@@ -1,0 +1,530 @@
+{
+ "unit": "sheet-057",
+ "records": [
+  {
+   "cluster_id": "c02878",
+   "name": "Helm_67",
+   "slug": "golden-horned-helm",
+   "description": "A golden helmet with a glowing orange gem on the brow and winged horn-like crests, with dark eye slits.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02879",
+   "name": "Helm_68",
+   "slug": "silver-thorn-circlet",
+   "description": "A thin silver circlet of thorny curling filigree with a small pale green gem at the front.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00678",
+   "name": "Helm_72",
+   "slug": "dark-purple-hood",
+   "description": "A dark purple pointed hood with a black opening and pale silver embroidered trim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02882",
+   "name": "Herbalism_01_Dill",
+   "slug": "dill-herb",
+   "description": "A sprig of feathery green dill with fine needle-like fronds.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02883",
+   "name": "Herbalism_02_rucola",
+   "slug": "rucola-herb",
+   "description": "A bunch of green lobed rucola leaves with pale yellow-green stems.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02884",
+   "name": "Herbalism_03_basilicum",
+   "slug": "basil-herb",
+   "description": "A purple-leafed basil sprig with broad veined leaves on a dark stem.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02885",
+   "name": "Herbalism_04_manaflower",
+   "slug": "mana-flower",
+   "description": "A teal-leafed plant with white blossoms on curling stems.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02886",
+   "name": "Herbalism_05_fireflower",
+   "slug": "fire-flower",
+   "description": "A bushy tangle of fiery red-orange branching tendrils like coral.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02888",
+   "name": "Herbalism_07_oilplant",
+   "slug": "oil-plant",
+   "description": "A stalk bearing a cluster of pale yellow oily seed pods with pink tendrils.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02890",
+   "name": "Herbalism_09_raptorherb",
+   "slug": "raptor-herb",
+   "description": "A green leafy herb branch with small paired leaves on a woody stem.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02891",
+   "name": "Herbalism_10_dragonherb",
+   "slug": "dragon-herb",
+   "description": "A bush of dark red-maroon leaves with orange tips.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02892",
+   "name": "Herbalism_11_shadowflower",
+   "slug": "shadow-flower",
+   "description": "A dense bush of deep blue-violet leaves with glowing blue buds.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02893",
+   "name": "Herbalism_12_redflower",
+   "slug": "red-flower",
+   "description": "A brown-red thorny bush dotted with small white blossoms.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02894",
+   "name": "Herbalism_13_wildrose",
+   "slug": "wild-rose",
+   "description": "Three salmon-pink wild roses with olive-green leaves on a thin stem.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02895",
+   "name": "Herbalism_14_purpleflower",
+   "slug": "purple-flower",
+   "description": "A sprig of small purple blossoms on a slender green stalk.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02896",
+   "name": "Herbalism_15_herb",
+   "slug": "curled-grass-herb",
+   "description": "A tuft of long green grass blades with one tall curling tendril.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02897",
+   "name": "Herbalism_16_yellowflower",
+   "slug": "yellow-bud-herb",
+   "description": "A tuft of green grass blades with a curling stalk ending in a small yellow bud.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02899",
+   "name": "Herbalism_18_herb",
+   "slug": "long-grass-herb",
+   "description": "A tuft of long thin olive-green grass blades fanning outward.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02900",
+   "name": "Herbalism_19_stinkyflower",
+   "slug": "stinky-flower",
+   "description": "A clump of brown reeds with dried cattail-like heads.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02901",
+   "name": "Herbalism_20_sickflower",
+   "slug": "sick-flower",
+   "description": "A branch of withered red-brown leaves with dark berries.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02902",
+   "name": "Herbalism_21_poisonous_mushroom",
+   "slug": "teal-yellow-mushroom",
+   "description": "A cluster of teal-capped mushrooms on tall yellow stalks.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02903",
+   "name": "Herbalism_22_poisonous_mushroom",
+   "slug": "red-orange-mushroom",
+   "description": "A single orange-red mushroom with a wide cap and slender curved stem.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02904",
+   "name": "Herbalism_23_mushroom",
+   "slug": "brown-cap-mushroom",
+   "description": "A brown-capped mushroom with a thick pale cream stem.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02905",
+   "name": "Herbalism_24_stinkymushroom",
+   "slug": "olive-mushroom-cluster",
+   "description": "A cluster of olive-yellow mushrooms on purple stalks.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02906",
+   "name": "Herbalism_25_manamushroom",
+   "slug": "blue-spotted-mushroom",
+   "description": "A light blue conical mushroom with white spots on a thin stem.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

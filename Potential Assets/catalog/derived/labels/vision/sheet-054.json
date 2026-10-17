@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-054",
+ "records": [
+  {
+   "cluster_id": "c02779",
+   "name": "Hammer_19",
+   "slug": "hammer-19",
+   "description": "A war hammer with a large blue-grey steel head and a dark grey handle with a round pommel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02780",
+   "name": "Hammer_20",
+   "slug": "hammer-20",
+   "description": "A war hammer with a wide pale grey steel head and a brown leather-wrapped haft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02781",
+   "name": "Hammer_21",
+   "slug": "hammer-21",
+   "description": "A hammer with a small dark pick-and-block head on a long thin dark shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02782",
+   "name": "Hammer_22",
+   "slug": "hammer-22",
+   "description": "A dark spiked mace-hammer with a studded black head on a long thin shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02783",
+   "name": "Hammer_23",
+   "slug": "hammer-23",
+   "description": "A dark slate hammer with a small blocky head on a long thin shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02784",
+   "name": "Hammer_24",
+   "slug": "hammer-24",
+   "description": "A dark spiked flanged mace-hammer on a long grey-blue shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02785",
+   "name": "Hammer_25",
+   "slug": "hammer-25",
+   "description": "A dark spiked flanged mace-hammer on a long grey-blue shaft with a flared base.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02786",
+   "name": "Hammer_26",
+   "slug": "hammer-26",
+   "description": "A long-shafted hammer with a small diamond-shaped steel head in teal-grey.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02787",
+   "name": "Hammer_27",
+   "slug": "hammer-27",
+   "description": "A hammer with a mauve-grey winged bow-tie head on a long shaft with a pink-tinged pommel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02788",
+   "name": "Hammer_28",
+   "slug": "hammer-28",
+   "description": "A dark navy war pick with a curved beak spike and hammer face on a long shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02789",
+   "name": "Hammer_29",
+   "slug": "hammer-29",
+   "description": "A rusty maroon-grey pick-hammer with a curved spike on a long pale shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02790",
+   "name": "Hammer_30",
+   "slug": "hammer-30",
+   "description": "A heavy hammer with a large pale grey-green steel block head on a dark brown handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02791",
+   "name": "Hammer_31",
+   "slug": "hammer-31",
+   "description": "A sledgehammer with a large golden-yellow block head on a dark green handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02792",
+   "name": "Hammer_32",
+   "slug": "hammer-32",
+   "description": "A long-shafted hammer with a pale pinkish-grey flared double head and a dark wooden shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02793",
+   "name": "Hammer_33",
+   "slug": "hammer-33",
+   "description": "A long-shafted hammer with a pale pink-grey flared double head and a dark shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02794",
+   "name": "Hammer_34",
+   "slug": "hammer-34",
+   "description": "A hammer with an ornate cream-gold flared head on a brown wooden shaft with a gold pommel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02795",
+   "name": "Hammer_35",
+   "slug": "hammer-35",
+   "description": "A hammer with a beige-grey flared head and a brown wooden shaft with a steel butt.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02796",
+   "name": "Hammer_36",
+   "slug": "hammer-36",
+   "description": "A dark hammer with a studded grey head set with a blue gemstone on a dark shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02797",
+   "name": "Hammer_37",
+   "slug": "hammer-37",
+   "description": "A dark hammer with a studded grey head set with a red gemstone and a red-tipped pommel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02798",
+   "name": "Hammer_38",
+   "slug": "hammer-38",
+   "description": "A large hammer with a dark navy blue block head on a dark steel handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02799",
+   "name": "Hammer_39",
+   "slug": "hammer-39",
+   "description": "A large hammer with a teal-green metal head on a dark steel handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02800",
+   "name": "Hammer_40",
+   "slug": "hammer-40",
+   "description": "A large hammer with a bright green glowing head on a dark steel handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02801",
+   "name": "Hammer_41",
+   "slug": "hammer-41",
+   "description": "A hammer with a silvery-white head and a spear-point butt on a dark shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02802",
+   "name": "Hammer_42",
+   "slug": "hammer-42",
+   "description": "A hammer with a pale icy-white double head and a spear-point butt on a dark shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02805",
+   "name": "Hammer_45",
+   "slug": "hammer-45",
+   "description": "A hammer with an ornate spiky copper-orange head and branching decorations on a copper shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

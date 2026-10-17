@@ -1,0 +1,508 @@
+{
+ "unit": "sheet-128",
+ "records": [
+  {
+   "cluster_id": "c00922",
+   "name": "Skill_315",
+   "slug": "wind-slash-swirl",
+   "description": "Pale blue and white curling wisps sweep diagonally across a teal square background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03920",
+   "name": "Skill_318",
+   "slug": "green-arrow-wind-trail",
+   "description": "A green-shafted arrow with a pale tip streaks to the right trailing teal wind streaks.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00923",
+   "name": "Skill_319",
+   "slug": "silence-mask",
+   "description": "A white face mask with teal eyes and a black X over the mouth sits in a teal glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03922",
+   "name": "Skill_321",
+   "slug": "triple-arrow-volley",
+   "description": "Three white-tipped arrows with blue trails fly up and to the right on a dark blue square.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03923",
+   "name": "Skill_321_noBG",
+   "slug": "triple-arrow-volley-transparent",
+   "description": "Three white-tipped arrows with blue trails fly up and to the right on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03924",
+   "name": "Skill_323",
+   "slug": "blue-feathered-spear-streak",
+   "description": "A blue feathered projectile with a fin-like tail streaks diagonally upward with motion trails on a dark blue square.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03925",
+   "name": "Skill_323_noBG",
+   "slug": "blue-feathered-spear-streak-transparent",
+   "description": "A blue feathered projectile with a fin-like tail streaks diagonally upward with motion trails on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03927",
+   "name": "Skill_324_noBG",
+   "slug": "blue-spearhead-transparent",
+   "description": "A steel-blue spearhead on a thin shaft points up and to the right over faint blue streaks on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00925",
+   "name": "Skill_328",
+   "slug": "blue-arrow-wind-trail",
+   "description": "A green-shafted arrow with a pale tip streaks to the right through broad blue wind streaks.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03930",
+   "name": "Skill_329",
+   "slug": "orange-potion-flask",
+   "description": "A round flask with an orange liquid and a cork stopper sits inside a bright blue radiating glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "heal",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03934",
+   "name": "Skill_336",
+   "slug": "falling-ice-shards",
+   "description": "Blue ice shards and small fragments tumble diagonally downward with motion streaks on a deep blue background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00927",
+   "name": "Skill_341",
+   "slug": "pale-trident-fork",
+   "description": "A pale bone-coloured three-pronged fork points upward on a magenta swirling background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03935",
+   "name": "Skill_342",
+   "slug": "pink-light-swirl",
+   "description": "A white-pink glowing streak curves diagonally across a purple background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00931",
+   "name": "Skill_348",
+   "slug": "magenta-claw-slashes",
+   "description": "Several bright magenta slash streaks cut diagonally across a dark olive and purple background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03938",
+   "name": "Skill_353",
+   "slug": "red-outline-hands",
+   "description": "Two outlined hands in glowing red reach in from the sides on a black background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "line-art",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03939",
+   "name": "Skill_354",
+   "slug": "casting-hand-blue-energy",
+   "description": "A pale hand with outstretched fingers releases a blue and white burst of energy downward on a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03940",
+   "name": "Skill_355",
+   "slug": "black-cross-pink-glow",
+   "description": "A solid black cross is outlined in white and surrounded by a hot pink radiating glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "heal",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03941",
+   "name": "Skill_357",
+   "slug": "pink-twisting-ribbons",
+   "description": "Pink and white ribbons of light twist diagonally across a magenta background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03942",
+   "name": "Skill_358",
+   "slug": "pink-heart",
+   "description": "A glossy pink heart with a light outline sits in a magenta radiating glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "heal"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03943",
+   "name": "Skill_361",
+   "slug": "golden-wind-swirl",
+   "description": "Yellow and orange wind streaks curl across the square with small orange sparks in the corner.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03944",
+   "name": "Skill_362",
+   "slug": "orange-light-pillar",
+   "description": "A pale orange column of light erupts upward from a ripple on the ground with thin shards around it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03946",
+   "name": "Skill_368",
+   "slug": "flame-claw-leaves",
+   "description": "Orange and green curved blade shapes like flames or leaves fan out from the lower left on an orange background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c03948",
+   "name": "Skill_370",
+   "slug": "golden-bubbles",
+   "description": "Three glossy golden-green spheres of different sizes cluster on an orange and brown background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00211",
+   "name": "Skill_376",
+   "slug": "green-wind-vortex",
+   "description": "Bright green curved streaks spiral into a dark green vortex.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03950",
+   "name": "Skill_377",
+   "slug": "green-lightning-streak",
+   "description": "A thin green lightning streak runs diagonally across a dark green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

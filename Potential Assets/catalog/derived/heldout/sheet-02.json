@@ -1,0 +1,230 @@
+{
+ "sheet": "sheet-02",
+ "cells": [
+  {
+   "i": 0,
+   "cluster_id": "c03881",
+   "name": "Skill_255",
+   "file": "sprites/Skill_255.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 1,
+   "cluster_id": "c00934",
+   "name": "Skill_373",
+   "file": "sprites/Skill_373.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 2,
+   "cluster_id": "c00025",
+   "name": "Skill_384",
+   "file": "sprites/Skill_384.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 3,
+   "cluster_id": "c04006",
+   "name": "Skill_496",
+   "file": "sprites/Skill_496.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 4,
+   "cluster_id": "c04083",
+   "name": "Spear4Halberd",
+   "file": "sprites/Spear4Halberd.png",
+   "size": "54x64",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 5,
+   "cluster_id": "c04106",
+   "name": "Spear_19",
+   "file": "sprites/Spear_19.png",
+   "size": "59x60",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 6,
+   "cluster_id": "c04138",
+   "name": "Spear_v2_14",
+   "file": "sprites/Spear_v2_14.png",
+   "size": "63x64",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 7,
+   "cluster_id": "c04159",
+   "name": "Staff_v2_10",
+   "file": "sprites/Staff_v2_10.png",
+   "size": "54x64",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 8,
+   "cluster_id": "c04180",
+   "name": "Staff_v2_32",
+   "file": "sprites/Staff_v2_32.png",
+   "size": "59x62",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 9,
+   "cluster_id": "c04294",
+   "name": "Sword_v2_25",
+   "file": "sprites/Sword_v2_25.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 10,
+   "cluster_id": "c04324",
+   "name": "Tabard_12",
+   "file": "sprites/Tabard_12.png",
+   "size": "34x63",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 11,
+   "cluster_id": "c04341",
+   "name": "Tabard_29",
+   "file": "sprites/Tabard_29.png",
+   "size": "36x64",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 12,
+   "cluster_id": "c04383",
+   "name": "Tailoring_27_hat",
+   "file": "sprites/Tailoring_27_hat.png",
+   "size": "64x50",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 13,
+   "cluster_id": "c04436",
+   "name": "Tech_Gambelson",
+   "file": "sprites/Tech_Gambelson.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 14,
+   "cluster_id": "c04453",
+   "name": "Tech_Quest",
+   "file": "sprites/Tech_Quest.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 15,
+   "cluster_id": "c04468",
+   "name": "Tech_StoneWalls",
+   "file": "sprites/Tech_StoneWalls.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 16,
+   "cluster_id": "c04470",
+   "name": "Tech_Tailoring",
+   "file": "sprites/Tech_Tailoring.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 17,
+   "cluster_id": "c04480",
+   "name": "Tech_WoodCrusher",
+   "file": "sprites/Tech_WoodCrusher.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 18,
+   "cluster_id": "c00997",
+   "name": "Update_06",
+   "file": "sprites/Update_06.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 19,
+   "cluster_id": "c00999",
+   "name": "Update_10",
+   "file": "sprites/Update_10.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 20,
+   "cluster_id": "c04566",
+   "name": "Wand_v2_50",
+   "file": "sprites/Wand_v2_50.png",
+   "size": "62x64",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 21,
+   "cluster_id": "c01008",
+   "name": "Warlock_08",
+   "file": "sprites/Warlock_08.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 22,
+   "cluster_id": "c00222",
+   "name": "Warlock_09",
+   "file": "sprites/Warlock_09.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 23,
+   "cluster_id": "c01023",
+   "name": "Warlock_27",
+   "file": "sprites/Warlock_27.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 24,
+   "cluster_id": "c01027",
+   "name": "Warlock_33",
+   "file": "sprites/Warlock_33.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  }
+ ]
+}

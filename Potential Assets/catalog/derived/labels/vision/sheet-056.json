@@ -1,0 +1,555 @@
+{
+ "unit": "sheet-056",
+ "records": [
+  {
+   "cluster_id": "c00670",
+   "name": "Helm_09",
+   "slug": "gold-visor-great-helm",
+   "description": "Golden great helm with a dark visor slit and an arrow-shaped cross bar across the face.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02836",
+   "name": "Helm_10",
+   "slug": "gold-horned-great-helm",
+   "description": "Golden great helm with a dark visor slit and two upswept horns at the crown.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02838",
+   "name": "Helm_12",
+   "slug": "steel-open-face-helm",
+   "description": "Dark grey steel helm with an open face and a curved cheek guard.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02839",
+   "name": "Helm_13",
+   "slug": "gold-flared-helm",
+   "description": "Golden helm with flared brow and cheek plates around a dark face opening.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00671",
+   "name": "Helm_14",
+   "slug": "gold-nasal-helm",
+   "description": "Gold conical helm with a narrow nose guard and a banded brow.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02841",
+   "name": "Helm_16",
+   "slug": "gold-neck-guard-helm",
+   "description": "Golden helm with a single eye opening and a long flared neck guard.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02844",
+   "name": "Helm_19",
+   "slug": "gold-bucket-helm",
+   "description": "Golden flat-fronted bucket helm with rows of rivets and perforated breathing holes.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02845",
+   "name": "Helm_20",
+   "slug": "steel-aventail-helm",
+   "description": "Steel helm with a flat band top and a chainmail aventail framing a dark face opening.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02846",
+   "name": "Helm_21",
+   "slug": "steel-kettle-hat-straps",
+   "description": "Steel wide-brimmed kettle hat with brown leather chin straps hanging down.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02847",
+   "name": "Helm_22",
+   "slug": "steel-kettle-visor-helm",
+   "description": "Steel brimmed helm with a closed grey visor covering the face.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02848",
+   "name": "Helm_23",
+   "slug": "steel-spiked-cap-helm",
+   "description": "Steel rounded helm with a small top knob and long cheek flaps.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02849",
+   "name": "Helm_24",
+   "slug": "gold-red-crest-helm",
+   "description": "Gold Roman-style helm with a red crest and long cheek plates.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02850",
+   "name": "Helm_25",
+   "slug": "steel-gladiator-helm",
+   "description": "Steel gladiator helm with a grilled visor and a tall swept crest.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02852",
+   "name": "Helm_31",
+   "slug": "gold-gladiator-plume-helm",
+   "description": "Gold gladiator helm with a red plume and a grilled visor.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02853",
+   "name": "Helm_32",
+   "slug": "purple-trim-hood",
+   "description": "Dark cloth hood with purple trim and an empty shadowed opening.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02855",
+   "name": "Helm_34",
+   "slug": "purple-demon-mask",
+   "description": "Purple carved demon face mask with hollow eyes and bared teeth.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02857",
+   "name": "Helm_36",
+   "slug": "white-gold-oni-mask",
+   "description": "White oni-style mask with gold patterned markings and fangs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02858",
+   "name": "Helm_39",
+   "slug": "brown-cowl-hood",
+   "description": "Grey-brown cloth cowl hood with a dark shadowed face opening.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02860",
+   "name": "Helm_41",
+   "slug": "gold-flat-top-great-helm",
+   "description": "Golden flat-topped great helm with a vertical ridge down the front.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02864",
+   "name": "Helm_49",
+   "slug": "grey-angular-closed-helm",
+   "description": "Grey steel closed helm with an angular faceted visor.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02865",
+   "name": "Helm_50",
+   "slug": "gold-angular-closed-helm",
+   "description": "Gold closed helm with angular faceted plates.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02867",
+   "name": "Helm_52",
+   "slug": "gold-grille-visor-helm",
+   "description": "Gold helm with a grilled visor raised above an open dark face.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02868",
+   "name": "Helm_54",
+   "slug": "red-beret-cap",
+   "description": "Red-orange soft beret cap with a small round badge on the side.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02873",
+   "name": "Helm_60",
+   "slug": "grey-purple-bandana",
+   "description": "Dark grey-purple cloth bandana folded and knotted.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02875",
+   "name": "Helm_63",
+   "slug": "thorn-circlet-green-gem",
+   "description": "Thorny twig circlet set with a green gemstone.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

@@ -1,0 +1,530 @@
+{
+ "unit": "sheet-147",
+ "records": [
+  {
+   "cluster_id": "c05624",
+   "name": "skill_360_noBG",
+   "slug": "magenta-energy-orb",
+   "description": "A glowing magenta orb wrapped in concentric swirling pink energy rings.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05625",
+   "name": "skill_362_noBG",
+   "slug": "orange-light-pillar",
+   "description": "An orange pillar of light with streaking rays rising from a glowing ground circle with sparks.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05626",
+   "name": "skill_363_noBG",
+   "slug": "orange-fire-streak",
+   "description": "A fiery orange comet-like streak with a white spark at its head over golden-olive swirls.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05627",
+   "name": "skill_364_noBG",
+   "slug": "bronze-helmet",
+   "description": "A bronze crested hoplite-style helmet with a dark visor, surrounded by golden radiating rays.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05628",
+   "name": "skill_366_noBG",
+   "slug": "orange-flame-swirl",
+   "description": "A curling orange flame or wind crescent trailing small embers.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05629",
+   "name": "skill_367",
+   "slug": "golden-flame-streaks",
+   "description": "Three golden flame-tipped streaks sweeping diagonally across a dark brown background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "opaque",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05630",
+   "name": "skill_367_noBG",
+   "slug": "golden-flame-streaks-transparent",
+   "description": "Three golden flame-tipped streaks sweeping diagonally on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05631",
+   "name": "skill_368_noBG",
+   "slug": "red-orange-claw-flames",
+   "description": "Spiky red and orange flame or claw shapes fanning across an olive-green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05632",
+   "name": "skill_369_noBG",
+   "slug": "golden-warrior-silhouettes",
+   "description": "Three dark muscular silhouetted figures standing before a golden radiating burst.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "summon",
+     "buff"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05633",
+   "name": "skill_370_noBG",
+   "slug": "yellow-green-orbs",
+   "description": "A large glossy yellow-green orb with two smaller orbs beside it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01168",
+   "name": "skill_371_noBG",
+   "slug": "green-wind-streaks",
+   "description": "Flowing green wind or energy streaks sweeping across the frame.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05634",
+   "name": "skill_372_noBG",
+   "slug": "green-light-pillar",
+   "description": "A green pillar of light with streaking rays rising from a glowing ground circle.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "heal"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05635",
+   "name": "skill_375_noBG",
+   "slug": "falling-figure-green-streaks",
+   "description": "A dark silhouetted humanoid tumbling backwards amid bright green streaks.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05636",
+   "name": "skill_376_noBG",
+   "slug": "green-vortex-crescent",
+   "description": "A bright green swirling vortex crescent with small trailing sparks.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05637",
+   "name": "skill_377_noBG",
+   "slug": "green-lightning-slash",
+   "description": "A thin jagged green lightning-like slash on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05639",
+   "name": "skill_378_noBG",
+   "slug": "green-claw-slashes",
+   "description": "Four curved dark green claw slash marks of decreasing size.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05640",
+   "name": "skill_379_noBG",
+   "slug": "green-aura-silhouette",
+   "description": "A dark green muscular figure silhouette seen from the front with green rays behind it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "status-effect"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05641",
+   "name": "skill_37_noBG",
+   "slug": "orange-meteor-streaks",
+   "description": "Three orange flaming meteor streaks falling diagonally.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05642",
+   "name": "skill_38",
+   "slug": "screaming-crowd-silhouettes",
+   "description": "A crowd of dark silhouetted figures with glowing eyes and raised hands against a dark red background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "summon",
+     "debuff"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "opaque",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05643",
+   "name": "skill_380_noBG",
+   "slug": "green-orbs",
+   "description": "A large glossy green orb with two smaller orbs beside it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "heal"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05644",
+   "name": "skill_381_noBG",
+   "slug": "red-radial-eye",
+   "description": "A black-and-red radial burst resembling an eye with a white pupil at the center.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05645",
+   "name": "skill_383_noBG",
+   "slug": "sleep-zzz",
+   "description": "Red-outlined black letters Z Z Z stacked diagonally.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "status-effect",
+     "debuff"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05647",
+   "name": "skill_385_noBG",
+   "slug": "hourglass-purple-glow",
+   "description": "A pink-red hourglass on a purple glowing background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "status-effect",
+     "debuff"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05649",
+   "name": "skill_388_noBG",
+   "slug": "orange-ghost",
+   "description": "A smiling orange-pink ghost with a wavy tail and jagged eyes.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "summon",
+     "status-effect"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05650",
+   "name": "skill_38_noBG",
+   "slug": "screaming-crowd-silhouettes-transparent",
+   "description": "A crowd of dark silhouetted figures with glowing eyes and raised hands in orange-red tones on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "summon",
+     "debuff"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

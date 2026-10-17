@@ -1,0 +1,529 @@
+{
+ "unit": "sheet-090",
+ "records": [
+  {
+   "cluster_id": "c04198",
+   "name": "Staff_v2_51",
+   "slug": "flaming-staff",
+   "description": "A slender staff topped with a glowing orange sunburst orb wreathed in flame.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04199",
+   "name": "Staff_v2_52",
+   "slug": "serpent-fire-staff",
+   "description": "A twisted wooden staff glowing with orange embers, its crook carved as a dragon or serpent head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00217",
+   "name": "Staff_v2_55",
+   "slug": "serpent-frost-staff",
+   "description": "A gnarled teal-blue staff whose crook curls into a serpent head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04200",
+   "name": "Stick",
+   "slug": "wooden-club",
+   "description": "A short tapered wooden club bound with leather wrapping at the grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04201",
+   "name": "Stick2",
+   "slug": "wooden-stick",
+   "description": "A thin straight brown wooden stick with a rounded knob at the top.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04202",
+   "name": "StoneHammer",
+   "slug": "stone-hammer",
+   "description": "A heavy grey stone-headed hammer on a short dark wooden handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04203",
+   "name": "Stones",
+   "slug": "stones",
+   "description": "A pile of three rounded stones, two grey and one small brown.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04204",
+   "name": "StrawHat",
+   "slug": "straw-hat",
+   "description": "A wide-brimmed brown straw hat with a domed crown.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04210",
+   "name": "Sword",
+   "slug": "sword-blue-pommel",
+   "description": "A straight steel sword with a dark blue pommel and simple crossguard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04211",
+   "name": "Sword2",
+   "slug": "sword-green-pommel",
+   "description": "A straight steel sword with a greenish pommel and plain crossguard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04212",
+   "name": "Sword3",
+   "slug": "sword-round-pommel",
+   "description": "A straight grey blade with a round pommel and slim crossguard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04213",
+   "name": "Sword4",
+   "slug": "sword-gold-hilt",
+   "description": "A straight sword with a gold-trimmed hilt and dark blade.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04214",
+   "name": "Sword5",
+   "slug": "sword-red-grip",
+   "description": "A straight sword with a dark red grip and narrow crossguard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04215",
+   "name": "Sword6",
+   "slug": "sword-brass-guard",
+   "description": "A straight sword with a brass pommel and small guard over a dark blade.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04216",
+   "name": "Sword7",
+   "slug": "sword-plain-grey",
+   "description": "A plain straight grey sword with a round pommel and short crossguard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04217",
+   "name": "SwordDecorated",
+   "slug": "decorated-sword",
+   "description": "A broad ornate sword with a gold-bound hilt and a wide decorated blade.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04218",
+   "name": "SwordEpee",
+   "slug": "epee",
+   "description": "A thin long rapier-style blade with a small curved guard and slender grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04219",
+   "name": "SwordEpee2",
+   "slug": "curved-epee",
+   "description": "A long slim slightly curved blade with a looping basket guard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04220",
+   "name": "SwordRapier",
+   "slug": "rapier",
+   "description": "A thin rapier with an ornate swept-hilt guard and long narrow blade.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04221",
+   "name": "SwordSaber1",
+   "slug": "saber-red-grip",
+   "description": "A single-edged blade with a red grip, small guard and slightly broadened tip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04222",
+   "name": "SwordSaber2",
+   "slug": "saber-gold-guard",
+   "description": "A curved saber with a gold knuckle guard and thin sweeping blade.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04223",
+   "name": "SwordSaber3",
+   "slug": "saber-wide-blade",
+   "description": "A curved saber with a brown grip, hooked guard and wide blade.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04224",
+   "name": "SwordSaber4",
+   "slug": "saber-ornate-guard",
+   "description": "A curved saber with an ornate gold looped guard and a broad blade.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04225",
+   "name": "SwordSaber5",
+   "slug": "scimitar",
+   "description": "A sharply curved dark scimitar with a small guard and a blue-tinted tip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04226",
+   "name": "SwordTwohanded1",
+   "slug": "two-handed-sword",
+   "description": "A long straight two-handed sword with a dark red grip and cross guard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

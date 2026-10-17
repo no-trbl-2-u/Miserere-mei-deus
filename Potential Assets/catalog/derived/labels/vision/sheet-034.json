@@ -1,0 +1,523 @@
+{
+ "unit": "sheet-034",
+ "records": [
+  {
+   "cluster_id": "c00041",
+   "name": "Boots_40",
+   "slug": "olive-green-boots",
+   "description": "Tall olive-green leather boots with buckled straps and a glossy rounded toe.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00042",
+   "name": "Boots_45",
+   "slug": "purple-buckled-boots",
+   "description": "Tall purple boots with silver buckles and a metal heel plate.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00530",
+   "name": "Boots_49",
+   "slug": "golden-buckled-boots",
+   "description": "Tall golden-yellow boots with buckled straps and glossy toes.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00531",
+   "name": "Boots_51",
+   "slug": "green-folded-boots",
+   "description": "Dark green boots with folded cuffs and a glossy rounded toe.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02097",
+   "name": "Boots_53",
+   "slug": "brown-red-gem-boots",
+   "description": "Brown leather boots with gold trim and red gems on the upper shafts.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00532",
+   "name": "Boots_55",
+   "slug": "magenta-gem-boots",
+   "description": "Plum-magenta boots with pink trim and glowing pink gems on the shafts.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02098",
+   "name": "Boots_56",
+   "slug": "navy-gold-trim-boots",
+   "description": "Deep blue boots with gold trim and small blue gems on the shafts.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02100",
+   "name": "Bow",
+   "slug": "dark-recurve-bow",
+   "description": "A thin dark-wood recurve bow with a taut string, angled diagonally.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02101",
+   "name": "Bow2",
+   "slug": "dark-recurve-bow-2",
+   "description": "A slim dark-wood recurve bow with a visible string, angled diagonally.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02102",
+   "name": "Bow3",
+   "slug": "dark-recurve-bow-3",
+   "description": "A slender dark-wood recurve bow with a taut string, angled diagonally.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02103",
+   "name": "Bow4",
+   "slug": "dark-longbow",
+   "description": "A long, slender dark-wood bow with a taut string, drawn diagonally.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02104",
+   "name": "Bow5",
+   "slug": "dark-curved-bow",
+   "description": "A narrow dark curved bow with a thin string, angled diagonally.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02105",
+   "name": "Bow_01",
+   "slug": "brown-simple-bow",
+   "description": "A simple brown wooden bow with a gently curved limb and a thin string.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02106",
+   "name": "Bow_02",
+   "slug": "golden-wrapped-bow",
+   "description": "A brown wooden bow with a golden wrapped grip and thin string.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02107",
+   "name": "Bow_05",
+   "slug": "brown-bow-gold-grip",
+   "description": "A brown recurve bow with a gold grip and upturned tips, string drawn straight.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02108",
+   "name": "Bow_06",
+   "slug": "ornate-brown-recurve-bow",
+   "description": "An ornate brown recurve bow with scrolled limbs and a diagonal string.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02109",
+   "name": "Bow_07",
+   "slug": "ornate-gold-accent-bow",
+   "description": "An ornate brown recurve bow with gold accents and a diagonal string.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02110",
+   "name": "Bow_08",
+   "slug": "wavy-brown-bow",
+   "description": "A brown wooden bow with an S-shaped wavy profile and thin string.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02111",
+   "name": "Bow_09",
+   "slug": "wavy-brown-bow-metal-grip",
+   "description": "A brown S-curved bow with a metal-banded grip and thin string.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02112",
+   "name": "Bow_10",
+   "slug": "wavy-grey-bow",
+   "description": "A grey-steel S-curved bow with a metal grip and thin string.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00534",
+   "name": "Bow_11",
+   "slug": "orange-wavy-bow",
+   "description": "An orange-brown S-curved bow with a wrapped grip and thin string.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02113",
+   "name": "Bow_12",
+   "slug": "pale-wood-bow",
+   "description": "A pale reddish-brown bow with a banded grip and thin string, angled diagonally.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02114",
+   "name": "Bow_13",
+   "slug": "crimson-bow",
+   "description": "A crimson-red bow with pointed tips and thin string, angled diagonally.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02115",
+   "name": "Bow_14",
+   "slug": "dark-iron-bow",
+   "description": "A dark iron-grey bow with a heavy grip and thin string, angled diagonally.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02116",
+   "name": "Bow_15",
+   "slug": "blue-steel-bow",
+   "description": "A blue-steel bow with a curved, ornate limb and thin string, angled diagonally.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

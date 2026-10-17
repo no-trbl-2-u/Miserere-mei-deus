@@ -1,0 +1,484 @@
+{
+ "unit": "sheet-03",
+ "records": [
+  {
+   "cluster_id": "c00229",
+   "name": "Warlock_49",
+   "slug": "green-glowing-dagger-skill",
+   "description": "A dagger or staff with a bright green lightning glow streaking up from its hilt against a dark green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01043",
+   "name": "Warriorskill_09",
+   "slug": "enraged-bald-man-skill",
+   "description": "A bald man with glowing eyes and a gritted, furious face in front of orange radiating rays.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00073",
+   "name": "Warriorskill_44",
+   "slug": "flexed-arm-skill",
+   "description": "A flexed muscular arm against orange radiating rays.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01094",
+   "name": "hit",
+   "slug": "orange-slash-hit",
+   "description": "A glowing orange curved slash or blade edge sweeping across a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c04759",
+   "name": "icon-BoneGolemF",
+   "slug": "bone-golem-skeleton",
+   "description": "A skeletal figure tinted blue and magenta with purple glow on a black background.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04784",
+   "name": "icon-JB04",
+   "slug": "orange-haired-man-yellow-jacket",
+   "description": "Bust of a gaunt man with long orange hair in a yellow jacket.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "player-class"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04791",
+   "name": "icon-JB11",
+   "slug": "blonde-ponytail-armoured-woman",
+   "description": "Bust of a blonde woman with a ponytail wearing armour and a yellow cloak.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "player-class"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04794",
+   "name": "icon-JB14",
+   "slug": "green-haired-woman-green-cloak",
+   "description": "Bust of a pale woman with green hair wearing a green cloak.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "player-class"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04808",
+   "name": "icon-JB28",
+   "slug": "white-haired-woman-halo",
+   "description": "Bust of a white-haired woman with a spiked halo ring behind her head.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "player-class"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04820",
+   "name": "icon-JB40",
+   "slug": "sun-crowned-woman",
+   "description": "Bust of a woman with a golden sun-shaped crown and red flowers in her hair.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "player-class"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04868",
+   "name": "icon-SK07",
+   "slug": "green-haired-girl-pink-dress",
+   "description": "A green-haired pointy-eared girl in a pink dress with arms outstretched on a purple background.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "summon"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c04872",
+   "name": "icon-SK11",
+   "slug": "helmeted-soldier-red-tunic",
+   "description": "A helmeted soldier in a red tunic carrying a shield.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "summon"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c04873",
+   "name": "icon-SK12",
+   "slug": "pale-woman-dark-hood",
+   "description": "A pale woman with long light hair in a dark hooded cloak.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "summon"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c04900",
+   "name": "icon-SK39",
+   "slug": "horned-helm-bearded-knight",
+   "description": "A bearded knight in blue-grey armour wearing a horned helmet.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "summon"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c04913",
+   "name": "icon-SK52",
+   "slug": "pale-dragon-head",
+   "description": "Side view of a pale pink dragon head in profile.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "summon"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c04915",
+   "name": "icon-SK54",
+   "slug": "white-haired-dark-robe",
+   "description": "A white-haired person in a dark robe seen from the shoulders up.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "summon"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c04917",
+   "name": "icon-SK56",
+   "slug": "purple-glowing-beast",
+   "description": "A dark horned beast with glowing magenta energy and spiked collar.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "summon"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c04918",
+   "name": "icon-SK57",
+   "slug": "veiled-figure-purple-turban",
+   "description": "A veiled figure in a purple turban and patterned gold-trimmed robe.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "summon"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c04921",
+   "name": "icon-SK60",
+   "slug": "hooded-warrior-purple-mask",
+   "description": "A hooded warrior in armour with a purple face mask and a sword over the shoulder.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "summon"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c04934",
+   "name": "icon-SK73",
+   "slug": "witch-blue-hat",
+   "description": "A girl in a large blue pointed witch hat resting her chin on her hand.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "summon"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c04941",
+   "name": "icon-SK80",
+   "slug": "sun-crowned-woman-dark",
+   "description": "A dark-haired woman with a golden sun crown and red flowers.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "summon"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c04946",
+   "name": "icon-SK85",
+   "slug": "red-hooded-skull-mask-figure",
+   "description": "A figure in a red hood wearing a bloodied skull-like mask with cross patterns on the background.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "summon"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c04950",
+   "name": "icon-SK89",
+   "slug": "auburn-haired-woman",
+   "description": "A woman with wavy auburn hair and closed eyes against black and white.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "summon"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c04967",
+   "name": "icon_44592508_p0",
+   "slug": "blue-horned-demon",
+   "description": "A blue muscular horned demon with red markings.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c04970",
+   "name": "icon_44867185_p0_master1200",
+   "slug": "golden-winged-fairy",
+   "description": "A golden winged fairy or angel figure with a halo against black.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "summon"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  }
+ ]
+}

@@ -1,0 +1,530 @@
+{
+ "unit": "sheet-061",
+ "records": [
+  {
+   "cluster_id": "c03034",
+   "name": "Jewelry_50_skullneck",
+   "slug": "skull-pendant-necklace",
+   "description": "A rough stone coffin-shaped pendant carved with a skull face hangs from a twisted brown cord.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03035",
+   "name": "Jewelry_51_flowerneck",
+   "slug": "golden-leaf-necklace",
+   "description": "A brown cord necklace holding a pendant of three curved golden leaf-like petals.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03036",
+   "name": "Jewelry_52_blueneck",
+   "slug": "pink-gem-necklace",
+   "description": "A blue-framed rectangular pendant set with a pink faceted gem hangs from a thin blue chain.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03037",
+   "name": "Jewelry_53_deadly_collar",
+   "slug": "spiked-collar",
+   "description": "A dark purple-black ring-shaped collar studded with sharp spikes around its outer edge.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03038",
+   "name": "Jewelry_54_green_neck",
+   "slug": "green-triangle-necklace",
+   "description": "A triangular gold-framed pendant set with a green gem hangs from a brown cord.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03039",
+   "name": "Jewelry_55_medallion",
+   "slug": "bronze-medallion-necklace",
+   "description": "A round bronze medallion with an embossed pattern hangs from a brown cord.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03040",
+   "name": "Jewelry_56_gold_medallion",
+   "slug": "gold-lion-medallion-necklace",
+   "description": "A round gold medallion embossed with a lion face hangs from a brown cord.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03041",
+   "name": "Jewelry_57_mystic_neck",
+   "slug": "dark-mask-amulet",
+   "description": "A dark metal shield-shaped pendant with a horned face and glowing red eyes hangs from a cord.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03042",
+   "name": "Jewelry_58_tribe_neck",
+   "slug": "leaf-yellow-gem-necklace",
+   "description": "A necklace with a yellow gem pendant wrapped in green leaves hangs from a brown cord.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03043",
+   "name": "Jewelry_59_clay_neck",
+   "slug": "clay-disc-necklace",
+   "description": "A round olive-green clay disc engraved with a cross-like pattern hangs from a brown cord.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03048",
+   "name": "KingsArmor",
+   "slug": "kings-armor",
+   "description": "A suit of dark plate armour trimmed with a red fur-edged cape and gold accents, shown on a red-draped stand.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03050",
+   "name": "KnifeDagger",
+   "slug": "curved-dagger",
+   "description": "A dagger with a curved steel blade and dark hilt pointing upward.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03051",
+   "name": "KnightChest",
+   "slug": "knight-breastplate",
+   "description": "A steel breastplate with pauldrons and a segmented lower plate.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03052",
+   "name": "KnightChest2",
+   "slug": "knight-chestplate-strap",
+   "description": "A steel chestplate with large shoulder guards, a brown diagonal strap and a skirted lower plate.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03053",
+   "name": "KnightChest3",
+   "slug": "knight-cuirass-narrow",
+   "description": "A narrow steel cuirass seen from the side with banded lower plates.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03054",
+   "name": "KnightHelm",
+   "slug": "knight-great-helm",
+   "description": "A steel great helm with a vertical slit and a cross-shaped mark on the front.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03055",
+   "name": "KnightHelm2",
+   "slug": "gold-trimmed-helm",
+   "description": "A steel helmet with gold trim and a raised visor over the face.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03056",
+   "name": "KnightHelm3",
+   "slug": "black-knight-helm",
+   "description": "A dark steel helmet with a wide neck guard and a narrow eye slit.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03057",
+   "name": "KnightShield",
+   "slug": "blue-cross-kite-shield",
+   "description": "A kite-shaped shield with a white field, blue sides and a white cross, steel rimmed.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03058",
+   "name": "KnightShieldGreen",
+   "slug": "green-kite-shield",
+   "description": "A kite-shaped shield with green and cream fields and a gold diagonal band, steel rimmed.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03059",
+   "name": "Knight_sword",
+   "slug": "knight-longsword",
+   "description": "A long straight steel sword with a thin crossguard and dark red grip, point downward.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03070",
+   "name": "LeatherBoots",
+   "slug": "soft-leather-shoes",
+   "description": "A pair of soft tan leather ankle shoes.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03071",
+   "name": "LeatherBoots2",
+   "slug": "brown-cuffed-boots",
+   "description": "A pair of brown leather boots with folded cuffs at the top.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03072",
+   "name": "LeatherBoots3",
+   "slug": "dark-cuffed-boots",
+   "description": "A pair of dark brown leather boots with folded cuffs and black soles.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03073",
+   "name": "LeatherBracers",
+   "slug": "leather-bracer",
+   "description": "A brown leather cylindrical bracer with metal banding.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

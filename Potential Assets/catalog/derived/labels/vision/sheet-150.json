@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-150",
+ "records": [
+  {
+   "cluster_id": "c05700",
+   "name": "skill_451_noBG",
+   "slug": "hammers-smash",
+   "description": "Three pink war hammers flying at different angles over a red radial burst.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05701",
+   "name": "skill_452_noBG",
+   "slug": "crossed-swords",
+   "description": "Two white-pink swords crossed in an X on a pink glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05702",
+   "name": "skill_453_noBG",
+   "slug": "flexed-arm",
+   "description": "A purple muscular arm flexed at the bicep.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05703",
+   "name": "skill_454_noBG",
+   "slug": "horned-helm",
+   "description": "A pink horned helmet with a dark visor slit seen from the front.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "defend"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05704",
+   "name": "skill_455_noBG",
+   "slug": "dazed-figure",
+   "description": "A dark bald figure with a pink spiral ring above its head against red rays.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05705",
+   "name": "skill_456_noBG",
+   "slug": "chain-bind",
+   "description": "A pink chain stretching diagonally across a pink and red glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05706",
+   "name": "skill_457",
+   "slug": "crossed-hammers-dark-bg",
+   "description": "Two black crossed hammers on a dark background with red radiating lines.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05707",
+   "name": "skill_457_noBG",
+   "slug": "crossed-hammers",
+   "description": "Two black crossed hammers with red radiating lines on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05708",
+   "name": "skill_458_noBG",
+   "slug": "dark-shield-aura",
+   "description": "A dark kite shield ringed by a red and pink burst of light.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "defend"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05709",
+   "name": "skill_45_noBG",
+   "slug": "screaming-hooded-figure",
+   "description": "A hooded figure with glowing white eyes and wide open mouth, teal rim light on the hood.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05710",
+   "name": "skill_460_noBG",
+   "slug": "red-sun-rays",
+   "description": "A large red disc edge in the corner with pink rays streaming outward.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c05711",
+   "name": "skill_462_noBG",
+   "slug": "flexing-silhouette",
+   "description": "A dark silhouette of a man with clenched fists and arms flexed, surrounded by red rays.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05712",
+   "name": "skill_465_noBG",
+   "slug": "red-swirl-orb",
+   "description": "A white glowing orb at the centre of curved red crescent swirls.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01176",
+   "name": "skill_468_noBG",
+   "slug": "orange-burst-shards",
+   "description": "An orange starburst with small dark shards scattered at the centre.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00030",
+   "name": "skill_469_noBG",
+   "slug": "dark-swords-stripes",
+   "description": "Two dark pointed blades slanting diagonally across red stripes.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05713",
+   "name": "skill_46_noBG",
+   "slug": "ice-comet",
+   "description": "A blue-white comet streak ending in a spiky cyan ice-crystal burst.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01177",
+   "name": "skill_471_noBG",
+   "slug": "purple-light-rays",
+   "description": "Purple beams of light fanning downward from a bright line at the top.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01178",
+   "name": "skill_473_noBG",
+   "slug": "purple-slashes",
+   "description": "Three purple claw-like slash streaks angled diagonally.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05714",
+   "name": "skill_475_noBG",
+   "slug": "purple-swirl-orb",
+   "description": "A white glowing orb at the centre of curved purple crescent swirls.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01179",
+   "name": "skill_476_noBG",
+   "slug": "conjuring-hands",
+   "description": "Two dark silhouetted hands reaching toward a bright purple glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "summon"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05715",
+   "name": "skill_477_noBG",
+   "slug": "bones-purple-rays",
+   "description": "Two pink bones with one splintering, over purple diagonal rays.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05716",
+   "name": "skill_478_noBG",
+   "slug": "purple-burst-shards",
+   "description": "A white-purple energy burst with black shards scattered at the centre.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01180",
+   "name": "skill_47_noBG",
+   "slug": "cyan-vortex",
+   "description": "A cyan and white spiral vortex swirling toward the centre.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05718",
+   "name": "skill_480_noBG",
+   "slug": "purple-spear",
+   "description": "A purple arrowhead spear pointing up-right with motion trails.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05719",
+   "name": "skill_481_noBG",
+   "slug": "rising-arrow-plus",
+   "description": "A magenta upward arrow on a glowing ring with a small plus sign above.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

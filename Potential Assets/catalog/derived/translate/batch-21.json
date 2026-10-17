@@ -1,0 +1,2176 @@
+{
+ "batch": "batch-21",
+ "items": [
+  {
+   "cluster_id": "c01262",
+   "name": "RC26",
+   "file": "textures/RC26.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "race",
+     "column": "Image",
+     "row": {
+      "name": "インフェステッド",
+      "ID": "RC000026"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "インフェステッド",
+      "ID": "SKNR0026"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06167",
+   "name": "RC28",
+   "file": "textures/RC28.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "race",
+     "column": "Image",
+     "row": {
+      "name": "黄昏人",
+      "ID": "RC000028"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "黄昏人",
+      "ID": "SKNR0028"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06168",
+   "name": "RC29",
+   "file": "textures/RC29.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "race",
+     "column": "Image",
+     "row": {
+      "name": "天狗",
+      "ID": "RC000029"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "天狗",
+      "ID": "SKNR0029"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06169",
+   "name": "RC30",
+   "file": "textures/RC30.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "race",
+     "column": "Image",
+     "row": {
+      "name": "リビングアーマー",
+      "ID": "RC000030"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "リビングアーマー",
+      "ID": "SKNR0030"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06170",
+   "name": "Rangda",
+   "file": "textures/Rangda.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "神降ろし",
+      "ID": "EBS08001",
+      "Category": "DungeonBoss1",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06171",
+   "name": "Raver Lord",
+   "file": "textures/Raver_Lord.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "辻斬り",
+      "ID": "EDG21002",
+      "Category": "Normal-D5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01263",
+   "name": "Red Vex-Disaster",
+   "file": "textures/Red_Vex-Disaster.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Image",
+     "row": {
+      "name": "復讐者",
+      "ID": "DSS00003"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06172",
+   "name": "Relict Thing",
+   "file": "textures/Relict_Thing.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "古のもの",
+      "ID": "E0N04008",
+      "Category": "Normal4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06173",
+   "name": "Rogue",
+   "file": "textures/Rogue.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "盗賊",
+      "ID": "E0N01004",
+      "Category": "Normal1",
+      "Rarity": 1
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06174",
+   "name": "Roper",
+   "file": "textures/Roper.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "state_visual",
+     "column": "Image",
+     "row": {
+      "name": "新たな扉",
+      "ID": "STVS0006"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06175",
+   "name": "SK01",
+   "file": "textures/SK01.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "テレジア",
+      "ID": "SKNS0001"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06176",
+   "name": "SK02",
+   "file": "textures/SK02.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "テーオドル",
+      "ID": "SKNS0002"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06177",
+   "name": "SK03",
+   "file": "textures/SK03.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "メアリー",
+      "ID": "SKNS0003"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06178",
+   "name": "SK04",
+   "file": "textures/SK04.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 鉱夫ヘルマン 3",
+      "ID": "REST0003N4",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 鉱夫ヘルマン 4",
+      "ID": "REST0004N2",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 鉱夫ヘルマン 4",
+      "ID": "REST0004N5",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 鉱夫ヘルマン 5",
+      "ID": "REST0005N4",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06179",
+   "name": "SK05",
+   "file": "textures/SK05.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "イクス",
+      "ID": "SKNS0005"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06180",
+   "name": "SK06",
+   "file": "textures/SK06.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "サクラ",
+      "ID": "SKNS0006"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06181",
+   "name": "SK07",
+   "file": "textures/SK07.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "フリージア",
+      "ID": "SKNS0007"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06182",
+   "name": "SK08",
+   "file": "textures/SK08.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 鉱夫ヘルマン 1",
+      "ID": "REST0001N4",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 聖司祭トビア 1",
+      "ID": "REST0026N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 聖司祭トビア 1",
+      "ID": "REST0026N5",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 聖司祭トビア 2",
+      "ID": "REST0027N1",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06183",
+   "name": "SK09",
+   "file": "textures/SK09.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ビアンカ",
+      "ID": "SKNS0009"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06184",
+   "name": "SK10",
+   "file": "textures/SK10.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "カヲル",
+      "ID": "SKNS0010"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06185",
+   "name": "SK11",
+   "file": "textures/SK11.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ジョン / John",
+      "ID": "SKNS0011"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06186",
+   "name": "SK12",
+   "file": "textures/SK12.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "マリア",
+      "ID": "SKNS0012"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06187",
+   "name": "SK13",
+   "file": "textures/SK13.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ドバイロン",
+      "ID": "SKNS0013"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06188",
+   "name": "SK14",
+   "file": "textures/SK14.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "セバスチャン",
+      "ID": "SKNS0014"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06189",
+   "name": "SK15",
+   "file": "textures/SK15.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 茶屋の娘オヨネ 2",
+      "ID": "REST0007N3",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 茶屋の娘オヨネ 2",
+      "ID": "REST0007N5",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 茶屋の娘オヨネ 3",
+      "ID": "REST0008N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 茶屋の娘オヨネ 4",
+      "ID": "REST0009N1",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06190",
+   "name": "SK16",
+   "file": "textures/SK16.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "シェード",
+      "ID": "SKNS0016"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06191",
+   "name": "SK17",
+   "file": "textures/SK17.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 光の巫女ドラフシェ 5",
+      "ID": "REST0025N3",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "アーミオン",
+      "ID": "SKNS0017"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06192",
+   "name": "SK18",
+   "file": "textures/SK18.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "マイオレット",
+      "ID": "SKNS0018"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06193",
+   "name": "SK19",
+   "file": "textures/SK19.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "SK-19",
+      "ID": "SKNS0019"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01264",
+   "name": "SK21",
+   "file": "textures/SK21.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "トム",
+      "ID": "SKNS0021"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06194",
+   "name": "SK22",
+   "file": "textures/SK22.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "アズーラ",
+      "ID": "SKNS0022"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06195",
+   "name": "SK23",
+   "file": "textures/SK23.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ウィリオ",
+      "ID": "SKNS0023"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06196",
+   "name": "SK24",
+   "file": "textures/SK24.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ノンナ",
+      "ID": "SKNS0024"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06197",
+   "name": "SK25",
+   "file": "textures/SK25.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x511",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 情報屋ヤンネ 5",
+      "ID": "REST0015N2",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "CCS-25",
+      "ID": "SKNS0025"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06198",
+   "name": "SK26",
+   "file": "textures/SK26.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ガストニー",
+      "ID": "SKNS0026"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06199",
+   "name": "SK27",
+   "file": "textures/SK27.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "エリカ",
+      "ID": "SKNS0027"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06200",
+   "name": "SK28",
+   "file": "textures/SK28.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ウゲツ",
+      "ID": "SKNS0028"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06201",
+   "name": "SK29",
+   "file": "textures/SK29.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "レイセシル",
+      "ID": "SKNS0029"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06202",
+   "name": "SK30",
+   "file": "textures/SK30.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ステリア",
+      "ID": "SKNS0030"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06203",
+   "name": "SK31",
+   "file": "textures/SK31.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "シル・エルリン",
+      "ID": "SKNS0031"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06204",
+   "name": "SK32",
+   "file": "textures/SK32.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "フィリップ",
+      "ID": "SKNS0032"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06205",
+   "name": "SK33",
+   "file": "textures/SK33.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ファティマ",
+      "ID": "SKNS0033"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06206",
+   "name": "SK34",
+   "file": "textures/SK34.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ドラフシェ",
+      "ID": "SKNS0034"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06207",
+   "name": "SK35",
+   "file": "textures/SK35.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ミュリーン",
+      "ID": "SKNS0035"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06208",
+   "name": "SK36",
+   "file": "textures/SK36.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "アクサナ",
+      "ID": "SKNS0036"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06209",
+   "name": "SK37",
+   "file": "textures/SK37.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "バクス",
+      "ID": "SKNS0037"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06210",
+   "name": "SK39",
+   "file": "textures/SK39.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 技師見習いソラティナ 4",
+      "ID": "REST0074N4",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ニコラ",
+      "ID": "SKNS0039"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06211",
+   "name": "SK41",
+   "file": "textures/SK41.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x511",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 技師見習いソラティナ 5",
+      "ID": "REST0075N4",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ゴードリック",
+      "ID": "SKNS0041"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06212",
+   "name": "SK42",
+   "file": "textures/SK42.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "キース",
+      "ID": "SKNS0042"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06213",
+   "name": "SK43",
+   "file": "textures/SK43.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "イレイディ",
+      "ID": "SKNS0043"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06214",
+   "name": "SK44",
+   "file": "textures/SK44.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "アーサドラ",
+      "ID": "SKNS0044"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06215",
+   "name": "SK45",
+   "file": "textures/SK45.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "リオナ",
+      "ID": "SKNS0045"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06216",
+   "name": "SK47",
+   "file": "textures/SK47.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "モーリアル",
+      "ID": "SKNS0047"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06217",
+   "name": "SK48",
+   "file": "textures/SK48.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 冒険者スターディア 1",
+      "ID": "REST0076N4",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 冒険者スターディア 4",
+      "ID": "REST0079N3",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ジーナ",
+      "ID": "SKNS0048"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06218",
+   "name": "SK49",
+   "file": "textures/SK49.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ジアーナ",
+      "ID": "SKNS0049"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06219",
+   "name": "SK52",
+   "file": "textures/SK52.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ドルクモンド",
+      "ID": "SKNS0052"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06220",
+   "name": "SK53",
+   "file": "textures/SK53.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x511",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "シンディス",
+      "ID": "SKNS0053"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06221",
+   "name": "SK54",
+   "file": "textures/SK54.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "テレーズ",
+      "ID": "SKNS0054"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06222",
+   "name": "SK55",
+   "file": "textures/SK55.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "グリゴリー",
+      "ID": "SKNS0055"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06223",
+   "name": "SK56",
+   "file": "textures/SK56.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ポッチー / Potchy",
+      "ID": "SKNS0056"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06224",
+   "name": "SK57",
+   "file": "textures/SK57.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 族長マアドゥール 1",
+      "ID": "REST0051N2",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 族長マアドゥール 2",
+      "ID": "REST0052N2",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 族長マアドゥール 2",
+      "ID": "REST0052N4",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 族長マアドゥール 3",
+      "ID": "REST0053N4",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06225",
+   "name": "SK58",
+   "file": "textures/SK58.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "マサヒデ",
+      "ID": "SKNS0058"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06226",
+   "name": "SK59",
+   "file": "textures/SK59.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 追放者ジャミル 1",
+      "ID": "REST0036N2",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 追放者ジャミル 3",
+      "ID": "REST0038N2",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 追放者ジャミル 5",
+      "ID": "REST0040N2",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 族長マアドゥール 1",
+      "ID": "REST0051N5",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06227",
+   "name": "SK60",
+   "file": "textures/SK60.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ケンゾー",
+      "ID": "SKNS0060"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06228",
+   "name": "SK61",
+   "file": "textures/SK61.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ルトヴィン",
+      "ID": "SKNS0061"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06229",
+   "name": "SK62",
+   "file": "textures/SK62.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ラミラ",
+      "ID": "SKNS0062"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06230",
+   "name": "SK63",
+   "file": "textures/SK63.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ラモナ",
+      "ID": "SKNS0063"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06231",
+   "name": "SK64",
+   "file": "textures/SK64.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "サラ",
+      "ID": "SKNS0064"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06232",
+   "name": "SK66",
+   "file": "textures/SK66.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "パール",
+      "ID": "SKNS0066"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06233",
+   "name": "SK67",
+   "file": "textures/SK67.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ヘンリーゼ",
+      "ID": "SKNS0067"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06234",
+   "name": "SK68",
+   "file": "textures/SK68.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ヴァルヴァラ",
+      "ID": "SKNS0068"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06235",
+   "name": "SK69",
+   "file": "textures/SK69.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "キヌ",
+      "ID": "SKNS0069"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06236",
+   "name": "SK70",
+   "file": "textures/SK70.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ツネヨシ",
+      "ID": "SKNS0070"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06237",
+   "name": "SK71",
+   "file": "textures/SK71.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ソルヴェン",
+      "ID": "SKNS0071"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06238",
+   "name": "SK72",
+   "file": "textures/SK72.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 闇に育った子フランツ 2",
+      "ID": "REST0057N3",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "エルクルード",
+      "ID": "SKNS0072"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06239",
+   "name": "SK73",
+   "file": "textures/SK73.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ネフェレイア",
+      "ID": "SKNS0073"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06240",
+   "name": "SK74",
+   "file": "textures/SK74.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 時間魔術学生ガルメイン 1",
+      "ID": "REST0081N3",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 時間魔術学生ガルメイン 2",
+      "ID": "REST0082N3",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 時間魔術学生ガルメイン 4",
+      "ID": "REST0084N3",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 時間魔術学生ガルメイン 5",
+      "ID": "REST0085N5",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06241",
+   "name": "SK75",
+   "file": "textures/SK75.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ダルバエ",
+      "ID": "SKNS0075"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06242",
+   "name": "SK76",
+   "file": "textures/SK76.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "シズネ",
+      "ID": "SKNS0076"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06243",
+   "name": "SK77",
+   "file": "textures/SK77.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "エルトヴァール",
+      "ID": "SKNS0077"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06244",
+   "name": "SK78",
+   "file": "textures/SK78.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ミリカ",
+      "ID": "SKNS0078"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06245",
+   "name": "SK79",
+   "file": "textures/SK79.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ヤヨイ",
+      "ID": "SKNS0079"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06246",
+   "name": "SK80",
+   "file": "textures/SK80.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ツキコ",
+      "ID": "SKNS0080"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06247",
+   "name": "SK81",
+   "file": "textures/SK81.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "サガクレ",
+      "ID": "SKNS0081"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06248",
+   "name": "SK82",
+   "file": "textures/SK82.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "イリーナ",
+      "ID": "SKNS0082"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06249",
+   "name": "SK83",
+   "file": "textures/SK83.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ゴーストリリー",
+      "ID": "SKNS0083"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06250",
+   "name": "SK84",
+   "file": "textures/SK84.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "カーディアス",
+      "ID": "SKNS0084"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06251",
+   "name": "SK85",
+   "file": "textures/SK85.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "アナスタシア",
+      "ID": "SKNS0085"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06252",
+   "name": "SK86",
+   "file": "textures/SK86.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "グリンデル",
+      "ID": "SKNS0086"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06253",
+   "name": "SK87",
+   "file": "textures/SK87.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ホウザン",
+      "ID": "SKNS0087"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06254",
+   "name": "SK88",
+   "file": "textures/SK88.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "シロタエ",
+      "ID": "SKNS0088"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06255",
+   "name": "SK89",
+   "file": "textures/SK89.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "エレマイア",
+      "ID": "SKNS0089"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06256",
+   "name": "SK90",
+   "file": "textures/SK90.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "リムスール",
+      "ID": "SKNS0090"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06257",
+   "name": "SK91",
+   "file": "textures/SK91.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "スヴェルグ",
+      "ID": "SKNS0091"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06258",
+   "name": "SK92",
+   "file": "textures/SK92.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "リゼット",
+      "ID": "SKNS0092"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06259",
+   "name": "SK93",
+   "file": "textures/SK93.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "オフィーリア",
+      "ID": "SKNS0093"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06260",
+   "name": "SK94",
+   "file": "textures/SK94.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "アステリオン",
+      "ID": "SKNS0094"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06261",
+   "name": "SK95",
+   "file": "textures/SK95.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "セドリック",
+      "ID": "SKNS0095"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06262",
+   "name": "SK96",
+   "file": "textures/SK96.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ルビエラ",
+      "ID": "SKNS0096"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06263",
+   "name": "SK97",
+   "file": "textures/SK97.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "マドック",
+      "ID": "SKNS0097"
+     }
+    }
+   ]
+  }
+ ]
+}

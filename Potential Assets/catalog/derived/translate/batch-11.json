@@ -1,0 +1,3761 @@
+{
+ "batch": "batch-11",
+ "items": [
+  {
+   "cluster_id": "c01052",
+   "name": "Warriorskill_22",
+   "file": "sprites/Warriorskill_22.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "我慢",
+      "ID": "SKA02025",
+      "Category": "3.Survive",
+      "Rarity": 2,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "我慢",
+      "ID": "SKA02025M1",
+      "Category": "3.Survive"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "ガッツ",
+      "ID": "Guts",
+      "Desc": "HPスタックを消費せずにHPを回復できることがある__加えて、HPスタック減少効果を一定確率で無効化する",
+      "Category": "Common",
+      "Rarity": 2
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00237",
+   "name": "Warriorskill_23",
+   "file": "sprites/Warriorskill_23.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "秘伝の構え",
+      "ID": "SKEB0042",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "秘伝の構え",
+      "ID": "SKEB0042M1",
+      "Category": "9.Enemy - Boss"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01053",
+   "name": "Warriorskill_24",
+   "file": "sprites/Warriorskill_24.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ディフェンシブ",
+      "ID": "SKA01008M2",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01055",
+   "name": "Warriorskill_26",
+   "file": "sprites/Warriorskill_26.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "シールドバッシュ",
+      "ID": "SKA01008",
+      "Category": "0.Attack",
+      "Rarity": 1,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "シールドバッシュ",
+      "ID": "SKA01008M1",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00238",
+   "name": "Warriorskill_27X1",
+   "file": "sprites/Warriorskill_27X1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ブラッディスライス",
+      "ID": "SKAA0050M2",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01056",
+   "name": "Warriorskill_28",
+   "file": "sprites/Warriorskill_28.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "バッシュ",
+      "ID": "SRNA0019",
+      "Desc": "このスキルを使用するたび、敵に重傷/2ターンを付与する",
+      "Rarity": 3,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "戦斧の一撃",
+      "ID": "SKEB0033",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "ミートリッパー",
+      "ID": "SKAA0050",
+      "Category": "0.Attack",
+      "Rarity": 2,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "戦斧の一撃",
+      "ID": "SKEB0033M1",
+      "Category": "9.Enemy - Boss"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01058",
+   "name": "Warriorskill_30",
+   "file": "sprites/Warriorskill_30.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "力ため",
+      "ID": "SKA01024",
+      "Category": "0.Attack",
+      "Rarity": 1,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "力ため",
+      "ID": "SKA01024M1",
+      "Category": "0.Attack"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "全力",
+      "ID": "Fullpower",
+      "Desc": "使用回数消費量2倍。常時スキルブースト状態になる。",
+      "Category": "ModParts",
+      "Rarity": 4,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "全能",
+      "ID": "MainParam:All+",
+      "Desc": "筋力・技量・魔力・信仰の全てを増やす",
+      "Category": "Basic",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00239",
+   "name": "Warriorskill_31",
+   "file": "sprites/Warriorskill_31.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "先制攻撃",
+      "ID": "Firststrike",
+      "Desc": "一定確率で、戦闘開始時に敵のすべてのスキルをスタンさせる",
+      "Category": "Common",
+      "Rarity": 1
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "先制使用不可",
+      "ID": "Ignore:UseInit",
+      "Desc": "「戦闘開始時」のスキルトリガーが発動しない",
+      "Category": "Debuff",
+      "Rarity": 0
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01059",
+   "name": "Warriorskill_32",
+   "file": "sprites/Warriorskill_32.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "revent",
+     "column": "Icon",
+     "row": {
+      "name": "環境効果 - 濃霧",
+      "ID": "REENV018",
+      "Tag": [
+       "RoomState",
+       "Active",
+       "Guide",
+       "RoomEnv"
+      ],
+      "ParamKey": "Eventscene"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "雲隠れ",
+      "ID": "SKA03008M2",
+      "Category": "3.Survive"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "濃霧",
+      "ID": "StateEnv18",
+      "Desc": "双方、ターン開始時に、ランダムな盲目/5ターン/1部屋を得る",
+      "Category": "Env",
+      "Rarity": 7,
+      "Tag": [
+       "DStatus"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01060",
+   "name": "Warriorskill_33",
+   "file": "sprites/Warriorskill_33.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "パリィ",
+      "ID": "SRN20012",
+      "Desc": "このスキルを使うたび、受け流し+15%/1ターンを得る",
+      "Rarity": 2,
+      "audio": "star",
+      "ShortText": "+10%"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "オート: パリー",
+      "ID": "SRN40009",
+      "Desc": "このスキルを自動使用: 受け流しするたび",
+      "Rarity": 4,
+      "Tag": [
+       "NotFreeSkill"
+      ],
+      "audio": "star",
+      "ShortText": "AUTO"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "パリィ",
+      "ID": "SKA04013",
+      "Category": "3.Survive",
+      "Rarity": 4,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "パリィ",
+      "ID": "SKA04013M1",
+      "Category": "3.Survive"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01061",
+   "name": "Warriorskill_34",
+   "file": "sprites/Warriorskill_34.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "エンチャント",
+      "ID": "SRN30016",
+      "Desc": "このスキルの持つ物理属性効果は、代わりに魔法属性に置き換わる",
+      "Rarity": 3,
+      "audio": "star",
+      "ShortText": "P→M",
+      "ParamKey": "Skill:ElemConvert:P:M"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "魔法剣",
+      "ID": "SKA01002M2",
+      "Category": "0.Attack"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "{[NM-MainParam:1]}+{[NM-MainParam:3]}",
+      "ID": "MainParam:13+",
+      "Desc": "{[DC-MainParam:12+]}",
+      "Category": "Basic",
+      "Rarity": 3
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "{[NM-MainParam:1]}+{[NM-MainParam:3]}",
+      "ID": "MainParam:13*",
+      "Desc": "{[DC-MainParam:12+]}",
+      "Category": "Basic",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01062",
+   "name": "Warriorskill_35",
+   "file": "sprites/Warriorskill_35.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "霞蓮華",
+      "ID": "SKA06001M2",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01064",
+   "name": "Warriorskill_37",
+   "file": "sprites/Warriorskill_37.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "浸水",
+      "ID": "SKE00046M2",
+      "Category": "9.Enemy"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00240",
+   "name": "Warriorskill_38",
+   "file": "sprites/Warriorskill_38.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "トーメントヒット",
+      "ID": "SKAA0002",
+      "Category": "0.Attack",
+      "Rarity": 2,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "トーメントヒット",
+      "ID": "SKAA0002M1",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01065",
+   "name": "Warriorskill_39",
+   "file": "sprites/Warriorskill_39.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "アニメートウェポン",
+      "ID": "SKA04019M2",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01066",
+   "name": "Warriorskill_40",
+   "file": "sprites/Warriorskill_40.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "ブレイクシールド",
+      "ID": "SKA03007",
+      "Category": "2.Support",
+      "Rarity": 3,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ブレイクシールド",
+      "ID": "SKA03007M1",
+      "Category": "2.Support"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01067",
+   "name": "Warriorskill_41",
+   "file": "sprites/Warriorskill_41.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "パワー(弱)",
+      "ID": "SRN10001",
+      "Desc": "スキル威力+10%",
+      "Rarity": 1,
+      "audio": "star",
+      "ShortText": "+10%",
+      "ParamKey": "Skill:IncPower"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "パワー(中)",
+      "ID": "SRN30001",
+      "Desc": "スキル威力+30%",
+      "Rarity": 3,
+      "audio": "star",
+      "ShortText": "+30%",
+      "ParamKey": "Skill:IncPower"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "パワー(強)",
+      "ID": "SRN50001",
+      "Desc": "スキル威力+50%",
+      "Rarity": 5,
+      "audio": "rare",
+      "ShortText": "+50%",
+      "ParamKey": "Skill:IncPower"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "パワー(極)",
+      "ID": "SRN70002",
+      "Desc": "スキル威力+100%",
+      "Rarity": 7,
+      "audio": "rare",
+      "ShortText": "+100%",
+      "ParamKey": "Skill:IncPower"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01068",
+   "name": "Warriorskill_42",
+   "file": "sprites/Warriorskill_42.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "医療行為",
+      "ID": "SKAA0003",
+      "Category": "3.Survive",
+      "Rarity": 5,
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "医療行為",
+      "ID": "SKAA0003M1",
+      "Category": "3.Survive"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00241",
+   "name": "Warriorskill_43X1",
+   "file": "sprites/Warriorskill_43X1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "消耗戦",
+      "ID": "WarOfAttrition",
+      "Desc": "バーストスキルを使用するたび、最後に使ったスキルの使用回数-5。敵がバーストスキルを使用するたび、敵が最後に使ったスキルの使用回数-5。",
+      "Category": "Unique",
+      "Rarity": 4,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00073",
+   "name": "Warriorskill_44",
+   "file": "sprites/Warriorskill_44.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 4,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "千日鍛錬",
+      "ID": "CNTU1902",
+      "Rarity": 2,
+      "ParamKey": "Union"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "マッスルコントラクション",
+      "ID": "SKA04001M3",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00242",
+   "name": "Warriorskill_45_nobgX1",
+   "file": "sprites/Warriorskill_45_nobgX1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "スレートブレイカー",
+      "ID": "SKAA0044M2",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00028",
+   "name": "Warriorskill_47",
+   "file": "sprites/Warriorskill_47.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 5,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ヘビースタンス",
+      "ID": "SKA05003M2",
+      "Category": "0.Attack"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ヘビースタンス 解除",
+      "ID": "SKA05003M3",
+      "Category": "0.Attack"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "虚無耐性",
+      "ID": "VArmor",
+      "Desc": "受ける虚無ダメージを軽減する__最大75%(変異所持時は95%)",
+      "Category": "Common",
+      "Rarity": 4
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "魔法耐性変換",
+      "ID": "ArmorConvert:M:V",
+      "Desc": "魔法耐性の一部を虚無耐性に加算する",
+      "Category": "Common",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01071",
+   "name": "Warriorskill_49",
+   "file": "sprites/Warriorskill_49.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "サプライ(弱)",
+      "ID": "SRN20002",
+      "Desc": "使用回数上限+25%",
+      "Rarity": 2,
+      "Tag": [
+       "NotFreeSkill"
+      ],
+      "audio": "star",
+      "ShortText": "+25%",
+      "ParamKey": "Skill:PossNum*"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "サプライ(中)",
+      "ID": "SRN40002",
+      "Desc": "使用回数上限+50%",
+      "Rarity": 4,
+      "Tag": [
+       "NotFreeSkill"
+      ],
+      "audio": "star",
+      "ShortText": "+50%",
+      "ParamKey": "Skill:PossNum*"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "サプライ(強)",
+      "ID": "SRN60002",
+      "Desc": "使用回数上限+80%",
+      "Rarity": 6,
+      "Tag": [
+       "NotFreeSkill"
+      ],
+      "audio": "rare",
+      "ShortText": "+80%",
+      "ParamKey": "Skill:PossNum*"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "サプライ(極)",
+      "ID": "SRN70004",
+      "Desc": "使用回数上限+100%",
+      "Rarity": 7,
+      "Tag": [
+       "NotFreeSkill"
+      ],
+      "audio": "rare",
+      "ShortText": "+100%",
+      "ParamKey": "Skill:PossNum*"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01081",
+   "name": "claw_strike",
+   "file": "sprites/claw_strike.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "アビサルダイブ",
+      "ID": "SKEB0089",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "アビサルダイブ",
+      "ID": "SKEB0089M1",
+      "Category": "9.Enemy - Boss"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04699",
+   "name": "cloak_02",
+   "file": "sprites/cloak_02.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "43x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "外套",
+      "ID": "CMPGC218",
+      "Rarity": 2,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "se-bag",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "外套",
+      "ID": "CMPGC318",
+      "Rarity": 3,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "se-bag",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "外套",
+      "ID": "CMPGC418",
+      "Rarity": 4,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "se-bag",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "外套",
+      "ID": "GER00018",
+      "Rarity": 1,
+      "Tag": [
+       "Basic",
+       "Random"
+      ],
+      "audio": "se-bag"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04710",
+   "name": "cloak_17",
+   "file": "sprites/cloak_17.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "53x60",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "透明マント",
+      "ID": "CMPGR099",
+      "Rarity": 7,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "透明マント",
+      "ID": "GERU7303",
+      "Rarity": 7,
+      "Tag": [
+       "Unique"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01085",
+   "name": "cloak_27X1",
+   "file": "sprites/cloak_27X1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "60x60",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "月隠れ",
+      "ID": "CMPGR134",
+      "Rarity": 7,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "月隠れ",
+      "ID": "GERU7213",
+      "Rarity": 7,
+      "Tag": [
+       "Unique"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "ヴァーシライト鉱石",
+      "ID": "SPIS0125",
+      "Tag": [
+       "Others"
+      ],
+      "ParamKey": "CampItem"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04718",
+   "name": "cloak_28",
+   "file": "sprites/cloak_28.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "48x55",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "傀儡",
+      "ID": "CMPGR077",
+      "Rarity": 6,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "傀儡",
+      "ID": "GERU6211",
+      "Rarity": 6,
+      "Tag": [
+       "Unique",
+       "SpecialStat"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01086",
+   "name": "cloak_33",
+   "file": "sprites/cloak_33.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "46x62",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "冥王の外套",
+      "ID": "CMPGR122",
+      "Rarity": 5,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "冥王の外套",
+      "ID": "GERU5219",
+      "Rarity": 5,
+      "Tag": [
+       "Unique",
+       "Random"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "兎印のコンテナL",
+      "ID": "SPIS0018",
+      "Tag": [
+       "Others"
+      ],
+      "ParamKey": "CampItem"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00075",
+   "name": "defiled_leaves",
+   "file": "sprites/defiled_leaves.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 4,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "異常付与強化",
+      "ID": "Effective",
+      "Desc": "敵への状態異常付与確率が向上する",
+      "Category": "Common",
+      "Rarity": 1
+     }
+    },
+    {
+     "table": "tips",
+     "column": "Icon",
+     "row": {
+      "name": "状態命中判定",
+      "ID": "TIPS_HitCalcA",
+      "Category": "Skill"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00243",
+   "name": "dragon_firebreath",
+   "file": "sprites/dragon_firebreath.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "フレイムスロワー / オイルスプレッド",
+      "ID": "SKE00044",
+      "Category": "9.Enemy",
+      "Rarity": 6,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "フレイムスロワー",
+      "ID": "SKE00044M1",
+      "Category": "9.Enemy"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "蛮勇",
+      "ID": "SavageValor",
+      "Desc": "ターン開始時、敵の持つダメージ無効化効果(分身・透明・障壁・遮蔽・無敵など)を解除する。",
+      "Category": "Unique",
+      "Rarity": 4,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00076",
+   "name": "drainlife",
+   "file": "sprites/drainlife.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 4,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "アンレジスト",
+      "ID": "SRN40005",
+      "Desc": "このスキルが与える状態異常は抵抗されない",
+      "Rarity": 4,
+      "audio": "star",
+      "ParamKey": "Skill:CantBeResist"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00244",
+   "name": "drunkenness",
+   "file": "sprites/drunkenness.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "飲酒",
+      "ID": "SKAA0041",
+      "Category": "2.Support",
+      "Rarity": 4,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "飲酒",
+      "ID": "SKAA0041M1",
+      "Category": "2.Support"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "満腹感",
+      "ID": "Satiety",
+      "Desc": "HPスタックが最大のとき、毎ターンブレイブが+1増加する",
+      "Category": "ModParts",
+      "Rarity": 4,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01088",
+   "name": "fel_CryX1",
+   "file": "sprites/fel_CryX1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "精神崩壊",
+      "ID": "SKEB0060",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "精神崩壊",
+      "ID": "SKEB0060M1",
+      "Category": "9.Enemy - Boss"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01089",
+   "name": "fell_skin",
+   "file": "sprites/fell_skin.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "黒鱗",
+      "ID": "SKEB0107",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "黒鱗",
+      "ID": "SKEB0107M1",
+      "Category": "9.Enemy - Boss"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01092",
+   "name": "flock_of_mice",
+   "file": "sprites/flock_of_mice.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "コウモリ変化 解除",
+      "ID": "SKA0X008M3",
+      "Category": "0.Attack"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "分散状態",
+      "ID": "StateRace08X1",
+      "Desc": "回避するたび、低確率でHPスタックを1回復する",
+      "Category": "Race",
+      "Rarity": 7
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "前線指揮",
+      "ID": "FrontlineCommand",
+      "Desc": "召喚スキルを使用したときにブレイブがリセットされなくなる",
+      "Category": "ModParts",
+      "Rarity": 4,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04738",
+   "name": "fraus_icon_X1",
+   "file": "sprites/fraus_icon_X1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "フラウスの加護",
+      "ID": "FleurProtection",
+      "Desc": "HP・HPスタックが0になっても死亡しなくなる。ミニオンが召喚できない。全スキルの使用回数消費量+3、石化+2。",
+      "Category": "Unique",
+      "Rarity": 7,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04739",
+   "name": "fraus_icon_X2",
+   "file": "sprites/fraus_icon_X2.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "フラウスの支配",
+      "ID": "FlausProtOnMinion",
+      "Desc": "ミニオンを召喚するたび、そのミニオンに「フラウスの加護」を付与する。",
+      "Category": "Unique",
+      "Rarity": 6,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01094",
+   "name": "hit",
+   "file": "sprites/hit.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "東方の剣術",
+      "ID": "EasternSwordarts",
+      "Desc": "直接攻撃するスキル効果は、追加で+1回発動する。",
+      "Category": "Unique",
+      "Rarity": 7,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04755",
+   "name": "icon-83220935_p3_master1200",
+   "file": "sprites/icon-83220935_p3_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ゴールデンスタチュー",
+      "ID": "EERM0005",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "Risky"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04756",
+   "name": "icon-84112998_p0_master1200",
+   "file": "sprites/icon-84112998_p0_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "牛鬼",
+      "ID": "EERM0007",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "Risky"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04757",
+   "name": "icon-88423784_p1_master1200",
+   "file": "sprites/icon-88423784_p1_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ヤクシニー",
+      "ID": "EERM0004",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "Risky"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04758",
+   "name": "icon-BehemothA",
+   "file": "sprites/icon-BehemothA.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ビヒモス",
+      "ID": "EERM0001",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "Risky"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04759",
+   "name": "icon-BoneGolemF",
+   "file": "sprites/icon-BoneGolemF.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ヨトゥン",
+      "ID": "EERM0010",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "Risky"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04760",
+   "name": "icon-ButcherE",
+   "file": "sprites/icon-ButcherE.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ブッチャー",
+      "ID": "EERM0006",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "Risky"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04761",
+   "name": "icon-DSS01",
+   "file": "sprites/icon-DSS01.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Icon",
+     "row": {
+      "name": "古代の予言者",
+      "ID": "DSS00001"
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Icon",
+     "row": {
+      "name": "古代の予言者",
+      "ID": "DGD001",
+      "Rarity": 7,
+      "Tag": [
+       "FarAnotherBoss",
+       "Disaster",
+       "NoEffect"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04762",
+   "name": "icon-DSS02",
+   "file": "sprites/icon-DSS02.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Icon",
+     "row": {
+      "name": "外なる尖兵",
+      "ID": "DSS00002"
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Icon",
+     "row": {
+      "name": "外なる尖兵",
+      "ID": "DGD002",
+      "Rarity": 7,
+      "Tag": [
+       "FarAnotherBoss",
+       "Disaster",
+       "NoEffect"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04763",
+   "name": "icon-DSS03",
+   "file": "sprites/icon-DSS03.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Icon",
+     "row": {
+      "name": "復讐者",
+      "ID": "DSS00003"
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Icon",
+     "row": {
+      "name": "復讐者",
+      "ID": "DGD003",
+      "Rarity": 7,
+      "Tag": [
+       "FarAnotherBoss",
+       "Disaster",
+       "NoEffect"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04764",
+   "name": "icon-DSS04",
+   "file": "sprites/icon-DSS04.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Icon",
+     "row": {
+      "name": "フラウス",
+      "ID": "DSS00004"
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Icon",
+     "row": {
+      "name": "フラウス",
+      "ID": "DGD004",
+      "Rarity": 7,
+      "Tag": [
+       "FarAnotherBoss",
+       "Disaster",
+       "NoEffect"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04765",
+   "name": "icon-DSS05",
+   "file": "sprites/icon-DSS05.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Icon",
+     "row": {
+      "name": "外なる瞳",
+      "ID": "DSS00005"
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Icon",
+     "row": {
+      "name": "外なる瞳",
+      "ID": "DGD005",
+      "Rarity": 7,
+      "Tag": [
+       "FarAnotherBoss",
+       "Disaster",
+       "NoEffect"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01097",
+   "name": "icon-DSS06",
+   "file": "sprites/icon-DSS06.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Icon",
+     "row": {
+      "name": "プライド",
+      "ID": "DSS00006"
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Icon",
+     "row": {
+      "name": "プライド",
+      "ID": "DGD006",
+      "Rarity": 7,
+      "Tag": [
+       "FarAnotherBoss",
+       "Disaster",
+       "NoEffect"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04766",
+   "name": "icon-DSS07",
+   "file": "sprites/icon-DSS07.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Icon",
+     "row": {
+      "name": "アゴニス",
+      "ID": "DSS00007"
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Icon",
+     "row": {
+      "name": "アゴニス",
+      "ID": "DGD007",
+      "Rarity": 7,
+      "Tag": [
+       "FarAnotherBoss",
+       "Disaster",
+       "NoEffect"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04767",
+   "name": "icon-DSS08",
+   "file": "sprites/icon-DSS08.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Icon",
+     "row": {
+      "name": "オルクス",
+      "ID": "DSS00008"
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Icon",
+     "row": {
+      "name": "オルクス",
+      "ID": "DGD008",
+      "Rarity": 7,
+      "Tag": [
+       "FarAnotherBoss",
+       "Disaster",
+       "NoEffect"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04768",
+   "name": "icon-DSS09",
+   "file": "sprites/icon-DSS09.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Icon",
+     "row": {
+      "name": "フェンリル",
+      "ID": "DSS00009"
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Icon",
+     "row": {
+      "name": "フェンリル",
+      "ID": "DGD009",
+      "Rarity": 7,
+      "Tag": [
+       "FarAnotherBoss",
+       "Disaster"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01098",
+   "name": "icon-DSS10",
+   "file": "sprites/icon-DSS10.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Icon",
+     "row": {
+      "name": "オーディン",
+      "ID": "DSS00010"
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Icon",
+     "row": {
+      "name": "オーディン",
+      "ID": "DGD010",
+      "Rarity": 7,
+      "Tag": [
+       "FarAnotherBoss",
+       "Disaster",
+       "NoEffect"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01099",
+   "name": "icon-DSS11",
+   "file": "sprites/icon-DSS11.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Icon",
+     "row": {
+      "name": "黄泉の使い",
+      "ID": "DSS00011"
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Icon",
+     "row": {
+      "name": "黄泉の使い",
+      "ID": "DGD011",
+      "Rarity": 7,
+      "Tag": [
+       "FarAnotherBoss",
+       "Disaster",
+       "NoEffect"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04769",
+   "name": "icon-DSS12",
+   "file": "sprites/icon-DSS12.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Icon",
+     "row": {
+      "name": "フレンジーガイ",
+      "ID": "DSS00012"
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Icon",
+     "row": {
+      "name": "フレンジーガイ",
+      "ID": "DGD012",
+      "Rarity": 7,
+      "Tag": [
+       "FarAnotherBoss",
+       "Disaster",
+       "NoEffect"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04770",
+   "name": "icon-DSS13",
+   "file": "sprites/icon-DSS13.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Icon",
+     "row": {
+      "name": "ベルゼバブ",
+      "ID": "DSS00013"
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Icon",
+     "row": {
+      "name": "ベルゼバブ",
+      "ID": "DGD013",
+      "Rarity": 7,
+      "Tag": [
+       "FarAnotherBoss",
+       "Disaster",
+       "NoEffect"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04771",
+   "name": "icon-DSS14",
+   "file": "sprites/icon-DSS14.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Icon",
+     "row": {
+      "name": "オキツグ",
+      "ID": "DSS00014"
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Icon",
+     "row": {
+      "name": "オキツグ",
+      "ID": "DGD014",
+      "Rarity": 7,
+      "Tag": [
+       "FarAnotherBoss",
+       "Disaster"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04772",
+   "name": "icon-DSS15",
+   "file": "sprites/icon-DSS15.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Icon",
+     "row": {
+      "name": "エルヴァバルド",
+      "ID": "DSS00015"
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Icon",
+     "row": {
+      "name": "エルヴァバルド",
+      "ID": "DGD015",
+      "Rarity": 7,
+      "Tag": [
+       "FarAnotherBoss",
+       "Disaster"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04773",
+   "name": "icon-DSS16",
+   "file": "sprites/icon-DSS16.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Icon",
+     "row": {
+      "name": "ガルダヴァス",
+      "ID": "DSS00016"
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Icon",
+     "row": {
+      "name": "ガルダヴァス",
+      "ID": "DGD016",
+      "Rarity": 7,
+      "Tag": [
+       "FarAnotherBoss",
+       "Disaster",
+       "NoEffect"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04774",
+   "name": "icon-DSS17",
+   "file": "sprites/icon-DSS17.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Icon",
+     "row": {
+      "name": "カロムス",
+      "ID": "DSS00017"
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Icon",
+     "row": {
+      "name": "カロムス",
+      "ID": "DGD017",
+      "Rarity": 7,
+      "Tag": [
+       "FarAnotherBoss",
+       "Disaster",
+       "NoEffect"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04775",
+   "name": "icon-DSS18",
+   "file": "sprites/icon-DSS18.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Icon",
+     "row": {
+      "name": "黄昏人",
+      "ID": "DSS00018"
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Icon",
+     "row": {
+      "name": "黄昏人",
+      "ID": "DGD018",
+      "Rarity": 7,
+      "Tag": [
+       "FarAnotherBoss",
+       "Disaster"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04776",
+   "name": "icon-DSS19",
+   "file": "sprites/icon-DSS19.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Icon",
+     "row": {
+      "name": "黒麒麟",
+      "ID": "DSS00019"
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Icon",
+     "row": {
+      "name": "黒麒麟",
+      "ID": "DGD019",
+      "Rarity": 7,
+      "Tag": [
+       "FarAnotherBoss",
+       "Disaster"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04777",
+   "name": "icon-DakiniD",
+   "file": "sprites/icon-DakiniD.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "カーリー",
+      "ID": "EERM0008",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "Risky"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04778",
+   "name": "icon-Dimensional BeastF",
+   "file": "sprites/icon-Dimensional_BeastF.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ティンダロス",
+      "ID": "EERM0003",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "Risky"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04780",
+   "name": "icon-Fate SpinnerD",
+   "file": "sprites/icon-Fate_SpinnerD.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ファーストヘッド",
+      "ID": "EERM0009",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "Risky"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04781",
+   "name": "icon-JB01",
+   "file": "sprites/icon-JB01.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS25"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS77"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS129"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS181"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04782",
+   "name": "icon-JB02",
+   "file": "sprites/icon-JB02.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS26"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS78"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS130"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS182"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04783",
+   "name": "icon-JB03",
+   "file": "sprites/icon-JB03.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS27"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS79"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS131"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS183"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04784",
+   "name": "icon-JB04",
+   "file": "sprites/icon-JB04.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS28"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS80"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS132"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS184"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04785",
+   "name": "icon-JB05",
+   "file": "sprites/icon-JB05.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS29"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS81"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS133"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS185"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04786",
+   "name": "icon-JB06",
+   "file": "sprites/icon-JB06.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS30"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS82"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS134"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS186"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04787",
+   "name": "icon-JB07",
+   "file": "sprites/icon-JB07.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS31"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS83"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS135"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS187"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04788",
+   "name": "icon-JB08",
+   "file": "sprites/icon-JB08.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS32"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS84"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS136"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS188"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04789",
+   "name": "icon-JB09",
+   "file": "sprites/icon-JB09.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS33"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS85"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS137"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS189"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04790",
+   "name": "icon-JB10",
+   "file": "sprites/icon-JB10.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS34"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS86"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS138"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS190"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04791",
+   "name": "icon-JB11",
+   "file": "sprites/icon-JB11.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS35"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS87"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS139"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS191"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04792",
+   "name": "icon-JB12",
+   "file": "sprites/icon-JB12.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS36"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS88"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS140"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS192"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04793",
+   "name": "icon-JB13",
+   "file": "sprites/icon-JB13.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS37"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS89"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS141"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS193"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04794",
+   "name": "icon-JB14",
+   "file": "sprites/icon-JB14.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS38"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS90"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS142"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS194"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04795",
+   "name": "icon-JB15",
+   "file": "sprites/icon-JB15.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS39"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS91"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS143"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS195"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04796",
+   "name": "icon-JB16",
+   "file": "sprites/icon-JB16.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS40"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS92"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS144"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS196"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04797",
+   "name": "icon-JB17",
+   "file": "sprites/icon-JB17.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS41"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS93"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS145"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS197"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04798",
+   "name": "icon-JB18",
+   "file": "sprites/icon-JB18.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS42"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS94"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS146"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS198"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04799",
+   "name": "icon-JB19",
+   "file": "sprites/icon-JB19.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS43"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS95"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS147"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS199"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04800",
+   "name": "icon-JB20",
+   "file": "sprites/icon-JB20.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS44"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS96"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS148"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS200"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04801",
+   "name": "icon-JB21",
+   "file": "sprites/icon-JB21.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS45"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS97"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS149"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS201"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04802",
+   "name": "icon-JB22",
+   "file": "sprites/icon-JB22.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS46"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS98"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS150"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS202"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04803",
+   "name": "icon-JB23",
+   "file": "sprites/icon-JB23.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS47"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS99"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS151"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS203"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04804",
+   "name": "icon-JB24",
+   "file": "sprites/icon-JB24.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS48"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS100"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS152"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS204"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04805",
+   "name": "icon-JB25",
+   "file": "sprites/icon-JB25.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS49"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS101"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS153"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS205"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04806",
+   "name": "icon-JB26",
+   "file": "sprites/icon-JB26.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS50"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS102"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS154"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS206"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04807",
+   "name": "icon-JB27",
+   "file": "sprites/icon-JB27.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS51"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS103"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS155"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS207"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04808",
+   "name": "icon-JB28",
+   "file": "sprites/icon-JB28.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS52"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS104"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS156"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS208"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04809",
+   "name": "icon-JB29",
+   "file": "sprites/icon-JB29.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS53"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS105"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS157"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS209"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04810",
+   "name": "icon-JB30",
+   "file": "sprites/icon-JB30.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS54"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS106"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS158"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS210"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04811",
+   "name": "icon-JB31",
+   "file": "sprites/icon-JB31.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS601"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS602"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS603"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS604"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04812",
+   "name": "icon-JB32",
+   "file": "sprites/icon-JB32.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS606"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS607"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS608"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS609"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04813",
+   "name": "icon-JB33",
+   "file": "sprites/icon-JB33.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "異界孔",
+      "ID": "DG0017M1MS60"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "工場跡",
+      "ID": "DG0018M1MS60"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "屋敷",
+      "ID": "DG0019M1MS60"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "神塚",
+      "ID": "DG0020M1MS60"
+     }
+    }
+   ]
+  }
+ ]
+}

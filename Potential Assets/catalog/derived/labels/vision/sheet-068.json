@@ -1,0 +1,530 @@
+{
+ "unit": "sheet-068",
+ "records": [
+  {
+   "cluster_id": "c03285",
+   "name": "Mining_26_forceps",
+   "slug": "mining-forceps",
+   "description": "A pair of dark metal tongs with a round clamp ring at the pivot and two long handles.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03286",
+   "name": "Mining_27_chain",
+   "slug": "mining-chain",
+   "description": "A length of rusty iron chain coiled in a loose curve.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03287",
+   "name": "Mining_28_retaining_beam",
+   "slug": "mining-retaining-beam",
+   "description": "Two weathered wooden beams joined at a right angle with a metal bracket, a mine support.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03288",
+   "name": "Mining_29_old_lamp",
+   "slug": "mining-old-lamp",
+   "description": "An old iron oil lantern with a glowing yellow flame behind glass and a carrying loop on top.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03289",
+   "name": "Mining_30_jaspillite",
+   "slug": "jaspillite-rock",
+   "description": "A grey rock slab streaked with red-pink bands.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03290",
+   "name": "Mining_31_rainbow_pyrite",
+   "slug": "rainbow-pyrite",
+   "description": "A rock chunk banded in pink, teal and blue stripes.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03291",
+   "name": "Mining_33_magic_crystal",
+   "slug": "magic-crystal-ore",
+   "description": "A dark grey ore rock studded with magenta crystal shards.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03292",
+   "name": "Mining_34_red_crystal",
+   "slug": "red-crystal-ore",
+   "description": "A dark grey ore rock studded with red crystal shards.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03293",
+   "name": "Mining_35_orange_crystal",
+   "slug": "orange-crystal-ore",
+   "description": "A brown ore rock studded with orange crystal chunks.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03294",
+   "name": "Mining_36_purple_crystal",
+   "slug": "purple-crystal-ore",
+   "description": "A dark purple ore rock studded with violet crystal chunks.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03296",
+   "name": "Mining_38_blue_crystal",
+   "slug": "blue-crystal-ore",
+   "description": "A grey stone slab with small blue crystals along its edges.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03299",
+   "name": "Mining_41_great_green_crystal",
+   "slug": "great-green-crystal",
+   "description": "A large cluster of glossy lime-green crystals on a grey stone base.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03300",
+   "name": "Mining_42_great_red_crystal",
+   "slug": "great-red-crystal",
+   "description": "A large cluster of crimson crystals on a grey stone base.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03301",
+   "name": "Mining_43_great_purple_crystal",
+   "slug": "great-purple-crystal",
+   "description": "A large cluster of violet crystals on a grey stone base.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03303",
+   "name": "Mining_45_runepart",
+   "slug": "rune-part-stone",
+   "description": "A dark stone slab cracked by glowing cyan veins.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03306",
+   "name": "Mining_48_mountaineering_hook",
+   "slug": "mountaineering-hook",
+   "description": "Two iron pitons with a length of chain ending in a ring.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03309",
+   "name": "Mining_51_iron_ingot",
+   "slug": "iron-ingot",
+   "description": "A polished grey-silver metal ingot bar.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03310",
+   "name": "Mining_52_copper_ingot",
+   "slug": "copper-ingot",
+   "description": "A triangular-prism copper-coloured ingot.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03311",
+   "name": "Mining_53_silver_ingot",
+   "slug": "silver-ingot",
+   "description": "A pale silver metal ingot bar.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03312",
+   "name": "Mining_54_gold_ingot",
+   "slug": "gold-ingot",
+   "description": "A shiny gold ingot bar.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03313",
+   "name": "Mining_55_blackiron_ingot",
+   "slug": "blackiron-ingot",
+   "description": "A dark charcoal-black iron ingot bar.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03314",
+   "name": "Mining_56_demonic_ingot",
+   "slug": "demonic-ingot",
+   "description": "A glossy red-orange ingot bar with a molten look.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03315",
+   "name": "Mining_57_magic_ingot",
+   "slug": "magic-ingot",
+   "description": "A teal-green ingot bar with faint engraved markings.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03316",
+   "name": "Mining_58_space_ingot",
+   "slug": "space-ingot",
+   "description": "A glowing purple ingot bar wrapped in swirling violet energy.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03317",
+   "name": "Mining_59_fire_ingot",
+   "slug": "fire-ingot",
+   "description": "An orange-bronze ingot bar with carved symbols on its face.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

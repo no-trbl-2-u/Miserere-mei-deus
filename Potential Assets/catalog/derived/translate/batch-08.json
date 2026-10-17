@@ -1,0 +1,3293 @@
+{
+ "batch": "batch-08",
+ "items": [
+  {
+   "cluster_id": "c03879",
+   "name": "Skill_252",
+   "file": "sprites/Skill_252.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "エナジースラッシュ",
+      "ID": "SKA01002",
+      "Category": "0.Attack",
+      "Rarity": 1,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "エナジースラッシュ",
+      "ID": "SKA01002M1",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03881",
+   "name": "Skill_255",
+   "file": "sprites/Skill_255.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "覇道",
+      "ID": "Hegemony",
+      "Desc": "エリートモンスターの出現率が劇的に上昇する",
+      "Category": "Unique",
+      "Rarity": 7,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03884",
+   "name": "Skill_258",
+   "file": "sprites/Skill_258.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "暗視 解除",
+      "ID": "SKA0X007M3",
+      "Category": "4.Special"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00067",
+   "name": "Skill_262",
+   "file": "sprites/Skill_262.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 4,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "鏡面体",
+      "ID": "MirrorBody",
+      "Desc": "魔法ダメージを受けるたび、魔法貫通+25%/5ターンを得る",
+      "Category": "Unique",
+      "Rarity": 5,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03888",
+   "name": "Skill_264",
+   "file": "sprites/Skill_264.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "時空間転移",
+      "ID": "SpaceTimeTransition",
+      "Desc": "自身のターン経過時効果が、追加で+2回発動するようになる",
+      "Category": "Unique",
+      "Rarity": 7,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03890",
+   "name": "Skill_266",
+   "file": "sprites/Skill_266.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "エナジーストリーム",
+      "ID": "SKA04012",
+      "Category": "2.Support",
+      "Rarity": 4,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "エナジーストリーム",
+      "ID": "SKA04012M1",
+      "Category": "2.Support"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00915",
+   "name": "Skill_267",
+   "file": "sprites/Skill_267.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "エナジーボルテクス",
+      "ID": "SKA04012M2",
+      "Category": "2.Support"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00068",
+   "name": "Skill_269",
+   "file": "sprites/Skill_269.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 4,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ストーンレイン",
+      "ID": "SKA04022M2",
+      "Category": "3.Survive"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03893",
+   "name": "Skill_273",
+   "file": "sprites/Skill_273.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "アンホーリーオーラ",
+      "ID": "SKA04008M3",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00207",
+   "name": "Skill_275",
+   "file": "sprites/Skill_275.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "ナイトメアハーベスト",
+      "ID": "SKEB0006",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ナイトメアハーベスト",
+      "ID": "SKEB0006M1",
+      "Category": "9.Enemy - Boss"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00208",
+   "name": "Skill_276",
+   "file": "sprites/Skill_276.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "妖精の魔法弾",
+      "ID": "GainSpellBullet:ByShield",
+      "Desc": "シールドを得るたび、その50%分の光弾を得る",
+      "Category": "Unique",
+      "Rarity": 7,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03897",
+   "name": "Skill_280",
+   "file": "sprites/Skill_280.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "虹色の光",
+      "ID": "SKA05020",
+      "Category": "0.Attack",
+      "Rarity": 5,
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "虹色の光",
+      "ID": "SKA05020M1",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03898",
+   "name": "Skill_281",
+   "file": "sprites/Skill_281.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "バックスタブ",
+      "ID": "SKA04008",
+      "Category": "0.Attack",
+      "Rarity": 4,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "バックスタブ",
+      "ID": "SKA04008M1",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00920",
+   "name": "Skill_291",
+   "file": "sprites/Skill_291.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "虚視",
+      "ID": "SKEB0097",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "虚視",
+      "ID": "SKEB0097M1",
+      "Category": "9.Enemy - Boss"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03902",
+   "name": "Skill_292",
+   "file": "sprites/Skill_292.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "バーティカルディバイド",
+      "ID": "SKA04001M4",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03903",
+   "name": "Skill_293",
+   "file": "sprites/Skill_293.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "バトルクライ",
+      "ID": "SKA04007",
+      "Category": "2.Support",
+      "Rarity": 4,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "バトルクライ",
+      "ID": "SKA04007M1",
+      "Category": "2.Support"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "武神",
+      "ID": "AbsCritInAllSkillsAlt",
+      "Desc": "所持スキルが全てオルトモードのとき、必ずクリティカルするようになる。",
+      "Category": "Unique",
+      "Rarity": 6,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00209",
+   "name": "Skill_295",
+   "file": "sprites/Skill_295.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "quest",
+     "column": "Icon1",
+     "row": {
+      "name": "名誉の戦士団",
+      "ID": "QST00011"
+     }
+    },
+    {
+     "table": "quest",
+     "column": "Icon1",
+     "row": {
+      "name": "悲嘆の残党",
+      "ID": "QST00072"
+     }
+    },
+    {
+     "table": "quest",
+     "column": "Icon1",
+     "row": {
+      "name": "外なる光教団",
+      "ID": "QST00093"
+     }
+    },
+    {
+     "table": "quest",
+     "column": "Icon1",
+     "row": {
+      "name": "北方守護の要",
+      "ID": "QST00107"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03905",
+   "name": "Skill_298",
+   "file": "sprites/Skill_298.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "吹き飛ばす",
+      "ID": "SKE00003M2",
+      "Category": "9.Enemy"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "自爆態勢",
+      "ID": "SKE00012M2",
+      "Category": "9.Enemy"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03907",
+   "name": "Skill_301",
+   "file": "sprites/Skill_301.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "睨みつける/自爆態勢",
+      "ID": "SKE00012",
+      "Category": "9.Enemy",
+      "Rarity": 5,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "睨みつける",
+      "ID": "SKE00012M1",
+      "Category": "9.Enemy"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03911",
+   "name": "Skill_304",
+   "file": "sprites/Skill_304.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "分身の術",
+      "ID": "SKA02020M2",
+      "Category": "1.Summon"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "残像",
+      "ID": "Afterimage",
+      "Desc": "敵の攻撃を回避するたび、分身/1戦闘を得る",
+      "Category": "Unique",
+      "Rarity": 5,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03912",
+   "name": "Skill_305",
+   "file": "sprites/Skill_305.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "挑発",
+      "ID": "SKA0X013",
+      "Category": "2.Support",
+      "Rarity": 7,
+      "Tag": [
+       "RaceSkill"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "天裂く咆哮",
+      "ID": "SKEB0085",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "挑発",
+      "ID": "SKA0X013M1",
+      "Category": "2.Support"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "天裂く咆哮",
+      "ID": "SKEB0085M1",
+      "Category": "9.Enemy - Boss"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03913",
+   "name": "Skill_306",
+   "file": "sprites/Skill_306.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "反射ダメージ強化",
+      "ID": "IncPow:ReflectDamage",
+      "Desc": "{[DC-IncPow:Burn]}",
+      "Category": "Common",
+      "Rarity": 3
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "反射ダメージ耐性",
+      "ID": "Armor:ReflectDamage",
+      "Desc": "反射ダメージの受ける量が減る",
+      "Category": "Common",
+      "Rarity": 1
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03918",
+   "name": "Skill_316",
+   "file": "sprites/Skill_316.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "クイックステップ",
+      "ID": "SKA03011M2",
+      "Category": "2.Support"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03919",
+   "name": "Skill_317",
+   "file": "sprites/Skill_317.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "アクティブスタンス",
+      "ID": "SKA04010M2",
+      "Category": "2.Support"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "{[NM-MainParam:1]}+{[NM-MainParam:2]}",
+      "ID": "MainParam:12+",
+      "Desc": "複数の基礎パラメータを増やす",
+      "Category": "Basic",
+      "Rarity": 3
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "{[NM-MainParam:1]}+{[NM-MainParam:2]}",
+      "ID": "MainParam:12*",
+      "Desc": "{[DC-MainParam:12+]}",
+      "Category": "Basic",
+      "Rarity": 4
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "{[NM-MainParam:1]}+{[NM-MainParam:2]}",
+      "ID": "MainParam:12/",
+      "Desc": "{[DC-MainParam:1/]}",
+      "Category": "Debuff",
+      "Rarity": 0
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03921",
+   "name": "Skill_320",
+   "file": "sprites/Skill_320.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "クリティカル(弱)",
+      "ID": "SRN10003",
+      "Desc": "スキルのクリティカル率+10%",
+      "Rarity": 1,
+      "audio": "star",
+      "ShortText": "+10%",
+      "ParamKey": "Skill:CritRate+"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "クリティカル(中)",
+      "ID": "SRN30002",
+      "Desc": "スキルのクリティカル率+15%",
+      "Rarity": 3,
+      "audio": "star",
+      "ShortText": "+15%",
+      "ParamKey": "Skill:CritRate+"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "クリティカル(強)",
+      "ID": "SRN50003",
+      "Desc": "スキルのクリティカル率+25%",
+      "Rarity": 5,
+      "audio": "rare",
+      "ShortText": "+25%",
+      "ParamKey": "Skill:CritRate+"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "クリティカル(極)",
+      "ID": "SRN70009",
+      "Desc": "必ずクリティカルする",
+      "Rarity": 7,
+      "audio": "rare",
+      "ShortText": "Crit",
+      "ParamKey": "Skill:AbsCrit"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00924",
+   "name": "Skill_322",
+   "file": "sprites/Skill_322.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "フォーカス(弱)",
+      "ID": "SRN30014",
+      "Desc": "このスキルを使うたび、集中+5%/5ターンを得る",
+      "Rarity": 3,
+      "audio": "star",
+      "ShortText": "+5%",
+      "ParamKey": "Skill:GainParamBoost3"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "オート: インテリジェンス",
+      "ID": "SRN50008",
+      "Desc": "このスキルを自動使用： 魔力系スキルを使用するたび",
+      "Rarity": 5,
+      "Tag": [
+       "NotFreeSkill"
+      ],
+      "audio": "rare",
+      "ShortText": "AUTO"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "フォーカス(強)",
+      "ID": "SRN50014",
+      "Desc": "このスキルを使うたび、集中+15%/5ターンを得る",
+      "Rarity": 5,
+      "audio": "rare",
+      "ShortText": "+15%",
+      "ParamKey": "Skill:GainParamBoost3X"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "アシスト: フォーカス",
+      "ID": "SRNA0003",
+      "Desc": "このスキルの威力は、集中100%によって強化される",
+      "Rarity": 4,
+      "audio": "star",
+      "ShortText": "P+",
+      "ParamKey": "Skill:IncPower:BonusStack3"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03926",
+   "name": "Skill_324",
+   "file": "sprites/Skill_324.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "スラスト",
+      "ID": "SKA03021",
+      "Category": "0.Attack",
+      "Rarity": 3,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "スラスト",
+      "ID": "SKA03021M1",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03928",
+   "name": "Skill_325",
+   "file": "sprites/Skill_325.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "スペルマイン",
+      "ID": "SKA04018",
+      "Category": "0.Attack",
+      "Rarity": 4,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "スペルマイン",
+      "ID": "SKA04018M1",
+      "Category": "0.Attack"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "粘着質",
+      "ID": "Adhesion",
+      "Desc": "直接ダメージを受けるたび、敵にクールダウン遅延/5ターンを与える",
+      "Category": "Buff",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03929",
+   "name": "Skill_327",
+   "file": "sprites/Skill_327.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "パッシブスタンス",
+      "ID": "SKA04010",
+      "Category": "2.Support",
+      "Rarity": 4,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "パッシブスタンス",
+      "ID": "SKA04010M1",
+      "Category": "2.Support"
+     }
+    },
+    {
+     "table": "tips",
+     "column": "Icon",
+     "row": {
+      "name": "常時効果",
+      "ID": "TIPS_SkillPassive",
+      "Category": "Skill"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03931",
+   "name": "Skill_330",
+   "file": "sprites/Skill_330.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "オート: クリティカル",
+      "ID": "SRN40006",
+      "Desc": "このスキルを自動使用: クリティカルするたび",
+      "Rarity": 4,
+      "Tag": [
+       "NotFreeSkill"
+      ],
+      "audio": "star",
+      "ShortText": "AUTO"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "狙い撃ち",
+      "ID": "CritDmg",
+      "Desc": "クリティカルダメージアップ",
+      "Category": "Common",
+      "Rarity": 1
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03932",
+   "name": "Skill_333",
+   "file": "sprites/Skill_333.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "エナジーバレット",
+      "ID": "SKA01012M2",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03933",
+   "name": "Skill_334",
+   "file": "sprites/Skill_334.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "水面心",
+      "ID": "WaterSurfaceMind",
+      "Desc": "所持するすべてのスキルが、バーストモードに切り替わらない",
+      "Category": "ModParts",
+      "Rarity": 4,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00069",
+   "name": "Skill_337",
+   "file": "sprites/Skill_337.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 4,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "さなぎ化 解除",
+      "ID": "SKA0X019M2",
+      "Category": "4.Special"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00926",
+   "name": "Skill_338",
+   "file": "sprites/Skill_338.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "エナジーバレット",
+      "ID": "SKA01012",
+      "Category": "0.Attack",
+      "Rarity": 1,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "エナジーボルト",
+      "ID": "SKA01012M1",
+      "Category": "0.Attack"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "降り注ぐ光柱",
+      "ID": "LightPillars",
+      "Desc": "フリースキルを使用するたび、敵に光弾ダメージを与える__敵がフリースキルを使用するたび、敵に光弾ダメージを与える",
+      "Category": "Unique",
+      "Rarity": 6,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    },
+    {
+     "table": "tips",
+     "column": "Icon",
+     "row": {
+      "name": "魔法属性",
+      "ID": "TIPS_ElementM",
+      "Category": "Damage"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00928",
+   "name": "Skill_343",
+   "file": "sprites/Skill_343.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "revent",
+     "column": "Icon",
+     "row": {
+      "name": "環境効果 - 瘴気",
+      "ID": "REENV012",
+      "Tag": [
+       "RoomState",
+       "Active",
+       "Guide",
+       "RoomEnv"
+      ],
+      "ParamKey": "Eventscene"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "瘴気",
+      "ID": "StateEnv12",
+      "Desc": "双方、汚染を持たないとき、状態異常を受けるたび、汚染+100%/1戦闘を得る",
+      "Category": "Env",
+      "Rarity": 7,
+      "Tag": [
+       "DStatus"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00929",
+   "name": "Skill_345",
+   "file": "sprites/Skill_345.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "糸絡め/巣の罠",
+      "ID": "SKE00006",
+      "Category": "9.Enemy",
+      "Rarity": 4,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "糸絡め",
+      "ID": "SKE00006M1",
+      "Category": "9.Enemy"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00930",
+   "name": "Skill_346X1",
+   "file": "sprites/Skill_346X1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ロックスマッシュ",
+      "ID": "SKAA0025M2",
+      "Category": "1.Summon"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03936",
+   "name": "Skill_350",
+   "file": "sprites/Skill_350.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "カルマ(弱)",
+      "ID": "SRNX0031",
+      "Desc": "このスキルを使うたび、因果+1%/5ターンを得る",
+      "Rarity": 4,
+      "audio": "star",
+      "ShortText": "/5T"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "カルマ(強)",
+      "ID": "SRNX0032",
+      "Desc": "このスキルを使うたび、因果+1%/1戦闘を得る",
+      "Rarity": 7,
+      "audio": "rare",
+      "ShortText": "/1C"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "因果",
+      "ID": "Karma",
+      "Desc": "何らかのダメージを受けるたび、一定確率で、敵に受けたダメージに等しい無属性間接ダメージを与える。",
+      "Category": "Damage",
+      "Rarity": 0
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00210",
+   "name": "Skill_351",
+   "file": "sprites/Skill_351.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "オーラバースト",
+      "ID": "SKA05001M2",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03937",
+   "name": "Skill_352",
+   "file": "sprites/Skill_352.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "仲間を呼ぶ",
+      "ID": "SKE00004",
+      "Category": "9.Enemy",
+      "Rarity": 6,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "威嚇/狂貌",
+      "ID": "SKE00008",
+      "Category": "9.Enemy",
+      "Rarity": 3,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "仲間を呼ぶ",
+      "ID": "SKE00021",
+      "Category": "9.Enemy",
+      "Rarity": 6,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "仲間を呼ぶ",
+      "ID": "SKE00022",
+      "Category": "9.Enemy",
+      "Rarity": 6,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00024",
+   "name": "Skill_356",
+   "file": "sprites/Skill_356.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 5,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "バトルロア/地形崩壊",
+      "ID": "SKE00042",
+      "Category": "9.Enemy",
+      "Rarity": 6,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "黒い嘲笑",
+      "ID": "SKEB0084",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "バトルロア",
+      "ID": "SKE00042M1",
+      "Category": "9.Enemy"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "黒い嘲笑",
+      "ID": "SKEB0084M1",
+      "Category": "9.Enemy - Boss"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00932",
+   "name": "Skill_359",
+   "file": "sprites/Skill_359.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "フィアー",
+      "ID": "SKA02017M2",
+      "Category": "0.Attack"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "邪悪な研究",
+      "ID": "GainMainParam:3:ByShield",
+      "Desc": "現在シールドの20%を魔力に加算する",
+      "Category": "Unique",
+      "Rarity": 6,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03945",
+   "name": "Skill_364",
+   "file": "sprites/Skill_364.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "呼応",
+      "ID": "Response",
+      "Desc": "敵がバーストスキルを使用するたび、ブレイブ+1",
+      "Category": "ModParts",
+      "Rarity": 4,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03947",
+   "name": "Skill_369",
+   "file": "sprites/Skill_369.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "命の煌き",
+      "ID": "SKEB0030",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "命の煌き",
+      "ID": "SKEB0030M1",
+      "Category": "9.Enemy - Boss"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00933",
+   "name": "Skill_371",
+   "file": "sprites/Skill_371.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "毒気の散布",
+      "ID": "SKE00041M2",
+      "Category": "9.Enemy"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03949",
+   "name": "Skill_372",
+   "file": "sprites/Skill_372.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "溶解質",
+      "ID": "Solute",
+      "Desc": "直接ダメージを受けるたび、敵の装備品の性能が減少する",
+      "Category": "Buff",
+      "Rarity": 0
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "強酸",
+      "ID": "Acid",
+      "Desc": "毎ターン、装備品の性能が徐々に減少する",
+      "Category": "Debuff",
+      "Rarity": 0
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00934",
+   "name": "Skill_373",
+   "file": "sprites/Skill_373.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "エグゾースト",
+      "ID": "SRN20013",
+      "Desc": "このスキルを使うたび、敵の全スキルの使用回数-1",
+      "Rarity": 2,
+      "audio": "star",
+      "ShortText": "-1"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "エナジードレイン/誘惑",
+      "ID": "SKE00007",
+      "Category": "9.Enemy",
+      "Rarity": 4,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "エナジードレイン",
+      "ID": "SKE00007M1",
+      "Category": "9.Enemy"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00025",
+   "name": "Skill_384",
+   "file": "sprites/Skill_384.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 5,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "嫉妬",
+      "ID": "SKEB0038",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "嫉妬",
+      "ID": "SKEB0038M1",
+      "Category": "9.Enemy - Boss"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "愛の言霊",
+      "ID": "Summon:Overlord",
+      "Desc": "戦闘開始時、ごくまれに古代の覇王を召喚する",
+      "Category": "Unique",
+      "Rarity": 7,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00935",
+   "name": "Skill_387",
+   "file": "sprites/Skill_387.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "サクリファイス",
+      "ID": "SKA05010M2",
+      "Category": "0.Attack"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "歪な肉体",
+      "ID": "GainMainParam:1:ByHP",
+      "Desc": "現在HPの10%を筋力に加算する",
+      "Category": "Unique",
+      "Rarity": 6,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03954",
+   "name": "Skill_388",
+   "file": "sprites/Skill_388.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "ウィーク",
+      "ID": "SRN10018",
+      "Desc": "スキル威力が2になる",
+      "Rarity": 1,
+      "audio": "star",
+      "ParamKey": "Skill:SetPower"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "変形",
+      "ID": "SKA0X020",
+      "Category": "4.Special",
+      "Rarity": 7,
+      "Tag": [
+       "RaceSkill"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "変形",
+      "ID": "SKA0X020M1",
+      "Category": "4.Special"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00026",
+   "name": "Skill_391",
+   "file": "sprites/Skill_391.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 5,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "超音波 / 不快音の空間",
+      "ID": "SKE00045",
+      "Category": "9.Enemy",
+      "Rarity": 6,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "超音波",
+      "ID": "SKE00045M1",
+      "Category": "9.Enemy"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03957",
+   "name": "Skill_395",
+   "file": "sprites/Skill_395.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "遅延ダメージ強化",
+      "ID": "IncPow:DelayDamage",
+      "Desc": "{[DC-IncPow:Burn]}",
+      "Category": "Common",
+      "Rarity": 3
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "遅延ダメージ耐性",
+      "ID": "Armor:DelayDamage",
+      "Desc": "遅延ダメージの受ける量が減る",
+      "Category": "Common",
+      "Rarity": 1
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03959",
+   "name": "Skill_397",
+   "file": "sprites/Skill_397.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "デトックス",
+      "ID": "SKA03025",
+      "Category": "3.Survive",
+      "Rarity": 3,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "デトックス",
+      "ID": "SKA03025M1",
+      "Category": "3.Survive"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "泉の薬効",
+      "ID": "StateEvent01",
+      "Category": "Env",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03960",
+   "name": "Skill_398",
+   "file": "sprites/Skill_398.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "空虚な囁き/霊場",
+      "ID": "SKE00048",
+      "Category": "9.Enemy",
+      "Rarity": 6,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "空虚な囁き",
+      "ID": "SKE00048M1",
+      "Category": "9.Enemy"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "除霊",
+      "ID": "Exorcism",
+      "Desc": "敵に直接ダメージを与えるたび、それがミニオンなら、即座に送還する",
+      "Category": "Unique",
+      "Rarity": 5,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00936",
+   "name": "Skill_399X1",
+   "file": "sprites/Skill_399X1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "屋敷のささやき声",
+      "ID": "StateEnvX3",
+      "Desc": "双方、クイックスキルを使用するたび、スキルブースト+20%/5ターンを得る",
+      "Category": "Env",
+      "Rarity": 7,
+      "Tag": [
+       "DStatus"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00937",
+   "name": "Skill_402",
+   "file": "sprites/Skill_402.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "王水",
+      "ID": "SKEB0008",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "トキシックブレス",
+      "ID": "SKEB0018",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "王水",
+      "ID": "SKEB0008M1",
+      "Category": "9.Enemy - Boss"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "トキシックブレス",
+      "ID": "SKEB0018M1",
+      "Category": "9.Enemy - Boss"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03963",
+   "name": "Skill_404",
+   "file": "sprites/Skill_404.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ローカストスウォーム",
+      "ID": "SKA02023M4",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00938",
+   "name": "Skill_405",
+   "file": "sprites/Skill_405.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "プラーグウィンド",
+      "ID": "SKA02023M3",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03966",
+   "name": "Skill_408",
+   "file": "sprites/Skill_408.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "秘密の道",
+      "ID": "SecretPath",
+      "Desc": "インベントリアイテムを使用するたび、HPスタックを1回復する",
+      "Category": "Unique",
+      "Rarity": 7,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00212",
+   "name": "Skill_409",
+   "file": "sprites/Skill_409.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "revent",
+     "column": "Icon",
+     "row": {
+      "name": "環境効果 - 砂塵",
+      "ID": "REENV014",
+      "Tag": [
+       "RoomState",
+       "Active",
+       "Guide",
+       "RoomEnv"
+      ],
+      "ParamKey": "Eventscene"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "砂塵",
+      "ID": "StateEnv14",
+      "Desc": "双方、受ける間接ダメージが上昇__双方、間接ダメージを受けるたび、高温+10%/1戦闘を得る",
+      "Category": "Env",
+      "Rarity": 7,
+      "Tag": [
+       "DStatus"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00939",
+   "name": "Skill_413X1",
+   "file": "sprites/Skill_413X1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "怨恨/滅亡の予言",
+      "ID": "SKAA0037",
+      "Category": "0.Attack",
+      "Rarity": 2,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "怨恨",
+      "ID": "SKAA0037M1",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03968",
+   "name": "Skill_414",
+   "file": "sprites/Skill_414.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "猛毒のつぶて",
+      "ID": "SKEB0004",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "猛毒のつぶて",
+      "ID": "SKEB0004M1",
+      "Category": "9.Enemy - Boss"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03971",
+   "name": "Skill_417",
+   "file": "sprites/Skill_417.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "オート: ヒール",
+      "ID": "SRN40007",
+      "Desc": "このスキルを自動使用: HPを回復するたび",
+      "Rarity": 4,
+      "Tag": [
+       "NotFreeSkill"
+      ],
+      "audio": "star",
+      "ShortText": "AUTO"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "回復力",
+      "ID": "HealAmo",
+      "Desc": "HPが回復する量が増える",
+      "Category": "Common",
+      "Rarity": 1
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "自然回復",
+      "ID": "Heal:TurnStart",
+      "Desc": "ターンごとに、HP回復",
+      "Category": "Common",
+      "Rarity": 1
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "休息",
+      "ID": "Heal:ProgRoom",
+      "Desc": "部屋移動ごとに、HP回復",
+      "Category": "Common",
+      "Rarity": 1
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00940",
+   "name": "Skill_418X1",
+   "file": "sprites/Skill_418X1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "黄昏渡り",
+      "ID": "SKAA0062M2",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00941",
+   "name": "Skill_420",
+   "file": "sprites/Skill_420.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "ポイズン",
+      "ID": "SKA01005",
+      "Category": "0.Attack",
+      "Rarity": 1,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ポイズン",
+      "ID": "SKA01005M1",
+      "Category": "0.Attack"
+     }
+    },
+    {
+     "table": "tips",
+     "column": "Icon",
+     "row": {
+      "name": "継続ダメージ",
+      "ID": "TIPS_DamageOverTime",
+      "Category": "Damage"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03974",
+   "name": "Skill_423",
+   "file": "sprites/Skill_423.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ベノムバイト",
+      "ID": "SKA01005M2",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00943",
+   "name": "Skill_431X1",
+   "file": "sprites/Skill_431X1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "血の棘",
+      "ID": "BloodThorns",
+      "Desc": "敵に与える反射ダメージは、自身の減少HP分だけ強化される",
+      "Category": "Unique",
+      "Rarity": 6,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00944",
+   "name": "Skill_436X1",
+   "file": "sprites/Skill_436X1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "増殖再構築",
+      "ID": "SKAA0049M2",
+      "Category": "2.Support"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00945",
+   "name": "Skill_442",
+   "file": "sprites/Skill_442.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "大上段",
+      "ID": "SKA02001M4",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00213",
+   "name": "Skill_443",
+   "file": "sprites/Skill_443.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "肉の鎧",
+      "ID": "MeatArmor",
+      "Desc": "シールドを得られなくなる。直接ダメージを受けるたび、そのダメージ量に応じた自然回復を得る。",
+      "Category": "Unique",
+      "Rarity": 5,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "全快時急所",
+      "ID": "CritRate:MaxHPStack",
+      "Desc": "HPスタックが最大のとき、クリティカル率加算",
+      "Category": "Basic",
+      "Rarity": 2
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "全快時強化",
+      "ID": "IncPow:On:HighHP",
+      "Desc": "HPスタックが最大のとき、スキルの威力アップ",
+      "Category": "Common",
+      "Rarity": 4
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "全快時強化",
+      "ID": "Skill:IncPow:On:HighHP",
+      "Desc": "HPが最大値以上のとき、スキルの威力アップ",
+      "Category": "Common",
+      "Rarity": 0
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00946",
+   "name": "Skill_444",
+   "file": "sprites/Skill_444.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "不動の構え",
+      "ID": "SKA05015M2",
+      "Category": "3.Survive"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "不動の構え 解除",
+      "ID": "SKA05015M3",
+      "Category": "3.Survive"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00947",
+   "name": "Skill_448",
+   "file": "sprites/Skill_448.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "全快時耐性",
+      "ID": "Blessing",
+      "Desc": "HPが最大値以上のとき、物理ダメージ/魔法ダメージを大幅に軽減する",
+      "Category": "Common",
+      "Rarity": 2
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "全快時回避",
+      "ID": "Avoid:MaxHPStack",
+      "Desc": "HPスタックが最大のとき、回避加算",
+      "Category": "Common",
+      "Rarity": 2
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03988",
+   "name": "Skill_449",
+   "file": "sprites/Skill_449.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "{[NM-MaxHP]}+{[NM-MaxShield]}",
+      "ID": "MaxHPShield*",
+      "Desc": "最大HPとシールドを強化する",
+      "Category": "Basic",
+      "Rarity": 3
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00070",
+   "name": "Skill_450",
+   "file": "sprites/Skill_450.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 4,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "ヒートウェーブ/サンライト",
+      "ID": "SKA02022",
+      "Category": "0.Attack",
+      "Rarity": 2,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ヒートウェーブ",
+      "ID": "SKA02022M1",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03990",
+   "name": "Skill_454",
+   "file": "sprites/Skill_454.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "デスペラード",
+      "ID": "SKA04007M2",
+      "Category": "2.Support"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "ミニオン武装",
+      "ID": "AddMinion:WepParam",
+      "Desc": "自身の持つ武器の性能は、召喚したミニオンにも適用される",
+      "Category": "Unique",
+      "Rarity": 7,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03991",
+   "name": "Skill_455",
+   "file": "sprites/Skill_455.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "デイズ",
+      "ID": "SRNA0020",
+      "Desc": "このスキルを使用するたび、敵に朦朧/2ターンを付与する",
+      "Rarity": 4,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "朦朧",
+      "ID": "NoQuick",
+      "Desc": "スキルのクイック効果が無効化される(どのスキルを使用しても、ターンが終了するようになる)",
+      "Category": "Debuff",
+      "Rarity": 0
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03993",
+   "name": "Skill_458",
+   "file": "sprites/Skill_458.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "瀕死時耐性",
+      "ID": "IncArmor:LowHP",
+      "Desc": "HPが最大値以上のとき、物理ダメージ/魔法ダメージを大幅に軽減する",
+      "Category": "Common",
+      "Rarity": 2
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "瀕死時回避",
+      "ID": "Avoid:LowHPStack",
+      "Desc": "HPスタックが0のとき、回避加算",
+      "Category": "Common",
+      "Rarity": 2
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00948",
+   "name": "Skill_462",
+   "file": "sprites/Skill_462.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "がむしゃら",
+      "ID": "SKA01021M2",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03997",
+   "name": "Skill_468",
+   "file": "sprites/Skill_468.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "タックル/がむしゃら",
+      "ID": "SKA01021",
+      "Category": "0.Attack",
+      "Rarity": 1,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "体当たり/吹き飛ばす",
+      "ID": "SKE00003",
+      "Category": "9.Enemy",
+      "Rarity": 3,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "タックル",
+      "ID": "SKA01021M1",
+      "Category": "0.Attack"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "秘孔点穴",
+      "ID": "SKA05002M2",
+      "Category": "3.Survive"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00949",
+   "name": "Skill_469",
+   "file": "sprites/Skill_469.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "デスペラード解除",
+      "ID": "SKA04007M3",
+      "Category": "2.Support"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00951",
+   "name": "Skill_472",
+   "file": "sprites/Skill_472.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "窮鼠",
+      "ID": "AtkInCrisis",
+      "Desc": "HPスタックが0のとき、クリティカルダメージが劇的に上昇",
+      "Category": "Unique",
+      "Rarity": 4,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00952",
+   "name": "Skill_475",
+   "file": "sprites/Skill_475.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "ヘイトレッドチャージ",
+      "ID": "SKEB0027",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "取り込む",
+      "ID": "SKEB0103",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ヘイトレッドチャージ",
+      "ID": "SKEB0027M1",
+      "Category": "9.Enemy - Boss"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "取り込む",
+      "ID": "SKEB0103M1",
+      "Category": "9.Enemy - Boss"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00954",
+   "name": "Skill_477",
+   "file": "sprites/Skill_477.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "サブミッション",
+      "ID": "SKA01010M4",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00214",
+   "name": "Skill_480",
+   "file": "sprites/Skill_480.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "サミング",
+      "ID": "SKA01010M2",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04001",
+   "name": "Skill_486",
+   "file": "sprites/Skill_486.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "朧二段",
+      "ID": "SKA03001M2",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00215",
+   "name": "Skill_492",
+   "file": "sprites/Skill_492.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "ダークブレード",
+      "ID": "SKA03023",
+      "Category": "0.Attack",
+      "Rarity": 3,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ダークブレード",
+      "ID": "SKA03023M1",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00960",
+   "name": "Skill_493",
+   "file": "sprites/Skill_493.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "revent",
+     "column": "Icon",
+     "row": {
+      "name": "環境効果 - 潮流",
+      "ID": "REENV021",
+      "Tag": [
+       "RoomState",
+       "Active",
+       "Guide",
+       "RoomEnv"
+      ],
+      "ParamKey": "Eventscene"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "潮流",
+      "ID": "StateEnv21",
+      "Desc": "双方、HPが0になるごとに、即座にHPスタック消費を行う",
+      "Category": "Env",
+      "Rarity": 7,
+      "Tag": [
+       "DStatus"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04004",
+   "name": "Skill_494",
+   "file": "sprites/Skill_494.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "アクアブラスト / 浸水",
+      "ID": "SKE00046",
+      "Category": "9.Enemy",
+      "Rarity": 6,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "アクアブラスト",
+      "ID": "SKE00046M1",
+      "Category": "9.Enemy"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04006",
+   "name": "Skill_496",
+   "file": "sprites/Skill_496.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "さなぎ化",
+      "ID": "SKA0X019",
+      "Category": "4.Special",
+      "Rarity": 7,
+      "Tag": [
+       "RaceSkill"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "さなぎ化",
+      "ID": "SKA0X019M1",
+      "Category": "4.Special"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00961",
+   "name": "Skill_499X1",
+   "file": "sprites/Skill_499X1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "オイルスプレッド",
+      "ID": "SKE00044M2",
+      "Category": "9.Enemy"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04009",
+   "name": "Skill_500",
+   "file": "sprites/Skill_500.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "新たな扉",
+      "ID": "NewDoor",
+      "Desc": "人ならざるものに変化し、部屋移動するごとに多量の「狂気」を得るようになる",
+      "Category": "Unique",
+      "Rarity": 7,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04012",
+   "name": "Skill_Attack",
+   "file": "sprites/Skill_Attack.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "聖別された武具",
+      "ID": "CNTU1803",
+      "Rarity": 3,
+      "ParamKey": "Union"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04013",
+   "name": "Skill_AxeAxe",
+   "file": "sprites/Skill_AxeAxe.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "断頭/葬送",
+      "ID": "SKAA0065",
+      "Category": "0.Attack",
+      "Rarity": 4,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "断頭",
+      "ID": "SKAA0065M1",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04019",
+   "name": "Skill_CastleSale",
+   "file": "sprites/Skill_CastleSale.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "隠し倉庫",
+      "ID": "CNTU0902",
+      "Rarity": 2,
+      "ParamKey": "Union"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04020",
+   "name": "Skill_Cleave",
+   "file": "sprites/Skill_Cleave.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "外科手術",
+      "ID": "SKAA0003M2",
+      "Category": "3.Survive"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "ほとばしる血潮",
+      "ID": "UseHPStack:OnAct",
+      "Desc": "スキルを直接使用するごとに、敵は即座にHPスタック消費を行う",
+      "Category": "Unique",
+      "Rarity": 5,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04023",
+   "name": "Skill_DaggerAttack2",
+   "file": "sprites/Skill_DaggerAttack2.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "スティールグリップ",
+      "ID": "SKE00052M2",
+      "Category": "9.Enemy"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04025",
+   "name": "Skill_Defence",
+   "file": "sprites/Skill_Defence.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "uorder",
+     "column": "Icon",
+     "row": {
+      "name": "部隊警護",
+      "ID": "UN0011D1"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04026",
+   "name": "Skill_Disarm",
+   "file": "sprites/Skill_Disarm.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "music",
+     "column": "Icon",
+     "row": {
+      "name": "敗北",
+      "ID": "MSC029"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04031",
+   "name": "Skill_Flag",
+   "file": "sprites/Skill_Flag.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "music",
+     "column": "Icon",
+     "row": {
+      "name": "ワールドマップ",
+      "ID": "MSC002"
+     }
+    },
+    {
+     "table": "uorder",
+     "column": "Icon",
+     "row": {
+      "name": "仲裁",
+      "ID": "UN0015D2"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04033",
+   "name": "Skill_GateClose",
+   "file": "sprites/Skill_GateClose.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "秘密の裏道",
+      "ID": "CNTU0903",
+      "Rarity": 3,
+      "ParamKey": "Union"
+     }
+    },
+    {
+     "table": "revent",
+     "column": "Icon",
+     "row": {
+      "name": "環境効果 - 狭所",
+      "ID": "REENV027",
+      "Tag": [
+       "RoomState",
+       "Active",
+       "Guide",
+       "RoomEnv"
+      ],
+      "ParamKey": "Eventscene"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "狭所",
+      "ID": "StateEnv27",
+      "Desc": "双方、クリティカル率+35%",
+      "Category": "Env",
+      "Rarity": 7,
+      "Tag": [
+       "DStatus"
+      ]
+     }
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-042",
+ "records": [
+  {
+   "cluster_id": "c02331",
+   "name": "Cooking_41_cake",
+   "slug": "cooking-cake-pie",
+   "description": "A round baked pie or cake with a golden crust and pink speckled filling, with one slice cut out.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02333",
+   "name": "Cooking_43_salmon",
+   "slug": "cooking-salmon-steak",
+   "description": "A raw salmon steak with orange-pink flesh, white fat lines and a silver skin edge.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02334",
+   "name": "Cooking_44_meat_ready",
+   "slug": "cooking-grilled-meat",
+   "description": "Grilled meat cuts with dark char marks and green herb flecks, cooked and ready to eat.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02336",
+   "name": "Cooking_46_spareribs",
+   "slug": "cooking-spareribs",
+   "description": "A rack of glazed spareribs with a small red dish of sauce beside it.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02339",
+   "name": "Cooking_49_lollipop",
+   "slug": "cooking-lollipop",
+   "description": "A swirled blue and white lollipop on a wooden stick.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02341",
+   "name": "Cooking_51_butter",
+   "slug": "cooking-butter",
+   "description": "A block of butter with two slices cut off, resting on white wrapping paper.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02342",
+   "name": "Cooking_52_spice",
+   "slug": "cooking-spices",
+   "description": "A pile of whole spices including red chillies, a brown cocoa-like pod, yellow powder and a clay shaker jar.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02343",
+   "name": "Cooking_53_worm",
+   "slug": "cooking-worm-bait",
+   "description": "A brown segmented worm curled beneath a small fishing hook.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02344",
+   "name": "Cooking_54_hook",
+   "slug": "cooking-fishing-hook",
+   "description": "A grey triple-pronged metal fishing hook with a loop at the top.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02345",
+   "name": "Cooking_55_cake",
+   "slug": "cooking-chocolate-cake",
+   "description": "A slice of layered chocolate cake with cream filling and a red cherry on top.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02346",
+   "name": "Cooking_56_seafood",
+   "slug": "cooking-clams-seafood",
+   "description": "Open clam shells with pale flesh beside green leafy garnish.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02347",
+   "name": "Cooking_57_cookies",
+   "slug": "cooking-cookies",
+   "description": "Two chocolate chip cookies with a few crumbs scattered beside them.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02350",
+   "name": "Cooking_60_oceanfish",
+   "slug": "cooking-ocean-fish",
+   "description": "A colourful parrot-like fish with blue, green, yellow and pink scales.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02351",
+   "name": "CopperBar",
+   "slug": "copper-bar",
+   "description": "A rectangular dull bronze-coloured metal ingot with a rough surface.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02352",
+   "name": "CopperCoin",
+   "slug": "copper-coin",
+   "description": "A single oval copper coin embossed with a floral swirl design.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "price",
+     "shop"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02353",
+   "name": "CopperCoinTen",
+   "slug": "copper-coin-stack-ten",
+   "description": "A tall stack of copper coins representing ten coins.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "price",
+     "shop"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02354",
+   "name": "CopperCoinThree",
+   "slug": "copper-coin-three",
+   "description": "Three loose copper coins of different sizes with a soft glow behind them.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "price",
+     "shop"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02361",
+   "name": "Crossbow1",
+   "slug": "crossbow-plain-grey",
+   "description": "A simple wooden crossbow with a grey metal prod and stirrup, shown angled.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02362",
+   "name": "Crossbow2",
+   "slug": "crossbow-dark-stirrup",
+   "description": "A crossbow with a dark bow limb and wooden stock, seen from the side.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02363",
+   "name": "Crossbow_01",
+   "slug": "crossbow-brown-curved",
+   "description": "A brown wooden crossbow with a curved bow and stock pointing down-right.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02365",
+   "name": "Crossbow_03",
+   "slug": "crossbow-reddish-wood",
+   "description": "A reddish wooden crossbow with a long stock and a curved bow limb.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02366",
+   "name": "Crossbow_04",
+   "slug": "crossbow-golden-limb",
+   "description": "A crossbow with a golden-brown bow limb and reddish wooden stock.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02367",
+   "name": "Crossbow_05",
+   "slug": "crossbow-steel-limb",
+   "description": "A crossbow with a dark steel bow limb and a reddish wooden stock.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02368",
+   "name": "Crossbow_06",
+   "slug": "crossbow-twin-prod",
+   "description": "A heavy crossbow with a double-pronged bow and a reddish stock with a metal tip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02369",
+   "name": "Crossbow_07",
+   "slug": "crossbow-twin-prod-ornate",
+   "description": "A heavy crossbow with a multi-pronged bow assembly and a reddish stock with a metal tip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

@@ -1,0 +1,508 @@
+{
+ "unit": "sheet-152",
+ "records": [
+  {
+   "cluster_id": "c05744",
+   "name": "skill_59_noBG",
+   "slug": "pale-hand-dropping-coins",
+   "description": "A pale gloved hand releasing a few small orange coins against a transparent background.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05745",
+   "name": "skill_5_noBG",
+   "slug": "falling-rocks",
+   "description": "Chunks of brown rock and brick debris tumbling downward through orange streaks.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01186",
+   "name": "skill_60_noBG",
+   "slug": "purple-fist-spear-thrust",
+   "description": "A purple-skinned fist gripping a white spear blade thrust upward with a motion streak.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05746",
+   "name": "skill_61_noBG",
+   "slug": "glowing-eyes-red-burst",
+   "description": "A pair of bright white slanted glowing eyes on a dark red radial burst.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05747",
+   "name": "skill_62",
+   "slug": "red-fist-battleaxe-swing",
+   "description": "A red fist swinging a double-bladed battleaxe with a pink swoosh trail on a dark red background.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05748",
+   "name": "skill_62_noBG",
+   "slug": "red-fist-battleaxe-swing-transparent",
+   "description": "A red fist swinging a double-bladed battleaxe with a pink swoosh trail on a transparent background.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05749",
+   "name": "skill_63",
+   "slug": "horned-berserker-silhouette",
+   "description": "A dark horned figure holding axes in a fiery red-orange glow.",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque",
+     "silhouette"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01187",
+   "name": "skill_64",
+   "slug": "three-silhouettes-radiant",
+   "description": "Three dark human silhouettes standing side by side before an orange radiating sunburst.",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "summon",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque",
+     "silhouette"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01188",
+   "name": "skill_64_noBG",
+   "slug": "three-silhouettes-radiant-transparent",
+   "description": "Three dark human silhouettes standing side by side before an orange radiating sunburst on a transparent background.",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "summon",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "silhouette"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05750",
+   "name": "skill_65_noBG",
+   "slug": "clawed-slash-swoosh",
+   "description": "A clenched hand with sharp pale claws slashing in a red and orange arc.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05751",
+   "name": "skill_66_noBG",
+   "slug": "pale-spiked-shards-swirl",
+   "description": "Pale pink spiky petal-like shards rising from an orange swirl.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c01189",
+   "name": "skill_67_noBG",
+   "slug": "orange-wind-streaks",
+   "description": "Swirling orange and yellow curved wind streaks.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00267",
+   "name": "skill_68_noBG",
+   "slug": "debris-light-pillar",
+   "description": "Dark rock fragments bursting upward within a pale orange pillar of light.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01191",
+   "name": "skill_7",
+   "slug": "pointing-hand-barrier-orb",
+   "description": "A hand holding a wand-like finger pointed inside a cracked orange glowing bubble.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "defend",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01192",
+   "name": "skill_70",
+   "slug": "thrown-axes-trio",
+   "description": "Three golden-hafted axes flying in a sweeping orange arc on a dark red background.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01193",
+   "name": "skill_70_noBG",
+   "slug": "thrown-axes-trio-transparent",
+   "description": "Three golden-hafted axes flying in a sweeping orange arc on a transparent background.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05753",
+   "name": "skill_72_noBG",
+   "slug": "watching-eye-rays",
+   "description": "A black-outlined eye with concentric rings and radiating rays in yellow with green accents.",
+   "tags": {
+    "kind": "glyph",
+    "use": [
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01195",
+   "name": "skill_73",
+   "slug": "arrow-volley-green",
+   "description": "A volley of white-tipped arrows streaking diagonally across a dark green background.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05754",
+   "name": "skill_73_noBG",
+   "slug": "arrow-volley-transparent",
+   "description": "A volley of white arrows streaking diagonally on a transparent background.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05755",
+   "name": "skill_74_noBG",
+   "slug": "purple-fist-spear-thrust-transparent",
+   "description": "A purple-skinned fist gripping a white spear blade thrust upward on a transparent background.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05756",
+   "name": "skill_75_noBG",
+   "slug": "green-arm-cyan-energy",
+   "description": "A green arm trailing swirling cyan energy.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05759",
+   "name": "skill_77_noBG",
+   "slug": "green-armoured-gauntlet-fist",
+   "description": "A green armoured gauntlet clenched into a fist with a yellow-green glow.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "buff",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05760",
+   "name": "skill_78_noBG",
+   "slug": "arrow-green-wind-trail",
+   "description": "A single arrow shooting rightward with green wind streaks behind it.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01196",
+   "name": "skill_79_noBG",
+   "slug": "silence-mask",
+   "description": "A white mask with green eyes and a black X over the mouth surrounded by green glow.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05761",
+   "name": "skill_7_noBG",
+   "slug": "pointing-hand-barrier-orb-transparent",
+   "description": "A hand with an extended finger inside a cracked orange glowing bubble on a transparent background.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "defend",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

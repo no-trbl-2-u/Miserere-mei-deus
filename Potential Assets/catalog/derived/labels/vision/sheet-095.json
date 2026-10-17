@@ -1,0 +1,517 @@
+{
+ "unit": "sheet-095",
+ "records": [
+  {
+   "cluster_id": "c04339",
+   "name": "Tabard_27",
+   "slug": "blue-spade-tabard",
+   "description": "A blue tabard with a pattern of darker spade-like shapes and light trim over a dark sleeved undershirt.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00985",
+   "name": "Tabard_32",
+   "slug": "green-sigil-tabard",
+   "description": "A dark tabard with green trim and a green crossed-leaf emblem on the chest.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04343",
+   "name": "Tabard_33_clean",
+   "slug": "grey-plain-tabard",
+   "description": "A plain grey tabard with a dark sleeve and light trim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04347",
+   "name": "Tabard_37",
+   "slug": "orange-diamond-tabard",
+   "description": "A brown and orange harlequin-diamond patterned tabard with dark sleeves.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04348",
+   "name": "Tabard_38",
+   "slug": "skull-tabard",
+   "description": "A dark purple tabard with a white skull and crossbones on the chest and green sleeves.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04350",
+   "name": "Tabard_40",
+   "slug": "dark-sigil-tabard",
+   "description": "A black tabard with a pale circular spiked sigil on the chest and brown sleeves.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04351",
+   "name": "Tabard_41",
+   "slug": "eye-tabard",
+   "description": "A black tabard with gold trim and a golden eye emblem on the chest.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04352",
+   "name": "Tabard_42",
+   "slug": "red-gold-star-tabard",
+   "description": "A red tabard with two gold star emblems, gold trim and teal sleeves.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04353",
+   "name": "Tabard_43",
+   "slug": "spider-tabard",
+   "description": "A dark green tabard with a white spider emblem on the chest and dark sleeves.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04354",
+   "name": "Tabard_44",
+   "slug": "red-star-tabard",
+   "description": "A maroon tabard with a gold starburst emblem on the chest and olive sleeves.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04355",
+   "name": "Tabard_45",
+   "slug": "red-maw-tabard",
+   "description": "A black tabard with a red fanged-mouth emblem and red trim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04356",
+   "name": "Tabard_46",
+   "slug": "pentagram-tabard",
+   "description": "A pale lavender-grey tabard with a faint pentagram emblem and dark sleeves.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04358",
+   "name": "Tabard_48",
+   "slug": "purple-star-tabard",
+   "description": "A vivid purple tabard with a white starburst emblem and blue sleeves.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04359",
+   "name": "Tailoring_01_torn_cloth",
+   "slug": "torn-cloth",
+   "description": "A single torn scrap of tan cloth with ragged edges.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04360",
+   "name": "Tailoring_02_sheets_of_cloth",
+   "slug": "pink-cloth-sheets",
+   "description": "A stack of folded pink cloth sheets.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04361",
+   "name": "Tailoring_03_clothroll",
+   "slug": "brown-cloth-roll",
+   "description": "A rolled bolt of brown cloth.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04362",
+   "name": "Tailoring_04_magic_cloth",
+   "slug": "magic-cloth-roll",
+   "description": "A rolled bolt of glowing magenta cloth with a violet outline.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04364",
+   "name": "Tailoring_06_demon_cloth",
+   "slug": "demon-cloth",
+   "description": "A dark cloth veined with glowing red cracks and a red outline.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04365",
+   "name": "Tailoring_07_frost_cloth",
+   "slug": "frost-cloth",
+   "description": "A pale blue icy cloth curling into scrolls with frosty edges.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04366",
+   "name": "Tailoring_08_double_cloth",
+   "slug": "double-cloth-stack",
+   "description": "A stack of folded red-brown quilted cloth sheets.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04367",
+   "name": "Tailoring_09_woolen_cloth",
+   "slug": "woolen-cloth",
+   "description": "A folded off-white piece of coarse woolen cloth.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04368",
+   "name": "Tailoring_10_rune_cloth",
+   "slug": "rune-cloth-roll",
+   "description": "A rolled bolt of green cloth with a bright green outline.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04369",
+   "name": "Tailoring_11_white_clothroll",
+   "slug": "white-cloth-roll",
+   "description": "A rolled white cloth bolt on a wooden spindle.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04370",
+   "name": "Tailoring_13_dyes",
+   "slug": "dye-bottles",
+   "description": "Three corked glass bottles holding red and green dye.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04371",
+   "name": "Tailoring_14_yarn",
+   "slug": "yarn-ball",
+   "description": "A ball of beige yarn with a loose strand trailing at the bottom.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

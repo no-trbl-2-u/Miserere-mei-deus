@@ -1,0 +1,556 @@
+{
+ "unit": "sheet-020",
+ "records": [
+  {
+   "cluster_id": "c01726",
+   "name": "Alchemy_53_huge_flask",
+   "slug": "huge-empty-flask",
+   "description": "An empty large round-bottomed glass flask with a long neck and a cork stopper, drawn in clear glass tones.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01727",
+   "name": "Alchemy_53_huge_flask2",
+   "slug": "huge-flask-silver-filigree",
+   "description": "A large glass flask with a silver thorny filigree wrapped around its round body and a cork stopper.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00410",
+   "name": "Alchemy_53_huge_flask3",
+   "slug": "huge-flask-gold-filigree",
+   "description": "A large glass flask with a golden thorny filigree wrapped around its round body and a cork stopper.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01728",
+   "name": "Alchemy_53_huge_flask4",
+   "slug": "huge-flask-steel-green-gem",
+   "description": "A large glass flask with a steel-blue filigree cage and a green gem set in the stopper.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00411",
+   "name": "Alchemy_55_hugegreen_flask",
+   "slug": "huge-green-flask",
+   "description": "A large flask filled with green liquid inside a golden filigree cage, with a green gem stopper.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory",
+     "heal"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01729",
+   "name": "Alchemy_56_hugeshadow_flask",
+   "slug": "huge-shadow-flask",
+   "description": "A large flask with glowing red liquid inside a dark thorny filigree cage and a reddish stopper.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01730",
+   "name": "Alchemy_57_hugepoison_flask",
+   "slug": "huge-poison-flask",
+   "description": "A large flask in a dark steel filigree cage with a green gem stopper and murky green-grey contents.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01731",
+   "name": "Alchemy_58_hugedark_flask",
+   "slug": "huge-dark-flask",
+   "description": "A large dark flask in thorny filigree with a crimson gem stopper and a pink-red glow radiating around it.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01732",
+   "name": "Alchemy_60_hugemagic_flask",
+   "slug": "huge-magic-flask",
+   "description": "A large dark flask in thorny filigree with a violet gem stopper and a purple magical glow ring around it.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01735",
+   "name": "Apple",
+   "slug": "apple",
+   "description": "A shiny red-and-yellow apple with a short stem and a single green leaf.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory",
+     "heal"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00459",
+   "name": "Armor2",
+   "slug": "purple-plate-cuirass",
+   "description": "A plate cuirass with purple and silver-trimmed pauldrons and a pale lower plate, shown front-facing.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01737",
+   "name": "Arquebuse",
+   "slug": "arquebus",
+   "description": "A long dark iron arquebus barrel with a wooden stock, drawn diagonally.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01738",
+   "name": "Arrow_01",
+   "slug": "bone-fletched-arrow",
+   "description": "An arrow with a pale stone head and tan feather fletching on a brown shaft, pointing up-left.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01739",
+   "name": "Arrow_02",
+   "slug": "copper-head-arrow",
+   "description": "An arrow with a rusty orange-brown head and tan fletching on a brown shaft, pointing up-left.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01740",
+   "name": "Arrow_03",
+   "slug": "barbed-red-fletch-arrow",
+   "description": "An arrow with a grey barbed steel head and dark red fletching on a brown shaft, pointing up-left.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01741",
+   "name": "Arrow_04",
+   "slug": "barbed-olive-fletch-arrow",
+   "description": "An arrow with a pale barbed head and olive-yellow fletching on a brown shaft, pointing up-left.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01742",
+   "name": "Arrow_05",
+   "slug": "barbed-orange-fletch-arrow",
+   "description": "An arrow with a pale barbed head and orange-red fletching on a brown shaft, pointing up-left.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01743",
+   "name": "Arrow_06",
+   "slug": "barbed-green-fletch-arrow",
+   "description": "An arrow with a pale barbed head and bright green fletching on a brown shaft, pointing up-left.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01744",
+   "name": "Arrow_07",
+   "slug": "barbed-brown-fletch-arrow",
+   "description": "An arrow with a pale barbed head and orange-brown fletching on a brown shaft, pointing up-left.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01745",
+   "name": "Arrow_08",
+   "slug": "barbed-yellow-green-fletch-arrow",
+   "description": "An arrow with a pale barbed head and yellow-green fletching on a brown shaft, pointing up-left.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01746",
+   "name": "Arrow_09",
+   "slug": "barbed-purple-fletch-arrow",
+   "description": "An arrow with a grey barbed head and purple fletching on a dark shaft, pointing up-left.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00460",
+   "name": "Arrow_10",
+   "slug": "barbed-violet-fletch-arrow",
+   "description": "An arrow with a grey barbed head and violet fletching on a dark grey shaft, pointing up-left.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01747",
+   "name": "Arrow_12",
+   "slug": "dark-blue-arrow",
+   "description": "An arrow with a dark blue-grey head and navy fletching on a dark shaft, pointing up-left.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01748",
+   "name": "Arrow_13",
+   "slug": "flame-orange-arrow",
+   "description": "An arrow with an orange head and bright orange fletching on a dark shaft, pointing up-left.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01749",
+   "name": "Arrow_14",
+   "slug": "ice-blue-arrow",
+   "description": "An arrow with a blue crystalline head and blue fletching on a dark shaft, pointing up-left.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

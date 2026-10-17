@@ -1,0 +1,498 @@
+{
+ "unit": "sheet-118",
+ "records": [
+  {
+   "cluster_id": "c00632",
+   "name": "Engineerskill_25_nobg",
+   "slug": "fiery-bullet-burst",
+   "description": "Four bullets fly out of a bright orange muzzle flash with glowing sparks.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00634",
+   "name": "Engineerskill_27_nobg",
+   "slug": "flaming-rocket",
+   "description": "A single rocket-like shell streaks diagonally trailing orange flame.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00636",
+   "name": "Engineerskill_30_nobg",
+   "slug": "three-potion-flasks",
+   "description": "Three round-bottomed glass flasks with corked necks hold blue liquid, set against a blue glow.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "buff",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00639",
+   "name": "Engineerskill_33_nobg",
+   "slug": "chain-hook",
+   "description": "A curved steel hook hangs on a short chain with dark links.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00640",
+   "name": "Engineerskill_34_nobg",
+   "slug": "arrow-volley",
+   "description": "Several iron-tipped arrows or bolts point to the upper right with a warm glow behind them.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00642",
+   "name": "Engineerskill_36_nobg",
+   "slug": "flaming-twin-barrels",
+   "description": "Two metal gun barrels pointing up-left spit orange flame from their muzzles.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00644",
+   "name": "Engineerskill_38_nobg",
+   "slug": "double-barrel-shotgun",
+   "description": "A side-by-side double-barrelled gun body with red rings around the barrels, angled diagonally.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00645",
+   "name": "Engineerskill_39_nobg",
+   "slug": "clenched-fists",
+   "description": "Two bare clenched fists with forearms are raised against a red glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00646",
+   "name": "Engineerskill_40_nobg",
+   "slug": "three-bullets",
+   "description": "Three brass bullets with pointed tips are fanned out on a warm tan glow.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00648",
+   "name": "Engineerskill_42_nobg",
+   "slug": "red-tipped-missile",
+   "description": "A silver missile with small fins and a glowing red open base points upward against an orange glow.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00649",
+   "name": "Engineerskill_43_nobg",
+   "slug": "orange-glow-orb",
+   "description": "A large translucent orange glowing sphere fills the cell with soft shading.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00652",
+   "name": "Engineerskill_47_nobg",
+   "slug": "glowing-cannon",
+   "description": "A metal cannon barrel seen head-on with a red-hot glowing bore and orange arc lines around it.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02642",
+   "name": "Fire_01_hit",
+   "slug": "fireball-hit",
+   "description": "A flaming meteor with a rocky dark core and long orange tail streaks on a black background.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02643",
+   "name": "Fire_01_nb",
+   "slug": "fireball",
+   "description": "A flaming meteor with a rocky dark core and a curved orange tail, on transparency.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02644",
+   "name": "Fire_02_powerhands",
+   "slug": "flame-hand",
+   "description": "An open palm of a hand wreathed in orange flames on a dark red background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02645",
+   "name": "Fire_03_mage",
+   "slug": "fire-mage",
+   "description": "A grey-bearded bald-browed man in dark robes with glowing eyes is ringed by fiery sparks.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "player-class",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02646",
+   "name": "Fire_03_nb",
+   "slug": "fire-mage-cutout",
+   "description": "A grey-haired bearded man in dark robes with glowing orange eyes, shown on transparency.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "player-class",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02647",
+   "name": "Fire_04_nb",
+   "slug": "flaming-skull",
+   "description": "A dark brown skull with glowing eye sockets bursts outward in orange flame, on transparency.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "status-effect"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02648",
+   "name": "Fire_04_spirits",
+   "slug": "flaming-skull-bg",
+   "description": "A dark brown skull with glowing eye sockets in a burst of orange flame on a fiery background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "status-effect"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02649",
+   "name": "Fire_05",
+   "slug": "fire-shards",
+   "description": "A cluster of glowing orange spikes shoots diagonally across a dark smoky background.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02650",
+   "name": "Fire_05_nb",
+   "slug": "fire-shards-cutout",
+   "description": "A cluster of glowing orange spikes shoots diagonally across a dark brown slope.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02651",
+   "name": "Fire_06_burn",
+   "slug": "burning-chest",
+   "description": "A wooden chest sits engulfed in roaring orange flames with a bright arc above it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "status-effect"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02652",
+   "name": "Fire_06_nb",
+   "slug": "burning-chest-cutout",
+   "description": "A wooden chest engulfed in orange flames with a bright arc above it, on partial transparency.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "status-effect"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02653",
+   "name": "Fire_07",
+   "slug": "flaming-dagger-grip",
+   "description": "A hand grips a steel dagger with swirling orange flame and flying embers around it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02654",
+   "name": "Fire_07_nb",
+   "slug": "flaming-dagger-grip-cutout",
+   "description": "A hand grips a steel dagger with swirling orange flame and embers, on transparency.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

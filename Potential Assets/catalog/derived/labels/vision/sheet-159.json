@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-159",
+ "records": [
+  {
+   "cluster_id": "c00738",
+   "name": "Nigeria",
+   "slug": "nigeria-flag",
+   "description": "Rounded flag with green, white and green vertical stripes.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00169",
+   "name": "Norway",
+   "slug": "norway-flag",
+   "description": "Rounded red flag with a white-outlined blue Nordic cross.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03354",
+   "name": "Oman",
+   "slug": "oman-flag",
+   "description": "Rounded flag with white, red and green horizontal bands and a red vertical hoist stripe holding a small white mark.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03360",
+   "name": "Pakistan",
+   "slug": "pakistan-flag",
+   "description": "Rounded green flag with a white vertical hoist stripe and a white crescent and star.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03362",
+   "name": "Palau",
+   "slug": "palau-flag",
+   "description": "Rounded light blue flag with an off-center yellow disc.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03363",
+   "name": "Panama",
+   "slug": "panama-flag",
+   "description": "Rounded flag in four quarters: white with blue star, red, blue, and white with red star.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03382",
+   "name": "Papua-New-Guinea",
+   "slug": "papua-new-guinea-flag",
+   "description": "Rounded flag split diagonally into a red upper half with a yellow bird shape and a black lower half with white stars.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03383",
+   "name": "Paraguay",
+   "slug": "paraguay-flag",
+   "description": "Rounded flag with red, white and blue horizontal bands and a small emblem ring on the white band.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03385",
+   "name": "Philippines",
+   "slug": "philippines-flag",
+   "description": "Rounded flag with blue and red horizontal bands and a white triangle at the hoist holding a yellow sun.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03404",
+   "name": "Portugal",
+   "slug": "portugal-flag",
+   "description": "Rounded flag with a green hoist section and a red field with a small yellow emblem at the seam.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03416",
+   "name": "Qatar",
+   "slug": "qatar-flag",
+   "description": "Rounded flag with a white serrated hoist edge and a maroon field.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03738",
+   "name": "Romania",
+   "slug": "romania-flag",
+   "description": "Rounded flag with blue, yellow and red vertical stripes.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03750",
+   "name": "Rwanda",
+   "slug": "rwanda-flag",
+   "description": "Rounded flag with blue, yellow and green horizontal bands and a yellow sun in the upper right.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03752",
+   "name": "Saint-Kitts-and-Nevis",
+   "slug": "saint-kitts-and-nevis-flag",
+   "description": "Rounded flag with a diagonal black band edged in yellow between green and red fields, with two white stars.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03753",
+   "name": "Saint-Lucia",
+   "slug": "saint-lucia-flag",
+   "description": "Rounded light blue flag with a white-outlined black and yellow triangle pair in the center.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03754",
+   "name": "Saint-Vincent-and-the-Grenadines",
+   "slug": "saint-vincent-and-the-grenadines-flag",
+   "description": "Rounded flag with blue, yellow and green vertical stripes and three green diamonds on the yellow stripe.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03757",
+   "name": "Samoa",
+   "slug": "samoa-flag",
+   "description": "Rounded red flag with a blue canton in the upper left holding five white stars.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03758",
+   "name": "San-Marino",
+   "slug": "san-marino-flag",
+   "description": "Rounded flag with white and light blue horizontal bands and a crowned coat of arms in the center.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03759",
+   "name": "Sao-Tome-and-Principe",
+   "slug": "sao-tome-and-principe-flag",
+   "description": "Rounded flag with green, yellow and green bands, a red triangle at the hoist and two black stars on the yellow band.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03760",
+   "name": "Saudi-Arabia",
+   "slug": "saudi-arabia-flag",
+   "description": "Rounded green flag with white Arabic script above a white sword.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03769",
+   "name": "Senegal",
+   "slug": "senegal-flag",
+   "description": "Rounded flag with green, yellow and red vertical stripes and a green star on the yellow stripe.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03770",
+   "name": "Serbia",
+   "slug": "serbia-flag",
+   "description": "Rounded flag with red, blue and white horizontal bands and a yellow crowned emblem near the hoist.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03771",
+   "name": "Seychelles",
+   "slug": "seychelles-flag",
+   "description": "Rounded flag with diagonal rays of blue, yellow, red, white and green fanning from the lower left corner.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03849",
+   "name": "Singapore",
+   "slug": "singapore-flag",
+   "description": "Rounded flag with a red upper band and white lower band, with a white crescent and five stars in the upper left.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04074",
+   "name": "Slovakia",
+   "slug": "slovakia-flag",
+   "description": "Rounded flag with white, blue and red horizontal bands and a white shield emblem near the hoist.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

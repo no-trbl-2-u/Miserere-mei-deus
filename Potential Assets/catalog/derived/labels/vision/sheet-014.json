@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-014",
+ "records": [
+  {
+   "cluster_id": "c00013",
+   "name": "4_Mail_Boots",
+   "slug": "mail-boots-bronze-red",
+   "description": "Pair of bronze-brown plated boots with red spiked trim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01558",
+   "name": "4_Mail_Chest",
+   "slug": "mail-chest-red",
+   "description": "Short-sleeved red-brown mail shirt with a chainmail skirt hem.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01559",
+   "name": "4_Mail_Shoulder",
+   "slug": "mail-shoulder-spiked",
+   "description": "Bronze pauldron with red edging and several red spikes on top.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01560",
+   "name": "4_Mail_belt",
+   "slug": "mail-belt-bronze",
+   "description": "Wide bronze-tan metal belt ring with small red gems.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01561",
+   "name": "4_Mail_bracers",
+   "slug": "mail-bracers-bronze",
+   "description": "Cylindrical bronze bracer with a red rim at the opening.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01562",
+   "name": "4_Mail_gloves",
+   "slug": "mail-gloves-scaled",
+   "description": "Pair of scaled bronze gauntlets with red studs at the fingers.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01563",
+   "name": "4_Mail_head",
+   "slug": "mail-helm-red-crest",
+   "description": "Bronze closed helmet with a red band across the brow and visor slit.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01565",
+   "name": "5_Cloth_Boots",
+   "slug": "cloth-boots-blue",
+   "description": "Pair of blue cloth boots with pale trim and turned-down cuffs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01566",
+   "name": "5_Cloth_Head",
+   "slug": "cloth-hood-blue-fur",
+   "description": "Blue cloth hood lined with white fur around the face opening.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01567",
+   "name": "5_Cloth_Pants",
+   "slug": "cloth-pants-blue",
+   "description": "Blue cloth trousers with pale vertical trim and a cyan clasp.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01568",
+   "name": "5_Cloth_belt",
+   "slug": "cloth-belt-blue",
+   "description": "Blue band belt with a pale silver edge, seen as an open ring.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01569",
+   "name": "5_Cloth_bracers",
+   "slug": "cloth-bracers-blue-fur",
+   "description": "Teal-blue bracer with fluffy white fur trim at both ends.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01570",
+   "name": "5_Cloth_gloves",
+   "slug": "cloth-gloves-blue-gems",
+   "description": "Pair of blue cloth gloves with cyan gems on the cuffs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01571",
+   "name": "5_Cloth_sloulder",
+   "slug": "cloth-shoulder-blue-fur",
+   "description": "Blue shoulder guard with silver filigree, a cyan gem and white fur edging.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01572",
+   "name": "5_Leather_Chest",
+   "slug": "leather-chest-orange",
+   "description": "Orange-brown leather vest with dark brown collar and crossed straps.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01573",
+   "name": "5_Leather_Pants",
+   "slug": "leather-pants-dark",
+   "description": "Dark brown trousers with orange stitched side trim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01574",
+   "name": "5_Leather_Shoulder",
+   "slug": "leather-shoulder-feathered",
+   "description": "Orange studded shoulder piece with dangling feather-like leather strips.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01575",
+   "name": "5_Leather_belt",
+   "slug": "leather-belt-brown",
+   "description": "Brown leather belt with studs, seen as an open ring.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01576",
+   "name": "5_Leather_boots",
+   "slug": "leather-boots-brown",
+   "description": "Pair of dark red-brown leather boots with buckled straps.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01577",
+   "name": "5_Leather_bracers",
+   "slug": "leather-bracers-orange",
+   "description": "Orange leather bracer with brown straps and a pointed top edge.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01578",
+   "name": "5_Leather_gloves",
+   "slug": "leather-gloves-orange-plated",
+   "description": "Pair of brown leather gloves with orange plated knuckles and cuffs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01579",
+   "name": "5_Leather_head",
+   "slug": "leather-hood-dark-red",
+   "description": "Dark red leather hood with pale stitched seams and a small clasp pendant.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00383",
+   "name": "5_Mail_Boots",
+   "slug": "mail-boots-white-purple",
+   "description": "Pair of white plated boots with purple soles and purple trim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01582",
+   "name": "5_Mail_belt",
+   "slug": "mail-belt-purple",
+   "description": "Purple belt with a small silver buckle, seen as an open ring.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01583",
+   "name": "5_Mail_bracers",
+   "slug": "mail-bracers-white-purple",
+   "description": "White cylindrical bracer with purple trim at the rim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

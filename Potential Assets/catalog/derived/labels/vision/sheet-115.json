@@ -1,0 +1,480 @@
+{
+ "unit": "sheet-115",
+ "records": [
+  {
+   "cluster_id": "c00037",
+   "name": "Assassinskill_40_nobg",
+   "slug": "studded-mace-lightning",
+   "description": "A square studded metal mace head on a handle crackling with white lightning on a red-orange background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00495",
+   "name": "Assassinskill_41_nobg",
+   "slug": "bow-and-arrows",
+   "description": "A dark curved bow with arrows on an orange background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00499",
+   "name": "Assassinskill_45_nobg",
+   "slug": "gripped-sword-blade",
+   "description": "A dark-skinned fist gripping a grey sword blade, outlined in orange.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00501",
+   "name": "Assassinskill_48_nobg",
+   "slug": "red-spiked-blades",
+   "description": "Several red spiked blades trailing chains on a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00558",
+   "name": "Druideskill_02_nobg",
+   "slug": "green-wind-swirl",
+   "description": "A white-green swirling wind streak on a lime green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00560",
+   "name": "Druideskill_05_nobg",
+   "slug": "green-lightning-bolt",
+   "description": "A white lightning bolt with small green sparks on a green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00562",
+   "name": "Druideskill_09_nobg",
+   "slug": "black-thorn-staff",
+   "description": "A black gnarled thorny staff with a green glow at its tip on a green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00563",
+   "name": "Druideskill_10_nobg",
+   "slug": "golden-staff-orb",
+   "description": "A twisted golden-green staff with a glowing yellow orb ringed by green swirling energy.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00567",
+   "name": "Druideskill_14_nobg",
+   "slug": "three-white-spears",
+   "description": "Three white spear points angled upward over a purple background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00570",
+   "name": "Druideskill_18_nobg",
+   "slug": "broken-purple-heart",
+   "description": "A glowing purple heart split down the middle on a violet background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00572",
+   "name": "Druideskill_20_nobg",
+   "slug": "purple-crystal-pendant",
+   "description": "A purple crystal pendant on a thin chain with a violet glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00573",
+   "name": "Druideskill_21_nobg",
+   "slug": "orange-claw-slashes",
+   "description": "Three glowing orange claw slash marks on a dark smoky background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00575",
+   "name": "Druideskill_24_nobg",
+   "slug": "beast-claw",
+   "description": "A furry brown beast arm ending in dark claws on an orange background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00577",
+   "name": "Druideskill_26_nobg",
+   "slug": "orange-slash-streaks",
+   "description": "Curved orange streaks sweeping diagonally across a brown-orange background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00578",
+   "name": "Druideskill_28_nobg",
+   "slug": "orange-spiral-swirl",
+   "description": "A thin orange spiral swirl on a brown-orange background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00580",
+   "name": "Druideskill_31_nobg",
+   "slug": "cyan-rune-glyph",
+   "description": "A glowing cyan angular rune glyph on a teal background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00581",
+   "name": "Druideskill_32_nobg",
+   "slug": "cyan-claw-circle",
+   "description": "A cyan talon-like claw shape drawn inside a dark circle on a teal background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00582",
+   "name": "Druideskill_33_nobg",
+   "slug": "cyan-paw-print",
+   "description": "A glowing cyan animal paw print on a teal background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "summon"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00583",
+   "name": "Druideskill_34_nobg",
+   "slug": "fanged-maw",
+   "description": "A monster mouth full of pale teeth on a dark teal background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00586",
+   "name": "Druideskill_37_nobg",
+   "slug": "cyan-swirl-streak",
+   "description": "A cyan streak line looping with wind arcs on a teal background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00587",
+   "name": "Druideskill_38_nobg",
+   "slug": "cyan-coil",
+   "description": "A cyan coiled spring or rope shape on a teal background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00588",
+   "name": "Druideskill_39_nobg",
+   "slug": "cyan-trident-bolt",
+   "description": "A cyan trident-like fork crackling with a white lightning bolt on a teal background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00592",
+   "name": "Druideskill_43_nobg",
+   "slug": "crossed-chains",
+   "description": "Two crossed black chains held by dark hands with a green glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00593",
+   "name": "Druideskill_44_nobg",
+   "slug": "sword-slash-arc",
+   "description": "A single black sword pointing down with an orange slash arc.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00594",
+   "name": "Druideskill_45_nobg",
+   "slug": "triple-swords",
+   "description": "Three black swords side by side on an orange background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

@@ -1,0 +1,554 @@
+{
+ "unit": "sheet-106",
+ "records": [
+  {
+   "cluster_id": "c05304",
+   "name": "runic_tablet_10",
+   "slug": "runic-tablet-cyan",
+   "description": "A a dark stone tablet with glowing cyan lightning-like runes and a cyan aura.",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "inventory",
+     "loot",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05305",
+   "name": "runic_tablet_11",
+   "slug": "runic-tablet-lime-green",
+   "description": "A a dark stone tablet with a glowing lime-green rune glyph and green sparks.",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "inventory",
+     "loot",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05306",
+   "name": "runic_tablet_12",
+   "slug": "runic-tablet-red",
+   "description": "A a dark stone tablet with glowing red jagged runes and a red outline.",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "inventory",
+     "loot",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05307",
+   "name": "santa_claus_hat",
+   "slug": "santa-claus-hat",
+   "description": "A red Santa Claus hat with a white fur brim and pompom.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05309",
+   "name": "shield_01",
+   "slug": "shield-01",
+   "description": "A round plain wooden buckler with weathered planks.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05310",
+   "name": "shield_02",
+   "slug": "shield-02",
+   "description": "A round wooden shield with dark vertical plank lines and no boss.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05311",
+   "name": "shield_03",
+   "slug": "shield-03",
+   "description": "A round wooden shield with a small steel central boss.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05313",
+   "name": "shield_06",
+   "slug": "shield-06",
+   "description": "A round shield with a metal rim, central dome boss and wooden planks beneath.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05314",
+   "name": "shield_07",
+   "slug": "shield-07",
+   "description": "A teardrop-shaped shield with a silver rim and a steel central boss.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05315",
+   "name": "shield_08",
+   "slug": "shield-08",
+   "description": "A teardrop-shaped shield with a gold rim and a gold central boss.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01114",
+   "name": "shield_09",
+   "slug": "shield-09",
+   "description": "A cracked, battered wooden kite-style shield with no metal fittings.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05316",
+   "name": "shield_11",
+   "slug": "shield-11",
+   "description": "A wooden shield with purple-grey metal brackets at the corners.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05317",
+   "name": "shield_12",
+   "slug": "shield-12",
+   "description": "A triangular wooden shield with a steel-blue metal rim.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05318",
+   "name": "shield_13",
+   "slug": "shield-13",
+   "description": "A triangular wooden shield bound with crossed purple metal straps.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05319",
+   "name": "shield_14",
+   "slug": "shield-14",
+   "description": "A wooden shield with a teal metal rim and a pale blue crystal-like emblem.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05320",
+   "name": "shield_15",
+   "slug": "shield-15",
+   "description": "A wooden shield with a gold rim and a gold emblem at the centre.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05322",
+   "name": "shield_17",
+   "slug": "shield-17",
+   "description": "A silver shield with a gold rim and a diagonal gold stripe.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05323",
+   "name": "shield_18",
+   "slug": "shield-18",
+   "description": "A silver shield with a gold rim and a gold central emblem.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05324",
+   "name": "shield_19",
+   "slug": "shield-19",
+   "description": "A shield with an orange-copper rim, wooden face and an orange emblem.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05325",
+   "name": "shield_20",
+   "slug": "shield-20",
+   "description": "A shield with an orange-red rim, silver face and a gold emblem.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05326",
+   "name": "shield_21",
+   "slug": "shield-21",
+   "description": "A tall rectangular wooden tower shield with a copper-brown rim.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01115",
+   "name": "shield_23",
+   "slug": "shield-23",
+   "description": "A tall rectangular wooden tower shield with teal metal bands.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05327",
+   "name": "shield_24",
+   "slug": "shield-24",
+   "description": "A tall rectangular wooden tower shield with orange-red metal bands.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05328",
+   "name": "shield_28",
+   "slug": "shield-28",
+   "description": "A tall rectangular teal steel tower shield with rusted fittings.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05329",
+   "name": "shield_29",
+   "slug": "shield-29",
+   "description": "A tall rectangular teal steel tower shield with darker rusted rim.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

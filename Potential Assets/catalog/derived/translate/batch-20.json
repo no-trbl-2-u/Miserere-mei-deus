@@ -1,0 +1,3069 @@
+{
+ "batch": "batch-20",
+ "items": [
+  {
+   "cluster_id": "c06078",
+   "name": "JB18",
+   "file": "textures/JB18.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "ごみひろい",
+      "ID": "JB000018",
+      "Rarity": 3
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 沼沢の主婦ターフリア 1",
+      "ID": "REST0061N2",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ごみひろい",
+      "ID": "SKNJ0018"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06079",
+   "name": "JB19",
+   "file": "textures/JB19.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "盗掘者",
+      "ID": "JB000019",
+      "Rarity": 4
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "盗掘者",
+      "ID": "SKNJ0019"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06080",
+   "name": "JB20",
+   "file": "textures/JB20.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "吟遊詩人",
+      "ID": "JB000020",
+      "Rarity": 5
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 沼沢の主婦ターフリア 2",
+      "ID": "REST0062N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 沼沢の主婦ターフリア 2",
+      "ID": "REST0062N4",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 沼沢の主婦ターフリア 3",
+      "ID": "REST0063N3",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06081",
+   "name": "JB21",
+   "file": "textures/JB21.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "拷問官",
+      "ID": "JB000021",
+      "Rarity": 5
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "拷問官",
+      "ID": "SKNJ0021"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06082",
+   "name": "JB22",
+   "file": "textures/JB22.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "屍術師",
+      "ID": "JB000022",
+      "Rarity": 2
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 情報屋ヤンネ 1",
+      "ID": "REST0011N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 情報屋ヤンネ 5",
+      "ID": "REST0015N3",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "屍術師",
+      "ID": "SKNJ0022"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06083",
+   "name": "JB23",
+   "file": "textures/JB23.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x511",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "旅人",
+      "ID": "JB000023",
+      "Rarity": 1
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 音楽家カルメラ 1",
+      "ID": "REST0046N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 音楽家カルメラ 5",
+      "ID": "REST0050N3",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "旅人",
+      "ID": "SKNJ0023"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06084",
+   "name": "JB24",
+   "file": "textures/JB24.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "モンク僧",
+      "ID": "JB000024",
+      "Rarity": 4
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 追放者ジャミル 1",
+      "ID": "REST0036N4",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "モンク僧",
+      "ID": "SKNJ0024"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06085",
+   "name": "JB25",
+   "file": "textures/JB25.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "権力者",
+      "ID": "JB000025",
+      "Rarity": 3
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "権力者",
+      "ID": "SKNJ0025"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06086",
+   "name": "JB26",
+   "file": "textures/JB26.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "魔法使い",
+      "ID": "JB000026",
+      "Rarity": 1
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "地獄 「探求者」",
+      "ID": "RESEV007N2",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "地獄 「探求者」",
+      "ID": "RESEV007N3",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 技師見習いソラティナ 4",
+      "ID": "REST0074N5",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06087",
+   "name": "JB27",
+   "file": "textures/JB27.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "ドルイド",
+      "ID": "JB000027",
+      "Rarity": 2
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ドルイド",
+      "ID": "SKNJ0027"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01252",
+   "name": "JB28",
+   "file": "textures/JB28.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "聖人",
+      "ID": "JB000028",
+      "Rarity": 3
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 鉱夫ヘルマン 3",
+      "ID": "REST0003N5",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 鉱夫ヘルマン 4",
+      "ID": "REST0004N3",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "聖人",
+      "ID": "SKNJ0028"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06088",
+   "name": "JB29",
+   "file": "textures/JB29.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "古術師",
+      "ID": "JB000029",
+      "Rarity": 5
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 時計職人ラウロ 5",
+      "ID": "REST0045N2",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 時計職人ラウロ 5",
+      "ID": "REST0045N4",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "古術師",
+      "ID": "SKNJ0029"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06089",
+   "name": "JB30",
+   "file": "textures/JB30.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "陰陽師",
+      "ID": "JB000030",
+      "Rarity": 4
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "陰陽師",
+      "ID": "SKNJ0030"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06090",
+   "name": "JB31",
+   "file": "textures/JB31.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "魔女",
+      "ID": "JB000031",
+      "Rarity": 4
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "魔女",
+      "ID": "SKNJ0031"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06091",
+   "name": "JB32",
+   "file": "textures/JB32.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "古医者",
+      "ID": "JB000032",
+      "Rarity": 5
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "古医者",
+      "ID": "SKNJ0032"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06092",
+   "name": "JB33",
+   "file": "textures/JB33.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "剣聖",
+      "ID": "JB000033",
+      "Rarity": 4
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "剣聖",
+      "ID": "SKNJ0033"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06093",
+   "name": "JB34",
+   "file": "textures/JB34.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "学者",
+      "ID": "JB000034",
+      "Rarity": 5
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "学者",
+      "ID": "SKNJ0034"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06094",
+   "name": "JB35",
+   "file": "textures/JB35.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "騎士",
+      "ID": "JB000035",
+      "Rarity": 4
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "騎士",
+      "ID": "SKNJ0035"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06095",
+   "name": "JB37",
+   "file": "textures/JB37.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "司祭",
+      "ID": "JB000037",
+      "Rarity": 4
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "司祭",
+      "ID": "SKNJ0037"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06096",
+   "name": "JB38",
+   "file": "textures/JB38.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "エンジニア",
+      "ID": "JB000038",
+      "Rarity": 5
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "エンジニア",
+      "ID": "SKNJ0038"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06097",
+   "name": "JB39",
+   "file": "textures/JB39.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "呪術師",
+      "ID": "JB000039",
+      "Rarity": 4
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "呪術師",
+      "ID": "SKNJ0039"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06098",
+   "name": "JB40",
+   "file": "textures/JB40.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "巫女",
+      "ID": "JB000040",
+      "Rarity": 5
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "巫女",
+      "ID": "SKNJ0040"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06099",
+   "name": "JB41",
+   "file": "textures/JB41.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "ピュリファイアー",
+      "ID": "JB000041",
+      "Rarity": 4
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ピュリファイアー",
+      "ID": "SKNJ0041"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06100",
+   "name": "JB42",
+   "file": "textures/JB42.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "ハンター",
+      "ID": "JB000042",
+      "Rarity": 5
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ハンター",
+      "ID": "SKNJ0042"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06101",
+   "name": "JB43",
+   "file": "textures/JB43.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "酔狂",
+      "ID": "JB000043",
+      "Rarity": 4
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "酔狂",
+      "ID": "SKNJ0043"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06102",
+   "name": "JB44",
+   "file": "textures/JB44.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "道化師",
+      "ID": "JB000044",
+      "Rarity": 5
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "道化師",
+      "ID": "SKNJ0044"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06103",
+   "name": "JB45",
+   "file": "textures/JB45.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "賢者",
+      "ID": "JB000045",
+      "Rarity": 4
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "賢者",
+      "ID": "SKNJ0045"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06104",
+   "name": "JB46",
+   "file": "textures/JB46.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "拳闘家",
+      "ID": "JB000046",
+      "Rarity": 5
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "拳闘家",
+      "ID": "SKNJ0046"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06105",
+   "name": "JB47",
+   "file": "textures/JB47.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "砂塵剣士",
+      "ID": "JB000047",
+      "Rarity": 4
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "砂塵剣士",
+      "ID": "SKNJ0047"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06106",
+   "name": "JB48",
+   "file": "textures/JB48.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "仙人",
+      "ID": "JB000048",
+      "Rarity": 5
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "仙人",
+      "ID": "SKNJ0048"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06107",
+   "name": "JB49",
+   "file": "textures/JB49.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "薬師",
+      "ID": "JB000049",
+      "Rarity": 4
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "薬師",
+      "ID": "SKNJ0049"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06108",
+   "name": "JB50",
+   "file": "textures/JB50.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "葬儀屋",
+      "ID": "JB000050",
+      "Rarity": 5
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "葬儀屋",
+      "ID": "SKNJ0050"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06109",
+   "name": "JB51",
+   "file": "textures/JB51.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "星詠み",
+      "ID": "JB000051",
+      "Rarity": 4
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "星詠み",
+      "ID": "SKNJ0051"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06110",
+   "name": "JB52",
+   "file": "textures/JB52.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "獣使い",
+      "ID": "JB000052",
+      "Rarity": 5
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "獣使い",
+      "ID": "SKNJ0052"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06111",
+   "name": "Kaizoku 01 S-Sword C",
+   "file": "textures/Kaizoku_01_S-Sword_C.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "死した水夫",
+      "ID": "E0N03013",
+      "Category": "Normal3",
+      "Rarity": 3
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06112",
+   "name": "Kaizoku 08 VooDoo A",
+   "file": "textures/Kaizoku_08_VooDoo_A.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "在野の呪術師",
+      "ID": "E0N05014",
+      "Category": "Normal5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06113",
+   "name": "Kaizoku 10 Crossbow C",
+   "file": "textures/Kaizoku_10_Crossbow_C.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "野盗",
+      "ID": "EDG01001",
+      "Category": "Normal-D4",
+      "Rarity": 4
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 追放者ジャミル 1",
+      "ID": "REST0036N5",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 追放者ジャミル 2",
+      "ID": "REST0037N2",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 追放者ジャミル 2",
+      "ID": "REST0037N4",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06114",
+   "name": "Kaizoku Hu Robe",
+   "file": "textures/Kaizoku_Hu_Robe.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 医療従事者ストーンズ 1",
+      "ID": "REST0066N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 医療従事者ストーンズ 2",
+      "ID": "REST0067N5",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 医療従事者ストーンズ 4",
+      "ID": "REST0069N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 医療従事者ストーンズ 5",
+      "ID": "REST0070N3",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00272",
+   "name": "Kobold Re A2",
+   "file": "textures/Kobold_Re_A2.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "コボルド",
+      "ID": "E0N01007",
+      "Category": "Normal1",
+      "Rarity": 1
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06115",
+   "name": "Kraken Small Octopus A",
+   "file": "textures/Kraken_Small_Octopus_A.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "オクトデーモン",
+      "ID": "E0N05013",
+      "Category": "Normal5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06116",
+   "name": "Kraken Small Octopus B",
+   "file": "textures/Kraken_Small_Octopus_B.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ドラッガー",
+      "ID": "EDG22001",
+      "Category": "Normal-D4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06117",
+   "name": "Kraken Small Squid B",
+   "file": "textures/Kraken_Small_Squid_B.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "クラーケン",
+      "ID": "E0N05009",
+      "Category": "Normal5",
+      "Rarity": 5
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 羊飼いの少年カール 5",
+      "ID": "REST0020N4",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 羊飼いの少年カール 5",
+      "ID": "REST0020N5",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06118",
+   "name": "Kraken Small Squid D",
+   "file": "textures/Kraken_Small_Squid_D.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "シーデビル",
+      "ID": "E0N05016",
+      "Category": "Normal5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06120",
+   "name": "Lamberjack",
+   "file": "textures/Lamberjack.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 鉱夫ヘルマン 3",
+      "ID": "REST0003N2",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 鉱夫ヘルマン 4",
+      "ID": "REST0004N4",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 鉱夫ヘルマン 5",
+      "ID": "REST0005N3",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06121",
+   "name": "Lamia",
+   "file": "textures/Lamia.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ラミア",
+      "ID": "E0N03011",
+      "Category": "Normal3",
+      "Rarity": 3
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06122",
+   "name": "Larva2",
+   "file": "textures/Larva2.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "深淵の落とし子",
+      "ID": "EBS06002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06123",
+   "name": "Larva B",
+   "file": "textures/Larva_B.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "森林 「止まぬ泣き声」",
+      "ID": "RESEV009N3",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "森林 「止まぬ泣き声」",
+      "ID": "RESEV009N6",
+      "ParamKey": "DoAct"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "森林 「止まぬ泣き声」",
+      "ID": "RESEV009N7",
+      "Category": "DStatus",
+      "ParamKey": "Gain"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "森林 「止まぬ泣き声」",
+      "ID": "RESEV009N8X1",
+      "ParamKey": "DoAct"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06124",
+   "name": "Laughing Spirit D",
+   "file": "textures/Laughing_Spirit_D.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "悪夢の壁",
+      "ID": "EDG04001",
+      "Category": "Normal-D4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06125",
+   "name": "Laughing Spirit E",
+   "file": "textures/Laughing_Spirit_E.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "呪霊",
+      "ID": "ESM00028",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "浜辺「黒漆の箱」",
+      "ID": "RESEV022N2",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06126",
+   "name": "Lesser Demon",
+   "file": "textures/Lesser_Demon.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "レッサーデーモン",
+      "ID": "EEX00004",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "NoDrop"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01253",
+   "name": "Lesser Demon Winged A",
+   "file": "textures/Lesser_Demon_Winged_A.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "レッサーデーモン",
+      "ID": "E0N02008",
+      "Category": "Normal2",
+      "Rarity": 2
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06127",
+   "name": "Lich",
+   "file": "textures/Lich.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "リッチ",
+      "ID": "E0N05012",
+      "Category": "Normal5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06128",
+   "name": "Light Spinner",
+   "file": "textures/Light_Spinner.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "アラクネ",
+      "ID": "EBS02001",
+      "Category": "DungeonBoss1",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06129",
+   "name": "LordSatyr",
+   "file": "textures/LordSatyr.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "バフォメット",
+      "ID": "EBS04002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06130",
+   "name": "Lycurgus",
+   "file": "textures/Lycurgus.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "当主",
+      "ID": "EBS19002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06131",
+   "name": "Maelific",
+   "file": "textures/Maelific.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "パズズ",
+      "ID": "ECQ00011",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06132",
+   "name": "MagicSword",
+   "file": "textures/MagicSword.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ダンシングソード",
+      "ID": "ESM00005",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc",
+       "CopyGear1Stats"
+      ]
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 屍術師ダレン 1",
+      "ID": "REST0031N3",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 時間魔術学生ガルメイン 2",
+      "ID": "REST0082N4",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06133",
+   "name": "Magic Armor",
+   "file": "textures/Magic_Armor.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "リビングアーマー",
+      "ID": "ESM00035",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc",
+       "CopyGear2Stats"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06134",
+   "name": "Man at Arms",
+   "file": "textures/Man_at_Arms.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "古代の兵士",
+      "ID": "E0N01001",
+      "Category": "Normal1",
+      "Rarity": 1
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 鉱夫ヘルマン 2",
+      "ID": "REST0002N2",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 鉱夫ヘルマン 5",
+      "ID": "REST0005N2",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 情報屋ヤンネ 4",
+      "ID": "REST0014N3",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06135",
+   "name": "Mandragora",
+   "file": "textures/Mandragora.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "マンドラゴラ",
+      "ID": "E0N01011",
+      "Category": "Normal1",
+      "Rarity": 1
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06136",
+   "name": "Master Killer",
+   "file": "textures/Master_Killer.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "マスターニンジャ",
+      "ID": "E0N05007",
+      "Category": "Normal5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06137",
+   "name": "Meat Generator B",
+   "file": "textures/Meat_Generator_B.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "海から帰った者",
+      "ID": "EDG22002",
+      "Category": "Normal-D5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06138",
+   "name": "Mind Flayer Lord A",
+   "file": "textures/Mind_Flayer_Lord_A.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "深海の王族",
+      "ID": "E0N04012",
+      "Category": "Normal4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06139",
+   "name": "Mind Frayer",
+   "file": "textures/Mind_Frayer.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "深海の住人",
+      "ID": "E0N03012",
+      "Category": "Normal3",
+      "Rarity": 3
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06140",
+   "name": "Mirror Knight F",
+   "file": "textures/Mirror_Knight_F.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ノスフェラトゥ",
+      "ID": "EERM0021",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "Risky"
+      ]
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR21N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR21N2",
+      "ParamKey": "Freq"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR21N3",
+      "ParamKey": "Freq"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06141",
+   "name": "Monk",
+   "file": "textures/Monk.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "破戒僧",
+      "ID": "E0N02012",
+      "Category": "Normal2",
+      "Rarity": 2
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06142",
+   "name": "Mummy",
+   "file": "textures/Mummy.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "マミー",
+      "ID": "EEX00002",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "NoDrop"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06143",
+   "name": "Musashi2",
+   "file": "textures/Musashi2.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ソードマスター",
+      "ID": "E0N04001",
+      "Category": "Normal4",
+      "Rarity": 4
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 戦う生存者",
+      "ID": "RECEV024N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 戦う生存者",
+      "ID": "RECEV024N4",
+      "Category": "RandomRecipe",
+      "ParamKey": "Gain"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 戦う生存者",
+      "ID": "RECEV024N5",
+      "Category": "RandomGear",
+      "ParamKey": "Gain"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01254",
+   "name": "Mystic C-Disaster",
+   "file": "textures/Mystic_C-Disaster.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Image",
+     "row": {
+      "name": "オキツグ",
+      "ID": "DSS00014"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06144",
+   "name": "Namtar D",
+   "file": "textures/Namtar_D.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "プレデター",
+      "ID": "EDG04002",
+      "Category": "Normal-D5",
+      "Rarity": 5
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 召喚魔法陣",
+      "ID": "RECEV030N5",
+      "ParamKey": "Battle"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06145",
+   "name": "Necromancer",
+   "file": "textures/Necromancer.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "人さらい",
+      "ID": "EBS03001",
+      "Category": "DungeonBoss1",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06146",
+   "name": "NightMare",
+   "file": "textures/NightMare.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ナイトメア",
+      "ID": "ESM00004",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06147",
+   "name": "OldVillager",
+   "file": "textures/OldVillager.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 死にかけた男",
+      "ID": "RECEV023N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 死にかけた男",
+      "ID": "RECEV023N3",
+      "ParamKey": "DoAct"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 死にかけた男",
+      "ID": "RECEV023N4",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 死にかけた男",
+      "ID": "RECEV023N6",
+      "Category": "Chestbox",
+      "ParamKey": "Gain"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06148",
+   "name": "Orcus D-Disaster",
+   "file": "textures/Orcus_D-Disaster.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Image",
+     "row": {
+      "name": "オルクス",
+      "ID": "DSS00008"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06149",
+   "name": "Orcus D",
+   "file": "textures/Orcus_D.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "オルクス",
+      "ID": "EDS00008",
+      "Category": "Disaster",
+      "Rarity": 9,
+      "Tag": [
+       "Uber"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06151",
+   "name": "Oyone",
+   "file": "textures/Oyone.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 茶屋の娘オヨネ 1",
+      "ID": "REST0006N2",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 茶屋の娘オヨネ 1",
+      "ID": "REST0006N5",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 茶屋の娘オヨネ 2",
+      "ID": "REST0007N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 茶屋の娘オヨネ 2",
+      "ID": "REST0007N4",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06152",
+   "name": "Pisco Daemon",
+   "file": "textures/Pisco_Daemon.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "深海の司祭",
+      "ID": "E0N04013",
+      "Category": "Normal4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01255",
+   "name": "Poison Giant",
+   "file": "textures/Poison_Giant.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "変貌者",
+      "ID": "EERM0011",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "Risky"
+      ]
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR11N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR11N2",
+      "ParamKey": "Freq"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR11N3",
+      "ParamKey": "Freq"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06153",
+   "name": "Prophet",
+   "file": "textures/Prophet.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "終末予言者",
+      "ID": "E0N03006",
+      "Category": "Normal3",
+      "Rarity": 3
+     }
+    },
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "やつれた男",
+      "ID": "EEX00009",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "NoDrop"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06154",
+   "name": "RC02",
+   "file": "textures/RC02.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "race",
+     "column": "Image",
+     "row": {
+      "name": "エルフ",
+      "ID": "RC000002"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "エルフ",
+      "ID": "SKNR0002"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06155",
+   "name": "RC03",
+   "file": "textures/RC03.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "race",
+     "column": "Image",
+     "row": {
+      "name": "ハーフリング",
+      "ID": "RC000003"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 光の巫女ドラフシェ 2",
+      "ID": "REST0022N4",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ハーフリング",
+      "ID": "SKNR0003"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06156",
+   "name": "RC04",
+   "file": "textures/RC04.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "race",
+     "column": "Image",
+     "row": {
+      "name": "リザードマン",
+      "ID": "RC000004"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "リザードマン",
+      "ID": "SKNR0004"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01256",
+   "name": "RC05",
+   "file": "textures/RC05.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ドラグーン",
+      "ID": "EEX00010",
+      "Category": "Special",
+      "Rarity": 5,
+      "Tag": [
+       "NoDrop"
+      ]
+     }
+    },
+    {
+     "table": "race",
+     "column": "Image",
+     "row": {
+      "name": "竜人",
+      "ID": "RC000005"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "伏魔殿 「ただ強く」",
+      "ID": "RESEV010N2",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "伏魔殿 「ただ強く」",
+      "ID": "RESEV010N3",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06157",
+   "name": "RC06",
+   "file": "textures/RC06.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "race",
+     "column": "Image",
+     "row": {
+      "name": "フェアリー",
+      "ID": "RC000006"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "フェアリー",
+      "ID": "SKNR0006"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00273",
+   "name": "RC07",
+   "file": "textures/RC07.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "race",
+     "column": "Image",
+     "row": {
+      "name": "ダークエルフ",
+      "ID": "RC000007"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "貧民窟 「割に合う取引」",
+      "ID": "RESEV006N2",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "貧民窟 「割に合う取引」",
+      "ID": "RESEV006N3",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ダークエルフ",
+      "ID": "SKNR0007"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06158",
+   "name": "RC08",
+   "file": "textures/RC08.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "race",
+     "column": "Image",
+     "row": {
+      "name": "吸血鬼",
+      "ID": "RC000008"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "吸血鬼",
+      "ID": "SKNR0008"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01257",
+   "name": "RC09",
+   "file": "textures/RC09.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "race",
+     "column": "Image",
+     "row": {
+      "name": "ワーラビット",
+      "ID": "RC000009"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "うさぎの運送屋",
+      "ID": "REPK0006N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "うさぎの運送屋",
+      "ID": "REPK0006N2",
+      "ParamKey": "SendAllItemsUp"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 情報屋ヤンネ 4",
+      "ID": "REST0014N4",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01258",
+   "name": "RC10",
+   "file": "textures/RC10.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "race",
+     "column": "Image",
+     "row": {
+      "name": "天使",
+      "ID": "RC000010"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "天使",
+      "ID": "SKNR0010"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06159",
+   "name": "RC11",
+   "file": "textures/RC11.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "race",
+     "column": "Image",
+     "row": {
+      "name": "自動人形",
+      "ID": "RC000011"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "尖塔 「軋む音」",
+      "ID": "RESEV003N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "尖塔 「軋む音」",
+      "ID": "RESEV003N3",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "尖塔 「軋む音」",
+      "ID": "RESEV003N7",
+      "ParamKey": "DoAct"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01259",
+   "name": "RC12",
+   "file": "textures/RC12.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state_visual",
+     "column": "Image",
+     "row": {
+      "name": "ウェアウルフ",
+      "ID": "STVS0003"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06160",
+   "name": "RC13",
+   "file": "textures/RC13.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "race",
+     "column": "Image",
+     "row": {
+      "name": "かぼちゃおばけ",
+      "ID": "RC000013"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "かぼちゃおばけ",
+      "ID": "SKNR0013"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06161",
+   "name": "RC14",
+   "file": "textures/RC14.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "race",
+     "column": "Image",
+     "row": {
+      "name": "巨人",
+      "ID": "RC000014"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "巨人",
+      "ID": "SKNR0014"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01260",
+   "name": "RC15",
+   "file": "textures/RC15.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "race",
+     "column": "Image",
+     "row": {
+      "name": "外なる者",
+      "ID": "RC000015"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "外なる者",
+      "ID": "SKNR0015"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06162",
+   "name": "RC16",
+   "file": "textures/RC16.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "犬",
+      "ID": "JBRC0016",
+      "Rarity": 5
+     }
+    },
+    {
+     "table": "race",
+     "column": "Image",
+     "row": {
+      "name": "犬",
+      "ID": "RC000016"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "犬",
+      "ID": "SKNR0016"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00274",
+   "name": "RC19",
+   "file": "textures/RC19.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "race",
+     "column": "Image",
+     "row": {
+      "name": "芋虫",
+      "ID": "RC000019"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "芋虫",
+      "ID": "SKNR0019"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06163",
+   "name": "RC20",
+   "file": "textures/RC20.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "race",
+     "column": "Image",
+     "row": {
+      "name": "不定形",
+      "ID": "RC000020"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 情報屋ヤンネ 5",
+      "ID": "REST0015N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 情報屋ヤンネ 5",
+      "ID": "REST0015N4",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "不定形",
+      "ID": "SKNR0020"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01261",
+   "name": "RC21",
+   "file": "textures/RC21.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "race",
+     "column": "Image",
+     "row": {
+      "name": "骨",
+      "ID": "RC000021"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "骨",
+      "ID": "SKNR0021"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06164",
+   "name": "RC22",
+   "file": "textures/RC22.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Image",
+     "row": {
+      "name": "座敷童子",
+      "ID": "JBRC0022",
+      "Rarity": 5
+     }
+    },
+    {
+     "table": "race",
+     "column": "Image",
+     "row": {
+      "name": "座敷童子",
+      "ID": "RC000022"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "座敷童子",
+      "ID": "SKNR0022"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06165",
+   "name": "RC23",
+   "file": "textures/RC23.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "race",
+     "column": "Image",
+     "row": {
+      "name": "半魚人",
+      "ID": "RC000023"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "半魚人",
+      "ID": "SKNR0023"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06166",
+   "name": "RC24",
+   "file": "textures/RC24.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x511",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "race",
+     "column": "Image",
+     "row": {
+      "name": "ゴーレム",
+      "ID": "RC000024"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Image",
+     "row": {
+      "name": "ゴーレム",
+      "ID": "SKNR0024"
+     }
+    }
+   ]
+  }
+ ]
+}

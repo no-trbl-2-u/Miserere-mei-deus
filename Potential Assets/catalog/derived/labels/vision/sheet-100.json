@@ -1,0 +1,480 @@
+{
+ "unit": "sheet-100",
+ "records": [
+  {
+   "cluster_id": "c04539",
+   "name": "Wand_v2_23",
+   "slug": "red-crystal-staff",
+   "description": "A wooden staff with iron bindings topped by a large faceted red crystal.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04540",
+   "name": "Wand_v2_24",
+   "slug": "thorned-red-gem-staff",
+   "description": "A dark thorn-wrapped staff holding a deep red gem at its head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04541",
+   "name": "Wand_v2_25",
+   "slug": "purple-crystal-cluster-staff",
+   "description": "A staff crowned with a jagged cluster of purple crystals on a dark purple shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04542",
+   "name": "Wand_v2_26",
+   "slug": "shepherd-crook-staff",
+   "description": "A pale wooden staff bent into a hooked crook with small green leaves growing from it.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04543",
+   "name": "Wand_v2_27",
+   "slug": "gilded-green-gem-staff",
+   "description": "A red-shafted staff with a gold frame head cradling a glowing pale green gem.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04544",
+   "name": "Wand_v2_28",
+   "slug": "spiral-silver-blade-staff",
+   "description": "A grey spiral-wrapped shaft ending in a pale silver blade-like tip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04546",
+   "name": "Wand_v2_30",
+   "slug": "green-glow-cracked-orb-staff",
+   "description": "A dark staff topped by a cracked black orb leaking bright acid-green glow.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04547",
+   "name": "Wand_v2_31",
+   "slug": "ember-cracked-orb-staff",
+   "description": "A dark staff topped by a cracked black orb leaking orange molten glow.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04549",
+   "name": "Wand_v2_33",
+   "slug": "crescent-moon-orb-staff",
+   "description": "A dark blue staff holding a pale violet orb with a white crescent moon marking.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04550",
+   "name": "Wand_v2_34",
+   "slug": "crimson-forked-staff",
+   "description": "A dark staff ending in a red-brown forked hook head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04551",
+   "name": "Wand_v2_35",
+   "slug": "golden-green-orb-staff",
+   "description": "A black staff with an ornate golden head surrounding a glowing green orb.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04552",
+   "name": "Wand_v2_36",
+   "slug": "plain-wooden-staff",
+   "description": "A plain long wooden staff with a small grey cap at the top.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04553",
+   "name": "Wand_v2_37",
+   "slug": "magenta-rose-orb-staff",
+   "description": "A dark red staff topped by a swirling magenta orb like a rose bloom.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04554",
+   "name": "Wand_v2_38",
+   "slug": "stone-head-staff",
+   "description": "A brown staff with a rough carved stone mace-like head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04556",
+   "name": "Wand_v2_40",
+   "slug": "violet-spear-wand",
+   "description": "A slender purple wand with a spear-like tip glowing violet.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04557",
+   "name": "Wand_v2_41",
+   "slug": "golden-sun-pentagram-staff",
+   "description": "A black staff topped by a gold spiked sun disc engraved with a pentagram.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04560",
+   "name": "Wand_v2_44",
+   "slug": "leafy-spike-staff",
+   "description": "A wooden staff with a head of broad green leaves and spikes.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04561",
+   "name": "Wand_v2_45",
+   "slug": "eyeball-spike-staff",
+   "description": "A curved wooden staff with a round eye-like head and a thin spike.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04562",
+   "name": "Wand_v2_46",
+   "slug": "spiked-iron-mace-staff",
+   "description": "A dark staff with a spiked iron mace head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04563",
+   "name": "Wand_v2_47",
+   "slug": "orange-glyph-staff",
+   "description": "An orange patterned staff with a gold head carved with a square glyph.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04564",
+   "name": "Wand_v2_48",
+   "slug": "magenta-glow-wand",
+   "description": "A purple lattice-wrapped wand with a bright magenta energy burst at its tip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04565",
+   "name": "Wand_v2_49",
+   "slug": "golden-skull-orb-staff",
+   "description": "A staff with a golden orb bearing hollow dark marks, on a green-wrapped gold-banded shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04567",
+   "name": "Wand_v2_51",
+   "slug": "caged-red-crystal-staff",
+   "description": "A dark staff with a glowing red crystal held in a black angular frame.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04568",
+   "name": "Wand_v2_52",
+   "slug": "caged-violet-crystal-staff",
+   "description": "A dark staff with a glowing purple crystal held in a black angular frame.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04571",
+   "name": "Wand_v2_55",
+   "slug": "green-leaf-crystal-staff",
+   "description": "A wooden staff with a pale green leaf-shaped crystal tip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

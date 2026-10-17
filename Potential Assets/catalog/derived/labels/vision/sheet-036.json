@@ -1,0 +1,529 @@
+{
+ "unit": "sheet-036",
+ "records": [
+  {
+   "cluster_id": "c02147",
+   "name": "Bow_v2_08",
+   "slug": "glowing-green-bow",
+   "description": "A bow with a mossy vine-wrapped limb and a bright lime-green glowing string.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02148",
+   "name": "Bow_v2_09",
+   "slug": "wooden-bow-brown",
+   "description": "A plain brown wooden bow with a gnarled limb and thin string.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02149",
+   "name": "BowlMeat",
+   "slug": "bowl-of-red-meat",
+   "description": "A dark brown bowl filled with chunks of raw red meat.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "inventory",
+     "heal",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02150",
+   "name": "BowlerHat",
+   "slug": "black-pot-bowler-hat",
+   "description": "A black round vessel with a brown filling seen from above, rendered like a pot or crowned hat.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c02151",
+   "name": "Bracer_01",
+   "slug": "silver-bracer",
+   "description": "A plain silver-grey cylindrical bracer with an open end.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02152",
+   "name": "Bracer_02",
+   "slug": "red-gold-bracer",
+   "description": "A red patterned bracer with gold-trimmed rims.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02153",
+   "name": "Bracer_03",
+   "slug": "brown-steel-bracer",
+   "description": "A brown leather bracer with steel-grey rims.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02154",
+   "name": "Bracer_04",
+   "slug": "green-steel-bracer",
+   "description": "A green cloth bracer with steel-grey rims.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02155",
+   "name": "Bracer_05",
+   "slug": "purple-gold-bracer",
+   "description": "A purple bracer with gold emblem and gold-trimmed rims.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02156",
+   "name": "Bracer_06",
+   "slug": "blue-gold-bracer",
+   "description": "A navy blue bracer with gold studs and gold-trimmed rims.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02157",
+   "name": "Bracer_07",
+   "slug": "olive-gold-bracer",
+   "description": "An olive-green studded bracer with gold-trimmed rims.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02158",
+   "name": "BrassKnuckles_v2_01",
+   "slug": "iron-knuckle-guard",
+   "description": "A grey iron knuckle guard with a brown wooden grip bar.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02159",
+   "name": "BrassKnuckles_v2_02",
+   "slug": "spiked-knuckle-guard-purple",
+   "description": "A spiked iron knuckle guard with a dark purple grip bar.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02162",
+   "name": "BrassKnuckles_v2_05",
+   "slug": "round-spiked-knuckle-disc",
+   "description": "A round striped disc with a central spike and a leather strap loop.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02163",
+   "name": "BrassKnuckles_v2_06",
+   "slug": "plain-knuckle-guard",
+   "description": "A plain grey metal knuckle guard with a wooden grip bar.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02164",
+   "name": "BrassKnuckles_v2_07",
+   "slug": "knuckle-guard-blade",
+   "description": "A grey knuckle guard with a wooden grip and a short blade projecting downward.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02166",
+   "name": "BrassKnuckles_v2_09",
+   "slug": "studded-knuckle-guard",
+   "description": "A grey knuckle guard with a purple grip bar and rows of spikes along its edge.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02167",
+   "name": "BrassKnuckles_v2_10",
+   "slug": "shield-shaped-knuckle-guard",
+   "description": "A triangular dark and gold shield-shaped guard plate with a metal rim.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c02170",
+   "name": "Bread",
+   "slug": "bread-slice",
+   "description": "A slice of white bread with a golden crust.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "inventory",
+     "heal",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02171",
+   "name": "Bread2",
+   "slug": "bread-loaf",
+   "description": "A round brown bread loaf with a seeded crust.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "inventory",
+     "heal",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02172",
+   "name": "Breakfast",
+   "slug": "breakfast-plate",
+   "description": "A breakfast of a fried egg, sausages and a potato.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "inventory",
+     "heal",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02173",
+   "name": "Brigandine",
+   "slug": "brigandine-tunic",
+   "description": "A grey tunic with a mail-scaled skirt and a brown belt.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02174",
+   "name": "Brigandine2",
+   "slug": "brigandine-vest",
+   "description": "A studded leather-and-mail body armour with shoulder pieces.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02175",
+   "name": "Bringer_of_death",
+   "slug": "bloodied-serrated-blade",
+   "description": "A long serrated blade with a blood-red edge, tip pointing down-left.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02176",
+   "name": "Broccoli",
+   "slug": "broccoli",
+   "description": "A head of green broccoli on a pale stalk.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "inventory",
+     "heal",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

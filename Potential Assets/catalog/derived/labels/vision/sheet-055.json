@@ -1,0 +1,555 @@
+{
+ "unit": "sheet-055",
+ "records": [
+  {
+   "cluster_id": "c02806",
+   "name": "Hammer_46",
+   "slug": "crimson-thorned-warhammer",
+   "description": "A long-hafted warhammer wrought in twisted crimson thorn-like metal with a spiked head, drawn in red and pink tones.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02807",
+   "name": "Hammer_47",
+   "slug": "dark-iron-pickhammer",
+   "description": "A slim dark iron hammer with a pointed pick-shaped head on a long thin dark haft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02808",
+   "name": "Hammer_48",
+   "slug": "grey-steel-long-hammer",
+   "description": "A long-shafted grey-blue hammer with a flared axe-like steel head on a dark pole.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02809",
+   "name": "Hammer_49",
+   "slug": "violet-tinted-long-hammer",
+   "description": "A long-hafted hammer with a purple-tinged steel head and dark pole.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02810",
+   "name": "Hammer_50",
+   "slug": "teal-steel-long-hammer",
+   "description": "A long-hafted hammer with a teal-tinged steel head on a slim dark pole.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02811",
+   "name": "Hammer_v2_03",
+   "slug": "wooden-mallet-brass-boss",
+   "description": "A wooden mallet with a boxy brown head bearing a small round boss, on a long light-wood handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02812",
+   "name": "Hammer_v2_04",
+   "slug": "wooden-log-mallet",
+   "description": "A mallet with a rounded log-shaped wooden head on a long light-wood handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02814",
+   "name": "Hammer_v2_06",
+   "slug": "grey-iron-sledgehammer",
+   "description": "A heavy grey iron sledgehammer with a blocky head and a dark grip-wrapped handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00668",
+   "name": "Hammer_v2_09",
+   "slug": "cyan-disc-hammer",
+   "description": "A hammer with a large cyan rounded head marked with a T-shaped emblem, on a dark metal handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02816",
+   "name": "Hammer_v2_10",
+   "slug": "stone-head-club-hammer",
+   "description": "A hammer with a rough grey stone head bound by a leather strap on a brown wooden handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02817",
+   "name": "Hammer_v2_11",
+   "slug": "spiked-steel-war-hammer",
+   "description": "A grey steel war hammer with a studded, flanged head and a pointed pommel on a dark shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02818",
+   "name": "Hammer_v2_12",
+   "slug": "glowing-orange-rune-hammer",
+   "description": "A black-headed hammer with glowing orange runes on its face, an orange aura and a dark handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02819",
+   "name": "Hammer_v2_13",
+   "slug": "purple-handled-engraved-hammer",
+   "description": "A hammer with a grey engraved head and a dark purple handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02820",
+   "name": "Hammer_v2_14",
+   "slug": "blue-lightning-hammer",
+   "description": "A dark hammer head with a glowing cyan sigil, surrounded by blue electric arcs and a blue aura.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02821",
+   "name": "Hammer_v2_15",
+   "slug": "red-orb-fire-hammer",
+   "description": "A dark hammer with a glowing red orb on its head, wreathed in a red-orange fiery aura.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02822",
+   "name": "Hammer_v2_16",
+   "slug": "green-glow-hammer",
+   "description": "A dark hammer with a bright lime-green glowing rim and floating green sparks.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02823",
+   "name": "Hammer_v2_17",
+   "slug": "golden-radiant-hammer",
+   "description": "A gilded ornate hammer with a double golden head and a bright star-shaped glint, wrapped in a warm glow.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02824",
+   "name": "Hammer_v2_18",
+   "slug": "purple-skull-hammer",
+   "description": "A hammer with a spiked diamond-shaped head holding a skull gem, glowing magenta-purple on a long dark shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02825",
+   "name": "Hammer_v2_19",
+   "slug": "golden-mushroom-head-hammer",
+   "description": "A hammer with a rounded golden multi-lobed head and brown-gold handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02826",
+   "name": "Hammer_v2_20",
+   "slug": "red-gem-spiked-mace-hammer",
+   "description": "A dark iron spiked-head hammer with a red gem set in the face and a chained dark handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02827",
+   "name": "Hammer_v2_21",
+   "slug": "molten-cracked-hammer",
+   "description": "A hammer with a cracked black head glowing with orange molten fissures, on a dark brown handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02828",
+   "name": "Hammer_v2_22",
+   "slug": "magenta-crystal-hammer",
+   "description": "A hammer with a jagged crystalline head and gem, glowing bright magenta-purple, on a dark spiked handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02830",
+   "name": "Hat",
+   "slug": "black-top-hat",
+   "description": "A dark navy-black top hat with a wide brim and a ribbon band.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "defend"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02831",
+   "name": "HeadMail",
+   "slug": "dark-chainmail-coif",
+   "description": "A dark grey hooded mail coif covering head and neck, with a shadowed face opening.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "defend"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02835",
+   "name": "Helm_05",
+   "slug": "steel-visored-helm",
+   "description": "A grey steel helmet with a vertical nose guard and slitted visor openings.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "defend"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

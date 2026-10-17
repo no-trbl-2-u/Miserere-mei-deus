@@ -1,0 +1,498 @@
+{
+ "unit": "sheet-030",
+ "records": [
+  {
+   "cluster_id": "c01992",
+   "name": "Blacksmith_59_iron_chest",
+   "slug": "iron-chest",
+   "description": "A closed riveted iron chest with a grey-brown metal body and panelled front.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01993",
+   "name": "Blacksmith_60_magic_chest",
+   "slug": "magic-chest",
+   "description": "A black chest covered in glowing magenta runes with a pink aura.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "loot",
+     "reward"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01994",
+   "name": "BlueGambeson2",
+   "slug": "blue-gambeson",
+   "description": "A dark blue quilted gambeson jacket with a high collar and buttoned front.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01995",
+   "name": "BlueShield",
+   "slug": "blue-shield",
+   "description": "A blue-grey heater shield with a pointed bottom and metal rim.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01996",
+   "name": "Bolt_01",
+   "slug": "bolt-01",
+   "description": "A crossbow bolt with a steel head, wooden shaft and brown fletching, angled diagonally.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "equipment",
+     "attack",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01997",
+   "name": "Bolt_02",
+   "slug": "bolt-02",
+   "description": "A crossbow bolt with a grey head, wooden shaft and brown fletching, angled diagonally.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "equipment",
+     "attack",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01998",
+   "name": "Bolt_03",
+   "slug": "bolt-03",
+   "description": "A crossbow bolt with dark navy fletching and a plain steel head.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "equipment",
+     "attack",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01999",
+   "name": "Bolt_04",
+   "slug": "bolt-04",
+   "description": "A crossbow bolt with purple fletching and a pale steel head.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "equipment",
+     "attack",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00518",
+   "name": "Bolt_06",
+   "slug": "bolt-06",
+   "description": "A crossbow bolt with a golden shaft, round gold tip and dark purple fletching.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "equipment",
+     "attack",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02000",
+   "name": "Bolt_07",
+   "slug": "bolt-07",
+   "description": "A crossbow bolt with a red shaft, round red tip and green fletching.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "equipment",
+     "attack",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02001",
+   "name": "Bolt_08",
+   "slug": "bolt-08",
+   "description": "A grey steel crossbow bolt with dark grey fletching and a barbed head.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "equipment",
+     "attack",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02002",
+   "name": "Bolt_09",
+   "slug": "bolt-09",
+   "description": "A pale blue-green steel crossbow bolt with grey fletching.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "equipment",
+     "attack",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02003",
+   "name": "Bolt_10",
+   "slug": "bolt-10",
+   "description": "A golden crossbow bolt with an amber shaft and brown fletching.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "equipment",
+     "attack",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02004",
+   "name": "Bolt_v2_01",
+   "slug": "bolt-v2-01",
+   "description": "A crossbow bolt with a reddish-brown shaft, pale head and brown fletching.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "equipment",
+     "attack",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02005",
+   "name": "Bolt_v2_03",
+   "slug": "bolt-v2-03",
+   "description": "A black crossbow bolt with a glowing cyan head and cyan aura.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "equipment",
+     "attack",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00519",
+   "name": "Bolt_v2_04",
+   "slug": "bolt-v2-04",
+   "description": "A black crossbow bolt with a glowing purple head and purple aura.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "equipment",
+     "attack",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02006",
+   "name": "Bolt_v2_05",
+   "slug": "bolt-v2-05",
+   "description": "A black crossbow bolt with a glowing lime-green head and green aura.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "equipment",
+     "attack",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02007",
+   "name": "Bolts",
+   "slug": "bolts-bundle",
+   "description": "A bundle of four wooden crossbow bolts with steel heads fanned out together.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02008",
+   "name": "Bones",
+   "slug": "bones",
+   "description": "Two grey bones crossed in an X.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02009",
+   "name": "Bonus_r_1",
+   "slug": "cracker",
+   "description": "A square tan cracker or hardtack biscuit with rows of small holes, folded at one corner.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02010",
+   "name": "Bonus_r_10",
+   "slug": "teal-jug",
+   "description": "A teal glazed ceramic jug with a curved handle and a spout.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02011",
+   "name": "Bonus_r_2",
+   "slug": "purple-fish",
+   "description": "A purple fish with pink belly and blue fins and tail.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02012",
+   "name": "Bonus_r_3",
+   "slug": "red-bulb-on-stick",
+   "description": "A glossy red round bulb on a short wooden stick with a pale cap.",
+   "tags": {
+    "kind": "unknown",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c02013",
+   "name": "Bonus_r_4",
+   "slug": "grey-skull",
+   "description": "A cartoon grey skull with dark eye sockets and a blocky jaw.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02014",
+   "name": "Bonus_r_5",
+   "slug": "purple-spiked-armour-piece",
+   "description": "A purple armour piece with spiked edges and red gem-like panels.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  }
+ ]
+}

@@ -1,0 +1,555 @@
+{
+ "unit": "sheet-012",
+ "records": [
+  {
+   "cluster_id": "c01505",
+   "name": "2_Cloth_belt",
+   "slug": "cloth-belt-pale",
+   "description": "A pale cream cloth belt ring with faint stitched pattern.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00344",
+   "name": "2_Cloth_bracers",
+   "slug": "purple-cloth-bracer",
+   "description": "A purple cloth bracer wrapped with bands and capped with pale silver trim at both ends.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00345",
+   "name": "2_Cloth_gloves",
+   "slug": "purple-cloth-gloves",
+   "description": "A pair of purple cloth gloves with pale cuffs and etched silver runic marks.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01506",
+   "name": "2_Cloth_sloulder",
+   "slug": "purple-cloth-shoulder",
+   "description": "A purple cloth shoulder piece with a pale silver rim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01507",
+   "name": "2_Leather_Chest",
+   "slug": "red-leather-chest",
+   "description": "A dark red leather tunic with pale piping, short sleeves and a belt at the waist.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01508",
+   "name": "2_Leather_Pants",
+   "slug": "red-leather-pants",
+   "description": "A pair of dark red leather trousers with striped lower legs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01509",
+   "name": "2_Leather_Shoulder",
+   "slug": "red-leather-shoulder",
+   "description": "A dark red leather pauldron with three pale claw-scratch marks and a silver rim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01510",
+   "name": "2_Leather_belt",
+   "slug": "red-leather-belt",
+   "description": "A red leather belt with a metal buckle, shown as a ring.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01511",
+   "name": "2_Leather_boots",
+   "slug": "red-leather-boots",
+   "description": "A pair of tall red leather boots with silver toe caps and buckle straps.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01512",
+   "name": "2_Leather_bracers",
+   "slug": "brown-leather-bracers",
+   "description": "A pair of brown leather bracer bands stacked together.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01513",
+   "name": "2_Leather_gloves",
+   "slug": "red-leather-gloves",
+   "description": "A pair of red leather gloves with white stripe accents on the fingers.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01514",
+   "name": "2_Leather_head",
+   "slug": "red-leather-helm",
+   "description": "A rounded dark red leather cap helmet with a grey steel neck guard.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01515",
+   "name": "2_Mail_Boots",
+   "slug": "mail-boots",
+   "description": "A pair of grey steel plated boots.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01516",
+   "name": "2_Mail_Chest",
+   "slug": "mail-chest",
+   "description": "A grey steel breastplate cuirass with a round neck hole.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01517",
+   "name": "2_Mail_Shoulder",
+   "slug": "mail-shoulder",
+   "description": "A rounded grey steel pauldron with a brown underside.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01518",
+   "name": "2_Mail_belt",
+   "slug": "mail-belt",
+   "description": "A grey steel-banded belt shown as a flat ring.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01519",
+   "name": "2_Mail_bracers",
+   "slug": "mail-bracer",
+   "description": "A grey steel cylindrical bracer vambrace.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01520",
+   "name": "2_Mail_gloves",
+   "slug": "mail-gauntlets",
+   "description": "A pair of grey articulated steel gauntlets.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01521",
+   "name": "2_Mail_head",
+   "slug": "mail-helm",
+   "description": "A grey steel closed knight helmet with visor slit and gorget.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00007",
+   "name": "2_mail_Pants",
+   "slug": "mail-pants",
+   "description": "A pair of grey steel leg greaves.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01522",
+   "name": "3_Cloth_Boots",
+   "slug": "red-gold-cloth-boots",
+   "description": "A pair of tall red cloth boots with gold trim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01523",
+   "name": "3_Cloth_Chest",
+   "slug": "red-gold-cloth-chest",
+   "description": "A red cloth tunic with gold trim, a brown cowl collar and a grey sash.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01524",
+   "name": "3_Cloth_Pants",
+   "slug": "red-gold-cloth-pants",
+   "description": "A pair of red cloth trousers with gold seam trim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01525",
+   "name": "3_Cloth_belt",
+   "slug": "red-gold-cloth-belt",
+   "description": "A red cloth double-strap belt with gold buckles, shown as a ring.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01526",
+   "name": "3_Cloth_bracers",
+   "slug": "red-gold-cloth-bracer",
+   "description": "A red cloth wrapped bracer with gold trim at the cuff.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

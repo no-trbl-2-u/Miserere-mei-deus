@@ -1,0 +1,1781 @@
+{
+ "unit": "batch-04",
+ "records": [
+  {
+   "cluster_id": "c02616",
+   "name": "Engineering_42_oil",
+   "slug": "doll-unsettling-noise-state",
+   "description": "Icon for the environment state Doll's Unsettling Noise, which makes both sides lose 1 Brave each time they take damage.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "status-effect"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02623",
+   "name": "Engineering_50_magic_plate",
+   "slug": "metal-rune-cooldown-plus-99",
+   "description": "Rune icon for Metal, a rarity 6 rune that adds +99 to skill cooldown and whose short text reads +99.",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02629",
+   "name": "Engineering_56_magic_charge",
+   "slug": "overheat-skill-icon",
+   "description": "Skill icon for Overheat, a rarity 7 Support race skill that also has an M1 mode variant.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02631",
+   "name": "Engineering_58_Remote_Control",
+   "slug": "experimental-apparatus-item",
+   "description": "Camp item and unique random gear icon for Experimental Apparatus (rarity 5).",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02633",
+   "name": "Engineering_60_robot",
+   "slug": "innovation-union-contract",
+   "description": "Union contract icon for Innovation (rarity 5); the file name suggests a robot, which the table does not confirm.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "union"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00610",
+   "name": "Engineerskill_01",
+   "slug": "mechanic-state-industrialisation-contract",
+   "description": "Icon shared by the Mechanic state (rarity 7, summons a metal golem each time a treasure chest is picked up) and the Industrialisation dungeon-drop contract (rarity 5).",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "status-effect",
+     "dungeon"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00611",
+   "name": "Engineerskill_02",
+   "slug": "designers-perspective-state",
+   "description": "Icon for the Designer's Perspective state (rarity 6), which adds +5 sight to corpse-modification board nodes.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "status-effect"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00614",
+   "name": "Engineerskill_05",
+   "slug": "gear-growth-state",
+   "description": "Icon for the Gear Growth state (rarity 5), under which each piece of equipment grows when the wearer levels up.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "status-effect",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00615",
+   "name": "Engineerskill_06",
+   "slug": "detonation-skill-mode-icon",
+   "description": "Skill-mode icon for Detonation, the M2 variant of an attack skill.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00619",
+   "name": "Engineerskill_10",
+   "slug": "gatling-fire-skill-mode-icon",
+   "description": "Skill-mode icon for Gatling Fire, the M2 variant of an attack skill.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00620",
+   "name": "Engineerskill_11",
+   "slug": "cannon-fire-heat-laser-icon",
+   "description": "Icon shared by the Cannon attack skill (rarity 4) and its modes, the Fire! mode, and the Heat Laser boss skill (rarity 7).",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action",
+     "enemy-boss"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00621",
+   "name": "Engineerskill_12",
+   "slug": "overheat-release-skill-mode-icon",
+   "description": "Skill-mode icon for Overheat Release, the M2 variant of the Overheat support skill.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00623",
+   "name": "Engineerskill_14",
+   "slug": "reboot-skill-icon",
+   "description": "Skill icon for Reboot, a rarity 7 Support race skill with an M1 mode variant.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00147",
+   "name": "Engineerskill_15",
+   "slug": "faction-quest-emblems",
+   "description": "Quest icon shared by four quest rows: Honourable Warriors' Guild, Oath Mutual-Aid Society, Dark Moon Trading Company, and Godless Dregs.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "quest"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00050",
+   "name": "Engineerskill_19",
+   "slug": "smoke-ball-skill-icon",
+   "description": "Skill icon for Smoke Ball, a rarity 3 Survive skill with an M1 mode variant.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "defend",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00628",
+   "name": "Engineerskill_21",
+   "slug": "cost-runes-structural-change-icon",
+   "description": "Icon shared by the weak Cost rune (rarity 2), the strong Cost rune (rarity 6), and the Structural Change state (rarity 4).",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "combat-action",
+     "status-effect"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00629",
+   "name": "Engineerskill_22",
+   "slug": "cluster-grenade-explosive-flame-icon",
+   "description": "Icon shared by the Cluster Grenade skill mode (M2 attack) and the Explosive Flame state (rarity 7), which treats the explosive damage it deals as magic damage.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "status-effect"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00630",
+   "name": "Engineerskill_23",
+   "slug": "trap-box-surprise-gift-icon",
+   "description": "Skill icon for Trap Box/Surprise Gift, a rarity 5 Support skill with a Trap Box M1 mode variant.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00633",
+   "name": "Engineerskill_26",
+   "slug": "earth-escape-dive-icons",
+   "description": "Icon shared by the Earth Escape summon skill (rarity 2), the enemy Dive skill (rarity 6), and their M1 mode rows.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "summon",
+     "enemy",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00635",
+   "name": "Engineerskill_28",
+   "slug": "full-charge-skill-mode-icon",
+   "description": "Skill-mode icon for Full Charge, the M2 variant of a Support skill.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00637",
+   "name": "Engineerskill_31",
+   "slug": "chainsaw-skill-icon",
+   "description": "Skill icon for Chainsaw, a rarity 5 attack skill with an M1 mode variant.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00638",
+   "name": "Engineerskill_32",
+   "slug": "mining-skill-icon",
+   "description": "Skill icon for Mining, a rarity 5 Special-category skill with an M1 mode variant.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00641",
+   "name": "Engineerskill_35",
+   "slug": "catastrophe-world-end-icon",
+   "description": "Icon shared by the Catastrophe attack skill (rarity 7) and its M1 mode, and the two World's End boss skill rows (rarity 7).",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "enemy-boss",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00643",
+   "name": "Engineerskill_37",
+   "slug": "hand-thrown-bomb-delayed-damage-icon",
+   "description": "Icon shared by the Hand-Thrown Bomb attack skill (rarity 2) and its M1 mode, and the Delayed Damage tip.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "tip",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00647",
+   "name": "Engineerskill_41",
+   "slug": "sniper-state",
+   "description": "Icon for the Sniper state (rarity 4), under which attacks always hit once cumulative cooldown reaches 10.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "status-effect"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00650",
+   "name": "Engineerskill_44",
+   "slug": "great-toad-summon-skill-mode-icon",
+   "description": "Skill-mode icon for Great Toad Summon, the M2 variant of a Support-category skill.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "summon",
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00148",
+   "name": "Engineerskill_45_nobgX1",
+   "slug": "blood-thirst-skill-icon",
+   "description": "Skill icon for Blood Thirst, a rarity 7 Support skill tagged FromAbility, with an M1 mode variant.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00651",
+   "name": "Engineerskill_46",
+   "slug": "planned-execution-skill-mode-icon",
+   "description": "Skill-mode icon for Planned Execution, the M2 variant of a Survive-category skill.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "defend",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00653",
+   "name": "Engineerskill_48",
+   "slug": "everything-goes-to-plan-skill-icon",
+   "description": "Skill icon for Everything Goes to Plan (Fine Work Flows), a rarity 7 attack skill with an M1 mode variant.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00654",
+   "name": "Engineerskill_49",
+   "slug": "dynamite-skill-icon",
+   "description": "Skill icon for Dynamite, a rarity 4 attack skill with an M1 mode variant.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00655",
+   "name": "Engineerskill_50",
+   "slug": "tester-credits-special-thanks-badge",
+   "description": "Special-thanks badge shared by four tester credit rows (SPT00001 to SPT00004).",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00656",
+   "name": "Fire_02_nbX1",
+   "slug": "spore-spread-parasitism-skill-icon",
+   "description": "Skill icon for Spore Spread/Parasitism, a rarity 7 Special-category race skill with a Spore Spread M1 mode variant.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02677",
+   "name": "Fire_ray",
+   "slug": "artillery-support-request-skill-mode-icon",
+   "description": "Skill-mode icon for Artillery Support Request, the M2 variant of an attack skill.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02699",
+   "name": "Frost_arrow",
+   "slug": "frost-bolt-skill-icon",
+   "description": "Skill icon for Frost Bolt, a rarity 5 attack skill with an M1 mode variant.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02703",
+   "name": "Gambesons",
+   "slug": "shelno-clinic-item",
+   "description": "Camp item and unique gear icon for Shelno Clinic (rarity 7).",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00657",
+   "name": "Gloves_02",
+   "slug": "pharmacist-gloves-item",
+   "description": "Camp item and random unique gear icon for Pharmacist (rarity 5), usable at camp and also worn as gear.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00149",
+   "name": "Gloves_05",
+   "slug": "martial-artist-gloves-item",
+   "description": "Icon shared by the Martial Artist camp item and unique gear (rarity 5) and the Martial Arts dungeon-drop contract (rarity 5).",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "camp",
+     "equipment",
+     "dungeon"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00150",
+   "name": "Gloves_09",
+   "slug": "persist-auto-free-solid-icon",
+   "description": "Icon shared by the Persist rune (rarity 1, ignores stun), the Auto: Free rune (rarity 4, auto-uses free skills), and the Solid state (rarity 1, sometimes ignores stun).",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "combat-action",
+     "status-effect"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00660",
+   "name": "Gloves_13",
+   "slug": "hidden-village-gloves-item",
+   "description": "Camp item and random unique gear icon for Hidden Village (rarity 5).",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00662",
+   "name": "Gloves_23",
+   "slug": "gauntlet-item-tiers",
+   "description": "Icon for Gauntlet, a camp item in three rarity tiers (2 to 4) plus a basic random gear version (rarity 1).",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02713",
+   "name": "Gloves_27",
+   "slug": "gloves-item-snow-country",
+   "description": "Icon shared by the Gloves camp item in three rarity tiers (2 to 4) and the rarity 5 Snow Country camp item.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00665",
+   "name": "GreenHat",
+   "slug": "nordmia-forest-hat-item",
+   "description": "Camp item and unique gear icon for the Great Forest of Nordmia (rarity 6), filed as a green hat.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02743",
+   "name": "Gun_v2_06",
+   "slug": "carried-great-cannon-item",
+   "description": "Camp item and unique gear icon for the Carried Great Cannon (rarity 7).",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02745",
+   "name": "Gun_v2_08",
+   "slug": "gun-item-tiers",
+   "description": "Icon for Gun, a camp item in three rarity tiers (2 to 4) plus a basic random gear version (rarity 1).",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02747",
+   "name": "Gun_v2_10",
+   "slug": "pocket-gun-item",
+   "description": "Camp item and unique random gear icon for the Pocket Gun (rarity 5).",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02750",
+   "name": "Gun_v2_13",
+   "slug": "matchlock-item",
+   "description": "Camp item and unique gear icon for Matchlock (rarity 6).",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02751",
+   "name": "Gun_v2_14",
+   "slug": "gezeiten-craftsman-item",
+   "description": "Camp item and unique gear icon for the Gezeiten Craftsman (rarity 6).",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02752",
+   "name": "Gun_v2_15",
+   "slug": "ray-gun-item",
+   "description": "Camp item and unique gear icon for the Ray Gun (rarity 7), whose gear version carries a special-stat tag.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02768",
+   "name": "Hammer_08",
+   "slug": "hammer-item-tiers",
+   "description": "Icon for Hammer, a camp item in three rarity tiers (2 to 4) plus a basic random gear version (rarity 1).",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02803",
+   "name": "Hammer_43",
+   "slug": "pandora-item",
+   "description": "Camp item and unique gear icon for Pandora (rarity 7).",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02804",
+   "name": "Hammer_44",
+   "slug": "great-feat-disaster-contract",
+   "description": "Disaster-drop contract icon for Great Feat (rarity 7).",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "dungeon"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00667",
+   "name": "Hammer_v2_01",
+   "slug": "giant-hammer-item",
+   "description": "Camp item and unique random gear icon for Giant Hammer (rarity 5).",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02813",
+   "name": "Hammer_v2_05",
+   "slug": "mallet-item-tiers",
+   "description": "Icon for Mallet, a camp item in three rarity tiers (2 to 4) plus a basic random gear version (rarity 1).",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02815",
+   "name": "Hammer_v2_07",
+   "slug": "wedge-of-earth-item",
+   "description": "Camp item and unique random gear icon for Wedge of the Earth (rarity 5).",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02829",
+   "name": "Hare_ears",
+   "slug": "rabbit-band-item",
+   "description": "Icon for the Rabbit Band camp item (rarity 7, always available), also used by the Wooden Tablet of Success shop item.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "camp",
+     "shop"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02832",
+   "name": "Helm_01",
+   "slug": "masses-union-contract",
+   "description": "Union contract icon for Masses (rarity 1).",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "union"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02833",
+   "name": "Helm_02",
+   "slug": "hat-item-tiers-einfarch",
+   "description": "Icon shared by the Hat camp item in three rarity tiers (2 to 4) and the rarity 7 Einfarch dungeon-drop contract.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "camp",
+     "equipment",
+     "dungeon"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02834",
+   "name": "Helm_03",
+   "slug": "scout-unit-union-contract",
+   "description": "Union contract icon for Scout Unit (rarity 3).",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "union"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00669",
+   "name": "Helm_07",
+   "slug": "helmet-item-tiers",
+   "description": "Icon for Helmet, a camp item in three rarity tiers (2 to 4) plus a basic random gear version (rarity 1).",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02837",
+   "name": "Helm_11",
+   "slug": "tabula-caeli-dungeon-contract",
+   "description": "Dungeon-drop contract icon for Tabula Caeli (rarity 7).",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "dungeon"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02840",
+   "name": "Helm_15",
+   "slug": "rainabel-dungeon-contract",
+   "description": "Dungeon-drop contract icon for Rainabel (rarity 7).",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "dungeon"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02842",
+   "name": "Helm_17",
+   "slug": "plague-doctor-item",
+   "description": "Camp item and unique random gear icon for Plague Doctor (rarity 5).",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02843",
+   "name": "Helm_18",
+   "slug": "solde-dungeon-contract",
+   "description": "Dungeon-drop contract icon for Solde (rarity 7).",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "dungeon"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00672",
+   "name": "Helm_27",
+   "slug": "guardian-of-the-north-item",
+   "description": "Camp item and unique gear icon for Guardian of the North (rarity 6).",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02851",
+   "name": "Helm_28",
+   "slug": "northern-warriors-union-contract",
+   "description": "Union contract icon for Northern Warriors (rarity 3).",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "union"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00673",
+   "name": "Helm_29",
+   "slug": "tsuneyoshi-helmet-item",
+   "description": "Camp item and unique gear icon for Tsuneyoshi's Helmet (rarity 7), also used by the East dungeon-drop contract and the Rabbit-mark Container XL shop item.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "camp",
+     "equipment",
+     "dungeon",
+     "shop"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02854",
+   "name": "Helm_33",
+   "slug": "mutant-mask-item",
+   "description": "Camp item and unique gear icon for Mutant Mask (rarity 6).",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02856",
+   "name": "Helm_35",
+   "slug": "ya-moto-volcano-dungeon-contract",
+   "description": "Dungeon-drop contract icon for Ya-Moto Volcano (rarity 7).",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "dungeon"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00674",
+   "name": "Helm_37",
+   "slug": "rescue-operation-eltrand-contracts",
+   "description": "Icon shared by the Rescue Operation union contract (rarity 3) and the Eltrand dungeon-drop contract (rarity 7).",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "union",
+     "dungeon"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02859",
+   "name": "Helm_40",
+   "slug": "legion-union-contract",
+   "description": "Union contract icon for Legion (rarity 5).",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "union"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02861",
+   "name": "Helm_42",
+   "slug": "launi-dungeon-contract",
+   "description": "Dungeon-drop contract icon for Launi (rarity 7).",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "dungeon"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00151",
+   "name": "Helm_44X1",
+   "slug": "blue-meteoric-iron-helm-item",
+   "description": "Camp item and basic gear icon for Blue Meteoric Iron Helm (rarity 4), also used by the Verchilite Ore shop item.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "camp",
+     "equipment",
+     "shop"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02862",
+   "name": "Helm_45",
+   "slug": "blastfort-dungeon-contract",
+   "description": "Dungeon-drop contract icon for Blastfort (rarity 7).",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "dungeon"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00675",
+   "name": "Helm_46",
+   "slug": "nlima-nyota-dungeon-contract",
+   "description": "Dungeon-drop contract icon for N'lima Nyota (rarity 7).",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "dungeon"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02863",
+   "name": "Helm_47",
+   "slug": "great-dune-dungeon-contract",
+   "description": "Dungeon-drop contract icon for Great Dune (rarity 7).",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "dungeon"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02866",
+   "name": "Helm_51",
+   "slug": "shainenaue-dungeon-contract",
+   "description": "Dungeon-drop contract icon for Shainenaue (rarity 7).",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "dungeon"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00676",
+   "name": "Helm_53",
+   "slug": "bergtiller-dungeon-contract",
+   "description": "Dungeon-drop contract icon for Bergtiller (rarity 7).",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "dungeon"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02869",
+   "name": "Helm_55",
+   "slug": "west-sand-dungeon-contract",
+   "description": "Dungeon-drop contract icon for West Sand (rarity 7).",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "dungeon"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02870",
+   "name": "Helm_57",
+   "slug": "corruption-of-power-union-contract",
+   "description": "Union contract icon for Corruption of Power (rarity 2).",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "union"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02871",
+   "name": "Helm_58",
+   "slug": "nordmia-dungeon-contract",
+   "description": "Dungeon-drop contract icon for Nordmia (rarity 7).",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "dungeon"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02872",
+   "name": "Helm_59",
+   "slug": "strat-dungeon-contract",
+   "description": "Dungeon-drop contract icon for Strat (rarity 7).",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "dungeon"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00677",
+   "name": "Helm_61",
+   "slug": "release-history-rkhist-icon",
+   "description": "Icon shared by four release-history rows dated January to March 2024, tagged with version numbers starting at v1.0.0.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c02874",
+   "name": "Helm_62",
+   "slug": "circlet-item-tiers",
+   "description": "Icon for Circlet, a camp item in three rarity tiers (2 to 4) plus a basic random gear version (rarity 1).",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02876",
+   "name": "Helm_64",
+   "slug": "angels-halo-item",
+   "description": "Camp item and unique random gear icon for Angel's Halo (rarity 5).",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02877",
+   "name": "Helm_66",
+   "slug": "gezeiten-dungeon-contract",
+   "description": "Dungeon-drop contract icon for Gezeiten (rarity 7).",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "dungeon"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02880",
+   "name": "Helm_69",
+   "slug": "queen-union-contract",
+   "description": "Union contract icon for Queen (rarity 5).",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "union"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02881",
+   "name": "Helm_71",
+   "slug": "solitude-union-contract",
+   "description": "Union contract icon for Solitude (rarity 5).",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "union"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02887",
+   "name": "Herbalism_06_parsley",
+   "slug": "medicinal-herb-item",
+   "description": "Camp item icon for Medicinal Herb (rarity 1), a usable herb.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "camp"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02889",
+   "name": "Herbalism_08_shadowberry",
+   "slug": "alpine-medicinal-herb-item",
+   "description": "Camp item icon for Alpine Medicinal Herb (rarity 3), a usable herb.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "camp"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02898",
+   "name": "Herbalism_17_energyflower",
+   "slug": "holy-tree-fruit-key",
+   "description": "Key-tagged inventory item icon for Holy Tree Fruit (rarity 6).",
+   "tags": {
+    "kind": "key",
+    "use": [
+     "inventory"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02909",
+   "name": "Herbalism_28_stinkymushroom",
+   "slug": "mushroom-state",
+   "description": "Icon for the Mushroom state (rarity 7), under which status ailments cannot be resisted and HP stacks drain each turn while spores spread to enemies.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "status-effect"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02911",
+   "name": "Herbalism_30_deadlymushroom",
+   "slug": "mushroom-camp-item",
+   "description": "Camp item and unique gear icon for Mushroom (rarity 7).",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02913",
+   "name": "Herbalism_32_leaves",
+   "slug": "recommended-content-map-point",
+   "description": "Map-point icon for Recommended Content, which opens a scene and is tagged ShowAll.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "map-point",
+     "navigation"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02929",
+   "name": "Herbalism_48_woodmoss",
+   "slug": "strange-mycelium-bed-spore-set",
+   "description": "Icon shared by the Strange Mycelium Bed camp item (rarity 7), the enemy Spore skill and its M1 mode, and the Spore Dispersal state, which rises to 100 percent and turns the user into a mushroom.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "camp",
+     "enemy",
+     "status-effect"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c02933",
+   "name": "Herbalism_52_goldenflower",
+   "slug": "golden-flower-outer-land-item",
+   "description": "Camp item icon for Golden Flower of the Outer Land (rarity 3), a usable item.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "camp"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02938",
+   "name": "Herbalism_57_whiteflower",
+   "slug": "fragrance-item",
+   "description": "Camp item and unique random gear icon for Fragrance (rarity 5).",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "camp",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02941",
+   "name": "Herbalism_60_redrose",
+   "slug": "blood-of-depravity-wandering-corpse",
+   "description": "Icon shared by the Blood of Depravity union contract (rarity 4) and two Wandering Corpse event rows, one PvP and one MeetCorpse.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "union",
+     "story"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02985",
+   "name": "Indian_hat",
+   "slug": "chiefs-feather-ornament-item",
+   "description": "Camp item icon for Chief's Feather Ornament (rarity 3), an always-available item.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "camp"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03003",
+   "name": "Jewelry_13_diamond",
+   "slug": "trapezohedron-infinite-darkness",
+   "description": "Icon for Trapezohedron, a usable camp item (rarity 6) with a unique gear version, which the Infinite Darkness state shares; that state moves other equipment's unique effects into this item's empty slots on level up.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "camp",
+     "equipment",
+     "status-effect"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03010",
+   "name": "Jewelry_20_greatbluecrystal",
+   "slug": "crystal-gear-state",
+   "description": "Icon for the Crystal gear state (rarity 4), under which the item's performance declines on level up.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "status-effect",
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

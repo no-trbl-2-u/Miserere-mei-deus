@@ -1,0 +1,530 @@
+{
+ "unit": "sheet-108",
+ "records": [
+  {
+   "cluster_id": "c05797",
+   "name": "skinning_13_feather",
+   "slug": "feather-dark",
+   "description": "A long dark grey-brown quill feather with a pale central shaft.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05798",
+   "name": "skinning_15_tusk",
+   "slug": "curved-tusk",
+   "description": "A curved cream-coloured tusk with a darker ridged base, bent into a hook shape.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05800",
+   "name": "skinning_17_claw",
+   "slug": "crab-claw",
+   "description": "A red-orange and cream pincer claw with a dark tip, shaped like a crab claw.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05803",
+   "name": "skinning_22_thick_fur",
+   "slug": "thick-fur-pelt",
+   "description": "A bundle of dense dark brown fur forming a rounded pelt.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05804",
+   "name": "skinning_23_dragon_tale",
+   "slug": "dragon-tail",
+   "description": "A scaled brown tail with blue spikes along the back and a tapering curled end, with a pale stump at the cut end.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05806",
+   "name": "skinning_25_ancient_scales",
+   "slug": "ancient-scales",
+   "description": "A patch of dark olive-brown overlapping scales with a ragged lower edge.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05807",
+   "name": "skinning_26_iron_skin",
+   "slug": "iron-skin-hide",
+   "description": "A rust-brown hide plated with large overlapping scale-like segments.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05808",
+   "name": "skinning_27_mystic_skin",
+   "slug": "mystic-skin",
+   "description": "A pale lavender-white membrane with purple veins and a wavy outline.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05810",
+   "name": "skinning_29_tyger_skin",
+   "slug": "tiger-skin",
+   "description": "An orange hide with black stripes laid flat.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05813",
+   "name": "skinning_32_zebra_skin",
+   "slug": "zebra-skin",
+   "description": "A white hide with black stripes and a dark mane line down the middle, laid flat.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05814",
+   "name": "skinning_33_dense_skin",
+   "slug": "dense-skin",
+   "description": "A grey-brown hide with a fine cross-hatched netted texture and a pale folded edge.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05815",
+   "name": "skinning_34_cow_skin",
+   "slug": "cow-skin",
+   "description": "A white hide with black patches in a cow pattern.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05818",
+   "name": "skinning_38_spoiled_skin",
+   "slug": "spoiled-skin",
+   "description": "A tattered, dull grey-brown hide in ragged strips.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05819",
+   "name": "skinning_39_great_coat",
+   "slug": "great-coat-fur",
+   "description": "A shaggy tan and brown fur pelt with long tufted strands.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05822",
+   "name": "skinning_42_deer_skin",
+   "slug": "deer-skin",
+   "description": "A tan hide with white spots and a pale underside, laid flat.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05826",
+   "name": "skinning_46_deerhorns",
+   "slug": "deer-horns",
+   "description": "A set of dark branching antlers mounted on a skull base.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05827",
+   "name": "skinning_47_wildteeth",
+   "slug": "wild-teeth",
+   "description": "A row of sharp fangs set in pinkish gum, with a curved jaw ridge.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05830",
+   "name": "skinning_50_fin",
+   "slug": "fin",
+   "description": "An orange-brown fin with grey spines and a torn webbed membrane.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05833",
+   "name": "skinning_53_greenfeather",
+   "slug": "green-feather",
+   "description": "A long feather with green and black barring and a pale shaft.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05838",
+   "name": "skinning_58_tongue",
+   "slug": "tongue",
+   "description": "A curved pinkish-mauve tongue shape.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05844",
+   "name": "staff_1",
+   "slug": "staff-orb",
+   "description": "A wooden staff topped with a round pale pearl orb.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05845",
+   "name": "staff_10",
+   "slug": "staff-pink-crystal",
+   "description": "A wooden staff with a pink crystal tip and a banded grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05846",
+   "name": "staff_11",
+   "slug": "staff-crook",
+   "description": "A wooden staff with a curled crook top and a wrapped grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05848",
+   "name": "staff_13",
+   "slug": "staff-ornate-bronze",
+   "description": "A long wooden staff capped with an ornate bronze trident-like head and a red wrapped grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05849",
+   "name": "staff_14",
+   "slug": "staff-ornate-bronze-b",
+   "description": "A long wooden staff capped with an ornate bronze head and a red wrapped grip, a close variant of staff_13.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

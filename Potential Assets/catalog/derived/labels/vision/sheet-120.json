@@ -1,0 +1,539 @@
+{
+ "unit": "sheet-120",
+ "records": [
+  {
+   "cluster_id": "c02949",
+   "name": "Ice_04_blizzard",
+   "slug": "ice-shard-blizzard",
+   "description": "Four glowing blue ice shards streak diagonally across a dark blue field.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02950",
+   "name": "Ice_05",
+   "slug": "frost-bearded-man",
+   "description": "Profile of a bearded man with glowing icy blue eyes and swirling frost wind around his head.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02951",
+   "name": "Ice_06_iceNeedles",
+   "slug": "ice-needle-spikes",
+   "description": "A cluster of jagged ice crystal spikes rising from a frozen base.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02952",
+   "name": "Ice_07",
+   "slug": "ice-pillars-eruption",
+   "description": "Pillars of blue light and ice rising from the ground in a dark cavern.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02953",
+   "name": "Ice_08_armor",
+   "slug": "ice-armor-shield",
+   "description": "A blue shield emblem with a glowing glyph, edged in frost.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "defend",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02954",
+   "name": "Ice_09_freeze",
+   "slug": "skull-frost-breath",
+   "description": "A dark cloaked figure and a glowing-eyed skull exhaling a stream of frost.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "status-effect",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02955",
+   "name": "Ice_10_fist",
+   "slug": "ice-fist-strike",
+   "description": "A clenched gauntleted fist with swirling blue frost arcs around it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02956",
+   "name": "Ice_10_nb",
+   "slug": "ice-fist-strike-transparent",
+   "description": "A clenched gauntleted fist with swirling blue frost arcs, on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02957",
+   "name": "Ice_11_destroy",
+   "slug": "ice-shield-shatter",
+   "description": "A dark shield split by a bright blue slash with a glowing burst at the centre.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02958",
+   "name": "Ice_11_nb",
+   "slug": "ice-shield-shatter-transparent",
+   "description": "A dark shield split by a bright blue slash with a glowing burst, on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02959",
+   "name": "Ice_12_arrow",
+   "slug": "ice-spear-thrust",
+   "description": "A barbed spear head with a wooden shaft trailing blue frost swooshes.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02960",
+   "name": "Ice_12_nb",
+   "slug": "ice-spear-thrust-transparent",
+   "description": "A barbed spear head with a wooden shaft trailing blue frost swooshes, on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02961",
+   "name": "Ice_13",
+   "slug": "ice-lance",
+   "description": "A long jagged icicle lance slashing diagonally across a dark blue field.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02962",
+   "name": "Ice_13_nb",
+   "slug": "ice-lance-transparent",
+   "description": "A long jagged icicle lance slashing diagonally, on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02963",
+   "name": "Ice_14_freeze",
+   "slug": "skull-frost-breath-bright",
+   "description": "A dark skull with glowing blue eyes exhaling a bright cloud of frost.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "status-effect",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02964",
+   "name": "Ice_14_nb",
+   "slug": "skull-frost-breath-transparent",
+   "description": "A dark skull with glowing blue eyes exhaling a bright cloud of frost, on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "status-effect",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02965",
+   "name": "Ice_15",
+   "slug": "ice-claw-slashes",
+   "description": "Three glowing blue ice claw slashes fanning out diagonally.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02966",
+   "name": "Ice_15_nb",
+   "slug": "ice-claw-slashes-transparent",
+   "description": "Three glowing blue ice claw slashes fanning out diagonally, on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02967",
+   "name": "Ice_16",
+   "slug": "ice-crystal-vortex",
+   "description": "A pointed ice crystal wrapped in a glowing blue whirling ring.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02968",
+   "name": "Ice_16_nb",
+   "slug": "ice-crystal-vortex-transparent",
+   "description": "A pointed ice crystal wrapped in a glowing blue whirling ring, on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02969",
+   "name": "Ice_17",
+   "slug": "water-droplet-frost",
+   "description": "A single glowing blue water droplet inside faint curved arcs.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "heal",
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02970",
+   "name": "Ice_17_nb",
+   "slug": "water-droplet-frost-transparent",
+   "description": "A single glowing blue water droplet inside faint curved arcs, on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "heal",
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02971",
+   "name": "Ice_18_icedenie",
+   "slug": "frost-breath-man",
+   "description": "An armoured man with glowing blue eyes breathing a stream of blue frost to the left.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "status-effect",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02972",
+   "name": "Ice_18_nb",
+   "slug": "frost-breath-man-transparent",
+   "description": "An armoured man with glowing blue eyes breathing a stream of blue frost, on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "status-effect",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02973",
+   "name": "Ice_1_nb",
+   "slug": "ice-crystal-mass",
+   "description": "A mass of jagged blue ice crystals with a bright peak.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

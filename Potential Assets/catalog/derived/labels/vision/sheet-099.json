@@ -1,0 +1,480 @@
+{
+ "unit": "sheet-099",
+ "records": [
+  {
+   "cluster_id": "c04488",
+   "name": "ThickBrounGambleson",
+   "slug": "thick-brown-gambeson",
+   "description": "A thick brown quilted gambeson tunic with short sleeves in dark leather tones.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04490",
+   "name": "Tomato",
+   "slug": "tomato",
+   "description": "A single ripe red tomato with a green leafy stem on top.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00991",
+   "name": "Torch",
+   "slug": "torch",
+   "description": "An unlit wooden torch with a rag-wrapped head bound with cord.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04492",
+   "name": "TorchFire",
+   "slug": "torch-fire",
+   "description": "A wooden torch with a burning orange flame at its head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04493",
+   "name": "TrainingSwordWood",
+   "slug": "wooden-training-sword",
+   "description": "A plain wooden training sword with a straight blade and crossguard, angled diagonally.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04512",
+   "name": "VegetableMarrow",
+   "slug": "vegetable-marrow",
+   "description": "A green vegetable marrow, an elongated pale-green squash.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04513",
+   "name": "Vegetables",
+   "slug": "vegetables-pile",
+   "description": "A pile of vegetables with broccoli, a carrot and a red tomato resting on scattered stones and dirt.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04515",
+   "name": "Vest",
+   "slug": "leather-vest",
+   "description": "A sleeveless brown leather vest with stitched seams and armholes.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04516",
+   "name": "VikingHelm",
+   "slug": "viking-helm",
+   "description": "A rounded iron helmet with a nose guard and bronze-toned cap, Viking style.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04519",
+   "name": "Wand_v2_02",
+   "slug": "wand-blue-gem-purple-grip",
+   "description": "A slender wand with a purple wrapped grip and a small blue gem at the tip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04521",
+   "name": "Wand_v2_04",
+   "slug": "wand-gold-star",
+   "description": "A wooden staff topped with a golden star.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04522",
+   "name": "Wand_v2_05",
+   "slug": "wand-green-star",
+   "description": "A vine-wrapped wooden staff topped with a green star.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04523",
+   "name": "Wand_v2_06",
+   "slug": "staff-crescent-moon",
+   "description": "A dark green staff topped with a silver crescent moon.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04524",
+   "name": "Wand_v2_07",
+   "slug": "scepter-pearl-orb",
+   "description": "A thin metal scepter topped with a large pale pearl-like orb.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04525",
+   "name": "Wand_v2_08",
+   "slug": "mace-grey-orb",
+   "description": "A dark rune-wrapped staff topped with a pale lavender spherical orb.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04526",
+   "name": "Wand_v2_09",
+   "slug": "staff-amber-crystal",
+   "description": "A steel-shafted staff with a leather grip and an amber crystal head set in metal prongs.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04527",
+   "name": "Wand_v2_11",
+   "slug": "wand-pink-crystal",
+   "description": "A wand with a glowing magenta crystal head surrounded by pink sparkles.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04529",
+   "name": "Wand_v2_13",
+   "slug": "wand-orange-flame-tip",
+   "description": "A wand with a glowing golden-orange flame-shaped head on a dark shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04530",
+   "name": "Wand_v2_14",
+   "slug": "skull-staff",
+   "description": "A twisted wooden staff topped with a skull with glowing orange eyes.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04532",
+   "name": "Wand_v2_16",
+   "slug": "staff-green-glow-crescent",
+   "description": "A staff with a crescent-shaped grey metal head cradling a glowing lime-green orb.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04533",
+   "name": "Wand_v2_17",
+   "slug": "staff-fire-orb",
+   "description": "A bronze hexagonal-framed staff head with a blazing orange fireball at its centre.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04534",
+   "name": "Wand_v2_18",
+   "slug": "staff-purple-triskelion",
+   "description": "A bronze-framed staff head holding a glowing purple triple-spiral emblem.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04535",
+   "name": "Wand_v2_19",
+   "slug": "staff-cyan-swirl",
+   "description": "A framed staff head with a glowing cyan swirl and radiating blue sparks.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04536",
+   "name": "Wand_v2_20",
+   "slug": "staff-magenta-burst",
+   "description": "A framed staff head with a bright magenta burst of light at its centre.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04537",
+   "name": "Wand_v2_21",
+   "slug": "staff-white-crystals",
+   "description": "A dark blue-grey staff topped with floating white crystal shards.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

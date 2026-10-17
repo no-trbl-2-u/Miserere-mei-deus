@@ -1,0 +1,504 @@
+{
+ "unit": "sheet-039",
+ "records": [
+  {
+   "cluster_id": "c02238",
+   "name": "Chest_61",
+   "slug": "yellow-sash-tunic",
+   "description": "A dark green-grey tunic with a golden-yellow sash and shoulder trim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "loot",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02240",
+   "name": "Chest_64",
+   "slug": "green-sash-tunic",
+   "description": "A dark tunic with a green sash and green shoulder trim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "loot",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02241",
+   "name": "Chest_66",
+   "slug": "steel-plate-cuirass",
+   "description": "A steel plate cuirass with a layered pauldron and a brown strap across the chest.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "loot",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02242",
+   "name": "Chest_67",
+   "slug": "bronze-plate-cuirass",
+   "description": "A copper-brown plate cuirass with a layered pauldron and orange belt.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "loot",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02244",
+   "name": "Chest_69",
+   "slug": "steel-cuirass-red-skirt",
+   "description": "A steel plate cuirass with a layered pauldron and a red pleated skirt.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "loot",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00541",
+   "name": "Chest_75",
+   "slug": "brown-leather-jerkin",
+   "description": "A brown leather jerkin with dark short sleeves and a ragged hem.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "loot",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02246",
+   "name": "Chest_77",
+   "slug": "red-leather-jerkin",
+   "description": "A red jerkin with dark short sleeves and gold trim along the hem.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "loot",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02247",
+   "name": "Chest_79",
+   "slug": "green-hooded-tunic",
+   "description": "A dark green tunic with a green hood-collar and a pointed hem.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "loot",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00542",
+   "name": "Chest_80",
+   "slug": "teal-hooded-tunic",
+   "description": "A dark tunic with a teal hood-collar and a pointed hem.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "loot",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00543",
+   "name": "Chest_82",
+   "slug": "red-bodice-armour",
+   "description": "A red bodice with orange-pink shoulder pieces and a studded pointed hem.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "loot",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02248",
+   "name": "Chest_83",
+   "slug": "maroon-hooded-robe",
+   "description": "A dark robe with a crimson hood-collar and gold trim lines.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "loot",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02249",
+   "name": "ChickenReady",
+   "slug": "roast-chicken",
+   "description": "A whole roasted chicken browned golden with drumsticks.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02252",
+   "name": "ClassicHat",
+   "slug": "brown-cloth-hood",
+   "description": "A plain brown cloth hood with an open face.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "loot",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02253",
+   "name": "ClassicPants",
+   "slug": "brown-trousers",
+   "description": "A pair of loose brown cloth trousers.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "loot",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02254",
+   "name": "ClothArmor",
+   "slug": "cloth-tunic-armour",
+   "description": "A pale cloth tunic with a brown belt and toggle fastenings down the front.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "loot",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02255",
+   "name": "ClothArmorPants",
+   "slug": "grey-cloth-pants",
+   "description": "A pair of light grey cloth trousers with darker lower legs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "loot",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02256",
+   "name": "Club",
+   "slug": "spiked-iron-mace",
+   "description": "A wooden-handled mace with a small spiked iron head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "loot",
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02257",
+   "name": "Club2",
+   "slug": "studded-wooden-mace",
+   "description": "A long wooden club with a studded, pointed head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "loot",
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02258",
+   "name": "Club3",
+   "slug": "flanged-mace",
+   "description": "A wooden-handled mace with a grey flanged metal head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "loot",
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02259",
+   "name": "Club4",
+   "slug": "dark-iron-morning-star",
+   "description": "A mace with a dark iron spiked ball head on a wooden shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "loot",
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02260",
+   "name": "Club_v2_01",
+   "slug": "bone-club",
+   "description": "A large bone with knobbed ends and a bloody tip, used as a club.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "loot",
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02261",
+   "name": "Club_v2_02",
+   "slug": "wooden-knobbed-club",
+   "description": "A thick wooden club with a bulbous head and a leather-wrapped grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "loot",
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02262",
+   "name": "Club_v2_03",
+   "slug": "spiked-wooden-club",
+   "description": "A thick wooden club with a bulbous head, wrapped grip and white spikes.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "loot",
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02263",
+   "name": "Club_v2_04",
+   "slug": "plank-club",
+   "description": "A wooden plank bound with leather strips, used as a club.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "loot",
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02264",
+   "name": "Club_v2_05",
+   "slug": "spiked-log-club",
+   "description": "A tapered wooden club studded with long iron spikes.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "loot",
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

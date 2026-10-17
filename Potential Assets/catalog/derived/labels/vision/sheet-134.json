@@ -1,0 +1,530 @@
+{
+ "unit": "sheet-134",
+ "records": [
+  {
+   "cluster_id": "c04608",
+   "name": "Wind_06_lightning",
+   "slug": "wind-lightning-hand",
+   "description": "An open hand with fingers spread, wrapped in branching blue lightning bolts on a dark blue background.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04609",
+   "name": "Wind_06_nb",
+   "slug": "wind-lightning-hand-nb",
+   "description": "An open hand with fingers spread, wrapped in branching blue lightning bolts on a dark blue background.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04610",
+   "name": "Wind_07_lightning",
+   "slug": "wind-lightning-woman",
+   "description": "A standing dark-haired woman in pale clothing surrounded by crackling blue lightning and a glowing blue ring on the ground.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "buff",
+     "status-effect"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04611",
+   "name": "Wind_07_nb",
+   "slug": "wind-lightning-woman-nb",
+   "description": "A standing dark-haired woman in pale clothing surrounded by crackling blue lightning and a glowing blue ring on the ground.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "buff",
+     "status-effect"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04612",
+   "name": "Wind_08_elemental",
+   "slug": "wind-gust-golem",
+   "description": "A muscular bronze-armoured figure with fists raised, wrapped in white swirling wind around its midsection.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "summon",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04613",
+   "name": "Wind_08_nb",
+   "slug": "wind-gust-golem-nb",
+   "description": "A muscular bronze-armoured figure with fists raised, wrapped in white swirling wind around its midsection.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "summon",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04614",
+   "name": "Wind_09_nb",
+   "slug": "wind-horned-beast-nb",
+   "description": "A dark horned beast head with glowing white eyes and a pale blue swirling aura around it.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "summon",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04615",
+   "name": "Wind_09_summon",
+   "slug": "wind-horned-beast",
+   "description": "A dark horned beast head with glowing white eyes and a pale blue swirling aura around it.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "summon",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04616",
+   "name": "Wind_10",
+   "slug": "wind-whirlwind-victim",
+   "description": "A small green-clad figure tumbling inside a large grey-white whirlwind vortex.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "debuff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04617",
+   "name": "Wind_10_nb",
+   "slug": "wind-whirlwind-victim-nb",
+   "description": "A small green-clad figure tumbling inside a large grey-white whirlwind vortex.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "debuff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04618",
+   "name": "Wind_11",
+   "slug": "wind-spirit-mask",
+   "description": "A dark shield-shaped mask with white curved markings and a glowing blue outline inside a blue aura.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "defend",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04619",
+   "name": "Wind_11_nb",
+   "slug": "wind-spirit-mask-nb",
+   "description": "A dark shield-shaped mask with white curved markings and a glowing blue outline inside a blue aura.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "defend",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04620",
+   "name": "Wind_12_blink",
+   "slug": "wind-blink-swordsman",
+   "description": "A man with a sword in a brown tunic standing in a blue vortex with small dark silhouettes in the air behind him.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04621",
+   "name": "Wind_12_nb",
+   "slug": "wind-blink-swordsman-nb",
+   "description": "A man with a sword in a brown tunic standing in a blue vortex with small dark silhouettes in the air behind him.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04622",
+   "name": "Wind_13_fly",
+   "slug": "wind-grey-wing",
+   "description": "A large grey feathered wing sweeping up and to the right with loose feathers trailing off.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04623",
+   "name": "Wind_13_nb",
+   "slug": "wind-grey-wing-nb",
+   "description": "A large grey feathered wing sweeping up and to the right with loose feathers trailing off.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04624",
+   "name": "Wind_14",
+   "slug": "wind-hawk-head",
+   "description": "A grey-and-white hawk head in profile with a yellow beak and orange eye against a blue swirl.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "summon",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04625",
+   "name": "Wind_14_nb",
+   "slug": "wind-hawk-head-nb",
+   "description": "A grey-and-white hawk head in profile with a yellow beak and orange eye against a blue swirl.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "summon",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04626",
+   "name": "Wind_15",
+   "slug": "wind-blade-slash",
+   "description": "A fist gripping a sword hilt with streaks of pale blue wind blasting along the blade direction.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04627",
+   "name": "Wind_15_nb",
+   "slug": "wind-blade-slash-nb",
+   "description": "A fist gripping a sword hilt with streaks of pale blue wind blasting along the blade direction.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04628",
+   "name": "Wind_16_levitation",
+   "slug": "wind-white-feather",
+   "description": "A single white glowing feather with a few small fragments drifting around it.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04629",
+   "name": "Wind_16_nb",
+   "slug": "wind-white-feather-nb",
+   "description": "A single white glowing feather with a few small fragments drifting around it.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04630",
+   "name": "Wind_17_arrowshot",
+   "slug": "wind-arrow-shot",
+   "description": "A dark arrow with grey fletching flying diagonally upward with a pale blue speed trail.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04631",
+   "name": "Wind_17_nb",
+   "slug": "wind-arrow-shot-nb",
+   "description": "A dark arrow with grey fletching flying diagonally upward with a pale blue speed trail.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04632",
+   "name": "Wind_18",
+   "slug": "wind-spiral-vortex",
+   "description": "A pale blue-white spiral vortex swirling on a dark background.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

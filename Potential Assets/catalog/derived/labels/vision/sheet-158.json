@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-158",
+ "records": [
+  {
+   "cluster_id": "c03086",
+   "name": "Liberia",
+   "slug": "liberia-flag",
+   "description": "Liberia flag of red and white horizontal stripes with a blue canton holding a white star.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00684",
+   "name": "Libya",
+   "slug": "libya-flag",
+   "description": "Libya flag of red, black and green horizontal bands with a white crescent and star on the black band.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03087",
+   "name": "Liechtenstein",
+   "slug": "liechtenstein-flag",
+   "description": "Liechtenstein flag of blue over red with a small gold crown in the upper left of the blue band.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03209",
+   "name": "Macedonia",
+   "slug": "macedonia-flag",
+   "description": "Macedonia flag with a yellow central sun and eight yellow rays spreading across a red field.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03210",
+   "name": "Madagascar",
+   "slug": "madagascar-flag",
+   "description": "Madagascar flag with a white vertical band on the left, red top right and green bottom right.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03219",
+   "name": "Malawi",
+   "slug": "malawi-flag",
+   "description": "Malawi flag of black, red and green horizontal bands with a red half sun rising from the black band.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03220",
+   "name": "Malaysia",
+   "slug": "malaysia-flag",
+   "description": "Malaysia flag of red and white horizontal stripes with a blue canton holding a yellow crescent and star.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03221",
+   "name": "Maldives",
+   "slug": "maldives-flag",
+   "description": "Maldives flag with a red field, a blue central rectangle and a white crescent inside it.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00168",
+   "name": "Mali",
+   "slug": "mali-flag",
+   "description": "Mali flag of green, yellow and red vertical bands.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03222",
+   "name": "Malta",
+   "slug": "malta-flag",
+   "description": "Malta flag with a white left half bearing a grey cross and a red right half.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03223",
+   "name": "Marshall-Islands",
+   "slug": "marshall-islands-flag",
+   "description": "Marshall Islands flag of blue with a white starburst at upper left and two diagonal orange and white stripes rising to the right.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03225",
+   "name": "Mauritania",
+   "slug": "mauritania-flag",
+   "description": "Mauritania flag with a green field and a yellow crescent and star.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03256",
+   "name": "Mexico",
+   "slug": "mexico-flag",
+   "description": "Mexico flag of green, white and red vertical bands with a small gold emblem on the white band.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03257",
+   "name": "Micronesia-(Federated)",
+   "slug": "micronesia-federated-flag",
+   "description": "Micronesia flag of light blue with four white stars arranged in a diamond.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03319",
+   "name": "Moldova",
+   "slug": "moldova-flag",
+   "description": "Moldova flag of blue, yellow and red vertical bands with a dark emblem on the yellow band.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03321",
+   "name": "Mongolia",
+   "slug": "mongolia-flag",
+   "description": "Mongolia flag of red, blue and red vertical bands with a yellow soyombo symbol on the left red band.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03322",
+   "name": "Montenegro",
+   "slug": "montenegro-flag",
+   "description": "Montenegro flag with a red field, a gold border and a gold emblem in the centre.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03323",
+   "name": "Morocco",
+   "slug": "morocco-flag",
+   "description": "Morocco flag with a red field and a green star in the centre.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03325",
+   "name": "Mozambique",
+   "slug": "mozambique-flag",
+   "description": "Mozambique flag of green, black and yellow bands separated by white lines with a red triangle on the left.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03331",
+   "name": "Myanmar",
+   "slug": "myanmar-flag",
+   "description": "Myanmar flag of yellow, green and red horizontal bands with a large white star in the centre.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03332",
+   "name": "Namibia",
+   "slug": "namibia-flag",
+   "description": "Namibia flag with a blue upper left, green lower right and a white-edged red diagonal stripe, with a yellow sun at upper left.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03333",
+   "name": "Nauru",
+   "slug": "nauru-flag",
+   "description": "Nauru flag of blue with a thin yellow horizontal stripe and a white star below it at left.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03346",
+   "name": "Nepal",
+   "slug": "nepal-flag",
+   "description": "Nepal flag of white with two stacked red pennant shapes holding small white emblems.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03347",
+   "name": "New-Zealand",
+   "slug": "new-zealand-flag",
+   "description": "New Zealand flag of blue with a Union Jack canton and red stars on the right.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03348",
+   "name": "Niger",
+   "slug": "niger-flag",
+   "description": "Niger flag of orange, white and green horizontal bands with an orange circle on the white band.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

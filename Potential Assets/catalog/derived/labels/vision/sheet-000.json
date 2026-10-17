@@ -1,0 +1,494 @@
+{
+ "unit": "sheet-000",
+ "records": [
+  {
+   "cluster_id": "c01890",
+   "name": "BB2_logo",
+   "slug": "buriedbornes-2-logo",
+   "description": "The Buriedbornes 2 title logo in grey gothic lettering with a stylised numeral 2.",
+   "tags": {
+    "kind": "brand-mark",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "high-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01898",
+   "name": "Background",
+   "slug": "rounded-grey-panel",
+   "description": "A light grey rounded square with a darker outline, used as a plain panel background.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome",
+     "background"
+    ],
+    "style": [
+     "flat-vector",
+     "nine-slice",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02210",
+   "name": "Checkmark",
+   "slug": "checkmark-icon",
+   "description": "A dark grey tick mark on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "settings",
+     "panel-chrome"
+    ],
+    "style": [
+     "monochrome",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02291",
+   "name": "Company-Logo",
+   "slug": "nussygame-company-logo",
+   "description": "A studio logo reading Nussygame in dark serif lettering with a small gold building mark before the first letter.",
+   "tags": {
+    "kind": "brand-mark",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02356",
+   "name": "CrossKey",
+   "slug": "dpad-icon-top-right-highlight",
+   "description": "A black and white pixel d-pad cross with a red highlight at the top-right of the upper arm.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "tutorial",
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02357",
+   "name": "CrossKey1",
+   "slug": "dpad-icon-up-highlight",
+   "description": "A black and white pixel d-pad cross with the up arm highlighted in red.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "tutorial",
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02358",
+   "name": "CrossKey2",
+   "slug": "dpad-icon-left-highlight",
+   "description": "A black and white pixel d-pad cross with the left arm highlighted in red.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "tutorial",
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02359",
+   "name": "CrossKey3",
+   "slug": "dpad-icon-right-highlight",
+   "description": "A black and white pixel d-pad cross with the right arm highlighted in red.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "tutorial",
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02360",
+   "name": "CrossKey4",
+   "slug": "dpad-icon-down-highlight",
+   "description": "A black and white pixel d-pad cross with the down arm highlighted in red.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "tutorial",
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02485",
+   "name": "DropdownArrow",
+   "slug": "dropdown-chevron",
+   "description": "A dark grey downward-pointing chevron on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "settings",
+     "panel-chrome"
+    ],
+    "style": [
+     "monochrome",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02640",
+   "name": "Filter-50",
+   "slug": "filter-funnel-icon",
+   "description": "A white outlined funnel shape on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "inventory",
+     "settings"
+    ],
+    "style": [
+     "line-art",
+     "monochrome",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02679",
+   "name": "Flat Shadow",
+   "slug": "soft-glow-square",
+   "description": "A soft white glow fading out around an empty square, suggesting a highlight or shadow frame.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "has-transparency",
+     "high-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c02983",
+   "name": "Icon_Player",
+   "slug": "player-flame-hex-icon",
+   "description": "A grey flame inside a hexagonal ring of arrows on a white background with scattered black specks.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "player-class"
+    ],
+    "style": [
+     "monochrome",
+     "opaque",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c02986",
+   "name": "InputFieldBackground",
+   "slug": "input-field-background",
+   "description": "A white rounded square with a soft grey border, used as a text field background.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome",
+     "settings"
+    ],
+    "style": [
+     "flat-vector",
+     "nine-slice",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03060",
+   "name": "Knob",
+   "slug": "white-knob-circle",
+   "description": "A plain white circle with a grey rim, the handle of a slider or toggle.",
+   "tags": {
+    "kind": "ui-button",
+    "use": [
+     "settings",
+     "panel-chrome"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03066",
+   "name": "L_EN",
+   "slug": "language-flag-english",
+   "description": "A US flag in a rectangular frame over a blue splattered badge, the English language selector.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03067",
+   "name": "L_ES",
+   "slug": "language-flag-spanish",
+   "description": "A Spanish flag in a rectangular frame over a blue splattered badge, the Spanish language selector.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03068",
+   "name": "L_FR",
+   "slug": "language-flag-french",
+   "description": "A French tricolour flag in a rectangular frame over a blue splattered badge, the French language selector.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03089",
+   "name": "Logo@2x",
+   "slug": "srdebugger-logo",
+   "description": "White sans-serif lettering reading SRDEBUGGER, a debug console tool logo.",
+   "tags": {
+    "kind": "brand-mark",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "monochrome",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03216",
+   "name": "MainButtons2",
+   "slug": "gamepad-face-buttons-right-highlight",
+   "description": "A pixel diamond of four white ring buttons with the right one filled red.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "tutorial",
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03217",
+   "name": "MainButtons3",
+   "slug": "gamepad-face-buttons-left-highlight",
+   "description": "A pixel diamond of four white ring buttons with the left one filled red.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "tutorial",
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03218",
+   "name": "MainButtons4",
+   "slug": "gamepad-face-buttons-top-highlight",
+   "description": "A pixel diamond of four white ring buttons with the top one filled red.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "tutorial",
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03245",
+   "name": "MenuButtons1",
+   "slug": "controller-menu-buttons-left-highlight",
+   "description": "A black pixel block with white outlines and two small ovals, the left one red, resembling controller menu buttons.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "tutorial",
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c03246",
+   "name": "MenuButtons2",
+   "slug": "controller-menu-buttons-right-highlight",
+   "description": "A black pixel block with white outlines and two small ovals, the right one red, resembling controller menu buttons.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "tutorial",
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c03324",
+   "name": "MouseButton2",
+   "slug": "mouse-icon-left-button-highlight",
+   "description": "A black and white pixel computer mouse with its left button highlighted in red.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "tutorial",
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

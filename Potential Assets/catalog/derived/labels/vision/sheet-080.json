@@ -1,0 +1,530 @@
+{
+ "unit": "sheet-080",
+ "records": [
+  {
+   "cluster_id": "c03662",
+   "name": "Res_70",
+   "slug": "olive-scale-plates",
+   "description": "A stack of overlapping olive-green scale plates arranged in a cluster.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03663",
+   "name": "Res_71",
+   "slug": "brown-seed-pod",
+   "description": "A large elongated brown seed with a pointed tip and streaked husk.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00857",
+   "name": "Res_72",
+   "slug": "speckled-egg-beige",
+   "description": "A beige egg with dark brown speckles.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03664",
+   "name": "Res_73",
+   "slug": "curved-claw",
+   "description": "A curved tan claw with a red fleshy base.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03666",
+   "name": "Res_76",
+   "slug": "magenta-crystal",
+   "description": "A faceted crystal shard shading from red at the base to magenta and violet at the tip.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03667",
+   "name": "Res_77",
+   "slug": "gradient-crystal-fire",
+   "description": "A faceted crystal shard shading from green at the base through yellow to red-orange at the tip.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03668",
+   "name": "Res_78",
+   "slug": "violet-crystal",
+   "description": "A faceted crystal shard shading from magenta to deep blue-violet.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03669",
+   "name": "Res_80",
+   "slug": "speckled-egg-orange",
+   "description": "An orange egg with darker orange speckles.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03670",
+   "name": "Res_81",
+   "slug": "cracked-grey-egg",
+   "description": "A grey-purple egg with a jagged broken top where the shell is cracked open.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03671",
+   "name": "Res_82",
+   "slug": "fanged-jaws",
+   "description": "A set of upper and lower jaws lined with sharp tan fangs.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03672",
+   "name": "Res_83",
+   "slug": "yellow-beak",
+   "description": "A curved yellow beak with a small notch near the base.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03674",
+   "name": "Res_87",
+   "slug": "bare-twig",
+   "description": "A bare brown branch with forked thin twigs.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03675",
+   "name": "Res_88",
+   "slug": "dead-purple-branches",
+   "description": "A bundle of thin dark purple-grey dead branches.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03676",
+   "name": "Res_89",
+   "slug": "red-leaves",
+   "description": "A cluster of three red autumn leaves.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03677",
+   "name": "Res_90",
+   "slug": "green-curled-thorn",
+   "description": "A dark thorn with a green curled tendril tip and brown base.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03678",
+   "name": "Res_91",
+   "slug": "purple-curled-thorn",
+   "description": "A red thorn with a purple curled tendril tip.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03679",
+   "name": "Res_92",
+   "slug": "walnuts",
+   "description": "Two brown walnuts with green leaves behind them.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03680",
+   "name": "Res_94",
+   "slug": "grass-tuft",
+   "description": "A tuft of olive-green grass blades.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03681",
+   "name": "Res_95",
+   "slug": "yellow-bud-plant",
+   "description": "A green plant with several yellow flower buds on stems.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03682",
+   "name": "Res_97",
+   "slug": "blue-potion-flask",
+   "description": "A round glass flask of blue liquid with a cork stopper and a paper label.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00012",
+   "name": "Res_99",
+   "slug": "purple-wrapped-flask",
+   "description": "A flask of purple liquid held in a faceted wrapping with web-like lines and a stopper.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03683",
+   "name": "Rice",
+   "slug": "rice-grains",
+   "description": "Scattered small grey-beige grains.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03684",
+   "name": "RingBronze",
+   "slug": "bronze-ring",
+   "description": "A plain bronze signet ring with a flat square top.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "loot",
+     "equipment"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03685",
+   "name": "RingGold",
+   "slug": "gold-ring-ruby",
+   "description": "A gold ring set with a red gemstone in a raised bezel.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "loot",
+     "equipment"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03686",
+   "name": "RingGold2",
+   "slug": "gold-ring-emerald",
+   "description": "A gold ring set with a green gemstone.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "loot",
+     "equipment"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

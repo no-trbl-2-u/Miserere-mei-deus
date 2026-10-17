@@ -1,0 +1,555 @@
+{
+ "unit": "sheet-060",
+ "records": [
+  {
+   "cluster_id": "c00682",
+   "name": "Jewelry_24_magic_ring",
+   "slug": "magic-ring-blue",
+   "description": "A plain glossy blue band ring with a bright highlight and no gemstone.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03011",
+   "name": "Jewelry_25_little_ring",
+   "slug": "little-ring-amber-gem",
+   "description": "A thin silver ring set with a faceted orange-amber gemstone in a claw mount.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03012",
+   "name": "Jewelry_26_mage_ring",
+   "slug": "mage-ring-magenta-gem",
+   "description": "A dark engraved grey-purple ring set with a large faceted magenta gemstone.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03013",
+   "name": "Jewelry_27_whitegold_ring",
+   "slug": "whitegold-ring",
+   "description": "A slender open-ended white-gold ring whose band overlaps and tapers at the ends.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03014",
+   "name": "Jewelry_28_aztec_ring",
+   "slug": "aztec-ring-bronze",
+   "description": "A bronze ring with a pointed diamond-shaped setting holding a small green gem.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03015",
+   "name": "Jewelry_29_threeknowledge_ring",
+   "slug": "threeknowledge-ring",
+   "description": "A dark iron ring set with three small gems in orange, green and red.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03016",
+   "name": "Jewelry_30_green_ring",
+   "slug": "green-ring-vine",
+   "description": "A moss-green ring whose band curls into a small vine-like tendril at the top.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03017",
+   "name": "Jewelry_31_bigsilver_ring",
+   "slug": "bigsilver-ring",
+   "description": "A wide plain polished silver band ring with no ornament.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00683",
+   "name": "Jewelry_33_blue_ring",
+   "slug": "blue-ring-teal-engraved",
+   "description": "A thick teal-green band ring engraved with leafy scroll patterns.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03018",
+   "name": "Jewelry_34_fire_ring",
+   "slug": "fire-ring-orange-gold",
+   "description": "An orange-gold ring with an ornate curling flourish at the top and a small gem.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03019",
+   "name": "Jewelry_35_rune_ring",
+   "slug": "rune-ring-black-orange",
+   "description": "A black band ring inlaid with glowing orange rune-like angular patterns.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03020",
+   "name": "Jewelry_36_hardstoune_ring",
+   "slug": "hardstone-ring-grey",
+   "description": "A chunky grey stone ring with a flat angular block-shaped top.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03021",
+   "name": "Jewelry_37_blue_ring",
+   "slug": "blue-ring-cyan-gem",
+   "description": "A grey metal ring with an octagonal cyan gemstone and smaller blue gems at its sides.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03022",
+   "name": "Jewelry_38_goldred_ring",
+   "slug": "goldred-ring",
+   "description": "A gold ring with a large octagonal red gemstone mounted on top.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03023",
+   "name": "Jewelry_39_devil_ring",
+   "slug": "devil-ring-spiked",
+   "description": "A dark red-brown ring studded with sharp spikes and a horned-looking crest.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03024",
+   "name": "Jewelry_40_megastrength_ring",
+   "slug": "megastrength-ring",
+   "description": "A heavy grey metal ring with angular facets and purple rectangular gems inset in the sides.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03025",
+   "name": "Jewelry_41_orangeneck",
+   "slug": "orange-necklace-gold-gem",
+   "description": "A chain necklace with a diamond-shaped gold-yellow gem pendant in a silver setting.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03026",
+   "name": "Jewelry_42_blueneck",
+   "slug": "blue-necklace-sapphire",
+   "description": "A chain necklace with a diamond-shaped blue gem pendant in a silver setting.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03027",
+   "name": "Jewelry_43_red_neck",
+   "slug": "red-necklace-ruby",
+   "description": "A chain necklace with a diamond-shaped red gem pendant in an ornate silver frame.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03028",
+   "name": "Jewelry_44_aztec_neck",
+   "slug": "aztec-necklace-green-gem",
+   "description": "A chain necklace with a green gem pendant in a spiked dark metal frame.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03029",
+   "name": "Jewelry_45_neck",
+   "slug": "necklace-bronze-green-gem",
+   "description": "A bronze chain necklace with a long pointed bronze pendant holding a small green gem.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03030",
+   "name": "Jewelry_46_black_neck",
+   "slug": "black-necklace-shard",
+   "description": "A silver chain necklace with a dark pointed black shard pendant.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03031",
+   "name": "Jewelry_47_whiteneck",
+   "slug": "white-necklace-studded-plate",
+   "description": "A dark chain necklace with a trapezoid iron plate pendant studded with white pearls.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03032",
+   "name": "Jewelry_48_purpleneck",
+   "slug": "purple-necklace-crystal",
+   "description": "A silver chain necklace with an elongated purple crystal pendant.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03033",
+   "name": "Jewelry_49_blackironneck",
+   "slug": "blackiron-necklace-orange-gem",
+   "description": "A dark iron chain necklace with an orange gem pendant set in a black iron mount.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

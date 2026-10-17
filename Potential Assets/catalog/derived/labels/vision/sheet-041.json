@@ -1,0 +1,530 @@
+{
+ "unit": "sheet-041",
+ "records": [
+  {
+   "cluster_id": "c02299",
+   "name": "Cooking_06_greengrapes",
+   "slug": "green-grapes",
+   "description": "A bunch of green grapes hanging from a short stem.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02300",
+   "name": "Cooking_07_bluegrapes",
+   "slug": "blue-grapes",
+   "description": "A bunch of dark blue grapes on a stem with a pink tie.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02301",
+   "name": "Cooking_08_banana",
+   "slug": "bananas",
+   "description": "A bunch of ripe yellow bananas.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02302",
+   "name": "Cooking_09_onion",
+   "slug": "onion",
+   "description": "A brown-skinned onion with a green sprout.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02303",
+   "name": "Cooking_10_turnip",
+   "slug": "turnip",
+   "description": "A white turnip with a purple-tinged top and green leaves.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02304",
+   "name": "Cooking_11_cabbage",
+   "slug": "cabbage",
+   "description": "A head of green cabbage with ruffled outer leaves.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02306",
+   "name": "Cooking_13_pepper",
+   "slug": "yellow-pepper",
+   "description": "A yellow bell pepper with a green stem.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02308",
+   "name": "Cooking_15_tomatos",
+   "slug": "tomatoes",
+   "description": "A cluster of three red tomatoes on a green vine.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02309",
+   "name": "Cooking_16_strawberry",
+   "slug": "strawberries",
+   "description": "Three red strawberries with green leaves.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02310",
+   "name": "Cooking_17_gooseberry",
+   "slug": "gooseberries",
+   "description": "Two green striped gooseberries hanging on thin stems.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02311",
+   "name": "Cooking_18_cherry",
+   "slug": "cherries",
+   "description": "A cluster of dark red cherries joined by stems.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02312",
+   "name": "Cooking_19_coconut",
+   "slug": "coconut",
+   "description": "A brown coconut cracked open to show white flesh, with green leaves beneath.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02313",
+   "name": "Cooking_20_mushrooms",
+   "slug": "mushrooms",
+   "description": "Two white button mushrooms, one whole and one sliced in half.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02314",
+   "name": "Cooking_21_flour",
+   "slug": "flour-sack",
+   "description": "A brown burlap sack spilling white flour, with wheat ears sticking out.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02315",
+   "name": "Cooking_22_corn",
+   "slug": "corn-cob",
+   "description": "A yellow corn cob with green husk leaves.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02316",
+   "name": "Cooking_24_meat",
+   "slug": "raw-steak",
+   "description": "A raw red cut of meat with white fat and a bone round.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02317",
+   "name": "Cooking_25_bone",
+   "slug": "bone",
+   "description": "A large pale bone with reddish ends.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00546",
+   "name": "Cooking_26_cookingknife",
+   "slug": "cooking-knife",
+   "description": "A kitchen knife with a broad steel blade and a dark handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "crafting",
+     "equipment"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02318",
+   "name": "Cooking_27_meat",
+   "slug": "raw-pork-cut",
+   "description": "A raw pink cut of meat with white fat.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02319",
+   "name": "Cooking_29_eggs",
+   "slug": "eggs",
+   "description": "Brown eggs, one cracked open with a yellow yolk visible.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02320",
+   "name": "Cooking_30_omelette",
+   "slug": "fried-egg-bacon",
+   "description": "A fried egg with a yellow yolk on strips of bacon.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02323",
+   "name": "Cooking_33_sandwich",
+   "slug": "sandwich",
+   "description": "A sandwich with ham and pickle slices between bread.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02326",
+   "name": "Cooking_36_Milk",
+   "slug": "milk-bottle",
+   "description": "A white milk bottle tied with a red ribbon.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02327",
+   "name": "Cooking_37_chocolate",
+   "slug": "chocolate-bar",
+   "description": "A bar of brown chocolate partly unwrapped from foil.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02328",
+   "name": "Cooking_38_chees",
+   "slug": "cheese-wheel",
+   "description": "A yellow cheese wheel with a wedge cut out and holes.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

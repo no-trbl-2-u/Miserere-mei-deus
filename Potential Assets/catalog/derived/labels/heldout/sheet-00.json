@@ -1,0 +1,495 @@
+{
+ "unit": "sheet-00",
+ "records": [
+  {
+   "cluster_id": "c00031",
+   "name": "03_summon_skeleton_knightX1",
+   "slug": "summon-skeleton-knight",
+   "description": "An armoured knight in a dark steel helmet with a visor, surrounded by a yellow glow.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "summon",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01374",
+   "name": "13_Leather_head",
+   "slug": "leather-hood",
+   "description": "A dark hooded leather headpiece with pale trim over a shadowed face.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01438",
+   "name": "16_Leather_Chest",
+   "slug": "leather-chest-blue",
+   "description": "A blue-grey leather chest armour with shoulder plates and a belt.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00320",
+   "name": "20_shield",
+   "slug": "blue-glow-shield",
+   "description": "A dark shield with a blue emblem and glowing blue edge on a blue energy background.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00346",
+   "name": "2_summon_spiders",
+   "slug": "summon-spiders",
+   "description": "A spider on an orange web against a dark background.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "summon",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00108",
+   "name": "40_timechanging",
+   "slug": "time-changing-clock",
+   "description": "A white-faced pocket watch wrapped in swirling blue energy.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00113",
+   "name": "49_red_wave",
+   "slug": "red-wave",
+   "description": "Streaking red-orange curved energy lines with small rings on a dark red background.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01550",
+   "name": "4_Leather_Chest",
+   "slug": "brown-leather-chest",
+   "description": "A brown leather chest armour with a fur-trimmed shoulder and straps.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00117",
+   "name": "71_spirit_wolves",
+   "slug": "spirit-wolf",
+   "description": "A glowing teal outline of a wolf head on a dark background.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "summon",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01657",
+   "name": "9_Cloth_Chest",
+   "slug": "dark-cloth-jacket",
+   "description": "A dark jacket with red-orange trim and a high collar.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00421",
+   "name": "Archerskill_10",
+   "slug": "apple-arrow-shot",
+   "description": "A red apple pierced by an arrow over a green target ring.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00438",
+   "name": "Archerskill_28",
+   "slug": "fiery-winged-arrow",
+   "description": "An upright arrow flanked by orange fiery wing-like shapes on a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00441",
+   "name": "Archerskill_32",
+   "slug": "flaming-gun-barrel",
+   "description": "A metallic barrel or gun with a fiery muzzle blast on an orange background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c00452",
+   "name": "Archerskill_43",
+   "slug": "eagle-head",
+   "description": "A bald eagle head in profile with a yellow beak on a green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "summon",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00475",
+   "name": "Assassinskill_18",
+   "slug": "purple-daggers",
+   "description": "Dark daggers stabbing upward with a purple glow behind them.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01879",
+   "name": "Axe_v2_44",
+   "slug": "bat-wing-axe",
+   "description": "A brown axe with a bat-wing shaped head on a wooden handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01917",
+   "name": "Belt_04",
+   "slug": "leather-belt",
+   "description": "A brown leather belt with a small round buckle.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02077",
+   "name": "Book_v2_33",
+   "slug": "dark-tome",
+   "description": "A closed dark brown book with a green-tinged cover and metal clasp.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00525",
+   "name": "Boots_04",
+   "slug": "leather-boots",
+   "description": "A pair of brown leather boots with folded cuffs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00043",
+   "name": "Chest_25",
+   "slug": "chainmail-tunic",
+   "description": "A grey chainmail tunic with short sleeves on a tall narrow canvas.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02364",
+   "name": "Crossbow_02",
+   "slug": "wooden-crossbow",
+   "description": "A brown wooden crossbow with a drawn string.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00548",
+   "name": "Dagger_06",
+   "slug": "steel-dagger",
+   "description": "A steel dagger with a green-wrapped hilt pointing upward.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00140",
+   "name": "Druideskill_03X1",
+   "slug": "yellow-lightning",
+   "description": "Branching yellow lightning bolts on a dark background.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00568",
+   "name": "Druideskill_15",
+   "slug": "purple-antler-sigil",
+   "description": "A glowing white antler-like sigil on a purple starry background.",
+   "tags": {
+    "kind": "sigil",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00574",
+   "name": "Druideskill_22",
+   "slug": "roaring-bear",
+   "description": "A roaring pink-tinted bear head with open jaws on a dark background.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "summon",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

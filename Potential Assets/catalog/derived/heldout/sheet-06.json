@@ -1,0 +1,230 @@
+{
+ "sheet": "sheet-06",
+ "cells": [
+  {
+   "i": 0,
+   "cluster_id": "c05966",
+   "name": "Banshee F",
+   "file": "textures/Banshee_F.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 1,
+   "cluster_id": "c05975",
+   "name": "BloodyBoneE",
+   "file": "textures/BloodyBoneE.png",
+   "size": "512x511",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 2,
+   "cluster_id": "c05981",
+   "name": "Bull Begger A",
+   "file": "textures/Bull_Begger_A.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 3,
+   "cluster_id": "c05987",
+   "name": "Coral Crab B",
+   "file": "textures/Coral_Crab_B.png",
+   "size": "512x511",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 4,
+   "cluster_id": "c05988",
+   "name": "Corps Eater A",
+   "file": "textures/Corps_Eater_A.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 5,
+   "cluster_id": "c05995",
+   "name": "DakiniD",
+   "file": "textures/DakiniD.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 6,
+   "cluster_id": "c06018",
+   "name": "Elder Tree C",
+   "file": "textures/Elder_Tree_C.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 7,
+   "cluster_id": "c06023",
+   "name": "FenrirG",
+   "file": "textures/FenrirG.png",
+   "size": "512x511",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 8,
+   "cluster_id": "c06035",
+   "name": "Frozen Core E",
+   "file": "textures/Frozen_Core_E.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 9,
+   "cluster_id": "c06051",
+   "name": "Hell Tamer B-Disaster",
+   "file": "textures/Hell_Tamer_B-Disaster.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 10,
+   "cluster_id": "c06052",
+   "name": "Hell Tamer B",
+   "file": "textures/Hell_Tamer_B.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 11,
+   "cluster_id": "c06057",
+   "name": "Humbaba F",
+   "file": "textures/Humbaba_F.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 12,
+   "cluster_id": "c06065",
+   "name": "JB05",
+   "file": "textures/JB05.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 13,
+   "cluster_id": "c06067",
+   "name": "JB07",
+   "file": "textures/JB07.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 14,
+   "cluster_id": "c06075",
+   "name": "JB15",
+   "file": "textures/JB15.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 15,
+   "cluster_id": "c06079",
+   "name": "JB19",
+   "file": "textures/JB19.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 16,
+   "cluster_id": "c06094",
+   "name": "JB35",
+   "file": "textures/JB35.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 17,
+   "cluster_id": "c00272",
+   "name": "Kobold Re A2",
+   "file": "textures/Kobold_Re_A2.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 18,
+   "cluster_id": "c06116",
+   "name": "Kraken Small Octopus B",
+   "file": "textures/Kraken_Small_Octopus_B.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 19,
+   "cluster_id": "c06117",
+   "name": "Kraken Small Squid B",
+   "file": "textures/Kraken_Small_Squid_B.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 20,
+   "cluster_id": "c06124",
+   "name": "Laughing Spirit D",
+   "file": "textures/Laughing_Spirit_D.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 21,
+   "cluster_id": "c06129",
+   "name": "LordSatyr",
+   "file": "textures/LordSatyr.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 22,
+   "cluster_id": "c06134",
+   "name": "Man at Arms",
+   "file": "textures/Man_at_Arms.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 23,
+   "cluster_id": "c06142",
+   "name": "Mummy",
+   "file": "textures/Mummy.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 24,
+   "cluster_id": "c06144",
+   "name": "Namtar D",
+   "file": "textures/Namtar_D.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  }
+ ]
+}

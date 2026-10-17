@@ -1,0 +1,502 @@
+{
+ "unit": "sheet-073",
+ "records": [
+  {
+   "cluster_id": "c00183",
+   "name": "Quest_133",
+   "slug": "pink-crystal-cluster",
+   "description": "A cluster of tall pink faceted crystals.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "quest"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00826",
+   "name": "Quest_138",
+   "slug": "purple-crystal-sack",
+   "description": "A grey-purple cloth sack spilling glowing purple crystals from its open top.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "loot",
+     "quest",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03452",
+   "name": "Quest_139",
+   "slug": "green-potion-flasks",
+   "description": "Three round glass flasks with cork stoppers filled with bubbling green liquid.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "crafting",
+     "quest"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03453",
+   "name": "Quest_14",
+   "slug": "steel-hex-bolt",
+   "description": "A large grey hex-headed steel bolt with a threaded shaft.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "quest"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03454",
+   "name": "Quest_140",
+   "slug": "gem-vial-trio",
+   "description": "Three glass vials with corks holding faceted blue, red and teal gem shapes.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "crafting",
+     "quest"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03455",
+   "name": "Quest_146",
+   "slug": "horn-on-wood-trophy",
+   "description": "A curved white horn and small tusks mounted on a brown wooden plank.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "quest"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03457",
+   "name": "Quest_148",
+   "slug": "fire-bottle",
+   "description": "A grey glass bottle with a burning rag in its neck and a flame at the top.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "attack",
+     "quest"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03458",
+   "name": "Quest_149",
+   "slug": "gold-earrings-green-gem",
+   "description": "A pair of gold hoop earrings each hanging a green gemstone.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "loot",
+     "equipment",
+     "quest"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03459",
+   "name": "Quest_15",
+   "slug": "brown-mushrooms",
+   "description": "Three brown mushrooms with pale stems and rounded caps.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "crafting",
+     "quest"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03460",
+   "name": "Quest_150",
+   "slug": "gold-earrings-red-gem",
+   "description": "A pair of gold hoop earrings each hanging a red gemstone.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "loot",
+     "equipment",
+     "quest"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00829",
+   "name": "Quest_152",
+   "slug": "gold-clover-earrings",
+   "description": "A pair of gold hoop earrings each hanging a black four-leaf clover charm with gold trim.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "loot",
+     "equipment",
+     "quest"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03461",
+   "name": "Quest_153",
+   "slug": "purple-drop-earrings",
+   "description": "A pair of long earrings with gold loops and purple teardrop stones.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "loot",
+     "equipment",
+     "quest"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00830",
+   "name": "Quest_155",
+   "slug": "green-drop-earrings",
+   "description": "A pair of long earrings with gold loops and green teardrop stones.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "loot",
+     "equipment",
+     "quest"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03464",
+   "name": "Quest_158",
+   "slug": "brown-tricorn-hat",
+   "description": "A dark brown leather tricorn hat.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "loot",
+     "equipment",
+     "quest"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03465",
+   "name": "Quest_159",
+   "slug": "cork-stoppers",
+   "description": "Three tan cork stoppers in a small pile.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "quest"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03466",
+   "name": "Quest_16",
+   "slug": "metal-tube",
+   "description": "A plain grey metal cylinder open at one end.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "quest"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03468",
+   "name": "Quest_161",
+   "slug": "orange-fur-pelt",
+   "description": "A shaggy orange and brown fur pelt with a dark centre.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "quest"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c03469",
+   "name": "Quest_17",
+   "slug": "blank-scroll",
+   "description": "A rolled parchment scroll, unrolled at the top with no writing.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "quest",
+     "story"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03470",
+   "name": "Quest_18",
+   "slug": "ink-bottle-and-quill",
+   "description": "A small dark ink bottle beside a white feather quill.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "quest",
+     "story"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03471",
+   "name": "Quest_19",
+   "slug": "gold-spiral-ring",
+   "description": "A gold ring with a raised spiral emblem on its face.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "loot",
+     "equipment",
+     "quest"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03472",
+   "name": "Quest_20",
+   "slug": "white-flag",
+   "description": "A tattered white flag on a wooden pole.",
+   "tags": {
+    "kind": "banner",
+    "use": [
+     "quest",
+     "story"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03473",
+   "name": "Quest_21",
+   "slug": "sealed-order-paper",
+   "description": "A paper notice headed ORDER, pinned with a red wax seal and a pin.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "quest",
+     "story"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03474",
+   "name": "Quest_23",
+   "slug": "grey-candle",
+   "description": "A short grey cylindrical candle with a black wick.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "quest",
+     "camp"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03476",
+   "name": "Quest_25",
+   "slug": "wooden-tankard",
+   "description": "A wooden barrel-style tankard with metal hoops and a handle.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "loot",
+     "quest",
+     "shop"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03477",
+   "name": "Quest_26",
+   "slug": "brown-saddle",
+   "description": "A brown leather riding saddle with a stirrup.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "quest",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

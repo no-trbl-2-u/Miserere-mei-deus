@@ -1,0 +1,480 @@
+{
+ "unit": "sheet-031",
+ "records": [
+  {
+   "cluster_id": "c02015",
+   "name": "Bonus_r_6",
+   "slug": "red-crystal",
+   "description": "A tall faceted red crystal shard with a bright red body and darker facets.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "reward"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02016",
+   "name": "Bonus_r_7",
+   "slug": "grey-clawed-hand",
+   "description": "A grey scaly clawed hand with four pale curved claws pointing downward.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "reward"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02018",
+   "name": "Bonus_r_9",
+   "slug": "green-slime-splat",
+   "description": "A bright lime-green slime blob with a pointed top and small droplets beside it.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "reward"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02019",
+   "name": "Bonus_w_1",
+   "slug": "longsword",
+   "description": "A straight longsword with a gold crossguard, brown grip and steel blade pointing down-left.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02020",
+   "name": "Bonus_w_10",
+   "slug": "bone-handled-sickle",
+   "description": "A curved sickle with a rusty crescent blade and a pale bone-like handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02022",
+   "name": "Bonus_w_3",
+   "slug": "halberd-axe",
+   "description": "A long-hafted poleaxe with a grey crescent axe head and wooden shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02023",
+   "name": "Bonus_w_4",
+   "slug": "blue-curved-blade",
+   "description": "A curved blue-steel scimitar-like blade with a ring-shaped pommel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02024",
+   "name": "Bonus_w_5",
+   "slug": "battle-axe",
+   "description": "A single-bladed grey battle axe on a tan wooden handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02025",
+   "name": "Bonus_w_6",
+   "slug": "thin-steel-sword",
+   "description": "A slender pale steel sword with a narrow blade and short hilt, angled diagonally.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02026",
+   "name": "Bonus_w_8",
+   "slug": "crimson-leaf-spear",
+   "description": "A spear with a dark red leaf-shaped head and a dark purple shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02027",
+   "name": "Bonus_w_9",
+   "slug": "crooked-wooden-staff",
+   "description": "A brown wooden staff with a hooked top and a wrapped grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02029",
+   "name": "Book2",
+   "slug": "black-leather-book",
+   "description": "A closed black leather book with a small red bookmark ribbon at the top.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02030",
+   "name": "Book_1",
+   "slug": "brown-leather-tome",
+   "description": "A flat brown leather book with a strap band across the cover.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02031",
+   "name": "Book_10",
+   "slug": "wooden-cover-book",
+   "description": "A thick book with a plain wooden cover and pale pages.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02032",
+   "name": "Book_11",
+   "slug": "green-gem-book",
+   "description": "A wooden-covered book with a large green gem set into the cover.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02033",
+   "name": "Book_12",
+   "slug": "purple-gem-book",
+   "description": "A wooden-covered book with a large magenta gem on the cover.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02034",
+   "name": "Book_13",
+   "slug": "purple-grey-book",
+   "description": "A closed book with a worn purple-grey cover and pale pages.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02035",
+   "name": "Book_14",
+   "slug": "orange-brown-book",
+   "description": "A closed book with a creased orange-brown cover.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02036",
+   "name": "Book_15",
+   "slug": "yellow-ochre-book",
+   "description": "A closed book with a creased yellow-ochre cover.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02037",
+   "name": "Book_16",
+   "slug": "amber-brown-book",
+   "description": "A closed book with a creased amber-brown cover.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02038",
+   "name": "Book_17",
+   "slug": "teal-book",
+   "description": "A closed book with a worn teal-green cover and pale edges.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02039",
+   "name": "Book_2",
+   "slug": "red-sigil-book",
+   "description": "A red-brown book with a strap and a faint star sigil on the cover.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02040",
+   "name": "Book_21",
+   "slug": "grey-green-book",
+   "description": "A closed book with a lumpy pale grey-green cover.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02041",
+   "name": "Book_22",
+   "slug": "golden-book",
+   "description": "A closed book with a glossy golden-yellow cover and a swirl pattern.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02042",
+   "name": "Book_23",
+   "slug": "pink-scaled-book",
+   "description": "A pink-mauve book with a cracked scale-like cover and flared corners.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

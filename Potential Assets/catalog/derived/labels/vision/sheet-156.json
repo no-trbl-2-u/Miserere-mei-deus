@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-156",
+ "records": [
+  {
+   "cluster_id": "c02250",
+   "name": "Chile",
+   "slug": "flag-chile",
+   "description": "Rounded pixel-art flag with a white upper stripe, a blue canton holding a white star, and a red lower stripe.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02251",
+   "name": "China",
+   "slug": "flag-china",
+   "description": "Rounded pixel-art flag on red with one large yellow star and four smaller yellow stars in an arc.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02290",
+   "name": "Comoros",
+   "slug": "flag-comoros",
+   "description": "Rounded pixel-art flag of yellow, white, red and blue horizontal stripes with a green triangle at the hoist bearing a white crescent and four stars.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02292",
+   "name": "Congo-(Democratic)",
+   "slug": "flag-congo-democratic",
+   "description": "Rounded pixel-art flag of blue with a diagonal red stripe edged in yellow and a yellow star in the upper left.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02293",
+   "name": "Congo-(Republic)",
+   "slug": "flag-congo-republic",
+   "description": "Rounded pixel-art flag split diagonally into green and red with a yellow diagonal band between them.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02355",
+   "name": "Croatia",
+   "slug": "flag-croatia",
+   "description": "Rounded pixel-art flag of red, white and blue horizontal stripes with a red and white shield at the centre.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02382",
+   "name": "Cuba",
+   "slug": "flag-cuba",
+   "description": "Rounded pixel-art flag of blue and white horizontal stripes with a blue triangle at the hoist holding a white star.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02388",
+   "name": "Cyprus",
+   "slug": "flag-cyprus",
+   "description": "Rounded pixel-art flag of red and white horizontal bands with a red crescent and star at the centre.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02389",
+   "name": "Czech-Republic",
+   "slug": "flag-czech-republic",
+   "description": "Rounded pixel-art flag of white over red with a blue triangle at the hoist.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02482",
+   "name": "Djibouti",
+   "slug": "flag-djibouti",
+   "description": "Rounded pixel-art flag of light blue over green with a white triangle at the hoist bearing a red star.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02483",
+   "name": "Dominica",
+   "slug": "flag-dominica",
+   "description": "Rounded pixel-art flag of green with a cross of yellow, black and white stripes and a red disc at the centre.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02484",
+   "name": "Dominican-Republic",
+   "slug": "flag-dominican-republic",
+   "description": "Rounded pixel-art flag with a white cross dividing blue and red quarters and a small green ring at the centre.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02526",
+   "name": "East-Timor",
+   "slug": "flag-east-timor",
+   "description": "Rounded pixel-art flag of red with a yellow triangle and a black triangle at the hoist holding a white star.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02527",
+   "name": "Ecuador",
+   "slug": "flag-ecuador",
+   "description": "Rounded pixel-art flag of yellow, blue and red horizontal stripes with a white shield at the centre.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02529",
+   "name": "Egypt",
+   "slug": "flag-egypt",
+   "description": "Rounded pixel-art flag of red, white and black horizontal stripes with a small gold emblem in the middle.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00600",
+   "name": "El-Salvador",
+   "slug": "flag-el-salvador",
+   "description": "Rounded pixel-art flag of light blue, white and light blue horizontal stripes with a small yellow ring at the centre.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02634",
+   "name": "Equatorial-Guinea",
+   "slug": "flag-equatorial-guinea",
+   "description": "Rounded pixel-art flag of green, white and red horizontal stripes with a blue triangle at the hoist.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02635",
+   "name": "Eritrea",
+   "slug": "flag-eritrea",
+   "description": "Rounded pixel-art flag with a red triangle at the hoist bearing a gold emblem, over green and light blue fields.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02636",
+   "name": "Ethiopia",
+   "slug": "flag-ethiopia",
+   "description": "Rounded pixel-art flag of green, yellow and red stripes with a light blue disc and yellow star at the centre.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02639",
+   "name": "Fiji",
+   "slug": "flag-fiji",
+   "description": "Rounded pixel-art flag of light blue with a Union Jack canton and a red-crossed white shield on the right.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02641",
+   "name": "Finland",
+   "slug": "flag-finland",
+   "description": "Rounded pixel-art flag of white with a blue Nordic cross.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02705",
+   "name": "Georgia",
+   "slug": "flag-georgia",
+   "description": "Rounded pixel-art flag of white with a large red cross and four smaller red crosses in the quarters.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02727",
+   "name": "Grecee",
+   "slug": "flag-greece",
+   "description": "Rounded pixel-art flag of blue and white horizontal stripes with a white cross in the upper-left canton.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02734",
+   "name": "Grenada",
+   "slug": "flag-grenada",
+   "description": "Rounded pixel-art flag with a red border, green and yellow triangles and a central red disc with a star.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02735",
+   "name": "Guatemala",
+   "slug": "flag-guatemala",
+   "description": "Rounded pixel-art flag of light blue and white vertical stripes with a small emblem ring at the centre.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

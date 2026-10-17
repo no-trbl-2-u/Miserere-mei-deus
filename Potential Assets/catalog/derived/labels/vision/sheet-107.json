@@ -1,0 +1,574 @@
+{
+ "unit": "sheet-107",
+ "records": [
+  {
+   "cluster_id": "c05330",
+   "name": "shield_30",
+   "slug": "blue-banded-tower-shield",
+   "description": "A tall blue shield with horizontal olive-gold bands across its face and a worn metal rim.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05331",
+   "name": "shield_31",
+   "slug": "orange-banded-tower-shield",
+   "description": "A tall orange-brown shield with horizontal gold bands and a layered armoured edge.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05332",
+   "name": "shield_32",
+   "slug": "pale-green-kite-shield",
+   "description": "A plain kite-shaped shield in muted pale green with a pointed bottom and no emblem.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05334",
+   "name": "shield_34",
+   "slug": "pale-blue-kite-shield",
+   "description": "A kite-shaped shield in pale blue with a vertical central ridge and pointed bottom.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05335",
+   "name": "shield_35",
+   "slug": "pink-red-kite-shield",
+   "description": "A kite-shaped shield with a pale pink face, a central vertical ridge and a red rim.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05336",
+   "name": "shield_36",
+   "slug": "red-cross-heater-shield",
+   "description": "A red heater-style shield with a yellow-gold cross pattern on its face.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05338",
+   "name": "shield_38",
+   "slug": "blue-winged-bastion-shield",
+   "description": "A blue angular shield with flared pointed wing-like upper edges and dark vertical ridges.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05339",
+   "name": "shield_39",
+   "slug": "purple-winged-bastion-shield",
+   "description": "A purple angular shield with flared pointed upper edges and dark thorny ridges.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05340",
+   "name": "shield_4",
+   "slug": "round-wooden-buckler",
+   "description": "A round wooden shield with vertical orange planks inside a grey metal rim.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05341",
+   "name": "shield_40",
+   "slug": "violet-thorned-bastion-shield",
+   "description": "A violet angular shield with curved spiked horns on its upper edges and dark ridges.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01116",
+   "name": "shield_42",
+   "slug": "bronze-flame-shield",
+   "description": "A bronze-brown shield with flame-like spikes projecting from its sides and glowing gold ridges.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05342",
+   "name": "shield_43",
+   "slug": "indigo-fin-shield",
+   "description": "A narrow indigo curved shield shaped like a fin, tapering to a hooked point at the bottom.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05343",
+   "name": "shield_44",
+   "slug": "steel-blue-fin-shield",
+   "description": "A narrow steel-blue curved shield shaped like a fin with a pointed hooked tip.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05344",
+   "name": "shield_45",
+   "slug": "blue-fin-shield",
+   "description": "A narrow blue curved shield shaped like a fin with a jagged pointed tip.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01117",
+   "name": "shield_47",
+   "slug": "purple-gem-fin-shield",
+   "description": "A narrow mauve-purple fin-shaped shield with a pointed edge and a small pale gem at its centre.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05345",
+   "name": "shield_48",
+   "slug": "gold-horned-half-shield",
+   "description": "A single golden curved shield with a swept-back horn at the top and a tapering point below.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05346",
+   "name": "shield_49",
+   "slug": "gold-twin-horn-shield",
+   "description": "A golden shield made of two mirrored curved horn-like plates with swept-back tips.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05347",
+   "name": "shield_50",
+   "slug": "gold-twin-horn-shield-cyan-gems",
+   "description": "A golden twin-plate horned shield with small cyan gems set into its surface.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05348",
+   "name": "shield_51",
+   "slug": "red-twin-horn-shield-cyan-gems",
+   "description": "A red-orange twin-plate horned shield with gold trim and small cyan gems.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05785",
+   "name": "skinning_01_piece_of_leather",
+   "slug": "leather-piece",
+   "description": "A flat piece of brown leather with ragged cut edges.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05786",
+   "name": "skinning_02_thick_skin",
+   "slug": "thick-hide",
+   "description": "A brown-grey thick hide with a scaly segmented pattern and curled edges.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05787",
+   "name": "skinning_03_very_thick_skin",
+   "slug": "very-thick-hide",
+   "description": "A thick dark-brown hide with a split notch and a pale rough edge.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05791",
+   "name": "skinning_07_spoiled_skin",
+   "slug": "spoiled-green-skin",
+   "description": "A mottled dark-green skin with ragged limbs-like edges, moldy and decayed in appearance.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05792",
+   "name": "skinning_08_monster_skin",
+   "slug": "monster-hide-spikes",
+   "description": "A grey-beige thick hide with several bony spikes along its curved edge.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05794",
+   "name": "skinning_10_demonic_skin",
+   "slug": "demonic-red-skin",
+   "description": "A red skin pelt with glowing pale-orange vein-like markings and a ragged outline.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

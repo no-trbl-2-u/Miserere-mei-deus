@@ -1,0 +1,555 @@
+{
+ "unit": "sheet-085",
+ "records": [
+  {
+   "cluster_id": "c03823",
+   "name": "Shoulder_28",
+   "slug": "gold-pauldron",
+   "description": "A single gold plated shoulder pauldron with a bright highlight and a small rivet.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00204",
+   "name": "Shoulder_36",
+   "slug": "green-scaled-pauldron",
+   "description": "An olive-green shoulder guard made of overlapping curved scale plates.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03824",
+   "name": "Shoulder_39",
+   "slug": "steel-banded-pauldron",
+   "description": "A grey steel shoulder pauldron built from stacked horizontal bands.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03825",
+   "name": "Shoulder_40",
+   "slug": "gold-banded-pauldron",
+   "description": "A gold shoulder pauldron built from stacked horizontal bands.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00906",
+   "name": "Shoulder_41",
+   "slug": "dark-banded-pauldron",
+   "description": "A dark brown-grey shoulder pauldron built from stacked horizontal bands.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03826",
+   "name": "Shoulder_44",
+   "slug": "gold-pauldron-lames",
+   "description": "A gold shoulder pauldron with a dark curved trim line and segmented lames below.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00205",
+   "name": "Shoulder_46",
+   "slug": "blue-steel-pauldron-red-trim",
+   "description": "A blue-grey steel pauldron with a red curved trim stripe and segmented plates at the edge.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03828",
+   "name": "Shoulder_48",
+   "slug": "green-leaf-shoulder-guard",
+   "description": "A dark green shoulder guard shaped like layered pointed leaves or feathers.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03829",
+   "name": "Shoulder_50",
+   "slug": "steel-skull-pauldron",
+   "description": "A grey steel shoulder pauldron with a skull embossed on the front.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00206",
+   "name": "Shoulder_53",
+   "slug": "gold-skull-pauldron",
+   "description": "A gold shoulder pauldron with a skull embossed on the front.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03830",
+   "name": "Shoulder_54",
+   "slug": "brown-horned-pauldron",
+   "description": "A brown rounded shoulder pauldron with a pointed upward horn and rivets.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03831",
+   "name": "Shoulder_55",
+   "slug": "olive-horned-pauldron",
+   "description": "An olive-green rounded shoulder pauldron with a pointed upward horn and rivets.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03832",
+   "name": "Shoulder_56",
+   "slug": "black-spiked-pauldron",
+   "description": "A black shoulder pauldron with a pointed horn and a fringe of spikes along its lower edge.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03834",
+   "name": "Shoulder_58",
+   "slug": "magenta-thorned-shoulder-guard",
+   "description": "A magenta and purple shoulder guard covered in thorny spines with vine-like ridges.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03835",
+   "name": "Shoulder_59",
+   "slug": "blue-thorned-shoulder-guard",
+   "description": "A blue shoulder guard covered in thorny spines with teal vine-like ridges.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03836",
+   "name": "Shoulder_60",
+   "slug": "blue-flame-orb-pauldron",
+   "description": "A blue ornate pauldron with a glowing blue flame orb resting on top.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00908",
+   "name": "Shoulder_61",
+   "slug": "green-flame-orb-pauldron",
+   "description": "A green ornate pauldron with a glowing yellow-green flame orb resting on top.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03837",
+   "name": "Shoulder_64",
+   "slug": "purple-flame-orb-pauldron",
+   "description": "A purple ornate pauldron with a glowing violet flame orb resting on top.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03838",
+   "name": "Shoulder_65",
+   "slug": "leather-strapped-pauldron",
+   "description": "A brown shoulder guard of stacked leather straps with metal buckles.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03839",
+   "name": "Shoulder_67",
+   "slug": "blue-cloth-pauldron",
+   "description": "A steel-edged shoulder piece with a blue fabric panel and a small gem at the bottom.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03840",
+   "name": "Shoulder_68",
+   "slug": "green-cloth-pauldron",
+   "description": "A steel-edged shoulder piece with a green fabric panel and a small gem at the bottom.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03841",
+   "name": "Shoulder_69",
+   "slug": "red-striped-spiked-pauldron",
+   "description": "A steel-edged shoulder piece with red and black stripes and a small spike.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03842",
+   "name": "Shoulder_70",
+   "slug": "orange-striped-spiked-pauldron",
+   "description": "A steel-edged shoulder piece with orange and brown stripes and metal spikes.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03843",
+   "name": "Shoulder_71",
+   "slug": "purple-striped-spiked-pauldron",
+   "description": "A steel-edged shoulder piece with purple and dark stripes and metal spikes.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03844",
+   "name": "Sickle",
+   "slug": "curved-sickle",
+   "description": "A curved steel sickle blade attached to a short brown wooden handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

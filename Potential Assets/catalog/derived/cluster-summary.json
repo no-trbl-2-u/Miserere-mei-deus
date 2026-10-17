@@ -1,0 +1,33 @@
+{
+ "png_files": 8595,
+ "clusters": 6361,
+ "clusters_with_corpus_row": 2307,
+ "clusters_needing_vision": 4054,
+ "collapse_ratio": 1.35,
+ "variant_children": 982,
+ "exact_perceptual_groups": 103,
+ "corpus_categories": {
+  "Unique": 204,
+  "Common": 174,
+  "Debuff": 144,
+  "0.Attack": 117,
+  "9.Enemy - Boss": 107,
+  "Buff": 101,
+  "ModParts": 56,
+  "Basic": 56,
+  "2.Support": 54,
+  "Job": 52,
+  "Env": 50,
+  "9.Enemy": 49,
+  "3.Survive": 41,
+  "Race": 35,
+  "SkillAutoUse": 33,
+  "Born": 21,
+  "Damage": 19,
+  "4.Special": 12,
+  "1.Summon": 11,
+  "SkillBuff": 8,
+  "Gear": 7,
+  "SkillDebuff": 3
+ }
+}

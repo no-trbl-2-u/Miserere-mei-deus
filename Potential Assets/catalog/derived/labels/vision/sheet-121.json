@@ -1,0 +1,554 @@
+{
+ "unit": "sheet-121",
+ "records": [
+  {
+   "cluster_id": "c02974",
+   "name": "Ice_2_nb",
+   "slug": "ice-shard-frost-ring",
+   "description": "A single blue ice shard encircled by a thin frost ring with small crystal fragments drifting around it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02975",
+   "name": "Ice_3_nb",
+   "slug": "frost-arc-sweep",
+   "description": "Sweeping curved bands of pale blue frost forming a wide arc across a blue background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02976",
+   "name": "Ice_4_nb",
+   "slug": "ice-shard-volley",
+   "description": "A volley of blue ice shards streaking diagonally down and to the left with small trailing sparks.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02977",
+   "name": "Ice_5_nb",
+   "slug": "frozen-bearded-face",
+   "description": "The face of a bearded man with glowing pale blue eyes surrounded by swirling cold wind lines.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02978",
+   "name": "Ice_6_nb",
+   "slug": "ice-spine-ridge",
+   "description": "A row of jagged blue ice spikes jutting from a frosted dark ridge.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02979",
+   "name": "Ice_7_nb",
+   "slug": "ice-spikes-pool",
+   "description": "Several glowing blue ice spikes rising from a frozen bluish pool on the ground.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02980",
+   "name": "Ice_8_nb",
+   "slug": "frost-rune-shield",
+   "description": "A dark blue shield with a pale blue rune mark in the centre inside a glowing frost halo.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "defend",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02981",
+   "name": "Ice_9_nb",
+   "slug": "frost-breath-skull",
+   "description": "A skull with glowing blue eyes breathing a stream of icy shards over a hooded dark figure.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03212",
+   "name": "Mageskill_01_Nobg",
+   "slug": "falling-ice-shards",
+   "description": "Three pale blue ice crystal shards slanting downward with soft glow on a blue background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00697",
+   "name": "Mageskill_04_nobg",
+   "slug": "flaming-brand-ring",
+   "description": "A glowing orange-red burning stick or brand wrapped by a swirling orange ring of fire.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00698",
+   "name": "Mageskill_05_nobg",
+   "slug": "purple-vortex",
+   "description": "A glowing magenta spiral vortex with purple wisps on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00699",
+   "name": "Mageskill_06",
+   "slug": "cyan-energy-comet",
+   "description": "A bright cyan glowing energy orb trailing a streak of light toward the upper left on a dark teal background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00700",
+   "name": "Mageskill_07_nobg",
+   "slug": "white-lightning-bolt",
+   "description": "A white jagged lightning bolt with a bright flash at its base on a dark olive background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00702",
+   "name": "Mageskill_11_nobg",
+   "slug": "purple-meteor",
+   "description": "A cracked dark rock wrapped in purple energy streaking toward the upper right with trailing sparks.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00703",
+   "name": "Mageskill_12_nobg",
+   "slug": "fire-meteor",
+   "description": "A burning red-brown rock engulfed in orange flame and white-hot trails flying diagonally.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00053",
+   "name": "Mageskill_13_nobg",
+   "slug": "slashed-shield",
+   "description": "A dark bronze shield crossed by a bright golden slash line with orange glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "defend",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00705",
+   "name": "Mageskill_15_nobg",
+   "slug": "orange-web-net",
+   "description": "A dark net of black strands with an orange glow behind it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00706",
+   "name": "Mageskill_16_nobg",
+   "slug": "glowing-gem-staff",
+   "description": "A wooden staff topped with a glowing orange gem, surrounded by orange energy tendrils.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00707",
+   "name": "Mageskill_17_nobg",
+   "slug": "orbiting-rock-ring",
+   "description": "A dark rock fragment encircled by a glowing orange ring with small floating pebbles.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00711",
+   "name": "Mageskill_21_nobg",
+   "slug": "cyan-ghost-skull-wave",
+   "description": "A glowing cyan skull with open jaw rising from a teal wave.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "summon",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00716",
+   "name": "Mageskill_27_nobg",
+   "slug": "three-spectral-women",
+   "description": "Three long-haired women in dark robes rendered as translucent blue ghostly figures.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "summon",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00719",
+   "name": "Mageskill_30_nobg",
+   "slug": "cyan-lightning-river",
+   "description": "A winding white-cyan ribbon of lightning or water streaking diagonally with blue web-like glows.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00720",
+   "name": "Mageskill_33_nobg",
+   "slug": "blue-white-starburst",
+   "description": "A bright white and blue starburst flash with light streaks radiating from the centre.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00721",
+   "name": "Mageskill_34_nobg",
+   "slug": "dark-rock-cyan-flame",
+   "description": "A black rugged rock trailing cyan flames as it flies toward the upper right.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00722",
+   "name": "Mageskill_35_nobg",
+   "slug": "battle-axe",
+   "description": "A single-bladed iron axe with a long dark handle angled diagonally.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

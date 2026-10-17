@@ -1,0 +1,480 @@
+{
+ "unit": "sheet-04",
+ "records": [
+  {
+   "cluster_id": "c04971",
+   "name": "icon_44921315_p0_master1200",
+   "slug": "skull-brain-heap",
+   "description": "A heap of stacked skulls and ribs with a large green-veined brain on top.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04984",
+   "name": "icon_66005943_p7_master1200",
+   "slug": "pale-woman-red-cape",
+   "description": "A pale long-haired woman in a dark dress with a red cape flaring out, arm raised.",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04991",
+   "name": "icon_76111972_p3",
+   "slug": "egg-clutch-clawed-horror",
+   "description": "A dark clawed creature with several pale egg-like orbs hanging above its hands.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c05015",
+   "name": "icon_80860504_p0_master1200",
+   "slug": "flame-crowned-orb-idol",
+   "description": "A round bronze orb-like body topped with a burning crown and radiating spikes.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c05019",
+   "name": "icon_82371147_p0_master1200",
+   "slug": "blue-dragon-head",
+   "description": "A blue scaled dragon head with horns and a red forked tongue.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05020",
+   "name": "icon_82453820_p1_master1200",
+   "slug": "blue-serpent-coil",
+   "description": "A coiled blue serpentine dragon body with a whiskered pale head at the left.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05027",
+   "name": "icon_83863945_p4_master1200",
+   "slug": "red-flame-spirit",
+   "description": "A swirling red-orange flame creature with tendrils of fire.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05037",
+   "name": "icon_86013300_p2",
+   "slug": "golden-faceless-figure",
+   "description": "A glowing golden humanoid figure with a dark featureless head standing before a staff.",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05038",
+   "name": "icon_86376219_p1",
+   "slug": "hooded-man-crimson-greatsword",
+   "description": "A bald hooded man in a crimson cloak with a large red-hilted sword at his back.",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05049",
+   "name": "icon_Annihilator C",
+   "slug": "pink-winged-mage-orb",
+   "description": "A pink armored figure with a crown and spread wings holding a glowing pink orb.",
+   "tags": {
+    "kind": "boss",
+    "use": [
+     "enemy-boss"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05074",
+   "name": "icon_Bone Golem B",
+   "slug": "skeleton-axe-magenta",
+   "description": "A red skeleton raising an axe with a magenta energy swirl beside it.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01103",
+   "name": "icon_Chernovog A",
+   "slug": "crowned-knight-halberd",
+   "description": "A crowned armored knight with a cape, halberd and large shield.",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05086",
+   "name": "icon_Creeping Coin A",
+   "slug": "scattered-gold-coins",
+   "description": "Several gold coins scattered against a black background.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05101",
+   "name": "icon_Doom Toad",
+   "slug": "green-toad",
+   "description": "A large olive-green toad seen front on.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05102",
+   "name": "icon_Doom Toad C",
+   "slug": "red-toad",
+   "description": "A large orange-red toad seen front on.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05103",
+   "name": "icon_Dragon B",
+   "slug": "green-dragon-head",
+   "description": "A green dragon head with a pointed snout and horns.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05112",
+   "name": "icon_Fate Spinner A",
+   "slug": "bearded-elder-face",
+   "description": "The face of a bald bearded elder with a long gold-trimmed beard.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05120",
+   "name": "icon_Float Eye F",
+   "slug": "floating-eye",
+   "description": "A single eye with a pale iris inside a black circle with a white rim.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05164",
+   "name": "icon_Lesser Demon Winged A",
+   "slug": "red-winged-demon",
+   "description": "A red horned demon with bat wings and a muscular torso.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05186",
+   "name": "icon_Orcus D",
+   "slug": "blue-horned-demon",
+   "description": "A blue muscular horned demon with gold ornaments and wings.",
+   "tags": {
+    "kind": "boss",
+    "use": [
+     "enemy-boss"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05193",
+   "name": "icon_Rogue",
+   "slug": "yellow-rogue-dagger",
+   "description": "A yellow-green clad rogue in a crouched stance holding a dagger.",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05200",
+   "name": "icon_Sidelle2",
+   "slug": "pale-bone-crawler",
+   "description": "A pale skeletal creature crouched on all fours.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c05212",
+   "name": "icon_Storm Seeker",
+   "slug": "teal-frog",
+   "description": "A teal glowing frog with yellow eyes crouching.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05221",
+   "name": "icon_Two Head Dragon",
+   "slug": "two-headed-gold-dragon",
+   "description": "A golden dragon with two heads and coiled body.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05229",
+   "name": "icon_Vampire Lord",
+   "slug": "vampire-lord",
+   "description": "A pale vampire in a black coat and high collar with red flames below.",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

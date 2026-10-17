@@ -1,0 +1,486 @@
+{
+ "unit": "sheet-130",
+ "records": [
+  {
+   "cluster_id": "c03984",
+   "name": "Skill_439",
+   "slug": "pink-hook-slash-gold",
+   "description": "A magenta hooked blade strike with gold streaks radiating behind it on a dark ground.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03985",
+   "name": "Skill_440",
+   "slug": "golden-claw-swipe",
+   "description": "A curved pale slash mark tearing across swirling golden-brown streaks.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03986",
+   "name": "Skill_445",
+   "slug": "horned-figure-halo",
+   "description": "A red-skinned horned figure with a spiral halo above its head against orange radiating stripes.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03987",
+   "name": "Skill_447",
+   "slug": "black-hammer-plus",
+   "description": "A black war hammer with a small plus sign on a fiery orange burst.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03989",
+   "name": "Skill_452",
+   "slug": "crossed-pink-blades",
+   "description": "Two crossed pale blades with pink edges over a magenta background.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03992",
+   "name": "Skill_456",
+   "slug": "chain-on-magenta",
+   "description": "A length of iron chain running diagonally across a magenta glow.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "debuff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03994",
+   "name": "Skill_459",
+   "slug": "pink-cross-heal",
+   "description": "A glowing pink medical cross on a dark maroon background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "heal",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03995",
+   "name": "Skill_463",
+   "slug": "red-slash-streaks",
+   "description": "Three red streaks sweeping diagonally from lower left on a dark red ground.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03996",
+   "name": "Skill_465",
+   "slug": "red-vortex-orb",
+   "description": "A white glowing orb at the centre of swirling red spiral arcs.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00950",
+   "name": "Skill_471",
+   "slug": "purple-light-rays-down",
+   "description": "Purple rays fanning downward from a bright band at the top.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03998",
+   "name": "Skill_473",
+   "slug": "purple-slash-streaks",
+   "description": "Three purple slash streaks sweeping diagonally on a dark violet ground.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00953",
+   "name": "Skill_476",
+   "slug": "dark-hands-purple-energy",
+   "description": "Two dark silhouetted hands raised with purple energy streaming between them.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "silhouette"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03999",
+   "name": "Skill_478",
+   "slug": "purple-burst-shards",
+   "description": "A bright purple explosion with dark shards scattering from the centre.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00955",
+   "name": "Skill_479",
+   "slug": "twin-purple-swords",
+   "description": "Two outlined swords pointing upward with a violet glow on diagonal stripes.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04000",
+   "name": "Skill_481",
+   "slug": "magenta-up-arrow-plus",
+   "description": "A magenta upward arrow with a small plus sign on a pulsing ring.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00956",
+   "name": "Skill_484",
+   "slug": "purple-comets-trio",
+   "description": "Three purple comet-like fireballs with veined tails streaking down-left.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00957",
+   "name": "Skill_485",
+   "slug": "purple-comet-single",
+   "description": "A single large purple comet fireball with a veined tail streaking down-left.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04002",
+   "name": "Skill_487",
+   "slug": "black-potion-plus",
+   "description": "A black round-bottomed flask with a plus sign and bubbles on a purple burst.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "heal",
+     "combat-action",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00958",
+   "name": "Skill_489",
+   "slug": "violet-wind-streaks",
+   "description": "Curved indigo and violet streaks sweeping across a dark blue ground.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00959",
+   "name": "Skill_490",
+   "slug": "broken-steel-blade",
+   "description": "A grey steel sword blade snapped in two on a deep blue background.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "debuff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04003",
+   "name": "Skill_491",
+   "slug": "blue-up-arrow-plus",
+   "description": "A blue upward arrow with a small plus sign on a ripple ring.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04005",
+   "name": "Skill_495",
+   "slug": "cyan-crossed-slashes",
+   "description": "Two crossing cyan light slashes forming an X on a dark teal ground.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04007",
+   "name": "Skill_497",
+   "slug": "horned-blue-armour",
+   "description": "A horned cyan chestplate with a vertical T-shaped plate on a dark blue glow.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04008",
+   "name": "Skill_498",
+   "slug": "cyan-light-streaks",
+   "description": "Several thin cyan streaks fanning out from the upper right on a dark teal ground.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04010",
+   "name": "Skill_ABuy",
+   "slug": "coin-and-bottle-buy",
+   "description": "A grey arrow pointing at a gold coin beside a dark flask on a brown ground.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "shop",
+     "price",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

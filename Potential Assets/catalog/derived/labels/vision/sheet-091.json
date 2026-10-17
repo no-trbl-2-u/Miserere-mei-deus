@@ -1,0 +1,530 @@
+{
+ "unit": "sheet-091",
+ "records": [
+  {
+   "cluster_id": "c04227",
+   "name": "SwordTwohanded2",
+   "slug": "twohanded-sword-2",
+   "description": "A long slender dark-grey two-handed sword drawn diagonally with a narrow crossguard and thin blade.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04228",
+   "name": "SwordTwohanded3",
+   "slug": "twohanded-sword-3",
+   "description": "A long slender dark-grey two-handed sword drawn diagonally with a small crossguard and long thin blade.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04229",
+   "name": "SwordTwohanded4",
+   "slug": "twohanded-sword-4",
+   "description": "A long dark-grey two-handed sword drawn diagonally with a thin blade and small guard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04230",
+   "name": "Sword_01",
+   "slug": "sword-01-steel-purple-hilt",
+   "description": "A steel-blue short sword pointing down-left with a wide crossguard and dark purple pommel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04232",
+   "name": "Sword_03",
+   "slug": "sword-03-bronze",
+   "description": "A broad bronze-coloured sword with a gold crossguard and dark red grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04233",
+   "name": "Sword_04",
+   "slug": "sword-04-dark-steel",
+   "description": "A slim dark blue-grey sword with a black grip and small crossguard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04234",
+   "name": "Sword_06",
+   "slug": "sword-06-weathered-brown",
+   "description": "A weathered grey-brown sword with a dark grip and curved guard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04235",
+   "name": "Sword_08",
+   "slug": "sword-08-pale-grey-red-grip",
+   "description": "A pale grey-beige broad sword with a dark red grip and gold guard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04236",
+   "name": "Sword_09",
+   "slug": "sword-09-teal-crystal",
+   "description": "A bright cyan crystalline sword with a teal green hilt and guard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00971",
+   "name": "Sword_10",
+   "slug": "sword-10-brown-wood",
+   "description": "A brown wood-grained sword with a dark grip and ring pommel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04237",
+   "name": "Sword_12",
+   "slug": "sword-12-orange-flame",
+   "description": "A narrow orange sword with a wrapped dark grip, glowing orange blade.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00972",
+   "name": "Sword_13",
+   "slug": "sword-13-lime-green",
+   "description": "A narrow lime-green sword with a wrapped yellow-green hilt.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00973",
+   "name": "Sword_14",
+   "slug": "sword-14-copper-bronze",
+   "description": "A broad dark copper-brown sword with a curved winged guard at the top.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00975",
+   "name": "Sword_18",
+   "slug": "sword-18-pale-teal",
+   "description": "A thin pale blue-green sword with a black grip and small guard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04238",
+   "name": "Sword_19",
+   "slug": "sword-19-silver-grey",
+   "description": "A thin plain silver-grey sword with a dark grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04239",
+   "name": "Sword_22",
+   "slug": "sword-22-grey-steel",
+   "description": "A plain grey steel sword with a dark grip and small crossguard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04240",
+   "name": "Sword_23",
+   "slug": "sword-23-purple-crystal",
+   "description": "A glowing purple crystal sword fading to white at the tip with a violet hilt.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04242",
+   "name": "Sword_25",
+   "slug": "sword-25-yellow-green",
+   "description": "A thin yellow-green glowing sword with a grey grip and guard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04243",
+   "name": "Sword_26",
+   "slug": "sword-26-red-orange-flame",
+   "description": "A broad red-orange fiery sword with a red grip and flared guard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04244",
+   "name": "Sword_27",
+   "slug": "sword-27-blue-grey-spiked",
+   "description": "A wide blue-grey blade with a spiked, jagged guard and a notched tip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04245",
+   "name": "Sword_28",
+   "slug": "sword-28-green-spirit",
+   "description": "A large translucent green glowing blade wreathed in leafy green wisps with a green hilt.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04246",
+   "name": "Sword_29",
+   "slug": "sword-29-dark-grey",
+   "description": "A thin dark-grey sword with a black grip and simple crossguard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04247",
+   "name": "Sword_30",
+   "slug": "sword-30-golden",
+   "description": "A golden-orange sword with a gold crossguard and dark pommel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04248",
+   "name": "Sword_33",
+   "slug": "sword-33-violet-silver",
+   "description": "A silver-white blade with a violet-blue hilt and ornate guard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04249",
+   "name": "Sword_34",
+   "slug": "sword-34-curved-grey",
+   "description": "A curved single-edged grey blade with a dark grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

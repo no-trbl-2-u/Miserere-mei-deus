@@ -1,0 +1,466 @@
+{
+ "unit": "sheet-110",
+ "records": [
+  {
+   "cluster_id": "c05872",
+   "name": "staff_42",
+   "slug": "blue-crystal-staff",
+   "description": "A long staff in cool blue-grey wood with a crystalline blue head at the top.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05873",
+   "name": "staff_43",
+   "slug": "gnarled-branch-staff",
+   "description": "A long staff of twisted brown branch wood with a curled hooked head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05874",
+   "name": "staff_44",
+   "slug": "forked-branch-staff",
+   "description": "A long staff of rough brown wood with several branching twig prongs near the top.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05876",
+   "name": "staff_46",
+   "slug": "lightning-blue-staff",
+   "description": "A thin dark staff with a jagged blue lightning-bolt shaped head and blue fittings at the base.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05877",
+   "name": "staff_49",
+   "slug": "pink-thorn-staff",
+   "description": "A dark staff topped with a spiky pink starburst head and pink tip at the bottom.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05878",
+   "name": "staff_5",
+   "slug": "orb-crook-staff",
+   "description": "A brown wooden staff curling into a hook at the top that holds a glowing pale orb.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05879",
+   "name": "staff_50",
+   "slug": "sun-disc-staff",
+   "description": "A staff with a golden sun-shaped spiked disc at the top and a golden spear tip at the base.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05880",
+   "name": "staff_6",
+   "slug": "orb-crook-staff-plain",
+   "description": "A brown wooden crook staff holding a glowing pale orb in its curled head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05881",
+   "name": "staff_7",
+   "slug": "orb-crook-staff-leafy",
+   "description": "A knotted brown crook staff holding a glowing pale orb, with a small green leaf at the head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01215",
+   "name": "staff_9",
+   "slug": "blue-tipped-staff",
+   "description": "A slim brown staff with a pale blue crystal point at the top.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05885",
+   "name": "textile",
+   "slug": "leather-hide-scrap",
+   "description": "A curved piece of dark reddish-brown leather or cloth, folded like a bolt of material.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04650",
+   "name": "ダンくんアイコン",
+   "slug": "tabby-cat-photo",
+   "description": "A photographic close-up of a grey tabby cat's face on a black background, used as a mascot icon.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04779",
+   "name": "icon-Discord",
+   "slug": "discord-logo",
+   "description": "The white Discord game-controller face logo on a rounded square speech-bubble shape.",
+   "tags": {
+    "kind": "brand-mark",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04960",
+   "name": "icon-Twitter",
+   "slug": "twitter-bird-logo",
+   "description": "The white Twitter bird logo on a rounded square shape.",
+   "tags": {
+    "kind": "brand-mark",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04961",
+   "name": "icon-reddit",
+   "slug": "reddit-snoo-logo",
+   "description": "The black Reddit alien mascot silhouette inside a white circle.",
+   "tags": {
+    "kind": "brand-mark",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04975",
+   "name": "icon_50688127_p0_master1200",
+   "slug": "grey-rock-lightning",
+   "description": "A mottled grey gnarled mass crossed by white lightning streaks on a black background.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c04993",
+   "name": "icon_76650660_p2",
+   "slug": "dripping-purple-ooze",
+   "description": "A pale lavender dripping slime-like mass with dark hollow openings on a black background.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05028",
+   "name": "icon_83863945_p4_master1200",
+   "slug": "red-tentacle-roots",
+   "description": "Writhing orange-red tentacle or root shapes against a black background.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05042",
+   "name": "icon_89192966_p1_master1200",
+   "slug": "egg-head-armor-figure",
+   "description": "A grey armoured figure with a smooth egg-shaped head and round shoulder plates on a black background.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05045",
+   "name": "icon_89192966_p5_master1200",
+   "slug": "egg-head-armor-figure-blue",
+   "description": "A blue-toned armoured figure with a smooth egg-shaped head and round shoulders on a black background.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05078",
+   "name": "icon_Conflated A",
+   "slug": "red-root-shrouded-figure",
+   "description": "A dark figure standing beneath a radiating web of red root-like lines on a black background.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05143",
+   "name": "icon_Hidden",
+   "slug": "hidden-hooded-figure",
+   "description": "A hunched dark hooded figure with glowing yellow eyes emerging from black.",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05150",
+   "name": "icon_Iron Golem",
+   "slug": "iron-golem",
+   "description": "A bulky white-grey riveted armour golem with a perforated helmet.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05194",
+   "name": "icon_Roper",
+   "slug": "roper-tree-monster",
+   "description": "A brown tree-like monster with twisting root limbs and pink glowing tendril tips.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05201",
+   "name": "icon_Skeleton",
+   "slug": "skeleton-warrior",
+   "description": "A skeleton holding a sword and a round shield against a black background.",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

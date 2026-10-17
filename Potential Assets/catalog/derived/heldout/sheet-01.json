@@ -1,0 +1,230 @@
+{
+ "sheet": "sheet-01",
+ "cells": [
+  {
+   "i": 0,
+   "cluster_id": "c00585",
+   "name": "Druideskill_36",
+   "file": "sprites/Druideskill_36.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 1,
+   "cluster_id": "c00637",
+   "name": "Engineerskill_31",
+   "file": "sprites/Engineerskill_31.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 2,
+   "cluster_id": "c00149",
+   "name": "Gloves_05",
+   "file": "sprites/Gloves_05.png",
+   "size": "53x55",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 3,
+   "cluster_id": "c02747",
+   "name": "Gun_v2_10",
+   "file": "sprites/Gun_v2_10.png",
+   "size": "48x62",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 4,
+   "cluster_id": "c02803",
+   "name": "Hammer_43",
+   "file": "sprites/Hammer_43.png",
+   "size": "55x60",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 5,
+   "cluster_id": "c02881",
+   "name": "Helm_71",
+   "file": "sprites/Helm_71.png",
+   "size": "55x58",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 6,
+   "cluster_id": "c02909",
+   "name": "Herbalism_28_stinkymushroom",
+   "file": "sprites/Herbalism_28_stinkymushroom.png",
+   "size": "54x63",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 7,
+   "cluster_id": "c00689",
+   "name": "Loot_23",
+   "file": "sprites/Loot_23.png",
+   "size": "40x56",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 8,
+   "cluster_id": "c03187",
+   "name": "Loot_69",
+   "file": "sprites/Loot_69.png",
+   "size": "47x60",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 9,
+   "cluster_id": "c00054",
+   "name": "Mageskill_24",
+   "file": "sprites/Mageskill_24.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 10,
+   "cluster_id": "c00728",
+   "name": "Mageskill_43",
+   "file": "sprites/Mageskill_43.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 11,
+   "cluster_id": "c00752",
+   "name": "Paladinskill_15",
+   "file": "sprites/Paladinskill_15.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 12,
+   "cluster_id": "c00172",
+   "name": "Paladinskill_40",
+   "file": "sprites/Paladinskill_40.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 13,
+   "cluster_id": "c00789",
+   "name": "Priestskill_07",
+   "file": "sprites/Priestskill_07.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 14,
+   "cluster_id": "c00791",
+   "name": "Priestskill_09",
+   "file": "sprites/Priestskill_09.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 15,
+   "cluster_id": "c00176",
+   "name": "Priestskill_13X1",
+   "file": "sprites/Priestskill_13X1.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 16,
+   "cluster_id": "c00059",
+   "name": "Priestskill_46",
+   "file": "sprites/Priestskill_46.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 17,
+   "cluster_id": "c00823",
+   "name": "Priestskill_50",
+   "file": "sprites/Priestskill_50.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 18,
+   "cluster_id": "c03490",
+   "name": "Quest_44",
+   "file": "sprites/Quest_44.png",
+   "size": "62x57",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 19,
+   "cluster_id": "c00847",
+   "name": "Res_151",
+   "file": "sprites/Res_151.png",
+   "size": "57x48",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 20,
+   "cluster_id": "c00858",
+   "name": "Res_75",
+   "file": "sprites/Res_75.png",
+   "size": "46x58",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 21,
+   "cluster_id": "c03720",
+   "name": "Ring_50",
+   "file": "sprites/Ring_50.png",
+   "size": "64x62",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 22,
+   "cluster_id": "c00880",
+   "name": "Shamanskill_19",
+   "file": "sprites/Shamanskill_19.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 23,
+   "cluster_id": "c00885",
+   "name": "Shamanskill_30",
+   "file": "sprites/Shamanskill_30.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 24,
+   "cluster_id": "c00909",
+   "name": "Skill_207",
+   "file": "sprites/Skill_207.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  }
+ ]
+}

@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-047",
+ "records": [
+  {
+   "cluster_id": "c02472",
+   "name": "Dagger_v2_43",
+   "slug": "curved-blue-dagger",
+   "description": "A curved silver dagger blade with a blue crossguard and a blue gem on the pommel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02474",
+   "name": "Dagger_v2_45",
+   "slug": "magenta-glow-dagger",
+   "description": "A broad triangular dagger with a T-shaped hilt, glowing magenta with speed streaks.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02475",
+   "name": "Dagger_v2_46",
+   "slug": "flame-serrated-blade",
+   "description": "A serrated brown blade wreathed in orange and red flame.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02476",
+   "name": "Dagger_v2_47",
+   "slug": "purple-aura-ornate-blade",
+   "description": "An ornate dark blade with a spiked guard, surrounded by a purple glowing aura.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02477",
+   "name": "Dagger_v2_48",
+   "slug": "frost-aura-blade",
+   "description": "A jagged dark blade with a blue gem pommel, surrounded by a cyan frost-like aura with sparkles.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02478",
+   "name": "Dagger_v2_49",
+   "slug": "green-rune-curved-blade",
+   "description": "A curved black blade etched with green glowing runes and a green aura.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02479",
+   "name": "Dagger_v2_50",
+   "slug": "golden-radiant-curved-blade",
+   "description": "A curved dark blade with a golden glow and a starburst gem at the pommel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02480",
+   "name": "DarkShirt",
+   "slug": "dark-laced-shirt",
+   "description": "A dark navy long-sleeved shirt with a laced collar and a brown belt.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02481",
+   "name": "Dishes",
+   "slug": "cutlery-set",
+   "description": "A set of grey forks, spoons and knives arranged together.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "loot",
+     "inventory",
+     "camp"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02486",
+   "name": "Duck",
+   "slug": "mallard-duck",
+   "description": "A mallard duck with a green head and brown body seen from the side.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory",
+     "camp"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02487",
+   "name": "Dumplings",
+   "slug": "dumplings",
+   "description": "Two golden-brown crimped dumplings.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory",
+     "camp"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02528",
+   "name": "Egg",
+   "slug": "egg-in-nest",
+   "description": "A white egg resting in a brown nest.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory",
+     "camp"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02531",
+   "name": "EliteDaggerBlue",
+   "slug": "elite-dagger-blue",
+   "description": "A grey dagger with a blue-wrapped grip and crossguard, pointing down.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02532",
+   "name": "EliteDaggerGold",
+   "slug": "elite-dagger-gold",
+   "description": "A grey dagger with a gold-wrapped grip and crossguard, pointing down.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02533",
+   "name": "EliteShoes",
+   "slug": "brown-leather-shoes",
+   "description": "A pair of brown leather shoes with buckle straps.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02534",
+   "name": "Enchantment_01_big_magicdust",
+   "slug": "purple-magic-dust-mound",
+   "description": "A cone-shaped mound of purple dust with a wisp of smoke rising from the tip.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02535",
+   "name": "Enchantment_02_big_magicdust",
+   "slug": "cyan-magic-dust-mound",
+   "description": "A cone-shaped mound of teal dust with swirling cyan energy around it.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02536",
+   "name": "Enchantment_03_big_magicdust",
+   "slug": "red-magic-dust-mound",
+   "description": "A cone-shaped mound of crimson dust with a red glow and a wisp at the tip.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02537",
+   "name": "Enchantment_04_magicdust",
+   "slug": "grey-magic-dust-mound",
+   "description": "A smaller cone-shaped mound of grey-silver dust with a thin smoke wisp.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02538",
+   "name": "Enchantment_05_magicdust",
+   "slug": "purple-rune-pouch",
+   "description": "A dark purple drawstring pouch marked with a glowing rune, emitting purple sparks.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02539",
+   "name": "Enchantment_06_magicdust",
+   "slug": "blue-rune-pouch",
+   "description": "A dark blue drawstring pouch marked with a glowing rune, emitting blue sparks.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02540",
+   "name": "Enchantment_07_magicdust",
+   "slug": "teal-rune-pouch",
+   "description": "A dark teal drawstring pouch marked with a glowing rune, emitting green sparks.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02541",
+   "name": "Enchantment_09_magicdust",
+   "slug": "indigo-rune-pouch",
+   "description": "A dark indigo drawstring pouch marked with a glowing rune, emitting violet sparks.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00601",
+   "name": "Enchantment_10_magicdust",
+   "slug": "green-rune-pouch",
+   "description": "A dark green drawstring pouch marked with a glowing rune, emitting bright green sparks.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02544",
+   "name": "Enchantment_13_magicsubstance",
+   "slug": "cyan-energy-swirl",
+   "description": "A glowing cyan spiral swirl of magical energy.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

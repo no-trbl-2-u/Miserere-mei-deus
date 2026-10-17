@@ -1,0 +1,2753 @@
+{
+ "batch": "batch-18",
+ "items": [
+  {
+   "cluster_id": "c05900",
+   "name": "51180360_p0_master1200",
+   "file": "textures/51180360_p0_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "古代の覇王",
+      "ID": "EBS10001",
+      "Category": "DungeonBoss1",
+      "Rarity": 6
+     }
+    },
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "古代の覇王",
+      "ID": "ESM00029",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 情報屋ヤンネ 4",
+      "ID": "REST0014N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 時間魔術学生ガルメイン 3",
+      "ID": "REST0083N2",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05901",
+   "name": "51180360_p1_master1200",
+   "file": "textures/51180360_p1_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "魂の解放者",
+      "ID": "EBS10002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05902",
+   "name": "54759245_p1_master1200X2",
+   "file": "textures/54759245_p1_master1200X2.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "旧支配者の大祭司",
+      "ID": "EBS15003",
+      "Category": "DungeonBoss3",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05903",
+   "name": "64775330_p2_master1200",
+   "file": "textures/64775330_p2_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ゴブリン",
+      "ID": "E0N01008",
+      "Category": "Normal1",
+      "Rarity": 1
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05904",
+   "name": "64837282_p0_master1200",
+   "file": "textures/64837282_p0_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ゴブリンシャーマン",
+      "ID": "E0N02011",
+      "Category": "Normal2",
+      "Rarity": 2
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01223",
+   "name": "64891264_p1_master1200",
+   "file": "textures/64891264_p1_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "炭鉱夫",
+      "ID": "ESM00014",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05905",
+   "name": "65132811_p0_master1200",
+   "file": "textures/65132811_p0_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ミミック",
+      "ID": "EEX00001",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "NoDrop"
+      ]
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 宝箱",
+      "ID": "RECEV001N11",
+      "ParamKey": "Battle"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 宝箱",
+      "ID": "RECEV001N16",
+      "ParamKey": "DoAct"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05906",
+   "name": "65132811_p2_master1200",
+   "file": "textures/65132811_p2_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 宝箱",
+      "ID": "RECEV001N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 鍵のかかった箱",
+      "ID": "RECEV021N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 鍵のかかった箱",
+      "ID": "RECEV021N3",
+      "ParamKey": "DoAct"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 鍵のかかった箱",
+      "ID": "RECEV021N4",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05907",
+   "name": "65132811_p3_master1200",
+   "file": "textures/65132811_p3_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 技師見習いソラティナ 2",
+      "ID": "REST0072N2",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01224",
+   "name": "66005943_p7_master1200",
+   "file": "textures/66005943_p7_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ヴァンパイア",
+      "ID": "E0N04011",
+      "Category": "Normal4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05908",
+   "name": "66005943_p9_master1200",
+   "file": "textures/66005943_p9_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ブレイドトゥース",
+      "ID": "E0N02002",
+      "Category": "Normal2",
+      "Rarity": 2
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05909",
+   "name": "66037225_p0",
+   "file": "textures/66037225_p0.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "塔の主",
+      "ID": "EBS03002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 情報屋ヤンネ 2",
+      "ID": "REST0012N5",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05910",
+   "name": "66067003_p1_master1200",
+   "file": "textures/66067003_p1_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "デーモンプリンス",
+      "ID": "EERM0019",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "Risky"
+      ]
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR19N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR19N2",
+      "ParamKey": "Freq"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR19N3",
+      "ParamKey": "Freq"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05911",
+   "name": "66067003_p2_master1200",
+   "file": "textures/66067003_p2_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ネビロス",
+      "ID": "EBS07002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 聖騎士イェリン 2",
+      "ID": "REST0030N5",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05912",
+   "name": "66252392_p0_master1200",
+   "file": "textures/66252392_p0_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ソウルフォート",
+      "ID": "EBS03003",
+      "Category": "DungeonBoss3",
+      "Rarity": 6
+     }
+    },
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ボーントーテム",
+      "ID": "ESM00021",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 時間魔術学生ガルメイン 3",
+      "ID": "REST0083N4",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05913",
+   "name": "68196795_p0",
+   "file": "textures/68196795_p0.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ゼリー",
+      "ID": "ESM00024",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05914",
+   "name": "76111972_p3",
+   "file": "textures/76111972_p3.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "シャドウラーカー",
+      "ID": "E0N04007",
+      "Category": "Normal4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01225",
+   "name": "76650660_p2",
+   "file": "textures/76650660_p2.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "不定形の戦士",
+      "ID": "EBS11002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    },
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "再顕現者",
+      "ID": "EBS20003",
+      "Category": "DungeonBoss3",
+      "Rarity": 7
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "神塚「神の亡骸を喰む」",
+      "ID": "RESEV020N6",
+      "ParamKey": "DoAct"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "神塚「神の亡骸を喰む」",
+      "ID": "RESEV020N7",
+      "ParamKey": "DoAct"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05915",
+   "name": "76965307_p1",
+   "file": "textures/76965307_p1.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "スキュラクイーン",
+      "ID": "EBS15001",
+      "Category": "DungeonBoss1",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05916",
+   "name": "76965307_p4",
+   "file": "textures/76965307_p4.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "スキュラ",
+      "ID": "E0N05008",
+      "Category": "Normal5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01226",
+   "name": "77892207_p0",
+   "file": "textures/77892207_p0.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "盗人",
+      "ID": "EDG06001",
+      "Category": "Normal-D4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05917",
+   "name": "77937023_p3",
+   "file": "textures/77937023_p3.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "グラトニー",
+      "ID": "EBS05001",
+      "Category": "DungeonBoss1",
+      "Rarity": 6
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 時計職人ラウロ 5",
+      "ID": "REST0045N5",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05918",
+   "name": "77937023_p4",
+   "file": "textures/77937023_p4.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "アビスイーター",
+      "ID": "EBS21002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05919",
+   "name": "78217648_p0",
+   "file": "textures/78217648_p0.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "バイパーネスト",
+      "ID": "EDG02001",
+      "Category": "Normal-D4",
+      "Rarity": 4
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 怪しげな穴",
+      "ID": "RECEV005N5",
+      "ParamKey": "Battle"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05920",
+   "name": "78536855_p3",
+   "file": "textures/78536855_p3.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "殺人者",
+      "ID": "E0N02004",
+      "Category": "Normal2",
+      "Rarity": 2
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05921",
+   "name": "78731756_p0",
+   "file": "textures/78731756_p0.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ダンシングジュエル",
+      "ID": "ESM00039",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc",
+       "CopyGear3Stats"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05922",
+   "name": "79338597_p1",
+   "file": "textures/79338597_p1.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "異星の侵略者",
+      "ID": "EERM0014",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "Risky"
+      ]
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR14N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR14N2",
+      "ParamKey": "Freq"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR14N3",
+      "ParamKey": "Freq"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01227",
+   "name": "79338597_p2",
+   "file": "textures/79338597_p2.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "深淵の肉塊",
+      "ID": "EEX00005",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "NoDrop"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05923",
+   "name": "79417988_p2",
+   "file": "textures/79417988_p2.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "マンティコア",
+      "ID": "E0N05004",
+      "Category": "Normal5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05924",
+   "name": "79417988_p3",
+   "file": "textures/79417988_p3.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ヌエ",
+      "ID": "EEX00008",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "Risky"
+      ]
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEV020N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEV020N2",
+      "ParamKey": "Freq"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEV020N3",
+      "ParamKey": "Freq"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01228",
+   "name": "79417988_p5-Disaster",
+   "file": "textures/79417988_p5-Disaster.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Image",
+     "row": {
+      "name": "黒麒麟",
+      "ID": "DSS00019"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01229",
+   "name": "79633847_p0-Disaster",
+   "file": "textures/79633847_p0-Disaster.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Image",
+     "row": {
+      "name": "黄昏人",
+      "ID": "DSS00018"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05925",
+   "name": "79937026_p3",
+   "file": "textures/79937026_p3.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 技師見習いソラティナ 1",
+      "ID": "REST0071N2",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 技師見習いソラティナ 3",
+      "ID": "REST0073N2",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "工場跡「停止した機械」",
+      "ID": "RESEV018N2",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "工場跡「停止した機械」",
+      "ID": "RESEV018N3",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05926",
+   "name": "80010168_p4",
+   "file": "textures/80010168_p4.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ダイダラボッチ",
+      "ID": "ECQ00021",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05927",
+   "name": "80129679_p0",
+   "file": "textures/80129679_p0.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "サブダンジョン - 地獄",
+      "ID": "RESDG007N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "サブダンジョン - 地獄",
+      "ID": "RESDG007N2",
+      "ParamKey": "Branch"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "サブダンジョン - 地獄",
+      "ID": "RESDG007N3",
+      "Category": "SubDungeon",
+      "ParamKey": "MoveDungeon"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "サブダンジョン - 地獄",
+      "ID": "RESDG007N4",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05928",
+   "name": "80457125_p0_master1200",
+   "file": "textures/80457125_p0_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "赤鬼",
+      "ID": "EDG02002",
+      "Category": "Normal-D5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05929",
+   "name": "80616199_p3_master1200",
+   "file": "textures/80616199_p3_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ドラゴンベビー",
+      "ID": "E0N03008",
+      "Category": "Normal3",
+      "Rarity": 3
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05930",
+   "name": "80841025_p0_master1200",
+   "file": "textures/80841025_p0_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "バエル",
+      "ID": "EBS07003",
+      "Category": "DungeonBoss3",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05931",
+   "name": "80860504_p0_master1200",
+   "file": "textures/80860504_p0_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ホーリースピリット",
+      "ID": "ESM00022",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05932",
+   "name": "80887888_p0_master1200",
+   "file": "textures/80887888_p0_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "グレムリン",
+      "ID": "E0N02005",
+      "Category": "Normal2",
+      "Rarity": 2
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05933",
+   "name": "80887888_p3_master1200",
+   "file": "textures/80887888_p3_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "インプ",
+      "ID": "E0N01015",
+      "Category": "Normal1",
+      "Rarity": 1
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05934",
+   "name": "81239731_p1_master1200",
+   "file": "textures/81239731_p1_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 古い棺",
+      "ID": "RECEV004N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 古い棺",
+      "ID": "RECEV004N2",
+      "ParamKey": "Freq"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 古い棺",
+      "ID": "RECEV004N3",
+      "ParamKey": "Freq"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 古い棺",
+      "ID": "RECEV004N4",
+      "Category": "RandomGear",
+      "ParamKey": "Gain"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01230",
+   "name": "81466580_p0_master1200X1",
+   "file": "textures/81466580_p0_master1200X1.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ミノタウロス",
+      "ID": "EBS01001",
+      "Category": "DungeonBoss1",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05935",
+   "name": "82231934_p0_master1200",
+   "file": "textures/82231934_p0_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "白虎",
+      "ID": "ECQ00016",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05936",
+   "name": "82371147_p0_master1200",
+   "file": "textures/82371147_p0_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "蒼龍",
+      "ID": "ECQ00014",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01231",
+   "name": "82453820_p1_master1200",
+   "file": "textures/82453820_p1_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "海竜",
+      "ID": "EBS22003",
+      "Category": "DungeonBoss3",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05937",
+   "name": "82599970_p5_master1200",
+   "file": "textures/82599970_p5_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "玄武",
+      "ID": "ECQ00015",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05938",
+   "name": "82825309_p0_master1200",
+   "file": "textures/82825309_p0_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "朱雀",
+      "ID": "ECQ00017",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05939",
+   "name": "82996530_p1_master1200",
+   "file": "textures/82996530_p1_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "デーモン",
+      "ID": "ESM00019",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "地獄 「探求者」",
+      "ID": "RESEV007N8",
+      "ParamKey": "DoAct"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01232",
+   "name": "83220935_p3_master1200",
+   "file": "textures/83220935_p3_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ゴールデンスタチュー",
+      "ID": "EERM0005",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "Risky"
+      ]
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR05N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR05N2",
+      "ParamKey": "Freq"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR05N3",
+      "ParamKey": "Freq"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05940",
+   "name": "83220935_p6_master1200",
+   "file": "textures/83220935_p6_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "リビングスタチュー",
+      "ID": "E0N05003",
+      "Category": "Normal5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05941",
+   "name": "83863945_p4_master1200",
+   "file": "textures/83863945_p4_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "染み出すもの",
+      "ID": "EDG17001",
+      "Category": "Normal-D4",
+      "Rarity": 4
+     }
+    },
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ブラッドゴーレム",
+      "ID": "ESM00040",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05942",
+   "name": "83913397_p4_master1200X1",
+   "file": "textures/83913397_p4_master1200X1.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "やつれた女",
+      "ID": "EEX00007",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "NoDrop"
+      ]
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 旅の女",
+      "ID": "RECEV008N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 旅の女",
+      "ID": "RECEV008N4",
+      "ParamKey": "DoAct"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 旅の女",
+      "ID": "RECEV008N5",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05943",
+   "name": "84112998_p0_master1200",
+   "file": "textures/84112998_p0_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "牛鬼",
+      "ID": "EERM0007",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "Risky"
+      ]
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR07N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR07N2",
+      "ParamKey": "Freq"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR07N3",
+      "ParamKey": "Freq"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01233",
+   "name": "84608428_p1_master1200",
+   "file": "textures/84608428_p1_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "スポーン",
+      "ID": "EDG07001",
+      "Category": "Normal-D4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05944",
+   "name": "84759177_p3_master1200",
+   "file": "textures/84759177_p3_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "殺人者の成れ果て",
+      "ID": "EBS01003",
+      "Category": "DungeonBoss3",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05945",
+   "name": "85215638_p1_master1200",
+   "file": "textures/85215638_p1_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "エリミネーター",
+      "ID": "EBS18002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    },
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "メタルゴーレム",
+      "ID": "ESM00038",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05946",
+   "name": "85215638_p4_master1200",
+   "file": "textures/85215638_p4_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "デコイ",
+      "ID": "ESM00034",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01234",
+   "name": "85361750_p1",
+   "file": "textures/85361750_p1.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "アバター",
+      "ID": "ESM00017",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05947",
+   "name": "85904543_p0",
+   "file": "textures/85904543_p0.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "教祖エルダグリム",
+      "ID": "ECQ00020",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01235",
+   "name": "86013300_p2-Disaster",
+   "file": "textures/86013300_p2-Disaster.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Image",
+     "row": {
+      "name": "外なる尖兵",
+      "ID": "DSS00002"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01236",
+   "name": "86376219_p1",
+   "file": "textures/86376219_p1.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "フラウスの騎士",
+      "ID": "EDG05001",
+      "Category": "Normal-D4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05948",
+   "name": "86605049_p0",
+   "file": "textures/86605049_p0.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "スルト",
+      "ID": "E0N05011",
+      "Category": "Normal5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05949",
+   "name": "87974745_p0",
+   "file": "textures/87974745_p0.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "フラウスの司教",
+      "ID": "EDG05002",
+      "Category": "Normal-D5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05950",
+   "name": "88423784_p1_master1200",
+   "file": "textures/88423784_p1_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ヤクシニー",
+      "ID": "EERM0004",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "Risky"
+      ]
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR04N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR04N2",
+      "ParamKey": "Freq"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR04N3",
+      "ParamKey": "Freq"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05951",
+   "name": "88936894_p3_master1200",
+   "file": "textures/88936894_p3_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "サンダーイール",
+      "ID": "E0N02009",
+      "Category": "Normal2",
+      "Rarity": 2
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01237",
+   "name": "89192966_p1_master1200",
+   "file": "textures/89192966_p1_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state_visual",
+     "column": "Image",
+     "row": {
+      "name": "マシーンボディ",
+      "ID": "STVS0007"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05952",
+   "name": "89192966_p5_master1200",
+   "file": "textures/89192966_p5_master1200.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "蒼隕鉄のゴーレム",
+      "ID": "EBS14001",
+      "Category": "DungeonBoss1",
+      "Rarity": 6
+     }
+    },
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ガーディアン",
+      "ID": "EDG03002",
+      "Category": "Normal-D5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05953",
+   "name": "Abaddon Locust C",
+   "file": "textures/Abaddon_Locust_C.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "アバドン",
+      "ID": "E0N04017",
+      "Category": "Normal4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05954",
+   "name": "Ananta A",
+   "file": "textures/Ananta_A.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ヒュドラ",
+      "ID": "ECQ00006",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05955",
+   "name": "AnnihilatorA-Disaster",
+   "file": "textures/AnnihilatorA-Disaster.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Image",
+     "row": {
+      "name": "古代の予言者",
+      "ID": "DSS00001"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 闇に育った子フランツ 1",
+      "ID": "REST0056N2",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01238",
+   "name": "Annihilator A",
+   "file": "textures/Annihilator_A.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "古代の予言者",
+      "ID": "EDS00001",
+      "Category": "Disaster",
+      "Rarity": 9,
+      "Tag": [
+       "Uber"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05956",
+   "name": "Anubis B",
+   "file": "textures/Anubis_B.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "アヌビス",
+      "ID": "EBS08003",
+      "Category": "DungeonBoss3",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05957",
+   "name": "Arabaki A",
+   "file": "textures/Arabaki_A.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "遺跡の守護者",
+      "ID": "EDG08001",
+      "Category": "Normal-D4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05958",
+   "name": "ArcmageB",
+   "file": "textures/ArcmageB.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ダークメイジ",
+      "ID": "ESM00012",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01239",
+   "name": "ArlauneB",
+   "file": "textures/ArlauneB.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x511",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "誘惑者",
+      "ID": "EBS23002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05959",
+   "name": "Armor Dwarf C",
+   "file": "textures/Armor_Dwarf_C.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "エンジニア",
+      "ID": "EDG18001",
+      "Category": "Normal-D4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05960",
+   "name": "Ashen Bone Drake A",
+   "file": "textures/Ashen_Bone_Drake_A.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "オールドドラゴン",
+      "ID": "EDG10001",
+      "Category": "Normal-D4",
+      "Rarity": 4
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 召喚魔法陣",
+      "ID": "RECEV030N7",
+      "ParamKey": "Battle"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05961",
+   "name": "Ashen Bone Drake B",
+   "file": "textures/Ashen_Bone_Drake_B.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ザッハーク",
+      "ID": "ECQ00003",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05962",
+   "name": "Astaroth E",
+   "file": "textures/Astaroth_E.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ラスト",
+      "ID": "EBS05003",
+      "Category": "DungeonBoss3",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05963",
+   "name": "AtlantisX1",
+   "file": "textures/AtlantisX1.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "デイゴン",
+      "ID": "EBS15002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05964",
+   "name": "Banshee",
+   "file": "textures/Banshee.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "バンシー",
+      "ID": "E0N02006",
+      "Category": "Normal2",
+      "Rarity": 2
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 聖騎士イェリン 1",
+      "ID": "REST0029N5",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05965",
+   "name": "Banshee E",
+   "file": "textures/Banshee_E.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "セイレーン",
+      "ID": "EDG21001",
+      "Category": "Normal-D4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05966",
+   "name": "Banshee F",
+   "file": "textures/Banshee_F.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "クーニアック",
+      "ID": "EDG01002",
+      "Category": "Normal-D5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05967",
+   "name": "Bard D",
+   "file": "textures/Bard_D.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x511",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "狂った音楽家",
+      "ID": "EBS21001",
+      "Category": "DungeonBoss1",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01240",
+   "name": "Basilisk A",
+   "file": "textures/Basilisk_A.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "バジリスク",
+      "ID": "E0N02010",
+      "Category": "Normal2",
+      "Rarity": 2
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05969",
+   "name": "Beelzebub A-Disaster",
+   "file": "textures/Beelzebub_A-Disaster.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Image",
+     "row": {
+      "name": "ベルゼバブ",
+      "ID": "DSS00013"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05970",
+   "name": "Beelzebub A",
+   "file": "textures/Beelzebub_A.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ベルゼバブ",
+      "ID": "EDS00013",
+      "Category": "Disaster",
+      "Rarity": 9,
+      "Tag": [
+       "Uber"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00270",
+   "name": "BehemothA",
+   "file": "textures/BehemothA.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ビヒモス",
+      "ID": "EERM0001",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "Risky"
+      ]
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR01N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR01N2",
+      "ParamKey": "Freq"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR01N3",
+      "ParamKey": "Freq"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05971",
+   "name": "BiwaHoushiAX1",
+   "file": "textures/BiwaHoushiAX1.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "堕法師",
+      "ID": "EDG11002",
+      "Category": "Normal-D5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01241",
+   "name": "Biwa Houshi CX1-Disaster",
+   "file": "textures/Biwa_Houshi_CX1-Disaster.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Image",
+     "row": {
+      "name": "黄泉の使い",
+      "ID": "DSS00011"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05972",
+   "name": "BlackJadeA",
+   "file": "textures/BlackJadeA.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "堕天使",
+      "ID": "EBS04001",
+      "Category": "DungeonBoss1",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01242",
+   "name": "Black Death A",
+   "file": "textures/Black_Death_A.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ヘイター",
+      "ID": "EDG07002",
+      "Category": "Normal-D5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05973",
+   "name": "Black Dragon F",
+   "file": "textures/Black_Dragon_F.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "クエレブレ",
+      "ID": "ECQ00002",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05974",
+   "name": "Blob A",
+   "file": "textures/Blob_A.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "彼方からの色",
+      "ID": "EBS16003",
+      "Category": "DungeonBoss3",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05975",
+   "name": "BloodyBoneE",
+   "file": "textures/BloodyBoneE.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x511",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "スケルトン",
+      "ID": "ESM00003",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05976",
+   "name": "BoneGolemF",
+   "file": "textures/BoneGolemF.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ヨトゥン",
+      "ID": "EERM0010",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "Risky"
+      ]
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR10N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR10N2",
+      "ParamKey": "Freq"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 強大な怪物",
+      "ID": "RECEVR10N3",
+      "ParamKey": "Freq"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05977",
+   "name": "Bone Golem B",
+   "file": "textures/Bone_Golem_B.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "ヘカトンケイル",
+      "ID": "E0N05001",
+      "Category": "Normal5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05979",
+   "name": "Boulder",
+   "file": "textures/Boulder.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 転がってくる岩",
+      "ID": "RECEV007N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "単発 - 転がってくる岩",
+      "ID": "RECEV007N5",
+      "ParamKey": "DoAct"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "環境効果 - 落盤",
+      "ID": "REENV020N1",
+      "Category": "DStatus",
+      "ParamKey": "Gain"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "遺跡 「古代よりも古く」",
+      "ID": "RESEV008N2",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05980",
+   "name": "Bright Circle",
+   "file": "textures/Bright_Circle.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "トルネンブラ",
+      "ID": "EBS21003",
+      "Category": "DungeonBoss3",
+      "Rarity": 7
+     }
+    }
+   ]
+  }
+ ]
+}

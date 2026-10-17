@@ -1,0 +1,529 @@
+{
+ "unit": "sheet-155",
+ "records": [
+  {
+   "cluster_id": "c05887",
+   "name": "uc",
+   "slug": "wooden-plaque-pair",
+   "description": "Two overlapping brown wooden plaques with gold-tan rounded borders, one tilted behind the other.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c01686",
+   "name": "Afghanistan",
+   "slug": "afghanistan-flag",
+   "description": "A flag of vertical bands in dark grey, red and green with a white emblem on the red band.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01687",
+   "name": "Albania",
+   "slug": "albania-flag",
+   "description": "A red flag with a black double-headed eagle silhouette in the centre.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01733",
+   "name": "Algeria",
+   "slug": "algeria-flag",
+   "description": "A flag split vertically green and white with a red crescent and red star.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01734",
+   "name": "Antigua-and-Barbuda",
+   "slug": "antigua-and-barbuda-flag",
+   "description": "A flag with a black triangle top holding a yellow sun, a blue band and a white band, framed by red triangles at the sides.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01780",
+   "name": "Australia",
+   "slug": "australia-flag",
+   "description": "A dark blue flag with a Union Jack canton and white stars.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01902",
+   "name": "Bahamas",
+   "slug": "bahamas-flag",
+   "description": "A flag with three horizontal bands of aqua, gold and aqua and a black triangle at the hoist.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01903",
+   "name": "Bahrain",
+   "slug": "bahrain-flag",
+   "description": "A red flag with a white serrated vertical edge on the hoist side.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01905",
+   "name": "Bangladesh",
+   "slug": "bangladesh-flag",
+   "description": "A green flag with a red disc slightly left of centre.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01906",
+   "name": "Barbados",
+   "slug": "barbados-flag",
+   "description": "A flag of blue, gold and blue vertical bands with a black trident on the gold band.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01915",
+   "name": "Belarus",
+   "slug": "belarus-flag",
+   "description": "A flag with a red upper field and green lower stripe and a white ornamental pattern along the hoist edge.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00130",
+   "name": "Belgium",
+   "slug": "belgium-flag",
+   "description": "A flag of three vertical bands in black, yellow and red.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01916",
+   "name": "Belize",
+   "slug": "belize-flag",
+   "description": "A blue flag with red stripes at top and bottom and a white disc holding a green wreath around a shield.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01935",
+   "name": "Benin",
+   "slug": "benin-flag",
+   "description": "A flag with a green vertical hoist band and yellow over red horizontal fields.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01938",
+   "name": "Bhutan",
+   "slug": "bhutan-flag",
+   "description": "A flag divided diagonally into yellow and orange-red with a white dragon across the middle.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00517",
+   "name": "Bolivia",
+   "slug": "bolivia-flag",
+   "description": "A flag of three horizontal bands in red, yellow and green with a red emblem disc in the yellow band.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02099",
+   "name": "Bosnia-and-Herzegovina",
+   "slug": "bosnia-and-herzegovina-flag",
+   "description": "A blue flag with a yellow right triangle and a diagonal line of white stars.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02169",
+   "name": "Brazil",
+   "slug": "brazil-flag",
+   "description": "A green flag with a yellow rhombus holding a blue globe with a white band.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02184",
+   "name": "Brunei",
+   "slug": "brunei-flag",
+   "description": "A yellow flag with diagonal white and black stripes and a red crest in the centre.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02195",
+   "name": "Burundi",
+   "slug": "burundi-flag",
+   "description": "A flag with a white saltire dividing red and green fields and a white disc with three red stars.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02199",
+   "name": "Cambodia",
+   "slug": "cambodia-flag",
+   "description": "A blue flag with red bands at top and bottom and a white temple silhouette in the centre.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02200",
+   "name": "Cameroon",
+   "slug": "cameroon-flag",
+   "description": "A flag of green, red and yellow vertical bands with a yellow star on the red band.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02201",
+   "name": "Canada",
+   "slug": "canada-flag",
+   "description": "A flag with red side bars and a white centre bearing a red maple leaf.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02203",
+   "name": "Cape-Verde",
+   "slug": "cape-verde-flag",
+   "description": "A blue flag with a white and red horizontal stripe and a circle of yellow stars.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02205",
+   "name": "Central-African-Republic",
+   "slug": "central-african-republic-flag",
+   "description": "A flag with a blue and white upper half, green and yellow lower half, a red vertical stripe and a yellow star in the corner.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

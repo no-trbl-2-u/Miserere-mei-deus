@@ -1,0 +1,230 @@
+{
+ "sheet": "sheet-07",
+ "cells": [
+  {
+   "i": 0,
+   "cluster_id": "c06171",
+   "name": "Raver Lord",
+   "file": "textures/Raver_Lord.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 1,
+   "cluster_id": "c06173",
+   "name": "Rogue",
+   "file": "textures/Rogue.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 2,
+   "cluster_id": "c06176",
+   "name": "SK02",
+   "file": "textures/SK02.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 3,
+   "cluster_id": "c06178",
+   "name": "SK04",
+   "file": "textures/SK04.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 4,
+   "cluster_id": "c06186",
+   "name": "SK12",
+   "file": "textures/SK12.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 5,
+   "cluster_id": "c06192",
+   "name": "SK18",
+   "file": "textures/SK18.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 6,
+   "cluster_id": "c01264",
+   "name": "SK21",
+   "file": "textures/SK21.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 7,
+   "cluster_id": "c06194",
+   "name": "SK22",
+   "file": "textures/SK22.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 8,
+   "cluster_id": "c06214",
+   "name": "SK44",
+   "file": "textures/SK44.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 9,
+   "cluster_id": "c06228",
+   "name": "SK61",
+   "file": "textures/SK61.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 10,
+   "cluster_id": "c06246",
+   "name": "SK80",
+   "file": "textures/SK80.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 11,
+   "cluster_id": "c06260",
+   "name": "SK94",
+   "file": "textures/SK94.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 12,
+   "cluster_id": "c06265",
+   "name": "Salamander A",
+   "file": "textures/Salamander_A.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 13,
+   "cluster_id": "c06266",
+   "name": "Scarecrow",
+   "file": "textures/Scarecrow.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 14,
+   "cluster_id": "c06293",
+   "name": "Treasure",
+   "file": "textures/Treasure.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 15,
+   "cluster_id": "c06302",
+   "name": "UN-Tech",
+   "file": "textures/UN-Tech.png",
+   "size": "1024x1024",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 16,
+   "cluster_id": "c06305",
+   "name": "UN03",
+   "file": "textures/UN03.png",
+   "size": "1024x1024",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 17,
+   "cluster_id": "c06317",
+   "name": "UN_Fest_3",
+   "file": "textures/UN_Fest_3.png",
+   "size": "1024x1024",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 18,
+   "cluster_id": "c06324",
+   "name": "Undead Gladiator",
+   "file": "textures/Undead_Gladiator.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 19,
+   "cluster_id": "c06330",
+   "name": "Wamp C",
+   "file": "textures/Wamp_C.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 20,
+   "cluster_id": "c01274",
+   "name": "dg1",
+   "file": "textures/dg1.png",
+   "size": "1024x1024",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 21,
+   "cluster_id": "c01276",
+   "name": "dg15",
+   "file": "textures/dg15.png",
+   "size": "1024x1024",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 22,
+   "cluster_id": "c01282",
+   "name": "dg4",
+   "file": "textures/dg4.png",
+   "size": "1024x1024",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 23,
+   "cluster_id": "c01283",
+   "name": "dg5",
+   "file": "textures/dg5.png",
+   "size": "1024x1024",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 24,
+   "cluster_id": "c01284",
+   "name": "dg8",
+   "file": "textures/dg8.png",
+   "size": "1024x1024",
+   "atlas": null,
+   "type": "Texture2D"
+  }
+ ]
+}

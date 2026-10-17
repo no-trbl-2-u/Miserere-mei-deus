@@ -1,0 +1,1603 @@
+{
+  "unit": "batch-10",
+  "records": [
+    {
+      "cluster_id": "c04450",
+      "name": "Tech_Plague",
+      "slug": "tech-plague-recovery-squad",
+      "description": "Icon for the rarity-2 union contract 'Recovery Squad' (回収部隊), an option offered through the Union.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "union"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04452",
+      "name": "Tech_Poison",
+      "slug": "tech-poison-toxic-fumes",
+      "description": "Icon for the environment status 'Toxic Fumes' (毒気), which stops both sides from gaining HP stacks while still allowing recovery at camp, also reused for the room-environment event 'Toxic Fumes' (環境効果 - 毒気).",
+      "tags": {
+        "kind": "environment",
+        "use": [
+          "status-effect",
+          "dungeon"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04453",
+      "name": "Tech_Quest",
+      "slug": "tech-quest-cheating",
+      "description": "Icon for the Unique status 'Cheating' (イカサマ), which forces any random skill selection to pick the rightmost skill.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "status-effect"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04455",
+      "name": "Tech_Relics",
+      "slug": "tech-relics-tax-contract",
+      "description": "Icon shared by the rarity-4 union contract 'Tax Collection' (徴税の契約), the Unique status 'Treasure Hunter' that grants a chest after each sub-dungeon clear, and the union order 'Supply Provision' (物資提供).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "union",
+          "status-effect",
+          "reward"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04456",
+      "name": "Tech_Resin",
+      "slug": "tech-resin-withered-fields",
+      "description": "Icon for the rarity-2 union contract 'Withered Fields' (枯れた田畑).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "union"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04458",
+      "name": "Tech_Saddle",
+      "slug": "tech-saddle-use-count",
+      "description": "Icon shared by the Common status 'Ignore Use Cost' (回数消費無視), which sometimes stops a skill's use count from dropping, and the two Debuff statuses 'Use Cost' (回数消費) that increase use-count consumption.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "status-effect"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04460",
+      "name": "Tech_Science",
+      "slug": "tech-science-translation-credit",
+      "description": "Icon for the translation-volunteer credit entries amargos, Anthedox, Arrss and Azebu (spthx table, Category 'Translation Volunteer'), which is a credits-list use rather than a game mechanic.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "unassigned"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "low"
+    },
+    {
+      "cluster_id": "c04462",
+      "name": "Tech_ShieldAttack",
+      "slug": "tech-shield-attack-escort",
+      "description": "Icon for the union order 'Escort' (護衛).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "union"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04464",
+      "name": "Tech_Speed",
+      "slug": "tech-speed-replenish-move",
+      "description": "Icon shared by the Common status 'Replenish on Room Move' (移動時補充), which restores +3 uses to a random skill when moving rooms, and 'Replenish on Floor Move' (フロア移動時補充), which restores all skills' use counts on a floor change.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "status-effect"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04468",
+      "name": "Tech_StoneWalls",
+      "slug": "tech-stone-walls-street-mission",
+      "description": "Icon for the dungeon-mode mission '街道' (Street), reused across four mission rows DG0001M1MS2, MS3, MS4 and MS402.",
+      "tags": {
+        "kind": "terrain",
+        "use": [
+          "dungeon-mode"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04470",
+      "name": "Tech_Tailoring",
+      "slug": "tech-tailoring-hair-procurement",
+      "description": "Icon for the union order 'Hair Procurement' (毛髪調達).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "union"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00990",
+      "name": "Tech_Throne",
+      "slug": "tech-throne-inheritance",
+      "description": "Icon shared by the rarity-6 dungeon-drop contract 'Inheritance' (継承) and the union order 'Convene Meeting' (会合招集).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon",
+          "union"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04473",
+      "name": "Tech_TowerUpgrade",
+      "slug": "tech-tower-upgrade-steel-formation",
+      "description": "Icon for the Unique status 'Steel Formation' (鋼の布陣), which ignores HP-stack reduction effects once cumulative cooldown reaches 20.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "status-effect"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04474",
+      "name": "Tech_TrainingDummy",
+      "slug": "tech-training-dummy-babysitting",
+      "description": "Icon for the union order 'Babysitting' (子守り), whose name does not match the training-dummy asset name.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "union"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04477",
+      "name": "Tech_Water",
+      "slug": "tech-water-torrent",
+      "description": "Icon for the rarity-5 dungeon-drop contract 'Torrent' (激流).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04478",
+      "name": "Tech_Wheel",
+      "slug": "tech-wheel-address-book-supply-route",
+      "description": "Icon shared by the rarity-1 union contract 'Address Book' (住所録) and the Unique status 'Supply Route' (補給路), which adds +1 extra use when a use-increase effect is gained.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "union",
+          "status-effect"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04479",
+      "name": "Tech_WitchHunt",
+      "slug": "tech-witch-hunt-punishment",
+      "description": "Icon shared by the rarity-4 union contract 'Area Purge' (一帯浄化), the Unique status 'Punishment' (懲罰) that costs an HP stack on each auto-use, and the union orders 'Public Order' (治安維持) and 'Dissident Crackdown' (不穏分子摘発).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "union",
+          "status-effect"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04480",
+      "name": "Tech_WoodCrusher",
+      "slug": "tech-wood-crusher-fissure",
+      "description": "Icon for the rarity-6 enemy skill 'Fissure' (亀裂) and its skill-mode variant, both ignoring affliction checks.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "enemy"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00219",
+      "name": "Update_01",
+      "slug": "update-01-pure-power",
+      "description": "Icon for the Pure Power rune line (weak: skill power +1, strong: +3), shared with the Unique status 'Peak of Martial Arts' (武の極致) that switches all held skills to alt mode each turn.",
+      "tags": {
+        "kind": "rune",
+        "use": [
+          "buff",
+          "status-effect"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00220",
+      "name": "Update_02",
+      "slug": "update-02-inspect",
+      "description": "Icon for the Inspect rune line (weak +25%, mid +50%, strong +150% accuracy for two turns after each use).",
+      "tags": {
+        "kind": "rune",
+        "use": [
+          "buff"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00994",
+      "name": "Update_03",
+      "slug": "update-03-special",
+      "description": "Icon for the Special rune line (weak and strong), which trades cooldown and use cost for +200% and +400% skill power.",
+      "tags": {
+        "kind": "rune",
+        "use": [
+          "buff"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00995",
+      "name": "Update_04",
+      "slug": "update-04-chaos-world-rewrite",
+      "description": "Icon shared by the rarity-5 dungeon-drop contract 'Chaos' (混沌), the rarity-7 boss skill 'World Rewrite' (世界改変) and its boss-mode variant, and the attack-mode 'Shadow Mist' (シャドウミスト).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon",
+          "enemy-boss",
+          "combat-action",
+          "attack"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00997",
+      "name": "Update_06",
+      "slug": "update-06-overdrive",
+      "description": "Icon for the support skill-mode 'Overdrive' (オーバードライブ).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "buff"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00998",
+      "name": "Update_07",
+      "slug": "update-07-auto-life",
+      "description": "Icon shared by the rune 'Auto: Life' (オート: ライフ), which triggers when a skill loses an HP stack, and the Basic status 'Max HP Stack' (最大HPスタック) in its three rarity variants, which spends one HP stack to fully heal HP at 0.",
+      "tags": {
+        "kind": "rune",
+        "use": [
+          "combat-action",
+          "status-effect"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00221",
+      "name": "Update_08",
+      "slug": "update-08-bat-transformation",
+      "description": "Icon for the attack skill-mode 'Bat Transformation' (コウモリ変化).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "attack"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00071",
+      "name": "Update_09",
+      "slug": "update-09-singing-voice",
+      "description": "Icon shared by the room-environment event 'Song' (環境効果 - 歌声), the enemy skill-mode 'Space of Unpleasant Sound' (不快音の空間), and the environment status 'Singing Voice' (歌声), which randomly drops or raises Brave at each turn start.",
+      "tags": {
+        "kind": "environment",
+        "use": [
+          "status-effect",
+          "dungeon",
+          "enemy"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00999",
+      "name": "Update_10",
+      "slug": "update-10-take-down",
+      "description": "Icon for the Unique status 'Take Down' (道連れ), which reduces the enemy's HP stack by 1 each time the holder loses an HP stack.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "status-effect"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04517",
+      "name": "VikingHelm2",
+      "slug": "viking-helm2-great-western-sea",
+      "description": "Icon for the rarity-7 dungeon-drop contract 'Great Western Sea' (大西海).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04518",
+      "name": "Wand_v2_01",
+      "slug": "wand-v2-01-apprentice-instruction",
+      "description": "Icon for the rarity-1 union contract 'Apprentice Instruction' (見習い指導).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "union"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04520",
+      "name": "Wand_v2_03",
+      "slug": "wand-v2-03-wand",
+      "description": "Icon for the basic wand, shared by three rarity-2/3/4 camp items 'Wand' (ワンド) and the rarity-1 basic gear 'Wand'.",
+      "tags": {
+        "kind": "weapon",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01000",
+      "name": "Wand_v2_10X1",
+      "slug": "wand-v2-10x1-academy-staff",
+      "description": "Icon for the rarity-5 'Academy Staff' (学院の杖), a camp item and a unique gear piece.",
+      "tags": {
+        "kind": "weapon",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04528",
+      "name": "Wand_v2_12",
+      "slug": "wand-v2-12-bone-staff",
+      "description": "Icon for the bone staff 'Bone Staff' (骨杖), shared by three rarity-2/3/4 camp items and a rarity-1 basic gear piece.",
+      "tags": {
+        "kind": "weapon",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04531",
+      "name": "Wand_v2_15",
+      "slug": "wand-v2-15-cursed-spirit-staff",
+      "description": "Icon for the rarity-7 'Cursed Spirit Staff' (呪霊の杖), a camp item and a unique gear piece.",
+      "tags": {
+        "kind": "weapon",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04538",
+      "name": "Wand_v2_22",
+      "slug": "wand-v2-22-meteoric-iron-wand",
+      "description": "Icon for the rarity-4 blue meteoric-iron wand 'Blue Meteoric-Iron Wand' (蒼隕鉄のワンド), also reused for the shop item 'Varsilite Ore' (ヴァーシライト鉱石).",
+      "tags": {
+        "kind": "weapon",
+        "use": [
+          "equipment",
+          "camp",
+          "shop"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04545",
+      "name": "Wand_v2_29",
+      "slug": "wand-v2-29-demon-king",
+      "description": "Icon for the rarity-7 'Demon King' (悪魔の王), a camp item and a unique gear piece.",
+      "tags": {
+        "kind": "weapon",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04548",
+      "name": "Wand_v2_32",
+      "slug": "wand-v2-32-hidden-fairy",
+      "description": "Icon for the rarity-5 'Hidden Fairy' (隠れ住む妖精), a camp item and a unique gear piece.",
+      "tags": {
+        "kind": "weapon",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04555",
+      "name": "Wand_v2_39",
+      "slug": "wand-v2-39-emperor-scepter",
+      "description": "Icon for the rarity-7 'Sorde Emperor's Scepter' (ソルデ皇帝の王笏), a camp item and a unique gear piece.",
+      "tags": {
+        "kind": "weapon",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04558",
+      "name": "Wand_v2_42",
+      "slug": "wand-v2-42-voice-of-corpse",
+      "description": "Icon for the rarity-6 'Voice of the Corpse' (屍者の声), a camp item and a unique gear piece.",
+      "tags": {
+        "kind": "weapon",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04559",
+      "name": "Wand_v2_43",
+      "slug": "wand-v2-43-beast-bone",
+      "description": "Icon for the rarity-5 'Beast Bone' (獣骨), a camp item and a unique gear piece.",
+      "tags": {
+        "kind": "weapon",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04566",
+      "name": "Wand_v2_50",
+      "slug": "wand-v2-50-ruin",
+      "description": "Icon for the rarity-7 disaster-drop contract 'Ruin' (破滅).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04569",
+      "name": "Wand_v2_53",
+      "slug": "wand-v2-53-five-sages-staff",
+      "description": "Icon shared by the rarity-7 'Staff of the Five Sages' (五大賢の杖) camp item and unique gear piece, and the disaster-drop contract 'Invasion' (侵略).",
+      "tags": {
+        "kind": "weapon",
+        "use": [
+          "equipment",
+          "camp",
+          "dungeon"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04570",
+      "name": "Wand_v2_54",
+      "slug": "wand-v2-54-surveillance",
+      "description": "Icon for the rarity-7 disaster-drop contract 'Surveillance' (監視).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04574",
+      "name": "Wand_v2_58",
+      "slug": "wand-v2-58-stagnation",
+      "description": "Icon for the rarity-7 disaster-drop contract 'Stagnation' (澱み).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04576",
+      "name": "Wand_v2_60",
+      "slug": "wand-v2-60-freesia-staff",
+      "description": "Icon for the rarity-7 'Freesia Staff' (フリージアの杖), a camp item and a unique gear piece.",
+      "tags": {
+        "kind": "weapon",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04577",
+      "name": "Wand_v2_61",
+      "slug": "wand-v2-61-cursed-implement",
+      "description": "Icon for the cursed implement 'Cursed Tool' (呪具), shared by three rarity-2/3/4 camp items and a rarity-1 basic gear piece.",
+      "tags": {
+        "kind": "weapon",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04584",
+      "name": "Wand_v2_68",
+      "slug": "wand-v2-68-stargazer",
+      "description": "Icon for the rarity-5 'Stargazer' (スターゲイザー), a camp item and a unique gear piece.",
+      "tags": {
+        "kind": "weapon",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01001",
+      "name": "Warlock_01",
+      "slug": "warlock-01-shadow-blast",
+      "description": "Icon for the rarity-2 attack skill 'Shadow Blast' (シャドウブラスト) and its skill-mode variant.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "attack"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01002",
+      "name": "Warlock_02",
+      "slug": "warlock-02-expel-dispel",
+      "description": "Icon shared by the rarity-6 rune 'Expel' (エクスペル), which removes all temporary enemy effects on use, and the survive skill-mode 'Dispel' (ディスペル).",
+      "tags": {
+        "kind": "rune",
+        "use": [
+          "combat-action",
+          "defend"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01004",
+      "name": "Warlock_04",
+      "slug": "warlock-04-cocoon-captive",
+      "description": "Icon for the rarity-7 boss skill 'Cocoon Captive' (繭の虜) and its boss-mode variant.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "enemy-boss"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01005",
+      "name": "Warlock_05",
+      "slug": "warlock-05-auto-kill",
+      "description": "Icon shared by the rarity-2 rune 'Auto: Kill' (オート: キル), which triggers on each enemy defeat, and the Unique status 'Faithless' (無信仰), which zeroes direct skill healing in exchange for stronger other healing.",
+      "tags": {
+        "kind": "rune",
+        "use": [
+          "combat-action",
+          "status-effect"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01006",
+      "name": "Warlock_06",
+      "slug": "warlock-06-spider-hatching",
+      "description": "Icon for the rarity-6 Unique status 'Poison Spider Hatching' (毒蜘蛛の孵化), which summons a poison spider scaled to the poison applied when a poisoned enemy is defeated.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "status-effect",
+          "summon"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01007",
+      "name": "Warlock_07",
+      "slug": "warlock-07-prior-runes",
+      "description": "Icon family for the four rarity-7 'Prior' runes (Bad, Ail, Buff, Good), each raising a skill's priority while the user cannot act, based on ailment or buff status.",
+      "tags": {
+        "kind": "rune",
+        "use": [
+          "buff"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01008",
+      "name": "Warlock_08",
+      "slug": "warlock-08-decay",
+      "description": "Icon for the attack skill-mode 'Decay' (ディケイ).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "attack"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00222",
+      "name": "Warlock_09",
+      "slug": "warlock-09-bone-flesh-bullet",
+      "description": "Icon for the rarity-5 Unique status 'Bone-and-Flesh Bullet' (骨肉弾), which gives a minion a death-cry effect when it is summoned.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "status-effect",
+          "summon"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01009",
+      "name": "Warlock_10",
+      "slug": "warlock-10-resentment",
+      "description": "Icon shared by the rarity-7 attack skill 'Resentment' (怨念) and its skill-mode variant, plus the Unique statuses 'Curse Specialization' (呪詛特化), which lets curse skills crit, and 'Excessive Defense' (過剰防衛), which auto-triggers Revenge on direct damage.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "attack",
+          "status-effect"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01010",
+      "name": "Warlock_11",
+      "slug": "warlock-11-mirror-shape",
+      "description": "Icon for the rarity-5 survive skill 'Mirror Shape' (ミラーシェイプ) and its skill-mode variant, also used for the special skill-mode 'Mimicry' (模倣) and the Unique status 'Shadow Clone' (影分身).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "defend",
+          "status-effect"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01012",
+      "name": "Warlock_13",
+      "slug": "warlock-13-nether-touch",
+      "description": "Icon for the rarity-7 boss skill 'Nether Touch' (ネザータッチ) and its boss-mode variant.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "enemy-boss"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00223",
+      "name": "Warlock_16",
+      "slug": "warlock-16-summon-nightmare",
+      "description": "Icon for the summon skill-mode 'Summon Nightmare' (サモンナイトメア).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "summon"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01017",
+      "name": "Warlock_19",
+      "slug": "warlock-19-auto-avoid-acrobat",
+      "description": "Icon shared by the rune 'Auto: Avoid' (オート: アボイド), the support skill 'Acrobat' (アクロバット) and its skill-mode variant, and the Common status 'Avoid' (回避), which reduces the chance to be hit.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "buff",
+          "status-effect"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01018",
+      "name": "Warlock_20",
+      "slug": "warlock-20-corrosive-touch",
+      "description": "Icon for the attack skill-mode 'Corrosive Touch' (コロッシブタッチ).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "attack"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01019",
+      "name": "Warlock_21",
+      "slug": "warlock-21-divine-punishment-staff",
+      "description": "Icon for the rarity-7 boss skill 'Staff of Divine Punishment' (神罰の杖) and its boss-mode variant.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "enemy-boss"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01021",
+      "name": "Warlock_23",
+      "slug": "warlock-23-thousand-year-curse",
+      "description": "Icon shared by the rarity-7 boss skill 'Thousand-Year Curse' (千年の呪い) with its boss-mode variant, and the Damage-category state 'Carrion Accumulation' (屍肉の蓄積), a parameter other skills reference.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "enemy-boss",
+          "status-effect"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00027",
+      "name": "Warlock_24X1",
+      "slug": "warlock-24x1-knowledge-is-power",
+      "description": "Icon for the rarity-5 Unique status 'Knowledge Is Power' (知は力なり), which scales all skill power by cumulative remaining uses (100% at 100).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "status-effect",
+          "buff"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00224",
+      "name": "Warlock_25",
+      "slug": "warlock-25-additional-contract",
+      "description": "Icon for the rarity-7 special skill 'Additional Contract' (追加契約) and its skill-mode variant.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01022",
+      "name": "Warlock_26",
+      "slug": "warlock-26-slayer-death-word",
+      "description": "Icon shared by the rarity-7 rune 'Slayer' (スレイヤー), which has a 50% chance to reduce the enemy HP stack on use, and the attack skill 'Death Word' (デスワード) with its skill-mode variant.",
+      "tags": {
+        "kind": "rune",
+        "use": [
+          "combat-action",
+          "attack"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01023",
+      "name": "Warlock_27",
+      "slug": "warlock-27-finishing-blow",
+      "description": "Icon for the Common status 'Finishing Blow' (トドメ), which gives a chance to reduce the enemy HP stack on each critical hit.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "status-effect"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01024",
+      "name": "Warlock_29",
+      "slug": "warlock-29-evil-gate",
+      "description": "Icon for the enemy skill-mode 'Evil Gate' (イービルゲート).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "enemy"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01025",
+      "name": "Warlock_30",
+      "slug": "warlock-30-evil-touch-gate",
+      "description": "Icon shared by the rarity-6 enemy skill 'Evil Touch / Evil Gate' (イービルタッチ / イービルゲート) with its skill-mode variant 'Evil Touch', and the special skill-mode 'Additional Contract Release' (追加契約 解除).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "enemy"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01026",
+      "name": "Warlock_31",
+      "slug": "warlock-31-revival",
+      "description": "Icon for the rarity-7 boss skill 'Revival' (復活) and its boss-mode variant.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "enemy-boss"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00225",
+      "name": "Warlock_32X1",
+      "slug": "warlock-32x1-dimension-freeze",
+      "description": "Icon for the attack skill-mode 'Dimension Freeze' (ディメンションフリーズ).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "attack"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01027",
+      "name": "Warlock_33",
+      "slug": "warlock-33-prophecy-of-ruin",
+      "description": "Icon for the attack skill-mode 'Prophecy of Ruin' (滅亡の予言).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "attack"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00226",
+      "name": "Warlock_35",
+      "slug": "warlock-35-grimoire",
+      "description": "Icon shared by the rarity-7 boss skill 'Grimoire' (グリモワール) and its boss-mode variant, and the support skill-mode 'Summon Evil God' (邪神召喚).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "enemy-boss",
+          "summon"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01029",
+      "name": "Warlock_37",
+      "slug": "warlock-37-aging-gas",
+      "description": "Icon shared by the rarity-4 enemy skill 'Aging Gas / Petrifying Gas' (老化ガス/石化ガス) and its skill-mode variant 'Aging Gas', and the ModParts Unique status 'Mental Body' (精神体), which zeroes max HP stack and adds max shield.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "enemy",
+          "status-effect"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01030",
+      "name": "Warlock_38",
+      "slug": "warlock-38-inescapable-curse",
+      "description": "Icon for the rarity-7 boss skill 'Inescapable Curse' (逃れえぬ呪い) and its boss-mode variant.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "enemy-boss"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00227",
+      "name": "Warlock_39",
+      "slug": "warlock-39-indestructible",
+      "description": "Icon for the ModParts Unique status 'Indestructible' (不朽), which doubles HP stacks and stuns all skills on each damage hit.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "status-effect"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01031",
+      "name": "Warlock_40",
+      "slug": "warlock-40-flash-of-genius",
+      "description": "Icon shared by the survive skill-mode 'Flash of Genius' (天才の閃き) and the Unique status 'Thrill' (スリル), which makes dungeon difficulty rise faster.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "defend",
+          "status-effect",
+          "dungeon"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01033",
+      "name": "Warlock_43",
+      "slug": "warlock-43-dark-bolt",
+      "description": "Icon shared by the rarity-1 attack skill 'Dark Bolt' (ダークボルト) with its skill-mode variant, and the glossary tip 'Void Element' (虚無属性).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "attack",
+          "tip"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01035",
+      "name": "Warlock_45",
+      "slug": "warlock-45-black-edge",
+      "description": "Icon for the rarity-7 boss skill 'Black Edge' (ブラックエッジ) and its boss-mode variant.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "enemy-boss"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01036",
+      "name": "Warlock_46",
+      "slug": "warlock-46-repatriation",
+      "description": "Icon shared by the rarity-7 summon skill 'Repatriation' (送還) with its skill-mode variant, the support skill-mode 'Minion Blast' (ミニオン爆破), and the Unique status 'Minion Possession' (ミニオン憑依), which boosts minions at a cost of one HP stack per summon.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "summon",
+          "combat-action",
+          "buff",
+          "status-effect"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01037",
+      "name": "Warlock_47",
+      "slug": "warlock-47-unclean-wave",
+      "description": "Icon shared by the rarity-7 boss skill 'Unclean Wave' (不浄の波) with its boss-mode variant, the enemy skill-mode 'Truth' (真実), and the Unique status 'Erosion Specialization' (侵食特化), which lets erosion damage crit.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "enemy-boss",
+          "status-effect"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00228",
+      "name": "Warlock_48",
+      "slug": "warlock-48-summon-ghost",
+      "description": "Icon for the summon skill-mode 'Summon Ghost' (サモンゴースト).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "summon"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00229",
+      "name": "Warlock_49",
+      "slug": "warlock-49-pandemic",
+      "description": "Icon for the rarity-5 Unique status 'Pandemic' (蔓延), which moves all of the holder's ailments onto the enemy at battle start.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "status-effect"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00230",
+      "name": "Warlock_50",
+      "slug": "warlock-50-ogre",
+      "description": "Icon shared by the rarity-6 rune 'Ogre' (オーガ), which inflicts fear for five turns on use, the enemy skill-mode 'Mad Visage' (狂貌), and the Env dungeon-difficulty statuses 'Rising Difficulty' (難易度上昇) and 'Initial Difficulty' (初期難易度).",
+      "tags": {
+        "kind": "rune",
+        "use": [
+          "debuff",
+          "combat-action",
+          "enemy",
+          "dungeon"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00231",
+      "name": "Warriorskill_01_nobgX1",
+      "slug": "warriorskill-01-lance-charge",
+      "description": "Icon for the rarity-5 attack skill 'Lance Charge' (ランスチャージ) and its skill-mode variant.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "attack"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01038",
+      "name": "Warriorskill_03",
+      "slug": "warriorskill-03-sheathed-sword",
+      "description": "Icon for the ModParts Unique status 'Sheathed Sword' (納刀), which grants +2 Brave on each free-skill use.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "status-effect"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00232",
+      "name": "Warriorskill_05",
+      "slug": "warriorskill-05-frenzy-rush",
+      "description": "Icon shared by the support skill-mode 'Frenzy Rush' (フレンジーラッシュ), the ModParts Unique status 'Victory Cry' (勝鬨), which grants +1 Brave per enemy defeated, and the union order 'Pugilist Ritual' (拳闘儀).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "buff",
+          "status-effect",
+          "union"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01040",
+      "name": "Warriorskill_06",
+      "slug": "warriorskill-06-whirlwind-sword",
+      "description": "Icon for the attack skill-mode 'Whirlwind Sword' (旋風剣).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "attack"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01041",
+      "name": "Warriorskill_07",
+      "slug": "warriorskill-07-merciless-edge",
+      "description": "Icon for the survive skill-mode 'Merciless Edge' (マーシレスエッジ).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "defend"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01042",
+      "name": "Warriorskill_08",
+      "slug": "warriorskill-08-breaker",
+      "description": "Icon for the support skill-mode 'Breaker' (ブレイカー).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "buff"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01043",
+      "name": "Warriorskill_09",
+      "slug": "warriorskill-09-spirit-shout",
+      "description": "Icon for the support skill-mode 'Spirit Shout' (スピリットシャウト).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "buff"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00233",
+      "name": "Warriorskill_11X1",
+      "slug": "warriorskill-11x1-bloodletting",
+      "description": "Icon for the survive skill-mode 'Bloodletting' (瀉血).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "defend"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01045",
+      "name": "Warriorskill_12",
+      "slug": "warriorskill-12-physical-activation",
+      "description": "Icon for the rarity-7 Unique status 'Physical Activation' (肉体活性), which applies the effect of the rune 'Auto: Heal' to all skills.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "status-effect"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01046",
+      "name": "Warriorskill_13",
+      "slug": "warriorskill-13-slash",
+      "description": "Icon shared by the rarity-1 attack skill 'Slash' (スラッシュ) and its skill-mode variant, and the rarity-1 enemy skill 'Slash / Fierce Slash' (斬りつける/激しく斬りつける) with its skill-mode variant.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "attack",
+          "enemy"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01047",
+      "name": "Warriorskill_14",
+      "slug": "warriorskill-14-heavy-strike",
+      "description": "Icon shared by the rarity-2 attack skill 'Heavy Strike' (ヘビーストライク) and the rarity-6 enemy skill 'Heavy Hit / Superior Aura' (ヘビーヒット / スペリオルオーラ), each with a skill-mode variant.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "attack",
+          "enemy"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00234",
+      "name": "Warriorskill_15X1",
+      "slug": "warriorskill-15x1-crimson-spike",
+      "description": "Icon for the attack skill-mode 'Crimson Spike' (クリムゾンスパイク).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "attack"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00235",
+      "name": "Warriorskill_16",
+      "slug": "warriorskill-16-guard",
+      "description": "Icon for the rarity-2 survive skill 'Guard' (ガード) and its skill-mode variant.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "defend"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01048",
+      "name": "Warriorskill_17",
+      "slug": "warriorskill-17-charge-thrust",
+      "description": "Icon shared by the rarity-7 attack skill 'Charge Thrust' (チャージスラスト) with its skill-mode variant, and the rarity-3 enemy skill 'Pierce / Bloody Thrust' (突き刺す/ブラッディスラスト) with its skill-mode variant.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "attack",
+          "enemy"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00236",
+      "name": "Warriorskill_18",
+      "slug": "warriorskill-18-auto-damage",
+      "description": "Icon shared by the rune 'Auto: Damage' (オート: ダメージ), which triggers on each direct damage taken, and the Unique status 'Close Combat' (接近戦), which treats all attacks as direct and can grant Ranged, plus the glossary tip 'Direct Attack' (直接攻撃).",
+      "tags": {
+        "kind": "rune",
+        "use": [
+          "combat-action",
+          "status-effect",
+          "tip"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01049",
+      "name": "Warriorskill_19",
+      "slug": "warriorskill-19-pierce-triple-strike",
+      "description": "Icon shared by the rarity-4 enemy skill 'Pierce / Poison Needle' (突き刺す/毒針), the rarity-3 enemy skill 'Triple Strike' (3連撃), and the enemy skill-modes 'Pierce' and 'Eight-Hit Strike' (八連撃).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "enemy",
+          "attack"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01051",
+      "name": "Warriorskill_21",
+      "slug": "warriorskill-21-double-slash",
+      "description": "Icon for the rarity-3 attack skill 'Double Slash' (ダブルスラッシュ) and its skill-mode variant.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "attack"
+        ],
+        "style": []
+      },
+      "used_by": [],
+      "confidence": "high"
+    }
+  ]
+}

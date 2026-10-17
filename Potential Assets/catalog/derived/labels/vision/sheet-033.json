@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-033",
+ "records": [
+  {
+   "cluster_id": "c02074",
+   "name": "Book_v2_30",
+   "slug": "blue-eye-tome",
+   "description": "A blue hardcover book with a white eye symbol on the cover and pale worn page edges.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02075",
+   "name": "Book_v2_31",
+   "slug": "brown-cross-tome",
+   "description": "A brown book with a ragged torn-leather spine edge and a dark cross embossed on the cover.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02076",
+   "name": "Book_v2_32",
+   "slug": "rune-clasped-grimoire",
+   "description": "A dark leather book with orange glowing runes on the cover and metal corner fittings with hanging straps.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02079",
+   "name": "Book_v2_35",
+   "slug": "green-glow-demon-tome",
+   "description": "A black book with a dark horned face on the cover and a green glowing outline.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02080",
+   "name": "Book_v2_36",
+   "slug": "icy-crystal-tome",
+   "description": "A book covered in blue crystalline ice facets with a glowing white gem at the centre.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02081",
+   "name": "Book_v2_37",
+   "slug": "molten-spiral-tome",
+   "description": "A cracked black rock-like book with a glowing orange spiral and an orange flame outline.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02082",
+   "name": "Book_v2_38",
+   "slug": "fanged-beast-tome",
+   "description": "A gold-trimmed book with an orange glow and a fanged monster face with yellow eyes on the cover.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02083",
+   "name": "Book_v2_39",
+   "slug": "purple-swirl-tome",
+   "description": "A dark blue book with swirling engraved patterns, a purple gem and a purple glowing outline.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02085",
+   "name": "Book_v2_42",
+   "slug": "golden-radiant-tome",
+   "description": "A gold book with ornate cut-out filigree on the cover and a bright yellow glow.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02086",
+   "name": "Boots_02",
+   "slug": "green-cuffed-boots",
+   "description": "A pair of green shoes with grey folded-over cloth cuffs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00524",
+   "name": "Boots_03",
+   "slug": "purple-cuffed-boots",
+   "description": "A pair of purple shoes with grey folded-over cloth cuffs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02087",
+   "name": "Boots_05",
+   "slug": "green-leather-boots",
+   "description": "A pair of green leather boots with a turned-down cuff and strap detailing.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00526",
+   "name": "Boots_07",
+   "slug": "brown-pointed-boots",
+   "description": "A pair of brown leather boots with pointed upturned toes and folded cuffs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02088",
+   "name": "Boots_09",
+   "slug": "green-pointed-boots",
+   "description": "A pair of green leather boots with pointed upturned toes and folded cuffs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02089",
+   "name": "Boots_10",
+   "slug": "red-gold-trim-boots",
+   "description": "A pair of red leather boots with gold trim along the cuffs and soles and pointed toes.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00040",
+   "name": "Boots_14",
+   "slug": "gold-curled-boots",
+   "description": "A pair of gold boots with curled pointed toes.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00005",
+   "name": "Boots_21",
+   "slug": "gold-armoured-boots",
+   "description": "A pair of ornate gold plated boots with pointed toes and layered plates.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02090",
+   "name": "Boots_24",
+   "slug": "dark-brown-tall-boots",
+   "description": "A pair of tall dark brown leather boots with buckled straps and spurs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02091",
+   "name": "Boots_25",
+   "slug": "steel-spiked-boots",
+   "description": "A pair of grey steel plate boots with spiked toes and riveted plates.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02092",
+   "name": "Boots_27",
+   "slug": "dark-steel-spiked-boots",
+   "description": "A pair of dark blue-black plate boots with spiked toes and riveted plates.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02093",
+   "name": "Boots_29",
+   "slug": "steel-greaves-boots",
+   "description": "A pair of steel shin guards over tan cloth shoes with straps.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02094",
+   "name": "Boots_33",
+   "slug": "gold-greaves-boots",
+   "description": "A pair of gold shin guards over tan cloth shoes with straps.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00134",
+   "name": "Boots_34",
+   "slug": "steel-purple-greaves-boots",
+   "description": "A pair of steel shin guards over purple-blue cloth shoes with straps.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00529",
+   "name": "Boots_37",
+   "slug": "olive-tall-boots",
+   "description": "A pair of tall olive-green leather boots with straps.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02095",
+   "name": "Boots_38",
+   "slug": "purple-tall-boots",
+   "description": "A pair of tall purple leather boots with straps.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

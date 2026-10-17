@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-131",
+ "records": [
+  {
+   "cluster_id": "c04011",
+   "name": "Skill_ASell",
+   "slug": "sell-item",
+   "description": "A brown coin pouch with a left-pointing grey arrow on a golden glowing background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "shop",
+     "price"
+    ],
+    "style": [
+     "painted",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04014",
+   "name": "Skill_AxeMastery",
+   "slug": "axe-mastery",
+   "description": "A grey axe head with a blue glowing edge against a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04015",
+   "name": "Skill_BalisticShoot",
+   "slug": "ballista-shot",
+   "description": "A flaming boulder with small rocks trailing as it streaks through the air.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04016",
+   "name": "Skill_BalisticShoot2",
+   "slug": "ballista-shot-2",
+   "description": "A crossbow-like ballista bow with a bolt pointing up-right in warm orange light.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04017",
+   "name": "Skill_BalisticShoot3",
+   "slug": "ballista-shot-3",
+   "description": "A scatter of dark rocks falling in a spread over a red-orange background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04018",
+   "name": "Skill_BombardShoot",
+   "slug": "bombard-shot",
+   "description": "A black cannon on the lower left firing a glowing white cannonball up-right into a purple sky.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04021",
+   "name": "Skill_Cursed",
+   "slug": "cursed",
+   "description": "A dark-haired person with small red horns and a red aura against a dark red background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "painted",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04022",
+   "name": "Skill_DaggerAttack",
+   "slug": "dagger-attack",
+   "description": "Several thin blades fanned out in a bundle with a pale glow on a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04024",
+   "name": "Skill_DefStance",
+   "slug": "defensive-stance",
+   "description": "Overlapping dark grey shields in front of a green round shield on an olive background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "defend",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04027",
+   "name": "Skill_Down2",
+   "slug": "down-door",
+   "description": "A wooden plank door with a grey downward arrow beside it on a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "navigation",
+     "dungeon"
+    ],
+    "style": [
+     "painted",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04028",
+   "name": "Skill_Evade",
+   "slug": "evade",
+   "description": "A plate-armoured knight helmet with a red plume seen from the side on a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "defend",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04029",
+   "name": "Skill_Execute",
+   "slug": "execute",
+   "description": "A man's profile head with a red slash streak across a dark red background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04030",
+   "name": "Skill_Explosion",
+   "slug": "explosion",
+   "description": "A glowing round golden cage or lantern with bright light inside on a brown background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c04032",
+   "name": "Skill_Focus",
+   "slug": "focus",
+   "description": "Four white arrows pointing inward to the centre on a blue background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04034",
+   "name": "Skill_GateOpen",
+   "slug": "gate-open",
+   "description": "A stone archway with a raised iron portcullis showing blue sky beyond.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "navigation",
+     "dungeon"
+    ],
+    "style": [
+     "painted",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04035",
+   "name": "Skill_Get",
+   "slug": "get",
+   "description": "A bare forearm and open hand reaching upward on a dark blue background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "loot",
+     "reward"
+    ],
+    "style": [
+     "painted",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00963",
+   "name": "Skill_GrabBerry",
+   "slug": "grab-berry",
+   "description": "A hand picking small red berries from a green leafy background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "loot",
+     "reward"
+    ],
+    "style": [
+     "painted",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04038",
+   "name": "Skill_GrabWood",
+   "slug": "grab-wood",
+   "description": "A hand reaching toward a wooden plank on a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "painted",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04039",
+   "name": "Skill_GunShoot",
+   "slug": "gun-shoot",
+   "description": "A dark gun barrel with a muzzle flash of yellow-orange fire.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04040",
+   "name": "Skill_Hard",
+   "slug": "hard",
+   "description": "A spiked mace on a long handle with a green glow behind it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04041",
+   "name": "Skill_Harvesting",
+   "slug": "harvesting",
+   "description": "A sickle and a bundle of wheat stalks on a brown background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "painted",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04042",
+   "name": "Skill_Headshoot",
+   "slug": "headshot",
+   "description": "A man's head in profile at lower left with a pointed arrow aimed upward over a green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04043",
+   "name": "Skill_Heal",
+   "slug": "heal",
+   "description": "A large green leaf with a pale swirling glow on a dark grey background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "heal",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04044",
+   "name": "Skill_Healing",
+   "slug": "healing",
+   "description": "A hammer with a white plus sign on a pink-magenta burst background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "heal",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04046",
+   "name": "Skill_KnightAttack",
+   "slug": "knight-attack",
+   "description": "A dark spear or lance with a pennant pointing up-right on a blue streaked background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

@@ -1,0 +1,528 @@
+{
+ "unit": "sheet-038",
+ "records": [
+  {
+   "cluster_id": "c02211",
+   "name": "Cheese",
+   "slug": "cheese-wedge",
+   "description": "A wedge of pale yellow cheese with a few crumbs beside it.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02212",
+   "name": "Cherry",
+   "slug": "cherries",
+   "description": "A pair of dark red cherries joined by two green stems.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02213",
+   "name": "Chest_02",
+   "slug": "orange-tunic-chest",
+   "description": "An orange short-sleeved tunic tied with a darker belt, shown as a chest-armour icon.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02215",
+   "name": "Chest_05",
+   "slug": "blue-vest-robe",
+   "description": "A blue sleeveless vest worn over a white shirt with a dark belt.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02216",
+   "name": "Chest_07",
+   "slug": "purple-tunic-scarf",
+   "description": "A purple short-sleeved tunic with a draped lilac scarf collar and belt.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02217",
+   "name": "Chest_08",
+   "slug": "ochre-tunic-hood",
+   "description": "An ochre tunic with a draped tan cowl collar and rope belt.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02218",
+   "name": "Chest_09",
+   "slug": "green-tunic-cowl",
+   "description": "A bright green tunic with a draped cowl collar and tan belt.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00136",
+   "name": "Chest_11",
+   "slug": "crimson-tunic-cowl",
+   "description": "A crimson tunic with orange trim and a draped rose cowl collar.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02219",
+   "name": "Chest_12",
+   "slug": "grey-mail-orange-striped",
+   "description": "A grey mail top with orange-and-black striped sleeve cuffs and skirt.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02220",
+   "name": "Chest_13",
+   "slug": "grey-mail-red-striped",
+   "description": "A grey mail top with a red heraldic chest shield and red-and-black striped skirt.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02221",
+   "name": "Chest_14",
+   "slug": "grey-mail-teal-striped",
+   "description": "A grey mail top with teal chest emblem and teal-and-black striped skirt.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02222",
+   "name": "Chest_18",
+   "slug": "brown-leather-cuirass",
+   "description": "A brown leather cuirass with shoulder pauldrons.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02223",
+   "name": "Chest_19",
+   "slug": "olive-plated-cuirass",
+   "description": "An olive-green cuirass with a square steel plate on the chest and shoulder pauldrons.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02224",
+   "name": "Chest_20",
+   "slug": "indigo-plated-cuirass",
+   "description": "An indigo cuirass with a square steel plate on the chest and shoulder pauldrons.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02225",
+   "name": "Chest_22",
+   "slug": "brown-striped-jerkin",
+   "description": "A brown striped short-sleeved jerkin with a high collar.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02229",
+   "name": "Chest_28",
+   "slug": "purple-long-coat",
+   "description": "A long purple coat with a violet sash, narrow in silhouette.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00044",
+   "name": "Chest_33",
+   "slug": "green-hooded-tunic",
+   "description": "A bright green hooded short tunic with a tan belt.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02230",
+   "name": "Chest_34",
+   "slug": "red-black-robe",
+   "description": "A long dark robe with red trim and a red inner panel.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02231",
+   "name": "Chest_40",
+   "slug": "violet-mage-robe",
+   "description": "A violet robe with a pale blue front panel and flared red-trimmed hem.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02232",
+   "name": "Chest_48",
+   "slug": "dark-cross-strap-vest",
+   "description": "A dark brown sleeveless vest with crossed leather straps and a belt.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02233",
+   "name": "Chest_49",
+   "slug": "brown-cross-strap-vest",
+   "description": "A brown sleeveless vest with crossed pink-tan leather straps.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00138",
+   "name": "Chest_51",
+   "slug": "steel-blue-plate-cuirass",
+   "description": "A steel-blue plate cuirass with a large pauldron and a skirted tasset.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02234",
+   "name": "Chest_53",
+   "slug": "steel-plate-gold-trim",
+   "description": "A dark steel plate cuirass with gold trim and a large pauldron.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02235",
+   "name": "Chest_54",
+   "slug": "rust-leather-brigandine",
+   "description": "A rust-orange and brown leather brigandine with straps and a dark skirt.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02236",
+   "name": "Chest_59",
+   "slug": "blue-striped-brigandine",
+   "description": "A dark brigandine with bright blue striped sleeves and studded trim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

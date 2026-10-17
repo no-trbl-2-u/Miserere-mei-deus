@@ -1,0 +1,498 @@
+{
+ "unit": "sheet-048",
+ "records": [
+  {
+   "cluster_id": "c02546",
+   "name": "Enchantment_15_naturesubstance",
+   "slug": "nature-substance-green-swirl",
+   "description": "A glowing green spiral of leafy wind-like energy swirling in a loose cloud.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02550",
+   "name": "Enchantment_19_shadowsubstance",
+   "slug": "shadow-substance-purple-triskelion",
+   "description": "A purple triple-spiral wisp of shadow energy with glowing edges.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02551",
+   "name": "Enchantment_20_magicsubstance",
+   "slug": "magic-substance-pink-burst",
+   "description": "A bright white-pink star-like burst of magical energy trailing a comet tail.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02552",
+   "name": "Enchantment_21_parchment",
+   "slug": "parchment-sheet",
+   "description": "A single curled sheet of tan parchment with rolled top and bottom edges.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02553",
+   "name": "Enchantment_22_scroll",
+   "slug": "tied-scroll",
+   "description": "A rolled parchment scroll bound with a brown leather strap.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00602",
+   "name": "Enchantment_24_purplescroll",
+   "slug": "purple-scroll",
+   "description": "A rolled grey scroll tied with a dark purple band and wreathed in a purple magical aura.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02555",
+   "name": "Enchantment_29_candles",
+   "slug": "candles",
+   "description": "A cluster of four melted white candles, two of them lit with small flames.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02556",
+   "name": "Enchantment_30_writing_instruments",
+   "slug": "ink-and-quill",
+   "description": "A black ink bottle with a cork stopper beside a white feather quill.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02557",
+   "name": "Enchantment_31_blankscroll",
+   "slug": "blank-scroll",
+   "description": "An unmarked open parchment scroll with curled top and bottom ends.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00145",
+   "name": "Enchantment_34_summoning_scroll",
+   "slug": "summoning-scroll",
+   "description": "An open parchment scroll inscribed with a pentagram and rows of runic writing.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "summon",
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00603",
+   "name": "Enchantment_35_order_scroll",
+   "slug": "order-scroll",
+   "description": "An open parchment scroll with lines of script and a red wax seal.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02560",
+   "name": "Enchantment_38_shadow_scroll",
+   "slug": "shadow-scroll",
+   "description": "A dark scroll wrapped in swirling purple shadow smoke and glowing glyphs.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "debuff",
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02562",
+   "name": "Enchantment_40_healing_scroll",
+   "slug": "healing-scroll",
+   "description": "A parchment scroll surrounded by a golden spiral glow of light.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "heal",
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02563",
+   "name": "Enchantment_41_book",
+   "slug": "purple-spellbook",
+   "description": "A thick dark spellbook with a glowing purple spiral emblem and purple aura.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02564",
+   "name": "Enchantment_42_book",
+   "slug": "green-spellbook",
+   "description": "A thick dark spellbook with a glowing green spiral emblem and green aura.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02566",
+   "name": "Enchantment_44_book",
+   "slug": "red-spellbook",
+   "description": "A thick dark spellbook with a glowing pink-red spiral emblem and red aura.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02567",
+   "name": "Enchantment_45_secretbook",
+   "slug": "secret-orange-book",
+   "description": "A thick orange-brown tome with a faint keyhole-like emblem and warm orange glow.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02568",
+   "name": "Enchantment_46_stoune",
+   "slug": "blank-stone",
+   "description": "A plain grey-brown rough stone slab with no markings.",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02570",
+   "name": "Enchantment_48_rune_stoune",
+   "slug": "orange-rune-stone",
+   "description": "A dark stone slab carved with glowing orange runes and an orange aura.",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02571",
+   "name": "Enchantment_49_rune_stoune",
+   "slug": "carved-rune-stone-a",
+   "description": "A grey-brown stone slab with a faint unlit rune carving.",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02573",
+   "name": "Enchantment_51_rune_stoune",
+   "slug": "carved-rune-stone-b",
+   "description": "A grey-brown stone slab with a faint unlit circular rune carving.",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02576",
+   "name": "Enchantment_54_rune_stoune",
+   "slug": "green-rune-stone",
+   "description": "A dark stone slab with a glowing green face-like rune and green aura.",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02577",
+   "name": "Enchantment_55_rune_stoune",
+   "slug": "white-rune-stone",
+   "description": "A dark stone slab marked with a white branching arrow-like rune.",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02580",
+   "name": "Engineering_01_little_explosive",
+   "slug": "dynamite-stick",
+   "description": "A purple-grey dynamite stick with a skull mark and a lit fuse spark.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "attack",
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02581",
+   "name": "Engineering_02_little_explosive",
+   "slug": "round-bomb",
+   "description": "A black round bomb with a cracked surface and a lit fuse spark.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "attack",
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

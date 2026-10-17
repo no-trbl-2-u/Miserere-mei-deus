@@ -1,0 +1,513 @@
+{
+ "unit": "sheet-002",
+ "records": [
+  {
+   "cluster_id": "c04594",
+   "name": "WebshopWhite",
+   "slug": "webshop-storefront-icon",
+   "description": "A white outline icon of a market storefront with a scalloped awning.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "monochrome",
+     "line-art",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04651",
+   "name": "amulet_h",
+   "slug": "amulet-orange-backdrop",
+   "description": "A silver ornate pendant necklace on a chain against an orange-brown radial gradient backdrop.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04652",
+   "name": "amulet_v",
+   "slug": "amulet-blue-backdrop",
+   "description": "A silver ornate pendant necklace on a chain against a cyan-to-blue vertical gradient backdrop.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "high-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04653",
+   "name": "avatar_female",
+   "slug": "avatar-female-silhouette",
+   "description": "A dark grey silhouette of a woman's head and shoulders fading into a white-to-grey gradient.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "player-class",
+     "settings"
+    ],
+    "style": [
+     "silhouette",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04654",
+   "name": "avatar_male",
+   "slug": "avatar-male-silhouette",
+   "description": "A dark grey silhouette of a man's head and shoulders fading into a white-to-grey gradient.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "player-class",
+     "settings"
+    ],
+    "style": [
+     "silhouette",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04655",
+   "name": "bb2-map",
+   "slug": "world-map",
+   "description": "A parchment-toned overworld map with sandy landmasses and blue-grey seas.",
+   "tags": {
+    "kind": "map",
+    "use": [
+     "navigation",
+     "map-point"
+    ],
+    "style": [
+     "painted",
+     "opaque",
+     "high-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04671",
+   "name": "boots_h",
+   "slug": "boots-orange-backdrop",
+   "description": "A pair of tall black leather boots with buckles against an orange-brown radial gradient backdrop.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04672",
+   "name": "boots_v",
+   "slug": "boots-blue-backdrop",
+   "description": "A pair of tall black leather boots with buckles against a cyan-to-blue vertical gradient backdrop.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "high-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04691",
+   "name": "bracers_h",
+   "slug": "bracers-orange-backdrop",
+   "description": "A pair of black studded leather bracers against an orange-brown radial gradient backdrop.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04692",
+   "name": "bracers_v",
+   "slug": "bracers-blue-backdrop",
+   "description": "A pair of black studded leather bracers against a cyan-to-blue vertical gradient backdrop.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "high-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04697",
+   "name": "clipboard-50",
+   "slug": "clipboard-icon",
+   "description": "A white outline icon of a clipboard with a clip and three text lines.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "quest",
+     "tip"
+    ],
+    "style": [
+     "monochrome",
+     "line-art",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04723",
+   "name": "close-50",
+   "slug": "close-circle-icon",
+   "description": "A white outline circle containing an X mark, a close or dismiss symbol.",
+   "tags": {
+    "kind": "ui-button",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "monochrome",
+     "line-art",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04724",
+   "name": "collapse-32",
+   "slug": "collapse-chevron-icon",
+   "description": "A white upward-pointing chevron, a collapse symbol.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "monochrome",
+     "line-art",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04725",
+   "name": "console-64",
+   "slug": "console-window-icon",
+   "description": "A white outline icon of a terminal window with a prompt chevron and cursor underscore.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "monochrome",
+     "line-art",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04726",
+   "name": "crossbow_h",
+   "slug": "crossbow-orange-backdrop",
+   "description": "A reddish-brown crossbow shown diagonally against an orange-brown radial gradient backdrop.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04727",
+   "name": "crossbow_v",
+   "slug": "crossbow-blue-backdrop",
+   "description": "A reddish-brown crossbow shown diagonally against a cyan-to-blue vertical gradient backdrop.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "high-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04730",
+   "name": "down-50",
+   "slug": "down-arrow-icon",
+   "description": "A thick white downward arrow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "navigation"
+    ],
+    "style": [
+     "monochrome",
+     "flat-vector",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04735",
+   "name": "fireRing_h",
+   "slug": "fire-ring-orange-backdrop",
+   "description": "A silver claw-set ring with a pink-red gemstone against an orange-brown radial gradient backdrop.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04736",
+   "name": "fireRing_v",
+   "slug": "fire-ring-blue-backdrop",
+   "description": "A silver claw-set ring with a pink-red gemstone against a cyan-to-blue vertical gradient backdrop.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "high-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04737",
+   "name": "footer_lodyas",
+   "slug": "footer-dark-texture",
+   "description": "A mostly empty dark grey textured panel with faint polygonal shading.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome",
+     "background"
+    ],
+    "style": [
+     "opaque",
+     "tileable"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c04752",
+   "name": "heart_monitor-64",
+   "slug": "heart-monitor-icon",
+   "description": "A white outline icon of a monitor screen showing a heartbeat pulse line.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "heal",
+     "status-effect"
+    ],
+    "style": [
+     "monochrome",
+     "line-art",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04753",
+   "name": "helmet_h",
+   "slug": "helmet-orange-backdrop",
+   "description": "A dark grey steel helmet with a visor slit against an orange-brown radial gradient backdrop.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04754",
+   "name": "helmet_v",
+   "slug": "helmet-blue-backdrop",
+   "description": "A dark grey steel helmet with a visor slit against a cyan-to-blue vertical gradient backdrop.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "high-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05244",
+   "name": "info-64",
+   "slug": "info-circle-icon",
+   "description": "A white outline circle containing a lowercase i, an information symbol.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "tip",
+     "tutorial"
+    ],
+    "style": [
+     "monochrome",
+     "line-art",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05245",
+   "name": "knapsack_h",
+   "slug": "knapsack-orange-backdrop",
+   "description": "A brown leather satchel bag with buckled straps against an orange-brown radial gradient backdrop.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

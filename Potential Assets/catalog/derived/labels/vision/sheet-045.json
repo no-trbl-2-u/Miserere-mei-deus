@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-045",
+ "records": [
+  {
+   "cluster_id": "c02419",
+   "name": "Dagger_48",
+   "slug": "skull-green-dagger",
+   "description": "A dagger with a glowing green blade, a skull set at the crossguard flanked by curved horns, and a dark red handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02420",
+   "name": "Dagger_49",
+   "slug": "jagged-green-curved-dagger",
+   "description": "A curved dagger with a pale green wavy, ragged blade and a dark green grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00556",
+   "name": "Dagger_52",
+   "slug": "green-flame-dagger",
+   "description": "A dagger with a flame-shaped glowing green blade, a silver guard and a dark green grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02422",
+   "name": "Dagger_53",
+   "slug": "icy-blue-spiked-dagger",
+   "description": "A curved dagger with a cyan icy blade edged in jagged spikes and a purple handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02423",
+   "name": "Dagger_54",
+   "slug": "plain-steel-dagger",
+   "description": "A slender steel dagger with a small skull-like pommel guard and a straight grey blade.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02424",
+   "name": "Dagger_55",
+   "slug": "golden-ornate-dagger",
+   "description": "A straight dagger with a gold blade, an ornate gold hilt and a small gold pommel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02425",
+   "name": "Dagger_56",
+   "slug": "pale-curved-dagger",
+   "description": "A narrow curved dagger with a pale silver blade and a dark green grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02426",
+   "name": "Dagger_57",
+   "slug": "forked-steel-dagger",
+   "description": "A dagger with a blue-grey blade split into two long prongs and a dark handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02427",
+   "name": "Dagger_58",
+   "slug": "green-wavy-dagger",
+   "description": "A dagger with a wavy, serpentine pale green blade and a dark green grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02429",
+   "name": "Dagger_60",
+   "slug": "spiked-brown-club-blade",
+   "description": "A broad tattered brown blade covered in jagged fur-like spikes with a spiked grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02430",
+   "name": "Dagger_v2_01",
+   "slug": "cleaver-dagger-grey",
+   "description": "A wide grey cleaver-style blade with a notched back, a brown wrapped grip and a thorny guard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02431",
+   "name": "Dagger_v2_02",
+   "slug": "cleaver-dagger-notched",
+   "description": "A wide grey notched blade with a pale edge and a brown wrapped handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02432",
+   "name": "Dagger_v2_03",
+   "slug": "kukri-dagger-dark-grip",
+   "description": "A curved kukri-style steel blade with a dark blue handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02433",
+   "name": "Dagger_v2_04",
+   "slug": "kukri-dagger-tassel",
+   "description": "A curved kukri-style steel blade with a dark handle and an orange tassel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02434",
+   "name": "Dagger_v2_05",
+   "slug": "kukri-dagger-gold-inlay",
+   "description": "A curved kukri-style blade with gold inlay along the spine and a dark handle with a pale pommel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02435",
+   "name": "Dagger_v2_06",
+   "slug": "amber-hilt-dagger",
+   "description": "A grey tapering dagger with an amber, scaled ornate hilt.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02436",
+   "name": "Dagger_v2_07",
+   "slug": "purple-curved-blade",
+   "description": "A broad curved blade with a purple glossy face, a dark rim and a purple gem handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02437",
+   "name": "Dagger_v2_08",
+   "slug": "blue-curved-blade",
+   "description": "A broad curved blade with blue-steel etched face and a dark handle with a blue gem.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02438",
+   "name": "Dagger_v2_09",
+   "slug": "molten-red-dagger",
+   "description": "A dagger with a molten red-orange blade, an ornate silver guard and a dark red handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02439",
+   "name": "Dagger_v2_10",
+   "slug": "gold-vine-dagger",
+   "description": "A dark steel curved blade wrapped in golden vine-like filigree with a gold-trimmed handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02440",
+   "name": "Dagger_v2_11",
+   "slug": "winged-grey-dagger",
+   "description": "A grey-green dagger with a broad winged blade, a spiked guard and a dark green grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02441",
+   "name": "Dagger_v2_12",
+   "slug": "brass-hilt-broad-dagger",
+   "description": "A broad grey blade with a brass-wrapped ornate hilt and curved guard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02442",
+   "name": "Dagger_v2_13",
+   "slug": "green-gem-broad-dagger",
+   "description": "A broad grey blade with a green gem inset in a curved, pale-wrapped hilt.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02443",
+   "name": "Dagger_v2_14",
+   "slug": "black-ornate-dagger",
+   "description": "A black curved blade with orange gem decorations and an ornate dark hilt.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02444",
+   "name": "Dagger_v2_15",
+   "slug": "rough-broad-dagger",
+   "description": "A broad rough steel blade with a plain brown wrapped hilt.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

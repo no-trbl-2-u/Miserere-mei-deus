@@ -1,0 +1,3504 @@
+{
+ "batch": "batch-12",
+ "items": [
+  {
+   "cluster_id": "c04814",
+   "name": "icon-JB34",
+   "file": "sprites/icon-JB34.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "異界孔",
+      "ID": "DG0017M1MS61"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "工場跡",
+      "ID": "DG0018M1MS61"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "屋敷",
+      "ID": "DG0019M1MS61"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "神塚",
+      "ID": "DG0020M1MS61"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04815",
+   "name": "icon-JB35",
+   "file": "sprites/icon-JB35.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "異界孔",
+      "ID": "DG0017M1MS62"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "工場跡",
+      "ID": "DG0018M1MS62"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "屋敷",
+      "ID": "DG0019M1MS62"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "神塚",
+      "ID": "DG0020M1MS62"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04816",
+   "name": "icon-JB36",
+   "file": "sprites/icon-JB36.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "異界孔",
+      "ID": "DG0017M1MS63"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "工場跡",
+      "ID": "DG0018M1MS63"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "屋敷",
+      "ID": "DG0019M1MS63"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "神塚",
+      "ID": "DG0020M1MS63"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04817",
+   "name": "icon-JB37",
+   "file": "sprites/icon-JB37.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "異界孔",
+      "ID": "DG0017M1MS211"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "工場跡",
+      "ID": "DG0018M1MS211"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "屋敷",
+      "ID": "DG0019M1MS211"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "神塚",
+      "ID": "DG0020M1MS211"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04818",
+   "name": "icon-JB38",
+   "file": "sprites/icon-JB38.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "異界孔",
+      "ID": "DG0017M1MS212"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "工場跡",
+      "ID": "DG0018M1MS212"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "屋敷",
+      "ID": "DG0019M1MS212"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "神塚",
+      "ID": "DG0020M1MS212"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04819",
+   "name": "icon-JB39",
+   "file": "sprites/icon-JB39.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "異界孔",
+      "ID": "DG0017M1MS213"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "工場跡",
+      "ID": "DG0018M1MS213"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "屋敷",
+      "ID": "DG0019M1MS213"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "神塚",
+      "ID": "DG0020M1MS213"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04820",
+   "name": "icon-JB40",
+   "file": "sprites/icon-JB40.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "異界孔",
+      "ID": "DG0017M1MS214"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "工場跡",
+      "ID": "DG0018M1MS214"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "屋敷",
+      "ID": "DG0019M1MS214"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "神塚",
+      "ID": "DG0020M1MS214"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04821",
+   "name": "icon-JB41",
+   "file": "sprites/icon-JB41.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "異界孔",
+      "ID": "DG0017M1MS219"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "工場跡",
+      "ID": "DG0018M1MS219"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "屋敷",
+      "ID": "DG0019M1MS219"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "神塚",
+      "ID": "DG0020M1MS219"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04822",
+   "name": "icon-JB42",
+   "file": "sprites/icon-JB42.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "異界孔",
+      "ID": "DG0017M1MS220"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "工場跡",
+      "ID": "DG0018M1MS220"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "屋敷",
+      "ID": "DG0019M1MS220"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "神塚",
+      "ID": "DG0020M1MS220"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04823",
+   "name": "icon-JB43",
+   "file": "sprites/icon-JB43.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "異界孔",
+      "ID": "DG0017M1MS221"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "工場跡",
+      "ID": "DG0018M1MS221"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "屋敷",
+      "ID": "DG0019M1MS221"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "神塚",
+      "ID": "DG0020M1MS221"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04824",
+   "name": "icon-JB44",
+   "file": "sprites/icon-JB44.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "異界孔",
+      "ID": "DG0017M1MS222"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "工場跡",
+      "ID": "DG0018M1MS222"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "屋敷",
+      "ID": "DG0019M1MS222"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "神塚",
+      "ID": "DG0020M1MS222"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04825",
+   "name": "icon-JB45",
+   "file": "sprites/icon-JB45.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "異界孔",
+      "ID": "DG0017M1MS223"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "工場跡",
+      "ID": "DG0018M1MS223"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "屋敷",
+      "ID": "DG0019M1MS223"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "神塚",
+      "ID": "DG0020M1MS223"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04826",
+   "name": "icon-JB46",
+   "file": "sprites/icon-JB46.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "異界孔",
+      "ID": "DG0017M1MS224"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "工場跡",
+      "ID": "DG0018M1MS224"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "屋敷",
+      "ID": "DG0019M1MS224"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "神塚",
+      "ID": "DG0020M1MS224"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04827",
+   "name": "icon-JB47",
+   "file": "sprites/icon-JB47.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "異界孔",
+      "ID": "DG0017M1MS225"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "工場跡",
+      "ID": "DG0018M1MS225"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "屋敷",
+      "ID": "DG0019M1MS225"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "神塚",
+      "ID": "DG0020M1MS225"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04828",
+   "name": "icon-JB48",
+   "file": "sprites/icon-JB48.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "異界孔",
+      "ID": "DG0017M1MS226"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "工場跡",
+      "ID": "DG0018M1MS226"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "屋敷",
+      "ID": "DG0019M1MS226"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "神塚",
+      "ID": "DG0020M1MS226"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04829",
+   "name": "icon-JB49",
+   "file": "sprites/icon-JB49.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Icon",
+     "row": {
+      "name": "薬師",
+      "ID": "JB000049",
+      "Rarity": 4
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "薬師",
+      "ID": "SKNJ0049"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "薬師",
+      "ID": "StateJob49",
+      "Desc": "HPを回復するたび、ルーンが1つもセットされていない全てのスキルを自動使用する",
+      "Category": "Job",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04830",
+   "name": "icon-JB50",
+   "file": "sprites/icon-JB50.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Icon",
+     "row": {
+      "name": "葬儀屋",
+      "ID": "JB000050",
+      "Rarity": 5
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "葬儀屋",
+      "ID": "SKNJ0050"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "葬儀屋",
+      "ID": "StateJob50",
+      "Desc": "トドメが発動するたび、ランダムなスキルを1つ自動使用する",
+      "Category": "Job",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04831",
+   "name": "icon-JB51",
+   "file": "sprites/icon-JB51.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Icon",
+     "row": {
+      "name": "星詠み",
+      "ID": "JB000051",
+      "Rarity": 4
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "星詠み",
+      "ID": "SKNJ0051"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "星詠み",
+      "ID": "StateJob51",
+      "Desc": "いずれかの遅延ダメージを敵に付与するたび、対応した属性の脆弱(物理脆弱・魔法脆弱・虚無脆弱)を敵に付与する",
+      "Category": "Job",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04832",
+   "name": "icon-JB52",
+   "file": "sprites/icon-JB52.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "job",
+     "column": "Icon",
+     "row": {
+      "name": "獣使い",
+      "ID": "JB000052",
+      "Rarity": 5
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "獣使い",
+      "ID": "SKNJ0052"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "獣使い",
+      "ID": "StateJob52",
+      "Desc": "ミニオンを召喚するたび、最大HPスタック+1を付与する",
+      "Category": "Job",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04833",
+   "name": "icon-RC02",
+   "file": "sprites/icon-RC02.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS6"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS58"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS110"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS162"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04834",
+   "name": "icon-RC03",
+   "file": "sprites/icon-RC03.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS7"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS59"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS111"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS163"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04835",
+   "name": "icon-RC04",
+   "file": "sprites/icon-RC04.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS8"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS60"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS112"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS164"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04836",
+   "name": "icon-RC05",
+   "file": "sprites/icon-RC05.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS9"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS61"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS113"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS165"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04837",
+   "name": "icon-RC06",
+   "file": "sprites/icon-RC06.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS10"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS62"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS114"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS166"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04838",
+   "name": "icon-RC07",
+   "file": "sprites/icon-RC07.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS11"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS63"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS115"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS167"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04839",
+   "name": "icon-RC08",
+   "file": "sprites/icon-RC08.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS12"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS64"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS116"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS168"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04840",
+   "name": "icon-RC09",
+   "file": "sprites/icon-RC09.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS13"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS65"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS117"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS169"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04841",
+   "name": "icon-RC10",
+   "file": "sprites/icon-RC10.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS14"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS66"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS118"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS170"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04842",
+   "name": "icon-RC11",
+   "file": "sprites/icon-RC11.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS15"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS67"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS119"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS171"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01100",
+   "name": "icon-RC12",
+   "file": "sprites/icon-RC12.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS16"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS68"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS120"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS172"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04843",
+   "name": "icon-RC13",
+   "file": "sprites/icon-RC13.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS17"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS69"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS121"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS173"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04844",
+   "name": "icon-RC14",
+   "file": "sprites/icon-RC14.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS18"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS70"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS122"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS174"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04845",
+   "name": "icon-RC15",
+   "file": "sprites/icon-RC15.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS19"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS71"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS123"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS175"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04846",
+   "name": "icon-RC16",
+   "file": "sprites/icon-RC16.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS20"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS72"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS124"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS176"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04847",
+   "name": "icon-RC17",
+   "file": "sprites/icon-RC17.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS21"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS73"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS125"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS177"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04848",
+   "name": "icon-RC18",
+   "file": "sprites/icon-RC18.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS22"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS74"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS126"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS178"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04849",
+   "name": "icon-RC19",
+   "file": "sprites/icon-RC19.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS23"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS75"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS127"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS179"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04850",
+   "name": "icon-RC20",
+   "file": "sprites/icon-RC20.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS24"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS76"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS128"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "街道",
+      "ID": "DG0001M1MS180"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04851",
+   "name": "icon-RC21",
+   "file": "sprites/icon-RC21.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "異界孔",
+      "ID": "DG0017M1MS25"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "工場跡",
+      "ID": "DG0018M1MS25"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "屋敷",
+      "ID": "DG0019M1MS25"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "神塚",
+      "ID": "DG0020M1MS25"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04852",
+   "name": "icon-RC22",
+   "file": "sprites/icon-RC22.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "異界孔",
+      "ID": "DG0017M1MS26"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "工場跡",
+      "ID": "DG0018M1MS26"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "屋敷",
+      "ID": "DG0019M1MS26"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "神塚",
+      "ID": "DG0020M1MS26"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04853",
+   "name": "icon-RC23",
+   "file": "sprites/icon-RC23.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "異界孔",
+      "ID": "DG0017M1MS27"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "工場跡",
+      "ID": "DG0018M1MS27"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "屋敷",
+      "ID": "DG0019M1MS27"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "神塚",
+      "ID": "DG0020M1MS27"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04854",
+   "name": "icon-RC24",
+   "file": "sprites/icon-RC24.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "異界孔",
+      "ID": "DG0017M1MS215"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "工場跡",
+      "ID": "DG0018M1MS215"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "屋敷",
+      "ID": "DG0019M1MS215"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "神塚",
+      "ID": "DG0020M1MS215"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04855",
+   "name": "icon-RC25",
+   "file": "sprites/icon-RC25.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "異界孔",
+      "ID": "DG0017M1MS216"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "工場跡",
+      "ID": "DG0018M1MS216"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "屋敷",
+      "ID": "DG0019M1MS216"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "神塚",
+      "ID": "DG0020M1MS216"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04856",
+   "name": "icon-RC26",
+   "file": "sprites/icon-RC26.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "異界孔",
+      "ID": "DG0017M1MS217"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "工場跡",
+      "ID": "DG0018M1MS217"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "屋敷",
+      "ID": "DG0019M1MS217"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "神塚",
+      "ID": "DG0020M1MS217"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04857",
+   "name": "icon-RC27",
+   "file": "sprites/icon-RC27.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "異界孔",
+      "ID": "DG0017M1MS218"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "工場跡",
+      "ID": "DG0018M1MS218"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "屋敷",
+      "ID": "DG0019M1MS218"
+     }
+    },
+    {
+     "table": "dmode_mission",
+     "column": "Icon",
+     "row": {
+      "name": "神塚",
+      "ID": "DG0020M1MS218"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04858",
+   "name": "icon-RC28",
+   "file": "sprites/icon-RC28.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "race",
+     "column": "Icon",
+     "row": {
+      "name": "黄昏人",
+      "ID": "RC000028"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "黄昏人",
+      "ID": "SKNR0028"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "黄昏人",
+      "ID": "StateRace28",
+      "Desc": "虚無ダメージを受けない。常時石化+2。",
+      "Category": "Race",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04859",
+   "name": "icon-RC29",
+   "file": "sprites/icon-RC29.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "race",
+     "column": "Icon",
+     "row": {
+      "name": "天狗",
+      "ID": "RC000029"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "天狗",
+      "ID": "SKNR0029"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "天狗",
+      "ID": "StateRace29",
+      "Desc": "攻撃回避率・状態異常回避率が、常に50%になる。",
+      "Category": "Race",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04860",
+   "name": "icon-RC30",
+   "file": "sprites/icon-RC30.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "race",
+     "column": "Icon",
+     "row": {
+      "name": "リビングアーマー",
+      "ID": "RC000030"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "リビングアーマー",
+      "ID": "SKNR0030"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "リビングアーマー",
+      "ID": "StateRace30",
+      "Desc": "1HPスタックにつき、被ダメージ-10%(最大90％)",
+      "Category": "Race",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04861",
+   "name": "icon-RC31",
+   "file": "sprites/icon-RC31.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "race",
+     "column": "Icon",
+     "row": {
+      "name": "菌糸人",
+      "ID": "RC000031"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "菌糸人",
+      "ID": "SKNR0031"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "菌糸人",
+      "ID": "StateRace31",
+      "Desc": "状態異常を治療するたび、1HPスタックを得る",
+      "Category": "Race",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04862",
+   "name": "icon-SK01",
+   "file": "sprites/icon-SK01.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 1",
+      "ID": "SPISK001",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "テレジア",
+      "ID": "SKNS0001"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04863",
+   "name": "icon-SK02",
+   "file": "sprites/icon-SK02.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 2",
+      "ID": "SPISK002",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "テーオドル",
+      "ID": "SKNS0002"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04864",
+   "name": "icon-SK03",
+   "file": "sprites/icon-SK03.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 3",
+      "ID": "SPISK003",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "メアリー",
+      "ID": "SKNS0003"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04865",
+   "name": "icon-SK04",
+   "file": "sprites/icon-SK04.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 4",
+      "ID": "SPISK004",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "パウロ",
+      "ID": "SKNS0004"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04866",
+   "name": "icon-SK05",
+   "file": "sprites/icon-SK05.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 5",
+      "ID": "SPISK005",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "イクス",
+      "ID": "SKNS0005"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04867",
+   "name": "icon-SK06",
+   "file": "sprites/icon-SK06.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 6",
+      "ID": "SPISK006",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "サクラ",
+      "ID": "SKNS0006"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04868",
+   "name": "icon-SK07",
+   "file": "sprites/icon-SK07.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 7",
+      "ID": "SPISK007",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "フリージア",
+      "ID": "SKNS0007"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04869",
+   "name": "icon-SK08",
+   "file": "sprites/icon-SK08.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 8",
+      "ID": "SPISK008",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "イェリン",
+      "ID": "SKNS0008"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04870",
+   "name": "icon-SK09",
+   "file": "sprites/icon-SK09.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 9",
+      "ID": "SPISK009",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ビアンカ",
+      "ID": "SKNS0009"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04871",
+   "name": "icon-SK10",
+   "file": "sprites/icon-SK10.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 10",
+      "ID": "SPISK010",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "カヲル",
+      "ID": "SKNS0010"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04872",
+   "name": "icon-SK11",
+   "file": "sprites/icon-SK11.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 11",
+      "ID": "SPISK011",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ジョン / John",
+      "ID": "SKNS0011"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04873",
+   "name": "icon-SK12",
+   "file": "sprites/icon-SK12.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 12",
+      "ID": "SPISK012",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "マリア",
+      "ID": "SKNS0012"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04874",
+   "name": "icon-SK13",
+   "file": "sprites/icon-SK13.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 13",
+      "ID": "SPISK013",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ドバイロン",
+      "ID": "SKNS0013"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04875",
+   "name": "icon-SK14",
+   "file": "sprites/icon-SK14.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 14",
+      "ID": "SPISK014",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "セバスチャン",
+      "ID": "SKNS0014"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04876",
+   "name": "icon-SK15",
+   "file": "sprites/icon-SK15.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 15",
+      "ID": "SPISK015",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "オウガイ",
+      "ID": "SKNS0015"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04877",
+   "name": "icon-SK16",
+   "file": "sprites/icon-SK16.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 16",
+      "ID": "SPISK016",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "シェード",
+      "ID": "SKNS0016"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04878",
+   "name": "icon-SK17",
+   "file": "sprites/icon-SK17.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 17",
+      "ID": "SPISK017",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "アーミオン",
+      "ID": "SKNS0017"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04879",
+   "name": "icon-SK18",
+   "file": "sprites/icon-SK18.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 18",
+      "ID": "SPISK018",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "マイオレット",
+      "ID": "SKNS0018"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04880",
+   "name": "icon-SK19",
+   "file": "sprites/icon-SK19.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 19",
+      "ID": "SPISK019",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "SK-19",
+      "ID": "SKNS0019"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04881",
+   "name": "icon-SK20",
+   "file": "sprites/icon-SK20.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 20",
+      "ID": "SPISK020",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "チャーリー",
+      "ID": "SKNS0020"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04882",
+   "name": "icon-SK21",
+   "file": "sprites/icon-SK21.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 21",
+      "ID": "SPISK021",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "トム",
+      "ID": "SKNS0021"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04883",
+   "name": "icon-SK22",
+   "file": "sprites/icon-SK22.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 22",
+      "ID": "SPISK022",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "アズーラ",
+      "ID": "SKNS0022"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04884",
+   "name": "icon-SK23",
+   "file": "sprites/icon-SK23.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 23",
+      "ID": "SPISK023",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ウィリオ",
+      "ID": "SKNS0023"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04885",
+   "name": "icon-SK24",
+   "file": "sprites/icon-SK24.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 24",
+      "ID": "SPISK024",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ノンナ",
+      "ID": "SKNS0024"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04886",
+   "name": "icon-SK25",
+   "file": "sprites/icon-SK25.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 25",
+      "ID": "SPISK025",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "CCS-25",
+      "ID": "SKNS0025"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04887",
+   "name": "icon-SK26",
+   "file": "sprites/icon-SK26.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 26",
+      "ID": "SPISK026",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ガストニー",
+      "ID": "SKNS0026"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04888",
+   "name": "icon-SK27",
+   "file": "sprites/icon-SK27.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 27",
+      "ID": "SPISK027",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "エリカ",
+      "ID": "SKNS0027"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04889",
+   "name": "icon-SK28",
+   "file": "sprites/icon-SK28.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 28",
+      "ID": "SPISK028",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ウゲツ",
+      "ID": "SKNS0028"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04890",
+   "name": "icon-SK29",
+   "file": "sprites/icon-SK29.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 29",
+      "ID": "SPISK029",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "レイセシル",
+      "ID": "SKNS0029"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04891",
+   "name": "icon-SK30",
+   "file": "sprites/icon-SK30.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 30",
+      "ID": "SPISK030",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ステリア",
+      "ID": "SKNS0030"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04892",
+   "name": "icon-SK31",
+   "file": "sprites/icon-SK31.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 31",
+      "ID": "SPISK031",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "シル・エルリン",
+      "ID": "SKNS0031"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04893",
+   "name": "icon-SK32",
+   "file": "sprites/icon-SK32.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 32",
+      "ID": "SPISK032",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "フィリップ",
+      "ID": "SKNS0032"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04894",
+   "name": "icon-SK33",
+   "file": "sprites/icon-SK33.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 33",
+      "ID": "SPISK033",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ファティマ",
+      "ID": "SKNS0033"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04895",
+   "name": "icon-SK34",
+   "file": "sprites/icon-SK34.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 34",
+      "ID": "SPISK034",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ドラフシェ",
+      "ID": "SKNS0034"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04896",
+   "name": "icon-SK35",
+   "file": "sprites/icon-SK35.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 35",
+      "ID": "SPISK035",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ミュリーン",
+      "ID": "SKNS0035"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04897",
+   "name": "icon-SK36",
+   "file": "sprites/icon-SK36.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 36",
+      "ID": "SPISK036",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "アクサナ",
+      "ID": "SKNS0036"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04898",
+   "name": "icon-SK37",
+   "file": "sprites/icon-SK37.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 37",
+      "ID": "SPISK037",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "バクス",
+      "ID": "SKNS0037"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04899",
+   "name": "icon-SK38",
+   "file": "sprites/icon-SK38.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 38",
+      "ID": "SPISK038",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ジャクター",
+      "ID": "SKNS0038"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04900",
+   "name": "icon-SK39",
+   "file": "sprites/icon-SK39.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 39",
+      "ID": "SPISK039",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ニコラ",
+      "ID": "SKNS0039"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04901",
+   "name": "icon-SK40",
+   "file": "sprites/icon-SK40.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "63x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 40",
+      "ID": "SPISK040",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "アーサラ",
+      "ID": "SKNS0040"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04902",
+   "name": "icon-SK41",
+   "file": "sprites/icon-SK41.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 41",
+      "ID": "SPISK041",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ゴードリック",
+      "ID": "SKNS0041"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04903",
+   "name": "icon-SK42",
+   "file": "sprites/icon-SK42.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 42",
+      "ID": "SPISK042",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "キース",
+      "ID": "SKNS0042"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04904",
+   "name": "icon-SK43",
+   "file": "sprites/icon-SK43.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 43",
+      "ID": "SPISK043",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "イレイディ",
+      "ID": "SKNS0043"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04905",
+   "name": "icon-SK44",
+   "file": "sprites/icon-SK44.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 44",
+      "ID": "SPISK044",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "アーサドラ",
+      "ID": "SKNS0044"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04906",
+   "name": "icon-SK45",
+   "file": "sprites/icon-SK45.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 45",
+      "ID": "SPISK045",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "リオナ",
+      "ID": "SKNS0045"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04907",
+   "name": "icon-SK46",
+   "file": "sprites/icon-SK46.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 46",
+      "ID": "SPISK046",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "マトローナ",
+      "ID": "SKNS0046"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04908",
+   "name": "icon-SK47",
+   "file": "sprites/icon-SK47.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 47",
+      "ID": "SPISK047",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "モーリアル",
+      "ID": "SKNS0047"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04909",
+   "name": "icon-SK48",
+   "file": "sprites/icon-SK48.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 48",
+      "ID": "SPISK048",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ジーナ",
+      "ID": "SKNS0048"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04910",
+   "name": "icon-SK49",
+   "file": "sprites/icon-SK49.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 49",
+      "ID": "SPISK049",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ジアーナ",
+      "ID": "SKNS0049"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04911",
+   "name": "icon-SK50",
+   "file": "sprites/icon-SK50.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 50",
+      "ID": "SPISK050",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "マリリノア",
+      "ID": "SKNS0050"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04912",
+   "name": "icon-SK51",
+   "file": "sprites/icon-SK51.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 51",
+      "ID": "SPISK051",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "クラッド",
+      "ID": "SKNS0051"
+     }
+    }
+   ]
+  }
+ ]
+}

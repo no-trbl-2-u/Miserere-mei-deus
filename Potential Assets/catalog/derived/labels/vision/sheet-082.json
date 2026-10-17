@@ -1,0 +1,538 @@
+{
+ "unit": "sheet-082",
+ "records": [
+  {
+   "cluster_id": "c03722",
+   "name": "Ring_55",
+   "slug": "black-band-ring",
+   "description": "A thin plain black ring band seen at a slight angle.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03724",
+   "name": "Ring_57",
+   "slug": "black-signet-ring",
+   "description": "A black signet ring with a silver-edged round face bearing a white cross emblem.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03725",
+   "name": "Ring_b_01",
+   "slug": "steel-band-ring",
+   "description": "A wide plain grey steel ring band.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03728",
+   "name": "Ring_b_04",
+   "slug": "gold-triple-band-ring",
+   "description": "A gold ring formed from three stacked parallel bands.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03729",
+   "name": "Ring_b_05",
+   "slug": "silver-cyan-gem-ring",
+   "description": "A silver ring set with an oval cyan gemstone.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03730",
+   "name": "Ring_b_06",
+   "slug": "gold-ornate-gem-ring",
+   "description": "An ornate gold ring with a decorative setting holding a small white gem.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03735",
+   "name": "RippedWhiteShirt",
+   "slug": "ripped-white-shirt",
+   "description": "A tattered off-white short-sleeved shirt with a torn hem.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03736",
+   "name": "RoastedPig",
+   "slug": "roasted-pig",
+   "description": "A roasted pig lying on a platter over green garnish.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory",
+     "camp"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03737",
+   "name": "RomanHelmet",
+   "slug": "roman-helmet",
+   "description": "A bronze Roman-style helmet with a tall crest and cheek guards.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03739",
+   "name": "RomeArmor",
+   "slug": "roman-red-tunic-armor",
+   "description": "A red tunic with a gold chest plate in Roman style.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03740",
+   "name": "RomeDagger",
+   "slug": "roman-dagger",
+   "description": "A short Roman-style dagger with a dark grip and steel blade pointing down-right.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03741",
+   "name": "RomeShield",
+   "slug": "roman-scutum-shield",
+   "description": "A tall red rectangular Roman shield with a gold starburst design and central boss.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03742",
+   "name": "Root",
+   "slug": "gnarled-root",
+   "description": "A gnarled brown tree root with several spreading tendrils.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03743",
+   "name": "Rose",
+   "slug": "pink-rose",
+   "description": "A single pink rose on a green stem with leaves.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03744",
+   "name": "RoseShield",
+   "slug": "rose-emblem-shield",
+   "description": "A green heater shield with a white rose emblem.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03745",
+   "name": "Roses",
+   "slug": "pink-rose-bouquet",
+   "description": "A bunch of three pink roses with green leaves.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03751",
+   "name": "Saddle",
+   "slug": "leather-saddle",
+   "description": "A brown leather riding saddle with a hanging stirrup.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03755",
+   "name": "Salad",
+   "slug": "salad-bowl",
+   "description": "A white bowl of mixed salad with lettuce, carrot and tomato.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory",
+     "camp"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03756",
+   "name": "Salt",
+   "slug": "bowl-of-salt",
+   "description": "A wooden bowl heaped with white salt beside a small dried fish.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03761",
+   "name": "ScholarRobe",
+   "slug": "scholar-robe",
+   "description": "A dark olive scholar's robe with a cloak draped over the shoulders.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03763",
+   "name": "Scythe_02",
+   "slug": "pale-blade-scythe",
+   "description": "A scythe with a pale curved blade and a long wooden handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03764",
+   "name": "Scythe_03",
+   "slug": "pale-blade-scythe-wrapped",
+   "description": "A scythe with a pale curved blade and a wrapped wooden handle with hanging cloth.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03765",
+   "name": "Scythe_04",
+   "slug": "purple-blade-scythe",
+   "description": "A scythe with a dark purple blade and a long thin handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03767",
+   "name": "Scythe_06",
+   "slug": "gold-winged-scythe",
+   "description": "A scythe with an ornate golden winged blade on a long handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03768",
+   "name": "Scythe_07",
+   "slug": "gold-curved-scythe",
+   "description": "A scythe with an ornate gold and copper curved blade on a long handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

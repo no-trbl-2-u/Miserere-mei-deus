@@ -1,0 +1,3847 @@
+{
+ "batch": "batch-01",
+ "items": [
+  {
+   "cluster_id": "c00107",
+   "name": "35_clones",
+   "file": "sprites/35_clones.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "姿映し",
+      "ID": "SKEB0050",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "姿映し",
+      "ID": "SKEB0050M1",
+      "Category": "9.Enemy - Boss"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00360",
+   "name": "35_wand_shot",
+   "file": "sprites/35_wand_shot.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "ペネトレイト(魔)",
+      "ID": "SRNA0041",
+      "Desc": "このスキルは、対象の魔法耐性を無視する",
+      "Rarity": 5,
+      "Tag": [
+       "NotFreeSkill"
+      ],
+      "audio": "rare",
+      "ShortText": "●",
+      "ParamKey": "Skill:IgnoreTargetArmor:M"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "メイジ(弱)",
+      "ID": "SRNA0051",
+      "Desc": "このスキルを使うたび、魔法強化+5%/5ターンを得る",
+      "Rarity": 1,
+      "audio": "star",
+      "ShortText": "+5%"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "メイジ(強)",
+      "ID": "SRNA0052",
+      "Desc": "このスキルを使うたび、魔法強化+15%/5ターンを得る",
+      "Rarity": 4,
+      "audio": "star",
+      "ShortText": "+15%"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "ダークサンダー",
+      "ID": "SKEB0045",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00361",
+   "name": "36_Critical_strike4",
+   "file": "sprites/36_Critical_strike4.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "アヴェンジストライク",
+      "ID": "SKA05011M4",
+      "Category": "2.Support"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00362",
+   "name": "36_telekinesis",
+   "file": "sprites/36_telekinesis.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "アヴァランチ",
+      "ID": "SKA04020M2",
+      "Category": "1.Summon"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "地形崩壊",
+      "ID": "SKE00042M2",
+      "Category": "9.Enemy"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00363",
+   "name": "36_wand_shot",
+   "file": "sprites/36_wand_shot.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "オート: バースト",
+      "ID": "SRN40010",
+      "Desc": "このスキルを自動使用: バーストスキルを使用するたび",
+      "Rarity": 4,
+      "Tag": [
+       "NotFreeSkill"
+      ],
+      "audio": "star",
+      "ShortText": "AUTO"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00034",
+   "name": "38_galleon",
+   "file": "sprites/38_galleon.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 4,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "海運",
+      "ID": "CNTD0625",
+      "Rarity": 6,
+      "ParamKey": "DungeonDrop"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "大波",
+      "ID": "SKA07005",
+      "Category": "0.Attack",
+      "Rarity": 7,
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "大波",
+      "ID": "SKA07005M1",
+      "Category": "0.Attack"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "命知らずの航海",
+      "ID": "IgnoreDamage:PM:On:Explode",
+      "Desc": "自身に爆発が付与されている間、物理ダメージと魔法ダメージを受け付けなくなる",
+      "Category": "Unique",
+      "Rarity": 6,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00365",
+   "name": "39_deadly_potion",
+   "file": "sprites/39_deadly_potion.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "オート: エイル",
+      "ID": "SRN30007",
+      "Desc": "このスキルを自動使用： 状態異常を受けるたび",
+      "Rarity": 3,
+      "Tag": [
+       "NotFreeSkill"
+      ],
+      "audio": "star",
+      "ShortText": "AUTO"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "薬品漬け",
+      "ID": "Drenched",
+      "Desc": "HPが回復しなくなる。HP回復効果を受けるたび、代わりに1薬効/1部屋を得る。",
+      "Category": "ModParts",
+      "Rarity": 4,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00366",
+   "name": "3_Cloth_HeadX1",
+   "file": "sprites/3_Cloth_HeadX1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "42x62",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "ダルバエのターバン",
+      "ID": "CMP_GERU7321",
+      "Rarity": 7,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "ダルバエのターバン",
+      "ID": "GERU7321",
+      "Rarity": 7,
+      "Tag": [
+       "Unique"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01528",
+   "name": "3_Leather_Chest",
+   "file": "sprites/3_Leather_Chest.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "45x60",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "忍装束",
+      "ID": "CMPGR034",
+      "Rarity": 5,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "忍装束",
+      "ID": "GERU5216",
+      "Rarity": 5,
+      "Tag": [
+       "Unique",
+       "Random"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01532",
+   "name": "3_Leather_boots",
+   "file": "sprites/3_Leather_boots.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "60x56",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "涼風",
+      "ID": "CMPGR042",
+      "Rarity": 5,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "涼風",
+      "ID": "GERU5306",
+      "Rarity": 5,
+      "Tag": [
+       "Unique",
+       "Random"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01542",
+   "name": "3_Mail_head",
+   "file": "sprites/3_Mail_head.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "36x56",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "プラチナヘルム",
+      "ID": "CMPGR7316",
+      "Rarity": 7,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "プラチナヘルム",
+      "ID": "GERU7316",
+      "Rarity": 7,
+      "Tag": [
+       "Unique"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "プラチナコート",
+      "ID": "PlatinumCoat",
+      "Desc": "全ての装備品は装備劣化効果の影響を受けない",
+      "Category": "Unique",
+      "Rarity": 7,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00108",
+   "name": "40_timechanging",
+   "file": "sprites/40_timechanging.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "時間遡行",
+      "ID": "CNTD0627",
+      "Rarity": 6,
+      "ParamKey": "DungeonDrop"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "オート: ターン",
+      "ID": "SRN70007",
+      "Desc": "このスキルを自動使用： ターン開始時",
+      "Rarity": 7,
+      "Tag": [
+       "NotFreeSkill"
+      ],
+      "audio": "rare",
+      "ShortText": "AUTO"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "タイムストップ",
+      "ID": "SKA05014M2",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00109",
+   "name": "41_ballistic",
+   "file": "sprites/41_ballistic.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "最前線",
+      "ID": "CNTD0614",
+      "Rarity": 6,
+      "ParamKey": "DungeonDrop"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "囲い込む/ノーエアー",
+      "ID": "SKE00039",
+      "Category": "9.Enemy",
+      "Rarity": 6,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "囲い込む",
+      "ID": "SKE00039M1",
+      "Category": "9.Enemy"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00369",
+   "name": "42_wall",
+   "file": "sprites/42_wall.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "ホールド",
+      "ID": "SRN30003",
+      "Desc": "このスキルは、オルトモードに切り替わらなくなる",
+      "Rarity": 3,
+      "Tag": [
+       "NotFreeSkill"
+      ],
+      "audio": "star",
+      "ParamKey": "Skill:NoModeChange"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "籠城",
+      "ID": "SKA05015",
+      "Category": "3.Survive",
+      "Rarity": 5,
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "籠城",
+      "ID": "SKA05015M1",
+      "Category": "3.Survive"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00110",
+   "name": "43_focus",
+   "file": "sprites/43_focus.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "永遠の抱擁",
+      "ID": "SKEB0012",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "パワードレイン",
+      "ID": "SKA05016M2",
+      "Category": "3.Survive"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "永遠の抱擁",
+      "ID": "SKEB0012M1",
+      "Category": "9.Enemy - Boss"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "誘惑",
+      "ID": "TargetReverse",
+      "Desc": "スキルの対象が、自身と敵で反転する",
+      "Category": "Debuff",
+      "Rarity": 0
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00111",
+   "name": "44_obsession",
+   "file": "sprites/44_obsession.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "フォース",
+      "ID": "SRN20008",
+      "Desc": "操作不能時、このスキルを優先的に使用する(この効果はオート戦闘時にも適用される)",
+      "Rarity": 2,
+      "audio": "star",
+      "ParamKey": "Skill:AutoPrior+"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "精神汚染",
+      "ID": "SKE00036",
+      "Category": "9.Enemy",
+      "Rarity": 6,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ミニオン操縦",
+      "ID": "SKA04011M3",
+      "Category": "2.Support"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "精神汚染",
+      "ID": "SKE00036M1",
+      "Category": "9.Enemy"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00370",
+   "name": "45_voodoo",
+   "file": "sprites/45_voodoo.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "カース",
+      "ID": "SKA01017M2",
+      "Category": "0.Attack"
+     }
+    },
+    {
+     "table": "uorder",
+     "column": "Icon",
+     "row": {
+      "name": "祭儀",
+      "ID": "UN0013D1"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00371",
+   "name": "46_healing_wave",
+   "file": "sprites/46_healing_wave.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "リザレクション",
+      "ID": "SKA04015M2",
+      "Category": "3.Survive"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00112",
+   "name": "47_wall",
+   "file": "sprites/47_wall.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "ウォール(弱)",
+      "ID": "SRN10012",
+      "Desc": "このスキルを使うたび、鉄壁+10%/5ターンを得る",
+      "Rarity": 1,
+      "audio": "star",
+      "ShortText": "+10%",
+      "ParamKey": "Skill:GainArmorBoostP"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "ウォール(強)",
+      "ID": "SRN40012",
+      "Desc": "このスキルを使うたび、鉄壁+25%/5ターンを得る",
+      "Rarity": 4,
+      "audio": "star",
+      "ShortText": "+25%",
+      "ParamKey": "Skill:GainArmorBoostPX"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "オート: ウォール",
+      "ID": "SRNA0024",
+      "Desc": "このスキルを自動使用: 鉄壁を獲得するたび",
+      "Rarity": 5,
+      "Tag": [
+       "NotFreeSkill"
+      ],
+      "audio": "rare",
+      "ShortText": "AUTO"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "鉄壁強化",
+      "ID": "IncPow:IncArmor:P",
+      "Desc": "鉄壁を得られる量が増える",
+      "Category": "Common",
+      "Rarity": 3
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00372",
+   "name": "48_blaster",
+   "file": "sprites/48_blaster.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "オート: スタン",
+      "ID": "SRN30009",
+      "Desc": "このスキルを自動使用： スタンを受けるたび",
+      "Rarity": 3,
+      "Tag": [
+       "NotFreeSkill"
+      ],
+      "audio": "star",
+      "ShortText": "AUTO"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "衝撃波",
+      "ID": "SKA03002",
+      "Category": "0.Attack",
+      "Rarity": 3,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "衝撃波",
+      "ID": "SKA03002M1",
+      "Category": "0.Attack"
+     }
+    },
+    {
+     "table": "tips",
+     "column": "Icon",
+     "row": {
+      "name": "スタン",
+      "ID": "TIPS_Stun",
+      "Category": "Skill"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00113",
+   "name": "49_red_wave",
+   "file": "sprites/49_red_wave.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "秘孔点穴",
+      "ID": "SKA05002",
+      "Category": "3.Survive",
+      "Rarity": 5,
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "経絡経穴",
+      "ID": "SKA05002M1",
+      "Category": "3.Survive"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "血煙",
+      "ID": "SprayOfBlood",
+      "Desc": "HPスタックを失うたび、透明/5ターン・遮蔽/5ターンを得る",
+      "Category": "ModParts",
+      "Rarity": 4,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01544",
+   "name": "4_Cloth_Chest",
+   "file": "sprites/4_Cloth_Chest.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "40x61",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "司教",
+      "ID": "CMPGR021",
+      "Rarity": 5,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "ヴァイスフェイトの司祭",
+      "ID": "CMPGR069",
+      "Rarity": 6,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "司教",
+      "ID": "GERU5203",
+      "Rarity": 5,
+      "Tag": [
+       "Unique",
+       "Random"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "ヴァイスフェイトの司祭",
+      "ID": "GERU6203",
+      "Rarity": 6,
+      "Tag": [
+       "Unique"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01545",
+   "name": "4_Cloth_Head",
+   "file": "sprites/4_Cloth_Head.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "47x60",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "ンリマ・ニヨタの術師",
+      "ID": "CMPGR080",
+      "Rarity": 6,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "ンリマ・ニヨタの術師",
+      "ID": "GERU6302",
+      "Rarity": 6,
+      "Tag": [
+       "Unique",
+       "SpecialStat"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01550",
+   "name": "4_Leather_Chest",
+   "file": "sprites/4_Leather_Chest.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "48x60",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "ソルヴェンの鎧",
+      "ID": "CMPGR7216",
+      "Rarity": 7,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "ソルヴェンの鎧",
+      "ID": "GERU7216",
+      "Rarity": 7,
+      "Tag": [
+       "Unique"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01554",
+   "name": "4_Leather_boots",
+   "file": "sprites/4_Leather_boots.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "61x62",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "ピエトロの靴",
+      "ID": "CMPGR114",
+      "Rarity": 7,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "ピエトロの靴",
+      "ID": "GERU7308",
+      "Rarity": 7,
+      "Tag": [
+       "Unique"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01564",
+   "name": "51_shadow_clone_nobg",
+   "file": "sprites/51_shadow_clone_nobg.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "コピー(弱)",
+      "ID": "SRN10007",
+      "Desc": "このスキルの出現率+8%",
+      "Rarity": 1,
+      "audio": "star",
+      "ShortText": "+8%",
+      "ParamKey": "Skill:IncPopRate+"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "コピー(強)",
+      "ID": "SRN70008",
+      "Desc": "このスキルの出現率+50%",
+      "Rarity": 7,
+      "audio": "rare",
+      "ShortText": "+50%",
+      "ParamKey": "Skill:IncPopRate+"
+     }
+    },
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "ロードアウトスロット+5",
+      "ID": "SPIUT004",
+      "Tag": [
+       "SelfHelp"
+      ],
+      "ParamKey": "LoadoutSlot"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "シャドウサーヴァント",
+      "ID": "SKEB0078",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00375",
+   "name": "51_shadow_clonesX1",
+   "file": "sprites/51_shadow_clonesX1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "軍隊的連携",
+      "ID": "MilitaryCoordination",
+      "Desc": "「鉄壁」の能力値が、「物理貫通」「直接ダメージ耐性」「物理吸収」にも加算される。",
+      "Category": "Unique",
+      "Rarity": 6,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00376",
+   "name": "52_Howl_of_terror",
+   "file": "sprites/52_Howl_of_terror.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "トキシックガス",
+      "ID": "SKA05004",
+      "Category": "0.Attack",
+      "Rarity": 5,
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "トキシックガス",
+      "ID": "SKA05004M1",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00377",
+   "name": "53_Magic_resistance",
+   "file": "sprites/53_Magic_resistance.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "サモンダークメイジ",
+      "ID": "SKA03020M2",
+      "Category": "1.Summon"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "呪霊の召喚",
+      "ID": "Hex:Summon:Incantation",
+      "Desc": "敵に呪詛を与えるたび、敵に与えている呪詛の量に応じた強さの呪霊を召喚する",
+      "Category": "Unique",
+      "Rarity": 7,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00035",
+   "name": "54_Holy_power",
+   "file": "sprites/54_Holy_power.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 4,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "アブソリュート",
+      "ID": "SRN60009",
+      "Desc": "このスキルは、常にバースト状態になる",
+      "Rarity": 6,
+      "Tag": [
+       "AlwaysBurst"
+      ],
+      "audio": "rare",
+      "ParamKey": "Skill:AlwaysBurst"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ホーリーオーラ",
+      "ID": "SKA04009M2",
+      "Category": "2.Support"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "達人の間合い",
+      "ID": "AutoUse:OnParry",
+      "Desc": "受け流しに成功するたび、すべての所持スキルを自動使用する",
+      "Category": "Unique",
+      "Rarity": 7,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00379",
+   "name": "56_holy",
+   "file": "sprites/56_holy.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "虚飾",
+      "ID": "CNTU1403",
+      "Rarity": 3,
+      "ParamKey": "Union"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00114",
+   "name": "57_run",
+   "file": "sprites/57_run.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "オート: ラン",
+      "ID": "SRN10010",
+      "Desc": "このスキルを自動使用： 逃走するたび",
+      "Rarity": 1,
+      "Tag": [
+       "NotFreeSkill"
+      ],
+      "audio": "star",
+      "ShortText": "AUTO"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "逃走",
+      "ID": "SKA01025",
+      "Category": "3.Survive",
+      "Rarity": 1,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "逃走",
+      "ID": "SKA01025M1",
+      "Category": "3.Survive"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00382",
+   "name": "5_Cloth_Chest",
+   "file": "sprites/5_Cloth_Chest.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "47x60",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "魔法学校生",
+      "ID": "CMPGR036",
+      "Rarity": 5,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "魔法学校生",
+      "ID": "GERU5218",
+      "Rarity": 5,
+      "Tag": [
+       "Unique",
+       "Random"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01580",
+   "name": "5_Mail_Chest",
+   "file": "sprites/5_Mail_Chest.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "41x62",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "純潔",
+      "ID": "CMPGR027",
+      "Rarity": 5,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "純潔",
+      "ID": "GERU5209",
+      "Rarity": 5,
+      "Tag": [
+       "Unique",
+       "Random"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01581",
+   "name": "5_Mail_Shoulder",
+   "file": "sprites/5_Mail_Shoulder.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "55x58",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "医療",
+      "ID": "CNTD0609",
+      "Rarity": 6,
+      "ParamKey": "DungeonDrop"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01585",
+   "name": "5_Mail_head",
+   "file": "sprites/5_Mail_head.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "44x56",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "クリスタルヘルム",
+      "ID": "CMPGR123",
+      "Rarity": 5,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "クリスタルヘルム",
+      "ID": "GERU5319",
+      "Rarity": 5,
+      "Tag": [
+       "Unique",
+       "Random"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "兎印のコンテナL",
+      "ID": "SPIS0019",
+      "Tag": [
+       "Others"
+      ],
+      "ParamKey": "CampItem"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00384",
+   "name": "5_summon_ent",
+   "file": "sprites/5_summon_ent.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "オート: サモン",
+      "ID": "SRN40018",
+      "Desc": "このスキルを自動使用： 召喚時",
+      "Rarity": 4,
+      "Tag": [
+       "NotFreeSkill"
+      ],
+      "audio": "star",
+      "ShortText": "AUTO"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "ミニオン譲渡",
+      "ID": "Move:AllStats:On:Summon",
+      "Desc": "召喚したミニオンに、現在保持している一時状態を全て渡す",
+      "Category": "ModParts",
+      "Rarity": 4,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00386",
+   "name": "61_heal",
+   "file": "sprites/61_heal.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "ハイヒーリング",
+      "ID": "SKA04015",
+      "Category": "3.Survive",
+      "Rarity": 4,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ハイヒーリング",
+      "ID": "SKA04015M1",
+      "Category": "3.Survive"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00387",
+   "name": "62_light",
+   "file": "sprites/62_light.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "アウェイクン",
+      "ID": "SRN70001",
+      "Desc": "ルーンセット時に、このスキルのルーンスロットを5まで拡張する",
+      "Rarity": 7,
+      "audio": "rare",
+      "ShortText": "5",
+      "ParamKey": "Skill:SetRuneSlot"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "エンライト",
+      "ID": "SRNA0039",
+      "Desc": "ルーンセット時に、このスキルのルーンスロットを3まで拡張する",
+      "Rarity": 2,
+      "audio": "star",
+      "ShortText": "3",
+      "ParamKey": "Skill:SetRuneSlot"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "レーザー照射",
+      "ID": "SKEB0051",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "レーザー照射",
+      "ID": "SKEB0051M1",
+      "Category": "9.Enemy - Boss"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00388",
+   "name": "63_cut",
+   "file": "sprites/63_cut.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "見切り",
+      "ID": "Discernment",
+      "Desc": "回避するたび、透明/1ターンと遮蔽/1ターンを得る",
+      "Category": "ModParts",
+      "Rarity": 4,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00389",
+   "name": "64_two_powers",
+   "file": "sprites/64_two_powers.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "双強化",
+      "ID": "IncPow:Damage",
+      "Desc": "{[DC-IncPow:Burn]}",
+      "Category": "Common",
+      "Rarity": 3
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "双貫通",
+      "ID": "IgnoreArmor",
+      "Desc": "敵の物理耐性・魔法耐性を無視する",
+      "Category": "Common",
+      "Rarity": 2
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00115",
+   "name": "65_spirit",
+   "file": "sprites/65_spirit.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "スクリーム",
+      "ID": "SKA07010",
+      "Category": "0.Attack",
+      "Rarity": 7,
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "神霊招来",
+      "ID": "SKEB0046",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "再顕現",
+      "ID": "SKEB0083",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "スクリーム",
+      "ID": "SKA07010M1",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00390",
+   "name": "66_spirit_sword",
+   "file": "sprites/66_spirit_sword.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "エルドリッチ",
+      "ID": "SRN40016",
+      "Desc": "このスキルの持つ魔法属性効果は、代わりに虚無属性に置き換わる",
+      "Rarity": 4,
+      "audio": "star",
+      "ShortText": "M→V",
+      "ParamKey": "Skill:ElemConvert:M:V"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "暗黒剣",
+      "ID": "SKA04014",
+      "Category": "0.Attack",
+      "Rarity": 4,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "暗黒剣",
+      "ID": "SKA04014M1",
+      "Category": "0.Attack"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "古代の戦術",
+      "ID": "AncientTactics",
+      "Desc": "バフを得るたび、ブレイブ+2",
+      "Category": "Unique",
+      "Rarity": 7,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00391",
+   "name": "67_swords_of_light",
+   "file": "sprites/67_swords_of_light.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ゴッドブレス",
+      "ID": "SKA03018M3",
+      "Category": "3.Survive"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00036",
+   "name": "69_starfall",
+   "file": "sprites/69_starfall.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 4,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "シューティングスター",
+      "ID": "SKA05014",
+      "Category": "0.Attack",
+      "Rarity": 5,
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "シューティングスター",
+      "ID": "SKA05014M1",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01588",
+   "name": "6_Cloth_Chest",
+   "file": "sprites/6_Cloth_Chest.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "46x62",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "東国の上忍",
+      "ID": "CMPGR076",
+      "Rarity": 6,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "東国の上忍",
+      "ID": "GERU6210",
+      "Rarity": 6,
+      "Tag": [
+       "Unique"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00116",
+   "name": "70_blackwater",
+   "file": "sprites/70_blackwater.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "祈念",
+      "ID": "CNTU1305",
+      "Rarity": 5,
+      "ParamKey": "Union"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "精霊の呼び声",
+      "ID": "SpiritsCalling",
+      "Desc": "バーストスキルを使用するたび、各スキルの使用回数を+1補充する。",
+      "Category": "Unique",
+      "Rarity": 7,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00117",
+   "name": "71_spirit_wolves",
+   "file": "sprites/71_spirit_wolves.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "魔獣使役",
+      "ID": "CNTU1505",
+      "Rarity": 5,
+      "ParamKey": "Union"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "テイムビースト/コマンドシャウト",
+      "ID": "SKAA0067",
+      "Category": "4.Special",
+      "Rarity": 5,
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "テイムビースト",
+      "ID": "SKAA0067M1",
+      "Category": "4.Special"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "ミニオンダメージ強化",
+      "ID": "AddMinion:DealDamage*",
+      "Desc": "ミニオン召喚時、全能を付与",
+      "Category": "Common",
+      "Rarity": 1
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00394",
+   "name": "72_creating_shadow",
+   "file": "sprites/72_creating_shadow.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "多次元の門",
+      "ID": "CNTU0904",
+      "Rarity": 4,
+      "ParamKey": "Union"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ブラックホール",
+      "ID": "SKA05006M2",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00118",
+   "name": "73_unholy_energy",
+   "file": "sprites/73_unholy_energy.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "悪魔の盟約",
+      "ID": "SKA06007M2",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00396",
+   "name": "75_Sun",
+   "file": "sprites/75_Sun.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "逆福音",
+      "ID": "SKEB0094",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "逆福音",
+      "ID": "SKEB0094M1",
+      "Category": "9.Enemy - Boss"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "奇跡の招来",
+      "ID": "Auto:CallMiracle",
+      "Desc": "バーストスキルを使用するたび、コールミラクルを自動発動する",
+      "Category": "Unique",
+      "Rarity": 7,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00119",
+   "name": "76_tentacles",
+   "file": "sprites/76_tentacles.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "エルドリッチテンタクル",
+      "ID": "SKA02017",
+      "Category": "0.Attack",
+      "Rarity": 2,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "巻き付く/八連撃",
+      "ID": "SKE00013",
+      "Category": "9.Enemy",
+      "Rarity": 5,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "引きずり込む",
+      "ID": "SKEB0029",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "エルドリッチテンタクル",
+      "ID": "SKA02017M1",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00120",
+   "name": "77_diamond_blade",
+   "file": "sprites/77_diamond_blade.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "マーダーエッジ",
+      "ID": "SKEB0003",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "脳切除",
+      "ID": "SKEB0102",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "マーダーエッジ",
+      "ID": "SKEB0003M1",
+      "Category": "9.Enemy - Boss"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "脳切除",
+      "ID": "SKEB0102M1",
+      "Category": "9.Enemy - Boss"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00397",
+   "name": "78_chariot",
+   "file": "sprites/78_chariot.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "スイッチャー",
+      "ID": "SRN60001",
+      "Desc": "ターン開始時に、可能ならこのスキルをオルトモードに切り替える",
+      "Rarity": 6,
+      "Tag": [
+       "NotFreeSkill"
+      ],
+      "audio": "rare",
+      "ParamKey": "Skill:AutoUse:AltMode1:TurnStart"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "パラダイムシフト",
+      "ID": "SKA06004",
+      "Category": "4.Special",
+      "Rarity": 6,
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "パラダイムシフト",
+      "ID": "SKA06004M1",
+      "Category": "4.Special"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01615",
+   "name": "7_Cloth_bracers",
+   "file": "sprites/7_Cloth_bracers.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "43x48",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "黄昏人",
+      "ID": "CMPGR7318",
+      "Rarity": 7,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "黄昏人",
+      "ID": "GERU7318",
+      "Rarity": 7,
+      "Tag": [
+       "Unique"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01618",
+   "name": "7_Leather_Chest",
+   "file": "sprites/7_Leather_Chest.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "56x59",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "フラウス教徒",
+      "ID": "CMPGR030",
+      "Rarity": 5,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "フラウス教徒",
+      "ID": "GERU5212",
+      "Rarity": 5,
+      "Tag": [
+       "Unique",
+       "Random"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01621",
+   "name": "7_Leather_belt",
+   "file": "sprites/7_Leather_belt.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "63x47",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "フラウスの恩寵",
+      "ID": "CMPGR081",
+      "Rarity": 6,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "フラウスの恩寵",
+      "ID": "GERU6303",
+      "Rarity": 6,
+      "Tag": [
+       "Unique"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01626",
+   "name": "7_Mail_Chest",
+   "file": "sprites/7_Mail_Chest.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "49x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "覇者",
+      "ID": "CMPGR119",
+      "Rarity": 7,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "覇者",
+      "ID": "GERU7210",
+      "Rarity": 7,
+      "Tag": [
+       "Unique"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00399",
+   "name": "7_summon_golem",
+   "file": "sprites/7_summon_golem.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "クレイゴーレム",
+      "ID": "SKA04020",
+      "Category": "1.Summon",
+      "Rarity": 4,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "サモンクレイゴーレム",
+      "ID": "SKA04020M1",
+      "Category": "1.Summon"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00402",
+   "name": "82_martial_arts",
+   "file": "sprites/82_martial_arts.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "ブースト(弱)",
+      "ID": "SRN10011",
+      "Desc": "スキルブースト率+10%",
+      "Rarity": 1,
+      "audio": "star",
+      "ShortText": "+10%",
+      "ParamKey": "Skill:SkillBoost*"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "ブースト(中)",
+      "ID": "SRN30011",
+      "Desc": "スキルブースト率+25%",
+      "Rarity": 3,
+      "audio": "star",
+      "ShortText": "+25%",
+      "ParamKey": "Skill:SkillBoost*"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "オート: ブースト",
+      "ID": "SRN40019",
+      "Desc": "このスキルを自動使用： スキルブーストが発動する時",
+      "Rarity": 4,
+      "Tag": [
+       "NotFreeSkill"
+      ],
+      "audio": "star",
+      "ShortText": "AUTO"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "ブースト(強)",
+      "ID": "SRN50011",
+      "Desc": "スキルブースト率+50%",
+      "Rarity": 5,
+      "audio": "rare",
+      "ShortText": "+50%",
+      "ParamKey": "Skill:SkillBoost*"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01634",
+   "name": "8_Cloth_Chest",
+   "file": "sprites/8_Cloth_Chest.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "50x60",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "賢人",
+      "ID": "CMPGR024",
+      "Rarity": 5,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "賢人",
+      "ID": "GERU5206",
+      "Rarity": 5,
+      "Tag": [
+       "Unique",
+       "Random"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01648",
+   "name": "8_Leather_head",
+   "file": "sprites/8_Leather_head.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "48x60",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "選択の余地",
+      "ID": "CNTD0610",
+      "Rarity": 6,
+      "ParamKey": "DungeonDrop"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01649",
+   "name": "8_Mail_Chest",
+   "file": "sprites/8_Mail_Chest.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "38x60",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "フルプレート",
+      "ID": "CMPGR019",
+      "Rarity": 5,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "フルプレート",
+      "ID": "GERU5201",
+      "Rarity": 5,
+      "Tag": [
+       "Unique",
+       "Random"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00403",
+   "name": "8_summon_stone_army",
+   "file": "sprites/8_summon_stone_army.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "肉の壁",
+      "ID": "RestoreShield:On:Summon",
+      "Desc": "ミニオンを召喚するたび、シールドを再セットする",
+      "Category": "Unique",
+      "Rarity": 6,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01657",
+   "name": "9_Cloth_Chest",
+   "file": "sprites/9_Cloth_Chest.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "56x59",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "竜人の里長",
+      "ID": "CMPGR128",
+      "Rarity": 7,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "竜人の里長",
+      "ID": "GERU7211",
+      "Rarity": 7,
+      "Tag": [
+       "Unique"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "兎印のコンテナXL",
+      "ID": "SPIS0035",
+      "Tag": [
+       "Others"
+      ],
+      "ParamKey": "CampItem"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01664",
+   "name": "9_Leather_Chest",
+   "file": "sprites/9_Leather_Chest.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "50x60",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "肉塊",
+      "ID": "CMPGR020",
+      "Rarity": 5,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "肉塊",
+      "ID": "GERU5202",
+      "Rarity": 5,
+      "Tag": [
+       "Unique",
+       "Random"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01673",
+   "name": "9_Mail_Chest",
+   "file": "sprites/9_Mail_Chest.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "47x63",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "トラエの将軍",
+      "ID": "CMPGR073",
+      "Rarity": 6,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "トラエの将軍",
+      "ID": "GERU6207",
+      "Rarity": 6,
+      "Tag": [
+       "Unique",
+       "SpecialStat"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01689",
+   "name": "Alchemy_02_mortar",
+   "file": "sprites/Alchemy_02_mortar.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "61x57",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "調薬",
+      "ID": "CNTU1301",
+      "Rarity": 1,
+      "ParamKey": "Union"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01699",
+   "name": "Alchemy_21_littleheal_flask",
+   "file": "sprites/Alchemy_21_littleheal_flask.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "40x54",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "ヒールポーション",
+      "ID": "CMP00001",
+      "Rarity": 1,
+      "Tag": [
+       "Usable"
+      ],
+      "audio": "se-potion",
+      "ParamKey": "ToUse"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01706",
+   "name": "Alchemy_28_doubleampoule",
+   "file": "sprites/Alchemy_28_doubleampoule.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "47x58",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "実験室解放",
+      "ID": "CNTU0203",
+      "Rarity": 3,
+      "ParamKey": "Union"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00122",
+   "name": "Alchemy_31_bigheal_flask",
+   "file": "sprites/Alchemy_31_bigheal_flask.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "38x58",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "フルヒールポーション",
+      "ID": "CMP20001",
+      "Rarity": 2,
+      "Tag": [
+       "Usable"
+      ],
+      "audio": "se-potion",
+      "ParamKey": "ToUse"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00409",
+   "name": "Alchemy_32_big_poisonX1",
+   "file": "sprites/Alchemy_32_big_poisonX1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "40x58",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "鋼の薬",
+      "ID": "CMP30008",
+      "Rarity": 3,
+      "Tag": [
+       "Usable"
+      ],
+      "audio": "se-potion",
+      "ParamKey": "ToUse"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01708",
+   "name": "Alchemy_34_bigenergy_flask",
+   "file": "sprites/Alchemy_34_bigenergy_flask.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "64x63",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "青銅の薬",
+      "ID": "CMP30010",
+      "Rarity": 3,
+      "Tag": [
+       "Usable"
+      ],
+      "audio": "se-potion",
+      "ParamKey": "ToUse"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01710",
+   "name": "Alchemy_36_spiritual_flask",
+   "file": "sprites/Alchemy_36_spiritual_flask.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "61x58",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "水銀の薬",
+      "ID": "CMP30009",
+      "Rarity": 3,
+      "Tag": [
+       "Usable"
+      ],
+      "audio": "se-potion",
+      "ParamKey": "ToUse"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01711",
+   "name": "Alchemy_37_belt",
+   "file": "sprites/Alchemy_37_belt.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "64x46",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "薬瓶帯",
+      "ID": "CMPGC265",
+      "Rarity": 2,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "se-potion",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "薬瓶帯",
+      "ID": "CMPGC365",
+      "Rarity": 3,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "se-potion",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "薬瓶帯",
+      "ID": "CMPGC465",
+      "Rarity": 4,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "se-potion",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "薬瓶帯",
+      "ID": "GER00065",
+      "Rarity": 1,
+      "Tag": [
+       "Basic",
+       "Random"
+      ],
+      "audio": "se-potion"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01713",
+   "name": "Alchemy_39_recipe",
+   "file": "sprites/Alchemy_39_recipe.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "64x56",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "実験",
+      "ID": "CNTD0616",
+      "Rarity": 6,
+      "ParamKey": "DungeonDrop"
+     }
+    },
+    {
+     "table": "uorder",
+     "column": "Icon",
+     "row": {
+      "name": "実験・レポート",
+      "ID": "UN0002D2"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01715",
+   "name": "Alchemy_41_magical_substance",
+   "file": "sprites/Alchemy_41_magical_substance.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "60x61",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "クリアポーション",
+      "ID": "CMP20003",
+      "Rarity": 2,
+      "Tag": [
+       "Usable"
+      ],
+      "audio": "se-potion",
+      "ParamKey": "ToUse"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00014",
+   "name": "Alchemy_52_middlemana_flask",
+   "file": "sprites/Alchemy_52_middlemana_flask.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "50x60",
+   "members": 5,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "青のエリキシル",
+      "ID": "CMP60004",
+      "Rarity": 6,
+      "Tag": [
+       "Usable"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00413",
+   "name": "Archerskill_02_nobg",
+   "file": "sprites/Archerskill_02_nobg.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "デマンド: デクスタリティ",
+      "ID": "SRN30018",
+      "Desc": "このスキルは技量系スキルとして扱う__このスキルのスキル威力は、他の基礎パラメータの代わりに技量を参照する",
+      "Rarity": 3,
+      "audio": "star",
+      "ShortText": "●",
+      "ParamKey": "Skill:ForceRefer:MainParam2"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "{[NM-MainParam:2]}",
+      "ID": "MainParam:2#",
+      "Desc": "{[DC-MainParam:1#]}",
+      "Category": "Basic",
+      "Rarity": -1
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "技量",
+      "ID": "MainParam:2",
+      "Desc": "{[DC-MainParam:1#]}",
+      "Category": "Basic",
+      "Rarity": -1,
+      "Tag": [
+       "Basic"
+      ]
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "{[NM-MainParam:2]}/レベル",
+      "ID": "MainParam:2@",
+      "Desc": "{[DC-MainParam:1#]}",
+      "Category": "Basic",
+      "Rarity": -1
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00417",
+   "name": "Archerskill_06",
+   "file": "sprites/Archerskill_06.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "クイッカー",
+      "ID": "SRN30005",
+      "Desc": "このスキルをクイック化する",
+      "Rarity": 3,
+      "Tag": [
+       "NotFreeSkill"
+      ],
+      "audio": "star",
+      "ShortText": "Q",
+      "ParamKey": "Skill:IsQuick"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "クイックショット/シャドウショット",
+      "ID": "SKA01023",
+      "Category": "0.Attack",
+      "Rarity": 1,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "クイックショット",
+      "ID": "SKA01023M1",
+      "Category": "0.Attack"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "忍の極意",
+      "ID": "ArtOfShinobi",
+      "Desc": "全スキルに、ルーン「クイッカー」の効果を適用する",
+      "Category": "Unique",
+      "Rarity": 6,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00418",
+   "name": "Archerskill_07",
+   "file": "sprites/Archerskill_07.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "デコイ",
+      "ID": "SKA04020M3",
+      "Category": "1.Summon"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00419",
+   "name": "Archerskill_08",
+   "file": "sprites/Archerskill_08.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "トレース",
+      "ID": "SKAA0042M2",
+      "Category": "2.Support"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00421",
+   "name": "Archerskill_10",
+   "file": "sprites/Archerskill_10.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "エイム(弱)",
+      "ID": "SRN10002",
+      "Desc": "スキルの命中率+10%",
+      "Rarity": 1,
+      "audio": "star",
+      "ShortText": "+10%",
+      "ParamKey": "Skill:Accu+"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "エイム(強)",
+      "ID": "SRN50002",
+      "Desc": "スキルの命中率+100%",
+      "Rarity": 5,
+      "audio": "rare",
+      "ShortText": "+100%",
+      "ParamKey": "Skill:Accu+"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "命中",
+      "ID": "Accu",
+      "Desc": "通常命中判定時の命中率を上げる",
+      "Category": "Basic",
+      "Rarity": 1
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "必中",
+      "ID": "Surehit",
+      "Desc": "通常命中判定時に必ず命中する状態",
+      "Category": "Buff",
+      "Rarity": 0
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00422",
+   "name": "Archerskill_11",
+   "file": "sprites/Archerskill_11.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "ベノムショット",
+      "ID": "SKA03004",
+      "Category": "0.Attack",
+      "Rarity": 3,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ベノムショット",
+      "ID": "SKA03004M1",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00423",
+   "name": "Archerskill_12",
+   "file": "sprites/Archerskill_12.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "掃射",
+      "ID": "TriggerAllElem:HiddenBlade",
+      "Desc": "直接魔法ダメージと直接虚無ダメージでも隠刃が発動するようになる",
+      "Category": "Unique",
+      "Rarity": 6,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00425",
+   "name": "Archerskill_14_nobg",
+   "file": "sprites/Archerskill_14_nobg.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "mappoint",
+     "column": "Icon",
+     "row": {
+      "name": "ささやき",
+      "ID": "MPP_WHIS",
+      "Tag": [
+       "ShowAll"
+      ],
+      "ParamKey": "OpenScene"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00427",
+   "name": "Archerskill_16",
+   "file": "sprites/Archerskill_16.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "オート: ライズ",
+      "ID": "SRN20006",
+      "Desc": "このスキルを自動使用： フロア移動するたび",
+      "Rarity": 2,
+      "Tag": [
+       "NotFreeSkill"
+      ],
+      "audio": "star",
+      "ShortText": "AUTO"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00429",
+   "name": "Archerskill_18",
+   "file": "sprites/Archerskill_18.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "シャドウショット",
+      "ID": "SKA01023M2",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00430",
+   "name": "Archerskill_19",
+   "file": "sprites/Archerskill_19.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "追加行動",
+      "ID": "AdditionalAction",
+      "Desc": "一定確率で、使用したスキルがクイック扱いになる",
+      "Category": "Common",
+      "Rarity": 1
+     }
+    },
+    {
+     "table": "tips",
+     "column": "Icon",
+     "row": {
+      "name": "クイックスキル",
+      "ID": "TIPS_Quick",
+      "Category": "Skill"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00123",
+   "name": "Archerskill_20",
+   "file": "sprites/Archerskill_20.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "revent",
+     "column": "Icon",
+     "row": {
+      "name": "環境効果 - 幻影",
+      "ID": "REENV009",
+      "Tag": [
+       "RoomState",
+       "Active",
+       "Guide",
+       "RoomEnv"
+      ],
+      "ParamKey": "Eventscene"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "忍術",
+      "ID": "SKA03010",
+      "Category": "2.Support",
+      "Rarity": 3,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "忍術",
+      "ID": "SKA03010M1",
+      "Category": "2.Support"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "幻影",
+      "ID": "StateEnv09",
+      "Desc": "双方、物理ダメージを与えるたび、分身/1戦闘を得る",
+      "Category": "Env",
+      "Rarity": 7,
+      "Tag": [
+       "DStatus"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00432",
+   "name": "Archerskill_22",
+   "file": "sprites/Archerskill_22.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "スナイプシュート",
+      "ID": "SKA01004M2",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00434",
+   "name": "Archerskill_24",
+   "file": "sprites/Archerskill_24.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "スパイクフィールド",
+      "ID": "SKA05011M3",
+      "Category": "2.Support"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00437",
+   "name": "Archerskill_27",
+   "file": "sprites/Archerskill_27.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "レンジショット",
+      "ID": "SKA01004",
+      "Category": "0.Attack",
+      "Rarity": 1,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "レンジショット",
+      "ID": "SKA01004M1",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00438",
+   "name": "Archerskill_28",
+   "file": "sprites/Archerskill_28.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "クイックドロー",
+      "ID": "SKA02024",
+      "Category": "2.Support",
+      "Rarity": 2,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "クイックドロー",
+      "ID": "SKA02024M1",
+      "Category": "2.Support"
+     }
+    },
+    {
+     "table": "tips",
+     "column": "Icon",
+     "row": {
+      "name": "クールダウン",
+      "ID": "TIPS_Cooldown",
+      "Category": "Skill"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00439",
+   "name": "Archerskill_29",
+   "file": "sprites/Archerskill_29.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "revent",
+     "column": "Icon",
+     "row": {
+      "name": "環境効果 - 月光",
+      "ID": "REENV011",
+      "Tag": [
+       "RoomState",
+       "Active",
+       "Guide",
+       "RoomEnv"
+      ],
+      "ParamKey": "Eventscene"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "月光",
+      "ID": "StateEnv11",
+      "Desc": "双方、ターン開始時に、変異+1%/1フロアを得る",
+      "Category": "Env",
+      "Rarity": 7,
+      "Tag": [
+       "DStatus"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00124",
+   "name": "Archerskill_31",
+   "file": "sprites/Archerskill_31.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "遠当て",
+      "ID": "AllAttack:Direct-",
+      "Desc": "敵へのすべての攻撃が間接攻撃として扱われる (逆の効果も併せ持つときは互いに打ち消される)__25%の確率で、ダメージ後に接近戦獲得",
+      "Category": "Unique",
+      "Rarity": 4,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    },
+    {
+     "table": "tips",
+     "column": "Icon",
+     "row": {
+      "name": "間接攻撃",
+      "ID": "TIPS_DamageIndirect",
+      "Category": "Damage"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00441",
+   "name": "Archerskill_32",
+   "file": "sprites/Archerskill_32.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "ラフエイム",
+      "ID": "SRNA0029",
+      "Desc": "このスキルのベース命中率は、50%になる",
+      "Rarity": 5,
+      "audio": "rare",
+      "ShortText": "=50%",
+      "ParamKey": "Skill:AccuSet50"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00442",
+   "name": "Archerskill_33",
+   "file": "sprites/Archerskill_33.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "マッシブ",
+      "ID": "SRNA0030",
+      "Desc": "このスキルの威力は、累計クールダウンによって強化される(+1%/1累計クールダウン)",
+      "Rarity": 4,
+      "audio": "star",
+      "ParamKey": "Skill:Power:By:TotalCooldown"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "不可止の前進",
+      "ID": "AddMassiveToAllSkills",
+      "Desc": "1累計クールダウンにつき、全スキルのスキルパワー+1%",
+      "Category": "Unique",
+      "Rarity": 6,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00443",
+   "name": "Archerskill_34",
+   "file": "sprites/Archerskill_34.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "テンポ",
+      "ID": "Tempo",
+      "Desc": "全スキルの基礎クールダウンが4になる。",
+      "Category": "ModParts",
+      "Rarity": 4,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00444",
+   "name": "Archerskill_35",
+   "file": "sprites/Archerskill_35.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "ヴェイン",
+      "ID": "SRN10015",
+      "Desc": "このスキルを使うたび、スキル無効/1ターンを得る",
+      "Rarity": 1,
+      "audio": "star",
+      "ParamKey": "Skill:GainSkillIgnore"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "空虚",
+      "ID": "Emptiness",
+      "Desc": "累計クールダウンが20以上のとき、虚無ダメージを受けなくなる。",
+      "Category": "ModParts",
+      "Rarity": 4,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  }
+ ]
+}

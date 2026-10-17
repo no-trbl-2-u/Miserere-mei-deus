@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-142",
+ "records": [
+  {
+   "cluster_id": "c05512",
+   "name": "skill_214_noBG",
+   "slug": "crossed-scythes-magenta",
+   "description": "Two crossed black scythes with a faint magenta ring behind them.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05513",
+   "name": "skill_215_noBG",
+   "slug": "claw-slashes-magenta",
+   "description": "Four pale slash streaks cutting diagonally across a magenta burst.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05514",
+   "name": "skill_216_noBG",
+   "slug": "stone-spikes-magenta",
+   "description": "A cluster of grey jagged stone spikes rising against magenta streaks.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01152",
+   "name": "skill_217_noBG",
+   "slug": "hanging-chain-magenta",
+   "description": "A silver chain hanging diagonally over purple light rays.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05515",
+   "name": "skill_218_noBG",
+   "slug": "crescent-swirl-blue",
+   "description": "A glowing blue-white crescent swirl of wind or light.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05516",
+   "name": "skill_21_noBG",
+   "slug": "clawed-hand-staff-purple",
+   "description": "A brown clawed hand gripping a stick with purple lightning zigzags behind it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05517",
+   "name": "skill_220_noBG",
+   "slug": "skull-figure-pink",
+   "description": "A pink skeletal figure with a glowing purple orb in its open mouth against a violet burst.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "summon"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05518",
+   "name": "skill_221_noBG",
+   "slug": "blade-slashes-teal",
+   "description": "Two teal blade-shaped slashes with green light rays behind them.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05519",
+   "name": "skill_222_noBG",
+   "slug": "spiked-star-teal",
+   "description": "A teal multi-pointed spiked star or caltrop with a dark outline.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05520",
+   "name": "skill_223_noBG",
+   "slug": "hooded-face-green",
+   "description": "A stern green face under a wide conical hat with dark shading.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05521",
+   "name": "skill_224_noBG",
+   "slug": "crossed-scythes-teal",
+   "description": "Two crossed black scythes with a faint teal ring behind them.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05522",
+   "name": "skill_226",
+   "slug": "ice-spikes-green-bg",
+   "description": "A cluster of icy blue spikes on a green radial background with pale streaks.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "opaque",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05523",
+   "name": "skill_226_noBG",
+   "slug": "ice-spikes",
+   "description": "A cluster of icy blue spikes with pale streaks on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01154",
+   "name": "skill_227_noBG",
+   "slug": "hanging-chain-green",
+   "description": "A silver chain hanging diagonally over green light rays.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05524",
+   "name": "skill_228_noBG",
+   "slug": "crescent-swirl-yellow",
+   "description": "A glowing yellow-white crescent swirl.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05525",
+   "name": "skill_229_noBG",
+   "slug": "zigzag-waves-teal",
+   "description": "Two horizontal teal zigzag wave bands.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c05526",
+   "name": "skill_23",
+   "slug": "claw-slashes-blue-bg",
+   "description": "Four blue-white diagonal slash streaks on a dark purple and blue background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "opaque",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05527",
+   "name": "skill_230",
+   "slug": "skull-spikes-cyan-bg",
+   "description": "A cyan screaming skull with spiked shoulders on a green radiating background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "summon"
+    ],
+    "style": [
+     "full-colour",
+     "opaque",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05528",
+   "name": "skill_230_noBG",
+   "slug": "skull-spikes-cyan",
+   "description": "A cyan screaming skull with spiked shoulders and green rays on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "summon"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05529",
+   "name": "skill_232_noBG",
+   "slug": "clawed-hand-staff-blue",
+   "description": "A blue clawed hand gripping a stick with teal lightning zigzags behind it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01155",
+   "name": "skill_233_noBG",
+   "slug": "purple-splash-slash",
+   "description": "A large purple ink-like splash streaking diagonally.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00082",
+   "name": "skill_234_noBG",
+   "slug": "claw-slashes-teal",
+   "description": "Several teal-white diagonal slash streaks on a translucent purple backdrop.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05530",
+   "name": "skill_235_noBG",
+   "slug": "dripping-blade-purple",
+   "description": "A dark blade tip dripping purple liquid.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00083",
+   "name": "skill_236_noBG",
+   "slug": "reaching-hands-silhouette",
+   "description": "Black silhouetted arms and hands reaching out with pink outlines.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05531",
+   "name": "skill_237_noBG",
+   "slug": "reaching-hand-purple",
+   "description": "A purple hand reaching forward with violet lightning and light rays.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

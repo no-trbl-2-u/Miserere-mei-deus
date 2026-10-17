@@ -1,0 +1,555 @@
+{
+ "unit": "sheet-040",
+ "records": [
+  {
+   "cluster_id": "c02265",
+   "name": "Club_v2_06",
+   "slug": "iron-ball-mace",
+   "description": "A mace with a smooth round iron ball head on a thin grey handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02266",
+   "name": "Club_v2_07",
+   "slug": "spiked-morning-star",
+   "description": "A morning star with a spiked dark iron ball head on a thin handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02267",
+   "name": "Club_v2_08",
+   "slug": "flanged-mace",
+   "description": "A flanged mace with a fan of grey metal blades on a slim handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02268",
+   "name": "Club_v2_09",
+   "slug": "studded-ball-mace",
+   "description": "A mace with a dark round head studded with bolts on a brown-tipped handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02269",
+   "name": "Club_v2_10",
+   "slug": "amber-orb-scepter",
+   "description": "A mace with an ornate gold-banded amber orb head on a dark handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02270",
+   "name": "Club_v2_11",
+   "slug": "square-hammer-mace",
+   "description": "A heavy grey square-headed hammer with corner studs on a leather-wrapped wooden handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02271",
+   "name": "Club_v2_12",
+   "slug": "spiked-wooden-club",
+   "description": "A long wooden club with iron spikes along its upper end.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02272",
+   "name": "Club_v2_13",
+   "slug": "red-ornate-mace",
+   "description": "A mace with an ornate red and gold diamond-shaped head on a slim handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02273",
+   "name": "Club_v2_14",
+   "slug": "glowing-hammer",
+   "description": "A hammer with a metal head radiating a bright orange glow on a dark red handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02274",
+   "name": "Club_v2_15",
+   "slug": "chain-flail-iron-ball",
+   "description": "A flail with a plain iron ball on a chain attached to a brown handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02275",
+   "name": "Club_v2_16",
+   "slug": "chain-flail-spiked-ball",
+   "description": "A flail with a spiked iron ball on a chain attached to a blue handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02276",
+   "name": "Club_v2_17",
+   "slug": "chain-flail-barrel-weight",
+   "description": "A flail with a dark cylindrical weight on a chain attached to a dark red handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02277",
+   "name": "Club_v2_18",
+   "slug": "chain-flail-flanged-head",
+   "description": "A flail with a flanged grey metal head on a chain attached to a purple handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02278",
+   "name": "Club_v2_19",
+   "slug": "golden-ring-flail",
+   "description": "A flail with a golden ring head on a chain attached to a green and gold handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02279",
+   "name": "Club_v2_20",
+   "slug": "fiery-spiked-flail",
+   "description": "A flail with a glowing orange spiked ball on a chain, surrounded by a fiery glow.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02280",
+   "name": "Club_v2_21",
+   "slug": "skull-totem-club",
+   "description": "A wooden club topped with a skull and green foliage.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02281",
+   "name": "Club_v2_22",
+   "slug": "spiked-iron-club",
+   "description": "A wooden club with a spiked metal sleeve around its head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02282",
+   "name": "Club_v2_23",
+   "slug": "steel-flanged-mace",
+   "description": "A flanged mace with a steel-blue fan-shaped head on a blue handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02283",
+   "name": "Club_v2_24",
+   "slug": "keyhole-head-mace",
+   "description": "A mace with a grey flower-shaped metal head pierced by a keyhole slot.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02284",
+   "name": "Coal",
+   "slug": "coal-lump",
+   "description": "A dark grey lump of coal with a small chip beside it.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02294",
+   "name": "Cooking_01_chicken",
+   "slug": "raw-chicken-drumstick",
+   "description": "A raw pale chicken drumstick with a reddish joint end.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02295",
+   "name": "Cooking_02_chicken_ready",
+   "slug": "cooked-chicken-drumstick",
+   "description": "A golden-brown roasted chicken drumstick.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "heal",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02296",
+   "name": "Cooking_03_pear",
+   "slug": "bitten-pear",
+   "description": "A yellow-green pear with a bitten side and a short stem with a leaf.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "heal",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02297",
+   "name": "Cooking_04_apple",
+   "slug": "red-apple",
+   "description": "A shiny red apple with a green leaf on its stem.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "heal",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02298",
+   "name": "Cooking_05_redgrapes",
+   "slug": "red-grape-cluster",
+   "description": "A hanging cluster of red grapes on a brown stem.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "heal",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

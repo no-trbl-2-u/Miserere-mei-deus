@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-021",
+ "records": [
+  {
+   "cluster_id": "c01750",
+   "name": "Arrow_15",
+   "slug": "arrow-15-teal-jade",
+   "description": "A diagonal arrow with a jade-green spiked head and teal fletching.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01751",
+   "name": "Arrow_16",
+   "slug": "arrow-16-steel-grey",
+   "description": "A diagonal arrow with a grey-blue steel head and fletching.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01752",
+   "name": "Arrow_17",
+   "slug": "arrow-17-bronze",
+   "description": "A diagonal arrow with a bronze barbed head and orange-brown fletching.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01753",
+   "name": "Arrow_18",
+   "slug": "arrow-18-teal-steel",
+   "description": "A diagonal arrow with a pale teal-grey head and fletching on a dark shaft.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01754",
+   "name": "Arrow_19",
+   "slug": "arrow-19-amber",
+   "description": "A diagonal arrow with an amber-orange head and layered orange fletching.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01755",
+   "name": "Arrow_20",
+   "slug": "arrow-20-bone-grey",
+   "description": "A diagonal arrow with a pale grey-beige head and light grey fletching.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01756",
+   "name": "Arrow_21",
+   "slug": "arrow-21-tarnished-grey",
+   "description": "A diagonal arrow with a dull grey-olive head and grey fletching.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01757",
+   "name": "Arrow_22",
+   "slug": "arrow-22-crimson-orange",
+   "description": "A diagonal arrow with a dark red shaft, rust head and orange fletching.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01758",
+   "name": "Arrow_23",
+   "slug": "arrow-23-gold-studded",
+   "description": "A diagonal arrow with a gold head, dark brown shaft and a studded brown nock end with no feathers.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01759",
+   "name": "Arrow_24",
+   "slug": "arrow-24-slate-blue",
+   "description": "A diagonal slim arrow with a slate-blue head and a diamond-shaped tail in dark blue-grey.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01760",
+   "name": "Arrow_25",
+   "slug": "arrow-25-copper-red",
+   "description": "A diagonal arrow with a copper head and a red-brown diamond-shaped tail.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01761",
+   "name": "Arrow_26",
+   "slug": "arrow-26-gilded-orange",
+   "description": "A diagonal arrow with a golden head and orange diamond-shaped tail.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01762",
+   "name": "Arrow_27",
+   "slug": "arrow-27-iron-black",
+   "description": "A diagonal arrow with a broad dark grey diamond head and dark grey fletching.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01763",
+   "name": "Arrow_28",
+   "slug": "arrow-28-frost-steel",
+   "description": "A diagonal arrow with a pale blue-grey diamond head and dark steel-blue fletching.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01764",
+   "name": "Arrow_29",
+   "slug": "arrow-29-golden-ornate",
+   "description": "A diagonal arrow with an ornate golden head and bronze-orange fletching.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01765",
+   "name": "Arrow_30",
+   "slug": "arrow-30-golden-lattice",
+   "description": "A diagonal arrow with a golden lattice-shaped head and orange fletching.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00461",
+   "name": "Arrow_32",
+   "slug": "arrow-32-bloody-olive",
+   "description": "A diagonal arrow with a blood-dripping grey head and olive-green fletching.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01766",
+   "name": "Arrow_33",
+   "slug": "arrow-33-moss-violet",
+   "description": "A diagonal arrow with a moss-green grey head and purple fletching.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01767",
+   "name": "Arrow_34",
+   "slug": "arrow-34-bloody-violet",
+   "description": "A diagonal arrow with a blood-red dripping head and purple fletching.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01768",
+   "name": "Arrow_35",
+   "slug": "arrow-35-crystal-blue",
+   "description": "A diagonal arrow with a pale blue crystalline head and dark blue fletching.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01769",
+   "name": "Arrow_36",
+   "slug": "arrow-36-rose-gem",
+   "description": "A diagonal arrow with a pink-red gem head, thin purple shaft and a small red gem at the tail.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01770",
+   "name": "Arrow_37",
+   "slug": "arrow-37-pink-violet",
+   "description": "A diagonal arrow with a pink spiked head, thin purple shaft and pink tail tip.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01771",
+   "name": "Arrow_38",
+   "slug": "arrow-38-blood-pink",
+   "description": "A diagonal arrow with a red blood-stained pink head, purple shaft and pink tail tip.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01772",
+   "name": "Arrow_39",
+   "slug": "arrow-39-emerald-gold",
+   "description": "A diagonal arrow with a gold head set with a green gem, orange shaft and a gem-studded tail.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01773",
+   "name": "Arrow_40",
+   "slug": "arrow-40-emerald-ring",
+   "description": "A diagonal arrow with a gold head set with a green gem, orange shaft and a ringed gold tail ornament.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

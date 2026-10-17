@@ -1,0 +1,555 @@
+{
+ "unit": "sheet-017",
+ "records": [
+  {
+   "cluster_id": "c01641",
+   "name": "8_Leather_Chest",
+   "slug": "leather-chest-dark-blue-spiked",
+   "description": "A dark blue-grey leather chest piece with a steel plate across the breast and small spikes at the shoulder.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01642",
+   "name": "8_Leather_Pants",
+   "slug": "leather-pants-blue-strapped",
+   "description": "Slate-blue leather trousers with brown leather straps wrapped around the shins.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01643",
+   "name": "8_Leather_Shoulder",
+   "slug": "leather-shoulder-blue-spiked",
+   "description": "A blue-grey layered leather shoulder guard with studs and a steel spike jutting out.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01644",
+   "name": "8_Leather_belt",
+   "slug": "leather-belt-tan-steel-spike",
+   "description": "A tan leather belt with a pointed steel spike fastened at the front.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01645",
+   "name": "8_Leather_boots",
+   "slug": "leather-boots-dark-blue-curved",
+   "description": "Dark blue leather boots with pale steel trim and curved blade-like toe spikes.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01646",
+   "name": "8_Leather_bracers",
+   "slug": "leather-bracer-black-spiked",
+   "description": "A black cylindrical leather bracer with a silver rim and small spikes on top.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01647",
+   "name": "8_Leather_gloves",
+   "slug": "leather-gloves-brown-blade",
+   "description": "A pair of brown leather gloves with silver cuffs and a steel blade on one knuckle.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01650",
+   "name": "8_Mail_Shoulder",
+   "slug": "mail-shoulder-grey-leather-trim",
+   "description": "A grey metal shoulder guard edged in brown leather with rivets.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01651",
+   "name": "8_Mail_belt",
+   "slug": "mail-belt-brown-buckle",
+   "description": "A brown leather belt with a silver buckle and a small round stud.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01652",
+   "name": "8_Mail_bracers",
+   "slug": "mail-bracer-grey-plated",
+   "description": "A grey steel plated bracer with angled pale metal edges.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01653",
+   "name": "8_Mail_gloves",
+   "slug": "mail-gauntlets-steel",
+   "description": "A pair of steel gauntlets with segmented finger plates and brown cuffs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01654",
+   "name": "8_Mail_head",
+   "slug": "mail-helm-iron-visor",
+   "description": "A grey iron great helm with a horizontal eye slit and rivets along the brow.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01655",
+   "name": "8_mail_Pants",
+   "slug": "mail-greaves-steel-plated",
+   "description": "Steel plated leg armour with riveted greaves and cuisses over dark legs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01656",
+   "name": "9_Cloth_Boots",
+   "slug": "cloth-boots-black-red-glow",
+   "description": "Black boots with glowing orange-red trim lines along the edges and cuffs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01658",
+   "name": "9_Cloth_Head",
+   "slug": "cloth-hood-horned-red-glow",
+   "description": "A black hooded mask with two curved horns and glowing orange-red markings around a dark face.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01659",
+   "name": "9_Cloth_Pants",
+   "slug": "cloth-pants-black-red-diamond",
+   "description": "Black trousers with an orange-red trimmed tabard and a diamond emblem at the hip.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01660",
+   "name": "9_Cloth_belt",
+   "slug": "cloth-belt-black-red-emblem",
+   "description": "A black belt with a large orange-red ornamented central emblem.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01661",
+   "name": "9_Cloth_bracers",
+   "slug": "cloth-bracer-orange-gem",
+   "description": "A dark bracer with a glowing orange rim and a yellow gem set into the side.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01662",
+   "name": "9_Cloth_gloves",
+   "slug": "cloth-gloves-black-red-trim",
+   "description": "A pair of black gloves with orange-red glowing trim and fingers marked with notches.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01663",
+   "name": "9_Cloth_sloulder",
+   "slug": "cloth-shoulder-black-red-emblem",
+   "description": "A black shoulder guard with orange-red glowing trim and a circular emblem.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01665",
+   "name": "9_Leather_Pants",
+   "slug": "leather-pants-orange-brown-striped",
+   "description": "Dark brown trousers with orange panels and pale metal studs down the legs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01666",
+   "name": "9_Leather_Shoulder",
+   "slug": "leather-shoulder-brown-spiked",
+   "description": "A brown leather shoulder guard with orange accents and several steel spikes.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01667",
+   "name": "9_Leather_belt",
+   "slug": "leather-belt-brown-studded",
+   "description": "A dark brown leather belt with silver studs and small spikes.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01668",
+   "name": "9_Leather_boots",
+   "slug": "leather-boots-brown-buckled",
+   "description": "Tall brown leather boots with silver buckles and pointed spiked heels.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01669",
+   "name": "9_Leather_bracers",
+   "slug": "leather-bracer-brown-buckled",
+   "description": "A brown leather bracer with silver buckles and straps.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

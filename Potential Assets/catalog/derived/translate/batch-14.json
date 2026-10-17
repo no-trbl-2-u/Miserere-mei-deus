@@ -1,0 +1,2246 @@
+{
+ "batch": "batch-14",
+ "items": [
+  {
+   "cluster_id": "c05017",
+   "name": "icon_80887888_p3_master1200",
+   "file": "sprites/icon_80887888_p3_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "インプ",
+      "ID": "E0N01015",
+      "Category": "Normal1",
+      "Rarity": 1
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01101",
+   "name": "icon_81466580_p0_master1200X1",
+   "file": "sprites/icon_81466580_p0_master1200X1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ミノタウロス",
+      "ID": "EBS01001",
+      "Category": "DungeonBoss1",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05018",
+   "name": "icon_82231934_p0_master1200",
+   "file": "sprites/icon_82231934_p0_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "白虎",
+      "ID": "ECQ00016",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05019",
+   "name": "icon_82371147_p0_master1200",
+   "file": "sprites/icon_82371147_p0_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "蒼龍",
+      "ID": "ECQ00014",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05020",
+   "name": "icon_82453820_p1_master1200",
+   "file": "sprites/icon_82453820_p1_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "海竜",
+      "ID": "EBS22003",
+      "Category": "DungeonBoss3",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05021",
+   "name": "icon_82453820_p3_master1200",
+   "file": "sprites/icon_82453820_p3_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "黄龍",
+      "ID": "ECQ00010",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05022",
+   "name": "icon_82599970_p5_master1200",
+   "file": "sprites/icon_82599970_p5_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "玄武",
+      "ID": "ECQ00015",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05023",
+   "name": "icon_82825309_p0_master1200",
+   "file": "sprites/icon_82825309_p0_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "朱雀",
+      "ID": "ECQ00017",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05024",
+   "name": "icon_82996530_p1_master1200",
+   "file": "sprites/icon_82996530_p1_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "デーモン",
+      "ID": "ESM00019",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05025",
+   "name": "icon_83220935_p4_master1200",
+   "file": "sprites/icon_83220935_p4_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "アイスゴーレム",
+      "ID": "ESM00031",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05026",
+   "name": "icon_83220935_p6_master1200",
+   "file": "sprites/icon_83220935_p6_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "リビングスタチュー",
+      "ID": "E0N05003",
+      "Category": "Normal5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05027",
+   "name": "icon_83863945_p4_master1200",
+   "file": "sprites/icon_83863945_p4_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "染み出すもの",
+      "ID": "EDG17001",
+      "Category": "Normal-D4",
+      "Rarity": 4
+     }
+    },
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ブラッドゴーレム",
+      "ID": "ESM00040",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05029",
+   "name": "icon_83913397_p4_master1200X1",
+   "file": "sprites/icon_83913397_p4_master1200X1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "やつれた女",
+      "ID": "EEX00007",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "NoDrop"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05030",
+   "name": "icon_84608428_p1_master1200",
+   "file": "sprites/icon_84608428_p1_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "スポーン",
+      "ID": "EDG07001",
+      "Category": "Normal-D4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05031",
+   "name": "icon_84759177_p3_master1200",
+   "file": "sprites/icon_84759177_p3_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "殺人者の成れ果て",
+      "ID": "EBS01003",
+      "Category": "DungeonBoss3",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05032",
+   "name": "icon_85215638_p1_master1200",
+   "file": "sprites/icon_85215638_p1_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "エリミネーター",
+      "ID": "EBS18002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    },
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "メタルゴーレム",
+      "ID": "ESM00038",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05033",
+   "name": "icon_85215638_p4_master1200",
+   "file": "sprites/icon_85215638_p4_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "デコイ",
+      "ID": "ESM00034",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05034",
+   "name": "icon_85361750_p1",
+   "file": "sprites/icon_85361750_p1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "アバター",
+      "ID": "ESM00017",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05035",
+   "name": "icon_85361750_p2",
+   "file": "sprites/icon_85361750_p2.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "フラウスの使徒",
+      "ID": "EEX00006",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "NoDrop"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05036",
+   "name": "icon_85904543_p0",
+   "file": "sprites/icon_85904543_p0.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "教祖エルダグリム",
+      "ID": "ECQ00020",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05037",
+   "name": "icon_86013300_p2",
+   "file": "sprites/icon_86013300_p2.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "外なる尖兵",
+      "ID": "EDS00002",
+      "Category": "Disaster",
+      "Rarity": 9,
+      "Tag": [
+       "Uber"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05038",
+   "name": "icon_86376219_p1",
+   "file": "sprites/icon_86376219_p1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "フラウスの騎士",
+      "ID": "EDG05001",
+      "Category": "Normal-D4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05039",
+   "name": "icon_86605049_p0",
+   "file": "sprites/icon_86605049_p0.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "スルト",
+      "ID": "E0N05011",
+      "Category": "Normal5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05040",
+   "name": "icon_87974745_p0",
+   "file": "sprites/icon_87974745_p0.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "フラウスの司教",
+      "ID": "EDG05002",
+      "Category": "Normal-D5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05041",
+   "name": "icon_88936894_p3_master1200",
+   "file": "sprites/icon_88936894_p3_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "サンダーイール",
+      "ID": "E0N02009",
+      "Category": "Normal2",
+      "Rarity": 2
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05043",
+   "name": "icon_89192966_p2_master1200",
+   "file": "sprites/icon_89192966_p2_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "プロトタイプ",
+      "ID": "EBS18001",
+      "Category": "DungeonBoss1",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05044",
+   "name": "icon_89192966_p5_master1200",
+   "file": "sprites/icon_89192966_p5_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "蒼隕鉄のゴーレム",
+      "ID": "EBS14001",
+      "Category": "DungeonBoss1",
+      "Rarity": 6
+     }
+    },
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ガーディアン",
+      "ID": "EDG03002",
+      "Category": "Normal-D5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05046",
+   "name": "icon_Abaddon Locust C",
+   "file": "sprites/icon_Abaddon_Locust_C.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "アバドン",
+      "ID": "E0N04017",
+      "Category": "Normal4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05047",
+   "name": "icon_Ananta A",
+   "file": "sprites/icon_Ananta_A.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ヒュドラ",
+      "ID": "ECQ00006",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05048",
+   "name": "icon_Annihilator A",
+   "file": "sprites/icon_Annihilator_A.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "古代の予言者",
+      "ID": "EDS00001",
+      "Category": "Disaster",
+      "Rarity": 9,
+      "Tag": [
+       "Uber"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05049",
+   "name": "icon_Annihilator C",
+   "file": "sprites/icon_Annihilator_C.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "クライアント",
+      "ID": "EDG18002",
+      "Category": "Normal-D5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05050",
+   "name": "icon_Anubis B",
+   "file": "sprites/icon_Anubis_B.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "アヌビス",
+      "ID": "EBS08003",
+      "Category": "DungeonBoss3",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05051",
+   "name": "icon_Arabaki A",
+   "file": "sprites/icon_Arabaki_A.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "遺跡の守護者",
+      "ID": "EDG08001",
+      "Category": "Normal-D4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05052",
+   "name": "icon_ArcmageB",
+   "file": "sprites/icon_ArcmageB.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ダークメイジ",
+      "ID": "ESM00012",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05053",
+   "name": "icon_ArlauneB",
+   "file": "sprites/icon_ArlauneB.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "誘惑者",
+      "ID": "EBS23002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05054",
+   "name": "icon_Arlaune C",
+   "file": "sprites/icon_Arlaune_C.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "アルラウネ",
+      "ID": "E0N05015",
+      "Category": "Normal5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05055",
+   "name": "icon_Armor Dwarf C",
+   "file": "sprites/icon_Armor_Dwarf_C.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "エンジニア",
+      "ID": "EDG18001",
+      "Category": "Normal-D4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05056",
+   "name": "icon_Ashen Bone Drake A",
+   "file": "sprites/icon_Ashen_Bone_Drake_A.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "オールドドラゴン",
+      "ID": "EDG10001",
+      "Category": "Normal-D4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05057",
+   "name": "icon_Ashen Bone Drake B",
+   "file": "sprites/icon_Ashen_Bone_Drake_B.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ザッハーク",
+      "ID": "ECQ00003",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05058",
+   "name": "icon_Astaroth E",
+   "file": "sprites/icon_Astaroth_E.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ラスト",
+      "ID": "EBS05003",
+      "Category": "DungeonBoss3",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05059",
+   "name": "icon_AtlantisX1",
+   "file": "sprites/icon_AtlantisX1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "デイゴン",
+      "ID": "EBS15002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05060",
+   "name": "icon_Banshee",
+   "file": "sprites/icon_Banshee.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "バンシー",
+      "ID": "E0N02006",
+      "Category": "Normal2",
+      "Rarity": 2
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05061",
+   "name": "icon_Banshee E",
+   "file": "sprites/icon_Banshee_E.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "セイレーン",
+      "ID": "EDG21001",
+      "Category": "Normal-D4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05062",
+   "name": "icon_Banshee F",
+   "file": "sprites/icon_Banshee_F.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "クーニアック",
+      "ID": "EDG01002",
+      "Category": "Normal-D5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05063",
+   "name": "icon_Bard D",
+   "file": "sprites/icon_Bard_D.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "狂った音楽家",
+      "ID": "EBS21001",
+      "Category": "DungeonBoss1",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05064",
+   "name": "icon_Basilisk A",
+   "file": "sprites/icon_Basilisk_A.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "バジリスク",
+      "ID": "E0N02010",
+      "Category": "Normal2",
+      "Rarity": 2
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05065",
+   "name": "icon_Basilisk E",
+   "file": "sprites/icon_Basilisk_E.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "デスリザード",
+      "ID": "EDG20002",
+      "Category": "Normal-D5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05066",
+   "name": "icon_Beelzebub A",
+   "file": "sprites/icon_Beelzebub_A.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ベルゼバブ",
+      "ID": "EDS00013",
+      "Category": "Disaster",
+      "Rarity": 9,
+      "Tag": [
+       "Uber"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05067",
+   "name": "icon_BehemothC",
+   "file": "sprites/icon_BehemothC.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "盲目の獣",
+      "ID": "EBS24001",
+      "Category": "DungeonBoss1",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05068",
+   "name": "icon_Behemoth D",
+   "file": "sprites/icon_Behemoth_D.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "神体喰らい",
+      "ID": "EBS20002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05069",
+   "name": "icon_BiwaHoushiAX1",
+   "file": "sprites/icon_BiwaHoushiAX1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "堕法師",
+      "ID": "EDG11002",
+      "Category": "Normal-D5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05070",
+   "name": "icon_BlackJadeA",
+   "file": "sprites/icon_BlackJadeA.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "堕天使",
+      "ID": "EBS04001",
+      "Category": "DungeonBoss1",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01102",
+   "name": "icon_Black Death A",
+   "file": "sprites/icon_Black_Death_A.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ヘイター",
+      "ID": "EDG07002",
+      "Category": "Normal-D5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05071",
+   "name": "icon_Black Dragon F",
+   "file": "sprites/icon_Black_Dragon_F.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "クエレブレ",
+      "ID": "ECQ00002",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05072",
+   "name": "icon_Blob A",
+   "file": "sprites/icon_Blob_A.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "彼方からの色",
+      "ID": "EBS16003",
+      "Category": "DungeonBoss3",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05073",
+   "name": "icon_BloodyBoneE",
+   "file": "sprites/icon_BloodyBoneE.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "スケルトン",
+      "ID": "ESM00003",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05074",
+   "name": "icon_Bone Golem B",
+   "file": "sprites/icon_Bone_Golem_B.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ヘカトンケイル",
+      "ID": "E0N05001",
+      "Category": "Normal5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05075",
+   "name": "icon_Bright Circle",
+   "file": "sprites/icon_Bright_Circle.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "トルネンブラ",
+      "ID": "EBS21003",
+      "Category": "DungeonBoss3",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05076",
+   "name": "icon_Bull Begger A",
+   "file": "sprites/icon_Bull_Begger_A.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "死せる赤子",
+      "ID": "EBS17001",
+      "Category": "DungeonBoss1",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01103",
+   "name": "icon_Chernovog A",
+   "file": "sprites/icon_Chernovog_A.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "スケルトンジェネラル",
+      "ID": "E0N04002",
+      "Category": "Normal4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05077",
+   "name": "icon_Chimaira A",
+   "file": "sprites/icon_Chimaira_A.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "キマイラ",
+      "ID": "E0N03009",
+      "Category": "Normal3",
+      "Rarity": 3
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05079",
+   "name": "icon_ConstrictorE",
+   "file": "sprites/icon_ConstrictorE.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "フォレストハンター",
+      "ID": "EDG09002",
+      "Category": "Normal-D5",
+      "Rarity": 5
+     }
+    },
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "森のともだち",
+      "ID": "ESM00008",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05080",
+   "name": "icon_Coral Crab B",
+   "file": "sprites/icon_Coral_Crab_B.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "コーラルクラブ",
+      "ID": "E0N01016",
+      "Category": "Normal1",
+      "Rarity": 1
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05081",
+   "name": "icon_Corps Eater A",
+   "file": "sprites/icon_Corps_Eater_A.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "コープスイーター",
+      "ID": "E0N03017",
+      "Category": "Normal3",
+      "Rarity": 3
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05082",
+   "name": "icon_Crawler A",
+   "file": "sprites/icon_Crawler_A.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ランドクローラー",
+      "ID": "E0N03004",
+      "Category": "Normal3",
+      "Rarity": 3
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05083",
+   "name": "icon_Crawler B",
+   "file": "sprites/icon_Crawler_B.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ランドデバウアー",
+      "ID": "ECQ00022",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05084",
+   "name": "icon_Crawler D",
+   "file": "sprites/icon_Crawler_D.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ストーンイーター",
+      "ID": "EDG14002",
+      "Category": "Normal-D5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05085",
+   "name": "icon_Crawler E",
+   "file": "sprites/icon_Crawler_E.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "デッドリークロウラー",
+      "ID": "E0N04016",
+      "Category": "Normal4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05086",
+   "name": "icon_Creeping Coin A",
+   "file": "sprites/icon_Creeping_Coin_A.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "舞い散る財宝",
+      "ID": "EBS23001",
+      "Category": "DungeonBoss1",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05087",
+   "name": "icon_Crystal Thing A",
+   "file": "sprites/icon_Crystal_Thing_A.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "リビングクリスタル",
+      "ID": "EBS14002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05088",
+   "name": "icon_Cursed Head 2-D",
+   "file": "sprites/icon_Cursed_Head_2-D.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "晒された呪物",
+      "ID": "E0N02014",
+      "Category": "Normal2",
+      "Rarity": 2
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05089",
+   "name": "icon_Cyclops B",
+   "file": "sprites/icon_Cyclops_B.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "サイクロプス",
+      "ID": "E0N04009",
+      "Category": "Normal4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05090",
+   "name": "icon_Dark Species B",
+   "file": "sprites/icon_Dark_Species_B.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ガスツール",
+      "ID": "ECQ00018",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05091",
+   "name": "icon_Dead Eye A",
+   "file": "sprites/icon_Dead_Eye_A.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ドレッドアイ",
+      "ID": "E0N02015",
+      "Category": "Normal2",
+      "Rarity": 2
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05092",
+   "name": "icon_DeathBeholderD",
+   "file": "sprites/icon_DeathBeholderD.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "名状しがたき恐怖",
+      "ID": "ESM00015",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    },
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "邪神",
+      "ID": "ESM00030",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05093",
+   "name": "icon_Devilkin Brute E",
+   "file": "sprites/icon_Devilkin_Brute_E.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "テインテッド",
+      "ID": "E0N03001",
+      "Category": "Normal3",
+      "Rarity": 3
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05094",
+   "name": "icon_Devilkin Brute G",
+   "file": "sprites/icon_Devilkin_Brute_G.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "フレンジーガイ",
+      "ID": "EDS00012",
+      "Category": "Disaster",
+      "Rarity": 9,
+      "Tag": [
+       "Uber"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05095",
+   "name": "icon_DiamondMantisB",
+   "file": "sprites/icon_DiamondMantisB.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "森のともだち",
+      "ID": "ESM00009",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05096",
+   "name": "icon_Diamond Mantis C",
+   "file": "sprites/icon_Diamond_Mantis_C.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ダイアモンドシザース",
+      "ID": "EBS20001",
+      "Category": "DungeonBoss1",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05097",
+   "name": "icon_Dick Snail A",
+   "file": "sprites/icon_Dick_Snail_A.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ジャイアントスネイル",
+      "ID": "EBS22001",
+      "Category": "DungeonBoss1",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05098",
+   "name": "icon_Din Lung C",
+   "file": "sprites/icon_Din_Lung_C.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "サンダーサーペント",
+      "ID": "E0N03016",
+      "Category": "Normal3",
+      "Rarity": 3
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05099",
+   "name": "icon_Din Lung D",
+   "file": "sprites/icon_Din_Lung_D.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ディープサーペント",
+      "ID": "EDG15002",
+      "Category": "Normal-D5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05100",
+   "name": "icon_Doom Cloud A",
+   "file": "sprites/icon_Doom_Cloud_A.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "蠢く肉腫",
+      "ID": "EDG17002",
+      "Category": "Normal-D5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05101",
+   "name": "icon_Doom Toad",
+   "file": "sprites/icon_Doom_Toad.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ジャイアントトード",
+      "ID": "E0N01014",
+      "Category": "Normal1",
+      "Rarity": 1
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05102",
+   "name": "icon_Doom Toad C",
+   "file": "sprites/icon_Doom_Toad_C.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "大蝦蟇",
+      "ID": "ESM00020",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05103",
+   "name": "icon_Dragon B",
+   "file": "sprites/icon_Dragon_B.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ドラゴン",
+      "ID": "ESM00025",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05104",
+   "name": "icon_Dragon E",
+   "file": "sprites/icon_Dragon_E.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ティアマト",
+      "ID": "ECQ00004",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05105",
+   "name": "icon_Durahan",
+   "file": "sprites/icon_Durahan.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "デュラハン",
+      "ID": "EBS01002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05106",
+   "name": "icon_Earth Medusa A",
+   "file": "sprites/icon_Earth_Medusa_A.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "メドゥーサ",
+      "ID": "E0N03010",
+      "Category": "Normal3",
+      "Rarity": 3
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05107",
+   "name": "icon_Echidna A",
+   "file": "sprites/icon_Echidna_A.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "エキドナ",
+      "ID": "ECQ00008",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05108",
+   "name": "icon_Echidna F",
+   "file": "sprites/icon_Echidna_F.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "彷徨う乳母",
+      "ID": "EERM0017",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "Risky"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05109",
+   "name": "icon_Efreet A",
+   "file": "sprites/icon_Efreet_A.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "イフリート",
+      "ID": "ECQ00023",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05110",
+   "name": "icon_Ekinmu A",
+   "file": "sprites/icon_Ekinmu_A.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ジン",
+      "ID": "EERM0018",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "Risky"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05111",
+   "name": "icon_Elder Tree C",
+   "file": "sprites/icon_Elder_Tree_C.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "トレント",
+      "ID": "E0N04004",
+      "Category": "Normal4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05112",
+   "name": "icon_Fate Spinner A",
+   "file": "sprites/icon_Fate_Spinner_A.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "先代当主",
+      "ID": "EBS19003",
+      "Category": "DungeonBoss3",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05113",
+   "name": "icon_Fate Spinner F",
+   "file": "sprites/icon_Fate_Spinner_F.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "老いたる赤子",
+      "ID": "EBS17002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05114",
+   "name": "icon_FenrirG",
+   "file": "sprites/icon_FenrirG.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "スピリットウルフ",
+      "ID": "ESM00006",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05115",
+   "name": "icon_Fenrir A",
+   "file": "sprites/icon_Fenrir_A.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "フェンリル",
+      "ID": "EDS00009",
+      "Category": "Disaster",
+      "Rarity": 9,
+      "Tag": [
+       "Uber"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05116",
+   "name": "icon_Fire Locust B",
+   "file": "sprites/icon_Fire_Locust_B.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "不浄の波",
+      "ID": "ESM00037",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05117",
+   "name": "icon_Fire Queen D",
+   "file": "sprites/icon_Fire_Queen_D.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "バンシークイーン",
+      "ID": "E0N05017",
+      "Category": "Normal5",
+      "Rarity": 5
+     }
+    }
+   ]
+  }
+ ]
+}

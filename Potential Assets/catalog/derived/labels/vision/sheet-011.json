@@ -1,0 +1,555 @@
+{
+ "unit": "sheet-011",
+ "records": [
+  {
+   "cluster_id": "c01471",
+   "name": "17_Mail_bracers",
+   "slug": "mail-bracers-tier17",
+   "description": "A brown leather forearm bracer with gold trim and spiked gold studs at the cuff.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01472",
+   "name": "17_Mail_gloves",
+   "slug": "mail-gloves-tier17",
+   "description": "A pair of dark leather gauntlets with red and gold plated cuffs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01475",
+   "name": "17_mail_Pants",
+   "slug": "mail-pants-tier17",
+   "description": "Dark brown trousers with a pink and gold trimmed tasset panel at the waist.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01482",
+   "name": "1_Cloth_Head",
+   "slug": "cloth-hood-tier1",
+   "description": "A brown cloth hood with a wide opening and two small clasps at the bottom.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01483",
+   "name": "1_Cloth_Pants",
+   "slug": "cloth-pants-tier1",
+   "description": "Plain brown cloth trousers with pale cuffs at the waist and ankles.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01484",
+   "name": "1_Cloth_belt",
+   "slug": "cloth-belt-tier1",
+   "description": "A cream cloth sash belt with two hanging tails, shown as a loop.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01485",
+   "name": "1_Cloth_sloulder",
+   "slug": "cloth-shoulder-tier1",
+   "description": "A gold-edged shoulder pad with pink padding and dark claw-like stripes, with a small ring at the lower edge.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01486",
+   "name": "1_Leather_Chest",
+   "slug": "leather-chest-tier1",
+   "description": "A short-sleeved brown leather tunic with a pale open collar.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01487",
+   "name": "1_Leather_Pants",
+   "slug": "leather-pants-tier1",
+   "description": "Brown leather trousers with pale cuffs and a knee patch.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01488",
+   "name": "1_Leather_Shoulder",
+   "slug": "leather-shoulder-tier1",
+   "description": "A rounded brown leather pauldron with a strap and buckle across it.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01489",
+   "name": "1_Leather_belt",
+   "slug": "leather-belt-tier1",
+   "description": "A brown leather belt with a small buckle, shown as a loop.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00318",
+   "name": "1_Leather_boots",
+   "slug": "leather-boots-tier1",
+   "description": "A pair of brown leather boots with folded cuffs and buckled straps.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01490",
+   "name": "1_Leather_bracers",
+   "slug": "leather-bracers-tier1",
+   "description": "A brown leather cylindrical bracer with pale rivets and a trimmed edge.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01491",
+   "name": "1_Leather_head",
+   "slug": "leather-cap-tier1",
+   "description": "A brown leather cap with metal studs and two dark flaps hanging at the sides.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01492",
+   "name": "1_Mail_Chest",
+   "slug": "mail-chest-tier1",
+   "description": "A grey steel breastplate with a raised shoulder and a dark armhole.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01493",
+   "name": "1_Mail_Shoulder",
+   "slug": "mail-shoulder-tier1",
+   "description": "A grey steel pauldron with embossed ridges and a small ring at the lower edge.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01494",
+   "name": "1_Mail_belt",
+   "slug": "mail-belt-tier1",
+   "description": "A grey steel segmented belt, shown as a loop.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01495",
+   "name": "1_Mail_bracers",
+   "slug": "mail-bracers-tier1",
+   "description": "A grey steel cylindrical bracer with a dark open end.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01496",
+   "name": "1_Mail_gloves",
+   "slug": "mail-gloves-tier1",
+   "description": "A pair of brown gloves with grey steel plated cuffs and knuckle guards.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01497",
+   "name": "1_Mail_head",
+   "slug": "mail-helm-tier1",
+   "description": "A grey steel domed helmet with a small spike on top and panel seams.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01498",
+   "name": "1_mail_Pants",
+   "slug": "mail-pants-tier1",
+   "description": "Brown trousers with grey steel plates on the thighs and a central waist plate.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01501",
+   "name": "2_Cloth_Boots",
+   "slug": "cloth-boots-tier2",
+   "description": "A pair of purple boots with cream buckled straps and trim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01502",
+   "name": "2_Cloth_Chest",
+   "slug": "cloth-robe-tier2",
+   "description": "A purple robe with a cream trimmed collar and a wide pointed neckline.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01503",
+   "name": "2_Cloth_Head",
+   "slug": "cloth-wizard-hat-tier2",
+   "description": "A purple pointed wizard hat with a wide brim and a darker band.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01504",
+   "name": "2_Cloth_Pants",
+   "slug": "cloth-pants-tier2",
+   "description": "Purple cloth trousers with pale cuffs at the waist and ankles.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

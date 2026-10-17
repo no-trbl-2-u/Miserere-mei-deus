@@ -1,0 +1,492 @@
+{
+ "unit": "sheet-07",
+ "records": [
+  {
+   "cluster_id": "c06171",
+   "name": "Raver Lord",
+   "slug": "raver-lord",
+   "description": "A horned-helmed armoured warrior in a red cape wielding a sword and round shield, with a skull on the chest.",
+   "tags": {
+    "kind": "boss",
+    "use": [
+     "enemy",
+     "enemy-boss"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c06173",
+   "name": "Rogue",
+   "slug": "rogue",
+   "description": "A green-clad rogue leaping mid-stride with a dagger raised.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c06176",
+   "name": "SK02",
+   "slug": "sk02-mace-knight",
+   "description": "A seated plate-armoured knight with pale hair resting a huge spiked mace on one shoulder.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c06178",
+   "name": "SK04",
+   "slug": "sk04-red-archer",
+   "description": "A red-garbed archer in a dynamic pose drawing a bow, with a flowing red cloak.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c06186",
+   "name": "SK12",
+   "slug": "sk12-dark-sorceress",
+   "description": "A pale woman in a long black gown with arms spread, surrounded by flames and a purple splash.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c06192",
+   "name": "SK18",
+   "slug": "sk18-spear-wraith",
+   "description": "A dark armoured figure with long hair holding a long spear forward in a lunging stance.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01264",
+   "name": "SK21",
+   "slug": "sk21-golden-armour",
+   "description": "A bulky suit of golden plate armour standing with fists at its sides.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c06194",
+   "name": "SK22",
+   "slug": "sk22-swirl-shield-knight",
+   "description": "A knight in light armour with a sword and a swirl-patterned shield, surrounded by a white aura and smoke.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c06214",
+   "name": "SK44",
+   "slug": "sk44-yellow-ring-witch",
+   "description": "A hooded figure in a pointed hat with a staff, ringed by glowing yellow sparks.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c06228",
+   "name": "SK61",
+   "slug": "sk61-caped-swordsman",
+   "description": "A white-haired young fighter in a red cape and red boots with a thin sword and round shield.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c06246",
+   "name": "SK80",
+   "slug": "sk80-haloed-priest",
+   "description": "A robed priest with a halo-like headpiece holding a long staff across the shoulders.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c06260",
+   "name": "SK94",
+   "slug": "sk94-kneeling-elder",
+   "description": "A muscular bearded elder kneeling with a wooden staff in pale draped cloth.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c06265",
+   "name": "Salamander A",
+   "slug": "salamander-a",
+   "description": "An orange salamander curled amid flames beside a tall spear.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c06266",
+   "name": "Scarecrow",
+   "slug": "scarecrow",
+   "description": "A scarecrow in a wide-brimmed hat and tattered blue and orange clothes standing with arms hanging.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c06293",
+   "name": "Treasure",
+   "slug": "treasure-pile",
+   "description": "A heap of gold coins and bars with a golden jug.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "reward"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c06302",
+   "name": "UN-Tech",
+   "slug": "un-tech-workshop",
+   "description": "A cluttered workshop interior with a seated craftsman, shelves of tools and a figure leaping near the ceiling.",
+   "tags": {
+    "kind": "environment",
+    "use": [
+     "story",
+     "crafting",
+     "background"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c06305",
+   "name": "UN03",
+   "slug": "un03-woodcutter-camp",
+   "description": "A forest camp with a campfire, a burly woodcutter at a stump and onlookers under thatched shelters.",
+   "tags": {
+    "kind": "environment",
+    "use": [
+     "story",
+     "camp",
+     "background"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c06317",
+   "name": "UN_Fest_3",
+   "slug": "un-fest-3-festival",
+   "description": "A festival scene in a crowded shop with a witch, costumed figures and a pumpkin-headed character.",
+   "tags": {
+    "kind": "environment",
+    "use": [
+     "story",
+     "shop",
+     "background"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c06324",
+   "name": "Undead Gladiator",
+   "slug": "undead-gladiator",
+   "description": "A crouching gladiator in golden armour with a sword and round shield.",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c06330",
+   "name": "Wamp C",
+   "slug": "wamp-c",
+   "description": "A yellow armoured bug-like frog creature with red flowers on its limbs seen from above.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01274",
+   "name": "dg1",
+   "slug": "dg1-night-landscape",
+   "description": "A dark night landscape with a winding pale path leading toward a distant castle.",
+   "tags": {
+    "kind": "environment",
+    "use": [
+     "dungeon",
+     "background"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01276",
+   "name": "dg15",
+   "slug": "dg15-torii-shrine",
+   "description": "A forest shrine with red torii gates and pagoda-style buildings in the dark.",
+   "tags": {
+    "kind": "environment",
+    "use": [
+     "dungeon",
+     "background"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01282",
+   "name": "dg4",
+   "slug": "dg4-red-cavern",
+   "description": "A cavern with glowing red walls and a small flame at the bottom of a spiralling passage.",
+   "tags": {
+    "kind": "environment",
+    "use": [
+     "dungeon",
+     "background"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01283",
+   "name": "dg5",
+   "slug": "dg5-ruined-village",
+   "description": "A moonlit ruined village of timber houses with a muddy road and a cart.",
+   "tags": {
+    "kind": "environment",
+    "use": [
+     "dungeon",
+     "background"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01284",
+   "name": "dg8",
+   "slug": "dg8-stone-hall",
+   "description": "A grey stone hall with carved columns and a central doorway with a statue.",
+   "tags": {
+    "kind": "architecture",
+    "use": [
+     "dungeon",
+     "background"
+    ],
+    "style": [
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

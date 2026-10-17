@@ -1,0 +1,506 @@
+{
+ "unit": "sheet-018",
+ "records": [
+  {
+   "cluster_id": "c01670",
+   "name": "9_Leather_gloves",
+   "slug": "leather-gauntlets",
+   "description": "A pair of brown leather gloves with metal-trimmed knuckles and finger plates.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01671",
+   "name": "9_Leather_head",
+   "slug": "leather-plague-mask",
+   "description": "A brown leather beaked plague-doctor mask with spiked crest and a strap.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01672",
+   "name": "9_Mail_Boots",
+   "slug": "mail-boots",
+   "description": "A pair of steel mail boots with plated shins and toes.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01674",
+   "name": "9_Mail_Shoulder",
+   "slug": "mail-skull-pauldron",
+   "description": "A steel shoulder pauldron decorated with a skull and fastened with a brown strap.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00404",
+   "name": "9_Mail_belt",
+   "slug": "mail-belt",
+   "description": "A brown leather belt with studs and a steel tip hanging down.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01675",
+   "name": "9_Mail_bracers",
+   "slug": "mail-bracer",
+   "description": "A curved steel bracer plate with a dark leather underside.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01676",
+   "name": "9_Mail_gloves",
+   "slug": "mail-gauntlets",
+   "description": "A pair of black gloves with steel plated cuffs and finger guards.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01677",
+   "name": "9_Mail_head",
+   "slug": "mail-helmet",
+   "description": "A steel crowned helmet with a closed visor and chainmail neck guard.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01678",
+   "name": "9_mail_Pants",
+   "slug": "mail-greaves-pants",
+   "description": "Brown leather trousers with a belt and steel thigh plates.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01679",
+   "name": "A_Inventory_frame",
+   "slug": "inventory-frame-square",
+   "description": "An empty square item slot with a thin silver border and transparent centre.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "inventory",
+     "panel-chrome"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01680",
+   "name": "A_Inventory_frame2",
+   "slug": "inventory-frame-wide",
+   "description": "An empty wide rectangular item slot with a thin silver border and transparent centre.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "inventory",
+     "panel-chrome"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01681",
+   "name": "A_Inventory_frame2_back",
+   "slug": "inventory-frame-back-grey",
+   "description": "A dark grey rounded rectangle with a faint scratched texture, a slot background.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "inventory",
+     "panel-chrome"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01682",
+   "name": "A_Inventory_frame2_back_Green",
+   "slug": "inventory-frame-back-green",
+   "description": "A dark green rounded rectangle with a faint scratched texture, a slot background.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "inventory",
+     "panel-chrome"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01683",
+   "name": "A_Inventory_frame2_back_RED",
+   "slug": "inventory-frame-back-red",
+   "description": "A dark red rounded rectangle with a faint scratched texture, a slot background.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "inventory",
+     "panel-chrome"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01684",
+   "name": "A_Inventory_frame2_back_blue",
+   "slug": "inventory-frame-back-blue",
+   "description": "A dark blue rounded rectangle with a faint scratched texture, a slot background.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "inventory",
+     "panel-chrome"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01685",
+   "name": "A_Inventory_frame2_back_purple",
+   "slug": "inventory-frame-back-purple",
+   "description": "A dark purple rounded rectangle with a faint scratched texture, a slot background.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "inventory",
+     "panel-chrome"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01688",
+   "name": "Alchemy_01_tea",
+   "slug": "grey-mug-of-tea",
+   "description": "A grey ceramic mug filled with dark brewed tea.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01690",
+   "name": "Alchemy_03_flask",
+   "slug": "empty-flask",
+   "description": "An empty glass conical flask with a cork-less narrow neck.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01691",
+   "name": "Alchemy_05_poison",
+   "slug": "green-poison-flask",
+   "description": "A glass conical flask filled with bright green liquid.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00406",
+   "name": "Alchemy_07_shadow",
+   "slug": "purple-shadow-flask",
+   "description": "A glass conical flask filled with purple liquid.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00407",
+   "name": "Alchemy_08_reactive_mixture",
+   "slug": "orange-reactive-flask",
+   "description": "A glass conical flask filled with orange bubbling liquid.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00408",
+   "name": "Alchemy_09_test_tube",
+   "slug": "empty-test-tube",
+   "description": "An empty glass test tube sealed with a cork stopper.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01692",
+   "name": "Alchemy_10_blue_mixture",
+   "slug": "teal-blue-flask",
+   "description": "A glass conical flask filled with teal liquid and bubbles.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01693",
+   "name": "Alchemy_11_magic_mixture",
+   "slug": "yellow-magic-flask",
+   "description": "A glass conical flask filled with yellow liquid and bubbles.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01694",
+   "name": "Alchemy_13_heal_potion",
+   "slug": "red-health-vial",
+   "description": "A corked glass test tube filled with red liquid.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "heal",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

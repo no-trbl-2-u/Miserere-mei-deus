@@ -1,0 +1,506 @@
+{
+ "unit": "sheet-062",
+ "records": [
+  {
+   "cluster_id": "c03074",
+   "name": "LeatherChest0",
+   "slug": "leather-tunic-green-sleeves",
+   "description": "A brown leather tunic with torn green cloth sleeves.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03075",
+   "name": "LeatherChest1",
+   "slug": "leather-armour-pauldrons",
+   "description": "A brown leather cuirass with shoulder pauldrons, short sleeves and a dark tasset skirt.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03076",
+   "name": "LeatherChest2",
+   "slug": "leather-armour-pauldrons-b",
+   "description": "A second variant of brown leather cuirass with layered pauldrons and a dark skirt.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03078",
+   "name": "LeatherPants",
+   "slug": "leather-pants",
+   "description": "A pair of brown leather trousers.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03079",
+   "name": "LeatherShoes",
+   "slug": "leather-shoes",
+   "description": "A pair of tan gathered leather shoes.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03080",
+   "name": "LeatherVest",
+   "slug": "leather-vest",
+   "description": "A sleeveless brown leather vest with banded panels and a lower lacing tie.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03082",
+   "name": "LegionaryArmor",
+   "slug": "legionary-armor",
+   "description": "A grey steel cuirass with red shoulder straps and a red pleated skirt in Roman legionary style.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03084",
+   "name": "Letherbelt",
+   "slug": "leather-belt",
+   "description": "A brown leather belt with a buckle, lying in a loop.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03085",
+   "name": "Letherbelt2",
+   "slug": "leather-belt-coiled",
+   "description": "A dark brown leather belt coiled in overlapping loops with a buckle.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03088",
+   "name": "LionShield",
+   "slug": "lion-shield",
+   "description": "A red kite-shaped shield with a gold rampant lion emblem.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03090",
+   "name": "Logs",
+   "slug": "logs",
+   "description": "A pile of cut wooden logs and planks with chips and splinters.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03091",
+   "name": "Loot_07",
+   "slug": "cotton-and-small-parts",
+   "description": "Fluffy white wads, possibly cotton, scattered with small metal rings and beads.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03093",
+   "name": "Loot_09",
+   "slug": "battle-axe",
+   "description": "A single-bladed axe with a grey steel head on a long dark wooden haft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03094",
+   "name": "Loot_10",
+   "slug": "sickle",
+   "description": "A curved steel sickle with a short wooden handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03095",
+   "name": "Loot_100",
+   "slug": "rusty-shears",
+   "description": "A pair of rusty iron scissors with ring handles.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03096",
+   "name": "Loot_101",
+   "slug": "wooden-chest",
+   "description": "A closed brown wooden treasure chest with iron fittings.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "loot",
+     "reward",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03098",
+   "name": "Loot_103",
+   "slug": "iron-chest",
+   "description": "A closed grey iron-clad chest with a domed lid.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "loot",
+     "reward",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03099",
+   "name": "Loot_104",
+   "slug": "gold-chest",
+   "description": "A closed golden yellow chest with a domed lid.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "loot",
+     "reward",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03100",
+   "name": "Loot_105",
+   "slug": "wine-bottle",
+   "description": "A dark glass bottle with a cream label and cork.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory",
+     "shop"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03103",
+   "name": "Loot_108",
+   "slug": "straw-hat",
+   "description": "A wide-brimmed tan straw hat.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03104",
+   "name": "Loot_109",
+   "slug": "wheat-ears",
+   "description": "Three golden ears of wheat bundled together.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03105",
+   "name": "Loot_11",
+   "slug": "sledgehammer",
+   "description": "A hammer with a square grey steel head on a long dark handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03106",
+   "name": "Loot_110",
+   "slug": "grain-sack",
+   "description": "A brown burlap sack open at the top and filled with grain.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "loot",
+     "inventory",
+     "crafting"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03107",
+   "name": "Loot_111",
+   "slug": "leather-glove",
+   "description": "A single brown leather glove with fingers splayed.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00154",
+   "name": "Loot_112",
+   "slug": "leather-hide",
+   "description": "A flat, ragged piece of reddish brown leather hide.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

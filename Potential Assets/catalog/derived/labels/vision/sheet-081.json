@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-081",
+ "records": [
+  {
+   "cluster_id": "c03687",
+   "name": "RingSilver",
+   "slug": "silver-signet-ring",
+   "description": "A worn dark-silver signet ring with an oval flat face engraved with a swirl mark.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03688",
+   "name": "RingSilver2",
+   "slug": "silver-oval-stone-ring",
+   "description": "A dark-grey metal ring with a large pale oval stone set in a raised bezel.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03689",
+   "name": "RingViking",
+   "slug": "black-rectangular-signet-ring",
+   "description": "A blackened metal ring with a flat rectangular face bearing faint engraved lines.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03691",
+   "name": "Ring_02",
+   "slug": "thin-gold-band-ring",
+   "description": "A thin plain gold band ring with a smooth polished surface.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03692",
+   "name": "Ring_03",
+   "slug": "silver-twisted-loop-ring",
+   "description": "A silver ring whose top splits into two interlocking looped strands in a figure-eight shape.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03693",
+   "name": "Ring_04",
+   "slug": "silver-ring-red-gem",
+   "description": "A slender grey-silver ring set with a small round red gem.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00860",
+   "name": "Ring_06",
+   "slug": "silver-ring-green-gem",
+   "description": "A slender grey-silver ring set with a small round green gem.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00861",
+   "name": "Ring_08",
+   "slug": "gold-ring-green-teardrop",
+   "description": "A gold ring with filigree openwork around a teardrop-shaped green gem.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03694",
+   "name": "Ring_10",
+   "slug": "silver-curl-ring",
+   "description": "A dark ring topped with a curling silver flourish like a stylized wave or tendril.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03697",
+   "name": "Ring_15",
+   "slug": "steel-skull-ring",
+   "description": "A dark steel ring with a white skull sculpted on the top.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03698",
+   "name": "Ring_17",
+   "slug": "silver-ring-ruby",
+   "description": "A slender grey ring holding a faceted bright red gem in prongs.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03699",
+   "name": "Ring_18",
+   "slug": "silver-ring-amethyst",
+   "description": "A slender grey ring holding a faceted purple gem in prongs.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03700",
+   "name": "Ring_19",
+   "slug": "gold-ring-blue-inlay",
+   "description": "A gold ring with an oval face inlaid with blue enamel showing small round holes.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03704",
+   "name": "Ring_27",
+   "slug": "gold-ring-emerald",
+   "description": "A thin gold ring set with a faceted green emerald in prongs.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03705",
+   "name": "Ring_28",
+   "slug": "gold-square-signet-ring",
+   "description": "A chunky gold ring with a flat square plate on top.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03706",
+   "name": "Ring_29",
+   "slug": "gold-ring-black-square",
+   "description": "A gold ring with a square setting holding a black stepped inset.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00862",
+   "name": "Ring_31",
+   "slug": "gold-ring-purple-gem",
+   "description": "A wide gold band with a round purple gem set on top.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00863",
+   "name": "Ring_32",
+   "slug": "gold-ring-green-gem",
+   "description": "A wide gold band with a round green gem set on top.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03712",
+   "name": "Ring_40",
+   "slug": "black-ring-orange-pattern",
+   "description": "A black band ring with glowing orange chevron or leaf patterns around its surface.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03713",
+   "name": "Ring_41",
+   "slug": "black-ring-cyan-runes",
+   "description": "A black band ring etched with glowing cyan rune marks.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03714",
+   "name": "Ring_42",
+   "slug": "wooden-vine-ring",
+   "description": "A brown wooden ring twisted like a branch with small green leaves sprouting from it.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03716",
+   "name": "Ring_44",
+   "slug": "gold-antler-ring",
+   "description": "A gold ring with thin branching antler-like prongs rising from the band.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03717",
+   "name": "Ring_45",
+   "slug": "gold-wavy-band-ring",
+   "description": "A plain gold ring with an uneven, wavy band shape.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03719",
+   "name": "Ring_47",
+   "slug": "purple-spider-ring",
+   "description": "A dark purple ring with a spiny, spider- or bat-like ornament holding a small red gem.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00020",
+   "name": "Ring_48",
+   "slug": "ice-blue-spiral-ring",
+   "description": "A pale icy-blue ring with a swirl spiral carved on the top.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

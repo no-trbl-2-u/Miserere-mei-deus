@@ -1,0 +1,480 @@
+{
+ "unit": "sheet-006",
+ "records": [
+  {
+   "cluster_id": "c01314",
+   "name": "11_Cloth_Pants",
+   "slug": "cloth-pants-brown",
+   "description": "A pair of slim brown cloth trousers with a faded olive hem.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01315",
+   "name": "11_Cloth_belt",
+   "slug": "cloth-belt-dark-brown",
+   "description": "A coiled dark brown belt with a small silver buckle.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01316",
+   "name": "11_Cloth_bracers",
+   "slug": "cloth-bracers-brown",
+   "description": "A single brown leather-look bracer cuff with two round studs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01317",
+   "name": "11_Cloth_gloves",
+   "slug": "cloth-gloves-brown",
+   "description": "A pair of brown gloves with cuffs trimmed in tan stitching.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01318",
+   "name": "11_Cloth_sloulder",
+   "slug": "cloth-shoulder-brown",
+   "description": "A brown collar-style shoulder piece with a small pouch attached on the right side.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01320",
+   "name": "11_Leather_Shoulder",
+   "slug": "leather-shoulder-epaulette-blue",
+   "description": "A teal epaulette with gold trim and a long gold fringe hanging below.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01321",
+   "name": "11_Leather_belt",
+   "slug": "leather-belt-tan",
+   "description": "A tan leather belt with a silver buckle, shown at an angle.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01322",
+   "name": "11_Leather_boots",
+   "slug": "leather-boots-red-brown",
+   "description": "A pair of tall reddish-brown leather boots with buckled straps at the sides.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01323",
+   "name": "11_Leather_bracers",
+   "slug": "leather-bracers-teal",
+   "description": "A teal cylindrical bracer with gold edging and a row of gold studs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01326",
+   "name": "11_Mail_Boots",
+   "slug": "mail-boots-steel",
+   "description": "A pair of grey steel-plated boots with gold accents and lacing.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01329",
+   "name": "11_Mail_belt",
+   "slug": "mail-belt-steel",
+   "description": "A dark metal ring-shaped belt with gold edge trim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01330",
+   "name": "11_Mail_bracers",
+   "slug": "mail-bracers-steel",
+   "description": "A grey steel vambrace with gold rivets and a dark flared cuff.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01331",
+   "name": "11_Mail_gloves",
+   "slug": "mail-gloves-steel",
+   "description": "A pair of steel gauntlets with silver and gold plating.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01334",
+   "name": "11_mail_Pants",
+   "slug": "mail-pants-steel",
+   "description": "A pair of grey steel leg guards with gold knee and ankle trim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01335",
+   "name": "12_Cloth_Boots",
+   "slug": "cloth-boots-teal-crimson",
+   "description": "A pair of curled-toe boots in teal and crimson with gold trim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01337",
+   "name": "12_Cloth_Pants",
+   "slug": "cloth-pants-patchwork",
+   "description": "Trousers with each leg in different colours: purple, crimson, teal and green.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01338",
+   "name": "12_Cloth_belt",
+   "slug": "cloth-belt-ornate",
+   "description": "A dark belt with scrolling gold ornament and blue inlay panels.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01340",
+   "name": "12_Cloth_gloves",
+   "slug": "cloth-gloves-green-teal",
+   "description": "A pair of black gloves with green jeweled backs and teal armoured cuffs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01341",
+   "name": "12_Cloth_sloulder",
+   "slug": "cloth-shoulder-ornate-teal",
+   "description": "An ornate teal and crimson shoulder guard with gold filigree and a pale gem.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00003",
+   "name": "12_Leather_Pants",
+   "slug": "leather-pants-brown",
+   "description": "A pair of plain brown leather trousers with a small stitched detail on one side.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01343",
+   "name": "12_Leather_Shoulder",
+   "slug": "leather-shoulder-octopus",
+   "description": "A shoulder guard topped with a pink octopus with tentacles over dark round pauldron plates.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01344",
+   "name": "12_Leather_belt",
+   "slug": "leather-belt-dark-runed",
+   "description": "A dark belt with silver edging and engraved rune-like markings.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01345",
+   "name": "12_Leather_boots",
+   "slug": "leather-boots-dark-grey",
+   "description": "A pair of tall dark grey boots with steel toe caps and knee plates.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01346",
+   "name": "12_Leather_bracers",
+   "slug": "leather-bracers-black",
+   "description": "A pair of black bracer cuffs with small studs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01347",
+   "name": "12_Leather_gloves",
+   "slug": "leather-gloves-dark-grey",
+   "description": "A pair of dark grey gloves with silver emblem plates on the cuffs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

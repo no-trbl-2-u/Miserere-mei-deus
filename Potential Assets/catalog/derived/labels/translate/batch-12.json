@@ -1,0 +1,1746 @@
+{
+  "unit": "batch-12",
+  "records": [
+    {
+      "cluster_id": "c04814",
+      "name": "icon-JB34",
+      "slug": "dungeon-mission-marker-jb34",
+      "description": "Dungeon-mode mission icon for mission variant MS61, shared by the four mission rows DG0017-DG0020 (Otherworld Hole, Factory Ruins, Mansion, Sacred Mound).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04815",
+      "name": "icon-JB35",
+      "slug": "dungeon-mission-marker-jb35",
+      "description": "Dungeon-mode mission icon for mission variant MS62, shared by the four mission rows DG0017-DG0020 (Otherworld Hole, Factory Ruins, Mansion, Sacred Mound).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04816",
+      "name": "icon-JB36",
+      "slug": "dungeon-mission-marker-jb36",
+      "description": "Dungeon-mode mission icon for mission variant MS63, shared by the four mission rows DG0017-DG0020 (Otherworld Hole, Factory Ruins, Mansion, Sacred Mound).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04817",
+      "name": "icon-JB37",
+      "slug": "dungeon-mission-marker-jb37",
+      "description": "Dungeon-mode mission icon for mission variant MS211, shared by the four mission rows DG0017-DG0020 (Otherworld Hole, Factory Ruins, Mansion, Sacred Mound).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04818",
+      "name": "icon-JB38",
+      "slug": "dungeon-mission-marker-jb38",
+      "description": "Dungeon-mode mission icon for mission variant MS212, shared by the four mission rows DG0017-DG0020 (Otherworld Hole, Factory Ruins, Mansion, Sacred Mound).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04819",
+      "name": "icon-JB39",
+      "slug": "dungeon-mission-marker-jb39",
+      "description": "Dungeon-mode mission icon for mission variant MS213, shared by the four mission rows DG0017-DG0020 (Otherworld Hole, Factory Ruins, Mansion, Sacred Mound).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04820",
+      "name": "icon-JB40",
+      "slug": "dungeon-mission-marker-jb40",
+      "description": "Dungeon-mode mission icon for mission variant MS214, shared by the four mission rows DG0017-DG0020 (Otherworld Hole, Factory Ruins, Mansion, Sacred Mound).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04821",
+      "name": "icon-JB41",
+      "slug": "dungeon-mission-marker-jb41",
+      "description": "Dungeon-mode mission icon for mission variant MS219, shared by the four mission rows DG0017-DG0020 (Otherworld Hole, Factory Ruins, Mansion, Sacred Mound).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04822",
+      "name": "icon-JB42",
+      "slug": "dungeon-mission-marker-jb42",
+      "description": "Dungeon-mode mission icon for mission variant MS220, shared by the four mission rows DG0017-DG0020 (Otherworld Hole, Factory Ruins, Mansion, Sacred Mound).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04823",
+      "name": "icon-JB43",
+      "slug": "dungeon-mission-marker-jb43",
+      "description": "Dungeon-mode mission icon for mission variant MS221, shared by the four mission rows DG0017-DG0020 (Otherworld Hole, Factory Ruins, Mansion, Sacred Mound).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04824",
+      "name": "icon-JB44",
+      "slug": "dungeon-mission-marker-jb44",
+      "description": "Dungeon-mode mission icon for mission variant MS222, shared by the four mission rows DG0017-DG0020 (Otherworld Hole, Factory Ruins, Mansion, Sacred Mound).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04825",
+      "name": "icon-JB45",
+      "slug": "dungeon-mission-marker-jb45",
+      "description": "Dungeon-mode mission icon for mission variant MS223, shared by the four mission rows DG0017-DG0020 (Otherworld Hole, Factory Ruins, Mansion, Sacred Mound).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04826",
+      "name": "icon-JB46",
+      "slug": "dungeon-mission-marker-jb46",
+      "description": "Dungeon-mode mission icon for mission variant MS224, shared by the four mission rows DG0017-DG0020 (Otherworld Hole, Factory Ruins, Mansion, Sacred Mound).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04827",
+      "name": "icon-JB47",
+      "slug": "dungeon-mission-marker-jb47",
+      "description": "Dungeon-mode mission icon for mission variant MS225, shared by the four mission rows DG0017-DG0020 (Otherworld Hole, Factory Ruins, Mansion, Sacred Mound).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04828",
+      "name": "icon-JB48",
+      "slug": "dungeon-mission-marker-jb48",
+      "description": "Dungeon-mode mission icon for mission variant MS226, shared by the four mission rows DG0017-DG0020 (Otherworld Hole, Factory Ruins, Mansion, Sacred Mound).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04829",
+      "name": "icon-JB49",
+      "slug": "job-yakushi",
+      "description": "Class icon for the Yakushi (Apothecary) player class; its state row says each time HP is restored, every skill with no rune set is used automatically.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "player-class"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04830",
+      "name": "icon-JB50",
+      "slug": "job-sogiya",
+      "description": "Class icon for the Sogiya (Funeral Director) player class; its state row says each time a finishing blow (トドメ) triggers, one random skill is used automatically.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "player-class"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04831",
+      "name": "icon-JB51",
+      "slug": "job-hoshiyomi",
+      "description": "Class icon for the Hoshiyomi (Stargazer) player class; its state row says each time a delayed-damage effect is applied to an enemy, the matching vulnerability (physical, magic or void) is applied to that enemy too.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "player-class"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04832",
+      "name": "icon-JB52",
+      "slug": "job-kemonotsukai",
+      "description": "Class icon for the Kemonotsukai (Beast Tamer) player class; its state row says each time a minion is summoned, the player gains +1 max HP stack.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "player-class"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04833",
+      "name": "icon-RC02",
+      "slug": "highway-mission-marker-rc02",
+      "description": "Dungeon-mode mission icon for the Highway (街道) location, shared by four DG0001 mission rows (MS6, MS58, MS110, MS162).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04834",
+      "name": "icon-RC03",
+      "slug": "highway-mission-marker-rc03",
+      "description": "Dungeon-mode mission icon for the Highway (街道) location, shared by four DG0001 mission rows (MS7, MS59, MS111, MS163).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04835",
+      "name": "icon-RC04",
+      "slug": "highway-mission-marker-rc04",
+      "description": "Dungeon-mode mission icon for the Highway (街道) location, shared by four DG0001 mission rows (MS8, MS60, MS112, MS164).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04836",
+      "name": "icon-RC05",
+      "slug": "highway-mission-marker-rc05",
+      "description": "Dungeon-mode mission icon for the Highway (街道) location, shared by four DG0001 mission rows (MS9, MS61, MS113, MS165).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04837",
+      "name": "icon-RC06",
+      "slug": "highway-mission-marker-rc06",
+      "description": "Dungeon-mode mission icon for the Highway (街道) location, shared by four DG0001 mission rows (MS10, MS62, MS114, MS166).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04838",
+      "name": "icon-RC07",
+      "slug": "highway-mission-marker-rc07",
+      "description": "Dungeon-mode mission icon for the Highway (街道) location, shared by four DG0001 mission rows (MS11, MS63, MS115, MS167).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04839",
+      "name": "icon-RC08",
+      "slug": "highway-mission-marker-rc08",
+      "description": "Dungeon-mode mission icon for the Highway (街道) location, shared by four DG0001 mission rows (MS12, MS64, MS116, MS168).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04840",
+      "name": "icon-RC09",
+      "slug": "highway-mission-marker-rc09",
+      "description": "Dungeon-mode mission icon for the Highway (街道) location, shared by four DG0001 mission rows (MS13, MS65, MS117, MS169).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04841",
+      "name": "icon-RC10",
+      "slug": "highway-mission-marker-rc10",
+      "description": "Dungeon-mode mission icon for the Highway (街道) location, shared by four DG0001 mission rows (MS14, MS66, MS118, MS170).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04842",
+      "name": "icon-RC11",
+      "slug": "highway-mission-marker-rc11",
+      "description": "Dungeon-mode mission icon for the Highway (街道) location, shared by four DG0001 mission rows (MS15, MS67, MS119, MS171).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01100",
+      "name": "icon-RC12",
+      "slug": "highway-mission-marker-rc12",
+      "description": "Dungeon-mode mission icon for the Highway (街道) location, shared by four DG0001 mission rows (MS16, MS68, MS120, MS172); the catalog lists this cluster with two members.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04843",
+      "name": "icon-RC13",
+      "slug": "highway-mission-marker-rc13",
+      "description": "Dungeon-mode mission icon for the Highway (街道) location, shared by four DG0001 mission rows (MS17, MS69, MS121, MS173).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04844",
+      "name": "icon-RC14",
+      "slug": "highway-mission-marker-rc14",
+      "description": "Dungeon-mode mission icon for the Highway (街道) location, shared by four DG0001 mission rows (MS18, MS70, MS122, MS174).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04845",
+      "name": "icon-RC15",
+      "slug": "highway-mission-marker-rc15",
+      "description": "Dungeon-mode mission icon for the Highway (街道) location, shared by four DG0001 mission rows (MS19, MS71, MS123, MS175).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04846",
+      "name": "icon-RC16",
+      "slug": "highway-mission-marker-rc16",
+      "description": "Dungeon-mode mission icon for the Highway (街道) location, shared by four DG0001 mission rows (MS20, MS72, MS124, MS176).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04847",
+      "name": "icon-RC17",
+      "slug": "highway-mission-marker-rc17",
+      "description": "Dungeon-mode mission icon for the Highway (街道) location, shared by four DG0001 mission rows (MS21, MS73, MS125, MS177).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04848",
+      "name": "icon-RC18",
+      "slug": "highway-mission-marker-rc18",
+      "description": "Dungeon-mode mission icon for the Highway (街道) location, shared by four DG0001 mission rows (MS22, MS74, MS126, MS178).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04849",
+      "name": "icon-RC19",
+      "slug": "highway-mission-marker-rc19",
+      "description": "Dungeon-mode mission icon for the Highway (街道) location, shared by four DG0001 mission rows (MS23, MS75, MS127, MS179).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04850",
+      "name": "icon-RC20",
+      "slug": "highway-mission-marker-rc20",
+      "description": "Dungeon-mode mission icon for the Highway (街道) location, shared by four DG0001 mission rows (MS24, MS76, MS128, MS180).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04851",
+      "name": "icon-RC21",
+      "slug": "dungeon-mission-marker-rc21",
+      "description": "Dungeon-mode mission icon for mission variant MS25, shared by the four mission rows DG0017-DG0020 (Otherworld Hole, Factory Ruins, Mansion, Sacred Mound).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04852",
+      "name": "icon-RC22",
+      "slug": "dungeon-mission-marker-rc22",
+      "description": "Dungeon-mode mission icon for mission variant MS26, shared by the four mission rows DG0017-DG0020 (Otherworld Hole, Factory Ruins, Mansion, Sacred Mound).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04853",
+      "name": "icon-RC23",
+      "slug": "dungeon-mission-marker-rc23",
+      "description": "Dungeon-mode mission icon for mission variant MS27, shared by the four mission rows DG0017-DG0020 (Otherworld Hole, Factory Ruins, Mansion, Sacred Mound).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04854",
+      "name": "icon-RC24",
+      "slug": "dungeon-mission-marker-rc24",
+      "description": "Dungeon-mode mission icon for mission variant MS215, shared by the four mission rows DG0017-DG0020 (Otherworld Hole, Factory Ruins, Mansion, Sacred Mound).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04855",
+      "name": "icon-RC25",
+      "slug": "dungeon-mission-marker-rc25",
+      "description": "Dungeon-mode mission icon for mission variant MS216, shared by the four mission rows DG0017-DG0020 (Otherworld Hole, Factory Ruins, Mansion, Sacred Mound).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04856",
+      "name": "icon-RC26",
+      "slug": "dungeon-mission-marker-rc26",
+      "description": "Dungeon-mode mission icon for mission variant MS217, shared by the four mission rows DG0017-DG0020 (Otherworld Hole, Factory Ruins, Mansion, Sacred Mound).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04857",
+      "name": "icon-RC27",
+      "slug": "dungeon-mission-marker-rc27",
+      "description": "Dungeon-mode mission icon for mission variant MS218, shared by the four mission rows DG0017-DG0020 (Otherworld Hole, Factory Ruins, Mansion, Sacred Mound).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon-mode",
+          "map-point"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c04858",
+      "name": "icon-RC28",
+      "slug": "race-twilight-person",
+      "description": "Race icon for the Twilight Person (黄昏人); its state row says it takes no void damage and has permanent petrification +2.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "race"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04859",
+      "name": "icon-RC29",
+      "slug": "race-tengu",
+      "description": "Race icon for the Tengu (天狗); its state row says its attack-evasion and status-effect-evasion rates are always 50%.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "race"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04860",
+      "name": "icon-RC30",
+      "slug": "race-living-armour",
+      "description": "Race icon for the Living Armour (リビングアーマー); its state row says each HP stack reduces damage taken by 10%, up to 90%.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "race"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04861",
+      "name": "icon-RC31",
+      "slug": "race-mycelium-person",
+      "description": "Race icon for the Mycelium Person (菌糸人); its state row says each time a status effect is cured it gains one HP stack.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "race"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04862",
+      "name": "icon-SK01",
+      "slug": "skin-teresia",
+      "description": "Character skin icon for Teresia (テレジア), paired with shop item 'Skin 1' (SPISK001).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04863",
+      "name": "icon-SK02",
+      "slug": "skin-theodor",
+      "description": "Character skin icon for Theodor (テーオドル), paired with shop item 'Skin 2' (SPISK002).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04864",
+      "name": "icon-SK03",
+      "slug": "skin-mary",
+      "description": "Character skin icon for Mary (メアリー), paired with shop item 'Skin 3' (SPISK003).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04865",
+      "name": "icon-SK04",
+      "slug": "skin-paulo",
+      "description": "Character skin icon for Paulo (パウロ), paired with shop item 'Skin 4' (SPISK004).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04866",
+      "name": "icon-SK05",
+      "slug": "skin-ix",
+      "description": "Character skin icon for Ix (イクス), paired with shop item 'Skin 5' (SPISK005).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04867",
+      "name": "icon-SK06",
+      "slug": "skin-sakura",
+      "description": "Character skin icon for Sakura (サクラ), paired with shop item 'Skin 6' (SPISK006).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04868",
+      "name": "icon-SK07",
+      "slug": "skin-freesia",
+      "description": "Character skin icon for Freesia (フリージア), paired with shop item 'Skin 7' (SPISK007).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04869",
+      "name": "icon-SK08",
+      "slug": "skin-yerin",
+      "description": "Character skin icon for Yerin (イェリン), paired with shop item 'Skin 8' (SPISK008).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04870",
+      "name": "icon-SK09",
+      "slug": "skin-bianca",
+      "description": "Character skin icon for Bianca (ビアンカ), paired with shop item 'Skin 9' (SPISK009).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04871",
+      "name": "icon-SK10",
+      "slug": "skin-kaoru",
+      "description": "Character skin icon for Kaoru (カヲル), paired with shop item 'Skin 10' (SPISK010).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04872",
+      "name": "icon-SK11",
+      "slug": "skin-john",
+      "description": "Character skin icon for John (ジョン / John), paired with shop item 'Skin 11' (SPISK011).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04873",
+      "name": "icon-SK12",
+      "slug": "skin-maria",
+      "description": "Character skin icon for Maria (マリア), paired with shop item 'Skin 12' (SPISK012).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04874",
+      "name": "icon-SK13",
+      "slug": "skin-dobairon",
+      "description": "Character skin icon for Dobairon (ドバイロン), paired with shop item 'Skin 13' (SPISK013).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04875",
+      "name": "icon-SK14",
+      "slug": "skin-sebastian",
+      "description": "Character skin icon for Sebastian (セバスチャン), paired with shop item 'Skin 14' (SPISK014).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04876",
+      "name": "icon-SK15",
+      "slug": "skin-ougai",
+      "description": "Character skin icon for Ougai (オウガイ), paired with shop item 'Skin 15' (SPISK015).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04877",
+      "name": "icon-SK16",
+      "slug": "skin-shade",
+      "description": "Character skin icon for Shade (シェード), paired with shop item 'Skin 16' (SPISK016).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04878",
+      "name": "icon-SK17",
+      "slug": "skin-armion",
+      "description": "Character skin icon for Armion (アーミオン), paired with shop item 'Skin 17' (SPISK017).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04879",
+      "name": "icon-SK18",
+      "slug": "skin-maiolet",
+      "description": "Character skin icon for Maiolet (マイオレット), paired with shop item 'Skin 18' (SPISK018).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04880",
+      "name": "icon-SK19",
+      "slug": "skin-sk-19",
+      "description": "Character skin icon for SK-19, paired with shop item 'Skin 19' (SPISK019).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04881",
+      "name": "icon-SK20",
+      "slug": "skin-charlie",
+      "description": "Character skin icon for Charlie (チャーリー), paired with shop item 'Skin 20' (SPISK020).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04882",
+      "name": "icon-SK21",
+      "slug": "skin-tom",
+      "description": "Character skin icon for Tom (トム), paired with shop item 'Skin 21' (SPISK021).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04883",
+      "name": "icon-SK22",
+      "slug": "skin-azura",
+      "description": "Character skin icon for Azura (アズーラ), paired with shop item 'Skin 22' (SPISK022).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04884",
+      "name": "icon-SK23",
+      "slug": "skin-wilio",
+      "description": "Character skin icon for Wilio (ウィリオ), paired with shop item 'Skin 23' (SPISK023).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04885",
+      "name": "icon-SK24",
+      "slug": "skin-nonna",
+      "description": "Character skin icon for Nonna (ノンナ), paired with shop item 'Skin 24' (SPISK024).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04886",
+      "name": "icon-SK25",
+      "slug": "skin-ccs-25",
+      "description": "Character skin icon for CCS-25, paired with shop item 'Skin 25' (SPISK025).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04887",
+      "name": "icon-SK26",
+      "slug": "skin-gastony",
+      "description": "Character skin icon for Gastony (ガストニー), paired with shop item 'Skin 26' (SPISK026).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04888",
+      "name": "icon-SK27",
+      "slug": "skin-erika",
+      "description": "Character skin icon for Erika (エリカ), paired with shop item 'Skin 27' (SPISK027).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04889",
+      "name": "icon-SK28",
+      "slug": "skin-ugetsu",
+      "description": "Character skin icon for Ugetsu (ウゲツ), paired with shop item 'Skin 28' (SPISK028).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04890",
+      "name": "icon-SK29",
+      "slug": "skin-reisecil",
+      "description": "Character skin icon for Reisecil (レイセシル), paired with shop item 'Skin 29' (SPISK029).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04891",
+      "name": "icon-SK30",
+      "slug": "skin-steria",
+      "description": "Character skin icon for Steria (ステリア), paired with shop item 'Skin 30' (SPISK030).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04892",
+      "name": "icon-SK31",
+      "slug": "skin-shiru-erurin",
+      "description": "Character skin icon for Shiru Erurin (シル・エルリン), paired with shop item 'Skin 31' (SPISK031).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04893",
+      "name": "icon-SK32",
+      "slug": "skin-philip",
+      "description": "Character skin icon for Philip (フィリップ), paired with shop item 'Skin 32' (SPISK032).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04894",
+      "name": "icon-SK33",
+      "slug": "skin-fatima",
+      "description": "Character skin icon for Fatima (ファティマ), paired with shop item 'Skin 33' (SPISK033).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04895",
+      "name": "icon-SK34",
+      "slug": "skin-drafushe",
+      "description": "Character skin icon for Drafushe (ドラフシェ), paired with shop item 'Skin 34' (SPISK034).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04896",
+      "name": "icon-SK35",
+      "slug": "skin-myurin",
+      "description": "Character skin icon for Myurin (ミュリーン), paired with shop item 'Skin 35' (SPISK035).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04897",
+      "name": "icon-SK36",
+      "slug": "skin-aksana",
+      "description": "Character skin icon for Aksana (アクサナ), paired with shop item 'Skin 36' (SPISK036).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04898",
+      "name": "icon-SK37",
+      "slug": "skin-baxus",
+      "description": "Character skin icon for Baxus (バクス), paired with shop item 'Skin 37' (SPISK037).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04899",
+      "name": "icon-SK38",
+      "slug": "skin-jakuta",
+      "description": "Character skin icon for Jakuta (ジャクター), paired with shop item 'Skin 38' (SPISK038).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04900",
+      "name": "icon-SK39",
+      "slug": "skin-nicola",
+      "description": "Character skin icon for Nicola (ニコラ), paired with shop item 'Skin 39' (SPISK039).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04901",
+      "name": "icon-SK40",
+      "slug": "skin-asara",
+      "description": "Character skin icon for Asara (アーサラ), paired with shop item 'Skin 40' (SPISK040).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04902",
+      "name": "icon-SK41",
+      "slug": "skin-godrick",
+      "description": "Character skin icon for Godrick (ゴードリック), paired with shop item 'Skin 41' (SPISK041).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04903",
+      "name": "icon-SK42",
+      "slug": "skin-keith",
+      "description": "Character skin icon for Keith (キース), paired with shop item 'Skin 42' (SPISK042).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04904",
+      "name": "icon-SK43",
+      "slug": "skin-ireidi",
+      "description": "Character skin icon for Ireidi (イレイディ), paired with shop item 'Skin 43' (SPISK043).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04905",
+      "name": "icon-SK44",
+      "slug": "skin-asadora",
+      "description": "Character skin icon for Asadora (アーサドラ), paired with shop item 'Skin 44' (SPISK044).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04906",
+      "name": "icon-SK45",
+      "slug": "skin-riona",
+      "description": "Character skin icon for Riona (リオナ), paired with shop item 'Skin 45' (SPISK045).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04907",
+      "name": "icon-SK46",
+      "slug": "skin-matorona",
+      "description": "Character skin icon for Matorona (マトローナ), paired with shop item 'Skin 46' (SPISK046).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04908",
+      "name": "icon-SK47",
+      "slug": "skin-mauriaru",
+      "description": "Character skin icon for Mauriaru (モーリアル), paired with shop item 'Skin 47' (SPISK047).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04909",
+      "name": "icon-SK48",
+      "slug": "skin-gina",
+      "description": "Character skin icon for Gina (ジーナ), paired with shop item 'Skin 48' (SPISK048).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04910",
+      "name": "icon-SK49",
+      "slug": "skin-giana",
+      "description": "Character skin icon for Giana (ジアーナ), paired with shop item 'Skin 49' (SPISK049).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04911",
+      "name": "icon-SK50",
+      "slug": "skin-maririnoa",
+      "description": "Character skin icon for Maririnoa (マリリノア), paired with shop item 'Skin 50' (SPISK050).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c04912",
+      "name": "icon-SK51",
+      "slug": "skin-kladd",
+      "description": "Character skin icon for Kladd (クラッド), paired with shop item 'Skin 51' (SPISK051).",
+      "tags": {
+        "kind": "portrait",
+        "use": [
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    }
+  ]
+}

@@ -1,0 +1,480 @@
+{
+ "unit": "sheet-046",
+ "records": [
+  {
+   "cluster_id": "c02445",
+   "name": "Dagger_v2_16",
+   "slug": "twin-prong-spiked-dagger",
+   "description": "A grey-brown dagger with a forked, double-pronged blade and a long dark handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02446",
+   "name": "Dagger_v2_17",
+   "slug": "curved-pale-scimitar-dagger",
+   "description": "A slim pale curved blade with a sweeping crescent edge and a dark wrapped grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02447",
+   "name": "Dagger_v2_18",
+   "slug": "icy-blue-curved-dagger",
+   "description": "A translucent blue-grey curved blade with ragged edges and a blue gem at the pommel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02448",
+   "name": "Dagger_v2_19",
+   "slug": "leaf-blade-bone-dagger",
+   "description": "A pale leaf-shaped dagger with a jagged edge and a green-banded hilt with a round pommel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02449",
+   "name": "Dagger_v2_20",
+   "slug": "spiked-edge-bone-dagger",
+   "description": "A pale dagger whose blade is lined with small outward spikes, with a green-banded hilt.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02450",
+   "name": "Dagger_v2_21",
+   "slug": "crimson-trident-dagger",
+   "description": "A dagger with a red-and-silver three-pronged jagged blade and a dark handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02451",
+   "name": "Dagger_v2_22",
+   "slug": "toxic-green-glowing-trident-dagger",
+   "description": "A three-pronged dark dagger wrapped in a bright acid-green glow.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02452",
+   "name": "Dagger_v2_23",
+   "slug": "red-gem-spiked-dagger",
+   "description": "A dark dagger with a spiked guard set with a red jewel and a red handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02453",
+   "name": "Dagger_v2_24",
+   "slug": "purple-eye-dagger",
+   "description": "A dark dagger with a purple eye-like gem at the guard and a brown handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02454",
+   "name": "Dagger_v2_25",
+   "slug": "pink-sigil-dagger",
+   "description": "A pink-red dagger with a circular rune sigil on the guard and a narrow tapering blade.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02455",
+   "name": "Dagger_v2_26",
+   "slug": "teal-ornate-dagger",
+   "description": "A dark teal dagger with a curved ornate guard and a ribbed, tapering blade.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02456",
+   "name": "Dagger_v2_27",
+   "slug": "teal-engraved-dagger",
+   "description": "A dark teal-grey dagger with an engraved blade and a spiked guard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02457",
+   "name": "Dagger_v2_28",
+   "slug": "crimson-cleaver-dagger",
+   "description": "A broad grey blade with a deep red inlay and a red cloth tied at the hilt.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02458",
+   "name": "Dagger_v2_29",
+   "slug": "grey-ridged-short-sword",
+   "description": "A grey ridged broad dagger with an angular guard and a brown handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02459",
+   "name": "Dagger_v2_30",
+   "slug": "golden-inlay-curved-sword",
+   "description": "A curved grey blade with a golden inlay running along it and a gold crossguard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02460",
+   "name": "Dagger_v2_31",
+   "slug": "orange-leaf-dagger",
+   "description": "A grey blade with an orange stripe and green leaf-like foliage at the guard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02461",
+   "name": "Dagger_v2_32",
+   "slug": "autumn-leaf-ornate-dagger",
+   "description": "A serrated grey-orange blade with orange maple-leaf shapes around a gold-gemmed guard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02462",
+   "name": "Dagger_v2_33",
+   "slug": "hooked-sickle-dagger",
+   "description": "A grey hooked sickle-like blade with a brown looped handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02464",
+   "name": "Dagger_v2_35",
+   "slug": "purple-wrapped-scimitar",
+   "description": "A pale curved scimitar with a notched edge, gold guard and purple-wrapped grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02465",
+   "name": "Dagger_v2_36",
+   "slug": "ice-crystal-short-sword",
+   "description": "A short sword with a blade made of jagged cyan ice crystals and a dark blue hilt.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02466",
+   "name": "Dagger_v2_37",
+   "slug": "slime-green-short-sword",
+   "description": "A short sword whose blade is coated in bubbly bright green slime, with a green-wrapped hilt.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02467",
+   "name": "Dagger_v2_38",
+   "slug": "round-crescent-axe-blade",
+   "description": "A rounded crescent-shaped grey blade with etched engraving on a red-wrapped handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02468",
+   "name": "Dagger_v2_39",
+   "slug": "double-crescent-axe-blade",
+   "description": "A wide double-lobed purple-grey crescent blade with a magenta-banded handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02470",
+   "name": "Dagger_v2_41",
+   "slug": "green-gem-spiked-dagger",
+   "description": "A dark spiked dagger with a glowing green gem at the guard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02471",
+   "name": "Dagger_v2_42",
+   "slug": "orange-swirl-curved-blade",
+   "description": "A curved grey blade with an orange swirl pattern near the hilt and a copper pommel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

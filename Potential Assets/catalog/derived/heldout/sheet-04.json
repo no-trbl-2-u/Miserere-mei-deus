@@ -1,0 +1,230 @@
+{
+ "sheet": "sheet-04",
+ "cells": [
+  {
+   "i": 0,
+   "cluster_id": "c04971",
+   "name": "icon_44921315_p0_master1200",
+   "file": "sprites/icon_44921315_p0_master1200.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 1,
+   "cluster_id": "c04984",
+   "name": "icon_66005943_p7_master1200",
+   "file": "sprites/icon_66005943_p7_master1200.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 2,
+   "cluster_id": "c04991",
+   "name": "icon_76111972_p3",
+   "file": "sprites/icon_76111972_p3.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 3,
+   "cluster_id": "c05015",
+   "name": "icon_80860504_p0_master1200",
+   "file": "sprites/icon_80860504_p0_master1200.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 4,
+   "cluster_id": "c05019",
+   "name": "icon_82371147_p0_master1200",
+   "file": "sprites/icon_82371147_p0_master1200.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 5,
+   "cluster_id": "c05020",
+   "name": "icon_82453820_p1_master1200",
+   "file": "sprites/icon_82453820_p1_master1200.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 6,
+   "cluster_id": "c05027",
+   "name": "icon_83863945_p4_master1200",
+   "file": "sprites/icon_83863945_p4_master1200.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 7,
+   "cluster_id": "c05037",
+   "name": "icon_86013300_p2",
+   "file": "sprites/icon_86013300_p2.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 8,
+   "cluster_id": "c05038",
+   "name": "icon_86376219_p1",
+   "file": "sprites/icon_86376219_p1.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 9,
+   "cluster_id": "c05049",
+   "name": "icon_Annihilator C",
+   "file": "sprites/icon_Annihilator_C.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 10,
+   "cluster_id": "c05074",
+   "name": "icon_Bone Golem B",
+   "file": "sprites/icon_Bone_Golem_B.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 11,
+   "cluster_id": "c01103",
+   "name": "icon_Chernovog A",
+   "file": "sprites/icon_Chernovog_A.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 12,
+   "cluster_id": "c05086",
+   "name": "icon_Creeping Coin A",
+   "file": "sprites/icon_Creeping_Coin_A.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 13,
+   "cluster_id": "c05101",
+   "name": "icon_Doom Toad",
+   "file": "sprites/icon_Doom_Toad.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 14,
+   "cluster_id": "c05102",
+   "name": "icon_Doom Toad C",
+   "file": "sprites/icon_Doom_Toad_C.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 15,
+   "cluster_id": "c05103",
+   "name": "icon_Dragon B",
+   "file": "sprites/icon_Dragon_B.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 16,
+   "cluster_id": "c05112",
+   "name": "icon_Fate Spinner A",
+   "file": "sprites/icon_Fate_Spinner_A.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 17,
+   "cluster_id": "c05120",
+   "name": "icon_Float Eye F",
+   "file": "sprites/icon_Float_Eye_F.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 18,
+   "cluster_id": "c05164",
+   "name": "icon_Lesser Demon Winged A",
+   "file": "sprites/icon_Lesser_Demon_Winged_A.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 19,
+   "cluster_id": "c05186",
+   "name": "icon_Orcus D",
+   "file": "sprites/icon_Orcus_D.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 20,
+   "cluster_id": "c05193",
+   "name": "icon_Rogue",
+   "file": "sprites/icon_Rogue.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 21,
+   "cluster_id": "c05200",
+   "name": "icon_Sidelle2",
+   "file": "sprites/icon_Sidelle2.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 22,
+   "cluster_id": "c05212",
+   "name": "icon_Storm Seeker",
+   "file": "sprites/icon_Storm_Seeker.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 23,
+   "cluster_id": "c05221",
+   "name": "icon_Two Head Dragon",
+   "file": "sprites/icon_Two_Head_Dragon.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 24,
+   "cluster_id": "c05229",
+   "name": "icon_Vampire Lord",
+   "file": "sprites/icon_Vampire_Lord.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  }
+ ]
+}

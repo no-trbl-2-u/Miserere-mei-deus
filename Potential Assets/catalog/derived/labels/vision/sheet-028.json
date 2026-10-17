@@ -1,0 +1,482 @@
+{
+ "unit": "sheet-028",
+ "records": [
+  {
+   "cluster_id": "c01936",
+   "name": "Berry",
+   "slug": "red-berries",
+   "description": "A scatter of ten round red berries.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01937",
+   "name": "Berry2",
+   "slug": "blue-berries",
+   "description": "A scatter of about ten round blue berries.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01939",
+   "name": "BlackBag",
+   "slug": "black-bag",
+   "description": "A dark brown cloth pouch tied at the neck with a round emblem on its front.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01940",
+   "name": "BlackBerberShield",
+   "slug": "black-berber-shield",
+   "description": "A dark rounded shield with thin red-orange crossing lines on its face.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01941",
+   "name": "BlackInk",
+   "slug": "black-ink",
+   "description": "A glass inkwell of black ink with a white feather quill and a small red wax seal beside it.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01943",
+   "name": "BlackPants2",
+   "slug": "black-pants",
+   "description": "A pair of black trousers with metal-plated knee guards.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01944",
+   "name": "BlackPepper",
+   "slug": "black-pepper",
+   "description": "A wooden bowl heaped with ground black pepper, with spilled grains on the ground.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01945",
+   "name": "BlackShield",
+   "slug": "black-shield",
+   "description": "A dark kite-shaped shield with a diagonal tan band across its face.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01946",
+   "name": "Blacksmith_02_stick",
+   "slug": "blacksmith-stick-copper",
+   "description": "A bar of metal with a copper-orange glowing end fading to dark brown.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00511",
+   "name": "Blacksmith_04_stick",
+   "slug": "blacksmith-stick-cyan",
+   "description": "A glowing cyan crystalline bar with a soft blue aura.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01947",
+   "name": "Blacksmith_05_stick",
+   "slug": "blacksmith-stick-green",
+   "description": "A glowing green bar with sparks of light around it.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00512",
+   "name": "Blacksmith_06_stick",
+   "slug": "blacksmith-stick-bronze",
+   "description": "A plain brownish bar of metal with a lighter tip.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01948",
+   "name": "Blacksmith_07_stick",
+   "slug": "blacksmith-stick-wood-grain",
+   "description": "A dark bar with a wood-like grain texture and a lighter end.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01949",
+   "name": "Blacksmith_08_stick",
+   "slug": "blacksmith-stick-black",
+   "description": "A dark black-purple metal bar with a faint sheen.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01950",
+   "name": "Blacksmith_09_demonic_stick",
+   "slug": "blacksmith-demonic-stick",
+   "description": "A black bar etched with glowing red swirling patterns and a red outline.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01951",
+   "name": "Blacksmith_10_gold_stick",
+   "slug": "blacksmith-gold-stick",
+   "description": "A bright golden-orange bar of metal with a glossy shine.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01952",
+   "name": "Blacksmith_11_leather_patch",
+   "slug": "leather-patch-stitched",
+   "description": "A tan leather patch with visible stitching across its middle.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01953",
+   "name": "Blacksmith_12_leather_patch",
+   "slug": "leather-patch-studded",
+   "description": "A pale leather square patch with a small pyramid stud set in its centre.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00513",
+   "name": "Blacksmith_14_iron_patch",
+   "slug": "iron-patch-quilted",
+   "description": "A dark quilted metal plate with diamond pattern and a pale iron rim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01954",
+   "name": "Blacksmith_16_iron_patch",
+   "slug": "iron-patch-riveted",
+   "description": "A dark riveted iron plate with side tabs and a pale rim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01955",
+   "name": "Blacksmith_17_iron_patch",
+   "slug": "iron-patch-spiked",
+   "description": "A dark iron plate with a single central spike and corner rivets.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01956",
+   "name": "Blacksmith_18_iron_patch",
+   "slug": "iron-patch-domed",
+   "description": "A domed grey iron plate with metal rings at its sides.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01957",
+   "name": "Blacksmith_19_flake_patch",
+   "slug": "flake-patch-blue",
+   "description": "A blue scale-patterned plate with a glowing cyan edge.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01958",
+   "name": "Blacksmith_20_rune_patch",
+   "slug": "rune-patch",
+   "description": "A dark plate carved with glowing orange runes and an orange glow around it.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01961",
+   "name": "Blacksmith_25_cannonball",
+   "slug": "cannonballs",
+   "description": "A stack of three dark grey iron cannonballs.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

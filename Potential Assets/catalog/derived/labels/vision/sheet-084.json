@@ -1,0 +1,530 @@
+{
+ "unit": "sheet-084",
+ "records": [
+  {
+   "cluster_id": "c03798",
+   "name": "Shield_v2_29",
+   "slug": "round-shield-red-black",
+   "description": "Round wooden shield split down the middle into dark brown and red halves, with a steel rim and a central boss.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03799",
+   "name": "Shield_v2_30",
+   "slug": "round-shield-black-gold-sun",
+   "description": "Round black shield with a gold sunburst engraving, steel rim and central boss.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00900",
+   "name": "Shield_v2_31",
+   "slug": "round-shield-green-knotwork",
+   "description": "Round olive-green shield with gold Celtic knotwork, a steel rim and a diamond-shaped central boss.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03803",
+   "name": "Shield_v2_36",
+   "slug": "shield-gold-glow-black",
+   "description": "Angular black and gold shield with a curved crescent plate and studded panel, surrounded by an orange glow.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03804",
+   "name": "Shield_v2_37",
+   "slug": "shield-purple-skull",
+   "description": "Dark purple banner-shaped shield bearing a skull emblem, wrapped in a magenta glow.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03805",
+   "name": "Shield_v2_38",
+   "slug": "shield-steel-wood-kite",
+   "description": "Small angular shield of brown wood plates in a steel frame with an engraved diamond center.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03806",
+   "name": "Shield_v2_39",
+   "slug": "shield-red-spiked-glow",
+   "description": "Jagged red shield with spiked edges and a web-like crack pattern, surrounded by a red glow.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03810",
+   "name": "Shoulder_02",
+   "slug": "pauldron-green-yellow",
+   "description": "Rounded pauldron with green and yellow banded plates held by steel straps.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03811",
+   "name": "Shoulder_03",
+   "slug": "pauldron-red-black",
+   "description": "Rounded pauldron with glossy red plates over dark segments, held by steel straps.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03812",
+   "name": "Shoulder_04",
+   "slug": "pauldron-purple-black",
+   "description": "Rounded pauldron with glossy purple plates over dark segments, held by steel straps.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03813",
+   "name": "Shoulder_05",
+   "slug": "pauldron-black-spiked",
+   "description": "Black steel pauldron with a spike on top and layered plates.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00902",
+   "name": "Shoulder_09",
+   "slug": "pauldron-gold-lamellar",
+   "description": "Gold lamellar pauldron of overlapping curved plates.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03814",
+   "name": "Shoulder_10",
+   "slug": "pauldron-dark-steel-lamellar",
+   "description": "Dark gunmetal lamellar pauldron of overlapping curved plates.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00203",
+   "name": "Shoulder_13",
+   "slug": "pauldron-blue-lamellar",
+   "description": "Blue lamellar pauldron of overlapping curved plates with a steel edge.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03815",
+   "name": "Shoulder_14",
+   "slug": "pauldron-purple-lamellar",
+   "description": "Purple lamellar pauldron of overlapping curved plates.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03816",
+   "name": "Shoulder_15",
+   "slug": "pauldron-brown-leather",
+   "description": "Smooth brown leather shoulder guard with a broad curved dome.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03817",
+   "name": "Shoulder_16",
+   "slug": "pauldron-olive-leather",
+   "description": "Olive-green leather shoulder guard with a rivet near the edge.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00903",
+   "name": "Shoulder_18",
+   "slug": "pauldron-crimson-leather",
+   "description": "Dark red leather shoulder guard with a rivet near the edge.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03818",
+   "name": "Shoulder_20",
+   "slug": "pauldron-olive-gold-crest",
+   "description": "Olive-green shoulder guard with a gold crest engraving and gold trim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00904",
+   "name": "Shoulder_21",
+   "slug": "pauldron-navy-gold-crest",
+   "description": "Dark navy shoulder guard with a gold crown-like crest and gold trim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03819",
+   "name": "Shoulder_22",
+   "slug": "pauldron-steel-plate",
+   "description": "Grey steel plate pauldron with a curled upper edge and rivets.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03820",
+   "name": "Shoulder_23",
+   "slug": "pauldron-steel-blue-gem",
+   "description": "Dark steel plate pauldron with a small blue gem inlay on the front.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03821",
+   "name": "Shoulder_24",
+   "slug": "pauldron-steel-red-gem",
+   "description": "Dark green-grey steel pauldron with stacked plates and a small red gem inlay.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03822",
+   "name": "Shoulder_26",
+   "slug": "pauldron-silver-bracer",
+   "description": "Silver steel shoulder guard with ridged plates and a single rivet.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00905",
+   "name": "Shoulder_27",
+   "slug": "pauldron-copper-bracer",
+   "description": "Copper-coloured shoulder guard with ridged plates and a single rivet.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

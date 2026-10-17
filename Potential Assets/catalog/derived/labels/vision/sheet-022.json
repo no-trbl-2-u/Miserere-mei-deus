@@ -1,0 +1,528 @@
+{
+ "unit": "sheet-022",
+ "records": [
+  {
+   "cluster_id": "c01774",
+   "name": "Arrow_v2_01",
+   "slug": "arrow-red-fletched",
+   "description": "A single arrow with a steel head and red-brown fletching, pointing up and to the right.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01775",
+   "name": "Arrow_v2_02",
+   "slug": "arrow-orange-glow",
+   "description": "An arrow with an orange glowing outline and dark fletching, pointing up and to the right.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01776",
+   "name": "Arrow_v2_03",
+   "slug": "arrow-magenta-glow",
+   "description": "An arrow with a bright magenta glowing outline and dark fletching, pointing up and to the right.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01777",
+   "name": "Arrows",
+   "slug": "arrow-bundle",
+   "description": "A small bundle of three wooden arrows with steel heads crossed together.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01778",
+   "name": "Ash",
+   "slug": "ash-pile",
+   "description": "A mound of grey ash with a few scattered flecks at its base.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01779",
+   "name": "AssassinsDagger",
+   "slug": "assassins-dagger",
+   "description": "A dagger with a black hilt, dark crossguard and a grey blade pointing down-right.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01781",
+   "name": "AxeHard",
+   "slug": "hard-axe",
+   "description": "A dark-headed halberd-style axe with a long black shaft and a spiked back.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01782",
+   "name": "AxeHard2",
+   "slug": "hard-axe-2",
+   "description": "A war hammer-axe with a grey spiked head and a long brown wooden handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01783",
+   "name": "AxeOld",
+   "slug": "old-axe",
+   "description": "A single-bladed axe with a worn grey head and a curved brown wooden handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01784",
+   "name": "AxePick",
+   "slug": "pickaxe",
+   "description": "A pickaxe with a pointed grey iron head and a long wooden handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01785",
+   "name": "AxeViking",
+   "slug": "viking-axe",
+   "description": "A dark bearded axe head on a reddish-brown wooden shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01786",
+   "name": "Axe_01",
+   "slug": "axe-01-leather-wrapped",
+   "description": "A double-bladed steel axe with a leather-wrapped wooden handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01787",
+   "name": "Axe_02",
+   "slug": "axe-02-leather-wrapped-wide",
+   "description": "A wide double-bladed steel axe with a leather-wrapped wooden handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01788",
+   "name": "Axe_03",
+   "slug": "axe-03-broad-steel",
+   "description": "A broad steel axe head with a notched edge on a thin dark shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01789",
+   "name": "Axe_04",
+   "slug": "axe-04-slim-steel",
+   "description": "A small steel axe head on a long slim dark shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01790",
+   "name": "Axe_05",
+   "slug": "axe-05-double-steel",
+   "description": "A double-bladed pale steel axe on a curved dark handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01791",
+   "name": "Axe_06",
+   "slug": "axe-06-double-steel-wide",
+   "description": "A wide double-bladed pale steel axe on a curved dark handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01793",
+   "name": "Axe_08",
+   "slug": "axe-08-green-crescent",
+   "description": "A green-tinted axe with a crescent blade and spiked back on a red-brown shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01794",
+   "name": "Axe_09",
+   "slug": "axe-09-green-crescent-slim",
+   "description": "A slim green-tinted crescent-bladed axe on a red-brown shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01795",
+   "name": "Axe_10",
+   "slug": "axe-10-green-double",
+   "description": "A green-steel double-bladed axe with a crescent top on a wrapped handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01796",
+   "name": "Axe_11",
+   "slug": "axe-11-ornate-double",
+   "description": "An ornate double-bladed grey-green axe with a pointed top on a long wooden handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01797",
+   "name": "Axe_12",
+   "slug": "axe-12-bronze-double",
+   "description": "An ornate double-bladed axe with bronze-orange blades on a long wooden handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01798",
+   "name": "Axe_13",
+   "slug": "axe-13-teal-double",
+   "description": "A double-bladed axe with teal-green steel blades on a curved dark handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01799",
+   "name": "Axe_14",
+   "slug": "axe-14-teal-broad",
+   "description": "A broad teal-green bladed axe with a spike on a curved dark handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01800",
+   "name": "Axe_15",
+   "slug": "axe-15-pale-hatchet",
+   "description": "A pale steel hatchet with a leather-wrapped grip on a short handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

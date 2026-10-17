@@ -1,0 +1,535 @@
+{
+ "unit": "sheet-116",
+ "records": [
+  {
+   "cluster_id": "c00595",
+   "name": "Druideskill_46_nobg",
+   "slug": "fang-claw-necklace",
+   "description": "A necklace of curved claws and fangs hanging from a cord against a pink-red background.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "buff"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00596",
+   "name": "Druideskill_47_nobg",
+   "slug": "skull-faced-root-wraith",
+   "description": "A grey skull with glowing red eyes wrapped in brown roots against an orange-brown background.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy",
+     "player-class"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02488",
+   "name": "Earth_01_telepathy",
+   "slug": "earth-telepathy-stones",
+   "description": "Grey boulders floating in a swirling green glow on a dark background.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02489",
+   "name": "Earth_02",
+   "slug": "green-leaf-vines",
+   "description": "A single green leaf framed by curling vines and sparkles on a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "heal"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02490",
+   "name": "Earth_03_throw",
+   "slug": "thrown-stone-shards",
+   "description": "A stone shard flung with green streaking motion trails across a dark background.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02491",
+   "name": "Earth_04_spirit",
+   "slug": "green-spirit-skull",
+   "description": "A mossy green skull inside a glowing green aura on a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "summon"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02492",
+   "name": "Earth_05",
+   "slug": "cracked-rock-green-energy",
+   "description": "A rock mass split by a glowing green-yellow crack with energy bursting out.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02493",
+   "name": "Earth_06",
+   "slug": "stone-fist-green-glow",
+   "description": "A rocky fist striking with a bright green-yellow glow at the point of impact.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02494",
+   "name": "Earth_07_movestones",
+   "slug": "moving-stones-cluster",
+   "description": "A cluster of grey stones scattered over a green mossy surface.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02496",
+   "name": "Earth_09_form",
+   "slug": "earth-form-man-vines",
+   "description": "A bald man with a scarred face standing before green vines and foliage.",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "combat-action",
+     "buff",
+     "player-class"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02497",
+   "name": "Earth_10_nb",
+   "slug": "vine-bound-boot",
+   "description": "A brown boot entwined by green vines and leaves, on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02498",
+   "name": "Earth_10_root",
+   "slug": "vine-bound-boot-bg",
+   "description": "A brown boot entwined by green vines and leaves on a dark earthy background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02499",
+   "name": "Earth_11_nb",
+   "slug": "hand-in-sand-swirl",
+   "description": "A hand reaching up from a swirl of sand, on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02500",
+   "name": "Earth_11_sandstorm",
+   "slug": "hand-in-sand-swirl-bg",
+   "description": "A hand reaching up from a swirl of sand on a brown background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02501",
+   "name": "Earth_12_nb",
+   "slug": "stone-armour-arm",
+   "description": "A grey stone-plated shoulder and arm with an orange glow behind it, on a transparent-edged background.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "combat-action",
+     "defend",
+     "buff"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02502",
+   "name": "Earth_12_stonearmor",
+   "slug": "stone-armour-arm-bg",
+   "description": "A grey stone-plated shoulder and arm against an orange and brown background.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "combat-action",
+     "defend",
+     "buff"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02503",
+   "name": "Earth_13",
+   "slug": "mossy-stone-pillars",
+   "description": "A cluster of dark stone pillars edged in glowing green, on a transparent background.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02504",
+   "name": "Earth_13_nb",
+   "slug": "mossy-stone-pillars-bg",
+   "description": "A cluster of dark stone pillars edged in glowing green against a dark background.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02505",
+   "name": "Earth_14_hide",
+   "slug": "hidden-leaf-shadow-face",
+   "description": "A dark shadowy face with glowing yellow eyes hidden among green leaves.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02506",
+   "name": "Earth_14_nb",
+   "slug": "hidden-leaf-shadow-face-grey",
+   "description": "A grey silhouette of a face with glowing eyes among green leaves, on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02507",
+   "name": "Earth_15_cleave",
+   "slug": "stone-golem-cleave",
+   "description": "A tan stone golem crouching with a white slashing arc and swirling dust around its fist.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02508",
+   "name": "Earth_15_nb",
+   "slug": "stone-golem-cleave-transparent",
+   "description": "A tan stone golem crouching with a white slashing arc around its fist, on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02509",
+   "name": "Earth_16_nb",
+   "slug": "falling-rock-swirl",
+   "description": "A grey rock with a spiral marking among falling debris, on a transparent background.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02510",
+   "name": "Earth_16_stonerain",
+   "slug": "falling-rock-swirl-bg",
+   "description": "A grey rock with a spiral marking among falling debris on a brown background.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02511",
+   "name": "Earth_17",
+   "slug": "green-whirlwind",
+   "description": "A bright green spiralling whirlwind of energy on a dark background.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "pixel-art",
+     "painted",
+     "atlas-crop",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

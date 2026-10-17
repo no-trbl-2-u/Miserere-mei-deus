@@ -1,0 +1,508 @@
+{
+ "unit": "sheet-063",
+ "records": [
+  {
+   "cluster_id": "c03108",
+   "name": "Loot_115",
+   "slug": "green-thread-spool",
+   "description": "A spool of green thread wound around a wooden core with a loose end hanging off the side.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03109",
+   "name": "Loot_116",
+   "slug": "yellow-thread-spool",
+   "description": "A spool of mustard-yellow thread wound around a wooden core with a loose end hanging off the side.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03110",
+   "name": "Loot_117",
+   "slug": "red-thread-spool",
+   "description": "A spool of crimson thread wound around a wooden core with a loose end hanging off the side.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00685",
+   "name": "Loot_119",
+   "slug": "blue-thread-spool",
+   "description": "A spool of blue thread wound around a wooden core with a loose end hanging off the side.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03111",
+   "name": "Loot_12",
+   "slug": "hand-saw",
+   "description": "A hand saw with a serrated grey blade and a brown wooden handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03112",
+   "name": "Loot_120",
+   "slug": "tan-thread-spool",
+   "description": "A spool of pale tan thread wound around a wooden core with a loose end hanging off the side.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03113",
+   "name": "Loot_121",
+   "slug": "scissors",
+   "description": "A pair of open iron scissors drawn in thin grey line work.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00155",
+   "name": "Loot_123",
+   "slug": "purple-cloth-roll",
+   "description": "A bolt of lavender-purple cloth rolled into a tube.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03114",
+   "name": "Loot_125",
+   "slug": "shovel",
+   "description": "A shovel with a long wooden shaft, a D-shaped grip and a steel scoop blade.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03115",
+   "name": "Loot_126",
+   "slug": "iron-anchor",
+   "description": "A grey iron ship anchor with a curved double fluke and a ring at the top.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03116",
+   "name": "Loot_128",
+   "slug": "copper-coin-stacks",
+   "description": "Several stacks of copper coins in uneven piles.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "reward",
+     "price"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03117",
+   "name": "Loot_13",
+   "slug": "pickaxe",
+   "description": "A pickaxe with a long dark wooden handle and a pointed steel head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03118",
+   "name": "Loot_130",
+   "slug": "iron-anvil",
+   "description": "A dark grey iron blacksmith anvil seen from the side.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03119",
+   "name": "Loot_131",
+   "slug": "iron-tongs",
+   "description": "A pair of long thin iron tongs with crossed arms and open jaws.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03120",
+   "name": "Loot_132",
+   "slug": "wooden-paddle",
+   "description": "A slim wooden stick with a flat spoon-shaped blade at the lower end, like a small oar or ladle.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03121",
+   "name": "Loot_133",
+   "slug": "twig-broom",
+   "description": "A broom with a long thin wooden handle and a bunch of dark bristles at the bottom.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03122",
+   "name": "Loot_134",
+   "slug": "woven-mesh-cloth",
+   "description": "A square of loosely woven beige fibre netting or burlap.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03123",
+   "name": "Loot_135",
+   "slug": "purple-cloth-drape",
+   "description": "A length of purple fabric hanging with a curled top edge.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03124",
+   "name": "Loot_136",
+   "slug": "rolled-leather-hide",
+   "description": "A brown leather hide rolled up into a curl, with a lighter underside.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00687",
+   "name": "Loot_138",
+   "slug": "green-veined-hide",
+   "description": "An irregular olive-green hide or scale patch with glowing yellow veins running through it.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03125",
+   "name": "Loot_14",
+   "slug": "hand-axe",
+   "description": "A small axe with a grey steel head and a long wooden handle with a wrapped grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03129",
+   "name": "Loot_146",
+   "slug": "broken-blade-shards",
+   "description": "A cracked grey blade fragment with small broken shards scattered beside it.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03130",
+   "name": "Loot_147",
+   "slug": "gems-and-gold-nuggets",
+   "description": "A scatter of gold nuggets with a purple, a blue and a green gemstone.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "reward",
+     "crafting"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03131",
+   "name": "Loot_148",
+   "slug": "honeycomb",
+   "description": "Golden-yellow honeycomb chunks with hexagonal cells.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03133",
+   "name": "Loot_15",
+   "slug": "arrow",
+   "description": "A single arrow with a dark shaft, a grey steel head and fletching at the tail.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "crafting",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

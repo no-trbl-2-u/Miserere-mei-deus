@@ -1,0 +1,480 @@
+{
+ "unit": "sheet-146",
+ "records": [
+  {
+   "cluster_id": "c05602",
+   "name": "skill_328_noBG",
+   "slug": "arrow-cyan-wind-streak",
+   "description": "An arrow with a green shaft and white head flying left to right trailing cyan wind streaks.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05604",
+   "name": "skill_32_noBG",
+   "slug": "blade-red-slash",
+   "description": "A steel sword blade pointing down-left with faint red slash lines radiating behind it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05606",
+   "name": "skill_332_noBG",
+   "slug": "cyan-wind-swoosh",
+   "description": "Soft cyan and white curved wind streaks sweeping diagonally across the icon.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00259",
+   "name": "skill_333_noBG",
+   "slug": "teal-wind-swoosh",
+   "description": "Layered teal curved swoosh streaks sweeping from lower left to upper right.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00087",
+   "name": "skill_334_noBG",
+   "slug": "purple-orb-vortex",
+   "description": "A glossy purple orb at the centre of a swirling blue-white vortex.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05607",
+   "name": "skill_335_noBG",
+   "slug": "purple-net",
+   "description": "A curved lattice net of white and purple threads over a dark purple background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05608",
+   "name": "skill_336_noBG",
+   "slug": "ice-chunk-impact",
+   "description": "A chunk of blue crystal shattering with fragments and blue motion streaks flying right.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00088",
+   "name": "skill_337_noBG",
+   "slug": "white-spikes-purple",
+   "description": "Pale white-blue pointed spikes rising from the bottom against a purple glowing background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05609",
+   "name": "skill_338_noBG",
+   "slug": "blue-diagonal-streaks",
+   "description": "Several thin blue streaks slanting diagonally over a dark purple-blue background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05610",
+   "name": "skill_339_noBG",
+   "slug": "cracked-shield-blue",
+   "description": "A black wooden shield with a white lightning crack and a blue glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "defend",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05611",
+   "name": "skill_33_noBG",
+   "slug": "black-shield-orange",
+   "description": "A black wooden shield with a metal rim and an orange glow behind it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "defend",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05612",
+   "name": "skill_34",
+   "slug": "crossed-swords-red",
+   "description": "Two black crossed sword silhouettes over a red-orange sunburst background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05613",
+   "name": "skill_340_noBG",
+   "slug": "cyan-crescent-swirl",
+   "description": "Two cyan glowing crescent arcs swirling in opposite directions.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01166",
+   "name": "skill_341_noBG",
+   "slug": "pitchfork-pink",
+   "description": "A pale three-pronged fork on a curved handle with pink streaks behind it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05614",
+   "name": "skill_345_noBG",
+   "slug": "red-net",
+   "description": "A curved lattice net of white and red threads over a reddish background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01167",
+   "name": "skill_349_noBG",
+   "slug": "cracked-shield-red",
+   "description": "A black wooden shield with a white lightning crack and a red glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "defend",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05615",
+   "name": "skill_34_noBG",
+   "slug": "crossed-swords-orange",
+   "description": "Two black crossed sword silhouettes with gold outlines over a faded orange-brown burst.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05616",
+   "name": "skill_35",
+   "slug": "knight-silhouette-orange",
+   "description": "A dark knight silhouette holding a sword and shield in front of a flaming orange crescent.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05617",
+   "name": "skill_350_noBG",
+   "slug": "red-crescent-swirl",
+   "description": "Two red-pink glowing crescent arcs swirling in opposite directions.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05618",
+   "name": "skill_352_noBG",
+   "slug": "screaming-skull-warrior",
+   "description": "A pink-lit armoured figure with a screaming skull face against pink rays.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05619",
+   "name": "skill_354_noBG",
+   "slug": "hand-casting-blue",
+   "description": "A pale hand casting a stream of blue-white magic energy from its fingers.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05620",
+   "name": "skill_355_noBG",
+   "slug": "black-cross-pink",
+   "description": "A black cross over a pink burst of rays.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "heal"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05621",
+   "name": "skill_357_noBG",
+   "slug": "pink-twist-swoosh",
+   "description": "Twisting pink and white ribbon swirls curving diagonally.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05622",
+   "name": "skill_359_noBG",
+   "slug": "glowing-pink-skull",
+   "description": "A glowing magenta skull with bright eyes against a pink rayed background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05623",
+   "name": "skill_35_noBG",
+   "slug": "knight-silhouette-dark",
+   "description": "A dark knight silhouette with sword and shield in front of a flaming orange crescent on a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

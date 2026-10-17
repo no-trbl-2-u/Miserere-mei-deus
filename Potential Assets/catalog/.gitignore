@@ -1,0 +1,7 @@
+# Regenerable intermediates. The contact sheets alone are 23MB of montage
+# rebuilt from extract/ by tools/sheets.py, and the pHash table by
+# tools/hash_images.py; the agent labels they feed are kept, since reproducing
+# those costs model calls rather than CPU.
+derived/sheets/
+derived/heldout/*.png
+derived/hashes.jsonl

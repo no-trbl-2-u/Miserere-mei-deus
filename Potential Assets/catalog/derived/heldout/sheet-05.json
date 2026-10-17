@@ -1,0 +1,230 @@
+{
+ "sheet": "sheet-05",
+ "cells": [
+  {
+   "i": 0,
+   "cluster_id": "c05231",
+   "name": "icon_Were Wolf A",
+   "file": "sprites/icon_Were_Wolf_A.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 1,
+   "cluster_id": "c05250",
+   "name": "mage_hat",
+   "file": "sprites/mage_hat.png",
+   "size": "51x62",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 2,
+   "cluster_id": "c01106",
+   "name": "necklace_02X1",
+   "file": "sprites/necklace_02X1.png",
+   "size": "56x62",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 3,
+   "cluster_id": "c05274",
+   "name": "necklace_13",
+   "file": "sprites/necklace_13.png",
+   "size": "59x61",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 4,
+   "cluster_id": "c00080",
+   "name": "skill_154_noBGX1",
+   "file": "sprites/skill_154_noBGX1.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 5,
+   "cluster_id": "c05449",
+   "name": "skill_169",
+   "file": "sprites/skill_169.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 6,
+   "cluster_id": "c05497",
+   "name": "skill_201",
+   "file": "sprites/skill_201.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 7,
+   "cluster_id": "c05603",
+   "name": "skill_329_noBG",
+   "file": "sprites/skill_329_noBG.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 8,
+   "cluster_id": "c01172",
+   "name": "skill_4",
+   "file": "sprites/skill_4.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 9,
+   "cluster_id": "c00266",
+   "name": "skill_58_noBGX1",
+   "file": "sprites/skill_58_noBGX1.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 10,
+   "cluster_id": "c05771",
+   "name": "skill_9",
+   "file": "sprites/skill_9.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 11,
+   "cluster_id": "c05788",
+   "name": "skinning_04_skin",
+   "file": "sprites/skinning_04_skin.png",
+   "size": "55x57",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 12,
+   "cluster_id": "c05817",
+   "name": "skinning_36_dragonhead",
+   "file": "sprites/skinning_36_dragonhead.png",
+   "size": "54x62",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 13,
+   "cluster_id": "c05828",
+   "name": "skinning_48_bearpaw",
+   "file": "sprites/skinning_48_bearpaw.png",
+   "size": "52x64",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 14,
+   "cluster_id": "c05834",
+   "name": "skinning_54_whitefeathers",
+   "file": "sprites/skinning_54_whitefeathers.png",
+   "size": "55x61",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 15,
+   "cluster_id": "c05836",
+   "name": "skinning_56_sharp_scales",
+   "file": "sprites/skinning_56_sharp_scales.png",
+   "size": "60x57",
+   "atlas": "IconAtlasCat1",
+   "type": "Sprite"
+  },
+  {
+   "i": 16,
+   "cluster_id": "c01223",
+   "name": "64891264_p1_master1200",
+   "file": "textures/64891264_p1_master1200.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 17,
+   "cluster_id": "c05907",
+   "name": "65132811_p3_master1200",
+   "file": "textures/65132811_p3_master1200.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 18,
+   "cluster_id": "c05910",
+   "name": "66067003_p1_master1200",
+   "file": "textures/66067003_p1_master1200.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 19,
+   "cluster_id": "c05914",
+   "name": "76111972_p3",
+   "file": "textures/76111972_p3.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 20,
+   "cluster_id": "c01225",
+   "name": "76650660_p2",
+   "file": "textures/76650660_p2.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 21,
+   "cluster_id": "c05925",
+   "name": "79937026_p3",
+   "file": "textures/79937026_p3.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 22,
+   "cluster_id": "c05926",
+   "name": "80010168_p4",
+   "file": "textures/80010168_p4.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 23,
+   "cluster_id": "c05940",
+   "name": "83220935_p6_master1200",
+   "file": "textures/83220935_p6_master1200.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  },
+  {
+   "i": 24,
+   "cluster_id": "c05957",
+   "name": "Arabaki A",
+   "file": "textures/Arabaki_A.png",
+   "size": "512x512",
+   "atlas": null,
+   "type": "Texture2D"
+  }
+ ]
+}

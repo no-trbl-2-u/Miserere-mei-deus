@@ -1,0 +1,476 @@
+{
+ "unit": "sheet-137",
+ "records": [
+  {
+   "cluster_id": "c05391",
+   "name": "skill_12_noBG",
+   "slug": "shuriken-trio",
+   "description": "Three pale pink-tan throwing stars with a faint golden swirl trail behind them.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05392",
+   "name": "skill_13",
+   "slug": "masked-warrior-face",
+   "description": "Front view of a stern red-skinned face under a wide conical straw hat, on a dark red background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "player-class",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05394",
+   "name": "skill_130_noBG",
+   "slug": "pink-orbs",
+   "description": "Two glossy magenta spheres, one small and one large, with white highlights.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05395",
+   "name": "skill_131",
+   "slug": "green-leaf-burst",
+   "description": "A single bright green leaf with visible veins over a dark green radiating background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "heal"
+    ],
+    "style": [
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05396",
+   "name": "skill_131_noBG",
+   "slug": "green-leaf",
+   "description": "A single bright green leaf with veins and a short stem, drawn with a dark outline on transparency.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "heal"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05398",
+   "name": "skill_132_noBG",
+   "slug": "green-scale-armor",
+   "description": "A dense overlapping pattern of green leaf-like scales with a ragged right edge.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "defend",
+     "buff"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05399",
+   "name": "skill_133",
+   "slug": "vine-wrapped-figure",
+   "description": "A dark silhouetted humanoid raising an arm, rooted in glowing green vines against radiating green rays.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01131",
+   "name": "skill_134_noBG",
+   "slug": "healing-crosses",
+   "description": "Three green plus-sign crosses of different sizes over a swirling green streak.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "heal"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05400",
+   "name": "skill_135",
+   "slug": "green-tendrils",
+   "description": "Twisted dark green vines or tentacles curling upward with a pale outline glow on a dark green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05401",
+   "name": "skill_135_noBG",
+   "slug": "green-tendrils-cutout",
+   "description": "Twisted dark green vines curling upward with a pale cyan outline glow on transparency.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01132",
+   "name": "skill_136_noBG",
+   "slug": "green-wind-streaks",
+   "description": "Soft curved green streaks sweeping diagonally like wind or flowing grass.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05402",
+   "name": "skill_137",
+   "slug": "green-paw-print",
+   "description": "A glowing green animal paw print with four toes and a large pad, ringed by faint flames on a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "summon",
+     "buff"
+    ],
+    "style": [
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05403",
+   "name": "skill_137_noBG",
+   "slug": "green-paw-print-cutout",
+   "description": "A glowing green animal paw print with four toes and a large pad, with pale rim light, on transparency.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "summon",
+     "buff"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05404",
+   "name": "skill_138",
+   "slug": "gold-claw-slashes",
+   "description": "Three thin golden claw-slash marks cutting diagonally across a dark green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05405",
+   "name": "skill_138_noBG",
+   "slug": "gold-claw-slashes-cutout",
+   "description": "Four golden claw-slash streaks with dark edges slanting diagonally on transparency.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01133",
+   "name": "skill_139_noBG",
+   "slug": "glowing-hands",
+   "description": "Two dark silhouetted hands reaching toward each other with a bright green light burst between them.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "heal",
+     "buff"
+    ],
+    "style": [
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05407",
+   "name": "skill_13_noBG",
+   "slug": "masked-warrior-face-cutout",
+   "description": "Front view of a stern red-skinned face under a wide conical straw hat, on transparency.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "player-class",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05408",
+   "name": "skill_14",
+   "slug": "crossed-scythes",
+   "description": "Two black curved scythes crossed in an X over concentric faint circles on a crimson background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05409",
+   "name": "skill_140",
+   "slug": "green-spiderweb",
+   "description": "A bright green spider web with radial strands on a dark green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05410",
+   "name": "skill_140_noBG",
+   "slug": "green-spiderweb-cutout",
+   "description": "A bright green spider web with dark outlines on transparency.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05411",
+   "name": "skill_141",
+   "slug": "golden-thorns",
+   "description": "A row of golden thorn spikes rising from the bottom over a dark green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01134",
+   "name": "skill_141_noBG",
+   "slug": "golden-thorns-cutout",
+   "description": "Golden thorn spikes leaning to the left with dark edges, on transparency.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05412",
+   "name": "skill_142",
+   "slug": "golden-shards-burst",
+   "description": "Golden-brown sharp shards radiating up and to the right over green streaks.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05413",
+   "name": "skill_142_noBG",
+   "slug": "golden-shards-cutout",
+   "description": "Golden-brown sharp shards scattered diagonally on transparency.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05414",
+   "name": "skill_143",
+   "slug": "fanged-maw",
+   "description": "A wide green mouth with rows of sharp golden-tan fangs on top and bottom, viewed head-on.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "enemy"
+    ],
+    "style": [
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

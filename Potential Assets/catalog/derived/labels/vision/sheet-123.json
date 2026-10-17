@@ -1,0 +1,484 @@
+{
+ "unit": "sheet-123",
+ "records": [
+  {
+   "cluster_id": "c00753",
+   "name": "Paladinskill_16_nobg",
+   "slug": "lion-crest-shield",
+   "description": "A round gold-rimmed emblem showing a lion's head on a blue and gold heater shield.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "defend"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00754",
+   "name": "Paladinskill_17_nobg",
+   "slug": "gold-skull",
+   "description": "A black skull silhouette with glowing gold eyes inside a circular ring on a gold background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00757",
+   "name": "Paladinskill_21_nobg",
+   "slug": "black-arrow-volley",
+   "description": "Three black arrows pointing up and to the right on a gold background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00758",
+   "name": "Paladinskill_22_nobg",
+   "slug": "white-arrow-volley",
+   "description": "Three glowing white arrows pointing down-left on a gold background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00759",
+   "name": "Paladinskill_23_nobg",
+   "slug": "light-arc-arrows",
+   "description": "A faint white arc with small glowing arrows radiating on a pale gold background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00760",
+   "name": "Paladinskill_24_nobg",
+   "slug": "golden-swords-trio",
+   "description": "Three golden-hilted swords fanned out with a bright flash on the rightmost blade.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00761",
+   "name": "Paladinskill_25_nobg",
+   "slug": "white-sword-slash",
+   "description": "A glowing white sword blade slashing diagonally past black angular lines on a gold background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00763",
+   "name": "Paladinskill_28_nobg",
+   "slug": "gold-cross-ring",
+   "description": "A dark gold Christian cross inside a pale circular ring on a gold background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "heal",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00767",
+   "name": "Paladinskill_33_nobg",
+   "slug": "blue-hammer-glow",
+   "description": "A dark blue war hammer silhouette surrounded by a white-blue glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00770",
+   "name": "Paladinskill_36_nobg",
+   "slug": "hammer-shockwave",
+   "description": "A dark hammer silhouette over concentric blue shockwave rings.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00771",
+   "name": "Paladinskill_37_nobg",
+   "slug": "armoured-man-portrait",
+   "description": "A pale dark-haired man in plate armour and a blue cloak, shown as a portrait.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "combat-action",
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00772",
+   "name": "Paladinskill_38_nobg",
+   "slug": "blue-sword-silhouette",
+   "description": "A black sword silhouette pointing up-right against a blue-white radiant background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00773",
+   "name": "Paladinskill_41_nobg",
+   "slug": "cyan-mace-swing",
+   "description": "A dark runed mace swung through cyan energy streaks.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00774",
+   "name": "Paladinskill_42_nobg",
+   "slug": "runed-teal-hammer",
+   "description": "A heavy dark war hammer with glowing teal runes on its head.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00775",
+   "name": "Paladinskill_43_nobg",
+   "slug": "sparkling-mace",
+   "description": "A silver mace with a starburst flash at its head on a blue background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00780",
+   "name": "Paladinskill_49_nobg",
+   "slug": "white-swirl-slashes",
+   "description": "Several white curved streaks swirling over a pale blue background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00784",
+   "name": "Priestskill_02_nobg",
+   "slug": "lightning-eyed-priest",
+   "description": "A bearded man with lightning crackling from his eyes and mouth against a blue background.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "combat-action",
+     "attack",
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00785",
+   "name": "Priestskill_03_nobg",
+   "slug": "golden-chains",
+   "description": "Heavy golden chain links hanging in a glowing gold-lit scene.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00786",
+   "name": "Priestskill_04_nobg",
+   "slug": "glowing-orb-scepter",
+   "description": "A thin scepter topped with a glowing white orb and radiating light rays.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00787",
+   "name": "Priestskill_05_nobg",
+   "slug": "lightning-ring-staff",
+   "description": "A white lightning bolt striking a ring-topped staff on a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00793",
+   "name": "Priestskill_12_nobg",
+   "slug": "purple-claw-slashes",
+   "description": "Three black curved claw slashes over a purple gradient background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00795",
+   "name": "Priestskill_15_nobg",
+   "slug": "blue-water-wave",
+   "description": "A rushing ribbon of bright blue water on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00796",
+   "name": "Priestskill_16_nobg",
+   "slug": "blue-whirlpool",
+   "description": "A blue water stream spiralling down into a whirlpool.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00797",
+   "name": "Priestskill_17_nobg",
+   "slug": "crossed-hooks-blue",
+   "description": "Two dark crossed hooked tools over a blue circular glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00799",
+   "name": "Priestskill_19_nobg",
+   "slug": "white-comet-burst",
+   "description": "A white comet with a bright starburst impact and a blue trail.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

@@ -1,0 +1,1805 @@
+{
+ "unit": "batch-07",
+ "records": [
+  {
+   "cluster_id": "c03570",
+   "name": "Relic_v2_02",
+   "slug": "death-calling-incense-burner-relic",
+   "description": "Icon for the rarity-7 camp relic Incense Burner of the Calling Dead, tagged Always.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "camp",
+     "loot"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03576",
+   "name": "Relic_v2_08",
+   "slug": "calamity-summons-consumable",
+   "description": "Icon shared by four rarity-7 consumable camp items in the Summoning of Calamity series (Ancient Prophet, Outer Vanguard, Avenger and Flauss), each consumed to call a disaster.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "summon",
+     "inventory"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03577",
+   "name": "Relic_v2_09",
+   "slug": "divine-realm-sanctum-relic",
+   "description": "Shared icon for the Divine Realm: the rarity-7 Divine Body Fragment camp item, the Divine Realm dungeon and its dungeon mode, and the Sanctuary map point.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "dungeon",
+     "dungeon-mode",
+     "map-point",
+     "loot"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00842",
+   "name": "Res_08",
+   "slug": "white-silver-sand-material",
+   "description": "Icon for the rarity-7 camp item White Silver Sand, a resource tagged Always.",
+   "tags": {
+    "kind": "unknown",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00843",
+   "name": "Res_106",
+   "slug": "magic-stone-crystal",
+   "description": "Icon for the rarity-5 camp item Magic Stone Crystal, also used by two shop listings titled Item: Magic Stone Crystal.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "shop",
+     "price",
+     "reward"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00188",
+   "name": "Res_112",
+   "slug": "great-magic-stone-crystal",
+   "description": "Icon for the rarity-7 camp item Great Magic Stone Crystal, shared with a shop listing for the same item and one for the Rare Crystal.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "shop",
+     "price",
+     "reward"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03593",
+   "name": "Res_125",
+   "slug": "mushroom-food",
+   "description": "Icon for the rarity-1 usable camp item Mushroom.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "inventory"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03602",
+   "name": "Res_137",
+   "slug": "faction-quest-emblem",
+   "description": "Quest emblem used by four quest rows from three factions: Oath Mutual Aid Society, Remnants of Lament and the Cult of the Outer Light (two quests).",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "quest"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00846",
+   "name": "Res_145",
+   "slug": "croissant-food",
+   "description": "Icon for the rarity-3 usable camp item Croissant.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "inventory"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00847",
+   "name": "Res_151",
+   "slug": "reddish-black-flesh-relic",
+   "description": "Icon shared by the rarity-6 camp item Reddish-Black Flesh, a unique gear piece of the same name, and the unique state Cultivation of Rotting Flesh, which restores one HP stack when an enemy is defeated.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "equipment",
+     "loot",
+     "status-effect"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00848",
+   "name": "Res_153",
+   "slug": "corpse-limb-storage-map",
+   "description": "Icon for the Corpse Limb Storage map point, which opens a scene and is also shared with a storage-cap shop item, an arm-parts buff and a tip entry.",
+   "tags": {
+    "kind": "map",
+    "use": [
+     "map-point",
+     "camp",
+     "buff"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00849",
+   "name": "Res_154X1",
+   "slug": "leg-parts-enhancement-buff",
+   "description": "Icon for the Buff state Leg Parts Enhancement, which increases the bonus gained from lab parts of the target body part.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "status-effect"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03618",
+   "name": "Res_156",
+   "slug": "beheading-attack-buff-icon",
+   "description": "Icon shared by the attack skill mode Beheading and the Buff state Head Parts Enhancement.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03620",
+   "name": "Res_159",
+   "slug": "rotten-flesh-item",
+   "description": "Icon for the rarity-1 usable camp item Rotten Flesh.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "inventory"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03623",
+   "name": "Res_162",
+   "slug": "compressed-flesh-block-item",
+   "description": "Icon for the rarity-7 usable camp item Compressed Human Flesh Block.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "inventory"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03648",
+   "name": "Res_55",
+   "slug": "easy-mode-icon",
+   "description": "Icon for the rarity-7 Easy Mode state, which resets skill uses and cooldowns on room moves at the cost of score, and for its matching tip entry.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "dungeon-mode",
+     "settings"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03651",
+   "name": "Res_58",
+   "slug": "fairy-powder-skill-icon",
+   "description": "Icon for the rarity-7 race skill Fairy Powder and its skill mode, categorised as survive.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "defend",
+     "race"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03665",
+   "name": "Res_74",
+   "slug": "umbilical-cord-accessory",
+   "description": "Icon for the rarity-7 camp item Infant Umbilical Cord, shared with a unique gear piece of the same name.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00858",
+   "name": "Res_75",
+   "slug": "honour-warriors-quest-emblem",
+   "description": "Quest emblem for the Order of Honourable Warriors, used by four quest rows QST00001 to QST00004.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "quest"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03673",
+   "name": "Res_84",
+   "slug": "cell-activation-blueprint",
+   "description": "Icon for the rarity-7 blueprint Cell Activation, also used by a shop listing for the Divine Body Fragment tagged Others.",
+   "tags": {
+    "kind": "unknown",
+    "use": [
+     "crafting",
+     "shop"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00859",
+   "name": "Res_85",
+   "slug": "demon-heart-item",
+   "description": "Icon for the rarity-5 usable camp item Demon's Heart.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "inventory"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03690",
+   "name": "Ring_01",
+   "slug": "ordinary-birth-ring",
+   "description": "Ring-shaped icon for the Born trait Ordinary, whose state raises the dungeon-event encounter rate; a Setup tip row also points at it.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00063",
+   "name": "Ring_09",
+   "slug": "pupil-ring-accessory",
+   "description": "Icon for the rarity-7 camp item Pupil Ring, tagged Always, also used by a shop listing titled Great Success Wooden Tablet.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "shop"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03695",
+   "name": "Ring_11",
+   "slug": "plain-ring-accessory",
+   "description": "Icon for the plain Ring camp item at rarities 2, 3 and 4, and the basic gear Ring.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03696",
+   "name": "Ring_14",
+   "slug": "barren-birth-ring",
+   "description": "Ring-shaped icon for the Born trait Barren, whose state stops magic stone gains and adds +1 remodel point on level-up.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00192",
+   "name": "Ring_16",
+   "slug": "success-birth-ring",
+   "description": "Ring-shaped icon for the Born trait Success, whose state gives +10 starting remodel points.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03701",
+   "name": "Ring_22",
+   "slug": "diamond-ring-accessory",
+   "description": "Icon for the rarity-7 camp item Diamond Ring, tagged Always, also used by a shop listing titled Great Success Wooden Tablet.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "shop"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03702",
+   "name": "Ring_23",
+   "slug": "vanity-birth-ring",
+   "description": "Ring-shaped icon for the Born trait Vanity, whose state adds +2 reroll bonus when equipment is rerolled.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03703",
+   "name": "Ring_25",
+   "slug": "political-strife-birth-ring",
+   "description": "Ring-shaped icon for the Born trait Political Strife, whose state sharply raises dungeon-event encounters and cuts gained experience by 50 percent.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03707",
+   "name": "Ring_34",
+   "slug": "noble-birth-ring",
+   "description": "Ring-shaped icon for the Born trait Noble, whose state grants +100 starting magic stones and stops magic stone drops from non-elite enemies.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03708",
+   "name": "Ring_35",
+   "slug": "poverty-birth-ring",
+   "description": "Ring-shaped icon for the Born trait Poverty, whose state blocks crafting and adds a +2 reroll bonus.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03709",
+   "name": "Ring_36",
+   "slug": "exile-birth-ring",
+   "description": "Ring-shaped icon for the Born trait Exile, whose state stops camp use-count recovery and adds one use to each skill on every room move.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03710",
+   "name": "Ring_37",
+   "slug": "devotee-birth-ring",
+   "description": "Ring-shaped icon for the Born trait Devotee, whose state stops camp use-count recovery and resets the uses of every skill on each dungeon event encounter.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03711",
+   "name": "Ring_38",
+   "slug": "loyalty-birth-ring",
+   "description": "Ring-shaped icon for the Born trait Loyalty, whose state stops remodel point gains and reduces craft cost by 20 with a minimum of 1.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00864",
+   "name": "Ring_39",
+   "slug": "evasion-birth-ring",
+   "description": "Ring-shaped icon for the Born trait Evasion, whose state randomises the room layout after each escape.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03715",
+   "name": "Ring_43",
+   "slug": "drifting-ashore-birth-ring",
+   "description": "Ring-shaped icon for the Born trait Drifting Ashore, whose state restores one HP stack per craft.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03718",
+   "name": "Ring_46",
+   "slug": "rebellion-birth-ring",
+   "description": "Ring-shaped icon for the Born trait Rebellion, whose state limits dungeon encounters to elite enemies.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03720",
+   "name": "Ring_50",
+   "slug": "solitary-ring-accessory",
+   "description": "Icon shared by the Born trait Solitary, the rarity-4 camp item Blue Meteoric Iron Ring, its basic gear version, and a shop listing for Varshilite Ore.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "shop"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03721",
+   "name": "Ring_54",
+   "slug": "serenity-birth-ring",
+   "description": "Ring-shaped icon for the Born trait Serenity, whose state adds +1 magic stone per enemy and stops elite spawns.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03723",
+   "name": "Ring_56",
+   "slug": "spirit-radiance-stone-ring",
+   "description": "Icon for the rarity-7 camp item Spirit Radiance Stone, shared with a unique gear piece of the same name and a shop listing for Varshilite Ore.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "shop"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03726",
+   "name": "Ring_b_02",
+   "slug": "confinement-birth-ring",
+   "description": "Ring-shaped icon for the Born trait Confinement, whose state adds +1 remodel point each time you leave camp.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03727",
+   "name": "Ring_b_03",
+   "slug": "offering-birth-ring",
+   "description": "Ring-shaped icon for the Born trait Offering, whose state blocks HP stack recovery and adds +1 remodel point per HP stack lost.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03731",
+   "name": "Ring_b_07",
+   "slug": "cunning-birth-ring",
+   "description": "Ring-shaped icon for the Born trait Cunning, whose state blocks rerolls and raises the rarity of gear, skills and runes obtained by 2.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03732",
+   "name": "Ring_b_08",
+   "slug": "vengeance-birth-ring",
+   "description": "Ring-shaped icon for the Born trait Vengeance, whose state adds a +2 reroll bonus when runes are rerolled.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03733",
+   "name": "Ring_b_09",
+   "slug": "ruin-birth-ring",
+   "description": "Ring-shaped icon for the Born trait Ruin, whose state doubles gained experience but lowers the maximum level to 80.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03734",
+   "name": "Ring_b_10",
+   "slug": "gift-of-love-ring",
+   "description": "Icon for the rarity-7 camp item Gift of Love, shared with a unique gear piece of the same name.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03762",
+   "name": "Scythe_01",
+   "slug": "sickle-weapon",
+   "description": "Icon for the sickle camp item at rarities 2, 3 and 4, and the basic gear sickle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03766",
+   "name": "Scythe_05",
+   "slug": "meteoric-iron-sickle-weapon",
+   "description": "Icon for the rarity-4 Meteoric Iron Sickle camp item, shared with a basic gear sickle and a shop listing for Varshilite Ore.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "shop"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00193",
+   "name": "Shamanskill_02_nobgX1",
+   "slug": "living-armour-gear",
+   "description": "Icon for the rarity-4 gear Living Armour, whose state improves its performance slightly each time the bearer loses an HP stack.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment"
+    ],
+    "style": [
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00194",
+   "name": "Shamanskill_05",
+   "slug": "eternal-sleep-boss-skill-icon",
+   "description": "Skill icon for the boss skill Eternal Sleep, shared with its skill mode and the unique state Ice Sculpture, which summons an ice golem when an enemy with frostbite dies.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "enemy-boss",
+     "summon",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00195",
+   "name": "Shamanskill_06",
+   "slug": "stone-bind-attack-icon",
+   "description": "Skill-mode icon for the attack Stone Bind.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00873",
+   "name": "Shamanskill_10",
+   "slug": "inferno-attack-icon",
+   "description": "Skill-mode icon for the attack Inferno, shared with the unique state Doomsday Flame, under which burning the bearer suffers also deals burn damage to enemies.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action",
+     "status-effect"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00021",
+   "name": "Shamanskill_12",
+   "slug": "submersion-room-environment-icon",
+   "description": "Icon shared by the room environment Submersion, the enemy skill Illusion/Truth, its skill mode Illusion, and the Env state Submersion.",
+   "tags": {
+    "kind": "environment",
+    "use": [
+     "dungeon",
+     "enemy",
+     "status-effect"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00196",
+   "name": "Shamanskill_13",
+   "slug": "secret-stance-defend-icon",
+   "description": "Icon for the unique state Secret Stance, which lets the barrier of the bearer also reduce physical damage.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "defend",
+     "status-effect"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00877",
+   "name": "Shamanskill_16",
+   "slug": "secret-medicinal-bath-union-emblem",
+   "description": "Icon for the rarity-4 Union contract Secret Medicinal Bath.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "union"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00879",
+   "name": "Shamanskill_18",
+   "slug": "heavy-rain-environment-icon",
+   "description": "Icon shared by the room environment Heavy Rain and its Env state, which at turn start clears status changes at a set chance and recalls minions.",
+   "tags": {
+    "kind": "environment",
+    "use": [
+     "dungeon",
+     "status-effect"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00880",
+   "name": "Shamanskill_19",
+   "slug": "dragon-vein-union-attack-icon",
+   "description": "Icon shared by the rarity-5 Union contract Dragon Vein and the race attack skill Dragon Fang with its skill mode.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "union",
+     "attack",
+     "combat-action",
+     "race"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00197",
+   "name": "Shamanskill_20",
+   "slug": "hyper-regeneration-attack-icon",
+   "description": "Skill-mode icon for Hyper Regeneration, which is categorised as an attack.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00064",
+   "name": "Shamanskill_22",
+   "slug": "shield-revival-state-icon",
+   "description": "Icon for the unique ModParts state Shield Revival, which resets the shield each time an HP stack is consumed.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "defend",
+     "status-effect"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00881",
+   "name": "Shamanskill_23",
+   "slug": "electric-bolt-attack-icon",
+   "description": "Skill-mode icon for the attack Electric Bolt.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00882",
+   "name": "Shamanskill_24",
+   "slug": "thunder-glyph-attack-icon",
+   "description": "Skill-mode icon for the attack Thunder Glyph, a glyph-type attack.",
+   "tags": {
+    "kind": "glyph",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00198",
+   "name": "Shamanskill_27",
+   "slug": "electric-current-environment-icon",
+   "description": "Icon shared by the room environment Electric Current and its Env state, which raises aimed attacks by 50 percent for both sides.",
+   "tags": {
+    "kind": "environment",
+    "use": [
+     "dungeon",
+     "status-effect"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00022",
+   "name": "Shamanskill_29",
+   "slug": "restore-body-support-icon",
+   "description": "Icon for the rarity-4 skill Restore Body and its skill mode, categorised as support.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "heal",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00885",
+   "name": "Shamanskill_30",
+   "slug": "thunder-word-attack-icon",
+   "description": "Icon for the rarity-1 attack skill Thunder Word and its skill mode.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00199",
+   "name": "Shamanskill_31X1",
+   "slug": "spell-reflection-defend-icon",
+   "description": "Icon shared by the support skill mode Spell Reflection and the Damage state Magic Reflection, which redirects matching-element direct damage to an enemy.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "defend",
+     "status-effect"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00886",
+   "name": "Shamanskill_32",
+   "slug": "cave-in-environment-icon",
+   "description": "Icon shared by the room environment Cave-in, the attack skill Stone Bullet and its skill mode, and the Env state Cave-in.",
+   "tags": {
+    "kind": "environment",
+    "use": [
+     "dungeon",
+     "attack",
+     "status-effect"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00200",
+   "name": "Shamanskill_34X1",
+   "slug": "prism-cannon-attack-icon",
+   "description": "Skill-mode icon for the attack Prism Cannon.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00201",
+   "name": "Shamanskill_40",
+   "slug": "earthquake-union-boss-icon",
+   "description": "Icon shared by the rarity-1 Union contract Mountain Retreat, the boss skills Great Earthquake and Great Fissure, and the support skill mode Earthquake.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "union",
+     "enemy-boss",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00066",
+   "name": "Shamanskill_42",
+   "slug": "black-wind-boss-skill-icon",
+   "description": "Icon for the boss skill Black Wind and its skill mode.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "enemy-boss",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00202",
+   "name": "Shamanskill_43_nobgX1",
+   "slug": "whirling-storm-defend-icon",
+   "description": "Skill-mode icon for the survive skill Whirling Storm.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "defend",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00893",
+   "name": "Shamanskill_44",
+   "slug": "totem-plague-wind-icon",
+   "description": "Icon shared by the rarity-4 Union contract Totem and the boss skill Plague Wind with its skill mode.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "union",
+     "enemy-boss",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00023",
+   "name": "Shamanskill_45",
+   "slug": "wind-shield-defend-icon",
+   "description": "Skill-mode icon for the survive skill Wind Shield.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "defend",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00894",
+   "name": "Shamanskill_47",
+   "slug": "thunder-cloud-summon-icon",
+   "description": "Icon shared by the boss skill Summon Thunder Cloud, the attack skill mode Call Storm with its release variant, and the boss skill mode Summon Thunder Cloud.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "summon",
+     "enemy-boss",
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00895",
+   "name": "Shamanskill_48",
+   "slug": "spike-form-attack-icon",
+   "description": "Icon shared by the attack skill mode Spike Form and its release variant.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00896",
+   "name": "Shamanskill_49",
+   "slug": "cloud-top-training-union-emblem",
+   "description": "Icon for the rarity-3 Union contract Cloud-Top Training Ground.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "union"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00897",
+   "name": "Shamanskill_50",
+   "slug": "call-storm-attack-icon",
+   "description": "Icon for the rarity-6 attack skill Call Storm, shared with its skill mode Storm Eye.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03784",
+   "name": "Shield_v2_15",
+   "slug": "artless-shield",
+   "description": "Shield icon for the rarity-5 camp item Artless, shared with a unique random gear piece of the same name.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03787",
+   "name": "Shield_v2_18",
+   "slug": "reverence-contract-shield",
+   "description": "Shield icon for the rarity-7 Reverence contract, which carries a disaster-drop parameter.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "union"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03796",
+   "name": "Shield_v2_27",
+   "slug": "deadline-shield",
+   "description": "Shield icon for the rarity-5 camp item Deadline, shared with a unique random gear piece of the same name.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03800",
+   "name": "Shield_v2_33",
+   "slug": "pillar-shield",
+   "description": "Shield icon for the rarity-7 Pillar Shield camp item, shared with a unique gear piece of the same name.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03801",
+   "name": "Shield_v2_34",
+   "slug": "solde-knight-shield",
+   "description": "Shield icon for the rarity-6 Shield of the Solde Knight camp item, shared with a unique gear piece and a shop listing for the Rabbit-Mark XL Container.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "loot",
+     "shop"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03802",
+   "name": "Shield_v2_35",
+   "slug": "kings-shield",
+   "description": "Shield icon for the rarity-7 King Shield camp item, shared with its unique gear version.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03807",
+   "name": "Shield_v2_40",
+   "slug": "aegis-shield",
+   "description": "Shield icon for the rarity-6 Aegis camp item, shared with a unique gear version tagged SpecialStat.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03809",
+   "name": "Shoulder_01",
+   "slug": "shoulder-guard-armour",
+   "description": "Icon for the shoulder guard camp item at rarities 2, 3 and 4, and the basic gear shoulder guard.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00901",
+   "name": "Shoulder_07",
+   "slug": "shoulder-tackle-attack-icon",
+   "description": "Skill icon for the attack Shoulder Tackle and its skill mode, although the filename refers to a shoulder.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00006",
+   "name": "Shoulder_35",
+   "slug": "flauss-radiance-armour",
+   "description": "Icon for the rarity-7 camp item Radiance of Flauss, shared with a unique gear piece of the same name across seven cluster members.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03827",
+   "name": "Shoulder_47",
+   "slug": "barbed-armour",
+   "description": "Icon for the rarity-5 camp item Barbed, shared with a unique random gear piece of the same name.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00907",
+   "name": "Shoulder_49X1",
+   "slug": "crystal-block-armour",
+   "description": "Icon for the rarity-7 camp item Crystal Stone Block, shared with its unique gear piece.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03833",
+   "name": "Shoulder_57",
+   "slug": "fatima-guardian-armour",
+   "description": "Icon for the rarity-7 camp item Guardian of Fatima, shared with its unique gear piece.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03850",
+   "name": "Skill_202",
+   "slug": "boost-enhancement-buff-icon",
+   "description": "Icon for the rarity-3 Common state Boost Enhancement, which gives a chance for a skill boost to trigger one extra skill effect.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "status-effect"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00909",
+   "name": "Skill_207",
+   "slug": "regeneration-survive-icon",
+   "description": "Skill-mode icon for the survive skill Regeneration.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "heal",
+     "defend"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03852",
+   "name": "Skill_209",
+   "slug": "body-press-attack-icon",
+   "description": "Icon for the rarity-5 attack skill Body Press and its skill mode.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03854",
+   "name": "Skill_214",
+   "slug": "guillotine-attack-icon",
+   "description": "Skill-mode icon for the attack Guillotine, variant M4.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00910",
+   "name": "Skill_219",
+   "slug": "main-parameter-stat-icon",
+   "description": "Shared generic stat icon for three template-driven state rows, MainParam 24+, 24* and 24/, whose names and descriptions are unresolved placeholders, so the exact stat is not identified; the 24/ row is categorised as a debuff.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c03858",
+   "name": "Skill_220",
+   "slug": "death-prophecy-boss-icon",
+   "description": "Icon shared by the boss skill Death Prophecy, its skill mode, and the Damage state Death Agony, which deals damage to enemies on death or when sent back.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "enemy-boss",
+     "combat-action",
+     "status-effect"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00911",
+   "name": "Skill_231_noBGX1",
+   "slug": "abomination-summon-icon",
+   "description": "Icon for the rarity-7 summon skill Abomination and its skill mode.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "summon",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03869",
+   "name": "Skill_233",
+   "slug": "corrosive-fluid-enemy-icon",
+   "description": "Icon for the rarity-5 enemy skill Corrosive Fluid, also labelled Strong Acid, and its skill mode Corrosive Fluid.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "enemy",
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03874",
+   "name": "Skill_240",
+   "slug": "healthy-sleep-state-icon",
+   "description": "Icon for the rarity-4 unique ModParts state Healthy Sleep, which cures all status ailments on each room move.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "heal",
+     "status-effect"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00912",
+   "name": "Skill_243",
+   "slug": "dual-resistance-defend-icon",
+   "description": "Icon for the rarity-3 Common state Dual Resistance, which raises physical and magic resistance.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "defend",
+     "buff"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03877",
+   "name": "Skill_248",
+   "slug": "dispersal-race-support-icon",
+   "description": "Icon shared by the rarity-7 race skill Dispersal and Proliferation Rebuild and its skill mode Dispersal, both categorised as support.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "race",
+     "combat-action"
+    ],
+    "style": [
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

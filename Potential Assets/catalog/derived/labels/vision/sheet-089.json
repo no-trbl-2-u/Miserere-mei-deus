@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-089",
+ "records": [
+  {
+   "cluster_id": "c04162",
+   "name": "Staff_v2_13",
+   "slug": "pale-claw-staff",
+   "description": "A slender staff with a blue-wrapped grip and a pale bone-like clawed fork at its head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04163",
+   "name": "Staff_v2_14",
+   "slug": "curved-wood-crook-staff",
+   "description": "A long brown wooden staff curving into a large hooked crook at the top.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04164",
+   "name": "Staff_v2_15",
+   "slug": "red-crook-staff",
+   "description": "A dark red staff ending in a curved hook with a pale tip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04165",
+   "name": "Staff_v2_17",
+   "slug": "ornate-orange-gem-staff",
+   "description": "A dark ornate staff with metal prongs holding glowing orange gems at the head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04166",
+   "name": "Staff_v2_18",
+   "slug": "steel-cyan-gem-staff",
+   "description": "A pale steel staff with a winged, branching head set with a cyan gem.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04168",
+   "name": "Staff_v2_20",
+   "slug": "skull-spiked-staff",
+   "description": "A black staff topped with a pale skull ringed by metal spikes.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04170",
+   "name": "Staff_v2_22",
+   "slug": "spiked-orb-staff",
+   "description": "A grey staff crowned with a spiked metal cage around a silvery orb.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04171",
+   "name": "Staff_v2_23",
+   "slug": "spider-staff",
+   "description": "A dark purple-grey staff topped with a black spider with a red mark.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04172",
+   "name": "Staff_v2_24",
+   "slug": "plain-iron-staff",
+   "description": "A plain dark iron staff with segmented fittings and a small blade-like tip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04173",
+   "name": "Staff_v2_25",
+   "slug": "green-gem-staff",
+   "description": "A slim grey staff with a green gem held in a small metal cradle at the top.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04174",
+   "name": "Staff_v2_26",
+   "slug": "pink-gem-staff",
+   "description": "A dark staff with a bright magenta gem held in a curved metal claw head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04175",
+   "name": "Staff_v2_27",
+   "slug": "orange-tip-spear-staff",
+   "description": "A brown rough-barked shaft with a small orange blade-like tip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04176",
+   "name": "Staff_v2_28",
+   "slug": "purple-winged-staff",
+   "description": "A purple-blue staff with a winged head cradling a red gem.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04177",
+   "name": "Staff_v2_29",
+   "slug": "green-leaf-branch-staff",
+   "description": "A thin brown branch-like staff with forked prongs holding green leaf-shaped gems.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04179",
+   "name": "Staff_v2_31",
+   "slug": "twisted-branch-staff",
+   "description": "A twisted brown wooden staff with gnarled, antler-like branching at the top.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04183",
+   "name": "Staff_v2_36",
+   "slug": "round-knob-staff",
+   "description": "A dark grey staff with a rounded dark knob at the head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04185",
+   "name": "Staff_v2_38",
+   "slug": "cross-head-staff",
+   "description": "A grey staff with a pale cross-shaped metal head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04186",
+   "name": "Staff_v2_39",
+   "slug": "flame-tip-staff",
+   "description": "A dark wooden staff with bone fittings and a small orange flame-like tip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04187",
+   "name": "Staff_v2_40",
+   "slug": "hooked-dark-staff",
+   "description": "A dark blue-black staff with a brown curled hook and metal fittings at the head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04188",
+   "name": "Staff_v2_41",
+   "slug": "white-orb-staff",
+   "description": "A blue-grey staff topped with a swirling white and violet orb.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04189",
+   "name": "Staff_v2_42",
+   "slug": "banded-dark-rod",
+   "description": "A plain dark rod with metal bands and no distinct head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04190",
+   "name": "Staff_v2_43",
+   "slug": "glowing-orange-orb-staff",
+   "description": "A dark staff with a glowing orange-white orb held in curved metal claws.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04192",
+   "name": "Staff_v2_45",
+   "slug": "red-spiked-eye-staff",
+   "description": "A black and red spiky staff with a red eye-like gem in an ornate frame.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04195",
+   "name": "Staff_v2_48",
+   "slug": "green-glow-claw-staff",
+   "description": "A staff glowing green with clawed prongs cradling a bright green crystal.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04197",
+   "name": "Staff_v2_50",
+   "slug": "purple-crystal-staff",
+   "description": "A purple staff with a large glowing violet crystal and a magenta glow at the head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

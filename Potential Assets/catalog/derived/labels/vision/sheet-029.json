@@ -1,0 +1,467 @@
+{
+ "unit": "sheet-029",
+ "records": [
+  {
+   "cluster_id": "c01963",
+   "name": "Blacksmith_27_anvil",
+   "slug": "anvil",
+   "description": "A dark iron blacksmith's anvil with a flat top and horn.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01965",
+   "name": "Blacksmith_29_horseshoe",
+   "slug": "rusty-horseshoe",
+   "description": "A worn rust-brown iron horseshoe with nail holes.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01966",
+   "name": "Blacksmith_30_silver_horseshoe",
+   "slug": "silver-horseshoe",
+   "description": "A polished silver-grey horseshoe with nail holes.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01967",
+   "name": "Blacksmith_31_rune_horseshoe",
+   "slug": "rune-horseshoe",
+   "description": "A dark horseshoe engraved with scrolling patterns and an orange glowing outline.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01968",
+   "name": "Blacksmith_32_magic_horseshoe",
+   "slug": "magenta-magic-horseshoe",
+   "description": "A dark horseshoe wrapped in a glowing magenta magical aura.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01969",
+   "name": "Blacksmith_33_magic_horseshoe",
+   "slug": "cyan-magic-horseshoe",
+   "description": "A dark horseshoe wrapped in a glowing cyan magical aura.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01970",
+   "name": "Blacksmith_34_chain",
+   "slug": "iron-chain",
+   "description": "Two crossed lengths of heavy black iron chain.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01971",
+   "name": "Blacksmith_35_hammer",
+   "slug": "glowing-hammer",
+   "description": "A heavy wooden-and-iron war hammer head with an orange glowing outline.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01972",
+   "name": "Blacksmith_36_blade",
+   "slug": "steel-blade",
+   "description": "A single curved steel blade with no hilt, tapering to a point.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01975",
+   "name": "Blacksmith_39_shackles",
+   "slug": "wooden-stocks",
+   "description": "A wooden plank with three round holes, like stocks or a restraint board.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01976",
+   "name": "Blacksmith_40_lever",
+   "slug": "sword-hilt-lever",
+   "description": "A grip with a round pommel and a flat crossguard, shown without a blade.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01977",
+   "name": "Blacksmith_41_old_lock",
+   "slug": "old-padlock",
+   "description": "A rusted iron padlock with rivets and a keyhole.",
+   "tags": {
+    "kind": "key",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01979",
+   "name": "Blacksmith_43_key",
+   "slug": "iron-key",
+   "description": "A dark iron key with a round bow and a toothed bit.",
+   "tags": {
+    "kind": "key",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01980",
+   "name": "Blacksmith_44_key",
+   "slug": "long-iron-key",
+   "description": "A long dark iron key with a ring bow.",
+   "tags": {
+    "kind": "key",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01981",
+   "name": "Blacksmith_45_key",
+   "slug": "golden-ornate-key",
+   "description": "An ornate golden key with a triangular bow and a branching bit.",
+   "tags": {
+    "kind": "key",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01982",
+   "name": "Blacksmith_46_magic_key",
+   "slug": "cyan-magic-key",
+   "description": "A key surrounded by swirling glowing cyan magical wisps.",
+   "tags": {
+    "kind": "key",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01983",
+   "name": "Blacksmith_47_wood",
+   "slug": "wood-plank",
+   "description": "A single light-coloured rectangular block of timber.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01984",
+   "name": "Blacksmith_48_rivets",
+   "slug": "iron-rivets",
+   "description": "Three large round-headed iron rivets with pointed shanks.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01985",
+   "name": "Blacksmith_50_round_plate",
+   "slug": "round-metal-plate",
+   "description": "A round dished grey metal plate.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01987",
+   "name": "Blacksmith_52_wooden_chest",
+   "slug": "wooden-chest",
+   "description": "A brown wooden chest bound with iron straps and a clasp.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "loot",
+     "reward"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01988",
+   "name": "Blacksmith_53_red_chest",
+   "slug": "red-chest",
+   "description": "A dark red wooden chest with iron bands and a lock plate.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "loot",
+     "reward"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00515",
+   "name": "Blacksmith_55_iron_chest",
+   "slug": "iron-chest",
+   "description": "A green-grey iron chest with riveted panels and clawed feet.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "loot",
+     "reward"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01989",
+   "name": "Blacksmith_56_royal_casket",
+   "slug": "royal-casket",
+   "description": "A red and gold casket with ornate trim, gold feet and a white gem on the lid.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "loot",
+     "reward"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01990",
+   "name": "Blacksmith_57_casket",
+   "slug": "green-casket",
+   "description": "A green casket with metal trim and a green gem on the lid.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "loot",
+     "reward"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01991",
+   "name": "Blacksmith_58_goldcoin",
+   "slug": "gold-coin",
+   "description": "A large gold coin stamped with an emblem.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "price",
+     "reward",
+     "shop"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

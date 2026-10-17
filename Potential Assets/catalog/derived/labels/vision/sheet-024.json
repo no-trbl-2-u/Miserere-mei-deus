@@ -1,0 +1,555 @@
+{
+ "unit": "sheet-024",
+ "records": [
+  {
+   "cluster_id": "c01827",
+   "name": "Axe_42",
+   "slug": "ornate-diamond-head-axe-tan",
+   "description": "An ornate axe with a large diamond-shaped tan and gold head set with a dark gem on a long black haft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01828",
+   "name": "Axe_43",
+   "slug": "ornate-diamond-head-axe-teal",
+   "description": "An ornate axe with a large diamond-shaped head in pale teal and silver with a dark gem on a long black haft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01829",
+   "name": "Axe_44",
+   "slug": "twisted-staff-axe-bronze",
+   "description": "A multi-pronged curved axe head in worn bronze on a long twisted brown haft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01830",
+   "name": "Axe_45",
+   "slug": "twisted-staff-axe-crimson",
+   "description": "A multi-pronged curved axe head in dark reddish-brown on a long twisted haft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01831",
+   "name": "Axe_46",
+   "slug": "twisted-staff-axe-gold",
+   "description": "A multi-pronged curved axe head in bright gold on a long twisted orange-brown haft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01832",
+   "name": "Axe_47",
+   "slug": "winged-blade-axe-amber",
+   "description": "An amber-orange axe with a swept wing-like blade and a curling tendril-shaped haft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01833",
+   "name": "Axe_48",
+   "slug": "winged-blade-axe-amber-flame",
+   "description": "An amber-orange axe with a swept wing-like blade and curling flame-like tendrils on the haft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01834",
+   "name": "Axe_49",
+   "slug": "feathered-crescent-axe-pale",
+   "description": "A crescent axe head with pale feather-like fringe and gold ornaments on a slim dark metal pole.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01835",
+   "name": "Axe_50",
+   "slug": "feathered-crescent-axe-green",
+   "description": "A crescent axe head with white feather fringe and acid-green glowing ornaments on a slim dark metal pole.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01836",
+   "name": "Axe_v2_01",
+   "slug": "hand-axe-wooden-haft",
+   "description": "A simple axe with a small grey steel head on a long straight wooden haft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01837",
+   "name": "Axe_v2_02",
+   "slug": "claw-pick-axe-wooden",
+   "description": "A long wooden pole topped with a multi-pronged curved steel claw head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01838",
+   "name": "Axe_v2_03",
+   "slug": "claw-pick-axe-skull-red-wrap",
+   "description": "A multi-pronged curved steel claw axe with a small skull ornament and a red cloth-wrapped grip on a wooden pole.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01839",
+   "name": "Axe_v2_04",
+   "slug": "hatchet-dark-handle",
+   "description": "A woodcutter's hatchet with a steel blade and a curved dark brown handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01840",
+   "name": "Axe_v2_05",
+   "slug": "hatchet-curved-handle",
+   "description": "A hatchet with a steel head and a long curved brown wooden handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01841",
+   "name": "Axe_v2_06",
+   "slug": "hammer-axe-steel",
+   "description": "A broad rectangular steel axe head on a wooden haft with a small spiked butt.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01842",
+   "name": "Axe_v2_07",
+   "slug": "long-axe-red-haft",
+   "description": "A single-bladed steel axe with a long curved red-brown haft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01843",
+   "name": "Axe_v2_08",
+   "slug": "long-axe-brown-haft",
+   "description": "A single-bladed steel axe with a long curved brown haft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01844",
+   "name": "Axe_v2_09",
+   "slug": "long-axe-purple-wrap",
+   "description": "A curved steel axe head on a haft wrapped in purple cloth with a pointed tip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01845",
+   "name": "Axe_v2_10",
+   "slug": "double-axe-dark-steel",
+   "description": "A double-bladed battle axe with a steel head and a black banded haft topped with a spike.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01846",
+   "name": "Axe_v2_11",
+   "slug": "double-axe-flame-orange",
+   "description": "A double-bladed axe with glowing orange-yellow blades on a dark haft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01847",
+   "name": "Axe_v2_12",
+   "slug": "hatchet-black-grip",
+   "description": "A dark hatchet with a grey steel head and a thick black handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01848",
+   "name": "Axe_v2_13",
+   "slug": "hatchet-black-orange-glow",
+   "description": "A dark hatchet with orange glowing accents on the blade and a black handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01849",
+   "name": "Axe_v2_14",
+   "slug": "broad-cleaver-axe",
+   "description": "A broad flat grey steel axe blade on a plain wooden haft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01850",
+   "name": "Axe_v2_15",
+   "slug": "winged-double-axe-rust",
+   "description": "A double-bladed axe with swept wing-shaped rust-red blades on a wooden haft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01851",
+   "name": "Axe_v2_16",
+   "slug": "winged-double-axe-steel",
+   "description": "A double-bladed axe with swept wing-shaped dark steel blades on a grey haft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

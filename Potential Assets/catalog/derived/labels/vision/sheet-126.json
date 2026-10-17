@@ -1,0 +1,484 @@
+{
+ "unit": "sheet-126",
+ "records": [
+  {
+   "cluster_id": "c03856",
+   "name": "Skill_217",
+   "slug": "chain-purple",
+   "description": "A pale steel chain running diagonally across a purple radial-burst background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03857",
+   "name": "Skill_218",
+   "slug": "white-swirl-purple",
+   "description": "A glowing white crescent swirl of light on a purple and blue background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03859",
+   "name": "Skill_221",
+   "slug": "teal-blade-slash",
+   "description": "Two curved teal blade slashes with streak trails on a green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03860",
+   "name": "Skill_222",
+   "slug": "ice-shuriken",
+   "description": "A spiked ice-blue throwing star with motion streaks on a green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03861",
+   "name": "Skill_223",
+   "slug": "straw-hat-face",
+   "description": "A stern green-toned face wearing a conical straw hat on a green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03862",
+   "name": "Skill_224",
+   "slug": "crossed-scythes",
+   "description": "Two black crossed scythes inside concentric teal rings on a green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03863",
+   "name": "Skill_225",
+   "slug": "teal-slash-streaks",
+   "description": "A curved teal blade slash with trailing streaks on a dark green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03864",
+   "name": "Skill_225_noBG",
+   "slug": "teal-slash-streaks-transparent",
+   "description": "A curved teal blade slash with trailing streaks on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03865",
+   "name": "Skill_227",
+   "slug": "chain-green",
+   "description": "A steel chain running diagonally with a green glow on a green radial background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03866",
+   "name": "Skill_228",
+   "slug": "white-swirl-green",
+   "description": "A glowing white-yellow crescent swirl of light on a dark green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03867",
+   "name": "Skill_229",
+   "slug": "teal-zigzag-bands",
+   "description": "Two jagged teal zigzag bands stacked on a dark green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c03868",
+   "name": "Skill_231",
+   "slug": "grinning-face-sparkles",
+   "description": "A grinning white face with jagged teeth and eyes, surrounded by four white sparkles on dark green.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "monochrome",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03870",
+   "name": "Skill_236",
+   "slug": "shadow-hands",
+   "description": "Several black hands outlined in purple reaching in from the left on a green burst background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03871",
+   "name": "Skill_237",
+   "slug": "purple-grasping-hand",
+   "description": "A purple hand with lightning-like wisps grasping on a purple and green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03872",
+   "name": "Skill_238",
+   "slug": "crossed-chains",
+   "description": "Two steel chains crossed in an X on a green radial-burst background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03873",
+   "name": "Skill_239",
+   "slug": "magenta-starburst",
+   "description": "A bright magenta starburst radiating thin rays from a white centre.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03875",
+   "name": "Skill_242",
+   "slug": "sword-blade-green",
+   "description": "A silver sword blade pointing up-right with a gold hilt edge on a green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03876",
+   "name": "Skill_246_noBG",
+   "slug": "golden-armour-transparent",
+   "description": "A golden armoured helm and shoulder in profile on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff",
+     "defend"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03878",
+   "name": "Skill_249",
+   "slug": "flaming-dark-blade",
+   "description": "A dark curved blade wreathed in yellow-green flames on a green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00913",
+   "name": "Skill_250",
+   "slug": "greatsword-green",
+   "description": "A broad grey greatsword pointing up-left on a green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00914",
+   "name": "Skill_251",
+   "slug": "armoured-greave",
+   "description": "A blue-grey spiked armoured leg or boot with motion streaks on a teal background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03880",
+   "name": "Skill_253",
+   "slug": "maroon-shield",
+   "description": "A maroon heater shield with a pink rim on a glowing teal background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "defend"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03882",
+   "name": "Skill_255_noBG",
+   "slug": "caped-warrior-silhouette",
+   "description": "A black silhouette of a warrior with a red cape holding a sword on a transparent background with blue rays.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "silhouette",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03883",
+   "name": "Skill_256",
+   "slug": "pale-blue-helm",
+   "description": "A pale icy-blue armoured helmet on a dark blue background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "defend",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03885",
+   "name": "Skill_259",
+   "slug": "red-claws-horns",
+   "description": "Crimson crossed claw or horn shapes with purple accents on a blue background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  }
+ ]
+}

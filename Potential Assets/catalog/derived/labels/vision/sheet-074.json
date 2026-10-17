@@ -1,0 +1,509 @@
+{
+ "unit": "sheet-074",
+ "records": [
+  {
+   "cluster_id": "c03479",
+   "name": "Quest_28",
+   "slug": "brown-card-pair",
+   "description": "Two overlapping brown playing cards with orange outlines.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "quest",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03480",
+   "name": "Quest_29",
+   "slug": "purple-swirl-card-pair",
+   "description": "Two overlapping purple cards with a white swirl emblem and violet outlines.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "quest",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03481",
+   "name": "Quest_30",
+   "slug": "green-crown-card-pair",
+   "description": "Two overlapping green cards with a crown emblem and bright green outlines.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "quest",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03483",
+   "name": "Quest_33",
+   "slug": "brown-leather-book",
+   "description": "A closed brown leather book with pale page edges.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "quest",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03487",
+   "name": "Quest_39",
+   "slug": "blue-clasped-book",
+   "description": "A closed blue book with a metal clasp strap and rivets.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "quest",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03488",
+   "name": "Quest_42",
+   "slug": "rune-scroll",
+   "description": "A rolled parchment scroll unfurled to show a single rune mark.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "quest",
+     "story"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03489",
+   "name": "Quest_43",
+   "slug": "wooden-beer-mug",
+   "description": "A wooden tankard with iron bands and a foamy head of beer.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "quest",
+     "shop"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03491",
+   "name": "Quest_45",
+   "slug": "gold-filled-barrels",
+   "description": "A cluster of three wooden barrels with gold coins spilling from the tops.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "quest",
+     "loot",
+     "reward"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03493",
+   "name": "Quest_47",
+   "slug": "blue-ore-rock",
+   "description": "A dark blue rock chunk studded with glowing cyan crystals.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "quest",
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03494",
+   "name": "Quest_48",
+   "slug": "golden-skull",
+   "description": "A golden skull with a purple gem set in its forehead.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "quest",
+     "loot",
+     "reward"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03495",
+   "name": "Quest_49",
+   "slug": "green-wine-bottles",
+   "description": "Three dark green bottles with tan labels standing together.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "quest",
+     "shop"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03496",
+   "name": "Quest_50",
+   "slug": "teal-potion-bottle",
+   "description": "A square teal glass bottle with a cork stopper and a label, filled with dark liquid.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "quest",
+     "heal",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03498",
+   "name": "Quest_52",
+   "slug": "black-tome",
+   "description": "A closed black book with a tan label on its cover.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "quest",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00834",
+   "name": "Quest_54",
+   "slug": "purple-spellbook",
+   "description": "A purple book with lettering on the cover and a cord tie.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "quest",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03500",
+   "name": "Quest_56",
+   "slug": "spiked-brown-object",
+   "description": "A brown lumpy block fitted with orange spikes, hard to identify.",
+   "tags": {
+    "kind": "unknown",
+    "use": [
+     "quest"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c00835",
+   "name": "Quest_58",
+   "slug": "magenta-crystal-object",
+   "description": "A faceted magenta crystalline shape with a hollow centre.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "quest",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c00836",
+   "name": "Quest_60",
+   "slug": "dark-crystal-object",
+   "description": "A faceted dark grey-black crystalline shape with a hollow centre.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "quest",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c03501",
+   "name": "Quest_61",
+   "slug": "loose-teeth",
+   "description": "Four loose tan teeth scattered together.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "quest",
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03502",
+   "name": "Quest_62",
+   "slug": "chocolate-chip-cookie",
+   "description": "A round baked cookie dotted with dark chips.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "quest",
+     "shop"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03503",
+   "name": "Quest_63",
+   "slug": "sewing-buttons",
+   "description": "Three round buttons in cream, brown and green with a loose thread.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "quest",
+     "crafting"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03505",
+   "name": "Quest_68",
+   "slug": "soup-bowl",
+   "description": "A shallow white bowl holding brown soup.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "quest",
+     "shop"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00837",
+   "name": "Quest_69",
+   "slug": "wooden-spoon",
+   "description": "A long wooden spoon with a round bowl.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "quest",
+     "crafting"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03506",
+   "name": "Quest_70",
+   "slug": "bow-or-fishing-rod",
+   "description": "A thin wooden rod with a loose string and small metal fittings along it.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "quest",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c03507",
+   "name": "Quest_71",
+   "slug": "iron-fish-hook",
+   "description": "A single curved grey metal fish hook with a loop eye.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "quest",
+     "crafting"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03508",
+   "name": "Quest_74",
+   "slug": "purple-rune-tablet",
+   "description": "A purple stone slab with a glowing white rune carved on its face.",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "quest",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

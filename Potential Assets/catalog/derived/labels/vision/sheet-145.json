@@ -1,0 +1,481 @@
+{
+ "unit": "sheet-145",
+ "records": [
+  {
+   "cluster_id": "c05578",
+   "name": "skill_294_noBG",
+   "slug": "three-silhouettes-red-aura",
+   "description": "Three dark muscular human silhouettes standing side by side against a red radiating glow.",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "summon",
+     "buff"
+    ],
+    "style": [
+     "silhouette",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05579",
+   "name": "skill_295_noBG",
+   "slug": "pink-fanged-jaws-slash",
+   "description": "A pink fanged claw or jaw shape slashing diagonally with magenta motion streaks.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01161",
+   "name": "skill_299_noBG",
+   "slug": "pink-axe-swing",
+   "description": "A pink double-bladed axe swung diagonally with a magenta motion trail.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05580",
+   "name": "skill_29_noBG",
+   "slug": "purple-head-pink-tendrils",
+   "description": "A dark purple bald head with glaring white eyes and pink tendrils radiating from the skull.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01162",
+   "name": "skill_3",
+   "slug": "haloed-figure-orange-rays",
+   "description": "A dark bald figure with a spiral halo above the head against orange sunburst rays.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "buff",
+     "heal"
+    ],
+    "style": [
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05582",
+   "name": "skill_303_noBG",
+   "slug": "horned-demon-silhouette-axes",
+   "description": "A cyan-glowing horned silhouette holding an axe in each hand.",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "summon",
+     "combat-action"
+    ],
+    "style": [
+     "silhouette",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05583",
+   "name": "skill_305_noBG",
+   "slug": "green-fanged-jaws-slash",
+   "description": "A green fanged claw or jaw shape slashing diagonally with green curved lines.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05584",
+   "name": "skill_306_noBG",
+   "slug": "green-leaf-blades",
+   "description": "A cluster of sharp green leaf-like blades or spikes rising upward.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c05586",
+   "name": "skill_309_noBG",
+   "slug": "teal-axe-swing",
+   "description": "A teal-green axe head swinging with a soft green motion trail.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05587",
+   "name": "skill_30_noBG",
+   "slug": "pink-glowing-demon-face",
+   "description": "A glowing pink and white face with slanted eyes and a jagged-toothed grin.",
+   "tags": {
+    "kind": "glyph",
+    "use": [
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05588",
+   "name": "skill_31",
+   "slug": "brown-talon-claw-red",
+   "description": "A brown scaled clawed talon with golden slash lines on a red background.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05589",
+   "name": "skill_310_noBG",
+   "slug": "green-axes-swoosh",
+   "description": "Green axe heads with curved green swoosh trails sweeping downward.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01163",
+   "name": "skill_311_noBG",
+   "slug": "cyan-arrow-streak",
+   "description": "A white-tipped cyan arrow streaking upper right with curved blue motion lines.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05590",
+   "name": "skill_312_noBG",
+   "slug": "eye-green-rays",
+   "description": "A black-outlined eye with concentric pupil and green and blue rays radiating around it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "status-effect"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05591",
+   "name": "skill_313_noBG",
+   "slug": "white-arrow-volley",
+   "description": "A volley of white arrows streaking diagonally toward the upper right.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05592",
+   "name": "skill_314_noBG",
+   "slug": "fist-thrusting-spear",
+   "description": "A pale fist gripping a white spear or blade pointing to the right.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05593",
+   "name": "skill_315_noBG",
+   "slug": "blue-leg-kick-swirl",
+   "description": "A teal leg extended in a kick with pale blue swirling wind streaks.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05594",
+   "name": "skill_316_noBG",
+   "slug": "red-figure-in-blue-streaks",
+   "description": "A red humanoid silhouette floating among cyan upward streaks of energy.",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05595",
+   "name": "skill_317_noBG",
+   "slug": "bandaged-fist-green-glow",
+   "description": "A clenched fist with a bandaged forearm surrounded by a green glow.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "buff"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05596",
+   "name": "skill_318_noBG",
+   "slug": "green-arrow-streak",
+   "description": "A pale green-tipped arrow with green streaks flying toward the right.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05597",
+   "name": "skill_31_noBG",
+   "slug": "brown-talon-claw",
+   "description": "A brown scaled clawed talon with golden slash lines, transparent background.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05598",
+   "name": "skill_32",
+   "slug": "sword-blade-red",
+   "description": "A steel sword blade angled diagonally over a red gradient background.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05599",
+   "name": "skill_322_noBG",
+   "slug": "blue-eye-rays",
+   "description": "A black-outlined eye with concentric pupil, black lashes above and blue rays below.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "status-effect"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05600",
+   "name": "skill_326",
+   "slug": "three-arrows-crossed-blue",
+   "description": "Three dark arrows fanning upward from a crossing point on a deep blue glowing background.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05601",
+   "name": "skill_326_noBG",
+   "slug": "three-arrows-crossed-blue-transparent",
+   "description": "Three dark arrows fanning upward from a crossing point with a blue glow, transparent background.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

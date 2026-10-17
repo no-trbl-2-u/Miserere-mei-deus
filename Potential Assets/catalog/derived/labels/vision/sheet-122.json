@@ -1,0 +1,513 @@
+{
+ "unit": "sheet-122",
+ "records": [
+  {
+   "cluster_id": "c00723",
+   "name": "Mageskill_36_nobg",
+   "slug": "frozen-spellbook",
+   "description": "A cyan ice-encrusted spellbook inside a glowing circular frost ring.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff",
+     "player-class"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00724",
+   "name": "Mageskill_38_nobg",
+   "slug": "ice-dragon-breath",
+   "description": "A pale ice dragon head exhaling a stream of frost and swirling blue wind.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "player-class"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00055",
+   "name": "Mageskill_44_nobg",
+   "slug": "lightning-bolt-arrow",
+   "description": "A white-hot zigzag lightning bolt ending in an arrowhead, with a faint circular outline behind it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "player-class"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00730",
+   "name": "Mageskill_46_nobg",
+   "slug": "flaming-shield",
+   "description": "A golden shield wreathed in orange flames.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "defend",
+     "buff",
+     "player-class"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03228",
+   "name": "Melee_01_dodge",
+   "slug": "sword-dodge-slash",
+   "description": "A sword and a curved blade crossing in a burst of golden sparks on a dark amber background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "player-class"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03229",
+   "name": "Melee_02",
+   "slug": "gauntlet-punch",
+   "description": "A steel-armoured gauntlet fist driving forward with an orange motion swoosh.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "player-class"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03230",
+   "name": "Melee_03_execute",
+   "slug": "sword-lightning-strike",
+   "description": "A gauntleted hand thrusting a sword upward crackling with yellow lightning against a dark blue background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "player-class"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03231",
+   "name": "Melee_04_nb",
+   "slug": "armoured-shoulder-wing",
+   "description": "A dark plated pauldron edged with a pale golden feathered glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "defend",
+     "player-class"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03232",
+   "name": "Melee_05_kill",
+   "slug": "knight-glowing-slash",
+   "description": "A silhouetted knight with shield and sword struck by a bright diagonal slash on a red background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "player-class"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "silhouette"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03233",
+   "name": "Melee_05_nb",
+   "slug": "knight-glowing-slash-transparent",
+   "description": "A silhouetted knight with shield and sword struck by a bright diagonal slash, on transparency.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "player-class"
+    ],
+    "style": [
+     "painted",
+     "silhouette",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03234",
+   "name": "Melee_06",
+   "slug": "purple-fist-crossed-swords",
+   "description": "A gauntleted fist gripping crossed swords wrapped in purple energy on a black background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "debuff",
+     "player-class"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03235",
+   "name": "Melee_06_nb",
+   "slug": "purple-fist-crossed-swords-transparent",
+   "description": "A gauntleted fist gripping crossed swords wrapped in purple energy, on transparency.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "debuff",
+     "player-class"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03236",
+   "name": "Melee_07_maces",
+   "slug": "spiked-mace-bleed",
+   "description": "A spiked iron mace held in a green gauntlet with red blood splatter behind it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "debuff",
+     "player-class"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03237",
+   "name": "Melee_07_nb",
+   "slug": "spiked-mace-bleed-transparent",
+   "description": "A spiked iron mace held in a green gauntlet with red blood splatter, on transparency.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "debuff",
+     "player-class"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03238",
+   "name": "Melee_08",
+   "slug": "round-shields",
+   "description": "Two overlapping round shields painted in blue, red and orange quarters with steel bosses.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "defend",
+     "player-class"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03239",
+   "name": "Melee_08_nb",
+   "slug": "round-shields-transparent",
+   "description": "Two overlapping round shields painted in blue, red and orange quarters with steel bosses, on transparency.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "defend",
+     "player-class"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03240",
+   "name": "Melee_09_destroy",
+   "slug": "flaming-slash-rubble",
+   "description": "A fiery orange slash streaking across shattered rock debris on a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "player-class"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03241",
+   "name": "Melee_09_nb",
+   "slug": "flaming-slash-rubble-transparent",
+   "description": "A fiery orange slash streaking across shattered rock debris, on transparency.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "player-class"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03242",
+   "name": "Melee_1_nb",
+   "slug": "crossed-blades-glow",
+   "description": "A sword crossing a curved blade with a bright golden glow at the intersection.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "player-class"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03243",
+   "name": "Melee_2_nb",
+   "slug": "gauntlet-punch-gold",
+   "description": "A steel-armoured gauntlet fist with a golden arc swoosh behind it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "player-class"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03244",
+   "name": "Melee_3_nb",
+   "slug": "sword-lightning-strike-transparent",
+   "description": "A gauntleted hand thrusting a sword upward crackling with yellow lightning, on transparency.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "player-class"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00741",
+   "name": "Paladinskill_03_nobg",
+   "slug": "lion-crest-shield",
+   "description": "A gold shield bearing a lion head emblem with a silver rim.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "defend",
+     "player-class"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00744",
+   "name": "Paladinskill_06_nobg",
+   "slug": "warhammer-swing",
+   "description": "A golden ornate warhammer shown in three overlapping positions to depict a swing.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "player-class"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00746",
+   "name": "Paladinskill_08_nobg",
+   "slug": "golden-crossed-slashes-shield",
+   "description": "Two crossing golden slash streaks over a dark shield with sparkles.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "defend",
+     "player-class"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00751",
+   "name": "Paladinskill_14_nobg",
+   "slug": "bow-in-ring",
+   "description": "A black bow outlined inside a pale ringed circle on a cream background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "player-class"
+    ],
+    "style": [
+     "line-art",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

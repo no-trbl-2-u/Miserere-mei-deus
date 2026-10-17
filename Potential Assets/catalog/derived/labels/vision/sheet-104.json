@@ -1,0 +1,509 @@
+{
+ "unit": "sheet-104",
+ "records": [
+  {
+   "cluster_id": "c04712",
+   "name": "cloak_21",
+   "slug": "brown-hooded-cloak",
+   "description": "A plain dark reddish-brown cloak with a draped hood and straight hanging folds.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04713",
+   "name": "cloak_22",
+   "slug": "indigo-gold-embroidered-cloak",
+   "description": "A deep indigo cloak with gold curling embroidery and pale trim along the hem.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04714",
+   "name": "cloak_23",
+   "slug": "blue-tentacle-cloak",
+   "description": "A cloak made of flowing blue ribbon-like strands resembling jellyfish tentacles.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04715",
+   "name": "cloak_24",
+   "slug": "yellow-black-checkered-tabard",
+   "description": "A yellow and black checkered banner-style cloak with a jagged bottom edge.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04716",
+   "name": "cloak_25",
+   "slug": "blue-skull-emblem-cloak",
+   "description": "A bright blue ragged-edged cloak with a white skull-like emblem on the chest.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04717",
+   "name": "cloak_26",
+   "slug": "red-black-spiked-cloak",
+   "description": "A dark cloak with red cracked patterning and a jagged spiked hem.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04719",
+   "name": "cloak_29",
+   "slug": "grey-blue-white-trim-cloak",
+   "description": "A slate blue-grey cloak with white edge trim and a squared hem.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04720",
+   "name": "cloak_30",
+   "slug": "leaf-covered-cloak",
+   "description": "A green cloak covered in overlapping leaves with a brown collar.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04721",
+   "name": "cloak_31",
+   "slug": "green-grey-glinting-cloak",
+   "description": "A dark green-grey cloak with a pale ornamental crest and a sparkle at the hem.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04722",
+   "name": "cloak_32",
+   "slug": "orange-fur-trim-cloak",
+   "description": "A brown cloak with a red crest at the top and orange striped fur-like texture.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04728",
+   "name": "diver_mask",
+   "slug": "brass-diving-helmet",
+   "description": "A brass deep-sea diving helmet with round green-glass portholes and a rear hose fitting.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04742",
+   "name": "glasses",
+   "slug": "purple-lens-goggles",
+   "description": "White-framed goggles with round purple lenses and a black strap.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04744",
+   "name": "hammer_51",
+   "slug": "red-brick-head-mallet",
+   "description": "A hammer with a red-orange rectangular head and a long dark wooden handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04745",
+   "name": "hammer_52",
+   "slug": "iron-war-hammer",
+   "description": "A grey steel war hammer with a riveted square head and a dark wooden shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04746",
+   "name": "hammer_53",
+   "slug": "long-handled-sledgehammer",
+   "description": "A sledgehammer with a small grey head on a long pale metal-tipped handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04747",
+   "name": "hammer_54",
+   "slug": "dark-handled-sledge",
+   "description": "A hammer with a heavy grey rectangular head on a thin dark handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05251",
+   "name": "materials_01_sticks",
+   "slug": "dark-twig-bundle",
+   "description": "A bundle of dark gnarled branches and sticks.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05252",
+   "name": "materials_02_sticks",
+   "slug": "wooden-pole-bundle",
+   "description": "Three straight light wooden poles lying together.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05254",
+   "name": "materials_04_wooden_roof",
+   "slug": "wooden-roof-shingles",
+   "description": "A pile of brown wooden roof shingles with a few loose pieces.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05255",
+   "name": "materials_05_tile",
+   "slug": "red-clay-roof-tiles",
+   "description": "A stack of red-orange clay roof tiles with dark gaps between them.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05256",
+   "name": "materials_06_boards",
+   "slug": "lumber-boards",
+   "description": "A stack of light wooden planks.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05260",
+   "name": "materials_10_putty_knife",
+   "slug": "pointed-trowel",
+   "description": "A pointed steel trowel with a short wooden handle.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05261",
+   "name": "materials_11_hacksaw",
+   "slug": "hand-saw",
+   "description": "A hand saw with a serrated steel blade and a wooden handle with a cut-out grip.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05262",
+   "name": "materials_12_chisel",
+   "slug": "steel-chisel",
+   "description": "A slim steel chisel with a flat narrow blade.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05265",
+   "name": "materials_15_tile",
+   "slug": "grey-stone-slabs",
+   "description": "A stack of pale grey flat stone or metal slabs.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

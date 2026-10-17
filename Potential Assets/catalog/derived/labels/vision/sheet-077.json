@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-077",
+ "records": [
+  {
+   "cluster_id": "c03591",
+   "name": "Res_123",
+   "slug": "blue-flower-bunch",
+   "description": "A bunch of small blue flowers on green stems tied together.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03592",
+   "name": "Res_124",
+   "slug": "wooden-plank",
+   "description": "A single light-brown wooden plank with visible grain.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03594",
+   "name": "Res_126",
+   "slug": "red-spotted-mushroom",
+   "description": "A mushroom with a red cap dotted in white and a pale stem.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00189",
+   "name": "Res_129",
+   "slug": "chocolate-pieces",
+   "description": "Two dark-brown chocolate-like blocks stacked at an angle.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00190",
+   "name": "Res_13",
+   "slug": "red-powder-pile",
+   "description": "A cone-shaped pile of glossy red material with small dark bumps.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03595",
+   "name": "Res_130",
+   "slug": "grey-mushroom",
+   "description": "A grey-beige mushroom with a wide cap and slender curved stem.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03596",
+   "name": "Res_131",
+   "slug": "orange-mushroom-cluster",
+   "description": "A cluster of four orange mushrooms with orange stems.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03597",
+   "name": "Res_132",
+   "slug": "bloodshot-eyeball",
+   "description": "A pale eyeball with a brown iris, red veins and a trailing root-like stalk.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03598",
+   "name": "Res_133",
+   "slug": "green-slime-blob",
+   "description": "A flat bright-green slimy blob with an irregular outline.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03599",
+   "name": "Res_134",
+   "slug": "wooden-spikes",
+   "description": "Three sharpened brown wooden spikes bundled together pointing upward.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03600",
+   "name": "Res_135",
+   "slug": "red-apple",
+   "description": "A dark red apple with a short stem and a green leaf.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03601",
+   "name": "Res_136",
+   "slug": "mango",
+   "description": "A red and yellow mango with a green leaf on top.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03603",
+   "name": "Res_138",
+   "slug": "bananas",
+   "description": "A bunch of two ripe yellow bananas.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03604",
+   "name": "Res_139",
+   "slug": "carrot",
+   "description": "An orange carrot with a leafy green top.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03605",
+   "name": "Res_14",
+   "slug": "grey-stone",
+   "description": "A faceted grey rock chunk with lighter highlights.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03606",
+   "name": "Res_140",
+   "slug": "silver-fish",
+   "description": "A silvery-grey fish seen from the side with fins spread.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03607",
+   "name": "Res_141",
+   "slug": "pink-fish",
+   "description": "A pinkish-red fish with orange fins angled diagonally.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03608",
+   "name": "Res_142",
+   "slug": "orange-crab",
+   "description": "An orange-red crab with raised claws and spread legs.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03609",
+   "name": "Res_143",
+   "slug": "squid",
+   "description": "A brownish-pink squid with tentacles trailing downward.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03610",
+   "name": "Res_144",
+   "slug": "scallop-shell",
+   "description": "A peach-coloured ribbed scallop shell.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03611",
+   "name": "Res_146",
+   "slug": "cake-slice",
+   "description": "A triangular slice of white cake with a cherry on top and jam layer.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03612",
+   "name": "Res_147",
+   "slug": "swirl-lollipop",
+   "description": "A pink and brown spiral lollipop on a thin stick.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03613",
+   "name": "Res_148",
+   "slug": "purple-wrapped-candy",
+   "description": "A purple wrapped candy with twisted ends.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03614",
+   "name": "Res_15",
+   "slug": "brown-rock",
+   "description": "A rounded brown rock with lighter faceted highlights.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03615",
+   "name": "Res_150",
+   "slug": "tan-stone",
+   "description": "A pale olive-tan cracked stone chunk.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

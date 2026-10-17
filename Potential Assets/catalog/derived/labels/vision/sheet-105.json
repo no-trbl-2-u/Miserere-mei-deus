@@ -1,0 +1,508 @@
+{
+ "unit": "sheet-105",
+ "records": [
+  {
+   "cluster_id": "c05270",
+   "name": "necklace_03",
+   "slug": "gold-chain-purple-gem-necklace",
+   "description": "Thin gold chain necklace with a purple diamond-shaped gem pendant.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05271",
+   "name": "necklace_04",
+   "slug": "silver-chain-pink-gem-necklace",
+   "description": "Dark silver chain necklace with a pink triangular gem pendant.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05273",
+   "name": "necklace_06",
+   "slug": "gold-chain-black-gem-necklace",
+   "description": "Gold chain necklace with a small gold-set dark teardrop gem pendant.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01107",
+   "name": "necklace_07",
+   "slug": "heavy-gold-curb-chain",
+   "description": "Thick gold curb-link chain necklace with no pendant.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05275",
+   "name": "necklace_18",
+   "slug": "gold-chain-amethyst-medallion",
+   "description": "Gold chain necklace with a round gold medallion set with a purple gem.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05276",
+   "name": "necklace_19",
+   "slug": "silver-chain-looped-charm-necklace",
+   "description": "Light silver chain necklace ending in a small figure-eight loop charm.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05277",
+   "name": "necklace_20",
+   "slug": "leather-cord-acorn-amulet",
+   "description": "Brown leather cord necklace with a brown acorn-shaped pendant.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05278",
+   "name": "necklace_21",
+   "slug": "leather-cord-voodoo-doll-amulet",
+   "description": "Brown cord necklace with a small stitched voodoo doll pendant.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05280",
+   "name": "necklace_23",
+   "slug": "bead-fringe-cord-necklace",
+   "description": "Tan cord necklace with small orange beads hanging along the lower edge.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00249",
+   "name": "necklace_25",
+   "slug": "silver-chain-gold-crystal-necklace",
+   "description": "Silver chain necklace with a small gold faceted crystal pendant.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05281",
+   "name": "necklace_27",
+   "slug": "gold-chain-claw-necklace",
+   "description": "Gold chain necklace with a cluster of white claw or fang pendants.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05284",
+   "name": "necklace_30",
+   "slug": "dark-cord-skull-necklace",
+   "description": "Dark cord necklace with a small grey skull pendant.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05285",
+   "name": "necklace_31",
+   "slug": "dark-cord-orange-gem-necklace",
+   "description": "Dark cord necklace with a square silver-framed orange gem pendant.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05286",
+   "name": "necklace_32",
+   "slug": "dark-cord-green-gem-necklace",
+   "description": "Dark cord necklace with a square silver-framed green gem pendant.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05287",
+   "name": "necklace_33",
+   "slug": "silver-chain-web-necklace",
+   "description": "Fine silver chain necklace with a delicate web-like silver ornament at the bottom.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05288",
+   "name": "necklace_34",
+   "slug": "silver-chain-black-gem-necklace",
+   "description": "Fine silver chain necklace with a black teardrop gem pendant.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05289",
+   "name": "necklace_35",
+   "slug": "silver-chain-violet-gem-necklace",
+   "description": "Fine silver chain necklace with a violet teardrop gem pendant.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05294",
+   "name": "poker",
+   "slug": "crossed-iron-hooks",
+   "description": "Two crossed dark iron hooks or tongs.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c05297",
+   "name": "runic_tablet_03",
+   "slug": "stone-rune-tablet-swirl",
+   "description": "Cracked tan stone tablet carved with a spiral rune.",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05298",
+   "name": "runic_tablet_04",
+   "slug": "blue-grey-rune-stone",
+   "description": "Blue-grey rough stone slab with jagged cracks.",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05299",
+   "name": "runic_tablet_05",
+   "slug": "brown-cracked-rune-stone",
+   "description": "Brown rough stone slab carved with cracked rune lines.",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05300",
+   "name": "runic_tablet_06",
+   "slug": "dark-grey-cracked-stone",
+   "description": "Dark grey rough stone slab with deep vertical cracks.",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05301",
+   "name": "runic_tablet_07",
+   "slug": "glowing-purple-rune-tablet",
+   "description": "Black tablet with a bright purple glowing lightning-like rune.",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "loot",
+     "inventory",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05302",
+   "name": "runic_tablet_08",
+   "slug": "glowing-white-rune-tablet",
+   "description": "Black tablet with a pale violet glowing angular rune.",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "loot",
+     "inventory",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05303",
+   "name": "runic_tablet_09",
+   "slug": "glowing-orange-spiral-rune-stone",
+   "description": "Dark stone tablet with a glowing orange spiral rune and sparks.",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "loot",
+     "inventory",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

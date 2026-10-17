@@ -1,0 +1,530 @@
+{
+ "unit": "sheet-035",
+ "records": [
+  {
+   "cluster_id": "c00535",
+   "name": "Bow_17",
+   "slug": "amber-twisted-bow",
+   "description": "A bow with an amber-bronze limb twisted like a gnarled branch and a thin tan string.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02117",
+   "name": "Bow_18",
+   "slug": "pale-gold-gnarled-bow",
+   "description": "A pale golden-tan bow with knotted, vine-like limbs and a thin string.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02118",
+   "name": "Bow_19",
+   "slug": "copper-pink-twisted-bow",
+   "description": "A copper-pink bow with a twisting, rope-like limb and a thin string.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02120",
+   "name": "Bow_21",
+   "slug": "grey-horned-bow",
+   "description": "A dark grey bow with sweeping curved limbs, pale horn-like tips and a thin string.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02121",
+   "name": "Bow_22",
+   "slug": "gold-winged-bow",
+   "description": "A yellow-gold bow with jagged blade-like fins along the upper limb and a green-yellow string.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02122",
+   "name": "Bow_23",
+   "slug": "crimson-horned-bow",
+   "description": "A crimson bow with broad sweeping horn-like limbs and dark red accents.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02125",
+   "name": "Bow_26",
+   "slug": "rust-thorn-bow",
+   "description": "A rust-red bow with thin knotted limbs and small thorny protrusions.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02126",
+   "name": "Bow_27",
+   "slug": "green-thorn-bow",
+   "description": "A green bow with curved limbs lined with pointed thorn spikes.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02127",
+   "name": "Bow_28",
+   "slug": "dark-teal-spiked-bow",
+   "description": "A dark teal-green bow with leaf-like spikes along both limbs.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02128",
+   "name": "Bow_29",
+   "slug": "orange-barbed-bow",
+   "description": "An orange-gold bow with curled barbed limbs and a thin string.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02129",
+   "name": "Bow_30",
+   "slug": "golden-slender-bow",
+   "description": "A slender golden bow with thin curved limbs and small barbs.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02130",
+   "name": "Bow_31",
+   "slug": "brown-thorn-bow",
+   "description": "A brown bow with a long curved limb covered in many small thorn spikes.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02132",
+   "name": "Bow_33",
+   "slug": "orange-brown-thorn-bow",
+   "description": "An orange-brown bow with a spiky thorned limb and a thin string.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02133",
+   "name": "Bow_34",
+   "slug": "faded-grey-feather-bow",
+   "description": "A faded grey-brown bow with feathery, splayed spikes along its limbs.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02134",
+   "name": "Bow_35",
+   "slug": "orange-feather-bow",
+   "description": "An orange bow whose limbs fan out into feather-like blades.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02135",
+   "name": "Bow_36",
+   "slug": "orange-wing-bow",
+   "description": "An orange wing-shaped bow with layered feather-like blades along the limb.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02136",
+   "name": "Bow_37",
+   "slug": "icy-blue-wing-bow",
+   "description": "A translucent ice-blue bow with feather-like wing blades and a pale string.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02137",
+   "name": "Bow_38",
+   "slug": "brown-red-angular-bow",
+   "description": "A brown-red bow with angular, sharply tapered limbs and a thin string.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02138",
+   "name": "Bow_39",
+   "slug": "reddish-brown-spiked-bow",
+   "description": "A reddish-brown bow with angular limbs and small spikes.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02141",
+   "name": "Bow_v2_02",
+   "slug": "dark-iron-hook-bow",
+   "description": "A dark olive-grey iron bow with hooked tips and a pale string.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02142",
+   "name": "Bow_v2_03",
+   "slug": "dark-angular-hook-bow",
+   "description": "A dark grey-brown angular bow with sharply bent limbs and hooked tips.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02143",
+   "name": "Bow_v2_04",
+   "slug": "dark-angular-hook-bow-blue-gem",
+   "description": "A dark grey angular bow with hooked tips and blue accent markings at the grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02144",
+   "name": "Bow_v2_05",
+   "slug": "fiery-orange-bow",
+   "description": "A dark bow wrapped in glowing orange flames along its limbs.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02145",
+   "name": "Bow_v2_06",
+   "slug": "frost-cyan-bow",
+   "description": "A bow glowing cyan with crystalline ice and small blue sparkles around it.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02146",
+   "name": "Bow_v2_07",
+   "slug": "violet-glow-bow",
+   "description": "A dark bow with a glowing purple-magenta outline and a straight string.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

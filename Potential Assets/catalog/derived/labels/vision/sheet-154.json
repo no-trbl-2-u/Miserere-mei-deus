@@ -1,0 +1,482 @@
+{
+ "unit": "sheet-154",
+ "records": [
+  {
+   "cluster_id": "c05784",
+   "name": "skill_9_noBG",
+   "slug": "flexed-arm-skill",
+   "description": "Painted icon of a muscular flexed arm in warm orange-brown tones.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01208",
+   "name": "spawn_nobg",
+   "slug": "glowing-eggs-spawn",
+   "description": "Painted icon of a cluster of teal glowing eggs with dark scaly shells.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "summon",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01219",
+   "name": "venom_nobg",
+   "slug": "venom-drip",
+   "description": "Painted icon of a dark venom drop dripping from a pointed tip over a toxic green glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05238",
+   "name": "icon_check_frame_off",
+   "slug": "check-frame-off",
+   "description": "Flat grey checkmark with a lighter highlight, the unchecked-state variant.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "settings",
+     "panel-chrome"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05239",
+   "name": "icon_check_frame_on",
+   "slug": "check-frame-on",
+   "description": "Bright green checkmark with a thick flat stroke, the checked-state variant.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "settings",
+     "panel-chrome"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05241",
+   "name": "icon_palette",
+   "slug": "colour-wheel-palette",
+   "description": "Round colour wheel divided into twelve hue segments from yellow through red, purple and blue to green.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05242",
+   "name": "icon_pen",
+   "slug": "white-pen",
+   "description": "White angled pen or pencil silhouette with a small tip detail.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "monochrome",
+     "flat-vector",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05243",
+   "name": "icon_social_youtube",
+   "slug": "youtube-logo",
+   "description": "White rounded rectangle with a play triangle cut out, the video-site logo shape.",
+   "tags": {
+    "kind": "brand-mark",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "monochrome",
+     "flat-vector",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04695",
+   "name": "circle",
+   "slug": "white-ring",
+   "description": "Plain white thin ring outline with a transparent centre.",
+   "tags": {
+    "kind": "glyph",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "monochrome",
+     "flat-vector",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05295",
+   "name": "rectangle",
+   "slug": "white-bar",
+   "description": "Tall plain white rounded vertical bar.",
+   "tags": {
+    "kind": "glyph",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "monochrome",
+     "flat-vector",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05842",
+   "name": "spinner_square_thin",
+   "slug": "thin-bar-spinner",
+   "description": "Very thin white vertical line segment, a spinner element.",
+   "tags": {
+    "kind": "glyph",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "monochrome",
+     "flat-vector",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04205",
+   "name": "StripeWhite_4",
+   "slug": "pe-text-fragment",
+   "description": "Blocky white pixel lettering showing the letters p and e, cropped at the edges.",
+   "tags": {
+    "kind": "text-label",
+    "use": [
+     "typography"
+    ],
+    "style": [
+     "pixel-art",
+     "monochrome",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04731",
+   "name": "elM",
+   "slug": "blue-slash-streaks",
+   "description": "Painted icon of several blue-white diagonal energy streaks on a dark purple-blue background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04732",
+   "name": "elP",
+   "slug": "golden-blade-slash",
+   "description": "Painted icon of a curved steel blade with a bright golden swoosh trail on an orange background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04733",
+   "name": "elV",
+   "slug": "green-spiral-hand",
+   "description": "Painted icon of a pale skeletal hand glowing green with a spiral rune in the palm.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "status-effect",
+     "debuff"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04743",
+   "name": "gs",
+   "slug": "gold-nugget",
+   "description": "Pixel-style chunky gold nugget with faceted yellow planes.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "price"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04748",
+   "name": "hc",
+   "slug": "eagle-head",
+   "description": "Painted icon of a bald eagle head in profile with white feathers and yellow beak over a green circle.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04749",
+   "name": "hcA",
+   "slug": "purple-thorn-branch",
+   "description": "Painted icon of a dark thorny branch with purple glowing leaves on a violet background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04750",
+   "name": "hcC",
+   "slug": "arrow-pierced-apple",
+   "description": "Painted icon of a red apple pierced by an arrow inside a green ring.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04751",
+   "name": "hcLastHit",
+   "slug": "flaming-sword",
+   "description": "Painted icon of a dark sword wreathed in orange flames on a red background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05266",
+   "name": "mod",
+   "slug": "grey-wrench",
+   "description": "Grey metallic wrench with an open-end jaw, drawn with simple shading.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "settings",
+     "crafting"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05267",
+   "name": "mp2",
+   "slug": "triple-arrows",
+   "description": "Painted icon of three arrows pointing downward through a pale green light on a dark teal background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05268",
+   "name": "mp4",
+   "slug": "raised-hands-glow",
+   "description": "Painted icon of two dark gloved hands raised beneath a glowing purple orb.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05308",
+   "name": "sc",
+   "slug": "silver-coins",
+   "description": "Three grey silver coins scattered, each with a small embossed mark.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "price"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05843",
+   "name": "ss",
+   "slug": "blue-crystal",
+   "description": "Pixel-style blue crystal cluster with light cyan facets.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "price"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

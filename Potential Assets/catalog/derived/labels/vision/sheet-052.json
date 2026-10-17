@@ -1,0 +1,493 @@
+{
+ "unit": "sheet-052",
+ "records": [
+  {
+   "cluster_id": "c02712",
+   "name": "Gloves_16",
+   "slug": "golden-clawed-gauntlets",
+   "description": "A pair of ornate gold gauntlets with clawed fingertips and an eye-like emblem on the back.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00661",
+   "name": "Gloves_18",
+   "slug": "green-leather-gloves",
+   "description": "A pair of olive-green gloves with wrapped cuffs, shown as left and right hand.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00051",
+   "name": "Gloves_19",
+   "slug": "purple-wrapped-gloves",
+   "description": "A pair of purple cloth-wrapped gloves with red gem studs on the cuffs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00663",
+   "name": "Gloves_25",
+   "slug": "white-cloth-gloves",
+   "description": "A pair of plain white gloves with separated fingers.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02714",
+   "name": "Gloves_28",
+   "slug": "black-gold-emblem-gloves",
+   "description": "A pair of black gauntlets with gold sunburst emblems on the backs of the hands.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02715",
+   "name": "GoldCoin",
+   "slug": "gold-coin",
+   "description": "A single large gold coin embossed with a winged emblem.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "reward",
+     "price"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02716",
+   "name": "GoldCoinTen",
+   "slug": "gold-coin-stack",
+   "description": "A tall stack of gold coins with a few loose coins at its base.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "reward",
+     "price"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02717",
+   "name": "GoldCoinThree",
+   "slug": "gold-coins-three",
+   "description": "Three gold coins scattered, each stamped with an emblem.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "reward",
+     "price"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02718",
+   "name": "GoldCup",
+   "slug": "gold-goblet",
+   "description": "A gold goblet with a wide bowl, stem and round foot.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "reward"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02719",
+   "name": "GoldStatue",
+   "slug": "gold-statuettes",
+   "description": "Three small gold figurine statuettes on pedestals of differing heights.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "reward"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02720",
+   "name": "GoldenShield",
+   "slug": "bronze-studded-round-shield",
+   "description": "A round brown shield studded with brass bosses in a ring pattern.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02728",
+   "name": "GreeceShield",
+   "slug": "greek-lambda-shield",
+   "description": "A round dark-rimmed bronze shield marked with a red lambda-like letter.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02729",
+   "name": "GreenMetalShield",
+   "slug": "green-heater-shield",
+   "description": "A green heater-shaped metal shield with a pale T-shaped cross emblem.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00666",
+   "name": "GreenPants",
+   "slug": "green-cuffed-trousers",
+   "description": "Olive-green trousers with a belt and rolled cuffs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02730",
+   "name": "GreenPants2",
+   "slug": "dark-green-cargo-trousers",
+   "description": "Narrow dark-green trousers with side pockets.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02731",
+   "name": "GreenPants3",
+   "slug": "green-striped-bloomers",
+   "description": "Green baggy trousers with pale vertical stripes, gathered at the ankles.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02732",
+   "name": "GreenShirt",
+   "slug": "green-laced-shirt",
+   "description": "A green long-sleeved shirt with a laced open collar.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02733",
+   "name": "GreensParsley",
+   "slug": "parsley-bunch",
+   "description": "A bundle of fresh green leafy parsley tied at the stem.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02738",
+   "name": "Gun_v2_01",
+   "slug": "brown-flintlock-pistol",
+   "description": "A flintlock pistol with a brown wooden stock and dark barrel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02739",
+   "name": "Gun_v2_02",
+   "slug": "silver-flintlock-pistol",
+   "description": "A flintlock pistol with a silver-grey ornate stock and barrel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02740",
+   "name": "Gun_v2_03",
+   "slug": "gold-flintlock-pistol",
+   "description": "A flintlock pistol with a golden engraved stock and barrel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02741",
+   "name": "Gun_v2_04",
+   "slug": "long-flintlock-musket",
+   "description": "A long-barrelled flintlock musket with dark steel and brown stock.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02742",
+   "name": "Gun_v2_05",
+   "slug": "red-stock-flintlock-musket",
+   "description": "A long flintlock musket with a reddish-brown stock.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02744",
+   "name": "Gun_v2_07",
+   "slug": "blunderbuss-pistol",
+   "description": "A flintlock firearm with a flared steel barrel and polished red-brown grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02746",
+   "name": "Gun_v2_09",
+   "slug": "slim-flintlock-rifle",
+   "description": "A slender flintlock rifle with a dark stock and steel barrel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

@@ -1,0 +1,539 @@
+{
+ "unit": "sheet-102",
+ "records": [
+  {
+   "cluster_id": "c04639",
+   "name": "WoodShieldBlueYellow",
+   "slug": "round-shield-blue-yellow",
+   "description": "Round wooden shield with blue and yellow quartered panels and a steel central boss.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04640",
+   "name": "WoodShieldRed",
+   "slug": "round-shield-dark-red",
+   "description": "Round wooden shield in dark red and black with pale cross bands and a steel central boss.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04641",
+   "name": "WoodShieldRed2",
+   "slug": "round-shield-red-white-spokes",
+   "description": "Round wooden shield with red and white radiating segments and a steel central boss.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04642",
+   "name": "WoodenBox",
+   "slug": "wooden-crate",
+   "description": "Plain wooden shipping crate made of nailed planks with a lid.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04643",
+   "name": "WoodenChest",
+   "slug": "wooden-chest",
+   "description": "Closed domed wooden treasure chest with iron fittings and a front lock.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "loot",
+     "reward"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04644",
+   "name": "WoodenHammer",
+   "slug": "wooden-mallet",
+   "description": "Wooden mallet with a thick rectangular head and a long handle, angled diagonally.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04645",
+   "name": "WorkShoes",
+   "slug": "leather-work-shoes",
+   "description": "Pair of brown leather boots with laces at the ankle.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04646",
+   "name": "Worm",
+   "slug": "pink-worm",
+   "description": "Curved pinkish-orange worm with a darker tapering tail.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04647",
+   "name": "YellowShirt",
+   "slug": "yellow-tunic",
+   "description": "Mustard-yellow long-sleeved tunic with a laced collar and a brown belt.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04656",
+   "name": "bg_blue",
+   "slug": "item-backdrop-blue",
+   "description": "Rounded square slot background in dark blue with faint crackled texture and a darker vignette edge.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "background",
+     "inventory",
+     "panel-chrome"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04657",
+   "name": "bg_green",
+   "slug": "item-backdrop-green",
+   "description": "Rounded square slot background in dark green with faint crackled texture and a darker vignette edge.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "background",
+     "inventory",
+     "panel-chrome"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04658",
+   "name": "bg_grey",
+   "slug": "item-backdrop-grey",
+   "description": "Rounded square slot background in dark grey with faint crackled texture and a darker vignette edge.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "background",
+     "inventory",
+     "panel-chrome"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04659",
+   "name": "bg_purple",
+   "slug": "item-backdrop-purple",
+   "description": "Rounded square slot background in dark purple with faint crackled texture and a darker vignette edge.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "background",
+     "inventory",
+     "panel-chrome"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04660",
+   "name": "bg_red",
+   "slug": "item-backdrop-red",
+   "description": "Rounded square slot background in dark red with faint crackled texture and a darker vignette edge.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "background",
+     "inventory",
+     "panel-chrome"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04661",
+   "name": "bonus_a_1",
+   "slug": "steel-sallet-helmet",
+   "description": "Grey steel helmet with a perforated visor, shown in side view on a small base.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04662",
+   "name": "bonus_a_10",
+   "slug": "red-white-cuirass",
+   "description": "Steel breastplate with a red and white tabard-style front and rounded shoulders.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04663",
+   "name": "bonus_a_2",
+   "slug": "leather-gauntlets",
+   "description": "Pair of brown leather gauntlets with strapped cuffs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04664",
+   "name": "bonus_a_3",
+   "slug": "steel-clawed-gauntlets",
+   "description": "Pair of dark steel articulated gauntlets with pointed finger plates.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04665",
+   "name": "bonus_a_4",
+   "slug": "mail-coif-helm",
+   "description": "Bronze-toned helmet with a visor slit and a chainmail aventail covering the neck.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04666",
+   "name": "bonus_a_5",
+   "slug": "black-gold-cape",
+   "description": "Black cape trimmed in gold with ornate gold flame-like embroidery.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04667",
+   "name": "bonus_a_6",
+   "slug": "purple-spiked-collar",
+   "description": "Purple band with jagged spiked edges, worn as a collar or circlet.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04668",
+   "name": "bonus_a_7",
+   "slug": "gold-trim-pauldron-armour",
+   "description": "Dark grey and brown shoulder-and-chest armour piece with gold edge trim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04669",
+   "name": "bonus_a_8",
+   "slug": "silver-gem-ring",
+   "description": "Silver ring with an angular setting holding an orange gem.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04670",
+   "name": "bonus_a_9",
+   "slug": "black-tall-boots",
+   "description": "Pair of tall black leather boots with buckled ankle straps.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04681",
+   "name": "bracelet_b_01",
+   "slug": "bronze-patterned-bracelet",
+   "description": "Bronze and brown cylindrical bracelet with a gold geometric pattern band.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

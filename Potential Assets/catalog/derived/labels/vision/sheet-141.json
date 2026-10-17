@@ -1,0 +1,517 @@
+{
+ "unit": "sheet-141",
+ "records": [
+  {
+   "cluster_id": "c05486",
+   "name": "skill_195",
+   "slug": "crossed-pink-blades",
+   "description": "Two crossed red blades with pink light streaks on a dark red background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01148",
+   "name": "skill_195_noBG",
+   "slug": "crossed-pink-blades-transparent",
+   "description": "Two crossed red blades with pink light streaks on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05487",
+   "name": "skill_196",
+   "slug": "red-dna-helix",
+   "description": "A glowing red double-helix strand on a dark red background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff",
+     "status-effect"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05488",
+   "name": "skill_196_noBG",
+   "slug": "red-dna-helix-transparent",
+   "description": "A glowing red double-helix strand on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff",
+     "status-effect"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05489",
+   "name": "skill_197",
+   "slug": "red-horned-helm",
+   "description": "A crimson horned helmet with a dark visor slit on a red glowing background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "defend",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05490",
+   "name": "skill_197_noBG",
+   "slug": "red-horned-helm-transparent",
+   "description": "A crimson horned helmet with a dark visor slit on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "defend",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05491",
+   "name": "skill_198_noBG",
+   "slug": "red-claw-slashes",
+   "description": "Three curved red-pink slash streaks fanning across a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05492",
+   "name": "skill_199_noBG",
+   "slug": "grey-cleaver-blade",
+   "description": "A broad grey steel blade with a short crossguard angled diagonally on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05493",
+   "name": "skill_1_noBG",
+   "slug": "tan-fist-strike",
+   "description": "A tan clenched fist punching forward with a motion trail on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05494",
+   "name": "skill_2",
+   "slug": "meditating-silhouette",
+   "description": "A black silhouette of a seated meditating figure against an orange radiant glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff",
+     "heal"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05496",
+   "name": "skill_200_noBG",
+   "slug": "flaming-pink-skull",
+   "description": "A bone skull with glowing red eyes and a pink flame rising from its head.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05498",
+   "name": "skill_201_noBG",
+   "slug": "green-flexed-arm",
+   "description": "A green muscular flexed arm with small rock fragments around it on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05499",
+   "name": "skill_202_noBG",
+   "slug": "green-fist-barrage",
+   "description": "Several green fists driving forward in a flurry on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05500",
+   "name": "skill_203_noBG",
+   "slug": "green-fist-punch",
+   "description": "A single green clenched fist punching with a pale motion arc on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01150",
+   "name": "skill_205_noBG",
+   "slug": "meditating-head-halo",
+   "description": "A dark head silhouette with a yellow spiral halo above it and yellow rays behind.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05501",
+   "name": "skill_206_noBG",
+   "slug": "golden-face-third-eye",
+   "description": "A golden stern face with glowing green eyes and a green gem on the forehead, with yellow rays.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05502",
+   "name": "skill_207_noBG",
+   "slug": "flying-golden-rocks",
+   "description": "Golden boulders and fragments flying diagonally on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05503",
+   "name": "skill_208_noBG",
+   "slug": "yellow-starburst",
+   "description": "A bright yellow-green radial starburst flash on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05504",
+   "name": "skill_209_noBG",
+   "slug": "green-pointing-hand-barrier",
+   "description": "A green hand pointing a finger inside a green translucent oval barrier on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "defend",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05505",
+   "name": "skill_20_noBG",
+   "slug": "screaming-skeleton",
+   "description": "A screaming skeleton in grey armour with pink rays behind it on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff",
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01151",
+   "name": "skill_21",
+   "slug": "lightning-clawed-hand",
+   "description": "A clawed hand gripping a staff crackling with cyan lightning on a purple background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05507",
+   "name": "skill_210_noBG",
+   "slug": "yellow-ripple-flexed-arm",
+   "description": "A green-gold flexed arm surrounded by concentric yellow ripple lines on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05509",
+   "name": "skill_211_noBG",
+   "slug": "purple-crystal-blades",
+   "description": "Three purple crystalline blades pointing down-left on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05510",
+   "name": "skill_212_noBG",
+   "slug": "pink-shuriken-trail",
+   "description": "Pink star-shaped throwing blades with trailing sparkles on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05511",
+   "name": "skill_213_noBG",
+   "slug": "purple-conical-hat-face",
+   "description": "A stern purple face under a wide conical hat with glowing white eyes on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff",
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

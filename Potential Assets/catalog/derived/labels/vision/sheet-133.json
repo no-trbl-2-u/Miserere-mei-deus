@@ -1,0 +1,489 @@
+{
+ "unit": "sheet-133",
+ "records": [
+  {
+   "cluster_id": "c01016",
+   "name": "Warlock_18_nobg",
+   "slug": "warlock-green-flame-drops",
+   "description": "Three falling green flame drops with dark cores on a green glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01020",
+   "name": "Warlock_22_nobg",
+   "slug": "warlock-sword-slash-burst",
+   "description": "A white sword blade cut through by black jagged cracks, with bright green light rays radiating behind it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01028",
+   "name": "Warlock_34_nobg",
+   "slug": "warlock-purple-fireball",
+   "description": "A swirling purple flame orb with a white glowing sigil trailing upward.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01032",
+   "name": "Warlock_42_nobg",
+   "slug": "warlock-horned-skull-shield",
+   "description": "A green-glowing shield bearing a black horned skull emblem.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "defend",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01034",
+   "name": "Warlock_44_nobg",
+   "slug": "warlock-dark-crossed-shield",
+   "description": "A black shield with thin crossed light lines inside a green glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "defend",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00072",
+   "name": "Warriorskill_02_nobg",
+   "slug": "warrior-bat-wing-blade",
+   "description": "A dark curved blade merging into a black bat-wing silhouette with orange light rays behind.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01039",
+   "name": "Warriorskill_04_nobg",
+   "slug": "warrior-triple-blades",
+   "description": "Three grey blade shards with orange edges pointing upward on a warm glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01044",
+   "name": "Warriorskill_10_nobg",
+   "slug": "warrior-red-serrated-slash",
+   "description": "A black serrated blade edge radiating bright red and white light beams.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01050",
+   "name": "Warriorskill_20_nobg",
+   "slug": "warrior-cyan-blade-slash",
+   "description": "A hand gripping a curved sword glowing cyan with speed streaks.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01054",
+   "name": "Warriorskill_25_nobg",
+   "slug": "warrior-twin-round-shields",
+   "description": "Two overlapping round wooden shields with metal bosses on a green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "defend",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01057",
+   "name": "Warriorskill_29_nobg",
+   "slug": "warrior-green-boot",
+   "description": "A dark green ornate leather boot with gold trim on a yellow-green glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01063",
+   "name": "Warriorskill_36_nobg",
+   "slug": "warrior-orange-banner",
+   "description": "An orange cloth banner hanging from a wooden pole.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01069",
+   "name": "Warriorskill_46_nobg",
+   "slug": "warrior-purple-scythe-slash",
+   "description": "A scythe-like blade shape with three purple slash arcs on a violet background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01070",
+   "name": "Warriorskill_48_nobg",
+   "slug": "warrior-punch-to-face",
+   "description": "A fist punching a grimacing man's face, with green glow at the edge.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01072",
+   "name": "Warriorskill_50_nobg",
+   "slug": "warrior-battle-axe",
+   "description": "A steel double-bit axe on a wooden haft with green glow behind it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04598",
+   "name": "Wind_01",
+   "slug": "wind-tornado",
+   "description": "A grey whirling tornado funnel on a dark stormy background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04599",
+   "name": "Wind_01_nb",
+   "slug": "wind-tornado-alt",
+   "description": "A grey whirling tornado funnel on a dark stormy background, variant with transparency.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04600",
+   "name": "Wind_02_nb",
+   "slug": "wind-runner",
+   "description": "A man in brown clothes sprinting through blowing wind streaks, on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04601",
+   "name": "Wind_02_run",
+   "slug": "wind-runner-opaque",
+   "description": "A man in brown clothes sprinting through blowing wind streaks on a dark blue background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04602",
+   "name": "Wind_03_blow",
+   "slug": "wind-blowing-face-opaque",
+   "description": "A blue-toned man's face in profile blowing a gust with swirling wind, on a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04603",
+   "name": "Wind_03_nb",
+   "slug": "wind-blowing-face",
+   "description": "A blue-toned man's face in profile blowing a gust with swirling wind, on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04604",
+   "name": "Wind_04_nb",
+   "slug": "wind-storm-cloud",
+   "description": "A grey storm cloud with blue lightning bolts striking down, on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04605",
+   "name": "Wind_04_storm",
+   "slug": "wind-storm-cloud-opaque",
+   "description": "A grey storm cloud with blue lightning bolts striking down on a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04606",
+   "name": "Wind_05_hitfist",
+   "slug": "wind-gauntlet-fist-opaque",
+   "description": "A brown-gloved fist driving forward with a wind swirl, on a dark teal background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04607",
+   "name": "Wind_05_nb",
+   "slug": "wind-gauntlet-fist",
+   "description": "A brown-gloved fist driving forward with a wind swirl, on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

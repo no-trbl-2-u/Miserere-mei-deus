@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-148",
+ "records": [
+  {
+   "cluster_id": "c05651",
+   "name": "skill_39",
+   "slug": "flaming-sword-on-red",
+   "description": "A broad dark blade wreathed in orange flames, angled diagonally on a red background.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "opaque",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05652",
+   "name": "skill_391_noBG",
+   "slug": "void-eye-swirl",
+   "description": "A black spiral vortex with a glowing white core ringed in blue, radiating dark spokes.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05653",
+   "name": "skill_393_noBG",
+   "slug": "sleep-zzz",
+   "description": "Three stacked blue letter Zs drawn with dark outlines, the universal sleep symbol.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "status-effect",
+     "debuff"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05654",
+   "name": "skill_394_noBG",
+   "slug": "dark-cloud-plus",
+   "description": "A dark navy cloud of lumps with a small plus sign and teal light rays behind it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05655",
+   "name": "skill_395_noBG",
+   "slug": "blue-hourglass",
+   "description": "A glowing blue hourglass with sand in the lower bulb and teal rays behind it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "status-effect",
+     "buff"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01170",
+   "name": "skill_396_noBG",
+   "slug": "purple-light-pillar",
+   "description": "A violet beam of light rising from a base of black rock fragments.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05656",
+   "name": "skill_397_noBG",
+   "slug": "healing-flask",
+   "description": "A black round-bottom flask with bubbles and a plus sign, outlined in teal with rays behind it.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "heal",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05657",
+   "name": "skill_398_noBG",
+   "slug": "blue-ghost",
+   "description": "A frightened-looking blue ghost with a wavy tail and teal rays behind it.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "summon",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05658",
+   "name": "skill_39_noBG",
+   "slug": "flaming-sword-cutout",
+   "description": "A broad dark blade wreathed in orange flames, angled diagonally, with a transparent background.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05659",
+   "name": "skill_400_noBG",
+   "slug": "blue-slash-streaks",
+   "description": "Several blue-white streaks fanning out diagonally like energy slashes.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05660",
+   "name": "skill_401_noBG",
+   "slug": "golden-droplets",
+   "description": "Three glossy golden-orange droplets in a row, the middle one largest.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "status-effect"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05661",
+   "name": "skill_402_noBG",
+   "slug": "yellow-slash-streak",
+   "description": "A sweeping yellow-green streak with ragged edges slanting diagonally.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05663",
+   "name": "skill_404_noBG",
+   "slug": "claw-slash-acid",
+   "description": "Pale curved claw marks with yellow-green liquid dripping from them.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00261",
+   "name": "skill_405_noBG",
+   "slug": "golden-crescent-slash",
+   "description": "Crossed golden crescent arcs forming a slash mark.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05664",
+   "name": "skill_406_noBG",
+   "slug": "orange-handprint-splat",
+   "description": "An orange splatter in the shape of an open hand with spiky fingers.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05665",
+   "name": "skill_40_noBG",
+   "slug": "greatsword-on-red",
+   "description": "A broad grey steel greatsword with a dark hilt, set diagonally on a red-brown background.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "opaque",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05666",
+   "name": "skill_41",
+   "slug": "ice-shards-on-dark",
+   "description": "Blue ice shards slanting across a dark purple background.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "opaque",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05667",
+   "name": "skill_410_noBG",
+   "slug": "orange-green-orbs",
+   "description": "Two glossy spheres, a small and a large, shading from orange to green.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "status-effect"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05668",
+   "name": "skill_411_noBG",
+   "slug": "green-droplets",
+   "description": "Three glossy green droplets in a row, the middle one largest.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "status-effect"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05669",
+   "name": "skill_412_noBG",
+   "slug": "green-slash-streak",
+   "description": "A teal-green streak with ragged edges sweeping diagonally.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05670",
+   "name": "skill_417_noBG",
+   "slug": "green-healing-cross",
+   "description": "A glowing mint-green cross with a dark green outline.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "heal",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00089",
+   "name": "skill_419_noBG",
+   "slug": "green-wind-swirl",
+   "description": "A bright green curved swoosh of motion lines.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05671",
+   "name": "skill_41_noBG",
+   "slug": "ice-shards-cutout",
+   "description": "Blue ice shards slanting diagonally with a transparent background.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05672",
+   "name": "skill_420_noBG",
+   "slug": "teal-green-orbs",
+   "description": "Two glossy spheres, a small and a large, shading from teal to green.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "status-effect"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05673",
+   "name": "skill_422_noBG",
+   "slug": "green-crystal-shards",
+   "description": "A cluster of sharp dark-green crystal shards radiating outward.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

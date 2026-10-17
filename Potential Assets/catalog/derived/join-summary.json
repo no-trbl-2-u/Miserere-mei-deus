@@ -1,0 +1,27 @@
+{
+ "files": 8697,
+ "corpus_tables_with_asset_refs": 38,
+ "files_with_corpus_row": 2629,
+ "files_without_corpus_row": 6068,
+ "distinct_unresolved_names": 2,
+ "unresolved_examples": [
+  {
+   "table": "revent_node",
+   "column": "Image",
+   "value": "<roamer>",
+   "refs": 2
+  },
+  {
+   "table": "season",
+   "column": "Image",
+   "value": "シーズン1",
+   "refs": 1
+  },
+  {
+   "table": "season",
+   "column": "Icon",
+   "value": "シーズン1",
+   "refs": 1
+  }
+ ]
+}

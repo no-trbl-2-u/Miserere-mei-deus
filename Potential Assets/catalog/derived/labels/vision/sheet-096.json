@@ -1,0 +1,542 @@
+{
+ "unit": "sheet-096",
+ "records": [
+  {
+   "cluster_id": "c04373",
+   "name": "Tailoring_16_yarn",
+   "slug": "brown-yarn-skein",
+   "description": "Two brown skeins of yarn wrapped together with a tan paper band.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04375",
+   "name": "Tailoring_18_magic_yarn",
+   "slug": "magic-pink-yarn-ball",
+   "description": "A ball of bright pink yarn wrapped in a glowing magenta aura with a trailing strand.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04376",
+   "name": "Tailoring_19_scissors",
+   "slug": "tailor-scissors",
+   "description": "A pair of plain grey steel tailoring scissors with open blades.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04377",
+   "name": "Tailoring_20_magic_scissors",
+   "slug": "magic-scissors",
+   "description": "A pair of purple-handled scissors surrounded by magenta sparkles.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04378",
+   "name": "Tailoring_21_magicthreads",
+   "slug": "magic-thread-spool",
+   "description": "A large spool of glowing magenta thread with a purple aura.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04379",
+   "name": "Tailoring_22_blue_clothroll",
+   "slug": "blue-cloth-roll",
+   "description": "A rolled bolt of blue patterned cloth with a wooden knob at the bottom end.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00986",
+   "name": "Tailoring_23_green_clothroll",
+   "slug": "green-cloth-roll",
+   "description": "A rolled bolt of green patterned cloth with a wooden knob at the bottom end.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04380",
+   "name": "Tailoring_24_socks",
+   "slug": "brown-sock",
+   "description": "A brown knitted sock with a ribbed cuff and a zigzag-patterned ankle.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "crafting",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04381",
+   "name": "Tailoring_25_glowes",
+   "slug": "brown-gloves",
+   "description": "A pair of brown leather gloves with tan cuffs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "crafting",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04382",
+   "name": "Tailoring_26_red_clothroll",
+   "slug": "red-cloth-roll",
+   "description": "A rolled bolt of crimson cloth with a wooden knob on the left end.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04384",
+   "name": "Tailoring_28_scarf",
+   "slug": "blue-scarf",
+   "description": "A ribbed blue scarf looped and draped.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "crafting",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04387",
+   "name": "Tailoring_31_yellow_shirt",
+   "slug": "yellow-shirt",
+   "description": "A yellow button-up shirt with rolled sleeves.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "crafting",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00987",
+   "name": "Tailoring_33_blue_shirt",
+   "slug": "blue-shirt",
+   "description": "A blue button-up shirt with chest pockets and rolled sleeves.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "crafting",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04388",
+   "name": "Tailoring_34_green_shirt",
+   "slug": "green-shirt",
+   "description": "A green button-up shirt with rolled sleeves.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "crafting",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04389",
+   "name": "Tailoring_35_buttons",
+   "slug": "sewing-buttons",
+   "description": "Three sewing buttons in purple, pink and red with a loose thread.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04390",
+   "name": "Tailoring_36_carpet",
+   "slug": "magic-carpet",
+   "description": "A small purple carpet with gold swirl embroidery and tasselled corners.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04391",
+   "name": "Tailoring_37_silkcloth",
+   "slug": "silk-cloth-roll",
+   "description": "A rolled bolt of smooth lilac silk cloth.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04392",
+   "name": "Tailoring_38_fiercloth",
+   "slug": "fire-cloth-roll",
+   "description": "A rolled bolt of orange cloth wreathed in flames.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04393",
+   "name": "Tailoring_39_frost_cloth",
+   "slug": "frost-cloth-roll",
+   "description": "A rolled bolt of light blue cloth with a frosty cyan glow.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04396",
+   "name": "Tailoring_42_little_bag",
+   "slug": "small-dark-pouch",
+   "description": "A small dark navy pouch with a flap and a metal clasp.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "crafting",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04397",
+   "name": "Tailoring_43_bag",
+   "slug": "brown-sack",
+   "description": "A brown drawstring sack with a green gem-like patch and stitched seams.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "crafting",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04399",
+   "name": "Tailoring_45_magic_bag",
+   "slug": "magic-orange-sack",
+   "description": "A drawstring sack wrapped in a fiery orange magical glow.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "crafting",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04401",
+   "name": "Tailoring_47_bigred_bag",
+   "slug": "big-red-backpack",
+   "description": "A large red backpack with a front pocket and strap.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "crafting",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04402",
+   "name": "Tailoring_48_bigblack_bag",
+   "slug": "big-black-backpack",
+   "description": "A large black backpack with embossed patterns and front straps.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "crafting",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04403",
+   "name": "Tailoring_49_miner_bag",
+   "slug": "miner-backpack",
+   "description": "A brown leather backpack with buckled straps and a front flap.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "crafting",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

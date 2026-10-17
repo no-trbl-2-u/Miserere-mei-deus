@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-101",
+ "records": [
+  {
+   "cluster_id": "c04572",
+   "name": "Wand_v2_56",
+   "slug": "wand-golden-orbs",
+   "description": "A wooden wand with a gnarled root-like handle topped by glowing golden orbs and sparks.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04573",
+   "name": "Wand_v2_57",
+   "slug": "wand-golden-swirl",
+   "description": "A green-handled wand ending in a glowing golden spiral curl.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04575",
+   "name": "Wand_v2_59",
+   "slug": "wand-blue-crystal-spiked",
+   "description": "A dark spiked wand with a blue-glowing crystalline head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04578",
+   "name": "Wand_v2_62",
+   "slug": "wand-red-glowing-orb",
+   "description": "A wand with a red clawed holder cradling a bright glowing red-white orb.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04579",
+   "name": "Wand_v2_63",
+   "slug": "wand-cyan-hooked-orb",
+   "description": "A wand with a cyan-edged curved hook head holding a glowing blue-white orb.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04580",
+   "name": "Wand_v2_64",
+   "slug": "wand-blue-ice-crystal",
+   "description": "A wand with a large faceted blue ice crystal head on a dark handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04581",
+   "name": "Wand_v2_65",
+   "slug": "wand-gold-gem",
+   "description": "An ornate bronze wand with a glowing golden gem at the tip and yellow radiance.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04582",
+   "name": "Wand_v2_66",
+   "slug": "wand-green-lightning",
+   "description": "A slender wand with a green-yellow lightning spark at its tip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04583",
+   "name": "Wand_v2_67",
+   "slug": "wand-blue-light-orb",
+   "description": "A dark blue wand topped with a bright glowing blue-white orb and small satellite sparks.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04585",
+   "name": "Wand_v2_69",
+   "slug": "wand-purple-crystal",
+   "description": "A dark wand with a spiked black claw head holding a glowing purple gem.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04586",
+   "name": "Wand_v2_70",
+   "slug": "wand-green-serpent",
+   "description": "A green scaled staff with a coiled cobra head at the top.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04587",
+   "name": "Wand_v2_71",
+   "slug": "wand-red-dragon-head",
+   "description": "A spiny red-brown club-like wand carved with a dragon head and glowing red edges.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04588",
+   "name": "Wand_v2_72",
+   "slug": "wand-teal-lightning-orb",
+   "description": "A teal wand topped with a crackling cyan electric energy orb.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04589",
+   "name": "Wand_v2_73",
+   "slug": "wand-teal-spirit-swirl",
+   "description": "A dark green wand with swirling translucent teal spirit wisps at the tip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04590",
+   "name": "Wand_v2_74",
+   "slug": "wand-white-crystal-thorns",
+   "description": "A dark thorned wand with a cluster of white crystal shards at the tip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04591",
+   "name": "WarHammer",
+   "slug": "war-hammer",
+   "description": "A heavy-headed war hammer with a long wooden haft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04592",
+   "name": "WarHammer2",
+   "slug": "war-hammer-pick",
+   "description": "A long-handled hammer with a narrow metal head and wooden shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04593",
+   "name": "WaterMalon",
+   "slug": "watermelon",
+   "description": "A whole striped watermelon beside a cut red slice with a green rind.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04595",
+   "name": "WhitePants",
+   "slug": "white-pants",
+   "description": "A pair of plain baggy off-white trousers.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04596",
+   "name": "WhiteShield",
+   "slug": "white-shield",
+   "description": "A kite-shaped white shield with black cross bands and a gold central emblem.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04597",
+   "name": "WhiteShirt",
+   "slug": "white-shirt",
+   "description": "A plain off-white laced-neck linen shirt with a brown belt.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04636",
+   "name": "WoodCup",
+   "slug": "wooden-cup",
+   "description": "A wooden tankard with metal bands and a side handle.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04637",
+   "name": "WoodShield",
+   "slug": "wood-shield",
+   "description": "A round wooden shield with a metal central boss.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01073",
+   "name": "WoodShieldBlackYellow",
+   "slug": "wood-shield-black-yellow",
+   "description": "A round wooden shield with black and yellow radiating stripes and a metal boss.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04638",
+   "name": "WoodShieldBlueWhite",
+   "slug": "wood-shield-blue-white",
+   "description": "A round wooden shield with blue and white vertical stripes and a metal boss.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

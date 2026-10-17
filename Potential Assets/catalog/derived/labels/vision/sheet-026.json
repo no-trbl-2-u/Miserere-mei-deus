@@ -1,0 +1,506 @@
+{
+ "unit": "sheet-026",
+ "records": [
+  {
+   "cluster_id": "c01881",
+   "name": "Axe_v2_46",
+   "slug": "frost-axe-blue",
+   "description": "Double-bladed battle axe wreathed in glowing icy blue energy on a dark haft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01882",
+   "name": "Axe_v2_47",
+   "slug": "plain-bearded-axe",
+   "description": "Plain grey iron axe with a wide crescent blade and a long wooden handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01883",
+   "name": "Axe_v2_48",
+   "slug": "poison-warhammer-green",
+   "description": "Spiked hammer-headed weapon on a long haft surrounded by a toxic green glow.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01884",
+   "name": "Axe_v2_49",
+   "slug": "violet-aura-axe",
+   "description": "Axe with a riveted steel head and orange-capped haft outlined in a purple aura.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01885",
+   "name": "Axe_v2_50",
+   "slug": "ornate-flame-axe",
+   "description": "Ornate black double-headed axe with orange filigree and a fiery orange glow.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01886",
+   "name": "Axe_v2_51",
+   "slug": "crimson-spiked-axe",
+   "description": "Red-glowing spiked axe with jagged bristling blades on a dark haft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01887",
+   "name": "Axe_v2_52",
+   "slug": "purple-arcane-axe",
+   "description": "Double-bladed axe with a magical purple halo and a dark spiked haft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01888",
+   "name": "Axe_v2_54",
+   "slug": "blue-runic-axe",
+   "description": "Black double-bladed axe with ornate blue runic patterns on a dark haft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01889",
+   "name": "Axe_v2_55",
+   "slug": "golden-halberd-axe",
+   "description": "Pale kite-shaped axe head with black studs on a long golden-trimmed pole.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00503",
+   "name": "Back_01",
+   "slug": "grey-cloak",
+   "description": "Plain grey-brown draped cloak with a collar hole and soft folds.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01891",
+   "name": "Back_03",
+   "slug": "green-gold-trim-cloak",
+   "description": "Green draped cloak with gold trim along the hem.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01892",
+   "name": "Back_04",
+   "slug": "red-gold-trim-cloak",
+   "description": "Red draped cloak with gold edging.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01893",
+   "name": "Back_05",
+   "slug": "tattered-brown-cloak",
+   "description": "Ragged brown cloak with torn hem and a small clasp.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00504",
+   "name": "Back_07",
+   "slug": "blue-flowing-cloak",
+   "description": "Blue cloak flowing to one side in smooth folds.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01894",
+   "name": "Back_08",
+   "slug": "purple-gold-trim-cloak",
+   "description": "Purple cloak with golden edging and a light highlight.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01896",
+   "name": "Back_10",
+   "slug": "green-scarf-mantle",
+   "description": "Bright green gathered mantle with a rolled collar and draping folds.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01897",
+   "name": "Back_11",
+   "slug": "red-scarf-mantle",
+   "description": "Rose-red gathered mantle with a rolled collar and draping folds.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00505",
+   "name": "Back_12",
+   "slug": "purple-gold-collar-cape",
+   "description": "Purple cape with a gold-trimmed collar and gold edging.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00129",
+   "name": "Back_16",
+   "slug": "fur-trimmed-orange-cloak",
+   "description": "Orange-brown cloak with white fur trim around the edges.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01900",
+   "name": "BagBrown",
+   "slug": "brown-bag",
+   "description": "Dark brown leather bag with a front buckle flap.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01901",
+   "name": "BagOfGold",
+   "slug": "bag-of-gold",
+   "description": "Round brown cloth sack tied at the neck, the gold bag icon.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "inventory",
+     "shop"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01904",
+   "name": "Bandage",
+   "slug": "bandage",
+   "description": "Red cloth bandage coiled in a loop with a loose end.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "inventory",
+     "heal"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01907",
+   "name": "BarbarianChest",
+   "slug": "barbarian-chest-armour",
+   "description": "Fur-trimmed leather chest armour with spiked pauldrons and straps.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01908",
+   "name": "BasicHelm",
+   "slug": "basic-iron-helm",
+   "description": "Round grey iron helmet with a short nose guard.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01909",
+   "name": "BasicMailHelm",
+   "slug": "mail-coif-helm",
+   "description": "Iron helmet with a nose guard and a dark chainmail neck covering.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

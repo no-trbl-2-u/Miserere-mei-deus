@@ -1,0 +1,1728 @@
+{
+ "unit": "batch-13",
+ "records": [
+  {
+   "cluster_id": "c04913",
+   "name": "icon-SK52",
+   "slug": "skin-52-dorukumondo",
+   "description": "64x64 icon for the skin Dorukumondo, which the shop sells as Skin 52 (SPISK052) and which the skin table lists as SKNS0052.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04914",
+   "name": "icon-SK53",
+   "slug": "skin-53-sindis",
+   "description": "64x64 icon for the skin Sindis, which the shop sells as Skin 53 (SPISK053) and which the skin table lists as SKNS0053.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04915",
+   "name": "icon-SK54",
+   "slug": "skin-54-therese",
+   "description": "64x64 icon for the skin Therese, which the shop sells as Skin 54 (SPISK054) and which the skin table lists as SKNS0054.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04916",
+   "name": "icon-SK55",
+   "slug": "skin-55-grigori",
+   "description": "64x64 icon for the skin Grigori, which the shop sells as Skin 55 (SPISK055) and which the skin table lists as SKNS0055.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04917",
+   "name": "icon-SK56",
+   "slug": "skin-56-potchy",
+   "description": "64x64 icon for the skin Potchy, which the shop sells as Skin 56 (SPISK056) and which the skin table lists as SKNS0056.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04918",
+   "name": "icon-SK57",
+   "slug": "skin-57-umar",
+   "description": "64x64 icon for the skin Umar, which the shop sells as Skin 57 (SPISK057) and which the skin table lists as SKNS0057.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04919",
+   "name": "icon-SK58",
+   "slug": "skin-58-masahide",
+   "description": "64x64 icon for the skin Masahide, which the shop sells as Skin 58 (SPISK058) and which the skin table lists as SKNS0058.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04920",
+   "name": "icon-SK59",
+   "slug": "skin-59-jamil",
+   "description": "64x64 icon for the skin Jamil, which the shop sells as Skin 59 (SPISK059) and which the skin table lists as SKNS0059.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04921",
+   "name": "icon-SK60",
+   "slug": "skin-60-kenzo",
+   "description": "64x64 icon for the skin Kenzo, which the shop sells as Skin 60 (SPISK060) and which the skin table lists as SKNS0060.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04922",
+   "name": "icon-SK61",
+   "slug": "skin-61-rutovin",
+   "description": "64x64 icon for the skin Rutovin, which the shop sells as Skin 61 (SPISK061) and which the skin table lists as SKNS0061.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04923",
+   "name": "icon-SK62",
+   "slug": "skin-62-ramira",
+   "description": "64x64 icon for the skin Ramira, which the shop sells as Skin 62 (SPISK062) and which the skin table lists as SKNS0062.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04924",
+   "name": "icon-SK63",
+   "slug": "skin-63-ramona",
+   "description": "64x64 icon for the skin Ramona, which the shop sells as Skin 63 (SPISK063) and which the skin table lists as SKNS0063.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04925",
+   "name": "icon-SK64",
+   "slug": "skin-64-sara",
+   "description": "64x64 icon for the skin Sara, which the shop sells as Skin 64 (SPISK064) and which the skin table lists as SKNS0064.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04926",
+   "name": "icon-SK65",
+   "slug": "skin-65-shutina",
+   "description": "64x64 icon for the skin Shutina, which the shop sells as Skin 65 (SPISK065) and which the skin table lists as SKNS0065.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04927",
+   "name": "icon-SK66",
+   "slug": "skin-66-pearl",
+   "description": "64x64 icon for the skin Pearl, which the shop sells as Skin 66 (SPISK066) and which the skin table lists as SKNS0066.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04928",
+   "name": "icon-SK67",
+   "slug": "skin-67-henryse",
+   "description": "64x64 icon for the skin Henryse, which the shop sells as Skin 67 (SPISK067) and which the skin table lists as SKNS0067.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04929",
+   "name": "icon-SK68",
+   "slug": "skin-68-varvara",
+   "description": "64x64 icon for the skin Varvara, which the shop sells as Skin 68 (SPISK068) and which the skin table lists as SKNS0068.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04930",
+   "name": "icon-SK69",
+   "slug": "skin-69-kinu",
+   "description": "64x64 icon for the skin Kinu, which the shop sells as Skin 69 (SPISK069) and which the skin table lists as SKNS0069.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04931",
+   "name": "icon-SK70",
+   "slug": "skin-70-tsuneyoshi",
+   "description": "64x64 icon for the skin Tsuneyoshi, which the shop sells as Skin 70 (SPISK070) and which the skin table lists as SKNS0070.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04932",
+   "name": "icon-SK71",
+   "slug": "skin-71-solven",
+   "description": "64x64 icon for the skin Solven, which the shop sells as Skin 71 (SPISK071) and which the skin table lists as SKNS0071.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04933",
+   "name": "icon-SK72",
+   "slug": "skin-72-erkurude",
+   "description": "64x64 icon for the skin Erkurude, which the shop sells as Skin 72 (SPISK072) and which the skin table lists as SKNS0072.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04934",
+   "name": "icon-SK73",
+   "slug": "skin-73-nefereia",
+   "description": "64x64 icon for the skin Nefereia, which the shop sells as Skin 73 (SPISK073) and which the skin table lists as SKNS0073.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04935",
+   "name": "icon-SK74",
+   "slug": "skin-74-faceless",
+   "description": "64x64 icon for the skin Faceless, which the shop sells as Skin 74 (SPISK074) and which the skin table lists as SKNS0074.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04936",
+   "name": "icon-SK75",
+   "slug": "skin-75-darubae",
+   "description": "64x64 icon for the skin Darubae, which the shop sells as Skin 75 (SPISK075) and which the skin table lists as SKNS0075.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04937",
+   "name": "icon-SK76",
+   "slug": "skin-76-shizune",
+   "description": "64x64 icon for the skin Shizune, which the shop sells as Skin 76 (SPISK076) and which the skin table lists as SKNS0076.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04938",
+   "name": "icon-SK77",
+   "slug": "skin-77-eltovaru",
+   "description": "64x64 icon for the skin Eltovaru, which the shop sells as Skin 77 (SPISK077) and which the skin table lists as SKNS0077.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04939",
+   "name": "icon-SK78",
+   "slug": "skin-78-mirika",
+   "description": "64x64 icon for the skin Mirika, which the shop sells as Skin 78 (SPISK078) and which the skin table lists as SKNS0078.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04940",
+   "name": "icon-SK79",
+   "slug": "skin-79-yayoi",
+   "description": "64x64 icon for the skin Yayoi, which the shop sells as Skin 79 (SPISK079) and which the skin table lists as SKNS0079.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04941",
+   "name": "icon-SK80",
+   "slug": "skin-80-tsukiko",
+   "description": "64x64 icon for the skin Tsukiko, which the shop sells as Skin 80 (SPISK080) and which the skin table lists as SKNS0080.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04942",
+   "name": "icon-SK81",
+   "slug": "skin-81-sagakure",
+   "description": "64x64 icon for the skin Sagakure, which the shop sells as Skin 81 (SPISK081) and which the skin table lists as SKNS0081.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04943",
+   "name": "icon-SK82",
+   "slug": "skin-82-irina",
+   "description": "64x64 icon for the skin Irina, which the shop sells as Skin 82 (SPISK082) and which the skin table lists as SKNS0082.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04944",
+   "name": "icon-SK83",
+   "slug": "skin-83-ghost-lily",
+   "description": "64x64 icon for the skin Ghost Lily, which the shop sells as Skin 83 (SPISK083) and which the skin table lists as SKNS0083.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04945",
+   "name": "icon-SK84",
+   "slug": "skin-84-cardias",
+   "description": "64x64 icon for the skin Cardias, which the shop sells as Skin 84 (SPISK084) and which the skin table lists as SKNS0084.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04946",
+   "name": "icon-SK85",
+   "slug": "skin-85-anastasia",
+   "description": "64x64 icon for the skin Anastasia, which the shop sells as Skin 85 (SPISK085) and which the skin table lists as SKNS0085.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04947",
+   "name": "icon-SK86",
+   "slug": "skin-86-grindel",
+   "description": "64x64 icon for the skin Grindel, which the shop sells as Skin 86 (SPISK086) and which the skin table lists as SKNS0086.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04948",
+   "name": "icon-SK87",
+   "slug": "skin-87-hozan",
+   "description": "64x64 icon for the skin Hozan, which the shop sells as Skin 87 (SPISK087) and which the skin table lists as SKNS0087.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04949",
+   "name": "icon-SK88",
+   "slug": "skin-88-shirotae",
+   "description": "64x64 icon for the skin Shirotae, which the shop sells as Skin 88 (SPISK088) and which the skin table lists as SKNS0088.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04950",
+   "name": "icon-SK89",
+   "slug": "skin-89-eremaia",
+   "description": "64x64 icon for the skin Eremaia (SKNS0089), which has no shop listing in the corpus.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04951",
+   "name": "icon-SK90",
+   "slug": "skin-90-rimusuru",
+   "description": "64x64 icon for the skin Rimusuru (SKNS0090), which has no shop listing in the corpus.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04952",
+   "name": "icon-SK91",
+   "slug": "skin-91-svelg",
+   "description": "64x64 icon for the skin Svelg, which the shop sells as Skin 91 (SPISK091) and which the skin table lists as SKNS0091.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04953",
+   "name": "icon-SK92",
+   "slug": "skin-92-lisette",
+   "description": "64x64 icon for the skin Lisette, which the shop sells as Skin 92 (SPISK092) and which the skin table lists as SKNS0092.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04954",
+   "name": "icon-SK93",
+   "slug": "skin-93-ophelia",
+   "description": "64x64 icon for the skin Ophelia, which the shop sells as Skin 93 (SPISK093) and which the skin table lists as SKNS0093.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04955",
+   "name": "icon-SK94",
+   "slug": "skin-94-asterion",
+   "description": "64x64 icon for the skin Asterion, which the shop sells as Skin 94 (SPISK094) and which the skin table lists as SKNS0094.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "shop"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04956",
+   "name": "icon-SK95",
+   "slug": "skin-95-cedric",
+   "description": "64x64 icon for the skin Cedric (SKNS0095), which has no shop listing in the corpus.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04957",
+   "name": "icon-SK96",
+   "slug": "skin-96-rubiera",
+   "description": "64x64 icon for the skin Rubiera (SKNS0096), which has no shop listing in the corpus.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04958",
+   "name": "icon-SK97",
+   "slug": "skin-97-maddock",
+   "description": "64x64 icon for the skin Maddock (SKNS0097), which has no shop listing in the corpus.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04959",
+   "name": "icon-SK98",
+   "slug": "skin-98-fortis",
+   "description": "64x64 icon for the skin Fortis (SKNS0098), which has no shop listing in the corpus.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04962",
+   "name": "icon_191024-migo",
+   "slug": "migo",
+   "description": "Icon of Migo, a DungeonBoss2 dungeon boss in the enemy table (rarity 7).",
+   "tags": {
+    "kind": "boss",
+    "use": [
+     "enemy-boss",
+     "dungeon-mode"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04963",
+   "name": "icon_43963599_p0",
+   "slug": "phoenix",
+   "description": "Icon of the Phoenix, shared by a Conquest enemy row and a summon-only Phoenix row that carries no drop or description.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy",
+     "summon"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04964",
+   "name": "icon_44028992_p0",
+   "slug": "tree-saint",
+   "description": "Icon of the Tree Saint, a DungeonBoss3 dungeon boss in the enemy table (rarity 6).",
+   "tags": {
+    "kind": "boss",
+    "use": [
+     "enemy-boss",
+     "dungeon-mode"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04965",
+   "name": "icon_44069011_p0",
+   "slug": "infected-plant",
+   "description": "Icon of the infected plant, a DungeonBoss1 dungeon boss in the enemy table (rarity 6).",
+   "tags": {
+    "kind": "boss",
+    "use": [
+     "enemy-boss",
+     "dungeon-mode"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04966",
+   "name": "icon_44367512_p0",
+   "slug": "leviathan",
+   "description": "Icon of the Leviathan, a Special enemy tagged Risky (rarity 6).",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04967",
+   "name": "icon_44592508_p0",
+   "slug": "nidhogg",
+   "description": "Icon of Nidhogg, a Conquest-category enemy (rarity 8).",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04968",
+   "name": "icon_44624931_p0",
+   "slug": "giant-crab",
+   "description": "Icon of the Giant Crab, a Normal2 standard enemy (rarity 2).",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04969",
+   "name": "icon_44728556_p0",
+   "slug": "swamp-hunter",
+   "description": "Icon of the Swamp Hunter, a Normal4 standard enemy (rarity 4).",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04970",
+   "name": "icon_44867185_p0_master1200",
+   "slug": "archangel",
+   "description": "Icon of the Archangel, a Conquest-category enemy (rarity 8).",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04971",
+   "name": "icon_44921315_p0_master1200",
+   "slug": "legion",
+   "description": "Icon of the Legion, shared by a Special enemy row (NoDrop) and a summon-only Legion row with no drop or description.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy",
+     "summon"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04972",
+   "name": "icon_46165755_p0_master1200",
+   "slug": "forest-guardian",
+   "description": "Icon of the Forest Guardian, a DungeonBoss2 dungeon boss in the enemy table (rarity 7).",
+   "tags": {
+    "kind": "boss",
+    "use": [
+     "enemy-boss",
+     "dungeon-mode"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04973",
+   "name": "icon_46165755_p1_master1200X1",
+   "slug": "infected-beast",
+   "description": "Icon of the infected beast, a DungeonBoss2 dungeon boss in the enemy table (rarity 7).",
+   "tags": {
+    "kind": "boss",
+    "use": [
+     "enemy-boss",
+     "dungeon-mode"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04974",
+   "name": "icon_46595704_p0_master1200",
+   "slug": "ras",
+   "description": "Icon of Ras, a DungeonBoss2 dungeon boss in the enemy table (rarity 7).",
+   "tags": {
+    "kind": "boss",
+    "use": [
+     "enemy-boss",
+     "dungeon-mode"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04976",
+   "name": "icon_50867970_p0_master1200",
+   "slug": "nine-tailed-fox",
+   "description": "Icon of the Nine-Tailed Fox, a DungeonBoss3 dungeon boss in the enemy table (rarity 7).",
+   "tags": {
+    "kind": "boss",
+    "use": [
+     "enemy-boss",
+     "dungeon-mode"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04977",
+   "name": "icon_51180360_p0_master1200",
+   "slug": "ancient-overlord",
+   "description": "Icon of the Ancient Overlord, a DungeonBoss1 boss that is also used by a summon-only entry and by the Opening music row (MSC001).",
+   "tags": {
+    "kind": "boss",
+    "use": [
+     "enemy-boss",
+     "dungeon-mode",
+     "summon",
+     "music-cue"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04978",
+   "name": "icon_51180360_p1_master1200",
+   "slug": "liberator-of-souls",
+   "description": "Icon of the Liberator of Souls, a DungeonBoss2 dungeon boss in the enemy table (rarity 7).",
+   "tags": {
+    "kind": "boss",
+    "use": [
+     "enemy-boss",
+     "dungeon-mode"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04979",
+   "name": "icon_54759245_p1_master1200X2",
+   "slug": "elder-high-priest",
+   "description": "Icon of the High Priest of the Elder Ones, a DungeonBoss3 dungeon boss in the enemy table (rarity 7).",
+   "tags": {
+    "kind": "boss",
+    "use": [
+     "enemy-boss",
+     "dungeon-mode"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04980",
+   "name": "icon_64775330_p2_master1200",
+   "slug": "goblin",
+   "description": "Icon of a goblin, a Normal1 standard enemy (rarity 1).",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04981",
+   "name": "icon_64837282_p0_master1200",
+   "slug": "goblin-shaman",
+   "description": "Icon of the Goblin Shaman, a Normal2 standard enemy (rarity 2).",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04982",
+   "name": "icon_64891264_p1_master1200",
+   "slug": "coal-miner",
+   "description": "Icon of a Coal Miner, a summon-only entry with no drop or description.",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "summon"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04983",
+   "name": "icon_65132811_p0_master1200",
+   "slug": "mimic",
+   "description": "Icon of the Mimic, a Special enemy tagged NoDrop (rarity 6).",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04984",
+   "name": "icon_66005943_p7_master1200",
+   "slug": "vampire",
+   "description": "Icon of the Vampire, a Normal4 standard enemy (rarity 4).",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04985",
+   "name": "icon_66005943_p9_master1200",
+   "slug": "bladetooth",
+   "description": "Icon of the Bladetooth, a Normal2 standard enemy (rarity 2).",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04986",
+   "name": "icon_66037225_p0",
+   "slug": "tower-lord",
+   "description": "Icon of the Lord of the Tower, a DungeonBoss2 dungeon boss in the enemy table (rarity 7).",
+   "tags": {
+    "kind": "boss",
+    "use": [
+     "enemy-boss",
+     "dungeon-mode"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04987",
+   "name": "icon_66067003_p1_master1200",
+   "slug": "demon-prince",
+   "description": "Icon of the Demon Prince, a Special enemy tagged Risky (rarity 6).",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04988",
+   "name": "icon_66067003_p2_master1200",
+   "slug": "nebiros",
+   "description": "Icon of Nebiros, a DungeonBoss2 dungeon boss in the enemy table (rarity 7).",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "enemy-boss",
+     "dungeon-mode"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04989",
+   "name": "icon_66252392_p0_master1200",
+   "slug": "soul-fort",
+   "description": "Icon of the Soul Fort, a DungeonBoss3 boss that is also used by a summon-only Bone Totem row with no drop or description.",
+   "tags": {
+    "kind": "boss",
+    "use": [
+     "enemy-boss",
+     "dungeon-mode",
+     "summon"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04990",
+   "name": "icon_68196795_p0",
+   "slug": "jelly",
+   "description": "Icon of a Jelly, a summon-only entry with no drop or description.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "summon"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04991",
+   "name": "icon_76111972_p3",
+   "slug": "shadow-raker",
+   "description": "Icon of the Shadow Raker, a Normal4 standard enemy (rarity 4).",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04992",
+   "name": "icon_76650660_p2",
+   "slug": "formless-warrior",
+   "description": "Icon of the Formless Warrior, shared by a DungeonBoss2 row (Formless Warrior) and a DungeonBoss3 row (Reappeared One, rarity 7).",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "enemy-boss",
+     "dungeon-mode"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04994",
+   "name": "icon_76650660_p3",
+   "slug": "abomination",
+   "description": "Icon of an Abomination, a summon-only entry with no drop or description.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "summon"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04995",
+   "name": "icon_76965307_p1",
+   "slug": "scylla-queen",
+   "description": "Icon of the Scylla Queen, a DungeonBoss1 dungeon boss in the enemy table (rarity 6).",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy-boss",
+     "dungeon-mode"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04996",
+   "name": "icon_76965307_p4",
+   "slug": "scylla",
+   "description": "Icon of the Scylla, a Normal5 standard enemy (rarity 5).",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04997",
+   "name": "icon_77892207_p0",
+   "slug": "thief",
+   "description": "Icon of a Thief, a Normal-D4 dungeon-tier enemy (rarity 4).",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04998",
+   "name": "icon_77892207_p3",
+   "slug": "highway-robber",
+   "description": "Icon of the Highway Robber, a Normal-D4 dungeon-tier enemy (rarity 4).",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04999",
+   "name": "icon_77937023_p3",
+   "slug": "gluttony",
+   "description": "Icon of Gluttony, a DungeonBoss1 dungeon boss in the enemy table (rarity 6).",
+   "tags": {
+    "kind": "boss",
+    "use": [
+     "enemy-boss",
+     "dungeon-mode"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05000",
+   "name": "icon_77937023_p4",
+   "slug": "abyss-eater",
+   "description": "Icon of the Abyss Eater, a DungeonBoss2 dungeon boss in the enemy table (rarity 7).",
+   "tags": {
+    "kind": "boss",
+    "use": [
+     "enemy-boss",
+     "dungeon-mode"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05001",
+   "name": "icon_78217648_p0",
+   "slug": "viper-nest",
+   "description": "Icon of the Viper Nest, a Normal-D4 dungeon-tier enemy (rarity 4).",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05002",
+   "name": "icon_78536855_p3",
+   "slug": "murderer",
+   "description": "Icon of a Murderer, a Normal2 standard enemy (rarity 2).",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05003",
+   "name": "icon_78731756_p0",
+   "slug": "dancing-jewel",
+   "description": "Icon of a Dancing Jewel, a summon-only entry with no drop or description, tagged to copy gear stats.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "summon"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05004",
+   "name": "icon_79338597_p1",
+   "slug": "alien-invader",
+   "description": "Icon of an Alien Invader, a Special enemy tagged Risky (rarity 6).",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05005",
+   "name": "icon_79338597_p2",
+   "slug": "abyssal-flesh-mass",
+   "description": "Icon of an Abyssal Flesh Mass, a Special enemy tagged NoDrop (rarity 6).",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05006",
+   "name": "icon_79338597_p3",
+   "slug": "endless-host",
+   "description": "Icon of the Endless Host, a Normal-D5 dungeon-tier enemy (rarity 5).",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05007",
+   "name": "icon_79417988_p2",
+   "slug": "manticore",
+   "description": "Icon of the Manticore, a Normal5 standard enemy (rarity 5).",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05008",
+   "name": "icon_79417988_p3",
+   "slug": "nue",
+   "description": "Icon of the Nue, a Special enemy tagged Risky (rarity 6).",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05009",
+   "name": "icon_79417988_p5",
+   "slug": "black-qilin",
+   "description": "Icon of the Black Qilin, a Disaster-category enemy tagged Uber (rarity 9).",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy-boss"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05010",
+   "name": "icon_79633847_p0",
+   "slug": "twilight-person",
+   "description": "Icon of the Twilight Person, a Disaster-category enemy tagged Uber (rarity 9).",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "enemy-boss"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05011",
+   "name": "icon_80010168_p4",
+   "slug": "daidarabotchi",
+   "description": "Icon of Daidarabotchi, a Conquest-category enemy (rarity 8).",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05012",
+   "name": "icon_80457125_p0_master1200",
+   "slug": "red-oni",
+   "description": "Icon of a Red Oni, a Normal-D5 dungeon-tier enemy (rarity 5).",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05013",
+   "name": "icon_80616199_p3_master1200",
+   "slug": "dragon-baby",
+   "description": "Icon of a Dragon Baby, a Normal3 standard enemy (rarity 3).",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05014",
+   "name": "icon_80841025_p0_master1200",
+   "slug": "baal",
+   "description": "Icon of Baal, a DungeonBoss3 dungeon boss in the enemy table (rarity 6).",
+   "tags": {
+    "kind": "boss",
+    "use": [
+     "enemy-boss",
+     "dungeon-mode"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05015",
+   "name": "icon_80860504_p0_master1200",
+   "slug": "holy-spirit",
+   "description": "Icon of a Holy Spirit, a summon-only entry with no drop or description.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "summon"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05016",
+   "name": "icon_80887888_p0_master1200",
+   "slug": "gremlin",
+   "description": "Icon of a Gremlin, a Normal2 standard enemy (rarity 2).",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy"
+    ],
+    "style": [
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

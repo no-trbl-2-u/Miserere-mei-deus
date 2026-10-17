@@ -1,0 +1,3187 @@
+{
+ "batch": "batch-06",
+ "items": [
+  {
+   "cluster_id": "c00749",
+   "name": "Paladinskill_12",
+   "file": "sprites/Paladinskill_12.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "最後の典礼",
+      "ID": "CNTU1805",
+      "Rarity": 5,
+      "ParamKey": "Union"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00750",
+   "name": "Paladinskill_13",
+   "file": "sprites/Paladinskill_13.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "鋼の肉体",
+      "ID": "BodyOfSteel",
+      "Desc": "シールドが0のときは、受ける回復効果が2倍になる",
+      "Category": "ModParts",
+      "Rarity": 4,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00752",
+   "name": "Paladinskill_15",
+   "file": "sprites/Paladinskill_15.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "フルヒーリング",
+      "ID": "SKA03018M2",
+      "Category": "3.Survive"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00755",
+   "name": "Paladinskill_18",
+   "file": "sprites/Paladinskill_18.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "信仰の勝利",
+      "ID": "CNTD0603",
+      "Rarity": 6,
+      "ParamKey": "DungeonDrop"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ヘブンズマイト",
+      "ID": "SKA05009M2",
+      "Category": "0.Attack"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ヘブンズマイト解除",
+      "ID": "SKA05009M3",
+      "Category": "0.Attack"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "{[NM-MainParam:1]}+{[NM-MainParam:4]}",
+      "ID": "MainParam:14+",
+      "Desc": "{[DC-MainParam:12+]}",
+      "Category": "Basic",
+      "Rarity": 3
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00756",
+   "name": "Paladinskill_19",
+   "file": "sprites/Paladinskill_19.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "秩序",
+      "ID": "MakeOrder",
+      "Desc": "バーストスキルを使用するたび、無敵/1ターンを得る。",
+      "Category": "Unique",
+      "Rarity": 6,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00171",
+   "name": "Paladinskill_26",
+   "file": "sprites/Paladinskill_26.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "コールミラクル",
+      "ID": "SKA07003",
+      "Category": "4.Special",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "コールミラクル",
+      "ID": "SKA07003M1",
+      "Category": "4.Special"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "ポジティブシンキング",
+      "ID": "TreatAllAsBuff",
+      "Desc": "すべての一時状態をバフとして扱う",
+      "Category": "Unique",
+      "Rarity": 6,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00762",
+   "name": "Paladinskill_27",
+   "file": "sprites/Paladinskill_27.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "ホーリーボルト",
+      "ID": "SKA01009",
+      "Category": "0.Attack",
+      "Rarity": 1,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ホーリーボルト",
+      "ID": "SKA01009M1",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00764",
+   "name": "Paladinskill_29",
+   "file": "sprites/Paladinskill_29.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ディバインストーム",
+      "ID": "SKA02012M2",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00765",
+   "name": "Paladinskill_31",
+   "file": "sprites/Paladinskill_31.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "エンシェントスピア",
+      "ID": "SKA05017M3",
+      "Category": "3.Survive"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00766",
+   "name": "Paladinskill_32",
+   "file": "sprites/Paladinskill_32.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "アバター",
+      "ID": "SKA06005M2",
+      "Category": "0.Attack"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "タフネス",
+      "ID": "Toughness",
+      "Desc": "毎ターン、一定確率で全ての状態異常が即座に治療される",
+      "Category": "Common",
+      "Rarity": 1
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00768",
+   "name": "Paladinskill_34",
+   "file": "sprites/Paladinskill_34.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "再生シールド",
+      "ID": "GainShieldTurn",
+      "Desc": "毎ターン、シールドが全回復するチャンス",
+      "Category": "Common",
+      "Rarity": 1
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00769",
+   "name": "Paladinskill_35",
+   "file": "sprites/Paladinskill_35.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "リフト",
+      "ID": "SRN40004",
+      "Desc": "このスキルを使うたび、自身の一時効果をすべて取り除く",
+      "Rarity": 4,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "リフレッシュ",
+      "ID": "SKA03017",
+      "Category": "3.Survive",
+      "Rarity": 3,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "リフレッシュ",
+      "ID": "SKA03017M1",
+      "Category": "3.Survive"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00017",
+   "name": "Paladinskill_39",
+   "file": "sprites/Paladinskill_39.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 5,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "ホワイトブレス",
+      "ID": "SKEB0014",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "渦鳴り",
+      "ID": "SKEB0092",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "竜環海嘯",
+      "ID": "SKEB0093",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ブリザード",
+      "ID": "SKA04006M2",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00172",
+   "name": "Paladinskill_40",
+   "file": "sprites/Paladinskill_40.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ホーリースピリット",
+      "ID": "SKA03003M2",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00776",
+   "name": "Paladinskill_44_nobg",
+   "file": "sprites/Paladinskill_44_nobg.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "mappoint",
+     "column": "Icon",
+     "row": {
+      "name": "プレイヤーカード",
+      "ID": "MPP_CARD",
+      "Tag": [
+       "ShowAll"
+      ],
+      "ParamKey": "OpenScene"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00777",
+   "name": "Paladinskill_45",
+   "file": "sprites/Paladinskill_45.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "戦乙女の招来",
+      "ID": "CallValkyrie",
+      "Desc": "HPスタックを失うたび、ヴァルキュリアを召喚する",
+      "Category": "Unique",
+      "Rarity": 6,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00778",
+   "name": "Paladinskill_46",
+   "file": "sprites/Paladinskill_46.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "威厳",
+      "ID": "Dignity",
+      "Desc": "与える直接ダメージと受ける直接ダメージがいずれも半減する。",
+      "Category": "ModParts",
+      "Rarity": 4,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00779",
+   "name": "Paladinskill_47",
+   "file": "sprites/Paladinskill_47.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "地道な努力",
+      "ID": "SKA03014",
+      "Category": "3.Survive",
+      "Rarity": 3,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "地道な努力",
+      "ID": "SKA03014M1",
+      "Category": "3.Survive"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "挑戦者",
+      "ID": "Challenger",
+      "Desc": "サベージモードに入りやすくなる。",
+      "Category": "ModParts",
+      "Rarity": 4,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00018",
+   "name": "Paladinskill_48_nobgX1",
+   "file": "sprites/Paladinskill_48_nobgX1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 5,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "招福",
+      "ID": "SKAA0020",
+      "Category": "2.Support",
+      "Rarity": 7,
+      "Tag": [
+       "RaceSkill"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "招福",
+      "ID": "SKAA0020M1",
+      "Category": "2.Support"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00781",
+   "name": "Paladinskill_50",
+   "file": "sprites/Paladinskill_50.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "テンペスト",
+      "ID": "SKA02023M2",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03365",
+   "name": "Pants_02",
+   "file": "sprites/Pants_02.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "44x52",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "キュロット",
+      "ID": "CMPGC248",
+      "Rarity": 2,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "se-bag",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "キュロット",
+      "ID": "CMPGC348",
+      "Rarity": 3,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "se-bag",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "キュロット",
+      "ID": "CMPGC460",
+      "Rarity": 4,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "se-bag",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "キュロット",
+      "ID": "GER00063",
+      "Rarity": 1,
+      "Tag": [
+       "Basic",
+       "Random"
+      ],
+      "audio": "se-bag"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03371",
+   "name": "Pants_13",
+   "file": "sprites/Pants_13.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "36x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "逃亡生活",
+      "ID": "CMPGR5223",
+      "Rarity": 5,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "逃亡生活",
+      "ID": "GERU5223",
+      "Rarity": 5,
+      "Tag": [
+       "Unique",
+       "Random"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00056",
+   "name": "Pants_14",
+   "file": "sprites/Pants_14.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "36x64",
+   "members": 4,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "もも当て",
+      "ID": "CMPGC246",
+      "Rarity": 2,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "se-metal",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "もも当て",
+      "ID": "CMPGC346",
+      "Rarity": 3,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "se-metal",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "もも当て",
+      "ID": "CMPGC458",
+      "Rarity": 4,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "se-metal",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "もも当て",
+      "ID": "GER00061",
+      "Rarity": 1,
+      "Tag": [
+       "Basic",
+       "Random"
+      ],
+      "audio": "se-metal"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00019",
+   "name": "Pants_20",
+   "file": "sprites/Pants_20.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "35x60",
+   "members": 5,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "忍者の里",
+      "ID": "CNTU1003",
+      "Rarity": 3,
+      "ParamKey": "Union"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03402",
+   "name": "PlateMailChestYellow",
+   "file": "sprites/PlateMailChestYellow.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "58x62",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "教会の剣",
+      "ID": "CMPGR6215",
+      "Rarity": 6,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "教会の剣",
+      "ID": "GERU6215",
+      "Rarity": 6,
+      "Tag": [
+       "Unique"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00175",
+   "name": "Priestskill_01",
+   "file": "sprites/Priestskill_01.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "汚れた聖像",
+      "ID": "CMPQ0005",
+      "Rarity": 6,
+      "Tag": [
+       "Key"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "赦し",
+      "ID": "CNTU1801",
+      "Rarity": 1,
+      "ParamKey": "Union"
+     }
+    },
+    {
+     "table": "quest",
+     "column": "Icon1",
+     "row": {
+      "name": "屍術研究所",
+      "ID": "QST00020"
+     }
+    },
+    {
+     "table": "quest",
+     "column": "Icon1",
+     "row": {
+      "name": "闇月商会",
+      "ID": "QST00055"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00788",
+   "name": "Priestskill_06",
+   "file": "sprites/Priestskill_06.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "プレイヤー(弱)",
+      "ID": "SRN30015",
+      "Desc": "このスキルを使うたび、祈祷+5%/5ターンを得る",
+      "Rarity": 3,
+      "audio": "star",
+      "ShortText": "+5%",
+      "ParamKey": "Skill:GainParamBoost4"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "オート: パイエティ",
+      "ID": "SRN50009",
+      "Desc": "このスキルを自動使用： 信仰系スキルを使用するたび",
+      "Rarity": 5,
+      "Tag": [
+       "NotFreeSkill"
+      ],
+      "audio": "rare",
+      "ShortText": "AUTO"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "プレイヤー(強)",
+      "ID": "SRN50015",
+      "Desc": "このスキルを使うたび、祈祷+15%/5ターンを得る",
+      "Rarity": 5,
+      "audio": "rare",
+      "ShortText": "+15%",
+      "ParamKey": "Skill:GainParamBoost4X"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "アシスト: プレイヤー",
+      "ID": "SRNA0004",
+      "Desc": "このスキルの威力は、祈祷100%によって強化される",
+      "Rarity": 4,
+      "audio": "star",
+      "ShortText": "P+",
+      "ParamKey": "Skill:IncPower:BonusStack4"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00789",
+   "name": "Priestskill_07",
+   "file": "sprites/Priestskill_07.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "魂の檻",
+      "ID": "Shieldx2:OnHPStack0",
+      "Desc": "HPスタックが0のとき、スキルによるシールド獲得効果が2倍になる",
+      "Category": "Unique",
+      "Rarity": 5,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00790",
+   "name": "Priestskill_08",
+   "file": "sprites/Priestskill_08.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "癒やしの光",
+      "ID": "HealingLight",
+      "Desc": "全スキルに、ルーン「ヒーラー」の効果を適用する",
+      "Category": "Unique",
+      "Rarity": 5,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00791",
+   "name": "Priestskill_09",
+   "file": "sprites/Priestskill_09.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "天への願い",
+      "ID": "SKA01009M2",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00057",
+   "name": "Priestskill_10X1",
+   "file": "sprites/Priestskill_10X1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 4,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "他責思考",
+      "ID": "BlamingOthers",
+      "Desc": "あなたの使うスキルについて、自身を対象とする効果は、全て敵を対象にするようになる",
+      "Category": "Unique",
+      "Rarity": 6,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00792",
+   "name": "Priestskill_11",
+   "file": "sprites/Priestskill_11.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "神罰代行",
+      "ID": "CNTU1802",
+      "Rarity": 2,
+      "ParamKey": "Union"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "エンシェントスパーク",
+      "ID": "SKA04017",
+      "Category": "0.Attack",
+      "Rarity": 4,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "エンシェントスパーク",
+      "ID": "SKA04017M1",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00176",
+   "name": "Priestskill_13X1",
+   "file": "sprites/Priestskill_13X1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "神前儀式",
+      "ID": "SKAA0029",
+      "Category": "2.Support",
+      "Rarity": 5,
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "神前儀式",
+      "ID": "SKAA0029M1",
+      "Category": "2.Support"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00794",
+   "name": "Priestskill_14",
+   "file": "sprites/Priestskill_14.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "revent",
+     "column": "Icon",
+     "row": {
+      "name": "環境効果 - 沼地",
+      "ID": "REENV006",
+      "Tag": [
+       "RoomState",
+       "Active",
+       "Guide",
+       "RoomEnv"
+      ],
+      "ParamKey": "Eventscene"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "ブラックブレス",
+      "ID": "SKEB0016",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "マッドフラッド",
+      "ID": "SKA04020M4",
+      "Category": "1.Summon"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ブラックブレス",
+      "ID": "SKEB0016M1",
+      "Category": "9.Enemy - Boss"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00798",
+   "name": "Priestskill_18",
+   "file": "sprites/Priestskill_18.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ライトニングロッド",
+      "ID": "SKA04017M2",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00800",
+   "name": "Priestskill_20",
+   "file": "sprites/Priestskill_20.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "サンクチュアリ",
+      "ID": "SKA03024",
+      "Category": "3.Survive",
+      "Rarity": 3,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "サンクチュアリ",
+      "ID": "SKA03024M1",
+      "Category": "3.Survive"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00177",
+   "name": "Priestskill_21",
+   "file": "sprites/Priestskill_21.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "献身",
+      "ID": "Devotion",
+      "Desc": "状態異常を受けるたび、免疫/3ターンを得る",
+      "Category": "Unique",
+      "Rarity": 6,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00058",
+   "name": "Priestskill_22X1",
+   "file": "sprites/Priestskill_22X1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 4,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "生の願い",
+      "ID": "SKAA0027M2",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00801",
+   "name": "Priestskill_23",
+   "file": "sprites/Priestskill_23.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "状態異常耐性",
+      "ID": "ResAil",
+      "Desc": "状態命中判定時の被命中率を減らす",
+      "Category": "Common",
+      "Rarity": 1
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00804",
+   "name": "Priestskill_26",
+   "file": "sprites/Priestskill_26.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "スティール",
+      "ID": "SRN60012",
+      "Desc": "このスキルでバーストスキルを使うたび、無敵/1ターンを得る",
+      "Rarity": 6,
+      "Tag": [
+       "NotFreeSkill"
+      ],
+      "audio": "rare",
+      "ParamKey": "Skill:GainInvinsible"
+     }
+    },
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "インビンシブル",
+      "ID": "SKA07001",
+      "Category": "3.Survive",
+      "Rarity": 7,
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "インビンシブル",
+      "ID": "SKA07001M1",
+      "Category": "3.Survive"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "無敵",
+      "ID": "Invinsible",
+      "Desc": "ダメージを受けなくなる",
+      "Category": "Buff",
+      "Rarity": 0
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00805",
+   "name": "Priestskill_27",
+   "file": "sprites/Priestskill_27.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "シールド増幅",
+      "ID": "GainShieldAmo",
+      "Desc": "スキルや能力で得られるシールド量が増える",
+      "Category": "Common",
+      "Rarity": 1
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00178",
+   "name": "Priestskill_28",
+   "file": "sprites/Priestskill_28.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "レイ",
+      "ID": "SKA02012",
+      "Category": "0.Attack",
+      "Rarity": 2,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "レイ",
+      "ID": "SKA02012M1",
+      "Category": "0.Attack"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00806",
+   "name": "Priestskill_29",
+   "file": "sprites/Priestskill_29.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "贖罪",
+      "ID": "CNTD0612",
+      "Rarity": 6,
+      "ParamKey": "DungeonDrop"
+     }
+    },
+    {
+     "table": "uorder",
+     "column": "Icon",
+     "row": {
+      "name": "聖地巡察",
+      "ID": "UN0018D1"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00807",
+   "name": "Priestskill_30",
+   "file": "sprites/Priestskill_30.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "ホーリービット",
+      "ID": "SKA03003",
+      "Category": "0.Attack",
+      "Rarity": 3,
+      "audio": "star"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ホーリービット",
+      "ID": "SKA03003M1",
+      "Category": "0.Attack"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "雷撃",
+      "ID": "LightningStrike",
+      "Desc": "バーストスキルを使用するたび、チャージスラストを自動発動する",
+      "Category": "Unique",
+      "Rarity": 5,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00808",
+   "name": "Priestskill_31",
+   "file": "sprites/Priestskill_31.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "王道",
+      "ID": "Royalty",
+      "Desc": "基礎パラメータを参照するとき、最も高いものを参照する",
+      "Category": "ModParts",
+      "Rarity": 4,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00810",
+   "name": "Priestskill_33",
+   "file": "sprites/Priestskill_33.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "revent",
+     "column": "Icon",
+     "row": {
+      "name": "環境効果 - 共鳴",
+      "ID": "REENV015",
+      "Tag": [
+       "RoomState",
+       "Active",
+       "Guide",
+       "RoomEnv"
+      ],
+      "ParamKey": "Eventscene"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "共鳴",
+      "ID": "StateEnv15",
+      "Desc": "双方、HPを直接回復するたび、相手にもその一部の回復を与える",
+      "Category": "Env",
+      "Rarity": 7,
+      "Tag": [
+       "DStatus"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00813",
+   "name": "Priestskill_36",
+   "file": "sprites/Priestskill_36.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "エンジェルフェザー",
+      "ID": "SKA0X010",
+      "Category": "3.Survive",
+      "Rarity": 7,
+      "Tag": [
+       "RaceSkill"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "エンジェルフェザー",
+      "ID": "SKA0X010M1",
+      "Category": "3.Survive"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00179",
+   "name": "Priestskill_37",
+   "file": "sprites/Priestskill_37.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "skill",
+     "column": "Icon",
+     "row": {
+      "name": "グレイプニル",
+      "ID": "SKEB0055",
+      "Category": "9.Enemy - Boss",
+      "Rarity": 7,
+      "Tag": [
+       "IgnoreAffCheck"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "グレイプニル",
+      "ID": "SKEB0055M1",
+      "Category": "9.Enemy - Boss"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00814",
+   "name": "Priestskill_38",
+   "file": "sprites/Priestskill_38.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "調剤",
+      "ID": "Dispensing",
+      "Desc": "バフを得るたび、1薬効/1部屋を得る",
+      "Category": "Unique",
+      "Rarity": 5,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00815",
+   "name": "Priestskill_39",
+   "file": "sprites/Priestskill_39.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "skill_mode",
+     "column": "Icon",
+     "row": {
+      "name": "ヘルコントラクト",
+      "ID": "SKA04018M2",
+      "Category": "0.Attack"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "暗躍",
+      "ID": "SecretManeuver",
+      "Desc": "ダークルームに入るたび、透明/1戦闘を得る",
+      "Category": "Unique",
+      "Rarity": 6,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00816",
+   "name": "Priestskill_40",
+   "file": "sprites/Priestskill_40.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "revent",
+     "column": "Icon",
+     "row": {
+      "name": "環境効果 - 結界",
+      "ID": "REENV019",
+      "Tag": [
+       "RoomState",
+       "Active",
+       "Guide",
+       "RoomEnv"
+      ],
+      "ParamKey": "Eventscene"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "結界",
+      "ID": "StateEnv19",
+      "Desc": "双方、魔法ダメージを与えるたび、障壁/1戦闘を得る",
+      "Category": "Env",
+      "Rarity": 7,
+      "Tag": [
+       "DStatus"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00180",
+   "name": "Priestskill_45X1",
+   "file": "sprites/Priestskill_45X1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "漆黒の波動",
+      "ID": "InvertHealToVoidAtk",
+      "Desc": "自身を対象とするHP回復効果は、対象が敵に置き換わり、虚無属性の直接ダメージを与えるようになる。",
+      "Category": "Unique",
+      "Rarity": 6,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00059",
+   "name": "Priestskill_46",
+   "file": "sprites/Priestskill_46.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 4,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "不老",
+      "ID": "EternalYouth",
+      "Desc": "自身のターン経過時トリガー効果が誘発しなくなる",
+      "Category": "ModParts",
+      "Rarity": 4,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00820",
+   "name": "Priestskill_47",
+   "file": "sprites/Priestskill_47.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "オーバーヒール",
+      "ID": "OverHeal",
+      "Desc": "シールドを得られなくなる。HPが最大値未満のとき、最大HPを超えて回復できる。",
+      "Category": "Unique",
+      "Rarity": 5,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "バーストヒール",
+      "ID": "BurstHeal",
+      "Desc": "HPを回復するたび、ブレイブ+1",
+      "Category": "Unique",
+      "Rarity": 6,
+      "Tag": [
+       "Unique"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00821",
+   "name": "Priestskill_48",
+   "file": "sprites/Priestskill_48.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "セイクリッド(弱)",
+      "ID": "SRN10013",
+      "Desc": "このスキルを使うたび、聖域+10%/5ターンを得る",
+      "Rarity": 1,
+      "audio": "star",
+      "ShortText": "+10%",
+      "ParamKey": "Skill:GainArmorBoostM"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "セイクリッド(強)",
+      "ID": "SRN40013",
+      "Desc": "このスキルを使うたび、聖域+25%/5ターンを得る",
+      "Rarity": 4,
+      "audio": "star",
+      "ShortText": "+25%",
+      "ParamKey": "Skill:GainArmorBoostMX"
+     }
+    },
+    {
+     "table": "rune",
+     "column": "Icon",
+     "row": {
+      "name": "オート: セイクリッド",
+      "ID": "SRNA0025",
+      "Desc": "このスキルを自動使用: 聖域を獲得するたび",
+      "Rarity": 5,
+      "Tag": [
+       "NotFreeSkill"
+      ],
+      "audio": "rare",
+      "ShortText": "AUTO"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "聖域強化",
+      "ID": "IncPow:IncArmor:M",
+      "Desc": "聖域を得られる量が増える",
+      "Category": "Common",
+      "Rarity": 3
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00823",
+   "name": "Priestskill_50",
+   "file": "sprites/Priestskill_50.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat3",
+   "size": "64x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "大ダメージ耐性",
+      "ID": "Persistence",
+      "Desc": "大きすぎるダメージを軽減する",
+      "Category": "Common",
+      "Rarity": 2
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03419",
+   "name": "Quest_02",
+   "file": "sprites/Quest_02.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "43x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "denv",
+     "column": "Icon",
+     "row": {
+      "name": "水没",
+      "ID": "DE000002"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03424",
+   "name": "Quest_09",
+   "file": "sprites/Quest_09.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "62x46",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "uorder",
+     "column": "Icon",
+     "row": {
+      "name": "布施の徴収",
+      "ID": "UN0007D2"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03429",
+   "name": "Quest_108",
+   "file": "sprites/Quest_108.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "37x48",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "悲劇",
+      "ID": "CNTU0501",
+      "Rarity": 1,
+      "ParamKey": "Union"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03430",
+   "name": "Quest_109",
+   "file": "sprites/Quest_109.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "54x56",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "再会",
+      "ID": "CNTU0505",
+      "Rarity": 5,
+      "ParamKey": "Union"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03437",
+   "name": "Quest_115",
+   "file": "sprites/Quest_115.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "58x54",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "uorder",
+     "column": "Icon",
+     "row": {
+      "name": "外なる光の探究",
+      "ID": "UN0007D3"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03447",
+   "name": "Quest_128",
+   "file": "sprites/Quest_128.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "62x52",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "儲け話",
+      "ID": "CNTU0402",
+      "Rarity": 2,
+      "ParamKey": "Union"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03449",
+   "name": "Quest_13",
+   "file": "sprites/Quest_13.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "44x62",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "mappoint",
+     "column": "Icon",
+     "row": {
+      "name": "音楽堂",
+      "ID": "MPP_MUSC",
+      "Tag": [
+       "ShowAll"
+      ],
+      "ParamKey": "OpenScene"
+     }
+    },
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "音楽堂",
+      "ID": "SPIUT008",
+      "Tag": [
+       "SelfHelp"
+      ],
+      "ParamKey": "MusicList"
+     }
+    },
+    {
+     "table": "uorder",
+     "column": "Icon",
+     "row": {
+      "name": "フェスティバル",
+      "ID": "UN0003D3"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00825",
+   "name": "Quest_131",
+   "file": "sprites/Quest_131.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "55x60",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "魔力導線",
+      "ID": "CNTD0519",
+      "Rarity": 5,
+      "ParamKey": "DungeonDrop"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03451",
+   "name": "Quest_136",
+   "file": "sprites/Quest_136.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "40x57",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "魔石のかけら",
+      "ID": "CMP10008",
+      "Rarity": 1,
+      "Tag": [
+       "Usable",
+       "GainSS",
+       "Consumed"
+      ],
+      "audio": "se-jewel",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "アイテム: 魔石のかけら",
+      "ID": "SPICI004",
+      "ParamKey": "CampItem"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00827",
+   "name": "Quest_141",
+   "file": "sprites/Quest_141.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "41x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "支配圏",
+      "ID": "CNTU0503",
+      "Rarity": 3,
+      "ParamKey": "Union"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00828",
+   "name": "Quest_142X1",
+   "file": "sprites/Quest_142X1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "41x64",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "uorder",
+     "column": "Icon",
+     "row": {
+      "name": "出陣",
+      "ID": "UN0010D1"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00184",
+   "name": "Quest_143",
+   "file": "sprites/Quest_143.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "58x58",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "解呪の札",
+      "ID": "CMPQ0002",
+      "Rarity": 6,
+      "Tag": [
+       "Key"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03456",
+   "name": "Quest_147",
+   "file": "sprites/Quest_147.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "58x53",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "収集品",
+      "ID": "CNTU0601",
+      "Rarity": 1,
+      "ParamKey": "Union"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03462",
+   "name": "Quest_156",
+   "file": "sprites/Quest_156.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "50x52",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "宝飾加工",
+      "ID": "CNTD0511",
+      "Rarity": 5,
+      "ParamKey": "DungeonDrop"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03463",
+   "name": "Quest_157",
+   "file": "sprites/Quest_157.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "62x58",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "猛獣使いの鞭",
+      "ID": "CMP30004",
+      "Rarity": 3,
+      "Tag": [
+       "Usable"
+      ],
+      "audio": "se-bag",
+      "ParamKey": "ToUse"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03467",
+   "name": "Quest_160",
+   "file": "sprites/Quest_160.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "36x61",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "記憶の整合",
+      "ID": "CNTU0502",
+      "Rarity": 2,
+      "ParamKey": "Union"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00831",
+   "name": "Quest_22X1",
+   "file": "sprites/Quest_22X1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "46x59",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "夜の燭台",
+      "ID": "CMPQ0019",
+      "Rarity": 6,
+      "Tag": [
+       "Key"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03475",
+   "name": "Quest_24",
+   "file": "sprites/Quest_24.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "45x60",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "denv",
+     "column": "Icon",
+     "row": {
+      "name": "高温",
+      "ID": "DE000003"
+     }
+    },
+    {
+     "table": "dungeon_mode",
+     "column": "Icon",
+     "row": {
+      "name": "古代の予言者",
+      "ID": "DGD001M1",
+      "Tag": [
+       "FarAnotherBoss",
+       "Disaster"
+      ]
+     }
+    },
+    {
+     "table": "dungeon_mode",
+     "column": "Icon",
+     "row": {
+      "name": "外なる尖兵",
+      "ID": "DGD002M1",
+      "Tag": [
+       "FarAnotherBoss",
+       "Disaster"
+      ]
+     }
+    },
+    {
+     "table": "dungeon_mode",
+     "column": "Icon",
+     "row": {
+      "name": "復讐者",
+      "ID": "DGD003M1",
+      "Tag": [
+       "FarAnotherBoss",
+       "Disaster"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03478",
+   "name": "Quest_27",
+   "file": "sprites/Quest_27.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "54x58",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "聖騎士の馬鞍",
+      "ID": "CMP50007",
+      "Rarity": 5,
+      "Tag": [
+       "Always"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "アイテム: 聖騎士の馬鞍",
+      "ID": "SPICI012",
+      "Tag": [
+       "OneOnly"
+      ],
+      "ParamKey": "CampItem"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00832",
+   "name": "Quest_31X1",
+   "file": "sprites/Quest_31X1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "44x48",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "カードキー",
+      "ID": "CMPQ0024",
+      "Rarity": 6,
+      "Tag": [
+       "Key"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03482",
+   "name": "Quest_32",
+   "file": "sprites/Quest_32.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "52x58",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "revent",
+     "column": "Icon",
+     "row": {
+      "name": "入手： クエスト",
+      "ID": "REPK0008",
+      "Tag": [
+       "Active"
+      ],
+      "ParamKey": "PickQuest"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03484",
+   "name": "Quest_34",
+   "file": "sprites/Quest_34.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "58x49",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "quest",
+     "column": "Icon1",
+     "row": {
+      "name": "名誉の戦士団",
+      "ID": "QST00004"
+     }
+    },
+    {
+     "table": "quest",
+     "column": "Icon1",
+     "row": {
+      "name": "屍術研究所",
+      "ID": "QST00018"
+     }
+    },
+    {
+     "table": "quest",
+     "column": "Icon1",
+     "row": {
+      "name": "屍術研究所",
+      "ID": "QST00026"
+     }
+    },
+    {
+     "table": "quest",
+     "column": "Icon1",
+     "row": {
+      "name": "屍術研究所",
+      "ID": "QST00030"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03485",
+   "name": "Quest_35",
+   "file": "sprites/Quest_35.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "58x49",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "妖蛆の秘密",
+      "ID": "CMPGR084",
+      "Rarity": 6,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "妖蛆の秘密",
+      "ID": "GERU6306",
+      "Rarity": 6,
+      "Tag": [
+       "Unique"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03486",
+   "name": "Quest_38",
+   "file": "sprites/Quest_38.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "58x49",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "uorder",
+     "column": "Icon",
+     "row": {
+      "name": "伝承記録",
+      "ID": "UN0005D2"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00833",
+   "name": "Quest_40",
+   "file": "sprites/Quest_40.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "56x54",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "征伐手配書「リンドブルム」",
+      "ID": "CMP60011",
+      "Rarity": 6,
+      "Tag": [
+       "Usable",
+       "Consumed",
+       "CallConquest"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "征伐手配書「クエレブレ」",
+      "ID": "CMP60012",
+      "Rarity": 6,
+      "Tag": [
+       "Usable",
+       "Consumed",
+       "CallConquest"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "征伐手配書「ザッハーク」",
+      "ID": "CMP60013",
+      "Rarity": 6,
+      "Tag": [
+       "Usable",
+       "Consumed",
+       "CallConquest"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "征伐手配書「ティアマト」",
+      "ID": "CMP60014",
+      "Rarity": 6,
+      "Tag": [
+       "Usable",
+       "Consumed",
+       "CallConquest"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00185",
+   "name": "Quest_41X1",
+   "file": "sprites/Quest_41X1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "58x58",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "鉱泉の地図",
+      "ID": "CMPQ0014",
+      "Rarity": 6,
+      "Tag": [
+       "Key"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03490",
+   "name": "Quest_44",
+   "file": "sprites/Quest_44.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "62x57",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "補給物資",
+      "ID": "CMP40009",
+      "Rarity": 4,
+      "Tag": [
+       "Usable"
+      ],
+      "audio": "se-jewel",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "uorder",
+     "column": "Icon",
+     "row": {
+      "name": "輸送路確保",
+      "ID": "UN0004D2"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03492",
+   "name": "Quest_46",
+   "file": "sprites/Quest_46.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "46x59",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "uorder",
+     "column": "Icon",
+     "row": {
+      "name": "遺失物調査",
+      "ID": "UN0005D1"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03497",
+   "name": "Quest_51",
+   "file": "sprites/Quest_51.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "57x54",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "欲望のはけ口",
+      "ID": "CNTU0603",
+      "Rarity": 3,
+      "ParamKey": "Union"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03499",
+   "name": "Quest_55",
+   "file": "sprites/Quest_55.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "58x49",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "蔵書提供",
+      "ID": "CNTU0202",
+      "Rarity": 2,
+      "ParamKey": "Union"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00011",
+   "name": "Quest_65",
+   "file": "sprites/Quest_65.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "48x55",
+   "members": 6,
+   "corpus": [
+    {
+     "table": "mappoint",
+     "column": "Icon",
+     "row": {
+      "name": "墓標",
+      "ID": "MPP_DEADS",
+      "Tag": [
+       "ShowAll"
+      ],
+      "ParamKey": "OpenScene"
+     }
+    },
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "冒険履歴スロット+2",
+      "ID": "SPIUT002",
+      "Tag": [
+       "SelfHelp"
+      ],
+      "ParamKey": "DeadSlot"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03504",
+   "name": "Quest_67",
+   "file": "sprites/Quest_67.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "58x61",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "褒美の撒き餌",
+      "ID": "CMP30016",
+      "Rarity": 3,
+      "Tag": [
+       "Always"
+      ],
+      "audio": "se-metal"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00061",
+   "name": "Quest_73",
+   "file": "sprites/Quest_73.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "59x39",
+   "members": 4,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "暗視グラス",
+      "ID": "CMP50003",
+      "Rarity": 5,
+      "Tag": [
+       "Always"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "アイテム: 暗視グラス",
+      "ID": "SPICI008",
+      "ParamKey": "CampItem"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03510",
+   "name": "Quest_79",
+   "file": "sprites/Quest_79.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "58x38",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "統治",
+      "ID": "CNTD0621",
+      "Rarity": 6,
+      "ParamKey": "DungeonDrop"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03513",
+   "name": "Quest_84",
+   "file": "sprites/Quest_84.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "58x63",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "予備の臓腑",
+      "ID": "CMP50024",
+      "Rarity": 5,
+      "Tag": [
+       "Usable",
+       "Consumed"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "uorder",
+     "column": "Icon",
+     "row": {
+      "name": "外敵排除",
+      "ID": "UN0006D3"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c00186",
+   "name": "Quest_85",
+   "file": "sprites/Quest_85.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "51x49",
+   "members": 3,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "イカサマダイス",
+      "ID": "CMP70028",
+      "Rarity": 7,
+      "Tag": [
+       "Always"
+      ],
+      "audio": "rare"
+     }
+    },
+    {
+     "table": "quest",
+     "column": "Icon1",
+     "row": {
+      "name": "名誉の戦士団",
+      "ID": "QST00006"
+     }
+    },
+    {
+     "table": "quest",
+     "column": "Icon1",
+     "row": {
+      "name": "屍術研究所",
+      "ID": "QST00017"
+     }
+    },
+    {
+     "table": "quest",
+     "column": "Icon1",
+     "row": {
+      "name": "闇月商会",
+      "ID": "QST00050"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03515",
+   "name": "Quest_88",
+   "file": "sprites/Quest_88.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "61x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "uorder",
+     "column": "Icon",
+     "row": {
+      "name": "文献収集",
+      "ID": "UN0002D1"
+     }
+    },
+    {
+     "table": "uorder",
+     "column": "Icon",
+     "row": {
+      "name": "帳簿整理",
+      "ID": "UN0009D3"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03516",
+   "name": "Quest_89",
+   "file": "sprites/Quest_89.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "59x54",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "薪",
+      "ID": "CMP00004",
+      "Rarity": 1,
+      "Tag": [
+       "Usable"
+      ],
+      "audio": "se-bag",
+      "ParamKey": "ToUse"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03521",
+   "name": "Quest_94",
+   "file": "sprites/Quest_94.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "36x52",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "暗夜行路",
+      "ID": "CNTD0607",
+      "Rarity": 6,
+      "ParamKey": "DungeonDrop"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "部屋不可視化",
+      "ID": "FreqRoomDoor",
+      "Desc": "一定確率で、部屋がダークルームになる",
+      "Category": "Debuff",
+      "Rarity": 0
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03522",
+   "name": "Quest_95",
+   "file": "sprites/Quest_95.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "36x63",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "たいまつ",
+      "ID": "CMP10003",
+      "Rarity": 1,
+      "Tag": [
+       "Usable"
+      ],
+      "audio": "se-bag",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "灯火",
+      "ID": "CNTD0518",
+      "Rarity": 5,
+      "ParamKey": "DungeonDrop"
+     }
+    },
+    {
+     "table": "revent",
+     "column": "Icon",
+     "row": {
+      "name": "環境効果 - 照明",
+      "ID": "REENV001",
+      "Tag": [
+       "RoomState",
+       "Active",
+       "Guide",
+       "RoomEnv"
+      ],
+      "ParamKey": "Eventscene"
+     }
+    },
+    {
+     "table": "state",
+     "column": "Icon",
+     "row": {
+      "name": "照明",
+      "ID": "StateEnv01",
+      "Desc": "双方、スキルの先制使用ができない__ダークルーム出現率が減少",
+      "Category": "Env",
+      "Rarity": 7,
+      "Tag": [
+       "DStatus"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03523",
+   "name": "Quest_97",
+   "file": "sprites/Quest_97.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "48x54",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "磨かれた蹄鉄",
+      "ID": "CMP20007",
+      "Rarity": 2,
+      "Tag": [
+       "Always"
+      ],
+      "audio": "se-jewel"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03525",
+   "name": "Quest_99",
+   "file": "sprites/Quest_99.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "46x56",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "uorder",
+     "column": "Icon",
+     "row": {
+      "name": "補給線維持",
+      "ID": "UN0001D2"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03533",
+   "name": "Quiver_v2_02",
+   "file": "sprites/Quiver_v2_02.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "59x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "campitem",
+     "column": "Icon",
+     "row": {
+      "name": "ダークエルフの矢筒",
+      "ID": "CMPGR040",
+      "Rarity": 5,
+      "Tag": [
+       "Usable",
+       "Gear",
+       "Earn"
+      ],
+      "audio": "rare",
+      "ParamKey": "ToUse"
+     }
+    },
+    {
+     "table": "gear",
+     "column": "Icon",
+     "row": {
+      "name": "ダークエルフの矢筒",
+      "ID": "GERU5304",
+      "Rarity": 5,
+      "Tag": [
+       "Unique",
+       "Random"
+      ],
+      "audio": "rare"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c03569",
+   "name": "Relic_v2_01",
+   "file": "sprites/Relic_v2_01.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat1",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "contract",
+     "column": "Icon",
+     "row": {
+      "name": "光の知見",
+      "ID": "CNTU0704",
+      "Rarity": 4,
+      "ParamKey": "Union"
+     }
+    }
+   ]
+  }
+ ]
+}

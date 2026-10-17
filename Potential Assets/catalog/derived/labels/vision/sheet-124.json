@@ -1,0 +1,484 @@
+{
+ "unit": "sheet-124",
+ "records": [
+  {
+   "cluster_id": "c00802",
+   "name": "Priestskill_24_nobg",
+   "slug": "priest-triple-plus-glow",
+   "description": "Three dark plus signs of different sizes floating over a purple glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "heal",
+     "buff"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00803",
+   "name": "Priestskill_25_nobg",
+   "slug": "priest-light-pillar-rubble",
+   "description": "A white beam of light descending onto black rubble and debris silhouettes.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00809",
+   "name": "Priestskill_32_nobg",
+   "slug": "priest-lightning-skull",
+   "description": "A purple lightning bolt striking a skull in a dark hooded figure.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00811",
+   "name": "Priestskill_34_nobg",
+   "slug": "priest-white-ring-rays",
+   "description": "A glowing white oval ring with short radiating streaks on a purple background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00812",
+   "name": "Priestskill_35_nobg",
+   "slug": "priest-purple-sun-orb",
+   "description": "A large purple orb whose rim is edged with a white spiky sunburst.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00817",
+   "name": "Priestskill_41_nobg",
+   "slug": "priest-lightning-web",
+   "description": "Black jagged lightning bolts and curved arcs spreading across a purple field.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00818",
+   "name": "Priestskill_42_nobg",
+   "slug": "priest-dark-eye-orb",
+   "description": "A black sphere inside concentric red-pink elliptical rings like an eye.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00819",
+   "name": "Priestskill_43_nobg",
+   "slug": "priest-thorn-branch",
+   "description": "A black thorny branch with round bulbs at its tips on a pink-magenta background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00822",
+   "name": "Priestskill_49_nobg",
+   "slug": "priest-golden-armour",
+   "description": "A golden chest armour with green trim and a bright sparkle glint.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03545",
+   "name": "Range_01",
+   "slug": "ranger-green-spear",
+   "description": "A spear-like arrow with green wind streaks on a dark navy background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03546",
+   "name": "Range_01_nb",
+   "slug": "ranger-green-spear-transparent",
+   "description": "A spear-like arrow with green wind streaks over a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03547",
+   "name": "Range_02_nb",
+   "slug": "ranger-whip-arm-transparent",
+   "description": "A muscular arm gripping a coiled whip.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03548",
+   "name": "Range_02_tame",
+   "slug": "ranger-whip-arm-tame",
+   "description": "A muscular arm gripping a coiled whip on a dark vignette background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "summon"
+    ],
+    "style": [
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03549",
+   "name": "Range_03_mark",
+   "slug": "ranger-grinning-face-mark",
+   "description": "A grinning face with a glowing sparkle in one eye beside a red vertical beam.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03550",
+   "name": "Range_03_nb",
+   "slug": "ranger-grinning-face-transparent",
+   "description": "A grinning face with a glowing sparkle in one eye and red streaks.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03551",
+   "name": "Range_04_ghost",
+   "slug": "ranger-skull-arrow-ghost",
+   "description": "A grey monochrome arrow sweeping past skulls on black.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "monochrome",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03552",
+   "name": "Range_04_nb",
+   "slug": "ranger-skull-arrow-transparent",
+   "description": "A grey monochrome arrow sweeping past skulls.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "monochrome",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03553",
+   "name": "Range_05",
+   "slug": "ranger-green-shadow-figure",
+   "description": "A black silhouetted figure with arms raised amid green light and falling arrows.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "silhouette",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03554",
+   "name": "Range_05_nb",
+   "slug": "ranger-green-shadow-figure-transparent",
+   "description": "A black silhouetted figure with arms raised amid green light and falling arrows.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "silhouette",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03555",
+   "name": "Range_06_love",
+   "slug": "ranger-heart-arrow",
+   "description": "A pink glowing arrow streaking downward with three hearts around it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "debuff"
+    ],
+    "style": [
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03556",
+   "name": "Range_06_nb",
+   "slug": "ranger-heart-arrow-transparent",
+   "description": "A pink glowing arrow streaking downward with three hearts around it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "debuff"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03557",
+   "name": "Range_07_nb",
+   "slug": "ranger-purple-claw-arrows",
+   "description": "A clawed hand wreathed in purple glow releasing a volley of arrows.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03558",
+   "name": "Range_07_shadowarrows",
+   "slug": "ranger-shadow-claw-arrows",
+   "description": "A clawed hand wreathed in purple glow releasing a volley of arrows on a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03559",
+   "name": "Range_08",
+   "slug": "ranger-red-shuriken-burst",
+   "description": "Several red-black four-pointed throwing stars scattered over a dark red streaked background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03560",
+   "name": "Range_08_nb",
+   "slug": "ranger-red-shuriken-burst-transparent",
+   "description": "Five dark four-pointed throwing stars scattered over a faded orange-red glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

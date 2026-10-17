@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-157",
+ "records": [
+  {
+   "cluster_id": "c02736",
+   "name": "Guinea-Bissau",
+   "slug": "flag-guinea-bissau",
+   "description": "Guinea-Bissau flag: red vertical band with a black star at left, yellow upper and green lower horizontal bands.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02737",
+   "name": "Guinea",
+   "slug": "flag-guinea",
+   "description": "Guinea flag: three vertical bands of yellow, red and green on a rounded rectangle.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02759",
+   "name": "Guyana",
+   "slug": "flag-guyana",
+   "description": "Guyana flag: green field with a white-edged yellow arrowhead over a black-edged red arrowhead pointing right.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02760",
+   "name": "Haiti",
+   "slug": "flag-haiti",
+   "description": "Haiti flag: blue upper and red lower horizontal bands with a white central panel holding a small palm tree emblem.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02942",
+   "name": "Honduras",
+   "slug": "flag-honduras",
+   "description": "Honduras flag: blue, white and blue horizontal bands with five small blue stars on the white band.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02982",
+   "name": "Iceland",
+   "slug": "flag-iceland",
+   "description": "Iceland flag: blue field with a white-bordered red Nordic cross.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02984",
+   "name": "India",
+   "slug": "flag-india",
+   "description": "India flag: orange, white and green horizontal bands with a blue wheel ring in the centre.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00679",
+   "name": "Iran",
+   "slug": "flag-iran",
+   "description": "Iran flag: green, white and red horizontal bands with a red central emblem and dotted white border lines.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02987",
+   "name": "Iraq",
+   "slug": "flag-iraq",
+   "description": "Iraq flag: red, white and black horizontal bands with three green blocks on the white band.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00680",
+   "name": "Ireland",
+   "slug": "flag-ireland",
+   "description": "Ireland flag: green, white and orange vertical bands on a rounded rectangle.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02988",
+   "name": "Israel",
+   "slug": "flag-israel",
+   "description": "Israel flag: white field with blue top and bottom stripes and a blue six-pointed star in the centre.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02989",
+   "name": "Jamaica",
+   "slug": "flag-jamaica",
+   "description": "Jamaica flag: green and black field divided by a yellow diagonal saltire.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02990",
+   "name": "Japan",
+   "slug": "flag-japan",
+   "description": "Japan flag: white field with a red circle in the centre.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03045",
+   "name": "Jordan",
+   "slug": "flag-jordan",
+   "description": "Jordan flag: black, white and green horizontal bands with a red triangle at left holding a small white star.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03046",
+   "name": "Kazakhstan",
+   "slug": "flag-kazakhstan",
+   "description": "Kazakhstan flag: sky-blue field with a yellow sun disc and a vertical yellow ornament strip at left.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03047",
+   "name": "Kenya",
+   "slug": "flag-kenya",
+   "description": "Kenya flag: black, red and green bands separated by white lines, with a red and white shield at the centre.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03049",
+   "name": "Kiribati",
+   "slug": "flag-kiribati",
+   "description": "Kiribati flag: red upper field with a yellow rising sun, over blue and white wavy stripes.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03061",
+   "name": "Korea,-North",
+   "slug": "flag-korea-north",
+   "description": "North Korea flag: blue, white and red horizontal bands with a white disc holding a red star on the red band.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03062",
+   "name": "Korea,-South",
+   "slug": "flag-korea-south",
+   "description": "South Korea flag: white field with a red and blue taegeuk in the centre and black trigram bars in the corners.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03063",
+   "name": "Kosovo",
+   "slug": "flag-kosovo",
+   "description": "Kosovo flag: blue field with a yellow map silhouette and an arc of six white stars above it.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03064",
+   "name": "Kuwait",
+   "slug": "flag-kuwait",
+   "description": "Kuwait flag: green, white and red horizontal bands with a black trapezoid at the hoist side.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03065",
+   "name": "Kyrgyzstan",
+   "slug": "flag-kyrgyzstan",
+   "description": "Kyrgyzstan flag: red field with a yellow sun disc ringed by rays.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03069",
+   "name": "Laos",
+   "slug": "flag-laos",
+   "description": "Laos flag: red, blue and red horizontal bands with a white circle in the centre.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03081",
+   "name": "Lebanon",
+   "slug": "flag-lebanon",
+   "description": "Lebanon flag: white band between red top and bottom bands, with a green cedar tree in the centre.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03083",
+   "name": "Lesotho",
+   "slug": "flag-lesotho",
+   "description": "Lesotho flag: blue, white and green horizontal bands with a small black hat symbol in the centre.",
+   "tags": {
+    "kind": "badge",
+    "use": [
+     "unassigned"
+    ],
+    "style": [
+     "full-colour",
+     "flat-vector",
+     "low-res",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

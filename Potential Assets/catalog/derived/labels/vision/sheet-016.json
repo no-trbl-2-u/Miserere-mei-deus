@@ -1,0 +1,555 @@
+{
+ "unit": "sheet-016",
+ "records": [
+  {
+   "cluster_id": "c01611",
+   "name": "7_Cloth_Chest",
+   "slug": "white-gold-cloth-chestpiece",
+   "description": "A dark grey cloth chestpiece trimmed with swirling gold bands, shown as a flared tunic front.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01612",
+   "name": "7_Cloth_Head",
+   "slug": "white-gold-skull-hood",
+   "description": "A white and gold pointed cowl framing a grinning grey skull face.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01613",
+   "name": "7_Cloth_Pants",
+   "slug": "white-gold-cloth-pants",
+   "description": "White cloth leggings with gold trim down the outer edges and silver greaves at the shins.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01614",
+   "name": "7_Cloth_belt",
+   "slug": "white-gold-cloth-belt",
+   "description": "A coiled white belt edged in gold with an ornate gold-and-white buckle plate.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01616",
+   "name": "7_Cloth_gloves",
+   "slug": "white-gold-cloth-gloves",
+   "description": "A pair of white gloves with gold diamond cuffs and silver clawed finger plates.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01617",
+   "name": "7_Cloth_sloulder",
+   "slug": "white-gold-cloth-shoulder",
+   "description": "A white shoulder pauldron with sweeping gold trim and a round gold medallion on the lower edge.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01619",
+   "name": "7_Leather_Pants",
+   "slug": "brown-leather-skirt-pants",
+   "description": "A brown leather tassel-style legging piece with a dark green centre panel and gold-tipped hem.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01620",
+   "name": "7_Leather_Shoulder",
+   "slug": "leaf-leather-shoulder",
+   "description": "A brown leather shoulder guard covered in green leaves with twigs at the edge.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01622",
+   "name": "7_Leather_boots",
+   "slug": "tan-leather-sandals",
+   "description": "A pair of flat tan leather sandals with brown straps.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01623",
+   "name": "7_Leather_bracers",
+   "slug": "vine-leather-bracer",
+   "description": "A hollow brown leather bracer with a small green sprout and leaves on top.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01624",
+   "name": "7_Leather_head",
+   "slug": "thorn-circlet-red-gem",
+   "description": "A twisted brown thorn-branch circlet with green leaf tips and a red gem at the centre.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01625",
+   "name": "7_Mail_Boots",
+   "slug": "dark-steel-mail-boots",
+   "description": "A pair of tall dark steel boots with pointed toes and plated shafts.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01627",
+   "name": "7_Mail_Shoulder",
+   "slug": "skull-steel-shoulder",
+   "description": "A dark steel pauldron with a skull emblem and purple cloth trailing from the lower edge.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01628",
+   "name": "7_Mail_belt",
+   "slug": "purple-studded-belt",
+   "description": "A purple leather belt with a buckle, studded strap and hanging tabs tipped with silver ornaments.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01629",
+   "name": "7_Mail_bracers",
+   "slug": "dark-steel-bracer",
+   "description": "A single dark steel forearm bracer with engraved plating.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01630",
+   "name": "7_Mail_gloves",
+   "slug": "dark-steel-gauntlets",
+   "description": "A pair of dark steel gauntlets with engraved knuckle plates.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01631",
+   "name": "7_Mail_head",
+   "slug": "plumed-steel-helm",
+   "description": "A dark steel closed helmet with a visor slit and a curved purple plume.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01632",
+   "name": "7_mail_Pants",
+   "slug": "dark-steel-leg-armour",
+   "description": "Dark steel leg greaves with purple cloth at the thighs and pointed knee plates.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01633",
+   "name": "8_Cloth_Boots",
+   "slug": "green-gold-cloth-boots",
+   "description": "A pair of green cloth boots with gold-trimmed leaf-like vein patterns.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01635",
+   "name": "8_Cloth_Head",
+   "slug": "green-gold-cloth-hood",
+   "description": "A dark green cloth hood with gold trim and thorny spikes along the rim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01636",
+   "name": "8_Cloth_Pants",
+   "slug": "green-gold-cloth-skirt",
+   "description": "A green cloth leg garment with gold trim and a gold-edged pointed hem.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01637",
+   "name": "8_Cloth_belt",
+   "slug": "green-gold-cloth-belt",
+   "description": "A green belt with gold vine-like swirl patterns, drawn as a loop.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01638",
+   "name": "8_Cloth_bracers",
+   "slug": "green-gold-cloth-bracer",
+   "description": "A cylindrical bracer with gold rims and dark brown wrapped bands between them.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01639",
+   "name": "8_Cloth_gloves",
+   "slug": "green-gold-cloth-gloves",
+   "description": "A pair of green gloves with gold leaf-vein trim along the fingers and cuffs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01640",
+   "name": "8_Cloth_sloulder",
+   "slug": "green-horned-shoulder",
+   "description": "A green rounded shoulder guard with two pale curved horn spikes.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

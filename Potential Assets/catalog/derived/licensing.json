@@ -1,0 +1,194 @@
+{
+ "extract": {
+  "game_dir": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Buriedbornes2",
+  "files": 8697,
+  "buckets": {
+   "Copy": 8692,
+   "Open": 5
+  },
+  "trademark_marks": [
+   "ApplePayWhite_0",
+   "ApplePayWhite_1",
+   "ApplePayWhite_2",
+   "ApplePayWhite_3",
+   "ApplePay_0",
+   "ApplePay_1",
+   "ApplePay_2",
+   "ApplePay_3",
+   "CodaWhite_0",
+   "CodaWhite_1",
+   "CodaWhite_2",
+   "CodaWhite_3",
+   "Coda_0",
+   "Coda_1",
+   "Coda_2",
+   "Coda_3",
+   "GooglePayWhite_0",
+   "GooglePayWhite_1",
+   "GooglePayWhite_2",
+   "GooglePayWhite_3",
+   "GooglePay_0",
+   "GooglePay_1",
+   "GooglePay_2",
+   "GooglePay_3",
+   "StripeWhite_0",
+   "StripeWhite_1",
+   "StripeWhite_2",
+   "StripeWhite_3",
+   "StripeWhite_4"
+  ],
+  "fonts": [
+   {
+    "file": "fonts/ARIAL.ttf",
+    "family": "Arial",
+    "license_text": "You may use this font to display and print content as permitted by the license terms for the product in which this font is included. You may only (i) embed this font in content as permitted by the embedding restrictions included in this font; and (ii) temporarily download this font to a printer or o",
+    "license_url": "",
+    "copyright": "© 2011 The Monotype Corporation. All Rights Reserved.",
+    "bucket": "Copy",
+    "license": "no redistributable licence stated in the font"
+   },
+   {
+    "file": "fonts/Dimkin_Regular.ttf",
+    "family": "Dimkin",
+    "license_text": "",
+    "license_url": "",
+    "copyright": "Dimkin Typeface © Blue Curve Designstudio. 2023. All Rights Reserved",
+    "bucket": "Copy",
+    "license": "no redistributable licence stated in the font"
+   },
+   {
+    "file": "fonts/LiberationSans.ttf",
+    "family": "Liberation Sans",
+    "license_text": "Licensed under the SIL Open Font License, Version 1.1",
+    "license_url": "http://scripts.sil.org/OFL",
+    "copyright": "Digitized data copyright (c) 2010 Google Corporation. \nCopyright (c) 2012 Red Hat, Inc.",
+    "bucket": "Open",
+    "license": "SIL Open Font License 1.1"
+   },
+   {
+    "file": "fonts/NotoSansKR-Light.ttf",
+    "family": "Noto Sans KR Light",
+    "license_text": "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://scripts.sil.org/OFL",
+    "license_url": "http://scripts.sil.org/OFL",
+    "copyright": "(c) 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'.",
+    "bucket": "Open",
+    "license": "SIL Open Font License 1.1"
+   },
+   {
+    "file": "fonts/NotoSansSC-Regular.ttf",
+    "family": "Noto Sans SC",
+    "license_text": "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://scripts.sil.org/OFL",
+    "license_url": "http://scripts.sil.org/OFL",
+    "copyright": "(c) 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'.",
+    "bucket": "Open",
+    "license": "SIL Open Font License 1.1"
+   },
+   {
+    "file": "fonts/NotoSansTC-Regular.ttf",
+    "family": "Noto Sans TC",
+    "license_text": "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://scripts.sil.org/OFL",
+    "license_url": "http://scripts.sil.org/OFL",
+    "copyright": "(c) 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'.",
+    "bucket": "Open",
+    "license": "SIL Open Font License 1.1"
+   },
+   {
+    "file": "fonts/Orbitron_Black.otf",
+    "family": "Orbitron",
+    "license_text": "",
+    "license_url": "",
+    "copyright": "Generated in 2009 by FontLab Studio. Copyright info pending.",
+    "bucket": "Copy",
+    "license": "no redistributable licence stated in the font"
+   },
+   {
+    "file": "fonts/Orbitron_Bold.otf",
+    "family": "Orbitron",
+    "license_text": "",
+    "license_url": "",
+    "copyright": "Generated in 2009 by FontLab Studio. Copyright info pending.",
+    "bucket": "Copy",
+    "license": "no redistributable licence stated in the font"
+   },
+   {
+    "file": "fonts/Orbitron_Light.otf",
+    "family": "Orbitron",
+    "license_text": "",
+    "license_url": "",
+    "copyright": "Generated in 2009 by FontLab Studio. Copyright info pending.",
+    "bucket": "Copy",
+    "license": "no redistributable licence stated in the font"
+   },
+   {
+    "file": "fonts/Orbitron_Medium.otf",
+    "family": "Orbitron",
+    "license_text": "",
+    "license_url": "",
+    "copyright": "Generated in 2009 by FontLab Studio. Copyright info pending.",
+    "bucket": "Copy",
+    "license": "no redistributable licence stated in the font"
+   },
+   {
+    "file": "fonts/PixelMplus12-Regular.ttf",
+    "family": "PixelMplus12",
+    "license_text": "",
+    "license_url": "",
+    "copyright": "Copyright (C) 2013 M+ Font Project",
+    "bucket": "Copy",
+    "license": "no redistributable licence stated in the font"
+   },
+   {
+    "file": "fonts/SourceCodePro-Regular.otf",
+    "family": "Source Code Pro",
+    "license_text": "Copyright 2010, 2012 Adobe Systems Incorporated (http://www.adobe.com/), with Reserved Font Name 'Source'. All Rights Reserved. Source is a trademark of Adobe Systems Incorporated in the United States and/or other countries.\r\n\r\nThis Font Software is licensed under the SIL Open Font License, Version ",
+    "license_url": "http://www.adobe.com/type/legal.html",
+    "copyright": "Copyright 2010, 2012 Adobe Systems Incorporated. All Rights Reserved.",
+    "bucket": "Open",
+    "license": "SIL Open Font License 1.1"
+   }
+  ]
+ },
+ "icons_tbr": {
+  "files": 4180,
+  "bucket": "Open",
+  "license": "CC-BY-3.0 (CC0 for Viscious Speed and Zeromancer) — game-icons.net",
+  "contributors": {
+   "delapouite": 2022,
+   "lorc": 1429,
+   "skoll": 172,
+   "caro-asercion": 127,
+   "viscious-speed": 121,
+   "sbed": 95,
+   "aussiesim": 52,
+   "darkzaitzev": 32,
+   "cathelineau": 29,
+   "quoting": 12,
+   "faithtoken": 10,
+   "lord-berandas": 10,
+   "priorblue": 7,
+   "willdabeast": 7,
+   "carl-olsen": 6,
+   "felbrigg": 5,
+   "lucasms": 5,
+   "seregacthtuf": 5,
+   "guard13007": 3,
+   "john-redman": 3,
+   "kier-heyl": 3,
+   "pierre-leducq": 3,
+   "rihlsul": 3,
+   "andymeneely": 2,
+   "generalace135": 2,
+   "heavenly-dog": 2,
+   "various-artists": 2,
+   "zajkonur": 2,
+   "zeromancer": 2,
+   "catsu": 1,
+   "irongamer": 1,
+   "john-colburn": 1,
+   "pepijn-poolman": 1,
+   "sparker": 1,
+   "spencerdub": 1,
+   "starseeker": 1
+  }
+ }
+}

@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-066",
+ "records": [
+  {
+   "cluster_id": "c03192",
+   "name": "Loot_74",
+   "slug": "silver-chalice",
+   "description": "A silver goblet with a wide engraved rim, a slender stem and a round foot.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03194",
+   "name": "Loot_76",
+   "slug": "steel-knife",
+   "description": "A steel knife with a long tapered blade and a small dark handle, angled diagonally.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "loot",
+     "equipment"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03195",
+   "name": "Loot_77",
+   "slug": "three-tine-fork",
+   "description": "A long-handled three-pronged fork or trident in grey steel, angled diagonally.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "loot",
+     "equipment"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00694",
+   "name": "Loot_79",
+   "slug": "blue-liquid-vial",
+   "description": "A glass tube filled partway with deep blue liquid.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03196",
+   "name": "Loot_81",
+   "slug": "white-liquid-vial",
+   "description": "A glass tube filled partway with opaque white liquid, like milk.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03197",
+   "name": "Loot_82",
+   "slug": "orange-glowing-rune-stone",
+   "description": "An oval brown stone carved with a glowing orange angular rune.",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03198",
+   "name": "Loot_83",
+   "slug": "blank-grey-rune-stone",
+   "description": "A plain dark grey oval stone with no rune marking.",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03199",
+   "name": "Loot_84",
+   "slug": "cyan-glowing-rune-stone",
+   "description": "An oval blue stone carved with a glowing cyan angular rune.",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03200",
+   "name": "Loot_85",
+   "slug": "green-glowing-rune-stone",
+   "description": "An oval green stone carved with a glowing lime trident-like rune.",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03201",
+   "name": "Loot_86",
+   "slug": "purple-glowing-rune-stone",
+   "description": "An oval purple stone carved with a glowing violet rune.",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03202",
+   "name": "Loot_87",
+   "slug": "clay-pitcher",
+   "description": "A brown ceramic pitcher with a narrow neck, a pouring lip and a single handle.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00162",
+   "name": "Loot_90",
+   "slug": "raw-meat-slab",
+   "description": "A slab of raw meat with a pale bone and a strip of fat.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03204",
+   "name": "Loot_92",
+   "slug": "egg-nest",
+   "description": "A twig bird nest holding five speckled pale eggs.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03205",
+   "name": "Loot_93",
+   "slug": "cheese-wedge",
+   "description": "A yellow wedge of cheese with round holes.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03206",
+   "name": "Loot_94",
+   "slug": "steaming-cheese-wedge",
+   "description": "A pale wedge of cheese with rising steam wisps.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03207",
+   "name": "Loot_97",
+   "slug": "purple-yarn-ball",
+   "description": "A ball of purple yarn with a loose strand trailing below.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00163",
+   "name": "Loot_98",
+   "slug": "tan-yarn-ball",
+   "description": "A ball of tan yarn with a loose strand trailing below.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03208",
+   "name": "Loot_99",
+   "slug": "needle-and-thread",
+   "description": "A thin sewing needle with a loop of dark thread trailing from it.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c03213",
+   "name": "MailChest",
+   "slug": "chainmail-blue-tunic",
+   "description": "A dark grey chainmail shirt with short sleeves over a blue tunic and a belt.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "loot",
+     "equipment"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03214",
+   "name": "MailChest2",
+   "slug": "dark-mail-shirt",
+   "description": "A dark grey mail shirt with short sleeves and a plain hem.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "loot",
+     "equipment"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03215",
+   "name": "MailChestRed",
+   "slug": "chainmail-brown-tunic",
+   "description": "A grey chainmail shirt with short sleeves over a brown tunic and a belt.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "loot",
+     "equipment"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03224",
+   "name": "MasterBag",
+   "slug": "green-satchel",
+   "description": "A green canvas backpack with buckled straps and a side loop.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03226",
+   "name": "MeatOnStick",
+   "slug": "meat-skewer",
+   "description": "A wooden skewer holding several browned chunks of meat.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03227",
+   "name": "MeatWithPotatos",
+   "slug": "meat-and-potatoes-bowl",
+   "description": "A shallow bowl of cooked meat and potato chunks.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03247",
+   "name": "MetalBracers",
+   "slug": "metal-bracer",
+   "description": "A dark grey cylindrical metal bracer for the forearm.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "loot",
+     "equipment"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

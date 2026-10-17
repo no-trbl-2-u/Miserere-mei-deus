@@ -1,0 +1,512 @@
+{
+ "unit": "sheet-076",
+ "records": [
+  {
+   "cluster_id": "c03566",
+   "name": "RedShield",
+   "slug": "red-shield",
+   "description": "A rounded red-brown shield with a tan horizontal band across its middle.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03567",
+   "name": "RedShirt",
+   "slug": "red-shirt",
+   "description": "A dark red long-sleeved laced-collar shirt shown flat.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03568",
+   "name": "Redbelt",
+   "slug": "red-belt",
+   "description": "A red cloth belt or sash tied in a bow, drawn as an open loop.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03571",
+   "name": "Relic_v2_03",
+   "slug": "cyan-crystal-lantern-relic",
+   "description": "A glowing cyan crystal vial hanging from a chain, with sparkles around it.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "reward",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03572",
+   "name": "Relic_v2_04",
+   "slug": "bronze-medallion-relic",
+   "description": "An ornate bronze octagonal medallion with a floral pattern and orange glow, hanging from a cord.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "reward",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03573",
+   "name": "Relic_v2_05",
+   "slug": "green-glow-skull-relic",
+   "description": "A bone skull with glowing green eyes and green slime, topped with a small spiked pendant.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "reward",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03574",
+   "name": "Relic_v2_06",
+   "slug": "pink-energy-orb-relic",
+   "description": "A pink glowing orb with radiating pink lines and sparks.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "reward",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03575",
+   "name": "Relic_v2_07",
+   "slug": "purple-vortex-relic",
+   "description": "A purple spiral vortex with swirling arcs around it.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "reward",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03578",
+   "name": "Relic_v2_10",
+   "slug": "green-glow-rock-relic",
+   "description": "Dark rock fragments with glowing green edges clustered on a small spiked handle.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "reward",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00841",
+   "name": "Res_04",
+   "slug": "wooden-plank",
+   "description": "A single brown wooden plank board.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03579",
+   "name": "Res_06",
+   "slug": "red-metal-ingot",
+   "description": "A pinkish-red metal ingot bar.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03580",
+   "name": "Res_10",
+   "slug": "gold-ore-pile",
+   "description": "A cone-shaped heap of golden ore with small nuggets.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00187",
+   "name": "Res_102",
+   "slug": "pink-potion-flask",
+   "description": "A round-bellied glass flask with a cork, holding bright pink liquid.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory",
+     "heal"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03581",
+   "name": "Res_104",
+   "slug": "grey-flask-two-lumps",
+   "description": "A grey-glass corked flask containing two brown round lumps.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03582",
+   "name": "Res_105",
+   "slug": "empty-glass-flask",
+   "description": "An empty round glass flask with a wide flared neck.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03583",
+   "name": "Res_108",
+   "slug": "orange-crystal",
+   "description": "A single faceted orange crystal gem.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03584",
+   "name": "Res_109",
+   "slug": "orange-crystal-shards",
+   "description": "Three orange crystal shards of different sizes.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00844",
+   "name": "Res_110",
+   "slug": "pink-crystal-shards",
+   "description": "Three pink crystal shards of different sizes.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03585",
+   "name": "Res_115",
+   "slug": "purple-gem",
+   "description": "A glossy deep purple oval gem.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03586",
+   "name": "Res_116",
+   "slug": "amber-gem",
+   "description": "A glossy amber-orange oval gem.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03587",
+   "name": "Res_118",
+   "slug": "green-ring-flask",
+   "description": "A donut-shaped glass flask with a green stopper and dark green liquid in its lower half.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00845",
+   "name": "Res_119",
+   "slug": "purple-ring-flask",
+   "description": "A donut-shaped glass flask with a purple stopper and dark purple liquid in its lower half.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03588",
+   "name": "Res_120",
+   "slug": "orange-flowers",
+   "description": "A pair of orange star-shaped flowers on green stems.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03589",
+   "name": "Res_121",
+   "slug": "red-flowers",
+   "description": "A pair of red-orange flowers on green stems.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03590",
+   "name": "Res_122",
+   "slug": "pink-flower-cluster",
+   "description": "A cluster of small magenta flowers on a bundle of green stems.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

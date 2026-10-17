@@ -1,0 +1,530 @@
+{
+ "unit": "sheet-067",
+ "records": [
+  {
+   "cluster_id": "c03248",
+   "name": "MetalHammer",
+   "slug": "metal-hammer-red-handle",
+   "description": "A war hammer with a small grey iron head and a long red-brown handle ending in a round pommel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03249",
+   "name": "MetalHammer2",
+   "slug": "metal-hammer-rusted",
+   "description": "A rusty iron war hammer with a rectangular head and a long dark wooden haft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03250",
+   "name": "MetalHammer3",
+   "slug": "metal-hammer-twin-block",
+   "description": "A heavy two-block hammer with a worn brown head and a long wooden handle with a red tassel at the end.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03251",
+   "name": "MetalHammer4",
+   "slug": "metal-hammer-spiked-purple",
+   "description": "A spiked iron war hammer with a studded dark head and a purple-wrapped handle ending in a spiked pommel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03252",
+   "name": "MetalHelmet",
+   "slug": "metal-helmet-bucket",
+   "description": "A dark steel great helm with a narrow horizontal eye slit and a rounded top.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03253",
+   "name": "MetalHelmet2",
+   "slug": "metal-helmet-knight-visor",
+   "description": "A steel knight helmet with a pointed visor and vertical breathing slits.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03254",
+   "name": "MetalHelmet3",
+   "slug": "metal-helmet-riveted",
+   "description": "A dark riveted iron helmet with copper trim and a wide eye slit.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00735",
+   "name": "MetalHelmetGold",
+   "slug": "metal-helmet-gold",
+   "description": "A brass or gold-toned helmet with a raised visor and rivets along the edge.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03255",
+   "name": "MetalShield1",
+   "slug": "metal-shield-kite",
+   "description": "A grey metal kite-shaped shield with a round copper boss at its centre.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03258",
+   "name": "Milk",
+   "slug": "milk-bottle",
+   "description": "A glass bottle of white milk with a cork stopper.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "inventory",
+     "loot",
+     "heal"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03259",
+   "name": "Mineral",
+   "slug": "mineral-dark-rock",
+   "description": "A dark brown rock chunk with grey mineral flecks and a few small pebbles beside it.",
+   "tags": {
+    "kind": "terrain",
+    "use": [
+     "crafting",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03260",
+   "name": "MineralGold",
+   "slug": "mineral-gold-rock",
+   "description": "A dark brown rock chunk with embedded gold nuggets and a few small fragments beside it.",
+   "tags": {
+    "kind": "terrain",
+    "use": [
+     "crafting",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03261",
+   "name": "Mining_01_fragments_of_stones",
+   "slug": "mining-stone-fragments",
+   "description": "A pile of pale grey angular stone fragments.",
+   "tags": {
+    "kind": "terrain",
+    "use": [
+     "crafting",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03262",
+   "name": "Mining_02_dried_clay",
+   "slug": "mining-dried-clay",
+   "description": "A single brown-pink lump of dried clay.",
+   "tags": {
+    "kind": "terrain",
+    "use": [
+     "crafting",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03263",
+   "name": "Mining_03_hardstone",
+   "slug": "mining-hardstone",
+   "description": "A smooth grey-green curved hard stone.",
+   "tags": {
+    "kind": "terrain",
+    "use": [
+     "crafting",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03264",
+   "name": "Mining_04_ironoreodds",
+   "slug": "mining-iron-ore-odds",
+   "description": "A small cluster of pinkish-brown rock chunks and scraps, the lesser iron ore leftovers.",
+   "tags": {
+    "kind": "terrain",
+    "use": [
+     "crafting",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03265",
+   "name": "Mining_05_ironore",
+   "slug": "mining-iron-ore",
+   "description": "A rust-orange rough chunk of iron ore.",
+   "tags": {
+    "kind": "terrain",
+    "use": [
+     "crafting",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03266",
+   "name": "Mining_06_clearironore",
+   "slug": "mining-clear-iron-ore",
+   "description": "A dark grey metallic crystalline slab of refined iron ore with light streaks.",
+   "tags": {
+    "kind": "terrain",
+    "use": [
+     "crafting",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03267",
+   "name": "Mining_07_ghostore",
+   "slug": "mining-ghost-ore",
+   "description": "A bright green glowing ore chunk with brown patches.",
+   "tags": {
+    "kind": "terrain",
+    "use": [
+     "crafting",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03268",
+   "name": "Mining_08_goldore",
+   "slug": "mining-gold-ore",
+   "description": "A grey rock with yellow gold nuggets embedded in it.",
+   "tags": {
+    "kind": "terrain",
+    "use": [
+     "crafting",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03270",
+   "name": "Mining_10_mangan",
+   "slug": "mining-manganese",
+   "description": "A black glossy lump of manganese ore with faceted grey highlights.",
+   "tags": {
+    "kind": "terrain",
+    "use": [
+     "crafting",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03272",
+   "name": "Mining_12_silverore",
+   "slug": "mining-silver-ore",
+   "description": "A grey rock slab with red-pink crystals on top.",
+   "tags": {
+    "kind": "terrain",
+    "use": [
+     "crafting",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03274",
+   "name": "Mining_15_nativecopper",
+   "slug": "mining-native-copper",
+   "description": "An orange copper nugget with pale blue-green patina spots.",
+   "tags": {
+    "kind": "terrain",
+    "use": [
+     "crafting",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03280",
+   "name": "Mining_21_bucket_of_minerals",
+   "slug": "mining-bucket-of-minerals",
+   "description": "A metal bucket filled with dark mineral chunks.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "crafting",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03284",
+   "name": "Mining_25_cobaltore",
+   "slug": "mining-cobalt-ore",
+   "description": "A dark grey rock with bright cyan-blue cobalt veins.",
+   "tags": {
+    "kind": "terrain",
+    "use": [
+     "crafting",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

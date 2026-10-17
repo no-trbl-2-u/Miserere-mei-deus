@@ -1,0 +1,504 @@
+{
+ "unit": "sheet-117",
+ "records": [
+  {
+   "cluster_id": "c02512",
+   "name": "Earth_17_nb",
+   "slug": "green-whirlwind-spell",
+   "description": "A glowing green whirlwind of swirling rings spiralling around a bright core.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02513",
+   "name": "Earth_18_digin",
+   "slug": "earth-burrow-lurker",
+   "description": "A dark burrow hole in cracked brown rock with a pair of glowing white eyes peering out.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02514",
+   "name": "Earth_18_nb",
+   "slug": "earth-burrow-lurker-b",
+   "description": "A dark burrow hole in cracked brown rock with a pair of glowing white eyes peering out.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02515",
+   "name": "Earth_19_nb",
+   "slug": "falling-debris-streaks",
+   "description": "Brown dusty streaks of debris falling down over a dark rocky ground line.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02516",
+   "name": "Earth_19_shake",
+   "slug": "falling-debris-streaks-dark",
+   "description": "Brown dusty streaks of debris falling down over a dark rocky ground line on a black background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02517",
+   "name": "Earth_1_nb",
+   "slug": "green-glow-boulders",
+   "description": "Grey boulders with small chunks flying off, outlined in a green glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02518",
+   "name": "Earth_2_nb",
+   "slug": "green-leaf-spear",
+   "description": "A green leaf-shaped spearhead on a stalk framed by curling glowing vines.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02519",
+   "name": "Earth_3_nb",
+   "slug": "flying-rock-shards",
+   "description": "Grey rock shards streaking diagonally with green motion trails.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02520",
+   "name": "Earth_4_nb",
+   "slug": "green-aura-skull",
+   "description": "A mossy skull inside a swirling green aura.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02521",
+   "name": "Earth_5_nb",
+   "slug": "earth-fissure-green-energy",
+   "description": "A brown rock mass split by a crack with bright green energy bursting out.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02522",
+   "name": "Earth_6_nb",
+   "slug": "green-glow-earth-fist",
+   "description": "A rocky fist wrapped in green glowing energy striking forward.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02523",
+   "name": "Earth_7_nb",
+   "slug": "scattered-rubble",
+   "description": "Dark grey rock rubble and fragments scattered with a faint green glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "defend"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02524",
+   "name": "Earth_8_nb",
+   "slug": "sprouting-tendril-mound",
+   "description": "A tentacle-like green root tendril with curling tips sprouting from a dark mound.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "summon"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02525",
+   "name": "Earth_9_nb",
+   "slug": "thorn-rooted-man",
+   "description": "A bald man's bust with a thorny dead branch growing from his head and spikes on his shoulders.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "summon"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00612",
+   "name": "Engineerskill_03_nobg",
+   "slug": "red-skull-crest",
+   "description": "A dark crest with a skull motif in a red glowing aura.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "player-class",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00613",
+   "name": "Engineerskill_04_nobg",
+   "slug": "drill-bit",
+   "description": "An orange spiral drill bit with a metal shaft angled diagonally.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "player-class",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00616",
+   "name": "Engineerskill_07_nobg",
+   "slug": "fused-bomb",
+   "description": "A grey round bomb with a lit fuse streaking through the air.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "player-class",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00617",
+   "name": "Engineerskill_08_nobg",
+   "slug": "magenta-net-launcher",
+   "description": "A black launcher with a mesh net spreading out in magenta glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "player-class",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00618",
+   "name": "Engineerskill_09_nobg",
+   "slug": "pipe-gun",
+   "description": "A dark bottle-like pipe gun or cannon barrel with a brass muzzle.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "player-class",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c00622",
+   "name": "Engineerskill_13_nobg",
+   "slug": "water-jet-nozzle",
+   "description": "A metal nozzle spraying a strong jet of cyan water.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "player-class",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00624",
+   "name": "Engineerskill_16_nobg",
+   "slug": "bearded-engineer-portrait",
+   "description": "A portrait of an elderly man with white beard, bushy brows and round goggle glasses.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00625",
+   "name": "Engineerskill_17_nobg",
+   "slug": "cracked-orange-shield",
+   "description": "A dark shield with a glowing orange slash crack across it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "player-class",
+     "defend"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00626",
+   "name": "Engineerskill_18_nobg",
+   "slug": "orange-triple-chevron",
+   "description": "Three stacked orange chevrons pointing upward with a soft glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "player-class",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00627",
+   "name": "Engineerskill_20_nobg",
+   "slug": "purple-energy-burst",
+   "description": "A purple-white energy blast with dark blade shapes radiating outward.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "player-class",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00631",
+   "name": "Engineerskill_24_nobg",
+   "slug": "blue-energy-bullet",
+   "description": "A blue glowing bullet-shaped capsule with a metal casing angled diagonally.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "player-class",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

@@ -1,0 +1,555 @@
+{
+ "unit": "sheet-013",
+ "records": [
+  {
+   "cluster_id": "c01527",
+   "name": "3_Cloth_gloves",
+   "slug": "red-cloth-gloves",
+   "description": "A pair of crimson cloth cuffs with frilled edges and a gold trim detail.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00367",
+   "name": "3_Cloth_sloulder",
+   "slug": "red-cloth-shoulder",
+   "description": "A red cloth shoulder mantle with ornate gold scrollwork trim and an orange gem.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01529",
+   "name": "3_Leather_Pants",
+   "slug": "green-leather-pants",
+   "description": "Green leather trousers with brown knee patches.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01530",
+   "name": "3_Leather_Shoulder",
+   "slug": "green-leather-shoulder",
+   "description": "A green leather pauldron decorated with golden feathers and a metal ring at the base.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01531",
+   "name": "3_Leather_belt",
+   "slug": "brown-leather-belt",
+   "description": "A brown leather belt with a small metal buckle, shown as an oval loop.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01533",
+   "name": "3_Leather_bracers",
+   "slug": "green-leather-bracers",
+   "description": "A green leather bracer with silver metal rims at both ends.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01534",
+   "name": "3_Leather_gloves",
+   "slug": "green-leather-gloves",
+   "description": "A pair of green leather gloves with silver cuff bands.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01535",
+   "name": "3_Leather_head",
+   "slug": "green-feathered-hat",
+   "description": "A green felt hat with a gold band and an orange feather.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01536",
+   "name": "3_Mail_Boots",
+   "slug": "steel-mail-boots",
+   "description": "A pair of grey steel plated boots with folded cuffs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01537",
+   "name": "3_Mail_Chest",
+   "slug": "steel-mail-chest",
+   "description": "A grey steel breastplate with dark sleeves and a rounded neck opening.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01538",
+   "name": "3_Mail_Shoulder",
+   "slug": "steel-mail-shoulder",
+   "description": "A grey steel layered pauldron with rivets.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01539",
+   "name": "3_Mail_belt",
+   "slug": "steel-mail-belt",
+   "description": "A grey steel segmented belt shown as a ring of plates.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01540",
+   "name": "3_Mail_bracers",
+   "slug": "steel-mail-bracers",
+   "description": "A single grey steel bracer with a rounded cuff.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01541",
+   "name": "3_Mail_gloves",
+   "slug": "steel-mail-gloves",
+   "description": "A pair of grey steel plated gauntlets with spiked cuffs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01543",
+   "name": "3_mail_Pants",
+   "slug": "steel-mail-pants",
+   "description": "Steel plated leg guards over brown trousers with a dark belt top.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01546",
+   "name": "4_Cloth_belt",
+   "slug": "cloth-belt-silver-trim",
+   "description": "A grey cloth belt with a wavy silver trim pattern.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01547",
+   "name": "4_Cloth_bracers",
+   "slug": "cloth-bracers",
+   "description": "A beige cloth bracer with a silver-rimmed cuff.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01548",
+   "name": "4_Cloth_gloves",
+   "slug": "cloth-wrapped-gloves",
+   "description": "A pair of beige bandage-wrapped gloves.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01549",
+   "name": "4_Cloth_sloulder",
+   "slug": "cloth-hood-shoulder",
+   "description": "A cream cloth hooded mantle with a face-like fold and a metal ring clasp.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c01551",
+   "name": "4_Leather_Pants",
+   "slug": "brown-leather-pants",
+   "description": "Brown leather trousers with fur-trimmed cuffs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01552",
+   "name": "4_Leather_Shoulder",
+   "slug": "fur-trimmed-leather-shoulder",
+   "description": "A brown leather pauldron with fur trim and studded straps.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01553",
+   "name": "4_Leather_belt",
+   "slug": "leather-belt-gold-gem",
+   "description": "A brown leather belt with a round buckle set with a yellow gem.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01555",
+   "name": "4_Leather_bracers",
+   "slug": "fur-trimmed-leather-bracers",
+   "description": "A brown leather bracer with fur trim at both ends.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01556",
+   "name": "4_Leather_gloves",
+   "slug": "fingerless-leather-gloves",
+   "description": "A pair of brown fingerless leather gloves with fur cuffs and rivets.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01557",
+   "name": "4_Leather_head",
+   "slug": "leather-belt-with-tassets",
+   "description": "A brown leather belt with hanging dark leather flaps and fur trim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

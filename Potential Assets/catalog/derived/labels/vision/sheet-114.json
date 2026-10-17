@@ -1,0 +1,501 @@
+{
+ "unit": "sheet-114",
+ "records": [
+  {
+   "cluster_id": "c00446",
+   "name": "Archerskill_37_nobg",
+   "slug": "green-claw-slash",
+   "description": "Three curved black claw slashes trailing green energy.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00448",
+   "name": "Archerskill_39_nobg",
+   "slug": "blue-throwing-knives",
+   "description": "Four steel throwing blades with blue glowing trails fanned out.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00453",
+   "name": "Archerskill_45_nobg",
+   "slug": "poison-arrow-strike",
+   "description": "A leaf-bladed arrow with green streaks and dripping green venom.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00455",
+   "name": "Archerskill_47_nobg",
+   "slug": "flaming-spear",
+   "description": "A thin spear with an orange glowing head against an orange flare.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00456",
+   "name": "Archerskill_48_nobg",
+   "slug": "green-arrow-volley",
+   "description": "A bundle of long green arrows fanned out with a green glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00457",
+   "name": "Archerskill_49_nobg",
+   "slug": "longbow-green",
+   "description": "A curved wooden bow with a drawn string and a faint green aura.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00458",
+   "name": "Archerskill_50_nobg",
+   "slug": "dagger-in-target",
+   "description": "A dagger striking the centre of a brown bullseye target with orange glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00465",
+   "name": "Assassinskill_05_nobg",
+   "slug": "clawed-gauntlet",
+   "description": "A black leather glove fitted with long steel claw blades over a yellow glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00466",
+   "name": "Assassinskill_06_nobg",
+   "slug": "shield-crossed-maces",
+   "description": "A brown shield with two crossed maces behind it on an orange glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00467",
+   "name": "Assassinskill_07_nobg",
+   "slug": "armour-break",
+   "description": "A purple-lit chestplate struck through by a white crossing slash.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00468",
+   "name": "Assassinskill_08_nobg",
+   "slug": "crossed-green-daggers",
+   "description": "Two daggers with green hilts crossed in a V over green light.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00469",
+   "name": "Assassinskill_09_nobg",
+   "slug": "spiral-hammer",
+   "description": "A red-headed hammer wrapped in a dark red spiral over a purple glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00470",
+   "name": "Assassinskill_10_nobg",
+   "slug": "weeping-stone-face",
+   "description": "A grey stone mask with three eyes and white tear streaks inside a green aura.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00474",
+   "name": "Assassinskill_17_nobg",
+   "slug": "lion-crest-shield",
+   "description": "A dark shield bearing a white lion crest, cut by a purple-white slash.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00477",
+   "name": "Assassinskill_20_nobg",
+   "slug": "claw-scratches",
+   "description": "Four pale curved claw scratch marks on an orange background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00481",
+   "name": "Assassinskill_24_nobg",
+   "slug": "poison-dagger",
+   "description": "A long blade with a green dripping tip and green swirl rings behind it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00482",
+   "name": "Assassinskill_25_nobg",
+   "slug": "graveyard-cross-silhouette",
+   "description": "A black silhouette of a hill topped by a tall cross on a black background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00483",
+   "name": "Assassinskill_26_nobg",
+   "slug": "flying-gold-coins",
+   "description": "Three shiny gold coins tumbling through the air with sparkles.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00485",
+   "name": "Assassinskill_28_nobg",
+   "slug": "flaming-thorn-club",
+   "description": "A thorned wooden club wreathed in orange flames.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00487",
+   "name": "Assassinskill_31_nobg",
+   "slug": "dark-woman-portrait",
+   "description": "A bust portrait of a dark-skinned woman with glowing pale eyes and a hooded cloak.",
+   "tags": {
+    "kind": "portrait",
+    "use": [
+     "player-class"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00488",
+   "name": "Assassinskill_32_nobg",
+   "slug": "sword-gripped-by-hand",
+   "description": "A broad sword held by a gnarled brown hand wrapped in leather.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00491",
+   "name": "Assassinskill_35_nobg",
+   "slug": "lightning-warhammer",
+   "description": "A square-headed metal warhammer crackling with red lightning.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00492",
+   "name": "Assassinskill_36_nobg",
+   "slug": "gem-sack",
+   "description": "A dark sack spilling pink gems with a red glow around it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00493",
+   "name": "Assassinskill_38_nobg",
+   "slug": "crossed-swords-silhouette",
+   "description": "Two black crossed swords in silhouette over an orange glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00494",
+   "name": "Assassinskill_39_nobg",
+   "slug": "golden-horns",
+   "description": "A cluster of golden horns with colourful ribbons swirling around them.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

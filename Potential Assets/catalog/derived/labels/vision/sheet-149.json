@@ -1,0 +1,506 @@
+{
+ "unit": "sheet-149",
+ "records": [
+  {
+   "cluster_id": "c05674",
+   "name": "skill_423_noBG",
+   "slug": "green-fanged-maw",
+   "description": "Wide-open green maw with upper and lower rows of sharp fangs against blue radiating streaks.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01173",
+   "name": "skill_424_noBG",
+   "slug": "green-clawed-hand",
+   "description": "A green monstrous hand with long curved claws reaching forward.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05675",
+   "name": "skill_425_noBG",
+   "slug": "green-hanging-fangs",
+   "description": "A row of four large green fangs hanging from a curved upper jaw line over blue streaks.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05676",
+   "name": "skill_426_noBG",
+   "slug": "green-claw-swipe",
+   "description": "A green clawed hand with pale claws swiping inside a cyan swirl of energy.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05678",
+   "name": "skill_427_noBG",
+   "slug": "green-frog",
+   "description": "A green frog leaping with its legs spread over blue radiating streaks.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "summon",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05679",
+   "name": "skill_429_noBG",
+   "slug": "green-hook-blade",
+   "description": "A green curved hook-shaped blade with a jagged spine on blue streaks.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05680",
+   "name": "skill_42_noBG",
+   "slug": "pointing-hand-bubble",
+   "description": "A brown human hand with extended index finger inside a translucent cyan bubble.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "debuff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05682",
+   "name": "skill_430_noBG",
+   "slug": "green-spikes",
+   "description": "Several green spear-like spikes pointing diagonally over pale blue streaks.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05684",
+   "name": "skill_434",
+   "slug": "magenta-claw-hand-dark",
+   "description": "A magenta clawed hand with pale claws amid golden swirling lines on a dark background.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05685",
+   "name": "skill_434_noBG",
+   "slug": "magenta-claw-hand",
+   "description": "A magenta clawed hand with pale claws amid golden swirling lines on a transparent background.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05686",
+   "name": "skill_435_noBG",
+   "slug": "magenta-hanging-fangs",
+   "description": "A row of four large magenta fangs hanging from a curved line over orange rays.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05687",
+   "name": "skill_436_noBG",
+   "slug": "pink-claw-ripples",
+   "description": "A pink clawed hand with white claws surrounded by orange concentric ripples.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05689",
+   "name": "skill_437_noBG",
+   "slug": "pink-frog",
+   "description": "A bright pink frog leaping over orange radiating streaks.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "summon",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00263",
+   "name": "skill_438_noBG",
+   "slug": "horned-axe-warrior-silhouette",
+   "description": "A black silhouette of a horned figure holding axes, outlined with an orange glow.",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "silhouette",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05690",
+   "name": "skill_439_noBG",
+   "slug": "magenta-hook-blade",
+   "description": "A magenta curved hook-shaped blade with a jagged spine on orange streaks.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05691",
+   "name": "skill_43_noBG",
+   "slug": "meditating-figure-eye",
+   "description": "A dark silhouette of a seated meditating figure with a teal glow and an eye-in-triangle above the head.",
+   "tags": {
+    "kind": "sigil",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "silhouette",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05692",
+   "name": "skill_44",
+   "slug": "eye-triangle-dark",
+   "description": "A teal eye inside a triangle with radiating lines on a dark purple background.",
+   "tags": {
+    "kind": "sigil",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05693",
+   "name": "skill_440_noBG",
+   "slug": "curved-horn-slash",
+   "description": "A large curved tan horn or scythe-like blade with orange motion streaks.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c05694",
+   "name": "skill_441_noBG",
+   "slug": "flaming-hammer",
+   "description": "A mallet-like hammer with a pink head flying diagonally trailed by orange flames.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05695",
+   "name": "skill_442_noBG",
+   "slug": "glowing-sword-blade",
+   "description": "A pale sword blade pointing diagonally with orange glowing streaks.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05696",
+   "name": "skill_445_noBG",
+   "slug": "red-horned-demon",
+   "description": "A red-skinned horned demon head with a spiral halo above and golden rays behind.",
+   "tags": {
+    "kind": "creature",
+    "use": [
+     "enemy",
+     "summon"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05697",
+   "name": "skill_44_noBG",
+   "slug": "eye-triangle",
+   "description": "A teal eye inside a triangle with radiating lines on a transparent background.",
+   "tags": {
+    "kind": "sigil",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05698",
+   "name": "skill_45",
+   "slug": "screaming-hooded-figure",
+   "description": "A hooded figure with glowing white eyes and wide open screaming mouth outlined in teal on a dark background.",
+   "tags": {
+    "kind": "humanoid",
+    "use": [
+     "debuff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01175",
+   "name": "skill_450_noBG",
+   "slug": "blazing-sun",
+   "description": "A bright orange sun partly visible at the lower right with radiating orange rays.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05699",
+   "name": "skill_451",
+   "slug": "flying-hammers-pink",
+   "description": "Three purple hammers flying toward the viewer on a pink and magenta background.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

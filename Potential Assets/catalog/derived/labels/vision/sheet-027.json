@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-027",
+ "records": [
+  {
+   "cluster_id": "c01910",
+   "name": "BasicMailHelm2",
+   "slug": "mail-hood-helm",
+   "description": "A dark iron hood-shaped helmet with a chainmail coif draping down below it.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01911",
+   "name": "Basil",
+   "slug": "purple-basil",
+   "description": "A bundle of dark purple basil leaves with a few loose leaves scattered beside it.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01912",
+   "name": "Basket",
+   "slug": "wicker-basket",
+   "description": "A woven wicker basket with an arched handle and an empty interior.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00506",
+   "name": "Baton2",
+   "slug": "spiked-baton",
+   "description": "A slim dark baton with a spiked iron head on a long thin shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01913",
+   "name": "Beans",
+   "slug": "dark-beans",
+   "description": "Several dark purple beans scattered loosely.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01914",
+   "name": "Beetles",
+   "slug": "beetles",
+   "description": "A green larva, a green horned beetle and a small red ladybug-like beetle.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01918",
+   "name": "Belt_05",
+   "slug": "copper-patterned-belt",
+   "description": "A brown leather belt band with orange geometric tooling and a central copper plate.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01919",
+   "name": "Belt_06",
+   "slug": "steel-segmented-belt",
+   "description": "A silver plated belt band made of segmented steel plates.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00507",
+   "name": "Belt_08",
+   "slug": "pink-wave-belt",
+   "description": "A dark maroon belt band with a pink wavy line pattern.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01920",
+   "name": "Belt_09",
+   "slug": "gold-wave-belt",
+   "description": "A dark belt band trimmed with a golden wavy line pattern.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01921",
+   "name": "Belt_10",
+   "slug": "blue-wave-belt",
+   "description": "A navy belt band with a violet-blue wavy line pattern.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01922",
+   "name": "Belt_11",
+   "slug": "lion-crest-belt",
+   "description": "A dark belt band with copper trim and a lion-head medallion at the front.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01923",
+   "name": "Belt_12",
+   "slug": "skull-belt",
+   "description": "A dark belt band with copper trim and a skull ornament at the front.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00508",
+   "name": "Belt_17",
+   "slug": "green-serpent-belt",
+   "description": "A green belt band with curled decorative filigree and a small serpent clasp.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01924",
+   "name": "Belt_18",
+   "slug": "double-leather-belt",
+   "description": "A brown leather belt with two parallel straps and buckles.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01925",
+   "name": "Belt_19",
+   "slug": "chain-belt",
+   "description": "A thin loop of grey metal chain forming a belt.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01926",
+   "name": "Belt_20",
+   "slug": "silver-plate-belt",
+   "description": "A wide silver metal band with etched panel detailing.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01927",
+   "name": "Belt_21",
+   "slug": "bronze-plate-belt",
+   "description": "A wide bronze-coloured metal band with plate detailing.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01928",
+   "name": "Belt_22",
+   "slug": "golden-belt",
+   "description": "A wide polished gold band with embossed ornaments.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00509",
+   "name": "Belt_24",
+   "slug": "steel-blue-belt",
+   "description": "A blue-grey metal band with square engraved panels.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00039",
+   "name": "Belt_29",
+   "slug": "cyan-rune-belt",
+   "description": "A dark blue band with glowing cyan swirling rune patterns.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00510",
+   "name": "Belt_31",
+   "slug": "lime-glow-belt",
+   "description": "A dark green band with glowing lime-green leaf ornaments and a round gem.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01930",
+   "name": "Belt_32",
+   "slug": "olive-skull-belt",
+   "description": "An olive-green belt band with a small skull-like clasp and scrollwork.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01931",
+   "name": "Belt_33",
+   "slug": "purple-scroll-belt",
+   "description": "A dark belt band with glowing purple scrollwork and round studs.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01932",
+   "name": "Belt_34",
+   "slug": "teal-gem-belt",
+   "description": "A dark belt band with glowing teal scrollwork and a pointed gem clasp.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

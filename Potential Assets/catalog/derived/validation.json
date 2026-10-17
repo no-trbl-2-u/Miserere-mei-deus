@@ -1,0 +1,25 @@
+{
+ "catalog_records": 8926,
+ "clusters": 6361,
+ "clusters_labelled": 6361,
+ "clusters_unlabelled": 0,
+ "files_on_disk": 8926,
+ "files_missing_from_catalog": 0,
+ "files_duplicated_in_catalog": 0,
+ "manifest_phantoms": [
+  "sprites/Circle~2.png"
+ ],
+ "records_from_filesystem_not_in_manifest": 230,
+ "index_entries_pointing_at_a_missing_file": 0,
+ "corpus_references_carried": 12570,
+ "dangling_used_by": 0,
+ "problems": {},
+ "tag_violations_sample": [],
+ "slug_violations_sample": [],
+ "label_read_errors": [],
+ "examples": {
+  "missing": [],
+  "duplicated": []
+ },
+ "PASS": true
+}

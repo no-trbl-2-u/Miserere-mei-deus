@@ -1,0 +1,485 @@
+{
+ "unit": "sheet-129",
+ "records": [
+  {
+   "cluster_id": "c03951",
+   "name": "Skill_383",
+   "slug": "sleep-zzz",
+   "description": "Three white-outlined pink Z letters stacked diagonally on a dark crimson background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03952",
+   "name": "Skill_385",
+   "slug": "hourglass-pink",
+   "description": "A glowing pink hourglass with red sand against a magenta radial burst.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03953",
+   "name": "Skill_386",
+   "slug": "rubble-eruption-orange",
+   "description": "Orange light rays shooting upward through a column of dark rock fragments on a red-brown background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03955",
+   "name": "Skill_392",
+   "slug": "blue-slashes",
+   "description": "Three violet-blue diagonal slash streaks on a dark navy background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03956",
+   "name": "Skill_394",
+   "slug": "storm-cloud-plus",
+   "description": "A dark blue cloud with a small plus sign at its upper right, framed by pale blue radiating light.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "heal"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03958",
+   "name": "Skill_396",
+   "slug": "rubble-eruption-purple",
+   "description": "Purple light rays rising through a column of dark rock fragments on a deep indigo background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03961",
+   "name": "Skill_400",
+   "slug": "blue-streaks",
+   "description": "Several thin blue-white speed streaks sweeping diagonally on a dark blue background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03962",
+   "name": "Skill_401",
+   "slug": "golden-drops",
+   "description": "Three glossy golden-yellow droplets over a dark red radial background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "heal"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03964",
+   "name": "Skill_406",
+   "slug": "orange-handprint",
+   "description": "An orange glowing handprint with splatter edges on a dark red background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03965",
+   "name": "Skill_407",
+   "slug": "golden-cross",
+   "description": "A glowing golden-yellow plus cross on a dark maroon background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "heal",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03967",
+   "name": "Skill_411",
+   "slug": "green-drops",
+   "description": "Three glossy emerald-green droplets over a green radial background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "heal",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03969",
+   "name": "Skill_414_noBG",
+   "slug": "teal-shards",
+   "description": "A spray of teal crystal shards flying diagonally with no background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03970",
+   "name": "Skill_416",
+   "slug": "green-handprint",
+   "description": "A bright green glowing handprint with splatter edges on a dark green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03972",
+   "name": "Skill_421",
+   "slug": "green-spikes",
+   "description": "Tall green thorn spikes rising from the bottom over a blue swirling background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03973",
+   "name": "Skill_422",
+   "slug": "green-crystal-shards",
+   "description": "Several green crystal shards radiating diagonally over a dark teal background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03975",
+   "name": "Skill_424",
+   "slug": "green-claw-hand",
+   "description": "A green clawed hand reaching in from the right over a dark blue background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03976",
+   "name": "Skill_425",
+   "slug": "green-fang-arc",
+   "description": "A curved arc of green fangs hanging from a blue band over a swirling teal background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03977",
+   "name": "Skill_426",
+   "slug": "green-claw-reach",
+   "description": "A green clawed hand reaching up from the lower right over a cyan swirling background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03978",
+   "name": "Skill_428",
+   "slug": "green-axe-warrior-silhouette",
+   "description": "A black silhouette of a horned axe-wielding warrior with green glowing outline on a dark green background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "summon",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "silhouette"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00942",
+   "name": "Skill_429",
+   "slug": "green-hook-blade",
+   "description": "A green curved hook or blade claw cutting diagonally over a blue streaked background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03979",
+   "name": "Skill_431_noBG",
+   "slug": "magenta-claw-spikes",
+   "description": "Magenta and orange curved claw spikes rising from the bottom on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03980",
+   "name": "Skill_433",
+   "slug": "pink-cross-slashes",
+   "description": "Pink and white crossed slash marks over a dark orange background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03981",
+   "name": "Skill_433_noBG",
+   "slug": "pink-cross-slashes-transparent",
+   "description": "Pink and white crossed slash marks with a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03982",
+   "name": "Skill_435",
+   "slug": "magenta-fang-arc",
+   "description": "A curved arc of magenta fangs hanging from a purple band over an orange background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03983",
+   "name": "Skill_438",
+   "slug": "orange-axe-warrior-silhouette",
+   "description": "A black silhouette of a horned axe-wielding warrior with fiery orange glow on a dark red background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "summon",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "silhouette"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

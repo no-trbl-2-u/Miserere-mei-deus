@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-078",
+ "records": [
+  {
+   "cluster_id": "c03616",
+   "name": "Res_152",
+   "slug": "grapes",
+   "description": "A bunch of purple grapes with a green leaf and stem.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03617",
+   "name": "Res_155",
+   "slug": "ear",
+   "description": "A severed pale-skinned humanoid ear with brown shading.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03619",
+   "name": "Res_157",
+   "slug": "horned-pod",
+   "description": "A green gourd-like pod with a curved reddish thorn hanging from its base.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c00850",
+   "name": "Res_158",
+   "slug": "ham-hock",
+   "description": "A pink cut of ham on the bone with a round bone end.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03621",
+   "name": "Res_16",
+   "slug": "red-ore",
+   "description": "A faceted chunk of dark red ore.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03622",
+   "name": "Res_161",
+   "slug": "steel-bar",
+   "description": "A plain grey metal bar with a glossy highlight.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00851",
+   "name": "Res_163",
+   "slug": "blue-gradient-bar",
+   "description": "A rectangular bar fading from cyan-blue to black.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03624",
+   "name": "Res_165",
+   "slug": "purple-gradient-bar",
+   "description": "A rectangular bar fading from violet to black.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03625",
+   "name": "Res_166",
+   "slug": "pink-gradient-bar",
+   "description": "A rectangular bar fading from bright pink to black.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03626",
+   "name": "Res_17",
+   "slug": "purple-ore",
+   "description": "A faceted chunk of purple ore.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00852",
+   "name": "Res_19",
+   "slug": "blue-ore",
+   "description": "A rounded chunk of deep blue ore.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03627",
+   "name": "Res_20",
+   "slug": "yellow-vein-stone",
+   "description": "A grey angular stone slab with yellow glowing flecks.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03628",
+   "name": "Res_21",
+   "slug": "red-vein-stone",
+   "description": "A dark angular stone slab with glowing red-orange flecks.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03629",
+   "name": "Res_22",
+   "slug": "green-vein-stone",
+   "description": "A dark angular stone slab with glowing lime-green flecks.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03630",
+   "name": "Res_24",
+   "slug": "wood-log",
+   "description": "A cut brown wooden log showing its ringed end and a small stub branch.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03631",
+   "name": "Res_26",
+   "slug": "blue-crystal",
+   "description": "A pointed blue crystal shard with light facets.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00853",
+   "name": "Res_27",
+   "slug": "pink-crystal",
+   "description": "A pointed salmon-pink crystal shard.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03632",
+   "name": "Res_28",
+   "slug": "orange-crystal",
+   "description": "A chunky orange crystal cluster.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03633",
+   "name": "Res_29",
+   "slug": "green-hex-gem",
+   "description": "A hexagonal bright green cut gem.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00854",
+   "name": "Res_31",
+   "slug": "magenta-hex-gem",
+   "description": "A hexagonal magenta cut gem.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03634",
+   "name": "Res_32",
+   "slug": "black-hex-gem",
+   "description": "A hexagonal black cut gem with a pale rim.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03635",
+   "name": "Res_33",
+   "slug": "red-ingot",
+   "description": "A red-brown metal ingot with a dark gradient base.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03636",
+   "name": "Res_34",
+   "slug": "purple-ingot",
+   "description": "A purple metal ingot.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03637",
+   "name": "Res_35",
+   "slug": "orange-ingot",
+   "description": "An orange metal ingot.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03638",
+   "name": "Res_36",
+   "slug": "green-ingot",
+   "description": "A lime-green metal ingot.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

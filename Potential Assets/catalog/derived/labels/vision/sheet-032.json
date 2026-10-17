@@ -1,0 +1,530 @@
+{
+ "unit": "sheet-032",
+ "records": [
+  {
+   "cluster_id": "c02043",
+   "name": "Book_24",
+   "slug": "teal-scaled-book",
+   "description": "A closed book with a teal cover embossed with a cracked scale or stone-plate pattern and a small ribbon bookmark.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02044",
+   "name": "Book_25",
+   "slug": "chained-purple-book",
+   "description": "A closed book with a dark purple cover wrapped in a chain and a magenta glint at its corner.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02045",
+   "name": "Book_3",
+   "slug": "plain-brown-leather-book",
+   "description": "A closed book with a plain brown leather cover and a pale ribbon bookmark hanging from the page edge.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02046",
+   "name": "Book_4",
+   "slug": "red-ornate-book",
+   "description": "A closed book with a dark red cover, a tan spine band and a small round gold emblem at the centre.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00520",
+   "name": "Book_6",
+   "slug": "green-glow-cracked-book",
+   "description": "A closed book with a dark slate cover cracked in a scale pattern with glowing green fissures.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02047",
+   "name": "Book_7",
+   "slug": "vine-wrapped-green-book",
+   "description": "A closed book with a teal cover bound in brown thorny vines with glowing green leaf shapes.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02048",
+   "name": "Book_8",
+   "slug": "ice-crystal-book",
+   "description": "A closed book whose cover is made of jagged pale blue ice crystals.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02049",
+   "name": "Book_9",
+   "slug": "violet-crystal-book",
+   "description": "A closed book whose cover is made of jagged violet crystal shards.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02050",
+   "name": "Book_v2_01",
+   "slug": "orange-rune-book",
+   "description": "A closed book with an orange-brown leather cover stamped with a curled glyph and a red bookmark ribbon.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02052",
+   "name": "Book_v2_03",
+   "slug": "green-leaf-book",
+   "description": "A closed book with a bright green cover bearing a leaf emblem and gold corner details.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02054",
+   "name": "Book_v2_05",
+   "slug": "teal-rune-steel-book",
+   "description": "A closed book with a dark teal cover, steel corner caps and a pale diamond rune emblem.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02055",
+   "name": "Book_v2_07",
+   "slug": "purple-gem-book",
+   "description": "A closed book with a dark purple cover, black clasp band and a glowing magenta gem at the centre.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02057",
+   "name": "Book_v2_11",
+   "slug": "skull-green-book",
+   "description": "A closed book with a dark green cover with a skull emblem on the front and steel corner caps.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02059",
+   "name": "Book_v2_13",
+   "slug": "cyan-glow-rune-book",
+   "description": "A closed book with a dark cover and steel corners outlined in glowing cyan with a luminous rune square.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02061",
+   "name": "Book_v2_15",
+   "slug": "black-gold-sigil-book",
+   "description": "A closed book with a black cover edged in gold and a golden diamond sigil at the centre.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02063",
+   "name": "Book_v2_17",
+   "slug": "golden-holy-cross-book",
+   "description": "A closed book with a golden glowing aura and a cross on its tan cover with steel corners.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02064",
+   "name": "Book_v2_18",
+   "slug": "locked-brown-book",
+   "description": "A closed book with a brown cover, a dark strap with a keyhole lock and spiked steel corners.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02065",
+   "name": "Book_v2_19",
+   "slug": "portrait-brown-book",
+   "description": "A closed book with a brown cover showing a small portrait medallion above a worn title plate.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02066",
+   "name": "Book_v2_20",
+   "slug": "red-crossed-slash-book",
+   "description": "A closed book with a red cover marked with a pale crossed-slash design and a red bookmark.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02067",
+   "name": "Book_v2_23",
+   "slug": "green-diamond-flap-book",
+   "description": "A green-covered book with a curled flap cover, a pale diamond emblem and a gold bookmark.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02068",
+   "name": "Book_v2_24",
+   "slug": "skull-gray-book",
+   "description": "A grey-covered book with a curled flap cover and a large cream skull emblem.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02069",
+   "name": "Book_v2_25",
+   "slug": "gold-gem-blue-book",
+   "description": "A dark blue book with gold trim and a large yellow diamond gem on its cover.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02070",
+   "name": "Book_v2_26",
+   "slug": "worn-green-book",
+   "description": "A weathered green book with a curled cover and cream patches of worn-away paint.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02072",
+   "name": "Book_v2_28",
+   "slug": "purple-swirl-book",
+   "description": "A purple book with a curled cover bearing a glowing violet swirl and star emblem.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02073",
+   "name": "Book_v2_29",
+   "slug": "red-starburst-book",
+   "description": "A dark red book with a curled cover bearing a cream starburst cross emblem.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

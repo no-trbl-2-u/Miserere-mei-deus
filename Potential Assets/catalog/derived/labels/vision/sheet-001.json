@@ -1,0 +1,507 @@
+{
+ "unit": "sheet-001",
+ "records": [
+  {
+   "cluster_id": "c03349",
+   "name": "NumberButton_Fill@2x",
+   "slug": "number-button-fill",
+   "description": "A solid white filled circle on a transparent background, the fill layer of a round number button.",
+   "tags": {
+    "kind": "ui-button",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "high-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03350",
+   "name": "NumberButton_Outline@2x",
+   "slug": "number-button-outline",
+   "description": "A thin white circular ring with a transparent centre, the outline layer of a round number button.",
+   "tags": {
+    "kind": "ui-button",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "line-art",
+     "has-transparency",
+     "high-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03386",
+   "name": "PinDot_Fill@2x",
+   "slug": "pin-dot-fill",
+   "description": "A small solid white filled circle with slightly soft pixel edges, the fill of a pin dot marker.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "map-point",
+     "navigation"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03387",
+   "name": "PinDot_Outline@2x",
+   "slug": "pin-dot-outline",
+   "description": "A thin white circular ring with a transparent centre, the outline of a pin dot marker.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "map-point",
+     "navigation"
+    ],
+    "style": [
+     "line-art",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03537",
+   "name": "RSticksMoveLR1",
+   "slug": "right-stick-move-lr-1",
+   "description": "A black-outlined white pixel-art gamepad stick glyph marked with the letter R and a red arc on the right side, first frame of a left-right movement hint.",
+   "tags": {
+    "kind": "glyph",
+    "use": [
+     "tutorial",
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "animated-frame",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03538",
+   "name": "RSticksMoveLR2",
+   "slug": "right-stick-move-lr-2",
+   "description": "A black-outlined white pixel-art gamepad stick glyph marked with the letter R and a red arc on the left side, second frame of a left-right movement hint.",
+   "tags": {
+    "kind": "glyph",
+    "use": [
+     "tutorial",
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "animated-frame",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03539",
+   "name": "RSticksMoveUD1",
+   "slug": "right-stick-move-ud-1",
+   "description": "A black-outlined white pixel-art gamepad stick glyph marked with the letter R and a red arc across the top, first frame of an up-down movement hint.",
+   "tags": {
+    "kind": "glyph",
+    "use": [
+     "tutorial",
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "animated-frame",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03540",
+   "name": "RSticksMoveUD2",
+   "slug": "right-stick-move-ud-2",
+   "description": "A black-outlined white pixel-art gamepad stick glyph marked with the letter R and a red arc across the bottom, second frame of an up-down movement hint.",
+   "tags": {
+    "kind": "glyph",
+    "use": [
+     "tutorial",
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "animated-frame",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03541",
+   "name": "Radial Filled 128px",
+   "slug": "radial-filled-128",
+   "description": "A solid white filled circle with smooth edges on a transparent background, the 128px size of a generic radial shape.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03542",
+   "name": "Radial Filled 256px",
+   "slug": "radial-filled-256",
+   "description": "A solid white filled circle with smooth edges on a transparent background, the 256px size of a generic radial shape.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "high-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03543",
+   "name": "Radial Filled 64px",
+   "slug": "radial-filled-64",
+   "description": "A solid white filled circle on a transparent background, the 64px size of a generic radial shape.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03544",
+   "name": "Radial Shadow",
+   "slug": "radial-shadow",
+   "description": "A soft grey-white glowing halo ring with a darker translucent centre, fading outward to transparent.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "background",
+     "panel-chrome"
+    ],
+    "style": [
+     "has-transparency",
+     "high-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00865",
+   "name": "Rounded Filled 1024px",
+   "slug": "rounded-filled-1024",
+   "description": "A solid white square with slightly rounded corners on a transparent background, the 1024px size of a generic rounded rectangle.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "flat-vector",
+     "nine-slice",
+     "has-transparency",
+     "high-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00866",
+   "name": "Rounded Filled 128px",
+   "slug": "rounded-filled-128",
+   "description": "A solid white square with slightly rounded corners on a transparent background, the 128px size of a generic rounded rectangle.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "flat-vector",
+     "nine-slice",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03746",
+   "name": "Rounded Filled 256px",
+   "slug": "rounded-filled-256",
+   "description": "A solid white square with slightly rounded corners on a transparent background, the 256px size of a generic rounded rectangle.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "flat-vector",
+     "nine-slice",
+     "has-transparency",
+     "high-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03747",
+   "name": "Rounded Outline 1024px - 1x",
+   "slug": "rounded-outline-1024",
+   "description": "A thin white rounded-corner square outline with a transparent interior, the 1024px size.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "line-art",
+     "nine-slice",
+     "has-transparency",
+     "high-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03748",
+   "name": "Rounded Outline 512px - 1x",
+   "slug": "rounded-outline-512",
+   "description": "A thin white rounded-corner square outline with a transparent interior, the 512px size.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "line-art",
+     "nine-slice",
+     "has-transparency",
+     "high-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03749",
+   "name": "Rounded Outline 64px - 1x",
+   "slug": "rounded-outline-64",
+   "description": "A thin white rounded-corner square outline with a transparent interior, the 64px size.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "line-art",
+     "nine-slice",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00992",
+   "name": "TriggersLT",
+   "slug": "trigger-lt",
+   "description": "A black-and-white pixel-art gamepad shoulder trigger glyph with a red top band and a zigzag line pattern below, for the left trigger.",
+   "tags": {
+    "kind": "glyph",
+    "use": [
+     "tutorial",
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c00993",
+   "name": "TriggersRT",
+   "slug": "trigger-rt",
+   "description": "A black-and-white pixel-art gamepad shoulder trigger glyph with a red top band and a circle pattern below, for the right trigger.",
+   "tags": {
+    "kind": "glyph",
+    "use": [
+     "tutorial",
+     "settings"
+    ],
+    "style": [
+     "pixel-art",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c04499",
+   "name": "UISprite",
+   "slug": "ui-sprite",
+   "description": "A near-white rounded square with a soft grey pixelated edge, the default Unity UI background sprite.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "flat-vector",
+     "nine-slice",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04501",
+   "name": "Ui_left",
+   "slug": "ui-left-dungeon-cell",
+   "description": "A dark painted dungeon cell with iron bars, lit candles, a hunched figure and a sword on the floor, framed in murky blue-green stone.",
+   "tags": {
+    "kind": "environment",
+    "use": [
+     "panel-chrome",
+     "background",
+     "dungeon"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "opaque",
+     "high-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04502",
+   "name": "Ui_right",
+   "slug": "ui-right-dungeon-cell",
+   "description": "A dark painted dungeon cell with iron bars, a lit candle, a cloaked figure and debris on the floor, framed in murky blue-green stone.",
+   "tags": {
+    "kind": "environment",
+    "use": [
+     "panel-chrome",
+     "background",
+     "dungeon"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "opaque",
+     "high-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04503",
+   "name": "Ui_top",
+   "slug": "ui-top-cobweb-strip",
+   "description": "A thin dark horizontal strip of painted stone and carved ornament with cobwebs, used as a top border.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome",
+     "dungeon"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "tileable",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04504",
+   "name": "Ui_under",
+   "slug": "ui-under-stone-strip",
+   "description": "A thin dark horizontal strip of painted stone and ornament, used as a bottom border.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome",
+     "dungeon"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "tileable",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

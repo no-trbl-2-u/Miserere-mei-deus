@@ -1,0 +1,480 @@
+{
+ "unit": "sheet-088",
+ "records": [
+  {
+   "cluster_id": "c04133",
+   "name": "Spear_v2_09",
+   "slug": "halberd-axe-blade",
+   "description": "A long wooden pole topped with a curved steel axe blade and spike, a halberd.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04134",
+   "name": "Spear_v2_10",
+   "slug": "ornate-silver-spear",
+   "description": "A thin dark shaft ending in an ornate openwork silver spearhead.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04135",
+   "name": "Spear_v2_11",
+   "slug": "trident-iron-spear",
+   "description": "A dark iron spear with a multi-pronged winged head resembling a trident.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04137",
+   "name": "Spear_v2_13",
+   "slug": "red-glowing-spear",
+   "description": "A spear with a fiery orange-red multi-pronged head surrounded by a red glow.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04139",
+   "name": "Spear_v2_15",
+   "slug": "yellow-glowing-spear",
+   "description": "A black-shafted spear with an ornate gold head and a glowing yellow-green blade.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04140",
+   "name": "SpearmanHelm",
+   "slug": "spearman-kettle-helm",
+   "description": "A dark steel wide-brimmed kettle helmet with a brown leather neck guard.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04141",
+   "name": "SpearmanHelm2",
+   "slug": "spearman-helm-cheek-guards",
+   "description": "A rounded steel helmet with brown leather ear flaps hanging at the sides.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04142",
+   "name": "SpearmanHelm3",
+   "slug": "spearman-hat-helm",
+   "description": "A broad flat-brimmed steel hat helmet with a rope chin cord.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04143",
+   "name": "SpecialPants",
+   "slug": "special-pants",
+   "description": "A pair of trousers with dark red legs and black outer panels.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "defend",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04144",
+   "name": "Spikelets",
+   "slug": "wheat-spikelets",
+   "description": "A bundle of three dried wheat ears with golden grains.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04146",
+   "name": "Staff_51",
+   "slug": "forked-staff-dark",
+   "description": "A dark wooden staff with a silver forked prong at the top.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04147",
+   "name": "Staff_52",
+   "slug": "forked-staff-silver",
+   "description": "A slender pale silver staff topped with a forked prong.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04148",
+   "name": "Staff_53",
+   "slug": "golden-orb-staff",
+   "description": "A wooden staff with a golden ornamental head holding a small glowing orb.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04149",
+   "name": "Staff_54",
+   "slug": "gold-banded-staff",
+   "description": "A slim golden staff with a small blue gem at the tip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04150",
+   "name": "Staff_v2_01",
+   "slug": "stone-mace-staff",
+   "description": "A long wooden staff capped with a grey stone knob.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04151",
+   "name": "Staff_v2_02",
+   "slug": "bronze-knob-staff",
+   "description": "A wooden staff with a bronze studded head and wrapped grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04152",
+   "name": "Staff_v2_03",
+   "slug": "shell-topped-staff",
+   "description": "A wooden staff topped with a golden scallop-shell shaped head.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04153",
+   "name": "Staff_v2_04",
+   "slug": "red-banded-pole",
+   "description": "A plain wooden pole with red bands at the grip and the top end.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04154",
+   "name": "Staff_v2_05",
+   "slug": "gold-tipped-staff",
+   "description": "A wooden staff with red wrapping and a small golden leaf-shaped tip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04155",
+   "name": "Staff_v2_06",
+   "slug": "red-gem-spear-staff",
+   "description": "A wooden shaft with red bands and orange-red gem-like ends on both sides.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04156",
+   "name": "Staff_v2_07",
+   "slug": "grey-claw-staff",
+   "description": "A wooden staff with a grey metal claw-like head at the top.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04157",
+   "name": "Staff_v2_08",
+   "slug": "ornate-claw-staff",
+   "description": "A dark wooden staff with a gold and iron claw head and wrapped middle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04158",
+   "name": "Staff_v2_09",
+   "slug": "trident-head-staff",
+   "description": "A wooden staff topped with an orange-brown trident-like ornament.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04160",
+   "name": "Staff_v2_11",
+   "slug": "hooked-iron-staff",
+   "description": "A dark iron staff with a curled hook and brown cloth strip at the top.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04161",
+   "name": "Staff_v2_12",
+   "slug": "skull-staff",
+   "description": "A dark staff topped with a white skull and wrapped with green cord.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

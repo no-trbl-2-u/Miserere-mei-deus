@@ -1,0 +1,530 @@
+{
+ "unit": "sheet-053",
+ "records": [
+  {
+   "cluster_id": "c02748",
+   "name": "Gun_v2_11",
+   "slug": "grey-flintlock-rifle",
+   "description": "A long-barrelled flintlock rifle with a dark grey metal barrel and a plain dark wooden stock, pointing up and to the right.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02749",
+   "name": "Gun_v2_12",
+   "slug": "brown-gilded-rifle",
+   "description": "A long rifle with a brown wooden stock and gold-coloured inlay along the lock and barrel, angled up to the right.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02753",
+   "name": "Gun_v2_16",
+   "slug": "long-rifle-silver-butt",
+   "description": "A long slender rifle with a brown stock, brass fittings and a pale silver-white butt plate, angled up to the right.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02754",
+   "name": "Gun_v2_17",
+   "slug": "dark-pump-shotgun",
+   "description": "A shotgun with a dark grey barrel, a pump grip and a brown wooden stock, angled up to the right.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02755",
+   "name": "Gun_v2_18",
+   "slug": "orange-glow-rifle",
+   "description": "A rifle with a dark barrel and stock outlined by a glowing orange aura, angled up to the right.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02756",
+   "name": "Gun_v2_19",
+   "slug": "purple-glow-rifle",
+   "description": "A rifle bathed in a violet glow with dark purple stock and barrel highlights, angled up to the right.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02757",
+   "name": "Gun_v2_20",
+   "slug": "green-glow-rifle",
+   "description": "A rifle with a bright lime-green glowing outline around its barrel and stock, angled up to the right.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02758",
+   "name": "Gun_v2_21",
+   "slug": "gold-aura-ornate-rifle",
+   "description": "A black ornate rifle with a pale golden aura and fine engraved detail, angled up to the right.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02761",
+   "name": "Hammer_01",
+   "slug": "iron-sledgehammer-wide",
+   "description": "A sledgehammer with a large rough grey iron head and a long brown wooden handle with a wrapped grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02762",
+   "name": "Hammer_02",
+   "slug": "iron-sledgehammer",
+   "description": "A hammer with a grey iron head with a flared striking face on a long brown wooden handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02763",
+   "name": "Hammer_03",
+   "slug": "iron-war-hammer",
+   "description": "A hammer with a narrow grey iron head with a pointed back spike on a long brown wooden handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02764",
+   "name": "Hammer_04",
+   "slug": "wooden-barrel-mallet",
+   "description": "A mallet with a large round ribbed wooden head on a long brown handle with a leather-wrapped grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02765",
+   "name": "Hammer_05",
+   "slug": "banded-barrel-mallet",
+   "description": "A mallet with a barrel-shaped wooden head bound with dark iron bands on a long brown handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02766",
+   "name": "Hammer_06",
+   "slug": "steel-claw-hammer",
+   "description": "A hammer with a pale steel head with a flat face and a point on a thin brown handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02767",
+   "name": "Hammer_07",
+   "slug": "steel-sledge-light",
+   "description": "A hammer with a light grey steel head with notched ends on a brown handle with wrapped bindings.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02769",
+   "name": "Hammer_09",
+   "slug": "dark-iron-maul",
+   "description": "A maul with a heavy dark grey rectangular head on a long brown wooden handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02770",
+   "name": "Hammer_10",
+   "slug": "dark-iron-maul-banded",
+   "description": "A maul with a dark grey-blue head and an orange-brown cord wrapped around the long wooden handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02771",
+   "name": "Hammer_11",
+   "slug": "blue-steel-hammer-spiked-haft",
+   "description": "A hammer with a blue-grey steel head on a long brown shaft that ends in a pronged metal foot.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02772",
+   "name": "Hammer_12",
+   "slug": "blue-steel-hammer-spiked-haft-b",
+   "description": "A hammer with a dark blue-grey steel head and a notched edge on a long brown shaft with a pronged foot.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02773",
+   "name": "Hammer_13",
+   "slug": "rose-steel-hammer-spiked-haft",
+   "description": "A hammer with a muted pink-purple steel head on a long brown shaft with a pronged metal foot.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02774",
+   "name": "Hammer_14",
+   "slug": "grey-twin-head-hammer",
+   "description": "A double-faced hammer with a grey steel head and a long tan shaft ending in a pronged foot.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02775",
+   "name": "Hammer_15",
+   "slug": "blue-twin-head-hammer",
+   "description": "A double-faced hammer with a blue-grey steel head and a long tan shaft ending in a dark blue pommel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02776",
+   "name": "Hammer_16",
+   "slug": "rose-twin-head-hammer",
+   "description": "A double-faced hammer with a mauve-pink steel head and a long shaft ending in a dark purple pommel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02777",
+   "name": "Hammer_17",
+   "slug": "silver-crescent-warhammer",
+   "description": "A warhammer with a broad pale silver crescent-shaped head on a tan shaft with a small silver pommel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02778",
+   "name": "Hammer_18",
+   "slug": "blue-crescent-warhammer",
+   "description": "A warhammer with a broad dark blue-grey crescent-shaped head on a tan shaft with a small silver pommel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

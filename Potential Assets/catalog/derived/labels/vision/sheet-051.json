@@ -1,0 +1,549 @@
+{
+ "unit": "sheet-051",
+ "records": [
+  {
+   "cluster_id": "c02686",
+   "name": "Formation_Round",
+   "slug": "formation-round",
+   "description": "Eight white diamond markers arranged in a ring on a dark blue vignette tile.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "navigation"
+    ],
+    "style": [
+     "pixel-art",
+     "opaque",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02687",
+   "name": "Formation_Square",
+   "slug": "formation-square",
+   "description": "Twelve white diamond markers forming a square outline on a dark blue vignette tile.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "navigation"
+    ],
+    "style": [
+     "pixel-art",
+     "opaque",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02688",
+   "name": "Formation_ThreeVert",
+   "slug": "formation-three-vert",
+   "description": "Three vertical columns of four white diamond markers on a dark blue vignette tile.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "navigation"
+    ],
+    "style": [
+     "pixel-art",
+     "opaque",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02689",
+   "name": "Formation_Triangle",
+   "slug": "formation-triangle",
+   "description": "White diamond markers arranged in a triangle pointing up on a dark blue vignette tile.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "navigation"
+    ],
+    "style": [
+     "pixel-art",
+     "opaque",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02690",
+   "name": "Formation_Vert",
+   "slug": "formation-vert",
+   "description": "Two vertical columns of white diamond markers on a dark blue vignette tile.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "navigation"
+    ],
+    "style": [
+     "pixel-art",
+     "opaque",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02691",
+   "name": "Formation_Vert2",
+   "slug": "formation-vert-2",
+   "description": "A single vertical column of four white diamond markers on a dark blue vignette tile.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "navigation"
+    ],
+    "style": [
+     "pixel-art",
+     "opaque",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02692",
+   "name": "Formation_divide",
+   "slug": "formation-divide",
+   "description": "Two separated clusters of four white diamond markers split left and right on a dark blue vignette tile.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "navigation"
+    ],
+    "style": [
+     "pixel-art",
+     "opaque",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02693",
+   "name": "FriedCarrot",
+   "slug": "fried-carrot",
+   "description": "A brown fried mass studded with orange carrot slices.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory",
+     "heal"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02694",
+   "name": "FriedChickenLeg",
+   "slug": "fried-chicken-leg",
+   "description": "A golden-brown fried chicken drumstick with an exposed bone end.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory",
+     "heal"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02695",
+   "name": "FriedEgg",
+   "slug": "fried-egg",
+   "description": "A fried egg with a glossy orange yolk and white fringe.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory",
+     "heal"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02696",
+   "name": "FriedOnions",
+   "slug": "fried-onions",
+   "description": "Scattered browned fried onion pieces and rings with a clump of brown mash.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory",
+     "heal"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02697",
+   "name": "FriedPotatos",
+   "slug": "fried-potatoes",
+   "description": "A scatter of golden fried potato chunks and crumbs.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory",
+     "heal"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02698",
+   "name": "FrogHelmetStechzeug",
+   "slug": "frog-helmet-stechzeug",
+   "description": "A dark iron closed helmet with a wide low brim, seen from the side.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02700",
+   "name": "FruitJuice",
+   "slug": "fruit-juice",
+   "description": "A wooden mug with iron bands, splashing brown-orange juice from the top.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory",
+     "heal"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02701",
+   "name": "FryingPan",
+   "slug": "frying-pan",
+   "description": "A black cast-iron frying pan with a wooden handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02702",
+   "name": "FurChest",
+   "slug": "fur-chest-armour",
+   "description": "A dark leather tunic with fur trim, straps and ragged sleeves.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02704",
+   "name": "Garlic",
+   "slug": "garlic",
+   "description": "A bulb of garlic with several loose cloves in pale cream and tan.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "loot",
+     "inventory",
+     "crafting"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02706",
+   "name": "GladiatorsHelm",
+   "slug": "gladiators-helm",
+   "description": "A dark steel gladiator helmet with a red crest and a skull-like visor.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02707",
+   "name": "GlassOfWine",
+   "slug": "glass-of-wine",
+   "description": "A stemmed glass of red wine with droplets splashing out.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory",
+     "heal"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02708",
+   "name": "Glasses",
+   "slug": "glasses",
+   "description": "Round spectacles with brown frames and pale grey lenses.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02709",
+   "name": "Gloves_03",
+   "slug": "gloves-blue",
+   "description": "A pair of blue cloth-and-leather gloves.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02710",
+   "name": "Gloves_06",
+   "slug": "gloves-pink-fingerless",
+   "description": "A pair of pink fingerless gloves with frilled cuffs and a small cross emblem.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00658",
+   "name": "Gloves_08",
+   "slug": "gloves-gold-gauntlets",
+   "description": "A pair of golden plate gauntlets with segmented fingers.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00659",
+   "name": "Gloves_12",
+   "slug": "gloves-gold-gauntlets-b",
+   "description": "A pair of ornate golden gauntlets with segmented fingers and dark trim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02711",
+   "name": "Gloves_15",
+   "slug": "gloves-steel-gauntlet",
+   "description": "A black and silver steel gauntlet with a white eye-like emblem on the back.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "pixel-art",
+     "has-transparency",
+     "full-colour",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-144",
+ "records": [
+  {
+   "cluster_id": "c05555",
+   "name": "skill_263_noBG",
+   "slug": "green-meditator-eye",
+   "description": "A black silhouette of a meditating figure with a green glow and a small green eye-in-triangle above its head, set against green rays.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05556",
+   "name": "skill_264_noBG",
+   "slug": "green-eye-triangle",
+   "description": "A green all-seeing eye inside a triangle on blue-green radiating sunburst rays.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05557",
+   "name": "skill_265_noBG",
+   "slug": "hooded-screaming-wraith",
+   "description": "A horned dark-green hooded figure with glowing green eyes and a wide open screaming mouth.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05558",
+   "name": "skill_266_noBG",
+   "slug": "green-slash-streaks",
+   "description": "Several curved bright-green streaks sweeping from a bright point at upper right.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05559",
+   "name": "skill_267_noBG",
+   "slug": "green-swirl-vortex",
+   "description": "A white-green spiral vortex radiating from a bright centre.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05560",
+   "name": "skill_268_noBG",
+   "slug": "green-figure-on-crystals",
+   "description": "A dark green silhouette of a figure with one arm raised, rising out of jagged green crystal spikes.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "summon"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05561",
+   "name": "skill_269_noBG",
+   "slug": "green-meteor-shower",
+   "description": "Bright green meteors with trailing streaks falling diagonally toward the lower left.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05562",
+   "name": "skill_26_noBG",
+   "slug": "red-grasping-hand",
+   "description": "A red hand reaching and clutching to the left with pale light streaks behind it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05563",
+   "name": "skill_27",
+   "slug": "purple-crossed-chains",
+   "description": "Two pale chains crossed in an X over a dark purple rayed background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05564",
+   "name": "skill_270_noBG",
+   "slug": "ghostly-teal-hand",
+   "description": "A pale ghostly hand with teal glowing energy rising beneath it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05565",
+   "name": "skill_272_noBG",
+   "slug": "hand-lightning-bubble",
+   "description": "An orange hand pointing a finger inside a translucent blue dome crackling with lightning.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "defend"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05566",
+   "name": "skill_273_noBG",
+   "slug": "pink-meditator-demon",
+   "description": "A dark silhouette of a meditating figure with a pink aura and a faint horned demon face above it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05567",
+   "name": "skill_274_noBG",
+   "slug": "yellow-eye-triangle",
+   "description": "A black all-seeing eye inside a yellow-edged triangle on pale yellow radiating rays.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05568",
+   "name": "skill_276_noBG",
+   "slug": "red-starburst-impact",
+   "description": "A red and white spiky starburst with an orange streak, like an explosive impact.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05569",
+   "name": "skill_277_noBG",
+   "slug": "magenta-swirl-vortex",
+   "description": "A white-magenta spiral vortex radiating from a bright centre.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05570",
+   "name": "skill_279_noBG",
+   "slug": "orange-meteor-shower",
+   "description": "Orange-white meteors with trailing streaks falling diagonally toward the lower left.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05571",
+   "name": "skill_27_noBG",
+   "slug": "pink-crossed-chains",
+   "description": "Two pale pink chains crossed in an X over purple rays.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05572",
+   "name": "skill_28",
+   "slug": "teal-radial-burst-dark",
+   "description": "A bright teal burst of thin rays radiating from the centre on a dark teal background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05573",
+   "name": "skill_282_noBG",
+   "slug": "green-curved-blade",
+   "description": "A dark curved blade with a green energy streak sweeping behind it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05574",
+   "name": "skill_285_noBG",
+   "slug": "lavender-crossed-chains",
+   "description": "Two lavender-blue chains crossed in an X over grey-purple rays.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01159",
+   "name": "skill_287_noBG",
+   "slug": "hand-gripping-curved-dagger",
+   "description": "A hand gripping a pale curved dagger with a blue pommel and pink accents.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05575",
+   "name": "skill_289_noBG",
+   "slug": "hand-with-orange-flames",
+   "description": "A pale clawed hand with small orange flame shapes dropping from its fingers.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00086",
+   "name": "skill_28_noBG",
+   "slug": "teal-radial-burst",
+   "description": "A bright teal burst of thin rays radiating from the centre on a pale background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05577",
+   "name": "skill_292_noBG",
+   "slug": "pink-hand-axe",
+   "description": "A magenta hand holding an axe with a pink blade against purple-pink rays.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01160",
+   "name": "skill_293_noBG",
+   "slug": "pink-horned-axe-warrior",
+   "description": "A pink-outlined black silhouette of a horned warrior holding two axes.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "summon"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

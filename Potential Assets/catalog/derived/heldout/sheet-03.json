@@ -1,0 +1,230 @@
+{
+ "sheet": "sheet-03",
+ "cells": [
+  {
+   "i": 0,
+   "cluster_id": "c00229",
+   "name": "Warlock_49",
+   "file": "sprites/Warlock_49.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 1,
+   "cluster_id": "c01043",
+   "name": "Warriorskill_09",
+   "file": "sprites/Warriorskill_09.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 2,
+   "cluster_id": "c00073",
+   "name": "Warriorskill_44",
+   "file": "sprites/Warriorskill_44.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 3,
+   "cluster_id": "c01094",
+   "name": "hit",
+   "file": "sprites/hit.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat3",
+   "type": "Sprite"
+  },
+  {
+   "i": 4,
+   "cluster_id": "c04759",
+   "name": "icon-BoneGolemF",
+   "file": "sprites/icon-BoneGolemF.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 5,
+   "cluster_id": "c04784",
+   "name": "icon-JB04",
+   "file": "sprites/icon-JB04.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 6,
+   "cluster_id": "c04791",
+   "name": "icon-JB11",
+   "file": "sprites/icon-JB11.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 7,
+   "cluster_id": "c04794",
+   "name": "icon-JB14",
+   "file": "sprites/icon-JB14.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 8,
+   "cluster_id": "c04808",
+   "name": "icon-JB28",
+   "file": "sprites/icon-JB28.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 9,
+   "cluster_id": "c04820",
+   "name": "icon-JB40",
+   "file": "sprites/icon-JB40.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 10,
+   "cluster_id": "c04868",
+   "name": "icon-SK07",
+   "file": "sprites/icon-SK07.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 11,
+   "cluster_id": "c04872",
+   "name": "icon-SK11",
+   "file": "sprites/icon-SK11.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 12,
+   "cluster_id": "c04873",
+   "name": "icon-SK12",
+   "file": "sprites/icon-SK12.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 13,
+   "cluster_id": "c04900",
+   "name": "icon-SK39",
+   "file": "sprites/icon-SK39.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 14,
+   "cluster_id": "c04913",
+   "name": "icon-SK52",
+   "file": "sprites/icon-SK52.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 15,
+   "cluster_id": "c04915",
+   "name": "icon-SK54",
+   "file": "sprites/icon-SK54.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 16,
+   "cluster_id": "c04917",
+   "name": "icon-SK56",
+   "file": "sprites/icon-SK56.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 17,
+   "cluster_id": "c04918",
+   "name": "icon-SK57",
+   "file": "sprites/icon-SK57.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 18,
+   "cluster_id": "c04921",
+   "name": "icon-SK60",
+   "file": "sprites/icon-SK60.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 19,
+   "cluster_id": "c04934",
+   "name": "icon-SK73",
+   "file": "sprites/icon-SK73.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 20,
+   "cluster_id": "c04941",
+   "name": "icon-SK80",
+   "file": "sprites/icon-SK80.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 21,
+   "cluster_id": "c04946",
+   "name": "icon-SK85",
+   "file": "sprites/icon-SK85.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 22,
+   "cluster_id": "c04950",
+   "name": "icon-SK89",
+   "file": "sprites/icon-SK89.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 23,
+   "cluster_id": "c04967",
+   "name": "icon_44592508_p0",
+   "file": "sprites/icon_44592508_p0.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  },
+  {
+   "i": 24,
+   "cluster_id": "c04970",
+   "name": "icon_44867185_p0_master1200",
+   "file": "sprites/icon_44867185_p0_master1200.png",
+   "size": "64x64",
+   "atlas": "IconAtlasCat2",
+   "type": "Sprite"
+  }
+ ]
+}

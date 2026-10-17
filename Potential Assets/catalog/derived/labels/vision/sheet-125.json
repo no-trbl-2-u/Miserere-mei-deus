@@ -1,0 +1,549 @@
+{
+ "unit": "sheet-125",
+ "records": [
+  {
+   "cluster_id": "c03561",
+   "name": "Range_09",
+   "slug": "dagger-hand-red-opaque",
+   "description": "A hand gripping a dagger upward, wreathed in red streaks of light on a dark black-red background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "low-res",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03562",
+   "name": "Range_09_nb",
+   "slug": "dagger-hand-red",
+   "description": "A hand gripping a dagger upward, wreathed in red streaks of light, on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00867",
+   "name": "Shamanskill_01_nobg",
+   "slug": "runed-hammer-lightning",
+   "description": "A stone hammer head carved with a glowing rune, circled by orange lightning and light.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00868",
+   "name": "Shamanskill_03_nobg",
+   "slug": "golden-spark-burst",
+   "description": "A radiant golden-white starburst with branching cracks of light radiating outward.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff",
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00869",
+   "name": "Shamanskill_04_nobg",
+   "slug": "flaming-totem-tower",
+   "description": "A stone pillar topped with a red flame, wrapped in swirling orange wind and fire.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "summon",
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00870",
+   "name": "Shamanskill_07_nobg",
+   "slug": "erupting-volcano",
+   "description": "A volcano erupting with a bright orange blast and sparks at its crater.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00871",
+   "name": "Shamanskill_08_nobg",
+   "slug": "falling-meteors",
+   "description": "Three dark rocky meteors streaking down with orange fire trails.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00872",
+   "name": "Shamanskill_09_nobg",
+   "slug": "orange-rune-emblem",
+   "description": "A glowing orange-white angular glyph emblem surrounded by a warm orange haze.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff",
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00874",
+   "name": "Shamanskill_11_nobg",
+   "slug": "red-potion-flask",
+   "description": "A round corked flask of dark red liquid with a red glow and light swirls around it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "heal",
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00875",
+   "name": "Shamanskill_14_nobg",
+   "slug": "blue-spirit-anchor",
+   "description": "A glowing blue anchor-shaped weapon with a small cross-like figure at its top, with blue light trails.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00876",
+   "name": "Shamanskill_15_nobg",
+   "slug": "blue-owl-totem",
+   "description": "A carved stone owl-faced totem glowing blue, with blue orbs floating around its head.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "summon",
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00878",
+   "name": "Shamanskill_17_nobg",
+   "slug": "blue-fur-lightning",
+   "description": "Dense blue shaggy fur or fleece crackling with electric arcs on a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff",
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "low-res",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00883",
+   "name": "Shamanskill_25_nobg",
+   "slug": "lightning-struck-figures",
+   "description": "Three small dark humanoid silhouettes caught in white-blue lightning bolts.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00065",
+   "name": "Shamanskill_26_nobg",
+   "slug": "lightning-hammer",
+   "description": "A black war hammer wrapped in blue lightning bolts.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00884",
+   "name": "Shamanskill_28_nobg",
+   "slug": "charged-black-rock",
+   "description": "A dark angular rock chunk with white-blue lightning arcing around it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00887",
+   "name": "Shamanskill_33_nobg",
+   "slug": "wooden-hand-green",
+   "description": "A hand rising from twisted wood roots wrapped in faint green glowing vines.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "summon",
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00888",
+   "name": "Shamanskill_35_nobg",
+   "slug": "orbiting-stone-club",
+   "description": "A wooden club with a stone orbiting it in green energy rings.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff",
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00889",
+   "name": "Shamanskill_36_nobg",
+   "slug": "green-lightning-crack",
+   "description": "A green lightning bolt striking down onto a cracked mossy stone.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00890",
+   "name": "Shamanskill_37_nobg",
+   "slug": "green-axe",
+   "description": "A large axe with a pale green blade and wooden haft in a green glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00891",
+   "name": "Shamanskill_38_nobg",
+   "slug": "green-glowing-blades",
+   "description": "A pair of slim blades glowing pale green with light streaks.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack",
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00892",
+   "name": "Shamanskill_39_nobg",
+   "slug": "branch-green-flame",
+   "description": "A gnarled wooden branch cradling a green flame, with dark debris floating around it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff",
+     "player-class"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03808",
+   "name": "Shock",
+   "slug": "shock-screaming-face",
+   "description": "A screaming blue-skinned face with spiked hair and electricity arcing across it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "status-effect",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "low-res",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03851",
+   "name": "Skill_203",
+   "slug": "meditating-silhouette",
+   "description": "A black silhouette of a figure seated in meditation against a bright yellow radiant burst.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "low-res",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03853",
+   "name": "Skill_213",
+   "slug": "purple-hatted-face",
+   "description": "A stern purple-skinned face under a wide conical straw hat, on a magenta background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "low-res",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03855",
+   "name": "Skill_216",
+   "slug": "purple-claw-shards",
+   "description": "Grey pointed claw or blade shards rising against a magenta background with white light streaks.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "atlas-crop",
+     "low-res",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  }
+ ]
+}

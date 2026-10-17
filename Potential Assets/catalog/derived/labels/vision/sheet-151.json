@@ -1,0 +1,473 @@
+{
+ "unit": "sheet-151",
+ "records": [
+  {
+   "cluster_id": "c05720",
+   "name": "skill_482_noBG",
+   "slug": "purple-sword-strike",
+   "description": "An ornate teal-and-purple sword streaking diagonally through violet energy trails.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05721",
+   "name": "skill_483_noBG",
+   "slug": "magenta-shard-slash",
+   "description": "A magenta energy streak with black angular shards cut out of it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00265",
+   "name": "skill_485_noBG",
+   "slug": "magenta-comet",
+   "description": "A magenta comet with a bright white head and a long streaming violet tail.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05722",
+   "name": "skill_487_noBG",
+   "slug": "heal-potion-burst",
+   "description": "A black round-bottom potion flask with a plus sign and magenta rays radiating behind it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "heal",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05723",
+   "name": "skill_488",
+   "slug": "purple-horned-emblem-dark",
+   "description": "A purple spiked horn-shaped emblem with a black keyhole slot on a dark purple background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05724",
+   "name": "skill_488_noBG",
+   "slug": "purple-horned-emblem",
+   "description": "A purple spiked horn-shaped emblem with a black keyhole slot on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05725",
+   "name": "skill_489_noBG",
+   "slug": "violet-swoosh-slashes",
+   "description": "Three curved violet-blue streaks sweeping across the frame like claw or wind slashes.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05726",
+   "name": "skill_48_noBG",
+   "slug": "ice-spire-silhouette",
+   "description": "A dark silhouetted figure with one arm raised standing atop jagged blue ice crystals.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "summon"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05727",
+   "name": "skill_490_noBG",
+   "slug": "broken-blade",
+   "description": "A large chipped silver sword blade and crossguard pointing upward at a diagonal.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "equipment"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05728",
+   "name": "skill_491_noBG",
+   "slug": "up-arrow-buff",
+   "description": "A blue upward arrow with a white outline and a small plus sign above a blue ripple pool.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05729",
+   "name": "skill_492_noBG",
+   "slug": "green-blue-sword-strike",
+   "description": "An ornate green and blue jewelled sword pointing downward with blue energy trailing from it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05730",
+   "name": "skill_493_noBG",
+   "slug": "cyan-shard-slash",
+   "description": "A cyan energy streak with black angular shards cut out of it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05731",
+   "name": "skill_495_noBG",
+   "slug": "cyan-crossed-slashes",
+   "description": "Two bright cyan and white energy slashes crossing in an X.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05732",
+   "name": "skill_496_noBG",
+   "slug": "dna-helix",
+   "description": "A blue double-helix DNA strand rendered in glowing blue.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "status-effect"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05733",
+   "name": "skill_497_noBG",
+   "slug": "cyan-horned-emblem",
+   "description": "A cyan spiked horn-shaped emblem with a black keyhole slot on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05734",
+   "name": "skill_498_noBG",
+   "slug": "cyan-light-rays",
+   "description": "A fan of thin cyan light streaks radiating from the lower left corner.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05735",
+   "name": "skill_499_noBG",
+   "slug": "poison-bottle-burst",
+   "description": "A black bottle with cyan bubbles and cyan rays bursting out behind it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05736",
+   "name": "skill_49_noBG",
+   "slug": "ice-comet",
+   "description": "A cyan icy comet with a bright head and trailing shards streaking down and left.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05737",
+   "name": "skill_4_noBG",
+   "slug": "stone-face-idol",
+   "description": "A stern brown face with glowing yellow eyes and a forehead gem, surrounded by golden rays.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "defend"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01181",
+   "name": "skill_5",
+   "slug": "falling-rocks",
+   "description": "Orange rock chunks tumbling diagonally against a red and yellow gradient.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05738",
+   "name": "skill_50",
+   "slug": "blue-energy-hand",
+   "description": "A pale hand releasing a stream of blue energy against a dark purple background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05739",
+   "name": "skill_52_noBG",
+   "slug": "shattered-weapon",
+   "description": "A broken curved blade with white crack lines radiating behind it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05740",
+   "name": "skill_54",
+   "slug": "cracked-black-shield",
+   "description": "A black shield with a silver rim and a white lightning-shaped crack across it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "defend"
+    ],
+    "style": [
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05741",
+   "name": "skill_55_noBG",
+   "slug": "crossed-chains",
+   "description": "Two metal chains crossing in an X over grey radiating rays.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05742",
+   "name": "skill_56",
+   "slug": "dark-visor-eyes",
+   "description": "A dark glossy helmet-like shape with two glowing white eyes.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "full-colour",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  }
+ ]
+}

@@ -1,0 +1,524 @@
+{
+ "unit": "sheet-019",
+ "records": [
+  {
+   "cluster_id": "c00121",
+   "name": "Alchemy_16_shadow_potion",
+   "slug": "shadow-potion-vial",
+   "description": "A slender glass test tube filled with purple liquid and stoppered with a cork.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01695",
+   "name": "Alchemy_17_blue_potion",
+   "slug": "blue-potion-vial",
+   "description": "A slender glass test tube filled with cyan-blue liquid and stoppered with a cork.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01696",
+   "name": "Alchemy_18_magic_mixture",
+   "slug": "magic-mixture-vial",
+   "description": "A slender glass test tube holding yellow liquid, wrapped in a braided cord grip near the base.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01697",
+   "name": "Alchemy_19_little_flask",
+   "slug": "little-flask-empty",
+   "description": "An empty clear glass flask with a faceted square body and a cork stopper.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01698",
+   "name": "Alchemy_20_littlemana_flask",
+   "slug": "little-mana-flask",
+   "description": "A small faceted glass flask filled with bright blue liquid and a cork stopper.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory",
+     "heal"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01700",
+   "name": "Alchemy_22_deadly_poison",
+   "slug": "deadly-poison-flask",
+   "description": "A faceted glass flask filled with green liquid and a cork stopper.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01701",
+   "name": "Alchemy_23_black_poison",
+   "slug": "black-poison-flask",
+   "description": "A faceted glass flask filled with near-black dark purple liquid and a cork stopper.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01702",
+   "name": "Alchemy_24_energy_potion",
+   "slug": "energy-potion-flask",
+   "description": "A faceted glass flask filled with amber-yellow liquid and a cork stopper.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01703",
+   "name": "Alchemy_25_stamina_potion",
+   "slug": "stamina-potion-flask",
+   "description": "A faceted glass flask of glowing magenta liquid surrounded by a pink aura.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01704",
+   "name": "Alchemy_26_immortal_potion",
+   "slug": "immortal-potion-flask",
+   "description": "A faceted glass flask of golden liquid wrapped in a crackling yellow glow.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01705",
+   "name": "Alchemy_27_bung",
+   "slug": "bung-corks-and-crystals",
+   "description": "A cluster of two cork stoppers, a dark wooden block and two small purple crystal shards.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01707",
+   "name": "Alchemy_29_big_flask",
+   "slug": "big-flask-empty",
+   "description": "An empty round-bottomed clear glass flask with a long neck and cork stopper.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01709",
+   "name": "Alchemy_35_invisibility_flask",
+   "slug": "invisibility-flask",
+   "description": "A round-bottomed glass flask of dark purple liquid with a bright magenta glow.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01712",
+   "name": "Alchemy_38_philosophers_stone",
+   "slug": "philosophers-stone",
+   "description": "A red faceted crystal gem glowing intensely inside a ring of red light.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "reward"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01714",
+   "name": "Alchemy_40_poisonousherbs",
+   "slug": "poisonous-herbs",
+   "description": "A bundle of dark green leafy herb sprigs tied together at the stems.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01716",
+   "name": "Alchemy_42_hotcoals",
+   "slug": "hot-coals",
+   "description": "A pile of three dark blocks of coal with glowing orange-red cracks.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01717",
+   "name": "Alchemy_43_pipette",
+   "slug": "pipette",
+   "description": "A glass dropper pipette with a brown rubber bulb on top.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01718",
+   "name": "Alchemy_44_minipotions",
+   "slug": "mini-potions-on-cords",
+   "description": "Three small corked vials of blue, green and orange liquid hanging on twisted cords.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01719",
+   "name": "Alchemy_45_middle_flask",
+   "slug": "middle-flask-empty",
+   "description": "An empty clear glass flask with a wide square body and a purple knob stopper.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01720",
+   "name": "Alchemy_45_middle_flask2",
+   "slug": "middle-flask-rope-leather",
+   "description": "An empty clear glass flask with a leather wrap, rope loop and round wooden stopper.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01721",
+   "name": "Alchemy_47_middlemagical_flask",
+   "slug": "middle-magical-flask",
+   "description": "A square glass flask filled with glowing cyan liquid, leather-wrapped with a wooden stopper.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory",
+     "heal"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01722",
+   "name": "Alchemy_48_middleshadow_flask",
+   "slug": "middle-shadow-flask",
+   "description": "A square glass flask filled with purple liquid, held in a studded leather wrap with a wooden stopper.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01723",
+   "name": "Alchemy_49_middleenergy_flask",
+   "slug": "middle-energy-flask",
+   "description": "A square glass flask of glowing yellow liquid with a golden aura, in a leather wrap with a wooden stopper.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01724",
+   "name": "Alchemy_50_plague_flask",
+   "slug": "plague-flask",
+   "description": "A spiked leather-wrapped glass flask filled with toxic green liquid and a spiked stopper.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01725",
+   "name": "Alchemy_51_fastpoison",
+   "slug": "fast-poison-flask",
+   "description": "A square glass flask filled with lime-green liquid, with a rune-like mark on the front and a wooden stopper.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

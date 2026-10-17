@@ -1,0 +1,4449 @@
+{
+ "summary": {
+  "heldout_in_answers": 200,
+  "heldout_labelled": 200,
+  "heldout_scored": 200,
+  "unscorable_no_table_mapping": 0,
+  "use_accuracy": 0.62,
+  "kind_accuracy": 0.87,
+  "note": "kind_accuracy is the defensible headline: it asks whether the labeller identified WHAT the asset is, and the game's table answers the same question. use_accuracy is weaker by construction - the labeller tags an asset's apparent function while the table records which subsystem consumes it, and a skill icon reused by a rune or state row makes those two answers differ without either being wrong. The single_table / shared_icon split below was added to test whether shared icons explain the gap. They do not: single-table clusters score LOWER on use, so the ~0.6 figure reflects the apparent-function vs consuming-subsystem mismatch across the board, not duplicate reuse. Read use_accuracy as agreement between two different axes, not as an error rate.",
+  "single_table": {
+   "n": 109,
+   "use_accuracy": 0.578,
+   "kind_accuracy": 0.817
+  },
+  "shared_icon": {
+   "n": 91,
+   "use_accuracy": 0.67,
+   "kind_accuracy": 0.934
+  },
+  "by_confidence": {
+   "high": {
+    "n": 90,
+    "use_accuracy": 0.644,
+    "kind_accuracy": 0.8
+   },
+   "low": {
+    "n": 26,
+    "use_accuracy": 0.308,
+    "kind_accuracy": 0.885
+   },
+   "medium": {
+    "n": 84,
+    "use_accuracy": 0.69,
+    "kind_accuracy": 0.94
+   }
+  },
+  "read_errors": []
+ },
+ "rows": [
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "state"
+   ],
+   "cluster_id": "c00031",
+   "name": "03_summon_skeleton_knightX1",
+   "confidence": "high",
+   "expected_use": [
+    "status-effect"
+   ],
+   "guessed_use": [
+    "combat-action",
+    "summon"
+   ],
+   "kind": "creature",
+   "use_hit": false,
+   "kind_hit": false,
+   "slug": "summon-skeleton-knight",
+   "description": "An armoured knight in a dark steel helmet with a visor, surrounded by a yellow glow."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "campitem",
+    "gear"
+   ],
+   "cluster_id": "c01374",
+   "name": "13_Leather_head",
+   "confidence": "high",
+   "expected_use": [
+    "camp",
+    "equipment",
+    "inventory"
+   ],
+   "guessed_use": [
+    "equipment",
+    "inventory"
+   ],
+   "kind": "armour",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "leather-hood",
+   "description": "A dark hooded leather headpiece with pale trim over a shadowed face."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "campitem",
+    "gear"
+   ],
+   "cluster_id": "c01438",
+   "name": "16_Leather_Chest",
+   "confidence": "high",
+   "expected_use": [
+    "camp",
+    "equipment",
+    "inventory"
+   ],
+   "guessed_use": [
+    "equipment",
+    "inventory"
+   ],
+   "kind": "armour",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "leather-chest-blue",
+   "description": "A blue-grey leather chest armour with shoulder plates and a belt."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "rune",
+    "state"
+   ],
+   "cluster_id": "c00320",
+   "name": "20_shield",
+   "confidence": "high",
+   "expected_use": [
+    "buff",
+    "debuff",
+    "equipment",
+    "status-effect"
+   ],
+   "guessed_use": [
+    "buff",
+    "combat-action",
+    "defend"
+   ],
+   "kind": "shield",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "blue-glow-shield",
+   "description": "A dark shield with a blue emblem and glowing blue edge on a blue energy background."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "rune",
+    "skill",
+    "skill_mode"
+   ],
+   "cluster_id": "c00346",
+   "name": "2_summon_spiders",
+   "confidence": "high",
+   "expected_use": [
+    "buff",
+    "combat-action",
+    "enemy",
+    "equipment"
+   ],
+   "guessed_use": [
+    "combat-action",
+    "summon"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "summon-spiders",
+   "description": "A spider on an orange web against a dark background."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "contract",
+    "rune",
+    "skill_mode"
+   ],
+   "cluster_id": "c00108",
+   "name": "40_timechanging",
+   "confidence": "high",
+   "expected_use": [
+    "attack",
+    "buff",
+    "combat-action",
+    "equipment",
+    "quest"
+   ],
+   "guessed_use": [
+    "buff",
+    "combat-action"
+   ],
+   "kind": "ui-icon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "time-changing-clock",
+   "description": "A white-faced pocket watch wrapped in swirling blue energy."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "skill",
+    "skill_mode",
+    "state"
+   ],
+   "cluster_id": "c00113",
+   "name": "49_red_wave",
+   "confidence": "medium",
+   "expected_use": [
+    "combat-action",
+    "defend",
+    "status-effect"
+   ],
+   "guessed_use": [
+    "attack",
+    "combat-action"
+   ],
+   "kind": "effect",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "red-wave",
+   "description": "Streaking red-orange curved energy lines with small rings on a dark red background."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "campitem",
+    "gear"
+   ],
+   "cluster_id": "c01550",
+   "name": "4_Leather_Chest",
+   "confidence": "high",
+   "expected_use": [
+    "camp",
+    "equipment",
+    "inventory"
+   ],
+   "guessed_use": [
+    "equipment",
+    "inventory"
+   ],
+   "kind": "armour",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "brown-leather-chest",
+   "description": "A brown leather chest armour with a fur-trimmed shoulder and straps."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "contract",
+    "skill",
+    "skill_mode",
+    "state"
+   ],
+   "cluster_id": "c00117",
+   "name": "71_spirit_wolves",
+   "confidence": "high",
+   "expected_use": [
+    "combat-action",
+    "quest",
+    "status-effect"
+   ],
+   "guessed_use": [
+    "combat-action",
+    "summon"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": false,
+   "slug": "spirit-wolf",
+   "description": "A glowing teal outline of a wolf head on a dark background."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "campitem",
+    "gear",
+    "shop_item"
+   ],
+   "cluster_id": "c01657",
+   "name": "9_Cloth_Chest",
+   "confidence": "medium",
+   "expected_use": [
+    "camp",
+    "equipment",
+    "inventory",
+    "shop"
+   ],
+   "guessed_use": [
+    "equipment",
+    "inventory"
+   ],
+   "kind": "armour",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "dark-cloth-jacket",
+   "description": "A dark jacket with red-orange trim and a high collar."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "rune",
+    "state",
+    "tips"
+   ],
+   "cluster_id": "c00421",
+   "name": "Archerskill_10",
+   "confidence": "high",
+   "expected_use": [
+    "buff",
+    "debuff",
+    "equipment",
+    "status-effect",
+    "tip"
+   ],
+   "guessed_use": [
+    "attack",
+    "combat-action"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "apple-arrow-shot",
+   "description": "A red apple pierced by an arrow over a green target ring."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "skill",
+    "skill_mode",
+    "tips"
+   ],
+   "cluster_id": "c00438",
+   "name": "Archerskill_28",
+   "confidence": "medium",
+   "expected_use": [
+    "buff",
+    "combat-action",
+    "tip"
+   ],
+   "guessed_use": [
+    "attack",
+    "combat-action"
+   ],
+   "kind": "ui-icon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "fiery-winged-arrow",
+   "description": "An upright arrow flanked by orange fiery wing-like shapes on a dark background."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "rune"
+   ],
+   "cluster_id": "c00441",
+   "name": "Archerskill_32",
+   "confidence": "low",
+   "expected_use": [
+    "buff",
+    "equipment"
+   ],
+   "guessed_use": [
+    "attack",
+    "combat-action"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "flaming-gun-barrel",
+   "description": "A metallic barrel or gun with a fiery muzzle blast on an orange background."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "rune",
+    "tips"
+   ],
+   "cluster_id": "c00452",
+   "name": "Archerskill_43",
+   "confidence": "high",
+   "expected_use": [
+    "buff",
+    "equipment",
+    "tip"
+   ],
+   "guessed_use": [
+    "combat-action",
+    "summon"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "eagle-head",
+   "description": "A bald eagle head in profile with a yellow beak on a green background."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "contract",
+    "skill",
+    "skill_mode"
+   ],
+   "cluster_id": "c00475",
+   "name": "Assassinskill_18",
+   "confidence": "high",
+   "expected_use": [
+    "attack",
+    "combat-action",
+    "enemy-boss",
+    "quest"
+   ],
+   "guessed_use": [
+    "attack",
+    "combat-action"
+   ],
+   "kind": "ui-icon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "purple-daggers",
+   "description": "Dark daggers stabbing upward with a purple glow behind them."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "contract"
+   ],
+   "cluster_id": "c01879",
+   "name": "Axe_v2_44",
+   "confidence": "high",
+   "expected_use": [
+    "quest"
+   ],
+   "guessed_use": [
+    "equipment",
+    "inventory"
+   ],
+   "kind": "weapon",
+   "use_hit": false,
+   "kind_hit": false,
+   "slug": "bat-wing-axe",
+   "description": "A brown axe with a bat-wing shaped head on a wooden handle."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "campitem",
+    "gear",
+    "quest"
+   ],
+   "cluster_id": "c01917",
+   "name": "Belt_04",
+   "confidence": "high",
+   "expected_use": [
+    "camp",
+    "equipment",
+    "inventory",
+    "quest"
+   ],
+   "guessed_use": [
+    "equipment",
+    "inventory"
+   ],
+   "kind": "accessory",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "leather-belt",
+   "description": "A brown leather belt with a small round buckle."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "contract"
+   ],
+   "cluster_id": "c02077",
+   "name": "Book_v2_33",
+   "confidence": "high",
+   "expected_use": [
+    "quest"
+   ],
+   "guessed_use": [
+    "equipment",
+    "inventory"
+   ],
+   "kind": "book",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "dark-tome",
+   "description": "A closed dark brown book with a green-tinged cover and metal clasp."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "campitem",
+    "contract",
+    "gear",
+    "quest"
+   ],
+   "cluster_id": "c00525",
+   "name": "Boots_04",
+   "confidence": "high",
+   "expected_use": [
+    "camp",
+    "equipment",
+    "inventory",
+    "quest"
+   ],
+   "guessed_use": [
+    "equipment",
+    "inventory"
+   ],
+   "kind": "armour",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "leather-boots",
+   "description": "A pair of brown leather boots with folded cuffs."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "campitem",
+    "gear",
+    "quest"
+   ],
+   "cluster_id": "c00043",
+   "name": "Chest_25",
+   "confidence": "medium",
+   "expected_use": [
+    "camp",
+    "equipment",
+    "inventory",
+    "quest"
+   ],
+   "guessed_use": [
+    "equipment",
+    "inventory"
+   ],
+   "kind": "armour",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "chainmail-tunic",
+   "description": "A grey chainmail tunic with short sleeves on a tall narrow canvas."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "campitem",
+    "contract",
+    "gear"
+   ],
+   "cluster_id": "c02364",
+   "name": "Crossbow_02",
+   "confidence": "high",
+   "expected_use": [
+    "camp",
+    "equipment",
+    "inventory",
+    "quest"
+   ],
+   "guessed_use": [
+    "equipment",
+    "inventory"
+   ],
+   "kind": "weapon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "wooden-crossbow",
+   "description": "A brown wooden crossbow with a drawn string."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "campitem",
+    "gear",
+    "quest"
+   ],
+   "cluster_id": "c00548",
+   "name": "Dagger_06",
+   "confidence": "high",
+   "expected_use": [
+    "camp",
+    "equipment",
+    "inventory",
+    "quest"
+   ],
+   "guessed_use": [
+    "equipment",
+    "inventory"
+   ],
+   "kind": "weapon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "steel-dagger",
+   "description": "A steel dagger with a green-wrapped hilt pointing upward."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "skill_mode"
+   ],
+   "cluster_id": "c00140",
+   "name": "Druideskill_03X1",
+   "confidence": "high",
+   "expected_use": [
+    "combat-action",
+    "defend"
+   ],
+   "guessed_use": [
+    "attack",
+    "combat-action"
+   ],
+   "kind": "effect",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "yellow-lightning",
+   "description": "Branching yellow lightning bolts on a dark background."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "state",
+    "tips"
+   ],
+   "cluster_id": "c00568",
+   "name": "Druideskill_15",
+   "confidence": "medium",
+   "expected_use": [
+    "status-effect",
+    "tip"
+   ],
+   "guessed_use": [
+    "buff",
+    "combat-action"
+   ],
+   "kind": "sigil",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "purple-antler-sigil",
+   "description": "A glowing white antler-like sigil on a purple starry background."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "state"
+   ],
+   "cluster_id": "c00574",
+   "name": "Druideskill_22",
+   "confidence": "high",
+   "expected_use": [
+    "status-effect"
+   ],
+   "guessed_use": [
+    "combat-action",
+    "summon"
+   ],
+   "kind": "creature",
+   "use_hit": false,
+   "kind_hit": false,
+   "slug": "roaring-bear",
+   "description": "A roaring pink-tinted bear head with open jaws on a dark background."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "skill",
+    "skill_mode"
+   ],
+   "cluster_id": "c00585",
+   "name": "Druideskill_36",
+   "confidence": "medium",
+   "expected_use": [
+    "combat-action",
+    "enemy-boss"
+   ],
+   "guessed_use": [
+    "buff"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "blue-thorned-dragon-skill",
+   "description": "A coiled blue spiny, thorny dragon-like creature with teal glow on a teal square background."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "skill",
+    "skill_mode"
+   ],
+   "cluster_id": "c00637",
+   "name": "Engineerskill_31",
+   "confidence": "low",
+   "expected_use": [
+    "attack",
+    "combat-action"
+   ],
+   "guessed_use": [
+    "attack"
+   ],
+   "kind": "ui-icon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "fiery-slash-ring-skill",
+   "description": "A bright orange flame streak curving beside a dark ring on a black background."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "campitem",
+    "contract",
+    "gear"
+   ],
+   "cluster_id": "c00149",
+   "name": "Gloves_05",
+   "confidence": "high",
+   "expected_use": [
+    "camp",
+    "equipment",
+    "inventory",
+    "quest"
+   ],
+   "guessed_use": [
+    "equipment",
+    "loot"
+   ],
+   "kind": "armour",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "green-fingerless-gloves",
+   "description": "A pair of olive-green fingerless gloves with stitched knuckles."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "campitem",
+    "gear"
+   ],
+   "cluster_id": "c02747",
+   "name": "Gun_v2_10",
+   "confidence": "high",
+   "expected_use": [
+    "camp",
+    "equipment",
+    "inventory"
+   ],
+   "guessed_use": [
+    "equipment",
+    "loot"
+   ],
+   "kind": "weapon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "revolver",
+   "description": "A grey six-shooter revolver with a brown wooden grip."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "campitem",
+    "gear"
+   ],
+   "cluster_id": "c02803",
+   "name": "Hammer_43",
+   "confidence": "high",
+   "expected_use": [
+    "camp",
+    "equipment",
+    "inventory"
+   ],
+   "guessed_use": [
+    "equipment",
+    "loot"
+   ],
+   "kind": "weapon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "war-hammer",
+   "description": "A double-headed war hammer with a cream-coloured head and dark shaft ending in a spike."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "contract"
+   ],
+   "cluster_id": "c02881",
+   "name": "Helm_71",
+   "confidence": "medium",
+   "expected_use": [
+    "quest"
+   ],
+   "guessed_use": [
+    "equipment",
+    "loot"
+   ],
+   "kind": "armour",
+   "use_hit": false,
+   "kind_hit": false,
+   "slug": "dark-green-hood-helm",
+   "description": "A dark green hooded helm with pale stitched trim and an empty black opening."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "state"
+   ],
+   "cluster_id": "c02909",
+   "name": "Herbalism_28_stinkymushroom",
+   "confidence": "high",
+   "expected_use": [
+    "status-effect"
+   ],
+   "guessed_use": [
+    "crafting",
+    "loot"
+   ],
+   "kind": "consumable",
+   "use_hit": false,
+   "kind_hit": false,
+   "slug": "stinky-mushroom",
+   "description": "A cluster of spotted tan mushrooms growing on a brown stump."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "tips"
+   ],
+   "cluster_id": "c00689",
+   "name": "Loot_23",
+   "confidence": "high",
+   "expected_use": [
+    "tip"
+   ],
+   "guessed_use": [
+    "crafting",
+    "loot"
+   ],
+   "kind": "relic",
+   "use_hit": false,
+   "kind_hit": false,
+   "slug": "bone",
+   "description": "A single pale bone lying diagonally."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "mappoint"
+   ],
+   "cluster_id": "c03187",
+   "name": "Loot_69",
+   "confidence": "high",
+   "expected_use": [
+    "map-point",
+    "navigation"
+   ],
+   "guessed_use": [
+    "dungeon",
+    "loot"
+   ],
+   "kind": "key",
+   "use_hit": false,
+   "kind_hit": false,
+   "slug": "skull-key",
+   "description": "A grey iron key whose bow is shaped like a skull."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "state"
+   ],
+   "cluster_id": "c00054",
+   "name": "Mageskill_24",
+   "confidence": "medium",
+   "expected_use": [
+    "status-effect"
+   ],
+   "guessed_use": [
+    "attack"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "pointing-hand-red-lightning-skill",
+   "description": "A hand with extended finger crackling with white lightning on a red background."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "skill",
+    "skill_mode"
+   ],
+   "cluster_id": "c00728",
+   "name": "Mageskill_43",
+   "confidence": "medium",
+   "expected_use": [
+    "attack",
+    "combat-action"
+   ],
+   "guessed_use": [
+    "attack",
+    "buff"
+   ],
+   "kind": "ui-icon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "purple-lightning-scroll-skill",
+   "description": "A rolled scroll with purple runes wrapped in purple lightning on black."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "skill_mode"
+   ],
+   "cluster_id": "c00752",
+   "name": "Paladinskill_15",
+   "confidence": "medium",
+   "expected_use": [
+    "combat-action",
+    "defend"
+   ],
+   "guessed_use": [
+    "buff"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "glowing-orb-hand-skill",
+   "description": "A pale hand holding a glowing white orb with orbital rings on a dark background."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "skill_mode"
+   ],
+   "cluster_id": "c00172",
+   "name": "Paladinskill_40",
+   "confidence": "low",
+   "expected_use": [
+    "attack",
+    "combat-action"
+   ],
+   "guessed_use": [
+    "attack"
+   ],
+   "kind": "ui-icon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "green-light-burst-skill",
+   "description": "A radiating burst of white and green light rays over dark rock."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "state"
+   ],
+   "cluster_id": "c00789",
+   "name": "Priestskill_07",
+   "confidence": "medium",
+   "expected_use": [
+    "status-effect"
+   ],
+   "guessed_use": [
+    "buff",
+    "summon"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "hooded-priestess-portrait-skill",
+   "description": "A portrait of a woman in a pale hood with cross markings and golden glow."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "skill_mode"
+   ],
+   "cluster_id": "c00791",
+   "name": "Priestskill_09",
+   "confidence": "medium",
+   "expected_use": [
+    "attack",
+    "combat-action"
+   ],
+   "guessed_use": [
+    "heal"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "raised-hands-light-skill",
+   "description": "Two pale hands raised beneath a glowing arc of white light."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "skill",
+    "skill_mode"
+   ],
+   "cluster_id": "c00176",
+   "name": "Priestskill_13X1",
+   "confidence": "medium",
+   "expected_use": [
+    "buff",
+    "combat-action"
+   ],
+   "guessed_use": [
+    "buff"
+   ],
+   "kind": "ui-icon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "lit-candles-skill",
+   "description": "A cluster of lit white candles with golden glints on a dark background."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "state"
+   ],
+   "cluster_id": "c00059",
+   "name": "Priestskill_46",
+   "confidence": "medium",
+   "expected_use": [
+    "status-effect"
+   ],
+   "guessed_use": [
+    "debuff"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "dark-hooded-figure-skill",
+   "description": "A dark hooded figure with a shadowed face and glowing eyes outlined in light."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "state"
+   ],
+   "cluster_id": "c00823",
+   "name": "Priestskill_50",
+   "confidence": "high",
+   "expected_use": [
+    "status-effect"
+   ],
+   "guessed_use": [
+    "buff",
+    "heal"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "radiant-cross-skill",
+   "description": "A black cross in front of a glowing golden sun-like disc with radiating ticks."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "campitem",
+    "uorder"
+   ],
+   "cluster_id": "c03490",
+   "name": "Quest_44",
+   "confidence": "medium",
+   "expected_use": [
+    "camp",
+    "inventory",
+    "union"
+   ],
+   "guessed_use": [
+    "loot",
+    "quest"
+   ],
+   "kind": "container",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "produce-barrels",
+   "description": "Three wooden barrels heaped with colourful fruit and vegetables."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "campitem",
+    "gear",
+    "state"
+   ],
+   "cluster_id": "c00847",
+   "name": "Res_151",
+   "confidence": "high",
+   "expected_use": [
+    "camp",
+    "equipment",
+    "inventory",
+    "status-effect"
+   ],
+   "guessed_use": [
+    "crafting",
+    "loot"
+   ],
+   "kind": "food",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "raw-meat-slab",
+   "description": "A thick slab of raw pink-purple meat."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "quest",
+    "revent",
+    "skill_mode",
+    "tips"
+   ],
+   "cluster_id": "c00858",
+   "name": "Res_75",
+   "confidence": "high",
+   "expected_use": [
+    "attack",
+    "combat-action",
+    "quest",
+    "story",
+    "tip"
+   ],
+   "guessed_use": [
+    "crafting",
+    "loot"
+   ],
+   "kind": "consumable",
+   "use_hit": false,
+   "kind_hit": false,
+   "slug": "blue-crystal",
+   "description": "A cyan crystal shard cluster with faceted edges."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "born",
+    "campitem",
+    "gear",
+    "shop_item",
+    "state"
+   ],
+   "cluster_id": "c03720",
+   "name": "Ring_50",
+   "confidence": "high",
+   "expected_use": [
+    "camp",
+    "equipment",
+    "inventory",
+    "player-class",
+    "shop",
+    "status-effect"
+   ],
+   "guessed_use": [
+    "equipment",
+    "loot"
+   ],
+   "kind": "accessory",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "scaled-silver-ring",
+   "description": "A silver-blue ring engraved with a scale pattern."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "contract",
+    "skill",
+    "skill_mode"
+   ],
+   "cluster_id": "c00880",
+   "name": "Shamanskill_19",
+   "confidence": "medium",
+   "expected_use": [
+    "attack",
+    "combat-action",
+    "quest"
+   ],
+   "guessed_use": [
+    "summon"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "blue-dragon-head-skill",
+   "description": "A grey-blue reptilian dragon head with a glowing blue eye on a dark blue background."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "skill",
+    "skill_mode"
+   ],
+   "cluster_id": "c00885",
+   "name": "Shamanskill_30",
+   "confidence": "medium",
+   "expected_use": [
+    "attack",
+    "combat-action"
+   ],
+   "guessed_use": [
+    "attack"
+   ],
+   "kind": "ui-icon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "lightning-staff-skill",
+   "description": "A dark staff struck by blue lightning on a navy background."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "skill_mode"
+   ],
+   "cluster_id": "c00909",
+   "name": "Skill_207",
+   "confidence": "low",
+   "expected_use": [
+    "combat-action",
+    "defend"
+   ],
+   "guessed_use": [
+    "attack"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "yellow-green-starburst-skill",
+   "description": "A bright yellow-green starburst with a glowing centre."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "state"
+   ],
+   "cluster_id": "c03881",
+   "name": "Skill_255",
+   "confidence": "medium",
+   "expected_use": [
+    "status-effect"
+   ],
+   "guessed_use": [
+    "buff",
+    "combat-action"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "armoured-knight-silhouette-skill",
+   "description": "A dark silhouette of an armoured knight with a spear and red shield against a blue background with light rays."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "rune",
+    "skill",
+    "skill_mode"
+   ],
+   "cluster_id": "c00934",
+   "name": "Skill_373",
+   "confidence": "medium",
+   "expected_use": [
+    "buff",
+    "combat-action",
+    "enemy",
+    "equipment"
+   ],
+   "guessed_use": [
+    "attack",
+    "combat-action"
+   ],
+   "kind": "ui-icon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "green-energy-slash-skill",
+   "description": "A bright green swooping energy streak with small glowing particles on a green background."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "skill",
+    "skill_mode",
+    "state"
+   ],
+   "cluster_id": "c00025",
+   "name": "Skill_384",
+   "confidence": "medium",
+   "expected_use": [
+    "combat-action",
+    "enemy-boss",
+    "status-effect"
+   ],
+   "guessed_use": [
+    "combat-action",
+    "heal"
+   ],
+   "kind": "ui-icon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "glowing-heart-skill",
+   "description": "A glossy red heart surrounded by purple lightning and a red radiant background."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "skill",
+    "skill_mode"
+   ],
+   "cluster_id": "c04006",
+   "name": "Skill_496",
+   "confidence": "medium",
+   "expected_use": [
+    "combat-action"
+   ],
+   "guessed_use": [
+    "buff",
+    "combat-action"
+   ],
+   "kind": "ui-icon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "blue-dna-helix-skill",
+   "description": "A glowing blue double-helix DNA strand on a dark teal background."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "contract"
+   ],
+   "cluster_id": "c04083",
+   "name": "Spear4Halberd",
+   "confidence": "high",
+   "expected_use": [
+    "quest"
+   ],
+   "guessed_use": [
+    "equipment",
+    "inventory",
+    "loot"
+   ],
+   "kind": "weapon",
+   "use_hit": false,
+   "kind_hit": false,
+   "slug": "halberd-spear",
+   "description": "A long dark-shafted halberd with a bladed axe head on a transparent background."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "campitem",
+    "gear"
+   ],
+   "cluster_id": "c04106",
+   "name": "Spear_19",
+   "confidence": "high",
+   "expected_use": [
+    "camp",
+    "equipment",
+    "inventory"
+   ],
+   "guessed_use": [
+    "equipment",
+    "inventory",
+    "loot"
+   ],
+   "kind": "weapon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "golden-spear",
+   "description": "A long spear with a golden shaft and gold spearhead angled diagonally."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "campitem",
+    "gear"
+   ],
+   "cluster_id": "c04138",
+   "name": "Spear_v2_14",
+   "confidence": "high",
+   "expected_use": [
+    "camp",
+    "equipment",
+    "inventory"
+   ],
+   "guessed_use": [
+    "equipment",
+    "inventory",
+    "loot"
+   ],
+   "kind": "weapon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "glowing-magenta-spear",
+   "description": "A spear with a dark shaft and a glowing magenta pink spearhead and tip."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "contract"
+   ],
+   "cluster_id": "c04159",
+   "name": "Staff_v2_10",
+   "confidence": "high",
+   "expected_use": [
+    "quest"
+   ],
+   "guessed_use": [
+    "equipment",
+    "inventory",
+    "loot"
+   ],
+   "kind": "weapon",
+   "use_hit": false,
+   "kind_hit": false,
+   "slug": "grey-ring-staff",
+   "description": "A slim grey staff topped with a ring-shaped head."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "campitem",
+    "gear"
+   ],
+   "cluster_id": "c04180",
+   "name": "Staff_v2_32",
+   "confidence": "high",
+   "expected_use": [
+    "camp",
+    "equipment",
+    "inventory"
+   ],
+   "guessed_use": [
+    "equipment",
+    "inventory",
+    "loot"
+   ],
+   "kind": "weapon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "red-banded-ring-staff",
+   "description": "A grey staff with a red band and a ring-shaped head."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "campitem",
+    "gear"
+   ],
+   "cluster_id": "c04294",
+   "name": "Sword_v2_25",
+   "confidence": "high",
+   "expected_use": [
+    "camp",
+    "equipment",
+    "inventory"
+   ],
+   "guessed_use": [
+    "equipment",
+    "inventory",
+    "loot"
+   ],
+   "kind": "weapon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "curved-flaming-blade",
+   "description": "A curved sword with a pale blade edged in orange flame-like glow and a red hilt."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "quest",
+    "union"
+   ],
+   "cluster_id": "c04324",
+   "name": "Tabard_12",
+   "confidence": "high",
+   "expected_use": [
+    "quest",
+    "union"
+   ],
+   "guessed_use": [
+    "equipment",
+    "inventory",
+    "loot"
+   ],
+   "kind": "armour",
+   "use_hit": false,
+   "kind_hit": false,
+   "slug": "navy-gold-tabard",
+   "description": "A navy blue tabard with gold trim and an ornate gold emblem."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "quest",
+    "union"
+   ],
+   "cluster_id": "c04341",
+   "name": "Tabard_29",
+   "confidence": "high",
+   "expected_use": [
+    "quest",
+    "union"
+   ],
+   "guessed_use": [
+    "equipment",
+    "inventory",
+    "loot"
+   ],
+   "kind": "armour",
+   "use_hit": false,
+   "kind_hit": false,
+   "slug": "green-tabard",
+   "description": "A green sleeveless tabard with gold marks on the front."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "contract"
+   ],
+   "cluster_id": "c04383",
+   "name": "Tailoring_27_hat",
+   "confidence": "high",
+   "expected_use": [
+    "quest"
+   ],
+   "guessed_use": [
+    "crafting",
+    "equipment",
+    "inventory"
+   ],
+   "kind": "armour",
+   "use_hit": false,
+   "kind_hit": false,
+   "slug": "straw-sun-hat",
+   "description": "A wide-brimmed cream straw hat with an orange ribbon."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "uorder"
+   ],
+   "cluster_id": "c04436",
+   "name": "Tech_Gambelson",
+   "confidence": "medium",
+   "expected_use": [
+    "union"
+   ],
+   "guessed_use": [
+    "crafting",
+    "equipment"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "grey-gambeson-tech",
+   "description": "A grey quilted padded gambeson shirt on a dark background."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "state"
+   ],
+   "cluster_id": "c04453",
+   "name": "Tech_Quest",
+   "confidence": "low",
+   "expected_use": [
+    "status-effect"
+   ],
+   "guessed_use": [
+    "quest"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "hand-with-ring-quest-tech",
+   "description": "A pale hand wearing a ring against a blue background."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "dmode_mission",
+    "skill",
+    "skill_mode"
+   ],
+   "cluster_id": "c04468",
+   "name": "Tech_StoneWalls",
+   "confidence": "high",
+   "expected_use": [
+    "attack",
+    "combat-action",
+    "dungeon-mode"
+   ],
+   "guessed_use": [
+    "crafting",
+    "dungeon"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "stone-archway-tech",
+   "description": "A grey stone arch and wall segment on a purple background."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "uorder"
+   ],
+   "cluster_id": "c04470",
+   "name": "Tech_Tailoring",
+   "confidence": "high",
+   "expected_use": [
+    "union"
+   ],
+   "guessed_use": [
+    "crafting"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "thread-and-scissors-tech",
+   "description": "A spool of thread, scissors and a needle on a brown background."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "skill",
+    "skill_mode"
+   ],
+   "cluster_id": "c04480",
+   "name": "Tech_WoodCrusher",
+   "confidence": "medium",
+   "expected_use": [
+    "combat-action",
+    "enemy"
+   ],
+   "guessed_use": [
+    "crafting"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "cracked-wooden-wall-tech",
+   "description": "Wooden planks split by a bright lightning-like crack."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "skill_mode"
+   ],
+   "cluster_id": "c00997",
+   "name": "Update_06",
+   "confidence": "medium",
+   "expected_use": [
+    "buff",
+    "combat-action"
+   ],
+   "guessed_use": [
+    "crafting",
+    "settings"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "blue-gear-update",
+   "description": "A blue metal cog gear in a swirling blue vortex."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "state"
+   ],
+   "cluster_id": "c00999",
+   "name": "Update_10",
+   "confidence": "medium",
+   "expected_use": [
+    "status-effect"
+   ],
+   "guessed_use": [
+    "debuff",
+    "status-effect"
+   ],
+   "kind": "ui-icon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "flaming-skull-update",
+   "description": "A skull with fiery orange flames on an orange background."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "contract"
+   ],
+   "cluster_id": "c04566",
+   "name": "Wand_v2_50",
+   "confidence": "high",
+   "expected_use": [
+    "quest"
+   ],
+   "guessed_use": [
+    "equipment",
+    "inventory",
+    "loot"
+   ],
+   "kind": "weapon",
+   "use_hit": false,
+   "kind_hit": false,
+   "slug": "red-rune-wand",
+   "description": "A dark ornate wand with a glowing red rune-carved crystal head."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "skill_mode"
+   ],
+   "cluster_id": "c01008",
+   "name": "Warlock_08",
+   "confidence": "medium",
+   "expected_use": [
+    "attack",
+    "combat-action"
+   ],
+   "guessed_use": [
+    "attack",
+    "combat-action"
+   ],
+   "kind": "ui-icon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "green-fel-fireball",
+   "description": "A green crackling energy meteor with a dark rock core trailing green lightning."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "state"
+   ],
+   "cluster_id": "c00222",
+   "name": "Warlock_09",
+   "confidence": "medium",
+   "expected_use": [
+    "status-effect"
+   ],
+   "guessed_use": [
+    "combat-action",
+    "debuff"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "green-ghost-skull",
+   "description": "A glowing green skull face with cracks and floating fragments."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "state"
+   ],
+   "cluster_id": "c01023",
+   "name": "Warlock_27",
+   "confidence": "medium",
+   "expected_use": [
+    "status-effect"
+   ],
+   "guessed_use": [
+    "combat-action",
+    "summon"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "graveyard-cross-silhouette",
+   "description": "A dark silhouette of a cross on a hill with spikes against a purple sky."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "skill_mode"
+   ],
+   "cluster_id": "c01027",
+   "name": "Warlock_33",
+   "confidence": "medium",
+   "expected_use": [
+    "attack",
+    "combat-action"
+   ],
+   "guessed_use": [
+    "combat-action",
+    "debuff"
+   ],
+   "kind": "ui-icon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "electrified-spellbook",
+   "description": "A glowing pale open book crackling with purple lightning on a purple background."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "state"
+   ],
+   "cluster_id": "c00229",
+   "name": "Warlock_49",
+   "confidence": "medium",
+   "expected_use": [
+    "status-effect"
+   ],
+   "guessed_use": [
+    "attack",
+    "combat-action"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "green-glowing-dagger-skill",
+   "description": "A dagger or staff with a bright green lightning glow streaking up from its hilt against a dark green background."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "skill_mode"
+   ],
+   "cluster_id": "c01043",
+   "name": "Warriorskill_09",
+   "confidence": "medium",
+   "expected_use": [
+    "buff",
+    "combat-action"
+   ],
+   "guessed_use": [
+    "buff",
+    "combat-action"
+   ],
+   "kind": "ui-icon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "enraged-bald-man-skill",
+   "description": "A bald man with glowing eyes and a gritted, furious face in front of orange radiating rays."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "contract",
+    "skill_mode"
+   ],
+   "cluster_id": "c00073",
+   "name": "Warriorskill_44",
+   "confidence": "high",
+   "expected_use": [
+    "attack",
+    "combat-action",
+    "quest"
+   ],
+   "guessed_use": [
+    "buff",
+    "combat-action"
+   ],
+   "kind": "ui-icon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "flexed-arm-skill",
+   "description": "A flexed muscular arm against orange radiating rays."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "state"
+   ],
+   "cluster_id": "c01094",
+   "name": "hit",
+   "confidence": "low",
+   "expected_use": [
+    "status-effect"
+   ],
+   "guessed_use": [
+    "attack",
+    "combat-action"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "orange-slash-hit",
+   "description": "A glowing orange curved slash or blade edge sweeping across a dark background."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c04759",
+   "name": "icon-BoneGolemF",
+   "confidence": "medium",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "bone-golem-skeleton",
+   "description": "A skeletal figure tinted blue and magenta with purple glow on a black background."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "dmode_mission",
+    "job",
+    "skin",
+    "state"
+   ],
+   "cluster_id": "c04784",
+   "name": "icon-JB04",
+   "confidence": "medium",
+   "expected_use": [
+    "dungeon-mode",
+    "player-class",
+    "status-effect"
+   ],
+   "guessed_use": [
+    "player-class"
+   ],
+   "kind": "portrait",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "orange-haired-man-yellow-jacket",
+   "description": "Bust of a gaunt man with long orange hair in a yellow jacket."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "dmode_mission",
+    "job",
+    "skin",
+    "state"
+   ],
+   "cluster_id": "c04791",
+   "name": "icon-JB11",
+   "confidence": "medium",
+   "expected_use": [
+    "dungeon-mode",
+    "player-class",
+    "status-effect"
+   ],
+   "guessed_use": [
+    "player-class"
+   ],
+   "kind": "portrait",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "blonde-ponytail-armoured-woman",
+   "description": "Bust of a blonde woman with a ponytail wearing armour and a yellow cloak."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "dmode_mission",
+    "job",
+    "skin",
+    "state"
+   ],
+   "cluster_id": "c04794",
+   "name": "icon-JB14",
+   "confidence": "medium",
+   "expected_use": [
+    "dungeon-mode",
+    "player-class",
+    "status-effect"
+   ],
+   "guessed_use": [
+    "player-class"
+   ],
+   "kind": "portrait",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "green-haired-woman-green-cloak",
+   "description": "Bust of a pale woman with green hair wearing a green cloak."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "dmode_mission",
+    "job",
+    "skin",
+    "state"
+   ],
+   "cluster_id": "c04808",
+   "name": "icon-JB28",
+   "confidence": "medium",
+   "expected_use": [
+    "dungeon-mode",
+    "player-class",
+    "status-effect"
+   ],
+   "guessed_use": [
+    "player-class"
+   ],
+   "kind": "portrait",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "white-haired-woman-halo",
+   "description": "Bust of a white-haired woman with a spiked halo ring behind her head."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "dmode_mission",
+    "job",
+    "skin",
+    "state"
+   ],
+   "cluster_id": "c04820",
+   "name": "icon-JB40",
+   "confidence": "medium",
+   "expected_use": [
+    "dungeon-mode",
+    "player-class",
+    "status-effect"
+   ],
+   "guessed_use": [
+    "player-class"
+   ],
+   "kind": "portrait",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "sun-crowned-woman",
+   "description": "Bust of a woman with a golden sun-shaped crown and red flowers in her hair."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "shop_item",
+    "skin"
+   ],
+   "cluster_id": "c04868",
+   "name": "icon-SK07",
+   "confidence": "low",
+   "expected_use": [
+    "player-class",
+    "shop"
+   ],
+   "guessed_use": [
+    "summon"
+   ],
+   "kind": "portrait",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "green-haired-girl-pink-dress",
+   "description": "A green-haired pointy-eared girl in a pink dress with arms outstretched on a purple background."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "shop_item",
+    "skin"
+   ],
+   "cluster_id": "c04872",
+   "name": "icon-SK11",
+   "confidence": "low",
+   "expected_use": [
+    "player-class",
+    "shop"
+   ],
+   "guessed_use": [
+    "summon"
+   ],
+   "kind": "portrait",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "helmeted-soldier-red-tunic",
+   "description": "A helmeted soldier in a red tunic carrying a shield."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "shop_item",
+    "skin"
+   ],
+   "cluster_id": "c04873",
+   "name": "icon-SK12",
+   "confidence": "low",
+   "expected_use": [
+    "player-class",
+    "shop"
+   ],
+   "guessed_use": [
+    "summon"
+   ],
+   "kind": "portrait",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "pale-woman-dark-hood",
+   "description": "A pale woman with long light hair in a dark hooded cloak."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "shop_item",
+    "skin"
+   ],
+   "cluster_id": "c04900",
+   "name": "icon-SK39",
+   "confidence": "low",
+   "expected_use": [
+    "player-class",
+    "shop"
+   ],
+   "guessed_use": [
+    "summon"
+   ],
+   "kind": "portrait",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "horned-helm-bearded-knight",
+   "description": "A bearded knight in blue-grey armour wearing a horned helmet."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "shop_item",
+    "skin"
+   ],
+   "cluster_id": "c04913",
+   "name": "icon-SK52",
+   "confidence": "low",
+   "expected_use": [
+    "player-class",
+    "shop"
+   ],
+   "guessed_use": [
+    "summon"
+   ],
+   "kind": "creature",
+   "use_hit": false,
+   "kind_hit": false,
+   "slug": "pale-dragon-head",
+   "description": "Side view of a pale pink dragon head in profile."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "shop_item",
+    "skin"
+   ],
+   "cluster_id": "c04915",
+   "name": "icon-SK54",
+   "confidence": "low",
+   "expected_use": [
+    "player-class",
+    "shop"
+   ],
+   "guessed_use": [
+    "summon"
+   ],
+   "kind": "portrait",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "white-haired-dark-robe",
+   "description": "A white-haired person in a dark robe seen from the shoulders up."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "shop_item",
+    "skin"
+   ],
+   "cluster_id": "c04917",
+   "name": "icon-SK56",
+   "confidence": "low",
+   "expected_use": [
+    "player-class",
+    "shop"
+   ],
+   "guessed_use": [
+    "summon"
+   ],
+   "kind": "creature",
+   "use_hit": false,
+   "kind_hit": false,
+   "slug": "purple-glowing-beast",
+   "description": "A dark horned beast with glowing magenta energy and spiked collar."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "shop_item",
+    "skin"
+   ],
+   "cluster_id": "c04918",
+   "name": "icon-SK57",
+   "confidence": "low",
+   "expected_use": [
+    "player-class",
+    "shop"
+   ],
+   "guessed_use": [
+    "summon"
+   ],
+   "kind": "portrait",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "veiled-figure-purple-turban",
+   "description": "A veiled figure in a purple turban and patterned gold-trimmed robe."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "shop_item",
+    "skin"
+   ],
+   "cluster_id": "c04921",
+   "name": "icon-SK60",
+   "confidence": "low",
+   "expected_use": [
+    "player-class",
+    "shop"
+   ],
+   "guessed_use": [
+    "summon"
+   ],
+   "kind": "portrait",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "hooded-warrior-purple-mask",
+   "description": "A hooded warrior in armour with a purple face mask and a sword over the shoulder."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "shop_item",
+    "skin"
+   ],
+   "cluster_id": "c04934",
+   "name": "icon-SK73",
+   "confidence": "low",
+   "expected_use": [
+    "player-class",
+    "shop"
+   ],
+   "guessed_use": [
+    "summon"
+   ],
+   "kind": "portrait",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "witch-blue-hat",
+   "description": "A girl in a large blue pointed witch hat resting her chin on her hand."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "shop_item",
+    "skin"
+   ],
+   "cluster_id": "c04941",
+   "name": "icon-SK80",
+   "confidence": "low",
+   "expected_use": [
+    "player-class",
+    "shop"
+   ],
+   "guessed_use": [
+    "summon"
+   ],
+   "kind": "portrait",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "sun-crowned-woman-dark",
+   "description": "A dark-haired woman with a golden sun crown and red flowers."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "shop_item",
+    "skin"
+   ],
+   "cluster_id": "c04946",
+   "name": "icon-SK85",
+   "confidence": "low",
+   "expected_use": [
+    "player-class",
+    "shop"
+   ],
+   "guessed_use": [
+    "summon"
+   ],
+   "kind": "portrait",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "red-hooded-skull-mask-figure",
+   "description": "A figure in a red hood wearing a bloodied skull-like mask with cross patterns on the background."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "skin"
+   ],
+   "cluster_id": "c04950",
+   "name": "icon-SK89",
+   "confidence": "low",
+   "expected_use": [
+    "player-class"
+   ],
+   "guessed_use": [
+    "summon"
+   ],
+   "kind": "portrait",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "auburn-haired-woman",
+   "description": "A woman with wavy auburn hair and closed eyes against black and white."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c04967",
+   "name": "icon_44592508_p0",
+   "confidence": "low",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "blue-horned-demon",
+   "description": "A blue muscular horned demon with red markings."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c04970",
+   "name": "icon_44867185_p0_master1200",
+   "confidence": "low",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "summon"
+   ],
+   "kind": "portrait",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "golden-winged-fairy",
+   "description": "A golden winged fairy or angel figure with a halo against black."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c04971",
+   "name": "icon_44921315_p0_master1200",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "skull-brain-heap",
+   "description": "A heap of stacked skulls and ribs with a large green-veined brain on top."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c04984",
+   "name": "icon_66005943_p7_master1200",
+   "confidence": "medium",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "humanoid",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "pale-woman-red-cape",
+   "description": "A pale long-haired woman in a dark dress with a red cape flaring out, arm raised."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c04991",
+   "name": "icon_76111972_p3",
+   "confidence": "low",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "egg-clutch-clawed-horror",
+   "description": "A dark clawed creature with several pale egg-like orbs hanging above its hands."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05015",
+   "name": "icon_80860504_p0_master1200",
+   "confidence": "low",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "flame-crowned-orb-idol",
+   "description": "A round bronze orb-like body topped with a burning crown and radiating spikes."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05019",
+   "name": "icon_82371147_p0_master1200",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "blue-dragon-head",
+   "description": "A blue scaled dragon head with horns and a red forked tongue."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05020",
+   "name": "icon_82453820_p1_master1200",
+   "confidence": "medium",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "blue-serpent-coil",
+   "description": "A coiled blue serpentine dragon body with a whiskered pale head at the left."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05027",
+   "name": "icon_83863945_p4_master1200",
+   "confidence": "medium",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "red-flame-spirit",
+   "description": "A swirling red-orange flame creature with tendrils of fire."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05037",
+   "name": "icon_86013300_p2",
+   "confidence": "medium",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "humanoid",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "golden-faceless-figure",
+   "description": "A glowing golden humanoid figure with a dark featureless head standing before a staff."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05038",
+   "name": "icon_86376219_p1",
+   "confidence": "medium",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "humanoid",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "hooded-man-crimson-greatsword",
+   "description": "A bald hooded man in a crimson cloak with a large red-hilted sword at his back."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05049",
+   "name": "icon_Annihilator C",
+   "confidence": "medium",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy-boss"
+   ],
+   "kind": "boss",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "pink-winged-mage-orb",
+   "description": "A pink armored figure with a crown and spread wings holding a glowing pink orb."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05074",
+   "name": "icon_Bone Golem B",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "skeleton-axe-magenta",
+   "description": "A red skeleton raising an axe with a magenta energy swirl beside it."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c01103",
+   "name": "icon_Chernovog A",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "humanoid",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "crowned-knight-halberd",
+   "description": "A crowned armored knight with a cape, halberd and large shield."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05086",
+   "name": "icon_Creeping Coin A",
+   "confidence": "medium",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "loot"
+   ],
+   "kind": "currency",
+   "use_hit": false,
+   "kind_hit": false,
+   "slug": "scattered-gold-coins",
+   "description": "Several gold coins scattered against a black background."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05101",
+   "name": "icon_Doom Toad",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "green-toad",
+   "description": "A large olive-green toad seen front on."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05102",
+   "name": "icon_Doom Toad C",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "red-toad",
+   "description": "A large orange-red toad seen front on."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05103",
+   "name": "icon_Dragon B",
+   "confidence": "medium",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "green-dragon-head",
+   "description": "A green dragon head with a pointed snout and horns."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05112",
+   "name": "icon_Fate Spinner A",
+   "confidence": "medium",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "portrait",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "bearded-elder-face",
+   "description": "The face of a bald bearded elder with a long gold-trimmed beard."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05120",
+   "name": "icon_Float Eye F",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "floating-eye",
+   "description": "A single eye with a pale iris inside a black circle with a white rim."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05164",
+   "name": "icon_Lesser Demon Winged A",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "red-winged-demon",
+   "description": "A red horned demon with bat wings and a muscular torso."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05186",
+   "name": "icon_Orcus D",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy-boss"
+   ],
+   "kind": "boss",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "blue-horned-demon",
+   "description": "A blue muscular horned demon with gold ornaments and wings."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05193",
+   "name": "icon_Rogue",
+   "confidence": "medium",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "player-class"
+   ],
+   "kind": "humanoid",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "yellow-rogue-dagger",
+   "description": "A yellow-green clad rogue in a crouched stance holding a dagger."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05200",
+   "name": "icon_Sidelle2",
+   "confidence": "low",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "pale-bone-crawler",
+   "description": "A pale skeletal creature crouched on all fours."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05212",
+   "name": "icon_Storm Seeker",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "teal-frog",
+   "description": "A teal glowing frog with yellow eyes crouching."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05221",
+   "name": "icon_Two Head Dragon",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "two-headed-gold-dragon",
+   "description": "A golden dragon with two heads and coiled body."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05229",
+   "name": "icon_Vampire Lord",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "humanoid",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "vampire-lord",
+   "description": "A pale vampire in a black coat and high collar with red flames below."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05231",
+   "name": "icon_Were Wolf A",
+   "confidence": "low",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "were-wolf-a",
+   "description": "Pixelated dark furred head silhouette with yellow speckled highlights on a black background."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "contract"
+   ],
+   "cluster_id": "c05250",
+   "name": "mage_hat",
+   "confidence": "high",
+   "expected_use": [
+    "quest"
+   ],
+   "guessed_use": [
+    "equipment",
+    "inventory"
+   ],
+   "kind": "armour",
+   "use_hit": false,
+   "kind_hit": false,
+   "slug": "mage-hat",
+   "description": "A brown turban-style hat with an orange jewel and a dark blue plume."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "campitem",
+    "gear",
+    "shop_item"
+   ],
+   "cluster_id": "c01106",
+   "name": "necklace_02X1",
+   "confidence": "high",
+   "expected_use": [
+    "camp",
+    "equipment",
+    "inventory",
+    "shop"
+   ],
+   "guessed_use": [
+    "equipment",
+    "inventory"
+   ],
+   "kind": "accessory",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "necklace-02-teal-gem",
+   "description": "A silver chain necklace with a teal diamond-shaped gem pendant."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "campitem",
+    "gear"
+   ],
+   "cluster_id": "c05274",
+   "name": "necklace_13",
+   "confidence": "high",
+   "expected_use": [
+    "camp",
+    "equipment",
+    "inventory"
+   ],
+   "guessed_use": [
+    "equipment",
+    "inventory"
+   ],
+   "kind": "accessory",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "necklace-13-spiral",
+   "description": "A silver chain necklace with a spiral-patterned round pendant."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "skill",
+    "skill_mode"
+   ],
+   "cluster_id": "c00080",
+   "name": "skill_154_noBGX1",
+   "confidence": "medium",
+   "expected_use": [
+    "buff",
+    "combat-action"
+   ],
+   "guessed_use": [
+    "buff",
+    "combat-action"
+   ],
+   "kind": "ui-icon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "skill-154-power-up",
+   "description": "Black silhouette of a flexing figure with arms raised against golden radiating rays."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "skill",
+    "skill_mode"
+   ],
+   "cluster_id": "c05449",
+   "name": "skill_169",
+   "confidence": "high",
+   "expected_use": [
+    "combat-action",
+    "defend"
+   ],
+   "guessed_use": [
+    "combat-action",
+    "heal"
+   ],
+   "kind": "ui-icon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "skill-169-heal-cross",
+   "description": "A glowing orange cross on a dark brown square background."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "skill_mode"
+   ],
+   "cluster_id": "c05497",
+   "name": "skill_201",
+   "confidence": "medium",
+   "expected_use": [
+    "attack",
+    "combat-action"
+   ],
+   "guessed_use": [
+    "attack",
+    "combat-action"
+   ],
+   "kind": "ui-icon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "skill-201-green-slash",
+   "description": "Glowing yellow-green slash streaks sweeping across a golden background."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "rune",
+    "state"
+   ],
+   "cluster_id": "c05603",
+   "name": "skill_329_noBG",
+   "confidence": "medium",
+   "expected_use": [
+    "buff",
+    "debuff",
+    "equipment",
+    "status-effect"
+   ],
+   "guessed_use": [
+    "combat-action",
+    "heal"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "skill-329-blue-potion",
+   "description": "A blue round flask of orange liquid with a cyan glow behind it."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "state"
+   ],
+   "cluster_id": "c01172",
+   "name": "skill_4",
+   "confidence": "medium",
+   "expected_use": [
+    "status-effect"
+   ],
+   "guessed_use": [
+    "buff",
+    "combat-action"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "skill-4-red-mask",
+   "description": "A red stern face with glowing white eyes and a forehead mark, surrounded by golden rays."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "skill_mode"
+   ],
+   "cluster_id": "c00266",
+   "name": "skill_58_noBGX1",
+   "confidence": "high",
+   "expected_use": [
+    "combat-action",
+    "defend"
+   ],
+   "guessed_use": [
+    "attack",
+    "combat-action"
+   ],
+   "kind": "ui-icon",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "skill-58-fist-strike",
+   "description": "A pale clenched fist surrounded by a glowing pink ring and radiating light."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "state"
+   ],
+   "cluster_id": "c05771",
+   "name": "skill_9",
+   "confidence": "high",
+   "expected_use": [
+    "status-effect"
+   ],
+   "guessed_use": [
+    "buff",
+    "combat-action"
+   ],
+   "kind": "ui-icon",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "skill-9-flexed-arm",
+   "description": "A muscular orange flexed arm on a warm brown background."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "bprint",
+    "shop_item"
+   ],
+   "cluster_id": "c05788",
+   "name": "skinning_04_skin",
+   "confidence": "high",
+   "expected_use": [
+    "crafting",
+    "shop"
+   ],
+   "guessed_use": [
+    "crafting",
+    "loot"
+   ],
+   "kind": "consumable",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "skinning-04-hide",
+   "description": "A dark brown folded animal hide with ragged pale edges."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "contract"
+   ],
+   "cluster_id": "c05817",
+   "name": "skinning_36_dragonhead",
+   "confidence": "high",
+   "expected_use": [
+    "quest"
+   ],
+   "guessed_use": [
+    "crafting",
+    "loot"
+   ],
+   "kind": "consumable",
+   "use_hit": false,
+   "kind_hit": false,
+   "slug": "skinning-36-dragon-head",
+   "description": "A brown horned dragon head with a spiked crest in profile."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "bprint",
+    "shop_item"
+   ],
+   "cluster_id": "c05828",
+   "name": "skinning_48_bearpaw",
+   "confidence": "high",
+   "expected_use": [
+    "crafting",
+    "shop"
+   ],
+   "guessed_use": [
+    "crafting",
+    "loot"
+   ],
+   "kind": "consumable",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "skinning-48-bear-paw",
+   "description": "A brown clawed bear paw shown from the front."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "bprint",
+    "shop_item"
+   ],
+   "cluster_id": "c05834",
+   "name": "skinning_54_whitefeathers",
+   "confidence": "high",
+   "expected_use": [
+    "crafting",
+    "shop"
+   ],
+   "guessed_use": [
+    "crafting",
+    "loot"
+   ],
+   "kind": "consumable",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "skinning-54-white-feathers",
+   "description": "Three long white feathers fanned together."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "bprint",
+    "shop_item"
+   ],
+   "cluster_id": "c05836",
+   "name": "skinning_56_sharp_scales",
+   "confidence": "medium",
+   "expected_use": [
+    "crafting",
+    "shop"
+   ],
+   "guessed_use": [
+    "crafting",
+    "loot"
+   ],
+   "kind": "consumable",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "skinning-56-sharp-scales",
+   "description": "A cluster of tan pointed scales or claws fanned out."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c01223",
+   "name": "64891264_p1_master1200",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "humanoid",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "bandana-brute-with-hammer",
+   "description": "A shirtless muscular man in a red bandana and red gloves holding a large hammer, on black."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "revent_node"
+   ],
+   "cluster_id": "c05907",
+   "name": "65132811_p3_master1200",
+   "confidence": "high",
+   "expected_use": [
+    "story"
+   ],
+   "guessed_use": [
+    "loot",
+    "reward"
+   ],
+   "kind": "container",
+   "use_hit": false,
+   "kind_hit": false,
+   "slug": "golden-treasure-chest",
+   "description": "A closed wooden treasure chest with gold-coloured metal bands, on black."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "enemy",
+    "revent_node"
+   ],
+   "cluster_id": "c05910",
+   "name": "66067003_p1_master1200",
+   "confidence": "high",
+   "expected_use": [
+    "enemy",
+    "story"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "winged-green-demon",
+   "description": "A dark winged horned demon standing amid yellow-green flames, on black."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05914",
+   "name": "76111972_p3",
+   "confidence": "medium",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "grey-armoured-insectoid",
+   "description": "A grey armoured multi-limbed insect-like monster with bulbous segments, on black."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "enemy",
+    "revent_node"
+   ],
+   "cluster_id": "c01225",
+   "name": "76650660_p2",
+   "confidence": "medium",
+   "expected_use": [
+    "enemy",
+    "story"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "hooded-wraith-ghost",
+   "description": "A pale purple hooded wraith with dripping tendrils and blue glowing core, on black."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "revent_node"
+   ],
+   "cluster_id": "c05925",
+   "name": "79937026_p3",
+   "confidence": "medium",
+   "expected_use": [
+    "story"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": false,
+   "kind_hit": false,
+   "slug": "white-mechanical-skull-head",
+   "description": "A white rounded metallic head with holes, bolts and dark slits, on black."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05926",
+   "name": "80010168_p4",
+   "confidence": "low",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "armour",
+   "use_hit": true,
+   "kind_hit": false,
+   "slug": "flaming-red-gauntlets",
+   "description": "A pair of crimson sinewy forearms or gauntlets topped with orange flames, on black."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05940",
+   "name": "83220935_p6_master1200",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "humanoid",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "kneeling-grey-muscular-giant",
+   "description": "A grey muscular bald humanoid kneeling on one knee, on black."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05957",
+   "name": "Arabaki A",
+   "confidence": "medium",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "arabaki-a-clay-figure",
+   "description": "A tan clay dogu-style figurine with goggle eyes and yellow flames at its hands, on black."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05966",
+   "name": "Banshee F",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "banshee-f",
+   "description": "A pale blue-skinned female spirit with long flowing violet hair and a tattered white dress, standing barefoot."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05975",
+   "name": "BloodyBoneE",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "bloody-bone-e",
+   "description": "A skeleton leaping in a crouched pose, raising a sword overhead, with blood-stained bones."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "enemy",
+    "revent_node"
+   ],
+   "cluster_id": "c05981",
+   "name": "Bull Begger A",
+   "confidence": "medium",
+   "expected_use": [
+    "enemy",
+    "story"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "bull-beggar-a",
+   "description": "A hulking fiery orange-red beast with a lumpy, molten-looking hide and glowing eyes, seen from the front."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05987",
+   "name": "Coral Crab B",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "coral-crab-b",
+   "description": "A blue crab with large claws and a pink and purple coral crest growing from its back."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c05988",
+   "name": "Corps Eater A",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "corpse-eater-a",
+   "description": "A round, scaly brown creature with large yellow eyes, tendrils on top and a wide red gaping mouth."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "enemy",
+    "revent_node"
+   ],
+   "cluster_id": "c05995",
+   "name": "DakiniD",
+   "confidence": "high",
+   "expected_use": [
+    "enemy",
+    "story"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "dakini-d",
+   "description": "A blue-skinned multi-armed female figure with flowing white ribbons and dark hair, in a dancing pose."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c06018",
+   "name": "Elder Tree C",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "elder-tree-c",
+   "description": "A golden-yellow gnarled tree with a human face carved into its trunk and red-tinged branches."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c06023",
+   "name": "FenrirG",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "fenrir-g",
+   "description": "A grey and brown patchy wolf seen from behind in three-quarter view, head lowered."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c06035",
+   "name": "Frozen Core E",
+   "confidence": "medium",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "frozen-core-e",
+   "description": "A dark blue metallic ribbed sphere surrounded by a faint icy blue glow."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "disaster"
+   ],
+   "cluster_id": "c06051",
+   "name": "Hell Tamer B-Disaster",
+   "confidence": "medium",
+   "expected_use": [
+    "dungeon"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "humanoid",
+   "use_hit": false,
+   "kind_hit": false,
+   "slug": "hell-tamer-b-disaster",
+   "description": "A grey monochrome winged demonic humanoid with a long tail and bony horns, standing with a spear."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c06052",
+   "name": "Hell Tamer B",
+   "confidence": "medium",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "humanoid",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "hell-tamer-b",
+   "description": "A winged horned demonic humanoid with red wings, bony armour and a long tail, holding a spear."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c06057",
+   "name": "Humbaba F",
+   "confidence": "medium",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "humbaba-f",
+   "description": "A massive dark shaggy bison-like beast facing the viewer with horns and a hunched back."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "job",
+    "revent_node",
+    "skin"
+   ],
+   "cluster_id": "c06065",
+   "name": "JB05",
+   "confidence": "high",
+   "expected_use": [
+    "player-class",
+    "story"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "humanoid",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "samurai-spearman",
+   "description": "A samurai in blue armour and a conical hat lunging with a long spear."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "job",
+    "skin"
+   ],
+   "cluster_id": "c06067",
+   "name": "JB07",
+   "confidence": "high",
+   "expected_use": [
+    "player-class"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "humanoid",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "hooded-executioner",
+   "description": "A shirtless hooded figure in dark trousers holding a bloodied curved blade."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "job",
+    "skin"
+   ],
+   "cluster_id": "c06075",
+   "name": "JB15",
+   "confidence": "high",
+   "expected_use": [
+    "player-class"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "humanoid",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "yellow-robed-halberdier",
+   "description": "A figure in a yellow hooded robe holding a long-handled axe or halberd, face hidden in shadow."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "job",
+    "skin"
+   ],
+   "cluster_id": "c06079",
+   "name": "JB19",
+   "confidence": "high",
+   "expected_use": [
+    "player-class"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "humanoid",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "blonde-shield-maiden",
+   "description": "A blonde woman in an orange cloak and boots with a round shield and a spear."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "job",
+    "skin"
+   ],
+   "cluster_id": "c06094",
+   "name": "JB35",
+   "confidence": "high",
+   "expected_use": [
+    "player-class"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "humanoid",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "armoured-knight-on-horse",
+   "description": "An armoured knight with a long sword riding a pale horse."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c00272",
+   "name": "Kobold Re A2",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "humanoid",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "kobold-re-a2",
+   "description": "A horned canine-headed kobold warrior in tan leather armour with a round wooden shield and curved sword."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c06116",
+   "name": "Kraken Small Octopus B",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "kraken-small-octopus-b",
+   "description": "A pink octopus with thick curling tentacles and a glaring yellow eye."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "enemy",
+    "revent_node"
+   ],
+   "cluster_id": "c06117",
+   "name": "Kraken Small Squid B",
+   "confidence": "high",
+   "expected_use": [
+    "enemy",
+    "story"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "kraken-small-squid-b",
+   "description": "A pale blue-grey squid with a large hooded mantle and spreading tentacles."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c06124",
+   "name": "Laughing Spirit D",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "laughing-spirit-d",
+   "description": "A cluster of crimson hooded faces with open screaming mouths packed together."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c06129",
+   "name": "LordSatyr",
+   "confidence": "medium",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy-boss"
+   ],
+   "kind": "boss",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "lord-satyr",
+   "description": "A winged red-skinned horned demon seated cross-legged holding a sword and a staff."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "enemy",
+    "revent_node"
+   ],
+   "cluster_id": "c06134",
+   "name": "Man at Arms",
+   "confidence": "high",
+   "expected_use": [
+    "enemy",
+    "story"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "humanoid",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "man-at-arms",
+   "description": "A soldier in a blue and red tunic with a helmet, holding a sword and a heater shield."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c06142",
+   "name": "Mummy",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "mummy",
+   "description": "A bandage-wrapped mummy with a green hand, standing in a shambling pose."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "enemy",
+    "revent_node"
+   ],
+   "cluster_id": "c06144",
+   "name": "Namtar D",
+   "confidence": "medium",
+   "expected_use": [
+    "enemy",
+    "story"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "namtar-d",
+   "description": "A human skull resting in front of a coiled golden centipede-like creature with segmented body."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c06171",
+   "name": "Raver Lord",
+   "confidence": "medium",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy",
+    "enemy-boss"
+   ],
+   "kind": "boss",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "raver-lord",
+   "description": "A horned-helmed armoured warrior in a red cape wielding a sword and round shield, with a skull on the chest."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c06173",
+   "name": "Rogue",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "player-class"
+   ],
+   "kind": "portrait",
+   "use_hit": false,
+   "kind_hit": true,
+   "slug": "rogue",
+   "description": "A green-clad rogue leaping mid-stride with a dagger raised."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "skin"
+   ],
+   "cluster_id": "c06176",
+   "name": "SK02",
+   "confidence": "medium",
+   "expected_use": [
+    "player-class"
+   ],
+   "guessed_use": [
+    "player-class"
+   ],
+   "kind": "portrait",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "sk02-mace-knight",
+   "description": "A seated plate-armoured knight with pale hair resting a huge spiked mace on one shoulder."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "revent_node",
+    "skin"
+   ],
+   "cluster_id": "c06178",
+   "name": "SK04",
+   "confidence": "medium",
+   "expected_use": [
+    "player-class",
+    "story"
+   ],
+   "guessed_use": [
+    "player-class"
+   ],
+   "kind": "portrait",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "sk04-red-archer",
+   "description": "A red-garbed archer in a dynamic pose drawing a bow, with a flowing red cloak."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "skin"
+   ],
+   "cluster_id": "c06186",
+   "name": "SK12",
+   "confidence": "medium",
+   "expected_use": [
+    "player-class"
+   ],
+   "guessed_use": [
+    "player-class"
+   ],
+   "kind": "portrait",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "sk12-dark-sorceress",
+   "description": "A pale woman in a long black gown with arms spread, surrounded by flames and a purple splash."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "skin"
+   ],
+   "cluster_id": "c06192",
+   "name": "SK18",
+   "confidence": "medium",
+   "expected_use": [
+    "player-class"
+   ],
+   "guessed_use": [
+    "player-class"
+   ],
+   "kind": "portrait",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "sk18-spear-wraith",
+   "description": "A dark armoured figure with long hair holding a long spear forward in a lunging stance."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "skin"
+   ],
+   "cluster_id": "c01264",
+   "name": "SK21",
+   "confidence": "medium",
+   "expected_use": [
+    "player-class"
+   ],
+   "guessed_use": [
+    "player-class"
+   ],
+   "kind": "portrait",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "sk21-golden-armour",
+   "description": "A bulky suit of golden plate armour standing with fists at its sides."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "skin"
+   ],
+   "cluster_id": "c06194",
+   "name": "SK22",
+   "confidence": "medium",
+   "expected_use": [
+    "player-class"
+   ],
+   "guessed_use": [
+    "player-class"
+   ],
+   "kind": "portrait",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "sk22-swirl-shield-knight",
+   "description": "A knight in light armour with a sword and a swirl-patterned shield, surrounded by a white aura and smoke."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "skin"
+   ],
+   "cluster_id": "c06214",
+   "name": "SK44",
+   "confidence": "medium",
+   "expected_use": [
+    "player-class"
+   ],
+   "guessed_use": [
+    "player-class"
+   ],
+   "kind": "portrait",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "sk44-yellow-ring-witch",
+   "description": "A hooded figure in a pointed hat with a staff, ringed by glowing yellow sparks."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "skin"
+   ],
+   "cluster_id": "c06228",
+   "name": "SK61",
+   "confidence": "medium",
+   "expected_use": [
+    "player-class"
+   ],
+   "guessed_use": [
+    "player-class"
+   ],
+   "kind": "portrait",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "sk61-caped-swordsman",
+   "description": "A white-haired young fighter in a red cape and red boots with a thin sword and round shield."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "skin"
+   ],
+   "cluster_id": "c06246",
+   "name": "SK80",
+   "confidence": "medium",
+   "expected_use": [
+    "player-class"
+   ],
+   "guessed_use": [
+    "player-class"
+   ],
+   "kind": "portrait",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "sk80-haloed-priest",
+   "description": "A robed priest with a halo-like headpiece holding a long staff across the shoulders."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "skin"
+   ],
+   "cluster_id": "c06260",
+   "name": "SK94",
+   "confidence": "medium",
+   "expected_use": [
+    "player-class"
+   ],
+   "guessed_use": [
+    "player-class"
+   ],
+   "kind": "portrait",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "sk94-kneeling-elder",
+   "description": "A muscular bearded elder kneeling with a wooden staff in pale draped cloth."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c06265",
+   "name": "Salamander A",
+   "confidence": "medium",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "salamander-a",
+   "description": "An orange salamander curled amid flames beside a tall spear."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c06266",
+   "name": "Scarecrow",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "scarecrow",
+   "description": "A scarecrow in a wide-brimmed hat and tattered blue and orange clothes standing with arms hanging."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "revent_node"
+   ],
+   "cluster_id": "c06293",
+   "name": "Treasure",
+   "confidence": "high",
+   "expected_use": [
+    "story"
+   ],
+   "guessed_use": [
+    "loot",
+    "reward"
+   ],
+   "kind": "currency",
+   "use_hit": false,
+   "kind_hit": false,
+   "slug": "treasure-pile",
+   "description": "A heap of gold coins and bars with a golden jug."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "revent_node",
+    "union"
+   ],
+   "cluster_id": "c06302",
+   "name": "UN-Tech",
+   "confidence": "medium",
+   "expected_use": [
+    "story",
+    "union"
+   ],
+   "guessed_use": [
+    "background",
+    "crafting",
+    "story"
+   ],
+   "kind": "environment",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "un-tech-workshop",
+   "description": "A cluttered workshop interior with a seated craftsman, shelves of tools and a figure leaping near the ceiling."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "revent_node",
+    "union"
+   ],
+   "cluster_id": "c06305",
+   "name": "UN03",
+   "confidence": "medium",
+   "expected_use": [
+    "story",
+    "union"
+   ],
+   "guessed_use": [
+    "background",
+    "camp",
+    "story"
+   ],
+   "kind": "environment",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "un03-woodcutter-camp",
+   "description": "A forest camp with a campfire, a burly woodcutter at a stump and onlookers under thatched shelters."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "union"
+   ],
+   "cluster_id": "c06317",
+   "name": "UN_Fest_3",
+   "confidence": "medium",
+   "expected_use": [
+    "union"
+   ],
+   "guessed_use": [
+    "background",
+    "shop",
+    "story"
+   ],
+   "kind": "environment",
+   "use_hit": false,
+   "kind_hit": false,
+   "slug": "un-fest-3-festival",
+   "description": "A festival scene in a crowded shop with a witch, costumed figures and a pumpkin-headed character."
+  },
+  {
+   "shared_icon": false,
+   "corpus_tables": [
+    "enemy"
+   ],
+   "cluster_id": "c06324",
+   "name": "Undead Gladiator",
+   "confidence": "high",
+   "expected_use": [
+    "enemy"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "humanoid",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "undead-gladiator",
+   "description": "A crouching gladiator in golden armour with a sword and round shield."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "enemy",
+    "revent_node"
+   ],
+   "cluster_id": "c06330",
+   "name": "Wamp C",
+   "confidence": "medium",
+   "expected_use": [
+    "enemy",
+    "story"
+   ],
+   "guessed_use": [
+    "enemy"
+   ],
+   "kind": "creature",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "wamp-c",
+   "description": "A yellow armoured bug-like frog creature with red flowers on its limbs seen from above."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "dungeon",
+    "dungeon_mode",
+    "revent_node"
+   ],
+   "cluster_id": "c01274",
+   "name": "dg1",
+   "confidence": "medium",
+   "expected_use": [
+    "dungeon",
+    "dungeon-mode",
+    "story"
+   ],
+   "guessed_use": [
+    "background",
+    "dungeon"
+   ],
+   "kind": "environment",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "dg1-night-landscape",
+   "description": "A dark night landscape with a winding pale path leading toward a distant castle."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "dungeon",
+    "dungeon_mode",
+    "revent_node"
+   ],
+   "cluster_id": "c01276",
+   "name": "dg15",
+   "confidence": "medium",
+   "expected_use": [
+    "dungeon",
+    "dungeon-mode",
+    "story"
+   ],
+   "guessed_use": [
+    "background",
+    "dungeon"
+   ],
+   "kind": "environment",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "dg15-torii-shrine",
+   "description": "A forest shrine with red torii gates and pagoda-style buildings in the dark."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "dungeon",
+    "dungeon_mode",
+    "revent_node"
+   ],
+   "cluster_id": "c01282",
+   "name": "dg4",
+   "confidence": "medium",
+   "expected_use": [
+    "dungeon",
+    "dungeon-mode",
+    "story"
+   ],
+   "guessed_use": [
+    "background",
+    "dungeon"
+   ],
+   "kind": "environment",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "dg4-red-cavern",
+   "description": "A cavern with glowing red walls and a small flame at the bottom of a spiralling passage."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "dungeon",
+    "dungeon_mode",
+    "revent_node"
+   ],
+   "cluster_id": "c01283",
+   "name": "dg5",
+   "confidence": "medium",
+   "expected_use": [
+    "dungeon",
+    "dungeon-mode",
+    "story"
+   ],
+   "guessed_use": [
+    "background",
+    "dungeon"
+   ],
+   "kind": "environment",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "dg5-ruined-village",
+   "description": "A moonlit ruined village of timber houses with a muddy road and a cart."
+  },
+  {
+   "shared_icon": true,
+   "corpus_tables": [
+    "dungeon",
+    "dungeon_mode",
+    "revent_node"
+   ],
+   "cluster_id": "c01284",
+   "name": "dg8",
+   "confidence": "medium",
+   "expected_use": [
+    "dungeon",
+    "dungeon-mode",
+    "story"
+   ],
+   "guessed_use": [
+    "background",
+    "dungeon"
+   ],
+   "kind": "architecture",
+   "use_hit": true,
+   "kind_hit": true,
+   "slug": "dg8-stone-hall",
+   "description": "A grey stone hall with carved columns and a central doorway with a statue."
+  }
+ ]
+}

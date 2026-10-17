@@ -1,0 +1,504 @@
+{
+ "unit": "sheet-083",
+ "records": [
+  {
+   "cluster_id": "c03772",
+   "name": "Shell",
+   "slug": "shell",
+   "description": "A pale pink-beige spiral conch shell with ridged whorls and a spiked lip.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03773",
+   "name": "ShieldBuckler",
+   "slug": "round-buckler",
+   "description": "A small round dark wooden buckler with a grey metal rim and cross-shaped iron bands.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "inventory",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03774",
+   "name": "Shield_v2_01",
+   "slug": "broken-plank-shield",
+   "description": "A battered brown wooden plank shield with a ragged splintered edge and metal trim.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "inventory",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03775",
+   "name": "Shield_v2_02",
+   "slug": "green-skull-shield",
+   "description": "A green kite shield with a white skull emblem, glowing green eyes and a green aura.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "inventory",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00898",
+   "name": "Shield_v2_03",
+   "slug": "dark-teal-square-shield",
+   "description": "A dark teal square shield set on a diagonal with a metal rim and a small central stud.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "inventory",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03776",
+   "name": "Shield_v2_06",
+   "slug": "plank-shield-brown",
+   "description": "A brown wooden plank shield with a rough chipped outline and no metal trim.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "inventory",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03777",
+   "name": "Shield_v2_07",
+   "slug": "reinforced-red-plank-shield",
+   "description": "A reddish-brown wooden shield with a diagonal iron strap and red blood stains along the bottom.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "inventory",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03778",
+   "name": "Shield_v2_08",
+   "slug": "yellow-black-striped-shield",
+   "description": "A kite shield with a vertical yellow and black split field and a grey metal rim.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "inventory",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00899",
+   "name": "Shield_v2_09",
+   "slug": "studded-dark-shield",
+   "description": "A dark navy shield with a metal rim and rows of grey pointed studs across the face.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "inventory",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03779",
+   "name": "Shield_v2_10",
+   "slug": "red-glowing-demon-shield",
+   "description": "A black shield with a red glowing horned demon skull emblem and a red aura.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "inventory",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03780",
+   "name": "Shield_v2_11",
+   "slug": "silver-sword-shield",
+   "description": "A pale silver heater shield with a stone-grey sword emblem and a riveted metal rim.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "inventory",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03781",
+   "name": "Shield_v2_12",
+   "slug": "lion-shield",
+   "description": "A heater shield with a cream lion head emblem on a dark navy field and a metal rim.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "inventory",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03782",
+   "name": "Shield_v2_13",
+   "slug": "red-white-quartered-shield",
+   "description": "A heater shield divided into red and white quarters with a metal rim.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "inventory",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03783",
+   "name": "Shield_v2_14",
+   "slug": "golden-skull-shield",
+   "description": "A black shield with a golden skull emblem, an ornate gold border and a golden glow.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "inventory",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03785",
+   "name": "Shield_v2_16",
+   "slug": "green-trident-shield",
+   "description": "A green shield with a grey metal rim and a pale gold forked rune emblem.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "inventory",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03786",
+   "name": "Shield_v2_17",
+   "slug": "red-fleur-shield",
+   "description": "A red shield with a metal rim and an orange-gold curled fleur emblem.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "inventory",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03788",
+   "name": "Shield_v2_19",
+   "slug": "spiked-skull-shield",
+   "description": "A dark purple shield with a white skull, a metal rim and black spikes projecting from the edges.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "inventory",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03789",
+   "name": "Shield_v2_20",
+   "slug": "green-glowing-cross-shield",
+   "description": "A green shield with crossed metal bands and a bright lime-green glowing aura.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "inventory",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03790",
+   "name": "Shield_v2_21",
+   "slug": "emerald-rune-shield",
+   "description": "A glowing emerald-green crystalline shield carved with a rune pattern and a green aura.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "inventory",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03791",
+   "name": "Shield_v2_22",
+   "slug": "brown-wooden-shield",
+   "description": "A brown wooden shield with diagonal grain, a notched metal rim and rivets.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "inventory",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03792",
+   "name": "Shield_v2_23",
+   "slug": "striped-wooden-shield",
+   "description": "A grey metal-rimmed shield with a wooden face and diagonal white-grey stripes.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "inventory",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03793",
+   "name": "Shield_v2_24",
+   "slug": "blue-lightning-shield",
+   "description": "A shield with a pale silver centre, an ornate blue rune border and crackling blue lightning around it.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "inventory",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03794",
+   "name": "Shield_v2_25",
+   "slug": "black-skull-shield",
+   "description": "A dark green-black shield with a bone-white skull emblem and a worn metal rim.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "inventory",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03795",
+   "name": "Shield_v2_26",
+   "slug": "brown-leather-shield",
+   "description": "A brown shield with leather-like panels and a copper-toned rim.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "inventory",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03797",
+   "name": "Shield_v2_28",
+   "slug": "round-wooden-shield",
+   "description": "A round wooden shield with a grey metal rim and a central boss.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "inventory",
+     "equipment",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

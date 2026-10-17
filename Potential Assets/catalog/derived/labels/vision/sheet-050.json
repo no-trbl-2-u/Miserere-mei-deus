@@ -1,0 +1,541 @@
+{
+ "unit": "sheet-050",
+ "records": [
+  {
+   "cluster_id": "c00608",
+   "name": "Engineering_37_bullet",
+   "slug": "three-bullets",
+   "description": "Three grey metal bullet casings with brass tips and red-brown bases standing together.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "attack",
+     "inventory",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02615",
+   "name": "Engineering_41_lantern",
+   "slug": "metal-lantern",
+   "description": "A cylindrical grey metal lantern with a ring on top, casting a yellow beam of light from its open end.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "inventory",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00609",
+   "name": "Engineering_43_sawX1",
+   "slug": "saw-blade-red-swirl",
+   "description": "A circular toothed saw blade with a central hole on a dark red background with pink swirling streaks.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "inventory",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02617",
+   "name": "Engineering_44_board",
+   "slug": "wooden-board-with-nails",
+   "description": "A tan wooden plank with several grey nails or spikes behind it.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02618",
+   "name": "Engineering_45_gun",
+   "slug": "flared-barrel-gun",
+   "description": "A dark metal firearm with a wide flared barrel and leather-wrapped grip pointing up and to the right.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02619",
+   "name": "Engineering_46_gun",
+   "slug": "green-lit-blunderbuss",
+   "description": "A dark purple-grey firearm with a flared barrel and glowing green marks along its side.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02620",
+   "name": "Engineering_47_pistol",
+   "slug": "spiked-pistol",
+   "description": "A short grey metal pistol with a wide muzzle and spiked fittings on the underside.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02621",
+   "name": "Engineering_48_silver_trumpet",
+   "slug": "silver-trumpet",
+   "description": "A short curved silver-grey metal tube resembling a trumpet bell with a wide open end.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "inventory",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02622",
+   "name": "Engineering_49_iron_plate",
+   "slug": "iron-plate",
+   "description": "A flat hexagonal dark grey iron plate with riveted edges.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "crafting",
+     "inventory",
+     "defend"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02624",
+   "name": "Engineering_51_gun",
+   "slug": "leather-wrapped-gun",
+   "description": "A grey metal firearm with a flared barrel and brown leather-wrapped grip, angled upward.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02625",
+   "name": "Engineering_52_rifle",
+   "slug": "scoped-rifle",
+   "description": "A long brown and grey rifle with a wooden stock and a scope mounted on top.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02626",
+   "name": "Engineering_53_magicgun",
+   "slug": "cyan-magic-gun",
+   "description": "A dark pistol-like firearm surrounded by a glowing cyan aura with a bright blue flame at the muzzle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02627",
+   "name": "Engineering_54_flamethrower",
+   "slug": "flamethrower",
+   "description": "A brass and dark metal pistol-shaped flamethrower with a small orange flame at its nozzle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02628",
+   "name": "Engineering_55_flameoil",
+   "slug": "flame-oil-canister",
+   "description": "A grey metal fuel canister with a pipe at the bottom and a flame emblem on its front.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "attack",
+     "inventory",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02630",
+   "name": "Engineering_57_rope",
+   "slug": "coiled-rope",
+   "description": "A thick coil of brown rope wound around a grey metal spool.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02632",
+   "name": "Engineering_59_mega_fishingrod",
+   "slug": "mega-fishing-rod",
+   "description": "A long fishing rod with a reel and taut line, in brown and grey metal.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "inventory",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02637",
+   "name": "ExpensiveDishes",
+   "slug": "expensive-dishes",
+   "description": "A decorated white porcelain plate with a green pattern next to a white cup.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "shop",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02638",
+   "name": "FatDagger",
+   "slug": "fat-dagger",
+   "description": "A short broad-bladed dagger with a dark hilt, pointing downward.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "equipment",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02678",
+   "name": "FishRedFried",
+   "slug": "fried-red-fish",
+   "description": "A whole fried red fish with a golden-brown crust.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "heal",
+     "inventory",
+     "camp"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02680",
+   "name": "FlourBag",
+   "slug": "flour-bag",
+   "description": "A tied burlap sack marked with a wheat emblem, with a little flour spilled at its base.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "inventory",
+     "camp"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02681",
+   "name": "Flowerpot",
+   "slug": "flowerpot",
+   "description": "A dark round pot holding a plant with blue star-shaped flowers.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "inventory",
+     "camp"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02682",
+   "name": "Flowers",
+   "slug": "red-purple-flowers",
+   "description": "A bunch of dark red and purple flowers with green stems and leaves.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "inventory",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02683",
+   "name": "Formation_Arch",
+   "slug": "formation-arch",
+   "description": "Six white diamond markers arranged in an arch pattern on a dark blue glowing background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "settings"
+    ],
+    "style": [
+     "flat-vector",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02684",
+   "name": "Formation_Hero",
+   "slug": "formation-hero",
+   "description": "Nine white diamond markers arranged in a pyramid-like pattern with one at the top on a dark blue glowing background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "settings"
+    ],
+    "style": [
+     "flat-vector",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02685",
+   "name": "Formation_InARow",
+   "slug": "formation-in-a-row",
+   "description": "Eight white diamond markers in two rows of four on a dark blue glowing background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "settings"
+    ],
+    "style": [
+     "flat-vector",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

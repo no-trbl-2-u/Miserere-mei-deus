@@ -1,0 +1,533 @@
+{
+ "unit": "sheet-136",
+ "records": [
+  {
+   "cluster_id": "c05368",
+   "name": "skill_110_noBG",
+   "slug": "water-bubbles",
+   "description": "Three glossy cyan-blue bubbles of different sizes on a teal backdrop.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "status-effect",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05369",
+   "name": "skill_111_noBG",
+   "slug": "void-eye",
+   "description": "A dark staring eye with a purple glowing rim, black radiating lashes and a small white pupil.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01121",
+   "name": "skill_112",
+   "slug": "purple-claw-slashes",
+   "description": "Four purple slash streaks angled diagonally across a deep violet background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00253",
+   "name": "skill_112_noBG",
+   "slug": "purple-claw-slashes-transparent",
+   "description": "Four purple slash streaks angled diagonally with transparent surroundings.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01122",
+   "name": "skill_113",
+   "slug": "sleep-zzz",
+   "description": "Three outlined white-and-purple Z letters stacked diagonally over a dark purple swirl.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "status-effect",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05370",
+   "name": "skill_113_noBG",
+   "slug": "sleep-zzz-transparent",
+   "description": "Three outlined purple Z letters stacked diagonally with a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "status-effect",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05371",
+   "name": "skill_114_noBG",
+   "slug": "broken-heart",
+   "description": "A glossy magenta heart with a cracked centre and cyan outline glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05373",
+   "name": "skill_115_noBG",
+   "slug": "glowing-hourglass",
+   "description": "A purple-sand hourglass surrounded by a blue radiant glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "status-effect",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05374",
+   "name": "skill_116",
+   "slug": "shattering-light-beam",
+   "description": "A pink-purple beam of light rising from a black shattered rock patch with violet pillars behind.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05376",
+   "name": "skill_118_noBG",
+   "slug": "purple-ghost",
+   "description": "A smiling-frightened purple ghost with dark eyes and mouth against a pale lavender glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "summon",
+     "status-effect",
+     "enemy"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01123",
+   "name": "skill_119",
+   "slug": "screaming-exposed-brain-head",
+   "description": "A shadowy purple humanoid head with an exposed brain and open mouth, violet rays bursting outward on a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01124",
+   "name": "skill_119_noBG",
+   "slug": "screaming-exposed-brain-head-transparent",
+   "description": "A shadowy purple humanoid head with an exposed brain and open mouth, violet rays bursting outward with transparent surroundings.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05377",
+   "name": "skill_11_noBG",
+   "slug": "golden-blade-edge",
+   "description": "A golden-brown sword blade entering from the bottom right with an orange glow behind it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action",
+     "equipment"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01126",
+   "name": "skill_120",
+   "slug": "purple-motion-streaks",
+   "description": "Several white-tipped purple streaks sweeping diagonally on a dark violet background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01127",
+   "name": "skill_120_noBG",
+   "slug": "purple-motion-streaks-transparent",
+   "description": "Several white-tipped purple streaks sweeping diagonally with a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05378",
+   "name": "skill_121",
+   "slug": "blood-drops",
+   "description": "Three glossy pink-red blood drops with violet rays radiating on a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "status-effect",
+     "debuff",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05379",
+   "name": "skill_121_noBG",
+   "slug": "blood-drops-transparent",
+   "description": "Three glossy pink-red blood drops with a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "status-effect",
+     "debuff",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05381",
+   "name": "skill_122_noBG",
+   "slug": "blood-slash",
+   "description": "A red blood streak splashing diagonally from upper left to lower right.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "status-effect",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05384",
+   "name": "skill_124_noBG",
+   "slug": "bloody-claw-rake",
+   "description": "Grey claws raking downward with red blood droplets falling beneath them.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "status-effect",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05385",
+   "name": "skill_125",
+   "slug": "purple-energy-orb",
+   "description": "A dark violet sphere crossed by glowing purple curved lines on a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01128",
+   "name": "skill_126_noBG",
+   "slug": "pink-handprint-splat",
+   "description": "A magenta splattered handprint with dripping spots.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05387",
+   "name": "skill_127",
+   "slug": "pink-heal-cross",
+   "description": "A glowing pink cross with a dark outline on a dark purple background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "heal"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01129",
+   "name": "skill_127_noBG",
+   "slug": "pink-heal-cross-transparent",
+   "description": "A glowing pink cross with a dark outline and transparent surroundings.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "heal"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05389",
+   "name": "skill_128_noBG",
+   "slug": "speed-boot",
+   "description": "A purple boot or leg in mid-stride with pink speed lines trailing behind it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05390",
+   "name": "skill_129",
+   "slug": "pink-swirl-slash",
+   "description": "Broad pink-magenta swirling streaks sweeping across a dark purple background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "opaque",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

@@ -1,0 +1,530 @@
+{
+ "unit": "sheet-092",
+ "records": [
+  {
+   "cluster_id": "c00978",
+   "name": "Sword_36",
+   "slug": "golden-orange-scimitar",
+   "description": "A broad curved scimitar with a glowing golden-orange blade and a gold hilt.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04250",
+   "name": "Sword_37",
+   "slug": "grey-curved-saber",
+   "description": "A slender curved grey saber with a dark brown grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00979",
+   "name": "Sword_39",
+   "slug": "golden-straight-sword",
+   "description": "A straight golden sword with a short crossguard and a gold blade.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04251",
+   "name": "Sword_40",
+   "slug": "grey-falchion-gold-guard",
+   "description": "A grey curved falchion with a gold guard and pommel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04252",
+   "name": "Sword_41",
+   "slug": "thin-green-curved-blade",
+   "description": "A very thin, slightly curved pale green-grey blade with a small hilt.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04254",
+   "name": "Sword_43",
+   "slug": "silver-scimitar-bronze-pommel",
+   "description": "A silver curved scimitar with a round bronze pommel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00981",
+   "name": "Sword_46",
+   "slug": "silver-sabre-red-tassel",
+   "description": "A broad curved silver blade with a red tassel hanging from the hilt.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04255",
+   "name": "Sword_47",
+   "slug": "white-sabre-blue-tassel",
+   "description": "A wide white-silver curved blade with a blue tassel at the hilt.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04256",
+   "name": "Sword_48",
+   "slug": "dark-curved-cleaver",
+   "description": "A dark grey curved blade with a black looped hand guard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04257",
+   "name": "Sword_49",
+   "slug": "thin-dark-straight-sword",
+   "description": "A thin dark grey straight blade with a black grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04258",
+   "name": "Sword_50",
+   "slug": "green-serpentine-blade",
+   "description": "A wavy green serpentine blade with a dark green grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04259",
+   "name": "Sword_51",
+   "slug": "grey-wavy-blade",
+   "description": "A long slender grey-green blade with a slightly wavy edge.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04260",
+   "name": "Sword_52",
+   "slug": "pale-sword-winged-guard",
+   "description": "A pale silver straight sword with a winged crossguard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04261",
+   "name": "Sword_53",
+   "slug": "pale-blue-skull-guard-sword",
+   "description": "A pale blue sword with a skull-like crossguard and dark grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04262",
+   "name": "Sword_54",
+   "slug": "grey-slab-cleaver",
+   "description": "A wide flat grey slab-like blade with a small red gem at the hilt.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04263",
+   "name": "Sword_55",
+   "slug": "purple-engraved-greatblade",
+   "description": "A wide purple-grey blade with ornate engraved patterns and a purple pommel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04264",
+   "name": "Sword_56",
+   "slug": "bloody-jagged-cleaver",
+   "description": "A jagged white cleaver blade stained red with a green grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04265",
+   "name": "Sword_57",
+   "slug": "silver-spiked-ornate-blade",
+   "description": "A pale silver blade with spiky ornate protrusions along its length.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04266",
+   "name": "Sword_58",
+   "slug": "glowing-purple-crystal-greatsword",
+   "description": "A large greatsword with a glowing purple crystalline blade.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04268",
+   "name": "Sword_60",
+   "slug": "flame-orange-sword",
+   "description": "An orange-red flame-like blade with an ornate red-brown hilt.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04269",
+   "name": "Sword_61",
+   "slug": "violet-glowing-short-sword",
+   "description": "A bright violet glowing short sword with a purple hilt.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04270",
+   "name": "Sword_v2_01",
+   "slug": "brown-gold-sweeping-blade",
+   "description": "A long brown and gold curved blade sweeping into a hooked tip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04271",
+   "name": "Sword_v2_02",
+   "slug": "crimson-sweeping-blade",
+   "description": "A long crimson-maroon curved blade with a hooked tip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04272",
+   "name": "Sword_v2_03",
+   "slug": "blue-purple-wavy-blade",
+   "description": "A blue-purple curved blade with a wavy, flowing edge.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04273",
+   "name": "Sword_v2_04",
+   "slug": "green-crystal-multi-prong-blade",
+   "description": "A green crystalline blade with several curved prongs at the tip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

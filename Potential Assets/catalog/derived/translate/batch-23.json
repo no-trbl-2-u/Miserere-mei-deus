@@ -1,0 +1,350 @@
+{
+ "batch": "batch-23",
+ "items": [
+  {
+   "cluster_id": "c06354",
+   "name": "dg6",
+   "file": "textures/dg6.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "1024x1024",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dungeon",
+     "column": "Image",
+     "row": {
+      "name": "洞窟",
+      "ID": "DG0002",
+      "Rarity": 2,
+      "Tag": [
+       "Normal"
+      ]
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Image",
+     "row": {
+      "name": "森奥の洞窟",
+      "ID": "DGS0020",
+      "Rarity": 6
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Image",
+     "row": {
+      "name": "エキドナ",
+      "ID": "DGCQ008",
+      "Rarity": 6,
+      "Tag": [
+       "Conquest"
+      ]
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Image",
+     "row": {
+      "name": "トウテツ",
+      "ID": "DGCQ020",
+      "Rarity": 6,
+      "Tag": [
+       "Conquest"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06355",
+   "name": "dg7",
+   "file": "textures/dg7.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "1024x1024",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dungeon",
+     "column": "Image",
+     "row": {
+      "name": "尖塔",
+      "ID": "DG0003",
+      "Rarity": 2,
+      "Tag": [
+       "Normal"
+      ]
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Image",
+     "row": {
+      "name": "アゴニス",
+      "ID": "DGD007",
+      "Rarity": 7,
+      "Tag": [
+       "FarAnotherBoss",
+       "Disaster",
+       "NoEffect"
+      ]
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Image",
+     "row": {
+      "name": "鐘楼塔",
+      "ID": "DGS0021",
+      "Rarity": 6,
+      "Tag": [
+       "NoEffect"
+      ]
+     }
+    },
+    {
+     "table": "dungeon_mode",
+     "column": "Image",
+     "row": {
+      "name": "尖塔",
+      "ID": "DG0003M1",
+      "Tag": [
+       "Normal",
+       "Retry"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c01284",
+   "name": "dg8",
+   "file": "textures/dg8.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "1024x1024",
+   "members": 2,
+   "corpus": [
+    {
+     "table": "dungeon",
+     "column": "Image",
+     "row": {
+      "name": "神殿跡",
+      "ID": "DG0005",
+      "Rarity": 3,
+      "Tag": [
+       "Normal"
+      ]
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Image",
+     "row": {
+      "name": "フラウス",
+      "ID": "DGD004",
+      "Rarity": 7,
+      "Tag": [
+       "FarAnotherBoss",
+       "Disaster",
+       "NoEffect"
+      ]
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Image",
+     "row": {
+      "name": "アークエンジェル",
+      "ID": "DGCQ007",
+      "Rarity": 6,
+      "Tag": [
+       "Conquest"
+      ]
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Image",
+     "row": {
+      "name": "司教ローズル",
+      "ID": "DGCQ009",
+      "Rarity": 6,
+      "Tag": [
+       "Conquest"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06356",
+   "name": "dg9",
+   "file": "textures/dg9.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "1024x1024",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "dungeon",
+     "column": "Image",
+     "row": {
+      "name": "遺跡",
+      "ID": "DG0008",
+      "Rarity": 3,
+      "Tag": [
+       "Normal"
+      ]
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Image",
+     "row": {
+      "name": "パズズ",
+      "ID": "DGCQ011",
+      "Rarity": 6,
+      "Tag": [
+       "Conquest"
+      ]
+     }
+    },
+    {
+     "table": "dungeon",
+     "column": "Image",
+     "row": {
+      "name": "イフリート",
+      "ID": "DGCQ024",
+      "Rarity": 6,
+      "Tag": [
+       "Conquest"
+      ]
+     }
+    },
+    {
+     "table": "dungeon_mode",
+     "column": "Image",
+     "row": {
+      "name": "遺跡",
+      "ID": "DG0008M1",
+      "Tag": [
+       "Normal",
+       "Retry"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06357",
+   "name": "docter",
+   "file": "textures/docter.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ストーリー導入「最初の冒険開始」",
+      "ID": "REMAIN01N1",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ストーリー導入「最初の冒険開始」",
+      "ID": "REMAIN01N2",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ストーリー導入「最初の冒険開始」",
+      "ID": "REMAIN01N3",
+      "ParamKey": "Text"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ストーリー導入「最初の冒険開始」",
+      "ID": "REMAIN01N4",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06358",
+   "name": "fraus.221108x512-Disaster",
+   "file": "textures/fraus.221108x512-Disaster.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "disaster",
+     "column": "Image",
+     "row": {
+      "name": "フラウス",
+      "ID": "DSS00004"
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "ケース 聖司祭トビア 2",
+      "ID": "REST0027N5",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c06359",
+   "name": "fraus.221108x512",
+   "file": "textures/fraus.221108x512.png",
+   "type": "Texture2D",
+   "atlas": null,
+   "size": "512x512",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Image",
+     "row": {
+      "name": "フラウス",
+      "ID": "EDS00004",
+      "Category": "Disaster",
+      "Rarity": 9,
+      "Tag": [
+       "Uber"
+      ]
+     }
+    },
+    {
+     "table": "revent_node",
+     "column": "Image",
+     "row": {
+      "name": "神殿跡 「敬虔な信徒」",
+      "ID": "RESEV005N1",
+      "ParamKey": "Text"
+     }
+    }
+   ]
+  }
+ ]
+}

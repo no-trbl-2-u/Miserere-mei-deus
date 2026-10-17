@@ -1,0 +1,488 @@
+{
+ "unit": "sheet-161",
+ "records": [
+  {
+   "cluster_id": "c04507",
+   "name": "United-States-of-America",
+   "slug": "united-states-flag",
+   "description": "Rounded rectangle flag with a white star on a blue canton and red and white horizontal stripes.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04508",
+   "name": "Uruguay",
+   "slug": "uruguay-flag",
+   "description": "Rounded rectangle flag with a yellow sun in a white canton and blue and white horizontal stripes.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04509",
+   "name": "Uzbekistan",
+   "slug": "uzbekistan-flag",
+   "description": "Rounded rectangle flag with a white crescent and stars on a light blue band over white and green bands.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04510",
+   "name": "Vanuatu",
+   "slug": "vanuatu-flag",
+   "description": "Rounded rectangle flag with a black triangle bordered in yellow, a sideways yellow Y, and red over green fields.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04511",
+   "name": "Vatican-City",
+   "slug": "vatican-city-flag",
+   "description": "Rounded rectangle flag split into a yellow half and a white half bearing a red crossed-keys emblem.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04514",
+   "name": "Venezuela",
+   "slug": "venezuela-flag",
+   "description": "Rounded rectangle flag with yellow, blue and red horizontal bands and an arc of white stars on the blue band.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00002",
+   "name": "Yemen",
+   "slug": "yemen-flag",
+   "description": "Rounded rectangle flag with red, white and dark grey horizontal bands.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04648",
+   "name": "Zambia",
+   "slug": "zambia-flag",
+   "description": "Rounded rectangle flag with a green field, a bird emblem at upper right and red, black and yellow vertical bars at lower right.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04649",
+   "name": "Zimbabwe",
+   "slug": "zimbabwe-flag",
+   "description": "Rounded rectangle flag with green and yellow stripes alternating with black, a black triangle at the left.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "settings"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "low-res"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01075",
+   "name": "border_2slice_pointy_sided",
+   "slug": "pointy-sided-border",
+   "description": "White outline of a tall shape with a straight left edge and a pointed arrow tip on the right, transparent inside.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "line-art",
+     "monochrome",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01076",
+   "name": "border_2slice_round_half_sided",
+   "slug": "round-half-sided-border",
+   "description": "White outline of a quarter-circle shape with a straight left and bottom edge and a curved top right, transparent inside.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "line-art",
+     "monochrome",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01077",
+   "name": "border_2slice_round_sided",
+   "slug": "round-sided-border",
+   "description": "White outline of a capital D shape with a straight left edge and a rounded right side, transparent inside.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "line-art",
+     "monochrome",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01078",
+   "name": "border_circlecut_side_l",
+   "slug": "circlecut-side-large-border",
+   "description": "Thin white outline of a side panel edge with a concave circular notch cut into the right side.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "line-art",
+     "monochrome",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01079",
+   "name": "border_circlecut_side_s",
+   "slug": "circlecut-side-small-border",
+   "description": "Thicker white outline of a small side panel edge with a concave circular notch cut into the right side.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "line-art",
+     "monochrome",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04673",
+   "name": "border_circledouble_side_l",
+   "slug": "circledouble-side-large-border",
+   "description": "White outline of a side edge with two stacked rounded bumps on the right, transparent inside.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "line-art",
+     "monochrome",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04674",
+   "name": "border_circledouble_side_s",
+   "slug": "circledouble-side-small-border",
+   "description": "White outline of a small side edge with two stacked rounded bumps on the right, transparent inside.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "line-art",
+     "monochrome",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04675",
+   "name": "border_circleout_s",
+   "slug": "circleout-border",
+   "description": "White outline of a square with a round lobe on each of its four corners, giving a clover-like shape.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "line-art",
+     "monochrome",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04676",
+   "name": "border_circleout_side_l",
+   "slug": "circleout-side-large-border",
+   "description": "White outline of a side edge with a stepped notch and a round bump on the right.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "line-art",
+     "monochrome",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04677",
+   "name": "border_circleout_side_s",
+   "slug": "circleout-side-small-border",
+   "description": "Thicker white outline of a side edge with a stepped notch and a round bump on the right.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "line-art",
+     "monochrome",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00074",
+   "name": "border_round_corners_m",
+   "slug": "round-corners-medium-border",
+   "description": "White rounded-square frame drawn only at the four corners, with gaps along the sides.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "line-art",
+     "monochrome",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01080",
+   "name": "border_round_side_lg",
+   "slug": "round-side-large-border",
+   "description": "Thin white outline of a capital D shape with a straight left edge and a rounded right side.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "line-art",
+     "monochrome",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04678",
+   "name": "border_round_side_s",
+   "slug": "round-side-small-border",
+   "description": "Thicker white outline of a capital D shape with a straight left edge and a rounded right side.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "line-art",
+     "monochrome",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04679",
+   "name": "border_squarecorners",
+   "slug": "square-corners-border",
+   "description": "White square corner brackets at the four corners of an empty square frame.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "line-art",
+     "monochrome",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04680",
+   "name": "border_squarecorners_ss",
+   "slug": "square-corners-extra-small-border",
+   "description": "Tiny white square corner brackets at the four corners of an empty square.",
+   "tags": {
+    "kind": "ui-frame",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "line-art",
+     "monochrome",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04694",
+   "name": "button_base",
+   "slug": "button-base",
+   "description": "Black rounded-square button base with a thin white rim and rounded corners.",
+   "tags": {
+    "kind": "ui-button",
+    "use": [
+     "panel-chrome"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

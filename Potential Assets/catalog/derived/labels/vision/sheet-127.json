@@ -1,0 +1,482 @@
+{
+ "unit": "sheet-127",
+ "records": [
+  {
+   "cluster_id": "c03886",
+   "name": "Skill_260",
+   "slug": "skill-sword-slash",
+   "description": "A large steel broadsword slashing diagonally across a teal swirling background.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03887",
+   "name": "Skill_263",
+   "slug": "skill-meditating-third-eye",
+   "description": "A dark silhouette of a seated meditating figure in green with a glowing eye in a triangle above its head.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "silhouette"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03889",
+   "name": "Skill_265",
+   "slug": "skill-screaming-hooded-ghoul",
+   "description": "A horned hooded figure with glowing green eyes and a wide screaming mouth against a blue radial burst.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03891",
+   "name": "Skill_268",
+   "slug": "skill-silhouette-on-green-crystals",
+   "description": "A dark humanoid silhouette with a raised arm standing atop green crystal shards amid teal swirling energy.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "summon",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "silhouette"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03892",
+   "name": "Skill_270",
+   "slug": "skill-spectral-hand-beam",
+   "description": "A pale ghostly clawed hand emitting a beam of light against a dark teal background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00916",
+   "name": "Skill_271",
+   "slug": "skill-magenta-crystal-shards",
+   "description": "Jagged magenta crystal shards streaking diagonally across a dark red background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03894",
+   "name": "Skill_274",
+   "slug": "skill-all-seeing-eye-triangle",
+   "description": "A golden triangle containing an eye on a red radiating sunburst background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03895",
+   "name": "Skill_278",
+   "slug": "skill-silhouette-on-purple-crystals",
+   "description": "A dark horned humanoid silhouette standing on purple crystal shards against a violet background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "summon",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "silhouette"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03896",
+   "name": "Skill_278_noBG",
+   "slug": "skill-silhouette-on-purple-crystals-nobg",
+   "description": "A purple-outlined dark horned humanoid silhouette atop purple crystal shards on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "summon",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "silhouette",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00917",
+   "name": "Skill_282",
+   "slug": "skill-curved-fang-blade",
+   "description": "A curved crimson fang or blade with a green swoosh against a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c03899",
+   "name": "Skill_284",
+   "slug": "skill-cracked-black-shield",
+   "description": "A black shield with a white-grey rim and a jagged crack across its face.",
+   "tags": {
+    "kind": "shield",
+    "use": [
+     "defend",
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00918",
+   "name": "Skill_285",
+   "slug": "skill-crossed-purple-chains",
+   "description": "Two purple chains crossed in an X over a green and dark radiating background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "status-effect"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03900",
+   "name": "Skill_286",
+   "slug": "skill-purple-glowing-eyed-mask",
+   "description": "A dark purple oval mask or helm with two glowing white eyes.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c03901",
+   "name": "Skill_289",
+   "slug": "skill-grasping-hand-orange-pills",
+   "description": "A pale hand holding orange capsule-shaped objects against a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "heal",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c00919",
+   "name": "Skill_290",
+   "slug": "skill-fist-holding-spear",
+   "description": "A brown fist gripping a white spear shaft with a bright tip against a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03904",
+   "name": "Skill_297",
+   "slug": "skill-pink-red-swirl-slash",
+   "description": "Sweeping pink and red curved streaks on a dark background suggesting a wide slash.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03906",
+   "name": "Skill_299",
+   "slug": "skill-pink-battle-axe",
+   "description": "A pink double-headed battle axe against swirling magenta streaks.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03908",
+   "name": "Skill_302",
+   "slug": "skill-green-hand-raising-axe",
+   "description": "A green hand raising a double-bladed axe against a dark green background with pale circles.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03909",
+   "name": "Skill_302_noBG",
+   "slug": "skill-green-hand-raising-axe-nobg",
+   "description": "A green hand raising a double-bladed axe with pale circles on a transparent background.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03910",
+   "name": "Skill_303",
+   "slug": "skill-teal-horned-warrior-silhouette",
+   "description": "A dark horned armoured warrior silhouette with axes, outlined in glowing teal.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "summon",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "silhouette"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03914",
+   "name": "Skill_307",
+   "slug": "skill-teal-swirl-slash",
+   "description": "Sweeping teal and green curved streaks on a dark background suggesting a wide slash.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03915",
+   "name": "Skill_308",
+   "slug": "skill-teal-light-pillar-debris",
+   "description": "A vertical teal beam of light rising over dark shattered debris fragments.",
+   "tags": {
+    "kind": "effect",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03916",
+   "name": "Skill_309",
+   "slug": "skill-green-axe-swing",
+   "description": "A pale green axe head swinging through teal motion streaks.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03917",
+   "name": "Skill_310",
+   "slug": "skill-green-axe-heads-arc",
+   "description": "Green axe heads or blades arcing in a curved sweep against a dark green background.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00921",
+   "name": "Skill_311",
+   "slug": "skill-white-arrow-streak",
+   "description": "A single white-teal arrow flying diagonally up and right against a dark teal background.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "attack",
+     "combat-action"
+    ],
+    "style": [
+     "full-colour",
+     "painted"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

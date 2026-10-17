@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-072",
+ "records": [
+  {
+   "cluster_id": "c03425",
+   "name": "Quest_10",
+   "slug": "gold-and-gems-pile",
+   "description": "A heap of gold coins studded with purple, green and blue gemstones.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "reward"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00181",
+   "name": "Quest_103",
+   "slug": "green-gemstone",
+   "description": "A faceted green gemstone with bright highlights.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00182",
+   "name": "Quest_104",
+   "slug": "blue-gemstone",
+   "description": "A faceted blue gemstone with bright highlights.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03426",
+   "name": "Quest_105",
+   "slug": "glass-bottle",
+   "description": "A grey-green glass bottle with a cork-like stopper and a small feather or twig tied to its neck.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03427",
+   "name": "Quest_106",
+   "slug": "blue-droplets",
+   "description": "Three glossy blue liquid droplets of different sizes.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03428",
+   "name": "Quest_107",
+   "slug": "green-droplets",
+   "description": "Three glossy green liquid droplets of different sizes.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03431",
+   "name": "Quest_11",
+   "slug": "iron-cauldron",
+   "description": "A black iron cooking pot with a wide rim and a grey metal body.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03432",
+   "name": "Quest_110",
+   "slug": "wooden-slingshot",
+   "description": "A forked wooden stick slingshot with a leather pouch and band.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03433",
+   "name": "Quest_111",
+   "slug": "brown-droplets",
+   "description": "Three glossy brown liquid droplets of different sizes.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03434",
+   "name": "Quest_112",
+   "slug": "steel-padlock",
+   "description": "A grey steel padlock with a keyhole and a closed shackle.",
+   "tags": {
+    "kind": "key",
+    "use": [
+     "loot",
+     "dungeon"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03435",
+   "name": "Quest_113",
+   "slug": "bat-wing",
+   "description": "A brown membranous bat wing stretched over thin bones.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03436",
+   "name": "Quest_114",
+   "slug": "leafy-twig",
+   "description": "A thin brown branch with small green leaves and offshoots.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03438",
+   "name": "Quest_116",
+   "slug": "coal-chunks",
+   "description": "A dark lump of coal with an orange-glowing side, surrounded by small fragments.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03439",
+   "name": "Quest_117",
+   "slug": "arrow-struck-helmet",
+   "description": "A grey iron helmet with an arrow stuck in its side.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "loot",
+     "equipment"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03440",
+   "name": "Quest_118",
+   "slug": "pocket-watch",
+   "description": "A silver pocket watch with a white clock face, hands and a ring on top.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03441",
+   "name": "Quest_119",
+   "slug": "dynamite-bundle",
+   "description": "A bundle of red dynamite sticks bound together with an alarm clock timer attached.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03442",
+   "name": "Quest_12",
+   "slug": "wooden-pole",
+   "description": "A long, thin wooden stick with notched segments, like a bamboo pole.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00824",
+   "name": "Quest_121",
+   "slug": "stone-bricks",
+   "description": "A stack of light grey stone or concrete blocks.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03443",
+   "name": "Quest_122",
+   "slug": "rope-coil",
+   "description": "A coil of thick brown twisted rope.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00060",
+   "name": "Quest_123",
+   "slug": "blue-herb-tuft",
+   "description": "A tuft of long, narrow blue grass or leaves.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03444",
+   "name": "Quest_125",
+   "slug": "magnifying-glass",
+   "description": "A magnifying glass with a wooden handle and a metal-rimmed round lens.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03445",
+   "name": "Quest_126",
+   "slug": "grey-gear",
+   "description": "A flat grey metal cogwheel with a round hole in the center.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03446",
+   "name": "Quest_127",
+   "slug": "scrap-parts",
+   "description": "A scatter of screws, nails and a small gear with a faint smudge.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03448",
+   "name": "Quest_129",
+   "slug": "white-cubes",
+   "description": "Several white cubes and crumbs, resembling sugar or salt blocks.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03450",
+   "name": "Quest_130",
+   "slug": "gold-bars",
+   "description": "Three orange-gold bars laid diagonally with bright highlights.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "reward"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

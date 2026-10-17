@@ -1,0 +1,530 @@
+{
+ "unit": "sheet-094",
+ "records": [
+  {
+   "cluster_id": "c04301",
+   "name": "Sword_v2_34",
+   "slug": "curved-steel-sabre",
+   "description": "A curved single-edged steel sabre with a dark grey blade and a gold-trimmed knuckle guard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04302",
+   "name": "Sword_v2_35",
+   "slug": "crimson-sabre",
+   "description": "A curved sabre with a deep red blade and red-and-gold hilt and guard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04303",
+   "name": "Sword_v2_36",
+   "slug": "spiked-pommel-rapier",
+   "description": "A long thin grey rapier with a dark ornate pommel and a small cross guard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04304",
+   "name": "Sword_v2_37",
+   "slug": "basket-hilt-rapier",
+   "description": "A long thin grey rapier with a swept basket-style guard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04305",
+   "name": "Sword_v2_38",
+   "slug": "cup-hilt-rapier",
+   "description": "A long thin grey rapier with a round cup-shaped hand guard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04306",
+   "name": "Sword_v2_39",
+   "slug": "grey-cutlass",
+   "description": "A slightly curved grey cutlass with a looped hand guard.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04307",
+   "name": "Sword_v2_40",
+   "slug": "short-iron-sword",
+   "description": "A short broad dark-grey straight sword with a brown grip and small pommel.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04308",
+   "name": "Sword_v2_41",
+   "slug": "violet-flame-blade",
+   "description": "A serrated broad blade wreathed in glowing purple energy.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04309",
+   "name": "Sword_v2_42",
+   "slug": "radiant-black-sword",
+   "description": "A black segmented sword with a cross guard surrounded by a golden glow and sparkle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04310",
+   "name": "Sword_v2_43",
+   "slug": "green-wavy-blade",
+   "description": "A wavy flame-shaped blade glowing bright green with floating sparks.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04311",
+   "name": "Sword_v2_45",
+   "slug": "flaming-orange-scimitar",
+   "description": "A dark curved ornate scimitar wrapped in orange fire swirls.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04313",
+   "name": "Sword_v2_47",
+   "slug": "venom-green-sword",
+   "description": "A dark spear-shaped sword with a glowing green rune blade and green streaks.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04316",
+   "name": "Sword_v2_50",
+   "slug": "holy-light-greatsword",
+   "description": "An ornate dark sword with a spiked guard bathed in white-gold radiant light.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04318",
+   "name": "Tabard_01_clean",
+   "slug": "grey-tabard",
+   "description": "A plain grey sleeveless tabard with a pointed hem.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04320",
+   "name": "Tabard_03",
+   "slug": "black-gold-tabard",
+   "description": "A black tabard with gold trim along the edges.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04321",
+   "name": "Tabard_05",
+   "slug": "brown-tabard",
+   "description": "A brown tabard with a pointed hem and pale edging.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04322",
+   "name": "Tabard_07",
+   "slug": "purple-tabard",
+   "description": "A bright purple tabard with gold-and-white trim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04323",
+   "name": "Tabard_09",
+   "slug": "indigo-tabard",
+   "description": "A deep indigo-blue tabard with gold trim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00984",
+   "name": "Tabard_10",
+   "slug": "green-slime-tabard",
+   "description": "A dark grey tabard dripping with green slime or moss.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04331",
+   "name": "Tabard_19",
+   "slug": "cream-tabard",
+   "description": "A plain cream-white sleeveless tabard with grey shading.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04332",
+   "name": "Tabard_20",
+   "slug": "teal-tabard",
+   "description": "A teal tabard with gold trim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04333",
+   "name": "Tabard_21",
+   "slug": "red-blue-quartered-tabard",
+   "description": "A tabard split into red and blue vertical halves.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04334",
+   "name": "Tabard_22",
+   "slug": "green-brown-tabard",
+   "description": "A tabard split into green and tan-brown vertical halves.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04336",
+   "name": "Tabard_24",
+   "slug": "red-black-tabard",
+   "description": "A tabard in red and black vertical halves.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04337",
+   "name": "Tabard_25",
+   "slug": "red-cross-tabard",
+   "description": "A dark navy tabard with a red cross emblem on the chest.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

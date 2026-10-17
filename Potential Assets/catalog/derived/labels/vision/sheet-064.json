@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-064",
+ "records": [
+  {
+   "cluster_id": "c03135",
+   "name": "Loot_151",
+   "slug": "bronze-pocket-watch",
+   "description": "A round bronze pocket watch with a white face, black hands and a ring at the top.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "loot",
+     "inventory",
+     "crafting"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03136",
+   "name": "Loot_152",
+   "slug": "rope-net-with-hooks",
+   "description": "A woven rope net with a gold-brown mesh and small metal rings or hooks along its lower edge.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03138",
+   "name": "Loot_154",
+   "slug": "wooden-planks",
+   "description": "A bundle of rough brown wooden planks lashed together, with splintered tops.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03139",
+   "name": "Loot_156",
+   "slug": "coal-chunk",
+   "description": "A jagged chunk of dark grey-black rock with pale veins, like coal or ore.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03140",
+   "name": "Loot_157",
+   "slug": "leather-strip",
+   "description": "A curled strip of brown leather with a twisted ribbon shape.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03141",
+   "name": "Loot_158",
+   "slug": "iron-nails",
+   "description": "Three long iron nails with flat heads fanned out in a cluster.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03142",
+   "name": "Loot_159",
+   "slug": "metal-bucket",
+   "description": "A grey metal bucket with a curved wire handle and dark interior.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03143",
+   "name": "Loot_16",
+   "slug": "arrow-bundle",
+   "description": "Three arrows with grey metal heads and dark brown fletched shafts.",
+   "tags": {
+    "kind": "projectile",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03144",
+   "name": "Loot_160",
+   "slug": "stone-block",
+   "description": "A pale grey-white cut stone block shown as a rough cube.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03145",
+   "name": "Loot_164",
+   "slug": "gold-block",
+   "description": "A yellow-gold cube with a gleaming top face, painted like a solid gold or wax block.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03146",
+   "name": "Loot_165",
+   "slug": "rolled-cloth",
+   "description": "A tan roll of cloth or hide curled into a spiral cylinder.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03147",
+   "name": "Loot_166",
+   "slug": "coiled-wire",
+   "description": "Several loops of thin dark metal wire coiled together in a loose tangle.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03148",
+   "name": "Loot_167",
+   "slug": "metal-gear-part",
+   "description": "A grey metal cog-like part with four blunt teeth and a central pin.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03150",
+   "name": "Loot_169",
+   "slug": "dynamite-stick",
+   "description": "A red-brown cylindrical stick of dynamite with a short fuse at the top.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03152",
+   "name": "Loot_170",
+   "slug": "sprouting-seed",
+   "description": "A brown seed or nut with a small green sprout curling from its top.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03153",
+   "name": "Loot_171",
+   "slug": "bent-metal-pipe",
+   "description": "A bent grey metal pipe with two elbow joints and open ends.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03154",
+   "name": "Loot_172",
+   "slug": "brown-leather-book",
+   "description": "A closed brown leather book with metal corner caps and a pale emblem on the cover.",
+   "tags": {
+    "kind": "book",
+    "use": [
+     "loot",
+     "inventory",
+     "quest"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03155",
+   "name": "Loot_173",
+   "slug": "black-bomb",
+   "description": "A round black iron bomb with a highlight and a short fuse on top.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "loot",
+     "combat-action",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03156",
+   "name": "Loot_174",
+   "slug": "paper-roll",
+   "description": "A white roll of paper or cloth with a curled loose end.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03157",
+   "name": "Loot_175",
+   "slug": "copper-ingot",
+   "description": "A rectangular copper-orange metal ingot with a bevelled top.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03158",
+   "name": "Loot_176",
+   "slug": "iron-ingot",
+   "description": "A rectangular silver-grey metal ingot with a recessed top.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03159",
+   "name": "Loot_18",
+   "slug": "rope-coil",
+   "description": "A length of twisted tan rope curled in a loop with a frayed end.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00157",
+   "name": "Loot_19",
+   "slug": "gold-nuggets",
+   "description": "A larger gold nugget surrounded by several small gold flecks.",
+   "tags": {
+    "kind": "currency",
+    "use": [
+     "loot",
+     "crafting",
+     "price"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03163",
+   "name": "Loot_26",
+   "slug": "purple-claws",
+   "description": "A pair of curved dark purple claws or talons with green-tinted tips.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03164",
+   "name": "Loot_27",
+   "slug": "red-rune-stone",
+   "description": "A brown stone fragment with a glowing red rune mark and a red aura.",
+   "tags": {
+    "kind": "rune",
+    "use": [
+     "loot",
+     "crafting",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

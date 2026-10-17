@@ -1,0 +1,1812 @@
+{
+  "unit": "batch-00",
+  "records": [
+    {
+      "cluster_id": "c00279",
+      "name": "01_summon_zombie",
+      "slug": "summon-zombie",
+      "description": "Skill icon for the Summon Zombie skill (サモンゾンビ), a rarity-1 summon whose mode variant reuses the same icon.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "summon",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00280",
+      "name": "02_Big_fire_arrow",
+      "slug": "ancient-fire",
+      "description": "Skill icon for the Ancient Fire skill (エンシェントファイア), a rarity-2 attack whose mode variant reuses the same icon.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "attack",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00281",
+      "name": "02_summon_skeleton_warrior",
+      "slug": "summon-skeleton",
+      "description": "Skill icon for the Summon Skeleton skill (サモンスケルトン), a rarity-2 summon that also backs the Summon tip (召喚).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "summon",
+          "combat-action",
+          "tip"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00282",
+      "name": "03_fireballX1",
+      "slug": "shadow-blaze",
+      "description": "Icon for the Shadow Blaze mode (シャドウブレイズ) of a Survive-category skill; the file name suggests a fireball but the only corpus row is this skill mode.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "defend",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00031",
+      "name": "03_summon_skeleton_knightX1",
+      "slug": "transcendence",
+      "description": "Status-effect icon for Transcendence (超克), a unique state that lets risk be gained beyond 1000 percent; the file name suggests a skeleton knight but the only corpus row is this state.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "status-effect"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00284",
+      "name": "04_summon_skeleton_army",
+      "slug": "summon-from-another-realm",
+      "description": "Foe boss skill icon for Summon from Another Realm (異界からの召喚), a rarity-7 enemy-boss skill tagged to ignore affinity checks, with a matching mode variant.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "enemy-boss",
+          "summon",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00285",
+      "name": "05_Death_blow",
+      "slug": "demons-strike",
+      "description": "Skill icon for Demon's Strike (悪魔の一撃), a rarity-6 attack skill with a mode variant that reuses the same icon.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "attack",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00094",
+      "name": "06_Death_blow2",
+      "slug": "honourable-warriors-badge",
+      "description": "Quest badge for the Honourable Warriors band (名誉の戦士団), shared by four quest rows.",
+      "tags": {
+        "kind": "badge",
+        "use": [
+          "quest",
+          "union"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00288",
+      "name": "07_Death_blow3",
+      "slug": "demon-bite",
+      "description": "Skill icon for Demon Bite (デーモンバイト), a rarity-6 attack skill with a mode variant that reuses the same icon.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "attack",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00095",
+      "name": "07_summon_death",
+      "slug": "void-form",
+      "description": "Icon for the Void Form mode (ボイドフォーム) of an attack-category skill; the file name suggests a summon but the only corpus row is this attack mode.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "attack",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00289",
+      "name": "08_Death",
+      "slug": "dungeon-boss",
+      "description": "Room-event icon for Dungeon Boss (ダンジョンボス), shared with the Summon Legion mode (サモンレギオン).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon",
+          "enemy-boss",
+          "summon"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00290",
+      "name": "08_summon_army_of_death",
+      "slug": "minion-growth",
+      "description": "Skill icon for Minion Growth (ミニオングロース), a rarity-4 support skill whose mode variant reuses the same icon.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "buff",
+          "summon",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00292",
+      "name": "10_Cloth_Chest",
+      "slug": "shaine-nawe-witch-cloth-chest",
+      "description": "Chest armour icon for the Witch of Shaine Nawe (シャイネナウエの魔女), shared by its rarity-7 camp item and matching unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01288",
+      "name": "10_Cloth_Head",
+      "slug": "madmans-pride-cloth-head",
+      "description": "Head armour icon for Madman's Pride (狂人の矜持), a rarity-6 camp item with matching unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01289",
+      "name": "10_Cloth_Pants",
+      "slug": "beast-tamer-cloth-pants",
+      "description": "Trouser armour icon for Beast Tamer (獣使い), a rarity-5 camp item with matching random unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01291",
+      "name": "10_Cloth_bracers",
+      "slug": "eltrant-ruins-cloth-bracers",
+      "description": "Bracer armour icon for the Eltrant Ruins (エルトラント遺跡群), a rarity-6 camp item with matching unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01293",
+      "name": "10_Leather_Chest",
+      "slug": "barbarian-chieftain-leather-chest",
+      "description": "Chest armour icon for the Barbarian Chieftain (蛮族長), a rarity-5 camp item with matching random unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01309",
+      "name": "10_magic_bolt2",
+      "slug": "void-spitter",
+      "description": "Icon for the Void Spitter mode (ボイドスピッター) of an attack-category skill; the file name suggests a magic bolt but the only corpus row is this mode.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "attack",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00293",
+      "name": "10_needles",
+      "slug": "needle-guard",
+      "description": "Skill icon for Needle Guard (ニードルガード), a rarity-2 attack skill, also tied to the Reflect Damage tip (反射ダメージ).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "attack",
+          "combat-action",
+          "tip"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00294",
+      "name": "10_summon_succubus",
+      "slug": "alluring-charm",
+      "description": "Status-effect icon for Alluring Charm (魅惑の色香), a unique state that applies Seduction to enemies for 3 turns at battle start.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "status-effect"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01319",
+      "name": "11_Leather_Chest",
+      "slug": "klaus-medical-coat-leather-chest",
+      "description": "Chest armour icon for Klaus's Medical Coat (クラウスの医術衣), a rarity-7 camp item with matching unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01324",
+      "name": "11_Leather_head",
+      "slug": "explorer-leather-head",
+      "description": "Head armour icon for the Explorer (探検家), a rarity-5 camp item with matching random unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01327",
+      "name": "11_Mail_Chest",
+      "slug": "battle-hardened-mail-chest",
+      "description": "Chest armour icon for Battle-Hardened (歴戦), a rarity-5 camp item with matching random unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01328",
+      "name": "11_Mail_Shoulder",
+      "slug": "machine-parts-mail-shoulder",
+      "description": "Shoulder armour icon for Machine Parts (マシーンパーツ), a rarity-7 camp item with matching unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01332",
+      "name": "11_Mail_head",
+      "slug": "engineer-of-trae-mail-head",
+      "description": "Head armour icon for the Engineer of Traë (トラエの技師), a rarity-6 camp item with matching unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00295",
+      "name": "11_bull",
+      "slug": "normal-battle-bull",
+      "description": "Shared icon for four unrelated rows: the Normal Battle room event (通常戦闘), the Demonic Aura support skill and its mode (デモニックオーラ), and the Spawn Count state (出現数) that reduces enemy spawns.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "buff",
+          "dungeon"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "low"
+    },
+    {
+      "cluster_id": "c00296",
+      "name": "11_summon_devil",
+      "slug": "conquest",
+      "description": "Room-event icon for Conquest (征伐), a battle-type event with no matching skill or item rows.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "dungeon"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01336",
+      "name": "12_Cloth_Chest",
+      "slug": "wealthy-noble-cloth-chest",
+      "description": "Chest armour icon for the Wealthy Noble (富裕貴族), a rarity-5 camp item with matching random unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00297",
+      "name": "12_Cloth_Head",
+      "slug": "solde-orchestra-cloth-head",
+      "description": "Head armour icon for the Solde Orchestra (ソルデの楽団), a rarity-6 camp item with matching special-stat unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01339",
+      "name": "12_Cloth_bracers",
+      "slug": "secret-stone-cloth-bracers",
+      "description": "Bracer armour icon for the Secret Stone (秘石), a rarity-5 camp item with matching random unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01342",
+      "name": "12_Leather_Chest",
+      "slug": "dominics-dragonscale-leather-chest",
+      "description": "Chest armour icon for Dominic's Dragonscale Armour (ドミニクの竜鱗鎧), a rarity-7 camp item with matching special-stat unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01351",
+      "name": "12_Mail_Chest",
+      "slug": "sodom-mail-chest",
+      "description": "Chest armour icon for Sodom (ソドム), a rarity-6 camp item with matching unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00298",
+      "name": "12_disarmament",
+      "slug": "retribution",
+      "description": "Skill icon for Retribution (レトリビューション), a rarity-5 support skill whose mode variant reuses the same icon.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "buff",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01360",
+      "name": "13_Cloth_Chest",
+      "slug": "archbishop-of-launi-cloth-chest",
+      "description": "Chest armour icon for the Archbishop of Launi (ラウニの大司教), a rarity-6 camp item with matching special-stat unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01368",
+      "name": "13_Leather_Chest",
+      "slug": "miasma-leather-chest",
+      "description": "Chest armour icon for Miasma (瘴気), a rarity-5 camp item with matching random unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01373",
+      "name": "13_Leather_gloves",
+      "slug": "indirect-possession-leather-gloves",
+      "description": "Glove armour icon for Indirect Possession (間接憑依), a rarity-6 camp item with matching unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01374",
+      "name": "13_Leather_head",
+      "slug": "darens-oath-leather-head",
+      "description": "Head armour icon for Daren's Oath (ダレンの誓い), a rarity-7 camp item with matching unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00301",
+      "name": "13_Mail_ChestX1",
+      "slug": "moon-shadow-mail-chest",
+      "description": "Chest armour icon for Moon Shadow (月影), a rarity-7 camp item with matching unique gear, also used by the Vashilight Ore shop item (ヴァーシライト鉱石).",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp",
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00096",
+      "name": "13_dead_shadow",
+      "slug": "corruption",
+      "description": "Skill icon for Corruption (コラプション), a rarity-3 attack skill whose mode variant reuses the same icon.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "attack",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00097",
+      "name": "13_summon_raven",
+      "slug": "gazer-scout",
+      "description": "Icon shared by the Gazer rune (ゲイザー), which grants Scout stacks per room when used, and the Scout state (スカウト).",
+      "tags": {
+        "kind": "rune",
+        "use": [
+          "status-effect",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01385",
+      "name": "14_Cloth_Chest",
+      "slug": "saint-of-rota-vec-cloth-chest",
+      "description": "Chest armour icon for the Saint of Rota Vec (ロタ・ヴェックの聖女), a rarity-6 camp item with matching unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01386",
+      "name": "14_Cloth_Head",
+      "slug": "apothecary-waltland-cloth-head",
+      "description": "Head armour icon for the Apothecary of Waltland (ウォルトランドの薬師), shared by its camp item and gear and by the union contract Anti-Poison Gas Measures (毒ガス対策).",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp",
+          "union"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01400",
+      "name": "14_Mail_Chest",
+      "slug": "azure-sea-sailor-mail-chest",
+      "description": "Chest armour icon for the Sailor of the Azure Sea (蒼碧海の船乗り), a rarity-6 camp item with matching unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01405",
+      "name": "14_Mail_head",
+      "slug": "imperial-guard-knight-mail-head",
+      "description": "Head armour icon for the Imperial Guard Knight (近衛騎士), a rarity-5 camp item with matching random unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00099",
+      "name": "14_phoenix",
+      "slug": "huge-flame",
+      "description": "Icon for the Huge Flame mode (ヒュージフレイム) of an attack-category skill; the file name suggests a phoenix but the only corpus row is this mode.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "attack",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00302",
+      "name": "14_summon_dogs",
+      "slug": "infection",
+      "description": "Status-effect icon for Infection (感染), a unique state that also applies any status effect taken to the enemy.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "status-effect"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01409",
+      "name": "15_Cloth_Chest",
+      "slug": "queens-dress-cloth-chest",
+      "description": "Chest armour icon for the Queen's Dress (女王のドレス), a rarity-7 camp item with matching special-stat unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00303",
+      "name": "15_Ice_block",
+      "slug": "freeze",
+      "description": "Icon shared by the Freeze room environment effect (環境効果 - 凍結) and the Freeze state, which applies frostbite scaled to damage taken by both sides.",
+      "tags": {
+        "kind": "environment",
+        "use": [
+          "dungeon",
+          "status-effect"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01416",
+      "name": "15_Leather_Chest",
+      "slug": "demon-hunter-leather-chest",
+      "description": "Chest armour icon for Demon Hunter (悪魔狩り), a rarity-5 camp item with matching random unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01424",
+      "name": "15_Mail_Boots",
+      "slug": "idaten-mail-boots",
+      "description": "Boot armour icon for Idaten (韋駄天, the swift god), a rarity-7 camp item with matching special-stat unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00304",
+      "name": "15_Mail_Chest",
+      "slug": "elven-forest-mail-chest",
+      "description": "Chest armour icon for the Elven Forest (エルフの森), a rarity-5 camp item with matching random unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00305",
+      "name": "15_shadow_stoune",
+      "slug": "warped-love",
+      "description": "Status-effect icon for Warped Love (歪な愛), a unique state that moves an enemy's temporary effects onto you when you defeat it; the file name suggests a shadow stone.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "status-effect"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00306",
+      "name": "15_summon_shadow_wolf",
+      "slug": "spirit-wolf",
+      "description": "Icon for the Spirit Wolf mode (スピリットウルフ) of an attack-category skill.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "attack",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01431",
+      "name": "16_Cloth_Boots",
+      "slug": "spirit-river-crossing-cloth-boots",
+      "description": "Boot armour icon for Spirit River Crossing (霊川渡り), a rarity-7 camp item with matching unique gear, also used by the Vashilight Ore shop item (ヴァーシライト鉱石).",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp",
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00307",
+      "name": "16_Cloth_Chest",
+      "slug": "acheron-robe-cloth-chest",
+      "description": "Chest armour icon for the Robe of Acheron (アクェロンの衣), a rarity-7 camp item with matching unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01435",
+      "name": "16_Cloth_bracers",
+      "slug": "yomi-sea-cloth-bracers",
+      "description": "Bracer armour icon for the Sea of Yomi (黄泉海), a rarity-7 camp item with matching unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01438",
+      "name": "16_Leather_Chest",
+      "slug": "kenzos-garb-leather-chest",
+      "description": "Chest armour icon for Kenzo's Garb (ケンゾーの装束), a rarity-7 camp item with matching special-stat unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01447",
+      "name": "16_Mail_Chest",
+      "slug": "necromancy-troupe-mail-chest",
+      "description": "Chest armour icon for the Necromancy Troupe (屍術団), a rarity-6 camp item with matching unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00308",
+      "name": "16_Mail_glovesX1",
+      "slug": "spirit-demon-mail-gloves",
+      "description": "Glove armour icon for the Spirit Demon (霊鬼), a rarity-7 camp item with matching unique gear, also used by the Vashilight Ore shop item (ヴァーシライト鉱石).",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp",
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00310",
+      "name": "16_shadow_swords",
+      "slug": "void-edge",
+      "description": "Skill icon for Void Edge (ボイドエッジ), a rarity-6 support skill whose mode variant reuses the same icon; the file name suggests swords.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "buff",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00311",
+      "name": "16_summon_brutal_army",
+      "slug": "call-allies",
+      "description": "Foe boss skill icon for Call Allies (仲間を呼ぶ), a rarity-7 enemy-boss skill tagged to ignore affinity checks, with a matching mode variant.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "enemy-boss",
+          "summon"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00312",
+      "name": "17_Cloth_Chest",
+      "slug": "self-indulgence-cloth-chest",
+      "description": "Chest armour icon shared by the camp items Self-Indulgence (自堕落) and Sven's Garb (スヴェンの衣) and their matching unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00313",
+      "name": "17_Cloth_HeadX1",
+      "slug": "spirit-jewel-crown-cloth-head",
+      "description": "Head armour icon for the Spirit Jewel Crown (霊玉の宝冠), a rarity-7 camp item with matching unique gear, also used by the Vashilight Ore shop item (ヴァーシライト鉱石).",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp",
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c01459",
+      "name": "17_Leather_Chest",
+      "slug": "northern-barbarian-leather-chest",
+      "description": "Chest armour icon for the Northern Barbarian Fighter (北方蛮族の闘士), a rarity-6 camp item with matching unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01465",
+      "name": "17_Leather_gloves",
+      "slug": "slum-scavenger-leather-gloves",
+      "description": "Glove armour icon for the Slum Scavenger (貧民窟のゴミ漁り), a rarity-6 camp item with matching unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01468",
+      "name": "17_Mail_Chest",
+      "slug": "eternity-mail-chest",
+      "description": "Chest armour icon for Eternity (永遠), a rarity-7 camp item with matching unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01473",
+      "name": "17_Mail_head",
+      "slug": "hegemony-contract",
+      "description": "Icon for the Hegemony contract (覇業), a rarity-6 dungeon-drop contract; the file name suggests a mail head but the only corpus row is the contract.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "loot"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00314",
+      "name": "17_shield",
+      "slug": "crit-avoidance",
+      "description": "Status icon for Crit Avoidance (急所回避), a common state that lowers the chance of taking critical hits.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "status-effect"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00100",
+      "name": "17_venomX1",
+      "slug": "reincarnation",
+      "description": "Icon for the Reincarnation mode (転生) of a Survive-category skill; the file name suggests venom but the only corpus row is this mode.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "defend",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00101",
+      "name": "18_moon",
+      "slug": "eclipse",
+      "description": "Icon for the Eclipse special skill (エクリプス), shared with the Recall rune (リコール) and its auto variant.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "summon"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "low"
+    },
+    {
+      "cluster_id": "c00315",
+      "name": "18_shield",
+      "slug": "ancient-shield",
+      "description": "Skill icon for Ancient Shield (エンシェントシールド), a rarity-5 survive skill whose mode variant reuses the same icon.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "defend",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01479",
+      "name": "19_Shadow_bomb",
+      "slug": "lemegeton",
+      "description": "Icon for the Lemegeton mode (レメゲトン) of an attack-category skill; the file name suggests a shadow bomb.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "attack",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00317",
+      "name": "19_shield",
+      "slug": "juggernaut",
+      "description": "Status icon for Juggernaut (ジャガーノート), a unique state that halves damage taken and blocks stun once cumulative cooldown reaches 20.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "status-effect"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01481",
+      "name": "1_Cloth_Chest",
+      "slug": "pharmacist-cloth-chest",
+      "description": "Chest armour icon for the Pharmacist (薬剤師), a rarity-5 camp item with matching random unique gear.",
+      "tags": {
+        "kind": "armour",
+        "use": [
+          "equipment",
+          "camp"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c01499",
+      "name": "20_Shadow_rain",
+      "slug": "color-from-another-realm",
+      "description": "Skill icon for Color from Another Realm (異界からの色), a rarity-5 attack skill whose mode variant reuses the same icon.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "attack",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00102",
+      "name": "20_shadowKnight",
+      "slug": "summon-dark-knight",
+      "description": "Icon for the Summon Dark Knight skill (サモンダークナイト), a rarity-3 summon; the same file also backs the Iron Will rune (アイアンウィル) and the Tenacity state (強靭).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "summon",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00320",
+      "name": "20_shield",
+      "slug": "barrier",
+      "description": "Rune icon for Barrier (バリア), a rarity-5 rune that grants a barrier per battle, shared with the Barrier Enhancement, Magic Resistance and Physical-to-Magic Resistance Conversion states.",
+      "tags": {
+        "kind": "rune",
+        "use": [
+          "defend",
+          "status-effect"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00323",
+      "name": "21_shadowworld",
+      "slug": "darkness",
+      "description": "Icon shared by the Darkness room environment effect (環境効果 - 暗闇), the Spread of Color mode and the Darkness state, which grants both sides 100 percent critical bonus for 2 turns per room.",
+      "tags": {
+        "kind": "environment",
+        "use": [
+          "dungeon",
+          "status-effect"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00327",
+      "name": "23_Light_blow",
+      "slug": "justice-ray",
+      "description": "Foe boss skill icon for Justice Ray (ジャスティスレイ), a rarity-7 enemy-boss skill with a matching mode variant, shared with the Heaven Ray attack mode (ヘブンスレイ).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "enemy-boss",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00103",
+      "name": "23_atom",
+      "slug": "gravity",
+      "description": "Skill icon for Gravity (グラビティ), a rarity-5 attack skill whose mode variant reuses the same icon.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "attack",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00328",
+      "name": "23_axe",
+      "slug": "smash",
+      "description": "Skill icon for Smash (スマッシュ), a rarity-4 attack skill, also shared with the foe mode Slash Violently (激しく斬りつける).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "attack",
+          "combat-action",
+          "enemy"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00330",
+      "name": "24_axe",
+      "slug": "full-swing",
+      "description": "Icon for the Full Swing mode (フルスウィング) of an attack-category skill.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "attack",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00334",
+      "name": "25_secret_community",
+      "slug": "mutation",
+      "description": "Rune icon for the Mutation runes (weak, strong and auto variants), shared with the Unnameable Dread attack mode (名状しがたき恐怖).",
+      "tags": {
+        "kind": "rune",
+        "use": [
+          "combat-action",
+          "buff"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "low"
+    },
+    {
+      "cluster_id": "c00337",
+      "name": "26_catapult_shot",
+      "slug": "crushing",
+      "description": "Icon shared by the Cancel Bombardment mode (砲撃取りやめ) and the Crushing state (破砕), which reduces enemy HP stacks when direct damage exceeds their max HP.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "attack",
+          "status-effect"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00338",
+      "name": "27_Storm",
+      "slug": "judgment",
+      "description": "Skill icon for Judgment (ジャッジメント), a rarity-6 attack skill whose mode variant reuses the same icon.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "attack",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00104",
+      "name": "27_bow_shot_nobgX1",
+      "slug": "petty-trick",
+      "description": "Skill icon for Petty Trick (小細工), a rarity-3 support skill whose mode variant reuses the same icon; the file name suggests a bow shot.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "buff",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00340",
+      "name": "28_Storm2",
+      "slug": "thunder-cloud",
+      "description": "Skill icon for Thunder Cloud (サンダークラウド), a rarity-5 attack skill whose mode variant reuses the same icon.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "attack",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00032",
+      "name": "28_portal",
+      "slug": "open-gate",
+      "description": "Icon shared by the Open Gate survive skill (ゲートオープン), the Dimensional Gate foe boss skill (次元門) and the Other Dimension dungeon-drop contract (別次元).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "combat-action",
+          "enemy-boss",
+          "loot"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00343",
+      "name": "29_music",
+      "slug": "danceable",
+      "description": "Rune icon for Danceable (ダンサブル), a rarity-6 rune that refills uses on level-up, shared with the Watch Video Ad shop item (動画広告閲覧).",
+      "tags": {
+        "kind": "rune",
+        "use": [
+          "buff",
+          "shop"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00346",
+      "name": "2_summon_spiders",
+      "slug": "stalemate",
+      "description": "Rune icon for Stalemate (ステイルメイト), a rarity-7 rune that applies a two-turn skill disable to the enemy, shared with the Spider Snare skill (スパイダースネア) and the Entangling Trap foe mode (絡め取る罠).",
+      "tags": {
+        "kind": "rune",
+        "use": [
+          "debuff",
+          "status-effect"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00033",
+      "name": "30_gun_shot",
+      "slug": "shotgun",
+      "description": "Skill icon for Shotgun (ショットガン), a rarity-7 attack skill whose mode variant reuses the same icon.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "attack",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00348",
+      "name": "30_vortex",
+      "slug": "martial-arts",
+      "description": "Skill icon for Martial Arts (マーシャルアーツ), a rarity-5 attack skill, shared with the Blade Dance foe boss skill (ブレイドダンス) and its mode.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "attack",
+          "combat-action",
+          "enemy-boss"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00349",
+      "name": "31_Wave_of_evil3",
+      "slug": "black-flame",
+      "description": "Status icon for Black Flame (黒い炎), a unique state that converts burn damage dealt to enemies into void damage.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "status-effect"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00351",
+      "name": "31_vortex",
+      "slug": "sword-dance",
+      "description": "Skill icon for Sword Dance (ソードダンス), a rarity-4 attack skill, shared with the Minimal Movement state (最小限の動き).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "attack",
+          "combat-action",
+          "status-effect"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00352",
+      "name": "32_Evil",
+      "slug": "terror-boom",
+      "description": "Foe boss skill icon for Terror Boom (テラーブーム), a rarity-7 enemy-boss skill, shared with the Divine Transfer foe boss skill (神性転移) and the Disaster support mode (ディザスター).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "enemy-boss",
+          "combat-action",
+          "buff"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00105",
+      "name": "32_teleport",
+      "slug": "zodiac-sign",
+      "description": "Skill icon for Zodiac Sign (ゾディアックサイン), a rarity-5 support skill whose mode variant reuses the same icon; the file name suggests teleport.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "buff",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00354",
+      "name": "33_Critical_strike",
+      "slug": "sword-flash",
+      "description": "Skill icon for Sword Flash (剣閃), a rarity-6 attack skill whose mode variant reuses the same icon.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "attack",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00357",
+      "name": "34_Critical_strike2",
+      "slug": "plunge-slash",
+      "description": "Icon for the Plunge Slash mode (プランジスラッシュ), shared with the Use on Encounter tip (遭遇時使用).",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "attack",
+          "combat-action",
+          "tip"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "medium"
+    },
+    {
+      "cluster_id": "c00359",
+      "name": "34_wound",
+      "slug": "bleed-slash",
+      "description": "Skill icon for Bleed Slash (ブリードスラッシュ), a rarity-2 attack skill whose mode variant reuses the same icon.",
+      "tags": {
+        "kind": "ui-icon",
+        "use": [
+          "attack",
+          "combat-action"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "high"
+    },
+    {
+      "cluster_id": "c00106",
+      "name": "35_Critical_strike3",
+      "slug": "penetrate",
+      "description": "Rune icon for Penetrate (ペネトレイト), which ignores the target's physical resistance, shared with the Fighter runes and the Ancient Blade mode (エンシェントブレード).",
+      "tags": {
+        "kind": "rune",
+        "use": [
+          "combat-action",
+          "buff"
+        ],
+        "style": [
+          "atlas-crop"
+        ]
+      },
+      "used_by": [],
+      "confidence": "low"
+    }
+  ]
+}

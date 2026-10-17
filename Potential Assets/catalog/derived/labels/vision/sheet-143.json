@@ -1,0 +1,505 @@
+{
+ "unit": "sheet-143",
+ "records": [
+  {
+   "cluster_id": "c05532",
+   "name": "skill_238_noBG",
+   "slug": "crossed-chains-green-burst",
+   "description": "Two crossed silver chains over a green radiating burst.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05533",
+   "name": "skill_239_noBG",
+   "slug": "magenta-starburst",
+   "description": "A bright magenta-white starburst of light rays on a purple field.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05534",
+   "name": "skill_240_noBG",
+   "slug": "purple-ghoul-wisps",
+   "description": "A dark purple humanoid figure with a blank face and pale wisps streaming from its head.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05535",
+   "name": "skill_242_noBG",
+   "slug": "silver-sword-yellow-rays",
+   "description": "A silver sword blade angled diagonally across yellow light rays.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05536",
+   "name": "skill_243_noBG",
+   "slug": "holy-cross-shield",
+   "description": "A black shield marked with a glowing yellow cross inside a yellow aura.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05538",
+   "name": "skill_244_noBG",
+   "slug": "three-black-swords-green",
+   "description": "Three black sword silhouettes with green outlines over a green burst.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05539",
+   "name": "skill_245",
+   "slug": "crusader-silhouette-yellow",
+   "description": "A black knight silhouette holding a cross-marked shield in front of a yellow-green crescent glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05540",
+   "name": "skill_245_noBG",
+   "slug": "crusader-silhouette-yellow-transparent",
+   "description": "A black knight silhouette holding a cross-marked shield in front of a yellow crescent glow on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "buff"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01156",
+   "name": "skill_247_noBG",
+   "slug": "flaming-slashes-yellow",
+   "description": "Three yellow-orange flaming comet streaks sweeping diagonally.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05541",
+   "name": "skill_248_noBG",
+   "slug": "green-skull-horde",
+   "description": "A crowd of glowing green silhouetted figures with skull-like faces and raised arms.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "summon"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05542",
+   "name": "skill_249_noBG",
+   "slug": "flaming-dark-blade",
+   "description": "A dark jagged blade wreathed in yellow flames.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05543",
+   "name": "skill_25",
+   "slug": "grasping-hands-purple",
+   "description": "Dark silhouetted hands reaching and grasping over a purple background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05544",
+   "name": "skill_250_noBG",
+   "slug": "broadsword-green-glow",
+   "description": "A grey broadsword with a green glow behind it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01157",
+   "name": "skill_251_noBG",
+   "slug": "blue-taloned-claw",
+   "description": "A bony blue-grey taloned limb with blue lines radiating from it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05545",
+   "name": "skill_252_noBG",
+   "slug": "silver-sword-cyan-rays",
+   "description": "A pale silver sword blade angled diagonally across cyan light rays.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05546",
+   "name": "skill_253_noBG",
+   "slug": "wooden-shield-teal",
+   "description": "A maroon wooden-grained shield with a teal glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "defend"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05547",
+   "name": "skill_254",
+   "slug": "crossed-swords-cyan-burst",
+   "description": "Two crossed black swords in front of a cyan circular burst.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05548",
+   "name": "skill_254_noBG",
+   "slug": "crossed-swords-cyan-burst-transparent",
+   "description": "Two crossed black swords with cyan radiating lines on a transparent background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05549",
+   "name": "skill_257_noBG",
+   "slug": "cyan-slashes",
+   "description": "Three cyan comet-like streaks sweeping diagonally.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05550",
+   "name": "skill_258_noBG",
+   "slug": "blue-skull-horde",
+   "description": "A crowd of blue silhouetted figures with glowing skull-like faces and raised arms.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "summon"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05551",
+   "name": "skill_259_noBG",
+   "slug": "crossed-red-blades",
+   "description": "Two crossed red curved blades with white-violet tips.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05552",
+   "name": "skill_26",
+   "slug": "red-hand-lightning",
+   "description": "A red hand reaching out with white lightning crackling around it over purple.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c05553",
+   "name": "skill_260_noBG",
+   "slug": "cleaver-sword-cyan",
+   "description": "A broad pale cleaver-style sword with cyan rays behind it.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01158",
+   "name": "skill_261_noBG",
+   "slug": "ice-shards-cyan",
+   "description": "A scatter of cyan crystalline ice shards.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "attack"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c05554",
+   "name": "skill_262_noBG",
+   "slug": "pointing-hand-green-bubble",
+   "description": "A red hand with a pointing index finger inside a green translucent bubble.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "combat-action",
+     "debuff"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  }
+ ]
+}

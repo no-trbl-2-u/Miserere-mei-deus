@@ -1,0 +1,530 @@
+{
+ "unit": "sheet-075",
+ "records": [
+  {
+   "cluster_id": "c00838",
+   "name": "Quest_77",
+   "slug": "teal-potion-vials",
+   "description": "Three corked glass test tubes filled with teal liquid.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "inventory",
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03509",
+   "name": "Quest_78",
+   "slug": "purple-potion-vials",
+   "description": "Three corked glass test tubes filled with purple liquid.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "inventory",
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00839",
+   "name": "Quest_80",
+   "slug": "cauldron-gold-coins",
+   "description": "A grey iron cauldron brimming with gold coins.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "loot",
+     "reward",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03511",
+   "name": "Quest_81",
+   "slug": "cauldron-purple-gems",
+   "description": "A grey iron cauldron brimming with purple gems.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "loot",
+     "reward",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03512",
+   "name": "Quest_83",
+   "slug": "pumpkin",
+   "description": "A whole orange pumpkin with a green stem.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "inventory",
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03514",
+   "name": "Quest_87",
+   "slug": "sharpened-log-stake",
+   "description": "A short wooden log sharpened to a point at one end.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03517",
+   "name": "Quest_90",
+   "slug": "gold-ore-nugget",
+   "description": "A gold ore chunk with small gold fragments scattered around it.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03518",
+   "name": "Quest_91",
+   "slug": "silver-ore-chunk",
+   "description": "A grey stone or silver ore chunk with small fragments beside it.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c03519",
+   "name": "Quest_92",
+   "slug": "wooden-planks-bundle",
+   "description": "A bundle of thin wooden planks leaning together.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "crafting",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03520",
+   "name": "Quest_93",
+   "slug": "wooden-ladder",
+   "description": "A simple wooden ladder leaning diagonally.",
+   "tags": {
+    "kind": "architecture",
+    "use": [
+     "dungeon",
+     "navigation",
+     "inventory"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03524",
+   "name": "Quest_98",
+   "slug": "golden-horseshoe",
+   "description": "An ornate golden horseshoe with engraved decoration.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "loot",
+     "reward",
+     "equipment"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03526",
+   "name": "Quiver1",
+   "slug": "brown-leather-quiver",
+   "description": "An empty dark brown leather quiver with a strap.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03527",
+   "name": "Quiver1wArrows",
+   "slug": "brown-leather-quiver-arrows",
+   "description": "A dark brown leather quiver with grey-fletched arrows protruding.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03528",
+   "name": "Quiver2",
+   "slug": "green-cloth-quiver",
+   "description": "An empty green cloth quiver.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03529",
+   "name": "Quiver2wArrows",
+   "slug": "green-cloth-quiver-arrows",
+   "description": "A green cloth quiver with grey-fletched arrows protruding.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03530",
+   "name": "Quiver3",
+   "slug": "dark-blue-quiver",
+   "description": "An empty dark blue-grey quiver with a grey top rim.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03531",
+   "name": "Quiver3wArrows",
+   "slug": "dark-blue-quiver-bow-arrows",
+   "description": "A dark blue-grey quiver holding arrows with a bow slung across it.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03532",
+   "name": "Quiver_v2_01",
+   "slug": "tan-rope-quiver-arrows",
+   "description": "A tan leather quiver bound with cord and holding red-fletched arrows.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03534",
+   "name": "Quiver_v2_03",
+   "slug": "brown-quiver-red-gem",
+   "description": "A brown leather quiver with a red gem emblem and red-fletched arrows.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03535",
+   "name": "Quiver_v2_04",
+   "slug": "green-quiver-gold-runes",
+   "description": "A green quiver with gold rune markings and red-fletched arrows.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03536",
+   "name": "Quiver_v2_05",
+   "slug": "purple-quiver-gem",
+   "description": "A dark purple quiver with a magenta gem and purple-fletched arrows.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03563",
+   "name": "RawChickenLeg",
+   "slug": "raw-chicken-leg",
+   "description": "A raw chicken drumstick with a bone end.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "inventory",
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03564",
+   "name": "RedBag",
+   "slug": "red-leather-satchel",
+   "description": "A reddish-brown leather satchel with a front buckle strap.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "inventory",
+     "loot",
+     "equipment"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03565",
+   "name": "RedGambeson",
+   "slug": "red-gambeson",
+   "description": "A dark short-sleeved gambeson with red quilted panels.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00840",
+   "name": "RedHat",
+   "slug": "red-hood",
+   "description": "A red cloth hood with a fur-trimmed opening.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "inventory",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

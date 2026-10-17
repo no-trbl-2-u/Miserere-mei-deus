@@ -1,0 +1,522 @@
+{
+ "unit": "sheet-005",
+ "records": [
+  {
+   "cluster_id": "c00664",
+   "name": "GooglePayWhite_0",
+   "slug": "google-g-logo",
+   "description": "The multicoloured Google 'G' logo in red, yellow, green and blue.",
+   "tags": {
+    "kind": "brand-mark",
+    "use": [
+     "payment"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02721",
+   "name": "GooglePayWhite_1",
+   "slug": "google-pay-letter-p",
+   "description": "A white capital letter 'P' cut from the Google Pay wordmark.",
+   "tags": {
+    "kind": "text-label",
+    "use": [
+     "payment"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02722",
+   "name": "GooglePayWhite_2",
+   "slug": "google-pay-letter-a",
+   "description": "A white lowercase letter 'a' cut from the Google Pay wordmark.",
+   "tags": {
+    "kind": "text-label",
+    "use": [
+     "payment"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02723",
+   "name": "GooglePayWhite_3",
+   "slug": "google-pay-letter-y",
+   "description": "A white lowercase letter 'y' cut from the Google Pay wordmark.",
+   "tags": {
+    "kind": "text-label",
+    "use": [
+     "payment"
+    ],
+    "style": [
+     "flat-vector",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c01287",
+   "name": "10_Cloth_Boots",
+   "slug": "cloth-boots-brown",
+   "description": "A pair of brown cloth boots with folded cuffs and mossy soles.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01290",
+   "name": "10_Cloth_belt",
+   "slug": "cloth-belt-brown",
+   "description": "A brown cloth belt with a small buckle, shown as a loop.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01292",
+   "name": "10_Cloth_sloulder",
+   "slug": "cloth-shoulder-plague-mask",
+   "description": "A shoulder piece formed from a pale beaked mask ringed by purple spiky feathers and dark roots.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01294",
+   "name": "10_Leather_Pants",
+   "slug": "leather-pants-brown",
+   "description": "Brown quilted leather trousers seen from the front.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01295",
+   "name": "10_Leather_Shoulder",
+   "slug": "leather-shoulder-brown",
+   "description": "A brown leather pauldron with layered strap plates and a small spike.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01296",
+   "name": "10_Leather_belt",
+   "slug": "leather-belt-studded",
+   "description": "A brown leather belt with metal studs and a metal edge, shown as a loop.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01297",
+   "name": "10_Leather_boots",
+   "slug": "leather-boots-brown",
+   "description": "A pair of tall brown leather boots with orange panels.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01298",
+   "name": "10_Leather_bracers",
+   "slug": "leather-bracers-brown",
+   "description": "A brown leather bracer with strapped bands and metal trim.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01299",
+   "name": "10_Leather_gloves",
+   "slug": "leather-gloves-flared",
+   "description": "A pair of dark leather gauntlets with flared cuffs and metal plates.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01300",
+   "name": "10_Leather_head",
+   "slug": "leather-hood-helm",
+   "description": "A dark hooded leather helm with metal spikes and glowing eyes in shadow.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01302",
+   "name": "10_Mail_Boots",
+   "slug": "mail-boots-steel",
+   "description": "A pair of grey steel greaves and boots with red inner lining.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01303",
+   "name": "10_Mail_Chest",
+   "slug": "mail-chest-steel-red",
+   "description": "A grey steel chest piece with jagged red-lined edges.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01304",
+   "name": "10_Mail_Shoulder",
+   "slug": "mail-shoulder-steel-red",
+   "description": "A grey steel pauldron with a red gem and red lining.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01305",
+   "name": "10_Mail_belt",
+   "slug": "mail-belt-red-gem",
+   "description": "A steel belt with a spiked red gem at its centre, shown as a loop.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01306",
+   "name": "10_Mail_bracers",
+   "slug": "mail-bracers-steel-red",
+   "description": "A grey steel bracer with a red inner lining.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01307",
+   "name": "10_Mail_gloves",
+   "slug": "mail-gloves-steel-red",
+   "description": "A pair of steel gauntlets with red fabric at the wrists.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01308",
+   "name": "10_Mail_head",
+   "slug": "mail-helm-horned-red",
+   "description": "A grey steel helm with jagged horns and red crest detail.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01310",
+   "name": "10_mail_Pants",
+   "slug": "mail-leggings-steel-red",
+   "description": "Steel leg armour with red cloth waistband and plated greaves.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01311",
+   "name": "11_Cloth_Boots",
+   "slug": "cloth-boots-tan",
+   "description": "A pair of tan cloth boots with folded cuffs and stitched panels.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01312",
+   "name": "11_Cloth_Chest",
+   "slug": "cloth-chest-apron",
+   "description": "A white collared shirt under a brown leather apron.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c01313",
+   "name": "11_Cloth_Head",
+   "slug": "cloth-goggles-green",
+   "description": "A pair of goggles with glowing green lenses and thin arms.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "inventory"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

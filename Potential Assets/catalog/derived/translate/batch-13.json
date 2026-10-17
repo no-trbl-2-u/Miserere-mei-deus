@@ -1,0 +1,2502 @@
+{
+ "batch": "batch-13",
+ "items": [
+  {
+   "cluster_id": "c04913",
+   "name": "icon-SK52",
+   "file": "sprites/icon-SK52.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 52",
+      "ID": "SPISK052",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ドルクモンド",
+      "ID": "SKNS0052"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04914",
+   "name": "icon-SK53",
+   "file": "sprites/icon-SK53.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 53",
+      "ID": "SPISK053",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "シンディス",
+      "ID": "SKNS0053"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04915",
+   "name": "icon-SK54",
+   "file": "sprites/icon-SK54.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 54",
+      "ID": "SPISK054",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "テレーズ",
+      "ID": "SKNS0054"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04916",
+   "name": "icon-SK55",
+   "file": "sprites/icon-SK55.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 55",
+      "ID": "SPISK055",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "グリゴリー",
+      "ID": "SKNS0055"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04917",
+   "name": "icon-SK56",
+   "file": "sprites/icon-SK56.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 56",
+      "ID": "SPISK056",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ポッチー / Potchy",
+      "ID": "SKNS0056"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04918",
+   "name": "icon-SK57",
+   "file": "sprites/icon-SK57.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 57",
+      "ID": "SPISK057",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ウマル",
+      "ID": "SKNS0057"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04919",
+   "name": "icon-SK58",
+   "file": "sprites/icon-SK58.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 58",
+      "ID": "SPISK058",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "マサヒデ",
+      "ID": "SKNS0058"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04920",
+   "name": "icon-SK59",
+   "file": "sprites/icon-SK59.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 59",
+      "ID": "SPISK059",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ジャミル",
+      "ID": "SKNS0059"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04921",
+   "name": "icon-SK60",
+   "file": "sprites/icon-SK60.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 60",
+      "ID": "SPISK060",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ケンゾー",
+      "ID": "SKNS0060"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04922",
+   "name": "icon-SK61",
+   "file": "sprites/icon-SK61.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 61",
+      "ID": "SPISK061",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ルトヴィン",
+      "ID": "SKNS0061"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04923",
+   "name": "icon-SK62",
+   "file": "sprites/icon-SK62.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 62",
+      "ID": "SPISK062",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ラミラ",
+      "ID": "SKNS0062"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04924",
+   "name": "icon-SK63",
+   "file": "sprites/icon-SK63.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 63",
+      "ID": "SPISK063",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ラモナ",
+      "ID": "SKNS0063"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04925",
+   "name": "icon-SK64",
+   "file": "sprites/icon-SK64.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 64",
+      "ID": "SPISK064",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "サラ",
+      "ID": "SKNS0064"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04926",
+   "name": "icon-SK65",
+   "file": "sprites/icon-SK65.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 65",
+      "ID": "SPISK065",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "シュティナ",
+      "ID": "SKNS0065"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04927",
+   "name": "icon-SK66",
+   "file": "sprites/icon-SK66.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 66",
+      "ID": "SPISK066",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "パール",
+      "ID": "SKNS0066"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04928",
+   "name": "icon-SK67",
+   "file": "sprites/icon-SK67.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 67",
+      "ID": "SPISK067",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ヘンリーゼ",
+      "ID": "SKNS0067"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04929",
+   "name": "icon-SK68",
+   "file": "sprites/icon-SK68.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 68",
+      "ID": "SPISK068",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ヴァルヴァラ",
+      "ID": "SKNS0068"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04930",
+   "name": "icon-SK69",
+   "file": "sprites/icon-SK69.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 69",
+      "ID": "SPISK069",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "キヌ",
+      "ID": "SKNS0069"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04931",
+   "name": "icon-SK70",
+   "file": "sprites/icon-SK70.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 70",
+      "ID": "SPISK070",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ツネヨシ",
+      "ID": "SKNS0070"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04932",
+   "name": "icon-SK71",
+   "file": "sprites/icon-SK71.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 71",
+      "ID": "SPISK071",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ソルヴェン",
+      "ID": "SKNS0071"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04933",
+   "name": "icon-SK72",
+   "file": "sprites/icon-SK72.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 72",
+      "ID": "SPISK072",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "エルクルード",
+      "ID": "SKNS0072"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04934",
+   "name": "icon-SK73",
+   "file": "sprites/icon-SK73.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 73",
+      "ID": "SPISK073",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ネフェレイア",
+      "ID": "SKNS0073"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04935",
+   "name": "icon-SK74",
+   "file": "sprites/icon-SK74.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 74",
+      "ID": "SPISK074",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "フェイスレス",
+      "ID": "SKNS0074"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04936",
+   "name": "icon-SK75",
+   "file": "sprites/icon-SK75.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 75",
+      "ID": "SPISK075",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ダルバエ",
+      "ID": "SKNS0075"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04937",
+   "name": "icon-SK76",
+   "file": "sprites/icon-SK76.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 76",
+      "ID": "SPISK076",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "シズネ",
+      "ID": "SKNS0076"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04938",
+   "name": "icon-SK77",
+   "file": "sprites/icon-SK77.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 77",
+      "ID": "SPISK077",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "エルトヴァール",
+      "ID": "SKNS0077"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04939",
+   "name": "icon-SK78",
+   "file": "sprites/icon-SK78.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 78",
+      "ID": "SPISK078",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ミリカ",
+      "ID": "SKNS0078"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04940",
+   "name": "icon-SK79",
+   "file": "sprites/icon-SK79.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 79",
+      "ID": "SPISK079",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ヤヨイ",
+      "ID": "SKNS0079"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04941",
+   "name": "icon-SK80",
+   "file": "sprites/icon-SK80.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 80",
+      "ID": "SPISK080",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ツキコ",
+      "ID": "SKNS0080"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04942",
+   "name": "icon-SK81",
+   "file": "sprites/icon-SK81.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 81",
+      "ID": "SPISK081",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "サガクレ",
+      "ID": "SKNS0081"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04943",
+   "name": "icon-SK82",
+   "file": "sprites/icon-SK82.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 82",
+      "ID": "SPISK082",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "イリーナ",
+      "ID": "SKNS0082"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04944",
+   "name": "icon-SK83",
+   "file": "sprites/icon-SK83.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 83",
+      "ID": "SPISK083",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ゴーストリリー",
+      "ID": "SKNS0083"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04945",
+   "name": "icon-SK84",
+   "file": "sprites/icon-SK84.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 84",
+      "ID": "SPISK084",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "カーディアス",
+      "ID": "SKNS0084"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04946",
+   "name": "icon-SK85",
+   "file": "sprites/icon-SK85.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 85",
+      "ID": "SPISK085",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "アナスタシア",
+      "ID": "SKNS0085"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04947",
+   "name": "icon-SK86",
+   "file": "sprites/icon-SK86.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 86",
+      "ID": "SPISK086",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "グリンデル",
+      "ID": "SKNS0086"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04948",
+   "name": "icon-SK87",
+   "file": "sprites/icon-SK87.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 87",
+      "ID": "SPISK087",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ホウザン",
+      "ID": "SKNS0087"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04949",
+   "name": "icon-SK88",
+   "file": "sprites/icon-SK88.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 88",
+      "ID": "SPISK088",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "シロタエ",
+      "ID": "SKNS0088"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04950",
+   "name": "icon-SK89",
+   "file": "sprites/icon-SK89.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "エレマイア",
+      "ID": "SKNS0089"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04951",
+   "name": "icon-SK90",
+   "file": "sprites/icon-SK90.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "リムスール",
+      "ID": "SKNS0090"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04952",
+   "name": "icon-SK91",
+   "file": "sprites/icon-SK91.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 91",
+      "ID": "SPISK091",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "スヴェルグ",
+      "ID": "SKNS0091"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04953",
+   "name": "icon-SK92",
+   "file": "sprites/icon-SK92.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 92",
+      "ID": "SPISK092",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "リゼット",
+      "ID": "SKNS0092"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04954",
+   "name": "icon-SK93",
+   "file": "sprites/icon-SK93.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 93",
+      "ID": "SPISK093",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "オフィーリア",
+      "ID": "SKNS0093"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04955",
+   "name": "icon-SK94",
+   "file": "sprites/icon-SK94.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "shop_item",
+     "column": "Icon",
+     "row": {
+      "name": "スキン 94",
+      "ID": "SPISK094",
+      "ParamKey": "Skin"
+     }
+    },
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "アステリオン",
+      "ID": "SKNS0094"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04956",
+   "name": "icon-SK95",
+   "file": "sprites/icon-SK95.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "セドリック",
+      "ID": "SKNS0095"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04957",
+   "name": "icon-SK96",
+   "file": "sprites/icon-SK96.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "ルビエラ",
+      "ID": "SKNS0096"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04958",
+   "name": "icon-SK97",
+   "file": "sprites/icon-SK97.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "マドック",
+      "ID": "SKNS0097"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04959",
+   "name": "icon-SK98",
+   "file": "sprites/icon-SK98.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "skin",
+     "column": "Icon",
+     "row": {
+      "name": "フォルティス",
+      "ID": "SKNS0098"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04962",
+   "name": "icon_191024-migo",
+   "file": "sprites/icon_191024-migo.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ミゴ",
+      "ID": "EBS24002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04963",
+   "name": "icon_43963599_p0",
+   "file": "sprites/icon_43963599_p0.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "フェニックス",
+      "ID": "ECQ00012",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    },
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "フェニックス",
+      "ID": "ESM00032",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04964",
+   "name": "icon_44028992_p0",
+   "file": "sprites/icon_44028992_p0.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "樹聖",
+      "ID": "EBS09003",
+      "Category": "DungeonBoss3",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04965",
+   "name": "icon_44069011_p0",
+   "file": "sprites/icon_44069011_p0.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "感染した植物",
+      "ID": "EBS16001",
+      "Category": "DungeonBoss1",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04966",
+   "name": "icon_44367512_p0",
+   "file": "sprites/icon_44367512_p0.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "リヴァイアサン",
+      "ID": "EERM0015",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "Risky"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04967",
+   "name": "icon_44592508_p0",
+   "file": "sprites/icon_44592508_p0.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ニーズヘッグ",
+      "ID": "ECQ00005",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04968",
+   "name": "icon_44624931_p0",
+   "file": "sprites/icon_44624931_p0.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ジャイアントクラブ",
+      "ID": "E0N02013",
+      "Category": "Normal2",
+      "Rarity": 2
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04969",
+   "name": "icon_44728556_p0",
+   "file": "sprites/icon_44728556_p0.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "スワンプハンター",
+      "ID": "E0N04014",
+      "Category": "Normal4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04970",
+   "name": "icon_44867185_p0_master1200",
+   "file": "sprites/icon_44867185_p0_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "アークエンジェル",
+      "ID": "ECQ00007",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04971",
+   "name": "icon_44921315_p0_master1200",
+   "file": "sprites/icon_44921315_p0_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "レギオン",
+      "ID": "EEX00003",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "NoDrop"
+      ]
+     }
+    },
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "レギオン",
+      "ID": "ESM00018",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04972",
+   "name": "icon_46165755_p0_master1200",
+   "file": "sprites/icon_46165755_p0_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "森の守護者",
+      "ID": "EBS09002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04973",
+   "name": "icon_46165755_p1_master1200X1",
+   "file": "sprites/icon_46165755_p1_master1200X1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "感染した獣",
+      "ID": "EBS16002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04974",
+   "name": "icon_46595704_p0_master1200",
+   "file": "sprites/icon_46595704_p0_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ラース",
+      "ID": "EBS05002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04976",
+   "name": "icon_50867970_p0_master1200",
+   "file": "sprites/icon_50867970_p0_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "九尾",
+      "ID": "EBS02003",
+      "Category": "DungeonBoss3",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04977",
+   "name": "icon_51180360_p0_master1200",
+   "file": "sprites/icon_51180360_p0_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "古代の覇王",
+      "ID": "EBS10001",
+      "Category": "DungeonBoss1",
+      "Rarity": 6
+     }
+    },
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "古代の覇王",
+      "ID": "ESM00029",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    },
+    {
+     "table": "music",
+     "column": "Icon",
+     "row": {
+      "name": "オープニング",
+      "ID": "MSC001"
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04978",
+   "name": "icon_51180360_p1_master1200",
+   "file": "sprites/icon_51180360_p1_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "魂の解放者",
+      "ID": "EBS10002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04979",
+   "name": "icon_54759245_p1_master1200X2",
+   "file": "sprites/icon_54759245_p1_master1200X2.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "旧支配者の大祭司",
+      "ID": "EBS15003",
+      "Category": "DungeonBoss3",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04980",
+   "name": "icon_64775330_p2_master1200",
+   "file": "sprites/icon_64775330_p2_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ゴブリン",
+      "ID": "E0N01008",
+      "Category": "Normal1",
+      "Rarity": 1
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04981",
+   "name": "icon_64837282_p0_master1200",
+   "file": "sprites/icon_64837282_p0_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ゴブリンシャーマン",
+      "ID": "E0N02011",
+      "Category": "Normal2",
+      "Rarity": 2
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04982",
+   "name": "icon_64891264_p1_master1200",
+   "file": "sprites/icon_64891264_p1_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "炭鉱夫",
+      "ID": "ESM00014",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04983",
+   "name": "icon_65132811_p0_master1200",
+   "file": "sprites/icon_65132811_p0_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ミミック",
+      "ID": "EEX00001",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "NoDrop"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04984",
+   "name": "icon_66005943_p7_master1200",
+   "file": "sprites/icon_66005943_p7_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ヴァンパイア",
+      "ID": "E0N04011",
+      "Category": "Normal4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04985",
+   "name": "icon_66005943_p9_master1200",
+   "file": "sprites/icon_66005943_p9_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ブレイドトゥース",
+      "ID": "E0N02002",
+      "Category": "Normal2",
+      "Rarity": 2
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04986",
+   "name": "icon_66037225_p0",
+   "file": "sprites/icon_66037225_p0.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "塔の主",
+      "ID": "EBS03002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04987",
+   "name": "icon_66067003_p1_master1200",
+   "file": "sprites/icon_66067003_p1_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "デーモンプリンス",
+      "ID": "EERM0019",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "Risky"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04988",
+   "name": "icon_66067003_p2_master1200",
+   "file": "sprites/icon_66067003_p2_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ネビロス",
+      "ID": "EBS07002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04989",
+   "name": "icon_66252392_p0_master1200",
+   "file": "sprites/icon_66252392_p0_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ソウルフォート",
+      "ID": "EBS03003",
+      "Category": "DungeonBoss3",
+      "Rarity": 6
+     }
+    },
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ボーントーテム",
+      "ID": "ESM00021",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04990",
+   "name": "icon_68196795_p0",
+   "file": "sprites/icon_68196795_p0.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ゼリー",
+      "ID": "ESM00024",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04991",
+   "name": "icon_76111972_p3",
+   "file": "sprites/icon_76111972_p3.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "シャドウラーカー",
+      "ID": "E0N04007",
+      "Category": "Normal4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04992",
+   "name": "icon_76650660_p2",
+   "file": "sprites/icon_76650660_p2.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "不定形の戦士",
+      "ID": "EBS11002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    },
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "再顕現者",
+      "ID": "EBS20003",
+      "Category": "DungeonBoss3",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04994",
+   "name": "icon_76650660_p3",
+   "file": "sprites/icon_76650660_p3.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "アボミネーション",
+      "ID": "ESM00033",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04995",
+   "name": "icon_76965307_p1",
+   "file": "sprites/icon_76965307_p1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "スキュラクイーン",
+      "ID": "EBS15001",
+      "Category": "DungeonBoss1",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04996",
+   "name": "icon_76965307_p4",
+   "file": "sprites/icon_76965307_p4.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "スキュラ",
+      "ID": "E0N05008",
+      "Category": "Normal5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04997",
+   "name": "icon_77892207_p0",
+   "file": "sprites/icon_77892207_p0.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "盗人",
+      "ID": "EDG06001",
+      "Category": "Normal-D4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04998",
+   "name": "icon_77892207_p3",
+   "file": "sprites/icon_77892207_p3.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "追い剥ぎ",
+      "ID": "EDG11001",
+      "Category": "Normal-D4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c04999",
+   "name": "icon_77937023_p3",
+   "file": "sprites/icon_77937023_p3.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "グラトニー",
+      "ID": "EBS05001",
+      "Category": "DungeonBoss1",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05000",
+   "name": "icon_77937023_p4",
+   "file": "sprites/icon_77937023_p4.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "アビスイーター",
+      "ID": "EBS21002",
+      "Category": "DungeonBoss2",
+      "Rarity": 7
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05001",
+   "name": "icon_78217648_p0",
+   "file": "sprites/icon_78217648_p0.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "バイパーネスト",
+      "ID": "EDG02001",
+      "Category": "Normal-D4",
+      "Rarity": 4
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05002",
+   "name": "icon_78536855_p3",
+   "file": "sprites/icon_78536855_p3.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "殺人者",
+      "ID": "E0N02004",
+      "Category": "Normal2",
+      "Rarity": 2
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05003",
+   "name": "icon_78731756_p0",
+   "file": "sprites/icon_78731756_p0.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ダンシングジュエル",
+      "ID": "ESM00039",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc",
+       "CopyGear3Stats"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05004",
+   "name": "icon_79338597_p1",
+   "file": "sprites/icon_79338597_p1.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "異星の侵略者",
+      "ID": "EERM0014",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "Risky"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05005",
+   "name": "icon_79338597_p2",
+   "file": "sprites/icon_79338597_p2.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "深淵の肉塊",
+      "ID": "EEX00005",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "NoDrop"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05006",
+   "name": "icon_79338597_p3",
+   "file": "sprites/icon_79338597_p3.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "無限の軍勢",
+      "ID": "EDG10002",
+      "Category": "Normal-D5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05007",
+   "name": "icon_79417988_p2",
+   "file": "sprites/icon_79417988_p2.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "マンティコア",
+      "ID": "E0N05004",
+      "Category": "Normal5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05008",
+   "name": "icon_79417988_p3",
+   "file": "sprites/icon_79417988_p3.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ヌエ",
+      "ID": "EEX00008",
+      "Category": "Special",
+      "Rarity": 6,
+      "Tag": [
+       "Risky"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05009",
+   "name": "icon_79417988_p5",
+   "file": "sprites/icon_79417988_p5.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "黒麒麟",
+      "ID": "EDS00019",
+      "Category": "Disaster",
+      "Rarity": 9,
+      "Tag": [
+       "Uber"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05010",
+   "name": "icon_79633847_p0",
+   "file": "sprites/icon_79633847_p0.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "黄昏人",
+      "ID": "EDS00018",
+      "Category": "Disaster",
+      "Rarity": 9,
+      "Tag": [
+       "Uber"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05011",
+   "name": "icon_80010168_p4",
+   "file": "sprites/icon_80010168_p4.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ダイダラボッチ",
+      "ID": "ECQ00021",
+      "Category": "Conquest",
+      "Rarity": 8
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05012",
+   "name": "icon_80457125_p0_master1200",
+   "file": "sprites/icon_80457125_p0_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "赤鬼",
+      "ID": "EDG02002",
+      "Category": "Normal-D5",
+      "Rarity": 5
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05013",
+   "name": "icon_80616199_p3_master1200",
+   "file": "sprites/icon_80616199_p3_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ドラゴンベビー",
+      "ID": "E0N03008",
+      "Category": "Normal3",
+      "Rarity": 3
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05014",
+   "name": "icon_80841025_p0_master1200",
+   "file": "sprites/icon_80841025_p0_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "バエル",
+      "ID": "EBS07003",
+      "Category": "DungeonBoss3",
+      "Rarity": 6
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05015",
+   "name": "icon_80860504_p0_master1200",
+   "file": "sprites/icon_80860504_p0_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "ホーリースピリット",
+      "ID": "ESM00022",
+      "Category": "Summon",
+      "Rarity": -1,
+      "Tag": [
+       "NoDrop",
+       "NoDesc"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "cluster_id": "c05016",
+   "name": "icon_80887888_p0_master1200",
+   "file": "sprites/icon_80887888_p0_master1200.png",
+   "type": "Sprite",
+   "atlas": "IconAtlasCat2",
+   "size": "64x64",
+   "members": 1,
+   "corpus": [
+    {
+     "table": "enemy",
+     "column": "Icon",
+     "row": {
+      "name": "グレムリン",
+      "ID": "E0N02005",
+      "Category": "Normal2",
+      "Rarity": 2
+     }
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,530 @@
+{
+ "unit": "sheet-087",
+ "records": [
+  {
+   "cluster_id": "c04104",
+   "name": "Spear_17",
+   "slug": "curved-blade-glaive-grey",
+   "description": "A pixel-art glaive with a curved pale grey blade on a long brown shaft, angled diagonally.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04105",
+   "name": "Spear_18",
+   "slug": "curved-blade-glaive-violet",
+   "description": "A pixel-art glaive with a curved lavender-tinged blade on a slender purple-grey shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04107",
+   "name": "Spear_20",
+   "slug": "crystal-head-spear-pale",
+   "description": "A pixel-art spear with a pale faceted crystalline diamond head on a long dark shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04108",
+   "name": "Spear_21",
+   "slug": "crystal-head-spear-slim",
+   "description": "A pixel-art spear with a slim pale crystalline head and thin dark shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04109",
+   "name": "Spear_23",
+   "slug": "winged-cross-spear-green",
+   "description": "A pixel-art spear with a green cross-shaped winged head on a dark green shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04110",
+   "name": "Spear_24",
+   "slug": "winged-cross-spear-teal",
+   "description": "A pixel-art spear with a blue-teal four-pointed winged head on a dark teal shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04111",
+   "name": "Spear_25",
+   "slug": "winged-cross-spear-gold",
+   "description": "A pixel-art spear with an orange and gold winged cross head on a brown shaft with a gold butt cap.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04113",
+   "name": "Spear_27",
+   "slug": "leaf-blade-spear-grey",
+   "description": "A pixel-art spear with a broad pale grey leaf-shaped blade on a dark shaft with a ring at the butt.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04114",
+   "name": "Spear_28",
+   "slug": "leaf-blade-spear-green",
+   "description": "A pixel-art spear with a pale green leaf-shaped blade and green-ornamented dark shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04115",
+   "name": "Spear_29",
+   "slug": "leaf-blade-spear-jade",
+   "description": "A pixel-art spear with a teal jade leaf blade on a dark green shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04117",
+   "name": "Spear_31",
+   "slug": "fork-head-spear-pale",
+   "description": "A pixel-art spear with a pale green-white forked head of several prongs on a dark shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00968",
+   "name": "Spear_32",
+   "slug": "fork-head-spear-steel",
+   "description": "A pixel-art spear with an ornate blue-grey multi-pronged fork head on a dark shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04120",
+   "name": "Spear_36",
+   "slug": "crystal-spear-blue",
+   "description": "A pixel-art spear with a faceted blue crystalline head and blue twisted shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04121",
+   "name": "Spear_37",
+   "slug": "crystal-spear-pink",
+   "description": "A pixel-art spear with a pink crystalline ornate head and magenta twisted shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04122",
+   "name": "Spear_38",
+   "slug": "crystal-spear-gold",
+   "description": "A pixel-art spear with an ornate gold-orange crystalline head and amber twisted shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04123",
+   "name": "Spear_39",
+   "slug": "trident-green",
+   "description": "A pixel-art trident with three green prongs and a green-grey shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04124",
+   "name": "Spear_40",
+   "slug": "trident-steel-blue",
+   "description": "A pixel-art trident with three blue-grey prongs and a blue-grey shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04125",
+   "name": "Spear_v2_01",
+   "slug": "halberd-dark",
+   "description": "A pixel-art dark grey halberd with an axe blade and a spike at the top of a dark shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04126",
+   "name": "Spear_v2_02",
+   "slug": "halberd-dark-broad",
+   "description": "A pixel-art dark grey halberd with a large crescent axe blade and top spike on a dark shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04127",
+   "name": "Spear_v2_03",
+   "slug": "plain-spear-grey",
+   "description": "A pixel-art plain spear with a small grey spearhead on a brown wooden shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04128",
+   "name": "Spear_v2_04",
+   "slug": "red-tassel-spear",
+   "description": "A pixel-art spear with a grey head, red tassel binding and a brown wooden shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04129",
+   "name": "Spear_v2_05",
+   "slug": "purple-gem-spear",
+   "description": "A pixel-art spear with a dark arrowhead set with a purple gem on a dark navy shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04130",
+   "name": "Spear_v2_06",
+   "slug": "crescent-blade-glaive",
+   "description": "A pixel-art glaive with a curved crescent-shaped dark blade on a brown wooden shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c04131",
+   "name": "Spear_v2_07",
+   "slug": "green-bound-spear",
+   "description": "A pixel-art spear with a dark grey head, green binding and a brown wooden shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c04132",
+   "name": "Spear_v2_08",
+   "slug": "gold-ornament-spear",
+   "description": "A pixel-art spear with a grey head, gold ornament and brown wooden shaft.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "pixel-art",
+     "full-colour",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

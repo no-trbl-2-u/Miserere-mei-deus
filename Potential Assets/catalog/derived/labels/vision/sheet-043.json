@@ -1,0 +1,530 @@
+{
+ "unit": "sheet-043",
+ "records": [
+  {
+   "cluster_id": "c02370",
+   "name": "Crossbow_08",
+   "slug": "crimson-spiked-crossbow",
+   "description": "A crossbow with a dark red wooden stock and several curved, spiked limbs fanning out from the front.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02371",
+   "name": "Crossbow_09",
+   "slug": "rose-thorned-crossbow",
+   "description": "A pinkish-red crossbow with thin barbed limbs splayed out from a dark brown stock.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02372",
+   "name": "Crossbow_10",
+   "slug": "golden-thorned-crossbow",
+   "description": "A crossbow with a brown stock and golden-orange spiked limbs fanning out from the front.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02373",
+   "name": "Crossbow_v2_01",
+   "slug": "wooden-crossbow",
+   "description": "A plain crossbow with a curved wooden bow and a long dark brown stock.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02374",
+   "name": "Crossbow_v2_02",
+   "slug": "iron-crossbow",
+   "description": "A grey iron crossbow with a metal-banded stock and a thin curved bow.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02375",
+   "name": "Crossbow_v2_03",
+   "slug": "light-wood-crossbow",
+   "description": "A simple crossbow with a pale wooden bow and a tan stock, drawn diagonally.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02376",
+   "name": "Crossbow_v2_04",
+   "slug": "orange-glowing-rune-crossbow",
+   "description": "A black crossbow with orange glowing outlines and a rune-engraved stock.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02377",
+   "name": "Crossbow_v2_05",
+   "slug": "cyan-glowing-rune-crossbow",
+   "description": "A black crossbow with cyan glowing outlines and a rune-engraved stock.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02378",
+   "name": "Crossbow_v2_06",
+   "slug": "purple-glowing-rune-crossbow",
+   "description": "A black crossbow with purple glowing outlines and a rune-engraved stock.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02379",
+   "name": "Crossbow_v2_07",
+   "slug": "green-glowing-rune-crossbow",
+   "description": "A black crossbow with lime-green glowing outlines and a rune-engraved stock.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02380",
+   "name": "Crown",
+   "slug": "gold-jeweled-crown",
+   "description": "A tarnished gold crown with a central spire topped by a red gem and a red jewel at the base.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot",
+     "reward"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02381",
+   "name": "Crystal",
+   "slug": "purple-crystal-cluster",
+   "description": "A cluster of glowing purple crystal shards with a violet glow around them.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "reward",
+     "crafting"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02383",
+   "name": "Cuirass",
+   "slug": "dark-iron-cuirass",
+   "description": "A dark grey plain breastplate with rounded shoulders.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02384",
+   "name": "CuirassRed",
+   "slug": "red-tabard-cuirass",
+   "description": "A dark steel cuirass with pauldrons worn over a red quilted tunic with a belt.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02385",
+   "name": "CuirassYellow",
+   "slug": "ochre-coat-cuirass",
+   "description": "A long ochre-brown coat with a dark armoured chest and shoulder piece.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02386",
+   "name": "Cuirass",
+   "slug": "steel-plate-cuirass",
+   "description": "A polished steel plate cuirass with a high collar, rivets and a flared lower edge.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "defend",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02387",
+   "name": "CuttingBoard",
+   "slug": "wooden-cutting-board",
+   "description": "A rectangular wooden cutting board made of vertical planks with a grey metal handle loop at the top.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "inventory",
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02390",
+   "name": "Dagger_01",
+   "slug": "plain-dagger",
+   "description": "A single-edged dagger with a pale steel blade and a brown wrapped handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02391",
+   "name": "Dagger_02",
+   "slug": "twin-daggers",
+   "description": "Two matching single-edged daggers with pale blades and brown handles side by side.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02392",
+   "name": "Dagger_03",
+   "slug": "slim-stiletto-dagger",
+   "description": "A thin double-edged dagger with a narrow steel blade and a small bronze guard and handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02393",
+   "name": "Dagger_04",
+   "slug": "bone-handled-dagger",
+   "description": "A dagger with a pale steel blade and a bone-coloured handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02394",
+   "name": "Dagger_05",
+   "slug": "curved-hook-dagger",
+   "description": "A short dagger with a brown leather grip and a curved, hooked claw blade.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02395",
+   "name": "Dagger_08",
+   "slug": "curved-scimitar-dagger",
+   "description": "A dagger with a long curved dark blade and a brown handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02397",
+   "name": "Dagger_12",
+   "slug": "four-blade-shuriken",
+   "description": "A four-bladed throwing star with curved pale blades radiating from a central hub.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02398",
+   "name": "Dagger_13",
+   "slug": "broad-bladed-knife",
+   "description": "A knife with a wide, leaf-shaped steel blade with a notched spine and a brown handle.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "attack",
+     "loot"
+    ],
+    "style": [
+     "painted",
+     "has-transparency",
+     "full-colour"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}

@@ -1,0 +1,494 @@
+{
+ "unit": "sheet-01",
+ "records": [
+  {
+   "cluster_id": "c00585",
+   "name": "Druideskill_36",
+   "slug": "blue-thorned-dragon-skill",
+   "description": "A coiled blue spiny, thorny dragon-like creature with teal glow on a teal square background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00637",
+   "name": "Engineerskill_31",
+   "slug": "fiery-slash-ring-skill",
+   "description": "A bright orange flame streak curving beside a dark ring on a black background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c00149",
+   "name": "Gloves_05",
+   "slug": "green-fingerless-gloves",
+   "description": "A pair of olive-green fingerless gloves with stitched knuckles.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02747",
+   "name": "Gun_v2_10",
+   "slug": "revolver",
+   "description": "A grey six-shooter revolver with a brown wooden grip.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02803",
+   "name": "Hammer_43",
+   "slug": "war-hammer",
+   "description": "A double-headed war hammer with a cream-coloured head and dark shaft ending in a spike.",
+   "tags": {
+    "kind": "weapon",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02881",
+   "name": "Helm_71",
+   "slug": "dark-green-hood-helm",
+   "description": "A dark green hooded helm with pale stitched trim and an empty black opening.",
+   "tags": {
+    "kind": "armour",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02909",
+   "name": "Herbalism_28_stinkymushroom",
+   "slug": "stinky-mushroom",
+   "description": "A cluster of spotted tan mushrooms growing on a brown stump.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00689",
+   "name": "Loot_23",
+   "slug": "bone",
+   "description": "A single pale bone lying diagonally.",
+   "tags": {
+    "kind": "relic",
+    "use": [
+     "loot",
+     "crafting"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03187",
+   "name": "Loot_69",
+   "slug": "skull-key",
+   "description": "A grey iron key whose bow is shaped like a skull.",
+   "tags": {
+    "kind": "key",
+    "use": [
+     "loot",
+     "dungeon"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00054",
+   "name": "Mageskill_24",
+   "slug": "pointing-hand-red-lightning-skill",
+   "description": "A hand with extended finger crackling with white lightning on a red background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00728",
+   "name": "Mageskill_43",
+   "slug": "purple-lightning-scroll-skill",
+   "description": "A rolled scroll with purple runes wrapped in purple lightning on black.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00752",
+   "name": "Paladinskill_15",
+   "slug": "glowing-orb-hand-skill",
+   "description": "A pale hand holding a glowing white orb with orbital rings on a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00172",
+   "name": "Paladinskill_40",
+   "slug": "green-light-burst-skill",
+   "description": "A radiating burst of white and green light rays over dark rock.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  },
+  {
+   "cluster_id": "c00789",
+   "name": "Priestskill_07",
+   "slug": "hooded-priestess-portrait-skill",
+   "description": "A portrait of a woman in a pale hood with cross markings and golden glow.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "summon",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00791",
+   "name": "Priestskill_09",
+   "slug": "raised-hands-light-skill",
+   "description": "Two pale hands raised beneath a glowing arc of white light.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "heal"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00176",
+   "name": "Priestskill_13X1",
+   "slug": "lit-candles-skill",
+   "description": "A cluster of lit white candles with golden glints on a dark background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00059",
+   "name": "Priestskill_46",
+   "slug": "dark-hooded-figure-skill",
+   "description": "A dark hooded figure with a shadowed face and glowing eyes outlined in light.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "debuff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00823",
+   "name": "Priestskill_50",
+   "slug": "radiant-cross-skill",
+   "description": "A black cross in front of a glowing golden sun-like disc with radiating ticks.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "heal",
+     "buff"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03490",
+   "name": "Quest_44",
+   "slug": "produce-barrels",
+   "description": "Three wooden barrels heaped with colourful fruit and vegetables.",
+   "tags": {
+    "kind": "container",
+    "use": [
+     "quest",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00847",
+   "name": "Res_151",
+   "slug": "raw-meat-slab",
+   "description": "A thick slab of raw pink-purple meat.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00858",
+   "name": "Res_75",
+   "slug": "blue-crystal",
+   "description": "A cyan crystal shard cluster with faceted edges.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c03720",
+   "name": "Ring_50",
+   "slug": "scaled-silver-ring",
+   "description": "A silver-blue ring engraved with a scale pattern.",
+   "tags": {
+    "kind": "accessory",
+    "use": [
+     "equipment",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c00880",
+   "name": "Shamanskill_19",
+   "slug": "blue-dragon-head-skill",
+   "description": "A grey-blue reptilian dragon head with a glowing blue eye on a dark blue background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "summon"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00885",
+   "name": "Shamanskill_30",
+   "slug": "lightning-staff-skill",
+   "description": "A dark staff struck by blue lightning on a navy background.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c00909",
+   "name": "Skill_207",
+   "slug": "yellow-green-starburst-skill",
+   "description": "A bright yellow-green starburst with a glowing centre.",
+   "tags": {
+    "kind": "ui-icon",
+    "use": [
+     "attack"
+    ],
+    "style": [
+     "full-colour",
+     "painted",
+     "opaque"
+    ]
+   },
+   "used_by": [],
+   "confidence": "low"
+  }
+ ]
+}

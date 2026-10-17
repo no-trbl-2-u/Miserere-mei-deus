@@ -1,0 +1,530 @@
+{
+ "unit": "sheet-058",
+ "records": [
+  {
+   "cluster_id": "c02907",
+   "name": "Herbalism_26_demonmushroom",
+   "slug": "demon-mushroom",
+   "description": "A plant with three round glossy red pods clustered on dark twisting reddish roots.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02908",
+   "name": "Herbalism_27_raindropmushroom",
+   "slug": "raindrop-mushroom",
+   "description": "Two curled magenta-and-pink mushroom pods with cyan droplet spots on purple stalks.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02910",
+   "name": "Herbalism_29_shadowmushroom",
+   "slug": "shadow-mushroom",
+   "description": "Three dark purple mushrooms with rounded caps on thin blue-grey stalks.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02912",
+   "name": "Herbalism_31_whiteberry",
+   "slug": "white-berry",
+   "description": "A green leafy sprig with clusters of small white berries and flowers.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02914",
+   "name": "Herbalism_33_edgyroot",
+   "slug": "edgy-root",
+   "description": "A branching dark reddish-brown root system spreading from a single bulb at the top.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02915",
+   "name": "Herbalism_34_goblineye",
+   "slug": "goblin-eye",
+   "description": "A bundle of red bud-like pods on thin green stems with narrow leaves.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02916",
+   "name": "Herbalism_35_fellherb",
+   "slug": "fell-herb",
+   "description": "A cluster of spiky magenta-purple tapered leaves rising from a dark base.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02917",
+   "name": "Herbalism_36_yellowrose",
+   "slug": "yellow-rose",
+   "description": "Three orange-yellow roses on a green stem with a few leaves.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02918",
+   "name": "Herbalism_37_bloodberry",
+   "slug": "blood-berry",
+   "description": "A dense bush of deep crimson-red leaves and berries on a dark stem.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02919",
+   "name": "Herbalism_38_cryingflower",
+   "slug": "crying-flower",
+   "description": "A curved green stem with blue teardrop-shaped blossoms and a large broad leaf.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02920",
+   "name": "Herbalism_39_wormherb",
+   "slug": "worm-herb",
+   "description": "A large green leaf with a pink curling worm-like tendril ending in a small bud.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02921",
+   "name": "Herbalism_40_redflower",
+   "slug": "red-flower",
+   "description": "A thin green stalk with two small orange-red flower buds and slender leaves.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02922",
+   "name": "Herbalism_41_mistyflower",
+   "slug": "misty-flower",
+   "description": "A large round cluster of small white flowers with yellow centres on a green stem.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02923",
+   "name": "Herbalism_42_kingflower",
+   "slug": "king-flower",
+   "description": "A green plant with grassy leaves and two purple star-shaped flowers.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02924",
+   "name": "Herbalism_43_healleaves",
+   "slug": "heal-leaves",
+   "description": "A pale green sprig of paired oval leaves on a slender stem.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02925",
+   "name": "Herbalism_44_manaleaves",
+   "slug": "mana-leaves",
+   "description": "A bushy sprig of blue-teal leaves branching from a central stem.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02926",
+   "name": "Herbalism_45_herb",
+   "slug": "herb",
+   "description": "A thin green stem with small yellow flower clusters and feathery leaves.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02927",
+   "name": "Herbalism_46_root",
+   "slug": "root",
+   "description": "A thick brown gnarled root with several forked branches.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02928",
+   "name": "Herbalism_47_lemon",
+   "slug": "lemon",
+   "description": "A leafy branch bearing three yellow lemons.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02930",
+   "name": "Herbalism_49_seakale",
+   "slug": "sea-kale",
+   "description": "A bunch of frilly bright green leaves rising from a short base.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02931",
+   "name": "Herbalism_50_berry",
+   "slug": "berry-sprig",
+   "description": "A teal-green leafy plant with small tan berries along its blades.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02932",
+   "name": "Herbalism_51_cone",
+   "slug": "pine-cone",
+   "description": "A brown pine cone resting on a spray of green pine needles.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02934",
+   "name": "Herbalism_53_ancientflower",
+   "slug": "ancient-flower",
+   "description": "An orange-brown bulb with long curling dried petal-like leaves splayed upward.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "medium"
+  },
+  {
+   "cluster_id": "c02935",
+   "name": "Herbalism_54_asparagus",
+   "slug": "asparagus",
+   "description": "A bundle of pale green asparagus stalks with leafy dark green tips.",
+   "tags": {
+    "kind": "food",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  },
+  {
+   "cluster_id": "c02936",
+   "name": "Herbalism_55_sunflower",
+   "slug": "sunflower",
+   "description": "A sunflower with yellow petals and a brown centre on a green stem with leaves.",
+   "tags": {
+    "kind": "consumable",
+    "use": [
+     "crafting",
+     "loot"
+    ],
+    "style": [
+     "full-colour",
+     "pixel-art",
+     "has-transparency",
+     "atlas-crop"
+    ]
+   },
+   "used_by": [],
+   "confidence": "high"
+  }
+ ]
+}
