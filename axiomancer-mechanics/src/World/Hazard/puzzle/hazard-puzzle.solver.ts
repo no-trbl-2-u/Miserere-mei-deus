@@ -3,14 +3,15 @@
  *
  * Walks every board a layout's one round can reach, through the session's
  * own move functions, and counts the distinct winning outcomes. An outcome
- * is the board after confirm, read as:
- *  - the multiset of staged cards with their powered flag;
- *  - the hand left;
+ * is what the player played, read off the board after confirm:
+ *  - the multiset of staged cards that change the result (a non-zero
+ *    value, a die, or a utility), each with its powered flag;
  *  - the reserve left;
- *  - the available dice;
- *  - the salvage progress.
- * Move order is not counted. A staged card that is unpowered and adds 0/0
- * reads as held, so holding it and playing it count once.
+ *  - the available dice.
+ * Move order is not counted, and a card held in hand is not part of the
+ * outcome. A staged card that changes nothing (unpowered, no utility, adds
+ * 0/0) reads as held, so a card that is inert in every line never adds an
+ * outcome.
  *
  * The walk skips moves that reach nothing new: unstaging (staging has no
  * side effect), re-powering a powered card (power it with the other die
@@ -20,7 +21,7 @@
 
 import { getHazardCardDef } from '../hazard.content';
 import { dieCanPowerCard, hazardCardValue } from '../hazard.engine';
-import type { HazardDieKind, HazardRouteKey, HazardSessionState } from '../hazard.types';
+import type { HazardDieKind, HazardHandEntry, HazardRouteKey, HazardSessionState } from '../hazard.types';
 import {
     confirmHazardPuzzle,
     createHazardPuzzleSession,
@@ -46,6 +47,12 @@ export interface HazardPuzzleSolution {
     goal: HazardPuzzleGoal;
     /** Distinct winning outcomes (end states of a cleared resolve). */
     winningOutcomes: number;
+    /**
+     * The card ids each winning outcome stages and that change the result,
+     * one list per outcome (a card staged twice is listed twice). Feeds
+     * `hazardPuzzleCardReport`.
+     */
+    winningStaged: string[][];
     /**
      * Largest margin over the goal among the winning outcomes: combined
      * minus goal on safe, the weaker meter's margin on risk. Null when
@@ -84,17 +91,25 @@ function boardKey(b: HazardSessionState): string {
     return `${hand}|${play}|${dice}|${b.drawPile.length}|${b.progressBase.force}/${b.progressBase.escape}`;
 }
 
+/** True when a staged card changes the result: a non-zero value, a die, or a utility. */
+function changesResult(p: HazardHandEntry): boolean {
+    if (p.dieId !== null) return true;
+    const def = getHazardCardDef(p.cardId);
+    if (def.effect && !def.dead) return true;
+    const v = hazardCardValue(p);
+    return v.force !== 0 || v.escape !== 0;
+}
+
+/** The staged cards of a resolved board that change the result, each with its powered flag. */
+function stagedThatCount(b: HazardSessionState): HazardHandEntry[] {
+    return b.play.filter(changesResult);
+}
+
 /** Identity of a resolved board as an outcome (see the module header). */
 function outcomeKey(b: HazardSessionState): string {
-    const hand = b.hand.map((h) => h.cardId);
-    const staged: string[] = [];
-    for (const p of b.play) {
-        const v = hazardCardValue(p);
-        if (p.dieId === null && v.force === 0 && v.escape === 0) hand.push(p.cardId);
-        else staged.push(`${p.cardId}${p.dieId ? '+' : ''}`);
-    }
+    const staged = sortedJoin(stagedThatCount(b).map((p) => `${p.cardId}${p.dieId ? '+' : ''}`));
     const dice = sortedJoin(b.dice.filter((d) => d.state === 'available').map((d) => d.kind));
-    return `${sortedJoin(staged)}|${sortedJoin(hand)}|${b.drawPile.length}|${dice}|${b.progressBase.force}/${b.progressBase.escape}`;
+    return `${staged}|${b.drawPile.join(',')}|${dice}`;
 }
 
 /** The moves worth trying from a board, one per interchangeable choice. */
@@ -104,7 +119,7 @@ function candidateMoves(b: HazardSessionState): HazardPuzzleMove[] {
     for (const h of b.hand) {
         if (seenHand.has(h.cardId)) continue;
         seenHand.add(h.cardId);
-        moves.push({ type: 'stage', uid: h.uid }, { type: 'discard', uid: h.uid });
+        moves.push({ type: 'stage', uid: h.uid });
     }
     const firstDieOfKind = new Map<HazardDieKind, string>();
     for (const d of b.dice) {
@@ -145,7 +160,7 @@ export function solveHazardPuzzleSession(
 ): HazardPuzzleSolution {
     const budget = options.budget ?? HAZARD_PUZZLE_SOLVER_BUDGET;
     const seen = new Set<string>();
-    const wins = new Set<string>();
+    const wins = new Map<string, string[]>();
     let best: Best | null = null;
     let overBudget = false;
     const line: HazardPuzzleMove[] = [];
@@ -162,7 +177,8 @@ export function solveHazardPuzzleSession(
         const resolved = confirmHazardPuzzle(s);
         const result = resolved.result;
         if (result?.cleared) {
-            wins.add(outcomeKey(resolved.board));
+            const outcome = outcomeKey(resolved.board);
+            if (!wins.has(outcome)) wins.set(outcome, stagedThatCount(resolved.board).map((p) => p.cardId));
             const surplus = hazardPuzzleSurplus(result);
             if (!best || surplus > best.surplus) best = { surplus, line: line.slice() };
         }
@@ -181,6 +197,7 @@ export function solveHazardPuzzleSession(
         route: start.route,
         goal: start.goal,
         winningOutcomes: wins.size,
+        winningStaged: [...wins.values()],
         bestSurplus: found ? found.surplus : null,
         winningLine: found ? found.line : null,
         boardsExplored: seen.size,

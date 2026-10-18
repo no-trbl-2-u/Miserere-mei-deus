@@ -14,7 +14,9 @@ import {
     stageHazardPuzzleCard,
 } from '../hazard-puzzle.session';
 import type { HazardPuzzleMove } from '../hazard-puzzle.types';
+import { solveHazardPuzzle } from '../hazard-puzzle.solver';
 import { validateHazardPuzzleLayout } from '../hazard-puzzle.validate';
+import * as puzzleApi from '../index';
 import { DRAW_ONLY_LAYOUT, MIXED_LAYOUT, testLayout } from './hazard-puzzle.layouts.mock';
 
 // MIXED_LAYOUT uids: hand c1 haul, c2 scram, c3 windread, c4 oath;
@@ -27,7 +29,7 @@ const MIXED_LINE: HazardPuzzleMove[] = [
     { type: 'stage', uid: 'c4' },
     { type: 'power', uid: 'c4', dieId: 'd8' }, // oath powered: 6/6
     { type: 'apply', uid: 'c4' }, // oath draws 2: grip (c9), leap (c10)
-    { type: 'discard', uid: 'c2' }, // scram salvage: +1 escape
+    { type: 'stage', uid: 'c2' }, // scram: 3 escape
     { type: 'stage', uid: 'c9' },
     { type: 'power', uid: 'c9', dieId: 'd7' }, // grip on the converted gold: 9 force
 ];
@@ -59,6 +61,32 @@ describe('createHazardPuzzleSession', () => {
     });
 });
 
+describe('no bin (HP1 A1)', () => {
+    it('offers no discard: the puzzle API has no discard function', () => {
+        expect('discardHazardPuzzleCard' in puzzleApi).toBe(false);
+    });
+
+    it('a hand card can only be staged or held', () => {
+        const s = createHazardPuzzleSession(MIXED_LAYOUT, 'safe');
+        for (const { uid, cardId } of s.board.hand) {
+            const staged = stageHazardPuzzleCard(s, uid);
+            expect(staged.board.hand.some((h) => h.uid === uid), cardId).toBe(false);
+            expect(staged.board.play.map((p) => p.uid), cardId).toEqual([uid]);
+            expect(staged.board.dice, cardId).toEqual(s.board.dice);
+        }
+    });
+
+    it('salvage never fires: a solved line bins nothing and adds no base progress', () => {
+        for (const route of ['safe', 'risk'] as const) {
+            const line = solveHazardPuzzle(MIXED_LAYOUT, route).winningLine ?? [];
+            expect(line.map((m) => m.type), route).not.toContain('discard');
+            const end = confirmHazardPuzzle(playHazardPuzzleMoves(createHazardPuzzleSession(MIXED_LAYOUT, route), line));
+            expect(end.board.discardPile, route).toEqual([]);
+            expect(end.board.progressBase, route).toEqual({ force: 0, escape: 0 });
+        }
+    });
+});
+
 describe('determinism (A2)', () => {
     it('replays one move list twice to the same state', () => {
         const a = confirmHazardPuzzle(playHazardPuzzleMoves(createHazardPuzzleSession(MIXED_LAYOUT, 'safe'), MIXED_LINE));
@@ -82,10 +110,10 @@ describe('determinism (A2)', () => {
 });
 
 describe('the one-round resolve (A5)', () => {
-    it('sums the line by hand: 23 force, 9 escape, 32 combined', () => {
+    it('sums the line by hand: 23 force, 11 escape, 34 combined', () => {
         const s = confirmHazardPuzzle(playHazardPuzzleMoves(createHazardPuzzleSession(MIXED_LAYOUT, 'safe'), MIXED_LINE));
-        // force: haul 6 + windread 2 + oath 6 + grip 9; escape: windread 2 + oath 6 + salvage 1.
-        expect(s.result).toEqual({ force: 23, escape: 9, goal: 30, p: 1, cleared: true });
+        // force: haul 6 + windread 2 + oath 6 + grip 9; escape: windread 2 + oath 6 + scram 3.
+        expect(s.result).toEqual({ force: 23, escape: 11, goal: 30, p: 1, cleared: true });
         expect(s.phase).toBe('resolved');
         expect(s.board.marks).toEqual(['O']);
     });
@@ -141,10 +169,8 @@ describe('DRAW from the reserve (A3)', () => {
     });
 
     it('without the draw the goal is out of reach', () => {
-        const s = confirmHazardPuzzle(
-            playHazardPuzzleMoves(createHazardPuzzleSession(DRAW_ONLY_LAYOUT, 'safe'), [{ type: 'discard', uid: 'c1' }]),
-        );
-        expect(s.result).toEqual({ force: 1, escape: 0, goal: 9, p: 1 / 9, cleared: false });
+        const s = confirmHazardPuzzle(createHazardPuzzleSession(DRAW_ONLY_LAYOUT, 'safe'));
+        expect(s.result).toEqual({ force: 0, escape: 0, goal: 9, p: 0, cleared: false });
     });
 
     it('draws in reserve order at drawPowered, and stops when the reserve is empty', () => {

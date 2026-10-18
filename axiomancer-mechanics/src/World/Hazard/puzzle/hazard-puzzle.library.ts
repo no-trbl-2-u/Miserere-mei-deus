@@ -5,8 +5,8 @@
  *
  * Each was authored backward with the solver: the intended line first, then
  * the goals set to what that line reaches. The counts in each comment are
- * the solver's, and the library test holds every layout in its declared
- * band. Titles and route names come from the live hazard each one reuses;
+ * the solver's, with no bin (a hand card is staged or held), and the library
+ * test holds every layout in its declared band. Titles and route names come from the live hazard each one reuses;
  * no story text is written here.
  */
 
@@ -14,8 +14,8 @@ import { getHazardDef } from '../hazard.content';
 import type { HazardPuzzleLayout } from './hazard-puzzle.types';
 
 /**
- * Easy: the cliff path on the Beacon Crags. Risk [7, 12]: 35 ways through;
- * safe 19: 71. A Mind of 3 adds a second blue die for the ESCAPE cards.
+ * Easy: the cliff path on the Beacon Crags. Risk [6, 8]: 36 ways through;
+ * safe 19: 34. A Mind of 3 adds a second blue die for the ESCAPE cards.
  */
 const CLIFF_EASY: HazardPuzzleLayout = {
     id: 'demo-cliff-easy',
@@ -26,14 +26,14 @@ const CLIFF_EASY: HazardPuzzleLayout = {
     hand: ['leap', 'haul', 'footing', 'scram'],
     reserve: ['runner'],
     dice: ['red', 'blue', 'purple'],
-    goals: { safe: 19, risk: [7, 12] },
+    goals: { safe: 19, risk: [6, 8] },
     bands: { safe: 'easy', risk: 'easy' },
     unlocks: [{ stat: 'mind', min: 3, kind: 'extraDie' }],
 };
 
 /**
- * Medium: the ash crossing in the Charcoal Wood. Risk [7, 9]: 9 ways; safe
- * 16: 23. Neither route clears without SURE FOOTING drawing IRON GRIP from
+ * Medium: the ash crossing in the Charcoal Wood. Risk [7, 9]: 7 ways; safe
+ * 16: 17. Neither route clears without SURE FOOTING drawing IRON GRIP from
  * the reserve; READ THE WIND can turn the blank die gold to power it. A Mind
  * of 3 turns the blank gold up front; a Heart of 3 adds a purple die.
  */
@@ -56,7 +56,7 @@ const ASHFALL_MEDIUM: HazardPuzzleLayout = {
 
 /**
  * Hard: the flooded undercroft in the Lantern Deep. Risk [13, 14]: 2 ways,
- * each clearing with nothing to spare; safe 26: 5. Neither route clears
+ * each clearing with nothing to spare; safe 24: 10. Neither route clears
  * without SURE FOOTING drawing from the reserve (IRON GRIP, then FAITH LEAP).
  * A Mind of 3 puts CLIFFRUNNER in the hand.
  */
@@ -69,7 +69,7 @@ const UNDERCROFT_HARD: HazardPuzzleLayout = {
     hand: ['footing', 'haul', 'scram'],
     reserve: ['grip', 'leap'],
     dice: ['purple', 'red', 'blue'],
-    goals: { safe: 26, risk: [13, 14] },
+    goals: { safe: 24, risk: [13, 14] },
     bands: { safe: 'medium', risk: 'hard' },
     unlocks: [{ stat: 'mind', min: 3, kind: 'extraCard', cardId: 'runner' }],
 };

@@ -25,7 +25,6 @@ import {
     applyHazardPuzzleCard,
     confirmHazardPuzzle,
     createHazardPuzzleSession,
-    discardHazardPuzzleCard,
     getHazardPuzzleLayout,
     powerHazardPuzzleCard,
     stageHazardPuzzleCard,
@@ -169,7 +168,8 @@ export function HazardPuzzleDemo({ initialId, initialRoute, autoConfirm, clockPa
                         onUnstage={(uid) => move((s) => unstageHazardPuzzleCard(s, uid))}
                         onPower={(uid, dieId) => move((s) => powerHazardPuzzleCard(s, uid, dieId))}
                         onApply={(uid) => move((s) => applyHazardPuzzleCard(s, uid))}
-                        onDiscard={(uid) => move((s) => discardHazardPuzzleCard(s, uid))}
+                        // A puzzle has no bin: a card dropped on it stays in hand.
+                        onDiscard={() => undefined}
                         onResolve={() => finish(false)}
                         onInspect={setDetailCard}
                         resolveLabel={vm.resolveLabel}

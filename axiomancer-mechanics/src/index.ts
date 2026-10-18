@@ -274,7 +274,7 @@ export type {
 export {
     HAZARD_PUZZLE_ACT, validateHazardPuzzleLayout, createHazardPuzzleSession,
     stageHazardPuzzleCard, unstageHazardPuzzleCard, powerHazardPuzzleCard,
-    applyHazardPuzzleCard, discardHazardPuzzleCard, playHazardPuzzleMove,
+    applyHazardPuzzleCard, playHazardPuzzleMove,
     playHazardPuzzleMoves, confirmHazardPuzzle,
 } from './World/Hazard';
 export type {
@@ -301,6 +301,9 @@ export {
 export type {
     HazardPuzzleSolution, HazardPuzzleSolveOptions, HazardPuzzleRouteAudit,
 } from './World/Hazard';
+// Hazard puzzle card report.
+export { hazardPuzzleCardReport, formatHazardPuzzleCardReport } from './World/Hazard';
+export type { HazardPuzzleCardReport, HazardPuzzleCardSource, HazardPuzzleCardUse } from './World/Hazard';
 // Hazard puzzle stat unlocks.
 export {
     HAZARD_PUZZLE_UNLOCK_DIE, activeHazardPuzzleUnlocks, applyHazardPuzzleUnlocks,

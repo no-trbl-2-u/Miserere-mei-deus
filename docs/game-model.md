@@ -220,9 +220,14 @@ keyword (`EnemyKeyword = never`).
 - **The hazard puzzle demos** (`World/Hazard/puzzle/`, dev menu only): a
   hazard played as one fixed round with no roll, on the same cards and dice.
   A layout sets the hand, a reserve the DRAW cards pull from, the dice, a goal
-  per route and optional stat unlocks. A solver counts the distinct ways
-  through, and the library test holds each of the three demos
-  (`HAZARD_PUZZLE_LIBRARY`) in its band (easy, medium, hard). The dev menu's
+  per route and optional stat unlocks. A puzzle has no bin: a hand card is
+  staged or held, never discarded. A solver counts the distinct ways
+  through (an outcome is the staged cards that change the result, the dice
+  and the reserve left), and the library test holds each of the three demos
+  (`HAZARD_PUZZLE_LIBRARY`) in its band (easy, medium, hard).
+  `npm run puzzle:report -w axiomancer-mechanics` prints, per demo and
+  route, how many winning outcomes stage each card and which are required
+  or unused (`hazardPuzzleCardReport`). The dev menu's
   HAZARD PUZZLES board plays them on the live hazard board (the same cards,
   dice, drag and route select as a live hazard) under a per-band clock. The outcome pays XP,
   a modest consumable and a region material; full completion adds the purse,

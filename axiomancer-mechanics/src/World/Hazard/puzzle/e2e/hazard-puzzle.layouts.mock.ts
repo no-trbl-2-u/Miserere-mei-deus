@@ -35,8 +35,8 @@ export const DRAW_ONLY_LAYOUT = layout({
 });
 
 /**
- * A board exercising every move kind: power, apply (convert and draw),
- * salvage, and a reserve deeper than one draw.
+ * A board exercising every move kind: stage, power, apply (convert and
+ * draw), and a reserve deeper than one draw.
  */
 export const MIXED_LAYOUT = layout({
     id: 'test-mixed',
@@ -50,9 +50,9 @@ export const MIXED_LAYOUT = layout({
  * The fixture library the library test runs on until the demo puzzles
  * ship. One hand and one set of dice at three goals, so the goal alone
  * sets the band. Counts are the solver's, recorded when the goals were
- * set: easy 222 safe / 91 risk, medium 13 / 19, hard 2 / 4. Each declares
- * stat unlocks so the library test's subset check has something to check;
- * `fixture-blank` adds a blank die and a `blankReroll` (9 / 9, medium).
+ * set, with no bin: easy 69 safe / 47 risk, medium 9 / 11, hard 2 / 3. Each
+ * declares stat unlocks so the library test's subset check has something to
+ * check; `fixture-blank` adds a blank die and a `blankReroll` (8 / 8, medium).
  */
 const BAND_HAND = ['leap', 'leap', 'windread', 'haul', 'runner'];
 const BAND_DICE: HazardPuzzleLayout['dice'] = ['red', 'red', 'blue', 'blue'];
@@ -73,7 +73,7 @@ export const FIXTURE_LIBRARY: readonly HazardPuzzleLayout[] = [
         id: 'fixture-easy',
         hand: BAND_HAND,
         dice: BAND_DICE,
-        goals: { safe: 14, risk: [6, 6] },
+        goals: { safe: 14, risk: [5, 5] },
         bands: { safe: 'easy', risk: 'easy' },
         unlocks: [BODY_DIE, MIND_CARD],
     }),

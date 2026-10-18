@@ -95,10 +95,9 @@ export interface HazardPuzzleSession {
     result: HazardPuzzleResult | null;
 }
 
-/** One player move, as a replayable record. */
+/** One player move, as a replayable record. A puzzle has no bin: a hand card is staged or held. */
 export type HazardPuzzleMove =
     | { type: 'stage'; uid: string }
     | { type: 'unstage'; uid: string }
     | { type: 'power'; uid: string; dieId: string }
-    | { type: 'apply'; uid: string }
-    | { type: 'discard'; uid: string };
+    | { type: 'apply'; uid: string };

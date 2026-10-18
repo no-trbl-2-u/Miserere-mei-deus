@@ -2,19 +2,19 @@
  * Hazard puzzle — the one-round session.
  *
  * The round runs on the live minigame's own transitions (stage, unstage,
- * power, apply, discard and salvage, convert); this module only builds the
- * board from a layout and judges it once. Determinism comes from the
- * board's shape, not from a seed:
+ * power, apply, convert); this module only builds the board from a layout
+ * and judges it once. A puzzle has no bin: a hand card is staged or held,
+ * so no card is discarded and salvage never fires. Determinism comes from
+ * the board's shape, not from a seed:
  *  - the draw pile is the layout's reserve and the refill bag is empty, so
  *    DRAW takes the next reserve cards in order and never shuffles;
  *  - RE-CAST cards are rejected by the validator, so no die is ever rolled;
- *  - salvage and convert dice carry a fixed colour, so they never roll.
+ *  - convert dice carry a fixed colour, so they never roll.
  * The board's rng state is a constant that no move advances.
  */
 
 import {
     applyHazardCard,
-    discardHazardCard,
     hazardProjectedProgress,
     powerHazardCard,
     stageHazardCard,
@@ -115,12 +115,6 @@ export function applyHazardPuzzleCard(s: HazardPuzzleSession, uid: string): Haza
     return onBoard(s, applyHazardCard(s.board, uid, NO_REFILL));
 }
 
-/** Bins a hand card for its salvage. */
-export function discardHazardPuzzleCard(s: HazardPuzzleSession, uid: string): HazardPuzzleSession {
-    if (s.phase !== 'playing') return s;
-    return onBoard(s, discardHazardCard(s.board, uid));
-}
-
 /** Applies one recorded move. An illegal move returns the same session. */
 export function playHazardPuzzleMove(s: HazardPuzzleSession, move: HazardPuzzleMove): HazardPuzzleSession {
     switch (move.type) {
@@ -132,8 +126,6 @@ export function playHazardPuzzleMove(s: HazardPuzzleSession, move: HazardPuzzleM
             return powerHazardPuzzleCard(s, move.uid, move.dieId);
         case 'apply':
             return applyHazardPuzzleCard(s, move.uid);
-        case 'discard':
-            return discardHazardPuzzleCard(s, move.uid);
     }
 }
 

@@ -126,11 +126,11 @@ describe('HazardPuzzleDemo', () => {
         expect(screen.getByTestId('hazard-applied-c1')).toBeTruthy();
         expect(boardProps(screen).vm.hand.map((c) => c.cardId)).toContain('grip');
         expect(screen.getByTestId('hazard-puzzle-reserve').props.children).not.toBe('2 CARDS IN RESERVE');
-        // discard: DEAD-MAN HAUL into the bin conjures its red die.
+        // no bin: DEAD-MAN HAUL dropped on the bin stays in hand, and no die is conjured.
         const dice = boardProps(screen).vm.dice.length;
         act(() => boardProps(screen).onDiscard('c2'));
-        expect(screen.queryByTestId('hazard-hand-c2')).toBeNull();
-        expect(boardProps(screen).vm.dice).toHaveLength(dice + 1);
+        expect(screen.getByTestId('hazard-hand-c2')).toBeTruthy();
+        expect(boardProps(screen).vm.dice).toHaveLength(dice);
         // inspect: a hand card opens the live card detail.
         act(() => boardProps(screen).onInspect(boardProps(screen).vm.hand[0]));
         expect(screen.getByTestId('hazard-card-detail')).toBeTruthy();
