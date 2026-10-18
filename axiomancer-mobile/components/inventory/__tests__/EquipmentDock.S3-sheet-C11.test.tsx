@@ -29,7 +29,7 @@ function makeVm(): EquipmentDockViewModel {
             { key: 'accessory', accessoryIndex: 2, label: 'TRINKET III', item: null },
         ],
         headerLabel: '✠ WORN UPON THE BODY',
-        hintLabel: 'TAP A SLOT TO SEE WHAT ELSE FITS',
+        hintLabel: 'CHOOSE A SLOT TO SEE WHAT ELSE FITS',
         bareLabel: '— bare —',
         selectedSlot: null,
         bannerEyebrow: 'FITTING SLOT',

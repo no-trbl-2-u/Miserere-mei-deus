@@ -749,7 +749,7 @@ describe('selectInventoryViewModel: equipmentDock', () => {
         expect(vm.equipmentDock.headerLabel).toBe('✠ WORN UPON THE BODY');
         // FE-027: the hint names the tap — the worn-vs-unworn comparison is not
         // on screen until a slot is tapped.
-        expect(vm.equipmentDock.hintLabel).toBe('TAP A SLOT TO SEE WHAT ELSE FITS');
+        expect(vm.equipmentDock.hintLabel).toBe('CHOOSE A SLOT TO SEE WHAT ELSE FITS');
         expect(vm.equipmentDock.bareLabel).toBe('— bare —');
         expect(vm.equipmentDock.slots).toHaveLength(5);
         vm.equipmentDock.slots.forEach((slot, i) => {

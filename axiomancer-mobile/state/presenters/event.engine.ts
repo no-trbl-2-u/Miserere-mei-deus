@@ -158,6 +158,16 @@ export const EVENT_CHROME: EventChrome = {
 };
 
 /**
+ * The hint under each cutscene line: one for a line with more to follow, one
+ * for the last. Pointer-neutral (critique pass 93): the plate runs under a
+ * mouse on web as well as a finger on the phone, so it names no gesture.
+ */
+export const CUTSCENE_HINT = {
+    next: '· continue ·',
+    last: '· walk on ·',
+} as const;
+
+/**
  * Single source of truth for the non-boss encounter label that the
  * prelude eyebrow (`withPreludeChrome`) and the badge
  * (`composeCombatPrelude`) BOTH derive from, so a copy edit cannot drift
