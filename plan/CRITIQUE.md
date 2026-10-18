@@ -738,15 +738,6 @@
 ## Pending
 
 
-### [LOW] cutscene / desktop — the omen plate still tells a mouse player "· tap ·", the remainder of the pass-92 pointer row
-- pass: 93 (commit 1a0e7b58)
-- viewport: desktop (1280x800); mobile reads correctly
-- category: voice
-- observation: #604 moved the hub drawer, the hazard hand and the rewards subtitle to "choose", but the cutscene plate under the omen line still reads "· tap ·" (and "· tap to walk on ·" on the last line) at 1280 under a mouse. The same visible "tap" survives in the satchel dock hint ("TAP A SLOT TO SEE WHAT ELSE FITS") and the map's here-node tooltip ("tap an adjacent node to step toward it"), neither in the drive's screen set. The cutscene string is also inline in the screen, not a presenter.
-- evidence: `.critique-artifacts/desktop/08-cutscene.txt` ("· tap ·"; fixture `wanderer-staged-cutscene`); `axiomancer-mobile/app/cutscene/index.tsx:152`, `state/presenters/inventory.engine.ts:292`, `state/presenters/tooltip.engine.ts:199`.
-- suggested fix: lift the cutscene hint into a presenter constant and use a pointer-neutral verb ("· continue ·" / "· walk on ·"), and do the same for the dock hint ("CHOOSE A SLOT ...") and the tooltip ("choose an adjacent node"), as #604 did; copy only, pinned by the screens' existing tests.
-- source: critique:drive (unattended)
-
 ### [LOW] combat / rune column — the CONVICTION caption under the ◆ chip is 6px text that ignores the system font size
 - pass: 93 (commit 1a0e7b58)
 - viewport: both (375x812 and 1280x800)
@@ -1069,6 +1060,15 @@
 
 ## Done
 
+### [x] [LOW] cutscene / desktop — the omen plate still tells a mouse player "· tap ·", the remainder of the pass-92 pointer row — RESOLVED 2026-10-18 (branch loop/iterate-cutscene-pointer-verbs, 60a241b3: the plate hint moves to CUTSCENE_HINT in the event presenter and reads "· continue ·" / "· walk on ·"; the dock hint and the here-node tooltip say "choose"; pinned in cutscene-skip.S4-world-C17.test.tsx)
+- pass: 93 (commit 1a0e7b58)
+- viewport: desktop (1280x800); mobile reads correctly
+- category: voice
+- observation: #604 moved the hub drawer, the hazard hand and the rewards subtitle to "choose", but the cutscene plate under the omen line still reads "· tap ·" (and "· tap to walk on ·" on the last line) at 1280 under a mouse. The same visible "tap" survives in the satchel dock hint ("TAP A SLOT TO SEE WHAT ELSE FITS") and the map's here-node tooltip ("tap an adjacent node to step toward it"), neither in the drive's screen set. The cutscene string is also inline in the screen, not a presenter.
+- evidence: `.critique-artifacts/desktop/08-cutscene.txt` ("· tap ·"; fixture `wanderer-staged-cutscene`); `axiomancer-mobile/app/cutscene/index.tsx:152`, `state/presenters/inventory.engine.ts:292`, `state/presenters/tooltip.engine.ts:199`.
+- suggested fix: lift the cutscene hint into a presenter constant and use a pointer-neutral verb ("· continue ·" / "· walk on ·"), and do the same for the dock hint ("CHOOSE A SLOT ...") and the tooltip ("choose an adjacent node"), as #604 did; copy only, pinned by the screens' existing tests.
+- source: critique:drive (unattended)
+- issue: #620
 ### [x] [LOW] combat / IN PLAY row — two copies of one Global give two chips with the same accessibility label — RESOLVED 2026-10-18 (branch loop/iterate-global-copy-label, d65ef6950: `globalsVM` names the copy, "copy 2 of 2", when one Global is in play more than once; a single copy keeps its label; pinned in CombatBoard.program-cards.test.tsx)
 - pass: antagonist on PR #520 (GS1, commit fc4aa159)
 - viewport: n/a (screen reader)

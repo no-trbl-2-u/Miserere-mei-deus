@@ -39,6 +39,7 @@ import { Animated, Text, TouchableOpacity, View } from 'react-native';
 import { ScreenBg } from '@/components/ScreenBg';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useGameActions, useGameState } from '@/state/GameStoreProvider';
+import { CUTSCENE_HINT } from '@/state/presenters/event.engine';
 import { FONTS, TYPE } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
@@ -149,7 +150,7 @@ export default function CutsceneScreen() {
                         {lines[index]}
                     </Text>
                     <Text style={styles.hint}>
-                        {isLastLine ? '· tap to walk on ·' : '· tap ·'}
+                        {isLastLine ? CUTSCENE_HINT.last : CUTSCENE_HINT.next}
                     </Text>
                 </Animated.View>
             </TouchableOpacity>

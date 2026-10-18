@@ -196,7 +196,7 @@ const MAP_NODE_CONTENT: Record<string, TooltipContent> = {
     },
     current: {
         title: 'HERE',
-        body: 'where you stand. tap an adjacent node to step toward it.',
+        body: 'where you stand. choose an adjacent node to step toward it.',
         footnote: 'your current position',
     },
 };
