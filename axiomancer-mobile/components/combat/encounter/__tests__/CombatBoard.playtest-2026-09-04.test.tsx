@@ -94,11 +94,19 @@ describe('CombatBoard rail — player VITAE is fully visible at 390x844', () => 
 
     it('the VITAE readout never wraps and speaks the canon word', () => {
         const vm = renderBoard();
-        const hp = screen.getByTestId('combat-rail-vitae');
+        // The readout is out of the accessibility tree, so the default
+        // query (which skips hidden elements) no longer finds it.
+        expect(screen.queryByTestId('combat-rail-vitae')).toBeNull();
+        const hp = screen.getByTestId('combat-rail-vitae', { includeHiddenElements: true });
         expect(hp.props.numberOfLines).toBe(1);
-        // The readout prints the maximum too, so the accessible name names
-        // both, after the canon word.
-        expect(hp.props.accessibilityLabel).toBe(`VITAE ${vm.player.hp} of ${vm.player.maxHp}`);
+        // The readout is hidden from the reader; the progressbar under it
+        // speaks VITAE once, naming the value and the maximum after the
+        // canon word.
+        expect(hp.props.accessibilityLabel).toBeUndefined();
+        expect(hp.props.accessibilityElementsHidden).toBe(true);
+        expect(hp.props.importantForAccessibility).toBe('no-hide-descendants');
+        expect(screen.getByTestId('combat-rail-vitae-bar').props.accessibilityLabel)
+            .toBe(`VITAE ${vm.player.hp} of ${vm.player.maxHp}`);
         const style = StyleSheet.flatten(hp.props.style) as Record<string, unknown>;
         // A flex-shrinking Text would wrap "♥ 129" onto two lines.
         expect(style.flexShrink).toBe(0);
