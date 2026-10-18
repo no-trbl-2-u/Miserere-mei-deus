@@ -2,10 +2,10 @@
  * Hazard puzzle solver — counts worked out by hand on small layouts, the
  * best surplus, the winning line's replay, the budget and the band check.
  *
- * Card numbers used below (free / powered): DEAD-MAN HAUL red 3/6 force,
- * salvage a red die; IRON GRIP red 5/9 force, salvage +1 force; SCRAMBLE
- * blue 3/6 escape, salvage +1 escape; SURE FOOTING purple 2/2 both meters,
- * DRAW 1. A gold die powers any colour.
+ * Card numbers used below (free / powered): DEAD-MAN HAUL red 3/6 force;
+ * IRON GRIP red 5/9 force; SCRAMBLE blue 3/6 escape; SURE FOOTING purple
+ * 2/2 both meters, DRAW 1. A gold die powers any colour. A puzzle has no
+ * bin, so a hand card is staged or held.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -25,8 +25,8 @@ function replaysToClear(layout: HazardPuzzleLayout, route: 'safe' | 'risk'): boo
 }
 
 describe('solveHazardPuzzle: hand-worked counts (A6)', () => {
-    it('one card, one die: staged (3) and powered (6) clear 3; held and binned do not', () => {
-        // HAUL: held 0, staged 3, powered 6, binned 0 (its red die is no progress).
+    it('one card, one die: staged (3) and powered (6) clear 3; held does not', () => {
+        // HAUL: held 0, staged 3, powered 6.
         const layout = testLayout({ id: 'one-card', hand: ['haul'], dice: ['red'], goals: { safe: 3, risk: [3, 1] } });
         const safe = solveHazardPuzzle(layout, 'safe');
         expect(safe.winningOutcomes).toBe(2);
@@ -39,12 +39,12 @@ describe('solveHazardPuzzle: hand-worked counts (A6)', () => {
         expect(risk.winningLine).toBeNull();
     });
 
-    it('two cards, no dice: five of the nine end states clear 3', () => {
-        // HAUL in {held 0, staged 3, binned 0 + red die}; SCRAMBLE in {held 0, staged 3, binned 1}.
-        // Clears: HAUL staged with any SCRAMBLE state (3), or SCRAMBLE staged with HAUL held or binned (2).
+    it('two cards, no dice: three of the four end states clear 3', () => {
+        // HAUL in {held 0, staged 3}; SCRAMBLE in {held 0, staged 3}.
+        // Clears: HAUL staged with SCRAMBLE held or staged (2), or SCRAMBLE staged with HAUL held (1).
         const layout = testLayout({ id: 'two-cards', hand: ['haul', 'scram'], goals: { safe: 3, risk: [3, 3] } });
         const safe = solveHazardPuzzle(layout, 'safe');
-        expect(safe.winningOutcomes).toBe(5);
+        expect(safe.winningOutcomes).toBe(3);
         expect(safe.bestSurplus).toBe(3);
         // Risk [3, 3] needs both staged: one outcome, no margin.
         const risk = solveHazardPuzzle(layout, 'risk');
@@ -52,9 +52,9 @@ describe('solveHazardPuzzle: hand-worked counts (A6)', () => {
         expect(risk.bestSurplus).toBe(0);
     });
 
-    it('one gold die between two cards: safe 8 has five ways, risk [5, 3] three', () => {
-        // GRIP in {0, 5, 9 with gold, 1 binned}; SCRAMBLE in {0, 3, 6 with gold, 1 binned}; one gold die.
-        // Safe >= 8: GRIP 9 with SCRAMBLE held, staged or binned (3), GRIP 5 + SCRAMBLE 3, GRIP 5 + SCRAMBLE 6.
+    it('one gold die between two cards: safe 8 has four ways, risk [5, 3] three', () => {
+        // GRIP in {0, 5, 9 with gold}; SCRAMBLE in {0, 3, 6 with gold}; one gold die.
+        // Safe >= 8: GRIP 9 with SCRAMBLE held or staged (2), GRIP 5 + SCRAMBLE 3, GRIP 5 + SCRAMBLE 6.
         // Risk needs GRIP staged and SCRAMBLE staged: (5,3), (9,3), (5,6). Best surplus on risk is
         // the weaker meter's margin, 0 in each.
         const layout = testLayout({
@@ -64,7 +64,7 @@ describe('solveHazardPuzzle: hand-worked counts (A6)', () => {
             goals: { safe: 8, risk: [5, 3] },
         });
         const safe = solveHazardPuzzle(layout, 'safe');
-        expect(safe.winningOutcomes).toBe(5);
+        expect(safe.winningOutcomes).toBe(4);
         expect(safe.bestSurplus).toBe(4); // 9 + 3 = 12 over 8
         const risk = solveHazardPuzzle(layout, 'risk');
         expect(risk.winningOutcomes).toBe(3);
@@ -72,7 +72,7 @@ describe('solveHazardPuzzle: hand-worked counts (A6)', () => {
     });
 
     it('a reserve DRAW: the one way through applies FOOTING, then stages the drawn GRIP', () => {
-        // FOOTING applied draws GRIP: holding GRIP, staging it (9) or binning it (5). Only staging clears 9.
+        // FOOTING applied draws GRIP: holding GRIP (4) or staging it (9). Only staging clears 9.
         // Staging FOOTING without applying it reads the same as applying it and holding GRIP.
         const safe = solveHazardPuzzle(DRAW_ONLY_LAYOUT, 'safe');
         expect(safe.winningOutcomes).toBe(1);
@@ -89,6 +89,37 @@ describe('solveHazardPuzzle: hand-worked counts (A6)', () => {
         const layout = testLayout({ id: 'fwd', hand: ['grip', 'scram', 'haul'], dice: ['gold', 'red'] });
         const reversed = { ...layout, id: 'rev', hand: layout.hand.slice().reverse() };
         expect(solveHazardPuzzle(reversed, 'safe').winningOutcomes).toBe(solveHazardPuzzle(layout, 'safe').winningOutcomes);
+    });
+});
+
+describe('an outcome is what is played (HP1 A2)', () => {
+    const withCrack = (layout: HazardPuzzleLayout): HazardPuzzleLayout => ({
+        ...layout,
+        id: `${layout.id}-crack`,
+        hand: [...layout.hand, 'crack'],
+    });
+    const layouts = [
+        testLayout({ id: 'two-cards', hand: ['haul', 'scram'], goals: { safe: 3, risk: [3, 3] } }),
+        testLayout({ id: 'one-gold', hand: ['grip', 'scram'], dice: ['gold'], goals: { safe: 8, risk: [5, 3] } }),
+        DRAW_ONLY_LAYOUT,
+        MIXED_LAYOUT,
+    ];
+
+    for (const layout of layouts) {
+        it(`${layout.id}: an inert card in the hand leaves the count unchanged on both routes`, () => {
+            for (const route of ['safe', 'risk'] as const) {
+                expect(solveHazardPuzzle(withCrack(layout), route).winningOutcomes, route).toBe(
+                    solveHazardPuzzle(layout, route).winningOutcomes,
+                );
+            }
+        });
+    }
+
+    it('lists the cards each win stages and that change the result, never a held card', () => {
+        // Safe 8, one gold die: GRIP 9 alone, GRIP 9 + SCRAMBLE 3, GRIP 5 + SCRAMBLE 3, GRIP 5 + SCRAMBLE 6.
+        const layout = testLayout({ id: 'one-gold', hand: ['grip', 'scram', 'crack'], dice: ['gold'], goals: { safe: 8, risk: [5, 3] } });
+        const staged = solveHazardPuzzle(layout, 'safe').winningStaged.map((ids) => ids.slice().sort().join('+'));
+        expect(staged.sort()).toEqual(['grip', 'grip+scram', 'grip+scram', 'grip+scram']);
     });
 });
 

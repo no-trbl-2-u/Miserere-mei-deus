@@ -52,7 +52,7 @@ describe('the route pick on the live RouteSelect (A19)', () => {
             ['safe', 'THE LONG GALLERY', 'MEDIUM · 75 S', false],
             ['risk', 'THE DROWNED DOOR', 'HARD · 60 S', true],
         ]);
-        expect(vm.routeChoices[0].ladder).toEqual([{ key: 'passage', label: 'PASS', values: [26] }]);
+        expect(vm.routeChoices[0].ladder).toEqual([{ key: 'passage', label: 'PASS', values: [24] }]);
         expect(vm.routeChoices[1].ladder).toEqual([
             { key: 'force', label: 'FOR', values: [13] },
             { key: 'escape', label: 'ESC', values: [14] },
@@ -140,7 +140,7 @@ describe('the board as the live hazard view model (A18, A21)', () => {
 
     it('reads the safe goal on the combined PASSAGE meter', () => {
         const vm = selectHazardPuzzleViewModel(HARD, createHazardPuzzleSession(HARD, 'safe'));
-        expect(vm.meters.map((m) => [m.key, m.need])).toEqual([['passage', 26]]);
+        expect(vm.meters.map((m) => [m.key, m.need])).toEqual([['passage', 24]]);
         expect(vm.bothRequired).toBe(false);
     });
 

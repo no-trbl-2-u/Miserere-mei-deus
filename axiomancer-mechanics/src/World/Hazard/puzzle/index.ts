@@ -27,7 +27,6 @@ export {
     unstageHazardPuzzleCard,
     powerHazardPuzzleCard,
     applyHazardPuzzleCard,
-    discardHazardPuzzleCard,
     playHazardPuzzleMove,
     playHazardPuzzleMoves,
     confirmHazardPuzzle,
@@ -44,6 +43,9 @@ export { hazardRegionMaterials } from './hazard-puzzle.region';
 
 export type { HazardPuzzleSolution, HazardPuzzleSolveOptions } from './hazard-puzzle.solver';
 export { solveHazardPuzzle, solveHazardPuzzleSession, hazardPuzzleSurplus } from './hazard-puzzle.solver';
+
+export type { HazardPuzzleCardReport, HazardPuzzleCardSource, HazardPuzzleCardUse } from './hazard-puzzle.report';
+export { hazardPuzzleCardReport, formatHazardPuzzleCardReport } from './hazard-puzzle.report';
 
 export type { HazardPuzzleRouteAudit } from './hazard-puzzle.band';
 export { hazardPuzzleBandOf, auditHazardPuzzleRoute, auditHazardPuzzleLayout } from './hazard-puzzle.band';
