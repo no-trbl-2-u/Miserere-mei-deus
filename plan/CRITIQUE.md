@@ -747,16 +747,6 @@
 - suggested fix: lift the cutscene hint into a presenter constant and use a pointer-neutral verb ("· continue ·" / "· walk on ·"), and do the same for the dock hint ("CHOOSE A SLOT ...") and the tooltip ("choose an adjacent node"), as #604 did; copy only, pinned by the screens' existing tests.
 - source: critique:drive (unattended)
 
-### [LOW] combat / rune column — the CONVICTION caption under the ◆ chip is 6px text that ignores the system font size
-- pass: 93 (commit 1a0e7b58)
-- viewport: both (375x812 and 1280x800)
-- category: a11y
-- observation: the word that names the game's spell economy prints at `fontSize: 6` with `allowFontScaling={false}`, so in both board captures it is a smudge under "◆ 0" rather than a word, and a player who has raised the system text size gets no larger. The HUD meta line had the same shape (9px, scaling off) and was raised to 11px with scaling on (Done, 2026-10-15).
-- evidence: `.critique-artifacts/mobile/04-combat-board.png`, `desktop/04-combat-board.png` (left rail, under the ◆ chip); `axiomancer-mobile/components/combat/encounter/CombatBoard.tsx:2041` (`convictionCaption`), `:282`.
-- suggested fix: raise the caption to the board's smallest legible size (9-10px) with font scaling on, letting the chip widen; re-check `signatureColumnHeight` keeps the column clear of the dice tray at 375; pin the size in the board test.
-- source: critique:drive (unattended)
-
-
 ### [LOW] rest / cache — "The node is spent the moment you stopped here" mixes present and past tense
 - pass: 89 (commit 2927472f)
 - viewport: both (375x812 and 1280x800)
@@ -1094,6 +1084,16 @@
 - source: loop
 
 ## Done
+
+### [x] [LOW] combat / rune column — the CONVICTION caption under the ◆ chip is 6px text that ignores the system font size — RESOLVED 2026-10-18 (branch loop/iterate-conviction-caption, 7debe9d9: the caption is 9px on an 11pt line with font scaling on; the chip is 38pt and five runes still clear the tray at 375x812; pinned in CombatBoard.sig-column.test.tsx)
+- pass: 93 (commit 1a0e7b58)
+- issue: #617
+- viewport: both (375x812 and 1280x800)
+- category: a11y
+- observation: the word that names the game's spell economy prints at `fontSize: 6` with `allowFontScaling={false}`, so in both board captures it is a smudge under "◆ 0" rather than a word, and a player who has raised the system text size gets no larger. The HUD meta line had the same shape (9px, scaling off) and was raised to 11px with scaling on (Done, 2026-10-15).
+- evidence: `.critique-artifacts/mobile/04-combat-board.png`, `desktop/04-combat-board.png` (left rail, under the ◆ chip); `axiomancer-mobile/components/combat/encounter/CombatBoard.tsx:2041` (`convictionCaption`), `:282`.
+- suggested fix: raise the caption to the board's smallest legible size (9-10px) with font scaling on, letting the chip widen; re-check `signatureColumnHeight` keeps the column clear of the dice tray at 375; pin the size in the board test.
+- source: critique:drive (unattended)
 
 ### [x] [LOW] critique / transport — the mobile viewport emulates a mouse, so phone captures show the desktop map gesture line — RESOLVED 2026-10-17 (branch loop/iterate-critique-touch-context, 2fe330ad: `contextOptions(viewport)` gives the mobile context `hasTouch` and `isMobile`, desktop keeps the mouse; pinned in critique-drive.test.mjs; the mobile hub capture now reads "drag · pinch")
 - pass: 92 (commit c49902c7)
