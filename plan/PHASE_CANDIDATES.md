@@ -789,12 +789,12 @@
 - proposed scope: 1-2 phases (L). Stryker scoped to changed lines under a time budget, a report-only job first.
 - conflicts: none; creates no content.
 
-### [ ] [owner] [score 0.0] Android smoke test on the preview APK (needs T: EXPO_TOKEN, emulator or device)
+### [ ] [owner] [score 0.0] Android smoke test on the preview APK (needs an emulator runner or T's device)
 - proposed: 2026-10-18, T's `/messy` of the EV1d "For `/messy`" block; part plan `plan/loop-gates.md` § 7; promote with `/plot`
 - trigger: no gate runs on Android (S6); PF2's device tables are blank.
 - source signals: `docs/reports/eval/latest.md` (EV1a-EV1d, stamp a712832a) and its JSON
-- proposed scope: 1-2 phases (L). Install and launch the preview APK, reach the title and one combat round; needs `EXPO_TOKEN`, EAS minutes, and a KVM emulator runner with Maestro or T's device.
-- conflicts: depends on T (secrets, device); creates no content.
+- proposed scope: 1-2 phases (L). Install and launch the preview APK, reach the title and one combat round. `EXPO_TOKEN` already exists (the repo secret `preview-build.yml` reads, and in the session environment); the blocker is a place to run the APK: a KVM emulator runner with Maestro, or T's device. EAS build minutes per run.
+- conflicts: depends on an emulator runner or T's device; creates no content.
 
 ## Promoted
 

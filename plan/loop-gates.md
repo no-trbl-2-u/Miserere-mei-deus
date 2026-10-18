@@ -11,7 +11,9 @@
   fail-on-parent are deterministic, so each turns `verify-gate` red when it fails. `verify-gate` stays in
   evaluate mode until T activates the ruleset (`plan/NEEDS_T.md` `verify-gate-ruleset`), so nothing blocks a
   merge before T chooses. The RV1 Claude review stays advisory (D86).
-- **The Android smoke test is filed**, marked as needing T (`EXPO_TOKEN`, an emulator or T's device).
+- **The Android smoke test is filed**, marked as needing an emulator runner or T's device. `EXPO_TOKEN` is not a
+  blocker: it exists as the repo secret `preview-build.yml` reads and in the session environment (checked
+  2026-10-18).
 
 ## Themes
 
@@ -82,8 +84,9 @@
 
 - **What exists:** `.github/workflows/preview-build.yml` (manual EAS build, needs `EXPO_TOKEN`); no Maestro, Detox
   or emulator; PF2's device tables are blank.
-- **Candidate (needs T):** a smoke run on the preview APK (install, launch, reach the title and one combat
-  round). Needs `EXPO_TOKEN`, EAS build minutes, and either a KVM emulator runner with Maestro or T's device.
+- **Candidate (needs a device path):** a smoke run on the preview APK (install, launch, reach the title and one
+  combat round). `EXPO_TOKEN` already exists; it needs EAS build minutes and either a KVM emulator runner with
+  Maestro or T's device.
 
 ### 8. The antagonist (missed 4 of 5; no fix aimed at it)
 
