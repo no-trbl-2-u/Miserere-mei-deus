@@ -151,7 +151,10 @@ export function TitleScreen({ menu, startAtMenu = false }: TitleScreenProps) {
       </Animated.View>
 
       {phase === 'menu' ? (
-        <Animated.View style={[StyleSheet.absoluteFill, menuStyle]} testID="title-menu">
+        <Animated.View
+          style={[styles.menu, { left: layout.menu.left, width: layout.menu.width }, menuStyle]}
+          testID="title-menu"
+        >
           {menu}
         </Animated.View>
       ) : null}
@@ -216,6 +219,13 @@ const useStyles = makeStyles((AXM) => ({
   plate: {
     position: 'absolute',
     top: 0,
+  },
+  // Spans the plate's band, not the window, so a wide window keeps the
+  // menu rows within the art.
+  menu: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
   },
   wordmarkRow: {
     position: 'absolute',

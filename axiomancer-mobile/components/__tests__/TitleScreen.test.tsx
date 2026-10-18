@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Text } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import { render, fireEvent, act } from '@testing-library/react-native';
 import { TitleScreen } from '../TitleScreen';
 import { createAppStore } from '@/state/store';
@@ -113,6 +113,15 @@ describe('TitleScreen', () => {
     const { getByTestId } = mount({ startAtMenu: true });
     expect(getByTestId('stub-menu')).toBeTruthy();
     expect(getByTestId('title-wordmark')).toBeTruthy();
+  });
+
+  // Critique pass 79: the menu shares the plate's band, so a wide window
+  // never leaves its rows hanging past the art.
+  it('hosts the menu in the plate\'s band', () => {
+    const { getByTestId } = mount({ startAtMenu: true });
+    const flat = (id: string) => StyleSheet.flatten(getByTestId(id).props.style);
+    const plate = flat('title-plate');
+    expect(flat('title-menu')).toMatchObject({ left: plate.left, width: plate.width });
   });
 
   it('keeps the EMBARK label in the button face style', () => {

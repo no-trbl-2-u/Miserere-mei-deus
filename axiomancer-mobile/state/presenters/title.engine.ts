@@ -71,6 +71,8 @@ export interface Viewport {
 export interface TitleLayout {
     /** The plate's box: full width on a phone, capped and centred on a wide window. */
     plate: { left: number; top: number; width: number; height: number };
+    /** The menu's horizontal band: the plate's own, so its rows sit within the art. */
+    menu: { left: number; width: number };
     /** The wordmark's resting centre and width, in the plate's sky. */
     wordmark: { centerX: number; centerY: number; width: number };
     /** The splash frame's centre (the window's centre). */
@@ -88,7 +90,8 @@ const PLATE_ASPECT = 1290 / 1600;
  * EMBARK; on a wide window its height is capped at 72% of the window and it is
  * centred, so it never grows past what the eye takes in. The wordmark rests in
  * the plate's sky, 13% down its height, clear of the safe-area inset, at 86%
- * of its width (at most 460pt).
+ * of its width (at most 460pt). The menu shares the plate's band, so on a
+ * wide window its rows never overhang the art.
  */
 export function titleLayout({ width, height, topInset }: Viewport): TitleLayout {
     const plateWidth = Math.min(width, height * 0.72 * PLATE_ASPECT);
@@ -98,6 +101,7 @@ export function titleLayout({ width, height, topInset }: Viewport): TitleLayout 
     const centerY = Math.max(topInset + 36, plateHeight * 0.13);
     return {
         plate: { left, top: 0, width: plateWidth, height: plateHeight },
+        menu: { left, width: plateWidth },
         wordmark: { centerX: width / 2, centerY, width: wordmarkWidth },
         splashCenter: { x: width / 2, y: height / 2 },
     };
