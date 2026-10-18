@@ -289,7 +289,7 @@ const DOCK_HEADER_LABEL = '✠ WORN UPON THE BODY';
 // The dock lists only worn slots; the worn-vs-unworn comparison is behind a
 // tap — selecting a slot filters the grid below to the items that fit it
 // (`filterRowsBySlot`). The hint teaches that interaction.
-const DOCK_HINT_LABEL = 'TAP A SLOT TO SEE WHAT ELSE FITS';
+const DOCK_HINT_LABEL = 'CHOOSE A SLOT TO SEE WHAT ELSE FITS';
 const DOCK_BARE_LABEL = '— bare —';
 const DOCK_BANNER_EYEBROW = 'FITTING SLOT';
 const DOCK_BANNER_CLEAR_LABEL = 'CLEAR ✕';

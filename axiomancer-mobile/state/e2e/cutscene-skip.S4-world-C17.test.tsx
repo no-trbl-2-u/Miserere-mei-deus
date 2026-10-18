@@ -25,6 +25,7 @@ jest.mock('@/lib/platform/router', () => ({
 
 import CutsceneScreen from '@/app/cutscene';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
+import { CUTSCENE_HINT } from '@/state/presenters/event.engine';
 import { createAppStore, EMPTY_EVENT_SLICE, type AppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 
@@ -103,5 +104,21 @@ describe('S4-world-C17: SKIP is a button, and a hittable one', () => {
         expect(store.getState().event.pending).toBeNull();
         expect(tree.queryByTestId('cutscene-advance')).toBeNull();
         expect(tree.getByTestId('cutscene-inactive')).toBeTruthy();
+    });
+});
+
+// Critique pass 93: the plate runs under a mouse on web too, so the hint under
+// the line comes from the presenter and names no touch gesture.
+describe('the cutscene hint is presenter copy, pointer-neutral', () => {
+    it('shows the presenter hint under a line with more to follow', () => {
+        const tree = mount(makeStore());
+
+        expect(tree.getByText(CUTSCENE_HINT.next)).toBeTruthy();
+    });
+
+    it('names no gesture in either hint', () => {
+        for (const hint of Object.values(CUTSCENE_HINT)) {
+            expect(hint).not.toMatch(/\b(tap|click)\b/i);
+        }
     });
 });
