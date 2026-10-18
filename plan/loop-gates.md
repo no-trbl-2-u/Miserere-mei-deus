@@ -5,6 +5,11 @@
 > in an attended session. Every candidate below is an `[owner]` row in `plan/PHASE_CANDIDATES.md`; T promotes one
 > with `/plot`. Evidence for every number: `docs/reports/eval/latest.md` (EV1a-EV1d) and the JSON beside it.
 
+## Status
+
+Plotted by T on 2026-10-18 as Phases LG1a-LG1h (`plan/phases/phase_LG1_loop_gates.md`); the candidates moved to
+PHASE_CANDIDATES "Promoted". Themes 1 and 8 stay as written (T's ruleset move; no candidate).
+
 ## T's rulings (2026-10-18)
 
 - **The mechanical checks fail `verify-gate`.** Path coverage, the acceptance map, the plan-queue lint and

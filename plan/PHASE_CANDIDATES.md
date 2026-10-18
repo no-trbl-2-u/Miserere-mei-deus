@@ -735,71 +735,14 @@
 - proposed scope: 1 phase. A check in `scripts/pr-gate.mjs` (or a `pr-review.yml` step) that fails a `loop:pr` or `plot` PR whose body holds a "Generated with" line, an author trailer or an emoji, with a test.
 - conflicts: none; creates no content.
 
-> **Eight `[owner]` loop-gate candidates (T, `/messy` 2026-10-18).** From the eval report's ranked gate
-> fixes; the part plan is `plan/loop-gates.md`. Scores are the EV1d "misses prevented per size point". T ruled
-> that the mechanical checks fail `verify-gate` (evaluate mode until T activates the ruleset). Each enters the
-> build plan only when T runs `/plot` on it.
-
-### [ ] [owner] [score 2.0] Path coverage: verify-gate fails on a changed path no verify-* workflow owns
-- proposed: 2026-10-18, T's `/messy` of the EV1d "For `/messy`" block; part plan `plan/loop-gates.md` § 2; promote with `/plot`
-- trigger: PR #526 merged with only Cloudflare Pages run; planted defect D4 sat in a file no `verify-*` triggers on (missed 4 of 4 by CI path filters).
-- source signals: `docs/reports/eval/latest.md` (EV1a-EV1d, stamp a712832a) and its JSON
-- proposed scope: 1 phase (S). `scripts/pr-gate.mjs` names each changed path outside every `verify-*` filter and the bookkeeping list and fails `verify-gate`, naming the filter to extend; tests on fixture diffs.
-- conflicts: overlaps "root npm test runs in no workflow" (half closed by RV1a); creates no content.
-
-### [ ] [owner] [score 1.5] Acceptance map: verify-gate fails a ticked acceptance line that names no test, command or shot
-- proposed: 2026-10-18, T's `/messy` of the EV1d "For `/messy`" block; part plan `plan/loop-gates.md` § 3; promote with `/plot`
-- trigger: #521 A4 and #523 A6 ticked on tests that could not fail; #523 ticked a `verify:visual` shot never taken; 49 of 65 measured ticks name no test.
-- source signals: `docs/reports/eval/latest.md` (EV1a-EV1d, stamp a712832a) and its JSON
-- proposed scope: 1 phase (S-M). `pr-gate.mjs` parses the PR body's `## Acceptance`; a `[x]` line must name a test file, command or shot artifact that exists; `skills/march.md` "Landing a change" template updated; tests.
-- conflicts: the RV1 review already comments on this; the gate makes it deterministic. Creates no content.
-
-### [ ] [owner] [score 1.0] Plan-queue lint: check-plan-queues.mjs fails a merge that splits or repeats a queue row
-- proposed: 2026-10-18, T's `/messy` of the EV1d "For `/messy`" block; part plan `plan/loop-gates.md` § 4; promote with `/plot`
-- trigger: `pr-resolve` union merges cut `plan/CRITIQUE.md` rows apart (c95114a2, 49829988); only conflict markers are checked.
-- source signals: `docs/reports/eval/latest.md` (EV1a-EV1d, stamp a712832a) and its JSON
-- proposed scope: 1 phase (S). `scripts/check-plan-queues.mjs` on AUDIT, CRITIQUE, PHASE_CANDIDATES and the build plan (row header shape, body under its header, no repeats, no doubled blank runs), modelled on `check-lessons.mjs`, in the root `npm test`.
-- conflicts: overlaps the held "Shard the AUDIT and CRITIQUE queues per writer"; needed under either option. Creates no content.
-
-### [ ] [owner] [score 1.0] Builder/judge separation: a judge that is not the builder re-runs each ticked acceptance line
-- proposed: 2026-10-18, T's `/messy` of the EV1d "For `/messy`" block; part plan `plan/loop-gates.md` § 3; promote with `/plot`
-- trigger: the same three builder misses as the acceptance map; promote only if the map's misses show it is needed.
-- source signals: `docs/reports/eval/latest.md` (EV1a-EV1d, stamp a712832a) and its JSON
-- proposed scope: 1-2 phases (L). A judge step runs each ticked line's named test or command on the PR head and reports per line.
-- conflicts: overlaps the RV1 Tests lens; creates no content.
-
-### [ ] [owner] [score 0.0] Critique record: each /critique pass appends a machine-readable record so the judge gets a denominator
-- proposed: 2026-10-18, T's `/messy` of the EV1d "For `/messy`" block; part plan `plan/loop-gates.md` § 5; promote with `/plot`
-- trigger: `/critique` is the one judge the eval reports "not measured"; 5 ledger follow-ups cite a critique pass.
-- source signals: `docs/reports/eval/latest.md` (EV1a-EV1d, stamp a712832a) and its JSON
-- proposed scope: 1 phase (S). A per-pass record (pass number, base and head sha, screens and viewports, finding IDs and severities) and `miss-rates-lib.mjs` matching escapes in that range.
-- conflicts: none; creates no content.
-
-### [ ] [owner] [score 0.0] Fail-on-parent: verify-gate fails when a test file the PR adds could not fail
-- proposed: 2026-10-18, T's `/messy` of the EV1d "For `/messy`" block; part plan `plan/loop-gates.md` § 6; promote with `/plot`
-- trigger: the parent replay found 4 of 58 test files could not fail; today `parent-tests` only feeds an advisory comment.
-- source signals: `docs/reports/eval/latest.md` (EV1a-EV1d, stamp a712832a) and its JSON
-- proposed scope: 1 phase (S-M). A `verify-gate` step runs `pr-review.mjs parent-tests` and fails on a new test that passes on the parent, with an opt-out marker for guard tests.
-- conflicts: none; creates no content.
-
-### [ ] [owner] [score 0.0] Diff-scoped mutation testing on a PR's changed lines, report-only first
-- proposed: 2026-10-18, T's `/messy` of the EV1d "For `/messy`" block; part plan `plan/loop-gates.md` § 6; promote with `/plot`
-- trigger: CI and the tests caught 0 of 4 planted defects; mutation survivors sit in combat code (mechanics 76.3%, 161 survivors).
-- source signals: `docs/reports/eval/latest.md` (EV1a-EV1d, stamp a712832a) and its JSON
-- proposed scope: 1-2 phases (L). Stryker scoped to changed lines under a time budget, a report-only job first.
-- conflicts: none; creates no content.
-
-### [ ] [owner] [score 0.0] Android smoke test on the preview APK (needs an emulator runner or T's device)
-- proposed: 2026-10-18, T's `/messy` of the EV1d "For `/messy`" block; part plan `plan/loop-gates.md` § 7; promote with `/plot`
-- trigger: no gate runs on Android (S6); PF2's device tables are blank.
-- source signals: `docs/reports/eval/latest.md` (EV1a-EV1d, stamp a712832a) and its JSON
-- proposed scope: 1-2 phases (L). Install and launch the preview APK, reach the title and one combat round. `EXPO_TOKEN` already exists (the repo secret `preview-build.yml` reads, and in the session environment); the blocker is a place to run the APK: a KVM emulator runner with Maestro, or T's device. EAS build minutes per run.
-- conflicts: depends on an emulator runner or T's device; creates no content.
-
 ## Promoted
 
 Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_CANDIDATES_2026.md`.
 
+- (2026-10-18) Eight loop-gate `[owner]` candidates from T's `/messy` of the EV1d gate fixes (path coverage,
+  acceptance map, plan-queue lint, builder/judge separation, critique record, fail-on-parent, diff-scoped
+  mutation, Android smoke) were promoted by T the same day with `/plot` as Phases LG1a-LG1h
+  (`plan/phases/phase_LG1_loop_gates.md`; part plan `plan/loop-gates.md`).
 - (pass 32) The Bleeding Signet is granted by nothing (AUDIT `[content]`,
   RH1's roster-health lens, the only orphan it reports). It is relic
   content with one signal, and the AUDIT row already routes it to a brief
