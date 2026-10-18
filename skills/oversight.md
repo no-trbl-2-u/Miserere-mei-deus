@@ -88,7 +88,9 @@ In parallel where independent:
       the window beside `pr-autofix`'s (`gh run list --workflow
       pr-review.yml --json conclusion,createdAt`, counting runs whose
       `review` job ran), and how many verdicts were `not-pass`. It is
-      the cost check on phase RV1b: one Claude run per reviewed head.
+      the cost check on phase RV1b: one Claude run per reviewed head,
+      three Sonnet lens sub-agents inside it on `risk:medium` and
+      `risk:high` (RV1c).
     - **Intake used.** `git log --since=<date> --grep='^phases: plot'` and
       the count of `plan/messy/`-refined specs (commit subjects
       `plan(<topic>):`). Zero after two weeks means the habit didn't take.

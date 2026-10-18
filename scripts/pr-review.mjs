@@ -15,13 +15,25 @@
 // already has one (the reviewer's own label raise fires `labeled` again).
 //
 //   node scripts/pr-review.mjs wanted --pr <n> [--dispatch]   # writes go, pr, head to $GITHUB_OUTPUT
+//   node scripts/pr-review.mjs parent-tests --pr <n>           # the Tests lens's parent replay (RV1c)
 //
-// `reviewWanted` is pure; only `main` reads GitHub.
+// `parent-tests` runs each test file the PR adds or changes at the PR's
+// head (the control) and then at its merge base with `main`, the PR's
+// version of the file laid over (the EV1b method, `scripts/eval/
+// parent-replay.mjs`). A file that passes on the base could not fail on
+// the change. It runs in a detached worktree under the system temp dir,
+// so the reviewer needs no `git worktree` or `git checkout` grant of its
+// own, and prints one line per file.
+//
+// `reviewWanted` and `formatParentTests` are pure; only `main` reads GitHub.
 
 import { execFileSync } from 'node:child_process'
 import { appendFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+
+import { newTitles, runnerFor, verdictFor } from './eval/parent-replay-lib.mjs'
+import { checkout, closeWorktree, git, openWorktree, runTests } from './eval/worktree.mjs'
 
 /** Labels that put a PR in front of the reviewer on `pull_request`. */
 export const REVIEW_LABELS = Object.freeze(['loop:pr', 'plot'])
@@ -58,6 +70,23 @@ export function reviewWanted({ state, isDraft, isCrossRepository, labels, head, 
   return { go: true, reason: `review head ${head.slice(0, 8)}` }
 }
 
+/**
+ * The `parent-tests` report, one line per replayed test file.
+ *
+ * @param {Array<{ path: string, verdict: string, reason: string, couldNotFailCases: string[], newCases: number }>} files from `verdictFor`.
+ * @returns {string} the report.
+ * @example formatParentTests([]) // 'parent-tests: the PR adds or changes no test file'
+ */
+export function formatParentTests(files) {
+  if (files.length === 0) return 'parent-tests: the PR adds or changes no test file'
+  const lines = files.map((f) => {
+    const cases = f.couldNotFailCases.length ? `; new cases passing on the base: ${f.couldNotFailCases.join('; ')}` : ''
+    return `${f.verdict.padEnd(15)} ${f.path} (${f.reason}${cases})`
+  })
+  const weak = files.filter((f) => f.verdict === 'could-not-fail').length
+  return [...lines, `parent-tests: ${weak} of ${files.length} file(s) could not fail on the change`].join('\n')
+}
+
 // --- I/O ----------------------------------------------------------------------
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -67,14 +96,47 @@ function arg(name, fallback) {
   return i > 0 ? process.argv[i + 1] : fallback
 }
 
-function main() {
+function parentTests(pr) {
+  const ref = `refs/remotes/origin/pr-review-${pr}`
+  git(['fetch', '--quiet', '--no-tags', 'origin', '+main:refs/remotes/origin/main', `+pull/${pr}/head:${ref}`])
+  const head = git(['rev-parse', ref])
+  const base = git(['merge-base', 'refs/remotes/origin/main', head])
+  const show = (sha, path) => {
+    try {
+      return git(['show', `${sha}:${path}`])
+    } catch {
+      return null
+    }
+  }
+  const tests = git(['diff', '--name-only', '--diff-filter=AM', base, head]).split('\n').filter((f) => f && runnerFor(f))
+  const files = []
+  if (tests.length) {
+    const dir = openWorktree('pr-review-parent-')
+    try {
+      checkout(dir, head)
+      const control = runTests(dir, tests)
+      checkout(dir, base)
+      git(['checkout', head, '--', ...tests], dir)
+      const onBase = runTests(dir, tests)
+      for (const path of tests) {
+        files.push({ path, ...verdictFor(control[path] ?? null, onBase[path] ?? null, newTitles(show(head, path) ?? '', show(base, path))) })
+      }
+    } finally {
+      closeWorktree(dir)
+    }
+  }
+  console.log(formatParentTests(files))
+}
+
+async function main() {
   const [mode] = process.argv.slice(2)
   const pr = arg('--pr')
   const repo = process.env.GH_REPO || 'no-trbl-2-u/Miserere-mei-deus'
-  if (mode !== 'wanted' || !pr) {
-    console.error('usage: pr-review.mjs wanted --pr <n> [--dispatch]')
+  if (!['wanted', 'parent-tests'].includes(mode) || !/^\d+$/.test(pr ?? '')) {
+    console.error('usage: pr-review.mjs wanted --pr <n> [--dispatch] | parent-tests --pr <n>')
     process.exit(2)
   }
+  if (mode === 'parent-tests') return parentTests(pr)
   const view = JSON.parse(execFileSync('gh', ['pr', 'view', pr, '--repo', repo,
     '--json', 'state,isDraft,isCrossRepository,labels,headRefOid,comments'], { cwd: ROOT, encoding: 'utf8' }))
   const facts = {
@@ -91,4 +153,4 @@ function main() {
   if (process.env.GITHUB_OUTPUT) appendFileSync(process.env.GITHUB_OUTPUT, `go=${d.go}\npr=${pr}\nhead=${facts.head}\n`)
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main()
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await main()

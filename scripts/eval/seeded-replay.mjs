@@ -3,7 +3,7 @@
 //
 // Planted defects (phase EV1c, brief A6). Each real bug of 2026-10-14 is
 // planted again by reverting its fix's source in a detached worktree that
-// is never pushed, and each mechanical gate meets it: the CI path filters,
+// this mode never pushes, and each mechanical gate meets it: the CI path filters,
 // the related tests as they stood at the fix's parent, and the related
 // tests at the fix with its source reverted. A file failing in either leg
 // reruns at the unplanted fix; one that fails there too is noise. Writes
@@ -11,24 +11,24 @@
 // `docs/reports/eval/latest.md`. The pure parts live in `seeded-lib.mjs`.
 //
 //   node scripts/eval/seeded-replay.mjs [--dry-run]
+//   node scripts/eval/seeded-replay.mjs --judge review [--dry-run]
+//
+// `--judge review` (phase RV1c, brief A7) scores the shadow reviewer
+// instead: see `seeded-review.mjs`. It is the one mode that pushes.
 
-import { spawnSync, execFileSync } from 'node:child_process'
-import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
-import { tmpdir } from 'node:os'
-import { dirname, join, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { readFileSync, readdirSync, writeFileSync } from 'node:fs'
+import { join } from 'node:path'
 
 import { classifyPaths, parseWorkflowFilter } from './ledger-lib.mjs'
 import { spliceMarked } from './mutation-lib.mjs'
-import { parseJsonReport, parseTap, runnerFor } from './parent-replay-lib.mjs'
+import { runnerFor } from './parent-replay-lib.mjs'
 import { SECTION_END, SECTION_START, SEEDS, ciVerdict, plantedPaths, relatedTests, renderSeededSection, testVerdict } from './seeded-lib.mjs'
+import { judgeReview } from './seeded-review.mjs'
+import { ROOT, checkout, closeWorktree, git, openWorktree, runTests as runInTree } from './worktree.mjs'
 
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const OUT_DIR = join(ROOT, 'docs/reports/eval')
 const RUN_TIMEOUT_MS = 10 * 60 * 1000
-const NODE_MODULES = ['node_modules', 'axiomancer-mechanics/node_modules', 'axiomancer-mobile/node_modules']
-
-const git = (args, cwd = ROOT) => execFileSync('git', args, { cwd, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }).trim()
+const runTests = (dir, paths) => runInTree(dir, paths, RUN_TIMEOUT_MS)
 
 function verifyWorkflows() {
   const dir = join(ROOT, '.github/workflows')
@@ -37,59 +37,6 @@ function verifyWorkflows() {
     .sort()
     .map((file) => ({ file, ...parseWorkflowFilter(readFileSync(join(dir, file), 'utf8')) }))
     .filter((wf) => wf.paths !== null)
-}
-
-function linkModules(dir) {
-  for (const rel of NODE_MODULES) {
-    const target = join(ROOT, rel)
-    const link = join(dir, rel)
-    if (existsSync(target) && existsSync(dirname(link)) && !existsSync(link)) symlinkSync(target, link, 'junction')
-  }
-}
-
-function checkout(dir, sha) {
-  git(['checkout', '--force', '--detach', '--quiet', sha], dir)
-  git(['clean', '-fdq', '-e', 'node_modules'], dir)
-  linkModules(dir)
-}
-
-function run(cmd, args, cwd) {
-  const r = spawnSync(cmd, args, { cwd, encoding: 'utf8', timeout: RUN_TIMEOUT_MS, maxBuffer: 256 * 1024 * 1024, env: { ...process.env, CI: '1', FORCE_COLOR: '0' } })
-  return { code: r.status ?? 1, stdout: r.stdout ?? '', stderr: r.stderr ?? '', timedOut: r.error?.code === 'ETIMEDOUT' }
-}
-
-/** Runs test files in `dir`, one call per runner; results keyed by path. */
-function runTests(dir, paths) {
-  const results = {}
-  const groups = {}
-  for (const p of paths) {
-    const r = runnerFor(p)
-    if (r) (groups[r.runner] ??= { cwd: r.cwd, files: [] }).files.push(p)
-  }
-  for (const [runner, { cwd, files }] of Object.entries(groups)) {
-    if (runner === 'node') {
-      for (const f of files) {
-        const r = run(process.execPath, ['--test', '--test-reporter=tap', f], dir)
-        const { ok, message } = parseTap(r.stdout, r.timedOut ? 1 : r.code)
-        results[f] = { ok, message }
-      }
-      continue
-    }
-    const outFile = join(dir, `.eval-${runner}.json`)
-    rmSync(outFile, { force: true })
-    const rel = files.map((f) => f.slice(cwd.length + 1))
-    const args = runner === 'jest'
-      ? ['--no-install', 'jest', '--ci', '--json', `--outputFile=${outFile}`, '--runTestsByPath', ...rel]
-      : ['--no-install', 'vitest', 'run', '--reporter=json', `--outputFile=${outFile}`, ...rel]
-    const r = run('npx', args, join(dir, cwd))
-    const parsed = parseJsonReport(existsSync(outFile) ? JSON.parse(readFileSync(outFile, 'utf8')) : null, dir)
-    for (const f of files) {
-      const p = parsed[f]
-      results[f] = p ? { ok: p.ok, message: p.message } : { ok: false, message: r.timedOut ? 'timed out' : `no result (exit ${r.code})` }
-    }
-    rmSync(outFile, { force: true })
-  }
-  return results
 }
 
 function replaySeed(dir, seed, workflows) {
@@ -120,13 +67,20 @@ function replaySeed(dir, seed, workflows) {
   return { ...seed, fix: fix.slice(0, 8), planted, triggered, gates: { ci: ciVerdict(triggered, before), before, after } }
 }
 
-function main() {
+async function main() {
+  if (process.argv.includes('--judge')) {
+    const judge = process.argv[process.argv.indexOf('--judge') + 1]
+    if (judge !== 'review') {
+      console.error(`seeded-replay: unknown judge '${judge}' (only 'review')`)
+      process.exit(2)
+    }
+    await judgeReview({ dryRun: process.argv.includes('--dry-run') })
+    return
+  }
   const head = git(['rev-parse', 'HEAD'])
   const stamp = { commit: head.slice(0, 8), date: git(['show', '-s', '--format=%cI', head]) }
   const workflows = verifyWorkflows()
-  const dir = mkdtempSync(join(tmpdir(), 'eval-seeded-'))
-  rmSync(dir, { recursive: true, force: true })
-  git(['worktree', 'add', '--detach', '--quiet', dir, 'HEAD'])
+  const dir = openWorktree('eval-seeded-')
   const seeds = []
   try {
     for (const seed of SEEDS) {
@@ -136,9 +90,11 @@ function main() {
       console.log(`${s.id} #${s.pr}: ci ${s.gates.ci.verdict}, before ${s.gates.before.verdict}, after ${s.gates.after.verdict} (${Math.round((Date.now() - t0) / 1000)}s)`)
     }
   } finally {
-    git(['worktree', 'remove', '--force', dir])
+    closeWorktree(dir)
   }
-  const replay = { stamp, seeds }
+  // A mechanical rerun keeps the review judge's last blocks; only --judge review rewrites them.
+  const previous = readSeeded()
+  const replay = { stamp, seeds: seeds.map((s) => (previous?.[s.id] ? { ...s, review: previous[s.id] } : s)) }
   const section = renderSeededSection(replay)
   if (process.argv.includes('--dry-run')) {
     process.stdout.write(`${section}\n`)
@@ -150,4 +106,13 @@ function main() {
   console.log('seeded replay -> docs/reports/eval/latest.md')
 }
 
-main()
+function readSeeded() {
+  try {
+    const json = JSON.parse(readFileSync(join(OUT_DIR, 'seeded.json'), 'utf8'))
+    return Object.fromEntries(json.seeds.filter((s) => s.review).map((s) => [s.id, s.review]))
+  } catch {
+    return null
+  }
+}
+
+await main()

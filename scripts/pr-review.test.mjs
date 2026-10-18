@@ -7,7 +7,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
-import { DISPATCH_LABELS, REVIEW_LABELS, headMarker, reviewWanted } from './pr-review.mjs'
+import { DISPATCH_LABELS, REVIEW_LABELS, formatParentTests, headMarker, reviewWanted } from './pr-review.mjs'
 
 const pr = (extra = {}) => ({
   state: 'OPEN', isDraft: false, isCrossRepository: false, labels: ['loop:pr', 'size:M'], head: 'a'.repeat(40), comments: [], ...extra,
@@ -48,4 +48,16 @@ test('a dispatched review takes eval:seed drafts and repeats a head, but never a
 test('the label sets: pull_request reviews loop:pr and plot; dispatch adds eval:seed', () => {
   assert.deepEqual([...REVIEW_LABELS], ['loop:pr', 'plot'])
   assert.deepEqual([...DISPATCH_LABELS], ['loop:pr', 'plot', 'eval:seed'])
+})
+
+test('parent-tests reports each file and how many could not fail (the Tests lens, RV1c)', () => {
+  assert.equal(formatParentTests([]), 'parent-tests: the PR adds or changes no test file')
+  const out = formatParentTests([
+    { path: 'scripts/a.test.mjs', verdict: 'could-not-fail', reason: 'passes on the parent', couldNotFailCases: ['pins x'], newCases: 1 },
+    { path: 'scripts/b.test.mjs', verdict: 'fails-on-parent', reason: 'a case fails on the parent', couldNotFailCases: [], newCases: 2 },
+  ]).split('\n')
+  assert.equal(out.length, 3)
+  assert.match(out[0], /^could-not-fail +scripts\/a\.test\.mjs \(passes on the parent; new cases passing on the base: pins x\)$/)
+  assert.match(out[1], /^fails-on-parent scripts\/b\.test\.mjs \(a case fails on the parent\)$/)
+  assert.equal(out[2], 'parent-tests: 1 of 2 file(s) could not fail on the change')
 })
