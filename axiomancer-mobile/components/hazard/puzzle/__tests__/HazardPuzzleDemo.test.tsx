@@ -1,19 +1,39 @@
 /**
- * Hermetic component tests — the HAZARD PUZZLES flow (A14, A15): list,
- * route pick before the clock, the board, clock expiry confirming the board
- * as it stands, a manual confirm, and the outcome reaching the player.
+ * Hermetic component tests — the HAZARD PUZZLES flow on the live hazard
+ * surface (A15, A18, A19, A20, A21, A23): the list, the live route select
+ * before the clock, the live board with every engine move reached through
+ * its own callbacks, the clock expiry confirming the board as it stands, a
+ * manual CONFIRM, the outcome reaching the player, and no tap-button view.
  */
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import React from 'react';
 
+import { HazardBoard } from '@/components/hazard/HazardBoard';
 import { HazardPuzzleDemo } from '@/components/hazard/puzzle/HazardPuzzleDemo';
 import { HAZARD_PUZZLE_TICK_MS } from '@/components/hazard/puzzle/useHazardPuzzleClock';
 import { createAppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 import type { BaseStats } from '@mechanics';
+
+// The live board's gestures, as its own test mocks them: a chainable
+// builder (every configurator returns the gesture) and a pass-through
+// detector. Moves are driven through the board's callbacks instead.
+jest.mock('react-native-gesture-handler', () => {
+    const chainable = () => {
+        const gesture: Record<string, unknown> = {};
+        for (const method of ['minDistance', 'maxDistance', 'enabled', 'onStart', 'onUpdate', 'onEnd', 'onFinalize']) {
+            gesture[method] = () => gesture;
+        }
+        return gesture;
+    };
+    return {
+        Gesture: { Pan: chainable, Tap: chainable, Exclusive: (...gestures: unknown[]) => gestures[0] },
+        GestureDetector: ({ children }: { children: React.ReactNode }) => children,
+    };
+});
 
 beforeEach(() => {
     jest.useFakeTimers();
@@ -31,9 +51,16 @@ function openHardRisk(stats: BaseStats = { heart: 1, body: 1, mind: 1 }) {
     const { tree } = withAllProviders(<HazardPuzzleDemo />, { store });
     const screen = render(tree);
     fireEvent.press(screen.getByTestId('hazard-puzzle-pick-demo-undercroft-hard'));
-    expect(screen.getByTestId('hazard-puzzle-routes')).toBeTruthy();
-    fireEvent.press(screen.getByTestId('hazard-puzzle-route-risk'));
+    expect(screen.getByTestId('hazard-route-select')).toBeTruthy();
+    fireEvent.press(screen.getByTestId('hazard-route-risk'));
     return { screen, store };
+}
+
+/** The live board's props as the puzzle mounted them (its VM and callbacks). */
+function boardProps(screen: ReturnType<typeof render>) {
+    // `HazardBoard` is memoised; the rendered node is the wrapped function.
+    const inner = (HazardBoard as unknown as { type: React.ComponentType<unknown> }).type;
+    return screen.UNSAFE_getByType(inner).props as React.ComponentProps<typeof HazardBoard>;
 }
 
 describe('HazardPuzzleDemo', () => {
@@ -46,38 +73,90 @@ describe('HazardPuzzleDemo', () => {
         expect(screen.getByTestId('hazard-puzzle-pick-demo-undercroft-hard')).toBeTruthy();
     });
 
-    it('the clock does not run until a route is picked', () => {
+    it('picks the route on the live RouteSelect, and the clock does not run until then', () => {
         const { tree } = withAllProviders(<HazardPuzzleDemo />);
         const screen = render(tree);
         fireEvent.press(screen.getByTestId('hazard-puzzle-pick-demo-undercroft-hard'));
+        expect(screen.getByTestId('hazard-route-select')).toBeTruthy();
+        expect(screen.getByTestId('hazard-route-safe')).toBeTruthy();
+        expect(screen.getByText('HARD · 60 S')).toBeTruthy();
+        expect(screen.queryByTestId('hazard-puzzle-clock')).toBeNull();
         act(() => {
             jest.advanceTimersByTime(120 * HAZARD_PUZZLE_TICK_MS);
         });
-        expect(screen.getByTestId('hazard-puzzle-routes')).toBeTruthy();
+        expect(screen.getByTestId('hazard-route-select')).toBeTruthy();
         expect(screen.queryByTestId('hazard-puzzle-outcome')).toBeNull();
+        fireEvent.press(screen.getByTestId('hazard-puzzle-back'));
+        expect(screen.getByTestId('hazard-puzzle-list')).toBeTruthy();
     });
 
-    it('starts the board with the hard risk clock, hand and reserve', () => {
+    it('starts the live board with the hard risk clock, hand and reserve', () => {
         const { screen } = openHardRisk();
-        expect(screen.getByTestId('hazard-puzzle-board')).toBeTruthy();
+        expect(screen.getByTestId('hazard-board')).toBeTruthy();
         expect(screen.getByTestId('hazard-puzzle-clock').props.children).toBe('1:00');
         expect(screen.getByTestId('hazard-puzzle-reserve').props.children).toBe('2 CARDS IN RESERVE');
         expect(screen.getByTestId('hazard-puzzle-unlocks').props.children).toBe('Your stats unlock nothing here.');
-        expect(screen.getAllByTestId(/^hazard-puzzle-hand-c\d+$/)).toHaveLength(3);
+        expect(screen.getAllByTestId(/^hazard-hand-c\d+$/)).toHaveLength(3);
+        expect(screen.getAllByTestId(/^hazard-die-d\d+$/)).toHaveLength(3);
     });
 
-    it('a Mind of 3 unlocks CLIFFRUNNER into the hand, and the board names it', () => {
+    it('a Mind of 3 unlocks CLIFFRUNNER into the hand, and the strip names it', () => {
         const { screen } = openHardRisk({ heart: 1, body: 1, mind: 3 });
         expect(screen.getByTestId('hazard-puzzle-unlocks').props.children).toBe(
             'Your stats unlock: CLIFFRUNNER joins the hand (MIND 3).',
         );
-        expect(screen.getAllByTestId(/^hazard-puzzle-hand-c\d+$/)).toHaveLength(4);
+        expect(screen.getAllByTestId(/^hazard-hand-c\d+$/)).toHaveLength(4);
+    });
+
+    it('reaches every engine move through the live board (A20)', () => {
+        const { screen } = openHardRisk();
+        // stage: a hand card into the play area.
+        act(() => boardProps(screen).onStage('c1'));
+        expect(screen.getByTestId('hazard-staged-c1')).toBeTruthy();
+        expect(screen.queryByTestId('hazard-hand-c1')).toBeNull();
+        // unstage: a staged card back to the hand.
+        act(() => boardProps(screen).onUnstage('c1'));
+        expect(screen.getByTestId('hazard-hand-c1')).toBeTruthy();
+        // power: the purple die onto the purple card.
+        act(() => boardProps(screen).onStage('c1'));
+        act(() => boardProps(screen).onPower('c1', 'd4'));
+        expect(boardProps(screen).vm.play[0].poweredByDieId).toBe('d4');
+        // apply: SURE FOOTING is a DRAW card, so the reserve feeds the hand.
+        act(() => boardProps(screen).onApply('c1'));
+        expect(screen.getByTestId('hazard-applied-c1')).toBeTruthy();
+        expect(boardProps(screen).vm.hand.map((c) => c.cardId)).toContain('grip');
+        expect(screen.getByTestId('hazard-puzzle-reserve').props.children).not.toBe('2 CARDS IN RESERVE');
+        // discard: DEAD-MAN HAUL into the bin conjures its red die.
+        const dice = boardProps(screen).vm.dice.length;
+        act(() => boardProps(screen).onDiscard('c2'));
+        expect(screen.queryByTestId('hazard-hand-c2')).toBeNull();
+        expect(boardProps(screen).vm.dice).toHaveLength(dice + 1);
+        // inspect: a hand card opens the live card detail.
+        act(() => boardProps(screen).onInspect(boardProps(screen).vm.hand[0]));
+        expect(screen.getByTestId('hazard-card-detail')).toBeTruthy();
+        fireEvent.press(screen.getByTestId('hazard-card-detail'));
+        expect(screen.queryByTestId('hazard-card-detail')).toBeNull();
+        // confirm: the board's CONFIRM resolves the round.
+        fireEvent.press(screen.getByTestId('hazard-play-button'));
+        expect(screen.getByTestId('hazard-puzzle-outcome')).toBeTruthy();
+    });
+
+    it('has no tap-button view: the resolve reads CONFIRM and no PLAY, BIN, POWER or RETURN button remains (A23)', () => {
+        const { screen } = openHardRisk();
+        expect(screen.getByText('CONFIRM')).toBeTruthy();
+        for (const word of ['PLAY', 'BIN', 'RETURN', 'APPLY']) expect(screen.queryByText(word)).toBeNull();
+        expect(screen.queryByText(/^POWER/)).toBeNull();
+        expect(screen.queryAllByTestId(/^hazard-puzzle-(hand|staged|power|apply|return|bin|stage|confirm)/)).toHaveLength(0);
+        // Staging shows only the live board's own per-card APPLY.
+        act(() => boardProps(screen).onStage('c1'));
+        expect(screen.getAllByText('APPLY')).toHaveLength(1);
+        expect(screen.getByTestId('hazard-apply-c1')).toBeTruthy();
     });
 
     it('when the clock runs out, confirms the board as it stands and pays the outcome', () => {
         const { screen, store } = openHardRisk();
         const before = store.getState().player;
-        fireEvent.press(screen.getByTestId('hazard-puzzle-hand-c1-play'));
+        act(() => boardProps(screen).onStage('c1'));
         act(() => {
             jest.advanceTimersByTime(59 * HAZARD_PUZZLE_TICK_MS);
         });
@@ -97,7 +176,7 @@ describe('HazardPuzzleDemo', () => {
         expect(store.getState().player.experience).toBe(after.experience);
     });
 
-    it('after a timed-out board and DONE, the next board still times out', () => {
+    it('after a timed-out board and CLAIM, the next board still times out', () => {
         const { screen, store } = openHardRisk();
         act(() => {
             jest.advanceTimersByTime(60 * HAZARD_PUZZLE_TICK_MS);
@@ -105,7 +184,7 @@ describe('HazardPuzzleDemo', () => {
         expect(screen.getByTestId('hazard-puzzle-outcome-headline').props.children).toBe('TIME RAN OUT');
         fireEvent.press(screen.getByTestId('hazard-puzzle-done'));
         fireEvent.press(screen.getByTestId('hazard-puzzle-pick-demo-undercroft-hard'));
-        fireEvent.press(screen.getByTestId('hazard-puzzle-route-risk'));
+        fireEvent.press(screen.getByTestId('hazard-route-risk'));
         expect(screen.getByTestId('hazard-puzzle-clock').props.children).toBe('1:00');
         const xp = store.getState().player.experience;
         act(() => {
@@ -115,9 +194,9 @@ describe('HazardPuzzleDemo', () => {
         expect(store.getState().player.experience).toBeGreaterThan(xp);
     });
 
-    it('a manual confirm resolves at once, without waiting for the clock', () => {
+    it('a manual CONFIRM resolves at once, without waiting for the clock', () => {
         const { screen } = openHardRisk();
-        fireEvent.press(screen.getByTestId('hazard-puzzle-confirm'));
+        fireEvent.press(screen.getByTestId('hazard-play-button'));
         expect(screen.getByTestId('hazard-puzzle-outcome-headline').props.children).toBe('FELL SHORT');
         fireEvent.press(screen.getByTestId('hazard-puzzle-done'));
         expect(screen.getByTestId('hazard-puzzle-list')).toBeTruthy();
@@ -128,7 +207,7 @@ describe('HazardPuzzleDemo', () => {
             <HazardPuzzleDemo initialId="demo-cliff-easy" initialRoute="safe" autoConfirm />,
         );
         const screen = render(tree);
-        expect(screen.getByTestId('hazard-puzzle-board')).toBeTruthy();
+        expect(screen.getByTestId('hazard-board')).toBeTruthy();
         expect(screen.getByTestId('hazard-puzzle-outcome')).toBeTruthy();
     });
 });

@@ -32,44 +32,40 @@ export const HAZARD_PUZZLE_STAT_LABEL: Record<HazardPuzzleStat, string> = Object
     mind: 'MIND',
 });
 
-export const HAZARD_PUZZLE_PICK_ROUTE = 'PICK A ROUTE. THE CLOCK STARTS WHEN YOU DO.';
-export const HAZARD_PUZZLE_HAND_LABEL = 'HAND';
-export const HAZARD_PUZZLE_STAGED_LABEL = 'IN PLAY';
-export const HAZARD_PUZZLE_DICE_LABEL = 'DICE';
-export const HAZARD_PUZZLE_STAGE_LABEL = 'PLAY';
-export const HAZARD_PUZZLE_BIN_LABEL = 'BIN';
-export const HAZARD_PUZZLE_RETURN_LABEL = 'RETURN';
-export const HAZARD_PUZZLE_APPLY_LABEL = 'APPLY';
 export const HAZARD_PUZZLE_CONFIRM_LABEL = 'CONFIRM';
-export const HAZARD_PUZZLE_CLAIM_LABEL = 'CLAIM AND LEAVE';
+export const HAZARD_PUZZLE_CONFIRM_SUB = 'RESOLVE';
+/** The play area's foot line on the puzzle board (the live board names its PLAY). */
+export const HAZARD_PUZZLE_RESOLVE_HINT = 'drop dice to power cards — CONFIRM resolves the round';
+export const HAZARD_PUZZLE_CLAIM_LABEL = 'CLAIM AND LEAVE ›';
+/** The board's one round, as the live header prints its round count. */
+export const HAZARD_PUZZLE_ROUND_LABEL = 'ROUND I / I';
 export const HAZARD_PUZZLE_NO_UNLOCKS = 'Your stats unlock nothing here.';
 
 export function hazardPuzzleBandChip(band: HazardPuzzleBand): string {
     return `${HAZARD_PUZZLE_BAND_LABEL[band]} ON THE RISK ROUTE`;
 }
 
-export function hazardPuzzleSafeGoal(goal: number): string {
-    return `REACH ${goal} FORCE + ESCAPE`;
-}
-
-export function hazardPuzzleRiskGoal(force: number, escape: number): string {
-    return `REACH ${force} FORCE AND ${escape} ESCAPE`;
-}
-
-export function hazardPuzzleProgress(force: number, escape: number): string {
-    return `FORCE ${force} · ESCAPE ${escape}`;
-}
-
 export function hazardPuzzleReserve(count: number): string {
     return count === 1 ? '1 CARD IN RESERVE' : `${count} CARDS IN RESERVE`;
 }
 
-export function hazardPuzzleClockSeconds(seconds: number): string {
-    return `${seconds} S ON THE CLOCK`;
+/** The route panel's badge: the route's band and its clock, e.g. "HARD · 60 S". */
+export function hazardPuzzleRouteBadge(band: string, seconds: number): string {
+    return `${band} · ${seconds} S`;
 }
 
-export function hazardPuzzlePowerLabel(dieWord: string): string {
-    return `POWER: ${dieWord}`;
+/** The route panel's REWARD chip: what a full clear pays on top of XP. */
+export function hazardPuzzleRouteReward(shillings: number): string {
+    return `XP and a find; clear it for +${shillings} shillings`;
+}
+
+/** The route panel's FAIL chip: the most VITAE a short resolve costs. */
+export function hazardPuzzleRoutePenalty(vitae: number): string {
+    return `up to −${vitae}♥`;
+}
+
+export function hazardPuzzleRouteCta(routeName: string): string {
+    return `TAKE ${routeName} ›`;
 }
 
 export function hazardPuzzleUnlockLine(parts: readonly string[]): string {

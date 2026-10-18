@@ -1,6 +1,7 @@
 /**
- * Hazard puzzle board presenter (A14, A15): the demo list, routes with their
- * goals and clocks, the stat-unlock line, the board view model, the clock
+ * Hazard puzzle board presenter (A14, A15, A18, A19, A21): the demo list, the
+ * live route-select and board view models fed from a puzzle (one round), the
+ * strip's clock and reserve count, the stat-unlock line, the clock
  * arithmetic and the outcome panel.
  */
 
@@ -20,11 +21,12 @@ import {
     formatHazardPuzzleClock,
     hazardPuzzleClockExpired,
     hazardPuzzleClockFor,
-    selectHazardPuzzleBoardVM,
     selectHazardPuzzleListVM,
     selectHazardPuzzleOutcomeVM,
-    selectHazardPuzzleRoutes,
+    selectHazardPuzzleRouteSelectVM,
+    selectHazardPuzzleStripVM,
     selectHazardPuzzleUnlockLine,
+    selectHazardPuzzleViewModel,
     tickHazardPuzzleClock,
 } from '../hazard-puzzle.engine';
 
@@ -40,28 +42,38 @@ describe('the demo list', () => {
     });
 });
 
-describe('routes and the clock (A15)', () => {
-    it('names both routes from the live hazard, with goal, band and clock', () => {
-        expect(selectHazardPuzzleRoutes(HARD)).toEqual([
-            {
-                key: 'safe',
-                name: 'THE LONG GALLERY',
-                goalLabel: 'REACH 26 FORCE + ESCAPE',
-                bandLabel: 'MEDIUM',
-                clockLabel: '75 S ON THE CLOCK',
-                testID: 'hazard-puzzle-route-safe',
-            },
-            {
-                key: 'risk',
-                name: 'THE DROWNED DOOR',
-                goalLabel: 'REACH 13 FORCE AND 14 ESCAPE',
-                bandLabel: 'HARD',
-                clockLabel: '60 S ON THE CLOCK',
-                testID: 'hazard-puzzle-route-risk',
-            },
+describe('the route pick on the live RouteSelect (A19)', () => {
+    it('feeds both routes from the live hazard, with the layout goal, band and clock', () => {
+        const vm = selectHazardPuzzleRouteSelectVM(HARD, []);
+        expect(vm.phase).toBe('route-select');
+        expect(vm.totalRounds).toBe(1);
+        expect(vm.title).toBe('FLOODED UNDERCROFT');
+        expect(vm.routeChoices.map((r) => [r.key, r.name, r.badge, r.dual])).toEqual([
+            ['safe', 'THE LONG GALLERY', 'MEDIUM · 75 S', false],
+            ['risk', 'THE DROWNED DOOR', 'HARD · 60 S', true],
         ]);
+        expect(vm.routeChoices[0].ladder).toEqual([{ key: 'passage', label: 'PASS', values: [26] }]);
+        expect(vm.routeChoices[1].ladder).toEqual([
+            { key: 'force', label: 'FOR', values: [13] },
+            { key: 'escape', label: 'ESC', values: [14] },
+        ]);
+        expect(vm.routeChoices[1].penaltyLabel).toBe('up to −12♥');
+        expect(vm.routeChoices[1].ctaLabel).toBe('TAKE THE DROWNED DOOR ›');
     });
 
+    it('previews the opening hand with the stat unlocks granted', () => {
+        const unlocks: HazardPuzzleUnlock[] = [{ stat: 'mind', min: 3, kind: 'extraCard', cardId: 'runner' }];
+        expect(selectHazardPuzzleRouteSelectVM(HARD, []).hand.map((c) => c.cardId)).toEqual(['footing', 'haul', 'scram']);
+        expect(selectHazardPuzzleRouteSelectVM(HARD, unlocks).hand.map((c) => c.cardId)).toEqual([
+            'footing',
+            'haul',
+            'scram',
+            'runner',
+        ]);
+    });
+});
+
+describe('the clock (A15)', () => {
     it('takes the clock from the band of the route played', () => {
         expect(HAZARD_PUZZLE_CLOCK_SECONDS).toEqual({ easy: 90, medium: 75, hard: 60 });
         expect(hazardPuzzleClockFor(HARD, 'risk')).toBe(60);
@@ -92,34 +104,67 @@ describe('the stat-unlock line', () => {
     });
 });
 
-describe('the board', () => {
-    it('shows the hand, dice, reserve count, goal, progress and clock', () => {
-        const session = createHazardPuzzleSession(HARD, 'risk');
-        const vm = selectHazardPuzzleBoardVM(HARD, session, 60);
+describe('the board as the live hazard view model (A18, A21)', () => {
+    it('shows one round: the hand, dice, goal meters and a CONFIRM resolve', () => {
+        const vm = selectHazardPuzzleViewModel(HARD, createHazardPuzzleSession(HARD, 'risk'));
+        expect(vm.phase).toBe('playing');
         expect(vm.title).toBe('FLOODED UNDERCROFT');
-        expect(vm.routeName).toBe('THE DROWNED DOOR');
-        expect(vm.hand.map((h) => h.card.cardId)).toEqual(['footing', 'haul', 'scram']);
+        expect(vm.routeKey).toBe('risk');
+        expect(vm.hand.map((c) => c.cardId)).toEqual(['footing', 'haul', 'scram']);
         expect(vm.dice.map((d) => d.kind)).toEqual(['purple', 'red', 'blue']);
-        expect(vm.reserveLabel).toBe('2 CARDS IN RESERVE');
-        expect(vm.progressLabel).toBe('FORCE 0 · ESCAPE 0');
-        expect(vm.clockLabel).toBe('1:00');
-        expect(vm.clockUrgent).toBe(false);
-        expect(vm.canConfirm).toBe(true);
+        expect(vm.meters.map((m) => [m.key, m.value, m.need])).toEqual([
+            ['force', 0, 13],
+            ['escape', 0, 14],
+        ]);
+        expect(vm.bothRequired).toBe(true);
+        // One round: one ledger mark, no momentum, a one-value ladder.
+        expect(vm.totalRounds).toBe(1);
+        expect(vm.roundLabel).toBe('ROUND I / I');
+        expect(vm.marks).toEqual(['pending']);
+        expect(vm.momentumNote).toBeNull();
+        expect(vm.thresholdLadder).toEqual([
+            { key: 'force', label: 'FOR', values: [13] },
+            { key: 'escape', label: 'ESC', values: [14] },
+        ]);
+        // The reserve is the deck the live board counts.
+        expect(vm.deckCount).toBe(2);
+        expect(vm.resolveLabel).toBe('CONFIRM');
+        expect(vm.resolveEnabled).toBe(true);
+        expect(vm.resolveFlash).toBeNull();
+        expect(vm.outcome).toBeNull();
+        expect(vm.rewards).toBeNull();
     });
 
-    it('offers each die that can power a staged card, and APPLY for a utility card', () => {
-        const session = stageHazardPuzzleCard(createHazardPuzzleSession(HARD, 'risk'), 'c1');
-        const vm = selectHazardPuzzleBoardVM(HARD, session, 9);
-        expect(vm.staged).toHaveLength(1);
-        expect(vm.staged[0].powerOptions.map((o) => o.label)).toEqual(['POWER: PURPLE']);
-        expect(vm.staged[0].canApply).toBe(true);
-        expect(vm.progressLabel).toBe('FORCE 2 · ESCAPE 2');
-        expect(vm.clockUrgent).toBe(true);
+    it('reads the safe goal on the combined PASSAGE meter', () => {
+        const vm = selectHazardPuzzleViewModel(HARD, createHazardPuzzleSession(HARD, 'safe'));
+        expect(vm.meters.map((m) => [m.key, m.need])).toEqual([['passage', 26]]);
+        expect(vm.bothRequired).toBe(false);
+    });
+
+    it('moves a staged card into the play area and onto the meters', () => {
+        const vm = selectHazardPuzzleViewModel(HARD, stageHazardPuzzleCard(createHazardPuzzleSession(HARD, 'risk'), 'c1'));
+        expect(vm.play.map((c) => c.uid)).toEqual(['c1']);
+        expect(vm.hand).toHaveLength(2);
+        expect(vm.meters.map((m) => m.value)).toEqual([2, 2]);
     });
 
     it('locks the board once resolved', () => {
-        const vm = selectHazardPuzzleBoardVM(HARD, confirmHazardPuzzle(createHazardPuzzleSession(HARD, 'risk')), 30);
-        expect(vm.canConfirm).toBe(false);
+        const vm = selectHazardPuzzleViewModel(HARD, confirmHazardPuzzle(createHazardPuzzleSession(HARD, 'risk')));
+        expect(vm.resolveEnabled).toBe(false);
+        expect(vm.phase).toBe('outcome');
+        expect(vm.marks).toEqual(['X']);
+    });
+});
+
+describe('the puzzle strip (A21)', () => {
+    it('shows the clock face and the reserve count, urgent under ten seconds', () => {
+        const session = createHazardPuzzleSession(HARD, 'risk');
+        expect(selectHazardPuzzleStripVM(session, 60)).toEqual({
+            clockLabel: '1:00',
+            clockUrgent: false,
+            reserveLabel: '2 CARDS IN RESERVE',
+        });
+        expect(selectHazardPuzzleStripVM(session, 9).clockUrgent).toBe(true);
     });
 });
 
@@ -129,6 +174,8 @@ describe('the outcome panel', () => {
         const outcome = hazardPuzzleOutcome({ route: 'risk', result, playerLevel: 2, region: 'lantern-deep', seed: 3 });
         const vm = selectHazardPuzzleOutcomeVM(result, outcome, true);
         expect(vm.headline).toBe('TIME RAN OUT');
+        expect(vm.cleared).toBe(false);
+        expect(vm.mark).toBe('X');
         expect(vm.reachedLabel).toBe('0% OF THE GOAL');
         expect(vm.rewards[0]).toBe('+20 XP');
         expect(vm.penalties).toEqual(['-12 VITAE', 'SCARRED: -5 MAX VITAE UNTIL YOU REST']);
@@ -153,6 +200,7 @@ describe('the outcome panel', () => {
         const outcome = hazardPuzzleOutcome({ route: 'risk', result, playerLevel: 2, region: 'lantern-deep', seed: 3 });
         const vm = selectHazardPuzzleOutcomeVM(result, outcome, false);
         expect(vm.headline).toBe('CLEARED');
+        expect(vm.mark).toBe('O');
         expect(vm.rewards).toContain('+32 SHILLINGS');
         expect(vm.penalties).toEqual(['Nothing lost.']);
     });

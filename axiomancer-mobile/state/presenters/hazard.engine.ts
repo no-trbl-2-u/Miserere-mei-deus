@@ -285,6 +285,60 @@ function offerCardVM(def: HazardCardDef): HazardCardVM {
     };
 }
 
+/**
+ * The live meters for one round (shared with the puzzle board).
+ *
+ * Inputs: `route`; `proj`, the projected FORCE and ESCAPE; `need`, the
+ * round's threshold (a combined number on safe, `[force, escape]` on risk).
+ * Outputs: the meters, and the safe route's per-type split line (null on risk).
+ */
+export function hazardRouteMeters(
+    route: HazardRouteKey,
+    proj: { force: number; escape: number },
+    need: number | readonly [number, number],
+): { meters: HazardMeterVM[]; meterDetail: string | null } {
+    if (route === 'risk') {
+        const [needF, needE] = typeof need === 'number' ? [need, need] : need;
+        return {
+            meters: [
+                { key: 'force', label: 'FORCE', value: proj.force, need: needF, met: proj.force >= needF },
+                { key: 'escape', label: 'ESCAPE', value: proj.escape, need: needE, met: proj.escape >= needE },
+            ],
+            meterDetail: null,
+        };
+    }
+    const needed = typeof need === 'number' ? need : need[0] + need[1];
+    const combined = proj.force + proj.escape;
+    return {
+        meters: [
+            { key: 'passage', label: 'PASSAGE — FORCE + ESCAPE', value: combined, need: needed, met: combined >= needed },
+        ],
+        meterDetail: `FORCE ${proj.force} · ESCAPE ${proj.escape} — either type counts`,
+    };
+}
+
+/**
+ * The per-round threshold ladder rows for a route (shared with the puzzle
+ * board, whose one round makes a one-value ladder).
+ *
+ * Inputs: `route`; `thresholds`, one entry per round (a number on safe,
+ * `[force, escape]` on risk).
+ * Outputs: one ladder row per meter.
+ */
+export function hazardThresholdLadder(
+    route: HazardRouteKey,
+    thresholds: readonly (number | readonly [number, number])[],
+): HazardViewModel['thresholdLadder'] {
+    const pair = (t: number | readonly [number, number]): readonly [number, number] => (typeof t === 'number' ? [t, t] : t);
+    if (route === 'risk') {
+        return [
+            { key: 'force', label: 'FOR', values: thresholds.map((t) => pair(t)[0]) },
+            { key: 'escape', label: 'ESC', values: thresholds.map((t) => pair(t)[1]) },
+        ];
+    }
+    return [{ key: 'passage', label: 'PASS', values: thresholds.map((t) => (typeof t === 'number' ? t : t[0] + t[1])) }];
+}
+
 function routeChoices(session: HazardSessionState): HazardRouteChoiceVM[] {
     const def = getHazardDef(session.hazardId);
     return [
@@ -433,23 +487,11 @@ export function selectHazardViewModel(state: Pick<AppStoreState, 'hazard'>): Haz
     let meterDetail: string | null = null;
     let thresholdLadder: HazardViewModel['thresholdLadder'] = [];
     if (session.route === 'risk') {
-        const [needF, needE] = def.risk.thresholds[session.round - 1];
-        meters = [
-            { key: 'force', label: 'FORCE', value: proj.force, need: needF, met: proj.force >= needF },
-            { key: 'escape', label: 'ESCAPE', value: proj.escape, need: needE, met: proj.escape >= needE },
-        ];
-        thresholdLadder = [
-            { key: 'force', label: 'FOR', values: def.risk.thresholds.map((t) => t[0]) },
-            { key: 'escape', label: 'ESC', values: def.risk.thresholds.map((t) => t[1]) },
-        ];
+        ({ meters, meterDetail } = hazardRouteMeters('risk', proj, def.risk.thresholds[session.round - 1]));
+        thresholdLadder = hazardThresholdLadder('risk', def.risk.thresholds);
     } else if (session.route === 'safe') {
-        const need = def.safe.thresholds[session.round - 1];
-        const combined = proj.force + proj.escape;
-        meters = [
-            { key: 'passage', label: 'PASSAGE — FORCE + ESCAPE', value: combined, need, met: combined >= need },
-        ];
-        meterDetail = `FORCE ${proj.force} · ESCAPE ${proj.escape} — either type counts`;
-        thresholdLadder = [{ key: 'passage', label: 'PASS', values: def.safe.thresholds }];
+        ({ meters, meterDetail } = hazardRouteMeters('safe', proj, def.safe.thresholds[session.round - 1]));
+        thresholdLadder = hazardThresholdLadder('safe', def.safe.thresholds);
     }
 
     const momentum = session.progressBase;

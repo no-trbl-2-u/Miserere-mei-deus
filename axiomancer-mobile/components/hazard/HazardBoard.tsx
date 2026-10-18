@@ -9,8 +9,9 @@
  *  - tap a staged card (or drag it out) to return it to hand;
  *  - drag a mana die onto a staged card of its colour to power it.
  *
- * The drag ghost renders at screen level in `app/hazard/index.tsx`;
- * this board reports gestures up through the `drag` controller.
+ * The drag ghost renders at screen level (`useHazardDrag`, shared by
+ * `/hazard` and the dev-menu puzzle board); this board reports gestures
+ * up through the `drag` controller.
  */
 
 import React, { useCallback, useMemo, useRef } from 'react';
@@ -258,7 +259,22 @@ function ApplyButton({ card, onApply }: { card: HazardCardVM; onApply: (uid: str
 // PLAY button — translucent sulfur glow, pulsing when armed.
 // ---------------------------------------------------------------------------
 
-function PlayButton({ enabled, subLabel, onPress }: { enabled: boolean; subLabel: string; onPress: () => void }) {
+/** "PLAY" → "Play": the resolve label as the screen reader speaks it. */
+function spokenLabel(label: string): string {
+    return label.charAt(0) + label.slice(1).toLowerCase();
+}
+
+function PlayButton({
+    enabled,
+    label,
+    subLabel,
+    onPress,
+}: {
+    enabled: boolean;
+    label: string;
+    subLabel: string;
+    onPress: () => void;
+}) {
     const AXM = usePalette();
     const styles = useStyles();
     const pulse = useSharedValue(0);
@@ -277,7 +293,11 @@ function PlayButton({ enabled, subLabel, onPress }: { enabled: boolean; subLabel
                 onPress={onPress}
                 accessibilityRole="button"
                 accessibilityState={{ disabled: !enabled }}
-                accessibilityLabel={enabled ? 'Play — commit every staged card and resolve the round' : 'Play, disabled. Stage at least one card first.'}
+                accessibilityLabel={
+                    enabled
+                        ? `${spokenLabel(label)} — commit every staged card and resolve the round`
+                        : `${spokenLabel(label)}, disabled. Stage at least one card first.`
+                }
                 testID="hazard-play-button"
                 style={[
                     styles.playBtn,
@@ -287,7 +307,7 @@ function PlayButton({ enabled, subLabel, onPress }: { enabled: boolean; subLabel
                     },
                 ]}
             >
-                <Text style={[styles.playText, { color: enabled ? AXM.sulfur : AXM.bone }]}>PLAY</Text>
+                <Text style={[styles.playText, { color: enabled ? AXM.sulfur : AXM.bone }]}>{label}</Text>
                 <Text style={[styles.playSub, { color: enabled ? AXM.sulfur : AXM.bone }]}>{subLabel}</Text>
             </Pressable>
         </Animated.View>
@@ -308,9 +328,30 @@ export interface HazardBoardProps {
     onDiscard: (uid: string) => void;
     onResolve: () => void;
     onInspect: (card: HazardCardVM) => void;
+    /** The resolve button's face; the puzzle board reads CONFIRM. Defaults to the live PLAY. */
+    resolveLabel?: string;
+    /** The play area's foot line, naming the resolve button. Defaults to the live line. */
+    resolveHint?: string;
 }
 
-export const HazardBoard = React.memo(function HazardBoard({ vm, drag, onStage, onUnstage, onPower, onApply, onDiscard, onResolve, onInspect }: HazardBoardProps) {
+/** The live board's resolve button face. */
+export const HAZARD_RESOLVE_LABEL = 'PLAY';
+/** The live board's play-area foot line. */
+export const HAZARD_RESOLVE_HINT = 'drop dice to power cards — PLAY commits and resolves the whole set';
+
+export const HazardBoard = React.memo(function HazardBoard({
+    vm,
+    drag,
+    onStage,
+    onUnstage,
+    onPower,
+    onApply,
+    onDiscard,
+    onResolve,
+    onInspect,
+    resolveLabel = HAZARD_RESOLVE_LABEL,
+    resolveHint = HAZARD_RESOLVE_HINT,
+}: HazardBoardProps) {
     const AXM = usePalette();
     const styles = useStyles();
     const playAreaRef = useRef<View | null>(null);
@@ -543,7 +584,7 @@ export const HazardBoard = React.memo(function HazardBoard({ vm, drag, onStage, 
                         ))}
                     </View>
                 )}
-                <Text style={styles.playHint}>drop dice to power cards — PLAY commits and resolves the whole set</Text>
+                <Text style={styles.playHint}>{resolveHint}</Text>
             </View>
 
             {/* hand dock + trash bin + PLAY button */}
@@ -597,7 +638,12 @@ export const HazardBoard = React.memo(function HazardBoard({ vm, drag, onStage, 
                         </GestureDetector>
                     ))}
                 </View>
-                <PlayButton enabled={vm.resolveEnabled} subLabel={vm.resolveSubLabel} onPress={onResolve} />
+                <PlayButton
+                    enabled={vm.resolveEnabled}
+                    label={resolveLabel}
+                    subLabel={vm.resolveSubLabel}
+                    onPress={onResolve}
+                />
             </View>
         </View>
     );

@@ -57,9 +57,14 @@ export const ROUTES = [
     { name: 'dialogue', path: '/exploration', fixture: 'apprentice-staged-dialogue', waitForPath: '/dialogue' },
     { name: 'village', path: '/exploration', fixture: 'wanderer-staged-village', waitForPath: '/village' },
     { name: 'cutscene', path: '/exploration', fixture: 'wanderer-staged-cutscene', waitForPath: '/cutscene' },
-    // Dev-menu HAZARD PUZZLES board (a dev route, so it needs the forced
-    // dev-tools context a fixture route gets): the hard demo's board, and
-    // its outcome panel after an immediate confirm.
+    // The live hazard on its board, the parity baseline for the puzzle
+    // board: the fixture's arrival starts the hazard (seed pinned by the
+    // minigame-seed injector), `hazardRoute` picks the route, and the shot
+    // waits out the dice roll.
+    { name: 'hazard-board', path: '/exploration', fixture: 'l30-bw-hazard-arrive', waitForPath: '/hazard', hazardRoute: 'risk' },
+    // Dev-menu HAZARD PUZZLES board on the live hazard board (a dev route,
+    // so it needs the forced dev-tools context a fixture route gets): the
+    // hard demo's board, and its outcome panel after an immediate confirm.
     { name: 'devpuzzle-board', path: '/devpuzzle?id=demo-undercroft-hard&route=risk&paused=1', fixture: 'fresh-start' },
     { name: 'devpuzzle-outcome', path: '/devpuzzle?id=demo-undercroft-hard&route=risk&confirm=1', fixture: 'fresh-start' },
 ]
@@ -308,6 +313,11 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl) {
             else await target.goto(url, { waitUntil: 'networkidle', timeout: 30_000 })
             if (route.waitForPath) {
                 await target.waitForURL((u) => u.pathname.endsWith(route.waitForPath), { timeout: 15_000 })
+            }
+            if (route.hazardRoute) {
+                await target.getByTestId(`hazard-route-${route.hazardRoute}`).click()
+                await target.getByTestId('hazard-board').waitFor({ state: 'visible', timeout: 10_000 })
+                await target.getByTestId('hazard-dice-roll').waitFor({ state: 'hidden', timeout: 10_000 })
             }
             // Settle fonts + any deferred layout. The 600ms is empirical:
             // long enough for the @expo-google-fonts loaders to resolve,

@@ -1,16 +1,20 @@
 /**
  * Hazard puzzle demo board presenter (dev menu only). Maps a puzzle layout,
- * its session and its outcome onto render-ready view models. Pure: no store
- * writes, no rolls, no rule decisions; legality comes from the engine's own
- * die rules, and the clock arithmetic lives here so a test can drive it.
+ * its session and its outcome onto render-ready view models: the board and
+ * the route pick are the live hazard's own `HazardViewModel`, so the puzzle
+ * plays on the live `HazardBoard` and `RouteSelect`. Pure: no store writes,
+ * no rolls, no rule decisions; the clock arithmetic lives here so a test can
+ * drive it.
  */
 
 import {
-    dieCanPowerCard,
+    createHazardPuzzleSession,
     getHazardCardDef,
     getHazardDef,
     HAZARD_PUZZLE_CLOCK_SECONDS,
+    HAZARD_PUZZLE_FAILURE,
     HAZARD_PUZZLE_LIBRARY,
+    HAZARD_PUZZLE_REWARDS,
     HAZARD_PUZZLE_UNLOCK_DIE,
     hazardProjectedProgress,
     type HazardPuzzleLayout,
@@ -21,20 +25,23 @@ import {
     type HazardRouteKey,
 } from '@mechanics';
 import {
+    HAZARD_PUZZLE_BAND_LABEL,
     HAZARD_PUZZLE_CLEARED,
+    HAZARD_PUZZLE_CONFIRM_LABEL,
+    HAZARD_PUZZLE_CONFIRM_SUB,
     HAZARD_PUZZLE_DIE_WORD,
     HAZARD_PUZZLE_NO_PENALTY,
+    HAZARD_PUZZLE_ROUND_LABEL,
     HAZARD_PUZZLE_SHORT,
     HAZARD_PUZZLE_TIME_UP,
     hazardPuzzleBandChip,
-    hazardPuzzleClockSeconds,
     hazardPuzzleItemChip,
-    hazardPuzzlePowerLabel,
-    hazardPuzzleProgress,
     hazardPuzzleReached,
     hazardPuzzleReserve,
-    hazardPuzzleRiskGoal,
-    hazardPuzzleSafeGoal,
+    hazardPuzzleRouteBadge,
+    hazardPuzzleRouteCta,
+    hazardPuzzleRoutePenalty,
+    hazardPuzzleRouteReward,
     hazardPuzzleScarChip,
     hazardPuzzleShillingsChip,
     hazardPuzzleUnlockBlank,
@@ -43,9 +50,15 @@ import {
     hazardPuzzleUnlockLine,
     hazardPuzzleVitaeChip,
     hazardPuzzleXpChip,
-    HAZARD_PUZZLE_BAND_LABEL,
 } from './hazard-puzzle.copy';
-import { hazardDieVM, hazardEntryCardVM, type HazardCardVM, type HazardDieVM } from './hazard.engine';
+import {
+    hazardDieVM,
+    hazardEntryCardVM,
+    hazardRouteMeters,
+    hazardThresholdLadder,
+    type HazardRouteChoiceVM,
+    type HazardViewModel,
+} from './hazard.engine';
 
 // ---------------------------------------------------------------------------
 // The list
@@ -73,15 +86,6 @@ export function selectHazardPuzzleListVM(
 // Routes and the clock
 // ---------------------------------------------------------------------------
 
-export interface HazardPuzzleRouteVM {
-    key: HazardRouteKey;
-    name: string;
-    goalLabel: string;
-    bandLabel: string;
-    clockLabel: string;
-    testID: string;
-}
-
 /** Seconds on the clock for a route: the band constant of that route. */
 export function hazardPuzzleClockFor(layout: HazardPuzzleLayout, route: HazardRouteKey): number {
     return HAZARD_PUZZLE_CLOCK_SECONDS[layout.bands[route]];
@@ -103,23 +107,6 @@ export function formatHazardPuzzleClock(remaining: number): string {
     return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 }
 
-function goalLabel(layout: HazardPuzzleLayout, route: HazardRouteKey): string {
-    if (route === 'risk') return hazardPuzzleRiskGoal(layout.goals.risk[0], layout.goals.risk[1]);
-    return hazardPuzzleSafeGoal(layout.goals.safe);
-}
-
-export function selectHazardPuzzleRoutes(layout: HazardPuzzleLayout): HazardPuzzleRouteVM[] {
-    const def = getHazardDef(layout.hazardId);
-    return (['safe', 'risk'] as const).map((key) => ({
-        key,
-        name: key === 'risk' ? def.riskRouteName : def.safeRouteName,
-        goalLabel: goalLabel(layout, key),
-        bandLabel: HAZARD_PUZZLE_BAND_LABEL[layout.bands[key]],
-        clockLabel: hazardPuzzleClockSeconds(hazardPuzzleClockFor(layout, key)),
-        testID: `hazard-puzzle-route-${key}`,
-    }));
-}
-
 // ---------------------------------------------------------------------------
 // The stat-unlock line
 // ---------------------------------------------------------------------------
@@ -136,94 +123,122 @@ export function selectHazardPuzzleUnlockLine(unlocks: readonly HazardPuzzleUnloc
 }
 
 // ---------------------------------------------------------------------------
-// The board
+// The board: the live hazard view model, one round
 // ---------------------------------------------------------------------------
-
-export interface HazardPuzzlePowerOptionVM {
-    dieId: string;
-    label: string;
-    testID: string;
-}
-
-export interface HazardPuzzleHandCardVM {
-    card: HazardCardVM;
-    testID: string;
-}
-
-export interface HazardPuzzleStagedCardVM {
-    card: HazardCardVM;
-    /** Dice that may power this card now (one per colour), empty once powered or applied. */
-    powerOptions: HazardPuzzlePowerOptionVM[];
-    canApply: boolean;
-    canReturn: boolean;
-    testID: string;
-}
-
-export interface HazardPuzzleBoardVM {
-    title: string;
-    routeName: string;
-    goalLabel: string;
-    progressLabel: string;
-    clockLabel: string;
-    clockUrgent: boolean;
-    hand: HazardPuzzleHandCardVM[];
-    staged: HazardPuzzleStagedCardVM[];
-    dice: HazardDieVM[];
-    reserveLabel: string;
-    canConfirm: boolean;
-}
 
 /** Seconds left at which the clock face turns urgent. */
 export const HAZARD_PUZZLE_URGENT_SECONDS = 10;
 
-export function selectHazardPuzzleBoardVM(
-    layout: HazardPuzzleLayout,
-    session: HazardPuzzleSession,
-    remaining: number,
-): HazardPuzzleBoardVM {
-    const board = session.board;
-    const def = getHazardDef(layout.hazardId);
-    const progress = hazardProjectedProgress(board);
-    const playing = session.phase === 'playing';
-    const staged = board.play.map((entry) => {
-        const cardDef = getHazardCardDef(entry.cardId);
-        const seen = new Set<string>();
-        const powerOptions: HazardPuzzlePowerOptionVM[] = [];
-        if (playing && !entry.applied && entry.dieId === null && !cardDef.dead) {
-            for (const d of board.dice) {
-                if (d.state !== 'available' || seen.has(d.kind) || !dieCanPowerCard(d.kind, cardDef)) continue;
-                seen.add(d.kind);
-                powerOptions.push({
-                    dieId: d.id,
-                    label: hazardPuzzlePowerLabel(HAZARD_PUZZLE_DIE_WORD[d.kind]),
-                    testID: `hazard-puzzle-power-${entry.uid}-${d.kind}`,
-                });
-            }
-        }
-        return {
-            card: hazardEntryCardVM(entry, board),
-            powerOptions,
-            canApply: playing && !entry.applied && cardDef.effect !== undefined && !cardDef.dead,
-            canReturn: playing && !entry.applied,
-            testID: `hazard-puzzle-staged-${entry.uid}`,
-        };
-    });
+/** The puzzle strip over the board: the clock and the reserve count. */
+export interface HazardPuzzleStripVM {
+    clockLabel: string;
+    clockUrgent: boolean;
+    reserveLabel: string;
+}
+
+export function selectHazardPuzzleStripVM(session: HazardPuzzleSession, remaining: number): HazardPuzzleStripVM {
     return {
-        title: layout.title,
-        routeName: session.route === 'risk' ? def.riskRouteName : def.safeRouteName,
-        goalLabel: goalLabel(layout, session.route),
-        progressLabel: hazardPuzzleProgress(progress.force, progress.escape),
         clockLabel: formatHazardPuzzleClock(remaining),
         clockUrgent: remaining <= HAZARD_PUZZLE_URGENT_SECONDS,
-        hand: board.hand.map((entry) => ({
-            card: hazardEntryCardVM(entry, board),
-            testID: `hazard-puzzle-hand-${entry.uid}`,
-        })),
-        staged,
-        dice: board.dice.map(hazardDieVM),
-        reserveLabel: hazardPuzzleReserve(board.drawPile.length),
-        canConfirm: playing,
+        reserveLabel: hazardPuzzleReserve(session.board.drawPile.length),
     };
+}
+
+/** The goal on a route as the live meters read it: combined on safe, `[force, escape]` on risk. */
+function routeGoal(layout: HazardPuzzleLayout, route: HazardRouteKey): number | readonly [number, number] {
+    return route === 'risk' ? layout.goals.risk : layout.goals.safe;
+}
+
+/** The route panels: each route's one-round goal, its band and clock, and what it pays and costs. */
+function puzzleRouteChoices(layout: HazardPuzzleLayout): HazardRouteChoiceVM[] {
+    const def = getHazardDef(layout.hazardId);
+    return (['safe', 'risk'] as const).map((key) => {
+        const name = key === 'risk' ? def.riskRouteName : def.safeRouteName;
+        return {
+            key,
+            name,
+            badge: hazardPuzzleRouteBadge(HAZARD_PUZZLE_BAND_LABEL[layout.bands[key]], hazardPuzzleClockFor(layout, key)),
+            badgeTone: key === 'risk' ? 'sulfur' : 'bone',
+            description: key === 'risk' ? def.riskRouteDesc : def.safeRouteDesc,
+            ladder: hazardThresholdLadder(key, [routeGoal(layout, key)]),
+            rewardLabel: hazardPuzzleRouteReward(HAZARD_PUZZLE_REWARDS.purse[key]),
+            penaltyLabel: hazardPuzzleRoutePenalty(HAZARD_PUZZLE_FAILURE.maxVitaeLoss[key]),
+            ctaLabel: hazardPuzzleRouteCta(name),
+            dual: key === 'risk',
+        };
+    });
+}
+
+/**
+ * The puzzle as the live hazard view model, so `HazardBoard` and
+ * `RouteSelect` render it unchanged. A field the puzzle lacks takes its
+ * one-round value: one round, one ledger mark, no momentum, the reserve as
+ * the deck count, and a CONFIRM resolve that is armed for the whole round.
+ *
+ * Inputs: `layout`; `session`, the puzzle round (a preview session before
+ * the route is picked); `phase`, `route-select` for the route pick, else
+ * `playing` while the round runs (a resolved session reads `outcome`).
+ * Outputs: a `HazardViewModel` with no resolve flash, outcome or rewards;
+ * the puzzle's own outcome panel shows the result.
+ */
+export function selectHazardPuzzleViewModel(
+    layout: HazardPuzzleLayout,
+    session: HazardPuzzleSession,
+    phase: 'route-select' | 'playing' = 'playing',
+): HazardViewModel {
+    const board = session.board;
+    const def = getHazardDef(layout.hazardId);
+    const routeSelect = phase === 'route-select';
+    const route = session.route;
+    const isRisk = route === 'risk';
+    const proj = hazardProjectedProgress(board);
+    const { meters, meterDetail } = hazardRouteMeters(route, proj, routeGoal(layout, route));
+    const dice = board.dice.map(hazardDieVM);
+    const playing = !routeSelect && session.phase === 'playing';
+    return {
+        active: true,
+        phase: routeSelect ? 'route-select' : playing ? 'playing' : 'outcome',
+        title: layout.title,
+        scenario: def.scenario,
+        boardHeadline: def.boardHeadline,
+        boardNote: isRisk ? def.riskBoardNote : def.safeBoardNote,
+        roundLabel: HAZARD_PUZZLE_ROUND_LABEL,
+        roundRoman: 'I',
+        totalRounds: 1,
+        marks: board.marks,
+        routeKey: routeSelect ? null : route,
+        routeLabel: routeSelect ? '' : isRisk ? 'RISK ROUTE' : 'SAFE ROUTE',
+        routeChoices: routeSelect ? puzzleRouteChoices(layout) : [],
+        dice,
+        diceReady: dice.filter((d) => d.usable).length,
+        hexCount: dice.filter((d) => d.isHex).length,
+        bothRequired: isRisk,
+        meters,
+        meterDetail,
+        momentumNote: null,
+        hand: board.hand.map((entry) => hazardEntryCardVM(entry, board)),
+        play: board.play.map((entry) => hazardEntryCardVM(entry, board)),
+        deckCount: board.drawPile.length,
+        discardCount: board.discardPile.length,
+        thresholdLadder: hazardThresholdLadder(route, [routeGoal(layout, route)]),
+        resolveEnabled: playing,
+        resolveLabel: HAZARD_PUZZLE_CONFIRM_LABEL,
+        resolveSubLabel: HAZARD_PUZZLE_CONFIRM_SUB,
+        resolveFlash: null,
+        outcome: null,
+        rewards: null,
+    };
+}
+
+/**
+ * The route pick before the clock: the live route panels over a preview of
+ * the opening hand (the stat unlocks already granted).
+ */
+export function selectHazardPuzzleRouteSelectVM(
+    layout: HazardPuzzleLayout,
+    unlocks: readonly HazardPuzzleUnlock[],
+): HazardViewModel {
+    return selectHazardPuzzleViewModel(layout, createHazardPuzzleSession(layout, 'safe', unlocks), 'route-select');
 }
 
 // ---------------------------------------------------------------------------
@@ -231,6 +246,10 @@ export function selectHazardPuzzleBoardVM(
 // ---------------------------------------------------------------------------
 
 export interface HazardPuzzleOutcomeVM {
+    /** The goal was reached: the headline reads in the live PERFECT gold, else in blood. */
+    cleared: boolean;
+    /** The round's one ledger mark. */
+    mark: 'O' | 'X';
     headline: string;
     reachedLabel: string;
     rewards: string[];
@@ -262,6 +281,8 @@ export function selectHazardPuzzleOutcomeVM(
     if (applied.scarApplied > 0) penalties.push(hazardPuzzleScarChip(applied.scarApplied));
     if (penalties.length === 0) penalties.push(HAZARD_PUZZLE_NO_PENALTY);
     return {
+        cleared: result.cleared,
+        mark: result.cleared ? 'O' : 'X',
         headline,
         // Floored, so a short resolve never reads "100%" (p = 199/200 rounds up).
         reachedLabel: hazardPuzzleReached(Math.floor(result.p * 100)),
