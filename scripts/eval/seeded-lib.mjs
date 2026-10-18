@@ -125,3 +125,162 @@ export function renderSeededSection(replay) {
   out.push('', tally.join('; ') + '.', '', SECTION_END)
   return out.join('\n')
 }
+
+// --- `--judge review` (phase RV1c, brief A7) ---------------------------------
+//
+// The shadow reviewer meets each planted defect as a draft PR, and its fix
+// as a clean control PR. These are the pure parts: branch names, where the
+// planted lines are, whether a verdict names one, and the Part 4 "before
+// Stage 1" thresholds of `docs/reports/pr-review-research.md`.
+
+export const REVIEW_SECTION_START = '<!-- eval:seeded-review:start -->'
+export const REVIEW_SECTION_END = '<!-- eval:seeded-review:end -->'
+
+/** A MED+ finding within this many lines of a planted hunk names it. */
+export const LINE_SLACK = 3
+
+/** The Part 4 run-time threshold, in minutes. */
+export const P90_LIMIT_MIN = 20
+
+/**
+ * The throwaway branches a seed's two draft PRs live on.
+ *
+ * @param {string} id the seed id.
+ * @returns {{ seed: string, control: string }} branch names.
+ * @example reviewBranches('D1').seed // 'eval/seed-D1'
+ */
+export function reviewBranches(id) {
+  return { seed: `eval/seed-${id}`, control: `eval/control-${id}` }
+}
+
+/**
+ * The new-side line ranges of each file's hunks in a unified diff. A hunk
+ * that only deletes covers the one line it sits at.
+ *
+ * @param {string} diff `git diff` output.
+ * @returns {Record<string, Array<[number, number]>>} inclusive ranges keyed by path.
+ * @example hunkRanges('+++ b/a.ts\n@@ -3,2 +3,4 @@\n')['a.ts'] // [[3, 6]]
+ */
+export function hunkRanges(diff) {
+  const out = {}
+  let file = null
+  for (const line of diff.split(/\r?\n/)) {
+    const f = line.match(/^\+\+\+ (?:b\/)?(.+)$/)
+    if (f) {
+      file = f[1] === '/dev/null' ? null : f[1]
+      continue
+    }
+    const h = line.match(/^@@ -\d+(?:,\d+)? \+(\d+)(?:,(\d+))? @@/)
+    if (h && file) {
+      const start = Number(h[1])
+      const count = h[2] === undefined ? 1 : Number(h[2])
+      ;(out[file] ??= []).push([start, start + Math.max(count, 1) - 1])
+    }
+  }
+  return out
+}
+
+/**
+ * The findings rows of a verdict comment (`skills/review.md` Step 5).
+ *
+ * @param {string} body the verdict comment.
+ * @returns {Array<{ severity: 'HIGH'|'MED'|'LOW', path: string|null, line: number|null, finding: string }>} one per row.
+ * @example verdictRows('| MED | `a.ts:4` | x |')[0].line // 4
+ */
+export function verdictRows(body) {
+  const rows = []
+  for (const m of (body ?? '').matchAll(/^\|\s*(HIGH|MED|LOW)\s*\|\s*([^|]*?)\s*\|\s*(.*?)\s*\|\s*$/gm)) {
+    const where = m[2].replace(/`/g, '').trim()
+    const at = where.match(/^(.+?):(\d+)(?:[-:]\d+)?$/)
+    rows.push({ severity: m[1], path: at ? at[1] : where || null, line: at ? Number(at[2]) : null, finding: m[3] })
+  }
+  return rows
+}
+
+/**
+ * Whether a verdict names a planted line: a MED or HIGH row on a planted
+ * path whose line sits within `LINE_SLACK` of one of its hunks. A row with
+ * no line does not count; the threshold is "names the planted line".
+ *
+ * @param {string} body the verdict comment.
+ * @param {Record<string, Array<[number, number]>>} hunks from `hunkRanges` over the seed PR's diff.
+ * @returns {{ flagged: boolean, medPlus: number, high: number, hits: string[] }} the score.
+ * @example flagsPlanted('| HIGH | `a.ts:5` | x |', { 'a.ts': [[3, 3]] }).flagged // true
+ */
+export function flagsPlanted(body, hunks) {
+  const rows = verdictRows(body).filter((r) => r.severity !== 'LOW')
+  const hits = rows
+    .filter((r) => r.line != null && (hunks[r.path] ?? []).some(([a, b]) => r.line >= a - LINE_SLACK && r.line <= b + LINE_SLACK))
+    .map((r) => `${r.path}:${r.line}`)
+  return { flagged: hits.length > 0, medPlus: rows.length, high: rows.filter((r) => r.severity === 'HIGH').length, hits }
+}
+
+/**
+ * Nearest-rank percentile; a run that never posted counts as `Infinity`.
+ *
+ * @param {number[]} values minutes.
+ * @param {number} p in (0, 1].
+ * @returns {number|null} the value, or null for no values.
+ * @example percentile([1, 2, 3, 30], 0.9) // 30
+ */
+export function percentile(values, p) {
+  if (values.length === 0) return null
+  const sorted = [...values].sort((a, b) => a - b)
+  return sorted[Math.ceil(p * sorted.length) - 1]
+}
+
+/**
+ * The three Part 4 "before Stage 1" rows, from each seed's `review` block.
+ * Seeds the review judge never ran on make every row "not measured".
+ *
+ * @param {Array<{ id: string, review?: object }>} seeds replayed seeds.
+ * @returns {Array<{ measure: string, pass: string, value: string, verdict: 'pass'|'fail'|'not measured' }>} the rows.
+ */
+export function reviewThresholds(seeds) {
+  const ran = seeds.filter((s) => s.review)
+  const rows = [
+    { measure: 'Planted defects flagged MED+ (D1-D4)', pass: '>= 3 of 4' },
+    { measure: 'Findings per clean control PR (the unplanted fix)', pass: '<= 1 MED+, 0 HIGH' },
+    { measure: 'Run time, p90 of the four', pass: `<= ${P90_LIMIT_MIN} min` },
+  ]
+  if (ran.length === 0) return rows.map((r) => ({ ...r, value: 'not measured', verdict: 'not measured' }))
+  const flagged = ran.filter((s) => s.review.seed?.flagged).length
+  const controls = ran.map((s) => s.review.control)
+  const cleanControls = controls.filter((c) => c?.posted && c.medPlus <= 1 && c.high === 0).length
+  const minutes = ran.map((s) => (s.review.seed?.posted ? s.review.seed.seconds / 60 : Infinity))
+  const p90 = percentile(minutes, 0.9)
+  return [
+    { ...rows[0], value: `${flagged} of ${ran.length}`, verdict: flagged >= 3 ? 'pass' : 'fail' },
+    { ...rows[1], value: `${cleanControls} of ${ran.length} within`, verdict: cleanControls === ran.length ? 'pass' : 'fail' },
+    { ...rows[2], value: Number.isFinite(p90) ? `${p90.toFixed(1)} min` : 'a run never posted', verdict: p90 <= P90_LIMIT_MIN ? 'pass' : 'fail' },
+  ]
+}
+
+const runCell = (r) => {
+  if (!r) return 'not run'
+  if (!r.posted) return `#${r.pr}: no verdict (${r.why ?? 'timed out'})`
+  return `#${r.pr}: ${r.verdict}, ${r.medPlus} MED+ (${r.high} HIGH), ${(r.seconds / 60).toFixed(1)} min`
+}
+
+/**
+ * The seeded-review section of `docs/reports/eval/latest.md`, markers included.
+ *
+ * @param {{ stamp: { commit: string, date: string }|null, seeds: object[] }} replay the run; `stamp` null before the first.
+ * @returns {string} markdown.
+ */
+export function renderReviewSection(replay) {
+  const out = [REVIEW_SECTION_START, '', '## The shadow reviewer on planted defects (RV1c, A7)', '']
+  out.push(replay.stamp
+    ? `Stamp: commit \`${replay.stamp.commit}\` (${replay.stamp.date}). Regenerate with \`node scripts/eval/seeded-replay.mjs --judge review\`; the data is the \`review\` block of each seed in \`docs/reports/eval/seeded.json\`.`
+    : 'Not measured yet: `node scripts/eval/seeded-replay.mjs --judge review` has not run against the three-lens reviewer on `main`.', '')
+  out.push(`Each seed is pushed as a draft \`eval:seed\` PR whose diff reverts its fix's source (the planted defect), and its fix as a second draft (the clean control). \`pr-review.yml\` is dispatched on each; a seed counts as flagged when a MED or HIGH row of the verdict names a planted line (within ${LINE_SLACK} lines of a hunk). Both PRs are closed and their branches deleted when the run ends. Thresholds: \`docs/reports/pr-review-research.md\` Part 4.`, '')
+  out.push('| Measure | Pass | Value | Verdict |', '|---|---|---|---|')
+  for (const r of reviewThresholds(replay.seeds)) out.push(`| ${r.measure} | ${r.pass} | ${r.value} | ${r.verdict} |`)
+  const ran = replay.seeds.filter((s) => s.review)
+  if (ran.length) {
+    out.push('', '| Seed | Planted PR | Named the planted line | Control PR |', '|---|---|---|---|')
+    for (const s of ran) out.push(`| ${s.id} | ${cell(runCell(s.review.seed))} | ${s.review.seed?.hits?.length ? cell(s.review.seed.hits.join(', ')) : 'no'} | ${cell(runCell(s.review.control))} |`)
+  }
+  out.push('', REVIEW_SECTION_END)
+  return out.join('\n')
+}
