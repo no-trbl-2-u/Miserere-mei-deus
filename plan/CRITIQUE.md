@@ -767,14 +767,6 @@
 - suggested fix: a tiny guard job that fails loudly when `branch` is set but does not start with `loop/`; pass the branch through `env:` rather than inline `${{ }}` in the script.
 - source: antagonist, PR #526
 
-### [LOW] combat / IN PLAY row — two copies of one Global give two chips with the same accessibility label
-- pass: antagonist on PR #520 (GS1, commit fc4aa159)
-- viewport: n/a (screen reader)
-- category: accessibility
-- observation: GS1 lets copies of a Global stack, and the chips are keyed by instance. Each chip's label is still `<name>, a Global in play for N more turn starts. Tap to read it.`, so two FREE copies played the same turn are announced the same way and a screen-reader user cannot tell there are two.
-- evidence: `globalsVM` in `axiomancer-mobile/state/presenters/combat-encounter.engine.ts`; the GS1 jest case renders two chips with the same `a11y`.
-- suggested fix: when more than one instance of a card is in play, name the count in the label (for example "copy 2 of 2"); terse, presenter-only.
-- source: antagonist, PR #520
 
 ### [LOW] docs — `plan/revamp/card-rules-inventory.md` §17 still says a Global is "unique in play"
 - pass: antagonist on PR #520 (GS1, commit fc4aa159)
@@ -1077,6 +1069,15 @@
 - suggested fix: lift the cutscene hint into a presenter constant and use a pointer-neutral verb ("· continue ·" / "· walk on ·"), and do the same for the dock hint ("CHOOSE A SLOT ...") and the tooltip ("choose an adjacent node"), as #604 did; copy only, pinned by the screens' existing tests.
 - source: critique:drive (unattended)
 - issue: #620
+### [x] [LOW] combat / IN PLAY row — two copies of one Global give two chips with the same accessibility label — RESOLVED 2026-10-18 (branch loop/iterate-global-copy-label, d65ef6950: `globalsVM` names the copy, "copy 2 of 2", when one Global is in play more than once; a single copy keeps its label; pinned in CombatBoard.program-cards.test.tsx)
+- pass: antagonist on PR #520 (GS1, commit fc4aa159)
+- viewport: n/a (screen reader)
+- category: accessibility
+- observation: GS1 lets copies of a Global stack, and the chips are keyed by instance. Each chip's label is still `<name>, a Global in play for N more turn starts. Tap to read it.`, so two FREE copies played the same turn are announced the same way and a screen-reader user cannot tell there are two.
+- evidence: `globalsVM` in `axiomancer-mobile/state/presenters/combat-encounter.engine.ts`; the GS1 jest case renders two chips with the same `a11y`.
+- suggested fix: when more than one instance of a card is in play, name the count in the label (for example "copy 2 of 2"); terse, presenter-only.
+- source: antagonist, PR #520
+- issue: #615
 ### [x] [LOW] title / desktop — the menu rows (520px) overhang the 464px title plate, and the plate reads as a lit strip in a black field — RESOLVED 2026-10-18 (branch loop/iterate-title-menu-plate, 529c70a5: `titleLayout` returns a `menu` band equal to the plate's and TitleScreen hosts the menu in it, so the rows sit within the art on a wide window; a phone keeps the full width; pinned in title.engine.test.ts and TitleScreen.test.tsx)
 - pass: 79 (commit f2065459)
 - viewport: desktop (1280x800)

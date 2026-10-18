@@ -92,6 +92,7 @@ describe('CombatBoard — program cards', () => {
         const s = playCombatCard(open(store, [GLOBAL.id], 100), { uid: 'h0' }, false).state;
         const cbs = mount(buildCombatViewModel(s), [], store);
         expect(screen.getByTestId('combat-globals')).toBeTruthy();
+        expect(buildCombatViewModel(s).globals[0].a11y).not.toMatch(/copy/);
         fireEvent.press(screen.getByTestId(`combat-global-${s.program!.globals[0].uid}`));
         expect(cbs.onInspect).toHaveBeenCalledWith(expect.objectContaining({ cardId: GLOBAL.id }));
     });
@@ -103,6 +104,10 @@ describe('CombatBoard — program cards', () => {
         const uids = s.program!.globals.map((g) => g.uid);
         expect(uids).toHaveLength(2);
         expect(new Set(uids).size).toBe(2);
+        // Each copy names itself, so a screen reader hears two different chips.
+        const labels = buildCombatViewModel(s).globals.map((g) => g.a11y);
+        expect(labels[0]).toMatch(/^[^,]+, copy 1 of 2, a Global in play /);
+        expect(labels[1]).toMatch(/^[^,]+, copy 2 of 2, a Global in play /);
         // Restored in `finally`, so a failure here cannot leave console.error
         // muted for the rest of the file.
         const errors = jest.spyOn(console, 'error').mockImplementation(() => undefined);
