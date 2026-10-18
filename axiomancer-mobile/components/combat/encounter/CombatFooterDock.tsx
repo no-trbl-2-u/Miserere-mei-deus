@@ -146,13 +146,17 @@ export const CombatFooterDock = React.memo(function CombatFooterDock({
             <View style={styles.vitaeCol} testID="combat-rail-vitae-col">
                 <View style={styles.vitaeRow}>
                     {/* Print the maximum, as the enemy's bar does, so the
-                      * player can tell how much of their VITAE is left. */}
+                      * player can tell how much of their VITAE is left. The
+                      * progressbar below speaks VITAE (with its value), so
+                      * the readout is hidden from the reader rather than
+                      * announced twice. */}
                     <Text
                         style={styles.vitaeText}
                         numberOfLines={1}
                         allowFontScaling={false}
                         testID="combat-rail-vitae"
-                        accessibilityLabel={`VITAE ${vm.player.hp} of ${vm.player.maxHp}`}
+                        accessibilityElementsHidden
+                        importantForAccessibility="no-hide-descendants"
                     >
                         ♥ {vm.player.hp}<Text style={styles.vitaeMax}> / {vm.player.maxHp}</Text>
                     </Text>
