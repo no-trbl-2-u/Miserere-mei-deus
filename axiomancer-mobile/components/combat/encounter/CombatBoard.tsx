@@ -279,7 +279,7 @@ const SignatureColumn = React.memo(function SignatureColumn({ conviction, signat
                 {/* Name the economy: every rune below is priced in ◆ and the
                   * enemy telegraph offers '+1◆', so the chip prints the word
                   * CONVICTION rather than leaving it to the a11y label. */}
-                <Text style={styles.convictionCaption} allowFontScaling={false}>CONVICTION</Text>
+                <Text style={styles.convictionCaption}>CONVICTION</Text>
             </View>
             {signatures.map((s) => (
                 <Pressable
@@ -323,12 +323,12 @@ export const SIG_TRAY_CLEARANCE = 10;
 // The column's own geometry (`sigColumn`, `convictionChip`, `sigRune` below),
 // named so its height for N runes can be computed without a layout pass. The
 // chip is its 1pt border twice, 3pt padding twice, the 18pt value line and
-// the caption's 1pt margin plus 7pt line. A rune is 44pt (the touch-target
+// the caption's 1pt margin plus 11pt line. A rune is 44pt (the touch-target
 // floor) at a 6pt gap, so five fit between the intent block and the tray on a
 // 375x812 screen (`CombatBoard.sig-column.test.tsx`).
 export const SIG_RUNE_SIZE = 44;
 export const SIG_COLUMN_GAP = 6;
-export const SIG_CONVICTION_CHIP_H = 34;
+export const SIG_CONVICTION_CHIP_H = 38;
 
 /** The rune column's height for `runes` signatures: the conviction chip, then
  *  one rune per signature, `SIG_COLUMN_GAP` apart. */
@@ -2037,8 +2037,10 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
         paddingHorizontal: 7, paddingVertical: 3,
     },
     convictionText: { fontFamily: FONTS.gothic, fontSize: 15, lineHeight: 18, letterSpacing: 0.5, textAlign: 'center' },
-    // The CONVICTION caption — small enough to stay chrome, large enough to read.
-    convictionCaption: { fontFamily: FONTS.sans, fontSize: 6, lineHeight: 7, letterSpacing: 0.6, color: AXM.bone, textAlign: 'center', marginTop: 1 },
+    // The CONVICTION caption — small enough to stay chrome, large enough to
+    // read: 9px, the floor the HUD clock line was raised past, and it scales
+    // with the system text size, so the chip widens rather than shrinks it.
+    convictionCaption: { fontFamily: FONTS.sans, fontSize: 9, lineHeight: 11, letterSpacing: 0.4, color: AXM.bone, textAlign: 'center', marginTop: 1 },
     sigRune: {
         width: SIG_RUNE_SIZE, height: SIG_RUNE_SIZE, borderRadius: SIG_RUNE_SIZE / 2, borderWidth: 1.5, backgroundColor: 'rgba(0,0,0,0.6)',
         alignItems: 'center', justifyContent: 'center',

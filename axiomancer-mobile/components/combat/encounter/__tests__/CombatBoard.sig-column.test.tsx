@@ -6,7 +6,9 @@
  *  A7. The conviction chip and signature runes start just under that intent
  *      block (the HUD's measured bottom plus `SIG_HUD_GAP`), still clamped so
  *      the last rune clears the dice tray by `SIG_TRAY_CLEARANCE`. Five runes
- *      fit at 375x812; on a shorter screen the clamp wins.
+ *      fit at 375x812; on a shorter screen the clamp wins. The chip's
+ *      CONVICTION caption is legible (9px or more) and scales with the
+ *      system text size.
  */
 
 import React from 'react';
@@ -113,6 +115,14 @@ describe('A7 — the signature column starts under the intent block', () => {
             + (s.convictionText.lineHeight as number) + (s.convictionCaption.marginTop as number) + (s.convictionCaption.lineHeight as number);
         expect(SIG_CONVICTION_CHIP_H).toBe(chipH);
         expect(signatureColumnHeight(5)).toBe(SIG_CONVICTION_CHIP_H + 5 * (SIG_RUNE_SIZE + SIG_COLUMN_GAP));
+    });
+
+    it('the CONVICTION caption is at least 9px and follows the system text size', () => {
+        const { result } = renderHook(() => useCombatBoardStyles());
+        expect(result.current.convictionCaption.fontSize as number).toBeGreaterThanOrEqual(9);
+        renderBoard();
+        const caption = screen.getByText('CONVICTION');
+        expect(caption.props.allowFontScaling).not.toBe(false);
     });
 
     it('is undefined until the HUD, the tray and the column have all measured', () => {
