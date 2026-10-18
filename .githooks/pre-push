@@ -10,3 +10,37 @@ if [ -n "$(git status --porcelain -- telemetry/)" ]; then
   printf '%s\n' 'Commit normally; the pre-commit hook will stage it automatically.' >&2
   exit 1
 fi
+
+# `Potential Assets/extract/` is a local-only tree: the game's own copyrighted
+# art, fonts and audio, cut out of T's installed copy of Buriedbornes 2 for
+# private reference (Potential Assets/extract/COVERAGE.md says so in its own
+# header). This repository is PUBLIC, so pushing those files would redistribute
+# a commercial game's assets under T's name, and a push cannot be taken back
+# once forks, caches and archives have it.
+#
+# .gitignore cannot do this job: the tree is already tracked and already in
+# local history, so ignoring it prevents nothing. The check has to happen here.
+#
+# The catalog that DESCRIBES those assets (Potential Assets/catalog/) is
+# metadata, is safe to publish, and is deliberately not matched below.
+while read -r _local_ref local_sha _remote_ref _remote_sha; do
+  case "$local_sha" in
+    *[!0]*) ;;          # a real sha
+    *) continue ;;      # all-zero: a branch deletion, nothing to inspect
+  esac
+  offenders=$(
+    git rev-list "$local_sha" --not --remotes=origin 2>/dev/null |
+      while read -r sha; do
+        git diff-tree --no-commit-id --name-only -r "$sha" 2>/dev/null
+      done | grep -F 'Potential Assets/extract/' | sort -u | head -5
+  )
+  if [ -n "$offenders" ]; then
+    printf '%s\n' 'pre-push: refusing to push Potential Assets/extract/.' >&2
+    printf '%s\n' 'That tree is the extracted Buriedbornes 2 assets, and this repo is public.' >&2
+    printf '%s\n' 'Sample paths in the commits being pushed:' >&2
+    printf '%s
+' "$offenders" | sed "s|^|  |" >&2
+    printf '%s\n' 'Push a branch that does not carry those commits, or rebuild the work onto origin/main.' >&2
+    exit 1
+  fi
+done
