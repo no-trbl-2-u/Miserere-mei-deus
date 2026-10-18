@@ -119,6 +119,20 @@ export function isOverThreshold(ratio, threshold = DIFF_THRESHOLD_RATIO) {
     return ratio > threshold
 }
 
+/**
+ * On the live hazard's route select: picks `hazardRoute` (`safe` or `risk`),
+ * then waits for the board to show and the dice roll to settle, so the shot
+ * is the board with its dice at rest.
+ *
+ * @param {import('playwright').Page} page the page, on `/hazard` at the route select.
+ * @param {'safe' | 'risk'} hazardRoute the route to pick.
+ */
+export async function pickHazardRoute(page, hazardRoute) {
+    await page.getByTestId(`hazard-route-${hazardRoute}`).click()
+    await page.getByTestId('hazard-board').waitFor({ state: 'visible', timeout: 10_000 })
+    await page.getByTestId('hazard-dice-roll').waitFor({ state: 'hidden', timeout: 10_000 })
+}
+
 // ---------------------------------------------------------------------------
 // Lazy imports — keep boot fast + don't crash the file from being
 // required by Jest when devDeps aren't installed yet.
@@ -314,11 +328,7 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl) {
             if (route.waitForPath) {
                 await target.waitForURL((u) => u.pathname.endsWith(route.waitForPath), { timeout: 15_000 })
             }
-            if (route.hazardRoute) {
-                await target.getByTestId(`hazard-route-${route.hazardRoute}`).click()
-                await target.getByTestId('hazard-board').waitFor({ state: 'visible', timeout: 10_000 })
-                await target.getByTestId('hazard-dice-roll').waitFor({ state: 'hidden', timeout: 10_000 })
-            }
+            if (route.hazardRoute) await pickHazardRoute(target, route.hazardRoute)
             // Settle fonts + any deferred layout. The 600ms is empirical:
             // long enough for the @expo-google-fonts loaders to resolve,
             // short enough to keep the suite under a minute.
