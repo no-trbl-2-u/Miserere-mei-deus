@@ -32,8 +32,13 @@ name: pr-review
 # below, pinned in `scripts/loop-pr.test.mjs`). The `workflow_dispatch`
 # route reviews one PR on demand (phase RV1c's seeded `eval:seed` drafts).
 #
+# On `risk:medium` and `risk:high` the run fans out to three Sonnet
+# sub-agents, one per lens (Rules, Tests, Blast radius, phase RV1c), merged
+# into the one verdict; `risk:low` keeps the single reviewer.
+#
 # Cost: GitHub-hosted runners, free for this public repo. Claude usage: one
-# run per reviewed head of a `loop:pr` or `plot` PR, at `effort: high`.
+# run per reviewed head of a `loop:pr` or `plot` PR, at `effort: high`,
+# plus three Sonnet sub-agents on a medium or high tier.
 
 on:
   pull_request:
@@ -144,11 +149,12 @@ jobs:
           if git cat-file -e "origin/main:$p" 2>/dev/null; then git checkout origin/main -- "$p"; fi
         done
       prompt: 'Read skills/review.md end to end and follow it for PR #${{ needs.review-wanted.outputs.pr }}.'
-      allowed_tools: 'Read,Grep,Glob,Task,TodoWrite,Bash(git diff:*),Bash(git show:*),Bash(git log:*),Bash(git fetch:*),Bash(git rev-parse:*),Bash(npm test:*),Bash(node --test:*),Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*),Bash(gh pr edit:*),mcp__github_inline_comment__create_inline_comment'
+      allowed_tools: 'Read,Grep,Glob,Task,TodoWrite,Bash(git diff:*),Bash(git show:*),Bash(git log:*),Bash(git fetch:*),Bash(git rev-parse:*),Bash(npm test:*),Bash(node --test:*),Bash(node scripts/pr-review.mjs parent-tests:*),Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*),Bash(gh pr edit:*),mcp__github_inline_comment__create_inline_comment'
       # Deny beats the allow list in .claude/settings.json, which a loop
       # tick needs and a reviewer must not have.
       extra_claude_args: |
         -p
         --disallowedTools "Edit,Write,MultiEdit,NotebookEdit,Bash(git push:*),Bash(git commit:*),Bash(gh pr merge:*),Bash(gh pr close:*),Bash(gh api:*)"
       effort: 'high'
-      timeout_minutes: 20
+      # 30, not 20: medium and high tiers fan out to three lens sub-agents (RV1c).
+      timeout_minutes: 30

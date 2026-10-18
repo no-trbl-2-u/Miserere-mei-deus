@@ -17,28 +17,22 @@
 // a dependency that moved between the parent and today runs at today's
 // version; the control run at the merge catches a file that breaks on it.
 
-import { spawnSync, execFileSync } from 'node:child_process'
-import { existsSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
-import { tmpdir } from 'node:os'
-import { dirname, join, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { execFileSync } from 'node:child_process'
+import { existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { join } from 'node:path'
 
 import {
-  checkTicks, firstParent, newTitles, parseJsonReport, parseTap, renderReplaySection, runnerFor, seedTickStatus,
+  checkTicks, firstParent, newTitles, renderReplaySection, runnerFor, seedTickStatus,
   spliceSection, verdictFor,
 } from './parent-replay-lib.mjs'
+import { ROOT, checkout, closeWorktree, git, openWorktree, runTests } from './worktree.mjs'
 
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const OUT_DIR = join(ROOT, 'docs/reports/eval')
-const RUN_TIMEOUT_MS = 15 * 60 * 1000
-const NODE_MODULES = ['node_modules', 'axiomancer-mechanics/node_modules', 'axiomancer-mobile/node_modules']
 
 function arg(name, fallback) {
   const i = process.argv.indexOf(name)
   return i > 0 ? process.argv[i + 1] : fallback
 }
-
-const git = (args, cwd = ROOT) => execFileSync('git', args, { cwd, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }).trim()
 
 function readEnv(key) {
   if (process.env[key]) return process.env[key]
@@ -67,68 +61,6 @@ function prBody(number) {
     console.warn(`parent-replay: no body for #${number}: ${e.message.split('\n')[0]}`)
     return ''
   }
-}
-
-/** A detached worktree whose `node_modules` are junctions to this checkout's. */
-function openWorktree() {
-  const dir = mkdtempSync(join(tmpdir(), 'eval-parent-replay-'))
-  rmSync(dir, { recursive: true, force: true })
-  git(['worktree', 'add', '--detach', '--quiet', dir, 'HEAD'])
-  return dir
-}
-
-function linkModules(dir) {
-  for (const rel of NODE_MODULES) {
-    const target = join(ROOT, rel)
-    const link = join(dir, rel)
-    if (existsSync(target) && existsSync(dirname(link)) && !existsSync(link)) symlinkSync(target, link, 'junction')
-  }
-}
-
-/** Moves the worktree to `sha`, dropping every untracked file but the junctions. */
-function checkout(dir, sha) {
-  git(['checkout', '--force', '--detach', '--quiet', sha], dir)
-  git(['clean', '-fdq', '-e', 'node_modules'], dir)
-  linkModules(dir)
-}
-
-function run(cmd, args, cwd) {
-  const r = spawnSync(cmd, args, { cwd, encoding: 'utf8', timeout: RUN_TIMEOUT_MS, maxBuffer: 256 * 1024 * 1024, env: { ...process.env, CI: '1', FORCE_COLOR: '0' } })
-  return { code: r.status ?? 1, stdout: r.stdout ?? '', stderr: r.stderr ?? '', timedOut: r.error?.code === 'ETIMEDOUT' }
-}
-
-/** Runs the given test files in `dir`, one call per runner, and returns results keyed by path. */
-function runTests(dir, paths) {
-  const results = {}
-  const groups = {}
-  for (const p of paths) {
-    const r = runnerFor(p)
-    if (r) (groups[r.runner] ??= { cwd: r.cwd, files: [] }).files.push(p)
-  }
-  for (const [runner, { cwd, files }] of Object.entries(groups)) {
-    if (runner === 'node') {
-      for (const f of files) {
-        const r = run(process.execPath, ['--test', '--test-reporter=tap', f], dir)
-        results[f] = parseTap(r.stdout, r.timedOut ? 1 : r.code)
-      }
-      continue
-    }
-    const wd = join(dir, cwd)
-    const rel = files.map((f) => f.slice(cwd.length + 1))
-    const outFile = join(dir, `.eval-${runner}.json`)
-    rmSync(outFile, { force: true })
-    const args = runner === 'jest'
-      ? ['--no-install', 'jest', '--ci', '--json', `--outputFile=${outFile}`, '--runTestsByPath', ...rel]
-      : ['--no-install', 'vitest', 'run', '--reporter=json', `--outputFile=${outFile}`, ...rel]
-    const r = run('npx', args, wd)
-    const report = existsSync(outFile) ? JSON.parse(readFileSync(outFile, 'utf8')) : null
-    const parsed = parseJsonReport(report, dir)
-    for (const f of files) {
-      results[f] = parsed[f] ?? { ok: false, cases: [], message: r.timedOut ? 'timed out' : `no result (exit ${r.code}): ${r.stderr.slice(-300)}` }
-    }
-    rmSync(outFile, { force: true })
-  }
-  return results
 }
 
 /** A run's outcome without its case list, which `parent-replay.json` does not need. */
@@ -173,10 +105,9 @@ function main() {
   const head = git(['rev-parse', 'HEAD'])
   const stamp = { commit: head.slice(0, 8), date: git(['show', '-s', '--format=%cI', head]) }
 
-  const dir = openWorktree()
+  const dir = openWorktree('eval-parent-replay-')
   const prs = []
   try {
-    linkModules(dir)
     for (const row of rows) {
       const t0 = Date.now()
       const pr = replayPr(dir, row)
@@ -186,7 +117,7 @@ function main() {
       console.log(`#${row.number}: ${pr.files.length} file(s) in ${Math.round((Date.now() - t0) / 1000)}s: ${tally}`)
     }
   } finally {
-    git(['worktree', 'remove', '--force', dir])
+    closeWorktree(dir)
   }
 
   for (const pr of prs) pr.body = prBody(pr.number)

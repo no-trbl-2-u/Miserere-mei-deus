@@ -8,7 +8,8 @@
 // the `verify-gate` job in pr-review.yml (phase RV1a): same-repo
 // `pull_request` only, the only writer of `risk:*`, no merge wiring; and the
 // shadow `review` job (phase RV1b): after the gate, only `loop:pr` / `plot`,
-// a read-comment-label grant with no Edit, Write, push or merge.
+// a read-comment-label grant with no Edit, Write, push or merge; and its
+// three lenses (phase RV1c): distinct, behind the tier check, 30 minutes.
 //
 //   node --test scripts/loop-pr.test.mjs
 
@@ -181,7 +182,7 @@ test('review runs after a green verify-gate, through review-wanted, on loop:pr a
   assert.match(rv, /uses: \.\/\.github\/workflows\/_claude-skill\.yml/)
   assert.match(rv, /prompt: 'Read skills\/review\.md end to end/)
   assert.match(rv, /effort: 'high'/)
-  assert.match(rv, /timeout_minutes: 20/)
+  assert.match(rv, /timeout_minutes: 30/)
 })
 
 test('review-wanted reviews only loop:pr and plot on pull_request, eval:seed only on dispatch', async () => {
@@ -196,7 +197,7 @@ test('the reviewer can read, comment and label, and nothing else', () => {
   const grant = rv.match(/allowed_tools: '([^']+)'/)[1].split(',')
   for (const t of ['Edit', 'Write', 'MultiEdit', 'NotebookEdit', 'Bash']) assert.ok(!grant.includes(t), `no ${t}`)
   for (const t of grant.filter((t) => t.startsWith('Bash('))) {
-    assert.match(t, /^Bash\((git (diff|show|log|fetch|rev-parse)|npm test|node --test|gh pr (view|diff|comment|edit)):\*\)$/, t)
+    assert.match(t, /^Bash\((git (diff|show|log|fetch|rev-parse)|npm test|node --test|node scripts\/pr-review\.mjs parent-tests|gh pr (view|diff|comment|edit)):\*\)$/, t)
   }
   assert.ok(grant.includes('mcp__github_inline_comment__create_inline_comment'))
   const deny = rv.match(/--disallowedTools "([^"]+)"/)[1].split(',')
@@ -223,6 +224,49 @@ test('skills/review.md writes the markers the ledger and verify-gate read', asyn
   assert.match(skill, new RegExp(RAISE_MARKER.source))
   assert.match(skill, /<!-- pr-review:head <full head SHA> -->/)
   assert.match(skill, /Never lower a tier/)
+})
+
+// --- the three lenses (phase RV1c, A9) --------------------------------------
+
+const lenses = (skill) => Object.fromEntries(
+  skill.split(/^### Lens: /m).slice(1).map((part) => [part.split('\n')[0].trim(), part.split(/^### /m)[0]]),
+)
+
+test('skills/review.md carries three distinct lens prompts', () => {
+  const l = lenses(read('skills/review.md'))
+  assert.deepEqual(Object.keys(l), ['Rules', 'Tests', 'Blast radius'])
+  const bodies = Object.values(l)
+  assert.equal(new Set(bodies).size, 3, 'no two lens prompts are the same')
+  // Each lens names its own question and its own reading list.
+  assert.match(l.Rules, /is the logic the diff changes correct\?/)
+  assert.match(l.Tests, /would the tests catch this change being wrong\?/)
+  assert.match(l.Tests, /node scripts\/pr-review\.mjs parent-tests --pr <n>/)
+  assert.match(l['Blast radius'], /what outside the changed lines does this diff break\?/)
+  for (const [name, body] of Object.entries(l)) assert.match(body, /^Read only: /m, `${name} has a reading list`)
+})
+
+test('the fan-out is behind the tier check: three Sonnet lenses on medium and high, one reviewer on low', () => {
+  const skill = read('skills/review.md')
+  const gate = skill.slice(skill.indexOf('### Step 2 — The tier decides the shape'), skill.indexOf('### Step 3 '))
+  assert.match(gate, /\*\*`risk:low`:\*\* one reviewer, you\./)
+  assert.match(gate, /\*\*`risk:medium` or `risk:high`:\*\* three lenses\./)
+  const fan = skill.slice(skill.indexOf('### Step 3b'), skill.indexOf('### Lens: Rules'))
+  assert.match(fan, /^### Step 3b — Three lenses \(`risk:medium`, `risk:high`\)$/m)
+  assert.match(fan, /`model: sonnet`/)
+  // A -p run ends with the turn: a backgrounded lens never reports (PR #610).
+  assert.match(fan, /`run_in_background: false`/)
+  assert.match(fan, /never end the turn\s+waiting/)
+  assert.match(fan, /\*\*only\*\*\s+its\s+own lens section/)
+  const merge = skill.slice(skill.indexOf('### Step 3c'), skill.indexOf('### Step 4'))
+  for (const tag of ['[rules]', '[tests]', '[blast]']) assert.ok(merge.includes(tag), tag)
+  assert.match(merge, /lens did not finish/)
+  assert.match(merge, /never read as\s+`no findings`/)
+})
+
+test('the review job allows 30 minutes for the fan-out and nothing else changes its grant', () => {
+  const rv = job(review, 'review')
+  assert.match(rv, /^ {6}timeout_minutes: 30$/m)
+  assert.doesNotMatch(rv, /Bash\(git (worktree|checkout|-C)/, 'the parent-test worktree is the script\'s, not a grant')
 })
 
 // --- the telemetry step never pushes across branches -------------------------

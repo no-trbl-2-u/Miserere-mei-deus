@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-10-17 at commit c49902c7
-> Pass count: 92
+> Last pass: 2026-10-18 at commit 1a0e7b58
+> Pass count: 93
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
@@ -719,7 +719,42 @@
 > mouse, so mobile captures now show the desktop gesture line; and the
 > desktop hub and hazard still tell a mouse player to "tap".
 
+> **[critique pass 93, 2026-10-18, commit 1a0e7b58] Unattended `/march`
+> tick.** `critique:drive` (`CRITIQUE_VIEWPORT=both`), full 11-screen
+> set: 22 captures, 0 nav trouble, 0 console/page errors. 12 commits
+> after pass 92: the drive's touch context (#606), pointer-neutral verbs
+> (#604), the RV1b shadow reviewer and telemetry. Confirmed fixed: the
+> mobile hub capture now reads "drag · pinch" and desktop keeps "drag ·
+> scroll to zoom"; the desktop hub drawer reads "choose a glowing node"
+> and the hazard hand "CHOOSE A CARD TO READ IT". Reconfirmed and not
+> re-filed: pass 89's "you stopped here" tense row (both rest captures),
+> the desktop title menu overhanging its plate (Pending, PR #614 open),
+> the unfixtured exploration hub bouncing to the title, and the mobile
+> hazard strip's "CHOOSE TO PROC..." (pass 68 trade). Two fresh
+> findings: the cutscene still prints "· tap ·" to a mouse player, the
+> remainder #604 did not reach; and the CONVICTION caption under the
+> rune column's ◆ chip is 6px with font scaling off.
+
 ## Pending
+
+
+### [LOW] cutscene / desktop — the omen plate still tells a mouse player "· tap ·", the remainder of the pass-92 pointer row
+- pass: 93 (commit 1a0e7b58)
+- viewport: desktop (1280x800); mobile reads correctly
+- category: voice
+- observation: #604 moved the hub drawer, the hazard hand and the rewards subtitle to "choose", but the cutscene plate under the omen line still reads "· tap ·" (and "· tap to walk on ·" on the last line) at 1280 under a mouse. The same visible "tap" survives in the satchel dock hint ("TAP A SLOT TO SEE WHAT ELSE FITS") and the map's here-node tooltip ("tap an adjacent node to step toward it"), neither in the drive's screen set. The cutscene string is also inline in the screen, not a presenter.
+- evidence: `.critique-artifacts/desktop/08-cutscene.txt` ("· tap ·"; fixture `wanderer-staged-cutscene`); `axiomancer-mobile/app/cutscene/index.tsx:152`, `state/presenters/inventory.engine.ts:292`, `state/presenters/tooltip.engine.ts:199`.
+- suggested fix: lift the cutscene hint into a presenter constant and use a pointer-neutral verb ("· continue ·" / "· walk on ·"), and do the same for the dock hint ("CHOOSE A SLOT ...") and the tooltip ("choose an adjacent node"), as #604 did; copy only, pinned by the screens' existing tests.
+- source: critique:drive (unattended)
+
+### [LOW] combat / rune column — the CONVICTION caption under the ◆ chip is 6px text that ignores the system font size
+- pass: 93 (commit 1a0e7b58)
+- viewport: both (375x812 and 1280x800)
+- category: a11y
+- observation: the word that names the game's spell economy prints at `fontSize: 6` with `allowFontScaling={false}`, so in both board captures it is a smudge under "◆ 0" rather than a word, and a player who has raised the system text size gets no larger. The HUD meta line had the same shape (9px, scaling off) and was raised to 11px with scaling on (Done, 2026-10-15).
+- evidence: `.critique-artifacts/mobile/04-combat-board.png`, `desktop/04-combat-board.png` (left rail, under the ◆ chip); `axiomancer-mobile/components/combat/encounter/CombatBoard.tsx:2041` (`convictionCaption`), `:282`.
+- suggested fix: raise the caption to the board's smallest legible size (9-10px) with font scaling on, letting the chip widen; re-check `signatureColumnHeight` keeps the column clear of the dice tray at 375; pin the size in the board test.
+- source: critique:drive (unattended)
 
 
 ### [LOW] rest / cache — "The node is spent the moment you stopped here" mixes present and past tense
@@ -741,14 +776,6 @@
 - suggested fix: a tiny guard job that fails loudly when `branch` is set but does not start with `loop/`; pass the branch through `env:` rather than inline `${{ }}` in the script.
 - source: antagonist, PR #526
 
-### [LOW] combat / footer dock — VITAE is announced twice, by the readout and by the bar
-- pass: antagonist on PR #529 (commit ce44dd8f)
-- viewport: n/a (screen reader)
-- category: accessibility
-- observation: `combat-rail-vitae` and the `progressbar` `combat-rail-vitae-bar` both carry `VITAE <hp> of <max>`, so swiping the dock reads the same line twice in a row.
-- evidence: `axiomancer-mobile/components/combat/encounter/CombatFooterDock.tsx` (`VitaeBar`, the `vitaeText` label).
-- suggested fix: keep the label on the progressbar (it also carries `accessibilityValue`) and hide the text readout from the reader (`importantForAccessibility="no"` / `accessibilityElementsHidden`), or the reverse.
-- source: antagonist, PR #529
 
 ### [LOW] docs — `plan/revamp/card-rules-inventory.md` §17 still says a Global is "unique in play"
 - pass: antagonist on PR #520 (GS1, commit fc4aa159)
@@ -1060,6 +1087,15 @@
 - suggested fix: when more than one instance of a card is in play, name the count in the label (for example "copy 2 of 2"); terse, presenter-only.
 - source: antagonist, PR #520
 - issue: #615
+### [x] [LOW] combat / footer dock — VITAE is announced twice, by the readout and by the bar — RESOLVED 2026-10-18 (branch loop/iterate-vitae-double-announce, 9d8fda0a: the text readout is hidden from the reader, the progressbar keeps the label and its value; pinned in CombatBoard.playtest-2026-09-04.test.tsx)
+- pass: antagonist on PR #529 (commit ce44dd8f)
+- viewport: n/a (screen reader)
+- category: accessibility
+- observation: `combat-rail-vitae` and the `progressbar` `combat-rail-vitae-bar` both carry `VITAE <hp> of <max>`, so swiping the dock reads the same line twice in a row.
+- evidence: `axiomancer-mobile/components/combat/encounter/CombatFooterDock.tsx` (`VitaeBar`, the `vitaeText` label).
+- suggested fix: keep the label on the progressbar (it also carries `accessibilityValue`) and hide the text readout from the reader (`importantForAccessibility="no"` / `accessibilityElementsHidden`), or the reverse.
+- source: antagonist, PR #529
+- issue: #611
 ### [x] [LOW] critique / transport — the mobile viewport emulates a mouse, so phone captures show the desktop map gesture line — RESOLVED 2026-10-17 (branch loop/iterate-critique-touch-context, 2fe330ad: `contextOptions(viewport)` gives the mobile context `hasTouch` and `isMobile`, desktop keeps the mouse; pinned in critique-drive.test.mjs; the mobile hub capture now reads "drag · pinch")
 - pass: 92 (commit c49902c7)
 - viewport: mobile (375x812)
