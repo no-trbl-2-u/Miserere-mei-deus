@@ -750,15 +750,6 @@
 - suggested fix: keep the label on the progressbar (it also carries `accessibilityValue`) and hide the text readout from the reader (`importantForAccessibility="no"` / `accessibilityElementsHidden`), or the reverse.
 - source: antagonist, PR #529
 
-### [LOW] combat / IN PLAY row — two copies of one Global give two chips with the same accessibility label
-- pass: antagonist on PR #520 (GS1, commit fc4aa159)
-- viewport: n/a (screen reader)
-- category: accessibility
-- observation: GS1 lets copies of a Global stack, and the chips are keyed by instance. Each chip's label is still `<name>, a Global in play for N more turn starts. Tap to read it.`, so two FREE copies played the same turn are announced the same way and a screen-reader user cannot tell there are two.
-- evidence: `globalsVM` in `axiomancer-mobile/state/presenters/combat-encounter.engine.ts`; the GS1 jest case renders two chips with the same `a11y`.
-- suggested fix: when more than one instance of a card is in play, name the count in the label (for example "copy 2 of 2"); terse, presenter-only.
-- source: antagonist, PR #520
-
 ### [LOW] docs — `plan/revamp/card-rules-inventory.md` §17 still says a Global is "unique in play"
 - pass: antagonist on PR #520 (GS1, commit fc4aa159)
 - viewport: n/a
@@ -1060,6 +1051,15 @@
 
 ## Done
 
+### [x] [LOW] combat / IN PLAY row — two copies of one Global give two chips with the same accessibility label — RESOLVED 2026-10-18 (branch loop/iterate-global-copy-label, d65ef6950: `globalsVM` names the copy, "copy 2 of 2", when one Global is in play more than once; a single copy keeps its label; pinned in CombatBoard.program-cards.test.tsx)
+- pass: antagonist on PR #520 (GS1, commit fc4aa159)
+- viewport: n/a (screen reader)
+- category: accessibility
+- observation: GS1 lets copies of a Global stack, and the chips are keyed by instance. Each chip's label is still `<name>, a Global in play for N more turn starts. Tap to read it.`, so two FREE copies played the same turn are announced the same way and a screen-reader user cannot tell there are two.
+- evidence: `globalsVM` in `axiomancer-mobile/state/presenters/combat-encounter.engine.ts`; the GS1 jest case renders two chips with the same `a11y`.
+- suggested fix: when more than one instance of a card is in play, name the count in the label (for example "copy 2 of 2"); terse, presenter-only.
+- source: antagonist, PR #520
+- issue: #615
 ### [x] [LOW] critique / transport — the mobile viewport emulates a mouse, so phone captures show the desktop map gesture line — RESOLVED 2026-10-17 (branch loop/iterate-critique-touch-context, 2fe330ad: `contextOptions(viewport)` gives the mobile context `hasTouch` and `isMobile`, desktop keeps the mouse; pinned in critique-drive.test.mjs; the mobile hub capture now reads "drag · pinch")
 - pass: 92 (commit c49902c7)
 - viewport: mobile (375x812)
