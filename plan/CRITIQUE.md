@@ -786,15 +786,6 @@
 - suggested fix: one engine read returning `{ block, shortfall }` per line, so the VM probes each line once.
 - source: antagonist, PR #523
 
-### [LOW] title / desktop — the menu rows (520px) overhang the 464px title plate, and the plate reads as a lit strip in a black field
-- pass: 79 (commit f2065459)
-- viewport: desktop (1280x800)
-- category: visual
-- observation: on a wide window `titleLayout` caps the plate at `height * 0.72 * PLATE_ASPECT` (464px at 800 tall), centred with feathered sides. The menu column under it is `MENU_COLUMN_MAX_WIDTH` 520, so NEW GAME, LOAD GAME and SETTINGS stick out about 28px past the art on each side, and the menu sits on flat black below the plate's foot. About two thirds of the screen is unbroken black around a narrow grey band.
-- evidence: `.critique-artifacts/desktop/02-onboarding.png` (rows 380-900, plate ~408-872); `01-title.png` (the band)
-- suggested fix: on a wide window, cap the embedded menu column at `min(MENU_COLUMN_MAX_WIDTH, layout.plate.width)` so the rows sit within the art (one value passed from TitleScreen to MainMenu's embedded mode); phone layout unchanged.
-- source: critique-drive (unattended)
-
 ### [LOW] RC2 walk 2026-10-11 — copy, feedback and consistency findings (one row per item, accepted for v0.2.0)
 - pass: RC2 walk, four `playtester` legs (attended, T present) on eb75f451 with the Blood Price test deck
 - viewport: playwright default (desktop)
@@ -1060,6 +1051,15 @@
 
 ## Done
 
+### [x] [LOW] title / desktop — the menu rows (520px) overhang the 464px title plate, and the plate reads as a lit strip in a black field — RESOLVED 2026-10-18 (branch loop/iterate-title-menu-plate, 529c70a5: `titleLayout` returns a `menu` band equal to the plate's and TitleScreen hosts the menu in it, so the rows sit within the art on a wide window; a phone keeps the full width; pinned in title.engine.test.ts and TitleScreen.test.tsx)
+- pass: 79 (commit f2065459)
+- viewport: desktop (1280x800)
+- category: visual
+- observation: on a wide window `titleLayout` caps the plate at `height * 0.72 * PLATE_ASPECT` (464px at 800 tall), centred with feathered sides. The menu column under it is `MENU_COLUMN_MAX_WIDTH` 520, so NEW GAME, LOAD GAME and SETTINGS stick out about 28px past the art on each side, and the menu sits on flat black below the plate's foot. About two thirds of the screen is unbroken black around a narrow grey band.
+- evidence: `.critique-artifacts/desktop/02-onboarding.png` (rows 380-900, plate ~408-872); `01-title.png` (the band)
+- suggested fix: on a wide window, cap the embedded menu column at `min(MENU_COLUMN_MAX_WIDTH, layout.plate.width)` so the rows sit within the art (one value passed from TitleScreen to MainMenu's embedded mode); phone layout unchanged.
+- source: critique-drive (unattended)
+- issue: #613
 ### [x] [LOW] critique / transport — the mobile viewport emulates a mouse, so phone captures show the desktop map gesture line — RESOLVED 2026-10-17 (branch loop/iterate-critique-touch-context, 2fe330ad: `contextOptions(viewport)` gives the mobile context `hasTouch` and `isMobile`, desktop keeps the mouse; pinned in critique-drive.test.mjs; the mobile hub capture now reads "drag · pinch")
 - pass: 92 (commit c49902c7)
 - viewport: mobile (375x812)
