@@ -132,7 +132,8 @@ select as `/hazard`). Act 1's live hazards are unchanged until T approves the de
   The screen-level drag controller and ghost move out of `app/hazard/index.tsx` into one shared hook or
   component that both screens use. A mobile test drives each move above through the board's callbacks.
 - **A21** (B3e2) The puzzle adds only: the clock, the reserve count, the stat-unlock line and the outcome. Each is
-  drawn with the live hazard palette (`components/hazard/palette.ts` `HZ`, `FONTS`, `HUE`). The outcome uses the
+  drawn with the live hazard palette: `HZ` and `TYPE_ACCENT` from `components/hazard/palette.ts`, `FONTS` and `HUE`
+  from `@/theme/axm`. The outcome uses the
   live `OutcomeOverlay` look (a puzzle VM fed to it, or a panel with its styles). Board pieces that mean nothing
   in one round show one round: one ledger mark, no momentum note, no multi-round threshold ladder.
 - **A22** (B3e2) The live `/hazard` screen is unchanged: `HazardBoard` gains only optional props (if any), the
