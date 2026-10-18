@@ -741,15 +741,6 @@
 - suggested fix: a tiny guard job that fails loudly when `branch` is set but does not start with `loop/`; pass the branch through `env:` rather than inline `${{ }}` in the script.
 - source: antagonist, PR #526
 
-### [LOW] combat / footer dock — VITAE is announced twice, by the readout and by the bar
-- pass: antagonist on PR #529 (commit ce44dd8f)
-- viewport: n/a (screen reader)
-- category: accessibility
-- observation: `combat-rail-vitae` and the `progressbar` `combat-rail-vitae-bar` both carry `VITAE <hp> of <max>`, so swiping the dock reads the same line twice in a row.
-- evidence: `axiomancer-mobile/components/combat/encounter/CombatFooterDock.tsx` (`VitaeBar`, the `vitaeText` label).
-- suggested fix: keep the label on the progressbar (it also carries `accessibilityValue`) and hide the text readout from the reader (`importantForAccessibility="no"` / `accessibilityElementsHidden`), or the reverse.
-- source: antagonist, PR #529
-
 ### [LOW] combat / IN PLAY row — two copies of one Global give two chips with the same accessibility label
 - pass: antagonist on PR #520 (GS1, commit fc4aa159)
 - viewport: n/a (screen reader)
@@ -1060,6 +1051,15 @@
 
 ## Done
 
+### [x] [LOW] combat / footer dock — VITAE is announced twice, by the readout and by the bar — RESOLVED 2026-10-18 (branch loop/iterate-vitae-double-announce, 9d8fda0a: the text readout is hidden from the reader, the progressbar keeps the label and its value; pinned in CombatBoard.playtest-2026-09-04.test.tsx)
+- pass: antagonist on PR #529 (commit ce44dd8f)
+- viewport: n/a (screen reader)
+- category: accessibility
+- observation: `combat-rail-vitae` and the `progressbar` `combat-rail-vitae-bar` both carry `VITAE <hp> of <max>`, so swiping the dock reads the same line twice in a row.
+- evidence: `axiomancer-mobile/components/combat/encounter/CombatFooterDock.tsx` (`VitaeBar`, the `vitaeText` label).
+- suggested fix: keep the label on the progressbar (it also carries `accessibilityValue`) and hide the text readout from the reader (`importantForAccessibility="no"` / `accessibilityElementsHidden`), or the reverse.
+- source: antagonist, PR #529
+- issue: #611
 ### [x] [LOW] critique / transport — the mobile viewport emulates a mouse, so phone captures show the desktop map gesture line — RESOLVED 2026-10-17 (branch loop/iterate-critique-touch-context, 2fe330ad: `contextOptions(viewport)` gives the mobile context `hasTouch` and `isMobile`, desktop keeps the mouse; pinned in critique-drive.test.mjs; the mobile hub capture now reads "drag · pinch")
 - pass: 92 (commit c49902c7)
 - viewport: mobile (375x812)
