@@ -223,7 +223,8 @@ keyword (`EnemyKeyword = never`).
   per route and optional stat unlocks. A solver counts the distinct ways
   through, and the library test holds each of the three demos
   (`HAZARD_PUZZLE_LIBRARY`) in its band (easy, medium, hard). The dev menu's
-  HAZARD PUZZLES board plays them under a per-band clock. The outcome pays XP,
+  HAZARD PUZZLES board plays them on the live hazard board (the same cards,
+  dice, drag and route select as a live hazard) under a per-band clock. The outcome pays XP,
   a modest consumable and a region material; full completion adds the purse,
   and falling short costs VITAE. Act 1's live hazards are unchanged; the
   puzzles reach the map only after T approves the demos.

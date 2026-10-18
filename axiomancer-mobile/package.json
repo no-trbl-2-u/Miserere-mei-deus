@@ -19,7 +19,7 @@
     "typecheck": "tsc --noEmit",
     "test": "jest",
     "test:watch": "jest --watch",
-    "verify": "npm run lint && npm run typecheck && npm test && npm run assets:check && npm run art:test && npm run critique-drive:test",
+    "verify": "npm run lint && npm run typecheck && npm test && npm run assets:check && npm run art:test && npm run critique-drive:test && npm run smoke:test",
     "verify:visual": "node scripts/smoke-screens.mjs",
     "e2e:hazard": "node scripts/hazard-e2e.mjs",
     "e2e:combat": "node scripts/combat-round-e2e.mjs",
@@ -48,6 +48,7 @@
     "art:qa": "node scripts/art/qa.mjs",
     "art:test": "node --test scripts/art.test.mjs scripts/shrink-art.test.mjs",
     "critique-drive:test": "node --test scripts/critique-drive.test.mjs",
+    "smoke:test": "node --test scripts/smoke-screens.test.mjs",
     "assets:acquire": "node scripts/acquire-art.mjs",
     "eas-build-on-success": "node scripts/sentry-release.mjs"
   },

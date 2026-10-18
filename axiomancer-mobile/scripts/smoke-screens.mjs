@@ -57,9 +57,14 @@ export const ROUTES = [
     { name: 'dialogue', path: '/exploration', fixture: 'apprentice-staged-dialogue', waitForPath: '/dialogue' },
     { name: 'village', path: '/exploration', fixture: 'wanderer-staged-village', waitForPath: '/village' },
     { name: 'cutscene', path: '/exploration', fixture: 'wanderer-staged-cutscene', waitForPath: '/cutscene' },
-    // Dev-menu HAZARD PUZZLES board (a dev route, so it needs the forced
-    // dev-tools context a fixture route gets): the hard demo's board, and
-    // its outcome panel after an immediate confirm.
+    // The live hazard on its board, the parity baseline for the puzzle
+    // board: the fixture's arrival starts the hazard (seed pinned by the
+    // minigame-seed injector), `hazardRoute` picks the route, and the shot
+    // waits out the dice roll.
+    { name: 'hazard-board', path: '/exploration', fixture: 'l30-bw-hazard-arrive', waitForPath: '/hazard', hazardRoute: 'risk' },
+    // Dev-menu HAZARD PUZZLES board on the live hazard board (a dev route,
+    // so it needs the forced dev-tools context a fixture route gets): the
+    // hard demo's board, and its outcome panel after an immediate confirm.
     { name: 'devpuzzle-board', path: '/devpuzzle?id=demo-undercroft-hard&route=risk&paused=1', fixture: 'fresh-start' },
     { name: 'devpuzzle-outcome', path: '/devpuzzle?id=demo-undercroft-hard&route=risk&confirm=1', fixture: 'fresh-start' },
 ]
@@ -112,6 +117,20 @@ export function pixelDiffRatio(width, height, diffPixelCount) {
 
 export function isOverThreshold(ratio, threshold = DIFF_THRESHOLD_RATIO) {
     return ratio > threshold
+}
+
+/**
+ * On the live hazard's route select: picks `hazardRoute` (`safe` or `risk`),
+ * then waits for the board to show and the dice roll to settle, so the shot
+ * is the board with its dice at rest.
+ *
+ * @param {import('playwright').Page} page the page, on `/hazard` at the route select.
+ * @param {'safe' | 'risk'} hazardRoute the route to pick.
+ */
+export async function pickHazardRoute(page, hazardRoute) {
+    await page.getByTestId(`hazard-route-${hazardRoute}`).click()
+    await page.getByTestId('hazard-board').waitFor({ state: 'visible', timeout: 10_000 })
+    await page.getByTestId('hazard-dice-roll').waitFor({ state: 'hidden', timeout: 10_000 })
 }
 
 // ---------------------------------------------------------------------------
@@ -309,6 +328,7 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl) {
             if (route.waitForPath) {
                 await target.waitForURL((u) => u.pathname.endsWith(route.waitForPath), { timeout: 15_000 })
             }
+            if (route.hazardRoute) await pickHazardRoute(target, route.hazardRoute)
             // Settle fonts + any deferred layout. The 600ms is empirical:
             // long enough for the @expo-google-fonts loaders to resolve,
             // short enough to keep the suite under a minute.
