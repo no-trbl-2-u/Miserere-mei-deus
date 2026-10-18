@@ -128,6 +128,24 @@
   - [ ] TEMPER: 0 cards; carried only by the anvil.
 - next: T's next card session (D37). BOON, HONE and TEMPER fail the bar because the atlas files them as Card keywords (the dice section) while no card prints them: T either moves them to Rule keywords or adds them to the bar's system exemptions (CONVICTION, RESERVE, WILD, PIP today). WAIVE needs a second carrier or a cut. Re-seed after.
 
+### [ ] [tests] Run the seeded review replay on the three-lens reviewer once RV1c is on `main` (2026-10-17)
+- category: tests
+- impact: 6
+- ease: 8
+- detail: phase RV1c (#610) shipped `node scripts/eval/seeded-replay.mjs
+  --judge review` and the three lenses in `skills/review.md`, but the
+  `review` job runs `main`'s copy of the skill (its `pre_run`), so neither
+  the fan-out nor its replay can be measured before T merges RV1c. The
+  seeded-review section of `docs/reports/eval/latest.md` reads "not
+  measured" until then. Once RV1c is on `main`: run the command (it pushes
+  eight `eval/*` branches, opens them as `eval:seed` drafts, dispatches
+  `pr-review.yml` on each, waits up to 35 min, then closes every PR and
+  deletes every branch), commit `docs/reports/eval/seeded.json` and
+  `latest.md`, and check `gh pr list --label eval:seed` is empty. This
+  also proves brief RV1 A7 and the RV1c Measure line (lens tags on a
+  verdict: read any medium or high `loop:pr` PR's verdict after the merge).
+- next: `/iterate` (a measurement run, plan-only diff under `docs/reports/`).
+
 ### [ ] [tooling] The guard's post-write lexicon check reports false findings in a worktree (2026-10-11)
 - category: tooling
 - impact: 4

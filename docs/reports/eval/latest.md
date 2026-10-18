@@ -207,6 +207,22 @@ CI path filters: 0 of 4 caught; verify, tests as they stood: 0 of 4 caught; veri
 
 <!-- eval:seeded:end -->
 
+<!-- eval:seeded-review:start -->
+
+## The shadow reviewer on planted defects (RV1c, A7)
+
+Not measured yet: `node scripts/eval/seeded-replay.mjs --judge review` has not run against the three-lens reviewer on `main`.
+
+Each seed is pushed as a draft `eval:seed` PR whose diff reverts its fix's source (the planted defect), and its fix as a second draft (the clean control). `pr-review.yml` is dispatched on each; a seed counts as flagged when a MED or HIGH row of the verdict names a planted line (within 3 lines of a hunk). Both PRs are closed and their branches deleted when the run ends. Thresholds: `docs/reports/pr-review-research.md` Part 4.
+
+| Measure | Pass | Value | Verdict |
+|---|---|---|---|
+| Planted defects flagged MED+ (D1-D4) | >= 3 of 4 | not measured | not measured |
+| Findings per clean control PR (the unplanted fix) | <= 1 MED+, 0 HIGH | not measured | not measured |
+| Run time, p90 of the four | <= 20 min | not measured | not measured |
+
+<!-- eval:seeded-review:end -->
+
 <!-- eval:mutation:start -->
 
 ## Mutation scores (EV1c, A5)
