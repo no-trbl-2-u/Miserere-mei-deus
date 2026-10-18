@@ -193,6 +193,8 @@ fields that already exist: XP, inventory, the scar flag and VITAE. No migration.
   - the salvage progress.
 
   Holding versus playing a card that adds nothing counts once. This is what the evidence table counted.
+  Superseded by `plan/phases/phase_HP1_hazard_cost_utility.md` A2 (2026-10-18): puzzles have no bin, and a
+  winning outcome counts only the cards that change the result.
 - **Bands are enforced on authored puzzles (T, solver test "Solvable + band").** This is a ruling on the
   "no count pin" doctrine (`axiomancer-mechanics/CLAUDE.md`): the band is a property of authored puzzle content,
   which T chose to enforce. It is not a balance target for combat or the run.
@@ -336,7 +338,7 @@ on `/devpuzzle`.
   the clock-expiry test kept; the live `HazardBoard` and `app/hazard` tests unchanged (A22).
 - Verify gate: mobile verify plus `verify:visual`.
 
-### B3f — Timed demo solves and the process lock (attended) · S · closes A17 · requires B3e, B3e2
+### B3f — Timed demo solves and the process lock (attended) · S · closes A17 · requires B3e, B3e2, HP1a, HP1b
 Measure: `docs/reports/hazard-puzzle-timing.md` exists with a median solve time and success rate per demo, the
 resulting clocks are in `HAZARD_PUZZLE_CLOCK_SECONDS`, and T's verdict is quoted.
 - Scope: the timing report; the three clock constants.

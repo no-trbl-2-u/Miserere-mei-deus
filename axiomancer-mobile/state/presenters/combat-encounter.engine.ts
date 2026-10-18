@@ -1722,19 +1722,31 @@ function handVM(state: CombatEncounterState): CombatCardVM[] {
         });
 }
 
-/** The Globals in play, each with its turns left and its card for the overlay. */
+/**
+ * The Globals in play, each with its turns left and its card for the overlay.
+ * Copies of one Global stack, so a card in play more than once names its copy
+ * ("copy 2 of 2") in the label, or a screen reader hears identical chips.
+ */
 function globalsVM(state: CombatEncounterState): CombatGlobalVM[] {
     const stats = state.player.baseStats;
-    return (state.program?.globals ?? []).map((g) => {
+    const globals = state.program?.globals ?? [];
+    const copies = new Map<string, number>();
+    for (const g of globals) copies.set(g.cardId, (copies.get(g.cardId) ?? 0) + 1);
+    const seen = new Map<string, number>();
+    return globals.map((g) => {
         const card = getCardById(g.cardId);
         const name = card?.name ?? g.cardId;
+        const nth = (seen.get(g.cardId) ?? 0) + 1;
+        seen.set(g.cardId, nth);
+        const total = copies.get(g.cardId) ?? 1;
+        const copy = total > 1 ? `, copy ${nth} of ${total}` : '';
         const turnsLabel = g.turnsLeft === null ? '∞' : `⏳${g.turnsLeft}`;
         const left = g.turnsLeft === null ? 'for the rest of combat' : `for ${g.turnsLeft} more turn start${g.turnsLeft === 1 ? '' : 's'}`;
         return {
             uid: g.uid, cardId: g.cardId, name, turnsLabel,
             stanceColor: STANCE_COLORS[card?.color ?? 'any'] ?? HUE.fallbackGrey,
             card: rewardCardVMs([g.cardId], stats)[0] ?? null,
-            a11y: `${name}, a Global in play ${left}. Tap to read it.`,
+            a11y: `${name}${copy}, a Global in play ${left}. Tap to read it.`,
         };
     });
 }
