@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-10-18 at commit 1a0e7b58
-> Pass count: 93
+> Last pass: 2026-10-18 at commit 757d79ff
+> Pass count: 94
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
@@ -734,6 +734,24 @@
 > findings: the cutscene still prints "· tap ·" to a mouse player, the
 > remainder #604 did not reach; and the CONVICTION caption under the
 > rune column's ◆ chip is 6px with font scaling off.
+
+> **[critique pass 94, 2026-10-18, commit 757d79ff] Unattended `/march`
+> tick.** `critique:drive` (`CRITIQUE_VIEWPORT=both`), full 11-screen
+> set: 22 captures, 0 nav trouble, 0 console/page errors. 15 commits
+> after pass 93: the cutscene pointer verbs (#621), the CONVICTION
+> caption (#618), the desktop title menu plate (#614), the Global copy
+> label (#616), the VITAE double announce (#612), the B3e2 live puzzle
+> UI (dev board, not in the set), RV1c and the HP1 plot. Confirmed
+> fixed: the cutscene reads "· continue ·" at both viewports, the
+> desktop title menu sits inside its plate, and the CONVICTION caption
+> under the rune column's chip is legible at both viewports. Checked and
+> not filed: the faint strokes across the hazard risk-route card are the
+> deliberate `Cracks` overlay (`RouteSelect.tsx`), and the threat rows'
+> "PHASE n · ATTACKS · N" is the 2026-10-07 resolution. Reconfirmed and
+> not re-filed: pass 89's "you stopped here" tense row (both rest
+> captures), the unfixtured exploration hub bouncing to the title, and
+> the mobile hazard strip's "CHOOSE TO PROC..." (pass 68 trade). Zero
+> fresh findings this pass.
 
 ## Pending
 
