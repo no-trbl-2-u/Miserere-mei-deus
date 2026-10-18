@@ -725,6 +725,13 @@
 - estimated phases: 1
 - conflicts: none. Plan and skill docs plus one lint rule, no game code or content. The Retro (`skills/march.md` §3 step 3) already allows the promotion, and this row just makes sure it happens.
 
+### [ ] [score 3.0] PR-body attribution lint: refuse a loop PR body or commit message carrying an attribution line or emoji
+- proposed: 2026-10-18, `/plot` B3e2 retro (lesson `harness-attribution-footer`, seen 2×)
+- trigger: the session harness's attribution reminder put a robot-emoji "Generated with" footer on PR #555 (iterate) and PR #619 (plot), against AGENTS.md rule 2; both were edited by hand after opening.
+- source signals: `plan/lessons.md` `harness-attribution-footer`; `skills/plot.md` §3 rule 6; `.claude/hooks/guard.mjs` already refuses such commit bodies, but nothing checks PR bodies.
+- proposed scope: 1 phase. A check in `scripts/pr-gate.mjs` (or a `pr-review.yml` step) that fails a `loop:pr` or `plot` PR whose body holds a "Generated with" line, an author trailer or an emoji, with a test.
+- conflicts: none; creates no content.
+
 ## Promoted
 
 Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_CANDIDATES_2026.md`.

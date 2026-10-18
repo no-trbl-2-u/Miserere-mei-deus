@@ -57,6 +57,16 @@ describe('title.engine', () => {
         expect(l.wordmark.width).toBeLessThanOrEqual(460);
     });
 
+    // Critique pass 79: at 1280x800 the 520pt menu column overhung the 464pt
+    // plate by about 28pt a side. The menu shares the plate's band.
+    it('keeps the menu within the plate on a wide window and full width on a phone', () => {
+        const wide = titleLayout({ width: 1280, height: 800, topInset: 0 });
+        expect(wide.menu).toEqual({ left: wide.plate.left, width: wide.plate.width });
+        expect(wide.menu.width).toBeLessThan(520);
+        const phone = titleLayout({ width: 390, height: 844, topInset: 47 });
+        expect(phone.menu).toEqual({ left: 0, width: 390 });
+    });
+
     it('starts the wordmark at the splash frame and rests it untransformed', () => {
         const l = titleLayout({ width: 390, height: 844, topInset: 0 });
         const f = titleWordmarkFrames(l, 300);

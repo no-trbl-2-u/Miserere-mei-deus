@@ -15,11 +15,17 @@
   goal alone sets the band, for example one safe layout gave goal 14 → 222 distinct winning outcomes,
   26 → 13, 30 → 2, 32 → 0. The table is in the braindump file.
 
+- B3e2 (T, attended session 2026-10-18): T played the B3e demo board and found it "nothing like" the live hazard
+  UI ("ewwww! gross! ... It has the same underlying mechanic as the regular hazard, but nothing like the UI/UX").
+  Root cause: A14 listed what the board shows but never required the live hazard components, and the B3e builder
+  chose tap buttons "with far less code" (commit `37e3712`). T chose "/plot reuse of live UI" via AskUserQuestion.
+
 ## Outcome
 
 A hazard can be played as a fixed, one-round puzzle: an authored layout of cards, dice, predetermined DRAW
 cards and stat unlocks, under a clock. A solver proves each layout is solvable and in its declared band, and
-three demo puzzles are playable from the dev menu. Act 1's live hazards are unchanged until T approves the demos.
+three demo puzzles are playable from the dev menu on the live hazard board (the same cards, dice, drag and route
+select as `/hazard`). Act 1's live hazards are unchanged until T approves the demos.
 
 ## Acceptance
 
@@ -108,10 +114,44 @@ three demo puzzles are playable from the dev menu. Act 1's live hazards are unch
   - per demo: the median solve time and the success rate;
   - the clocks that result (median × 1.5, rounded to 5 s), written into the A15 constants;
   - T's verdict, "lock the process" or "change X", in T's words.
+- **A18** (B3e2) The `/devpuzzle` board renders through the live hazard components: `HazardBoard`, `HazardCard`
+  and `HazardDie` from `components/hazard/`, the same ones `app/hazard/index.tsx` mounts. A presenter function
+  `selectHazardPuzzleViewModel` in `state/presenters/hazard-puzzle.engine.ts` maps a puzzle session and its layout
+  to the live `HazardViewModel`. No puzzle-only card, die, meter, hand or play-area component exists.
+- **A19** (B3e2) The route pick before the clock is the live `RouteSelect`, showing each route's goal from the
+  layout and its band.
+- **A20** (B3e2) Every engine move is reachable through the live board's interactions, and no other way:
+  - drag a hand card into the play area → `stageHazardPuzzleCard`;
+  - tap a staged card, or drag it out → `unstageHazardPuzzleCard`;
+  - drag a die onto a staged card of its colour (or gold) → `powerHazardPuzzleCard`;
+  - a utility card's apply (DRAW included, drawing from the reserve) → `applyHazardPuzzleCard`;
+  - drag a hand card onto the bin → `discardHazardPuzzleCard` (salvage);
+  - the board's resolve button, labelled CONFIRM → `confirmHazardPuzzle`; the clock's expiry does the same (A15);
+  - tap a hand card → the live `CardDetailOverlay`.
+
+  The screen-level drag controller and ghost move out of `app/hazard/index.tsx` into one shared hook or
+  component that both screens use. A mobile test drives each move above through the board's callbacks.
+- **A21** (B3e2) The puzzle adds only: the clock, the reserve count, the stat-unlock line and the outcome. Each is
+  drawn with the live hazard palette: `HZ` and `TYPE_ACCENT` from `components/hazard/palette.ts`, `FONTS` and `HUE`
+  from `@/theme/axm`. The outcome uses the
+  live `OutcomeOverlay` look (a puzzle VM fed to it, or a panel with its styles). Board pieces that mean nothing
+  in one round show one round: one ledger mark, no momentum note, no multi-round threshold ladder.
+- **A22** (B3e2) The live `/hazard` screen is unchanged: `HazardBoard` gains only optional props (if any), the
+  existing hazard component and presenter tests pass untouched, and the A24 live shot is the baseline both boards
+  are compared against.
+- **A23** (B3e2) The tap-button view is deleted: `components/hazard/puzzle/HazardPuzzleBoardView.tsx`, the
+  PLAY / BIN / POWER / APPLY / RETURN button copy in `hazard-puzzle.copy.ts`, and the button-only VM types
+  (`HazardPuzzleHandCardVM`, `HazardPuzzleStagedCardVM`, `HazardPuzzlePowerOptionVM`, `HazardPuzzleBoardVM`) and
+  their tests. A render test checks `/devpuzzle` shows no PLAY, BIN, POWER, APPLY or RETURN button.
+- **A24** (B3e2) Visual parity: `npm run verify:visual` gains a live `hazard-board` shot (the live hazard on its
+  board, after route pick and roll, booted from a fixture with the seed pinned), and the `devpuzzle-board` and
+  `devpuzzle-outcome` baselines are re-captured on the new board. The PR body shows `hazard-board` and
+  `devpuzzle-board` side by side. T merging the PR is the parity verdict.
 
 Measure: `npm run verify -w axiomancer-mechanics && npm run verify -w axiomancer-mobile` pass; the A7/A10 library
 test reports each demo's band, count and unlock subsets; the dev menu opens all three demos and finishes each one
-on web (`npm run verify:visual` shot of the board and the outcome panel).
+on web on the live hazard board (`npm run verify:visual`: the `hazard-board` and `devpuzzle-board` shots side by
+side, and the outcome panel).
 
 ## Scope (shared)
 
@@ -177,6 +217,18 @@ fields that already exist: XP, inventory, the scar flag and VITAE. No migration.
   (D37 holds) and reuse existing hazard copy (no new canon, Story canon rule).
 - **Clock placeholders** (A15) are not tuned; A17 sets them from measured solves.
 - **Slot:** anytime. It blocks no open row and fixes no live defect.
+- **B3e2: the puzzle feeds the live board a `HazardViewModel`** rather than forking `HazardBoard`. A field the
+  puzzle lacks takes its one-round value (`totalRounds` 1, `momentumNote` null, `deckCount` = reserve count,
+  `resolveLabel` CONFIRM). A puzzle need the VM cannot carry (the clock) is an optional `HazardBoard` slot prop
+  or sits outside the board on the screen; never a second board.
+- **B3e2: no dice-roll overlay.** Puzzle faces are authored, not rolled, so `DiceRollOverlay` is not shown and
+  the dice sit on the board when the clock starts. [T to confirm]
+- **B3e2: `/devpuzzle` is full-screen like `/hazard`**, not a scroll view; the demo list keeps its rows, drawn
+  in the hazard palette. The deep-link params (`?id`, `&route`, `&confirm=1`, `&paused=1`) stay for the shots.
+- **B3e2: the live hazard shot.** If no fixture lands on the live board deterministically, the phase adds one
+  (state fixtures are allowed under `docs/state-fixtures.md`); it never stubs the board.
+- **B3e2 slot:** asap. B3f's timed solves on the button board would set clocks for a UI the game will not ship,
+  so B3f requires B3e2.
 
 ## Tests matrix (shared intent; each phase lists its own)
 
@@ -204,7 +256,7 @@ Verify: <commands run, results>
 
 ## DoD
 
-A1–A17 ticked, each by the phase that closes it.
+A1–A24 ticked, each by the phase that closes it.
 
 ## Follow-ups (out of scope)
 
@@ -265,7 +317,26 @@ reports the three demos in their bands; a `verify:visual` shot shows a demo boar
 - Tests: the library test now runs on the demos; the mobile presenter, clock-expiry and dev-entry tests.
 - Verify gate: both workspaces plus `verify:visual`.
 
-### B3f — Timed demo solves and the process lock (attended) · S · closes A17 · requires B3e
+### B3e2 — The puzzle on the live hazard board · L · closes A18, A19, A20, A21, A22, A23, A24 · requires B3e
+Measure: `npm run verify -w axiomancer-mobile && npm run verify:visual`; the `hazard-board` and `devpuzzle-board`
+shots show the same cards, dice, hand dock and play area, and no PLAY / BIN / POWER / APPLY / RETURN button remains
+on `/devpuzzle`.
+- Scope: `state/presenters/hazard-puzzle.engine.ts` (`selectHazardPuzzleViewModel`, the button VMs removed),
+  `hazard-puzzle.copy.ts`, a shared drag controller and ghost lifted from `app/hazard/index.tsx`,
+  `components/hazard/puzzle/HazardPuzzleDemo.tsx` and `HazardPuzzleOutcomePanel.tsx` rebuilt on the live
+  components, `HazardPuzzleBoardView.tsx` deleted, `app/devpuzzle/index.tsx`, `scripts/smoke-screens.mjs` (the
+  `hazard-board` route), a state fixture if A24 needs one, the three baselines.
+- Not touched: mechanics (`World/Hazard/puzzle/` is complete), the live hazard store actions, `HAZARD_DECK`, card
+  or keyword definitions (D37), art (D37).
+- Consumers: `docs/dev-tools.md` (the board now uses the live drag controls); `docs/game-model.md` paragraph if it
+  names the buttons.
+- Save/schema: none.
+- Tests: presenter tests for `selectHazardPuzzleViewModel` (one-round fields, reserve count, CONFIRM label);
+  a `/devpuzzle` render test driving every A20 move through the board callbacks, and the no-button check (A23);
+  the clock-expiry test kept; the live `HazardBoard` and `app/hazard` tests unchanged (A22).
+- Verify gate: mobile verify plus `verify:visual`.
+
+### B3f — Timed demo solves and the process lock (attended) · S · closes A17 · requires B3e, B3e2
 Measure: `docs/reports/hazard-puzzle-timing.md` exists with a median solve time and success rate per demo, the
 resulting clocks are in `HAZARD_PUZZLE_CLOCK_SECONDS`, and T's verdict is quoted.
 - Scope: the timing report; the three clock constants.
