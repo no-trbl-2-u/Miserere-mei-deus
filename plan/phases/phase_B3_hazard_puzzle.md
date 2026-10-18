@@ -137,7 +137,7 @@ select as `/hazard`). Act 1's live hazards are unchanged until T approves the de
   live `OutcomeOverlay` look (a puzzle VM fed to it, or a panel with its styles). Board pieces that mean nothing
   in one round show one round: one ledger mark, no momentum note, no multi-round threshold ladder.
 - **A22** (B3e2) The live `/hazard` screen is unchanged: `HazardBoard` gains only optional props (if any), the
-  existing hazard component and presenter tests pass untouched, and the A23 live shot is the baseline both boards
+  existing hazard component and presenter tests pass untouched, and the A24 live shot is the baseline both boards
   are compared against.
 - **A23** (B3e2) The tap-button view is deleted: `components/hazard/puzzle/HazardPuzzleBoardView.tsx`, the
   PLAY / BIN / POWER / APPLY / RETURN button copy in `hazard-puzzle.copy.ts`, and the button-only VM types
