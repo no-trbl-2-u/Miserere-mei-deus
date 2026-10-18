@@ -57,7 +57,10 @@ describe('the route pick on the live RouteSelect (A19)', () => {
             { key: 'force', label: 'FOR', values: [13] },
             { key: 'escape', label: 'ESC', values: [14] },
         ]);
-        expect(vm.routeChoices[1].penaltyLabel).toBe('up to −12♥');
+        expect(vm.routeChoices.map((r) => [r.rewardLabel, r.penaltyLabel])).toEqual([
+            ['XP and a find; clear it for +12 shillings', 'up to −6♥'],
+            ['XP and a find; clear it for +32 shillings', 'up to −12♥'],
+        ]);
         expect(vm.routeChoices[1].ctaLabel).toBe('TAKE THE DROWNED DOOR ›');
     });
 
