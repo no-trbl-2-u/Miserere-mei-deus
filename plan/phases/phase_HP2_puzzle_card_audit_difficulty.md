@@ -50,10 +50,21 @@ times; and the puzzle bands use that measure, so the initial Act 1 puzzle set ca
 
   Unit tests use hand-built layouts whose numbers are worked out by hand in the test file. The solver budget
   still applies.
-- **A4** `/devpuzzle` keeps a dev-only move log for each attempt: layout id, route, solver name (typed once per
+- **A4** [x] (HP2c) `/devpuzzle` keeps a dev-only move log for each attempt: layout id, route, solver name (typed once per
   session), clock start, and each move with milliseconds since the start, ending with the confirm or expiry and
   the result. A COPY LOG control copies it as JSON. Production builds render no log and record nothing. A mobile
   test drives three moves and checks the JSON.
+
+  Proof: `state/presenters/hazard-puzzle-log.engine.ts` (the attempt reducers) and
+  `components/hazard/puzzle/HazardPuzzleLogPanel.tsx` (SOLVER, the attempt lines, COPY LOG, CLEAR), mounted by
+  `HazardPuzzleDemo` only when `isDevToolsEnabled()`. Tests:
+  `components/hazard/puzzle/__tests__/HazardPuzzleLog.test.tsx` — "logs three moves with milliseconds from the
+  clock start, and COPY LOG hands over the JSON" (the three-move JSON, and the clock start equal to the roll
+  settling, not the mount), "records the clock running out as the end of the attempt", "CLEAR empties the log",
+  "a production build renders no log and records nothing";
+  `state/presenters/__tests__/hazard-puzzle-log.engine.test.ts` (seven reducer cases);
+  `lib/__tests__/clipboard.test.ts` (the copy seam). Command:
+  `npm run verify -w axiomancer-mobile`.
 - **A5** `HAZARD_PUZZLE_CALIBRATION` holds 13 to 20 calibration entries, each a layout, the one route it is
   solved on, and a `heldOut` flag (3 to 5 held out). Every layout uses only pool cards, is Act 1, and is solvable
   on its route. Across the set each A3 feature takes at least four distinct values. Calibration entries are not
