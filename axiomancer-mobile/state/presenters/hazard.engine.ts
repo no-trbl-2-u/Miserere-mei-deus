@@ -42,6 +42,12 @@ export interface HazardDieVM {
     accessibilityLabel: string;
 }
 
+/** A die's latest reroll: `count` replays the tumble when it changes, `order` staggers it among that reroll's dice. */
+export interface HazardDieRoll {
+    count: number;
+    order: number;
+}
+
 export interface HazardCardVM {
     uid: string;
     cardId: string;

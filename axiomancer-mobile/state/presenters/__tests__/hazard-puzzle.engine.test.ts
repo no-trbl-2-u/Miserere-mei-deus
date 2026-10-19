@@ -2,14 +2,16 @@
  * Hazard puzzle board presenter (A14, A15, A18, A19, A21): the demo list, the
  * live route-select and board view models fed from a puzzle (one round), the
  * strip's clock and reserve count, the stat-unlock line, the clock
- * arithmetic and the outcome panel.
+ * arithmetic and the outcome panel. HP3b (A3): what a move did to the
+ * tray (rerolled and gained dice) and the roll record that replays a tumble.
  */
 
-import { describe, expect, it } from '@jest/globals';
+import { afterEach, beforeEach, describe, expect, it } from '@jest/globals';
 
 import {
     confirmHazardPuzzle,
     createHazardPuzzleSession,
+    applyHazardPuzzleCard,
     getHazardPuzzleLayout,
     HAZARD_PUZZLE_CLOCK_SECONDS,
     hazardPuzzleOutcome,
@@ -21,6 +23,8 @@ import {
     formatHazardPuzzleClock,
     hazardPuzzleClockExpired,
     hazardPuzzleClockFor,
+    nextHazardPuzzleDieRolls,
+    selectHazardPuzzleDiceChange,
     selectHazardPuzzleListVM,
     selectHazardPuzzleOutcomeVM,
     selectHazardPuzzleRouteSelectVM,
@@ -29,6 +33,7 @@ import {
     selectHazardPuzzleViewModel,
     tickHazardPuzzleClock,
 } from '../hazard-puzzle.engine';
+import { addRerollFixture, removeRerollFixture } from '@/test-utils/hazardPuzzleRerollFixture';
 
 const HARD = getHazardPuzzleLayout('demo-undercroft-hard');
 
@@ -206,5 +211,50 @@ describe('the outcome panel', () => {
         expect(vm.mark).toBe('O');
         expect(vm.rewards).toContain('+32 SHILLINGS');
         expect(vm.penalties).toEqual(['Nothing lost.']);
+    });
+});
+
+describe('the tray between two moves (HP3b A3)', () => {
+    beforeEach(() => {
+        addRerollFixture();
+    });
+    afterEach(removeRerollFixture);
+
+    function start() {
+        const layout = getHazardPuzzleLayout('fx-reroll-puzzle');
+        return createHazardPuzzleSession(layout, 'risk', []);
+    }
+
+    it('names the die a reroll turned, and gains none', () => {
+        const s0 = start();
+        // Hand c1 fx-reroll, c2 fx-gain-die, c3..c5 the hard demo's cards; dice d6 purple, d7 red, d8 blue.
+        const s1 = stageHazardPuzzleCard(s0, 'c1');
+        const s2 = applyHazardPuzzleCard(s1, 'c1');
+        expect(selectHazardPuzzleDiceChange(s1, s2)).toEqual({ rerolled: ['d6'], gained: [] });
+        expect(s2.board.dice.map((d) => d.kind)).toEqual(['gold', 'red', 'blue']);
+    });
+
+    it('names the die a gainDie added, and rerolls none', () => {
+        const s1 = stageHazardPuzzleCard(start(), 'c2');
+        const s2 = applyHazardPuzzleCard(s1, 'c2');
+        const change = selectHazardPuzzleDiceChange(s1, s2);
+        expect(change.rerolled).toEqual([]);
+        expect(change.gained).toHaveLength(1);
+        const gained = s2.board.dice.find((d) => d.id === change.gained[0]);
+        expect(gained).toMatchObject({ kind: 'purple', temporary: true });
+    });
+
+    it('a move that leaves the tray alone changes nothing', () => {
+        const s0 = start();
+        expect(selectHazardPuzzleDiceChange(s0, stageHazardPuzzleCard(s0, 'c3'))).toEqual({ rerolled: [], gained: [] });
+    });
+
+    it('the roll record counts each reroll per die and staggers a reroll in tray order', () => {
+        const empty = {};
+        expect(nextHazardPuzzleDieRolls(empty, [])).toBe(empty);
+        const one = nextHazardPuzzleDieRolls(empty, ['d6', 'd8']);
+        expect(one).toEqual({ d6: { count: 1, order: 0 }, d8: { count: 1, order: 1 } });
+        const two = nextHazardPuzzleDieRolls(one, ['d8']);
+        expect(two).toEqual({ d6: { count: 1, order: 0 }, d8: { count: 2, order: 0 } });
     });
 });
