@@ -65,7 +65,8 @@ export const ROUTES = [
     // Dev-menu HAZARD PUZZLES board on the live hazard board (a dev route,
     // so it needs the forced dev-tools context a fixture route gets): the
     // hard demo's board, and its outcome panel after an immediate confirm.
-    { name: 'devpuzzle-board', path: '/devpuzzle?id=demo-undercroft-hard&route=risk&paused=1', fixture: 'fresh-start' },
+    // The board opens with the live dice roll, so its shot waits it out.
+    { name: 'devpuzzle-board', path: '/devpuzzle?id=demo-undercroft-hard&route=risk&paused=1', fixture: 'fresh-start', settleRoll: true },
     { name: 'devpuzzle-outcome', path: '/devpuzzle?id=demo-undercroft-hard&route=risk&confirm=1', fixture: 'fresh-start' },
 ]
 
@@ -130,6 +131,16 @@ export function isOverThreshold(ratio, threshold = DIFF_THRESHOLD_RATIO) {
 export async function pickHazardRoute(page, hazardRoute) {
     await page.getByTestId(`hazard-route-${hazardRoute}`).click()
     await page.getByTestId('hazard-board').waitFor({ state: 'visible', timeout: 10_000 })
+    await settleDiceRoll(page)
+}
+
+/**
+ * Waits for a hazard board's opening dice roll to finish, so the shot is
+ * the board with its dice at rest (the live hazard and the puzzle board).
+ *
+ * @param {import('playwright').Page} page the page, on a hazard board.
+ */
+export async function settleDiceRoll(page) {
     await page.getByTestId('hazard-dice-roll').waitFor({ state: 'hidden', timeout: 10_000 })
 }
 
@@ -329,6 +340,10 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl) {
                 await target.waitForURL((u) => u.pathname.endsWith(route.waitForPath), { timeout: 15_000 })
             }
             if (route.hazardRoute) await pickHazardRoute(target, route.hazardRoute)
+            if (route.settleRoll) {
+                await target.getByTestId('hazard-board').waitFor({ state: 'visible', timeout: 10_000 })
+                await settleDiceRoll(target)
+            }
             // Settle fonts + any deferred layout. The 600ms is empirical:
             // long enough for the @expo-google-fonts loaders to resolve,
             // short enough to keep the suite under a minute.

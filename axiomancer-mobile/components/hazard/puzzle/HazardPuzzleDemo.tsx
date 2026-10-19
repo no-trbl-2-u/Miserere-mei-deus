@@ -7,6 +7,13 @@
  * live `HazardViewModel`), and only the outcome reaches the store
  * (`claimHazardPuzzle`).
  *
+ * The board opens like a live hazard: picking a route plays the live
+ * `DiceRollOverlay`, landing on the layout's own dice faces (after unlocks),
+ * and the clock starts only when the roll settles. A DRAW's cards join the
+ * hand with the live board's hand-entry animation, in reserve order. Both
+ * are presentation only: every face and card is the layout's, nothing is
+ * rolled or shuffled.
+ *
  * Board moves, all through the live board's own gestures (a puzzle has no
  * bin, so the board gets no discard handler and draws none):
  *  - drag a hand card into the play area → stage;
@@ -36,7 +43,7 @@ import {
 } from '@mechanics';
 
 import { HazardBoard } from '@/components/hazard/HazardBoard';
-import { CardDetailOverlay } from '@/components/hazard/HazardOverlays';
+import { CardDetailOverlay, DiceRollOverlay } from '@/components/hazard/HazardOverlays';
 import { RouteSelect } from '@/components/hazard/RouteSelect';
 import { useHazardDrag } from '@/components/hazard/useHazardDrag';
 import { useGameActions, useGameState } from '@/state/GameStoreProvider';
@@ -94,6 +101,9 @@ export function HazardPuzzleDemo({ initialId, initialRoute, autoConfirm, clockPa
     const [play, setPlay] = useState<Play | null>(null);
     const [outcome, setOutcome] = useState<HazardPuzzleOutcomeVM | null>(null);
     const [detailCard, setDetailCard] = useState<HazardCardVM | null>(null);
+    // The start key whose opening roll has settled; until it matches the
+    // board's key, the roll overlay plays and the clock holds.
+    const [rolledFor, setRolledFor] = useState<number | null>(null);
     const { drag, ghost } = useHazardDrag();
     // Never reused for the life of the screen: the clock remembers which key
     // it already expired for, so a key restarting at 1 after DONE would leave
@@ -130,7 +140,8 @@ export function HazardPuzzleDemo({ initialId, initialRoute, autoConfirm, clockPa
     );
 
     const seconds = play ? hazardPuzzleClockFor(play.layout, play.session.route) : 0;
-    const running = play !== null && play.session.phase === 'playing' && !clockPaused;
+    const rolling = play !== null && play.session.phase === 'playing' && rolledFor !== play.startKey;
+    const running = play !== null && play.session.phase === 'playing' && !rolling && !clockPaused;
     const remaining = useHazardPuzzleClock(seconds, running, play?.startKey ?? 0, () => finish(true));
 
     useEffect(() => {
@@ -184,6 +195,15 @@ export function HazardPuzzleDemo({ initialId, initialRoute, autoConfirm, clockPa
                         />
                     ) : null}
                 </View>
+                {rolling && vm.routeKey !== null ? (
+                    <DiceRollOverlay
+                        key={play.startKey}
+                        dice={vm.dice}
+                        routeLabel={vm.routeLabel}
+                        routeKey={vm.routeKey}
+                        onDone={() => setRolledFor(play.startKey)}
+                    />
+                ) : null}
                 {detail}
                 {ghost}
             </View>

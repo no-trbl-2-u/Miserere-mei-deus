@@ -8,7 +8,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { ROUTES, pickHazardRoute } from './smoke-screens.mjs'
+import { ROUTES, pickHazardRoute, settleDiceRoll } from './smoke-screens.mjs'
 
 /** A page stand-in that records every locator call in order. */
 function fakePage() {
@@ -49,4 +49,15 @@ test('pickHazardRoute clicks the route, then waits for the board and for the rol
         ['waitFor', 'hazard-board', 'visible'],
         ['waitFor', 'hazard-dice-roll', 'hidden'],
     ])
+})
+
+test('the devpuzzle board shot waits out the opening roll; the outcome shot does not need to', () => {
+    assert.equal(ROUTES.find((r) => r.name === 'devpuzzle-board').settleRoll, true)
+    assert.equal(ROUTES.find((r) => r.name === 'devpuzzle-outcome').settleRoll, undefined)
+})
+
+test('settleDiceRoll waits for the roll overlay to hide', async () => {
+    const page = fakePage()
+    await settleDiceRoll(page)
+    assert.deepEqual(page.calls, [['waitFor', 'hazard-dice-roll', 'hidden']])
 })
