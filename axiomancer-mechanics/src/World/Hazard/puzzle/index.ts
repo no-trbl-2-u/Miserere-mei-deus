@@ -58,6 +58,17 @@ export {
     hazardPuzzleLibraryUse,
 } from './hazard-puzzle.audit';
 
+export type { HazardPuzzleDominance, HazardPuzzleLibraryCell } from './hazard-puzzle.dominance';
+export {
+    hazardPuzzleCellHolds,
+    hazardPuzzleCellLabel,
+    hazardPuzzleDominatedCards,
+    hazardPuzzleLibraryCardIds,
+    hazardPuzzleLibraryCells,
+    hazardPuzzleUnusedCards,
+    swapHazardPuzzleCard,
+} from './hazard-puzzle.dominance';
+
 export type { HazardPuzzleRouteAudit } from './hazard-puzzle.band';
 export { hazardPuzzleBandOf, auditHazardPuzzleRoute, auditHazardPuzzleLayout } from './hazard-puzzle.band';
 
