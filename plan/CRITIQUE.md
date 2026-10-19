@@ -2402,7 +2402,9 @@
   landing there to file a matching `plan/CRITIQUE.md` row in the same commit;
   (b) teach `/iterate` (or `/march`'s triage step) to sweep
   `*/docs/reports/*.md` for unfiled findings; (c) accept that reports are
-  human-only artefacts and route them through `/jot`. Until one is chosen,
+  human-only artefacts and route them through `/jot`.
+  **T ruled 2026-10-19: (b)**, the loop sweeps `*/docs/reports/*.md` for unfiled findings
+  (Phase RS1). Until one is chosen,
   the next hand-written report will go the same way.
 - source: loop (burn-day sweep)
 

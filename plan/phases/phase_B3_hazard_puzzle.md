@@ -183,7 +183,7 @@ fields that already exist: XP, inventory, the scar flag and VITAE. No migration.
 - **RE-CAST is excluded from puzzles, not deleted.** T ruled to cut RE-CAST cards, the saved hazard deck and its
   screens, and the `deadcard` consequence. The live Act 1 hazards still use all of them, so the cuts land with the
   Act 1 rollout (Follow-ups), once T approves the demos (T: "Not until we lock in on the process").
-  [T to confirm]
+  (T confirmed 2026-10-19)
 - **DRAW keeps its card text and amounts** and draws from the layout's reserve (T).
 - **"Distinct winning outcome"** = a distinct end state of a cleared resolve:
   - the multiset of staged cards with their powered flag;
@@ -224,7 +224,10 @@ fields that already exist: XP, inventory, the scar flag and VITAE. No migration.
   `resolveLabel` CONFIRM). A puzzle need the VM cannot carry (the clock) is an optional `HazardBoard` slot prop
   or sits outside the board on the screen; never a second board.
 - **B3e2: no dice-roll overlay.** Puzzle faces are authored, not rolled, so `DiceRollOverlay` is not shown and
-  the dice sit on the board when the clock starts. [T to confirm]
+  the dice sit on the board when the clock starts. Superseded 2026-10-19 by T's illusion rule: "I still want
+  to provide the ILLUSION that there's randomness (ie. dice, card draw, reroll). But everything is scripted."
+  The board plays the live roll, draw and reroll animations landing on the layout's scripted results
+  (Phase HP3).
 - **B3e2: `/devpuzzle` is full-screen like `/hazard`**, not a scroll view; the demo list keeps its rows, drawn
   in the hazard palette. The deep-link params (`?id`, `&route`, `&confirm=1`, `&paused=1`) stay for the shots.
 - **B3e2: the live hazard shot.** If no fixture lands on the live board deterministically, the phase adds one

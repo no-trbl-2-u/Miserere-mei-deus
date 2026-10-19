@@ -770,6 +770,8 @@ Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_
 
 ## Rejected
 
+- Card evolution (cards that grow or specialise over a run), the pre-revamp `[needs-user-call]` row: retired by
+  T on 2026-10-19. It predates the reset and THE CARD HOLD (D37); T can raise it again in a card session.
 - Re-anchor spec.md and VISION.md to the post-refactor product: moot
   (R10b2, 2026-10-02), since R10b rewrote `spec.md`, VISION.md and the
   doctrine against the post-revamp game (2a79e596).
@@ -922,34 +924,6 @@ re-sorts this section at R11.
   URL with query params; no token needed on-device). Keep it out of
   production builds.
 - parked: until B10 (dev menu revamp), after RC. Moved here via /oversight 2026-09-28; `/expand` does not re-file it.
-
-### Card evolution (`[needs-user-call]` — UNPARKED, ruled design-now via /oversight 2026-08-10)
-- source: `archive-pre-revamp:plan/archive/2026-09-25-trim-t4/plan/tuning/2026-07-11-card-library-improvement-plan.md` §2
-  ("Deliberately deferred / parked", GPT rec 3). That doc says the item
-  is "parked as a phase candidate," but no row existed here — the
-  oversight standing sweep only drains what's in this file, so the park
-  was invisible. Pointer restored as oversight-session residue
-  2026-07-18.
-- shape: doctrine-shaped card growth — a card's FREE-line evolution /
-  PAID specialization / cost-consequence fork; fits
-  rank-as-epistemic-maturity. Needs a card-INSTANCE state schema
-  (collection persistence, editor support, `GAME_STATE_VERSION`
-  migration) — a full phase, and per the source doc worthless until the
-  library/preset foundation settles (starter trim + scoreCard-v2 retune
-  + D-FLIP/D8 first).
-- status: **UNPARKED (2026-08-10).** Phase 39 (curve repair + theme
-  symmetry) shipped, firing this row's own unpark trigger; per its own
-  standing rule the next `/oversight` was obligated to re-ask design-now
-  vs. drop. **Ruled: design now** (T via /oversight 2026-08-10).
-  Not yet promoted to a build-plan phase — the shape ("doctrine-shaped
-  card growth... needs a card-INSTANCE state schema") is not concrete
-  enough for a brief. Next: a dedicated design session (brainstorm on
-  the FREE-line evolution / PAID specialization / cost-consequence-fork
-  shape, and the card-instance schema it needs) before this promotes.
-  Note the V-sequence (visual redesign) and the whole-product pivot are
-  currently consuming design bandwidth — sequence this session
-  accordingly rather than displacing them.
-- parked: until B6 (card sessions); legacy `[needs-user-call]` parked by T via /oversight 2026-09-28, after RC. Moved here via /oversight 2026-09-28; `/expand` does not re-file it.
 
 ### [score 3.0] RAGE_UNLOCK_ROUND's self-heal escalation is unreachable — every roster enemy is authored, so the qualitative "punish attrition" phase never fires in a real fight
 - proposed: 2026-09-20, `/adjust-enemies` pass 14 (Step 1b widened KB audit)

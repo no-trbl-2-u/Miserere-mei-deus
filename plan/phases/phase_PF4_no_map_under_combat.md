@@ -99,7 +99,7 @@ Not an R-phase. None.
 - **The camera re-fits on return.** `MapCanvas` keeps its camera in local
   shared values, so a pan the player made before the fight is not kept;
   the fit on the player's node is what a fresh visit shows, and after a
-  fight the player is standing on that node. `[T to confirm]`
+  fight the player is standing on that node. (T confirmed 2026-10-19)
 - **Not a separate route.** Moving live combat to its own
   `fullScreenModal` like hazard would also work, but it moves the
   encounter state machine, the prelude/aftermath flow and the resume

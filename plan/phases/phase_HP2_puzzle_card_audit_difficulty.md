@@ -37,7 +37,7 @@ times; and the puzzle bands use that measure, so the initial Act 1 puzzle set ca
 
   A unit test checks the grouping on fixture cards.
 - **A2** `HAZARD_PUZZLE_CARD_POOL` in the puzzle tuning module lists the cards puzzles may use: the A1
-  recommendation as T merges it (T's merge of the HP2a PR is the D37 ruling; T may edit the list in review).
+  recommendation as T merges it (T's merge of the HP2a PR is the D37 ruling; T may edit the list in review; T confirmed 2026-10-19).
   `validateHazardPuzzleLayout` rejects a hand, reserve or unlock card outside the pool. A test checks that no two
   pool cards fall in one A1 group. `HAZARD_DECK` and the live hazard are unchanged.
 - **A3** The solver reports five difficulty features per layout and route, in `npm run puzzle:report` and a typed
@@ -108,12 +108,12 @@ None. Logs are files in `docs/reports/`, not save data.
 - **Pooled solvers** (T): T's and the agent's times are pooled for the fit. The report also lists each solver's
   numbers separately, so a gap between them is visible.
 - **The bar is ρ ≥ 0.7** (T), and the held-out entries must all land in their predicted band. A "simple
-  combination" is the mean of two features' ranks; nothing fancier is fitted on 10 to 15 points.
+  combination" is the mean of two features' ranks; nothing fancier is fitted on 10 to 15 points (T confirmed 2026-10-19).
 - **Thresholds come from T in the session:** T says where median solve time splits easy, medium and hard; the
   thresholds on the measure follow from the training entries.
 - **Calibration puzzles are content the loop authors** under D88, with pool cards and existing hazard copy only,
   as B3 ruled for the demos. They are tools, not shipped puzzles.
-- **The clock is hidden or 300 s during calibration**, so time pressure doesn't cut a solve short.
+- **The clock is hidden or 300 s during calibration**, so time pressure doesn't cut a solve short (T confirmed 2026-10-19).
 - **Slot:** anytime. It blocks no open row and fixes no live defect; the initial Act 1 puzzle set is a later
   `/plot` that builds on it.
 

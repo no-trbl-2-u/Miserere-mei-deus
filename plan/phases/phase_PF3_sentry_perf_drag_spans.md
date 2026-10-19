@@ -90,8 +90,8 @@ Not an R-phase. None.
 - **Sample rate 1.0 on preview.** Only T and testers run preview APKs, so
   volume is small and every drag is worth seeing. If the Sentry free
   tier's span quota becomes a problem, lowering the constant is the
-  fix; record that in the commit body. `[T to confirm]` the rate after
-  the first week of data.
+  fix; record that in the commit body. T confirmed 1.0 on 2026-10-19
+  after the first week; lower it only if Sentry warns about quota.
 - **No profiling, no in-app perf log.** T's choice, 2026-10-14.
 - **Span kinds from the payload.** A card drag from the hand is
   `hand-to-play`, a card drag from play is `play-to-hand`, a die drag is

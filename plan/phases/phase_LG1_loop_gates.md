@@ -90,16 +90,16 @@ None. `docs/reports/critique/passes.jsonl` is a new append-only report file, not
 - **The ruleset is not a phase** (D94): `plan/NEEDS_T.md` `verify-gate-ruleset` stays T's.
 - **Acceptance proof format:** a backticked existing path or a backticked `npm`, `node` or `npx` command; or
   `(no test: <reason>)`. The opt-out keeps doc-only and attended lines honest without a fake test; the summary
-  shows each one so T sees them.
+  shows each one so T sees them (T confirmed 2026-10-19).
 - **Guard tests:** a `guard-test:` comment with a reason opts a file out of fail-on-parent; some tests pass on the
-  parent by design (they pin behaviour that already holds).
-- **Critique record path:** `docs/reports/critique/passes.jsonl`, append-only, one line per pass.
+  parent by design (they pin behaviour that already holds) (T confirmed 2026-10-19).
+- **Critique record path:** `docs/reports/critique/passes.jsonl`, append-only, one line per pass (T confirmed 2026-10-19).
 - **The judge runs only what A3 names**, on the PR head, inside the job's time limit; it never edits the PR.
 - **Mutation is report-only** and never fails a check: its scores have no baseline per diff yet.
 - **Android is attended** because each run spends EAS build minutes and needs T to approve the first run. It uses
   a KVM-capable GitHub runner and a pinned emulator action; if no runner in the repo's plan supports KVM, the
   phase records that in `docs/reports/android-smoke.md` and stops at a workflow that runs on T's device via `adb`
-  instead.
+  instead (T confirmed 2026-10-19).
 - **Slot:** anytime. These fix the loop's merge gates, not a live game defect, and block no open row.
 
 ## Tests matrix (shared intent; each phase lists its own)

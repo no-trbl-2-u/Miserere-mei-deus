@@ -83,7 +83,7 @@ cases pass; a `verify:visual` shot of the callout at low VITAE.
   "why was that refused" (T's ask).
 - The engine owns the number (A1); mobile never computes cost minus
   VITAE (mobile AGENTS rule: no rules in presenters).
-- The look in A3 is the leading option and is marked [T to confirm];
+- The look in A3 is the leading option (T confirmed 2026-10-19);
   ship it and T judges it in the PR.
 - Requires PR #516 merged, because the refusal paths come from it.
 

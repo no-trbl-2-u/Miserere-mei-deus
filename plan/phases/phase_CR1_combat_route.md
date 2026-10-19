@@ -166,7 +166,8 @@ Not an R-phase. None.
   legacy. "Testing around what used to be there" means route-level and
   script-level sandbox tests (A6). The panel and board unit suites that
   build a fight from `state/mocks/combat.mock.ts` test live code and
-  stay. `[T to confirm]`
+  stay for now. T ruled 2026-10-19: replace them with tests that start from a
+  real encounter (a fixture save), then delete the mock (Phase CT1).
 - **`inCombat` stays.** `enterCombat` / `exitCombat` still drive the
   Android back lock and the run's `encountersFaced`; only the overlay's
   `inEncounterModal` family goes.

@@ -53,12 +53,13 @@ either line paired with DRAW, CONVERT, +1 die or a reroll to layout-set faces, r
   B3 outcome function handles p = 0 from a negative total. Tests use fixture cards with a cost on the free line,
   the powered line and both.
 - **A7** A new utility effect `gainDie` adds dice when the card is applied: `gainDieBase` dice unpowered and
-  `gainDiePowered` when a die powers the card (both default 1), of colour `gainDieKind` (default the card's own
-  colour), as temporary dice like the mana salvage die. A gold card's `majorEffect` uses the powered amount. Tests
-  cover each case.
+  `gainDiePowered` when a die powers the card, of colour `gainDieKind`, as temporary dice like the mana salvage die.
+  There are no defaults (T, 2026-10-19): a `gainDie` card must declare all three, and the card validator rejects
+  one that doesn't. A gold card's `majorEffect` uses the powered amount. Tests cover each case.
 - **A8** A new utility effect `reroll` turns available dice into the layout's next `rerollFaces` (a new optional
-  `HazardPuzzleLayout` field, consumed in order like the reserve): one die unpowered (the first available, in die
-  order), every available die when powered or `majorEffect`. When the faces run out, the remaining dice keep
+  `HazardPuzzleLayout` field, consumed in order like the reserve). How many dice it touches is per card, with no
+  default (T, 2026-10-19): `rerollBase` dice unpowered and `rerollPowered` when powered (or under `majorEffect`),
+  taken in die order; the card validator rejects a `reroll` card missing either. When the faces run out, the remaining dice keep
   their face. `validateHazardPuzzleLayout` rejects a layout that holds a `reroll` card and declares no
   `rerollFaces`. RE-CAST stays rejected (B3 A4). No RNG is read (B3 A2); the determinism test replays a reroll
   line twice.
@@ -71,6 +72,19 @@ either line paired with DRAW, CONVERT, +1 die or a reroll to layout-set faces, r
 - **A10** No card and no keyword is added: `HAZARD_DECK`, `HAZARD_KEYWORDS` and the glossary are unchanged.
   Fixture cards live in a test-only module and are removed from the deck after each test. The live hazard
   suites (`hazard.engine.test.ts`, `hazard.balance.sim.test.ts`) pass untouched.
+- **A11** A paid cost needs a second benefit (T, 2026-10-19: "Free = lose progress + extra die now that makes
+  sense. But paid would need another utility based benefit"). A card whose powered line carries a cost (a
+  negative `fp` or `ep`) must declare `poweredEffect`, a second utility that fires only when a die powers the
+  card, on top of its `effect`. The card validator rejects such a card without one. `applyHazardCard` fires
+  `poweredEffect` after `effect` on a powered card. Tests cover a free cost card, a powered cost card with and
+  without `poweredEffect`.
+- **A12** An automatic worse-copy test (T, 2026-10-19). A library test fails, naming the cards, when:
+  - a card in `HAZARD_PUZZLE_LIBRARY` is `unused` (A3) in every layout and route that holds it; or
+  - a card X is dominated by a card Y: in every library layout and route holding X, swapping X for Y keeps at
+    least as many winning outcomes, and in at least one it gives strictly more.
+
+  Fixture tests show a cost card that is an existing card plus a cost being flagged, and two cards with equal
+  results not being flagged. If a current demo fails, the demo is re-authored (existing cards only).
 
 Measure: `npm run verify -w axiomancer-mechanics && npm run verify -w axiomancer-mobile` pass; the library test
 reports every demo in band with no bin; `npm run puzzle:report -w axiomancer-mechanics` prints the per-card
@@ -103,15 +117,17 @@ None. Puzzle sessions are not saved; no save field changes; no migration.
 - **No bin in puzzles; the live hazard keeps it** (T). The live three-round hazard goes away at the Act 1
   rollout (B3 Follow-ups), so it is not edited now.
 - **Signed, never clamped** (T). A cost can't be dodged by playing into an empty meter.
-- **Reroll is to layout-set faces** (T), the reserve's model for dice. Minor = one die, major = all, matching
-  CONVERT's minor and major.
-- **`gainDie` defaults** (1 die, the card's own colour, temporary) are engine defaults; T's card session sets
-  real values per card. A gold card's `majorEffect` uses the powered amount, as gold DRAW does.
+- **Reroll is to layout-set faces** (T), the reserve's model for dice. The count is per card (A8), no default.
+- **`gainDie` has no defaults** (T, 2026-10-19); each card declares count and colour (A7). A gold card's
+  `majorEffect` uses the powered amount, as gold DRAW does.
+- **The illusion of randomness** (T, 2026-10-19): "I still want to provide the ILLUSION that there's randomness
+  (ie. dice, card draw, reroll). But everything is scripted." Draws, rerolls and gained dice resolve from the
+  layout; the board animates them like live play (Phase HP3).
 - **Outcome = what is played** (A2). Held cards are not part of an outcome now that nothing can be binned; this
   replaces B3's "holding versus playing a card that adds nothing counts once" with a definition that also covers
   cost cards.
-- **"No card strictly worse than another in every layout"** (T's success metric) is read by T from the A3
-  report's `unused` column across layouts; it is not a test, because there are no real cost cards to test yet.
+- **"No card strictly worse than another in every layout"** is an automatic test now (T, 2026-10-19; A12), on the
+  library as it stands and on fixture cost cards.
 - **No keyword for `gainDie` or `reroll`.** Keywords are owner-only (D37); T adds them with the first real card.
   Until then the effects have no glossary entry and no card carries them.
 - **Bands stay** easy 30+, medium 5-29, hard 1-4 with surplus ≤ 1 (B3 A8). The demos move to fit the bands, not
@@ -143,7 +159,7 @@ Verify: <commands run, results>
 
 ## DoD
 
-A1–A10 ticked, each by the phase that closes it.
+A1–A12 ticked, each by the phase that closes it.
 
 ## Follow-ups (out of scope)
 
@@ -178,7 +194,7 @@ Measure: `npm run verify -w axiomancer-mobile`; the board test shows no bin on `
 - Tests: the puzzle board test; the live `HazardBoard` tests unchanged.
 - Verify gate: mobile verify plus `verify:visual`.
 
-### HP1c — Signed costs, +1 die, reroll to set faces · M · closes A6, A7, A8, A9, A10 · requires HP1a
+### HP1c — Signed costs, +1 die, reroll to set faces · M · closes A6, A7, A8, A9, A10, A11 · requires HP1a
 Measure: `npm run verify -w axiomancer-mechanics`; the A9 tests show a required cost-DRAW card and an unused
 both-lines cost card.
 - Scope: `hazard.types.ts`, `hazard.engine.ts` (`applyHazardCard`), puzzle types and validate
@@ -186,5 +202,12 @@ both-lines cost card.
 - Consumers: the barrel; `docs/game-model.md` (the effects exist, carried by no card yet).
 - Save/schema: none.
 - Tests: `puzzle/e2e/hazard-puzzle.costs.engine.test.ts` (signed values, `gainDie`, `reroll`, determinism, the
-  A9 cases); the live hazard suites unchanged (A10).
+  A9 cases, the A11 paid-cost rule); the live hazard suites unchanged (A10).
 - Verify gate: mechanics verify plus the mobile type-check.
+
+### HP1d — The worse-copy test · S · closes A12 · requires HP1c
+Measure: `npm run verify -w axiomancer-mechanics`; the library test fails a fixture card that is an existing card
+plus a cost, and passes the current library (re-authored if needed).
+- Scope: the library test, a dominance helper beside the solver report, demos only if one fails.
+- Tests: fixture dominated card flagged; equal cards not flagged; the real library.
+- Verify gate: mechanics verify.
