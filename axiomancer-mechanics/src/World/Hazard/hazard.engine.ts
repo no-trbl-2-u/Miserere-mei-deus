@@ -222,13 +222,13 @@ export function finishHazardRolling(s: HazardSessionState): HazardSessionState {
 }
 
 // ---------------------------------------------------------------------------
-// Card effects (draw / re-cast / convert)
+// Card effects (draw / re-cast / convert / gain die / reroll)
 // ---------------------------------------------------------------------------
 
 /**
  * Fires a card's utility once, in full, at the appropriate tier. The
  * effect now fires on APPLY (not on stage/power), so this draws / recasts
- * / converts the WHOLE amount for the tier rather than a powered delta.
+ * / converts / adds dice / rerolls to set faces for the WHOLE amount for the tier rather than a powered delta.
  * `major` is true when a die is attached OR the card is a gold
  * `majorEffect` card (utility-first — always major, the die buys numbers).
  */
@@ -302,6 +302,34 @@ function applyUtilityEffect(
         }
         void convertedCount;
         return { ...s, dice, rng, uidCounter: uc };
+    }
+    if (def.effect === 'gainDie') {
+        const n = major ? (def.gainDiePowered ?? 1) : (def.gainDieBase ?? 1);
+        const kind = def.gainDieKind ?? def.kind;
+        let rng = s.rng;
+        let uc = s.uidCounter;
+        const added: HazardDie[] = [];
+        for (let i = 0; i < n; i++) {
+            const extra = rollManaDie(rng, uc, kind);
+            rng = extra.rng;
+            uc = extra.uidCounter;
+            added.push(extra.value);
+        }
+        return { ...s, dice: [...s.dice, ...added], rng, uidCounter: uc };
+    }
+    if (def.effect === 'reroll') {
+        // Minor turns the first available die, major every available die,
+        // each to the next of the session's set faces. No die is rolled;
+        // once the faces run out the rest keep their face.
+        const faces = (s.rerollFaces ?? []).slice();
+        let budget = major ? Infinity : 1;
+        const dice = s.dice.map((d) => {
+            if (d.state !== 'available' || budget <= 0) return d;
+            budget -= 1;
+            const face = faces.shift();
+            return face === undefined ? d : { ...d, kind: face };
+        });
+        return { ...s, dice, rerollFaces: faces };
     }
     return s;
 }

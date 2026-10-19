@@ -55,6 +55,11 @@ export interface HazardPuzzleLayout {
     reserve: string[];
     /** Authored die faces; `hex` is the blank face. */
     dice: HazardDieKind[];
+    /**
+     * Faces a `reroll` card turns dice to, consumed in order like the
+     * reserve. Required when the layout holds a `reroll` card.
+     */
+    rerollFaces?: HazardDieKind[];
     goals: HazardPuzzleGoals;
     bands: Record<HazardRouteKey, HazardPuzzleBand>;
     unlocks: HazardPuzzleUnlock[];

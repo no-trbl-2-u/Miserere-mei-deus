@@ -6,7 +6,7 @@
  * is what the player played, read off the board after confirm:
  *  - the multiset of staged cards that change the result (a non-zero
  *    value, a die, or a utility), each with its powered flag;
- *  - the reserve left;
+ *  - the reserve and the reroll faces left;
  *  - the available dice.
  * Move order is not counted, and a card held in hand is not part of the
  * outcome. A staged card that changes nothing (unpowered, no utility, adds
@@ -88,7 +88,8 @@ function boardKey(b: HazardSessionState): string {
         b.play.map((p) => `${p.cardId}:${p.dieId ? dieKind.get(p.dieId) : '-'}:${p.applied ? 'a' : ''}`),
     );
     const dice = sortedJoin(b.dice.filter((d) => d.state === 'available').map((d) => d.kind));
-    return `${hand}|${play}|${dice}|${b.drawPile.length}|${b.progressBase.force}/${b.progressBase.escape}`;
+    const faces = b.rerollFaces?.length ?? 0;
+    return `${hand}|${play}|${dice}|${b.drawPile.length}|${faces}|${b.progressBase.force}/${b.progressBase.escape}`;
 }
 
 /** True when a staged card changes the result: a non-zero value, a die, or a utility. */
@@ -109,7 +110,7 @@ function stagedThatCount(b: HazardSessionState): HazardHandEntry[] {
 function outcomeKey(b: HazardSessionState): string {
     const staged = sortedJoin(stagedThatCount(b).map((p) => `${p.cardId}${p.dieId ? '+' : ''}`));
     const dice = sortedJoin(b.dice.filter((d) => d.state === 'available').map((d) => d.kind));
-    return `${staged}|${b.drawPile.join(',')}|${dice}`;
+    return `${staged}|${b.drawPile.join(',')}|${(b.rerollFaces ?? []).join(',')}|${dice}`;
 }
 
 /** The moves worth trying from a board, one per interchangeable choice. */

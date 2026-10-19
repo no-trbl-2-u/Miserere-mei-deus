@@ -227,7 +227,11 @@ keyword (`EnemyKeyword = never`).
   (`HAZARD_PUZZLE_LIBRARY`) in its band (easy, medium, hard).
   `npm run puzzle:report -w axiomancer-mechanics` prints, per demo and
   route, how many winning outcomes stage each card and which are required
-  or unused (`hazardPuzzleCardReport`). The dev menu's
+  or unused (`hazardPuzzleCardReport`). Card values are signed: a negative
+  number is a cost, on either line or both, and a meter can go below 0. The
+  engine also has two utilities no card carries yet: `gainDie` (temporary
+  dice on apply) and `reroll` (dice turned to the layout's `rerollFaces`, in
+  order, never rolled); T's card session gives them cards and keywords. The dev menu's
   HAZARD PUZZLES board plays them on the live hazard board (the same cards,
   dice, drag and route select as a live hazard, with no bin) under a per-band clock. The outcome pays XP,
   a modest consumable and a region material; full completion adds the purse,
