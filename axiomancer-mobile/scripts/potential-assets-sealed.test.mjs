@@ -17,6 +17,7 @@
 // trove, and anything that would drop the exclusion from the build context.
 
 import assert from 'node:assert/strict'
+import { execFileSync } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -105,4 +106,56 @@ test('the generated icon geometry is checked in, so the library is not needed at
   )
   const text = fs.readFileSync(generated, 'utf-8')
   assert.ok(!RESOLVES.test(text), 'the generated file resolves a trove path instead of inlining geometry')
+})
+
+/** Every tracked file in the repo, as repo-relative POSIX paths. */
+function trackedFiles(args) {
+  return execFileSync('git', ['-C', REPO, ...args], { encoding: 'utf-8' })
+    .split(/\r?\n/)
+    .filter(Boolean)
+}
+
+test('the trove is gitignored, so a clone never carries it', () => {
+  const lines = fs.readFileSync(path.join(REPO, '.gitignore'), 'utf-8')
+    .split(/\r?\n/)
+    .map((l) => l.trim())
+  assert.ok(
+    lines.includes(`/${TROVE}/`) || lines.includes(`${TROVE}/`),
+    `.gitignore no longer ignores "${TROVE}/". Without that line the trove ` +
+      'creeps back into the index one asset at a time (D96)',
+  )
+})
+
+test('nothing under the trove is tracked by git', () => {
+  // The ignore line does nothing for a path already in the index: that was
+  // the repo's actual state until 2026-10-19, 4,262 files deep. This is the
+  // invariant the ignore line only looks like it provides.
+  const tracked = trackedFiles(['ls-files', '--', TROVE])
+  assert.deepEqual(
+    tracked.slice(0, 20),
+    [],
+    `${tracked.length} file(s) under "${TROVE}" are tracked. Untrack them ` +
+      '(git rm -r --cached) — the trove lives on T\'s machine only (D96)',
+  )
+})
+
+test('no tracked file anywhere in the repo resolves a trove path', () => {
+  // The scan above covers the mobile bundle. The law is repo-wide: mechanics,
+  // root scripts, workflows and config may not reach into the trove either.
+  const CODE = /\.(ts|tsx|js|jsx|mjs|cjs|json|ya?ml|sh|py)$/
+  const offenders = []
+  for (const rel of trackedFiles(['ls-files'])) {
+    if (!CODE.test(rel)) continue
+    if (rel.endsWith('potential-assets-sealed.test.mjs')) continue
+    const abs = path.join(REPO, rel)
+    if (!fs.existsSync(abs)) continue
+    if (RESOLVES.test(fs.readFileSync(abs, 'utf-8'))) offenders.push(rel)
+  }
+  assert.deepEqual(
+    offenders,
+    [],
+    'these resolve a path into the trove. Copy the asset out to where it ' +
+      'belongs and read it from there; a tool that needs the library takes ' +
+      'its root as an argument (D96)',
+  )
 })

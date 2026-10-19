@@ -22,6 +22,7 @@ import { execFileSync } from 'node:child_process'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
+import { markedHeads } from '../pr-review.mjs'
 import { REVIEW_VERDICT } from './ledger-lib.mjs'
 import { spliceMarked } from './mutation-lib.mjs'
 import { REVIEW_SECTION_END, REVIEW_SECTION_START, SEEDS, flagsPlanted, hunkRanges, plantedPaths, renderReviewSection, reviewBranches } from './seeded-lib.mjs'
@@ -75,7 +76,6 @@ function openDraft(branch, sha, title, body) {
 
 /** Waits for the verdict on `sha`; resolves `{ posted, seconds, body }`. */
 async function awaitVerdict(pr, sha, t0) {
-  const marker = `<!-- pr-review:head ${sha} -->`
   while (Date.now() - t0 < WAIT_MS) {
     await sleep(POLL_MS)
     let comments = []
@@ -84,7 +84,7 @@ async function awaitVerdict(pr, sha, t0) {
     } catch {
       continue
     }
-    const verdict = comments.find((c) => REVIEW_VERDICT.test(c.body ?? '') && c.body.includes(marker))
+    const verdict = comments.find((c) => REVIEW_VERDICT.test(c.body ?? '') && markedHeads(c.body).some((m) => m.sha === sha))
     if (verdict) return { posted: true, seconds: Math.round((Date.parse(verdict.createdAt) - t0) / 1000), body: verdict.body }
   }
   return { posted: false, why: `no verdict within ${WAIT_MS / 60000} min` }
