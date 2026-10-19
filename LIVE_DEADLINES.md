@@ -6,6 +6,4 @@
 
 | Due | Item | What it needs | Window |
 |---|---|---|---|
-| 2026-10-27 (in 8 days) | The puzzle looks random (roll, draw, reroll) | needs a plot: no row for HP3a, HP3b | W1 |
-| 2026-10-29 (in 10 days) | Timed demo solves and the clocks | needs you: B3f ready for you | W1 |
 | 2026-11-02 (in 14 days) | W1 demo: T plays the three demos | needs you: your task | W1 |
