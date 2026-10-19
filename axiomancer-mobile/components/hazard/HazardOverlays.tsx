@@ -40,7 +40,12 @@ import { HZ, routeAccent, TYPE_ACCENT } from './palette';
 // Dice-cast interstitial — dice tumble in, settle, then the board opens.
 // ---------------------------------------------------------------------------
 
-function TumblingDie({ die, index }: { die: HazardDieVM; index: number }) {
+/**
+ * The live dice-cast tumble: its child falls in rotated, seats and
+ * micro-bounces. The cast interstitial plays it on every die; the puzzle
+ * board replays it in the tray on a die a reroll turns.
+ */
+export function DieTumble({ index, testID, children }: { index: number; testID?: string; children: React.ReactNode }) {
     const fall = useSharedValue(0);
     useEffect(() => {
         fall.value = withDelay(
@@ -60,9 +65,17 @@ function TumblingDie({ die, index }: { die: HazardDieVM; index: number }) {
         return { opacity: Math.min(1, t * 3), transform: [{ translateY }, { rotate }] };
     });
     return (
-        <Animated.View style={style}>
-            <HazardDie kind={die.kind} size={56} glow={!die.isHex} />
+        <Animated.View style={style} testID={testID}>
+            {children}
         </Animated.View>
+    );
+}
+
+function TumblingDie({ die, index }: { die: HazardDieVM; index: number }) {
+    return (
+        <DieTumble index={index}>
+            <HazardDie kind={die.kind} size={56} glow={!die.isHex} />
+        </DieTumble>
     );
 }
 

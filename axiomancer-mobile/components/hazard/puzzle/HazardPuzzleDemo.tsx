@@ -10,9 +10,11 @@
  * The board opens like a live hazard: picking a route plays the live
  * `DiceRollOverlay`, landing on the layout's own dice faces (after unlocks),
  * and the clock starts only when the roll settles. A DRAW's cards join the
- * hand with the live board's hand-entry animation, in reserve order. Both
- * are presentation only: every face and card is the layout's, nothing is
- * rolled or shuffled.
+ * hand with the live board's hand-entry animation, in reserve order. A
+ * reroll replays the cast tumble in the tray on each die it turns, landing
+ * on the layout's next `rerollFaces`; a gained die arrives in the tray as a
+ * live salvage die does (conjured, fading in). All of it is presentation
+ * only: every face and card is the layout's, nothing is rolled or shuffled.
  *
  * Board moves, all through the live board's own gestures (a puzzle has no
  * bin, so the board gets no discard handler and draws none):
@@ -47,10 +49,12 @@ import { CardDetailOverlay, DiceRollOverlay } from '@/components/hazard/HazardOv
 import { RouteSelect } from '@/components/hazard/RouteSelect';
 import { useHazardDrag } from '@/components/hazard/useHazardDrag';
 import { useGameActions, useGameState } from '@/state/GameStoreProvider';
-import type { HazardCardVM } from '@/state/presenters/hazard.engine';
+import type { HazardCardVM, HazardDieRoll } from '@/state/presenters/hazard.engine';
 import { HAZARD_PUZZLE_RESOLVE_HINT } from '@/state/presenters/hazard-puzzle.copy';
 import {
     hazardPuzzleClockFor,
+    nextHazardPuzzleDieRolls,
+    selectHazardPuzzleDiceChange,
     selectHazardPuzzleListVM,
     selectHazardPuzzleOutcomeVM,
     selectHazardPuzzleRouteSelectVM,
@@ -104,6 +108,8 @@ export function HazardPuzzleDemo({ initialId, initialRoute, autoConfirm, clockPa
     // The start key whose opening roll has settled; until it matches the
     // board's key, the roll overlay plays and the clock holds.
     const [rolledFor, setRolledFor] = useState<number | null>(null);
+    // Dice a reroll turned this board, so the tray replays their tumble.
+    const [dieRolls, setDieRolls] = useState<Readonly<Record<string, HazardDieRoll>>>({});
     const { drag, ghost } = useHazardDrag();
     // Never reused for the life of the screen: the clock remembers which key
     // it already expired for, so a key restarting at 1 after DONE would leave
@@ -121,6 +127,7 @@ export function HazardPuzzleDemo({ initialId, initialRoute, autoConfirm, clockPa
                 session: createHazardPuzzleSession(layout, route, unlocks),
                 startKey,
             });
+            setDieRolls({});
             setOutcome(null);
         },
         [baseStats],
@@ -155,7 +162,10 @@ export function HazardPuzzleDemo({ initialId, initialRoute, autoConfirm, clockPa
     }, [autoConfirm, play, outcome, finish]);
 
     const move = (fn: (s: HazardPuzzleSession) => HazardPuzzleSession) => {
-        if (play) setPlay({ ...play, session: fn(play.session) });
+        if (!play) return;
+        const next = fn(play.session);
+        setPlay({ ...play, session: next });
+        setDieRolls((rolls) => nextHazardPuzzleDieRolls(rolls, selectHazardPuzzleDiceChange(play.session, next).rerolled));
     };
 
     const list = useMemo(() => selectHazardPuzzleListVM(), []);
@@ -183,6 +193,7 @@ export function HazardPuzzleDemo({ initialId, initialRoute, autoConfirm, clockPa
                         onInspect={setDetailCard}
                         resolveLabel={vm.resolveLabel}
                         resolveHint={HAZARD_PUZZLE_RESOLVE_HINT}
+                        dieRolls={dieRolls}
                     />
                     {outcome ? (
                         <HazardPuzzleOutcomePanel

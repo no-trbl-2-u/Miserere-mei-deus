@@ -30,13 +30,20 @@ import Animated, {
     withTiming,
 } from 'react-native-reanimated';
 
-import type { HazardCardVM, HazardDieVM, HazardMeterVM, HazardViewModel } from '@/state/presenters/hazard.engine';
+import type {
+    HazardCardVM,
+    HazardDieRoll,
+    HazardDieVM,
+    HazardMeterVM,
+    HazardViewModel,
+} from '@/state/presenters/hazard.engine';
 import { HAZARD_TUNING } from '@mechanics';
 import { FONTS, HUE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 import { HazardCard } from './HazardCard';
 import { HazardDie } from './HazardDie';
+import { DieTumble } from './HazardOverlays';
 import { Cracks, LedgerMark, ProgGlyph, TrashGlyph } from './glyphs';
 import { HZ, routeAccent, TYPE_ACCENT } from './palette';
 
@@ -185,10 +192,12 @@ function TrayDie({
     die,
     drag,
     ghosted,
+    roll,
 }: {
     die: HazardDieVM;
     drag: DragController;
     ghosted: boolean;
+    roll?: HazardDieRoll;
 }) {
     const styles = useStyles();
     const pan = Gesture.Pan()
@@ -216,7 +225,13 @@ function TrayDie({
                 accessible
                 accessibilityLabel={die.accessibilityLabel}
             >
-                <HazardDie kind={die.kind} size={42} state={die.state} glow={die.usable} temporary={die.temporary} />
+                {roll ? (
+                    <DieTumble key={roll.count} index={roll.order} testID={`hazard-die-roll-${die.id}-${roll.count}`}>
+                        <HazardDie kind={die.kind} size={42} state={die.state} glow={die.usable} temporary={die.temporary} />
+                    </DieTumble>
+                ) : (
+                    <HazardDie kind={die.kind} size={42} state={die.state} glow={die.usable} temporary={die.temporary} />
+                )}
                 {die.temporary && <Text style={styles.dieTag}>CONJURED</Text>}
             </Animated.View>
         </GestureDetector>
@@ -334,6 +349,8 @@ export interface HazardBoardProps {
     resolveLabel?: string;
     /** The play area's foot line, naming the resolve button. Defaults to the live line. */
     resolveHint?: string;
+    /** Dice to replay the cast tumble on, by die id (the puzzle board's rerolls). The live board passes none. */
+    dieRolls?: Readonly<Record<string, HazardDieRoll>>;
 }
 
 /** The live board's resolve button face. */
@@ -353,6 +370,7 @@ export const HazardBoard = React.memo(function HazardBoard({
     onInspect,
     resolveLabel = HAZARD_RESOLVE_LABEL,
     resolveHint = HAZARD_RESOLVE_HINT,
+    dieRolls,
 }: HazardBoardProps) {
     const AXM = usePalette();
     const styles = useStyles();
@@ -534,6 +552,7 @@ export const HazardBoard = React.memo(function HazardBoard({
                             die={die}
                             drag={drag}
                             ghosted={drag.active?.type === 'die' && drag.active.dieId === die.id}
+                            roll={dieRolls?.[die.id]}
                         />
                     ))}
                 </View>
