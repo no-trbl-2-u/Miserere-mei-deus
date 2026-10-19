@@ -171,6 +171,31 @@ event-pool and layout files).
 - [x] (#628) Phase HP1a — No bin, an honest count, the card report, demos back in band (plotted by T, 2026-10-18): puzzle sessions have no discard; a winning outcome counts only cards that change the result; `hazardPuzzleCardReport` and `npm run puzzle:report`; demos re-authored into band. Brief `plan/phases/phase_HP1_hazard_cost_utility.md` § HP1a. Requires nothing.
 - [x] (#631) Phase HP1b — The puzzle board loses its bin (plotted by T, 2026-10-18): `/devpuzzle` shows no bin; the live `/hazard` board keeps it. Brief `plan/phases/phase_HP1_hazard_cost_utility.md` § HP1b. Requires HP1a, B3e2.
 - [x] (#637) Phase HP3a — The puzzle rolls and draws like a live hazard (plotted by T, 2026-10-19): the dice roll in on the layout's faces and the clock starts after; drawn cards slide in from the reserve; nothing random. Brief `plan/phases/phase_HP3_puzzle_randomness_illusion.md` § HP3a. Requires nothing.
+- [ ] Phase HP4a — Decision pressure in the report (plotted by T, 2026-10-19): `puzzle:report` prints, per route and
+      unlock set, the optional-card count, the required share and how many distinct first plays can still win or
+      can no longer win; a route where every card is required prints `forced` and one where every first play wins
+      prints `free`. Extends HP2b's feature list rather than duplicating it. Brief
+      `plan/phases/phase_HP4_graded_puzzle_set.md` § HP4a. Requires HP2b.
+- [ ] Phase HP4b — The candidate library shape (plotted by T, 2026-10-19): a candidate layout carries a short
+      `label`, an `intendedBand` and the one route it is played on; `HAZARD_PUZZLE_CANDIDATES` holds them, validated
+      and budget-checked but deliberately not held to `hazardPuzzleBandOf`, and pinned not to enter the library or
+      dominance cells. Brief `plan/phases/phase_HP4_graded_puzzle_set.md` § HP4b. Requires nothing.
+- [ ] Phase HP4c — Author the thirty (plotted by T, 2026-10-19): ten easy, ten medium and ten hard candidates with
+      distinct labels across at least three Act 1 regions, none `forced` or `free` on its nominated route and
+      spanning the HP4a numbers; pool cards only, no card or keyword added (D37). Brief
+      `plan/phases/phase_HP4_graded_puzzle_set.md` § HP4c. Requires HP4a, HP4b.
+- [ ] Phase HP4d — Thirty on the board (plotted by T, 2026-10-19): `/devpuzzle` lists the candidates in three
+      labelled groups by intended band and plays any of them on its nominated route through the live `HazardBoard`;
+      the three demos stay reachable and production still renders nothing. Brief
+      `plan/phases/phase_HP4_graded_puzzle_set.md` § HP4d. Requires HP4b.
+- [ ] Phase HP4e — T plays the thirty (plotted by T, 2026-10-19) (attended): T plays each candidate once, timed by
+      HP2c's move log, and `docs/reports/hazard-puzzle-candidates.md` records the label, the intended band, the
+      time, whether T solved it and T's keep-or-cut ruling in T's words. Brief
+      `plan/phases/phase_HP4_graded_puzzle_set.md` § HP4e. Requires HP4c, HP4d.
+- [ ] Phase HP4f — The patterns (plotted by T, 2026-10-19): `docs/reports/hazard-puzzle-patterns.md` sets the kept
+      candidates against the cut ones on the HP4a numbers and states each authoring pattern as a rule a future
+      puzzle can be checked against, or says no pattern separates them. Brief
+      `plan/phases/phase_HP4_graded_puzzle_set.md` § HP4f. Requires HP4e.
 - [ ] Phase VE1a — One export, stamped, everywhere (plotted by T, 2026-10-19): one `ensureWebExport` with a content stamp replaces the nine copied export blocks and their nine reuse flags across smoke, the e2e drivers, critique and perf; `.smoke-dist` is the one directory; the two verify workflows drop the env lines; the README names CI's Linux Playwright Chromium as the renderer of record and the PR's first integration run re-stamps all 13 baselines from CI. Brief `plan/phases/phase_VE1_visual_e2e_signal.md` § VE1a. Requires nothing.
 - [ ] Phase VE1b — Ready signal, determinism check, run record (plotted by T, 2026-10-19): the app sets a web-only ready attribute and smoke and critique wait on it instead of a 600ms sleep; `SMOKE_RUNS=n` exits 4 on any route that is not byte-identical across runs; the telemetry hook logs `script` rows for `verify:visual`, `e2e:*`, `critique:drive`, `smoke:bundler` and `baseline:approve`. Brief `plan/phases/phase_VE1_visual_e2e_signal.md` § VE1b. Requires nothing.
 - [ ] Phase VE1c — The report-only CI step with the evidence in the PR (plotted by T, 2026-10-19): both verify workflows run `verify:visual` on every integration run, never red on a diff; the step summary carries the route table and timings, the captures ride as an artifact, and on a same-repo PR the new captures are committed to the PR head as one `visual: re-stamp` commit with one updated comment, so T approves from the image diff; `.smoke-dist` and the browsers are cached on the stamp. Brief `plan/phases/phase_VE1_visual_e2e_signal.md` § VE1c. Requires VE1a, VE1b.
@@ -870,6 +895,18 @@ See the status rows above; generate briefs on demand.
 > "reason not stated" — never invent one), and the resulting
 > commit/issue/phase-brief when available.
 
+- **2026-10-19** — actor: **T via `/plot`** (attended session, branch
+  `loop/plot-HP4-graded-puzzle-set`). Action: **added Phases HP4a-HP4f**, slotted asap directly
+  above Phase VE1a, the first open row. This was T's request: T played all six routes of the three
+  demo puzzles through `/devpuzzle` and solved every one in under ten seconds, then asked, in T's
+  words, to "plot a phase where we do 10 easy, 10 medium, 10 hard, each with a label. I'll do
+  another playthrough of them to determine which to keep and hopefully we can find some patterns
+  for future puzzles." T's stated reason: the existing demos are not puzzles, and a graded,
+  labelled set played by hand is how the patterns worth authoring to get found. Asap because the
+  W1 goal "Hazard puzzles locked" and the W2 goal "Act 1 hazards are puzzles"
+  (`plan/deadlines.md`) both rest on it. Brief `plan/phases/phase_HP4_graded_puzzle_set.md`. No row
+  was removed: HP2b, HP2d, HP2e and HP2f stay open, with HP4's brief recording under Follow-ups how
+  each is reshaped by it.
 - **2026-09-23** — actor: **T via `/oversight`** (attended session, branch
   `claude/oversight-7vknwr`). Action: **re-scoped Phase 84** (material
   scope change, not add/remove). The phase's original brief — an attended
