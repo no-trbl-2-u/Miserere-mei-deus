@@ -194,7 +194,9 @@ Measure: `npm run verify -w axiomancer-mobile`; the board test shows no bin on `
 - Tests: the puzzle board test; the live `HazardBoard` tests unchanged.
 - Verify gate: mobile verify plus `verify:visual`.
 
-### HP1c — Signed costs, +1 die, reroll to set faces · M · closes A6, A7, A8, A9, A10, A11 · requires HP1a
+### HP1c — Signed costs, +1 die, reroll to set faces · M · closes A6, A9, A10 · requires HP1a
+Shipped as #633 from the brief before T's 2026-10-19 amendments (it kept the old defaults: 1 die of the card's
+colour; reroll one die unpowered, all powered). A7, A8 and A11 as amended move to HP1c2.
 Measure: `npm run verify -w axiomancer-mechanics`; the A9 tests show a required cost-DRAW card and an unused
 both-lines cost card.
 - Scope: `hazard.types.ts`, `hazard.engine.ts` (`applyHazardCard`), puzzle types and validate
@@ -205,7 +207,17 @@ both-lines cost card.
   A9 cases, the A11 paid-cost rule); the live hazard suites unchanged (A10).
 - Verify gate: mechanics verify plus the mobile type-check.
 
-### HP1d — The worse-copy test · S · closes A12 · requires HP1c
+### HP1c2 — T's cost-card rules on the shipped engine · S · closes A7, A8, A11 · requires HP1c
+Measure: `npm run verify -w axiomancer-mechanics`; the validator rejects a `gainDie` or `reroll` card missing its
+counts or colour, and a card with a powered cost and no `poweredEffect`; a powered cost card fires both utilities.
+- Scope: remove the `gainDie` and `reroll` defaults from `hazard.types.ts` / `hazard.engine.ts` (counts and colour
+  required, per A7 and A8), add `rerollBase` / `rerollPowered`, add `poweredEffect` and fire it after `effect` on
+  a powered card (A11), the card validator, the fixture cost cards in `hazard-puzzle.cost-cards.mock.ts`.
+- Tests: `puzzle/e2e/hazard-puzzle.costs.engine.test.ts` updated: missing counts rejected, per-card counts honoured,
+  the A11 cases.
+- Verify gate: mechanics verify plus the mobile type-check.
+
+### HP1d — The worse-copy test · S · closes A12 · requires HP1c2
 Measure: `npm run verify -w axiomancer-mechanics`; the library test fails a fixture card that is an existing card
 plus a cost, and passes the current library (re-authored if needed).
 - Scope: the library test, a dominance helper beside the solver report, demos only if one fails.
