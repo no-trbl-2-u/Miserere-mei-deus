@@ -325,7 +325,9 @@ export interface HazardBoardProps {
     onUnstage: (uid: string) => void;
     onPower: (uid: string, dieId: string) => void;
     onApply: (uid: string) => void;
-    onDiscard: (uid: string) => void;
+    /** Scrap a hand card for its salvage. Omitted (the puzzle board), the
+     *  board draws no bin and a card dropped where it would be is not scrapped. */
+    onDiscard?: (uid: string) => void;
     onResolve: () => void;
     onInspect: (card: HazardCardVM) => void;
     /** The resolve button's face; the puzzle board reads CONFIRM. Defaults to the live PLAY. */
@@ -366,8 +368,8 @@ export const HazardBoard = React.memo(function HazardBoard({
             // Discard is HAND-ONLY: a hand card dropped on the trash bin
             // scraps for salvage. The bin gets a generous pad.
             if (payload.type === 'card' && payload.from === 'hand') {
-                const trashRect = await measureRect(trashRef);
-                if (rectContains(trashRect, x, y, 18)) {
+                const trashRect = onDiscard ? await measureRect(trashRef) : null;
+                if (onDiscard && rectContains(trashRect, x, y, 18)) {
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy).catch(() => undefined);
                     onDiscard(payload.uid);
                     return;
@@ -590,28 +592,30 @@ export const HazardBoard = React.memo(function HazardBoard({
             {/* hand dock + trash bin + PLAY button */}
             <View style={styles.dock}>
                 {/* trash bin — drag a card here to scrap it for its SALVAGE */}
-                <View
-                    ref={trashRef}
-                    style={[
-                        styles.trashBin,
-                        drag.active?.type === 'card'
-                            ? { borderColor: AXM.blood, backgroundColor: AXM.bloodSubtle, borderStyle: 'solid' }
-                            : null,
-                    ]}
-                    testID="hazard-trash"
-                    accessible
-                    accessibilityLabel="Trash bin. Drag a card here to discard it for its salvage benefit."
-                >
-                    <TrashGlyph size={22} color={drag.active?.type === 'card' ? AXM.blood : AXM.bone} />
-                    <Text
+                {onDiscard ? (
+                    <View
+                        ref={trashRef}
                         style={[
-                            styles.trashLabel,
-                            drag.active?.type === 'card' ? { color: AXM.blood } : null,
+                            styles.trashBin,
+                            drag.active?.type === 'card'
+                                ? { borderColor: AXM.blood, backgroundColor: AXM.bloodSubtle, borderStyle: 'solid' }
+                                : null,
                         ]}
+                        testID="hazard-trash"
+                        accessible
+                        accessibilityLabel="Trash bin. Drag a card here to discard it for its salvage benefit."
                     >
-                        SCRAP
-                    </Text>
-                </View>
+                        <TrashGlyph size={22} color={drag.active?.type === 'card' ? AXM.blood : AXM.bone} />
+                        <Text
+                            style={[
+                                styles.trashLabel,
+                                drag.active?.type === 'card' ? { color: AXM.blood } : null,
+                            ]}
+                        >
+                            SCRAP
+                        </Text>
+                    </View>
+                ) : null}
                 <View style={styles.fan} testID="hazard-hand">
                     {vm.hand.map((card, i) => (
                         <GestureDetector key={card.uid} gesture={handCardGesture(card)}>
