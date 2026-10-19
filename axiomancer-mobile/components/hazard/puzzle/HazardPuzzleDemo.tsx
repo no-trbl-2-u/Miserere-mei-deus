@@ -7,12 +7,12 @@
  * live `HazardViewModel`), and only the outcome reaches the store
  * (`claimHazardPuzzle`).
  *
- * Board moves, all through the live board's own gestures:
+ * Board moves, all through the live board's own gestures (a puzzle has no
+ * bin, so the board gets no discard handler and draws none):
  *  - drag a hand card into the play area → stage;
  *  - tap a staged card, or drag it out → unstage;
  *  - drag a die onto a staged card of its colour (or gold) → power;
  *  - a staged card's APPLY → apply (a DRAW card draws from the reserve);
- *  - drag a hand card onto the bin → discard for salvage;
  *  - CONFIRM (or the clock running out) → resolve;
  *  - tap a hand card → read it.
  */
@@ -168,8 +168,6 @@ export function HazardPuzzleDemo({ initialId, initialRoute, autoConfirm, clockPa
                         onUnstage={(uid) => move((s) => unstageHazardPuzzleCard(s, uid))}
                         onPower={(uid, dieId) => move((s) => powerHazardPuzzleCard(s, uid, dieId))}
                         onApply={(uid) => move((s) => applyHazardPuzzleCard(s, uid))}
-                        // A puzzle has no bin: a card dropped on it stays in hand.
-                        onDiscard={() => undefined}
                         onResolve={() => finish(false)}
                         onInspect={setDetailCard}
                         resolveLabel={vm.resolveLabel}

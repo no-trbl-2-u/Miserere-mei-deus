@@ -229,7 +229,7 @@ keyword (`EnemyKeyword = never`).
   route, how many winning outcomes stage each card and which are required
   or unused (`hazardPuzzleCardReport`). The dev menu's
   HAZARD PUZZLES board plays them on the live hazard board (the same cards,
-  dice, drag and route select as a live hazard) under a per-band clock. The outcome pays XP,
+  dice, drag and route select as a live hazard, with no bin) under a per-band clock. The outcome pays XP,
   a modest consumable and a region material; full completion adds the purse,
   and falling short costs VITAE. Act 1's live hazards are unchanged; the
   puzzles reach the map only after T approves the demos.

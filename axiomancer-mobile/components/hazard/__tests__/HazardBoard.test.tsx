@@ -162,6 +162,20 @@ describe('HazardBoard', () => {
         expect(getByText('RESOLVE')).toBeTruthy();
     });
 
+    it('draws the bin on the live board, which passes a discard handler', () => {
+        const { getByTestId, getByText } = render(<HazardBoard {...mockProps} />);
+        expect(getByTestId('hazard-trash')).toBeTruthy();
+        expect(getByText('SCRAP')).toBeTruthy();
+    });
+
+    it('draws no bin without a discard handler, as on the puzzle board', () => {
+        const { onDiscard: _omitted, ...noBin } = mockProps;
+        const { queryByTestId, queryByText, getByTestId } = render(<HazardBoard {...noBin} />);
+        expect(queryByTestId('hazard-trash')).toBeNull();
+        expect(queryByText('SCRAP')).toBeNull();
+        expect(getByTestId('hazard-hand')).toBeTruthy();
+    });
+
     it('renders progress meters', () => {
         const { getByText } = render(<HazardBoard {...mockProps} />);
         expect(getByText('FORCE')).toBeTruthy();
