@@ -1,0 +1,23 @@
+{
+  "generated_by": "scripts/devlog-shots.mjs",
+  "date": "2026-10-19",
+  "since": "9cd85a0b9",
+  "sinceDate": "2026-10-17",
+  "shots": [
+    {
+      "screen": "devpuzzle-board",
+      "before": true,
+      "ratio": 0.30763154696803985
+    },
+    {
+      "screen": "devpuzzle-outcome",
+      "before": true,
+      "ratio": 0.18614047879450724
+    },
+    {
+      "screen": "hazard-board",
+      "before": false,
+      "ratio": null
+    }
+  ]
+}
