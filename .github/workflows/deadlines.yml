@@ -1,0 +1,66 @@
+name: deadlines
+
+# Keeps LIVE_DEADLINES.md current (T, 2026-10-19): the items from plan/deadlines.md
+# due in the next two weeks that need T (a plot, a task, or an attended row ready
+# for T). Regenerated every morning and whenever the plan or the build plan
+# changes on main; committed to main only when the file changed. It joins the
+# nexus-loop group so its commit queues behind a loop tick instead of racing it.
+# The session-start reminder computes the same list live; this file is the one
+# T can open anywhere.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'plan/deadlines.md'
+      - 'plan/steps/01_build_plan.md'
+      - 'scripts/deadlines.mjs'
+      - 'scripts/deadlines-lib.mjs'
+  schedule:
+    - cron: '13 11 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nexus-loop
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT || github.token }}
+          ref: main
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Regenerate LIVE_DEADLINES.md
+        run: node scripts/deadlines.mjs --write
+
+      - name: Commit if changed
+        shell: bash
+        env:
+          GIT_AUTHOR_NAME: claude[bot]
+          GIT_AUTHOR_EMAIL: 41898282+claude[bot]@users.noreply.github.com
+          GIT_COMMITTER_NAME: claude[bot]
+          GIT_COMMITTER_EMAIL: 41898282+claude[bot]@users.noreply.github.com
+        run: |
+          git add -- LIVE_DEADLINES.md
+          if git diff --cached --quiet; then
+            echo "Nothing to commit."
+            exit 0
+          fi
+          git commit -m "deadlines: refresh LIVE_DEADLINES.md $(date -u +%F)"
+          for attempt in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep $((attempt * 5))
+          done
+          exit 1

@@ -211,6 +211,12 @@ The unified **nexus** harness was re-onboarded onto the monorepo on
   There is no archive directory (D66): pre-revamp history is read with
   `git show archive-pre-revamp:plan/archive/<path>`, and only when T asks
   about history. Never read it to learn how the game works.
+- **Deadlines** (T, 2026-10-19): `plan/deadlines.md` is the whole deadline plan (the v0.3 milestone, the
+  two-week windows, and the Items table with every deadline item, done or open, its due date and the phase ids
+  that finish it or `needs plot`). `LIVE_DEADLINES.md` at the root is the next two weeks of items that need T,
+  generated from it daily by `.github/workflows/deadlines.yml` (never edit it by hand). A `/plot` of a
+  deadline item replaces its `needs plot` with the new phase ids. The loop is not restricted to the current
+  window.
 - `scripts/` — `deploy-check.mjs` (CI-green deploy gate),
   `notify.mjs` (pager), `loop-issue.mjs` (GitHub issue mirror),
   `pr-resolve.mjs` (keeps `loop:pr` PRs mergeable).

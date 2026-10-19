@@ -16,6 +16,13 @@ When a brainstorm or design conversation ends with buildable direction, offer
 it in one `AskUserQuestion`: "Want to use `/plot` to turn this into a phase?"
 or "Want to use `/messy` to file this dump?". The loop never fires either.
 
+**Deadlines (T, 2026-10-19).** `plan/deadlines.md` is the whole deadline plan; `LIVE_DEADLINES.md` is the
+next two weeks of items that need T, regenerated daily (never edit it by hand). When a chat starts, the
+session-start hook runs `node scripts/deadlines.mjs --remind` and prints a **DEADLINE REMINDER**: lead your
+first reply to T with that list (what needs a plot, what needs T, and when it is due) before anything else.
+It is silent in GitHub Actions, so loop ticks never see it. When you `/plot` a deadline item, replace its
+`needs plot` in the Items table with the new phase ids; when T finishes a `T` task, tick its Status `[x]`.
+
 Answering a **balance/measurement** question (win rates, engagement)? Read
 `docs/reports/measured/latest.md` (phase R12a: the grey and Blood Price
 decks across the Act 1 ledger) and name the commit its stamp gives. It is a
