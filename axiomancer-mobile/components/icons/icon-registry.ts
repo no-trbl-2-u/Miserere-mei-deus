@@ -2,8 +2,8 @@
  * The Miserere Mei, Deus icon canon.
  *
  * Single source of truth for the game's icon/glyph vocabulary. The
- * geometry comes from the owner-provided game-icons.net library
- * (`Potential Assets/icons-TBR`, CC BY 3.0 / CC0 per artist), curated
+ * geometry comes from the game-icons.net library, CC BY 3.0 / CC0 per
+ * artist (`LICENSE-game-icons.txt`, beside the geometry), curated
  * through `scripts/extract-game-icons.mjs` into the generated
  * `game-icon-paths.ts` — the app never reads the library at runtime.
  * Every mark renders as a monochrome silhouette in the caller's color

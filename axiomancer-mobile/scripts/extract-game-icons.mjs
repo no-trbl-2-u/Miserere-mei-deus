@@ -3,17 +3,24 @@
  * extract-game-icons.mjs — Phase V1 (the Woodcut Codex).
  *
  * Reads the curated icon manifest below, pulls each SVG's geometry out
- * of the owner-provided game-icons.net library at
- * `<repo>/Potential Assets/icons-TBR/ffffff/transparent/1x1/`, and
- * regenerates `components/icons/game-icon-paths.ts` (checked in — the
- * app never reads the library at runtime).
+ * of a local copy of the game-icons.net library, and regenerates
+ * `components/icons/game-icon-paths.ts` (checked in — the app never reads
+ * the library at runtime, and the library is not in the repository).
  *
- * To add an icon: add a manifest row, run
- * `node scripts/extract-game-icons.mjs`, give it a label in
- * `components/icons/icon-registry.ts`, and commit both.
+ * The library root is an argument, not a path this repo knows:
  *
- * License: game-icons.net marks are CC BY 3.0 (some artists CC0) —
- * see `Potential Assets/icons-TBR/license.txt`. Attribution is carried
+ *   node scripts/extract-game-icons.mjs <library>/ffffff/transparent/1x1
+ *
+ * or set GAME_ICONS_LIBRARY to the same directory. There is deliberately
+ * no default: nothing in the tree may depend on where the operator keeps
+ * a 4,000-file icon archive.
+ *
+ * To add an icon: add a manifest row, run the script, give the icon a
+ * label in `components/icons/icon-registry.ts`, and commit both.
+ *
+ * License: game-icons.net marks are CC BY 3.0 (some artists CC0) — the
+ * record travels with the geometry in
+ * `components/icons/LICENSE-game-icons.txt`, and attribution is carried
  * per-entry in the generated file.
  */
 
@@ -22,7 +29,16 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const LIBRARY = join(HERE, '..', '..', 'Potential Assets', 'icons-TBR', 'ffffff', 'transparent', '1x1');
+const LIBRARY = process.argv[2] ?? process.env.GAME_ICONS_LIBRARY;
+if (!LIBRARY) {
+    console.error(
+        'usage: node scripts/extract-game-icons.mjs <library>/ffffff/transparent/1x1\n' +
+            '   or: GAME_ICONS_LIBRARY=<same directory> node scripts/extract-game-icons.mjs\n\n' +
+            'The game-icons.net archive is not in this repository. Point this at wherever\n' +
+            'you keep it; the geometry it writes is what ships.',
+    );
+    process.exit(2);
+}
 const OUT = join(HERE, '..', 'components', 'icons', 'game-icon-paths.ts');
 
 /** registry name → library path (artist/file, no extension) */
@@ -77,11 +93,11 @@ writeFileSync(
     `/**
  * GENERATED FILE — do not edit by hand.
  *
- * Curated silhouettes from the owner-provided game-icons.net library
- * (\`Potential Assets/icons-TBR\`, CC BY 3.0 / CC0 per artist — see the
- * library's license.txt). Regenerate with:
+ * Curated silhouettes from the game-icons.net library, CC BY 3.0 / CC0
+ * per artist — see \`components/icons/LICENSE-game-icons.txt\`, which is the
+ * archive's own record kept beside this file. Regenerate with:
  *
- *   node scripts/extract-game-icons.mjs
+ *   node scripts/extract-game-icons.mjs <library>/ffffff/transparent/1x1
  *
  * \`source\` is the attribution key: \`<artist>/<icon>\` on game-icons.net.
  */

@@ -2,9 +2,9 @@
  * Hermetic component tests — AxmIcon + the icon registry.
  *
  * The registry is the single source of truth for the icon canon:
- * curated game-icons.net silhouettes (the owner-provided library under
- * `Potential Assets/icons-TBR`) extracted by
- * `scripts/extract-game-icons.mjs`. Pins: every registered name
+ * curated game-icons.net silhouettes, extracted from a local copy of the
+ * library by `scripts/extract-game-icons.mjs` (the library is not in the
+ * repository; the geometry is). Pins: every registered name
  * renders an Svg; every spec carries geometry, a label, and its
  * attribution source; the label override lands on the a11y tree; the
  * adapters' expected names all exist.

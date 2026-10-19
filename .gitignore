@@ -57,3 +57,10 @@ dist/
 
 # /messy dumps: T's scratch, never committed (skills/messy.md)
 plan/messy/
+
+# The reference trove: candidate art, licensed packs and extracted material.
+# Never in the repository and never in a build (T, 2026-10-19). The game
+# references nothing inside it — enforced by
+# axiomancer-mobile/scripts/potential-assets-sealed.test.mjs — and licence
+# records for art copied out of it live in docs/licences/.
+/Potential Assets/

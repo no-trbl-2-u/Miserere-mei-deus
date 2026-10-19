@@ -42,7 +42,7 @@
     "deploy": "npm run deploy:preview",
     "deploy:preview": "npm run verify && node scripts/with-env.mjs eas build --platform android --profile preview",
     "deploy:production": "npm run verify && node scripts/with-env.mjs eas build --platform all --profile production",
-    "assets:check": "node --test scripts/asset-provenance.test.mjs",
+    "assets:check": "node --test scripts/asset-provenance.test.mjs scripts/potential-assets-sealed.test.mjs",
     "assets:ingest": "node scripts/ingest-art.mjs",
     "art:gen": "node scripts/generate-art.mjs",
     "art:qa": "node scripts/art/qa.mjs",
