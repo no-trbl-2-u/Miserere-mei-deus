@@ -211,6 +211,10 @@
           {
             "type": "command",
             "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard.mjs\" session-start"
+          },
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/scripts/deadlines.mjs\" --remind"
           }
         ]
       }
