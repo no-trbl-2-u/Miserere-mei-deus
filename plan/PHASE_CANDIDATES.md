@@ -739,6 +739,10 @@
 
 Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_CANDIDATES_2026.md`.
 
+- (2026-10-18) Eight loop-gate `[owner]` candidates from T's `/messy` of the EV1d gate fixes (path coverage,
+  acceptance map, plan-queue lint, builder/judge separation, critique record, fail-on-parent, diff-scoped
+  mutation, Android smoke) were promoted by T the same day with `/plot` as Phases LG1a-LG1h
+  (`plan/phases/phase_LG1_loop_gates.md`; part plan `plan/loop-gates.md`).
 - (pass 32) The Bleeding Signet is granted by nothing (AUDIT `[content]`,
   RH1's roster-health lens, the only orphan it reports). It is relic
   content with one signal, and the AUDIT row already routes it to a brief
