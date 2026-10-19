@@ -14,7 +14,16 @@
 // head marker in the verdict comment stops a second review of a head that
 // already has one (the reviewer's own label raise fires `labeled` again).
 //
-//   node scripts/pr-review.mjs wanted --pr <n> [--dispatch]   # writes go, pr, head to $GITHUB_OUTPUT
+// The marker also carries a digest of the PR's diff against its base
+// (phase RV2, `plan/phases/phase_RV2_review_skips_unchanged_diff.md`), so a
+// merge of `main`, a rebase or a content-free force-push is a new SHA with
+// the same digest and is not reviewed twice. A conflict resolution changes
+// the diff, so it still reviews. The digest comes from `gh pr diff` piped
+// into `git patch-id --stable`, which needs no repository: the
+// `review-wanted` job stays a sparse depth-1 checkout. No digest falls back
+// to the SHA rule; it never skips a review.
+//
+//   node scripts/pr-review.mjs wanted --pr <n> [--dispatch]   # writes go, pr, head, digest to $GITHUB_OUTPUT
 //   node scripts/pr-review.mjs parent-tests --pr <n>           # the Tests lens's parent replay (RV1c)
 //
 // `parent-tests` runs each test file the PR adds or changes at the PR's
@@ -45,29 +54,65 @@ export const DISPATCH_LABELS = Object.freeze([...REVIEW_LABELS, 'eval:seed'])
  * The marker a verdict comment carries for the head it reviewed.
  *
  * @param {string} sha the full head SHA.
- * @returns {string} the HTML comment.
- * @example headMarker('abc') // '<!-- pr-review:head abc -->'
+ * @param {string | null} [digest] the head's diff digest; omitted, the old SHA-only shape.
+ * @returns {string} the HTML comment, one line.
+ * @example headMarker('abc', 'f00') // '<!-- pr-review:head abc diff f00 -->'
  */
-export function headMarker(sha) {
-  return `<!-- pr-review:head ${sha} -->`
+export function headMarker(sha, digest = null) {
+  return digest ? `<!-- pr-review:head ${sha} diff ${digest} -->` : `<!-- pr-review:head ${sha} -->`
+}
+
+const MARKER = /<!-- pr-review:head ([0-9a-f]+)(?: diff ([0-9a-f]+))? -->/g
+
+/**
+ * Every head marker in a comment body, old shape and new.
+ *
+ * @param {string} body a comment body.
+ * @returns {Array<{ sha: string, digest: string | null }>} one entry per marker.
+ * @example markedHeads('<!-- pr-review:head abc -->') // [{ sha: 'abc', digest: null }]
+ */
+export function markedHeads(body) {
+  return [...body.matchAll(MARKER)].map((m) => ({ sha: m[1], digest: m[2] ?? null }))
+}
+
+/**
+ * The stable identity of a unified diff: `git patch-id --stable` on stdin.
+ * Hunk line numbers and file order do not change it; any edited line does.
+ *
+ * @param {string} patch a unified diff, as `gh pr diff` prints it.
+ * @returns {string | null} the 40-hex digest, or null for an empty diff or a failed run.
+ * @example diffDigest('') // null
+ */
+export function diffDigest(patch) {
+  if (!patch || !patch.trim()) return null
+  try {
+    const out = execFileSync('git', ['patch-id', '--stable'], { input: patch, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 })
+    return /^([0-9a-f]{40})\b/.exec(out)?.[1] ?? null
+  } catch {
+    return null
+  }
 }
 
 /**
  * Whether to review this PR now.
  *
- * @param {{ state: string, isDraft: boolean, isCrossRepository: boolean, labels: string[], head: string, comments: string[], dispatch?: boolean }} pr the PR's live facts; `comments` are bodies.
+ * @param {{ state: string, isDraft: boolean, isCrossRepository: boolean, labels: string[], head: string, digest?: string | null, comments: string[], dispatch?: boolean }} pr the PR's live facts; `comments` are bodies, `digest` is the head's `diffDigest` (null when unavailable).
  * @returns {{ go: boolean, reason: string }} the decision and why.
  * @example reviewWanted({ state: 'OPEN', isDraft: false, isCrossRepository: false, labels: ['loop:pr'], head: 'a', comments: [] }).go // true
  */
-export function reviewWanted({ state, isDraft, isCrossRepository, labels, head, comments, dispatch = false }) {
+export function reviewWanted({ state, isDraft, isCrossRepository, labels, head, digest = null, comments, dispatch = false }) {
   if (isCrossRepository) return { go: false, reason: 'fork head: the reviewer never runs on one' }
   if (state !== 'OPEN') return { go: false, reason: `PR is ${state.toLowerCase()}` }
   const allowed = dispatch ? DISPATCH_LABELS : REVIEW_LABELS
   if (!labels.some((l) => allowed.includes(l))) return { go: false, reason: `no ${allowed.join(' / ')} label` }
   if (dispatch) return { go: true, reason: 'dispatched' }
   if (isDraft) return { go: false, reason: 'draft' }
-  if (comments.some((b) => b.includes(headMarker(head)))) return { go: false, reason: `head ${head.slice(0, 8)} already has a verdict` }
-  return { go: true, reason: `review head ${head.slice(0, 8)}` }
+  const marked = comments.flatMap(markedHeads)
+  if (marked.some((m) => m.sha === head)) return { go: false, reason: `head ${head.slice(0, 8)} already has a verdict` }
+  if (!digest) return { go: true, reason: `review head ${head.slice(0, 8)} (diff digest unavailable: SHA rule only)` }
+  const same = marked.find((m) => m.digest === digest)
+  if (same) return { go: false, reason: `diff ${digest.slice(0, 8)} already has a verdict (head ${same.sha.slice(0, 8)}); head ${head.slice(0, 8)} changes nothing in it` }
+  return { go: true, reason: `review head ${head.slice(0, 8)} (diff ${digest.slice(0, 8)})` }
 }
 
 /**
@@ -128,6 +173,15 @@ function parentTests(pr) {
   console.log(formatParentTests(files))
 }
 
+function prDigest(pr, repo) {
+  try {
+    return diffDigest(execFileSync('gh', ['pr', 'diff', pr, '--repo', repo], { cwd: ROOT, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 }))
+  } catch (e) {
+    console.error(`pr-review #${pr}: gh pr diff failed, no digest (${String(e.message).split('\n')[0]})`)
+    return null
+  }
+}
+
 async function main() {
   const [mode] = process.argv.slice(2)
   const pr = arg('--pr')
@@ -145,12 +199,15 @@ async function main() {
     isCrossRepository: view.isCrossRepository,
     labels: view.labels.map((l) => l.name),
     head: view.headRefOid,
+    digest: prDigest(pr, repo),
     comments: view.comments.map((c) => c.body ?? ''),
     dispatch: process.argv.includes('--dispatch'),
   }
   const d = reviewWanted(facts)
   console.log(`pr-review #${pr}: ${d.go ? 'go' : 'skip'} (${d.reason})`)
-  if (process.env.GITHUB_OUTPUT) appendFileSync(process.env.GITHUB_OUTPUT, `go=${d.go}\npr=${pr}\nhead=${facts.head}\n`)
+  if (process.env.GITHUB_OUTPUT) {
+    appendFileSync(process.env.GITHUB_OUTPUT, `go=${d.go}\npr=${pr}\nhead=${facts.head}\ndigest=${facts.digest ?? ''}\n`)
+  }
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await main()

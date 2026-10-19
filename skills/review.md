@@ -14,9 +14,12 @@
 
 Only the `review` job in `.github/workflows/pr-review.yml` runs this,
 after a green `verify-gate`, on an open, non-draft, same-repo PR
-labelled `loop:pr` or `plot` whose head has no verdict yet
-(`scripts/pr-review.mjs`), or on a `workflow_dispatch` for one PR. The
-prompt names the PR: "follow it for PR #<n>". This is not a loop verb:
+labelled `loop:pr` or `plot` whose head has no verdict yet and whose
+diff against the base no verdict names (`scripts/pr-review.mjs`, phase
+RV2), or on a `workflow_dispatch` for one PR. The prompt names the PR,
+the head it decided on and that head's diff digest: "follow it for PR
+#<n>. Head <sha>, diff digest <digest>." (`unavailable` when
+`gh pr diff` failed). This is not a loop verb:
 `/march` never dispatches it and no tick runs it on its own PR.
 
 The job's `pre_run` restores this file, `.claude/`, `CLAUDE.md`,
@@ -246,7 +249,7 @@ valid review. Do not pad.
    ```markdown
    ## Review verdict
    <!-- pr-review:verdict pass -->
-   <!-- pr-review:head <full head SHA> -->
+   <!-- pr-review:head <full head SHA> diff <diff digest> -->
 
    | Severity | Where | Finding |
    |---|---|---|
@@ -258,6 +261,14 @@ valid review. Do not pad.
    Shadow review (RV1): advisory only; T merges as before.
    ```
 
+   - The head marker names the head you reviewed and the prompt's diff
+     digest, on one line. Write ` diff <diff digest>` only when the
+     prompt's digest is a 40-hex value **and** the prompt's head is the
+     `headRefOid` you read in Step 1; otherwise (digest `unavailable`, or
+     the PR moved on) write the SHA alone,
+     `<!-- pr-review:head <full head SHA> -->`. A digest names a diff,
+     and a later head with the same diff is skipped on its strength, so
+     never pair it with a head it was not computed for.
    - The verdict is `not-pass` when any HIGH finding stands, else
      `pass`. Write the marker as `<!-- pr-review:verdict not-pass -->`
      for a not-pass.
