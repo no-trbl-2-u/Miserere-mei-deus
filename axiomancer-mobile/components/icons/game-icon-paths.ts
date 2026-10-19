@@ -1,11 +1,11 @@
 /**
  * GENERATED FILE — do not edit by hand.
  *
- * Curated silhouettes from the owner-provided game-icons.net library
- * (`Potential Assets/icons-TBR`, CC BY 3.0 / CC0 per artist — see the
- * library's license.txt). Regenerate with:
+ * Curated silhouettes from the game-icons.net library, CC BY 3.0 / CC0
+ * per artist — see `components/icons/LICENSE-game-icons.txt`, which is the
+ * archive's own record kept beside this file. Regenerate with:
  *
- *   node scripts/extract-game-icons.mjs
+ *   node scripts/extract-game-icons.mjs <library>/ffffff/transparent/1x1
  *
  * `source` is the attribution key: `<artist>/<icon>` on game-icons.net.
  */
