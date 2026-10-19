@@ -7,11 +7,14 @@
  * A13: the three demos, one per band on the risk route, the safe route in
  * the same band or easier, and at least one demo that cannot be cleared
  * without a reserve DRAW card.
+ * HP1 A12: no card is unused in every layout that holds it, and no pool
+ * card beats a library card in every layout that holds it.
  */
 
 import { describe, expect, it } from 'vitest';
 
 import { getHazardCardDef, getHazardDef } from '../../hazard.content';
+import { hazardPuzzleDominatedCards, hazardPuzzleUnusedCards } from '../hazard-puzzle.dominance';
 import { auditHazardPuzzleLayout, auditHazardPuzzleUnlocks } from '../hazard-puzzle.band';
 import { getHazardPuzzleLayout, HAZARD_PUZZLE_LIBRARY } from '../hazard-puzzle.library';
 import { solveHazardPuzzle } from '../hazard-puzzle.solver';
@@ -106,4 +109,14 @@ describe('hazard puzzle library: no unlock makes a puzzle harder (A10)', () => {
             });
         }
     }
+});
+
+describe('hazard puzzle library: no worse copy (HP1 A12)', () => {
+    it('no library card is unused in every layout that holds it', () => {
+        expect(hazardPuzzleUnusedCards(HAZARD_PUZZLE_LIBRARY)).toEqual([]);
+    });
+
+    it('no library card is dominated by a pool card', () => {
+        expect(hazardPuzzleDominatedCards(HAZARD_PUZZLE_LIBRARY)).toEqual([]);
+    });
 });
