@@ -181,6 +181,10 @@ test('review runs after a green verify-gate, through review-wanted, on loop:pr a
   assert.match(rv, /\n {4}concurrency:\n {6}group: pr-review-\$\{\{ needs\.review-wanted\.outputs\.pr \}\}\n {6}cancel-in-progress: true/)
   assert.match(rv, /uses: \.\/\.github\/workflows\/_claude-skill\.yml/)
   assert.match(rv, /prompt: 'Read skills\/review\.md end to end/)
+  // Phase RV2: the head and its diff digest reach the reviewer by the prompt, not by a new grant.
+  assert.match(wanted, /^ {6}head: \$\{\{ steps\.wanted\.outputs\.head \}\}$/m)
+  assert.match(wanted, /^ {6}digest: \$\{\{ steps\.wanted\.outputs\.digest \}\}$/m)
+  assert.match(rv, /Head \$\{\{ needs\.review-wanted\.outputs\.head \}\}, diff digest \$\{\{ needs\.review-wanted\.outputs\.digest \|\| ''unavailable'' \}\}/)
   assert.match(rv, /effort: 'high'/)
   assert.match(rv, /timeout_minutes: 30/)
 })
@@ -222,7 +226,11 @@ test('skills/review.md writes the markers the ledger and verify-gate read', asyn
   assert.match(skill, REVIEW_VERDICT)
   assert.match(skill, /<!-- pr-review:verdict not-pass -->/)
   assert.match(skill, new RegExp(RAISE_MARKER.source))
-  assert.match(skill, /<!-- pr-review:head <full head SHA> -->/)
+  assert.match(skill, /<!-- pr-review:head <full head SHA> diff <diff digest> -->/)
+  assert.match(skill, /`<!-- pr-review:head <full head SHA> -->`/, 'the SHA-only fallback shape')
+  const { headMarker } = await import('./pr-review.mjs')
+  assert.equal(headMarker('<full head SHA>', '<diff digest>'), '<!-- pr-review:head <full head SHA> diff <diff digest> -->')
+  assert.equal(headMarker('<full head SHA>'), '<!-- pr-review:head <full head SHA> -->')
   assert.match(skill, /Never lower a tier/)
 })
 
