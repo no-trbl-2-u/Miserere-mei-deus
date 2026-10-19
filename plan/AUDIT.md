@@ -128,6 +128,16 @@
   - [ ] TEMPER: 0 cards; carried only by the anvil.
 - next: T's next card session (D37). BOON, HONE and TEMPER fail the bar because the atlas files them as Card keywords (the dice section) while no card prints them: T either moves them to Rule keywords or adds them to the bar's system exemptions (CONVICTION, RESERVE, WILD, PIP today). WAIVE needs a second carrier or a cut. Re-seed after.
 
+### [ ] [loop-call] RV1 A7's seeded-branch push is still `[T to confirm]` (2026-10-19)
+- category: loop-call
+- impact: 3
+- ease: 9
+- detail: brief `plan/phases/phase_RV1_pr_review_pipeline.md` (Decisions, "A7 pushes seeded branches, as drafts,
+  and deletes them") amends EV1's "planted defects never leave the machine" for the review judge and is marked
+  `[T to confirm]`. RV1c shipped (#610). T's 2026-10-19 decision round confirmed every other open default but
+  was not asked this one. The seeded replay row below depends on it, since it pushes eight `eval/*` branches.
+- next: `/oversight` asks T once; record the answer in the brief (`(T confirmed <date>)` or the change).
+
 ### [ ] [tests] Run the seeded review replay on the three-lens reviewer once RV1c is on `main` (2026-10-17)
 - category: tests
 - impact: 6
