@@ -7,6 +7,9 @@
  * HP3a (A1, A2, A4): the opening roll lands on the layout's faces and holds
  * the clock, a DRAW's cards enter the hand in reserve order, nothing reads
  * an RNG, and the board's results equal the engine's replay of its moves.
+ * HP3b (A3): a reroll replays the cast tumble on the dice it turns, landing
+ * on the layout's next set faces, and a gained die arrives in the tray as a
+ * live salvage die does.
  */
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
@@ -19,6 +22,7 @@ import { DICE_ROLL_OVERLAY_MS } from '@/components/hazard/HazardOverlays';
 import { HazardPuzzleDemo } from '@/components/hazard/puzzle/HazardPuzzleDemo';
 import { HAZARD_PUZZLE_TICK_MS } from '@/components/hazard/puzzle/useHazardPuzzleClock';
 import { createAppStore } from '@/state/store';
+import { addRerollFixture, removeRerollFixture, REROLL_PUZZLE_ID } from '@/test-utils/hazardPuzzleRerollFixture';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 import {
@@ -326,6 +330,79 @@ describe('HazardPuzzleDemo', () => {
         expect(screen.getByTestId('hazard-puzzle-outcome-headline').props.children).toBe(
             result!.cleared ? 'CLEARED' : 'FELL SHORT',
         );
+    });
+
+    describe('rerolls and gained dice (HP3b A3)', () => {
+        beforeEach(() => {
+            addRerollFixture();
+        });
+        afterEach(removeRerollFixture);
+
+        // Hand c1 fx-reroll, c2 fx-gain-die, c3..c5 the hard demo's cards; dice d6 purple, d7 red, d8 blue.
+        const openReroll = () => openDemo(REROLL_PUZZLE_ID, 'risk', { heart: 1, body: 1, mind: 1 }, true);
+
+        it('a reroll replays the cast tumble on the die it turns and lands on the layout\'s next face', () => {
+            const random = jest.spyOn(Math, 'random');
+            const { screen } = openReroll();
+            expect(screen.queryAllByTestId(/^hazard-die-roll-/)).toHaveLength(0);
+            act(() => boardProps(screen).onStage('c1'));
+            act(() => boardProps(screen).onApply('c1'));
+            // Only the turned die tumbles, and it lands on the first set face.
+            expect(screen.getByTestId('hazard-die-roll-d6-1')).toBeTruthy();
+            expect(screen.queryAllByTestId(/^hazard-die-roll-/)).toHaveLength(1);
+            expect(boardProps(screen).vm.dice.map((d) => d.kind)).toEqual(['gold', 'red', 'blue']);
+            expect(random).not.toHaveBeenCalled();
+            random.mockRestore();
+        });
+
+        it('a powered reroll tumbles each die it turns, staggered, onto the next faces in order', () => {
+            const { screen } = openReroll();
+            act(() => boardProps(screen).onStage('c1'));
+            act(() => boardProps(screen).onPower('c1', 'd6'));
+            act(() => boardProps(screen).onApply('c1'));
+            // The purple die powers the card, so the reroll turns the two dice still available.
+            expect(boardProps(screen).vm.dice.map((d) => d.kind)).toEqual(['purple', 'gold', 'gold']);
+            expect(boardProps(screen).dieRolls).toEqual({ d7: { count: 1, order: 0 }, d8: { count: 1, order: 1 } });
+            expect(screen.getByTestId('hazard-die-roll-d7-1')).toBeTruthy();
+            expect(screen.getByTestId('hazard-die-roll-d8-1')).toBeTruthy();
+        });
+
+        it('a gained die arrives in the tray as a live salvage die does', () => {
+            const { screen } = openReroll();
+            const before = boardProps(screen).vm.dice.map((d) => d.id);
+            act(() => boardProps(screen).onStage('c2'));
+            act(() => boardProps(screen).onApply('c2'));
+            const gained = boardProps(screen).vm.dice.filter((d) => !before.includes(d.id));
+            expect(gained).toHaveLength(1);
+            expect(gained[0]).toMatchObject({ kind: 'purple', temporary: true });
+            // The live tray's arrival: the die mounts with its entry animation and the CONJURED tag, and does not tumble.
+            const chip = screen.getByTestId(`hazard-die-${gained[0].id}`);
+            expect(chip.props.entering).toBeDefined();
+            expect(within(chip).getByText('CONJURED')).toBeTruthy();
+            expect(screen.queryAllByTestId(/^hazard-die-roll-/)).toHaveLength(0);
+        });
+
+        it('the board\'s dice equal the engine\'s replay of the same reroll and gain', () => {
+            const { screen } = openReroll();
+            const moves: HazardPuzzleMove[] = [
+                { type: 'stage', uid: 'c2' },
+                { type: 'apply', uid: 'c2' },
+                { type: 'stage', uid: 'c1' },
+                { type: 'apply', uid: 'c1' },
+            ];
+            for (const m of moves) {
+                act(() => {
+                    const p = boardProps(screen);
+                    if (m.type === 'stage') p.onStage(m.uid);
+                    else if (m.type === 'apply') p.onApply(m.uid);
+                });
+            }
+            const layout = getHazardPuzzleLayout(REROLL_PUZZLE_ID);
+            const replay = playHazardPuzzleMoves(createHazardPuzzleSession(layout, 'risk', []), moves);
+            expect(boardProps(screen).vm.dice.map((d) => [d.id, d.kind])).toEqual(
+                replay.board.dice.map((d) => [d.id, d.kind]),
+            );
+        });
     });
 
     it('opens straight on a demo and route from the deep link, and auto-confirm shows the outcome', () => {
