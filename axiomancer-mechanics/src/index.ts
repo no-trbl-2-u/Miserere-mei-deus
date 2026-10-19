@@ -310,6 +310,11 @@ export {
     hazardPuzzleCardBan, hazardPuzzleCardGroups, hazardPuzzleCardShape, hazardPuzzleLibraryUse,
 } from './World/Hazard';
 export type { HazardPuzzleCardAuditRow, HazardPuzzleLibraryUse } from './World/Hazard';
+// Hazard puzzle worse-copy check: unused and dominated library cards.
+export {
+    hazardPuzzleDominatedCards, hazardPuzzleUnusedCards, hazardPuzzleLibraryCells, hazardPuzzleLibraryCardIds,
+} from './World/Hazard';
+export type { HazardPuzzleDominance, HazardPuzzleLibraryCell } from './World/Hazard';
 // Hazard puzzle stat unlocks.
 export {
     HAZARD_PUZZLE_UNLOCK_DIE, activeHazardPuzzleUnlocks, applyHazardPuzzleUnlocks,

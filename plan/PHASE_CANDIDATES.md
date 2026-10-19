@@ -650,12 +650,6 @@
 - proposed scope: one `/iterate` tick. Add a pre-commit or `guard.mjs` check that refuses a staged file whose LF/CRLF style differs from its `HEAD` version, with a hook test. A `.gitattributes` `eol` rule is the other route, but it renormalizes the 9 CRLF mechanics sources and needs its own diff. Then mark the lesson `guarded by`.
 - conflicts: none; no content.
 
-### [ ] [score 3.0] Mobile scripts spawn `npx` through a shell on Windows (lesson `e2e-export-windows`, seen 2×)
-- proposed: 2026-10-16, retro of ship B3e (#592)
-- source signals: lesson `e2e-export-windows` (ship CR1a, ship B3e). `smoke-screens.mjs`, `combat-round-e2e.mjs`, `combat-drag-perf.mjs`, `critique-drive.mjs`, `encounter-routing-e2e.mjs` and others call `spawnSync('npx', …)` with no shell, so on Windows the export exits 3 before any screen loads.
-- proposed scope: one `/iterate` tick. A shared `scripts/lib/spawn-npx.mjs` that passes `shell: process.platform === 'win32'`, used by every script that spawns `npx`, with a unit test on the options. Then mark the lesson `guarded by`.
-- conflicts: none; no content.
-
 ### [ ] [score 3.5] Repo scripts borrow keyring `gh` auth when a worktree has no `.env` (lesson `worktree-no-env`, seen 2×)
 - proposed: 2026-10-14, retro iterate (AUDIT [infra] pr-resolve); narrowed 2026-10-14 (D94)
 - source signals:
@@ -770,6 +764,10 @@ Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_
 
 ## Rejected
 
+- Mobile scripts spawn `npx` through a shell on Windows (lesson `e2e-export-windows`): briefed
+  into Phase VE1a on 2026-10-19 (`plan/phases/phase_VE1_visual_e2e_signal.md` A1: the one
+  `ensureWebExport` helper spawns `npx.cmd` with a shell on Windows and its unit test pins the
+  options), so the separate `/iterate` tick is not needed.
 - Card evolution (cards that grow or specialise over a run), the pre-revamp `[needs-user-call]` row: retired by
   T on 2026-10-19. It predates the reset and THE CARD HOLD (D37); T can raise it again in a card session.
 - Re-anchor spec.md and VISION.md to the post-refactor product: moot

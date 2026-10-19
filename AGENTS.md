@@ -314,3 +314,32 @@ them; update here first.
    the one T picks; a no files nothing beyond rule 7's residue. No
    `/march` step, cron, workflow or loop verb ever fires them
    (`scripts/loop-pr.test.mjs`).
+9. **`Potential Assets/` is a store, never a source (T, 2026-10-19,
+   D96).** It holds candidate art, licensed packs and extracted
+   reference material. An agent may read it to FIND something and may
+   take a copy out of it. Nothing is ever USED from there.
+   - **To use an asset, move it out.** Copy it to where it belongs in the
+     project — `axiomancer-mobile/assets/images/<surface>/` and so on —
+     record it in that directory's `provenance.json`, and let the build
+     include it from its new home. An asset still sitting in the trove is
+     a candidate, not a shipped asset.
+   - **Nothing in the repository may resolve a path into it.** No
+     `require`, `import`, `readFileSync`, `join` or glob, in app code,
+     mechanics, scripts, config or CI. A tool that genuinely needs the
+     library takes its root as an argument (see
+     `axiomancer-mobile/scripts/extract-game-icons.mjs`, which takes
+     `argv[2]` or `GAME_ICONS_LIBRARY` and has no default) so the repo
+     never knows where T keeps it.
+   - **It exists only on T's machine.** It is gitignored (`/Potential
+     Assets/`) and excluded from the build context (`.easignore`), so a
+     clone, a CI runner and a cloud container all have no such
+     directory. Code that reads it does not merely violate doctrine — it
+     breaks everywhere but T's box.
+   - **Licence proof travels with the asset, not the trove.** When art is
+     copied out, its licence record is copied into the tree too
+     (`docs/licences/`, or beside the asset), because a `provenance.json`
+     citing a trove path proves nothing to anyone else.
+   - Enforced by `axiomancer-mobile/scripts/potential-assets-sealed.test.mjs`
+     (in `assets:check`, so in `verify`): no module resolves a trove path,
+     nothing under it is tracked by git, the ignore and build-context
+     exclusions are intact, and the build-time tooling allowlist is empty.

@@ -426,6 +426,20 @@ ambiguity.)
   requested it, T's stated reason (or "reason not stated"), and the
   resulting commit/issue/brief.
 
+- **THE TROVE IS A STORE (T, attended session 2026-10-19, D96).**
+  `Potential Assets/` holds candidate art, licensed packs and extracted
+  reference material. Read it to find something; copy what you want out of
+  it. Never use anything from inside it. An asset that is going to ship is
+  moved to where it belongs in the project (and recorded in that
+  directory's `provenance.json`, with its licence record copied into the
+  tree) so the build includes it from there. Nothing in the repository may
+  resolve a path into the trove — it is gitignored and `.easignore`d, so it
+  exists only on T's machine and such a reference breaks every clone, CI
+  runner and cloud container. A tool that needs the library takes its root
+  as an argument. Canonical text: `AGENTS.md` § "Nexus standing rules"
+  rule 9; enforced by
+  `axiomancer-mobile/scripts/potential-assets-sealed.test.mjs`.
+
 ## AUDIT category taxonomy (this project)
 
 `/iterate` and `/expand` read `plan/AUDIT.md`. Categories used
@@ -437,10 +451,11 @@ here (tokens match `skills/iterate.md` §4 "Audit categories"):
 ## Hard rules
 
 Rules 1-5 are the nexus standing rules, **canonical in `AGENTS.md`
-§ "Nexus standing rules"** (which now numbers eight — including
+§ "Nexus standing rules"** (which now numbers nine — including
 `AskUserQuestion` only in `/oversight` (and `/plot`/`/messy` with T
 present), **file the residue**, and **T's buildable direction goes
-through `/plot` or `/messy`**). Read them there; update them there
+through `/plot` or `/messy`**, and **`Potential Assets/` is a store,
+never a source** (D96)). Read them there; update them there
 first — this file no longer carries a copy. In short: atomic
 commit+push (code to a `loop:pr` PR, plan-only to `main`); no
 trailers/emojis; foreground verify gate, no
