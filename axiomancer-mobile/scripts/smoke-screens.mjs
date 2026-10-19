@@ -12,6 +12,9 @@
 //   exit 2  →  baseline missing for one or more routes (first-run / new route)
 //   exit 3  →  config / boot failure (expo export / browser / server)
 //   SMOKE_CHROME=/path/to/chrome  custom browser binary · SMOKE_REUSE_EXPORT=1  skip the export
+//   SMOKE_ONLY=devpuzzle-board,hazard-board  shoot and diff only these routes
+//   (the shots a change moves; on a renderer unlike the baselines' every
+//   route drifts, so the full run's exit code says nothing about the change)
 //
 // When a diff is real and expected, run:
 //   npm run baseline:approve
@@ -73,6 +76,22 @@ export const ROUTES = [
 // 0.5% of pixels may differ before a route is flagged. Bumps catch
 // anti-aliasing / font-subpixel noise without masking real UI shifts.
 export const DIFF_THRESHOLD_RATIO = 0.005
+
+/**
+ * The routes a run shoots: all of them, or only those `only` names (a
+ * comma list, as `SMOKE_ONLY` carries it). An unknown name throws, so a
+ * typo never reads as a green run of nothing.
+ *
+ * @param {typeof ROUTES} routes every visual route.
+ * @param {string | undefined} only comma-separated route names, or unset.
+ */
+export function selectRoutes(routes, only) {
+    const names = (only ?? '').split(',').map((n) => n.trim()).filter(Boolean)
+    if (names.length === 0) return routes
+    const unknown = names.filter((n) => !routes.some((r) => r.name === n))
+    if (unknown.length > 0) throw new Error(`SMOKE_ONLY names unknown route(s): ${unknown.join(', ')}`)
+    return routes.filter((r) => names.includes(r.name))
+}
 
 // Per-pixel sensitivity passed to pixelmatch. 0 = exact, 1 = ignore.
 // 0.1 matches the pixelmatch default and is the sweet spot for fonts.
@@ -328,7 +347,7 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl) {
     const differing = []
     const missing = []
 
-    for (const route of ROUTES) {
+    for (const route of selectRoutes(ROUTES, process.env.SMOKE_ONLY)) {
         const url = `${baseUrl}${route.path}`
         const target = route.fixture ? await fixturePage(route.fixture)
             : route.liveFight ? await (await browser.newContext(contextOptions)).newPage()
@@ -411,6 +430,8 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl) {
 // ---------------------------------------------------------------------------
 
 async function main() {
+    // A bad SMOKE_ONLY fails here, before the export, not after it.
+    selectRoutes(ROUTES, process.env.SMOKE_ONLY)
     runExpoExport()
     const deps = await loadDeps()
 
