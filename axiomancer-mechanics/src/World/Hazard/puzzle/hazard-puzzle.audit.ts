@@ -12,7 +12,8 @@
  * T approves. `npm run puzzle:audit` writes the full report.
  */
 
-import type { HazardCardDef, HazardRouteKey } from '../hazard.types';
+import type { HazardCardDef } from '../hazard.types';
+import { hazardPuzzleLibraryCells } from './hazard-puzzle.dominance';
 import { hazardPuzzleCardReport } from './hazard-puzzle.report';
 import type { HazardPuzzleLayout } from './hazard-puzzle.types';
 
@@ -72,14 +73,9 @@ export function hazardPuzzleLibraryUse(
     library: readonly HazardPuzzleLayout[],
 ): Map<string, HazardPuzzleLibraryUse> {
     const seen = new Map<string, { required: boolean; unused: boolean }[]>();
-    for (const layout of library) {
-        const unlockSets = layout.unlocks.length > 0 ? [[], layout.unlocks] : [[]];
-        for (const route of ['safe', 'risk'] as HazardRouteKey[]) {
-            for (const unlocks of unlockSets) {
-                for (const c of hazardPuzzleCardReport(layout, route, unlocks).cards) {
-                    seen.set(c.cardId, [...(seen.get(c.cardId) ?? []), { required: c.required, unused: c.unused }]);
-                }
-            }
+    for (const { layout, route, unlocks } of hazardPuzzleLibraryCells(library)) {
+        for (const c of hazardPuzzleCardReport(layout, route, unlocks).cards) {
+            seen.set(c.cardId, [...(seen.get(c.cardId) ?? []), { required: c.required, unused: c.unused }]);
         }
     }
     const use = new Map<string, HazardPuzzleLibraryUse>();
