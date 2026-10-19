@@ -47,7 +47,9 @@ export type HazardCardRarity = 'common' | 'uncommon' | 'rare';
 /**
  * `gainDie` and `reroll` are engine-only so far: no deck card carries
  * them and they have no keyword yet. A reroll never rolls; it turns dice
- * to the session's `rerollFaces`, in order.
+ * to the session's `rerollFaces`, in order. Neither has a default: a card
+ * declares its counts (and a `gainDie` card its colour), checked by
+ * `validateHazardCardDef`.
  */
 export type HazardUtilityEffect = 'draw' | 'recast' | 'convert' | 'gainDie' | 'reroll';
 
@@ -108,13 +110,22 @@ export interface HazardCardDef {
      * minor to major only when a die is applied.
      */
     majorEffect?: boolean;
+    /**
+     * A second utility that fires only when a die powers the card, after
+     * `effect`, at its major tier. Required when the powered line carries a
+     * cost (a negative `fp` or `ep`): a paid cost buys a second benefit.
+     */
+    poweredEffect?: HazardUtilityEffect;
     drawBase?: number;
     drawPowered?: number;
-    /** `gainDie`: temporary dice added on apply, minor and major (both default 1). */
+    /** `gainDie`: temporary dice added on apply, minor and major. Required, no default. */
     gainDieBase?: number;
     gainDiePowered?: number;
-    /** `gainDie`: the added dice's colour (default the card's own `kind`). */
+    /** `gainDie`: the added dice's colour. Required, no default. */
     gainDieKind?: HazardColor;
+    /** `reroll`: how many available dice turn, in die order, minor and major. Required, no default. */
+    rerollBase?: number;
+    rerollPowered?: number;
     /**
      * Dead cards (consequence CRACK cards) cannot be powered and
      * contribute nothing — they only clog the hand.

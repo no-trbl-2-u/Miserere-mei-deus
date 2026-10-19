@@ -23,6 +23,10 @@ export type {
     HazardSessionState,
 } from './hazard.types';
 
+// ── Card validation (cost-card rules) ──────────────────────────────────────
+export { validateHazardCardDef } from './hazard.card-validate';
+export type { HazardCardValidation } from './hazard.card-validate';
+
 // ── Seeded RNG ─────────────────────────────────────────────────────────────
 export { seedRng } from './hazard.rng';
 

@@ -272,7 +272,7 @@ export type {
 
 // Hazard puzzle: the fixed, one-round hazard (dev-menu only for now).
 export {
-    HAZARD_PUZZLE_ACT, validateHazardPuzzleLayout, createHazardPuzzleSession,
+    HAZARD_PUZZLE_ACT, validateHazardPuzzleLayout, validateHazardCardDef, createHazardPuzzleSession,
     stageHazardPuzzleCard, unstageHazardPuzzleCard, powerHazardPuzzleCard,
     applyHazardPuzzleCard, playHazardPuzzleMove,
     playHazardPuzzleMoves, confirmHazardPuzzle,

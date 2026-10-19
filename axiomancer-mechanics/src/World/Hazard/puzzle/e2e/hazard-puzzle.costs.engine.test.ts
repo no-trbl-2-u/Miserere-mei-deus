@@ -1,7 +1,8 @@
 /**
  * Hazard puzzle costs and utilities — signed card values, the `gainDie`
- * and `reroll` effects, DRAW and CONVERT on cards that carry a cost, and
- * the deck and glossary left untouched. Every cost or new-utility card
+ * and `reroll` effects with per-card counts and no defaults, the card
+ * validator, a paid cost's `poweredEffect`, DRAW and CONVERT on cards that
+ * carry a cost, and the deck and glossary left untouched. Every cost or new-utility card
  * here is a test-only fixture (`hazard-puzzle.cost-cards.mock.ts`).
  *
  * Deck numbers used below (free / powered): HAUL red 3/6 force; SCRAMBLE
@@ -11,6 +12,7 @@
 
 import { describe, expect, it } from 'vitest';
 
+import { validateHazardCardDef } from '../../hazard.card-validate';
 import { HAZARD_DECK, HAZARD_KEYWORDS } from '../../hazard.content';
 import { hazardCardValue, hazardProjectedProgress } from '../../hazard.engine';
 import { hazardPuzzleOutcome } from '../hazard-puzzle.outcome';
@@ -23,12 +25,33 @@ import {
 } from '../hazard-puzzle.session';
 import { solveHazardPuzzle } from '../hazard-puzzle.solver';
 import { HAZARD_PUZZLE_FAILURE } from '../hazard-puzzle.tuning';
-import type { HazardPuzzleLayout, HazardPuzzleMove } from '../hazard-puzzle.types';
+import type { HazardCardDef } from '../../hazard.types';
+import type { HazardPuzzleLayout, HazardPuzzleMove, HazardPuzzleSession } from '../hazard-puzzle.types';
 import { validateHazardPuzzleLayout } from '../hazard-puzzle.validate';
-import { FIXTURE_CARDS, useHazardFixtureCards } from './hazard-puzzle.cost-cards.mock';
+import { FIXTURE_CARDS, FX_SURGE_COST, FX_TOLL, useHazardFixtureCards } from './hazard-puzzle.cost-cards.mock';
 import { testLayout } from './hazard-puzzle.layouts.mock';
 
 const DECK_IDS_AT_LOAD = HAZARD_DECK.map((c) => c.id);
+
+function card(over: Partial<HazardCardDef> & Pick<HazardCardDef, 'id'>): HazardCardDef {
+    return { name: over.id, kind: 'purple', rarity: 'common', weight: 0, f: 0, e: 0, flavor: '', keywords: [], ...over };
+}
+
+/** Registers `def` on the deck for one call, then takes it off again. */
+function withCard<T>(def: HazardCardDef, run: () => T): T {
+    HAZARD_DECK.push(def);
+    try {
+        return run();
+    } finally {
+        HAZARD_DECK.splice(HAZARD_DECK.indexOf(def), 1);
+    }
+}
+
+/** The session with its first hand card's id replaced (to reach the engine with a card a puzzle refuses). */
+function swapFirstHandCard(s: HazardPuzzleSession, cardId: string): HazardPuzzleSession {
+    const [first, ...rest] = s.board.hand;
+    return { ...s, board: { ...s.board, hand: [{ ...first, cardId }, ...rest] } };
+}
 
 function diceOf(layout: HazardPuzzleLayout, moves: HazardPuzzleMove[]) {
     return playHazardPuzzleMoves(createHazardPuzzleSession(layout, 'safe'), moves).board.dice.map((d) => [
@@ -81,7 +104,7 @@ describe('signed card values (A6)', () => {
 describe('gainDie (A7)', () => {
     useHazardFixtureCards();
 
-    it('unpowered adds gainDieBase temporary dice of the card colour', () => {
+    it('unpowered adds gainDieBase temporary dice of gainDieKind', () => {
         const layout = testLayout({ id: 'die-minor', hand: ['fx-gain-die'], dice: ['red'] });
         expect(diceOf(layout, [{ type: 'stage', uid: 'c1' }, { type: 'apply', uid: 'c1' }])).toEqual([
             ['red', 'available', false],
@@ -118,6 +141,22 @@ describe('gainDie (A7)', () => {
             ['red', 'spent', false],
             ['blue', 'available', true],
         ]);
+    });
+
+    it('has no defaults: a card missing its counts or colour adds no die', () => {
+        // A puzzle refuses such a card, so the engine is reached by swapping it onto a valid board.
+        const layout = testLayout({ id: 'die-bare', hand: ['fx-gain-die'], dice: ['purple'] });
+        for (const bare of [
+            card({ id: 'fx-bare-die', effect: 'gainDie', gainDieKind: 'purple' }),
+            card({ id: 'fx-bare-die', effect: 'gainDie', gainDieBase: 1, gainDiePowered: 1 }),
+        ]) {
+            withCard(bare, () => {
+                expect(() => createHazardPuzzleSession({ ...layout, hand: ['fx-bare-die'] }, 'safe')).toThrow(/gainDie/);
+                const s = swapFirstHandCard(createHazardPuzzleSession(layout, 'safe'), 'fx-bare-die');
+                const after = playHazardPuzzleMoves(s, [{ type: 'stage', uid: 'c1' }, { type: 'apply', uid: 'c1' }]);
+                expect(after.board.dice.map((d) => d.kind)).toEqual(['purple']);
+            });
+        }
     });
 
     it('a gold majorEffect card adds the powered amount with or without a die', () => {
@@ -164,7 +203,7 @@ describe('reroll to set faces (A8)', () => {
         { type: 'apply', uid: 'c1' },
     ];
 
-    it('unpowered turns the first available die to the next face', () => {
+    it('unpowered turns rerollBase dice (1) to the next face', () => {
         const s = playHazardPuzzleMoves(createHazardPuzzleSession(MINOR, 'safe'), [
             { type: 'stage', uid: 'c1' },
             { type: 'apply', uid: 'c1' },
@@ -177,7 +216,37 @@ describe('reroll to set faces (A8)', () => {
         expect(s.board.rerollFaces).toEqual(['blue', 'red']);
     });
 
-    it('powered turns every available die, in die order, until the faces run out', () => {
+    it('powered turns rerollPowered dice (3), in die order; the rest keep their face', () => {
+        const layout = testLayout({
+            id: 'reroll-count',
+            hand: ['fx-reroll'],
+            dice: ['purple', 'hex', 'red', 'hex', 'blue'],
+            rerollFaces: ['gold', 'blue', 'red', 'purple'],
+        });
+        const s = playHazardPuzzleMoves(createHazardPuzzleSession(layout, 'safe'), MAJOR_LINE);
+        expect(s.board.dice.map((d) => [d.kind, d.state])).toEqual([
+            ['purple', 'spent'],
+            ['gold', 'available'],
+            ['blue', 'available'],
+            ['red', 'available'],
+            ['blue', 'available'],
+        ]);
+        expect(s.board.rerollFaces).toEqual(['purple']);
+    });
+
+    it('has no defaults: a card missing its counts turns no die', () => {
+        const bare = card({ id: 'fx-bare-reroll', effect: 'reroll' });
+        const layout = testLayout({ id: 'reroll-bare-card', hand: ['fx-reroll'], dice: ['hex'], rerollFaces: ['gold'] });
+        withCard(bare, () => {
+            expect(() => createHazardPuzzleSession({ ...layout, hand: ['fx-bare-reroll'] }, 'safe')).toThrow(/rerollBase/);
+            const s = swapFirstHandCard(createHazardPuzzleSession(layout, 'safe'), 'fx-bare-reroll');
+            const after = playHazardPuzzleMoves(s, [{ type: 'stage', uid: 'c1' }, { type: 'apply', uid: 'c1' }]);
+            expect(after.board.dice.map((d) => d.kind)).toEqual(['hex']);
+            expect(after.board.rerollFaces).toEqual(['gold']);
+        });
+    });
+
+    it('powered turns available dice, in die order, until the faces run out', () => {
         const s = playHazardPuzzleMoves(createHazardPuzzleSession(MAJOR, 'safe'), MAJOR_LINE);
         expect(s.board.dice.map((d) => [d.kind, d.state])).toEqual([
             ['purple', 'spent'],
@@ -215,6 +284,136 @@ describe('reroll to set faces (A8)', () => {
         expect(b).toEqual(a);
         expect(a.board.rng).toEqual({ s: 0 });
         expect(solveHazardPuzzle(MAJOR, 'safe')).toEqual(solveHazardPuzzle(MAJOR, 'safe'));
+    });
+});
+
+describe('the card validator (A7, A8, A11)', () => {
+    useHazardFixtureCards();
+
+    function reasonsOf(def: HazardCardDef): string {
+        const check = validateHazardCardDef(def);
+        expect(check.ok).toBe(false);
+        return check.reasons.join(' ');
+    }
+
+    it('passes every live deck card and every fixture card', () => {
+        for (const def of [...HAZARD_DECK, ...FIXTURE_CARDS]) {
+            expect(validateHazardCardDef(def), def.id).toEqual({ ok: true, reasons: [] });
+        }
+    });
+
+    it('rejects a gainDie card missing either count or its colour', () => {
+        expect(reasonsOf(card({ id: 'a', effect: 'gainDie', gainDiePowered: 1, gainDieKind: 'red' }))).toMatch(/gainDieBase/);
+        expect(reasonsOf(card({ id: 'b', effect: 'gainDie', gainDieBase: 1, gainDieKind: 'red' }))).toMatch(/gainDiePowered/);
+        expect(reasonsOf(card({ id: 'c', effect: 'gainDie', gainDieBase: 1, gainDiePowered: 1 }))).toMatch(/gainDieKind/);
+        expect(reasonsOf(card({ id: 'd', effect: 'gainDie', gainDieBase: -1, gainDiePowered: 1.5, gainDieKind: 'red' })))
+            .toMatch(/gainDieBase.*gainDiePowered/);
+    });
+
+    it('rejects a reroll card missing either count, as effect or poweredEffect', () => {
+        expect(reasonsOf(card({ id: 'a', effect: 'reroll', rerollPowered: 2 }))).toMatch(/rerollBase/);
+        expect(reasonsOf(card({ id: 'b', effect: 'reroll', rerollBase: 1 }))).toMatch(/rerollPowered/);
+        expect(reasonsOf(card({ id: 'c', f: 2, fp: 4, ep: -1, effect: 'draw', poweredEffect: 'reroll' }))).toMatch(
+            /rerollBase.*rerollPowered/,
+        );
+    });
+
+    it('a free-line cost needs no poweredEffect; a powered-line cost does', () => {
+        expect(validateHazardCardDef(FX_TOLL).ok).toBe(true);
+        const paid = { ...FX_SURGE_COST, poweredEffect: undefined };
+        expect(reasonsOf(paid)).toMatch(/cost on the powered line needs a poweredEffect/);
+        // An unset powered value falls back to the free line, so a free cost with no fp is paid too.
+        expect(reasonsOf(card({ id: 'fallback', f: -1, e: 2, effect: 'draw' }))).toMatch(/needs a poweredEffect/);
+    });
+
+    it('a poweredEffect is a second utility: it needs an effect and must differ from it', () => {
+        expect(reasonsOf(card({ id: 'a', fp: -1, poweredEffect: 'draw' }))).toMatch(/needs an effect first/);
+        expect(reasonsOf(card({ id: 'b', fp: -1, effect: 'draw', poweredEffect: 'draw' }))).toMatch(/repeats the card's effect/);
+    });
+
+    it('a puzzle layout holding a card the validator rejects is rejected', () => {
+        const paid = card({ id: 'fx-paid-bare', f: 3, fp: 6, ep: -2, effect: 'draw' });
+        withCard(paid, () => {
+            const check = validateHazardPuzzleLayout(testLayout({ id: 'paid-bare', hand: ['haul', 'fx-paid-bare'] }));
+            expect(check.ok).toBe(false);
+            expect(check.reasons.join(' ')).toMatch(/hand\[1\]: "fx-paid-bare": a cost on the powered line/);
+        });
+    });
+
+    it('a poweredEffect reroll card needs rerollFaces on its layout', () => {
+        const check = validateHazardPuzzleLayout(testLayout({ id: 'overdrive-bare', hand: ['fx-overdrive'] }));
+        expect(check.reasons.join(' ')).toMatch(/declares no rerollFaces/);
+    });
+});
+
+describe('a paid cost fires its poweredEffect (A11)', () => {
+    useHazardFixtureCards();
+
+    it('unpowered, a powered-cost card fires neither its gainDie (base 0) nor its poweredEffect', () => {
+        const layout = testLayout({ id: 'paid-free', hand: ['fx-surge-cost'], reserve: ['grip'], dice: ['red'] });
+        const s = playHazardPuzzleMoves(createHazardPuzzleSession(layout, 'safe'), [
+            { type: 'stage', uid: 'c1' },
+            { type: 'apply', uid: 'c1' },
+        ]);
+        expect(s.board.dice.map((d) => d.kind)).toEqual(['red']);
+        expect(s.board.hand).toEqual([]);
+        expect(s.board.drawPile).toEqual(['grip']);
+    });
+
+    it('powered, it fires its effect and then its poweredEffect', () => {
+        const layout = testLayout({ id: 'paid-powered', hand: ['fx-surge-cost'], reserve: ['grip'], dice: ['red'] });
+        const s = playHazardPuzzleMoves(createHazardPuzzleSession(layout, 'safe'), [
+            { type: 'stage', uid: 'c1' },
+            { type: 'power', uid: 'c1', dieId: 'd2' },
+            { type: 'apply', uid: 'c1' },
+        ]);
+        expect(s.board.dice.map((d) => [d.kind, d.state])).toEqual([
+            ['red', 'spent'],
+            ['blue', 'available'],
+        ]);
+        expect(s.board.hand.map((h) => h.cardId)).toEqual(['grip']);
+        expect(s.board.drawPile).toEqual([]);
+    });
+
+    it('the poweredEffect fires after the effect: OVERDRIVE rerolls the die it just gained', () => {
+        // The red die powers OVERDRIVE and is spent; gainDie adds a blue die, and only
+        // then does the reroll find an available die to turn gold.
+        const layout = testLayout({ id: 'paid-order', hand: ['fx-overdrive'], dice: ['red'], rerollFaces: ['gold'] });
+        expect(validateHazardPuzzleLayout(layout).ok).toBe(true);
+        expect(
+            diceOf(layout, [
+                { type: 'stage', uid: 'c1' },
+                { type: 'power', uid: 'c1', dieId: 'd2' },
+                { type: 'apply', uid: 'c1' },
+            ]),
+        ).toEqual([
+            ['red', 'spent', false],
+            ['gold', 'available', true],
+        ]);
+    });
+
+    it('a gold majorEffect card fires its poweredEffect only when a die powers it', () => {
+        const gold = card({
+            id: 'fx-gold-paid', kind: 'gold', fp: 6, ep: -1, majorEffect: true,
+            effect: 'gainDie', gainDieBase: 1, gainDiePowered: 1, gainDieKind: 'gold',
+            poweredEffect: 'draw', drawPowered: 1,
+        });
+        const layout = testLayout({ id: 'paid-gold', hand: ['fx-gold-paid'], reserve: ['grip'], dice: ['gold'] });
+        withCard(gold, () => {
+            const free = playHazardPuzzleMoves(createHazardPuzzleSession(layout, 'safe'), [
+                { type: 'stage', uid: 'c1' },
+                { type: 'apply', uid: 'c1' },
+            ]);
+            expect(free.board.dice).toHaveLength(2);
+            expect(free.board.drawPile).toEqual(['grip']);
+            const powered = playHazardPuzzleMoves(createHazardPuzzleSession(layout, 'safe'), [
+                { type: 'stage', uid: 'c1' },
+                { type: 'power', uid: 'c1', dieId: 'd2' },
+                { type: 'apply', uid: 'c1' },
+            ]);
+            expect(powered.board.dice).toHaveLength(2);
+            expect(powered.board.drawPile).toEqual([]);
+        });
     });
 });
 

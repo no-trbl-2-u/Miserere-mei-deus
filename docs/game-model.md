@@ -231,7 +231,12 @@ keyword (`EnemyKeyword = never`).
   number is a cost, on either line or both, and a meter can go below 0. The
   engine also has two utilities no card carries yet: `gainDie` (temporary
   dice on apply) and `reroll` (dice turned to the layout's `rerollFaces`, in
-  order, never rolled); T's card session gives them cards and keywords. The dev menu's
+  order, never rolled). Neither has a default: a card declares its counts
+  unpowered and powered (and a `gainDie` card its colour). A card with a
+  cost on its powered line also carries a `poweredEffect`, a second utility
+  that fires after its `effect` when a die powers it. `validateHazardCardDef`
+  checks these rules and a puzzle refuses a card that fails them; T's card
+  session gives the utilities cards and keywords. The dev menu's
   HAZARD PUZZLES board plays them on the live hazard board (the same cards,
   dice, drag and route select as a live hazard, with no bin) under a per-band clock. The outcome pays XP,
   a modest consumable and a region material; full completion adds the purse,

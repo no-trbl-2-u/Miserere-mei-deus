@@ -4,15 +4,19 @@
  * `HAZARD_DECK` before each test (so `getHazardCardDef` finds them) and
  * takes them off again after each test.
  *
- * Numbers (free / powered), FORCE / ESCAPE:
+ * Numbers (free / powered), FORCE / ESCAPE. Every card passes
+ * `validateHazardCardDef`: counts and colours are declared, and a cost on
+ * the powered line carries a `poweredEffect`.
  *  - fx-toll: purple, -1/-1 free, 0/0 powered, DRAW 2 (a cost on the free line);
- *  - fx-surge-cost: red, 3/0 free, 6/-2 powered, +1 blue die when powered
- *    (a cost on the powered line);
- *  - fx-greed: purple, -3/-3 on both lines, DRAW 2 (a cost on both lines);
- *  - fx-cost-convert: purple, -1/-1 both lines, CONVERT;
- *  - fx-gain-die: purple, 0/0 both lines, +1 die (+2 powered) of its colour;
- *  - fx-gold-die: gold, 0/0 free, 6/6 powered, +1 die (+2 powered), majorEffect;
- *  - fx-reroll: purple, 0/0 both lines, reroll to the layout's set faces.
+ *  - fx-surge-cost: red, 3/0 free, 6/-2 powered, +1 blue die when powered,
+ *    then DRAW 1 as its poweredEffect (a cost on the powered line);
+ *  - fx-greed: purple, -3/-3 on both lines, DRAW 2, +1 blue die when powered;
+ *  - fx-cost-convert: purple, -1/-1 both lines, CONVERT, DRAW 1 when powered;
+ *  - fx-gain-die: purple, 0/0 both lines, +1 purple die (+2 powered);
+ *  - fx-gold-die: gold, 0/0 free, 6/6 powered, +1 gold die (+2 powered), majorEffect;
+ *  - fx-reroll: purple, 0/0 both lines, reroll 1 die (3 powered) to the layout's set faces;
+ *  - fx-overdrive: red, 2/0 free, 5/-3 powered, +1 blue die when powered, then
+ *    reroll 1 die as its poweredEffect (fires after the gained die lands).
  */
 
 import { afterEach, beforeEach } from 'vitest';
@@ -28,18 +32,32 @@ export const FX_TOLL = fixture({ id: 'fx-toll', kind: 'purple', f: -1, e: -1, fp
 export const FX_SURGE_COST = fixture({
     id: 'fx-surge-cost', kind: 'red', f: 3, e: 0, fp: 6, ep: -2,
     effect: 'gainDie', gainDieBase: 0, gainDiePowered: 1, gainDieKind: 'blue',
+    poweredEffect: 'draw', drawPowered: 1,
 });
-export const FX_GREED = fixture({ id: 'fx-greed', kind: 'purple', f: -3, e: -3, fp: -3, ep: -3, effect: 'draw', drawBase: 2, drawPowered: 2 });
-export const FX_COST_CONVERT = fixture({ id: 'fx-cost-convert', kind: 'purple', f: -1, e: -1, fp: -1, ep: -1, effect: 'convert' });
-export const FX_GAIN_DIE = fixture({ id: 'fx-gain-die', kind: 'purple', effect: 'gainDie', gainDieBase: 1, gainDiePowered: 2 });
+export const FX_GREED = fixture({
+    id: 'fx-greed', kind: 'purple', f: -3, e: -3, fp: -3, ep: -3, effect: 'draw', drawBase: 2, drawPowered: 2,
+    poweredEffect: 'gainDie', gainDieBase: 0, gainDiePowered: 1, gainDieKind: 'blue',
+});
+export const FX_COST_CONVERT = fixture({
+    id: 'fx-cost-convert', kind: 'purple', f: -1, e: -1, fp: -1, ep: -1, effect: 'convert',
+    poweredEffect: 'draw', drawPowered: 1,
+});
+export const FX_GAIN_DIE = fixture({
+    id: 'fx-gain-die', kind: 'purple', effect: 'gainDie', gainDieBase: 1, gainDiePowered: 2, gainDieKind: 'purple',
+});
 export const FX_GOLD_DIE = fixture({
     id: 'fx-gold-die', kind: 'gold', f: 0, e: 0, fp: 6, ep: 6,
-    effect: 'gainDie', majorEffect: true, gainDieBase: 1, gainDiePowered: 2,
+    effect: 'gainDie', majorEffect: true, gainDieBase: 1, gainDiePowered: 2, gainDieKind: 'gold',
 });
-export const FX_REROLL = fixture({ id: 'fx-reroll', kind: 'purple', effect: 'reroll' });
+export const FX_REROLL = fixture({ id: 'fx-reroll', kind: 'purple', effect: 'reroll', rerollBase: 1, rerollPowered: 3 });
+export const FX_OVERDRIVE = fixture({
+    id: 'fx-overdrive', kind: 'red', f: 2, e: 0, fp: 5, ep: -3,
+    effect: 'gainDie', gainDieBase: 0, gainDiePowered: 1, gainDieKind: 'blue',
+    poweredEffect: 'reroll', rerollBase: 0, rerollPowered: 1,
+});
 
 export const FIXTURE_CARDS: readonly HazardCardDef[] = [
-    FX_TOLL, FX_SURGE_COST, FX_GREED, FX_COST_CONVERT, FX_GAIN_DIE, FX_GOLD_DIE, FX_REROLL,
+    FX_TOLL, FX_SURGE_COST, FX_GREED, FX_COST_CONVERT, FX_GAIN_DIE, FX_GOLD_DIE, FX_REROLL, FX_OVERDRIVE,
 ];
 
 function removeFixtureCards(): void {

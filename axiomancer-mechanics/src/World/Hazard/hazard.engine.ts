@@ -43,6 +43,7 @@ import {
     type HazardRewardId,
     type HazardRouteKey,
     type HazardSessionState,
+    type HazardUtilityEffect,
 } from './hazard.types';
 
 // ---------------------------------------------------------------------------
@@ -235,11 +236,11 @@ export function finishHazardRolling(s: HazardSessionState): HazardSessionState {
 function applyUtilityEffect(
     s: HazardSessionState,
     def: HazardCardDef,
-    powered: boolean,
+    effect: HazardUtilityEffect,
+    major: boolean,
     deckBag: readonly string[],
 ): HazardSessionState {
-    const major = powered || def.majorEffect === true;
-    if (def.effect === 'draw') {
+    if (effect === 'draw') {
         const base = def.drawBase ?? 1;
         const n = major ? (def.drawPowered ?? base) : base;
         if (n <= 0) return s;
@@ -252,7 +253,7 @@ function applyUtilityEffect(
             uidCounter: draw.uidCounter,
         };
     }
-    if (def.effect === 'recast') {
+    if (effect === 'recast') {
         let rng = s.rng;
         let uc = s.uidCounter;
         let dice = s.dice.map((d) => {
@@ -270,7 +271,7 @@ function applyUtilityEffect(
         }
         return { ...s, dice, rng, uidCounter: uc };
     }
-    if (def.effect === 'convert') {
+    if (effect === 'convert') {
         // CONVERT always mints WILD GOLD dice (so it is never strictly worse
         // than re-cast). Minor turns ONE hostile ✕; major turns them ALL, and
         // — when ≤1 was converted — conjures a floating gold die so a major
@@ -303,9 +304,12 @@ function applyUtilityEffect(
         void convertedCount;
         return { ...s, dice, rng, uidCounter: uc };
     }
-    if (def.effect === 'gainDie') {
-        const n = major ? (def.gainDiePowered ?? 1) : (def.gainDieBase ?? 1);
-        const kind = def.gainDieKind ?? def.kind;
+    if (effect === 'gainDie') {
+        // No defaults: a card missing its count or colour adds nothing
+        // (`validateHazardCardDef` rejects such a card).
+        const n = (major ? def.gainDiePowered : def.gainDieBase) ?? 0;
+        const kind = def.gainDieKind;
+        if (n <= 0 || !kind) return s;
         let rng = s.rng;
         let uc = s.uidCounter;
         const added: HazardDie[] = [];
@@ -317,12 +321,13 @@ function applyUtilityEffect(
         }
         return { ...s, dice: [...s.dice, ...added], rng, uidCounter: uc };
     }
-    if (def.effect === 'reroll') {
-        // Minor turns the first available die, major every available die,
-        // each to the next of the session's set faces. No die is rolled;
-        // once the faces run out the rest keep their face.
+    if (effect === 'reroll') {
+        // Turns the card's count of available dice (`rerollBase` minor,
+        // `rerollPowered` major), in die order, each to the next of the
+        // session's set faces. No die is rolled; once the faces run out the
+        // rest keep their face.
         const faces = (s.rerollFaces ?? []).slice();
-        let budget = major ? Infinity : 1;
+        let budget = (major ? def.rerollPowered : def.rerollBase) ?? 0;
         const dice = s.dice.map((d) => {
             if (d.state !== 'available' || budget <= 0) return d;
             budget -= 1;
@@ -427,8 +432,9 @@ export function powerHazardCard(
 
 /**
  * APPLIES a staged card: fires its utility effect once (powered tier if a
- * die is attached, else base — gold `majorEffect` cards are always major)
- * and locks the card. Applied cards can no longer be unstaged, re-powered,
+ * die is attached, else base — gold `majorEffect` cards are always major),
+ * then, on a powered card, its `poweredEffect` at the major tier, and
+ * locks the card. Applied cards can no longer be unstaged, re-powered,
  * or discarded. A no-op if the card is missing or already applied.
  */
 export function applyHazardCard(
@@ -445,7 +451,10 @@ export function applyHazardCard(
     };
     const def = getHazardCardDef(card.cardId);
     if (def.dead || !def.effect) return ns;
-    return applyUtilityEffect(ns, def, card.dieId !== null, deckBag);
+    const powered = card.dieId !== null;
+    const after = applyUtilityEffect(ns, def, def.effect, powered || def.majorEffect === true, deckBag);
+    if (!powered || !def.poweredEffect) return after;
+    return applyUtilityEffect(after, def, def.poweredEffect, true, deckBag);
 }
 
 /**
