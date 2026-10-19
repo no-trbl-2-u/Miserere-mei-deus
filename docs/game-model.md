@@ -233,7 +233,11 @@ keyword (`EnemyKeyword = never`).
   card; `HAZARD_DECK` and the live hazard keep every card.
   `npm run puzzle:report -w axiomancer-mechanics` prints, per demo and
   route, how many winning outcomes stage each card and which are required
-  or unused (`hazardPuzzleCardReport`). Card values are signed: a negative
+  or unused (`hazardPuzzleCardReport`). The library test fails, naming the
+  cards, on a worse copy: a card no win stages in any demo that holds it, or
+  one a pool card beats in every demo that holds it (at least as many
+  winning outcomes everywhere, more in one: `hazardPuzzleDominatedCards`).
+  Card values are signed: a negative
   number is a cost, on either line or both, and a meter can go below 0. The
   engine also has two utilities no card carries yet: `gainDie` (temporary
   dice on apply) and `reroll` (dice turned to the layout's `rerollFaces`, in
