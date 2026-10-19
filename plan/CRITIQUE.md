@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-10-18 at commit 757d79ff
-> Pass count: 94
+> Last pass: 2026-10-19 at commit 5b2059cb
+> Pass count: 95
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
@@ -751,6 +751,23 @@
 > not re-filed: pass 89's "you stopped here" tense row (both rest
 > captures), the unfixtured exploration hub bouncing to the title, and
 > the mobile hazard strip's "CHOOSE TO PROC..." (pass 68 trade). Zero
+> fresh findings this pass.
+
+> **[critique pass 95, 2026-10-19, commit 5b2059cb] Unattended `/march`
+> tick.** `critique:drive` (`CRITIQUE_VIEWPORT=both`), full 11-screen
+> set: 22 captures, 0 nav trouble, 0 console/page errors. 19 commits
+> after pass 94: HP1a, HP1b and HP1c (hazard puzzle engine: no bin,
+> signed costs; the puzzle board is a dev surface, not in the set), the
+> HP2/HP3/CT1/RS1 plots, the deadline reminder and the measured truth
+> runs. None of it reaches a screen in the set, and none of the 22
+> captures shows a regression against pass 94. Checked and not filed:
+> UNBROKEN OATH printing "DRAW 2" on both lines of the desktop hazard
+> hand is its data (`drawBase` = `drawPowered`, a gold major effect in
+> `hazard.content.ts`). Reconfirmed and not re-filed: pass 89's "you
+> stopped here" tense row (both rest captures), the unfixtured
+> exploration hub bouncing to the title, the mobile hazard strip's
+> "CHOOSE TO PROC..." (pass 68 trade), and the covered fan cards
+> cutting their names on a phone (pass 88; whole when lifted). Zero
 > fresh findings this pass.
 
 ## Pending
