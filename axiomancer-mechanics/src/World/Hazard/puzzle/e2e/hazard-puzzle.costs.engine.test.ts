@@ -24,7 +24,7 @@ import {
     playHazardPuzzleMoves,
 } from '../hazard-puzzle.session';
 import { solveHazardPuzzle } from '../hazard-puzzle.solver';
-import { HAZARD_PUZZLE_FAILURE } from '../hazard-puzzle.tuning';
+import { HAZARD_PUZZLE_CARD_POOL, HAZARD_PUZZLE_FAILURE } from '../hazard-puzzle.tuning';
 import type { HazardCardDef } from '../../hazard.types';
 import type { HazardPuzzleLayout, HazardPuzzleMove, HazardPuzzleSession } from '../hazard-puzzle.types';
 import { validateHazardPuzzleLayout } from '../hazard-puzzle.validate';
@@ -40,13 +40,16 @@ function card(over: Partial<HazardCardDef> & Pick<HazardCardDef, 'id'>): HazardC
     return { name: over.id, kind: 'purple', rarity: 'common', weight: 0, f: 0, e: 0, flavor: '', keywords: [], ...over };
 }
 
-/** Registers `def` on the deck for one call, then takes it off again. */
+/** Registers `def` on the deck and the puzzle card pool for one call, then takes it off both again. */
 function withCard<T>(def: HazardCardDef, run: () => T): T {
     HAZARD_DECK.push(def);
+    HAZARD_PUZZLE_CARD_POOL.push(def.id);
     try {
         return run();
     } finally {
         HAZARD_DECK.splice(HAZARD_DECK.indexOf(def), 1);
+        const i = HAZARD_PUZZLE_CARD_POOL.indexOf(def.id);
+        if (i !== -1) HAZARD_PUZZLE_CARD_POOL.splice(i, 1);
     }
 }
 
