@@ -341,9 +341,35 @@ on `/devpuzzle`.
   the clock-expiry test kept; the live `HazardBoard` and `app/hazard` tests unchanged (A22).
 - Verify gate: mobile verify plus `verify:visual`.
 
-### B3f — Timed demo solves and the process lock (attended) · S · closes A17 · requires B3e, B3e2, HP1a, HP1b, HP3a
+### B3f — Timed demo solves and the process lock (attended) · S · closes A17 · requires B3e, B3e2, HP1a, HP1b, HP3a, HP2c
 Measure: `docs/reports/hazard-puzzle-timing.md` exists with a median solve time and success rate per demo, the
 resulting clocks are in `HAZARD_PUZZLE_CLOCK_SECONDS`, and T's verdict is quoted.
 - Scope: the timing report; the three clock constants.
 - Tests: none new; the A15 test's values follow the constants.
 - Verify gate: mechanics verify.
+
+**T's rulings, 2026-10-19.** Settled in an attended session before any solve:
+
+- **HP2c ships first.** B3f now requires HP2c: the solves are timed by the dev-only move log, not by a
+  hand-held stopwatch. HP2c was slotted in W2; it moves to W1 ahead of B3f. HP2e requires both, so building
+  it first serves that row too.
+- **The sample.** T solves each route **once** — a first-time solve survives exactly one exposure, so T gets
+  one per route and no more. The `playtester` agent runs **several independent solves per route**, each with
+  fresh context, to thicken the sample. The report records T's and the agent's times separately and says how
+  many solves each median rests on.
+- **Order.** T solves before reading any playtester transcript, and the brief's layouts are never described
+  to T in chat. A described layout is a spent first-time solve.
+
+**Two spec gaps A17 leaves open** (found 2026-10-19, to settle as B3f ships):
+
+- **Per demo vs per band.** A17 asks for a median "per demo", but `HAZARD_PUZZLE_CLOCK_SECONDS` is per
+  *band*, and the demos do not map one-to-one: cliff is easy/easy, ashfall medium/medium, undercroft
+  **medium/hard**. The report therefore records per-demo-per-route times and groups them by band to set the
+  three constants.
+- **`hard` rests on one route.** `demo-undercroft-hard` on `risk` is the only hard route in the demo set, so
+  the hard clock rests on that route's solves alone. The report says so where it sets `hard`.
+
+**Open: the clock is frozen, not hidden.** A17 wants the clock hidden during a solve. `?paused=1` only sets
+`running = false` in `HazardPuzzleDemo`, so `remaining` stays at its full value and the strip still renders
+the number. A frozen clock exerts no time pressure, so it may be good enough; making A17 literal is a small
+`?clock=hidden` param on the `/devpuzzle` route, outside this phase's scope.

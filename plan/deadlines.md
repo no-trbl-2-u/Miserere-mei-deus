@@ -35,15 +35,17 @@ left; otherwise after.
 ### W1 — Hazard puzzles locked (Oct 20 - Nov 2)
 
 - Rows: HP1c (cost cards: signed costs, extra die, reroll), HP1d (worse-copy test), HP3 (the illusion of
-  randomness, to plot now), B3f (attended: timed demo solves and the clocks), HP2a (card audit; T rules the cut at
+  randomness, to plot now), HP2c (the move log, moved up from W2: it times B3f's solves), B3f (attended: timed
+  demo solves and the clocks), HP2a (card audit; T rules the cut at
   its merge), HP2b (difficulty features).
 - Alongside, needing no time from T: LG1a-LG1e (loop gates), CT1 (real-fight combat tests), RS1 (the loop sweeps
   reports).
-- T's time (about 3 h): B3f's timed solves; HP2a's cut; playing the demos at the end.
+- T's time (about 3 h): B3f's timed solves (one per route, the playtester agent covers the rest; T, 2026-10-19);
+  HP2a's cut; playing the demos at the end.
 
 ### W2 — Act 1 hazards are puzzles (Nov 3 - Nov 16)
 
-- Rows: HP2c-HP2f (move log, calibration set, attended calibration solves, bands on the measure).
+- Rows: HP2d-HP2f (calibration set, attended calibration solves, bands on the measure). HP2c moved to W1.
 - To plot in W2: the Act 1 puzzle set, routing the live hazard nodes to the puzzle, and the cuts (RE-CAST cards,
   the saved hazard deck, `deadcard`; B3 Follow-ups).
 - T's time (about 5 h): calibration solves (HP2e); a card session designing the first cost cards (Toll, Debt,
@@ -87,12 +89,13 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 |---|---|---|---|---|
 | [ ] | 2026-10-24 | Cost-card engine and the worse-copy test | W1 | HP1c, HP1c2, HP1d |
 | [ ] | 2026-10-27 | The puzzle looks random (roll, draw, reroll) | W1 | HP3a, HP3b |
+| [ ] | 2026-10-26 | The dev-only move log (times B3f's solves) | W1 | HP2c |
 | [ ] | 2026-10-29 | Timed demo solves and the clocks | W1 | B3f |
 | [ ] | 2026-10-30 | Card audit; T rules the cut at the HP2a merge | W1 | HP2a |
 | [ ] | 2026-10-31 | Difficulty features in the solver | W1 | HP2b |
 | [ ] | 2026-11-02 | W1 demo: T plays the three demos | W1 | T |
 | [ ] | 2026-11-04 | Act 1 puzzle set, live hazard routing and the cuts | W2 | needs plot |
-| [ ] | 2026-11-07 | Move log and calibration set | W2 | HP2c, HP2d |
+| [ ] | 2026-11-07 | The calibration set | W2 | HP2d |
 | [ ] | 2026-11-11 | Calibration solves | W2 | HP2e |
 | [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends) | W2 | T |
 | [ ] | 2026-11-12 | Cost-card design session (Toll, Debt, Overdrive) | W2 | T |
