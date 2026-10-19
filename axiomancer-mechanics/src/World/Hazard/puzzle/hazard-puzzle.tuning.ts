@@ -31,6 +31,16 @@ export const HAZARD_PUZZLE_TUNING = {
 } as const;
 
 export const HAZARD_PUZZLE_BANDS = HAZARD_PUZZLE_TUNING.bands;
+
+/**
+ * The cards a puzzle may use: the card audit's recommendation
+ * (`npm run puzzle:audit`), as T approves it. No two of them play the same
+ * and none is banned. Cut from puzzles, not from `HAZARD_DECK`: the live
+ * hazard still draws CLIFFRUNNER (plays as SCRAMBLE), BALANCE POLE and
+ * PILGRIM'S BLESSING (RE-CAST), and CRACK (dead). Test fixture cards join
+ * it for the length of their test.
+ */
+export const HAZARD_PUZZLE_CARD_POOL: string[] = ['haul', 'grip', 'scram', 'leap', 'footing', 'windread', 'oath'];
 export const HAZARD_PUZZLE_SOLVER_BUDGET = HAZARD_PUZZLE_TUNING.solver.budget;
 
 /**

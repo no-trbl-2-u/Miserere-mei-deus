@@ -1,7 +1,8 @@
 /**
  * Hazard puzzle — layout validation.
  *
- * A layout is playable only when every card exists, none is a RE-CAST
+ * A layout is playable only when every card exists and is in the puzzle
+ * card pool, none is a RE-CAST
  * card (a puzzle never rolls, so re-casting has nothing to do), the act is
  * Act 1, it reuses a live hazard's copy, it sits in an Act 1 region, both
  * goals are positive whole numbers, and a layout holding a reroll card
@@ -12,6 +13,7 @@
 import type { MapName } from '../../map.library';
 import { getHazardCardDef, HAZARD_LIBRARY } from '../hazard.content';
 import type { HazardCardDef } from '../hazard.types';
+import { HAZARD_PUZZLE_CARD_POOL } from './hazard-puzzle.tuning';
 import type { HazardPuzzleLayout, HazardPuzzleValidation } from './hazard-puzzle.types';
 
 /** The only act a hazard puzzle may belong to until T lifts the scope. */
@@ -37,6 +39,9 @@ function checkCard(layout: HazardPuzzleLayout, cardId: string, where: string, re
     if (!def) {
         reasons.push(`${where}: unknown hazard card "${cardId}"`);
         return;
+    }
+    if (!HAZARD_PUZZLE_CARD_POOL.includes(cardId)) {
+        reasons.push(`${where}: "${cardId}" is not in the puzzle card pool`);
     }
     if (def.effect === 'recast') {
         reasons.push(`${where}: "${cardId}" is a RE-CAST card; puzzles never re-cast dice`);

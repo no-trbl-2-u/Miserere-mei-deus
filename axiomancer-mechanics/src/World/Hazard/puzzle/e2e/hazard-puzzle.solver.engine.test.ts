@@ -16,6 +16,9 @@ import { solveHazardPuzzle } from '../hazard-puzzle.solver';
 import { HAZARD_PUZZLE_BANDS, HAZARD_PUZZLE_SOLVER_BUDGET } from '../hazard-puzzle.tuning';
 import type { HazardPuzzleLayout } from '../hazard-puzzle.types';
 import { DRAW_ONLY_LAYOUT, FIXTURE_LIBRARY, MIXED_LAYOUT, testLayout } from './hazard-puzzle.layouts.mock';
+import { useHazardPuzzlePoolCards } from './hazard-puzzle.pool.mock';
+
+useHazardPuzzlePoolCards(['crack', 'runner']);
 
 function replaysToClear(layout: HazardPuzzleLayout, route: 'safe' | 'risk'): boolean {
     const solution = solveHazardPuzzle(layout, route);

@@ -100,10 +100,10 @@ describe('HazardPuzzleDemo', () => {
         expect(screen.getAllByTestId(/^hazard-die-d\d+$/)).toHaveLength(3);
     });
 
-    it('a Mind of 3 unlocks CLIFFRUNNER into the hand, and the strip names it', () => {
+    it('a Mind of 3 unlocks a second SCRAMBLE into the hand, and the strip names it', () => {
         const { screen } = openHardRisk({ heart: 1, body: 1, mind: 3 });
         expect(screen.getByTestId('hazard-puzzle-unlocks').props.children).toBe(
-            'Your stats unlock: CLIFFRUNNER joins the hand (MIND 3).',
+            'Your stats unlock: SCRAMBLE joins the hand (MIND 3).',
         );
         expect(screen.getAllByTestId(/^hazard-hand-c\d+$/)).toHaveLength(4);
     });

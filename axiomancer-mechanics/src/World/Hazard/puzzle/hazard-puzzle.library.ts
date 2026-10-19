@@ -14,8 +14,10 @@ import { getHazardDef } from '../hazard.content';
 import type { HazardPuzzleLayout } from './hazard-puzzle.types';
 
 /**
- * Easy: the cliff path on the Beacon Crags. Risk [6, 8]: 36 ways through;
- * safe 19: 34. A Mind of 3 adds a second blue die for the ESCAPE cards.
+ * Easy: the cliff path on the Beacon Crags. Risk [5, 8]: 44 ways through;
+ * safe 17: 32. A Mind of 3 adds a second blue die for the ESCAPE cards.
+ * The reserve's second SCRAMBLE was CLIFFRUNNER until the card pool cut
+ * it (it plays the same); the goals came down a step to stay easy.
  */
 const CLIFF_EASY: HazardPuzzleLayout = {
     id: 'demo-cliff-easy',
@@ -24,9 +26,9 @@ const CLIFF_EASY: HazardPuzzleLayout = {
     hazardId: 'cracked-cliff',
     region: 'beacon-crags',
     hand: ['leap', 'haul', 'footing', 'scram'],
-    reserve: ['runner'],
+    reserve: ['scram'],
     dice: ['red', 'blue', 'purple'],
-    goals: { safe: 19, risk: [6, 8] },
+    goals: { safe: 17, risk: [5, 8] },
     bands: { safe: 'easy', risk: 'easy' },
     unlocks: [{ stat: 'mind', min: 3, kind: 'extraDie' }],
 };
@@ -43,7 +45,7 @@ const ASHFALL_MEDIUM: HazardPuzzleLayout = {
     act: 1,
     hazardId: 'ashfall-crossing',
     region: 'charcoal-wood',
-    hand: ['footing', 'windread', 'runner'],
+    hand: ['footing', 'windread', 'scram'],
     reserve: ['grip'],
     dice: ['hex', 'blue', 'red'],
     goals: { safe: 16, risk: [7, 9] },
@@ -58,7 +60,7 @@ const ASHFALL_MEDIUM: HazardPuzzleLayout = {
  * Hard: the flooded undercroft in the Lantern Deep. Risk [13, 14]: 2 ways,
  * each clearing with nothing to spare; safe 24: 10. Neither route clears
  * without SURE FOOTING drawing from the reserve (IRON GRIP, then FAITH LEAP).
- * A Mind of 3 puts CLIFFRUNNER in the hand.
+ * A Mind of 3 puts a second SCRAMBLE in the hand.
  */
 const UNDERCROFT_HARD: HazardPuzzleLayout = {
     id: 'demo-undercroft-hard',
@@ -71,7 +73,7 @@ const UNDERCROFT_HARD: HazardPuzzleLayout = {
     dice: ['purple', 'red', 'blue'],
     goals: { safe: 24, risk: [13, 14] },
     bands: { safe: 'medium', risk: 'hard' },
-    unlocks: [{ stat: 'mind', min: 3, kind: 'extraCard', cardId: 'runner' }],
+    unlocks: [{ stat: 'mind', min: 3, kind: 'extraCard', cardId: 'scram' }],
 };
 
 /** The demo puzzles, easy to hard. */

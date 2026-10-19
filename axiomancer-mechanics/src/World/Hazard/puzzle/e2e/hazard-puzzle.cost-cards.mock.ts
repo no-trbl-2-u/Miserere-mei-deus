@@ -1,8 +1,9 @@
 /**
  * Test-only cost and utility cards. Not deck content: no card or keyword
  * is added to the game. `useHazardFixtureCards()` pushes them onto
- * `HAZARD_DECK` before each test (so `getHazardCardDef` finds them) and
- * takes them off again after each test.
+ * `HAZARD_DECK` (so `getHazardCardDef` finds them) and their ids onto
+ * `HAZARD_PUZZLE_CARD_POOL` before each test, and takes them off again
+ * after each test.
  *
  * Numbers (free / powered), FORCE / ESCAPE:
  *  - fx-toll: purple, -1/-1 free, 0/0 powered, DRAW 2 (a cost on the free line);
@@ -18,6 +19,7 @@
 import { afterEach, beforeEach } from 'vitest';
 
 import { HAZARD_DECK } from '../../hazard.content';
+import { HAZARD_PUZZLE_CARD_POOL } from '../hazard-puzzle.tuning';
 import type { HazardCardDef } from '../../hazard.types';
 
 function fixture(over: Partial<HazardCardDef> & Pick<HazardCardDef, 'id' | 'kind'>): HazardCardDef {
@@ -46,6 +48,8 @@ function removeFixtureCards(): void {
     for (const card of FIXTURE_CARDS) {
         const i = HAZARD_DECK.indexOf(card);
         if (i !== -1) HAZARD_DECK.splice(i, 1);
+        const p = HAZARD_PUZZLE_CARD_POOL.indexOf(card.id);
+        if (p !== -1) HAZARD_PUZZLE_CARD_POOL.splice(p, 1);
     }
 }
 
@@ -53,6 +57,7 @@ function removeFixtureCards(): void {
 export function useHazardFixtureCards(): void {
     beforeEach(() => {
         HAZARD_DECK.push(...FIXTURE_CARDS);
+        HAZARD_PUZZLE_CARD_POOL.push(...FIXTURE_CARDS.map((c) => c.id));
     });
     afterEach(removeFixtureCards);
 }

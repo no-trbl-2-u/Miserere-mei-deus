@@ -65,13 +65,13 @@ describe('the route pick on the live RouteSelect (A19)', () => {
     });
 
     it('previews the opening hand with the stat unlocks granted', () => {
-        const unlocks: HazardPuzzleUnlock[] = [{ stat: 'mind', min: 3, kind: 'extraCard', cardId: 'runner' }];
+        const unlocks: HazardPuzzleUnlock[] = [{ stat: 'mind', min: 3, kind: 'extraCard', cardId: 'scram' }];
         expect(selectHazardPuzzleRouteSelectVM(HARD, []).hand.map((c) => c.cardId)).toEqual(['footing', 'haul', 'scram']);
         expect(selectHazardPuzzleRouteSelectVM(HARD, unlocks).hand.map((c) => c.cardId)).toEqual([
             'footing',
             'haul',
             'scram',
-            'runner',
+            'scram',
         ]);
     });
 });
