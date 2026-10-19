@@ -56,6 +56,7 @@ import {
     hazardEntryCardVM,
     hazardRouteMeters,
     hazardThresholdLadder,
+    type HazardDieRoll,
     type HazardRouteChoiceVM,
     type HazardViewModel,
 } from './hazard.engine';
@@ -239,6 +240,54 @@ export function selectHazardPuzzleRouteSelectVM(
     unlocks: readonly HazardPuzzleUnlock[],
 ): HazardViewModel {
     return selectHazardPuzzleViewModel(layout, createHazardPuzzleSession(layout, 'safe', unlocks), 'route-select');
+}
+
+// ---------------------------------------------------------------------------
+// The tray between two moves: rerolled and gained dice
+// ---------------------------------------------------------------------------
+
+export interface HazardPuzzleDiceChange {
+    /** Dice on both boards whose face changed (a reroll), in tray order. */
+    rerolled: string[];
+    /** Dice on the next board only (a gained die), in tray order. */
+    gained: string[];
+}
+
+/**
+ * What one move did to the tray, so the board can animate it: a reroll
+ * turns a die's face in place, a gained die is new. Reads the two boards
+ * only; every face is the layout's, nothing is rolled here.
+ */
+export function selectHazardPuzzleDiceChange(
+    prev: HazardPuzzleSession,
+    next: HazardPuzzleSession,
+): HazardPuzzleDiceChange {
+    const before = new Map(prev.board.dice.map((d) => [d.id, d.kind]));
+    const rerolled: string[] = [];
+    const gained: string[] = [];
+    for (const d of next.board.dice) {
+        const kind = before.get(d.id);
+        if (kind === undefined) gained.push(d.id);
+        else if (kind !== d.kind) rerolled.push(d.id);
+    }
+    return { rerolled, gained };
+}
+
+/**
+ * The board's roll record after a reroll: each rerolled die's count goes up
+ * by one (replaying its tumble), staggered in tray order. No reroll returns
+ * the same record, so the memoised board does not re-render for it.
+ */
+export function nextHazardPuzzleDieRolls(
+    rolls: Readonly<Record<string, HazardDieRoll>>,
+    rerolled: readonly string[],
+): Readonly<Record<string, HazardDieRoll>> {
+    if (rerolled.length === 0) return rolls;
+    const next = { ...rolls };
+    rerolled.forEach((id, order) => {
+        next[id] = { count: (rolls[id]?.count ?? 0) + 1, order };
+    });
+    return next;
 }
 
 // ---------------------------------------------------------------------------
