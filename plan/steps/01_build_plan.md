@@ -177,7 +177,7 @@ event-pool and layout files).
       or a content-free force-push stops buying a second full review, while a conflict resolution still
       reviews because it changes that diff. A missing digest falls back to the SHA rule. Brief
       `plan/phases/phase_RV2_review_skips_unchanged_diff.md`. Requires nothing.
-- [ ] Phase TP1a — Title plate legibility gate (plotted by T, 2026-10-19): a check that measures the wordmark's
+- [x] (#655) Phase TP1a — Title plate legibility gate (plotted by T, 2026-10-19): a check that measures the wordmark's
       and the psalm line's contrast against the plate region behind them — through the `axmTitleFoot` and
       `axmTitleSides` scrims and at `MENU_PLATE_OPACITY` — from `titleLayout` and `titleWordmarkFrames`, not
       copied geometry. Baseline-and-arm: the installed plate's figures are recorded and the gate fails only for a
