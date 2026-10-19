@@ -1,13 +1,15 @@
 // scripts/pr-review.test.mjs — when the shadow reviewer runs (phase RV1b, A5):
 // open same-repo `loop:pr` / `plot` PRs, never drafts on `pull_request`,
-// once per head; a dispatched run also takes `eval:seed` drafts.
+// once per head; a dispatched run also takes `eval:seed` drafts. Phase RV2:
+// once per diff, so a head whose diff against the base a verdict already
+// names is skipped whatever its SHA.
 //
 //   node --test scripts/pr-review.test.mjs
 
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
-import { DISPATCH_LABELS, REVIEW_LABELS, formatParentTests, headMarker, reviewWanted } from './pr-review.mjs'
+import { DISPATCH_LABELS, REVIEW_LABELS, diffDigest, formatParentTests, headMarker, markedHeads, reviewWanted } from './pr-review.mjs'
 
 const pr = (extra = {}) => ({
   state: 'OPEN', isDraft: false, isCrossRepository: false, labels: ['loop:pr', 'size:M'], head: 'a'.repeat(40), comments: [], ...extra,
@@ -34,6 +36,81 @@ test('a head that already has a verdict is not reviewed again; a new head is', (
   const verdict = `## Review verdict\n<!-- pr-review:verdict pass -->\n${headMarker(head)}`
   assert.equal(reviewWanted(pr({ head, comments: [verdict] })).go, false)
   assert.equal(reviewWanted(pr({ head: 'c'.repeat(40), comments: [verdict] })).go, true)
+})
+
+// --- the diff digest (phase RV2) ----------------------------------------------
+
+const PATCH = [
+  'diff --git a/x.mjs b/x.mjs', '--- a/x.mjs', '+++ b/x.mjs', '@@ -1,2 +1,2 @@', ' a', '-b', '+c',
+  'diff --git a/y.mjs b/y.mjs', '--- a/y.mjs', '+++ b/y.mjs', '@@ -10,2 +10,2 @@', ' a', '-b', '+d', '',
+].join('\n')
+
+test('diffDigest hashes a patch stably, ignores hunk line numbers, and sees an edited line', () => {
+  const d = diffDigest(PATCH)
+  assert.match(d, /^[0-9a-f]{40}$/)
+  assert.equal(diffDigest(PATCH), d)
+  assert.equal(diffDigest(PATCH.replace('@@ -10,2 +10,2 @@', '@@ -50,2 +50,2 @@')), d, 'a merge that moves the hunk keeps the digest')
+  assert.notEqual(diffDigest(PATCH.replace('+d', '+e')), d, 'a resolution that edits a line changes it')
+  assert.equal(diffDigest(''), null)
+  assert.equal(diffDigest('  \n'), null)
+})
+
+test('the marker is one line, greppable for the SHA, and reads back in both shapes', () => {
+  const sha = 'e'.repeat(40)
+  const dg = 'f'.repeat(40)
+  assert.equal(headMarker(sha), `<!-- pr-review:head ${sha} -->`)
+  assert.equal(headMarker(sha, dg), `<!-- pr-review:head ${sha} diff ${dg} -->`)
+  assert.ok(!headMarker(sha, dg).includes('\n'))
+  assert.ok(headMarker(sha, dg).includes(`pr-review:head ${sha}`))
+  assert.deepEqual(markedHeads(`x\n${headMarker(sha, dg)}\n${headMarker('1'.repeat(40))}`), [
+    { sha, digest: dg }, { sha: '1'.repeat(40), digest: null },
+  ])
+  assert.deepEqual(markedHeads('no marker here'), [])
+})
+
+test('a new SHA whose diff a verdict already names is skipped, and the reason names the digest', () => {
+  const dg = diffDigest(PATCH)
+  const verdict = `## Review verdict\n<!-- pr-review:verdict pass -->\n${headMarker('b'.repeat(40), dg)}`
+  const d = reviewWanted(pr({ head: 'c'.repeat(40), digest: dg, comments: [verdict] }))
+  assert.equal(d.go, false)
+  assert.match(d.reason, new RegExp(`diff ${dg.slice(0, 8)} already has a verdict`))
+})
+
+test('the same SHA still skips under the new marker, with or without a digest', () => {
+  const head = 'b'.repeat(40)
+  const verdict = headMarker(head, '9'.repeat(40))
+  assert.equal(reviewWanted(pr({ head, comments: [verdict] })).go, false)
+  assert.equal(reviewWanted(pr({ head, digest: '8'.repeat(40), comments: [verdict] })).go, false)
+})
+
+test('a changed diff on a new SHA is reviewed', () => {
+  const verdict = headMarker('b'.repeat(40), diffDigest(PATCH))
+  const d = reviewWanted(pr({ head: 'c'.repeat(40), digest: diffDigest(PATCH.replace('+d', '+e')), comments: [verdict] }))
+  assert.equal(d.go, true)
+})
+
+test('old SHA-only verdicts never skip a different head, and never throw', () => {
+  const old = ['## Review verdict', headMarker('b'.repeat(40)), 'garbage <!-- pr-review:head -->'].join('\n')
+  assert.equal(reviewWanted(pr({ head: 'c'.repeat(40), digest: diffDigest(PATCH), comments: [old, ''] })).go, true)
+})
+
+test('no digest falls back to the SHA rule and says so', () => {
+  const dg = diffDigest(PATCH)
+  const verdict = headMarker('b'.repeat(40), dg)
+  const d = reviewWanted(pr({ head: 'c'.repeat(40), digest: null, comments: [verdict] }))
+  assert.equal(d.go, true, 'a missing digest never silences a review')
+  assert.match(d.reason, /digest unavailable/)
+  assert.equal(reviewWanted(pr({ head: 'b'.repeat(40), comments: [verdict] })).go, false)
+})
+
+test('the RV1b gates hold before the digest is read', () => {
+  const dg = diffDigest(PATCH)
+  assert.equal(reviewWanted(pr({ digest: dg, isCrossRepository: true })).go, false)
+  assert.equal(reviewWanted(pr({ digest: dg, isDraft: true })).go, false)
+  assert.equal(reviewWanted(pr({ digest: dg, state: 'CLOSED' })).go, false)
+  assert.equal(reviewWanted(pr({ digest: dg, labels: ['size:S'] })).go, false)
+  const verdict = headMarker('b'.repeat(40), dg)
+  assert.equal(reviewWanted(pr({ head: 'c'.repeat(40), digest: dg, comments: [verdict], dispatch: true })).go, true, 'a dispatch always reviews')
 })
 
 test('a dispatched review takes eval:seed drafts and repeats a head, but never a fork', () => {

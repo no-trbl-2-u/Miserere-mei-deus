@@ -1,5 +1,10 @@
 # Phase RV1 — PR review pipeline: the always-reporting gate and the shadow reviewer
 
+> **Changed by RV2** (`plan/phases/phase_RV2_review_skips_unchanged_diff.md`): the reviewer's
+> once-per-head rule is now once per head *or* per diff. The head marker carries a
+> `git patch-id --stable` digest of the PR's diff, and a head whose digest a verdict already names is
+> skipped. Read RV1b's dedupe below as the rule before RV2.
+
 ## Sources
 
 - The `/plot` request from T, 2026-10-16: a PR review pipeline modelled on Anthropic's published practice (risk tiers, shadow mode first, low-risk auto-merge later). The design is `docs/reports/pr-review-research.md` (stamp 2026-10-16, `a712832a7`): Part 1 the escape data, Part 3 the staged design and the risk-tier table, Part 4 the thresholds, Part 5 the brief this phase carries. The report rides this plot's PR because it was never merged on its own.
