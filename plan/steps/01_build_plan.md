@@ -171,6 +171,16 @@ event-pool and layout files).
 - [x] (#628) Phase HP1a — No bin, an honest count, the card report, demos back in band (plotted by T, 2026-10-18): puzzle sessions have no discard; a winning outcome counts only cards that change the result; `hazardPuzzleCardReport` and `npm run puzzle:report`; demos re-authored into band. Brief `plan/phases/phase_HP1_hazard_cost_utility.md` § HP1a. Requires nothing.
 - [x] (#631) Phase HP1b — The puzzle board loses its bin (plotted by T, 2026-10-18): `/devpuzzle` shows no bin; the live `/hazard` board keeps it. Brief `plan/phases/phase_HP1_hazard_cost_utility.md` § HP1b. Requires HP1a, B3e2.
 - [x] (#637) Phase HP3a — The puzzle rolls and draws like a live hazard (plotted by T, 2026-10-19): the dice roll in on the layout's faces and the clock starts after; drawn cards slide in from the reserve; nothing random. Brief `plan/phases/phase_HP3_puzzle_randomness_illusion.md` § HP3a. Requires nothing.
+- [ ] Phase TP1a — Title plate legibility gate (plotted by T, 2026-10-19): a check that measures the wordmark's
+      and the psalm line's contrast against the plate region behind them — through the `axmTitleFoot` and
+      `axmTitleSides` scrims and at `MENU_PLATE_OPACITY` — from `titleLayout` and `titleWordmarkFrames`, not
+      copied geometry. Baseline-and-arm: the installed plate's figures are recorded and the gate fails only for a
+      plate that differs from the baseline and misses the threshold, so it ships green. No art, no timing, no
+      layout change (D88). Brief `plan/phases/phase_TP1_title_plate_legibility.md` § TP1a. Requires nothing.
+- [blocked: owner-led — art is owner-only (D88)] Phase TP1b — The title plate itself: a PD/CC0 image with a dark
+      field, one burning light low in frame and a quiet upper band, acquired through `scripts/acquire-art.mjs` so
+      the licence is proven rather than asserted, then proved readable by TP1a's gate. T's art pass picks it;
+      Hiroshige and three Turners were tried and graded out too pale (brief § Follow-ups). Requires TP1a.
 - [x] (#643) Phase HP3b — Rerolls and gained dice animate (plotted by T, 2026-10-19): a reroll plays the roll onto the layout's next faces and a gained die arrives like a salvage die. Brief `plan/phases/phase_HP3_puzzle_randomness_illusion.md` § HP3b. Requires HP3a, HP1c.
 - [x] (#633) Phase HP1c — Signed costs, +1 die, reroll to set faces (plotted by T, 2026-10-18): negative card values on either line, the `gainDie` and `reroll` effects with layout-set reroll faces, DRAW and CONVERT with costs, tested on fixture cards only (no card or keyword added, D37). A paid cost (a die spent on a card that still costs) needs a second utility, and `gainDie` and `reroll` counts are per card with no defaults (T, 2026-10-19). Brief `plan/phases/phase_HP1_hazard_cost_utility.md` § HP1c. Requires HP1a.
 - [x] (#639) Phase HP1c2 — T's cost-card rules on the shipped engine (ruled by T, 2026-10-19): `gainDie` and `reroll` counts and colour per card with no defaults; a card that still costs when powered must carry a `poweredEffect`, fired after its `effect`. HP1c (#633) shipped before these rulings. Brief `plan/phases/phase_HP1_hazard_cost_utility.md` § HP1c2. Requires HP1c.
