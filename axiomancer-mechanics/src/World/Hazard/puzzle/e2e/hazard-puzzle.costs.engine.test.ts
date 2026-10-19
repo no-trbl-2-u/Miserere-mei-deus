@@ -30,6 +30,9 @@ import type { HazardPuzzleLayout, HazardPuzzleMove, HazardPuzzleSession } from '
 import { validateHazardPuzzleLayout } from '../hazard-puzzle.validate';
 import { FIXTURE_CARDS, FX_SURGE_COST, FX_TOLL, useHazardFixtureCards } from './hazard-puzzle.cost-cards.mock';
 import { testLayout } from './hazard-puzzle.layouts.mock';
+import { useHazardPuzzlePoolCards } from './hazard-puzzle.pool.mock';
+
+useHazardPuzzlePoolCards(['runner']);
 
 const DECK_IDS_AT_LOAD = HAZARD_DECK.map((c) => c.id);
 

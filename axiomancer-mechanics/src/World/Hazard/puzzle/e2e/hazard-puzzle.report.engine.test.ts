@@ -12,6 +12,9 @@ import { describe, expect, it } from 'vitest';
 import { formatHazardPuzzleCardReport, hazardPuzzleCardReport } from '../hazard-puzzle.report';
 import type { HazardPuzzleUnlock } from '../hazard-puzzle.types';
 import { testLayout } from './hazard-puzzle.layouts.mock';
+import { useHazardPuzzlePoolCards } from './hazard-puzzle.pool.mock';
+
+useHazardPuzzlePoolCards(['crack']);
 
 const ONE_GOLD = testLayout({
     id: 'report-one-gold',

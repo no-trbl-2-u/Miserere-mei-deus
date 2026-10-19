@@ -1,9 +1,10 @@
 /**
  * Hazard puzzle — layout validation.
  *
- * A layout is playable only when every card exists and passes
- * `validateHazardCardDef`, none is a RE-CAST card (a puzzle never rolls,
- * so re-casting has nothing to do), the act is Act 1, it reuses a live hazard's copy, it sits in an Act 1 region, both
+ * A layout is playable only when every card exists, passes
+ * `validateHazardCardDef`, is in the puzzle card pool, and none is a RE-CAST
+ * card (a puzzle never rolls, so re-casting has nothing to do). The act is
+ * Act 1, it reuses a live hazard's copy, it sits in an Act 1 region, both
  * goals are positive whole numbers, and a layout holding a reroll card
  * declares the faces it rerolls to. RE-CAST cards stay in
  * `HAZARD_DECK` for the live minigame; they are only kept out of puzzles.
@@ -13,6 +14,7 @@ import type { MapName } from '../../map.library';
 import { validateHazardCardDef } from '../hazard.card-validate';
 import { getHazardCardDef, HAZARD_LIBRARY } from '../hazard.content';
 import type { HazardCardDef } from '../hazard.types';
+import { HAZARD_PUZZLE_CARD_POOL } from './hazard-puzzle.tuning';
 import type { HazardPuzzleLayout, HazardPuzzleValidation } from './hazard-puzzle.types';
 
 /** The only act a hazard puzzle may belong to until T lifts the scope. */
@@ -40,6 +42,9 @@ function checkCard(layout: HazardPuzzleLayout, cardId: string, where: string, re
         return;
     }
     for (const reason of validateHazardCardDef(def).reasons) reasons.push(`${where}: ${reason}`);
+    if (!HAZARD_PUZZLE_CARD_POOL.includes(cardId)) {
+        reasons.push(`${where}: "${cardId}" is not in the puzzle card pool`);
+    }
     const fires = [def.effect, def.poweredEffect];
     if (fires.includes('recast')) {
         reasons.push(`${where}: "${cardId}" is a RE-CAST card; puzzles never re-cast dice`);

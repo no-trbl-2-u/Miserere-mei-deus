@@ -34,7 +34,7 @@ export {
 
 export {
     HAZARD_PUZZLE_FAILURE, HAZARD_PUZZLE_REWARDS, HAZARD_PUZZLE_TUNING,
-    HAZARD_PUZZLE_BANDS, HAZARD_PUZZLE_SOLVER_BUDGET,
+    HAZARD_PUZZLE_BANDS, HAZARD_PUZZLE_SOLVER_BUDGET, HAZARD_PUZZLE_CARD_POOL,
 } from './hazard-puzzle.tuning';
 
 export type { HazardPuzzleOutcome, HazardPuzzleOutcomeContext } from './hazard-puzzle.outcome';
@@ -46,6 +46,17 @@ export { solveHazardPuzzle, solveHazardPuzzleSession, hazardPuzzleSurplus } from
 
 export type { HazardPuzzleCardReport, HazardPuzzleCardSource, HazardPuzzleCardUse } from './hazard-puzzle.report';
 export { hazardPuzzleCardReport, formatHazardPuzzleCardReport } from './hazard-puzzle.report';
+
+export type { HazardPuzzleCardAuditRow, HazardPuzzleLibraryUse } from './hazard-puzzle.audit';
+export {
+    HAZARD_PUZZLE_IGNORED_FIELDS,
+    hazardPuzzleCardAudit,
+    hazardPuzzleCardBan,
+    hazardPuzzleCardGroups,
+    hazardPuzzleCardShape,
+    hazardPuzzleCardShapeKey,
+    hazardPuzzleLibraryUse,
+} from './hazard-puzzle.audit';
 
 export type { HazardPuzzleRouteAudit } from './hazard-puzzle.band';
 export { hazardPuzzleBandOf, auditHazardPuzzleRoute, auditHazardPuzzleLayout } from './hazard-puzzle.band';

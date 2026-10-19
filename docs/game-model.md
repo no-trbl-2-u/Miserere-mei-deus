@@ -224,7 +224,13 @@ keyword (`EnemyKeyword = never`).
   staged or held, never discarded. A solver counts the distinct ways
   through (an outcome is the staged cards that change the result, the dice
   and the reserve left), and the library test holds each of the three demos
-  (`HAZARD_PUZZLE_LIBRARY`) in its band (easy, medium, hard).
+  (`HAZARD_PUZZLE_LIBRARY`) in its band (easy, medium, hard). A puzzle
+  draws only from `HAZARD_PUZZLE_CARD_POOL`, the cards T approved from the
+  card audit (`npm run puzzle:audit -w axiomancer-mechanics` writes
+  `docs/reports/hazard-puzzle-card-audit.md`): no RE-CAST or dead card, and
+  no two cards that play the same once salvage, rarity and weight are set
+  aside (CLIFFRUNNER plays as SCRAMBLE). The validator refuses any other
+  card; `HAZARD_DECK` and the live hazard keep every card.
   `npm run puzzle:report -w axiomancer-mechanics` prints, per demo and
   route, how many winning outcomes stage each card and which are required
   or unused (`hazardPuzzleCardReport`). Card values are signed: a negative
