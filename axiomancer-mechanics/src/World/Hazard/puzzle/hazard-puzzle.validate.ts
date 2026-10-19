@@ -3,8 +3,9 @@
  *
  * A layout is playable only when every card exists, none is a RE-CAST
  * card (a puzzle never rolls, so re-casting has nothing to do), the act is
- * Act 1, it reuses a live hazard's copy, it sits in an Act 1 region, and both
- * goals are positive whole numbers. RE-CAST cards stay in
+ * Act 1, it reuses a live hazard's copy, it sits in an Act 1 region, both
+ * goals are positive whole numbers, and a layout holding a reroll card
+ * declares the faces it rerolls to. RE-CAST cards stay in
  * `HAZARD_DECK` for the live minigame; they are only kept out of puzzles.
  */
 
@@ -31,7 +32,7 @@ function isPositiveInt(n: number): boolean {
     return Number.isInteger(n) && n > 0;
 }
 
-function checkCard(cardId: string, where: string, reasons: string[]): void {
+function checkCard(layout: HazardPuzzleLayout, cardId: string, where: string, reasons: string[]): void {
     const def = findCard(cardId);
     if (!def) {
         reasons.push(`${where}: unknown hazard card "${cardId}"`);
@@ -39,6 +40,9 @@ function checkCard(cardId: string, where: string, reasons: string[]): void {
     }
     if (def.effect === 'recast') {
         reasons.push(`${where}: "${cardId}" is a RE-CAST card; puzzles never re-cast dice`);
+    }
+    if (def.effect === 'reroll' && (layout.rerollFaces ?? []).length === 0) {
+        reasons.push(`${where}: "${cardId}" is a reroll card but the layout declares no rerollFaces`);
     }
 }
 
@@ -54,13 +58,13 @@ export function validateHazardPuzzleLayout(layout: HazardPuzzleLayout): HazardPu
         reasons.push(`region: "${layout.region}" is not an Act ${HAZARD_PUZZLE_ACT} region`);
     }
     if (layout.hand.length === 0) reasons.push('hand: a puzzle needs at least one card');
-    layout.hand.forEach((id, i) => checkCard(id, `hand[${i}]`, reasons));
-    layout.reserve.forEach((id, i) => checkCard(id, `reserve[${i}]`, reasons));
+    layout.hand.forEach((id, i) => checkCard(layout, id, `hand[${i}]`, reasons));
+    layout.reserve.forEach((id, i) => checkCard(layout, id, `reserve[${i}]`, reasons));
     layout.unlocks.forEach((u, i) => {
         if (!Number.isInteger(u.min) || u.min < 0) {
             reasons.push(`unlocks[${i}]: min ${u.min} is not a whole number of at least 0`);
         }
-        if (u.kind === 'extraCard') checkCard(u.cardId, `unlocks[${i}]`, reasons);
+        if (u.kind === 'extraCard') checkCard(layout, u.cardId, `unlocks[${i}]`, reasons);
     });
     if (!isPositiveInt(layout.goals.safe)) {
         reasons.push(`goals.safe: ${layout.goals.safe} is not a positive whole number`);

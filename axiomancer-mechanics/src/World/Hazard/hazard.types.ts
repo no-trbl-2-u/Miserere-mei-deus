@@ -44,7 +44,12 @@ export interface HazardDie {
 
 export type HazardCardRarity = 'common' | 'uncommon' | 'rare';
 
-export type HazardUtilityEffect = 'draw' | 'recast' | 'convert';
+/**
+ * `gainDie` and `reroll` are engine-only so far: no deck card carries
+ * them and they have no keyword yet. A reroll never rolls; it turns dice
+ * to the session's `rerollFaces`, in order.
+ */
+export type HazardUtilityEffect = 'draw' | 'recast' | 'convert' | 'gainDie' | 'reroll';
 
 export type HazardKeywordId =
     | 'surge'
@@ -78,7 +83,11 @@ export interface HazardCardDef {
     rarity: HazardCardRarity;
     /** Relative frequency in the starter draw pile. */
     weight?: number;
-    /** FREE (top) action values — contributed the moment the card is staged. */
+    /**
+     * FREE (top) action values — contributed the moment the card is staged.
+     * Signed: a negative value is a cost on that meter, on either line or
+     * both, and the meters are never clamped at 0.
+     */
     f: number;
     e: number;
     /** MANA (bottom / SURGE) action values, used once a die is applied. */
@@ -101,6 +110,11 @@ export interface HazardCardDef {
     majorEffect?: boolean;
     drawBase?: number;
     drawPowered?: number;
+    /** `gainDie`: temporary dice added on apply, minor and major (both default 1). */
+    gainDieBase?: number;
+    gainDiePowered?: number;
+    /** `gainDie`: the added dice's colour (default the card's own `kind`). */
+    gainDieKind?: HazardColor;
     /**
      * Dead cards (consequence CRACK cards) cannot be powered and
      * contribute nothing — they only clog the hand.
@@ -255,6 +269,12 @@ export interface HazardSessionState {
     hand: HazardHandEntry[];
     play: HazardHandEntry[];
     dice: HazardDie[];
+    /**
+     * Faces a `reroll` card turns dice to, consumed in order like the draw
+     * pile. Set by a hazard puzzle from its layout; absent (no faces) in the
+     * live minigame, where a reroll leaves every die as it is.
+     */
+    rerollFaces?: HazardDieKind[];
     /** Momentum carried into the current round (REC#1). */
     progressBase: { force: number; escape: number };
     /** Per-session momentum cap (HAZARD_MOMENTUM_CAP). */

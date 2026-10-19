@@ -9,6 +9,7 @@
  *  - the draw pile is the layout's reserve and the refill bag is empty, so
  *    DRAW takes the next reserve cards in order and never shuffles;
  *  - RE-CAST cards are rejected by the validator, so no die is ever rolled;
+ *  - a reroll turns dice to the layout's `rerollFaces`, in order;
  *  - convert dice carry a fixed colour, so they never roll.
  * The board's rng state is a constant that no move advances.
  */
@@ -77,6 +78,7 @@ export function createHazardPuzzleSession(
         hand,
         play: [],
         dice,
+        rerollFaces: layout.rerollFaces?.slice() ?? [],
         progressBase: { force: 0, escape: 0 },
         momentumCap: HAZARD_MOMENTUM_CAP,
         resolveInfo: null,
