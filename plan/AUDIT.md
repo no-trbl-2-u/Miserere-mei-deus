@@ -1371,6 +1371,28 @@ present. Row stays open until that session runs.
   now also covers. Bearings' sentence is the one record that must change
   when the second Pages project exists — filed below as a loop-call rather
   than edited blind, because the project does not exist yet.
+- **ACTED ON by T, 2026-10-19 — the `axiomancer` Pages project is deleted.**
+  T ruled in an attended session that the per-branch previews were not worth
+  their cost: their only consumers were audits and agents, T plays on local
+  builds and EAS preview APKs, and the project auto-built **every pushed
+  branch** into a public URL — a standing accident path while the art
+  licensing is still in flight (it is why the `new-assets-extract` reskin,
+  full of extracted Buriedbornes 2 art, was never pushed). The project and
+  its deployments were deleted with `wrangler pages project delete`;
+  `axiomancer-devlog` is untouched and still builds. So the guessable
+  per-branch preview half of this row is **closed**, not scoped: there is no
+  longer a project to guess at.
+- **Still open, and still only T's to write:** bearings' "No hosted web
+  surface" sentence. It remains inaccurate — `axiomancer-devlog` is a hosted
+  public surface, deliberately so since the 2026-09-20 reversal. Deleting the
+  game project removed the *unintended* surface, not the sentence's error.
+  Per this row's own standing instruction, that sentence is a standing
+  decision and is not edited to match observed reality by anyone but T.
+- a replacement for what the previews were actually good for: Cloudflare built
+  from a clean clone, which is a real check — it is how the `Potential Assets`
+  sealing was confirmed on hardware that never had the directory (PR #645).
+  That proof is now unmanned. Worth a loop-call: an export step inside
+  `verify-gate` that builds the web bundle and publishes nothing.
 
 ### [x] The loop's own docs still call the `Closes #N` trailer the closing mechanism — RESOLVED 2026-10-06 (9d86edbe)
 - category: docs
