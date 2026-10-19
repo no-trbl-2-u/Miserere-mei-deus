@@ -171,6 +171,20 @@ event-pool and layout files).
 - [x] (#628) Phase HP1a — No bin, an honest count, the card report, demos back in band (plotted by T, 2026-10-18): puzzle sessions have no discard; a winning outcome counts only cards that change the result; `hazardPuzzleCardReport` and `npm run puzzle:report`; demos re-authored into band. Brief `plan/phases/phase_HP1_hazard_cost_utility.md` § HP1a. Requires nothing.
 - [x] (#631) Phase HP1b — The puzzle board loses its bin (plotted by T, 2026-10-18): `/devpuzzle` shows no bin; the live `/hazard` board keeps it. Brief `plan/phases/phase_HP1_hazard_cost_utility.md` § HP1b. Requires HP1a, B3e2.
 - [x] (#637) Phase HP3a — The puzzle rolls and draws like a live hazard (plotted by T, 2026-10-19): the dice roll in on the layout's faces and the clock starts after; drawn cards slide in from the reserve; nothing random. Brief `plan/phases/phase_HP3_puzzle_randomness_illusion.md` § HP3a. Requires nothing.
+- [ ] Phase IT1a — Item glyphs resolve by item id (plotted by T, 2026-10-19): `ItemGlyph` keys on
+      category alone, so all three healing potions draw one identical flask and both relics draw one
+      identical trinket. An id-keyed resolver in the `getCardArt` shape, with **today's** category glyph
+      as the fallback, so an empty table changes no pixel and the phase ships green; the table's values
+      are typed `AxmIconName`, making a bad entry a compile error rather than the silent `null`
+      `ActionIcon` returns. No art (D88). Brief
+      `plan/phases/phase_IT1_item_glyph_resolver.md` § IT1a. Requires nothing.
+- [blocked: owner-led — art is owner-only (D88)] Phase IT1b — T's icon picks, and the inline glyphs
+      die: T picks from the 2026-10-19 candidate sheet (23 candidates over 7 slots, rendered at the 28px
+      `ItemGlyph` draws); then the rest is mechanical — add the chosen icons to
+      `extract-game-icons.mjs`'s manifest, regenerate `game-icon-paths.ts`, fill IT1a's table, and
+      delete the one-off inline `<Svg>` blocks in `ItemCard.tsx` and `ItemGrid.tsx` the picks make dead
+      (`icon-registry.ts` forbids them). Brief
+      `plan/phases/phase_IT1_item_glyph_resolver.md` § IT1b. Requires IT1a.
 - [ ] Phase RV2 — The reviewer skips a head whose diff did not change (plotted by T, 2026-10-19): the
       verdict marker carries a `git patch-id --stable` digest of the PR's diff against its base, and
       `reviewWanted` skips any head whose digest a verdict already names — so a merge of `main`, a rebase
@@ -1383,6 +1397,7 @@ See the status rows above; generate briefs on demand.
 - **2026-10-19** — actor: **T, attended decision round** (pushed to `main` at T's word). Action: **added Phase HP1c2** before HP1d: HP1c (#633) was claimed and built in parallel with T's amendments, so A7, A8 and A11 as amended move to HP1c2, and HP1d now requires it. Confirmed T's request: yes (T's rulings in the same round). Reason: the shipped engine still has the defaults T removed. Resulting commit: this one.
 - **2026-10-19** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-RV2-review-skip-unchanged-diff`). Action: **added Phase RV2** directly above TP1a. Reason: T asked whether the PR reviewer could skip a head that only carried a merge-conflict fix; it dedupes per head SHA, so every merge of `main` buys a second full Claude review of an unchanged diff. Brief `plan/phases/phase_RV2_review_skips_unchanged_diff.md`.
 - **2026-10-19** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-TP1-title-plate-legibility`, PR #644, merged). Action: **added Phases TP1a and TP1b** — **entry filed late**, in the RV2 commit rather than TP1's own, which breaks this log's same-commit rule; recorded here rather than left missing. Reason: T liked the shipped title launch sequence read against a dark placeholder plate, so TP1a gates the plate's legibility by measurement and TP1b is the owner-led plate pick (D88).
+- **2026-10-19** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-IT1-item-glyph-resolver`). Action: **added Phases IT1a and IT1b** directly above RV2. Reason: an item-art survey for T found that `ItemGlyph` keys on category, not item id, so the three healing potions and the two relics each draw one shared glyph — the same defect class as the card registry mapping only three ids. IT1a is the resolver with today's glyph as the fallback (ships changing no pixel); IT1b is T's icon picks and the death of the inline one-off `<Svg>` glyphs, owner-led under D88. Brief `plan/phases/phase_IT1_item_glyph_resolver.md`.
 >
 ## Phase log (commit hashes)
 
