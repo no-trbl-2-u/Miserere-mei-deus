@@ -23,6 +23,5 @@
 
 ## Open
 
-- **env-token-stale** · rotate the `GH_TOKEN` in the local `.env` (it returns 401 while `gh`'s keyring login works) · blocks: `loop-issue.mjs` issue mirrors and phase-open on attended ticks · workaround: run `gh` without exporting `GH_TOKEN`; pass `GH_TOKEN=$(gh auth token)` to repo scripts · seen 2× · last 2026-10-14
 - **verify-gate-ruleset** · once phase RV1a's PR merges, run the `gh api -X POST .../rulesets` command in `.github/workflows/README.md` ("The `verify-gate` ruleset") to require `verify-gate` on `main` in evaluate mode (A4) · blocks: Rule Insights evidence for the RV1 Stage 0 table · workaround: none; `verify-gate` still reports on every PR · seen 1× · last 2026-10-16
 - **pr-review-stage-2** · after 20 shadow-reviewed `loop:pr` merges, read the Part 4 table (`docs/reports/pr-review-research.md`; regenerate with `node scripts/eval/escape-ledger.mjs && node scripts/eval/miss-rates.mjs`); if it passes, accept D95, require `review` in the ruleset, turn on `allow_auto_merge`, and have a phase wire the `risk:low` `gh pr merge --auto` branch · blocks: Stage 2 (risk:low auto-merge) · workaround: none needed; T merges by hand (D86) · seen 1× · last 2026-10-17

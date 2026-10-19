@@ -292,6 +292,10 @@ ambiguity.)
   it: `git switch -c <branch> v0.1.0-checkpoint`.
   **`v0.2.0`** (commit `eb75f451`, 2026-10-11, D83) adds the Blood Price trial
   set on that core; GitHub release, no APK from the tag.
+- **DEADLINES (T, attended session 2026-10-19).** `plan/deadlines.md` sets the v0.3 milestone ("Act 1 complete,
+  playable", by 2026-12-28) in five two-week windows, each with a goal and a demo T checks. The loop is not
+  restricted to the current window: `/march` keeps picking open rows top to bottom. New cards and the card-creator
+  workflow are the lowest priority.
 - **THE CARD HOLD (T, attended session 2026-09-26, D37).** No player card
   and no player keyword is created outside a guided session with T. No
   `/expand`, phase or brief adds one, and none plans a phase that would.
