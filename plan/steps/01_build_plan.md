@@ -1365,7 +1365,7 @@ See the status rows above; generate briefs on demand.
 - **2026-10-19** — actor: **T, attended session** (decision round, pushed to `main` at T's word). Action: **added Phase HP1d** (the worse-copy test) after HP1c and amended HP1c (no `gainDie` or reroll defaults; a paid cost needs a second utility). Confirmed T's request: yes (T: "if you pay for the card with a die AND you lose progress on the card, there better be another utility benefit"; "Automatic test now"). Reason: HP1c was unclaimed, so its brief changes before a tick builds it. Resulting commit: this one.
 - **2026-10-19** — actor: **T, attended decision round** (`/plot`, branch `loop/plot-HP3-CT1-RS1`). Action: **added Phases HP3a, HP3b** (the illusion of randomness) above the first open row, asap, and made B3f require HP3a; **added Phases CT1a, CT1b and RS1** after the last open row, anytime. Confirmed T's request: yes (T chose "/plot it now", "Replace with real-fight tests" and "Loop sweeps reports", then "Plot them now as one PR"). Reason: HP3 asap because B3f must time solves on the board as it ships (`plan/deadlines.md` W1); CT1 and RS1 anytime (test quality and a process fix; no live defect). Resulting commit: this one.
 - **2026-10-19** — actor: **T, attended decision round** (pushed to `main` at T's word). Action: **added Phase HP1c2** before HP1d: HP1c (#633) was claimed and built in parallel with T's amendments, so A7, A8 and A11 as amended move to HP1c2, and HP1d now requires it. Confirmed T's request: yes (T's rulings in the same round). Reason: the shipped engine still has the defaults T removed. Resulting commit: this one.
-
+>
 ## Phase log (commit hashes)
 
 - phase 0 — (adoption commit) — nexus methodology adopted
