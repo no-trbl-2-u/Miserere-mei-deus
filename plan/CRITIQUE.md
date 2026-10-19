@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-10-19 at commit 5b2059cb
-> Pass count: 95
+> Last pass: 2026-10-19 at commit 01b69c66
+> Pass count: 96
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
@@ -769,6 +769,21 @@
 > "CHOOSE TO PROC..." (pass 68 trade), and the covered fan cards
 > cutting their names on a phone (pass 88; whole when lifted). Zero
 > fresh findings this pass.
+
+> **[critique pass 96, 2026-10-19, commit 01b69c66] Unattended `/march`
+> tick.** `critique:drive` (`CRITIQUE_VIEWPORT=both`), full 11-screen
+> set: 22 captures, 0 nav trouble, 0 console/page errors. 14 commits
+> after pass 95: HP1c2 (cost card rules), HP2a (card audit pool), HP3a
+> (puzzle roll and draw), a CI fixture fix and the measured truth runs.
+> All of it lands in the hazard puzzle engine and its dev board
+> (`/devpuzzle`, not in the set); the one live-screen diff is
+> `HazardOverlays.tsx` naming its 1700ms roll timeout
+> `DICE_ROLL_OVERLAY_MS`, no behaviour change. No capture shows a
+> regression against pass 95. Reconfirmed and not re-filed: the village
+> Minor Healing Potion row, the exploration legend's SEALED key, the
+> covered fan cards cutting their names on a phone (pass 88), and the
+> mobile hazard strip's "CHOOSE TO PROC..." (pass 68 trade). Zero fresh
+> findings this pass.
 
 ## Pending
 
