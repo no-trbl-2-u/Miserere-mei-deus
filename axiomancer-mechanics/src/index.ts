@@ -304,6 +304,12 @@ export type {
 // Hazard puzzle card report.
 export { hazardPuzzleCardReport, formatHazardPuzzleCardReport } from './World/Hazard';
 export type { HazardPuzzleCardReport, HazardPuzzleCardSource, HazardPuzzleCardUse } from './World/Hazard';
+// Hazard puzzle card audit and the card pool puzzles draw from.
+export {
+    HAZARD_PUZZLE_CARD_POOL, HAZARD_PUZZLE_IGNORED_FIELDS, hazardPuzzleCardAudit,
+    hazardPuzzleCardBan, hazardPuzzleCardGroups, hazardPuzzleCardShape, hazardPuzzleLibraryUse,
+} from './World/Hazard';
+export type { HazardPuzzleCardAuditRow, HazardPuzzleLibraryUse } from './World/Hazard';
 // Hazard puzzle stat unlocks.
 export {
     HAZARD_PUZZLE_UNLOCK_DIE, activeHazardPuzzleUnlocks, applyHazardPuzzleUnlocks,
