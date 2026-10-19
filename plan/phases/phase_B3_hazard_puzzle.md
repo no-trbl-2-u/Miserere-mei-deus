@@ -341,7 +341,7 @@ on `/devpuzzle`.
   the clock-expiry test kept; the live `HazardBoard` and `app/hazard` tests unchanged (A22).
 - Verify gate: mobile verify plus `verify:visual`.
 
-### B3f — Timed demo solves and the process lock (attended) · S · closes A17 · requires B3e, B3e2, HP1a, HP1b
+### B3f — Timed demo solves and the process lock (attended) · S · closes A17 · requires B3e, B3e2, HP1a, HP1b, HP3a
 Measure: `docs/reports/hazard-puzzle-timing.md` exists with a median solve time and success rate per demo, the
 resulting clocks are in `HAZARD_PUZZLE_CLOCK_SECONDS`, and T's verdict is quoted.
 - Scope: the timing report; the three clock constants.
