@@ -8,7 +8,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { ROUTES, pickHazardRoute } from './smoke-screens.mjs'
+import { ROUTES, pickHazardRoute, selectRoutes, settleDiceRoll } from './smoke-screens.mjs'
 
 /** A page stand-in that records every locator call in order. */
 function fakePage() {
@@ -49,4 +49,28 @@ test('pickHazardRoute clicks the route, then waits for the board and for the rol
         ['waitFor', 'hazard-board', 'visible'],
         ['waitFor', 'hazard-dice-roll', 'hidden'],
     ])
+})
+
+test('the devpuzzle board shot waits out the opening roll; the outcome shot does not need to', () => {
+    assert.equal(ROUTES.find((r) => r.name === 'devpuzzle-board').settleRoll, true)
+    assert.equal(ROUTES.find((r) => r.name === 'devpuzzle-outcome').settleRoll, undefined)
+})
+
+test('settleDiceRoll waits for the roll overlay to hide', async () => {
+    const page = fakePage()
+    await settleDiceRoll(page)
+    assert.deepEqual(page.calls, [['waitFor', 'hazard-dice-roll', 'hidden']])
+})
+
+test('selectRoutes keeps every route unless SMOKE_ONLY names some', () => {
+    assert.equal(selectRoutes(ROUTES, undefined), ROUTES)
+    assert.equal(selectRoutes(ROUTES, ''), ROUTES)
+    assert.deepEqual(
+        selectRoutes(ROUTES, 'devpuzzle-board, hazard-board').map((r) => r.name),
+        ['hazard-board', 'devpuzzle-board'],
+    )
+})
+
+test('selectRoutes throws on a route name it does not know', () => {
+    assert.throws(() => selectRoutes(ROUTES, 'devpuzzle-board,no-such-shot'), /no-such-shot/)
 })

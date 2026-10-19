@@ -12,6 +12,9 @@
 //   exit 2  →  baseline missing for one or more routes (first-run / new route)
 //   exit 3  →  config / boot failure (expo export / browser / server)
 //   SMOKE_CHROME=/path/to/chrome  custom browser binary · SMOKE_REUSE_EXPORT=1  skip the export
+//   SMOKE_ONLY=devpuzzle-board,hazard-board  shoot and diff only these routes
+//   (the shots a change moves; on a renderer unlike the baselines' every
+//   route drifts, so the full run's exit code says nothing about the change)
 //
 // When a diff is real and expected, run:
 //   npm run baseline:approve
@@ -65,13 +68,30 @@ export const ROUTES = [
     // Dev-menu HAZARD PUZZLES board on the live hazard board (a dev route,
     // so it needs the forced dev-tools context a fixture route gets): the
     // hard demo's board, and its outcome panel after an immediate confirm.
-    { name: 'devpuzzle-board', path: '/devpuzzle?id=demo-undercroft-hard&route=risk&paused=1', fixture: 'fresh-start' },
+    // The board opens with the live dice roll, so its shot waits it out.
+    { name: 'devpuzzle-board', path: '/devpuzzle?id=demo-undercroft-hard&route=risk&paused=1', fixture: 'fresh-start', settleRoll: true },
     { name: 'devpuzzle-outcome', path: '/devpuzzle?id=demo-undercroft-hard&route=risk&confirm=1', fixture: 'fresh-start' },
 ]
 
 // 0.5% of pixels may differ before a route is flagged. Bumps catch
 // anti-aliasing / font-subpixel noise without masking real UI shifts.
 export const DIFF_THRESHOLD_RATIO = 0.005
+
+/**
+ * The routes a run shoots: all of them, or only those `only` names (a
+ * comma list, as `SMOKE_ONLY` carries it). An unknown name throws, so a
+ * typo never reads as a green run of nothing.
+ *
+ * @param {typeof ROUTES} routes every visual route.
+ * @param {string | undefined} only comma-separated route names, or unset.
+ */
+export function selectRoutes(routes, only) {
+    const names = (only ?? '').split(',').map((n) => n.trim()).filter(Boolean)
+    if (names.length === 0) return routes
+    const unknown = names.filter((n) => !routes.some((r) => r.name === n))
+    if (unknown.length > 0) throw new Error(`SMOKE_ONLY names unknown route(s): ${unknown.join(', ')}`)
+    return routes.filter((r) => names.includes(r.name))
+}
 
 // Per-pixel sensitivity passed to pixelmatch. 0 = exact, 1 = ignore.
 // 0.1 matches the pixelmatch default and is the sweet spot for fonts.
@@ -130,6 +150,16 @@ export function isOverThreshold(ratio, threshold = DIFF_THRESHOLD_RATIO) {
 export async function pickHazardRoute(page, hazardRoute) {
     await page.getByTestId(`hazard-route-${hazardRoute}`).click()
     await page.getByTestId('hazard-board').waitFor({ state: 'visible', timeout: 10_000 })
+    await settleDiceRoll(page)
+}
+
+/**
+ * Waits for a hazard board's opening dice roll to finish, so the shot is
+ * the board with its dice at rest (the live hazard and the puzzle board).
+ *
+ * @param {import('playwright').Page} page the page, on a hazard board.
+ */
+export async function settleDiceRoll(page) {
     await page.getByTestId('hazard-dice-roll').waitFor({ state: 'hidden', timeout: 10_000 })
 }
 
@@ -317,7 +347,7 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl) {
     const differing = []
     const missing = []
 
-    for (const route of ROUTES) {
+    for (const route of selectRoutes(ROUTES, process.env.SMOKE_ONLY)) {
         const url = `${baseUrl}${route.path}`
         const target = route.fixture ? await fixturePage(route.fixture)
             : route.liveFight ? await (await browser.newContext(contextOptions)).newPage()
@@ -329,6 +359,10 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl) {
                 await target.waitForURL((u) => u.pathname.endsWith(route.waitForPath), { timeout: 15_000 })
             }
             if (route.hazardRoute) await pickHazardRoute(target, route.hazardRoute)
+            if (route.settleRoll) {
+                await target.getByTestId('hazard-board').waitFor({ state: 'visible', timeout: 10_000 })
+                await settleDiceRoll(target)
+            }
             // Settle fonts + any deferred layout. The 600ms is empirical:
             // long enough for the @expo-google-fonts loaders to resolve,
             // short enough to keep the suite under a minute.
@@ -396,6 +430,8 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl) {
 // ---------------------------------------------------------------------------
 
 async function main() {
+    // A bad SMOKE_ONLY fails here, before the export, not after it.
+    selectRoutes(ROUTES, process.env.SMOKE_ONLY)
     runExpoExport()
     const deps = await loadDeps()
 

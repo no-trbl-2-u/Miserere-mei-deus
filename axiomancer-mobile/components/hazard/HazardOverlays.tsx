@@ -66,6 +66,9 @@ function TumblingDie({ die, index }: { die: HazardDieVM; index: number }) {
     );
 }
 
+/** How long the dice-cast interstitial plays before it calls `onDone`. */
+export const DICE_ROLL_OVERLAY_MS = 1700;
+
 export function DiceRollOverlay({
     dice,
     routeLabel,
@@ -81,7 +84,7 @@ export function DiceRollOverlay({
     const styles = useStyles();
     useEffect(() => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => undefined);
-        const t = setTimeout(onDone, 1700);
+        const t = setTimeout(onDone, DICE_ROLL_OVERLAY_MS);
         return () => clearTimeout(t);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
