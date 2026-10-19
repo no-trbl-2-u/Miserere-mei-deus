@@ -93,7 +93,7 @@ None. No game data or save shape changes.
 - **Agent judges are scored from evidence, not re-run.** The antagonist's and `/critique`'s miss rates come from the ledger (what each reviewed against what escaped). Re-running the antagonist on planted defects is a follow-up, because it is costly and not mechanical.
 - **Planted defects never leave the machine.** Replays run on local scratch branches or detached worktrees, which are never pushed.
 - **Android.** Recorded as a structural gap ("no gate exists"), with no miss rate. A device check is not built here.
-- **Stryker scope.** Limited to the A5 modules so one tick can run it. Wider coverage is a follow-up. The dependency is a dev dependency only `[T to confirm]`.
+- **Stryker scope.** Limited to the A5 modules so one tick can run it. Wider coverage is a follow-up. The dependency is a dev dependency only (T confirmed 2026-10-19).
 - **The fixes go to `/messy`, not the build plan.** The loop never fires `/messy` (AGENTS.md rule 8). EV1 writes the dump section and T runs `/messy` on it.
 
 ## Tests matrix
