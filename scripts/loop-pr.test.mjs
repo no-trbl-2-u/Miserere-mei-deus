@@ -206,6 +206,8 @@ test('the fixer is a separate run from the reviewer: writes and pushes once, nev
   assert.match(fx, /if: always\(\) && needs\.fix-wanted\.outputs\.go == 'true'/)
   assert.match(fx, /git archive origin\/main skills\/review-fix\.md \| tar -x -C \.review-tooling/, 'main\'s copy of the skill')
   assert.match(fx, /prompt: 'Read \.review-tooling\/skills\/review-fix\.md end to end/)
+  assert.ok(fx.indexOf('git switch "') < fx.indexOf('git checkout origin/main -- "$p"'), 'switch to the PR branch before laying main\'s config over it')
+  assert.match(read('skills/review-fix.md'), /never `-A` or `\.`/)
   const grant = fx.match(/allowed_tools: '([^']+)'/)[1].split(',')
   assert.ok(grant.includes('Edit') && grant.includes('Write'), 'the fixer writes')
   for (const t of grant) assert.doesNotMatch(t, /gh pr (comment|edit|merge|close)|gh api|--force|rebase/, t)
