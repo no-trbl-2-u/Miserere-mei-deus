@@ -157,7 +157,18 @@ async function runRoundTrip(page, baseUrl) {
             fail(`arriving at room 4 left the labyrinth for ${new URL(page.url()).pathname}, not a fight`)
         }
         log('inspecting the baited fountain ...')
-        await press(page, 'labyrinth-poi-fountain', 'room 4 fountain')
+        // The arrival fight can still beat the click to the punch after the
+        // race above picked the fountain: a detached target or a click that
+        // never lands because the page has already navigated is that same
+        // "arrival was a fight" case, not a harness failure. The waitForURL
+        // below is the real assertion either way.
+        const fountain = page.locator('[data-testid="labyrinth-poi-fountain"]:visible').first()
+        const appeared = await fountain.waitFor({ state: 'visible', timeout: 10000 }).then(() => true, () => false)
+        if (appeared) {
+            await fountain.click({ force: true, timeout: 5000 }).catch(() => {})
+        } else if (!onCombatRoute(new URL(page.url()))) {
+            fail(`room 4 fountain: \`labyrinth-poi-fountain\` never appeared (at ${page.url()})`)
+        }
     } else {
         log('room 4\'s arrival was itself a fight')
     }

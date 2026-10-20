@@ -23,5 +23,5 @@
 
 ## Open
 
-- **ruleset-bypass-for-t** · put T on the bypass list of ruleset 25469169 with the `gh api -X PUT .../rulesets/25469169` call in `.github/workflows/README.md` ("The `verify-gate` ruleset") · blocks: every direct push to `main` on T's token (plan-only ticks, telemetry, `fix-ci`); the merge job has its own `verify-gate` check and is not blocked · workaround: none; a refused push is a red tick · seen 1× · last 2026-10-20
+- **ruleset-bypass-for-t** · put T on the bypass list of ruleset 25469169 with the `gh api -X PUT .../rulesets/25469169` call in `.github/workflows/README.md` ("The `verify-gate` ruleset") · blocks: every direct push to `main` on T's token (plan-only ticks, telemetry, `fix-ci`); the merge job has its own `verify-gate` check and is not blocked · workaround: open a PR from a throwaway branch instead of pushing `main` directly, and let `verify-gate` pass it there · seen 2× · last 2026-10-20
 
