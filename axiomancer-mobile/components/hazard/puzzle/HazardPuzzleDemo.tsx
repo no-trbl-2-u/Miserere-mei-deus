@@ -24,6 +24,12 @@
  *  - a staged card's APPLY → apply (a DRAW card draws from the reserve);
  *  - CONFIRM (or the clock running out) → resolve;
  *  - tap a hand card → read it.
+ *
+ * Every move is also timed into the dev-only move log (HP2c A4): the attempt
+ * starts when the opening roll settles, which is when the clock starts and so
+ * when the solve really begins, and ends on the CONFIRM or the expiry. The log
+ * and its panel exist only in dev builds (`isDevToolsEnabled`); a production
+ * build records nothing and renders no panel.
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -48,9 +54,18 @@ import { HazardBoard } from '@/components/hazard/HazardBoard';
 import { CardDetailOverlay, DiceRollOverlay } from '@/components/hazard/HazardOverlays';
 import { RouteSelect } from '@/components/hazard/RouteSelect';
 import { useHazardDrag } from '@/components/hazard/useHazardDrag';
+import { isDevToolsEnabled } from '@/lib/buildProfile';
 import { useGameActions, useGameState } from '@/state/GameStoreProvider';
 import type { HazardCardVM, HazardDieRoll } from '@/state/presenters/hazard.engine';
 import { HAZARD_PUZZLE_RESOLVE_HINT } from '@/state/presenters/hazard-puzzle.copy';
+import {
+    endHazardPuzzleAttempt,
+    logHazardPuzzleMove,
+    nameHazardPuzzleSolver,
+    startHazardPuzzleAttempt,
+    type HazardPuzzleLogAttempt,
+    type HazardPuzzleLogMoveKind,
+} from '@/state/presenters/hazard-puzzle-log.engine';
 import {
     hazardPuzzleClockFor,
     nextHazardPuzzleDieRolls,
@@ -66,6 +81,7 @@ import {
 import { HUE } from '@/theme/axm';
 
 import { HazardPuzzleList } from './HazardPuzzleList';
+import { HazardPuzzleLogPanel } from './HazardPuzzleLogPanel';
 import { HazardPuzzleOutcomePanel } from './HazardPuzzleOutcomePanel';
 import { HazardPuzzleStrip, stripProps } from './HazardPuzzleStrip';
 import { useHazardPuzzleClock } from './useHazardPuzzleClock';
@@ -115,6 +131,24 @@ export function HazardPuzzleDemo({ initialId, initialRoute, autoConfirm, clockPa
     // it already expired for, so a key restarting at 1 after DONE would leave
     // the next board's clock stuck at 0:00 without confirming.
     const startCount = useRef(0);
+    // The dev-only move log (HP2c A4). The open attempt is the last entry;
+    // nothing is recorded outside dev builds.
+    const logging = isDevToolsEnabled();
+    const [solver, setSolver] = useState('');
+    const [attempts, setAttempts] = useState<HazardPuzzleLogAttempt[]>([]);
+
+    const logMove = useCallback(
+        (kind: HazardPuzzleLogMoveKind, uid: string, dieId?: string) => {
+            if (!logging) return;
+            const at = Date.now();
+            setAttempts((list) =>
+                list.length === 0
+                    ? list
+                    : [...list.slice(0, -1), logHazardPuzzleMove(list[list.length - 1], { kind, uid, dieId }, at)],
+            );
+        },
+        [logging],
+    );
 
     const start = useCallback(
         (layout: HazardPuzzleLayout, route: HazardRouteKey) => {
@@ -142,8 +176,28 @@ export function HazardPuzzleDemo({ initialId, initialRoute, autoConfirm, clockPa
             const claim = actions.claimHazardPuzzle(play.layout, resolved.route, result.p);
             setPlay({ ...play, session: resolved });
             setOutcome(selectHazardPuzzleOutcomeVM(result, claim.outcome, timedOut, claim));
+            if (logging) {
+                const at = Date.now();
+                setAttempts((list) =>
+                    list.length === 0
+                        ? list
+                        : [
+                              ...list.slice(0, -1),
+                              endHazardPuzzleAttempt(
+                                  list[list.length - 1],
+                                  {
+                                      kind: timedOut ? 'expiry' : 'confirm',
+                                      cleared: result.cleared,
+                                      // Floored like the outcome panel's line: a short resolve never reads 100.
+                                      reachedPercent: Math.floor(result.p * 100),
+                                  },
+                                  at,
+                              ),
+                          ],
+                );
+            }
         },
-        [actions, play],
+        [actions, play, logging],
     );
 
     const seconds = play ? hazardPuzzleClockFor(play.layout, play.session.route) : 0;
@@ -161,11 +215,15 @@ export function HazardPuzzleDemo({ initialId, initialRoute, autoConfirm, clockPa
         if (autoConfirm && play && play.session.phase === 'playing' && !outcome) finish(false);
     }, [autoConfirm, play, outcome, finish]);
 
-    const move = (fn: (s: HazardPuzzleSession) => HazardPuzzleSession) => {
+    const move = (
+        fn: (s: HazardPuzzleSession) => HazardPuzzleSession,
+        logged: { kind: HazardPuzzleLogMoveKind; uid: string; dieId?: string },
+    ) => {
         if (!play) return;
         const next = fn(play.session);
         setPlay({ ...play, session: next });
         setDieRolls((rolls) => nextHazardPuzzleDieRolls(rolls, selectHazardPuzzleDiceChange(play.session, next).rerolled));
+        logMove(logged.kind, logged.uid, logged.dieId);
     };
 
     const list = useMemo(() => selectHazardPuzzleListVM(), []);
@@ -185,10 +243,10 @@ export function HazardPuzzleDemo({ initialId, initialRoute, autoConfirm, clockPa
                     <HazardBoard
                         vm={vm}
                         drag={drag}
-                        onStage={(uid) => move((s) => stageHazardPuzzleCard(s, uid))}
-                        onUnstage={(uid) => move((s) => unstageHazardPuzzleCard(s, uid))}
-                        onPower={(uid, dieId) => move((s) => powerHazardPuzzleCard(s, uid, dieId))}
-                        onApply={(uid) => move((s) => applyHazardPuzzleCard(s, uid))}
+                        onStage={(uid) => move((s) => stageHazardPuzzleCard(s, uid), { kind: 'stage', uid })}
+                        onUnstage={(uid) => move((s) => unstageHazardPuzzleCard(s, uid), { kind: 'unstage', uid })}
+                        onPower={(uid, dieId) => move((s) => powerHazardPuzzleCard(s, uid, dieId), { kind: 'power', uid, dieId })}
+                        onApply={(uid) => move((s) => applyHazardPuzzleCard(s, uid), { kind: 'apply', uid })}
                         onResolve={() => finish(false)}
                         onInspect={setDetailCard}
                         resolveLabel={vm.resolveLabel}
@@ -212,7 +270,23 @@ export function HazardPuzzleDemo({ initialId, initialRoute, autoConfirm, clockPa
                         dice={vm.dice}
                         routeLabel={vm.routeLabel}
                         routeKey={vm.routeKey}
-                        onDone={() => setRolledFor(play.startKey)}
+                        onDone={() => {
+                            setRolledFor(play.startKey);
+                            // The clock starts here, so the solve starts here.
+                            if (logging) {
+                                const at = Date.now();
+                                setAttempts((list) => [
+                                    ...list,
+                                    startHazardPuzzleAttempt({
+                                        layoutId: play.layout.id,
+                                        route: play.session.route,
+                                        solver,
+                                        clockSeconds: hazardPuzzleClockFor(play.layout, play.session.route),
+                                        at,
+                                    }),
+                                ]);
+                            }
+                        }}
                     />
                 ) : null}
                 {detail}
@@ -244,7 +318,22 @@ export function HazardPuzzleDemo({ initialId, initialRoute, autoConfirm, clockPa
         );
     }
 
-    return <HazardPuzzleList items={list} onPick={(id) => setPicked(findLayout(id))} />;
+    if (!logging) return <HazardPuzzleList items={list} onPick={(id) => setPicked(findLayout(id))} />;
+    return (
+        <View style={styles.root}>
+            <HazardPuzzleList items={list} onPick={(id) => setPicked(findLayout(id))} />
+            <HazardPuzzleLogPanel
+                attempts={attempts}
+                solver={solver}
+                onSolverChange={(next) => {
+                    setSolver(next);
+                    // A name typed after a solve still labels what is already logged.
+                    setAttempts((list2) => nameHazardPuzzleSolver(list2, next));
+                }}
+                onClear={() => setAttempts([])}
+            />
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
