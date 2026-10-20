@@ -151,3 +151,20 @@ deliberate diff — a test pins its length.
 Candidate files live in `scripts/art-sources.json`, one entry per plate
 with its reason recorded. A title in that file is a proposal, not a
 permission.
+
+## The title plate must stay legible (phase TP1a)
+
+A new title plate (`assets/images/title/shore-at-dawn.webp`) must clear
+the legibility gate before it ships. `scripts/title-plate-legibility.mjs`
+measures the wordmark's and the psalm line's contrast against the plate
+as the player sees it (through the screen's scrims, at the title and menu
+opacities); `npm run art:test` fails a plate that differs from the
+recorded baseline and misses a threshold. Try a candidate first:
+
+```bash
+npm run art:legibility --workspace axiomancer-mobile -- --plate <file>
+npm run art:legibility --workspace axiomancer-mobile -- --write   # after installing it
+```
+
+The thresholds, their reasoning and the baseline live in
+`docs/reports/title-plate-legibility.md`.
