@@ -9,7 +9,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
-import { DISPATCH_LABELS, DISPATCH_ONLY_LABELS, EXHAUSTED_LABEL, MAX_PASSES, REVIEW_LABELS, diffDigest, formatParentTests, headMarker, markedHeads, reviewWanted } from './pr-review.mjs'
+import { DISPATCH_LABELS, DISPATCH_ONLY_LABELS, EXHAUSTED_LABEL, FIX_ATTEMPT_MARKER, MAX_PASSES, REVIEW_LABELS, diffDigest, fixWanted, formatParentTests, headMarker, markedHeads, reviewWanted } from './pr-review.mjs'
 
 const pr = (extra = {}) => ({
   state: 'OPEN', isDraft: false, isCrossRepository: false, labels: ['loop:pr', 'size:M'], head: 'a'.repeat(40), comments: [], ...extra,
@@ -56,6 +56,27 @@ test('an unchanged diff on a new head reuses its verdict: no review, and the mer
   assert.equal(d.reuse, true)
   assert.match(d.reason, /that verdict stands/)
   assert.equal(reviewWanted(pr({ head: 'c'.repeat(40), digest: dg, comments: [headMarker('b'.repeat(40), 'e'.repeat(40))] })).reuse, undefined, 'a different diff is reviewed')
+})
+
+test('the fixer runs once, on a trusted not-pass for the head, never on a plan, a hold or the pipeline (D95)', () => {
+  const head = 'c'.repeat(40)
+  const notPass = { body: `<!-- pr-review:verdict not-pass -->\n${headMarker(head)}`, author: 'no-trbl-2-u' }
+  const base = {
+    state: 'OPEN', isDraft: false, isCrossRepository: false, labels: ['loop:pr'], title: 'feat: x', files: ['scripts/a.mjs'], head,
+    comments: [notPass], trusted: ['no-trbl-2-u'], planLabels: ['plot'], holdLabels: ['review:needs-T'], pipelinePaths: ['scripts/pr-merge.mjs'],
+  }
+  assert.equal(fixWanted(base).go, true)
+  assert.match(fixWanted({ ...base, comments: [{ ...notPass, body: notPass.body.replace('not-pass', 'pass') }] }).reason, /nothing to fix/)
+  assert.match(fixWanted({ ...base, comments: [{ ...notPass, author: 'stranger' }] }).reason, /no trusted verdict/)
+  assert.match(fixWanted({ ...base, comments: [{ ...notPass, body: notPass.body.replace(head, 'd'.repeat(40)) }] }).reason, /no trusted verdict/)
+  assert.match(fixWanted({ ...base, comments: [notPass, { body: `fixed\n${FIX_ATTEMPT_MARKER}`, author: 'x' }] }).reason, /already on the PR/)
+  assert.match(fixWanted({ ...base, commitMessages: [`fix(review): y\n${FIX_ATTEMPT_MARKER}`] }).reason, /already on the PR/)
+  assert.match(fixWanted({ ...base, labels: ['plot'] }).reason, /plan PR/)
+  assert.match(fixWanted({ ...base, title: 'plan: z' }).reason, /plan PR/)
+  assert.match(fixWanted({ ...base, labels: ['review:needs-T'] }).reason, /review:needs-T/)
+  assert.match(fixWanted({ ...base, files: ['scripts/pr-merge.mjs'] }).reason, /pipeline PR/)
+  assert.match(fixWanted({ ...base, isDraft: true }).reason, /draft/)
+  assert.match(fixWanted({ ...base, state: 'MERGED' }).reason, /merged/)
 })
 
 test('drafts wait on pull_request', () => {

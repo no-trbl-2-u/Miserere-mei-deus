@@ -389,9 +389,8 @@ valid review. Do not pad.
    Then raise it:
    `gh pr edit <n> --add-label risk:high --remove-label <old>`. The
    verdict already carries the raise marker, so `verify-gate` keeps the
-   label on the next push. The order matters: the label change fires a
-   `labeled` event, and the re-run it starts skips this head only once
-   the verdict (with its head marker) is on the PR. Never lower a tier,
+   label on the next push (a label change starts no run of its own: the
+   workflow has no `labeled` trigger). Never lower a tier,
    and never touch a `size:*`, `area:*`, `review:*` or `loop:*` label.
 
 ### Step 6 — Done

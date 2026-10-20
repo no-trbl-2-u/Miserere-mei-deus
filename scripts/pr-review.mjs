@@ -25,6 +25,7 @@
 //
 //   node scripts/pr-review.mjs wanted --pr <n> [--dispatch]   # writes go, pr, head, digest to $GITHUB_OUTPUT
 //   node scripts/pr-review.mjs parent-tests --pr <n>           # the Tests lens's parent replay (RV1c)
+//   node scripts/pr-review.mjs fix-wanted --pr <n>             # writes go, branch, head to $GITHUB_OUTPUT (the fixer, D95)
 //
 // `parent-tests` runs each test file the PR adds or changes at the PR's
 // head (the control) and then at its merge base with `main`, the PR's
@@ -61,6 +62,9 @@ export const REVIEW_LABELS = Object.freeze(['loop:pr', 'plot'])
  * exhausts it.
  */
 export const MAX_PASSES = 2
+
+/** The marker the fixer's commit body carries; one attempt per PR. */
+export const FIX_ATTEMPT_MARKER = '<!-- pr-review-fix:attempt -->'
 
 /** The label the workflow applies when the cap is reached. */
 export const EXHAUSTED_LABEL = 'review:exhausted'
@@ -144,6 +148,35 @@ export function reviewWanted({ state, isDraft, isCrossRepository, labels, head, 
 }
 
 /**
+ * Whether the fixer runs on this PR now: the latest trusted verdict for
+ * the head is `not-pass`, the PR is one the merge job would merge on a
+ * pass (open, not a draft, not a fork, not a plan, not the pipeline, no
+ * hold label), and no fix attempt is on the PR yet.
+ *
+ * @param {{ state: string, isDraft: boolean, isCrossRepository: boolean, labels: string[], title: string, files: string[], head: string, comments: { body: string, author?: string }[], commitMessages?: string[], trusted?: readonly string[], planLabels?: readonly string[], holdLabels?: readonly string[], pipelinePaths?: readonly string[], planTitle?: RegExp }} pr the PR's live facts.
+ * @returns {{ go: boolean, reason: string }} the decision and why.
+ */
+export function fixWanted({ state, isDraft, isCrossRepository, labels, title, files = [], head, comments, commitMessages = [], trusted = [], planLabels = [], holdLabels = [], pipelinePaths = [], planTitle = /^(plot|plan)\s*[:(]/i }) {
+  if (isCrossRepository) return { go: false, reason: 'fork head' }
+  if (state !== 'OPEN') return { go: false, reason: `PR is ${state.toLowerCase()}` }
+  if (isDraft) return { go: false, reason: 'draft' }
+  const plan = labels.find((l) => planLabels.includes(l)) ?? (planTitle.test(title ?? '') ? 'title' : null)
+  if (plan) return { go: false, reason: 'plan PR: T reads plans' }
+  const hold = labels.find((l) => holdLabels.includes(l))
+  if (hold) return { go: false, reason: `label ${hold}` }
+  const pipeline = files.find((f) => pipelinePaths.includes(f))
+  if (pipeline) return { go: false, reason: `pipeline PR (${pipeline}): T fixes the pipeline` }
+  if ([...comments.map((c) => c.body ?? ''), ...commitMessages].some((t) => t.includes(FIX_ATTEMPT_MARKER))) return { go: false, reason: 'a fix attempt is already on the PR' }
+  const last = comments
+    .filter((c) => trusted.includes(c.author ?? '') && VERDICT.test(c.body ?? '') && markedHeads(c.body ?? '').some((m) => m.sha === head))
+    .at(-1)
+  if (!last) return { go: false, reason: `no trusted verdict for head ${head.slice(0, 8)}` }
+  const verdict = last.body.match(VERDICT)[1]
+  if (verdict !== 'not-pass') return { go: false, reason: `verdict ${verdict}: nothing to fix` }
+  return { go: true, reason: `verdict not-pass on head ${head.slice(0, 8)}, no attempt yet` }
+}
+
+/**
  * The `parent-tests` report, one line per replayed test file.
  *
  * @param {Array<{ path: string, verdict: string, reason: string, couldNotFailCases: string[], newCases: number }>} files from `verdictFor`.
@@ -222,11 +255,26 @@ async function main() {
   const [mode] = process.argv.slice(2)
   const pr = arg('--pr')
   const repo = process.env.GH_REPO || 'no-trbl-2-u/Miserere-mei-deus'
-  if (!['wanted', 'parent-tests'].includes(mode) || !/^\d+$/.test(pr ?? '')) {
-    console.error('usage: pr-review.mjs wanted --pr <n> [--dispatch] | parent-tests --pr <n>')
+  if (!['wanted', 'parent-tests', 'fix-wanted'].includes(mode) || !/^\d+$/.test(pr ?? '')) {
+    console.error('usage: pr-review.mjs wanted --pr <n> [--dispatch] | parent-tests --pr <n> | fix-wanted --pr <n>')
     process.exit(2)
   }
   if (mode === 'parent-tests') return parentTests(pr)
+  if (mode === 'fix-wanted') {
+    const { HOLD_LABELS, PIPELINE_PATHS, PLAN_LABELS, PLAN_TITLE, TRUSTED_AUTHORS } = await import('./pr-merge.mjs')
+    const v = JSON.parse(execFileSync('gh', ['pr', 'view', pr, '--repo', repo,
+      '--json', 'state,isDraft,isCrossRepository,labels,title,files,headRefOid,headRefName,comments,commits'], { cwd: ROOT, encoding: 'utf8' }))
+    const d = fixWanted({
+      state: v.state, isDraft: v.isDraft, isCrossRepository: v.isCrossRepository, labels: v.labels.map((l) => l.name), title: v.title,
+      files: (v.files ?? []).map((f) => f.path), head: v.headRefOid,
+      comments: v.comments.map((c) => ({ body: c.body ?? '', author: c.author?.login ?? '' })),
+      commitMessages: (v.commits ?? []).map((c) => c.messageBody ?? ''),
+      trusted: TRUSTED_AUTHORS, planLabels: PLAN_LABELS, holdLabels: HOLD_LABELS, pipelinePaths: PIPELINE_PATHS, planTitle: PLAN_TITLE,
+    })
+    console.log(`pr-review-fix #${pr}: ${d.go ? 'fix' : 'skip'} (${d.reason})`)
+    if (process.env.GITHUB_OUTPUT) appendFileSync(process.env.GITHUB_OUTPUT, `go=${d.go}\nbranch=${v.headRefName}\nhead=${v.headRefOid}\n`)
+    return
+  }
   const view = JSON.parse(execFileSync('gh', ['pr', 'view', pr, '--repo', repo,
     '--json', 'state,isDraft,isCrossRepository,labels,headRefOid,comments'], { cwd: ROOT, encoding: 'utf8' }))
   const facts = {
