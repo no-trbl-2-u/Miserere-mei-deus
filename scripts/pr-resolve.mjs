@@ -21,10 +21,14 @@
 // Never force-pushes, never rebases, never touches `main`. A union merge of
 // an append-only file can double a row both sides edited (hunt's lesson
 // `union-edit-doubles`); `unionMerge` counts each line three ways (base,
-// ours, theirs) so an edited row keeps only its edited form.
+// ours, theirs) so an edited row keeps only its edited form. The line order
+// comes from git's own three-way merge, so a row one side moved (Pending to
+// Done) moves whole; an anchor walk split such rows (lesson
+// `union-anchor-split`).
 
 import { execFileSync } from 'node:child_process'
 import fs from 'node:fs'
+import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -77,40 +81,59 @@ export function keepCount(b, o, t) {
 /**
  * Union merge of an append-only file: every row either side added survives,
  * no row appears more often than `keepCount` allows, and (for telemetry)
- * table rows stay in timestamp order. Pure; the I/O lives in the CLI.
+ * table rows stay in timestamp order. Deterministic; its only I/O is the
+ * scratch files `mergeFileUnion` hands git.
  * @param {string} base  @param {string} ours  @param {string} theirs
  * @param {{ telemetry?: boolean }} [opts]
  * @returns {string}
  */
 export function unionMerge(base, ours, theirs, opts = {}) {
-  const B = base.split('\n')
-  const O = ours.split('\n')
-  const T = theirs.split('\n')
-  const cb = counts(B)
-  const co = counts(O)
-  const ct = counts(T)
+  const cb = counts(base.split('\n'))
+  const co = counts(ours.split('\n'))
+  const ct = counts(theirs.split('\n'))
+  const out = mergeFileUnion(base, ours, theirs).split('\n')
 
-  // Order: ours as the spine, then theirs' rows that ours lacks, each placed
-  // after the nearest preceding line it shares with ours.
-  const out = [...O]
-  let anchor = -1
-  for (const line of T) {
-    const idx = out.indexOf(line, anchor + 1)
-    if (idx !== -1) {
-      anchor = idx
-      continue
+  const keep = (line) => keepCount(cb.get(line) || 0, co.get(line) || 0, ct.get(line) || 0)
+
+  // A clashing hunk keeps both sides, so a row one side closed comes back
+  // under its old heading. That heading trims to zero; the body lines it
+  // carried are the surplus copies, so they go first.
+  const isHead = (l) => /^#{1,6} /.test(l)
+  const stranded = new Array(out.length).fill(false)
+  for (let i = 0; i < out.length; i += 1) {
+    if (!isHead(out[i]) || keep(out[i]) > 0) continue
+    for (let j = i + 1; j < out.length && out[j].trim() !== '' && !isHead(out[j]); j += 1) stranded[j] = true
+  }
+  const total = counts(out)
+  const drop = new Array(out.length).fill(false)
+  const surplus = new Map()
+  for (const [line, n] of total) if (line.trim() !== '' && n > keep(line)) surplus.set(line, n - keep(line))
+  for (let i = 0; i < out.length; i += 1) {
+    const left = surplus.get(out[i]) || 0
+    if (stranded[i] && left > 0) {
+      drop[i] = true
+      surplus.set(out[i], left - 1)
     }
-    out.splice(anchor + 1, 0, line)
-    anchor += 1
   }
 
   // Trim each non-blank line to its three-way count (blank lines are layout).
   const seen = new Map()
-  const trimmed = out.filter((line) => {
+  const kept = out.filter((line, i) => {
+    if (drop[i]) return false
     if (line.trim() === '') return true
     const n = (seen.get(line) || 0) + 1
     seen.set(line, n)
-    return n <= keepCount(cb.get(line) || 0, co.get(line) || 0, ct.get(line) || 0)
+    return n <= keep(line)
+  })
+
+  // Dropped rows leave their blank separators behind; no blank run may grow
+  // past the longest either side wrote.
+  const longestRun = (text) => Math.max(0, ...(text.match(/\n(\s*\n)+/g) || []).map((m) => m.split('\n').length - 2))
+  const maxRun = Math.max(longestRun(ours), longestRun(theirs))
+  let run = 0
+  const trimmed = kept.filter((line) => {
+    run = line.trim() === '' ? run + 1 : 0
+    return run <= maxRun
   })
 
   if (!opts.telemetry) return trimmed.join('\n')
@@ -119,6 +142,34 @@ export function unionMerge(base, ours, theirs, opts = {}) {
   const rows = trimmed.filter(isRow).sort()
   let i = 0
   return trimmed.map((l) => (isRow(l) ? rows[i++] : l)).join('\n')
+}
+
+/**
+ * Line order for a union merge: `git merge-file --union`, a real diff3, so
+ * each side's moves and edits apply where they were made and only clashing
+ * hunks keep both sides (ours first). Run in a scratch directory.
+ * @param {string} base  @param {string} ours  @param {string} theirs
+ * @returns {string}
+ */
+function mergeFileUnion(base, ours, theirs) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'pr-resolve-'))
+  try {
+    const files = { ours, base, theirs }
+    for (const [name, text] of Object.entries(files)) fs.writeFileSync(path.join(dir, name), text)
+    try {
+      return execFileSync('git', ['merge-file', '-p', '--union', 'ours', 'base', 'theirs'], {
+        cwd: dir,
+        encoding: 'utf8',
+        maxBuffer: 64 * 1024 * 1024,
+      })
+    } catch (err) {
+      // merge-file exits with the conflict count; a positive count still printed the merge
+      if (typeof err.status === 'number' && err.status > 0 && typeof err.stdout === 'string') return err.stdout
+      throw err
+    }
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
 }
 
 /** True when text still carries a git conflict marker. @param {string} text */

@@ -214,6 +214,21 @@ test('unionMerge does not double a row one side edited (lesson union-edit-double
   assert.match(out, /row three/)
 })
 
+test('unionMerge moves a row whole when one side moves it Pending to Done (lesson union-anchor-split)', () => {
+  const row = (t) => [`### ${t}`, '- viewport: n/a', '- source: drive', '']
+  const base = ['## Pending', '', ...row('A'), ...row('B'), '## Done', '', ...row('[x] Z')].join('\n')
+  // ours closes B; theirs closes A. Both rows share the generic body lines.
+  const ours = ['## Pending', '', ...row('A'), '## Done', '', ...row('[x] B'), ...row('[x] Z')].join('\n')
+  const theirs = ['## Pending', '', ...row('B'), '## Done', '', ...row('[x] A'), ...row('[x] Z')].join('\n')
+  const out = unionMerge(base, ours, theirs)
+  const [pending, done] = out.split('## Done')
+  assert.doesNotMatch(pending, /viewport/, 'no headerless body left in Pending')
+  for (const t of ['A', 'B', 'Z']) {
+    assert.match(done, new RegExp(`### \\[x\\] ${t}\\n- viewport: n/a\\n- source: drive\\n`), `row ${t} whole`)
+  }
+  assert.ok(!/\n\n\n/.test(out), 'no blank-line bloat')
+})
+
 test('unionMerge keeps telemetry rows in timestamp order', () => {
   const head = '| when (UTC) | event |\n|---|---|\n'
   const base = `${head}| 2026-10-12T01:00Z | a |\n`
