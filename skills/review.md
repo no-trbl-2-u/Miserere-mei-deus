@@ -68,7 +68,7 @@ gh pr diff <n>
 Note the head SHA (the verdict's head marker), the labels, and the
 derived tier: the `risk:low|medium|high` label `verify-gate` applied
 (`scripts/pr-risk.mjs`). If no `risk:*` label is on the PR, run
-`node scripts/pr-risk.mjs --pr <n>` (without `--apply`) and use the
+`node .review-tooling/scripts/pr-risk.mjs --pr <n>` (without `--apply`) and use the
 tier it prints. Read the PR body's `## Acceptance` lines and the brief
 they come from when it names one (`plan/phases/...`).
 
