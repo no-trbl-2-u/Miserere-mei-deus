@@ -295,7 +295,7 @@ function verbOfBash(command) {
  * mentions a script name is not a run.
  */
 const SCRIPT_RE =
-  /(?:^|[;&|(\n])\s*(?:[A-Za-z_][A-Za-z0-9_]*=\S*\s+)*npm\s+(?:[^|;&\n]*?\s)?run\s+(?:[^|;&\n]*?\s)?(verify:visual|e2e:[a-z0-9-]+|critique:drive|smoke:bundler|baseline:approve)(?![\w:-])/
+  /(?:^|[;&|(\n])\s*(?:[A-Za-z_][A-Za-z0-9_]*=\S*\s+)*npm\s+(?:[^|;&\n]*?\s)?run\s+(?:[^|;&\n]*?\s)?(verify:visual|e2e:[a-z0-9-]+(?::[a-z0-9-]+)*|critique:drive|smoke:bundler|baseline:approve)(?![\w:-])/
 
 /** The logged npm script a Bash command runs, or null. */
 function scriptOfBash(command) {
