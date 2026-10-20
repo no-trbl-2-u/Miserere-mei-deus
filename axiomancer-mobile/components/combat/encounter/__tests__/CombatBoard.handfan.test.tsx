@@ -33,7 +33,7 @@ import { initializeCombatEncounter, rollEncounterDice } from '@mechanics';
 import {
     CombatBoard, CombatCardFace, handFanLayout,
     NAME_BAND_LEFT_CHROME, useCombatBoardStyles,
-    HAND_CARD_H, HAND_FAN_PAD_BOTTOM, HAND_PILL_OVERHANG,
+    HAND_CARD_H, HAND_CARD_W, HAND_FAN_PAD_BOTTOM, HAND_PILL_OVERHANG,
     type DragController,
 } from '@/components/combat/encounter/CombatBoard';
 import { buildCombatViewModel, type CombatViewModel } from '@/state/presenters/combat-encounter.engine';
@@ -138,6 +138,18 @@ describe('the hand fan prints every name on one uncapped line', () => {
         // start of a name: about three of the band's 13pt gothic capitals.
         const { step } = handFanLayout(PHONE.width, 5);
         expect(step - NAME_BAND_LEFT_CHROME).toBeGreaterThanOrEqual(30);
+    });
+
+    it('a five-card fan at 375 keeps the outer card’s FREE pill on screen', () => {
+        // The fan's left edge, less how far the outer card's top-left corner
+        // swings out under its tilt (rotate tilt * 3deg about the card's
+        // centre, tilt -2 at five cards), less the pill's 6pt overhang.
+        const { band, step } = handFanLayout(PHONE.width, 5);
+        const fanW = HAND_CARD_W + 4 * step;
+        const left = (PHONE.width - band) / 2 + (band - fanW) / 2;
+        const theta = (6 * Math.PI) / 180;
+        const swing = (HAND_CARD_H / 2) * Math.sin(theta) - (HAND_CARD_W / 2) * (1 - Math.cos(theta));
+        expect(left - swing - 6).toBeGreaterThanOrEqual(0);
     });
 
     it('every hand card, covered or not, keeps one line and no width cap', () => {

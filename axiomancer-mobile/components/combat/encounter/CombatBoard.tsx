@@ -358,8 +358,11 @@ export function signatureColumnTop(hudBottom: number, trayTop: number, sigH: num
 // the board's own edge inset.
 // Never tighter than a readable sliver, however large the hand.
 export const HAND_FAN_MIN_STEP = 28;
-// The board's own edge inset on either side of the fan.
-export const HAND_FAN_BOARD_EDGE = 12;
+// The board's own edge inset on either side of the fan. It must hold the
+// outermost card's FREE pill (6pt past the face's left edge) plus the ~9pt its
+// top-left corner swings out under a five-card fan's 6deg tilt, or the pill
+// is cut at the screen edge.
+export const HAND_FAN_BOARD_EDGE = 18;
 // The widest a step may grow: a whole card plus this gap. A band with room
 // lays the hand out side by side, so no card hides its right-hand (paid) column
 // under a neighbour; a phone never has that room and keeps its overlap.
