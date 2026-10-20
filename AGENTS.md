@@ -160,7 +160,13 @@ review, not drafts. **The loop never merges, closes or force-pushes a
 PR** (D86). Since D95 the `pr-review.yml` `merge` job merges every
 non-plan PR whose adversarial review is complete and green; T merges
 plan PRs (`plot`, `review:plan-only`, a `plot:`/`plan:` title) and
-anything the review holds. `pr-autofix` (Haiku, two runs per PR) keeps
+anything the review holds, and every PR that changes the review pipeline
+itself. **Repository settings are T's alone** (rulesets, auto-merge,
+secrets, variables, labels' meaning): a session never changes them, even
+at T's word in the moment; it writes the exact command as a
+`plan/NEEDS_T.md` row and T runs it (the 2026-10-20 ruleset, created
+in session without a bypass list, blocked every push to `main`).
+`pr-autofix` (Haiku, two runs per PR) keeps
 a red `loop:pr` PR green and `pr-resolve` keeps it mergeable (D87); at
 most 5 are open at once (D85).
 

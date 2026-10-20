@@ -35,16 +35,27 @@ test('a fork, a closed or merged PR, or a seeded draft on pull_request is skippe
 test('two verdicts on a PR end its automated review; a dispatch still reviews it (T, 2026-10-20)', () => {
   assert.equal(MAX_PASSES, 2)
   assert.equal(EXHAUSTED_LABEL, 'review:exhausted')
-  const v = (sha) => `## Review verdict\n<!-- pr-review:verdict not-pass -->\n${headMarker(sha)}`
+  const v = (sha, verdict = 'not-pass', readers = true) => `## Review verdict\n<!-- pr-review:verdict ${verdict} -->\n${headMarker(sha)}\n${readers ? '<!-- pr-review:readers 4 overlap 0 -->' : ''}`
   const one = pr({ head: 'c'.repeat(40), comments: [v('a'.repeat(40))] })
-  assert.equal(reviewWanted(one).go, true, 'one verdict: the fixed head gets its second pass')
+  assert.equal(reviewWanted(one).go, true, 'one not-pass: the fixed head gets its second pass')
   const two = pr({ head: 'c'.repeat(40), comments: [v('a'.repeat(40)), v('b'.repeat(40))] })
   const d = reviewWanted(two)
   assert.equal(d.go, false)
   assert.equal(d.exhausted, true)
   assert.match(d.reason, /cap is 2 passes/)
   assert.equal(reviewWanted({ ...two, dispatch: true }).go, true)
+  assert.equal(reviewWanted(pr({ head: 'c'.repeat(40), comments: [v('a'.repeat(40), 'pass'), v('b'.repeat(40), 'pass'), v('d'.repeat(40), 'pass')] })).go, true, 'passes never exhaust')
+  assert.equal(reviewWanted(pr({ head: 'c'.repeat(40), comments: [v('a'.repeat(40), 'not-pass', false), v('b'.repeat(40), 'not-pass', false)] })).go, true, 'pre-D95 verdicts (no readers marker) never count')
   assert.equal(reviewWanted(pr({ head: 'c'.repeat(40), comments: ['no markers here', 'pr-review:verdict pass in prose'] })).go, true, 'only marker-bearing comments count')
+})
+
+test('an unchanged diff on a new head reuses its verdict: no review, and the merge job is told so', () => {
+  const dg = diffDigest(PATCH)
+  const d = reviewWanted(pr({ head: 'c'.repeat(40), digest: dg, comments: [headMarker('b'.repeat(40), dg)] }))
+  assert.equal(d.go, false)
+  assert.equal(d.reuse, true)
+  assert.match(d.reason, /that verdict stands/)
+  assert.equal(reviewWanted(pr({ head: 'c'.repeat(40), digest: dg, comments: [headMarker('b'.repeat(40), 'e'.repeat(40))] })).reuse, undefined, 'a different diff is reviewed')
 })
 
 test('drafts wait on pull_request', () => {
