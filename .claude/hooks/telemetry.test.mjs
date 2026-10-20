@@ -298,6 +298,118 @@ test('other shell commands are not verb-reads', () => {
   assert.equal(verbRows().length, before)
 })
 
+// The visual/e2e suite's run record (VE1b): a Bash call running one of its
+// npm scripts opens a `script` row and closes it with the exit-code outcome
+// and the smoke counts.
+const scriptRows = () => rows().filter((r) => /\| script(-end)? \|/.test(r))
+const bashCall = (command, extra = {}) => ({ ...base(), tool_name: 'Bash', tool_input: { command, ...extra } })
+
+test('the five suite scripts each open a script row named for the script', () => {
+  clearTick()
+  const before = scriptRows().length
+  for (const command of [
+    'npm run verify:visual',
+    'SMOKE_RUNS=5 npm run verify:visual 2>&1 | tail -20',
+    'npm run e2e:fixture',
+    'npm run e2e:combat-round:boss',
+    "cat > a.txt <<'EOF'\nnot a run\nEOF\nnpm run e2e:combat-round:boss",
+    'npm run --workspace axiomancer-mobile critique:drive',
+    'cd axiomancer-mobile && npm run smoke:bundler',
+    'npm run baseline:approve',
+  ])
+    fire('tool', bashCall(command))
+  const names = scriptRows().slice(before).map((r) => r.split('|')[3].trim())
+  assert.deepEqual(names, ['verify:visual', 'verify:visual', 'e2e:fixture', 'e2e:combat-round:boss', 'e2e:combat-round:boss', 'critique:drive', 'smoke:bundler', 'baseline:approve'])
+})
+
+test('other npm scripts and mentions of a script name are not script rows', () => {
+  clearTick()
+  const before = scriptRows().length
+  for (const command of [
+    'npm run verify',
+    'npm run verify --workspace axiomancer-mobile',
+    'npm test',
+    'grep -n verify:visual package.json',
+    'npm run verify:visual-extra',
+    'cat skills/march.md',
+    "cat > t.test.mjs <<'EOF'\nconst cmds = [\n  'npm run verify:visual',\n]\nEOF",
+    'echo npm && echo run verify:visual',
+    "cat > notes.md <<'EOF'\nrun this first:\nnpm run verify:visual\nthen look\nEOF",
+    'cat <<EOF > run.sh\nnpm run e2e:fixture\nEOF\necho done',
+  ])
+    fire('tool', bashCall(command))
+  assert.equal(scriptRows().length, before)
+})
+
+test('a script-end row carries the smoke counts and the exit-code outcome', () => {
+  clearTick()
+  const ok = bashCall('npm run verify:visual')
+  fire('tool', ok)
+  fire('tool-end', {
+    ...ok,
+    hook_event_name: 'PostToolUse',
+    duration_ms: 21_400,
+    tool_response: { stdout: 'smoke-screens: matched     13\nsmoke-screens: differing   0\nsmoke-screens: missing     0\n', stderr: '' },
+  })
+  const end = rows().at(-1)
+  assert.match(end, /\| script-end \| verify:visual \|/)
+  assert.match(end, /\| 21s \|/, 'the harness duration is the row duration')
+  assert.match(end, /\| ok; matched 13 \/ differing 0 \/ missing 0 \|$/)
+})
+
+test('a failed script maps its exit code: 1 diff, 2 missing, other codes an error', () => {
+  clearTick()
+  const cases = [
+    [1, /\| diff; matched 11 \/ differing 2 \/ missing 0 \|$/],
+    [2, /\| missing; matched 11 \/ differing 0 \/ missing 2 \|$/],
+    [4, /\| error: 4 \|$/],
+  ]
+  for (const [code, want] of cases) {
+    const call = bashCall(`npm run verify:visual # case ${code}`)
+    fire('tool', call)
+    const counts = code === 1 ? [11, 2, 0] : code === 2 ? [11, 0, 2] : null
+    const out = counts ? `smoke-screens: matched ${counts[0]}\nsmoke-screens: differing ${counts[1]}\nsmoke-screens: missing ${counts[2]}` : 'nondeterministic: root'
+    fire('tool-end', { ...call, hook_event_name: 'PostToolUseFailure', error: `Exit code ${code}\n${out}` })
+    assert.match(rows().at(-1), want, `exit ${code}`)
+  }
+})
+
+// A `| tail` or `; echo` after the script makes the Bash call exit 0 while the
+// script exited 1; the summary it printed is the script's own verdict.
+test('a pipe that hides the exit code still reads the outcome from the summary', () => {
+  clearTick()
+  const call = bashCall('npm run verify:visual 2>&1 | tail -20')
+  fire('tool', call)
+  fire('tool-end', {
+    ...call,
+    hook_event_name: 'PostToolUse',
+    tool_response: { stdout: 'smoke-screens: matched     1\nsmoke-screens: differing   12\nsmoke-screens: missing     0\n' },
+  })
+  assert.match(rows().at(-1), /\| diff; matched 1 \/ differing 12 \/ missing 0 \|$/)
+})
+
+test('a backgrounded script run closes as backgrounded with no duration', () => {
+  clearTick()
+  const call = bashCall('npm run e2e:hazard', { run_in_background: true })
+  fire('tool', call)
+  fire('tool-end', { ...call, hook_event_name: 'PostToolUse', tool_response: { stdout: '' } })
+  assert.match(rows().at(-1), /\| script-end \| e2e:hazard \| [^|]+ \| - \| backgrounded \|$/)
+})
+
+test('a plain Bash call that finishes writes no end row', () => {
+  clearTick()
+  const before = rows().length
+  fire('tool-end', { ...bashCall('ls'), hook_event_name: 'PostToolUse', tool_response: { stdout: 'x' } })
+  assert.equal(rows().length, before)
+})
+
+test('a Skill failure reported by PostToolUseFailure records its error', () => {
+  const call = { ...base(), tool_name: 'Skill', tool_input: { skill: 'expand' } }
+  fire('tool', call)
+  fire('tool-end', { ...call, hook_event_name: 'PostToolUseFailure', error: 'skill not found' })
+  assert.match(rows().at(-1), /\| skill-end \| expand \|.*error: skill not found \|$/)
+})
+
 test('tick-close writes the missing tick-end row once, from the execution file', () => {
   const sid = 'ci-run-1'
   fire('prompt', { session_id: sid, transcript_path: transcript, prompt: '/march' })

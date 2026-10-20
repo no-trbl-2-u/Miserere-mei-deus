@@ -117,6 +117,13 @@ const storeAdapter = bootFixture ? createFixtureBootAdapter(bootFixture.state) :
 // Dev-only skip hook (`components/DevSkipBridge.tsx`). Lazy so the skip
 // module and the engine combat sim it imports stay out of production
 // bundles; the mount below is additionally gated on `isDevToolsEnabled()`.
+// Web-only ready signal for the screenshot scripts
+// (`scripts/lib/page-ready.mjs`): set once every font has settled, loaded or
+// failed, so a shot never lands mid font swap. Native builds get nothing.
+function markWebReady(): void {
+  if (Platform.OS === 'web') document.documentElement.dataset.axmReady = '1';
+}
+
 const DevSkipBridge = lazy(() =>
   import('@/components/DevSkipBridge').then((m) => ({ default: m.DevSkipBridge })),
 );
@@ -184,7 +191,7 @@ function RootLayout() {
   useEffect(() => {
     if (fontsLoaded && preloaded) {
       SplashScreen.hideAsync();
-      
+
       // Load decorative fonts asynchronously after startup
       import('expo-font').then(({ loadAsync }) => {
         loadAsync({
@@ -192,16 +199,19 @@ function RootLayout() {
           JetBrainsMono_400Regular,
         }).then(() => {
           setSecondaryFontsLoaded(true);
+          markWebReady();
         }).catch((err) => {
           // Fallback gracefully - app works without decorative fonts
           if (__DEV__) {
             console.warn('[fonts] secondary fonts failed to load', err);
           }
+          markWebReady();
         });
       }).catch((err) => {
         if (__DEV__) {
           console.warn('[fonts] expo-font import failed', err);
         }
+        markWebReady();
       });
     }
   }, [fontsLoaded, preloaded]);

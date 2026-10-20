@@ -35,6 +35,7 @@ import { readFile, stat, mkdir, writeFile, rm } from 'node:fs/promises'
 import { resolve, dirname, join, extname } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { enterLiveFight } from './live-fight-entry.mjs'
+import { waitForReady } from './lib/page-ready.mjs'
 import { ensureWebExport } from './lib/web-export.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -294,7 +295,7 @@ async function captureScreen(context, baseUrl, screen, viewport, outDir, index) 
         }
         if (screen.prepare) await screen.prepare(page).catch((e) => { entry.navError = `prepare: ${e.message}` })
         if (screen.settle) await screen.settle(page).catch((e) => { entry.settleError = `settle: ${e.message}` })
-        await page.waitForTimeout(700)
+        await waitForReady(page).catch((e) => { entry.settleError = entry.settleError ?? `ready: ${e.message}` })
         entry.finalUrl = page.url()
         await page.screenshot({ path: join(outDir, entry.screenshot), fullPage: false })
         const text = await page.evaluate(() => document.body?.innerText ?? '').catch(() => '')

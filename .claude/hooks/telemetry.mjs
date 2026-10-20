@@ -5,7 +5,8 @@
 // Wired via .claude/settings.json:
 //
 //   PreToolUse  (Skill|SlashCommand|Task|Agent|Read|Bash) → telemetry.mjs tool
-//   PostToolUse (Skill|SlashCommand|Task|Agent) → telemetry.mjs tool-end
+//   PostToolUse (Skill|SlashCommand|Task|Agent|Bash) → telemetry.mjs tool-end
+//   PostToolUseFailure (same matcher)           → telemetry.mjs tool-end
 //   UserPromptSubmit                            → telemetry.mjs prompt
 //   Stop                                        → telemetry.mjs tick-end
 //
@@ -30,16 +31,24 @@
 //             subagent           a Task/Agent spawn started
 //             verb-read          a loop verb's skills/<verb>.md was read
 //                                (no -end row; once per verb per tick)
+//             script             a Bash call ran one of the visual/e2e
+//                                npm scripts (SCRIPT_RE below)
 //             skill-end          …and the matching call finished
 //             slash-command-end  …and the matching call finished
 //             subagent-end       …and the matching call finished
+//             script-end         …and the matching call finished
 //             tick-end           the main agent finished responding
 //   name    Skill / command / subagent-type name.
 //   model   Resolved model id, or '-' when genuinely unknowable at write
 //           time (see resolveModel below). NOT a guess.
 //   dur     Wall-clock duration on *-end and tick-end rows; '-' on start
 //           rows. Formatted '4s', '1m12s', '2h03m'.
-//   detail  Free text. On *-end rows: 'ok' or 'error: <reason>'.
+//   detail  Free text. On *-end rows: 'ok' or 'error: <reason>'. On
+//           script-end rows the outcome follows the script's exit code
+//           ('ok' 0, 'diff' 1, 'missing' 2, 'error: <code>' otherwise,
+//           'backgrounded' for a run_in_background call), then the
+//           'matched N / differing N / missing N' counts when the output
+//           carries them.
 //
 // ---------------------------------------------------------------------
 // Why the schema changed (2026-09-15)
@@ -109,6 +118,15 @@
 //    the runner calls it with the action's execution file, and it writes
 //    the tick-end row (duration and outcome from that file) only when the
 //    session's shard has a slash-prompt with no tick-end after it.
+//
+// 7. SCRIPT ROWS (VE1b, 2026-10-20). The visual and e2e suite had no run
+//    record: nothing logged npm scripts, so its cost and its approval
+//    latency were unknowable. A Bash call that runs `npm run verify:visual`,
+//    `e2e:<name>`, `critique:drive`, `smoke:bundler` or `baseline:approve`
+//    now writes a `script` row and, from PostToolUse or PostToolUseFailure,
+//    its `script-end` row. The scripts themselves know nothing about
+//    telemetry. A CI run is not a Claude session and writes no row; its
+//    record is the workflow step summary.
 //
 // Zero dependencies. Newest rows last.
 
@@ -269,6 +287,84 @@ function verbOfBash(command) {
   return m ? verbOfRead(m[1]) : null
 }
 
+/**
+ * The npm scripts whose runs are logged as `script` rows: the visual gate
+ * and the e2e legs around it. `npm run verify` and the rest are not. `npm`
+ * must stand where a command starts (line start, or after `;`, `&`, `|`,
+ * `(`, past any `VAR=value` prefixes), and heredoc bodies are cut out
+ * before matching, so a heredoc or a grep that only mentions a script name
+ * is not a run.
+ */
+const SCRIPT_RE =
+  /(?:^|[;&|(\n])\s*(?:[A-Za-z_][A-Za-z0-9_]*=\S*\s+)*npm\s+(?:[^|;&\n]*?\s)?run\s+(?:[^|;&\n]*?\s)?(verify:visual|e2e:[a-z0-9-]+(?::[a-z0-9-]+)*|critique:drive|smoke:bundler|baseline:approve)(?![\w:-])/
+
+/**
+ * A heredoc body (`<<EOF` or `<<-'EOF'` through the line holding only
+ * the delimiter): text the command writes, not commands it runs.
+ */
+const HEREDOC_RE = /<<-?\s*(['"]?)([A-Za-z_][A-Za-z0-9_]*)\1[^\n]*\n[\s\S]*?\n[ \t]*\2(?=\n|$)/g
+
+/** The logged npm script a Bash command runs, or null. */
+function scriptOfBash(command) {
+  const m = String(command ?? '').replace(HEREDOC_RE, '<<HEREDOC').match(SCRIPT_RE)
+  return m ? m[1] : null
+}
+
+/**
+ * The exit code of a finished Bash call: the payload's own field when it
+ * has one, else the `Exit code N` a failed call reports, else 0 for a call
+ * PostToolUse saw succeed. null when a failure names no code.
+ */
+function exitCodeOf(input) {
+  const res = input?.tool_response
+  for (const v of [res?.exit_code, res?.exitCode, res?.code]) if (Number.isInteger(v)) return v
+  const text = [input?.error, res?.error, typeof res === 'string' ? res : res?.stderr].filter(Boolean).join('\n')
+  const m = text.match(/Exit code (\d+)/i)
+  if (m) return Number(m[1])
+  return input?.hook_event_name === 'PostToolUseFailure' || input?.error ? null : 0
+}
+
+/**
+ * The smoke summary counts a run printed (`smoke-screens: matched 13`, …),
+ * or null when the output carries no full summary.
+ */
+function smokeCounts(input) {
+  const res = input?.tool_response
+  const text = [res?.stdout, typeof res === 'string' ? res : '', input?.error].filter(Boolean).join('\n')
+  const read = (k) => {
+    const m = text.match(new RegExp(`\\b${k}\\s+(\\d+)`))
+    return m ? Number(m[1]) : null
+  }
+  const counts = { matched: read('matched'), differing: read('differing'), missing: read('missing') }
+  if (Object.values(counts).some((n) => n === null)) return null
+  return { ...counts, nondeterministic: read('nondeterministic') ?? 0 }
+}
+
+/**
+ * The exit code the script itself chose. Its printed summary outranks the
+ * Bash call's code, because a `| tail` or `; echo` after the script hides
+ * its code from the call (smoke-screens' exit order: 4, 2, 1, 0).
+ */
+function scriptExitCode(input, counts) {
+  const code = exitCodeOf(input)
+  if (!counts || (code !== 0 && code !== null)) return code
+  if (counts.nondeterministic > 0) return 4
+  if (counts.missing > 0) return 2
+  if (counts.differing > 0) return 1
+  return code
+}
+
+/** The detail of a script-end row: the exit-code outcome, then the counts. */
+function scriptOutcome(input) {
+  if (input?.tool_input?.run_in_background === true) return 'backgrounded'
+  const counts = smokeCounts(input)
+  const code = scriptExitCode(input, counts)
+  const outcome =
+    code === 0 ? 'ok' : code === 1 ? 'diff' : code === 2 ? 'missing' : `error: ${code ?? 'unknown'}`
+  if (!counts) return outcome
+  return `${outcome}; matched ${counts.matched} / differing ${counts.differing} / missing ${counts.missing}`
+}
+
 function verbOfRead(filePath) {
   const p = String(filePath ?? '').replace(/\\/g, '/')
   const m = p.match(/(?:^|\/)skills\/([a-z0-9][a-z0-9-]*)\.md$/i)
@@ -301,8 +397,10 @@ function classify(input) {
     }
   if (tool === 'Read' || tool === 'Bash') {
     const verb = tool === 'Read' ? verbOfRead(ti.file_path) : verbOfBash(ti.command)
-    if (!verb) return null
-    return { event: 'verb-read', name: verb, detail: '', pinnedModel: null, noEnd: true }
+    if (verb) return { event: 'verb-read', name: verb, detail: '', pinnedModel: null, noEnd: true }
+    const script = tool === 'Bash' ? scriptOfBash(ti.command) : null
+    if (!script) return null
+    return { event: 'script', name: script, detail: ti.command, pinnedModel: null }
   }
   if (tool === 'Task' || tool === 'Agent')
     return {
@@ -319,11 +417,13 @@ function classify(input) {
 function outcomeOf(input) {
   const res = input?.tool_response
   const failed =
+    input?.hook_event_name === 'PostToolUseFailure' ||
+    typeof input?.error === 'string' ||
     res?.is_error === true ||
     res?.isError === true ||
     (typeof res?.status === 'string' && /error|fail/i.test(res.status))
   if (!failed) return 'ok'
-  const why = res?.error ?? res?.message ?? (typeof res === 'string' ? res : '')
+  const why = input?.error ?? res?.error ?? res?.message ?? (typeof res === 'string' ? res : '')
   return `error: ${String(why).slice(0, 70) || 'unspecified'}`
 }
 
@@ -368,7 +468,7 @@ function toolStart(input) {
   })
 }
 
-/** PostToolUse: close the matching invocation and write its end row. */
+/** PostToolUse / PostToolUseFailure: close the matching invocation and write its end row. */
 function toolEnd(input) {
   const c = classify(input)
   if (!c || c.noEnd) return
@@ -383,8 +483,15 @@ function toolEnd(input) {
     event: `${c.event}-end`,
     name: c.name,
     model: c.pinnedModel ?? resolveModel(input?.transcript_path) ?? '-',
-    dur: started ? humanDur(Date.now() - started) : '-',
-    detail: outcomeOf(input),
+    dur:
+      c.event === 'script' && input?.tool_input?.run_in_background === true
+        ? '-'
+        : Number.isFinite(input?.duration_ms)
+          ? humanDur(input.duration_ms)
+          : started
+            ? humanDur(Date.now() - started)
+            : '-',
+    detail: c.event === 'script' ? scriptOutcome(input) : outcomeOf(input),
   })
 }
 

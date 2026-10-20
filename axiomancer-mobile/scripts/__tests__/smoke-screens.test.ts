@@ -24,6 +24,7 @@ describe('smoke-screens helpers', () => {
         DIFF: 1,
         MISSING_BASELINE: 2,
         BOOT_FAILURE: 3,
+        NONDETERMINISTIC: 4,
     }
 
     const VIEWPORT = { width: 390, height: 844 }
@@ -209,7 +210,8 @@ describe('smoke-screens helpers', () => {
             expect(EXIT.DIFF).toBe(1)
             expect(EXIT.MISSING_BASELINE).toBe(2)
             expect(EXIT.BOOT_FAILURE).toBe(3)
-            expect(new Set(Object.values(EXIT)).size).toBe(4)
+            expect(EXIT.NONDETERMINISTIC).toBe(4)
+            expect(new Set(Object.values(EXIT)).size).toBe(5)
         })
     })
 

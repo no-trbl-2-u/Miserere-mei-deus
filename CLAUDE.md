@@ -43,8 +43,10 @@ are frozen in `telemetry/legacy-to-2026-09-23.md`). Read it all as one
 time-sorted table with `npm run telemetry` (`--since YYYY-MM-DD`,
 `--tail N`). Commit a session's shard with the tick; never edit rows.
 
-Each start row (`skill`, `subagent`, `slash-command`) pairs with an `-end`
-row carrying that call's duration and outcome, and a tick that invoked
+Each start row (`skill`, `subagent`, `slash-command`, and `script` for a
+Bash run of `verify:visual`, `e2e:*`, `critique:drive`, `smoke:bundler` or
+`baseline:approve`) pairs with an `-end` row carrying that call's duration
+and outcome, and a tick that invoked
 anything closes with a `tick-end` row. So a start row with no `-end` row
 means the call never returned, and a `slash-prompt` followed straight by
 `tick-end` means the tick genuinely did nothing. A conversational turn that

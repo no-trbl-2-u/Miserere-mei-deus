@@ -11,8 +11,11 @@
 //   exit 1  →  one or more routes differ; review + maybe approve
 //   exit 2  →  baseline missing for one or more routes (first-run / new route)
 //   exit 3  →  config / boot failure (expo export / browser / server)
+//   exit 4  →  SMOKE_RUNS=<n>: a route's n captures were not byte-identical
+//              (the gate cannot judge a nondeterministic screen; fix that first)
 //   SMOKE_CHROME=/path/to/chrome  custom browser binary · AXM_FORCE_EXPORT=1  re-export
 //   (otherwise .smoke-dist is reused when its stamp matches the tree, lib/web-export.mjs)
+//   SMOKE_RUNS=5  load and shoot every route 5 times, exit 4 on any that differ
 //   SMOKE_ONLY=devpuzzle-board,hazard-board  shoot and diff only these routes
 //   (the shots a change moves; on a renderer unlike the baselines' every
 //   route drifts, so the full run's exit code says nothing about the change)
@@ -24,13 +27,14 @@
 
 import { spawn } from 'node:child_process'
 import { createServer } from 'node:http'
-import { readFile, mkdir, copyFile, readdir, stat } from 'node:fs/promises'
+import { readFile, writeFile, mkdir, copyFile, readdir, stat } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { resolve, dirname, join, extname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { injectMinigameSeeds } from './minigame-seed-injector.mjs'
 import { forceDevTools } from './fixture-injector.mjs'
 import { enterLiveFight } from './live-fight-entry.mjs'
+import { waitForReady } from './lib/page-ready.mjs'
 import { ensureWebExport } from './lib/web-export.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -118,10 +122,12 @@ export const EXIT = {
     DIFF: 1,
     MISSING_BASELINE: 2,
     BOOT_FAILURE: 3,
+    NONDETERMINISTIC: 4,
 }
 
 export function resultToExit(result) {
     if (result.bootError) return EXIT.BOOT_FAILURE
+    if ((result.nondeterministic ?? []).length > 0) return EXIT.NONDETERMINISTIC
     if (result.missing.length > 0) return EXIT.MISSING_BASELINE
     if (result.differing.length > 0) return EXIT.DIFF
     return EXIT.OK
@@ -139,6 +145,33 @@ export function pixelDiffRatio(width, height, diffPixelCount) {
 
 export function isOverThreshold(ratio, threshold = DIFF_THRESHOLD_RATIO) {
     return ratio > threshold
+}
+
+/**
+ * How many times each route is loaded and shot, from `SMOKE_RUNS`. Unset
+ * is 1; anything but a whole number from 1 to 20 throws, so a typo never
+ * reads as a determinism check that did not run.
+ *
+ * @param {string | undefined} raw the `SMOKE_RUNS` value.
+ */
+export function parseSmokeRuns(raw) {
+    if (raw === undefined || raw === '') return 1
+    const n = Number(raw)
+    if (!Number.isInteger(n) || n < 1 || n > 20) throw new Error(`SMOKE_RUNS must be a whole number from 1 to 20, got '${raw}'`)
+    return n
+}
+
+/**
+ * The routes whose captures are not byte-identical across runs: each
+ * entry's later captures are compared with its first.
+ *
+ * @param {{ route: string, captures: Uint8Array[] }[]} shots every route's captures, in run order.
+ * @returns {string[]} the nondeterministic route names, in input order.
+ */
+export function nondeterministicRoutes(shots) {
+    return shots
+        .filter(({ captures }) => captures.slice(1).some((c) => !Buffer.from(c).equals(Buffer.from(captures[0]))))
+        .map(({ route }) => route)
 }
 
 /**
@@ -337,10 +370,13 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl) {
     const differing = []
     const missing = []
 
-    for (const route of selectRoutes(ROUTES, process.env.SMOKE_ONLY)) {
+    // Load the route and shoot it; returns the PNG. A fixture page or a
+    // live fight's own context is closed straight after its shot.
+    async function shootRoute(route) {
         const url = `${baseUrl}${route.path}`
+        const liveContext = route.liveFight ? await browser.newContext(contextOptions) : null
         const target = route.fixture ? await fixturePage(route.fixture)
-            : route.liveFight ? await (await browser.newContext(contextOptions)).newPage()
+            : liveContext ? await liveContext.newPage()
             : page
         try {
             if (route.liveFight) await enterLiveFight(target, baseUrl, { seed: LIVE_FIGHT_SEED })
@@ -348,26 +384,44 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl) {
             if (route.waitForPath) {
                 await target.waitForURL((u) => u.pathname.endsWith(route.waitForPath), { timeout: 15_000 })
             }
+            await waitForReady(target)
             if (route.hazardRoute) await pickHazardRoute(target, route.hazardRoute)
             if (route.settleRoll) {
                 await target.getByTestId('hazard-board').waitFor({ state: 'visible', timeout: 10_000 })
                 await settleDiceRoll(target)
             }
-            // Settle fonts + any deferred layout. The 600ms is empirical:
-            // long enough for the @expo-google-fonts loaders to resolve,
-            // short enough to keep the suite under a minute.
-            await target.evaluate(() => document.fonts.ready)
-            await target.waitForTimeout(600)
+            // After a hazard step the board has re-rendered; let it paint.
+            if (route.hazardRoute || route.settleRoll) await waitForReady(target)
+            return await target.screenshot({ fullPage: false })
+        } finally {
+            if (target !== page) await target.close().catch(() => {})
+            if (liveContext) await liveContext.close().catch(() => {})
+        }
+    }
+
+    const runs = parseSmokeRuns(process.env.SMOKE_RUNS)
+    const shots = []
+
+    for (const route of selectRoutes(ROUTES, process.env.SMOKE_ONLY)) {
+        const captures = []
+        try {
+            for (let run = 0; run < runs; run++) captures.push(await shootRoute(route))
         } catch (err) {
             console.error(`smoke-screens: failed to load ${route.path}: ${err.message}`)
             differing.push({ route: route.name, reason: 'load-failed', message: err.message })
-            if (target !== page) await target.close().catch(() => {})
             continue
+        }
+        shots.push({ route: route.name, captures })
+        // A capture that differs from the first is kept beside the diffs
+        // (never in current/, which baseline:approve copies) for review.
+        if (nondeterministicRoutes([{ route: route.name, captures }]).length > 0) {
+            for (const [k, capture] of captures.entries()) {
+                if (k > 0) await writeFile(join(DIFF_DIR, `${route.name}.run${k + 1}.png`), capture)
+            }
         }
 
         const currentPath = join(CURRENT_DIR, `${route.name}.png`)
-        await target.screenshot({ path: currentPath, fullPage: false })
-        if (target !== page) await target.close().catch(() => {})
+        await writeFile(currentPath, captures[0])
 
         const baselinePath = join(BASELINE_DIR, `${route.name}.png`)
         if (!existsSync(baselinePath)) {
@@ -397,9 +451,7 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl) {
         const ratio = pixelDiffRatio(width, height, diffPixels)
         if (isOverThreshold(ratio)) {
             const diffPath = join(DIFF_DIR, `${route.name}.png`)
-            await readFile(baselinePath) // touch
-            const fs = await import('node:fs/promises')
-            await fs.writeFile(diffPath, PNG.sync.write(diff))
+            await writeFile(diffPath, PNG.sync.write(diff))
             differing.push({
                 route: route.name,
                 reason: 'pixel-diff',
@@ -412,7 +464,7 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl) {
     }
 
     await browser.close()
-    return { matched, differing, missing, consoleErrors }
+    return { matched, differing, missing, consoleErrors, runs, nondeterministic: nondeterministicRoutes(shots) }
 }
 
 // ---------------------------------------------------------------------------
@@ -420,8 +472,9 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl) {
 // ---------------------------------------------------------------------------
 
 async function main() {
-    // A bad SMOKE_ONLY fails here, before the export, not after it.
+    // A bad SMOKE_ONLY or SMOKE_RUNS fails here, before the export, not after it.
     selectRoutes(ROUTES, process.env.SMOKE_ONLY)
+    parseSmokeRuns(process.env.SMOKE_RUNS)
     await runExpoExport()
     const deps = await loadDeps()
 
@@ -441,6 +494,12 @@ async function main() {
     console.log(`smoke-screens: differing   ${result.differing.length}`)
     console.log(`smoke-screens: missing     ${result.missing.length}`)
     console.log(`smoke-screens: console errors ${result.consoleErrors.length}`)
+    if (result.runs > 1) {
+        console.log(`smoke-screens: nondeterministic ${result.nondeterministic.length} (${result.runs} runs per route)`)
+        for (const route of result.nondeterministic) {
+            console.log(`  NONDET  ${route}  captures differ across ${result.runs} runs`)
+        }
+    }
 
     if (result.differing.length > 0) {
         console.log('')

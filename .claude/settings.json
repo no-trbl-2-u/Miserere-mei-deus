@@ -182,7 +182,18 @@
         ]
       },
       {
-        "matcher": "Skill|SlashCommand|Task|Agent",
+        "matcher": "Skill|SlashCommand|Task|Agent|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/telemetry.mjs\" tool-end"
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "Skill|SlashCommand|Task|Agent|Bash",
         "hooks": [
           {
             "type": "command",

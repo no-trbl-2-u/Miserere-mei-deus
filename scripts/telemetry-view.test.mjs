@@ -79,3 +79,20 @@ test('arguments parse, and malformed ones are rejected', () => {
   assert.throws(() => parseArgs(['--tail', '0']))
   assert.throws(() => parseArgs(['--bogus']))
 })
+
+test('--kind keeps one event kind and its -end rows, script rows included', () => {
+  const dir = dirWith({
+    'a.md': shard(
+      row('2026-10-20T10:00:00Z', 'slash-prompt'),
+      '| 2026-10-20T10:00:05Z | script | verify:visual | claude-opus-5 | - | SMOKE_RUNS=5 npm run verify:visual |',
+      row('2026-10-20T10:00:06Z', 'skill'),
+      '| 2026-10-20T10:01:10Z | script-end | verify:visual | claude-opus-5 | 1m05s | ok; matched 13 / differing 0 / missing 0 |',
+      row('2026-10-20T10:02:00Z', 'tick-end'),
+    ),
+  })
+  const kept = filterRows(collectRows(dir), { kind: 'script' })
+  assert.deepEqual(kept.map((r) => r.split('|')[2].trim()), ['script', 'script-end'])
+  assert.match(kept[1], /ok; matched 13 \/ differing 0 \/ missing 0/)
+  assert.deepEqual(parseArgs(['--kind', 'script']), { kind: 'script' })
+  assert.throws(() => parseArgs(['--kind', 'Script|x']))
+})

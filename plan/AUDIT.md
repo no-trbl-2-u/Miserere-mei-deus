@@ -128,6 +128,19 @@
   - [ ] TEMPER: 0 cards; carried only by the anvil.
 - next: T's next card session (D37). BOON, HONE and TEMPER fail the bar because the atlas files them as Card keywords (the dice section) while no card prints them: T either moves them to Rule keywords or adds them to the bar's system exemptions (CONVICTION, RESERVE, WILD, PIP today). WAIVE needs a second carrier or a cut. Re-seed after.
 
+### [ ] [tests] `combat-encounter`'s first capture in a full `verify:visual` run differs by one pixel (2026-10-20)
+- category: tests
+- impact: 5
+- ease: 5
+- detail: VE1b's `SMOKE_RUNS=5` (PR #663) found the one nondeterministic route. In a full 13-route run, the first
+  live-fight capture differs from runs 2-5 at (127,64), the antialiased top-left corner of a 1px `blood` rounded
+  border (rgb 210,84,64 vs 204,81,62). It is byte-stable shot alone, after one other route, and in a standalone
+  probe, and no CSS animation is running at the ready signal. It stays under the 0.5% gate, but it blocks VE1's
+  "0 nondeterministic routes" Measure and any parallel capture.
+- next: once VE1c's CI step runs `SMOKE_RUNS=2`, read whether the CI renderer shows it. If it does, bisect the
+  preceding routes (`SMOKE_ONLY` with growing prefixes) to find the one that leaves state behind, and fix that
+  leak or give the live fight a fresh browser.
+
 ### [ ] [loop-call] RV1 A7's seeded-branch push is still `[T to confirm]` (2026-10-19)
 - category: loop-call
 - impact: 3
