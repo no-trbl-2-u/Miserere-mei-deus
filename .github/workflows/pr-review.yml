@@ -29,7 +29,10 @@ name: pr-review
 # `review-wanted` decides on a plain runner first (`scripts/pr-review.mjs`:
 # drafts, seeded drafts, once per head, and once per diff, phase RV2), so a
 # label-only event costs no Claude run, and a merge of main or a rebase
-# that leaves the PR's diff unchanged costs none either. The digest comes from `gh pr diff`, so this job stays a sparse
+# that leaves the PR's diff unchanged costs none either. At most two
+# passes per PR (T, 2026-10-20): the second runs only when a not-pass was
+# fixed and pushed; after it the PR is labelled `review:exhausted` and
+# waits for T (a dispatch still reviews it). The digest comes from `gh pr diff`, so this job stays a sparse
 # depth-1 checkout. The reviewer reads, comments and
 # labels; it cannot edit, commit, push, merge or close (grant and deny list
 # below, pinned in `scripts/loop-pr.test.mjs`). The `workflow_dispatch`
@@ -140,9 +143,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Decide (draft, seeded draft, once per head, once per diff)
+      - name: Decide (draft, seeded draft, once per head, once per diff, two passes)
         id: wanted
         run: node scripts/pr-review.mjs wanted --pr "$PR" $DISPATCH
+      - name: Label the PR for T when the pass cap is reached
+        if: steps.wanted.outputs.exhausted == 'true'
+        run: gh pr edit "$PR" --repo "$GH_REPO" --add-label review:exhausted
 
   review:
     needs: review-wanted

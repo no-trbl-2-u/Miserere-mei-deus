@@ -9,7 +9,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
-import { DISPATCH_LABELS, DISPATCH_ONLY_LABELS, REVIEW_LABELS, diffDigest, formatParentTests, headMarker, markedHeads, reviewWanted } from './pr-review.mjs'
+import { DISPATCH_LABELS, DISPATCH_ONLY_LABELS, EXHAUSTED_LABEL, MAX_PASSES, REVIEW_LABELS, diffDigest, formatParentTests, headMarker, markedHeads, reviewWanted } from './pr-review.mjs'
 
 const pr = (extra = {}) => ({
   state: 'OPEN', isDraft: false, isCrossRepository: false, labels: ['loop:pr', 'size:M'], head: 'a'.repeat(40), comments: [], ...extra,
@@ -30,6 +30,21 @@ test('a fork, a closed or merged PR, or a seeded draft on pull_request is skippe
   assert.deepEqual([...DISPATCH_ONLY_LABELS], ['eval:seed'])
   assert.match(reviewWanted(pr({ labels: ['eval:seed'] })).reason, /dispatch only/)
   assert.match(reviewWanted(pr({ labels: ['eval:seed'], isDraft: true })).reason, /dispatch only/)
+})
+
+test('two verdicts on a PR end its automated review; a dispatch still reviews it (T, 2026-10-20)', () => {
+  assert.equal(MAX_PASSES, 2)
+  assert.equal(EXHAUSTED_LABEL, 'review:exhausted')
+  const v = (sha) => `## Review verdict\n<!-- pr-review:verdict not-pass -->\n${headMarker(sha)}`
+  const one = pr({ head: 'c'.repeat(40), comments: [v('a'.repeat(40))] })
+  assert.equal(reviewWanted(one).go, true, 'one verdict: the fixed head gets its second pass')
+  const two = pr({ head: 'c'.repeat(40), comments: [v('a'.repeat(40)), v('b'.repeat(40))] })
+  const d = reviewWanted(two)
+  assert.equal(d.go, false)
+  assert.equal(d.exhausted, true)
+  assert.match(d.reason, /cap is 2 passes/)
+  assert.equal(reviewWanted({ ...two, dispatch: true }).go, true)
+  assert.equal(reviewWanted(pr({ head: 'c'.repeat(40), comments: ['no markers here', 'pr-review:verdict pass in prose'] })).go, true, 'only marker-bearing comments count')
 })
 
 test('drafts wait on pull_request', () => {

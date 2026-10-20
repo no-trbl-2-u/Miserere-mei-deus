@@ -86,9 +86,11 @@ the repo's reverse-import graph, the defect class the escape ledger
 says that module leaks, and a "do not report" list of every other
 assignment's files), then `### Tests lens` and, on `risk:medium` or
 `risk:high`, `### Control adversary`. The count is the diff's, capped
-by tier (`risk:low` 2, `risk:medium` 4, `risk:high` 7 assignments) and
+by tier (`risk:low` 2, `risk:medium` 3, `risk:high` 6 assignments) and
 by a character ceiling per reader; a records-only diff (plan, docs,
-telemetry) spawns none.
+telemetry) spawns none. Every assignment is read twice, by a **logic**
+reader and a **seams** reader with different questions over the same
+owned files.
 
 - **One or more assignments:** run Step 3b with them. Skip Steps 3
   and 3a: the readers cover the diff, and the label profile lives in
@@ -146,12 +148,13 @@ diff into three background sub-agents and exited "once they finish").
 The readers, each given **only** its own text plus the PR number, the
 head SHA, the tier and the PR's labels:
 
-- **One per `### Assignment`:** the "Assignment reader" section below,
-  then that assignment's section from the manifest, copied whole. Do
-  not give a reader another assignment's section, the control's text
-  or your own reading of the diff: readers who share a brief converge
-  on the same checks, and the point of the partition is that they do
-  not.
+- **Two per `### Assignment`:** one with the "Assignment logic"
+  section below and one with the "Assignment seams" section below,
+  each followed by that assignment's section from the manifest, copied
+  whole. Do not give a reader the other reader's section, another
+  assignment's section, the control's text or your own reading of the
+  diff: readers who share a brief converge on the same checks, and the
+  point of the partition is that they do not.
 - **The Tests lens:** its section below, plus the manifest's
   `### Tests lens` line.
 - **The control adversary** (`risk:medium`, `risk:high` only): its
@@ -168,13 +171,14 @@ on the PR.
 While they run, do nothing that a reader covers. When all are back
 (or one is not; below), go to Step 3c.
 
-### Lens: Assignment reader
+### Lens: Assignment logic
 
-You are one partitioned reader of a review of one PR. The assignment
-below names the files you own, the importers you own, the defect
-class to hunt first, and the files you must not report on because
-another reader owns them. Your one question: **is anything wrong in
-what I own?**
+You are the logic reader of one assignment in a partitioned review of
+one PR; a seams reader has the same files and asks a different
+question. The assignment below names the files you own, the importers
+you own, the defect class to hunt first, and the files you must not
+report on because another assignment owns them. Your one question:
+**is the logic in what I own correct?**
 
 Read only: the diff (`gh pr diff <n>`), each owned changed file in
 full (`git show pr-<n>:<path>`), each owned consumer at the lines that
@@ -191,18 +195,53 @@ Check, on the owned changed lines and the owned consumers:
   phase entered twice, a guard inverted, an off-by-one, a loop over a
   list it mutates, an `await` missing where the next line reads the
   result.
+- **A workflow or script step** in an owned file that cannot run as
+  written (a wrong path, a missing `needs`, a condition that is always
+  false).
+
+Do not read consumers for breakage; the seams reader does. Report a
+finding only when you can point at the line and say what goes wrong. A
+defect you notice in a file on the "do not report" list is another
+assignment's: leave it out. Ignore style, naming and missing tests.
+
+### Lens: Assignment seams
+
+You are the seams reader of one assignment in a partitioned review of
+one PR; a logic reader has the same files and checks their logic. The
+assignment below names the files you own, the importers you own, and
+the files you must not report on because another assignment owns
+them. Your one question: **what must agree with this change and does
+not?**
+
+Read only: the diff (`gh pr diff <n>`), each owned changed file at the
+changed regions (`git show pr-<n>:<path>`), each owned consumer at the
+lines that use what changed, and any workflow, settings file, hook or
+document the owned files name.
+
+Check:
+
 - **Consumers.** For every export, prop, type, CLI flag, label, file
   path or marker an owned file renames, removes or changes the shape
   of, read the owned consumers for a use the diff did not update: HIGH
   when it breaks, MED when it silently misreads. Report it against the
   consumer's line.
-- **A workflow or script step** in an owned file that cannot run as
-  written (a wrong path, a missing `needs`, a condition that is always
-  false).
+- **Contracts between files.** A marker and its parser, an event and
+  its reader, a constant and the layout that uses it, a path a script
+  assumes and the place a workflow checks it out to, a root a module
+  resolves and the directory it is run from: HIGH when they disagree.
+- **Trust and environment.** Who may write the thing the owned code
+  reads (a comment, a label, a file in the PR's tree), which token or
+  permission a step runs with, what a repository setting or ruleset
+  does to the paths the owned code pushes or merges. A gap a stranger
+  or the PR itself could use is HIGH.
+- **Tests beside the owned files** that pin something the change moved
+  (a path, a label list, a grant): run them (`node --test <file>`) when
+  they are in `scripts/` or `.claude/`; a failure is HIGH.
 
+Do not re-check the logic of the changed lines; the logic reader does.
 Report a finding only when you can point at the line and say what goes
-wrong. A defect you notice in a file on the "do not report" list is
-another reader's: leave it out. Ignore style, naming and missing tests.
+wrong. A defect in a file on the "do not report" list is another
+assignment's: leave it out. Ignore style, naming and missing tests.
 
 ### Lens: Tests
 
@@ -261,8 +300,9 @@ Report against the line where the mismatch is read, not written.
 
 ### Step 3c — Merge the reports
 
-1. Tag every finding with its reader: `[a1]`, `[a2]`, ..., `[tests]`
-   or `[control]` at the start of its Finding cell.
+1. Tag every finding with its reader: `[a1:logic]`, `[a1:seams]`,
+   `[a2:logic]`, ..., `[tests]` or `[control]` at the start of its
+   Finding cell.
 2. **Collapse duplicates:** two findings on the same file within three
    lines of each other are one row, at the higher severity, carrying
    every tag (`[a1][control]`). Count the rows that carry two or more
@@ -307,14 +347,14 @@ valid review. Do not pad.
 
    | Severity | Where | Finding |
    |---|---|---|
-   | HIGH | `path/to/file.ts:42` | [a1] <one line> |
+   | HIGH | `path/to/file.ts:42` | [a1:logic] <one line> |
    | MED | `scripts/x.mjs:10` | [tests] <one line> |
 
    Risk: derived `risk:medium`.
 
-   Readers: <n> (<assignments> assignments, Tests, Control); overlap <k> row(s).
+   Readers: <n> (<assignments> assignments x 2, Tests, Control); overlap <k> row(s).
 
-   A `pass` on a non-plan PR is merged by the `merge` job (D95); a `not-pass` waits for T.
+   A `pass` on a non-plan PR is merged by the `merge` job (D95); a `not-pass` waits for a fix. Pass <1 or 2> of 2.
    ```
 
    - The head marker names the head you reviewed and the prompt's diff
@@ -359,6 +399,15 @@ valid review. Do not pad.
 Print one line: the PR number, the verdict, the finding count by
 severity, and the tier. A run that could not finish its review posts
 no verdict; it never posts `pass` for a review it did not do.
+
+### Pass cap
+
+A PR gets at most two automated passes (T, 2026-10-20). The first
+merges or holds; a HIGH fixed and pushed earns the second; after that
+`review-wanted` labels the PR `review:exhausted` and only T, or a
+dispatch, reviews it again. Write "Pass 1 of 2" or "Pass 2 of 2" on
+the verdict's last line, counting the verdict comments already on the
+PR plus yours.
 
 ## 4. Hard rules
 

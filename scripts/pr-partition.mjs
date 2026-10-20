@@ -47,8 +47,18 @@ export const ROOT = (() => {
   }
 })()
 
-/** Assignments per tier, not counting the Tests lens and the control adversary. */
-export const MAX_AGENTS = Object.freeze({ 'risk:low': 2, 'risk:medium': 4, 'risk:high': 7 })
+/** Assignments per tier, not counting the Tests lens and the control adversary. Each assignment gets READERS_PER_ASSIGNMENT readers. */
+export const MAX_AGENTS = Object.freeze({ 'risk:low': 2, 'risk:medium': 3, 'risk:high': 6 })
+
+/**
+ * The readers each assignment gets, with different questions over the same
+ * owned files: `logic` hunts the module's ledger defect class on the changed
+ * lines; `seams` hunts only what the change must agree with (consumers,
+ * contracts between files, markers and their parsers, settings and
+ * environment). Two readers with one brief converge; two briefs do not
+ * (T, 2026-10-20: three of the five HIGHs on #666 were seams).
+ */
+export const READERS_PER_ASSIGNMENT = Object.freeze(['logic', 'seams'])
 
 /** Characters of owned source (changed files plus consumers) one assignment may carry. */
 export const CHAR_CEILING = 120_000
@@ -370,14 +380,14 @@ export function renderManifest(m) {
   const head = [
     `# Review manifest${m.pr ? ` for PR #${m.pr}` : ''}`,
     '',
-    `Tier ${m.tier}: up to ${m.max} assignments; ${m.agents.length} spawned, plus the Tests lens${m.control ? ' and the control adversary' : ''}.`,
+    `Tier ${m.tier}: up to ${m.max} assignments; ${m.agents.length} spawned, each read by ${READERS_PER_ASSIGNMENT.length} readers (${READERS_PER_ASSIGNMENT.join(', ')}), plus the Tests lens${m.control ? ' and the control adversary' : ''}: ${m.agents.length * READERS_PER_ASSIGNMENT.length + 1 + (m.control ? 1 : 0)} sub-agents.`,
     m.records.length ? `Plan, docs and loop records left to no agent: ${m.records.length} file(s).` : '',
     m.unpartitioned.length ? `Changed non-source files (every assignment may read, none owns): ${m.unpartitioned.join(', ')}.` : '',
   ].filter(Boolean)
   const sections = m.agents.map((a) => [
     `### Assignment ${a.id}: ${a.module}`,
     '',
-    `You are one of ${m.agents.length} partitioned readers of PR #${m.pr ?? '<n>'}. You own the files below and nothing else.`,
+    `You are one of ${m.agents.length * READERS_PER_ASSIGNMENT.length} partitioned readers of PR #${m.pr ?? '<n>'}, one of ${READERS_PER_ASSIGNMENT.length} on this assignment. You own the files below and nothing else.`,
     `Report a finding only on a line in an owned file or an owned consumer; a defect anywhere else is another reader's and you must not report it.`,
     '',
     `**Hunt first:** ${a.hunt}.`,

@@ -52,6 +52,17 @@ import { checkout, closeWorktree, git, openWorktree, runTests } from './eval/wor
  */
 export const REVIEW_LABELS = Object.freeze(['loop:pr', 'plot'])
 
+/**
+ * Verdicts per PR on `pull_request` before the reviewer stops and leaves the
+ * PR to T (T, 2026-10-20). The first pass merges or holds; a HIGH fixed and
+ * pushed earns the second; after that the PR is labelled
+ * `review:exhausted` and only a dispatch reviews it again.
+ */
+export const MAX_PASSES = 2
+
+/** The label the workflow applies when the cap is reached. */
+export const EXHAUSTED_LABEL = 'review:exhausted'
+
 /** Seeded drafts (phase RV1c) are reviewed only by dispatch, never on `pull_request`. */
 export const DISPATCH_ONLY_LABELS = Object.freeze(['eval:seed'])
 
@@ -71,6 +82,7 @@ export function headMarker(sha, digest = null) {
 }
 
 const MARKER = /<!-- pr-review:head ([0-9a-f]+)(?: diff ([0-9a-f]+))? -->/g
+const VERDICT = /<!--\s*pr-review:verdict (pass|not-pass)\s*-->/
 
 /**
  * Every head marker in a comment body, old shape and new.
@@ -105,7 +117,7 @@ export function diffDigest(patch) {
  * Whether to review this PR now.
  *
  * @param {{ state: string, isDraft: boolean, isCrossRepository: boolean, labels: string[], head: string, digest?: string | null, comments: string[], dispatch?: boolean }} pr the PR's live facts; `comments` are bodies, `digest` is the head's `diffDigest` (null when unavailable).
- * @returns {{ go: boolean, reason: string }} the decision and why.
+ * @returns {{ go: boolean, reason: string, exhausted?: boolean }} the decision and why; `exhausted` when the pass cap stopped it.
  * @example reviewWanted({ state: 'OPEN', isDraft: false, isCrossRepository: false, labels: ['loop:pr'], head: 'a', comments: [] }).go // true
  */
 export function reviewWanted({ state, isDraft, isCrossRepository, labels, head, digest = null, comments, dispatch = false }) {
@@ -117,6 +129,8 @@ export function reviewWanted({ state, isDraft, isCrossRepository, labels, head, 
   if (isDraft) return { go: false, reason: 'draft' }
   const marked = comments.flatMap(markedHeads)
   if (marked.some((m) => m.sha === head)) return { go: false, reason: `head ${head.slice(0, 8)} already has a verdict` }
+  const passes = comments.filter((c) => VERDICT.test(c)).length
+  if (passes >= MAX_PASSES) return { go: false, exhausted: true, reason: `${passes} verdicts already: the cap is ${MAX_PASSES} passes, T reviews from here (${EXHAUSTED_LABEL})` }
   if (!digest) return { go: true, reason: `review head ${head.slice(0, 8)} (diff digest unavailable: SHA rule only)` }
   const same = marked.find((m) => m.digest === digest)
   if (same) return { go: false, reason: `diff ${digest.slice(0, 8)} already has a verdict (head ${same.sha.slice(0, 8)}); head ${head.slice(0, 8)} changes nothing in it` }
@@ -222,7 +236,7 @@ async function main() {
   const d = reviewWanted(facts)
   console.log(`pr-review #${pr}: ${d.go ? 'go' : 'skip'} (${d.reason})`)
   if (process.env.GITHUB_OUTPUT) {
-    appendFileSync(process.env.GITHUB_OUTPUT, `go=${d.go}\npr=${pr}\nhead=${facts.head}\ndigest=${facts.digest ?? ''}\n`)
+    appendFileSync(process.env.GITHUB_OUTPUT, `go=${d.go}\npr=${pr}\nhead=${facts.head}\ndigest=${facts.digest ?? ''}\nexhausted=${Boolean(d.exhausted)}\n`)
   }
 }
 
