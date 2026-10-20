@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-10-19 at commit 01b69c66
-> Pass count: 96
+> Last pass: 2026-10-19 at commit c9e41d58
+> Pass count: 97
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
@@ -783,6 +783,22 @@
 > Minor Healing Potion row, the exploration legend's SEALED key, the
 > covered fan cards cutting their names on a phone (pass 88), and the
 > mobile hazard strip's "CHOOSE TO PROC..." (pass 68 trade). Zero fresh
+> findings this pass.
+
+> **[critique pass 97, 2026-10-19, commit c9e41d58] Unattended `/march`
+> tick.** `critique:drive` (`CRITIQUE_VIEWPORT=both`), full 11-screen
+> set: 22 captures, 0 nav trouble, 0 console/page errors. 14 commits
+> after pass 96: HP3b (puzzle rerolls replay the cast tumble), HP1d,
+> RV2, the potential-assets seal, the VE1 and TP1 plots and the measured
+> truth run. The one live-component diff is `HazardBoard.tsx` taking an
+> optional `dieRolls` prop that only the dev puzzle board passes, and
+> `TumblingDie` now wrapping the shared `DieTumble`; the live hazard tray
+> and cast interstitial render as before. No capture shows a regression
+> against pass 96. Reconfirmed and not re-filed: the rest/cache tense
+> row, the village Minor Healing Potion row, the exploration legend's
+> SEALED key, the covered fan cards cutting their names on a phone (pass
+> 88), the mobile hazard strip's "CHOOSE TO PROC..." (pass 68 trade) and
+> the unfixtured exploration hub bouncing to the title. Zero fresh
 > findings this pass.
 
 ## Pending
