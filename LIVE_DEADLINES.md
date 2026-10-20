@@ -6,4 +6,4 @@
 
 | Due | Item | What it needs | Window |
 |---|---|---|---|
-| 2026-11-02 (in 13 days) | W1 demo: T plays the three demos | needs you: your task | W1 |
+| 2026-11-02 (in 13 days) | W1 demo: T plays the thirty candidates | needs you: HP4e ready for you | W1 |

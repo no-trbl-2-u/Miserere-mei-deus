@@ -109,11 +109,13 @@ select as `/hazard`). Act 1's live hazards are unchanged until T approves the de
   checks expiry.
 - **A16** Act 1 is unchanged: the six live hazards still run today's three-round minigame, and no save field
   changes. The existing `hazard.engine.test.ts` and `hazard.balance.sim.test.ts` pass untouched.
-- **A17** (attended) `docs/reports/hazard-puzzle-timing.md` records timed first-time solves of the three demos:
-  - who solved (the `playtester` agent, and T), the clock hidden;
-  - per demo: the median solve time and the success rate;
-  - the clocks that result (median × 1.5, rounded to 5 s), written into the A15 constants;
-  - T's verdict, "lock the process" or "change X", in T's words.
+- **A17** **(moved to HP4g, 2026-10-20 — see § B3f.)** As written it asked for
+  `docs/reports/hazard-puzzle-timing.md`: timed first-time solves of the three demos by T and the `playtester`
+  agent with the clock hidden, a median and success rate per demo, the resulting clocks (median × 1.5, rounded to
+  5 s) written into the A15 constants, and T's verdict quoted. T solved the demos on 2026-10-19 and the verdict
+  was "change X", which cut the report and produced HP4. The surviving half — setting the A15 constants from real
+  solve times — is `plan/phases/phase_HP4_graded_puzzle_set.md` A11, closed by HP4g over the kept candidates. No
+  row in this brief closes A17.
 - **A18** (B3e2) The `/devpuzzle` board renders through the live hazard components: `HazardBoard`, `HazardCard`
   and `HazardDie` from `components/hazard/`, the same ones `app/hazard/index.tsx` mounts. A presenter function
   `selectHazardPuzzleViewModel` in `state/presenters/hazard-puzzle.engine.ts` maps a puzzle session and its layout
@@ -261,7 +263,8 @@ Verify: <commands run, results>
 
 ## DoD
 
-A1–A24 ticked, each by the phase that closes it.
+A1–A24 ticked, each by the phase that closes it — except **A17**, which moved to
+`plan/phases/phase_HP4_graded_puzzle_set.md` A11 (HP4g) when B3f was cut on 2026-10-20.
 
 ## Follow-ups (out of scope)
 
@@ -341,12 +344,30 @@ on `/devpuzzle`.
   the clock-expiry test kept; the live `HazardBoard` and `app/hazard` tests unchanged (A22).
 - Verify gate: mobile verify plus `verify:visual`.
 
-### B3f — Timed demo solves and the process lock (attended) · S · closes A17 · requires B3e, B3e2, HP1a, HP1b, HP3a, HP2c
-Measure: `docs/reports/hazard-puzzle-timing.md` exists with a median solve time and success rate per demo, the
-resulting clocks are in `HAZARD_PUZZLE_CLOCK_SECONDS`, and T's verdict is quoted.
-- Scope: the timing report; the three clock constants.
-- Tests: none new; the A15 test's values follow the constants.
-- Verify gate: mechanics verify.
+### B3f — CUT 2026-10-20 (was: timed demo solves and the process lock, attended · S · closed A17)
+**T cut this row in an attended session, 2026-10-20.** T's rule, verbatim: *"if there's an equivalent for testing
+the 30 puzzles, then cut it. Otherwise adapt it."*
+
+- **What happened to the solves.** They were done, on 2026-10-19: T played all six routes of the three demos
+  through `/devpuzzle` and solved every one in under ten seconds. T's verdict was "change X", not "lock the
+  process", and it produced Phases HP4a–HP4f — thirty graded candidates, played by hand to mine authoring
+  patterns. `docs/reports/hazard-puzzle-timing.md` is therefore **never written**; the finding lives in
+  `plan/phases/phase_HP4_graded_puzzle_set.md` § Sources and in the build plan's Queue change log for 2026-10-19
+  and 2026-10-20.
+- **What replaced the report.** HP4e — T plays the thirty, each once, timed by HP2c's move log, with the keep-or-cut
+  ruling quoted per candidate in `docs/reports/hazard-puzzle-candidates.md`. That is the equivalent T's rule asks
+  for, over a set worth timing.
+- **What was adapted instead of cut.** Setting `HAZARD_PUZZLE_CLOCK_SECONDS` had no equivalent anywhere in
+  HP4a–HP4f, and B3f was A17's only closer. It became **HP4g** (A11 in HP4's brief), carrying A17's two spec gaps:
+  times grouped by band rather than per layout, and a band resting on few samples saying so on the line that sets
+  it. A17 is therefore closed by HP4g, not by any row in this brief.
+- **What was dropped on purpose.** B3f's `playtester`-agent solves. HP4e is a T-only playthrough by design, and ten
+  kept candidates per band give a median without them.
+- **The open A17 question this brief raised** — the clock is frozen by `?paused=1`, not hidden — is unresolved and
+  now belongs to HP4e's session, which is the next time anyone solves a puzzle against a clock. Making it literal
+  is still a small `?clock=hidden` param on `/devpuzzle`.
+
+Phase HP2e's `Requires` dropped B3f in the same commit; nothing else in the queue depended on it.
 
 **T's rulings, 2026-10-19.** Settled in an attended session before any solve:
 
