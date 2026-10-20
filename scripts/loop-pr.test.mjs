@@ -252,7 +252,7 @@ test('the reviewer can read, comment and label, and nothing else', () => {
   const grant = rv.match(/allowed_tools: '([^']+)'/)[1].split(',')
   for (const t of ['Edit', 'Write', 'MultiEdit', 'NotebookEdit', 'Bash']) assert.ok(!grant.includes(t), `no ${t}`)
   for (const t of grant.filter((t) => t.startsWith('Bash('))) {
-    assert.match(t, /^Bash\((git (diff|show|log|fetch|rev-parse)|npm test|node --test|node \.review-tooling\/scripts\/pr-review\.mjs parent-tests|node \.review-tooling\/scripts\/pr-partition\.mjs|gh pr (view|diff|comment|edit)):\*\)$/, t)
+    assert.match(t, /^Bash\((git (diff|show|log|fetch|rev-parse)|npm test|node --test|node \.review-tooling\/scripts\/pr-review\.mjs parent-tests|node \.review-tooling\/scripts\/pr-partition\.mjs|node \.review-tooling\/scripts\/pr-risk\.mjs|gh pr (view|diff|comment|edit)):\*\)$/, t)
   }
   assert.ok(grant.includes('mcp__github_inline_comment__create_inline_comment'))
   const deny = rv.match(/--disallowedTools "([^"]+)"/)[1].split(',')
