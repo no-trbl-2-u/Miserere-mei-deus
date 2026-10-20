@@ -62,7 +62,9 @@ describe('program faces', () => {
         expect(programHeadline('SACRIFICE 4, DEAL 12.')).toEqual({ keyword: null, value: 'Deal 12' });
         expect(programHeadline('TETHER 3. SACRIFICE 4.')).toEqual({ keyword: 'TETHER', value: '3' });
         expect(programFreeCell('SACRIFICE 2, DEAL 5.')).toEqual({ keyword: 'SACRIFICE', value: '−2' });
-        expect(programFreeCell('DEAL 3.')).toBeNull();
+        // D91: a FREE line always wears a pill, so a damage-only line reads DEAL.
+        expect(programFreeCell('DEAL 3.')).toEqual({ keyword: 'DEAL', value: '3' });
+        expect(programFreeCell('DEAL half the VITAE you lost this combat (max 10).')).toEqual({ keyword: 'DEAL', value: 'X' });
     });
 
     it('a Global and a Curse wear their type tag; the hand card carries its play state', () => {

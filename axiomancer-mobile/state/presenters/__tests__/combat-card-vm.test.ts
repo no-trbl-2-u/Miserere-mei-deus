@@ -17,13 +17,15 @@
 
 import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import {
-    getCard, getCardById,
+    getCard, getCardById, scaleCardForStats, scaleRider, CARD_LANES,
     registerSandboxCards, clearSandboxCards, effectsLibrary,
 } from '@mechanics';
 import type { Card, Effect } from '@mechanics';
 import {
     faceStats, detailStats, engineHonestKind, resolvePrimary, armedValue,
 } from '@/state/presenters/combat-encounter.engine';
+import { programLinesFor } from '@/state/presenters/card-program.engine';
+import { glyphShapeFor } from '@/components/combat/glyphShapes';
 
 /**
  * The Profane Canon prints no plain round-clock DoT: POISON ticks per card
@@ -134,6 +136,50 @@ describe('Option A split rail — freeKeyword/freeValue + typeStrip (owner-picke
         expect(f.freeKeyword).toBe('VULNERABLE');
         expect(f.freeValue).toBe('+10% · 1t');
         expect(f.freeHeroText).toBe('vulnerable +10% · 1 turn');
+    });
+});
+
+describe('D91 FREE corner pill — a pill whenever the card has a FREE line', () => {
+    it('A Plain Blow → the DEAL pill with its free damage (critique pass 85)', () => {
+        // FREE "Deal 2": the face carries the DEAL glyph and value, so the
+        // corner pill draws (the board renders it when freeGlyph is set).
+        const { card, sourceCard } = cardOf('grey-strike');
+        const f = faceStats(card, sourceCard);
+        expect(sourceCard!.free?.damage).toBe(2);
+        expect(f.freeGlyph).toBe('⚔');
+        expect(f.freeGlyphKey).toBe('DEAL');
+        expect(f.freeKeyword).toBe('DEAL');
+        expect(f.freeValue).toBe('2');
+        expect(glyphShapeFor(f.freeGlyphKey)).toBeTruthy();
+    });
+
+    it('A Plain Blow pill carries the stat-scaled free damage the engine deals', () => {
+        const stats = { body: 10, mind: 5, heart: 5 };
+        const { card, sourceCard } = cardOf('grey-strike');
+        const scaled = faceStats(card, scaleCardForStats(sourceCard!, stats));
+        const dealt = scaleRider(sourceCard!.free!, stats).damage!;
+        expect(dealt).toBeGreaterThan(2);
+        expect(scaled.freeValue).toBe(`${dealt}`);
+    });
+
+    it('every lane card: a FREE line if and only if the face shows a pill (glyph and value)', () => {
+        const ids = [...new Set(CARD_LANES.flatMap(lane => lane.cardIds))];
+        expect(ids.length).toBeGreaterThan(3);
+        const offenders: string[] = [];
+        for (const id of ids) {
+            const card = getCard(id);
+            const src = getCardById(id);
+            if (!card || !src) { offenders.push(`${id} → not in the library`); continue; }
+            // The printed FREE line: a program card's (triggers and globals
+            // included), else the authored rider.
+            const hasFreeLine = src.program ? programLinesFor(src).free.trim() !== '' : !!src.free;
+            const f = faceStats(card, src);
+            const hasPill = !!f.freeGlyph && !!f.freeValue;
+            if (hasFreeLine !== hasPill) {
+                offenders.push(`${id} → FREE line ${hasFreeLine}, pill ${hasPill} (glyph '${f.freeGlyph}', value ${f.freeValue})`);
+            }
+        }
+        expect(offenders).toEqual([]);
     });
 });
 

@@ -33,6 +33,8 @@ const DROP: GlyphShape = { d: 'M12 2 C8 8 5 12 5 15 A7 7 0 0 0 19 15 C19 12 16 8
 const CRESCENT: GlyphShape = { d: 'M15 3 A9 9 0 1 0 21 15 A7 7 0 1 1 15 3 Z' };
 // TETHER — two chain links: what you pay, the foe pays.
 const LINKS: GlyphShape = { d: 'M2 12 A4 4 0 0 1 6 8 H11 A4 4 0 0 1 11 16 H6 A4 4 0 0 1 2 12 Z M5 12 A1.5 1.5 0 0 0 6.5 13.5 H10.5 A1.5 1.5 0 0 0 10.5 10.5 H6.5 A1.5 1.5 0 0 0 5 12 Z M13 8 H18 A4 4 0 0 1 18 16 H13 A4 4 0 0 1 13 8 Z M13.5 10.5 A1.5 1.5 0 0 0 13.5 13.5 H17.5 A1.5 1.5 0 0 0 17.5 10.5 Z', evenodd: true };
+// DEAL — an upright blade: plain damage to the foe.
+const SWORD: GlyphShape = { d: 'M12 2 L14 5 V15 H18 V17 H13 V20 A1 1 0 0 1 11 20 V17 H6 V15 H10 V5 Z' };
 const EYE: GlyphShape = { d: 'M12 5.5 C6 5.5 2 12 2 12 C2 12 6 18.5 12 18.5 C18 18.5 22 12 22 12 C22 12 18 5.5 12 5.5 Z M12 8.5 A3.5 3.5 0 1 0 12 15.5 A3.5 3.5 0 1 0 12 8.5 Z', evenodd: true };
 
 /** UPPERCASE face keyword → silhouette, for the keys a live face can produce. */
@@ -41,6 +43,7 @@ export const GLYPH_SHAPES: Record<string, GlyphShape> = {
     BLEED: DROPS,
     VULNERABLE: CRACKED_SHIELD,
     // ── currencies / verbs ──
+    DEAL: SWORD,
     GUARD: SHIELD,
     HEAL: HEART,
     // ── the blood price ──
