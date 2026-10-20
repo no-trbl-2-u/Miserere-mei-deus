@@ -1,7 +1,8 @@
 /**
  * Puzzle-report CLI — prints `hazardPuzzleCardReport` for every demo in
  * `HAZARD_PUZZLE_LIBRARY`, both routes, as markdown: once with no unlock
- * and once with every declared unlock granted. Reads only.
+ * and once with every declared unlock granted, each with its five
+ * difficulty features. Reads only.
  *
  * Usage:
  *   npm run puzzle:report
@@ -9,6 +10,7 @@
 
 import {
     formatHazardPuzzleCardReport,
+    formatHazardPuzzleFeatures,
     hazardPuzzleCardReport,
 } from '../World/Hazard/puzzle/hazard-puzzle.report';
 import { HAZARD_PUZZLE_LIBRARY } from '../World/Hazard/puzzle/hazard-puzzle.library';
@@ -27,6 +29,7 @@ function layoutSection(layout: HazardPuzzleLayout): string {
             const wins = report.cards[0]?.total ?? 0;
             parts.push(
                 `### ${route} (${layout.bands[route]}), ${unlockLabel(unlocks)}: ${wins} winning outcomes`,
+                formatHazardPuzzleFeatures(report.features, report.overBudget),
                 formatHazardPuzzleCardReport(report),
             );
         }

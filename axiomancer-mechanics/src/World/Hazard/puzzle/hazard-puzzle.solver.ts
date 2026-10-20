@@ -17,6 +17,10 @@
  * side effect), re-powering a powered card (power it with the other die
  * instead), applying a card with no utility (confirm applies it), and a
  * second copy of a card or die that is interchangeable with the first.
+ *
+ * Alongside the count it reads five difficulty features off the same walk
+ * (`HazardPuzzleFeatures`). The walk never undoes a move, so a die placed
+ * on a card stays there: that is what lets a first move close every line.
  */
 
 import { getHazardCardDef } from '../hazard.content';
@@ -42,6 +46,29 @@ export interface HazardPuzzleSolveOptions {
     budget?: number;
 }
 
+/**
+ * Five difficulty features of one layout on one route, read off the
+ * solver's walk. Calibration (HP2e) picks the one that tracks real
+ * first-time solve times.
+ */
+export interface HazardPuzzleFeatures {
+    /** Distinct winning outcomes: the same number as `winningOutcomes`. */
+    winningLines: number;
+    /**
+     * Share of the first placements from which a win is still reachable. A
+     * first placement is one hand card staged, either with its die left open
+     * or powered by one die kind that can power it; one per interchangeable
+     * choice. 0 when the hand is empty.
+     */
+    openingShare: number;
+    /** Distinct losing outcomes one short of the goal (surplus -1; on risk, the weaker meter). */
+    nearMisses: number;
+    /** Fewest moves (stage, power, apply) in a winning line; null when nothing wins. */
+    shortestWin: number | null;
+    /** Share of the winning outcomes that stage a DRAW card (confirm applies it); 0 when nothing wins. */
+    drawDependence: number;
+}
+
 export interface HazardPuzzleSolution {
     route: HazardRouteKey;
     goal: HazardPuzzleGoal;
@@ -65,6 +92,8 @@ export interface HazardPuzzleSolution {
     boardsExplored: number;
     /** True when the walk stopped at the budget: the counts are partial. */
     overBudget: boolean;
+    /** The five difficulty features (partial with the counts when over budget). */
+    features: HazardPuzzleFeatures;
 }
 
 /** Margin of a resolve over its goal: combined on safe, the weaker meter on risk. */
@@ -154,55 +183,110 @@ interface Best {
     line: HazardPuzzleMove[];
 }
 
+/** True when a win stages a DRAW card. */
+function stagesDraw(cardIds: readonly string[]): boolean {
+    return cardIds.some((id) => getHazardCardDef(id).effect === 'draw');
+}
+
 /** Solves a session as it stands (still playing); the line starts from it. */
 export function solveHazardPuzzleSession(
     start: HazardPuzzleSession,
     options: HazardPuzzleSolveOptions = {},
 ): HazardPuzzleSolution {
     const budget = options.budget ?? HAZARD_PUZZLE_SOLVER_BUDGET;
-    const seen = new Set<string>();
+    // Shallowest depth each board was reached at, and whether a win lies on from it.
+    const depthOf = new Map<string, number>();
+    const winsFrom = new Map<string, boolean>();
     const wins = new Map<string, string[]>();
+    const nearMisses = new Set<string>();
     let best: Best | null = null;
+    let shortestWin: number | null = null;
     let overBudget = false;
     const line: HazardPuzzleMove[] = [];
 
-    const visit = (s: HazardPuzzleSession): void => {
-        if (overBudget) return;
+    // A board met again at a shallower depth is walked again so the
+    // shortest win is honest; outcomes are sets, so nothing counts twice.
+    const visit = (s: HazardPuzzleSession): boolean => {
+        if (overBudget) return false;
         const key = boardKey(s.board);
-        if (seen.has(key)) return;
-        if (seen.size >= budget) {
+        const depth = line.length;
+        const known = depthOf.get(key);
+        if (known !== undefined && known <= depth) return winsFrom.get(key) ?? false;
+        if (known === undefined && depthOf.size >= budget) {
             overBudget = true;
-            return;
+            return false;
         }
-        seen.add(key);
+        depthOf.set(key, depth);
         const resolved = confirmHazardPuzzle(s);
         const result = resolved.result;
+        let won = false;
         if (result?.cleared) {
+            won = true;
             const outcome = outcomeKey(resolved.board);
             if (!wins.has(outcome)) wins.set(outcome, stagedThatCount(resolved.board).map((p) => p.cardId));
             const surplus = hazardPuzzleSurplus(result);
             if (!best || surplus > best.surplus) best = { surplus, line: line.slice() };
+            if (shortestWin === null || depth < shortestWin) shortestWin = depth;
+        } else if (result && hazardPuzzleSurplus(result) === -1) {
+            nearMisses.add(outcomeKey(resolved.board));
         }
         for (const move of candidateMoves(s.board)) {
             const next = playHazardPuzzleMove(s, move);
             if (next === s) continue;
             line.push(move);
-            visit(next);
+            if (visit(next)) won = true;
             line.pop();
         }
+        winsFrom.set(key, won);
+        return won;
     };
 
-    if (start.phase === 'playing') visit(start);
+    /** Walks the root by first placements and returns the share that still wins. */
+    const openingShare = (root: HazardPuzzleSession): number => {
+        let placements = 0;
+        let winning = 0;
+        const place = (s: HazardPuzzleSession, move: HazardPuzzleMove): HazardPuzzleSession | null => {
+            const next = playHazardPuzzleMove(s, move);
+            if (next === s) return null;
+            placements += 1;
+            line.push(move);
+            if (visit(next)) winning += 1;
+            line.pop();
+            return next;
+        };
+        visit(root);
+        for (const stage of candidateMoves(root.board)) {
+            if (stage.type !== 'stage') continue;
+            const staged = place(root, stage);
+            if (!staged) continue;
+            line.push(stage);
+            for (const power of candidateMoves(staged.board)) {
+                if (power.type === 'power' && power.uid === stage.uid) place(staged, power);
+            }
+            line.pop();
+        }
+        return placements === 0 ? 0 : winning / placements;
+    };
+
+    const share = start.phase === 'playing' ? openingShare(start) : 0;
     const found = best as Best | null;
+    const winningStaged = [...wins.values()];
     return {
         route: start.route,
         goal: start.goal,
         winningOutcomes: wins.size,
-        winningStaged: [...wins.values()],
+        winningStaged,
         bestSurplus: found ? found.surplus : null,
         winningLine: found ? found.line : null,
-        boardsExplored: seen.size,
+        boardsExplored: depthOf.size,
         overBudget,
+        features: {
+            winningLines: wins.size,
+            openingShare: share,
+            nearMisses: nearMisses.size,
+            shortestWin,
+            drawDependence: wins.size === 0 ? 0 : winningStaged.filter(stagesDraw).length / wins.size,
+        },
     };
 }
 
