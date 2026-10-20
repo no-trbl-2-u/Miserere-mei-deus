@@ -291,15 +291,17 @@ jobs:
     uses: ./.github/workflows/_claude-skill.yml
     secrets: inherit
     with:
+      # Switch to the PR branch first, then lay main's harness config over
+      # it as unstaged local changes (a restore before the switch aborts it
+      # when the branch differs on those paths). The skill never stages them.
       pre_run: |
-        git fetch --no-tags origin main
+        git fetch --no-tags origin main "${{ needs.fix-wanted.outputs.branch }}"
+        git switch "${{ needs.fix-wanted.outputs.branch }}"
         rm -rf .review-tooling && mkdir -p .review-tooling
         git archive origin/main skills/review-fix.md | tar -x -C .review-tooling
         for p in .claude CLAUDE.md AGENTS.md .mcp.json; do
           if git cat-file -e "origin/main:$p" 2>/dev/null; then git checkout origin/main -- "$p"; fi
         done
-        git fetch --no-tags origin "${{ needs.fix-wanted.outputs.branch }}"
-        git switch "${{ needs.fix-wanted.outputs.branch }}"
       prompt: 'Read .review-tooling/skills/review-fix.md end to end and follow it: fix the not-pass on PR #${{ needs.review-wanted.outputs.pr }}, branch ${{ needs.fix-wanted.outputs.branch }}, head ${{ needs.fix-wanted.outputs.head }}.'
       allowed_tools: 'Read,Edit,Write,Grep,Glob,TodoWrite,Bash(git fetch:*),Bash(git switch:*),Bash(git pull:*),Bash(git status:*),Bash(git diff:*),Bash(git show:*),Bash(git log:*),Bash(git add:*),Bash(git commit:*),Bash(git push origin:*),Bash(npm test:*),Bash(npm run verify:*),Bash(node --test:*),Bash(gh pr view:*),Bash(gh pr diff:*)'
       extra_claude_args: |

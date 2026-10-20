@@ -57,7 +57,11 @@ that fix it. You are reading the copy.
    `npm run verify` for `axiomancer-*`), and the root `npm test` when
    you touched `scripts/`, `.github/` or `skills/`. A red test is yours
    to fix or your change to revert; never push red.
-6. **Ship one commit:** `fix(review): <the HIGH, in one line>`, body
+6. **Ship one commit:** stage only the files you changed for the fix
+   (`git add <path>...`, never `-A` or `.`): the job lays `main`'s
+   `.claude/`, `CLAUDE.md`, `AGENTS.md` and `.mcp.json` over the branch
+   as unstaged changes, and they must stay unstaged. Commit as
+   `fix(review): <the HIGH, in one line>`, body
    listing each row fixed as `HIGH <path:line>: <what changed>` and
    each row left as `left <path:line>: <why>`. End the body with the
    line `<!-- pr-review-fix:attempt -->`. Then `git push origin
