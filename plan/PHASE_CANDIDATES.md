@@ -721,6 +721,13 @@
 - estimated phases: 1
 - conflicts: none. Plan and skill docs plus one lint rule, no game code or content. The Retro (`skills/march.md` §3 step 3) already allows the promotion, and this row just makes sure it happens.
 
+### [ ] [score 4.0] Label preflight for `gh pr create`: fail before opening when a label does not exist
+- proposed: 2026-10-19, `/plot` HP4 retro (lesson `loop-pr-label-missing`, seen 2×)
+- trigger: `gh pr create` refuses the whole call on an unknown label and opens nothing, so the skill has to be re-run. Twice now: the missing `loop:pr` label (ship R12a, #505) and `area:mechanics` guessed from the workspace name when the area set is the fixed six `cards combat mobile ui ci loop` (plot HP4, this tick). `skills/march.md` §3 creates `loop:pr` and the size labels but nothing checks `area:*`.
+- source signals: `plan/lessons.md` `loop-pr-label-missing`; `skills/plot.md` Step 5 ("at least one `area:*` label naming what the phases will touch") names no closed set; `skills/march.md` §3 "Area and review labels".
+- proposed scope: 1 phase, or one `/iterate` tick. A small script that takes the labels a skill is about to pass, checks them against `gh label list`, and fails loudly naming the unknown one and the closest existing label; the `area:*` set written down as a closed list in `skills/march.md` §3 so a skill picks from it rather than inventing one. Test it with a known-bad label.
+- conflicts: none; creates no content. Smaller than the PR-body attribution lint below and could ship in the same phase if T prefers one row.
+
 ### [ ] [score 4.5] PR-body attribution lint: refuse a loop PR body or commit message carrying an attribution line or emoji
 - **Pass 39 note (2026-10-18):** rescored 3.0 -> 4.5. A third sighting (ship B3e2, PR #623, edited after opening) puts lesson `harness-attribution-footer` at seen 3×, across iterate, plot and ship. It has no guard yet. `verify-gate` already reads every PR (`pr-review.yml`), so a body check can run as one step there.
 - proposed: 2026-10-18, `/plot` B3e2 retro (lesson `harness-attribution-footer`, seen 2×)
