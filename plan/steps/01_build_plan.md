@@ -171,6 +171,22 @@ event-pool and layout files).
 - [x] (#628) Phase HP1a — No bin, an honest count, the card report, demos back in band (plotted by T, 2026-10-18): puzzle sessions have no discard; a winning outcome counts only cards that change the result; `hazardPuzzleCardReport` and `npm run puzzle:report`; demos re-authored into band. Brief `plan/phases/phase_HP1_hazard_cost_utility.md` § HP1a. Requires nothing.
 - [x] (#631) Phase HP1b — The puzzle board loses its bin (plotted by T, 2026-10-18): `/devpuzzle` shows no bin; the live `/hazard` board keeps it. Brief `plan/phases/phase_HP1_hazard_cost_utility.md` § HP1b. Requires HP1a, B3e2.
 - [x] (#637) Phase HP3a — The puzzle rolls and draws like a live hazard (plotted by T, 2026-10-19): the dice roll in on the layout's faces and the clock starts after; drawn cards slide in from the reserve; nothing random. Brief `plan/phases/phase_HP3_puzzle_randomness_illusion.md` § HP3a. Requires nothing.
+- [ ] Phase DL1a — The deadline lint (plotted by T, 2026-10-20): `scripts/check-deadlines.mjs` in the root
+      `npm test` fails when `plan/deadlines.md` and this Status block disagree — an open row no Items row names
+      and no `## Unscheduled` line excuses, an Item naming a phase id with no row, the same id in two Items, a due
+      date outside its window's range. Reads both files through `deadlines-lib.mjs`'s existing parsers; never
+      reddens on a `needs plot` or an overdue item (the reminder owns those). Also fixes the wrapped-row defect
+      found while plotting it: `PHASE_ROW` is line-anchored, so every multi-line row looked like `Requires
+      nothing` and every open attended one was announced as ready for T. Brief
+      `plan/phases/phase_DL1_deadline_plan_integrity.md` § DL1a. Requires nothing.
+- [ ] Phase DL1b — The derived Status column (plotted by T, 2026-10-20): `deadlines.mjs --write` recomputes every
+      phase Item's Status cell from this Status block and rewrites `plan/deadlines.md` in place, `T` rows
+      untouched; the lint fails a hand edit that disagrees; `deadlines.yml` commits both generated files in one
+      commit. Brief `plan/phases/phase_DL1_deadline_plan_integrity.md` § DL1b. Requires DL1a.
+- [ ] Phase DL1c — The reconcile step in `/plot` and `/messy` (plotted by T, 2026-10-20): both skills edit the
+      Items table in the same commit as the queue mutation — a date or an `## Unscheduled` line per added row, and
+      an edit to any Item the plot supersedes, re-scopes or completes — because a superseded premise is the one
+      drift no lint can see. Brief `plan/phases/phase_DL1_deadline_plan_integrity.md` § DL1c. Requires DL1a.
 - [x] (#683) Phase IT1a — Item glyphs resolve by item id (plotted by T, 2026-10-19): `ItemGlyph` keys on
       category alone, so all three healing potions draw one identical flask and both relics draw one
       identical trinket. An id-keyed resolver in the `getCardArt` shape, with **today's** category glyph
@@ -210,6 +226,11 @@ event-pool and layout files).
       candidates against the cut ones on the HP4a numbers and states each authoring pattern as a rule a future
       puzzle can be checked against, or says no pattern separates them. Brief
       `plan/phases/phase_HP4_graded_puzzle_set.md` § HP4f. Requires HP4e.
+- [ ] Phase HP4g — The clocks, from the kept set (plotted by T, 2026-10-20): `HAZARD_PUZZLE_CLOCK_SECONDS` set
+      from the kept candidates' HP4e times, grouped by band, median × 1.5 rounded to 5 s, recorded in
+      `docs/reports/hazard-puzzle-clocks.md`; a band with fewer than four kept candidates keeps its placeholder and
+      the report says why. Carries cut Phase B3f's A17 — the one part of it with no equivalent in HP4a–HP4f (T,
+      2026-10-20). Brief `plan/phases/phase_HP4_graded_puzzle_set.md` § HP4g. Requires HP4f.
 - [x] Phase VE1a — One export, stamped, everywhere (plotted by T, 2026-10-19): one `ensureWebExport` with a content stamp replaces the nine copied export blocks and their nine reuse flags across smoke, the e2e drivers, critique and perf; `.smoke-dist` is the one directory; the two verify workflows drop the env lines; the README names CI's Linux Playwright Chromium as the renderer of record and the PR's first integration run re-stamps all 13 baselines from CI. Brief `plan/phases/phase_VE1_visual_e2e_signal.md` § VE1a. Requires nothing. (#661)
 - [x] (#663) Phase VE1b — Ready signal, determinism check, run record (plotted by T, 2026-10-19): the app sets a web-only ready attribute and smoke and critique wait on it instead of a 600ms sleep; `SMOKE_RUNS=n` exits 4 on any route that is not byte-identical across runs; the telemetry hook logs `script` rows for `verify:visual`, `e2e:*`, `critique:drive`, `smoke:bundler` and `baseline:approve`. Brief `plan/phases/phase_VE1_visual_e2e_signal.md` § VE1b. Requires nothing.
 - [ ] Phase VE1c — The report-only CI step with the evidence in the PR (plotted by T, 2026-10-19): both verify workflows run `verify:visual` on every integration run, never red on a diff; the step summary carries the route table and timings, the captures ride as an artifact, and on a same-repo PR the new captures are committed to the PR head as one `visual: re-stamp` commit with one updated comment, so T approves from the image diff; `.smoke-dist` and the browsers are cached on the stamp. Brief `plan/phases/phase_VE1_visual_e2e_signal.md` § VE1c. Requires VE1a, VE1b.
@@ -247,11 +268,10 @@ event-pool and layout files).
 - [x] (#588) Phase B3d — Stat unlocks (plotted by T, 2026-10-15): optional per-layout thresholds: +1 die (Body red, Mind blue, Heart purple), an extra card, or blanks turned to authored faces; the solver proves no unlock makes a puzzle harder. Brief `plan/phases/phase_B3_hazard_puzzle.md` § B3d. Requires B3b.
 - [x] (#592) Phase B3e — Three demos and the dev-menu board (plotted by T, 2026-10-15): three demo puzzles (easy, medium, hard) authored backward with the solver, played from a dev-menu HAZARD PUZZLES board with a per-band clock. Brief `plan/phases/phase_B3_hazard_puzzle.md` § B3e. Requires B3b, B3c, B3d.
 - [x] (#658) Phase HP2c — The dev-only move log (plotted by T, 2026-10-18): `/devpuzzle` logs each move with a timestamp and copies the log as JSON in dev builds; production records nothing. Moved above B3f, which now requires it: it is the instrument that times B3f's solves, and HP2e needs it too (T, 2026-10-19). Brief `plan/phases/phase_HP2_puzzle_card_audit_difficulty.md` § HP2c. Requires HP1b.
-- [ ] Phase B3f — Timed demo solves and the process lock (plotted by T, 2026-10-15) (attended): first-time solves timed by HP2c's move log, T once per route and the playtester agent several times per route, clocks set to median x 1.5, and T's verdict on locking the process before Act 1 rollout. T's rulings and A17's two spec gaps are in the brief (T, 2026-10-19). Brief `plan/phases/phase_B3_hazard_puzzle.md` § B3f. Requires B3e, B3e2, HP1a, HP1b, HP3a, HP2c.
 - [x] (#641) Phase HP2a — Card audit and the puzzle card pool (plotted by T, 2026-10-18): `npm run puzzle:audit` writes the card audit (identical-behaviour groups, banned and inert fields, keep or cut); `HAZARD_PUZZLE_CARD_POOL` is the list T's merge approves (D37), enforced by `validateHazardPuzzleLayout`; `HAZARD_DECK` unchanged. Brief `plan/phases/phase_HP2_puzzle_card_audit_difficulty.md` § HP2a. Requires HP1a.
 - [x] (#665) Phase HP2b — Five difficulty features in the solver (plotted by T, 2026-10-18): winning lines, opening share, near misses, shortest win and draw dependence per layout and route, in `puzzle:report`. Brief `plan/phases/phase_HP2_puzzle_card_audit_difficulty.md` § HP2b. Requires HP1a.
 - [ ] Phase HP2d — The calibration set (plotted by T, 2026-10-18): 13 to 20 calibration puzzles from the pool (3 to 5 held out), each feature taking at least four values. Brief `plan/phases/phase_HP2_puzzle_card_audit_difficulty.md` § HP2d. Requires HP2a, HP2b.
-- [ ] Phase HP2e — Calibration solves and the difficulty report (plotted by T, 2026-10-18) (attended): T and the `playtester` agent solve every calibration puzzle first-time; `puzzle:calibrate` picks the feature with the highest Spearman ρ against pooled median time (bar 0.7) and checks the held-out bands; `docs/reports/hazard-puzzle-difficulty.md` records it with T's verdict. Brief `plan/phases/phase_HP2_puzzle_card_audit_difficulty.md` § HP2e. Requires HP2c, HP2d, B3f.
+- [ ] Phase HP2e — Calibration solves and the difficulty report (plotted by T, 2026-10-18) (attended): T and the `playtester` agent solve every calibration puzzle first-time; `puzzle:calibrate` picks the feature with the highest Spearman ρ against pooled median time (bar 0.7) and checks the held-out bands; `docs/reports/hazard-puzzle-difficulty.md` records it with T's verdict. B3f dropped from Requires when it was cut (T, 2026-10-20); the clock dependency it carried is HP4g's now, and this row's own premise is amended once HP4e's rulings exist (`plan/phases/phase_HP4_graded_puzzle_set.md` Follow-ups). Brief `plan/phases/phase_HP2_puzzle_card_audit_difficulty.md` § HP2e. Requires HP2c, HP2d.
 - [ ] Phase HP2f — Bands on the calibrated measure (plotted by T, 2026-10-18): `HAZARD_PUZZLE_BANDS` moves to the adopted measure and the demos sit in band, or the report records why the count bands stayed. Brief `plan/phases/phase_HP2_puzzle_card_audit_difficulty.md` § HP2f. Requires HP2e.
 - [ ] Phase LG1a — Plan-queue lint (plotted by T, 2026-10-18): `scripts/check-plan-queues.mjs` lints the AUDIT, CRITIQUE, PHASE_CANDIDATES and Status-block rows in the root `npm test`. Brief `plan/phases/phase_LG1_loop_gates.md` § LG1a. Requires nothing.
 - [ ] Phase LG1b — Path coverage in verify-gate (plotted by T, 2026-10-18): `verify-gate` fails and names a changed path no `verify-*` filter owns. Brief `plan/phases/phase_LG1_loop_gates.md` § LG1b. Requires nothing.
@@ -909,6 +929,23 @@ See the status rows above; generate briefs on demand.
 > "reason not stated" — never invent one), and the resulting
 > commit/issue/phase-brief when available.
 
+- **2026-10-20** — actor: **T, attended session** (`/plot asap`, branch
+  `loop/plot-DL1-deadline-plan-integrity`). Action: **added Phases DL1a, DL1b, DL1c** (the deadline plan cannot
+  silently drift from the build plan) directly above Phase IT1a, the first open row; **cut Phase B3f** and
+  **added Phase HP4g** after HP4f, carrying B3f's A17; **dropped B3f from Phase HP2e's `Requires`**, which would
+  otherwise name a row that no longer exists and leave HP2e permanently un-ready. Confirmed T's request: yes. T
+  opened the session with "What's next?", was shown the stale reminder, and named the defect: "The deadline items
+  don't update with the work that's been done. I've already tested the 3 puzzles and we've already created a new
+  spec to create 10 of each puzzle." T then chose "Reconcile and let's handle the structural fix now", and ruled
+  B3f with: "if there's an equivalent for testing the 30 puzzles, then cut it. Otherwise adapt it." HP4e is that
+  equivalent, so B3f's timing report is cut and `docs/reports/hazard-puzzle-timing.md` is never written; setting
+  `HAZARD_PUZZLE_CLOCK_SECONDS` had no equivalent, so it was adapted into HP4g. Two further calls came from T by
+  `AskUserQuestion`: coverage is every open row with an `## Unscheduled` opt-out, and `--write` rewrites the
+  Status column. T's stated reason: the deadline reminder led a chat with work that was already done while the
+  real W1 critical path (HP4a–HP4f) had no Item at all. Reason for asap: the drift fires on every chat start, and
+  a reminder that is wrong on its first line is worse than none. Resulting commit: this one; brief
+  `plan/phases/phase_DL1_deadline_plan_integrity.md`; `plan/phases/phase_HP4_graded_puzzle_set.md` amended
+  (A11, § HP4g, Follow-ups); `plan/deadlines.md` Items table reconciled in the same commit.
 - **2026-10-19** — actor: **T via `/plot`** (attended session, branch
   `loop/plot-HP4-graded-puzzle-set`). Action: **added Phases HP4a-HP4f**, slotted asap directly
   above Phase VE1a, the first open row. This was T's request: T played all six routes of the three

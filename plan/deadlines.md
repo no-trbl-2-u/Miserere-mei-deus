@@ -26,7 +26,7 @@ left; otherwise after.
 
 | Window | Dates | Goal | Demo T checks at the end |
 |---|---|---|---|
-| W1 | Oct 20 - Nov 2 | Hazard puzzles locked | T plays the three demos on the live board with scripted randomness; clocks set from timed solves |
+| W1 | Oct 20 - Nov 2 | Hazard puzzles locked | T plays the thirty graded candidates on the live board with scripted randomness; the kept set, its patterns and its clocks follow |
 | W2 | Nov 3 - Nov 16 | Act 1 hazards are puzzles | An Act 1 run where every hazard is a puzzle; difficulty measured |
 | W3 | Nov 17 - Nov 30 | Card upgrades and every event node works | A walk of all four regions where every node type resolves; a card upgraded and used in a fight |
 | W4 | Dec 1 - Dec 14 | Enemy revamp and the Act Boss | An Act 1 clear with Blood Price, upgrades and a levelled player, ending at the Act Boss |
@@ -34,18 +34,27 @@ left; otherwise after.
 
 ### W1 — Hazard puzzles locked (Oct 20 - Nov 2)
 
-- Rows: HP1c (cost cards: signed costs, extra die, reroll), HP1d (worse-copy test), HP3 (the illusion of
-  randomness, to plot now), HP2c (the move log, moved up from W2: it times B3f's solves), B3f (attended: timed
-  demo solves and the clocks), HP2a (card audit; T rules the cut at
-  its merge), HP2b (difficulty features).
+- Shipped in the first days of the window: HP1c, HP1c2, HP1d (cost cards and the worse-copy test), HP3a, HP3b
+  (the illusion of randomness), HP2c (the move log), HP2a (the card audit and the pool), HP2b (five difficulty
+  features).
+- **What the window now turns on: HP4a-HP4f.** T played all six routes of the three demos on 2026-10-19 and solved
+  every one in under ten seconds, so the demos are not puzzles. HP4 authors thirty graded candidates (ten easy,
+  ten medium, ten hard), puts them on the live board, and T plays them. **Phase B3f was cut on 2026-10-20** (its
+  timed demo solves happened and its verdict was "change X"); the clocks it was to set are HP4g's, from the kept
+  candidates.
+- Also in the window: DL1a-DL1c, the deadline lint, so this plan cannot silently drift from the build plan again.
 - Alongside, needing no time from T: LG1a-LG1e (loop gates), CT1 (real-fight combat tests), RS1 (the loop sweeps
-  reports).
-- T's time (about 3 h): B3f's timed solves (one per route, the playtester agent covers the rest; T, 2026-10-19);
-  HP2a's cut; playing the demos at the end.
+  reports), VE1c-VE1d, IT1a.
+- T's time (about 3 h): playing the thirty candidates once each (HP4e) at the end of the window, timed by HP2c's
+  move log, with no candidate's label described beforehand.
 
 ### W2 — Act 1 hazards are puzzles (Nov 3 - Nov 16)
 
-- Rows: HP2d-HP2f (calibration set, attended calibration solves, bands on the measure). HP2c moved to W1.
+- Rows: HP4f (the authoring patterns from the kept set), HP4g (the band clocks from the kept set's times), then
+  HP2d-HP2f (calibration set, attended calibration solves, bands on the measure). HP2c moved to W1. HP2d-HP2f are
+  amended once HP4e's rulings exist: the calibration set should be drawn from HP4's kept candidates, and HP2e's
+  Spearman bar has nothing to fit while every solve is under ten seconds
+  (`plan/phases/phase_HP4_graded_puzzle_set.md` Follow-ups).
 - To plot in W2: the Act 1 puzzle set, routing the live hazard nodes to the puzzle, and the cuts (RE-CAST cards,
   the saved hazard deck, `deadcard`; B3 Follow-ups).
 - T's time (about 5 h): calibration solves (HP2e); a card session designing the first cost cards (Toll, Debt,
@@ -80,6 +89,14 @@ a name, its window, and **Rows**: the build-plan phase ids that finish it, `need
 only T does; tick its Status `[x]` when done). Status is only set by hand on `T` rows; phase items read their state
 from the build plan. A session that `/plot`s an item replaces its `needs plot` with the new phase ids.
 
+**Status is derived for phase Items** (from 2026-10-20): `deadlines.mjs --write` recomputes it from the build
+plan once DL1b lands, and `scripts/check-deadlines.mjs` (DL1a) fails the root `npm test` when an open build-plan
+row has no Item and no `## Unscheduled` line, when an Item names a row that does not exist, when two Items name one
+row, or when a date falls outside its window. **A `T` Item's Status is hand-ticked and derivable by nothing.** One
+drift no check can see: an Item whose *premise* is superseded while the rows it names still exist — the
+`W1 demo: T plays the three demos` case of 2026-10-20. The guard for that is the reconcile step `/plot` and
+`/messy` carry (DL1c), not a lint.
+
 The reminder, printed when T starts a chat and kept in `LIVE_DEADLINES.md`, names only what is stuck without T,
 due within two weeks or overdue: "needs a plot" (`needs plot`, or a named id with no row) and "needs you" (an open
 `T` task, or a named row that is attended or owner-led and whose prerequisites have shipped). Work the loop can
@@ -87,14 +104,20 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 
 | Status | Due | Item | Window | Rows |
 |---|---|---|---|---|
-| [ ] | 2026-10-24 | Cost-card engine and the worse-copy test | W1 | HP1c, HP1c2, HP1d |
-| [ ] | 2026-10-27 | The puzzle looks random (roll, draw, reroll) | W1 | HP3a, HP3b |
-| [ ] | 2026-10-26 | The dev-only move log (times B3f's solves) | W1 | HP2c |
-| [ ] | 2026-10-29 | Timed demo solves and the clocks | W1 | B3f |
-| [ ] | 2026-10-30 | Card audit; T rules the cut at the HP2a merge | W1 | HP2a |
-| [ ] | 2026-10-31 | Difficulty features in the solver | W1 | HP2b |
-| [ ] | 2026-11-02 | W1 demo: T plays the three demos | W1 | T |
+| [x] | 2026-10-24 | Cost-card engine and the worse-copy test | W1 | HP1c, HP1c2, HP1d |
+| [x] | 2026-10-27 | The puzzle looks random (roll, draw, reroll) | W1 | HP3a, HP3b |
+| [x] | 2026-10-26 | The dev-only move log (times HP4e's solves) | W1 | HP2c |
+| [x] | 2026-10-30 | Card audit; T rules the cut at the HP2a merge | W1 | HP2a |
+| [x] | 2026-10-31 | Difficulty features in the solver | W1 | HP2b |
+| [ ] | 2026-10-23 | Decision pressure in the puzzle report | W1 | HP4a |
+| [ ] | 2026-10-23 | The candidate library shape | W1 | HP4b |
+| [ ] | 2026-10-24 | The deadline lint and its reconcile step | W1 | DL1a, DL1b, DL1c |
+| [ ] | 2026-10-27 | Author the thirty candidates | W1 | HP4c |
+| [ ] | 2026-10-28 | The thirty on the live board | W1 | HP4d |
+| [ ] | 2026-11-02 | W1 demo: T plays the thirty candidates | W1 | HP4e |
 | [ ] | 2026-11-04 | Act 1 puzzle set, live hazard routing and the cuts | W2 | needs plot |
+| [ ] | 2026-11-05 | The authoring patterns from the kept set | W2 | HP4f |
+| [ ] | 2026-11-06 | The band clocks, from the kept set's times | W2 | HP4g |
 | [ ] | 2026-11-07 | The calibration set | W2 | HP2d |
 | [ ] | 2026-11-11 | Calibration solves | W2 | HP2e |
 | [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends) | W2 | T |
@@ -122,6 +145,25 @@ attended session.
 
 ## Change log
 
+- **2026-10-20** — **the plan reconciled with the build plan, and a lint plotted so this cannot recur** (T,
+  attended session). T asked "what's next", was shown a stale reminder, and named the defect: *"The deadline items
+  don't update with the work that's been done. I've already tested the 3 puzzles and we've already created a new
+  spec to create 10 of each puzzle."* What changed here:
+  - **Removed** `2026-10-29 | Timed demo solves and the clocks | B3f`. Phase B3f was cut the same day: T's timed
+    solves happened on 2026-10-19 and the verdict was "change X". T's rule, verbatim: *"if there's an equivalent
+    for testing the 30 puzzles, then cut it. Otherwise adapt it."* HP4e is that equivalent.
+  - **Re-scoped** `2026-11-02 | W1 demo: T plays the three demos | T` to `W1 demo: T plays the thirty candidates`,
+    Rows `HP4e`. That playthrough had already happened; the W1 demo is the thirty.
+  - **Added** Items for HP4a, HP4b, HP4c, HP4d, HP4e, HP4f and the new HP4g (the band clocks, carrying cut B3f's
+    A17), and for DL1a-DL1c. HP4a-HP4f had been plotted on 2026-10-19 with **no Item at all**, so the real W1
+    critical path was invisible to the reminder — the drift that produced this entry.
+  - **Renamed** the move-log Item, which named B3f's solves, to name HP4e's.
+  - **Ticked** the five W1 Items whose rows have all shipped (HP1c/HP1c2/HP1d, HP3a/HP3b, HP2c, HP2a, HP2b).
+    Hand-set for now; **DL1b** makes `deadlines.mjs --write` recompute every phase Item's Status from the build
+    plan, and **DL1a** fails the root `npm test` when the two plans disagree at all. Until DL1b lands, a phase
+    Item's Status is still a hand-edited cell the reminder ignores.
+  - **The W1 and W2 window sections and the W1 demo column** rewritten to the same effect. No date moved except
+    the two rows above.
 - **2026-10-19** — the Items table and the reminder added (T): per-item due dates, reminders only for what needs a
   plot or needs T, `LIVE_DEADLINES.md` for the next two weeks.
 - **2026-10-19** — created by T (attended decision round): milestone, rhythm, scope and order chosen via

@@ -108,6 +108,14 @@ See `## Phases`: six phases, `size:multi-phase`.
   separate them, each as a rule a future puzzle can be built to and checked
   against. Where no pattern separates them it says so rather than inventing
   one.
+- **A11** (added 2026-10-20, carried from cut Phase B3f's A17)
+  `HAZARD_PUZZLE_CLOCK_SECONDS` is set from the kept candidates' real solve
+  times: `docs/reports/hazard-puzzle-clocks.md` lists, per kept candidate, its
+  intended band, its nominated route and T's A9 time; groups them by **band**,
+  not by candidate, because the constant is per band; sets each band to
+  median × 1.5 rounded to 5 s. A band with fewer than four kept candidates
+  keeps its placeholder instead, and the report names the band and says why.
+  The A15 mobile timer test's values follow the resulting constants.
 
 Measure: `npm run verify -w axiomancer-mechanics` and `-w axiomancer-mobile`;
 `npm run puzzle:report` prints the decision-pressure block for all thirty
@@ -118,10 +126,11 @@ rulings.
 
 `axiomancer-mechanics`: the solver, report, types, tuning and library modules
 under `src/World/Hazard/puzzle/`. `axiomancer-mobile`: the `/devpuzzle` route
-and `components/hazard/puzzle/`, presenter-side only. Two reports under
+and `components/hazard/puzzle/`, presenter-side only. Three reports under
 `docs/reports/`. No change to `HAZARD_PUZZLE_LIBRARY`'s three layouts, to
-`HAZARD_PUZZLE_BANDS`, to `HAZARD_PUZZLE_CLOCK_SECONDS`, or to the live Act 1
-hazard nodes.
+`HAZARD_PUZZLE_BANDS`, or to the live Act 1 hazard nodes.
+`HAZARD_PUZZLE_CLOCK_SECONDS` is unchanged by HP4a–HP4f and set by **HP4g**
+alone (A11).
 
 ## Consumers to update
 
@@ -166,9 +175,17 @@ and no migration is needed. `/devpuzzle` is dev-gated by `isDevToolsEnabled`.
   keywords and art to guided sessions; a layout is an arrangement of existing
   pool cards, dice faces and goals, in the class D88 lets the loop build from
   a brief T approved. This brief is that approval.
-- **`HAZARD_PUZZLE_CLOCK_SECONDS` is not touched.** T's solves were all under
-  ten seconds, so median × 1.5 would set a ~15 s clock and encode the defect
-  in a constant. The placeholders stand until the kept set has real times.
+- **`HAZARD_PUZZLE_CLOCK_SECONDS` is not touched before HP4g.** T's solves of
+  the *demos* were all under ten seconds, so median × 1.5 would set a ~15 s
+  clock and encode the defect in a constant. The placeholders stand through
+  HP4a–HP4f and are set from the kept set's real times in HP4g (A11, added
+  2026-10-20 when Phase B3f was cut).
+- **The clocks come from the kept candidates only, and from T's times alone**
+  (A11). HP4e is a T-only playthrough by design — a first-time solve survives
+  one exposure — and ten kept candidates per band give a median without the
+  `playtester` agent runs cut B3f had planned over six demo routes. Cut
+  candidates are excluded: a clock set partly from puzzles that will not ship
+  would be measuring the wrong thing.
 - **T's rough times are recorded as rough** (A9). HP2c's move log ships for
   the candidate playthrough, but T's solves of the *demos* were untimed
   recollections and the report says so.
@@ -189,8 +206,8 @@ and no migration is needed. `/devpuzzle` is dev-gated by `isDevToolsEnabled`.
 ## Verify gate
 
 Mechanics verify for HP4a–HP4c and HP4f; mechanics plus mobile verify for
-HP4b (the types cross the barrel) and HP4d. Root `npm test` for the report
-phases.
+HP4b (the types cross the barrel), HP4d and HP4g (the constant crosses the
+barrel into the mobile timer test). Root `npm test` for the report phases.
 
 ## Commit body template
 
@@ -204,13 +221,20 @@ Acceptance: A<n> <how it was proved>
 
 ## DoD
 
-A1–A10, all ticked, each naming the test, command or report that proves it.
+A1–A11, all ticked, each naming the test, command or report that proves it.
 
 ## Follow-ups (out of scope)
 
-- **B3f's report.** T's verdict on the demo solves is "change X", not "lock
-  the process". `docs/reports/hazard-puzzle-timing.md` records the sub-ten-second
-  solves, the table above and that verdict; B3f's own row owns it, not HP4.
+- ~~**B3f's report.**~~ **Settled 2026-10-20: Phase B3f was cut.** T's rule,
+  verbatim: *"if there's an equivalent for testing the 30 puzzles, then cut it.
+  Otherwise adapt it."* HP4e is the equivalent of B3f's timed solves, so
+  `docs/reports/hazard-puzzle-timing.md` is never written; the sub-ten-second
+  finding lives in this brief's Sources table and in the build plan's Queue
+  change log for 2026-10-19 and 2026-10-20. The one part with no equivalent —
+  setting `HAZARD_PUZZLE_CLOCK_SECONDS`, which B3f's A17 alone closed — was
+  adapted into **A11 / HP4g**, carrying A17's two spec gaps: per-candidate times
+  grouped by band rather than per candidate, and a band whose median rests on
+  few candidates saying so.
 - **HP2d (the calibration set, 13–20 puzzles with 3–5 held out)** should be
   drawn from HP4's kept set rather than authored separately; the row stays
   open and its brief is amended once HP4e's rulings exist.
@@ -289,3 +313,19 @@ separates them.
 - Consumers: `docs/truth-sources.md` if the report becomes a cited source.
 - Tests: none new.
 - Verify gate: prose verify; mechanics verify for the annotation.
+
+### HP4g — The clocks, from the kept set · S · closes A11 · requires HP4f
+Measure: `docs/reports/hazard-puzzle-clocks.md` sets each band from the kept
+candidates' median × 1.5 rounded to 5 s, and
+`HAZARD_PUZZLE_CLOCK_SECONDS` plus the A15 mobile timer test carry those
+values.
+- Scope: `hazard-puzzle.tuning.ts` (the three constants) and the report; the
+  A15 test's expected values in
+  `state/presenters/__tests__/hazard-puzzle.engine.test.ts`.
+- Consumers: `docs/game-model.md` (a tuning constant moves).
+- Tests: none new; the existing A15 timer test's values follow the constants.
+- Verify gate: mechanics plus mobile verify (the constant crosses the barrel).
+- Note: added 2026-10-20 when Phase B3f was cut; it is the only part of B3f's
+  A17 with no equivalent in HP4a–HP4f. A band with fewer than four kept
+  candidates keeps its placeholder and the report says which band and why,
+  rather than setting a clock from one or two times.

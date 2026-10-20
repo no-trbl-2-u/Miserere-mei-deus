@@ -5,10 +5,12 @@
 - The `/plot` request from T, 2026-10-18 (attended): "audit the current cards for the hazard puzzles. Get rid of
   cards that don't make sense and figure out a way to measure difficulty so we can create our initial set of
   puzzles", deepened through `/anthropic-skills:prompt` into the four parts below.
-- T's rulings at plot time (AskUserQuestion): B3f stays separate and runs first; solve times from T and the
+- T's rulings at plot time (AskUserQuestion): B3f stays separate and runs first (B3f cut 2026-10-20; see
+  Decisions); solve times from T and the
   `playtester` agent are pooled; the bar is Spearman ρ ≥ 0.7; `/devpuzzle` gets a dev-only move log.
 - `plan/phases/phase_B3_hazard_puzzle.md` (A2 no RNG, A6 solver, A8 count bands, A13 demos, A17 timed solves)
   and `plan/phases/phase_HP1_hazard_cost_utility.md` (A1 no bin, A2 the outcome count, A3 the per-card report).
+  B3's A17 moved to `plan/phases/phase_HP4_graded_puzzle_set.md` A11 (HP4g) on 2026-10-20.
   Design records: `braindump/2026-10-15-hazard-fixed-puzzle.md`, `braindump/2026-10-18-hazard-cost-utility-cards.md`.
 - D37 and D88 (the card cut is T's: this plot builds the evidence and enforces the list T merges; no card or
   keyword is created or edited), D57 and B3's "Bands are enforced on authored puzzles" ruling (bands are a
@@ -115,7 +117,11 @@ None. Logs are files in `docs/reports/`, not save data.
   rollout.
 - **"Behaves the same"** means equal puzzle-relevant shape (colour, values, effect, amounts, `majorEffect`,
   `dead`), with `salvage`, `rarity` and `weight` ignored once HP1a removes the bin.
-- **B3f runs first and stays separate** (T). HP2e requires B3f, so the demos' clocks are set before calibration.
+- ~~**B3f runs first and stays separate**~~ **(T's 2026-10-18 ruling; superseded 2026-10-20.)** Phase B3f was
+  cut and HP2e's `Requires` dropped it. The clock dependency it carried moved to HP4g, and this brief's whole
+  calibration premise is amended once HP4e's rulings exist — see
+  `plan/phases/phase_HP4_graded_puzzle_set.md` Follow-ups, which also records that HP2e's ρ ≥ 0.7 bar has no
+  variance to fit while every demo solves in under ten seconds.
 - **Pooled solvers** (T): T's and the agent's times are pooled for the fit. The report also lists each solver's
   numbers separately, so a gap between them is visible.
 - **The bar is ρ ≥ 0.7** (T), and the held-out entries must all land in their predicted band. A "simple
@@ -196,7 +202,7 @@ each feature taking at least four values across the set.
 - Tests: pool cards only, Act 1, solvable on the declared route, feature spread, 3 to 5 held out.
 - Verify gate: mechanics verify plus the mobile type-check.
 
-### HP2e — Calibration solves and the difficulty report (attended) · M · closes A6, A7 · requires HP2c, HP2d, B3f
+### HP2e — Calibration solves and the difficulty report (attended) · M · closes A6, A7 · requires HP2c, HP2d
 Measure: `docs/reports/hazard-puzzle-difficulty.md` exists with the ρ table, the verdict against 0.7, the
 held-out check and T's verdict; the logs are committed.
 - Scope: the solve session; `npm run puzzle:calibrate` and its Spearman helper; the logs; the report.

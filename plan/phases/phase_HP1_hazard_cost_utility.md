@@ -169,7 +169,9 @@ A1–A12 ticked, each by the phase that closes it.
   with the first real cost card, so the look is judged on a real card.
 - **A narrower recolour utility** (one die to a named colour): T left "other utilities within the current
   mechanics" open; file it with the card session if a card needs it.
-- **B3f** times the demos after HP1b.
+- ~~**B3f** times the demos after HP1b.~~ B3f was cut 2026-10-20: T solved the demos on 2026-10-19 in under ten
+  seconds each, which produced HP4 (thirty graded candidates) instead. The timing that matters now is HP4e's, over
+  the thirty, and the clocks are set by HP4g.
 
 ## Phases
 
