@@ -41,11 +41,11 @@ export type { HazardPuzzleOutcome, HazardPuzzleOutcomeContext } from './hazard-p
 export { hazardPuzzleOutcome } from './hazard-puzzle.outcome';
 export { hazardRegionMaterials } from './hazard-puzzle.region';
 
-export type { HazardPuzzleSolution, HazardPuzzleSolveOptions } from './hazard-puzzle.solver';
+export type { HazardPuzzleFeatures, HazardPuzzleSolution, HazardPuzzleSolveOptions } from './hazard-puzzle.solver';
 export { solveHazardPuzzle, solveHazardPuzzleSession, hazardPuzzleSurplus } from './hazard-puzzle.solver';
 
 export type { HazardPuzzleCardReport, HazardPuzzleCardSource, HazardPuzzleCardUse } from './hazard-puzzle.report';
-export { hazardPuzzleCardReport, formatHazardPuzzleCardReport } from './hazard-puzzle.report';
+export { hazardPuzzleCardReport, formatHazardPuzzleCardReport, formatHazardPuzzleFeatures } from './hazard-puzzle.report';
 
 export type { HazardPuzzleCardAuditRow, HazardPuzzleLibraryUse } from './hazard-puzzle.audit';
 export {

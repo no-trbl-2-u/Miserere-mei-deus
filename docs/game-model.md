@@ -233,7 +233,13 @@ keyword (`EnemyKeyword = never`).
   card; `HAZARD_DECK` and the live hazard keep every card.
   `npm run puzzle:report -w axiomancer-mechanics` prints, per demo and
   route, how many winning outcomes stage each card and which are required
-  or unused (`hazardPuzzleCardReport`). The library test fails, naming the
+  or unused (`hazardPuzzleCardReport`), and the solve's five difficulty
+  features (`HazardPuzzleFeatures`): winning lines (the outcome count),
+  opening share (the first placements, a card with its die left open or
+  powered by one die kind, from which a win is still reachable), near misses
+  (losing outcomes one short), shortest win (fewest moves) and draw
+  dependence (the share of wins that stage a DRAW card). Calibration picks
+  the one that tracks first-time solve times. The library test fails, naming the
   cards, on a worse copy: a card no win stages in any demo that holds it, or
   one a pool card beats in every demo that holds it (at least as many
   winning outcomes everywhere, more in one: `hazardPuzzleDominatedCards`).
