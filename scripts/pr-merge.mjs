@@ -55,8 +55,9 @@ export const HOLD_LABELS = Object.freeze(['review:needs-T', 'loop:pr-stuck', 'ev
  * never merges itself: T merges it (T, 2026-10-20).
  */
 export const PIPELINE_PATHS = Object.freeze([
-  '.github/workflows/pr-review.yml', '.github/workflows/_claude-skill.yml', 'scripts/pr-merge.mjs', 'scripts/pr-review.mjs',
-  'scripts/pr-partition.mjs', 'scripts/pr-risk.mjs', 'scripts/pr-gate.mjs', 'skills/review.md', 'skills/review-fix.md',
+  '.github/workflows/pr-review.yml', '.github/workflows/_claude-skill.yml', '.github/workflows/pr-autofix.yml', '.github/workflows/pr-resolve.yml',
+  'scripts/pr-merge.mjs', 'scripts/pr-review.mjs', 'scripts/pr-partition.mjs', 'scripts/pr-risk.mjs', 'scripts/pr-gate.mjs', 'scripts/pr-resolve.mjs',
+  'skills/review.md', 'skills/review-fix.md', 'skills/fix-ci.md',
 ])
 
 /** Merges by this job in any 24-hour window; the rest wait for T. */

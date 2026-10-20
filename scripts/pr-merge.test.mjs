@@ -156,7 +156,7 @@ test('a verdict for the same diff on an earlier head stands after a merge of mai
 })
 
 test('a PR that changes the review pipeline never merges itself', () => {
-  assert.ok(PIPELINE_PATHS.includes('scripts/pr-merge.mjs') && PIPELINE_PATHS.includes('skills/review.md') && PIPELINE_PATHS.includes('.github/workflows/pr-review.yml'))
+  for (const f of ['scripts/pr-merge.mjs', 'skills/review.md', 'skills/review-fix.md', 'skills/fix-ci.md', '.github/workflows/pr-review.yml', '.github/workflows/pr-autofix.yml', '.github/workflows/pr-resolve.yml', 'scripts/pr-resolve.mjs']) assert.ok(PIPELINE_PATHS.includes(f), f)
   for (const f of PIPELINE_PATHS) assert.match(mergeWanted(pr({ files: ['README.md', f] })).reason, /pipeline PR/, f)
   assert.equal(mergeWanted(pr({ files: ['README.md', 'scripts/pr-risk.test.mjs'] })).go, true, 'a test beside a pipeline file is not the pipeline')
 })
