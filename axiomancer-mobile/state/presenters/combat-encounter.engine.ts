@@ -149,9 +149,6 @@ function riderPairs(r: CardRider): [string, string][] {
         // De-abbreviated: '×1 · 1t', never the 'i1 d1' code.
         pairs.push([kw.toUpperCase(), `${percentIntensity(r.applyEffect.effectId, i) ?? `×${i}`}${d ? ` · ${d}t` : ''}`]);
     }
-    // Damage leads, as riderText leads with "Deal N": A Plain Blow's FREE
-    // "Deal 2" is a DEAL pill (D91), never a face with no pill.
-    if (r.damage) pairs.unshift(['DEAL', `${r.damage}`]);
     return pairs;
 }
 

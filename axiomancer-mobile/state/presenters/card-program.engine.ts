@@ -87,23 +87,12 @@ const FREE_CELL: readonly { re: RegExp; keyword: string; value: (m: RegExpMatchA
     { re: /\bTETHER (\d+)\b/, keyword: 'TETHER', value: (m) => m[1] },
     // A cost reads as a loss, never as the "+N" the cell gives a gain.
     { re: /\bSACRIFICE (\d+)\b/, keyword: 'SACRIFICE', value: (m) => `−${m[1]}` },
-    // A FREE line with none of the above still wears a pill (D91: a pill
-    // whenever the card has a FREE line). Damage reads DEAL; an amount the
-    // card does not print as a number reads the way the PAID headline spells
-    // it ('n', 'X', '×2'), never a fabricated figure.
-    { re: /\bDEAL (\d+)\b/, keyword: 'DEAL', value: (m) => m[1] },
-    { re: /\bGUARD n\b/, keyword: 'GUARD', value: () => 'n' },
-    { re: /\bnext DEAL this turn deals \+n\b/, keyword: 'DEAL', value: () => '+n' },
-    { re: /\bDEAL\b/, keyword: 'DEAL', value: () => 'X' },
-    { re: /\bfoe loses VITAE\b/, keyword: 'DEAL', value: () => 'X' },
-    { re: /\bSACRIFICE\b/, keyword: 'SACRIFICE', value: () => '×2' },
 ];
 
 /**
  * The FREE cell of a program face: the first keyword with a silhouette the
- * FREE line prints, and its number. Null only for a line no pattern reads;
- * every lane card's FREE line resolves a cell (the D91 pill sweep in
- * `combat-card-vm.test.ts` pins it).
+ * FREE line prints, and its number. Null when the line prints none (the cell
+ * is then left off, as on A Plain Blow).
  */
 export function programFreeCell(text: string): { keyword: string; value: string } | null {
     for (const c of FREE_CELL) {
