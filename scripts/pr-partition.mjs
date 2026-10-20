@@ -33,7 +33,19 @@ import { fileURLToPath } from 'node:url'
 
 import { isLowPath } from './pr-risk.mjs'
 
-export const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+/**
+ * The repository root. The review job runs main's copy of this file from
+ * `.review-tooling/scripts/`, so the root is git's toplevel from the file's
+ * own directory, not a fixed `..`.
+ */
+export const ROOT = (() => {
+  const here = dirname(fileURLToPath(import.meta.url))
+  try {
+    return execFileSync('git', ['rev-parse', '--show-toplevel'], { cwd: here, encoding: 'utf8' }).trim()
+  } catch {
+    return resolve(here, '..')
+  }
+})()
 
 /** Assignments per tier, not counting the Tests lens and the control adversary. */
 export const MAX_AGENTS = Object.freeze({ 'risk:low': 2, 'risk:medium': 4, 'risk:high': 7 })

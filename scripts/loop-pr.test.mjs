@@ -229,7 +229,7 @@ test('review runs after a green verify-gate, through review-wanted, on every sam
   assert.match(rv, /^ {4}if: always\(\) && needs\.review-wanted\.outputs\.go == 'true'$/m)
   assert.match(rv, /\n {4}concurrency:\n {6}group: pr-review-\$\{\{ needs\.review-wanted\.outputs\.pr \}\}\n {6}cancel-in-progress: true/)
   assert.match(rv, /uses: \.\/\.github\/workflows\/_claude-skill\.yml/)
-  assert.match(rv, /prompt: 'Read skills\/review\.md end to end/)
+  assert.match(rv, /prompt: 'Read \.review-tooling\/skills\/review\.md end to end/)
   // Phase RV2: the head and its diff digest reach the reviewer by the prompt, not by a new grant.
   assert.match(wanted, /^ {6}head: \$\{\{ steps\.wanted\.outputs\.head \}\}$/m)
   assert.match(wanted, /^ {6}digest: \$\{\{ steps\.wanted\.outputs\.digest \}\}$/m)
@@ -252,7 +252,7 @@ test('the reviewer can read, comment and label, and nothing else', () => {
   const grant = rv.match(/allowed_tools: '([^']+)'/)[1].split(',')
   for (const t of ['Edit', 'Write', 'MultiEdit', 'NotebookEdit', 'Bash']) assert.ok(!grant.includes(t), `no ${t}`)
   for (const t of grant.filter((t) => t.startsWith('Bash('))) {
-    assert.match(t, /^Bash\((git (diff|show|log|fetch|rev-parse)|npm test|node --test|node scripts\/pr-review\.mjs parent-tests|node scripts\/pr-partition\.mjs|gh pr (view|diff|comment|edit)):\*\)$/, t)
+    assert.match(t, /^Bash\((git (diff|show|log|fetch|rev-parse)|npm test|node --test|node \.review-tooling\/scripts\/pr-review\.mjs parent-tests|node \.review-tooling\/scripts\/pr-partition\.mjs|gh pr (view|diff|comment|edit)):\*\)$/, t)
   }
   assert.ok(grant.includes('mcp__github_inline_comment__create_inline_comment'))
   const deny = rv.match(/--disallowedTools "([^"]+)"/)[1].split(',')
@@ -265,7 +265,10 @@ test('the reviewer can read, comment and label, and nothing else', () => {
 test('the reviewer runs main\'s copy of its own instructions', () => {
   const rv = job(review, 'review')
   assert.match(rv, /git fetch --no-tags origin main/)
-  assert.match(rv, /for p in skills\/review\.md scripts\/pr-partition\.mjs scripts\/pr-review\.mjs scripts\/pr-risk\.mjs \.claude CLAUDE\.md AGENTS\.md \.mcp\.json; do/)
+  // main's skill and scripts go to .review-tooling/; the PR's own scripts/ and tests stay whole (the fifth verdict on #666).
+  assert.match(rv, /git archive origin\/main skills\/review\.md scripts \| tar -x -C \.review-tooling/)
+  assert.match(rv, /for p in \.claude CLAUDE\.md AGENTS\.md \.mcp\.json; do/)
+  assert.doesNotMatch(rv.match(/for p in ([^\n]*); do/)[1], /scripts\/|skills\//, 'no script or skill of the PR is overwritten in place')
   assert.match(rv, /git checkout origin\/main -- "\$p"/)
 })
 
@@ -299,7 +302,7 @@ test('skills/review.md carries three distinct reader prompts: the assignment rea
   assert.match(l['Assignment reader'], /is anything wrong in\s+what I own\?/)
   assert.match(l['Assignment reader'], /"do not report" list is\s+another reader's: leave it out/)
   assert.match(l.Tests, /would the tests catch this change being wrong\?/)
-  assert.match(l.Tests, /node scripts\/pr-review\.mjs parent-tests --pr <n>/)
+  assert.match(l.Tests, /node \.review-tooling\/scripts\/pr-review\.mjs parent-tests --pr <n>/)
   assert.match(l.Control, /what breaks across the seams the\s+partition cut\?/)
   for (const [name, body] of Object.entries(l)) assert.match(body, /^Read only: /m, `${name} has a reading list`)
 })
@@ -307,7 +310,7 @@ test('skills/review.md carries three distinct reader prompts: the assignment rea
 test('the fan-out follows the manifest: one Sonnet reader per assignment, Tests always, Control on medium and high', () => {
   const skill = read('skills/review.md')
   const shape = skill.slice(skill.indexOf('### Step 2 — The manifest decides the shape'), skill.indexOf('### Step 3 '))
-  assert.match(shape, /node scripts\/pr-partition\.mjs --pr <n>/)
+  assert.match(shape, /node \.review-tooling\/scripts\/pr-partition\.mjs --pr <n>/)
   assert.match(shape, /\*\*Zero assignments\*\*[^\n]*: one\s+reviewer, you\./)
   assert.match(shape, /the manifest is the shape/)
   const fan = skill.slice(skill.indexOf('### Step 3b'), skill.indexOf('### Lens: Assignment reader'))

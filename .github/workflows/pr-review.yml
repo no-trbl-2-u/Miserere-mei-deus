@@ -160,16 +160,21 @@ jobs:
     uses: ./.github/workflows/_claude-skill.yml
     secrets: inherit
     with:
-      # The PR's head may edit skills/review.md, the partition or the
-      # reviewer's scripts, or .claude/; the reviewer runs main's copies of
-      # all of them when main has them.
+      # The PR's head may edit skills/review.md or the reviewer's scripts;
+      # the reviewer runs main's copies from .review-tooling/ (the skill and
+      # all of scripts/, so their imports resolve), and the PR's own tree
+      # stays whole so its tests run as the PR wrote them. .claude/,
+      # CLAUDE.md, AGENTS.md and .mcp.json are harness config and are
+      # restored in place.
       pre_run: |
         git fetch --no-tags origin main
-        for p in skills/review.md scripts/pr-partition.mjs scripts/pr-review.mjs scripts/pr-risk.mjs .claude CLAUDE.md AGENTS.md .mcp.json; do
+        rm -rf .review-tooling && mkdir -p .review-tooling
+        git archive origin/main skills/review.md scripts | tar -x -C .review-tooling
+        for p in .claude CLAUDE.md AGENTS.md .mcp.json; do
           if git cat-file -e "origin/main:$p" 2>/dev/null; then git checkout origin/main -- "$p"; fi
         done
-      prompt: 'Read skills/review.md end to end and follow it for PR #${{ needs.review-wanted.outputs.pr }}. Head ${{ needs.review-wanted.outputs.head }}, diff digest ${{ needs.review-wanted.outputs.digest || ''unavailable'' }}.'
-      allowed_tools: 'Read,Grep,Glob,Task,TodoWrite,Bash(git diff:*),Bash(git show:*),Bash(git log:*),Bash(git fetch:*),Bash(git rev-parse:*),Bash(npm test:*),Bash(node --test:*),Bash(node scripts/pr-review.mjs parent-tests:*),Bash(node scripts/pr-partition.mjs:*),Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*),Bash(gh pr edit:*),mcp__github_inline_comment__create_inline_comment'
+      prompt: 'Read .review-tooling/skills/review.md end to end and follow it for PR #${{ needs.review-wanted.outputs.pr }}. Head ${{ needs.review-wanted.outputs.head }}, diff digest ${{ needs.review-wanted.outputs.digest || ''unavailable'' }}.'
+      allowed_tools: 'Read,Grep,Glob,Task,TodoWrite,Bash(git diff:*),Bash(git show:*),Bash(git log:*),Bash(git fetch:*),Bash(git rev-parse:*),Bash(npm test:*),Bash(node --test:*),Bash(node .review-tooling/scripts/pr-review.mjs parent-tests:*),Bash(node .review-tooling/scripts/pr-partition.mjs:*),Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*),Bash(gh pr edit:*),mcp__github_inline_comment__create_inline_comment'
       # Deny beats the allow list in .claude/settings.json, which a loop
       # tick needs and a reviewer must not have.
       extra_claude_args: |

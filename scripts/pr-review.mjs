@@ -142,7 +142,15 @@ export function formatParentTests(files) {
 
 // --- I/O ----------------------------------------------------------------------
 
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+// The review job runs main's copy of this file from `.review-tooling/scripts/`.
+const ROOT = (() => {
+  const here = dirname(fileURLToPath(import.meta.url))
+  try {
+    return execFileSync('git', ['rev-parse', '--show-toplevel'], { cwd: here, encoding: 'utf8' }).trim()
+  } catch {
+    return resolve(here, '..')
+  }
+})()
 
 function arg(name, fallback) {
   const i = process.argv.indexOf(name)
