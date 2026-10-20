@@ -47,6 +47,35 @@
           ],
           "noisy": []
         }
+      },
+      "review": {
+        "stamp": {
+          "commit": "63d9f877",
+          "date": "2026-10-20T09:38:27-04:00"
+        },
+        "seed": {
+          "pr": 669,
+          "posted": true,
+          "seconds": 417,
+          "verdict": "not-pass",
+          "flagged": true,
+          "medPlus": 4,
+          "high": 4,
+          "hits": [
+            "axiomancer-mobile/state/presenters/combat-encounter.engine.ts:152",
+            "axiomancer-mobile/state/presenters/card-program.engine.ts:90"
+          ]
+        },
+        "control": {
+          "pr": 670,
+          "posted": true,
+          "seconds": 582,
+          "verdict": "pass",
+          "flagged": false,
+          "medPlus": 2,
+          "high": 0,
+          "hits": []
+        }
       }
     },
     {
@@ -114,6 +143,34 @@
           "noisy": [
             "axiomancer-mobile/components/combat/encounter/__tests__/CombatBoard.region-arena.test.tsx"
           ]
+        }
+      },
+      "review": {
+        "stamp": {
+          "commit": "63d9f877",
+          "date": "2026-10-20T09:38:27-04:00"
+        },
+        "seed": {
+          "pr": 671,
+          "posted": true,
+          "seconds": 337,
+          "verdict": "not-pass",
+          "flagged": true,
+          "medPlus": 2,
+          "high": 2,
+          "hits": [
+            "axiomancer-mobile/components/combat/encounter/CombatBoard.tsx:1031"
+          ]
+        },
+        "control": {
+          "pr": 672,
+          "posted": true,
+          "seconds": 763,
+          "verdict": "pass",
+          "flagged": false,
+          "medPlus": 0,
+          "high": 0,
+          "hits": []
         }
       }
     },
@@ -185,6 +242,34 @@
             "axiomancer-mobile/components/combat/encounter/__tests__/CombatBoard.region-arena.test.tsx"
           ]
         }
+      },
+      "review": {
+        "stamp": {
+          "commit": "63d9f877",
+          "date": "2026-10-20T09:38:27-04:00"
+        },
+        "seed": {
+          "pr": 673,
+          "posted": true,
+          "seconds": 295,
+          "verdict": "not-pass",
+          "flagged": true,
+          "medPlus": 2,
+          "high": 2,
+          "hits": [
+            "axiomancer-mobile/components/combat/encounter/CombatBoard.tsx:362"
+          ]
+        },
+        "control": {
+          "pr": 674,
+          "posted": true,
+          "seconds": 513,
+          "verdict": "pass",
+          "flagged": false,
+          "medPlus": 2,
+          "high": 0,
+          "hits": []
+        }
       }
     },
     {
@@ -218,6 +303,36 @@
             "scripts/loop-pr.test.mjs"
           ],
           "noisy": []
+        }
+      },
+      "review": {
+        "stamp": {
+          "commit": "63d9f877",
+          "date": "2026-10-20T09:38:27-04:00"
+        },
+        "seed": {
+          "pr": 675,
+          "posted": true,
+          "seconds": 698,
+          "verdict": "not-pass",
+          "flagged": true,
+          "medPlus": 3,
+          "high": 1,
+          "hits": [
+            "scripts/pr-resolve.mjs:98",
+            "scripts/pr-resolve.mjs:110",
+            "scripts/pr-resolve.mjs:85"
+          ]
+        },
+        "control": {
+          "pr": 676,
+          "posted": true,
+          "seconds": 1633,
+          "verdict": "pass",
+          "flagged": false,
+          "medPlus": 0,
+          "high": 0,
+          "hits": []
         }
       }
     }
