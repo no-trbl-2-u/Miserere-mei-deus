@@ -5,6 +5,8 @@ import Svg, { Circle, Path } from 'react-native-svg';
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { ActionIcon } from '@/components/ActionIcon';
+import { AxmIcon } from '@/components/icons/AxmIcon';
+import { getItemGlyph, type ItemGlyphTable } from '@/components/icons/item-glyphs';
 import { TooltipTarget } from '@/components/tooltip/TooltipTarget';
 import { EquipDeltaPanel } from '@/components/inventory/EquipDeltaPanel';
 import { rarityAffordance, rarityColors } from '@/components/inventory/rarityAffordance';
@@ -28,8 +30,22 @@ export function groupByCategory(items: readonly InventoryItemRow[]): Record<Inve
     return out;
 }
 
-export function ItemGlyph({ category, sub }: { category: InventoryCategory; sub: string | null }) {
+export interface ItemGlyphProps {
+    category: InventoryCategory;
+    sub: string | null;
+    /** Engine item id. An id with an entry in the item glyph table draws that
+     *  icon; any other id (or none) draws the category glyph below. */
+    itemId?: string | null;
+    /** Test seam: the table to resolve against (defaults to `ITEM_GLYPH_BY_ID`). */
+    glyphs?: ItemGlyphTable;
+}
+
+export function ItemGlyph({ category, sub, itemId, glyphs }: ItemGlyphProps) {
     const AXM = usePalette();
+    const byId = getItemGlyph(itemId, glyphs);
+    if (byId !== null) {
+        return <AxmIcon name={byId} size={28} color={AXM.parchment} />;
+    }
     if (category === 'equipment' && sub === 'Weapon') {
         return <ActionIcon kind="sword" size={32} color={AXM.parchment} />;
     }
@@ -222,7 +238,7 @@ export function ItemCard({ item, expanded, onTap, onUseOrEquip, onDiscard }: Ite
                 testID={`item-${item.id}`}
             >
                 <View style={styles.itemIcon}>
-                    <ItemGlyph category={item.category} sub={item.sub} />
+                    <ItemGlyph category={item.category} sub={item.sub} itemId={item.id} />
                 </View>
                 <Text style={styles.itemName} numberOfLines={expanded ? undefined : 2}>
                     {item.name}

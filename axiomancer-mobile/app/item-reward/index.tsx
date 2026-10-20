@@ -92,7 +92,7 @@ export default function ItemRewardScreen() {
                 <View style={styles.card} testID="item-reward-card">
                     <View style={styles.columns}>
                         <View style={styles.artPlate} testID="item-reward-art">
-                            <ItemGlyph category="equipment" sub={vm.sub} />
+                            <ItemGlyph category="equipment" sub={vm.sub} itemId={vm.itemId} />
                         </View>
 
                         <View style={styles.factsCol}>

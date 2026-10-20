@@ -71,7 +71,7 @@ export function EquipmentSlot({
         >
             <View style={[styles.dockSlotGlyph, filled ? styles.dockSlotGlyphFilled : styles.dockSlotGlyphBare]}>
                 {filled && slot.item !== null ? (
-                    <ItemGlyph category="equipment" sub={slot.item.sub} />
+                    <ItemGlyph category="equipment" sub={slot.item.sub} itemId={slot.item.id} />
                 ) : (
                     <Text style={styles.dockSlotEmptyMark}>∅</Text>
                 )}
