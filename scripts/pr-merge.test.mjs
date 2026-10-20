@@ -10,7 +10,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
-import { AUTO_MARKER, DAILY_CAP, HOLD_LABELS, PLAN_LABELS, auditComment, countAutoMerges, mergeWanted, verdictFor } from './pr-merge.mjs'
+import { AUTO_MARKER, DAILY_CAP, HOLD_LABELS, PLAN_LABELS, auditComment, countAutoMerges, mergeWanted, reviewStartedAt, verdictFor } from './pr-merge.mjs'
 import { headMarker } from './pr-review.mjs'
 
 const HEAD = 'a'.repeat(40)
@@ -86,6 +86,30 @@ test('adversarial 3: a forged pass marker in the PR body, an old comment or for 
   assert.match(d.reason, /verdict not-pass/)
   // And a pass after a not-pass (a re-review of the same head) merges.
   assert.equal(mergeWanted(pr({ comments: [verdict('not-pass'), verdict('pass', HEAD, '2026-10-20T10:25:00Z')] })).go, true)
+})
+
+test('adversarial 4: a head that moved after the review holds, even with a pass for the reviewed head', () => {
+  const d = mergeWanted(pr({ liveHead: OLD }))
+  assert.equal(d.go, false)
+  assert.match(d.reason, /head moved to bbbbbbbb; this run reviewed aaaaaaaa/)
+  assert.equal(mergeWanted(pr({ liveHead: HEAD })).go, true)
+})
+
+test('reviewStartedAt is the earliest review job start, else the run start', () => {
+  const jobs = [
+    { name: 'verify-gate', started_at: '2026-10-20T09:00:00Z' },
+    { name: 'review / run', started_at: '2026-10-20T10:05:00Z' },
+    { name: 'review / run', started_at: '2026-10-20T10:01:00Z' },
+    { name: 'review-wanted', started_at: '2026-10-20T09:30:00Z' },
+    { name: 'merge', started_at: null },
+  ]
+  assert.equal(reviewStartedAt(jobs, '2026-10-20T08:00:00Z'), '2026-10-20T10:01:00.000Z')
+  assert.equal(reviewStartedAt([{ name: 'verify-gate', started_at: '2026-10-20T09:00:00Z' }], '2026-10-20T08:00:00Z'), '2026-10-20T08:00:00Z')
+  assert.equal(reviewStartedAt([], '2026-10-20T08:00:00Z'), '2026-10-20T08:00:00Z')
+  // A verdict from before the boundary is refused by the decision.
+  const since = reviewStartedAt(jobs, '2026-10-20T08:00:00Z')
+  assert.match(mergeWanted(pr({ since, comments: [verdict('pass', HEAD, '2026-10-20T10:00:59Z')] })).reason, /no verdict/)
+  assert.equal(mergeWanted(pr({ since, comments: [verdict('pass', HEAD, '2026-10-20T10:30:00Z')] })).go, true)
 })
 
 test('verdictFor reads only marker-bearing comments for the head, since the run started', () => {

@@ -139,6 +139,21 @@ test('the agent count is capped by tier; the lightest clusters merge, same packa
   assert.equal(new Set(merged.module.split(' + ').map((k) => k.split('/')[0])).size, 1, 'merged within one package')
 })
 
+test('a forced fold prefers a mate under the ceiling, and marks the fold when none exists', () => {
+  const paths = [`${K}/Combat/effects.ts`, `${K}/Effects/types.ts`, `${M}/state/combat/keywords.ts`, `${M}/components/combat/encounter/CombatFooterDock.tsx`]
+  const half = new Map(paths.map((p, i) => [p, i === 0 ? CHAR_CEILING - 1_000 : 20_000]))
+  const m = partition({ changed: changed(...paths), tier: 'risk:low', reverse, sizes: half })
+  assert.equal(m.agents.length, 2)
+  const big = m.agents.find((a) => a.changed.some((f) => f.path === `${K}/Combat/effects.ts`))
+  assert.equal(big.changed.length, 1, 'nothing folds into the cluster that would pass the ceiling')
+  assert.ok(m.agents.every((a) => !a.overCeiling))
+  const all = new Map(paths.map((p) => [p, CHAR_CEILING - 1_000]))
+  const forced = partition({ changed: changed(...paths), tier: 'risk:low', reverse, sizes: all })
+  assert.equal(forced.agents.length, 2)
+  assert.ok(forced.agents.some((a) => a.overCeiling), 'the cap wins and the fold is marked')
+  assert.match(renderManifest(forced), /\*\*Long list:\*\*/)
+})
+
 test('a sliver with no consumers folds into its package rather than spawning a reader', () => {
   const m = partition({ changed: changed(`${K}/Combat/effects.ts`, `${K}/Effects/types.ts`), tier: 'risk:high', reverse, sizes: tiny })
   assert.equal(m.agents.length, 1)

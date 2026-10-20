@@ -412,7 +412,8 @@ invocation — see §7 Hard Rule 12.
 1. **No `Co-Authored-By:` in commits.** Plain message bodies.
 2. **No emojis** anywhere in code, content, or commit messages.
 3. **No `--no-verify`, no force-push, no destructive resets.**
-   Never merge, close or enable auto-merge on a `loop:pr` PR (D86).
+   Never merge, close or enable auto-merge on a `loop:pr` PR (D86);
+   the `pr-review.yml` `merge` job alone merges, on a green review (D95).
 4. **Don't drag in stray working-tree changes.** `git status
    --short` first; stage explicitly.
 5. **Don't restart the user's dev servers.** They keep dev up;

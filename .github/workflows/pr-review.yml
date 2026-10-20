@@ -211,11 +211,7 @@ jobs:
           node-version: '22'
       - name: When this run's review started (a verdict older than this is not its verdict)
         id: since
-        run: |
-          started=$(gh api "repos/$GH_REPO/actions/runs/$GITHUB_RUN_ID/jobs" --jq '[.jobs[] | select(.name | startswith("review /")) | .started_at] | min // empty')
-          if [ -z "$started" ]; then started=$(gh api "repos/$GH_REPO/actions/runs/$GITHUB_RUN_ID" --jq '.run_started_at'); fi
-          echo "since=$started" >> "$GITHUB_OUTPUT"
-          echo "review started at $started"
+        run: node scripts/pr-merge.mjs since --run "$GITHUB_RUN_ID"
       - name: Decide (plan PR, holds, this run's verdict on this head, CLEAN, cap, kill switch)
         id: decide
         run: node scripts/pr-merge.mjs decide --pr "$PR" --head "$HEAD_SHA" --since "${{ steps.since.outputs.since }}"
@@ -226,4 +222,6 @@ jobs:
           gh pr merge "$PR" --repo "$GH_REPO" --auto --merge --match-head-commit "$HEAD_SHA"
       - name: Hold
         if: steps.decide.outputs.go != 'true'
-        run: echo "::notice::PR #$PR not merged: ${{ steps.decide.outputs.reason }}"
+        env:
+          REASON: ${{ steps.decide.outputs.reason }}
+        run: echo "::notice::PR #$PR not merged: $REASON"

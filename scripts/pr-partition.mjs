@@ -274,7 +274,7 @@ export function partition({ changed, tier, labels = [], reverse, sizes = new Map
     c.weight = c.changed.reduce((n, f) => n + (lines[f] ?? 0), 0) + c.consumers.length
   }
 
-  // 3. Merge the lightest clusters until the tier's cap holds (same package
+  // 3. Merge the smallest clusters (by characters) until the tier's cap holds (same package
   //    first), and fold a sliver (under MIN_CHARS, no consumers) into its
   //    package's next cluster: a reader for one small file is a wasted spawn.
   const pkg = (k) => k.split('/')[0]
@@ -287,9 +287,16 @@ export function partition({ changed, tier, labels = [], reverse, sizes = new Map
     clusters = clusters.filter((c) => c !== a)
   }
   while (clusters.length > max) {
-    clusters.sort((a, b) => a.weight - b.weight)
+    clusters.sort((a, b) => a.chars - b.chars || a.weight - b.weight)
     const a = clusters[0]
-    fold(a, clusters.slice(1).find((c) => pkg(c.key) === pkg(a.key)) ?? clusters[1])
+    const rest = clusters.slice(1)
+    const fits = (c) => c.chars + a.chars <= CHAR_CEILING
+    // The cap wins over the ceiling only when no mate under the ceiling
+    // exists; the fold is then marked so the reader is told its list is long.
+    const mate = rest.find((c) => pkg(c.key) === pkg(a.key) && fits(c)) ?? rest.find(fits)
+      ?? rest.find((c) => pkg(c.key) === pkg(a.key)) ?? rest[0]
+    if (!fits(mate)) mate.overCeiling = true
+    fold(a, mate)
   }
   for (;;) {
     clusters.sort((a, b) => a.weight - b.weight)
@@ -326,6 +333,7 @@ export function partition({ changed, tier, labels = [], reverse, sizes = new Map
       consumersOmitted: Math.max(0, c.consumers.length - kept.length),
       exclude: allSource.filter((f) => !c.changed.includes(f)),
       chars: c.chars + kept.reduce((n, k) => n + size(k.path), 0),
+      overCeiling: Boolean(c.overCeiling),
     }
   })
 
@@ -363,6 +371,7 @@ export function renderManifest(m) {
     `**Hunt first:** ${a.hunt}.`,
     a.alsoClasses.length ? `Then also: ${a.alsoClasses.map((c) => DEFECT_CLASSES[c].hunt).join('; ')}.` : '',
     '',
+    a.overCeiling ? `**Long list:** the tier's reader cap forced this fold past the ${CHAR_CEILING} character ceiling; read the diff hunks first, then each owned file at the changed regions.` : null,
     '**Owned changed files** (lines changed; ledger leaks = ledger PRs touching this file that needed a post-merge fix):',
     list(a.changed, (f) => {
       const notes = [f.lines != null ? `${f.lines} lines` : '', f.leaks ? `${f.leaks} ledger leak${f.leaks > 1 ? 's' : ''}` : ''].filter(Boolean)

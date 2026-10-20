@@ -14,12 +14,14 @@
 //
 //   node scripts/pr-merge.mjs decide --pr <n> --head <sha> --since <ISO>   # writes go, reason to $GITHUB_OUTPUT
 //   node scripts/pr-merge.mjs audit --pr <n> --head <sha> --run <id>        # prints the audit comment the job posts
+//   node scripts/pr-merge.mjs since --run <id>                               # writes since=<ISO> (this run's review start) to $GITHUB_OUTPUT
 //
 // Holds, each a tested line of `mergeWanted`:
 //   - the kill switch: repository variable PR_AUTO_MERGE=off, or the label `no-auto-merge`
 //   - a plan PR: label `plot` or `review:plan-only`, or a title that starts `plot:` or `plan:`
 //   - a PR that waits on T or the loop: `review:needs-T`, `loop:pr-stuck`, `eval:seed`, a draft, a fork
-//   - the head moved since the verdict, or the verdict is `not-pass`, or there is none for this run
+//   - the head moved since the review (the PR's live head is not the one this run was given), or
+//     the verdict is `not-pass`, or there is none for this run
 //   - GitHub says the PR is not mergeable (`mergeStateStatus` other than CLEAN)
 //   - the daily cap (`DAILY_CAP` merges by this job in 24 hours, counted by the `<!-- pr-merge:auto -->` marker)
 //
@@ -70,13 +72,31 @@ export function verdictFor(comments, head, since) {
 }
 
 /**
+ * When this run's review started: the earliest start of its `review /`
+ * jobs, or the run's own start when none is listed. A verdict posted
+ * before this is an earlier run's, never this one's.
+ *
+ * @param {{ name: string, started_at: string | null }[]} jobs the run's jobs, as the Actions API lists them.
+ * @param {string} runStartedAt the run's `run_started_at`.
+ * @returns {string} an ISO time.
+ * @example reviewStartedAt([{ name: 'review / run', started_at: '2026-10-20T10:00:00Z' }], '2026-10-20T09:00:00Z') // '2026-10-20T10:00:00Z'
+ */
+export function reviewStartedAt(jobs, runStartedAt) {
+  const starts = (jobs ?? [])
+    .filter((j) => /^review \//.test(j.name ?? '') && j.started_at && Number.isFinite(Date.parse(j.started_at)))
+    .map((j) => Date.parse(j.started_at))
+  return starts.length ? new Date(Math.min(...starts)).toISOString() : runStartedAt
+}
+
+/**
  * Whether to merge this PR now.
  *
- * @param {{ state: string, isDraft: boolean, isCrossRepository: boolean, labels: string[], title: string, head: string, mergeStateStatus: string, comments: { body: string, createdAt: string }[], since: string, killSwitch?: boolean, mergedToday?: number }} pr the PR's live facts.
+ * @param {{ state: string, isDraft: boolean, isCrossRepository: boolean, labels: string[], title: string, head: string, liveHead?: string, mergeStateStatus: string, comments: { body: string, createdAt: string }[], since: string, killSwitch?: boolean, mergedToday?: number }} pr the PR's live facts; `head` is the one this run reviewed, `liveHead` the PR's current one.
  * @returns {{ go: boolean, reason: string }} the decision and why.
  */
-export function mergeWanted({ state, isDraft, isCrossRepository, labels, title, head, mergeStateStatus, comments, since, killSwitch = false, mergedToday = 0 }) {
+export function mergeWanted({ state, isDraft, isCrossRepository, labels, title, head, liveHead = head, mergeStateStatus, comments, since, killSwitch = false, mergedToday = 0 }) {
   if (killSwitch) return { go: false, reason: 'kill switch: PR_AUTO_MERGE is off' }
+  if (liveHead !== head) return { go: false, reason: `head moved to ${liveHead.slice(0, 8)}; this run reviewed ${head.slice(0, 8)}` }
   if (labels.includes('no-auto-merge')) return { go: false, reason: 'label no-auto-merge' }
   if (isCrossRepository) return { go: false, reason: 'fork head: never merged by the job' }
   if (state !== 'OPEN') return { go: false, reason: `PR is ${state.toLowerCase()}` }
@@ -142,8 +162,17 @@ async function main() {
   const repo = process.env.GH_REPO || 'no-trbl-2-u/Miserere-mei-deus'
   const ok = /^\d+$/.test(pr ?? '') && /^[0-9a-f]{40}$/.test(head ?? '')
   if (mode === 'audit' && ok && arg('--run')) return console.log(auditComment({ pr, head, run: arg('--run') }))
+  if (mode === 'since' && /^\d+$/.test(arg('--run') ?? '')) {
+    const run = arg('--run')
+    const jobs = JSON.parse(gh(['api', `repos/${repo}/actions/runs/${run}/jobs`])).jobs ?? []
+    const runStartedAt = JSON.parse(gh(['api', `repos/${repo}/actions/runs/${run}`])).run_started_at
+    const at = reviewStartedAt(jobs, runStartedAt)
+    console.log(`pr-merge: review started at ${at}`)
+    if (process.env.GITHUB_OUTPUT) appendFileSync(process.env.GITHUB_OUTPUT, `since=${at}\n`)
+    return
+  }
   if (mode !== 'decide' || !ok || !since) {
-    console.error('usage: pr-merge.mjs decide --pr <n> --head <40-hex sha> --since <ISO> | audit --pr <n> --head <sha> --run <id>')
+    console.error('usage: pr-merge.mjs decide --pr <n> --head <40-hex sha> --since <ISO> | audit --pr <n> --head <sha> --run <id> | since --run <id>')
     process.exit(2)
   }
   const view = JSON.parse(gh(['pr', 'view', pr, '--repo', repo, '--json', 'state,isDraft,isCrossRepository,labels,title,headRefOid,mergeStateStatus,comments']))
@@ -155,14 +184,14 @@ async function main() {
     labels: view.labels.map((l) => l.name),
     title: view.title,
     head,
+    liveHead: view.headRefOid,
     mergeStateStatus: view.mergeStateStatus,
     comments: view.comments.map((c) => ({ body: c.body ?? '', createdAt: c.createdAt })),
     since,
     killSwitch: (process.env.PR_AUTO_MERGE ?? '').toLowerCase() === 'off',
     mergedToday: countAutoMerges(merged, new Date().toISOString()),
   }
-  let d = mergeWanted(facts)
-  if (!d.go && view.headRefOid !== head) d = { go: false, reason: `head moved to ${view.headRefOid.slice(0, 8)}; this run reviewed ${head.slice(0, 8)}` }
+  const d = mergeWanted(facts)
   console.log(`pr-merge #${pr}: ${d.go ? 'merge' : 'hold'} (${d.reason})`)
   if (process.env.GITHUB_OUTPUT) appendFileSync(process.env.GITHUB_OUTPUT, `go=${d.go}\nreason=${d.reason.replace(/\n/g, ' ')}\n`)
 }
