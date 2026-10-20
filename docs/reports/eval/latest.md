@@ -211,15 +211,22 @@ CI path filters: 0 of 4 caught; verify, tests as they stood: 0 of 4 caught; veri
 
 ## The shadow reviewer on planted defects (RV1c, A7)
 
-Not measured yet: `node scripts/eval/seeded-replay.mjs --judge review` has not run against the three-lens reviewer on `main`.
+Stamp: commit `63d9f877` (2026-10-20T09:38:27-04:00). Regenerate with `node scripts/eval/seeded-replay.mjs --judge review`; the data is the `review` block of each seed in `docs/reports/eval/seeded.json`.
 
 Each seed is pushed as a draft `eval:seed` PR whose diff reverts its fix's source (the planted defect), and its fix as a second draft (the clean control). `pr-review.yml` is dispatched on each; a seed counts as flagged when a MED or HIGH row of the verdict names a planted line (within 3 lines of a hunk). Both PRs are closed and their branches deleted when the run ends. Thresholds: `docs/reports/pr-review-research.md` Part 4.
 
 | Measure | Pass | Value | Verdict |
 |---|---|---|---|
-| Planted defects flagged MED+ (D1-D4) | >= 3 of 4 | not measured | not measured |
-| Findings per clean control PR (the unplanted fix) | <= 1 MED+, 0 HIGH | not measured | not measured |
-| Run time, p90 of the four | <= 20 min | not measured | not measured |
+| Planted defects flagged MED+ (D1-D4) | >= 3 of 4 | 4 of 4 | pass |
+| Findings per clean control PR (the unplanted fix) | <= 1 MED+, 0 HIGH | 2 of 4 within | fail |
+| Run time, p90 of the four | <= 20 min | 11.6 min | pass |
+
+| Seed | Planted PR | Named the planted line | Control PR |
+|---|---|---|---|
+| D1 | #669: not-pass, 4 MED+ (4 HIGH), 7.0 min | axiomancer-mobile/state/presenters/combat-encounter.engine.ts:152, axiomancer-mobile/state/presenters/card-program.engine.ts:90 | #670: pass, 2 MED+ (0 HIGH), 9.7 min |
+| D2 | #671: not-pass, 2 MED+ (2 HIGH), 5.6 min | axiomancer-mobile/components/combat/encounter/CombatBoard.tsx:1031 | #672: pass, 0 MED+ (0 HIGH), 12.7 min |
+| D3 | #673: not-pass, 2 MED+ (2 HIGH), 4.9 min | axiomancer-mobile/components/combat/encounter/CombatBoard.tsx:362 | #674: pass, 2 MED+ (0 HIGH), 8.6 min |
+| D4 | #675: not-pass, 3 MED+ (1 HIGH), 11.6 min | scripts/pr-resolve.mjs:98, scripts/pr-resolve.mjs:110, scripts/pr-resolve.mjs:85 | #676: pass, 0 MED+ (0 HIGH), 27.2 min |
 
 <!-- eval:seeded-review:end -->
 

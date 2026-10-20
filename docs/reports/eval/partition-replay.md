@@ -83,13 +83,39 @@ and then fill this table from `docs/reports/eval/seeded.json` (the
 `review` block per seed) and the `pr-review:readers` markers of the
 verdicts it produced:
 
-| Measure | Three-lens (RV1c) | Partitioned (RV3) | Control adversary alone | Pass |
+| Measure | Three-lens (RV1c) | Partitioned (RV3), run 2026-10-20 | Control adversary alone | Pass |
 |---|---|---|---|---|
-| Planted defects flagged MED+ (D1 to D4) | not run | | | RV3 >= RV1c, and >= 3 of 4 (Part 4 of the research report) |
-| Findings per clean control PR | not run | | | <= 1 MED+, 0 HIGH |
-| Overlap rows per verdict (two or more tags) | 1 in 45 rows | | n/a | <= baseline rate |
-| Readers that did not finish | 0 recorded | | | <= 1 per run |
-| Run time, p90 | 9m28s on #665 (three lenses) | | | <= 20 min |
+| Planted defects flagged HIGH on the planted line (D1 to D4) | not run | **4 of 4** | 3 of 4 (D2, D3, D4; not D1) | RV3 >= RV1c, and >= 3 of 4: **pass** |
+| Findings per clean control PR (MED+, HIGH) | not run | D1 2/0, D2 0/0, D3 2/0, D4 0/0 | D3's 2 MEDs and D4's 1 LOW are the control's | <= 1 MED+, 0 HIGH: **fail on D1 and D3** (2 MEDs each, 0 HIGH) |
+| Overlap rows (two or more tags) per seeded verdict | 1 in 45 rows (baseline) | 6 of 11 rows; every one pairs an assignment reader with the control | n/a | <= baseline rate: **fail as written**, but see below |
+| Readers that did not finish | 0 recorded | 0 of 40 | 0 | <= 1 per run: pass |
+| Run time, seeded drafts (s) | 9m28s on #665 | 295, 337, 417, 698; p90 under 12 min | | <= 20 min: pass |
+| Run time, control drafts (s) | | 513, 582, 763, 1633 (D4's control, 27 min) | | <= 20 min: **fail on D4's control** |
+
+Read: the partition found every planted defect, each as a HIGH on the
+planted line, with the Tests lens contributing on D4 only. The control
+adversary alone found three of the four; it missed D1 (`riderPairs`),
+the presenter-logic class that the rules-logic hunt names first. So the
+measured gain of the partition over one strong reader is one defect in
+four, the one the ledger's leakiest module leaks.
+
+The overlap number needs a correction before it means anything: the
+control adversary reads the whole diff by design, so every row it shares
+with an assignment reader is the control confirming the partition, not
+two partitioned readers duplicating each other. Counting only rows
+shared between two assignment readers, overlap is 0 of 11. The marker
+should count that way; a follow-up changes Step 3c to exclude the
+control from the overlap count.
+
+False positives: two controls drew 2 MEDs each. D1's control (the real
+fix of #534) and D3's (the fix of #529) were each told MED twice by the
+assignment readers; those are above the "<= 1 MED+" bar the research
+report set for a clean PR, and MEDs never block a merge, so the cost is
+noise in the verdict, not a wrong hold.
+
+The 27-minute control D4 was a dispatched run that queued behind six
+others on the same minute; the reviewer's own job time was under 12
+minutes on every seeded draft.
 
 The three-lens column can be measured too: dispatch the same seeds
 from a branch that restores the RV1c skill, or read the column as "not
