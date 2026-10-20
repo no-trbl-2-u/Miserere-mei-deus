@@ -280,8 +280,9 @@ gh pr checks "loop/<verb>-<slug>" --repo "$GH_REPO" --watch --fail-fast
   findings, one `## Review verdict` comment, and a `risk:*` raise with
   a reason. On a `pass` the `merge` job merges a non-plan PR (D95); a
   `not-pass`, a plan PR or a hold label leaves it to T.
-- **Never** enable auto-merge, merge the PR, close it, or force-push
-  its branch. T merges (D86).
+- **Never** merge the PR, close it, or force-push its branch yourself
+  (D86): the `merge` job merges it on a green review, T merges the rest
+  (D95).
 - **Check the cap and claims before cutting the branch.**
 - Attended sessions with T may still push `main` at T's word.
 

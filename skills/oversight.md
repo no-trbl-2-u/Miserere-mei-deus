@@ -89,7 +89,8 @@ In parallel where independent:
       pr-review.yml --json conclusion,createdAt`, counting runs whose
       `review` job ran), and how many verdicts were `not-pass`. It is
       the cost check on phase RV1b: one Claude run per reviewed head,
-      with up to 2 / 4 / 7 Sonnet assignment readers by tier plus the
+      with up to 2 / 3 / 6 assignments by tier, each read by two Sonnet
+      readers (logic, seams), plus the
       Tests lens and, on `risk:medium` and `risk:high`, a control
       adversary (RV3; the manifest is `scripts/pr-partition.mjs`).
     - **Intake used.** `git log --since=<date> --grep='^phases: plot'` and
