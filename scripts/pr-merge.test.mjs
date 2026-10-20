@@ -10,7 +10,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
-import { AUTO_MARKER, DAILY_CAP, HOLD_LABELS, PLAN_LABELS, TRUSTED_AUTHORS, auditComment, countAutoMerges, mergeWanted, reviewStartedAt, verdictFor } from './pr-merge.mjs'
+import { AUTO_MARKER, DAILY_CAP, HOLD_LABELS, PLAN_LABELS, TRUSTED_AUTHORS, auditComment, countAutoMerges, mergeWanted, reviewStartedAt, verdictFor, verifyGateGreen } from './pr-merge.mjs'
 import { headMarker } from './pr-review.mjs'
 
 const HEAD = 'a'.repeat(40)
@@ -21,9 +21,25 @@ const verdict = (v, sha = HEAD, createdAt = '2026-10-20T10:20:00Z', author = 'no
   createdAt,
   author,
 })
+const GREEN = [{ name: 'verify-gate', conclusion: 'success', headSha: HEAD }]
 const pr = (extra = {}) => ({
   state: 'OPEN', isDraft: false, isCrossRepository: false, labels: ['loop:pr', 'size:M', 'risk:high'], title: 'feat: a thing',
-  head: HEAD, mergeStateStatus: 'CLEAN', comments: [verdict('pass')], since: SINCE, ...extra,
+  head: HEAD, mergeStateStatus: 'CLEAN', checks: GREEN, comments: [verdict('pass')], since: SINCE, ...extra,
+})
+
+test('adversarial 0: the job needs a green verify-gate on the head itself, not only the ruleset', () => {
+  assert.equal(verifyGateGreen(GREEN, HEAD), true)
+  assert.equal(verifyGateGreen([], HEAD), false, 'no run, no merge')
+  assert.equal(verifyGateGreen([{ name: 'verify-gate', conclusion: 'failure', headSha: HEAD }], HEAD), false)
+  assert.equal(verifyGateGreen([{ name: 'verify-gate', conclusion: null, headSha: HEAD }], HEAD), false, 'still running')
+  assert.equal(verifyGateGreen([{ name: 'verify-gate', conclusion: 'success', headSha: OLD }], HEAD), false, 'green on another head')
+  assert.equal(verifyGateGreen([{ name: 'verify-gate', conclusion: 'failure', headSha: HEAD }, { name: 'verify-gate', conclusion: 'success', headSha: HEAD }], HEAD), true, 'the latest run decides')
+  assert.equal(verifyGateGreen([{ name: 'verify-gate', conclusion: 'success', headSha: HEAD }, { name: 'verify-gate', conclusion: 'failure', headSha: HEAD }], HEAD), false)
+  assert.equal(verifyGateGreen([{ name: 'review / run', conclusion: 'success', headSha: HEAD }], HEAD), false, 'another check is not the gate')
+  const d = mergeWanted(pr({ checks: [] }))
+  assert.equal(d.go, false)
+  assert.match(d.reason, /verify-gate is not green/)
+  assert.match(mergeWanted(pr({ checks: [{ name: 'verify-gate', conclusion: 'failure', headSha: HEAD }] })).reason, /verify-gate is not green/)
 })
 
 test('a reviewed, green, non-plan PR merges, whatever its tier', () => {

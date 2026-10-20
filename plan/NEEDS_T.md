@@ -23,3 +23,5 @@
 
 ## Open
 
+- **ruleset-bypass-for-t** · run `gh api -X PUT repos/no-trbl-2-u/Miserere-mei-deus/rulesets/25469169 --input -` with `{ "bypass_actors": [{ "actor_id": 5, "actor_type": "RepositoryRole", "bypass_mode": "always" }] }` (the command is in `.github/workflows/README.md`, "The `verify-gate` ruleset") · blocks: every direct push to `main` on T's token (plan-only ticks, telemetry rows, `fix-ci`) while the ruleset has no bypass; the merge job carries its own `verify-gate` check and is not blocked · workaround: none; a refused push is a red tick until this is done · seen 1× · last 2026-10-20
+

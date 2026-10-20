@@ -78,13 +78,17 @@ if a workflow ever fires `/plot` or `/messy`.
 ## The `verify-gate` ruleset (active since D95, 2026-10-20)
 
 The ruleset requires `verify-gate` on `main` (phase RV1a, A4) and is
-**active with no bypass actors**: the merge job runs on T's token, so a
-bypass for T would be a bypass for the job, and every merge-gate miss in
-the escape ledger was a hand merge before a check finished. T can still
-edit the ruleset as admin when `verify-gate` itself is broken.
-`integration_id` 15368 is GitHub Actions, so only the workflow's own
-check satisfies it. `allow_auto_merge` is on (the job's
-`gh pr merge --auto` needs it).
+**active, with T (admin) on the bypass list**. A required status check
+binds every update of `main`, direct pushes included, and the loop
+pushes plan-only, telemetry and `fix-ci` commits straight to `main`
+with no PR to earn `verify-gate` on; without the bypass those pushes
+are refused. So the ruleset binds the Actions identity and any other
+actor, while the merge job, which runs on T's token, carries its own
+gate: `scripts/pr-merge.mjs decide` refuses to merge unless the head's
+own `verify-gate` check run concluded `success` (read from the commit's
+check runs, never from a comment). `integration_id` 15368 is GitHub
+Actions, so only the workflow's own check satisfies the ruleset.
+`allow_auto_merge` is on (the job's `gh pr merge --auto` needs it).
 
 ```bash
 gh api -X POST repos/no-trbl-2-u/Miserere-mei-deus/rulesets --input - <<'EOF'
@@ -102,14 +106,19 @@ gh api -X POST repos/no-trbl-2-u/Miserere-mei-deus/rulesets --input - <<'EOF'
       }
     }
   ],
-  "bypass_actors": []
+  "bypass_actors": [{ "actor_id": 5, "actor_type": "RepositoryRole", "bypass_mode": "always" }]
 }
 EOF
 gh api -X PATCH repos/no-trbl-2-u/Miserere-mei-deus -F allow_auto_merge=true
 ```
 
 Check it with `gh api repos/no-trbl-2-u/Miserere-mei-deus/rulesets`. The
-merge job's kill switch is a repository variable:
+ruleset created on 2026-10-20 (id 25469169) went up with no bypass
+actors; putting T on the list is one call
+(`gh api -X PUT repos/no-trbl-2-u/Miserere-mei-deus/rulesets/25469169 --input -`
+with the `bypass_actors` line above), and it is T's row in
+`plan/NEEDS_T.md` until done. The merge job's kill switch is a
+repository variable:
 `gh variable set PR_AUTO_MERGE --body off` stops every auto-merge until
 it is deleted or set to anything else; the label `no-auto-merge` holds
 one PR.

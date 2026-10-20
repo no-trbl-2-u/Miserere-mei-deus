@@ -111,10 +111,15 @@ carry the ruleset's refusal.
 ## 5. What was done on the repository (T's ratified decision, 2026-10-20)
 
 - `allow_auto_merge` turned on.
-- Ruleset `main requires verify-gate` created, **active, no bypass
-  actors** (id 25469169). Every merge to `main`, T's included, now
-  needs a green `verify-gate` on the head; T edits the ruleset as admin
-  if the gate itself breaks.
+- Ruleset `main requires verify-gate` created, active (id 25469169).
+  It went up with no bypass actors; the fourth review of #666 pointed
+  out that a required check with no bypass also refuses the loop's
+  direct pushes to `main` (plan-only, telemetry, `fix-ci`), which have
+  no PR to earn the check on. Putting T back on the bypass list is a
+  repository-settings call this session was not allowed to make; it is
+  T's row in `plan/NEEDS_T.md`. Until then every push to `main` from
+  the loop will be refused. The merge job does not depend on the
+  ruleset: it reads the head's `verify-gate` check run itself.
 - Label `no-auto-merge` present (holds one PR); the repository variable
   `PR_AUTO_MERGE=off` holds all of them.
 - `plan/NEEDS_T.md` rows `verify-gate-ruleset` and `pr-review-stage-2`

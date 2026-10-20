@@ -180,6 +180,7 @@ test('the one gh pr merge is --auto, in the merge job, gated on the scripted dec
   assert.ok(mj, 'merge job present')
   assert.match(mj, /- uses: actions\/checkout@v4\n\s+with:\n\s+ref: main\n\s+sparse-checkout: scripts/, 'the merge job runs main\'s scripts, never the PR\'s')
   assert.match(mj, /^ {6}actions: read$/m)
+  assert.match(mj, /^ {6}checks: read$/m, 'the decision reads the head check runs')
   assert.match(mj, /^ {4}needs: \[review-wanted, review\]$/m)
   assert.match(mj, /needs\.review\.result == 'success'/)
   assert.match(mj, /node scripts\/pr-merge\.mjs decide --pr "\$PR" --head "\$HEAD_SHA" --since "\$\{\{ steps\.since\.outputs\.since \}\}"/)
@@ -199,7 +200,7 @@ test('the merge decision refuses plans, holds, forged markers and a non-CLEAN PR
   const { headMarker } = await import('./pr-review.mjs')
   const head = 'a'.repeat(40)
   const pass = { body: `<!-- pr-review:verdict pass -->\n${headMarker(head)}`, createdAt: '2026-10-20T01:00:00Z', author: 'no-trbl-2-u' }
-  const base = { state: 'OPEN', isDraft: false, isCrossRepository: false, labels: [], title: 't', head, mergeStateStatus: 'CLEAN', comments: [pass], since: '2026-10-20T00:00:00Z' }
+  const base = { state: 'OPEN', isDraft: false, isCrossRepository: false, labels: [], title: 't', head, mergeStateStatus: 'CLEAN', checks: [{ name: 'verify-gate', conclusion: 'success', headSha: head }], comments: [pass], since: '2026-10-20T00:00:00Z' }
   assert.equal(mergeWanted(base).go, true, 'the clean case merges')
   assert.equal(mergeWanted({ ...base, comments: [] }).go, false, 'no verdict, no merge')
   for (const l of PLAN_LABELS) assert.match(mergeWanted({ ...base, labels: [l] }).reason, /plan PR/, l)
@@ -209,6 +210,7 @@ test('the merge decision refuses plans, holds, forged markers and a non-CLEAN PR
   assert.match(mergeWanted({ ...base, comments: [{ ...pass, createdAt: '2026-10-19T23:00:00Z' }] }).reason, /no verdict/, 'a marker from before this run')
   assert.match(mergeWanted({ ...base, comments: [{ ...pass, body: pass.body.replace(head, 'b'.repeat(40)) }] }).reason, /no verdict/, 'a marker for another head')
   assert.match(mergeWanted({ ...base, mergeStateStatus: 'BLOCKED' }).reason, /BLOCKED/)
+  assert.match(mergeWanted({ ...base, checks: [] }).reason, /verify-gate is not green/, 'no gate run on the head')
   assert.match(mergeWanted({ ...base, liveHead: 'b'.repeat(40) }).reason, /head moved/)
   assert.match(mergeWanted({ ...base, killSwitch: true }).reason, /kill switch/)
 })

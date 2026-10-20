@@ -23,6 +23,8 @@
 //   - a verdict comment from any account but the reviewer's (`TRUSTED_AUTHORS`): the repo is public
 //   - the head moved since the review (the PR's live head is not the one this run was given), or
 //     the verdict is `not-pass`, or there is none for this run
+//   - `verify-gate` is not green on the head (the head's check runs; the job's own gate, since T is
+//     on the ruleset's bypass list and the job merges on T's token)
 //   - GitHub says the PR is not mergeable (`mergeStateStatus` other than CLEAN)
 //   - the daily cap (`DAILY_CAP` merges by this job in 24 hours, counted by the `<!-- pr-merge:auto -->` marker)
 //
@@ -102,12 +104,27 @@ export function reviewStartedAt(jobs, runStartedAt) {
 }
 
 /**
+ * Whether `verify-gate` is green on the head, from the commit's check runs:
+ * the job's own gate, so the merge never rests on the ruleset alone (T is
+ * on the ruleset's bypass list, and the job merges on T's token).
+ *
+ * @param {{ name: string, conclusion: string | null, headSha?: string }[]} checks the head's check runs.
+ * @param {string} head the full head SHA.
+ * @returns {boolean} true when the latest `verify-gate` run on this head concluded `success`.
+ * @example verifyGateGreen([{ name: 'verify-gate', conclusion: 'success' }], 'abc') // true
+ */
+export function verifyGateGreen(checks, head) {
+  const gates = (checks ?? []).filter((c) => c.name === 'verify-gate' && (c.headSha == null || c.headSha === head))
+  return gates.length > 0 && gates.at(-1).conclusion === 'success'
+}
+
+/**
  * Whether to merge this PR now.
  *
  * @param {{ state: string, isDraft: boolean, isCrossRepository: boolean, labels: string[], title: string, head: string, liveHead?: string, mergeStateStatus: string, comments: { body: string, createdAt: string }[], since: string, killSwitch?: boolean, mergedToday?: number }} pr the PR's live facts; `head` is the one this run reviewed, `liveHead` the PR's current one.
  * @returns {{ go: boolean, reason: string }} the decision and why.
  */
-export function mergeWanted({ state, isDraft, isCrossRepository, labels, title, head, liveHead = head, mergeStateStatus, comments, since, killSwitch = false, mergedToday = 0, trusted = TRUSTED_AUTHORS }) {
+export function mergeWanted({ state, isDraft, isCrossRepository, labels, title, head, liveHead = head, mergeStateStatus, checks = [], comments, since, killSwitch = false, mergedToday = 0, trusted = TRUSTED_AUTHORS }) {
   if (killSwitch) return { go: false, reason: 'kill switch: PR_AUTO_MERGE is off' }
   if (liveHead !== head) return { go: false, reason: `head moved to ${liveHead.slice(0, 8)}; this run reviewed ${head.slice(0, 8)}` }
   if (labels.includes('no-auto-merge')) return { go: false, reason: 'label no-auto-merge' }
@@ -121,6 +138,7 @@ export function mergeWanted({ state, isDraft, isCrossRepository, labels, title, 
   const verdict = verdictFor(comments, head, since, trusted)
   if (!verdict) return { go: false, reason: `no verdict for head ${head.slice(0, 8)} posted since ${since} by a trusted account` }
   if (verdict !== 'pass') return { go: false, reason: `verdict ${verdict} on head ${head.slice(0, 8)}` }
+  if (!verifyGateGreen(checks, head)) return { go: false, reason: `verify-gate is not green on head ${head.slice(0, 8)}` }
   if (mergeStateStatus !== 'CLEAN') return { go: false, reason: `mergeStateStatus ${mergeStateStatus}: GitHub does not call it mergeable` }
   if (mergedToday >= DAILY_CAP) return { go: false, reason: `daily cap: ${mergedToday} auto-merges in 24h` }
   return { go: true, reason: `verdict pass on head ${head.slice(0, 8)}, ${mergeStateStatus}, ${mergedToday} of ${DAILY_CAP} today` }
@@ -190,6 +208,10 @@ async function main() {
   }
   const view = JSON.parse(gh(['pr', 'view', pr, '--repo', repo, '--json', 'state,isDraft,isCrossRepository,labels,title,headRefOid,mergeStateStatus,comments']))
   const merged = JSON.parse(gh(['pr', 'list', '--repo', repo, '--state', 'merged', '--limit', '50', '--json', 'mergedAt,comments']))
+  const checkRuns = JSON.parse(gh(['api', `repos/${repo}/commits/${head}/check-runs?per_page=100`])).check_runs ?? []
+  const checks = checkRuns
+    .sort((a, b) => Date.parse(a.started_at ?? 0) - Date.parse(b.started_at ?? 0))
+    .map((c) => ({ name: c.name, conclusion: c.conclusion, headSha: c.head_sha }))
   const facts = {
     state: view.state,
     isDraft: view.isDraft,
@@ -199,6 +221,7 @@ async function main() {
     head,
     liveHead: view.headRefOid,
     mergeStateStatus: view.mergeStateStatus,
+    checks,
     comments: view.comments.map((c) => ({ body: c.body ?? '', createdAt: c.createdAt, author: c.author?.login ?? '' })),
     since,
     killSwitch: (process.env.PR_AUTO_MERGE ?? '').toLowerCase() === 'off',

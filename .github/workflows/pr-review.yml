@@ -192,6 +192,7 @@ jobs:
       contents: write
       pull-requests: write
       actions: read
+      checks: read
     concurrency:
       group: pr-merge-${{ needs.review-wanted.outputs.pr }}
       cancel-in-progress: false
