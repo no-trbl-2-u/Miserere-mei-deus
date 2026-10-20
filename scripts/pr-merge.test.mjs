@@ -73,11 +73,19 @@ test('holds: needs-T, stuck, eval seeds, no-auto-merge, drafts, forks, closed', 
 // --- the adversarial cases ---------------------------------------------------
 
 test('adversarial 1: a red required check (GitHub BLOCKED) holds even on a pass verdict', () => {
-  for (const s of ['BLOCKED', 'BEHIND', 'DIRTY', 'UNSTABLE', 'UNKNOWN', 'HAS_HOOKS']) {
+  for (const s of ['BLOCKED', 'BEHIND', 'DIRTY', 'UNKNOWN', 'HAS_HOOKS']) {
     const d = mergeWanted(pr({ mergeStateStatus: s }))
     assert.equal(d.go, false, s)
     assert.match(d.reason, new RegExp(`mergeStateStatus ${s}`))
   }
+})
+
+test('UNSTABLE merges when verify-gate is green on the head: only verify-gate is required', () => {
+  const d = mergeWanted(pr({ mergeStateStatus: 'UNSTABLE' }))
+  assert.equal(d.go, true, d.reason)
+  const red = mergeWanted(pr({ mergeStateStatus: 'UNSTABLE', checks: [{ name: 'verify-gate', conclusion: 'failure', headSha: HEAD }] }))
+  assert.equal(red.go, false)
+  assert.match(red.reason, /verify-gate is not green/)
 })
 
 test('adversarial 2: the kill switch holds before anything else is read', () => {
