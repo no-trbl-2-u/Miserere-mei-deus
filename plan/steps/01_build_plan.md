@@ -171,6 +171,20 @@ event-pool and layout files).
 - [x] (#628) Phase HP1a — No bin, an honest count, the card report, demos back in band (plotted by T, 2026-10-18): puzzle sessions have no discard; a winning outcome counts only cards that change the result; `hazardPuzzleCardReport` and `npm run puzzle:report`; demos re-authored into band. Brief `plan/phases/phase_HP1_hazard_cost_utility.md` § HP1a. Requires nothing.
 - [x] (#631) Phase HP1b — The puzzle board loses its bin (plotted by T, 2026-10-18): `/devpuzzle` shows no bin; the live `/hazard` board keeps it. Brief `plan/phases/phase_HP1_hazard_cost_utility.md` § HP1b. Requires HP1a, B3e2.
 - [x] (#637) Phase HP3a — The puzzle rolls and draws like a live hazard (plotted by T, 2026-10-19): the dice roll in on the layout's faces and the clock starts after; drawn cards slide in from the reserve; nothing random. Brief `plan/phases/phase_HP3_puzzle_randomness_illusion.md` § HP3a. Requires nothing.
+- [ ] Phase IT1a — Item glyphs resolve by item id (plotted by T, 2026-10-19): `ItemGlyph` keys on
+      category alone, so all three healing potions draw one identical flask and both relics draw one
+      identical trinket. An id-keyed resolver in the `getCardArt` shape, with **today's** category glyph
+      as the fallback, so an empty table changes no pixel and the phase ships green; the table's values
+      are typed `AxmIconName`, making a bad entry a compile error rather than the silent `null`
+      `ActionIcon` returns. No art (D88). Brief
+      `plan/phases/phase_IT1_item_glyph_resolver.md` § IT1a. Requires nothing.
+- [blocked: owner-led — art is owner-only (D88)] Phase IT1b — T's icon picks, and the inline glyphs
+      die: T picks from the 2026-10-19 candidate sheet (23 candidates over 7 slots, rendered at the 28px
+      `ItemGlyph` draws); then the rest is mechanical — add the chosen icons to
+      `extract-game-icons.mjs`'s manifest, regenerate `game-icon-paths.ts`, fill IT1a's table, and
+      delete the one-off inline `<Svg>` blocks in `ItemCard.tsx` and `ItemGrid.tsx` the picks make dead
+      (`icon-registry.ts` forbids them). Brief
+      `plan/phases/phase_IT1_item_glyph_resolver.md` § IT1b. Requires IT1a.
 - [ ] Phase HP4a — Decision pressure in the report (plotted by T, 2026-10-19): `puzzle:report` prints, per route and
       unlock set, the optional-card count, the required share and how many distinct first plays can still win or
       can no longer win; a route where every card is required prints `forced` and one where every first play wins
@@ -206,7 +220,7 @@ event-pool and layout files).
       or a content-free force-push stops buying a second full review, while a conflict resolution still
       reviews because it changes that diff. A missing digest falls back to the SHA rule. Brief
       `plan/phases/phase_RV2_review_skips_unchanged_diff.md`. Requires nothing.
-- [ ] Phase TP1a — Title plate legibility gate (plotted by T, 2026-10-19): a check that measures the wordmark's
+- [x] (#655) Phase TP1a — Title plate legibility gate (plotted by T, 2026-10-19): a check that measures the wordmark's
       and the psalm line's contrast against the plate region behind them — through the `axmTitleFoot` and
       `axmTitleSides` scrims and at `MENU_PLATE_OPACITY` — from `titleLayout` and `titleWordmarkFrames`, not
       copied geometry. Baseline-and-arm: the installed plate's figures are recorded and the gate fails only for a
@@ -1425,6 +1439,7 @@ See the status rows above; generate briefs on demand.
 - **2026-10-19** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-RV2-review-skip-unchanged-diff`). Action: **added Phase RV2** directly above TP1a. Reason: T asked whether the PR reviewer could skip a head that only carried a merge-conflict fix; it dedupes per head SHA, so every merge of `main` buys a second full Claude review of an unchanged diff. Brief `plan/phases/phase_RV2_review_skips_unchanged_diff.md`.
 - **2026-10-19** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-TP1-title-plate-legibility`, PR #644, merged). Action: **added Phases TP1a and TP1b** — **entry filed late**, in the RV2 commit rather than TP1's own, which breaks this log's same-commit rule; recorded here rather than left missing. Reason: T liked the shipped title launch sequence read against a dark placeholder plate, so TP1a gates the plate's legibility by measurement and TP1b is the owner-led plate pick (D88).
 - **2026-10-19** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-VE1-visual-e2e`). Action: **added Phases VE1a, VE1b, VE1c, VE1d** (the visual e2e suite measured as signal per minute: one stamped web export for every script, a ready signal and a determinism check, a report-only CI step that commits each visual change's CI-rendered captures to the PR for T to approve from the image diff, routes selected from the diff) above the first open row. Confirmed T's request: yes (T's prompt and four AskUserQuestion calls: no Windows restamp once fresh baselines proved 1.5-4.5% renderer noise here, CI as renderer of record; report-only with the screenshots added to the PR; telemetry plus the CI step summary as the record; route selection as its own phase). Reason: asap because `verify:visual` is red on `main` today (11 of 13 routes, baselines up to 52 days stale, 0 CI runs) so every mobile `loop:pr` PR ships its pixels unseen. Resulting commit: this one; brief `plan/phases/phase_VE1_visual_e2e_signal.md`.
+- **2026-10-19** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-IT1-item-glyph-resolver`). Action: **added Phases IT1a and IT1b** directly above RV2. Reason: an item-art survey for T found that `ItemGlyph` keys on category, not item id, so the three healing potions and the two relics each draw one shared glyph — the same defect class as the card registry mapping only three ids. IT1a is the resolver with today's glyph as the fallback (ships changing no pixel); IT1b is T's icon picks and the death of the inline one-off `<Svg>` glyphs, owner-led under D88. Brief `plan/phases/phase_IT1_item_glyph_resolver.md`.
 >
 ## Phase log (commit hashes)
 
