@@ -196,8 +196,21 @@ test('the merge decision refuses plans, holds, forged markers and a non-CLEAN PR
   const { PLAN_LABELS, HOLD_LABELS, mergeWanted } = await import('./pr-merge.mjs')
   assert.deepEqual([...PLAN_LABELS], ['plot', 'review:plan-only'])
   assert.ok(HOLD_LABELS.includes('review:needs-T') && HOLD_LABELS.includes('no-auto-merge'))
-  const base = { state: 'OPEN', isDraft: false, isCrossRepository: false, labels: [], title: 't', head: 'a'.repeat(40), mergeStateStatus: 'CLEAN', comments: [], since: '2026-10-20T00:00:00Z' }
-  assert.equal(mergeWanted(base).go, false, 'no verdict, no merge')
+  const { headMarker } = await import('./pr-review.mjs')
+  const head = 'a'.repeat(40)
+  const pass = { body: `<!-- pr-review:verdict pass -->\n${headMarker(head)}`, createdAt: '2026-10-20T01:00:00Z', author: 'no-trbl-2-u' }
+  const base = { state: 'OPEN', isDraft: false, isCrossRepository: false, labels: [], title: 't', head, mergeStateStatus: 'CLEAN', comments: [pass], since: '2026-10-20T00:00:00Z' }
+  assert.equal(mergeWanted(base).go, true, 'the clean case merges')
+  assert.equal(mergeWanted({ ...base, comments: [] }).go, false, 'no verdict, no merge')
+  for (const l of PLAN_LABELS) assert.match(mergeWanted({ ...base, labels: [l] }).reason, /plan PR/, l)
+  assert.match(mergeWanted({ ...base, title: 'plot: x' }).reason, /plan PR/)
+  for (const l of HOLD_LABELS) assert.match(mergeWanted({ ...base, labels: [l] }).reason, new RegExp(l.replace(/[-:]/g, '.')), l)
+  assert.match(mergeWanted({ ...base, comments: [{ ...pass, author: 'stranger' }] }).reason, /trusted account/, 'a forged marker from another account')
+  assert.match(mergeWanted({ ...base, comments: [{ ...pass, createdAt: '2026-10-19T23:00:00Z' }] }).reason, /no verdict/, 'a marker from before this run')
+  assert.match(mergeWanted({ ...base, comments: [{ ...pass, body: pass.body.replace(head, 'b'.repeat(40)) }] }).reason, /no verdict/, 'a marker for another head')
+  assert.match(mergeWanted({ ...base, mergeStateStatus: 'BLOCKED' }).reason, /BLOCKED/)
+  assert.match(mergeWanted({ ...base, liveHead: 'b'.repeat(40) }).reason, /head moved/)
+  assert.match(mergeWanted({ ...base, killSwitch: true }).reason, /kill switch/)
 })
 
 // --- pr-review.yml: the shadow reviewer (phase RV1b, A5) ------------------------

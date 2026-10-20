@@ -20,6 +20,7 @@
 //   - the kill switch: repository variable PR_AUTO_MERGE=off, or the label `no-auto-merge`
 //   - a plan PR: label `plot` or `review:plan-only`, or a title that starts `plot:` or `plan:`
 //   - a PR that waits on T or the loop: `review:needs-T`, `loop:pr-stuck`, `eval:seed`, a draft, a fork
+//   - a verdict comment from any account but the reviewer's (`TRUSTED_AUTHORS`): the repo is public
 //   - the head moved since the review (the PR's live head is not the one this run was given), or
 //     the verdict is `not-pass`, or there is none for this run
 //   - GitHub says the PR is not mergeable (`mergeStateStatus` other than CLEAN)
@@ -48,6 +49,15 @@ export const HOLD_LABELS = Object.freeze(['review:needs-T', 'loop:pr-stuck', 'ev
 /** Merges by this job in any 24-hour window; the rest wait for T. */
 export const DAILY_CAP = 12
 
+/**
+ * Accounts whose verdict comments the job trusts: the repository owner
+ * (the reviewer posts with GH_PAT, T's token) and the Actions identities
+ * it falls back to. The repo is public, so any other account can post the
+ * exact markers; those are never read. Override with TRUSTED_VERDICT_AUTHORS
+ * (comma-separated) when the token changes hands.
+ */
+export const TRUSTED_AUTHORS = Object.freeze(['no-trbl-2-u', 'claude[bot]', 'github-actions[bot]'])
+
 /** The marker the job's own comment carries, so the cap and the ledger can count its merges. */
 export const AUTO_MARKER = '<!-- pr-merge:auto -->'
 
@@ -56,14 +66,16 @@ export const AUTO_MARKER = '<!-- pr-merge:auto -->'
  * that carries the reviewer's verdict marker, the head marker for `head`,
  * and was posted at or after `since`.
  *
- * @param {{ body: string, createdAt: string }[]} comments the PR's comments, any order.
+ * @param {{ body: string, createdAt: string, author?: string }[]} comments the PR's comments, any order.
  * @param {string} head the full head SHA the job was given.
  * @param {string} since ISO time this run's review started.
+ * @param {readonly string[]} [trusted] the accounts whose verdicts count.
  * @returns {'pass' | 'not-pass' | null} the verdict, or null when no comment qualifies.
  */
-export function verdictFor(comments, head, since) {
+export function verdictFor(comments, head, since, trusted = TRUSTED_AUTHORS) {
   const t0 = Date.parse(since)
   const qualifying = comments
+    .filter((c) => trusted.includes(c.author ?? ''))
     .filter((c) => Number.isFinite(Date.parse(c.createdAt)) && Date.parse(c.createdAt) >= t0)
     .filter((c) => markedHeads(c.body ?? '').some((m) => m.sha === head))
     .filter((c) => REVIEW_VERDICT.test(c.body ?? ''))
@@ -95,7 +107,7 @@ export function reviewStartedAt(jobs, runStartedAt) {
  * @param {{ state: string, isDraft: boolean, isCrossRepository: boolean, labels: string[], title: string, head: string, liveHead?: string, mergeStateStatus: string, comments: { body: string, createdAt: string }[], since: string, killSwitch?: boolean, mergedToday?: number }} pr the PR's live facts; `head` is the one this run reviewed, `liveHead` the PR's current one.
  * @returns {{ go: boolean, reason: string }} the decision and why.
  */
-export function mergeWanted({ state, isDraft, isCrossRepository, labels, title, head, liveHead = head, mergeStateStatus, comments, since, killSwitch = false, mergedToday = 0 }) {
+export function mergeWanted({ state, isDraft, isCrossRepository, labels, title, head, liveHead = head, mergeStateStatus, comments, since, killSwitch = false, mergedToday = 0, trusted = TRUSTED_AUTHORS }) {
   if (killSwitch) return { go: false, reason: 'kill switch: PR_AUTO_MERGE is off' }
   if (liveHead !== head) return { go: false, reason: `head moved to ${liveHead.slice(0, 8)}; this run reviewed ${head.slice(0, 8)}` }
   if (labels.includes('no-auto-merge')) return { go: false, reason: 'label no-auto-merge' }
@@ -106,8 +118,8 @@ export function mergeWanted({ state, isDraft, isCrossRepository, labels, title, 
   if (plan) return { go: false, reason: `plan PR (${plan === 'title' ? 'title' : `label ${plan}`}): T merges plans by hand` }
   const hold = labels.find((l) => HOLD_LABELS.includes(l))
   if (hold) return { go: false, reason: `label ${hold}` }
-  const verdict = verdictFor(comments, head, since)
-  if (!verdict) return { go: false, reason: `no verdict for head ${head.slice(0, 8)} posted since ${since}` }
+  const verdict = verdictFor(comments, head, since, trusted)
+  if (!verdict) return { go: false, reason: `no verdict for head ${head.slice(0, 8)} posted since ${since} by a trusted account` }
   if (verdict !== 'pass') return { go: false, reason: `verdict ${verdict} on head ${head.slice(0, 8)}` }
   if (mergeStateStatus !== 'CLEAN') return { go: false, reason: `mergeStateStatus ${mergeStateStatus}: GitHub does not call it mergeable` }
   if (mergedToday >= DAILY_CAP) return { go: false, reason: `daily cap: ${mergedToday} auto-merges in 24h` }
@@ -187,10 +199,13 @@ async function main() {
     head,
     liveHead: view.headRefOid,
     mergeStateStatus: view.mergeStateStatus,
-    comments: view.comments.map((c) => ({ body: c.body ?? '', createdAt: c.createdAt })),
+    comments: view.comments.map((c) => ({ body: c.body ?? '', createdAt: c.createdAt, author: c.author?.login ?? '' })),
     since,
     killSwitch: (process.env.PR_AUTO_MERGE ?? '').toLowerCase() === 'off',
     mergedToday: countAutoMerges(merged, new Date().toISOString()),
+    trusted: (process.env.TRUSTED_VERDICT_AUTHORS ?? '').split(',').map((s) => s.trim()).filter(Boolean).length
+      ? process.env.TRUSTED_VERDICT_AUTHORS.split(',').map((s) => s.trim()).filter(Boolean)
+      : TRUSTED_AUTHORS,
   }
   const d = mergeWanted(facts)
   console.log(`pr-merge #${pr}: ${d.go ? 'merge' : 'hold'} (${d.reason})`)
