@@ -95,8 +95,10 @@ spawn `playtester`. Instead:
    CRITIQUE_VIEWPORT=both npm run critique:drive   # mobile + desktop
    ```
 
-   It imports the Playwright *library* (no MCP), exports + serves the
-   web build hermetically, drives the §3 screen set, and writes
+   It imports the Playwright *library* (no MCP), serves the shared web
+   export `axiomancer-mobile/.smoke-dist` hermetically (re-exported only
+   when its stamp no longer matches the tree; `AXM_FORCE_EXPORT=1`
+   forces it), drives the §3 screen set, and writes
    screenshots + DOM innerText + console/page errors per screen to
    `axiomancer-mobile/.critique-artifacts/<viewport>/`, plus a
    top-level `manifest.json`. Exit 0 = captured (even if some screens

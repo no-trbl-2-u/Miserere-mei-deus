@@ -16,19 +16,18 @@
 //
 // Usage:
 //   node scripts/labyrinth-combat-roundtrip-e2e.mjs
-//   LABYRINTH_E2E_REUSE_EXPORT=1 node scripts/...
+//   AXM_FORCE_EXPORT=1 node scripts/...       # re-export (else .smoke-dist is reused on a stamp hit)
 //   LABYRINTH_E2E_CHROME=/path/to/chrome node scripts/...
 //
 // Exit codes: 0 = round trip clean · 1 = assertion failed ·
 // 3 = boot failure (export / server / browser).
 
-import { spawnSync } from 'node:child_process'
 import { createServer } from 'node:http'
 import { readFile, stat } from 'node:fs/promises'
-import { existsSync } from 'node:fs'
 import { resolve, dirname, join, extname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { injectStateFixture } from './fixture-injector.mjs'
+import { ensureWebExport } from './lib/web-export.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const REPO_ROOT = resolve(__dirname, '..')
@@ -62,29 +61,9 @@ function fail(msg) {
 // Export + static server (mirrors scripts/encounter-routing-e2e.mjs)
 // ---------------------------------------------------------------------------
 
-function runExpoExport() {
-    if (existsSync(EXPORT_DIR) && process.env.LABYRINTH_E2E_REUSE_EXPORT === '1') {
-        log('reusing existing .smoke-dist (LABYRINTH_E2E_REUSE_EXPORT=1)')
-        return
-    }
-    log('running `expo export --platform web` → .smoke-dist ...')
-    const result = spawnSync(
-        'npx',
-        ['expo', 'export', '--platform', 'web', '--output-dir', EXPORT_DIR],
-        {
-            cwd: REPO_ROOT,
-            stdio: 'inherit',
-            // Dev tools (SELF → `self-dev-tools-link` → `/dev` →
-            // Debug* buttons) only mount when `isDevToolsEnabled()` is
-            // true; `app.config.ts` bakes that in for non-production
-            // BUILD_PROFILE.
-            env: { ...process.env, BUILD_PROFILE: 'preview' },
-        },
-    )
-    if (result.status !== 0) {
-        console.error('labyrinth-combat-roundtrip-e2e: expo export failed')
-        process.exit(3)
-    }
+async function runExpoExport() {
+    const r = await ensureWebExport({ outDir: EXPORT_DIR, log })
+    if (!r.ok) { console.error('labyrinth-combat-roundtrip-e2e: expo export failed'); process.exit(3) }
 }
 
 async function fileCandidate(requestedPath) {
@@ -209,7 +188,7 @@ async function runRoundTrip(page, baseUrl) {
 // ---------------------------------------------------------------------------
 
 async function main() {
-    runExpoExport()
+    await runExpoExport()
     const { server, baseUrl } = await startStaticServer(EXPORT_DIR)
     log(`static server at ${baseUrl}`)
 

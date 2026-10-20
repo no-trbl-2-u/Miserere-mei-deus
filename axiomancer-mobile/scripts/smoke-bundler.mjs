@@ -33,11 +33,11 @@
 // are exported so the hermetic test in scripts/__tests__/ can
 // pin the contract without spawning a real export.
 
-import { spawn } from 'node:child_process'
 import { rm, stat, readFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
+import { ensureWebExport } from './lib/web-export.mjs'
 
 // ---------------------------------------------------------------------------
 // Config
@@ -121,34 +121,6 @@ export function resolveOutputConfig({ configuredOutputDir, tempDir, pid, now }) 
 // Side-effecting runners
 // ---------------------------------------------------------------------------
 
-async function runExport(outputDir, timeoutMs) {
-    return new Promise((resolve) => {
-        const child = spawn('npx', buildExportArgs(outputDir), {
-            stdio: ['ignore', 'inherit', 'inherit'],
-            // On Windows npx is npx.cmd, which Node refuses to spawn without a shell.
-            shell: process.platform === 'win32',
-            env: process.env,
-        })
-
-        let timedOut = false
-        const timer = setTimeout(() => {
-            timedOut = true
-            child.kill('SIGTERM')
-            setTimeout(() => child.kill('SIGKILL'), 5000).unref()
-        }, timeoutMs)
-
-        child.on('exit', (code) => {
-            clearTimeout(timer)
-            resolve({ exitCode: code ?? 1, timedOut })
-        })
-        child.on('error', (err) => {
-            clearTimeout(timer)
-            console.error(`smoke-bundler: spawn error: ${err.message}`)
-            resolve({ exitCode: 1, timedOut: false })
-        })
-    })
-}
-
 async function inspectExport(outputDir) {
     const missingFiles = []
     for (const name of REQUIRED_FILES) {
@@ -183,11 +155,17 @@ async function main() {
 
     let result
     try {
-        // Never accept a stale export as evidence. A configured output path is
-        // preserved only after this run succeeds so downstream E2E scripts can
+        // Never accept a stale export as evidence: the bundler always runs
+        // here. A configured output path is preserved only after this run
+        // succeeds, and the export's stamp lets the downstream E2E scripts
         // reuse the exact bundle that the smoke check inspected.
         await rm(outputDir, { recursive: true, force: true })
-        const { exitCode, timedOut } = await runExport(outputDir, timeoutMs)
+        const { exitCode, timedOut } = await ensureWebExport({
+            outDir: outputDir,
+            force: true,
+            timeoutMs,
+            log: (m) => console.log(`smoke-bundler: ${m}`),
+        })
         const { missingFiles, indexHtmlBytes } = await inspectExport(outputDir)
         result = classifyExportResult({ exitCode, timedOut, indexHtmlBytes, missingFiles })
     } catch (err) {

@@ -35,7 +35,7 @@
     "e2e:fixture": "node scripts/fixture-e2e.mjs",
     "critique:drive": "node scripts/critique-drive.mjs",
     "perf:combat-drag": "node scripts/combat-drag-perf.mjs",
-    "e2e:minigames": "node scripts/hazard-e2e.mjs && ENCOUNTER_E2E_REUSE_EXPORT=1 node scripts/encounter-routing-e2e.mjs && ROUNDTRIP_E2E_REUSE_EXPORT=1 node scripts/exploration-combat-roundtrip-e2e.mjs && COMBAT_ROUND_E2E_REUSE_EXPORT=1 node scripts/combat-round-e2e.mjs",
+    "e2e:minigames": "node scripts/hazard-e2e.mjs && node scripts/encounter-routing-e2e.mjs && node scripts/exploration-combat-roundtrip-e2e.mjs && node scripts/combat-round-e2e.mjs",
     "smoke:bundler": "node scripts/smoke-bundler.mjs",
     "baseline:approve": "node scripts/baseline-approve.mjs",
     "deploy:check": "node scripts/deploy-check.mjs",
@@ -48,7 +48,7 @@
     "art:qa": "node scripts/art/qa.mjs",
     "art:test": "node --test scripts/art.test.mjs scripts/shrink-art.test.mjs",
     "critique-drive:test": "node --test scripts/critique-drive.test.mjs",
-    "smoke:test": "node --test scripts/smoke-screens.test.mjs",
+    "smoke:test": "node --test scripts/smoke-screens.test.mjs scripts/web-export.test.mjs",
     "assets:acquire": "node scripts/acquire-art.mjs",
     "eas-build-on-success": "node scripts/sentry-release.mjs"
   },

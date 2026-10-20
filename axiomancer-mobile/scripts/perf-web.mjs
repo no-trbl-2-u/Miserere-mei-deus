@@ -17,21 +17,20 @@
 //
 // Usage:
 //   node scripts/perf-web.mjs
-//   PERF_REUSE_EXPORT=1 node scripts/perf-web.mjs     # reuse .perf-dist
+//   AXM_FORCE_EXPORT=1 node scripts/...       # re-export (else .smoke-dist is reused on a stamp hit)
 //   PERF_CHROME=/path/to/chrome node scripts/perf-web.mjs
 
-import { spawnSync } from 'node:child_process'
 import { createServer } from 'node:http'
 import { readFile, readdir, stat } from 'node:fs/promises'
-import { existsSync } from 'node:fs'
 import { gzipSync } from 'node:zlib'
 import { resolve, dirname, join, extname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { enterLiveFight } from './live-fight-entry.mjs'
+import { ensureWebExport } from './lib/web-export.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const REPO_ROOT = resolve(__dirname, '..')
-const EXPORT_DIR = resolve(REPO_ROOT, '.perf-dist')
+const EXPORT_DIR = resolve(REPO_ROOT, '.smoke-dist')
 const VIEWPORT = { width: 390, height: 844 }
 const SETTLE_MS = 2000
 const ROUNDS = 3
@@ -51,20 +50,9 @@ function log(msg) { process.stderr.write(`perf-web: ${msg}\n`) }
 
 // ── boot plumbing (mirrors combat-round-e2e.mjs) ─────────────────────────────
 
-function runExpoExport() {
-    if (existsSync(EXPORT_DIR) && process.env.PERF_REUSE_EXPORT === '1') {
-        log('reusing existing .perf-dist (PERF_REUSE_EXPORT=1)')
-        return
-    }
-    log('running `expo export --platform web` → .perf-dist ...')
-    const result = spawnSync('npx', ['expo', 'export', '--platform', 'web', '--output-dir', EXPORT_DIR], {
-        cwd: REPO_ROOT,
-        // stdout carries the JSON result, so the export's own output goes to stderr.
-        stdio: ['ignore', process.stderr, process.stderr],
-        shell: process.platform === 'win32',
-        env: { ...process.env, BUILD_PROFILE: 'preview' },
-    })
-    if (result.status !== 0) { log('expo export failed'); process.exit(3) }
+async function runExpoExport() {
+    const r = await ensureWebExport({ outDir: EXPORT_DIR, log })
+    if (!r.ok) { console.error('perf-web: expo export failed'); process.exit(3) }
 }
 
 async function fileCandidate(p) {
@@ -122,7 +110,7 @@ async function jsFiles(dir) {
  *
  * @param {string} dir the export directory.
  * @returns {Promise<{ bundleJsBytes: number, bundleJsGzipBytes: number }>}
- * @example await measureBundle('.perf-dist') // { bundleJsBytes: 4123456, bundleJsGzipBytes: 987654 }
+ * @example await measureBundle('.smoke-dist') // { bundleJsBytes: 4123456, bundleJsGzipBytes: 987654 }
  */
 export async function measureBundle(dir) {
     let raw = 0
@@ -314,7 +302,7 @@ export async function measureRuntime(browser, baseUrl) {
 // ── main ─────────────────────────────────────────────────────────────────────
 
 async function main() {
-    runExpoExport()
+    await runExpoExport()
     const bundle = await measureBundle(EXPORT_DIR)
     const { server, baseUrl } = await startStaticServer(EXPORT_DIR)
     const { chromium } = await import('playwright')
