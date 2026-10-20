@@ -41,7 +41,8 @@ name: pr-review
 # The run fans out to Sonnet sub-agents from a manifest
 # `scripts/pr-partition.mjs` derives from the diff (phase RV3): one reader
 # per module of changed source, each owning its files and their importers
-# and told what not to report, capped by tier (2 / 4 / 7), plus the Tests
+# and told what not to report, capped by tier (2 / 3 / 6) and each read by
+# a logic reader and a seams reader, plus the Tests
 # lens and, on medium and high, a control adversary that reads the whole
 # diff unpartitioned. All are merged into the one verdict, overlap counted.
 #
@@ -58,7 +59,7 @@ name: pr-review
 #
 # Cost: GitHub-hosted runners, free for this public repo. Claude usage: one
 # run per reviewed head of every same-repo PR, at `effort: high`, plus up
-# to nine Sonnet sub-agents on a high tier (seven readers, Tests, control).
+# to fourteen Sonnet sub-agents on a high tier (six assignments x 2, Tests, control).
 
 on:
   pull_request:
@@ -187,7 +188,7 @@ jobs:
         -p
         --disallowedTools "Edit,Write,MultiEdit,NotebookEdit,Bash(git push:*),Bash(git commit:*),Bash(gh pr merge:*),Bash(gh pr close:*),Bash(gh api:*)"
       effort: 'high'
-      # 40: a high tier fans out to as many as nine Sonnet sub-agents (RV3).
+      # 40: a high tier fans out to as many as fourteen Sonnet sub-agents (RV3).
       timeout_minutes: 40
 
   merge:

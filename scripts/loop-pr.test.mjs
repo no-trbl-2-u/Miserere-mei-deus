@@ -317,7 +317,8 @@ test('the fan-out follows the manifest: one Sonnet reader per assignment, Tests 
   assert.match(shape, /node \.review-tooling\/scripts\/pr-partition\.mjs --pr <n>/)
   assert.match(shape, /\*\*Zero assignments\*\*[^\n]*: one\s+reviewer, you\./)
   assert.match(shape, /the manifest is the shape/)
-  const fan = skill.slice(skill.indexOf('### Step 3b'), skill.indexOf('### Lens: Assignment reader'))
+  const fan = skill.slice(skill.indexOf('### Step 3b'), skill.indexOf('### Lens: Assignment logic'))
+  assert.ok(fan.length > 0 && fan.length < 4000, 'the Step 3b slice ends at the first lens heading')
   assert.match(fan, /^### Step 3b — The fan-out \(one or more assignments\)$/m)
   assert.match(fan, /`model: sonnet`/)
   // A -p run ends with the turn: a backgrounded reader never reports (PR #610).
