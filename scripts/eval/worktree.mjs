@@ -14,7 +14,16 @@ import { fileURLToPath } from 'node:url'
 
 import { parseJsonReport, parseTap, runnerFor } from './parent-replay-lib.mjs'
 
-export const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
+export const ROOT = (() => {
+  // The review job runs main's copy of scripts/ from .review-tooling/, so the
+  // root is git's toplevel from this file's directory, not a fixed path.
+  const here = dirname(fileURLToPath(import.meta.url))
+  try {
+    return execFileSync('git', ['rev-parse', '--show-toplevel'], { cwd: here, encoding: 'utf8' }).trim()
+  } catch {
+    return resolve(here, '../..')
+  }
+})()
 const NODE_MODULES = ['node_modules', 'axiomancer-mechanics/node_modules', 'axiomancer-mobile/node_modules']
 
 export const git = (args, cwd = ROOT) => execFileSync('git', args, { cwd, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }).trim()

@@ -67,7 +67,7 @@ gets checked.
 | `ci-autofix.yml` | `/fix-ci` | `verify-*` failure on `main` + manual | Red-main first responder. Pushes the fix to `main`. Its own job-level `ci-autofix` concurrency group (R0): skipped runs never queue, so they cannot displace a real one. |
 | `pr-autofix.yml` | `/fix-ci <run> --branch <head>` (Haiku) | `verify-*` failure on a PR branch + manual | Keeps `loop:pr` PRs green (D87). A plain gate job first checks the PR is open, same-repo, labelled `loop:pr` and not `loop:pr-stuck`, and counts its attempt comments; the third red run labels it `loop:pr-stuck` instead of running. The fix job has a job-level `pr-autofix-<PR>` group. Never touches `main`, never force-pushes. |
 | `pr-resolve.yml` | `scripts/pr-resolve.mjs`, then `/fix-ci --resolve` (Haiku, Read + Edit only) | every push to `main` + manual | Keeps `loop:pr` PRs mergeable (D87). Merges `main` into each conflicting same-repo `loop:pr` PR; conflicts only in telemetry shards or the plan queues settle by a union of rows (three-way counted, so an edited row is not doubled); anything else goes to a Haiku run between a scripted prepare and a finish that refuses a leftover marker. The scan starts that Haiku run as a `workflow_dispatch` of this file per conflicted PR (`branch`, `pr` inputs), because `claude-code-action` rejects a `push` event. Job-level `pr-resolve` group for the scan, `pr-resolve-<branch>` per resolve. Push, never force. |
-| `pr-review.yml` | deterministic `scripts/pr-risk.mjs` + `scripts/pr-gate.mjs` (job `verify-gate`); `skills/review.md` (job `review`) | every same-repo PR into `main`: `opened`, `synchronize`, `reopened`, `ready_for_review`, `labeled`; `review` also by manual dispatch with a `pr` input | **The always-reporting gate** (phase RV1a). The `verify-*` workflows are path-filtered, so none can be a required check; `verify-gate` always reports. It labels the PR with the derived `risk:low\|medium\|high` (the only workflow writer of `risk:*`; a reviewer's raise, marked `<!-- pr-review:raised risk:<tier> -->` in a PR comment, is kept), runs the root `npm test` when the diff touches a path no `verify-*` covers, then waits (cap 45 min) for every `verify-*` the diff triggers on the head and is green only when all are. `pull_request`, never `pull_request_target`; labels with the workflow token, so a label starts no run. Job-level `pr-review-gate-<PR>` group, cancel in progress. Required by T's ruleset below (evaluate mode). **The shadow reviewer** (phase RV1b): after a green `verify-gate`, `review-wanted` (`scripts/pr-review.mjs`, plain runner) passes an open, non-draft PR labelled `loop:pr` or `plot` whose head has no verdict yet and whose diff against the base no verdict names (phase RV2: the verdict's head marker carries a `git patch-id --stable` digest of `gh pr diff`, so a merge of `main` or a rebase that leaves the diff unchanged is not reviewed again, while a conflict resolution is; no digest falls back to the SHA rule); then one Claude run of `skills/review.md` (`effort: high`, 30 min) posts inline MED/HIGH findings and one `## Review verdict` comment (`<!-- pr-review:verdict pass\|not-pass -->`, scored by the escape ledger as judge `pr-review`) and may raise `risk:*` with a reason. On `risk:medium` and `risk:high` that run fans out to three Sonnet sub-agents, one per lens (Rules, Tests, Blast radius; phase RV1c), each finding tagged with its lens in the one verdict; the Tests lens replays the PR's tests on its merge base with `node scripts/pr-review.mjs parent-tests`. `node scripts/eval/seeded-replay.mjs --judge review` scores it on the planted defects D1-D4 through throwaway `eval:seed` draft PRs it dispatches on and then closes. It runs `main`'s copy of its skill and `.claude/`, has no Edit, Write, push, commit, merge, close or `gh api` (allow list plus a deny list), and blocks nothing: a not-pass is a comment. Job-level `pr-review-<PR>` group, cancel in progress. Stage 2 (a required `review`, `risk:low` auto-merge) is T's `plan/NEEDS_T.md` row `pr-review-stage-2`. |
+| `pr-review.yml` | deterministic `scripts/pr-risk.mjs` + `scripts/pr-gate.mjs` (job `verify-gate`); `skills/review.md` (job `review`) | every same-repo PR into `main`: `opened`, `synchronize`, `reopened`, `ready_for_review`, `labeled`; `review` also by manual dispatch with a `pr` input | **The always-reporting gate** (phase RV1a). The `verify-*` workflows are path-filtered, so none can be a required check; `verify-gate` always reports. It labels the PR with the derived `risk:low\|medium\|high` (the only workflow writer of `risk:*`; a reviewer's raise, marked `<!-- pr-review:raised risk:<tier> -->` in a PR comment, is kept), runs the root `npm test` when the diff touches a path no `verify-*` covers, then waits (cap 45 min) for every `verify-*` the diff triggers on the head and is green only when all are. `pull_request`, never `pull_request_target`; labels with the workflow token, so a label starts no run. Job-level `pr-review-gate-<PR>` group, cancel in progress. Required by T's ruleset below (evaluate mode). **The adversarial reviewer** (phase RV1b; every same-repo PR since D95): after a green `verify-gate`, `review-wanted` (`scripts/pr-review.mjs`, plain runner) passes an open, non-draft PR (`eval:seed` drafts by dispatch only) whose head has no verdict yet and whose diff against the base no verdict names (phase RV2: the verdict's head marker carries a `git patch-id --stable` digest of `gh pr diff`, so a merge of `main` or a rebase that leaves the diff unchanged is not reviewed again, while a conflict resolution is; no digest falls back to the SHA rule); then one Claude run of `skills/review.md` (`effort: high`, 30 min) posts inline MED/HIGH findings and one `## Review verdict` comment (`<!-- pr-review:verdict pass\|not-pass -->`, scored by the escape ledger as judge `pr-review`) and may raise `risk:*` with a reason. The run fans out to Sonnet sub-agents from the manifest `scripts/pr-partition.mjs` derives from the diff (phase RV3): one assignment per module of changed source, owning its files and their importers with a do-not-report list, capped by tier (2 / 3 / 6), each read by a logic reader and a seams reader, plus the Tests lens (which replays the PR's tests on its merge base with `node scripts/pr-review.mjs parent-tests`) and, on medium and high, a control adversary over the whole diff; each finding is tagged with its reader and the verdict carries `<!-- pr-review:readers <n> overlap <k> -->`. `node scripts/eval/seeded-replay.mjs --judge review` scores it on the planted defects D1-D4 through throwaway `eval:seed` draft PRs it dispatches on and then closes. It runs `main`'s copy of its skill and scripts from `.review-tooling/` (the PR's own `scripts/` and tests stay whole) and `main`'s `.claude/` in place, has no Edit, Write, push, commit, merge, close or `gh api` (allow list plus a deny list). Job-level `pr-review-<PR>` group, cancel in progress. **The merge job** (D95): a plain runner after `review`, in the same run; `scripts/pr-merge.mjs decide` merges when this run's verdict for the exact head is `pass`, the PR is not a plan (`plot`, `review:plan-only`, a `plot:`/`plan:` title), no hold label is on it (`review:needs-T`, `loop:pr-stuck`, `eval:seed`, `no-auto-merge`), GitHub reports `CLEAN`, fewer than 12 auto-merges happened in 24 h, and the repository variable `PR_AUTO_MERGE` is not `off`; then an audit comment (`<!-- pr-merge:auto -->`) and `gh pr merge --auto --merge --match-head-commit`, so the active ruleset below has the last word. A `not-pass` or any hold leaves the PR to T. At most two passes per PR: `review-wanted` stops at the second verdict and labels the PR `review:exhausted`; a dispatch still reviews it. |
 | `iterate.yml`, `critique.yml`, `expand.yml`, `ship-a-phase.yml`, `plan-a-phase.yml` | same-named | manual only | Direct dispatch = force one run. March dispatches these on its own, except `plan-a-phase`: since R11 only T runs it (by hand or this button), and the loop never writes a brief. `iterate.yml` pins Opus 5.5. |
 | `claude.yml` | — | `@claude` mention in issues/PRs | Interactive responder. |
 
@@ -75,21 +75,27 @@ Skills that need a human in the loop (`/oversight`, `/jot`, `/plot`,
 `/messy`) deliberately have no workflow; `scripts/loop-pr.test.mjs` fails
 if a workflow ever fires `/plot` or `/messy`.
 
-## The `verify-gate` ruleset (T runs this once)
+## The `verify-gate` ruleset (active since D95, 2026-10-20)
 
-The loop cannot change repository settings, so T creates the ruleset that
-requires `verify-gate` on `main` (phase RV1a, A4). It starts in **evaluate**
-mode: nothing is blocked, and Settings -> Rules -> Insights records what it
-would have blocked. T is on the bypass list (`RepositoryRole` 5 is admin;
-`integration_id` 15368 is GitHub Actions, so only the workflow's own check
-satisfies it).
+The ruleset requires `verify-gate` on `main` (phase RV1a, A4) and is
+**active, with T (admin) on the bypass list**. A required status check
+binds every update of `main`, direct pushes included, and the loop
+pushes plan-only, telemetry and `fix-ci` commits straight to `main`
+with no PR to earn `verify-gate` on; without the bypass those pushes
+are refused. So the ruleset binds the Actions identity and any other
+actor, while the merge job, which runs on T's token, carries its own
+gate: `scripts/pr-merge.mjs decide` refuses to merge unless the head's
+own `verify-gate` check run concluded `success` (read from the commit's
+check runs, never from a comment). `integration_id` 15368 is GitHub
+Actions, so only the workflow's own check satisfies the ruleset.
+`allow_auto_merge` is on (the job's `gh pr merge --auto` needs it).
 
 ```bash
 gh api -X POST repos/no-trbl-2-u/Miserere-mei-deus/rulesets --input - <<'EOF'
 {
   "name": "main requires verify-gate",
   "target": "branch",
-  "enforcement": "evaluate",
+  "enforcement": "active",
   "conditions": { "ref_name": { "include": ["~DEFAULT_BRANCH"], "exclude": [] } },
   "rules": [
     {
@@ -103,14 +109,19 @@ gh api -X POST repos/no-trbl-2-u/Miserere-mei-deus/rulesets --input - <<'EOF'
   "bypass_actors": [{ "actor_id": 5, "actor_type": "RepositoryRole", "bypass_mode": "always" }]
 }
 EOF
+gh api -X PATCH repos/no-trbl-2-u/Miserere-mei-deus -F allow_auto_merge=true
 ```
 
-If GitHub refuses `"enforcement": "evaluate"` on this plan, run the same call
-with `"enforcement": "active"`: T stays on the bypass list, so it blocks
-nothing T does today, while every other actor (the loop's token included)
-needs a green `verify-gate`. Check it with
-`gh api repos/no-trbl-2-u/Miserere-mei-deus/rulesets`. Flipping evaluate to
-active later is `gh api -X PUT repos/no-trbl-2-u/Miserere-mei-deus/rulesets/<id> -f enforcement=active`.
+Check it with `gh api repos/no-trbl-2-u/Miserere-mei-deus/rulesets`. The
+ruleset created on 2026-10-20 (id 25469169) went up with no bypass
+actors; putting T on the list is one call
+(`gh api -X PUT repos/no-trbl-2-u/Miserere-mei-deus/rulesets/25469169 --input -`
+with the `bypass_actors` line above), and it is T's row in
+`plan/NEEDS_T.md` until done. The merge job's kill switch is a
+repository variable:
+`gh variable set PR_AUTO_MERGE --body off` stops every auto-merge until
+it is deleted or set to anything else; the label `no-auto-merge` holds
+one PR.
 
 ## Operating notes
 

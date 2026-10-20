@@ -5,7 +5,8 @@ The autonomous **nexus** loop is live at the repo root: read
 [`plan/bearings.md`](./plan/bearings.md) for standing context and `skills/` for
 the loop verbs (`/ship-a-phase`, `/march`, `/iterate`, `/oversight`, …). Domain
 **design** skills and tuning/playtest commands live in `.claude/`. The loop
-lands code as `loop:pr` pull requests that T merges by hand (D84–D87).
+lands code as `loop:pr` pull requests (D84–D87); a PR merges when its
+adversarial review is green, and T merges plan PRs by hand (D95).
 
 **When T asks for loop work, use `/plot` or `/messy` (AGENTS.md rule 8).** If T
 says they want something the loop should build ("let's add…", "the loop should

@@ -64,3 +64,4 @@ plan/messy/
 # axiomancer-mobile/scripts/potential-assets-sealed.test.mjs — and licence
 # records for art copied out of it live in docs/licences/.
 /Potential Assets/
+.review-tooling/
