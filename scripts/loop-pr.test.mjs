@@ -7,7 +7,7 @@
 // /plot and /messy, and that /plot lands its phases by a `plot` PR (D93); and
 // the `verify-gate` job in pr-review.yml (phase RV1a): same-repo
 // `pull_request` only, the only writer of `risk:*`, no merge wiring; and the
-// shadow `review` job (phase RV1b): after the gate, only `loop:pr` / `plot`,
+// `review` job (phase RV1b; every same-repo PR since D95): after the gate,
 // a read-comment-label grant with no Edit, Write, push or merge; and its
 // three lenses (phase RV1c): distinct, behind the tier check, 30 minutes.
 //
@@ -104,14 +104,25 @@ test('pr-resolve runs Claude only on a dispatched run, never on push', () => {
 
 // --- nothing in the loop merges, auto-merges or force-pushes a PR -----------
 
-test('no workflow merges, auto-merges or force-pushes', () => {
+test('no workflow but pr-review\'s merge job merges or auto-merges, and none force-pushes (D95)', () => {
   for (const f of fs.readdirSync(path.join(ROOT, WF)).filter((f) => f.endsWith('.yml'))) {
     const text = code(read(`${WF}/${f}`))
-    assert.doesNotMatch(text, /gh pr merge/, f)
-    assert.doesNotMatch(text, /--auto\b/, f)
+    if (f !== 'pr-review.yml') {
+      assert.doesNotMatch(text, /gh pr merge/, f)
+      assert.doesNotMatch(text, /--auto\b/, f)
+    } else {
+      // Outside the merge job, pr-review.yml merges nothing either.
+      const outside = text.replace(/\n {2}merge:\n[\s\S]*$/, '')
+      assert.doesNotMatch(outside, /gh pr merge|--auto\b/, 'pr-review.yml merges only in its merge job')
+    }
     assert.doesNotMatch(text, /git push[^\n]*(--force|\s-f\b)/, f)
   }
   assert.doesNotMatch(code(read('scripts/pr-resolve.mjs')), /'--force'|'-f'|'rebase'/)
+  // No skill or script but the merge decision writes the merge; the reviewer's skill forbids it.
+  for (const f of fs.readdirSync(path.join(ROOT, 'skills')).filter((f) => f.endsWith('.md'))) {
+    const blocks = (read(`skills/${f}`).match(/```[\s\S]*?```/g) ?? []).join('\n')
+    assert.doesNotMatch(blocks, /gh pr merge/, `skills/${f} never runs gh pr merge in a command block`)
+  }
 })
 
 // --- pr-review.yml: the always-reporting gate (phase RV1a, A1, A2a) ----------
@@ -155,44 +166,85 @@ test('verify-gate is the only workflow step that writes a risk:* label', () => {
   assert.match(job(review, 'verify-gate'), /node scripts\/pr-risk\.mjs --pr "\$PR" --apply/)
 })
 
-// Stage 2 (risk:low auto-merge) is T's call and not wired in RV1. When it is,
-// `gh pr merge --auto` may only sit in a step gated on risk:low; until then
-// this holds vacuously and the merge test above forbids `gh pr merge` at all.
-test('a gh pr merge --auto in pr-review is reachable only from a risk:low step', () => {
+// --- pr-review.yml: the merge job (D95, amends D86) ---------------------------
+
+test('the one gh pr merge is --auto, in the merge job, gated on the scripted decision', () => {
   const steps = review.split(/\n\s+- name: /).slice(1)
-  for (const s of steps.filter((s) => /gh pr merge/.test(code(s)))) {
-    assert.match(code(s), /gh pr merge --auto\b/, 'never a plain merge')
-    assert.match(s, /\n\s+if: [^\n]*risk:low/, 'gated on risk:low')
-  }
+  const merging = steps.filter((s) => /gh pr merge/.test(code(s)))
+  assert.equal(merging.length, 1, 'exactly one merging step')
+  const [s] = merging
+  assert.match(code(s), /gh pr merge "\$PR" --repo "\$GH_REPO" --auto --merge --match-head-commit "\$HEAD_SHA"/, 'auto, merge commit, pinned to the reviewed head')
+  assert.match(s, /\n\s+if: steps\.decide\.outputs\.go == 'true'/, 'gated on the decision')
+  assert.match(code(s), /gh pr merge[^\n]*\n[^\n]*gh pr comment "\$PR"[^\n]*pr-merge\.mjs audit/, 'the audit comment follows the merge call, never precedes it')
+  const mj = job(review, 'merge')
+  assert.ok(mj, 'merge job present')
+  assert.match(mj, /- uses: actions\/checkout@v4\n\s+with:\n\s+ref: main\n\s+sparse-checkout: scripts/, 'the merge job runs main\'s scripts, never the PR\'s')
+  assert.match(mj, /^ {6}actions: read$/m)
+  assert.match(mj, /^ {6}checks: read$/m, 'the decision reads the head check runs')
+  assert.match(mj, /^ {4}needs: \[review-wanted, review\]$/m)
+  assert.match(mj, /needs\.review\.result == 'success'/)
+  assert.match(mj, /node scripts\/pr-merge\.mjs decide --pr "\$PR" --head "\$HEAD_SHA" --since "\$\{\{ steps\.since\.outputs\.since \}\}"/)
+  assert.match(mj, /PR_AUTO_MERGE: \$\{\{ vars\.PR_AUTO_MERGE \}\}/, 'the kill switch is a repository variable')
+  assert.match(mj, /id: since\n\s+run: node scripts\/pr-merge\.mjs since --run "\$GITHUB_RUN_ID"/, 'the review-start boundary is the tested script, not inline shell')
+  assert.doesNotMatch(mj, /--jq/, 'no inline jq in the merge job')
+  assert.match(mj, /REASON: \$\{\{ steps\.decide\.outputs\.reason \}\}/, 'the reason reaches the shell through env, never inline')
+  assert.match(mj, /^ {6}contents: write$/m)
+  assert.doesNotMatch(mj, /claude-code-action|_claude-skill\.yml/, 'no model in the merge job')
+  assert.doesNotMatch(mj, /--admin|--delete-branch|gh api -X (PUT|DELETE|PATCH)/, 'no bypass, no settings edits')
+})
+
+test('the merge decision refuses plans, holds, forged markers and a non-CLEAN PR', async () => {
+  const { PLAN_LABELS, HOLD_LABELS, mergeWanted } = await import('./pr-merge.mjs')
+  assert.deepEqual([...PLAN_LABELS], ['plot', 'review:plan-only'])
+  assert.ok(HOLD_LABELS.includes('review:needs-T') && HOLD_LABELS.includes('no-auto-merge'))
+  const { headMarker } = await import('./pr-review.mjs')
+  const head = 'a'.repeat(40)
+  const pass = { body: `<!-- pr-review:verdict pass -->\n${headMarker(head)}`, createdAt: '2026-10-20T01:00:00Z', author: 'no-trbl-2-u' }
+  const base = { state: 'OPEN', isDraft: false, isCrossRepository: false, labels: [], title: 't', head, mergeStateStatus: 'CLEAN', checks: [{ name: 'verify-gate', conclusion: 'success', headSha: head }], comments: [pass], since: '2026-10-20T00:00:00Z' }
+  assert.equal(mergeWanted(base).go, true, 'the clean case merges')
+  assert.equal(mergeWanted({ ...base, comments: [] }).go, false, 'no verdict, no merge')
+  for (const l of PLAN_LABELS) assert.match(mergeWanted({ ...base, labels: [l] }).reason, /plan PR/, l)
+  assert.match(mergeWanted({ ...base, title: 'plot: x' }).reason, /plan PR/)
+  for (const l of HOLD_LABELS) assert.match(mergeWanted({ ...base, labels: [l] }).reason, new RegExp(l.replace(/[-:]/g, '.')), l)
+  assert.match(mergeWanted({ ...base, comments: [{ ...pass, author: 'stranger' }] }).reason, /trusted account/, 'a forged marker from another account')
+  assert.match(mergeWanted({ ...base, comments: [{ ...pass, createdAt: '2026-10-19T23:00:00Z' }] }).reason, /no verdict/, 'a marker from before this run')
+  assert.match(mergeWanted({ ...base, comments: [{ ...pass, body: pass.body.replace(head, 'b'.repeat(40)) }] }).reason, /no verdict/, 'a marker for another head')
+  assert.match(mergeWanted({ ...base, mergeStateStatus: 'BLOCKED' }).reason, /BLOCKED/)
+  assert.match(mergeWanted({ ...base, checks: [] }).reason, /verify-gate is not green/, 'no gate run on the head')
+  assert.match(mergeWanted({ ...base, liveHead: 'b'.repeat(40) }).reason, /head moved/)
+  assert.match(mergeWanted({ ...base, killSwitch: true }).reason, /kill switch/)
 })
 
 // --- pr-review.yml: the shadow reviewer (phase RV1b, A5) ------------------------
 
-test('review runs after a green verify-gate, through review-wanted, on loop:pr and plot only', () => {
+test('review runs after a green verify-gate, through review-wanted, on every same-repo PR (D95)', () => {
   const wanted = job(review, 'review-wanted')
   assert.ok(wanted, 'review-wanted job present')
   assert.match(wanted, /^ {4}needs: verify-gate$/m)
   assert.match(wanted, /needs\.verify-gate\.result == 'success'/)
   assert.match(wanted, /node scripts\/pr-review\.mjs wanted --pr "\$PR"/)
+  assert.match(wanted, /if: steps\.wanted\.outputs\.exhausted == 'true'\n\s+run: gh pr edit "\$PR" --repo "\$GH_REPO" --add-label review:exhausted/, 'the pass cap labels the PR for T')
   const rv = job(review, 'review')
   assert.ok(rv, 'review job present')
   assert.match(rv, /^ {4}needs: review-wanted$/m)
   assert.match(rv, /^ {4}if: always\(\) && needs\.review-wanted\.outputs\.go == 'true'$/m)
   assert.match(rv, /\n {4}concurrency:\n {6}group: pr-review-\$\{\{ needs\.review-wanted\.outputs\.pr \}\}\n {6}cancel-in-progress: true/)
   assert.match(rv, /uses: \.\/\.github\/workflows\/_claude-skill\.yml/)
-  assert.match(rv, /prompt: 'Read skills\/review\.md end to end/)
+  assert.match(rv, /prompt: 'Read \.review-tooling\/skills\/review\.md end to end/)
   // Phase RV2: the head and its diff digest reach the reviewer by the prompt, not by a new grant.
   assert.match(wanted, /^ {6}head: \$\{\{ steps\.wanted\.outputs\.head \}\}$/m)
   assert.match(wanted, /^ {6}digest: \$\{\{ steps\.wanted\.outputs\.digest \}\}$/m)
   assert.match(rv, /Head \$\{\{ needs\.review-wanted\.outputs\.head \}\}, diff digest \$\{\{ needs\.review-wanted\.outputs\.digest \|\| ''unavailable'' \}\}/)
   assert.match(rv, /effort: 'high'/)
-  assert.match(rv, /timeout_minutes: 30/)
+  assert.match(rv, /timeout_minutes: 40/)
 })
 
-test('review-wanted reviews only loop:pr and plot on pull_request, eval:seed only on dispatch', async () => {
-  const { REVIEW_LABELS, DISPATCH_LABELS } = await import('./pr-review.mjs')
-  assert.deepEqual([...REVIEW_LABELS], ['loop:pr', 'plot'])
-  assert.deepEqual([...DISPATCH_LABELS].filter((l) => !REVIEW_LABELS.includes(l)), ['eval:seed'])
+test('review-wanted reviews every same-repo PR on pull_request; eval:seed drafts only on dispatch', async () => {
+  const { DISPATCH_ONLY_LABELS, reviewWanted } = await import('./pr-review.mjs')
+  assert.deepEqual([...DISPATCH_ONLY_LABELS], ['eval:seed'])
+  const base = { state: 'OPEN', isDraft: false, isCrossRepository: false, labels: [], head: 'a'.repeat(40), comments: [] }
+  assert.equal(reviewWanted(base).go, true, 'no label needed')
+  assert.equal(reviewWanted({ ...base, labels: ['eval:seed'] }).go, false)
   assert.match(review, /workflow_dispatch:\n {4}inputs:\n {6}pr:/)
 })
 
@@ -201,7 +253,7 @@ test('the reviewer can read, comment and label, and nothing else', () => {
   const grant = rv.match(/allowed_tools: '([^']+)'/)[1].split(',')
   for (const t of ['Edit', 'Write', 'MultiEdit', 'NotebookEdit', 'Bash']) assert.ok(!grant.includes(t), `no ${t}`)
   for (const t of grant.filter((t) => t.startsWith('Bash('))) {
-    assert.match(t, /^Bash\((git (diff|show|log|fetch|rev-parse)|npm test|node --test|node scripts\/pr-review\.mjs parent-tests|gh pr (view|diff|comment|edit)):\*\)$/, t)
+    assert.match(t, /^Bash\((git (diff|show|log|fetch|rev-parse)|npm test|node --test|node \.review-tooling\/scripts\/pr-review\.mjs parent-tests|node \.review-tooling\/scripts\/pr-partition\.mjs|node \.review-tooling\/scripts\/pr-risk\.mjs|gh pr (view|diff|comment|edit)):\*\)$/, t)
   }
   assert.ok(grant.includes('mcp__github_inline_comment__create_inline_comment'))
   const deny = rv.match(/--disallowedTools "([^"]+)"/)[1].split(',')
@@ -214,7 +266,10 @@ test('the reviewer can read, comment and label, and nothing else', () => {
 test('the reviewer runs main\'s copy of its own instructions', () => {
   const rv = job(review, 'review')
   assert.match(rv, /git fetch --no-tags origin main/)
-  assert.match(rv, /for p in skills\/review\.md \.claude CLAUDE\.md AGENTS\.md \.mcp\.json; do/)
+  // main's skill and scripts go to .review-tooling/; the PR's own scripts/ and tests stay whole (the fifth verdict on #666).
+  assert.match(rv, /git archive origin\/main skills\/review\.md scripts \| tar -x -C \.review-tooling/)
+  assert.match(rv, /for p in \.claude CLAUDE\.md AGENTS\.md \.mcp\.json; do/)
+  assert.doesNotMatch(rv.match(/for p in ([^\n]*); do/)[1], /scripts\/|skills\//, 'no script or skill of the PR is overwritten in place')
   assert.match(rv, /git checkout origin\/main -- "\$p"/)
 })
 
@@ -232,48 +287,72 @@ test('skills/review.md writes the markers the ledger and verify-gate read', asyn
   assert.equal(headMarker('<full head SHA>', '<diff digest>'), '<!-- pr-review:head <full head SHA> diff <diff digest> -->')
   assert.equal(headMarker('<full head SHA>'), '<!-- pr-review:head <full head SHA> -->')
   assert.match(skill, /Never lower a tier/)
+  assert.match(skill, /<!-- pr-review:readers <n> overlap <k> -->/, 'the readers marker the replay report reads')
 })
 
-// --- the three lenses (phase RV1c, A9) --------------------------------------
+// --- the partitioned fan-out (phase RV3, D95) --------------------------------
 
 const lenses = (skill) => Object.fromEntries(
   skill.split(/^### Lens: /m).slice(1).map((part) => [part.split('\n')[0].trim(), part.split(/^### /m)[0]]),
 )
 
-test('skills/review.md carries three distinct lens prompts', () => {
+test('skills/review.md carries three distinct reader prompts: the assignment reader, Tests and Control', () => {
   const l = lenses(read('skills/review.md'))
-  assert.deepEqual(Object.keys(l), ['Rules', 'Tests', 'Blast radius'])
-  const bodies = Object.values(l)
-  assert.equal(new Set(bodies).size, 3, 'no two lens prompts are the same')
-  // Each lens names its own question and its own reading list.
-  assert.match(l.Rules, /is the logic the diff changes correct\?/)
+  assert.deepEqual(Object.keys(l), ['Assignment logic', 'Assignment seams', 'Tests', 'Control'])
+  assert.equal(new Set(Object.values(l)).size, 4, 'no two reader prompts are the same')
+  assert.match(l['Assignment logic'], /is the logic in what I own correct\?/)
+  assert.match(l['Assignment logic'], /Do not read consumers for breakage; the seams reader does/)
+  assert.match(l['Assignment seams'], /what must agree with this change and does\s+not\?/)
+  assert.match(l['Assignment seams'], /Do not re-check the logic of the changed lines; the logic reader does/)
+  for (const k of ['Assignment logic', 'Assignment seams']) assert.match(l[k], /"do not report" list is\s+another\s+assignment's: leave it out/, k)
   assert.match(l.Tests, /would the tests catch this change being wrong\?/)
-  assert.match(l.Tests, /node scripts\/pr-review\.mjs parent-tests --pr <n>/)
-  assert.match(l['Blast radius'], /what outside the changed lines does this diff break\?/)
+  assert.match(l.Tests, /node \.review-tooling\/scripts\/pr-review\.mjs parent-tests --pr <n>/)
+  assert.match(l.Control, /what breaks across the seams the\s+partition cut\?/)
   for (const [name, body] of Object.entries(l)) assert.match(body, /^Read only: /m, `${name} has a reading list`)
 })
 
-test('the fan-out is behind the tier check: three Sonnet lenses on medium and high, one reviewer on low', () => {
+test('the fan-out follows the manifest: one Sonnet reader per assignment, Tests always, Control on medium and high', () => {
   const skill = read('skills/review.md')
-  const gate = skill.slice(skill.indexOf('### Step 2 — The tier decides the shape'), skill.indexOf('### Step 3 '))
-  assert.match(gate, /\*\*`risk:low`:\*\* one reviewer, you\./)
-  assert.match(gate, /\*\*`risk:medium` or `risk:high`:\*\* three lenses\./)
-  const fan = skill.slice(skill.indexOf('### Step 3b'), skill.indexOf('### Lens: Rules'))
-  assert.match(fan, /^### Step 3b — Three lenses \(`risk:medium`, `risk:high`\)$/m)
+  const shape = skill.slice(skill.indexOf('### Step 2 — The manifest decides the shape'), skill.indexOf('### Step 3 '))
+  assert.match(shape, /node \.review-tooling\/scripts\/pr-partition\.mjs --pr <n>/)
+  assert.match(shape, /\*\*Zero assignments\*\*[^\n]*: one\s+reviewer, you\./)
+  assert.match(shape, /the manifest is the shape/)
+  const fan = skill.slice(skill.indexOf('### Step 3b'), skill.indexOf('### Lens: Assignment reader'))
+  assert.match(fan, /^### Step 3b — The fan-out \(one or more assignments\)$/m)
   assert.match(fan, /`model: sonnet`/)
-  // A -p run ends with the turn: a backgrounded lens never reports (PR #610).
+  // A -p run ends with the turn: a backgrounded reader never reports (PR #610).
   assert.match(fan, /`run_in_background: false`/)
   assert.match(fan, /never end the turn\s+waiting/)
-  assert.match(fan, /\*\*only\*\*\s+its\s+own lens section/)
+  assert.match(fan, /each given \*\*only\*\* its own text/)
+  assert.match(fan, /\*\*Two per `### Assignment`:\*\*/)
+  const skillText = read('skills/review.md')
+  assert.match(skillText, /^### Pass cap$/m)
+  assert.match(skillText, /at most two automated passes/)
+  assert.match(fan, /\*\*The control adversary\*\* \(`risk:medium`, `risk:high` only\)/)
   const merge = skill.slice(skill.indexOf('### Step 3c'), skill.indexOf('### Step 4'))
-  for (const tag of ['[rules]', '[tests]', '[blast]']) assert.ok(merge.includes(tag), tag)
-  assert.match(merge, /lens did not finish/)
+  for (const tag of ['[a1]', '[tests]', '[control]']) assert.ok(merge.includes(tag), tag)
+  assert.match(merge, /reader did not finish/)
   assert.match(merge, /never read as\s+`no findings`/)
+  assert.match(merge, /\*\*overlap\*\*/)
 })
 
-test('the review job allows 30 minutes for the fan-out and nothing else changes its grant', () => {
+test('the manifest caps readers by tier and gives every assignment a do-not-report list', async () => {
+  const { MAX_AGENTS, partition, buildReverseGraph } = await import('./pr-partition.mjs')
+  assert.deepEqual(MAX_AGENTS, { 'risk:low': 2, 'risk:medium': 3, 'risk:high': 6 })
+  const { READERS_PER_ASSIGNMENT } = await import('./pr-partition.mjs')
+  assert.deepEqual([...READERS_PER_ASSIGNMENT], ['logic', 'seams'])
+  const reverse = buildReverseGraph(new Map())
+  const changed = ['axiomancer-mechanics/src/Combat/a.ts', 'axiomancer-mobile/state/presenters/b.ts', 'scripts/c.mjs'].map((p) => ({ path: p, additions: 1, deletions: 0 }))
+  const sizes = new Map(changed.map((c) => [c.path, 10_000]))
+  const m = partition({ changed, tier: 'risk:high', reverse, sizes })
+  assert.equal(m.agents.length, 3)
+  for (const a of m.agents) assert.equal(a.exclude.length, 2)
+  assert.equal(partition({ changed, tier: 'risk:low', reverse, sizes }).agents.length, 2)
+})
+
+test('the review job allows 40 minutes for the fan-out and nothing else changes its grant', () => {
   const rv = job(review, 'review')
-  assert.match(rv, /^ {6}timeout_minutes: 30$/m)
+  assert.match(rv, /^ {6}timeout_minutes: 40$/m)
   assert.doesNotMatch(rv, /Bash\(git (worktree|checkout|-C)/, 'the parent-test worktree is the script\'s, not a grant')
 })
 

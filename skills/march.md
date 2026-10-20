@@ -275,10 +275,11 @@ gh pr checks "loop/<verb>-<slug>" --repo "$GH_REPO" --watch --fail-fast
   green only when every triggered `verify-*` is, and it applies the
   derived `risk:*` label. The tick never sets a `risk:*` label itself;
   T merges as before (D86).
-- **The shadow review** (`skills/review.md`, phase RV1b) posts after
-  `verify-gate` on `loop:pr` and `plot` PRs: inline MED/HIGH findings,
-  one `## Review verdict` comment, and a `risk:*` raise with a reason.
-  It blocks nothing; T reads the verdict and merges as before (D86).
+- **The adversarial review** (`skills/review.md`, phase RV1b, RV3)
+  posts after `verify-gate` on every same-repo PR: inline MED/HIGH
+  findings, one `## Review verdict` comment, and a `risk:*` raise with
+  a reason. On a `pass` the `merge` job merges a non-plan PR (D95); a
+  `not-pass`, a plan PR or a hold label leaves it to T.
 - **Never** enable auto-merge, merge the PR, close it, or force-push
   its branch. T merges (D86).
 - **Check the cap and claims before cutting the branch.**

@@ -23,5 +23,5 @@
 
 ## Open
 
-- **verify-gate-ruleset** · once phase RV1a's PR merges, run the `gh api -X POST .../rulesets` command in `.github/workflows/README.md` ("The `verify-gate` ruleset") to require `verify-gate` on `main` in evaluate mode (A4) · blocks: Rule Insights evidence for the RV1 Stage 0 table · workaround: none; `verify-gate` still reports on every PR · seen 1× · last 2026-10-16
-- **pr-review-stage-2** · after 20 shadow-reviewed `loop:pr` merges, read the Part 4 table (`docs/reports/pr-review-research.md`; regenerate with `node scripts/eval/escape-ledger.mjs && node scripts/eval/miss-rates.mjs`); if it passes, accept D95, require `review` in the ruleset, turn on `allow_auto_merge`, and have a phase wire the `risk:low` `gh pr merge --auto` branch · blocks: Stage 2 (risk:low auto-merge) · workaround: none needed; T merges by hand (D86) · seen 1× · last 2026-10-17
+- **ruleset-bypass-for-t** · put T on the bypass list of ruleset 25469169 with the `gh api -X PUT .../rulesets/25469169` call in `.github/workflows/README.md` ("The `verify-gate` ruleset") · blocks: every direct push to `main` on T's token (plan-only ticks, telemetry, `fix-ci`); the merge job has its own `verify-gate` check and is not blocked · workaround: none; a refused push is a red tick · seen 1× · last 2026-10-20
+

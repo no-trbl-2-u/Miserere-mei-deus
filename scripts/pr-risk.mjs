@@ -165,7 +165,16 @@ export function spliceReplay(report, block) {
 
 // --- I/O ----------------------------------------------------------------------
 
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+const ROOT = (() => {
+  // The review job runs main's copy of scripts/ from .review-tooling/, so the
+  // root is git's toplevel from this file's directory, not a fixed path.
+  const here = dirname(fileURLToPath(import.meta.url))
+  try {
+    return execFileSync('git', ['rev-parse', '--show-toplevel'], { cwd: here, encoding: 'utf8' }).trim()
+  } catch {
+    return resolve(here, '..')
+  }
+})()
 const REPORT = 'docs/reports/pr-review-research.md'
 
 function sh(cmd, args, opts = {}) {
