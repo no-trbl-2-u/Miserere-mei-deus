@@ -207,11 +207,14 @@ export function solveHazardPuzzleSession(
     // A board met again at a shallower depth is walked again so the
     // shortest win is honest; outcomes are sets, so nothing counts twice.
     const visit = (s: HazardPuzzleSession): boolean => {
-        if (overBudget) return false;
         const key = boardKey(s.board);
         const depth = line.length;
         const known = depthOf.get(key);
+        // A board already walked answers from the cache even after the
+        // budget trips: `openingShare` re-enters the root's placements
+        // after the exhaustive walk, and a win found on the way stays a win.
         if (known !== undefined && known <= depth) return winsFrom.get(key) ?? false;
+        if (overBudget) return false;
         if (known === undefined && depthOf.size >= budget) {
             overBudget = true;
             return false;

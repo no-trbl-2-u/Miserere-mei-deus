@@ -151,6 +151,11 @@ describe('the features and the count agree', () => {
         expect(solution.overBudget).toBe(true);
         expect(solution.boardsExplored).toBe(50);
         expect(solution.features.winningLines).toBe(solution.winningOutcomes);
+        // The exhaustive walk trips the budget; the placements walked
+        // before it answer from the cache, so a win found stays a win
+        // (it read 0 when the budget check ran before the cache lookup).
+        expect(solution.winningOutcomes).toBeGreaterThan(0);
+        expect(solution.features.openingShare).toBeGreaterThan(0);
     });
 });
 
