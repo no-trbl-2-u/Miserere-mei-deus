@@ -25,7 +25,8 @@
 //   - GitHub says the PR is not mergeable (`mergeStateStatus` other than CLEAN)
 //   - the daily cap (`DAILY_CAP` merges by this job in 24 hours, counted by the `<!-- pr-merge:auto -->` marker)
 //
-// `mergeWanted` is pure; only `main` reads GitHub.
+// `mergeWanted` is pure; only `main` reads GitHub. The merge job checks out
+// `main`'s copy of this file, so a PR cannot rewrite the decision that merges it.
 
 import { execFileSync } from 'node:child_process'
 import { appendFileSync } from 'node:fs'
@@ -122,7 +123,7 @@ export function mergeWanted({ state, isDraft, isCrossRepository, labels, title, 
  */
 export function auditComment({ pr, head, run }) {
   return [
-    `Auto-merged by the \`pr-review\` merge job (D95): review verdict \`pass\` on head \`${head}\`, run ${run}.`,
+    `Merge requested by the \`pr-review\` merge job (D95): review verdict \`pass\` on head \`${head}\`, run ${run}; GitHub's ruleset performs the merge.`,
     AUTO_MARKER,
   ].join('\n')
 }

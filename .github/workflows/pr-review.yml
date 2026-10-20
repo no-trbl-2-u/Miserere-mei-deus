@@ -160,11 +160,12 @@ jobs:
     uses: ./.github/workflows/_claude-skill.yml
     secrets: inherit
     with:
-      # The PR's head may edit skills/review.md or .claude/; the reviewer
-      # runs main's copies of both when main has them.
+      # The PR's head may edit skills/review.md, the partition or the
+      # reviewer's scripts, or .claude/; the reviewer runs main's copies of
+      # all of them when main has them.
       pre_run: |
         git fetch --no-tags origin main
-        for p in skills/review.md .claude CLAUDE.md AGENTS.md .mcp.json; do
+        for p in skills/review.md scripts/pr-partition.mjs scripts/pr-review.mjs scripts/pr-risk.mjs .claude CLAUDE.md AGENTS.md .mcp.json; do
           if git cat-file -e "origin/main:$p" 2>/dev/null; then git checkout origin/main -- "$p"; fi
         done
       prompt: 'Read skills/review.md end to end and follow it for PR #${{ needs.review-wanted.outputs.pr }}. Head ${{ needs.review-wanted.outputs.head }}, diff digest ${{ needs.review-wanted.outputs.digest || ''unavailable'' }}.'
@@ -190,6 +191,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      actions: read
     concurrency:
       group: pr-merge-${{ needs.review-wanted.outputs.pr }}
       cancel-in-progress: false
@@ -203,8 +205,11 @@ jobs:
       HEAD_SHA: ${{ needs.review-wanted.outputs.head }}
       PR_AUTO_MERGE: ${{ vars.PR_AUTO_MERGE }}
     steps:
+      # main's scripts, never the PR's: a PR could otherwise rewrite the
+      # decision that merges it.
       - uses: actions/checkout@v4
         with:
+          ref: main
           sparse-checkout: scripts
       - uses: actions/setup-node@v4
         with:
@@ -215,13 +220,14 @@ jobs:
       - name: Decide (plan PR, holds, this run's verdict on this head, CLEAN, cap, kill switch)
         id: decide
         run: node scripts/pr-merge.mjs decide --pr "$PR" --head "$HEAD_SHA" --since "${{ steps.since.outputs.since }}"
-      - name: Audit comment, then auto-merge (GitHub's ruleset decides)
+      - name: Auto-merge (GitHub's ruleset decides), then the audit comment
         if: steps.decide.outputs.go == 'true'
         run: |
-          gh pr comment "$PR" --repo "$GH_REPO" --body "$(node scripts/pr-merge.mjs audit --pr "$PR" --head "$HEAD_SHA" --run "$GITHUB_RUN_ID")"
           gh pr merge "$PR" --repo "$GH_REPO" --auto --merge --match-head-commit "$HEAD_SHA"
+          gh pr comment "$PR" --repo "$GH_REPO" --body "$(node scripts/pr-merge.mjs audit --pr "$PR" --head "$HEAD_SHA" --run "$GITHUB_RUN_ID")"
       - name: Hold
         if: steps.decide.outputs.go != 'true'
         env:
           REASON: ${{ steps.decide.outputs.reason }}
-        run: echo "::notice::PR #$PR not merged: $REASON"
+        run: |
+          echo "::notice::PR $PR not merged: $REASON"

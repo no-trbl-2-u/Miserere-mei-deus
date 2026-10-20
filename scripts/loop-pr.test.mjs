@@ -110,6 +110,10 @@ test('no workflow but pr-review\'s merge job merges or auto-merges, and none for
     if (f !== 'pr-review.yml') {
       assert.doesNotMatch(text, /gh pr merge/, f)
       assert.doesNotMatch(text, /--auto\b/, f)
+    } else {
+      // Outside the merge job, pr-review.yml merges nothing either.
+      const outside = text.replace(/\n {2}merge:\n[\s\S]*$/, '')
+      assert.doesNotMatch(outside, /gh pr merge|--auto\b/, 'pr-review.yml merges only in its merge job')
     }
     assert.doesNotMatch(text, /git push[^\n]*(--force|\s-f\b)/, f)
   }
@@ -171,7 +175,9 @@ test('the one gh pr merge is --auto, in the merge job, gated on the scripted dec
   const [s] = merging
   assert.match(code(s), /gh pr merge "\$PR" --repo "\$GH_REPO" --auto --merge --match-head-commit "\$HEAD_SHA"/, 'auto, merge commit, pinned to the reviewed head')
   assert.match(s, /\n\s+if: steps\.decide\.outputs\.go == 'true'/, 'gated on the decision')
-  assert.match(code(s), /gh pr comment "\$PR"[^\n]*pr-merge\.mjs audit/, 'the audit comment goes first')
+  assert.match(code(s), /gh pr merge[^\n]*\n[^\n]*gh pr comment "\$PR"[^\n]*pr-merge\.mjs audit/, 'the audit comment follows the merge call, never precedes it')
+  assert.match(mj, /- uses: actions\/checkout@v4\n\s+with:\n\s+ref: main\n\s+sparse-checkout: scripts/, 'the merge job runs main\'s scripts, never the PR\'s')
+  assert.match(mj, /^ {6}actions: read$/m)
   const mj = job(review, 'merge')
   assert.ok(mj, 'merge job present')
   assert.match(mj, /^ {4}needs: \[review-wanted, review\]$/m)
@@ -244,7 +250,7 @@ test('the reviewer can read, comment and label, and nothing else', () => {
 test('the reviewer runs main\'s copy of its own instructions', () => {
   const rv = job(review, 'review')
   assert.match(rv, /git fetch --no-tags origin main/)
-  assert.match(rv, /for p in skills\/review\.md \.claude CLAUDE\.md AGENTS\.md \.mcp\.json; do/)
+  assert.match(rv, /for p in skills\/review\.md scripts\/pr-partition\.mjs scripts\/pr-review\.mjs scripts\/pr-risk\.mjs \.claude CLAUDE\.md AGENTS\.md \.mcp\.json; do/)
   assert.match(rv, /git checkout origin\/main -- "\$p"/)
 })
 

@@ -137,6 +137,7 @@ test('the daily cap holds the thirteenth merge', () => {
 test('the audit comment names the head and the run and carries the marker', () => {
   const c = auditComment({ pr: 5, head: HEAD, run: 123 })
   assert.match(c, /D95/)
+  assert.match(c, /Merge requested/, 'the comment follows the merge call and claims no outcome of its own')
   assert.ok(c.includes(HEAD))
   assert.match(c, /run 123/)
   assert.ok(c.endsWith(AUTO_MARKER))
