@@ -17,6 +17,12 @@ const CURRENT = resolve(REPO_ROOT, 'screenshots/current')
 const BASELINE = resolve(REPO_ROOT, 'screenshots/baseline')
 
 async function main() {
+    if (process.platform === 'win32' || process.platform === 'darwin') {
+        console.warn(
+            'baseline-approve: warning: the renderer of record is CI\'s Linux Playwright Chromium; '
+            + 'a capture from this machine differs by renderer alone (screenshots/baseline/README.md).',
+        )
+    }
     if (!existsSync(CURRENT)) {
         console.error(
             'baseline-approve: no screenshots/current/ — run `npm run verify:visual` first.',

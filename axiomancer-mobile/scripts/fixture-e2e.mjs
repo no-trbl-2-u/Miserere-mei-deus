@@ -22,19 +22,18 @@
 //
 // Usage:
 //   node scripts/fixture-e2e.mjs                 # export + run
-//   FIXTURE_E2E_REUSE_EXPORT=1 node scripts/fixture-e2e.mjs
+//   AXM_FORCE_EXPORT=1 node scripts/...       # re-export (else .smoke-dist is reused on a stamp hit)
 //   FIXTURE_E2E_CHROME=/path/to/chrome ...       # custom browser binary
 //
 // Exit codes: 0 = all three cases pass · 1 = assertion failed ·
 // 3 = boot failure (export / server / browser).
 
-import { spawnSync } from 'node:child_process'
 import { createServer } from 'node:http'
 import { readFile, stat } from 'node:fs/promises'
-import { existsSync } from 'node:fs'
 import { resolve, dirname, join, extname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { forceDevTools, injectStateFixture } from './fixture-injector.mjs'
+import { ensureWebExport } from './lib/web-export.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const REPO_ROOT = resolve(__dirname, '..')
@@ -65,21 +64,9 @@ function fail(msg) {
 // Export + static server (mirrors scripts/hazard-e2e.mjs)
 // ---------------------------------------------------------------------------
 
-function runExpoExport() {
-    if (existsSync(EXPORT_DIR) && process.env.FIXTURE_E2E_REUSE_EXPORT === '1') {
-        log('reusing existing .smoke-dist (FIXTURE_E2E_REUSE_EXPORT=1)')
-        return
-    }
-    log('running `expo export --platform web` → .smoke-dist ...')
-    const result = spawnSync(
-        'npx',
-        ['expo', 'export', '--platform', 'web', '--output-dir', EXPORT_DIR],
-        { cwd: REPO_ROOT, stdio: 'inherit', env: { ...process.env, BUILD_PROFILE: 'preview' } },
-    )
-    if (result.status !== 0) {
-        console.error('fixture-e2e: expo export failed')
-        process.exit(3)
-    }
+async function runExpoExport() {
+    const r = await ensureWebExport({ outDir: EXPORT_DIR, log })
+    if (!r.ok) { console.error('fixture-e2e: expo export failed'); process.exit(3) }
 }
 
 async function fileCandidate(requestedPath) {
@@ -228,7 +215,7 @@ async function caseUnknownIdFallback(browser, baseUrl) {
 // ---------------------------------------------------------------------------
 
 async function main() {
-    runExpoExport()
+    await runExpoExport()
     const { server, baseUrl } = await startStaticServer(EXPORT_DIR)
     let browser = null
     try {

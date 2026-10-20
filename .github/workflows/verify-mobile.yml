@@ -140,14 +140,10 @@ jobs:
       - name: Hazard playthrough (both routes)
         if: steps.scope.outputs.hazard == 'true'
         run: npm run e2e:hazard --workspace axiomancer-mobile
-        env:
-          HAZARD_E2E_REUSE_EXPORT: '1'
 
       - name: Encounter routing (every minigame trigger to its screen)
         if: steps.scope.outputs.encounters == 'true'
         run: npm run e2e:encounters --workspace axiomancer-mobile
-        env:
-          ENCOUNTER_E2E_REUSE_EXPORT: '1'
 
       # State-fixture boot (docs/state-fixtures.md): `?fixture=<id>` deep link,
       # `__AXM_FIXTURE__` inline fixture with `arrive`, unknown-id fallback.
@@ -156,8 +152,6 @@ jobs:
       - name: State-fixture boot (deep link + inline + fallback)
         if: steps.scope.outputs.run_integration == 'true'
         run: npm run e2e:fixture --workspace axiomancer-mobile
-        env:
-          FIXTURE_E2E_REUSE_EXPORT: '1'
 
       # Keep in step with verify-mechanics.yml — the two workflows carry
       # parallel copies of this journey list, and a step added to only one of
@@ -176,7 +170,6 @@ jobs:
         if: steps.scope.outputs.combat == 'true'
         run: npm run e2e:combat-round --workspace axiomancer-mobile
         env:
-          COMBAT_ROUND_E2E_REUSE_EXPORT: '1'
           COMBAT_ROUND_E2E_SEEDS: '16,8,3'
 
       # CRITIQUE.md [HIGH] 2026-08-19: 30 prior runs of the step above never
@@ -189,21 +182,18 @@ jobs:
         if: steps.scope.outputs.combat == 'true'
         run: npm run e2e:combat-round:boss --workspace axiomancer-mobile
         env:
-          COMBAT_ROUND_E2E_REUSE_EXPORT: '1'
           COMBAT_ROUND_E2E_SEEDS: '16,8'
 
       - name: Combat reveal withdraw (crash-strict)
         if: steps.scope.outputs.combat == 'true'
         run: npm run e2e:combat-round:withdraw --workspace axiomancer-mobile
         env:
-          COMBAT_ROUND_E2E_REUSE_EXPORT: '1'
           COMBAT_ROUND_E2E_SEEDS: '16'
 
       - name: Combat victory with pending level-up (crash-strict)
         if: steps.scope.outputs.combat == 'true'
         run: npm run e2e:combat-round:levelup --workspace axiomancer-mobile
         env:
-          COMBAT_ROUND_E2E_REUSE_EXPORT: '1'
           COMBAT_ROUND_E2E_SEEDS: '16,8'
 
       # AUDIT.md [3.5] "Verify gate is blind to the Playwright journeys":
@@ -219,14 +209,10 @@ jobs:
       - name: Exploration <-> combat round trip (and mid-fight reload)
         if: steps.scope.outputs.encounters == 'true'
         run: npm run e2e:exploration-roundtrip --workspace axiomancer-mobile
-        env:
-          ROUNDTRIP_E2E_REUSE_EXPORT: '1'
 
       - name: Labyrinth <-> combat round trip
         if: steps.scope.outputs.encounters == 'true'
         run: npm run e2e:labyrinth-roundtrip --workspace axiomancer-mobile
-        env:
-          LABYRINTH_E2E_REUSE_EXPORT: '1'
 
       # A new game walked node to node on the start map: arrival, cache,
       # gathering, a fight to its end, and the hazard route. World/** and the
@@ -234,5 +220,3 @@ jobs:
       - name: Map walk (new game, node to node)
         if: steps.scope.outputs.encounters == 'true'
         run: npm run e2e:map-walk --workspace axiomancer-mobile
-        env:
-          MAP_WALK_E2E_REUSE_EXPORT: '1'

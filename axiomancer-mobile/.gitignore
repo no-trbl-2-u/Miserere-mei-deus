@@ -39,12 +39,10 @@ walk-*.png
 
 # Visual-smoke artefacts (baseline PNGs are committed; current + diff are not)
 .smoke-dist/
-.perf-dist/
 screenshots/current/
 screenshots/diff/
 
 # /critique unattended transport (Phase 34) — export + captured artifacts
-.critique-dist/
 .critique-artifacts/
 .critique-artifacts-fresh-eyes/
 

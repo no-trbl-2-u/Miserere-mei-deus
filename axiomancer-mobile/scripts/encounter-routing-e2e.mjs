@@ -25,19 +25,18 @@
 //
 // Usage:
 //   node scripts/encounter-routing-e2e.mjs                  # export + run
-//   ENCOUNTER_E2E_REUSE_EXPORT=1 node scripts/...           # reuse .smoke-dist
+//   AXM_FORCE_EXPORT=1 node scripts/...       # re-export (else .smoke-dist is reused on a stamp hit)
 //   ENCOUNTER_E2E_CHROME=/path/to/chrome node scripts/...   # custom browser
 //
 // Exit codes: 0 = every button routed correctly · 1 = assertion failed ·
 // 3 = boot failure (export / server / browser).
 
-import { spawnSync } from 'node:child_process'
 import { createServer } from 'node:http'
 import { readFile, stat } from 'node:fs/promises'
-import { existsSync } from 'node:fs'
 import { resolve, dirname, join, extname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { openDevSection } from './dev-section.mjs'
+import { ensureWebExport } from './lib/web-export.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const REPO_ROOT = resolve(__dirname, '..')
@@ -80,29 +79,9 @@ const CASES = [
 // Export + static server (mirrors scripts/hazard-e2e.mjs)
 // ---------------------------------------------------------------------------
 
-function runExpoExport() {
-    if (existsSync(EXPORT_DIR) && process.env.ENCOUNTER_E2E_REUSE_EXPORT === '1') {
-        log('reusing existing .smoke-dist (ENCOUNTER_E2E_REUSE_EXPORT=1)')
-        return
-    }
-    log('running `expo export --platform web` → .smoke-dist ...')
-    const result = spawnSync(
-        'npx',
-        ['expo', 'export', '--platform', 'web', '--output-dir', EXPORT_DIR],
-        {
-            cwd: REPO_ROOT,
-            stdio: 'inherit',
-            // The dev tools (SELF → `self-dev-tools-link` → the `/dev`
-            // Developer screen → Debug* buttons) only mount when
-            // `isDevToolsEnabled()` is true; `app.config.ts` bakes that in
-            // for any non-`production` BUILD_PROFILE.
-            env: { ...process.env, BUILD_PROFILE: 'preview' },
-        },
-    )
-    if (result.status !== 0) {
-        console.error('encounter-routing-e2e: expo export failed')
-        process.exit(3)
-    }
+async function runExpoExport() {
+    const r = await ensureWebExport({ outDir: EXPORT_DIR, log })
+    if (!r.ok) { console.error('encounter-routing-e2e: expo export failed'); process.exit(3) }
 }
 
 async function fileCandidate(requestedPath) {
@@ -216,7 +195,7 @@ async function checkButton(page, baseUrl, c) {
 // ---------------------------------------------------------------------------
 
 async function main() {
-    runExpoExport()
+    await runExpoExport()
     const { server, baseUrl } = await startStaticServer(EXPORT_DIR)
     log(`static server at ${baseUrl}`)
 

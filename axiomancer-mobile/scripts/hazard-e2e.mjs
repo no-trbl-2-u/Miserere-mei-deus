@@ -18,20 +18,19 @@
 //
 // Usage:
 //   node scripts/hazard-e2e.mjs                # export + run
-//   HAZARD_E2E_REUSE_EXPORT=1 node scripts/hazard-e2e.mjs
+//   AXM_FORCE_EXPORT=1 node scripts/...       # re-export (else .smoke-dist is reused on a stamp hit)
 //   HAZARD_E2E_CHROME=/path/to/chrome ...      # custom browser binary
 //   HAZARD_E2E_SCREENSHOTS=1 ...               # dump step screenshots
 //
 // Exit codes: 0 = both routes played clean · 1 = assertion failed ·
 // 3 = boot failure (export / server / browser).
 
-import { spawnSync } from 'node:child_process'
 import { createServer } from 'node:http'
 import { readFile, mkdir, stat } from 'node:fs/promises'
-import { existsSync } from 'node:fs'
 import { resolve, dirname, join, extname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { openDevSection } from './dev-section.mjs'
+import { ensureWebExport } from './lib/web-export.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const REPO_ROOT = resolve(__dirname, '..')
@@ -68,33 +67,9 @@ function fail(msg) {
 // Export + static server (mirrors scripts/smoke-screens.mjs)
 // ---------------------------------------------------------------------------
 
-function runExpoExport() {
-    if (existsSync(EXPORT_DIR) && process.env.HAZARD_E2E_REUSE_EXPORT === '1') {
-        log('reusing existing .smoke-dist (HAZARD_E2E_REUSE_EXPORT=1)')
-        return
-    }
-    log('running `expo export --platform web` → .smoke-dist ...')
-    const result = spawnSync(
-        'npx',
-        ['expo', 'export', '--platform', 'web', '--output-dir', EXPORT_DIR],
-        {
-            cwd: REPO_ROOT,
-            stdio: 'inherit',
-            // The harness drives the dev tools (SELF → `self-dev-tools-link`
-            // → the `/dev` Developer screen → the Debug* entry buttons), which
-            // only mount when `isDevToolsEnabled()` is true. In an export build
-            // `__DEV__` is false, so we must bake `extra.devToolsEnabled=true`
-            // into the bundle — `app.config.ts` does that for any
-            // non-`production` BUILD_PROFILE. Without this the dev affordance
-            // never renders and the playthrough times out waiting for
-            // `self-dev-tools-link`.
-            env: { ...process.env, BUILD_PROFILE: 'preview' },
-        },
-    )
-    if (result.status !== 0) {
-        console.error('hazard-e2e: expo export failed')
-        process.exit(3)
-    }
+async function runExpoExport() {
+    const r = await ensureWebExport({ outDir: EXPORT_DIR, log })
+    if (!r.ok) { console.error('hazard-e2e: expo export failed'); process.exit(3) }
 }
 
 async function fileCandidate(requestedPath) {
@@ -423,7 +398,7 @@ async function playHazard(page, baseUrl, route, seed) {
 // ---------------------------------------------------------------------------
 
 async function main() {
-    runExpoExport()
+    await runExpoExport()
     const { server, baseUrl } = await startStaticServer(EXPORT_DIR)
     log(`static server at ${baseUrl}`)
 

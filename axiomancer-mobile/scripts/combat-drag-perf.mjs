@@ -26,24 +26,24 @@
 //   (c) staged card → hand (unstage)
 //
 // Usage:
-//   COMBAT_DRAG_PERF_REUSE_EXPORT=1 node scripts/combat-drag-perf.mjs
+//   AXM_FORCE_EXPORT=1 node scripts/...       # re-export (else .smoke-dist is reused on a stamp hit)
 //   env: REPS (5), CPU_THROTTLE (4 — CDP slowdown factor, ~mid-range phone),
 //        SEED (16), COMBAT_DRAG_PERF_CHROME (Chromium executable),
-//        COMBAT_DRAG_PERF_OUT (JSON result path), COMBAT_DRAG_PERF_DIST (an
-//        export dir other than .smoke-dist, e.g. a `--no-minify` export so
-//        the profile names functions), PROFILE=1 (CPU-profile the first
+//        COMBAT_DRAG_PERF_OUT (JSON result path), COMBAT_DRAG_PERF_DIST (a
+//        hand-built export dir used as it stands, e.g. a `--no-minify` export
+//        so the profile names functions), PROFILE=1 (CPU-profile the first
 //        drag of each kind and print its top-15 self-time functions).
 //
 // Exit 0 always on a completed run (it measures, it does not gate); exit 3 on
 // a failed export or a board that never mounts.
 
-import { spawnSync } from 'node:child_process'
 import { createServer } from 'node:http'
 import { readFile, stat, writeFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { resolve, dirname, join, extname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { enterLiveFight } from './live-fight-entry.mjs'
+import { ensureWebExport } from './lib/web-export.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const REPO_ROOT = resolve(__dirname, '..')
@@ -64,16 +64,15 @@ const MIME = {
 const log = (m) => console.log(`combat-drag-perf: ${m}`)
 
 // Builds the static export unless a reusable one is present and asked for.
-function runExpoExport() {
-    if (existsSync(EXPORT_DIR) && process.env.COMBAT_DRAG_PERF_REUSE_EXPORT === '1') {
-        log(`reusing existing ${EXPORT_DIR}`)
+async function runExpoExport() {
+    if (process.env.COMBAT_DRAG_PERF_DIST) {
+        // A hand-built export (a `--no-minify` one) is used as it stands.
+        if (!existsSync(join(EXPORT_DIR, 'index.html'))) { console.error(`combat-drag-perf: no export in ${EXPORT_DIR}`); process.exit(3) }
+        log(`using ${EXPORT_DIR} as built`)
         return
     }
-    log('running `expo export --platform web` → .smoke-dist ...')
-    const r = spawnSync('npx', ['expo', 'export', '--platform', 'web', '--output-dir', '.smoke-dist'], {
-        cwd: REPO_ROOT, stdio: 'inherit', env: { ...process.env, CI: '1' },
-    })
-    if (r.status !== 0) { console.error('combat-drag-perf: expo export failed'); process.exit(3) }
+    const r = await ensureWebExport({ outDir: EXPORT_DIR, log })
+    if (!r.ok) { console.error('combat-drag-perf: expo export failed'); process.exit(3) }
 }
 
 // Minimal SPA static server (same fallback order as the e2e harnesses).
@@ -243,7 +242,7 @@ function summarise(runs) {
 }
 
 async function main() {
-    runExpoExport()
+    await runExpoExport()
     const { server, baseUrl } = await startStaticServer(EXPORT_DIR)
     const { chromium } = await import('playwright')
     const opts = { headless: true }
