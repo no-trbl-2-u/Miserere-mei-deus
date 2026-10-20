@@ -291,15 +291,22 @@ function verbOfBash(command) {
  * The npm scripts whose runs are logged as `script` rows: the visual gate
  * and the e2e legs around it. `npm run verify` and the rest are not. `npm`
  * must stand where a command starts (line start, or after `;`, `&`, `|`,
- * `(`, past any `VAR=value` prefixes), so a heredoc or a grep that only
- * mentions a script name is not a run.
+ * `(`, past any `VAR=value` prefixes), and heredoc bodies are cut out
+ * before matching, so a heredoc or a grep that only mentions a script name
+ * is not a run.
  */
 const SCRIPT_RE =
   /(?:^|[;&|(\n])\s*(?:[A-Za-z_][A-Za-z0-9_]*=\S*\s+)*npm\s+(?:[^|;&\n]*?\s)?run\s+(?:[^|;&\n]*?\s)?(verify:visual|e2e:[a-z0-9-]+(?::[a-z0-9-]+)*|critique:drive|smoke:bundler|baseline:approve)(?![\w:-])/
 
+/**
+ * A heredoc body (`<<EOF` or `<<-'EOF'` through the line holding only
+ * the delimiter): text the command writes, not commands it runs.
+ */
+const HEREDOC_RE = /<<-?\s*(['"]?)([A-Za-z_][A-Za-z0-9_]*)\1[^\n]*\n[\s\S]*?\n[ \t]*\2(?=\n|$)/g
+
 /** The logged npm script a Bash command runs, or null. */
 function scriptOfBash(command) {
-  const m = String(command ?? '').match(SCRIPT_RE)
+  const m = String(command ?? '').replace(HEREDOC_RE, '<<HEREDOC').match(SCRIPT_RE)
   return m ? m[1] : null
 }
 

@@ -312,13 +312,14 @@ test('the five suite scripts each open a script row named for the script', () =>
     'SMOKE_RUNS=5 npm run verify:visual 2>&1 | tail -20',
     'npm run e2e:fixture',
     'npm run e2e:combat-round:boss',
+    "cat > a.txt <<'EOF'\nnot a run\nEOF\nnpm run e2e:combat-round:boss",
     'npm run --workspace axiomancer-mobile critique:drive',
     'cd axiomancer-mobile && npm run smoke:bundler',
     'npm run baseline:approve',
   ])
     fire('tool', bashCall(command))
   const names = scriptRows().slice(before).map((r) => r.split('|')[3].trim())
-  assert.deepEqual(names, ['verify:visual', 'verify:visual', 'e2e:fixture', 'e2e:combat-round:boss', 'critique:drive', 'smoke:bundler', 'baseline:approve'])
+  assert.deepEqual(names, ['verify:visual', 'verify:visual', 'e2e:fixture', 'e2e:combat-round:boss', 'e2e:combat-round:boss', 'critique:drive', 'smoke:bundler', 'baseline:approve'])
 })
 
 test('other npm scripts and mentions of a script name are not script rows', () => {
@@ -333,6 +334,8 @@ test('other npm scripts and mentions of a script name are not script rows', () =
     'cat skills/march.md',
     "cat > t.test.mjs <<'EOF'\nconst cmds = [\n  'npm run verify:visual',\n]\nEOF",
     'echo npm && echo run verify:visual',
+    "cat > notes.md <<'EOF'\nrun this first:\nnpm run verify:visual\nthen look\nEOF",
+    'cat <<EOF > run.sh\nnpm run e2e:fixture\nEOF\necho done',
   ])
     fire('tool', bashCall(command))
   assert.equal(scriptRows().length, before)
