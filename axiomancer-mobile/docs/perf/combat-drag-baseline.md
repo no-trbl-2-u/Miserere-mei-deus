@@ -72,11 +72,10 @@ Re-run with:
 
 ```sh
 cd axiomancer-mobile
-npx expo export --platform web --output-dir .smoke-dist
-COMBAT_DRAG_PERF_REUSE_EXPORT=1 node scripts/combat-drag-perf.mjs
-# a named CPU profile of the first drag of each kind:
+node scripts/combat-drag-perf.mjs    # reuses .smoke-dist on a stamp hit
+# a named CPU profile of the first drag of each kind (a hand-built dir is used as it stands):
 npx expo export --platform web --output-dir .smoke-dist-nomin --no-minify
-PROFILE=1 COMBAT_DRAG_PERF_DIST=.smoke-dist-nomin COMBAT_DRAG_PERF_REUSE_EXPORT=1 node scripts/combat-drag-perf.mjs
+PROFILE=1 COMBAT_DRAG_PERF_DIST=.smoke-dist-nomin node scripts/combat-drag-perf.mjs
 ```
 
 ## Android release APK: to be run on a device

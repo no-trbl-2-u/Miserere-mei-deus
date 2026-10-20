@@ -104,10 +104,10 @@ function main() {
     log(`run ${i + 1}/${RUNS}: engine bench`)
     const engine = measure('perf-bench', 'npm', ['run', '-s', 'perf-bench', '--workspace', 'axiomancer-mechanics'])
     log(`run ${i + 1}/${RUNS}: web`)
-    const reuse = i > 0 || process.env.PERF_REUSE_EXPORT === '1'
+    // perf-web reuses the shared export on a stamp hit, so only a stale
+    // first run exports.
     const web = measure('perf-web', 'node', ['scripts/perf-web.mjs'], {
       cwd: join(ROOT, 'axiomancer-mobile'),
-      env: { ...process.env, PERF_REUSE_EXPORT: reuse ? '1' : '0' },
     })
     runs.push({ ...web, ...engine })
   }

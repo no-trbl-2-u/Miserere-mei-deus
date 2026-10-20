@@ -15,7 +15,7 @@ The visual smoke gate produced current screenshots before baselines existed. T a
 ## Consequences
 
 - Use `npm run baseline:approve` only when current screenshots are accepted.
-- Verify with `npm run verify:visual` or `SMOKE_REUSE_EXPORT=1 npm run verify:visual` when appropriate.
+- Verify with `npm run verify:visual`; it reuses `.smoke-dist` while the export's stamp matches the tree (`AXM_FORCE_EXPORT=1` re-exports).
 - Commit `screenshots/baseline/*.png` with the approval.
 - Treat future visual diffs as evidence requiring review, not as noise.
 
