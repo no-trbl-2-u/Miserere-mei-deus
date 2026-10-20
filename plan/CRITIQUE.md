@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-10-19 at commit c9e41d58
-> Pass count: 97
+> Last pass: 2026-10-20 at commit f8058ad6
+> Pass count: 98
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
@@ -801,7 +801,35 @@
 > the unfixtured exploration hub bouncing to the title. Zero fresh
 > findings this pass.
 
+> **[critique pass 98, 2026-10-20, commit f8058ad6] Unattended `/march`
+> tick.** `critique:drive` (`CRITIQUE_VIEWPORT=both`), full 11-screen
+> set: 22 captures, 0 nav trouble, 0 console/page errors. 22 commits
+> after pass 97: VE1a (one shared web export), VE1b (the web ready
+> signal), HP2b and HP2c (dev puzzle board, not in the set), the TP1a
+> title plate docs, the RV review fixes and a labyrinth e2e race fix.
+> The one live-app diff is `_layout.tsx` setting `data-axm-ready` once
+> the fonts settle; no player-facing screen changed, and the title,
+> combat, board, hub, village, dialogue, cutscene, rest and hazard
+> captures show no regression against pass 97. Reconfirmed and not
+> re-filed: the rest/cache tense row, the village Minor Healing Potion
+> row, the covered fan cards cutting their names on a phone (pass 88),
+> the mobile hazard strip's "CHOOSE TO PROC..." (pass 68 trade) and the
+> unfixtured exploration hub bouncing to the title (now caught on the
+> boot splash). One fresh finding, born of VE1b: the onboarding capture
+> no longer waits out the menu's fade-in, so both viewports show the
+> CHRONICLE menu ghosted under the title plate.
+
 ## Pending
+
+
+### [MED] ci / critique-drive — the onboarding capture is taken mid-fade since VE1b, so the menu never shows
+- pass: 98 (commit f8058ad6)
+- viewport: both (375x812 and 1280x800)
+- category: infra
+- observation: VE1b replaced `captureScreen`'s fixed `waitForTimeout(700)` with `waitForReady`. The ready flag is set once at boot, when the fonts settle, so on the onboarding entry it is already true when EMBARK is clicked; the shot lands two frames after the click. Both `02-onboarding.png` captures show the title plate still up and the THE CHRONICLE / NEW GAME / LOAD GAME / SETTINGS menu faint beneath it, while `02-onboarding.txt` lists every menu line. The critique lens on the new-player menu is blind until this is fixed. The unfixtured `05-exploration-hub` capture now lands on the boot splash for the same reason.
+- evidence: `.critique-artifacts/{mobile,desktop}/02-onboarding.png` against `.txt`; `axiomancer-mobile/scripts/critique-drive.mjs` onboarding `prepare` (click, no settle) and `captureScreen` (`waitForReady` in place of the 700ms wait); `scripts/lib/page-ready.mjs`.
+- suggested fix: give the onboarding entry a `settle` that waits for the menu to be opaque (the `titleSettled` pattern, keyed on a menu testID such as the NEW GAME row), rather than restoring a blind sleep.
+- source: critique:drive (unattended)
 
 
 ### [LOW] rest / cache — "The node is spent the moment you stopped here" mixes present and past tense
