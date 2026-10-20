@@ -249,3 +249,60 @@ jobs:
           REASON: ${{ steps.decide.outputs.reason }}
         run: |
           echo "::notice::PR $PR not merged: $REASON"
+
+  # The fixer (D95, T 2026-10-20): a not-pass is fixed on the PR's branch by
+  # a run that is not the reviewer, once per PR; its push is the second and
+  # last automated pass. Plain-runner gate first, so a hold costs no Claude
+  # run; the fix job runs main's copy of skills/review-fix.md.
+  fix-wanted:
+    needs: [review-wanted, merge]
+    if: always() && needs.review-wanted.outputs.go == 'true' && needs.merge.result == 'success'
+    runs-on: ubuntu-latest
+    outputs:
+      go: ${{ steps.wanted.outputs.go }}
+      branch: ${{ steps.wanted.outputs.branch }}
+      head: ${{ steps.wanted.outputs.head }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      PR: ${{ needs.review-wanted.outputs.pr }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: scripts
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Decide (trusted not-pass on this head, no attempt yet, not a plan, hold or pipeline PR)
+        id: wanted
+        run: node scripts/pr-review.mjs fix-wanted --pr "$PR"
+
+  fix:
+    needs: [review-wanted, fix-wanted]
+    if: always() && needs.fix-wanted.outputs.go == 'true'
+    concurrency:
+      group: pr-review-fix-${{ needs.review-wanted.outputs.pr }}
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      pull-requests: read
+      id-token: write
+    uses: ./.github/workflows/_claude-skill.yml
+    secrets: inherit
+    with:
+      pre_run: |
+        git fetch --no-tags origin main
+        rm -rf .review-tooling && mkdir -p .review-tooling
+        git archive origin/main skills/review-fix.md | tar -x -C .review-tooling
+        for p in .claude CLAUDE.md AGENTS.md .mcp.json; do
+          if git cat-file -e "origin/main:$p" 2>/dev/null; then git checkout origin/main -- "$p"; fi
+        done
+        git fetch --no-tags origin "${{ needs.fix-wanted.outputs.branch }}"
+        git switch "${{ needs.fix-wanted.outputs.branch }}"
+      prompt: 'Read .review-tooling/skills/review-fix.md end to end and follow it: fix the not-pass on PR #${{ needs.review-wanted.outputs.pr }}, branch ${{ needs.fix-wanted.outputs.branch }}, head ${{ needs.fix-wanted.outputs.head }}.'
+      allowed_tools: 'Read,Edit,Write,Grep,Glob,TodoWrite,Bash(git fetch:*),Bash(git switch:*),Bash(git pull:*),Bash(git status:*),Bash(git diff:*),Bash(git show:*),Bash(git log:*),Bash(git add:*),Bash(git commit:*),Bash(git push origin:*),Bash(npm test:*),Bash(npm run verify:*),Bash(node --test:*),Bash(gh pr view:*),Bash(gh pr diff:*)'
+      extra_claude_args: |
+        -p
+        --disallowedTools "Bash(gh pr comment:*),Bash(gh pr edit:*),Bash(gh pr merge:*),Bash(gh pr close:*),Bash(gh api:*),Bash(git push --force:*),Bash(git push -f:*),Bash(git rebase:*),Bash(git merge:*),Bash(git reset:*)"
+      timeout_minutes: 30
