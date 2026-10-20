@@ -115,3 +115,38 @@ export function hazardPuzzleScarChip(scar: number): string {
 export const HAZARD_PUZZLE_REWARDS_LABEL = 'GAINED';
 export const HAZARD_PUZZLE_PENALTY_LABEL = 'LOST';
 export const HAZARD_PUZZLE_NO_PENALTY = 'Nothing lost.';
+
+// --- The dev-only move log (HP2c, A4). Dev-surface register; never player-facing. ---
+
+export const HAZARD_PUZZLE_LOG_LABEL = 'MOVE LOG';
+export const HAZARD_PUZZLE_LOG_SOLVER_LABEL = 'SOLVER';
+export const HAZARD_PUZZLE_LOG_SOLVER_PLACEHOLDER = 'who is solving';
+export const HAZARD_PUZZLE_LOG_COPY_LABEL = 'COPY LOG';
+export const HAZARD_PUZZLE_LOG_COPY_A11Y = 'Copy the move log as JSON';
+export const HAZARD_PUZZLE_LOG_CLEAR_LABEL = 'CLEAR';
+export const HAZARD_PUZZLE_LOG_CLEAR_A11Y = 'Discard every logged attempt';
+export const HAZARD_PUZZLE_LOG_EMPTY = 'No attempts yet. Solve a puzzle and the log fills.';
+export const HAZARD_PUZZLE_LOG_COPIED = 'copied as JSON';
+export const HAZARD_PUZZLE_LOG_COPY_FAILED = 'no clipboard here — the JSON is below, select and copy it';
+export const HAZARD_PUZZLE_LOG_CLEARED_FEEDBACK = 'log cleared';
+
+/** The log's own summary line: how much is logged and whether it is named. */
+export function hazardPuzzleLogSummary(attempts: number, moves: number, solver: string): string {
+    const who = solver.length === 0 ? 'unnamed solver' : solver;
+    const attemptWord = attempts === 1 ? '1 attempt' : `${attempts} attempts`;
+    const moveWord = moves === 1 ? '1 move' : `${moves} moves`;
+    return `${who} · ${attemptWord} · ${moveWord}`;
+}
+
+/** One logged attempt, as the panel lists it. */
+export function hazardPuzzleLogAttemptLine(
+    layoutId: string,
+    route: string,
+    moves: number,
+    seconds: number | null,
+    cleared: boolean | null,
+): string {
+    const time = seconds === null ? 'unfinished' : `${seconds} s`;
+    const verdict = cleared === null ? 'open' : cleared ? 'cleared' : 'short';
+    return `${layoutId} · ${route} · ${moves} moves · ${time} · ${verdict}`;
+}
