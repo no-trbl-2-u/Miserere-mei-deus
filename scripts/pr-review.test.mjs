@@ -1,6 +1,6 @@
-// scripts/pr-review.test.mjs — when the shadow reviewer runs (phase RV1b, A5):
-// open same-repo `loop:pr` / `plot` PRs, never drafts on `pull_request`,
-// once per head; a dispatched run also takes `eval:seed` drafts. Phase RV2:
+// scripts/pr-review.test.mjs — when the reviewer runs (phase RV1b, A5; D95):
+// every open same-repo PR, never drafts on `pull_request`, once per head;
+// `eval:seed` drafts only on a dispatched run. Phase RV2:
 // once per diff, so a head whose diff against the base a verdict already
 // names is skipped whatever its SHA.
 //
@@ -9,22 +9,27 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
-import { DISPATCH_LABELS, REVIEW_LABELS, diffDigest, formatParentTests, headMarker, markedHeads, reviewWanted } from './pr-review.mjs'
+import { DISPATCH_LABELS, DISPATCH_ONLY_LABELS, REVIEW_LABELS, diffDigest, formatParentTests, headMarker, markedHeads, reviewWanted } from './pr-review.mjs'
 
 const pr = (extra = {}) => ({
   state: 'OPEN', isDraft: false, isCrossRepository: false, labels: ['loop:pr', 'size:M'], head: 'a'.repeat(40), comments: [], ...extra,
 })
 
-test('an open same-repo loop:pr or plot PR with no verdict on its head is reviewed', () => {
+test('every open same-repo PR with no verdict on its head is reviewed, whatever its labels (D95)', () => {
   assert.equal(reviewWanted(pr()).go, true)
   assert.equal(reviewWanted(pr({ labels: ['plot', 'review:plan-only'] })).go, true)
+  assert.equal(reviewWanted(pr({ labels: ['area:ci', 'risk:high'] })).go, true, 'no loop:pr label needed')
+  assert.equal(reviewWanted(pr({ labels: [] })).go, true, 'a hand PR with no labels')
+  assert.deepEqual([...REVIEW_LABELS], ['loop:pr', 'plot'])
 })
 
-test('a fork, a closed or merged PR, or one with neither label is skipped', () => {
+test('a fork, a closed or merged PR, or a seeded draft on pull_request is skipped', () => {
   assert.match(reviewWanted(pr({ isCrossRepository: true })).reason, /fork/)
   assert.equal(reviewWanted(pr({ state: 'MERGED' })).go, false)
   assert.equal(reviewWanted(pr({ state: 'CLOSED' })).go, false)
-  assert.equal(reviewWanted(pr({ labels: ['area:ci', 'risk:high'] })).go, false)
+  assert.deepEqual([...DISPATCH_ONLY_LABELS], ['eval:seed'])
+  assert.match(reviewWanted(pr({ labels: ['eval:seed'] })).reason, /dispatch only/)
+  assert.match(reviewWanted(pr({ labels: ['eval:seed'], isDraft: true })).reason, /dispatch only/)
 })
 
 test('drafts wait on pull_request', () => {
@@ -108,7 +113,7 @@ test('the RV1b gates hold before the digest is read', () => {
   assert.equal(reviewWanted(pr({ digest: dg, isCrossRepository: true })).go, false)
   assert.equal(reviewWanted(pr({ digest: dg, isDraft: true })).go, false)
   assert.equal(reviewWanted(pr({ digest: dg, state: 'CLOSED' })).go, false)
-  assert.equal(reviewWanted(pr({ digest: dg, labels: ['size:S'] })).go, false)
+  assert.equal(reviewWanted(pr({ digest: dg, labels: ['eval:seed'] })).go, false)
   const verdict = headMarker('b'.repeat(40), dg)
   assert.equal(reviewWanted(pr({ head: 'c'.repeat(40), digest: dg, comments: [verdict], dispatch: true })).go, true, 'a dispatch always reviews')
 })
@@ -119,12 +124,13 @@ test('a dispatched review takes eval:seed drafts and repeats a head, but never a
   assert.equal(reviewWanted({ ...seedDraft, dispatch: true }).go, true)
   assert.equal(reviewWanted(seedDraft).go, false, 'eval:seed alone never reviews on pull_request')
   assert.equal(reviewWanted({ ...seedDraft, isCrossRepository: true, dispatch: true }).go, false)
-  assert.equal(reviewWanted(pr({ labels: ['size:S'], dispatch: true })).go, false)
+  assert.equal(reviewWanted(pr({ labels: ['size:S'], dispatch: true })).go, true, 'a dispatch reviews any same-repo PR (D95)')
 })
 
-test('the label sets: pull_request reviews loop:pr and plot; dispatch adds eval:seed', () => {
+test('the label sets: eval:seed is the one dispatch-only label', () => {
   assert.deepEqual([...REVIEW_LABELS], ['loop:pr', 'plot'])
   assert.deepEqual([...DISPATCH_LABELS], ['loop:pr', 'plot', 'eval:seed'])
+  assert.deepEqual([...DISPATCH_LABELS].filter((l) => !REVIEW_LABELS.includes(l)), [...DISPATCH_ONLY_LABELS])
 })
 
 test('parent-tests reports each file and how many could not fail (the Tests lens, RV1c)', () => {
