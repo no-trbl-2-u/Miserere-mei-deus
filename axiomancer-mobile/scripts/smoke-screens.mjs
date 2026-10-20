@@ -13,7 +13,8 @@
 //   exit 3  →  config / boot failure (expo export / browser / server)
 //   exit 4  →  SMOKE_RUNS=<n>: a route's n captures were not byte-identical
 //              (the gate cannot judge a nondeterministic screen; fix that first)
-//   SMOKE_CHROME=/path/to/chrome  custom browser binary · SMOKE_REUSE_EXPORT=1  skip the export
+//   SMOKE_CHROME=/path/to/chrome  custom browser binary · AXM_FORCE_EXPORT=1  re-export
+//   (otherwise .smoke-dist is reused when its stamp matches the tree, lib/web-export.mjs)
 //   SMOKE_RUNS=5  load and shoot every route 5 times, exit 4 on any that differ
 //   SMOKE_ONLY=devpuzzle-board,hazard-board  shoot and diff only these routes
 //   (the shots a change moves; on a renderer unlike the baselines' every
@@ -24,7 +25,7 @@
 // to copy current → baseline. Commit the baseline PNGs alongside the
 // change that produced them so the next run is green.
 
-import { spawn, spawnSync } from 'node:child_process'
+import { spawn } from 'node:child_process'
 import { createServer } from 'node:http'
 import { readFile, writeFile, mkdir, copyFile, readdir, stat } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
@@ -34,6 +35,7 @@ import { injectMinigameSeeds } from './minigame-seed-injector.mjs'
 import { forceDevTools } from './fixture-injector.mjs'
 import { enterLiveFight } from './live-fight-entry.mjs'
 import { waitForReady } from './lib/page-ready.mjs'
+import { ensureWebExport } from './lib/web-export.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const REPO_ROOT = resolve(__dirname, '..')
@@ -232,21 +234,9 @@ async function loadDeps() {
 
 const EXPORT_DIR = resolve(REPO_ROOT, '.smoke-dist')
 
-function runExpoExport() {
-    if (existsSync(EXPORT_DIR) && process.env.SMOKE_REUSE_EXPORT === '1') {
-        console.log('smoke-screens: reusing existing .smoke-dist (SMOKE_REUSE_EXPORT=1)')
-        return
-    }
-    console.log('smoke-screens: running `expo export --platform web` → .smoke-dist ...')
-    const result = spawnSync(
-        'npx',
-        ['expo', 'export', '--platform', 'web', '--output-dir', EXPORT_DIR],
-        { cwd: REPO_ROOT, stdio: 'inherit' },
-    )
-    if (result.status !== 0) {
-        console.error('smoke-screens: expo export failed')
-        process.exit(EXIT.BOOT_FAILURE)
-    }
+async function runExpoExport() {
+    const r = await ensureWebExport({ outDir: EXPORT_DIR, log: (m) => console.log(`smoke-screens: ${m}`) })
+    if (!r.ok) { console.error('smoke-screens: expo export failed'); process.exit(EXIT.BOOT_FAILURE) }
 }
 
 const MIME = {
@@ -485,7 +475,7 @@ async function main() {
     // A bad SMOKE_ONLY or SMOKE_RUNS fails here, before the export, not after it.
     selectRoutes(ROUTES, process.env.SMOKE_ONLY)
     parseSmokeRuns(process.env.SMOKE_RUNS)
-    runExpoExport()
+    await runExpoExport()
     const deps = await loadDeps()
 
     const { server, port } = await startStaticServer(EXPORT_DIR)

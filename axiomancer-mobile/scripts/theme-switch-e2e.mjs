@@ -1,4 +1,4 @@
-// Live theme-switch e2e against the exported production web build.
+// Live theme-switch e2e against the shared web export.
 // Serves .smoke-dist, opens /settings (the picker moved there 2026-09-23), expands the COLOUR THEME picker,
 // switches themes, and asserts the palette actually re-paints in place
 // (no reload, no console errors).
@@ -7,26 +7,17 @@ import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join, extname } from 'node:path';
-import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
+import { ensureWebExport } from './lib/web-export.mjs';
 
 // fileURLToPath, not URL.pathname: the latter yields /C:/… on Windows,
 // which Node path APIs and spawn cwd reject.
 const DIST = fileURLToPath(new URL('../.smoke-dist', import.meta.url));
 
-// Build the web export if it isn't already present (reuse otherwise, so
-// running back-to-back with the visual smoke gate is cheap).
-if (!existsSync(join(DIST, 'index.html'))) {
-    console.log('theme-e2e: exporting web build → .smoke-dist ...');
-    const r = spawnSync('npx', ['expo', 'export', '--platform', 'web', '--output-dir', DIST], {
-        cwd: fileURLToPath(new URL('..', import.meta.url)),
-        stdio: 'inherit',
-        // On Windows npx is npx.cmd, which Node refuses to spawn without a shell.
-        shell: process.platform === 'win32',
-    });
-    if (r.status !== 0) { console.error('theme-e2e: expo export failed'); process.exit(3); }
-}
+// The shared export, reused when its stamp matches the tree.
+const exported = await ensureWebExport({ outDir: DIST, log: (m) => console.log(`theme-e2e: ${m}`) });
+if (!exported.ok) { console.error('theme-e2e: expo export failed'); process.exit(3); }
 
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.ttf': 'font/ttf', '.woff': 'font/woff', '.woff2': 'font/woff2', '.svg': 'image/svg+xml', '.map': 'application/json' };
 

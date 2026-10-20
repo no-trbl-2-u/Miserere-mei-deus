@@ -75,7 +75,6 @@ web-build/
 /axiomancer-mobile/**/yarn-debug.*
 /axiomancer-mobile/**/yarn-error.*
 /axiomancer-mobile/.smoke-dist/
-/axiomancer-mobile/.critique-dist/
 /axiomancer-mobile/.critique-artifacts/
 /axiomancer-mobile/.critique-artifacts-fresh-eyes/
 /axiomancer-mobile/.audit-dist/

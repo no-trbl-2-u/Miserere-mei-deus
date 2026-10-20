@@ -24,24 +24,23 @@
 //   node scripts/critique-drive.mjs                     # mobile viewport
 //   CRITIQUE_VIEWPORT=desktop node scripts/critique-drive.mjs
 //   CRITIQUE_VIEWPORT=both    node scripts/critique-drive.mjs
-//   CRITIQUE_DRIVE_REUSE_EXPORT=1 node scripts/critique-drive.mjs
+//   AXM_FORCE_EXPORT=1 node scripts/...       # re-export (else .smoke-dist is reused on a stamp hit)
 //   CRITIQUE_DRIVE_CHROME=/path/to/chrome node scripts/critique-drive.mjs
 //
 // Exit codes: 0 = artifacts captured (even if some screens errored) ·
 // 3 = boot failure (export / static server / browser launch).
 
-import { spawnSync } from 'node:child_process'
 import { createServer } from 'node:http'
 import { readFile, stat, mkdir, writeFile, rm } from 'node:fs/promises'
-import { existsSync } from 'node:fs'
 import { resolve, dirname, join, extname } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { enterLiveFight } from './live-fight-entry.mjs'
 import { waitForReady } from './lib/page-ready.mjs'
+import { ensureWebExport } from './lib/web-export.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const REPO_ROOT = resolve(__dirname, '..')
-const EXPORT_DIR = resolve(REPO_ROOT, '.critique-dist')
+const EXPORT_DIR = resolve(REPO_ROOT, '.smoke-dist')
 const ARTIFACT_ROOT = resolve(REPO_ROOT, '.critique-artifacts')
 // Seed 16 pins the tray roll for the combat screen's demo deck (same
 // pin the combat e2e uses), so the combat capture is deterministic.
@@ -215,22 +214,9 @@ const MIME = {
 
 function log(msg) { console.log(`critique-drive: ${msg}`) }
 
-function runExpoExport() {
-    if (existsSync(EXPORT_DIR) && process.env.CRITIQUE_DRIVE_REUSE_EXPORT === '1') {
-        log('reusing existing .critique-dist (CRITIQUE_DRIVE_REUSE_EXPORT=1)')
-        return
-    }
-    log('running `expo export --platform web` → .critique-dist ...')
-    // Cross-platform spawn: on Windows `npx` is `npx.cmd`, and Node refuses to
-    // spawn a .cmd without a shell (CVE-2024-27980), so use shell there.
-    const isWin = process.platform === 'win32'
-    const result = spawnSync(
-        isWin ? 'npx.cmd' : 'npx',
-        ['expo', 'export', '--platform', 'web', '--output-dir', EXPORT_DIR],
-        { cwd: REPO_ROOT, stdio: 'inherit', env: { ...process.env }, shell: isWin },
-    )
-    if (result.error) { console.error('critique-drive: expo export could not spawn —', result.error.message); process.exit(3) }
-    if (result.status !== 0) { console.error('critique-drive: expo export failed'); process.exit(3) }
+async function runExpoExport() {
+    const r = await ensureWebExport({ outDir: EXPORT_DIR, log })
+    if (!r.ok) { console.error('critique-drive: expo export failed'); process.exit(3) }
 }
 
 async function fileCandidate(p) {
@@ -356,7 +342,7 @@ async function main() {
     }
     await mkdir(ARTIFACT_ROOT, { recursive: true })
 
-    runExpoExport()
+    await runExpoExport()
     const { server, baseUrl } = await startStaticServer(EXPORT_DIR)
     log(`static server at ${baseUrl}`)
 

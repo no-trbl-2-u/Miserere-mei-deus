@@ -11,21 +11,20 @@
 //
 // Usage:
 //   node scripts/fixture-gallery.mjs                  # export + capture all
-//   GALLERY_REUSE_EXPORT=1 node scripts/fixture-gallery.mjs
+//   AXM_FORCE_EXPORT=1 node scripts/...       # re-export (else .smoke-dist is reused on a stamp hit)
 //   ONLY=labyrinth-room,rest-cut-sheet ...            # subset by name
 //   GALLERY_CHROME=/path/to/chrome ...                # custom browser binary
 //
 // Exit codes: 0 = every entry captured · 1 = one or more entries failed
 // (still writes what it could) · 3 = boot failure (export/server/browser).
 
-import { spawnSync } from 'node:child_process'
 import { createServer } from 'node:http'
 import { readFile, mkdir, stat, writeFile } from 'node:fs/promises'
-import { existsSync } from 'node:fs'
 import { resolve, dirname, join, extname } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { injectMinigameSeeds } from './minigame-seed-injector.mjs'
 import { forceDevTools } from './fixture-injector.mjs'
+import { ensureWebExport } from './lib/web-export.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const REPO_ROOT = resolve(__dirname, '..')
@@ -107,14 +106,9 @@ export const GALLERY = [
 // Export + static server (mirrors scripts/smoke-screens.mjs)
 // ---------------------------------------------------------------------------
 
-function runExpoExport() {
-    if (existsSync(EXPORT_DIR) && process.env.GALLERY_REUSE_EXPORT === '1') {
-        log('reusing existing .smoke-dist (GALLERY_REUSE_EXPORT=1)')
-        return
-    }
-    log('running `expo export --platform web` → .smoke-dist ...')
-    const result = spawnSync('npx', ['expo', 'export', '--platform', 'web', '--output-dir', EXPORT_DIR], { cwd: REPO_ROOT, stdio: 'inherit' })
-    if (result.status !== 0) { console.error('fixture-gallery: expo export failed'); process.exit(3) }
+async function runExpoExport() {
+    const r = await ensureWebExport({ outDir: EXPORT_DIR, log })
+    if (!r.ok) { console.error('fixture-gallery: expo export failed'); process.exit(3) }
 }
 
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'application/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml', '.json': 'application/json; charset=utf-8', '.woff': 'font/woff', '.woff2': 'font/woff2', '.ttf': 'font/ttf' }
@@ -189,7 +183,7 @@ async function main() {
     const only = process.env.ONLY ? new Set(process.env.ONLY.split(',').map((s) => s.trim())) : null
     const entries = only ? GALLERY.filter((e) => only.has(e.name)) : GALLERY
     await mkdir(OUT_DIR, { recursive: true })
-    runExpoExport()
+    await runExpoExport()
     const { server, baseUrl } = await startStaticServer(EXPORT_DIR)
     let browser
     try {
