@@ -19,7 +19,7 @@ import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 
 import { initializeCombatEncounter, rollEncounterDice, type CombatEncounterState } from '@mechanics';
-import { CombatBoard, type DragController } from '@/components/combat/encounter/CombatBoard';
+import { CombatBoard, refusedDieShortfall, type DragController } from '@/components/combat/encounter/CombatBoard';
 import { SACRIFICE_CALLOUT_MS, sacrificeGhostArcs } from '@/components/combat/encounter/VitaeSacrificeCallout';
 import { buildCombatViewModel, PROGRAM_COPY } from '@/state/presenters/combat-encounter.engine';
 import { createSettingsStore } from '@/state/settings';
@@ -53,11 +53,14 @@ type Play = {
 };
 
 /** The first hand card, read as a program card with `play`, staged. */
-function boardWith(play: Play, opts: { reduced?: boolean } = {}) {
+function boardWith(play: Play, opts: { reduced?: boolean; allDraggable?: boolean } = {}) {
     const { store, s } = freshEncounter();
     const vm0 = buildCombatViewModel(s);
     const card = { ...vm0.hand[0], play: { ...play, unscrappable: false, xRange: null } };
-    const vm = { ...vm0, hand: [card, ...vm0.hand.slice(1)] };
+    // The opening roll leaves one draggable die; `allDraggable` frees the rest
+    // so a case can offer the card a second die.
+    const dice = opts.allDraggable ? vm0.dice.map((d) => ({ ...d, draggable: true })) : vm0.dice;
+    const vm = { ...vm0, hand: [card, ...vm0.hand.slice(1)], dice };
     const cbs = boardCallbacks();
     const settings = createSettingsStore({
         storage: { getItem: async () => null, setItem: async () => undefined, removeItem: async () => undefined },
@@ -145,10 +148,40 @@ describe('CombatBoard — any other refusal leaves the VITAE ring alone', () => 
     });
 
     it('a card that already holds a die refuses a second one without the callout', async () => {
-        const { vm, die } = boardWith({ freeBlock: null, paidBlock: null, freeShortfall: null, paidShortfall: SHORT });
+        const { vm, die } = boardWith({ freeBlock: null, paidBlock: null, freeShortfall: null, paidShortfall: SHORT }, { allDraggable: true });
         await tapCombatDie(die.id);
         const other = vm.dice.find((d) => d.draggable && !d.spent && d.id !== die.id);
-        if (other) await tapCombatDie(other.id);
+        // A second die must exist, or this case asserts nothing.
+        expect(other).toBeDefined();
+        await tapCombatDie(other!.id);
         expect(screen.queryByTestId('combat-vitae-callout')).toBeNull();
+    });
+});
+
+describe('refusedDieShortfall — which refused die drop points at the ring', () => {
+    const vm = buildCombatViewModel(freshEncounter().s);
+    const card = { ...vm.hand[0], play: { freeBlock: null, paidBlock: FLOOR, freeShortfall: null, paidShortfall: SHORT, unscrappable: false, xRange: null } };
+    const hand = [card, ...vm.hand.slice(1)];
+    const legal = { color: card.stance };
+    // The grey hand's stance is 'any', which every die powers; a body card
+    // refuses a mind die.
+    const bodyHand = [{ ...card, stance: 'body' }, ...hand.slice(1)];
+
+    it('a die dropped ON the card returns its PAID shortfall', () => {
+        expect(refusedDieShortfall(legal, card.uid, [card.uid], hand, {})).toEqual(SHORT);
+    });
+
+    it('a loose drop in the play area names the only staged card', () => {
+        expect(refusedDieShortfall(legal, null, [card.uid], hand, {})).toEqual(SHORT);
+    });
+
+    it('a loose drop with two staged cards names no card', () => {
+        expect(refusedDieShortfall(legal, null, [card.uid, hand[1].uid], hand, {})).toBeNull();
+    });
+
+    it('an off-colour die, or a card that already holds a die, is refused for another reason', () => {
+        expect(refusedDieShortfall({ color: 'body' }, card.uid, [card.uid], bodyHand, {})).toEqual(SHORT);
+        expect(refusedDieShortfall({ color: 'mind' }, card.uid, [card.uid], bodyHand, {})).toBeNull();
+        expect(refusedDieShortfall(legal, card.uid, [card.uid], hand, { [card.uid]: 'd0' })).toBeNull();
     });
 });
