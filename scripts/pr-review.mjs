@@ -53,10 +53,12 @@ import { checkout, closeWorktree, git, openWorktree, runTests } from './eval/wor
 export const REVIEW_LABELS = Object.freeze(['loop:pr', 'plot'])
 
 /**
- * Verdicts per PR on `pull_request` before the reviewer stops and leaves the
- * PR to T (T, 2026-10-20). The first pass merges or holds; a HIGH fixed and
- * pushed earns the second; after that the PR is labelled
- * `review:exhausted` and only a dispatch reviews it again.
+ * Not-pass verdicts per PR on `pull_request` before the reviewer stops and
+ * leaves the PR to T (T, 2026-10-20). The first pass merges or holds; a HIGH
+ * fixed and pushed earns the second; a second not-pass labels the PR
+ * `review:exhausted` and only a dispatch reviews it again. Only D95
+ * verdicts (with the readers marker) count, so a PR's older history never
+ * exhausts it.
  */
 export const MAX_PASSES = 2
 
@@ -83,6 +85,8 @@ export function headMarker(sha, digest = null) {
 
 const MARKER = /<!-- pr-review:head ([0-9a-f]+)(?: diff ([0-9a-f]+))? -->/g
 const VERDICT = /<!--\s*pr-review:verdict (pass|not-pass)\s*-->/
+/** A D95 verdict (the partitioned reviewer) carries the readers marker; older verdicts never count toward the cap. */
+const STRIKE = /<!--\s*pr-review:verdict not-pass\s*-->[\s\S]*<!-- pr-review:readers /
 
 /**
  * Every head marker in a comment body, old shape and new.
@@ -117,7 +121,7 @@ export function diffDigest(patch) {
  * Whether to review this PR now.
  *
  * @param {{ state: string, isDraft: boolean, isCrossRepository: boolean, labels: string[], head: string, digest?: string | null, comments: string[], dispatch?: boolean }} pr the PR's live facts; `comments` are bodies, `digest` is the head's `diffDigest` (null when unavailable).
- * @returns {{ go: boolean, reason: string, exhausted?: boolean }} the decision and why; `exhausted` when the pass cap stopped it.
+ * @returns {{ go: boolean, reason: string, exhausted?: boolean, reuse?: boolean }} the decision and why; `exhausted` when the pass cap stopped it; `reuse` when an earlier verdict on the same diff stands for this head (the merge job reads it).
  * @example reviewWanted({ state: 'OPEN', isDraft: false, isCrossRepository: false, labels: ['loop:pr'], head: 'a', comments: [] }).go // true
  */
 export function reviewWanted({ state, isDraft, isCrossRepository, labels, head, digest = null, comments, dispatch = false }) {
@@ -129,11 +133,13 @@ export function reviewWanted({ state, isDraft, isCrossRepository, labels, head, 
   if (isDraft) return { go: false, reason: 'draft' }
   const marked = comments.flatMap(markedHeads)
   if (marked.some((m) => m.sha === head)) return { go: false, reason: `head ${head.slice(0, 8)} already has a verdict` }
-  const passes = comments.filter((c) => VERDICT.test(c)).length
-  if (passes >= MAX_PASSES) return { go: false, exhausted: true, reason: `${passes} verdicts already: the cap is ${MAX_PASSES} passes, T reviews from here (${EXHAUSTED_LABEL})` }
+  if (digest) {
+    const same = marked.find((m) => m.digest === digest)
+    if (same) return { go: false, reuse: true, reason: `diff ${digest.slice(0, 8)} already has a verdict (head ${same.sha.slice(0, 8)}); head ${head.slice(0, 8)} changes nothing in it, so that verdict stands` }
+  }
+  const strikes = comments.filter((c) => STRIKE.test(c)).length
+  if (strikes >= MAX_PASSES) return { go: false, exhausted: true, reason: `${strikes} not-pass verdicts already: the cap is ${MAX_PASSES} passes, T reviews from here (${EXHAUSTED_LABEL})` }
   if (!digest) return { go: true, reason: `review head ${head.slice(0, 8)} (diff digest unavailable: SHA rule only)` }
-  const same = marked.find((m) => m.digest === digest)
-  if (same) return { go: false, reason: `diff ${digest.slice(0, 8)} already has a verdict (head ${same.sha.slice(0, 8)}); head ${head.slice(0, 8)} changes nothing in it` }
   return { go: true, reason: `review head ${head.slice(0, 8)} (diff ${digest.slice(0, 8)})` }
 }
 
@@ -236,7 +242,7 @@ async function main() {
   const d = reviewWanted(facts)
   console.log(`pr-review #${pr}: ${d.go ? 'go' : 'skip'} (${d.reason})`)
   if (process.env.GITHUB_OUTPUT) {
-    appendFileSync(process.env.GITHUB_OUTPUT, `go=${d.go}\npr=${pr}\nhead=${facts.head}\ndigest=${facts.digest ?? ''}\nexhausted=${Boolean(d.exhausted)}\n`)
+    appendFileSync(process.env.GITHUB_OUTPUT, `go=${d.go}\npr=${pr}\nhead=${facts.head}\ndigest=${facts.digest ?? ''}\nexhausted=${Boolean(d.exhausted)}\nreuse=${Boolean(d.reuse)}\n`)
   }
 }
 

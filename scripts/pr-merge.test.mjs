@@ -10,7 +10,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
-import { AUTO_MARKER, DAILY_CAP, HOLD_LABELS, PLAN_LABELS, TRUSTED_AUTHORS, auditComment, countAutoMerges, mergeWanted, reviewStartedAt, verdictFor, verifyGateGreen } from './pr-merge.mjs'
+import { AUTO_MARKER, DAILY_CAP, HOLD_LABELS, PIPELINE_PATHS, PLAN_LABELS, TRUSTED_AUTHORS, auditComment, countAutoMerges, mergeWanted, reviewStartedAt, verdictFor, verifyGateGreen } from './pr-merge.mjs'
 import { headMarker } from './pr-review.mjs'
 
 const HEAD = 'a'.repeat(40)
@@ -142,6 +142,23 @@ test('adversarial 5: a verdict from any account but the reviewer\'s is never rea
   // The allowlist can be narrowed or moved.
   assert.equal(verdictFor([verdict('pass')], HEAD, SINCE, ['other-bot']), null)
   assert.equal(verdictFor([verdict('pass', HEAD, '2026-10-20T10:20:00Z', 'other-bot')], HEAD, SINCE, ['other-bot']), 'pass')
+})
+
+test('a verdict for the same diff on an earlier head stands after a merge of main moved the head', () => {
+  const dg = 'c'.repeat(40)
+  // The verdict names OLD and the digest; the live head is HEAD with the same digest; it predates this run.
+  const reused = { ...verdict('pass', OLD, '2026-10-20T09:00:00Z'), body: verdict('pass', OLD).body }
+  assert.equal(mergeWanted(pr({ comments: [reused], digest: dg })).go, true)
+  assert.equal(mergeWanted(pr({ comments: [reused] })).go, false, 'no digest known: the head rule alone')
+  assert.equal(mergeWanted(pr({ comments: [reused], digest: 'd'.repeat(40) })).go, false, 'another diff')
+  assert.equal(mergeWanted(pr({ comments: [{ ...reused, author: 'stranger' }], digest: dg })).go, false, 'still only a trusted author')
+  assert.match(mergeWanted(pr({ comments: [{ ...reused, body: reused.body.replace('verdict pass', 'verdict not-pass') }], digest: dg })).reason, /not-pass/)
+})
+
+test('a PR that changes the review pipeline never merges itself', () => {
+  assert.ok(PIPELINE_PATHS.includes('scripts/pr-merge.mjs') && PIPELINE_PATHS.includes('skills/review.md') && PIPELINE_PATHS.includes('.github/workflows/pr-review.yml'))
+  for (const f of PIPELINE_PATHS) assert.match(mergeWanted(pr({ files: ['README.md', f] })).reason, /pipeline PR/, f)
+  assert.equal(mergeWanted(pr({ files: ['README.md', 'scripts/pr-risk.test.mjs'] })).go, true, 'a test beside a pipeline file is not the pipeline')
 })
 
 test('verdictFor reads only marker-bearing comments for the head, since the run started', () => {
