@@ -135,7 +135,8 @@ const job = (text, id) => {
 
 test('pr-review runs on pull_request into main, never pull_request_target', () => {
   assert.doesNotMatch(code(review), /pull_request_target/)
-  assert.match(review, /^on:\n {2}pull_request:\n {4}branches: \[main\]\n {4}types: \[opened, synchronize, reopened, ready_for_review, labeled\]$/m)
+  // No labeled trigger: one run per label cancelled the one before and left a cancelled verify-gate on the head (#667).
+  assert.match(review, /^on:\n {2}pull_request:\n {4}branches: \[main\]\n {4}types: \[opened, synchronize, reopened, ready_for_review\]$/m)
   for (const f of fs.readdirSync(path.join(ROOT, WF)).filter((f) => f.endsWith('.yml'))) {
     assert.doesNotMatch(code(read(`${WF}/${f}`)), /pull_request_target/, f)
   }
@@ -182,8 +183,9 @@ test('the one gh pr merge is --auto, in the merge job, gated on the scripted dec
   assert.match(mj, /^ {6}actions: read$/m)
   assert.match(mj, /^ {6}checks: read$/m, 'the decision reads the head check runs')
   assert.match(mj, /^ {4}needs: \[review-wanted, review\]$/m)
-  assert.match(mj, /needs\.review\.result == 'success'/)
-  assert.match(mj, /node scripts\/pr-merge\.mjs decide --pr "\$PR" --head "\$HEAD_SHA" --since "\$\{\{ steps\.since\.outputs\.since \}\}"/)
+  assert.match(mj, /\(needs\.review-wanted\.outputs\.go == 'true' && needs\.review\.result == 'success'\) \|\| needs\.review-wanted\.outputs\.reuse == 'true'/, 'a reused verdict reaches the merge job')
+  assert.match(mj, /--digest "\$\{\{ needs\.review-wanted\.outputs\.digest \}\}"/)
+  assert.match(mj, /node scripts\/pr-merge\.mjs decide --pr "\$PR" --head "\$HEAD_SHA" --since "\$\{\{ steps\.since\.outputs\.since \}\}" --digest/)
   assert.match(mj, /PR_AUTO_MERGE: \$\{\{ vars\.PR_AUTO_MERGE \}\}/, 'the kill switch is a repository variable')
   assert.match(mj, /id: since\n\s+run: node scripts\/pr-merge\.mjs since --run "\$GITHUB_RUN_ID"/, 'the review-start boundary is the tested script, not inline shell')
   assert.doesNotMatch(mj, /--jq/, 'no inline jq in the merge job')
@@ -213,6 +215,7 @@ test('the merge decision refuses plans, holds, forged markers and a non-CLEAN PR
   assert.match(mergeWanted({ ...base, checks: [] }).reason, /verify-gate is not green/, 'no gate run on the head')
   assert.match(mergeWanted({ ...base, liveHead: 'b'.repeat(40) }).reason, /head moved/)
   assert.match(mergeWanted({ ...base, killSwitch: true }).reason, /kill switch/)
+  assert.match(mergeWanted({ ...base, files: ['skills/review.md'] }).reason, /pipeline PR/, 'the pipeline never merges itself')
 })
 
 // --- pr-review.yml: the shadow reviewer (phase RV1b, A5) ------------------------

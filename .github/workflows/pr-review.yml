@@ -15,9 +15,11 @@ name: pr-review
 # command in `.github/workflows/README.md`.
 #
 # `pull_request`, never `pull_request_target`: a fork's head never sees a
-# secret, and this file only ever runs for heads in this repo. The label is
-# written with the workflow's own token, which starts no new workflow run,
-# so labelling cannot loop. Nothing here merges, auto-merges, closes or
+# secret, and this file only ever runs for heads in this repo. No `labeled`
+# trigger: `gh pr create --label` fired one run per label, each cancelling
+# the one before, and a cancelled `verify-gate` check run on the head left
+# the ruleset reading the head as not green (#667, 2026-10-20). The label is
+# written with the workflow's own token, which starts no new workflow run. Nothing here merges, auto-merges, closes or
 # force-pushes a PR (D86); `scripts/loop-pr.test.mjs` pins all of it.
 #
 # Job `review` (RV1b) is the adversarial reviewer: after a green
@@ -64,7 +66,7 @@ name: pr-review
 on:
   pull_request:
     branches: [main]
-    types: [opened, synchronize, reopened, ready_for_review, labeled]
+    types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
     inputs:
       pr:
@@ -132,6 +134,7 @@ jobs:
       pr: ${{ steps.wanted.outputs.pr }}
       head: ${{ steps.wanted.outputs.head }}
       digest: ${{ steps.wanted.outputs.digest }}
+      reuse: ${{ steps.wanted.outputs.reuse }}
     env:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
@@ -197,7 +200,9 @@ jobs:
     # the decision reads the verdict comment. A failed or cancelled review
     # posts no verdict, so the decision holds on its own; the `if` only
     # spares a runner.
-    if: always() && needs.review-wanted.outputs.go == 'true' && needs.review.result == 'success'
+    # Also after a reused verdict (an unchanged diff on a new head, the
+    # review job skipped): the decision finds that verdict by its digest.
+    if: always() && ((needs.review-wanted.outputs.go == 'true' && needs.review.result == 'success') || needs.review-wanted.outputs.reuse == 'true')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -210,8 +215,8 @@ jobs:
       cancel-in-progress: false
     env:
       # GH_PAT, so the merge's push to main fires pr-resolve, deadlines and
-      # the other push workflows; github.token would not. The ruleset binds
-      # this account too (no bypass actors), so a red verify-gate refuses it.
+      # the other push workflows; github.token would not. The decision reads
+      # the head's own verify-gate check run; the ruleset is the second lock.
       GH_TOKEN: ${{ secrets.GH_PAT || github.token }}
       GH_REPO: ${{ github.repository }}
       PR: ${{ needs.review-wanted.outputs.pr }}
@@ -232,12 +237,12 @@ jobs:
         run: node scripts/pr-merge.mjs since --run "$GITHUB_RUN_ID"
       - name: Decide (plan PR, holds, this run's verdict on this head, CLEAN, cap, kill switch)
         id: decide
-        run: node scripts/pr-merge.mjs decide --pr "$PR" --head "$HEAD_SHA" --since "${{ steps.since.outputs.since }}"
+        run: node scripts/pr-merge.mjs decide --pr "$PR" --head "$HEAD_SHA" --since "${{ steps.since.outputs.since }}" --digest "${{ needs.review-wanted.outputs.digest }}"
       - name: Auto-merge (GitHub's ruleset decides), then the audit comment
         if: steps.decide.outputs.go == 'true'
         run: |
           gh pr merge "$PR" --repo "$GH_REPO" --auto --merge --match-head-commit "$HEAD_SHA"
-          gh pr comment "$PR" --repo "$GH_REPO" --body "$(node scripts/pr-merge.mjs audit --pr "$PR" --head "$HEAD_SHA" --run "$GITHUB_RUN_ID")"
+          gh pr comment "$PR" --repo "$GH_REPO" --body "$(node scripts/pr-merge.mjs audit --pr "$PR" --head "$HEAD_SHA" --run "$GITHUB_RUN_ID")" || echo "::warning::merge requested; the audit comment failed"
       - name: Hold
         if: steps.decide.outputs.go != 'true'
         env:
