@@ -78,7 +78,7 @@ export function EquipmentDetailModal({ vm, onClose }: EquipmentDetailModalProps)
                             {/* ── Two columns: art on the left, facts on the right ── */}
                             <View style={styles.columns}>
                                 <View style={styles.artPlate} testID="equip-detail-art">
-                                    <ItemGlyph category="equipment" sub={vm.sub} />
+                                    <ItemGlyph category="equipment" sub={vm.sub} itemId={vm.itemId} />
                                 </View>
 
                                 <View style={styles.factsCol}>

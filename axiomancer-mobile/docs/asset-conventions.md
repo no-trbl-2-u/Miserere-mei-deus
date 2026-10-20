@@ -112,6 +112,17 @@ count on every run; it does not fail, because only the owner can answer
 the question and a red build would neither answer it nor let anything
 else ship. Same question as `Potential Assets/MCP-Axiomancer/images/`.
 
+## Item glyphs are chosen by id
+
+An inventory item's glyph is a property of the item, not its category.
+`components/icons/item-glyphs.ts` holds `ITEM_GLYPH_BY_ID`, one row per
+item id naming a registry icon (`AxmIconName`, so a name that is not in
+`game-icon-paths.ts` does not compile). `ItemGlyph` draws that icon when
+the id has a row and the category glyph otherwise; it never draws
+nothing. The table starts empty. Choosing an item's icon is an owner art
+call: add the icon to the extraction manifest if it is not in the
+registry yet, regenerate, then add the row.
+
 ## Known gaps (queued work, build plan)
 
 - No bundle-size budget (spec 11 Q5 was left blank).

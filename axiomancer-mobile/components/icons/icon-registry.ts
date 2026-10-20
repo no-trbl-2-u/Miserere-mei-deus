@@ -11,7 +11,8 @@
  *
  * Adding an icon: add a manifest row in the extraction script, run it,
  * give the mark a label here, and add a row to the `AxmIcon` test —
- * never inline a new one-off `<Svg>` icon in a component. Screens that
+ * never inline a new one-off `<Svg>` icon in a component. An inventory
+ * item wears a registry icon through its row in `item-glyphs.ts`. Screens that
  * need the same mark must consume the registry so the art can be
  * upgraded in one place (see `SVG_ASSET_SPEC.md`).
  */

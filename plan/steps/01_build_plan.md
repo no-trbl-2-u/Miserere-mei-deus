@@ -187,7 +187,7 @@ event-pool and layout files).
       Items table in the same commit as the queue mutation — a date or an `## Unscheduled` line per added row, and
       an edit to any Item the plot supersedes, re-scopes or completes — because a superseded premise is the one
       drift no lint can see. Brief `plan/phases/phase_DL1_deadline_plan_integrity.md` § DL1c. Requires DL1a.
-- [ ] Phase IT1a — Item glyphs resolve by item id (plotted by T, 2026-10-19): `ItemGlyph` keys on
+- [x] (#683) Phase IT1a — Item glyphs resolve by item id (plotted by T, 2026-10-19): `ItemGlyph` keys on
       category alone, so all three healing potions draw one identical flask and both relics draw one
       identical trinket. An id-keyed resolver in the `getCardArt` shape, with **today's** category glyph
       as the fallback, so an empty table changes no pixel and the phase ships green; the table's values
