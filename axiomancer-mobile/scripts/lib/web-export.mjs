@@ -46,9 +46,10 @@ export const STAMP_INPUTS = [
 
 /**
  * Hash the export inputs. `tracked` is `git ls-files -s` parsed to
- * `{ path, blob }`; `dirty` maps a modified or untracked path to the sha256 of
- * its current contents (or `null` when it was deleted), and wins over the
- * tracked blob id. Order of either input does not change the hash.
+ * `{ path, blob }`; `dirty` maps a modified or untracked path to the git blob
+ * id of its current contents (or `null` when it was deleted), and wins over
+ * the tracked blob id, so committing an edit leaves the stamp unchanged.
+ * Order of either input does not change the hash.
  * @example computeStampHash({ tracked: [{ path: 'a', blob: '1' }], dirty: {}, expo: '54.0.0' }) // '3f…'
  */
 export function computeStampHash({ tracked, dirty, expo }) {
@@ -56,7 +57,7 @@ export function computeStampHash({ tracked, dirty, expo }) {
     for (const { path, blob } of tracked) ids.set(path, blob)
     for (const [path, sha] of Object.entries(dirty)) {
         if (sha === null) ids.delete(path)
-        else ids.set(path, `dirty:${sha}`)
+        else ids.set(path, sha)
     }
     const h = createHash('sha256')
     h.update(`expo ${expo ?? 'unknown'}\n`)
@@ -131,6 +132,14 @@ export function readStamp(outDir) {
     try { return JSON.parse(readFileSync(join(outDir, STAMP_FILE), 'utf8')) } catch { return null }
 }
 
+/**
+ * The git blob id of some contents (what `git hash-object` prints).
+ * @example gitBlobId(Buffer.from('hi\n')) // '45b983be36b73c0788dc9cbcb76cbb80fc7bb057'
+ */
+export function gitBlobId(buf) {
+    return createHash('sha1').update(`blob ${buf.length}\0`).update(buf).digest('hex')
+}
+
 function git(repoRoot, args) {
     const r = spawnSync('git', args, { cwd: repoRoot, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
     return r.status === 0 ? r.stdout : null
@@ -151,7 +160,7 @@ export function computeStamp({ repoRoot = resolve(MOBILE_ROOT, '..') } = {}) {
     const dirty = {}
     for (const path of parseStatus(status)) {
         const abs = join(repoRoot, path)
-        dirty[path] = existsSync(abs) ? createHash('sha256').update(readFileSync(abs)).digest('hex') : null
+        dirty[path] = existsSync(abs) ? gitBlobId(readFileSync(abs)) : null
     }
     const expo = expoVersion()
     return { hash: computeStampHash({ tracked: parseLsFiles(ls), dirty, expo }), expo }

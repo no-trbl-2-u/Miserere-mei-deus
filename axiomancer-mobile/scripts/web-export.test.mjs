@@ -12,6 +12,7 @@ import {
     computeStamp,
     computeStampHash,
     decideExport,
+    gitBlobId,
     exportSpawnSpec,
     parseLsFiles,
     parseStatus,
@@ -37,6 +38,13 @@ test('a dirty file replaces its blob id, a deleted one drops out, an untracked o
     const deleted = computeStampHash({ tracked, dirty: { 'axiomancer-mobile/app/index.tsx': null }, expo: 'x' })
     const added = computeStampHash({ tracked, dirty: { 'axiomancer-mobile/app/new.tsx': 'f00' }, expo: 'x' })
     assert.equal(new Set([base, edited, deleted, added]).size, 4)
+})
+
+test('a dirty file committed as is keeps the stamp: its id is the git blob id', () => {
+    assert.equal(gitBlobId(Buffer.from('hi\n')), '45b983be36b73c0788dc9cbcb76cbb80fc7bb057')
+    const committed = computeStampHash({ tracked, dirty: {}, expo: 'x' })
+    const dirtySame = computeStampHash({ tracked, dirty: { 'axiomancer-mobile/app/index.tsx': 'aaa' }, expo: 'x' })
+    assert.equal(dirtySame, committed)
 })
 
 test('git ls-files and status records parse', () => {
