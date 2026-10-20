@@ -199,25 +199,6 @@ export function prunePending(prev: Record<string, string>, stagedUids: string[])
     return next;
 }
 
-/**
- * The unpaid SACRIFICE to flag on the VITAE ring when a die is refused (null =
- * no callout). The refusing card is the one hit, or, for a loose drop in the
- * play area, the only staged card. Only a colour-legal die on a card that holds
- * no die is refused by the card's PAID line; the shortfall is the engine's.
- */
-export function refusedDieShortfall(
-    die: { color: string; isX?: boolean },
-    hitUid: string | null,
-    stagedUids: string[],
-    hand: readonly CombatCardVM[],
-    pendingByUid: Record<string, string>,
-): { cost: number; vitae: number } | null {
-    const uid = hitUid ?? (stagedUids.length === 1 ? stagedUids[0] : null);
-    const card = uid ? hand.find((c) => c.uid === uid) : undefined;
-    if (!card || pendingByUid[card.uid] || !dieCanPowerCardVM(die, card.stance)) return null;
-    return card.play?.paidShortfall ?? null;
-}
-
 /** Clear every pending die pick — the same object when already empty, so the
  *  turn-change reset (and the mount pass) costs no extra board commit (same
  *  reason as {@link prunePending}). */
@@ -1047,7 +1028,7 @@ export const CombatBoard = React.memo(function CombatBoard({
                     : 'no staged card can take this die';
                 juiceHaptics.notify(Haptics.NotificationFeedbackType.Error);
                 setDropReject((prev) => ({ uid: hitUid ?? '', reason, n: prev.n + 1 }));
-                flagShortfall(refusedDieShortfall(payload.die, hitUid, stagedUids, vm.hand, pendingDieByUid));
+                if (card && !pendingDieByUid[card.uid] && dieCanPowerCardVM(payload.die, card.stance)) flagShortfall(card.play?.paidShortfall);
             }
             return;
         }
@@ -1137,7 +1118,8 @@ export const CombatBoard = React.memo(function CombatBoard({
         if (!target) {
             // A colour-legal die refused by the card's PAID line: point at the
             // VITAE ring when that refusal is the SACRIFICE floor.
-            flagShortfall(refusedDieShortfall(die, stagedUids[0], stagedUids, vm.hand, pendingDieByUid));
+            const c = handMapRef.current.get(stagedUids[0]);
+            if (c && !pendingDieByUid[c.uid] && dieCanPowerCardVM(die, c.stance)) flagShortfall(c.play?.paidShortfall);
             return;
         }
         juiceHaptics.impact(Haptics.ImpactFeedbackStyle.Rigid);
