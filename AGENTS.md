@@ -156,11 +156,13 @@ label (`skills/march.md` §3 "Area and review labels");
 plan-only and telemetry commits still push `main`, except `/plot`'s
 spec and rows, which open a PR labelled `plot` (never `loop:pr`; D93)
 so T approves the phase split by merging it. Open PRs ready for
-review, not drafts. **T merges by hand** (D86): never enable auto-merge
-(it is disabled on this repo) and never merge, close or force-push a
-`loop:pr` PR. `pr-autofix` (Haiku, two runs per PR) keeps a red
-`loop:pr` PR green and `pr-resolve` keeps it mergeable (D87); at most 5
-are open at once (D85).
+review, not drafts. **The loop never merges, closes or force-pushes a
+PR** (D86). Since D95 the `pr-review.yml` `merge` job merges every
+non-plan PR whose adversarial review is complete and green; T merges
+plan PRs (`plot`, `review:plan-only`, a `plot:`/`plan:` title) and
+anything the review holds. `pr-autofix` (Haiku, two runs per PR) keeps
+a red `loop:pr` PR green and `pr-resolve` keeps it mergeable (D87); at
+most 5 are open at once (D85).
 
 ## Per-package guides
 

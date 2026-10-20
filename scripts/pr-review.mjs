@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 // scripts/pr-review.mjs
 //
-// Whether the shadow reviewer runs on a PR (phase RV1b,
-// `plan/phases/phase_RV1_pr_review_pipeline.md` A5). The `review` job in
-// `pr-review.yml` starts a Claude run only when this says go, so the label
-// filter, the draft rule and the once-per-head rule live in one tested
-// function instead of a workflow `if`.
+// Whether the reviewer runs on a PR (phase RV1b,
+// `plan/phases/phase_RV1_pr_review_pipeline.md` A5; every same-repo PR
+// since D95). The `review` job in `pr-review.yml` starts a Claude run only
+// when this says go, so the draft rule, the seeded-draft rule and the
+// once-per-head rule live in one tested function instead of a workflow `if`.
 //
 // Why a script and not the event payload: `gh pr create --label ...` fires
 // `opened` and one `labeled` event per label, each cancelling the gate run
@@ -44,11 +44,30 @@ import { fileURLToPath } from 'node:url'
 import { newTitles, runnerFor, verdictFor } from './eval/parent-replay-lib.mjs'
 import { checkout, closeWorktree, git, openWorktree, runTests } from './eval/worktree.mjs'
 
-/** Labels that put a PR in front of the reviewer on `pull_request`. */
+/**
+ * Labels the reviewer ran on through phase RV2. Since D95 (2026-10-20) every
+ * same-repo PR is reviewed, so these are the labels the merge job and the
+ * ledger still name, not a filter: `reviewWanted` reads them only to
+ * phrase its reason.
+ */
 export const REVIEW_LABELS = Object.freeze(['loop:pr', 'plot'])
 
-/** A dispatched review also takes the seeded drafts phase RV1c opens. */
-export const DISPATCH_LABELS = Object.freeze([...REVIEW_LABELS, 'eval:seed'])
+/**
+ * Verdicts per PR on `pull_request` before the reviewer stops and leaves the
+ * PR to T (T, 2026-10-20). The first pass merges or holds; a HIGH fixed and
+ * pushed earns the second; after that the PR is labelled
+ * `review:exhausted` and only a dispatch reviews it again.
+ */
+export const MAX_PASSES = 2
+
+/** The label the workflow applies when the cap is reached. */
+export const EXHAUSTED_LABEL = 'review:exhausted'
+
+/** Seeded drafts (phase RV1c) are reviewed only by dispatch, never on `pull_request`. */
+export const DISPATCH_ONLY_LABELS = Object.freeze(['eval:seed'])
+
+/** A dispatched review takes everything `pull_request` does plus the seeded drafts. */
+export const DISPATCH_LABELS = Object.freeze([...REVIEW_LABELS, ...DISPATCH_ONLY_LABELS])
 
 /**
  * The marker a verdict comment carries for the head it reviewed.
@@ -63,6 +82,7 @@ export function headMarker(sha, digest = null) {
 }
 
 const MARKER = /<!-- pr-review:head ([0-9a-f]+)(?: diff ([0-9a-f]+))? -->/g
+const VERDICT = /<!--\s*pr-review:verdict (pass|not-pass)\s*-->/
 
 /**
  * Every head marker in a comment body, old shape and new.
@@ -97,18 +117,20 @@ export function diffDigest(patch) {
  * Whether to review this PR now.
  *
  * @param {{ state: string, isDraft: boolean, isCrossRepository: boolean, labels: string[], head: string, digest?: string | null, comments: string[], dispatch?: boolean }} pr the PR's live facts; `comments` are bodies, `digest` is the head's `diffDigest` (null when unavailable).
- * @returns {{ go: boolean, reason: string }} the decision and why.
+ * @returns {{ go: boolean, reason: string, exhausted?: boolean }} the decision and why; `exhausted` when the pass cap stopped it.
  * @example reviewWanted({ state: 'OPEN', isDraft: false, isCrossRepository: false, labels: ['loop:pr'], head: 'a', comments: [] }).go // true
  */
 export function reviewWanted({ state, isDraft, isCrossRepository, labels, head, digest = null, comments, dispatch = false }) {
   if (isCrossRepository) return { go: false, reason: 'fork head: the reviewer never runs on one' }
   if (state !== 'OPEN') return { go: false, reason: `PR is ${state.toLowerCase()}` }
-  const allowed = dispatch ? DISPATCH_LABELS : REVIEW_LABELS
-  if (!labels.some((l) => allowed.includes(l))) return { go: false, reason: `no ${allowed.join(' / ')} label` }
   if (dispatch) return { go: true, reason: 'dispatched' }
+  const seed = labels.find((l) => DISPATCH_ONLY_LABELS.includes(l))
+  if (seed) return { go: false, reason: `${seed}: reviewed by dispatch only` }
   if (isDraft) return { go: false, reason: 'draft' }
   const marked = comments.flatMap(markedHeads)
   if (marked.some((m) => m.sha === head)) return { go: false, reason: `head ${head.slice(0, 8)} already has a verdict` }
+  const passes = comments.filter((c) => VERDICT.test(c)).length
+  if (passes >= MAX_PASSES) return { go: false, exhausted: true, reason: `${passes} verdicts already: the cap is ${MAX_PASSES} passes, T reviews from here (${EXHAUSTED_LABEL})` }
   if (!digest) return { go: true, reason: `review head ${head.slice(0, 8)} (diff digest unavailable: SHA rule only)` }
   const same = marked.find((m) => m.digest === digest)
   if (same) return { go: false, reason: `diff ${digest.slice(0, 8)} already has a verdict (head ${same.sha.slice(0, 8)}); head ${head.slice(0, 8)} changes nothing in it` }
@@ -134,7 +156,15 @@ export function formatParentTests(files) {
 
 // --- I/O ----------------------------------------------------------------------
 
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+// The review job runs main's copy of this file from `.review-tooling/scripts/`.
+const ROOT = (() => {
+  const here = dirname(fileURLToPath(import.meta.url))
+  try {
+    return execFileSync('git', ['rev-parse', '--show-toplevel'], { cwd: here, encoding: 'utf8' }).trim()
+  } catch {
+    return resolve(here, '..')
+  }
+})()
 
 function arg(name, fallback) {
   const i = process.argv.indexOf(name)
@@ -206,7 +236,7 @@ async function main() {
   const d = reviewWanted(facts)
   console.log(`pr-review #${pr}: ${d.go ? 'go' : 'skip'} (${d.reason})`)
   if (process.env.GITHUB_OUTPUT) {
-    appendFileSync(process.env.GITHUB_OUTPUT, `go=${d.go}\npr=${pr}\nhead=${facts.head}\ndigest=${facts.digest ?? ''}\n`)
+    appendFileSync(process.env.GITHUB_OUTPUT, `go=${d.go}\npr=${pr}\nhead=${facts.head}\ndigest=${facts.digest ?? ''}\nexhausted=${Boolean(d.exhausted)}\n`)
   }
 }
 

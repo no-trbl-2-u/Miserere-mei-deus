@@ -20,28 +20,45 @@ name: pr-review
 # so labelling cannot loop. Nothing here merges, auto-merges, closes or
 # force-pushes a PR (D86); `scripts/loop-pr.test.mjs` pins all of it.
 #
-# Job `review` (RV1b) is the shadow reviewer: after a green `verify-gate`,
-# on an open, non-draft, same-repo PR labelled `loop:pr` or `plot`, one
-# Claude run of `skills/review.md` posts inline MED/HIGH findings and one
-# `## Review verdict` comment, and may raise (never lower) the `risk:*`
-# label. It blocks nothing: a not-pass is a comment, and the ruleset
-# requires `verify-gate` only. `review-wanted` decides on a plain runner
-# first (`scripts/pr-review.mjs`: labels, drafts, once per head, and once
-# per diff, phase RV2), so a label-only event costs no Claude run, and a
-# merge of main or a rebase that leaves the PR's diff unchanged costs none
-# either. The digest comes from `gh pr diff`, so this job stays a sparse
+# Job `review` (RV1b) is the adversarial reviewer: after a green
+# `verify-gate`, on every open, non-draft, same-repo PR (D95; through RV2
+# only `loop:pr` and `plot`), one Claude run of `skills/review.md` posts
+# inline MED/HIGH findings and one `## Review verdict` comment, and may
+# raise (never lower) the `risk:*` label. The ruleset requires
+# `verify-gate` only; a not-pass is a comment that job `merge` reads.
+# `review-wanted` decides on a plain runner first (`scripts/pr-review.mjs`:
+# drafts, seeded drafts, once per head, and once per diff, phase RV2), so a
+# label-only event costs no Claude run, and a merge of main or a rebase
+# that leaves the PR's diff unchanged costs none either. At most two
+# passes per PR (T, 2026-10-20): the second runs only when a not-pass was
+# fixed and pushed; after it the PR is labelled `review:exhausted` and
+# waits for T (a dispatch still reviews it). The digest comes from `gh pr diff`, so this job stays a sparse
 # depth-1 checkout. The reviewer reads, comments and
 # labels; it cannot edit, commit, push, merge or close (grant and deny list
 # below, pinned in `scripts/loop-pr.test.mjs`). The `workflow_dispatch`
 # route reviews one PR on demand (phase RV1c's seeded `eval:seed` drafts).
 #
-# On `risk:medium` and `risk:high` the run fans out to three Sonnet
-# sub-agents, one per lens (Rules, Tests, Blast radius, phase RV1c), merged
-# into the one verdict; `risk:low` keeps the single reviewer.
+# The run fans out to Sonnet sub-agents from a manifest
+# `scripts/pr-partition.mjs` derives from the diff (phase RV3): one reader
+# per module of changed source, each owning its files and their importers
+# and told what not to report, capped by tier (2 / 4 / 7), plus the Tests
+# lens and, on medium and high, a control adversary that reads the whole
+# diff unpartitioned. All are merged into the one verdict, overlap counted.
+#
+# Job `merge` (D95, amends D86) runs on a plain runner after `review`, in
+# the same run: `scripts/pr-merge.mjs decide` merges a PR only when it is
+# not a plan PR (`plot`, `review:plan-only`, or a `plot:`/`plan:` title),
+# no hold label is on it (`review:needs-T`, `loop:pr-stuck`, `eval:seed`,
+# `no-auto-merge`), this run's review posted a `pass` verdict naming the
+# exact head, GitHub calls the PR CLEAN, the daily cap holds, and the
+# repository variable `PR_AUTO_MERGE` is not `off`. Then it posts an audit
+# comment and runs `gh pr merge --auto --merge`: GitHub's active ruleset
+# (a required `verify-gate`) is the last word, never a comment match. The
+# reviewer itself still cannot merge, close, push or commit.
 #
 # Cost: GitHub-hosted runners, free for this public repo. Claude usage: one
-# run per reviewed head of a `loop:pr` or `plot` PR, at `effort: high`,
-# plus three Sonnet sub-agents on a medium or high tier.
+# run per reviewed head of every same-repo PR, at `effort: high`, plus up
+# to nine Sonnet sub-agents on a high tier (seven readers, Tests, control).
 
 on:
   pull_request:
@@ -126,9 +143,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Decide (labels, draft, once per head, once per diff)
+      - name: Decide (draft, seeded draft, once per head, once per diff, two passes)
         id: wanted
         run: node scripts/pr-review.mjs wanted --pr "$PR" $DISPATCH
+      - name: Label the PR for T when the pass cap is reached
+        if: steps.wanted.outputs.exhausted == 'true'
+        run: gh pr edit "$PR" --repo "$GH_REPO" --add-label review:exhausted
 
   review:
     needs: review-wanted
@@ -146,20 +166,80 @@ jobs:
     uses: ./.github/workflows/_claude-skill.yml
     secrets: inherit
     with:
-      # The PR's head may edit skills/review.md or .claude/; the reviewer
-      # runs main's copies of both when main has them.
+      # The PR's head may edit skills/review.md or the reviewer's scripts;
+      # the reviewer runs main's copies from .review-tooling/ (the skill and
+      # all of scripts/, so their imports resolve), and the PR's own tree
+      # stays whole so its tests run as the PR wrote them. .claude/,
+      # CLAUDE.md, AGENTS.md and .mcp.json are harness config and are
+      # restored in place.
       pre_run: |
         git fetch --no-tags origin main
-        for p in skills/review.md .claude CLAUDE.md AGENTS.md .mcp.json; do
+        rm -rf .review-tooling && mkdir -p .review-tooling
+        git archive origin/main skills/review.md scripts | tar -x -C .review-tooling
+        for p in .claude CLAUDE.md AGENTS.md .mcp.json; do
           if git cat-file -e "origin/main:$p" 2>/dev/null; then git checkout origin/main -- "$p"; fi
         done
-      prompt: 'Read skills/review.md end to end and follow it for PR #${{ needs.review-wanted.outputs.pr }}. Head ${{ needs.review-wanted.outputs.head }}, diff digest ${{ needs.review-wanted.outputs.digest || ''unavailable'' }}.'
-      allowed_tools: 'Read,Grep,Glob,Task,TodoWrite,Bash(git diff:*),Bash(git show:*),Bash(git log:*),Bash(git fetch:*),Bash(git rev-parse:*),Bash(npm test:*),Bash(node --test:*),Bash(node scripts/pr-review.mjs parent-tests:*),Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*),Bash(gh pr edit:*),mcp__github_inline_comment__create_inline_comment'
+      prompt: 'Read .review-tooling/skills/review.md end to end and follow it for PR #${{ needs.review-wanted.outputs.pr }}. Head ${{ needs.review-wanted.outputs.head }}, diff digest ${{ needs.review-wanted.outputs.digest || ''unavailable'' }}.'
+      allowed_tools: 'Read,Grep,Glob,Task,TodoWrite,Bash(git diff:*),Bash(git show:*),Bash(git log:*),Bash(git fetch:*),Bash(git rev-parse:*),Bash(npm test:*),Bash(node --test:*),Bash(node .review-tooling/scripts/pr-review.mjs parent-tests:*),Bash(node .review-tooling/scripts/pr-partition.mjs:*),Bash(node .review-tooling/scripts/pr-risk.mjs:*),Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*),Bash(gh pr edit:*),mcp__github_inline_comment__create_inline_comment'
       # Deny beats the allow list in .claude/settings.json, which a loop
       # tick needs and a reviewer must not have.
       extra_claude_args: |
         -p
         --disallowedTools "Edit,Write,MultiEdit,NotebookEdit,Bash(git push:*),Bash(git commit:*),Bash(gh pr merge:*),Bash(gh pr close:*),Bash(gh api:*)"
       effort: 'high'
-      # 30, not 20: medium and high tiers fan out to three lens sub-agents (RV1c).
-      timeout_minutes: 30
+      # 40: a high tier fans out to as many as nine Sonnet sub-agents (RV3).
+      timeout_minutes: 40
+
+  merge:
+    needs: [review-wanted, review]
+    # The review job's own success is not the verdict (a not-pass exits 0);
+    # the decision reads the verdict comment. A failed or cancelled review
+    # posts no verdict, so the decision holds on its own; the `if` only
+    # spares a runner.
+    if: always() && needs.review-wanted.outputs.go == 'true' && needs.review.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: read
+      checks: read
+    concurrency:
+      group: pr-merge-${{ needs.review-wanted.outputs.pr }}
+      cancel-in-progress: false
+    env:
+      # GH_PAT, so the merge's push to main fires pr-resolve, deadlines and
+      # the other push workflows; github.token would not. The ruleset binds
+      # this account too (no bypass actors), so a red verify-gate refuses it.
+      GH_TOKEN: ${{ secrets.GH_PAT || github.token }}
+      GH_REPO: ${{ github.repository }}
+      PR: ${{ needs.review-wanted.outputs.pr }}
+      HEAD_SHA: ${{ needs.review-wanted.outputs.head }}
+      PR_AUTO_MERGE: ${{ vars.PR_AUTO_MERGE }}
+    steps:
+      # main's scripts, never the PR's: a PR could otherwise rewrite the
+      # decision that merges it.
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: scripts
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: When this run's review started (a verdict older than this is not its verdict)
+        id: since
+        run: node scripts/pr-merge.mjs since --run "$GITHUB_RUN_ID"
+      - name: Decide (plan PR, holds, this run's verdict on this head, CLEAN, cap, kill switch)
+        id: decide
+        run: node scripts/pr-merge.mjs decide --pr "$PR" --head "$HEAD_SHA" --since "${{ steps.since.outputs.since }}"
+      - name: Auto-merge (GitHub's ruleset decides), then the audit comment
+        if: steps.decide.outputs.go == 'true'
+        run: |
+          gh pr merge "$PR" --repo "$GH_REPO" --auto --merge --match-head-commit "$HEAD_SHA"
+          gh pr comment "$PR" --repo "$GH_REPO" --body "$(node scripts/pr-merge.mjs audit --pr "$PR" --head "$HEAD_SHA" --run "$GITHUB_RUN_ID")"
+      - name: Hold
+        if: steps.decide.outputs.go != 'true'
+        env:
+          REASON: ${{ steps.decide.outputs.reason }}
+        run: |
+          echo "::notice::PR $PR not merged: $REASON"

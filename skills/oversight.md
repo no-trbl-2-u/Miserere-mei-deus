@@ -89,8 +89,9 @@ In parallel where independent:
       pr-review.yml --json conclusion,createdAt`, counting runs whose
       `review` job ran), and how many verdicts were `not-pass`. It is
       the cost check on phase RV1b: one Claude run per reviewed head,
-      three Sonnet lens sub-agents inside it on `risk:medium` and
-      `risk:high` (RV1c).
+      with up to 2 / 4 / 7 Sonnet assignment readers by tier plus the
+      Tests lens and, on `risk:medium` and `risk:high`, a control
+      adversary (RV3; the manifest is `scripts/pr-partition.mjs`).
     - **Intake used.** `git log --since=<date> --grep='^phases: plot'` and
       the count of `plan/messy/`-refined specs (commit subjects
       `plan(<topic>):`). Zero after two weeks means the habit didn't take.

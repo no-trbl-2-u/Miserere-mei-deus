@@ -438,7 +438,8 @@ Return cleanly with the PR URL. Loop's next tick re-audits.
    (§3, D88); card, keyword and art work waits on THE CARD HOLD
    (D37).
 4a. **Code lands by PR; never merge, close or auto-merge it** (D84,
-   D86). One PR per tick.
+   D86; the `pr-review.yml` `merge` job alone merges, on a green
+   review, D95). One PR per tick.
 5. **Don't audit blindly when work is queued.** If
    `plan/CRITIQUE.md` has Pending rows, prefer draining those
    over a fresh audit.
