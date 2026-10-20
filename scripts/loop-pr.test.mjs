@@ -221,6 +221,14 @@ test('the fixer is a separate run from the reviewer: writes and pushes once, nev
   assert.doesNotMatch((skill.match(/```[\s\S]*?```/g) ?? []).join('\n'), /gh pr (comment|edit|merge|close)/)
 })
 
+test('pr-review.mjs never imports pr-merge.mjs: the cycle deadlocked fix-wanted (exit 13 on #679)', async () => {
+  assert.doesNotMatch(code(read('scripts/pr-review.mjs')), /pr-merge\.mjs/)
+  assert.match(code(read('scripts/pr-review.mjs')), /from '\.\/pr-policy\.mjs'/)
+  const { PIPELINE_PATHS, MERGEABLE_STATES } = await import('./pr-policy.mjs')
+  assert.ok(PIPELINE_PATHS.includes('scripts/pr-policy.mjs'), 'the policy is pipeline')
+  assert.deepEqual([...MERGEABLE_STATES], ['CLEAN', 'UNSTABLE'])
+})
+
 test('the merge decision refuses plans, holds, forged markers and a non-CLEAN PR', async () => {
   const { PLAN_LABELS, HOLD_LABELS, mergeWanted } = await import('./pr-merge.mjs')
   assert.deepEqual([...PLAN_LABELS], ['plot', 'review:plan-only'])

@@ -44,6 +44,7 @@ import { fileURLToPath } from 'node:url'
 
 import { newTitles, runnerFor, verdictFor } from './eval/parent-replay-lib.mjs'
 import { checkout, closeWorktree, git, openWorktree, runTests } from './eval/worktree.mjs'
+import { HOLD_LABELS, PIPELINE_PATHS, PLAN_LABELS, PLAN_TITLE, TRUSTED_AUTHORS } from './pr-policy.mjs'
 
 /**
  * Labels the reviewer ran on through phase RV2. Since D95 (2026-10-20) every
@@ -261,7 +262,6 @@ async function main() {
   }
   if (mode === 'parent-tests') return parentTests(pr)
   if (mode === 'fix-wanted') {
-    const { HOLD_LABELS, PIPELINE_PATHS, PLAN_LABELS, PLAN_TITLE, TRUSTED_AUTHORS } = await import('./pr-merge.mjs')
     const v = JSON.parse(execFileSync('gh', ['pr', 'view', pr, '--repo', repo,
       '--json', 'state,isDraft,isCrossRepository,labels,title,files,headRefOid,headRefName,comments,commits'], { cwd: ROOT, encoding: 'utf8' }))
     const d = fixWanted({

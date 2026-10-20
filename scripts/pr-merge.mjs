@@ -26,7 +26,8 @@
 //     the verdict is `not-pass`, or there is none for this run
 //   - `verify-gate` is not green on the head (the head's check runs; the job's own gate, since T is
 //     on the ruleset's bypass list and the job merges on T's token)
-//   - GitHub says the PR is not mergeable (`mergeStateStatus` other than CLEAN)
+//   - GitHub says the PR is not mergeable (`mergeStateStatus` other than CLEAN or UNSTABLE; UNSTABLE is a
+//     non-required check red or cancelled, and only `verify-gate` is required, checked above)
 //   - the daily cap (`DAILY_CAP` merges by this job in 24 hours, counted by the `<!-- pr-merge:auto -->` marker)
 //
 // `mergeWanted` is pure; only `main` reads GitHub. The merge job checks out
@@ -38,42 +39,13 @@ import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { REVIEW_VERDICT } from './eval/ledger-lib.mjs'
+import { AUTO_MARKER, DAILY_CAP, HOLD_LABELS, MERGEABLE_STATES, PIPELINE_PATHS, PLAN_LABELS, PLAN_TITLE, TRUSTED_AUTHORS } from './pr-policy.mjs'
 import { markedHeads } from './pr-review.mjs'
 
-/** Labels that mark a PR as a plan, never merged by the job. */
-export const PLAN_LABELS = Object.freeze(['plot', 'review:plan-only'])
-
-/** A title that names a plan PR. */
-export const PLAN_TITLE = /^(plot|plan)\s*[:(]/i
-
-/** Labels that hold a PR for T or the loop. */
-export const HOLD_LABELS = Object.freeze(['review:needs-T', 'loop:pr-stuck', 'eval:seed', 'no-auto-merge'])
-
-/**
- * Files that are the review pipeline itself. A PR that changes them is
- * reviewed by main's copy but, once merged, becomes the new rule, so it
- * never merges itself: T merges it (T, 2026-10-20).
- */
-export const PIPELINE_PATHS = Object.freeze([
-  '.github/workflows/pr-review.yml', '.github/workflows/_claude-skill.yml', '.github/workflows/pr-autofix.yml', '.github/workflows/pr-resolve.yml',
-  'scripts/pr-merge.mjs', 'scripts/pr-review.mjs', 'scripts/pr-partition.mjs', 'scripts/pr-risk.mjs', 'scripts/pr-gate.mjs', 'scripts/pr-resolve.mjs',
-  'skills/review.md', 'skills/review-fix.md', 'skills/fix-ci.md',
-])
-
-/** Merges by this job in any 24-hour window; the rest wait for T. */
-export const DAILY_CAP = 12
-
-/**
- * Accounts whose verdict comments the job trusts: the repository owner
- * (the reviewer posts with GH_PAT, T's token) and the Actions identities
- * it falls back to. The repo is public, so any other account can post the
- * exact markers; those are never read. Override with TRUSTED_VERDICT_AUTHORS
- * (comma-separated) when the token changes hands.
- */
-export const TRUSTED_AUTHORS = Object.freeze(['no-trbl-2-u', 'claude[bot]', 'github-actions[bot]'])
-
-/** The marker the job's own comment carries, so the cap and the ledger can count its merges. */
-export const AUTO_MARKER = '<!-- pr-merge:auto -->'
+// The policy constants live in `pr-policy.mjs` so `pr-review.mjs` can read
+// them without importing this file (which imports it: the cycle deadlocked
+// the CLI's top-level await, exit 13). Re-exported here for every reader.
+export { AUTO_MARKER, DAILY_CAP, HOLD_LABELS, MERGEABLE_STATES, PIPELINE_PATHS, PLAN_LABELS, PLAN_TITLE, TRUSTED_AUTHORS }
 
 /**
  * The verdict the job trusts for this head and this run: the latest comment
@@ -162,7 +134,7 @@ export function mergeWanted({ state, isDraft, isCrossRepository, labels, title, 
   if (!verdict) return { go: false, reason: `no verdict for head ${head.slice(0, 8)} posted since ${since} by a trusted account` }
   if (verdict !== 'pass') return { go: false, reason: `verdict ${verdict} on head ${head.slice(0, 8)}` }
   if (!verifyGateGreen(checks, head)) return { go: false, reason: `verify-gate is not green on head ${head.slice(0, 8)}` }
-  if (mergeStateStatus !== 'CLEAN') return { go: false, reason: `mergeStateStatus ${mergeStateStatus}: GitHub does not call it mergeable` }
+  if (!MERGEABLE_STATES.includes(mergeStateStatus)) return { go: false, reason: `mergeStateStatus ${mergeStateStatus}: GitHub does not call it mergeable` }
   if (mergedToday >= DAILY_CAP) return { go: false, reason: `daily cap: ${mergedToday} auto-merges in 24h` }
   return { go: true, reason: `verdict pass on head ${head.slice(0, 8)}, ${mergeStateStatus}, ${mergedToday} of ${DAILY_CAP} today` }
 }
