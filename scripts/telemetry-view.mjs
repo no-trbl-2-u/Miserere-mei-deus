@@ -4,6 +4,7 @@
 //   npm run telemetry                       # all rows, oldest first
 //   npm run telemetry -- --since 2026-09-20 # rows on or after a UTC date
 //   npm run telemetry -- --tail 50          # only the newest N rows
+//   npm run telemetry -- --kind script      # one event kind and its -end rows
 //
 // The invocation log is split into one file per session per UTC date
 // under `telemetry/` (see `.claude/hooks/telemetry.mjs`, header point 3),
@@ -30,6 +31,9 @@ const ROW_RE = /^\| 20\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ \|/
 /** The timestamp cell of a data row, used as its sort key. */
 const whenOf = (row) => row.slice(2, 22)
 
+/** The event cell of a data row. */
+const eventOf = (row) => row.split('|')[2].trim()
+
 /**
  * Every data row from every `*.md` shard in `dir`, oldest first.
  * Rows with the same timestamp keep their shard's order (Array#sort is
@@ -50,10 +54,13 @@ export function collectRows(dir) {
 /**
  * Apply the CLI filters to already-sorted rows.
  * @param rows  sorted data rows
- * @param opts  { since?: 'YYYY-MM-DD', tail?: number }
+ * @param opts  { since?: 'YYYY-MM-DD', tail?: number, kind?: string }
+ *              `kind` keeps one event kind and its `-end` rows, so
+ *              `--kind script` lists the visual/e2e runs and their outcomes.
  */
-export function filterRows(rows, { since, tail } = {}) {
+export function filterRows(rows, { since, tail, kind } = {}) {
   let out = since ? rows.filter((r) => whenOf(r).slice(0, 10) >= since) : rows
+  if (kind) out = out.filter((r) => eventOf(r) === kind || eventOf(r) === `${kind}-end`)
   if (tail) out = out.slice(-tail)
   return out
 }
@@ -70,8 +77,11 @@ export function parseArgs(argv) {
     } else if (flag === '--tail' && /^\d+$/.test(value ?? '') && Number(value) > 0) {
       opts.tail = Number(value)
       i++
+    } else if (flag === '--kind' && /^[a-z][a-z-]*$/.test(value ?? '')) {
+      opts.kind = value
+      i++
     } else {
-      throw new Error(`unknown or malformed argument: ${flag}\nusage: telemetry-view.mjs [--since YYYY-MM-DD] [--tail N]`)
+      throw new Error(`unknown or malformed argument: ${flag}\nusage: telemetry-view.mjs [--since YYYY-MM-DD] [--tail N] [--kind EVENT]`)
     }
   }
   return opts
