@@ -288,8 +288,8 @@
         "source": "flow path from route:index: route:index -> route:(tabs)/deck"
       },
       "driven": {
-        "value": false,
-        "source": null
+        "value": true,
+        "source": "axiomancer-mobile/scripts/feature-map-e2e.mjs"
       },
       "tested": {
         "value": true,
@@ -339,7 +339,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/smoke-screens.mjs"
+        "source": "axiomancer-mobile/scripts/feature-map-e2e.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
       },
       "tested": {
         "value": true,
@@ -364,7 +364,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/smoke-screens.mjs"
+        "source": "axiomancer-mobile/scripts/feature-map-e2e.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
       },
       "tested": {
         "value": true,
@@ -713,8 +713,8 @@
         "source": "flow path from route:index: route:index -> route:(tabs)/character -> route:hazard-deck"
       },
       "driven": {
-        "value": false,
-        "source": null
+        "value": true,
+        "source": "axiomancer-mobile/scripts/feature-map-e2e.mjs"
       },
       "tested": {
         "value": true,
@@ -739,7 +739,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/fixture-e2e.mjs, axiomancer-mobile/scripts/map-walk-e2e.mjs"
+        "source": "axiomancer-mobile/scripts/feature-map-e2e.mjs, axiomancer-mobile/scripts/fixture-e2e.mjs, axiomancer-mobile/scripts/map-walk-e2e.mjs"
       },
       "tested": {
         "value": true,
@@ -864,7 +864,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/theme-switch-e2e.mjs"
+        "source": "axiomancer-mobile/scripts/feature-map-e2e.mjs, axiomancer-mobile/scripts/theme-switch-e2e.mjs"
       },
       "tested": {
         "value": true,
