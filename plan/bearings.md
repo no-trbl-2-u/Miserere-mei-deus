@@ -262,7 +262,12 @@ ambiguity.)
     outside `plan/`, `telemetry/`, `docs/reports/` or `devlog/entries/` opens a `loop:pr` PR
     onto `main` (D84); at most 5 are open (raised from 3 via /oversight 2026-10-17), after which `/march` reports
     "waiting on T" (D85); a non-plan PR merges when its adversarial
-    review is green (D95); T merges plan PRs; a PR open 7 days is
+    review is green (D95), with no daily limit (phase RV4, T 2026-10-21):
+    the per-PR holds still stop it (kill switch `PR_AUTO_MERGE=off` or
+    `no-auto-merge`, a plan or pipeline PR, `review:needs-T`,
+    `loop:pr-stuck`, a draft or fork, an untrusted verdict author, a
+    moved head, a `not-pass` or missing verdict, a `verify-gate` not
+    green), and the open-PR cap bounds what is in flight; T merges plan PRs; a PR open 7 days is
     flagged, never closed (D86). `pr-autofix` (Haiku, two
     runs per PR, then `loop:pr-stuck`) keeps them green and `pr-resolve`
     keeps them mergeable (D87). The flow: `skills/march.md` §3 "Landing a
