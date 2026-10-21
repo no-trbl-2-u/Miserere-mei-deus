@@ -54,7 +54,7 @@ name: pr-review
 # not a plan PR (`plot`, `review:plan-only`, or a `plot:`/`plan:` title),
 # no hold label is on it (`review:needs-T`, `loop:pr-stuck`, `eval:seed`,
 # `no-auto-merge`), this run's review posted a `pass` verdict naming the
-# exact head, GitHub calls the PR CLEAN, the daily cap holds, and the
+# exact head, GitHub calls the PR CLEAN, and the
 # repository variable `PR_AUTO_MERGE` is not `off`. Then it posts an audit
 # comment and runs `gh pr merge --auto --merge`: GitHub's active ruleset
 # (a required `verify-gate`) is the last word, never a comment match. The

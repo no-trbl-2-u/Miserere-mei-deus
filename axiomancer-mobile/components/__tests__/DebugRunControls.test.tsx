@@ -32,7 +32,7 @@ const withProvider = (store: AppStore, child: React.ReactNode) => <GameStoreProv
 describe('DebugRunControls', () => {
     it('renders run + gallery buttons in dev', () => {
         const tree = render(withProvider(createAppStore({ adapter: createMemoryAdapter() }), <DebugRunControls />));
-        for (const id of ['debug-run-save', 'debug-run-reset', 'debug-run-new', 'debug-gallery-enemy-art', 'debug-gallery-rooms', 'debug-gallery-defeat', 'debug-gallery-parley']) {
+        for (const id of ['debug-run-save', 'debug-run-reset', 'debug-run-new', 'debug-gallery-enemy-art', 'debug-gallery-rooms', 'debug-gallery-defeat', 'debug-gallery-parley', 'debug-gallery-frames']) {
             expect(tree.queryByTestId(id)).not.toBeNull();
         }
     });
@@ -75,5 +75,7 @@ describe('DebugRunControls', () => {
         expect(mockPush).toHaveBeenCalledWith('/devart/rooms');
         fireEvent.press(tree.getByTestId('debug-gallery-parley'));
         expect(mockPush).toHaveBeenCalledWith('/devaftermath?panel=parley');
+        fireEvent.press(tree.getByTestId('debug-gallery-frames'));
+        expect(mockPush).toHaveBeenCalledWith('/devframes');
     });
 });
