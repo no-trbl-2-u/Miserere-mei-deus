@@ -1,0 +1,53 @@
+{
+  "generated_by": "scripts/devlog-shots.mjs",
+  "date": "2026-10-21",
+  "since": "486618d55",
+  "sinceDate": "2026-10-19",
+  "shots": [
+    {
+      "screen": "character",
+      "before": true,
+      "ratio": 0.059469558877141816
+    },
+    {
+      "screen": "combat-encounter",
+      "before": true,
+      "ratio": 0.043501640539555235
+    },
+    {
+      "screen": "dialogue",
+      "before": true,
+      "ratio": 0.06425750394944708
+    },
+    {
+      "screen": "exploration",
+      "before": true,
+      "ratio": 0.02724207072548305
+    },
+    {
+      "screen": "inventory",
+      "before": true,
+      "ratio": 0.10361222505772269
+    },
+    {
+      "screen": "labyrinth",
+      "before": true,
+      "ratio": 0.07742435289828654
+    },
+    {
+      "screen": "memoir",
+      "before": true,
+      "ratio": 0.02439543079353506
+    },
+    {
+      "screen": "root",
+      "before": true,
+      "ratio": 0.3911198201482562
+    },
+    {
+      "screen": "village",
+      "before": true,
+      "ratio": 0.1038248875926601
+    }
+  ]
+}
