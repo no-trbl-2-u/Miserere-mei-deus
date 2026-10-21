@@ -179,6 +179,21 @@ event-pool and layout files).
       found while plotting it: `PHASE_ROW` is line-anchored, so every multi-line row looked like `Requires
       nothing` and every open attended one was announced as ready for T. Brief
       `plan/phases/phase_DL1_deadline_plan_integrity.md` § DL1a. Requires nothing.
+- [ ] Phase ML1a — Merging `lessons.md` stops duplicating slugs (plotted by T, 2026-10-20): a git
+      merge driver for `plan/lessons.md` and `plan/NEEDS_T.md`, registered via `.gitattributes` and the
+      same session-startup path that already sets `core.hooksPath`, unioning the two sides **by slug**
+      — higher `seen`, later `last`, unioned citations, `guarded by` beating `open` — and **refusing**
+      the merge with ordinary conflict markers where a union would breach the 500-byte or 40-open cap.
+      Its constants are imported from `scripts/check-lessons.mjs` so lint and driver cannot drift. Six
+      sightings in two days, three on PR #653 alone. Brief
+      `plan/phases/phase_ML1_lessons_merge_driver.md` § ML1a. Requires nothing.
+- [ ] Phase ML1b — The build plan's rows and queue log (plotted by T, 2026-10-20): the same treatment
+      for `plan/steps/01_build_plan.md`, whose Status rows collide because every `/plot asap` appends
+      above the same first open row (one plot PR took four rounds on 2026-10-19/20). Split from ML1a
+      because build-plan rows are an **ordered** list whose order carries priority, not a keyed set, so
+      "union by key" does not define the result; and unlike `lessons.md` a duplicate here reddens no
+      lint, so it is cost rather than breakage. Brief
+      `plan/phases/phase_ML1_lessons_merge_driver.md` § ML1b. Requires ML1a.
 - [ ] Phase DL1b — The derived Status column (plotted by T, 2026-10-20): `deadlines.mjs --write` recomputes every
       phase Item's Status cell from this Status block and rewrites `plan/deadlines.md` in place, `T` rows
       untouched; the lint fails a hand edit that disagrees; `deadlines.yml` commits both generated files in one
@@ -1482,6 +1497,7 @@ See the status rows above; generate briefs on demand.
 - **2026-10-19** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-TP1-title-plate-legibility`, PR #644, merged). Action: **added Phases TP1a and TP1b** — **entry filed late**, in the RV2 commit rather than TP1's own, which breaks this log's same-commit rule; recorded here rather than left missing. Reason: T liked the shipped title launch sequence read against a dark placeholder plate, so TP1a gates the plate's legibility by measurement and TP1b is the owner-led plate pick (D88).
 - **2026-10-19** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-VE1-visual-e2e`). Action: **added Phases VE1a, VE1b, VE1c, VE1d** (the visual e2e suite measured as signal per minute: one stamped web export for every script, a ready signal and a determinism check, a report-only CI step that commits each visual change's CI-rendered captures to the PR for T to approve from the image diff, routes selected from the diff) above the first open row. Confirmed T's request: yes (T's prompt and four AskUserQuestion calls: no Windows restamp once fresh baselines proved 1.5-4.5% renderer noise here, CI as renderer of record; report-only with the screenshots added to the PR; telemetry plus the CI step summary as the record; route selection as its own phase). Reason: asap because `verify:visual` is red on `main` today (11 of 13 routes, baselines up to 52 days stale, 0 CI runs) so every mobile `loop:pr` PR ships its pixels unseen. Resulting commit: this one; brief `plan/phases/phase_VE1_visual_e2e_signal.md`.
 - **2026-10-19** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-IT1-item-glyph-resolver`). Action: **added Phases IT1a and IT1b** directly above RV2. Reason: an item-art survey for T found that `ItemGlyph` keys on category, not item id, so the three healing potions and the two relics each draw one shared glyph — the same defect class as the card registry mapping only three ids. IT1a is the resolver with today's glyph as the fallback (ships changing no pixel); IT1b is T's icon picks and the death of the inline one-off `<Svg>` glyphs, owner-led under D88. Brief `plan/phases/phase_IT1_item_glyph_resolver.md`.
+- **2026-10-20** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-ML1-lessons-merge-driver`). Action: **added Phases ML1a and ML1b** directly above DL1b. Reason: git's three-way merge keeps both copies of a bumped lesson row with no conflict markers, so nothing prompts a human and `check-lessons` goes red on the receiving branch — six sightings on 2026-10-19/20, three of them on PR #653, each resolved by keeping both rows and each undone by hand. ML1a is the driver for `lessons.md` and `NEEDS_T.md`; ML1b extends the idea to the build plan, split out because its rows are ordered rather than keyed. Brief `plan/phases/phase_ML1_lessons_merge_driver.md`.
 >
 ## Phase log (commit hashes)
 
