@@ -4,7 +4,8 @@
 // plan/deadlines.md is the whole plan. Its "## Items" table lists every deadline
 // item: a due date, a name, the window, and either the build-plan phase ids that
 // finish it, `needs plot`, or `T` (a task only T does). A T task is done when its
-// Status cell is `[x]`.
+// Status cell is `[x]`, ticked by hand; a phase item's Status is derived from the
+// build plan and rewritten by `deadlines.mjs --write` (DL1b).
 //
 // The reminder names only what is stuck without T, due within the horizon (or
 // overdue):
@@ -166,6 +167,50 @@ export const inWindow = (due, window) => {
         const endYear = iso(y, window.to) < iso(y, window.from) ? y + 1 : y
         return iso(y, window.from) <= due && due <= iso(endYear, window.to)
     })
+}
+
+/**
+ * A phase Item's Status, derived from the build plan: `[x]` when every phase id it names
+ * is shipped or skipped, `[ ]` otherwise (an id with no row counts as open). Null for a
+ * `T` or `needs plot` Item, whose Status nothing derives.
+ * @returns {'[x]' | '[ ]' | null}
+ */
+export const derivedStatus = (item, phases) => {
+    if (!Array.isArray(item.rows)) return null
+    return item.rows.every((id) => phases.get(id)?.shipped) ? '[x]' : '[ ]'
+}
+
+const STATUS_CELL = /^(\|\s*)\[[ x]\]/
+const TABLE_SCAFFOLD = /^\|\s*(?:Status\s*\||-)/
+
+/**
+ * Rewrite the Status cell of every phase Item in the Items table to its derived value,
+ * leaving every other byte of the file as it was. A table line in the Items section that
+ * ITEM_ROW does not match is left exactly as it is and returned in `unmatched`.
+ * @param {string} md plan/deadlines.md
+ * @returns {{md: string, changed: string[], unmatched: string[]}}
+ */
+export const rewriteItemStatus = (md, phases) => {
+    const start = md.indexOf('\n## Items')
+    if (start < 0) return { md, changed: [], unmatched: [] }
+    const nextHeading = md.indexOf('\n## ', start + 1)
+    const end = nextHeading < 0 ? md.length : nextHeading
+    const changed = []
+    const unmatched = []
+    const lines = md.slice(start, end).split('\n').map((line) => {
+        if (!line.startsWith('|') || TABLE_SCAFFOLD.test(line)) return line
+        const m = line.match(ITEM_ROW)
+        if (!m) {
+            unmatched.push(line)
+            return line
+        }
+        const [, status, due, name, window, rowsCell] = m
+        const want = derivedStatus({ done: status === '[x]', due, name, window, rows: parseRowsCell(rowsCell) }, phases)
+        if (!want || want === status) return line
+        changed.push(`${name}: ${status} -> ${want}`)
+        return line.replace(STATUS_CELL, `$1${want}`)
+    })
+    return { md: md.slice(0, start) + lines.join('\n') + md.slice(end), changed, unmatched }
 }
 
 /** Whole days from `today` to `due` (both YYYY-MM-DD); negative when overdue. */

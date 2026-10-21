@@ -339,10 +339,14 @@ git commit -m "<type>: <one-line summary> — phase <N>" -m "<bullets + Decision
 
 The build-plan row stays `[ ]` with a `- pr: #<PR>` field (the
 `- issue:` field's shape) while the PR is open. The PR's **last
-commit** flips it to `[x] (#<PR>)` so T's merge ticks it:
+commit** flips it to `[x] (#<PR>)` so T's merge ticks it, and in the
+same commit re-derives the deadline Items' Status cells: if the flip
+finishes an Item, `scripts/check-deadlines.mjs` fails the root `npm
+test` until `plan/deadlines.md` says so (phase DL1b):
 
 ```bash
-git add plan/steps/01_build_plan.md
+node scripts/deadlines.mjs --write && git checkout -- LIVE_DEADLINES.md
+git add plan/steps/01_build_plan.md plan/deadlines.md
 git commit -m "plan: phase <N> shipped — <one-line>" -m "Closes #<phase-issue-number>"
 git push -u origin "loop/ship-<N>-<slug>"
 gh pr create --repo "$GH_REPO" --base main --head "loop/ship-<N>-<slug>" \

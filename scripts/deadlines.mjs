@@ -3,7 +3,8 @@
 //
 //   node scripts/deadlines.mjs            # print the reminder
 //   node scripts/deadlines.mjs --remind   # session-start hook: print the reminder, silent in CI
-//   node scripts/deadlines.mjs --write    # rewrite LIVE_DEADLINES.md (the daily workflow)
+//   node scripts/deadlines.mjs --write    # rewrite LIVE_DEADLINES.md and every phase Item's
+//                                         # Status cell in plan/deadlines.md (the daily workflow)
 //   node scripts/deadlines.mjs --today=YYYY-MM-DD   # pin the date (tests, previews)
 //
 // Reads plan/deadlines.md (the whole plan) and plan/steps/01_build_plan.md; the
@@ -13,7 +14,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { dueNeeds, liveMarkdown, nextNeed, parseItems, parsePhaseRows, reminderText } from './deadlines-lib.mjs'
+import { dueNeeds, liveMarkdown, nextNeed, parseItems, parsePhaseRows, reminderText, rewriteItemStatus } from './deadlines-lib.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const args = process.argv.slice(2)
@@ -32,8 +33,18 @@ const main = () => {
     // Chats T starts only: the loop's runs in GitHub Actions stay clean.
     if (flag('remind') && (process.env.GITHUB_ACTIONS || process.env.CI)) return
     const today = todayArg ?? localToday()
-    const items = parseItems(read('plan/deadlines.md'))
     const phases = parsePhaseRows(read('plan/steps/01_build_plan.md'))
+    let deadlinesMd = read('plan/deadlines.md')
+    if (flag('write')) {
+        const rewrite = rewriteItemStatus(deadlinesMd, phases)
+        for (const line of rewrite.unmatched) process.stderr.write(`deadlines: Items row not understood, left as is: ${line}\n`)
+        if (rewrite.changed.length) {
+            fs.writeFileSync(path.join(ROOT, 'plan/deadlines.md'), rewrite.md)
+            process.stdout.write(`deadlines: Status recomputed — ${rewrite.changed.join('; ')}\n`)
+        }
+        deadlinesMd = rewrite.md
+    }
+    const items = parseItems(deadlinesMd)
     const needs = dueNeeds(items, phases, today)
     const next = nextNeed(items, phases, today)
     if (flag('write')) {
