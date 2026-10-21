@@ -157,10 +157,7 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - FM1c — loop work, needs no time from T beyond confirming the pitch rule; date not set.
 - FM1d — loop work, needs no time from T beyond confirming the pitch rule; date not set.
 - FM1e — loop work, needs no time from T beyond confirming the pitch rule; date not set.
-- OV1a — attended; T is building it in the plotting session (2026-10-20); date not set.
-- OV1b — attended; T is building it in the plotting session (2026-10-20); date not set.
-- OV1c — attended; T is building it in the plotting session (2026-10-20); date not set.
-- OV1d — attended; T is building it in the plotting session (2026-10-20); date not set.
+- OV1d — attended; only A11 is left, the conflict test, which needs T at the desktop; date not set.
 - VE1c — loop work listed alongside W1, needing no time from T; date not set.
 - VE1d — loop work listed alongside W1, needing no time from T; date not set.
 - PF2 — attended; after v0.3 (The milestone), and waits on T's Android baseline numbers.
