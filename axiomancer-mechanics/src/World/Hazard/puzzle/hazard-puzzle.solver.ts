@@ -69,6 +69,16 @@ export interface HazardPuzzleFeatures {
     drawDependence: number;
 }
 
+/**
+ * The first plays of one route: the first placements `openingShare` reads,
+ * counted rather than shared. A first play wins when a win is still
+ * reachable after it; it loses when every line from it falls short.
+ */
+export interface HazardPuzzleFirstPlays {
+    winning: number;
+    losing: number;
+}
+
 export interface HazardPuzzleSolution {
     route: HazardRouteKey;
     goal: HazardPuzzleGoal;
@@ -94,6 +104,8 @@ export interface HazardPuzzleSolution {
     overBudget: boolean;
     /** The five difficulty features (partial with the counts when over budget). */
     features: HazardPuzzleFeatures;
+    /** The first plays that can still win and those that cannot (none when the session is over). */
+    firstPlays: HazardPuzzleFirstPlays;
 }
 
 /** Margin of a resolve over its goal: combined on safe, the weaker meter on risk. */
@@ -211,7 +223,7 @@ export function solveHazardPuzzleSession(
         const depth = line.length;
         const known = depthOf.get(key);
         // A board already walked answers from the cache even after the
-        // budget trips: `openingShare` re-enters the root's placements
+        // budget trips: `walkFirstPlays` re-enters the root's placements
         // after the exhaustive walk, and a win found on the way stays a win.
         if (known !== undefined && known <= depth) return winsFrom.get(key) ?? false;
         if (overBudget) return false;
@@ -244,8 +256,8 @@ export function solveHazardPuzzleSession(
         return won;
     };
 
-    /** Walks the root by first placements and returns the share that still wins. */
-    const openingShare = (root: HazardPuzzleSession): number => {
+    /** Walks the root by first placements and counts those that still win. */
+    const walkFirstPlays = (root: HazardPuzzleSession): HazardPuzzleFirstPlays => {
         let placements = 0;
         let winning = 0;
         const place = (s: HazardPuzzleSession, move: HazardPuzzleMove): HazardPuzzleSession | null => {
@@ -268,10 +280,12 @@ export function solveHazardPuzzleSession(
             }
             line.pop();
         }
-        return placements === 0 ? 0 : winning / placements;
+        return { winning, losing: placements - winning };
     };
 
-    const share = start.phase === 'playing' ? openingShare(start) : 0;
+    const firstPlays = start.phase === 'playing' ? walkFirstPlays(start) : { winning: 0, losing: 0 };
+    const placements = firstPlays.winning + firstPlays.losing;
+    const share = placements === 0 ? 0 : firstPlays.winning / placements;
     const found = best as Best | null;
     const winningStaged = [...wins.values()];
     return {
@@ -290,6 +304,7 @@ export function solveHazardPuzzleSession(
             shortestWin,
             drawDependence: wins.size === 0 ? 0 : winningStaged.filter(stagesDraw).length / wins.size,
         },
+        firstPlays,
     };
 }
 

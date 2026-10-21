@@ -299,11 +299,18 @@ export {
     hazardPuzzleBandOf, auditHazardPuzzleRoute, auditHazardPuzzleLayout,
 } from './World/Hazard';
 export type {
-    HazardPuzzleFeatures, HazardPuzzleSolution, HazardPuzzleSolveOptions, HazardPuzzleRouteAudit,
+    HazardPuzzleFeatures, HazardPuzzleFirstPlays, HazardPuzzleSolution, HazardPuzzleSolveOptions,
+    HazardPuzzleRouteAudit,
 } from './World/Hazard';
-// Hazard puzzle card report and the solve's difficulty features.
-export { hazardPuzzleCardReport, formatHazardPuzzleCardReport, formatHazardPuzzleFeatures } from './World/Hazard';
-export type { HazardPuzzleCardReport, HazardPuzzleCardSource, HazardPuzzleCardUse } from './World/Hazard';
+// Hazard puzzle card report, the solve's difficulty features and its decision pressure.
+export {
+    hazardPuzzleCardReport, formatHazardPuzzleCardReport, formatHazardPuzzleFeatures,
+    hazardPuzzleDecisionPressure, formatHazardPuzzleDecisionPressure,
+} from './World/Hazard';
+export type {
+    HazardPuzzleCardReport, HazardPuzzleCardSource, HazardPuzzleCardUse,
+    HazardPuzzleDecisionPressure, HazardPuzzlePressureFinding,
+} from './World/Hazard';
 // Hazard puzzle card audit and the card pool puzzles draw from.
 export {
     HAZARD_PUZZLE_CARD_POOL, HAZARD_PUZZLE_IGNORED_FIELDS, hazardPuzzleCardAudit,

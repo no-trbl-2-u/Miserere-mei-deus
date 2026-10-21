@@ -4,12 +4,23 @@
  *
  * Card numbers used below (free / powered): IRON GRIP red 5/9 force;
  * SCRAMBLE blue 3/6 escape; SURE FOOTING purple 2/2 both meters, DRAW 1;
- * CRACK dead, 0/0 and never powerable. A gold die powers any colour.
+ * CRACK dead, 0/0 and never powerable; DEAD-MAN HAUL red 3/6 force. A
+ * gold die powers any colour, a red die only red.
+ *
+ * Decision pressure (HP4 A1, A2): a first play is one hand card staged with
+ * its die left open, or powered by one die kind that can power it. The walk
+ * never undoes a move, so a die placed on the wrong card stays there.
  */
 
 import { describe, expect, it } from 'vitest';
 
-import { formatHazardPuzzleCardReport, hazardPuzzleCardReport } from '../hazard-puzzle.report';
+import {
+    formatHazardPuzzleCardReport,
+    formatHazardPuzzleDecisionPressure,
+    hazardPuzzleCardReport,
+    hazardPuzzleDecisionPressure,
+} from '../hazard-puzzle.report';
+import { HAZARD_PUZZLE_LIBRARY } from '../hazard-puzzle.library';
 import type { HazardPuzzleUnlock } from '../hazard-puzzle.types';
 import { testLayout } from './hazard-puzzle.layouts.mock';
 import { useHazardPuzzlePoolCards } from './hazard-puzzle.pool.mock';
@@ -84,5 +95,141 @@ describe('hazardPuzzleCardReport (A3)', () => {
                 '| crack | hand | 0 / 4 |  | yes |',
             ].join('\n'),
         );
+    });
+});
+
+/** GRIP in {0, 5, 9 with gold}; SCRAMBLE in {0, 3, 6 with gold}; one gold die. */
+const DIE_CHOICE = testLayout({
+    id: 'pressure-die-choice',
+    hand: ['grip', 'scram'],
+    dice: ['gold'],
+    goals: { safe: 12, risk: [9, 3] },
+});
+
+/** HAUL in {0, 3, 6 with red}; one red die. */
+const ONE_CARD = testLayout({ id: 'pressure-one-card', hand: ['haul'], dice: ['red'], goals: { safe: 3, risk: [3, 1] } });
+
+/** DIE_CHOICE plus HAUL: risk [9, 3] has an optional card and a losing first play. */
+const THREE_CARDS = testLayout({
+    id: 'pressure-three',
+    hand: ['grip', 'scram', 'haul'],
+    dice: ['gold'],
+    goals: { safe: 1, risk: [9, 3] },
+});
+
+describe('decision pressure (HP4 A1)', () => {
+    it('neither forced nor free: one optional card, and the die on SCRAMBLE loses', () => {
+        // Risk [9, 3]: SCRAMBLE is the only escape, so every win stages it. Wins:
+        // GRIP 9 + SCRAMBLE 3; GRIP 9 + SCRAMBLE 3 + HAUL 3; GRIP 5 + HAUL 6 + SCRAMBLE 3.
+        // GRIP and SCRAMBLE are required, HAUL is in two of three.
+        // First plays: GRIP open, GRIP gold, SCRAMBLE open, HAUL open, HAUL gold still win;
+        // SCRAMBLE gold leaves GRIP 5 + HAUL 3 = 8 force, one short of 9.
+        expect(hazardPuzzleCardReport(THREE_CARDS, 'risk').pressure).toEqual({
+            optional: 1,
+            required: 2,
+            total: 3,
+            requiredShare: 2 / 3,
+            firstPlays: { winning: 5, losing: 1 },
+            finding: null,
+        });
+    });
+
+    it('free: every first play still wins, with one optional card and one unused', () => {
+        // Safe 8 (see the A3 case above): GRIP required, SCRAMBLE optional, CRACK unused.
+        // First plays: GRIP open, GRIP gold, SCRAMBLE open, SCRAMBLE gold (GRIP 5 + 6 = 11),
+        // CRACK open: all five still win.
+        expect(hazardPuzzleCardReport(ONE_GOLD, 'safe').pressure).toEqual({
+            optional: 1,
+            required: 1,
+            total: 3,
+            requiredShare: 1 / 3,
+            firstPlays: { winning: 5, losing: 0 },
+            finding: 'free',
+        });
+    });
+
+    it('forced: one win needs both cards, and the die on SCRAMBLE is the one losing first play', () => {
+        // Safe 12: only GRIP 9 + SCRAMBLE 3. SCRAMBLE gold caps at 5 + 6 = 11.
+        expect(hazardPuzzleCardReport(DIE_CHOICE, 'safe').pressure).toEqual({
+            optional: 0,
+            required: 2,
+            total: 2,
+            requiredShare: 1,
+            firstPlays: { winning: 3, losing: 1 },
+            finding: 'forced',
+        });
+    });
+
+    it('forced reads before free: one card, both first plays win', () => {
+        // Safe 3: HAUL staged (3) or powered (6) wins; held (0) does not.
+        expect(hazardPuzzleCardReport(ONE_CARD, 'safe').pressure).toMatchObject({
+            optional: 0,
+            required: 1,
+            total: 1,
+            firstPlays: { winning: 2, losing: 0 },
+            finding: 'forced',
+        });
+    });
+
+    it('a route nothing wins has no finding and every first play loses', () => {
+        // Risk [3, 1]: HAUL pays no escape.
+        expect(hazardPuzzleCardReport(ONE_CARD, 'risk').pressure).toEqual({
+            optional: 0,
+            required: 0,
+            total: 1,
+            requiredShare: 0,
+            firstPlays: { winning: 0, losing: 2 },
+            finding: null,
+        });
+    });
+
+    it('the first plays add up to the opening share', () => {
+        const report = hazardPuzzleCardReport(THREE_CARDS, 'risk');
+        const { winning, losing } = report.pressure.firstPlays;
+        expect(winning / (winning + losing)).toBe(report.features.openingShare);
+    });
+
+    it('an empty report is neither forced nor free and has a zero share', () => {
+        expect(hazardPuzzleDecisionPressure([], { winning: 0, losing: 0 })).toEqual({
+            optional: 0,
+            required: 0,
+            total: 0,
+            requiredShare: 0,
+            firstPlays: { winning: 0, losing: 0 },
+            finding: null,
+        });
+    });
+
+    it('prints as one line, the finding last', () => {
+        expect(formatHazardPuzzleDecisionPressure(hazardPuzzleCardReport(THREE_CARDS, 'risk').pressure)).toBe(
+            'decision pressure: optional cards 1 · required 2 / 3 (67%) · ' +
+                'first plays that can win 5 · first plays that cannot 1',
+        );
+        expect(formatHazardPuzzleDecisionPressure(hazardPuzzleCardReport(DIE_CHOICE, 'safe').pressure)).toBe(
+            'decision pressure: optional cards 0 · required 2 / 2 (100%) · ' +
+                'first plays that can win 3 · first plays that cannot 1 · **forced**',
+        );
+    });
+});
+
+describe('decision pressure on the live library (HP4 A2)', () => {
+    const findingOf = (id: string, route: 'safe' | 'risk') => {
+        const layout = HAZARD_PUZZLE_LIBRARY.find((l) => l.id === id);
+        if (!layout) throw new Error(`no library layout ${id}`);
+        return hazardPuzzleCardReport(layout, route).pressure.finding;
+    };
+
+    it('prints forced where every card is required: ashfall risk and undercroft risk', () => {
+        expect(findingOf('demo-ashfall-medium', 'risk')).toBe('forced');
+        expect(findingOf('demo-undercroft-hard', 'risk')).toBe('forced');
+    });
+
+    it('prints free on cliff-easy risk, and on every other route with no losing first play', () => {
+        // The brief named cliff-easy risk; measured, no first play loses on any
+        // route that is not forced, so the other three routes are free too.
+        expect(findingOf('demo-cliff-easy', 'risk')).toBe('free');
+        expect(findingOf('demo-cliff-easy', 'safe')).toBe('free');
+        expect(findingOf('demo-ashfall-medium', 'safe')).toBe('free');
+        expect(findingOf('demo-undercroft-hard', 'safe')).toBe('free');
     });
 });
