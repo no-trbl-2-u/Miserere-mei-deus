@@ -38,7 +38,13 @@ test('only the live hazard shot picks a route', () => {
 
 test('the devpuzzle shots sit beside the live hazard shot', () => {
     const names = ROUTES.map((r) => r.name)
-    for (const name of ['hazard-board', 'devpuzzle-board', 'devpuzzle-outcome']) assert.ok(names.includes(name), name)
+    for (const name of ['hazard-board', 'devpuzzle-list', 'devpuzzle-board', 'devpuzzle-outcome']) assert.ok(names.includes(name), name)
+})
+
+test('the devpuzzle list shot opens the bare route in the forced dev-tools context', () => {
+    const list = ROUTES.find((r) => r.name === 'devpuzzle-list')
+    assert.equal(list.path, '/devpuzzle')
+    assert.equal(list.fixture, 'fresh-start')
 })
 
 test('pickHazardRoute clicks the route, then waits for the board and for the roll to settle', async () => {

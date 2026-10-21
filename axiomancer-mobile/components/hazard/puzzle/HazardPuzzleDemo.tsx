@@ -1,6 +1,8 @@
 /**
  * The dev-menu HAZARD PUZZLES flow on the live hazard surface: the list of
- * demo puzzles, the live `RouteSelect` (before the clock starts), the live
+ * demo puzzles and of labelled candidates (grouped by intended band; a
+ * candidate skips the route pick and starts on its nominated route), the
+ * live `RouteSelect` (before a demo's clock starts), the live
  * `HazardBoard` under the clock with the shared drag controller, and the
  * outcome. The puzzle session lives in local state and is never saved; the
  * engine runs every move, the presenter shapes every view (the board is the
@@ -40,10 +42,13 @@ import {
     applyHazardPuzzleCard,
     confirmHazardPuzzle,
     createHazardPuzzleSession,
+    getHazardPuzzleCandidate,
     getHazardPuzzleLayout,
+    HAZARD_PUZZLE_CANDIDATES,
     powerHazardPuzzleCard,
     stageHazardPuzzleCard,
     unstageHazardPuzzleCard,
+    type HazardPuzzleCandidate,
     type HazardPuzzleLayout,
     type HazardPuzzleSession,
     type HazardPuzzleUnlock,
@@ -69,6 +74,7 @@ import {
 import {
     hazardPuzzleClockFor,
     nextHazardPuzzleDieRolls,
+    selectHazardPuzzleCandidateGroupsVM,
     selectHazardPuzzleDiceChange,
     selectHazardPuzzleListVM,
     selectHazardPuzzleOutcomeVM,
@@ -87,14 +93,19 @@ import { HazardPuzzleStrip, stripProps } from './HazardPuzzleStrip';
 import { useHazardPuzzleClock } from './useHazardPuzzleClock';
 
 export interface HazardPuzzleDemoProps {
-    /** Open this demo straight away (smoke shots, deep links). */
+    /**
+     * Open this demo straight away (smoke shots, deep links). A candidate's
+     * id starts that candidate on its nominated route.
+     */
     initialId?: string;
-    /** With `initialId`, start this route straight away. */
+    /** With a demo's `initialId`, start this route straight away. */
     initialRoute?: HazardRouteKey;
     /** With both, confirm at once to show the outcome panel. */
     autoConfirm?: boolean;
     /** Hold the clock (stable smoke shots of the board). */
     clockPaused?: boolean;
+    /** The candidate set the list groups (tests pass their own). */
+    candidates?: readonly HazardPuzzleCandidate[];
 }
 
 interface Play {
@@ -114,7 +125,22 @@ function findLayout(id: string | undefined): HazardPuzzleLayout | null {
     }
 }
 
-export function HazardPuzzleDemo({ initialId, initialRoute, autoConfirm, clockPaused }: HazardPuzzleDemoProps) {
+function findCandidate(id: string | undefined, candidates: readonly HazardPuzzleCandidate[]): HazardPuzzleCandidate | null {
+    if (!id) return null;
+    try {
+        return getHazardPuzzleCandidate(id, candidates);
+    } catch {
+        return null;
+    }
+}
+
+export function HazardPuzzleDemo({
+    initialId,
+    initialRoute,
+    autoConfirm,
+    clockPaused,
+    candidates = HAZARD_PUZZLE_CANDIDATES,
+}: HazardPuzzleDemoProps) {
     const actions = useGameActions();
     const baseStats = useGameState((s) => s.player.baseStats);
     const [picked, setPicked] = useState<HazardPuzzleLayout | null>(() => findLayout(initialId));
@@ -212,6 +238,13 @@ export function HazardPuzzleDemo({ initialId, initialRoute, autoConfirm, clockPa
     }, [picked]);
 
     useEffect(() => {
+        const candidate = findCandidate(initialId, candidates);
+        if (candidate) start(candidate, candidate.route);
+        // Deep-link start of a candidate on its nominated route, once on mount.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
         if (autoConfirm && play && play.session.phase === 'playing' && !outcome) finish(false);
     }, [autoConfirm, play, outcome, finish]);
 
@@ -227,6 +260,11 @@ export function HazardPuzzleDemo({ initialId, initialRoute, autoConfirm, clockPa
     };
 
     const list = useMemo(() => selectHazardPuzzleListVM(), []);
+    const candidateGroups = useMemo(() => selectHazardPuzzleCandidateGroupsVM(candidates), [candidates]);
+    const pickCandidate = (id: string) => {
+        const candidate = findCandidate(id, candidates);
+        if (candidate) start(candidate, candidate.route);
+    };
 
     const detail =
         detailCard !== null ? <CardDetailOverlay card={detailCard} onClose={() => setDetailCard(null)} /> : null;
@@ -318,10 +356,18 @@ export function HazardPuzzleDemo({ initialId, initialRoute, autoConfirm, clockPa
         );
     }
 
-    if (!logging) return <HazardPuzzleList items={list} onPick={(id) => setPicked(findLayout(id))} />;
+    const listView = (
+        <HazardPuzzleList
+            items={list}
+            onPick={(id) => setPicked(findLayout(id))}
+            candidateGroups={candidateGroups}
+            onPickCandidate={pickCandidate}
+        />
+    );
+    if (!logging) return listView;
     return (
         <View style={styles.root}>
-            <HazardPuzzleList items={list} onPick={(id) => setPicked(findLayout(id))} />
+            {listView}
             <HazardPuzzleLogPanel
                 attempts={attempts}
                 solver={solver}

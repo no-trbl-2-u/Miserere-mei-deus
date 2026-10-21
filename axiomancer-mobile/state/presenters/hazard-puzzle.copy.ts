@@ -17,6 +17,11 @@ export const HAZARD_PUZZLE_DIE_WORD: Record<HazardDieKind, string> = Object.free
 
 export const HAZARD_PUZZLE_LIST_TITLE = 'HAZARD PUZZLES';
 export const HAZARD_PUZZLE_LIST_INTRO = 'Fixed one-round demos. Pick a puzzle, then a route; the clock starts on the route.';
+export const HAZARD_PUZZLE_DEMOS_HEADING = 'DEMOS';
+export const HAZARD_PUZZLE_CANDIDATES_HEADING = 'CANDIDATES';
+export const HAZARD_PUZZLE_CANDIDATES_INTRO =
+    'Labelled candidates, grouped by the band each is authored to feel like. Each plays on its one route: pick it and the clock starts.';
+export const HAZARD_PUZZLE_CANDIDATE_GROUP_EMPTY = 'None authored yet.';
 export const HAZARD_PUZZLE_BACK_LABEL = 'BACK';
 export const HAZARD_PUZZLE_DISABLED = 'Dev tools are off in this build.';
 
@@ -43,6 +48,16 @@ export const HAZARD_PUZZLE_NO_UNLOCKS = 'Your stats unlock nothing here.';
 
 export function hazardPuzzleBandChip(band: HazardPuzzleBand): string {
     return `${HAZARD_PUZZLE_BAND_LABEL[band]} ON THE RISK ROUTE`;
+}
+
+/** A candidate group's heading: its intended band and how many it holds, e.g. "EASY · 10". */
+export function hazardPuzzleCandidateGroupHeading(band: HazardPuzzleBand, count: number): string {
+    return `${HAZARD_PUZZLE_BAND_LABEL[band]} · ${count}`;
+}
+
+/** A candidate row's second line: the live hazard it reuses and its nominated route. */
+export function hazardPuzzleCandidateDetail(title: string, route: 'safe' | 'risk'): string {
+    return `${title} · ${route === 'risk' ? 'RISK' : 'SAFE'} ROUTE`;
 }
 
 export function hazardPuzzleReserve(count: number): string {

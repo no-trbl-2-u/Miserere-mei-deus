@@ -75,6 +75,8 @@ export const ROUTES = [
     // so it needs the forced dev-tools context a fixture route gets): the
     // hard demo's board, and its outcome panel after an immediate confirm.
     // The board opens with the live dice roll, so its shot waits it out.
+    // The list: the three demos, then the candidates grouped by intended band.
+    { name: 'devpuzzle-list', path: '/devpuzzle', fixture: 'fresh-start' },
     { name: 'devpuzzle-board', path: '/devpuzzle?id=demo-undercroft-hard&route=risk&paused=1', fixture: 'fresh-start', settleRoll: true },
     { name: 'devpuzzle-outcome', path: '/devpuzzle?id=demo-undercroft-hard&route=risk&confirm=1', fixture: 'fresh-start' },
 ]
