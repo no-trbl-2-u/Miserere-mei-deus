@@ -66,6 +66,40 @@ store (watched by the exploration screen). Not covered: a fight hosted by
 `/labyrinth`, and the `/combat-encounter` sandbox (its state is panel-local
 and persists nothing). Tests: `state/dev/__tests__/skip-event.test.ts`.
 
+## Post puzzle attempts to the solve-time API (2026-10-21)
+
+Each `/devpuzzle` attempt that ends (a CONFIRM or the clock running out) is
+posted once to the `miserere-api` Worker (`backend/`) as
+`POST /v1/puzzle-attempts`, in the shared `PuzzleAttemptPost` shape from
+`@mechanics` (phase BE1c). A candidate carries its `intendedBand`; a demo
+carries null. The poster is `lib/puzzleAttempts.ts`, called from
+`components/hazard/puzzle/usePostEndedPuzzleAttempts.ts`, which remembers
+each attempt by layout and clock start, so renaming the SOLVER after a solve
+never posts it twice.
+
+It posts only when **all three** hold, and otherwise makes no network call:
+
+| Needs | Where it comes from |
+|---|---|
+| dev tools on | `isDevToolsEnabled()`: a preview build, or a local dev session |
+| `EXPO_PUBLIC_PUZZLE_API_URL` | the Worker's origin, no path (a trailing slash is dropped) |
+| `EXPO_PUBLIC_PUZZLE_API_TOKEN` | the shared dev bearer token, the Worker's `PUZZLE_API_TOKEN` |
+
+A failed post (network, or any non-2xx) is dropped with one
+`[puzzleAttempts] attempt not posted` console warning: no retry, no queue,
+nothing on screen. The COPY LOG export is unchanged.
+
+For a local session, export both values before `npm start`. For a preview
+APK, `.github/workflows/preview-build.yml` reads the repo secrets of the same
+names and writes them into the build profile's `env` in its checkout's
+`eas.json` (an EAS cloud build does not see the runner's env); it skips this
+for `production`, and with either secret unset the build simply never posts.
+The token ships inside the preview APK, which the brief accepts for dev-only
+puzzle times; rotating it means a new secret and a rebuild. The Worker URL
+and the secrets are set up in phase BE1b. Tests:
+`lib/__tests__/puzzleAttempts.test.ts`,
+`components/hazard/puzzle/__tests__/HazardPuzzlePost.test.tsx`.
+
 ## Layout
 
 | File | Role |
@@ -130,7 +164,7 @@ shaping who the player is.
 | Leaf | What it does | Test ids |
 |---|---|---|
 | `DebugHazardButton` | Start a hazard (BRAVE IT) | `debug-hazard-button` |
-| `DebugHazardPuzzlesButton` | Open the HAZARD PUZZLES board (`/devpuzzle`): three fixed demo puzzles (`HAZARD_PUZZLE_LIBRARY`) played on the live hazard surface. Below the demos the list shows the labelled candidate puzzles (`HAZARD_PUZZLE_CANDIDATES`, phase HP4b: each with a `label`, an `intendedBand` and one nominated `route`, checked by `auditHazardPuzzleCandidate` and never by the library's band gate) in three groups, EASY, MEDIUM and HARD by `intendedBand`, each headed with its count and each row headed by the candidate's label (phase HP4d); a band with no candidate shows "None authored yet.". Picking a candidate skips the route select and starts the live board on its nominated route, on its intended band's clock (`?id=<candidate id>` deep-links the same). The board is the live route select, the live hazard board with its drag controls (shared with `/hazard`, less the bin: a puzzle has no discard) under the puzzle's clock, and the outcome. The board rolls in like a live hazard: the live dice roll lands on the layout's own faces and the clock starts after it, and a DRAW's cards enter the hand with the live hand animation in reserve order, a reroll replays the cast tumble in the tray on each die it turns (landing on the layout's next set face), and a gained die arrives conjured like a live salvage die; nothing is random (`?id=<demo>&route=safe\|risk` deep-links a demo; `&confirm=1` confirms at once, `&paused=1` holds the clock). The list screen also carries the dev-only MOVE LOG (phase HP2c): a SOLVER field typed once for the session, one line per attempt with its moves and solve time, COPY LOG (the log as JSON, through the `copyText` seam (`lib/clipboard.ts`) — the web Clipboard API, or the native share sheet; when neither takes it the JSON is printed selectable) and CLEAR. An attempt's clock starts when the opening roll settles, which is when the puzzle clock starts, and ends on the CONFIRM or the expiry with the result, so `end.ms` is the solve time the clock-tuning and calibration phases read. Production builds record nothing and render no panel | `debug-hazard-puzzles-button`, `hazard-puzzle-candidates`, `hazard-puzzle-candidate-group-<band>`, `hazard-puzzle-candidate-<id>`, `hazard-puzzle-log`, `hazard-puzzle-log-solver`, `hazard-puzzle-log-copy`, `hazard-puzzle-log-clear` |
+| `DebugHazardPuzzlesButton` | Open the HAZARD PUZZLES board (`/devpuzzle`): three fixed demo puzzles (`HAZARD_PUZZLE_LIBRARY`) played on the live hazard surface. Below the demos the list shows the labelled candidate puzzles (`HAZARD_PUZZLE_CANDIDATES`, phase HP4b: each with a `label`, an `intendedBand` and one nominated `route`, checked by `auditHazardPuzzleCandidate` and never by the library's band gate) in three groups, EASY, MEDIUM and HARD by `intendedBand`, each headed with its count and each row headed by the candidate's label (phase HP4d); a band with no candidate shows "None authored yet.". Picking a candidate skips the route select and starts the live board on its nominated route, on its intended band's clock (`?id=<candidate id>` deep-links the same). The board is the live route select, the live hazard board with its drag controls (shared with `/hazard`, less the bin: a puzzle has no discard) under the puzzle's clock, and the outcome. The board rolls in like a live hazard: the live dice roll lands on the layout's own faces and the clock starts after it, and a DRAW's cards enter the hand with the live hand animation in reserve order, a reroll replays the cast tumble in the tray on each die it turns (landing on the layout's next set face), and a gained die arrives conjured like a live salvage die; nothing is random (`?id=<demo>&route=safe\|risk` deep-links a demo; `&confirm=1` confirms at once, `&paused=1` holds the clock). The list screen also carries the dev-only MOVE LOG (phase HP2c): a SOLVER field typed once for the session, one line per attempt with its moves and solve time, COPY LOG (the log as JSON, through the `copyText` seam (`lib/clipboard.ts`) — the web Clipboard API, or the native share sheet; when neither takes it the JSON is printed selectable) and CLEAR. An attempt's clock starts when the opening roll settles, which is when the puzzle clock starts, and ends on the CONFIRM or the expiry with the result, so `end.ms` is the solve time the clock-tuning and calibration phases read. Each ended attempt is also posted to the solve-time API when the build carries its URL and token (see "Post puzzle attempts to the solve-time API" above). Production builds record nothing, post nothing and render no panel | `debug-hazard-puzzles-button`, `hazard-puzzle-candidates`, `hazard-puzzle-candidate-group-<band>`, `hazard-puzzle-candidate-<id>`, `hazard-puzzle-log`, `hazard-puzzle-log-solver`, `hazard-puzzle-log-copy`, `hazard-puzzle-log-clear` |
 | `DebugRestButton` | Start the night watch at a camp or an inn | `debug-rest-button`, `debug-rest-inn-button` |
 | `DebugRewardTriggers` | RELIQUARY MODEST / RICH (loot-cache tiers), ANVIL ×500 (fixed budget), UNLOCK JOURNAL (every foe codex entry), and one chip per authored hazard id (`state/dev/rewards.ts`) | `debug-cache-button`, `debug-cache-rich-button`, `debug-anvil-budget-button`, `debug-journal-unlock-button`, `debug-hazard-id-<id>` |
 

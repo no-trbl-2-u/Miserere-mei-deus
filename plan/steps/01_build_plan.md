@@ -196,7 +196,7 @@ event-pool and layout files).
       and adds the repo secrets; the D1 database `miserere` is created, and `backend-deploy.yml` applies
       migrations and deploys `miserere-api` on a push to `main` touching `backend/**`. Brief `plan/phases/phase_BE1_solve_time_backend.md` § BE1b.
       Requires BE1a.
-- [ ] Phase BE1c — Preview builds post each attempt (plotted by T, 2026-10-21): each `/devpuzzle` attempt that
+- [x] (#732) Phase BE1c — Preview builds post each attempt (plotted by T, 2026-10-21): each `/devpuzzle` attempt that
       ends is posted once when dev tools are on and the `EXPO_PUBLIC_PUZZLE_API_*` env is set; a failure is
       dropped with a dev warning; production never posts. Brief `plan/phases/phase_BE1_solve_time_backend.md` § BE1c. Requires BE1a.
 - [ ] Phase BE1d — `npm run puzzle:times` (plotted by T, 2026-10-21): per-candidate attempts, solve rate and
