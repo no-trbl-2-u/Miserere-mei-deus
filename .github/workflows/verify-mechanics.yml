@@ -1,6 +1,6 @@
 name: verify-mechanics
 
-# Sole owner for mechanics and root dependency changes. Mobile consumes
+# Sole owner for mechanics, backend and root dependency changes. Mobile consumes
 # mechanics as local source, so this job detects the documented cross-package
 # impact paths and runs the affected consumer gate in the same installed
 # environment. Each known subsystem selects its own browser journey;
@@ -12,6 +12,7 @@ on:
     branches: [main]
     paths:
       - 'axiomancer-mechanics/**'
+      - 'backend/**'
       - 'scripts/ci-e2e-scope.mjs'
       - 'scripts/ci-e2e-scope.test.mjs'
       - '.github/workflows/verify-mechanics.yml'
@@ -20,6 +21,7 @@ on:
     branches: [main]
     paths:
       - 'axiomancer-mechanics/**'
+      - 'backend/**'
       - 'scripts/ci-e2e-scope.mjs'
       - 'scripts/ci-e2e-scope.test.mjs'
       - '.github/workflows/verify-mechanics.yml'
@@ -97,6 +99,11 @@ jobs:
 
       - name: Verify mechanics (type-check + tests + build)
         run: npm run verify --workspace axiomancer-mechanics
+
+      # The Worker imports the engine's attempt contract, so it is verified
+      # beside mechanics: type-check, then its tests in workerd on a local D1.
+      - name: Verify the backend Worker (type-check + Workers-runtime tests)
+        run: npm run verify --workspace backend
 
       - name: Verify mobile against affected mechanics
         if: steps.impact.outputs.mobile == 'true'
