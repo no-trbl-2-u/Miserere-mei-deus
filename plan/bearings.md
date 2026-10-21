@@ -454,6 +454,20 @@ ambiguity.)
   than asking. Phase AN1d is what this ruling unblocks;
   `plan/phases/phase_AN1_enemy_animation.md` carries the detail.
 
+- **`art-department/` IS A TREE, NOT AN NPM WORKSPACE (T, attended session
+  2026-10-21, D98).** Art tooling lives at the repo root in `art-department/`
+  and may be written in any language — T's ruling, made on seeing a Python rig
+  tool sitting inside the JS/TS mobile workspace. It is deliberately **absent**
+  from root `package.json` `workspaces`, and the reason is recorded in
+  `.easignore` itself: its Section 2 keep-list states that `npm ci` resolves
+  every declared workspace, so a declared one must be uploaded to EAS. Since
+  this tree exists partly to hold large build-time masters that must never
+  ship, declaring it would defeat its purpose. It is reached by path, never
+  `npm --workspace`; it is excluded from the EAS archive; and nothing in the
+  repository resolves a path into it — the same boundary rule 9 (D96) puts on
+  `Potential Assets/`, and enforced the same way, by a test. Phases AD1a and
+  AD1b build it; `plan/phases/phase_AD1_art_department.md` carries the detail.
+
 ## AUDIT category taxonomy (this project)
 
 `/iterate` and `/expand` read `plan/AUDIT.md`. Categories used
