@@ -17,7 +17,9 @@
 //     in plan/NEEDS_T.md, which has its own one-line format, and no slug
 //     sits in both files.
 // Run by the root `npm test` (scripts/check-lessons.test.mjs) and by
-// .claude/hooks/guard.mjs post-write whenever either file is written.
+// .claude/hooks/guard.mjs post-write whenever either file is written. The
+// merge driver (scripts/lessons-merge.mjs) imports the caps, row regexes
+// and rowMask from here, so the two cannot disagree on a valid row.
 //
 // Exit codes: 0 clean; 1 findings (one per line on stderr).
 
@@ -31,10 +33,39 @@ export const MAX_BYTES = 500
 export const MAX_OPEN = 40
 export const MAX_REFLEX_LINES = 50
 
-const LESSON = /^- \*\*([a-z0-9]+(?:-[a-z0-9]+)*)\*\* · (.+) → (.+) · seen (\d+)× · last (\d{4}-\d{2}-\d{2}) · (open|guarded by .+)$/
-const NEEDS_T = /^- \*\*([a-z0-9]+(?:-[a-z0-9]+)*)\*\* · (.+) · blocks: (.+) · workaround: (.+) · seen (\d+)× · last (\d{4}-\d{2}-\d{2})$/
+export const LESSON = /^- \*\*([a-z0-9]+(?:-[a-z0-9]+)*)\*\* · (.+) → (.+) · seen (\d+)× · last (\d{4}-\d{2}-\d{2}) · (open|guarded by .+)$/
+export const NEEDS_T = /^- \*\*([a-z0-9]+(?:-[a-z0-9]+)*)\*\* · (.+) · blocks: (.+) · workaround: (.+) · seen (\d+)× · last (\d{4}-\d{2}-\d{2})$/
 // A rule that hands the fix to T: that item belongs in plan/NEEDS_T.md.
 const T_MOVE = /\bT (?:to|must|should|needs to) /
+
+/**
+ * Which lines of a lessons or NEEDS_T file are rows. Pure; shared with the
+ * merge driver (scripts/lessons-merge.mjs) so both agree on what a row is.
+ * A lessons row is a `- ` bullet under a `<!-- @domain:x -->` anchor (until
+ * `## Adding a domain`); a NEEDS_T row is a `- ` bullet under `## Open`.
+ * @param {string[]} lines
+ * @param {'lessons' | 'needs-t'} kind
+ * @returns {Array<'row' | 'body' | null>} 'body' is a non-row line inside a lessons domain
+ */
+export function rowMask(lines, kind) {
+  let inRows = false
+  return lines.map((line) => {
+    if (kind === 'needs-t') {
+      if (/^## /.test(line)) {
+        inRows = /^## Open\s*$/.test(line)
+        return null
+      }
+      return inRows && line.startsWith('- ') ? 'row' : null
+    }
+    if (/^<!-- @domain:[a-z0-9-]+ -->$/.test(line)) {
+      inRows = true
+      return null
+    }
+    if (/^## Adding a domain/.test(line)) inRows = false
+    if (!inRows) return null
+    return line.startsWith('- ') ? 'row' : 'body'
+  })
+}
 
 /**
  * Lint the text of a lessons file. Pure.
@@ -44,18 +75,14 @@ const T_MOVE = /\bT (?:to|must|should|needs to) /
 export function lintLessons(text) {
   const findings = []
   const slugs = new Map()
-  let inDomain = false
   let open = 0
   let lessons = 0
-  text.split('\n').forEach((line, i) => {
+  const lines = text.split('\n')
+  rowMask(lines, 'lessons').forEach((kind, i) => {
     const n = i + 1
-    if (/^<!-- @domain:[a-z0-9-]+ -->$/.test(line)) {
-      inDomain = true
-      return
-    }
-    if (/^## Adding a domain/.test(line)) inDomain = false
-    if (!inDomain || !line.startsWith('- ')) {
-      if (inDomain && /^\d+\. /.test(line)) {
+    const line = lines[i]
+    if (kind !== 'row') {
+      if (kind === 'body' && /^\d+\. /.test(line)) {
         findings.push(`line ${n}: numbered entry — lessons are '- **slug** · …' bullets`)
       }
       return
@@ -89,15 +116,12 @@ export function lintNeedsT(text, lessonSlugs = []) {
   const findings = []
   const slugs = new Map()
   const lessons = new Set(lessonSlugs)
-  let inOpen = false
   let items = 0
-  text.split('\n').forEach((line, i) => {
+  const lines = text.split('\n')
+  rowMask(lines, 'needs-t').forEach((kind, i) => {
+    if (kind !== 'row') return
     const n = i + 1
-    if (/^## /.test(line)) {
-      inOpen = /^## Open\s*$/.test(line)
-      return
-    }
-    if (!inOpen || !line.startsWith('- ')) return
+    const line = lines[i]
     items += 1
     const bytes = Buffer.byteLength(line, 'utf8')
     if (bytes > MAX_BYTES) findings.push(`line ${n}: ${bytes} bytes (max ${MAX_BYTES})`)

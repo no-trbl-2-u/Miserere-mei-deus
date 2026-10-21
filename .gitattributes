@@ -1,0 +1,6 @@
+# Merge plan/lessons.md and plan/NEEDS_T.md by slug, not by line (Phase ML1a):
+# scripts/lessons-merge.mjs, registered as merge.lessons.driver by the
+# SessionStart hook in .claude/settings.json. Unregistered (a fresh clone
+# before any Claude session, a CI runner) git falls back to its line merge.
+plan/lessons.md merge=lessons
+plan/NEEDS_T.md merge=lessons

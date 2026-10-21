@@ -31,6 +31,12 @@
 > `plan/NEEDS_T.md` instead: it never climbs this ladder and never
 > becomes a `PHASE_CANDIDATES` automation row. The lint refuses a
 > lesson whose rule says "T to …" and a slug in both files.
+>
+> **Merges.** Git merges this file and `NEEDS_T.md` by slug through
+> `scripts/lessons-merge.mjs` (`.gitattributes`, registered at session
+> start): two bumps of one slug become one row, and a merge that would
+> break the byte or open cap is refused with conflict markers to resolve
+> by hand.
 
 <!-- @domain:deploy -->
 
@@ -76,7 +82,7 @@
 - **sed-flattens-crlf** · `sed -i` on a CRLF test file rewrote every line, so a 1-line edit showed as 620 changed lines (ship SF1) → edit CRLF files byte-wise or with the Edit tool, and read `git diff --stat` before staging; again Python `open(p,'w')` on Windows wrote two LF barrels back as CRLF (ship B3b, fixed by review on #584); automation filed in `PHASE_CANDIDATES.md` · seen 2× · last 2026-10-16 · open
 - **checks-not-yet-registered** · `gh pr checks --watch` run straight after `gh pr create` exits 0 with "no checks reported", which reads as green while nothing has run (HP2b, DL1a) → poll `gh pr checks <n>` until it lists rows, then `--watch` · seen 2× · last 2026-10-21 · open
 - **isolated-worktree-shell** · the guard refused heredocs, `mklink`, `$VAR` args, `commit -F`, `&&` git chains, git in `$(…)`, background gates; a refused chain also drops its `git add` (B3b, crit 90, B3e2, HP1c2, HP1d, RV2, plot VE1) → Write/Edit for text, one git cmd per call, `symlinkSync` junctions, commit with `-m`, gates foreground, `git show --stat` before push · seen 21× · last 2026-10-20 · guarded by .claude/hooks/guard.mjs (refuses `git commit -F`, names `-m`)
-- **lessons-merge-dup-slug** · two merges each kept their own row of one slug, so `check-lessons` went red on `main`, unseen since root `npm test` runs in no workflow: `env-token-stale` (ship BT2b), `isolated-worktree-shell` (EV1a; again HP1a; again the HP1c2 and HP2a merges, found by ship HP3b) → before a lessons commit, grep the slug on fresh `origin/main` and bump the existing row; automation is the candidate "root `npm test` runs in no workflow" · seen 5× · last 2026-10-19 · open
+- **lessons-merge-dup-slug** · two merges each kept their own row of one slug, so `check-lessons` went red on `main`, unseen since root `npm test` runs in no workflow: `env-token-stale` (ship BT2b), `isolated-worktree-shell` (EV1a, HP1a, HP1c2, HP2a, #644, #645, #653) → merge by slug, never by line; still grep the slug on fresh `origin/main` before a lessons commit · seen 6× · last 2026-10-20 · guarded by scripts/lessons-merge.mjs (lessons-merge.test.mjs)
 - **brief-geometry-unmeasured** · BT2b's A7 asked for five runes above the tray at 375x812, but the shipped geometry needed 304pt where 292 were free; only a measurement of the web export showed it (ship BT2b) → measure a layout acceptance in the web export before writing its test, and record any size change under Decisions · seen 1× · last 2026-10-14 · open
 - **brief-ui-reuse-unnamed** · B3e's A14 listed what the puzzle board shows but not which live components draw it, so the builder shipped a tap-button board T rejected as "nothing like" the hazard UI (plot B3e2) → a brief for a surface that mirrors a live one names the components, VM and interactions it reuses, and asks for a side-by-side visual shot · seen 1× · last 2026-10-18 · open
 - **amend-while-claimed** · T's 2026-10-19 decision round amended HP1c's brief on `main` while a loop tick had already claimed and was building HP1c, so #633 shipped the pre-amendment rules and HP1c2 had to be added (attended session) → before amending an open row's brief, check open `loop:pr` PRs and `loop/ship-<id>` branches for a claim; if claimed, file the amendment as a follow-up phase instead · seen 1× · last 2026-10-19 · open
