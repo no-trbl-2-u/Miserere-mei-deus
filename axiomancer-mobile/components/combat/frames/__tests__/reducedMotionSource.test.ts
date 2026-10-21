@@ -26,7 +26,7 @@ function stripComments(text: string): string {
  * here is a gate nothing holds to A4, and the last assertion refuses the
  * list going empty.
  */
-const MOTION_GATES = ['useFramePlayback.ts', 'useEnemyAttackClip.ts'] as const;
+const MOTION_GATES = ['useFramePlayback.ts', 'useEnemyClipSelection.ts'] as const;
 
 describe('the enemy frame engine owns no reduced-motion mechanism of its own', () => {
     const sources = fs.readdirSync(ENGINE_DIR).filter((f) => /\.tsx?$/.test(f));
