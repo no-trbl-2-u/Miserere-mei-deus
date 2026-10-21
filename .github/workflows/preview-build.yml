@@ -63,6 +63,30 @@ jobs:
         if: inputs.run_visual_verify == true
         run: npm run verify:visual --workspace axiomancer-mobile
 
+      # The solve-time API (phase BE1c): a dev-tools build posts each ended
+      # /devpuzzle attempt when both EXPO_PUBLIC_PUZZLE_API_* values are baked
+      # in. An EAS cloud build does not see this runner's env, but it archives
+      # the working tree, so the values go into the profile's `env` in this
+      # checkout's eas.json (never committed). Skipped for production, and
+      # when either secret is unset the build simply never posts.
+      - name: Pass the puzzle API values to the build
+        if: env.PREVIEW_PROFILE != 'production'
+        working-directory: axiomancer-mobile
+        env:
+          EXPO_PUBLIC_PUZZLE_API_URL: ${{ secrets.EXPO_PUBLIC_PUZZLE_API_URL }}
+          EXPO_PUBLIC_PUZZLE_API_TOKEN: ${{ secrets.EXPO_PUBLIC_PUZZLE_API_TOKEN }}
+        run: |
+          if [ -z "$EXPO_PUBLIC_PUZZLE_API_URL" ] || [ -z "$EXPO_PUBLIC_PUZZLE_API_TOKEN" ]; then
+            echo "puzzle API secrets not set: this build will not post attempts"
+            exit 0
+          fi
+          jq --arg p "$PREVIEW_PROFILE" \
+            '.build[$p].env = ((.build[$p].env // {}) + {
+               EXPO_PUBLIC_PUZZLE_API_URL: env.EXPO_PUBLIC_PUZZLE_API_URL,
+               EXPO_PUBLIC_PUZZLE_API_TOKEN: env.EXPO_PUBLIC_PUZZLE_API_TOKEN })' \
+            eas.json > eas.json.tmp && mv eas.json.tmp eas.json
+          echo "puzzle API values passed to the $PREVIEW_PROFILE profile"
+
       - name: EAS build
         working-directory: axiomancer-mobile
         run: npx eas-cli@latest build --platform "$PREVIEW_PLATFORM" --profile "$PREVIEW_PROFILE" --non-interactive

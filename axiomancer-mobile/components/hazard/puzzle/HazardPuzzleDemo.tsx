@@ -31,7 +31,9 @@
  * starts when the opening roll settles, which is when the clock starts and so
  * when the solve really begins, and ends on the CONFIRM or the expiry. The log
  * and its panel exist only in dev builds (`isDevToolsEnabled`); a production
- * build records nothing and renders no panel.
+ * build records nothing and renders no panel. Each attempt that ends is also
+ * posted once to the solve-time API when the build carries its URL and token
+ * (phase BE1c, `usePostEndedPuzzleAttempts`).
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -91,6 +93,7 @@ import { HazardPuzzleLogPanel } from './HazardPuzzleLogPanel';
 import { HazardPuzzleOutcomePanel } from './HazardPuzzleOutcomePanel';
 import { HazardPuzzleStrip, stripProps } from './HazardPuzzleStrip';
 import { useHazardPuzzleClock } from './useHazardPuzzleClock';
+import { usePostEndedPuzzleAttempts } from './usePostEndedPuzzleAttempts';
 
 export interface HazardPuzzleDemoProps {
     /**
@@ -162,6 +165,12 @@ export function HazardPuzzleDemo({
     const logging = isDevToolsEnabled();
     const [solver, setSolver] = useState('');
     const [attempts, setAttempts] = useState<HazardPuzzleLogAttempt[]>([]);
+    // A candidate posts its intended band; a demo layout posts null.
+    const intendedBandFor = useCallback(
+        (layoutId: string) => findCandidate(layoutId, candidates)?.intendedBand ?? null,
+        [candidates],
+    );
+    usePostEndedPuzzleAttempts(attempts, intendedBandFor);
 
     const logMove = useCallback(
         (kind: HazardPuzzleLogMoveKind, uid: string, dieId?: string) => {
