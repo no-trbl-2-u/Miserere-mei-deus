@@ -1,5 +1,5 @@
 {
-  "source": "assets/images/enemies/float-eye.webp",
+  "source": "../../../axiomancer-mobile/assets/images/enemies/float-eye.webp",
   "generator": "scripts/art/rig-spritesheet.py",
   "frame": 256,
   "columns": 8,

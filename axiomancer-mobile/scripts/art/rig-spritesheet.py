@@ -32,9 +32,12 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-REPO = Path(__file__).resolve().parents[2]
-SRC_DIR = REPO / "assets" / "images" / "enemies"
-OUT_DIR = SRC_DIR / "anim"
+MOBILE = Path(__file__).resolve().parents[2]
+ROOT = MOBILE.parent
+SRC_DIR = MOBILE / "assets" / "images" / "enemies"
+# Masters are build-time artifacts and never ship, so they live outside the
+# bundled asset tree. Phase AD1a gives this tool its own home beside them.
+OUT_DIR = ROOT / "art-department" / "masters" / "enemies"
 
 # Measured off float-eye.webp; see the provenance record written beside the sheet.
 EYE_CENTER = (253.0, 228.0)
@@ -221,7 +224,7 @@ def main():
     sheet = Image.new("RGBA", (cols * fp, len(names) * fp), (0, 0, 0, 0))
 
     meta = {
-        "source": f"assets/images/enemies/{args.enemy}.webp",
+        "source": f"../../../axiomancer-mobile/assets/images/enemies/{args.enemy}.webp",
         "generator": "scripts/art/rig-spritesheet.py",
         "frame": fp, "columns": cols, "rows": len(names),
         # AN1 A6 anchors frames on the foot line. A floating creature has no
