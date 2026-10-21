@@ -30,7 +30,7 @@ test('parseWorkflowFilter: every real verify-* workflow has a pull_request paths
   const mobile = workflows.find((w) => w.file === 'verify-mobile.yml')
   assert.deepEqual(mobile.paths, [
     'axiomancer-mobile/**', '.github/workflows/verify-mobile.yml', 'scripts/check-worklets.mjs',
-    'scripts/check-worklets.test.mjs', 'docs/art-catalog.json',
+    'scripts/check-worklets.test.mjs', 'docs/art-catalog.json', 'docs/feature-map/features.json',
   ])
 })
 

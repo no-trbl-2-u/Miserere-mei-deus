@@ -32,6 +32,18 @@ test('dev-tools leaves and helpers select the journeys they can launch', () => {
     assert.equal(rewards.hazard, false)
 })
 
+test('the feature map drive and a regenerated map each select an integration run', () => {
+    const drive = classify('mobile', ['axiomancer-mobile/scripts/feature-map-e2e.mjs', 'axiomancer-mobile/scripts/lib/feature-map-drive.mjs'])
+    assert.equal(drive.run_integration, true)
+    assert.equal(drive.full, false)
+    const map = classify('mobile', ['docs/feature-map/features.json'])
+    assert.equal(map.run_integration, true)
+    assert.equal(map.mobile, false)
+    assert.equal(map.full, false)
+    const unitTest = classify('mobile', ['axiomancer-mobile/scripts/feature-map-drive.test.mjs'])
+    assert.equal(unitTest.run_integration, false)
+})
+
 test('the map walk script selects the encounter suite it runs with', () => {
     const result = classify('mobile', ['axiomancer-mobile/scripts/map-walk-e2e.mjs'])
     assert.equal(result.encounters, true)

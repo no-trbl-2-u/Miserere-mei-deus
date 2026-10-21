@@ -53,6 +53,12 @@ function classifyMobilePath(path, result) {
         result.run_integration = true
         return
     }
+    // A regenerated feature map changes what the reachability drive demands,
+    // so it gets one integration run; no subsystem journey owns it.
+    if (path === 'docs/feature-map/features.json') {
+        result.run_integration = true
+        return
+    }
     if (isNonRuntime(path)) return
 
     const hazard = [
@@ -83,6 +89,8 @@ function classifyMobilePath(path, result) {
         // The combat round trips (map and labyrinth) ride the encounter suite too.
         /^axiomancer-mobile\/scripts\/(?:exploration|labyrinth)-combat-roundtrip-e2e\.mjs$/,
         /^axiomancer-mobile\/components\/LabyrinthGate/,
+        // The feature map's reachability drive rides an integration run.
+        /^axiomancer-mobile\/scripts\/(?:feature-map-e2e|lib\/feature-map-drive)\.mjs$/,
     ]
 
     let matched = false
