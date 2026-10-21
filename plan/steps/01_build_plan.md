@@ -187,8 +187,32 @@ event-pool and layout files).
       Its constants are imported from `scripts/check-lessons.mjs` so lint and driver cannot drift. Six
       sightings in two days, three on PR #653 alone. Brief
       `plan/phases/phase_ML1_lessons_merge_driver.md` § ML1a. Requires nothing.
+- [ ] Phase AN1a — The enemy frame engine, the fallback and the dev route (plotted by T, 2026-10-21):
+      a frame-set registry beside `ENEMY_ART_BY_KEY` keyed on `portraitAsset`, a reanimated frame player,
+      and a dev route that plays a supplied sheet — with the registry **empty**, so every current enemy
+      renders the single image it renders today and the phase lands changing no pixel. Frames anchor on
+      the **foot line**, not the bounding box (T's reference sheet held its feet to 5.2% of cell while
+      the bbox centre wandered 11.2% as the weapon swung), and go through the same ingest `RECIPE` as
+      every other asset. Reduced motion reuses the pane's existing ref. Brief
+      `plan/phases/phase_AN1_enemy_animation.md` § AN1a. Requires nothing.
+- [ ] Phase AN1b — The enemy's turn is animated (plotted by T, 2026-10-21): the attack animation plays
+      on the enemy's beat in `CombatCombatantPane`, off the **existing** `fx.seq` walk (`threat-fired`,
+      `damage-dealt`) at the existing `IMPACT` offset and behind the existing `reduceMotion.current`; an
+      enemy with no frame set is untouched. Brief
+      `plan/phases/phase_AN1_enemy_animation.md` § AN1b. Requires AN1a.
+- [ ] Phase AN1c — Idle, struck, attacking (plotted by T, 2026-10-21): the manifest names three
+      animations and the engine selects them — idle as the resting loop, struck on damage taken, attack
+      on the enemy's beat; idle loops, the other two are one-shots returning to idle. T sequenced this
+      after seeing AN1b work. Brief
+      `plan/phases/phase_AN1_enemy_animation.md` § AN1c. Requires AN1b.
+- [ ] Phase AN1d — Sheets generated for used enemies only (plotted by T, 2026-10-21): `generate-art.mjs`
+      gains a `frames: { cols, rows }` spec block — one grid image per call (the grid is what buys
+      character consistency), then split, alpha-matte and ingest each cell through the existing `RECIPE`,
+      one provenance record per set. It **refuses** any id failing D97's used-enemy test (in the roster
+      with a `portraitAsset` **and** in `ENEMY_ART_BY_KEY`; `sandbag-01` fails it). Brief
+      `plan/phases/phase_AN1_enemy_animation.md` § AN1d. Requires AN1c.
 - [x] (#705) Phase ML1b — The build plan's rows and queue log (plotted by T, 2026-10-20): the same treatment
-      for `plan/steps/01_build_plan.md`, whose Status rows collide because every `/plot asap` appends
+>      for `plan/steps/01_build_plan.md`, whose Status rows collide because every `/plot asap` appends
       above the same first open row (one plot PR took four rounds on 2026-10-19/20). Split from ML1a
       because build-plan rows are an **ordered** list whose order carries priority, not a keyed set, so
       "union by key" does not define the result; and unlike `lessons.md` a duplicate here reddens no
@@ -1513,6 +1537,7 @@ See the status rows above; generate briefs on demand.
 - **2026-10-19** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-VE1-visual-e2e`). Action: **added Phases VE1a, VE1b, VE1c, VE1d** (the visual e2e suite measured as signal per minute: one stamped web export for every script, a ready signal and a determinism check, a report-only CI step that commits each visual change's CI-rendered captures to the PR for T to approve from the image diff, routes selected from the diff) above the first open row. Confirmed T's request: yes (T's prompt and four AskUserQuestion calls: no Windows restamp once fresh baselines proved 1.5-4.5% renderer noise here, CI as renderer of record; report-only with the screenshots added to the PR; telemetry plus the CI step summary as the record; route selection as its own phase). Reason: asap because `verify:visual` is red on `main` today (11 of 13 routes, baselines up to 52 days stale, 0 CI runs) so every mobile `loop:pr` PR ships its pixels unseen. Resulting commit: this one; brief `plan/phases/phase_VE1_visual_e2e_signal.md`.
 - **2026-10-19** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-IT1-item-glyph-resolver`). Action: **added Phases IT1a and IT1b** directly above RV2. Reason: an item-art survey for T found that `ItemGlyph` keys on category, not item id, so the three healing potions and the two relics each draw one shared glyph — the same defect class as the card registry mapping only three ids. IT1a is the resolver with today's glyph as the fallback (ships changing no pixel); IT1b is T's icon picks and the death of the inline one-off `<Svg>` glyphs, owner-led under D88. Brief `plan/phases/phase_IT1_item_glyph_resolver.md`.
 - **2026-10-20** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-ML1-lessons-merge-driver`). Action: **added Phases ML1a and ML1b** directly above DL1b. Reason: git's three-way merge keeps both copies of a bumped lesson row with no conflict markers, so nothing prompts a human and `check-lessons` goes red on the receiving branch — six sightings on 2026-10-19/20, three of them on PR #653, each resolved by keeping both rows and each undone by hand. ML1a is the driver for `lessons.md` and `NEEDS_T.md`; ML1b extends the idea to the build plan, split out because its rows are ordered rather than keyed. Brief `plan/phases/phase_ML1_lessons_merge_driver.md`.
+- **2026-10-21** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-AN1-enemy-animation`). Action: **added Phases AN1a–AN1d** directly above the first open row, in T's own sequence: the engine and a dev route first, then the enemy's turn animated, then three states per enemy once T has seen it work, then the art pipeline generating the sheets. Records **D97**: a sprite sheet for an ALREADY-USED enemy is enhancement rather than content creation, so AN1d may run as ordinary `/march` ticks — narrowly, with the used-enemy test as the guard; anything outside that set stays owner-only under D88/D37. Brief `plan/phases/phase_AN1_enemy_animation.md`.
 >
 ## Phase log (commit hashes)
 

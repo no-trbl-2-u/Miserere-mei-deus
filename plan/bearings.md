@@ -441,6 +441,19 @@ ambiguity.)
   rule 9; enforced by
   `axiomancer-mobile/scripts/potential-assets-sealed.test.mjs`.
 
+- **SHEETS FOR USED ENEMIES ARE ENHANCEMENT (T, attended session 2026-10-21,
+  D97).** Generating a sprite sheet for an enemy that is **already used** in the
+  game is enhancement of existing content, not content creation, so it may run
+  as ordinary `/march` ticks. The guard is narrow and machine-checkable: the id
+  appears in `axiomancer-mechanics/src/Enemy/enemy.library.ts`'s roster **with** a
+  `portraitAsset`, **and** that key is in `ENEMY_ART_BY_KEY`
+  (`axiomancer-mobile/assets/images/enemies/index.ts`). Three enemies qualify
+  today; the `sandbag-01` dev dummy does not, carrying no `portraitAsset`. Art
+  for anything outside that set — a new enemy, a new creature, any other surface
+  — remains owner-only under D88 and D37, and the generator refuses it rather
+  than asking. Phase AN1d is what this ruling unblocks;
+  `plan/phases/phase_AN1_enemy_animation.md` carries the detail.
+
 ## AUDIT category taxonomy (this project)
 
 `/iterate` and `/expand` read `plan/AUDIT.md`. Categories used
