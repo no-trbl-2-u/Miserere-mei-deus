@@ -30,7 +30,9 @@ import Svg, { Circle, Defs, Ellipse, LinearGradient, Path, RadialGradient, Rect,
 import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
 import { getEncounterEnemyArt } from '@/assets/images/enemies';
 import { getEnemyFrameSet } from '@/assets/images/enemies/frames';
-import { EnemyFramePlayer, isEnemyAttackBeat, useEnemyAttackClip } from '@/components/combat/frames';
+import {
+    ENEMY_ATTACK_IMPACT_MS, EnemyFramePlayer, isEnemyAttackBeat, useEnemyAttackClip,
+} from '@/components/combat/frames';
 import { ARENA_PLATES_SHOWN, BLACK_ARENA_ALT, arenaAltTextFor, arenaBackdropFor } from '@/assets/images/combat';
 import { FONTS, HUE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
@@ -323,7 +325,10 @@ export const PlayerMedallion = React.memo(function PlayerMedallion({
                 statuses.push({ text: kw, color });
             }
         }
-        const IMPACT = 100;
+        // The impact beat every side of a resolution lands on. One constant,
+        // so the recoil, the board shake, the flash and the enemy's swing
+        // cannot be retuned apart from each other by halves.
+        const IMPACT = ENEMY_ATTACK_IMPACT_MS;
         if (dmg > 0) {
             const norm = Math.min(1, dmg / Math.max(1, player.maxHp));
             const blocked = enemyIntentDamage - dmg;
@@ -450,8 +455,8 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
     // below via each hook's own `delayMs` so they still land with the enemy
     // lunge apex instead of firing on the trigger frame.
     const [damageTick, setDamageTick] = useState({ key: 0, norm: 0 });
-    const shakeStyle = useJuiceShake(damageTick.key, damageTick.norm > 0.66 ? 'high' : damageTick.norm > 0.33 ? 'medium' : 'low', 100);
-    const flashStyle = useJuiceFlash(damageTick.key, damageTick.norm, 100);
+    const shakeStyle = useJuiceShake(damageTick.key, damageTick.norm > 0.66 ? 'high' : damageTick.norm > 0.33 ? 'medium' : 'low', ENEMY_ATTACK_IMPACT_MS);
+    const flashStyle = useJuiceFlash(damageTick.key, damageTick.norm, ENEMY_ATTACK_IMPACT_MS);
     // Reduce-motion gate (recommended) — suppresses the shake + lunge
     // (the HP tween + floats still fire so the hit is never silent).
     const reduceMotion = useRef(false);

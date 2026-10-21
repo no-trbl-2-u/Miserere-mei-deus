@@ -93,6 +93,18 @@ describe('useEnemyAttackClip', () => {
         expect(readClip()).toBe('idle:0:false');
     });
 
+    it('reads the preference at the impact beat, not when the events arrived', () => {
+        // The ref is live: the platform can answer, or the player can change
+        // their mind, inside the 100ms the swing is waiting out. The answer
+        // that matters is the one at the moment the clip would start.
+        const paneRef = { current: false };
+        const { rerender } = render(<Probe frameSet={SYNTHETIC_FRAME_SET} beat={0} reducedMotion={paneRef} />);
+        rerender(<Probe frameSet={SYNTHETIC_FRAME_SET} beat={1} reducedMotion={paneRef} />);
+        paneRef.current = true;
+        act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS * 4); });
+        expect(readClip()).toBe('idle:0:false');
+    });
+
     it('spends an enemy with no frame set on nothing', () => {
         const { rerender } = render(<Probe frameSet={null} beat={0} />);
         rerender(<Probe frameSet={null} beat={1} />);

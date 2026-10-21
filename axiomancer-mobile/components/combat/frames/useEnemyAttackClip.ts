@@ -61,12 +61,16 @@ export function useEnemyAttackClip({
 
     useEffect(() => {
         // Beat 0 is "the enemy has not acted"; a set with no attack clip has
-        // nothing to select; reduced motion selects nothing at all.
+        // nothing to select. Reduced motion selects nothing either, but it is
+        // asked at the impact beat below rather than here.
         if (beat === 0 || !attackClip) return undefined;
-        if (readReducedMotion(reducedMotion)) return undefined;
 
         const timers: ReturnType<typeof setTimeout>[] = [];
         timers.push(setTimeout(() => {
+            // Sampled HERE, not when the effect ran: the preference is read at
+            // the moment the swing would start, so a toggle inside the impact
+            // window is honoured rather than a stale answer from 100ms ago.
+            if (readReducedMotion(reducedMotion)) return;
             setState((prev) => ({ clipName: ATTACK_CLIP, startKey: prev.startKey + 1 }));
             // A one-shot holds its last cell rather than snapping back, so the
             // return to resting is this timer's job, not the player's.

@@ -17,11 +17,11 @@ import type { EnemyFrameSet } from '@/assets/images/enemies/frames';
 export const ATTACK_CLIP = 'attacking';
 
 /**
- * Milliseconds from the resolution frame to the impact apex. This is the
- * pane's own existing offset — the `IMPACT = 100` the player medallion delays
- * its recoil by, and the literal `100` the board's shake and flash hooks are
- * handed. The enemy's swing lands on the same beat because it is the same
- * number, named here so the wiring can say which beat it means.
+ * Milliseconds from the resolution frame to the impact apex: the beat the
+ * player medallion delays its recoil by, the board's shake and flash are
+ * handed, and the enemy's swing starts on. It was the same literal `100` in
+ * three places before this module existed; now it is one constant those three
+ * read, so the beat cannot be retuned by halves.
  */
 export const ENEMY_ATTACK_IMPACT_MS = 100;
 
