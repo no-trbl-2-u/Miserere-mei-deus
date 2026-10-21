@@ -67,7 +67,7 @@ a test over every key in `ENEMY_ART_BY_KEY` shows the static fallback while no f
     bob; anchoring on the feet does not.
   - `centre` is the kind for a creature that floats, where **no foot line exists** and the hover *is* the
     idle animation — an anchor that tracked the body would cancel the very motion the clip is for. The
-    float-eye is the case: `assets/images/enemies/anim/float-eye.sheet.json` declares
+    float-eye is the case: `art-department/masters/enemies/float-eye.sheet.json` declares
     `anchor: {kind: "centre"}` and its rig holds that point fixed by construction, every pose being an
     offset from it.
   - A manifest naming neither kind fails, the same way A5 fails a count mismatch. A single universal rule
@@ -104,10 +104,12 @@ a test over every key in `ENEMY_ART_BY_KEY` shows the static fallback while no f
 - **A10 (cells are shipped, the master is not)** What the app loads is **per-cell WebP**, one file per
   frame, produced from the master by a tool in `art-department/` and ingested with `--no-grade` per A6b
   because this set is derived. The 2048x768 master PNG is a build input and never enters
-  `axiomancer-mobile/assets/`. This is not a preference: AD1b moves the masters to
-  `art-department/masters/` and lands D98's guard that nothing in the repository resolves a path into
-  that tree, so a registry entry that pointed at the sheet file would fail that guard the moment AD1b
-  landed. Per-cell is also what A1's "ordered frame list" already asks for.
+  `axiomancer-mobile/assets/`. This is not a preference. The master already lives in
+  `art-department/masters/enemies/`, because `scripts/asset-provenance.test.mjs` fails any file under
+  `assets/images` that no registry reaches - correctly, since an unregistered file in a bundled tree is
+  dead weight (it failed #720 on exactly that, and the masters moved rather than the test bending).
+  AD1b then lands D98's guard that nothing in the repository resolves a path into that tree, so a
+  registry entry pointing at the sheet file would fail that guard the day AD1b merged. Per-cell is also what A1's "ordered frame list" already asks for.
 - **A11 (the bundle cost is a number)** The phase records the measured per-frame and per-set size against
   the static image it adds to, and a test asserts no cell exceeds a recorded ceiling, so a later
   regenerated set cannot quietly triple. Measured on the existing sheet at `RECIPE` q44: 24 cells,
@@ -176,9 +178,11 @@ None. Frames are assets and a manifest; nothing is persisted and no save reads t
   that nothing in the repository resolves a path into `art-department/`, and moves the masters there;
   a `require()` of `float-eye.sheet.webp` would break on the day AD1b merged. The split happens in
   `art-department/` and emits into the app's asset tree, which is the direction D98 permits.
-- **AN1e requires AD1b, not just AN1c.** Splitting before the masters have a home would mean writing
-  the splitter inside `axiomancer-mobile` and then moving it, and would hard-code a path AD1b
-  invalidates. AD1a requires nothing and AD1b only AD1a, so neither blocks on the AN1 chain.
+- **AN1e requires AD1a, not just AN1c.** The splitter is art tooling and belongs in `art-department/`,
+  which AD1a creates; writing it inside `axiomancer-mobile` would mean moving it immediately after.
+  It does **not** wait on AD1b: #720 already landed the masters outside the bundled tree, so AD1b's
+  remaining work - the `.easignore` entry and the boundary guard - neither blocks nor is blocked by
+  the split. AD1a requires nothing, so this adds no wait to the AN1 chain.
 - **The set is derived, so it ingests with `--no-grade`** (A6b). Its cells descend from an already
   graded painting; the full `RECIPE` would grade them twice and greyscale the corona.
 
@@ -259,10 +263,10 @@ grid splits to the manifest's cell count; `npm run art:test` green.
 
 ### AN1e — The float-eye is installed, and animates (Size: M)
 
-Closes A9, A10, A11. Requires AN1c and AD1b. Attended: no — D97 makes a used enemy's sheet
+Closes A9, A10, A11. Requires AN1c and AD1a. Attended: no — D97 makes a used enemy's sheet
 enhancement, and this row generates no art at all: it installs one that already exists.
 
-The payoff row. `assets/images/enemies/anim/float-eye.sheet.png` (landed by #720) is split by an
+The payoff row. `art-department/masters/enemies/float-eye.sheet.png` (landed by #720) is split by an
 `art-department/` tool into 24 per-cell WebP, ingested `--no-grade`, and registered against
 `float-eye`. Its manifest already declares `anchor: {kind: "centre"}` per A6 and names its clips
 `idle` / `struck` / `attacking`, which is AN1c's vocabulary exactly, so this is a registry entry and
