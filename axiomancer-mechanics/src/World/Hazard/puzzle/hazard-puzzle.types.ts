@@ -65,6 +65,21 @@ export interface HazardPuzzleLayout {
     unlocks: HazardPuzzleUnlock[];
 }
 
+/**
+ * A candidate puzzle: a layout authored for T to play once and rule keep or
+ * cut. It lives apart from the demo library, so it is never held to the
+ * band the solver count gives (`bands` still records what the solver
+ * measures); `intendedBand` is the felt difficulty the author is claiming.
+ */
+export interface HazardPuzzleCandidate extends HazardPuzzleLayout {
+    /** The authored pattern in a few words, e.g. "one trap, two decoys". */
+    label: string;
+    /** The difficulty the candidate is authored to feel like on its route. */
+    intendedBand: HazardPuzzleBand;
+    /** The one route the candidate is played and graded on. */
+    route: HazardRouteKey;
+}
+
 export interface HazardPuzzleValidation {
     ok: boolean;
     reasons: string[];
