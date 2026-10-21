@@ -221,7 +221,7 @@ event-pool and layout files).
       can no longer win; a route where every card is required prints `forced` and one where every first play wins
       prints `free`. Extends HP2b's feature list rather than duplicating it. Brief
       `plan/phases/phase_HP4_graded_puzzle_set.md` § HP4a. Requires HP2b.
-- [ ] Phase HP4b — The candidate library shape (plotted by T, 2026-10-19): a candidate layout carries a short
+- [x] (#696) Phase HP4b — The candidate library shape (plotted by T, 2026-10-19): a candidate layout carries a short
       `label`, an `intendedBand` and the one route it is played on; `HAZARD_PUZZLE_CANDIDATES` holds them, validated
       and budget-checked but deliberately not held to `hazardPuzzleBandOf`, and pinned not to enter the library or
       dominance cells. Brief `plan/phases/phase_HP4_graded_puzzle_set.md` § HP4b. Requires nothing.
