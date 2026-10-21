@@ -1,0 +1,22 @@
+{
+  "area:Cards": { "name": "Cards", "aliases": ["card", "cards", "keyword", "keywords"] },
+  "area:Character": { "name": "VITAE and stats", "aliases": ["VITAE", "stats", "stat model", "XP", "level up"] },
+  "area:Combat": { "name": "A fight", "aliases": ["fight", "combat", "Dice", "dice", "die"] },
+  "area:Enemy": { "name": "The foes", "aliases": ["foe", "foes", "enemy", "enemies", "Befriend and mercy", "befriend", "mercy"] },
+  "area:Items": { "name": "Items", "aliases": ["item", "items", "potion", "potions", "relic", "relics"] },
+  "area:World": { "name": "The world", "aliases": ["world", "region", "regions", "node", "nodes", "shillings"] },
+  "route:(tabs)/deck": { "name": "Deck", "aliases": ["deck"] },
+  "route:(tabs)/exploration": { "name": "The map", "aliases": ["map", "maps", "exploration"] },
+  "route:blacksmith": { "name": "The Anvil", "aliases": ["Anvil", "blacksmith", "HONE", "TEMPER"] },
+  "route:cache": { "name": "Loot cache", "aliases": ["loot-cache", "loot cache"] },
+  "route:combat-encounter": { "name": "Encounter", "aliases": ["encounter", "encounters"] },
+  "route:cutscene": { "name": "Cutscene", "aliases": ["cutscene", "cutscenes"] },
+  "route:dev": { "name": "The dev menu", "aliases": ["dev menu"] },
+  "route:devpuzzle": { "name": "The hazard puzzle demos", "aliases": ["hazard puzzle", "hazard puzzles", "HAZARD PUZZLES"] },
+  "route:dialogue": { "name": "Dialogue", "aliases": ["dialogue"] },
+  "route:hazard": { "name": "The hazard minigame", "aliases": ["hazard", "hazards", "Hazard"] },
+  "route:hazard-deck": { "name": "The hazard deck", "aliases": ["hazard deck", "HAZARD_DECK"] },
+  "route:item-reward": { "name": "Reward", "aliases": ["reward", "rewards"] },
+  "route:labyrinth": { "name": "The Labyrinth", "aliases": ["Labyrinth", "Aporia"] },
+  "route:rest": { "name": "Rest", "aliases": ["RestChoice", "rest node", "rest site"] }
+}

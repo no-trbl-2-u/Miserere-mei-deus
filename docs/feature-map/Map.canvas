@@ -57,326 +57,362 @@
 		{
 			"id": "route:(tabs)/character",
 			"type": "text",
-			"text": "**Character**\nroute\npitch unknown",
+			"text": "**Character**\nroute",
 			"x": 40,
 			"y": 340,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "4"
 		},
 		{
 			"id": "route:(tabs)/deck",
 			"type": "text",
-			"text": "**Deck**\nroute\npitch unknown",
+			"text": "**Deck**\nroute",
 			"x": 340,
 			"y": 340,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "4"
 		},
 		{
 			"id": "route:(tabs)/exploration",
 			"type": "text",
-			"text": "**Exploration**\nroute\npitch unknown",
+			"text": "**The map**\nroute",
 			"x": 640,
 			"y": 340,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "4"
 		},
 		{
 			"id": "route:(tabs)/inventory",
 			"type": "text",
-			"text": "**Inventory**\nroute\npitch unknown",
+			"text": "**Inventory**\nroute\nneeds a pitch",
 			"x": 40,
 			"y": 470,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "1"
 		},
 		{
 			"id": "route:(tabs)/memoir",
 			"type": "text",
-			"text": "**Memoir**\nroute\npitch unknown",
+			"text": "**Memoir**\nroute\nneeds a pitch",
 			"x": 340,
 			"y": 470,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "1"
 		},
 		{
 			"id": "route:blacksmith",
 			"type": "text",
-			"text": "**Blacksmith**\nroute\npitch unknown\nopens from any screen",
+			"text": "**The Anvil**\nroute\nopens from any screen",
 			"x": 40,
 			"y": 760,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "4"
 		},
 		{
 			"id": "route:cache",
 			"type": "text",
-			"text": "**Cache**\nroute\npitch unknown\nopens from any screen",
+			"text": "**Loot cache**\nroute\nneeds a pitch\nopens from any screen",
 			"x": 340,
 			"y": 760,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "1"
 		},
 		{
 			"id": "route:combat-encounter",
 			"type": "text",
-			"text": "**Combat Encounter**\nroute\npitch unknown\nopens from any screen",
+			"text": "**Encounter**\nroute\nopens from any screen",
 			"x": 640,
 			"y": 760,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "4"
 		},
 		{
 			"id": "route:cutscene",
 			"type": "text",
-			"text": "**Cutscene**\nroute\npitch unknown\nopens from any screen",
+			"text": "**Cutscene**\nroute\nopens from any screen",
 			"x": 40,
 			"y": 890,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "4"
 		},
 		{
 			"id": "route:dialogue",
 			"type": "text",
-			"text": "**Dialogue**\nroute\npitch unknown\nopens from any screen",
+			"text": "**Dialogue**\nroute\nopens from any screen",
 			"x": 340,
 			"y": 890,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "4"
 		},
 		{
 			"id": "route:event",
 			"type": "text",
-			"text": "**Event**\nroute\npitch unknown\nopens from any screen",
+			"text": "**Event**\nroute\nneeds a pitch\nopens from any screen",
 			"x": 640,
 			"y": 890,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "1"
 		},
 		{
 			"id": "route:index",
 			"type": "text",
-			"text": "**Index**\nroute\npitch unknown",
+			"text": "**Index**\nroute\nneeds a pitch",
 			"x": 40,
 			"y": 1020,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "1"
 		},
 		{
 			"id": "route:item-reward",
 			"type": "text",
-			"text": "**Item Reward**\nroute\npitch unknown\nopens from any screen",
+			"text": "**Reward**\nroute\nopens from any screen",
 			"x": 340,
 			"y": 1020,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "4"
 		},
 		{
 			"id": "route:rest",
 			"type": "text",
-			"text": "**Rest**\nroute\npitch unknown\nopens from any screen",
+			"text": "**Rest**\nroute\nneeds a pitch\nopens from any screen",
 			"x": 640,
 			"y": 1020,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "1"
 		},
 		{
 			"id": "route:saves",
 			"type": "text",
-			"text": "**Saves**\nroute\npitch unknown",
+			"text": "**Saves**\nroute\nneeds a pitch",
 			"x": 40,
 			"y": 1150,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "1"
 		},
 		{
 			"id": "route:settings",
 			"type": "text",
-			"text": "**Settings**\nroute\npitch unknown",
+			"text": "**Settings**\nroute\nneeds a pitch",
 			"x": 340,
 			"y": 1150,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "1"
 		},
 		{
 			"id": "route:village",
 			"type": "text",
-			"text": "**Village**\nroute\npitch unknown\nopens from any screen",
+			"text": "**Village**\nroute\nneeds a pitch\nopens from any screen",
 			"x": 640,
 			"y": 1150,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "1"
 		},
 		{
 			"id": "route:hazard",
 			"type": "text",
-			"text": "**Hazard**\nroute\npitch unknown\nopens from any screen",
+			"text": "**The hazard minigame**\nroute\nopens from any screen",
 			"x": 40,
 			"y": 1440,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "4"
 		},
 		{
 			"id": "route:hazard-deck",
 			"type": "text",
-			"text": "**Hazard Deck**\nroute\npitch unknown",
+			"text": "**The hazard deck**\nroute",
 			"x": 340,
 			"y": 1440,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "4"
 		},
 		{
 			"id": "route:labyrinth",
 			"type": "text",
-			"text": "**Labyrinth**\nroute\npitch unknown\nopens from any screen",
+			"text": "**The Labyrinth**\nroute\nopens from any screen",
 			"x": 640,
 			"y": 1440,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "4"
 		},
 		{
 			"id": "area:Cards",
 			"type": "text",
-			"text": "**Cards**\nengine area\npitch unknown",
+			"text": "**Cards**\nengine area",
 			"x": 40,
 			"y": 1730,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "4"
 		},
 		{
 			"id": "area:Character",
 			"type": "text",
-			"text": "**Character**\nengine area\npitch unknown",
+			"text": "**VITAE and stats**\nengine area",
 			"x": 340,
 			"y": 1730,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "4"
 		},
 		{
 			"id": "area:Combat",
 			"type": "text",
-			"text": "**Combat**\nengine area\npitch unknown",
+			"text": "**A fight**\nengine area",
 			"x": 640,
 			"y": 1730,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "4"
 		},
 		{
 			"id": "area:Effects",
 			"type": "text",
-			"text": "**Effects**\nengine area\npitch unknown",
+			"text": "**Effects**\nengine area\nneeds a pitch",
 			"x": 40,
 			"y": 1860,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "1"
 		},
 		{
 			"id": "area:Enemy",
 			"type": "text",
-			"text": "**Enemy**\nengine area\npitch unknown",
+			"text": "**The foes**\nengine area",
 			"x": 340,
 			"y": 1860,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "4"
 		},
 		{
 			"id": "area:Game",
 			"type": "text",
-			"text": "**Game**\nengine area\npitch unknown",
+			"text": "**Game**\nengine area",
 			"x": 640,
 			"y": 1860,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "4"
 		},
 		{
 			"id": "area:Items",
 			"type": "text",
-			"text": "**Items**\nengine area\npitch unknown",
+			"text": "**Items**\nengine area",
 			"x": 40,
 			"y": 1990,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "4"
 		},
 		{
 			"id": "area:Log",
 			"type": "text",
-			"text": "**Log**\nengine area\npitch unknown",
+			"text": "**Log**\nengine area\nneeds a pitch",
 			"x": 340,
 			"y": 1990,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "1"
 		},
 		{
 			"id": "area:NPCs",
 			"type": "text",
-			"text": "**NPCs**\nengine area\npitch unknown",
+			"text": "**NPCs**\nengine area",
 			"x": 640,
 			"y": 1990,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "4"
 		},
 		{
 			"id": "area:World",
 			"type": "text",
-			"text": "**World**\nengine area\npitch unknown",
+			"text": "**The world**\nengine area",
 			"x": 40,
 			"y": 2120,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "4"
 		},
 		{
 			"id": "route:dev",
 			"type": "text",
-			"text": "**Dev**\ndev route\npitch unknown",
+			"text": "**The dev menu**\ndev route",
 			"x": 40,
 			"y": 2410,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "4"
 		},
 		{
 			"id": "route:devaftermath",
 			"type": "text",
-			"text": "**Devaftermath**\ndev route\npitch unknown",
+			"text": "**Devaftermath**\ndev route\nneeds a pitch",
 			"x": 340,
 			"y": 2410,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "1"
 		},
 		{
 			"id": "route:devart",
 			"type": "text",
-			"text": "**Devart**\ndev route\npitch unknown",
+			"text": "**Devart**\ndev route\nneeds a pitch",
 			"x": 640,
 			"y": 2410,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "1"
 		},
 		{
 			"id": "route:devart/rooms",
 			"type": "text",
-			"text": "**Devart Rooms**\ndev route\npitch unknown",
+			"text": "**Devart Rooms**\ndev route\nneeds a pitch",
 			"x": 40,
 			"y": 2540,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "1"
 		},
 		{
 			"id": "route:devframes",
 			"type": "text",
-			"text": "**Devframes**\ndev route\npitch unknown",
+			"text": "**Devframes**\ndev route\nneeds a pitch",
 			"x": 340,
 			"y": 2540,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "1"
 		},
 		{
 			"id": "route:devpuzzle",
 			"type": "text",
-			"text": "**Devpuzzle**\ndev route\npitch unknown",
+			"text": "**The hazard puzzle demos**\ndev route",
 			"x": 640,
 			"y": 2540,
 			"width": 260,
-			"height": 90
+			"height": 90,
+			"color": "4"
 		}
 	],
 	"edges": [
