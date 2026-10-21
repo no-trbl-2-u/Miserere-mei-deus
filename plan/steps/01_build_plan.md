@@ -216,7 +216,7 @@ event-pool and layout files).
       delete the one-off inline `<Svg>` blocks in `ItemCard.tsx` and `ItemGrid.tsx` the picks make dead
       (`icon-registry.ts` forbids them). Brief
       `plan/phases/phase_IT1_item_glyph_resolver.md` § IT1b. Requires IT1a.
-- [ ] Phase HP4a — Decision pressure in the report (plotted by T, 2026-10-19): `puzzle:report` prints, per route and
+- [x] (#697) Phase HP4a — Decision pressure in the report (plotted by T, 2026-10-19): `puzzle:report` prints, per route and
       unlock set, the optional-card count, the required share and how many distinct first plays can still win or
       can no longer win; a route where every card is required prints `forced` and one where every first play wins
       prints `free`. Extends HP2b's feature list rather than duplicating it. Brief

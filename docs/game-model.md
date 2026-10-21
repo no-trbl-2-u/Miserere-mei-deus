@@ -239,7 +239,12 @@ keyword (`EnemyKeyword = never`).
   powered by one die kind, from which a win is still reachable), near misses
   (losing outcomes one short), shortest win (fewest moves) and draw
   dependence (the share of wins that stage a DRAW card). Calibration picks
-  the one that tracks first-time solve times. The library test fails, naming the
+  the one that tracks first-time solve times. Each route also prints its
+  decision pressure (`hazardPuzzleDecisionPressure`): the optional cards
+  (staged in some wins but not all), the required share, and how many first
+  placements can still win and how many cannot. A route where every card is
+  required is marked `forced` and one where every first placement still wins
+  is marked `free`: findings, not failures. The library test fails, naming the
   cards, on a worse copy: a card no win stages in any demo that holds it, or
   one a pool card beats in every demo that holds it (at least as many
   winning outcomes everywhere, more in one: `hazardPuzzleDominatedCards`).

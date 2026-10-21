@@ -5,11 +5,20 @@
  * the hand, the reserve and the granted unlocks, whether every win needs it
  * and whether no win uses it. T reads the `unused` column across layouts to
  * spot a card that is worse than another everywhere. The same solve's five
- * difficulty features ride along, one line per report.
+ * difficulty features ride along, one line per report, and so does its
+ * decision pressure: how many cards are a real choice and how many first
+ * plays already lose. A route where every card is required is `forced` (the
+ * only play is all of it) and one where every first play still wins is
+ * `free` (no play is a mistake); both are findings, not failures.
  */
 
 import type { HazardRouteKey } from '../hazard.types';
-import { solveHazardPuzzle, type HazardPuzzleFeatures, type HazardPuzzleSolveOptions } from './hazard-puzzle.solver';
+import {
+    solveHazardPuzzle,
+    type HazardPuzzleFeatures,
+    type HazardPuzzleFirstPlays,
+    type HazardPuzzleSolveOptions,
+} from './hazard-puzzle.solver';
 import type { HazardPuzzleLayout, HazardPuzzleUnlock } from './hazard-puzzle.types';
 
 /** Where a card in the report comes from. */
@@ -29,6 +38,29 @@ export interface HazardPuzzleCardUse {
     unused: boolean;
 }
 
+/** A route with no decision in it: every card required, or every first play winning. */
+export type HazardPuzzlePressureFinding = 'forced' | 'free';
+
+/** How much one route's choices matter, read off the card report and the first plays. */
+export interface HazardPuzzleDecisionPressure {
+    /** Cards staged in at least one win but not in every win. */
+    optional: number;
+    /** Cards staged in every win. */
+    required: number;
+    /** Cards in the report: hand, reserve and granted unlocks. */
+    total: number;
+    /** `required / total`; 0 when the report holds no card. */
+    requiredShare: number;
+    /** First plays from which a win is still reachable, and those from which none is. */
+    firstPlays: HazardPuzzleFirstPlays;
+    /**
+     * `forced` when every card is required; `free` when every first play
+     * still wins and at least one does; null otherwise or when nothing wins.
+     * `forced` is read first, so a route that is both prints `forced`.
+     */
+    finding: HazardPuzzlePressureFinding | null;
+}
+
 export interface HazardPuzzleCardReport {
     layoutId: string;
     route: HazardRouteKey;
@@ -36,6 +68,8 @@ export interface HazardPuzzleCardReport {
     cards: HazardPuzzleCardUse[];
     /** The solve's difficulty features. */
     features: HazardPuzzleFeatures;
+    /** The route's decision pressure. */
+    pressure: HazardPuzzleDecisionPressure;
     /** The solve stopped at its budget: every number here is partial. */
     overBudget: boolean;
 }
@@ -57,6 +91,27 @@ function cardSources(
     return sources;
 }
 
+/** Decision pressure from a route's card uses and first plays. */
+export function hazardPuzzleDecisionPressure(
+    cards: readonly HazardPuzzleCardUse[],
+    firstPlays: HazardPuzzleFirstPlays,
+): HazardPuzzleDecisionPressure {
+    const total = cards.length;
+    const required = cards.filter((c) => c.required).length;
+    const optional = cards.filter((c) => !c.required && !c.unused).length;
+    let finding: HazardPuzzlePressureFinding | null = null;
+    if (total > 0 && required === total) finding = 'forced';
+    else if (firstPlays.winning > 0 && firstPlays.losing === 0) finding = 'free';
+    return {
+        optional,
+        required,
+        total,
+        requiredShare: total === 0 ? 0 : required / total,
+        firstPlays: { ...firstPlays },
+        finding,
+    };
+}
+
 /** Per-card use across the winning outcomes of `layout` on `route` with `unlocks` granted. */
 export function hazardPuzzleCardReport(
     layout: HazardPuzzleLayout,
@@ -76,6 +131,7 @@ export function hazardPuzzleCardReport(
         unlocks: unlocks.slice(),
         cards,
         features: solution.features,
+        pressure: hazardPuzzleDecisionPressure(cards, solution.firstPlays),
         overBudget: solution.overBudget,
     };
 }
@@ -104,4 +160,16 @@ export function formatHazardPuzzleFeatures(features: HazardPuzzleFeatures, overB
         `draw dependence ${share(features.drawDependence)}`,
     ];
     return `${parts.join(' · ')}${overBudget ? ' (partial: over budget)' : ''}`;
+}
+
+/** The decision pressure as one line, its finding (if any) last. */
+export function formatHazardPuzzleDecisionPressure(pressure: HazardPuzzleDecisionPressure): string {
+    const parts = [
+        `optional cards ${pressure.optional}`,
+        `required ${pressure.required} / ${pressure.total} (${share(pressure.requiredShare)})`,
+        `first plays that can win ${pressure.firstPlays.winning}`,
+        `first plays that cannot ${pressure.firstPlays.losing}`,
+    ];
+    if (pressure.finding) parts.push(`**${pressure.finding}**`);
+    return `decision pressure: ${parts.join(' · ')}`;
 }

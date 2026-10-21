@@ -2,7 +2,8 @@
  * Puzzle-report CLI — prints `hazardPuzzleCardReport` for every demo in
  * `HAZARD_PUZZLE_LIBRARY`, both routes, as markdown: once with no unlock
  * and once with every declared unlock granted, each with its five
- * difficulty features. Reads only.
+ * difficulty features and its decision pressure (`forced` / `free` marked).
+ * Reads only.
  *
  * Usage:
  *   npm run puzzle:report
@@ -10,6 +11,7 @@
 
 import {
     formatHazardPuzzleCardReport,
+    formatHazardPuzzleDecisionPressure,
     formatHazardPuzzleFeatures,
     hazardPuzzleCardReport,
 } from '../World/Hazard/puzzle/hazard-puzzle.report';
@@ -30,6 +32,7 @@ function layoutSection(layout: HazardPuzzleLayout): string {
             parts.push(
                 `### ${route} (${layout.bands[route]}), ${unlockLabel(unlocks)}: ${wins} winning outcomes`,
                 formatHazardPuzzleFeatures(report.features, report.overBudget),
+                formatHazardPuzzleDecisionPressure(report.pressure),
                 formatHazardPuzzleCardReport(report),
             );
         }

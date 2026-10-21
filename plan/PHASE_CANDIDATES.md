@@ -666,9 +666,9 @@
 - proposed scope: one `/iterate` tick. A `scripts/pr-checks-wait.mjs <pr>` that polls until the PR lists check rows (bounded), then execs `gh pr checks --watch --fail-fast`, exiting non-zero on "no checks" past the bound; `skills/march.md` §3 and `skills/ship-a-phase.md` Step 12 call it. A unit test on the poll's decision. Then mark the lesson `guarded by`.
 - conflicts: none; no content.
 
-### [ ] [score 3.5] `/plot` checks every path a brief names before the plot PR opens (lesson `brief-pointer-drift`, seen 2×)
+### [ ] [score 3.5] `/plot` checks every path a brief names before the plot PR opens (lesson `brief-pointer-drift`, seen 3×)
 - proposed: 2026-10-21, retro of ship DL1a (#686)
-- source signals: lesson `brief-pointer-drift` (ship CS1, ship DL1a). The CS1 brief named a truth-sources table that never existed; the DL1 brief names `docs/dev-tools.md` as a consumer for A10 and DL1a, and no such file exists. Each ship tick had to restate the anchor and record the call.
+- source signals: lesson `brief-pointer-drift` (ship CS1, ship DL1a). The CS1 brief named a truth-sources table that never existed; the DL1 brief names `docs/dev-tools.md` as a consumer for A10 and DL1a, and no such file exists; the HP4 brief names it again for HP4a, HP4b and HP4d. Each ship tick had to restate the anchor and record the call.
 - proposed scope: one `/iterate` tick. A `scripts/check-brief-paths.mjs` over `plan/phases/*.md` that fails a backticked repo path in a brief's Scope or Consumers section that is neither on disk nor marked `(new)`, wired into the root `npm test` only for briefs with an open build-plan row. Then mark the lesson `guarded by`.
 - conflicts: none; no content.
 
