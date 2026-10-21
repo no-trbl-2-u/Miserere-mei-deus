@@ -31,13 +31,23 @@ the root suite (`npm test`). It fails if any tracked file outside this tree
 resolves a path into it, if the mobile build config so much as names the tree,
 if the tree becomes a declared workspace or is reached through
 `npm --workspace`, if `.easignore` stops excluding `/art-department/`, or if a
-spritesheet master reappears under `axiomancer-mobile/assets/`. Naming the tree
-in prose, in a CI path filter, or in a root script that invokes a tool **by
-path** is the sanctioned access and does not trip it; so is a tool in here
-reading a shipped painting out of `axiomancer-mobile/assets/` as its source —
-that direction is inside-out. A reference that genuinely must resolve inward
-goes in the guard's `RESOLVERS_ALLOWED` map with its reason, so the exception
-stays a list rather than a habit.
+spritesheet master reappears under `axiomancer-mobile/assets/`.
+
+The rule it applies to executable code (`.ts .tsx .js .jsx .mjs .cjs .py .sh`)
+is deliberately blunt: **running code outside this tree may not name the tree
+as a path at all.** Enumerating call shapes was the first attempt and it
+leaked — a dynamic `import('art-department/…')` and a nested
+`join(baseDir(), 'art-department/x')` both slipped past it. Naming the tree in
+a comment is free, so prose about the boundary costs nothing. JSON and YAML are
+not scanned that way, because they execute nothing and their two legitimate
+mentions — the root `art:doctor` / `art:test` / `art:rig` scripts, which reach
+the tree **by path**, and `verify-art-department.yml`, which owns the path —
+each have their own allowlisted assertion that fails on any mention not on the
+list. A tool in here reading a shipped painting out of
+`axiomancer-mobile/assets/` as its source is inside-out and is exempt along
+with the rest of the tree. A file that genuinely must resolve inward goes in
+the guard's `RESOLVERS_ALLOWED` map with its reason, so the exception stays a
+list rather than a habit.
 
 ## Not an npm workspace, deliberately
 

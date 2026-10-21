@@ -31,6 +31,7 @@
 import assert from 'node:assert/strict'
 import { execFileSync } from 'node:child_process'
 import fs from 'node:fs'
+import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import test from 'node:test'
@@ -62,15 +63,58 @@ const ROOT_SCRIPTS_ALLOWED = new Map([
 ])
 
 /**
- * A reference that actually RESOLVES a path, as opposed to naming the tree in
- * prose, in a path filter or in a shell command that invokes a tool by path.
+ * The tree named as a PATH SEGMENT. The lookbehind keeps
+ * `verify-art-department.yml` out, and the lookahead keeps
+ * `art-department-sealed.test.mjs` out: both name a file, not this directory.
  */
-const RESOLVES_CALL =
-  /(?:require|readFileSync|readdirSync|createReadStream|existsSync|statSync|join|resolve)\s*\([^)]*art-department/
-const IMPORT_SPECIFIER = /(?:^|[\s;{(])(?:from|import)\s+['"][^'"]*art-department[^'"]*['"]/
+const TREE_PATH = /(?<![\w-])art-department(?![\w.-])/
 
-function resolvesIntoTree(text) {
-  return RESOLVES_CALL.test(text) || IMPORT_SPECIFIER.test(text)
+/**
+ * Executable code, where naming the tree outside a comment means reaching into
+ * it at run time. Enumerating call shapes was the first attempt and it leaked:
+ * a bare `[^)]*` run cannot cross a nested call's `)`, so
+ * `join(baseDir(), 'art-department/x')` slipped through, and a dynamic
+ * `import('art-department/x')` matched neither the call list nor the
+ * `from '...'` form. The question is not which function is called -- it is
+ * whether running code names the tree at all.
+ *
+ * JSON and YAML are deliberately NOT scanned this way: they execute nothing,
+ * and their two legitimate mentions (the root `art:*` scripts and
+ * `verify-art-department.yml`) have dedicated allowlisted assertions below,
+ * which fail on any mention that is not on the list.
+ */
+const SCANNED_CODE = /\.(ts|tsx|js|jsx|mjs|cjs|py|sh)$/
+
+/** True when the tree reference at `index` sits inside a comment on that line. */
+function inComment(line, index) {
+  const before = line.slice(0, index)
+  return /\/\/|\/\*|^\s*\*|#/.test(before)
+}
+
+/**
+ * Every line of `text` that names the tree as a path outside a comment, as
+ * `{ line, text }` (1-based). Prose about the boundary is free; code is not.
+ */
+export function treeReferenceLines(text) {
+  const out = []
+  text.split(/\r?\n/).forEach((line, i) => {
+    const m = TREE_PATH.exec(line)
+    if (!m) return
+    if (inComment(line, m.index)) return
+    out.push({ line: i + 1, text: line.trim() })
+  })
+  return out
+}
+
+/** The offending repo-relative paths among `files`, each `{ abs, rel }`. */
+function scanForReferences(files) {
+  const offenders = []
+  for (const { abs, rel } of files) {
+    if (!fs.existsSync(abs)) continue
+    const hits = treeReferenceLines(fs.readFileSync(abs, 'utf-8'))
+    if (hits.length) offenders.push(`${rel}:${hits[0].line}`)
+  }
+  return offenders
 }
 
 function sourceFiles(dir) {
@@ -79,8 +123,9 @@ function sourceFiles(dir) {
   const out = []
   for (const entry of fs.readdirSync(root, { withFileTypes: true, recursive: true })) {
     if (!entry.isFile()) continue
-    if (!/\.(ts|tsx|js|jsx|mjs|cjs)$/.test(entry.name)) continue
-    out.push(path.join(entry.parentPath ?? entry.path, entry.name))
+    if (!SCANNED_CODE.test(entry.name)) continue
+    const abs = path.join(entry.parentPath ?? entry.path, entry.name)
+    out.push({ abs, rel: path.relative(REPO, abs).replace(/\\/g, '/') })
   }
   return out
 }
@@ -92,15 +137,54 @@ function trackedFiles(...args) {
     .filter(Boolean)
 }
 
-test('no bundled module resolves a path into art-department', () => {
-  const offenders = []
-  for (const dir of BUNDLED) {
-    for (const file of sourceFiles(dir)) {
-      if (resolvesIntoTree(fs.readFileSync(file, 'utf-8'))) {
-        offenders.push(path.relative(REPO, file).replace(/\\/g, '/'))
-      }
-    }
+test('the detector tells code reaching into the tree from prose about it', () => {
+  // A sealing guard passes on a clean tree by construction, so the thing worth
+  // proving is that it can fail at all, and on the right inputs. These are the
+  // shapes that have to be caught -- including the two an earlier call-shape
+  // regex let through -- and the mentions that must stay legal.
+  const caught = [
+    "import sheet from '../../../art-department/masters/enemies/float-eye.sheet.png'",
+    "const mod = await import('art-department/tools/index.mjs')",
+    "import('art-department/tools/index.mjs').then((m) => m.run())",
+    "require('../art-department/tools/x.js')",
+    "const p = path.join(baseDir(), 'art-department', 'masters')",
+    "fs.readFileSync(`${root}/art-department/masters/a.json`)",
+    "ASSET_ROOTS.push(resolve(__dirname, '..', 'art-department'))",
+    'SHEET = Path("art-department") / "masters"',
+  ]
+  const ignored = [
+    '// the masters live in art-department/, and nothing may resolve a path into that tree',
+    " * lives under the art-department tree, and nothing here may resolve a path into it",
+    '# the rig writes into art-department/masters/ -- its own tree',
+    "const WORKFLOWS = ['verify-art-department.yml', 'verify-drift.yml']",
+    "const guard = 'scripts/art-department-sealed.test.mjs'",
+  ]
+  for (const line of caught) {
+    assert.equal(treeReferenceLines(line).length, 1, `missed an inward reference: ${line}`)
   }
+  for (const line of ignored) {
+    assert.deepEqual(treeReferenceLines(line), [], `fired on a legitimate mention: ${line}`)
+  }
+})
+
+test('the repo-wide scan reports a file that breaks the rule', () => {
+  // The detector table above proves the matcher; this proves the scan that
+  // uses it, against a file on disk, so neither half can rot unnoticed.
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'art-dept-guard-'))
+  try {
+    const clean = path.join(dir, 'clean.mjs')
+    const dirty = path.join(dir, 'dirty.mjs')
+    fs.writeFileSync(clean, '// art-department/ is named here in prose only\nexport const x = 1\n')
+    fs.writeFileSync(dirty, "export const sheet = require('../art-department/masters/enemies/a.png')\n")
+    assert.deepEqual(scanForReferences([{ abs: clean, rel: 'clean.mjs' }]), [])
+    assert.deepEqual(scanForReferences([{ abs: dirty, rel: 'dirty.mjs' }]), ['dirty.mjs:1'])
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('no bundled module resolves a path into art-department', () => {
+  const offenders = scanForReferences(BUNDLED.flatMap((dir) => sourceFiles(dir)))
   assert.deepEqual(
     offenders,
     [],
@@ -115,17 +199,13 @@ test('no tracked file outside the tree resolves a path into it', () => {
   // backend, root scripts, workflows and config may not reach in either. The
   // tree's own files are exempt -- a tool reading and writing its own tree, and
   // reading a shipped painting as its source, is inside-out, not outside-in.
-  const CODE = /\.(ts|tsx|js|jsx|mjs|cjs|json|ya?ml|sh|py)$/
-  const offenders = []
-  for (const rel of trackedFiles()) {
-    if (!CODE.test(rel)) continue
-    if (rel === SELF) continue
-    if (rel === `${TREE}` || rel.startsWith(`${TREE}/`)) continue
-    if (RESOLVERS_ALLOWED.has(rel)) continue
-    const abs = path.join(REPO, rel)
-    if (!fs.existsSync(abs)) continue
-    if (resolvesIntoTree(fs.readFileSync(abs, 'utf-8'))) offenders.push(rel)
-  }
+  const files = trackedFiles()
+    .filter((rel) => SCANNED_CODE.test(rel))
+    .filter((rel) => rel !== SELF)
+    .filter((rel) => rel !== TREE && !rel.startsWith(`${TREE}/`))
+    .filter((rel) => !RESOLVERS_ALLOWED.has(rel))
+    .map((rel) => ({ abs: path.join(REPO, rel), rel }))
+  const offenders = scanForReferences(files)
   assert.deepEqual(
     offenders,
     [],
