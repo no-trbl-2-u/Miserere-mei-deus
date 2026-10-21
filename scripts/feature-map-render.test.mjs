@@ -10,7 +10,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import {
-  CANVAS_PATH, COLORS, FEATURES_PATH, GAME_MODEL_PATH, README_PATH, TABLE_END, TABLE_START,
+  CANVAS_PATH, COLORS, FEATURES_PATH, GAME_MODEL_PATH, NAMES_PATH, README_PATH, TABLE_END, TABLE_START,
   anomalies, canvasProblems, drawnEdges, main, renderCanvas, renderCanvasObject, renderReadme,
 } from './feature-map-render.mjs'
 import { featureTable } from './vault.mjs'
@@ -101,6 +101,12 @@ test('anomalies: unreachable routes, dead ends past the shell gates, unmatched g
   assert.match(readme, /## Unnamed features\n\n[^\n]*\n\n- World \(`area:World`\)\n- Devart \(`route:devart`\)\n/)
 })
 
+test('anomalies: a section named only through the alias table matches its feature', () => {
+  const names = { 'area:World': { name: 'World', aliases: ['the world', 'region'] } }
+  assert.deepEqual(anomalies(MAP, GAME_MODEL, names).unmatched, ['Cards'])
+  assert.match(renderReadme(MAP, GAME_MODEL, names), /match no feature\n\n- Cards\n\n/)
+})
+
 test('canvas: valid JSON Canvas, one text node per feature, one group node per group', () => {
   const canvas = JSON.parse(renderCanvas(MAP))
   assert.deepEqual(canvasProblems(canvas), [])
@@ -165,6 +171,7 @@ test('main: writes both files, --check passes on a fresh render and fails on dri
   fs.mkdirSync(path.join(dir, 'docs', 'feature-map'), { recursive: true })
   fs.writeFileSync(path.join(dir, FEATURES_PATH), JSON.stringify(MAP))
   fs.writeFileSync(path.join(dir, GAME_MODEL_PATH), GAME_MODEL)
+  fs.mkdirSync(path.join(dir, 'scripts'))
   const log = console.log
   const error = console.error
   console.log = () => {}
@@ -178,6 +185,9 @@ test('main: writes both files, --check passes on a fresh render and fails on dri
     main([], dir)
     fs.writeFileSync(path.join(dir, CANVAS_PATH), '{}\n')
     assert.equal(main(['--check'], dir), 1)
+    main([], dir)
+    fs.writeFileSync(path.join(dir, NAMES_PATH), JSON.stringify({ 'area:World': { name: 'World', aliases: ['Cards'] } }))
+    assert.equal(main(['--check'], dir), 1, 'a new alias changes the anomaly list')
   } finally {
     console.log = log
     console.error = error

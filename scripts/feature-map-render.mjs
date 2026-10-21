@@ -4,8 +4,9 @@
 //   node scripts/feature-map-render.mjs           # write docs/feature-map/README.md and Map.canvas
 //   node scripts/feature-map-render.mjs --check   # exit 1 when either committed file differs from a fresh render
 //
-// Reads docs/feature-map/features.json (written by scripts/feature-map.mjs) and
-// docs/game-model.md, and writes two files deterministically:
+// Reads docs/feature-map/features.json (written by scripts/feature-map.mjs),
+// docs/game-model.md and, when present, the alias table
+// scripts/feature-map.names.json, and writes two files deterministically:
 //
 //   README.md   one table row per feature between the feature-table markers,
 //               then the anomaly list and the unnamed features. The markers are
@@ -37,6 +38,8 @@ export const FEATURES_PATH = 'docs/feature-map/features.json'
 export const GAME_MODEL_PATH = 'docs/game-model.md'
 export const README_PATH = 'docs/feature-map/README.md'
 export const CANVAS_PATH = 'docs/feature-map/Map.canvas'
+/** The evidence pass's alias table, `{ "<feature id>": { name, aliases } }`; optional. */
+export const NAMES_PATH = 'scripts/feature-map.names.json'
 
 export const TABLE_START = '<!-- feature-table:start -->'
 export const TABLE_END = '<!-- feature-table:end -->'
@@ -107,10 +110,12 @@ export function gameModelSections(text) {
 
 const norm = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
 
-/** The names a feature answers to: its display name and any aliases. */
-function namesOf(feature) {
-  const aliases = Array.isArray(feature.aliases) ? feature.aliases : []
-  return [feature.name, ...aliases].map(norm).filter(Boolean)
+/** The names a feature answers to: its display name and its aliases, from the feature or the alias table. */
+function namesOf(feature, names) {
+  const own = Array.isArray(feature.aliases) ? feature.aliases : []
+  const entry = names[feature.id]
+  const table = entry && Array.isArray(entry.aliases) ? entry.aliases : []
+  return [feature.name, ...own, ...table].map(norm).filter(Boolean)
 }
 
 /**
@@ -119,9 +124,10 @@ function namesOf(feature) {
  *                feature carries reachability evidence yet;
  *   deadEnds     a route or dev route with no outgoing flow edge to another
  *                feature, shell gates aside (back is never an edge);
- *   unmatched    a game-model.md section whose heading names no feature.
+ *   unmatched    a game-model.md section whose heading is no feature's name
+ *                or alias.
  */
-export function anomalies(map, gameModelText) {
+export function anomalies(map, gameModelText, names = {}) {
   const routes = orderedFeatures(map).filter((f) => f.kind !== 'engine-area')
   const hasEvidence = map.features.some((f) => f.reachable !== undefined)
   const unreachable = hasEvidence ? routes.filter((f) => flag(f.reachable) === 'no') : null
@@ -129,7 +135,7 @@ export function anomalies(map, gameModelText) {
     map.edges.filter((e) => e.kind === 'flow' && e.from !== e.to && !isShellGateEdge(e)).map((e) => e.from),
   )
   const deadEnds = routes.filter((f) => !exits.has(f.id))
-  const known = new Set(map.features.flatMap(namesOf))
+  const known = new Set(map.features.flatMap((f) => namesOf(f, names)))
   const unmatched = gameModelSections(gameModelText).filter((h) => !known.has(norm(h)))
   return { unreachable, deadEnds, unmatched }
 }
@@ -137,11 +143,11 @@ export function anomalies(map, gameModelText) {
 const bullets = (items, none) => (items.length ? items.map((s) => `- ${s}`) : [`- ${none}`])
 const nameAndId = (f) => `${f.name} (\`${f.id}\`)`
 
-export function renderReadme(map, gameModelText) {
+export function renderReadme(map, gameModelText, names = {}) {
   const rows = orderedFeatures(map).map((f) =>
     `| ${cell(f.name)} | ${cell(KIND_LABEL[f.kind] || f.kind)} | ${flag(f.reachable)} | ${flag(f.driven)} | ${flag(f.tested)} | ${cell(pitchCell(f))} |`,
   )
-  const a = anomalies(map, gameModelText)
+  const a = anomalies(map, gameModelText, names)
   const unnamedKnown = map.features.some((f) => typeof f.named === 'boolean')
   const unnamed = orderedFeatures(map).filter((f) => f.named === false)
   const lines = [
@@ -310,7 +316,9 @@ export function canvasProblems(canvas) {
 export function render(root = ROOT) {
   const map = JSON.parse(fs.readFileSync(path.join(root, FEATURES_PATH), 'utf8'))
   const gameModel = fs.readFileSync(path.join(root, GAME_MODEL_PATH), 'utf8')
-  return { [README_PATH]: renderReadme(map, gameModel), [CANVAS_PATH]: renderCanvas(map) }
+  const namesFile = path.join(root, NAMES_PATH)
+  const names = fs.existsSync(namesFile) ? JSON.parse(fs.readFileSync(namesFile, 'utf8')) : {}
+  return { [README_PATH]: renderReadme(map, gameModel, names), [CANVAS_PATH]: renderCanvas(map) }
 }
 
 export function main(argv = process.argv.slice(2), root = ROOT) {
