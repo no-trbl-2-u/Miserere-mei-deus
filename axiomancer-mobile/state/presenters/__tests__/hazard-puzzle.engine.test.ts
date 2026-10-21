@@ -13,6 +13,7 @@ import {
     createHazardPuzzleSession,
     applyHazardPuzzleCard,
     getHazardPuzzleLayout,
+    HAZARD_PUZZLE_CANDIDATES,
     HAZARD_PUZZLE_CLOCK_SECONDS,
     hazardPuzzleOutcome,
     stageHazardPuzzleCard,
@@ -23,7 +24,9 @@ import {
     formatHazardPuzzleClock,
     hazardPuzzleClockExpired,
     hazardPuzzleClockFor,
+    isHazardPuzzleCandidate,
     nextHazardPuzzleDieRolls,
+    selectHazardPuzzleCandidateGroupsVM,
     selectHazardPuzzleDiceChange,
     selectHazardPuzzleListVM,
     selectHazardPuzzleOutcomeVM,
@@ -34,6 +37,7 @@ import {
     tickHazardPuzzleClock,
 } from '../hazard-puzzle.engine';
 import { addRerollFixture, removeRerollFixture } from '@/test-utils/hazardPuzzleRerollFixture';
+import { CANDIDATE_FIXTURE } from '@/test-utils/hazardPuzzleCandidateFixture';
 
 const HARD = getHazardPuzzleLayout('demo-undercroft-hard');
 
@@ -44,6 +48,45 @@ describe('the demo list', () => {
             ['demo-ashfall-medium', 'ASHFALL CROSSING', 'MEDIUM ON THE RISK ROUTE'],
             ['demo-undercroft-hard', 'FLOODED UNDERCROFT', 'HARD ON THE RISK ROUTE'],
         ]);
+    });
+});
+
+describe('the candidate list, grouped by intended band (HP4d A8)', () => {
+    it('always shows three labelled groups, easy then medium then hard, even with no candidate', () => {
+        const groups = selectHazardPuzzleCandidateGroupsVM([]);
+        expect(groups.map((g) => [g.band, g.heading, g.items.length, g.emptyLine, g.testID])).toEqual([
+            ['easy', 'EASY · 0', 0, 'None authored yet.', 'hazard-puzzle-candidate-group-easy'],
+            ['medium', 'MEDIUM · 0', 0, 'None authored yet.', 'hazard-puzzle-candidate-group-medium'],
+            ['hard', 'HARD · 0', 0, 'None authored yet.', 'hazard-puzzle-candidate-group-hard'],
+        ]);
+    });
+
+    it('puts each candidate in its intended band, in authored order, with its label and route', () => {
+        const groups = selectHazardPuzzleCandidateGroupsVM(CANDIDATE_FIXTURE);
+        expect(groups.map((g) => g.heading)).toEqual(['EASY · 2', 'MEDIUM · 1', 'HARD · 1']);
+        expect(groups.map((g) => g.emptyLine)).toEqual([null, null, null]);
+        expect(groups.map((g) => g.items.map((i) => [i.id, i.label, i.detail, i.testID]))).toEqual([
+            [
+                ['cand-easy-a', 'one trap, two decoys', 'CRACKED CLIFF PATH · SAFE ROUTE', 'hazard-puzzle-candidate-cand-easy-a'],
+                ['cand-easy-b', 'spend the gold first', 'FLOODED UNDERCROFT · RISK ROUTE', 'hazard-puzzle-candidate-cand-easy-b'],
+            ],
+            [['cand-medium-a', 'draw before you power', 'ASHFALL CROSSING · RISK ROUTE', 'hazard-puzzle-candidate-cand-medium-a']],
+            [['cand-hard-a', 'the long way round', 'CRACKED CLIFF PATH · SAFE ROUTE', 'hazard-puzzle-candidate-cand-hard-a']],
+        ]);
+    });
+
+    it('reads the engine candidate set by default, every candidate in exactly one group', () => {
+        const groups = selectHazardPuzzleCandidateGroupsVM();
+        expect(groups.map((g) => g.band)).toEqual(['easy', 'medium', 'hard']);
+        expect(groups.flatMap((g) => g.items.map((i) => i.id))).toHaveLength(HAZARD_PUZZLE_CANDIDATES.length);
+    });
+
+    it('runs a candidate on its nominated route at its intended band clock, any other route at the solver band', () => {
+        const hardOnEasyLayout = CANDIDATE_FIXTURE[1];
+        expect(isHazardPuzzleCandidate(hardOnEasyLayout)).toBe(true);
+        expect(isHazardPuzzleCandidate(HARD)).toBe(false);
+        expect(hazardPuzzleClockFor(hardOnEasyLayout, 'safe')).toBe(HAZARD_PUZZLE_CLOCK_SECONDS.hard);
+        expect(hazardPuzzleClockFor(hardOnEasyLayout, 'risk')).toBe(HAZARD_PUZZLE_CLOCK_SECONDS[hardOnEasyLayout.bands.risk]);
     });
 });
 

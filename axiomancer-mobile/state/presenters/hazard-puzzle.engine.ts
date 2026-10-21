@@ -11,12 +11,15 @@ import {
     createHazardPuzzleSession,
     getHazardCardDef,
     getHazardDef,
+    HAZARD_PUZZLE_CANDIDATES,
     HAZARD_PUZZLE_CLOCK_SECONDS,
     HAZARD_PUZZLE_FAILURE,
     HAZARD_PUZZLE_LIBRARY,
     HAZARD_PUZZLE_REWARDS,
     HAZARD_PUZZLE_UNLOCK_DIE,
     hazardProjectedProgress,
+    type HazardPuzzleBand,
+    type HazardPuzzleCandidate,
     type HazardPuzzleLayout,
     type HazardPuzzleOutcome,
     type HazardPuzzleResult,
@@ -34,7 +37,10 @@ import {
     HAZARD_PUZZLE_ROUND_LABEL,
     HAZARD_PUZZLE_SHORT,
     HAZARD_PUZZLE_TIME_UP,
+    HAZARD_PUZZLE_CANDIDATE_GROUP_EMPTY,
     hazardPuzzleBandChip,
+    hazardPuzzleCandidateDetail,
+    hazardPuzzleCandidateGroupHeading,
     hazardPuzzleItemChip,
     hazardPuzzleReached,
     hazardPuzzleReserve,
@@ -84,12 +90,74 @@ export function selectHazardPuzzleListVM(
 }
 
 // ---------------------------------------------------------------------------
+// The candidates, grouped by intended band
+// ---------------------------------------------------------------------------
+
+export interface HazardPuzzleCandidateItemVM {
+    id: string;
+    /** The authored pattern, the row's headline. */
+    label: string;
+    /** The live hazard's title and the nominated route. */
+    detail: string;
+    testID: string;
+}
+
+export interface HazardPuzzleCandidateGroupVM {
+    band: HazardPuzzleBand;
+    heading: string;
+    items: HazardPuzzleCandidateItemVM[];
+    /** Set when the group holds no candidate, so the board still shows the band. */
+    emptyLine: string | null;
+    testID: string;
+}
+
+/** The candidate groups' order on the board. */
+const CANDIDATE_BAND_ORDER: readonly HazardPuzzleBand[] = ['easy', 'medium', 'hard'];
+
+/**
+ * The candidate list: always three groups, easy then medium then hard, each
+ * holding the candidates whose `intendedBand` it names, in authored order.
+ * A band with no candidate still gets its group, with an empty line.
+ */
+export function selectHazardPuzzleCandidateGroupsVM(
+    candidates: readonly HazardPuzzleCandidate[] = HAZARD_PUZZLE_CANDIDATES,
+): HazardPuzzleCandidateGroupVM[] {
+    return CANDIDATE_BAND_ORDER.map((band) => {
+        const items = candidates
+            .filter((c) => c.intendedBand === band)
+            .map((c) => ({
+                id: c.id,
+                label: c.label,
+                detail: hazardPuzzleCandidateDetail(c.title, c.route),
+                testID: `hazard-puzzle-candidate-${c.id}`,
+            }));
+        return {
+            band,
+            heading: hazardPuzzleCandidateGroupHeading(band, items.length),
+            items,
+            emptyLine: items.length === 0 ? HAZARD_PUZZLE_CANDIDATE_GROUP_EMPTY : null,
+            testID: `hazard-puzzle-candidate-group-${band}`,
+        };
+    });
+}
+
+/** True when a layout is a candidate (it carries an intended band and a nominated route). */
+export function isHazardPuzzleCandidate(layout: HazardPuzzleLayout): layout is HazardPuzzleCandidate {
+    return 'intendedBand' in layout && 'route' in layout;
+}
+
+// ---------------------------------------------------------------------------
 // Routes and the clock
 // ---------------------------------------------------------------------------
 
-/** Seconds on the clock for a route: the band constant of that route. */
+/**
+ * Seconds on the clock for a route: the band constant of that route. A
+ * candidate on its nominated route runs on its intended band's clock, the
+ * band it is authored and ruled against; any other route reads the solver's band.
+ */
 export function hazardPuzzleClockFor(layout: HazardPuzzleLayout, route: HazardRouteKey): number {
-    return HAZARD_PUZZLE_CLOCK_SECONDS[layout.bands[route]];
+    const band = isHazardPuzzleCandidate(layout) && layout.route === route ? layout.intendedBand : layout.bands[route];
+    return HAZARD_PUZZLE_CLOCK_SECONDS[band];
 }
 
 /** One second off the clock, never below zero. */

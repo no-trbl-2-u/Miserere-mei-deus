@@ -1,11 +1,13 @@
 /**
  * Dev-only HAZARD PUZZLES board, full-screen like `/hazard`: the three demo
- * puzzles, the live route select, the live hazard board under its clock and
- * the outcome. Gated to dev builds; production renders nothing.
+ * puzzles and the labelled candidates grouped easy, medium and hard, the
+ * live route select, the live hazard board under its clock and the outcome.
+ * Gated to dev-tools builds (dev and preview); production renders nothing.
  *
  * Route: /devpuzzle. Optional `?id=<demo id>` opens a demo, `&route=safe|risk`
  * starts it, `&confirm=1` confirms at once (the smoke shot of the outcome
  * panel), and `&paused=1` holds the clock (the smoke shot of the board).
+ * `?id=<candidate id>` starts that candidate on its nominated route.
  */
 
 import React from 'react';

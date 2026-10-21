@@ -1,7 +1,7 @@
 /**
  * Dev-only entry to the HAZARD PUZZLES board: the three fixed demo puzzles
- * (easy, medium, hard), each under its clock. Tap pushes `/devpuzzle`.
- * Renders null outside dev builds.
+ * and the labelled candidates (grouped easy, medium, hard), each under its
+ * clock. Tap pushes `/devpuzzle`. Renders null outside dev builds.
  */
 
 import React from 'react';
@@ -11,7 +11,7 @@ import { isDevToolsEnabled } from '@/lib/buildProfile';
 import { useRouter } from '@/lib/platform/router';
 import { HAZARD_PUZZLE_LIST_TITLE } from '@/state/presenters/hazard-puzzle.copy';
 
-export const DEBUG_HAZARD_PUZZLES_SUB = 'three fixed demos under a clock';
+export const DEBUG_HAZARD_PUZZLES_SUB = 'three demos and the candidates, under a clock';
 export const DEBUG_HAZARD_PUZZLES_OPEN = 'OPEN';
 
 export function DebugHazardPuzzlesButton() {

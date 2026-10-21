@@ -229,7 +229,7 @@ event-pool and layout files).
       distinct labels across at least three Act 1 regions, none `forced` or `free` on its nominated route and
       spanning the HP4a numbers; pool cards only, no card or keyword added (D37). Brief
       `plan/phases/phase_HP4_graded_puzzle_set.md` § HP4c. Requires HP4a, HP4b.
-- [ ] Phase HP4d — Thirty on the board (plotted by T, 2026-10-19): `/devpuzzle` lists the candidates in three
+- [x] (#699) Phase HP4d — Thirty on the board (plotted by T, 2026-10-19): `/devpuzzle` lists the candidates in three
       labelled groups by intended band and plays any of them on its nominated route through the live `HazardBoard`;
       the three demos stay reachable and production still renders nothing. Brief
       `plan/phases/phase_HP4_graded_puzzle_set.md` § HP4d. Requires HP4b.

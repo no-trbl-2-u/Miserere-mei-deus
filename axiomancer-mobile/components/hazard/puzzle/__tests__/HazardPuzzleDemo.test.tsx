@@ -22,6 +22,7 @@ import { DICE_ROLL_OVERLAY_MS } from '@/components/hazard/HazardOverlays';
 import { HazardPuzzleDemo } from '@/components/hazard/puzzle/HazardPuzzleDemo';
 import { HAZARD_PUZZLE_TICK_MS } from '@/components/hazard/puzzle/useHazardPuzzleClock';
 import { createAppStore } from '@/state/store';
+import { CANDIDATE_FIXTURE } from '@/test-utils/hazardPuzzleCandidateFixture';
 import { addRerollFixture, removeRerollFixture, REROLL_PUZZLE_ID } from '@/test-utils/hazardPuzzleRerollFixture';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 import { withAllProviders } from '@/test-utils/withAllProviders';
@@ -411,6 +412,67 @@ describe('HazardPuzzleDemo', () => {
         );
         const screen = render(tree);
         expect(screen.getByTestId('hazard-board')).toBeTruthy();
+        expect(screen.getByTestId('hazard-puzzle-outcome')).toBeTruthy();
+    });
+});
+
+describe('HazardPuzzleDemo — the candidates (HP4d A8)', () => {
+    it('with no candidate yet, still lists the demos and shows three empty labelled groups', () => {
+        const { tree } = withAllProviders(<HazardPuzzleDemo candidates={[]} />);
+        const screen = render(tree);
+        expect(screen.getByTestId('hazard-puzzle-pick-demo-undercroft-hard')).toBeTruthy();
+        expect(screen.getByTestId('hazard-puzzle-candidates')).toBeTruthy();
+        for (const heading of ['EASY · 0', 'MEDIUM · 0', 'HARD · 0']) expect(screen.getByText(heading)).toBeTruthy();
+        expect(screen.getAllByText('None authored yet.')).toHaveLength(3);
+        expect(screen.queryAllByTestId(/^hazard-puzzle-candidate-cand-/)).toHaveLength(0);
+    });
+
+    it('lists each candidate by its label inside its intended band group', () => {
+        const { tree } = withAllProviders(<HazardPuzzleDemo candidates={CANDIDATE_FIXTURE} />);
+        const screen = render(tree);
+        const easy = screen.getByTestId('hazard-puzzle-candidate-group-easy');
+        expect(within(easy).getByText('EASY · 2')).toBeTruthy();
+        expect(within(easy).getByText('one trap, two decoys')).toBeTruthy();
+        expect(within(easy).getByText('spend the gold first')).toBeTruthy();
+        const hard = screen.getByTestId('hazard-puzzle-candidate-group-hard');
+        expect(within(hard).getByText('the long way round')).toBeTruthy();
+        expect(within(hard).getByText('CRACKED CLIFF PATH · SAFE ROUTE')).toBeTruthy();
+        expect(screen.queryByText('None authored yet.')).toBeNull();
+    });
+
+    it('picking a candidate skips the route pick and starts the live board on its nominated route, at its intended band clock', () => {
+        const { tree } = withAllProviders(<HazardPuzzleDemo candidates={CANDIDATE_FIXTURE} />);
+        const screen = render(tree);
+        fireEvent.press(screen.getByTestId('hazard-puzzle-candidate-cand-hard-a'));
+        expect(screen.queryByTestId('hazard-route-select')).toBeNull();
+        settleRoll();
+        expect(screen.getByTestId('hazard-board')).toBeTruthy();
+        expect(boardProps(screen).vm.routeKey).toBe('safe');
+        expect(screen.getByTestId('hazard-puzzle-clock').props.children).toBe('1:00');
+    });
+
+    it('plays a risk-route candidate on risk, and DONE returns to the list with the demos still reachable', () => {
+        const { tree } = withAllProviders(<HazardPuzzleDemo candidates={CANDIDATE_FIXTURE} />);
+        const screen = render(tree);
+        fireEvent.press(screen.getByTestId('hazard-puzzle-candidate-cand-medium-a'));
+        settleRoll();
+        expect(boardProps(screen).vm.routeKey).toBe('risk');
+        expect(screen.getByTestId('hazard-puzzle-clock').props.children).toBe('1:15');
+        fireEvent.press(screen.getByTestId('hazard-play-button'));
+        expect(screen.getByTestId('hazard-puzzle-outcome')).toBeTruthy();
+        fireEvent.press(screen.getByTestId('hazard-puzzle-done'));
+        expect(screen.getByTestId('hazard-puzzle-list')).toBeTruthy();
+        fireEvent.press(screen.getByTestId('hazard-puzzle-pick-demo-cliff-easy'));
+        expect(screen.getByTestId('hazard-route-select')).toBeTruthy();
+    });
+
+    it('deep-links a candidate by id onto its nominated route', () => {
+        const { tree } = withAllProviders(
+            <HazardPuzzleDemo initialId="cand-easy-b" candidates={CANDIDATE_FIXTURE} autoConfirm />,
+        );
+        const screen = render(tree);
+        expect(screen.getByTestId('hazard-board')).toBeTruthy();
+        expect(boardProps(screen).vm.routeKey).toBe('risk');
         expect(screen.getByTestId('hazard-puzzle-outcome')).toBeTruthy();
     });
 });
