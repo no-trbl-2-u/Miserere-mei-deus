@@ -199,7 +199,7 @@ event-pool and layout files).
 - [x] (#732) Phase BE1c — Preview builds post each attempt (plotted by T, 2026-10-21): each `/devpuzzle` attempt that
       ends is posted once when dev tools are on and the `EXPO_PUBLIC_PUZZLE_API_*` env is set; a failure is
       dropped with a dev warning; production never posts. Brief `plan/phases/phase_BE1_solve_time_backend.md` § BE1c. Requires BE1a.
-- [ ] Phase BE1d — `npm run puzzle:times` (plotted by T, 2026-10-21): per-candidate attempts, solve rate and
+- [x] (#742) Phase BE1d — `npm run puzzle:times` (plotted by T, 2026-10-21): per-candidate attempts, solve rate and
       median solve time grouped by band, with `--solver` and `--json`. Brief `plan/phases/phase_BE1_solve_time_backend.md` § BE1d. Requires BE1a.
 - [x] (#727) Phase AN1a — The enemy frame engine, the fallback and the dev route (plotted by T, 2026-10-21):
       a frame-set registry beside `ENEMY_ART_BY_KEY` keyed on `portraitAsset`, a reanimated frame player,
@@ -209,7 +209,7 @@ event-pool and layout files).
       the bbox centre wandered 11.2% as the weapon swung), and go through the same ingest `RECIPE` as
       every other asset. Reduced motion reuses the pane's existing ref. Brief
       `plan/phases/phase_AN1_enemy_animation.md` § AN1a. Requires nothing.
-- [ ] Phase AN1b — The enemy's turn is animated (plotted by T, 2026-10-21): the attack animation plays
+- [x] (#735) Phase AN1b — The enemy's turn is animated (plotted by T, 2026-10-21): the attack animation plays
       on the enemy's beat in `CombatCombatantPane`, off the **existing** `fx.seq` walk (`threat-fired`,
       `damage-dealt`) at the existing `IMPACT` offset and behind the existing `reduceMotion.current`; an
       enemy with no frame set is untouched. Brief
