@@ -51,7 +51,7 @@
     "art:legibility": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/title-plate-legibility.mjs",
     "critique-drive:test": "node --test scripts/critique-drive.test.mjs",
     "feature-map-drive:test": "node --test scripts/feature-map-drive.test.mjs",
-    "smoke:test": "node --test scripts/smoke-screens.test.mjs scripts/web-export.test.mjs",
+    "smoke:test": "node --test scripts/smoke-screens.test.mjs scripts/web-export.test.mjs scripts/smoke-routes-for.test.mjs",
     "assets:acquire": "node scripts/acquire-art.mjs",
     "eas-build-on-success": "node scripts/sentry-release.mjs"
   },

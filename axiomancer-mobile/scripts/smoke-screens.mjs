@@ -19,6 +19,9 @@
 //   SMOKE_ONLY=devpuzzle-board,hazard-board  shoot and diff only these routes
 //   (the shots a change moves; on a renderer unlike the baselines' every
 //   route drifts, so the full run's exit code says nothing about the change)
+//   With neither SMOKE_ONLY nor SMOKE_ROUTES=all, a run shoots only the routes
+//   the paths changed since the merge-base with origin/main map to, failing
+//   closed to all (lib/smoke-routes-for.mjs). CI passes SMOKE_ROUTES=all.
 //   Every run writes screenshots/visual-summary.json (routes, counts, timings)
 //   and, under CI, the same table to $GITHUB_STEP_SUMMARY (visual-report.mjs).
 //
@@ -39,6 +42,7 @@ import { forceDevTools } from './fixture-injector.mjs'
 import { enterLiveFight } from './live-fight-entry.mjs'
 import { waitForReady } from './lib/page-ready.mjs'
 import { ensureWebExport } from './lib/web-export.mjs'
+import { changedPaths, chooseRoutes } from './lib/smoke-routes-for.mjs'
 import { buildVisualSummary, renderStepSummary } from './visual-report.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -103,6 +107,20 @@ export function selectRoutes(routes, only) {
     const unknown = names.filter((n) => !routes.some((r) => r.name === n))
     if (unknown.length > 0) throw new Error(`SMOKE_ONLY names unknown route(s): ${unknown.join(', ')}`)
     return routes.filter((r) => names.includes(r.name))
+}
+
+/**
+ * The routes this run shoots and the line that says why: `SMOKE_ONLY`, then
+ * `SMOKE_ROUTES=all`, then the routes the branch's changed paths map to.
+ *
+ * @param {typeof ROUTES} routes every visual route.
+ * @param {Record<string, string | undefined>} env the process environment.
+ * @param {() => string[] | null} changed the changed paths, or null for all.
+ */
+export function routesForRun(routes, env, changed) {
+    const choice = chooseRoutes(routes, { only: env.SMOKE_ONLY, routesEnv: env.SMOKE_ROUTES, changed })
+    const picked = choice.names ? routes.filter((r) => choice.names.includes(r.name)) : selectRoutes(routes, env.SMOKE_ONLY)
+    return { routes: picked, log: choice.log }
 }
 
 // Per-pixel sensitivity passed to pixelmatch. 0 = exact, 1 = ignore.
@@ -328,7 +346,7 @@ function startStaticServer(rootDir) {
 // Screenshot + diff per route
 // ---------------------------------------------------------------------------
 
-async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl) {
+async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl, routes) {
     await mkdir(CURRENT_DIR, { recursive: true })
     await mkdir(DIFF_DIR, { recursive: true })
 
@@ -414,7 +432,7 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl) {
     let captureMs = 0
     const loopStart = performance.now()
 
-    for (const route of selectRoutes(ROUTES, process.env.SMOKE_ONLY)) {
+    for (const route of routes) {
         const captures = []
         const shotStart = performance.now()
         try {
@@ -488,8 +506,9 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl) {
 // ---------------------------------------------------------------------------
 
 async function main() {
-    // A bad SMOKE_ONLY or SMOKE_RUNS fails here, before the export, not after it.
-    selectRoutes(ROUTES, process.env.SMOKE_ONLY)
+    // A bad SMOKE_ONLY, SMOKE_ROUTES or SMOKE_RUNS fails here, before the export.
+    const { routes, log } = routesForRun(ROUTES, process.env, () => changedPaths(resolve(REPO_ROOT, '..')))
+    console.log(`smoke-screens: ${log}`)
     parseSmokeRuns(process.env.SMOKE_RUNS)
     const exportTiming = await runExpoExport()
     const deps = await loadDeps()
@@ -500,7 +519,7 @@ async function main() {
 
     let result
     try {
-        result = await captureAndDiff(deps, baseUrl)
+        result = await captureAndDiff(deps, baseUrl, routes)
     } finally {
         server.close()
     }
