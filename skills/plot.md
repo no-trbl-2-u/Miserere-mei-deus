@@ -135,7 +135,7 @@ the rows. `plan/deadlines.md` is edited by hand here; nothing
 regenerates it from the build plan except the Status cells:
 
 - **Every row the plot added** gets a home: name it in an `## Items`
-  row with a due date inside that row's window (a `needs plot` Item
+  row whose due date sits inside its Window (a `needs plot` Item
   this plot answers has its `needs plot` replaced by the new ids), or
   a `- <id> — <reason>` line under `## Unscheduled` ("date not set"
   when the date is T's to pick and T is not here to pick it). Never
