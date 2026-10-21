@@ -1,11 +1,17 @@
 /**
- * Enemy art registry — 1:1 per-enemy portraits.
+ * Enemy art registry — one OR MORE assets per enemy.
  *
  * Three enemies: two alpha-matted paintings (black backgrounds keyed out so
  * figures float over the arena backdrop) and one licensed game-icons.net
- * silhouette (The Doorwarden) — one asset per enemy either way (the 1:1 art
- * law). The registry key is the enemy's `portraitAsset` (kebab-case) —
- * slug→asset routing stays mobile-local. See provenance.json.
+ * silhouette (The Doorwarden). The registry key is the enemy's
+ * `portraitAsset` (kebab-case) — slug->asset routing stays mobile-local. See
+ * provenance.json.
+ *
+ * There is no "one asset per enemy" law. An enemy may carry a single
+ * painting, as all three below do today, or a painting plus an animated FRAME
+ * SET — see `./frames.ts`, whose registry is deliberately empty until the
+ * first set is installed. The bindings below hold either way: a frame set is
+ * additional art for an enemy, never a replacement for its key.
  *
  * `getEncounterEnemyArt(artKey, nonce)` resolves the key directly; unknown /
  * missing keys fall back to a stable hash pick over the whole pool (so an
@@ -13,7 +19,11 @@
  * duration of its encounter).
  */
 
-const ENEMY_ART_BY_KEY: Record<string, number> = {
+/**
+ * The bindings. Exported so a test can ENUMERATE them rather than name the
+ * enemies that happen to exist today.
+ */
+export const ENEMY_ART_BY_KEY: Readonly<Record<string, number>> = {
     'float-eye':         require('./float-eye.webp'),
     'brine-hag':         require('./hag.webp'),
     // The Aporia — labyrinth act boss. Licensed game-icons.net silhouette
@@ -43,9 +53,29 @@ export function getEncounterEnemyArt(artKey: string | null | undefined, nonce = 
     return ENEMY_ART_POOL[h % ENEMY_ART_POOL.length];
 }
 
-/** True when the key resolves 1:1 (no hash fallback). */
+/** True when the key resolves directly to its own painting (no hash fallback). */
 export function hasEnemyArt(artKey: string | null | undefined): boolean {
     return !!artKey && ENEMY_ART_BY_KEY[artKey] !== undefined;
 }
 
 export const ENEMY_ART_COUNT = ENEMY_ART_POOL.length;
+
+/** Every bound `portraitAsset` key, in registry order. */
+export const ENEMY_ART_KEYS: readonly string[] = Object.keys(ENEMY_ART_BY_KEY);
+
+export {
+    ENEMY_FRAME_SETS,
+    FRAME_CELL_MAX_BYTES,
+    RESTING_CLIP,
+    frameIndexInSheet,
+    getEnemyFrameSet,
+    hasEnemyFrames,
+    validateFrameSet,
+} from './frames';
+export type {
+    EnemyFrameSet,
+    FrameAnchor,
+    FrameAnchorKind,
+    FrameClip,
+    FrameSetManifest,
+} from './frames';

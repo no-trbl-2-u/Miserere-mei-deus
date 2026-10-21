@@ -28,5 +28,15 @@
       "assets/images/enemies/index.ts (registry — see its header for surfaces)"
     ],
     "post_process": "2026-09-22 build-size pass: re-encoded in place to the ingest recipe (longest edge <= 640px, WebP q44) by scripts/shrink-art.mjs"
+  },
+  {
+    "generated_by": "contract-note",
+    "date": "2026-10-21",
+    "tool": "none - this record documents HOW an animated frame set is recorded here, and covers no file of its own yet",
+    "covers": "no file yet. A frame set is several files under ONE record: when anim/<portraitAsset>/ is installed, append an entry whose `covers` is a prose blanket naming that directory, carrying the master it was split from, the splitter that cut it, and whether the cells were graded on the way in (a derived set ingests --no-grade, because its source's grade is already baked in; only newly generated cells take the full recipe). See docs/asset-conventions.md, 'Enemy frame sets'.",
+    "used_by": [
+      "assets/images/enemies/frames.ts (the frame-set registry - empty until the first set is installed)"
+    ],
+    "license": "n/a - no asset is covered by this record"
   }
 ]
