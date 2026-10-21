@@ -107,7 +107,7 @@ flowchart LR
 
 - **Owner / location:** private repo `no-trbl-2-u/miserere-vault` (T's notes); its working copy is `vault/` at the main checkout's root, ignored by this repo (`/vault/`). Phone and desktop meet through Obsidian Sync; the desktop's Obsidian Git plugin bridges to the repo.
 - **Purpose:** T's goal, thread map and inbox for brainstorming and plotting with Claude. It is not rules authority and not a loop queue.
-- **Data flow and conventions:** [`docs/vault.md`](vault.md); `node scripts/vault.mjs ensure|status`; the `/vault` command.
+- **Data flow and conventions:** [`docs/vault.md`](vault.md); `node scripts/vault.mjs ensure|status|features` (`features` copies the generated feature map into the vault); the `/vault` command.
 - **Availability:** optional. Nothing in the build, tests or CI reads `vault/`; a cloud session must have the repo attached before `ensure` can clone it.
 
 ## Architecture rules
