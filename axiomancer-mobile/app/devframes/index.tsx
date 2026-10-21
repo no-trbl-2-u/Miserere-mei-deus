@@ -8,9 +8,13 @@
  * drives the component through exactly the path an accessibility preference
  * drives it through in combat.
  *
- * The set it plays is the synthetic fixture beside the component, not an
- * installed enemy: the shipped registry is empty by design, and the only real
- * sheet in the repository lives in a tree app code may not reach into.
+ * WHICH SET. The synthetic fixture is first and stays first: it is four
+ * coloured bars that differ in hue and shape per clip, so a mis-selected state
+ * is obvious at a glance in a way real art never is. Every INSTALLED set is
+ * offered beside it, built from the registry rather than listed, so an enemy
+ * installed later appears here without this file being touched. The fixture
+ * also keeps the harness working when the registry is empty, which it was
+ * for three phases and may be again on a branch.
  *
  * Route: /devframes
  */
@@ -18,17 +22,23 @@
 import React, { useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 
+import { ENEMY_FRAME_SETS, type EnemyFrameSet } from '@/assets/images/enemies/frames';
 import { EnemyFramePlayer } from '@/components/combat/frames';
 import { SYNTHETIC_FRAME_KEY, SYNTHETIC_FRAME_SET } from '@/components/combat/frames/syntheticFrameSet';
 import { isDevToolsEnabled } from '@/lib/buildProfile';
 import { FONTS } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
-const CLIPS = Object.keys(SYNTHETIC_FRAME_SET.manifest.clips);
+/** The fixture first, then whatever the registry holds, in registry order. */
+const SETS: readonly { key: string; set: EnemyFrameSet }[] = [
+    { key: SYNTHETIC_FRAME_KEY, set: SYNTHETIC_FRAME_SET },
+    ...Object.keys(ENEMY_FRAME_SETS).map((key) => ({ key, set: ENEMY_FRAME_SETS[key] })),
+];
 
 export default function DevFrameHarness() {
     const styles = useStyles();
-    const [clipName, setClipName] = useState(CLIPS[0]);
+    const [setKey, setSetKey] = useState(SETS[0].key);
+    const [clipName, setClipName] = useState('idle');
     const [playing, setPlaying] = useState(true);
     const [reducedMotion, setReducedMotion] = useState(false);
     const [startKey, setStartKey] = useState(0);
@@ -38,8 +48,12 @@ export default function DevFrameHarness() {
         return <View style={styles.root} testID="devframes-disabled" />;
     }
 
-    const clip = SYNTHETIC_FRAME_SET.manifest.clips[clipName];
-    const { anchor, graded } = SYNTHETIC_FRAME_SET.manifest;
+    const frameSet = (SETS.find((s) => s.key === setKey) ?? SETS[0]).set;
+    const clips = Object.keys(frameSet.manifest.clips);
+    // A set switched to may not name the clip the last one was on, so the
+    // resting clip is the fallback rather than a crash.
+    const clip = frameSet.manifest.clips[clipName] ?? frameSet.manifest.clips[clips[0]];
+    const { anchor, graded } = frameSet.manifest;
 
     // Stepping pauses and hands the player an explicit cell. The harness owns
     // the number; the player keeps one driver either way, so stepping can never
@@ -55,9 +69,9 @@ export default function DevFrameHarness() {
 
             <View style={styles.stage}>
                 <EnemyFramePlayer
-                    artKey={SYNTHETIC_FRAME_KEY}
-                    frameSet={SYNTHETIC_FRAME_SET}
-                    clipName={clipName}
+                    artKey={setKey}
+                    frameSet={frameSet}
+                    clipName={clipName in frameSet.manifest.clips ? clipName : clips[0]}
                     playing={playing}
                     reducedMotion={reducedMotion}
                     startKey={startKey}
@@ -70,12 +84,29 @@ export default function DevFrameHarness() {
             <Text style={styles.readout} testID="devframes-readout">
                 {`clip ${clipName} · ${clip.frames} frames @ ${clip.fps}fps · ${clip.loop ? 'loops' : 'one-shot'} · rest ${clip.rest}${stepped == null ? '' : ` · stepped to ${stepped}`}`}
             </Text>
-            <Text style={styles.readout}>
-                {`anchor ${anchor.kind} · grid ${SYNTHETIC_FRAME_SET.manifest.columns}x${SYNTHETIC_FRAME_SET.manifest.rows} · ${graded ? 'graded' : 'ungraded'}`}
+            <Text style={styles.readout} testID="devframes-set-readout">
+                {`set ${setKey} · anchor ${anchor.kind} · grid ${frameSet.manifest.columns}x${frameSet.manifest.rows} · ${graded ? 'graded' : 'ungraded'}`}
             </Text>
 
             <View style={styles.row}>
-                {CLIPS.map((name) => (
+                {SETS.map(({ key }) => (
+                    <Control
+                        key={key}
+                        label={key}
+                        on={key === setKey}
+                        testID={`devframes-set-${key}`}
+                        onPress={() => {
+                            setSetKey(key);
+                            setStepped(null);
+                            setStartKey((k) => k + 1);
+                            setPlaying(true);
+                        }}
+                    />
+                ))}
+            </View>
+
+            <View style={styles.row}>
+                {clips.map((name) => (
                     <Control
                         key={name}
                         label={name}
@@ -109,7 +140,8 @@ export default function DevFrameHarness() {
             <Text style={styles.note}>
                 Reduced motion holds the clip&apos;s resting cell and starts no animation at all. The
                 seeded e2e harness takes the same path through the global instant flag, so a suite
-                never waits on a frame.
+                never waits on a frame. The sets above the stage are the synthetic fixture and every
+                set the registry actually holds; an enemy installed later shows up here on its own.
             </Text>
         </ScrollView>
     );

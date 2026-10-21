@@ -106,16 +106,34 @@ An enemy may carry one asset or several. The old "1:1 art law" is
 retired: the bindings in `assets/images/enemies/index.ts` are preserved,
 but a key is now allowed a static painting **and** an animated FRAME
 SET beside it. `assets/images/enemies/frames.ts` holds the registry,
-the manifest type and `validateFrameSet`; it ships EMPTY, so while no
-set is installed every enemy renders exactly the single image it
-rendered before.
+the manifest type and `validateFrameSet`. It shipped EMPTY in phase
+AN1a and the float-eye went into it in AN1e; every other enemy is
+absent from it and renders exactly the single image it rendered before.
+Absence from the frame registry is the static path, not a gap.
 
 **What ships is cells, never the sheet.** A frame set is per-cell WebP,
 one file per frame, under
 `assets/images/enemies/anim/<portraitAsset>/`. The grid master is a
 build input and lives in the repo-root art-department tree; nothing
 under `axiomancer-mobile/` may resolve a path into that tree, so the
-splitter runs there and emits here.
+splitter runs there and emits here. Two commands, in order — the
+splitter does the geometry, the ingest does the recipe and writes the
+provenance in the same run:
+
+```bash
+python art-department/tools/split-spritesheet.py \
+  --sheet art-department/masters/enemies/<key>.sheet.png --out <staging-dir>
+
+# from axiomancer-mobile/
+node scripts/ingest-art.mjs --in <staging-dir> \
+  --category enemies/anim/<key> --no-grade --license UNRESOLVED --license-note "..."
+```
+
+The cells come out `<key>-NN.webp`, zero-padded and row-major, and the
+`require()` literals go in `assets/images/enemies/anim/<key>/index.ts`
+in that same order — it is `row * columns + frame`, the index
+`sheetIndexFor` computes. Getting it wrong does not crash anything; it
+makes the enemy flinch on the beat it meant to swing.
 
 **The manifest.** Mirrors the master's sidecar JSON:
 
@@ -170,23 +188,47 @@ take the full recipe. The manifest's `graded` field records which
 happened, so the next reader does not have to guess. An animated enemy
 must not look graded differently from the static one beside it.
 
-**Bundle cost, measured.** The reference 8x3 sheet split at the recipe's
-q44: 24 cells, 149.5 KB total, mean 6378 B per frame, max 9020 B —
-against 23624 B for the static `float-eye.webp`. That is 6.5x, +126 KB,
-for one enemy. `FRAME_CELL_MAX_BYTES` in `frames.ts` is the ceiling a
-regenerated set is held to so it cannot quietly triple.
+**Bundle cost, measured on the cells that shipped.** The float-eye's
+8x3 sheet split and ingested at the recipe's q44: 24 cells, 156452 B
+(152.8 KB) total, mean 6519 B per frame, max 9352 B
+(`float-eye-20.webp`, the attack flare), min 3786 B — against 23624 B
+for the static `float-eye.webp`. That is 6.6x, +132.8 KB, for one
+enemy. (The AN1 brief's estimate was 149.5 KB / mean 6378 / max 9020,
+measured with a different encoder build; the figures here are the files
+in the tree.) `FRAME_CELL_MAX_BYTES` in `frames.ts` is the ceiling, and
+`scripts/frame-cells.test.mjs` weighs every shipped cell against it on
+each `assets:check` — a ceiling nothing weighs is a wish. That test
+also checks the provenance record's stated cost against the bytes on
+disk, because a record that drifts from its files is worse than none:
+it is believed.
 
-**Provenance.** A set is several files under ONE record: `covers` names
-the directory's cells (a prose blanket such as "every cell in
-anim/float-eye/" is accepted by the sweep), and the record carries the
-master it was split from, the splitter, and whether the cells were
-graded on the way in.
+**Provenance.** A set is several files under ONE record, and that
+record lives in `anim/<key>/provenance.json` — beside the cells, which
+is where the directory sweep looks. `covers` names the directory's
+cells (a prose blanket such as "every cell in anim/float-eye/" is also
+accepted), and the record carries the master it was split from, the
+splitter, the measured cost, and whether the cells were graded on the
+way in. Two fields say the two things that get confused: `graded` is
+whether the pixels carry a grade at all, `graded_in_this_run` is
+whether this ingest applied one. A derived set is `true` / `false`.
+
+**Reachability, since a registry is no longer one file.** The orphan
+sweep in `asset-provenance.test.mjs` used to read only
+`<category>/index.ts`. A frame set's `require()` literals live two
+modules down — `enemies/index.ts` to `frames.ts` to
+`anim/<key>/index.ts` — so the sweep now walks the local modules a
+category's `index.ts` imports or re-exports, transitively, without
+leaving the category. That is the reachability Metro performs, which is
+what "a registry reaches it" always meant. A cell nothing imports is
+still dead weight and still fails.
 
 **Seeing it work.** `/devframes` is the dev-only harness: it plays a
 supplied set at its manifest fps, names the clip and cell on screen, and
 offers pause-and-step plus a reduced-motion toggle. It plays a synthetic
-inline fixture, not an installed enemy — the registry is empty by
-design and the only real sheet lives in a tree app code may not reach.
+inline fixture rather than an installed enemy, so it keeps working
+whatever the registry holds. For the installed article, fight the
+Float-Eye: it is the breakwater's level-1 foe and it hovers, flinches
+and lunges in the combat pane itself.
 
 **When each clip plays in combat.** `CombatCombatantPane` reads TWO
 beats off the single walk of `fx.events` it already does per

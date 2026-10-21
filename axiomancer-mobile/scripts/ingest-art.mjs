@@ -32,7 +32,7 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 
 const MOBILE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const ROOT = path.resolve(MOBILE, '..')
@@ -191,6 +191,10 @@ async function main() {
   console.log('Remember the registry: add the require() literals to that directory\'s index.ts.')
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+// pathToFileURL, not a `file://` prefix: on Windows `argv[1]` is `C:\...`
+// and the naive compare never matches, so the ingest silently did nothing
+// when AN1e first ran it. Every other script in this directory already
+// uses this form (`acquire-art.mjs`, `critique-drive.mjs`).
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main().catch((err) => { console.error(String(err.message ?? err)); process.exit(1) })
 }

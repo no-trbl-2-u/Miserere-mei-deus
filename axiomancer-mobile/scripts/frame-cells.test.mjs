@@ -1,0 +1,123 @@
+// axiomancer-mobile/scripts/frame-cells.test.mjs — A11, the bundle cost of an
+// animated enemy, weighed rather than estimated (phase AN1e).
+//
+//   node --test axiomancer-mobile/scripts/frame-cells.test.mjs
+//
+// A frame set is 24 files where a static enemy is one, so the cost of
+// animating the roster is a multiplier, not an increment. The AN1 brief closed
+// its own "Bundle cost" follow-up by measuring it — and a measurement in a
+// brief is a sentence that was true once. `FRAME_CELL_MAX_BYTES` exists so a
+// regenerated set at a higher quality cannot quietly triple the bundle, and a
+// ceiling nothing weighs against is a wish. This is what weighs it.
+//
+// It also checks the number in the provenance record against the bytes on
+// disk. The record is how anyone later learns what an animated enemy costs; a
+// record that drifted from its own files would be worse than none, because it
+// would be believed.
+
+import assert from 'node:assert/strict'
+import fs from 'node:fs'
+import path from 'node:path'
+import test from 'node:test'
+import { fileURLToPath } from 'node:url'
+
+const MOBILE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+const ENEMIES = path.join(MOBILE, 'assets', 'images', 'enemies')
+const ANIM = path.join(ENEMIES, 'anim')
+
+/**
+ * The ceiling, read from the registry rather than copied. A second copy of a
+ * limit is a limit that can be raised in one place and enforced from the
+ * other.
+ */
+function ceilingBytes() {
+  const source = fs.readFileSync(path.join(ENEMIES, 'frames.ts'), 'utf-8')
+  const m = source.match(/FRAME_CELL_MAX_BYTES\s*=\s*(\d+)/)
+  assert.ok(m, 'frames.ts no longer declares FRAME_CELL_MAX_BYTES')
+  return Number(m[1])
+}
+
+/** Every installed frame set: `{ key, dir, cells }`, cells sorted by name. */
+function frameSets() {
+  if (!fs.existsSync(ANIM)) return []
+  return fs
+    .readdirSync(ANIM, { withFileTypes: true })
+    .filter((e) => e.isDirectory())
+    .map((e) => {
+      const dir = path.join(ANIM, e.name)
+      const cells = fs.readdirSync(dir).filter((f) => f.toLowerCase().endsWith('.webp')).sort()
+      return { key: e.name, dir, cells }
+    })
+}
+
+const sets = frameSets()
+
+test('there is an installed frame set to weigh', () => {
+  // Phase AN1e is the row that stopped the registry being empty. If this ever
+  // finds nothing, every assertion below passes about no files at all.
+  assert.ok(sets.length >= 1, 'no frame set under assets/images/enemies/anim/')
+  assert.ok(sets.some((s) => s.key === 'float-eye'), 'the float-eye set must be installed')
+})
+
+test('no shipped cell exceeds the recorded ceiling', () => {
+  const ceiling = ceilingBytes()
+  const over = []
+  for (const { key, dir, cells } of sets) {
+    for (const cell of cells) {
+      const bytes = fs.statSync(path.join(dir, cell)).size
+      if (bytes > ceiling) over.push(`${key}/${cell}: ${bytes} B > ${ceiling} B`)
+    }
+  }
+  assert.deepEqual(over, [], 'a cell over the ceiling means the set was regenerated hotter')
+})
+
+test('the float-eye set is whole: 24 cells, named row-major', () => {
+  // A truncated set is the failure the registry's own validation catches at
+  // runtime; catching it here says which FILE is missing rather than that a
+  // count disagreed.
+  const set = sets.find((s) => s.key === 'float-eye')
+  assert.equal(set.cells.length, 24)
+  for (let i = 0; i < 24; i++) {
+    assert.ok(
+      set.cells.includes(`float-eye-${String(i).padStart(2, '0')}.webp`),
+      `cell ${i} is missing from the set`,
+    )
+  }
+})
+
+test('the provenance record states the measured cost, and it is the cost on disk', () => {
+  const set = sets.find((s) => s.key === 'float-eye')
+  const record = JSON.parse(fs.readFileSync(path.join(set.dir, 'provenance.json'), 'utf-8'))[0]
+  const bytes = set.cells.map((c) => fs.statSync(path.join(set.dir, c)).size)
+  const total = bytes.reduce((a, b) => a + b, 0)
+  const max = Math.max(...bytes)
+  const mean = Math.round(total / bytes.length)
+
+  assert.ok(record.measured, 'the record must state what the set weighs')
+  for (const claim of [String(total), String(max), String(mean)]) {
+    assert.ok(
+      record.measured.includes(claim),
+      `the record does not state ${claim}; measured total ${total}, max ${max}, mean ${mean}`,
+    )
+  }
+
+  // And the comparison that makes the number mean something: what the static
+  // painting costs, for the enemy this set replaces the stillness of.
+  const staticBytes = fs.statSync(path.join(ENEMIES, 'float-eye.webp')).size
+  assert.ok(
+    record.measured.includes(String(staticBytes)),
+    `the record does not state the ${staticBytes} B static image it is measured against`,
+  )
+})
+
+test('a frame set records that it was NOT graded on the way in (A6b)', () => {
+  // Grade once. A derived set whose record said it had been graded here would
+  // be the invitation to grade it again, and a double-graded cell renders
+  // fine, passes every count check, and simply looks wrong beside the
+  // static art.
+  for (const { key, dir } of sets) {
+    const record = JSON.parse(fs.readFileSync(path.join(dir, 'provenance.json'), 'utf-8'))[0]
+    assert.equal(record.graded_in_this_run, false, `${key}: the ingest must have run --no-grade`)
+    assert.ok(/no-grade/.test(record.tool), `${key}: the record must name the flag it ingested with`)
+  }
+})
