@@ -187,7 +187,7 @@ event-pool and layout files).
       Its constants are imported from `scripts/check-lessons.mjs` so lint and driver cannot drift. Six
       sightings in two days, three on PR #653 alone. Brief
       `plan/phases/phase_ML1_lessons_merge_driver.md` § ML1a. Requires nothing.
-- [ ] Phase BE1a — The attempt contract and the Worker (plotted by T, 2026-10-21): a new `backend/` workspace
+- [x] (#723) Phase BE1a — The attempt contract and the Worker (plotted by T, 2026-10-21): a new `backend/` workspace
       holding a Cloudflare Worker with `POST`/`GET /v1/puzzle-attempts` behind a bearer token, the D1 schema as
       numbered migrations, and the attempt contract (types plus validator) in `@mechanics`, tested in the Workers
       runtime against a local D1. No deploy yet. Brief `plan/phases/phase_BE1_solve_time_backend.md` § BE1a. Requires nothing.
