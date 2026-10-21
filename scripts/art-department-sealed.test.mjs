@@ -85,23 +85,86 @@ const TREE_PATH = /(?<![\w-])art-department(?![\w.-])/
  */
 const SCANNED_CODE = /\.(ts|tsx|js|jsx|mjs|cjs|py|sh)$/
 
-/** True when the tree reference at `index` sits inside a comment on that line. */
-function inComment(line, index) {
-  const before = line.slice(0, index)
-  return /\/\/|\/\*|^\s*\*|#/.test(before)
+/** Which comment syntax a file uses. */
+export function commentStyle(file) {
+  return /\.(py|sh)$/.test(file) ? 'hash' : 'slash'
+}
+
+/**
+ * `text` with every comment blanked out, line structure preserved, so a line
+ * number still means what it said. A plain "is there a `//` to the left of the
+ * match" test was not enough: `'https://cdn/x'` and `'#top'` are string
+ * literals, not comment openers, and either one before a genuine resolve would
+ * have excused it. So this walks the text tracking string literals, line
+ * comments and block comments, and a comment opener inside a string is not an
+ * opener. Python's triple quotes are not modelled; the worst that costs is a
+ * false positive, which is the safe direction for a seal.
+ */
+export function blankComments(text, style = 'slash') {
+  const hash = style === 'hash'
+  const out = text.split('')
+  let mode = 'code'
+  let quote = ''
+  let i = 0
+  while (i < text.length) {
+    const c = text[i]
+    const d = text[i + 1]
+    if (mode === 'code') {
+      if (!hash && c === '/' && (d === '/' || d === '*')) {
+        mode = d === '/' ? 'line' : 'block'
+        out[i] = out[i + 1] = ' '
+        i += 2
+      } else if (hash && c === '#') {
+        mode = 'line'
+        out[i] = ' '
+        i += 1
+      } else {
+        if (c === "'" || c === '"' || c === '`') {
+          mode = 'string'
+          quote = c
+        }
+        i += 1
+      }
+      continue
+    }
+    if (mode === 'string') {
+      // An unterminated literal is a parse we got wrong, not a licence: fall
+      // back to code at the newline rather than swallowing the rest of the file.
+      if (c === '\\') i += 2
+      else {
+        if (c === quote || c === '\n') mode = 'code'
+        i += 1
+      }
+      continue
+    }
+    if (mode === 'line') {
+      if (c === '\n') mode = 'code'
+      else out[i] = ' '
+      i += 1
+      continue
+    }
+    if (c === '*' && d === '/') {
+      mode = 'code'
+      out[i] = out[i + 1] = ' '
+      i += 2
+    } else {
+      if (c !== '\n') out[i] = ' '
+      i += 1
+    }
+  }
+  return out.join('')
 }
 
 /**
  * Every line of `text` that names the tree as a path outside a comment, as
  * `{ line, text }` (1-based). Prose about the boundary is free; code is not.
  */
-export function treeReferenceLines(text) {
+export function treeReferenceLines(text, style = 'slash') {
+  const lines = text.split(/\r?\n/)
+  const stripped = blankComments(text, style).split(/\r?\n/)
   const out = []
-  text.split(/\r?\n/).forEach((line, i) => {
-    const m = TREE_PATH.exec(line)
-    if (!m) return
-    if (inComment(line, m.index)) return
-    out.push({ line: i + 1, text: line.trim() })
+  stripped.forEach((line, i) => {
+    if (TREE_PATH.test(line)) out.push({ line: i + 1, text: lines[i].trim() })
   })
   return out
 }
@@ -111,7 +174,7 @@ function scanForReferences(files) {
   const offenders = []
   for (const { abs, rel } of files) {
     if (!fs.existsSync(abs)) continue
-    const hits = treeReferenceLines(fs.readFileSync(abs, 'utf-8'))
+    const hits = treeReferenceLines(fs.readFileSync(abs, 'utf-8'), commentStyle(rel))
     if (hits.length) offenders.push(`${rel}:${hits[0].line}`)
   }
   return offenders
@@ -150,14 +213,18 @@ test('the detector tells code reaching into the tree from prose about it', () =>
     "const p = path.join(baseDir(), 'art-department', 'masters')",
     "fs.readFileSync(`${root}/art-department/masters/a.json`)",
     "ASSET_ROOTS.push(resolve(__dirname, '..', 'art-department'))",
-    'SHEET = Path("art-department") / "masters"',
+    // A `//` or a `#` inside a string literal is not a comment opener, so
+    // neither of these excuses the resolve that follows it.
+    "const cdn = 'https://cdn.example.com'; const p = require('../art-department/x')",
+    "const anchor = '#top'; const p = join(root, 'art-department', 'm')",
+    "const live = true /* note */; import('../art-department/tools/x.mjs')",
   ]
   const ignored = [
     '// the masters live in art-department/, and nothing may resolve a path into that tree',
-    " * lives under the art-department tree, and nothing here may resolve a path into it",
-    '# the rig writes into art-department/masters/ -- its own tree',
+    '/**\n * lives under the art-department tree, and nothing here may resolve a path into it\n */',
     "const WORKFLOWS = ['verify-art-department.yml', 'verify-drift.yml']",
     "const guard = 'scripts/art-department-sealed.test.mjs'",
+    'const x = 1 // see art-department/README.md for why',
   ]
   for (const line of caught) {
     assert.equal(treeReferenceLines(line).length, 1, `missed an inward reference: ${line}`)
@@ -165,6 +232,15 @@ test('the detector tells code reaching into the tree from prose about it', () =>
   for (const line of ignored) {
     assert.deepEqual(treeReferenceLines(line), [], `fired on a legitimate mention: ${line}`)
   }
+  // Python and shell comment with `#`, and a `#` in one of their strings is
+  // still a string.
+  assert.deepEqual(treeReferenceLines('# the rig writes into art-department/masters/', 'hash'), [])
+  assert.equal(
+    treeReferenceLines('tag = "#master"\nSHEET = Path("art-department") / "masters"', 'hash').length,
+    1,
+  )
+  assert.equal(commentStyle('tools/rig.py'), 'hash')
+  assert.equal(commentStyle('scripts/x.mjs'), 'slash')
 })
 
 test('the repo-wide scan reports a file that breaks the rule', () => {
