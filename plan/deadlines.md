@@ -186,6 +186,7 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - AN1c — loop work, but T sequenced it after seeing AN1b work; date not set.
 - AN1d — loop work under D97 (used enemies only); follows AN1c; date not set.
 - AN1e — loop work; the row that actually installs the float-eye, requires AN1c and AD1a; date not set.
+- RV4 — loop plumbing; removes the merge cap that is blocking today's chain; date not set.
 
 ## How a window closes
 
