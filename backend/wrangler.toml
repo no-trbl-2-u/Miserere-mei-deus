@@ -1,7 +1,7 @@
 # The miserere-api Worker: dev puzzle solve times (phase BE1).
-# BE1b creates the D1 database `miserere` on T's account and replaces the
-# placeholder id below; until then this config runs only locally
-# (`npm test -w backend`, `npm run dev -w backend`).
+# Deployed by .github/workflows/backend-deploy.yml on a push to main touching
+# backend/** (phase BE1b) to https://miserere-api.no-trbl-2-u.workers.dev.
+# Locally: `npm test -w backend`, `npm run dev -w backend`.
 name = "miserere-api"
 main = "src/index.ts"
 compatibility_date = "2026-03-01"
@@ -9,7 +9,7 @@ compatibility_date = "2026-03-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "miserere"
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "d2933f80-97b3-44bf-bfca-3958dba331b8"
 migrations_dir = "migrations"
 
 # PUZZLE_API_TOKEN is a Worker secret (`wrangler secret put PUZZLE_API_TOKEN`),
