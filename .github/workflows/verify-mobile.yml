@@ -21,6 +21,9 @@ on:
       # which lives outside this package. Without this line a catalogue-only
       # edit re-breaks the register and never re-runs the guard that caught it.
       - 'docs/art-catalog.json'
+      # The reachability drive reads the feature map, so a regenerated map
+      # re-runs it (phase FM1d).
+      - 'docs/feature-map/features.json'
   pull_request:
     branches: [main]
     paths:
@@ -29,6 +32,7 @@ on:
       - 'scripts/check-worklets.mjs'
       - 'scripts/check-worklets.test.mjs'
       - 'docs/art-catalog.json'
+      - 'docs/feature-map/features.json'
   schedule:
     - cron: '13 7 * * 0'
   workflow_dispatch:
@@ -308,6 +312,15 @@ jobs:
       - name: Map walk (new game, node to node)
         if: steps.scope.outputs.encounters == 'true'
         run: npm run e2e:map-walk --workspace axiomancer-mobile
+
+      # The feature map's reachability drive (phase FM1d): from a fresh save,
+      # every route docs/feature-map/features.json marks reachable is reached
+      # by play or a dev seam; the flow-edge report lands in the step summary.
+      # It touches every route, so it rides every integration run, and a
+      # change to the map itself selects one.
+      - name: Feature map reachability drive
+        if: steps.scope.outputs.run_integration == 'true'
+        run: npm run e2e:feature-map --workspace axiomancer-mobile
 
   # Same-repo PRs only; the called workflow runs none of the PR's code and
   # pushes only baseline PNGs to the PR head (phase VE1c).
