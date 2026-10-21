@@ -20,6 +20,9 @@
 // of the engine are not attributed to any route: they would couple every route
 // to every area and say nothing.
 //
+// Each feature also carries its display name and evidence flags (named,
+// reachable, driven, tested, needsPitch), set in scripts/feature-map.evidence.mjs.
+//
 // The output shape is a contract: later phases add fields, never rename.
 // Imports and navigation calls are read with the TypeScript parser already in
 // the workspace (parse only, no type checking). No new dependency.
@@ -28,6 +31,8 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
+
+import { annotate } from './feature-map.evidence.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const require = createRequire(path.join(ROOT, 'axiomancer-mechanics', 'package.json'))
@@ -351,14 +356,24 @@ function mobileClosure(start, parse, resolve, isScreen, stopAt = new Set()) {
 
 const edgeKey = (e) => `${e.kind}\u0000${e.from}\u0000${e.to}\u0000${e.file}`
 
-/** Flow and coupling edges for `features` in the tree at `root`, sorted and deduped. */
-export function edges(root = ROOT, features = inventory(root)) {
+/** Parser, resolver and href index shared by the edge pass and the evidence pass. */
+function makeContext(root, features) {
   const parse = makeParser(root)
   const resolve = makeResolver(root)
-  const values = makeValueResolver(parse, resolve)
+  let barrel = null
+  const areasOf = (targets, names) => {
+    barrel ??= barrelAreas(root, parse)
+    return engineAreasOf(targets, names, barrel)
+  }
+  return { root, ts, parse, resolve, areasOf, values: makeValueResolver(parse, resolve), segs: segmentIndex(features), isTestFile, isCode, hrefSegment, cmp, trees: new Map() }
+}
+
+/** Flow and coupling edges for `features` in the tree at `root`, sorted and deduped. */
+export function edges(root = ROOT, features = inventory(root), ctx = makeContext(root, features)) {
+  const { parse, resolve, values } = ctx
   const barrel = barrelAreas(root, parse)
   const ids = new Set(features.map((f) => f.id))
-  const segs = segmentIndex(features)
+  const segs = ctx.segs
   const out = new Map()
   const add = (e) => {
     if (e.from === e.to || !ids.has(e.from) || !ids.has(e.to)) return
@@ -403,6 +418,7 @@ export function edges(root = ROOT, features = inventory(root)) {
     const edge = new Set()
     for (const rel of own) for (const imp of parse(rel).imports) for (const t of resolve(rel, imp.spec)) if (shell.has(t) && !isTestFile(t)) edge.add(t)
     const tree = [...new Set([...own, ...edge])].sort(cmp)
+    ctx.trees.set(id, own.filter((r) => r !== source).sort(cmp))
     for (const rel of tree) {
       for (const to of flowTargets(rel)) add({ kind: 'flow', from: id, to, file: rel })
       for (const imp of parse(rel).imports) {
@@ -430,7 +446,9 @@ export function edges(root = ROOT, features = inventory(root)) {
 /** The full map for the tree at `root`. */
 export function buildFeatureMap(root = ROOT) {
   const features = inventory(root)
-  return { version: 1, features, edges: edges(root, features) }
+  const ctx = makeContext(root, features)
+  const list = edges(root, features, ctx)
+  return { version: 1, features: annotate(features, list, ctx), edges: list }
 }
 
 /** Two-space JSON, LF, trailing newline: identical bytes for an identical map. */
