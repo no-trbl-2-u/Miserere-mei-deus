@@ -97,3 +97,12 @@ export type { HazardPuzzleCandidateAudit } from './hazard-puzzle.candidate-audit
 export { auditHazardPuzzleCandidate, hazardPuzzleCandidateSetProblems } from './hazard-puzzle.candidate-audit';
 export { HAZARD_PUZZLE_CLOCK_SECONDS } from './hazard-puzzle.tuning';
 export { HAZARD_PUZZLE_REGIONS } from './hazard-puzzle.validate';
+
+export type {
+    PuzzleAttemptCreated, PuzzleAttemptEndKind, PuzzleAttemptError, PuzzleAttemptList,
+    PuzzleAttemptMove, PuzzleAttemptMoveKind, PuzzleAttemptPost, PuzzleAttemptRow, PuzzleAttemptValidation,
+} from './hazard-puzzle.attempt-contract';
+export {
+    PUZZLE_ATTEMPTS_PATH, PUZZLE_ATTEMPT_BANDS, PUZZLE_ATTEMPT_END_KINDS, PUZZLE_ATTEMPT_LIMITS,
+    PUZZLE_ATTEMPT_MOVE_KINDS, PUZZLE_ATTEMPT_ROUTES, validatePuzzleAttemptPost,
+} from './hazard-puzzle.attempt-contract';

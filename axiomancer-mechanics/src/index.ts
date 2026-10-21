@@ -328,6 +328,15 @@ export {
     hazardPuzzleDeclaresUnlocks, hazardPuzzleUnlockSubsets, auditHazardPuzzleUnlocks,
 } from './World/Hazard';
 export type { HazardPuzzleUnlockAudit } from './World/Hazard';
+// Hazard puzzle solve-time API contract: the attempt the preview app posts and the Worker stores.
+export {
+    PUZZLE_ATTEMPTS_PATH, PUZZLE_ATTEMPT_BANDS, PUZZLE_ATTEMPT_END_KINDS, PUZZLE_ATTEMPT_LIMITS,
+    PUZZLE_ATTEMPT_MOVE_KINDS, PUZZLE_ATTEMPT_ROUTES, validatePuzzleAttemptPost,
+} from './World/Hazard';
+export type {
+    PuzzleAttemptCreated, PuzzleAttemptEndKind, PuzzleAttemptError, PuzzleAttemptList,
+    PuzzleAttemptMove, PuzzleAttemptMoveKind, PuzzleAttemptPost, PuzzleAttemptRow, PuzzleAttemptValidation,
+} from './World/Hazard';
 // Hazard puzzle demos and the clock.
 export {
     HAZARD_PUZZLE_LIBRARY, getHazardPuzzleLayout, HAZARD_PUZZLE_CLOCK_SECONDS, HAZARD_PUZZLE_REGIONS,

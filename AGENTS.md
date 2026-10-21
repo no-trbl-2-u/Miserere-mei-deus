@@ -14,12 +14,13 @@ does not have. Then the product spec, `spec.md`.
 design/balance/content work → `axiomancer-mechanics/VISION.md` (T's wants)
 + `spec.md`.
 
-npm-workspaces monorepo. Two packages, flat at the root:
+npm-workspaces monorepo. Three packages, flat at the root:
 
 | Package | Role |
 |---|---|
 | `axiomancer-mechanics` | TypeScript game engine + CLI. Owns rules, state transitions, deterministic RNG, content libraries, balance/tuning, hermetic engine tests. |
 | `axiomancer-mobile` | Expo / React Native app. Consumes mechanics as **local source** via the `@mechanics` alias (`→ ../axiomancer-mechanics/src`). Owns screens, navigation, theming, presenters. |
+| `backend` | The `miserere-api` Cloudflare Worker and its D1 schema (numbered migrations): dev puzzle solve times, `POST`/`GET /v1/puzzle-attempts` behind a bearer token. Imports the engine's attempt contract by path; tests run in workerd against a local D1 (`npm test -w backend`). |
 
 ## Hard rules
 

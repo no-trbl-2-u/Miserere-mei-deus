@@ -5,7 +5,8 @@
   "description": "Miserere Mei, Deus monorepo — mechanics engine + mobile app.",
   "workspaces": [
     "axiomancer-mechanics",
-    "axiomancer-mobile"
+    "axiomancer-mobile",
+    "backend"
   ],
   "engines": {
     "node": ">=22.0.0",
