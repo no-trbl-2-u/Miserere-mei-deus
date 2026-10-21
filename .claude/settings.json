@@ -225,6 +225,10 @@
           },
           {
             "type": "command",
+            "command": "git -C \"$CLAUDE_PROJECT_DIR\" config merge.buildplan.name 'the build plan, insertions unioned' && git -C \"$CLAUDE_PROJECT_DIR\" config merge.buildplan.driver 'node scripts/build-plan-merge.mjs %O %A %B %P'"
+          },
+          {
+            "type": "command",
             "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard.mjs\" session-start"
           },
           {

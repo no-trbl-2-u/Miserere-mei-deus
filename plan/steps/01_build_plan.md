@@ -187,7 +187,7 @@ event-pool and layout files).
       Its constants are imported from `scripts/check-lessons.mjs` so lint and driver cannot drift. Six
       sightings in two days, three on PR #653 alone. Brief
       `plan/phases/phase_ML1_lessons_merge_driver.md` § ML1a. Requires nothing.
-- [ ] Phase ML1b — The build plan's rows and queue log (plotted by T, 2026-10-20): the same treatment
+- [x] (#705) Phase ML1b — The build plan's rows and queue log (plotted by T, 2026-10-20): the same treatment
       for `plan/steps/01_build_plan.md`, whose Status rows collide because every `/plot asap` appends
       above the same first open row (one plot PR took four rounds on 2026-10-19/20). Split from ML1a
       because build-plan rows are an **ordered** list whose order carries priority, not a keyed set, so

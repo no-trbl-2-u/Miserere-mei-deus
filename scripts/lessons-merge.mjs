@@ -133,10 +133,11 @@ function mergeRow(b, o, t, kind) {
 }
 
 /**
- * `git merge-file --diff3` on three texts, run in a scratch directory.
+ * `git merge-file` on three texts, run in a scratch directory. Also used by
+ * build-plan-merge.mjs.
  * @returns {string}
  */
-function mergeFile(base, ours, theirs, extra = []) {
+export function mergeFile(base, ours, theirs, extra = []) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'lessons-merge-'))
   try {
     for (const [name, text] of Object.entries({ ours, base, theirs })) fs.writeFileSync(path.join(dir, name), text)
