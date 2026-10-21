@@ -194,7 +194,7 @@ event-pool and layout files).
       "union by key" does not define the result; and unlike `lessons.md` a duplicate here reddens no
       lint, so it is cost rather than breakage. Brief
       `plan/phases/phase_ML1_lessons_merge_driver.md` § ML1b. Requires ML1a.
-- [ ] Phase DL1b — The derived Status column (plotted by T, 2026-10-20): `deadlines.mjs --write` recomputes every
+- [x] (#707) Phase DL1b — The derived Status column (plotted by T, 2026-10-20): `deadlines.mjs --write` recomputes every
       phase Item's Status cell from this Status block and rewrites `plan/deadlines.md` in place, `T` rows
       untouched; the lint fails a hand edit that disagrees; `deadlines.yml` commits both generated files in one
       commit. Brief `plan/phases/phase_DL1_deadline_plan_integrity.md` § DL1b. Requires DL1a.

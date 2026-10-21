@@ -2,8 +2,10 @@ name: deadlines
 
 # Keeps LIVE_DEADLINES.md current (T, 2026-10-19): the items from plan/deadlines.md
 # due in the next two weeks that need T (a plot, a task, or an attended row ready
-# for T). Regenerated every morning and whenever the plan or the build plan
-# changes on main; committed to main only when the file changed. It joins the
+# for T). The same run recomputes every phase Item's Status cell in
+# plan/deadlines.md from the build plan (phase DL1b). Regenerated every morning and
+# whenever the plan or the build plan changes on main; both files are committed to
+# main together, in one commit, only when either changed. It joins the
 # nexus-loop group so its commit queues behind a loop tick instead of racing it.
 # The session-start reminder computes the same list live; this file is the one
 # T can open anywhere.
@@ -16,6 +18,7 @@ on:
       - 'plan/steps/01_build_plan.md'
       - 'scripts/deadlines.mjs'
       - 'scripts/deadlines-lib.mjs'
+      - 'scripts/check-deadlines.mjs'
   schedule:
     - cron: '13 11 * * *'
   workflow_dispatch:
@@ -42,7 +45,7 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Regenerate LIVE_DEADLINES.md
+      - name: Regenerate LIVE_DEADLINES.md and the phase Item Status cells
         run: node scripts/deadlines.mjs --write
 
       - name: Commit if changed
@@ -53,12 +56,12 @@ jobs:
           GIT_COMMITTER_NAME: claude[bot]
           GIT_COMMITTER_EMAIL: 41898282+claude[bot]@users.noreply.github.com
         run: |
-          git add -- LIVE_DEADLINES.md
+          git add -- LIVE_DEADLINES.md plan/deadlines.md
           if git diff --cached --quiet; then
             echo "Nothing to commit."
             exit 0
           fi
-          git commit -m "deadlines: refresh LIVE_DEADLINES.md $(date -u +%F)"
+          git commit -m "deadlines: refresh LIVE_DEADLINES.md and Item Status $(date -u +%F)"
           for attempt in 1 2 3; do
             git pull --rebase origin main && git push origin HEAD:main && exit 0
             sleep $((attempt * 5))

@@ -6,6 +6,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
     daysUntil,
+    derivedStatus,
     dueNeeds,
     itemNeed,
     liveMarkdown,
@@ -16,6 +17,7 @@ import {
     parseWindows,
     inWindow,
     reminderText,
+    rewriteItemStatus,
     whenText,
 } from './deadlines-lib.mjs'
 
@@ -194,4 +196,72 @@ test('parseUnscheduled and parseWindows read their sections', () => {
     assert.deepEqual(w1, { from: [10, 20], to: [11, 2] })
     assert.equal(inWindow('2026-11-02', w1), true)
     assert.equal(inWindow('2026-11-03', w1), false)
+})
+
+const STATUS_PLAN = `## Status (at-a-glance)
+
+- [x] (#600) Phase S1 — shipped. Requires nothing.
+- [skipped] Phase S2 — skipped by T.
+- [ ] Phase O1 — open.
+`
+
+const STATUS_DEADLINES = `# Deadlines
+
+## Items
+
+Prose that mentions | a pipe.
+
+| Status | Due | Item | Window | Rows |
+|---|---|---|---|---|
+| [ ] | 2026-10-24 | All shipped, stale | W1 | S1, \`S2\` |
+|  [x]  | 2026-10-25 | Ticked but open | W1 | S1, O1 |
+| [x] | 2026-10-26 | Already right | W1 | S1 |
+| [ ] | 2026-10-27 | Unknown id | W1 | Z9 |
+| [ ] | 2026-10-28 | Open task | W1 | T |
+| [x] | 2026-10-29 | Done task | W1 | T |
+| [ ] | 2026-10-30 | Unplotted | W1 | needs plot |
+| [-] | 2026-10-31 | Odd cell | W1 | S1 |
+
+## Unscheduled
+
+| [ ] | 2026-11-01 | Not the Items table | W1 | S1 |
+`
+
+test('A6: derivedStatus is [x] only when every named row shipped or was skipped', () => {
+    const phases = parsePhaseRows(STATUS_PLAN)
+    const item = (rows) => ({ done: false, due: '2026-10-24', name: 'i', window: 'W1', rows })
+    assert.equal(derivedStatus(item(['S1', 'S2']), phases), '[x]')
+    assert.equal(derivedStatus(item(['S1', 'O1']), phases), '[ ]')
+    assert.equal(derivedStatus(item(['Z9']), phases), '[ ]')
+    assert.equal(derivedStatus(item('T'), phases), null)
+    assert.equal(derivedStatus(item('needs plot'), phases), null)
+})
+
+test('A6: --write flips phase Items both ways and leaves every other byte alone', () => {
+    const { md, changed, unmatched } = rewriteItemStatus(STATUS_DEADLINES, parsePhaseRows(STATUS_PLAN))
+    assert.deepEqual(changed, ['All shipped, stale: [ ] -> [x]', 'Ticked but open: [x] -> [ ]'])
+    assert.deepEqual(unmatched, ['| [-] | 2026-10-31 | Odd cell | W1 | S1 |'])
+    const expected = STATUS_DEADLINES
+        .replace('| [ ] | 2026-10-24 | All shipped', '| [x] | 2026-10-24 | All shipped')
+        .replace('|  [x]  | 2026-10-25 | Ticked', '|  [ ]  | 2026-10-25 | Ticked')
+    assert.equal(md, expected)
+    for (const line of ['| [ ] | 2026-10-28 | Open task | W1 | T |', '| [x] | 2026-10-29 | Done task | W1 | T |', '| [ ] | 2026-11-01 | Not the Items table | W1 | S1 |']) {
+        assert.ok(md.includes(line), `untouched: ${line}`)
+    }
+})
+
+test('A6: --write is idempotent', () => {
+    const phases = parsePhaseRows(STATUS_PLAN)
+    const once = rewriteItemStatus(STATUS_DEADLINES, phases).md
+    const twice = rewriteItemStatus(once, phases)
+    assert.equal(twice.md, once)
+    assert.deepEqual(twice.changed, [])
+})
+
+test('A6: the real plan/deadlines.md is already what --write would write', () => {
+    const read = (rel) => fs.readFileSync(path.join(ROOT, rel), 'utf8')
+    const real = read('plan/deadlines.md')
+    const { md, unmatched } = rewriteItemStatus(real, parsePhaseRows(read('plan/steps/01_build_plan.md')))
+    assert.deepEqual(unmatched, [])
+    assert.equal(md, real)
 })

@@ -10,7 +10,9 @@
 //   - an Items row (or `## Unscheduled` line) naming a phase id with no build-plan row;
 //   - one phase id named by two Items rows, or by an Items row and `## Unscheduled`;
 //   - an Items row whose due date falls outside its window in the `## Windows` table,
-//     or whose window has no row there.
+//     or whose window has no row there;
+//   - a phase Item whose Status cell disagrees with the one `deadlines.mjs --write`
+//     derives from the build plan (a hand edit; `T` Items are hand-ticked and exempt).
 // Both files are read through scripts/deadlines-lib.mjs's parsers, never re-parsed here.
 //
 // It never fails on a `needs plot` Item, an overdue Item or an open `T` task: those
@@ -24,7 +26,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { inWindow, parseItems, parsePhaseRows, parseUnscheduled, parseWindows } from './deadlines-lib.mjs'
+import { derivedStatus, inWindow, parseItems, parsePhaseRows, parseUnscheduled, parseWindows } from './deadlines-lib.mjs'
 
 const DEADLINES = 'plan/deadlines.md'
 const BUILD_PLAN = 'plan/steps/01_build_plan.md'
@@ -54,6 +56,10 @@ export const checkDeadlines = (deadlinesMd, buildPlanMd) => {
             for (const id of item.rows.filter((id) => !phases.has(id))) {
                 errors.push(`${DEADLINES}: Item "${item.name}" names ${id}, which has no row in ${BUILD_PLAN}; fix the id or plot the row.`)
             }
+        }
+        const want = derivedStatus(item, phases)
+        if (want && want !== (item.done ? '[x]' : '[ ]')) {
+            errors.push(`${DEADLINES}: Item "${item.name}" has Status ${item.done ? '[x]' : '[ ]'}, but its rows say ${want}; run \`node scripts/deadlines.mjs --write\` instead of editing the cell.`)
         }
         const window = windows.get(item.window)
         if (!window) {
