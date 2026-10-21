@@ -12,6 +12,9 @@ import {
     nextNeed,
     parseItems,
     parsePhaseRows,
+    parseUnscheduled,
+    parseWindows,
+    inWindow,
     reminderText,
     whenText,
 } from './deadlines-lib.mjs'
@@ -127,4 +130,68 @@ test('the real plan parses: every Items row has a date, a window and rows', () =
         assert.match(item.window, /^W\d+$/)
         assert.ok(item.rows === 'needs plot' || item.rows === 'T' || item.rows.length > 0, item.name)
     }
+})
+
+const WRAPPED_PLAN = `## Status (at-a-glance)
+
+- [ ] Phase HP4c — Author the thirty (plotted by T, 2026-10-19): ten easy, ten medium and ten hard candidates with
+      their labels. Brief \`plan/phases/phase_HP4_graded_puzzle_set.md\` § HP4c. Requires HP4b.
+- [ ] Phase HP4d — Thirty on the board (plotted by T, 2026-10-19): \`/devpuzzle\` lists the candidates in three
+      bands. Brief \`plan/phases/phase_HP4_graded_puzzle_set.md\` § HP4d. Requires HP4c.
+- [ ] Phase HP2e — Calibration solves (plotted by T, 2026-10-18) (attended): B3f dropped from Requires when it was
+      cut (T, 2026-10-20). Brief \`plan/phases/phase_HP2_puzzle_card_audit_difficulty.md\` § HP2e. Requires HP4c, HP4d.
+
+## Per-phase scope
+`
+
+const hp4eRow = () => {
+    const plan = fs.readFileSync(path.join(ROOT, 'plan/steps/01_build_plan.md'), 'utf8')
+    const lines = plan.split('\n')
+    const at = lines.findIndex((l) => /^- \[[^\]]*\]\s+(?:\(#\d+\)\s+)?Phase HP4e — /.test(l))
+    if (at < 0) return null
+    const rest = lines.slice(at + 1)
+    const end = rest.findIndex((l) => !/^\s+\S/.test(l))
+    return [lines[at], ...rest.slice(0, end < 0 ? undefined : end)].join('\n')
+}
+
+test('A12: a wrapped row reads its Requires from a continuation line', () => {
+    const wrapped = parsePhaseRows(WRAPPED_PLAN)
+    assert.deepEqual(wrapped.get('HP4c').requires, ['HP4b'])
+    assert.deepEqual(wrapped.get('HP4d').requires, ['HP4c'])
+    assert.deepEqual(wrapped.get('HP2e').requires, ['HP4c', 'HP4d'], 'the last Requires clause, not the prose one')
+    assert.equal(wrapped.get('HP2e').waitsOnT, true)
+})
+
+test('A12: the live HP4e row is not ready while HP4c and HP4d are open, and is once both ship', () => {
+    const row = hp4eRow()
+    if (!row) return // HP4e has left the build plan: the fixture above still pins the rule
+    assert.ok(row.includes('\n'), 'the live HP4e row wraps')
+    const item = { done: false, due: '2026-11-02', name: 'W1 demo', window: 'W1', rows: ['HP4e'] }
+    const open = parsePhaseRows(`- [ ] Phase HP4c — c. Requires HP4b.\n- [ ] Phase HP4d — d. Requires HP4c.\n${row.replace(/^- \[[^\]]*\]/, '- [ ]')}\n`)
+    assert.deepEqual(open.get('HP4e').requires, ['HP4c', 'HP4d'])
+    assert.equal(itemNeed(item, open), null)
+    const shipped = parsePhaseRows(`- [x] Phase HP4c — c. Requires HP4b.\n- [x] Phase HP4d — d. Requires HP4c.\n${row.replace(/^- \[[^\]]*\]/, '- [ ]')}\n`)
+    assert.deepEqual(itemNeed(item, shipped), { kind: 'needs you', detail: 'HP4e ready for you' })
+})
+
+test('parsePhaseRows marks open rows and reads only the Status block', () => {
+    const plan = `## Status (at-a-glance)\n\n- [-] Phase P1 — partial.\n- [skipped] Phase K1 — skipped.\n- [blocked: owner-led] Phase X1 — owner.\n\n## Queue change log\n\n- [ ] Phase Q9 — quoted.\n`
+    const rows = parsePhaseRows(plan)
+    assert.deepEqual([...rows.keys()], ['P1', 'K1', 'X1'])
+    assert.equal(rows.get('P1').open, true)
+    assert.equal(rows.get('K1').open, false)
+    assert.equal(rows.get('X1').open, true)
+})
+
+test('parseUnscheduled and parseWindows read their sections', () => {
+    const md = `## Windows\n\n| Window | Dates | Goal | Demo |\n|---|---|---|---|\n| W1 | Oct 20 - Nov 2 | g | d |\n\n## Unscheduled\n\n- VE1c — loop work.\n- \`PF2\` — after v0.3.\n- B9\n\n## How a window closes\n- not a line\n`
+    assert.deepEqual(parseUnscheduled(md), [
+        { id: 'VE1c', reason: 'loop work.' },
+        { id: 'PF2', reason: 'after v0.3.' },
+        { id: 'B9', reason: '' },
+    ])
+    const w1 = parseWindows(md).get('W1')
+    assert.deepEqual(w1, { from: [10, 20], to: [11, 2] })
+    assert.equal(inWindow('2026-11-02', w1), true)
+    assert.equal(inWindow('2026-11-03', w1), false)
 })

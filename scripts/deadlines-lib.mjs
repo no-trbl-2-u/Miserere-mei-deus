@@ -50,31 +50,122 @@ const parseRowsCell = (cell) => {
     return plain.split(',').map((id) => id.trim()).filter(Boolean)
 }
 
+/** The build plan's "## Status (at-a-glance)" block, or the whole text when it has none (fixtures). */
+const statusBlock = (md) => {
+    const start = md.indexOf('## Status (at-a-glance)')
+    if (start < 0) return md
+    const end = md.indexOf('\n## ', start + 1)
+    return md.slice(start, end < 0 ? undefined : end)
+}
+
+/**
+ * The Status block's phase rows, each with its continuation lines joined: most rows
+ * added since 2026-10-18 wrap over several indented lines, and a `Requires` clause on
+ * a continuation line read as "Requires nothing" until DL1a.
+ * @returns {{status: string, id: string, rest: string}[]}
+ */
+const phaseRowTexts = (md) => {
+    const rows = []
+    let current = null
+    for (const line of statusBlock(md).split('\n')) {
+        const m = line.match(PHASE_ROW)
+        if (m) {
+            current = { status: m[1].trim(), id: m[2], rest: m[3] }
+            rows.push(current)
+        } else if (current && /^\s+\S/.test(line)) {
+            current.rest += ` ${line.trim()}`
+        } else {
+            current = null
+        }
+    }
+    return rows
+}
+
 /**
  * Read the build plan's phase rows: status, attended or owner-led, and Requires.
+ * `open` is `[ ]`, `[-]` or `[blocked: …]`; `shipped` is `[x]` or `[skipped]`.
  * @param {string} md
- * @returns {Map<string, {shipped: boolean, waitsOnT: boolean, requires: string[]}>}
+ * @returns {Map<string, {status: string, shipped: boolean, open: boolean, waitsOnT: boolean, requires: string[]}>}
  */
 export const parsePhaseRows = (md) =>
     new Map(
-        md
-            .split('\n')
-            .map((line) => line.match(PHASE_ROW))
-            .filter(Boolean)
-            .map(([, status, id, rest]) => [
+        phaseRowTexts(md).map(({ status, id, rest }) => {
+            const shipped = status === 'x' || status === 'skipped'
+            return [
                 id,
                 {
-                    shipped: status.trim() === 'x' || status.trim() === 'skipped',
+                    status,
+                    shipped,
+                    open: !shipped,
                     waitsOnT: /\(attended\)/.test(rest) || /owner-led/.test(status),
                     requires: parseRequires(rest),
                 },
+            ]
+        }),
+    )
+
+// The last "Requires …." clause: a row's prose can say "Requires" before the clause
+// itself (HP2e: "B3f dropped from Requires when it was cut").
+const parseRequires = (rest) => {
+    const m = [...rest.matchAll(/Requires ([^.]*)\./g)].at(-1)
+    if (!m || /^nothing$/i.test(m[1].trim())) return []
+    return m[1].split(',').map((s) => s.trim()).filter(Boolean)
+}
+
+/** A level-2 section of plan/deadlines.md, heading excluded; '' when absent. */
+const section = (md, heading) => {
+    const text = `\n${md}`
+    const start = text.indexOf(`\n## ${heading}\n`)
+    if (start < 0) return ''
+    const end = text.indexOf('\n## ', start + 1)
+    return text.slice(start + heading.length + 5, end < 0 ? undefined : end)
+}
+
+const UNSCHEDULED_ROW = /^-\s+`?([A-Za-z0-9]+)`?\s*(?:—\s*(.*))?$/
+
+/**
+ * The `## Unscheduled` section: open build-plan rows deliberately left undated, one per
+ * line as `- <id> — <reason>`.
+ * @returns {{id: string, reason: string}[]}
+ */
+export const parseUnscheduled = (md) =>
+    section(md, 'Unscheduled')
+        .split('\n')
+        .map((line) => line.match(UNSCHEDULED_ROW))
+        .filter(Boolean)
+        .map(([, id, reason]) => ({ id, reason: (reason ?? '').trim() }))
+
+const WINDOW_ROW = /^\|\s*(W\d+)\s*\|\s*([A-Z][a-z]{2}) (\d{1,2}) - ([A-Z][a-z]{2}) (\d{1,2})\s*\|/
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+/**
+ * The `## Windows` table's date ranges, as month/day pairs (the table names no year).
+ * @returns {Map<string, {from: [number, number], to: [number, number]}>}
+ */
+export const parseWindows = (md) =>
+    new Map(
+        section(md, 'Windows')
+            .split('\n')
+            .map((line) => line.match(WINDOW_ROW))
+            .filter((m) => m && MONTHS.includes(m[2]) && MONTHS.includes(m[4]))
+            .map(([, name, m1, d1, m2, d2]) => [
+                name,
+                { from: [MONTHS.indexOf(m1) + 1, Number(d1)], to: [MONTHS.indexOf(m2) + 1, Number(d2)] },
             ]),
     )
 
-const parseRequires = (rest) => {
-    const m = rest.match(/Requires ([^.]*)\./)
-    if (!m || /^nothing$/i.test(m[1].trim())) return []
-    return m[1].split(',').map((s) => s.trim()).filter(Boolean)
+const iso = (year, [month, day]) => `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+
+/**
+ * Whether a YYYY-MM-DD date falls inside a window, the window's year taken from the
+ * date (a window that runs past December ends the next year).
+ */
+export const inWindow = (due, window) => {
+    const year = Number(due.slice(0, 4))
+    return [year, year - 1].some((y) => {
+        const endYear = iso(y, window.to) < iso(y, window.from) ? y + 1 : y
+        return iso(y, window.from) <= due && due <= iso(endYear, window.to)
+    })
 }
 
 /** Whole days from `today` to `due` (both YYYY-MM-DD); negative when overdue. */
