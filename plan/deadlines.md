@@ -148,6 +148,8 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - VE1d — loop work listed alongside W1, needing no time from T; date not set.
 - PF2 — attended; after v0.3 (The milestone), and waits on T's Android baseline numbers.
 - IT1b — blocked: owner-led, art is T's; date not set.
+- ML1a — loop work; fixes a live merge defect, needs no time from T; date not set.
+- ML1b — loop work; follows ML1a, and the brief asks for a comparison before building it; date not set.
 - TP1b — blocked: owner-led, art is T's; date not set.
 - B5 — blocked: owner-led; the card-creator workflow is v0.3 stretch, in only if a window has time left.
 - B6 — blocked: owner-led; card sessions are v0.3 stretch, in only if a window has time left.
