@@ -136,6 +136,22 @@ test('A4: an unknown window fails', () => {
     assert.deepEqual(errors, ['plan/deadlines.md: Item "Nowhere" is in window W7, which has no row in the ## Windows table; add the window or fix the cell.'])
 })
 
+test('A7: a phase Item whose Status disagrees with its rows fails, naming the Item, the cell and the value', () => {
+    const rows = [
+        '| [x] | 2026-10-24 | Loop work | W1 | A1 |',
+        '| [ ] | 2026-11-05 | Wrapped | W2 | W1 |',
+        '| [ ] | 2026-10-26 | Shipped, not ticked | W1 | A0 |',
+        '| [x] | 2026-10-27 | Skipped alone | W1 | K1 |',
+        '| [ ] | 2026-10-28 | A task | W1 | T |',
+        '| [x] | 2026-10-29 | A done task | W1 | T |',
+    ]
+    const errors = checkDeadlines(deadlines(rows, EXCUSE_REST), BUILD_PLAN)
+    assert.deepEqual(errors, [
+        'plan/deadlines.md: Item "Loop work" has Status [x], but its rows say [ ]; run `node scripts/deadlines.mjs --write` instead of editing the cell.',
+        'plan/deadlines.md: Item "Shipped, not ticked" has Status [ ], but its rows say [x]; run `node scripts/deadlines.mjs --write` instead of editing the cell.',
+    ])
+})
+
 test('never fails on a needs-plot Item, an overdue Item or an open T task', () => {
     const rows = [...COVER_ALL, '| [ ] | 2026-10-21 | Unplotted | W1 | needs plot |', '| [ ] | 2026-10-21 | A task | W1 | T |']
     assert.deepEqual(checkDeadlines(deadlines(rows, EXCUSE_REST), BUILD_PLAN), [])

@@ -91,10 +91,12 @@ a name, its window, and **Rows**: the build-plan phase ids that finish it, `need
 only T does; tick its Status `[x]` when done). Status is only set by hand on `T` rows; phase items read their state
 from the build plan. A session that `/plot`s an item replaces its `needs plot` with the new phase ids.
 
-**Status is derived for phase Items** (from 2026-10-20): `deadlines.mjs --write` recomputes it from the build
-plan once DL1b lands, and `scripts/check-deadlines.mjs` (DL1a) fails the root `npm test` when an open build-plan
-row has no Item and no `## Unscheduled` line, when an Item names a row that does not exist, when two Items name one
-row, or when a date falls outside its window. **A `T` Item's Status is hand-ticked and derivable by nothing.** One
+**Status is derived for phase Items; never hand-edit it** (DL1b, 2026-10-21): `node scripts/deadlines.mjs --write`
+recomputes it from the build plan (`[x]` when every row the Item names has shipped or been skipped, `[ ]`
+otherwise) and rewrites only those cells; the `deadlines` workflow and the tick that ships a phase both run it.
+`scripts/check-deadlines.mjs` (DL1a) fails the root `npm test` when an open build-plan row has no Item and no
+`## Unscheduled` line, when an Item names a row that does not exist, when two Items name one row, when a date falls
+outside its window, or when a phase Item's Status disagrees with what `--write` would write. **A `T` Item's Status is hand-ticked and derivable by nothing.** One
 drift no check can see: an Item whose *premise* is superseded while the rows it names still exist — the
 `W1 demo: T plays the three demos` case of 2026-10-20. The guard for that is the reconcile step `/plot` and
 `/messy` carry (DL1c), not a lint.
@@ -111,11 +113,11 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 | [x] | 2026-10-26 | The dev-only move log (times HP4e's solves) | W1 | HP2c |
 | [x] | 2026-10-30 | Card audit; T rules the cut at the HP2a merge | W1 | HP2a |
 | [x] | 2026-10-31 | Difficulty features in the solver | W1 | HP2b |
-| [ ] | 2026-10-23 | Decision pressure in the puzzle report | W1 | HP4a |
-| [ ] | 2026-10-23 | The candidate library shape | W1 | HP4b |
+| [x] | 2026-10-23 | Decision pressure in the puzzle report | W1 | HP4a |
+| [x] | 2026-10-23 | The candidate library shape | W1 | HP4b |
 | [ ] | 2026-10-24 | The deadline lint and its reconcile step | W1 | DL1a, DL1b, DL1c |
-| [ ] | 2026-10-27 | Author the thirty candidates | W1 | HP4c |
-| [ ] | 2026-10-28 | The thirty on the live board | W1 | HP4d |
+| [x] | 2026-10-27 | Author the thirty candidates | W1 | HP4c |
+| [x] | 2026-10-28 | The thirty on the live board | W1 | HP4d |
 | [ ] | 2026-11-02 | W1 demo: T plays the thirty candidates | W1 | HP4e |
 | [ ] | 2026-11-04 | Act 1 puzzle set, live hazard routing and the cuts | W2 | needs plot |
 | [ ] | 2026-11-05 | The authoring patterns from the kept set | W2 | HP4f |
@@ -183,6 +185,9 @@ attended session.
 
 ## Change log
 
+- **2026-10-21** — **phase Item Status is derived** (phase DL1b, the loop). `deadlines.mjs --write` now rewrites
+  every phase Item's Status cell from the build plan, and the lint fails a cell that disagrees. Its first run
+  ticked the four HP4 Items whose rows had shipped (HP4a, HP4b, HP4c, HP4d). No date moved; no `T` row changed.
 - **2026-10-20** — **card upgrades plotted** (T, attended session, `/pitch` then `/plot anytime`). `Card-upgrade
   path` now names UP1a-UP1g; **added** `2026-12-12 | Upgrades proven on the Act 1 boss | W4 | UP1h` (UP1h requires
   B2's boss); **ticked** `Upgrade grant call`, which T made in the session (rest, blacksmith, elite).
