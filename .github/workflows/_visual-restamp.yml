@@ -49,6 +49,9 @@ jobs:
       github.event_name == 'pull_request'
       && github.event.pull_request.head.repo.full_name == github.repository
       && inputs.routes != ''
+    concurrency:
+      group: visual-restamp-${{ github.event.pull_request.number }}
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
