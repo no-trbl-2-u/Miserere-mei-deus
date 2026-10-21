@@ -1,0 +1,1689 @@
+{
+	"nodes": [
+		{
+			"id": "legend",
+			"type": "text",
+			"text": "**Feature map**\nCyan edge: the player goes from one to the other.\nPurple edge: one uses the other in code.\nRed node: needs a pitch. Green node: has one.\nUncoloured node: not known yet.",
+			"x": 0,
+			"y": 0,
+			"width": 940,
+			"height": 180
+		},
+		{
+			"id": "group:tabs",
+			"type": "group",
+			"x": 0,
+			"y": 300,
+			"width": 940,
+			"height": 300,
+			"label": "Tabs"
+		},
+		{
+			"id": "group:world",
+			"type": "group",
+			"x": 0,
+			"y": 720,
+			"width": 940,
+			"height": 560,
+			"label": "World routes"
+		},
+		{
+			"id": "group:minigames",
+			"type": "group",
+			"x": 0,
+			"y": 1400,
+			"width": 940,
+			"height": 170,
+			"label": "Minigames"
+		},
+		{
+			"id": "group:engine",
+			"type": "group",
+			"x": 0,
+			"y": 1690,
+			"width": 940,
+			"height": 560,
+			"label": "Engine areas"
+		},
+		{
+			"id": "group:dev",
+			"type": "group",
+			"x": 0,
+			"y": 2370,
+			"width": 940,
+			"height": 300,
+			"label": "Dev routes"
+		},
+		{
+			"id": "route:(tabs)/character",
+			"type": "text",
+			"text": "**Character**\nroute\npitch unknown",
+			"x": 40,
+			"y": 340,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "route:(tabs)/deck",
+			"type": "text",
+			"text": "**Deck**\nroute\npitch unknown",
+			"x": 340,
+			"y": 340,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "route:(tabs)/exploration",
+			"type": "text",
+			"text": "**Exploration**\nroute\npitch unknown",
+			"x": 640,
+			"y": 340,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "route:(tabs)/inventory",
+			"type": "text",
+			"text": "**Inventory**\nroute\npitch unknown",
+			"x": 40,
+			"y": 470,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "route:(tabs)/memoir",
+			"type": "text",
+			"text": "**Memoir**\nroute\npitch unknown",
+			"x": 340,
+			"y": 470,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "route:blacksmith",
+			"type": "text",
+			"text": "**Blacksmith**\nroute\npitch unknown\nopens from any screen",
+			"x": 40,
+			"y": 760,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "route:cache",
+			"type": "text",
+			"text": "**Cache**\nroute\npitch unknown\nopens from any screen",
+			"x": 340,
+			"y": 760,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "route:combat-encounter",
+			"type": "text",
+			"text": "**Combat Encounter**\nroute\npitch unknown\nopens from any screen",
+			"x": 640,
+			"y": 760,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "route:cutscene",
+			"type": "text",
+			"text": "**Cutscene**\nroute\npitch unknown\nopens from any screen",
+			"x": 40,
+			"y": 890,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "route:dialogue",
+			"type": "text",
+			"text": "**Dialogue**\nroute\npitch unknown\nopens from any screen",
+			"x": 340,
+			"y": 890,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "route:event",
+			"type": "text",
+			"text": "**Event**\nroute\npitch unknown\nopens from any screen",
+			"x": 640,
+			"y": 890,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "route:index",
+			"type": "text",
+			"text": "**Index**\nroute\npitch unknown",
+			"x": 40,
+			"y": 1020,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "route:item-reward",
+			"type": "text",
+			"text": "**Item Reward**\nroute\npitch unknown\nopens from any screen",
+			"x": 340,
+			"y": 1020,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "route:rest",
+			"type": "text",
+			"text": "**Rest**\nroute\npitch unknown\nopens from any screen",
+			"x": 640,
+			"y": 1020,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "route:saves",
+			"type": "text",
+			"text": "**Saves**\nroute\npitch unknown",
+			"x": 40,
+			"y": 1150,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "route:settings",
+			"type": "text",
+			"text": "**Settings**\nroute\npitch unknown",
+			"x": 340,
+			"y": 1150,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "route:village",
+			"type": "text",
+			"text": "**Village**\nroute\npitch unknown\nopens from any screen",
+			"x": 640,
+			"y": 1150,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "route:hazard",
+			"type": "text",
+			"text": "**Hazard**\nroute\npitch unknown\nopens from any screen",
+			"x": 40,
+			"y": 1440,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "route:hazard-deck",
+			"type": "text",
+			"text": "**Hazard Deck**\nroute\npitch unknown",
+			"x": 340,
+			"y": 1440,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "route:labyrinth",
+			"type": "text",
+			"text": "**Labyrinth**\nroute\npitch unknown\nopens from any screen",
+			"x": 640,
+			"y": 1440,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "area:Cards",
+			"type": "text",
+			"text": "**Cards**\nengine area\npitch unknown",
+			"x": 40,
+			"y": 1730,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "area:Character",
+			"type": "text",
+			"text": "**Character**\nengine area\npitch unknown",
+			"x": 340,
+			"y": 1730,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "area:Combat",
+			"type": "text",
+			"text": "**Combat**\nengine area\npitch unknown",
+			"x": 640,
+			"y": 1730,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "area:Effects",
+			"type": "text",
+			"text": "**Effects**\nengine area\npitch unknown",
+			"x": 40,
+			"y": 1860,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "area:Enemy",
+			"type": "text",
+			"text": "**Enemy**\nengine area\npitch unknown",
+			"x": 340,
+			"y": 1860,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "area:Game",
+			"type": "text",
+			"text": "**Game**\nengine area\npitch unknown",
+			"x": 640,
+			"y": 1860,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "area:Items",
+			"type": "text",
+			"text": "**Items**\nengine area\npitch unknown",
+			"x": 40,
+			"y": 1990,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "area:Log",
+			"type": "text",
+			"text": "**Log**\nengine area\npitch unknown",
+			"x": 340,
+			"y": 1990,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "area:NPCs",
+			"type": "text",
+			"text": "**NPCs**\nengine area\npitch unknown",
+			"x": 640,
+			"y": 1990,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "area:World",
+			"type": "text",
+			"text": "**World**\nengine area\npitch unknown",
+			"x": 40,
+			"y": 2120,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "route:dev",
+			"type": "text",
+			"text": "**Dev**\ndev route\npitch unknown",
+			"x": 40,
+			"y": 2410,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "route:devaftermath",
+			"type": "text",
+			"text": "**Devaftermath**\ndev route\npitch unknown",
+			"x": 340,
+			"y": 2410,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "route:devart",
+			"type": "text",
+			"text": "**Devart**\ndev route\npitch unknown",
+			"x": 640,
+			"y": 2410,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "route:devart/rooms",
+			"type": "text",
+			"text": "**Devart Rooms**\ndev route\npitch unknown",
+			"x": 40,
+			"y": 2540,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "route:devframes",
+			"type": "text",
+			"text": "**Devframes**\ndev route\npitch unknown",
+			"x": 340,
+			"y": 2540,
+			"width": 260,
+			"height": 90
+		},
+		{
+			"id": "route:devpuzzle",
+			"type": "text",
+			"text": "**Devpuzzle**\ndev route\npitch unknown",
+			"x": 640,
+			"y": 2540,
+			"width": 260,
+			"height": 90
+		}
+	],
+	"edges": [
+		{
+			"id": "coupling:area:Cards->area:Character",
+			"fromNode": "area:Cards",
+			"toNode": "area:Character",
+			"color": "6"
+		},
+		{
+			"id": "coupling:area:Cards->area:Combat",
+			"fromNode": "area:Cards",
+			"toNode": "area:Combat",
+			"color": "6",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "coupling:area:Cards->area:Effects",
+			"fromNode": "area:Cards",
+			"toNode": "area:Effects",
+			"color": "6"
+		},
+		{
+			"id": "coupling:area:Cards->area:Enemy",
+			"fromNode": "area:Cards",
+			"toNode": "area:Enemy",
+			"color": "6",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "coupling:area:Cards->area:Game",
+			"fromNode": "area:Cards",
+			"toNode": "area:Game",
+			"color": "6",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "coupling:area:Character->area:Combat",
+			"fromNode": "area:Character",
+			"toNode": "area:Combat",
+			"color": "6",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "coupling:area:Character->area:Effects",
+			"fromNode": "area:Character",
+			"toNode": "area:Effects",
+			"color": "6"
+		},
+		{
+			"id": "coupling:area:Character->area:Game",
+			"fromNode": "area:Character",
+			"toNode": "area:Game",
+			"color": "6",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "coupling:area:Character->area:Items",
+			"fromNode": "area:Character",
+			"toNode": "area:Items",
+			"color": "6",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "coupling:area:Combat->area:Effects",
+			"fromNode": "area:Combat",
+			"toNode": "area:Effects",
+			"color": "6",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "coupling:area:Combat->area:Enemy",
+			"fromNode": "area:Combat",
+			"toNode": "area:Enemy",
+			"color": "6"
+		},
+		{
+			"id": "coupling:area:Combat->area:Game",
+			"fromNode": "area:Combat",
+			"toNode": "area:Game",
+			"color": "6",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "coupling:area:Combat->area:Items",
+			"fromNode": "area:Combat",
+			"toNode": "area:Items",
+			"color": "6",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "coupling:area:Combat->area:Log",
+			"fromNode": "area:Combat",
+			"toNode": "area:Log",
+			"color": "6",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "coupling:area:Combat->area:World",
+			"fromNode": "area:Combat",
+			"toNode": "area:World",
+			"color": "6",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "coupling:area:Effects->area:Game",
+			"fromNode": "area:Effects",
+			"toNode": "area:Game",
+			"color": "6",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "coupling:area:Enemy->area:Character",
+			"fromNode": "area:Enemy",
+			"toNode": "area:Character",
+			"color": "6"
+		},
+		{
+			"id": "coupling:area:Enemy->area:Effects",
+			"fromNode": "area:Enemy",
+			"toNode": "area:Effects",
+			"color": "6"
+		},
+		{
+			"id": "coupling:area:Enemy->area:Game",
+			"fromNode": "area:Enemy",
+			"toNode": "area:Game",
+			"color": "6",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "coupling:area:Enemy->area:Items",
+			"fromNode": "area:Enemy",
+			"toNode": "area:Items",
+			"color": "6"
+		},
+		{
+			"id": "coupling:area:Enemy->area:World",
+			"fromNode": "area:Enemy",
+			"toNode": "area:World",
+			"color": "6",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "coupling:area:Game->area:Items",
+			"fromNode": "area:Game",
+			"toNode": "area:Items",
+			"color": "6"
+		},
+		{
+			"id": "coupling:area:Game->area:Log",
+			"fromNode": "area:Game",
+			"toNode": "area:Log",
+			"color": "6"
+		},
+		{
+			"id": "coupling:area:Game->area:NPCs",
+			"fromNode": "area:Game",
+			"toNode": "area:NPCs",
+			"color": "6"
+		},
+		{
+			"id": "coupling:area:Game->area:World",
+			"fromNode": "area:Game",
+			"toNode": "area:World",
+			"color": "6",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "coupling:area:Items->area:Effects",
+			"fromNode": "area:Items",
+			"toNode": "area:Effects",
+			"color": "6"
+		},
+		{
+			"id": "coupling:area:NPCs->area:World",
+			"fromNode": "area:NPCs",
+			"toNode": "area:World",
+			"color": "6",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "coupling:area:World->area:Cards",
+			"fromNode": "area:World",
+			"toNode": "area:Cards",
+			"color": "6"
+		},
+		{
+			"id": "coupling:area:World->area:Character",
+			"fromNode": "area:World",
+			"toNode": "area:Character",
+			"color": "6"
+		},
+		{
+			"id": "coupling:area:World->area:Effects",
+			"fromNode": "area:World",
+			"toNode": "area:Effects",
+			"color": "6"
+		},
+		{
+			"id": "coupling:area:World->area:Items",
+			"fromNode": "area:World",
+			"toNode": "area:Items",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/character->area:Character",
+			"fromNode": "route:(tabs)/character",
+			"toNode": "area:Character",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/character->area:Combat",
+			"fromNode": "route:(tabs)/character",
+			"toNode": "area:Combat",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/character->area:Effects",
+			"fromNode": "route:(tabs)/character",
+			"toNode": "area:Effects",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/character->area:Game",
+			"fromNode": "route:(tabs)/character",
+			"toNode": "area:Game",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/character->area:Items",
+			"fromNode": "route:(tabs)/character",
+			"toNode": "area:Items",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/character->area:Log",
+			"fromNode": "route:(tabs)/character",
+			"toNode": "area:Log",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/character->area:World",
+			"fromNode": "route:(tabs)/character",
+			"toNode": "area:World",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/deck->area:Cards",
+			"fromNode": "route:(tabs)/deck",
+			"toNode": "area:Cards",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/deck->area:Combat",
+			"fromNode": "route:(tabs)/deck",
+			"toNode": "area:Combat",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/deck->area:Effects",
+			"fromNode": "route:(tabs)/deck",
+			"toNode": "area:Effects",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/deck->area:Game",
+			"fromNode": "route:(tabs)/deck",
+			"toNode": "area:Game",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/deck->area:Items",
+			"fromNode": "route:(tabs)/deck",
+			"toNode": "area:Items",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/deck->area:NPCs",
+			"fromNode": "route:(tabs)/deck",
+			"toNode": "area:NPCs",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/deck->area:World",
+			"fromNode": "route:(tabs)/deck",
+			"toNode": "area:World",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/exploration->area:Cards",
+			"fromNode": "route:(tabs)/exploration",
+			"toNode": "area:Cards",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/exploration->area:Character",
+			"fromNode": "route:(tabs)/exploration",
+			"toNode": "area:Character",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/exploration->area:Combat",
+			"fromNode": "route:(tabs)/exploration",
+			"toNode": "area:Combat",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/exploration->area:Effects",
+			"fromNode": "route:(tabs)/exploration",
+			"toNode": "area:Effects",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/exploration->area:Enemy",
+			"fromNode": "route:(tabs)/exploration",
+			"toNode": "area:Enemy",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/exploration->area:Game",
+			"fromNode": "route:(tabs)/exploration",
+			"toNode": "area:Game",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/exploration->area:Items",
+			"fromNode": "route:(tabs)/exploration",
+			"toNode": "area:Items",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/exploration->area:NPCs",
+			"fromNode": "route:(tabs)/exploration",
+			"toNode": "area:NPCs",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/exploration->area:World",
+			"fromNode": "route:(tabs)/exploration",
+			"toNode": "area:World",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/inventory->area:Cards",
+			"fromNode": "route:(tabs)/inventory",
+			"toNode": "area:Cards",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/inventory->area:Character",
+			"fromNode": "route:(tabs)/inventory",
+			"toNode": "area:Character",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/inventory->area:Combat",
+			"fromNode": "route:(tabs)/inventory",
+			"toNode": "area:Combat",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/inventory->area:Effects",
+			"fromNode": "route:(tabs)/inventory",
+			"toNode": "area:Effects",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/inventory->area:Enemy",
+			"fromNode": "route:(tabs)/inventory",
+			"toNode": "area:Enemy",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/inventory->area:Game",
+			"fromNode": "route:(tabs)/inventory",
+			"toNode": "area:Game",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/inventory->area:Items",
+			"fromNode": "route:(tabs)/inventory",
+			"toNode": "area:Items",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/inventory->area:NPCs",
+			"fromNode": "route:(tabs)/inventory",
+			"toNode": "area:NPCs",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/inventory->area:World",
+			"fromNode": "route:(tabs)/inventory",
+			"toNode": "area:World",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/memoir->area:Cards",
+			"fromNode": "route:(tabs)/memoir",
+			"toNode": "area:Cards",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/memoir->area:Character",
+			"fromNode": "route:(tabs)/memoir",
+			"toNode": "area:Character",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/memoir->area:Combat",
+			"fromNode": "route:(tabs)/memoir",
+			"toNode": "area:Combat",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/memoir->area:Effects",
+			"fromNode": "route:(tabs)/memoir",
+			"toNode": "area:Effects",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/memoir->area:Game",
+			"fromNode": "route:(tabs)/memoir",
+			"toNode": "area:Game",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/memoir->area:Items",
+			"fromNode": "route:(tabs)/memoir",
+			"toNode": "area:Items",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/memoir->area:NPCs",
+			"fromNode": "route:(tabs)/memoir",
+			"toNode": "area:NPCs",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:(tabs)/memoir->area:World",
+			"fromNode": "route:(tabs)/memoir",
+			"toNode": "area:World",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:blacksmith->area:Character",
+			"fromNode": "route:blacksmith",
+			"toNode": "area:Character",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:blacksmith->area:Combat",
+			"fromNode": "route:blacksmith",
+			"toNode": "area:Combat",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:blacksmith->area:Game",
+			"fromNode": "route:blacksmith",
+			"toNode": "area:Game",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:blacksmith->area:Log",
+			"fromNode": "route:blacksmith",
+			"toNode": "area:Log",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:blacksmith->area:World",
+			"fromNode": "route:blacksmith",
+			"toNode": "area:World",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:cache->area:Cards",
+			"fromNode": "route:cache",
+			"toNode": "area:Cards",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:cache->area:Game",
+			"fromNode": "route:cache",
+			"toNode": "area:Game",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:cache->area:Log",
+			"fromNode": "route:cache",
+			"toNode": "area:Log",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:cache->area:World",
+			"fromNode": "route:cache",
+			"toNode": "area:World",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:combat-encounter->area:Cards",
+			"fromNode": "route:combat-encounter",
+			"toNode": "area:Cards",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:combat-encounter->area:Character",
+			"fromNode": "route:combat-encounter",
+			"toNode": "area:Character",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:combat-encounter->area:Combat",
+			"fromNode": "route:combat-encounter",
+			"toNode": "area:Combat",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:combat-encounter->area:Effects",
+			"fromNode": "route:combat-encounter",
+			"toNode": "area:Effects",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:combat-encounter->area:Enemy",
+			"fromNode": "route:combat-encounter",
+			"toNode": "area:Enemy",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:combat-encounter->area:Game",
+			"fromNode": "route:combat-encounter",
+			"toNode": "area:Game",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:combat-encounter->area:Items",
+			"fromNode": "route:combat-encounter",
+			"toNode": "area:Items",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:combat-encounter->area:Log",
+			"fromNode": "route:combat-encounter",
+			"toNode": "area:Log",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:combat-encounter->area:NPCs",
+			"fromNode": "route:combat-encounter",
+			"toNode": "area:NPCs",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:combat-encounter->area:World",
+			"fromNode": "route:combat-encounter",
+			"toNode": "area:World",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:cutscene->area:Effects",
+			"fromNode": "route:cutscene",
+			"toNode": "area:Effects",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:cutscene->area:Game",
+			"fromNode": "route:cutscene",
+			"toNode": "area:Game",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:cutscene->area:Items",
+			"fromNode": "route:cutscene",
+			"toNode": "area:Items",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:cutscene->area:Log",
+			"fromNode": "route:cutscene",
+			"toNode": "area:Log",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:cutscene->area:NPCs",
+			"fromNode": "route:cutscene",
+			"toNode": "area:NPCs",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:cutscene->area:World",
+			"fromNode": "route:cutscene",
+			"toNode": "area:World",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:dev->area:Cards",
+			"fromNode": "route:dev",
+			"toNode": "area:Cards",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:dev->area:Character",
+			"fromNode": "route:dev",
+			"toNode": "area:Character",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:dev->area:Combat",
+			"fromNode": "route:dev",
+			"toNode": "area:Combat",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:dev->area:Effects",
+			"fromNode": "route:dev",
+			"toNode": "area:Effects",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:dev->area:Enemy",
+			"fromNode": "route:dev",
+			"toNode": "area:Enemy",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:dev->area:Game",
+			"fromNode": "route:dev",
+			"toNode": "area:Game",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:dev->area:Items",
+			"fromNode": "route:dev",
+			"toNode": "area:Items",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:dev->area:Log",
+			"fromNode": "route:dev",
+			"toNode": "area:Log",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:dev->area:NPCs",
+			"fromNode": "route:dev",
+			"toNode": "area:NPCs",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:dev->area:World",
+			"fromNode": "route:dev",
+			"toNode": "area:World",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:devaftermath->area:Items",
+			"fromNode": "route:devaftermath",
+			"toNode": "area:Items",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:devaftermath->area:Log",
+			"fromNode": "route:devaftermath",
+			"toNode": "area:Log",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:devart/rooms->area:Game",
+			"fromNode": "route:devart/rooms",
+			"toNode": "area:Game",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:devart/rooms->area:Items",
+			"fromNode": "route:devart/rooms",
+			"toNode": "area:Items",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:devart/rooms->area:NPCs",
+			"fromNode": "route:devart/rooms",
+			"toNode": "area:NPCs",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:devart/rooms->area:World",
+			"fromNode": "route:devart/rooms",
+			"toNode": "area:World",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:devframes->area:Log",
+			"fromNode": "route:devframes",
+			"toNode": "area:Log",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:devpuzzle->area:Game",
+			"fromNode": "route:devpuzzle",
+			"toNode": "area:Game",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:devpuzzle->area:Log",
+			"fromNode": "route:devpuzzle",
+			"toNode": "area:Log",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:devpuzzle->area:World",
+			"fromNode": "route:devpuzzle",
+			"toNode": "area:World",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:dialogue->area:Cards",
+			"fromNode": "route:dialogue",
+			"toNode": "area:Cards",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:dialogue->area:Effects",
+			"fromNode": "route:dialogue",
+			"toNode": "area:Effects",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:dialogue->area:Game",
+			"fromNode": "route:dialogue",
+			"toNode": "area:Game",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:dialogue->area:Items",
+			"fromNode": "route:dialogue",
+			"toNode": "area:Items",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:dialogue->area:Log",
+			"fromNode": "route:dialogue",
+			"toNode": "area:Log",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:dialogue->area:NPCs",
+			"fromNode": "route:dialogue",
+			"toNode": "area:NPCs",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:dialogue->area:World",
+			"fromNode": "route:dialogue",
+			"toNode": "area:World",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:event->area:Cards",
+			"fromNode": "route:event",
+			"toNode": "area:Cards",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:event->area:Effects",
+			"fromNode": "route:event",
+			"toNode": "area:Effects",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:event->area:Game",
+			"fromNode": "route:event",
+			"toNode": "area:Game",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:event->area:Items",
+			"fromNode": "route:event",
+			"toNode": "area:Items",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:event->area:Log",
+			"fromNode": "route:event",
+			"toNode": "area:Log",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:event->area:NPCs",
+			"fromNode": "route:event",
+			"toNode": "area:NPCs",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:event->area:World",
+			"fromNode": "route:event",
+			"toNode": "area:World",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:hazard->area:Game",
+			"fromNode": "route:hazard",
+			"toNode": "area:Game",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:hazard->area:Log",
+			"fromNode": "route:hazard",
+			"toNode": "area:Log",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:hazard->area:World",
+			"fromNode": "route:hazard",
+			"toNode": "area:World",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:hazard-deck->area:Effects",
+			"fromNode": "route:hazard-deck",
+			"toNode": "area:Effects",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:hazard-deck->area:Game",
+			"fromNode": "route:hazard-deck",
+			"toNode": "area:Game",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:hazard-deck->area:Items",
+			"fromNode": "route:hazard-deck",
+			"toNode": "area:Items",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:hazard-deck->area:Log",
+			"fromNode": "route:hazard-deck",
+			"toNode": "area:Log",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:hazard-deck->area:NPCs",
+			"fromNode": "route:hazard-deck",
+			"toNode": "area:NPCs",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:hazard-deck->area:World",
+			"fromNode": "route:hazard-deck",
+			"toNode": "area:World",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:index->area:Cards",
+			"fromNode": "route:index",
+			"toNode": "area:Cards",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:index->area:Character",
+			"fromNode": "route:index",
+			"toNode": "area:Character",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:index->area:Combat",
+			"fromNode": "route:index",
+			"toNode": "area:Combat",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:index->area:Effects",
+			"fromNode": "route:index",
+			"toNode": "area:Effects",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:index->area:Enemy",
+			"fromNode": "route:index",
+			"toNode": "area:Enemy",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:index->area:Game",
+			"fromNode": "route:index",
+			"toNode": "area:Game",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:index->area:Items",
+			"fromNode": "route:index",
+			"toNode": "area:Items",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:index->area:Log",
+			"fromNode": "route:index",
+			"toNode": "area:Log",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:index->area:NPCs",
+			"fromNode": "route:index",
+			"toNode": "area:NPCs",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:index->area:World",
+			"fromNode": "route:index",
+			"toNode": "area:World",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:item-reward->area:Character",
+			"fromNode": "route:item-reward",
+			"toNode": "area:Character",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:item-reward->area:Combat",
+			"fromNode": "route:item-reward",
+			"toNode": "area:Combat",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:item-reward->area:Effects",
+			"fromNode": "route:item-reward",
+			"toNode": "area:Effects",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:item-reward->area:Game",
+			"fromNode": "route:item-reward",
+			"toNode": "area:Game",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:item-reward->area:Items",
+			"fromNode": "route:item-reward",
+			"toNode": "area:Items",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:item-reward->area:Log",
+			"fromNode": "route:item-reward",
+			"toNode": "area:Log",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:item-reward->area:World",
+			"fromNode": "route:item-reward",
+			"toNode": "area:World",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:labyrinth->area:Game",
+			"fromNode": "route:labyrinth",
+			"toNode": "area:Game",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:labyrinth->area:Items",
+			"fromNode": "route:labyrinth",
+			"toNode": "area:Items",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:labyrinth->area:Log",
+			"fromNode": "route:labyrinth",
+			"toNode": "area:Log",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:labyrinth->area:NPCs",
+			"fromNode": "route:labyrinth",
+			"toNode": "area:NPCs",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:labyrinth->area:World",
+			"fromNode": "route:labyrinth",
+			"toNode": "area:World",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:rest->area:Cards",
+			"fromNode": "route:rest",
+			"toNode": "area:Cards",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:rest->area:Game",
+			"fromNode": "route:rest",
+			"toNode": "area:Game",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:rest->area:Log",
+			"fromNode": "route:rest",
+			"toNode": "area:Log",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:rest->area:World",
+			"fromNode": "route:rest",
+			"toNode": "area:World",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:saves->area:Cards",
+			"fromNode": "route:saves",
+			"toNode": "area:Cards",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:saves->area:Character",
+			"fromNode": "route:saves",
+			"toNode": "area:Character",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:saves->area:Combat",
+			"fromNode": "route:saves",
+			"toNode": "area:Combat",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:saves->area:Effects",
+			"fromNode": "route:saves",
+			"toNode": "area:Effects",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:saves->area:Enemy",
+			"fromNode": "route:saves",
+			"toNode": "area:Enemy",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:saves->area:Game",
+			"fromNode": "route:saves",
+			"toNode": "area:Game",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:saves->area:Items",
+			"fromNode": "route:saves",
+			"toNode": "area:Items",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:saves->area:Log",
+			"fromNode": "route:saves",
+			"toNode": "area:Log",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:saves->area:NPCs",
+			"fromNode": "route:saves",
+			"toNode": "area:NPCs",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:saves->area:World",
+			"fromNode": "route:saves",
+			"toNode": "area:World",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:settings->area:Log",
+			"fromNode": "route:settings",
+			"toNode": "area:Log",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:settings->area:World",
+			"fromNode": "route:settings",
+			"toNode": "area:World",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:village->area:Combat",
+			"fromNode": "route:village",
+			"toNode": "area:Combat",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:village->area:Game",
+			"fromNode": "route:village",
+			"toNode": "area:Game",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:village->area:Items",
+			"fromNode": "route:village",
+			"toNode": "area:Items",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:village->area:Log",
+			"fromNode": "route:village",
+			"toNode": "area:Log",
+			"color": "6"
+		},
+		{
+			"id": "flow:route:(tabs)/character->route:(tabs)/deck",
+			"fromNode": "route:(tabs)/character",
+			"toNode": "route:(tabs)/deck",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:(tabs)/character->route:(tabs)/exploration",
+			"fromNode": "route:(tabs)/character",
+			"toNode": "route:(tabs)/exploration",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:(tabs)/character->route:(tabs)/inventory",
+			"fromNode": "route:(tabs)/character",
+			"toNode": "route:(tabs)/inventory",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:(tabs)/character->route:(tabs)/memoir",
+			"fromNode": "route:(tabs)/character",
+			"toNode": "route:(tabs)/memoir",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:(tabs)/character->route:dev",
+			"fromNode": "route:(tabs)/character",
+			"toNode": "route:dev",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:(tabs)/character->route:hazard-deck",
+			"fromNode": "route:(tabs)/character",
+			"toNode": "route:hazard-deck",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:(tabs)/character->route:settings",
+			"fromNode": "route:(tabs)/character",
+			"toNode": "route:settings",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:(tabs)/deck->route:(tabs)/exploration",
+			"fromNode": "route:(tabs)/deck",
+			"toNode": "route:(tabs)/exploration",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:(tabs)/deck->route:(tabs)/inventory",
+			"fromNode": "route:(tabs)/deck",
+			"toNode": "route:(tabs)/inventory",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:(tabs)/deck->route:(tabs)/memoir",
+			"fromNode": "route:(tabs)/deck",
+			"toNode": "route:(tabs)/memoir",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:(tabs)/exploration->route:(tabs)/inventory",
+			"fromNode": "route:(tabs)/exploration",
+			"toNode": "route:(tabs)/inventory",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:(tabs)/exploration->route:(tabs)/memoir",
+			"fromNode": "route:(tabs)/exploration",
+			"toNode": "route:(tabs)/memoir",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:(tabs)/inventory->route:(tabs)/memoir",
+			"fromNode": "route:(tabs)/inventory",
+			"toNode": "route:(tabs)/memoir",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:combat-encounter->route:(tabs)/exploration",
+			"fromNode": "route:combat-encounter",
+			"toNode": "route:(tabs)/exploration",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:dev->route:(tabs)/exploration",
+			"fromNode": "route:dev",
+			"toNode": "route:(tabs)/exploration",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:dev->route:devaftermath",
+			"fromNode": "route:dev",
+			"toNode": "route:devaftermath",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:dev->route:devart",
+			"fromNode": "route:dev",
+			"toNode": "route:devart",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:dev->route:devart/rooms",
+			"fromNode": "route:dev",
+			"toNode": "route:devart/rooms",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:dev->route:devframes",
+			"fromNode": "route:dev",
+			"toNode": "route:devframes",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:dev->route:devpuzzle",
+			"fromNode": "route:dev",
+			"toNode": "route:devpuzzle",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:index->route:(tabs)/character",
+			"fromNode": "route:index",
+			"toNode": "route:(tabs)/character",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:index->route:(tabs)/deck",
+			"fromNode": "route:index",
+			"toNode": "route:(tabs)/deck",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:index->route:(tabs)/exploration",
+			"fromNode": "route:index",
+			"toNode": "route:(tabs)/exploration",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:index->route:(tabs)/inventory",
+			"fromNode": "route:index",
+			"toNode": "route:(tabs)/inventory",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:index->route:(tabs)/memoir",
+			"fromNode": "route:index",
+			"toNode": "route:(tabs)/memoir",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:index->route:saves",
+			"fromNode": "route:index",
+			"toNode": "route:saves",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:index->route:settings",
+			"fromNode": "route:index",
+			"toNode": "route:settings",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:saves->route:(tabs)/character",
+			"fromNode": "route:saves",
+			"toNode": "route:(tabs)/character",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:saves->route:(tabs)/deck",
+			"fromNode": "route:saves",
+			"toNode": "route:(tabs)/deck",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:saves->route:(tabs)/exploration",
+			"fromNode": "route:saves",
+			"toNode": "route:(tabs)/exploration",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:saves->route:(tabs)/inventory",
+			"fromNode": "route:saves",
+			"toNode": "route:(tabs)/inventory",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:saves->route:(tabs)/memoir",
+			"fromNode": "route:saves",
+			"toNode": "route:(tabs)/memoir",
+			"color": "5"
+		}
+	]
+}
