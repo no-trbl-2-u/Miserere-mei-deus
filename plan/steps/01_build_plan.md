@@ -225,7 +225,7 @@ event-pool and layout files).
       `label`, an `intendedBand` and the one route it is played on; `HAZARD_PUZZLE_CANDIDATES` holds them, validated
       and budget-checked but deliberately not held to `hazardPuzzleBandOf`, and pinned not to enter the library or
       dominance cells. Brief `plan/phases/phase_HP4_graded_puzzle_set.md` § HP4b. Requires nothing.
-- [ ] Phase HP4c — Author the thirty (plotted by T, 2026-10-19): ten easy, ten medium and ten hard candidates with
+- [x] (#701) Phase HP4c — Author the thirty (plotted by T, 2026-10-19): ten easy, ten medium and ten hard candidates with
       distinct labels across at least three Act 1 regions, none `forced` or `free` on its nominated route and
       spanning the HP4a numbers; pool cards only, no card or keyword added (D37). Brief
       `plan/phases/phase_HP4_graded_puzzle_set.md` § HP4c. Requires HP4a, HP4b.
