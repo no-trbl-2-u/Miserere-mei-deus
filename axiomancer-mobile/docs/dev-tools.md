@@ -112,6 +112,27 @@ and the same token. To read the stored attempts by hand:
 curl -H "Authorization: Bearer $PUZZLE_API_TOKEN"   "https://miserere-api.no-trbl-2-u.workers.dev/v1/puzzle-attempts?layout=<id>"
 ```
 
+### Read the solve times: `npm run puzzle:times`
+
+From the repo root, `npm run puzzle:times` reads `GET /v1/puzzle-attempts`
+and prints one table: the candidates grouped by intended band (EASY, MEDIUM,
+HARD), then the DEMOS, each layout with its attempt count, solve count, solve
+rate and median solve time in seconds over cleared attempts (phase BE1d).
+
+| Flag | Effect |
+|---|---|
+| `--solver <name>` | only that solver's attempts (trimmed, case-insensitive) |
+| `--json` | the summary rows as JSON instead of the table |
+| `--file <path>` | read a saved GET body instead of calling the Worker |
+
+It needs `PUZZLE_API_URL` (the Worker's origin) and `PUZZLE_API_TOKEN` (the
+same bearer token). Either one unset in the environment is read from
+`~/.config/miserere/puzzle-api.env` (`KEY=value` lines; `#` comments and
+`export` allowed). With one still missing it exits 2 with a one-line message
+naming it. The token is only sent in the Authorization header and is never
+printed. Tests: `scripts/puzzle-times.test.mjs` (root `npm test`), over
+`scripts/fixtures/puzzle-attempts.json`.
+
 ## Layout
 
 | File | Role |

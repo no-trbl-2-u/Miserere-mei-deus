@@ -178,6 +178,20 @@ offers pause-and-step plus a reduced-motion toggle. It plays a synthetic
 inline fixture, not an installed enemy — the registry is empty by
 design and the only real sheet lives in a tree app code may not reach.
 
+**When a clip plays in combat.** `CombatCombatantPane` selects the
+`attacking` clip on the enemy's beat and returns to `idle` when that
+one-shot has run its own length. The beat is read off the single walk
+of `fx.events` the pane already does per resolution — a fired
+`threat-fired`, or `damage-dealt` the player took — and a fired threat
+counts even when the hit was denied, because the swing happened. The
+clip starts at the pane's existing 100ms impact offset, so it lands
+with the recoil, the shake and the flash rather than ahead of them.
+Reduced motion is the ref the pane already maintains: when it says
+motion is reduced, no clip is selected at all and the enemy holds its
+resting frame. An enemy with no frame set goes through none of this and
+renders its single painting. The `struck` clip is not wired yet; AN1c
+selects all three.
+
 ## Licensing debt (open, blocked on the owner)
 
 Every raster directory except `maps/` (the Dore plate) now records

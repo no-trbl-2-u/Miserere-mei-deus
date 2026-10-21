@@ -1,0 +1,13 @@
+{
+  "attempts": [
+    { "id": 9, "receivedAt": "2026-10-21T20:09:00.000Z", "solver": "T", "layoutId": "demo-cliff-easy", "route": "safe", "intendedBand": null, "moves": [], "endKind": "confirm", "endMs": 8000, "cleared": true, "appBuild": "1.0.0 preview" },
+    { "id": 8, "receivedAt": "2026-10-21T20:08:00.000Z", "solver": "T", "layoutId": "cand-hard-01", "route": "risk", "intendedBand": "hard", "moves": [], "endKind": "expiry", "endMs": 30000, "cleared": false, "appBuild": "1.0.0 preview" },
+    { "id": 7, "receivedAt": "2026-10-21T20:07:00.000Z", "solver": "agent", "layoutId": "cand-easy-02", "route": "safe", "intendedBand": "easy", "moves": [], "endKind": "confirm", "endMs": 4000, "cleared": true, "appBuild": "1.0.0 preview" },
+    { "id": 6, "receivedAt": "2026-10-21T20:06:00.000Z", "solver": "t", "layoutId": "cand-easy-02", "route": "safe", "intendedBand": "easy", "moves": [], "endKind": "confirm", "endMs": 9000, "cleared": false, "appBuild": "1.0.0 preview" },
+    { "id": 5, "receivedAt": "2026-10-21T20:05:00.000Z", "solver": "T", "layoutId": "cand-medium-01", "route": "risk", "intendedBand": "medium", "moves": [], "endKind": "confirm", "endMs": 15250, "cleared": true, "appBuild": "1.0.0 preview" },
+    { "id": 4, "receivedAt": "2026-10-21T20:04:00.000Z", "solver": "T", "layoutId": "cand-easy-01", "route": "safe", "intendedBand": "easy", "moves": [], "endKind": "confirm", "endMs": 7000, "cleared": true, "appBuild": "1.0.0 preview" },
+    { "id": 3, "receivedAt": "2026-10-21T20:03:00.000Z", "solver": "T", "layoutId": "cand-easy-01", "route": "safe", "intendedBand": "easy", "moves": [], "endKind": "confirm", "endMs": 5000, "cleared": true, "appBuild": "1.0.0 preview" },
+    { "id": 2, "receivedAt": "2026-10-21T20:02:00.000Z", "solver": "T", "layoutId": "cand-easy-01", "route": "safe", "intendedBand": "easy", "moves": [], "endKind": "expiry", "endMs": 20000, "cleared": false, "appBuild": "1.0.0 preview" },
+    { "id": 1, "receivedAt": "2026-10-21T20:01:00.000Z", "solver": "T", "layoutId": "cand-easy-01", "route": "safe", "intendedBand": "easy", "moves": [], "endKind": "confirm", "endMs": 6100, "cleared": true, "appBuild": "1.0.0 preview" }
+  ]
+}

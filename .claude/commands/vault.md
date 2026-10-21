@@ -15,11 +15,18 @@ Argument handling:
 
 Steps:
 
-1. **Sync.** Run `node scripts/vault.mjs ensure`. If it exits non-zero
+1. **Sync and copy.** Run `node scripts/vault.mjs ensure`. If it exits non-zero
    (dirty tree, diverged branch, failed clone), stop and show T its message;
    never merge, rebase or stash to get past it. In a cloud session the vault
    repo must be attached (`add_repo` for `no-trbl-2-u/miserere-vault`) before
    `ensure` can clone it.
+   Then run `node scripts/vault.mjs features`: it copies the repo's
+   generated feature map to `vault/Feature Map.canvas` and
+   `vault/02 Features.md` and touches no other file (`docs/vault.md`
+   "Generated files"). A "skipped" line just means the map is not generated
+   yet; carry on. If it exits non-zero, show T its message and carry on
+   without the copy. Never edit those two files by hand; they ride in
+   step 6's commit.
 2. **The goal.** Read `vault/00 Goal.md`. If the goal sentence is empty, or
    T says it has moved, ask T at most three questions with `AskUserQuestion`
    (shaped per `docs/asking-well.md`) to sharpen it, then write T's own
