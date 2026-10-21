@@ -41,6 +41,7 @@ walk-*.png
 .smoke-dist/
 screenshots/current/
 screenshots/diff/
+screenshots/visual-summary.json
 
 # /critique unattended transport (Phase 34) — export + captured artifacts
 .critique-artifacts/

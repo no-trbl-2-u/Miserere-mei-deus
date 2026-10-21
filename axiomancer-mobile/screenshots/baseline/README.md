@@ -67,8 +67,13 @@ portrait, `deviceScaleFactor: 1`).
    (current over baseline) stays for a capture taken on that renderer,
    such as a Linux container.
 
-Until the report-only CI step lands (phase VE1c), the re-stamp commit is
-made by hand from the integration run's screenshots.
+The re-stamp is CI's report-only visual step (phase VE1c, `verify-mobile`
+and `verify-mechanics` through `_visual-restamp.yml`): it never turns a
+check red, writes the route table to the step summary, uploads the
+captures as `visual-smoke-<sha>`, and on a same-repo PR commits the
+differing and missing routes (never a route whose two captures differ)
+and posts one `<!-- visual-smoke -->` comment. A fork PR gets the summary
+and the artifact only.
 
 ## First-run setup
 

@@ -62,6 +62,17 @@ test('mobile runtime asset changes fail closed while screenshots do not', () => 
     assert.equal(classify('mobile', ['axiomancer-mobile/screenshots/arena.webp']).run_integration, false)
 })
 
+test('a re-stamped baseline selects one integration run and no journey', () => {
+    const result = classify('mobile', ['axiomancer-mobile/screenshots/baseline/memoir.png'])
+    assert.equal(result.run_integration, true)
+    assert.deepEqual([result.hazard, result.encounters, result.combat, result.full], [false, false, false, false])
+    // The run's own captures and diffs never reach a commit, and stay non-runtime.
+    assert.equal(classify('mobile', ['axiomancer-mobile/screenshots/current/memoir.png']).run_integration, false)
+    assert.equal(classify('mobile', ['axiomancer-mobile/screenshots/diff/memoir.png']).run_integration, false)
+    // The baseline README is prose, not a baseline.
+    assert.equal(classify('mobile', ['axiomancer-mobile/screenshots/baseline/README.md']).run_integration, false)
+})
+
 test('mobile docs and hermetic tests do not launch browser evidence', () => {
     const result = classify('mobile', [
         'axiomancer-mobile/docs/combat.md',

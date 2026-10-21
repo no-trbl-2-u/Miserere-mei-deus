@@ -1,0 +1,135 @@
+name: _visual-restamp
+
+# Called by verify-mobile and verify-mechanics after their report-only visual
+# smoke step (phase VE1c). On a same-repo PR whose run found differing or
+# missing routes, it commits CI's new captures over the baselines to the PR
+# head as one `visual: re-stamp` commit and posts or updates one PR comment,
+# so T approves from the PR's image diff (merging approves the baselines).
+#
+# It runs none of the PR's code: the routes and the comment come from the
+# calling job, the captures from its artifact. It pushes only
+# axiomancer-mobile/screenshots/baseline/*.png, only to the PR's own head
+# branch, never to main, never forced; a head that moved since the run
+# rejects the push, and the newer run re-stamps. Every step continues on
+# error, so a failed re-stamp never turns the verify workflow red (which
+# would fire pr-autofix).
+#
+# The push uses GH_PAT when set, so the re-stamped head gets its own run:
+# ci-e2e-scope selects integration for a baseline PNG, that run's visual
+# step matches, and no second commit follows. With github.token alone the
+# push starts no workflow.
+
+on:
+  workflow_call:
+    inputs:
+      artifact:
+        description: 'Name of the visual-smoke artifact in this run'
+        type: string
+        required: true
+      routes:
+        description: 'Space-separated routes to re-stamp'
+        type: string
+        required: true
+      comment:
+        description: 'The PR comment body (starts with the visual-smoke marker)'
+        type: string
+        required: true
+    secrets:
+      GH_PAT:
+        required: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  restamp:
+    name: re-stamp the PR's baselines
+    if: >-
+      github.event_name == 'pull_request'
+      && github.event.pull_request.head.repo.full_name == github.repository
+      && inputs.routes != ''
+    concurrency:
+      group: visual-restamp-${{ github.event.pull_request.number }}
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out the PR head
+        continue-on-error: true
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          token: ${{ secrets.GH_PAT || github.token }}
+
+      - name: Download the captures
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact }}
+          path: ${{ runner.temp }}/visual
+
+      - name: Commit the new captures over the baselines
+        id: commit
+        continue-on-error: true
+        shell: bash
+        env:
+          ROUTES: ${{ inputs.routes }}
+          HEAD_REF: ${{ github.head_ref }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          case "$HEAD_REF" in
+            '' | main) echo "visual-restamp: refusing to commit to '$HEAD_REF'"; exit 1 ;;
+          esac
+          for route in $ROUTES; do
+            [[ "$route" =~ ^[a-z0-9-]+$ ]] || { echo "visual-restamp: bad route name '$route'"; exit 1; }
+            cp "$RUNNER_TEMP/visual/current/$route.png" "axiomancer-mobile/screenshots/baseline/$route.png"
+          done
+          git add -- axiomancer-mobile/screenshots/baseline/
+          if git diff --cached --quiet; then
+            echo "visual-restamp: captures equal the baselines; nothing to commit"
+            exit 0
+          fi
+          stray="$(git diff --cached --name-only | grep -Ev '^axiomancer-mobile/screenshots/baseline/[a-z0-9-]+\.png$' || true)"
+          [ -z "$stray" ] || { echo "visual-restamp: refusing to commit $stray"; exit 1; }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m "visual: re-stamp $(echo $ROUTES | tr ' ' ',') (CI render)" \
+            -m "CI's Linux Playwright Chromium is the renderer of record. Captures from $RUN_URL; read the image diff before merging."
+          echo "committed=true" >> "$GITHUB_OUTPUT"
+
+      # Before the push: the push starts a run on the new head, and its
+      # concurrency group cancels this one.
+      - name: Post or update the visual-smoke comment
+        if: steps.commit.outputs.committed == 'true'
+        continue-on-error: true
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          COMMENT: ${{ inputs.comment }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          body="$RUNNER_TEMP/visual-comment.md"
+          printf '%s' "$COMMENT" > "$body"
+          id="$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
+            --jq '.[] | select(.body | startswith("<!-- visual-smoke -->")) | .id' | tail -n1)"
+          if [ -n "$id" ]; then
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$id" -F "body=@$body" > /dev/null
+          else
+            gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body-file "$body"
+          fi
+
+      - name: Push the re-stamp to the PR head
+        if: steps.commit.outputs.committed == 'true'
+        continue-on-error: true
+        shell: bash
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          set -euo pipefail
+          case "$HEAD_REF" in
+            '' | main) echo "visual-restamp: refusing to push to '$HEAD_REF'"; exit 1 ;;
+          esac
+          git push origin "HEAD:refs/heads/$HEAD_REF"
