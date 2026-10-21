@@ -1,0 +1,23 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-10-21",
+    "tool": "scripts/art/rig-spritesheet.py (Pillow + numpy affine rig)",
+    "covers": [
+      "float-eye.sheet.png (lossless master, 2048x768)",
+      "float-eye.sheet.webp (ship candidate, q88)",
+      "float-eye.sheet.json (frame grid + clip table)",
+      "float-eye.preview.webp (animated flipbook, review only — not shipped)"
+    ],
+    "source": "../../../axiomancer-mobile/assets/images/enemies/float-eye.webp",
+    "method": "No image model was used and nothing was generated. The shipped painting is split into two layers — the body with the eye disc erased and refilled from the body's own black, and a feathered disc holding the eye — and each of the 24 frames is an affine pose of those layers plus a colour grade. Every pixel therefore descends from the existing asset.",
+    "clips": "idle (8f @12fps, loop), hit (8f @16fps, one-shot), strike (8f @14fps, one-shot); one clip per row, 8 columns",
+    "license": "UNRESOLVED — inherits the source painting's status",
+    "license_note": "float-eye.webp is owner-supplied external illustration with no recorded source or licence (see ../provenance.json). A derivative cannot be cleaner than what it derives from, so this sheet carries the same open question and is blocked on the same owner answer.",
+    "used_by": [
+      "nothing yet — experimental asset for the first enemy animation test; no registry entry and no runtime surface"
+    ],
+    "build_size_note": "2048x768 is a master, outside the <=640px ingest recipe by design; that recipe is about one-portrait-per-enemy art. Measured split cost at RECIPE q44: 24 cells, 149.5 KB total, mean 6378 B, max 9020 B, against 23624 B for the static float-eye.webp - 6.5x. If that is too much, the frame edge is the dial: rerun with --frame 192 or --frame 128.",
+    "home_note": "These are build-time masters, not shipped assets. They live in art-department/ (D98) rather than axiomancer-mobile/assets/, because assets/ is bundled and scripts/asset-provenance.test.mjs rightly fails art that no registry reaches. Phase AN1e splits the sheet into per-cell WebP under assets/images/enemies/anim/float-eye/ and registers those; the master never ships. Phase AD1b adds the .easignore entry that keeps this tree out of the EAS upload archive, and the guard that nothing in the repo resolves a path into it."
+  }
+]
