@@ -15,7 +15,7 @@ import {
     ENEMY_ART_BY_KEY, ENEMY_ART_KEYS, getEncounterEnemyArt, hasEnemyArt,
 } from '../index';
 import {
-    ENEMY_FRAME_SETS, getEnemyFrameSet, hasEnemyFrames, validateFrameSet,
+    ENEMY_FRAME_SETS, REQUIRED_CLIPS, getEnemyFrameSet, hasEnemyFrames, validateFrameSet,
     type EnemyFrameSet, type FrameClip,
 } from '../frames';
 
@@ -48,22 +48,38 @@ describe('the static art registry is untouched while no frame set is installed',
     });
 });
 
-/** A valid 2x2 set, for the failure fixtures below to break in one way each. */
+/**
+ * A valid 2x3 set, for the failure fixtures below to break in one way each.
+ * Three rows because AN1c made three clips the contract: a set that names only
+ * idle and attacking is now itself one of the failures.
+ */
 function validSet(): EnemyFrameSet {
     return {
         manifest: {
             frame: 64,
             columns: 2,
-            rows: 2,
+            rows: 3,
             anchor: { kind: 'foot-line' },
             clips: {
                 idle: { row: 0, frames: 2, fps: 12, loop: true, rest: 0 },
-                attacking: { row: 1, frames: 2, fps: 14, loop: false, rest: 0 },
+                struck: { row: 1, frames: 2, fps: 16, loop: false, rest: 1 },
+                attacking: { row: 2, frames: 2, fps: 14, loop: false, rest: 0 },
             },
             graded: true,
         },
-        frames: [{ uri: 'a' }, { uri: 'b' }, { uri: 'c' }, { uri: 'd' }],
+        frames: [
+            { uri: 'a' }, { uri: 'b' },
+            { uri: 'c' }, { uri: 'd' },
+            { uri: 'e' }, { uri: 'f' },
+        ],
     };
+}
+
+/** A copy of `set` with one clip removed — the manifest's clips are readonly. */
+function withoutClip(set: EnemyFrameSet, name: string): EnemyFrameSet {
+    const clips: Record<string, FrameClip> = { ...set.manifest.clips };
+    delete clips[name];
+    return { ...set, manifest: { ...set.manifest, clips } };
 }
 
 /** A copy of `set` with one clip patched — the manifest's clips are readonly. */
@@ -80,8 +96,8 @@ describe('validateFrameSet', () => {
 
     it('fails a cell count that disagrees with the manifest', () => {
         const set = validSet();
-        set.frames = set.frames.slice(0, 3);
-        expect(validateFrameSet('short', set).join(' ')).toMatch(/3 frame file\(s\) for a 2x2 manifest/);
+        set.frames = set.frames.slice(0, 5);
+        expect(validateFrameSet('short', set).join(' ')).toMatch(/5 frame file\(s\) for a 2x3 manifest/);
     });
 
     it('fails a resting index past the end of its clip', () => {
@@ -122,7 +138,7 @@ describe('validateFrameSet', () => {
 
     it('fails a clip pointing at a row the sheet does not have', () => {
         const set = withClip(validSet(), 'attacking', { row: 4 });
-        expect(validateFrameSet('offsheet', set).join(' ')).toMatch(/row 4 is outside a 2-row sheet/);
+        expect(validateFrameSet('offsheet', set).join(' ')).toMatch(/row 4 is outside a 3-row sheet/);
     });
 
     it('fails a clip claiming more frames than its row holds', () => {
@@ -131,11 +147,25 @@ describe('validateFrameSet', () => {
     });
 
     it('fails a set with no resting clip to fall back to', () => {
-        const base = validSet();
-        const clips: Record<string, FrameClip> = { ...base.manifest.clips };
-        delete clips.idle;
-        const set: EnemyFrameSet = { ...base, manifest: { ...base.manifest, clips } };
-        expect(validateFrameSet('restless', set).join(' ')).toMatch(/no 'idle' clip/);
+        expect(validateFrameSet('restless', withoutClip(validSet(), 'idle')).join(' '))
+            .toMatch(/no 'idle' clip/);
+    });
+
+    // AN1c — three states or none. Enumerated rather than written out three
+    // times, so a fourth state added later cannot be left unchecked here.
+    it.each([...REQUIRED_CLIPS])('fails a manifest that names no %s clip', (name) => {
+        const problems = validateFrameSet('partial', withoutClip(validSet(), name)).join(' ');
+        expect(problems).toMatch(new RegExp(`no '${name}' clip`));
+    });
+
+    it('fails a resting clip that does not loop — an enemy must not stop breathing', () => {
+        const set = withClip(validSet(), 'idle', { loop: false });
+        expect(validateFrameSet('frozen', set).join(' ')).toMatch(/idle: must loop/);
+    });
+
+    it.each(['struck', 'attacking'])('fails a looping %s clip — a reaction ends', (name) => {
+        const set = withClip(validSet(), name, { loop: true });
+        expect(validateFrameSet('endless', set).join(' ')).toMatch(new RegExp(`${name}: must be a one-shot`));
     });
 
     it('fails a non-positive fps', () => {

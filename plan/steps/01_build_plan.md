@@ -214,7 +214,7 @@ event-pool and layout files).
       `damage-dealt`) at the existing `IMPACT` offset and behind the existing `reduceMotion.current`; an
       enemy with no frame set is untouched. Brief
       `plan/phases/phase_AN1_enemy_animation.md` § AN1b. Requires AN1a.
-- [ ] Phase AN1c — Idle, struck, attacking (plotted by T, 2026-10-21): the manifest names three
+- [x] (#757) Phase AN1c — Idle, struck, attacking (plotted by T, 2026-10-21): the manifest names three
       animations and the engine selects them — idle as the resting loop, struck on damage taken, attack
       on the enemy's beat; idle loops, the other two are one-shots returning to idle. T sequenced this
       after seeing AN1b work. Brief

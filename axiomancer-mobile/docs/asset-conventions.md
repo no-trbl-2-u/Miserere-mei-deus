@@ -136,6 +136,16 @@ splitter runs there and emits here.
 `rest` is the index WITHIN ITS CLIP of the frame to hold when nothing
 is playing — the frame reduced motion and the seeded e2e harness show.
 
+**All three clips, every time.** `idle`, `struck` and `attacking` are
+required names, and a manifest missing one FAILS validation by that
+name. So does one whose loop flags disagree with the state: `idle`
+loops, `struck` and `attacking` are one-shots. A set that cannot show
+being hit is worse than an enemy that never animates, because the gap
+only appears in the one resolution it was needed; and a `struck` clip
+marked `loop: true` would leave an enemy flinching for the rest of the
+fight without failing anything else. The vocabulary is not a choice:
+the float-eye master's sidecar already names its rows this way.
+
 **The anchor is a KIND, not a rule.** There is no single right anchor,
 and a universal one would have broken on the first enemy it met:
 
@@ -178,19 +188,33 @@ offers pause-and-step plus a reduced-motion toggle. It plays a synthetic
 inline fixture, not an installed enemy — the registry is empty by
 design and the only real sheet lives in a tree app code may not reach.
 
-**When a clip plays in combat.** `CombatCombatantPane` selects the
-`attacking` clip on the enemy's beat and returns to `idle` when that
-one-shot has run its own length. The beat is read off the single walk
-of `fx.events` the pane already does per resolution — a fired
-`threat-fired`, or `damage-dealt` the player took — and a fired threat
-counts even when the hit was denied, because the swing happened. The
-clip starts at the pane's existing 100ms impact offset, so it lands
-with the recoil, the shake and the flash rather than ahead of them.
+**When each clip plays in combat.** `CombatCombatantPane` reads TWO
+beats off the single walk of `fx.events` it already does per
+resolution, and `useEnemyClipSelection` turns them into one clip name:
+
+| State | Beat | Timing |
+|---|---|---|
+| `idle` | none — it is where the enemy sits | A loop, so a resting foe is alive rather than paused. |
+| `struck` | `damage-dealt` or `dot-tick` the ENEMY took | Immediately: the blow has already landed, and a delayed flinch reads as a second hit. |
+| `attacking` | `threat-fired`, or `damage-dealt` the player took | At the pane's existing 100ms impact offset, so it lands with the recoil, the shake and the flash rather than ahead of them. |
+
+A fired threat counts as the enemy's beat even when the hit was denied,
+because the swing happened. A resolution in which the enemy neither
+struck nor was struck — a buff, a status application, a heal — selects
+nothing, so the enemy keeps breathing and never mimes a swing it did
+not make.
+
+The two beats are separate counters rather than one verdict, because a
+single resolution can be both: the player's blow lands and the enemy's
+threat fires. When it is, the flinch plays at once and the swing takes
+over at its own offset; whoever started last owns the return to `idle`,
+so the flinch's expiry cannot cut the swing short. Each one-shot ends by
+handing the enemy back to `idle` after its own declared length.
+
 Reduced motion is the ref the pane already maintains: when it says
 motion is reduced, no clip is selected at all and the enemy holds its
 resting frame. An enemy with no frame set goes through none of this and
-renders its single painting. The `struck` clip is not wired yet; AN1c
-selects all three.
+renders its single painting.
 
 ## Licensing debt (open, blocked on the owner)
 

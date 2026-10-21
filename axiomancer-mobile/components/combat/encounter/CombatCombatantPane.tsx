@@ -31,7 +31,8 @@ import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
 import { getEncounterEnemyArt } from '@/assets/images/enemies';
 import { getEnemyFrameSet } from '@/assets/images/enemies/frames';
 import {
-    ENEMY_ATTACK_IMPACT_MS, EnemyFramePlayer, isEnemyAttackBeat, useEnemyAttackClip,
+    ENEMY_ATTACK_IMPACT_MS, EnemyFramePlayer, isEnemyAttackBeat, isEnemyStruckBeat,
+    useEnemyClipSelection,
 } from '@/components/combat/frames';
 import { ARENA_PLATES_SHOWN, BLACK_ARENA_ALT, arenaAltTextFor, arenaBackdropFor } from '@/assets/images/combat';
 import { FONTS, HUE } from '@/theme/axm';
@@ -445,11 +446,14 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
     // (recoil/flash/squash/slash/haptic) live in `PlayerMedallion`.
     const enemyShift = useSharedValue(0);
     const enemyScale = useSharedValue(1);
-    // The enemy's own beat count, for the frame engine. It rises in the SAME
+    // The enemy's own beat counts, for the frame engine. They rise in the SAME
     // walk of `fx.events` the lunge reads, so the swing and the lunge can never
-    // disagree about whether the enemy acted. It drives nothing above: the
+    // disagree about whether the enemy acted. They drive nothing above: the
     // frame clip is state of its own and the shared values are untouched.
+    // Two counters, not one: a resolution can be both the enemy's swing and the
+    // player's blow landing, and the frame engine needs to see both to decide.
     const [attackBeat, setAttackBeat] = useState(0);
+    const [struckBeat, setStruckBeat] = useState(0);
     // Board-level feedback: a damage-scaled screen shake + a red vignette
     // flash — lib/juice primitives, synced to the IMPACT beat
     // below via each hook's own `delayMs` so they still land with the enemy
@@ -500,13 +504,18 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                 statusFloats.push({ side, text: kw, color });
             }
         }
-        // THE ENEMY'S BEAT (phase AN1b). Off the walk just finished — a fired
-        // threat, or damage the player took — so the frame engine and the lunge
-        // read one stream once. The counter is all that happens here: when and
-        // whether an attack clip plays is `useEnemyAttackClip`'s call, and an
-        // enemy with no frame set spends this on nothing.
+        // THE ENEMY'S BEATS (phases AN1b, AN1c). Off the walk just finished —
+        // a fired threat or damage the player took for the swing, damage the
+        // enemy took for the flinch — so the frame engine and the lunge read
+        // one stream once. The counters are all that happens here: when and
+        // whether a clip plays is `useEnemyClipSelection`'s call, and an enemy
+        // with no frame set spends this on nothing.
         if (isEnemyAttackBeat({ playerDamage: playerDmg, threatFired })) {
             setAttackBeat((n) => n + 1);
+        }
+        const enemyDotDmg = ticks.reduce((sum, t) => (t.side === 'enemy' ? sum + t.amount : sum), 0);
+        if (isEnemyStruckBeat({ enemyDamage: enemyDmg, enemyDotDamage: enemyDotDmg })) {
+            setStruckBeat((n) => n + 1);
         }
         // The ledgers and the enemy's STAGE beat each float the word that moved
         // the numbers. The wording lives ONCE, in the presenter's `selectCombatLogLines`, so
@@ -576,8 +585,11 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
     // One label for the figure, whichever way it is drawn: a screen reader
     // must not be able to tell that an enemy animates.
     const enemyFigureLabel = `${enemy.name} bars the way`;
-    const attackClip = useEnemyAttackClip({
-        frameSet: enemyFrameSet, beat: attackBeat, reducedMotion: reduceMotion,
+    const enemyClip = useEnemyClipSelection({
+        frameSet: enemyFrameSet,
+        attackBeat,
+        struckBeat,
+        reducedMotion: reduceMotion,
     });
 
     // Region-keyed arena backdrop — falls back to the neutral
@@ -664,8 +676,8 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                                 <EnemyFramePlayer
                                     artKey={enemy.artKey}
                                     frameSet={enemyFrameSet}
-                                    clipName={attackClip.clipName}
-                                    startKey={attackClip.startKey}
+                                    clipName={enemyClip.clipName}
+                                    startKey={enemyClip.startKey}
                                     reducedMotion={reduceMotion}
                                     style={[styles.enemyFigureImg, enemy.isBoss && styles.enemyFigureImgBoss]}
                                     accessibilityLabel={enemyFigureLabel}
