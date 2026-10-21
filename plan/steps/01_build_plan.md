@@ -179,7 +179,7 @@ event-pool and layout files).
       found while plotting it: `PHASE_ROW` is line-anchored, so every multi-line row looked like `Requires
       nothing` and every open attended one was announced as ready for T. Brief
       `plan/phases/phase_DL1_deadline_plan_integrity.md` § DL1a. Requires nothing.
-- [ ] Phase ML1a — Merging `lessons.md` stops duplicating slugs (plotted by T, 2026-10-20): a git
+- [x] Phase ML1a — Merging `lessons.md` stops duplicating slugs (#695) (plotted by T, 2026-10-20): a git
       merge driver for `plan/lessons.md` and `plan/NEEDS_T.md`, registered via `.gitattributes` and the
       same session-startup path that already sets `core.hooksPath`, unioning the two sides **by slug**
       — higher `seen`, later `last`, unioned citations, `guarded by` beating `open` — and **refusing**

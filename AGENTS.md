@@ -277,6 +277,13 @@ them; update here first.
    `.githooks/pre-commit` auto-stages `telemetry/`, and `.githooks/pre-push`
    blocks if newer rows remain uncommitted. One shard per session, so the
    log never conflicts on merge. Session startup installs the hooks through `core.hooksPath`.
+   `plan/lessons.md` and `plan/NEEDS_T.md` are edited rows, not appended
+   ones, so they keep one shared file and merge **by slug** through
+   `scripts/lessons-merge.mjs` (`.gitattributes`; session startup registers
+   `merge.lessons.driver` beside the hooks): one row per slug, higher
+   `seen`, later `last`, unioned citations, `guarded by` over `open`. It
+   refuses with conflict markers where the result would break a cap or the
+   two sides rewrote the same text; a human resolves those.
 2. **No `Co-Authored-By:` trailers, no emojis** — in commits, code, or
    content.
 3. **The verify gate is non-negotiable.** No `--no-verify`, no

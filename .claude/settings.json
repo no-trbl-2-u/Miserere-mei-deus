@@ -221,6 +221,10 @@
           },
           {
             "type": "command",
+            "command": "git -C \"$CLAUDE_PROJECT_DIR\" config merge.lessons.name 'lessons.md and NEEDS_T.md by slug' && git -C \"$CLAUDE_PROJECT_DIR\" config merge.lessons.driver 'node scripts/lessons-merge.mjs %O %A %B %P'"
+          },
+          {
+            "type": "command",
             "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard.mjs\" session-start"
           },
           {
