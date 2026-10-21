@@ -219,7 +219,7 @@ event-pool and layout files).
       on the enemy's beat; idle loops, the other two are one-shots returning to idle. T sequenced this
       after seeing AN1b work. Brief
       `plan/phases/phase_AN1_enemy_animation.md` § AN1c. Requires AN1b.
-- [ ] Phase AN1d — Sheets generated for used enemies only (plotted by T, 2026-10-21): `generate-art.mjs`
+- [x] Phase AN1d — Sheets generated for used enemies only (plotted by T, 2026-10-21): `generate-art.mjs`
       gains a `frames: { cols, rows }` spec block — one grid image per call (the grid is what buys
       character consistency), then split, alpha-matte and ingest each cell through the existing `RECIPE`,
       one provenance record per set. It **refuses** any id failing D97's used-enemy test (in the roster
