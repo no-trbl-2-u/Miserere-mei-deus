@@ -43,7 +43,8 @@ npm-workspaces monorepo. Two packages, flat at the root:
   trade-off; lead with prose; every question states its defer path;
   answers are policy — file them durably and never re-ask. Autonomous
   loop skills never ask at all — `AskUserQuestion` is reserved for
-  `/oversight` there (standing rule 6 below); they decide, document
+  `/oversight` there, and for `/plot`, `/messy` and `/vault` with T
+  present (standing rule 6 below); they decide, document
   the call, and file load-bearing calls as `[loop-call]` residue for T to
   audit afterwards (THE OPEN GATE retired `[needs-user-call]`).
 
@@ -295,8 +296,8 @@ them; update here first.
    tick's PR: read the log, patch on the branch, push again (≤3
    same-root-cause iterations, then leave it to `pr-autofix`). Red on
    `main` is `ci-autofix`'s.
-6. **`AskUserQuestion` only in `/oversight`, and in `/plot` or `/messy`
-   when T is present.** Every other skill decides, documents the call in
+6. **`AskUserQuestion` only in `/oversight`, and in `/plot`, `/messy` or
+   `/vault` when T is present.** Every other skill decides, documents the call in
    the commit body or PR, and ships. Since
    THE OPEN GATE (T direct, 2026-08-28 — see `plan/bearings.md`)
    there are no owner-blocked decisions: the loop answers every open
