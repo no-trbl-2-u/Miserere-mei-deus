@@ -6,6 +6,7 @@
 
 export type {
     HazardPuzzleBand,
+    HazardPuzzleCandidate,
     HazardPuzzleGoal,
     HazardPuzzleGoals,
     HazardPuzzleLayout,
@@ -19,7 +20,7 @@ export type {
     HazardPuzzleValidation,
 } from './hazard-puzzle.types';
 
-export { HAZARD_PUZZLE_ACT, validateHazardPuzzleLayout } from './hazard-puzzle.validate';
+export { HAZARD_PUZZLE_ACT, validateHazardPuzzleCandidate, validateHazardPuzzleLayout } from './hazard-puzzle.validate';
 
 export {
     createHazardPuzzleSession,
@@ -83,5 +84,8 @@ export {
 } from './hazard-puzzle.unlocks';
 
 export { HAZARD_PUZZLE_LIBRARY, getHazardPuzzleLayout } from './hazard-puzzle.library';
+export { HAZARD_PUZZLE_CANDIDATES, getHazardPuzzleCandidate } from './hazard-puzzle.candidates';
+export type { HazardPuzzleCandidateAudit } from './hazard-puzzle.candidate-audit';
+export { auditHazardPuzzleCandidate, hazardPuzzleCandidateSetProblems } from './hazard-puzzle.candidate-audit';
 export { HAZARD_PUZZLE_CLOCK_SECONDS } from './hazard-puzzle.tuning';
 export { HAZARD_PUZZLE_REGIONS } from './hazard-puzzle.validate';

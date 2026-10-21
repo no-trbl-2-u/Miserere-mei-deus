@@ -6,6 +6,9 @@
  * SCRAMBLE and CLIFFRUNNER blue 3/6 escape (they differ only in salvage,
  * which a puzzle never reads); CRACK dead, 0/0 and never powerable.
  * GRIP-TOLL is a test-only IRON GRIP with a 1 ESCAPE toll on its free line.
+ *
+ * HP4 A4: the candidate set never enters the library's cells, so the
+ * worse-copy check reads the three demos alone.
  */
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -19,6 +22,8 @@ import {
     hazardPuzzleUnusedCards,
     swapHazardPuzzleCard,
 } from '../hazard-puzzle.dominance';
+import { HAZARD_PUZZLE_CANDIDATES } from '../hazard-puzzle.candidates';
+import { getHazardPuzzleLayout, HAZARD_PUZZLE_LIBRARY } from '../hazard-puzzle.library';
 import type { HazardPuzzleUnlock } from '../hazard-puzzle.types';
 import { testLayout } from './hazard-puzzle.layouts.mock';
 import { useHazardPuzzlePoolCards } from './hazard-puzzle.pool.mock';
@@ -98,5 +103,28 @@ describe('the worse-copy check on fixture libraries (A12)', () => {
             'dom-runner risk 0',
             'dom-runner risk 1',
         ]);
+    });
+});
+
+describe('the candidate set stays out of the library (HP4 A4)', () => {
+    it('the library is the three demos, and its cells read only them', () => {
+        const ids = ['demo-cliff-easy', 'demo-ashfall-medium', 'demo-undercroft-hard'];
+        expect(HAZARD_PUZZLE_LIBRARY.map((l) => l.id)).toEqual(ids);
+        const cellIds = new Set(hazardPuzzleLibraryCells(HAZARD_PUZZLE_LIBRARY).map((c) => c.layout.id));
+        expect([...cellIds]).toEqual(ids);
+    });
+
+    it('no candidate is a library layout, by id or by reference', () => {
+        for (const c of HAZARD_PUZZLE_CANDIDATES) {
+            expect(HAZARD_PUZZLE_LIBRARY, c.id).not.toContain(c);
+            expect(() => getHazardPuzzleLayout(c.id), c.id).toThrow(/Unknown hazard puzzle/);
+        }
+    });
+
+    it('no library layout carries a candidate field', () => {
+        for (const l of HAZARD_PUZZLE_LIBRARY) {
+            expect(Object.keys(l), l.id).not.toEqual(expect.arrayContaining(['label']));
+            expect(Object.keys(l), l.id).not.toEqual(expect.arrayContaining(['intendedBand']));
+        }
     });
 });

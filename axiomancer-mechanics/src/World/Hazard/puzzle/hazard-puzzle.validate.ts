@@ -13,9 +13,14 @@
 import type { MapName } from '../../map.library';
 import { validateHazardCardDef } from '../hazard.card-validate';
 import { getHazardCardDef, HAZARD_LIBRARY } from '../hazard.content';
-import type { HazardCardDef } from '../hazard.types';
+import type { HazardCardDef, HazardRouteKey } from '../hazard.types';
 import { HAZARD_PUZZLE_CARD_POOL } from './hazard-puzzle.tuning';
-import type { HazardPuzzleLayout, HazardPuzzleValidation } from './hazard-puzzle.types';
+import type {
+    HazardPuzzleBand,
+    HazardPuzzleCandidate,
+    HazardPuzzleLayout,
+    HazardPuzzleValidation,
+} from './hazard-puzzle.types';
 
 /** The only act a hazard puzzle may belong to until T lifts the scope. */
 export const HAZARD_PUZZLE_ACT = 1;
@@ -81,5 +86,23 @@ export function validateHazardPuzzleLayout(layout: HazardPuzzleLayout): HazardPu
     if (!isPositiveInt(gf) || !isPositiveInt(ge)) {
         reasons.push(`goals.risk: [${gf}, ${ge}] needs two positive whole numbers`);
     }
+    return { ok: reasons.length === 0, reasons };
+}
+
+const BANDS: readonly HazardPuzzleBand[] = ['easy', 'medium', 'hard'];
+const ROUTES: readonly HazardRouteKey[] = ['safe', 'risk'];
+
+/**
+ * A candidate is a valid layout plus a non-empty label, an intended band
+ * and one nominated route. Its declared `bands` are not checked against the
+ * solver here or anywhere else: a candidate is not held to a band.
+ */
+export function validateHazardPuzzleCandidate(candidate: HazardPuzzleCandidate): HazardPuzzleValidation {
+    const reasons = [...validateHazardPuzzleLayout(candidate).reasons];
+    if (candidate.label.trim().length === 0) reasons.push('label: a candidate needs a short label');
+    if (!BANDS.includes(candidate.intendedBand)) {
+        reasons.push(`intendedBand: "${candidate.intendedBand}" is not easy, medium or hard`);
+    }
+    if (!ROUTES.includes(candidate.route)) reasons.push(`route: "${candidate.route}" is not safe or risk`);
     return { ok: reasons.length === 0, reasons };
 }
