@@ -51,9 +51,16 @@ describe('readReducedMotion', () => {
 });
 
 describe('EnemyFramePlayer', () => {
-    it('mounts one layer per cell in the set', () => {
+    it('mounts one layer per cell in the set, so no cell decodes mid-clip', () => {
         render(<EnemyFramePlayer artKey={SYNTHETIC_FRAME_KEY} frameSet={SYNTHETIC_FRAME_SET} />);
-        expect(screen.getByTestId('enemy-frame-player')).toBeTruthy();
+        const root = screen.getByTestId('enemy-frame-player');
+        expect(root.children).toHaveLength(SYNTHETIC_FRAME_SET.frames.length);
+        // Exactly one of them is the opaque, active layer.
+        const opaque = root.children.filter((child: unknown) => {
+            const style = (child as { props?: { style?: unknown } }).props?.style;
+            return JSON.stringify(style ?? '').includes('"opacity":1');
+        });
+        expect(opaque).toHaveLength(1);
     });
 
     it('holds the resting cell and plays nothing under reduced motion', () => {

@@ -38,7 +38,7 @@ import { describe, it, expect } from '@jest/globals';
 import { promises as fs } from 'fs';
 import * as path from 'path';
 
-import { linking } from '@/lib/platform/router';
+import { ROUTE_TABLE, linking } from '@/lib/platform/router';
 
 const APP_ROOT = path.resolve(__dirname, '..', '..', 'app');
 const ROOT_LAYOUT = path.join(APP_ROOT, '_layout.tsx');
@@ -184,6 +184,38 @@ describe('layout registration: every linking entry names a registered screen', (
         expect(typeof tabs).toBe('object');
         const unregistered = Object.keys(tabs.screens).filter((name) => !tabNames.has(name));
         expect(unregistered).toEqual([]);
+    });
+});
+
+describe('layout registration: ROUTE_TABLE and linking describe the same routes', () => {
+    // `linking` is documented as mirroring `ROUTE_TABLE` exactly, and nothing
+    // checked it: a route added to one and not the other is navigable from
+    // code but dead from a URL, or the reverse, and both read as fine.
+    const screens = (linking as unknown as { config: { screens: LinkingScreens } }).config.screens;
+
+    /** Every screen name the linking config maps, root and tabs alike. */
+    function linkedScreenNames(): Set<string> {
+        const out = new Set<string>();
+        for (const [name, value] of Object.entries(screens)) {
+            if (typeof value === 'string') out.add(name);
+            else for (const nested of Object.keys(value.screens)) out.add(nested);
+        }
+        return out;
+    }
+
+    it('every ROUTE_TABLE screen is reachable from a URL', () => {
+        const linked = linkedScreenNames();
+        const missing = Object.values(ROUTE_TABLE)
+            .map((entry) => entry.screen)
+            .filter((screen) => !linked.has(screen));
+        expect(missing).toEqual([]);
+    });
+
+    it('every linked screen is in ROUTE_TABLE', () => {
+        const tabled = new Set(Object.values(ROUTE_TABLE).map((entry) => entry.screen));
+        // `index` is the root route; it has no ROUTE_TABLE segment of its own.
+        const orphans = [...linkedScreenNames()].filter((name) => name !== 'index' && !tabled.has(name));
+        expect(orphans).toEqual([]);
     });
 });
 
