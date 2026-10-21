@@ -278,6 +278,15 @@ test('the tree is not a declared npm workspace, and the root scripts reach it by
   }
 })
 
+test('this guard itself is wired into the root test suite', () => {
+  const pkg = JSON.parse(fs.readFileSync(path.join(REPO, 'package.json'), 'utf-8'))
+  assert.ok(
+    (pkg.scripts?.test ?? '').includes(SELF),
+    `package.json's "test" script does not run ${SELF} -- the guard would exist but npm test ` +
+      'would never execute it, so the boundary would be a file, not a check (A7)',
+  )
+})
+
 test('only the workflow that owns the path names the tree', () => {
   const dir = path.join(REPO, '.github', 'workflows')
   const offenders = fs
