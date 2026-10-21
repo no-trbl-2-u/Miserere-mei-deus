@@ -187,6 +187,19 @@ event-pool and layout files).
       Its constants are imported from `scripts/check-lessons.mjs` so lint and driver cannot drift. Six
       sightings in two days, three on PR #653 alone. Brief
       `plan/phases/phase_ML1_lessons_merge_driver.md` § ML1a. Requires nothing.
+- [ ] Phase BE1a — The attempt contract and the Worker (plotted by T, 2026-10-21): a new `backend/` workspace
+      holding a Cloudflare Worker with `POST`/`GET /v1/puzzle-attempts` behind a bearer token, the D1 schema as
+      numbered migrations, and the attempt contract (types plus validator) in `@mechanics`, tested in the Workers
+      runtime against a local D1. No deploy yet. Brief `plan/phases/phase_BE1_solve_time_backend.md` § BE1a. Requires nothing.
+- [ ] Phase BE1b — Live on Cloudflare (plotted by T, 2026-10-21) (attended): T mints the Cloudflare API token
+      and adds the repo secrets; the D1 database `miserere` is created, and `backend-deploy.yml` applies
+      migrations and deploys `miserere-api` on a push to `main` touching `backend/**`. Brief `plan/phases/phase_BE1_solve_time_backend.md` § BE1b.
+      Requires BE1a.
+- [ ] Phase BE1c — Preview builds post each attempt (plotted by T, 2026-10-21): each `/devpuzzle` attempt that
+      ends is posted once when dev tools are on and the `EXPO_PUBLIC_PUZZLE_API_*` env is set; a failure is
+      dropped with a dev warning; production never posts. Brief `plan/phases/phase_BE1_solve_time_backend.md` § BE1c. Requires BE1a.
+- [ ] Phase BE1d — `npm run puzzle:times` (plotted by T, 2026-10-21): per-candidate attempts, solve rate and
+      median solve time grouped by band, with `--solver` and `--json`. Brief `plan/phases/phase_BE1_solve_time_backend.md` § BE1d. Requires BE1a.
 - [ ] Phase AN1a — The enemy frame engine, the fallback and the dev route (plotted by T, 2026-10-21):
       a frame-set registry beside `ENEMY_ART_BY_KEY` keyed on `portraitAsset`, a reanimated frame player,
       and a dev route that plays a supplied sheet — with the registry **empty**, so every current enemy
@@ -982,6 +995,11 @@ See the status rows above; generate briefs on demand.
 > "reason not stated" — never invent one), and the resulting
 > commit/issue/phase-brief when available.
 
+- **2026-10-21** — actor: **T, attended session** (`/plot asap` from T's `/pitch`, branch
+  `loop/plot-BE1-solve-time-backend`). Action: **added Phases BE1a, BE1b, BE1c, BE1d** (the solve-time backend:
+  Workers + D1 contract and Worker, attended deploy, preview-build posting, `puzzle:times`) directly above
+  AN1a. Confirmed T's request: yes (`/pitch` exit answer "/plot asap"). Reason: T's solves of the thirty start
+  now and HP4f/HP4g read the times. Resulting commit: this one; brief `plan/phases/phase_BE1_solve_time_backend.md`.
 - **2026-10-20** — actor: **T, attended session** (`/plot anytime` from T's `/pitch`, branch
   `loop/plot-UP1-card-upgrades`). Action: **added Phases UP1a, UP1b, UP1c, UP1d, UP1e, UP1f, UP1g, UP1h** (card
   upgrades: Blood Price names, the upgrade law, the first rare, rest/anvil/elite grant paths, the measured report,
@@ -1541,6 +1559,7 @@ See the status rows above; generate briefs on demand.
 - **2026-10-20** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-ML1-lessons-merge-driver`). Action: **added Phases ML1a and ML1b** directly above DL1b. Reason: git's three-way merge keeps both copies of a bumped lesson row with no conflict markers, so nothing prompts a human and `check-lessons` goes red on the receiving branch — six sightings on 2026-10-19/20, three of them on PR #653, each resolved by keeping both rows and each undone by hand. ML1a is the driver for `lessons.md` and `NEEDS_T.md`; ML1b extends the idea to the build plan, split out because its rows are ordered rather than keyed. Brief `plan/phases/phase_ML1_lessons_merge_driver.md`.
 - **2026-10-21** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-AN1-enemy-animation`). Action: **added Phases AN1a–AN1d** directly above the first open row, in T's own sequence: the engine and a dev route first, then the enemy's turn animated, then three states per enemy once T has seen it work, then the art pipeline generating the sheets. Records **D97**: a sprite sheet for an ALREADY-USED enemy is enhancement rather than content creation, so AN1d may run as ordinary `/march` ticks — narrowly, with the used-enemy test as the guard; anything outside that set stays owner-only under D88/D37. Brief `plan/phases/phase_AN1_enemy_animation.md`.
 - **2026-10-21** — actor: **T, attended session** (`/plot anytime`, branch `loop/plot-AD1-art-department`). Action: **added Phases AD1a and AD1b** after Phase UP1h, the last open row. Reason (T): shown that `rig-spritesheet.py` is Python living inside `axiomancer-mobile`, a JS/TS presentation-layer workspace whose verifier cannot check it and whose `assets/` tree is bundled into the app, T ruled a top-level `art-department` package that "can use any tooling/languages it wants". `anytime` because it blocks nothing: AN1a–AN1c are mobile-side engine work and AN1d extends `generate-art.mjs`, which is JavaScript and stays in the mobile package. Records **D98**: the tree is deliberately not an npm workspace, because `.easignore` makes a declared workspace unexcludable from the EAS archive. Brief `plan/phases/phase_AD1_art_department.md`.
+- **2026-10-21** — actor: **T, attended session** (`/plot` amendment, branch `loop/plot-AN1-amend-frame-contract`). Action: **amended the AN1 brief's A6 and added A6b**; no new rows, because AN1a already owns both and has not been built. Reason: a float-eye spritesheet prototyped in the same session measured two defects in the frame contract. (1) A6 fixed the anchor on the foot line, but the float-eye floats and its hover *is* the idle animation, so a body-tracking anchor would cancel the clip; A6 now declares an anchor **kind** (`foot-line` for a creature that stands, `centre` for one that floats) and fails a manifest naming neither. (2) A6 quoted `RECIPE` without `grayscale: true`, which it carries: run on the float-eye it flattens the corona from RGB (62, 61, 16) to a flat grey 56, and the corona flare is the whole read of the attack frame; a derived sheet also arrives with its source's grade already baked in. A6b now says grade exactly once, `--no-grade` for a derived set. Brief `plan/phases/phase_AN1_enemy_animation.md`.
 >
 ## Phase log (commit hashes)
 

@@ -23,13 +23,14 @@ name: pr-review
 # force-pushes a PR (D86); `scripts/loop-pr.test.mjs` pins all of it.
 #
 # Job `review` (RV1b) is the adversarial reviewer: after a green
-# `verify-gate`, on every open, non-draft, same-repo PR (D95; through RV2
+# `verify-gate`, on every open, non-draft, same-repo PR that is not a plan
+# (D95; plans skipped since T, 2026-10-21, dispatch still reviews one; through RV2
 # only `loop:pr` and `plot`), one Claude run of `skills/review.md` posts
 # inline MED/HIGH findings and one `## Review verdict` comment, and may
 # raise (never lower) the `risk:*` label. The ruleset requires
 # `verify-gate` only; a not-pass is a comment that job `merge` reads.
 # `review-wanted` decides on a plain runner first (`scripts/pr-review.mjs`:
-# drafts, seeded drafts, once per head, and once per diff, phase RV2), so a
+# drafts, seeded drafts, plans, once per head, and once per diff, phase RV2), so a
 # label-only event costs no Claude run, and a merge of main or a rebase
 # that leaves the PR's diff unchanged costs none either. At most two
 # passes per PR (T, 2026-10-20): the second runs only when a not-pass was
