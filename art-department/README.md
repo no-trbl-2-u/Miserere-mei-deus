@@ -26,6 +26,19 @@ Those two sentences are the whole contract. They are the same boundary the repo
 puts on `Potential Assets/` (AGENTS.md rule 9), for the same reason: a boundary
 nobody checks is a boundary that leaks.
 
+So both sentences are checked, by `scripts/art-department-sealed.test.mjs` in
+the root suite (`npm test`). It fails if any tracked file outside this tree
+resolves a path into it, if the mobile build config so much as names the tree,
+if the tree becomes a declared workspace or is reached through
+`npm --workspace`, if `.easignore` stops excluding `/art-department/`, or if a
+spritesheet master reappears under `axiomancer-mobile/assets/`. Naming the tree
+in prose, in a CI path filter, or in a root script that invokes a tool **by
+path** is the sanctioned access and does not trip it; so is a tool in here
+reading a shipped painting out of `axiomancer-mobile/assets/` as its source —
+that direction is inside-out. A reference that genuinely must resolve inward
+goes in the guard's `RESOLVERS_ALLOWED` map with its reason, so the exception
+stays a list rather than a habit.
+
 ## Not an npm workspace, deliberately
 
 `art-department/` is **absent** from the root `package.json` `workspaces` array,
