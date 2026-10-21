@@ -15,15 +15,26 @@ import { clipDurationMs } from '../framePlayback';
 
 describe('isEnemyAttackBeat', () => {
     it('is the beat when the enemy damaged the player', () => {
-        expect(isEnemyAttackBeat({ playerDamage: 7, threatFired: false })).toBe(true);
+        expect(isEnemyAttackBeat({ playerDamage: 7, threatFired: false, intentDamage: 7 })).toBe(true);
     });
 
     it('is the beat when the threat fired and was denied — the swing still happened', () => {
-        expect(isEnemyAttackBeat({ playerDamage: 0, threatFired: true })).toBe(true);
+        expect(isEnemyAttackBeat({ playerDamage: 0, threatFired: true, intentDamage: 6 })).toBe(true);
+    });
+
+    it('is NOT the beat when the threat that fired was never an attack', () => {
+        // A heal, a buff, a cleanse: the enemy's turn, but not its swing. The
+        // same gate the pane's DENIED flourish already uses, so the two cannot
+        // disagree about what an attack is.
+        expect(isEnemyAttackBeat({ playerDamage: 0, threatFired: true, intentDamage: 0 })).toBe(false);
+    });
+
+    it('is the beat when the player took damage from something that fired no threat', () => {
+        expect(isEnemyAttackBeat({ playerDamage: 3, threatFired: false, intentDamage: 0 })).toBe(true);
     });
 
     it('is not the beat when the resolution was the player\'s own', () => {
-        expect(isEnemyAttackBeat({ playerDamage: 0, threatFired: false })).toBe(false);
+        expect(isEnemyAttackBeat({ playerDamage: 0, threatFired: false, intentDamage: 6 })).toBe(false);
     });
 });
 

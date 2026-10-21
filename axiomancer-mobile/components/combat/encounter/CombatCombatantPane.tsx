@@ -505,7 +505,9 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
         // read one stream once. The counter is all that happens here: when and
         // whether an attack clip plays is `useEnemyAttackClip`'s call, and an
         // enemy with no frame set spends this on nothing.
-        if (isEnemyAttackBeat({ playerDamage: playerDmg, threatFired })) {
+        if (isEnemyAttackBeat({
+            playerDamage: playerDmg, threatFired, intentDamage: enemy.intent.damage,
+        })) {
             setAttackBeat((n) => n + 1);
         }
         // The ledgers and the enemy's STAGE beat each float the word that moved
