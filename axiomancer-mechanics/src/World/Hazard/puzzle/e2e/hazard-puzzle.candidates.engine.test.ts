@@ -1,8 +1,11 @@
 /**
- * Hazard puzzle candidates (HP4 A3, A4): a candidate carries a label, an
+ * Hazard puzzle candidates (HP4 A3-A7): a candidate carries a label, an
  * intended band and one nominated route; it is a valid layout drawn only
  * from the puzzle card pool, solvable on its route inside the solver
- * budget, and never held to the band its solver count gives.
+ * budget, and never held to the band its solver count gives. The authored
+ * thirty are ten per band with distinct labels across three or more
+ * regions; none is `forced` or `free` on its route, and their optional-card
+ * and losing-first-play counts each take four or more values.
  *
  * Fixture numbers are the demo cliff's (`hazard-puzzle.library.ts`): hand
  * LEAP, HAUL, SURE FOOTING, SCRAMBLE over a red, a blue and a purple die,
@@ -14,11 +17,14 @@ import { describe, expect, it } from 'vitest';
 
 import { auditHazardPuzzleCandidate, hazardPuzzleCandidateSetProblems } from '../hazard-puzzle.candidate-audit';
 import { getHazardPuzzleCandidate, HAZARD_PUZZLE_CANDIDATES } from '../hazard-puzzle.candidates';
-import { auditHazardPuzzleRoute } from '../hazard-puzzle.band';
+import { auditHazardPuzzleRoute, hazardPuzzleBandOf } from '../hazard-puzzle.band';
 import { getHazardPuzzleLayout, HAZARD_PUZZLE_LIBRARY } from '../hazard-puzzle.library';
+import { hazardPuzzleCardReport } from '../hazard-puzzle.report';
+import { solveHazardPuzzle } from '../hazard-puzzle.solver';
 import { HAZARD_PUZZLE_CARD_POOL } from '../hazard-puzzle.tuning';
 import type { HazardPuzzleCandidate } from '../hazard-puzzle.types';
-import { validateHazardPuzzleCandidate } from '../hazard-puzzle.validate';
+import { HAZARD_PUZZLE_REGIONS, validateHazardPuzzleCandidate } from '../hazard-puzzle.validate';
+import { HAZARD_LIBRARY } from '../../hazard.content';
 
 const CLIFF = getHazardPuzzleLayout('demo-cliff-easy');
 
@@ -129,6 +135,69 @@ describe('the candidate set (A3, A4)', () => {
             expect(audit.problems).toEqual([]);
             expect(audit.solution?.overBudget).toBe(false);
             expect(audit.solution?.winningOutcomes).toBeGreaterThan(0);
+        });
+    }
+});
+
+describe('the thirty (A5)', () => {
+    it('holds ten candidates per intended band', () => {
+        const count = (band: string): number => HAZARD_PUZZLE_CANDIDATES.filter((c) => c.intendedBand === band).length;
+        expect([count('easy'), count('medium'), count('hard')]).toEqual([10, 10, 10]);
+        expect(HAZARD_PUZZLE_CANDIDATES).toHaveLength(30);
+    });
+
+    it('gives every candidate a distinct, non-empty label', () => {
+        const labels = HAZARD_PUZZLE_CANDIDATES.map((c) => c.label.trim());
+        expect(labels.every((l) => l.length > 0)).toBe(true);
+        expect(new Set(labels).size).toBe(labels.length);
+    });
+
+    it('spans at least three of the four Act 1 regions', () => {
+        const regions = new Set(HAZARD_PUZZLE_CANDIDATES.map((c) => c.region));
+        for (const r of regions) expect(HAZARD_PUZZLE_REGIONS).toContain(r);
+        expect(regions.size).toBeGreaterThanOrEqual(3);
+    });
+});
+
+describe('decision pressure on the nominated route (A6)', () => {
+    const reports = HAZARD_PUZZLE_CANDIDATES.map((c) => ({ c, report: hazardPuzzleCardReport(c, c.route) }));
+
+    for (const { c, report } of reports) {
+        it(`${c.id} is neither forced nor free on ${c.route}, with a first play that loses`, () => {
+            expect(report.overBudget).toBe(false);
+            expect(report.pressure.finding).toBeNull();
+            expect(report.pressure.firstPlays.losing).toBeGreaterThan(0);
+            expect(report.pressure.firstPlays.winning).toBeGreaterThan(0);
+        });
+    }
+
+    it('spreads the optional-card count and the losing-first-play count over four values or more', () => {
+        const optional = new Set(reports.map(({ report }) => report.pressure.optional));
+        const losing = new Set(reports.map(({ report }) => report.pressure.firstPlays.losing));
+        expect(optional.size).toBeGreaterThanOrEqual(4);
+        expect(losing.size).toBeGreaterThanOrEqual(4);
+    });
+});
+
+describe('pool cards and live copy only (A7)', () => {
+    for (const c of HAZARD_PUZZLE_CANDIDATES) {
+        it(`${c.id} draws only pool cards and reuses a live hazard's copy`, () => {
+            for (const id of [...c.hand, ...c.reserve]) expect(HAZARD_PUZZLE_CARD_POOL).toContain(id);
+            expect(c.unlocks).toEqual([]);
+            const hazard = HAZARD_LIBRARY.find((h) => h.id === c.hazardId);
+            expect(hazard).toBeDefined();
+            expect(c.title).toBe(hazard?.title);
+        });
+    }
+});
+
+describe('declared bands record what the solver measures', () => {
+    for (const c of HAZARD_PUZZLE_CANDIDATES) {
+        it(`${c.id} declares the solver's band on both routes`, () => {
+            for (const route of ['safe', 'risk'] as const) {
+                const s = solveHazardPuzzle(c, route);
+                expect(hazardPuzzleBandOf(s.winningOutcomes, s.bestSurplus)).toBe(c.bands[route]);
+            }
         });
     }
 });
