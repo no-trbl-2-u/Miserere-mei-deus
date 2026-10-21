@@ -4,8 +4,12 @@
 // Whether the reviewer runs on a PR (phase RV1b,
 // `plan/phases/phase_RV1_pr_review_pipeline.md` A5; every same-repo PR
 // since D95). The `review` job in `pr-review.yml` starts a Claude run only
-// when this says go, so the draft rule, the seeded-draft rule and the
-// once-per-head rule live in one tested function instead of a workflow `if`.
+// when this says go, so the draft rule, the seeded-draft rule, the plan
+// rule and the once-per-head rule live in one tested function instead of a
+// workflow `if`. A plan PR (`plot`, `review:plan-only`, or a `plot:`/`plan:`
+// title) is never reviewed on `pull_request`: T reads plans, the merge job
+// never merges them, and a code reviewer has nothing to find in one (T,
+// 2026-10-21). A dispatch still reviews one on demand.
 //
 // Why a script and not the event payload: `gh pr create --label ...` fires
 // `opened` and one `labeled` event per label, each cancelling the gate run
@@ -125,14 +129,16 @@ export function diffDigest(patch) {
 /**
  * Whether to review this PR now.
  *
- * @param {{ state: string, isDraft: boolean, isCrossRepository: boolean, labels: string[], head: string, digest?: string | null, comments: string[], dispatch?: boolean }} pr the PR's live facts; `comments` are bodies, `digest` is the head's `diffDigest` (null when unavailable).
+ * @param {{ state: string, isDraft: boolean, isCrossRepository: boolean, labels: string[], title?: string, head: string, digest?: string | null, comments: string[], dispatch?: boolean }} pr the PR's live facts; `comments` are bodies, `digest` is the head's `diffDigest` (null when unavailable).
  * @returns {{ go: boolean, reason: string, exhausted?: boolean, reuse?: boolean }} the decision and why; `exhausted` when the pass cap stopped it; `reuse` when an earlier verdict on the same diff stands for this head (the merge job reads it).
  * @example reviewWanted({ state: 'OPEN', isDraft: false, isCrossRepository: false, labels: ['loop:pr'], head: 'a', comments: [] }).go // true
  */
-export function reviewWanted({ state, isDraft, isCrossRepository, labels, head, digest = null, comments, dispatch = false }) {
+export function reviewWanted({ state, isDraft, isCrossRepository, labels, title = '', head, digest = null, comments, dispatch = false }) {
   if (isCrossRepository) return { go: false, reason: 'fork head: the reviewer never runs on one' }
   if (state !== 'OPEN') return { go: false, reason: `PR is ${state.toLowerCase()}` }
   if (dispatch) return { go: true, reason: 'dispatched' }
+  const plan = labels.find((l) => PLAN_LABELS.includes(l)) ?? (PLAN_TITLE.test(title ?? '') ? 'title' : null)
+  if (plan) return { go: false, reason: `plan PR (${plan}): T reads plans, the reviewer does not` }
   const seed = labels.find((l) => DISPATCH_ONLY_LABELS.includes(l))
   if (seed) return { go: false, reason: `${seed}: reviewed by dispatch only` }
   if (isDraft) return { go: false, reason: 'draft' }
@@ -276,12 +282,13 @@ async function main() {
     return
   }
   const view = JSON.parse(execFileSync('gh', ['pr', 'view', pr, '--repo', repo,
-    '--json', 'state,isDraft,isCrossRepository,labels,headRefOid,comments'], { cwd: ROOT, encoding: 'utf8' }))
+    '--json', 'state,isDraft,isCrossRepository,labels,title,headRefOid,comments'], { cwd: ROOT, encoding: 'utf8' }))
   const facts = {
     state: view.state,
     isDraft: view.isDraft,
     isCrossRepository: view.isCrossRepository,
     labels: view.labels.map((l) => l.name),
+    title: view.title,
     head: view.headRefOid,
     digest: prDigest(pr, repo),
     comments: view.comments.map((c) => c.body ?? ''),
