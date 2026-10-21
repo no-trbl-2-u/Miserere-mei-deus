@@ -200,6 +200,11 @@ describe('CombatCombatantPane — the enemy\'s turn animates (phase AN1b)', () =
         act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS * 4); });
         const framedEnemy = juiceCalls();
 
+        // The comparison below is only a guard if the frame engine actually
+        // ran on this second render — otherwise an enemy that never wires in
+        // `getEnemyFrameSet` at all would "preserve" shake/flash trivially.
+        expect(mockFramePlayerProps.length).toBeGreaterThan(0);
+
         // Same keys, same severities, same 100ms delay: the frame engine added
         // an animation, it did not retune one.
         expect(framedEnemy.shake).toEqual(staticEnemy.shake);
