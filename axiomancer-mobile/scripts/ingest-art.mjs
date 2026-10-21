@@ -47,6 +47,18 @@ export const RECIPE = {
   contrast: 1.08,
 }
 
+/**
+ * The grade, as one function, so every path that grades (this ingest and the
+ * frame-sheet split in generate-art) applies the same three steps in the same
+ * order.
+ */
+export function gradePipeline(pipeline) {
+  return pipeline
+    .grayscale()
+    .modulate({ brightness: RECIPE.brightness })
+    .linear(RECIPE.contrast, -(128 * RECIPE.contrast) + 128)
+}
+
 const RASTER = new Set(['.png', '.jpg', '.jpeg', '.webp', '.tif', '.tiff'])
 
 export function parseArgs(argv) {
@@ -157,12 +169,7 @@ async function main() {
         withoutEnlargement: true,
       })
     }
-    if (opts.grade) {
-      pipeline = pipeline
-        .grayscale()
-        .modulate({ brightness: RECIPE.brightness })
-        .linear(RECIPE.contrast, -(128 * RECIPE.contrast) + 128)
-    }
+    if (opts.grade) pipeline = gradePipeline(pipeline)
     const buffer = await pipeline.webp({ quality: opts.quality }).toBuffer()
     after += buffer.length
     written.push(path.relative(MOBILE, dest))

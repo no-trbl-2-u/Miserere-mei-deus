@@ -9,6 +9,7 @@
 
 import crypto from 'node:crypto'
 
+import { sheetClause, sheetSize, validateFrames } from './sheet.mjs'
 import { CATEGORY_RULES, NEGATIVE, PREAMBLE, STYLE_VERSION } from './style.mjs'
 
 /**
@@ -18,6 +19,8 @@ import { CATEGORY_RULES, NEGATIVE, PREAMBLE, STYLE_VERSION } from './style.mjs'
  * @property {string} subject   what the thing IS, one or two sentences
  * @property {string} [detail]  distinguishing marks, worn state, held objects
  * @property {string[]} [avoid] subject-specific negatives, beyond the standing ones
+ * @property {{cols:number, rows:number, poses?:string[]}} [frames] ask for one grid
+ *   sheet of animation frames instead of one figure (enemies only; see sheet.mjs)
  */
 
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
@@ -38,6 +41,7 @@ export function validateSpec(spec) {
   if (!spec.subject || String(spec.subject).trim().length < 12) {
     problems.push('subject must say what the thing is (12+ chars)')
   }
+  problems.push(...validateFrames(spec))
   return problems
 }
 
@@ -58,6 +62,7 @@ export function compile(spec) {
     CATEGORY_RULES[spec.category],
     `Subject: ${String(spec.subject).trim().replace(/\s+/g, ' ')}`,
     spec.detail ? `Detail: ${String(spec.detail).trim().replace(/\s+/g, ' ')}` : null,
+    spec.frames ? sheetClause(spec.frames) : null,
     `Avoid: ${avoid.join(', ')}.`,
   ].filter(Boolean).join('\n\n')
 
@@ -69,6 +74,7 @@ export function compile(spec) {
     // The hash identifies the exact text without storing it twice, and lets a
     // later run tell "same intent, new model" from "prompt was edited".
     promptHash: crypto.createHash('sha256').update(prompt).digest('hex').slice(0, 16),
+    ...(spec.frames ? { frames: spec.frames, size: sheetSize(spec.frames) } : {}),
   }
 }
 
