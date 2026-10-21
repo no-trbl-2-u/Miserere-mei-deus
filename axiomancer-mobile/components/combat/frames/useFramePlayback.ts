@@ -12,7 +12,7 @@
  * a picture again, exactly as it is today — not a frozen first cell, and never
  * a blank.
  */
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useLayoutEffect, useState } from 'react';
 import {
     Easing, cancelAnimation, runOnJS, useAnimatedReaction, useSharedValue, withRepeat, withTiming,
 } from 'react-native-reanimated';
@@ -68,7 +68,12 @@ export function useFramePlayback({
 
     const { frames, loop, fps, rest } = clip;
 
-    useEffect(() => {
+    // Layout effect, not a passive one: `index` starts at `rest` so a clip
+    // change mid-mount doesn't render a blank frame for a tick, but that
+    // means this effect's correction to frame 0 must land before the commit
+    // paints — a passive effect lands after, flashing the stale/rest cell on
+    // exactly the attack beat it must never show.
+    useLayoutEffect(() => {
         if (still) {
             cancelAnimation(progress);
             progress.value = rest;
