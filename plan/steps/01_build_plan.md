@@ -355,6 +355,7 @@ event-pool and layout files).
 - [ ] Phase FM1c — The README and the canvas (plotted by T, 2026-10-21): generated `docs/feature-map/README.md` (one line per feature, then the anomaly list) and `Map.canvas` (JSON Canvas, grouped layout, two edge colours, pitch-flag node colour). Brief `plan/phases/phase_FM1_feature_map.md` § FM1c. Requires FM1b.
 - [ ] Phase FM1d — The reachability drive (plotted by T, 2026-10-21): `e2e:feature-map` drives a fresh save to every non-dev route the map marks reachable, fails on a mismatch either way, and lists each player-flow edge as crossed or uncrossed. Brief `plan/phases/phase_FM1_feature_map.md` § FM1d. Requires FM1b.
 - [ ] Phase FM1e — Into the vault (plotted by T, 2026-10-21): `/vault` copies the canvas to `vault/Feature Map.canvas` and the feature table to `vault/02 Features.md`, overwriting only those two files. Brief `plan/phases/phase_FM1_feature_map.md` § FM1e. Requires FM1c.
+- [ ] Phase AN1e — The float-eye is installed, and animates (plotted by T, 2026-10-21): the row the AN1 chain never had — A1–A8 are satisfiable with an empty registry, AN1b/AN1c leave an enemy with no frame set untouched, and AN1d's generator calls a never-executed paid backend, so all four could ship green with the float-eye as static as today. The existing 24-frame sheet is split by an `art-department/` tool into per-cell WebP, ingested `--no-grade` because it is derived (A6b), and registered against `float-eye`; per-cell rather than the sheet file because D98's guard forbids the app resolving a path into `art-department/`, where #720 already put the masters. Measured cost: 24 cells, 149.5 KB, mean 6378 B/frame against 23624 B static. No model call, nothing spent. Brief `plan/phases/phase_AN1_enemy_animation.md` § AN1e. Requires AN1c, AD1a.
 - [x] (#569) Phase CR1a — The combat route and its gate, map and labyrinth (plotted by T, 2026-10-15): a global `CombatGate` starts each fight and pushes `/combat-encounter`, now the live fight route (`fullScreenModal`, no back or swipe out, a reload replays the fight onto it); exploration and labyrinth stop rendering combat; the pre-v1 dev sandbox and its tests are deleted and every tool that used it reaches a fight through `/dev` instead. Brief `plan/phases/phase_CR1_combat_route.md` § CR1a. Requires nothing.
 - [x] (#573) Phase CR1b — Delete the overlay era, labyrinth round-trip e2e (plotted by T, 2026-10-15): `EncounterModalOverlay`, its chain bars and rivets, `inEncounterModal` tab hiding and locking, `fightOnScreen` and the `StatusCard` skip deleted, proven by a grep; a new labyrinth combat round-trip e2e. Brief `plan/phases/phase_CR1_combat_route.md` § CR1b. Requires CR1a.
 - [skipped] Phase CR1c — Combat drag numbers before and after the route (plotted by T, 2026-10-15) (attended): Sentry `combat.drag.*` p75 per kind from T's preview APK, before CR1a and after CR1b, in `docs/perf/combat-drag-baseline.md`. Brief `plan/phases/phase_CR1_combat_route.md` § CR1c. Requires CR1b. Skipped by T, 2026-10-15: Sentry holds no performance data from before the route (PF3 tracing landed the same day and no APK with it was played), and PF4 had already removed the map cost the route was expected to change.
@@ -1000,6 +1001,18 @@ See the status rows above; generate briefs on demand.
 > "reason not stated" — never invent one), and the resulting
 > commit/issue/phase-brief when available.
 
+- **2026-10-21** — actor: **T, attended session** (`/plot`, branch `loop/plot-AN1e-float-eye-installed`).
+  Action: **added Phase AN1e** after Phase FM1e, the last open row, and **added acceptance A9, A10 and
+  A11** to the existing AN1 brief. Confirmed T's request: yes. Reason (T): "I want, once the animation
+  phases are done, to see the floating eye animated" — which the chain as plotted could not deliver:
+  A1–A8 are satisfiable with an empty registry by design, AN1b and AN1c explicitly leave an enemy with
+  no frame set untouched, and AN1d's generator calls `gpt-image-2` through a backend the AN1 brief
+  itself records as never executed, on an account with no credits. `anytime` because its `Requires`
+  (AN1c, AD1b) are far from met, so position does not affect pickability. Brief
+  `plan/phases/phase_AN1_enemy_animation.md` § AN1e. The asset it installs is PR #720, whose
+  `assets:check` failure moved the masters to `art-department/masters/enemies/` ahead of AD1b; AD1b
+  still owns the `.easignore` entry and the boundary guard, and its row's "the four `anim/` master
+  files leave `axiomancer-mobile/assets/`" is now already true.
 - **2026-10-21** — actor: **T, attended session** (`/plot anytime`, branch `loop/plot-FM1-feature-map`). Action: **added Phases FM1a, FM1b, FM1c, FM1d, FM1e** (the feature map: every feature, how they connect, which still need a pitch) after Phase AD1b, the last open row. Confirmed T's request: yes. Reason (T): "map all the features in the game, how they connect, and ultimately, what still needs a pitch session", without numbers or per-feature detail. Brief `plan/phases/phase_FM1_feature_map.md`.
 - **2026-10-21** — actor: **T, attended session** (`/plot asap` from T's `/pitch`, branch
   `loop/plot-BE1-solve-time-backend`). Action: **added Phases BE1a, BE1b, BE1c, BE1d** (the solve-time backend:

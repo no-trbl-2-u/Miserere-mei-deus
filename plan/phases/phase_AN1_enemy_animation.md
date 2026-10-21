@@ -67,7 +67,7 @@ a test over every key in `ENEMY_ART_BY_KEY` shows the static fallback while no f
     bob; anchoring on the feet does not.
   - `centre` is the kind for a creature that floats, where **no foot line exists** and the hover *is* the
     idle animation — an anchor that tracked the body would cancel the very motion the clip is for. The
-    float-eye is the case: `assets/images/enemies/anim/float-eye.sheet.json` declares
+    float-eye is the case: `art-department/masters/enemies/float-eye.sheet.json` declares
     `anchor: {kind: "centre"}` and its rig holds that point fixed by construction, every pose being an
     offset from it.
   - A manifest naming neither kind fails, the same way A5 fails a count mismatch. A single universal rule
@@ -93,8 +93,32 @@ a test over every key in `ENEMY_ART_BY_KEY` shows the static fallback while no f
 - **A8** `enemies/index.ts`'s header comment stops asserting the retired 1:1 art law and says what is
   actually true: one *or more* assets per enemy, bindings preserved.
 
+- **A9 (the first enemy is actually installed)** `float-eye` has a frame-set registry entry and animates
+  in live combat. The acceptance is behavioural, not structural: a test drives the encounter pane for
+  `float-eye` and asserts the frame player mounts and advances, where the same test for an enemy with no
+  entry asserts the static image — so "the registry is wired" and "an enemy animates" cannot pass
+  separately. A1–A8 build an engine that is allowed to have nothing in it; A9 is the statement that
+  stops that being the shipped state. `float-eye` passes D97's used-enemy test: `enemy-float-eye` is in
+  `enemy.library.ts`'s roster with `portraitAsset: 'float-eye'`, and `float-eye` is a key of
+  `ENEMY_ART_BY_KEY`.
+- **A10 (cells are shipped, the master is not)** What the app loads is **per-cell WebP**, one file per
+  frame, produced from the master by a tool in `art-department/` and ingested with `--no-grade` per A6b
+  because this set is derived. The 2048x768 master PNG is a build input and never enters
+  `axiomancer-mobile/assets/`. This is not a preference. The master already lives in
+  `art-department/masters/enemies/`, because `scripts/asset-provenance.test.mjs` fails any file under
+  `assets/images` that no registry reaches - correctly, since an unregistered file in a bundled tree is
+  dead weight (it failed #720 on exactly that, and the masters moved rather than the test bending).
+  AD1b then lands D98's guard that nothing in the repository resolves a path into that tree, so a
+  registry entry pointing at the sheet file would fail that guard the day AD1b merged. Per-cell is also what A1's "ordered frame list" already asks for.
+- **A11 (the bundle cost is a number)** The phase records the measured per-frame and per-set size against
+  the static image it adds to, and a test asserts no cell exceeds a recorded ceiling, so a later
+  regenerated set cannot quietly triple. Measured on the existing sheet at `RECIPE` q44: 24 cells,
+  149.5 KB total, mean 6378 B, max 9020 B, against 23624 B for `float-eye.webp` — 6.5x, +126 KB for one
+  enemy. This closes AN1's own "Bundle cost" follow-up, which asked for a number rather than a feeling.
+
 Measure: the A2 enumeration test green with an empty registry; the A5 fixture matrix green; the dev route
-plays a sheet; `npm run verify -w axiomancer-mobile` green.
+plays a sheet; the float-eye animates in a live encounter test while an unregistered enemy still renders
+its static image; `npm run verify -w axiomancer-mobile` green.
 
 ## Scope
 
@@ -103,6 +127,8 @@ plays a sheet; `npm run verify -w axiomancer-mobile` green.
 - `axiomancer-mobile/components/combat/encounter/CombatCombatantPane.tsx`: in AN1b only.
 - `axiomancer-mobile/app/<dev route>/`: the harness (A7).
 - `axiomancer-mobile/scripts/`: in AN1d only.
+- `art-department/`: in AN1e only — the sheet splitter. No app code lives there (D98).
+- `axiomancer-mobile/assets/images/enemies/anim/float-eye/`: in AN1e only — the shipped per-cell WebP.
 - Not touched: the FX event vocabulary, the engine, `enemy.library.ts`, the existing recoil/flash/squash
   animations, any timing or colour value outside the new component.
 
@@ -141,6 +167,24 @@ None. Frames are assets and a manifest; nothing is persisted and no save reads t
   ingest happen locally after one generation call.
 - **A dev route, because "T sees it work" is an acceptance** (A7), and the repo already has three.
 - **Slot: asap.** T asked now, it blocks no open row, and AN1b/AN1c/AN1d all wait on AN1a.
+- **An engine with an empty registry is not what T asked for** (A9). T's words, attended 2026-10-21:
+  "I want, once the animation phases are done, to see the floating eye animated." A1–A8 are
+  deliberately satisfiable with nothing installed, AN1b and AN1c explicitly leave an enemy with no
+  frame set untouched, and AN1d builds a generator that calls `gpt-image-2` through
+  `backends/openai.mjs` — code this brief already notes has never been executed, on an account with
+  no credits. All four rows could therefore ship green with the float-eye as static as it is today.
+  AN1e is the row that makes the stated outcome an acceptance rather than an expectation.
+- **Per-cell WebP, not the sheet file** (A10), forced by D98 rather than chosen. AD1b lands the guard
+  that nothing in the repository resolves a path into `art-department/`, and moves the masters there;
+  a `require()` of `float-eye.sheet.webp` would break on the day AD1b merged. The split happens in
+  `art-department/` and emits into the app's asset tree, which is the direction D98 permits.
+- **AN1e requires AD1a, not just AN1c.** The splitter is art tooling and belongs in `art-department/`,
+  which AD1a creates; writing it inside `axiomancer-mobile` would mean moving it immediately after.
+  It does **not** wait on AD1b: #720 already landed the masters outside the bundled tree, so AD1b's
+  remaining work - the `.easignore` entry and the boundary guard - neither blocks nor is blocked by
+  the split. AD1a requires nothing, so this adds no wait to the AN1 chain.
+- **The set is derived, so it ingests with `--no-grade`** (A6b). Its cells descend from an already
+  graded painting; the full `RECIPE` would grade them twice and greyscale the corona.
 
 ## Tests matrix
 
@@ -217,13 +261,34 @@ It **refuses** an id that fails D97's used-enemy test, and says so rather than g
 Measure: a dry run compiles a sheet request for a used enemy and refuses an unused one by name; a fixture
 grid splits to the manifest's cell count; `npm run art:test` green.
 
+### AN1e — The float-eye is installed, and animates (Size: M)
+
+Closes A9, A10, A11. Requires AN1c and AD1a. Attended: no — D97 makes a used enemy's sheet
+enhancement, and this row generates no art at all: it installs one that already exists.
+
+The payoff row. `art-department/masters/enemies/float-eye.sheet.png` (landed by #720) is split by an
+`art-department/` tool into 24 per-cell WebP, ingested `--no-grade`, and registered against
+`float-eye`. Its manifest already declares `anchor: {kind: "centre"}` per A6 and names its clips
+`idle` / `struck` / `attacking`, which is AN1c's vocabulary exactly, so this is a registry entry and
+a split, not a remap. No model is called and nothing is spent.
+
+Measure: an encounter test for `float-eye` shows the frame player mounting and advancing while the
+same test for an unregistered enemy shows the static image; reduced motion holds the resting frame;
+no cell exceeds the recorded ceiling; `npm run verify -w axiomancer-mobile` green.
+
 ## Follow-ups (not in this phase)
 
 - **A smoke test for the OpenAI backend.** `backends/openai.mjs` defaults to `ART_MODEL=gpt-image-2` and
   its own comment admits this code has never called it. Before AN1d is trusted, one keyed call should
   prove the request shape. T supplies the key; nothing in this phase spends.
-- **Bundle cost.** N frames per enemy where there is now one image, at WebP q44 / ≤640px. AN1a should
-  record the per-frame size it measures so AN1c and AN1d can be judged against a number rather than a
-  feeling.
+- ~~**Bundle cost.**~~ Closed by A11, measured on the real sheet: 24 cells at q44 cost 149.5 KB against
+  23624 B for the static image, mean 6378 B per frame. 6.5x for one enemy is the number AN1c, AN1d
+  and AN1e are judged against.
+- **AN1d's first sheet is no longer the only path to a working animation.** AN1e proves the engine end
+  to end on a free, already-rigged asset, so the keyed smoke test above gates AN1d's *generator*
+  rather than gating whether anything animates at all. Whether the other two enemies are rigged from
+  their paintings the way the float-eye was, or generated, is a question for AN1d and is not answered
+  here: the rig exploited a composition the float-eye happens to have — an eye floating in a black
+  disc, where a moved layer's seam is black on black — and it does not generalise.
 - **The player's own frames.** The player portrait is static too; whether the player animates is a
   separate design question this phase does not raise.
