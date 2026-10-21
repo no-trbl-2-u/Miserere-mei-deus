@@ -6,252 +6,900 @@
       "name": "Cards",
       "kind": "engine-area",
       "group": "engine",
-      "source": "axiomancer-mechanics/src/Cards"
+      "source": "axiomancer-mechanics/src/Cards",
+      "named": true,
+      "reachable": {
+        "value": true,
+        "source": "coupling path from a reachable route: route:index -> area:Cards"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, ..."
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mechanics/src/CLI/e2e/cli.docs-examples.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/dev-tools.engine.test.ts, axiomancer-mechanics/src/Cards/card-rules.test.ts, ..."
+      },
+      "needsPitch": {
+        "value": false,
+        "missing": null,
+        "source": "braindump/2026-10-15-hazard-fixed-puzzle.md"
+      }
     },
     {
       "id": "area:Character",
-      "name": "Character",
+      "name": "VITAE and stats",
       "kind": "engine-area",
       "group": "engine",
-      "source": "axiomancer-mechanics/src/Character"
+      "source": "axiomancer-mechanics/src/Character",
+      "named": true,
+      "reachable": {
+        "value": true,
+        "source": "coupling path from a reachable route: route:index -> area:Character"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, ..."
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mechanics/src/CLI/e2e/dev-tools.engine.test.ts, axiomancer-mechanics/src/Cards/e2e/blood-price.engine.test.ts, axiomancer-mechanics/src/Cards/e2e/card-lanes.engine.test.ts, ..."
+      },
+      "needsPitch": {
+        "value": false,
+        "missing": null,
+        "source": "braindump/2026-10-15-hazard-fixed-puzzle.md"
+      }
     },
     {
       "id": "area:Combat",
-      "name": "Combat",
+      "name": "A fight",
       "kind": "engine-area",
       "group": "engine",
-      "source": "axiomancer-mechanics/src/Combat"
+      "source": "axiomancer-mechanics/src/Combat",
+      "named": true,
+      "reachable": {
+        "value": true,
+        "source": "coupling path from a reachable route: route:index -> area:Combat"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, ..."
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mechanics/src/CLI/e2e/cli.docs-examples.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/combat.cli.engine.test.ts, axiomancer-mechanics/src/Cards/e2e/blood-price.engine.test.ts, ..."
+      },
+      "needsPitch": {
+        "value": false,
+        "missing": null,
+        "source": "braindump/2026-10-15-hazard-fixed-puzzle.md"
+      }
     },
     {
       "id": "area:Effects",
       "name": "Effects",
       "kind": "engine-area",
       "group": "engine",
-      "source": "axiomancer-mechanics/src/Effects"
+      "source": "axiomancer-mechanics/src/Effects",
+      "named": false,
+      "reachable": {
+        "value": true,
+        "source": "coupling path from a reachable route: route:index -> area:Effects"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, ..."
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mechanics/src/Cards/e2e/card-upgrades.engine.test.ts, axiomancer-mechanics/src/Cards/e2e/cards-sandbox.engine.test.ts, axiomancer-mechanics/src/Character/e2e/equipment-loadout.engine.test.ts, ..."
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Effects\")",
+        "source": null
+      }
     },
     {
       "id": "area:Enemy",
-      "name": "Enemy",
+      "name": "The foes",
       "kind": "engine-area",
       "group": "engine",
-      "source": "axiomancer-mechanics/src/Enemy"
+      "source": "axiomancer-mechanics/src/Enemy",
+      "named": true,
+      "reachable": {
+        "value": true,
+        "source": "coupling path from a reachable route: route:index -> area:Enemy"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, ..."
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mechanics/src/CLI/e2e/cli.docs-examples.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/combat.cli.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/game.cli.route-audit.engine.test.ts, ..."
+      },
+      "needsPitch": {
+        "value": false,
+        "missing": null,
+        "source": "plan/2026-09-02-big-numbers-overhaul.decisions.md D8"
+      }
     },
     {
       "id": "area:Game",
       "name": "Game",
       "kind": "engine-area",
       "group": "engine",
-      "source": "axiomancer-mechanics/src/Game"
+      "source": "axiomancer-mechanics/src/Game",
+      "named": false,
+      "reachable": {
+        "value": true,
+        "source": "coupling path from a reachable route: route:index -> area:Game"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, ..."
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mechanics/src/CLI/e2e/dev-tools.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/fixture-boot.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/game.cli.engine.test.ts, ..."
+      },
+      "needsPitch": {
+        "value": false,
+        "missing": null,
+        "source": "plan/2026-09-25-refactor-strategy.decisions.md D77"
+      }
     },
     {
       "id": "area:Items",
       "name": "Items",
       "kind": "engine-area",
       "group": "engine",
-      "source": "axiomancer-mechanics/src/Items"
+      "source": "axiomancer-mechanics/src/Items",
+      "named": true,
+      "reachable": {
+        "value": true,
+        "source": "coupling path from a reachable route: route:index -> area:Items"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, ..."
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mechanics/src/CLI/e2e/dev-tools.engine.test.ts, axiomancer-mechanics/src/Character/e2e/character.engine.test.ts, axiomancer-mechanics/src/Character/e2e/equip-delta.engine.test.ts, ..."
+      },
+      "needsPitch": {
+        "value": false,
+        "missing": null,
+        "source": "braindump/2026-10-15-hazard-fixed-puzzle.md"
+      }
     },
     {
       "id": "area:Log",
       "name": "Log",
       "kind": "engine-area",
       "group": "engine",
-      "source": "axiomancer-mechanics/src/Log"
+      "source": "axiomancer-mechanics/src/Log",
+      "named": false,
+      "reachable": {
+        "value": true,
+        "source": "coupling path from a reachable route: route:index -> area:Log"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, ..."
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mechanics/src/CLI/e2e/io.engine.test.ts, axiomancer-mechanics/src/Log/e2e/logging.engine.test.ts, axiomancer-mobile/components/__tests__/DebugLogViewer.test.tsx, ..."
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Log\")",
+        "source": null
+      }
     },
     {
       "id": "area:NPCs",
       "name": "NPCs",
       "kind": "engine-area",
       "group": "engine",
-      "source": "axiomancer-mechanics/src/NPCs"
+      "source": "axiomancer-mechanics/src/NPCs",
+      "named": false,
+      "reachable": {
+        "value": true,
+        "source": "coupling path from a reachable route: route:index -> area:NPCs"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, ..."
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mechanics/src/NPCs/e2e/dialogue.engine.test.ts, axiomancer-mechanics/src/World/MapEvents/e2e/description-passthrough.engine.test.ts, axiomancer-mechanics/src/World/MapEvents/e2e/narration-kind.engine.test.ts, ..."
+      },
+      "needsPitch": {
+        "value": false,
+        "missing": null,
+        "source": "plan/2026-09-25-refactor-strategy.decisions.md D29"
+      }
     },
     {
       "id": "area:World",
-      "name": "World",
+      "name": "The world",
       "kind": "engine-area",
       "group": "engine",
-      "source": "axiomancer-mechanics/src/World"
+      "source": "axiomancer-mechanics/src/World",
+      "named": true,
+      "reachable": {
+        "value": true,
+        "source": "coupling path from a reachable route: route:index -> area:World"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, ..."
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mechanics/src/CLI/e2e/cli.docs-examples.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/game.cli.route-audit.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/hazard.cli.engine.test.ts, ..."
+      },
+      "needsPitch": {
+        "value": false,
+        "missing": null,
+        "source": "braindump/2026-10-15-hazard-fixed-puzzle.md"
+      }
     },
     {
       "id": "route:(tabs)/character",
       "name": "Character",
       "kind": "route",
       "group": "tabs",
-      "source": "axiomancer-mobile/app/(tabs)/character/index.tsx"
+      "source": "axiomancer-mobile/app/(tabs)/character/index.tsx",
+      "named": false,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:(tabs)/character"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, axiomancer-mobile/scripts/exploration-combat-roundtrip-e2e.mjs, ..."
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/components/__tests__/EffectGlyph.test.tsx, axiomancer-mobile/components/__tests__/StanceGlyph.test.tsx, axiomancer-mobile/components/__tests__/XpChain.test.tsx, ..."
+      },
+      "needsPitch": {
+        "value": false,
+        "missing": null,
+        "source": "plan/2026-09-02-big-numbers-overhaul.decisions.md D30"
+      }
     },
     {
       "id": "route:(tabs)/deck",
       "name": "Deck",
       "kind": "route",
       "group": "tabs",
-      "source": "axiomancer-mobile/app/(tabs)/deck/index.tsx"
+      "source": "axiomancer-mobile/app/(tabs)/deck/index.tsx",
+      "named": true,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:(tabs)/deck"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/feature-map-e2e.mjs"
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/app/(tabs)/deck/__tests__/DeckScreen.test.tsx, axiomancer-mobile/state/presenters/__tests__/deck.engine.test.ts"
+      },
+      "needsPitch": {
+        "value": false,
+        "missing": null,
+        "source": "braindump/2026-10-15-hazard-fixed-puzzle.md"
+      }
     },
     {
       "id": "route:(tabs)/exploration",
-      "name": "Exploration",
+      "name": "The map",
       "kind": "route",
       "group": "tabs",
-      "source": "axiomancer-mobile/app/(tabs)/exploration/index.tsx"
+      "source": "axiomancer-mobile/app/(tabs)/exploration/index.tsx",
+      "named": true,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:(tabs)/exploration"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/exploration-combat-roundtrip-e2e.mjs, ..."
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/components/__tests__/DebugEnemyPicker.test.tsx, axiomancer-mobile/components/__tests__/DebugTriggerEncounter.test.tsx, axiomancer-mobile/components/__tests__/DebugWorldTravel.test.tsx, ..."
+      },
+      "needsPitch": {
+        "value": false,
+        "missing": null,
+        "source": "plan/2026-09-02-big-numbers-overhaul.decisions.md D16"
+      }
     },
     {
       "id": "route:(tabs)/inventory",
       "name": "Inventory",
       "kind": "route",
       "group": "tabs",
-      "source": "axiomancer-mobile/app/(tabs)/inventory/index.tsx"
+      "source": "axiomancer-mobile/app/(tabs)/inventory/index.tsx",
+      "named": false,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:(tabs)/inventory"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/feature-map-e2e.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/components/inventory/SlotBanner.test.tsx, axiomancer-mobile/components/inventory/__tests__/EquipmentDock.S3-sheet-C11.test.tsx, axiomancer-mobile/components/inventory/__tests__/EquipmentDock.portrait-box.test.tsx, ..."
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Inventory\")",
+        "source": null
+      }
     },
     {
       "id": "route:(tabs)/memoir",
       "name": "Memoir",
       "kind": "route",
       "group": "tabs",
-      "source": "axiomancer-mobile/app/(tabs)/memoir/index.tsx"
+      "source": "axiomancer-mobile/app/(tabs)/memoir/index.tsx",
+      "named": false,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:(tabs)/memoir"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/feature-map-e2e.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/components/__tests__/ErrorBoundary.test.tsx, axiomancer-mobile/scripts/__tests__/smoke-screens.test.ts, axiomancer-mobile/state/e2e/app-components.engine.test.tsx, ..."
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Memoir\")",
+        "source": null
+      }
     },
     {
       "id": "route:blacksmith",
-      "name": "Blacksmith",
+      "name": "The Anvil",
       "kind": "route",
       "group": "world",
-      "source": "axiomancer-mobile/app/blacksmith/index.tsx"
+      "source": "axiomancer-mobile/app/blacksmith/index.tsx",
+      "named": true,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:blacksmith"
+      },
+      "driven": {
+        "value": false,
+        "source": null
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/state/e2e/forge-vocabulary.S5-talk-C12.test.tsx, axiomancer-mobile/state/e2e/region-plate.rc-walk-10.test.tsx, axiomancer-mobile/state/e2e/scene-measure.S5-talk-C13.test.tsx"
+      },
+      "needsPitch": {
+        "value": false,
+        "missing": null,
+        "source": "braindump/2026-10-15-hazard-fixed-puzzle.md"
+      }
     },
     {
       "id": "route:cache",
-      "name": "Cache",
+      "name": "Loot cache",
       "kind": "route",
       "group": "world",
-      "source": "axiomancer-mobile/app/cache/index.tsx"
+      "source": "axiomancer-mobile/app/cache/index.tsx",
+      "named": true,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:cache"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/encounter-routing-e2e.mjs"
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/components/__tests__/CacheGate.test.tsx, axiomancer-mobile/state/e2e/region-plate.rc-walk-10.test.tsx"
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Loot cache\", \"loot-cache\", \"loot cache\")",
+        "source": null
+      }
     },
     {
       "id": "route:combat-encounter",
-      "name": "Combat Encounter",
+      "name": "Encounter",
       "kind": "route",
       "group": "world",
-      "source": "axiomancer-mobile/app/combat-encounter/index.tsx"
+      "source": "axiomancer-mobile/app/combat-encounter/index.tsx",
+      "named": true,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:combat-encounter"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/exploration-combat-roundtrip-e2e.mjs, ..."
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/assets/images/cards/__tests__/card-art.test.ts, axiomancer-mobile/assets/images/combat/__tests__/index.test.ts, axiomancer-mobile/assets/images/enemies/__tests__/frames.test.ts, ..."
+      },
+      "needsPitch": {
+        "value": false,
+        "missing": null,
+        "source": "plan/2026-09-25-refactor-strategy.decisions.md D44"
+      }
     },
     {
       "id": "route:cutscene",
       "name": "Cutscene",
       "kind": "route",
       "group": "world",
-      "source": "axiomancer-mobile/app/cutscene/index.tsx"
+      "source": "axiomancer-mobile/app/cutscene/index.tsx",
+      "named": true,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:cutscene"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/components/__tests__/DebugTriggerEncounter.test.tsx, axiomancer-mobile/components/__tests__/EventGate.test.tsx, axiomancer-mobile/state/e2e/cutscene-skip.S4-world-C17.test.tsx, ..."
+      },
+      "needsPitch": {
+        "value": false,
+        "missing": null,
+        "source": "plan/2026-09-25-refactor-strategy.decisions.md D31"
+      }
     },
     {
       "id": "route:dev",
-      "name": "Dev",
+      "name": "The dev menu",
       "kind": "dev-route",
       "group": "dev",
-      "source": "axiomancer-mobile/app/dev/index.tsx"
+      "source": "axiomancer-mobile/app/dev/index.tsx",
+      "named": true,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:(tabs)/character -> route:dev"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, axiomancer-mobile/scripts/exploration-combat-roundtrip-e2e.mjs, ..."
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/components/__tests__/DebugCardLanes.test.tsx, axiomancer-mobile/components/__tests__/DebugCurrencyControl.test.tsx, axiomancer-mobile/components/__tests__/DebugDialogueJump.test.tsx, ..."
+      },
+      "needsPitch": {
+        "value": false,
+        "missing": null,
+        "source": "plan/2026-09-25-refactor-strategy.decisions.md D62"
+      }
     },
     {
       "id": "route:devaftermath",
       "name": "Devaftermath",
       "kind": "dev-route",
       "group": "dev",
-      "source": "axiomancer-mobile/app/devaftermath/index.tsx"
+      "source": "axiomancer-mobile/app/devaftermath/index.tsx",
+      "named": false,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:(tabs)/character -> route:dev -> route:devaftermath"
+      },
+      "driven": {
+        "value": false,
+        "source": null
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/components/__tests__/DebugRunControls.test.tsx, axiomancer-mobile/components/art/__tests__/art-components.test.tsx, axiomancer-mobile/components/event/aftermath/__tests__/CombatDefeatPanel.test.tsx, ..."
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Devaftermath\")",
+        "source": null
+      }
     },
     {
       "id": "route:devart",
       "name": "Devart",
       "kind": "dev-route",
       "group": "dev",
-      "source": "axiomancer-mobile/app/devart/index.tsx"
+      "source": "axiomancer-mobile/app/devart/index.tsx",
+      "named": false,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:(tabs)/character -> route:dev -> route:devart"
+      },
+      "driven": {
+        "value": false,
+        "source": null
+      },
+      "tested": {
+        "value": false,
+        "source": null
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Devart\")",
+        "source": null
+      }
     },
     {
       "id": "route:devart/rooms",
       "name": "Devart Rooms",
       "kind": "dev-route",
       "group": "dev",
-      "source": "axiomancer-mobile/app/devart/rooms.tsx"
+      "source": "axiomancer-mobile/app/devart/rooms.tsx",
+      "named": false,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:(tabs)/character -> route:dev -> route:devart/rooms"
+      },
+      "driven": {
+        "value": false,
+        "source": null
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/components/__tests__/DebugRunControls.test.tsx"
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Devart Rooms\")",
+        "source": null
+      }
     },
     {
       "id": "route:devframes",
       "name": "Devframes",
       "kind": "dev-route",
       "group": "dev",
-      "source": "axiomancer-mobile/app/devframes/index.tsx"
+      "source": "axiomancer-mobile/app/devframes/index.tsx",
+      "named": false,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:(tabs)/character -> route:dev -> route:devframes"
+      },
+      "driven": {
+        "value": false,
+        "source": null
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/app/__tests__/devframes.test.tsx, axiomancer-mobile/components/__tests__/DebugRunControls.test.tsx, axiomancer-mobile/components/combat/encounter/__tests__/CombatCombatantPane.frames.test.tsx, ..."
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Devframes\")",
+        "source": null
+      }
     },
     {
       "id": "route:devpuzzle",
-      "name": "Devpuzzle",
+      "name": "The hazard puzzle demos",
       "kind": "dev-route",
       "group": "dev",
-      "source": "axiomancer-mobile/app/devpuzzle/index.tsx"
+      "source": "axiomancer-mobile/app/devpuzzle/index.tsx",
+      "named": true,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:(tabs)/character -> route:dev -> route:devpuzzle"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/smoke-screens.mjs"
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/components/__tests__/DebugHazardPuzzlesButton.test.tsx, axiomancer-mobile/components/hazard/puzzle/__tests__/HazardPuzzleDemo.test.tsx, axiomancer-mobile/components/hazard/puzzle/__tests__/HazardPuzzleLog.test.tsx, ..."
+      },
+      "needsPitch": {
+        "value": false,
+        "missing": null,
+        "source": "braindump/2026-10-15-hazard-fixed-puzzle.md"
+      }
     },
     {
       "id": "route:dialogue",
       "name": "Dialogue",
       "kind": "route",
       "group": "world",
-      "source": "axiomancer-mobile/app/dialogue/index.tsx"
+      "source": "axiomancer-mobile/app/dialogue/index.tsx",
+      "named": true,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:dialogue"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/fixture-e2e.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/state/e2e/event.screen.test.tsx, axiomancer-mobile/state/e2e/option-description-size.S5-talk-C17.test.tsx, axiomancer-mobile/state/e2e/scene-measure.S5-talk-C13.test.tsx, ..."
+      },
+      "needsPitch": {
+        "value": false,
+        "missing": null,
+        "source": "plan/2026-09-25-refactor-strategy.decisions.md D39"
+      }
     },
     {
       "id": "route:event",
       "name": "Event",
       "kind": "route",
       "group": "world",
-      "source": "axiomancer-mobile/app/event/index.tsx"
+      "source": "axiomancer-mobile/app/event/index.tsx",
+      "named": false,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:event"
+      },
+      "driven": {
+        "value": false,
+        "source": null
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/components/__tests__/EventGate.test.tsx, axiomancer-mobile/components/event/__tests__/EventArt.test.tsx, axiomancer-mobile/components/event/__tests__/PlaceholderIllustration.test.tsx, ..."
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Event\")",
+        "source": null
+      }
     },
     {
       "id": "route:hazard",
-      "name": "Hazard",
+      "name": "The hazard minigame",
       "kind": "route",
       "group": "minigames",
-      "source": "axiomancer-mobile/app/hazard/index.tsx"
+      "source": "axiomancer-mobile/app/hazard/index.tsx",
+      "named": true,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:hazard"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/components/__tests__/HazardGate.test.tsx, axiomancer-mobile/components/hazard/__tests__/RewardsOverlay.test.tsx, axiomancer-mobile/scripts/smoke-screens.test.mjs, ..."
+      },
+      "needsPitch": {
+        "value": false,
+        "missing": null,
+        "source": "braindump/2026-10-15-hazard-fixed-puzzle.md"
+      }
     },
     {
       "id": "route:hazard-deck",
-      "name": "Hazard Deck",
+      "name": "The hazard deck",
       "kind": "route",
       "group": "minigames",
-      "source": "axiomancer-mobile/app/hazard-deck/index.tsx"
+      "source": "axiomancer-mobile/app/hazard-deck/index.tsx",
+      "named": true,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:(tabs)/character -> route:hazard-deck"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/feature-map-e2e.mjs"
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/components/hazard/__tests__/HazardRemoveGrid.test.tsx, axiomancer-mobile/state/e2e/hazard-deck.screen.test.tsx, axiomancer-mobile/state/e2e/hazard-stat-key.S7-hazard-C04.test.tsx, ..."
+      },
+      "needsPitch": {
+        "value": false,
+        "missing": null,
+        "source": "braindump/2026-10-15-hazard-fixed-puzzle.md"
+      }
     },
     {
       "id": "route:index",
       "name": "Index",
       "kind": "route",
       "group": "world",
-      "source": "axiomancer-mobile/app/index.tsx"
+      "source": "axiomancer-mobile/app/index.tsx",
+      "named": false,
+      "reachable": {
+        "value": true,
+        "source": "entry route"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/feature-map-e2e.mjs, axiomancer-mobile/scripts/fixture-e2e.mjs, axiomancer-mobile/scripts/map-walk-e2e.mjs"
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/components/__tests__/MainMenu.test.tsx, axiomancer-mobile/components/__tests__/TitleScreen.test.tsx, axiomancer-mobile/scripts/title-plate-legibility.test.mjs, ..."
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Index\")",
+        "source": null
+      }
     },
     {
       "id": "route:item-reward",
-      "name": "Item Reward",
+      "name": "Reward",
       "kind": "route",
       "group": "world",
-      "source": "axiomancer-mobile/app/item-reward/index.tsx"
+      "source": "axiomancer-mobile/app/item-reward/index.tsx",
+      "named": true,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:item-reward"
+      },
+      "driven": {
+        "value": false,
+        "source": null
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/state/e2e/item-reward.screen.test.tsx"
+      },
+      "needsPitch": {
+        "value": false,
+        "missing": null,
+        "source": "braindump/2026-10-15-hazard-fixed-puzzle.md"
+      }
     },
     {
       "id": "route:labyrinth",
-      "name": "Labyrinth",
+      "name": "The Labyrinth",
       "kind": "route",
       "group": "minigames",
-      "source": "axiomancer-mobile/app/labyrinth/index.tsx"
+      "source": "axiomancer-mobile/app/labyrinth/index.tsx",
+      "named": true,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:labyrinth"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/labyrinth-combat-roundtrip-e2e.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/components/__tests__/DebugWorldTravel.test.tsx, axiomancer-mobile/components/__tests__/LabyrinthGate.test.tsx, axiomancer-mobile/components/labyrinth/__tests__/GateSockets.test.tsx, ..."
+      },
+      "needsPitch": {
+        "value": false,
+        "missing": null,
+        "source": "plan/2026-09-25-refactor-strategy.decisions.md D5"
+      }
     },
     {
       "id": "route:rest",
       "name": "Rest",
       "kind": "route",
       "group": "world",
-      "source": "axiomancer-mobile/app/rest/index.tsx"
+      "source": "axiomancer-mobile/app/rest/index.tsx",
+      "named": true,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:rest"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs"
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/components/__tests__/RestGate.test.tsx, axiomancer-mobile/state/e2e/rest-village-column.critique-71.test.tsx"
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Rest\", \"RestChoice\", \"rest node\", \"rest site\")",
+        "source": null
+      }
     },
     {
       "id": "route:saves",
       "name": "Saves",
       "kind": "route",
       "group": "world",
-      "source": "axiomancer-mobile/app/saves/index.tsx"
+      "source": "axiomancer-mobile/app/saves/index.tsx",
+      "named": false,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:saves"
+      },
+      "driven": {
+        "value": false,
+        "source": null
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/state/e2e/app-routes.engine.test.tsx, axiomancer-mobile/state/e2e/saves.screen.test.tsx"
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Saves\")",
+        "source": null
+      }
     },
     {
       "id": "route:settings",
       "name": "Settings",
       "kind": "route",
       "group": "world",
-      "source": "axiomancer-mobile/app/settings/index.tsx"
+      "source": "axiomancer-mobile/app/settings/index.tsx",
+      "named": false,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:settings"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/feature-map-e2e.mjs, axiomancer-mobile/scripts/theme-switch-e2e.mjs"
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/components/__tests__/ThemeSwitcher.test.tsx, axiomancer-mobile/state/e2e/app-routes.engine.test.tsx, axiomancer-mobile/state/e2e/settings.screen.test.tsx, ..."
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Settings\")",
+        "source": null
+      }
     },
     {
       "id": "route:village",
       "name": "Village",
       "kind": "route",
       "group": "world",
-      "source": "axiomancer-mobile/app/village/index.tsx"
+      "source": "axiomancer-mobile/app/village/index.tsx",
+      "named": false,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:village"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/components/__tests__/DebugTriggerEncounter.test.tsx, axiomancer-mobile/lib/platform/__tests__/router.pending-navigation.test.ts, axiomancer-mobile/state/e2e/option-description-size.S5-talk-C17.test.tsx, ..."
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Village\")",
+        "source": null
+      }
     }
   ],
   "edges": [

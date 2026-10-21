@@ -103,6 +103,31 @@ export const FRAME_CELL_MAX_BYTES = 12000;
 export const RESTING_CLIP = 'idle';
 
 /**
+ * THE THREE STATES (phase AN1c). A set names all three or it is not a set:
+ * `idle` is the resting loop, `struck` plays when the enemy takes damage, and
+ * `attacking` plays on the enemy's own beat. Naming only two was the AN1a/AN1b
+ * shape, when nothing selected a third; now that the engine selects between
+ * them, a set missing one has a state it cannot show, and an enemy that cannot
+ * show being hit is worse than an enemy that never animates at all.
+ *
+ * The vocabulary is not ours to choose: the float-eye master's sidecar already
+ * names its rows `idle` / `struck` / `attacking`, and AN1e installs it.
+ */
+export const REQUIRED_CLIPS = [RESTING_CLIP, 'struck', 'attacking'] as const;
+
+/**
+ * Which of the three loop, as a contract rather than a convention: the resting
+ * clip repeats forever, and the two reactions are one-shots that hand the enemy
+ * back to rest. A `struck` clip declaring `loop: true` would leave an enemy
+ * flinching for the remainder of the fight, and it would do it silently.
+ */
+export const CLIP_LOOPS: Readonly<Record<string, boolean>> = {
+    [RESTING_CLIP]: true,
+    struck: false,
+    attacking: false,
+};
+
+/**
  * THE REGISTRY. Empty by design (A2) — see the header. An enemy absent from
  * here resolves through `getEncounterEnemyArt` exactly as it always has.
  */
@@ -157,9 +182,17 @@ export function validateFrameSet(key: string, set: EnemyFrameSet): string[] {
     const clipNames = Object.keys(m.clips ?? {});
     if (clipNames.length === 0) {
         problems.push(`${key}: manifest names no clips`);
-    }
-    if (clipNames.length > 0 && !clipNames.includes(RESTING_CLIP)) {
-        problems.push(`${key}: manifest has no '${RESTING_CLIP}' clip to rest on`);
+    } else {
+        // AN1c — all three states, every time. Reported one name at a time so
+        // a half-built manifest says which state is missing rather than that
+        // something is.
+        for (const required of REQUIRED_CLIPS) {
+            if (!clipNames.includes(required)) {
+                problems.push(
+                    `${key}: manifest has no '${required}' clip (a set names ${REQUIRED_CLIPS.join(', ')})`,
+                );
+            }
+        }
     }
 
     for (const name of clipNames) {
@@ -182,6 +215,14 @@ export function validateFrameSet(key: string, set: EnemyFrameSet): string[] {
         }
         if (!(clip.fps > 0)) {
             problems.push(`${key}.${name}: fps must be positive, got ${clip.fps}`);
+        }
+        // AN1c — looping is a property of the state, not of the sheet that
+        // happened to be drawn. Rest loops; the two reactions do not.
+        const expectedLoop = CLIP_LOOPS[name];
+        if (expectedLoop !== undefined && clip.loop !== expectedLoop) {
+            problems.push(
+                `${key}.${name}: must ${expectedLoop ? 'loop' : 'be a one-shot'}, got loop ${clip.loop}`,
+            );
         }
     }
 

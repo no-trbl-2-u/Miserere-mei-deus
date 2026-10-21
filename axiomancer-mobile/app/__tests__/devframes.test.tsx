@@ -7,6 +7,8 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
+import { REQUIRED_CLIPS } from '@/assets/images/enemies/frames';
+
 import DevFrameHarness from '../devframes/index';
 
 type GlobalWithDev = typeof globalThis & { __DEV__?: boolean };
@@ -42,6 +44,20 @@ describe('the enemy frame harness', () => {
     it('switches clips, so the one-shot can be watched beside the loop', () => {
         render(<DevFrameHarness />);
         fireEvent.press(screen.getByTestId('devframes-clip-attacking'));
+        expect(screen.getByTestId('devframes-readout').props.children).toContain('one-shot');
+    });
+
+    // AN1c — the harness is how T judges the states, so all three must be
+    // reachable in it, not only the two the engine shipped with.
+    it.each([...REQUIRED_CLIPS])('offers the %s clip', (name) => {
+        render(<DevFrameHarness />);
+        expect(screen.getByTestId(`devframes-clip-${name}`)).toBeTruthy();
+    });
+
+    it('calls the resting clip a loop and the struck clip a one-shot', () => {
+        render(<DevFrameHarness />);
+        expect(screen.getByTestId('devframes-readout').props.children).toContain('loop');
+        fireEvent.press(screen.getByTestId('devframes-clip-struck'));
         expect(screen.getByTestId('devframes-readout').props.children).toContain('one-shot');
     });
 
