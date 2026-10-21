@@ -137,6 +137,35 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 | [ ] | 2026-12-26 | Playtester walk of all four regions | W5 | needs plot |
 | [ ] | 2026-12-28 | Tag v0.3 and build the APK | W5 | T |
 
+## Unscheduled
+
+Open build-plan rows deliberately left undated, one per line as `- <id> — <reason>`. `scripts/check-deadlines.mjs`
+fails the root `npm test` on an open row (`[ ]`, `[-]` or `[blocked: …]`) that neither an Item above nor a line here
+names, and on a line here with no reason. **A row listed here is work the loop may still pick on its ordinary turn:
+undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
+
+- VE1c — loop work listed alongside W1, needing no time from T; date not set.
+- VE1d — loop work listed alongside W1, needing no time from T; date not set.
+- PF2 — attended; after v0.3 (The milestone), and waits on T's Android baseline numbers.
+- IT1b — blocked: owner-led, art is T's; date not set.
+- TP1b — blocked: owner-led, art is T's; date not set.
+- B5 — blocked: owner-led; the card-creator workflow is v0.3 stretch, in only if a window has time left.
+- B6 — blocked: owner-led; card sessions are v0.3 stretch, in only if a window has time left.
+- B7 — blocked: owner-led; after v0.3 (The milestone).
+- B8 — blocked: owner-led; after v0.3 (The milestone).
+- B9 — blocked: owner-led; after v0.3 (The milestone).
+- B10 — blocked: owner-led; after v0.3 (The milestone).
+- 90 — pre-revamp partial (the multi-hit half shipped); the summoner half is not v0.3 work; date not set.
+- 52b — pre-revamp partial (the inn as a first-class rest); not v0.3 work; date not set.
+- 47c — pre-revamp partial (Expo decouple, assets); not v0.3 work; date not set.
+- 47d — pre-revamp partial (Expo decouple, device APIs); not v0.3 work; date not set.
+- 47e — pre-revamp partial (Expo decouple, build and CI); not v0.3 work; date not set.
+- V2 — pre-revamp partial (map scene remainders); not v0.3 work; date not set.
+- V3 — pre-revamp partial (menus and chrome remainders); not v0.3 work; date not set.
+- V6 — pre-revamp partial (glyph unification remainders); not v0.3 work; date not set.
+- V7 — pre-revamp partial (illustration upgrades); art is T's; not v0.3 work.
+- W5 — pre-revamp partial (map roster growth); enemies wait on T's B2 session; date not set.
+
 ## How a window closes
 
 At the end of each window T runs the demo. A missed goal moves to the next window and the plan shifts, recorded
@@ -145,6 +174,12 @@ attended session.
 
 ## Change log
 
+- **2026-10-21** — **`## Unscheduled` added and the deadline lint live** (phase DL1a, the loop). Every open
+  build-plan row no Item names is listed there with its reason, read row by row from the build plan: VE1c and VE1d,
+  PF2, the art rows IT1b and TP1b, the owner-led B-rows, and ten pre-revamp `[-]` partials. No date moved and no
+  Item changed. `scripts/check-deadlines.mjs` now fails the root `npm test` when the two plans disagree, and the
+  reminder reads wrapped build-plan rows whole, so an attended row's `Requires` on a continuation line (HP4e's
+  `Requires HP4c, HP4d`) is no longer read as "Requires nothing".
 - **2026-10-20** — **the plan reconciled with the build plan, and a lint plotted so this cannot recur** (T,
   attended session). T asked "what's next", was shown a stale reminder, and named the defect: *"The deadline items
   don't update with the work that's been done. I've already tested the 3 puzzles and we've already created a new
