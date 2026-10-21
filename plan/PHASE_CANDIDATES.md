@@ -660,6 +660,18 @@
 - estimated phases: 1
 - conflicts: none. Creates no content.
 
+### [ ] [score 3.5] Wait for a PR's checks to register before watching them (lesson `checks-not-yet-registered`, seen 2×)
+- proposed: 2026-10-21, retro of ship DL1a (#686)
+- source signals: lesson `checks-not-yet-registered` (ship HP2b, ship DL1a). `gh pr checks --watch` run right after `gh pr create` or a push exits 0 with "no checks reported", which reads as green while nothing has run; both ticks caught it only by looking twice.
+- proposed scope: one `/iterate` tick. A `scripts/pr-checks-wait.mjs <pr>` that polls until the PR lists check rows (bounded), then execs `gh pr checks --watch --fail-fast`, exiting non-zero on "no checks" past the bound; `skills/march.md` §3 and `skills/ship-a-phase.md` Step 12 call it. A unit test on the poll's decision. Then mark the lesson `guarded by`.
+- conflicts: none; no content.
+
+### [ ] [score 3.5] `/plot` checks every path a brief names before the plot PR opens (lesson `brief-pointer-drift`, seen 2×)
+- proposed: 2026-10-21, retro of ship DL1a (#686)
+- source signals: lesson `brief-pointer-drift` (ship CS1, ship DL1a). The CS1 brief named a truth-sources table that never existed; the DL1 brief names `docs/dev-tools.md` as a consumer for A10 and DL1a, and no such file exists. Each ship tick had to restate the anchor and record the call.
+- proposed scope: one `/iterate` tick. A `scripts/check-brief-paths.mjs` over `plan/phases/*.md` that fails a backticked repo path in a brief's Scope or Consumers section that is neither on disk nor marked `(new)`, wired into the root `npm test` only for briefs with an open build-plan row. Then mark the lesson `guarded by`.
+- conflicts: none; no content.
+
 ### [ ] [score 5.0] `deploy:check` exits at once on a plan-only HEAD instead of waiting out its 120s grace (lesson `deploy-check-grace`, seen 6×)
 - **Pass 39 note (2026-10-18):** rescored 4.5 -> 5.0. Two more sightings (critique 93 and 94, both 2026-10-18), with no guard yet. That is six sightings, three times the ladder's 2× bar. The scope is still one `/iterate` tick.
 - **Pass 38 note (2026-10-18):** rescored 4.0 -> 4.5. A fourth sighting (critique 92, `dde3253c`), still with no guard. Scope unchanged: one `/iterate` tick.
