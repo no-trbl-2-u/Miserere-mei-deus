@@ -95,10 +95,22 @@ names and writes them into the build profile's `env` in its checkout's
 `eas.json` (an EAS cloud build does not see the runner's env); it skips this
 for `production`, and with either secret unset the build simply never posts.
 The token ships inside the preview APK, which the brief accepts for dev-only
-puzzle times; rotating it means a new secret and a rebuild. The Worker URL
-and the secrets are set up in phase BE1b. Tests:
+puzzle times; rotating it means a new secret and a rebuild. Tests:
 `lib/__tests__/puzzleAttempts.test.ts`,
 `components/hazard/puzzle/__tests__/HazardPuzzlePost.test.tsx`.
+
+**The live Worker (phase BE1b).** `miserere-api` is deployed at
+**https://miserere-api.no-trbl-2-u.workers.dev**, backed by the D1 database
+`miserere` on T's Cloudflare account (its id is in `backend/wrangler.toml`).
+`.github/workflows/backend-deploy.yml` applies the D1 migrations, deploys the
+Worker and sets its `PUZZLE_API_TOKEN` secret on every push to `main` touching
+`backend/**`, or from the Actions tab (`workflow_dispatch`). The repo secrets
+`EXPO_PUBLIC_PUZZLE_API_URL` and `EXPO_PUBLIC_PUZZLE_API_TOKEN` hold that URL
+and the same token. To read the stored attempts by hand:
+
+```bash
+curl -H "Authorization: Bearer $PUZZLE_API_TOKEN"   "https://miserere-api.no-trbl-2-u.workers.dev/v1/puzzle-attempts?layout=<id>"
+```
 
 ### Read the solve times: `npm run puzzle:times`
 
