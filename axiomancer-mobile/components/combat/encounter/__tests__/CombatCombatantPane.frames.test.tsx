@@ -1,10 +1,12 @@
 /**
- * Phase AN1b — the enemy's turn is animated, in the pane itself.
+ * Phases AN1b and AN1c — the enemy's states, in the pane itself.
  *
  * Two claims, and the second is the one that keeps the first honest:
- *   1. on the enemy's beat the pane selects the ATTACK clip, at the same
- *      impact offset the recoil already uses, from the same walk of
- *      `fx.events`; an enemy with no frame set renders its single painting;
+ *   1. the pane selects a clip per state off ONE walk of `fx.events`: the
+ *      ATTACK clip on the enemy's beat at the same impact offset the recoil
+ *      already uses, the STRUCK clip when the damage was the enemy's own, and
+ *      idle when the resolution was neither; an enemy with no frame set
+ *      renders its single painting through none of it;
  *   2. the pane's EXISTING feedback — the damage-scaled shake and the impact
  *      flash — is handed exactly the same arguments whether the enemy has
  *      frames or not. The frame engine is additive or it is a regression.
@@ -20,7 +22,7 @@ import { describe, expect, it, jest } from '@jest/globals';
 
 import * as Juice from '@/lib/juice';
 import { CombatCombatantPane, type CombatFx } from '@/components/combat/encounter/CombatCombatantPane';
-import { ENEMY_ATTACK_IMPACT_MS } from '@/components/combat/frames';
+import { ENEMY_ATTACK_IMPACT_MS, clipDurationMs } from '@/components/combat/frames';
 import { SYNTHETIC_FRAME_SET } from '@/components/combat/frames/syntheticFrameSet';
 import type { CombatEnemyPaneVM, CombatPlayerPaneVM } from '@/state/presenters/combat-encounter.engine';
 import type { CombatEvent } from '@mechanics';
@@ -117,7 +119,7 @@ function resetSpies() {
     (Juice.useJuiceFlash as jest.Mock).mockClear();
 }
 
-describe('CombatCombatantPane — the enemy\'s turn animates (phase AN1b)', () => {
+describe('CombatCombatantPane — the enemy\'s states animate (phases AN1b, AN1c)', () => {
     beforeEach(() => {
         jest.useFakeTimers();
         resetSpies();
@@ -150,12 +152,38 @@ describe('CombatCombatantPane — the enemy\'s turn animates (phase AN1b)', () =
         expect(mockFramePlayerProps.at(-1)?.startKey).toBe(1);
     });
 
-    it('leaves the enemy resting on a resolution that was not its beat', () => {
+    it('selects the struck clip when the ENEMY took the damage, and never the attack clip (AN1c)', () => {
         frames.getEnemyFrameSet.mockReturnValue(SYNTHETIC_FRAME_SET);
+        // No threat fired and the player took nothing: this resolution was the
+        // player's own blow landing. It is the shape a non-attack intent will
+        // have the day one exists, and the enemy must not mime a swing on it.
         const playerHit = [
             { kind: 'damage-dealt', target: 'enemy', amount: 9 },
         ] as unknown as CombatEvent[];
         renderPane({ seq: 1, events: playerHit });
+        expect(mockFramePlayerProps.at(-1)?.clipName).toBe('struck');
+        const struck = SYNTHETIC_FRAME_SET.manifest.clips.struck;
+        act(() => { jest.advanceTimersByTime(clipDurationMs(struck)); });
+        expect(mockFramePlayerProps.at(-1)?.clipName).toBe('idle');
+        // Not once, at any point in the resolution, was the swing selected.
+        expect(mockFramePlayerProps.map((p) => p.clipName)).not.toContain('attacking');
+    });
+
+    it('selects the struck clip for a damage-over-time tick on the enemy', () => {
+        frames.getEnemyFrameSet.mockReturnValue(SYNTHETIC_FRAME_SET);
+        const poison = [
+            { kind: 'dot-tick', target: 'enemy', amount: 3 },
+        ] as unknown as CombatEvent[];
+        renderPane({ seq: 1, events: poison });
+        expect(mockFramePlayerProps.at(-1)?.clipName).toBe('struck');
+    });
+
+    it('leaves the enemy resting on a resolution in which nobody took damage', () => {
+        frames.getEnemyFrameSet.mockReturnValue(SYNTHETIC_FRAME_SET);
+        const buffOnly = [
+            { kind: 'effect-landed', target: 'enemy', effectId: 'guard', effectKind: 'guard' },
+        ] as unknown as CombatEvent[];
+        renderPane({ seq: 1, events: buffOnly });
         act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS * 4); });
         expect(mockFramePlayerProps.at(-1)?.clipName).toBe('idle');
     });
@@ -211,6 +239,45 @@ describe('CombatCombatantPane — the enemy\'s turn animates (phase AN1b)', () =
         expect(framedEnemy.flash).toEqual(staticEnemy.flash);
         // And the hit still registered at all, so the comparison is not two
         // sets of nothing.
+        expect(staticEnemy.shake.some(([key]) => (key as number) > 0)).toBe(true);
+        expect(staticEnemy.flash.some(([, norm]) => (norm as number) > 0)).toBe(true);
+    });
+
+    it('leaves them unchanged on a resolution that now also plays the STRUCK clip (A3, AN1c)', () => {
+        // The same comparison as above, on the resolution AN1c added a clip
+        // to. A new state selected in the middle of the pane's feedback is
+        // exactly where a retune would slip in unnoticed.
+        const trade = [
+            { kind: 'threat-fired' },
+            { kind: 'damage-dealt', target: 'self', amount: 6 },
+            { kind: 'damage-dealt', target: 'enemy', amount: 9 },
+        ] as unknown as CombatEvent[];
+
+        frames.getEnemyFrameSet.mockReturnValue(null);
+        const staticView = renderPane({ seq: 1, events: trade });
+        act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS * 8); });
+        const staticEnemy = juiceCalls();
+        // Unmounted before the registry answer changes: a pane left mounted
+        // picks the frame set up on its next render and starts a second
+        // enemy's clips inside this one's timeline.
+        staticView.unmount();
+
+        resetSpies();
+        frames.getEnemyFrameSet.mockReturnValue(SYNTHETIC_FRAME_SET);
+        renderPane({ seq: 1, events: trade });
+        // Both new states really were exercised on this resolution, or the
+        // comparison below is proving nothing about either of them. Advanced
+        // one beat at a time: a single long jump batches every pending timer
+        // into one render and only the last clip is ever observed.
+        expect(mockFramePlayerProps.map((p) => p.clipName)).toContain('struck');
+        act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS); });
+        expect(mockFramePlayerProps.at(-1)?.clipName).toBe('attacking');
+        act(() => { jest.advanceTimersByTime(clipDurationMs(SYNTHETIC_FRAME_SET.manifest.clips.attacking)); });
+        expect(mockFramePlayerProps.at(-1)?.clipName).toBe('idle');
+        const framedEnemy = juiceCalls();
+
+        expect(framedEnemy.shake).toEqual(staticEnemy.shake);
+        expect(framedEnemy.flash).toEqual(staticEnemy.flash);
         expect(staticEnemy.shake.some(([key]) => (key as number) > 0)).toBe(true);
         expect(staticEnemy.flash.some(([, norm]) => (norm as number) > 0)).toBe(true);
     });
