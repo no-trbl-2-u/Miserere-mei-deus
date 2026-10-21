@@ -67,6 +67,16 @@ portrait, `deviceScaleFactor: 1`).
    (current over baseline) stays for a capture taken on that renderer,
    such as a Linux container.
 
+   A local run shoots only the routes the branch's changes can reach
+   (`scripts/lib/smoke-routes-for.mjs`, phase VE1d): the paths changed
+   since the merge-base with `origin/main`, plus uncommitted and
+   untracked files, mapped to routes. It logs `routes from diff: <names>`.
+   A path no rule names, app-wide code (`app/_layout.tsx`, `state/`,
+   `lib/`, `assets/`, shared components), the engine or the lockfile
+   selects every route, and so does a diff with no rendered path in it.
+   `SMOKE_ROUTES=all` shoots every route regardless (CI always passes
+   it); `SMOKE_ONLY=<names>` overrides both.
+
 The re-stamp is CI's report-only visual step (phase VE1c, `verify-mobile`
 and `verify-mechanics` through `_visual-restamp.yml`): it never turns a
 check red, writes the route table to the step summary, uploads the
