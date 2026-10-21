@@ -100,6 +100,84 @@ art directory has a provenance record, every record carries date / tool
 / license / covers, every `require()` resolves, and every file is
 reachable from a registry. It runs inside the mobile verify gate.
 
+## Enemy frame sets (the animated art contract)
+
+An enemy may carry one asset or several. The old "1:1 art law" is
+retired: the bindings in `assets/images/enemies/index.ts` are preserved,
+but a key is now allowed a static painting **and** an animated FRAME
+SET beside it. `assets/images/enemies/frames.ts` holds the registry,
+the manifest type and `validateFrameSet`; it ships EMPTY, so while no
+set is installed every enemy renders exactly the single image it
+rendered before.
+
+**What ships is cells, never the sheet.** A frame set is per-cell WebP,
+one file per frame, under
+`assets/images/enemies/anim/<portraitAsset>/`. The grid master is a
+build input and lives in the repo-root art-department tree; nothing
+under `axiomancer-mobile/` may resolve a path into that tree, so the
+splitter runs there and emits here.
+
+**The manifest.** Mirrors the master's sidecar JSON:
+
+```jsonc
+{
+  "frame": 256,              // edge of one square cell, source pixels
+  "columns": 8, "rows": 3,   // the grid the cells came from
+  "anchor": { "kind": "centre", "x": 128, "y": 128, "why": "it hovers" },
+  "graded": true,            // see "grade once" below
+  "clips": {
+    "idle":      { "row": 0, "frames": 8, "fps": 12, "loop": true,  "rest": 0 },
+    "struck":    { "row": 1, "frames": 8, "fps": 16, "loop": false, "rest": 7 },
+    "attacking": { "row": 2, "frames": 8, "fps": 14, "loop": false, "rest": 0 }
+  }
+}
+```
+
+`rest` is the index WITHIN ITS CLIP of the frame to hold when nothing
+is playing — the frame reduced motion and the seeded e2e harness show.
+
+**The anchor is a KIND, not a rule.** There is no single right anchor,
+and a universal one would have broken on the first enemy it met:
+
+| Kind | For | Evidence |
+|---|---|---|
+| `foot-line` (default) | a creature that STANDS | On the reference sheet the foot line held to 23px of a 443px cell (5.2%) while the bounding-box centre wandered 49.5px (11.2%) as the weapon swung. A bbox anchor makes that creature bob. |
+| `centre` | a creature that FLOATS | No foot line exists, and the hover IS the idle clip — an anchor tracking the body would cancel the motion the clip is for. The float-eye's own sidecar declares it. |
+
+A manifest naming neither kind FAILS validation, exactly as a cell count
+that disagrees with the grid does, or a `rest` index past the end of its
+clip. A frame set that fails is not rendered at all: a partial loop is a
+failure, not a shrug.
+
+**Grade once, never twice.** The ingest `RECIPE` carries
+`grayscale: true` alongside the size and quality terms. Run on a colour
+enemy it flattens the read — on the float-eye it takes the corona from
+RGB (62, 61, 16) to a flat grey 56, and the corona flare is the whole
+read of the attack frame. A sheet DERIVED from an already-ingested
+painting arrives with its source's grade baked in, so it ingests with
+`--no-grade`; only newly generated cells, which have never been graded,
+take the full recipe. The manifest's `graded` field records which
+happened, so the next reader does not have to guess. An animated enemy
+must not look graded differently from the static one beside it.
+
+**Bundle cost, measured.** The reference 8x3 sheet split at the recipe's
+q44: 24 cells, 149.5 KB total, mean 6378 B per frame, max 9020 B —
+against 23624 B for the static `float-eye.webp`. That is 6.5x, +126 KB,
+for one enemy. `FRAME_CELL_MAX_BYTES` in `frames.ts` is the ceiling a
+regenerated set is held to so it cannot quietly triple.
+
+**Provenance.** A set is several files under ONE record: `covers` names
+the directory's cells (a prose blanket such as "every cell in
+anim/float-eye/" is accepted by the sweep), and the record carries the
+master it was split from, the splitter, and whether the cells were
+graded on the way in.
+
+**Seeing it work.** `/devframes` is the dev-only harness: it plays a
+supplied set at its manifest fps, names the clip and cell on screen, and
+offers pause-and-step plus a reduced-motion toggle. It plays a synthetic
+inline fixture, not an installed enemy — the registry is empty by
+design and the only real sheet lives in a tree app code may not reach.
+
 ## Licensing debt (open, blocked on the owner)
 
 Every raster directory except `maps/` (the Dore plate) now records

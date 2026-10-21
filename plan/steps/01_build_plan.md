@@ -200,7 +200,7 @@ event-pool and layout files).
       dropped with a dev warning; production never posts. Brief `plan/phases/phase_BE1_solve_time_backend.md` § BE1c. Requires BE1a.
 - [ ] Phase BE1d — `npm run puzzle:times` (plotted by T, 2026-10-21): per-candidate attempts, solve rate and
       median solve time grouped by band, with `--solver` and `--json`. Brief `plan/phases/phase_BE1_solve_time_backend.md` § BE1d. Requires BE1a.
-- [ ] Phase AN1a — The enemy frame engine, the fallback and the dev route (plotted by T, 2026-10-21):
+- [x] (#727) Phase AN1a — The enemy frame engine, the fallback and the dev route (plotted by T, 2026-10-21):
       a frame-set registry beside `ENEMY_ART_BY_KEY` keyed on `portraitAsset`, a reanimated frame player,
       and a dev route that plays a supplied sheet — with the registry **empty**, so every current enemy
       renders the single image it renders today and the phase lands changing no pixel. Frames anchor on
