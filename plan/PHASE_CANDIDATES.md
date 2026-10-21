@@ -57,6 +57,15 @@
 - conflicts: the "Bias" and "Last pass" headers at the top of each queue are the conflict magnet; they move to a tiny separate file either way.
 
 
+### [ ] [score 3.5] Stop `<rev>:<path>` git reads from breaking on Windows (lesson `msys-rev-path`, seen 2x)
+
+- proposed: 2026-10-21, `/plot` AD1 retro (lesson `msys-rev-path`, seen 2×)
+- source signals: `plan/lessons.md` `msys-rev-path`, seen 2×, last 2026-10-21. Git Bash path conversion rewrites `git show origin/main:<path>` to `origin\main;<path>` and git reports "ambiguous argument". It bit twice inside one plot session reading `main`'s build plan and workflows, costing a retry each time; the same family as `sed-flattens-crlf` and `isolated-worktree-shell` — this box's shell, not the repo's logic.
+- rationale: every verb reads `main` by `<rev>:<path>` when it orients, so this is a tax on the first step of plot, expand, iterate and ship alike. The fix is one environment variable, which is exactly the kind of thing a doc line never reliably carries.
+- proposed scope: 1 small phase (loop docs plus one guard). (1) Say the safe forms where orienting steps live (`skills/march.md` §4 Step 0, `skills/plot.md` §2 Step 1). (2) Have `.claude/hooks/guard.mjs` catch a Bash call containing `git show <rev>:` without `MSYS_NO_PATHCONV=1` and name the fix, the way it already names `-m` for `git commit -F`.
+- estimated phases: 1
+- conflicts: none. Harness and loop docs only; no game code, content, rule, card or keyword (D37, D88). Label `review:plan-only`.
+
 ### [ ] [score 4.0] Guard every root gate against the fresh-router re-push (lesson `gate-router-identity`, seen 2x)
 - Filed by the CR1b retro (2026-10-15). `useRouter()` returns a fresh object every render, so a gate effect keyed on `router` re-runs on any re-render; `EventGate` (stacked its screen twice) and `LabyrinthGate` (re-pushed `/labyrinth` over a labyrinth fight, fixed in #573) both needed a once-per-session latch.
 - The automation: a hermetic test that mounts each `components/*Gate.tsx` with a router mock returning a fresh object per call, opens its session, re-renders with the pathname moved off its route, and asserts exactly one push. `HazardGate`, `RestGate`, `CacheGate`, `ItemRewardGate`, `BlacksmithGate`, `CombatGate`, `EventGate`, `LabyrinthGate`.
