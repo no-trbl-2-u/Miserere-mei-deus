@@ -1,0 +1,47 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-10-21",
+    "tool": "art-department/tools/split-spritesheet.py (Pillow, lossless cells) then scripts/ingest-art.mjs (sharp) --no-grade",
+    "model": "none - no image model was called and nothing was spent",
+    "post_process": "longest edge <= 640px, WebP q44, UNGRADED",
+    "graded": true,
+    "graded_in_this_run": false,
+    "graded_note": "A6b, grade once. The two fields say the two different things that get confused: the cells DO carry the ingest grade (graded: true, which is what the frame manifest records), and this run did not apply it (graded_in_this_run: false). It was applied once, upstream, to float-eye.webp in 2026-07. Re-running it here would darken the cells a second time and, worse, grayscale: true would flatten the corona that is the whole read of the attack frame.",
+    "license": "UNRESOLVED",
+    "license_note": "Derived from float-eye.webp, an owner-supplied external illustration with no recorded source or licence. A derivative cannot be cleaner than what it derives from, so this set carries the same open question and is blocked on the same owner answer.",
+    "source": "art-department/masters/enemies/float-eye.sheet.png (2048x768 lossless master, 8 columns x 3 rows of 256px cells; see its own provenance.json, which records the rig that drew it)",
+    "method": "The master was cut into 24 lossless PNG cells by the splitter, row-major, then each cell was encoded to WebP q44 by the shared ingest recipe with the grade skipped. Every pixel descends from the shipped painting; the sheet master itself never enters this tree (D98).",
+    "used_by": [
+      "assets/images/enemies/frames.ts - ENEMY_FRAME_SETS['float-eye'], via ./anim/float-eye/index.ts",
+      "components/combat/encounter/CombatCombatantPane.tsx - the enemy figure in live combat"
+    ],
+    "measured": "A11, measured on these exact files: 24 cells, 156452 B (152.8 KB) in total, mean 6519 B, max 9352 B (float-eye-20.webp, the attack flare), min 3786 B - against 23624 B for the static float-eye.webp. 6.6x, +132.8 KB for one enemy. FRAME_CELL_MAX_BYTES is 12000 and frame-cells.test.mjs fails any cell above it, so a regenerated set cannot quietly triple.",
+    "covers": [
+      "float-eye-00.webp",
+      "float-eye-01.webp",
+      "float-eye-02.webp",
+      "float-eye-03.webp",
+      "float-eye-04.webp",
+      "float-eye-05.webp",
+      "float-eye-06.webp",
+      "float-eye-07.webp",
+      "float-eye-08.webp",
+      "float-eye-09.webp",
+      "float-eye-10.webp",
+      "float-eye-11.webp",
+      "float-eye-12.webp",
+      "float-eye-13.webp",
+      "float-eye-14.webp",
+      "float-eye-15.webp",
+      "float-eye-16.webp",
+      "float-eye-17.webp",
+      "float-eye-18.webp",
+      "float-eye-19.webp",
+      "float-eye-20.webp",
+      "float-eye-21.webp",
+      "float-eye-22.webp",
+      "float-eye-23.webp"
+    ]
+  }
+]

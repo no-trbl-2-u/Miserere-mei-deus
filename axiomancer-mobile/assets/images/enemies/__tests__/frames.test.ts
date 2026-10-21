@@ -1,11 +1,15 @@
 /**
  * The frame registry's two contracts.
  *
- * 1. SHIPPING CHANGES NO PIXEL. The frame-set registry is empty, so every
- *    enemy still resolves to the one image it resolved to before. This test
- *    ENUMERATES `ENEMY_ART_BY_KEY` rather than naming the three enemies that
- *    exist today, so a fourth is covered the day it is added and nobody has to
- *    remember to come back here.
+ * 1. EVERY ENEMY STILL RESOLVES TO ITS OWN PAINTING, registered for frames or
+ *    not. The registry shipped empty in AN1a and the float-eye went into it in
+ *    AN1e, so this is no longer "nothing animates" - it is the stronger claim
+ *    that installing a set took nothing away: the static binding is untouched
+ *    for every key, and the frame lookup answers for exactly the keys that
+ *    have an entry. It still ENUMERATES `ENEMY_ART_BY_KEY` rather than naming
+ *    the enemies that exist today, so a fourth is covered the day it is added
+ *    and nobody has to remember to come back here - the expected frame answer
+ *    is read off the registry rather than written down as a list of names.
  * 2. A PARTIAL LOOP IS A FAILURE. A set whose files disagree with its
  *    manifest, whose resting index names a frame that does not exist, or whose
  *    manifest declares no anchor kind, fails validation — it must never render
@@ -19,7 +23,7 @@ import {
     type EnemyFrameSet, type FrameClip,
 } from '../frames';
 
-describe('the static art registry is untouched while no frame set is installed', () => {
+describe('installing a frame set took nothing away from the static registry', () => {
     const keys = ENEMY_ART_KEYS;
 
     it('has keys to enumerate at all', () => {
@@ -27,24 +31,73 @@ describe('the static art registry is untouched while no frame set is installed',
         expect(keys.length).toBeGreaterThanOrEqual(3);
     });
 
-    it.each(keys)('%s resolves to its own single image, and has no frames', (key) => {
+    it.each(keys)('%s resolves to its own single image', (key) => {
         expect(hasEnemyArt(key)).toBe(true);
         expect(getEncounterEnemyArt(key)).toBe(ENEMY_ART_BY_KEY[key]);
         // The nonce only matters on the hash fallback; a registered key ignores it.
         expect(getEncounterEnemyArt(key, 97)).toBe(ENEMY_ART_BY_KEY[key]);
-        expect(hasEnemyFrames(key)).toBe(false);
-        expect(getEnemyFrameSet(key)).toBeNull();
     });
 
-    it('the frame registry ships empty, so no enemy animates yet', () => {
-        expect(Object.keys(ENEMY_FRAME_SETS)).toEqual([]);
+    // Derived from the registry, not from a list of names: a fourth enemy,
+    // framed or static, is covered here without this file being edited.
+    it.each(keys)('%s animates exactly when the frame registry says so', (key) => {
+        const installed = Object.prototype.hasOwnProperty.call(ENEMY_FRAME_SETS, key);
+        expect(hasEnemyFrames(key)).toBe(installed);
+        expect(getEnemyFrameSet(key)).toBe(installed ? ENEMY_FRAME_SETS[key] : null);
+    });
+
+    // The enumeration above is only a contract while at least one key sits on
+    // each side of it. With every enemy installed, "the static path still
+    // works" would be a sentence about nobody.
+    it('the roster still has a framed enemy and a static one', () => {
+        expect(keys.filter((k) => hasEnemyFrames(k))).toEqual(['float-eye']);
+        expect(keys.filter((k) => !hasEnemyFrames(k)).length).toBeGreaterThan(0);
     });
 
     it('an unknown key still falls back to the hash pick, as it always did', () => {
         expect(hasEnemyArt('no-such-enemy')).toBe(false);
+        expect(hasEnemyFrames('no-such-enemy')).toBe(false);
         expect(Object.values(ENEMY_ART_BY_KEY)).toContain(
             getEncounterEnemyArt('no-such-enemy', 3),
         );
+    });
+});
+
+/**
+ * A9 - the installed set, read against the sheet it was cut from. The manifest
+ * in `frames.ts` is a TRANSCRIPTION of `float-eye.sheet.json`, and a
+ * transcription is a thing that can be wrong: a row swapped here would make
+ * the enemy flinch on the beat it meant to swing, and nothing else in this
+ * suite would notice.
+ */
+describe('the float-eye is installed', () => {
+    const set = ENEMY_FRAME_SETS['float-eye'];
+
+    it('is in the registry at all', () => {
+        expect(set).toBeDefined();
+    });
+
+    it('ships one file per cell of its 8x3 grid', () => {
+        expect(set.manifest.columns * set.manifest.rows).toBe(24);
+        expect(set.frames).toHaveLength(24);
+        // 24 DISTINCT modules, not one cell required 24 times.
+        expect(new Set(set.frames.map((f) => JSON.stringify(f))).size).toBe(24);
+    });
+
+    it('names its three clips on the rows the sheet drew them on', () => {
+        expect(set.manifest.clips.idle).toEqual({ row: 0, frames: 8, fps: 12, loop: true, rest: 0 });
+        expect(set.manifest.clips.struck).toEqual({ row: 1, frames: 8, fps: 16, loop: false, rest: 7 });
+        expect(set.manifest.clips.attacking).toEqual({ row: 2, frames: 8, fps: 14, loop: false, rest: 0 });
+    });
+
+    it('anchors on the centre, because it floats and the hover is the clip', () => {
+        expect(set.manifest.anchor.kind).toBe('centre');
+    });
+
+    it('records that its cells already carry the grade (A6b)', () => {
+        // They descend from an already-ingested painting and came in with
+        // --no-grade. Saying `false` here would invite a second grade.
+        expect(set.manifest.graded).toBe(true);
     });
 });
 
@@ -175,13 +228,13 @@ describe('validateFrameSet', () => {
 });
 
 describe('every installed frame set validates', () => {
-    // Vacuous today by design, and the guard that stops an install shipping
-    // broken the moment the registry is no longer empty.
-    it.each(Object.keys(ENEMY_FRAME_SETS).length ? Object.keys(ENEMY_FRAME_SETS) : ['<none installed>'])(
-        '%s',
-        (key) => {
-            if (key === '<none installed>') return;
-            expect(validateFrameSet(key, ENEMY_FRAME_SETS[key])).toEqual([]);
-        },
-    );
+    // No longer vacuous: the float-eye is in here, so this is now the gate
+    // that stops a real install shipping broken.
+    it('there is something installed to validate', () => {
+        expect(Object.keys(ENEMY_FRAME_SETS).length).toBeGreaterThan(0);
+    });
+
+    it.each(Object.keys(ENEMY_FRAME_SETS))('%s', (key) => {
+        expect(validateFrameSet(key, ENEMY_FRAME_SETS[key])).toEqual([]);
+    });
 });

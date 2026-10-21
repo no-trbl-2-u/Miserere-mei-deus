@@ -8,10 +8,12 @@
  * provenance.json.
  *
  * There is no "one asset per enemy" law. An enemy may carry a single
- * painting, as all three below do today, or a painting plus an animated FRAME
- * SET — see `./frames.ts`, whose registry is deliberately empty until the
- * first set is installed. The bindings below hold either way: a frame set is
- * additional art for an enemy, never a replacement for its key.
+ * painting, or a painting plus an animated FRAME SET — see `./frames.ts`. The
+ * float-eye carries both: its painting below, and the 24 cells under
+ * `anim/float-eye/` that phase AN1e installed. The bindings below hold either
+ * way: a frame set is additional art for an enemy, never a replacement for
+ * its key, and an enemy with no set renders through `getEncounterEnemyArt`
+ * exactly as it always did.
  *
  * `getEncounterEnemyArt(artKey, nonce)` resolves the key directly; unknown /
  * missing keys fall back to a stable hash pick over the whole pool (so an

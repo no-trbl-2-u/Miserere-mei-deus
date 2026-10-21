@@ -7,10 +7,12 @@
  * graded. The registry is keyed on the same `portraitAsset` key the static
  * registry uses, so one enemy either has frames or does not.
  *
- * `ENEMY_FRAME_SETS` SHIPS EMPTY, and that is deliberate (phase AN1a, A2). The
- * engine and the art install are separate phases so that the engine's review is
- * not hostage to an art review; while the registry is empty every enemy renders
- * exactly the single image it rendered before. `AN1e` installs the first set.
+ * `ENEMY_FRAME_SETS` SHIPPED EMPTY, and that was deliberate (phase AN1a, A2):
+ * the engine and the art install are separate phases so that the engine's
+ * review is not hostage to an art review. Phase AN1e installed the first set,
+ * the float-eye's. Every OTHER enemy is still absent from the registry and
+ * still renders exactly the single image it rendered before — absence from
+ * here is the static path, not a missing feature.
  *
  * WHAT A SET IS MADE OF
  * ---------------------
@@ -38,14 +40,21 @@
  * `--no-grade`; only newly generated cells take the full recipe. `graded` on
  * the manifest records which happened, so nobody has to guess later.
  *
- * BUNDLE COST (A11, measured). The reference 8x3 sheet split at the recipe's
- * q44: 24 cells, 149.5 KB in total, mean 6378 B, max 9020 B per cell — against
- * 23624 B for the static `float-eye.webp`. 6.5x, +126 KB, for one enemy.
- * `FRAME_CELL_MAX_BYTES` below is the ceiling that keeps a regenerated set from
- * quietly tripling that.
+ * BUNDLE COST (A11, measured on the cells that actually shipped). The
+ * float-eye's 8x3 sheet split and ingested at the recipe's q44: 24 cells,
+ * 156452 B (152.8 KB) in total, mean 6519 B, max 9352 B (`float-eye-20.webp`,
+ * the attack flare), min 3786 B — against 23624 B for the static
+ * `float-eye.webp`. 6.6x, +132.8 KB, for one enemy. (The brief's estimate was
+ * 149.5 KB / mean 6378 / max 9020, measured with a different encoder build;
+ * the numbers here are the files in the tree, which is what a ceiling has to
+ * be set against.) `FRAME_CELL_MAX_BYTES` below is that ceiling, and
+ * `scripts/frame-cells.test.mjs` is what enforces it against the bytes on
+ * disk — a constant nothing weighs is a wish.
  */
 
 import type { ImageSourcePropType } from 'react-native';
+
+import { FLOAT_EYE_CELLS } from './anim/float-eye';
 
 /** How a cell is registered against the frame beneath it. */
 export type FrameAnchorKind = 'foot-line' | 'centre';
@@ -128,10 +137,60 @@ export const CLIP_LOOPS: Readonly<Record<string, boolean>> = {
 };
 
 /**
- * THE REGISTRY. Empty by design (A2) — see the header. An enemy absent from
- * here resolves through `getEncounterEnemyArt` exactly as it always has.
+ * THE FLOAT-EYE (phase AN1e) — the first installed set, and the one that makes
+ * the four phases before it visible.
+ *
+ * The numbers are not chosen here. They are transcribed from
+ * `float-eye.sheet.json`, the sidecar the rig wrote beside the master it drew,
+ * so the manifest the app plays and the manifest the sheet was cut to are the
+ * same table. `anchor.kind` is `centre` rather than the standing default
+ * because the eye floats: it has no foot line, and its hover IS the idle clip,
+ * so an anchor tracking the body would cancel the motion the clip exists for.
+ *
+ * `graded: true` says the pixels carry the ingest grade — applied ONCE, to the
+ * painting these cells descend from, back in 2026-07. The split ingested with
+ * `--no-grade` for exactly that reason; see this directory's
+ * `anim/float-eye/provenance.json`.
  */
-export const ENEMY_FRAME_SETS: Readonly<Record<string, EnemyFrameSet>> = {};
+const FLOAT_EYE_FRAME_SET: EnemyFrameSet = {
+    manifest: {
+        frame: 256,
+        columns: 8,
+        rows: 3,
+        anchor: {
+            kind: 'centre',
+            x: 128,
+            y: 128,
+            why: 'floating enemy; no foot line exists, and the hover is the idle clip',
+        },
+        clips: {
+            idle: { row: 0, frames: 8, fps: 12, loop: true, rest: 0 },
+            struck: { row: 1, frames: 8, fps: 16, loop: false, rest: 7 },
+            attacking: { row: 2, frames: 8, fps: 14, loop: false, rest: 0 },
+        },
+        graded: true,
+        // This points at the provenance record rather than naming the masters
+        // tree, and `generator` is left unset for the same reason: app code
+        // may not name that tree even in a string literal, because a string
+        // literal is how a path gets resolved, and the sealed-tree guard in
+        // the root suite fails the build for it. The full lineage lives in
+        // `anim/float-eye/provenance.json` — the master, the rig that drew
+        // it, the splitter that cut it, the ungraded ingest, the cost.
+        source: 'see anim/float-eye/provenance.json',
+    },
+    frames: FLOAT_EYE_CELLS,
+};
+
+/**
+ * THE REGISTRY. An enemy absent from here resolves through
+ * `getEncounterEnemyArt` exactly as it always has — which is still every enemy
+ * but one. AN1a shipped this empty on purpose so the engine's review was not
+ * hostage to an art review; AN1e put the float-eye in it, and that is the row
+ * where the chain stops being invisible.
+ */
+export const ENEMY_FRAME_SETS: Readonly<Record<string, EnemyFrameSet>> = {
+    'float-eye': FLOAT_EYE_FRAME_SET,
+};
 
 /** The frame set for a `portraitAsset` key, or null when the enemy is static. */
 export function getEnemyFrameSet(artKey: string | null | undefined): EnemyFrameSet | null {

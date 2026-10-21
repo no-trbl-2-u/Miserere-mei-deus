@@ -7,7 +7,7 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
-import { REQUIRED_CLIPS } from '@/assets/images/enemies/frames';
+import { ENEMY_FRAME_SETS, REQUIRED_CLIPS } from '@/assets/images/enemies/frames';
 
 import DevFrameHarness from '../devframes/index';
 
@@ -59,6 +59,31 @@ describe('the enemy frame harness', () => {
         expect(screen.getByTestId('devframes-readout').props.children).toContain('loop');
         fireEvent.press(screen.getByTestId('devframes-clip-struck'));
         expect(screen.getByTestId('devframes-readout').props.children).toContain('one-shot');
+    });
+
+    // AN1e — the harness played only the synthetic fixture while the registry
+    // was empty. Now that a real enemy is installed, T can watch the article
+    // itself here rather than a stand-in for it, and the list is built FROM
+    // the registry so the next enemy appears without this file being edited.
+    it.each(Object.keys(ENEMY_FRAME_SETS))('offers the installed %s set', (key) => {
+        render(<DevFrameHarness />);
+        expect(screen.getByTestId(`devframes-set-${key}`)).toBeTruthy();
+    });
+
+    it('offers the synthetic fixture too, so the harness survives an empty registry', () => {
+        render(<DevFrameHarness />);
+        expect(screen.getByTestId('devframes-set-dev-synthetic')).toBeTruthy();
+    });
+
+    it('plays an installed set at its own manifest, not the fixture\'s', () => {
+        render(<DevFrameHarness />);
+        // The fixture is a 4x3 grid at 6fps; the float-eye is 8x3 at 12.
+        expect(screen.getByTestId('devframes-readout').props.children).toContain('6fps');
+        fireEvent.press(screen.getByTestId('devframes-set-float-eye'));
+        expect(screen.getByTestId('devframes-readout').props.children).toContain('12fps');
+        expect(screen.getByTestId('devframes-set-readout').props.children).toContain('float-eye');
+        // The float-eye floats, so its anchor is the one that is NOT the default.
+        expect(screen.getByTestId('devframes-set-readout').props.children).toContain('centre');
     });
 
     it('renders nothing in a build with dev tools off', () => {

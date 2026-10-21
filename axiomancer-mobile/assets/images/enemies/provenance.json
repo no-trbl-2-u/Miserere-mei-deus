@@ -32,10 +32,10 @@
   {
     "generated_by": "contract-note",
     "date": "2026-10-21",
-    "tool": "none - this record documents HOW an animated frame set is recorded here, and covers no file of its own yet",
-    "covers": "no file yet. A frame set is several files under ONE record: when anim/<portraitAsset>/ is installed, append an entry whose `covers` is a prose blanket naming that directory, carrying the master it was split from, the splitter that cut it, and whether the cells were graded on the way in (a derived set ingests --no-grade, because its source's grade is already baked in; only newly generated cells take the full recipe). See docs/asset-conventions.md, 'Enemy frame sets'.",
+    "tool": "none - this record documents WHERE and HOW an animated frame set is recorded, and covers no file of its own",
+    "covers": "no file. A frame set is several files under ONE record, and that record lives BESIDE THE CELLS, in anim/<portraitAsset>/provenance.json - which is where the directory sweep in scripts/asset-provenance.test.mjs looks, because anim/<key>/ is an art directory of its own. The record carries the master it was split from, the splitter that cut it, the measured per-cell and per-set cost, and whether the cells were graded on the way in (a derived set ingests --no-grade, because its source grade is already baked in; only newly generated cells take the full recipe). The first one is anim/float-eye/provenance.json, written by phase AN1e. See docs/asset-conventions.md, 'Enemy frame sets'.",
     "used_by": [
-      "assets/images/enemies/frames.ts (the frame-set registry - empty until the first set is installed)"
+      "assets/images/enemies/frames.ts (the frame-set registry - the float-eye is installed; every other enemy is absent and renders its single painting)"
     ],
     "license": "n/a - no asset is covered by this record"
   }

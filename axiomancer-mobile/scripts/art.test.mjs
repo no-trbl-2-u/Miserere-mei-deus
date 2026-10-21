@@ -10,6 +10,7 @@
 // the thirty lines that actually speak HTTP.
 
 import assert from 'node:assert/strict'
+import fs from 'node:fs'
 import test from 'node:test'
 
 import { BACKEND_NAMES, generate, generationProvenance, selectBackendName, selectionReason } from './art/adapter.mjs'
@@ -143,6 +144,16 @@ test('an injected backend bypasses selection entirely — the test seam', async 
 })
 
 // ── the QA drift metrics ─────────────────────────────────────────────────────
+
+test('the ingest runs when it is the entry point, on Windows paths too', () => {
+  // `import.meta.url === `file://${process.argv[1]}`` never matches when
+  // argv[1] is `C:\\...`, so the ingest exited 0 having written nothing and
+  // the split that fed it looked like it had produced no output. The whole
+  // failure is one string comparison, so one string is what is pinned.
+  const source = fs.readFileSync(new URL('./ingest-art.mjs', import.meta.url), 'utf-8')
+  assert.match(source, /import\.meta\.url === pathToFileURL\(process\.argv\[1\]\)\.href/)
+  assert.doesNotMatch(source, /import\.meta\.url === `file:\/\//)
+})
 
 test('palette distance is zero on a token and rises off it', () => {
   const [r, g, b] = [0x0b, 0x0a, 0x09] // PALETTE.bg

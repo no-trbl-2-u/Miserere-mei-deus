@@ -193,19 +193,106 @@ test('every provenance record covers files that actually exist', () => {
   assert.deepEqual(phantom, [], 'a record for a deleted asset outlives the asset it documents')
 })
 
+// PHASE AN1e — a category's registry is no longer one file.
+//
+// This gate read `<category>/index.ts` and nothing else, which was true of
+// every category until an enemy got a frame set: 24 cells whose `require()`
+// literals live in `enemies/anim/float-eye/index.ts`, reached from
+// `enemies/index.ts` through `enemies/frames.ts`. Every one of them was on
+// disk and bound to a rendered component, and this sweep would have called
+// all 24 dead weight.
+//
+// The fix is not an exemption — an exemption is how a category stops being
+// swept at all. Reachability is followed instead: start at the category's
+// `index.ts` and walk the local modules it imports or re-exports, and their
+// local modules in turn, staying inside the category. That is the same
+// reachability Metro performs, which is what "a registry reaches it" was
+// always trying to mean. A cell nothing imports is still an orphan, and a
+// whole module nothing imports contributes nothing.
+
+/** The `./x` specifiers a module imports or re-exports. */
+function localSpecifiers(source) {
+  const out = []
+  for (const m of source.matchAll(/(?:from|require\()\s*'(\.[^']*)'/g)) out.push(m[1])
+  return out
+}
+
+/** `spec` resolved to a module file, or null when it is not one (an image is not). */
+function resolveModule(fromFile, spec) {
+  const base = path.resolve(path.dirname(fromFile), spec)
+  for (const candidate of [base, `${base}.ts`, `${base}.tsx`, path.join(base, 'index.ts')]) {
+    if (fs.existsSync(candidate) && fs.statSync(candidate).isFile() && /\.tsx?$/.test(candidate)) {
+      return candidate
+    }
+  }
+  return null
+}
+
+/**
+ * Every module of a category's registry, as one string: its `index.ts` plus
+ * the local modules reachable from it, transitively, without leaving the
+ * category directory. The `seen` set makes a cycle terminate rather than hang.
+ */
+function registrySourceFor(category) {
+  const entry = path.join(IMAGES, category, 'index.ts')
+  if (!fs.existsSync(entry)) return null
+  const home = path.join(IMAGES, category)
+  const seen = new Set()
+  const parts = []
+  const queue = [entry]
+  while (queue.length) {
+    const file = queue.shift()
+    if (seen.has(file)) continue
+    seen.add(file)
+    const source = fs.readFileSync(file, 'utf-8')
+    parts.push(source)
+    for (const spec of localSpecifiers(source)) {
+      const next = resolveModule(file, spec)
+      // Staying inside the category is deliberate: `screens/index.ts` reaches
+      // ACROSS to `maps/` by design, and following that would let one
+      // category's registry excuse another category's orphan.
+      if (next && next.startsWith(home + path.sep)) queue.push(next)
+    }
+  }
+  return { source: parts.join('\n'), modules: [...seen] }
+}
+
 test('every art file is reachable from a registry', () => {
   const orphans = []
   for (const { rel, images } of dirs) {
     const category = rel.split('/')[0]
     if (REGISTRY_LESS.has(category)) continue
-    const indexPath = path.join(IMAGES, category, 'index.ts')
-    if (!fs.existsSync(indexPath)) { orphans.push(`${rel}: no index.ts`); continue }
-    const source = fs.readFileSync(indexPath, 'utf-8')
+    const registry = registrySourceFor(category)
+    if (registry == null) { orphans.push(`${rel}: no index.ts`); continue }
     for (const img of images) {
-      if (!source.includes(img)) orphans.push(`${rel}/${img}`)
+      if (!registry.source.includes(img)) orphans.push(`${rel}/${img}`)
     }
   }
   assert.deepEqual(orphans, [], 'art in the tree that no registry reaches is dead bundle weight')
+})
+
+test('following re-exports is reachability, not a hole the enemies walked through', () => {
+  // Two guards on the walk above. First: it really does leave the entry file
+  // — if it stopped there, the float-eye's cells would pass this sweep by
+  // accident the day someone pasted their names into a comment.
+  const enemies = registrySourceFor('enemies')
+  const reached = enemies.modules.map((m) => path.relative(IMAGES, m).replace(/\\/g, '/'))
+  assert.ok(reached.includes('enemies/frames.ts'), 'the frame registry must be walked')
+  assert.ok(
+    reached.includes('enemies/anim/float-eye/index.ts'),
+    'the cells module must be reached THROUGH frames.ts, not named directly',
+  )
+
+  // Second: it does not leave the category. `screens/index.ts` requires out of
+  // `maps/` by design, and a walk that followed it would let `screens` vouch
+  // for art that only `maps` is supposed to account for.
+  const screens = registrySourceFor('screens')
+  for (const m of screens.modules) {
+    assert.ok(
+      m.startsWith(path.join(IMAGES, 'screens') + path.sep),
+      `the walk left its category: ${m}`,
+    )
+  }
 })
 
 test('the registry-less list holds only directories that are still registry-less', () => {
