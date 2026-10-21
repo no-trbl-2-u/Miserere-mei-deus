@@ -3,6 +3,7 @@
 //
 //   node scripts/vault.mjs ensure   # clone vault/ when missing, else fast-forward it
 //   node scripts/vault.mjs status   # head commit, ahead/behind, dirty
+//   node scripts/vault.mjs features # copy the repo's feature map into the vault (FM1e)
 //
 // The vault is its own repo (no-trbl-2-u/miserere-vault), cloned into `vault/`
 // at the MAIN checkout's root and ignored by Miserere (`/vault/`). From a linked
@@ -12,7 +13,7 @@
 // VAULT_REMOTE overrides the clone URL (tests, forks). See docs/vault.md.
 
 import { spawnSync } from 'node:child_process'
-import { existsSync } from 'node:fs'
+import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -124,11 +125,96 @@ export function status({ cwd = process.cwd(), git = runGit } = {}) {
   }
 }
 
+// The feature map (phase FM1e). The repo generates docs/feature-map/ (FM1c);
+// `features` copies two files from it into the vault and overwrites nothing else:
+//   docs/feature-map/Map.canvas -> vault/Feature Map.canvas   (byte for byte)
+//   docs/feature-map/README.md  -> vault/02 Features.md       (the feature table)
+// CONTRACT with the generator: README.md holds the feature table between two
+// marker lines, each exactly once and on a line of its own, start before end:
+//   <!-- feature-table:start -->
+//   <!-- feature-table:end -->
+// 02 Features.md is FEATURES_HEADER, a blank line, then the lines between the
+// markers verbatim. A missing source file is skipped with a message (exit 0:
+// the map is not generated yet); a README without well-formed markers breaks
+// the contract (exit 1) and nothing is written. See docs/vault.md.
+export const FEATURE_MAP_DIR = path.join('docs', 'feature-map')
+export const TABLE_START = '<!-- feature-table:start -->'
+export const TABLE_END = '<!-- feature-table:end -->'
+export const FEATURES_HEADER = "Generated from the repo's feature map (docs/feature-map/README.md); do not edit, /vault overwrites this file."
+export const FEATURE_FILES = [
+  { from: 'Map.canvas', to: 'Feature Map.canvas' },
+  { from: 'README.md', to: '02 Features.md' },
+]
+
+/** The lines between the feature-table markers, verbatim; throws when the markers are not well formed. */
+export function featureTable(readme) {
+  const lines = readme.split('\n')
+  const at = (marker) => lines.flatMap((l, i) => (l.replace(/\r$/, '') === marker ? [i] : []))
+  const starts = at(TABLE_START)
+  const ends = at(TABLE_END)
+  if (starts.length !== 1 || ends.length !== 1 || starts[0] > ends[0]) {
+    throw new Error(
+      `expected ${TABLE_START} and ${TABLE_END} once each, on lines of their own, start first (found ${starts.length} start, ${ends.length} end)`,
+    )
+  }
+  return lines.slice(starts[0] + 1, ends[0]).join('\n')
+}
+
+/** 02 Features.md's body for a README: the header, a blank line, the table. */
+export function featuresNote(readme) {
+  const table = featureTable(readme)
+  return `${FEATURES_HEADER}\n\n${table}${table.endsWith('\n') ? '' : '\n'}`
+}
+
+/**
+ * Copy the feature map from this checkout into the main checkout's vault/.
+ * The source is the checkout `cwd` is in (a worktree reads its own docs/);
+ * the vault is the shared one `ensure` keeps. Returns { code, lines }.
+ */
+export function features({ cwd = process.cwd(), git = runGit } = {}) {
+  const top = git(['rev-parse', '--show-toplevel'], cwd)
+  if (!top.ok) throw new Error(`not inside a git checkout (${cwd}): ${top.err}`)
+  const srcDir = path.join(path.resolve(cwd, top.out), FEATURE_MAP_DIR)
+  const dir = path.join(mainRoot({ cwd, git }), 'vault')
+  if (!existsSync(path.join(dir, '.git'))) {
+    return { code: 1, lines: [`vault: ${dir} is not cloned; run node scripts/vault.mjs ensure first.`] }
+  }
+  // Read and check every source before writing, so a broken README leaves the vault untouched.
+  const writes = []
+  const lines = []
+  for (const { from, to } of FEATURE_FILES) {
+    const src = path.join(srcDir, from)
+    if (!existsSync(src)) {
+      lines.push(`vault: skipped ${to}: ${src} does not exist yet (the feature map is not generated).`)
+      continue
+    }
+    if (from !== 'README.md') {
+      writes.push({ to, data: readFileSync(src) })
+      continue
+    }
+    try {
+      writes.push({ to, data: Buffer.from(featuresNote(readFileSync(src, 'utf8')), 'utf8') })
+    } catch (e) {
+      return { code: 1, lines: [`vault: ${src} breaks the feature-table contract: ${e.message}. Nothing was copied.`] }
+    }
+  }
+  for (const { to, data } of writes) {
+    const dest = path.join(dir, to)
+    if (existsSync(dest) && readFileSync(dest).equals(data)) {
+      lines.push(`vault: ${to} is up to date`)
+      continue
+    }
+    writeFileSync(dest, data)
+    lines.push(`vault: wrote ${to}`)
+  }
+  return { code: 0, lines }
+}
+
 export function main(argv = process.argv.slice(2)) {
   const verb = argv[0]
-  const run = { ensure, status }[verb]
+  const run = { ensure, status, features }[verb]
   if (!run) {
-    console.error('usage: node scripts/vault.mjs ensure|status')
+    console.error('usage: node scripts/vault.mjs ensure|status|features')
     return 2
   }
   let result
