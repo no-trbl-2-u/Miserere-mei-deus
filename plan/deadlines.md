@@ -115,7 +115,7 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 | [x] | 2026-10-31 | Difficulty features in the solver | W1 | HP2b |
 | [x] | 2026-10-23 | Decision pressure in the puzzle report | W1 | HP4a |
 | [x] | 2026-10-23 | The candidate library shape | W1 | HP4b |
-| [ ] | 2026-10-24 | The deadline lint and its reconcile step | W1 | DL1a, DL1b, DL1c |
+| [x] | 2026-10-24 | The deadline lint and its reconcile step | W1 | DL1a, DL1b, DL1c |
 | [x] | 2026-10-27 | Author the thirty candidates | W1 | HP4c |
 | [x] | 2026-10-28 | The thirty on the live board | W1 | HP4d |
 | [ ] | 2026-11-02 | W1 demo: T plays the thirty candidates | W1 | HP4e |

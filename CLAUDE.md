@@ -25,6 +25,10 @@ session-start hook runs `node scripts/deadlines.mjs --remind` and prints a **DEA
 first reply to T with that list (what needs a plot, what needs T, and when it is due) before anything else.
 It is silent in GitHub Actions, so loop ticks never see it. When you `/plot` a deadline item, replace its
 `needs plot` in the Items table with the new phase ids; when T finishes a `T` task, tick its Status `[x]`.
+A phase Item's Status is derived by `node scripts/deadlines.mjs --write`; never hand-edit it.
+`scripts/check-deadlines.mjs` (in the root `npm test`) fails when an open build-plan row has no Item and no
+`## Unscheduled` line, an Item names a missing row, a date leaves its window, or a phase Status is stale. It
+cannot see an Item whose premise is gone, so `/plot` and `/messy` carry a reconcile step that edits such Items.
 
 Answering a **balance/measurement** question (win rates, engagement)? Read
 `docs/reports/measured/latest.md` (phase R12a: the grey and Blood Price
