@@ -32,6 +32,31 @@ phone <-> Obsidian Sync <-> desktop folder Miserere-mei-deus/vault/
 | `Inbox.md` | T's rough ideas, newest at the bottom. |
 | `Threads/` | One note per thread. |
 | `Map.canvas` | The map as an Obsidian canvas. |
+| `Feature Map.canvas` | Generated: every feature of the game and how they connect, copied from the repo's `docs/feature-map/Map.canvas`. |
+| `02 Features.md` | Generated: the feature table (name, flags, needs a pitch), copied from the repo's `docs/feature-map/README.md`. |
+
+## Generated files
+
+`Feature Map.canvas` and `02 Features.md` are generated in the repo and
+copied in by `node scripts/vault.mjs features` (phase FM1e; brief
+`plan/phases/phase_FM1_feature_map.md`). They are Claude-owned: T should not
+edit them, because every `/vault` session overwrites both. The copy touches
+those two files and nothing else, and leaves them alone when they already
+match. To change what they say, change the code the map is generated from.
+
+- `Feature Map.canvas` is `docs/feature-map/Map.canvas`, byte for byte.
+- `02 Features.md` is one header line ("Generated from the repo's feature
+  map ...; do not edit"), a blank line, then the lines of
+  `docs/feature-map/README.md` between the marker lines
+  `<!-- feature-table:start -->` and `<!-- feature-table:end -->`, verbatim.
+
+The marker lines are the contract with the generator
+(`scripts/feature-map.mjs`): each appears exactly once, on a line of its own,
+start before end. A README that breaks it makes `features` exit 1 and copy
+nothing. A source file that does not exist yet is skipped with a message and
+`features` exits 0, so `/vault` runs on before the map is first generated.
+`features` exits 1 when `vault/` is not cloned. It reads the feature map from
+the checkout it runs in and writes the main checkout's `vault/`.
 
 ## Write zones
 
@@ -41,6 +66,8 @@ phone <-> Obsidian Sync <-> desktop folder Miserere-mei-deus/vault/
 - In `Threads/`, Claude adds notes and Obsidian question callouts and never
   rewrites T's prose.
 - `01 Map.md` and `Map.canvas` are Claude-maintained.
+- `Feature Map.canvas` and `02 Features.md` are generated; only
+  `node scripts/vault.mjs features` writes them.
 
 Claude never writes a goal of its own. When the goal is empty or has moved,
 Claude asks T and writes T's words.
@@ -51,9 +78,11 @@ Claude asks T and writes T's words.
    fast-forwards it when present. It stops, and says why, on a dirty tree or a
    diverged branch; it never merges, rebases or stashes. From a linked
    worktree it still uses the main checkout's `vault/`.
-2. Edit the notes inside the write zones.
-3. `git -C vault add -A` and `git -C vault commit -m "vault: <summary>"`.
-4. `git -C vault push`. If the push is rejected, run `ensure` again; if it
+2. `node scripts/vault.mjs features` refreshes the two generated files
+   (above).
+3. Edit the notes inside the write zones.
+4. `git -C vault add -A` and `git -C vault commit -m "vault: <summary>"`.
+5. `git -C vault push`. If the push is rejected, run `ensure` again; if it
    reports divergence, stop and tell T.
 
 `node scripts/vault.mjs status` prints the head commit, ahead/behind against

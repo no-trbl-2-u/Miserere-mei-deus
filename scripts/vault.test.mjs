@@ -1,4 +1,5 @@
-// scripts/vault.test.mjs — the vault working copy (phase OV1b, A3 and A4).
+// scripts/vault.test.mjs — the vault working copy (phase OV1b, A3 and A4) and
+// the feature-map copy into it (phase FM1e, A12).
 // Every case runs against a temp bare repo standing in for
 // no-trbl-2-u/miserere-vault and a temp host repo standing in for Miserere's
 // main checkout; nothing touches the network or this checkout's vault/.
@@ -14,7 +15,7 @@ import test from 'node:test'
 import { fileURLToPath } from 'node:url'
 
 import { isZoned } from './check-lexicon.mjs'
-import { cleanEnv, ensure, mainRoot, status } from './vault.mjs'
+import { cleanEnv, ensure, FEATURES_HEADER, featuresNote, featureTable, features, mainRoot, status, TABLE_END, TABLE_START } from './vault.mjs'
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -154,4 +155,121 @@ test('A3: Miserere ignores /vault/ and the lexicon lint never scans it', () => {
   assert.equal(isZoned('vault/Inbox.md'), true)
   assert.equal(isZoned('vault/Threads/a.md'), true)
   assert.equal(isZoned('docs/vault.md'), false)
+})
+
+// --- FM1e: the feature map copied into the vault -------------------------
+
+const CANVAS = '{"nodes":[{"id":"village","type":"text","text":"Village","x":0,"y":0,"width":200,"height":60}],"edges":[]}\n'
+const TABLE = '| Feature | Kind | Needs pitch |\n|---|---|---|\n| Village | route | no |\n'
+const README = `# Feature map\n\nIntro prose that stays in the repo.\n\n${TABLE_START}\n${TABLE}${TABLE_END}\n\n## Anomalies\n\n- none\n`
+
+/** The fixture with the vault cloned and, unless told otherwise, the generated feature map in the host checkout. */
+function featureFixture(t, { canvas = CANVAS, readme = README } = {}) {
+  const f = fixture(t)
+  assert.equal(ensure({ cwd: f.host, remote: f.remote }).code, 0)
+  const src = path.join(f.host, 'docs', 'feature-map')
+  mkdirSync(src, { recursive: true })
+  if (canvas !== null) writeFileSync(path.join(src, 'Map.canvas'), canvas)
+  if (readme !== null) writeFileSync(path.join(src, 'README.md'), readme)
+  return { ...f, src }
+}
+
+const read = (dir, name) => readFileSync(path.join(dir, name), 'utf8')
+const vaultChanges = (f) => sh(f.vault, 'status', '--porcelain', '--untracked-files=all')
+
+test('featureTable returns the lines between the markers verbatim', () => {
+  assert.equal(featureTable(README), TABLE.replace(/\n$/, ''))
+  // CRLF markers still match; the table's own line endings pass through untouched.
+  const crlf = README.replace(/\n/g, '\r\n')
+  assert.equal(featureTable(crlf), TABLE.replace(/\n/g, '\r\n').replace(/\n$/, ''))
+  assert.equal(featuresNote(crlf), `${FEATURES_HEADER}\n\n${TABLE.replace(/\n/g, '\r\n')}`)
+  assert.equal(featuresNote(README), `${FEATURES_HEADER}\n\n${TABLE}`)
+})
+
+test('featureTable rejects a missing, doubled, inline or reversed marker', () => {
+  assert.throws(() => featureTable('# no markers\n'), /found 0 start, 0 end/)
+  assert.throws(() => featureTable(`${TABLE_START}\n${TABLE_START}\nx\n${TABLE_END}\n`), /found 2 start, 1 end/)
+  assert.throws(() => featureTable(`text ${TABLE_START}\nx\n${TABLE_END}\n`), /found 0 start, 1 end/)
+  assert.throws(() => featureTable(`${TABLE_END}\nx\n${TABLE_START}\n`), /start first/)
+})
+
+test('features copies the canvas and the table, and leaves every other vault file alone', (t) => {
+  const f = featureFixture(t)
+  commitFile(f.vault, 'Inbox.md', '- T idea\n', 'vault: inbox')
+  commitFile(f.vault, 'Map.canvas', '{"nodes":[],"edges":[]}\n', 'vault: thread canvas')
+  commitFile(f.vault, '02 Features.md', 'stale, overwritten\n', 'vault: stale features')
+  const r = features({ cwd: f.host })
+  assert.equal(r.code, 0, r.lines.join('\n'))
+  assert.match(r.lines.join('\n'), /wrote Feature Map\.canvas/)
+  assert.match(r.lines.join('\n'), /wrote 02 Features\.md/)
+  assert.ok(readFileSync(path.join(f.vault, 'Feature Map.canvas')).equals(readFileSync(path.join(f.src, 'Map.canvas'))))
+  assert.equal(read(f.vault, '02 Features.md'), `${FEATURES_HEADER}\n\n${TABLE}`)
+  assert.doesNotMatch(read(f.vault, '02 Features.md'), /Intro prose|Anomalies/)
+  // Only the two generated files changed; every other note is byte-identical.
+  const changed = vaultChanges(f).split('\n').map((l) => l.slice(3).replace(/"/g, '')).sort()
+  assert.deepEqual(changed, ['02 Features.md', 'Feature Map.canvas'])
+  assert.equal(read(f.vault, '00 Goal.md'), '# Goal\n')
+  assert.equal(read(f.vault, 'Inbox.md'), '- T idea\n')
+  assert.equal(read(f.vault, 'Map.canvas'), '{"nodes":[],"edges":[]}\n')
+})
+
+test('features is idempotent: a second run reports up to date and rewrites nothing', (t) => {
+  const f = featureFixture(t)
+  assert.equal(features({ cwd: f.host }).code, 0)
+  const r = features({ cwd: f.host })
+  assert.equal(r.code, 0)
+  assert.deepEqual(r.lines, ['vault: Feature Map.canvas is up to date', 'vault: 02 Features.md is up to date'])
+})
+
+test('features skips a source that is not generated yet, exits 0, and writes nothing for it', (t) => {
+  const f = featureFixture(t, { canvas: null, readme: null })
+  const r = features({ cwd: f.host })
+  assert.equal(r.code, 0, r.lines.join('\n'))
+  assert.equal(r.lines.length, 2)
+  for (const line of r.lines) assert.match(line, /skipped .*does not exist yet/)
+  assert.equal(vaultChanges(f), '')
+
+  const g = featureFixture(t, { readme: null })
+  const s = features({ cwd: g.host })
+  assert.equal(s.code, 0)
+  assert.match(s.lines.join('\n'), /skipped 02 Features\.md/)
+  assert.match(s.lines.join('\n'), /wrote Feature Map\.canvas/)
+})
+
+test('features refuses a README that breaks the marker contract and copies nothing', (t) => {
+  const f = featureFixture(t, { readme: '# Feature map\n\n| a | b |\n' })
+  const r = features({ cwd: f.host })
+  assert.equal(r.code, 1)
+  assert.match(r.lines.join('\n'), /breaks the feature-table contract.*Nothing was copied/)
+  assert.equal(vaultChanges(f), '', 'not even the canvas')
+})
+
+test('features without a cloned vault says to run ensure and exits 1', (t) => {
+  const f = fixture(t)
+  const r = features({ cwd: f.host })
+  assert.equal(r.code, 1)
+  assert.match(r.lines.join('\n'), /not cloned; run node scripts\/vault\.mjs ensure first/)
+})
+
+test('from a linked worktree, features reads that worktree and writes the main checkout vault', (t) => {
+  const f = featureFixture(t, { canvas: null, readme: null })
+  const wt = path.join(f.tmp, 'wt')
+  sh(f.host, 'worktree', 'add', '-q', '-b', 'side', wt)
+  mkdirSync(path.join(wt, 'docs', 'feature-map'), { recursive: true })
+  writeFileSync(path.join(wt, 'docs', 'feature-map', 'Map.canvas'), CANVAS)
+  writeFileSync(path.join(wt, 'docs', 'feature-map', 'README.md'), README)
+  assert.equal(features({ cwd: wt }).code, 0)
+  assert.equal(read(f.vault, 'Feature Map.canvas'), CANVAS)
+  assert.equal(read(f.vault, '02 Features.md'), `${FEATURES_HEADER}\n\n${TABLE}`)
+})
+
+test('the CLI runs features as a verb', (t) => {
+  const f = featureFixture(t)
+  const out = execFileSync(process.execPath, [path.join(REPO, 'scripts', 'vault.mjs'), 'features'], {
+    cwd: f.host,
+    encoding: 'utf8',
+    env: cleanEnv(),
+  })
+  assert.match(out, /wrote Feature Map\.canvas/)
+  assert.equal(read(f.vault, 'Feature Map.canvas'), CANVAS)
 })
