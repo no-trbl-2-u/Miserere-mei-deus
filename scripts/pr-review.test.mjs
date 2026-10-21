@@ -15,12 +15,18 @@ const pr = (extra = {}) => ({
   state: 'OPEN', isDraft: false, isCrossRepository: false, labels: ['loop:pr', 'size:M'], head: 'a'.repeat(40), comments: [], ...extra,
 })
 
-test('every open same-repo PR with no verdict on its head is reviewed, whatever its labels (D95)', () => {
+test('every open same-repo non-plan PR with no verdict on its head is reviewed, whatever its labels (D95)', () => {
   assert.equal(reviewWanted(pr()).go, true)
-  assert.equal(reviewWanted(pr({ labels: ['plot', 'review:plan-only'] })).go, true)
   assert.equal(reviewWanted(pr({ labels: ['area:ci', 'risk:high'] })).go, true, 'no loop:pr label needed')
   assert.equal(reviewWanted(pr({ labels: [] })).go, true, 'a hand PR with no labels')
   assert.deepEqual([...REVIEW_LABELS], ['loop:pr', 'plot'])
+})
+
+test('a plan PR is never reviewed on pull_request, only by dispatch (T, 2026-10-21)', () => {
+  for (const l of ['plot', 'review:plan-only']) assert.match(reviewWanted(pr({ labels: [l] })).reason, /plan PR/, l)
+  for (const title of ['plot: BE1 solve-time backend', 'plan(RV4): x', 'Plan: y']) assert.equal(reviewWanted(pr({ title })).go, false, title)
+  assert.equal(reviewWanted(pr({ title: 'planner: fix the planner' })).go, true, 'a title that only starts with "plan"')
+  assert.equal(reviewWanted(pr({ labels: ['plot'], dispatch: true })).go, true, 'dispatch still reviews a plan')
 })
 
 test('a fork, a closed or merged PR, or a seeded draft on pull_request is skipped', () => {
