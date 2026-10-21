@@ -1,0 +1,84 @@
+name: backend-deploy
+
+# Deploys the miserere-api Worker (backend/) to Cloudflare (phase BE1b):
+# apply the D1 migrations to the remote `miserere` database, deploy the
+# Worker, then set its PUZZLE_API_TOKEN secret from the repo secret. The
+# Worker lives at https://miserere-api.no-trbl-2-u.workers.dev.
+#
+# Tests are not repeated here: verify-mechanics owns backend/** and gates the
+# PR before it reaches main. The job runs only on main, so a manual dispatch
+# from another branch deploys nothing. The Cloudflare and Worker secrets are
+# scoped to the steps that use them, never to `npm ci`, so no install script
+# sees them. scripts/backend-deploy.test.mjs pins this shape.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-deploy.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One deploy at a time, and never cancel one mid-migration.
+concurrency:
+  group: backend-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: migrate + deploy miserere-api
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Check the deploy secrets are set
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PUZZLE_API_TOKEN: ${{ secrets.PUZZLE_API_TOKEN }}
+        run: |
+          missing=""
+          [ -n "$CLOUDFLARE_API_TOKEN" ] || missing="$missing CLOUDFLARE_API_TOKEN"
+          [ -n "$CLOUDFLARE_ACCOUNT_ID" ] || missing="$missing CLOUDFLARE_ACCOUNT_ID"
+          [ -n "$PUZZLE_API_TOKEN" ] || missing="$missing PUZZLE_API_TOKEN"
+          if [ -n "$missing" ]; then
+            echo "::error::missing repo secret(s):$missing"
+            exit 1
+          fi
+
+      - name: Install workspace dependencies
+        run: npm ci
+
+      - name: Apply D1 migrations (remote)
+        working-directory: backend
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler d1 migrations apply miserere --remote
+
+      - name: Deploy the Worker
+        working-directory: backend
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler deploy
+
+      - name: Set the PUZZLE_API_TOKEN Worker secret
+        working-directory: backend
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PUZZLE_API_TOKEN: ${{ secrets.PUZZLE_API_TOKEN }}
+        run: printf '%s' "$PUZZLE_API_TOKEN" | npx wrangler secret put PUZZLE_API_TOKEN
