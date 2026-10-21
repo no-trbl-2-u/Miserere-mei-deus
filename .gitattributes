@@ -9,3 +9,8 @@ plan/NEEDS_T.md merge=lessons
 # ML1b): scripts/build-plan-merge.mjs, registered as merge.buildplan.driver the
 # same way. Unregistered, git falls back to its line merge.
 plan/steps/01_build_plan.md merge=buildplan
+
+# The art-department masters are compared byte for byte against a fresh
+# regeneration (art-department/tests/test_rig_spritesheet.py), so git must
+# never rewrite their line endings on checkout.
+art-department/masters/** -text

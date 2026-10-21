@@ -18,7 +18,7 @@ Clips are authored as explicit per-frame keys rather than curves. Animation
 timing is a thing you tune by eye, so the numbers you want to nudge are all
 in CLIPS below and read top-to-bottom as a dope sheet.
 
-Usage:  python rig-spritesheet.py [--enemy float-eye] [--frame 256]
+Usage:  python art-department/tools/rig-spritesheet.py [--enemy float-eye]
 """
 
 from __future__ import annotations
@@ -32,12 +32,16 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-MOBILE = Path(__file__).resolve().parents[2]
-ROOT = MOBILE.parent
+# This file lives at art-department/tools/, so the department is one level up
+# and the repo root two. Both ends of the pipeline resolve from there: the
+# source painting is read out of the mobile package's bundled asset tree, and
+# the sheet is written back inside the department, because a master is a
+# build-time artifact that must never reach the app bundle.
+DEPT = Path(__file__).resolve().parents[1]
+ROOT = DEPT.parent
+MOBILE = ROOT / "axiomancer-mobile"
 SRC_DIR = MOBILE / "assets" / "images" / "enemies"
-# Masters are build-time artifacts and never ship, so they live outside the
-# bundled asset tree. Phase AD1a gives this tool its own home beside them.
-OUT_DIR = ROOT / "art-department" / "masters" / "enemies"
+OUT_DIR = DEPT / "masters" / "enemies"
 
 # Measured off float-eye.webp; see the provenance record written beside the sheet.
 EYE_CENTER = (253.0, 228.0)
@@ -213,7 +217,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--enemy", default="float-eye")
     ap.add_argument("--frame", type=int, default=256, help="frame edge in px")
+    ap.add_argument("--out", type=Path, default=OUT_DIR,
+                    help="directory to write into; defaults to the masters tree")
     args = ap.parse_args()
+    out_dir = args.out
 
     src = Image.open(SRC_DIR / f"{args.enemy}.webp").convert("RGBA")
     body, eye = split_layers(src)
@@ -225,7 +232,7 @@ def main():
 
     meta = {
         "source": f"../../../axiomancer-mobile/assets/images/enemies/{args.enemy}.webp",
-        "generator": "scripts/art/rig-spritesheet.py",
+        "generator": "art-department/tools/rig-spritesheet.py",
         "frame": fp, "columns": cols, "rows": len(names),
         # AN1 A6 anchors frames on the foot line. A floating creature has no
         # feet, and its hover is the animation, so anchoring it on anything
@@ -251,14 +258,17 @@ def main():
             "rest": clip["rest"],
         }
 
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
-    stem = OUT_DIR / f"{args.enemy}.sheet"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    stem = out_dir / f"{args.enemy}.sheet"
     sheet.save(f"{stem}.png")
     sheet.save(f"{stem}.webp", quality=88, method=6)
-    (OUT_DIR / f"{args.enemy}.sheet.json").write_text(json.dumps(meta, indent=2) + "\n")
+    # Explicit encoding and newline, because the manifest has to come out
+    # byte-identical on every platform and the default writes CRLF on Windows.
+    (out_dir / f"{args.enemy}.sheet.json").write_text(
+        json.dumps(meta, indent=2) + "\n", encoding="utf-8", newline="\n")
 
     # Flipbook of every clip back to back, purely so a human can eyeball it.
-    previews[0].save(OUT_DIR / f"{args.enemy}.preview.webp", save_all=True,
+    previews[0].save(out_dir / f"{args.enemy}.preview.webp", save_all=True,
                      append_images=previews[1:], duration=80, loop=0, quality=86)
 
     png_kb = os.path.getsize(f"{stem}.png") / 1024
