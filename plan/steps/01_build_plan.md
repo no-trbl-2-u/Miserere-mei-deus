@@ -187,6 +187,19 @@ event-pool and layout files).
       Its constants are imported from `scripts/check-lessons.mjs` so lint and driver cannot drift. Six
       sightings in two days, three on PR #653 alone. Brief
       `plan/phases/phase_ML1_lessons_merge_driver.md` § ML1a. Requires nothing.
+- [ ] Phase BE1a — The attempt contract and the Worker (plotted by T, 2026-10-21): a new `backend/` workspace
+      holding a Cloudflare Worker with `POST`/`GET /v1/puzzle-attempts` behind a bearer token, the D1 schema as
+      numbered migrations, and the attempt contract (types plus validator) in `@mechanics`, tested in the Workers
+      runtime against a local D1. No deploy yet. Brief `plan/phases/phase_BE1_solve_time_backend.md` § BE1a. Requires nothing.
+- [ ] Phase BE1b — Live on Cloudflare (plotted by T, 2026-10-21) (attended): T mints the Cloudflare API token
+      and adds the repo secrets; the D1 database `miserere` is created, and `backend-deploy.yml` applies
+      migrations and deploys `miserere-api` on a push to `main` touching `backend/**`. Brief `plan/phases/phase_BE1_solve_time_backend.md` § BE1b.
+      Requires BE1a.
+- [ ] Phase BE1c — Preview builds post each attempt (plotted by T, 2026-10-21): each `/devpuzzle` attempt that
+      ends is posted once when dev tools are on and the `EXPO_PUBLIC_PUZZLE_API_*` env is set; a failure is
+      dropped with a dev warning; production never posts. Brief `plan/phases/phase_BE1_solve_time_backend.md` § BE1c. Requires BE1a.
+- [ ] Phase BE1d — `npm run puzzle:times` (plotted by T, 2026-10-21): per-candidate attempts, solve rate and
+      median solve time grouped by band, with `--solver` and `--json`. Brief `plan/phases/phase_BE1_solve_time_backend.md` § BE1d. Requires BE1a.
 - [ ] Phase AN1a — The enemy frame engine, the fallback and the dev route (plotted by T, 2026-10-21):
       a frame-set registry beside `ENEMY_ART_BY_KEY` keyed on `portraitAsset`, a reanimated frame player,
       and a dev route that plays a supplied sheet — with the registry **empty**, so every current enemy
@@ -980,6 +993,11 @@ See the status rows above; generate briefs on demand.
 > "reason not stated" — never invent one), and the resulting
 > commit/issue/phase-brief when available.
 
+- **2026-10-21** — actor: **T, attended session** (`/plot asap` from T's `/pitch`, branch
+  `loop/plot-BE1-solve-time-backend`). Action: **added Phases BE1a, BE1b, BE1c, BE1d** (the solve-time backend:
+  Workers + D1 contract and Worker, attended deploy, preview-build posting, `puzzle:times`) directly above
+  AN1a. Confirmed T's request: yes (`/pitch` exit answer "/plot asap"). Reason: T's solves of the thirty start
+  now and HP4f/HP4g read the times. Resulting commit: this one; brief `plan/phases/phase_BE1_solve_time_backend.md`.
 - **2026-10-20** — actor: **T, attended session** (`/plot anytime` from T's `/pitch`, branch
   `loop/plot-UP1-card-upgrades`). Action: **added Phases UP1a, UP1b, UP1c, UP1d, UP1e, UP1f, UP1g, UP1h** (card
   upgrades: Blood Price names, the upgrade law, the first rare, rest/anvil/elite grant paths, the measured report,
