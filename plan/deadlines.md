@@ -147,6 +147,10 @@ fails the root `npm test` on an open row (`[ ]`, `[-]` or `[blocked: …]`) that
 names, and on a line here with no reason. **A row listed here is work the loop may still pick on its ordinary turn:
 undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
 
+- OV1a — attended; T is building it in the plotting session (2026-10-20); date not set.
+- OV1b — attended; T is building it in the plotting session (2026-10-20); date not set.
+- OV1c — attended; T is building it in the plotting session (2026-10-20); date not set.
+- OV1d — attended; T is building it in the plotting session (2026-10-20); date not set.
 - VE1c — loop work listed alongside W1, needing no time from T; date not set.
 - VE1d — loop work listed alongside W1, needing no time from T; date not set.
 - PF2 — attended; after v0.3 (The milestone), and waits on T's Android baseline numbers.
