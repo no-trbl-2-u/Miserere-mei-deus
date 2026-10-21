@@ -8,82 +8,92 @@ Brief: `plan/phases/phase_FM1_feature_map.md`.
 <!-- feature-table:start -->
 | Feature | Kind | Reachable | Driven | Tested | Needs a pitch |
 |---|---|---|---|---|---|
-| Character | route | unknown | unknown | unknown | unknown |
-| Deck | route | unknown | unknown | unknown | unknown |
-| Exploration | route | unknown | unknown | unknown | unknown |
-| Inventory | route | unknown | unknown | unknown | unknown |
-| Memoir | route | unknown | unknown | unknown | unknown |
-| Blacksmith | route | unknown | unknown | unknown | unknown |
-| Cache | route | unknown | unknown | unknown | unknown |
-| Combat Encounter | route | unknown | unknown | unknown | unknown |
-| Cutscene | route | unknown | unknown | unknown | unknown |
-| Dialogue | route | unknown | unknown | unknown | unknown |
-| Event | route | unknown | unknown | unknown | unknown |
-| Index | route | unknown | unknown | unknown | unknown |
-| Item Reward | route | unknown | unknown | unknown | unknown |
-| Rest | route | unknown | unknown | unknown | unknown |
-| Saves | route | unknown | unknown | unknown | unknown |
-| Settings | route | unknown | unknown | unknown | unknown |
-| Village | route | unknown | unknown | unknown | unknown |
-| Hazard | route | unknown | unknown | unknown | unknown |
-| Hazard Deck | route | unknown | unknown | unknown | unknown |
-| Labyrinth | route | unknown | unknown | unknown | unknown |
-| Cards | engine area | unknown | unknown | unknown | unknown |
-| Character | engine area | unknown | unknown | unknown | unknown |
-| Combat | engine area | unknown | unknown | unknown | unknown |
-| Effects | engine area | unknown | unknown | unknown | unknown |
-| Enemy | engine area | unknown | unknown | unknown | unknown |
-| Game | engine area | unknown | unknown | unknown | unknown |
-| Items | engine area | unknown | unknown | unknown | unknown |
-| Log | engine area | unknown | unknown | unknown | unknown |
-| NPCs | engine area | unknown | unknown | unknown | unknown |
-| World | engine area | unknown | unknown | unknown | unknown |
-| Dev | dev route | unknown | unknown | unknown | unknown |
-| Devaftermath | dev route | unknown | unknown | unknown | unknown |
-| Devart | dev route | unknown | unknown | unknown | unknown |
-| Devart Rooms | dev route | unknown | unknown | unknown | unknown |
-| Devframes | dev route | unknown | unknown | unknown | unknown |
-| Devpuzzle | dev route | unknown | unknown | unknown | unknown |
+| Character | route | yes | yes | yes | no |
+| Deck | route | yes | no | yes | no |
+| The map | route | yes | yes | yes | no |
+| Inventory | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Inventory") |
+| Memoir | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Memoir") |
+| The Anvil | route | yes | no | yes | no |
+| Loot cache | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Loot cache", "loot-cache", "loot cache") |
+| Encounter | route | yes | yes | yes | no |
+| Cutscene | route | yes | yes | yes | no |
+| Dialogue | route | yes | yes | yes | no |
+| Event | route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Event") |
+| Index | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Index") |
+| Reward | route | yes | no | yes | no |
+| Rest | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Rest", "RestChoice", "rest node", "rest site") |
+| Saves | route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Saves") |
+| Settings | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Settings") |
+| Village | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Village") |
+| The hazard minigame | route | yes | yes | yes | no |
+| The hazard deck | route | yes | no | yes | no |
+| The Labyrinth | route | yes | yes | yes | no |
+| Cards | engine area | yes | yes | yes | no |
+| VITAE and stats | engine area | yes | yes | yes | no |
+| A fight | engine area | yes | yes | yes | no |
+| Effects | engine area | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Effects") |
+| The foes | engine area | yes | yes | yes | no |
+| Game | engine area | yes | yes | yes | no |
+| Items | engine area | yes | yes | yes | no |
+| Log | engine area | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Log") |
+| NPCs | engine area | yes | yes | yes | no |
+| The world | engine area | yes | yes | yes | no |
+| The dev menu | dev route | yes | yes | yes | no |
+| Devaftermath | dev route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devaftermath") |
+| Devart | dev route | yes | no | no | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devart") |
+| Devart Rooms | dev route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devart Rooms") |
+| Devframes | dev route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devframes") |
+| The hazard puzzle demos | dev route | yes | yes | yes | no |
 <!-- feature-table:end -->
 
 ## Anomalies
 
 ### Built but unreachable
 
-- unknown: features.json carries no reachability evidence yet.
+- none
 
 ### Routes with no way out but back
 
 Routes with no outgoing player-flow edge to another feature, not counting the shell gates every screen shares.
 
-- Blacksmith (`route:blacksmith`)
-- Cache (`route:cache`)
+- The Anvil (`route:blacksmith`)
+- Loot cache (`route:cache`)
 - Cutscene (`route:cutscene`)
 - Dialogue (`route:dialogue`)
 - Event (`route:event`)
-- Item Reward (`route:item-reward`)
+- Reward (`route:item-reward`)
 - Rest (`route:rest`)
 - Village (`route:village`)
-- Hazard (`route:hazard`)
-- Hazard Deck (`route:hazard-deck`)
-- Labyrinth (`route:labyrinth`)
+- The hazard minigame (`route:hazard`)
+- The hazard deck (`route:hazard-deck`)
+- The Labyrinth (`route:labyrinth`)
 - Devaftermath (`route:devaftermath`)
 - Devart (`route:devart`)
 - Devart Rooms (`route:devart/rooms`)
 - Devframes (`route:devframes`)
-- Devpuzzle (`route:devpuzzle`)
+- The hazard puzzle demos (`route:devpuzzle`)
 
 ### game-model.md sections that match no feature
 
-- Dice
-- A fight
-- VITAE and stats
-- The foes
-- Befriend and mercy
-- The world
+- none
 
 ## Unnamed features
 
 Features with no name from `game-model.md` vocabulary; each keeps its path-derived name.
 
-- unknown: features.json does not say which features are named yet.
+- Character (`route:(tabs)/character`)
+- Inventory (`route:(tabs)/inventory`)
+- Memoir (`route:(tabs)/memoir`)
+- Event (`route:event`)
+- Index (`route:index`)
+- Saves (`route:saves`)
+- Settings (`route:settings`)
+- Village (`route:village`)
+- Effects (`area:Effects`)
+- Game (`area:Game`)
+- Log (`area:Log`)
+- NPCs (`area:NPCs`)
+- Devaftermath (`route:devaftermath`)
+- Devart (`route:devart`)
+- Devart Rooms (`route:devart/rooms`)
+- Devframes (`route:devframes`)
