@@ -59,14 +59,34 @@ a test over every key in `ENEMY_ART_BY_KEY` shows the static fallback while no f
 - **A5 (a partial loop is a failure, not a shrug)** A frame set whose file count disagrees with its
   manifest, or whose resting index is out of range, fails a test. It must never render a truncated
   animation.
-- **A6 (the frame contract)** Frames are anchored on the **foot line**, not the bounding box, and the
-  contract is written down with the evidence: T's supplied sheet measured 8 cells of 443×443 with the
-  foot line stable to 23px (5.2% of cell) while the bounding-box centre wandered 49.5px (11.2%) because
-  the weapon swings. Anchoring on the bbox would make the creature bob; anchoring on the feet does not.
-  Each cell is alpha-matted (that sheet carried 0.85% red matte fringe, which would read as a rim glow
-  against `AXM.bg` `#0b0a09`) and goes through the **same** `RECIPE` as every other asset — longest edge
-  ≤640, WebP q44, brightness 0.62 / contrast 1.08 — so an animated enemy cannot look graded differently
-  from a static one.
+- **A6 (the frame contract)** The manifest declares an **anchor kind**, and the contract is written
+  down with the evidence for each.
+  - `foot-line` is the kind for a creature that stands, and the default. T's supplied sheet measured 8
+    cells of 443×443 with the foot line stable to 23px (5.2% of cell) while the bounding-box centre
+    wandered 49.5px (11.2%) because the weapon swings. Anchoring on the bbox would make that creature
+    bob; anchoring on the feet does not.
+  - `centre` is the kind for a creature that floats, where **no foot line exists** and the hover *is* the
+    idle animation — an anchor that tracked the body would cancel the very motion the clip is for. The
+    float-eye is the case: `assets/images/enemies/anim/float-eye.sheet.json` declares
+    `anchor: {kind: "centre"}` and its rig holds that point fixed by construction, every pose being an
+    offset from it.
+  - A manifest naming neither kind fails, the same way A5 fails a count mismatch. A single universal rule
+    would have shipped an engine that breaks on the first enemy it was pointed at.
+  Each cell is alpha-matted (T's sheet carried 0.85% red matte fringe, which would read as a rim glow
+  against `AXM.bg` `#0b0a09`).
+- **A6b (grade once, never twice)** A cell goes through the same `RECIPE` as every other asset — longest
+  edge ≤640, WebP q44 — but the **grade is applied exactly once in an asset's life**, and the manifest
+  records whether it has been. Two corrections to the original wording, both found by measurement:
+  - `RECIPE` in `scripts/ingest-art.mjs` is `{maxEdge: 640, quality: 44, grayscale: true, brightness:
+    0.62, contrast: 1.08}`. **`grayscale: true` was omitted** from this brief's first draft. Run on the
+    float-eye it flattens the corona from RGB (62, 61, 16) to a flat grey 56 — and the corona flare is the
+    entire read of the attack frame. A colour enemy cannot be greyscaled on the way in.
+  - A sheet **derived** from an already-ingested painting has its source's grade baked in. Re-running the
+    grade darkens it twice. A derived set therefore ingests with `--no-grade` (the flag
+    `scripts/ingest-art.mjs` already parses) and says so in its provenance; only a **newly generated**
+    sheet, whose cells have never been graded, takes the full `RECIPE`.
+  An animated enemy must not look graded differently from a static one — which is an argument for
+  grading once, not for grading again.
 - **A7 (T can see it work)** A dev route under `app/` in the manner of `devart/` plays an installed frame
   set at its manifest fps, with controls to step frames and to toggle the reduced-motion path, so T can
   judge the engine before any shipped enemy changes.
@@ -110,7 +130,10 @@ None. Frames are assets and a manifest; nothing is persisted and no save reads t
   deliberately the smallest thing that satisfies what T asked for.
 - **The engine ships before the art, and changes no pixel** (A2). A frame engine and a frame set in one
   phase would make the engine's review hostage to an art review. The registry starts empty.
-- **Anchor on the foot line** (A6), from measurement, not taste.
+- **An anchor kind, not one anchor** (A6), from measurement, not taste. The foot line is right for a
+  creature that stands and wrong for one that floats, and the roster already contains both.
+- **Grade once** (A6b). The failure this prevents is silent: a double-graded or greyscaled cell still
+  renders, still passes every count and range check, and simply looks wrong next to the static art.
 - **Reuse the pane's existing `reduceMotion` ref** (A4) rather than adding a second source of truth for
   the same preference; two mechanisms drift and one of them will be the one that is wrong.
 - **One grid image, split after** for AN1d. Generating frames one at a time is what breaks character
@@ -155,7 +178,7 @@ A1–A8 ticked.
 
 ### AN1a — The frame engine, the fallback, and the dev route (Size: M)
 
-Closes A1–A8. Requires nothing. Attended: no.
+Closes A1–A8, including A6b. Requires nothing. Attended: no.
 
 The primitive and the harness, with the registry empty. Nothing in live combat changes.
 
