@@ -17,6 +17,8 @@ When a brainstorm or design conversation ends with buildable direction, offer
 it in one `AskUserQuestion`: "Want to use `/plot` to turn this into a phase?"
 or "Want to use `/messy` to file this dump?". The loop never fires either.
 
+**The vault:** T's Obsidian notes (goal, thread map, inbox) live in `vault/`, a separate repo; run `/vault` for a session and read [`docs/vault.md`](./docs/vault.md) for its write zones.
+
 **Deadlines (T, 2026-10-19).** `plan/deadlines.md` is the whole deadline plan; `LIVE_DEADLINES.md` is the
 next two weeks of items that need T, regenerated daily (never edit it by hand). When a chat starts, the
 session-start hook runs `node scripts/deadlines.mjs --remind` and prints a **DEADLINE REMINDER**: lead your

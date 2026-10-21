@@ -60,6 +60,7 @@ const PLAN_LIVE = 'plan/bearings.md' // the only live plan/ surface
 
 export const isZoned = (rel) => {
   if (rel.startsWith('plan/')) return rel !== PLAN_LIVE
+  if (rel.startsWith('vault/')) return true // T's Obsidian notes: a separate, ignored repo (docs/vault.md)
   if (ZONE_BASENAMES.includes(path.basename(rel))) return true
   return ZONE_DIRS.some((z) => rel.includes(z))
 }
