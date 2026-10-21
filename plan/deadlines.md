@@ -176,6 +176,10 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - V6 — pre-revamp partial (glyph unification remainders); not v0.3 work; date not set.
 - V7 — pre-revamp partial (illustration upgrades); art is T's; not v0.3 work.
 - W5 — pre-revamp partial (map roster growth); enemies wait on T's B2 session; date not set.
+- AN1a — loop work; ships changing no pixel, needs no time from T; date not set.
+- AN1b — loop work; follows AN1a; date not set.
+- AN1c — loop work, but T sequenced it after seeing AN1b work; date not set.
+- AN1d — loop work under D97 (used enemies only); follows AN1c; date not set.
 
 ## How a window closes
 
