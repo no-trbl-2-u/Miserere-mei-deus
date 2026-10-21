@@ -36,6 +36,10 @@ jobs:
   verify:
     name: mechanics + affected consumers
     runs-on: ubuntu-latest
+    outputs:
+      visual_artifact: ${{ steps.visual_upload.outputs.artifact-id && format('visual-smoke-{0}', github.sha) || '' }}
+      visual_routes: ${{ steps.visual_plan.outputs.routes }}
+      visual_comment: ${{ steps.visual_plan.outputs.comment }}
     timeout-minutes: 60
     steps:
       - name: Checkout full history for impact detection
@@ -102,17 +106,101 @@ jobs:
         if: steps.impact.outputs.mobile == 'true'
         run: npm run verify --workspace axiomancer-mobile
 
-      - name: Export and inspect the affected mobile bundle once
+      # The shared web export is cached on its input stamp (scripts/lib/
+      # web-export.mjs) and the browsers on the Playwright version, so a warm
+      # run skips both. A cached export was inspected by smoke:bundler when it
+      # was saved (the save runs only after that step passes), so a hit skips
+      # the inspection too: same stamp, same inputs, same bundle.
+      - name: Stamp the web export and the browser version
+        id: stamp
         if: steps.impact.outputs.run_integration == 'true'
+        working-directory: axiomancer-mobile
+        run: |
+          echo "hash=$(node --input-type=module -e "import { computeStamp } from './scripts/lib/web-export.mjs'; console.log(computeStamp()?.hash ?? 'none')")" >> "$GITHUB_OUTPUT"
+          echo "playwright=$(node -p "require('playwright/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Restore the web export
+        id: export_cache
+        if: steps.impact.outputs.run_integration == 'true' && steps.stamp.outputs.hash != 'none'
+        uses: actions/cache/restore@v4
+        with:
+          path: axiomancer-mobile/.smoke-dist
+          key: smoke-dist-${{ steps.stamp.outputs.hash }}
+
+      - name: Export and inspect the affected mobile bundle once
+        if: steps.impact.outputs.run_integration == 'true' && steps.export_cache.outputs.cache-hit != 'true'
         run: npm run smoke:bundler --workspace axiomancer-mobile
         env:
           BUILD_PROFILE: preview
           SMOKE_BUNDLER_TIMEOUT_MS: '480000'
           SMOKE_BUNDLER_OUTPUT_DIR: '.smoke-dist'
 
+      - name: Save the web export
+        if: steps.impact.outputs.run_integration == 'true' && steps.stamp.outputs.hash != 'none' && steps.export_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: axiomancer-mobile/.smoke-dist
+          key: smoke-dist-${{ steps.stamp.outputs.hash }}
+
+      - name: Cache Playwright browsers
+        if: steps.impact.outputs.run_integration == 'true'
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.stamp.outputs.playwright }}
+
+      # On a cache hit the browser download is skipped; the system deps are
+      # installed either way.
       - name: Install Playwright Chromium
         if: steps.impact.outputs.run_integration == 'true'
         run: npx playwright install --with-deps chromium
+
+      # Report-only visual smoke (phase VE1c): every integration run shoots
+      # every route twice against the committed baselines, and never turns
+      # the check red on a diff. The route table and phase timings land in the
+      # step summary; the captures ride as the visual-smoke-<sha> artifact. On
+      # a same-repo PR with differing or missing routes, _visual-restamp.yml
+      # (job `restamp` below) commits the new captures to the PR head and
+      # posts one comment, so T approves from the image diff. Baselines are
+      # CI's render (screenshots/baseline/README.md); on main it only reports.
+      - name: Visual smoke (report-only)
+        id: visual
+        if: steps.impact.outputs.run_integration == 'true'
+        continue-on-error: true
+        run: npm run verify:visual --workspace axiomancer-mobile
+        env:
+          SMOKE_ROUTES: all
+          SMOKE_RUNS: '2'
+
+      - name: Upload the visual captures
+        id: visual_upload
+        if: always() && steps.visual.outcome != 'skipped'
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-smoke-${{ github.sha }}
+          path: |
+            axiomancer-mobile/screenshots/current
+            axiomancer-mobile/screenshots/diff
+            axiomancer-mobile/screenshots/visual-summary.json
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Plan the visual re-stamp
+        id: visual_plan
+        if: always() && steps.visual_upload.outputs.artifact-id != ''
+        working-directory: axiomancer-mobile
+        env:
+          ARTIFACT_URL: ${{ steps.visual_upload.outputs.artifact-url }}
+          SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          summary=screenshots/visual-summary.json
+          [ -f "$summary" ] || { echo "routes=" >> "$GITHUB_OUTPUT"; exit 0; }
+          echo "routes=$(node scripts/visual-report.mjs restamp "$summary" | paste -sd' ' -)" >> "$GITHUB_OUTPUT"
+          {
+            echo 'comment<<VISUAL_COMMENT_EOF'
+            node scripts/visual-report.mjs comment "$summary" "$ARTIFACT_URL" "$SHA"
+            echo 'VISUAL_COMMENT_EOF'
+          } >> "$GITHUB_OUTPUT"
 
       - name: Hazard playthrough (both routes)
         if: steps.impact.outputs.hazard == 'true'
@@ -183,3 +271,22 @@ jobs:
       - name: Labyrinth <-> combat round trip
         if: steps.impact.outputs.encounters == 'true'
         run: npm run e2e:labyrinth-roundtrip --workspace axiomancer-mobile
+
+  # Same-repo PRs only; the called workflow runs none of the PR's code and
+  # pushes only baseline PNGs to the PR head (phase VE1c).
+  restamp:
+    needs: verify
+    if: >-
+      github.event_name == 'pull_request'
+      && github.event.pull_request.head.repo.full_name == github.repository
+      && needs.verify.outputs.visual_routes != ''
+    permissions:
+      contents: write
+      pull-requests: write
+    uses: ./.github/workflows/_visual-restamp.yml
+    with:
+      artifact: ${{ needs.verify.outputs.visual_artifact }}
+      routes: ${{ needs.verify.outputs.visual_routes }}
+      comment: ${{ needs.verify.outputs.visual_comment }}
+    secrets:
+      GH_PAT: ${{ secrets.GH_PAT }}

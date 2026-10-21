@@ -590,3 +590,49 @@ test('ship-a-phase, iterate, critique, fix-ci and plot each run the Retro', () =
   }
   assert.match(march, /### Retro\n/)
 })
+
+// --- the visual re-stamp (phase VE1c, A7) -------------------------------------
+
+const restamp = read(`${WF}/_visual-restamp.yml`)
+
+test('the visual re-stamp runs only on same-repo pull_request runs with routes to stamp', () => {
+  assert.match(restamp, /^on:\n {2}workflow_call:/m, 'only callable, never its own trigger')
+  assert.match(restamp, /github\.event_name == 'pull_request'/)
+  assert.match(restamp, /github\.event\.pull_request\.head\.repo\.full_name == github\.repository/)
+  assert.match(restamp, /inputs\.routes != ''/)
+  for (const wf of ['verify-mobile', 'verify-mechanics']) {
+    const caller = job(read(`${WF}/${wf}.yml`), 'restamp')
+    assert.ok(caller, `${wf} has a restamp job`)
+    assert.match(caller, /uses: \.\/\.github\/workflows\/_visual-restamp\.yml/, wf)
+    assert.match(caller, /github\.event_name == 'pull_request'/, wf)
+    assert.match(caller, /github\.event\.pull_request\.head\.repo\.full_name == github\.repository/, wf)
+  }
+})
+
+test('the visual re-stamp stages and pushes only baseline PNGs, to the PR head, never main', () => {
+  const body = code(restamp)
+  const adds = body.match(/git add[^\n]*/g) ?? []
+  assert.deepEqual(adds, ['git add -- axiomancer-mobile/screenshots/baseline/'])
+  assert.match(body, /grep -Ev '\^axiomancer-mobile\/screenshots\/baseline\/\[a-z0-9-\]\+\\\.png\$'/, 'a stray staged path refuses the commit')
+  const pushes = body.match(/git push[^\n]*/g) ?? []
+  assert.deepEqual(pushes, ['git push origin "HEAD:refs/heads/$HEAD_REF"'])
+  assert.match(body, /HEAD_REF: \$\{\{ github\.head_ref \}\}/)
+  assert.equal((body.match(/'' \| main\) echo "visual-restamp: refusing/g) ?? []).length, 2, 'commit and push both refuse main')
+  assert.match(body, /ref: \$\{\{ github\.event\.pull_request\.head\.sha \}\}/, 'commits on the head the run shot, so a moved head rejects the push')
+})
+
+test('the visual step is report-only and the re-stamp never turns a verify run red', () => {
+  for (const wf of ['verify-mobile', 'verify-mechanics']) {
+    const text = read(`${WF}/${wf}.yml`)
+    const step = text.split('- name: Visual smoke (report-only)\n')[1]?.split('\n      - name:')[0] ?? ''
+    assert.match(step, /continue-on-error: true/, wf)
+    assert.match(step, /npm run verify:visual --workspace axiomancer-mobile/, wf)
+    assert.match(step, /SMOKE_ROUTES: all/, wf)
+    assert.match(text, /name: visual-smoke-\$\{\{ github\.sha \}\}/, wf)
+    assert.match(text, /key: smoke-dist-\$\{\{ steps\.stamp\.outputs\.hash \}\}/, `${wf} caches the export on its stamp`)
+    assert.match(text, /key: playwright-\$\{\{ runner\.os \}\}-\$\{\{ steps\.stamp\.outputs\.playwright \}\}/, `${wf} caches the browsers on the Playwright version`)
+  }
+  const steps = restamp.split(/\n {6}- name: /).slice(1)
+  assert.equal(steps.length, 5)
+  for (const s of steps) assert.match(s, /continue-on-error: true/, s.split('\n')[0])
+})

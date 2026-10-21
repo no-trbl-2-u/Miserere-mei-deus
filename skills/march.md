@@ -271,6 +271,10 @@ gh pr checks "loop/<verb>-<slug>" --repo "$GH_REPO" --watch --fail-fast
   own change: fix on the branch (push, never force), up to 3
   same-root-cause tries. Still red when the tick must end: leave it;
   `pr-autofix` takes it (two runs, D87).
+- **A `visual: re-stamp` commit from CI on the PR** (phase VE1c) means
+  the PR changed pixels: read the image diff in Files changed (and the
+  `<!-- visual-smoke -->` comment) before merging; the merge approves the
+  new baselines. Pull before the next push to that branch.
 - **`verify-gate`** (`pr-review.yml`, phase RV1a) reports on every PR:
   green only when every triggered `verify-*` is, and it applies the
   derived `risk:*` label. The tick never sets a `risk:*` label itself;

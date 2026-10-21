@@ -19,6 +19,8 @@
 //   SMOKE_ONLY=devpuzzle-board,hazard-board  shoot and diff only these routes
 //   (the shots a change moves; on a renderer unlike the baselines' every
 //   route drifts, so the full run's exit code says nothing about the change)
+//   Every run writes screenshots/visual-summary.json (routes, counts, timings)
+//   and, under CI, the same table to $GITHUB_STEP_SUMMARY (visual-report.mjs).
 //
 // When a diff is real and expected, run:
 //   npm run baseline:approve
@@ -28,7 +30,8 @@
 import { spawn } from 'node:child_process'
 import { createServer } from 'node:http'
 import { readFile, writeFile, mkdir, copyFile, readdir, stat } from 'node:fs/promises'
-import { existsSync } from 'node:fs'
+import { appendFileSync, existsSync, writeFileSync } from 'node:fs'
+import { performance } from 'node:perf_hooks'
 import { resolve, dirname, join, extname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { injectMinigameSeeds } from './minigame-seed-injector.mjs'
@@ -36,6 +39,7 @@ import { forceDevTools } from './fixture-injector.mjs'
 import { enterLiveFight } from './live-fight-entry.mjs'
 import { waitForReady } from './lib/page-ready.mjs'
 import { ensureWebExport } from './lib/web-export.mjs'
+import { buildVisualSummary, renderStepSummary } from './visual-report.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const REPO_ROOT = resolve(__dirname, '..')
@@ -114,6 +118,7 @@ export const BASELINE_DIR = resolve(REPO_ROOT, 'screenshots/baseline')
 const LIVE_FIGHT_SEED = 16
 export const CURRENT_DIR = resolve(REPO_ROOT, 'screenshots/current')
 export const DIFF_DIR = resolve(REPO_ROOT, 'screenshots/diff')
+export const SUMMARY_PATH = resolve(REPO_ROOT, 'screenshots/visual-summary.json')
 
 // ---------------------------------------------------------------------------
 // Exit-code mapping — also re-exported for the hermetic test
@@ -237,8 +242,10 @@ async function loadDeps() {
 const EXPORT_DIR = resolve(REPO_ROOT, '.smoke-dist')
 
 async function runExpoExport() {
+    const start = performance.now()
     const r = await ensureWebExport({ outDir: EXPORT_DIR, log: (m) => console.log(`smoke-screens: ${m}`) })
     if (!r.ok) { console.error('smoke-screens: expo export failed'); process.exit(EXIT.BOOT_FAILURE) }
+    return { exportMs: performance.now() - start, exportReused: r.reused }
 }
 
 const MIME = {
@@ -403,15 +410,21 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl) {
 
     const runs = parseSmokeRuns(process.env.SMOKE_RUNS)
     const shots = []
+    // Compare time is the loop's time not spent loading and shooting.
+    let captureMs = 0
+    const loopStart = performance.now()
 
     for (const route of selectRoutes(ROUTES, process.env.SMOKE_ONLY)) {
         const captures = []
+        const shotStart = performance.now()
         try {
             for (let run = 0; run < runs; run++) captures.push(await shootRoute(route))
         } catch (err) {
             console.error(`smoke-screens: failed to load ${route.path}: ${err.message}`)
             differing.push({ route: route.name, reason: 'load-failed', message: err.message })
             continue
+        } finally {
+            captureMs += performance.now() - shotStart
         }
         shots.push({ route: route.name, captures })
         // A capture that differs from the first is kept beside the diffs
@@ -465,8 +478,9 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl) {
         }
     }
 
+    const compareMs = performance.now() - loopStart - captureMs
     await browser.close()
-    return { matched, differing, missing, consoleErrors, runs, nondeterministic: nondeterministicRoutes(shots) }
+    return { matched, differing, missing, consoleErrors, runs, nondeterministic: nondeterministicRoutes(shots), captureMs, compareMs }
 }
 
 // ---------------------------------------------------------------------------
@@ -477,7 +491,7 @@ async function main() {
     // A bad SMOKE_ONLY or SMOKE_RUNS fails here, before the export, not after it.
     selectRoutes(ROUTES, process.env.SMOKE_ONLY)
     parseSmokeRuns(process.env.SMOKE_RUNS)
-    await runExpoExport()
+    const exportTiming = await runExpoExport()
     const deps = await loadDeps()
 
     const { server, port } = await startStaticServer(EXPORT_DIR)
@@ -531,7 +545,19 @@ async function main() {
         // Promote to a fail-gate by adding a non-zero return here.
     }
 
-    process.exit(resultToExit(result))
+    const exitCode = resultToExit(result)
+    writeRunRecord(buildVisualSummary(result, {
+        ...exportTiming, captureMs: result.captureMs, compareMs: result.compareMs,
+    }, exitCode))
+    process.exit(exitCode)
+}
+
+// The JSON summary beside the captures (the CI artifact carries it to the
+// re-stamp job), and the same table in the CI step summary when there is one.
+function writeRunRecord(summary) {
+    writeFileSync(SUMMARY_PATH, JSON.stringify(summary, null, 2) + '\n')
+    console.log(`smoke-screens: summary -> ${SUMMARY_PATH}`)
+    if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, renderStepSummary(summary))
 }
 
 const invokedDirectly = process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)

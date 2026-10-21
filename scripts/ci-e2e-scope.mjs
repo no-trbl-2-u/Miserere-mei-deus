@@ -46,6 +46,13 @@ function markMobileSuite(result, suite) {
 }
 
 function classifyMobilePath(path, result) {
+    // A re-stamped baseline (CI's own `visual: re-stamp` commit, or a hand
+    // approval) gets one integration run, so its visual step confirms the new
+    // baseline. No journey owns a baseline PNG, so none is selected.
+    if (/^axiomancer-mobile\/screenshots\/baseline\/[^/]+\.png$/.test(path)) {
+        result.run_integration = true
+        return
+    }
     if (isNonRuntime(path)) return
 
     const hazard = [
