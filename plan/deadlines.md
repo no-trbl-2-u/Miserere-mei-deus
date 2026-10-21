@@ -117,6 +117,7 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 | [x] | 2026-10-23 | The candidate library shape | W1 | HP4b |
 | [x] | 2026-10-24 | The deadline lint and its reconcile step | W1 | DL1a, DL1b, DL1c |
 | [x] | 2026-10-27 | Author the thirty candidates | W1 | HP4c |
+| [ ] | 2026-10-30 | Solve times stored online (Workers + D1) | W1 | BE1a, BE1b, BE1c, BE1d |
 | [x] | 2026-10-28 | The thirty on the live board | W1 | HP4d |
 | [ ] | 2026-11-02 | W1 demo: T plays the thirty candidates | W1 | HP4e |
 | [ ] | 2026-11-04 | Act 1 puzzle set, live hazard routing and the cuts | W2 | needs plot |
@@ -149,6 +150,13 @@ fails the root `npm test` on an open row (`[ ]`, `[-]` or `[blocked: …]`) that
 names, and on a line here with no reason. **A row listed here is work the loop may still pick on its ordinary turn:
 undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
 
+- AD1a — plotted 2026-10-21 (#716) without a deadline line; date not set.
+- AD1b — plotted 2026-10-21 (#716) without a deadline line; date not set.
+- FM1a — loop work, needs no time from T beyond confirming the pitch rule; date not set.
+- FM1b — loop work, needs no time from T beyond confirming the pitch rule; date not set.
+- FM1c — loop work, needs no time from T beyond confirming the pitch rule; date not set.
+- FM1d — loop work, needs no time from T beyond confirming the pitch rule; date not set.
+- FM1e — loop work, needs no time from T beyond confirming the pitch rule; date not set.
 - OV1a — attended; T is building it in the plotting session (2026-10-20); date not set.
 - OV1b — attended; T is building it in the plotting session (2026-10-20); date not set.
 - OV1c — attended; T is building it in the plotting session (2026-10-20); date not set.
@@ -176,6 +184,10 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - V6 — pre-revamp partial (glyph unification remainders); not v0.3 work; date not set.
 - V7 — pre-revamp partial (illustration upgrades); art is T's; not v0.3 work.
 - W5 — pre-revamp partial (map roster growth); enemies wait on T's B2 session; date not set.
+- AN1a — loop work; ships changing no pixel, needs no time from T; date not set.
+- AN1b — loop work; follows AN1a; date not set.
+- AN1c — loop work, but T sequenced it after seeing AN1b work; date not set.
+- AN1d — loop work under D97 (used enemies only); follows AN1c; date not set.
 
 ## How a window closes
 

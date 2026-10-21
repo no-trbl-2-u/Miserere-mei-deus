@@ -187,8 +187,45 @@ event-pool and layout files).
       Its constants are imported from `scripts/check-lessons.mjs` so lint and driver cannot drift. Six
       sightings in two days, three on PR #653 alone. Brief
       `plan/phases/phase_ML1_lessons_merge_driver.md` § ML1a. Requires nothing.
+- [ ] Phase BE1a — The attempt contract and the Worker (plotted by T, 2026-10-21): a new `backend/` workspace
+      holding a Cloudflare Worker with `POST`/`GET /v1/puzzle-attempts` behind a bearer token, the D1 schema as
+      numbered migrations, and the attempt contract (types plus validator) in `@mechanics`, tested in the Workers
+      runtime against a local D1. No deploy yet. Brief `plan/phases/phase_BE1_solve_time_backend.md` § BE1a. Requires nothing.
+- [ ] Phase BE1b — Live on Cloudflare (plotted by T, 2026-10-21) (attended): T mints the Cloudflare API token
+      and adds the repo secrets; the D1 database `miserere` is created, and `backend-deploy.yml` applies
+      migrations and deploys `miserere-api` on a push to `main` touching `backend/**`. Brief `plan/phases/phase_BE1_solve_time_backend.md` § BE1b.
+      Requires BE1a.
+- [ ] Phase BE1c — Preview builds post each attempt (plotted by T, 2026-10-21): each `/devpuzzle` attempt that
+      ends is posted once when dev tools are on and the `EXPO_PUBLIC_PUZZLE_API_*` env is set; a failure is
+      dropped with a dev warning; production never posts. Brief `plan/phases/phase_BE1_solve_time_backend.md` § BE1c. Requires BE1a.
+- [ ] Phase BE1d — `npm run puzzle:times` (plotted by T, 2026-10-21): per-candidate attempts, solve rate and
+      median solve time grouped by band, with `--solver` and `--json`. Brief `plan/phases/phase_BE1_solve_time_backend.md` § BE1d. Requires BE1a.
+- [ ] Phase AN1a — The enemy frame engine, the fallback and the dev route (plotted by T, 2026-10-21):
+      a frame-set registry beside `ENEMY_ART_BY_KEY` keyed on `portraitAsset`, a reanimated frame player,
+      and a dev route that plays a supplied sheet — with the registry **empty**, so every current enemy
+      renders the single image it renders today and the phase lands changing no pixel. Frames anchor on
+      the **foot line**, not the bounding box (T's reference sheet held its feet to 5.2% of cell while
+      the bbox centre wandered 11.2% as the weapon swung), and go through the same ingest `RECIPE` as
+      every other asset. Reduced motion reuses the pane's existing ref. Brief
+      `plan/phases/phase_AN1_enemy_animation.md` § AN1a. Requires nothing.
+- [ ] Phase AN1b — The enemy's turn is animated (plotted by T, 2026-10-21): the attack animation plays
+      on the enemy's beat in `CombatCombatantPane`, off the **existing** `fx.seq` walk (`threat-fired`,
+      `damage-dealt`) at the existing `IMPACT` offset and behind the existing `reduceMotion.current`; an
+      enemy with no frame set is untouched. Brief
+      `plan/phases/phase_AN1_enemy_animation.md` § AN1b. Requires AN1a.
+- [ ] Phase AN1c — Idle, struck, attacking (plotted by T, 2026-10-21): the manifest names three
+      animations and the engine selects them — idle as the resting loop, struck on damage taken, attack
+      on the enemy's beat; idle loops, the other two are one-shots returning to idle. T sequenced this
+      after seeing AN1b work. Brief
+      `plan/phases/phase_AN1_enemy_animation.md` § AN1c. Requires AN1b.
+- [ ] Phase AN1d — Sheets generated for used enemies only (plotted by T, 2026-10-21): `generate-art.mjs`
+      gains a `frames: { cols, rows }` spec block — one grid image per call (the grid is what buys
+      character consistency), then split, alpha-matte and ingest each cell through the existing `RECIPE`,
+      one provenance record per set. It **refuses** any id failing D97's used-enemy test (in the roster
+      with a `portraitAsset` **and** in `ENEMY_ART_BY_KEY`; `sandbag-01` fails it). Brief
+      `plan/phases/phase_AN1_enemy_animation.md` § AN1d. Requires AN1c.
 - [x] (#705) Phase ML1b — The build plan's rows and queue log (plotted by T, 2026-10-20): the same treatment
-      for `plan/steps/01_build_plan.md`, whose Status rows collide because every `/plot asap` appends
+>      for `plan/steps/01_build_plan.md`, whose Status rows collide because every `/plot asap` appends
       above the same first open row (one plot PR took four rounds on 2026-10-19/20). Split from ML1a
       because build-plan rows are an **ordered** list whose order carries priority, not a keyed set, so
       "union by key" does not define the result; and unlike `lessons.md` a duplicate here reddens no
@@ -311,6 +348,13 @@ event-pool and layout files).
 - [ ] Phase UP1f — The elite reward (plotted by T, 2026-10-20): an elite offers the best 3 cards available (one from the player's lanes) or a random upgrade of a highest-rarity owned card. Brief `plan/phases/phase_UP1_card_upgrades.md` § UP1f. Requires UP1b, UP1c.
 - [ ] Phase UP1g — Upgraded decks in the measured report (plotted by T, 2026-10-20): half-upgraded Blood Price columns beside the plain deck for every ledger fight. Brief `plan/phases/phase_UP1_card_upgrades.md` § UP1g. Requires UP1b.
 - [ ] Phase UP1h — The boss check (plotted by T, 2026-10-20): against the Act 1 boss, half-upgraded Blood Price wins above 50% and the plain deck at or below 25%. Brief `plan/phases/phase_UP1_card_upgrades.md` § UP1h. Requires UP1g, B2.
+- [ ] Phase AD1a — The `art-department` tree, its toolchain rule and the rig tool's new home (plotted by T, 2026-10-21): a top-level `art-department/`, deliberately **not** an npm workspace — `.easignore`'s keep-list records that `npm ci` resolves every declared workspace, so declaring one would force EAS to upload the very masters this exists to keep out. A README states T's any-language rule, the Python toolchain declares its dependencies with a `doctor` that names a missing one rather than failing inside an import trace, `verify-art-department` owns the path, and `rig-spritesheet.py` moves in — proven by regenerating the float-eye sheet byte for byte. Brief `plan/phases/phase_AD1_art_department.md` § AD1a. Requires nothing.
+- [ ] Phase AD1b — The masters move, and the boundary becomes a test (plotted by T, 2026-10-21): the four `anim/` master files leave `axiomancer-mobile/assets/` for `art-department/masters/enemies/` with their provenance record, `.easignore` gains its Section 2 entry with the justification that file demands, and a root-suite guard asserts no path in the repo resolves into the tree — the same shape of guard rule 9 puts on `Potential Assets/`. Brief `plan/phases/phase_AD1_art_department.md` § AD1b. Requires AD1a.
+- [ ] Phase FM1a — The inventory and the edges (plotted by T, 2026-10-21): `scripts/feature-map.mjs` writes `docs/feature-map/features.json`, one entry per app route and engine area, with player-flow edges (navigation calls) and coupling edges (imports) as two kinds; `--check` in the root `npm test` fails on drift, a coverage test on a missing or extra feature. Brief `plan/phases/phase_FM1_feature_map.md` § FM1a. Requires nothing.
+- [ ] Phase FM1b — Evidence, names and the pitch flag (plotted by T, 2026-10-21): each feature gets `reachable`, `driven` and `tested` flags with their sources, `game-model.md` names through one alias table, and `needsPitch` with the missing evidence (no `braindump/` pitch and no decisions D-number names it). Brief `plan/phases/phase_FM1_feature_map.md` § FM1b. Requires FM1a.
+- [ ] Phase FM1c — The README and the canvas (plotted by T, 2026-10-21): generated `docs/feature-map/README.md` (one line per feature, then the anomaly list) and `Map.canvas` (JSON Canvas, grouped layout, two edge colours, pitch-flag node colour). Brief `plan/phases/phase_FM1_feature_map.md` § FM1c. Requires FM1b.
+- [ ] Phase FM1d — The reachability drive (plotted by T, 2026-10-21): `e2e:feature-map` drives a fresh save to every non-dev route the map marks reachable, fails on a mismatch either way, and lists each player-flow edge as crossed or uncrossed. Brief `plan/phases/phase_FM1_feature_map.md` § FM1d. Requires FM1b.
+- [ ] Phase FM1e — Into the vault (plotted by T, 2026-10-21): `/vault` copies the canvas to `vault/Feature Map.canvas` and the feature table to `vault/02 Features.md`, overwriting only those two files. Brief `plan/phases/phase_FM1_feature_map.md` § FM1e. Requires FM1c.
 - [x] (#569) Phase CR1a — The combat route and its gate, map and labyrinth (plotted by T, 2026-10-15): a global `CombatGate` starts each fight and pushes `/combat-encounter`, now the live fight route (`fullScreenModal`, no back or swipe out, a reload replays the fight onto it); exploration and labyrinth stop rendering combat; the pre-v1 dev sandbox and its tests are deleted and every tool that used it reaches a fight through `/dev` instead. Brief `plan/phases/phase_CR1_combat_route.md` § CR1a. Requires nothing.
 - [x] (#573) Phase CR1b — Delete the overlay era, labyrinth round-trip e2e (plotted by T, 2026-10-15): `EncounterModalOverlay`, its chain bars and rivets, `inEncounterModal` tab hiding and locking, `fightOnScreen` and the `StatusCard` skip deleted, proven by a grep; a new labyrinth combat round-trip e2e. Brief `plan/phases/phase_CR1_combat_route.md` § CR1b. Requires CR1a.
 - [skipped] Phase CR1c — Combat drag numbers before and after the route (plotted by T, 2026-10-15) (attended): Sentry `combat.drag.*` p75 per kind from T's preview APK, before CR1a and after CR1b, in `docs/perf/combat-drag-baseline.md`. Brief `plan/phases/phase_CR1_combat_route.md` § CR1c. Requires CR1b. Skipped by T, 2026-10-15: Sentry holds no performance data from before the route (PF3 tracing landed the same day and no APK with it was played), and PF4 had already removed the map cost the route was expected to change.
@@ -956,6 +1000,12 @@ See the status rows above; generate briefs on demand.
 > "reason not stated" — never invent one), and the resulting
 > commit/issue/phase-brief when available.
 
+- **2026-10-21** — actor: **T, attended session** (`/plot anytime`, branch `loop/plot-FM1-feature-map`). Action: **added Phases FM1a, FM1b, FM1c, FM1d, FM1e** (the feature map: every feature, how they connect, which still need a pitch) after Phase AD1b, the last open row. Confirmed T's request: yes. Reason (T): "map all the features in the game, how they connect, and ultimately, what still needs a pitch session", without numbers or per-feature detail. Brief `plan/phases/phase_FM1_feature_map.md`.
+- **2026-10-21** — actor: **T, attended session** (`/plot asap` from T's `/pitch`, branch
+  `loop/plot-BE1-solve-time-backend`). Action: **added Phases BE1a, BE1b, BE1c, BE1d** (the solve-time backend:
+  Workers + D1 contract and Worker, attended deploy, preview-build posting, `puzzle:times`) directly above
+  AN1a. Confirmed T's request: yes (`/pitch` exit answer "/plot asap"). Reason: T's solves of the thirty start
+  now and HP4f/HP4g read the times. Resulting commit: this one; brief `plan/phases/phase_BE1_solve_time_backend.md`.
 - **2026-10-20** — actor: **T, attended session** (`/plot anytime` from T's `/pitch`, branch
   `loop/plot-UP1-card-upgrades`). Action: **added Phases UP1a, UP1b, UP1c, UP1d, UP1e, UP1f, UP1g, UP1h** (card
   upgrades: Blood Price names, the upgrade law, the first rare, rest/anvil/elite grant paths, the measured report,
@@ -1513,6 +1563,9 @@ See the status rows above; generate briefs on demand.
 - **2026-10-19** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-VE1-visual-e2e`). Action: **added Phases VE1a, VE1b, VE1c, VE1d** (the visual e2e suite measured as signal per minute: one stamped web export for every script, a ready signal and a determinism check, a report-only CI step that commits each visual change's CI-rendered captures to the PR for T to approve from the image diff, routes selected from the diff) above the first open row. Confirmed T's request: yes (T's prompt and four AskUserQuestion calls: no Windows restamp once fresh baselines proved 1.5-4.5% renderer noise here, CI as renderer of record; report-only with the screenshots added to the PR; telemetry plus the CI step summary as the record; route selection as its own phase). Reason: asap because `verify:visual` is red on `main` today (11 of 13 routes, baselines up to 52 days stale, 0 CI runs) so every mobile `loop:pr` PR ships its pixels unseen. Resulting commit: this one; brief `plan/phases/phase_VE1_visual_e2e_signal.md`.
 - **2026-10-19** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-IT1-item-glyph-resolver`). Action: **added Phases IT1a and IT1b** directly above RV2. Reason: an item-art survey for T found that `ItemGlyph` keys on category, not item id, so the three healing potions and the two relics each draw one shared glyph — the same defect class as the card registry mapping only three ids. IT1a is the resolver with today's glyph as the fallback (ships changing no pixel); IT1b is T's icon picks and the death of the inline one-off `<Svg>` glyphs, owner-led under D88. Brief `plan/phases/phase_IT1_item_glyph_resolver.md`.
 - **2026-10-20** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-ML1-lessons-merge-driver`). Action: **added Phases ML1a and ML1b** directly above DL1b. Reason: git's three-way merge keeps both copies of a bumped lesson row with no conflict markers, so nothing prompts a human and `check-lessons` goes red on the receiving branch — six sightings on 2026-10-19/20, three of them on PR #653, each resolved by keeping both rows and each undone by hand. ML1a is the driver for `lessons.md` and `NEEDS_T.md`; ML1b extends the idea to the build plan, split out because its rows are ordered rather than keyed. Brief `plan/phases/phase_ML1_lessons_merge_driver.md`.
+- **2026-10-21** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-AN1-enemy-animation`). Action: **added Phases AN1a–AN1d** directly above the first open row, in T's own sequence: the engine and a dev route first, then the enemy's turn animated, then three states per enemy once T has seen it work, then the art pipeline generating the sheets. Records **D97**: a sprite sheet for an ALREADY-USED enemy is enhancement rather than content creation, so AN1d may run as ordinary `/march` ticks — narrowly, with the used-enemy test as the guard; anything outside that set stays owner-only under D88/D37. Brief `plan/phases/phase_AN1_enemy_animation.md`.
+- **2026-10-21** — actor: **T, attended session** (`/plot anytime`, branch `loop/plot-AD1-art-department`). Action: **added Phases AD1a and AD1b** after Phase UP1h, the last open row. Reason (T): shown that `rig-spritesheet.py` is Python living inside `axiomancer-mobile`, a JS/TS presentation-layer workspace whose verifier cannot check it and whose `assets/` tree is bundled into the app, T ruled a top-level `art-department` package that "can use any tooling/languages it wants". `anytime` because it blocks nothing: AN1a–AN1c are mobile-side engine work and AN1d extends `generate-art.mjs`, which is JavaScript and stays in the mobile package. Records **D98**: the tree is deliberately not an npm workspace, because `.easignore` makes a declared workspace unexcludable from the EAS archive. Brief `plan/phases/phase_AD1_art_department.md`.
+- **2026-10-21** — actor: **T, attended session** (`/plot` amendment, branch `loop/plot-AN1-amend-frame-contract`). Action: **amended the AN1 brief's A6 and added A6b**; no new rows, because AN1a already owns both and has not been built. Reason: a float-eye spritesheet prototyped in the same session measured two defects in the frame contract. (1) A6 fixed the anchor on the foot line, but the float-eye floats and its hover *is* the idle animation, so a body-tracking anchor would cancel the clip; A6 now declares an anchor **kind** (`foot-line` for a creature that stands, `centre` for one that floats) and fails a manifest naming neither. (2) A6 quoted `RECIPE` without `grayscale: true`, which it carries: run on the float-eye it flattens the corona from RGB (62, 61, 16) to a flat grey 56, and the corona flare is the whole read of the attack frame; a derived sheet also arrives with its source's grade already baked in. A6b now says grade exactly once, `--no-grade` for a derived set. Brief `plan/phases/phase_AN1_enemy_animation.md`.
 >
 ## Phase log (commit hashes)
 
