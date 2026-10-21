@@ -209,7 +209,7 @@ event-pool and layout files).
       the bbox centre wandered 11.2% as the weapon swung), and go through the same ingest `RECIPE` as
       every other asset. Reduced motion reuses the pane's existing ref. Brief
       `plan/phases/phase_AN1_enemy_animation.md` § AN1a. Requires nothing.
-- [ ] Phase AN1b — The enemy's turn is animated (plotted by T, 2026-10-21): the attack animation plays
+- [x] (#735) Phase AN1b — The enemy's turn is animated (plotted by T, 2026-10-21): the attack animation plays
       on the enemy's beat in `CombatCombatantPane`, off the **existing** `fx.seq` walk (`threat-fired`,
       `damage-dealt`) at the existing `IMPACT` offset and behind the existing `reduceMotion.current`; an
       enemy with no frame set is untouched. Brief
