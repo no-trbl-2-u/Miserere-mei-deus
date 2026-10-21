@@ -1,0 +1,22 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-10-21",
+    "tool": "scripts/art/rig-spritesheet.py (Pillow + numpy affine rig)",
+    "covers": [
+      "float-eye.sheet.png (lossless master, 2048x768)",
+      "float-eye.sheet.webp (ship candidate, q88)",
+      "float-eye.sheet.json (frame grid + clip table)",
+      "float-eye.preview.webp (animated flipbook, review only — not shipped)"
+    ],
+    "source": "assets/images/enemies/float-eye.webp",
+    "method": "No image model was used and nothing was generated. The shipped painting is split into two layers — the body with the eye disc erased and refilled from the body's own black, and a feathered disc holding the eye — and each of the 24 frames is an affine pose of those layers plus a colour grade. Every pixel therefore descends from the existing asset.",
+    "clips": "idle (8f @12fps, loop), hit (8f @16fps, one-shot), strike (8f @14fps, one-shot); one clip per row, 8 columns",
+    "license": "UNRESOLVED — inherits the source painting's status",
+    "license_note": "float-eye.webp is owner-supplied external illustration with no recorded source or licence (see ../provenance.json). A derivative cannot be cleaner than what it derives from, so this sheet carries the same open question and is blocked on the same owner answer.",
+    "used_by": [
+      "nothing yet — experimental asset for the first enemy animation test; no registry entry and no runtime surface"
+    ],
+    "build_size_note": "2048x768 exceeds the <=640px longest-edge ingest recipe that scripts/shrink-art.mjs applies to single paintings. That recipe is about one-portrait-per-enemy art; a 24-frame sheet is a different shape of asset. The WebP is ~216 KB. If it ships, the frame edge is the dial — rerun with --frame 192 or --frame 128."
+  }
+]
