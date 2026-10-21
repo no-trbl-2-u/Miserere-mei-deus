@@ -285,6 +285,12 @@ them; update here first.
    `seen`, later `last`, unioned citations, `guarded by` over `open`. It
    refuses with conflict markers where the result would break a cap or the
    two sides rewrote the same text; a human resolves those.
+   `plan/steps/01_build_plan.md` merges through `scripts/build-plan-merge.mjs`
+   (`merge.buildplan.driver`, registered the same way): two plots inserting
+   above the same row keep both sides' rows (ours first, each side's order
+   kept) and both Queue change log entries, and neighbouring row ticks
+   settle. Two rewrites of one row keep their markers, and a merge that
+   would give a phase a second row is refused.
 2. **No `Co-Authored-By:` trailers, no emojis** — in commits, code, or
    content.
 3. **The verify gate is non-negotiable.** No `--no-verify`, no

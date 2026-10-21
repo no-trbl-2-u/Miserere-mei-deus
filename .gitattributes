@@ -4,3 +4,8 @@
 # before any Claude session, a CI runner) git falls back to its line merge.
 plan/lessons.md merge=lessons
 plan/NEEDS_T.md merge=lessons
+
+# Merge plan/steps/01_build_plan.md with same-spot insertions unioned (Phase
+# ML1b): scripts/build-plan-merge.mjs, registered as merge.buildplan.driver the
+# same way. Unregistered, git falls back to its line merge.
+plan/steps/01_build_plan.md merge=buildplan

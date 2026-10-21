@@ -161,3 +161,36 @@ test('the real plan/deadlines.md and build plan agree', () => {
     const read = (rel) => fs.readFileSync(path.join(ROOT, rel), 'utf8')
     assert.deepEqual(checkDeadlines(read('plan/deadlines.md'), read('plan/steps/01_build_plan.md')), [])
 })
+
+// A9 (phase DL1c): a superseded premise is the drift no rule above sees, so the guard is a procedure step in
+// the two skills that change the queue. Pin that the step is there, in the step that mutates the queue, and
+// that the commit stages the file it edits.
+const section = (text, heading) => {
+    const start = text.indexOf(heading)
+    assert.ok(start >= 0, `missing ${heading}`)
+    const next = text.indexOf('\n### ', start + heading.length)
+    return text.slice(start, next < 0 ? undefined : next)
+}
+
+for (const [file, step, commitStep] of [
+    ['skills/plot.md', '### Step 4 — Slot', '### Step 5 — Open the PR'],
+    ['skills/messy.md', '### Step 4 — Refine', '### Step 5 — Commit'],
+]) {
+    test(`A9: ${file} carries the deadline reconcile step in its queue step`, () => {
+        const text = fs.readFileSync(path.join(ROOT, file), 'utf8')
+        const body = section(text, step)
+        assert.match(body, /\*\*Reconcile the deadline plan\*\* \(phase DL1c\), in the same commit/)
+        assert.match(body, /supersedes, re-scopes or completes/)
+        assert.match(body, /premise/)
+        assert.match(body, /## Change log/)
+        assert.match(body, /node scripts\/check-deadlines\.mjs/)
+        assert.match(section(text, commitStep), /git add [^\n]*plan\/deadlines\.md/)
+    })
+}
+
+test('A9: /plot gives every row it adds an Item or an ## Unscheduled line', () => {
+    const body = section(fs.readFileSync(path.join(ROOT, 'skills/plot.md'), 'utf8'), '### Step 4 — Slot')
+    assert.match(body, /Every row the plot added/)
+    assert.match(body, /## Unscheduled/)
+    assert.match(body, /node scripts\/deadlines\.mjs --write/)
+})

@@ -211,8 +211,8 @@ event-pool and layout files).
       one provenance record per set. It **refuses** any id failing D97's used-enemy test (in the roster
       with a `portraitAsset` **and** in `ENEMY_ART_BY_KEY`; `sandbag-01` fails it). Brief
       `plan/phases/phase_AN1_enemy_animation.md` § AN1d. Requires AN1c.
-- [ ] Phase ML1b — The build plan's rows and queue log (plotted by T, 2026-10-20): the same treatment
-      for `plan/steps/01_build_plan.md`, whose Status rows collide because every `/plot asap` appends
+- [x] (#705) Phase ML1b — The build plan's rows and queue log (plotted by T, 2026-10-20): the same treatment
+>      for `plan/steps/01_build_plan.md`, whose Status rows collide because every `/plot asap` appends
       above the same first open row (one plot PR took four rounds on 2026-10-19/20). Split from ML1a
       because build-plan rows are an **ordered** list whose order carries priority, not a keyed set, so
       "union by key" does not define the result; and unlike `lessons.md` a duplicate here reddens no
@@ -222,7 +222,7 @@ event-pool and layout files).
       phase Item's Status cell from this Status block and rewrites `plan/deadlines.md` in place, `T` rows
       untouched; the lint fails a hand edit that disagrees; `deadlines.yml` commits both generated files in one
       commit. Brief `plan/phases/phase_DL1_deadline_plan_integrity.md` § DL1b. Requires DL1a.
-- [ ] Phase DL1c — The reconcile step in `/plot` and `/messy` (plotted by T, 2026-10-20): both skills edit the
+- [x] (#710) Phase DL1c — The reconcile step in `/plot` and `/messy` (plotted by T, 2026-10-20): both skills edit the
       Items table in the same commit as the queue mutation — a date or an `## Unscheduled` line per added row, and
       an edit to any Item the plot supersedes, re-scopes or completes — because a superseded premise is the one
       drift no lint can see. Brief `plan/phases/phase_DL1_deadline_plan_integrity.md` § DL1c. Requires DL1a.
