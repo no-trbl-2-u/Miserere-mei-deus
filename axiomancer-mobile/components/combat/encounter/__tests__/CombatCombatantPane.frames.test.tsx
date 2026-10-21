@@ -1,0 +1,217 @@
+/**
+ * Phase AN1b — the enemy's turn is animated, in the pane itself.
+ *
+ * Two claims, and the second is the one that keeps the first honest:
+ *   1. on the enemy's beat the pane selects the ATTACK clip, at the same
+ *      impact offset the recoil already uses, from the same walk of
+ *      `fx.events`; an enemy with no frame set renders its single painting;
+ *   2. the pane's EXISTING feedback — the damage-scaled shake and the impact
+ *      flash — is handed exactly the same arguments whether the enemy has
+ *      frames or not. The frame engine is additive or it is a regression.
+ *
+ * The registry ships empty (A2), so the frame set here is injected at
+ * `getEnemyFrameSet` rather than registered: the selection logic is what this
+ * phase ships, and it must be provable before any enemy is installed.
+ */
+import React from 'react';
+import { AccessibilityInfo } from 'react-native';
+import { act, render } from '@testing-library/react-native';
+import { describe, expect, it, jest } from '@jest/globals';
+
+import * as Juice from '@/lib/juice';
+import { CombatCombatantPane, type CombatFx } from '@/components/combat/encounter/CombatCombatantPane';
+import { ENEMY_ATTACK_IMPACT_MS } from '@/components/combat/frames';
+import { SYNTHETIC_FRAME_SET } from '@/components/combat/frames/syntheticFrameSet';
+import type { CombatEnemyPaneVM, CombatPlayerPaneVM } from '@/state/presenters/combat-encounter.engine';
+import type { CombatEvent } from '@mechanics';
+import { withAllProviders } from '@/test-utils/withAllProviders';
+
+const mockFramePlayerProps: Record<string, unknown>[] = [];
+
+jest.mock('@/assets/images/enemies/frames', () => {
+    const actual = jest.requireActual('@/assets/images/enemies/frames') as Record<string, unknown>;
+    return { ...actual, getEnemyFrameSet: jest.fn(() => null) };
+});
+
+jest.mock('@/components/combat/frames', () => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const react = require('react');
+    const actual = jest.requireActual('@/components/combat/frames') as Record<string, unknown>;
+    const Real = actual.EnemyFramePlayer;
+    return {
+        ...actual,
+        EnemyFramePlayer: (props: Record<string, unknown>) => {
+            mockFramePlayerProps.push(props);
+            return react.createElement(Real, props);
+        },
+    };
+});
+
+jest.mock('@/lib/juice', () => {
+    const actual = jest.requireActual('@/lib/juice') as typeof Juice;
+    return {
+        ...actual,
+        useJuiceShake: jest.fn(actual.useJuiceShake),
+        useJuiceFlash: jest.fn(actual.useJuiceFlash),
+    };
+});
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const frames = require('@/assets/images/enemies/frames') as { getEnemyFrameSet: jest.Mock };
+
+const ENEMY: CombatEnemyPaneVM = {
+    name: 'The Float-Eye', artKey: 'float-eye', isBoss: false, artNonce: 3,
+    hp: 20, maxHp: 30, hpPct: 0.66, effects: [],
+    intent: {
+        type: 'attack', icon: 'blade', label: 'strikes', damage: 6, branch: null, next: null,
+        wallMath: { projectedDamage: 6, netDamage: 6, willDeny: false, guard: 0, barrier: 0 },
+    } as unknown as CombatEnemyPaneVM['intent'],
+    stagesEntered: 0, pendingDot: 0, roundsToKill: null, isLethalInFlight: false,
+};
+
+const PLAYER: CombatPlayerPaneVM = {
+    name: 'Pilgrim', hp: 40, maxHp: 50, hpPct: 0.8, guard: 0, effects: [],
+};
+
+/** The enemy's beat: a threat fired and the player took the hit. */
+const ENEMY_BEAT: CombatEvent[] = [
+    { kind: 'threat-fired' },
+    { kind: 'damage-dealt', target: 'self', amount: 6 },
+] as unknown as CombatEvent[];
+
+function renderPane(fx?: CombatFx) {
+    const { tree } = withAllProviders(
+        <CombatCombatantPane enemy={ENEMY} player={PLAYER} fx={fx} region="the Drowned Parish" />,
+    );
+    return render(tree);
+}
+
+/**
+ * The DISTINCT argument tuples each juice hook was handed, in order. Render
+ * count is not the contract — a clip change re-renders the pane, and a hook
+ * called a second time with identical arguments has animated nothing twice.
+ * What must not move is the arguments themselves.
+ */
+function distinctCalls(fn: jest.Mock): unknown[][] {
+    const seen: string[] = [];
+    const out: unknown[][] = [];
+    for (const call of fn.mock.calls as unknown[][]) {
+        const key = JSON.stringify(call);
+        if (seen.includes(key)) continue;
+        seen.push(key);
+        out.push(call);
+    }
+    return out;
+}
+
+function juiceCalls() {
+    return {
+        shake: distinctCalls(Juice.useJuiceShake as jest.Mock),
+        flash: distinctCalls(Juice.useJuiceFlash as jest.Mock),
+    };
+}
+
+function resetSpies() {
+    mockFramePlayerProps.length = 0;
+    (Juice.useJuiceShake as jest.Mock).mockClear();
+    (Juice.useJuiceFlash as jest.Mock).mockClear();
+}
+
+describe('CombatCombatantPane — the enemy\'s turn animates (phase AN1b)', () => {
+    beforeEach(() => {
+        jest.useFakeTimers();
+        resetSpies();
+        frames.getEnemyFrameSet.mockReturnValue(null);
+        jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled')
+            .mockResolvedValue(false as unknown as boolean);
+    });
+    afterEach(() => {
+        jest.useRealTimers();
+        jest.restoreAllMocks();
+    });
+
+    it('renders the single painting, and mounts no frame player, for an enemy with no frame set', () => {
+        const view = renderPane({ seq: 1, events: ENEMY_BEAT });
+        act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS * 4); });
+        expect(view.queryByTestId('combat-enemy-frames')).toBeNull();
+        expect(view.getByTestId('combat-enemy-figure')).toBeTruthy();
+        expect(mockFramePlayerProps).toHaveLength(0);
+    });
+
+    it('selects the attack clip on the enemy\'s beat, at the existing impact offset', () => {
+        frames.getEnemyFrameSet.mockReturnValue(SYNTHETIC_FRAME_SET);
+        const view = renderPane({ seq: 1, events: ENEMY_BEAT });
+        expect(view.getByTestId('combat-enemy-frames')).toBeTruthy();
+        // Before the impact beat the enemy is still resting — the swing lands
+        // with the recoil, not on the frame the events arrived.
+        expect(mockFramePlayerProps.at(-1)?.clipName).toBe('idle');
+        act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS); });
+        expect(mockFramePlayerProps.at(-1)?.clipName).toBe('attacking');
+        expect(mockFramePlayerProps.at(-1)?.startKey).toBe(1);
+    });
+
+    it('leaves the enemy resting on a resolution that was not its beat', () => {
+        frames.getEnemyFrameSet.mockReturnValue(SYNTHETIC_FRAME_SET);
+        const playerHit = [
+            { kind: 'damage-dealt', target: 'enemy', amount: 9 },
+        ] as unknown as CombatEvent[];
+        renderPane({ seq: 1, events: playerHit });
+        act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS * 4); });
+        expect(mockFramePlayerProps.at(-1)?.clipName).toBe('idle');
+    });
+
+    it('hands the frame player the pane\'s own reduced-motion ref, not a second mechanism', () => {
+        frames.getEnemyFrameSet.mockReturnValue(SYNTHETIC_FRAME_SET);
+        renderPane({ seq: 1, events: ENEMY_BEAT });
+        const passed = mockFramePlayerProps.map((p) => p.reducedMotion);
+        // A ref object, and the SAME ref object every render — a boolean or a
+        // fresh object would mean the engine had grown an answer of its own.
+        expect(passed.length).toBeGreaterThan(0);
+        expect(passed.every((r) => typeof r === 'object' && r !== null && 'current' in r)).toBe(true);
+        expect(new Set(passed).size).toBe(1);
+    });
+
+    it('plays nothing when that ref says motion is reduced', async () => {
+        frames.getEnemyFrameSet.mockReturnValue(SYNTHETIC_FRAME_SET);
+        (AccessibilityInfo.isReduceMotionEnabled as jest.Mock)
+            .mockResolvedValue(true as unknown as never);
+        const view = renderPane();
+        // Let the pane's own ref settle from the platform before the beat.
+        await act(async () => { await Promise.resolve(); });
+        view.rerender(
+            withAllProviders(
+                <CombatCombatantPane enemy={ENEMY} player={PLAYER} fx={{ seq: 2, events: ENEMY_BEAT }} region="the Drowned Parish" />,
+            ).tree,
+        );
+        act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS * 10); });
+        expect(mockFramePlayerProps.at(-1)?.clipName).toBe('idle');
+        expect(mockFramePlayerProps.at(-1)?.startKey).toBe(0);
+    });
+
+    it('leaves the existing shake and flash beats byte-for-byte unchanged (A3)', () => {
+        frames.getEnemyFrameSet.mockReturnValue(null);
+        renderPane({ seq: 1, events: ENEMY_BEAT });
+        act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS * 4); });
+        const staticEnemy = juiceCalls();
+
+        resetSpies();
+        frames.getEnemyFrameSet.mockReturnValue(SYNTHETIC_FRAME_SET);
+        renderPane({ seq: 1, events: ENEMY_BEAT });
+        act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS * 4); });
+        const framedEnemy = juiceCalls();
+
+        // The comparison below is only a guard if the frame engine actually
+        // ran on this second render — otherwise an enemy that never wires in
+        // `getEnemyFrameSet` at all would "preserve" shake/flash trivially.
+        expect(mockFramePlayerProps.length).toBeGreaterThan(0);
+
+        // Same keys, same severities, same 100ms delay: the frame engine added
+        // an animation, it did not retune one.
+        expect(framedEnemy.shake).toEqual(staticEnemy.shake);
+        expect(framedEnemy.flash).toEqual(staticEnemy.flash);
+        // And the hit still registered at all, so the comparison is not two
+        // sets of nothing.
+        expect(staticEnemy.shake.some(([key]) => (key as number) > 0)).toBe(true);
+        expect(staticEnemy.flash.some(([, norm]) => (norm as number) > 0)).toBe(true);
+    });
+});

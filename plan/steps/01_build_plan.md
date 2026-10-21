@@ -191,7 +191,7 @@ event-pool and layout files).
       holding a Cloudflare Worker with `POST`/`GET /v1/puzzle-attempts` behind a bearer token, the D1 schema as
       numbered migrations, and the attempt contract (types plus validator) in `@mechanics`, tested in the Workers
       runtime against a local D1. No deploy yet. Brief `plan/phases/phase_BE1_solve_time_backend.md` § BE1a. Requires nothing.
-- [ ] Phase RV4 — The daily merge cap goes (plotted by T, 2026-10-21): `DAILY_CAP = 12` in `scripts/pr-policy.mjs` held PR #725 although it was green on every check including the adversarial review and GitHub called it MERGEABLE/CLEAN, blocking a six-phase chain T was orchestrating. The cap arrived inside commit 2adde5ff9 alongside the auto-merge it throttles and was never recorded in D95, so the code carried a rule the decision did not. The hold goes, the `countAutoMerges` number stays in the pass reason and the audit marker, the cap test inverts rather than disappears, and D95 is amended to match. Every per-PR hold is untouched and D85's five-open-PR cap still bounds what is in flight. Brief `plan/phases/phase_RV4_drop_the_daily_merge_cap.md`. Requires nothing.
+- [x] (#738) Phase RV4 — The daily merge cap goes (plotted by T, 2026-10-21): `DAILY_CAP = 12` in `scripts/pr-policy.mjs` held PR #725 although it was green on every check including the adversarial review and GitHub called it MERGEABLE/CLEAN, blocking a six-phase chain T was orchestrating. The cap arrived inside commit 2adde5ff9 alongside the auto-merge it throttles and was never recorded in D95, so the code carried a rule the decision did not. The hold goes, the `countAutoMerges` number stays in the pass reason and the audit marker, the cap test inverts rather than disappears, and D95 is amended to match. Every per-PR hold is untouched and D85's five-open-PR cap still bounds what is in flight. Brief `plan/phases/phase_RV4_drop_the_daily_merge_cap.md`. Requires nothing.
 - [ ] Phase BE1b — Live on Cloudflare (plotted by T, 2026-10-21) (attended): T mints the Cloudflare API token
       and adds the repo secrets; the D1 database `miserere` is created, and `backend-deploy.yml` applies
       migrations and deploys `miserere-api` on a push to `main` touching `backend/**`. Brief `plan/phases/phase_BE1_solve_time_backend.md` § BE1b.
@@ -199,7 +199,7 @@ event-pool and layout files).
 - [x] (#732) Phase BE1c — Preview builds post each attempt (plotted by T, 2026-10-21): each `/devpuzzle` attempt that
       ends is posted once when dev tools are on and the `EXPO_PUBLIC_PUZZLE_API_*` env is set; a failure is
       dropped with a dev warning; production never posts. Brief `plan/phases/phase_BE1_solve_time_backend.md` § BE1c. Requires BE1a.
-- [ ] Phase BE1d — `npm run puzzle:times` (plotted by T, 2026-10-21): per-candidate attempts, solve rate and
+- [x] (#742) Phase BE1d — `npm run puzzle:times` (plotted by T, 2026-10-21): per-candidate attempts, solve rate and
       median solve time grouped by band, with `--solver` and `--json`. Brief `plan/phases/phase_BE1_solve_time_backend.md` § BE1d. Requires BE1a.
 - [x] (#727) Phase AN1a — The enemy frame engine, the fallback and the dev route (plotted by T, 2026-10-21):
       a frame-set registry beside `ENEMY_ART_BY_KEY` keyed on `portraitAsset`, a reanimated frame player,
@@ -209,7 +209,7 @@ event-pool and layout files).
       the bbox centre wandered 11.2% as the weapon swung), and go through the same ingest `RECIPE` as
       every other asset. Reduced motion reuses the pane's existing ref. Brief
       `plan/phases/phase_AN1_enemy_animation.md` § AN1a. Requires nothing.
-- [ ] Phase AN1b — The enemy's turn is animated (plotted by T, 2026-10-21): the attack animation plays
+- [x] (#735) Phase AN1b — The enemy's turn is animated (plotted by T, 2026-10-21): the attack animation plays
       on the enemy's beat in `CombatCombatantPane`, off the **existing** `fx.seq` walk (`threat-fired`,
       `damage-dealt`) at the existing `IMPACT` offset and behind the existing `reduceMotion.current`; an
       enemy with no frame set is untouched. Brief

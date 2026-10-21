@@ -28,7 +28,11 @@
 //     on the ruleset's bypass list and the job merges on T's token)
 //   - GitHub says the PR is not mergeable (`mergeStateStatus` other than CLEAN or UNSTABLE; UNSTABLE is a
 //     non-required check red or cancelled, and only `verify-gate` is required, checked above)
-//   - the daily cap (`DAILY_CAP` merges by this job in 24 hours, counted by the `<!-- pr-merge:auto -->` marker)
+//
+// No hold counts earlier merges: the daily cap went in phase RV4 (T, 2026-10-21). The job's
+// merges in the last 24 hours (the `<!-- pr-merge:auto -->` marker, `countAutoMerges`) are still
+// named in the pass reason, so a runaway loop shows in the audit trail; the open-PR cap bounds
+// what is in flight.
 //
 // `mergeWanted` is pure; only `main` reads GitHub. The merge job checks out
 // `main`'s copy of this file, so a PR cannot rewrite the decision that merges it.
@@ -39,13 +43,13 @@ import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { REVIEW_VERDICT } from './eval/ledger-lib.mjs'
-import { AUTO_MARKER, DAILY_CAP, HOLD_LABELS, MERGEABLE_STATES, PIPELINE_PATHS, PLAN_LABELS, PLAN_TITLE, TRUSTED_AUTHORS } from './pr-policy.mjs'
+import { AUTO_MARKER, HOLD_LABELS, MERGEABLE_STATES, PIPELINE_PATHS, PLAN_LABELS, PLAN_TITLE, TRUSTED_AUTHORS } from './pr-policy.mjs'
 import { markedHeads } from './pr-review.mjs'
 
 // The policy constants live in `pr-policy.mjs` so `pr-review.mjs` can read
 // them without importing this file (which imports it: the cycle deadlocked
 // the CLI's top-level await, exit 13). Re-exported here for every reader.
-export { AUTO_MARKER, DAILY_CAP, HOLD_LABELS, MERGEABLE_STATES, PIPELINE_PATHS, PLAN_LABELS, PLAN_TITLE, TRUSTED_AUTHORS }
+export { AUTO_MARKER, HOLD_LABELS, MERGEABLE_STATES, PIPELINE_PATHS, PLAN_LABELS, PLAN_TITLE, TRUSTED_AUTHORS }
 
 /**
  * The verdict the job trusts for this head and this run: the latest comment
@@ -135,8 +139,7 @@ export function mergeWanted({ state, isDraft, isCrossRepository, labels, title, 
   if (verdict !== 'pass') return { go: false, reason: `verdict ${verdict} on head ${head.slice(0, 8)}` }
   if (!verifyGateGreen(checks, head)) return { go: false, reason: `verify-gate is not green on head ${head.slice(0, 8)}` }
   if (!MERGEABLE_STATES.includes(mergeStateStatus)) return { go: false, reason: `mergeStateStatus ${mergeStateStatus}: GitHub does not call it mergeable` }
-  if (mergedToday >= DAILY_CAP) return { go: false, reason: `daily cap: ${mergedToday} auto-merges in 24h` }
-  return { go: true, reason: `verdict pass on head ${head.slice(0, 8)}, ${mergeStateStatus}, ${mergedToday} of ${DAILY_CAP} today` }
+  return { go: true, reason: `verdict pass on head ${head.slice(0, 8)}, ${mergeStateStatus}, ${mergedToday} auto-merged in 24h` }
 }
 
 /**

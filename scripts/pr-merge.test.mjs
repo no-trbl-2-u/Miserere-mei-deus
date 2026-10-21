@@ -10,7 +10,8 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
-import { AUTO_MARKER, DAILY_CAP, HOLD_LABELS, PIPELINE_PATHS, PLAN_LABELS, TRUSTED_AUTHORS, auditComment, countAutoMerges, mergeWanted, reviewStartedAt, verdictFor, verifyGateGreen } from './pr-merge.mjs'
+import * as policy from './pr-policy.mjs'
+import { AUTO_MARKER, HOLD_LABELS, PIPELINE_PATHS, PLAN_LABELS, TRUSTED_AUTHORS, auditComment, countAutoMerges, mergeWanted, reviewStartedAt, verdictFor, verifyGateGreen } from './pr-merge.mjs'
 import { headMarker } from './pr-review.mjs'
 
 const HEAD = 'a'.repeat(40)
@@ -179,16 +180,44 @@ test('verdictFor reads only marker-bearing comments for the head, since the run 
   assert.equal(verdictFor([{ body: verdict('pass').body, createdAt: 'garbage' }], HEAD, SINCE), null)
 })
 
-test('the daily cap holds the thirteenth merge', () => {
-  assert.equal(DAILY_CAP, 12)
-  assert.equal(mergeWanted(pr({ mergedToday: DAILY_CAP - 1 })).go, true)
-  assert.match(mergeWanted(pr({ mergedToday: DAILY_CAP })).reason, /daily cap/)
+test('no daily cap: a reviewed green PR merges however many merged before it', () => {
+  assert.equal('DAILY_CAP' in policy, false, 'the cap constant is gone')
+  for (const n of [0, 11, 12, 13, 99, 10_000]) {
+    const d = mergeWanted(pr({ mergedToday: n }))
+    assert.equal(d.go, true, `mergedToday ${n}`)
+    assert.match(d.reason, new RegExp(`${n} auto-merged in 24h`), 'the count stays in the pass reason')
+  }
   const merged = [
     { mergedAt: '2026-10-20T09:00:00Z', comments: [{ body: auditComment({ pr: 1, head: HEAD, run: 7 }) }] },
     { mergedAt: '2026-10-19T09:00:00Z', comments: [{ body: AUTO_MARKER }] },
     { mergedAt: '2026-10-20T09:30:00Z', comments: [{ body: 'T merged this by hand' }] },
   ]
   assert.equal(countAutoMerges(merged, '2026-10-20T10:00:00Z'), 1)
+})
+
+test('the holds that survive the cap still fire, at any merge count', () => {
+  const holds = {
+    'kill switch': [{ killSwitch: true }, /kill switch/],
+    'no-auto-merge label': [{ labels: ['no-auto-merge'] }, /label no-auto-merge/],
+    'plan PR': [{ labels: ['plot'] }, /plan PR/],
+    'pipeline PR': [{ files: ['scripts/pr-policy.mjs'] }, /pipeline PR/],
+    'review:needs-T': [{ labels: ['review:needs-T'] }, /label review:needs-T/],
+    'loop:pr-stuck': [{ labels: ['loop:pr-stuck'] }, /label loop:pr-stuck/],
+    draft: [{ isDraft: true }, /draft/],
+    fork: [{ isCrossRepository: true }, /fork/],
+    'untrusted verdict author': [{ comments: [verdict('pass', HEAD, '2026-10-20T10:20:00Z', 'mallory')] }, /no verdict/],
+    'head moved': [{ liveHead: OLD }, /head moved/],
+    'not-pass verdict': [{ comments: [verdict('not-pass')] }, /verdict not-pass/],
+    'missing verdict': [{ comments: [] }, /no verdict/],
+    'verify-gate not green': [{ checks: [] }, /verify-gate is not green/],
+  }
+  for (const [name, [extra, reason]] of Object.entries(holds)) {
+    for (const mergedToday of [0, 99]) {
+      const d = mergeWanted(pr({ mergedToday, ...extra }))
+      assert.equal(d.go, false, `${name} at ${mergedToday}`)
+      assert.match(d.reason, reason, name)
+    }
+  }
 })
 
 test('the audit comment names the head and the run and carries the marker', () => {

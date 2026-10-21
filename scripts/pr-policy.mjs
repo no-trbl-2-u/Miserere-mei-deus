@@ -27,9 +27,6 @@ export const PIPELINE_PATHS = Object.freeze([
   'skills/review.md', 'skills/review-fix.md', 'skills/fix-ci.md',
 ])
 
-/** Merges by this job in any 24-hour window; the rest wait for T. */
-export const DAILY_CAP = 12
-
 /**
  * Accounts whose verdict comments the job trusts: the repository owner
  * (the reviewer posts with GH_PAT, T's token) and the Actions identities
@@ -39,7 +36,7 @@ export const DAILY_CAP = 12
  */
 export const TRUSTED_AUTHORS = Object.freeze(['no-trbl-2-u', 'claude[bot]', 'github-actions[bot]'])
 
-/** The marker the job's own comment carries, so the cap and the ledger can count its merges. */
+/** The marker the job's own comment carries, so the pass reason and the ledger can count its merges. */
 export const AUTO_MARKER = '<!-- pr-merge:auto -->'
 
 /**
