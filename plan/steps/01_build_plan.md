@@ -191,6 +191,7 @@ event-pool and layout files).
       holding a Cloudflare Worker with `POST`/`GET /v1/puzzle-attempts` behind a bearer token, the D1 schema as
       numbered migrations, and the attempt contract (types plus validator) in `@mechanics`, tested in the Workers
       runtime against a local D1. No deploy yet. Brief `plan/phases/phase_BE1_solve_time_backend.md` § BE1a. Requires nothing.
+- [ ] Phase RV4 — The daily merge cap goes (plotted by T, 2026-10-21): `DAILY_CAP = 12` in `scripts/pr-policy.mjs` held PR #725 although it was green on every check including the adversarial review and GitHub called it MERGEABLE/CLEAN, blocking a six-phase chain T was orchestrating. The cap arrived inside commit 2adde5ff9 alongside the auto-merge it throttles and was never recorded in D95, so the code carried a rule the decision did not. The hold goes, the `countAutoMerges` number stays in the pass reason and the audit marker, the cap test inverts rather than disappears, and D95 is amended to match. Every per-PR hold is untouched and D85's five-open-PR cap still bounds what is in flight. Brief `plan/phases/phase_RV4_drop_the_daily_merge_cap.md`. Requires nothing.
 - [ ] Phase BE1b — Live on Cloudflare (plotted by T, 2026-10-21) (attended): T mints the Cloudflare API token
       and adds the repo secrets; the D1 database `miserere` is created, and `backend-deploy.yml` applies
       migrations and deploys `miserere-api` on a push to `main` touching `backend/**`. Brief `plan/phases/phase_BE1_solve_time_backend.md` § BE1b.
@@ -1001,6 +1002,13 @@ See the status rows above; generate briefs on demand.
 > "reason not stated" — never invent one), and the resulting
 > commit/issue/phase-brief when available.
 
+- **2026-10-21** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-RV4-drop-daily-cap`). Action: **added Phase RV4** directly above the first open row.
+  Confirmed T's request: yes. Reason (T), on being shown `DAILY_CAP = 12` after it held PR #725:
+  "I don't want that". T first chose `/oversight`; that skill's hard rule 1 forbids editing code
+  and the constant lives in `scripts/pr-policy.mjs` with a test, so the request routed here
+  instead - the 2026-10-17 precedent raised a cap that lives in `skills/march.md` prose. `asap`
+  because the cap is blocking merges right now. Id RV4 rather than RV3: RV3 names no row or brief
+  but commit 2adde5ff9 claims it. Brief `plan/phases/phase_RV4_drop_the_daily_merge_cap.md`.
 - **2026-10-21** — actor: **T, attended session** (`/plot`, branch `loop/plot-AN1e-float-eye-installed`).
   Action: **added Phase AN1e** after Phase FM1e, the last open row, and **added acceptance A9, A10 and
   A11** to the existing AN1 brief. Confirmed T's request: yes. Reason (T): "I want, once the animation
