@@ -9,7 +9,7 @@ Brief: `plan/phases/phase_FM1_feature_map.md`.
 | Feature | Kind | Reachable | Driven | Tested | Needs a pitch |
 |---|---|---|---|---|---|
 | Character | route | yes | yes | yes | no |
-| Deck | route | yes | no | yes | no |
+| Deck | route | yes | yes | yes | no |
 | The map | route | yes | yes | yes | no |
 | Inventory | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Inventory") |
 | Memoir | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Memoir") |
@@ -26,7 +26,7 @@ Brief: `plan/phases/phase_FM1_feature_map.md`.
 | Settings | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Settings") |
 | Village | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Village") |
 | The hazard minigame | route | yes | yes | yes | no |
-| The hazard deck | route | yes | no | yes | no |
+| The hazard deck | route | yes | yes | yes | no |
 | The Labyrinth | route | yes | yes | yes | no |
 | Cards | engine area | yes | yes | yes | no |
 | VITAE and stats | engine area | yes | yes | yes | no |
