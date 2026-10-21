@@ -97,7 +97,11 @@ function measureRect(ref: MeasurableRef): Promise<Rect | null> {
             resolve(null);
             return;
         }
-        node.measureInWindow((x, y, width, height) => resolve({ x, y, width, height }));
+        // `measure`'s page coords share the root-view origin with the gesture's
+        // absoluteX/Y. `measureInWindow` does not on Android edge-to-edge: it
+        // reads a status bar's height too high, so the lower half of a staged
+        // card missed every die drop.
+        node.measure((_x, _y, width, height, pageX, pageY) => resolve({ x: pageX, y: pageY, width, height }));
     });
 }
 
