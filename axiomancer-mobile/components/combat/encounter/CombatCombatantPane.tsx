@@ -573,6 +573,9 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
     // `AccessibilityInfo` a second time, because two answers to one question
     // drift and one of them is wrong.
     const enemyFrameSet = getEnemyFrameSet(enemy.artKey);
+    // One label for the figure, whichever way it is drawn: a screen reader
+    // must not be able to tell that an enemy animates.
+    const enemyFigureLabel = `${enemy.name} bars the way`;
     const attackClip = useEnemyAttackClip({
         frameSet: enemyFrameSet, beat: attackBeat, reducedMotion: reduceMotion,
     });
@@ -665,7 +668,7 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                                     startKey={attackClip.startKey}
                                     reducedMotion={reduceMotion}
                                     style={[styles.enemyFigureImg, enemy.isBoss && styles.enemyFigureImgBoss]}
-                                    accessibilityLabel={`${enemy.name} bars the way`}
+                                    accessibilityLabel={enemyFigureLabel}
                                     testID="combat-enemy-frames"
                                 />
                             ) : (
@@ -675,7 +678,7 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                                     contentFit="contain"
                                     contentPosition="bottom center"
                                     transition={0}
-                                    accessibilityLabel={`${enemy.name} bars the way`}
+                                    accessibilityLabel={enemyFigureLabel}
                                 />
                             )}
                         </Animated.View>
