@@ -6,8 +6,9 @@
  *                character. Blood border: it discards map progress.
  *   NEW RUN    — `resetRun({ keepCharacter: false })`: everything fresh.
  *   GALLERIES  — the dev-only visual routes: enemy art (`/devart`),
- *                Aporia rooms (`/devart/rooms`), and the DEFEAT / PARLEY
- *                aftermath panels (`/devaftermath?panel=…`).
+ *                Aporia rooms (`/devart/rooms`), the DEFEAT / PARLEY
+ *                aftermath panels (`/devaftermath?panel=…`), and the
+ *                frame-engine harness (`/devframes`).
  *
  * Renders null outside dev builds.
  */
@@ -24,6 +25,7 @@ const GALLERIES: readonly { label: string; route: string; testID: string }[] = [
     { label: 'APORIA ROOMS', route: '/devart/rooms', testID: 'debug-gallery-rooms' },
     { label: 'DEFEAT PANEL', route: '/devaftermath?panel=defeat', testID: 'debug-gallery-defeat' },
     { label: 'PARLEY PANEL', route: '/devaftermath?panel=parley', testID: 'debug-gallery-parley' },
+    { label: 'FRAME ENGINE', route: '/devframes', testID: 'debug-gallery-frames' },
 ];
 
 export function DebugRunControls() {
