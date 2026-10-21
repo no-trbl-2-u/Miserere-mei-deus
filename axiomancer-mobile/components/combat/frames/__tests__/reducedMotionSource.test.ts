@@ -19,6 +19,15 @@ function stripComments(text: string): string {
     return text.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
 }
 
+/**
+ * Every module that decides WHETHER MOTION HAPPENS, and must therefore be
+ * taking the answer from its caller rather than from the platform. Listing
+ * them by name is the point: a new gate added to the engine without a row
+ * here is a gate nothing holds to A4, and the last assertion refuses the
+ * list going empty.
+ */
+const MOTION_GATES = ['useFramePlayback.ts', 'useEnemyClipSelection.ts'] as const;
+
 describe('the enemy frame engine owns no reduced-motion mechanism of its own', () => {
     const sources = fs.readdirSync(ENGINE_DIR).filter((f) => /\.tsx?$/.test(f));
 
@@ -31,5 +40,16 @@ describe('the enemy frame engine owns no reduced-motion mechanism of its own', (
         // asks, which is most of why it never does.
         const text = stripComments(fs.readFileSync(path.join(ENGINE_DIR, file), 'utf8'));
         expect(text).not.toMatch(FORBIDDEN);
+    });
+
+    it.each(MOTION_GATES)('%s gates motion through the answer its caller handed it', (file) => {
+        // The positive half. "Never asks" is satisfied by a module that never
+        // consults the preference at all — which would be a gate that is not
+        // gating. Each named gate must read it, and read it through the one
+        // shared reader, so there is exactly one way the answer arrives.
+        expect(sources).toContain(file);
+        const text = stripComments(fs.readFileSync(path.join(ENGINE_DIR, file), 'utf8'));
+        expect(text).toMatch(/readReducedMotion\s*\(/);
+        expect(text).toMatch(/reducedMotion/);
     });
 });

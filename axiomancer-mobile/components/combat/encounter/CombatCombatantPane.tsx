@@ -510,7 +510,9 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
         // one stream once. The counters are all that happens here: when and
         // whether a clip plays is `useEnemyClipSelection`'s call, and an enemy
         // with no frame set spends this on nothing.
-        if (isEnemyAttackBeat({ playerDamage: playerDmg, threatFired })) {
+        if (isEnemyAttackBeat({
+            playerDamage: playerDmg, threatFired, intentDamage: enemy.intent.damage,
+        })) {
             setAttackBeat((n) => n + 1);
         }
         const enemyDotDmg = ticks.reduce((sum, t) => (t.side === 'enemy' ? sum + t.amount : sum), 0);
