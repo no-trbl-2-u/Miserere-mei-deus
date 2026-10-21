@@ -81,12 +81,23 @@ const ENEMY_BEAT: CombatEvent[] = [
     { kind: 'damage-dealt', target: 'self', amount: 6 },
 ] as unknown as CombatEvent[];
 
-function renderPane(fx?: CombatFx) {
+function renderPane(fx?: CombatFx, enemy: CombatEnemyPaneVM = ENEMY) {
     const { tree } = withAllProviders(
-        <CombatCombatantPane enemy={ENEMY} player={PLAYER} fx={fx} region="the Drowned Parish" />,
+        <CombatCombatantPane enemy={enemy} player={PLAYER} fx={fx} region="the Drowned Parish" />,
     );
     return render(tree);
 }
+
+/** The same foe, telegraphing something that is not an attack. */
+const MENDING_ENEMY: CombatEnemyPaneVM = {
+    ...ENEMY,
+    intent: {
+        ...ENEMY.intent, type: 'mend', label: 'knits itself', damage: 0,
+    } as unknown as CombatEnemyPaneVM['intent'],
+};
+
+/** A threat that fired and dealt the player nothing. */
+const THREAT_ONLY: CombatEvent[] = [{ kind: 'threat-fired' }] as unknown as CombatEvent[];
 
 /**
  * The DISTINCT argument tuples each juice hook was handed, in order. Render
@@ -150,6 +161,27 @@ describe('CombatCombatantPane — the enemy\'s states animate (phases AN1b, AN1c
         act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS); });
         expect(mockFramePlayerProps.at(-1)?.clipName).toBe('attacking');
         expect(mockFramePlayerProps.at(-1)?.startKey).toBe(1);
+    });
+
+    it('does not swing when the threat that fired was never an attack', () => {
+        // The PANE's wiring of `enemy.intent.damage` into the beat, not the
+        // pure function in isolation: a mending or buffing foe takes its turn
+        // without miming a blow it never telegraphed.
+        frames.getEnemyFrameSet.mockReturnValue(SYNTHETIC_FRAME_SET);
+        renderPane({ seq: 1, events: THREAT_ONLY }, MENDING_ENEMY);
+        act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS * 4); });
+        expect(mockFramePlayerProps.length).toBeGreaterThan(0);
+        expect(mockFramePlayerProps.at(-1)?.clipName).toBe('idle');
+        expect(mockFramePlayerProps.at(-1)?.startKey).toBe(0);
+    });
+
+    it('does swing when the same threat-only resolution came from an attack intent', () => {
+        // The other side of that gate, so "never swings" cannot pass by
+        // accident: an attack the player guarded is still a swing.
+        frames.getEnemyFrameSet.mockReturnValue(SYNTHETIC_FRAME_SET);
+        renderPane({ seq: 1, events: THREAT_ONLY });
+        act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS); });
+        expect(mockFramePlayerProps.at(-1)?.clipName).toBe('attacking');
     });
 
     it('selects the struck clip when the ENEMY took the damage, and never the attack clip (AN1c)', () => {

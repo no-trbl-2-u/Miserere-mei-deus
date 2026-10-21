@@ -254,6 +254,12 @@ stable: `self-dev-tools-link`, `debug-trigger-encounter-*`
 `debug-hazard-button`, `debug-currency-large-grant`, `debug-rest-button`,
 `debug-cache-button`, `debug-xp-grant-button`.
 
+A local `npm run verify:visual` scopes its routes from the branch's diff
+(`scripts/lib/smoke-routes-for.mjs`, phase VE1d). `app/dev/` and the
+`Debug*` components name no route there, so a change to them shoots every
+route: the live-fight shot enters through `/dev`, and a fixture shot runs
+with dev tools forced.
+
 `debug-currency-*` answers to `dev-section-run`, not `dev-section-player`,
 since 2026-10-16: a harness reaching it through `openDevSection`
 (`scripts/dev-section.mjs`) passes `run` as the section key.

@@ -31,18 +31,26 @@ export interface EnemyBeatSignals {
     playerDamage: number;
     /** Whether the enemy's threat fired this resolution (`threat-fired`). */
     threatFired: boolean;
+    /** The telegraphed damage of the intent that fired (`enemy.intent.damage`). */
+    intentDamage: number;
 }
 
 /**
- * True when this resolution was the enemy acting on the player.
+ * True when this resolution was the enemy SWINGING at the player.
  *
- * A fired threat counts even when the player took nothing: the swing happened
- * and was denied, and an enemy that mimes nothing on the turn its attack is
- * guarded reads as a bug rather than as a block. Damage to the player counts
- * on its own because not every source of it fires a threat event.
+ * Damage the player took counts on its own, because not every source of it
+ * fires a threat event. A fired threat counts even when the player took
+ * nothing — the swing happened and was denied, and an enemy that mimes nothing
+ * on the turn its attack is guarded reads as a bug rather than as a block —
+ * but only when the intent was an attack at all. A threat that heals or buffs
+ * the enemy is its turn, not its swing. That is the same gate the pane's own
+ * DENIED flourish already uses, and the two must not disagree about what an
+ * attack is.
  */
-export function isEnemyAttackBeat({ playerDamage, threatFired }: EnemyBeatSignals): boolean {
-    return threatFired || playerDamage > 0;
+export function isEnemyAttackBeat(
+    { playerDamage, threatFired, intentDamage }: EnemyBeatSignals,
+): boolean {
+    return playerDamage > 0 || (threatFired && intentDamage > 0);
 }
 
 /** The attack clip of a set, or null when the set has none (or there is no set). */

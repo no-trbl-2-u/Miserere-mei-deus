@@ -62,6 +62,8 @@ jobs:
       - name: Run visual smoke screens
         if: inputs.run_visual_verify == true
         run: npm run verify:visual --workspace axiomancer-mobile
+        env:
+          SMOKE_ROUTES: all
 
       # The solve-time API (phase BE1c): a dev-tools build posts each ended
       # /devpuzzle attempt when both EXPO_PUBLIC_PUZZLE_API_* values are baked
