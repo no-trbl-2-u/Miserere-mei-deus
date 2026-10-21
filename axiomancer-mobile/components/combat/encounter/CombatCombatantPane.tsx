@@ -29,6 +29,8 @@ import Svg, { Circle, Defs, Ellipse, LinearGradient, Path, RadialGradient, Rect,
 
 import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
 import { getEncounterEnemyArt } from '@/assets/images/enemies';
+import { getEnemyFrameSet } from '@/assets/images/enemies/frames';
+import { EnemyFramePlayer, isEnemyAttackBeat, useEnemyAttackClip } from '@/components/combat/frames';
 import { ARENA_PLATES_SHOWN, BLACK_ARENA_ALT, arenaAltTextFor, arenaBackdropFor } from '@/assets/images/combat';
 import { FONTS, HUE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
@@ -438,6 +440,11 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
     // (recoil/flash/squash/slash/haptic) live in `PlayerMedallion`.
     const enemyShift = useSharedValue(0);
     const enemyScale = useSharedValue(1);
+    // The enemy's own beat count, for the frame engine. It rises in the SAME
+    // walk of `fx.events` the lunge reads, so the swing and the lunge can never
+    // disagree about whether the enemy acted. It drives nothing above: the
+    // frame clip is state of its own and the shared values are untouched.
+    const [attackBeat, setAttackBeat] = useState(0);
     // Board-level feedback: a damage-scaled screen shake + a red vignette
     // flash — lib/juice primitives, synced to the IMPACT beat
     // below via each hook's own `delayMs` so they still land with the enemy
@@ -487,6 +494,14 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                 const color = e.effect ? effectGlyph(e.effect as Parameters<typeof effectGlyph>[0]).color : (side === 'player' ? HUE.tickPurple : HUE.goldAccent);
                 statusFloats.push({ side, text: kw, color });
             }
+        }
+        // THE ENEMY'S BEAT (phase AN1b). Off the walk just finished — a fired
+        // threat, or damage the player took — so the frame engine and the lunge
+        // read one stream once. The counter is all that happens here: when and
+        // whether an attack clip plays is `useEnemyAttackClip`'s call, and an
+        // enemy with no frame set spends this on nothing.
+        if (isEnemyAttackBeat({ playerDamage: playerDmg, threatFired })) {
+            setAttackBeat((n) => n + 1);
         }
         // The ledgers and the enemy's STAGE beat each float the word that moved
         // the numbers. The wording lives ONCE, in the presenter's `selectCombatLogLines`, so
@@ -545,6 +560,17 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
     // Random painting per encounter (artNonce = encounter seed), stable for the
     // fight's duration — see assets/images/enemies.
     const enemyArt = getEncounterEnemyArt(enemy.artKey, enemy.artNonce);
+
+    // Frames, when this enemy has them. The registry ships empty, so today
+    // every enemy takes the `null` path and renders the painting above exactly
+    // as it always has; AN1e installs the first set. Reduced motion is the
+    // pane's OWN ref, handed straight down — the frame engine never asks
+    // `AccessibilityInfo` a second time, because two answers to one question
+    // drift and one of them is wrong.
+    const enemyFrameSet = getEnemyFrameSet(enemy.artKey);
+    const attackClip = useEnemyAttackClip({
+        frameSet: enemyFrameSet, beat: attackBeat, reducedMotion: reduceMotion,
+    });
 
     // Region-keyed arena backdrop — falls back to the neutral
     // desolation plate for a region with no rule of its own. The Northern
@@ -626,14 +652,27 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                             wrapper because RN cannot merge two `transform` arrays from a
                             style list, and the lunge above owns the outer one. */}
                         <Animated.View style={[styles.enemyIdleWrap, idleStyle]} testID="combat-enemy-figure">
-                            <Image
-                                source={enemyArt}
-                                style={[styles.enemyFigureImg, enemy.isBoss && styles.enemyFigureImgBoss]}
-                                contentFit="contain"
-                                contentPosition="bottom center"
-                                transition={0}
-                                accessibilityLabel={`${enemy.name} bars the way`}
-                            />
+                            {enemyFrameSet ? (
+                                <EnemyFramePlayer
+                                    artKey={enemy.artKey}
+                                    frameSet={enemyFrameSet}
+                                    clipName={attackClip.clipName}
+                                    startKey={attackClip.startKey}
+                                    reducedMotion={reduceMotion}
+                                    style={[styles.enemyFigureImg, enemy.isBoss && styles.enemyFigureImgBoss]}
+                                    accessibilityLabel={`${enemy.name} bars the way`}
+                                    testID="combat-enemy-frames"
+                                />
+                            ) : (
+                                <Image
+                                    source={enemyArt}
+                                    style={[styles.enemyFigureImg, enemy.isBoss && styles.enemyFigureImgBoss]}
+                                    contentFit="contain"
+                                    contentPosition="bottom center"
+                                    transition={0}
+                                    accessibilityLabel={`${enemy.name} bars the way`}
+                                />
+                            )}
                         </Animated.View>
                     </View>
                 </Animated.View>
