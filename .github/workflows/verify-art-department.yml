@@ -8,8 +8,10 @@ name: verify-art-department
 # What it checks: the toolchain's dependencies are declared and installable,
 # `doctor` reports a missing one by name, and the tree's own suite is green --
 # which includes regenerating the float-eye spritesheet from the rig tool's
-# home and comparing all four outputs against the committed master byte for
-# byte.
+# home and comparing it against the committed master: the WebP, the manifest
+# and the flipbook byte for byte, the lossless PNG pixel for pixel (its deflate
+# stream depends on which zlib the Pillow wheel was linked against, and this
+# runner's differs from the authoring machine's).
 
 on:
   push:

@@ -15,16 +15,23 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from PIL import Image
+
 DEPT = Path(__file__).resolve().parents[1]
 RIG = DEPT / "tools" / "rig-spritesheet.py"
 MASTERS = DEPT / "masters" / "enemies"
 ENEMY = "float-eye"
-OUTPUTS = [
-    f"{ENEMY}.sheet.png",
-    f"{ENEMY}.sheet.webp",
-    f"{ENEMY}.sheet.json",
-    f"{ENEMY}.preview.webp",
-]
+
+# The WebP sheet, the manifest and the review flipbook are compared as raw
+# bytes. The lossless PNG is compared pixel for pixel instead, because a PNG's
+# IDAT is a deflate stream and its exact bytes depend on which zlib the Pillow
+# wheel was linked against -- zlib-ng on the authoring machine, plain zlib on a
+# Linux runner -- for identical pixels. The WebP is the stricter witness
+# anyway: it is byte-identical everywhere, so any change to a single pixel
+# fails this suite regardless of how the PNG happened to compress.
+BYTE_FOR_BYTE = [f"{ENEMY}.sheet.webp", f"{ENEMY}.sheet.json", f"{ENEMY}.preview.webp"]
+PIXEL_FOR_PIXEL = [f"{ENEMY}.sheet.png"]
+OUTPUTS = PIXEL_FOR_PIXEL + BYTE_FOR_BYTE
 
 
 class RigRegeneratesTheMaster(unittest.TestCase):
@@ -47,8 +54,8 @@ class RigRegeneratesTheMaster(unittest.TestCase):
             with self.subTest(name):
                 self.assertTrue((self.out / name).is_file(), f"{name} was not written")
 
-    def test_every_output_matches_the_committed_master_byte_for_byte(self):
-        for name in OUTPUTS:
+    def test_the_webp_manifest_and_flipbook_match_the_master_byte_for_byte(self):
+        for name in BYTE_FOR_BYTE:
             with self.subTest(name):
                 fresh = (self.out / name).read_bytes()
                 committed = (MASTERS / name).read_bytes()
@@ -60,6 +67,18 @@ class RigRegeneratesTheMaster(unittest.TestCase):
                     f"{name} differs from the committed master. The rig is "
                     "deterministic, so something in the tool changed -- find it "
                     "rather than refreshing the master.")
+
+    def test_the_png_matches_the_master_pixel_for_pixel(self):
+        for name in PIXEL_FOR_PIXEL:
+            with self.subTest(name):
+                with Image.open(self.out / name) as fresh, Image.open(MASTERS / name) as master:
+                    self.assertEqual(fresh.size, master.size, name)
+                    self.assertEqual(fresh.mode, master.mode, name)
+                    self.assertEqual(
+                        fresh.convert("RGBA").tobytes(), master.convert("RGBA").tobytes(),
+                        f"{name} differs from the committed master in its pixels. "
+                        "The rig is deterministic, so something in the tool "
+                        "changed -- find it rather than refreshing the master.")
 
     def test_the_manifest_still_points_at_the_source_painting(self):
         import json
