@@ -137,7 +137,7 @@ test('determinism: two runs serialize to identical bytes, sorted and deduped', (
   assert.deepEqual(keys, [...new Set(keys)].sort())
   assert.deepEqual(map.features.map((f) => f.id), map.features.map((f) => f.id).sort())
   assert.deepEqual(Object.keys(map.edges[0]), ['kind', 'from', 'to', 'file'])
-  assert.deepEqual(Object.keys(map.features[0]), ['id', 'name', 'kind', 'group', 'source'])
+  assert.deepEqual(Object.keys(map.features[0]), ['id', 'name', 'kind', 'group', 'source', 'named', 'reachable', 'driven', 'tested', 'needsPitch'])
 })
 
 test('--check: fails with no output, passes after a write, fails again on drift', () => {
