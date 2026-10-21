@@ -55,14 +55,28 @@ fewer, do it inline.
   list; in an attended session, ask up to 4 with `AskUserQuestion`
   (recommendation first, `docs/asking-well.md`) and record the
   answers there.
+- **Reconcile the deadline plan** (phase DL1c), in the same commit
+  as the candidates. A dump adds no build-plan rows, so it owes no
+  `## Items` or `## Unscheduled` line; the `/plot` that promotes a
+  candidate gives its rows one (`skills/plot.md` Step 4). But a
+  theme that **supersedes, re-scopes or completes** an open Item in
+  `plan/deadlines.md` edits that Item itself: its name, date or rows
+  are changed to the work that now finishes it (`needs plot` when
+  that work is only a candidate), or a `T` Item T says is done is
+  ticked `[x]`. Add one `## Change log` line at the top of that
+  section naming the edit and why. No lint sees an Item whose
+  premise is gone while its rows still exist; this step is the only
+  guard. Then run `node scripts/check-deadlines.mjs`; it must be
+  clean.
 
 ### Step 5 — Commit
 
-Plan-only, so it pushes `main` (D84). Stage the part plan(s) and
-`plan/PHASE_CANDIDATES.md` explicitly; never `plan/messy/`.
+Plan-only, so it pushes `main` (D84). Stage the part plan(s),
+`plan/PHASE_CANDIDATES.md` and, when Step 4 edited it,
+`plan/deadlines.md` explicitly; never `plan/messy/`.
 
 ```bash
-git add plan/<topic>.md plan/PHASE_CANDIDATES.md
+git add plan/<topic>.md plan/PHASE_CANDIDATES.md plan/deadlines.md
 git commit -m "plan(<topic>): messy <slug> — <K> themes, <M> candidates"
 git push origin main
 ```

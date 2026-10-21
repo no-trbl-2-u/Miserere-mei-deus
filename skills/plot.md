@@ -130,6 +130,35 @@ phase. Add one Queue change log entry (same commit) naming every
 phase id the plot added. If a "needs a brief: `/plot <N>`" candidate
 existed, move it to Rejected as "briefed".
 
+**Reconcile the deadline plan** (phase DL1c), in the same commit as
+the rows. `plan/deadlines.md` is edited by hand here; nothing
+regenerates it from the build plan except the Status cells:
+
+- **Every row the plot added** gets a home: name it in an `## Items`
+  row whose due date sits inside its Window (a `needs plot` Item
+  this plot answers has its `needs plot` replaced by the new ids), or
+  a `- <id> — <reason>` line under `## Unscheduled` ("date not set"
+  when the date is T's to pick and T is not here to pick it). Never
+  guess a date for T.
+- **Every Item the plot supersedes, re-scopes or completes** is
+  edited itself, not only its Rows cell: its name, date or rows are
+  changed to the work that now finishes it, or a `T` Item T has
+  already done is ticked `[x]`. Read each open Item in the plot's
+  window and ask whether its premise still holds once these rows
+  exist. This is the one drift no lint sees: an Item whose rows
+  still exist but whose premise is gone (the `W1 demo: T plays the
+  three demos` Item of 2026-10-20) passes every check.
+- **One `## Change log` line** at the top of that section names
+  what was added, edited and ticked, and why.
+
+Then re-derive the Status cells and run the lint (coverage, ids,
+windows, Status); both must be clean before Step 5:
+
+```bash
+node scripts/deadlines.mjs --write && git checkout -- LIVE_DEADLINES.md
+node scripts/check-deadlines.mjs
+```
+
 ### Step 5 — Open the PR (D93)
 
 A plot is plan-only, but it lands by PR so T can read the
@@ -141,7 +170,7 @@ branch before the first edit (Steps 3–4 write on it):
 git fetch origin main
 git switch -c "loop/plot-<N>-<slug>" origin/main
 # Steps 3-4 edit here
-git add plan/phases/phase_<N>_<topic>.md plan/steps/01_build_plan.md plan/PHASE_CANDIDATES.md
+git add plan/phases/phase_<N>_<topic>.md plan/steps/01_build_plan.md plan/PHASE_CANDIDATES.md plan/deadlines.md
 git commit -m "phases: plot <N> — <title>" -m "<k> phase(s): <ids>. <asap|anytime> because <reason>."
 git push -u origin "loop/plot-<N>-<slug>"
 gh label create plot --repo "$GH_REPO" --color 5319E7 \
