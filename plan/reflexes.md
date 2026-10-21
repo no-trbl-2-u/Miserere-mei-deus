@@ -15,11 +15,19 @@
 2. Blocked is loud. Before a skill stops on a failure-mode
    condition, it surfaces an issue or a mirror comment first
    — silence is the failure, not the blocker itself.
+3. PR labels come from `gh label list`, never guessed. A label
+   the repo lacks makes `gh pr create` open nothing, and
+   `area:*` is the fixed six (`cards combat mobile ui ci
+   loop`), never a workspace or tree name.
 
 ## Promotion log
 
 - <ISO> — promoted from `lessons.md` `<!-- @domain:<NAME> -->`
   entry #<N>: "<one-line summary>".
+- 2026-10-21 — promoted from `lessons.md` `<!-- @domain:loop -->`
+  `loop-pr-label-missing` (seen 3× across ship and plot, latest
+  ship AD1b guessing `area:tooling`): "take `area:*` from `gh
+  label list`, never a workspace name".
 
 ## Drain log
 
