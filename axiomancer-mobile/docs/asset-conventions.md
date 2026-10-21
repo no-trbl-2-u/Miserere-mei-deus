@@ -258,6 +258,28 @@ motion is reduced, no clip is selected at all and the enemy holds its
 resting frame. An enemy with no frame set goes through none of this and
 renders its single painting.
 
+**Generating a sheet (phase AN1d).** A subject spec with a
+`frames: { cols, rows, poses? }` block makes `npm run art:gen` ask for
+ONE grid image instead of one figure: one call is what keeps the
+creature the same in every cell. `poses` names one pose per row (for
+example idle, struck, attacking). The generator then splits the grid
+row-major into `<slug>-NN.webp` under `enemies/anim/<slug>/`, grades
+each cell once with the full recipe (these cells were never graded),
+keys the black ground to alpha (border-connected, so a dark pupil inside
+the figure stays opaque), and writes ONE provenance record for the set
+with the grid, the measured per-cell cost and `graded_in_this_run: true`.
+It does not write the registry entry; `frames.ts` still names the
+clips by hand.
+
+It **refuses** any slug that is not an enemy already in the game: the
+key must be a `portraitAsset` in `axiomancer-mechanics/src/Enemy/enemy.library.ts`
+**and** a key of `ENEMY_ART_BY_KEY` in `enemies/index.ts`. Both are read
+from source on every run. `sandbag-01` (no portrait) and any new
+creature are refused by name before a request is built; art for them
+stays with the owner. `prompts/enemies/brine-hag.sheet.json` is the
+worked spec, and with no `OPENAI_API_KEY` the run is a dry run that
+prints the compiled sheet request and writes nothing.
+
 ## Licensing debt (open, blocked on the owner)
 
 Every raster directory except `maps/` (the Dore plate) now records

@@ -3,6 +3,13 @@
 //
 //   node scripts/generate-art.mjs --spec prompts/enemies/tallow-bailiff.json
 //   node scripts/generate-art.mjs --spec <file> --dry-run
+//   node scripts/generate-art.mjs --spec prompts/enemies/float-eye.sheet.json
+//
+// A spec with a `frames: { cols, rows }` block asks for one grid sheet instead
+// of one figure (phase AN1d). It is refused, by name and before any request is
+// built, unless the slug is an enemy already in the game; on success the grid
+// is split into graded, alpha-keyed cells under `enemies/anim/<slug>/` with one
+// provenance record for the set. See `art/sheet.mjs`.
 //
 // The one command that runs T's ruled route end to end: the prompt compiler
 // renders the house style plus the subject spec, the adapter generates (or
@@ -21,7 +28,8 @@ import { fileURLToPath } from 'node:url'
 
 import { generate, generationProvenance, selectionReason } from './art/adapter.mjs'
 import { compileFile } from './art/prompt.mjs'
-import { RECIPE, mergeProvenance } from './ingest-art.mjs'
+import { assertUsedEnemy, readUsedEnemyKeys, sheetProvenance, splitSheet } from './art/sheet.mjs'
+import { RECIPE, gradePipeline, mergeProvenance } from './ingest-art.mjs'
 
 const MOBILE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const IMAGES = path.join(MOBILE, 'assets', 'images')
@@ -55,6 +63,24 @@ export async function postProcess(sharp, buffer, { maxEdge = RECIPE.maxEdge, qua
   return pipeline.webp({ quality }).toBuffer()
 }
 
+/**
+ * Split a generated sheet and lay out what it writes: the cells, the one
+ * provenance record covering them, and the directory they go in. Writes
+ * nothing itself, so the dry run and the test see exactly what a real run
+ * would put on disk.
+ */
+export async function planSheet(sharp, { request, result, date }) {
+  const cells = await splitSheet(sharp, result.image, request.frames, {
+    recipe: RECIPE,
+    grade: gradePipeline,
+    slug: request.slug,
+  })
+  const base = generationProvenance({ request, result, date, covers: [] })
+  const entry = sheetProvenance(base, { frames: request.frames, cells, recipe: RECIPE })
+  const dir = path.join(IMAGES, request.category, 'anim', request.slug)
+  return { dir, cells, entry }
+}
+
 async function main() {
   const opts = parseArgs(process.argv.slice(2))
   if (!opts.spec) {
@@ -63,12 +89,19 @@ async function main() {
   }
 
   const request = compileFile(fs, path.resolve(process.cwd(), opts.spec))
+  // The refusal comes before anything is printed as a request or sent: a sheet
+  // for an enemy that is not in the game is not a request this route makes.
+  if (request.frames) assertUsedEnemy(request.slug, readUsedEnemyKeys(fs))
   console.log(`slug:    ${request.slug}  (${request.category})`)
+  if (request.frames) {
+    const { cols, rows } = request.frames
+    console.log(`sheet:   ${cols}x${rows} grid, ${cols * rows} cells, requested at ${request.size}`)
+  }
   console.log(`style:   ${request.styleVersion}   prompt: ${request.promptHash}`)
   console.log(`backend: ${selectionReason()}`)
   console.log(`\n--- compiled prompt ---\n${request.prompt}\n-----------------------\n`)
 
-  const result = await generate(request)
+  const result = await generate(request, { size: request.size })
 
   if (result.inert || !result.image) {
     console.log('generate-art: inert run — nothing generated, nothing written.')
@@ -77,6 +110,10 @@ async function main() {
   }
 
   const { default: sharp } = await import('sharp')
+  if (request.frames) {
+    await writeSheet(sharp, { request, result, dryRun: opts.dryRun })
+    return
+  }
   const webp = await postProcess(sharp, result.image)
   const dest = path.join(IMAGES, request.category, `${request.slug}.webp`)
   const provPath = path.join(IMAGES, request.category, 'provenance.json')
@@ -97,6 +134,26 @@ async function main() {
   console.log(`wrote ${path.relative(MOBILE, dest)} (${(webp.length / 1024).toFixed(0)}K)`)
   console.log(`provenance: ${path.relative(MOBILE, provPath)}`)
   console.log('Remember the registry: add the require() literal to that directory\'s index.ts.')
+}
+
+async function writeSheet(sharp, { request, result, dryRun }) {
+  const date = new Date().toISOString().slice(0, 10)
+  const { dir, cells, entry } = await planSheet(sharp, { request, result, date })
+  const rel = path.relative(MOBILE, dir)
+  if (dryRun) {
+    for (const c of cells) console.log(`would write ${rel}/${c.name} (${c.webp.length} B)`)
+    console.log(`would record: ${JSON.stringify(entry, null, 2)}`)
+    return
+  }
+  fs.mkdirSync(dir, { recursive: true })
+  for (const c of cells) fs.writeFileSync(path.join(dir, c.name), c.webp)
+  const provPath = path.join(dir, 'provenance.json')
+  const existing = fs.existsSync(provPath) ? JSON.parse(fs.readFileSync(provPath, 'utf-8')) : null
+  fs.writeFileSync(provPath, `${JSON.stringify(mergeProvenance(existing, entry), null, 2)}\n`)
+  console.log(`wrote ${cells.length} cells to ${rel}/  (${entry.measured})`)
+  console.log(`provenance: ${path.relative(MOBILE, provPath)}`)
+  console.log('Remember the registry: an index.ts of require() literals beside the cells, and a manifest')
+  console.log('entry in assets/images/enemies/frames.ts naming the clips per row (see the float-eye\'s).')
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
