@@ -150,6 +150,13 @@ fails the root `npm test` on an open row (`[ ]`, `[-]` or `[blocked: …]`) that
 names, and on a line here with no reason. **A row listed here is work the loop may still pick on its ordinary turn:
 undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
 
+- AD1a — plotted 2026-10-21 (#716) without a deadline line; date not set.
+- AD1b — plotted 2026-10-21 (#716) without a deadline line; date not set.
+- FM1a — loop work, needs no time from T beyond confirming the pitch rule; date not set.
+- FM1b — loop work, needs no time from T beyond confirming the pitch rule; date not set.
+- FM1c — loop work, needs no time from T beyond confirming the pitch rule; date not set.
+- FM1d — loop work, needs no time from T beyond confirming the pitch rule; date not set.
+- FM1e — loop work, needs no time from T beyond confirming the pitch rule; date not set.
 - OV1a — attended; T is building it in the plotting session (2026-10-20); date not set.
 - OV1b — attended; T is building it in the plotting session (2026-10-20); date not set.
 - OV1c — attended; T is building it in the plotting session (2026-10-20); date not set.
