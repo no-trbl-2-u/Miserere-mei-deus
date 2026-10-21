@@ -187,11 +187,3 @@ export function validateFrameSet(key: string, set: EnemyFrameSet): string[] {
 
     return problems;
 }
-
-/**
- * The absolute index into `frames` of clip-relative frame `i`. The grid is
- * row-major, so a clip occupies the first `clip.frames` cells of its own row.
- */
-export function frameIndexInSheet(manifest: FrameSetManifest, clip: FrameClip, i: number): number {
-    return clip.row * manifest.columns + i;
-}

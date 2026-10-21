@@ -67,7 +67,6 @@ export {
     ENEMY_FRAME_SETS,
     FRAME_CELL_MAX_BYTES,
     RESTING_CLIP,
-    frameIndexInSheet,
     getEnemyFrameSet,
     hasEnemyFrames,
     validateFrameSet,

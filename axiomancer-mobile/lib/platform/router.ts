@@ -46,7 +46,7 @@ export const Tabs = Object.assign(RootTabs.Navigator, { Screen: RootTabs.Screen 
 // it doesn't stack a second copy of the tab navigator).
 type RouteEntry = { screen: string; tab: boolean };
 
-const ROUTE_TABLE: Readonly<Record<string, RouteEntry>> = {
+export const ROUTE_TABLE: Readonly<Record<string, RouteEntry>> = {
   '': { screen: 'index', tab: false },
   saves: { screen: 'saves/index', tab: false },
   settings: { screen: 'settings/index', tab: false },
