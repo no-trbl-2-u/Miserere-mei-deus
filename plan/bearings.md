@@ -592,6 +592,8 @@ npm run verify                                    # whole monorepo
 npm run deploy:check                              # post-push CI-green gate (main)
 gh pr checks <branch> --watch --fail-fast         # a loop PR's CI gate
 node scripts/check-lessons.mjs                    # the lessons ladder lint
+node scripts/check-deadlines.mjs                  # deadline plan vs build plan lint (DL1a)
+node scripts/deadlines.mjs --today=YYYY-MM-DD     # the deadline reminder, pinned to a date
 npm run game -- combat                            # play Hazard-Pattern Combat (CLI)
 npm run mobile -- start                           # expo dev server
 ```

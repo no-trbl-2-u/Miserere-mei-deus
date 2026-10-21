@@ -363,7 +363,10 @@ the next tick to fill.
 ### Step 12 — Watch the PR's checks
 
 ```bash
-gh pr checks "loop/ship-<N>-<slug>" --repo "$GH_REPO" --watch --fail-fast
+# Checks take a few seconds to register after a push; --watch before then
+# exits 0 on "no checks reported" (lesson `checks-not-yet-registered`).
+until gh pr checks "<PR>" --repo "$GH_REPO" 2>/dev/null | grep -q .; do sleep 5; done
+gh pr checks "<PR>" --repo "$GH_REPO" --watch --fail-fast
 ```
 
 Outcomes:

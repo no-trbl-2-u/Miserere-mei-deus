@@ -171,7 +171,7 @@ event-pool and layout files).
 - [x] (#628) Phase HP1a — No bin, an honest count, the card report, demos back in band (plotted by T, 2026-10-18): puzzle sessions have no discard; a winning outcome counts only cards that change the result; `hazardPuzzleCardReport` and `npm run puzzle:report`; demos re-authored into band. Brief `plan/phases/phase_HP1_hazard_cost_utility.md` § HP1a. Requires nothing.
 - [x] (#631) Phase HP1b — The puzzle board loses its bin (plotted by T, 2026-10-18): `/devpuzzle` shows no bin; the live `/hazard` board keeps it. Brief `plan/phases/phase_HP1_hazard_cost_utility.md` § HP1b. Requires HP1a, B3e2.
 - [x] (#637) Phase HP3a — The puzzle rolls and draws like a live hazard (plotted by T, 2026-10-19): the dice roll in on the layout's faces and the clock starts after; drawn cards slide in from the reserve; nothing random. Brief `plan/phases/phase_HP3_puzzle_randomness_illusion.md` § HP3a. Requires nothing.
-- [ ] Phase DL1a — The deadline lint (plotted by T, 2026-10-20): `scripts/check-deadlines.mjs` in the root
+- [x] (#686) Phase DL1a — The deadline lint (plotted by T, 2026-10-20): `scripts/check-deadlines.mjs` in the root
       `npm test` fails when `plan/deadlines.md` and this Status block disagree — an open row no Items row names
       and no `## Unscheduled` line excuses, an Item naming a phase id with no row, the same id in two Items, a due
       date outside its window's range. Reads both files through `deadlines-lib.mjs`'s existing parsers; never
