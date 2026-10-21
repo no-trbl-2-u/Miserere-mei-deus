@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-10-20 at commit f8058ad6
-> Pass count: 98
+> Last pass: 2026-10-21 at commit 02f94d07
+> Pass count: 99
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
@@ -819,16 +819,36 @@
 > no longer waits out the menu's fade-in, so both viewports show the
 > CHRONICLE menu ghosted under the title plate.
 
+> **[critique pass 99, 2026-10-21, commit 02f94d07] Unattended `/march`
+> tick.** `critique:drive` (`CRITIQUE_VIEWPORT=both`), full 11-screen
+> set: 22 captures, 0 nav trouble, 0 console/page errors. 13 commits
+> after pass 98: HP4a to HP4d (the thirty candidate hazard puzzles,
+> decision pressure and the dev board's candidate groups, none of it in
+> the set), IT1a (item glyph resolver; satchel, not in the set), ML1a,
+> OV1b and the DL1/UP1/ML1/OV1 plots. No player-facing screen in the set
+> changed, and the title, combat, board, hub, village, dialogue,
+> cutscene, rest and late-game hub captures show no regression against
+> pass 98. No fresh row: the one new observation (the hazard route
+> select caught mid-stagger, its risk route and right-hand fan cards
+> ghosted at both viewports) shares pass 98's root cause, so it is
+> folded into that row, which is raised MED to HIGH because the lens is
+> now blind on three screens. Reconfirmed and not re-filed: the
+> rest/cache tense row, the village Minor Healing Potion row, the
+> covered fan cards cutting their names on a phone (pass 88), the
+> mobile hazard strip's "CHOOSE TO PROC..." (pass 68 trade), the
+> per-arrival hazard draw (pass 64), and the unfixtured exploration hub
+> caught on the boot splash.
+
 ## Pending
 
 
-### [MED] ci / critique-drive — the onboarding capture is taken mid-fade since VE1b, so the menu never shows
-- pass: 98 (commit f8058ad6)
+### [HIGH] ci / critique-drive — captures are taken mid-fade since VE1b: the onboarding menu and the hazard routes never show
+- pass: 98 (commit f8058ad6); raised MED to HIGH at pass 99 (commit 02f94d07)
 - viewport: both (375x812 and 1280x800)
 - category: infra
-- observation: VE1b replaced `captureScreen`'s fixed `waitForTimeout(700)` with `waitForReady`. The ready flag is set once at boot, when the fonts settle, so on the onboarding entry it is already true when EMBARK is clicked; the shot lands two frames after the click. Both `02-onboarding.png` captures show the title plate still up and the THE CHRONICLE / NEW GAME / LOAD GAME / SETTINGS menu faint beneath it, while `02-onboarding.txt` lists every menu line. The critique lens on the new-player menu is blind until this is fixed. The unfixtured `05-exploration-hub` capture now lands on the boot splash for the same reason.
-- evidence: `.critique-artifacts/{mobile,desktop}/02-onboarding.png` against `.txt`; `axiomancer-mobile/scripts/critique-drive.mjs` onboarding `prepare` (click, no settle) and `captureScreen` (`waitForReady` in place of the 700ms wait); `scripts/lib/page-ready.mjs`.
-- suggested fix: give the onboarding entry a `settle` that waits for the menu to be opaque (the `titleSettled` pattern, keyed on a menu testID such as the NEW GAME row), rather than restoring a blind sleep.
+- observation: VE1b replaced `captureScreen`'s fixed `waitForTimeout(700)` with `waitForReady`. The ready flag is set once at boot, when the fonts settle, so on the onboarding entry it is already true when EMBARK is clicked; the shot lands two frames after the click. Both `02-onboarding.png` captures show the title plate still up and the THE CHRONICLE / NEW GAME / LOAD GAME / SETTINGS menu faint beneath it, while `02-onboarding.txt` lists every menu line. The critique lens on the new-player menu is blind until this is fixed. The unfixtured `05-exploration-hub` capture now lands on the boot splash for the same reason. Pass 99: the hazard route select is caught mid-stagger too. `RouteSelect.tsx` fades the hand in at `220 + i * 70`ms and the routes at `320 + i * 120`ms (320ms each), so at both viewports the right-hand hand cards and the whole risk route (THE LEAP, THE DROWNED DOOR) are still ghosted. The lens is now blind on three of the eleven screens, and the hazard screen is where the HP4 puzzle work is about to land.
+- evidence: `.critique-artifacts/{mobile,desktop}/02-onboarding.png` against `.txt`, and `{mobile,desktop}/10-hazard.png` (risk route and right-hand fan cards faded) against `10-hazard.txt` (every route line present); `axiomancer-mobile/scripts/critique-drive.mjs` onboarding `prepare` (click, no settle) and `captureScreen` (`waitForReady` in place of the 700ms wait); `scripts/lib/page-ready.mjs`.
+- suggested fix: give the onboarding entry a `settle` that waits for the menu to be opaque (the `titleSettled` pattern, keyed on a menu testID such as the NEW GAME row), and the hazard entry one that waits for the last route card's entering animation to finish (or a short post-ready settle on every fixtured screen), rather than restoring a blind sleep.
 - source: critique:drive (unattended)
 
 
