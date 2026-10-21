@@ -65,9 +65,11 @@ left; otherwise after.
 
 - To plot at the start of W3: an audit of all twelve map event kinds in Act 1 (encounter, interaction,
   gathering, rest, village, cutscene, hazard, loot cache, narration, blacksmith, travel, labyrinth) with a fix for
-  each that does not work; finishing the card-upgrade path (the engine and the Blacksmith screen exist; the grant
-  path is the open call).
-- T's time (about 2 h): the upgrade grant call; the region walk at the end.
+  each that does not work.
+- Rows: UP1a-UP1g (plotted 2026-10-20, `plan/phases/phase_UP1_card_upgrades.md`): Blood Price names, the upgrade
+  law (rarity limits upgrades; numbers go up), Blood for Blood as the first rare, and the rest, blacksmith and
+  elite grant paths. The grant call was made in the 2026-10-20 session. UP1h, the boss check, waits for B2 (W4).
+- T's time (about 2 h): the region walk at the end.
 
 ### W4 — Enemy revamp and the Act Boss (Dec 1 - Dec 14)
 
@@ -126,11 +128,12 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 | [ ] | 2026-11-16 | Loop gates, real-fight tests, report sweep | W2 | LG1a, LG1b, LG1c, LG1d, LG1e, LG1f, LG1g, CT1a, CT1b, RS1 |
 | [ ] | 2026-11-16 | W2 demo: an Act 1 run with every hazard a puzzle | W2 | T |
 | [ ] | 2026-11-17 | Event-node audit and fixes (all twelve kinds) | W3 | needs plot |
-| [ ] | 2026-11-17 | Card-upgrade path | W3 | needs plot |
-| [ ] | 2026-11-18 | Upgrade grant call | W3 | T |
+| [ ] | 2026-11-17 | Card-upgrade path | W3 | UP1a, UP1b, UP1c, UP1d, UP1e, UP1f, UP1g |
+| [x] | 2026-11-18 | Upgrade grant call | W3 | T |
 | [ ] | 2026-11-30 | W3 demo: a four-region walk, every node resolves | W3 | T |
 | [ ] | 2026-12-02 | Enemy revamp session and the Act Boss | W4 | B2 |
 | [ ] | 2026-12-11 | Combat playtest (winnable and dangerous) | W4 | R12 |
+| [ ] | 2026-12-12 | Upgrades proven on the Act 1 boss | W4 | UP1h |
 | [ ] | 2026-12-14 | W4 demo: an Act 1 clear ending at the Act Boss | W4 | T |
 | [ ] | 2026-12-16 | Relic pass session | W5 | B1 |
 | [ ] | 2026-12-23 | Android smoke test on the preview APK | W5 | LG1h |
@@ -173,6 +176,10 @@ here with the date; nothing is dropped silently. A window's "to plot" items are 
 attended session.
 
 ## Change log
+
+- **2026-10-20** — **card upgrades plotted** (T, attended session, `/pitch` then `/plot anytime`). `Card-upgrade
+  path` now names UP1a-UP1g; **added** `2026-12-12 | Upgrades proven on the Act 1 boss | W4 | UP1h` (UP1h requires
+  B2's boss); **ticked** `Upgrade grant call`, which T made in the session (rest, blacksmith, elite).
 
 - **2026-10-21** — **`## Unscheduled` added and the deadline lint live** (phase DL1a, the loop). Every open
   build-plan row no Item names is listed there with its reason, read row by row from the build plan: VE1c and VE1d,

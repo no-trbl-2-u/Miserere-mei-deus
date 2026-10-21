@@ -284,6 +284,14 @@ event-pool and layout files).
 - [ ] Phase CT1a — Real-fight helper and the state tests (plotted by T, 2026-10-19): `startRealFight` boots a fixture save into a real encounter; the 12 state and presenter tests start from it. Brief `plan/phases/phase_CT1_real_fight_tests.md` § CT1a. Requires nothing.
 - [ ] Phase CT1b — Combat board tests and the mock deleted (plotted by T, 2026-10-19): the 25 combat board tests start from a real fight; `state/mocks/combat.mock.ts` deleted with an import guard. Brief `plan/phases/phase_CT1_real_fight_tests.md` § CT1b. Requires CT1a.
 - [ ] Phase RS1 — The loop sweeps hand-written reports (plotted by T, 2026-10-19): `scripts/report-sweep.mjs` finds unfiled `axiomancer-*/docs/reports/*.md`; `/march` triage files one CRITIQUE row each. Brief `plan/phases/phase_RS1_report_sweep.md`. Requires nothing.
+- [ ] Phase UP1a — Blood Price names (plotted by T, 2026-10-20): every unnamed Blood Price card gets a thematic name drawn from its effect; the five named cards keep theirs; ids unchanged. Brief `plan/phases/phase_UP1_card_upgrades.md` § UP1a. Requires nothing.
+- [ ] Phase UP1b — The upgrade law and program scaling (plotted by T, 2026-10-20): rarity limits upgrades (common 1, uncommon 2, rare 3) as `<id>+`/`++`/`+++`; every upgrade raises payoff numbers, Blood Price `program` cards included, never costs; a replace-card action. Brief `plan/phases/phase_UP1_card_upgrades.md` § UP1b. Requires nothing.
+- [ ] Phase UP1c — Blood for Blood, the first rare (plotted by T, 2026-10-20): `bp-e-08n` moves to rank 5 with bigger numbers and takes three upgrades. Brief `plan/phases/phase_UP1_card_upgrades.md` § UP1c. Requires UP1b.
+- [ ] Phase UP1d — The upgrade screen and the rest-site upgrade (plotted by T, 2026-10-20): one shared screen with the before/after preview and a locked "???" slot; a rest site offers "upgrade a card" beside rest and cut. Brief `plan/phases/phase_UP1_card_upgrades.md` § UP1d. Requires UP1b.
+- [ ] Phase UP1e — The blacksmith card upgrade (plotted by T, 2026-10-20): a card upgrade for 5 shillings, once per visit, beside HONE, TEMPER and SWAP. Brief `plan/phases/phase_UP1_card_upgrades.md` § UP1e. Requires UP1d.
+- [ ] Phase UP1f — The elite reward (plotted by T, 2026-10-20): an elite offers the best 3 cards available (one from the player's lanes) or a random upgrade of a highest-rarity owned card. Brief `plan/phases/phase_UP1_card_upgrades.md` § UP1f. Requires UP1b, UP1c.
+- [ ] Phase UP1g — Upgraded decks in the measured report (plotted by T, 2026-10-20): half-upgraded Blood Price columns beside the plain deck for every ledger fight. Brief `plan/phases/phase_UP1_card_upgrades.md` § UP1g. Requires UP1b.
+- [ ] Phase UP1h — The boss check (plotted by T, 2026-10-20): against the Act 1 boss, half-upgraded Blood Price wins above 50% and the plain deck at or below 25%. Brief `plan/phases/phase_UP1_card_upgrades.md` § UP1h. Requires UP1g, B2.
 - [x] (#569) Phase CR1a — The combat route and its gate, map and labyrinth (plotted by T, 2026-10-15): a global `CombatGate` starts each fight and pushes `/combat-encounter`, now the live fight route (`fullScreenModal`, no back or swipe out, a reload replays the fight onto it); exploration and labyrinth stop rendering combat; the pre-v1 dev sandbox and its tests are deleted and every tool that used it reaches a fight through `/dev` instead. Brief `plan/phases/phase_CR1_combat_route.md` § CR1a. Requires nothing.
 - [x] (#573) Phase CR1b — Delete the overlay era, labyrinth round-trip e2e (plotted by T, 2026-10-15): `EncounterModalOverlay`, its chain bars and rivets, `inEncounterModal` tab hiding and locking, `fightOnScreen` and the `StatusCard` skip deleted, proven by a grep; a new labyrinth combat round-trip e2e. Brief `plan/phases/phase_CR1_combat_route.md` § CR1b. Requires CR1a.
 - [skipped] Phase CR1c — Combat drag numbers before and after the route (plotted by T, 2026-10-15) (attended): Sentry `combat.drag.*` p75 per kind from T's preview APK, before CR1a and after CR1b, in `docs/perf/combat-drag-baseline.md`. Brief `plan/phases/phase_CR1_combat_route.md` § CR1c. Requires CR1b. Skipped by T, 2026-10-15: Sentry holds no performance data from before the route (PF3 tracing landed the same day and no APK with it was played), and PF4 had already removed the map cost the route was expected to change.
@@ -928,6 +936,13 @@ See the status rows above; generate briefs on demand.
 > confirmation this was T's request, T's stated reason (or
 > "reason not stated" — never invent one), and the resulting
 > commit/issue/phase-brief when available.
+
+- **2026-10-20** — actor: **T, attended session** (`/plot anytime` from T's `/pitch`, branch
+  `loop/plot-UP1-card-upgrades`). Action: **added Phases UP1a, UP1b, UP1c, UP1d, UP1e, UP1f, UP1g, UP1h** (card
+  upgrades: Blood Price names, the upgrade law, the first rare, rest/anvil/elite grant paths, the measured report,
+  the boss check) after Phase RS1, the last open row. T's request, confirmed in session. T's reason: card upgrades
+  carry the Act 1 power curve (v0.3 W3); the names phase first and a rare to test with, at T's direction. Brief
+  `plan/phases/phase_UP1_card_upgrades.md`.
 
 - **2026-10-20** — actor: **T, attended session** (`/plot asap`, branch
   `loop/plot-DL1-deadline-plan-integrity`). Action: **added Phases DL1a, DL1b, DL1c** (the deadline plan cannot
