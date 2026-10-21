@@ -95,8 +95,8 @@ writes a new one. The playtest matrix stays as
 ## Root `.claude/`
 
 Live, at the repo root:
-- `.claude/commands/` — the loop verbs' doorways only. No domain command is
-  live: `combat-tuning`, `legacy-combat-tuning`, `playtest`,
+- `.claude/commands/` — the loop verbs' doorways, plus T's attended `/vault`
+  session (`docs/vault.md`, phase OV1b). No domain command is live: `combat-tuning`, `legacy-combat-tuning`, `playtest`,
   `resolve-playtest` and `bump-engine` were trimmed earlier, the eight
   tuning/playtest commands above went in trim T5 (D10), and `combat-playtest`
   was archived in R0 (Phase R12 rebuilds it).

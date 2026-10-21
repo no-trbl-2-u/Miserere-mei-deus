@@ -65,3 +65,6 @@ plan/messy/
 # records for art copied out of it live in docs/licences/.
 /Potential Assets/
 .review-tooling/
+
+# The Obsidian vault: its own repo (no-trbl-2-u/miserere-vault), cloned here by scripts/vault.mjs (docs/vault.md).
+/vault/
