@@ -1,0 +1,70 @@
+name: verify-art-department
+
+# The gate for the top-level art-department tree, which is deliberately not an
+# npm workspace (D98) and so is reached by none of the other verify lanes.
+# It owns this path: when the repo-wide gate arrives, a change under
+# art-department/ is this workflow's to answer for.
+#
+# What it checks: the toolchain's dependencies are declared and installable,
+# `doctor` reports a missing one by name, and the tree's own suite is green --
+# which includes regenerating the float-eye spritesheet from the rig tool's
+# home and comparing it against the committed master: the WebP, the manifest
+# and the flipbook byte for byte, the lossless PNG pixel for pixel (its deflate
+# stream depends on which zlib the Pillow wheel was linked against, and this
+# runner's differs from the authoring machine's).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'art-department/**'
+      - '.github/workflows/verify-art-department.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'art-department/**'
+      - '.github/workflows/verify-art-department.yml'
+  schedule:
+    - cron: '41 7 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-art-department-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+jobs:
+  art-department:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+
+      # The pins are exact on purpose: the byte-for-byte master comparison
+      # makes the imaging library's version part of the contract.
+      - name: Install the declared dependencies
+        run: python -m pip install --disable-pip-version-check -r art-department/requirements.txt
+
+      - name: Doctor
+        run: python art-department/doctor.py
+
+      # A3: a checkout missing a dependency must fail saying which one, not
+      # inside an import trace. Proved against the real entrypoint, with the
+      # manifest naming a package that is certainly not installed.
+      - name: Doctor names a missing dependency
+        run: |
+          printf 'definitely-not-installed==1.0  # module: definitely_not_installed\n' > /tmp/absent.txt
+          if python art-department/doctor.py --requirements /tmp/absent.txt > /tmp/doctor.out 2>&1; then
+            echo "doctor exited 0 with a missing dependency"; cat /tmp/doctor.out; exit 1
+          fi
+          cat /tmp/doctor.out
+          grep -q 'unsatisfied: definitely-not-installed' /tmp/doctor.out
+
+      - name: Suite
+        run: python art-department/run-tests.py -v

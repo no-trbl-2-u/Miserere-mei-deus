@@ -25,7 +25,7 @@ const workflows = readdirSync(join(ROOT, '.github/workflows'))
   .map((file) => ({ file, ...parseWorkflowFilter(readFileSync(join(ROOT, '.github/workflows', file), 'utf8')) }))
 
 test('parseWorkflowFilter: every real verify-* workflow has a pull_request paths list', () => {
-  assert.deepEqual(workflows.map((w) => w.file), ['verify-drift.yml', 'verify-mechanics.yml', 'verify-mobile.yml', 'verify-prose.yml'])
+  assert.deepEqual(workflows.map((w) => w.file), ['verify-art-department.yml', 'verify-drift.yml', 'verify-mechanics.yml', 'verify-mobile.yml', 'verify-prose.yml'])
   for (const w of workflows) assert.ok(w.paths.length > 0, `${w.file} has paths`)
   const mobile = workflows.find((w) => w.file === 'verify-mobile.yml')
   assert.deepEqual(mobile.paths, [
@@ -63,7 +63,7 @@ test('classifyPaths: the real filters skip .github/workflows and root scripts (t
   const files = ['.github/workflows/pr-resolve.yml', 'scripts/loop-pr.test.mjs', 'plan/AUDIT.md', 'telemetry/x.md']
   const got = classifyPaths(files, workflows)
   assert.deepEqual(got.triggered, [])
-  assert.equal(got.skipped.length, 4)
+  assert.equal(got.skipped.length, workflows.length)
   assert.deepEqual(got.uncovered, ['.github/workflows/pr-resolve.yml', 'scripts/loop-pr.test.mjs'])
 })
 

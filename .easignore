@@ -109,6 +109,16 @@ web-build/
 # workspace directories (npm ci resolves every declared workspace), and
 # axiomancer-mechanics/src + content + automation.
 
+# Art tooling and its build-time masters. CHECKED, not assumed: `art-department`
+# appears in no import, require or path join under app/, components/, state/,
+# lib/, theme/, axiomancer-mechanics/src, metro.config.js, app.config.ts or the
+# babel config; it declares no package.json, so it has no install lifecycle
+# script; and it is deliberately absent from the root `workspaces` array, which
+# is what makes excluding it possible at all (see the KEEP note above: npm ci
+# resolves every declared workspace). The tree holds a 798 KB spritesheet master
+# and will hold more — exactly the weight this section exists to shed.
+/art-department/
+
 # Repo-level docs, planning memory, art sources, and the DevLog site.
 /plan/
 /Potential Assets/

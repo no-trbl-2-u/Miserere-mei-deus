@@ -1,0 +1,19 @@
+# art-department — the Python toolchain's declared dependencies.
+#
+# One line per distribution, in pip's own requirement syntax, plus a
+# `# module: <import name>` note where the import name differs from the
+# distribution name (Pillow installs as PIL). `python art-department/doctor.py`
+# reads this file, so a dependency declared here is checked everywhere and
+# a missing one is reported by name instead of blowing up inside an import.
+#
+# Install everything in it with:
+#   python -m pip install -r art-department/requirements.txt
+#
+# The versions are pinned exactly, not floored. The rig's masters are compared
+# byte for byte against a fresh regeneration, and the bytes of a WebP depend on
+# the libwebp bundled in the Pillow wheel -- so the imaging library's version is
+# part of that contract, not an implementation detail. Bump it deliberately and
+# regenerate the masters in the same commit.
+
+Pillow==12.3.0  # module: PIL
+numpy==2.5.4  # module: numpy

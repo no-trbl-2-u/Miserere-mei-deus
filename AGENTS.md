@@ -22,6 +22,9 @@ npm-workspaces monorepo. Three packages, flat at the root:
 | `axiomancer-mobile` | Expo / React Native app. Consumes mechanics as **local source** via the `@mechanics` alias (`→ ../axiomancer-mechanics/src`). Owns screens, navigation, theming, presenters. |
 | `backend` | The `miserere-api` Cloudflare Worker and its D1 schema (numbered migrations): dev puzzle solve times, `POST`/`GET /v1/puzzle-attempts` behind a bearer token. Imports the engine's attempt contract by path; tests run in workerd against a local D1 (`npm test -w backend`). |
 
+A fourth top-level tree, `art-department/`, is **not** a workspace and is
+reached by path, never `npm --workspace` — see "The art department" below.
+
 ## Hard rules
 
 - The pre-monorepo per-package **nexus** harness (old loop verbs + accumulated
@@ -178,6 +181,25 @@ Each package keeps its own `AGENTS.md` / `CLAUDE.md` with domain specifics
 (engine doctrine, mobile presenter boundaries). Read the relevant one before
 working in a package.
 
+## The art department
+
+`art-department/` is a top-level tree for tooling that makes art, and the
+masters it makes. **A tool in it may use any language or toolchain** (T,
+attended, 2026-10-21) — the npm workspaces do not get a vote on what batch
+image work is written in. Two constraints bound that freedom, and they are what
+make it safe to grant: **nothing in the tree is imported by the app**, and
+**nothing in it ships** (the EAS archive excludes it). What ships is whatever a
+tool produces and a phase deliberately copies into
+`axiomancer-mobile/assets/`, with a provenance record.
+
+It is **not an npm workspace**, deliberately, and the absence is load-bearing:
+`.easignore`'s keep-list records that `npm ci` resolves every declared
+workspace, so a declared one must be uploaded to EAS — and this tree exists
+partly to hold large build-time masters that must never reach a build. It is
+reached by path (`npm run art:doctor` / `art:test` / `art:rig`), never
+`npm --workspace`. `art-department/README.md` is the full contract, including
+what a non-Python tool must satisfy to land there.
+
 ## Testing at a known state
 
 `docs/state-fixtures.md` — one declarative **state fixture** (preset, map,
@@ -190,6 +212,9 @@ store, and deep-links the web build (`?fixture=<id>` /
 - `npm run verify --workspace axiomancer-mechanics` — type-check + lint + tests + build
 - `npm run verify --workspace axiomancer-mobile` — lint + typecheck + jest +
   asset-provenance / art / critique-drive tests
+- `npm run art:doctor && npm run art:test` — the `art-department/` tree (Python;
+  by path, not a workspace, so `npm run verify` never reaches it). CI runs the
+  same two in `verify-art-department`.
 - **Fresh `.claude/worktrees/*` checkouts**: run `npm install` at the
   worktree root before verifying. A worktree has no per-workspace
   `node_modules`, so `tsc` resolves the hoisted root TypeScript instead

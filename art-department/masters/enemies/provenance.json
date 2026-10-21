@@ -2,7 +2,7 @@
   {
     "generated_by": "derived",
     "date": "2026-10-21",
-    "tool": "scripts/art/rig-spritesheet.py (Pillow + numpy affine rig)",
+    "tool": "art-department/tools/rig-spritesheet.py (Pillow + numpy affine rig)",
     "covers": [
       "float-eye.sheet.png (lossless master, 2048x768)",
       "float-eye.sheet.webp (ship candidate, q88)",

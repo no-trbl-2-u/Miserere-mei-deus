@@ -27,7 +27,7 @@ const run = (file, conclusion, createdAt = '2026-10-16T10:00:00Z') => ({
 })
 
 test('the live verify-* filters parse', () => {
-  assert.deepEqual(WORKFLOWS.map((w) => w.file), ['verify-drift.yml', 'verify-mechanics.yml', 'verify-mobile.yml', 'verify-prose.yml'])
+  assert.deepEqual(WORKFLOWS.map((w) => w.file), ['verify-art-department.yml', 'verify-drift.yml', 'verify-mechanics.yml', 'verify-mobile.yml', 'verify-prose.yml'])
   for (const w of WORKFLOWS) assert.ok(w.paths.length > 0, w.file)
 })
 
