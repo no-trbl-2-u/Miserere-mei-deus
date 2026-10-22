@@ -102,6 +102,7 @@
 - **worktree-install-dirties-lock** · the `npm install` AGENTS.md requires in a fresh worktree rewrote 39 lines of `package-lock.json` (`dev` to `devOptional`) with no dependency change, ready to ride the phase commit (ship AN1b) → after that install, `git checkout -- package-lock.json` before staging, and stage explicitly rather than `git add -A` · seen 1× · last 2026-10-21 · open
 - **needs-t-bump-overflow** · bumping a `plan/NEEDS_T.md` row's `seen`/workaround text pushed it to 516 bytes; a plan-only PR merged and root `npm test` went red on `main` (crit 98, IT1a) → after any NEEDS_T or lessons edit run `node scripts/check-lessons.mjs` before commit; trim the row, never the count · seen 1× · last 2026-10-20 · open
 - **worktree-no-node-modules** · an isolated agent worktree carries no `node_modules`, so Node climbs to the parent checkout's install: root `npm test` legs that shell out to a workspace script die with a misleading `TSError TS5095` from the parent's `ts-node` (3 `axio-mcp-server` reds, ship AD1b) → `ls node_modules` before believing a red root leg; junction or install it, and never report that red as a repo break · seen 1× · last 2026-10-21 · open
+- **brief-source-off-tree** · AN3's brief made its A5 ingest read `Potential Assets/…/Jelly A.png`, which exists only on T's machine, so no runner could ship AN3a and it was blocked (march AN3a) → a brief whose phase consumes a trove asset names a path in the tree, and the plot copies the asset there before the row is pickable · seen 1× · last 2026-10-22 · open
 
 <!-- @domain:mobile -->
 
