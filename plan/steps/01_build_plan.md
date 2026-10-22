@@ -271,13 +271,15 @@ event-pool and layout files).
       labelled groups by intended band and plays any of them on its nominated route through the live `HazardBoard`;
       the three demos stay reachable and production still renders nothing. Brief
       `plan/phases/phase_HP4_graded_puzzle_set.md` § HP4d. Requires HP4b.
+- [ ] Phase AN3a — The Jelly takes the Hag's place (plotted by T, 2026-10-22): T chose torio's `Jelly A` after seeing it rigged — a single translucent volume that squashes about its base, needing none of the four limb masks the Hag required and showing none of the seam they left. The Brine Hag's fight is carried over WHOLE (level 7, stat budget, elite, strategic, loot, the 30% befriend gate, xpBonus 35); only the id, the art key, the portrait and the prose change. Her befriend narrative is about a traded reflection and a tide, so it is rewritten rather than renamed around. Licence settled: torio Javardry free material, free for any use including commercial and modification. Brief `plan/phases/phase_AN3_the_green_jelly.md` § AN3a. Requires nothing.
+- [ ] Phase AN3b — The Jelly animates (plotted by T, 2026-10-22): the AN1e shape against the new key — an `art-department/` rig, the 8x3 split to per-cell WebP, the registry entry and an encounter test proving the player mounts and advances. First set to use the `foot-line` anchor rather than `centre`: a jelly rests on a surface and squashes about its base, where the float-eye hovers. Brief `plan/phases/phase_AN3_the_green_jelly.md` § AN3b. Requires AN3a.
 - [x] (#771) Phase HP5a — Five cost cards (plotted by T, 2026-10-21): five hazard cards that trade meter points for a
       utility (two Toll, one Debt, two Overdrive), validated, never drawn by the live three-round hazard, in the
       puzzle card pool and clear of the worse-copy check. Brief `plan/phases/phase_HP5_cost_card_puzzles.md` § HP5a. Requires nothing.
 - [ ] Phase HP5b — Costs on the board (plotted by T, 2026-10-21): `HazardCard` draws a negative value with a minus
       sign, the meters show a debt below zero, and projected progress counts a staged cost. Brief
       `plan/phases/phase_HP5_cost_card_puzzles.md` § HP5b. Requires HP5a.
-- [ ] Phase HP5c — The twenty easy and medium candidates go (plotted by T, 2026-10-21): `cand-easy-*` and
+- [x] (#773) Phase HP5c — The twenty easy and medium candidates go (plotted by T, 2026-10-21): `cand-easy-*` and
       `cand-medium-*` deleted; `/devpuzzle` keeps the ten hard and the demos. Brief `plan/phases/phase_HP5_cost_card_puzzles.md` § HP5c. Requires nothing.
 - [ ] Phase HP5d — Twenty cost-card puzzles (plotted by T, 2026-10-21): `cand-cost-medium-01..10` and
       `cand-cost-hard-01..10`, each holding a new card, no slack (best surplus 0), and lost by staging the whole
@@ -1017,6 +1019,17 @@ See the status rows above; generate briefs on demand.
 > "reason not stated" — never invent one), and the resulting
 > commit/issue/phase-brief when available.
 
+- **2026-10-22** — actor: **T, attended session** (`/plot asap`, branch
+  `loop/plot-AN3-green-jelly`). Action: **added Phases AN3a and AN3b** directly above the first
+  open row. Confirmed T's request: yes. Reason (T), after being shown three enemies rigged from
+  the trove: "Green Jelly? Yes, 100%! Replace the hag with him." The Hag's own rig needed four
+  hand-authored limb masks and still showed a seam when an arm swung clear of her cloak; the
+  jelly is one volume and needs none. T had earlier ruled the Doorwarden is not to be animated.
+  Also settles the licence question open since 2026-10-21: the art is from
+  `Potential Assets/torio/`, とり夫 (torio)'s Javardry free material, catalogued as free for any
+  use including commercial, modification and redistribution with no attribution required — and
+  the float-eye is in that same catalog, so its UNRESOLVED provenance is wrong and is filed as a
+  follow-up. Brief `plan/phases/phase_AN3_the_green_jelly.md`.
 - **2026-10-21** — actor: **T, attended session** (`/plot asap`, branch
   `loop/plot-AN2-animation-unobscured`). Action: **added Phases AN2a and AN2b** directly above the
   first open row. Confirmed T's request: yes. Reason (T), after installing the first preview APK

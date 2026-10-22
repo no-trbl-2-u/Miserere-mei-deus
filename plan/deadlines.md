@@ -120,7 +120,7 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 | [x] | 2026-10-30 | Solve times stored online (Workers + D1) | W1 | BE1a, BE1b, BE1c, BE1d |
 | [x] | 2026-10-28 | The thirty on the live board | W1 | HP4d |
 | [ ] | 2026-10-24 | Five hazard cost cards, shown on the board | W1 | HP5a, HP5b |
-| [ ] | 2026-10-23 | The twenty easy and medium candidates go | W1 | HP5c |
+| [x] | 2026-10-23 | The twenty easy and medium candidates go | W1 | HP5c |
 | [ ] | 2026-10-28 | Twenty cost-card puzzles on /devpuzzle | W1 | HP5d |
 | [ ] | 2026-11-02 | W1 demo: T plays the thirty (ten hard + twenty cost-card) | W1 | HP4e |
 | [ ] | 2026-11-04 | Act 1 puzzle set, live hazard routing and the cuts | W2 | needs plot |
@@ -191,6 +191,8 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - AN1e — loop work; the row that actually installs the float-eye, requires AN1c and AD1a; date not set.
 - AN2a — loop work; removes the overlay covering the enemy animation; date not set.
 - AN2b — loop work; delays the flinch until the played card clears; date not set.
+- AN3a — loop work; the Hag becomes the Green Jelly, fight unchanged; date not set.
+- AN3b — loop work; the Jelly's frame set; follows AN3a; date not set.
 - RV4 — loop plumbing; removes the merge cap that is blocking today's chain; date not set.
 
 ## How a window closes

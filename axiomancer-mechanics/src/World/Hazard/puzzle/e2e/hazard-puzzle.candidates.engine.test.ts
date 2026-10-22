@@ -139,11 +139,12 @@ describe('the candidate set (A3, A4)', () => {
     }
 });
 
-describe('the thirty (A5)', () => {
-    it('holds ten candidates per intended band', () => {
-        const count = (band: string): number => HAZARD_PUZZLE_CANDIDATES.filter((c) => c.intendedBand === band).length;
-        expect([count('easy'), count('medium'), count('hard')]).toEqual([10, 10, 10]);
-        expect(HAZARD_PUZZLE_CANDIDATES).toHaveLength(30);
+describe('the ten hard (A5)', () => {
+    it('holds the ten hard candidates and no easy or medium one', () => {
+        const ids = HAZARD_PUZZLE_CANDIDATES.map((c) => c.id);
+        const hard = Array.from({ length: 10 }, (_, i) => `cand-hard-${String(i + 1).padStart(2, '0')}`);
+        expect(ids).toEqual(hard);
+        expect(HAZARD_PUZZLE_CANDIDATES.every((c) => c.intendedBand === 'hard')).toBe(true);
     });
 
     it('gives every candidate a distinct, non-empty label', () => {
@@ -171,10 +172,13 @@ describe('decision pressure on the nominated route (A6)', () => {
         });
     }
 
-    it('spreads the optional-card count and the losing-first-play count over four values or more', () => {
+    // The ten hard each leave one or two cards optional, so only the losing
+    // first plays still spread over four values; the optional count must not
+    // collapse to one value.
+    it('spreads the losing-first-play count over four values and the optional-card count over two', () => {
         const optional = new Set(reports.map(({ report }) => report.pressure.optional));
         const losing = new Set(reports.map(({ report }) => report.pressure.firstPlays.losing));
-        expect(optional.size).toBeGreaterThanOrEqual(4);
+        expect(optional.size).toBeGreaterThanOrEqual(2);
         expect(losing.size).toBeGreaterThanOrEqual(4);
     });
 });
