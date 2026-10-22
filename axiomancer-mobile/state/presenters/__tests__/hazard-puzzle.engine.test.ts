@@ -81,9 +81,13 @@ describe('the candidate list, grouped by intended band (HP4d A8)', () => {
         expect(groups.flatMap((g) => g.items.map((i) => i.id))).toHaveLength(HAZARD_PUZZLE_CANDIDATES.length);
     });
 
-    it('lists the ten hard by default, with easy and medium empty (HP5 A5)', () => {
+    it('lists the ten hard and the twenty cost-card candidates by default, easy empty (HP5 A5, A6)', () => {
         const groups = selectHazardPuzzleCandidateGroupsVM();
-        expect(groups.map((g) => g.heading)).toEqual(['EASY · 0', 'MEDIUM · 0', 'HARD · 10']);
+        expect(groups.map((g) => g.heading)).toEqual(['EASY · 0', 'MEDIUM · 10', 'HARD · 20']);
+        const ids = (band: string) => groups.find((g) => g.band === band)!.items.map((i) => i.id);
+        expect(ids('medium')).toEqual(Array.from({ length: 10 }, (_, i) => `cand-cost-medium-${String(i + 1).padStart(2, '0')}`));
+        expect(ids('hard').filter((id) => id.startsWith('cand-cost-hard-'))).toHaveLength(10);
+        expect(ids('hard').filter((id) => /^cand-hard-\d\d$/.test(id))).toHaveLength(10);
         expect(groups.flatMap((g) => g.items.map((i) => i.id)).some((id) => /^cand-(easy|medium)-/.test(id))).toBe(false);
     });
 

@@ -246,6 +246,10 @@ A1–A11, all ticked, each naming the test, command or report that proves it.
   whatever HP4f concludes.
 - **Routing the live Act 1 hazard nodes to puzzles** (W2) is untouched here.
 - Retiring or re-authoring the three demo layouts once the kept set exists.
+- **HP4e's thirty are now ten hard and twenty cost-card candidates** (HP5, T 2026-10-21): HP4c's
+  `cand-hard-01..10` plus HP5d's `cand-cost-medium-01..10` and `cand-cost-hard-01..10`, built on the five
+  puzzle-only cost cards. HP4c's twenty easy and medium were deleted in HP5c. Brief
+  `plan/phases/phase_HP5_cost_card_puzzles.md`.
 
 ## Phases
 

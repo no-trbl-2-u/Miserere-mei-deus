@@ -139,12 +139,15 @@ describe('the candidate set (A3, A4)', () => {
     }
 });
 
-describe('the ten hard (A5)', () => {
-    it('holds the ten hard candidates and no easy or medium one', () => {
+describe('the ten hard and the twenty cost-card candidates (A5)', () => {
+    it('holds the ten hard, then the twenty cost-card candidates, and no easy one', () => {
         const ids = HAZARD_PUZZLE_CANDIDATES.map((c) => c.id);
-        const hard = Array.from({ length: 10 }, (_, i) => `cand-hard-${String(i + 1).padStart(2, '0')}`);
-        expect(ids).toEqual(hard);
-        expect(HAZARD_PUZZLE_CANDIDATES.every((c) => c.intendedBand === 'hard')).toBe(true);
+        const two = (i: number) => String(i + 1).padStart(2, '0');
+        const hard = Array.from({ length: 10 }, (_, i) => `cand-hard-${two(i)}`);
+        const costMedium = Array.from({ length: 10 }, (_, i) => `cand-cost-medium-${two(i)}`);
+        const costHard = Array.from({ length: 10 }, (_, i) => `cand-cost-hard-${two(i)}`);
+        expect(ids).toEqual([...hard, ...costMedium, ...costHard]);
+        expect(HAZARD_PUZZLE_CANDIDATES.some((c) => c.intendedBand === 'easy')).toBe(false);
     });
 
     it('gives every candidate a distinct, non-empty label', () => {

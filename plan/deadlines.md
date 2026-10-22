@@ -121,7 +121,7 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 | [x] | 2026-10-28 | The thirty on the live board | W1 | HP4d |
 | [x] | 2026-10-24 | Five hazard cost cards, shown on the board | W1 | HP5a, HP5b |
 | [x] | 2026-10-23 | The twenty easy and medium candidates go | W1 | HP5c |
-| [ ] | 2026-10-28 | Twenty cost-card puzzles on /devpuzzle | W1 | HP5d |
+| [x] | 2026-10-28 | Twenty cost-card puzzles on /devpuzzle | W1 | HP5d |
 | [ ] | 2026-11-02 | W1 demo: T plays the thirty (ten hard + twenty cost-card) | W1 | HP4e |
 | [ ] | 2026-11-04 | Act 1 puzzle set, live hazard routing and the cuts | W2 | needs plot |
 | [ ] | 2026-11-05 | The authoring patterns from the kept set | W2 | HP4f |
