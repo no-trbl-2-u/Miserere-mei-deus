@@ -10,8 +10,9 @@ name: pr-review
 # always reports: it labels the PR with the risk tier `scripts/pr-risk.mjs`
 # derives, fails on a changed path no `verify-*` filter owns and that is
 # not bookkeeping, naming it (LG1b; `verify-root` owns what the root
-# `npm test` checks), then waits for every `verify-*` the diff triggers on
-# this head and is green only when all of them are (`scripts/pr-gate.mjs`).
+# `npm test` checks), fails on a ticked acceptance line in the PR body
+# that names no proof (LG1c, `scripts/pr-acceptance.mjs`), then waits for
+# every `verify-*` the diff triggers on this head and is green only when all of them are (`scripts/pr-gate.mjs`).
 # A ruleset in evaluate mode requires it; T creates that ruleset with the
 # command in `.github/workflows/README.md`.
 #
@@ -119,6 +120,13 @@ jobs:
       - name: Classify the diff against the verify-* path filters
         id: classify
         run: node scripts/pr-gate.mjs classify --pr "$PR"
+
+      # Every ticked `- [x] A<n>` line in the body's Acceptance section
+      # names a test file, shot or command on the head, or a `(no test:
+      # <reason>)` listed for T (phase LG1c). It reads the body live, so a
+      # re-run of this job checks an edited body.
+      - name: Acceptance proof in the PR body
+        run: node scripts/pr-acceptance.mjs --pr "$PR" --head "$HEAD_SHA"
 
       - name: Wait for every triggered verify-* on this head
         run: node scripts/pr-gate.mjs wait --pr "$PR" --head "$HEAD_SHA"
