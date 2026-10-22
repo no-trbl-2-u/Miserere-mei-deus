@@ -8,14 +8,21 @@
  * one-shots laid over it, and when one has run its own length the enemy is
  * handed back to `idle`.
  *
+ * THE FLINCH WAITS FOR THE BOARD. A blow the player lands comes from a card
+ * they have just played over the battlefield, and the board's card motion from
+ * that commit is still running over the enemy when the events arrive. So the
+ * flinch is held until that motion has settled (`CARD_MOTION_SETTLE_MS`, the
+ * board's own card durations, not a copy of them) and plays on a clear board.
+ *
  * THE ORDER OF THE TWO is not arbitrated by a priority table, because the
- * timing already arbitrates it. A flinch starts the instant the blow lands; the
- * swing starts at the pane's existing impact offset, so when a single
- * resolution contains both (the player strikes, the enemy's threat fires) the
- * flinch plays and the swing takes over from it at the beat it was always going
- * to land on. Whoever started last owns the return to rest — that is what the
- * play token below is for, so an earlier clip's expiry cannot drop a later clip
- * back to idle halfway through.
+ * timing already arbitrates it. The swing starts at the pane's existing impact
+ * offset. When a single resolution contains both (the enemy's threat fires and
+ * it also took damage, a damage-over-time tick say) the flinch keeps its place
+ * on the beat itself, ahead of the swing, and the swing takes over from it at
+ * the beat it was always going to land on; a flinch held past the impact would
+ * cut the swing off instead. Whoever started last owns the return to rest —
+ * that is what the play token below is for, so an earlier clip's expiry cannot
+ * drop a later clip back to idle halfway through.
  *
  * It owns nothing but its own state. The pane's recoil / flash / squash /
  * contact shared values are not read here and not written here — this hook
@@ -31,6 +38,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { RESTING_CLIP, type EnemyFrameSet } from '@/assets/images/enemies/frames';
+import { CARD_MOTION_SETTLE_MS } from '@/components/combat/encounter/cardMotion';
 
 import { clipDurationMs } from './framePlayback';
 import { readReducedMotion, type ReducedMotionLike } from './useFramePlayback';
@@ -52,6 +60,8 @@ export interface EnemyClipSelectionInput {
     reducedMotion?: ReducedMotionLike;
     /** Overridable only so a test need not wait out the real offset. */
     impactMs?: number;
+    /** The same, for the flinch's wait on the board's card motion. */
+    struckDelayMs?: number;
 }
 
 export interface EnemyClipSelectionState {
@@ -67,6 +77,7 @@ export interface EnemyClipSelectionState {
 
 export function useEnemyClipSelection({
     frameSet, attackBeat, struckBeat, reducedMotion, impactMs = ENEMY_ATTACK_IMPACT_MS,
+    struckDelayMs = CARD_MOTION_SETTLE_MS,
 }: EnemyClipSelectionInput): EnemyClipSelectionState {
     const [state, setState] = useState<{ clipName: string; startKey: number }>({
         clipName: RESTING_CLIP, startKey: 0,
@@ -95,6 +106,12 @@ export function useEnemyClipSelection({
         }, durationMs);
     }, []);
 
+    /** Back to the resting clip now, outranking any return still pending. */
+    const rest = useCallback(() => {
+        playToken.current += 1;
+        setState((prev) => (prev.clipName === RESTING_CLIP ? prev : { ...prev, clipName: RESTING_CLIP }));
+    }, []);
+
     // THE SWING. Delayed to the pane's impact offset so it lands with the
     // recoil, the shake and the flash rather than ahead of them.
     useEffect(() => {
@@ -115,15 +132,39 @@ export function useEnemyClipSelection({
         return () => { timers.forEach(clearTimeout); };
     }, [attackBeat, attackClip, reducedMotion, impactMs, play]);
 
-    // THE FLINCH. No offset: the blow has already landed by the time the pane
-    // has the event, and a delayed flinch reads as a second, later hit.
+    // The attack beat as of the last commit, written by the effect declared
+    // last below. Effects run in declaration order, so the flinch's effect
+    // still sees the previous value in the commit that bumped both counters,
+    // and that is how it knows the swing is from its own resolution.
+    const seenAttackBeat = useRef(attackBeat);
+
+    // THE FLINCH. Held for the board's card motion, unless a swing from the
+    // same resolution is due at the impact offset: then it plays now, ahead of
+    // the swing, as it always did.
     useEffect(() => {
         if (struckBeat === 0 || !struckClip) return undefined;
-        if (readReducedMotion(reducedMotion)) return undefined;
+        // This beat's cleanup dropped the previous flinch's return timer, so
+        // a beat that selects nothing hands the enemy back to rest itself.
+        if (readReducedMotion(reducedMotion)) { rest(); return undefined; }
 
-        const timer = play(STRUCK_CLIP, clipDurationMs(struckClip));
-        return () => clearTimeout(timer);
-    }, [struckBeat, struckClip, reducedMotion, play]);
+        const swingToo = !!attackClip && attackBeat !== seenAttackBeat.current;
+        const timers: ReturnType<typeof setTimeout>[] = [];
+        if (swingToo) {
+            timers.push(play(STRUCK_CLIP, clipDurationMs(struckClip)));
+        } else {
+            timers.push(setTimeout(() => {
+                // Sampled at the moment the flinch would start, like the swing.
+                if (readReducedMotion(reducedMotion)) { rest(); return; }
+                timers.push(play(STRUCK_CLIP, clipDurationMs(struckClip)));
+            }, struckDelayMs));
+        }
+        return () => { timers.forEach(clearTimeout); };
+        // attackBeat and attackClip are read, not watched: a swing on its own
+        // is the effect above's business and must not replay a flinch.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [struckBeat, struckClip, reducedMotion, play, struckDelayMs, rest]);
+
+    useEffect(() => { seenAttackBeat.current = attackBeat; }, [attackBeat]);
 
     return {
         clipName: state.clipName,

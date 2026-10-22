@@ -20,6 +20,10 @@ import { STRUCK_CLIP, struckClipOf } from '../enemyStruckBeat';
 import { useEnemyClipSelection } from '../useEnemyClipSelection';
 import { SYNTHETIC_FRAME_SET } from '../syntheticFrameSet';
 import { clipDurationMs, frameIndexAt } from '../framePlayback';
+import {
+    CARD_ENTER_MS, CARD_LAYOUT_MS, CARD_MOTION_SETTLE_MS,
+} from '@/components/combat/encounter/cardMotion';
+import { FAN_CARD_ENTERING, FAN_CARD_LAYOUT } from '@/components/combat/encounter/CombatBoard';
 
 const IDLE = SYNTHETIC_FRAME_SET.manifest.clips.idle;
 const ATTACK = SYNTHETIC_FRAME_SET.manifest.clips[ATTACK_CLIP];
@@ -85,15 +89,23 @@ describe('struck — the one-shot on damage taken', () => {
         expect(STRUCK.loop).toBe(false);
     });
 
-    it('fires on the beat itself — a flinch is not delayed to the impact offset', () => {
+    it('waits for the board\'s card motion to settle before it is selected', () => {
         const { beat } = renderProbe();
         act(() => { beat({ struckBeat: 1 }); });
+        // The played card is still leaving the battlefield: not yet.
+        expect(readClip()).toBe('idle:0:false:false');
+        act(() => { jest.advanceTimersByTime(CARD_MOTION_SETTLE_MS - 1); });
+        expect(readClip()).toBe('idle:0:false:false');
+        act(() => { jest.advanceTimersByTime(1); });
         expect(readClip()).toBe(`${STRUCK_CLIP}:1:false:true`);
     });
 
-    it('returns to idle when its own length has run', () => {
+    it('returns to idle when its own length has run, counted from when it started', () => {
         const { beat } = renderProbe();
         act(() => { beat({ struckBeat: 1 }); });
+        act(() => { jest.advanceTimersByTime(CARD_MOTION_SETTLE_MS); });
+        // The wait is spent before the clip, not out of it: the full length
+        // still plays.
         act(() => { jest.advanceTimersByTime(clipDurationMs(STRUCK) - 1); });
         expect(readClip()).toBe(`${STRUCK_CLIP}:1:false:true`);
         act(() => { jest.advanceTimersByTime(1); });
@@ -103,9 +115,55 @@ describe('struck — the one-shot on damage taken', () => {
     it('restarts on a second blow rather than treating it as the same one', () => {
         const { beat } = renderProbe();
         act(() => { beat({ struckBeat: 1 }); });
-        act(() => { jest.advanceTimersByTime(20); });
+        act(() => { jest.advanceTimersByTime(CARD_MOTION_SETTLE_MS + 20); });
         act(() => { beat({ struckBeat: 2 }); });
+        act(() => { jest.advanceTimersByTime(CARD_MOTION_SETTLE_MS); });
         expect(readClip()).toBe(`${STRUCK_CLIP}:2:false:true`);
+        act(() => { jest.advanceTimersByTime(clipDurationMs(STRUCK)); });
+        expect(readClip()).toBe('idle:2:false:false');
+    });
+
+    it('two blows inside the wait play one flinch and still return to idle', () => {
+        const { beat } = renderProbe();
+        act(() => { beat({ struckBeat: 1 }); });
+        act(() => { jest.advanceTimersByTime(CARD_MOTION_SETTLE_MS / 2); });
+        act(() => { beat({ struckBeat: 2 }); });
+        act(() => { jest.advanceTimersByTime(CARD_MOTION_SETTLE_MS); });
+        expect(readClip()).toBe(`${STRUCK_CLIP}:1:false:true`);
+        act(() => { jest.advanceTimersByTime(clipDurationMs(STRUCK) * 4); });
+        expect(readClip()).toBe('idle:1:false:false');
+    });
+
+    it('a blow mid-flinch is not left holding the first flinch\'s last cell', () => {
+        // The second beat's cleanup drops the first flinch's return timer;
+        // the second flinch's own return is what must hand the enemy back.
+        const { beat } = renderProbe();
+        act(() => { beat({ struckBeat: 1 }); });
+        act(() => { jest.advanceTimersByTime(CARD_MOTION_SETTLE_MS + 10); });
+        act(() => { beat({ struckBeat: 2 }); });
+        act(() => { jest.advanceTimersByTime(CARD_MOTION_SETTLE_MS + clipDurationMs(STRUCK) * 2); });
+        expect(readClip()).toBe('idle:2:false:false');
+    });
+
+    it('hands the enemy back to rest when motion turns reduced mid-flinch', () => {
+        const paneRef = { current: false };
+        const { beat } = renderProbe({ reducedMotion: paneRef });
+        act(() => { beat({ struckBeat: 1 }); });
+        act(() => { jest.advanceTimersByTime(CARD_MOTION_SETTLE_MS + 10); });
+        expect(readClip()).toBe(`${STRUCK_CLIP}:1:false:true`);
+        paneRef.current = true;
+        act(() => { beat({ struckBeat: 2 }); });
+        act(() => { jest.advanceTimersByTime(clipDurationMs(STRUCK) * 4); });
+        expect(readClip()).toBe('idle:1:false:false');
+    });
+
+    it('reads the preference when the wait ends, not when the events arrived', () => {
+        const paneRef = { current: false };
+        const { beat } = renderProbe({ reducedMotion: paneRef });
+        act(() => { beat({ struckBeat: 1 }); });
+        paneRef.current = true;
+        act(() => { jest.advanceTimersByTime(CARD_MOTION_SETTLE_MS * 4); });
+        expect(readClip()).toBe('idle:0:false:false');
     });
 
     it('selects nothing when the caller\'s ref says motion is reduced', () => {
@@ -114,6 +172,20 @@ describe('struck — the one-shot on damage taken', () => {
         act(() => { beat({ struckBeat: 1 }); });
         act(() => { jest.advanceTimersByTime(clipDurationMs(STRUCK) * 4); });
         expect(readClip()).toBe('idle:0:false:false');
+    });
+});
+
+describe('the flinch\'s wait is the board\'s own motion, not a copy of it', () => {
+    it('is the longest of the board\'s card durations', () => {
+        expect(CARD_MOTION_SETTLE_MS).toBe(Math.max(CARD_ENTER_MS, CARD_LAYOUT_MS));
+    });
+
+    it('is the duration the board\'s card builders were handed', () => {
+        // Reanimated builders keep the duration they were given; reading it
+        // back proves the board and the wait share one number.
+        const durationOf = (b: unknown) => (b as { durationV: number }).durationV;
+        expect(durationOf(FAN_CARD_ENTERING)).toBe(CARD_ENTER_MS);
+        expect(durationOf(FAN_CARD_LAYOUT)).toBe(CARD_LAYOUT_MS);
     });
 });
 
