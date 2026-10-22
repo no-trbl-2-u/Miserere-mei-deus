@@ -109,7 +109,7 @@ export function renderAuditRow(drift, date) {
       + `to ${format(drift.current)} at ${drift.commit ?? '-'} `
       + '(`docs/reports/measured/history.jsonl`, `latest.md`).',
     '- next: T\'s call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` '
-      + 'may not do (D37, D88); this row waits for a brief T approves. `/iterate` may bisect the commits '
+      + 'may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits '
       + 'between the two history lines and add what it finds here, nothing more.',
     '',
   ].join('\n')
@@ -240,7 +240,7 @@ export function renderLatest(line) {
     'Each Act 1 ledger fight, with the player at the level a full clear brings to it, playing each measured '
       + 'deck with the greedy witness. A cell reads **win rate / lowest-VITAE p10** (one fight in ten gets at '
       + 'least this close to death, as a fraction of max VITAE). A measurement, not a gate (D57), and not a '
-      + 'licence to tune (D37). Cite it with its commit.',
+      + 'licence to tune (D88). Cite it with its commit.',
     '',
     ...tableRows(line),
     '',

@@ -12,17 +12,18 @@
  * written.
  */
 
-import { HAZARD_DECK } from './hazard.content';
+import { hazardLiveDeck } from './hazard.content';
 import { HAZARD_TUNING } from './hazard.tuning';
 
 export const HAZARD_CARD_FLAG_PREFIX = 'hazard-card:';
 
 /** The starter draw bag: weighted card ids from the authored deck, scaled
- *  by the tunable deck-size multiplier (floored at one copy per card). */
+ *  by the tunable deck-size multiplier (floored at one copy per card).
+ *  Puzzle-only cards never enter it. */
 export function hazardStarterBag(): string[] {
     const scale = HAZARD_TUNING.deck.starterWeightScale;
     const bag: string[] = [];
-    for (const card of HAZARD_DECK) {
+    for (const card of hazardLiveDeck()) {
         const w = card.weight ?? 1;
         if (w === 0) continue; // weight:0 = keep def accessible but exclude from starter
         const copies = Math.max(1, Math.round(w * scale));

@@ -19,7 +19,7 @@ describe('puzzle:audit', () => {
 
     it('lists every deck card plus CRACK, each with a keep or cut', () => {
         const rows = hazardPuzzleCardAuditMarkdown().split('\n').filter((l) => /^\| .+ \(`[a-z-]+`\) \|/.test(l));
-        expect(rows).toHaveLength(11);
+        expect(rows).toHaveLength(16);
         for (const row of rows) expect(row).toMatch(/\| (keep|cut): [^|]+ \|$/);
     });
 });

@@ -68,7 +68,7 @@ what the game deliberately does not have.
 2. **The rebuild track (owner-led, B1-B10):** relics, card sessions (Plan
    B: lanes and families, D73), the enemy revamp (normal, elite, region
    boss, act boss), hazards, the Deck tab, card art, the Labyrinth
-   re-theme, the dev menu. The loop does not start these (D37, D58).
+   re-theme, the dev menu. The loop does not start these (D58, D88).
 3. **R11** decides how the loop creates content again.
 
 ### Non-goals

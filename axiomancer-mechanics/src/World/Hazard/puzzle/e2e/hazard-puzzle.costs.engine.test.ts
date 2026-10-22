@@ -476,7 +476,9 @@ describe('no card and no keyword is added (A10)', () => {
     it('the fixture cards leave HAZARD_DECK after each test; the glossary is unchanged', () => {
         expect(HAZARD_DECK.map((c) => c.id)).toEqual(DECK_IDS_AT_LOAD);
         for (const card of FIXTURE_CARDS) expect(HAZARD_DECK).not.toContain(card);
-        expect(HAZARD_DECK.some((c) => c.effect === 'gainDie' || c.effect === 'reroll')).toBe(false);
+        // The only deck cards with a +die or reroll are HP5's puzzle-only cost cards.
+        const utilityCards = HAZARD_DECK.filter((c) => [c.effect, c.poweredEffect].some((e) => e === 'gainDie' || e === 'reroll'));
+        for (const c of utilityCards) expect(c.puzzleOnly, c.id).toBe(true);
         expect(Object.keys(HAZARD_KEYWORDS).sort()).toEqual(
             ['convert', 'crack', 'draw', 'escape', 'force', 'gilded', 'recast', 'salvage', 'surge'],
         );

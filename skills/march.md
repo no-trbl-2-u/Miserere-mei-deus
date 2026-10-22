@@ -37,11 +37,9 @@ Standing rules the chain carries (Phase R11, 2026-10-12):
 - **The loop builds only briefed rows** (§3 "Pickable phase"). A row
   with no brief is filed as "needs a brief: `/plot <N>`"; the loop
   never authors a brief.
-- **Content per surface** (D88). THE CARD HOLD (D37): no card or
-  keyword is made outside a guided session with T; art is owner-only
-  too (B8). Enemies, relics, maps, NPCs and events are built only from
-  a row whose brief T wrote or approved; `/expand` may propose them as
-  candidates (D89).
+- **Content per surface** (D88, D99). Cards, keywords, art, enemies,
+  relics, maps, NPCs and events are built only from a row whose brief
+  T wrote or approved; `/expand` may propose them as candidates (D89).
 - **`/plot` and `/messy` are T's intake.** No march step, cron,
   workflow or loop verb fires them; they run only in a conversation
   with T (AGENTS.md rule 8). `/plot` lands its rows and brief by a

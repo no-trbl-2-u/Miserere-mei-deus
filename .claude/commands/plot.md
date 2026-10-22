@@ -16,7 +16,6 @@ Argument handling:
 Procedure: §2 of `skills/plot.md` (orient, research, shape the spec and
 decide its phases, slot, open the `plot` PR on `loop/plot-<N>-<slug>`,
 retro). Never push `main` (D93). Hard rules: §3.
-Never write code. Cards, keywords and art are never planned for the
-loop (D37).
+Never write code.
 
 Argument: $ARGUMENTS

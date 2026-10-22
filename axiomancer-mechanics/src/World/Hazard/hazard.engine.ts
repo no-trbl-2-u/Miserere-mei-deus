@@ -22,7 +22,7 @@ import {
     getHazardCardDef,
     getHazardDef,
     HAZARD_CRACK_CARD,
-    HAZARD_DECK,
+    hazardLiveDeck,
     HAZARD_DIE_FACES,
 } from './hazard.content';
 import { nextInt, seedRng, shuffle, type HazardRngState } from './hazard.rng';
@@ -570,7 +570,7 @@ export function hazardTierOf(marks: readonly HazardMark[]): HazardOutcomeTier {
 
 /**
  * The pick-one card offer after a clear: three distinct cards from the core
- * deck. A perfect run's first slot is a gold rare; a one-win run offers no
+ * deck (never a puzzle-only card). A perfect run's first slot is a gold rare; a one-win run offers no
  * rare.
  */
 function rollRewardCards(
@@ -578,7 +578,8 @@ function rollRewardCards(
     tier: HazardOutcomeTier,
     wins: number,
 ): { cards: HazardCardDef[]; rng: HazardRngState } {
-    const rares = HAZARD_DECK.filter((c) => c.rarity === 'rare');
+    const deck = hazardLiveDeck();
+    const rares = deck.filter((c) => c.rarity === 'rare');
     const cards: HazardCardDef[] = [];
     let r = rng;
     if (tier === 'perfect') {
@@ -586,7 +587,7 @@ function rollRewardCards(
         cards.push(rares[pick.value]);
         r = pick.state;
     }
-    const pool = HAZARD_DECK.filter(
+    const pool = deck.filter(
         (c) => !cards.includes(c) && (wins === 1 ? c.rarity !== 'rare' : true),
     );
     const shuffled = shuffle(r, pool);

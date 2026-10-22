@@ -26,7 +26,7 @@ import {
     scaleCardForStats,
     type StatFamily,
     type CombatEncounterState, type CombatCard, type CombatManaDie, type CombatEvent,
-    type CombatThreatPhase, type CombatThreatEffect, type CombatIntentType,
+    type CombatThreatPhase, type CombatIntentType,
     type CombatSummary, type SignatureSkill,
     type Card, type CardCombatEffects, type CardType,
     type UpgradeableDieGear,
@@ -600,98 +600,13 @@ function branchVM(phase: CombatThreatPhase | undefined): CombatIntentBranchVM | 
     };
 }
 
-// ── The enemy's played "card" (the after-the-fact reveal) ────────────────────
-
-/** One structured line off the resolved threat action ("6 DAMAGE", "POISON ×2"):
- *  the foe's OWN announced action (struck through on the card when the player
- *  denied it). */
-export interface EnemyActionLineVM { text: string; color: string; source: 'telegraph' }
-
-/**
- * What the enemy just did, shaped as a card the player can read for a beat
- * after END PHASE. The enemy plays no literal cards — it has a telegraphed
- * threat sequence — so this is that phase's action rendered in the same
- * vocabulary the player's own cards use.
- */
-export interface EnemyActionCardVM {
-    /** Phase number as telegraphed in the reveal ("PHASE 2"). */
-    phaseIndex: number;
-    icon: string;
-    /** ATTACKS / WEAKENS / … — the intent word, or the phase's authored label. */
-    label: string;
-    color: string;
-    /** The authored action sentence, parenthetical payload stripped (that
-     *  payload is the `lines` below, so printing both reads as a stutter). */
-    actionText: string;
-    lines: EnemyActionLineVM[];
-    /** The foe's OWN blow never fired — the player's control held it. */
-    denied: boolean;
-}
-
 /** `buildThreatAction` prints `${actionText} (${parts}).` — keep the sentence,
- *  drop the payload parenthetical (the structured `lines` carry it, brighter).
- *  A description in any other shape falls through unchanged. */
+ *  drop the payload parenthetical (the log narrates the payload through its own
+ *  damage and status lines). A description in any other shape falls through
+ *  unchanged. */
 function stripThreatPayload(description: string): string {
     const m = /^(.*?)\s*\([^()]*\)\.?$/.exec(description.trim());
     return (m ? m[1] : description.replace(/\.$/, '')).trim();
-}
-
-/** The payload of a resolved threat action, in the keyword vocabulary. */
-function enemyActionLines(effects: readonly CombatThreatEffect[]): EnemyActionLineVM[] {
-    const lines: EnemyActionLineVM[] = [];
-    for (const e of effects) {
-        if (e.damage && e.damage > 0) lines.push({ text: `${e.damage} DAMAGE`, color: INTENT_ICONS.damage.color, source: 'telegraph' });
-        if (e.effectId) {
-            const effect = lookupEffect(e.effectId);
-            const kw = keywordForEffect(e.effectId) ?? effect?.name ?? e.effectId;
-            const intensity = e.intensity ?? 1;
-            lines.push({
-                text: `${kw.toUpperCase()}${intensity > 1 ? ` ×${intensity}` : ''}`,
-                color: effect ? effectGlyph(effect).color : INTENT_ICONS.debuff.color,
-                source: 'telegraph',
-            });
-        }
-        if (e.enemyHeal && e.enemyHeal > 0) lines.push({ text: `HEALS ${e.enemyHeal}`, color: INTENT_ICONS.buff.color, source: 'telegraph' });
-        if (e.enemyCleanse && e.enemyCleanse > 0) lines.push({ text: `SHEDS ${e.enemyCleanse}`, color: INTENT_ICONS.buff.color, source: 'telegraph' });
-    }
-    return lines;
-}
-
-/**
- * The enemy's turn, read back off the resolved event stream. Returns null when
- * the bump carried no threat resolution at all (a card APPLY, a fate tap) — the
- * reveal is for the enemy's turn only, never the player's own plays.
- *
- * `state` is the POST-resolution state; `threatPhases` is the enemy's fixed
- * sequence, so the fired phase is still addressable by its telegraph index.
- */
-export function selectEnemyActionCard(
-    events: readonly CombatEvent[],
-    state: CombatEncounterState,
-): EnemyActionCardVM | null {
-    const fired = events.find((e) => e.kind === 'threat-fired');
-    const resolved = events.find((e) => e.kind === 'phase-resolved');
-    if (!fired && !resolved) return null;
-    const phaseIndex = fired ? fired.phaseIndex : resolved!.phaseIndex;
-    const phase = state.threatPhases.find((p) => p.index === phaseIndex);
-    // A hindered phase emits `phase-resolved` with mark 'clear' and no
-    // 'threat-fired' — the action the player DENIED still deserves the card
-    // (it is the proof their control worked), read off the phase itself.
-    const denied = !fired;
-    const description = fired ? fired.description : phase?.threatAction.description ?? '';
-    if (description.length === 0) return null;
-    const effects = fired ? fired.effects : phase?.threatAction.effects ?? [];
-    const meta = INTENT_ICONS[(phase?.intentType ?? 'pass') as CombatIntentType];
-    const lines = enemyActionLines(effects);
-    return {
-        phaseIndex,
-        icon: meta.icon,
-        label: phase?.intentLabel ?? meta.label,
-        color: meta.color,
-        actionText: stripThreatPayload(description),
-        lines,
-        denied,
-    };
 }
 
 /**

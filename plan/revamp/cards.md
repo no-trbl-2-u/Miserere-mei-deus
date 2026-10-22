@@ -71,8 +71,8 @@ survivors, chosen by T.
   reward pool. Fresh
   deck Blow 5 / Ward 3 / Word 2 (D43). The reward pool is the whole library
   but the Curses (D44).
-- THE CARD HOLD (D37): no card or keyword is created outside a guided
-  session with T.
+- THE CARD HOLD (D37) is lifted (D99, 2026-10-22): cards and keywords are
+  built from a brief T wrote or approved, like any content (D88).
 - Card types: purged to **Attack / Skill / Spell** (D51, shipped in R7).
 - The keyword/card revamp process plans:
   [`plan/2026-09-27-keyword-card-revamp.plans.md`](../2026-09-27-keyword-card-revamp.plans.md)

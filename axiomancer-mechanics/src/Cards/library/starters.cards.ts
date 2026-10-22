@@ -1,7 +1,7 @@
 /**
  * THE GREY OFFICE — the whole player card library.
  *
- * New cards arrive only through a guided session with T. These three are
+ * New cards arrive only from a brief T wrote or approved. These three are
  * the fresh-run deck (Blow 5 / Ward 3 / Word 2) and the reward pool.
  *
  * This file is data-only. All runtime behaviour lives in

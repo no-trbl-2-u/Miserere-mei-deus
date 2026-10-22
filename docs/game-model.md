@@ -213,8 +213,8 @@ keyword (`EnemyKeyword = never`).
 - **Is X reachable in play?** `npm run roster-health -w axiomancer-mechanics`
   (`World/roster-health.ts`) lists dangling references and orphaned
   enemies, items, NPCs, dialogue nodes and quests.
-- **The hazard minigame** (`World/Hazard/`): a ten-card deck (`HAZARD_DECK`)
-  and four dice rolled once; the player fills the route's meters with FORCE
+- **The hazard minigame** (`World/Hazard/`): a ten-card deck
+  (`hazardLiveDeck()`, `HAZARD_DECK` less its puzzle-only cards) and four dice rolled once; the player fills the route's meters with FORCE
   and ESCAPE cards for shillings or VITAE. A failure scars: maximum VITAE
   drops (`HAZARD_MAXHP_SCAR`) until the next rest.
 - **The hazard puzzle demos** (`World/Hazard/puzzle/`, dev menu only): a
@@ -230,7 +230,16 @@ keyword (`EnemyKeyword = never`).
   `docs/reports/hazard-puzzle-card-audit.md`): no RE-CAST or dead card, and
   no two cards that play the same once salvage, rarity and weight are set
   aside (CLIFFRUNNER plays as SCRAMBLE). The validator refuses any other
-  card; `HAZARD_DECK` and the live hazard keep every card.
+  card; `HAZARD_DECK` and the live hazard keep every card. The pool also
+  holds five puzzle-only cost cards (`puzzleOnly`; the live hazard never
+  draws, offers or grants one): two Tolls, a cost on the free line that a die
+  cancels (WAYFARER'S TITHE, purple, -1/-1 for DRAW 2; TURN THE STONES, red,
+  -2 FORCE for a reroll), a Debt, a cost on both lines (PAWNED BREATH, purple,
+  -2/-2 for DRAW 2, or DRAW 3 and a gold die when powered), and two
+  Overdrives, a bigger powered line that costs the other meter and buys a
+  second utility (BREAKNECK HAUL, red, 3 FORCE free, 6 FORCE -3 ESCAPE, a blue
+  die and DRAW 1 powered; HEADLONG DIVE, blue, the mirror at 7 ESCAPE -3
+  FORCE, a red die and a reroll).
   `npm run puzzle:report -w axiomancer-mechanics` prints, per demo and
   route, how many winning outcomes stage each card and which are required
   or unused (`hazardPuzzleCardReport`), and the solve's five difficulty
@@ -250,14 +259,14 @@ keyword (`EnemyKeyword = never`).
   winning outcomes everywhere, more in one: `hazardPuzzleDominatedCards`).
   Card values are signed: a negative
   number is a cost, on either line or both, and a meter can go below 0. The
-  engine also has two utilities no card carries yet: `gainDie` (temporary
+  engine also has two utilities only the cost cards carry: `gainDie` (temporary
   dice on apply) and `reroll` (dice turned to the layout's `rerollFaces`, in
   order, never rolled). Neither has a default: a card declares its counts
   unpowered and powered (and a `gainDie` card its colour). A card with a
   cost on its powered line also carries a `poweredEffect`, a second utility
   that fires after its `effect` when a die powers it. `validateHazardCardDef`
-  checks these rules and a puzzle refuses a card that fails them; T's card
-  session gives the utilities cards and keywords. The dev menu's
+  checks these rules and a puzzle refuses a card that fails them. Neither
+  utility has a keyword yet. The dev menu's
   HAZARD PUZZLES board plays them on the live hazard board (the same cards,
   dice, drag and route select as a live hazard, with no bin) under a per-band clock. The outcome pays XP,
   a modest consumable and a region material; full completion adds the purse,

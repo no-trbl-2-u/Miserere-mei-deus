@@ -47,9 +47,8 @@ that already covers the task, and the open `plot` PRs
 - Which D-numbers it touches
   (`plan/2026-09-25-refactor-strategy.decisions.md`).
 - Which content surfaces it touches, and what D88 allows: cards,
-  keywords and art are owner-only (D37) and are never planned for
-  the loop; enemies, relics, maps, NPCs and events are allowed
-  because T is asking now.
+  keywords, art, enemies, relics, maps, NPCs and events are all
+  allowed because T is asking now (D99 lifted the card hold).
 - **Map the mechanisms.** Read the code each acceptance statement
   will lean on. A primitive the code lacks is either put in a
   phase's scope or named under Follow-ups (`skills/plan-a-phase.md`
@@ -251,9 +250,8 @@ why it cannot: attended, `Requires` unmet).
 2. **Never fired by the loop.** A `skills/` file other than this
    one and `skills/messy.md` that dispatches `/plot` fails
    `scripts/loop-pr.test.mjs`.
-3. **Never plans card, keyword or art work for the loop** (D37).
-4. **Acceptance IDs and `Measure:` are mandatory**, and with several
+3. **Acceptance IDs and `Measure:` are mandatory**, and with several
    phases every acceptance ID is closed by exactly one of them.
-5. **Lands by a `plot` PR with one size label, never a push to
+4. **Lands by a `plot` PR with one size label, never a push to
    `main`, never `loop:pr` (D93).** Never merges, closes or force-pushes its PR; T merges.
-6. **No emojis, no attribution trailers** (AGENTS.md rule 2).
+5. **No emojis, no attribution trailers** (AGENTS.md rule 2).

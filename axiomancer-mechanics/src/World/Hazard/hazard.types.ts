@@ -131,6 +131,12 @@ export interface HazardCardDef {
      * contribute nothing — they only clog the hand.
      */
     dead?: boolean;
+    /**
+     * Puzzle-only cards (the cost cards) live in `HAZARD_DECK` so puzzles
+     * and their tools can read them, but the live three-round hazard never
+     * draws, offers or grants one: `hazardLiveDeck()` leaves them out.
+     */
+    puzzleOnly?: boolean;
     /** Discard benefit (trash bin). Omitted = discards for nothing. */
     salvage?: HazardSalvage;
     flavor: string;

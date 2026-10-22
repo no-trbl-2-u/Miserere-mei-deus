@@ -193,6 +193,8 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - AN2b — loop work; delays the flinch until the played card clears; date not set.
 - AN3a — loop work; the Hag becomes the Green Jelly, fight unchanged; date not set.
 - AN3b — loop work; the Jelly's frame set; follows AN3a; date not set.
+- AN4a — loop work; the Act 1 boss stops being a placeholder; date not set.
+- AN4b — loop work; the Beholder's frame set; follows AN4a; date not set.
 - RV4 — loop plumbing; removes the merge cap that is blocking today's chain; date not set.
 
 ## How a window closes

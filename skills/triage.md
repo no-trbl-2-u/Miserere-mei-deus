@@ -133,12 +133,8 @@ For each issue, decide:
    - large / off-strategy enhancement → a candidate in
      `plan/PHASE_CANDIDATES.md` citing the issue (`/expand`
      and `/oversight` weigh it there)
-4. **Content filter (D88, D37).** A request for a new **card,
-   keyword or art** is not loop work: label it `triage:reviewed`
-   plus its category and comment that it waits for T's guided
-   session, naming the B-phase it belongs to where one fits
-   (`plan/revamp/README.md` §7). A request for a new **enemy,
-   relic, map, NPC or event** becomes a `[content]` candidate in
+4. **Content filter (D88, D99).** A request for a new **card,
+   keyword, art, enemy, relic, map, NPC or event** becomes a `[content]` candidate in
    `plan/PHASE_CANDIDATES.md` citing the issue, labelled
    `triage:loop-queued`, with a comment that it is built only once
    T plots it. A fix to existing content (a wrong gloss, a broken
@@ -230,10 +226,9 @@ The richer deploy comment is `skills/iterate.md`'s job.
 6. **Don't over-classify.** When in doubt, pick the closest
    existing category and say so in the comment; never invent
    one.
-7. **Content routing per surface (D88).** Card, keyword and art
-   requests are `triage:reviewed` for T's sessions; enemy, relic,
-   map, NPC and event requests are `[content]` candidates (Step 2
-   item 4); never a build-plan row.
+7. **Content routing per surface (D88, D99).** Card, keyword, art,
+   enemy, relic, map, NPC and event requests are `[content]`
+   candidates (Step 2 item 4); never a build-plan row.
 8. **No emojis. No attribution trailers** (AGENTS.md rule 2).
 9. **`gh` calls only.** No raw curl unless `gh` is unavailable.
 

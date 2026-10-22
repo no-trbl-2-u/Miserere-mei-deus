@@ -63,6 +63,17 @@ export const HAZARD_DECK: HazardCardDef[] = [
     // DUAL number that only appears once a (wild) gold die is applied. Rare.
     { id: 'oath', name: 'UNBROKEN OATH', kind: 'gold', rarity: 'rare', weight: 1, f: C.gold.free, e: C.gold.free, fp: C.gold.powered, ep: C.gold.powered, effect: 'draw', majorEffect: true, drawBase: U.drawMajor, drawPowered: U.drawMajor, salvage: { type: 'mana' }, flavor: 'You will not fall. You refuse — and the path answers.', keywords: ['gilded', 'draw', 'surge'] },
     { id: 'blessing', name: "PILGRIM'S BLESSING", kind: 'gold', rarity: 'rare', weight: 1, f: C.gold.free, e: C.gold.free, fp: C.gold.strongPowered, ep: C.gold.strongPowered, effect: 'recast', majorEffect: true, salvage: { type: 'mana' }, flavor: 'Something older than the cliff steadies your hand.', keywords: ['gilded', 'recast', 'surge'] },
+
+    // COST CARDS (puzzle-only) — each trades meter points for a utility.
+    // A TOLL costs on its free line only, so a die cancels it; a DEBT costs
+    // on both lines; an OVERDRIVE pays more when powered and adds a cost on
+    // its other meter, which buys a second utility (`poweredEffect`). The
+    // live hazard never draws, offers or grants them (`hazardLiveDeck`).
+    { id: 'tithe', name: "WAYFARER'S TITHE", kind: 'purple', rarity: 'common', weight: 0, puzzleOnly: true, f: -1, e: -1, fp: 0, ep: 0, effect: 'draw', drawBase: 2, drawPowered: 2, flavor: 'Pay the road a little, and it shows you more of itself.', keywords: ['draw', 'surge'] },
+    { id: 'stones', name: 'TURN THE STONES', kind: 'red', rarity: 'common', weight: 0, puzzleOnly: true, f: -2, e: 0, fp: 0, ep: 0, effect: 'reroll', rerollBase: 1, rerollPowered: 2, flavor: 'Pry the loose rocks over. Something steadier lies beneath.', keywords: ['force', 'surge'] },
+    { id: 'pawn', name: 'PAWNED BREATH', kind: 'purple', rarity: 'uncommon', weight: 0, puzzleOnly: true, f: -2, e: -2, fp: -2, ep: -2, effect: 'draw', drawBase: 2, drawPowered: 3, poweredEffect: 'gainDie', gainDieBase: 0, gainDiePowered: 1, gainDieKind: 'gold', flavor: 'Spend the air you have not drawn yet. The cliff keeps the ledger.', keywords: ['draw', 'surge'] },
+    { id: 'breakneck', name: 'BREAKNECK HAUL', kind: 'red', rarity: 'uncommon', weight: 0, puzzleOnly: true, f: 3, e: 0, fp: 6, ep: -3, effect: 'gainDie', gainDieBase: 0, gainDiePowered: 1, gainDieKind: 'blue', poweredEffect: 'draw', drawBase: 0, drawPowered: 1, flavor: 'Up the rope faster than your legs can follow.', keywords: ['force', 'escape', 'surge', 'draw'] },
+    { id: 'headlong', name: 'HEADLONG DIVE', kind: 'blue', rarity: 'uncommon', weight: 0, puzzleOnly: true, f: 0, e: 3, fp: -3, ep: 7, effect: 'gainDie', gainDieBase: 0, gainDiePowered: 1, gainDieKind: 'red', poweredEffect: 'reroll', rerollBase: 0, rerollPowered: 1, flavor: 'Throw yourself at the far side and leave your grip behind.', keywords: ['escape', 'force', 'surge'] },
 ];
 
 /**
@@ -73,6 +84,11 @@ export const HAZARD_CRACK_CARD: HazardCardDef = {
     id: 'crack', name: 'CRACK', kind: 'purple', rarity: 'common', f: 0, e: 0, fp: 0, ep: 0,
     dead: true, flavor: 'The flaw travels with you now.', keywords: ['crack'],
 };
+
+/** The cards the live three-round hazard may draw, offer or grant: the deck without its puzzle-only cards. */
+export function hazardLiveDeck(): HazardCardDef[] {
+    return HAZARD_DECK.filter((c) => !c.puzzleOnly);
+}
 
 export function getHazardCardDef(cardId: string): HazardCardDef {
     const def =

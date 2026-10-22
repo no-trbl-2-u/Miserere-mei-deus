@@ -271,9 +271,11 @@ event-pool and layout files).
       labelled groups by intended band and plays any of them on its nominated route through the live `HazardBoard`;
       the three demos stay reachable and production still renders nothing. Brief
       `plan/phases/phase_HP4_graded_puzzle_set.md` § HP4d. Requires HP4b.
+- [ ] Phase AN4a — The Beholder takes the Doorwarden's place (plotted by T, 2026-10-22): the Act 1 **boss** ships as 1434 bytes of flat white with alpha holes for its eyes — a placeholder that became the act's climax by default. It becomes torio's Death Beholder. Level 8, `difficulty: 'boss'`, `logic: 'boss'`, `mapName: 'lantern-deep'`, the loot and the per-node pin are carried over UNCHANGED: Phase UP1h measures this exact fight, so an art change must not move what it measures. Name and description are rewritten — "The Doorwarden" is a name about a door. Brief `plan/phases/phase_AN4_the_death_beholder.md` § AN4a. Requires nothing.
+- [ ] Phase AN4b — The Beholder animates (plotted by T, 2026-10-22): the AN1e shape on a `centre` anchor. Its attack is a SCALE change, not a deformation — shrink and dim, then swell hard at the camera — because T rejected an earlier candidate whose per-row tendril wave read at full size and vanished at combat scale. A test pins the scale range so it cannot be quietly softened. Brief `plan/phases/phase_AN4_the_death_beholder.md` § AN4b. Requires AN4a.
 - [blocked: source art off-tree — `Jelly A.png` is only in T's gitignored `Potential Assets/`, see NEEDS_T `an3-jelly-source` 2026-10-22] Phase AN3a — The Jelly takes the Hag's place (plotted by T, 2026-10-22): T chose torio's `Jelly A` after seeing it rigged — a single translucent volume that squashes about its base, needing none of the four limb masks the Hag required and showing none of the seam they left. The Brine Hag's fight is carried over WHOLE (level 7, stat budget, elite, strategic, loot, the 30% befriend gate, xpBonus 35); only the id, the art key, the portrait and the prose change. Her befriend narrative is about a traded reflection and a tide, so it is rewritten rather than renamed around. Licence settled: torio Javardry free material, free for any use including commercial and modification. Brief `plan/phases/phase_AN3_the_green_jelly.md` § AN3a. Requires nothing.
 - [ ] Phase AN3b — The Jelly animates (plotted by T, 2026-10-22): the AN1e shape against the new key — an `art-department/` rig, the 8x3 split to per-cell WebP, the registry entry and an encounter test proving the player mounts and advances. First set to use the `foot-line` anchor rather than `centre`: a jelly rests on a surface and squashes about its base, where the float-eye hovers. Brief `plan/phases/phase_AN3_the_green_jelly.md` § AN3b. Requires AN3a.
-- [ ] Phase HP5a — Five cost cards (plotted by T, 2026-10-21): five hazard cards that trade meter points for a
+- [x] (#771) Phase HP5a — Five cost cards (plotted by T, 2026-10-21): five hazard cards that trade meter points for a
       utility (two Toll, one Debt, two Overdrive), validated, never drawn by the live three-round hazard, in the
       puzzle card pool and clear of the worse-copy check. Brief `plan/phases/phase_HP5_cost_card_puzzles.md` § HP5a. Requires nothing.
 - [ ] Phase HP5b — Costs on the board (plotted by T, 2026-10-21): `HazardCard` draws a negative value with a minus
@@ -285,7 +287,7 @@ event-pool and layout files).
       `cand-cost-hard-01..10`, each holding a new card, no slack (best surplus 0), and lost by staging the whole
       opening hand; each new card both required somewhere and a trap somewhere. Brief `plan/phases/phase_HP5_cost_card_puzzles.md` § HP5d. Requires HP5a,
       HP5b, HP5c.
-- [ ] Phase AN2a — The enemy action card goes (plotted by T, 2026-10-21): T watched the first preview build carrying AN1 and ruled the card out — a centred `absoluteFillObject` overlay at `zIndex: 45` holding ~1.9s after END PHASE, directly over the enemy during the turn the lunge plays. The component, its mount, its presenter and its two suites go; the threat glyph and the damage floats stay and are what still say what happened. Brief `plan/phases/phase_AN2_the_animation_is_seen.md` § AN2a. Requires nothing.
+- [x] (#778) Phase AN2a — The enemy action card goes (plotted by T, 2026-10-21): T watched the first preview build carrying AN1 and ruled the card out — a centred `absoluteFillObject` overlay at `zIndex: 45` holding ~1.9s after END PHASE, directly over the enemy during the turn the lunge plays. The component, its mount, its presenter and its two suites go; the threat glyph and the damage floats stay and are what still say what happened. Brief `plan/phases/phase_AN2_the_animation_is_seen.md` § AN2a. Requires nothing.
 - [ ] Phase AN2b — The flinch waits for the board to clear (plotted by T, 2026-10-21): the `struck` clip is selected at t=0, so on device the flinch played mostly behind the player's own cards. It now waits until the played card is off the enemy, off a delay derived from that animation's own duration rather than a second hand-typed constant; `attacking` keeps the `ENEMY_ATTACK_IMPACT_MS` offset it shares with the pane's recoil. A delayed clip still plays in full and still returns to idle. Brief `plan/phases/phase_AN2_the_animation_is_seen.md` § AN2b. Requires nothing.
 - [ ] Phase HP4e — T plays the thirty (plotted by T, 2026-10-19) (attended): T plays each candidate once, timed by
       HP2c's move log, and `docs/reports/hazard-puzzle-candidates.md` records the label, the intended band, the
@@ -1019,6 +1021,15 @@ See the status rows above; generate briefs on demand.
 > "reason not stated" — never invent one), and the resulting
 > commit/issue/phase-brief when available.
 
+- **2026-10-22** — actor: **T, attended session** (`/plot asap`, branch
+  `loop/plot-AN4-death-beholder`). Action: **added Phases AN4a and AN4b** directly above the first
+  open row. Confirmed T's request: yes. Reason (T): "write in a row for the beholder, replacing the
+  doorwarden", after T asked whether the Doorwarden was a boss or an elite and was told he is the
+  **boss** (level 8, `difficulty: 'boss'`). T had already ruled the Doorwarden's own art is not to
+  be animated; it is 1434 bytes of flat white with alpha holes, a placeholder rather than authored
+  art. The Beholder was T's replacement for an earlier jellyfish candidate T judged "very subtle".
+  Art is torio Javardry free material, the same grant as AN3. Brief
+  `plan/phases/phase_AN4_the_death_beholder.md`.
 - **2026-10-22** — actor: **T, attended session** (`/plot asap`, branch
   `loop/plot-AN3-green-jelly`). Action: **added Phases AN3a and AN3b** directly above the first
   open row. Confirmed T's request: yes. Reason (T), after being shown three enemies rigged from
