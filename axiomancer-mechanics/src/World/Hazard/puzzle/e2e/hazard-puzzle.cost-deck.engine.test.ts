@@ -4,11 +4,11 @@
  * three-round hazard.
  *
  * Card numbers (free / powered, FORCE / ESCAPE):
- *  - WAYFARER'S TITHE (`tithe`), purple Toll: -1/-1 free, 0/0 powered, DRAW 2;
- *  - TURN THE STONES (`stones`), red Toll: -2/0 free, 0/0 powered, reroll 1 (2 powered);
- *  - PAWNED BREATH (`pawn`), purple Debt: -2/-2 both lines, DRAW 2 (3 powered), +1 gold die when powered;
- *  - BREAKNECK HAUL (`breakneck`), red Overdrive: 3/0 free, 6/-3 powered, +1 blue die and DRAW 1 when powered;
- *  - HEADLONG DIVE (`headlong`), blue Overdrive: 0/3 free, -3/7 powered, +1 red die and reroll 1 when powered.
+ *  - WAYFARER'S TITHE (`tithe`), purple Toll: -2/-2 free, 0/0 powered, DRAW 2;
+ *  - TURN THE STONES (`stones`), red Toll: -2/0 free, 2/0 powered, reroll 1 (2 powered);
+ *  - PAWNED BREATH (`pawn`), purple Debt: -2/-2 both lines, +1 gold die, and DRAW 2 when powered;
+ *  - BREAKNECK HAUL (`breakneck`), red Overdrive: 3/-1 free with DRAW 1, 6/-3 powered with +1 blue die;
+ *  - HEADLONG DIVE (`headlong`), blue Overdrive: -1/3 free with reroll 1, -3/7 powered with +1 red die.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -35,9 +35,13 @@ const UTILITIES = ['draw', 'gainDie', 'reroll', 'convert'];
 const poweredF = (c: HazardCardDef): number => c.fp ?? c.f;
 const poweredE = (c: HazardCardDef): number => c.ep ?? c.e;
 const isToll = (c: HazardCardDef): boolean => Math.min(c.f, c.e) < 0 && Math.min(poweredF(c), poweredE(c)) >= 0;
-const isDebt = (c: HazardCardDef): boolean => Math.min(c.f, c.e) < 0 && Math.min(poweredF(c), poweredE(c)) < 0;
+const isDebt = (c: HazardCardDef): boolean =>
+    Math.max(c.f, c.e) < 0 && Math.max(poweredF(c), poweredE(c)) < 0;
 const isOverdrive = (c: HazardCardDef): boolean =>
-    Math.min(c.f, c.e) >= 0 && Math.min(poweredF(c), poweredE(c)) < 0 && c.poweredEffect !== undefined;
+    Math.max(c.f, c.e) > 0 &&
+    Math.min(poweredF(c), poweredE(c)) < Math.min(c.f, c.e) &&
+    Math.max(poweredF(c), poweredE(c)) > Math.max(c.f, c.e) &&
+    c.poweredEffect !== undefined;
 
 /** Every reroll card here turns dice to these faces, in order. */
 const FACES: HazardPuzzleLayout['dice'] = ['gold', 'red', 'blue'];
@@ -50,7 +54,8 @@ const FACES: HazardPuzzleLayout['dice'] = ['gold', 'red', 'blue'];
 const COST_LIBRARY: HazardPuzzleLayout[] = [
     testLayout({ id: 'cost-tithe', hand: ['tithe', 'scram'], reserve: ['haul', 'haul'], dice: ['gold', 'purple', 'hex'], rerollFaces: FACES, goals: { safe: 1, risk: [6, 6] } }),
     testLayout({ id: 'cost-stones', hand: ['stones', 'footing'], dice: ['red', 'hex'], rerollFaces: FACES, goals: { safe: 1, risk: [2, 2] } }),
-    testLayout({ id: 'cost-pawn', hand: ['pawn', 'grip'], reserve: ['leap'], dice: ['blue', 'red', 'purple'], rerollFaces: FACES, goals: { safe: 1, risk: [6, 6] } }),
+    // PAWNED BREATH's gold die is the only way to power UNBROKEN OATH here.
+    testLayout({ id: 'cost-pawn', hand: ['pawn', 'oath'], dice: ['blue'], rerollFaces: ['red', 'blue', 'purple'], goals: { safe: 1, risk: [4, 4] } }),
     testLayout({ id: 'cost-breakneck', hand: ['breakneck', 'leap'], reserve: ['haul'], dice: ['red', 'blue'], rerollFaces: FACES, goals: { safe: 1, risk: [6, 6] } }),
     testLayout({ id: 'cost-headlong', hand: ['headlong', 'oath'], dice: ['purple', 'blue'], rerollFaces: FACES, goals: { safe: 1, risk: [2, 8] } }),
 ];

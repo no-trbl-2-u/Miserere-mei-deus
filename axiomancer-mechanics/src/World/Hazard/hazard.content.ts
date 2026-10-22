@@ -66,14 +66,17 @@ export const HAZARD_DECK: HazardCardDef[] = [
 
     // COST CARDS (puzzle-only) — each trades meter points for a utility.
     // A TOLL costs on its free line only, so a die cancels it; a DEBT costs
-    // on both lines; an OVERDRIVE pays more when powered and adds a cost on
-    // its other meter, which buys a second utility (`poweredEffect`). The
-    // live hazard never draws, offers or grants them (`hazardLiveDeck`).
-    { id: 'tithe', name: "WAYFARER'S TITHE", kind: 'purple', rarity: 'common', weight: 0, puzzleOnly: true, f: -1, e: -1, fp: 0, ep: 0, effect: 'draw', drawBase: 2, drawPowered: 2, flavor: 'Pay the road a little, and it shows you more of itself.', keywords: ['draw', 'surge'] },
-    { id: 'stones', name: 'TURN THE STONES', kind: 'red', rarity: 'common', weight: 0, puzzleOnly: true, f: -2, e: 0, fp: 0, ep: 0, effect: 'reroll', rerollBase: 1, rerollPowered: 2, flavor: 'Pry the loose rocks over. Something steadier lies beneath.', keywords: ['force', 'surge'] },
-    { id: 'pawn', name: 'PAWNED BREATH', kind: 'purple', rarity: 'uncommon', weight: 0, puzzleOnly: true, f: -2, e: -2, fp: -2, ep: -2, effect: 'draw', drawBase: 2, drawPowered: 3, poweredEffect: 'gainDie', gainDieBase: 0, gainDiePowered: 1, gainDieKind: 'gold', flavor: 'Spend the air you have not drawn yet. The cliff keeps the ledger.', keywords: ['draw', 'surge'] },
-    { id: 'breakneck', name: 'BREAKNECK HAUL', kind: 'red', rarity: 'uncommon', weight: 0, puzzleOnly: true, f: 3, e: 0, fp: 6, ep: -3, effect: 'gainDie', gainDieBase: 0, gainDiePowered: 1, gainDieKind: 'blue', poweredEffect: 'draw', drawBase: 0, drawPowered: 1, flavor: 'Up the rope faster than your legs can follow.', keywords: ['force', 'escape', 'surge', 'draw'] },
-    { id: 'headlong', name: 'HEADLONG DIVE', kind: 'blue', rarity: 'uncommon', weight: 0, puzzleOnly: true, f: 0, e: 3, fp: -3, ep: 7, effect: 'gainDie', gainDieBase: 0, gainDiePowered: 1, gainDieKind: 'red', poweredEffect: 'reroll', rerollBase: 0, rerollPowered: 1, flavor: 'Throw yourself at the far side and leave your grip behind.', keywords: ['escape', 'force', 'surge'] },
+    // on both lines and gains nothing on either meter; an OVERDRIVE gains on
+    // one meter and costs the other on both lines, paying more (and costing
+    // more) when powered, which buys a second utility (`poweredEffect`).
+    // Every free line carries a utility, so an unpowered play is never a
+    // plain number card (T, 2026-10-22). The live hazard never draws, offers
+    // or grants them (`hazardLiveDeck`).
+    { id: 'tithe', name: "WAYFARER'S TITHE", kind: 'purple', rarity: 'common', weight: 0, puzzleOnly: true, f: -2, e: -2, fp: 0, ep: 0, effect: 'draw', drawBase: 2, drawPowered: 2, flavor: 'Pay the road a little, and it shows you more of itself.', keywords: ['draw', 'surge'] },
+    { id: 'stones', name: 'TURN THE STONES', kind: 'red', rarity: 'common', weight: 0, puzzleOnly: true, f: -2, e: 0, fp: 2, ep: 0, effect: 'reroll', rerollBase: 1, rerollPowered: 2, flavor: 'Pry the loose rocks over. Something steadier lies beneath.', keywords: ['force', 'surge'] },
+    { id: 'pawn', name: 'PAWNED BREATH', kind: 'purple', rarity: 'uncommon', weight: 0, puzzleOnly: true, f: -2, e: -2, fp: -2, ep: -2, effect: 'gainDie', gainDieBase: 1, gainDiePowered: 1, gainDieKind: 'gold', poweredEffect: 'draw', drawBase: 0, drawPowered: 2, flavor: 'Spend the air you have not drawn yet. The cliff keeps the ledger.', keywords: ['draw', 'surge'] },
+    { id: 'breakneck', name: 'BREAKNECK HAUL', kind: 'red', rarity: 'uncommon', weight: 0, puzzleOnly: true, f: 3, e: -1, fp: 6, ep: -3, effect: 'draw', drawBase: 1, drawPowered: 0, poweredEffect: 'gainDie', gainDieBase: 0, gainDiePowered: 1, gainDieKind: 'blue', flavor: 'Up the rope faster than your legs can follow.', keywords: ['force', 'escape', 'surge', 'draw'] },
+    { id: 'headlong', name: 'HEADLONG DIVE', kind: 'blue', rarity: 'uncommon', weight: 0, puzzleOnly: true, f: -1, e: 3, fp: -3, ep: 7, effect: 'reroll', rerollBase: 1, rerollPowered: 0, poweredEffect: 'gainDie', gainDieBase: 0, gainDiePowered: 1, gainDieKind: 'red', flavor: 'Throw yourself at the far side and leave your grip behind.', keywords: ['escape', 'force', 'surge'] },
 ];
 
 /**
