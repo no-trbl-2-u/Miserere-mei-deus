@@ -65,6 +65,14 @@
 - estimated phases: 1
 - conflicts: none. Harness and loop docs only; no game code, content, rule, card or keyword (D37, D88). Label `review:plan-only`.
 
+### [ ] [score 4.0] One lint for every script's main guard, not one file's (lesson `argv-file-url-prefix`, seen 2×)
+- proposed: 2026-10-22, ship UP1a retro (lesson `argv-file-url-prefix`, seen 2×)
+- source signals: `plan/lessons.md` `argv-file-url-prefix`. The guard in `axiomancer-mobile/scripts/art.test.mjs` pins only `ingest-art.mjs`; `generate-art.mjs` still compares `import.meta.url` to `` `file://${process.argv[1]}` ``, so on Windows its CLI exits 0 printing nothing and `art-sheet.test.mjs` fails two tests locally (green on Linux CI). The same form is in `axiomancer-mobile/scripts/art/qa.mjs`, `smoke-bundler.mjs` and root `scripts/check-devlog-not-served.mjs`, `check-lexicon.mjs`, `check-prose.mjs`, `ci-e2e-scope.mjs`.
+- rationale: a script that silently does nothing on T's box reads as a red test for an unrelated diff, and every verify on Windows pays for it.
+- proposed scope: 1 small phase. Switch each file to `pathToFileURL(process.argv[1]).href`, and widen the guard to scan every tracked `.mjs` under `scripts/` and `axiomancer-mobile/scripts/` for the bare `file://${process.argv[1]}` form.
+- estimated phases: 1
+- conflicts: none. Tooling only; no game code, content, rule, card or keyword.
+
 ### [ ] [score 4.0] Guard every root gate against the fresh-router re-push (lesson `gate-router-identity`, seen 2x)
 - Filed by the CR1b retro (2026-10-15). `useRouter()` returns a fresh object every render, so a gate effect keyed on `router` re-runs on any re-render; `EventGate` (stacked its screen twice) and `LabyrinthGate` (re-pushed `/labyrinth` over a labyrinth fight, fixed in #573) both needed a once-per-session latch.
 - The automation: a hermetic test that mounts each `components/*Gate.tsx` with a router mock returning a fresh object per call, opens its session, re-renders with the pathname moved off its route, and asserts exactly one push. `HazardGate`, `RestGate`, `CacheGate`, `ItemRewardGate`, `BlacksmithGate`, `CombatGate`, `EventGate`, `LabyrinthGate`.

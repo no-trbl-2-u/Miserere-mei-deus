@@ -364,6 +364,32 @@ trial set registers its own in one line. The Blood Price ledger,
 the lane keeps (ids `bp-<slot><option>`); CS1 checks the library against it
 (§17).
 
+**Names (Phase UP1a, 2026-10-22).** Every Blood Price card has a name read
+off what it does; the ids (`bp-<slot><option>`) did not change. Five names
+are T's from revision 2 (Bloodletting, Open Vein, Blood for Blood, Crimson
+Pact, Transfusion); the other 25 replaced the `Blood Price <slot>`
+placeholders. A library test fails if a lane card's name still starts with
+"Blood Price " or two library cards share a name (§17). Names are card
+content: a rename is a T-approved brief, like this one (D99).
+
+| Id | Name | Sub-lane | Id | Name | Sub-lane |
+|---|---|---|---|---|---|
+| `bp-p-01a` | Forfeit Strike | Payoff | `bp-e-06b` | Double-Edged | Engine |
+| `bp-p-02a` | Scar Tissue | Payoff | `bp-e-07b` | Raised Stakes | Engine |
+| `bp-p-03a` | Cornered | Payoff | `bp-e-08n` | Blood for Blood | Engine |
+| `bp-p-04c` | Returned Twofold | Payoff | `bp-e-09n` | Crimson Pact | Engine |
+| `bp-p-05b` | Shared Wound | Payoff | `bp-e-10d` | Name Your Price | Engine |
+| `bp-p-06d` | What Is Owed | Payoff | `bp-m-01d` | Siphon | Misc |
+| `bp-p-07b` | Full Tally | Payoff | `bp-m-02b` | Reclaim | Misc |
+| `bp-p-08d` | Binding Vow | Payoff | `bp-m-03d` | Famished | Misc |
+| `bp-p-09b` | Uneven Trade | Payoff | `bp-m-04n` | Transfusion | Misc |
+| `bp-p-10c` | Callus | Payoff | `bp-m-05b` | Grim Resolve | Misc |
+| `bp-e-01n` | Bloodletting | Engine | `bp-m-06c` | Not Yet | Misc |
+| `bp-e-02d` | Pinpricks | Engine | `bp-m-07a` | Feeding Mark | Misc |
+| `bp-e-03d` | Slow Drip | Engine | `bp-m-08d` | Nothing Wasted | Misc |
+| `bp-e-04c` | Remission | Engine | `bp-m-09a` | Brimming | Misc |
+| `bp-e-05n` | Open Vein | Engine | `bp-m-10a` | Repaid in Kind | Misc |
+
 **Ratified, not built.**
 
 - Lanes: a 10-12 card lane on top of grey; 1-2 signature keywords per
@@ -438,6 +464,7 @@ in `axiomancer-mechanics`.
 | Carrier rule and admission bar | §8 | `card-rules.engine.test.ts` → "rule: carrier-rule" (`checkCarrierRule`) | same |
 | House voice and retired terms on card text | §6 | `scripts/check-prose.mjs` (the card libraries are content surfaces) | none needed: the text is clean |
 | Ledger and library agree on the Blood Price slots | §15 | `scripts/content-drift.test.mjs` → "the Blood Price lane ships exactly the slots the ledger keeps" | none |
+| Every Blood Price card has a real name; library names are distinct | §15 | `axiomancer-mechanics/src/Cards/e2e/blood-price.engine.test.ts` → "every lane card carries a real name" | none |
 | The atlas's Card / Rule split | §9 | `scripts/content-drift.test.mjs` → "the atlas sorts every row into a Card, Rule or system section" | none |
 
 The checkers live in `axiomancer-mechanics/src/Cards/card-rules.ts`, unit
