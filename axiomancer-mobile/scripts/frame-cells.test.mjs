@@ -58,6 +58,7 @@ test('there is an installed frame set to weigh', () => {
   assert.ok(sets.length >= 1, 'no frame set under assets/images/enemies/anim/')
   assert.ok(sets.some((s) => s.key === 'float-eye'), 'the float-eye set must be installed')
   assert.ok(sets.some((s) => s.key === 'death-beholder'), 'the death-beholder set must be installed')
+  assert.ok(sets.some((s) => s.key === 'green-jelly'), 'the green-jelly set must be installed')
 })
 
 test('no shipped cell exceeds the recorded ceiling', () => {
@@ -72,7 +73,7 @@ test('no shipped cell exceeds the recorded ceiling', () => {
   assert.deepEqual(over, [], 'a cell over the ceiling means the set was regenerated hotter')
 })
 
-for (const key of ['float-eye', 'death-beholder']) {
+for (const key of ['float-eye', 'death-beholder', 'green-jelly']) {
 test(`the ${key} set is whole: 24 cells, named row-major`, () => {
   // A truncated set is the failure the registry's own validation catches at
   // runtime; catching it here says which FILE is missing rather than that a

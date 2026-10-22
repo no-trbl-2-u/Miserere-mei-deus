@@ -107,10 +107,11 @@ retired: the bindings in `assets/images/enemies/index.ts` are preserved,
 but a key is now allowed a static painting **and** an animated FRAME
 SET beside it. `assets/images/enemies/frames.ts` holds the registry,
 the manifest type and `validateFrameSet`. It shipped EMPTY in phase
-AN1a, the float-eye went into it in AN1e and the death-beholder (the
-Act 1 boss) in AN4b; every other enemy is
-absent from it and renders exactly the single image it rendered before.
-Absence from the frame registry is the static path, not a gap.
+AN1a, the float-eye went into it in AN1e, the death-beholder (the
+Act 1 boss) in AN4b and the green jelly (the Act 1 elite) in AN3b, which
+framed the last enemy on the roster. A key absent from it renders exactly
+the single image it would have before. Absence from the frame registry is
+the static path, not a gap.
 
 **What ships is cells, never the sheet.** A frame set is per-cell WebP,
 one file per frame, under
@@ -198,7 +199,12 @@ enemy. (The AN1 brief's estimate was 149.5 KB / mean 6378 / max 9020,
 measured with a different encoder build; the figures here are the files
 in the tree.) The death-beholder (AN4b) is a far busier painting: at
 256px its cells reach 21490 B, so it is cut at 176px instead — 24 cells,
-197658 B, max 11068 B, against 56286 B static (3.5x). When a set
+197658 B, max 11068 B, against 56286 B static (3.5x). The green jelly
+(AN3b) is back at 256px: 24 cells, 179610 B, mean 7484 B, max 7920 B,
+against 12572 B static (14.3x, but its static portrait is unusually
+small). It is also the first set on a `foot-line` anchor: the rig poses
+every frame about a pivot on its base, so the pane pins its cells to the
+bottom of the box. When a set
 overshoots, the cell edge is the dial; the ceiling is not.
 `FRAME_CELL_MAX_BYTES` in `frames.ts` is the ceiling, and
 `scripts/frame-cells.test.mjs` weighs every shipped cell against it on

@@ -38,5 +38,24 @@
     "used_by": [
       "axiomancer-mobile/assets/images/enemies/anim/death-beholder/ — phase AN4b cut this master into 24 per-cell WebP with tools/split-spritesheet.py and ingested them --no-grade. The master itself does not ship."
     ]
+  },
+  {
+    "generated_by": "derived",
+    "date": "2026-10-22",
+    "tool": "art-department/tools/rig-spritesheet.py --enemy green-jelly (Pillow + numpy one-layer affine rig, posed about a foot-line pivot)",
+    "covers": [
+      "green-jelly.sheet.png (lossless master, 2048x768: 8x3 cells of 256px)",
+      "green-jelly.sheet.webp (ship candidate, q88)",
+      "green-jelly.sheet.json (frame grid + clip table)",
+      "green-jelly.preview.webp (animated flipbook, review only — not shipped)"
+    ],
+    "source": "../../../axiomancer-mobile/assets/images/enemies/green-jelly.webp",
+    "method": "No image model was used and nothing was generated. The shipped painting arrived fully opaque on black, so the black ground connected to the border is first keyed to alpha, the same matte as the death-beholder's. The matted jelly is then posed as one layer, and every pose is taken about a pivot on its foot line (330, 548 in source pixels: the middle of the base), not about the canvas centre: it squashes along the floor and stretches upward, wider being shorter. The attack sinks to a squash (1.24 x 0.72), springs off the floor on the very next frame (0.82 x 1.24, lifted 34px) and lands spread wide toward the player. Every pixel descends from the existing asset.",
+    "clips": "idle (8f @10fps, loop), struck (8f @16fps, one-shot, rest 7), attacking (8f @12fps, one-shot); one clip per row, 8 columns; anchor foot-line",
+    "license": "torio Javardry free material: free for any use including commercial, modification and redistribution; no attribution required",
+    "artist": "torio (とり夫), Pixiv user 5887541",
+    "used_by": [
+      "axiomancer-mobile/assets/images/enemies/anim/green-jelly/ — phase AN3b cut this master into 24 per-cell WebP with tools/split-spritesheet.py and ingested them --no-grade. The master itself does not ship."
+    ]
   }
 ]

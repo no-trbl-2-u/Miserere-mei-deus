@@ -46,12 +46,15 @@ describe('installing a frame set took nothing away from the static registry', ()
         expect(getEnemyFrameSet(key)).toBe(installed ? ENEMY_FRAME_SETS[key] : null);
     });
 
-    // The enumeration above is only a contract while at least one key sits on
-    // each side of it. With every enemy installed, "the static path still
-    // works" would be a sentence about nobody.
-    it('the roster still has a framed enemy and a static one', () => {
-        expect(keys.filter((k) => hasEnemyFrames(k)).sort()).toEqual(['death-beholder', 'float-eye']);
-        expect(keys.filter((k) => !hasEnemyFrames(k)).length).toBeGreaterThan(0);
+    // Phase AN3b framed the last enemy on the roster, so the static side of
+    // the enumeration above is now empty. The static path itself is not gone:
+    // a key with no set renders its single painting, and the float-eye's
+    // encounter suite still drives the pane for keys with none. This pins the
+    // count, so the next enemy added static, or framed, is a decision this
+    // line has to be edited for.
+    it('every enemy on the roster is framed, and the list is exact', () => {
+        expect(keys.filter((k) => hasEnemyFrames(k)).sort()).toEqual(['death-beholder', 'float-eye', 'green-jelly']);
+        expect(keys.filter((k) => !hasEnemyFrames(k))).toEqual([]);
     });
 
     it('an unknown key still falls back to the hash pick, as it always did', () => {
@@ -128,6 +131,43 @@ describe('the death-beholder is installed', () => {
     it('anchors on the centre, because it floats (A8)', () => {
         expect(set.manifest.anchor.kind).toBe('centre');
         expect(set.manifest.anchor.why).toMatch(/float/);
+    });
+
+    it('records that its cells carry no grade, matching the ungraded portrait', () => {
+        expect(set.manifest.graded).toBe(false);
+    });
+});
+
+/**
+ * Phase AN3b - the Act 1 elite, read against `green-jelly.sheet.json`. The
+ * first installed set that stands rather than floats.
+ */
+describe('the green jelly is installed', () => {
+    const set = ENEMY_FRAME_SETS['green-jelly'];
+
+    it('is in the registry at all, and validates', () => {
+        expect(set).toBeDefined();
+        expect(validateFrameSet('green-jelly', set)).toEqual([]);
+    });
+
+    it('ships one distinct file per cell of its 8x3 grid, cut at 256px', () => {
+        expect(set.manifest.frame).toBe(256);
+        expect(set.manifest.columns * set.manifest.rows).toBe(24);
+        expect(set.frames).toHaveLength(24);
+        expect(new Set(set.frames.map((f) => JSON.stringify(f))).size).toBe(24);
+    });
+
+    it('names its three clips on the rows the sheet drew them on', () => {
+        expect(set.manifest.clips.idle).toEqual({ row: 0, frames: 8, fps: 10, loop: true, rest: 0 });
+        expect(set.manifest.clips.struck).toEqual({ row: 1, frames: 8, fps: 16, loop: false, rest: 7 });
+        expect(set.manifest.clips.attacking).toEqual({ row: 2, frames: 8, fps: 12, loop: false, rest: 0 });
+    });
+
+    it('anchors on the foot line, because it sits on a surface (A7)', () => {
+        expect(set.manifest.anchor.kind).toBe('foot-line');
+        expect(set.manifest.anchor.why).toMatch(/base/);
+        // The pivot sits low in the cell, on the jelly's base, not at its middle.
+        expect(set.manifest.anchor.y).toBeGreaterThan(set.manifest.frame * 0.75);
     });
 
     it('records that its cells carry no grade, matching the ungraded portrait', () => {
