@@ -271,7 +271,7 @@ event-pool and layout files).
       labelled groups by intended band and plays any of them on its nominated route through the live `HazardBoard`;
       the three demos stay reachable and production still renders nothing. Brief
       `plan/phases/phase_HP4_graded_puzzle_set.md` § HP4d. Requires HP4b.
-- [ ] Phase HP5a — Five cost cards (plotted by T, 2026-10-21): five hazard cards that trade meter points for a
+- [x] (#771) Phase HP5a — Five cost cards (plotted by T, 2026-10-21): five hazard cards that trade meter points for a
       utility (two Toll, one Debt, two Overdrive), validated, never drawn by the live three-round hazard, in the
       puzzle card pool and clear of the worse-copy check. Brief `plan/phases/phase_HP5_cost_card_puzzles.md` § HP5a. Requires nothing.
 - [ ] Phase HP5b — Costs on the board (plotted by T, 2026-10-21): `HazardCard` draws a negative value with a minus
