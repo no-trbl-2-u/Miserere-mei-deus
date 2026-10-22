@@ -12,7 +12,7 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 import { createGameStore } from './store';
 import { nullAdapter } from './persistence/null.adapter';
 import { Player } from '../Character/characters.mock';
-import { FloatEye, TheDoorwarden } from '../Enemy/enemy.library';
+import { FloatEye, DeathBeholder } from '../Enemy/enemy.library';
 import { Encounter } from '../World/types';
 import { Item } from '../Items/types';
 import { mockSequentialRng } from '../test-utils/rng';
@@ -28,10 +28,10 @@ describe('store.startCombat — accepts Enemy or Encounter', () => {
     });
 
     it('Encounter: stages the first enemy of the list', () => {
-        const enc: Encounter = { enemies: [TheDoorwarden], origin: 'test:bw-1' };
+        const enc: Encounter = { enemies: [DeathBeholder], origin: 'test:bw-1' };
         const store = createGameStore(nullAdapter, { player: Player });
         store.getState().startCombat(enc);
-        expect(store.getState().currentEncounter!.enemies[0]!.id).toBe(TheDoorwarden.id);
+        expect(store.getState().currentEncounter!.enemies[0]!.id).toBe(DeathBeholder.id);
     });
 
     it('throws for an empty encounter', () => {

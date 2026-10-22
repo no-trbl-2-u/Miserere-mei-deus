@@ -14,22 +14,6 @@
     "post_process": "2026-09-22 build-size pass: re-encoded in place to the ingest recipe (longest edge <= 640px, WebP q44) by scripts/shrink-art.mjs"
   },
   {
-    "generated_by": "acquisition",
-    "date": "2026-09-05",
-    "tool": "sharp (SVG rasterized to 512px WebP, white glyph on transparent) — adjust-enemies pass 1 backfill for the three Aporia act bosses (W-01), which shipped with no portraitAsset at all (fallback silhouette in play since launch)",
-    "source": "game-icons.net via the licensed local trove Potential Assets/icons-TBR/ (license.txt in that folder)",
-    "artist": "Delapouite (delapouite.com)",
-    "license": "CC BY 3.0",
-    "attribution": "Icons made by Delapouite",
-    "covers": [
-      "the-doorwarden.webp (door-watcher.svg)"
-    ],
-    "used_by": [
-      "assets/images/enemies/index.ts (registry — see its header for surfaces)"
-    ],
-    "post_process": "2026-09-22 build-size pass: re-encoded in place to the ingest recipe (longest edge <= 640px, WebP q44) by scripts/shrink-art.mjs"
-  },
-  {
     "generated_by": "contract-note",
     "date": "2026-10-21",
     "tool": "none - this record documents WHERE and HOW an animated frame set is recorded, and covers no file of its own",
@@ -49,7 +33,10 @@
       "death-beholder.webp",
       "green-jelly.webp"
     ],
-    "source": "Potential Assets/torio (torio Javardry free monster art)",
-    "artist": "torio (とり夫), Pixiv user 5887541"
+    "source": "Potential Assets/torio (torio Javardry free monster art); death-beholder.webp is `Death Beholder A.png` from the 2022_added_monsters_ver3 pack (2000x2000, catalog slug `death-beholder`); green-jelly.webp is `Jelly A.png` from the 2017-2018_added_monsters_ver5 pack (catalog slug `green-jelly`)",
+    "artist": "torio (とり夫), Pixiv user 5887541",
+    "used_by": [
+      "assets/images/enemies/index.ts (registry - death-beholder is the Act 1 boss's portraitAsset since phase AN4a; green-jelly is staged for AN3a)"
+    ]
   }
 ]

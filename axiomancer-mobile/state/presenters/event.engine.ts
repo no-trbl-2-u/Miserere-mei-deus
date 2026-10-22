@@ -180,7 +180,7 @@ export interface EventViewModel {
     variant: EventVariant;
     artSlug: EventArtSlug;
     /**
-     * Enemy art key — the engine's `portraitAsset` (e.g. `"the-doorwarden"`),
+     * Enemy art key — the engine's `portraitAsset` (e.g. `"death-beholder"`),
      * falling back to the enemy id. Present only on combat-prelude variants;
      * the art layer resolves it 1:1 against the painting registry, with the
      * archetype illustration (see `enemy-art`) as the silhouette fallback.

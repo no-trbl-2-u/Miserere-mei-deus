@@ -80,6 +80,15 @@ encounter test; verify and root test green.
 
 Open by A4; read the schema and record the finding before deciding.
 
+**Finding (AN4a, 2026-10-22): no migration.** A save cannot carry the boss's id. `durableSlice`
+(`Game/store.ts`) writes every durable field but never the transient `currentEncounter`, so a save
+taken in the boss room reloads with the fight owed and re-rolls the encounter from the per-node pin
+(pinned by `World/e2e/fight-checkpoint.engine.test.ts`, "the door fight" case). Map state holds
+node ids, never event payloads, so the old slug lives nowhere in a save. The codex id
+`codex-death-beholder` is appended only on a befriend, and the boss has no `friendshipReward`
+(pinned in `Enemy/e2e/revamp-roster.engine.test.ts`); a dev-tool save holding the old codex id
+keeps it as an inert string, as the v26 to v27 roster reset ruled for removed foes.
+
 ## Decisions made upfront — DO NOT ASK
 
 - **T chose the art, attended, 2026-10-22**, after being shown it rigged. That is the owner

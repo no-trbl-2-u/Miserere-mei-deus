@@ -167,7 +167,7 @@ keyword (`EnemyKeyword = never`).
   in every region.
 - **Brine Hag:** level 7, elite, 120 VITAE. Placed on certain nodes. The
   only foe that can be befriended.
-- **The Doorwarden:** boss, 320 VITAE at level 8, two stages (at 60% and
+- **The Death Beholder:** boss, 320 VITAE at level 8, two stages (at 60% and
   25% VITAE). It holds every region's door, pinned at level 1, 2, 3 and 4
   (`World/MapEvents/content.ts`); `scaleEnemyToLevel` scales its VITAE to
   the pin. Its deck opens tier 2 on round 4 and tier 3 on round 7 (the
@@ -194,7 +194,7 @@ keyword (`EnemyKeyword = never`).
 ## The world
 
 - **Act 1 only:** Breakwater, Charcoal Wood, Beacon Crags, the Lantern
-  Deep. Each region ends at a Doorwarden door. The Lantern Deep's deep stair
+  Deep. Each region ends at a Death Beholder's door. The Lantern Deep's deep stair
   (`ld-18`) and the Labyrinth vault door (`ld-15`) are sealed cutscenes.
   The Labyrinth and the other continents' maps are parked and unreachable.
 - **Nodes** in play: encounter, hazard, rest, blacksmith (the Anvil),

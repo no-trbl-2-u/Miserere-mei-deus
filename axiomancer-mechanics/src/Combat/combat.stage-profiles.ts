@@ -103,7 +103,7 @@ export const COMBAT_STAGE_PROFILES: Record<CombatStageId, CombatStageProfile> = 
         bonusBaseDice: 0,
         dieUpgradeLevel: 0,
         upgradedCardShare: 0,
-        enemySlugs: ['float-eye', 'brine-hag', 'the-doorwarden'],
+        enemySlugs: ['float-eye', 'brine-hag', 'death-beholder'],
     },
     mid: {
         id: 'mid',
@@ -124,7 +124,7 @@ export const COMBAT_STAGE_PROFILES: Record<CombatStageId, CombatStageProfile> = 
         bonusBaseDice: 1,
         dieUpgradeLevel: 2,
         upgradedCardShare: 0.33,
-        enemySlugs: ['brine-hag', 'the-doorwarden'],
+        enemySlugs: ['brine-hag', 'death-beholder'],
     },
     late: {
         id: 'late',
@@ -141,7 +141,7 @@ export const COMBAT_STAGE_PROFILES: Record<CombatStageId, CombatStageProfile> = 
         bonusBaseDice: 2,
         dieUpgradeLevel: 3,
         upgradedCardShare: 0.66,
-        enemySlugs: ['the-doorwarden'],
+        enemySlugs: ['death-beholder'],
     },
 };
 

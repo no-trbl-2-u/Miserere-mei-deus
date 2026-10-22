@@ -98,7 +98,7 @@ export const ENEMY_DECKS: Record<string, EnemyDeckSpec> = {
     // BOSS — TIERED (7 cards): the door is kept open, the frame and the
     // margin note, then what shuts stays shut, the proof completed and the
     // question that eats.
-    'enemy-the-doorwarden': {
+    'enemy-death-beholder': {
         tier1: ['litany-of-thresholds', 'the-door-kept-open'],
         tier2: ['the-bronze-frame', 'ap-the-margin-note'],
         tier3: ['what-shuts-stays-shut', 'ap-the-proof-completed', 'ap-the-question-that-eats'],

@@ -22,7 +22,7 @@
  *   c6  the stair cave                                  (the door, terminal)
  *
  * The door fight holds a column of its own and is the stair cave's only way
- * in, so no route reaches the exit past the Doorwarden.
+ * in, so no route reaches the exit past the Death Beholder.
  *
  * Lanes run in plate order around each ring, so every lateral rib joins
  * two landmarks that are neighbours on the plate. Events use the shipped

@@ -6,7 +6,7 @@
  *
  * No authored quest carries a kill objective, so the reducer's contract
  * is pinned on a fixture quest whose target is a real rostered foe (the
- * Doorwarden, every Act 1 region's door fight).
+ * Death Beholder, every Act 1 region's door fight).
  */
 
 import { describe, expect, it } from 'vitest';
@@ -16,7 +16,7 @@ import { ENEMY_REGISTRY } from '../../Enemy/enemy.library';
 import type { Quest, QuestLog } from '../types';
 
 /** The door fight's display name — the kill the fixture quest asks for. */
-const BOSS_NAME = ENEMY_REGISTRY['the-doorwarden'].name;
+const BOSS_NAME = ENEMY_REGISTRY['death-beholder'].name;
 
 /** A one-kill fixture quest (any `QuestName` will do; the reducer keys on it). */
 const DOOR_QUEST: Quest = {
@@ -26,7 +26,7 @@ const DOOR_QUEST: Quest = {
     status: 'available',
     objectives: [{
         id: 'kill-door', type: 'kill', target: BOSS_NAME,
-        description: 'Put down the Doorwarden.',
+        description: 'Put down the Death Beholder.',
         requiredCount: 1, currentCount: 0,
     }],
     reward: { kind: 'currency', amount: 1 },

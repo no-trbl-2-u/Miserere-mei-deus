@@ -159,8 +159,8 @@ describe('round-keyed deck tiers — a flat deck still compiles to what it alway
 
 describe('round-keyed deck tiers — an authored tiered deck opens its tiers by round', () => {
     it('every boss/unique that hand-authored tiers gates exactly by tier', () => {
-        // The Doorwarden is the only hand-tiered deck.
-        expect(TIERED_DECK_IDS).toEqual(['enemy-the-doorwarden']);
+        // The Death Beholder is the only hand-tiered deck.
+        expect(TIERED_DECK_IDS).toEqual(['enemy-death-beholder']);
         for (const id of TIERED_DECK_IDS) {
             const plan = planDeckTiers(id)!;
             expect(plan.authored).toBe(true);
@@ -175,15 +175,15 @@ describe('round-keyed deck tiers — an authored tiered deck opens its tiers by 
         }
     });
 
-    // The Doorwarden authors later gates than the defaults (4 and 7): its
+    // The Death Beholder authors later gates than the defaults (4 and 7): its
     // fight runs about seven turns, so its finale opens on round 7.
-    it('the Doorwarden shows only tier 1 until round 4, tier 2 at round 4, tier 3 at round 7', () => {
-        const plan = planDeckTiers('enemy-the-doorwarden')!;
+    it('the Death Beholder shows only tier 1 until round 4, tier 2 at round 4, tier 3 at round 7', () => {
+        const plan = planDeckTiers('enemy-death-beholder')!;
         expect(plan.tiers).toEqual([1, 1, 2, 2, 3, 3, 3]);
         expect(plan.tierRounds[2]).toBe(4);
         expect(plan.tierRounds[3]).toBe(7);
 
-        const walk = pointerByRound(enemyById('enemy-the-doorwarden'), 9);
+        const walk = pointerByRound(enemyById('enemy-death-beholder'), 9);
         const tierAtRound = walk.map(i => plan.tiers[i]);
         // Round 1 is tier 1 and nothing else…
         expect(tierAtRound[0]).toBe(1);
@@ -260,7 +260,7 @@ describe('round-keyed deck tiers — the sequence never stalls', () => {
     });
 
     it('getThreatSequence strips a gate off phase 0 whatever the source authored', () => {
-        const enemy = enemyById('enemy-the-doorwarden') as Enemy & { threatSequence?: unknown };
+        const enemy = enemyById('enemy-death-beholder') as Enemy & { threatSequence?: unknown };
         enemy.threatSequence = [
             { index: 1, threatAction: { description: 'x', effects: [{ damage: 5 }] }, unlockAfterRound: 4 },
             { index: 2, threatAction: { description: 'y', effects: [{ damage: 9 }] }, isFinalPhase: true, unlockAfterRound: 4 },

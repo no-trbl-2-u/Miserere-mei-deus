@@ -6,7 +6,7 @@ import { beaconCrags } from './Northern-Continent/beacon-crags';
 import { lanternDeep } from './Northern-Continent/lantern-deep';
 
 /**
- * Each Act 1 region ends at a Doorwarden door (`docs/game-model.md`): the
+ * Each Act 1 region ends at a Death Beholder's door (`docs/game-model.md`): the
  * region's exit is reachable only through its door fight. The frontier walks
  * edges both ways, so the guard does too. The RC walk found the Charcoal
  * Wood's exit joined to every last-ring node, so the door could be skipped.
@@ -42,7 +42,7 @@ function reachableWithout(map: MapDefinition, removed: string): Set<string> {
     return seen;
 }
 
-describe('every Act 1 exit sits behind its Doorwarden', () => {
+describe('every Act 1 exit sits behind its Death Beholder', () => {
     for (const { map, door, exit } of REGIONS) {
         it(`${map.name}: ${exit} is reachable only through ${door}`, () => {
             expect(reachableWithout(map, door).has(exit)).toBe(false);

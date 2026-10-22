@@ -19,14 +19,14 @@ import {
     BrineHag,
     // Sweep — finalBlowLines + causeLines (no pactLines).
     FloatEye,
-    TheDoorwarden,
+    DeathBeholder,
     // Un-authored regression — test sandbox.
     Sandbag_01,
 } from '../enemy.library';
 
 describe('per-foe aftermath narrative lines (art-driven roster)', () => {
     const befriendable = [BrineHag];
-    const sweepOnly = [FloatEye, TheDoorwarden];
+    const sweepOnly = [FloatEye, DeathBeholder];
     const authored = [...befriendable, ...sweepOnly];
 
     it('all authored enemies carry finalBlowLines + causeLines shape', () => {

@@ -14,7 +14,7 @@ import { describe, it, expect } from 'vitest';
 
 import { Player } from '../../Character/characters.mock';
 import type { Character } from '../../Character/types';
-import { FloatEye, BrineHag, TheDoorwarden } from '../../Enemy/enemy.library';
+import { FloatEye, BrineHag, DeathBeholder } from '../../Enemy/enemy.library';
 import { deepClone } from '../../Utils';
 import { simulateHazardPatternCombat, runOneEncounter } from '../combat.encounter.sim';
 
@@ -46,7 +46,7 @@ describe('HP combat — combats terminate for every loadout family (structural, 
     }
 
     it('the boss fight terminates without crashing (win ratio NOT a constraint)', () => {
-        const s = simulateHazardPatternCombat(loadout(DOT), TheDoorwarden, RUNS, SEED);
+        const s = simulateHazardPatternCombat(loadout(DOT), DeathBeholder, RUNS, SEED);
         expect(s.victories + s.mercies + s.defeats + s.retreats).toBe(RUNS);
         expect(s.avgRounds).toBeGreaterThan(0);
     });
@@ -72,7 +72,7 @@ describe('HP combat — engagement metrics stay coherent (structural, armed)', (
 describe('HP combat — no degenerate stalemates (the safety cap never binds in practice)', () => {
     it('a wall-heavy TURTLE loadout still terminates every seeded boss run within the round cap', () => {
         for (let i = 0; i < 25; i++) {
-            const r = runOneEncounter(loadout(TURTLE), TheDoorwarden, SEED + i, 'turtle');
+            const r = runOneEncounter(loadout(TURTLE), DeathBeholder, SEED + i, 'turtle');
             expect(['victory', 'mercy', 'defeat', 'retreat']).toContain(r.outcome);
             expect(r.rounds).toBeLessThanOrEqual(61);
         }

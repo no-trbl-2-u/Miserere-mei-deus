@@ -171,7 +171,7 @@ describe('resolveMapEvent dispatch', () => {
         expect(result.event.kind).toBe('encounter');
         if (result.event.kind === 'encounter') {
             expect(result.event.isBoss).toBe(true);
-            expect(result.event.encounter.enemies[0].name).toBe('The Doorwarden');
+            expect(result.event.encounter.enemies[0].name).toBe('The Death Beholder');
         }
     });
 });

@@ -2,18 +2,19 @@
  * The enemy roster reset.
  *
  * Pins the post-reset roster: exactly three live foes (Float-Eye, the Brine
- * Hag, the Doorwarden) plus the `sandbag` fixture; no survivor carries a
+ * Hag, the Death Beholder) plus the `sandbag` fixture; no survivor carries a
  * keyword or a stage `gain` list; no enemy card carries an affliction; every
  * Act 1 map draws Float-Eye; each Act 1 region pins the Brine Hag mid-region
- * and the Doorwarden as its door boss. The keyword, rider, curse and
+ * and the Death Beholder as its door boss. The keyword, rider, curse and
  * SUMMON code stays gone from the engine's surface. lexicon-ok: guard pins the deleted surface stays gone
  */
 
 import { describe, expect, it } from 'vitest';
 
 import {
-    ENEMY_REGISTRY, EnemiesByMap, EnemyLibrary, FloatEye, LIVE_ENEMY_IDS,
+    DeathBeholder, ENEMY_REGISTRY, EnemiesByMap, EnemyLibrary, FloatEye, LIVE_ENEMY_IDS,
 } from '../enemy.library';
+import { enemyStatBudget } from '../index';
 import type { Enemy } from '../types';
 import { ENEMY_CARD_LIBRARY, type EnemyCardFace } from '../../Combat/combat.enemy-cards';
 import { ENEMY_DECKS, deckCardIds } from '../../Combat/combat.enemy-decks';
@@ -22,12 +23,12 @@ import { getNodeEventPool } from '../../World';
 import * as engine from '../../Combat/combat.engine';
 import * as mechanics from '../../index';
 
-const SURVIVOR_IDS = ['enemy-float-eye', 'enemy-brine-hag', 'enemy-the-doorwarden'];
+const SURVIVOR_IDS = ['enemy-float-eye', 'enemy-brine-hag', 'enemy-death-beholder'];
 
 describe('the R2 roster', () => {
     it('ENEMY_REGISTRY is exactly sandbag + the three survivors', () => {
         expect(Object.keys(ENEMY_REGISTRY).sort())
-            .toEqual(['brine-hag', 'float-eye', 'sandbag', 'the-doorwarden']);
+            .toEqual(['brine-hag', 'death-beholder', 'float-eye', 'sandbag']);
         expect(EnemyLibrary.map(e => e.id)).toEqual(SURVIVOR_IDS);
         expect([...LIVE_ENEMY_IDS].sort())
             .toEqual([...SURVIVOR_IDS, ENEMY_REGISTRY.sandbag.id].sort());
@@ -98,10 +99,11 @@ describe('the R2 Act 1 pools and pins (D61)', () => {
         expect(EnemiesByMap[map]).toEqual([FloatEye]);
     });
 
-    it.each(ACT1)('$map pins the Doorwarden as its door boss ($door)', ({ continent, map, door }) => {
+    it.each(ACT1)('$map pins the Death Beholder as its door boss ($door)', ({ continent, map, door }) => {
         const payload = encounterAt(continent, map, door);
-        expect(payload.enemySlug).toBe('the-doorwarden');
+        expect(payload.enemySlug).toBe('death-beholder');
         expect(payload.isBoss).toBe(true);
+        expect(ENEMY_REGISTRY[payload.enemySlug as keyof typeof ENEMY_REGISTRY].difficulty).toBe('boss');
     });
 
     it.each(ACT1)('$map pins the Brine Hag mid-region ($elite)', ({ continent, map, elite }) => {
@@ -133,5 +135,47 @@ describe('R2b — the enemy keyword code is gone (D63)', () => {
                 }
             }
         }
+    });
+});
+
+/**
+ * Phase AN4a moved the Act 1 boss to new art, a new id and new words. Phase
+ * UP1h measures this exact fight, so every number it fights with is pinned
+ * here at the values the Doorwarden carried: an art change must not re-tune it.
+ */
+describe('the Death Beholder is the Doorwarden\'s fight, carried over whole (AN4a)', () => {
+    it('keeps the boss tier, level, map, VITAE and stat budget', () => {
+        expect(DeathBeholder).toMatchObject({
+            id: 'enemy-death-beholder',
+            portraitAsset: 'death-beholder',
+            level: 8,
+            difficulty: 'boss',
+            logic: 'boss',
+            mapName: 'lantern-deep',
+            maxHealth: 320,
+        });
+        expect(DeathBeholder.baseStats).toEqual(enemyStatBudget(8, { heart: 1, body: 3, mind: 2 }));
+    });
+
+    it('keeps its two stages, its loot and its tiered deck', () => {
+        expect(DeathBeholder.stages?.map(st => ({ at: st.at, threatBonus: st.threatBonus, heal: st.heal })))
+            .toEqual([
+                { at: { vitaePct: 0.6 }, threatBonus: 0.3, heal: undefined },
+                { at: { vitaePct: 0.25 }, threatBonus: 0.5, heal: { pct: 0.15 } },
+            ]);
+        expect(DeathBeholder.loot?.map(l => [l.item?.id ?? null, l.weight])).toEqual([
+            ['healing-potion', 40], ['greater-healing-potion', 25], ['minor-healing-potion', 20],
+        ]);
+        expect(ENEMY_DECKS['enemy-death-beholder']).toEqual({
+            tier1: ['litany-of-thresholds', 'the-door-kept-open'],
+            tier2: ['the-bronze-frame', 'ap-the-margin-note'],
+            tier3: ['what-shuts-stays-shut', 'ap-the-proof-completed', 'ap-the-question-that-eats'],
+            tier2AtRound: 4,
+            tier3AtRound: 7,
+        });
+    });
+
+    it('cannot be befriended, so no save ever unlocks its codex entry', () => {
+        expect(DeathBeholder.friendshipReward).toBeUndefined();
     });
 });

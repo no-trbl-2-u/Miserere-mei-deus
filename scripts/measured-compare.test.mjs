@@ -9,7 +9,7 @@ import {
 
 function cell(over = {}) {
   return {
-    fight: 'bw-17/the-doorwarden', isBoss: true, playerLevel: 2, enemyLevel: 1, spread: 'even', deck: 'grey',
+    fight: 'bw-17/death-beholder', isBoss: true, playerLevel: 2, enemyLevel: 1, spread: 'even', deck: 'grey',
     winRate: 0.5, meanRounds: 6, lowestVitaeFractionMean: 0.3, lowestVitaeFractionP10: 0.1, playerHpTakenMean: 40,
     ...over,
   }
@@ -59,7 +59,7 @@ const drift = compare({ current: line([cell({ winRate: 0.2 })]), previous })[0]
 
 test('renderAuditRow: a [content] row naming fight, deck, metric, both values and both commits', () => {
   const row = renderAuditRow(drift, '2026-10-13')
-  assert.match(row, /^### \[ \] \[content\] measured drift: bw-17\/the-doorwarden grey winRate 50% -> 20% \(even, 2026-10-13\)\n/)
+  assert.match(row, /^### \[ \] \[content\] measured drift: bw-17\/death-beholder grey winRate 50% -> 20% \(even, 2026-10-13\)\n/)
   assert.match(row, /- category: content\n/)
   assert.match(row, /from 50% at aaaaaaa to 20% at bbbbbbb/)
   assert.match(row, /D88, D99/)
@@ -97,7 +97,7 @@ test('fileDrifts: no Pending heading is an error only when there is a row to add
 })
 
 test('historyLine: stamps the report and slims each cell', () => {
-  const report = { runs: 300, seed: 1, cells: [{ ...cell(), map: 'breakwater', nodeId: 'bw-17', enemySlug: 'the-doorwarden', runs: 300, seed: 1 }], decks: {} }
+  const report = { runs: 300, seed: 1, cells: [{ ...cell(), map: 'breakwater', nodeId: 'bw-17', enemySlug: 'death-beholder', runs: 300, seed: 1 }], decks: {} }
   const h = historyLine(report, { date: '2026-10-13', commit: 'bbbbbbb' })
   assert.deepEqual(Object.keys(h), ['date', 'commit', 'runs', 'seed', 'cells', 'decks'])
   assert.equal(h.cells[0].map, undefined)
@@ -108,7 +108,7 @@ test('renderLatest: stamped header, generated note and a row per fight', () => {
   const md = renderLatest(line([cell(), cell({ fight: 'bw-2/float-eye', isBoss: false, winRate: 1 })]))
   assert.match(md, /measured at bbbbbbb, 2026-10-13, 300 runs, seed 1/)
   assert.match(md, /do not edit/)
-  assert.match(md, /\| bw-17\/the-doorwarden \(door\) \| L2 v L1 \| 50% \/ 0\.10 \|/)
+  assert.match(md, /\| bw-17\/death-beholder \(door\) \| L2 v L1 \| 50% \/ 0\.10 \|/)
   assert.match(md, /\| bw-2\/float-eye \| L2 v L1 \| 100% \/ 0\.10 \|/)
   assert.doesNotMatch(md, /baseline/i)
 })
@@ -123,6 +123,6 @@ test('renderDigestSection: no run, a stale run, a first run, no drift and drifts
   assert.match(renderDigestSection(line([cell()]), previous, []), /No drift past the thresholds/)
   const withDrift = renderDigestSection(current, previous, [drift], { sinceDate: '2026-10-10' })
   assert.match(withDrift, /1 drift\(s\)/)
-  assert.match(withDrift, /bw-17\/the-doorwarden, grey even: winRate 50% -> 20%/)
+  assert.match(withDrift, /bw-17\/death-beholder, grey even: winRate 50% -> 20%/)
   assert.match(withDrift, /compared with aaaaaaa/)
 })

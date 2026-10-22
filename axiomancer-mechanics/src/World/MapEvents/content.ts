@@ -209,7 +209,7 @@ const BW_ENCOUNTER_FOES: Record<string, ActOneFoe> = {
 const BW_ELITE: ActOneFoe = { slug: 'brine-hag', level: BW_ELITE_LEVEL };
 
 /** The watchtower, the chokepoint before the bridge, holds the door fight. */
-const BW_DOOR: ActOneFoe = { slug: 'the-doorwarden', level: BW_DOOR_LEVEL, isBoss: true };
+const BW_DOOR: ActOneFoe = { slug: 'death-beholder', level: BW_DOOR_LEVEL, isBoss: true };
 
 const BW_REST_NODES: Record<string, string> = {
     'bw-9':  'The customs house lets rooms by the night. The clerk takes shillings, not names.',
@@ -296,7 +296,7 @@ const BREAKWATER_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> =
 
 /**
  * One pinned Act 1 fight. Float-Eye takes the normal fights, the Brine Hag
- * one mid-region node, the Doorwarden every region's door fight. A node with
+ * one mid-region node, the Death Beholder every region's door fight. A node with
  * no line of its own falls back to the foe's own description.
  */
 interface ActOneFoe { slug: EnemySlug; level: number; description?: string; isBoss?: boolean }
@@ -342,7 +342,7 @@ const CW_ENCOUNTER_FOES: Record<string, ActOneFoe> = {
     // c4 — the rock chapel, the wayside cross, the east cave
     'cw-16': { slug: 'float-eye', level: CW_FIGHT_LEVEL_LATE },
     // The door fight, alone in its column: the exit's only way in.
-    'cw-17': { slug: 'the-doorwarden', level: CW_DOOR_LEVEL, isBoss: true },
+    'cw-17': { slug: 'death-beholder', level: CW_DOOR_LEVEL, isBoss: true },
     'cw-19': { slug: 'float-eye', level: CW_FIGHT_LEVEL_LATE },
 };
 
@@ -473,7 +473,7 @@ const BC_ENCOUNTER_FOES: Record<string, ActOneFoe> = {
     'bc-11': { slug: 'float-eye', level: BC_FIGHT_LEVEL_LATE },
     'bc-13': { slug: 'float-eye', level: BC_FIGHT_LEVEL_LATE },
     // c5 — the stone gate: the door fight, alone in its column: the exit's only way in
-    'bc-15': { slug: 'the-doorwarden', level: BC_DOOR_LEVEL, isBoss: true },
+    'bc-15': { slug: 'death-beholder', level: BC_DOOR_LEVEL, isBoss: true },
 };
 
 /** All three rests are CAMPS: inns live inside settlements. */
@@ -593,7 +593,7 @@ const LD_ENCOUNTER_FOES: Record<string, ActOneFoe> = {
     // c4 — the fortress gate
     'ld-13': { slug: 'float-eye', level: LD_FIGHT_LEVEL_LATE },
     // c5 — the ruined city: the door fight, on the last fight column
-    'ld-16': { slug: 'the-doorwarden', level: LD_DOOR_LEVEL, isBoss: true },
+    'ld-16': { slug: 'death-beholder', level: LD_DOOR_LEVEL, isBoss: true },
 };
 
 /** All three rests are CAMPS: inns live inside settlements. */

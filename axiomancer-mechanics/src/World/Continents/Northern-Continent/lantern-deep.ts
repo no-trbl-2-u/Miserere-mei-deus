@@ -23,7 +23,7 @@
  *   c6  the deep stair                                        (the door, terminal)
  *
  * The door fight holds a column of its own and is the deep stair's only way
- * in, so no route reaches the exit past the Doorwarden.
+ * in, so no route reaches the exit past the Death Beholder.
  *
  * Lanes run west to east in every band, so every lateral rib joins two
  * landmarks that are neighbours on the plate. The vault door is the

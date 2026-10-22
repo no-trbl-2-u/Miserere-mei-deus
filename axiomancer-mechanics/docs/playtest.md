@@ -21,9 +21,9 @@ cards, filtered by `tier <= maxCardTier` and learning level).
 
 | Id | Name | Player | HP | Max tier | Enemy roster (slugs) |
 |---|---|---|---|---|---|
-| `early` | The Shallows | level 3, 5/5/5 | 90 | 1 | float-eye, brine-hag, the-doorwarden |
-| `mid` | The Long Road | level 20, 17/17/17 | 255 | 3 | brine-hag, the-doorwarden |
-| `late` | The Deep Wood | level 45, 37/39/38 | 570 | 3 | the-doorwarden |
+| `early` | The Shallows | level 3, 5/5/5 | 90 | 1 | float-eye, brine-hag, death-beholder |
+| `mid` | The Long Road | level 20, 17/17/17 | 255 | 3 | brine-hag, death-beholder |
+| `late` | The Deep Wood | level 45, 37/39/38 | 570 | 3 | death-beholder |
 
 The rosters are the three foes left after the enemy roster reset (revamp
 R2); the `impossible` ceiling stage went with its only foe. The rosters

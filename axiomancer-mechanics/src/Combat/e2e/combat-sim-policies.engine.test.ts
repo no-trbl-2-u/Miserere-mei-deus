@@ -15,7 +15,7 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 
 import { Player } from '../../Character/characters.mock';
 import type { Character } from '../../Character/types';
-import { FloatEye, TheDoorwarden } from '../../Enemy/enemy.library';
+import { FloatEye, DeathBeholder } from '../../Enemy/enemy.library';
 import { getCardById } from '../../Cards/cards.library';
 import { registerSandboxCards } from '../../Cards/cards.sandbox';
 import { lookupEffect } from '../../Effects';
@@ -171,15 +171,15 @@ describe('greedy object reproduces the pinned decision sequences', () => {
     // A narrow fidelity pin on `greedy`'s decision sequence, not a balance
     // gate: the grey MIX at 5/5/5 loses this line in five rounds (plays 25,
     // statusPlays 5) — the grey office is the deck you outgrow.
-    it('seed 11 vs TheDoorwarden: the pinned sequence (Gate 0 law: one tray per phase)', () => {
-        const r = runOneEncounter(loadout(MIX), TheDoorwarden, 11, 'greedy');
+    it('seed 11 vs DeathBeholder: the pinned sequence (Gate 0 law: one tray per phase)', () => {
+        const r = runOneEncounter(loadout(MIX), DeathBeholder, 11, 'greedy');
         expect({ outcome: r.outcome, rounds: r.rounds, plays: r.plays, statusPlays: r.statusPlays })
             .toEqual({ outcome: 'defeat', rounds: 5, plays: 25, statusPlays: 5 });
         // Determinism, not balance: the same seed must reproduce the same
         // sequence byte-for-byte. (The exact figures above are a fidelity
         // measurement of the CURRENT library + engine and are expected to be
         // re-measured whenever either moves — they are not a target.)
-        const again = runOneEncounter(loadout(MIX), TheDoorwarden, 11, 'greedy');
+        const again = runOneEncounter(loadout(MIX), DeathBeholder, 11, 'greedy');
         expect({ outcome: again.outcome, rounds: again.rounds, plays: again.plays, statusPlays: again.statusPlays })
             .toEqual({ outcome: r.outcome, rounds: r.rounds, plays: r.plays, statusPlays: r.statusPlays });
         expect(again.cardUsage).toEqual(r.cardUsage);
