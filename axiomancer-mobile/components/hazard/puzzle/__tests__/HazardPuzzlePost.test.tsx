@@ -125,11 +125,11 @@ describe('posting ended attempts (A3)', () => {
 
     it('a candidate posts its intended band', () => {
         const screen = mount();
-        fireEvent.press(screen.getByTestId('hazard-puzzle-candidate-cand-easy-01'));
+        fireEvent.press(screen.getByTestId('hazard-puzzle-candidate-cand-hard-01'));
         settleRoll();
         fireEvent.press(screen.getByTestId('hazard-play-button'));
         expect(fetchMock).toHaveBeenCalledTimes(1);
-        expect(postedBodies()[0]).toMatchObject({ layoutId: 'cand-easy-01', intendedBand: 'easy', route: 'risk' });
+        expect(postedBodies()[0]).toMatchObject({ layoutId: 'cand-hard-01', intendedBand: 'hard', route: 'risk' });
     });
 
     it('a production build makes no network call', () => {
