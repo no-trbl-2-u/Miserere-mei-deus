@@ -271,10 +271,23 @@ event-pool and layout files).
       labelled groups by intended band and plays any of them on its nominated route through the live `HazardBoard`;
       the three demos stay reachable and production still renders nothing. Brief
       `plan/phases/phase_HP4_graded_puzzle_set.md` § HP4d. Requires HP4b.
+- [ ] Phase HP5a — Five cost cards (plotted by T, 2026-10-21): five hazard cards that trade meter points for a
+      utility (two Toll, one Debt, two Overdrive), validated, never drawn by the live three-round hazard, in the
+      puzzle card pool and clear of the worse-copy check. Brief `plan/phases/phase_HP5_cost_card_puzzles.md` § HP5a. Requires nothing.
+- [ ] Phase HP5b — Costs on the board (plotted by T, 2026-10-21): `HazardCard` draws a negative value with a minus
+      sign, the meters show a debt below zero, and projected progress counts a staged cost. Brief
+      `plan/phases/phase_HP5_cost_card_puzzles.md` § HP5b. Requires HP5a.
+- [ ] Phase HP5c — The twenty easy and medium candidates go (plotted by T, 2026-10-21): `cand-easy-*` and
+      `cand-medium-*` deleted; `/devpuzzle` keeps the ten hard and the demos. Brief `plan/phases/phase_HP5_cost_card_puzzles.md` § HP5c. Requires nothing.
+- [ ] Phase HP5d — Twenty cost-card puzzles (plotted by T, 2026-10-21): `cand-cost-medium-01..10` and
+      `cand-cost-hard-01..10`, each holding a new card, no slack (best surplus 0), and lost by staging the whole
+      opening hand; each new card both required somewhere and a trap somewhere. Brief `plan/phases/phase_HP5_cost_card_puzzles.md` § HP5d. Requires HP5a,
+      HP5b, HP5c.
 - [ ] Phase HP4e — T plays the thirty (plotted by T, 2026-10-19) (attended): T plays each candidate once, timed by
       HP2c's move log, and `docs/reports/hazard-puzzle-candidates.md` records the label, the intended band, the
       time, whether T solved it and T's keep-or-cut ruling in T's words. Brief
-      `plan/phases/phase_HP4_graded_puzzle_set.md` § HP4e. Requires HP4c, HP4d.
+      `plan/phases/phase_HP4_graded_puzzle_set.md` § HP4e. The thirty are now HP4c's ten hard and HP5d's twenty
+      cost-card candidates (T, 2026-10-21). Requires HP4c, HP4d, HP5d.
 - [ ] Phase HP4f — The patterns (plotted by T, 2026-10-19): `docs/reports/hazard-puzzle-patterns.md` sets the kept
       candidates against the cut ones on the HP4a numbers and states each authoring pattern as a rule a future
       puzzle can be checked against, or says no pattern separates them. Brief
@@ -1587,6 +1600,7 @@ See the status rows above; generate briefs on demand.
 - **2026-10-21** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-AN1-enemy-animation`). Action: **added Phases AN1a–AN1d** directly above the first open row, in T's own sequence: the engine and a dev route first, then the enemy's turn animated, then three states per enemy once T has seen it work, then the art pipeline generating the sheets. Records **D97**: a sprite sheet for an ALREADY-USED enemy is enhancement rather than content creation, so AN1d may run as ordinary `/march` ticks — narrowly, with the used-enemy test as the guard; anything outside that set stays owner-only under D88/D37. Brief `plan/phases/phase_AN1_enemy_animation.md`.
 - **2026-10-21** — actor: **T, attended session** (`/plot anytime`, branch `loop/plot-AD1-art-department`). Action: **added Phases AD1a and AD1b** after Phase UP1h, the last open row. Reason (T): shown that `rig-spritesheet.py` is Python living inside `axiomancer-mobile`, a JS/TS presentation-layer workspace whose verifier cannot check it and whose `assets/` tree is bundled into the app, T ruled a top-level `art-department` package that "can use any tooling/languages it wants". `anytime` because it blocks nothing: AN1a–AN1c are mobile-side engine work and AN1d extends `generate-art.mjs`, which is JavaScript and stays in the mobile package. Records **D98**: the tree is deliberately not an npm workspace, because `.easignore` makes a declared workspace unexcludable from the EAS archive. Brief `plan/phases/phase_AD1_art_department.md`.
 - **2026-10-21** — actor: **T, attended session** (`/plot` amendment, branch `loop/plot-AN1-amend-frame-contract`). Action: **amended the AN1 brief's A6 and added A6b**; no new rows, because AN1a already owns both and has not been built. Reason: a float-eye spritesheet prototyped in the same session measured two defects in the frame contract. (1) A6 fixed the anchor on the foot line, but the float-eye floats and its hover *is* the idle animation, so a body-tracking anchor would cancel the clip; A6 now declares an anchor **kind** (`foot-line` for a creature that stands, `centre` for one that floats) and fails a manifest naming neither. (2) A6 quoted `RECIPE` without `grayscale: true`, which it carries: run on the float-eye it flattens the corona from RGB (62, 61, 16) to a flat grey 56, and the corona flare is the whole read of the attack frame; a derived sheet also arrives with its source's grade already baked in. A6b now says grade exactly once, `--no-grade` for a derived set. Brief `plan/phases/phase_AN1_enemy_animation.md`.
+- **2026-10-21** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-HP5-cost-card-puzzles`). Action: **added Phases HP5a, HP5b, HP5c, HP5d** (five hazard cost cards, costs on the board, the twenty easy and medium candidates deleted, twenty cost-card puzzles) directly above Phase HP4e, and **amended HP4e** to play HP4c's ten hard plus HP5d's twenty and to require HP5d. Confirmed T's request: yes (T asked for the removal and the twenty new puzzles on about five new cards that cost points for utility, and ruled no slack, delete, 10 medium + 10 hard, and that these are hazard cards the loop may author). Reason: asap because HP4e, the W1 demo, now times these puzzles. Brief `plan/phases/phase_HP5_cost_card_puzzles.md`.
 >
 ## Phase log (commit hashes)
 
