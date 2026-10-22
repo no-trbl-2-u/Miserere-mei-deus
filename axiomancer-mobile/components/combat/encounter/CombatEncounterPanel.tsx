@@ -43,13 +43,12 @@ import { type CombatFx } from '@/components/combat/encounter/CombatCombatantPane
 import { CombatDie, combatDieFootprint } from '@/components/combat/encounter/CombatDie';
 import { CombatSummaryModal } from '@/components/combat/encounter/CombatSummaryModal';
 import { CombatRewardsOverlay } from '@/components/combat/encounter/CombatRewardsOverlay';
-import { EnemyActionCard } from '@/components/combat/encounter/EnemyActionCard';
 import { Image } from '@/lib/platform/image';
 import { getEncounterEnemyArt } from '@/assets/images/enemies';
 import {
-    INTENT_ICONS, buildCombatViewModel, rewardCardVMs, selectEnemyActionCard, STANCE_COLORS, threatPhaseHeader,
+    INTENT_ICONS, buildCombatViewModel, rewardCardVMs, STANCE_COLORS, threatPhaseHeader,
     selectCombatLogHistory, COMBAT_LOG_TOGGLE_TEXT, COMBAT_LOG_TOGGLE_A11Y, COMBAT_LOG_CLOSE_A11Y, COMBAT_LOG_BACK_TEXT,
-    type CombatCardVM, type CombatEffectChipVM, type CombatSignatureVM, type EnemyActionCardVM,
+    type CombatCardVM, type CombatEffectChipVM, type CombatSignatureVM,
 } from '@/state/presenters/combat-encounter.engine';
 import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
 import { useGameState, useGameStore } from '@/state/GameStoreProvider';
@@ -588,22 +587,6 @@ export function CombatEncounterPanel({
     // the seq (captures the events stashed in fxRef just before).
     const fx = useMemo<CombatFx>(() => ({ seq: fxSeq, events: fxRef.current }), [fxSeq]);
 
-    // The enemy's turn, shown back as a card for a beat so the player knows
-    // what happened on the foe's turn. Driven off the SAME resolved-event bump the pane's floats ride, and keyed
-    // by that seq so a repeated action still replays. `null` on every bump that
-    // carried no threat resolution — a card APPLY is the player's turn, not the
-    // foe's. The seq ref makes this exactly-once-per-resolve even though `live`
-    // is a dep (the selector needs the post-resolution threat sequence).
-    const [enemyAction, setEnemyAction] = useState<{ key: number; vm: EnemyActionCardVM } | null>(null);
-    const lastCardSeq = useRef(0);
-    useEffect(() => {
-        if (fx.seq === 0 || fx.seq === lastCardSeq.current) return;
-        lastCardSeq.current = fx.seq;
-        const card = selectEnemyActionCard(fx.events, live);
-        setEnemyAction(card ? { key: fx.seq, vm: card } : null);
-    }, [fx, live]);
-    const onEnemyActionDone = useCallback(() => setEnemyAction(null), []);
-
     const handleExit = useCallback(() => {
         if (exitedRef.current) return;
         exitedRef.current = true;
@@ -787,18 +770,6 @@ export function CombatEncounterPanel({
                         )}
                     </ScrollView>
                 </View>
-            )}
-
-            {/* the foe's turn, named — rises over the board for a beat after END
-                PHASE, then clears itself. Never over the reveal (nothing has
-                resolved yet there). */}
-            {enemyAction && !showReveal && (
-                <EnemyActionCard
-                    vm={enemyAction.vm}
-                    enemyName={vm.enemy.name}
-                    revealKey={enemyAction.key}
-                    onDone={onEnemyActionDone}
-                />
             )}
 
             {/* mercy choice */}

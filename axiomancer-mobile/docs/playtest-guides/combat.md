@@ -24,7 +24,6 @@ An encounter node resolves to a `combat-prelude` event. `<CombatGate>` (`compone
 | `combat-board` | The board |
 | `combat-hud` | Enemy HUD block (vitae, intent) |
 | `combat-intent` | Enemy intent icon |
-| `combat-enemy-action-card` | The enemy's played action card |
 | `combat-dice-tray` | Your rolled dice |
 | `combat-die-<id>` | One die (`components/combat/encounter/CombatDie.tsx`); tap gesture is `combat-die-tap-<id>` |
 | `combat-dice-skip` | Skip the roll ritual |
@@ -57,7 +56,7 @@ An encounter node resolves to a `combat-prelude` event. `<CombatGate>` (`compone
 2. **Drag** a `combat-hand-<uid>` into `combat-play-area` → it becomes `combat-staged-<uid>`. A plain tap only opens `combat-card-detail` — close it with `combat-card-detail-close`.
 3. **Drag** a `combat-die-<id>` whose colour matches the card onto `combat-staged-<uid>`; success shows `combat-staged-die`. A die whose aria-label says `MISS face` powers nothing — pick another. A wrong colour flashes `combat-drop-reject`. Use real pointer moves (down → several moves → up); `scripts/combat-round-e2e.mjs` `dragTo` is the reference.
 4. Press `combat-apply-<uid>`. Repeat 2–4 while dice remain, or discard via `combat-trash`.
-5. Press `combat-end-phase`; the enemy acts (`combat-enemy-action-card`), the tray re-rolls.
+5. Press `combat-end-phase`; the enemy acts (its lunge plays and the damage floats rise), the tray re-rolls.
 6. Repeat until the foe breaks. Answer `combat-mercy-spare`/`-exploit` if asked.
 7. Pick a reward (`combat-reward-<cardId>` → `combat-reward-confirm`) or `combat-reward-skip`; close `combat-summary-close`; press `combat-victory-panel-carry-on` (or the friendship/defeat exit). You are back on the map.
 
