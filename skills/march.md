@@ -131,7 +131,13 @@ that:
    one `plan/PHASE_CANDIDATES.md` row "needs a brief: `/plot <N>`"
    (once; skip if it exists) and move on. The loop never authors a
    brief; `/plot` and attended `/plan-a-phase` do;
-4. **is not claimed** by an open `loop:pr` PR (below, "Claims").
+4. **is not claimed** by an open `loop:pr` PR (below, "Claims");
+5. **is not held on another row's outcome.** A row can meet its
+   `Requires` and still wait: a brief (its own, or a sibling's
+   Follow-ups) may say it is amended or drawn from an open row's
+   result ("amended once HP4e's rulings exist"). Grep `plan/phases/`
+   for the row's id before building; a held row is skipped and named
+   in the tick's output, the same as a blocked one.
 
 Rows marked `[x]`, `[-]`, `[skipped]` or `[blocked: …]` are
 never pickable. A blocked row (including every owner-led B-row)
