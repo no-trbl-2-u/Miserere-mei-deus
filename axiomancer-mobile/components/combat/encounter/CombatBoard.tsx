@@ -143,7 +143,8 @@ function measureRect(ref: React.RefObject<View | null>): Promise<Rect | null> {
     return new Promise((resolve) => {
         const node = ref.current;
         if (!node) { resolve(null); return; }
-        node.measureInWindow((x, y, width, height) => resolve({ x, y, width, height }));
+        // Page coords, like the gesture's absoluteX/Y (see HazardBoard measureRect).
+        node.measure((_x, _y, width, height, pageX, pageY) => resolve({ x: pageX, y: pageY, width, height }));
     });
 }
 
