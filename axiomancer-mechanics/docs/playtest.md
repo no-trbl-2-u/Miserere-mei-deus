@@ -8,7 +8,7 @@
 >
 > Loops that consume this: none until Phase R12 writes a new combat-playtest
 > command (the old one was archived in R0).
-> Card changes happen only in guided sessions with T (D37). Engine constants
+> Card changes ship only from a brief T approved (D88, D99). Engine constants
 > are tuned manually against this harness's evidence.
 
 ## Stage profiles
@@ -70,7 +70,7 @@ losing. Deck resolution is not random.
 A sandbox card (`src/Cards/cards.sandbox.ts`, `registerSandboxCards`) still
 resolves through `getCardById`, so a test can register one and name it in a
 `cards:` deck. Sandbox content never ships; a new card enters the library
-only in a guided card session (D37).
+only from a brief T wrote or approved (D88, D99).
 
 ## CLI cookbook
 

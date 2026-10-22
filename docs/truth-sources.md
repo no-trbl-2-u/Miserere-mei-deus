@@ -188,8 +188,8 @@ Rules for citing a measurement:
    the `/digest` DevLog entry and as a `[content]` row in
    `plan/AUDIT.md`. Whether it ever becomes a gated reference is R12's
    call, made with T.
-3. **Measuring is not tuning (D37, D88).** A measurement is briefing:
-   card and deck changes happen only in guided sessions with T, and
+3. **Measuring is not tuning (D88, D99).** A measurement is briefing:
+   card and deck changes ship only from a brief T approved, and
    enemies or engine constants move only inside a phase T briefed. A
    `[content]` drift row waits for T; `/iterate` never fixes it.
 

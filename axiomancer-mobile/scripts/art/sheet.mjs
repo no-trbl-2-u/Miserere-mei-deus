@@ -10,7 +10,7 @@
 // reads.
 //
 // THE GUARD. A sheet for an enemy that is already in the game is enhancement;
-// art for anything else is owner-only content. The test is T's and is narrow:
+// art for anything else is content that needs a T-approved brief (D88, D99). The test is T's and is narrow:
 // the key must be a `portraitAsset` in the engine's enemy library AND a key of
 // `ENEMY_ART_BY_KEY` in the app's art registry. Both are read from source on
 // every run rather than copied here, so a roster change moves the guard with
@@ -130,7 +130,7 @@ export function assertUsedEnemy(slug, used) {
     `sheet: refused ${JSON.stringify(slug)} — it fails the used-enemy test `
       + '(a portraitAsset in enemy.library.ts AND a key of ENEMY_ART_BY_KEY). '
       + 'Frame sheets are generated only for enemies already in the game; anything else is '
-      + `owner-only art. Used enemies: ${known}.`,
+      + `content art that needs a brief T approved (D99). Used enemies: ${known}.`,
   )
 }
 

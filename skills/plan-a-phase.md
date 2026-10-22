@@ -267,8 +267,8 @@ phase entirely:
    shapes that contradict them.
 5. **Content per surface (D88).** A brief plans an enemy, relic,
    map, NPC or event only when T asked for it in this session (or
-   via `/plot`); never a card, keyword or art (D37), and never an
-   owner-led B-row — those are T's sessions.
+   via `/plot`); the same holds for a card, keyword or art (D99);
+   never an owner-led B-row — those are T's sessions.
 6. **Acceptance IDs and a `Measure:` line, always** (§4).
 
 ## 8. Failure modes
