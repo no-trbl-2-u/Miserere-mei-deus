@@ -81,6 +81,12 @@ describe('the candidate list, grouped by intended band (HP4d A8)', () => {
         expect(groups.flatMap((g) => g.items.map((i) => i.id))).toHaveLength(HAZARD_PUZZLE_CANDIDATES.length);
     });
 
+    it('lists the ten hard by default, with easy and medium empty (HP5 A5)', () => {
+        const groups = selectHazardPuzzleCandidateGroupsVM();
+        expect(groups.map((g) => g.heading)).toEqual(['EASY · 0', 'MEDIUM · 0', 'HARD · 10']);
+        expect(groups.flatMap((g) => g.items.map((i) => i.id)).some((id) => /^cand-(easy|medium)-/.test(id))).toBe(false);
+    });
+
     it('runs a candidate on its nominated route at its intended band clock, any other route at the solver band', () => {
         const hardOnEasyLayout = CANDIDATE_FIXTURE[1];
         expect(isHazardPuzzleCandidate(hardOnEasyLayout)).toBe(true);
