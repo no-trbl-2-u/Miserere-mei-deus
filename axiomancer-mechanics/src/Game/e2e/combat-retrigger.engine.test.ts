@@ -16,7 +16,7 @@ import { describe, it, expect } from 'vitest';
 import { createGameStore } from '../store';
 import { nullAdapter } from '../persistence/null.adapter';
 import { createCharacter } from '../../Character';
-import { FloatEye, BrineHag } from '../../Enemy/enemy.library';
+import { FloatEye, GreenJelly } from '../../Enemy/enemy.library';
 
 describe('Phase 103 — Combat retrigger lock fix', () => {
     it('victory outcome allows new combat trigger', () => {
@@ -38,9 +38,9 @@ describe('Phase 103 — Combat retrigger lock fix', () => {
         expect(store.getState().currentEncounter).toBeUndefined();
 
         // Should be able to stage a new encounter.
-        store.getState().startCombat(BrineHag);
+        store.getState().startCombat(GreenJelly);
         expect(store.getState().currentEncounter).toBeTruthy();
-        expect(store.getState().currentEncounter!.enemies[0]!.name).toBe('Brine Hag');
+        expect(store.getState().currentEncounter!.enemies[0]!.name).toBe('Green Jelly');
     });
 
     it('friendship outcome allows new combat trigger', () => {
@@ -52,7 +52,7 @@ describe('Phase 103 — Combat retrigger lock fix', () => {
 
         const store = createGameStore(nullAdapter, { player: character });
 
-        store.getState().startCombat(BrineHag);
+        store.getState().startCombat(GreenJelly);
         expect(store.getState().currentEncounter).toBeTruthy();
 
         const report = store.getState().endCombat('friendship');
@@ -80,9 +80,9 @@ describe('Phase 103 — Combat retrigger lock fix', () => {
         expect(report.outcome).toBe('defeat');
         expect(store.getState().currentEncounter).toBeUndefined();
 
-        store.getState().startCombat(BrineHag);
+        store.getState().startCombat(GreenJelly);
         expect(store.getState().currentEncounter).toBeTruthy();
-        expect(store.getState().currentEncounter!.enemies[0]!.name).toBe('Brine Hag');
+        expect(store.getState().currentEncounter!.enemies[0]!.name).toBe('Green Jelly');
     });
 
     it('all terminal outcomes clear encounter lock for map-based triggers', () => {
@@ -101,7 +101,7 @@ describe('Phase 103 — Combat retrigger lock fix', () => {
         const report1 = store.getState().endCombat('victory');
         expect(report1.outcome).toBe('victory');
 
-        store.getState().startCombat({ enemies: [BrineHag], origin: 'test-node-2' });
+        store.getState().startCombat({ enemies: [GreenJelly], origin: 'test-node-2' });
         expect(store.getState().currentEncounter).toBeTruthy();
         expect(store.getState().currentEncounter?.origin).toBe('test-node-2');
 
@@ -129,7 +129,7 @@ describe('Phase 103 — Combat retrigger lock fix', () => {
         expect(store.getState().currentEncounter).toBeUndefined();
 
         // Second encounter: friendship.
-        store.getState().startCombat({ enemies: [BrineHag], origin: 'encounter-2' });
+        store.getState().startCombat({ enemies: [GreenJelly], origin: 'encounter-2' });
         expect(store.getState().endCombat('friendship').outcome).toBe('friendship');
         expect(store.getState().currentEncounter).toBeUndefined();
 
@@ -139,7 +139,7 @@ describe('Phase 103 — Combat retrigger lock fix', () => {
         expect(store.getState().currentEncounter).toBeUndefined();
 
         // Fourth encounter: verify all outcomes cleared the lock.
-        store.getState().startCombat({ enemies: [BrineHag], origin: 'encounter-4' });
+        store.getState().startCombat({ enemies: [GreenJelly], origin: 'encounter-4' });
         expect(store.getState().currentEncounter).toBeTruthy();
         expect(store.getState().currentEncounter?.origin).toBe('encounter-4');
     });

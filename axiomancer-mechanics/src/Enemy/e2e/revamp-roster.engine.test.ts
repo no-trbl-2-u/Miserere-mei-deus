@@ -1,10 +1,10 @@
 /**
  * The enemy roster reset.
  *
- * Pins the post-reset roster: exactly three live foes (Float-Eye, the Brine
- * Hag, the Death Beholder) plus the `sandbag` fixture; no survivor carries a
+ * Pins the post-reset roster: exactly three live foes (Float-Eye, the Green
+ * Jelly, the Death Beholder) plus the `sandbag` fixture; no survivor carries a
  * keyword or a stage `gain` list; no enemy card carries an affliction; every
- * Act 1 map draws Float-Eye; each Act 1 region pins the Brine Hag mid-region
+ * Act 1 map draws Float-Eye; each Act 1 region pins the Green Jelly mid-region
  * and the Death Beholder as its door boss. The keyword, rider, curse and
  * SUMMON code stays gone from the engine's surface. lexicon-ok: guard pins the deleted surface stays gone
  */
@@ -12,7 +12,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    DeathBeholder, ENEMY_REGISTRY, EnemiesByMap, EnemyLibrary, FloatEye, LIVE_ENEMY_IDS,
+    DeathBeholder, ENEMY_REGISTRY, EnemiesByMap, EnemyLibrary, FloatEye, GreenJelly, LIVE_ENEMY_IDS,
 } from '../enemy.library';
 import { enemyStatBudget } from '../index';
 import type { Enemy } from '../types';
@@ -23,12 +23,15 @@ import { getNodeEventPool } from '../../World';
 import * as engine from '../../Combat/combat.engine';
 import * as mechanics from '../../index';
 
-const SURVIVOR_IDS = ['enemy-float-eye', 'enemy-brine-hag', 'enemy-death-beholder'];
+/** The Brine Hag's XP reward before AN3a (level 7 x the elite rate), carried over unchanged. */
+const XP_REWARD = 350;
+
+const SURVIVOR_IDS = ['enemy-float-eye', 'enemy-green-jelly', 'enemy-death-beholder'];
 
 describe('the R2 roster', () => {
     it('ENEMY_REGISTRY is exactly sandbag + the three survivors', () => {
         expect(Object.keys(ENEMY_REGISTRY).sort())
-            .toEqual(['brine-hag', 'death-beholder', 'float-eye', 'sandbag']);
+            .toEqual(['death-beholder', 'float-eye', 'green-jelly', 'sandbag']);
         expect(EnemyLibrary.map(e => e.id)).toEqual(SURVIVOR_IDS);
         expect([...LIVE_ENEMY_IDS].sort())
             .toEqual([...SURVIVOR_IDS, ENEMY_REGISTRY.sandbag.id].sort());
@@ -106,9 +109,9 @@ describe('the R2 Act 1 pools and pins (D61)', () => {
         expect(ENEMY_REGISTRY[payload.enemySlug as keyof typeof ENEMY_REGISTRY].difficulty).toBe('boss');
     });
 
-    it.each(ACT1)('$map pins the Brine Hag mid-region ($elite)', ({ continent, map, elite }) => {
+    it.each(ACT1)('$map pins the Green Jelly mid-region ($elite)', ({ continent, map, elite }) => {
         const payload = encounterAt(continent, map, elite);
-        expect(payload.enemySlug).toBe('brine-hag');
+        expect(payload.enemySlug).toBe('green-jelly');
         expect(payload.isBoss ?? false).toBe(false);
     });
 });
@@ -177,5 +180,38 @@ describe('the Death Beholder is the Doorwarden\'s fight, carried over whole (AN4
 
     it('cannot be befriended, so no save ever unlocks its codex entry', () => {
         expect(DeathBeholder.friendshipReward).toBeUndefined();
+    });
+});
+
+describe('the Green Jelly is the Brine Hag\'s fight, carried over whole (AN3a)', () => {
+    it('keeps the elite tier, level, map, VITAE, XP and stat budget', () => {
+        expect(GreenJelly).toMatchObject({
+            id: 'enemy-green-jelly',
+            portraitAsset: 'green-jelly',
+            level: 7,
+            difficulty: 'elite',
+            logic: 'strategic',
+            mapName: 'breakwater',
+            maxHealth: 120,
+            xpReward: XP_REWARD,
+        });
+        expect(GreenJelly.baseStats).toEqual(enemyStatBudget(7, { heart: 4, body: 1, mind: 2 }));
+    });
+
+    it('keeps its loot and its deck', () => {
+        expect(GreenJelly.loot?.map(l => [l.item?.id ?? null, l.weight])).toEqual([
+            [null, 80], ['healing-potion', 20],
+        ]);
+        expect(ENEMY_DECKS['enemy-green-jelly']).toEqual([
+            'dp-wet-congregation', 'dp-lead-bell', 'dp-drowning-drill', 'dp-breaking-sea', 'dp-vespers-under-water',
+        ]);
+    });
+
+    it('keeps the befriend gate below 30% and its 35 XP friendship bonus', () => {
+        expect(GreenJelly.befriendabilityConfig).toEqual({ hpGate: { belowPct: 0.3 } });
+        expect(GreenJelly.friendshipReward?.items?.map(i => i.id)).toEqual(['healing-potion']);
+        expect(GreenJelly.friendshipReward?.xpBonus).toBe(35);
+        expect(GreenJelly.friendshipReward?.flagSet).toBe('befriended-green-jelly');
+        expect(GreenJelly.journalEntry?.id).toBe('codex-green-jelly');
     });
 });

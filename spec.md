@@ -46,7 +46,7 @@ Undertale.
 
 - **Combat:** the grey deck (three cards), four dice rolled once per threat
   phase, Conviction, one signature (The Open Hand), three foes (Float-Eye,
-  Brine Hag, the Death Beholder).
+  Green Jelly, the Death Beholder).
 - **World:** Act 1, four regions (Breakwater, Charcoal Wood, Beacon
   Crags, the Lantern Deep), each closed by a Death Beholder's door. Rest, the
   Anvil, hazards, caches and gathering nodes. Shillings are the one

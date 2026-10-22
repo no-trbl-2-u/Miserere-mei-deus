@@ -94,7 +94,7 @@ export function deckCardIds(spec: EnemyDeckSpec): readonly string[] {
 export const ENEMY_DECKS: Record<string, EnemyDeckSpec> = {
     // The three roster enemies.
     'enemy-float-eye': ['dp-first-bell', 'dp-undertow-grip', 'dp-breaking-sea'],
-    'enemy-brine-hag': ['dp-wet-congregation', 'dp-lead-bell', 'dp-drowning-drill', 'dp-breaking-sea', 'dp-vespers-under-water'],
+    'enemy-green-jelly': ['dp-wet-congregation', 'dp-lead-bell', 'dp-drowning-drill', 'dp-breaking-sea', 'dp-vespers-under-water'],
     // BOSS — TIERED (7 cards): the door is kept open, the frame and the
     // margin note, then what shuts stays shut, the proof completed and the
     // question that eats.

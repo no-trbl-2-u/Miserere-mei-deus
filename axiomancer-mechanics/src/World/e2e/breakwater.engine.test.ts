@@ -133,9 +133,9 @@ describe('the Breakwater\'s events (D29)', () => {
         expect(payload).toMatchObject({ kind: 'encounter', enemySlug: 'death-beholder', isBoss: true, level: 1 });
     });
 
-    it('fights the region\'s elite, the Brine Hag, mid-region (D61)', () => {
+    it('fights the region\'s elite, the Green Jelly, mid-region (D61)', () => {
         const payload = getNodeEventPool('coastal-continent', 'breakwater', 'bw-8')!.entries[0]!.payload;
-        expect(payload).toMatchObject({ kind: 'encounter', enemySlug: 'brine-hag', isBoss: false });
+        expect(payload).toMatchObject({ kind: 'encounter', enemySlug: 'green-jelly', isBoss: false });
     });
 
     it('crosses the river bridge into the Charcoal Wood (Act 1, map 2)', () => {

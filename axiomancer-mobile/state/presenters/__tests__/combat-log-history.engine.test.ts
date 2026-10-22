@@ -116,9 +116,9 @@ describe('selectCombatLogHistory — carries every line selectCombatLogLines alr
     });
 
     it('a stage-entered line still carries its ‡ banner', () => {
-        const events: CombatEvent[] = [{ kind: 'stage-entered', enemyId: 'e', name: 'The Brine Hag', text: 'She rises anew.' }];
+        const events: CombatEvent[] = [{ kind: 'stage-entered', enemyId: 'e', name: 'The Green Jelly', text: 'She rises anew.' }];
         const [line] = selectCombatLogHistory(stateWith(events));
-        expect(line.text).toContain('THE BRINE HAG');
+        expect(line.text).toContain('THE GREEN JELLY');
         expect(line.text).toContain('She rises anew.');
     });
 });

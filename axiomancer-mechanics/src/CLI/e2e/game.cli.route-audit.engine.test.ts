@@ -65,7 +65,7 @@ describe('Phase 14 — route survivorship vs coverage-audit classification', () 
     it('a scripted route stops at a combat defeat and downgrades to "blocked" — never reports post-defeat traversal as survivorship', async () => {
         const logPath = tmpPath('defeat-stop');
 
-        // The bw-8 combat (the Brine Hag's elite node) is forced against a
+        // The bw-8 combat (the Green Jelly's elite node) is forced against a
         // ceiling enemy — a test-only registry entry: the Death Beholder scaled
         // to L110 — so it is a DETERMINISTIC defeat regardless of card
         // balance. The impossible enemy decouples this classifier test from

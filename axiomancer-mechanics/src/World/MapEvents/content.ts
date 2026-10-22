@@ -205,8 +205,8 @@ const BW_ENCOUNTER_FOES: Record<string, ActOneFoe> = {
     'bw-14': { slug: 'float-eye', level: BW_FIGHT_LEVEL },
 };
 
-/** The Brine Hag, a rarer mid-region fight on the north pier. */
-const BW_ELITE: ActOneFoe = { slug: 'brine-hag', level: BW_ELITE_LEVEL };
+/** The Green Jelly, a rarer mid-region fight on the north pier. */
+const BW_ELITE: ActOneFoe = { slug: 'green-jelly', level: BW_ELITE_LEVEL };
 
 /** The watchtower, the chokepoint before the bridge, holds the door fight. */
 const BW_DOOR: ActOneFoe = { slug: 'death-beholder', level: BW_DOOR_LEVEL, isBoss: true };
@@ -295,7 +295,7 @@ const BREAKWATER_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> =
 // ramping ring by ring from 2 to 3.
 
 /**
- * One pinned Act 1 fight. Float-Eye takes the normal fights, the Brine Hag
+ * One pinned Act 1 fight. Float-Eye takes the normal fights, the Green Jelly
  * one mid-region node, the Death Beholder every region's door fight. A node with
  * no line of its own falls back to the foe's own description.
  */
@@ -337,8 +337,8 @@ const CW_ENCOUNTER_FOES: Record<string, ActOneFoe> = {
     // c2 — the stone circle, the footbridge
     'cw-7':  { slug: 'float-eye', level: CW_FIGHT_LEVEL_EARLY },
     'cw-10': { slug: 'float-eye', level: CW_FIGHT_LEVEL_EARLY },
-    // c3 — the root graveyard: the Brine Hag mid-region
-    'cw-12': { slug: 'brine-hag', level: CW_FIGHT_LEVEL_LATE },
+    // c3 — the root graveyard: the Green Jelly mid-region
+    'cw-12': { slug: 'green-jelly', level: CW_FIGHT_LEVEL_LATE },
     // c4 — the rock chapel, the wayside cross, the east cave
     'cw-16': { slug: 'float-eye', level: CW_FIGHT_LEVEL_LATE },
     // The door fight, alone in its column: the exit's only way in.
@@ -466,8 +466,8 @@ const bcArrival: MapEventPool = {
 const BC_ENCOUNTER_FOES: Record<string, ActOneFoe> = {
     // c1 — the summit beacon
     'bc-2':  { slug: 'float-eye', level: BC_FIGHT_LEVEL_EARLY },
-    // c3 — the ruined chapel (the Brine Hag mid-region), the toll gate
-    'bc-8':  { slug: 'brine-hag', level: BC_FIGHT_LEVEL_EARLY },
+    // c3 — the ruined chapel (the Green Jelly mid-region), the toll gate
+    'bc-8':  { slug: 'green-jelly', level: BC_FIGHT_LEVEL_EARLY },
     'bc-10': { slug: 'float-eye', level: BC_FIGHT_LEVEL_EARLY },
     // c4 — the arch bridge, the quarry
     'bc-11': { slug: 'float-eye', level: BC_FIGHT_LEVEL_LATE },
@@ -585,8 +585,8 @@ const LD_ENCOUNTER_FOES: Record<string, ActOneFoe> = {
     // c1 — the drowned temple, the cathedral
     'ld-3':  { slug: 'float-eye', level: LD_FIGHT_LEVEL_EARLY },
     'ld-5':  { slug: 'float-eye', level: LD_FIGHT_LEVEL_EARLY },
-    // c2 — the central aqueduct: the Brine Hag mid-region
-    'ld-8':  { slug: 'brine-hag', level: LD_FIGHT_LEVEL_EARLY },
+    // c2 — the central aqueduct: the Green Jelly mid-region
+    'ld-8':  { slug: 'green-jelly', level: LD_FIGHT_LEVEL_EARLY },
     // c3 — the mushroom forest, the ossuary
     'ld-11': { slug: 'float-eye', level: LD_FIGHT_LEVEL_LATE },
     'ld-12': { slug: 'float-eye', level: LD_FIGHT_LEVEL_LATE },

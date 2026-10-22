@@ -1,7 +1,7 @@
 /**
  * Hermetic engine test — the v26 → v27 hop: the enemy reset.
  *
- * The roster is Float-Eye, the Brine Hag and the Death Beholder, and no enemy
+ * The roster is Float-Eye, the Green Jelly and the Death Beholder, and no enemy
  * carries a keyword. A staged encounter carries its enemies whole, so a v26 save may
  * name a deleted foe, or a survivor still wearing its old keywords. The hop
  * re-points the first to a fresh Float-Eye and strips the second; everything

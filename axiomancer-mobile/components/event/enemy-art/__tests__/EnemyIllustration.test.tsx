@@ -34,7 +34,7 @@ const BESPOKE_SAMPLES: ReadonlyArray<readonly [string, EnemyArchetype]> = [
     ['grey-wolf', 'beast'],
     ['mournful-gull', 'avian'],
     ['bramble-sprite', 'flora'],
-    ['brine-hag', 'zealot'],
+    ['hollow-saint', 'zealot'],
     ['float-eye', 'eldritch'],
 ];
 

@@ -5,7 +5,7 @@
     "tool": "external-illustration",
     "prompt": "Temp art drop (repo-root tmp_image, 2026-07-06) — painted figures/objects on black; batch-processed: resized to <=512-640px, converted to WebP, and (except card art) black backgrounds alpha-matted (border-connected keying with graded glow edges)",
     "spec_section": "temp-art-pass",
-    "covers": "float-eye.webp and hag.webp — the two survivors of the 52-painting 2026-07-06 drop (phase R2 enemy reset retired the rest)",
+    "covers": "float-eye.webp — the last survivor of the 52-painting 2026-07-06 drop (phase R2 enemy reset retired the rest; phase AN3a retired hag.webp when the Brine Hag became the Green Jelly)",
     "used_by": [
       "assets/images/enemies/index.ts (registry — see its header for surfaces)"
     ],
@@ -36,7 +36,7 @@
     "source": "Potential Assets/torio (torio Javardry free monster art); death-beholder.webp is `Death Beholder A.png` from the 2022_added_monsters_ver3 pack (2000x2000, catalog slug `death-beholder`); green-jelly.webp is `Jelly A.png` from the 2017-2018_added_monsters_ver5 pack (catalog slug `green-jelly`)",
     "artist": "torio (とり夫), Pixiv user 5887541",
     "used_by": [
-      "assets/images/enemies/index.ts (registry - death-beholder is the Act 1 boss's portraitAsset since phase AN4a; green-jelly is staged for AN3a)"
+      "assets/images/enemies/index.ts (registry - death-beholder is the Act 1 boss's portraitAsset since phase AN4a; green-jelly is the Act 1 elite's portraitAsset since phase AN3a)"
     ]
   }
 ]

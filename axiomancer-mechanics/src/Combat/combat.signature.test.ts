@@ -8,7 +8,7 @@
 import { describe, it, expect } from 'vitest';
 
 import { Player } from '../Character/characters.mock';
-import { BrineHag, FloatEye, DeathBeholder } from '../Enemy/enemy.library';
+import { GreenJelly, FloatEye, DeathBeholder } from '../Enemy/enemy.library';
 import type { Enemy } from '../Enemy/types';
 import {
     initializeCombatEncounter, rollEncounterDice, playSignatureSkill, selectMercyChoice,
@@ -46,8 +46,8 @@ describe('R4 — the signature kit', () => {
 });
 
 describe('R4 — The Open Hand is the befriend', () => {
-    it('opens the mercy choice on the Brine Hag at or below 30% VITAE', () => {
-        const s = encounter(BrineHag, 0.3);
+    it('opens the mercy choice on the Green Jelly at or below 30% VITAE', () => {
+        const s = encounter(GreenJelly, 0.3);
         const r = playSignatureSkill(s, OPEN_HAND);
         expect(r.events.some(e => e.kind === 'signature-cast')).toBe(true);
         expect(r.events.some(e => e.kind === 'mercy-opened')).toBe(true);
@@ -58,14 +58,14 @@ describe('R4 — The Open Hand is the befriend', () => {
         expect(r.state.enemy.effects).toEqual(s.enemy.effects);
     });
 
-    it('sparing the befriended Brine Hag ends the fight in mercy', () => {
-        const opened = playSignatureSkill(encounter(BrineHag, 0.2), OPEN_HAND).state;
+    it('sparing the befriended Green Jelly ends the fight in mercy', () => {
+        const opened = playSignatureSkill(encounter(GreenJelly, 0.2), OPEN_HAND).state;
         const spared = selectMercyChoice(opened, 'spare');
         expect(spared.state.finalOutcome).toBe('mercy');
     });
 
-    it('refuses above the Brine Hag\'s gate and spends nothing', () => {
-        const s = encounter(BrineHag, 0.9);
+    it('refuses above the Green Jelly\'s gate and spends nothing', () => {
+        const s = encounter(GreenJelly, 0.9);
         expect(signatureCastBlock(s, getSignatureSkill(OPEN_HAND)!)).toMatch(/not yet low enough/);
         const r = playSignatureSkill(s, OPEN_HAND);
         expect(r.state.conviction).toBe(SIGNATURE_COST);
@@ -85,7 +85,7 @@ describe('R4 — The Open Hand is the befriend', () => {
     });
 
     it('names the Conviction shortfall first', () => {
-        const s = encounter(BrineHag, 0.1, SIGNATURE_COST - 1);
+        const s = encounter(GreenJelly, 0.1, SIGNATURE_COST - 1);
         expect(signatureCastBlock(s, getSignatureSkill(OPEN_HAND)!)).toBe(`Need ${SIGNATURE_COST} ◆ Conviction`);
     });
 });

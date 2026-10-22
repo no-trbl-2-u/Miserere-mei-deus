@@ -13,7 +13,7 @@ describe('resolveEnemyArchetype', () => {
     });
 
     it('matches by keyword for un-overridden ids', () => {
-        expect(resolveEnemyArchetype('enemy-brine-hag')).toBe('zealot');
+        expect(resolveEnemyArchetype('enemy-hollow-saint')).toBe('zealot');
         expect(resolveEnemyArchetype('enemy-bilge-rat')).toBe('vermin');
         expect(resolveEnemyArchetype('enemy-reef-crab')).toBe('crustacean');
         expect(resolveEnemyArchetype('enemy-grey-wolf')).toBe('beast');

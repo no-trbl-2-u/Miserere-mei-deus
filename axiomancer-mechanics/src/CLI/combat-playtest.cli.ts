@@ -18,7 +18,7 @@
  *   npm run combat-playtest                                        # all stages, greedy witness, the grey deck
  *   npm run combat-playtest -- --stage=early --policy=all
  *   npm run combat-playtest -- --deck=cards:grey-strike,grey-ward --runs=100 --seed=7
- *   npm run combat-playtest -- --enemy=brine-hag --cards
+ *   npm run combat-playtest -- --enemy=green-jelly --cards
  *   npm run combat-playtest -- --json
  *
  * Flags (house style: `--k=v` for values, bare `--k` for switches):

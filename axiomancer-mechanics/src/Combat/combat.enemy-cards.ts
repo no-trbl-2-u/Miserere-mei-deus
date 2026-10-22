@@ -8,7 +8,7 @@
  * authored intent. The telegraph reads as the enemy PLAYING a named card.
  *
  * The library holds only the
- * 14 cards the three live foes play — Float-Eye, the Brine Hag and the
+ * 14 cards the three live foes play — Float-Eye, the Green Jelly and the
  * Death Beholder. Every card deals plain damage: no card carries a debuff
  * (`effectId`/`intensity`). The debuff fields stay on the types because the
  * resolver still reads them; nothing

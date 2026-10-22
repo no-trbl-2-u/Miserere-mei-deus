@@ -79,7 +79,7 @@ by default; `--auto` lets a bot play.
 
 | Flag | Effect |
 | --- | --- |
-| `--enemy <slug>` | An `ENEMY_REGISTRY` slug: `float-eye` (default), `brine-hag`, `death-beholder`. |
+| `--enemy <slug>` | An `ENEMY_REGISTRY` slug: `float-eye` (default), `green-jelly`, `death-beholder`. |
 | `--preset <id>` | Character preset from `src/Character/presets.ts`: `apprentice` (default), `wanderer`, `sage`, `kid-l1`, `kid-l15`. |
 | `--stage <early\|mid\|late>` | Use that playtest stage's player (unless `--preset` is given) and an enemy from its roster (unless `--enemy` is given). |
 | `--deck <grey\|cards:a,b,c>` | The deck: the grey deck, or these card ids. Without it the deck is built from the player's known cards. |
@@ -100,7 +100,7 @@ Events on stdout: `hazardCombat:start`, `hazardCombat:card`,
 npm run combat -- --auto --policy status --enemy float-eye --seed 42 \
   --max-turns 12 --json-events --state-log /tmp/combat.jsonl
 
-npm run combat -- --enemy brine-hag --preset wanderer
+npm run combat -- --enemy green-jelly --preset wanderer
 npm run combat -- --auto --stage mid --deck grey --seed 7
 ```
 
@@ -166,14 +166,14 @@ prints win rate, outcome counts, average rounds and diagnostic columns. Values m
 
 | Flag | Effect |
 | --- | --- |
-| `--enemy=<Name>` | Run against one enemy only (e.g. `BrineHag`, `DeathBeholder`). Omit to run the full roster. |
+| `--enemy=<Name>` | Run against one enemy only (e.g. `GreenJelly`, `DeathBeholder`). Omit to run the full roster. |
 | `--loadout=<id,id,...>` | Card ids for the player's deck. The default is the three grey cards, `grey-strike,grey-ward,grey-word`. |
 | `--runs=<n>` | Runs per enemy (default 200). |
 | `--seed=<n>` | Base seed (default 1). |
 | `--blind` | Use the `blind` sim policy instead of `greedy`. |
 
 The roster is the `ENEMIES` export of `combat-sim.cli.ts`: `FloatEye`,
-`BrineHag`, `DeathBeholder`.
+`GreenJelly`, `DeathBeholder`.
 
 ```bash
 npm run combat-sim -- --loadout=grey-strike,grey-ward,grey-word --runs=100

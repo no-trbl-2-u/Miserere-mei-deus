@@ -61,26 +61,26 @@ describe('applyHazardOutcome: routes through endCombat (phase 54)', () => {
 
     it('a merciful win maps to the reducer\'s friendship outcome and activates authored friendshipReward content', () => {
         const store = createAppStore({ adapter: createMemoryAdapter() });
-        // Brine Hag: friendshipReward carries items, xpBonus, flagSet
+        // Green Jelly: friendshipReward carries items, xpBonus, flagSet
         // and journalEntry — real authored content, not a test
         // fixture, reached from live hazard combat.
-        const brineHag = ENEMY_REGISTRY['brine-hag'];
-        store.getState().startCombat(brineHag);
-        const finalState = openEncounter(brineHag);
+        const greenJelly = ENEMY_REGISTRY['green-jelly'];
+        store.getState().startCombat(greenJelly);
+        const finalState = openEncounter(greenJelly);
 
-        applyHazardOutcome(store, 'mercy' as CombatOutcome, finalState, brineHag);
+        applyHazardOutcome(store, 'mercy' as CombatOutcome, finalState, greenJelly);
 
         const state = store.getState();
         expect(state.currentEncounter).toBeUndefined();
-        expect(state.flags).toContain(brineHag.friendshipReward!.flagSet);
-        expect(state.codex.unlockedEntries).toContain(brineHag.journalEntry!.id);
-        const expectedXp = Math.floor((brineHag.xpReward ?? 0) * 0.5) + (brineHag.friendshipReward!.xpBonus ?? 0);
+        expect(state.flags).toContain(greenJelly.friendshipReward!.flagSet);
+        expect(state.codex.unlockedEntries).toContain(greenJelly.journalEntry!.id);
+        const expectedXp = Math.floor((greenJelly.xpReward ?? 0) * 0.5) + (greenJelly.friendshipReward!.xpBonus ?? 0);
         expect(state.player!.experience).toBe(expectedXp);
     });
 
     it('befriending a kill-objective target completes its quest and grants the quest reward', () => {
         const store = createAppStore({ adapter: createMemoryAdapter() });
-        const boss = ENEMY_REGISTRY['brine-hag'];
+        const boss = ENEMY_REGISTRY['green-jelly'];
         // The fixture quest (no quest is authored), its objective
         // re-aimed at a live foe (objectives match on the enemy's display name).
         const authored = FIXTURE_QUEST;

@@ -15,9 +15,9 @@
  * the live VITAE multiplier. Pins per player level (the region the player
  * reaches at that level, `World/MapEvents/content.ts`):
  *
- *   player L1 → the Breakwater:     Float-Eye 2, Brine Hag 3, Death Beholder 1
- *   player L3 → the Beacon Crags:   Float-Eye 3, Brine Hag 3, Death Beholder 3
- *   player L5 → the Lantern Deep:   Float-Eye 4, Brine Hag 3, Death Beholder 4
+ *   player L1 → the Breakwater:     Float-Eye 2, Green Jelly 3, Death Beholder 1
+ *   player L3 → the Beacon Crags:   Float-Eye 3, Green Jelly 3, Death Beholder 3
+ *   player L5 → the Lantern Deep:   Float-Eye 4, Green Jelly 3, Death Beholder 4
  *
  * The player is the sim Player at the level, stats spent evenly, wearing the
  * starting relic.
@@ -27,7 +27,7 @@ import { Player } from '../Character/characters.mock';
 import type { Character } from '../Character/types';
 import { calculateMaxHealth, deepClone } from '../Utils';
 import { stageStats } from '../Game/act1-progression';
-import { FloatEye, BrineHag, DeathBeholder } from '../Enemy/enemy.library';
+import { FloatEye, GreenJelly, DeathBeholder } from '../Enemy/enemy.library';
 import { scaleEnemyToLevel } from '../World/encounter';
 import type { Enemy } from '../Enemy/types';
 import { getCardLane } from '../Cards/card.lanes';
@@ -37,7 +37,7 @@ const LEVELS = [1, 3, 5] as const;
 /** Act 1 map pin per foe per player level (see the header). */
 const FOE_PIN: Record<string, Record<number, number>> = {
     [FloatEye.id]: { 1: 2, 3: 3, 5: 4 },
-    [BrineHag.id]: { 1: 3, 3: 3, 5: 3 },
+    [GreenJelly.id]: { 1: 3, 3: 3, 5: 3 },
     [DeathBeholder.id]: { 1: 1, 3: 3, 5: 4 },
 };
 const POLICIES: { policy: PacingPolicy; cap?: number }[] = [{ policy: 'witness' }, { policy: 'human-like' }];
@@ -80,7 +80,7 @@ function main(): void {
     const cap = Number(arg('cap', '0'));
     const drivers = cap > 0 ? [...POLICIES, { policy: 'human-like' as const, cap }] : POLICIES;
     for (const { policy, cap: maxPlaysPerTurn } of drivers) {
-        for (const base of [FloatEye, BrineHag, DeathBeholder]) {
+        for (const base of [FloatEye, GreenJelly, DeathBeholder]) {
             for (const level of LEVELS) {
                 const enemy = foeFor(base, level);
                 const s = simulatePacing({

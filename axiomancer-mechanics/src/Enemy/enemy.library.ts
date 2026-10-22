@@ -4,7 +4,7 @@
  * Three foes that deal plain damage, one per tier Act 1 uses, plus the
  * `sandbag-01` dev dummy:
  *   - Float-Eye (L1, normal) — every Act 1 map's wandering fight.
- *   - The Brine Hag (L7, elite) — a rarer mid-region fight; befriendable.
+ *   - The Green Jelly (L7, elite) — a rarer mid-region fight; befriendable.
  *   - The Death Beholder (L8, boss) — every region's door fight.
  *
  * No enemy carries a keyword, affliction or rider.
@@ -79,11 +79,13 @@ export const FloatEye = createEnemy({
     tags: ['early-game', 'enemy'],
 });
 
-export const BrineHag = createEnemy({
-    id: 'enemy-brine-hag',
-    portraitAsset: 'brine-hag',
-    name: 'Brine Hag',
-    description: 'She traded her reflection to the tide for the right to keep yours. The exchange rate has only worsened since.',
+export const GreenJelly = createEnemy({
+    id: 'enemy-green-jelly',
+    portraitAsset: 'green-jelly',
+    name: 'Green Jelly',
+    description:
+        'A green clot of jelly the size of a cart, clear enough to read through. Things it has ' +
+        'eaten hang in it, half gone, still facing the way they faced. It is in no hurry. Neither were they.',
     level: 7,
     baseStats: enemyStatBudget(7, { heart: 4, body: 1, mind: 2 }),
     mapName: 'breakwater',
@@ -99,10 +101,10 @@ export const BrineHag = createEnemy({
         ],
         xpBonus: 35,
         narrative:
-            'The hag lowers her hands and, for the first time in a tide\'s age, looks at ' +
-            'nothing at all. "You kept your face," she says. "Even here. Even now. ' +
-            'Perhaps the sea will trade mine back for the novelty."',
-        flagSet: 'befriended-brine-hag',
+            'The jelly settles, slow as cooling wax, and goes still on the stone. Through it, ' +
+            'the things it kept drift loose and sink, one by one, until it holds only light. ' +
+            'It does not follow when you go. It lets you take the whole of yourself away.',
+        flagSet: 'befriended-green-jelly',
     },
     pactLines: {
         quiet:   'She stops reaching for your reflection. The rock pools go still and honest.',
@@ -110,7 +112,7 @@ export const BrineHag = createEnemy({
         heavy:   '"I sold my face for leverage over the drowning. You are the first to stand in front of me and stay one person."',
     },
     journalEntry: {
-        id: 'codex-brine-hag',
+        id: 'codex-green-jelly',
         title: 'The Face Broker',
         body:
             'Every bargain she has struck is recorded in a face she keeps and cannot wear. ' +
@@ -216,10 +218,10 @@ export const Sandbag_01 = createEnemy({
 // ─── Library indices ──────────────────────────────────────────────────────────
 
 /** Every production enemy, in tier order. */
-export const EnemyLibrary = [FloatEye, BrineHag, DeathBeholder] as const;
+export const EnemyLibrary = [FloatEye, GreenJelly, DeathBeholder] as const;
 
 /**
- * An Act 1 region's wandering pool: Float-Eye. The Brine Hag is a
+ * An Act 1 region's wandering pool: Float-Eye. The Green Jelly is a
  * rarer mid-region fight and the Death Beholder the door fight; both are pinned
  * per-node in `MapEvents/content.ts`, not drawn.
  */
@@ -248,7 +250,7 @@ export const ENEMY_REGISTRY = {
     // Test fixture.
     sandbag: Sandbag_01,
     'float-eye':      FloatEye,
-    'brine-hag':      BrineHag,
+    'green-jelly':      GreenJelly,
     'death-beholder': DeathBeholder,
 } as const;
 

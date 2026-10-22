@@ -22,7 +22,7 @@ const SAMPLES: ReadonlyArray<{ label: string; key: string; boss?: boolean }> = [
     { label: 'beast', key: 'grey-wolf' },
     { label: 'avian', key: 'mournful-gull' },
     { label: 'flora', key: 'bramble-sprite' },
-    { label: 'zealot', key: 'brine-hag' },
+    { label: 'zealot', key: 'green-jelly' },
     { label: 'eldritch', key: 'float-eye' },
     { label: 'tyrant (boss)', key: 'death-beholder', boss: true },
     { label: 'generic', key: 'mystery-foe' },

@@ -25,7 +25,7 @@ npm run game -- --fixture list  # list the state fixtures you can boot from
 npm run game -- --fixture apprentice-bw-rest
 
 npm run combat                  # one fight, played at the terminal (default enemy float-eye)
-npm run combat -- --auto --seed 42 --enemy brine-hag
+npm run combat -- --auto --seed 42 --enemy green-jelly
 
 npm run hazard -- --auto --seed 42 --runs 1 --hazard cracked-cliff --route top
 npm run labyrinth               # the Aporia, room by room

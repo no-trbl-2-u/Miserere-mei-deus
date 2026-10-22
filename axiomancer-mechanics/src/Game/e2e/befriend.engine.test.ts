@@ -1,7 +1,7 @@
 /**
  * Hermetic e2e — befriendable-enemy content arc.
  *
- * Drives a friendship outcome for the Brine Hag end-to-end
+ * Drives a friendship outcome for the Green Jelly end-to-end
  * through `createGameStore`, asserts the per-enemy `friendshipReward`
  * threads through `store.endCombat()`:
  *
@@ -18,7 +18,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { FloatEye, BrineHag } from '../../Enemy/enemy.library';
+import { FloatEye, GreenJelly } from '../../Enemy/enemy.library';
 import { createGameStore } from '../store';
 import { nullAdapter } from '../persistence/null.adapter';
 
@@ -43,7 +43,7 @@ describe('Phase 60 — befriendable-enemy content arc', () => {
         // The friendshipReward field surfaces ONLY on
         // outcome === 'friendship'. Defeat / victory / flee paths skip it.
         const store = createGameStore(nullAdapter);
-        store.getState().startCombat(BrineHag);
+        store.getState().startCombat(GreenJelly);
         const report = store.getState().endCombat('victory');
 
         expect(report.outcome).toBe('victory');
@@ -54,37 +54,37 @@ describe('Phase 60 — befriendable-enemy content arc', () => {
 describe('Phase 62 — quest-branch wire-in on outcome === friendship', () => {
     it('friendship outcome appends FriendshipReward.flagSet to state.flags (de-duped)', () => {
         const store = createGameStore(nullAdapter);
-        store.getState().startCombat(BrineHag);
+        store.getState().startCombat(GreenJelly);
         store.getState().endCombat('friendship');
         // First friendship sets the flag.
-        expect(store.getState().flags).toContain('befriended-brine-hag');
+        expect(store.getState().flags).toContain('befriended-green-jelly');
 
         // Drive a second friendship encounter (same flag would be a no-op).
-        store.getState().startCombat(BrineHag);
+        store.getState().startCombat(GreenJelly);
         store.getState().endCombat('friendship');
         // De-duped: still exactly one occurrence.
-        const matches = store.getState().flags.filter(f => f === 'befriended-brine-hag');
+        const matches = store.getState().flags.filter(f => f === 'befriended-green-jelly');
         expect(matches.length).toBe(1);
     });
 
     it('victory outcome does NOT set the friendship flag (only fires for outcome === friendship)', () => {
         const store = createGameStore(nullAdapter);
-        store.getState().startCombat(BrineHag);
+        store.getState().startCombat(GreenJelly);
         store.getState().endCombat('victory');
-        expect(store.getState().flags).not.toContain('befriended-brine-hag');
+        expect(store.getState().flags).not.toContain('befriended-green-jelly');
     });
 });
 
 describe('Phase 102 — Befriendable-enemy Tier-2 expansion', () => {
-    it('BrineHag friendship threads elite-tier reward', () => {
+    it('GreenJelly friendship threads elite-tier reward', () => {
         const store = createGameStore(nullAdapter);
-        store.getState().startCombat(BrineHag);
+        store.getState().startCombat(GreenJelly);
 
         const report = store.getState().endCombat('friendship');
         expect(report.outcome).toBe('friendship');
         expect(report.loot.some(item => item.id === 'healing-potion')).toBe(true);
         expect(report.xpGained).toBe(Math.floor(7 * 50 * 0.5) + 35); // base half-XP (elite) + 35 bonus
-        expect(report.friendshipReward?.narrative).toMatch(/hag lowers her hands/);
-        expect(store.getState().flags).toContain('befriended-brine-hag');
+        expect(report.friendshipReward?.narrative).toMatch(/jelly settles, slow as cooling wax/);
+        expect(store.getState().flags).toContain('befriended-green-jelly');
     });
 });

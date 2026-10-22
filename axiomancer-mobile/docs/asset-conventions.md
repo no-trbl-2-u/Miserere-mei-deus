@@ -281,7 +281,7 @@ key must be a `portraitAsset` in `axiomancer-mechanics/src/Enemy/enemy.library.t
 **and** a key of `ENEMY_ART_BY_KEY` in `enemies/index.ts`. Both are read
 from source on every run. `sandbag-01` (no portrait) and any new
 creature are refused by name before a request is built; art for them
-stays with the owner. `prompts/enemies/brine-hag.sheet.json` is the
+stays with the owner. `prompts/enemies/green-jelly.sheet.json` is the
 worked spec, and with no `OPENAI_API_KEY` the run is a dry run that
 prints the compiled sheet request and writes nothing.
 

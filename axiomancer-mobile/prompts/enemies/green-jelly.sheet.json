@@ -1,0 +1,16 @@
+{
+  "slug": "green-jelly",
+  "category": "enemies",
+  "subject": "The Green Jelly, a single glossy translucent green dome of jelly with bright highlights, resting on the ground",
+  "detail": "the same figure as its shipped painting; its base stays on one line in every cell so the set anchors on the foot line",
+  "frames": {
+    "cols": 8,
+    "rows": 3,
+    "poses": [
+      "idle, a slow squash and stretch about its base that ends where it began",
+      "struck, flattening under a blow and springing back to its shape",
+      "attacking, rearing tall and lunging toward the viewer, then settling back"
+    ]
+  },
+  "avoid": ["no droplets crossing cell borders"]
+}

@@ -36,8 +36,8 @@ const DEFEAT_VM: AftermathDefeatViewModel = {
     kind: 'defeat',
     characterName: 'WORM-EATEN PILGRIM',
     killer: {
-        name: 'Brine Hag',
-        epithet: 'traded her reflection to the tide',
+        name: 'Green Jelly',
+        epithet: 'keeps what it eats',
         finalCard: 'STRIKE',
         damage: 6,
     },
