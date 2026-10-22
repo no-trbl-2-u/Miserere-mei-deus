@@ -188,6 +188,8 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - AN1e — loop work; the row that actually installs the float-eye, requires AN1c and AD1a; date not set.
 - AN2a — loop work; removes the overlay covering the enemy animation; date not set.
 - AN2b — loop work; delays the flinch until the played card clears; date not set.
+- AN3a — loop work; the Hag becomes the Green Jelly, fight unchanged; date not set.
+- AN3b — loop work; the Jelly's frame set; follows AN3a; date not set.
 - RV4 — loop plumbing; removes the merge cap that is blocking today's chain; date not set.
 
 ## How a window closes
