@@ -26,7 +26,7 @@ import {
 } from '@mechanics';
 import {
     HAZARD_CRACK_CARD,
-    HAZARD_DECK,
+    hazardLiveDeck,
     HAZARD_LIBRARY,
     HAZARD_MAXHP_SCAR,
     HAZARD_MINHP_LOSS,
@@ -132,9 +132,9 @@ export interface HazardDeckPresetResult {
     cardIds: string[];
 }
 
-/** Core cards that print only numbers, and the ones that carry a utility. */
-const numberCardIds = HAZARD_DECK.filter((card) => !card.effect).map((card) => card.id);
-const utilityCardIds = HAZARD_DECK.filter((card) => !!card.effect).map((card) => card.id);
+/** Core cards that print only numbers, and the ones that carry a utility (never a puzzle-only card). */
+const numberCardIds = hazardLiveDeck().filter((card) => !card.effect).map((card) => card.id);
+const utilityCardIds = hazardLiveDeck().filter((card) => !!card.effect).map((card) => card.id);
 
 export const HAZARD_DECK_PRESETS: readonly HazardDeckPreset[] = Object.freeze([
     {
@@ -429,13 +429,13 @@ export function applyHazardDeckPresetAction(store: AppStore, presetId: HazardDec
 
 /**
  * Dev tool — rebuilds the player's acquired hazard cards as a random
- * selection from the core deck. Existing
+ * selection from the core deck (never a puzzle-only card). Existing
  * `hazard-card:` flags are dropped first; the implicit starter bag is
  * untouched. Returns the granted card ids (with duplicates).
  */
 export function randomizeHazardDeckAction(store: AppStore): string[] {
     const state = store.getState() as unknown as GameState;
-    const pool = HAZARD_DECK;
+    const pool = hazardLiveDeck();
     let flags = (state.flags ?? []).filter((f) => !f.startsWith(HAZARD_CARD_FLAG_PREFIX));
     const granted: string[] = [];
     for (let i = 0; i < RANDOMIZE_ACQUIRED_COUNT; i++) {

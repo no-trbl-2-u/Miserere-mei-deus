@@ -37,6 +37,7 @@ export { HAZARD_TUNING } from './hazard.tuning';
 export {
     HAZARD_KEYWORDS,
     HAZARD_DECK,
+    hazardLiveDeck,
     HAZARD_CRACK_CARD,
     getHazardCardDef,
     HAZARD_REWARDS,

@@ -48,7 +48,7 @@ import {
     getHazardCardDef,
     getHazardDef,
     hazardStarterBag,
-    HAZARD_DECK,
+    hazardLiveDeck,
     HAZARD_LIBRARY,
 } from '../World/Hazard';
 import type {
@@ -83,16 +83,21 @@ const USAGE =
     '[--deck <id,id,...>] [--bag-file <path>] ' +
     '[--script <path>] [--stdin] [--json-events] [--state-log <path>]';
 
-/** Every card id the authored deck knows — the validation allow-list. */
-const KNOWN_CARD_IDS: ReadonlySet<string> = new Set(HAZARD_DECK.map((c) => c.id));
+/**
+ * Every card id a live hazard run may hold — the validation allow-list.
+ * Excludes the puzzle-only cost cards (`hazardLiveDeck`): this CLI only ever
+ * stages a real `createHazardSession` run, so `--deck`/`--bag-file` must not
+ * be able to smuggle a puzzle-only card into one.
+ */
+const KNOWN_CARD_IDS: ReadonlySet<string> = new Set(hazardLiveDeck().map((c) => c.id));
 
-/** Throws on any id not in `HAZARD_DECK`, naming the offender and source. */
+/** Throws on any id not in the live deck, naming the offender and source. */
 function validateCardIds(ids: readonly string[], source: string): void {
     for (const id of ids) {
         if (!KNOWN_CARD_IDS.has(id)) {
             throw new Error(
                 `Unknown hazard card id '${id}' in ${source}. ` +
-                `Known ids: ${HAZARD_DECK.map((c) => c.id).join(', ')}.`,
+                `Known ids: ${hazardLiveDeck().map((c) => c.id).join(', ')}.`,
             );
         }
     }
@@ -104,7 +109,7 @@ function validateCardIds(ids: readonly string[], source: string): void {
  *     deterministic harness A/B);
  *   - otherwise the starter bag, with `--deck` ids appended as the "acquired"
  *     deck (mirrors `appendAcquiredCard` / `hazardDeckBag`).
- * Ids are assumed pre-validated against `HAZARD_DECK`.
+ * Ids are assumed pre-validated against the live deck (`hazardLiveDeck`).
  */
 export function composeHazardBag(deck?: readonly string[], bagFileIds?: readonly string[]): string[] {
     if (bagFileIds && bagFileIds.length > 0) return [...bagFileIds];

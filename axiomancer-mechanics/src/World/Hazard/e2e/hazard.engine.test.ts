@@ -32,6 +32,7 @@ import {
     HAZARD_DECK,
     HAZARD_KEYWORDS,
     HAZARD_LIBRARY,
+    hazardLiveDeck,
     HAZARD_REWARDS,
 } from '../hazard.content';
 import { HAZARD_TUNING } from '../hazard.tuning';
@@ -677,6 +678,14 @@ describe('outcome and rewards', () => {
         for (const h of HAZARD_LIBRARY) expect(h.risk.rewardLabel).not.toMatch(/relic|cache/i);
     });
 
+    it('the card offer never holds a puzzle-only cost card', () => {
+        for (let seed = 1; seed <= 30; seed++) {
+            for (const card of runToOutcome(seed, 'risk', 'footing').outcome!.offerCards) {
+                expect(card.puzzleOnly, `seed ${seed}: ${card.id}`).toBeFalsy();
+            }
+        }
+    });
+
     it('single-win complete: no rare offers (0% rare on one win)', () => {
         // Win only round 1 on safe, fail 2 and 3 — across several seeds the
         // offer must never contain a rare.
@@ -776,9 +785,11 @@ describe('deck flags codec', () => {
 
 describe('content integrity', () => {
     const CORE_IDS = ['haul', 'grip', 'scram', 'runner', 'leap', 'footing', 'windread', 'pole', 'oath', 'blessing'];
+    const COST_IDS = ['tithe', 'stones', 'pawn', 'breakneck', 'headlong'];
 
-    it('the deck is exactly the ten core cards, each resolving through getHazardCardDef', () => {
-        expect(HAZARD_DECK.map((c) => c.id)).toEqual(CORE_IDS);
+    it('the deck is the ten core cards and the five puzzle-only cost cards, each resolving through getHazardCardDef', () => {
+        expect(HAZARD_DECK.map((c) => c.id)).toEqual([...CORE_IDS, ...COST_IDS]);
+        expect(hazardLiveDeck().map((c) => c.id)).toEqual(CORE_IDS);
         for (const c of HAZARD_DECK) expect(getHazardCardDef(c.id).name).toBe(c.name);
         expect(getHazardCardDef(HAZARD_CRACK_CARD.id)).toBe(HAZARD_CRACK_CARD);
         expect(() => getHazardCardDef('r_pivot')).toThrow();

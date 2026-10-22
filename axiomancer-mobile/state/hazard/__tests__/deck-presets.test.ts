@@ -1,5 +1,5 @@
 import { describe, expect, it } from '@jest/globals';
-import { decodeAcquiredCards, getHazardCardDef, HAZARD_DECK } from '@mechanics';
+import { decodeAcquiredCards, getHazardCardDef, hazardLiveDeck } from '@mechanics';
 
 import {
     applyHazardDeckPresetAction,
@@ -41,7 +41,8 @@ describe('Hazard deck presets', () => {
         expect(straightResult.cardIds).toEqual(straightAgain.cardIds);
         for (const id of straightResult.cardIds) expect(getHazardCardDef(id).effect).toBeUndefined();
         for (const id of utilityResult.cardIds) expect(getHazardCardDef(id).effect).toBeDefined();
-        expect(straightResult.cardIds.length + utilityResult.cardIds.length).toBe(HAZARD_DECK.length);
+        expect(straightResult.cardIds.length + utilityResult.cardIds.length).toBe(hazardLiveDeck().length);
+        for (const id of [...straightResult.cardIds, ...utilityResult.cardIds]) expect(getHazardCardDef(id).puzzleOnly).toBeFalsy();
         expect(decodeAcquiredCards(straight.getState().flags)).toEqual(straightResult.cardIds);
         expect(decodeAcquiredCards(utility.getState().flags)).toEqual(utilityResult.cardIds);
     });
@@ -56,5 +57,6 @@ describe('Hazard deck presets', () => {
         // hazard-card flag for each granted card (the test's actual intent).
         const acquired = decodeAcquiredCards(store.getState().flags);
         for (const id of granted) expect(acquired).toContain(id);
+        for (const id of granted) expect(getHazardCardDef(id).puzzleOnly).toBeFalsy();
     });
 });

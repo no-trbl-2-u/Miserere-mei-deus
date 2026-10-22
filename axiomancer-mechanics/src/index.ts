@@ -252,7 +252,7 @@ export {
 // and types mobile consumes; the rest of the Hazard module's surface is
 // reachable from `./World/Hazard`.
 export {
-    HAZARD_TUNING, HAZARD_KEYWORDS, HAZARD_DECK, HAZARD_CRACK_CARD,
+    HAZARD_TUNING, HAZARD_KEYWORDS, HAZARD_DECK, hazardLiveDeck, HAZARD_CRACK_CARD,
     getHazardCardDef, HAZARD_REWARDS, HAZARD_CONSEQUENCES,
     HAZARD_VITAE_REWARD, HAZARD_SHILLINGS_REWARD, HAZARD_RISK_SHILLINGS_REWARD,
     HAZARD_MINHP_LOSS, HAZARD_MAXHP_SCAR, HAZARD_LIBRARY, getHazardDef,
