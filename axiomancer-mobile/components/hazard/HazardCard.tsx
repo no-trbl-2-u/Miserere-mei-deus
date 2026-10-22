@@ -14,12 +14,12 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { hazardStatPairLabel } from '@/state/presenters/hazard.engine';
+import { hazardSignedNumber, hazardStatPairLabel } from '@/state/presenters/hazard.engine';
 import type { HazardCardVM } from '@/state/presenters/hazard.engine';
 import { FONTS, HUE } from '@/theme/axm';
 
 import { DieGlyph, ProgGlyph } from './glyphs';
-import { CARD_EDGE, CARD_INK, CARD_INK2, CARD_PAPER, DIE, RARITY_UI, TYPE_INK } from './palette';
+import { CARD_EDGE, CARD_INK, CARD_INK2, CARD_PAPER, COST_INK, DIE, RARITY_UI, TYPE_INK } from './palette';
 
 export type HazardCardMode = 'hand' | 'play' | 'detail' | 'offer';
 
@@ -85,7 +85,8 @@ function ManaSocket({
 }
 
 /**
- * StatPair — the FORCE / ESCAPE number pair a card prints (zeros dimmed).
+ * StatPair — the FORCE / ESCAPE number pair a card prints (zeros dimmed,
+ * costs in the cost ink with a minus sign).
  * The two marks carry no printed name, so the pair announces itself by
  * name for screen readers; sighted players get
  * the same key from `HazardStatKey`.
@@ -104,10 +105,18 @@ function StatPair({
     size?: number;
     gap?: number;
 }) {
+    // A gain prints in its type's ink, a zero dims, and a cost prints at
+    // full strength in the cost ink with a true minus sign.
     const item = (kind: 'force' | 'escape', val: number) => (
-        <View key={kind} style={{ flexDirection: 'row', alignItems: 'center', gap: 2, opacity: val > 0 ? 1 : 0.3 }}>
+        <View
+            key={kind}
+            testID={val < 0 ? `stat-cost-${kind}` : undefined}
+            style={{ flexDirection: 'row', alignItems: 'center', gap: 2, opacity: val === 0 ? 0.3 : 1 }}
+        >
             <ProgGlyph kind={kind} size={size} color={TYPE_INK[kind]} />
-            <Text style={{ fontFamily: FONTS.gothic, fontSize: size + 4, lineHeight: size + 5, color: TYPE_INK[kind] }}>{val}</Text>
+            <Text style={{ fontFamily: FONTS.gothic, fontSize: size + 4, lineHeight: size + 5, color: val < 0 ? COST_INK : TYPE_INK[kind] }}>
+                {hazardSignedNumber(val)}
+            </Text>
         </View>
     );
     return (

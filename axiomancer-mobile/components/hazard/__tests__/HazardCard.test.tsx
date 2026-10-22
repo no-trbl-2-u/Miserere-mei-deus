@@ -220,3 +220,47 @@ describe('detail mode effect line', () => {
         expect(height(mockCardVM)).toContain('"height":330');
     });
 });
+
+describe('cost cards', () => {
+    const MINUS = '−';
+    const flat = (node: unknown): Record<string, unknown> =>
+        Array.isArray(node) ? Object.assign({}, ...node.map(flat)) : ((node ?? {}) as Record<string, unknown>);
+    const powered = (card: HazardCardVM): HazardCardVM => ({ ...card, poweredByDieId: 'd1' });
+
+    // A cost prints with a true minus sign, in the cost ink and at full
+    // strength, where a zero dims and a gain keeps its type ink.
+    function costTextColor(view: ReturnType<typeof render>, kind: 'force' | 'escape'): unknown {
+        const cost = view.getAllByTestId(`stat-cost-${kind}`)[0];
+        expect(flat(cost.props.style).opacity).toBe(1);
+        return flat(within(cost).getByText(/−\d/).props.style).color;
+    }
+
+    it('a Toll in hand prints its free cost with a minus, in a colour apart from a gain', () => {
+        const view = render(<HazardCard card={cardVMFromId('stones')} mode="hand" />);
+        expect(view.getByLabelText(`FORCE ${MINUS}2, ESCAPE 0`)).toBeTruthy();
+        const gain = within(view.getByLabelText('FORCE 2, ESCAPE 0')).getByText('2');
+        expect(costTextColor(view, 'force')).not.toBe(flat(gain.props.style).color);
+        expect(view.getAllByTestId('stat-cost-force')).toHaveLength(1);
+    });
+
+    it('a Toll staged in the play area still prints its cost', () => {
+        const view = render(<HazardCard card={cardVMFromId('tithe')} mode="play" />);
+        expect(view.getByLabelText(`FORCE ${MINUS}2, ESCAPE ${MINUS}2`)).toBeTruthy();
+        expect(view.getAllByTestId('stat-cost-escape')).toHaveLength(1);
+    });
+
+    it('a Debt prints a cost on both lines, staged and powered', () => {
+        const view = render(<HazardCard card={powered(cardVMFromId('pawn'))} mode="play" />);
+        expect(view.getAllByLabelText(`FORCE ${MINUS}2, ESCAPE ${MINUS}2`)).toHaveLength(2);
+        expect(view.getAllByTestId('stat-cost-force')).toHaveLength(2);
+        expect(costTextColor(view, 'escape')).toBeDefined();
+    });
+
+    it('an Overdrive prints its larger powered cost beside its larger gain', () => {
+        const view = render(<HazardCard card={powered(cardVMFromId('breakneck'))} mode="detail" />);
+        expect(view.getByLabelText(`FORCE 3, ESCAPE ${MINUS}1`)).toBeTruthy();
+        expect(view.getByLabelText(`FORCE 6, ESCAPE ${MINUS}3`)).toBeTruthy();
+        expect(view.queryAllByTestId('stat-cost-force')).toHaveLength(0);
+        expect(view.getAllByTestId('stat-cost-escape')).toHaveLength(2);
+    });
+});

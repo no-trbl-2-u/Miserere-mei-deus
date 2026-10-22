@@ -107,6 +107,8 @@ const mockHazardViewModel: HazardViewModel = {
             key: 'force',
             label: 'FORCE',
             value: 2,
+            valueLabel: '2',
+            debt: false,
             need: 12,
             met: false,
         },
@@ -179,6 +181,24 @@ describe('HazardBoard', () => {
     it('renders progress meters', () => {
         const { getByText } = render(<HazardBoard {...mockProps} />);
         expect(getByText('FORCE')).toBeTruthy();
+    });
+
+    it('draws no debt mark on a meter at or above zero', () => {
+        const { queryByTestId } = render(<HazardBoard {...mockProps} />);
+        expect(queryByTestId('hazard-meter-force-debt')).toBeNull();
+    });
+
+    // A staged Toll with no die pushes the total below zero: the meter shows
+    // the debt, signed, instead of clamping to an empty bar at 0.
+    it('shows a meter below zero as a debt, signed and announced', () => {
+        const vm: HazardViewModel = {
+            ...mockHazardViewModel,
+            meters: [{ key: 'force', label: 'FORCE', value: -2, valueLabel: '−2', debt: true, need: 4, met: false }],
+        };
+        const { getByTestId, getByText, getByLabelText } = render(<HazardBoard {...mockProps} vm={vm} />);
+        expect(getByTestId('hazard-meter-force-debt')).toBeTruthy();
+        expect(getByText('−2', { exact: false })).toBeTruthy();
+        expect(getByLabelText('FORCE progress: debt of 2, goal 4 - not yet met')).toBeTruthy();
     });
 
     it('handles disabled resolve button', () => {

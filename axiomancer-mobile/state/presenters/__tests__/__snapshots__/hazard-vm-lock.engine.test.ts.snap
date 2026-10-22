@@ -60,11 +60,13 @@ exports[`hazard view-model lock-in round-play VM contract is frozen (a staged, p
   "meterDetail": "null",
   "meters": [
     {
+      "debt": "boolean",
       "key": "string",
       "label": "string",
       "met": "boolean",
       "need": "number",
       "value": "number",
+      "valueLabel": "string",
     },
   ],
   "momentumNote": "null",

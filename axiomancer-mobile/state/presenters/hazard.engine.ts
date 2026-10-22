@@ -76,7 +76,12 @@ export interface HazardCardVM {
 export interface HazardMeterVM {
     key: 'force' | 'escape' | 'passage';
     label: string;
+    /** Signed and never clamped: staged costs can push it below zero. */
     value: number;
+    /** `value` as printed, with a true minus sign when it is a debt, e.g. "−2". */
+    valueLabel: string;
+    /** The total is below zero: the meter owes points before it fills. */
+    debt: boolean;
     need: number;
     met: boolean;
 }
@@ -303,23 +308,26 @@ export function hazardRouteMeters(
     proj: { force: number; escape: number },
     need: number | readonly [number, number],
 ): { meters: HazardMeterVM[]; meterDetail: string | null } {
+    const meter = (key: HazardMeterVM['key'], label: string, value: number, needed: number): HazardMeterVM => ({
+        key,
+        label,
+        value,
+        valueLabel: hazardSignedNumber(value),
+        debt: value < 0,
+        need: needed,
+        met: value >= needed,
+    });
     if (route === 'risk') {
         const [needF, needE] = typeof need === 'number' ? [need, need] : need;
         return {
-            meters: [
-                { key: 'force', label: 'FORCE', value: proj.force, need: needF, met: proj.force >= needF },
-                { key: 'escape', label: 'ESCAPE', value: proj.escape, need: needE, met: proj.escape >= needE },
-            ],
+            meters: [meter('force', 'FORCE', proj.force, needF), meter('escape', 'ESCAPE', proj.escape, needE)],
             meterDetail: null,
         };
     }
     const needed = typeof need === 'number' ? need : need[0] + need[1];
-    const combined = proj.force + proj.escape;
     return {
-        meters: [
-            { key: 'passage', label: 'PASSAGE — FORCE + ESCAPE', value: combined, need: needed, met: combined >= needed },
-        ],
-        meterDetail: `FORCE ${proj.force} · ESCAPE ${proj.escape} — either type counts`,
+        meters: [meter('passage', 'PASSAGE — FORCE + ESCAPE', proj.force + proj.escape, needed)],
+        meterDetail: `FORCE ${hazardSignedNumber(proj.force)} · ESCAPE ${hazardSignedNumber(proj.escape)} — either type counts`,
     };
 }
 
@@ -418,7 +426,46 @@ export const HAZARD_HAND_LABEL = 'YOUR HAND — CHOOSE A CARD TO READ IT, OR A R
  * Outputs: one string, e.g. "FORCE 3, ESCAPE 1".
  */
 export function hazardStatPairLabel(force: number, escape: number): string {
-    return `${HAZARD_STAT_KEY.rows[0].label} ${force}, ${HAZARD_STAT_KEY.rows[1].label} ${escape}`;
+    return `${HAZARD_STAT_KEY.rows[0].label} ${hazardSignedNumber(force)}, ${HAZARD_STAT_KEY.rows[1].label} ${hazardSignedNumber(escape)}`;
+}
+
+/**
+ * A card or meter number as printed: a cost or a debt takes a true minus
+ * sign (U+2212), which reads wider than a hyphen on a small card.
+ *
+ * Inputs: `n`, a signed value (costs are never clamped).
+ * Outputs: e.g. "3", "0", "−2".
+ */
+export function hazardSignedNumber(n: number): string {
+    return n < 0 ? `−${Math.abs(n)}` : `${n}`;
+}
+
+/**
+ * Spoken value of a staged card: the line it counts now (the powered line
+ * once a die sits on it, else the free line), costs included, so a Toll
+ * staged without a die is heard as the debt it adds.
+ *
+ * Inputs: `card`, a staged card's VM.
+ * Outputs: e.g. "Counts −2 force, −2 escape.", or "" when both are zero.
+ */
+export function hazardStagedValueLabel(card: HazardCardVM): string {
+    const line = card.poweredByDieId !== null ? card.powered : card.free;
+    if (line.force === 0 && line.escape === 0) return '';
+    return `Counts ${hazardSignedNumber(line.force)} force, ${hazardSignedNumber(line.escape)} escape.`;
+}
+
+/**
+ * Spoken progress for a meter. A debt is said as one, so a screen reader
+ * hears why a meter with no lit segment still needs more than its goal.
+ *
+ * Inputs: `meter`.
+ * Outputs: e.g. "FORCE progress: debt of 2, goal 4 - not yet met".
+ */
+export function hazardMeterSpokenLabel(meter: HazardMeterVM): string {
+    const status = meter.met ? '- requirement met' : '- not yet met';
+    return meter.debt
+        ? `${meter.label} progress: debt of ${Math.abs(meter.value)}, goal ${meter.need} ${status}`
+        : `${meter.label} progress: ${meter.value} of ${meter.need} ${status}`;
 }
 
 const OUTCOME_COPY: Record<HazardOutcomeTier, { word: string; sub: string; line: string; cta: string }> = {

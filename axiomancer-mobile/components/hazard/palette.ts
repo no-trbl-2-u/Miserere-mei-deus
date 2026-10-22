@@ -49,6 +49,14 @@ export const TYPE_ACCENT = {
 /** Darker inks so type numbers read on parchment card stock. */
 export const TYPE_INK = { force: HUE.hzForceInk, escape: HUE.hzEscapeInk } as const;
 
+/**
+ * A cost, kept apart from both gain inks so a minus never reads as a gain:
+ * a dark ochre that holds its contrast on parchment card stock, and the
+ * combat "stat down" amber for a meter in debt on the dark board.
+ */
+export const COST_INK = HUE.hzGoldDim;
+export const DEBT_ACCENT = HUE.statDownAmber;
+
 export const CARD_PAPER = HUE.hzCardPaper;
 export const CARD_INK = HUE.hzCardInk;
 export const CARD_INK2 = HUE.hzCardInk2;
