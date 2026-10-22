@@ -6,10 +6,12 @@
 // `verify-*` workflows cannot be required checks: a required
 // `verify-mobile` that never runs on a mechanics-only PR blocks it forever.
 // `verify-gate` always reports instead: green only when every `verify-*`
-// the diff triggers is green on the PR's head, and when the diff touches a
-// path no `verify-*` covers, the job runs the root `npm test` itself.
+// the diff triggers is green on the PR's head. Every changed path must be
+// owned by some `verify-*` filter or be loop bookkeeping; a path neither
+// owns fails the gate, named with the filter nearest it by directory
+// (phase LG1b), so a new directory cannot stay unverified for good.
 //
-//   node scripts/pr-gate.mjs classify --pr <n>            # writes uncovered=true|false to $GITHUB_OUTPUT
+//   node scripts/pr-gate.mjs classify --pr <n>            # exits 1 on an unowned path
 //   node scripts/pr-gate.mjs wait --pr <n> --head <sha> [--timeout-min 45] [--interval-s 30]
 //
 // The decision (`decideGate`) is pure; only `main` reads GitHub.
@@ -45,12 +47,52 @@ export function latestByWorkflow(runs) {
 }
 
 /**
+ * A filter entry's literal directory: its segments up to the first glob,
+ * without the file or `**` it ends on.
+ *
+ * @param {string} pattern a `paths:` entry.
+ * @returns {string[]} the directory segments.
+ * @example patternDir('axiomancer-mobile/state/presenters/*.copy.ts') // ['axiomancer-mobile', 'state', 'presenters']
+ */
+export function patternDir(pattern) {
+  const segs = pattern.split('/').slice(0, -1)
+  const glob = segs.findIndex((s) => /[*?[]/.test(s))
+  return glob < 0 ? segs : segs.slice(0, glob)
+}
+
+/**
+ * The workflow whose filter would own an unowned path by directory: the one
+ * with an entry sharing the most leading directories with it. Ties go to the
+ * first workflow in the list (they arrive sorted by file name).
+ *
+ * @param {string} path an unowned changed path.
+ * @param {{ file: string, paths: string[] }[]} workflows the parsed `verify-*` filters.
+ * @returns {{ file: string, pattern: string }|null} null when no entry shares a directory.
+ * @example nearestOwner('scripts/new.mjs', [{ file: 'verify-drift.yml', paths: ['scripts/content-drift.mjs'] }]).file // 'verify-drift.yml'
+ */
+export function nearestOwner(path, workflows) {
+  const dirs = path.split('/').slice(0, -1)
+  let best = null
+  let bestShared = 0
+  for (const wf of workflows) {
+    for (const pattern of wf.paths) {
+      if (pattern.startsWith('!')) continue
+      const pd = patternDir(pattern)
+      let shared = 0
+      while (shared < pd.length && shared < dirs.length && pd[shared] === dirs[shared]) shared++
+      if (shared > bestShared) { best = { file: wf.file, pattern }; bestShared = shared }
+    }
+  }
+  return best
+}
+
+/**
  * The gate's state for one head.
  *
  * @param {string[]} files the PR's changed paths.
  * @param {{ file: string, name: string, paths: string[] }[]} workflows the parsed `verify-*` pull_request filters.
  * @param {{ path: string, status: string, conclusion: string|null, createdAt: string }[]} runs `pull_request` workflow runs on the head.
- * @returns {{ state: 'green'|'red'|'wait', triggered: string[], uncovered: string[], runRootTests: boolean, passed: string[], pending: string[], failed: { file: string, conclusion: string }[] }} the decision.
+ * @returns {{ state: 'green'|'red'|'wait', triggered: string[], uncovered: string[], unowned: { path: string, nearest: { file: string, pattern: string }|null }[], passed: string[], pending: string[], failed: { file: string, conclusion: string }[] }} the decision; any unowned path makes it red.
  * @example decideGate(['plan/x.md'], [], []).state // 'green'
  */
 export function decideGate(files, workflows, runs) {
@@ -65,8 +107,9 @@ export function decideGate(files, workflows, runs) {
     else if (PASSING.includes(run.conclusion)) passed.push(file)
     else failed.push({ file, conclusion: run.conclusion ?? 'unknown' })
   }
-  const state = failed.length ? 'red' : pending.length ? 'wait' : 'green'
-  return { state, triggered, uncovered, runRootTests: uncovered.length > 0, passed, pending, failed }
+  const unowned = uncovered.map((path) => ({ path, nearest: nearestOwner(path, workflows) }))
+  const state = failed.length || unowned.length ? 'red' : pending.length ? 'wait' : 'green'
+  return { state, triggered, uncovered, unowned, passed, pending, failed }
 }
 
 /**
@@ -81,7 +124,15 @@ export function describe(d) {
   if (d.passed.length) lines.push(`- green: ${d.passed.join(', ')}`)
   if (d.pending.length) lines.push(`- waiting on: ${d.pending.join(', ')}`)
   if (d.failed.length) lines.push(`- red: ${d.failed.map((f) => `${f.file} (${f.conclusion})`).join(', ')}`)
-  lines.push(`- uncovered paths (root \`npm test\` runs in this job): ${d.uncovered.length ? d.uncovered.join(', ') : 'none'}`)
+  if (!d.unowned.length) lines.push('- unowned paths: none')
+  else {
+    lines.push(`- unowned paths (no \`verify-*\` filter owns them and they are not bookkeeping, so the gate fails):`)
+    for (const u of d.unowned) {
+      lines.push(u.nearest
+        ? `  - \`${u.path}\`: extend \`${u.nearest.file}\` (nearest entry by directory: \`${u.nearest.pattern}\`)`
+        : `  - \`${u.path}\`: no \`verify-*\` filter shares its directory; add it to one (\`verify-root.yml\` owns what the root \`npm test\` checks) or to \`BOOKKEEPING_PREFIXES\``)
+    }
+  }
   return lines.join('\n')
 }
 
@@ -129,8 +180,9 @@ async function main() {
 
   if (mode === 'classify') {
     const d = decideGate(files, workflows, [])
-    report(describe({ ...d, pending: [], state: d.triggered.length ? 'classified' : 'no verify-* triggered' }))
-    if (process.env.GITHUB_OUTPUT) appendFileSync(process.env.GITHUB_OUTPUT, `uncovered=${d.runRootTests}\n`)
+    const state = d.unowned.length ? 'red' : d.triggered.length ? 'classified' : 'no verify-* triggered'
+    report(describe({ ...d, pending: [], state }))
+    if (d.unowned.length) process.exit(1)
     return
   }
 

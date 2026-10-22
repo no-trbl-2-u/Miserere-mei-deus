@@ -36,6 +36,13 @@
 
 ## Pending
 
+### [ ] [debt] The escape ledger classifies past PRs against today's verify-* filters, so verify-root reads as expected-but-not-run on every older scripts/ PR (LG1b, 2026-10-22)
+- category: debt
+- impact: 4
+- ease: 7
+- detail: `scripts/eval/escape-ledger.mjs` reads the live `.github/workflows/verify-*.yml` filters once and classifies every merged PR in the window with them (`classifyPaths`, then `expectedNotRun`). Phase LG1b added `verify-root.yml`, which owns `scripts/`, `.github/`, `skills/` and the top-level files, so the next ledger run lists `verify-root.yml` as triggered but not run on every PR merged before it existed (#526 among them) and stops counting those paths as uncovered. Any earlier filter change had the same skew, just smaller. Reading each workflow's filter at the PR's merge commit (`git show <sha>:.github/workflows/<file>`, skipping a file that did not exist there) keeps the history as it was. The seeded replay should keep the live filters: it measures today's gate.
+- next: `/iterate` — a `verifyWorkflowsAt(sha)` in `escape-ledger.mjs` with a fixture test in `scripts/eval/escape-ledger.test.mjs`.
+
 ### [ ] [finding] Five reachable routes have no play path from a fresh save, only shell-gate edges (FM1d drive, 2026-10-21)
 - category: finding
 - impact: 4

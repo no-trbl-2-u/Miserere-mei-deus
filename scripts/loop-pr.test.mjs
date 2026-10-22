@@ -149,8 +149,16 @@ test('verify-gate runs on every same-repo PR, not only loop:pr and plot', () => 
   assert.doesNotMatch(gate, /loop:pr|'plot'|labels\.\*\.name/, 'no label filter on the gate')
   assert.match(gate, /\n {4}concurrency:\n {6}group: pr-review-gate-\$\{\{ github\.event\.pull_request\.number \}\}\n {6}cancel-in-progress: true/)
   assert.match(gate, /node scripts\/pr-gate\.mjs classify/)
-  assert.match(gate, /if: steps\.classify\.outputs\.uncovered == 'true'\n {8}run: npm test/)
+  // LG1b: the root `npm test` is verify-root's lane, so the gate waits on it instead of running it.
+  assert.doesNotMatch(gate, /run: npm test/)
   assert.match(gate, /node scripts\/pr-gate\.mjs wait --pr "\$PR" --head "\$HEAD_SHA"/)
+})
+
+test('verify-root runs the root npm test on the paths it owns, on PRs and on main', () => {
+  const root = read(`${WF}/verify-root.yml`)
+  assert.match(root, /^on:\n {2}push:\n {4}branches: \[main\]\n {4}paths:\n/m)
+  assert.match(root, /\n {2}pull_request:\n {4}branches: \[main\]\n {4}paths:\n/)
+  assert.match(code(root), /run: npm ci --no-audit --no-fund\n\n {6}- name: Root npm test\n {8}run: npm test/)
 })
 
 test('verify-gate labels with the workflow token, so its label starts no run', () => {

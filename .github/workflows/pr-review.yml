@@ -8,8 +8,9 @@ name: pr-review
 # none of them can be a required check (a required `verify-mobile` that
 # never runs on a mechanics-only PR blocks it forever). `verify-gate`
 # always reports: it labels the PR with the risk tier `scripts/pr-risk.mjs`
-# derives, runs the root `npm test` when the diff touches a path no
-# `verify-*` covers, then waits for every `verify-*` the diff triggers on
+# derives, fails on a changed path no `verify-*` filter owns and that is
+# not bookkeeping, naming it (LG1b; `verify-root` owns what the root
+# `npm test` checks), then waits for every `verify-*` the diff triggers on
 # this head and is green only when all of them are (`scripts/pr-gate.mjs`).
 # A ruleset in evaluate mode requires it; T creates that ruleset with the
 # command in `.github/workflows/README.md`.
@@ -118,14 +119,6 @@ jobs:
       - name: Classify the diff against the verify-* path filters
         id: classify
         run: node scripts/pr-gate.mjs classify --pr "$PR"
-
-      - name: Install dependencies (uncovered paths only)
-        if: steps.classify.outputs.uncovered == 'true'
-        run: npm ci --no-audit --no-fund
-
-      - name: Root npm test (uncovered paths only)
-        if: steps.classify.outputs.uncovered == 'true'
-        run: npm test
 
       - name: Wait for every triggered verify-* on this head
         run: node scripts/pr-gate.mjs wait --pr "$PR" --head "$HEAD_SHA"
