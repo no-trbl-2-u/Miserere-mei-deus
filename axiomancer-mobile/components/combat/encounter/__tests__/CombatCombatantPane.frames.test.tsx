@@ -27,6 +27,7 @@ import { SYNTHETIC_FRAME_SET } from '@/components/combat/frames/syntheticFrameSe
 import type { CombatEnemyPaneVM, CombatPlayerPaneVM } from '@/state/presenters/combat-encounter.engine';
 import type { CombatEvent } from '@mechanics';
 import { withAllProviders } from '@/test-utils/withAllProviders';
+import { CARD_MOTION_SETTLE_MS } from '@/components/combat/encounter/cardMotion';
 
 const mockFramePlayerProps: Record<string, unknown>[] = [];
 
@@ -193,6 +194,9 @@ describe('CombatCombatantPane — the enemy\'s states animate (phases AN1b, AN1c
             { kind: 'damage-dealt', target: 'enemy', amount: 9 },
         ] as unknown as CombatEvent[];
         renderPane({ seq: 1, events: playerHit });
+        // Held while the played card leaves the battlefield (AN2b).
+        expect(mockFramePlayerProps.at(-1)?.clipName).toBe('idle');
+        act(() => { jest.advanceTimersByTime(CARD_MOTION_SETTLE_MS); });
         expect(mockFramePlayerProps.at(-1)?.clipName).toBe('struck');
         const struck = SYNTHETIC_FRAME_SET.manifest.clips.struck;
         act(() => { jest.advanceTimersByTime(clipDurationMs(struck)); });
@@ -207,6 +211,7 @@ describe('CombatCombatantPane — the enemy\'s states animate (phases AN1b, AN1c
             { kind: 'dot-tick', target: 'enemy', amount: 3 },
         ] as unknown as CombatEvent[];
         renderPane({ seq: 1, events: poison });
+        act(() => { jest.advanceTimersByTime(CARD_MOTION_SETTLE_MS); });
         expect(mockFramePlayerProps.at(-1)?.clipName).toBe('struck');
     });
 

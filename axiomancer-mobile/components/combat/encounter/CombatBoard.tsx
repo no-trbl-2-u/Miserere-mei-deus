@@ -57,6 +57,7 @@ import { glyphShapeFor } from '@/components/combat/glyphShapes';
 import { CombatCombatantPane, EffectChips, PlayerMedallion, COMBAT_HUD_HEIGHT, type CombatFx } from './CombatCombatantPane';
 import { CombatFooterDock, dockMinHeight } from './CombatFooterDock';
 import { SACRIFICE_CALLOUT_MS } from './VitaeSacrificeCallout';
+import { CARD_ENTER_MS, CARD_LAYOUT_MS } from './cardMotion';
 import { CombatDie, combatDieA11yLabel } from './CombatDie';
 import { RollingDie } from './RollingDie';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -83,8 +84,8 @@ import { getCardArt } from '@/assets/images/cards';
 // (Drag-perf hypothesis 4, layout animations on the drag path; see
 // docs/perf/combat-drag-baseline.md.) `entering` is only read at mount, but
 // shares the convention so no builder on the board is allocated per render.
-export const FAN_CARD_ENTERING = FadeIn.duration(180);
-export const FAN_CARD_LAYOUT = LinearTransition.duration(160);
+export const FAN_CARD_ENTERING = FadeIn.duration(CARD_ENTER_MS);
+export const FAN_CARD_LAYOUT = LinearTransition.duration(CARD_LAYOUT_MS);
 
 /**
  * The fan's slide-together transition, per platform.
@@ -107,7 +108,7 @@ export function fanCardLayoutFor(os: string): typeof FAN_CARD_LAYOUT | undefined
     return os === 'web' ? undefined : FAN_CARD_LAYOUT;
 }
 const FAN_CARD_LAYOUT_HERE = fanCardLayoutFor(Platform.OS);
-const STAGED_CARD_ENTERING = FadeInDown.duration(180);
+const STAGED_CARD_ENTERING = FadeInDown.duration(CARD_ENTER_MS);
 const PLAY_HINT_ENTERING = FadeIn.duration(150);
 const REJECT_LINE_ENTERING = FadeIn.duration(120);
 

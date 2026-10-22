@@ -27,6 +27,7 @@ import { ENEMY_FRAME_SETS, getEnemyFrameSet } from '@/assets/images/enemies/fram
 import type { CombatEnemyPaneVM, CombatPlayerPaneVM } from '@/state/presenters/combat-encounter.engine';
 import { EnemyLibrary, type CombatEvent } from '@mechanics';
 import { withAllProviders } from '@/test-utils/withAllProviders';
+import { CARD_MOTION_SETTLE_MS } from '@/components/combat/encounter/cardMotion';
 
 const JELLY = ENEMY_FRAME_SETS['green-jelly'];
 
@@ -137,7 +138,7 @@ describe('the green jelly animates in a live encounter (phase AN3b, A6)', () => 
 
     it('flinches through its STRUCK row when the player\'s blow lands', () => {
         const view = renderPane({ seq: 1, events: PLAYER_BLOW });
-        expect(rowOf(liveCell(view))).toBe(JELLY.manifest.clips.struck.row);
+        act(() => { jest.advanceTimersByTime(CARD_MOTION_SETTLE_MS); });        expect(rowOf(liveCell(view))).toBe(JELLY.manifest.clips.struck.row);
         act(() => { jest.advanceTimersByTime(clipDurationMs(JELLY.manifest.clips.struck)); });
         expect(rowOf(liveCell(view))).toBe(JELLY.manifest.clips.idle.row);
     });
