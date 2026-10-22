@@ -107,7 +107,8 @@ retired: the bindings in `assets/images/enemies/index.ts` are preserved,
 but a key is now allowed a static painting **and** an animated FRAME
 SET beside it. `assets/images/enemies/frames.ts` holds the registry,
 the manifest type and `validateFrameSet`. It shipped EMPTY in phase
-AN1a and the float-eye went into it in AN1e; every other enemy is
+AN1a, the float-eye went into it in AN1e and the death-beholder (the
+Act 1 boss) in AN4b; every other enemy is
 absent from it and renders exactly the single image it rendered before.
 Absence from the frame registry is the static path, not a gap.
 
@@ -195,7 +196,11 @@ must not look graded differently from the static one beside it.
 for the static `float-eye.webp`. That is 6.6x, +132.8 KB, for one
 enemy. (The AN1 brief's estimate was 149.5 KB / mean 6378 / max 9020,
 measured with a different encoder build; the figures here are the files
-in the tree.) `FRAME_CELL_MAX_BYTES` in `frames.ts` is the ceiling, and
+in the tree.) The death-beholder (AN4b) is a far busier painting: at
+256px its cells reach 21490 B, so it is cut at 176px instead — 24 cells,
+197658 B, max 11068 B, against 56286 B static (3.5x). When a set
+overshoots, the cell edge is the dial; the ceiling is not.
+`FRAME_CELL_MAX_BYTES` in `frames.ts` is the ceiling, and
 `scripts/frame-cells.test.mjs` weighs every shipped cell against it on
 each `assets:check` — a ceiling nothing weighs is a wish. That test
 also checks the provenance record's stated cost against the bytes on

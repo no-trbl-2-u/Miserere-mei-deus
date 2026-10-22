@@ -14,11 +14,18 @@ Layers
   body  the full painting with the eye disc erased and refilled
   eye   a feathered disc around the eye, moved/scaled on its own each frame
 
+The death-beholder (phase AN4b) is rigged as ONE layer. It has no single eye
+to lift out -- a dozen empty sockets -- and its attack is a scale change of the
+whole sphere, not a deformation of any part of it. What it needs instead is a
+matte: the painting arrived fully opaque on black, so scaled as it stands it
+would read as a black square growing and shrinking. The black ground that is
+connected to the border is keyed to alpha first (see `matte_border_black`).
+
 Clips are authored as explicit per-frame keys rather than curves. Animation
 timing is a thing you tune by eye, so the numbers you want to nudge are all
 in CLIPS below and read top-to-bottom as a dope sheet.
 
-Usage:  python art-department/tools/rig-spritesheet.py [--enemy float-eye]
+Usage:  python art-department/tools/rig-spritesheet.py [--enemy float-eye|death-beholder]
 """
 
 from __future__ import annotations
@@ -121,6 +128,84 @@ CLIPS = {
 }
 
 
+# --------------------------------------------------------------------------
+# the death-beholder (phase AN4b)
+#
+# Same key vocabulary, minus the eye layer it does not have. The working
+# canvas is wider than the float-eye's because this painting fills its whole
+# square with corona: the crop window is 768 around a 640 source, so the sphere
+# rests at 83% of the cell and the attack's swell (x1.14, 730px) stays inside it
+# instead of shearing the corona off at the cell edge.
+# --------------------------------------------------------------------------
+
+BEHOLDER_PAD = 1024
+BEHOLDER_CROP = 768
+
+# The cell edge. Not the float-eye's 256: this painting is far busier, and at
+# 256 its cells encode to 21 KB at the ingest's q44, against the app's 12000 B
+# per-cell ceiling. 176 is the largest edge that fits under it (max 11068 B);
+# 192 does not (12840 B). The ceiling is the contract, the edge is the dial.
+BEHOLDER_FRAME = 176
+
+# The attack's two poses, named because a test pins them. The coil is the
+# smallest the sphere ever gets and the swell the largest, and they are
+# ADJACENT frames: the silhouette changes by SWELL / COIL = 1.425 (about 40%)
+# in one step. T rejected an earlier candidate because its motion was "very
+# subtle" at combat size; a jump this size survives the downscale, and
+# `tests/test_beholder_attack.py` fails if anyone eases it.
+BEHOLDER_COIL = 0.80
+BEHOLDER_SWELL = 1.14
+
+
+def _beholder_idle_frame(i: int, n: int) -> dict:
+    t = i / n
+    w = 2 * math.pi * t
+    return dict(
+        tx=3.0 * math.sin(w), ty=-8.0 * math.sin(w),
+        sx=1 + 0.015 * math.cos(w), sy=1 - 0.015 * math.cos(w),
+        rot=1.0 * math.sin(w),
+        dim=0.04 + 0.04 * math.sin(w + 1.0),
+    )
+
+
+BEHOLDER_CLIPS = {
+    # A slow hover with a breathing squash; heavier than the float-eye's.
+    "idle": dict(loop=True, fps=10, rest=0, frames=[_beholder_idle_frame(i, 8) for i in range(8)]),
+
+    # One frame of white, then a squash-and-recoil in the clear (the
+    # float-eye's lesson: a flash spread over frames just bleaches the sprite).
+    "struck": dict(loop=False, fps=16, rest=7, frames=[
+        dict(tx=+16, ty=-3, sx=1.12, sy=0.88, rot=-5.0, flash=0.90),
+        dict(tx=+14, ty=-2, sx=1.10, sy=0.90, rot=-4.5, flash=0.20, red=0.24),
+        dict(tx=+5,  ty=+1, sx=0.96, sy=1.05, rot=-1.5, red=0.14),
+        dict(tx=-6,  ty=+2, sx=1.05, sy=0.96, rot=+2.0, red=0.06),
+        dict(tx=+3,  ty=0,  sx=0.98, sy=1.03, rot=-1.0),
+        dict(tx=-2,  ty=0,  sx=1.01, sy=0.99, rot=+0.5),
+        dict(tx=0,   ty=0,  sx=1.00, sy=1.00, rot=0.0),
+        dict(tx=0,   ty=-1, sx=1.00, sy=1.00, rot=0.0),
+    ]),
+
+    # One-shot. It draws in on itself and goes dark, then swells hard at the
+    # camera and settles. Pure scale, uniform in x and y, so it reads at combat
+    # size without knowing which way the creature faces.
+    "attacking": dict(loop=False, fps=12, rest=0, frames=[
+        dict(sx=1.00, sy=1.00),
+        dict(sx=0.92, sy=0.92, dim=0.18),
+        dict(sx=0.85, sy=0.85, dim=0.32),
+        dict(sx=BEHOLDER_COIL, sy=BEHOLDER_COIL, dim=0.42),
+        dict(sx=BEHOLDER_SWELL, sy=BEHOLDER_SWELL, flare=0.60),
+        dict(sx=1.10, sy=1.10, flare=0.35),
+        dict(sx=1.04, sy=1.04, flare=0.12),
+        dict(sx=1.00, sy=1.00),
+    ]),
+}
+
+# How dark a border-connected pixel must be to count as ground, and the ramp
+# its alpha takes from there: 0 at black, opaque at MATTE_LIFT.
+MATTE_GROUND = 40.0
+MATTE_LIFT = 48.0
+
+
 def _feather(shape, center, r_in, r_out):
     """Radial 1->0 ramp; the soft edge is what hides the layer seam."""
     h, w = shape
@@ -153,6 +238,40 @@ def split_layers(src: Image.Image):
 
     to_img = lambda arr: Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8), "RGBA")
     return to_img(body), to_img(eye)
+
+
+def matte_border_black(src: Image.Image) -> Image.Image:
+    """Key the black ground that touches the border to alpha.
+
+    Border-CONNECTED, not a luminance key: the beholder's spines, its empty
+    sockets and its mouth are as black as the ground, but they are enclosed by
+    lit paint, so a flood from the edge never reaches them and they stay
+    opaque. The flood is a repeated 4-neighbour dilation inside the dark mask,
+    run until it stops growing, which is deterministic and needs nothing past
+    numpy. Keyed pixels take a graded alpha from their own brightness, so the
+    corona's spray fades into the ground instead of ending on a hard edge.
+    """
+    a = np.asarray(src.convert("RGBA")).astype(np.float32)
+    lum = a[..., :3].max(2)
+    dark = lum < MATTE_GROUND
+
+    reach = np.zeros_like(dark)
+    reach[0, :], reach[-1, :], reach[:, 0], reach[:, -1] = dark[0, :], dark[-1, :], dark[:, 0], dark[:, -1]
+    while True:
+        grown = reach.copy()
+        grown[1:, :] |= reach[:-1, :]
+        grown[:-1, :] |= reach[1:, :]
+        grown[:, 1:] |= reach[:, :-1]
+        grown[:, :-1] |= reach[:, 1:]
+        grown &= dark
+        if (grown == reach).all():
+            break
+        reach = grown
+
+    alpha = np.where(reach, np.clip(lum / MATTE_LIFT, 0.0, 1.0) * 255.0, a[..., 3])
+    out = a.copy()
+    out[..., 3] = alpha
+    return Image.fromarray(np.clip(out, 0, 255).astype(np.uint8), "RGBA")
 
 
 def affine(img: Image.Image, center, sx=1.0, sy=1.0, rot=0.0, tx=0.0, ty=0.0):
@@ -193,41 +312,63 @@ def grade(img: Image.Image, flash=0.0, red=0.0, flare=0.0, dim=0.0):
     return Image.fromarray(out.astype(np.uint8), "RGBA")
 
 
-def render_frame(body, eye, key, frame_px):
+def render_frame(body, eye, key, frame_px, pad_px=PAD, crop_px=CROP):
     k = lambda n, d: float(key.get(n, d))
 
     # The eye moves inside the body first, so it rides the shell transform.
+    # A one-layer rig (the beholder) has no eye and poses the body alone.
     posed = body.copy()
-    moved_eye = affine(eye, EYE_CENTER, k("ex", 1), k("ey", 1), 0.0, k("edx", 0), k("edy", 0))
-    posed.alpha_composite(moved_eye)
+    if eye is not None:
+        moved_eye = affine(eye, EYE_CENTER, k("ex", 1), k("ey", 1), 0.0, k("edx", 0), k("edy", 0))
+        posed.alpha_composite(moved_eye)
 
-    pad = Image.new("RGBA", (PAD, PAD), (0, 0, 0, 0))
-    off = (PAD - posed.width) // 2
+    pad = Image.new("RGBA", (pad_px, pad_px), (0, 0, 0, 0))
+    off = (pad_px - posed.width) // 2
     pad.paste(posed, (off, off))
 
-    c = (PAD / 2, PAD / 2)
+    c = (pad_px / 2, pad_px / 2)
     pad = affine(pad, c, k("sx", 1), k("sy", 1), k("rot", 0), k("tx", 0), k("ty", 0))
     pad = grade(pad, k("flash", 0), k("red", 0), k("flare", 0), k("dim", 0))
 
-    lo = (PAD - CROP) // 2
-    return pad.crop((lo, lo, lo + CROP, lo + CROP)).resize((frame_px, frame_px), Image.LANCZOS)
+    lo = (pad_px - crop_px) // 2
+    return pad.crop((lo, lo, lo + crop_px, lo + crop_px)).resize((frame_px, frame_px), Image.LANCZOS)
+
+
+def _beholder_layers(src):
+    return matte_border_black(src), None
+
+
+# One row per riggable enemy: how its painting becomes layers, the canvas it
+# is posed on, its cell edge, and its dope sheet. An enemy absent from here cannot be rigged
+# by this tool, and says so by name rather than borrowing the float-eye's eye.
+RIGS = {
+    "float-eye": dict(layers=split_layers, pad=PAD, crop=CROP, frame=256, clips=CLIPS),
+    "death-beholder": dict(layers=_beholder_layers, pad=BEHOLDER_PAD, crop=BEHOLDER_CROP,
+                           frame=BEHOLDER_FRAME, clips=BEHOLDER_CLIPS),
+}
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--enemy", default="float-eye")
-    ap.add_argument("--frame", type=int, default=256, help="frame edge in px")
+    ap.add_argument("--frame", type=int, default=None,
+                    help="frame edge in px; defaults to the enemy's rig row")
     ap.add_argument("--out", type=Path, default=OUT_DIR,
                     help="directory to write into; defaults to the masters tree")
     args = ap.parse_args()
     out_dir = args.out
 
-    src = Image.open(SRC_DIR / f"{args.enemy}.webp").convert("RGBA")
-    body, eye = split_layers(src)
+    if args.enemy not in RIGS:
+        ap.error(f"no rig for {args.enemy!r}; riggable: {', '.join(RIGS)}")
+    rig = RIGS[args.enemy]
+    clips = rig["clips"]
 
-    names = list(CLIPS)
-    cols = max(len(CLIPS[n]["frames"]) for n in names)
-    fp = args.frame
+    src = Image.open(SRC_DIR / f"{args.enemy}.webp").convert("RGBA")
+    body, eye = rig["layers"](src)
+
+    names = list(clips)
+    cols = max(len(clips[n]["frames"]) for n in names)
+    fp = args.frame or rig["frame"]
     sheet = Image.new("RGBA", (cols * fp, len(names) * fp), (0, 0, 0, 0))
 
     meta = {
@@ -245,9 +386,9 @@ def main():
     }
     previews = []
     for row, name in enumerate(names):
-        clip = CLIPS[name]
+        clip = clips[name]
         for col, key in enumerate(clip["frames"]):
-            f = render_frame(body, eye, key, fp)
+            f = render_frame(body, eye, key, fp, rig["pad"], rig["crop"])
             sheet.paste(f, (col * fp, row * fp))
             previews.append(f)
         meta["clips"][name] = {

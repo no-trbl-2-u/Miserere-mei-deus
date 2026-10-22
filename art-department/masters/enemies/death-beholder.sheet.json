@@ -1,0 +1,36 @@
+{
+  "source": "../../../axiomancer-mobile/assets/images/enemies/death-beholder.webp",
+  "generator": "art-department/tools/rig-spritesheet.py",
+  "frame": 176,
+  "columns": 8,
+  "rows": 3,
+  "anchor": {
+    "kind": "centre",
+    "x": 88.0,
+    "y": 88.0,
+    "why": "floating enemy; no foot line exists"
+  },
+  "clips": {
+    "idle": {
+      "row": 0,
+      "frames": 8,
+      "fps": 10,
+      "loop": true,
+      "rest": 0
+    },
+    "struck": {
+      "row": 1,
+      "frames": 8,
+      "fps": 16,
+      "loop": false,
+      "rest": 7
+    },
+    "attacking": {
+      "row": 2,
+      "frames": 8,
+      "fps": 12,
+      "loop": false,
+      "rest": 0
+    }
+  }
+}

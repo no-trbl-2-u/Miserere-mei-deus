@@ -19,5 +19,24 @@
     ],
     "build_size_note": "2048x768 is a master, outside the <=640px ingest recipe by design; that recipe is about one-portrait-per-enemy art. Measured split cost at RECIPE q44: 24 cells, 149.5 KB total, mean 6378 B, max 9020 B, against 23624 B for the static float-eye.webp - 6.5x. If that is too much, the frame edge is the dial: rerun with --frame 192 or --frame 128.",
     "home_note": "These are build-time masters, not shipped assets. They live in art-department/ (D98) rather than axiomancer-mobile/assets/, because assets/ is bundled and scripts/asset-provenance.test.mjs rightly fails art that no registry reaches. Phase AN1e did exactly that: the sheet is split into per-cell WebP under assets/images/enemies/anim/float-eye/ and those are registered; the master never ships. Phase AD1a added the .easignore entry that keeps this tree out of the EAS upload archive; phase AD1b added the guard (scripts/art-department-sealed.test.mjs) that nothing in the repo resolves a path into it, and these files were already here by then."
+  },
+  {
+    "generated_by": "derived",
+    "date": "2026-10-22",
+    "tool": "art-department/tools/rig-spritesheet.py --enemy death-beholder (Pillow + numpy one-layer affine rig)",
+    "covers": [
+      "death-beholder.sheet.png (lossless master, 1408x528: 8x3 cells of 176px)",
+      "death-beholder.sheet.webp (ship candidate, q88)",
+      "death-beholder.sheet.json (frame grid + clip table)",
+      "death-beholder.preview.webp (animated flipbook, review only — not shipped)"
+    ],
+    "source": "../../../axiomancer-mobile/assets/images/enemies/death-beholder.webp",
+    "method": "No image model was used and nothing was generated. The shipped painting arrived fully opaque on black, so the black ground connected to the border is first keyed to alpha (graded from its own brightness, so the corona's spray fades out); the enclosed blacks - spines, sockets, mouth - stay opaque. The whole matted painting is then posed as one layer: each of the 24 frames is an affine pose plus a colour grade. The attack is uniform scale only: coil to 0.80 and dim, then swell to 1.14 on the very next frame. Every pixel descends from the existing asset.",
+    "clips": "idle (8f @10fps, loop), struck (8f @16fps, one-shot, rest 7), attacking (8f @12fps, one-shot); one clip per row, 8 columns; anchor centre",
+    "license": "torio Javardry free material: free for any use including commercial, modification and redistribution; no attribution required",
+    "artist": "torio (とり夫), Pixiv user 5887541",
+    "used_by": [
+      "axiomancer-mobile/assets/images/enemies/anim/death-beholder/ — phase AN4b cut this master into 24 per-cell WebP with tools/split-spritesheet.py and ingested them --no-grade. The master itself does not ship."
+    ]
   }
 ]

@@ -63,6 +63,7 @@ It is therefore reached **by path**, never by `npm --workspace`:
 npm run art:doctor     # or: python art-department/doctor.py
 npm run art:test       # or: python art-department/run-tests.py
 npm run art:rig -- --enemy float-eye
+npm run art:rig -- --enemy death-beholder
 ```
 
 ## What is here
@@ -72,9 +73,9 @@ npm run art:rig -- --enemy float-eye
 | `requirements.txt` | The Python toolchain's declared dependencies, pinned. |
 | `doctor.py` | Reports every missing dependency **by name** and exits non-zero. |
 | `run-tests.py` | Runs this tree's own suite. |
-| `tools/rig-spritesheet.py` | Rigs a shipped enemy painting into an animation spritesheet by affine transforms. No image model, no API spend. |
+| `tools/rig-spritesheet.py` | Rigs a shipped enemy painting into an animation spritesheet by affine transforms. No image model, no API spend. One `RIGS` row per enemy: the float-eye (two layers, its eye lifted out) and the death-beholder (one matted layer; its attack is pure scale). |
 | `tools/split-spritesheet.py` | Cuts a sheet master into one lossless PNG cell per frame, row-major, for the app ingest to encode. It does the geometry; the encode recipe and the provenance record stay in `axiomancer-mobile/scripts/ingest-art.mjs`, which has one copy of both. |
-| `tests/` | The suite: the doctor names what is missing; the rig reproduces its master byte for byte. |
+| `tests/` | The suite: the doctor names what is missing; the rig reproduces each master byte for byte; the beholder's attack keeps its 40% swell. |
 | `masters/` | The large build-time artifacts the tools produce. Committed (they are the regeneration source of truth and what a reviewer compares against), never shipped. |
 
 ## Adding a tool in another language

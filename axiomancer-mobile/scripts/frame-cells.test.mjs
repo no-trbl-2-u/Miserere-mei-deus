@@ -57,6 +57,7 @@ test('there is an installed frame set to weigh', () => {
   // finds nothing, every assertion below passes about no files at all.
   assert.ok(sets.length >= 1, 'no frame set under assets/images/enemies/anim/')
   assert.ok(sets.some((s) => s.key === 'float-eye'), 'the float-eye set must be installed')
+  assert.ok(sets.some((s) => s.key === 'death-beholder'), 'the death-beholder set must be installed')
 })
 
 test('no shipped cell exceeds the recorded ceiling', () => {
@@ -71,43 +72,46 @@ test('no shipped cell exceeds the recorded ceiling', () => {
   assert.deepEqual(over, [], 'a cell over the ceiling means the set was regenerated hotter')
 })
 
-test('the float-eye set is whole: 24 cells, named row-major', () => {
+for (const key of ['float-eye', 'death-beholder']) {
+test(`the ${key} set is whole: 24 cells, named row-major`, () => {
   // A truncated set is the failure the registry's own validation catches at
   // runtime; catching it here says which FILE is missing rather than that a
   // count disagreed.
-  const set = sets.find((s) => s.key === 'float-eye')
+  const set = sets.find((s) => s.key === key)
   assert.equal(set.cells.length, 24)
   for (let i = 0; i < 24; i++) {
     assert.ok(
-      set.cells.includes(`float-eye-${String(i).padStart(2, '0')}.webp`),
+      set.cells.includes(`${key}-${String(i).padStart(2, '0')}.webp`),
       `cell ${i} is missing from the set`,
     )
   }
 })
+}
 
-test('the provenance record states the measured cost, and it is the cost on disk', () => {
-  const set = sets.find((s) => s.key === 'float-eye')
-  const record = JSON.parse(fs.readFileSync(path.join(set.dir, 'provenance.json'), 'utf-8'))[0]
-  const bytes = set.cells.map((c) => fs.statSync(path.join(set.dir, c)).size)
-  const total = bytes.reduce((a, b) => a + b, 0)
-  const max = Math.max(...bytes)
-  const mean = Math.round(total / bytes.length)
+test('every provenance record states the measured cost, and it is the cost on disk', () => {
+  for (const set of sets) {
+    const record = JSON.parse(fs.readFileSync(path.join(set.dir, 'provenance.json'), 'utf-8'))[0]
+    const bytes = set.cells.map((c) => fs.statSync(path.join(set.dir, c)).size)
+    const total = bytes.reduce((a, b) => a + b, 0)
+    const max = Math.max(...bytes)
+    const mean = Math.round(total / bytes.length)
 
-  assert.ok(record.measured, 'the record must state what the set weighs')
-  for (const claim of [String(total), String(max), String(mean)]) {
+    assert.ok(record.measured, `${set.key}: the record must state what the set weighs`)
+    for (const claim of [String(total), String(max), String(mean)]) {
+      assert.ok(
+        record.measured.includes(claim),
+        `${set.key}: the record does not state ${claim}; measured total ${total}, max ${max}, mean ${mean}`,
+      )
+    }
+
+    // And the comparison that makes the number mean something: what the static
+    // painting costs, for the enemy this set replaces the stillness of.
+    const staticBytes = fs.statSync(path.join(ENEMIES, `${set.key}.webp`)).size
     assert.ok(
-      record.measured.includes(claim),
-      `the record does not state ${claim}; measured total ${total}, max ${max}, mean ${mean}`,
+      record.measured.includes(String(staticBytes)),
+      `${set.key}: the record does not state the ${staticBytes} B static image it is measured against`,
     )
   }
-
-  // And the comparison that makes the number mean something: what the static
-  // painting costs, for the enemy this set replaces the stillness of.
-  const staticBytes = fs.statSync(path.join(ENEMIES, 'float-eye.webp')).size
-  assert.ok(
-    record.measured.includes(String(staticBytes)),
-    `the record does not state the ${staticBytes} B static image it is measured against`,
-  )
 })
 
 test('a frame set records that it was NOT graded on the way in (A6b)', () => {

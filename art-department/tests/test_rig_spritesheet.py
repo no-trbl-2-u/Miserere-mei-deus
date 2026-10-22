@@ -1,4 +1,8 @@
-"""The rig regenerates the float-eye sheet byte for byte from its new home.
+"""The rig regenerates every committed sheet byte for byte.
+
+One suite per rigged enemy: the float-eye (phase AN1e's master) and the
+death-beholder (phase AN4b's), each regenerated from its shipped painting and
+compared against what is committed.
 
 The rig is deterministic -- Pillow affine transforms and numpy arithmetic, no
 randomness and no timestamp in any of the four outputs -- so the strict test is
@@ -20,7 +24,6 @@ from PIL import Image
 DEPT = Path(__file__).resolve().parents[1]
 RIG = DEPT / "tools" / "rig-spritesheet.py"
 MASTERS = DEPT / "masters" / "enemies"
-ENEMY = "float-eye"
 
 # The WebP sheet, the manifest and the review flipbook are compared as raw
 # bytes. The lossless PNG is compared pixel for pixel instead, because a PNG's
@@ -29,18 +32,23 @@ ENEMY = "float-eye"
 # Linux runner -- for identical pixels. The WebP is the stricter witness
 # anyway: it is byte-identical everywhere, so any change to a single pixel
 # fails this suite regardless of how the PNG happened to compress.
-BYTE_FOR_BYTE = [f"{ENEMY}.sheet.webp", f"{ENEMY}.sheet.json", f"{ENEMY}.preview.webp"]
-PIXEL_FOR_PIXEL = [f"{ENEMY}.sheet.png"]
-OUTPUTS = PIXEL_FOR_PIXEL + BYTE_FOR_BYTE
 
 
-class RigRegeneratesTheMaster(unittest.TestCase):
+class _RigRegeneratesTheMaster:
+    """Mixed into one TestCase per enemy below; ENEMY names the sheet."""
+
+    ENEMY = ""
+
     @classmethod
     def setUpClass(cls):
+        e = cls.ENEMY
+        cls.BYTE_FOR_BYTE = [f"{e}.sheet.webp", f"{e}.sheet.json", f"{e}.preview.webp"]
+        cls.PIXEL_FOR_PIXEL = [f"{e}.sheet.png"]
+        cls.OUTPUTS = cls.PIXEL_FOR_PIXEL + cls.BYTE_FOR_BYTE
         cls._tmp = tempfile.TemporaryDirectory()
         cls.out = Path(cls._tmp.name)
         done = subprocess.run(
-            [sys.executable, str(RIG), "--enemy", ENEMY, "--out", str(cls.out)],
+            [sys.executable, str(RIG), "--enemy", e, "--out", str(cls.out)],
             capture_output=True, text=True)
         if done.returncode != 0:
             raise AssertionError(f"rig failed:\n{done.stdout}\n{done.stderr}")
@@ -50,12 +58,12 @@ class RigRegeneratesTheMaster(unittest.TestCase):
         cls._tmp.cleanup()
 
     def test_it_writes_every_output(self):
-        for name in OUTPUTS:
+        for name in self.OUTPUTS:
             with self.subTest(name):
                 self.assertTrue((self.out / name).is_file(), f"{name} was not written")
 
     def test_the_webp_manifest_and_flipbook_match_the_master_byte_for_byte(self):
-        for name in BYTE_FOR_BYTE:
+        for name in self.BYTE_FOR_BYTE:
             with self.subTest(name):
                 fresh = (self.out / name).read_bytes()
                 committed = (MASTERS / name).read_bytes()
@@ -69,7 +77,7 @@ class RigRegeneratesTheMaster(unittest.TestCase):
                     "rather than refreshing the master.")
 
     def test_the_png_matches_the_master_pixel_for_pixel(self):
-        for name in PIXEL_FOR_PIXEL:
+        for name in self.PIXEL_FOR_PIXEL:
             with self.subTest(name):
                 with Image.open(self.out / name) as fresh, Image.open(MASTERS / name) as master:
                     self.assertEqual(fresh.size, master.size, name)
@@ -83,11 +91,30 @@ class RigRegeneratesTheMaster(unittest.TestCase):
     def test_the_manifest_still_points_at_the_source_painting(self):
         import json
 
-        meta = json.loads((self.out / f"{ENEMY}.sheet.json").read_text(encoding="utf-8"))
+        meta = json.loads((self.out / f"{self.ENEMY}.sheet.json").read_text(encoding="utf-8"))
         source = DEPT / "masters" / "enemies" / meta["source"]
         self.assertTrue(source.resolve().is_file(),
                         f"manifest source {meta['source']} does not resolve to a file")
         self.assertEqual(meta["generator"], "art-department/tools/rig-spritesheet.py")
+
+
+class FloatEyeRegenerates(_RigRegeneratesTheMaster, unittest.TestCase):
+    ENEMY = "float-eye"
+
+
+class DeathBeholderRegenerates(_RigRegeneratesTheMaster, unittest.TestCase):
+    ENEMY = "death-beholder"
+
+
+class TheRigRefusesAnEnemyItHasNoRigFor(unittest.TestCase):
+    def test_an_unrigged_enemy_is_refused_by_name(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            done = subprocess.run(
+                [sys.executable, str(RIG), "--enemy", "hag", "--out", tmp],
+                capture_output=True, text=True)
+            self.assertNotEqual(done.returncode, 0)
+            self.assertIn("no rig for 'hag'", done.stderr)
+            self.assertEqual(list(Path(tmp).iterdir()), [])
 
 
 class TheToolLivesHereNow(unittest.TestCase):
