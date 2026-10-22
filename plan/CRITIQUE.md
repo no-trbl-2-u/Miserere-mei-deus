@@ -1183,6 +1183,7 @@
 - suggested fix: lift the cutscene hint into a presenter constant and use a pointer-neutral verb ("· continue ·" / "· walk on ·"), and do the same for the dock hint ("CHOOSE A SLOT ...") and the tooltip ("choose an adjacent node"), as #604 did; copy only, pinned by the screens' existing tests.
 - source: critique:drive (unattended)
 - issue: #620
+
 ### [x] [LOW] combat / IN PLAY row — two copies of one Global give two chips with the same accessibility label — RESOLVED 2026-10-18 (branch loop/iterate-global-copy-label, d65ef6950: `globalsVM` names the copy, "copy 2 of 2", when one Global is in play more than once; a single copy keeps its label; pinned in CombatBoard.program-cards.test.tsx)
 - pass: antagonist on PR #520 (GS1, commit fc4aa159)
 - viewport: n/a (screen reader)
@@ -1192,6 +1193,7 @@
 - suggested fix: when more than one instance of a card is in play, name the count in the label (for example "copy 2 of 2"); terse, presenter-only.
 - source: antagonist, PR #520
 - issue: #615
+
 ### [x] [LOW] title / desktop — the menu rows (520px) overhang the 464px title plate, and the plate reads as a lit strip in a black field — RESOLVED 2026-10-18 (branch loop/iterate-title-menu-plate, 529c70a5: `titleLayout` returns a `menu` band equal to the plate's and TitleScreen hosts the menu in it, so the rows sit within the art on a wide window; a phone keeps the full width; pinned in title.engine.test.ts and TitleScreen.test.tsx)
 - pass: 79 (commit f2065459)
 - viewport: desktop (1280x800)
@@ -1201,6 +1203,7 @@
 - suggested fix: on a wide window, cap the embedded menu column at `min(MENU_COLUMN_MAX_WIDTH, layout.plate.width)` so the rows sit within the art (one value passed from TitleScreen to MainMenu's embedded mode); phone layout unchanged.
 - source: critique-drive (unattended)
 - issue: #613
+
 ### [x] [LOW] combat / footer dock — VITAE is announced twice, by the readout and by the bar — RESOLVED 2026-10-18 (branch loop/iterate-vitae-double-announce, 9d8fda0a: the text readout is hidden from the reader, the progressbar keeps the label and its value; pinned in CombatBoard.playtest-2026-09-04.test.tsx)
 - pass: antagonist on PR #529 (commit ce44dd8f)
 - viewport: n/a (screen reader)
@@ -1210,6 +1213,7 @@
 - suggested fix: keep the label on the progressbar (it also carries `accessibilityValue`) and hide the text readout from the reader (`importantForAccessibility="no"` / `accessibilityElementsHidden`), or the reverse.
 - source: antagonist, PR #529
 - issue: #611
+
 ### [x] [LOW] critique / transport — the mobile viewport emulates a mouse, so phone captures show the desktop map gesture line — RESOLVED 2026-10-17 (branch loop/iterate-critique-touch-context, 2fe330ad: `contextOptions(viewport)` gives the mobile context `hasTouch` and `isMobile`, desktop keeps the mouse; pinned in critique-drive.test.mjs; the mobile hub capture now reads "drag · pinch")
 - pass: 92 (commit c49902c7)
 - viewport: mobile (375x812)
@@ -1219,6 +1223,7 @@
 - suggested fix: give the mobile entry in `VIEWPORTS` `hasTouch: true, isMobile: true` and pass them to `newContext` (desktop keeps the mouse); check the two scripted clicks (`Embark`, `combat-enter`) still land, and pin the context options in `critique-drive.test.mjs`. Tooling only, no game change.
 - source: critique:drive (unattended)
 - issue: #605
+
 ### [x] [LOW] desktop — the hub drawer and the hazard hand still tell a mouse player to "tap" — RESOLVED 2026-10-17 (branch loop/iterate-pointer-neutral-verbs, c6daa798: "choose" in the drawer line, `HAZARD_HAND_LABEL` in the hazard presenter, and the combat rewards subtitle; pinned in RouteSelect.test.tsx and exploration.engine.test.ts)
 - pass: 92 (commit c49902c7)
 - viewport: desktop (1280x800)
@@ -1228,6 +1233,7 @@
 - suggested fix: use pointer-neutral verbs ("choose a glowing node to travel", "choose a card to read it") in both strings (moving the hazard one into its presenter copy) and any test that pins them; copy only, no rule change. (Picking "tap"/"click" off `MapPointer` is the heavier alternative.)
 - source: critique:drive (unattended)
 - issue: #603
+
 ### [x] [LOW] exploration hub / tooling — the level-15 Sage fixture shows 680 VITAE, twice what a level-15 pilgrim can now reach — RESOLVED 2026-10-17 (branch loop/iterate-preset-stat-curve, 428a91a2: every preset holds exactly 15 + (level - 1) x `STAT_POINTS_PER_LEVEL`, spread in the old proportions; Sage is 8/11/10; pinned by presets.engine.test.ts "stat curve")
 - pass: 90 (commit 6b5e2b6d)
 - viewport: both (375x812 and 1280x800)
@@ -1237,6 +1243,7 @@
 - suggested fix: set each level preset's `baseStats` to a reachable spread, start stats plus (level - 1) x `STAT_POINTS_PER_LEVEL`, and add a guard test that no preset's stat total exceeds what its level can bank. Dev presets only, no player rule changes; label `review:rules-change` anyway, since sims and e2e read these numbers.
 - source: critique:drive (unattended)
 - issue: #599
+
 ### [x] [LOW] exploration / map — on desktop the gesture line still says "drag · pinch", but a mouse zooms with the wheel since #590 — RESOLVED 2026-10-16 (branch loop/iterate-map-gesture-line, 41a733aa: `MAP_GESTURE_LINE` in the exploration presenter; MapOverlays reads "drag · scroll to zoom" for a fine pointer on web, "drag · pinch" otherwise; pinned in MapOverlays.test.tsx)
 - pass: 91 (commit ef1d1dd3)
 - viewport: desktop (1280x800); mobile is correct
@@ -1256,6 +1263,7 @@
 - suggested fix: announce the floor line once per refusal (`announceForAccessibility(PROGRAM_COPY.floorA11y(...))`), keeping the label change for focus.
 - source: antagonist, PR #523
 - issue: #558
+
 ### [x] [LOW] combat / HUD — "PHASE 1/5 · R1 · T1" is 9px text that ignores the system font size, and "R1 · T1" is never explained — RESOLVED 2026-10-15 (branch loop/iterate-hud-meta-line: the presenter builds the whole line, "PHASE 1/5 · ROUND 1 · TURN 1", as `metaLine`; the board prints it as given at 11px with font scaling on, and the name row wraps; pinned in legibility-sweep.engine.test.ts)
 - issue: #556
 - pass: 88 (commit 1df5499e)
