@@ -21,7 +21,7 @@ import { describe, it, expect } from 'vitest';
 import { Player } from '../../Character/characters.mock';
 import { Sandbag_01, FloatEye } from '../../Enemy/enemy.library';
 import type { Enemy } from '../../Enemy/types';
-import { getCardById } from '../cards.library';
+import { getCardById, cardLibrary } from '../cards.library';
 import { programLineBlock, programLineShortfall } from '../../Combat/combat.engine';
 import { getCardLane, CARD_LANES } from '../card.lanes';
 import { BLOOD_PRICE_SET } from '../library/blood-price.cards';
@@ -96,6 +96,16 @@ describe('the Blood Price set', () => {
         for (const id of added) expect(sacrifices(id) || getCardById(id)?.program?.global?.trigger === 'sac', id).toBe(true);
         // No card left in the lane names a Curse.
         for (const card of LANE_CARDS) expect(JSON.stringify(card.program), card.id).not.toMatch(/Curse/);
+    });
+
+    it('every lane card carries a real name: none still reads "Blood Price <slot>", and no two library cards share one', () => {
+        for (const card of LANE_CARDS) {
+            const name = getCardById(card.id)?.name ?? '';
+            expect(name, card.id).not.toMatch(/^Blood Price /);
+            expect(name.trim().length, card.id).toBeGreaterThan(0);
+        }
+        const names = cardLibrary.map(c => c.name);
+        expect(new Set(names).size).toBe(names.length);
     });
 
     it('the grey Curse stays defined but sits in no lane, deck or reward pool', () => {
