@@ -119,7 +119,10 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 | [x] | 2026-10-27 | Author the thirty candidates | W1 | HP4c |
 | [x] | 2026-10-30 | Solve times stored online (Workers + D1) | W1 | BE1a, BE1b, BE1c, BE1d |
 | [x] | 2026-10-28 | The thirty on the live board | W1 | HP4d |
-| [ ] | 2026-11-02 | W1 demo: T plays the thirty candidates | W1 | HP4e |
+| [ ] | 2026-10-24 | Five hazard cost cards, shown on the board | W1 | HP5a, HP5b |
+| [ ] | 2026-10-23 | The twenty easy and medium candidates go | W1 | HP5c |
+| [ ] | 2026-10-28 | Twenty cost-card puzzles on /devpuzzle | W1 | HP5d |
+| [ ] | 2026-11-02 | W1 demo: T plays the thirty (ten hard + twenty cost-card) | W1 | HP4e |
 | [ ] | 2026-11-04 | Act 1 puzzle set, live hazard routing and the cuts | W2 | needs plot |
 | [ ] | 2026-11-05 | The authoring patterns from the kept set | W2 | HP4f |
 | [ ] | 2026-11-06 | The band clocks, from the kept set's times | W2 | HP4g |
@@ -186,6 +189,8 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - AN1c — loop work, but T sequenced it after seeing AN1b work; date not set.
 - AN1d — loop work under D97 (used enemies only); follows AN1c; date not set.
 - AN1e — loop work; the row that actually installs the float-eye, requires AN1c and AD1a; date not set.
+- AN2a — loop work; removes the overlay covering the enemy animation; date not set.
+- AN2b — loop work; delays the flinch until the played card clears; date not set.
 - RV4 — loop plumbing; removes the merge cap that is blocking today's chain; date not set.
 
 ## How a window closes
@@ -196,6 +201,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-21** — **cost-card puzzles plotted** (T, attended session, `/plot asap`). **Added** three W1 Items for HP5a-HP5d (five hazard cost cards and their board display, the twenty easy and medium candidates deleted, twenty cost-card puzzles). **Edited** the W1 demo Item: T's thirty are now HP4c's ten hard plus HP5d's twenty, and HP4e requires HP5d. Nothing ticked; no date moved.
 - **2026-10-21** — **phase Item Status is derived** (phase DL1b, the loop). `deadlines.mjs --write` now rewrites
   every phase Item's Status cell from the build plan, and the lint fails a cell that disagrees. Its first run
   ticked the four HP4 Items whose rows had shipped (HP4a, HP4b, HP4c, HP4d). No date moved; no `T` row changed.

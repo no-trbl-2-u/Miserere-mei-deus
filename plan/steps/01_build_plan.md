@@ -226,7 +226,7 @@ event-pool and layout files).
       with a `portraitAsset` **and** in `ENEMY_ART_BY_KEY`; `sandbag-01` fails it). Brief
       `plan/phases/phase_AN1_enemy_animation.md` § AN1d. Requires AN1c.
 - [x] (#705) Phase ML1b — The build plan's rows and queue log (plotted by T, 2026-10-20): the same treatment
->      for `plan/steps/01_build_plan.md`, whose Status rows collide because every `/plot asap` appends
+      for `plan/steps/01_build_plan.md`, whose Status rows collide because every `/plot asap` appends
       above the same first open row (one plot PR took four rounds on 2026-10-19/20). Split from ML1a
       because build-plan rows are an **ordered** list whose order carries priority, not a keyed set, so
       "union by key" does not define the result; and unlike `lessons.md` a duplicate here reddens no
@@ -271,10 +271,25 @@ event-pool and layout files).
       labelled groups by intended band and plays any of them on its nominated route through the live `HazardBoard`;
       the three demos stay reachable and production still renders nothing. Brief
       `plan/phases/phase_HP4_graded_puzzle_set.md` § HP4d. Requires HP4b.
+- [ ] Phase HP5a — Five cost cards (plotted by T, 2026-10-21): five hazard cards that trade meter points for a
+      utility (two Toll, one Debt, two Overdrive), validated, never drawn by the live three-round hazard, in the
+      puzzle card pool and clear of the worse-copy check. Brief `plan/phases/phase_HP5_cost_card_puzzles.md` § HP5a. Requires nothing.
+- [ ] Phase HP5b — Costs on the board (plotted by T, 2026-10-21): `HazardCard` draws a negative value with a minus
+      sign, the meters show a debt below zero, and projected progress counts a staged cost. Brief
+      `plan/phases/phase_HP5_cost_card_puzzles.md` § HP5b. Requires HP5a.
+- [ ] Phase HP5c — The twenty easy and medium candidates go (plotted by T, 2026-10-21): `cand-easy-*` and
+      `cand-medium-*` deleted; `/devpuzzle` keeps the ten hard and the demos. Brief `plan/phases/phase_HP5_cost_card_puzzles.md` § HP5c. Requires nothing.
+- [ ] Phase HP5d — Twenty cost-card puzzles (plotted by T, 2026-10-21): `cand-cost-medium-01..10` and
+      `cand-cost-hard-01..10`, each holding a new card, no slack (best surplus 0), and lost by staging the whole
+      opening hand; each new card both required somewhere and a trap somewhere. Brief `plan/phases/phase_HP5_cost_card_puzzles.md` § HP5d. Requires HP5a,
+      HP5b, HP5c.
+- [ ] Phase AN2a — The enemy action card goes (plotted by T, 2026-10-21): T watched the first preview build carrying AN1 and ruled the card out — a centred `absoluteFillObject` overlay at `zIndex: 45` holding ~1.9s after END PHASE, directly over the enemy during the turn the lunge plays. The component, its mount, its presenter and its two suites go; the threat glyph and the damage floats stay and are what still say what happened. Brief `plan/phases/phase_AN2_the_animation_is_seen.md` § AN2a. Requires nothing.
+- [ ] Phase AN2b — The flinch waits for the board to clear (plotted by T, 2026-10-21): the `struck` clip is selected at t=0, so on device the flinch played mostly behind the player's own cards. It now waits until the played card is off the enemy, off a delay derived from that animation's own duration rather than a second hand-typed constant; `attacking` keeps the `ENEMY_ATTACK_IMPACT_MS` offset it shares with the pane's recoil. A delayed clip still plays in full and still returns to idle. Brief `plan/phases/phase_AN2_the_animation_is_seen.md` § AN2b. Requires nothing.
 - [ ] Phase HP4e — T plays the thirty (plotted by T, 2026-10-19) (attended): T plays each candidate once, timed by
       HP2c's move log, and `docs/reports/hazard-puzzle-candidates.md` records the label, the intended band, the
       time, whether T solved it and T's keep-or-cut ruling in T's words. Brief
-      `plan/phases/phase_HP4_graded_puzzle_set.md` § HP4e. Requires HP4c, HP4d.
+      `plan/phases/phase_HP4_graded_puzzle_set.md` § HP4e. The thirty are now HP4c's ten hard and HP5d's twenty
+      cost-card candidates (T, 2026-10-21). Requires HP4c, HP4d, HP5d.
 - [ ] Phase HP4f — The patterns (plotted by T, 2026-10-19): `docs/reports/hazard-puzzle-patterns.md` sets the kept
       candidates against the cut ones on the HP4a numbers and states each authoring pattern as a rule a future
       puzzle can be checked against, or says no pattern separates them. Brief
@@ -326,7 +341,7 @@ event-pool and layout files).
 - [ ] Phase HP2d — The calibration set (plotted by T, 2026-10-18): 13 to 20 calibration puzzles from the pool (3 to 5 held out), each feature taking at least four values. Brief `plan/phases/phase_HP2_puzzle_card_audit_difficulty.md` § HP2d. Requires HP2a, HP2b.
 - [ ] Phase HP2e — Calibration solves and the difficulty report (plotted by T, 2026-10-18) (attended): T and the `playtester` agent solve every calibration puzzle first-time; `puzzle:calibrate` picks the feature with the highest Spearman ρ against pooled median time (bar 0.7) and checks the held-out bands; `docs/reports/hazard-puzzle-difficulty.md` records it with T's verdict. B3f dropped from Requires when it was cut (T, 2026-10-20); the clock dependency it carried is HP4g's now, and this row's own premise is amended once HP4e's rulings exist (`plan/phases/phase_HP4_graded_puzzle_set.md` Follow-ups). Brief `plan/phases/phase_HP2_puzzle_card_audit_difficulty.md` § HP2e. Requires HP2c, HP2d.
 - [ ] Phase HP2f — Bands on the calibrated measure (plotted by T, 2026-10-18): `HAZARD_PUZZLE_BANDS` moves to the adopted measure and the demos sit in band, or the report records why the count bands stayed. Brief `plan/phases/phase_HP2_puzzle_card_audit_difficulty.md` § HP2f. Requires HP2e.
-- [ ] Phase LG1a — Plan-queue lint (plotted by T, 2026-10-18): `scripts/check-plan-queues.mjs` lints the AUDIT, CRITIQUE, PHASE_CANDIDATES and Status-block rows in the root `npm test`. Brief `plan/phases/phase_LG1_loop_gates.md` § LG1a. Requires nothing.
+- [x] (#765) Phase LG1a — Plan-queue lint (plotted by T, 2026-10-18): `scripts/check-plan-queues.mjs` lints the AUDIT, CRITIQUE, PHASE_CANDIDATES and Status-block rows in the root `npm test`. Brief `plan/phases/phase_LG1_loop_gates.md` § LG1a. Requires nothing.
 - [x] (#767) Phase LG1b — Path coverage in verify-gate (plotted by T, 2026-10-18): `verify-gate` fails and names a changed path no `verify-*` filter owns. Brief `plan/phases/phase_LG1_loop_gates.md` § LG1b. Requires nothing.
 - [ ] Phase LG1c — Acceptance proof in verify-gate (plotted by T, 2026-10-18): every ticked acceptance line names a test, shot or command, or says `(no test: <reason>)`. Brief `plan/phases/phase_LG1_loop_gates.md` § LG1c. Requires nothing.
 - [ ] Phase LG1d — Fail-on-parent in verify-gate (plotted by T, 2026-10-18): an added test that passes on the parent fails the gate unless marked `guard-test:`. Brief `plan/phases/phase_LG1_loop_gates.md` § LG1d. Requires nothing.
@@ -1002,6 +1017,16 @@ See the status rows above; generate briefs on demand.
 > "reason not stated" — never invent one), and the resulting
 > commit/issue/phase-brief when available.
 
+- **2026-10-21** — actor: **T, attended session** (`/plot asap`, branch
+  `loop/plot-AN2-animation-unobscured`). Action: **added Phases AN2a and AN2b** directly above the
+  first open row. Confirmed T's request: yes. Reason (T), after installing the first preview APK
+  carrying AN1 and fighting the Float-Eye: the idle hover, the flinch and the lunge all play
+  correctly on device, but two things hide them — "we should wait just a moment AFTER we apply
+  the card because the animation ends up doing the flinch mostly behind the player's cards" and
+  "the telegraph modal from the enemy, that's gotta go. It's mostly pointless and blocks part of
+  the animation". T chose outright deletion over keeping the card's text elsewhere, and delaying
+  the flinch over rerouting the card. `asap` because both are defects in work T has just seen.
+  Brief `plan/phases/phase_AN2_the_animation_is_seen.md`.
 - **2026-10-21** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-RV4-drop-daily-cap`). Action: **added Phase RV4** directly above the first open row.
   Confirmed T's request: yes. Reason (T), on being shown `DAILY_CAP = 12` after it held PR #725:
   "I don't want that". T first chose `/oversight`; that skill's hard rule 1 forbids editing code
@@ -1587,6 +1612,7 @@ See the status rows above; generate briefs on demand.
 - **2026-10-21** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-AN1-enemy-animation`). Action: **added Phases AN1a–AN1d** directly above the first open row, in T's own sequence: the engine and a dev route first, then the enemy's turn animated, then three states per enemy once T has seen it work, then the art pipeline generating the sheets. Records **D97**: a sprite sheet for an ALREADY-USED enemy is enhancement rather than content creation, so AN1d may run as ordinary `/march` ticks — narrowly, with the used-enemy test as the guard; anything outside that set stays owner-only under D88/D37. Brief `plan/phases/phase_AN1_enemy_animation.md`.
 - **2026-10-21** — actor: **T, attended session** (`/plot anytime`, branch `loop/plot-AD1-art-department`). Action: **added Phases AD1a and AD1b** after Phase UP1h, the last open row. Reason (T): shown that `rig-spritesheet.py` is Python living inside `axiomancer-mobile`, a JS/TS presentation-layer workspace whose verifier cannot check it and whose `assets/` tree is bundled into the app, T ruled a top-level `art-department` package that "can use any tooling/languages it wants". `anytime` because it blocks nothing: AN1a–AN1c are mobile-side engine work and AN1d extends `generate-art.mjs`, which is JavaScript and stays in the mobile package. Records **D98**: the tree is deliberately not an npm workspace, because `.easignore` makes a declared workspace unexcludable from the EAS archive. Brief `plan/phases/phase_AD1_art_department.md`.
 - **2026-10-21** — actor: **T, attended session** (`/plot` amendment, branch `loop/plot-AN1-amend-frame-contract`). Action: **amended the AN1 brief's A6 and added A6b**; no new rows, because AN1a already owns both and has not been built. Reason: a float-eye spritesheet prototyped in the same session measured two defects in the frame contract. (1) A6 fixed the anchor on the foot line, but the float-eye floats and its hover *is* the idle animation, so a body-tracking anchor would cancel the clip; A6 now declares an anchor **kind** (`foot-line` for a creature that stands, `centre` for one that floats) and fails a manifest naming neither. (2) A6 quoted `RECIPE` without `grayscale: true`, which it carries: run on the float-eye it flattens the corona from RGB (62, 61, 16) to a flat grey 56, and the corona flare is the whole read of the attack frame; a derived sheet also arrives with its source's grade already baked in. A6b now says grade exactly once, `--no-grade` for a derived set. Brief `plan/phases/phase_AN1_enemy_animation.md`.
+- **2026-10-21** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-HP5-cost-card-puzzles`). Action: **added Phases HP5a, HP5b, HP5c, HP5d** (five hazard cost cards, costs on the board, the twenty easy and medium candidates deleted, twenty cost-card puzzles) directly above Phase HP4e, and **amended HP4e** to play HP4c's ten hard plus HP5d's twenty and to require HP5d. Confirmed T's request: yes (T asked for the removal and the twenty new puzzles on about five new cards that cost points for utility, and ruled no slack, delete, 10 medium + 10 hard, and that these are hazard cards the loop may author). Reason: asap because HP4e, the W1 demo, now times these puzzles. Brief `plan/phases/phase_HP5_cost_card_puzzles.md`.
 >
 ## Phase log (commit hashes)
 
