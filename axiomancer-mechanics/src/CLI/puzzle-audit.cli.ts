@@ -3,7 +3,9 @@
  * `HAZARD_DECK` plus CRACK to `docs/reports/hazard-puzzle-card-audit.md`:
  * each card's puzzle shape, the fields puzzles ignore, any ban, its
  * identical-behaviour group, its report columns across the demo library
- * and a keep or cut recommendation. Reads the game; writes only the report.
+ * and a keep or cut recommendation. Then every candidate on its nominated
+ * route with its decision-pressure columns. Reads the game; writes only the
+ * report.
  *
  * Usage:
  *   npm run puzzle:audit
@@ -20,8 +22,12 @@ import {
     hazardPuzzleCardShape,
     type HazardPuzzleCardAuditRow,
 } from '../World/Hazard/puzzle/hazard-puzzle.audit';
+import { HAZARD_PUZZLE_CANDIDATES } from '../World/Hazard/puzzle/hazard-puzzle.candidates';
 import { HAZARD_PUZZLE_LIBRARY } from '../World/Hazard/puzzle/hazard-puzzle.library';
+import { hazardPuzzleCardReport } from '../World/Hazard/puzzle/hazard-puzzle.report';
+import { solveHazardPuzzle } from '../World/Hazard/puzzle/hazard-puzzle.solver';
 import { HAZARD_PUZZLE_CARD_POOL } from '../World/Hazard/puzzle/hazard-puzzle.tuning';
+import type { HazardPuzzleCandidate } from '../World/Hazard/puzzle/hazard-puzzle.types';
 
 const REPORT_PATH = path.resolve(__dirname, '../../../docs/reports/hazard-puzzle-card-audit.md');
 
@@ -55,6 +61,22 @@ function row(r: HazardPuzzleCardAuditRow): string {
     );
 }
 
+function goalOf(c: HazardPuzzleCandidate): string {
+    return c.route === 'risk' ? `[${c.goals.risk[0]}, ${c.goals.risk[1]}]` : `${c.goals.safe}`;
+}
+
+/** One candidate on its nominated route: its solve and its decision-pressure columns. */
+function candidateRow(c: HazardPuzzleCandidate): string {
+    const solution = solveHazardPuzzle(c, c.route);
+    const report = hazardPuzzleCardReport(c, c.route);
+    const p = report.pressure;
+    return (
+        `| \`${c.id}\` | ${c.intendedBand} | ${c.route} ${goalOf(c)} | ${solution.winningOutcomes} | ` +
+        `${solution.bestSurplus ?? '-'} | ${p.optional} | ${p.required} / ${p.total} | ` +
+        `${p.firstPlays.winning} | ${p.firstPlays.losing} | ${p.finding ?? '-'} |`
+    );
+}
+
 export function hazardPuzzleCardAuditMarkdown(): string {
     const rows = hazardPuzzleCardAudit([...HAZARD_DECK, HAZARD_CRACK_CARD], HAZARD_PUZZLE_LIBRARY);
     const kept = rows.filter((r) => r.keep).map((r) => `\`${r.def.id}\``);
@@ -84,6 +106,17 @@ export function hazardPuzzleCardAuditMarkdown(): string {
         '',
         `Pool in \`HAZARD_PUZZLE_CARD_POOL\` (${HAZARD_PUZZLE_CARD_POOL.length}): ` +
             `${HAZARD_PUZZLE_CARD_POOL.map((id) => `\`${id}\``).join(', ')}.`,
+        '',
+        '## Candidates',
+        '',
+        'Every candidate in `HAZARD_PUZZLE_CANDIDATES`, on its nominated route with no unlock: its winning',
+        'outcomes and best surplus, then its decision pressure (optional cards, required cards of all the',
+        'cards it holds, the first plays that can still win and those that cannot, and a `forced` or `free`',
+        'finding).',
+        '',
+        '| candidate | band | route and goal | wins | best surplus | optional | required | first plays that win | first plays that lose | finding |',
+        '|---|---|---|---|---|---|---|---|---|---|',
+        ...HAZARD_PUZZLE_CANDIDATES.map(candidateRow),
         '',
     ].join('\n');
 }
