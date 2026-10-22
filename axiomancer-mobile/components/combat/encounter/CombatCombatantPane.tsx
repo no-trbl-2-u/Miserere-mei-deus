@@ -44,6 +44,7 @@ import { PROGRAM_COPY, selectCombatLogLines } from '@/state/presenters/combat-en
 import { type CombatEvent } from '@mechanics';
 import { effectGlyph } from '@/components/combat/statusGlyphs';
 import { keywordForEffect } from '@/state/combat/keywords';
+import { CARD_MOTION_SETTLE_MS } from './cardMotion';
 import { IntentIcon } from './IntentIcon';
 import { VitaeSacrificeCallout } from './VitaeSacrificeCallout';
 import { useJuiceFlash, useJuiceIdleBreath, useJuiceNumberPop, useJuicePulse, useJuiceShake } from '@/lib/juice';
@@ -477,6 +478,15 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
     }, []);
     const dropEnemy = useCallback((id: number) => setEnemyFloats((p) => p.filter((f) => f.id !== id)), []);
 
+    // Frames, when this enemy has them. The registry ships empty, so today
+    // every enemy takes the `null` path and renders the painting above exactly
+    // as it always has; AN1e installs the first set. Reduced motion is the
+    // pane's OWN ref, handed straight down — the frame engine never asks
+    // `AccessibilityInfo` a second time, because two answers to one question
+    // drift and one of them is wrong. Hoisted above the fx effect below: the
+    // flinch's own wait on the board reads it too.
+    const enemyFrameSet = getEnemyFrameSet(enemy.artKey);
+
     useEffect(() => {
         if (!fx || fx.seq === 0 || fx.seq === lastSeq.current) return;
         lastSeq.current = fx.seq;
@@ -510,9 +520,10 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
         // one stream once. The counters are all that happens here: when and
         // whether a clip plays is `useEnemyClipSelection`'s call, and an enemy
         // with no frame set spends this on nothing.
-        if (isEnemyAttackBeat({
+        const attackedThisBeat = isEnemyAttackBeat({
             playerDamage: playerDmg, threatFired, intentDamage: enemy.intent.damage,
-        })) {
+        });
+        if (attackedThisBeat) {
             setAttackBeat((n) => n + 1);
         }
         const enemyDotDmg = ticks.reduce((sum, t) => (t.side === 'enemy' ? sum + t.amount : sum), 0);
@@ -549,8 +560,22 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
             pushEnemy('DENIED', HUE.goldAccent, 0);
         }
         // (d-symmetric) the player's APPLY landed on the enemy → flinch + float.
+        // A framed enemy's struck CLIP is already held for `useEnemyClipSelection`'s
+        // own CARD_MOTION_SETTLE_MS wait (AN2b), unless this same resolution is
+        // also the enemy's swing — then the clip keeps its place on the beat
+        // instead. The position wobble is the same flinch on a different
+        // channel, so it waits on the same terms, or the figure still jiggles
+        // in place behind the player's cards while the clip itself holds still.
+        let wobbleTimer: ReturnType<typeof setTimeout> | undefined;
         if (enemyDmg > 0) {
-            enemyShift.value = withSequence(withTiming(-6, { duration: 70 }), withTiming(0, { duration: 160 }));
+            const playWobble = () => {
+                enemyShift.value = withSequence(withTiming(-6, { duration: 70 }), withTiming(0, { duration: 160 }));
+            };
+            if (enemyFrameSet && !attackedThisBeat) {
+                wobbleTimer = setTimeout(playWobble, CARD_MOTION_SETTLE_MS);
+            } else {
+                playWobble();
+            }
             pushEnemy(`-${enemyDmg}`, AXM.parchment, 0);
         }
         // (c) enemy-side DoT ticks float over the figure (alternating x-jitter).
@@ -565,7 +590,10 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
         statusFloats.forEach((s, k) => {
             if (s.side === 'enemy' && !enemyHadFloat) pushEnemy(s.text, s.color, (k % 2 === 0 ? 1 : -1) * 30);
         });
-    }, [fx, enemy.intent.damage, player.maxHp, AXM.parchment, enemyScale, enemyShift, pushEnemy]);
+        // A held wobble belongs to THIS resolution; a newer one arriving before
+        // it fires must not have its own flinch clobbered by a stale timer.
+        return () => { if (wobbleTimer) clearTimeout(wobbleTimer); };
+    }, [fx, enemy.intent.damage, player.maxHp, AXM.parchment, enemyFrameSet, enemyScale, enemyShift, pushEnemy]);
 
     const enemyAnim = useAnimatedStyle(() => ({ transform: [{ translateX: enemyShift.value }, { scale: enemyScale.value }] }));
 
@@ -577,13 +605,6 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
     // fight's duration — see assets/images/enemies.
     const enemyArt = getEncounterEnemyArt(enemy.artKey, enemy.artNonce);
 
-    // Frames, when this enemy has them. The registry ships empty, so today
-    // every enemy takes the `null` path and renders the painting above exactly
-    // as it always has; AN1e installs the first set. Reduced motion is the
-    // pane's OWN ref, handed straight down — the frame engine never asks
-    // `AccessibilityInfo` a second time, because two answers to one question
-    // drift and one of them is wrong.
-    const enemyFrameSet = getEnemyFrameSet(enemy.artKey);
     // One label for the figure, whichever way it is drawn: a screen reader
     // must not be able to tell that an enemy animates.
     const enemyFigureLabel = `${enemy.name} bars the way`;
