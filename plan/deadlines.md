@@ -196,6 +196,13 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - AN4a — loop work; the Act 1 boss stops being a placeholder; date not set.
 - AN4b — loop work; the Beholder's frame set; follows AN4a; date not set.
 - RV4 — loop plumbing; removes the merge cap that is blocking today's chain; date not set.
+- BE2a — loop work; T's card-logging request, blocks nothing in a window; date not set.
+- BE2b — loop work; follows the same request; date not set.
+- BE2c — loop work; follows BE2a and BE2b; date not set.
+- BE2d — loop work; follows BE2c; date not set.
+- BE2e — loop work; follows BE2a and BE2b; date not set.
+- BE2f — loop work; follows BE2a; date not set.
+- BE2g — attended; T's check on a preview APK once BE2c-BE2f ship; date not set.
 
 ## How a window closes
 
@@ -205,6 +212,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-22** — **card and combat logging plotted** (T, attended session, `/plot`). **Added** Unscheduled lines for BE2a-BE2g: T set no date and the rows block no window's goal. **Edited** no Item: no open Item's premise depends on the play log. Nothing ticked; no date moved.
 - **2026-10-21** — **cost-card puzzles plotted** (T, attended session, `/plot asap`). **Added** three W1 Items for HP5a-HP5d (five hazard cost cards and their board display, the twenty easy and medium candidates deleted, twenty cost-card puzzles). **Edited** the W1 demo Item: T's thirty are now HP4c's ten hard plus HP5d's twenty, and HP4e requires HP5d. Nothing ticked; no date moved.
 - **2026-10-21** — **phase Item Status is derived** (phase DL1b, the loop). `deadlines.mjs --write` now rewrites
   every phase Item's Status cell from the build plan, and the lint fails a cell that disagrees. Its first run

@@ -123,7 +123,7 @@
       "needsPitch": {
         "value": false,
         "missing": null,
-        "source": "plan/2026-09-02-big-numbers-overhaul.decisions.md D8"
+        "source": "braindump/2026-10-21-backend-schema-plan.md"
       }
     },
     {
@@ -448,7 +448,7 @@
       "needsPitch": {
         "value": false,
         "missing": null,
-        "source": "plan/2026-09-25-refactor-strategy.decisions.md D44"
+        "source": "braindump/2026-10-21-backend-schema-plan.md"
       }
     },
     {
@@ -498,7 +498,7 @@
       "needsPitch": {
         "value": false,
         "missing": null,
-        "source": "plan/2026-09-25-refactor-strategy.decisions.md D62"
+        "source": "braindump/2026-10-21-backend-schema-plan.md"
       }
     },
     {
