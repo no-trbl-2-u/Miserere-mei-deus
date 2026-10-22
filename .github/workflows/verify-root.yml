@@ -1,0 +1,71 @@
+name: verify-root
+
+# The owner of the paths only the root `npm test` checks: the repo's own
+# scripts, workflows, hooks, skills, docs, devlog and top-level files. Each
+# path a PR changes has to be owned by a `verify-*` filter or be loop
+# bookkeeping, or `verify-gate` fails and names it (phase LG1b,
+# `scripts/pr-gate.mjs`). Before this lane the gate ran the root `npm test`
+# inside its own job for these paths; a filter here lets the gate read their
+# owner from a workflow file like every other lane. The two `!` entries keep
+# the bookkeeping trees under `devlog/` and `docs/` out, as `BOOKKEEPING_PREFIXES`
+# (`scripts/eval/ledger-lib.mjs`) does.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '*'
+      - '.claude/**'
+      - '.githooks/**'
+      - '.github/**'
+      - 'braindump/**'
+      - 'devlog/**'
+      - 'docs/**'
+      - 'scripts/**'
+      - 'skills/**'
+      - '!devlog/entries/**'
+      - '!docs/reports/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - '*'
+      - '.claude/**'
+      - '.githooks/**'
+      - '.github/**'
+      - 'braindump/**'
+      - 'devlog/**'
+      - 'docs/**'
+      - 'scripts/**'
+      - 'skills/**'
+      - '!devlog/entries/**'
+      - '!docs/reports/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-root-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+jobs:
+  root:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      # Full history, as the gate's own checkout had: some root tests read git.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Root npm test
+        run: npm test
