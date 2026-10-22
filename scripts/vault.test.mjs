@@ -44,7 +44,8 @@ function publish(seed, name, body, msg) {
 /** A bare "vault" remote seeded with one commit, a seed clone to push from, and a host checkout. */
 function fixture(t) {
   const tmp = realpathSync.native(mkdtempSync(path.join(tmpdir(), 'vault-test-')))
-  t.after(() => rmSync(tmp, { recursive: true, force: true }))
+  // A git child can still be writing under .git as the hook runs: retry ENOTEMPTY.
+  t.after(() => rmSync(tmp, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 }))
   const remote = path.join(tmp, 'miserere-vault.git')
   sh(tmp, 'init', '-q', '--bare', '--initial-branch=main', remote)
   const seed = path.join(tmp, 'seed')
