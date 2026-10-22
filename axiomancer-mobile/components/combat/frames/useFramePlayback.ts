@@ -94,7 +94,7 @@ export function useFramePlayback({
     }, [still, playing, frames, loop, fps, rest, startKey]);
 
     // The worklet below captures PRIMITIVES, never a helper from another module
-    // and never a JS-thread reader — the same discipline EnemyActionCard keeps.
+    // and never a JS-thread reader (scripts/check-worklets.mjs).
     useAnimatedReaction(
         () => {
             const raw = Math.floor(Math.max(0, progress.value));
