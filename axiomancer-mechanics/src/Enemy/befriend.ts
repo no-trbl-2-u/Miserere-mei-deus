@@ -8,7 +8,7 @@ import type { Enemy } from './types';
 /**
  * A foe can be befriended when it carries a `friendshipReward`: that is what
  * the friendship outcome pays out, and a foe without one has nothing to give
- * (the survivors: the Brine Hag yes, Float-Eye and the Doorwarden no).
+ * (the survivors: the Brine Hag yes, Float-Eye and the Death Beholder no).
  */
 export function isEnemyBefriendable(enemy: Pick<Enemy, 'friendshipReward'>): boolean {
     return enemy.friendshipReward !== undefined;

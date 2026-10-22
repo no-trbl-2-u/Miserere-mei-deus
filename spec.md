@@ -46,9 +46,9 @@ Undertale.
 
 - **Combat:** the grey deck (three cards), four dice rolled once per threat
   phase, Conviction, one signature (The Open Hand), three foes (Float-Eye,
-  Brine Hag, the Doorwarden).
+  Brine Hag, the Death Beholder).
 - **World:** Act 1, four regions (Breakwater, Charcoal Wood, Beacon
-  Crags, the Lantern Deep), each closed by a Doorwarden door. Rest, the
+  Crags, the Lantern Deep), each closed by a Death Beholder's door. Rest, the
   Anvil, hazards, caches and gathering nodes. Shillings are the one
   currency; healing potions the one item kind.
 - **Progression:** levels and body/mind/heart stats; stats scale each

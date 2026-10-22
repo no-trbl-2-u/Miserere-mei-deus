@@ -2,8 +2,8 @@
  * Enemy art registry — one OR MORE assets per enemy.
  *
  * Three enemies: two alpha-matted paintings (black backgrounds keyed out so
- * figures float over the arena backdrop) and one licensed game-icons.net
- * silhouette (The Doorwarden). The registry key is the enemy's
+ * figures float over the arena backdrop) and the Death Beholder, torio's
+ * Javardry free material, ingested in colour. The registry key is the enemy's
  * `portraitAsset` (kebab-case) — slug->asset routing stays mobile-local. See
  * provenance.json.
  *
@@ -28,20 +28,17 @@
 export const ENEMY_ART_BY_KEY: Readonly<Record<string, number>> = {
     'float-eye':         require('./float-eye.webp'),
     'brine-hag':         require('./hag.webp'),
-    // The Aporia — labyrinth act boss. Licensed game-icons.net silhouette
-    // (CC BY 3.0 — Delapouite), white glyph on transparent, rasterized 512px
-    // WebP; see provenance.json.
-    'the-doorwarden':    require('./the-doorwarden.webp'),
-    // STAGED for phases AN3a and AN4a, which repoint the enemies that will
-    // use them and drop the two entries above. They are registered now, not
-    // later, because the asset trove is gitignored: a loop tick
-    // cannot reach the source, so the ingested art has to be in the tree
-    // before those phases can be built. Both are torio Javardry free
-    // material - free for any use including commercial and modification -
-    // and both were ingested --no-grade, because RECIPE carries
-    // `grayscale: true` and these are colour enemies (AN1 A6b).
-    'green-jelly':       require('./green-jelly.webp'),
+    // The Act 1 boss (phase AN4a): torio Javardry free material - free for
+    // any use including commercial and modification - ingested --no-grade,
+    // because RECIPE carries `grayscale: true` and this is a colour enemy
+    // (AN1 A6b).
     'death-beholder':    require('./death-beholder.webp'),
+    // STAGED for phase AN3a, which repoints the Brine Hag to it and drops
+    // her entry above. Registered now, not later, because the asset trove is
+    // gitignored: a loop tick cannot reach the source, so the ingested art
+    // has to be in the tree before that phase can be built. Same licence and
+    // the same ungraded ingest as the beholder.
+    'green-jelly':       require('./green-jelly.webp'),
 };
 
 const ENEMY_ART_POOL: number[] = Object.values(ENEMY_ART_BY_KEY);

@@ -15,10 +15,11 @@
 // per-directory provenance.json files):
 //
 //   maps/ combat/ splatter/   Public domain              -> publish
-//   enemies/ (1 of 3)         CC BY 3.0, artist named    -> publish WITH the
-//                                                           attribution rendered
 //   enemies/ (2 of 3)         UNRESOLVED                 -> EXCLUDE
-//     (enemy counts re-audited at the phase R2 roster reset, 2026-09-29)
+//   enemies/ (1 of 3)         torio free material        -> EXCLUDE until T
+//                             (no attribution required)     rules the terms in
+//     (enemy counts re-audited at phase AN4a, 2026-10-22, which retired the
+//     one CC BY silhouette; the attribution tier stays for the next CC BY file)
 //   cards/ (19)               UNRESOLVED                 -> EXCLUDE
 //   portraits/ (15)           UNRESOLVED                 -> EXCLUDE
 //   treasure/ (4)             UNRESOLVED                 -> EXCLUDE

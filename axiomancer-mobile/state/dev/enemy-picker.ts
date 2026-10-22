@@ -2,7 +2,7 @@
  * Dev-only ENEMY PICKER helpers.
  *
  * Lets a tester fight ANY authored foe from ANY map — including the
- * region boss (The Doorwarden), which no map pool draws (it is pinned
+ * region boss (The Death Beholder), which no map pool draws (it is pinned
  * per-node), so the `library` roster lists every production foe — by staging the same `combat-prelude` event the
  * live exploration path produces, so `<CombatGate>` engages it and the
  * fight pays out real rewards through `endCombat`.

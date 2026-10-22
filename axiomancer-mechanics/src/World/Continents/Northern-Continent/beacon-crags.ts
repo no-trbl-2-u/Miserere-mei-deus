@@ -23,7 +23,7 @@
  *   c6  the glacier shrine                              (the door, terminal)
  *
  * The door fight holds a column of its own and is the glacier shrine's only
- * way in, so no route reaches the exit past the Doorwarden.
+ * way in, so no route reaches the exit past the Death Beholder.
  *
  * Lanes run west to east in every band, so every lateral rib joins two
  * landmarks that are neighbours on the plate. Events use the shipped builders

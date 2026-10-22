@@ -50,7 +50,7 @@ test('a later record wins over the directory wildcard it supersedes', () => {
     assert.equal(covers(records[1], 'prop.webp'), false)
 })
 
-test('the shipped tree still says what the About page claims: card art is withheld, some foes publish', () => {
+test('the shipped tree still says what the About page claims: card art is withheld, and so is the boss', () => {
     // These two directories are the ones the public catalog reads. If either
     // verdict flips, the About page's wording and the catalog's plates must
     // change with it — which is exactly why this is asserted rather than
@@ -58,8 +58,11 @@ test('the shipped tree still says what the About page claims: card art is withhe
     assert.equal(verdictFor('cards', 'freeze.webp').publish, false, 'card art must not publish while its licence is UNRESOLVED')
     const records = readProvenance('enemies')
     assert.ok(records.length > 1, 'the enemies directory should carry per-file records')
-    const licensed = verdictFor('enemies', 'the-doorwarden.webp', records)
-    assert.equal(licensed.publish, true)
-    assert.equal(licensed.tier, 'attribution')
-    assert.ok(licensed.attribution.length > 0)
+    // Phase AN4a retired the one CC BY silhouette. The boss is now torio's
+    // free material, whose terms name no licence this gate recognises, so it
+    // is withheld until T rules those terms into PUBLIC_DOMAIN.
+    const boss = verdictFor('enemies', 'death-beholder.webp', records)
+    assert.equal(boss.publish, false)
+    assert.match(boss.why, /neither public domain\/CC0 nor an attribution licence/)
+    assert.ok(boss.attribution.length > 0, 'the artist stays on record either way')
 })

@@ -51,7 +51,7 @@ describe('scaledEncounterLevel', () => {
     });
 
     it('boss band stays in [+2, +3] relative to the player', () => {
-        const boss = ENEMY_REGISTRY['the-doorwarden'];
+        const boss = ENEMY_REGISTRY['death-beholder'];
         for (let i = 0; i < 50; i++) {
             const level = scaledEncounterLevel(boss, 5);
             expect(level).toBeGreaterThanOrEqual(7);

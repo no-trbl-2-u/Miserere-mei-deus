@@ -165,7 +165,7 @@ describe('validateFrameSet', () => {
 
     it('fails a manifest that declares no anchor kind', () => {
         const set = validSet();
-        // The float-eye floats and the doorwarden stands; there is no single
+        // The float-eye floats and the jelly rests on its base; there is no single
         // right anchor, so a manifest that names neither kind is unusable.
         delete (set.manifest as { anchor?: unknown }).anchor;
         expect(validateFrameSet('anchorless', set).join(' ')).toMatch(/declares no anchor kind/);

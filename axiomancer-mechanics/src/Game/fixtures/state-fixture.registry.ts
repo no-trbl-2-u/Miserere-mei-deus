@@ -38,7 +38,7 @@ export const STATE_FIXTURES: readonly StateFixture[] = Object.freeze([
     },
     {
         id: 'sage-bw-door-gate',
-        description: 'Sage (L15) on the Breakwater\'s bw-15, one step from the door fight (bw-17, the Doorwarden) and two from the river bridge (bw-18). Combat + travel surfaces.',
+        description: 'Sage (L15) on the Breakwater\'s bw-15, one step from the door fight (bw-17, the Death Beholder) and two from the river bridge (bw-18). Combat + travel surfaces.',
         seed: 'fixture-sage-bw-door-gate',
         preset: 'sage',
         world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-15' },

@@ -5,7 +5,7 @@
  * `sandbag-01` dev dummy:
  *   - Float-Eye (L1, normal) — every Act 1 map's wandering fight.
  *   - The Brine Hag (L7, elite) — a rarer mid-region fight; befriendable.
- *   - The Doorwarden (L8, boss) — every region's door fight.
+ *   - The Death Beholder (L8, boss) — every region's door fight.
  *
  * No enemy carries a keyword, affliction or rider.
  *
@@ -44,7 +44,7 @@ function drop(id: string, weight: number): LootTableEntry {
 
 const ADDED = '2026-07-06';
 
-/** Provenance stamp for the W-01 labyrinth-boss batch the Doorwarden came from. */
+/** Provenance stamp for the W-01 labyrinth-boss batch the Act 1 boss's numbers came from. */
 const APORIA_ADDED = '2026-07-07';
 
 // ─── The roster ───────────────────────────────────────────────────────────────
@@ -135,14 +135,14 @@ export const BrineHag = createEnemy({
  * The region boss — every Act 1 region's door fight. Its stages are a boss
  * phase change, not keywords.
  */
-export const TheDoorwarden = createEnemy({
-    id: 'enemy-the-doorwarden',
-    portraitAsset: 'the-doorwarden',
-    name: 'The Doorwarden',
+export const DeathBeholder = createEnemy({
+    id: 'enemy-death-beholder',
+    portraitAsset: 'death-beholder',
+    name: 'The Death Beholder',
     description:
-        'A hinge-priest of jointed bronze, kneeling in a chapel whose walls are doors. ' +
-        'Every door that ever shut is remembered in him, and he holds them all shut at once. ' +
-        'He does not hate you. He simply does not recognize your right of way.',
+        'An eye that outlived its seeing. The sockets are empty, and the gaze comes out of them ' +
+        'anyway, heavier for having nothing left to look through. It does not blink. ' +
+        'It has nothing left to close.',
     level: 8,
     baseStats: enemyStatBudget(8, { heart: 1, body: 3, mind: 2 }),
     mapName: 'lantern-deep',
@@ -180,7 +180,7 @@ export const TheDoorwarden = createEnemy({
         quiet:  'You pause to knock. In his chapel, knocking is consent to the terms of the house.',
     },
     journalEntry: {
-        id: 'codex-the-doorwarden',
+        id: 'codex-death-beholder',
         title: 'The Hinge-Priest',
         body:
             'The house needed something to believe in its doors, so it built a believer. ' +
@@ -216,11 +216,11 @@ export const Sandbag_01 = createEnemy({
 // ─── Library indices ──────────────────────────────────────────────────────────
 
 /** Every production enemy, in tier order. */
-export const EnemyLibrary = [FloatEye, BrineHag, TheDoorwarden] as const;
+export const EnemyLibrary = [FloatEye, BrineHag, DeathBeholder] as const;
 
 /**
  * An Act 1 region's wandering pool: Float-Eye. The Brine Hag is a
- * rarer mid-region fight and the Doorwarden the door fight; both are pinned
+ * rarer mid-region fight and the Death Beholder the door fight; both are pinned
  * per-node in `MapEvents/content.ts`, not drawn.
  */
 const ACT1_POOL = [FloatEye];
@@ -249,7 +249,7 @@ export const ENEMY_REGISTRY = {
     sandbag: Sandbag_01,
     'float-eye':      FloatEye,
     'brine-hag':      BrineHag,
-    'the-doorwarden': TheDoorwarden,
+    'death-beholder': DeathBeholder,
 } as const;
 
 export type EnemySlug = keyof typeof ENEMY_REGISTRY;

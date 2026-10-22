@@ -183,7 +183,7 @@ test('every provenance record covers files that actually exist', () => {
       if (!Array.isArray(entry.covers)) continue
       for (const claim of entry.covers) {
         // Entries may carry a parenthetical source note, e.g.
-        // `"the-doorwarden.webp (door-watcher.svg)"` — the filename is the
+        // `"portrait.webp (source-glyph.svg)"` — the filename is the
         // first token and the note describes where the art came from.
         const name = String(claim).split(/\s+/)[0]
         if (!fs.existsSync(path.join(d.dir, name))) phantom.push(`${d.rel}: ${name}`)

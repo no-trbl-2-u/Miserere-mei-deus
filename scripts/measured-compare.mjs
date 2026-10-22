@@ -29,7 +29,7 @@ const EPSILON = 1e-9
  *
  * @param {{ fight: string, deck: string, spread: string }} cell a history cell.
  * @returns {string} `fight|deck|spread`.
- * @example cellKey({ fight: 'bw-17/the-doorwarden', deck: 'grey', spread: 'even' }) // 'bw-17/the-doorwarden|grey|even'
+ * @example cellKey({ fight: 'bw-17/death-beholder', deck: 'grey', spread: 'even' }) // 'bw-17/death-beholder|grey|even'
  */
 export function cellKey(cell) {
   return `${cell.fight}|${cell.deck}|${cell.spread}`
@@ -71,8 +71,8 @@ export function compare({ current, previous, thresholds = DEFAULT_THRESHOLDS }) 
  *
  * @param {{ fight: string, deck: string, metric: string }} drift from `compare`.
  * @returns {string} the heading prefix every row for this key starts with.
- * @example auditRowPrefix({ fight: 'bw-17/the-doorwarden', deck: 'grey', metric: 'winRate' })
- *   // '### [ ] [content] measured drift: bw-17/the-doorwarden grey winRate '
+ * @example auditRowPrefix({ fight: 'bw-17/death-beholder', deck: 'grey', metric: 'winRate' })
+ *   // '### [ ] [content] measured drift: bw-17/death-beholder grey winRate '
  */
 export function auditRowPrefix(drift) {
   return `### [ ] [content] measured drift: ${drift.fight} ${drift.deck} ${drift.metric} `

@@ -24,7 +24,7 @@ const SAMPLES: ReadonlyArray<{ label: string; key: string; boss?: boolean }> = [
     { label: 'flora', key: 'bramble-sprite' },
     { label: 'zealot', key: 'brine-hag' },
     { label: 'eldritch', key: 'float-eye' },
-    { label: 'tyrant (boss)', key: 'the-doorwarden', boss: true },
+    { label: 'tyrant (boss)', key: 'death-beholder', boss: true },
     { label: 'generic', key: 'mystery-foe' },
 ];
 

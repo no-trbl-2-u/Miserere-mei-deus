@@ -81,7 +81,7 @@ describe('EnemyIllustration', () => {
     });
 
     it('routes a tyrant boss to the crowned CreatureScene', () => {
-        const key = 'the-doorwarden';
+        const key = 'death-beholder';
         expect(resolveEnemyArchetype(key, true)).toBe('tyrant');
         const tree = render(<EnemyIllustration enemyArtKey={key} isBoss />);
         const scene = tree.getByLabelText(/Combat encounter illustration showing /);

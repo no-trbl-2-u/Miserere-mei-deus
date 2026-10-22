@@ -124,8 +124,8 @@ export function collectObjectives(log: QuestLog, itemId: string): Array<{
  * updated log plus the quests that completed as a result.
  *
  * Matching is on the enemy's DISPLAY NAME (`Enemy.name`), which is what the
- * authored objectives carry — e.g. an objective targets "The Doorwarden",
- * not the `the-doorwarden` slug.
+ * authored objectives carry — e.g. an objective targets "The Death Beholder",
+ * not the `death-beholder` slug.
  *
  * It is a reusable reducer because the hazard-pattern combat never routes
  * through `endCombat`, so the host calls it when a fight ends.

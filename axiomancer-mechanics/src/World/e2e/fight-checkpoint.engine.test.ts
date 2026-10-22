@@ -74,7 +74,7 @@ const cases = [
         boss: false,
     },
     {
-        name: 'the door fight (the Doorwarden at bw-17)',
+        name: 'the door fight (the Death Beholder at bw-17)',
         approach: () => {
             const placed = placeOnNode(createStartingWorld('breakwater'), 'bw-16');
             return { ...placed, currentMap: unlockAdjacent(placed.currentMap, 'bw-16') };

@@ -9,7 +9,7 @@
  *
  * The library holds only the
  * 14 cards the three live foes play — Float-Eye, the Brine Hag and the
- * Doorwarden. Every card deals plain damage: no card carries a debuff
+ * Death Beholder. Every card deals plain damage: no card carries a debuff
  * (`effectId`/`intensity`). The debuff fields stay on the types because the
  * resolver still reads them; nothing
  * in the library sets them.
@@ -19,7 +19,7 @@
  *
  *   common 0.8-1.0 · escalation 1.0-1.3 · signature 1.3-1.6
  *
- * and a deck's later cards carry the heavier weights. The Doorwarden's
+ * and a deck's later cards carry the heavier weights. The Death Beholder's
  * seven cards sit below these bands (0.8-1.15): its fight is paced by its
  * late tier gates (`tier2AtRound` 4, `tier3AtRound` 7) and its VITAE, so
  * its damage steps up at rounds 7-8 instead of peaking at rounds 4-5. `actionText` never
@@ -122,7 +122,7 @@ export const ENEMY_CARD_LIBRARY: Record<string, EnemyCard> = {
         archetype: 'the-aporia',
         grade: 'signature',
         damageWeight: 1.1,
-        actionText: 'The Doorwarden lays a threshold under your feet; it declines to be crossed, and takes the four steps you had left',
+        actionText: 'The Death Beholder lays a threshold under your feet; it declines to be crossed, and takes the four steps you had left',
     },
     'the-door-kept-open': {
         name: 'The Door You Kept Open',

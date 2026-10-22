@@ -42,7 +42,7 @@ describe('the Act 1 XP ledger (LV1)', () => {
                 name: 'Stage', level: door.playerLevel,
                 baseStats: stageStats(door.playerLevel, 'even'), knownCards: [...STARTING_CARD_IDS],
             });
-            const foe = scaleEnemyToLevel(ENEMY_REGISTRY['the-doorwarden'], door.doorLevel!);
+            const foe = scaleEnemyToLevel(ENEMY_REGISTRY['death-beholder'], door.doorLevel!);
             const { winRate } = simulateHazardPatternCombat(player, foe, 100, 1);
             expect(winRate, door.nodeId).toBeGreaterThan(0.1);
             expect(winRate, door.nodeId).toBeLessThan(0.9);

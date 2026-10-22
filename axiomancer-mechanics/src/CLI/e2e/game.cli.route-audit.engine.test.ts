@@ -6,7 +6,7 @@ import { randomUUID } from 'crypto';
 
 import { runGameCli } from '../game.cli';
 import { setStateLogPath, setOutputMode } from '../io';
-import { ENEMY_REGISTRY, TheDoorwarden } from '../../Enemy/enemy.library';
+import { ENEMY_REGISTRY, DeathBeholder } from '../../Enemy/enemy.library';
 import { scaleEnemyToLevel } from '../../World/encounter';
 
 const tmpFiles: string[] = [];
@@ -48,7 +48,7 @@ describe('Phase 14 — route survivorship vs coverage-audit classification', () 
         expect((summary.resolvedNodeIds as string[]).length).toBe(18);
         expect(summary.combatOutcomes).toEqual({});
 
-        // bw-17 is the Doorwarden's door fight; bw-1 is the arrival cutscene
+        // bw-17 is the Death Beholder's door fight; bw-1 is the arrival cutscene
         // — the audit inspects wiring, it never fights anyone. bw-18 is the
         // door to charcoal-wood — the read-only audit sees its kind without
         // walking through it. bw-16 is the region's Anvil.
@@ -66,7 +66,7 @@ describe('Phase 14 — route survivorship vs coverage-audit classification', () 
         const logPath = tmpPath('defeat-stop');
 
         // The bw-8 combat (the Brine Hag's elite node) is forced against a
-        // ceiling enemy — a test-only registry entry: the Doorwarden scaled
+        // ceiling enemy — a test-only registry entry: the Death Beholder scaled
         // to L110 — so it is a DETERMINISTIC defeat regardless of card
         // balance. The impossible enemy decouples this classifier test from
         // balance for good.
@@ -79,7 +79,7 @@ describe('Phase 14 — route survivorship vs coverage-audit classification', () 
         // a capped, undecided combat must not. bw-12 is a route target but
         // must never be reached once bw-8 ends in defeat.
         const registry = ENEMY_REGISTRY as Record<string, unknown>;
-        registry['test-ceiling'] = scaleEnemyToLevel(TheDoorwarden, 110);
+        registry['test-ceiling'] = scaleEnemyToLevel(DeathBeholder, 110);
         try {
             await runGameCli([
                 '--start-map', 'breakwater', '--route', 'bw-2,bw-8,bw-12',

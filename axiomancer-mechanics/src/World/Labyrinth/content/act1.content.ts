@@ -17,7 +17,7 @@ export const ACT1: LabyrinthActDef = {
     entry: 'ap1-1',
     questRoom: 'ap1-8',
     bossRoom: 'ap1-15',
-    bossSlug: 'the-doorwarden',
+    bossSlug: 'death-beholder',
     descent: 'act2',
     riddle: ACT1_RIDDLE,
     gates: [

@@ -25,8 +25,8 @@ describe('resolveEnemyArchetype', () => {
     });
 
     it('routes a survivor with no keyword by its boss flag', () => {
-        expect(resolveEnemyArchetype('enemy-the-doorwarden', true)).toBe('tyrant');
-        expect(resolveEnemyArchetype('enemy-the-doorwarden', false)).toBe('generic');
+        expect(resolveEnemyArchetype('enemy-death-beholder', true)).toBe('tyrant');
+        expect(resolveEnemyArchetype('enemy-death-beholder', false)).toBe('generic');
     });
 
     it('falls back to generic for foes and tyrant for unknown bosses', () => {

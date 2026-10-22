@@ -26,7 +26,7 @@ function greyPlayer(health: number, maxHealth: number): Character {
 
 describe('lowest VITAE in the combat sim (R12a A3)', () => {
     const floatEye = scaleEnemyToLevel(ENEMY_REGISTRY['float-eye'], 1);
-    const doorwarden = scaleEnemyToLevel(ENEMY_REGISTRY['the-doorwarden'], 4);
+    const doorwarden = scaleEnemyToLevel(ENEMY_REGISTRY['death-beholder'], 4);
 
     it('a player too deep to dent never drops below full', () => {
         const r = runOneEncounter(greyPlayer(1_000_000, 1_000_000), floatEye, 1);

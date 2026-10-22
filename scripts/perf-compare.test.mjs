@@ -28,7 +28,7 @@ const metrics = (over = {}) => ({
   frameP95Ms: 20,
   slowFramePct: 4,
   longTaskMs: 200,
-  engineMsPerCombat: { FloatEye: 1, BrineHag: 1, TheDoorwarden: 1, all: 1 },
+  engineMsPerCombat: { FloatEye: 1, BrineHag: 1, DeathBeholder: 1, all: 1 },
   ...over,
 })
 const line = (over = {}, cpu = 'cpu-a') => ({ commit: 'aaa', runner: { cpu, cores: 4 }, metrics: metrics(over) })

@@ -1,7 +1,7 @@
 /**
  * Hermetic engine test — the v26 → v27 hop: the enemy reset.
  *
- * The roster is Float-Eye, the Brine Hag and the Doorwarden, and no enemy
+ * The roster is Float-Eye, the Brine Hag and the Death Beholder, and no enemy
  * carries a keyword. A staged encounter carries its enemies whole, so a v26 save may
  * name a deleted foe, or a survivor still wearing its old keywords. The hop
  * re-points the first to a fresh Float-Eye and strips the second; everything
@@ -11,15 +11,15 @@
 import { describe, it, expect } from 'vitest';
 import { migrate } from '../game.migrate';
 import { createNewGameState, GAME_STATE_VERSION } from '../game.reducer';
-import { FloatEye, TheDoorwarden } from '../../Enemy/enemy.library';
+import { FloatEye, DeathBeholder } from '../../Enemy/enemy.library';
 
-/** A v26 save staged on a deleted foe and a Doorwarden still wearing keywords. */
+/** A v26 save staged on a deleted foe and a Death Beholder still wearing keywords. */
 function v26Save(): Record<string, unknown> {
     const fresh = createNewGameState();
-    const oldDoorwarden = {
-        ...structuredClone(TheDoorwarden),
+    const oldBoss = {
+        ...structuredClone(DeathBeholder),
         keywords: [{ kind: 'hide', n: 6 }, { kind: 'unshaken' }],
-        stages: (TheDoorwarden.stages ?? []).map(st => ({ ...st, gain: [{ kind: 'brutal' }] })),
+        stages: (DeathBeholder.stages ?? []).map(st => ({ ...st, gain: [{ kind: 'brutal' }] })),
     };
     return {
         ...fresh,
@@ -29,7 +29,7 @@ function v26Save(): Record<string, unknown> {
             origin: 'bw-2',
             enemies: [
                 { id: 'enemy-grave-larva', name: 'Grave Larva', keywords: [{ kind: 'hide', n: 2 }] },
-                oldDoorwarden,
+                oldBoss,
             ],
         },
     };
@@ -52,11 +52,11 @@ describe('migrate v26 → v27 (THE REVAMP R2 / D48)', () => {
     it('strips a survivor\'s keywords and stage gains, keeping the rest of it', () => {
         const migrated = migrate(v26Save(), 26, 27);
         const warden = migrated.currentEncounter!.enemies[1]!;
-        expect(warden.id).toBe(TheDoorwarden.id);
+        expect(warden.id).toBe(DeathBeholder.id);
         expect(warden.keywords).toEqual([]);
-        expect(warden.stages).toHaveLength(TheDoorwarden.stages!.length);
+        expect(warden.stages).toHaveLength(DeathBeholder.stages!.length);
         for (const stage of warden.stages!) expect(stage).not.toHaveProperty('gain');
-        expect(warden.stages![0]!.name).toBe(TheDoorwarden.stages![0]!.name);
+        expect(warden.stages![0]!.name).toBe(DeathBeholder.stages![0]!.name);
     });
 
     it('leaves flags for retired foes as inert strings, and the encounter origin', () => {

@@ -19,7 +19,7 @@
 import { Player } from '../Character/characters.mock';
 import type { Character } from '../Character/types';
 import type { Enemy } from '../Enemy/types';
-import { FloatEye, BrineHag, TheDoorwarden } from '../Enemy/enemy.library';
+import { FloatEye, BrineHag, DeathBeholder } from '../Enemy/enemy.library';
 import { GREY_OFFICE_CARDS } from '../Cards/library/starters.cards';
 import { deepClone } from '../Utils';
 import { simulateHazardPatternCombat, type CombatSimPolicyId } from '../Combat/combat.encounter.sim';
@@ -27,7 +27,7 @@ import { simulateHazardPatternCombat, type CombatSimPolicyId } from '../Combat/c
 // `statusEngagement` warning light; it governs nothing.
 import { formatCombatQuality } from '../Combat/combat.objective';
 
-export const ENEMIES: Record<string, Enemy> = { FloatEye, BrineHag, TheDoorwarden };
+export const ENEMIES: Record<string, Enemy> = { FloatEye, BrineHag, DeathBeholder };
 
 /** Default `--loadout`: the grey office, the whole player card library. */
 export const DEFAULT_LOADOUT: string[] = GREY_OFFICE_CARDS.map(c => c.id);

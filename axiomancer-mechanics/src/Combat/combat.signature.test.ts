@@ -8,7 +8,7 @@
 import { describe, it, expect } from 'vitest';
 
 import { Player } from '../Character/characters.mock';
-import { BrineHag, FloatEye, TheDoorwarden } from '../Enemy/enemy.library';
+import { BrineHag, FloatEye, DeathBeholder } from '../Enemy/enemy.library';
 import type { Enemy } from '../Enemy/types';
 import {
     initializeCombatEncounter, rollEncounterDice, playSignatureSkill, selectMercyChoice,
@@ -75,7 +75,7 @@ describe('R4 — The Open Hand is the befriend', () => {
 
     it.each([
         ['Float-Eye', FloatEye],
-        ['the Doorwarden', TheDoorwarden],
+        ['the Death Beholder', DeathBeholder],
     ])('refuses on %s, which cannot be befriended', (_name, enemy) => {
         const s = encounter(enemy, 0.05);
         expect(signatureCastBlock(s, getSignatureSkill(OPEN_HAND)!)).toMatch(/will not be befriended/);

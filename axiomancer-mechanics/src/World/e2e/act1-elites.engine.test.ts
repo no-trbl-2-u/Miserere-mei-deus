@@ -2,7 +2,7 @@
  * Act 1's fights.
  *
  * Every Act 1 region's door fight — the map's last fight
- * column — is the Doorwarden as a boss; each region keeps one mid-region
+ * column — is the Death Beholder as a boss; each region keeps one mid-region
  * node pinned to its one elite, the Brine Hag. Every other fight is Float-Eye.
  *
  * Every Act 1 fight is pinned low, and the elite is too: an
@@ -31,9 +31,9 @@ describe.each(ACT1_MAPS)('Act 1 fights on %s / %s (D30, D61)', (continent, mapNa
         return [{ node, payload, foe: roster.get(payload.enemySlug!) }];
     });
 
-    it('has exactly one boss — the Doorwarden, on the last fight column (D61)', () => {
+    it('has exactly one boss — the Death Beholder, on the last fight column (D61)', () => {
         const bosses = fights.filter(f => f.payload.isBoss);
-        expect(bosses.map(f => f.payload.enemySlug)).toEqual(['the-doorwarden']);
+        expect(bosses.map(f => f.payload.enemySlug)).toEqual(['death-beholder']);
         const lastColumn = Math.max(...fights.map(f => f.node.location[0]));
         expect(bosses[0]!.node.location[0]).toBe(lastColumn);
     });
