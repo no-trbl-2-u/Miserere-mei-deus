@@ -283,6 +283,8 @@ event-pool and layout files).
       `cand-cost-hard-01..10`, each holding a new card, no slack (best surplus 0), and lost by staging the whole
       opening hand; each new card both required somewhere and a trap somewhere. Brief `plan/phases/phase_HP5_cost_card_puzzles.md` § HP5d. Requires HP5a,
       HP5b, HP5c.
+- [ ] Phase AN2a — The enemy action card goes (plotted by T, 2026-10-21): T watched the first preview build carrying AN1 and ruled the card out — a centred `absoluteFillObject` overlay at `zIndex: 45` holding ~1.9s after END PHASE, directly over the enemy during the turn the lunge plays. The component, its mount, its presenter and its two suites go; the threat glyph and the damage floats stay and are what still say what happened. Brief `plan/phases/phase_AN2_the_animation_is_seen.md` § AN2a. Requires nothing.
+- [ ] Phase AN2b — The flinch waits for the board to clear (plotted by T, 2026-10-21): the `struck` clip is selected at t=0, so on device the flinch played mostly behind the player's own cards. It now waits until the played card is off the enemy, off a delay derived from that animation's own duration rather than a second hand-typed constant; `attacking` keeps the `ENEMY_ATTACK_IMPACT_MS` offset it shares with the pane's recoil. A delayed clip still plays in full and still returns to idle. Brief `plan/phases/phase_AN2_the_animation_is_seen.md` § AN2b. Requires nothing.
 - [ ] Phase HP4e — T plays the thirty (plotted by T, 2026-10-19) (attended): T plays each candidate once, timed by
       HP2c's move log, and `docs/reports/hazard-puzzle-candidates.md` records the label, the intended band, the
       time, whether T solved it and T's keep-or-cut ruling in T's words. Brief
@@ -1015,6 +1017,16 @@ See the status rows above; generate briefs on demand.
 > "reason not stated" — never invent one), and the resulting
 > commit/issue/phase-brief when available.
 
+- **2026-10-21** — actor: **T, attended session** (`/plot asap`, branch
+  `loop/plot-AN2-animation-unobscured`). Action: **added Phases AN2a and AN2b** directly above the
+  first open row. Confirmed T's request: yes. Reason (T), after installing the first preview APK
+  carrying AN1 and fighting the Float-Eye: the idle hover, the flinch and the lunge all play
+  correctly on device, but two things hide them — "we should wait just a moment AFTER we apply
+  the card because the animation ends up doing the flinch mostly behind the player's cards" and
+  "the telegraph modal from the enemy, that's gotta go. It's mostly pointless and blocks part of
+  the animation". T chose outright deletion over keeping the card's text elsewhere, and delaying
+  the flinch over rerouting the card. `asap` because both are defects in work T has just seen.
+  Brief `plan/phases/phase_AN2_the_animation_is_seen.md`.
 - **2026-10-21** — actor: **T, attended session** (`/plot asap`, branch `loop/plot-RV4-drop-daily-cap`). Action: **added Phase RV4** directly above the first open row.
   Confirmed T's request: yes. Reason (T), on being shown `DAILY_CAP = 12` after it held PR #725:
   "I don't want that". T first chose `/oversight`; that skill's hard rule 1 forbids editing code
