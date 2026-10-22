@@ -278,7 +278,7 @@ event-pool and layout files).
 - [x] (#771) Phase HP5a — Five cost cards (plotted by T, 2026-10-21): five hazard cards that trade meter points for a
       utility (two Toll, one Debt, two Overdrive), validated, never drawn by the live three-round hazard, in the
       puzzle card pool and clear of the worse-copy check. Brief `plan/phases/phase_HP5_cost_card_puzzles.md` § HP5a. Requires nothing.
-- [ ] Phase HP5b — Costs on the board (plotted by T, 2026-10-21): `HazardCard` draws a negative value with a minus
+- [x] (#789) Phase HP5b — Costs on the board (plotted by T, 2026-10-21): `HazardCard` draws a negative value with a minus
       sign, the meters show a debt below zero, and projected progress counts a staged cost. Brief
       `plan/phases/phase_HP5_cost_card_puzzles.md` § HP5b. Requires HP5a.
 - [x] (#773) Phase HP5c — The twenty easy and medium candidates go (plotted by T, 2026-10-21): `cand-easy-*` and

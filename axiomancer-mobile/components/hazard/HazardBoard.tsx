@@ -37,6 +37,7 @@ import type {
     HazardMeterVM,
     HazardViewModel,
 } from '@/state/presenters/hazard.engine';
+import { hazardMeterSpokenLabel, hazardStagedValueLabel } from '@/state/presenters/hazard.engine';
 import { HAZARD_TUNING } from '@mechanics';
 import { FONTS, HUE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
@@ -45,7 +46,7 @@ import { HazardCard } from './HazardCard';
 import { HazardDie } from './HazardDie';
 import { DieTumble } from './HazardOverlays';
 import { Cracks, LedgerMark, ProgGlyph, TrashGlyph } from './glyphs';
-import { HZ, routeAccent, TYPE_ACCENT } from './palette';
+import { DEBT_ACCENT, HZ, routeAccent, TYPE_ACCENT } from './palette';
 
 // ---------------------------------------------------------------------------
 // Drag plumbing
@@ -118,16 +119,22 @@ function SegBar({ meter }: { meter: HazardMeterVM }) {
         <View
             accessible
             accessibilityRole="progressbar"
-            accessibilityLabel={`${meter.label} progress: ${meter.value} of ${meter.need} ${meter.met ? '- requirement met' : '- not yet met'}`}
-            accessibilityValue={{ min: 0, max: meter.need, now: meter.value }}
+            accessibilityLabel={hazardMeterSpokenLabel(meter)}
+            accessibilityValue={{ min: Math.min(0, meter.value), max: meter.need, now: meter.value }}
+            testID={`hazard-meter-${meter.key}`}
         >
             <View style={styles.meterHead}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
                     <ProgGlyph kind={meter.key} size={13} color={accent} />
                     <Text style={[styles.meterLabel, { color: accent }]}>{meter.label}</Text>
+                    {meter.debt && (
+                        <Text testID={`hazard-meter-${meter.key}-debt`} style={[styles.debtTag, { borderColor: DEBT_ACCENT, color: DEBT_ACCENT }]}>
+                            DEBT
+                        </Text>
+                    )}
                 </View>
-                <Text style={[styles.meterValue, { color: meter.met ? accent : AXM.parchment }]}>
-                    {meter.value}
+                <Text style={[styles.meterValue, { color: meter.debt ? DEBT_ACCENT : meter.met ? accent : AXM.parchment }]}>
+                    {meter.valueLabel}
                     <Text style={{ color: AXM.bone }}> / {meter.need}</Text>
                     {meter.met ? ' ✓' : ''}
                 </Text>
@@ -142,7 +149,7 @@ function SegBar({ meter }: { meter: HazardMeterVM }) {
                             style={[
                                 styles.seg,
                                 {
-                                    borderColor: filled ? accent : AXM.ash,
+                                    borderColor: filled ? accent : meter.debt ? DEBT_ACCENT : AXM.ash,
                                     backgroundColor: filled ? accent : 'rgba(0,0,0,0.45)',
                                 },
                             ]}
@@ -598,7 +605,7 @@ export const HazardBoard = React.memo(function HazardBoard({
                                         testID={`hazard-staged-${card.uid}`}
                                         accessible
                                         accessibilityRole="button"
-                                        accessibilityLabel={`${card.name}, ${card.kind} card staged for play. ${card.applied ? 'Applied and locked. ' : card.poweredByDieId ? 'Powered by mana die. ' : 'Drop a die anywhere on it to power it. '}${card.powered.force || card.powered.escape ? `Will provide: ${card.powered.force} force, ${card.powered.escape} escape.` : ''}`}
+                                        accessibilityLabel={`${card.name}, ${card.kind} card staged for play. ${card.applied ? 'Applied and locked. ' : card.poweredByDieId ? 'Powered by mana die. ' : 'Drop a die anywhere on it to power it. '}${hazardStagedValueLabel(card)}`}
                                         accessibilityHint={card.applied ? 'Locked in' : 'Tap to return to hand, or drag a die onto the card to power it, then Apply'}
                                     >
                                         <HazardCard card={card} mode="play" />
@@ -698,6 +705,7 @@ const useStyles = makeStyles((AXM) => ({
     meterHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 3 },
     meterLabel: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 1.4 },
     meterValue: { fontFamily: FONTS.mono, fontSize: 14 },
+    debtTag: { fontFamily: FONTS.sans, fontSize: 11, letterSpacing: 1, borderWidth: 1, paddingHorizontal: 4, lineHeight: 13 },
     segRow: { flexDirection: 'row', gap: 2, height: 13 },
     seg: { flex: 1, borderWidth: 1 },
     bothRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginVertical: 5 },
