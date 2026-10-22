@@ -68,6 +68,7 @@
   `workflow_run` workflow keyed on pr-resolve), then prove it on a staged
   conflict. Infra only; nothing about merging, closing or force-pushing
   changes (D86).
+
 ### [x] [bug] The hazard dice cast's springs inherit Reanimated 4's mass 4, so they swing for many seconds (2026-10-14) — CLOSED 2026-10-14 (784d6a1e: TumblingDie uses DICE_ROLL_TIMING's springs; the stamp gets STAMP_SPRING, mass 1, threshold 0.01; HazardOverlays.test.tsx pins it under a second. The cast's 1700ms timer never waited on the springs)
 - issue: #544
 - category: bug
@@ -84,6 +85,7 @@
   hazard cast's interstitial waits on these callbacks is unchecked.
 - next: name mass and energyThreshold on the three hazard springs (or share
   `DiceSpring` values), then check the cast's timing on the built app.
+
 ### [content] roster: the Bleeding Signet is granted by nothing (item-ungranted, RH1, 2026-10-13)
 - category: content
 - impact: 4
@@ -95,6 +97,7 @@
   `World/e2e/roster-health.engine.test.ts` (`PINNED_ORPHANS`).
 - next: needs a brief T approves: stage it, grant it, or retire it (D88).
   The pin changes in the same change.
+
 ### [content] Card-rules fence: 18 Blood Price cards pinned over the complexity budget (Phase CS1, 2026-10-13)
 - category: content
 - impact: 4
@@ -194,6 +197,7 @@
   toplevel of the written file (`git -C <dir> rev-parse --show-toplevel`),
   and pass the path relative to that root; add a `guard.mjs self-test`
   case for a worktree path. R11's first retro is a natural home.
+
 ### [x] [bug] P-07b's printed "(max 30)" does not cap its paid line (RC2 walk, 2026-10-11) — CLOSED 2026-10-13 (0cd35985: DEAL body-scaled the resolved VITAE lost, 30 became 114; both lines now DEAL it `exact`, unscaled, like "HEAL the damage dealt"; blood-price.engine.test.ts pins the caps at body 19)
 - issue: #513
 - source: RC2 walk 2026-10-11 (eb75f451, Blood Price test deck, attended; accepted for the v0.2.0 tag by T, D83)
@@ -742,7 +746,6 @@
   A/B surface is meant.
 
 ### [debt] T5 Tier 2 docs — named for archive but still have consumers (2026-09-25; archive part resolved, effects/enemy rewrite open)
-
 - **Context:** trim T5 archived the Tier 2 docs rows
   (`archive-pre-revamp:plan/archive/2026-09-25-trim-t5/`). Six files the spec named have inbound
   pointers the trim could not repoint, because the pointers live under
@@ -774,7 +777,6 @@
   kept.
 
 ### [debt] T2b dice-flag collapse — live content the OFF path was carrying (2026-09-25)
-
 - **Context:** D7 deleted the Upgradeable-Dice OFF path (stance draft, hidden read, STAKE, v1 wheel, fate-X powering). The shipped model already ignored all of these; the items below were already inert in players' builds and are now visibly so.
 - **Fate cards — RESOLVED (adjust-cards pass 20, 2026-09-26):** `the-note-falls-due`, `miserere`, `dead-pledge` folded `fate` -> off-colour `dieBonus` (recoil moved into the rider). Still open: the `fate` field has zero carriers but remains in `types.ts`, `cards.pricing.ts`, `combat.cards.ts`, `card-upgrades.ts`, `combat.card-complexity.ts`, `card-keywords.ts` and the tests. Deleting it is a small cross-surface cleanup. Also `it-gets-up-again` (`float_x_die`) is priced at 4.5 but almost always pays only its +1 Conviction fallback; that is an owner call alongside the `reroll_spent` item below.
 - **Advantage buffs:** `buff_haste`, `buff_accuracy_up`, `buff_critical_damage_up` and kin grant advantage through the deleted read, so they do nothing in combat. Retire or re-hook (`/adjust-keywords`).
@@ -797,7 +799,6 @@
   - *OMEN's `omenClaim` is never sent by mobile,* so OMEN always falls back to a die-derived stance with a 1-phase window.
 
 ### [debt] TRIM THE FAT T2a merged unverified — finish list (2026-09-25)
-
 - **Context:** owner call 2026-09-25 — T2a merged mid-work without re-running the gates. Full hand-off: `plan/2026-09-25-trim-t2a-handoff.prompt.md`.
 - **Still open:** write-never `MapState.hazardOutcomes` / `HazardNodeOutcome` — left in place (a v26 hop to strip a harmless field is churn; strip it the next time a save hop lands for another reason). `buff_all_stats_up` / `debuff_curse` carry only an inert `rollModifier` and nothing applies them — `/adjust-keywords` call (deprecated-effects list).
 - **Deviation from the spec, kept deliberately:** `combat.autoplay` moved to `src/test-utils/` (three surviving tests use it); `isRouteBlocked` kept (live movement check); `validateInteractions` kept (guards the live interaction registry).
@@ -1993,7 +1994,6 @@ present. Row stays open until that session runs.
   check `git show --stat HEAD` before pushing.
 
 ### [x] [docs] Trim-the-fat spec names `.claude/agents/mechanics-expert.md` as a delete candidate, but four live skills spawn it (2026-09-25) — CLOSED 2026-09-28 (R0)
-
 - **Found by:** T1 of `plan/2026-09-25-trim-the-fat.spec.md` (Tier 1 "Docs" list, last bullet: "Rewrite or delete").
 - **Consumer the audit missed:** `skills/ship-a-phase.md:68,536`, `skills/iterate.md:245,399`, `skills/adjust-cards.md:216`, `skills/adjust-keywords.md:192` all name `mechanics-expert` as the design-second-opinion subagent. Deleting the agent file breaks those spawns.
 - **Action taken:** kept (standing frame ¶1). Spec row stands corrected: this is a *rewrite* (its philosophy-theme / stance-proc doctrine is retired), not a delete. Rewrite is design work, out of T1 scope.
