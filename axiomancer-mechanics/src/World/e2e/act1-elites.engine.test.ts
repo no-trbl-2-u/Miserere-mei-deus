@@ -3,7 +3,7 @@
  *
  * Every Act 1 region's door fight — the map's last fight
  * column — is the Death Beholder as a boss; each region keeps one mid-region
- * node pinned to its one elite, the Brine Hag. Every other fight is Float-Eye.
+ * node pinned to its one elite, the Green Jelly. Every other fight is Float-Eye.
  *
  * Every Act 1 fight is pinned low, and the elite is too: an
  * unpinned elite would scale to its own roster level (7 and up).
@@ -38,9 +38,9 @@ describe.each(ACT1_MAPS)('Act 1 fights on %s / %s (D30, D61)', (continent, mapNa
         expect(bosses[0]!.node.location[0]).toBe(lastColumn);
     });
 
-    it('stages exactly one elite — the Brine Hag — before the door', () => {
+    it('stages exactly one elite — the Green Jelly — before the door', () => {
         const elites = fights.filter(f => f.foe?.difficulty === 'elite');
-        expect(elites.map(f => f.payload.enemySlug)).toEqual(['brine-hag']);
+        expect(elites.map(f => f.payload.enemySlug)).toEqual(['green-jelly']);
         const lastColumn = Math.max(...fights.map(f => f.node.location[0]));
         expect(elites[0]!.node.location[0]).toBeLessThan(lastColumn);
     });

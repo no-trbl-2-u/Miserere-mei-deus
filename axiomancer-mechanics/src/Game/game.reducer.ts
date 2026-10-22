@@ -125,7 +125,7 @@ import { generateRunId } from './run-loop';
  * - v36: levels cost a rising `L × 250` XP; a save's progress is
  *   re-expressed on that curve.
  */
-export const GAME_STATE_VERSION = 37;
+export const GAME_STATE_VERSION = 38;
 
 /**
  * Builds a brand-new GameState with default player and world.

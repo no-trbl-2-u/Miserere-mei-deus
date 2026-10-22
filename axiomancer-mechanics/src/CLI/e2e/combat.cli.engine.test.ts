@@ -72,8 +72,8 @@ describe('Combat CLI — flag parsing', () => {
     });
 
     it('supports --flag=value form', () => {
-        const flags = parseCombatArgv(['--enemy=brine-hag', '--auto']);
-        expect(flags.enemySlug).toBe('brine-hag');
+        const flags = parseCombatArgv(['--enemy=green-jelly', '--auto']);
+        expect(flags.enemySlug).toBe('green-jelly');
         expect(flags.auto).toBe(true);
         expect(flags.policy).toBe('status');
         expect(flags.maxTurns).toBe(8);
@@ -82,8 +82,8 @@ describe('Combat CLI — flag parsing', () => {
     it('marks enemyExplicit only when --enemy was actually passed (phase 26)', () => {
         expect(parseCombatArgv([]).enemyExplicit).toBe(false);
         expect(parseCombatArgv(['--stage', 'early']).enemyExplicit).toBe(false);
-        expect(parseCombatArgv(['--enemy', 'brine-hag']).enemyExplicit).toBe(true);
-        expect(parseCombatArgv(['--stage', 'early', '--enemy', 'brine-hag']).enemyExplicit).toBe(true);
+        expect(parseCombatArgv(['--enemy', 'green-jelly']).enemyExplicit).toBe(true);
+        expect(parseCombatArgv(['--stage', 'early', '--enemy', 'green-jelly']).enemyExplicit).toBe(true);
     });
 
     it('rejects unknown flags', () => {
@@ -188,7 +188,7 @@ describe('Combat CLI — deterministic auto playthrough', () => {
             const logPath = tmpPath(`policy-${policy}`);
             await expect(runCombatCli([
                 '--auto', '--policy', policy,
-                '--enemy', 'brine-hag',
+                '--enemy', 'green-jelly',
                 '--preset', 'apprentice',
                 '--seed', '1',
                 '--max-turns', '8',

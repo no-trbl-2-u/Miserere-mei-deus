@@ -99,7 +99,7 @@ test('the c95114a2 split fails', () => {
     '- pass: 84 (commit dd61ec90)',
     '- viewport: both (375x812 and 1280x800)',
     '- category: comprehension',
-    '- observation: on the Brine Hag board, A Plain Ward shows its FREE pill ("+4")',
+    '- observation: on the Green Jelly board, A Plain Ward shows its FREE pill ("+4")',
     '- evidence: `.critique-artifacts/mobile/04-combat-board.png`',
     '- suggested fix: add a `DEAL` pair for `r.damage` in `riderPairs`',
     '- observation: on the walked Breakwater sheet ("18 nodes · 12 sealed")',

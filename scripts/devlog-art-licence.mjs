@@ -15,11 +15,12 @@
 // per-directory provenance.json files):
 //
 //   maps/ combat/ splatter/   Public domain              -> publish
-//   enemies/ (2 of 3)         UNRESOLVED                 -> EXCLUDE
-//   enemies/ (1 of 3)         torio free material        -> EXCLUDE until T
+//   enemies/ (1 of 3)         UNRESOLVED                 -> EXCLUDE
+//   enemies/ (2 of 3)         torio free material        -> EXCLUDE until T
 //                             (no attribution required)     rules the terms in
 //     (enemy counts re-audited at phase AN4a, 2026-10-22, which retired the
-//     one CC BY silhouette; the attribution tier stays for the next CC BY file)
+//     one CC BY silhouette, and at AN3a, which retired the unresolved hag;
+//     the attribution tier stays for the next CC BY file)
 //   cards/ (19)               UNRESOLVED                 -> EXCLUDE
 //   portraits/ (15)           UNRESOLVED                 -> EXCLUDE
 //   treasure/ (4)             UNRESOLVED                 -> EXCLUDE
@@ -140,7 +141,7 @@ export function readProvenance(dir) {
  * The gate, for one shipped art file.
  *
  * @param {string} dir       e.g. "enemies"
- * @param {string} filename  e.g. "hag.webp"
+ * @param {string} filename  e.g. "float-eye.webp"
  */
 export function verdictFor(dir, filename, records = readProvenance(dir)) {
     const record = recordFor(records, filename)

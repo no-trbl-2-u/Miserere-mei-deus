@@ -11,7 +11,7 @@
  *   npm run perf-bench --workspace axiomancer-mechanics -- --runs=100 --warmup=20
  *
  * Output:
- *   { "engineMsPerCombat": { "FloatEye": 1.2, "BrineHag": 1.4, "DeathBeholder": 2.1, "all": 1.6 } }
+ *   { "engineMsPerCombat": { "FloatEye": 1.2, "GreenJelly": 1.4, "DeathBeholder": 2.1, "all": 1.6 } }
  */
 
 import { performance } from 'node:perf_hooks';

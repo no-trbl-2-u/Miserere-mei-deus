@@ -14,7 +14,7 @@ import { describe, it, expect } from 'vitest';
 
 import { Player } from '../../Character/characters.mock';
 import type { Character } from '../../Character/types';
-import { FloatEye, BrineHag, DeathBeholder } from '../../Enemy/enemy.library';
+import { FloatEye, GreenJelly, DeathBeholder } from '../../Enemy/enemy.library';
 import { deepClone } from '../../Utils';
 import { simulateHazardPatternCombat, runOneEncounter } from '../combat.encounter.sim';
 
@@ -36,7 +36,7 @@ const CONTROL = ['scolds-bridle', 'petty-indictment'];                 // contro
 const TURTLE = ['chilblain-watch', 'hoarfrost-teeth', 'spoiled-poultice']; // wall + thorns + DoT
 
 describe('HP combat — combats terminate for every loadout family (structural, armed)', () => {
-    for (const [name, enemy] of [['FloatEye', FloatEye], ['BrineHag', BrineHag]] as const) {
+    for (const [name, enemy] of [['FloatEye', FloatEye], ['GreenJelly', GreenJelly]] as const) {
         it(`${name}: a DoT loadout terminates every run with exact outcome accounting`, () => {
             const s = simulateHazardPatternCombat(loadout(DOT), enemy, RUNS, SEED);
             expect(s.runs).toBe(RUNS);

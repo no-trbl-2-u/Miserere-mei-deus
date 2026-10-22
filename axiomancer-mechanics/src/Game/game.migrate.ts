@@ -24,9 +24,10 @@
  * dropped), v32 → v33 (the write-only `regionConsequences` slice dropped),
  * v33 → v34 (the parked world's maps, quests and flags dropped), v34 → v35
  * (every relic but the Suppliant's Ring dropped), v35 → v36 (XP
- * re-expressed on the rising level curve) and v36 → v37 (XP re-expressed on
- * the level-20 curve). The hops chain, so a v11 save lands at v37 in one
- * `migrate` call. Every other version mismatch rejects.
+ * re-expressed on the rising level curve), v36 → v37 (XP re-expressed on
+ * the level-20 curve) and v37 → v38 (the Brine Hag's befriend flag and codex
+ * entry renamed to the Green Jelly's). The hops chain, so a v11 save lands at
+ * v38 in one `migrate` call. Every other version mismatch rejects.
  */
 
 import { GameState } from './types';
@@ -945,6 +946,43 @@ function migrateV36ToV37(raw: Record<string, unknown>): Record<string, unknown> 
 }
 
 /**
+ * The Brine Hag became the Green Jelly: the same fight under a new id. A save
+ * that befriended her carries her flag and her codex entry; each is renamed so
+ * the befriend stays recorded and the codex entry still resolves. Old id to
+ * new id.
+ */
+const V37_RENAMED_FLAGS: Readonly<Record<string, string>> = {
+    'befriended-brine-hag': 'befriended-green-jelly',
+};
+const V37_RENAMED_CODEX_ENTRIES: Readonly<Record<string, string>> = {
+    'codex-brine-hag': 'codex-green-jelly',
+};
+
+/** Rename each id in `ids` per `renames`, dropping a duplicate the rename makes. */
+function renameIds(ids: unknown, renames: Readonly<Record<string, string>>): unknown {
+    if (!Array.isArray(ids)) return ids;
+    return [...new Set(ids.map(id => (typeof id === 'string' ? renames[id] ?? id : id)))];
+}
+
+/**
+ * v37 → v38: the Brine Hag's `befriended-` flag and `codex-` entry move to
+ * the Green Jelly's ids. Nothing else in a save names an enemy: the staged
+ * encounter is never persisted and map state holds no payloads. Pure over a
+ * raw v37 save payload.
+ */
+function migrateV37ToV38(raw: Record<string, unknown>): Record<string, unknown> {
+    const codex = raw.codex as { unlockedEntries?: unknown } | undefined;
+    return {
+        ...raw,
+        ...(raw.flags !== undefined ? { flags: renameIds(raw.flags, V37_RENAMED_FLAGS) } : {}),
+        ...(codex && typeof codex === 'object'
+            ? { codex: { ...codex, unlockedEntries: renameIds(codex.unlockedEntries, V37_RENAMED_CODEX_ENTRIES) } }
+            : {}),
+        version: 38,
+    };
+}
+
+/**
  * Narrow a raw save payload to the current `GameState`. Only the current
  * version is accepted; any other version throws (the caller resets to a new
  * game). The name/signature is kept so the persistence layer's call site is
@@ -987,8 +1025,9 @@ export function migrate(
     // v32 → v33 drops the write-only region-consequences slice; v33 → v34
     // drops the parked world's maps, quests and flags; v34 → v35 drops every
     // relic but the Suppliant's Ring; v35 → v36 re-expresses XP on the
-    // rising level curve; v36 → v37 re-expresses it on the level-20 curve.
-    // Chained so a v11 save lands at v37 in one call.
+    // rising level curve; v36 → v37 re-expresses it on the level-20 curve;
+    // v37 → v38 renames the Brine Hag's flag and codex entry to the Green
+    // Jelly's. Chained so a v11 save lands at v38 in one call.
     if (version === 11 && toVersion >= 12) {
         working = migrateV11ToV12(working);
         version = 12;
@@ -1092,6 +1131,10 @@ export function migrate(
     if (version === 36 && toVersion >= 37) {
         working = migrateV36ToV37(working);
         version = 37;
+    }
+    if (version === 37 && toVersion >= 38) {
+        working = migrateV37ToV38(working);
+        version = 38;
     }
 
     if (version !== toVersion) {

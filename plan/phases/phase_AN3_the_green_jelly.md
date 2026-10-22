@@ -76,6 +76,15 @@ Measure: the A1 numeric diff; a repo-wide search clean of the old id; the A6 enc
 
 Open by A3. The phase must read the save schema and record what it finds before deciding.
 
+**Answer (AN3a, 2026-10-22).** A save is `durableSlice` in `Game/store.ts`: version, runId,
+player, world, quests, flags, rngState, codex and the labyrinth. The staged encounter is never
+written, and map state holds no payloads, so no save names the Hag's enemy id or art key. The
+Hag is befriendable, though, and her friendship writes two ids that do persist: the
+`befriended-brine-hag` flag and the `codex-brine-hag` codex entry. Both are renamed, so the
+migration is needed: `GAME_STATE_VERSION` 37 to 38, hop `migrateV37ToV38` in
+`Game/game.migrate.ts`, pinned by `Game/e2e/green-jelly-rename-migration.engine.test.ts`.
+Without it a befriended Hag's codex entry would no longer resolve.
+
 ## Decisions made upfront — DO NOT ASK
 
 - **T chose the art, attended, 2026-10-22**, after being shown the rigged sheet: "Green

@@ -165,7 +165,7 @@ keyword (`EnemyKeyword = never`).
 
 - **Float-Eye:** level 1, normal, 38 VITAE. The only foe drawn at random,
   in every region.
-- **Brine Hag:** level 7, elite, 120 VITAE. Placed on certain nodes. The
+- **Green Jelly:** level 7, elite, 120 VITAE. Placed on certain nodes. The
   only foe that can be befriended.
 - **The Death Beholder:** boss, 320 VITAE at level 8, two stages (at 60% and
   25% VITAE). It holds every region's door, pinned at level 1, 2, 3 and 4
@@ -185,7 +185,7 @@ keyword (`EnemyKeyword = never`).
   to three (`SLOT_CAPACITY.accessory`), so both are worn together and the
   signature bar lists every signature the worn relics grant.
 - **The Open Hand** befriends a foe that has a `friendshipReward` and sits
-  under its `hpGate` (the Brine Hag: below 30% VITAE; `Enemy/befriend.ts`).
+  under its `hpGate` (the Green Jelly: below 30% VITAE; `Enemy/befriend.ts`).
 - **The mercy choice** (`selectMercyChoice`) follows. Spare ends the fight
   as mercy and pays the friendship reward. Exploit strikes for max(10, 50%
   of the foe's maximum VITAE); the fight goes on if the foe survives.

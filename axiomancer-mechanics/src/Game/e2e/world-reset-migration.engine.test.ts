@@ -168,7 +168,7 @@ function v28WithVillageRemnants(): Record<string, unknown> {
         ...fresh,
         version: 28,
         mapGoodwill: { 'fishing-village': 3 },
-        flags: ['village-goodwill-bonus:fishing-village', 'befriended-brine-hag', 'village-goodwill-bonus:breakwater'],
+        flags: ['village-goodwill-bonus:fishing-village', 'befriended-green-jelly', 'village-goodwill-bonus:breakwater'],
         world: {
             ...fresh.world,
             currentContinent: withVillage(fresh.world.currentContinent),
@@ -196,7 +196,7 @@ describe('migrate v28 → v29 (THE REVAMP R3b / D53: fishing-village + goodwill 
     });
 
     it('strips the goodwill bonus flags and keeps every other flag', () => {
-        expect(hop29(v28WithVillageRemnants()).flags).toEqual(['befriended-brine-hag']);
+        expect(hop29(v28WithVillageRemnants()).flags).toEqual(['befriended-green-jelly']);
     });
 
     it('takes fishing-village out of every continent list and out of mapStates', () => {

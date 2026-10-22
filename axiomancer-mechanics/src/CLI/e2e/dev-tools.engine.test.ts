@@ -128,7 +128,7 @@ describe('devGrantCurrency', () => {
 describe('devSpawnEnemy', () => {
     it('spawns an enemy into combat', () => {
         const store = freshStore();
-        const r = devSpawnEnemy(store, 'brine-hag');
+        const r = devSpawnEnemy(store, 'green-jelly');
         expect(r.ok).toBe(true);
         expect(store.getState().currentEncounter).toBeDefined();
     });

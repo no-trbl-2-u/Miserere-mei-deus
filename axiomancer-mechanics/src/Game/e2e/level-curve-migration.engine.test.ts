@@ -28,8 +28,8 @@ function v36At(level: number, experience: number, availableStatPoints = 0): Reco
 const hop = (raw: Record<string, unknown>): GameState => migrate(raw, 36, 37);
 
 describe('migrate v36 → v37 (LV1: the level-20 curve)', () => {
-    it('lands at the current version', () => {
-        expect(GAME_STATE_VERSION).toBe(37);
+    it('lands at v37, below the current version', () => {
+        expect(GAME_STATE_VERSION).toBeGreaterThanOrEqual(37);
         expect(hop(v36At(1, 0)).version).toBe(37);
     });
 
@@ -64,11 +64,11 @@ describe('migrate v36 → v37 (LV1: the level-20 curve)', () => {
         expect(player.experience).toBeGreaterThanOrEqual(player.experienceToNextLevel);
     });
 
-    it('a v35 save chains through both hops to v37', () => {
+    it('a v35 save chains through both hops and on to the current version', () => {
         const fresh = createNewGameState({ startMap: 'breakwater' });
         const raw = { ...fresh, version: 35, player: { ...fresh.player, level: 3, experience: 2500 } };
         const migrated = migrate(raw, 35);
-        expect(migrated.version).toBe(37);
+        expect(migrated.version).toBe(GAME_STATE_VERSION);
         expect(migrated.player.level).toBe(3);
         expect(migrated.player.experienceToNextLevel).toBe(experienceForLevel(4));
     });

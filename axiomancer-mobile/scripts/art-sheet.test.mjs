@@ -38,9 +38,9 @@ import { planSheet } from './generate-art.mjs'
 const MOBILE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
 const sheetSpec = {
-  slug: 'brine-hag',
+  slug: 'green-jelly',
   category: 'enemies',
-  subject: 'The Brine Hag, an old sea-witch standing hunched',
+  subject: 'The Green Jelly, an old sea-witch standing hunched',
   frames: { cols: 4, rows: 2, poses: ['idle sway', 'casting'] },
 }
 
@@ -127,7 +127,7 @@ const runCli = (specPath) => spawnSync(process.execPath, ['scripts/generate-art.
 })
 
 test('the CLI dry run compiles a sheet request for a used enemy', () => {
-  const run = runCli('prompts/enemies/brine-hag.sheet.json')
+  const run = runCli('prompts/enemies/green-jelly.sheet.json')
   assert.equal(run.status, 0, run.stderr)
   assert.match(run.stdout, /sheet: {3}8x3 grid, 24 cells/)
   assert.match(run.stdout, /Sheet: one image laid out as a grid of 8 columns by 3 rows/)
@@ -228,8 +228,8 @@ test('a fixture grid splits to cols x rows graded, keyed cells under one record'
   const { dir, cells, entry } = await planSheet(sharp, { request, result, date: '2026-10-21' })
 
   assert.equal(cells.length, cols * rows)
-  assert.deepEqual(cells.map((c) => c.name), [...Array(cols * rows).keys()].map((i) => cellName('brine-hag', i, 8)))
-  assert.equal(path.relative(MOBILE, dir), path.join('assets', 'images', 'enemies', 'anim', 'brine-hag'))
+  assert.deepEqual(cells.map((c) => c.name), [...Array(cols * rows).keys()].map((i) => cellName('green-jelly', i, 8)))
+  assert.equal(path.relative(MOBILE, dir), path.join('assets', 'images', 'enemies', 'anim', 'green-jelly'))
 
   for (const { webp } of cells) {
     const { data, info } = await sharp(webp).ensureAlpha().raw().toBuffer({ resolveWithObject: true })

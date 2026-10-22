@@ -20,7 +20,7 @@ import type { MapEventPool } from '../MapEvents/types';
 import type { MapDefinition, Quest } from '../types';
 import type { DialogueTree } from '../../NPCs/types';
 import type { Equipment, Item } from '../../Items/types';
-import { BrineHag as LiveBrineHag, FloatEye as LiveFloatEye, Sandbag_01 } from '../../Enemy/enemy.library';
+import { GreenJelly as LiveGreenJelly, FloatEye as LiveFloatEye, Sandbag_01 } from '../../Enemy/enemy.library';
 
 // Computed before any synthetic pool below is registered.
 const LIVE = auditRosterHealth();
@@ -61,7 +61,7 @@ const ring: Equipment = {
 
 // Live foes with their loot stripped, so only planted items are named.
 const FloatEye = { ...LiveFloatEye, loot: [] };
-const BrineHag = { ...LiveBrineHag, loot: [], friendshipReward: undefined };
+const GreenJelly = { ...LiveGreenJelly, loot: [], friendshipReward: undefined };
 
 function mapDef(over: Partial<MapDefinition>): MapDefinition {
     return { name: 'test-map', continent: 'test-continent', nodes: [], ...over } as unknown as MapDefinition;
@@ -176,18 +176,18 @@ describe('roster health — each dangling lens fires', () => {
 
 describe('roster health — each orphan lens fires', () => {
     it('enemy-unpooled: a library enemy no pool draws or pins', () => {
-        const found = orphanEnemies(sources({ enemyLibrary: [FloatEye, BrineHag] }));
-        expect(found.map(f => f.id)).toEqual([BrineHag.id]);
+        const found = orphanEnemies(sources({ enemyLibrary: [FloatEye, GreenJelly] }));
+        expect(found.map(f => f.id)).toEqual([GreenJelly.id]);
     });
 
     it('enemy-unpooled: an encounter pin reaches the enemy; the dev dummy is never an orphan', () => {
         const pools: MapEventPool[] = [{
             id: 'x-5.encounter',
-            entries: [{ kind: 'encounter', weight: 1, payload: { kind: 'encounter', enemySlug: 'brine-hag' } }],
+            entries: [{ kind: 'encounter', weight: 1, payload: { kind: 'encounter', enemySlug: 'green-jelly' } }],
         }];
         const src = sources({
-            enemyLibrary: [FloatEye, BrineHag, Sandbag_01],
-            enemyRegistry: { 'float-eye': FloatEye, 'brine-hag': BrineHag, sandbag: Sandbag_01 },
+            enemyLibrary: [FloatEye, GreenJelly, Sandbag_01],
+            enemyRegistry: { 'float-eye': FloatEye, 'green-jelly': GreenJelly, sandbag: Sandbag_01 },
             pools,
         });
         expect(orphanEnemies(src)).toEqual([]);

@@ -10,18 +10,18 @@
 import { describe, it, expect } from 'vitest';
 
 import { foeFor } from './lane-pacing.cli';
-import { FloatEye, BrineHag, DeathBeholder, type EnemySlug } from '../Enemy/enemy.library';
+import { FloatEye, GreenJelly, DeathBeholder, type EnemySlug } from '../Enemy/enemy.library';
 import { createNewGameState } from '../Game/game.reducer';
 import { resolveEncounter } from '../World/MapEvents/handlers';
 
 const SLUG: Record<string, EnemySlug> = {
     [FloatEye.id]: 'float-eye',
-    [BrineHag.id]: 'brine-hag',
+    [GreenJelly.id]: 'green-jelly',
     [DeathBeholder.id]: 'death-beholder',
 };
 
 describe('lane-pacing foes match live encounters', () => {
-    for (const base of [FloatEye, BrineHag, DeathBeholder]) {
+    for (const base of [FloatEye, GreenJelly, DeathBeholder]) {
         for (const level of [1, 3, 5]) {
             it(`${base.name} at player level ${level}`, () => {
                 const foe = foeFor(base, level);

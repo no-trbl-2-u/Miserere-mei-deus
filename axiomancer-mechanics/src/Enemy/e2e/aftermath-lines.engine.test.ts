@@ -3,7 +3,7 @@
  *
  * Pins the registration shape (`finalBlowLines` + `causeLines` on the
  * authored set; `pactLines` only on befriendable enemies that carry a
- * `friendshipReward`); voice signatures spot-checked on the Brine Hag;
+ * `friendshipReward`); voice signatures spot-checked on the Green Jelly;
  * the Sandbag_01 regression pins that the fields stay strictly undefined
  * for the un-authored test sandbox so the consumer-side fallback path
  * stays intact.
@@ -16,7 +16,7 @@ import { describe, it, expect } from 'vitest';
 import { EnemyLibrary } from '../enemy.library';
 import {
     // Befriendable — full line set incl. pactLines.
-    BrineHag,
+    GreenJelly,
     // Sweep — finalBlowLines + causeLines (no pactLines).
     FloatEye,
     DeathBeholder,
@@ -25,7 +25,7 @@ import {
 } from '../enemy.library';
 
 describe('per-foe aftermath narrative lines (art-driven roster)', () => {
-    const befriendable = [BrineHag];
+    const befriendable = [GreenJelly];
     const sweepOnly = [FloatEye, DeathBeholder];
     const authored = [...befriendable, ...sweepOnly];
 
@@ -94,8 +94,8 @@ describe('per-foe aftermath narrative lines (art-driven roster)', () => {
     });
 
     it('befriendable enemies carry pactLines + journalEntry voice pairs', () => {
-        expect(BrineHag.pactLines!.heavy).toMatch(/sold my face/);
-        expect(BrineHag.journalEntry!.title).toMatch(/Face Broker/);
+        expect(GreenJelly.pactLines!.heavy).toMatch(/sold my face/);
+        expect(GreenJelly.journalEntry!.title).toMatch(/Face Broker/);
     });
 
     it('un-authored enemies (Sandbag_01 — test sandbox per Phase 74 D1) have all three fields undefined', () => {

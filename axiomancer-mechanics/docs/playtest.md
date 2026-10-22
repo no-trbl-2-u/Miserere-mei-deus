@@ -21,8 +21,8 @@ cards, filtered by `tier <= maxCardTier` and learning level).
 
 | Id | Name | Player | HP | Max tier | Enemy roster (slugs) |
 |---|---|---|---|---|---|
-| `early` | The Shallows | level 3, 5/5/5 | 90 | 1 | float-eye, brine-hag, death-beholder |
-| `mid` | The Long Road | level 20, 17/17/17 | 255 | 3 | brine-hag, death-beholder |
+| `early` | The Shallows | level 3, 5/5/5 | 90 | 1 | float-eye, green-jelly, death-beholder |
+| `mid` | The Long Road | level 20, 17/17/17 | 255 | 3 | green-jelly, death-beholder |
 | `late` | The Deep Wood | level 45, 37/39/38 | 570 | 3 | death-beholder |
 
 The rosters are the three foes left after the enemy roster reset (revamp
@@ -85,13 +85,13 @@ npm run combat-playtest -- --stage=early --policy=blind --runs=100 --seed=7 --ca
 npm run combat-playtest -- --stage=late --policy=all --runs=60 --seed=1
 
 # An explicit card list against one enemy, machine-readable for agents
-npm run combat-playtest -- --stage=mid --enemy=brine-hag --deck=cards:grey-strike,grey-strike,grey-ward --json
+npm run combat-playtest -- --stage=mid --enemy=green-jelly --deck=cards:grey-strike,grey-strike,grey-ward --json
 
 # A single auto-played encounter through the interactive CLI (fast qualitative sweep)
 npm run combat -- --enemy float-eye --auto --policy status --seed 5 --deck grey --max-turns 6
 
 # A hand-playable encounter: stage player, the grey deck, JSONL answers on stdin
-npm run combat -- --enemy brine-hag --stage mid --deck grey --seed 11 --stdin --json-events
+npm run combat -- --enemy green-jelly --stage mid --deck grey --seed 11 --stdin --json-events
 ```
 
 The `combat-playtest` CLI (`src/CLI/combat-playtest.cli.ts`) accepts
