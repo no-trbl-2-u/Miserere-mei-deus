@@ -233,13 +233,14 @@ keyword (`EnemyKeyword = never`).
   card; `HAZARD_DECK` and the live hazard keep every card. The pool also
   holds five puzzle-only cost cards (`puzzleOnly`; the live hazard never
   draws, offers or grants one): two Tolls, a cost on the free line that a die
-  cancels (WAYFARER'S TITHE, purple, -1/-1 for DRAW 2; TURN THE STONES, red,
-  -2 FORCE for a reroll), a Debt, a cost on both lines (PAWNED BREATH, purple,
-  -2/-2 for DRAW 2, or DRAW 3 and a gold die when powered), and two
-  Overdrives, a bigger powered line that costs the other meter and buys a
-  second utility (BREAKNECK HAUL, red, 3 FORCE free, 6 FORCE -3 ESCAPE, a blue
-  die and DRAW 1 powered; HEADLONG DIVE, blue, the mirror at 7 ESCAPE -3
-  FORCE, a red die and a reroll).
+  cancels (WAYFARER'S TITHE, purple, -2/-2 for DRAW 2, 0/0 powered; TURN THE
+  STONES, red, -2 FORCE for a reroll, +2 FORCE and two rerolls powered), a
+  Debt, a cost on both lines (PAWNED BREATH, purple, -2/-2 for a gold die, and
+  DRAW 2 as well when powered), and two Overdrives, one meter for the other on
+  both lines with a utility on each (BREAKNECK HAUL, red, 3 FORCE -1 ESCAPE and
+  DRAW 1 free, 6 FORCE -3 ESCAPE and a blue die powered; HEADLONG DIVE, blue,
+  the mirror: -1/3 and a reroll free, -3/7 and a red die powered). Every free
+  line carries a utility, so no cost card plays as a plain number card.
   `npm run puzzle:report -w axiomancer-mechanics` prints, per demo and
   route, how many winning outcomes stage each card and which are required
   or unused (`hazardPuzzleCardReport`), and the solve's five difficulty
