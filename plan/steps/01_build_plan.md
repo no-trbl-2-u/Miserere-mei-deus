@@ -277,7 +277,7 @@ event-pool and layout files).
 - [ ] Phase HP5b — Costs on the board (plotted by T, 2026-10-21): `HazardCard` draws a negative value with a minus
       sign, the meters show a debt below zero, and projected progress counts a staged cost. Brief
       `plan/phases/phase_HP5_cost_card_puzzles.md` § HP5b. Requires HP5a.
-- [ ] Phase HP5c — The twenty easy and medium candidates go (plotted by T, 2026-10-21): `cand-easy-*` and
+- [x] (#773) Phase HP5c — The twenty easy and medium candidates go (plotted by T, 2026-10-21): `cand-easy-*` and
       `cand-medium-*` deleted; `/devpuzzle` keeps the ten hard and the demos. Brief `plan/phases/phase_HP5_cost_card_puzzles.md` § HP5c. Requires nothing.
 - [ ] Phase HP5d — Twenty cost-card puzzles (plotted by T, 2026-10-21): `cand-cost-medium-01..10` and
       `cand-cost-hard-01..10`, each holding a new card, no slack (best surplus 0), and lost by staging the whole

@@ -164,18 +164,20 @@ test('A12: a wrapped row reads its Requires from a continuation line', () => {
     assert.equal(wrapped.get('HP2e').waitsOnT, true)
 })
 
-test('A12: the live HP4e row is not ready while HP4c, HP4d or HP5d is open, and is once all three ship', () => {
+test('A12: the live HP4e row is not ready while its requirements are open, and is once they all ship', () => {
     const row = hp4eRow()
     if (!row) return // HP4e has left the build plan: the fixture above still pins the rule
     assert.ok(row.includes('\n'), 'the live HP4e row wraps')
     const item = { done: false, due: '2026-11-02', name: 'W1 demo', window: 'W1', rows: ['HP4e'] }
-    const hp4e = row.replace(/^- \[[^\]]*\]/, '- [ ]')
-    const open = parsePhaseRows(`- [ ] Phase HP4c — c. Requires HP4b.\n- [ ] Phase HP4d — d. Requires HP4c.\n- [ ] Phase HP5d — d5. Requires HP5c.\n${hp4e}\n`)
-    assert.deepEqual(open.get('HP4e').requires, ['HP4c', 'HP4d', 'HP5d'])
+    const live = row.replace(/^- \[[^\]]*\]/, '- [ ]')
+    // The row may gain requirements (HP5d joined it on 2026-10-21); HP4c and HP4d stay among them.
+    const requires = parsePhaseRows(`${live}\n`).get('HP4e').requires
+    assert.ok(requires.includes('HP4c') && requires.includes('HP4d'), `HP4e requires ${requires.join(', ')}`)
+    const plan = (box) => `${requires.map((id) => `- [${box}] Phase ${id} — ${id}.`).join('\n')}\n${live}\n`
+    const open = parsePhaseRows(plan(' '))
+    assert.deepEqual(open.get('HP4e').requires, requires)
     assert.equal(itemNeed(item, open), null)
-    const partial = parsePhaseRows(`- [x] Phase HP4c — c. Requires HP4b.\n- [x] Phase HP4d — d. Requires HP4c.\n- [ ] Phase HP5d — d5. Requires HP5c.\n${hp4e}\n`)
-    assert.equal(itemNeed(item, partial), null)
-    const shipped = parsePhaseRows(`- [x] Phase HP4c — c. Requires HP4b.\n- [x] Phase HP4d — d. Requires HP4c.\n- [x] Phase HP5d — d5. Requires HP5c.\n${hp4e}\n`)
+    const shipped = parsePhaseRows(plan('x'))
     assert.deepEqual(itemNeed(item, shipped), { kind: 'needs you', detail: 'HP4e ready for you' })
 })
 
