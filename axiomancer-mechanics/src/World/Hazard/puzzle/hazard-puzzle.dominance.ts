@@ -19,6 +19,7 @@ import { hazardPuzzleCardReport } from './hazard-puzzle.report';
 import { solveHazardPuzzle } from './hazard-puzzle.solver';
 import { HAZARD_PUZZLE_CARD_POOL } from './hazard-puzzle.tuning';
 import type { HazardPuzzleLayout, HazardPuzzleUnlock } from './hazard-puzzle.types';
+import { validateHazardPuzzleLayout } from './hazard-puzzle.validate';
 
 /** One place the library is solved: a layout, a route and the unlocks granted. */
 export interface HazardPuzzleLibraryCell {
@@ -123,7 +124,13 @@ export function hazardPuzzleDominatedCards(
             const gains: HazardPuzzleDominance['gains'] = [];
             let worse = false;
             for (let i = 0; i < holding.length && !worse; i++) {
-                const swapped = count(swapHazardPuzzleCard(holding[i], cardId, by));
+                const cell = swapHazardPuzzleCard(holding[i], cardId, by);
+                // A card the layout cannot hold (a reroll card on a board with no reroll faces) cannot stand in.
+                if (!validateHazardPuzzleLayout(cell.layout).ok) {
+                    worse = true;
+                    break;
+                }
+                const swapped = count(cell);
                 if (swapped < base[i]) worse = true;
                 else if (swapped > base[i]) {
                     gains.push({ cell: hazardPuzzleCellLabel(holding[i]), outcomes: base[i], swapped });

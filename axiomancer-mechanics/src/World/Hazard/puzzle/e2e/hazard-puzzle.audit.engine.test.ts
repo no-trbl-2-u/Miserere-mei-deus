@@ -139,6 +139,7 @@ describe('the puzzle card pool (A2)', () => {
     it('leaves HAZARD_DECK whole: the live hazard still draws the cut cards', () => {
         expect(HAZARD_DECK.map((c) => c.id)).toEqual([
             'haul', 'grip', 'scram', 'runner', 'leap', 'footing', 'windread', 'pole', 'oath', 'blessing',
+            'tithe', 'stones', 'pawn', 'breakneck', 'headlong',
         ]);
     });
 

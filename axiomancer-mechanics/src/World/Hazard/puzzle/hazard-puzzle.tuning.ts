@@ -37,10 +37,15 @@ export const HAZARD_PUZZLE_BANDS = HAZARD_PUZZLE_TUNING.bands;
  * (`npm run puzzle:audit`), as T approves it. No two of them play the same
  * and none is banned. Cut from puzzles, not from `HAZARD_DECK`: the live
  * hazard still draws CLIFFRUNNER (plays as SCRAMBLE), BALANCE POLE and
- * PILGRIM'S BLESSING (RE-CAST), and CRACK (dead). Test fixture cards join
+ * PILGRIM'S BLESSING (RE-CAST), and CRACK (dead). The cost cards run the
+ * other way: in the pool, but never drawn by the live hazard. Test fixture cards join
  * it for the length of their test.
  */
-export const HAZARD_PUZZLE_CARD_POOL: string[] = ['haul', 'grip', 'scram', 'leap', 'footing', 'windread', 'oath'];
+export const HAZARD_PUZZLE_CARD_POOL: string[] = [
+    'haul', 'grip', 'scram', 'leap', 'footing', 'windread', 'oath',
+    // The five cost cards: puzzle-only, never in the live hazard's draw.
+    'tithe', 'stones', 'pawn', 'breakneck', 'headlong',
+];
 export const HAZARD_PUZZLE_SOLVER_BUDGET = HAZARD_PUZZLE_TUNING.solver.budget;
 
 /**
