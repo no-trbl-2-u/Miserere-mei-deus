@@ -32,6 +32,16 @@ export const ENEMY_ART_BY_KEY: Readonly<Record<string, number>> = {
     // (CC BY 3.0 — Delapouite), white glyph on transparent, rasterized 512px
     // WebP; see provenance.json.
     'the-doorwarden':    require('./the-doorwarden.webp'),
+    // STAGED for phases AN3a and AN4a, which repoint the enemies that will
+    // use them and drop the two entries above. They are registered now, not
+    // later, because the asset trove is gitignored: a loop tick
+    // cannot reach the source, so the ingested art has to be in the tree
+    // before those phases can be built. Both are torio Javardry free
+    // material - free for any use including commercial and modification -
+    // and both were ingested --no-grade, because RECIPE carries
+    // `grayscale: true` and these are colour enemies (AN1 A6b).
+    'green-jelly':       require('./green-jelly.webp'),
+    'death-beholder':    require('./death-beholder.webp'),
 };
 
 const ENEMY_ART_POOL: number[] = Object.values(ENEMY_ART_BY_KEY);
