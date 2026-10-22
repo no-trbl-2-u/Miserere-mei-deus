@@ -10,7 +10,8 @@
  * `ENEMY_FRAME_SETS` SHIPPED EMPTY, and that was deliberate (phase AN1a, A2):
  * the engine and the art install are separate phases so that the engine's
  * review is not hostage to an art review. Phase AN1e installed the first set,
- * the float-eye's; phase AN4b the second, the Act 1 boss's. Every OTHER enemy
+ * the float-eye's; phase AN4b the second, the Act 1 boss's; phase AN3b the
+ * third, the Act 1 elite's and the first that stands. Every OTHER enemy
  * is still absent from the registry and
  * still renders exactly the single image it rendered before — absence from
  * here is the static path, not a missing feature.
@@ -50,7 +51,8 @@
  * the numbers here are the files in the tree, which is what a ceiling has to
  * be set against.) The death-beholder (AN4b) is a far busier painting and
  * held the same ceiling by cutting at 176px rather than 256: 24 cells,
- * 197658 B, max 11068 B, against 56286 B static.
+ * 197658 B, max 11068 B, against 56286 B static. The green jelly (AN3b) is
+ * back at 256px: 24 cells, 179610 B, max 7920 B, against 12572 B static.
  * `FRAME_CELL_MAX_BYTES` below is that ceiling, and
  * `scripts/frame-cells.test.mjs` is what enforces it against the bytes on
  * disk — a constant nothing weighs is a wish.
@@ -60,6 +62,7 @@ import type { ImageSourcePropType } from 'react-native';
 
 import { DEATH_BEHOLDER_CELLS } from './anim/death-beholder';
 import { FLOAT_EYE_CELLS } from './anim/float-eye';
+import { GREEN_JELLY_CELLS } from './anim/green-jelly';
 
 /** How a cell is registered against the frame beneath it. */
 export type FrameAnchorKind = 'foot-line' | 'centre';
@@ -224,15 +227,52 @@ const DEATH_BEHOLDER_FRAME_SET: EnemyFrameSet = {
 };
 
 /**
+ * THE GREEN JELLY (phase AN3b) — the Act 1 elite, and the first set on a
+ * `foot-line` anchor.
+ *
+ * Transcribed from `green-jelly.sheet.json`. Unlike the two floaters, a jelly
+ * SITS on a surface, and its squash and stretch happen about its base: the rig
+ * poses every frame about a pivot on the foot line, so a squash spreads it
+ * along the floor and a stretch grows it upward. The anchor is that pivot in
+ * cell pixels. Anchored on the centre it would lift off the floor whenever it
+ * squashed.
+ *
+ * `graded: false`, as the beholder's: the portrait was ingested ungraded in
+ * AN3a (a colour elite), so the frames match it on screen.
+ */
+const GREEN_JELLY_FRAME_SET: EnemyFrameSet = {
+    manifest: {
+        frame: 256,
+        columns: 8,
+        rows: 3,
+        anchor: {
+            kind: 'foot-line',
+            x: 132,
+            y: 219.2,
+            why: 'rests on a surface; squash and stretch are about its base',
+        },
+        clips: {
+            idle: { row: 0, frames: 8, fps: 10, loop: true, rest: 0 },
+            struck: { row: 1, frames: 8, fps: 16, loop: false, rest: 7 },
+            attacking: { row: 2, frames: 8, fps: 12, loop: false, rest: 0 },
+        },
+        graded: false,
+        source: 'see anim/green-jelly/provenance.json',
+    },
+    frames: GREEN_JELLY_CELLS,
+};
+
+/**
  * THE REGISTRY. An enemy absent from here resolves through
  * `getEncounterEnemyArt` exactly as it always has. AN1a shipped this empty on
  * purpose so the engine's review was not hostage to an art review; AN1e put
  * the float-eye in it, and that is the row where the chain stops being
- * invisible. AN4b added the boss.
+ * invisible. AN4b added the boss, AN3b the elite.
  */
 export const ENEMY_FRAME_SETS: Readonly<Record<string, EnemyFrameSet>> = {
     'death-beholder': DEATH_BEHOLDER_FRAME_SET,
     'float-eye': FLOAT_EYE_FRAME_SET,
+    'green-jelly': GREEN_JELLY_FRAME_SET,
 };
 
 /** The frame set for a `portraitAsset` key, or null when the enemy is static. */

@@ -1,8 +1,8 @@
 """The rig regenerates every committed sheet byte for byte.
 
-One suite per rigged enemy: the float-eye (phase AN1e's master) and the
-death-beholder (phase AN4b's), each regenerated from its shipped painting and
-compared against what is committed.
+One suite per rigged enemy: the float-eye (phase AN1e's master), the
+death-beholder (phase AN4b's) and the green jelly (phase AN3b's), each
+regenerated from its shipped painting and compared against what is committed.
 
 The rig is deterministic -- Pillow affine transforms and numpy arithmetic, no
 randomness and no timestamp in any of the four outputs -- so the strict test is
@@ -104,6 +104,10 @@ class FloatEyeRegenerates(_RigRegeneratesTheMaster, unittest.TestCase):
 
 class DeathBeholderRegenerates(_RigRegeneratesTheMaster, unittest.TestCase):
     ENEMY = "death-beholder"
+
+
+class GreenJellyRegenerates(_RigRegeneratesTheMaster, unittest.TestCase):
+    ENEMY = "green-jelly"
 
 
 class TheRigRefusesAnEnemyItHasNoRigFor(unittest.TestCase):

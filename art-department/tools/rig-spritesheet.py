@@ -21,11 +21,17 @@ matte: the painting arrived fully opaque on black, so scaled as it stands it
 would read as a black square growing and shrinking. The black ground that is
 connected to the border is keyed to alpha first (see `matte_border_black`).
 
+The green jelly (phase AN3b) is the same one matted layer, but it is the
+first rig that STANDS. A jelly rests on a surface and squashes about its base,
+so every pose is taken about a pivot on its foot line rather than the cell
+centre, and its manifest declares a `foot-line` anchor. Posed about the centre
+it would lift off the floor every time it squashed.
+
 Clips are authored as explicit per-frame keys rather than curves. Animation
 timing is a thing you tune by eye, so the numbers you want to nudge are all
 in CLIPS below and read top-to-bottom as a dope sheet.
 
-Usage:  python art-department/tools/rig-spritesheet.py [--enemy float-eye|death-beholder]
+Usage:  python art-department/tools/rig-spritesheet.py [--enemy float-eye|death-beholder|green-jelly]
 """
 
 from __future__ import annotations
@@ -200,6 +206,73 @@ BEHOLDER_CLIPS = {
     ]),
 }
 
+# --------------------------------------------------------------------------
+# the green jelly (phase AN3b)
+#
+# One matted layer, like the beholder, but posed about its BASE. The pivot is
+# the middle of the foot line, measured off green-jelly.webp after the matte:
+# the silhouette's last solid row is y=552 and its base spans x=217..441 at
+# y=540. Every scale and rotation below happens about that point, so a squash
+# spreads the jelly along the floor and a stretch grows it upward, and the
+# foot line itself never moves unless a frame says `ty`.
+#
+# Volume is (roughly) conserved: wider is shorter, taller is narrower. That is
+# the whole of what makes it read as jelly rather than as a sprite scaling.
+# --------------------------------------------------------------------------
+
+JELLY_PIVOT = (330.0, 548.0)
+
+# The attack's two poses, named because a test pins them: the deepest squash
+# of the wind-up and the tallest stretch of the spring, on ADJACENT frames.
+# The beholder's lesson applies (T: motion that is "very subtle" at combat
+# size does not survive the downscale), so the change in height between them
+# is large on purpose.
+JELLY_COIL = dict(sx=1.24, sy=0.72)
+JELLY_SPRING = dict(sx=0.82, sy=1.24)
+
+
+def _jelly_idle_frame(i: int, n: int) -> dict:
+    t = i / n
+    w = 2 * math.pi * t
+    return dict(
+        sx=1 - 0.035 * math.sin(w), sy=1 + 0.035 * math.sin(w),
+        rot=1.2 * math.sin(w + math.pi / 2),
+        dim=0.03 + 0.03 * math.sin(w + 1.0),
+    )
+
+
+JELLY_CLIPS = {
+    # A slow breathing wobble about the base: it swells up, settles wide, and
+    # sways a degree either way. The foot line holds still.
+    "idle": dict(loop=True, fps=10, rest=0, frames=[_jelly_idle_frame(i, 8) for i in range(8)]),
+
+    # One frame of white on the impact, flattened by the blow, then a jiggle
+    # that rings down: taller, wider, taller, each smaller than the last.
+    "struck": dict(loop=False, fps=16, rest=7, frames=[
+        dict(tx=+14, sx=1.20, sy=0.80, rot=-3.0, flash=0.90),
+        dict(tx=+12, sx=1.16, sy=0.83, rot=-2.5, flash=0.20, red=0.22),
+        dict(tx=+5,  sx=0.90, sy=1.12, rot=+1.5, red=0.14),
+        dict(tx=-3,  sx=1.08, sy=0.93, rot=-1.0, red=0.06),
+        dict(tx=+2,  sx=0.96, sy=1.05, rot=+0.6),
+        dict(tx=-1,  sx=1.02, sy=0.98, rot=-0.3),
+        dict(tx=0,   sx=1.00, sy=1.00, rot=0.0),
+        dict(tx=0,   sx=1.00, sy=1.00, rot=0.0),
+    ]),
+
+    # One-shot. It sinks into itself and darkens, springs up off the floor,
+    # and lands spread wide toward the player before it wobbles back.
+    "attacking": dict(loop=False, fps=12, rest=0, frames=[
+        dict(sx=1.00, sy=1.00),
+        dict(sx=1.12, sy=0.86, dim=0.12),
+        dict(**JELLY_COIL, dim=0.24),
+        dict(**JELLY_SPRING, tx=-14, ty=-34),
+        dict(sx=1.26, sy=0.78, tx=-26),
+        dict(sx=0.93, sy=1.08, tx=-14),
+        dict(sx=1.04, sy=0.97, tx=-5),
+        dict(sx=1.00, sy=1.00),
+    ]),
+}
+
 # How dark a border-connected pixel must be to count as ground, and the ramp
 # its alpha takes from there: 0 at black, opaque at MATTE_LIFT.
 MATTE_GROUND = 40.0
@@ -312,7 +385,7 @@ def grade(img: Image.Image, flash=0.0, red=0.0, flare=0.0, dim=0.0):
     return Image.fromarray(out.astype(np.uint8), "RGBA")
 
 
-def render_frame(body, eye, key, frame_px, pad_px=PAD, crop_px=CROP):
+def render_frame(body, eye, key, frame_px, pad_px=PAD, crop_px=CROP, pivot=None):
     k = lambda n, d: float(key.get(n, d))
 
     # The eye moves inside the body first, so it rides the shell transform.
@@ -326,7 +399,9 @@ def render_frame(body, eye, key, frame_px, pad_px=PAD, crop_px=CROP):
     off = (pad_px - posed.width) // 2
     pad.paste(posed, (off, off))
 
-    c = (pad_px / 2, pad_px / 2)
+    # A floating rig poses about the canvas centre; a standing one about its
+    # pivot in source pixels, carried onto the padded canvas.
+    c = (pad_px / 2, pad_px / 2) if pivot is None else (pivot[0] + off, pivot[1] + off)
     pad = affine(pad, c, k("sx", 1), k("sy", 1), k("rot", 0), k("tx", 0), k("ty", 0))
     pad = grade(pad, k("flash", 0), k("red", 0), k("flare", 0), k("dim", 0))
 
@@ -338,6 +413,23 @@ def _beholder_layers(src):
     return matte_border_black(src), None
 
 
+# The two anchor kinds the app's manifest validates. A floating rig's anchor is
+# the cell centre; a standing rig's is its pivot, carried into cell pixels.
+_FLOATING = dict(kind="centre", why="floating enemy; no foot line exists")
+_STANDING = dict(kind="foot-line", why="rests on a surface; squash and stretch are about its base")
+
+
+def anchor_for(rig, fp):
+    """The manifest anchor: where, in a cell, the rig holds still."""
+    if rig.get("pivot") is None:
+        return {"kind": _FLOATING["kind"], "x": fp / 2, "y": fp / 2, "why": _FLOATING["why"]}
+    lo = (rig["pad"] - rig["crop"]) // 2
+    off = (rig["pad"] - rig["source"]) // 2
+    k = fp / rig["crop"]
+    x, y = ((p + off - lo) * k for p in rig["pivot"])
+    return {"kind": _STANDING["kind"], "x": round(x, 2), "y": round(y, 2), "why": _STANDING["why"]}
+
+
 # One row per riggable enemy: how its painting becomes layers, the canvas it
 # is posed on, its cell edge, and its dope sheet. An enemy absent from here cannot be rigged
 # by this tool, and says so by name rather than borrowing the float-eye's eye.
@@ -345,6 +437,11 @@ RIGS = {
     "float-eye": dict(layers=split_layers, pad=PAD, crop=CROP, frame=256, clips=CLIPS),
     "death-beholder": dict(layers=_beholder_layers, pad=BEHOLDER_PAD, crop=BEHOLDER_CROP,
                            frame=BEHOLDER_FRAME, clips=BEHOLDER_CLIPS),
+    # 640 source on a 768 canvas cropped back to 640: the crop is the painting
+    # itself, which already leaves room above the dome for the spring and to
+    # either side for the landing.
+    "green-jelly": dict(layers=_beholder_layers, pad=PAD, crop=CROP, frame=256,
+                        clips=JELLY_CLIPS, pivot=JELLY_PIVOT, source=640),
 }
 
 
@@ -377,18 +474,17 @@ def main():
         "frame": fp, "columns": cols, "rows": len(names),
         # AN1 A6 anchors frames on the foot line. A floating creature has no
         # feet, and its hover is the animation, so anchoring it on anything
-        # that tracks the body would cancel the bob. This sheet declares its
-        # anchor as the cell centre, fixed across every frame, and the rig
-        # guarantees that by construction -- all motion is an offset from it.
-        "anchor": {"kind": "centre", "x": fp / 2, "y": fp / 2,
-                   "why": "floating enemy; no foot line exists"},
+        # that tracks the body would cancel the bob: those sheets declare the
+        # cell centre. A standing one (the jelly) declares its pivot. Either
+        # way the rig guarantees it by construction -- all motion is about it.
+        "anchor": anchor_for(rig, fp),
         "clips": {},
     }
     previews = []
     for row, name in enumerate(names):
         clip = clips[name]
         for col, key in enumerate(clip["frames"]):
-            f = render_frame(body, eye, key, fp, rig["pad"], rig["crop"])
+            f = render_frame(body, eye, key, fp, rig["pad"], rig["crop"], rig.get("pivot"))
             sheet.paste(f, (col * fp, row * fp))
             previews.append(f)
         meta["clips"][name] = {
