@@ -5,7 +5,7 @@
  * (`library/starters.cards.ts`), plus each registered trial set
  * (`TRIAL_SETS`, one line per set). Stat scaling (`Combat/stat-scaling.ts`)
  * grows their numbers with the player's body, mind and heart. New cards are
- * designed only in a guided session with T, which is where this file grows.
+ * built only from a brief T wrote or approved.
  *
  * THE CONSTRAINTS:
  *   1. Every card is playable without a die: it authors a non-empty `free`
@@ -40,8 +40,8 @@ export const TRIAL_SETS: readonly TrialSet[] = Object.freeze([
 
 /**
  * The player library: the grey office (A Plain Blow, A Plain Ward, A Plain
- * Word) and the registered trial sets. New cards arrive only through a
- * guided session with T.
+ * Word) and the registered trial sets. New cards arrive only from a brief
+ * T wrote or approved.
  */
 export const cardLibrary: Card[] = [
     ...GREY_OFFICE_CARDS,

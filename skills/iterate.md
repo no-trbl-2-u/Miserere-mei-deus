@@ -39,8 +39,8 @@ focus.)
   rewrite content — cards, keywords, enemies, relics, maps, NPCs,
   events, art, dialogue or flavor prose — is written to
   `plan/AUDIT.md` with `next: file — content (D88)` and never
-  picked; content ships only as a briefed phase. Card, keyword and
-  art findings also wait on THE CARD HOLD (D37). Correcting a broken
+  picked; content ships only as a briefed phase (D99 makes cards,
+  keywords and art no exception). Correcting a broken
   reference or a typo in existing UI text is a fix, not content.
 - **A defect found while shipping is fixed in this tick (D90).** If
   the fix uncovers a separate defect (a broken test, a wrong
@@ -435,8 +435,7 @@ Return cleanly with the PR URL. Loop's next tick re-audits.
 2. **Verify gate must pass.** No `--no-verify`.
 3. **No emojis. No attribution trailers** (AGENTS.md rule 2).
 4. **No content.** Content findings are filed, never shipped
-   (§3, D88); card, keyword and art work waits on THE CARD HOLD
-   (D37).
+   (§3, D88, D99).
 4a. **Code lands by PR; never merge, close or auto-merge it** (D84,
    D86; the `pr-review.yml` `merge` job alone merges, on a green
    review, D95). One PR per tick.

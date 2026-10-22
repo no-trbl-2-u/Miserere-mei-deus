@@ -317,6 +317,8 @@ player card or a player keyword. `adjust-cards` and `adjust-keywords` are
 paused (`skills/march.md` §3b skips them) until T re-arms them. Everything
 else in the loop continues. *Rejected:* letting the stewards keep making
 small passes until the purge.
+*Superseded by D99 (T, attended, 2026-10-22): cards, keywords and art are
+ordinary content under D88.*
 
 **D38 — The loop pauses at the card phase: step 3 is attended.** (T,
 2026-09-26.) After M5 the loop does not start D1 step 3 (the D4 per-stat
@@ -969,7 +971,7 @@ satisfied for exactly these.)
 
 **D88 — Content per surface.** (T, attended, 2026-10-12, R11 ballot e; supersedes the content side of D58.)
 
-- Cards, keywords and art stay owner-only (D37, B8).
+- ~~Cards, keywords and art stay owner-only (D37, B8).~~ *Superseded by D99 (T, 2026-10-22): they build from a T-approved brief like the line below.*
 - Enemies, relics, maps, NPCs and events: the loop may propose them (`/expand` candidates) and may build them only from a build-plan row whose brief T wrote or approved (`/plot`, attended `/plan-a-phase`, or `/oversight` promotion). A proposal is never built until promoted.
 
 **D89 — `/expand` stays bold.** (T, attended, 2026-10-12, R11 ballot f; overrides the brief's "strict" default.)
@@ -1015,6 +1017,12 @@ satisfied for exactly these.)
 - A PR merges when its review is complete and green: the `merge` job (a plain runner, no model, `scripts/pr-merge.mjs decide`) merges once this run's verdict for the exact head is `pass`, GitHub reports the PR `CLEAN`, and no hold applies. The job's own gate is the head's `verify-gate` check run, read from the commit's check runs (never a comment: the #529 lesson); then it runs `gh pr merge --auto --merge --match-head-commit` and posts an audit comment (`<!-- pr-merge:auto -->`). The ruleset (a required `verify-gate`, active) binds every actor but T, who stays on its bypass list because the loop's plan-only, telemetry and `fix-ci` pushes go straight to `main` on T's token and have no PR to earn the check on.
 - **A plan PR is never merged by the job:** label `plot` or `review:plan-only`, or a title that starts `plot:` or `plan:`. T merges plans by hand, as D93 intends. Also held for T: `review:needs-T`, `loop:pr-stuck`, `eval:seed`, `no-auto-merge`, drafts, forks, and a `not-pass`. There is no daily limit: a cap of 12 auto-merges in 24 hours arrived in code with D95 but was never ruled, held PR #725, and was removed in phase RV4 (T, 2026-10-21); the job's 24-hour count stays in its pass reason, and D85's open-PR cap bounds what is in flight. The kill switch is the repository variable `PR_AUTO_MERGE=off`.
 - The reviewer itself still cannot merge, close, push or commit; the only writer of a verdict marker is `skills/review.md`, run from `main`'s copy. A PR open 7 days is still flagged, never closed (D86's second line stands). `scripts/loop-pr.test.mjs` pins all of it.
+
+**D99 — The card hold is lifted: cards, keywords and art are ordinary content.** (T, attended, 2026-10-22; supersedes D37 and the owner-only bullet of D88. T: "Remove that rule. I never explicitly wanted that rule.")
+
+- Cards, keywords and art join enemies, relics, maps, NPCs and events under D88: the loop may build them only from a build-plan row whose brief T wrote or approved (`/plot`, attended `/plan-a-phase`, or `/oversight` promotion).
+- The loop still never invents card, keyword or art content unprompted: `/expand` may only propose candidates, as for other content, and a proposal is never built until promoted.
+- Unchanged: `Potential Assets/` is a store, never a source (D96); a sprite sheet for an already-used enemy stays enhancement (D97). First use: a `/plot` phase renaming the Blood Price cards.
 
 ## Open follow-ups
 

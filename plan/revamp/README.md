@@ -22,8 +22,9 @@
 >
 > **Card process: Plan B, ratified 2026-09-30 (D73).** One slice per lane;
 > lanes group into families (a relic names a family); the first pool is 3
-> families × 1 lane; bridge cards join sub-lanes within a family. THE CARD
-> HOLD (D37) and the B4 gate still apply. See [cards.md](cards.md).
+> families × 1 lane; bridge cards join sub-lanes within a family. The B4
+> gate still applies; THE CARD HOLD (D37) was lifted by D99 (2026-10-22).
+> See [cards.md](cards.md).
 
 ## 1. What this is
 
@@ -202,9 +203,7 @@ The B-rows stay `[blocked: owner-led]` in the build plan.
 
 | Surface | Loop authority |
 |---|---|
-| Cards, keywords | None. THE CARD HOLD (D37): only a guided session with T creates one |
-| Art | None. Owner-only (B8) |
-| Enemies, relics, maps, NPCs, events | Propose as `/expand` candidates (D89); build only from a build-plan row whose brief T wrote or approved (`/plot`, attended `/plan-a-phase`, `/oversight` promotion) |
+| Cards, keywords, art, enemies, relics, maps, NPCs, events (D99 lifted THE CARD HOLD, D37) | Propose as `/expand` candidates (D89); build only from a build-plan row whose brief T wrote or approved (`/plot`, attended `/plan-a-phase`, `/oversight` promotion) |
 | Code, tooling, tests, docs, fixes | Yes, as briefed phases or `/iterate` fixes, landed by `loop:pr` PRs T merges (D84–D87) |
 
 | Step | Phase / decision | Ready after | Why here |

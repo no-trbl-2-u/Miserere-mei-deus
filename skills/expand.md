@@ -220,12 +220,9 @@ For each top candidate, ask:
 4. **Does the loop have the capacity to ship this?** A
    candidate that requires schema migration of 100 records
    deserves to be phase-promoted but only by `/oversight`.
-5. **Which content surface? (the D88 filter)** A candidate whose
-   work is making **cards, keywords or art** is **not filed**: note
-   the signal in one line in the pass log (and the commit body) for
-   T's guided sessions (THE CARD HOLD, D37; B8). A candidate for an
-   **enemy, relic, map, NPC or event** may be filed (D89: bold
-   proposes from every source), marked `[content]`, with the line
+5. **Which content surface? (the D88 filter)** A candidate for a
+   **card, keyword, art** (D99), **enemy, relic, map, NPC or event**
+   may be filed (D89: bold proposes from every source), marked `[content]`, with the line
    "built only once T plots it (`/plot`) or `/oversight` promotes it
    with a brief T approves". It is never built from the candidate
    alone.
@@ -250,7 +247,6 @@ Top candidates:
 - [score X.Y] <one-line>
 
 Source signals: <brief — audit / critique / triage / spec / design / data / commits>.
-Held for T's sessions (cards, keywords, art; D37): <one-liners, or "none">.
 Posture: bold. Promotion gated by /oversight.
 EOF
 )"
@@ -299,9 +295,9 @@ oversight will review and promote.
 7. **No emojis. No attribution trailers** (AGENTS.md rule 2).
 8. **Strict posture is real.** If posture is `strict`, exit 0
    with no-op. Don't sneak candidates in.
-9. **Content candidates per surface (D88, D89).** Never file a
-   candidate that creates cards, keywords or art; an enemy, relic,
-   map, NPC or event candidate is filed `[content]` and waits for T
+9. **Content candidates per surface (D88, D89, D99).** A card,
+   keyword, art, enemy, relic, map, NPC or event candidate is filed
+   `[content]` and waits for T
    (§6 Step 3, question 5). `/expand` is plan-only: it pushes
    `main` and never opens a PR.
 

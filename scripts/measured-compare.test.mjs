@@ -62,7 +62,7 @@ test('renderAuditRow: a [content] row naming fight, deck, metric, both values an
   assert.match(row, /^### \[ \] \[content\] measured drift: bw-17\/the-doorwarden grey winRate 50% -> 20% \(even, 2026-10-13\)\n/)
   assert.match(row, /- category: content\n/)
   assert.match(row, /from 50% at aaaaaaa to 20% at bbbbbbb/)
-  assert.match(row, /D37, D88/)
+  assert.match(row, /D88, D99/)
   assert.ok(row.endsWith('\n'))
 })
 

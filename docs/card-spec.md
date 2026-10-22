@@ -381,7 +381,7 @@ T's call (ballot, 2026-10-13):
 
 - **Canonical lane size going forward?** → A family is 3 sub-lanes of about 10 (30 + grey); a lane is a sub-lane
 - **Which family is next?** → None until Blood Price is measured (R12a)
-- **When do placeholder names become real names?** → A naming session before the next lane; names are a card session under D37
+- **When do placeholder names become real names?** → A naming session before the next lane; names are card content: a `/plot` brief T approves (D99; D37 lifted)
 ```
 
 The ballot's §17 asked about B5, the card-creator tool, which has no

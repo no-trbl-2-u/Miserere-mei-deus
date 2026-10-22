@@ -272,9 +272,8 @@ ambiguity.)
     runs per PR, then `loop:pr-stuck`) keeps them green and `pr-resolve`
     keeps them mergeable (D87). The flow: `skills/march.md` §3 "Landing a
     change".
-  - **Content per surface (D88).** Cards, keywords and art: owner-only
-    (THE CARD HOLD below, B8). Enemies, relics, maps, NPCs and events: the
-    loop may propose them (`/expand`, bold, D89) and builds them only from
+  - **Content per surface (D88, D99).** Cards, keywords, art, enemies,
+    relics, maps, NPCs and events: the loop may propose them (`/expand`, bold, D89) and builds them only from
     a build-plan row whose brief T wrote or approved. Owner-led B-rows
     stay `[blocked: owner-led]`.
   - **The loop builds only briefed rows and never writes a brief.** A
@@ -302,10 +301,11 @@ ambiguity.)
   playable", by 2026-12-28) in five two-week windows, each with a goal and a demo T checks. The loop is not
   restricted to the current window: `/march` keeps picking open rows top to bottom. New cards and the card-creator
   workflow are the lowest priority.
-- **THE CARD HOLD (T, attended session 2026-09-26, D37).** No player card
-  and no player keyword is created outside a guided session with T. No
-  `/expand`, phase or brief adds one, and none plans a phase that would.
-  R11 kept it unchanged (D88).
+- **THE CARD HOLD IS LIFTED (T, attended session 2026-10-22, D99;
+  supersedes D37).** Cards, keywords and art are ordinary content under
+  D88: built only from a build-plan row whose brief T wrote or approved
+  (`/plot`, attended `/plan-a-phase`, `/oversight` promotion), proposed by
+  `/expand` as candidates, never invented unprompted.
   The card-rules inventory B4 required is merged
   (`plan/revamp/card-rules-inventory.md`). **The card process is Plan B
   (D73):** one slice per lane, lanes grouped into families (a relic names a
@@ -405,7 +405,7 @@ ambiguity.)
   in `.env`. Every generated asset records generator, model, prompt and
   date in its `provenance.json` entry (also the Steam AI-disclosure
   record). Midjourney stays out of the automated pipeline. Art is
-  owner-only (D88); card art returns in B8.
+  content (D88, D99): built only from a brief T approved.
 - **`Potential Assets/MCP-Axiomancer/images/` — license per image not on
   record.** The loop may not wire an image it cannot write a truthful
   `provenance.json` entry for. An untraceable image is replaced or
@@ -455,8 +455,8 @@ ambiguity.)
   (`axiomancer-mobile/assets/images/enemies/index.ts`). Three enemies qualify
   today; the `sandbag-01` dev dummy does not, carrying no `portraitAsset`. Art
   for anything outside that set — a new enemy, a new creature, any other surface
-  — remains owner-only under D88 and D37, and the generator refuses it rather
-  than asking. Phase AN1d is what this ruling unblocks;
+  — is content that needs a brief T approved (D88, D99), and the generator
+  refuses it rather than asking. Phase AN1d is what this ruling unblocks;
   `plan/phases/phase_AN1_enemy_animation.md` carries the detail.
 
 - **`art-department/` IS A TREE, NOT AN NPM WORKSPACE (T, attended session

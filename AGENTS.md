@@ -113,9 +113,9 @@ The content stewards (`adjust-*`, `forge`), the `card-expert`,
 skills (`brainstorm-mechanics`, `character-spec`, `story-spec`, `world-spec`,
 `kb-query`) were archived in R0 of THE REVAMP (2026-09-28, D58); since R10b2
 they live only under the `archive-pre-revamp` tag (D66). The loop creates no content during the
-revamp; card and keyword design happens only in guided sessions with T (D37),
-which will write a fresh card agent (B6). The `kb-query` MCP tools stay
-callable directly. The keyword wiring checklist now lives in
+revamp; cards and keywords, like all content, are built only from a brief T
+wrote or approved (D88; D99 lifted D37's card hold). The `kb-query` MCP
+tools stay callable directly. The keyword wiring checklist now lives in
 `axiomancer-mechanics/docs/keyword-atlas.md`; the map wiring contract in
 `axiomancer-mechanics/docs/world.md`.
 
@@ -144,7 +144,7 @@ run and any claim from memory is marked UNGROUNDED.
 | **Measured baselines** | Win-rate curves, status engagement | **Retired** (D57, R1): none is current until R9/B2 re-measure; the last one lives only under the `archive-pre-revamp` tag and describes a pre-revamp engine |
 
 Measuring is not tuning: a measurement is briefing. During the
-revamp, card and deck changes happen only in guided sessions with T (D37);
+revamp, card and deck changes ship only from a brief T approved (D88, D99);
 engine constants move only inside a ratified revamp phase (D58).
 Full protocols (consumption surfaces, wishlist, measured truth): [`docs/truth-sources.md`](docs/truth-sources.md). The complete
 external-system register (ownership, credentials, recovery):
@@ -234,9 +234,9 @@ The unified **nexus** harness was re-onboarded onto the monorepo on
   `.claude/commands/<verb>.md` pointers are the doorways.) `/march` runs
   the upstream chain (triage → critique → phase → expand → iterate) and
   builds only briefed, unattended, unclaimed build-plan rows. **Content
-  per surface (D88):** cards, keywords and art are owner-only (THE CARD
-  HOLD, D37); enemies, relics, maps, NPCs and events are built only from
-  a row whose brief T wrote or approved, and `/expand` may propose them.
+  per surface (D88, D99):** cards, keywords, art, enemies, relics, maps,
+  NPCs and events are built only from a row whose brief T wrote or
+  approved, and `/expand` may propose them.
 - `plan/` — the loop's durable memory: `bearings.md` (standing context —
   **read this first**), `steps/01_build_plan.md` (the phase queue),
   `AUDIT.md` + `CRITIQUE.md` (the drain queues), `PHASE_CANDIDATES.md`,

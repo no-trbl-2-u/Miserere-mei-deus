@@ -35,8 +35,8 @@ Name each in a few words.
 For each theme: grep the packages and `plan/` (part plans under
 `plan/revamp/`, `plan/<topic>.md`, the build plan,
 `PHASE_CANDIDATES`, AUDIT, CRITIQUE), and note which D-numbers it
-touches and which content surfaces (D88: cards, keywords, art are
-owner-only). With **3 or more themes**, fan out one sub-agent per
+touches and which content surfaces (D88: every surface builds only
+from a brief T approved, D99). With **3 or more themes**, fan out one sub-agent per
 theme (`Explore`, foreground) and synthesize their answers; with
 fewer, do it inline.
 

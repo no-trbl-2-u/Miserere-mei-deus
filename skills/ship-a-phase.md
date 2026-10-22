@@ -489,9 +489,9 @@ Canonical in `plan/revamp/README.md` §5; in short:
    removed from a save (Step 5).
 5. **Gates** — Step 9.
 6. **Content per surface (D88).** An R-phase re-points and deletes.
-   Any phase may author an enemy, relic, map, NPC or event only where
-   its brief (T-written or T-approved) says to; never a card, keyword
-   or art (D37).
+   Any phase may author a card, keyword, art, enemy, relic, map, NPC
+   or event only where its brief (T-written or T-approved) says to
+   (D99).
 
 ## 9. Missing brief
 
@@ -548,8 +548,8 @@ Phase-shaped — mark `[blocked: …]`, notify, return:
    (reason: "brief too thin: `/plot <N>` again") only if even that
    fails. Never rewrite the brief.
 9. **The phase can only ship by creating content its brief does not
-   authorize** (D88) or by card/keyword/art work the hold forbids
-   (D37). Name the missing owner session in the blocked reason.
+   authorize** (D88, D99). Name the missing brief in the blocked
+   reason.
 
 For everything else: **decide, ship, document.**
 
