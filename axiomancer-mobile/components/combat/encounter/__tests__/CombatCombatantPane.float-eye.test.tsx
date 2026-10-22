@@ -167,7 +167,7 @@ describe('the float-eye animates in a live encounter (phase AN1e, A9)', () => {
 
     // THE OTHER HALF OF A9. Without this, "the pane animates" could be true of
     // every enemy, and the static path would have been quietly deleted.
-    it.each(['death-beholder', 'brine-hag'])(
+    it.each(['green-jelly', 'hag'])(
         '%s has no frame set, and still renders its single painting',
         (artKey) => {
             expect(getEnemyFrameSet(artKey)).toBeNull();

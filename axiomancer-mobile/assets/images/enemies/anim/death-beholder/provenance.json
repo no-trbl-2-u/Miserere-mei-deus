@@ -1,0 +1,47 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-10-22",
+    "tool": "art-department/tools/split-spritesheet.py (Pillow, lossless cells) then scripts/ingest-art.mjs (sharp) --no-grade",
+    "model": "none - no image model was called and nothing was spent",
+    "post_process": "longest edge <= 640px, WebP q44, UNGRADED",
+    "graded": false,
+    "graded_in_this_run": false,
+    "graded_note": "A6b, grade once - here, zero times. The source painting death-beholder.webp was itself ingested ungraded in phase AN4a (a colour boss: the grayscale grade would erase its orange corona and green hide), so these cells carry no grade either, and graded: false on the frame manifest says so. They match the static portrait they replace; grading only the animated cells would make the boss change colour the moment it starts to move.",
+    "license": "torio Javardry free material: free for any use including commercial, modification and redistribution; no attribution required",
+    "artist": "torio (とり夫), Pixiv user 5887541",
+    "source": "art-department/masters/enemies/death-beholder.sheet.png (1408x528 lossless master, 8 columns x 3 rows of 176px cells; see its own provenance.json, which records the rig that drew it), itself rigged from the shipped death-beholder.webp (torio's `Death Beholder A.png`, 2022_added_monsters_ver3 pack, catalog slug `death-beholder`)",
+    "method": "The rig keyed the painting's border-connected black ground to alpha and posed the whole sphere as one layer in 24 affine frames. The master was cut into 24 lossless PNG cells by the splitter, row-major, then each cell was encoded to WebP q44 by the shared ingest recipe with the grade skipped. Every pixel descends from the shipped painting; the sheet master itself never enters this tree.",
+    "used_by": [
+      "assets/images/enemies/frames.ts - ENEMY_FRAME_SETS['death-beholder'], via ./anim/death-beholder/index.ts",
+      "components/combat/encounter/CombatCombatantPane.tsx - the Act 1 boss in live combat"
+    ],
+    "measured": "A8, measured on these exact files: 24 cells, 197658 B (193.0 KB) in total, mean 8236 B, max 11068 B (death-beholder-20.webp, the attack swell), min 4892 B (death-beholder-19.webp, the coil) - against 56286 B for the static death-beholder.webp. 3.5x, +141.4 KB for one enemy. The cell edge is 176px, not the float-eye's 256: at 256 this painting's cells encode to 21490 B max, past FRAME_CELL_MAX_BYTES (12000), and 192 still overshoots (12840 B). The ceiling held; the edge moved.",
+    "covers": [
+      "death-beholder-00.webp",
+      "death-beholder-01.webp",
+      "death-beholder-02.webp",
+      "death-beholder-03.webp",
+      "death-beholder-04.webp",
+      "death-beholder-05.webp",
+      "death-beholder-06.webp",
+      "death-beholder-07.webp",
+      "death-beholder-08.webp",
+      "death-beholder-09.webp",
+      "death-beholder-10.webp",
+      "death-beholder-11.webp",
+      "death-beholder-12.webp",
+      "death-beholder-13.webp",
+      "death-beholder-14.webp",
+      "death-beholder-15.webp",
+      "death-beholder-16.webp",
+      "death-beholder-17.webp",
+      "death-beholder-18.webp",
+      "death-beholder-19.webp",
+      "death-beholder-20.webp",
+      "death-beholder-21.webp",
+      "death-beholder-22.webp",
+      "death-beholder-23.webp"
+    ]
+  }
+]

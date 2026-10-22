@@ -50,7 +50,7 @@ describe('installing a frame set took nothing away from the static registry', ()
     // each side of it. With every enemy installed, "the static path still
     // works" would be a sentence about nobody.
     it('the roster still has a framed enemy and a static one', () => {
-        expect(keys.filter((k) => hasEnemyFrames(k))).toEqual(['float-eye']);
+        expect(keys.filter((k) => hasEnemyFrames(k)).sort()).toEqual(['death-beholder', 'float-eye']);
         expect(keys.filter((k) => !hasEnemyFrames(k)).length).toBeGreaterThan(0);
     });
 
@@ -98,6 +98,40 @@ describe('the float-eye is installed', () => {
         // They descend from an already-ingested painting and came in with
         // --no-grade. Saying `false` here would invite a second grade.
         expect(set.manifest.graded).toBe(true);
+    });
+});
+
+/**
+ * Phase AN4b - the Act 1 boss, read against `death-beholder.sheet.json` the
+ * same way the float-eye is read against its own sidecar.
+ */
+describe('the death-beholder is installed', () => {
+    const set = ENEMY_FRAME_SETS['death-beholder'];
+
+    it('is in the registry at all', () => {
+        expect(set).toBeDefined();
+    });
+
+    it('ships one distinct file per cell of its 8x3 grid, cut at 176px', () => {
+        expect(set.manifest.frame).toBe(176);
+        expect(set.manifest.columns * set.manifest.rows).toBe(24);
+        expect(set.frames).toHaveLength(24);
+        expect(new Set(set.frames.map((f) => JSON.stringify(f))).size).toBe(24);
+    });
+
+    it('names its three clips on the rows the sheet drew them on', () => {
+        expect(set.manifest.clips.idle).toEqual({ row: 0, frames: 8, fps: 10, loop: true, rest: 0 });
+        expect(set.manifest.clips.struck).toEqual({ row: 1, frames: 8, fps: 16, loop: false, rest: 7 });
+        expect(set.manifest.clips.attacking).toEqual({ row: 2, frames: 8, fps: 12, loop: false, rest: 0 });
+    });
+
+    it('anchors on the centre, because it floats (A8)', () => {
+        expect(set.manifest.anchor.kind).toBe('centre');
+        expect(set.manifest.anchor.why).toMatch(/float/);
+    });
+
+    it('records that its cells carry no grade, matching the ungraded portrait', () => {
+        expect(set.manifest.graded).toBe(false);
     });
 });
 
