@@ -58,7 +58,6 @@
 
 
 ### [ ] [score 3.5] Stop `<rev>:<path>` git reads from breaking on Windows (lesson `msys-rev-path`, seen 2x)
-
 - proposed: 2026-10-21, `/plot` AD1 retro (lesson `msys-rev-path`, seen 2×)
 - source signals: `plan/lessons.md` `msys-rev-path`, seen 2×, last 2026-10-21. Git Bash path conversion rewrites `git show origin/main:<path>` to `origin\main;<path>` and git reports "ambiguous argument". It bit twice inside one plot session reading `main`'s build plan and workflows, costing a retry each time; the same family as `sed-flattens-crlf` and `isolated-worktree-shell` — this box's shell, not the repo's logic.
 - rationale: every verb reads `main` by `<rev>:<path>` when it orients, so this is a tax on the first step of plot, expand, iterate and ship alike. The fix is one environment variable, which is exactly the kind of thing a doc line never reliably carries.
