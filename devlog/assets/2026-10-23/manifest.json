@@ -1,0 +1,14 @@
+{
+  "generated_by": "scripts/devlog-shots.mjs",
+  "date": "2026-10-23",
+  "since": "e5c0a8893",
+  "sinceDate": "2026-10-21",
+  "shots": [
+    {
+      "screen": "devpuzzle-list",
+      "before": false,
+      "ratio": null
+    }
+  ],
+  "catalogEvidence": true
+}
