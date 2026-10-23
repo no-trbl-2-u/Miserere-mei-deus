@@ -251,6 +251,8 @@ validation layer. The skill itself is written in a session with T.
 
 CS1 shipped the spec skeleton (`docs/card-spec.md`) and the rules fence; B5's tool shape is still T's call.
 
+**v1 ratified (T, 2026-10-23, D102).** The manual flow Blood Price and the Elementalist went through is the lane-creator v1 flow, `docs/lane-creator.md`. The skill above is v2, held until v1 has run a few more times.
+
 ## B6 — Card sessions (owner)
 
 T runs Plan B's sessions as amended by D73, one lane per slice. A fresh card agent is written at the
