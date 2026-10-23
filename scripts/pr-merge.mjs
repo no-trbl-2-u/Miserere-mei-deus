@@ -18,7 +18,7 @@
 //
 // Holds, each a tested line of `mergeWanted`:
 //   - the kill switch: repository variable PR_AUTO_MERGE=off, or the label `no-auto-merge`
-//   - a plan PR: label `plot` or `review:plan-only`, or a title that starts `plot:` or `plan:`
+//   - a plot PR: label `plot`, or a title that starts `plot:` (D101; `review:plan-only` and `plan:` merge like any PR)
 //   - a pipeline PR: one that changes a file in `PIPELINE_PATHS` (the reviewer, the partition, the merge job)
 //   - a PR that waits on T or the loop: `review:needs-T`, `loop:pr-stuck`, `eval:seed`, a draft, a fork
 //   - a verdict comment from any account but the reviewer's (`TRUSTED_AUTHORS`): the repo is public

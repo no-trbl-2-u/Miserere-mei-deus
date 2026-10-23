@@ -52,13 +52,14 @@ test('a reviewed, green, non-plan PR merges, whatever its tier', () => {
   assert.equal(mergeWanted(pr({ labels: [] })).go, true, 'a hand PR with no labels merges too')
 })
 
-test('a plan PR never merges: plot or review:plan-only label, or a plot:/plan: title', () => {
-  assert.deepEqual([...PLAN_LABELS], ['plot', 'review:plan-only'])
+test('only a plot PR never merges: the plot label or a plot: title (D101)', () => {
+  assert.deepEqual([...PLAN_LABELS], ['plot'])
   assert.match(mergeWanted(pr({ labels: ['plot', 'risk:low'] })).reason, /plan PR \(label plot\)/)
-  assert.match(mergeWanted(pr({ labels: ['review:plan-only'] })).reason, /plan PR \(label review:plan-only\)/)
   assert.match(mergeWanted(pr({ title: 'plot: HP4 — a graded set' })).reason, /plan PR \(title\)/)
-  assert.match(mergeWanted(pr({ title: 'plan: HP2c ahead of B3f' })).reason, /plan PR \(title\)/)
-  assert.match(mergeWanted(pr({ title: 'Plan(RV3): x' })).reason, /plan PR \(title\)/)
+  assert.match(mergeWanted(pr({ title: 'Plot(RV3): x' })).reason, /plan PR \(title\)/)
+  // A critique pass, a lesson or a decision record merges on a pass like any PR (D101).
+  assert.equal(mergeWanted(pr({ labels: ['review:plan-only', 'size:S', 'area:loop'] })).go, true, 'review:plan-only merges')
+  assert.equal(mergeWanted(pr({ title: 'plan: HP2c ahead of B3f' })).go, true, 'a plan: title merges')
   assert.equal(mergeWanted(pr({ title: 'feat: plan the dock' })).go, true, 'the word inside a title is not a prefix')
 })
 

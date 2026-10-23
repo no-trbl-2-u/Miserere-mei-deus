@@ -300,8 +300,8 @@ gh pr checks "loop/<verb>-<slug>" --repo "$GH_REPO" --required --watch --fail-fa
 - **The adversarial review** (`skills/review.md`, phase RV1b, RV3)
   posts after `verify-gate` on every same-repo PR: inline MED/HIGH
   findings, one `## Review verdict` comment, and a `risk:*` raise with
-  a reason. On a `pass` the `merge` job merges a non-plan PR (D95); a
-  `not-pass`, a plan PR or a hold label leaves it to T.
+  a reason. On a `pass` the `merge` job merges any PR but a `plot` PR
+  (D95, D101); a `not-pass`, a `plot` PR or a hold label leaves it to T.
 - **Never** merge the PR, close it, or force-push its branch yourself
   (D86): the `merge` job merges it on a green review, T merges the rest
   (D95).

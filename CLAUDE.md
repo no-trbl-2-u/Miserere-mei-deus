@@ -6,7 +6,7 @@ The autonomous **nexus** loop is live at the repo root: read
 the loop verbs (`/ship-a-phase`, `/march`, `/iterate`, `/oversight`, …). Domain
 **design** skills and tuning/playtest commands live in `.claude/`. The loop
 lands code as `loop:pr` pull requests (D84–D87); a PR merges when its
-adversarial review is green, and T merges plan PRs by hand (D95).
+adversarial review is green, and T merges only `plot` PRs by hand (D95, D101).
 
 **When T asks for loop work, use `/plot` or `/messy` (AGENTS.md rule 8).** If T
 says they want something the loop should build ("let's add…", "the loop should
