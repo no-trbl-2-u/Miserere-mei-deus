@@ -187,7 +187,9 @@ size label so T can spot the estimate in the PR list: `size:S`,
 `size:multi-phase` for a plot that splits (the per-phase sizes are in
 the PR's phase table). Every `plot` PR also carries `review:plan-only`
 (it never changes code) and at least one `area:*` label naming what
-the phases will touch (`skills/march.md` §3 "Area and review labels").
+the phases will touch (`skills/march.md` §3 "Area and review labels"),
+picked from the labels that exist (`gh label list --search area:`):
+`gh pr create` fails on an unknown label.
 The labels are created by `skills/march.md` → "Landing a change" if
 missing.
 

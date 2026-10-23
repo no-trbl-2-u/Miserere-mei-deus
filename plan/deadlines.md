@@ -207,6 +207,10 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - IO1b — attended; waits on T enrolling in the Apple Developer Program; date not set.
 - IO1c — loop work; follows IO1a; date not set.
 - IO1d — attended; T and a friend install the first iPhone builds once IO1b and IO1c ship; date not set.
+- FM2a — loop work; T slotted it anytime; date not set.
+- FM2b — loop work; follows FM2a; date not set.
+- FM2c — loop work; follows FM2a; date not set.
+- FM2d — attended; T's look in Obsidian once FM2b and FM2c ship; date not set.
 
 ## How a window closes
 
@@ -217,6 +221,7 @@ attended session.
 ## Change log
 
 - **2026-10-22** — **iPhone beta builds plotted** (T, attended session, `/plot`). **Added** Unscheduled lines for IO1a-IO1d: T set no date, and the rows block no window's goal. **Edited** no Item: none in the open windows rests on iOS builds. **Ticked** nothing.
+- **2026-10-22** — **modular feature map plotted** (T, attended session, `/plot anytime`). **Added** Unscheduled lines for FM2a-FM2d: T set no date and the rows serve no window's goal. **Edited** no Item: the FM1 map they extend has shipped and no open Item depends on it.
 - **2026-10-22** — **card and combat logging plotted** (T, attended session, `/plot`). **Added** Unscheduled lines for BE2a-BE2g: T set no date and the rows block no window's goal. **Edited** no Item: no open Item's premise depends on the play log. Nothing ticked; no date moved.
 - **2026-10-21** — **cost-card puzzles plotted** (T, attended session, `/plot asap`). **Added** three W1 Items for HP5a-HP5d (five hazard cost cards and their board display, the twenty easy and medium candidates deleted, twenty cost-card puzzles). **Edited** the W1 demo Item: T's thirty are now HP4c's ten hard plus HP5d's twenty, and HP4e requires HP5d. Nothing ticked; no date moved.
 - **2026-10-21** — **phase Item Status is derived** (phase DL1b, the loop). `deadlines.mjs --write` now rewrites

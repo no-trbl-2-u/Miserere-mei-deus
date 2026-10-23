@@ -258,7 +258,8 @@ gh pr checks "loop/<verb>-<slug>" --repo "$GH_REPO" --watch --fail-fast
   - <autonomous call: picked X over Y because ...>
 
   ## Acceptance
-  - [x] A1 <the brief's acceptance ID and text>
+  - [x] A1 <the brief's text>, proven by `<path/to/x.test.ts>` or `npm run <script>`
+  - [x] A2 <a doc-only or attended line> (no test: <reason>)
 
   ## Verify
   - `<command>` -> <summary>
@@ -267,7 +268,17 @@ gh pr checks "loop/<verb>-<slug>" --repo "$GH_REPO" --watch --fail-fast
   ```
 
   `## Acceptance` lists the brief's IDs the PR closes; drop the
-  section for a fix with no brief. `Closes #<N>` is the last line, one
+  section for a fix with no brief. **Each ticked line names its
+  proof** (phase LG1c): a backticked test file or `verify:visual`
+  shot that exists on the PR head (a full path, or a bare file name
+  the head holds), or a backticked `npm`, `node` or `npx` command;
+  or it ends with `(no test: <reason>)`, which `verify-gate`'s
+  summary lists for T. A ticked line with neither, or naming a file
+  the head lacks, turns `verify-gate` red. Check the body before
+  opening the PR: `node scripts/pr-acceptance.mjs --body-file
+  "$body"`. The step reads the body live, so after editing a red
+  body, re-run the failed `verify-gate` job (`gh run rerun <id>
+  --failed`). `Closes #<N>` is the last line, one
   issue per line; `close-trailers` reads it from the commit range of
   the merge push, so put the same trailer in the PR's last commit.
 - **`gh pr checks --watch` replaces `deploy:check`** for the branch
