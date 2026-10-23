@@ -75,8 +75,16 @@ export function lastCommit(root, rel) {
   }
 }
 
-/** The CRITIQUE Pending row for one unfiled report. */
+/** True when `rel` has no character (a backtick or a newline) that would break
+ * out of the backtick span a CRITIQUE row embeds it in. */
+export function isSafeReportPath(rel) {
+  return !/[`\r\n]/.test(rel)
+}
+
+/** The CRITIQUE Pending row for one unfiled report, or null when its path is
+ * not safe to embed in a backtick span (isSafeReportPath). */
 export function critiqueRow(rel, commit) {
+  if (!isSafeReportPath(rel)) return null
   const at = commit ? `commit ${commit.split(' ')[0]}` : 'uncommitted'
   return [
     `### [MED] unfiled report \`${rel}\`: read it and file its findings`,
@@ -123,9 +131,12 @@ export function sweep(root, { file = false } = {}) {
   const found = unfiled(listReports(root), readBaseline(root), readQueues(root))
     .map((rel) => ({ rel, commit: lastCommit(root, rel) }))
   if (file && found.length) {
-    const critiquePath = path.join(root, 'plan/CRITIQUE.md')
-    const text = fs.readFileSync(critiquePath, 'utf8')
-    fs.writeFileSync(critiquePath, addPendingRows(text, found.map((f) => critiqueRow(f.rel, f.commit))))
+    const rows = found.map((f) => critiqueRow(f.rel, f.commit)).filter((r) => r !== null)
+    if (rows.length) {
+      const critiquePath = path.join(root, 'plan/CRITIQUE.md')
+      const text = fs.readFileSync(critiquePath, 'utf8')
+      fs.writeFileSync(critiquePath, addPendingRows(text, rows))
+    }
   }
   return found
 }
@@ -146,7 +157,10 @@ function main(argv) {
     return
   }
   for (const f of found) console.log(`${f.rel}  ${f.commit ?? '(uncommitted)'}`)
-  console.log(`report-sweep: ${found.length} unfiled${file ? ', filed to plan/CRITIQUE.md Pending' : ''}`)
+  const unsafe = file ? found.filter((f) => !isSafeReportPath(f.rel)) : []
+  for (const f of unsafe) console.log(`report-sweep: not filing ${f.rel} (unsafe path for a CRITIQUE row)`)
+  const filedNote = file ? `, filed ${found.length - unsafe.length} to plan/CRITIQUE.md Pending` : ''
+  console.log(`report-sweep: ${found.length} unfiled${filedNote}`)
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main(process.argv.slice(2))

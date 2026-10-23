@@ -15,7 +15,7 @@ import test from 'node:test'
 import { fileURLToPath } from 'node:url'
 
 import { lintQueue } from './check-plan-queues.mjs'
-import { addPendingRows, critiqueRow, listReports, sweep } from './report-sweep.mjs'
+import { addPendingRows, critiqueRow, isSafeReportPath, listReports, sweep } from './report-sweep.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const SCRIPT = path.join(ROOT, 'scripts/report-sweep.mjs')
@@ -84,6 +84,19 @@ test('--file adds one MED Pending row after the HIGH rows, which the queue lint 
   assert.match(text, /- evidence: `axiomancer-mobile\/docs\/reports\/NEW_BUGS\.md`/)
   assert.deepEqual(lintQueue(text, 'critique').findings, [])
   assert.deepEqual(sweep(root, { file: true }), [], 'the filed row cites the path, so it is not filed twice')
+})
+
+test('a report path with a backtick or newline is reported but never filed, so it cannot break the row\'s backtick span', () => {
+  const root = fixture()
+  const evilRel = 'axiomancer-mobile/docs/reports/evil`md.md'
+  fs.writeFileSync(path.join(root, evilRel), '# evil\n')
+  assert.equal(isSafeReportPath(evilRel), false)
+  assert.equal(critiqueRow(evilRel, null), null)
+  const found = sweep(root, { file: true })
+  assert.ok(found.some((f) => f.rel === evilRel), 'still reported as unfiled')
+  const text = fs.readFileSync(path.join(root, 'plan/CRITIQUE.md'), 'utf8')
+  assert.ok(!text.includes(evilRel), 'never written into the queue')
+  assert.deepEqual(lintQueue(text, 'critique').findings, [])
 })
 
 test('a row lands cleanly in an empty Pending and after HIGH-only rows', () => {
