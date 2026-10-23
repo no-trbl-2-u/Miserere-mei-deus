@@ -15,13 +15,13 @@
  */
 
 import {
-    cardLibrary, createCharacter, initializeCombatEncounter, rollEncounterDice, playCombatCard,
+    cardLibrary, rollEncounterDice, playCombatCard,
     type Card, type CombatEncounterState,
 } from '@mechanics';
 
 import { buildCombatViewModel, selectCombatLogHistory } from '../combat-encounter.engine';
 import { programHeadline, programFreeCell } from '../card-program.engine';
-import { createMockEncounterEnemy } from '../../mocks/combat.mock';
+import { realFightFixture, startRealFight } from '@/test-utils/realFight';
 
 const programCards = cardLibrary.filter((c) => c.program);
 const find = (pred: (c: Card) => boolean): Card => {
@@ -41,12 +41,16 @@ const TETHER_CARD = find((c) => /^TETHER \d+\. SACRIFICE 1/.test(paidText(c)));
 const WILD = { id: 'w', color: 'wild' as const, state: 'available' as const, temporary: false, face: 'mana' as const };
 
 function encounter(hand: string[], vitae = 100): CombatEncounterState {
-    const player = createCharacter({ name: 'Hero', level: 1, baseStats: { heart: 5, body: 5, mind: 5 } });
     const deck = [...hand, 'grey-strike', 'grey-ward', 'grey-word', 'grey-strike', 'grey-ward'];
-    const enemy = { ...createMockEncounterEnemy(), health: 400, maxHealth: 400 };
-    const s = rollEncounterDice(initializeCombatEncounter(player, enemy, deck, 5)).state;
+    const { combat } = startRealFight(
+        realFightFixture({ level: 1, baseStats: { heart: 5, body: 5, mind: 5 } }),
+        { deck, seed: 5 },
+    );
+    const s = rollEncounterDice(combat).state;
     return {
         ...s,
+        // The real foe, fattened so no test's damage ends the fight.
+        enemy: { ...s.enemy, health: 400, maxHealth: 400 },
         hand: hand.map((cardId, i) => ({ uid: `h${i}`, cardId })),
         player: { ...s.player, health: vitae },
         dice: [{ ...WILD }],

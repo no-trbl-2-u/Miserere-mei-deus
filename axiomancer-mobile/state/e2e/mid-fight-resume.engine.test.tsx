@@ -20,7 +20,7 @@ import { CombatModeProvider } from '@/state/combat-mode';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { createAppStore, type AppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
-import { createMockEncounterEnemy } from '@/state/mocks/combat.mock';
+import { startRealFight } from '@/test-utils/realFight';
 import ExplorationScreen from '@/app/(tabs)/exploration';
 import { CombatGate } from '@/components/CombatGate';
 
@@ -64,8 +64,7 @@ function mountExploration(store: AppStore) {
 
 describe('continuing a chronicle saved mid-fight', () => {
     it('the gate routes the saved fight to /combat-encounter', () => {
-        const store = makeStore();
-        store.getState().startCombat(createMockEncounterEnemy());
+        const { store } = startRealFight();
 
         const tree = mountExploration(store);
 

@@ -47,7 +47,7 @@ import { CombatModeProvider } from '@/state/combat-mode';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { createAppStore, type AppStore, EMPTY_EVENT_SLICE } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
-import { createMockEncounterEnemy } from '@/state/mocks/combat.mock';
+import { arriveAtRealFight } from '@/test-utils/realFight';
 import type { ResolveMapEventResult } from '@mechanics';
 
 import CharacterScreen from '@/app/(tabs)/character';
@@ -78,22 +78,6 @@ function seedActiveEvent(store: AppStore, result: ResolveMapEventResult): void {
 const REST_EVENT: ResolveMapEventResult = {
     state: undefined as never,
     event: { kind: 'rest', healed: 7 } as never,
-};
-
-// A real `createEnemy(...)`-built Enemy, not a hand-rolled literal: the
-// encounter modal auto-engages, so this fixture boots the live combat panel
-// on render, and the engine reads shape a literal never carries (`effects`,
-// threat sequence) — a hand-rolled one throws "bearer.effects is not iterable".
-const ENCOUNTER_EVENT: ResolveMapEventResult = {
-    state: undefined as never,
-    event: {
-        kind: 'encounter',
-        encounter: {
-            enemies: [createMockEncounterEnemy()],
-            origin: 'breakwater:bw-2',
-        },
-        isBoss: false,
-    } as never,
 };
 
 function withProviders(store: AppStore, screen: React.ReactNode) {
@@ -287,8 +271,8 @@ describe('smoke-render: surfaces with an ACTIVE event (no infinite render loop)'
     });
 
     it('renders the Exploration tab with an active combat-prelude without throwing', () => {
-        const store = makeStore();
-        seedActiveEvent(store, ENCOUNTER_EVENT);
+        // A real arrival at bw-2: the prelude holds the node's own foe.
+        const { store } = arriveAtRealFight();
         expect(() => render(withProviders(store, <ExplorationScreen />))).not.toThrow();
     });
 

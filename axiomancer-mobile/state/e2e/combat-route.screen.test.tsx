@@ -51,10 +51,10 @@ import CombatEncounterScreen from '@/app/combat-encounter/index';
 import { HardwareBackHandler } from '@/components/HardwareBackHandler';
 import { CombatModeProvider, useCombatMode } from '@/state/combat-mode';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
-import { createMockEncounterEnemy } from '@/state/mocks/combat.mock';
 import { createAppStore, type AppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
-import type { Enemy } from '@mechanics';
+import { REAL_BOSS_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
+import type { FixtureRef } from '@/test-utils/fixtureStore';
 
 let combat: ReturnType<typeof useCombatMode>;
 function Probe() {
@@ -70,10 +70,8 @@ afterEach(() => {
     jest.clearAllMocks();
 });
 
-function stagedStore(enemy: Enemy = createMockEncounterEnemy()): AppStore {
-    const store = createAppStore({ adapter: createMemoryAdapter() });
-    store.getState().startCombat(enemy);
-    return store;
+function stagedStore(ref?: FixtureRef): AppStore {
+    return startRealFight(ref).store;
 }
 
 function mount(store: AppStore, extra?: React.ReactNode) {
@@ -90,8 +88,8 @@ function mount(store: AppStore, extra?: React.ReactNode) {
 
 describe('the live combat route', () => {
     it('hands the staged foe to the panel and raises the combat flag', () => {
-        const enemy = createMockEncounterEnemy();
-        const tree = mount(stagedStore(enemy));
+        const { store, enemy } = startRealFight();
+        const tree = mount(store);
 
         expect(tree.queryByTestId('combat-encounter-live')).not.toBeNull();
         expect(tree.queryByTestId(`stub-panel-${enemy.id}`)).not.toBeNull();
@@ -137,15 +135,13 @@ describe('the live combat route', () => {
     });
 
     it('a boss seals WITHDRAW', () => {
-        const boss = { ...createMockEncounterEnemy(), difficulty: 'boss' } as Enemy;
-        const tree = mount(stagedStore(boss));
+        const tree = mount(stagedStore(REAL_BOSS_FIGHT_FIXTURE));
 
         expect(tree.queryByTestId('stub-withdraw')).toBeNull();
     });
 
     it('keeps the foe after the store settles the fight, so the summary stays up', () => {
-        const enemy = createMockEncounterEnemy();
-        const store = stagedStore(enemy);
+        const { store, enemy } = startRealFight();
         const tree = mount(store);
 
         act(() => { store.getState().endCombat('victory'); });
