@@ -370,8 +370,10 @@ the next tick to fill.
 ```bash
 # Checks take a few seconds to register after a push; --watch before then
 # exits 0 on "no checks reported" (lesson `checks-not-yet-registered`).
+# --required: only `verify-gate`, which waits on every verify-*; without it
+# the watch also waits on the advisory `review / run` job (up to 40 min).
 until gh pr checks "<PR>" --repo "$GH_REPO" 2>/dev/null | grep -q .; do sleep 5; done
-gh pr checks "<PR>" --repo "$GH_REPO" --watch --fail-fast
+gh pr checks "<PR>" --repo "$GH_REPO" --required --watch --fail-fast
 ```
 
 Outcomes:
@@ -582,5 +584,5 @@ git add <explicit files>
 git commit -m "<subject>"
 git push -u origin loop/ship-<N>-<slug>
 gh pr create --label loop:pr --label "size:<S|M|L>" --label "area:<area>" --base main ...
-gh pr checks loop/ship-<N>-<slug> --watch --fail-fast
+gh pr checks loop/ship-<N>-<slug> --required --watch --fail-fast
 ```
