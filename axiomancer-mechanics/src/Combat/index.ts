@@ -111,3 +111,14 @@ export {
 export {
     getCombatLoadout, addToLoadout,
 } from './combat.loadout';
+
+// The play-log API contract: the fight and deck change the preview app posts and the Worker stores.
+export {
+    PLAY_LOG_FIGHTS_PATH, PLAY_LOG_DECK_EVENTS_PATH, COMBAT_EVENT_KINDS, PLAY_LOG_UI_EVENT_KINDS,
+    PLAY_LOG_FIGHT_OUTCOMES, DECK_EVENT_KINDS, PLAY_LOG_LIMITS, validateFightPost, validateDeckEventPost,
+} from './combat.play-log-contract';
+export type {
+    CombatEventKind, PlayLogUiEventKind, DeckEventKind, PlayLogStamp, PlayLogCombatEvent, PlayLogUiEvent,
+    PlayLogEvent, PlayLogSource, FightPost, DeckEventWhere, DeckEventPost, FightRow, DeckEventRow, FightList,
+    DeckEventList, PlayLogCreated, PlayLogError, FightValidation, DeckEventValidation,
+} from './combat.play-log-contract';
