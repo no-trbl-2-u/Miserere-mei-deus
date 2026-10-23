@@ -1,4 +1,5 @@
 import type { CardProgram } from './card-program.types';
+import type { UpgradeScale } from './card-upgrade.scale';
 
 /**
  * Cards System Types
@@ -157,8 +158,9 @@ export interface CardRider {
 }
 
 // ── CARD UPGRADES — the Slay the Spire axis ─────────────────────────────────
-// One of the six progression axes: a card you own can be upgraded once, into
-// `<id>+` / `<name>+`. The upgraded copy is a PATCH of the original, never a
+// One of the six progression axes: a card you own can be upgraded as many
+// times as its rarity allows (common 1, uncommon 2, rare 3), into `<id>+`,
+// `<id>++`, `<id>+++` (Phase UP1b). The upgraded copy is a PATCH of the original, never a
 // second hand-authored card, so a rework of the base card carries forward.
 // Runtime lives in `src/Cards/card-upgrades.ts` (`upgradeCard`), which applies
 // an authored {@link Card.upgrade} patch if present and otherwise falls back
@@ -299,4 +301,11 @@ export interface Card {
      * it. See `card-program.types.ts`.
      */
     program?: CardProgram;
+    /**
+     * A program card's lines at a given upgrade level (Phase UP1b). `program`
+     * is this at level 0; `upgradeCard` rebuilds `program` from it at each
+     * upgrade, so the printed text and the applied numbers come from the same
+     * scaled values. A program card without one keeps its numbers when upgraded.
+     */
+    programAt?: (scale: UpgradeScale) => CardProgram;
 }

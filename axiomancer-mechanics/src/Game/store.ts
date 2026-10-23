@@ -172,6 +172,8 @@ export interface GameActions {
     levelUp: () => void;
     allocateStatPoint: (stat: 'heart' | 'body' | 'mind') => void;
     learnCard: (cardId: string) => void;
+    /** Swaps one owned copy of `cardId` for `withCardId` (`REPLACE_CARD`). */
+    replaceCard: (cardId: string, withCardId: string) => void;
     save: () => void;
     // ── Run loop ─────────────────────────────────────────────────────────────
     /**
@@ -492,6 +494,10 @@ export function createGameStore(
 
             learnCard(cardId) {
                 dispatch({ type: 'LEARN_CARD', payload: { cardId } });
+            },
+
+            replaceCard(cardId, withCardId) {
+                dispatch({ type: 'REPLACE_CARD', payload: { cardId, withCardId } });
             },
 
             save() {

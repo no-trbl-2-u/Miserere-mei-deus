@@ -48,6 +48,33 @@ export function learnCard(
     };
 }
 
+/**
+ * Swaps ONE owned copy of `cardId` for `withCardId` (an upgrade: `x` for
+ * `x+`), in `knownCards` first, else in `combatRewardCards`. Duplicates are
+ * kept: only the first matching copy changes. Pure; returns the unchanged
+ * character (same reference) when the card is not owned or `withCardId` does
+ * not resolve.
+ */
+export function replaceCard(
+    character: Character,
+    cardId: string,
+    withCardId: string,
+): Character {
+    if (cardId === withCardId || !getCardById(withCardId)) return character;
+    const swapOne = (ids: readonly string[]): string[] | null => {
+        const at = ids.indexOf(cardId);
+        if (at < 0) return null;
+        const next = ids.slice();
+        next[at] = withCardId;
+        return next;
+    };
+    const known = swapOne(character.knownCards);
+    if (known) return { ...character, knownCards: known };
+    const rewards = swapOne(character.combatRewardCards ?? []);
+    if (rewards) return { ...character, combatRewardCards: rewards };
+    return character;
+}
+
 // ─── Card Execution ─────────────────────────────────────────────────────────
 
 /** One discrete thing that happened while a card resolved. */

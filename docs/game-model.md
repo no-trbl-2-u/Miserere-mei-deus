@@ -20,9 +20,13 @@ the Expo app (`axiomancer-mobile`) presents it.
   Plain Blow (attack, DEAL), A Plain Ward (skill, GUARD), A Plain Word
   (spell, VULNERABLE), all colour `any`, rank 1 (Ash), tier 1. The trial
   set (`BLOOD_PRICE_SET`, `Cards/library/blood-price.cards.ts`, D80, D81):
-  30 cards (11 body, 8 mind, 11 heart, all rank 1): 25 kept from the Blood
+  30 cards (11 body, 8 mind, 11 heart, all rank 1 but one): 25 kept from the Blood
   Price ballot and five SACRIFICE cards T added in revision 2 (Bloodletting,
-  Open Vein, Blood for Blood, Crimson Pact, Transfusion). The grey Curse is
+  Open Vein, Blood for Blood, Crimson Pact, Transfusion). Blood for Blood
+  (`bp-e-08n`) is the library's one rare (rank 5, Skull; Phase UP1c): FREE
+  SACRIFICE 3, DEAL 9; PAID SACRIFICE X (max 12), DEAL 3X. Its upgrades
+  raise X's cap by 3 each (15, 18, 21) and the third makes it 4X (T,
+  2026-10-23). The grey Curse is
   defined for foes to add later; no card adds it and it is in no lane, deck
   or reward pool. It joins the library through one `TRIAL_SETS` line in
   `Cards/cards.library.ts` and comes out by deleting that line and the file
@@ -289,8 +293,14 @@ without a ruling from T.
 - No alignment, GRACE or faction reputation.
 - No bonus for paying with the card's own colour: the die powers the card
   and adds nothing (D79). The gold die stays wild.
-- No card upgrades in play (D8) and no die growth beyond the Anvil (D20);
-  both are parked.
+- No card upgrade is granted in play yet, and no die growth beyond the Anvil
+  (D20, parked). The upgrade law exists (Phase UP1b, `Cards/card-upgrades.ts`):
+  rarity limits upgrades (common 1, uncommon 2, rare 3) as `<id>+`, `++`,
+  `+++`; each raises payoffs (Blood Price programs through `programAt`) and
+  never a cost; `REPLACE_CARD` swaps one owned copy. Blood for Blood, the
+  one rare, takes three (its FREE DEAL grows; PAID's X cap rises and the
+  third is 4X: the one cost an upgrade grows, by T's ruling). The rest site, anvil and
+  elite grants are UP1d to UP1f.
 - No measured balance baseline (D57). A balance question gets "not
   measured".
 

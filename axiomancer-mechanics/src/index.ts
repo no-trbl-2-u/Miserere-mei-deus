@@ -123,6 +123,16 @@ export type {
     // Card programs: the Global / Curse / SACRIFICE ledger
     ProgramLedger, GlobalInPlay, ProgramShortfall,
 } from './Combat';
+// The play-log API contract: the fight and deck change the preview app posts and the Worker stores.
+export {
+    PLAY_LOG_FIGHTS_PATH, PLAY_LOG_DECK_EVENTS_PATH, COMBAT_EVENT_KINDS, PLAY_LOG_UI_EVENT_KINDS,
+    PLAY_LOG_FIGHT_OUTCOMES, DECK_EVENT_KINDS, PLAY_LOG_LIMITS, validateFightPost, validateDeckEventPost,
+} from './Combat';
+export type {
+    CombatEventKind, PlayLogUiEventKind, DeckEventKind, PlayLogStamp, PlayLogCombatEvent, PlayLogUiEvent,
+    PlayLogEvent, PlayLogSource, FightPost, DeckEventWhere, DeckEventPost, FightRow, DeckEventRow, FightList,
+    DeckEventList, PlayLogCreated, PlayLogError, FightValidation, DeckEventValidation,
+} from './Combat';
 // Measured truth (R12a): the Act 1 ledger x spread x deck measurement.
 export { measuredTruthCells, MEASURED_DECK_LANES, MEASURED_SPREADS } from './Combat/combat.measured-truth';
 export type {
@@ -199,8 +209,11 @@ export type {
 export {
     // Rank/rarity helpers (mobile renders rank names off these)
     CARD_RANK_NAMES, rankToRarity,
-    getAvailableCards, learnCard,
+    getAvailableCards, learnCard, replaceCard,
     cardLibrary, getCardById,
+    // Card upgrades (Phase UP1b): the law by rarity and the id helpers
+    UPGRADE_LIMITS, upgradeCard, upgradeLimit, upgradeLevel, canUpgrade,
+    baseCardId, isUpgradedCardId, getUpgradedCardById,
     // Card lanes (the dev menu's CARDS section)
     CARD_LANES, GREY_LANE, getCardLane, laneRewardPool,
     // Runtime enumeration of the CardSpecialMechanic union, bound to

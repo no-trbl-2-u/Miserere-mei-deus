@@ -11,8 +11,10 @@
 - Since S3 (D40–D41) stats are the player's main growth: body/mind/heart
   scale every keyword family by `base × stat ÷ 5`; VITAE is
   `50 + 12·body + 6·mind + 6·heart`.
-- Parked, by owner rulings — not touched by the revamp: card upgrades
-  (`Cards/card-upgrades.ts`, D8, no in-game grant), die growth
+- Card upgrades are no longer parked: D8 is resolved by the UP1 brief
+  (`plan/phases/phase_UP1_card_upgrades.md`); the law shipped in UP1b, the
+  grants follow in UP1d to UP1f.
+- Parked, by owner rulings — not touched by the revamp: die growth
   `bonusTurnDice` / `dieUpgradeLevel` (D20, set only by
   `combat.stage-profiles.ts:257-258`), `bankedSouls` (D20, accrues, never
   spent).

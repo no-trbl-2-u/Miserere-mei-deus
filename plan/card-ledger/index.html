@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Miserere Mei, Deus — card ballots</title>
+<!--
+  The ballot index (phase BV1b): one entry per card family, from the BALLOTS
+  array below. Served as the front page of the axiomancer-ballots Pages site;
+  it also works opened from disk. Adding a ballot: plan/card-ledger/README.md.
+-->
+<style>
+  :root {
+    --bg: #efe9dc; --ink: #1b1714; --muted: #6b6259; --card: #fbf7ee;
+    --edge: #2a2420; --open: #3d5a40; --closed: #6b6259;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141110; --ink: #ece4d6; --muted: #a39887; --card: #1f1a17;
+      --edge: #ece4d6; --open: #8fbf8f; --closed: #a39887;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 16px; background: var(--bg); color: var(--ink);
+    font: 16px/1.45 Georgia, "Times New Roman", serif;
+  }
+  main { max-width: 640px; margin: 0 auto; }
+  h1 { font-size: 1.4rem; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 16px; }
+  ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+  li {
+    background: var(--card); border: 2px solid var(--edge); border-radius: 10px; padding: 12px 14px;
+  }
+  li a.go { display: block; font-weight: bold; font-size: 1.1rem; color: var(--ink); }
+  .meta { color: var(--muted); font-size: .9rem; margin: 4px 0 0; }
+  .status { display: inline-block; font-size: .75rem; font-weight: bold; letter-spacing: .08em;
+            text-transform: uppercase; padding: 1px 6px; border-radius: 3px; color: var(--card); }
+  .status.open { background: var(--open); }
+  .status.closed { background: var(--closed); }
+  .empty { color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Card ballots</h1>
+  <p class="sub">One ballot per card family. An open ballot saves your ticks on this device as you go and submits the verdict from its footer.</p>
+  <ul id="ballots"></ul>
+</main>
+<script>
+/* One entry per family. status: open (taking a verdict) | closed (verdicts
+   recorded; the entry links to the ledger that holds them). date: the day the
+   ballot opened. */
+const BALLOTS = [
+  { id: 'elementalist-2026-10-22', family: 'The Elementalist', file: 'rehearsal-elementalist.ballot.html', ledger: 'rehearsal-elementalist.md', status: 'open', date: '2026-10-22' },
+  { id: 'blood-price-2026-09-30', family: 'Blood Price', file: 'rehearsal-blood-price.ballot.html', ledger: 'rehearsal-blood-price.md', status: 'closed', date: '2026-09-30' },
+];
+
+/** Escape text for safe insertion as HTML. */
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+/** The ledger's address on GitHub: the Pages site serves the ballots, not the markdown. */
+const ledgerUrl = (b) => `https://github.com/no-trbl-2-u/Miserere-mei-deus/blob/main/plan/card-ledger/${b.ledger}`;
+
+const entry = (b) => `
+  <li>
+    <a class="go" href="${esc(b.file)}">${esc(b.family)}</a>
+    <p class="meta"><span class="status ${esc(b.status)}">${esc(b.status)}</span> opened ${esc(b.date)}</p>
+    ${b.status === 'closed'
+      ? `<p class="meta">verdicts recorded: <a href="${esc(ledgerUrl(b))}">the ledger</a></p>`
+      : ''}
+  </li>`;
+
+document.getElementById('ballots').innerHTML = BALLOTS.length
+  ? BALLOTS.map(entry).join('')
+  : '<li class="empty">No ballots yet.</li>';
+</script>
+</body>
+</html>

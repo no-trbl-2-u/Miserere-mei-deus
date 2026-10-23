@@ -63,10 +63,13 @@ describe('the game without the trial set', () => {
     });
 });
 
-/** Files allowed to name a trial card id: the set itself and its own test. */
+/** Files allowed to name a trial card id: the set itself, its own test, and
+ *  the mobile art registry (Metro needs a literal id per painting; removing a
+ *  set deletes its rows and paintings there, and an unmapped id falls back). */
 const ALLOWED = new Set([
     path.join('axiomancer-mechanics', 'src', 'Cards', 'library', 'blood-price.cards.ts'),
     path.join('axiomancer-mechanics', 'src', 'Cards', 'e2e', 'blood-price.engine.test.ts'),
+    path.join('axiomancer-mobile', 'assets', 'images', 'cards', 'index.ts'),
 ]);
 const SKIP_DIRS = new Set(['node_modules', '.expo', '.audit-dist', '.smoke-dist', 'dist', 'android', 'ios', 'screenshots']);
 
@@ -93,5 +96,6 @@ describe('no code outside the set names a trial card id', () => {
             .filter(f => /['"`]bp-[a-z0-9-]+['"`]/.test(fs.readFileSync(f, 'utf8')))
             .map(f => path.relative(root, f));
         expect(offenders).toEqual([]);
-    });
+        // The walk reads every file in two packages; a loaded full verify pushed it past the 5s default.
+    }, 30_000);
 });
