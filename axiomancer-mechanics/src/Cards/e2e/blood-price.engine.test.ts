@@ -440,11 +440,18 @@ describe('the revision 2 cards', () => {
         expect(upgradeCard(ups[2]!)).toBeUndefined();
         expect(getCardById('bp-e-08n++++')).toBeUndefined();
 
-        // Each upgrade hits harder on the FREE line; PAID stays 3X.
-        const hit = (id: string, paid: boolean) => 500 - play(fight([id]), 't0', paid, paid ? 5 : undefined).enemy.health;
+        // PAID (T, 2026-10-23): X's cap +3 per upgrade, and the third upgrade is 4X.
+        expect(ups.map(c => c!.program!.paid!.text)).toEqual([
+            'SACRIFICE any amount X (max 15), DEAL 3X.',
+            'SACRIFICE any amount X (max 18), DEAL 3X.',
+            'SACRIFICE any amount X (max 21), DEAL 4X.',
+        ]);
         const ids = ['bp-e-08n', ...ups.map(c => c!.id)];
+        expect(ids.map(id => programXRange(fight([id]), 't0', true, PROGRAM_KIT)?.max)).toEqual([12, 15, 18, 21]);
+
+        const hit = (id: string, paid: boolean) => 500 - play(fight([id]), 't0', paid, paid ? 5 : undefined).enemy.health;
         expect(ids.map(id => hit(id, false))).toEqual([9, 13, 18, 25]);
-        expect(ids.map(id => hit(id, true))).toEqual([15, 15, 15, 15]);
+        expect(ids.map(id => hit(id, true))).toEqual([15, 15, 15, 20]);
     });
 
     it('Transfusion: SACRIFICE now, HEAL (mind-scaled) at the start of your next turn', () => {
