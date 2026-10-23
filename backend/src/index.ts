@@ -15,7 +15,8 @@
  * rejects is a 400 naming each problem. Only preview builds post the puzzle
  * and play-log routes; production never does.
  *
- * The ballot routes alone are called from a browser page on another origin:
+ * The ballot routes alone are called from a browser page on another origin
+ * (the card-ledger ballots, `plan/card-ledger/ballot-kit.js`, phase BV1b):
  * they answer an `OPTIONS` preflight before the token check and echo an origin
  * the `BALLOT_ORIGINS` var allows on every response. The other routes send no
  * CORS header.
