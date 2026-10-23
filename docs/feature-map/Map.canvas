@@ -859,6 +859,12 @@
 			"color": "6"
 		},
 		{
+			"id": "coupling:route:blacksmith->area:Cards",
+			"fromNode": "route:blacksmith",
+			"toNode": "area:Cards",
+			"color": "6"
+		},
+		{
 			"id": "coupling:route:blacksmith->area:Character",
 			"fromNode": "route:blacksmith",
 			"toNode": "area:Character",
@@ -868,6 +874,12 @@
 			"id": "coupling:route:blacksmith->area:Combat",
 			"fromNode": "route:blacksmith",
 			"toNode": "area:Combat",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:blacksmith->area:Effects",
+			"fromNode": "route:blacksmith",
+			"toNode": "area:Effects",
 			"color": "6"
 		},
 		{

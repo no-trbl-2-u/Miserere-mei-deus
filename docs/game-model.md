@@ -213,7 +213,9 @@ keyword (`EnemyKeyword = never`).
 - **The Anvil** (one per region, near its exit; `ANVIL_VERB_PRICING`,
   `World/Blacksmith/blacksmith.engine.ts`): HONE turns a miss face to mana
   (3 shillings), TEMPER a mana face to special (5), SWAP changes a die's
-  gear (8). This is the only way dice grow.
+  gear (8). This is the only way dice grow. It also upgrades one card a
+  visit for 5 shillings (Phase UP1e), on the rest site's upgrade screen;
+  refused when the purse is short or no card can take another upgrade.
 - **Items** are healing potions (`Items/consumable.library.ts`): Minor 10
   VITAE (15 below half), Healing 20 (30), Greater 50 (75).
 - **Is X reachable in play?** `npm run roster-health -w axiomancer-mechanics`
@@ -295,14 +297,14 @@ without a ruling from T.
 - No alignment, GRACE or faction reputation.
 - No bonus for paying with the card's own colour: the die powers the card
   and adds nothing (D79). The gold die stays wild.
-- No die growth beyond the Anvil (D20, parked). The rest site grants card
-  upgrades (Phase UP1d); the upgrade law (Phase UP1b, `Cards/card-upgrades.ts`):
+- No die growth beyond the Anvil (D20, parked). The rest site and the Anvil
+  grant card upgrades (Phases UP1d, UP1e); the upgrade law (Phase UP1b, `Cards/card-upgrades.ts`):
   rarity limits upgrades (common 1, uncommon 2, rare 3) as `<id>+`, `++`,
   `+++`; each raises payoffs (Blood Price programs through `programAt`) and
   never a cost; `REPLACE_CARD` swaps one owned copy. Blood for Blood, the
   one rare, takes three (its FREE DEAL grows; PAID's X cap rises and the
-  third is 4X: the one cost an upgrade grows, by T's ruling). The anvil and elite grants
-  are UP1e and UP1f.
+  third is 4X: the one cost an upgrade grows, by T's ruling). The elite grant
+  is UP1f.
 - No measured balance baseline (D57). A balance question gets "not
   measured".
 

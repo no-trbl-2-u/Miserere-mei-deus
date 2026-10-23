@@ -2,7 +2,8 @@
  * /blacksmith — the Blacksmith encounter screen ("The Anvil").
  *
  * The die-gear upgrade surface: HONE (add a mana face),
- * TEMPER (mana face → special face), and gear SWAP. All rules live in
+ * TEMPER (mana face → special face), gear SWAP, and one card UPGRADE a
+ * visit on the shared upgrade screen (Phase UP1e). All rules live in
  * `axiomancer-mechanics` (World/Blacksmith); this screen renders the
  * presenter VM and dispatches store actions only.
  *
@@ -18,6 +19,7 @@ import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { Haptics, ImpactFeedbackStyle } from '@/lib/platform/haptics';
 
 import { LeaveRow } from '@/components/LeaveRow';
+import { CardUpgradePicker } from '@/components/upgrade/CardUpgradePicker';
 import { ScreenBg } from '@/components/ScreenBg';
 import { mapBackdropFor } from '@/state/exploration-maps';
 import { AxmIcon } from '@/components/icons';
@@ -28,6 +30,11 @@ import {
     type BlacksmithOfferVM,
     type BlacksmithSwapVM,
 } from '@/state/presenters/blacksmith.engine';
+import {
+    BLACKSMITH_CARD_SECTION_LABEL,
+    BLACKSMITH_CARD_UPGRADE_BACK,
+    blacksmithUpgradedChip,
+} from '@/state/presenters/blacksmith.copy';
 import { FONTS, TYPE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
@@ -66,7 +73,7 @@ function OfferButton({ offer, onPress }: { offer: BlacksmithOfferVM; onPress: ()
                     offer.enabled
                         // The forge prices in SHILLINGS, not the combat board's
                         // CONVICTION diamonds.
-                        ? `${offer.label} the ${offer.color} die for ${offer.price} shillings`
+                        ? `${offer.label} ${offer.color === null ? '' : `the ${offer.color} die `}for ${offer.price} shillings`
                             + (offer.effect ? `: ${offer.effect}` : '')
                         : `${offer.label} unavailable: ${offer.reason}`
                 }
@@ -232,6 +239,20 @@ export default function BlacksmithScreen() {
                             />
                         ))}
 
+                        {vm.cardUpgrade !== null && (
+                            <>
+                                <Text style={styles.sectionLabel}>{BLACKSMITH_CARD_SECTION_LABEL}</Text>
+                                <View style={styles.die} testID="blacksmith-card-upgrade">
+                                    <View style={styles.offerRow}>
+                                        <OfferButton
+                                            offer={vm.cardUpgrade}
+                                            onPress={actions.chooseBlacksmithCardUpgrade}
+                                        />
+                                    </View>
+                                </View>
+                            </>
+                        )}
+
                         {vm.swaps.length > 0 && (
                             <>
                                 <Text style={styles.sectionLabel}>ON OFFER</Text>
@@ -257,6 +278,22 @@ export default function BlacksmithScreen() {
                     </View>
                 )}
 
+                {vm.phase === 'upgrade-pick' && vm.upgradeRows !== null && (
+                    <View testID="blacksmith-upgrade-pick">
+                        <CardUpgradePicker
+                            rows={vm.upgradeRows}
+                            priceLine={vm.upgradePriceLine}
+                            onConfirm={(cardId) => actions.pickBlacksmithCardUpgrade(cardId)}
+                        />
+                        <LeaveRow
+                            label={BLACKSMITH_CARD_UPGRADE_BACK}
+                            accessibilityLabel="Back to the anvil without upgrading a card"
+                            onPress={actions.cancelBlacksmithCardUpgrade}
+                            testID="blacksmith-upgrade-back"
+                        />
+                    </View>
+                )}
+
                 {vm.phase === 'card' && vm.card !== null && (
                     <View
                         style={[styles.card, vm.card.refused && { borderColor: AXM.blood }]}
@@ -269,7 +306,13 @@ export default function BlacksmithScreen() {
                         {!vm.card.refused && vm.card.cost > 0 && (
                             <View style={styles.chipRow}>
                                 <Text style={styles.chip} testID="blacksmith-card-cost">−{vm.card.cost} SHILLINGS</Text>
-                                <Text style={styles.chip}>{vm.card.verb.toUpperCase()} · {vm.card.color.toUpperCase()}</Text>
+                                {vm.card.upgraded !== null ? (
+                                    <Text style={styles.chip} testID="blacksmith-card-upgraded">
+                                        {blacksmithUpgradedChip(vm.card.upgraded.fromName, vm.card.upgraded.toName)}
+                                    </Text>
+                                ) : vm.card.color !== null && (
+                                    <Text style={styles.chip}>{vm.card.verb.toUpperCase()} · {vm.card.color.toUpperCase()}</Text>
+                                )}
                             </View>
                         )}
                         <TouchableOpacity
@@ -308,7 +351,7 @@ export default function BlacksmithScreen() {
                 )}
 
                 {/* Shared bordered control — see LeaveRow. */}
-                {vm.phase !== 'outcome' && vm.phase !== 'card' && (
+                {vm.phase !== 'outcome' && vm.phase !== 'card' && vm.phase !== 'upgrade-pick' && (
                     <LeaveRow
                         label="LET THE COALS DIE"
                         accessibilityLabel="Leave the forge untouched"

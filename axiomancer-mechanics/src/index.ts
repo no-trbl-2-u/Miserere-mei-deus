@@ -363,15 +363,17 @@ export {
 export type { HazardPuzzleCandidate, HazardPuzzleCandidateAudit } from './World/Hazard';
 
 // Blacksmith encounter ("The Anvil" — die-gear upgrades: HONE / TEMPER /
-// gear swap).
+// gear swap, and one card upgrade a visit).
 export {
     ANVIL_VERB_PRICING, BLACKSMITH_WITNESS_VARIANTS, HEART_RICH_PAYLOAD_VARIANT,
     createBlacksmithSession, beginBlacksmith, honeBlacksmith, temperBlacksmith,
-    swapBlacksmith, continueBlacksmithCard, leaveBlacksmith,
+    swapBlacksmith, chooseBlacksmithCardUpgrade, cancelBlacksmithCardUpgrade,
+    pickBlacksmithCardUpgrade, blacksmithCardUpgradeRefusal,
+    continueBlacksmithCard, leaveBlacksmith,
     claimBlacksmithOutcome,
 } from './World/Blacksmith';
 export type {
-    BlacksmithVariantOffer, BlacksmithSession,
+    BlacksmithVariantOffer, BlacksmithSession, BlacksmithCardUpgrade,
 } from './World/Blacksmith';
 // Rest-choice encounter — the rest node's one irreversible choice of
 // `rest` / `upgrade` / `cut`, composing the Cards/card.removal primitive rather than

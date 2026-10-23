@@ -11,6 +11,10 @@ import {
     beginBlacksmith,
     honeBlacksmith,
     continueBlacksmithCard,
+    chooseBlacksmithCardUpgrade,
+    pickBlacksmithCardUpgrade,
+    blacksmithCardUpgradeRefusal,
+    leaveBlacksmith,
     concreteDefaultRail,
     HEART_RICH_PAYLOAD_VARIANT,
     ANVIL_VERB_PRICING,
@@ -116,5 +120,30 @@ describe('FE-023: forge prices carry the shilling suffix, never the conviction g
     it('no view-model string carries the conviction glyph', () => {
         const vm = selectBlacksmithVM({ blacksmith: { session: forging(500) } });
         expect(JSON.stringify(vm)).not.toContain('\u25C6');
+    });
+});
+
+describe('card upgrade VM (Phase UP1e)', () => {
+    const DECK = ['grey-strike', 'grey-strike', 'grey-ward'];
+    const withDeck = (budget: number): BlacksmithSession =>
+        beginBlacksmith(createBlacksmithSession(1, concreteDefaultRail(), budget, [], DECK));
+
+    it('offers the upgrade at the anvil price, with the engine reason when greyed', () => {
+        const open = selectBlacksmithVM({ blacksmith: { session: withDeck(20) } }).cardUpgrade!;
+        expect(open.price).toBe(ANVIL_VERB_PRICING.upgrade);
+        expect(open.enabled).toBe(true);
+        const poor = selectBlacksmithVM({ blacksmith: { session: withDeck(1) } }).cardUpgrade!;
+        expect(poor.enabled).toBe(false);
+        expect(poor.reason).toBe(blacksmithCardUpgradeRefusal(withDeck(1)));
+    });
+
+    it('hands the picker one row per upgradable card, and the ledger names the upgrade', () => {
+        let s = chooseBlacksmithCardUpgrade(withDeck(20));
+        const rows = selectBlacksmithVM({ blacksmith: { session: s } }).upgradeRows!;
+        expect(rows.map((r) => [r.cardId, r.count])).toEqual([['grey-strike', 2], ['grey-ward', 1]]);
+        s = leaveBlacksmith(continueBlacksmithCard(pickBlacksmithCardUpgrade(s, 'grey-ward')));
+        const vm = selectBlacksmithVM({ blacksmith: { session: s } });
+        expect(vm.upgradeRows).toBeNull();
+        expect(vm.outcome!.chips.some((c) => c.startsWith('UPGRADED: '))).toBe(true);
     });
 });
