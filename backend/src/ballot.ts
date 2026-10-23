@@ -23,6 +23,17 @@ export const BALLOT_CANDIDATE_PATTERN = /^[A-Z]-\d{2}[a-z]$/;
 /** A slot on a ballot, e.g. `P-01`; the keys of `notes`. */
 export const BALLOT_SLOT_PATTERN = /^[A-Z]-\d{2}$/;
 
+/**
+ * A row's standing (phase BV2a): `draft` is a Save, progress only; `final` is
+ * a Submit. The verdict in force is the newest `final` row for a ballot.
+ */
+export const BALLOT_STATUSES = ['draft', 'final'] as const;
+export type BallotVerdictStatus = (typeof BALLOT_STATUSES)[number];
+
+export function isBallotVerdictStatus(value: unknown): value is BallotVerdictStatus {
+    return typeof value === 'string' && (BALLOT_STATUSES as readonly string[]).includes(value);
+}
+
 export interface BallotVerdictPost {
     ballotId: string;
     /** The ballot's Generate text, verbatim. */
@@ -34,6 +45,8 @@ export interface BallotVerdictPost {
     general: string | null;
     /** The submitting browser's user agent. */
     client: string | null;
+    /** Optional on the wire, `final` when absent; always set on a stored row. */
+    status: BallotVerdictStatus;
 }
 
 export interface BallotVerdictRow extends BallotVerdictPost {
@@ -94,6 +107,10 @@ export function validateBallotVerdictPost(body: unknown): BallotVerdictValidatio
     checkOptionalText(body.general, 'general', null, reasons);
     checkOptionalText(body.client, 'client', BALLOT_LIMITS.client, reasons);
 
+    if (body.status !== undefined && !isBallotVerdictStatus(body.status)) {
+        reasons.push(`status: expected draft or final, got ${JSON.stringify(body.status)}`);
+    }
+
     if (reasons.length > 0) return { ok: false, reasons };
     return {
         ok: true,
@@ -104,6 +121,7 @@ export function validateBallotVerdictPost(body: unknown): BallotVerdictValidatio
             notes: body.notes as Record<string, string>,
             general: (body.general as string | undefined) ?? null,
             client: (body.client as string | undefined) ?? null,
+            status: (body.status as BallotVerdictStatus | undefined) ?? 'final',
         },
     };
 }
