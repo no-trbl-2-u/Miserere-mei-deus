@@ -93,6 +93,8 @@ Inputs for that session:
   (or lane family) it opens; its detail view shows that name. Equipped
   relics decide the combat card-reward pool, so B1 and the card sessions
   (B6) are coupled: a lane relic needs its lane's cards.
+- **Lane relics stack (D100).** 1-2 relics of one lane give 1 lane card
+  in the 3-card combat reward; 3-4 give 2; all 5 relic slots give 3.
 - **Relic sources (D71), for now:** quests give designated relics;
   elites have a low chance of dropping a random relic. There is no starting relic:
   the first lane opens with the first lane relic (D71).
