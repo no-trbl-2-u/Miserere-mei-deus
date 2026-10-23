@@ -131,7 +131,7 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 | [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends) | W2 | T |
 | [ ] | 2026-11-12 | Cost-card design session (Toll, Debt, Overdrive) | W2 | T |
 | [ ] | 2026-11-13 | Bands on the calibrated measure | W2 | HP2f |
-| [ ] | 2026-11-16 | Loop gates, real-fight tests, report sweep | W2 | LG1a, LG1b, LG1c, LG1d, LG1e, LG1f, LG1g, CT1a, CT1b, RS1 |
+| [x] | 2026-11-16 | Loop gates, real-fight tests, report sweep | W2 | LG1a, LG1b, LG1c, LG1d, LG1e, LG1f, LG1g, CT1a, CT1b, RS1 |
 | [ ] | 2026-11-16 | W2 demo: an Act 1 run with every hazard a puzzle | W2 | T |
 | [ ] | 2026-11-17 | Event-node audit and fixes (all twelve kinds) | W3 | needs plot |
 | [ ] | 2026-11-17 | Card-upgrade path | W3 | UP1a, UP1b, UP1c, UP1d, UP1e, UP1f, UP1g |
