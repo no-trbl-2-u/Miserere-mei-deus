@@ -360,7 +360,7 @@ gh pr create --repo "$GH_REPO" --base main --head "loop/ship-<N>-<slug>" \
 The body follows the template in `skills/march.md` §3: What shipped,
 What T can now do, Decisions, Acceptance (the brief's `A1…` IDs this
 phase closes, ticked, each naming its proof or `(no test: <reason>)`;
-`verify-gate` fails an unproven line, phase LG1c), Verify (the Step 9 commands and results), and
+`verify-gate` fails an unproven line, phase LG1c, and the `judge` job runs every named proof, phase LG1f), Verify (the Step 9 commands and results), and
 `Closes #<phase-issue-number>` as the last line. Record the PR number
 on the row in the same commit if you know it, or leave `- pr:` for
 the next tick to fill.

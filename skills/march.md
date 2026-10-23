@@ -281,7 +281,13 @@ gh pr checks "loop/<verb>-<slug>" --repo "$GH_REPO" --required --watch --fail-fa
   opening the PR: `node scripts/pr-acceptance.mjs --body-file
   "$body"`. The step reads the body live, so after editing a red
   body, re-run the failed `verify-gate` job (`gh run rerun <id>
-  --failed`). `Closes #<N>` is the last line, one
+  --failed`). The `judge` job then **runs** each named test file and
+  command on the head (phase LG1f) and `verify-gate` fails when one
+  fails, so name a command that runs on a plain runner with no shell
+  and no token (no `&&`, pipes or `$VAR`; one proof per backtick);
+  anything else is `(no test: <reason>)`. Try a body's proofs before
+  opening the PR: `node scripts/pr-judge.mjs run --body-file
+  "$body"`. `Closes #<N>` is the last line, one
   issue per line; `close-trailers` reads it from the commit range of
   the merge push, so put the same trailer in the PR's last commit.
 - **`gh pr checks --watch` replaces `deploy:check`** for the branch
@@ -300,8 +306,8 @@ gh pr checks "loop/<verb>-<slug>" --repo "$GH_REPO" --required --watch --fail-fa
 - **The adversarial review** (`skills/review.md`, phase RV1b, RV3)
   posts after `verify-gate` on every same-repo PR: inline MED/HIGH
   findings, one `## Review verdict` comment, and a `risk:*` raise with
-  a reason. On a `pass` the `merge` job merges a non-plan PR (D95); a
-  `not-pass`, a plan PR or a hold label leaves it to T.
+  a reason. On a `pass` the `merge` job merges any PR but a `plot` PR
+  (D95, D101); a `not-pass`, a `plot` PR or a hold label leaves it to T.
 - **Never** merge the PR, close it, or force-push its branch yourself
   (D86): the `merge` job merges it on a green review, T merges the rest
   (D95).
