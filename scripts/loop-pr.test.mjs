@@ -145,7 +145,8 @@ test('pr-review runs on pull_request into main, never pull_request_target', () =
 test('verify-gate runs on every same-repo PR, not only loop:pr and plot', () => {
   const gate = job(review, 'verify-gate')
   assert.ok(gate, 'verify-gate job present')
-  assert.match(gate, /^ {4}if: github\.event\.pull_request\.head\.repo\.full_name == github\.repository$/m)
+  // always(): the gate needs the judge (LG1f) and still reports when the judge fails.
+  assert.match(gate, /^ {4}if: always\(\) && github\.event\.pull_request\.head\.repo\.full_name == github\.repository$/m)
   assert.doesNotMatch(gate, /loop:pr|'plot'|labels\.\*\.name/, 'no label filter on the gate')
   assert.match(gate, /\n {4}concurrency:\n {6}group: pr-review-gate-\$\{\{ github\.event\.pull_request\.number \}\}\n {6}cancel-in-progress: true/)
   assert.match(gate, /node scripts\/pr-gate\.mjs classify/)

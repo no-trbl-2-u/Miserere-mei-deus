@@ -11,10 +11,19 @@ name: pr-review
 # derives, fails on a changed path no `verify-*` filter owns and that is
 # not bookkeeping, naming it (LG1b; `verify-root` owns what the root
 # `npm test` checks), fails on a ticked acceptance line in the PR body
-# that names no proof (LG1c, `scripts/pr-acceptance.mjs`), then waits for
+# that names no proof (LG1c, `scripts/pr-acceptance.mjs`), fails when
+# job `judge` does, then waits for
 # every `verify-*` the diff triggers on this head and is green only when all of them are (`scripts/pr-gate.mjs`).
 # A ruleset in evaluate mode requires it; T creates that ruleset with the
 # command in `.github/workflows/README.md`.
+#
+# Job `judge` (LG1f, `scripts/pr-judge.mjs`) runs before the gate: each test
+# file or `npm`/`node`/`npx` command a ticked acceptance line names runs on
+# the PR head, once, under a per-proof limit, with no token in reach; the
+# summary gives a pass or fail per line, and `(no test: ...)` lines are
+# listed, not run. Dependencies are installed only when there is a proof to
+# run. The gate `needs` it and runs `always()`, failing when the judge did:
+# a gate skipped by a failed need would read as passing to a ruleset.
 #
 # `pull_request`, never `pull_request_target`: a fork's head never sees a
 # secret, and this file only ever runs for heads in this repo. No `labeled`
@@ -83,8 +92,52 @@ permissions:
   actions: read
 
 jobs:
-  verify-gate:
+  judge:
     if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    concurrency:
+      group: pr-review-judge-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Checkout the PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      # The only step with a token: it reads the body the later steps judge.
+      - name: Read the PR body
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        run: gh pr view "$PR" --repo "$GH_REPO" --json body --jq .body > "$RUNNER_TEMP/pr-body.md"
+
+      - name: Plan the proofs to run
+        id: plan
+        run: node scripts/pr-judge.mjs plan --body-file "$RUNNER_TEMP/pr-body.md"
+
+      - name: Install dependencies
+        if: steps.plan.outputs.count != '0'
+        run: npm ci --no-audit --no-fund
+
+      - name: Run each named proof on the head
+        run: node scripts/pr-judge.mjs run --body-file "$RUNNER_TEMP/pr-body.md" --timeout-minutes 10
+
+  verify-gate:
+    needs: judge
+    # always(): a gate skipped because the judge failed would satisfy a
+    # required check; it runs and fails instead.
+    if: always() && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 60
     # Job-level and per PR: a new push or label supersedes the gate on the old state.
@@ -110,6 +163,16 @@ jobs:
 
       - name: Label the derived risk tier
         run: node scripts/pr-risk.mjs --pr "$PR" --apply
+
+      # Job `judge` ran each proof the PR body names (phase LG1f); its
+      # summary has the per-line verdicts.
+      - name: The judge's verdict on the named proofs
+        if: needs.judge.result != 'success'
+        env:
+          JUDGE: ${{ needs.judge.result }}
+        run: |
+          echo "::error::judge $JUDGE: a proof the PR body names did not pass on this head; see the judge job's summary"
+          exit 1
 
       # Plan files are bookkeeping, so the root `npm test` below skips a
       # plan-only PR, which is where a pr-resolve merge splits a queue row.
