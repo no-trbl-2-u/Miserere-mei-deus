@@ -281,7 +281,13 @@ gh pr checks "loop/<verb>-<slug>" --repo "$GH_REPO" --required --watch --fail-fa
   opening the PR: `node scripts/pr-acceptance.mjs --body-file
   "$body"`. The step reads the body live, so after editing a red
   body, re-run the failed `verify-gate` job (`gh run rerun <id>
-  --failed`). `Closes #<N>` is the last line, one
+  --failed`). The `judge` job then **runs** each named test file and
+  command on the head (phase LG1f) and `verify-gate` fails when one
+  fails, so name a command that runs on a plain runner with no shell
+  and no token (no `&&`, pipes or `$VAR`; one proof per backtick);
+  anything else is `(no test: <reason>)`. Try a body's proofs before
+  opening the PR: `node scripts/pr-judge.mjs run --body-file
+  "$body"`. `Closes #<N>` is the last line, one
   issue per line; `close-trailers` reads it from the commit range of
   the merge push, so put the same trailer in the PR's last commit.
 - **`gh pr checks --watch` replaces `deploy:check`** for the branch
