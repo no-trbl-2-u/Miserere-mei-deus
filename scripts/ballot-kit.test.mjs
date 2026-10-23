@@ -1,4 +1,4 @@
-// Tests for plan/card-ledger/ballot-kit.js (phase BV1b): the kit's pure parts,
+// Tests for plan/card-ledger/ballot-kit.js (phases BV1b, BV2b): the kit's pure parts,
 // loaded in a vm the way a browser loads a classic script, plus the index and
 // the ballots it lists.
 import { test } from 'node:test';
@@ -30,7 +30,20 @@ test('loads as a classic script without a DOM and exposes BallotKit', () => {
 test('a draft round trips, dropping blank notes', () => {
   const draft = { kept: ['P-01a', 'E-03c'], notes: { 'P-01': ' TWEAK 3 ', 'P-02': '  ' }, general: 'more frost' };
   const back = plain(kit.restoreDraft(kit.serialiseDraft(draft)));
-  assert.deepEqual(back, { kept: ['P-01a', 'E-03c'], notes: { 'P-01': 'TWEAK 3' }, general: 'more frost' });
+  assert.deepEqual(back, { kept: ['P-01a', 'E-03c'], notes: { 'P-01': 'TWEAK 3' }, general: 'more frost', savedAt: null });
+});
+
+test('a draft round trips its savedAt stamp', () => {
+  const draft = { kept: ['P-01a'], notes: {}, general: '', savedAt: '2026-10-23T10:00:00.000Z' };
+  const stored = JSON.parse(kit.serialiseDraft(draft));
+  assert.equal(stored.savedAt, '2026-10-23T10:00:00.000Z');
+  assert.equal(kit.restoreDraft(JSON.stringify(stored)).savedAt, '2026-10-23T10:00:00.000Z');
+});
+
+test('a draft from before BV2b, with no savedAt, still restores', () => {
+  const old = JSON.stringify({ v: 1, kept: ['P-01a'], notes: { 'P-01': 'x' }, general: 'g' });
+  assert.deepEqual(plain(kit.restoreDraft(old)), { kept: ['P-01a'], notes: { 'P-01': 'x' }, general: 'g', savedAt: null });
+  assert.equal(kit.restoreDraft(JSON.stringify({ v: 1, kept: [], savedAt: 'not a time' })).savedAt, null);
 });
 
 test('an absent or unreadable draft restores as null', () => {
@@ -42,7 +55,7 @@ test('an absent or unreadable draft restores as null', () => {
 
 test('a draft with wrong-typed fields restores the readable parts', () => {
   const back = plain(kit.restoreDraft(JSON.stringify({ v: 1, kept: ['P-01a', 7], notes: { 'P-01': 'x', 'P-02': 3 }, general: 5 })));
-  assert.deepEqual(back, { kept: ['P-01a'], notes: { 'P-01': 'x' }, general: '' });
+  assert.deepEqual(back, { kept: ['P-01a'], notes: { 'P-01': 'x' }, general: '', savedAt: null });
 });
 
 test('the payload has the shape the Worker validates', () => {
@@ -54,7 +67,7 @@ test('the payload has the shape the Worker validates', () => {
     general: '   ',
     client: 'Mozilla/5.0',
   }));
-  assert.deepEqual(Object.keys(payload).sort(), ['ballotId', 'client', 'general', 'kept', 'notes', 'verdictText']);
+  assert.deepEqual(Object.keys(payload).sort(), ['ballotId', 'client', 'general', 'kept', 'notes', 'status', 'verdictText']);
   assert.deepEqual(payload, {
     ballotId: 'elementalist-2026-10-22',
     verdictText: 'REHEARSAL BALLOT\nP-01: KEEP P-01a',
@@ -62,8 +75,17 @@ test('the payload has the shape the Worker validates', () => {
     notes: { 'P-01': 'merge' },
     general: null,
     client: 'Mozilla/5.0',
+    status: 'final',
   });
   assert.equal(kit.buildPayload({ ballotId: 'x-1', verdictText: 't', client: 'a'.repeat(900) }).client.length, 500);
+});
+
+test('a Save payload carries status draft, a Submit payload final', () => {
+  const base = { ballotId: 'x-1', verdictText: 't', kept: [], notes: {}, general: '' };
+  assert.equal(kit.buildPayload({ ...base, status: 'draft' }).status, 'draft');
+  assert.equal(kit.buildPayload({ ...base, status: 'final' }).status, 'final');
+  assert.equal(kit.buildPayload(base).status, 'final');
+  assert.equal(kit.buildPayload({ ...base, status: 'maybe' }).status, 'final');
 });
 
 test('the API URL is normalised, and junk is refused', () => {
@@ -91,6 +113,14 @@ test('each failure reads in words and keeps the draft', () => {
   for (const words of [offline, unauthorised, rejected, tooLarge, kit.errorWords({ status: 500, body: {} })]) {
     assert.match(words, /Your draft is kept on this device\./);
   }
+});
+
+test('Save and load failures name what failed', () => {
+  assert.match(kit.errorWords({ status: 400, body: { reasons: ['status: x'] } }, 'save'), /rejected the save \(400\): status: x/);
+  assert.match(kit.errorWords({ status: 413, body: {} }, 'save'), /The save is too large .*\(413\): shorten the notes and save again/);
+  assert.match(kit.errorWords({ status: 400, body: {} }, 'load'), /rejected the request \(400\)/);
+  assert.match(kit.errorWords({ status: 401, body: {} }, 'save'), /press Save or Submit to type it again/);
+  assert.match(kit.errorWords({ status: 413, body: {} }), /The verdict is too large .* submit again/);
 });
 
 function fakeResponse(status, body) {
@@ -168,5 +198,83 @@ test('an open ballot loads the kit and mounts with its index id; a closed one is
     } else {
       assert.ok(!loadsKit, `${b.file} is closed and does not load the kit`);
     }
+  }
+});
+
+test('newest wins: the online row replaces the device draft only when it is newer', () => {
+  const row = { receivedAt: '2026-10-23T12:00:00.000Z', status: 'draft' };
+  assert.equal(kit.rowIsNewer(row, { savedAt: '2026-10-23T11:59:59.000Z' }), true);
+  assert.equal(kit.rowIsNewer(row, { savedAt: '2026-10-23T12:00:01.000Z' }), false);
+  assert.equal(kit.rowIsNewer(row, { savedAt: '2026-10-23T12:00:00.000Z' }), false, 'a tie keeps the device draft');
+  assert.equal(kit.rowIsNewer(row, { savedAt: null }), true, 'a draft with no stamp counts as older');
+  assert.equal(kit.rowIsNewer(row, null), true, 'no draft at all');
+  assert.equal(kit.rowIsNewer(null, { savedAt: null }), false, 'no row');
+  assert.equal(kit.rowIsNewer(null, null), false);
+});
+
+test('a row from the Worker applies as a draft stamped with its receivedAt', () => {
+  const row = { id: 3, ballotId: 'x-1', kept: ['P-01a', 4], notes: { 'P-01': 'tweak', 'P-02': 7 }, general: null, status: 'draft', receivedAt: '2026-10-23T12:00:00.000Z' };
+  assert.deepEqual(plain(kit.rowToDraft(row)), { kept: ['P-01a'], notes: { 'P-01': 'tweak' }, general: '', savedAt: '2026-10-23T12:00:00.000Z' });
+});
+
+test('the load and save words say what happened', () => {
+  assert.equal(kit.formatTime('2026-10-23T12:05:09.000Z'), '2026-10-23 12:05 UTC');
+  assert.equal(kit.loadedWords({ status: 'draft', receivedAt: '2026-10-23T12:05:09.000Z' }), 'Loaded your save from 2026-10-23 12:05 UTC (not submitted).');
+  assert.equal(kit.loadedWords({ status: 'final', receivedAt: '2026-10-23T12:05:09.000Z' }), 'Loaded your submitted verdict from 2026-10-23 12:05 UTC.');
+  assert.equal(kit.savedWords({ id: 9, receivedAt: '2026-10-23T12:05:09.000Z' }), 'Saved, not submitted: #9 at 2026-10-23 12:05 UTC.');
+  assert.match(kit.loadFailedWords(true, null), /^Draft restored from this device\. The online save could not be reached: this device has no API token yet/);
+  assert.match(kit.loadFailedWords(false, null), /^The online save could not be reached/);
+  const offline = kit.loadFailedWords(true, { words: kit.errorWords({ offline: true }, 'load') });
+  assert.match(offline, /could not be reached\. Could not reach the server/);
+  assert.match(offline, /Your draft is kept on this device\./);
+});
+
+test('a Save posts status draft and reads the 201 like a Submit', async () => {
+  const calls = [];
+  const fetchFn = async (url, init) => { calls.push({ url, init }); return fakeResponse(201, { id: 8, receivedAt: '2026-10-23T12:00:00.000Z' }); };
+  const api = { url: 'https://api.example.dev', token: 'secret' };
+  const base = { ballotId: 'x-1', verdictText: 'v', kept: [], notes: {}, general: '' };
+  const saved = plain(await kit.submitVerdict(fetchFn, api, kit.buildPayload({ ...base, status: 'draft' })));
+  assert.deepEqual(saved, { ok: true, id: 8, receivedAt: '2026-10-23T12:00:00.000Z' });
+  assert.equal(JSON.parse(calls[0].init.body).status, 'draft');
+  await kit.submitVerdict(fetchFn, api, kit.buildPayload(base));
+  assert.equal(JSON.parse(calls[1].init.body).status, 'final');
+
+  const rejected = await kit.submitVerdict(async () => fakeResponse(400, { reasons: ['notes: expected an object'] }), api, kit.buildPayload({ ...base, status: 'draft' }));
+  assert.match(rejected.words, /rejected the save \(400\)/);
+});
+
+test('the load fetches the newest row of either status for the ballot', async () => {
+  const calls = [];
+  const rows = [
+    { id: 5, status: 'draft', receivedAt: '2026-10-23T12:00:00.000Z' },
+    { id: 4, status: 'final', receivedAt: '2026-10-23T11:00:00.000Z' },
+  ];
+  const fetchFn = async (url, init) => { calls.push({ url, init }); return fakeResponse(200, { ballotVerdicts: rows }); };
+  const api = { url: 'https://api.example.dev', token: 'secret' };
+  const result = plain(await kit.fetchNewest(fetchFn, api, 'elementalist-2026-10-22'));
+  assert.deepEqual(result, { ok: true, row: rows[0] });
+  assert.equal(calls[0].url, 'https://api.example.dev/v1/ballot-verdicts?ballot=elementalist-2026-10-22');
+  assert.ok(!calls[0].url.includes('status='), 'either status');
+  assert.equal(calls[0].init.method, 'GET');
+  assert.equal(calls[0].init.headers.Authorization, 'Bearer secret');
+  assert.ok(!calls[0].url.includes('secret'), 'the token is never in the URL');
+
+  const empty = plain(await kit.fetchNewest(async () => fakeResponse(200, { ballotVerdicts: [] }), api, 'x-1'));
+  assert.deepEqual(empty, { ok: true, row: null });
+});
+
+test('a failed load turns offline, 401, 400 and 413 into words', async () => {
+  const api = { url: 'https://api.example.dev', token: 't' };
+  const offline = await kit.fetchNewest(async () => { throw new TypeError('Failed to fetch'); }, api, 'x-1');
+  assert.equal(offline.ok, false);
+  assert.equal(offline.status, 0);
+  assert.match(offline.words, /could not reach the server/i);
+  for (const [status, pattern] of [[401, /401/], [400, /400/], [413, /413/]]) {
+    const result = await kit.fetchNewest(async () => fakeResponse(status, { error: 'x' }), api, 'x-1');
+    assert.equal(result.ok, false);
+    assert.equal(result.status, status);
+    assert.match(result.words, pattern);
+    assert.match(result.words, /Your draft is kept on this device\./);
   }
 });
