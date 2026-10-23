@@ -96,5 +96,6 @@ describe('no code outside the set names a trial card id', () => {
             .filter(f => /['"`]bp-[a-z0-9-]+['"`]/.test(fs.readFileSync(f, 'utf8')))
             .map(f => path.relative(root, f));
         expect(offenders).toEqual([]);
-    });
+        // The walk reads every file in two packages; a loaded full verify pushed it past the 5s default.
+    }, 30_000);
 });
