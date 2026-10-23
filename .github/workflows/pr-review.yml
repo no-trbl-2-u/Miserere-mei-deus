@@ -55,7 +55,7 @@ name: pr-review
 #
 # Job `merge` (D95, amends D86) runs on a plain runner after `review`, in
 # the same run: `scripts/pr-merge.mjs decide` merges a PR only when it is
-# not a plan PR (`plot`, `review:plan-only`, or a `plot:`/`plan:` title),
+# not a plot PR (label `plot`, or a `plot:` title; D101),
 # no hold label is on it (`review:needs-T`, `loop:pr-stuck`, `eval:seed`,
 # `no-auto-merge`), this run's review posted a `pass` verdict naming the
 # exact head, GitHub calls the PR CLEAN, and the

@@ -1024,6 +1024,12 @@ satisfied for exactly these.)
 - The loop still never invents card, keyword or art content unprompted: `/expand` may only propose candidates, as for other content, and a proposal is never built until promoted.
 - Unchanged: `Potential Assets/` is a store, never a source (D96); a sprite sheet for an already-used enemy stays enhancement (D97). First use: a `/plot` phase renaming the Blood Price cards.
 
+**D101 — Only a `plot` PR waits for T.** (T, attended, 2026-10-23; amends D95's plan-PR bullet. T: "I keep seeing critique PRs getting stuck in review. Can you fix that for me? I really only want plot PRs to need review.")
+
+- A plan PR is now only a PR labelled `plot` or titled `plot:` (`PLAN_LABELS`, `PLAN_TITLE` in `scripts/pr-policy.mjs`). It is still never reviewed on `pull_request` and never merged by the job; T merges it (D93).
+- A `review:plan-only` PR (a critique pass, a lesson, a decision record) and a `plan:` title are ordinary PRs: the adversarial review runs and the `merge` job merges on a `pass`, under every D95 hold (kill switch, hold labels, pipeline paths, a green `verify-gate`, a trusted verdict on the exact head). `review:plan-only` stays a reading label only.
+- Why: critique passes (#681, #702) waited hours for T's hand with nothing for T to decide.
+
 ## Open follow-ups
 
 **D1 status at a glance (2026-09-28, after #408).** Card and keyword

@@ -239,7 +239,7 @@ test('pr-review.mjs never imports pr-merge.mjs: the cycle deadlocked fix-wanted 
 
 test('the merge decision refuses plans, holds, forged markers and a non-CLEAN PR', async () => {
   const { PLAN_LABELS, HOLD_LABELS, mergeWanted } = await import('./pr-merge.mjs')
-  assert.deepEqual([...PLAN_LABELS], ['plot', 'review:plan-only'])
+  assert.deepEqual([...PLAN_LABELS], ['plot'])
   assert.ok(HOLD_LABELS.includes('review:needs-T') && HOLD_LABELS.includes('no-auto-merge'))
   const { headMarker } = await import('./pr-review.mjs')
   const head = 'a'.repeat(40)

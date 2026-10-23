@@ -6,10 +6,11 @@
 // since D95). The `review` job in `pr-review.yml` starts a Claude run only
 // when this says go, so the draft rule, the seeded-draft rule, the plan
 // rule and the once-per-head rule live in one tested function instead of a
-// workflow `if`. A plan PR (`plot`, `review:plan-only`, or a `plot:`/`plan:`
-// title) is never reviewed on `pull_request`: T reads plans, the merge job
-// never merges them, and a code reviewer has nothing to find in one (T,
-// 2026-10-21). A dispatch still reviews one on demand.
+// workflow `if`. A plot PR (label `plot`, or a `plot:` title) is never
+// reviewed on `pull_request`: T reads plots, the merge job never merges
+// them (T, 2026-10-21). Since D101 (T, 2026-10-23) that is the only plan
+// PR: a `review:plan-only` PR or a `plan:` title is reviewed and merged like
+// any other. A dispatch still reviews a plot on demand.
 //
 // Why a script and not the event payload: `gh pr create --label ...` fires
 // `opened` and one `labeled` event per label, each cancelling the gate run

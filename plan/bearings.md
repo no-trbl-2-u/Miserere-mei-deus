@@ -264,10 +264,10 @@ ambiguity.)
     "waiting on T" (D85); a non-plan PR merges when its adversarial
     review is green (D95), with no daily limit (phase RV4, T 2026-10-21):
     the per-PR holds still stop it (kill switch `PR_AUTO_MERGE=off` or
-    `no-auto-merge`, a plan or pipeline PR, `review:needs-T`,
+    `no-auto-merge`, a plot or pipeline PR, `review:needs-T`,
     `loop:pr-stuck`, a draft or fork, an untrusted verdict author, a
     moved head, a `not-pass` or missing verdict, a `verify-gate` not
-    green), and the open-PR cap bounds what is in flight; T merges plan PRs; a PR open 7 days is
+    green), and the open-PR cap bounds what is in flight; T merges `plot` PRs (D101: a `review:plan-only` PR merges on a pass like any other); a PR open 7 days is
     flagged, never closed (D86). `pr-autofix` (Haiku, two
     runs per PR, then `loop:pr-stuck`) keeps them green and `pr-resolve`
     keeps them mergeable (D87). The flow: `skills/march.md` §3 "Landing a

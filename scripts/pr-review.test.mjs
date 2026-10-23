@@ -22,9 +22,12 @@ test('every open same-repo non-plan PR with no verdict on its head is reviewed, 
   assert.deepEqual([...REVIEW_LABELS], ['loop:pr', 'plot'])
 })
 
-test('a plan PR is never reviewed on pull_request, only by dispatch (T, 2026-10-21)', () => {
-  for (const l of ['plot', 'review:plan-only']) assert.match(reviewWanted(pr({ labels: [l] })).reason, /plan PR/, l)
-  for (const title of ['plot: BE1 solve-time backend', 'plan(RV4): x', 'Plan: y']) assert.equal(reviewWanted(pr({ title })).go, false, title)
+test('a plot PR is never reviewed on pull_request, only by dispatch (T, 2026-10-21; D101)', () => {
+  assert.match(reviewWanted(pr({ labels: ['plot'] })).reason, /plan PR/)
+  for (const title of ['plot: BE1 solve-time backend', 'Plot(RV4): x']) assert.equal(reviewWanted(pr({ title })).go, false, title)
+  // Since D101 a review:plan-only PR or a plan: title is reviewed like any other PR.
+  assert.equal(reviewWanted(pr({ labels: ['review:plan-only'] })).go, true, 'review:plan-only is reviewed')
+  for (const title of ['plan(RV4): x', 'Plan: y']) assert.equal(reviewWanted(pr({ title })).go, true, title)
   assert.equal(reviewWanted(pr({ title: 'planner: fix the planner' })).go, true, 'a title that only starts with "plan"')
   assert.equal(reviewWanted(pr({ labels: ['plot'], dispatch: true })).go, true, 'dispatch still reviews a plan')
 })
@@ -78,7 +81,7 @@ test('the fixer runs once, on a trusted not-pass for the head, never on a plan, 
   assert.match(fixWanted({ ...base, comments: [notPass, { body: `fixed\n${FIX_ATTEMPT_MARKER}`, author: 'x' }] }).reason, /already on the PR/)
   assert.match(fixWanted({ ...base, commitMessages: [`fix(review): y\n${FIX_ATTEMPT_MARKER}`] }).reason, /already on the PR/)
   assert.match(fixWanted({ ...base, labels: ['plot'] }).reason, /plan PR/)
-  assert.match(fixWanted({ ...base, title: 'plan: z' }).reason, /plan PR/)
+  assert.match(fixWanted({ ...base, title: 'plot: z' }).reason, /plan PR/)
   assert.match(fixWanted({ ...base, labels: ['review:needs-T'] }).reason, /review:needs-T/)
   assert.match(fixWanted({ ...base, files: ['scripts/pr-merge.mjs'] }).reason, /pipeline PR/)
   assert.match(fixWanted({ ...base, isDraft: true }).reason, /draft/)
