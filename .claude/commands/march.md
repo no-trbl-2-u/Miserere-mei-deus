@@ -8,7 +8,8 @@ first; this stub is only the doorway.
 
 Procedure (§4 of the skill; the gates are in §3, "Gates (the one
 home)"). First match wins:
-1. Unlabeled or `loop:do` issues → `/triage`.
+1. Unlabeled or `loop:do` issues → `/triage`. Either way, then
+   run the report sweep (`node scripts/report-sweep.mjs --file`).
 2. Critique due (rate-limited, green deploy) → `/critique`.
 3. PR cap (3 open `loop:pr` PRs) → report "waiting on T", end.
 4. Next pickable phase (first `[ ]` row, not attended, `Requires`

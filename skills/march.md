@@ -17,6 +17,9 @@ ELSE expand due + bold posture     →  /expand
 ELSE                               →  /iterate
 ```
 
+Step 1 also runs the report sweep every tick, after triage: an
+unfiled package report becomes a CRITIQUE row (phase RS1).
+
 First match wins. Every "due", "pickable" and "cap" test lives in §3,
 the one home for gate logic; other verbs point here rather than
 repeating it. §3 also owns **Landing a change** (the PR flow,
@@ -376,9 +379,26 @@ If `urgent > 0` or `unlabeled > 0`:
 
 - Read `skills/triage.md`.
 - Execute its procedure end-to-end.
-- Return.
+- Run the report sweep (below), then return.
 
-Otherwise fall through to Step 2.
+Otherwise run the report sweep, then fall through to Step 2.
+
+**Report sweep (phase RS1).** A hand-written report saved under a
+package's `docs/reports/` reaches the loop here:
+
+```bash
+node scripts/report-sweep.mjs --file
+```
+
+It lists each `axiomancer-*/docs/reports/*.md` that is neither in
+`plan/report-sweep-baseline.json` nor cited by path in
+`plan/CRITIQUE.md` or `plan/AUDIT.md`, and adds one CRITIQUE Pending
+row for each: "`[MED]` unfiled report `<path>`: read it and file its
+findings", with the path as evidence. `/iterate` works that row like
+any other. The root `docs/reports/` is the loop's own output and is
+never swept. "no unfiled reports" changes nothing; filed rows are
+plan-only queue bookkeeping (§3 "Landing a change"). The sweep never
+dispatches a verb or ends the tick.
 
 ### Step 2 — Critique due?
 

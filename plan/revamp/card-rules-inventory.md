@@ -344,6 +344,7 @@ These are T's rulings for B5/B6. None exists in code; none is a live rule.
 | EXILE (a line's card leaves for the combat; PAID-only) and SACRIFICE (lose n VITAE, unscaled, never below 1) keywords; the first Curse | D69-D71 |
 | Lanes: a 10-12 card lane on top of grey; 1-2 signature keywords per lane; pairs as the goal | `cards.md` deck model |
 | Relics open lanes: combat card reward = 2 random + 1 guaranteed lane card; no lane relic, 3 random | D68, D71 |
+| Lane relics stack: 3-4 relics of one lane = 2 lane cards + 1 random; 5 = all 3 from that lane | D100 |
 | Families of sub-lanes; a relic names a family; bridge cards within a family | D73 |
 | First pool: one family, Blood Price, with 3 sub-lanes (Payoff, Engine, Misc) of ~10 cards = 30 + grey; replaces D73's 3 families × 1 lane | D74 |
 | Card text: the scrap floor (no line gives only 1 Conviction); the Global template (duration badges, trigger first, PAID shows only the change) | `cards.md` (T, 2026-09-30) |
