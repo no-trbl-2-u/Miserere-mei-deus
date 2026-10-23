@@ -386,7 +386,7 @@ the PR.
 ### Step 7 — Watch the PR's checks
 
 ```bash
-gh pr checks loop/iterate-<slug> --repo "$GH_REPO" --watch --fail-fast
+gh pr checks loop/iterate-<slug> --repo "$GH_REPO" --required --watch --fail-fast
 ```
 
 Red on this fix: fix on the branch (push, never force), up to 3
@@ -469,7 +469,7 @@ git add <explicit files>
 git commit -m "<category>: <subject>"
 git push -u origin loop/iterate-<slug>
 gh pr create --label loop:pr --label "size:<S|M|L>" --label "area:<area>" --base main ...
-gh pr checks loop/iterate-<slug> --watch --fail-fast
+gh pr checks loop/iterate-<slug> --required --watch --fail-fast
 
 # Issue mirror
 node scripts/loop-issue.mjs open --severity ... --category ... \

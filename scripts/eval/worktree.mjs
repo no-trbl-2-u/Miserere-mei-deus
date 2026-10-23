@@ -28,16 +28,16 @@ const NODE_MODULES = ['node_modules', 'axiomancer-mechanics/node_modules', 'axio
 
 export const git = (args, cwd = ROOT) => execFileSync('git', args, { cwd, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }).trim()
 
-/** A fresh detached worktree at HEAD; remove it with `closeWorktree`. */
-export function openWorktree(prefix) {
+/** A fresh detached worktree at `repo`'s HEAD (this checkout by default); remove it with `closeWorktree`. */
+export function openWorktree(prefix, repo = ROOT) {
   const dir = mkdtempSync(join(tmpdir(), prefix))
   rmSync(dir, { recursive: true, force: true })
-  git(['worktree', 'add', '--detach', '--quiet', dir, 'HEAD'])
+  git(['worktree', 'add', '--detach', '--quiet', dir, 'HEAD'], repo)
   return dir
 }
 
-export function closeWorktree(dir) {
-  git(['worktree', 'remove', '--force', dir])
+export function closeWorktree(dir, repo = ROOT) {
+  git(['worktree', 'remove', '--force', dir], repo)
 }
 
 function linkModules(dir) {
@@ -56,7 +56,12 @@ export function checkout(dir, sha) {
 }
 
 function run(cmd, args, cwd, timeoutMs) {
-  const r = spawnSync(cmd, args, { cwd, encoding: 'utf8', timeout: timeoutMs, maxBuffer: 256 * 1024 * 1024, env: { ...process.env, CI: '1', FORCE_COLOR: '0' } })
+  // A caller that is itself under `node --test` passes NODE_TEST_CONTEXT
+  // down, and a child `node --test` that sees it reports to that parent
+  // instead of printing TAP.
+  const env = { ...process.env, CI: '1', FORCE_COLOR: '0' }
+  delete env.NODE_TEST_CONTEXT
+  const r = spawnSync(cmd, args, { cwd, encoding: 'utf8', timeout: timeoutMs, maxBuffer: 256 * 1024 * 1024, env })
   return { code: r.status ?? 1, stdout: r.stdout ?? '', stderr: r.stderr ?? '', timedOut: r.error?.code === 'ETIMEDOUT' }
 }
 
