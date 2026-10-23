@@ -12,17 +12,15 @@ import { StyleSheet } from 'react-native';
 import { render, renderHook, screen } from '@testing-library/react-native';
 import { describe, expect, it } from '@jest/globals';
 
-import { initializeCombatEncounter, rollEncounterDice } from '@mechanics';
+import { rollEncounterDice } from '@mechanics';
 import { CombatCardFace, useCombatBoardStyles } from '@/components/combat/encounter/CombatBoard';
 import { buildCombatViewModel } from '@/state/presenters/combat-encounter.engine';
-import { createMockEncounterEnemy } from '@/state/mocks/combat.mock';
+import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
 function firstCard() {
-    const { store } = withAllProviders(<></>);
-    const base = store.getState().player;
-    const player = { ...base, knownCards: ['grey-strike', 'grey-ward', 'grey-word'], baseStats: { heart: 8, body: 8, mind: 8 } };
-    let s = initializeCombatEncounter(player, createMockEncounterEnemy(), undefined, 16);
+    const { combat } = startRealFight(REAL_FIGHT_FIXTURE, { player: { knownCards: ['grey-strike', 'grey-ward', 'grey-word'], baseStats: { heart: 8, body: 8, mind: 8 } }, seed: 16 });
+    let s = combat;
     s = rollEncounterDice(s).state;
     return buildCombatViewModel(s).hand[0]!;
 }

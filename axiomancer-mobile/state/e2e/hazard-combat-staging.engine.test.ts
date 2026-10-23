@@ -6,37 +6,19 @@
  */
 
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
-import type { ResolveMapEventResult } from '@mechanics';
 
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 import { createAppActions } from '@/state/actions';
-import { createAppStore, EMPTY_EVENT_SLICE, type AppStore } from '@/state/store';
-import { createMockEncounterEnemy } from '@/state/mocks/combat.mock';
+import { createAppStore } from '@/state/store';
+import { arriveAtRealFight } from '@/test-utils/realFight';
 
 afterEach(() => {
     jest.restoreAllMocks();
 });
 
-function seedActiveEvent(store: AppStore, result: ResolveMapEventResult): void {
-    store.setState({ event: { ...EMPTY_EVENT_SLICE, pending: result } });
-}
-
-function encounterEvent(): ResolveMapEventResult {
-    return {
-        state: undefined as never,
-        event: {
-            kind: 'encounter',
-            encounter: { enemies: [createMockEncounterEnemy()], origin: 'breakwater:bw-2' },
-            isBoss: false,
-        } as never,
-    };
-}
-
 describe('beginHazardEncounter: stages currentEncounter (phase 54)', () => {
     it('calls startCombat so state.currentEncounter is populated before the fight starts', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter() });
-        const actions = createAppActions(store);
-        seedActiveEvent(store, encounterEvent());
+        const { store, actions } = arriveAtRealFight();
 
         expect(store.getState().currentEncounter).toBeUndefined();
 
@@ -49,9 +31,7 @@ describe('beginHazardEncounter: stages currentEncounter (phase 54)', () => {
     });
 
     it('still clears the pending event slice (unchanged behavior)', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter() });
-        const actions = createAppActions(store);
-        seedActiveEvent(store, encounterEvent());
+        const { store, actions } = arriveAtRealFight();
 
         actions.beginHazardEncounter();
 

@@ -17,14 +17,14 @@ import { render, screen } from '@testing-library/react-native';
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
-import { initializeCombatEncounter, rollEncounterDice } from '@mechanics';
+import { rollEncounterDice } from '@mechanics';
 import {
     CombatBoard, compactFree, handFanLayout,
     HAND_CARD_W, HAND_FAN_BOARD_EDGE, HAND_FAN_MIN_STEP,
     type DragController,
 } from '@/components/combat/encounter/CombatBoard';
 import { buildCombatViewModel, type CombatViewModel } from '@/state/presenters/combat-encounter.engine';
-import { createMockEncounterEnemy } from '@/state/mocks/combat.mock';
+import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
 // A four-card hand off the grey office (the whole card library).
@@ -54,10 +54,8 @@ const boardCallbacks = () => ({
 });
 
 function freshVM(): { store: ReturnType<typeof withAllProviders>['store']; vm: CombatViewModel } {
-    const { store } = withAllProviders(<></>);
-    const base = store.getState().player;
-    const player = { ...base, knownCards: CARDS, baseStats: { heart: 8, body: 8, mind: 8 }, health: 129, maxHealth: 200 };
-    let s = initializeCombatEncounter(player, createMockEncounterEnemy(), undefined, 16);
+    const { store, combat } = startRealFight(REAL_FIGHT_FIXTURE, { player: { knownCards: CARDS, baseStats: { heart: 8, body: 8, mind: 8 }, health: 129, maxHealth: 200 }, seed: 16 });
+    let s = combat;
     s = rollEncounterDice(s).state;
     return { store, vm: buildCombatViewModel(s) };
 }

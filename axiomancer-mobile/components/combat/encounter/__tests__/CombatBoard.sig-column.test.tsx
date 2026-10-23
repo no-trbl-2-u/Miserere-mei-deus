@@ -16,7 +16,7 @@ import { StyleSheet } from 'react-native';
 import { act, fireEvent, render, renderHook, screen } from '@testing-library/react-native';
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 
-import { initializeCombatEncounter, rollEncounterDice } from '@mechanics';
+import { rollEncounterDice } from '@mechanics';
 import {
     CombatBoard, signatureColumnHeight, signatureColumnTop, useCombatBoardStyles,
     HAND_CARD_H, HAND_FAN_PAD_BOTTOM, HAND_PILL_OVERHANG,
@@ -27,7 +27,7 @@ import { dockMinHeight } from '@/components/combat/encounter/CombatFooterDock';
 import {
     buildCombatViewModel, type CombatEffectChipVM, type CombatViewModel,
 } from '@/state/presenters/combat-encounter.engine';
-import { createMockEncounterEnemy } from '@/state/mocks/combat.mock';
+import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
 const CARDS = ['grey-strike', 'grey-ward', 'grey-word', 'grey-strike'];
@@ -47,9 +47,8 @@ const noopDrag = (): DragController =>
     ({ begin: () => undefined, end: () => undefined, active: null, x: { value: 0 }, y: { value: 0 } } as unknown as DragController);
 
 function renderBoard(shape: (vm: CombatViewModel) => CombatViewModel = (v) => v): CombatViewModel {
-    const { store } = withAllProviders(<></>);
-    const player = { ...store.getState().player, knownCards: CARDS };
-    let s = initializeCombatEncounter(player, createMockEncounterEnemy(), undefined, 16);
+    const { store, combat } = startRealFight(REAL_FIGHT_FIXTURE, { player: { knownCards: CARDS }, seed: 16 });
+    let s = combat;
     s = rollEncounterDice(s).state;
     const vm = shape(buildCombatViewModel(s));
     const { tree } = withAllProviders(

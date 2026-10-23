@@ -11,11 +11,11 @@ import React from 'react';
 import { render, screen } from '@testing-library/react-native';
 import { describe, expect, it, jest } from '@jest/globals';
 
-import { initializeCombatEncounter, rollEncounterDice } from '@mechanics';
+import { rollEncounterDice } from '@mechanics';
 import { CombatBoard, type DragController } from '@/components/combat/encounter/CombatBoard';
 import { combatDieA11yLabel } from '@/components/combat/encounter/CombatDie';
 import { buildCombatViewModel } from '@/state/presenters/combat-encounter.engine';
-import { createMockEncounterEnemy } from '@/state/mocks/combat.mock';
+import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 import { tapCombatDie } from '@/test-utils/tapCombatDie';
 
@@ -24,10 +24,8 @@ const noopDrag = (): DragController =>
 
 describe('CombatBoard — the staged card speaks for its socketed die', () => {
     it('labels the die on the staged card and leaves the socket copy unlabelled', async () => {
-        const { store } = withAllProviders(<></>);
-        const base = store.getState().player;
-        const player = { ...base, knownCards: ['grey-strike', 'grey-ward', 'grey-word'], baseStats: { heart: 8, body: 8, mind: 8 }, health: 200, maxHealth: 200 };
-        let s = initializeCombatEncounter(player, createMockEncounterEnemy(), undefined, 16);
+        const { store, combat } = startRealFight(REAL_FIGHT_FIXTURE, { player: { knownCards: ['grey-strike', 'grey-ward', 'grey-word'], baseStats: { heart: 8, body: 8, mind: 8 }, health: 200, maxHealth: 200 }, seed: 16 });
+        let s = combat;
         s = rollEncounterDice(s).state;
         const first = s.dice.findIndex(d => d.state === 'available' && !d.floating && d.face !== 'miss');
         expect(first).toBeGreaterThanOrEqual(0);

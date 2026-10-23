@@ -5,20 +5,18 @@
  */
 
 import { describe, it, expect } from '@jest/globals';
-import { createCharacter, initializeCombatEncounter, rollEncounterDice } from '@mechanics';
+import { rollEncounterDice } from '@mechanics';
 import type { CombatEncounterState } from '@mechanics';
 
 import { buildCombatViewModel } from '@/state/presenters/combat-encounter.engine';
-import { createMockEncounterEnemy } from '@/state/mocks/combat.mock';
+import { realFightFixture, startRealFight } from '@/test-utils/realFight';
 
 // Any playable deck works — the grey office is the whole library.
 const DECK = ['grey-strike', 'grey-ward', 'grey-word'];
 
 function openState(): CombatEncounterState {
-    const player = createCharacter({ name: 'Hero', level: 3, baseStats: { heart: 8, body: 8, mind: 8 } });
-    player.knownCards = Array.from(new Set([...(player.knownCards ?? []), ...DECK]));
-    const state = initializeCombatEncounter(player, createMockEncounterEnemy(), DECK, 7);
-    return rollEncounterDice(state).state;
+    const { combat } = startRealFight(realFightFixture({ level: 3, baseStats: { heart: 8, body: 8, mind: 8 }, knownCards: DECK }), { deck: DECK, seed: 7 });
+    return rollEncounterDice(combat).state;
 }
 
 // The status kill-path foresight. The engine selector (`projectCombatOutcome`)

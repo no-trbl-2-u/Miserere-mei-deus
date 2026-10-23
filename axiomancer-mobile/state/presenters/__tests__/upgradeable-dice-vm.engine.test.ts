@@ -11,20 +11,18 @@
 
 import { describe, expect, it } from '@jest/globals';
 import {
-    createCharacter, initializeCombatEncounter, rollEncounterDice,
+    rollEncounterDice,
 } from '@mechanics';
 import type { CombatEncounterState, CombatManaDie } from '@mechanics';
 
 import { buildCombatViewModel } from '../combat-encounter.engine';
-import { createMockEncounterEnemy } from '../../mocks/combat.mock';
+import { realFightFixture, startRealFight } from '@/test-utils/realFight';
 
 const DECK = ['grey-strike', 'grey-strike', 'grey-ward', 'grey-ward', 'grey-word', 'grey-word'];
 
 function openEncounter(): CombatEncounterState {
-    const player = createCharacter({ name: 'Hero', level: 3, baseStats: { heart: 8, body: 8, mind: 8 } });
-    player.knownCards = Array.from(new Set([...(player.knownCards ?? []), ...DECK]));
-    const state = initializeCombatEncounter(player, createMockEncounterEnemy(), DECK, 7);
-    return rollEncounterDice(state).state;
+    const { combat } = startRealFight(realFightFixture({ level: 3, baseStats: { heart: 8, body: 8, mind: 8 }, knownCards: DECK }), { deck: DECK, seed: 7 });
+    return rollEncounterDice(combat).state;
 }
 
 /** A hand-crafted faced tray die (the gear roll shape). */

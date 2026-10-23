@@ -14,23 +14,21 @@ import { StyleSheet } from 'react-native';
 import { render, screen, within } from '@testing-library/react-native';
 import { describe, expect, it } from '@jest/globals';
 
-import { initializeCombatEncounter, rollEncounterDice } from '@mechanics';
+import { rollEncounterDice } from '@mechanics';
 import {
     CombatCardFace, HAND_CARD_H, HAND_CARD_W, PAID_LINE_FLOOR, PAID_LINE_SIZE, paidLedgerFit,
 } from '@/components/combat/encounter/CombatBoard';
 import { buildCombatViewModel, type CombatCardVM } from '@/state/presenters/combat-encounter.engine';
-import { createMockEncounterEnemy } from '@/state/mocks/combat.mock';
+import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 import { HUE } from '@/theme/axm';
 
 const GREY = ['grey-strike', 'grey-ward', 'grey-word'];
 
 function hand(): CombatCardVM[] {
-    const { store } = withAllProviders(<></>);
-    const base = store.getState().player;
     // Heart 8 scales the word to a "+24%" FREE and a "+60%" PAID.
-    const player = { ...base, knownCards: GREY, baseStats: { heart: 8, body: 8, mind: 8 } };
-    let s = initializeCombatEncounter(player, createMockEncounterEnemy(), undefined, 16);
+    const { combat } = startRealFight(REAL_FIGHT_FIXTURE, { player: { knownCards: GREY, baseStats: { heart: 8, body: 8, mind: 8 } }, seed: 16 });
+    let s = combat;
     s = rollEncounterDice(s).state;
     return buildCombatViewModel(s).hand;
 }
