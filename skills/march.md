@@ -17,6 +17,9 @@ ELSE expand due + bold posture     →  /expand
 ELSE                               →  /iterate
 ```
 
+Step 1 also runs the report sweep every tick, after triage: an
+unfiled package report becomes a CRITIQUE row (phase RS1).
+
 First match wins. Every "due", "pickable" and "cap" test lives in §3,
 the one home for gate logic; other verbs point here rather than
 repeating it. §3 also owns **Landing a change** (the PR flow,
@@ -211,7 +214,7 @@ done
 gh pr create --repo "$GH_REPO" --base main --head "loop/<verb>-<slug>" \
   --label loop:pr --label "size:<S|M|L>" --label "area:<area>" \
   --title "<subject naming the claim>" --body-file "$body"
-gh pr checks "loop/<verb>-<slug>" --repo "$GH_REPO" --watch --fail-fast
+gh pr checks "loop/<verb>-<slug>" --repo "$GH_REPO" --required --watch --fail-fast
 ```
 
 - **One size label per PR** (T, 2026-10-14), so T can spot the
@@ -278,7 +281,13 @@ gh pr checks "loop/<verb>-<slug>" --repo "$GH_REPO" --watch --fail-fast
   opening the PR: `node scripts/pr-acceptance.mjs --body-file
   "$body"`. The step reads the body live, so after editing a red
   body, re-run the failed `verify-gate` job (`gh run rerun <id>
-  --failed`). `Closes #<N>` is the last line, one
+  --failed`). The `judge` job then **runs** each named test file and
+  command on the head (phase LG1f) and `verify-gate` fails when one
+  fails, so name a command that runs on a plain runner with no shell
+  and no token (no `&&`, pipes or `$VAR`; one proof per backtick);
+  anything else is `(no test: <reason>)`. Try a body's proofs before
+  opening the PR: `node scripts/pr-judge.mjs run --body-file
+  "$body"`. `Closes #<N>` is the last line, one
   issue per line; `close-trailers` reads it from the commit range of
   the merge push, so put the same trailer in the PR's last commit.
 - **`gh pr checks --watch` replaces `deploy:check`** for the branch
@@ -297,8 +306,8 @@ gh pr checks "loop/<verb>-<slug>" --repo "$GH_REPO" --watch --fail-fast
 - **The adversarial review** (`skills/review.md`, phase RV1b, RV3)
   posts after `verify-gate` on every same-repo PR: inline MED/HIGH
   findings, one `## Review verdict` comment, and a `risk:*` raise with
-  a reason. On a `pass` the `merge` job merges a non-plan PR (D95); a
-  `not-pass`, a plan PR or a hold label leaves it to T.
+  a reason. On a `pass` the `merge` job merges any PR but a `plot` PR
+  (D95, D101); a `not-pass`, a `plot` PR or a hold label leaves it to T.
 - **Never** merge the PR, close it, or force-push its branch yourself
   (D86): the `merge` job merges it on a green review, T merges the rest
   (D95).
@@ -370,9 +379,26 @@ If `urgent > 0` or `unlabeled > 0`:
 
 - Read `skills/triage.md`.
 - Execute its procedure end-to-end.
-- Return.
+- Run the report sweep (below), then return.
 
-Otherwise fall through to Step 2.
+Otherwise run the report sweep, then fall through to Step 2.
+
+**Report sweep (phase RS1).** A hand-written report saved under a
+package's `docs/reports/` reaches the loop here:
+
+```bash
+node scripts/report-sweep.mjs --file
+```
+
+It lists each `axiomancer-*/docs/reports/*.md` that is neither in
+`plan/report-sweep-baseline.json` nor cited by path in
+`plan/CRITIQUE.md` or `plan/AUDIT.md`, and adds one CRITIQUE Pending
+row for each: "`[MED]` unfiled report `<path>`: read it and file its
+findings", with the path as evidence. `/iterate` works that row like
+any other. The root `docs/reports/` is the loop's own output and is
+never swept. "no unfiled reports" changes nothing; filed rows are
+plan-only queue bookkeeping (§3 "Landing a change"). The sweep never
+dispatches a verb or ends the tick.
 
 ### Step 2 — Critique due?
 

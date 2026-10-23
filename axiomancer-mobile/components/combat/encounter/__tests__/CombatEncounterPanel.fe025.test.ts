@@ -10,16 +10,16 @@
 
 import { describe, expect, it } from '@jest/globals';
 
-import { initializeCombatEncounter, rollEncounterDice, createCharacter } from '@mechanics';
+import { rollEncounterDice } from '@mechanics';
 import { buildCombatViewModel } from '@/state/presenters/combat-encounter.engine';
-import { createMockEncounterEnemy } from '@/state/mocks/combat.mock';
+import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 
 function encounterVm(health: number, maxHealth: number) {
-    const base = createCharacter({ name: 'Pilgrim', level: 5, baseStats: { heart: 8, body: 8, mind: 8 } });
-    const player = { ...base, health, maxHealth };
-    const s = rollEncounterDice(
-        initializeCombatEncounter(player, createMockEncounterEnemy(), undefined, 16),
-    ).state;
+    const { combat } = startRealFight(REAL_FIGHT_FIXTURE, {
+        player: { level: 5, baseStats: { heart: 8, body: 8, mind: 8 }, health, maxHealth },
+        seed: 16,
+    });
+    const s = rollEncounterDice(combat).state;
     return buildCombatViewModel(s);
 }
 

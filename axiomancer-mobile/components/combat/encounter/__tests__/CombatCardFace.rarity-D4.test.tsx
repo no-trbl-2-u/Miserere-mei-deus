@@ -22,13 +22,13 @@ import { render, screen } from '@testing-library/react-native';
 import { describe, expect, it } from '@jest/globals';
 
 import {
-    cardLibrary, initializeCombatEncounter, rankToRarity, rollEncounterDice, type CardRank,
+    cardLibrary, rankToRarity, rollEncounterDice, type CardRank,
 } from '@mechanics';
 
 import { CombatCardFace } from '@/components/combat/encounter/CombatBoard';
 import { buildCombatViewModel, type CombatCardVM } from '@/state/presenters/combat-encounter.engine';
 import { RARITY_LABEL, rarityFor } from '@/state/presenters/card-rarity.engine';
-import { createMockEncounterEnemy } from '@/state/mocks/combat.mock';
+import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
 /**
@@ -45,16 +45,11 @@ function idsSpanningTheLadder(): string[] {
 }
 
 function handVMs(ids: string[]): CombatCardVM[] {
-    const { store } = withAllProviders(<></>);
-    const base = store.getState().player;
-    const player = {
-        ...base,
-        knownCards: ids,
-        baseStats: { heart: 8, body: 8, mind: 8 },
-        health: 200,
-        maxHealth: 200,
-    };
-    let s = initializeCombatEncounter(player, createMockEncounterEnemy(), undefined, 16);
+    const { combat } = startRealFight(REAL_FIGHT_FIXTURE, {
+        player: { knownCards: ids, baseStats: { heart: 8, body: 8, mind: 8 }, health: 200, maxHealth: 200 },
+        seed: 16,
+    });
+    let s = combat;
     s = rollEncounterDice(s).state;
     return buildCombatViewModel(s).hand;
 }

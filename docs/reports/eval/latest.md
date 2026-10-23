@@ -311,7 +311,7 @@ No report (over budget (1380s): 564 of 2276 tested, 6 survived).
 
 ## Miss rate per judge (EV1c, A7)
 
-Stamp: commit `4043ba25` (2026-10-17T10:40:15Z). Regenerate with `node scripts/eval/miss-rates.mjs`; inputs: ledger at `4043ba25`, parent replay at `5085b096`, planted defects at `b0ac22f8`, mutation at `15a2fa76`.
+Stamp: commit `37178677` (2026-10-22T21:29:28-04:00). Regenerate with `node scripts/eval/miss-rates.mjs`; inputs: ledger at `4043ba25`, parent replay at `5085b096`, planted defects at `b0ac22f8`, mutation at `15a2fa76`, critique passes at `02f94d07`.
 
 | Judge | Missed | Of | Rate | Rows it comes from | How it is counted |
 |---|---|---|---|---|---|
@@ -319,7 +319,7 @@ Stamp: commit `4043ba25` (2026-10-17T10:40:15Z). Regenerate with `node scripts/e
 | `verify` | 4 | 4 | 100% | D1 (#534), D2 (#523), D3 (#529), D4 (#543) | Tests as they stood at each fix's parent. Each fix's own tests catch its defect: 4 of 4. Mutation: mechanics: combat resolution: 76.3% (194 of 842 mutants survive or are uncovered); mobile: combat presenters: over budget (1380s): 564 of 2276 tested, 6 survived. |
 | The antagonist | 4 | 5 | 80% | #520 (S3), #521 (S3), #523 (S3, S5), #526 (S4) | Denominator: PRs carrying a seeded escape that the antagonist reviewed before merge. It reviewed 6 of 42 ledger PRs; 1 drew a "not a pass". |
 | The shadow reviewer (`pr-review`) | not measured | - | - | - | no ledger PR has a `pr-review` verdict before its merge yet (the reviewer starts with phase RV1b); the Part 4 shadow table reads 20. |
-| `/critique` | not measured | - | - | - | it plays the deployed web build after merge and no ledger row records what a pass saw against what had escaped, so it has no denominator. Context: 5 follow-up fix(es) in the ledger cite a critique pass. |
+| `/critique` | 0 | 0 | n/a | none | Denominator: escapes (a seeded escape, or a fix within 7 days on the same code) merged inside a recorded pass's base..head range; 1 pass(es) recorded (99). A catch is an escape whose fix cites a finding of that pass or a later one: none. Context: 5 follow-up fix(es) in the ledger cite a critique pass. |
 | The merge gate | 4 | 42 | 9.5% | #509, #529, #541, #600 | A miss is a merge before every check on the final head finished, or over an antagonist "not a pass" (S1). |
 | The builder's own `[x]` | 3 | 65 | 4.6% | #521 A4 (S3), #523 A6 (S3), #523 verify:visual (S5) | Misses: ticks the parent replay found unproven (0), the seeded S3 ticks and S5's missing shot. 49 of 65 ticks name no test, so the replay can neither prove nor clear them. |
 

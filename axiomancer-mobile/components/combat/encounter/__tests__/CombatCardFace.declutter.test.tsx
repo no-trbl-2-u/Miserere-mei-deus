@@ -17,10 +17,10 @@ import React from 'react';
 import { render, screen } from '@testing-library/react-native';
 import { describe, expect, it } from '@jest/globals';
 
-import { initializeCombatEncounter, rollEncounterDice } from '@mechanics';
+import { rollEncounterDice } from '@mechanics';
 import { CombatCardFace } from '@/components/combat/encounter/CombatBoard';
 import { buildCombatViewModel, type CombatCardVM } from '@/state/presenters/combat-encounter.engine';
-import { createMockEncounterEnemy } from '@/state/mocks/combat.mock';
+import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
 // The grey office — the whole card library: a DEAL, a GUARD and a VULNERABLE
@@ -29,10 +29,8 @@ import { withAllProviders } from '@/test-utils/withAllProviders';
 const CARDS = ['grey-strike', 'grey-ward', 'grey-word'];
 
 function handVMs(): CombatCardVM[] {
-    const { store } = withAllProviders(<></>);
-    const base = store.getState().player;
-    const player = { ...base, knownCards: CARDS, baseStats: { heart: 8, body: 8, mind: 8 }, health: 200, maxHealth: 200 };
-    let s = initializeCombatEncounter(player, createMockEncounterEnemy(), undefined, 16);
+    const { combat } = startRealFight(REAL_FIGHT_FIXTURE, { player: { knownCards: CARDS, baseStats: { heart: 8, body: 8, mind: 8 }, health: 200, maxHealth: 200 }, seed: 16 });
+    let s = combat;
     s = rollEncounterDice(s).state;
     return buildCombatViewModel(s).hand;
 }

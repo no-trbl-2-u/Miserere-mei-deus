@@ -18,10 +18,9 @@ jest.mock('@/lib/platform/router', () => ({
 import { CombatGate } from '@/components/CombatGate';
 import { CombatModeProvider, useCombatMode } from '@/state/combat-mode';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
-import { createMockEncounterEnemy } from '@/state/mocks/combat.mock';
-import { createAppStore, EMPTY_EVENT_SLICE, type AppStore } from '@/state/store';
+import { createAppStore, type AppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
-import type { ResolveMapEventResult } from '@mechanics';
+import { arriveAtRealFight, startRealFight } from '@/test-utils/realFight';
 
 beforeEach(() => {
     jest.useFakeTimers();
@@ -31,15 +30,6 @@ afterEach(() => {
     jest.useRealTimers();
     jest.clearAllMocks();
 });
-
-const ENCOUNTER_EVENT: ResolveMapEventResult = {
-    state: undefined as never,
-    event: {
-        kind: 'encounter',
-        encounter: { enemies: [createMockEncounterEnemy()], origin: 'breakwater:bw-2' },
-        isBoss: false,
-    } as never,
-};
 
 let combat: { inCombat: boolean } = { inCombat: false };
 function Probe() {
@@ -73,18 +63,16 @@ describe('CombatGate', () => {
     });
 
     it('engages a combat-prelude: stages the foe, clears the event, raises the combat flag', () => {
-        const store = makeStore();
-        store.setState({ event: { ...EMPTY_EVENT_SLICE, pending: ENCOUNTER_EVENT } });
+        const { store, nodeEnemy } = arriveAtRealFight();
         mount(store);
 
         expect(store.getState().event.pending).toBeNull();
-        expect(store.getState().currentEncounter?.enemies[0]?.id).toBe(createMockEncounterEnemy().id);
+        expect(store.getState().currentEncounter?.enemies[0]?.id).toBe(nodeEnemy.id);
         expect(combat.inCombat).toBe(true);
     });
 
     it('pushes /combat-encounter once while a fight is staged', () => {
-        const store = makeStore();
-        store.setState({ event: { ...EMPTY_EVENT_SLICE, pending: ENCOUNTER_EVENT } });
+        const { store } = arriveAtRealFight();
         mount(store);
         // An unrelated store change re-renders the gate; the latch holds.
         act(() => { store.setState({ _devSkipSeq: 0 } as never); });
@@ -95,22 +83,20 @@ describe('CombatGate', () => {
     });
 
     it('re-arms when the fight is settled, so the next fight routes too', () => {
-        const store = makeStore();
-        store.getState().startCombat(createMockEncounterEnemy());
+        const { store, enemy } = startRealFight();
         mount(store);
         expect(mockPush).toHaveBeenCalledTimes(1);
 
         act(() => { store.getState().endCombat('flee'); });
         expect(store.getState().currentEncounter ?? null).toBeNull();
-        act(() => { store.getState().startCombat(createMockEncounterEnemy()); });
+        act(() => { store.getState().startCombat(enemy); });
         act(() => { jest.advanceTimersByTime(1); });
 
         expect(mockPush).toHaveBeenCalledTimes(2);
     });
 
     it('routes a fight already staged at mount (continued in memory) without engaging again', () => {
-        const store = makeStore();
-        store.getState().startCombat(createMockEncounterEnemy());
+        const { store } = startRealFight();
         mount(store);
 
         expect(mockPush).toHaveBeenCalledWith('/combat-encounter');

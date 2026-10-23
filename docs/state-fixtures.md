@@ -73,6 +73,23 @@ const store = createAppStore({ adapter: createFixtureBootAdapter(boot.state) });
 // or, engine-side: createAppStore({ adapter: createMemoryAdapter(buildStateFromFixture(fixture)) })
 ```
 
+**Combat tests (mobile Jest)** begin from a real fight, never a hand-built
+foe (phase CT1): `startRealFight` in `test-utils/realFight.ts` boots a
+fixture store on the Breakwater's bw-2 encounter, arrives, enters the fight
+through `beginHazardEncounter` and returns the store, the staged foe and the
+live combat state. `deck` and `seed` fix the hand; `player` sets exact save
+fields (a known-card set, a health pool); `REAL_BOSS_FIGHT_FIXTURE` is the
+door boss; `arriveAtRealFight` stops at the prelude. The old mock foe
+(`state/mocks/combat.mock.ts`) is deleted, and
+`test-utils/no-combat-mock.test.ts` fails if anything imports it again.
+
+```ts
+const { store, enemy, combat } = startRealFight(REAL_FIGHT_FIXTURE, {
+    player: { knownCards: CARDS, health: 200, maxHealth: 200 },
+    seed: 16,
+});
+```
+
 **Web (dev build / preview export)**
 
 ```
@@ -95,7 +112,7 @@ await page.goto(`${baseUrl}/`)
 | `/critique` unattended (`npm run critique:drive`) | `SCREENS` entries with a `fixture` key + `waitForPath` — dialogue, village, cutscene, rest, hazard, late-game hub |
 | `/critique` attended (`playtester`) | URLs of the form `/exploration?fixture=<id>` (skill §3, agent "Entering at a known state") |
 | `verify:visual` (`smoke-screens.mjs`) | `ROUTES` entries with `fixture` + `waitForPath` (dialogue, village, cutscene) in a forced-dev-tools context |
-| Mobile Jest | `test-utils/fixtureStore.ts` → `createFixtureStore(ref)` / `arriveFromFixture(h)`; exemplar `state/e2e/travel-door.engine.test.ts` |
+| Mobile Jest | `test-utils/fixtureStore.ts` → `createFixtureStore(ref)` / `arriveFromFixture(h)`; exemplar `state/e2e/travel-door.engine.test.ts`. Combat tests: `test-utils/realFight.ts` → `startRealFight(ref, opts)` |
 | Mechanics Vitest | `src/test-utils/fixture-store.ts` → `createFixtureGameStore(ref)` |
 | CLI | `--fixture <id|path.json|list>` |
 | Playwright drivers | `scripts/fixture-injector.mjs` → `injectStateFixture` / `forceDevTools`; proof `npm run e2e:fixture` |

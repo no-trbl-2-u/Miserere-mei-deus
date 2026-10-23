@@ -289,8 +289,12 @@ without a ruling from T.
 - No alignment, GRACE or faction reputation.
 - No bonus for paying with the card's own colour: the die powers the card
   and adds nothing (D79). The gold die stays wild.
-- No card upgrades in play (D8) and no die growth beyond the Anvil (D20);
-  both are parked.
+- No card upgrade is granted in play yet, and no die growth beyond the Anvil
+  (D20, parked). The upgrade law exists (Phase UP1b, `Cards/card-upgrades.ts`):
+  rarity limits upgrades (common 1, uncommon 2, rare 3) as `<id>+`, `++`,
+  `+++`; each raises payoffs (Blood Price programs through `programAt`) and
+  never a cost; `REPLACE_CARD` swaps one owned copy. The rest site, anvil and
+  elite grants are UP1d to UP1f.
 - No measured balance baseline (D57). A balance question gets "not
   measured".
 

@@ -226,14 +226,35 @@ After assessment, **3–6 findings**, not 8.
 
 Update metadata header.
 
+Then append the pass record (phase LG1e): one JSON line to
+`docs/reports/critique/passes.jsonl`, the same commit, never editing
+an earlier line. It is what gives `/critique` a miss rate in
+`docs/reports/eval/latest.md` (`scripts/eval/miss-rates-lib.mjs`
+counts an escape merged inside a pass's `base..head` range as a miss,
+or a catch when its fix cites that pass's finding).
+
+```json
+{"pass":<N>,"date":"<ISO>","base":"<previous Last pass sha, full>","head":"<sha played, full>","screens":["title","onboarding","..."],"viewports":["375x812","1280x800"],"findings":[{"id":"pass <N> <two-to-four-word name>","severity":"HIGH"}]}
+```
+
+- `base` is the `Last pass` commit from the header before this pass
+  updated it; `head` is the commit this pass played.
+- `screens` are the §3 screens actually captured; `viewports` the
+  sizes played.
+- `findings` lists each row filed this pass, `id` being the words a
+  fix commit cites as `CRITIQUE <id>` (`[CRITIQUE pass 85 footer
+  dock]`), `severity` one of `HIGH`, `MED`, `LOW`. A pass that only
+  raised or folded an existing row lists none.
+- Check it parses: `node --test scripts/eval/miss-rates.test.mjs`.
+
 ### Step 5 — Commit + push
 
-A critique pass writes only `plan/CRITIQUE.md`, so it is plan-only
-and pushes `main` directly (D84; `skills/march.md` §3 "Landing a
-change"). It never opens a PR.
+A critique pass writes only `plan/CRITIQUE.md` and its pass record
+under `docs/reports/`, so it is plan-only and pushes `main` directly
+(D84; `skills/march.md` §3 "Landing a change"). It never opens a PR.
 
 ```bash
-git add plan/CRITIQUE.md
+git add plan/CRITIQUE.md docs/reports/critique/passes.jsonl
 git commit -m "$(cat <<'EOF'
 critique: pass <N> — <K> findings (<H> high, <M> medium, <L> low)
 
@@ -267,7 +288,8 @@ Return 3-line summary.
 
 ## 6. Hard rules
 
-1. **Never modify code, content, or data.** Findings only.
+1. **Never modify code, content, or data.** Findings and the pass
+   record only.
 2. **Attended: delegate the playthrough to `playtester`.** Don't
    play from main agent context. **Unattended: never spawn
    `playtester`;** use the §3.5 transport.
@@ -311,6 +333,7 @@ this skill writes in §5 Step 4, so keep that header current.
 ```bash
 # State files
 plan/CRITIQUE.md                     # findings queue + last-pass metadata
+docs/reports/critique/passes.jsonl   # one record per pass (Step 4)
 plan/bearings.md                     # voice, URL contract
 
 # Sub-agent
@@ -324,5 +347,5 @@ http://localhost:8081/exploration?fixture=<id>           # attended URL form
 # Commands
 git pull --ff-only                   # Step 0
 npm run deploy:check                    # green-deploy precondition
-git commit && git push               # single critique: <summary> commit
+git commit && git push               # single critique: <summary> commit (CRITIQUE.md + passes.jsonl)
 ```

@@ -207,6 +207,9 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - IO1b — attended; waits on T enrolling in the Apple Developer Program; date not set.
 - IO1c — loop work; follows IO1a; date not set.
 - IO1d — attended; T and a friend install the first iPhone builds once IO1b and IO1c ship; date not set.
+- BV1a — loop work, slotted asap (T); waits on BE2a; blocks no window's goal; date not set.
+- BV1b — loop work; follows BV1a; date not set.
+- BV1c — attended; T creates the ballot Pages project and submits the first verdict from the phone; date not set.
 - FM2a — loop work; T slotted it anytime; date not set.
 - FM2b — loop work; follows FM2a; date not set.
 - FM2c — loop work; follows FM2a; date not set.
@@ -220,6 +223,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-23** — **ballots on the phone plotted** (T, attended session, `/plot asap`). **Added** Unscheduled lines for BV1a-BV1c: T set no date, and the rows block no window's goal (card lanes are v0.3 stretch). **Edited** no Item: no open Item's premise depends on the ballot site. BE2a moved up the build plan's Status block (BV1a requires it); its Unscheduled line stands. Nothing ticked; no date moved.
 - **2026-10-22** — **iPhone beta builds plotted** (T, attended session, `/plot`). **Added** Unscheduled lines for IO1a-IO1d: T set no date, and the rows block no window's goal. **Edited** no Item: none in the open windows rests on iOS builds. **Ticked** nothing.
 - **2026-10-22** — **modular feature map plotted** (T, attended session, `/plot anytime`). **Added** Unscheduled lines for FM2a-FM2d: T set no date and the rows serve no window's goal. **Edited** no Item: the FM1 map they extend has shipped and no open Item depends on it.
 - **2026-10-22** — **card and combat logging plotted** (T, attended session, `/plot`). **Added** Unscheduled lines for BE2a-BE2g: T set no date and the rows block no window's goal. **Edited** no Item: no open Item's premise depends on the play log. Nothing ticked; no date moved.

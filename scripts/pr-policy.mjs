@@ -6,11 +6,16 @@
 // `await main()` that cycle never settled (Node exit 13 on PR #679's
 // `fix-wanted` job, which made GitHub call every PR UNSTABLE).
 
-/** Labels that mark a PR as a plan, never merged by the job. */
-export const PLAN_LABELS = Object.freeze(['plot', 'review:plan-only'])
+/**
+ * Labels that mark a PR as a plan: never reviewed on `pull_request`, never
+ * merged by the job, T merges it. Only `plot` since D101 (T, 2026-10-23):
+ * a `review:plan-only` PR (a critique pass, a lesson, a decision record) is
+ * reviewed and merged like any other PR.
+ */
+export const PLAN_LABELS = Object.freeze(['plot'])
 
-/** A title that names a plan PR. */
-export const PLAN_TITLE = /^(plot|plan)\s*[:(]/i
+/** A title that names a plan PR: `plot:` or `plot(...)` only (D101). */
+export const PLAN_TITLE = /^plot\s*[:(]/i
 
 /** Labels that hold a PR for T or the loop. */
 export const HOLD_LABELS = Object.freeze(['review:needs-T', 'loop:pr-stuck', 'eval:seed', 'no-auto-merge'])

@@ -1,0 +1,13 @@
+{
+  "//": "Phase RS1: the package reports present on 2026-10-19, already handled (their findings shipped or were filed). scripts/report-sweep.mjs files a CRITIQUE row for any report not listed here and not cited in plan/CRITIQUE.md or plan/AUDIT.md. A new report is filed, never added here.",
+  "reports": [
+    "axiomancer-mechanics/docs/reports/FIRST-MAP-AUDIT.md",
+    "axiomancer-mechanics/docs/reports/NARRATIVE-ENCOUNTER-AUDIT.md",
+    "axiomancer-mechanics/docs/reports/deck-tuning-2026-09-04.md",
+    "axiomancer-mechanics/docs/reports/playtest-20260918-011321.md",
+    "axiomancer-mechanics/docs/reports/shilling-economy-calibration-2026-08-16.md",
+    "axiomancer-mobile/docs/reports/PLAYTEST_BUGS_2026-09-18.md",
+    "axiomancer-mobile/docs/reports/UI_FRESH_EYES_2026-09-12.md",
+    "axiomancer-mobile/docs/reports/UI_FRESH_EYES_SWARM_2026-09-12.md"
+  ]
+}
