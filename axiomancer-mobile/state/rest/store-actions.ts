@@ -3,9 +3,10 @@
  *
  * The pure engine lives in `axiomancer-mechanics` (World/RestChoice); these
  * wrappers thread a rest node's one irreversible choice — `rest` (free,
- * flat 25% heal) / `cut` (paid deck removal) — through the mobile `rest`
- * slice and, at claim, apply the settled ledger to the real `GameState`:
- * heal, shillings spent, `cardRemovals` incremented, and the scar mend.
+ * flat 25% heal) / `upgrade` (free, one card upgraded) / `cut` (paid deck
+ * removal) — through the mobile `rest` slice and, at claim, apply the
+ * settled ledger to the real `GameState`: heal, the upgraded copy, shillings
+ * spent, `cardRemovals` incremented, and the scar mend.
  */
 
 import type { GameState } from '@mechanics';
@@ -18,7 +19,9 @@ import {
     createRestChoiceSession,
     DEFAULT_REST_SHELTER,
     pickRestChoiceCut as engineCut,
+    pickRestChoiceUpgrade as engineUpgrade,
     removeCardFromCombatDeck,
+    replaceCard,
 } from '@mechanics';
 import type {
     Character,
@@ -94,12 +97,21 @@ export function pickRestChoiceCutAction(store: AppStore, cardId: string): void {
     setSession(store, engineCut(s, cardId));
 }
 
+/** upgrade-pick -> outcome. `cardId` must be one of `session.upgradableCardIds`. */
+export function pickRestChoiceUpgradeAction(store: AppStore, cardId: string): void {
+    const s = store.getState().rest?.session;
+    if (!s) return;
+    setSession(store, engineUpgrade(s, cardId));
+}
+
 export interface ClaimRestChoiceResult {
     applied: boolean;
     chosen: RestChoiceOfferId | null;
     healed: number;
     spent: number;
     removedCardId: string | null;
+    /** The upgraded id now in the deck (`<id>+`), or null when no upgrade was taken. */
+    upgradedToCardId: string | null;
     /** Max-VITAE mended back from hazard scars (any rest, inn or camp). */
     scarMended: number;
 }
@@ -110,6 +122,7 @@ const NOOP_CLAIM: ClaimRestChoiceResult = Object.freeze({
     healed: 0,
     spent: 0,
     removedCardId: null,
+    upgradedToCardId: null,
     scarMended: 0,
 });
 
@@ -145,6 +158,17 @@ export function claimRestChoiceOutcomeAction(store: AppStore): ClaimRestChoiceRe
         if (removal.ok) {
             player = removal.player;
             flags = removal.flags;
+        }
+    }
+
+    // An `upgrade` swaps exactly one owned copy for its upgraded id; the
+    // other copies stay as they were.
+    let upgradedToCardId: string | null = null;
+    if (outcome.chosen === 'upgrade' && outcome.upgradedCardId && outcome.upgradedToCardId) {
+        const upgraded = replaceCard(player, outcome.upgradedCardId, outcome.upgradedToCardId);
+        if (upgraded !== player) {
+            player = upgraded;
+            upgradedToCardId = outcome.upgradedToCardId;
         }
     }
 
@@ -184,6 +208,7 @@ export function claimRestChoiceOutcomeAction(store: AppStore): ClaimRestChoiceRe
         healed,
         spent: outcome.spent,
         removedCardId: outcome.removedCardId,
+        upgradedToCardId,
         scarMended,
     };
 }

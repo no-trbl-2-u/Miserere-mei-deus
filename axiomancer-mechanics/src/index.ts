@@ -214,6 +214,7 @@ export {
     // Card upgrades (Phase UP1b): the law by rarity and the id helpers
     UPGRADE_LIMITS, upgradeCard, upgradeLimit, upgradeLevel, canUpgrade,
     baseCardId, isUpgradedCardId, getUpgradedCardById,
+    nextUpgradeId, upgradableCardIds,
     // Card lanes (the dev menu's CARDS section)
     CARD_LANES, GREY_LANE, getCardLane, laneRewardPool,
     // Runtime enumeration of the CardSpecialMechanic union, bound to
@@ -373,11 +374,11 @@ export type {
     BlacksmithVariantOffer, BlacksmithSession,
 } from './World/Blacksmith';
 // Rest-choice encounter — the rest node's one irreversible choice of
-// `rest` / `cut`, composing the Cards/card.removal primitive rather than
+// `rest` / `upgrade` / `cut`, composing the Cards/card.removal primitive rather than
 // rebuilding it.
 export {
     RESTCHOICE_TUNING, createRestChoiceSession, previewRestChoiceHeal,
-    chooseRestChoiceOffer, pickRestChoiceCut, claimRestChoiceOutcome,
+    chooseRestChoiceOffer, pickRestChoiceCut, pickRestChoiceUpgrade, claimRestChoiceOutcome,
 } from './World/RestChoice';
 export type {
     RestChoiceOfferId, RestChoiceSession,

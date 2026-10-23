@@ -89,6 +89,7 @@ import {
     chooseRestChoiceOfferAction,
     claimRestChoiceOutcomeAction,
     pickRestChoiceCutAction,
+    pickRestChoiceUpgradeAction,
     type BeginRestOptions,
     type ClaimRestChoiceResult,
 } from './rest/store-actions';
@@ -455,11 +456,13 @@ export interface AppActions {
 
     /** Start a rest node. Returns false if one is underway. */
     beginRest: (options?: BeginRestOptions) => boolean;
-    /** Commit one of the two offers. Locks the other. */
+    /** Commit one of the three offers. Locks the others. */
     chooseRestChoiceOffer: (offer: RestChoiceOfferId) => void;
     /** Pick a card to remove (`cut` sub-step). Must be one of the offered ids. */
     pickRestChoiceCut: (cardId: string) => void;
-    /** Confirm the settled ledger; applies heal/spend/removal and persists. */
+    /** Pick a card to upgrade (`upgrade` sub-step). Must be one of the upgradable ids. */
+    pickRestChoiceUpgrade: (cardId: string) => void;
+    /** Confirm the settled ledger; applies heal/upgrade/spend/removal and persists. */
     claimRestOutcome: () => ClaimRestChoiceResult;
 
     // -----------------------------------------------------------------
@@ -775,6 +778,7 @@ export function createAppActions(store: AppStore): AppActions {
         beginRest: (options) => beginRestAction(store, options),
         chooseRestChoiceOffer: (offer) => chooseRestChoiceOfferAction(store, offer),
         pickRestChoiceCut: (cardId) => pickRestChoiceCutAction(store, cardId),
+        pickRestChoiceUpgrade: (cardId) => pickRestChoiceUpgradeAction(store, cardId),
         claimRestOutcome: () => claimRestChoiceOutcomeAction(store),
         beginLootCacheChoice: (options) => beginLootCacheChoiceAction(store, options),
         chooseLootCacheChoiceOffer: (offer) => chooseLootCacheChoiceOfferAction(store, offer),

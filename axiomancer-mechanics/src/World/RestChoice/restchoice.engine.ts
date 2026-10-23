@@ -1,10 +1,12 @@
 /**
- * Rest-choice engine ("rest" / "cut") — pure engine transitions.
+ * Rest-choice engine ("rest" / "upgrade" / "cut") — pure engine transitions.
  *
  * A rest node is one irreversible choice: "Rest: Heal 25% health or remove a
- * card." State machine:
+ * card", or give up the heal to upgrade one card (Phase UP1d). State machine:
  *
- *   offer ──chooseRestChoiceOffer('rest')────────────────▶ outcome
+ *   offer ──chooseRestChoiceOffer('rest')────────────────────────────▶ outcome
+ *     │
+ *     ├──chooseRestChoiceOffer('upgrade')──▶ upgrade-pick ──pickRestChoiceUpgrade──▶ outcome
  *     │
  *     └──chooseRestChoiceOffer('cut')────▶ cut-pick ──pickRestChoiceCut──▶ outcome
  *                                                                              │
@@ -16,12 +18,15 @@
  * itself — that primitive needs the full `Character` (which list, rewards
  * or known, actually owns the copy) that this engine never carries. It only
  * names the picked card; the host performs the real removal against its own
- * `Character` at claim — see `restchoice.types.ts` header.
+ * `Character` at claim — see `restchoice.types.ts` header. `upgrade` is the
+ * same: it names the card and the id it becomes, and the host's `replaceCard`
+ * swaps the one copy.
  */
 
 import { RESTCHOICE_TUNING } from './restchoice.content';
 import type { SeedInput } from '../seed';
 import { MIN_COMBAT_DECK_SIZE, cardRemovalPrice } from '../../Cards/card.removal';
+import { nextUpgradeId, upgradableCardIds } from '../../Cards/card-upgrades';
 import type {
     RestChoiceOffer,
     RestChoiceOfferId,
@@ -49,10 +54,22 @@ export interface CreateRestChoiceOptions {
     description?: string | null;
 }
 
-function buildOffers(currency: number, deckSize: number, removals: number): RestChoiceOffer[] {
+function buildOffers(
+    currency: number,
+    deckSize: number,
+    removals: number,
+    upgradableCount: number,
+): RestChoiceOffer[] {
     const cutPrice = cardRemovalPrice(removals);
     return [
         { id: 'rest', cost: 0 },
+        {
+            id: 'upgrade',
+            cost: 0,
+            ...(upgradableCount === 0
+                ? { disabledReason: 'no card in the deck can take another upgrade' }
+                : {}),
+        },
         {
             id: 'cut',
             cost: cutPrice,
@@ -70,6 +87,7 @@ export function createRestChoiceSession(seed: SeedInput, opts: CreateRestChoiceO
     const removals = typeof opts.removals === 'number' && Number.isFinite(opts.removals) && opts.removals > 0
         ? Math.floor(opts.removals)
         : 0;
+    const upgradable = upgradableCardIds(opts.deckCardIds);
     return {
         phase: 'offer',
         shelter: opts.shelter,
@@ -77,8 +95,9 @@ export function createRestChoiceSession(seed: SeedInput, opts: CreateRestChoiceO
         health: opts.health,
         currency: opts.currency,
         deckCardIds: opts.deckCardIds.slice(),
+        upgradableCardIds: upgradable,
         removals,
-        offers: buildOffers(opts.currency, opts.deckCardIds.length, removals),
+        offers: buildOffers(opts.currency, opts.deckCardIds.length, removals, upgradable.length),
         description: opts.description?.trim() || null,
         outcome: null,
         seed,
@@ -130,8 +149,10 @@ export function chooseRestChoiceOffer(s: RestChoiceSession, offer: RestChoiceOff
         const healed = previewRestChoiceHeal(s);
         return sealOutcome(s, {
             chosen: 'rest', healed, spent: 0, removedCardId: null, removals: s.removals,
+            upgradedCardId: null, upgradedToCardId: null,
         });
     }
+    if (offer === 'upgrade') return { ...s, phase: 'upgrade-pick' };
     return { ...s, phase: 'cut-pick' };
 }
 
@@ -154,6 +175,35 @@ export function pickRestChoiceCut(s: RestChoiceSession, cardId: string): RestCho
         spent: cardRemovalPrice(s.removals),
         removedCardId: cardId,
         removals: s.removals + 1,
+        upgradedCardId: null,
+        upgradedToCardId: null,
+    });
+}
+
+// ---------------------------------------------------------------------------
+// Upgrade sub-step
+// ---------------------------------------------------------------------------
+
+/**
+ * upgrade-pick → outcome. Only a card actually offered
+ * (`upgradableCardIds`) is a valid pick; anything else is a silent no-op,
+ * the same contract as the cut. Heals nothing and costs nothing: the night
+ * spent at the work is the price. The real `replaceCard` call is the
+ * host's, at claim.
+ */
+export function pickRestChoiceUpgrade(s: RestChoiceSession, cardId: string): RestChoiceSession {
+    if (s.phase !== 'upgrade-pick') return s;
+    if (!s.upgradableCardIds.includes(cardId)) return s;
+    const to = nextUpgradeId(cardId);
+    if (to === undefined) return s;
+    return sealOutcome(s, {
+        chosen: 'upgrade',
+        healed: 0,
+        spent: 0,
+        removedCardId: null,
+        removals: s.removals,
+        upgradedCardId: cardId,
+        upgradedToCardId: to,
     });
 }
 

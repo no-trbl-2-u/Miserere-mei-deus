@@ -1,7 +1,7 @@
 /**
- * Rest-choice encounter ("rest" / "cut") — Public API.
+ * Rest-choice encounter ("rest" / "upgrade" / "cut") — Public API.
  *
- * A rest node is one irreversible choice of two. The
+ * A rest node is one irreversible choice of three. The
  * engine never reads `GameState`; the host settles the outcome ledger
  * against the real `Character` at claim time — see `restchoice.types.ts`
  * for why `cut` names a card rather than removing it itself.
@@ -22,5 +22,6 @@ export {
     previewRestChoiceHeal,
     chooseRestChoiceOffer,
     pickRestChoiceCut,
+    pickRestChoiceUpgrade,
     claimRestChoiceOutcome,
 } from './restchoice.engine';

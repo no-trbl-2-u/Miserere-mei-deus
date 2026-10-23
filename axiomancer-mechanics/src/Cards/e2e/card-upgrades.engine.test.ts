@@ -28,6 +28,8 @@ import {
     isUpgradedCardId,
     upgradeCard,
     UPGRADE_SUFFIX,
+    nextUpgradeId,
+    upgradableCardIds,
 } from '../card-upgrades';
 import type { Card } from '../types';
 
@@ -381,5 +383,22 @@ describe('getUpgradedCardById', () => {
         expect(baseCardId('spoiled-poultice')).toBe('spoiled-poultice');
         expect(isUpgradedCardId('spoiled-poultice+')).toBe(true);
         expect(isUpgradedCardId('spoiled-poultice')).toBe(false);
+    });
+});
+
+describe('picking a card to upgrade (Phase UP1d)', () => {
+    it('nextUpgradeId appends one + while the card has an upgrade left', () => {
+        expect(nextUpgradeId('grey-strike')).toBe('grey-strike+');
+        expect(nextUpgradeId('grey-strike+')).toBeUndefined(); // a common takes one
+        expect(nextUpgradeId('bp-e-08n++')).toBe('bp-e-08n+++'); // the rare takes three
+        expect(nextUpgradeId('bp-e-08n+++')).toBeUndefined();
+        expect(nextUpgradeId('no-such-card')).toBeUndefined();
+    });
+
+    it('upgradableCardIds keeps each upgradable id once, in first-seen order', () => {
+        expect(upgradableCardIds([
+            'grey-ward', 'grey-strike', 'grey-ward', 'grey-strike+', 'no-such-card', 'bp-e-08n+',
+        ])).toEqual(['grey-ward', 'grey-strike', 'bp-e-08n+']);
+        expect(upgradableCardIds([])).toEqual([]);
     });
 });

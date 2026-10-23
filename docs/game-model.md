@@ -206,8 +206,10 @@ keyword (`EnemyKeyword = never`).
   quests; that plumbing is kept and tested with fixtures.
 - **Currency:** shillings.
 - **Rest** offers one choice (`World/RestChoice/`): heal
-  `restHealFraction` = 25% of maximum VITAE, or cut a card for 5, 10, 15 …
-  shillings (`CARD_REMOVAL_PRICING`).
+  `restHealFraction` = 25% of maximum VITAE, upgrade one card the player
+  picks (free, no heal; the shared upgrade screen shows it before and after,
+  beside a locked "???" slot), or cut a card for 5, 10, 15 … shillings
+  (`CARD_REMOVAL_PRICING`).
 - **The Anvil** (one per region, near its exit; `ANVIL_VERB_PRICING`,
   `World/Blacksmith/blacksmith.engine.ts`): HONE turns a miss face to mana
   (3 shillings), TEMPER a mana face to special (5), SWAP changes a die's
@@ -293,14 +295,14 @@ without a ruling from T.
 - No alignment, GRACE or faction reputation.
 - No bonus for paying with the card's own colour: the die powers the card
   and adds nothing (D79). The gold die stays wild.
-- No card upgrade is granted in play yet, and no die growth beyond the Anvil
-  (D20, parked). The upgrade law exists (Phase UP1b, `Cards/card-upgrades.ts`):
+- No die growth beyond the Anvil (D20, parked). The rest site grants card
+  upgrades (Phase UP1d); the upgrade law (Phase UP1b, `Cards/card-upgrades.ts`):
   rarity limits upgrades (common 1, uncommon 2, rare 3) as `<id>+`, `++`,
   `+++`; each raises payoffs (Blood Price programs through `programAt`) and
   never a cost; `REPLACE_CARD` swaps one owned copy. Blood for Blood, the
   one rare, takes three (its FREE DEAL grows; PAID's X cap rises and the
-  third is 4X: the one cost an upgrade grows, by T's ruling). The rest site, anvil and
-  elite grants are UP1d to UP1f.
+  third is 4X: the one cost an upgrade grows, by T's ruling). The anvil and elite grants
+  are UP1e and UP1f.
 - No measured balance baseline (D57). A balance question gets "not
   measured".
 

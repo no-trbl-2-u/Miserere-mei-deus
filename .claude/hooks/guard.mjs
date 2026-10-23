@@ -87,7 +87,10 @@ const RULES = [
     message:
       'guard: git commit -F/--file is forbidden — the guard lints commit ' +
       'messages from the command string (AGENTS.md standing rule 2), and a ' +
-      'message file is invisible to it. Write the message inline with -m.',
+      'message file is invisible to it. Write the message inline with -m. ' +
+      'The whole command was refused, so nothing in it ran (a `git add` ' +
+      'chained before the commit did not happen either): re-run the full ' +
+      'chain, not just the commit.',
   },
   {
     name: 'trailer-or-emoji-in-commit',

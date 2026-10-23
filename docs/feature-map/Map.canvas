@@ -1405,6 +1405,18 @@
 			"color": "6"
 		},
 		{
+			"id": "coupling:route:rest->area:Combat",
+			"fromNode": "route:rest",
+			"toNode": "area:Combat",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:rest->area:Effects",
+			"fromNode": "route:rest",
+			"toNode": "area:Effects",
+			"color": "6"
+		},
+		{
 			"id": "coupling:route:rest->area:Game",
 			"fromNode": "route:rest",
 			"toNode": "area:Game",
