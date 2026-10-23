@@ -818,7 +818,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/__tests__/RestGate.test.tsx, axiomancer-mobile/state/e2e/rest-village-column.critique-71.test.tsx"
+        "source": "axiomancer-mobile/components/__tests__/RestGate.test.tsx, axiomancer-mobile/state/e2e/rest-upgrade.UP1d.test.tsx, axiomancer-mobile/state/e2e/rest-village-column.critique-71.test.tsx"
       },
       "needsPitch": {
         "value": true,
@@ -2107,12 +2107,6 @@
       "kind": "coupling",
       "from": "route:(tabs)/deck",
       "to": "area:Cards",
-      "file": "axiomancer-mobile/state/presenters/card-program.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:(tabs)/deck",
-      "to": "area:Cards",
       "file": "axiomancer-mobile/state/presenters/card-rarity.engine.ts"
     },
     {
@@ -2126,12 +2120,6 @@
       "from": "route:(tabs)/deck",
       "to": "area:Cards",
       "file": "axiomancer-mobile/state/presenters/deck.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:(tabs)/deck",
-      "to": "area:Combat",
-      "file": "axiomancer-mobile/state/presenters/card-program.engine.ts"
     },
     {
       "kind": "coupling",
@@ -2719,12 +2707,6 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Cards",
-      "file": "axiomancer-mobile/state/presenters/card-program.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:combat-encounter",
-      "to": "area:Cards",
       "file": "axiomancer-mobile/state/presenters/card-rarity.engine.ts"
     },
     {
@@ -2804,12 +2786,6 @@
       "from": "route:combat-encounter",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:combat-encounter",
-      "to": "area:Combat",
-      "file": "axiomancer-mobile/state/presenters/card-program.engine.ts"
     },
     {
       "kind": "coupling",
@@ -4039,7 +4015,25 @@
       "kind": "coupling",
       "from": "route:rest",
       "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/card-upgrade.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:rest",
+      "to": "area:Cards",
       "file": "axiomancer-mobile/state/presenters/rest.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:rest",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/card-upgrade.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:rest",
+      "to": "area:Effects",
+      "file": "axiomancer-mobile/state/presenters/card-upgrade.engine.ts"
     },
     {
       "kind": "coupling",

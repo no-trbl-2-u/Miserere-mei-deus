@@ -20,6 +20,7 @@ export {
 export {
     UPGRADE_LIMITS, upgradeCard, upgradeLimit, upgradeLevel, canUpgrade,
     baseCardId, isUpgradedCardId, getUpgradedCardById,
+    nextUpgradeId, upgradableCardIds,
 } from './card-upgrades';
 
 export {

@@ -329,3 +329,31 @@ export function getUpgradedCardById(id: string): Card | undefined {
     const base = getCardById(baseCardId(id));
     return base ? upgradedAt(base, Math.max(1, upgradeLevel(id))) : undefined;
 }
+
+// ─── Picking a card to upgrade (Phase UP1d) ─────────────────────────────────
+
+/**
+ * The id one upgrade turns `id` into (`'some-card'` -> `'some-card+'`), or
+ * undefined when the card is unknown or already at its rarity's limit. A
+ * picker uses it to refuse a card before it offers it.
+ */
+export function nextUpgradeId(id: string): string | undefined {
+    const card = getCardById(id);
+    return card && canUpgrade(card) ? `${id}${UPGRADE_SUFFIX}` : undefined;
+}
+
+/**
+ * The distinct ids in `ids` that can still take an upgrade, in first-seen
+ * order. An unknown id, a Curse and a card at its limit drop out, so an
+ * upgrade screen built on this lists only what one more upgrade can reach.
+ */
+export function upgradableCardIds(ids: readonly string[]): string[] {
+    const seen = new Set<string>();
+    const out: string[] = [];
+    for (const id of ids) {
+        if (seen.has(id)) continue;
+        seen.add(id);
+        if (nextUpgradeId(id) !== undefined) out.push(id);
+    }
+    return out;
+}
