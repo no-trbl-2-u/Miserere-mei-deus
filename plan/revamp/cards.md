@@ -147,6 +147,9 @@ relics. This replaces the stat-threshold idea.
   reward) and elites (a low chance of a random relic).
 - **The combat card reward** offers 3 cards: 2 completely random and 1 guaranteed lane card, drawn from a lane an equipped relic
   opens. With no lane relic equipped, all 3 options are random.
+  **Amended by D100 (lane relics stack):** with 3-4 relics of one lane
+  equipped, 2 of the 3 are from that lane; with all 5 relic slots holding
+  that lane's relics, all 3 are.
 
 **The first lane opens with the first lane relic** (T, D71). There is no
 starting relic; until a quest or elite gives one, the deck is grey plus
