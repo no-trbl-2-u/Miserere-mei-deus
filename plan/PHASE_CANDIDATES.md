@@ -57,6 +57,14 @@
 - conflicts: the "Bias" and "Last pass" headers at the top of each queue are the conflict magnet; they move to a tiny separate file either way.
 
 
+### [ ] [score 4.0] Run verify-mechanics when a mobile file a mechanics test reads changes
+- proposed: 2026-10-23, `/ship-a-phase` UP1b retro (lessons at the 40-open cap, so filed here instead)
+- source signals: `trial-set-removal.engine.test.ts` scans `axiomancer-mobile/` for `bp-` ids, but `verify-mechanics.yml`'s `paths:` filter leaves out `axiomancer-mobile/**`. PR #796 (mobile art only) added `bp-` ids to `assets/images/cards/index.ts` and merged green, so `main` held a red mechanics test no run had seen. UP1b's PR #824 found it and fixed it.
+- rationale: a cross-package test can only guard what its workflow runs on; any mobile-only PR can break it unseen and land the red on the next mechanics PR.
+- proposed scope: 1 small phase. Either add the mobile paths that mechanics tests read to `verify-mechanics.yml`'s filter, or a root test that lists every mechanics test reading outside its package and checks the filter covers those paths.
+- estimated phases: 1
+- conflicts: none. CI only; no game code, content, rule, card or keyword (D88).
+
 ### [ ] [score 3.5] Stop `<rev>:<path>` git reads from breaking on Windows (lesson `msys-rev-path`, seen 2x)
 - proposed: 2026-10-21, `/plot` AD1 retro (lesson `msys-rev-path`, seen 2×)
 - source signals: `plan/lessons.md` `msys-rev-path`, seen 2×, last 2026-10-21. Git Bash path conversion rewrites `git show origin/main:<path>` to `origin\main;<path>` and git reports "ambiguous argument". It bit twice inside one plot session reading `main`'s build plan and workflows, costing a retry each time; the same family as `sed-flattens-crlf` and `isolated-worktree-shell` — this box's shell, not the repo's logic.
