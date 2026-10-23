@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rehearsal Ballot</title>
+<!--
+  Elementalist ballot (second family rehearsal, D73/D74 shape): Payoff, Engine and Misc tabs, 90 candidates.
+  Self-contained: no network, no storage. Open in any browser.
+
+  How it works:
+    1. Every candidate card is rendered from the CARDS array below.
+    2. Tick the checkbox on each card you KEEP (any number per slot;
+       ticking two in one slot reads as "merge these").
+    3. Optional: type a per-slot note (a TWEAK number, a merge rule).
+    4. Press "Generate" — a plain-text verdict sheet appears; copy it
+       and paste it back to Claude.
+  Unticked cards are CUT by default (plans §1: CUT is the default).
+-->
+<style>
+  /* ---- Colour tokens (light default, dark via media query or toggle) ---- */
+  :root {
+    --bg: #efe9dc;          /* page: aged paper */
+    --ink: #1b1714;         /* body text */
+    --muted: #6b6259;       /* secondary text */
+    --card: #fbf7ee;        /* card face */
+    --edge: #2a2420;        /* card border */
+    --blood: #8e1b1b;       /* rehearsal banner accent */
+    --fire: #b5401a; --frost: #2f6f9e; --storm: #6b4fa0;
+    --free: #3d5a40;        /* FREE line accent */
+    --paid: #7a5a12;        /* PAID line accent */
+    --art: #d9cfbd;         /* art box fill */
+    --sel: #8e1b1b;         /* selected card ring */
+    --btn: #1b1714;
+    --btn-ink: #fbf7ee;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141110; --ink: #ece4d6; --muted: #a39887; --card: #1f1a17;
+      --edge: #ece4d6; --blood: #e0504a; --free: #8fbf8f; --paid: #e0b54a;
+      --art: #2c2521; --sel: #e0504a; --btn: #ece4d6; --btn-ink: #141110;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141110; --ink: #ece4d6; --muted: #a39887; --card: #1f1a17;
+    --edge: #ece4d6; --blood: #e0504a; --free: #8fbf8f; --paid: #e0b54a;
+    --art: #2c2521; --sel: #e0504a; --btn: #ece4d6; --btn-ink: #141110;
+  }
+
+  /* ---- Layout ---- */
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 16px; background: var(--bg); color: var(--ink);
+    font: 15px/1.45 Georgia, "Times New Roman", serif;
+  }
+  header, main, footer { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; letter-spacing: .02em; }
+  .sub { color: var(--muted); margin: 0 0 12px; }
+  .legend { font-size: .9rem; color: var(--muted); margin-bottom: 16px; }
+  .legend b { color: var(--ink); }
+  .theme { float: right; }
+
+  /* One slot = heading + role + row of candidate cards + note field */
+  .slot { margin: 22px 0 8px; padding-top: 10px; border-top: 2px solid var(--edge); }
+  .slot h2 { font-size: 1.1rem; margin: 0; }
+  .slot .role { color: var(--muted); margin: 2px 0 10px; }
+  .row { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+  .note { width: 100%; margin-top: 8px; padding: 6px 8px; font: inherit;
+          background: var(--card); color: var(--ink); border: 1px solid var(--muted); border-radius: 4px; }
+
+  /* ---- Card face ---- */
+  label.card {
+    display: flex; flex-direction: column; cursor: pointer;
+    background: var(--card); border: 2px solid var(--edge); border-radius: 10px;
+    padding: 10px; min-height: 300px; position: relative;
+    transition: box-shadow .12s, transform .12s;
+  }
+  label.card:hover { transform: translateY(-2px); }
+  label.card.on { box-shadow: 0 0 0 4px var(--sel); }
+  .top { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
+  .name { font-weight: bold; }
+  .type { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+  .art {
+    margin: 8px 0; height: 96px; border: 1px solid var(--edge); border-radius: 6px;
+    background: repeating-linear-gradient(45deg, var(--art) 0 6px, transparent 6px 12px);
+    display: grid; place-items: center; font-size: 2.6rem;
+  }
+  .line { margin: 4px 0; font-size: .92rem; }
+  .tag { display: inline-block; min-width: 42px; font-size: .7rem; font-weight: bold;
+         letter-spacing: .08em; padding: 1px 5px; border-radius: 3px; margin-right: 4px;
+         color: var(--card); vertical-align: 1px; }
+  .tag.free { background: var(--free); }
+  .tag.paid { background: var(--paid); }
+  .kw { font-variant: small-caps; font-weight: bold; }
+  .kw.fire { color: var(--fire); }
+  .kw.frost { color: var(--frost); }
+  .kw.storm { color: var(--storm); }
+  :root[data-theme="dark"] { --fire: #ff8a5c; --frost: #7cc4f5; --storm: #c3a6ff; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fire: #ff8a5c; --frost: #7cc4f5; --storm: #c3a6ff; } }
+  .dur { display: flex; gap: 4px; margin: 2px 0 4px; }
+  .dur .tag { min-width: 0; }
+  .trig .ticon { display: inline-block; width: 1.3em; }
+  .why { margin-top: auto; padding-top: 8px; font-size: .8rem; color: var(--muted); font-style: italic; }
+  .pick { position: absolute; top: 8px; right: 8px; width: 20px; height: 20px; accent-color: var(--sel); }
+  .top { padding-right: 26px; }
+
+  .rehearsal { margin: 0 0 10px; padding: 8px 10px; border: 2px dashed var(--blood); border-radius: 6px; color: var(--blood); }
+  /* ---- Tabs ---- */
+  .tabs { max-width: 1100px; margin: 0 auto; display: flex; gap: 6px; flex-wrap: wrap;
+          position: sticky; top: 0; background: var(--bg); padding: 8px 0; z-index: 2; }
+  .tabs button { margin: 0; background: transparent; color: var(--ink); border: 2px solid var(--edge); }
+  .tabs button[aria-selected="true"] { background: var(--btn); color: var(--btn-ink); }
+  .tabs .n { font-size: .8rem; opacity: .8; margin-left: 4px; }
+  .panel[hidden] { display: none; }
+  .blurb { color: var(--muted); margin: 10px 0 0; }
+  /* ---- Footer / output ---- */
+  footer { margin-top: 28px; padding-top: 12px; border-top: 2px solid var(--edge); }
+  textarea { width: 100%; font: 13px/1.4 ui-monospace, Menlo, Consolas, monospace;
+             background: var(--card); color: var(--ink); border: 1px solid var(--muted);
+             border-radius: 4px; padding: 8px; }
+  #general { min-height: 60px; }
+  #out { min-height: 220px; margin-top: 10px; }
+  button { font: inherit; padding: 8px 18px; border-radius: 6px; border: 0;
+           background: var(--btn); color: var(--btn-ink); cursor: pointer; margin: 8px 8px 0 0; }
+  .count { color: var(--muted); margin-left: 6px; }
+</style>
+</head>
+<body>
+<header>
+  <button class="theme" id="themeBtn" type="button" aria-label="Toggle colour theme">◐</button>
+  <p class="rehearsal" role="note"><b>REHEARSAL ONLY</b> — a practice run of the card process. These are draft candidates, not live cards; nothing here ships.</p>
+  <h1>The Elementalist — rehearsal ballot</h1>
+  <p class="sub">Second family rehearsal, repeating the Blood Price process. Family: the Elementalist, "I bend the elements." Three sub-lanes, one per tab: Payoff, Engine, Misc. Each has 10 slots × 3 candidates (90 cards in all); the target is about 1 survivor per slot, 30 in all. Element tags: 🔥 Fire, ❄ Frost, ⚡ Storm; two tags mark a pair bridge.</p>
+  <p class="legend">
+    <b>Tick</b> each card you keep. Ticking two in one slot means "merge". <b>Unticked = CUT</b>.
+    Use a slot's note box for a TWEAK (one number) or a merge rule.<br>
+    <b class="kw fire">INFERNO n</b>: both burn. The foe loses n VITAE at the start of its turn; you lose half (rounded down) at the start of yours; plain loss, and it <b>can kill you</b>. <i>Placeholder math: 3 turns per application; the split and duration are not ruled yet.</i> "On the foe only" / "you take" lines burn one side.<br>
+    <b class="kw frost">CHILL n</b>: the foe's attacks deal n less; it drops by 1 each round; more CHILL adds to it.
+    <b class="kw frost">FROZEN</b>: while CHILL is at least the foe's attack, the foe is FROZEN: the next DEAL it takes is doubled, then FROZEN ends but the CHILL stays (it can re-freeze every turn).<br>
+    <b class="kw storm">STORM n</b>: the foe loses n VITAE at the start of its turn, then the STORM grows by 1; it lasts all combat; more STORM adds to it.
+    <b class="kw storm">DRAW n</b>: draw n cards (a new shared keyword).
+    <b>BEND</b>: turn one element on the foe into another.<br>
+    <b>DEAL</b>: damage. <b>GUARD</b>: block. <b>HEAL</b>: restore VITAE. <b>VULNERABLE</b>: the foe takes more damage from DEALs.
+    Numbers are base values before stat scaling. For reference, A Plain Blow is FREE DEAL 2 / PAID DEAL 5; Blood Price's Forfeit Strike is SACRIFICE 2, DEAL 7 / SACRIFICE 4, DEAL 16.<br>
+    <b>Globals:</b> FREE ⏳3 = in play 3 turns, PAID ∞ = rest of combat; all open on ⟳ start of your turn. A PAID line shows only what changes.
+    <b>Scrap floor:</b> no line gives only "gain 1 Conviction".
+  </p>
+</header>
+
+<nav class="tabs" id="tabs" role="tablist" aria-label="Sub-lanes"></nav>
+<main id="slots"></main>
+
+<footer>
+  <label for="general"><b>General notes</b> (optional)</label>
+  <textarea id="general" placeholder="Anything about the lane as a whole…"></textarea>
+  <button id="gen" type="button">Generate</button>
+  <button id="copy" type="button">Copy</button>
+  <span class="count" id="count"></span>
+  <textarea id="out" readonly placeholder="Press Generate, then copy this text back to Claude."></textarea>
+</footer>
+
+<script>
+/* =====================================================================
+   DATA — the ballot. One entry per candidate card.
+   slot: slot code; role: the slot's one-line job (shown once per slot);
+   id: slot + candidate letter; type: Attack | Skill | Spell | Global;
+   glyph: placeholder art; free / paid: the two rules lines (plain text);
+   why: the drafter's one-line rationale.
+   ===================================================================== */
+const TABS = [
+  { key: 'P', name: 'Payoff', blurb: 'Benefits for having the elements up on the foe (and, for Fire, on you).' },
+  { key: 'E', name: 'Engine', blurb: 'Puts INFERNO, CHILL and STORM up and makes them grow; E-10 is the bend.' },
+  { key: 'M', name: 'Misc', blurb: 'Related utility: putting out your own fire, Frost sustain, DRAW, extending the elements.' },
+];
+
+const SLOTS = [
+  // Payoff
+  { slot: 'P-01', el: '🔥', role: 'Attack — DEAL more for the foe\'s INFERNO (capped)', glyph: '🔥' },
+  { slot: 'P-02', el: '🔥', role: 'Attack — a huge DEAL that also sets you burning', glyph: '☄' },
+  { slot: 'P-03', el: '❄', role: 'Skill — GUARD equal to the foe\'s CHILL', glyph: '🛡' },
+  { slot: 'P-04', el: '❄', role: 'Attack — Shatter: PAID spends the CHILL for more', glyph: '❅' },
+  { slot: 'P-05', el: '⚡', role: 'Spell — cash out: the foe pays for its STORM', glyph: '⚡' },
+  { slot: 'P-06', el: '⚡', role: 'Skill — GUARD that grows with the STORM', glyph: '🌀' },
+  { slot: 'P-07', el: '🔥❄', role: 'Attack — a hit built for FROZEN, plus INFERNO (balanced damage)', glyph: '♨' },
+  { slot: 'P-08', el: '❄⚡', role: 'Skill — sustain while CHILL and STORM are both up', glyph: '☂' },
+  { slot: 'P-09', el: '🔥⚡', role: 'Attack — high risk: grows with your own INFERNO and the STORM', glyph: '🌋' },
+  { slot: 'P-10', el: 'all', role: 'Global — rewards each different element on the foe', glyph: '☯' },
+  // Engine
+  { slot: 'E-01', el: '🔥', role: 'Spell — INFERNO (both burn)', glyph: '🔥' },
+  { slot: 'E-02', el: '🔥', role: 'Attack — DEAL, then INFERNO', glyph: '🗡' },
+  { slot: 'E-03', el: '❄', role: 'Spell — CHILL', glyph: '❄' },
+  { slot: 'E-04', el: '❄', role: 'Skill — GUARD and CHILL', glyph: '🧊' },
+  { slot: 'E-05', el: '⚡', role: 'Spell — STORM', glyph: '☁' },
+  { slot: 'E-06', el: '⚡', role: 'Spell — the STORM grows faster', glyph: '🌪' },
+  { slot: 'E-07', el: '⚡', role: 'Skill — DRAW, and add STORM', glyph: '🃏' },
+  { slot: 'E-08', el: '🔥❄', role: 'Spell — fire and frost on the foe, without burning you', glyph: '♨' },
+  { slot: 'E-09', el: '❄⚡', role: 'Global — CHILL and STORM every turn', glyph: '🌨' },
+  { slot: 'E-10', el: 'all', role: 'Spell — BEND: turn one element into another', glyph: '⇄' },
+  // Misc
+  { slot: 'M-01', el: '🔥', role: 'Skill — put yourself out (the Fire safety valve)', glyph: '💧' },
+  { slot: 'M-02', el: '❄', role: 'Skill — HEAL that grows with the foe\'s CHILL', glyph: '✚' },
+  { slot: 'M-03', el: '⚡', role: 'Skill — DRAW', glyph: '🂠' },
+  { slot: 'M-04', el: 'all', role: 'Spell — extend: feed every element already up', glyph: '⏳' },
+  { slot: 'M-05', el: 'all', role: 'Skill — Conviction for each element on the foe', glyph: '✦' },
+  { slot: 'M-06', el: '❄', role: 'Skill — GUARD, better while the foe is FROZEN', glyph: '🛡' },
+  { slot: 'M-07', el: '⚡', role: 'Spell — VULNERABLE and STORM (a cross-lane keyword)', glyph: '🜲' },
+  { slot: 'M-08', el: '⚡', role: 'Global — DRAW every turn', glyph: '🌩' },
+  { slot: 'M-09', el: '🔥', role: 'Skill — pass the flame: move your INFERNO onto the foe', glyph: '🕯' },
+  { slot: 'M-10', el: '⚡', role: 'Skill — eye of the storm: defence from the STORM', glyph: '👁' },
+];
+
+const CARDS = [
+  // P-01
+  { id: 'P-01a', type: 'Attack', free: 'DEAL 4, +1 per INFERNO on the foe (max +6).', paid: 'DEAL 9, +2 per INFERNO on the foe (max +16).', why: 'Reads the burn\'s strength; capped.' },
+  { id: 'P-01b', type: 'Attack', free: 'DEAL 5.', paid: 'DEAL 8, doubled if the foe is burning.', why: 'One yes/no check, no arithmetic.' },
+  { id: 'P-01c', type: 'Attack', free: 'DEAL 3, INFERNO 2.', paid: 'DEAL 8; the foe loses its INFERNO once more, now.', why: 'Sets up, then cashes in a tick early.' },
+  // P-02
+  { id: 'P-02a', type: 'Attack', free: 'DEAL 8; you take INFERNO 2.', paid: 'DEAL 20; you take INFERNO 4.', why: 'The purest risk: a big hit and you burn.' },
+  { id: 'P-02b', type: 'Attack', free: 'DEAL 6.', paid: 'DEAL 18; INFERNO 8 (you and the foe both burn).', why: 'Safe FREE; PAID burns everybody.' },
+  { id: 'P-02c', type: 'Attack', free: 'DEAL 7; you take INFERNO 3.', paid: 'DEAL 8, twice; you take INFERNO 3 after each.', why: 'Two hits for FROZEN or VULNERABLE; you burn twice.' },
+  // P-03
+  { id: 'P-03a', type: 'Skill', free: 'GUARD equal to the foe\'s CHILL (max 8).', paid: 'GUARD twice the foe\'s CHILL (max 20).', why: 'Frost\'s two walls stack: CHILL cuts the hit, GUARD blocks the rest.' },
+  { id: 'P-03b', type: 'Skill', free: 'GUARD 3, CHILL 1.', paid: 'GUARD 6, + the foe\'s CHILL (max +12).', why: 'Never blank, even with no CHILL up.' },
+  { id: 'P-03c', type: 'Skill', free: 'GUARD 4.', paid: 'GUARD 10, or 20 if the foe is FROZEN.', why: 'Rewards hitting the freeze bar.' },
+  // P-04
+  { id: 'P-04a', type: 'Attack', free: 'DEAL 5.', paid: 'Spend all the foe\'s CHILL: DEAL 6, +2 per CHILL spent (max +20).', why: 'Trades your defence for a finisher.' },
+  { id: 'P-04b', type: 'Attack', free: 'DEAL 4, or 8 if the foe has CHILL.', paid: 'DEAL 10; spend half the foe\'s CHILL to DEAL that much again.', why: 'Keeps half the wall.' },
+  { id: 'P-04c', type: 'Attack', free: 'DEAL 3, CHILL 2.', paid: 'DEAL 12. If the foe is FROZEN, it stays FROZEN after this hit.', why: 'One freeze doubles two hits.' },
+  // P-05
+  { id: 'P-05a', type: 'Spell', free: 'The foe loses VITAE equal to its STORM.', paid: 'The foe loses twice its STORM; the STORM ends.', why: 'PAID trades the whole storm for one strike.' },
+  { id: 'P-05b', type: 'Spell', free: 'STORM 1; DEAL equal to the foe\'s STORM.', paid: 'DEAL twice the foe\'s STORM (max 30).', why: 'Goes through DEAL, so FROZEN and VULNERABLE apply: a bridge to Frost.' },
+  { id: 'P-05c', type: 'Spell', free: 'DEAL 3.', paid: 'The foe loses its STORM now (an extra tick); the STORM grows by 1.', why: 'An extra tick that also speeds the storm.' },
+  // P-06
+  { id: 'P-06a', type: 'Skill', free: 'GUARD equal to the foe\'s STORM (max 8).', paid: 'GUARD twice the foe\'s STORM (max 20).', why: 'Storm\'s defensive half.' },
+  { id: 'P-06b', type: 'Skill', free: 'GUARD 3, DRAW 1.', paid: 'GUARD 5, + the foe\'s STORM (max +12). DRAW 1.', why: 'Block plus a card.' },
+  { id: 'P-06c', type: 'Skill', free: 'GUARD 4.', paid: 'GUARD 6, STORM 2.', why: 'A plain block that feeds the storm.' },
+  // P-07
+  { id: 'P-07a', type: 'Attack', free: 'DEAL 5, INFERNO 2.', paid: 'DEAL 10, INFERNO 4; if the foe is FROZEN, the INFERNO is doubled too.', why: 'Shatter and burn.' },
+  { id: 'P-07b', type: 'Attack', free: 'CHILL 2, DEAL 4.', paid: 'DEAL 9, twice; then INFERNO 3.', why: 'The first hit eats FROZEN, then the fire is set.' },
+  { id: 'P-07c', type: 'Attack', free: 'DEAL 4, or 8 if the foe has both CHILL and INFERNO.', paid: 'DEAL 10, or 22 if the foe has both.', why: 'The pair check in its plainest form.' },
+  // P-08
+  { id: 'P-08a', type: 'Skill', free: 'GUARD 4; HEAL 2 if the foe has CHILL and STORM.', paid: 'GUARD 8; HEAL 5 if both are up.', why: 'Long, sustainable defence.' },
+  { id: 'P-08b', type: 'Skill', free: 'GUARD equal to the foe\'s CHILL + STORM (max 10).', paid: 'The same (max 24); this GUARD lasts into your next turn.', why: 'One number from two elements; PAID carries over.' },
+  { id: 'P-08c', type: 'Skill', free: 'HEAL 3.', paid: 'HEAL 4; CHILL 2, STORM 2.', why: 'Heals and keeps both running.' },
+  // P-09
+  { id: 'P-09a', type: 'Attack', free: 'DEAL 4, + your INFERNO (max +6).', paid: 'DEAL 8, + your INFERNO + the foe\'s STORM (max +24).', why: 'The more you burn, the harder you hit.' },
+  { id: 'P-09b', type: 'Attack', free: 'DEAL 5; you take INFERNO 2.', paid: 'DEAL 10; the STORM grows by 2; you take INFERNO 3.', why: 'You burn, the storm speeds up.' },
+  { id: 'P-09c', type: 'Attack', free: 'DEAL 3, STORM 1.', paid: 'DEAL 6, doubled if you are burning and the foe has STORM.', why: 'An all-in check.' },
+  // P-10
+  { id: 'P-10a', type: 'Global', trig: 'turn', body: 'DEAL 2 for each element on the foe.', paidDelta: 'DEAL 3 for each instead.', why: 'Rewards running all three.' },
+  { id: 'P-10b', type: 'Global', trig: 'turn', body: 'If the foe has two or more elements, DEAL 5.', paidDelta: 'DEAL 4 per element instead (two or more).', why: 'Pairs are the goal; one threshold.' },
+  { id: 'P-10c', type: 'Global', trig: 'turn', body: 'GUARD 2 for each element on the foe.', paidDelta: 'DEAL 3 for each instead.', why: 'Mirrors Blood Price P-10c: defence FREE, offence PAID.' },
+  // E-01
+  { id: 'E-01a', type: 'Spell', free: 'INFERNO 4.', paid: 'INFERNO 9.', why: 'The base fire.' },
+  { id: 'E-01b', type: 'Spell', free: 'INFERNO 3, GUARD 2.', paid: 'INFERNO 8, GUARD 5.', why: 'The block offsets your half of the burn.' },
+  { id: 'E-01c', type: 'Spell', free: 'INFERNO 2, DEAL 3.', paid: 'INFERNO 6; you take no INFERNO from this card.', why: 'PAID tilts the whole burn onto the foe.' },
+  // E-02
+  { id: 'E-02a', type: 'Attack', free: 'DEAL 4, then INFERNO 2.', paid: 'DEAL 9, then INFERNO 4.', why: 'Hit and ignite.' },
+  { id: 'E-02b', type: 'Attack', free: 'DEAL 3, then INFERNO 3.', paid: 'DEAL 5, twice; INFERNO 2 after each.', why: 'Two applications for two hits.' },
+  { id: 'E-02c', type: 'Attack', free: 'DEAL 5.', paid: 'DEAL 8, then INFERNO equal to half the damage dealt (max 8).', why: 'The harder the hit, the hotter the fire.' },
+  // E-03
+  { id: 'E-03a', type: 'Spell', free: 'CHILL 3.', paid: 'CHILL 7.', why: 'The base frost.' },
+  { id: 'E-03b', type: 'Spell', free: 'CHILL 2, DRAW 1.', paid: 'CHILL 6, DRAW 1.', why: 'Never a dead card.' },
+  { id: 'E-03c', type: 'Spell', free: 'CHILL 2.', paid: 'CHILL 5; the foe\'s CHILL does not drop next round.', why: 'Slows the thaw.' },
+  // E-04
+  { id: 'E-04a', type: 'Skill', free: 'GUARD 3, CHILL 2.', paid: 'GUARD 7, CHILL 4.', why: 'Both Frost walls in one card.' },
+  { id: 'E-04b', type: 'Skill', free: 'GUARD 4.', paid: 'GUARD 7; GUARD left unused after the foe\'s attack becomes CHILL.', why: 'A block that is never wasted.' },
+  { id: 'E-04c', type: 'Skill', free: 'CHILL 3.', paid: 'CHILL 5, then GUARD equal to the foe\'s CHILL (max 12).', why: 'Order matters: CHILL first, then the GUARD reads it.' },
+  // E-05
+  { id: 'E-05a', type: 'Spell', free: 'STORM 2.', paid: 'STORM 5.', why: 'The base storm.' },
+  { id: 'E-05b', type: 'Spell', free: 'STORM 1, DRAW 1.', paid: 'STORM 3, DRAW 2.', why: 'Storm\'s utility from the start.' },
+  { id: 'E-05c', type: 'Spell', free: 'STORM 2.', paid: 'STORM 2; for the rest of combat it grows by 2 each turn instead of 1.', why: 'A slow start, a faster storm.' },
+  // E-06
+  { id: 'E-06a', type: 'Spell', free: 'The STORM grows by 2 now.', paid: 'The STORM grows by 1 more each turn for the rest of combat.', why: 'The ramp itself.' },
+  { id: 'E-06b', type: 'Spell', free: 'STORM 1; the STORM grows by 1 now.', paid: 'The STORM doubles now (max +15).', why: 'A spike instead of a ramp.' },
+  { id: 'E-06c', type: 'Spell', free: 'DRAW 1; the STORM grows by 1.', paid: 'DRAW 2; the STORM grows by 3.', why: 'Draw and growth together.' },
+  // E-07
+  { id: 'E-07a', type: 'Skill', free: 'DRAW 1, STORM 1.', paid: 'DRAW 2, STORM 2.', why: 'The plain utility card.' },
+  { id: 'E-07b', type: 'Skill', free: 'DRAW 2.', paid: 'DRAW 2, then STORM equal to the cards in your hand (max 5).', why: 'A big hand, a big storm.' },
+  { id: 'E-07c', type: 'Skill', free: 'GUARD 2, DRAW 1.', paid: 'DRAW 2, STORM 3, GUARD 4.', why: 'Utility that also blocks.' },
+  // E-08
+  { id: 'E-08a', type: 'Spell', free: 'CHILL 2; INFERNO 2 on the foe only.', paid: 'CHILL 4; INFERNO 5 on the foe only.', why: 'The frost damps your half of the fire.' },
+  { id: 'E-08b', type: 'Spell', free: 'CHILL 3.', paid: 'CHILL 3; INFERNO 6 on the foe only.', why: 'Safe FREE; the fire only on PAID.' },
+  { id: 'E-08c', type: 'Spell', free: 'CHILL 2, INFERNO 2.', paid: 'Steam: remove your INFERNO; the foe gains that much CHILL and INFERNO.', why: 'Your burn becomes the foe\'s problem twice over.' },
+  // E-09
+  { id: 'E-09a', type: 'Global', trig: 'turn', body: 'CHILL 1, and the STORM grows by 1.', paidDelta: null, why: 'Both slow engines, every turn.' },
+  { id: 'E-09b', type: 'Global', trig: 'turn', body: 'CHILL equal to half the foe\'s STORM (max 4).', paidDelta: 'CHILL equal to the foe\'s STORM (max 6) instead.', why: 'The storm brings the cold.' },
+  { id: 'E-09c', type: 'Global', trig: 'turn', body: 'CHILL 2.', paidDelta: 'Also STORM 1.', why: 'Frost first; PAID adds the storm.' },
+  // E-10
+  { id: 'E-10a', type: 'Spell', free: 'BEND: turn one element on the foe into another, keeping its number.', paid: 'BEND, then that element +3.', why: 'The fantasy card, plain.' },
+  { id: 'E-10b', type: 'Spell', free: 'Choose one: INFERNO 3, CHILL 3 or STORM 2.', paid: 'BEND every element on the foe into one you choose, adding their numbers.', why: 'FREE picks the element; PAID fuses them.' },
+  { id: 'E-10c', type: 'Spell', free: 'DEAL 3.', paid: 'Swap the numbers of two elements on the foe. DRAW 1.', why: 'Safe FREE; PAID rearranges the board.' },
+  // M-01
+  { id: 'M-01a', type: 'Skill', free: 'Remove your INFERNO.', paid: 'Remove your INFERNO; HEAL 5.', why: 'The plain safety valve.' },
+  { id: 'M-01b', type: 'Skill', free: 'GUARD 3; your INFERNO drops by 2.', paid: 'Remove your INFERNO; GUARD equal to what it was.', why: 'Never blank.' },
+  { id: 'M-01c', type: 'Skill', free: 'HEAL 3.', paid: 'Remove your INFERNO; for the rest of combat, INFERNO burns only the foe. EXILE.', why: 'Fire immunity, once per combat.' },
+  // M-02
+  { id: 'M-02a', type: 'Skill', free: 'HEAL 2, + the foe\'s CHILL (max +4).', paid: 'HEAL 4, + twice the foe\'s CHILL (max +12).', why: 'Frost sustain.' },
+  { id: 'M-02b', type: 'Skill', free: 'HEAL 3.', paid: 'HEAL 8; CHILL 2.', why: 'Heal and keep the cold up.' },
+  { id: 'M-02c', type: 'Skill', free: 'HEAL equal to the foe\'s CHILL (max 6).', paid: 'The same (max 15); the CHILL does not drop this round.', why: 'A pure reader.' },
+  // M-03
+  { id: 'M-03a', type: 'Skill', free: 'DRAW 2.', paid: 'DRAW 3, GUARD 3.', why: 'The plain draw.' },
+  { id: 'M-03b', type: 'Skill', free: 'DRAW 1, GUARD 2.', paid: 'DRAW 2; gain 2 Conviction.', why: 'Cards and fuel.' },
+  { id: 'M-03c', type: 'Skill', free: 'DRAW 1, STORM 1.', paid: 'DRAW 2, or 4 if the foe has STORM.', why: 'The storm rewards you with cards.' },
+  // M-04
+  { id: 'M-04a', type: 'Spell', free: 'INFERNO on the foe lasts 1 more turn; CHILL 1; the STORM grows by 1.', paid: 'INFERNO lasts 3 more turns; CHILL 3; the STORM grows by 2.', why: 'Feeds whatever is already up.' },
+  { id: 'M-04b', type: 'Spell', free: 'GUARD 3.', paid: 'Each element on the foe +2.', why: 'Safe FREE.' },
+  { id: 'M-04c', type: 'Spell', free: 'The foe\'s CHILL does not drop this round; DRAW 1.', paid: 'For 2 rounds, no element on the foe weakens or ends.', why: 'Stops the clocks.' },
+  // M-05
+  { id: 'M-05a', type: 'Skill', free: 'Gain 1 Conviction per element on the foe; GUARD 2.', paid: 'Gain 2 Conviction per element on the foe.', why: 'Pairs pay for Conviction cards.' },
+  { id: 'M-05b', type: 'Skill', free: 'GUARD 2.', paid: 'Gain 3 Conviction if the foe has two or more elements; otherwise 2.', why: 'Never blank.' },
+  { id: 'M-05c', type: 'Skill', free: 'DRAW 1; gain 1 Conviction.', paid: 'DRAW 1; gain 2 Conviction per element on the foe (max 6).', why: 'A card plus fuel.' },
+  // M-06
+  { id: 'M-06a', type: 'Skill', free: 'GUARD 4, doubled if the foe is FROZEN.', paid: 'GUARD 9, doubled if the foe is FROZEN.', why: 'The plain rule.' },
+  { id: 'M-06b', type: 'Skill', free: 'GUARD 3, CHILL 1.', paid: 'GUARD 6; if the foe is FROZEN, also HEAL 4.', why: 'A freeze buys a breather.' },
+  { id: 'M-06c', type: 'Skill', free: 'GUARD 5.', paid: 'GUARD 6; this turn the foe is FROZEN if its CHILL is at least half its attack.', why: 'Lowers the freeze bar once.' },
+  // M-07
+  { id: 'M-07a', type: 'Spell', free: 'VULNERABLE +10% for 1 turn, STORM 1.', paid: 'VULNERABLE +25% for 2 turns, STORM 3.', why: 'Setup for DEAL; a STORM tick is plain loss, so VULNERABLE does not touch it.' },
+  { id: 'M-07b', type: 'Spell', free: 'STORM 2.', paid: 'VULNERABLE +5% per STORM on the foe (max +50%) for 2 turns.', why: 'The storm softens the foe.' },
+  { id: 'M-07c', type: 'Spell', free: 'VULNERABLE +10% for 1 turn.', paid: 'VULNERABLE +20% for 2 turns; DRAW 2.', why: 'Setup plus cards.' },
+  // M-08
+  { id: 'M-08a', type: 'Global', trig: 'turn', body: 'DRAW 1.', paidDelta: null, why: 'Steady card advantage.' },
+  { id: 'M-08b', type: 'Global', trig: 'turn', body: 'DRAW 1 if the foe has STORM.', paidDelta: 'Also, the STORM grows by 1.', why: 'Tied to the storm.' },
+  { id: 'M-08c', type: 'Global', trig: 'turn', body: 'STORM 1.', paidDelta: 'Also DRAW 1.', why: 'The storm first; cards on PAID.' },
+  // M-09
+  { id: 'M-09a', type: 'Skill', free: 'Move your INFERNO onto the foe.', paid: 'Move your INFERNO onto the foe, doubled.', why: 'The bend, in fire form.' },
+  { id: 'M-09b', type: 'Skill', free: 'GUARD 3.', paid: 'Move your INFERNO onto the foe; DEAL 5.', why: 'Safe FREE.' },
+  { id: 'M-09c', type: 'Skill', free: 'Move half your INFERNO onto the foe.', paid: 'Move all of it; HEAL what was moved.', why: 'Out of danger, and healed.' },
+  // M-10
+  { id: 'M-10a', type: 'Skill', free: 'GUARD 3, or 6 if the foe has STORM.', paid: 'This turn, take 1 less damage per STORM on the foe (max 8).', why: 'Defence from the storm\'s size.' },
+  { id: 'M-10b', type: 'Skill', free: 'GUARD 2, DRAW 1.', paid: 'Until your next turn, the foe\'s attacks deal half its STORM less (max 6).', why: 'A Frost-like effect from Storm: the Frost + Storm pair.' },
+  { id: 'M-10c', type: 'Skill', free: 'HEAL 2, STORM 1.', paid: 'HEAL equal to the foe\'s STORM (max 12).', why: 'The storm as sustain.' },
+];
+
+/* Globals here use the turn trigger only (the trigger set is closed:
+   no new trigger for this family). */
+const TRIGGERS = {
+  turn:  { icon: '⟳', text: 'Start of your turn:' },
+};
+
+/* =====================================================================
+   RENDER — pure helpers that turn data into DOM nodes.
+   ===================================================================== */
+
+/** Escape text for safe insertion as HTML. */
+const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+/** Wrap the known keywords in styled spans (each element gets its colour). */
+const markKeywords = (s) =>
+  esc(s)
+    .replace(/\bINFERNO\b/g, '<span class="kw fire">INFERNO</span>')
+    .replace(/\b(CHILL|FROZEN)\b/g, '<span class="kw frost">$1</span>')
+    .replace(/\b(STORM|DRAW)\b/g, '<span class="kw storm">$1</span>')
+    .replace(/\b(DEAL|GUARD|HEAL|VULNERABLE|EXILE|BEND)\b/g, '<span class="kw">$1</span>');
+
+/** Body of a Global card: duration badges, trigger line, optional PAID delta. */
+const globalBody = (card) => {
+  const t = TRIGGERS[card.trig];
+  return `
+    <div class="dur"><span class="tag free">FREE ⏳3</span><span class="tag paid">PAID ∞</span></div>
+    <div class="line trig"><span class="ticon" aria-hidden="true">${t.icon}</span><b>${markKeywords(t.text)}</b> ${markKeywords(card.body)}</div>
+    ${card.paidDelta ? `<div class="line"><span class="tag paid">PAID</span>${markKeywords(card.paidDelta)}</div>` : ''}`;
+};
+
+/** FREE and PAID lines for every non-Global card. */
+const plainBody = (card) => `
+    <div class="line"><span class="tag free">FREE</span>${markKeywords(card.free)}</div>
+    <div class="line"><span class="tag paid">PAID</span>${markKeywords(card.paid)}</div>`;
+
+/** Build one card face as an HTML string. */
+const cardHtml = (card, glyph, el) => `
+  <label class="card" data-id="${card.id}">
+    <input class="pick" type="checkbox" value="${card.id}" aria-label="Keep ${card.id}">
+    <div class="top"><span class="name">${card.id}</span><span class="type">${card.type} · ${el}</span></div>
+    <div class="art" aria-hidden="true">${glyph}</div>
+    ${card.type === 'Global' ? globalBody(card) : plainBody(card)}
+    <div class="why">${esc(card.why)}</div>
+  </label>`;
+
+/** Build one slot section: heading, role, its candidate cards, a note box. */
+const slotHtml = (s) => `
+  <section class="slot" data-slot="${s.slot}">
+    <h2>${s.slot}</h2>
+    <p class="role">${esc(s.role)}</p>
+    <div class="row">${CARDS.filter((c) => c.id.startsWith(s.slot)).map((c) => cardHtml(c, s.glyph, s.el)).join('')}</div>
+    <input class="note" type="text" data-note="${s.slot}" placeholder="Note for ${s.slot}: TWEAK / merge rule (optional)">
+  </section>`;
+
+/** One tab panel: blurb + its 10 slots. Hidden unless it is the active tab. */
+const panelHtml = (t, i) => `
+  <div class="panel" id="panel-${t.key}" role="tabpanel" ${i ? 'hidden' : ''}>
+    <p class="blurb"><b>${t.name}</b>: ${esc(t.blurb)}</p>
+    ${SLOTS.filter((s) => s.slot.startsWith(t.key + '-')).map(slotHtml).join('')}
+  </div>`;
+
+/** Tab button with a live "kept / total" counter. */
+const tabHtml = (t, i) =>
+  `<button type="button" role="tab" data-tab="${t.key}" aria-selected="${i === 0}">${t.name}<span class="n" data-n="${t.key}"></span></button>`;
+
+document.getElementById('slots').innerHTML = TABS.map(panelHtml).join('');
+document.getElementById('tabs').innerHTML = TABS.map(tabHtml).join('');
+
+/** Show one tab's panel, hide the others. */
+const showTab = (key) => {
+  document.querySelectorAll('[data-tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === key)));
+  TABS.forEach((t) => { document.getElementById(`panel-${t.key}`).hidden = t.key !== key; });
+};
+document.getElementById('tabs').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-tab]');
+  if (b) showTab(b.dataset.tab);
+});
+
+/* =====================================================================
+   STATE — read straight from the DOM (no stored state).
+   ===================================================================== */
+
+/** Ids of every ticked card. */
+const kept = () => [...document.querySelectorAll('.pick:checked')].map((i) => i.value);
+
+/** Update the selected-card ring and the running count. */
+const refresh = () => {
+  document.querySelectorAll('label.card').forEach((l) =>
+    l.classList.toggle('on', l.querySelector('.pick').checked));
+  document.getElementById('count').textContent = `${kept().length} kept of ${CARDS.length}`;
+  TABS.forEach((t) => {
+    const total = CARDS.filter((c) => c.id.startsWith(t.key + '-')).length;
+    const k = kept().filter((id) => id.startsWith(t.key + '-')).length;
+    document.querySelector(`[data-n="${t.key}"]`).textContent = `${k}/${total}`;
+  });
+};
+document.getElementById('slots').addEventListener('change', refresh);
+refresh();
+
+/* =====================================================================
+   OUTPUT — build the plain-text verdict sheet from the current picks.
+   ===================================================================== */
+
+/** One line per slot: KEEP / MERGE / CUT, the cut candidates, the note. */
+const slotLine = (s, keptIds) => {
+  const ids = CARDS.filter((c) => c.id.startsWith(s.slot)).map((c) => c.id);
+  const keep = ids.filter((id) => keptIds.includes(id));
+  const cut = ids.filter((id) => !keptIds.includes(id));
+  const note = document.querySelector(`[data-note="${s.slot}"]`).value.trim();
+  const verdict = keep.length === 0 ? 'CUT slot'
+    : keep.length === 1 ? `KEEP ${keep[0]}`
+    : `MERGE ${keep.join(' + ')}`;
+  return `${s.slot}: ${verdict}` +
+    (keep.length ? ` | cut: ${cut.join(', ') || '-'}` : '') +
+    (note ? ` | note: ${note}` : '');
+};
+
+/** The whole sheet: header, one line per slot, general notes. */
+const sheet = () => {
+  const k = kept();
+  const general = document.getElementById('general').value.trim();
+  return [
+    'REHEARSAL BALLOT — the Elementalist (second family rehearsal; not live cards)',
+    `kept ${k.length} of ${CARDS.length}`,
+    ...TABS.flatMap((t) => [
+      `-- ${t.name} --`,
+      ...SLOTS.filter((s) => s.slot.startsWith(t.key + '-')).map((s) => slotLine(s, k)),
+    ]),
+    general ? `general: ${general}` : null,
+  ].filter(Boolean).join('\n');
+};
+
+document.getElementById('gen').addEventListener('click', () => {
+  document.getElementById('out').value = sheet();
+});
+
+document.getElementById('copy').addEventListener('click', async () => {
+  const out = document.getElementById('out');
+  if (!out.value) out.value = sheet();
+  try { await navigator.clipboard.writeText(out.value); }
+  catch { out.select(); document.execCommand && document.execCommand('copy'); }
+});
+
+/* Theme toggle: flips data-theme on <html>; no storage. */
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme
+    ? root.dataset.theme === 'dark'
+    : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+});
+</script>
+</body>
+</html>
