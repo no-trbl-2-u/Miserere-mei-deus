@@ -1,13 +1,14 @@
 {
   "stamp": {
-    "commit": "4043ba25",
-    "date": "2026-10-17T10:40:15Z"
+    "commit": "37178677",
+    "date": "2026-10-22T21:29:28-04:00"
   },
   "inputs": {
     "ledger": "4043ba25",
     "parent replay": "5085b096",
     "planted defects": "b0ac22f8",
-    "mutation": "15a2fa76"
+    "mutation": "15a2fa76",
+    "critique passes": "02f94d07"
   },
   "rows": [
     {
@@ -55,10 +56,10 @@
     },
     {
       "judge": "`/critique`",
-      "misses": null,
-      "of": null,
+      "misses": [],
+      "of": 0,
       "rate": null,
-      "note": "it plays the deployed web build after merge and no ledger row records what a pass saw against what had escaped, so it has no denominator. Context: 5 follow-up fix(es) in the ledger cite a critique pass."
+      "note": "Denominator: escapes (a seeded escape, or a fix within 7 days on the same code) merged inside a recorded pass's base..head range; 1 pass(es) recorded (99). A catch is an escape whose fix cites a finding of that pass or a later one: none. Context: 5 follow-up fix(es) in the ledger cite a critique pass."
     },
     {
       "judge": "The merge gate",
