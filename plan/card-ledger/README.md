@@ -36,6 +36,8 @@ Pages site.
 ballot file has no `BALLOTS` entry, or an open ballot does not load the kit
 under its index id.
 
+The whole flow a ballot sits in is `docs/lane-creator.md` (lane-creator v1, D102).
+
 ## Reading a verdict back
 
 Every Submit appends a row; the newest row for a ballot id is the verdict in
