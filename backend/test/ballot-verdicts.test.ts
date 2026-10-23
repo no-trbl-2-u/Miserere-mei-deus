@@ -1,12 +1,13 @@
 /**
- * BV1 A2-A4: the ballot-verdict routes in the Workers runtime against a local
- * D1. A request without the token is a 401, a body the validator rejects a
+ * BV1 A2-A4, BV2 A1-A2: the ballot-verdict routes in the Workers runtime
+ * against a local D1. A request without the token is a 401, a body the validator rejects a
  * 400 naming each problem, a body over the cap a 413, and a POST then a GET
  * returns the same row, newest first, with `?ballot=` exact. CORS answers on
- * these routes only, for an origin `BALLOT_ORIGINS` allows.
+ * these routes only, for an origin `BALLOT_ORIGINS` allows. Every row carries
+ * a `status`, `final` unless the post says `draft`, and `?status=` narrows.
  */
 
-import { SELF } from 'cloudflare:test';
+import { env, SELF } from 'cloudflare:test';
 import { describe, expect, it } from 'vitest';
 
 import { BALLOT_LIMITS } from '../src/ballot';
@@ -29,6 +30,7 @@ function verdict(over: Partial<BallotVerdictPost> = {}): BallotVerdictPost {
         notes: { 'P-01': 'TWEAK 3' },
         general: 'Fire reads strongest.',
         client: 'Mozilla/5.0 (iPhone)',
+        status: 'final',
         ...over,
     };
 }
@@ -157,6 +159,78 @@ describe('GET /v1/ballot-verdicts', () => {
         expect((await verdicts()).map((v) => v.general)).toEqual(['resubmit', 'other', 'first']);
         expect((await verdicts('?ballot=elementalist-2026-10-22')).map((v) => v.general)).toEqual(['resubmit', 'first']);
         expect(await verdicts('?ballot=elementalist')).toEqual([]);
+    });
+});
+
+describe('status (BV2a)', () => {
+    it('stores a draft as draft, and a post without a status as final', async () => {
+        const { status: _s, ...unmarked } = verdict({ general: 'unmarked' });
+        expect((await post(VERDICTS, unmarked)).status).toBe(201);
+        expect((await post(VERDICTS, verdict({ general: 'saved', status: 'draft' }))).status).toBe(201);
+        expect((await verdicts()).map((v) => [v.general, v.status])).toEqual([
+            ['saved', 'draft'],
+            ['unmarked', 'final'],
+        ]);
+    });
+
+    it('refuses any other status with a 400 naming it, and stores nothing', async () => {
+        for (const status of ['maybe', 'FINAL', '', null, 1]) {
+            const response = await post(VERDICTS, { ...verdict(), status });
+            expect(response.status).toBe(400);
+            expect(await response.json<PlayLogError>()).toEqual({
+                error: 'invalid ballot verdict',
+                reasons: [`status: expected draft or final, got ${JSON.stringify(status)}`],
+            });
+        }
+        expect(await verdicts()).toEqual([]);
+    });
+
+    it('narrows by ?status= exactly, alone and with ?ballot=, newest first', async () => {
+        await post(VERDICTS, verdict({ general: 'save 1', status: 'draft' }));
+        await post(VERDICTS, verdict({ general: 'submit' }));
+        await post(VERDICTS, verdict({ ballotId: 'blood-price-2026-10-11', general: 'other', status: 'draft' }));
+        await post(VERDICTS, verdict({ general: 'save 2', status: 'draft' }));
+
+        expect((await verdicts()).map((v) => v.general)).toEqual(['save 2', 'other', 'submit', 'save 1']);
+        expect((await verdicts('?status=draft')).map((v) => v.general)).toEqual(['save 2', 'other', 'save 1']);
+        expect((await verdicts('?status=final')).map((v) => v.general)).toEqual(['submit']);
+        expect((await verdicts('?ballot=elementalist-2026-10-22&status=draft')).map((v) => v.general)).toEqual([
+            'save 2',
+            'save 1',
+        ]);
+        expect(await verdicts('?ballot=blood-price-2026-10-11&status=final')).toEqual([]);
+    });
+
+    it('refuses a ?status= other than draft or final with a 400', async () => {
+        const response = await get(`${VERDICTS}?status=finale`);
+        expect(response.status).toBe(400);
+        expect(await response.json<PlayLogError>()).toEqual({
+            error: 'invalid query',
+            reasons: ['status: expected draft or final, got "finale"'],
+        });
+    });
+
+    it('migration 0004 reads a row stored under 0003 as final', async () => {
+        const migration = (name: string) => {
+            const found = env.TEST_MIGRATIONS.find((m) => m.name === name);
+            if (!found) throw new Error(`missing migration ${name}`);
+            return found.queries.map((query) => env.DB.prepare(query));
+        };
+        await env.DB.prepare('DROP TABLE ballot_verdicts').run();
+        await env.DB.batch(migration('0003_ballot_verdicts.sql'));
+        await env.DB
+            .prepare(
+                `INSERT INTO ballot_verdicts (received_at, ballot_id, verdict_text, kept_json, notes_json)
+                 VALUES ('2026-10-22T20:00:00.000Z', 'elementalist-2026-10-22', 'BV1 verdict', '[]', '{}')`,
+            )
+            .run();
+        await env.DB.batch(migration('0004_ballot_verdict_status.sql'));
+
+        const rows = await verdicts();
+        expect(rows.map((v) => [v.verdictText, v.status])).toEqual([['BV1 verdict', 'final']]);
+        await expect(
+            env.DB.prepare("UPDATE ballot_verdicts SET status = 'maybe'").run(),
+        ).rejects.toThrow(/CHECK constraint failed/);
     });
 });
 
