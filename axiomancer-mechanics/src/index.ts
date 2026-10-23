@@ -199,8 +199,11 @@ export type {
 export {
     // Rank/rarity helpers (mobile renders rank names off these)
     CARD_RANK_NAMES, rankToRarity,
-    getAvailableCards, learnCard,
+    getAvailableCards, learnCard, replaceCard,
     cardLibrary, getCardById,
+    // Card upgrades (Phase UP1b): the law by rarity and the id helpers
+    UPGRADE_LIMITS, upgradeCard, upgradeLimit, upgradeLevel, canUpgrade,
+    baseCardId, isUpgradedCardId, getUpgradedCardById,
     // Card lanes (the dev menu's CARDS section)
     CARD_LANES, GREY_LANE, getCardLane, laneRewardPool,
     // Runtime enumeration of the CardSpecialMechanic union, bound to

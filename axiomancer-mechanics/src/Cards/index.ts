@@ -13,8 +13,14 @@ export type {
 } from './types';
 
 export {
-    getAvailableCards, learnCard,
+    getAvailableCards, learnCard, replaceCard,
 } from './card.engine';
+
+// Card upgrades (Phase UP1b): the law by rarity and the id helpers.
+export {
+    UPGRADE_LIMITS, upgradeCard, upgradeLimit, upgradeLevel, canUpgrade,
+    baseCardId, isUpgradedCardId, getUpgradedCardById,
+} from './card-upgrades';
 
 export {
     cardLibrary, getCardById,

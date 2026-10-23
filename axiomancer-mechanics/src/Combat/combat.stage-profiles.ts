@@ -19,7 +19,7 @@
 import type { BaseStats, Character } from '../Character/types';
 import type { Card, CardTier, CardRank } from '../Cards/types';
 import { cardLibrary } from '../Cards/cards.library';
-import { UPGRADE_SUFFIX } from '../Cards/card-upgrades';
+import { canUpgrade, UPGRADE_SUFFIX } from '../Cards/card-upgrades';
 import { Player } from '../Character/characters.mock';
 import { deepClone, calculateMaxHealth } from '../Utils';
 
@@ -192,7 +192,7 @@ export function stageEligibleCardIds(
     return ids.map((id, i) => {
         if (i % step !== 0) return id;
         const card = pool.get(id);
-        if (!card) return id;
+        if (!card || !canUpgrade(card)) return id;
         return `${id}${UPGRADE_SUFFIX}`;
     });
 }

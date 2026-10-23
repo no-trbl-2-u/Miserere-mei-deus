@@ -1,7 +1,7 @@
 /**
  * GUARD — CARD UPGRADES (2026-09-02), the Slay the Spire progression axis.
  *
- * `upgradeCard` turns any card into its `+` copy: an authored `Card.upgrade`
+ * `upgradeCard` turns a card into its next `+` copy: an authored `Card.upgrade`
  * patch when one exists, the documented default rule otherwise
  * (`src/Cards/card-upgrades.ts`). These are bug detectors, not a balance
  * grade — they pin the properties an upgrade must never violate:
@@ -31,10 +31,17 @@ import {
 } from '../card-upgrades';
 import type { Card } from '../types';
 
-/** READ-ONLY view of the curated library (other agents own those modules).
- *  Program cards are left out: their numbers live in program lines, which
- *  the upgrade rule does not read (no player surface upgrades a card). */
+/** The plain (non-program) cards of the curated library: the default rule's
+ *  surface. Program cards grow through `programAt`; their suite is
+ *  `card-upgrade-law.engine.test.ts`. */
 const LIBRARY: readonly Card[] = cardLibrary.filter(c => !c.program);
+
+/** One upgrade of a card that has one left (every plain library card is common). */
+function up1(card: Card): Card {
+    const up = upgradeCard(card);
+    if (!up) throw new Error(`${card.id} refused its first upgrade`);
+    return up;
+}
 
 /** Flatten every numeric leaf of a card to `path -> value`. */
 function numericLeaves(value: unknown, path = '', out = new Map<string, number>()): Map<string, number> {
@@ -69,7 +76,7 @@ describe('card upgrades — structure', () => {
     it('every library card yields an upgraded copy with the + suffix', () => {
         const offenders: string[] = [];
         for (const card of LIBRARY) {
-            const up = upgradeCard(card);
+            const up = up1(card);
             if (up.id !== `${card.id}${UPGRADE_SUFFIX}`) offenders.push(`${card.id} → id "${up.id}"`);
             if (!up.name.endsWith(UPGRADE_SUFFIX)) offenders.push(`${card.id} → name "${up.name}"`);
             if (up.name === card.name) offenders.push(`${card.id} → name unchanged`);
@@ -80,7 +87,7 @@ describe('card upgrades — structure', () => {
     it('the upgraded copy keeps the card identity fields', () => {
         const offenders: string[] = [];
         for (const card of LIBRARY) {
-            const up = upgradeCard(card);
+            const up = up1(card);
             if (up.rank !== card.rank) offenders.push(`${card.id}: rank`);
             if (up.tier !== card.tier) offenders.push(`${card.id}: tier`);
             if (up.cardType !== card.cardType) offenders.push(`${card.id}: cardType`);
@@ -96,7 +103,7 @@ describe('card upgrades — structure', () => {
     it('the upgrade never drops or re-shapes a mechanic or an effect', () => {
         const offenders: string[] = [];
         for (const card of LIBRARY) {
-            const up = upgradeCard(card);
+            const up = up1(card);
             const before = (card.specialMechanics ?? []).map(m => m.kind).join(',');
             const after = (up.specialMechanics ?? []).map(m => m.kind).join(',');
             if (before !== after) offenders.push(`${card.id}: mechanics ${before} → ${after}`);
@@ -107,8 +114,8 @@ describe('card upgrades — structure', () => {
         expect(offenders).toEqual([]);
     });
 
-    it('an upgraded copy carries no upgrade patch of its own (one level only)', () => {
-        for (const card of LIBRARY) expect(upgradeCard(card).upgrade).toBeUndefined();
+    it('an upgraded copy carries no upgrade patch of its own (the patch is the first upgrade only)', () => {
+        for (const card of LIBRARY) expect(up1(card).upgrade).toBeUndefined();
     });
 });
 
@@ -116,7 +123,7 @@ describe('card upgrades — a + never subtracts', () => {
     it('no numeric field goes DOWN, and none is dropped', () => {
         const offenders: string[] = [];
         for (const card of LIBRARY) {
-            const up = upgradeCard(card);
+            const up = up1(card);
             const before = numericLeaves(card);
             const after = numericLeaves(up);
             for (const [path, n] of before) {
@@ -134,7 +141,7 @@ describe('card upgrades — a + never subtracts', () => {
     it('no upgrade prints an intensity above MAX_EFFECT_INTENSITY', () => {
         const offenders: string[] = [];
         for (const card of LIBRARY) {
-            for (const [path, n] of numericLeaves(upgradeCard(card))) {
+            for (const [path, n] of numericLeaves(up1(card))) {
                 if (/intensity$/i.test(path) && n > MAX_EFFECT_INTENSITY) {
                     offenders.push(`${card.id} → ${path} = ${n}`);
                 }
@@ -145,7 +152,7 @@ describe('card upgrades — a + never subtracts', () => {
 
     it('the default rule raises SOMETHING on every card that has a number to raise', () => {
         const inert = LIBRARY
-            .filter(c => !changedSomething(c, upgradeCard(c)))
+            .filter(c => !changedSomething(c, up1(c)))
             .map(c => c.id);
         expect(inert).toEqual([]);
     });
@@ -153,7 +160,7 @@ describe('card upgrades — a + never subtracts', () => {
     it('never raises a self-inflicted debuff (a cost wearing an effect)', () => {
         const offenders: string[] = [];
         for (const card of LIBRARY) {
-            const up = upgradeCard(card);
+            const up = up1(card);
             (card.combatEffects ?? []).forEach((ce, i) => {
                 if (ce.appliedTo !== 'self' || !ce.effectId.startsWith('debuff_')) return;
                 const after = up.combatEffects?.[i];
@@ -175,7 +182,7 @@ describe('card upgrades — paidSummary never lies', () => {
         const offenders: string[] = [];
         for (const card of LIBRARY) {
             if (card.paidSummary === undefined) continue;
-            const up = upgradeCard(card);
+            const up = up1(card);
             const before = [...facePayload(card).entries()].join('|');
             const after = [...facePayload(up).entries()].join('|');
             if (before !== after && up.paidSummary !== undefined && !card.upgrade?.paidSummary) {
@@ -188,7 +195,7 @@ describe('card upgrades — paidSummary never lies', () => {
     it('every surviving paidSummary still passes the number-parity law', () => {
         const offenders: string[] = [];
         for (const card of LIBRARY) {
-            const up = upgradeCard(card);
+            const up = up1(card);
             if (up.paidSummary === undefined) continue;
             // Same normalisation as paid-summary-honesty.engine.test.ts: DOOM's
             // explanatory "+1 each time the foe acts" is a rule, not a number
@@ -211,7 +218,7 @@ describe('card upgrades — paidSummary never lies', () => {
             paidSummary: 'Nothing more.',
             free: { damage: 2 },
         };
-        const up = upgradeCard(card);
+        const up = up1(card);
         expect(up.free?.damage).toBe(4);
         expect(up.paidSummary).toBe('Nothing more.');
     });
@@ -222,7 +229,7 @@ describe('card upgrades — purity', () => {
         const offenders: string[] = [];
         for (const card of LIBRARY) {
             const snapshot = JSON.stringify(card);
-            upgradeCard(card);
+            up1(card);
             if (JSON.stringify(card) !== snapshot) offenders.push(card.id);
         }
         expect(offenders).toEqual([]);
@@ -238,7 +245,7 @@ describe('card upgrades — purity', () => {
         expect(word?.combatEffects?.length).toBeGreaterThan(0);
         const card: Card = { ...strike!, id: 'upgrade-purity-witness', combatEffects: word!.combatEffects };
         expect(card.free).toBeDefined();
-        const up = upgradeCard(card);
+        const up = up1(card);
         expect(up).not.toBe(card);
         expect(up.specialMechanics).not.toBe(card.specialMechanics);
         expect(up.specialMechanics?.[0]).not.toBe(card.specialMechanics?.[0]);
@@ -252,7 +259,7 @@ describe('card upgrades — purity', () => {
 
     it('is deterministic — the same card upgrades to the same copy every time', () => {
         for (const card of LIBRARY) {
-            expect(JSON.stringify(upgradeCard(card))).toBe(JSON.stringify(upgradeCard(card)));
+            expect(JSON.stringify(up1(card))).toBe(JSON.stringify(up1(card)));
         }
     });
 });
@@ -266,13 +273,13 @@ describe('card upgrades — the default rule numbers', () => {
     it('MAGNITUDE is +40%, at least +2', () => {
         const cases: [number, number][] = [[6, 8], [7, 10], [8, 11], [12, 17], [14, 20], [22, 31], [45, 63]];
         for (const [from, to] of cases) {
-            const up = upgradeCard(fixture({ specialMechanics: [{ kind: 'deal', amount: from }] }));
+            const up = up1(fixture({ specialMechanics: [{ kind: 'deal', amount: from }] }));
             expect([from, (up.specialMechanics?.[0] as { amount: number }).amount]).toEqual([from, to]);
         }
     });
 
     it('DoT intensity is +1 (duration untouched); a FREE line grows by MAGNITUDE', () => {
-        const up = upgradeCard(fixture({
+        const up = up1(fixture({
             free: { damage: 2, guard: 5 },
             combatEffects: [{ effectId: 'debuff_poison', appliedTo: 'opponent', intensity: 4, duration: 3 }],
         }));
@@ -281,7 +288,7 @@ describe('card upgrades — the default rule numbers', () => {
     });
 
     it('clamps a DoT at MAX_EFFECT_INTENSITY rather than printing past it', () => {
-        const up = upgradeCard(fixture({
+        const up = up1(fixture({
             combatEffects: [{ effectId: 'debuff_poison', appliedTo: 'opponent', intensity: MAX_EFFECT_INTENSITY }],
         }));
         expect(up.combatEffects?.[0].intensity).toBe(MAX_EFFECT_INTENSITY);
@@ -304,7 +311,7 @@ describe('card upgrades — an authored patch wins over the default', () => {
     };
 
     it('applies the patch instead of the default rule', () => {
-        const up = upgradeCard(base);
+        const up = up1(base);
         // The default would have raised `amount` to 10 and intensity to 5.
         expect(up.specialMechanics?.[0]).toEqual({ kind: 'deal', amount: 8 });
         expect(up.combatEffects?.[0]).toMatchObject({ intensity: 4, duration: 3 });
@@ -316,14 +323,14 @@ describe('card upgrades — an authored patch wins over the default', () => {
 
     it('clears the face when the patch changes numbers and supplies no new sentence', () => {
         const silent: Card = { ...base, upgrade: { mechanics: [{ kind: 'deal', fields: { amount: 5 } }] } };
-        const up = upgradeCard(silent);
+        const up = up1(silent);
         expect(up.paidSummary).toBeUndefined();
         expect((up.specialMechanics?.[0] as { amount: number }).amount).toBe(12);
     });
 
     it('clamps a negative delta to zero — a + never subtracts', () => {
         const sneaky: Card = { ...base, upgrade: { mechanics: [{ kind: 'deal', fields: { amount: -5 } }] } };
-        expect((upgradeCard(sneaky).specialMechanics?.[0] as { amount: number }).amount).toBe(7);
+        expect((up1(sneaky).specialMechanics?.[0] as { amount: number }).amount).toBe(7);
     });
 
     it('targets one occurrence of a repeated kind with `index`', () => {
@@ -332,14 +339,14 @@ describe('card upgrades — an authored patch wins over the default', () => {
             specialMechanics: [{ kind: 'deal', amount: 7 }, { kind: 'deal', amount: 3 }],
             upgrade: { mechanics: [{ kind: 'deal', index: 1, fields: { amount: 4 } }] },
         };
-        expect(upgradeCard(twoDeals).specialMechanics).toEqual([
+        expect(up1(twoDeals).specialMechanics).toEqual([
             { kind: 'deal', amount: 7 }, { kind: 'deal', amount: 7 },
         ]);
     });
 
     it('an authored name / description override the derived ones', () => {
         const renamed: Card = { ...base, upgrade: { name: 'The Second Cut', description: 'y' } };
-        const up = upgradeCard(renamed);
+        const up = up1(renamed);
         expect(up.name).toBe('The Second Cut');
         expect(up.description).toBe('y');
         expect(up.id).toBe('authored+');
@@ -353,7 +360,7 @@ describe('getUpgradedCardById', () => {
         const up = getUpgradedCardById(`${sample.id}+`);
         expect(up).toBeDefined();
         expect(up?.id).toBe(`${sample.id}+`);
-        expect(JSON.stringify(up)).toBe(JSON.stringify(upgradeCard(sample)));
+        expect(JSON.stringify(up)).toBe(JSON.stringify(up1(sample)));
     });
 
     it('accepts the bare base id too', () => {

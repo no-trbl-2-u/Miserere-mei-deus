@@ -2,8 +2,15 @@
  * CARD UPGRADES (2026-09-02) — the Slay the Spire progression axis.
  *
  * OWNER RULING: "Players should also be able to upgrade their cards (See Slay
- * the Spire)." One of the six progression axes. A card you own can be upgraded
- * ONCE, producing a copy with id `<id>+` and name `<name>+`.
+ * the Spire)." One of the six progression axes.
+ *
+ * ─── THE UPGRADE LAW (Phase UP1b) ───────────────────────────────────────────
+ *
+ * Rarity sets how many upgrades a card may take: common 1, uncommon 2, rare 3
+ * ({@link UPGRADE_LIMITS}). Each upgrade appends one `+` to the id and the
+ * name: `<id>+`, `<id>++`, `<id>+++`. An upgrade past the limit is refused
+ * (`upgradeCard` returns undefined, and the id does not resolve). Each upgrade
+ * applies to the previous one. A Curse takes none.
  *
  * The upgraded copy is computed, never hand-authored a second time:
  *
@@ -31,10 +38,15 @@
  * effect): that is a cost wearing an effect's clothes. The `buff_` /
  * `debuff_` id prefix is exhaustive across both effect libraries.
  *
- * CURSES (`theme: 'curse'`) get NO numeric change at all: every number on a
- * curse is a price you pay, so there is nothing a `+` could honestly raise.
- * They still upgrade structurally (the `+` id/name) so the caller never has to
- * special-case them. Slay the Spire likewise makes curses unupgradable.
+ * CURSES take no upgrade at all: every number on a curse is a price you pay,
+ * so there is nothing a `+` could honestly raise. Slay the Spire likewise
+ * makes curses unupgradable.
+ *
+ * PROGRAM CARDS (the Blood Price lane) carry their numbers in program lines,
+ * which the rule above cannot reach. Such a card authors `Card.programAt`, its
+ * lines built at an {@link UpgradeScale}; the upgrade rebuilds `program` at the
+ * new level. Payoffs and their caps grow by the same two steps; costs do not
+ * (`card-upgrade.scale.ts`).
  *
  * ─── paidSummary ────────────────────────────────────────────────────────────
  *
@@ -52,8 +64,11 @@
 
 import { MAX_EFFECT_INTENSITY } from '../Game/game-mechanics.constants';
 import { getCardById } from './cards.library';
+import { magnitudeStep, upgradeScale, UPGRADE_INTENSITY_STEP } from './card-upgrade.scale';
+import { rankToRarity } from './types';
 import type {
     Card,
+    CardRarity,
     CardCombatEffects,
     CardRider,
     CardRiderUpgrade,
@@ -64,21 +79,19 @@ import type {
 
 // ─── Constants (the exact default-rule numbers, in one place) ───────────────
 
-/** The suffix appended to an upgraded card's id and name. */
+/** The suffix appended to an upgraded card's id and name, once per upgrade. */
 export const UPGRADE_SUFFIX = '+';
-/** MAGNITUDE bucket: +40%, at least +2. */
-export const UPGRADE_MAGNITUDE_PCT = 0.4;
-export const UPGRADE_MAGNITUDE_MIN = 2;
-/** DOT bucket: +1 intensity (duration untouched). */
-export const UPGRADE_INTENSITY_STEP = 1;
+export { UPGRADE_MAGNITUDE_PCT, UPGRADE_MAGNITUDE_MIN, UPGRADE_INTENSITY_STEP } from './card-upgrade.scale';
+
+/** How many upgrades a card of each rarity may take (T, 2026-10-20). */
+export const UPGRADE_LIMITS: Readonly<Record<CardRarity, number>> = Object.freeze({
+    common: 1, uncommon: 2, rare: 3,
+});
 
 // ─── The buckets ────────────────────────────────────────────────────────────
 
 /** +40%, at least +2. Damage and walls — anything on the scale ladder. */
-function magnitude(n: number): number {
-    if (!(n > 0)) return n;
-    return n + Math.max(UPGRADE_MAGNITUDE_MIN, Math.round(n * UPGRADE_MAGNITUDE_PCT));
-}
+const magnitude = magnitudeStep;
 
 /** +1 intensity, never above MAX_EFFECT_INTENSITY (30). */
 function intensity(n: number): number {
@@ -114,11 +127,27 @@ function isSelfCost(effectId: string, toSelf: boolean): boolean {
     return toSelf && effectId.startsWith('debuff_');
 }
 
-/** `<id>+` -> `<id>`. Idempotent for a base id. Callers that key engine
- *  behaviour off a literal card id (oath/hex passives, WOUND_CARD_ID, deck
- *  recipes) must resolve through this. */
+/** `<id>+++` -> `<id>`: strips every `+`. Idempotent for a base id. Callers
+ *  that key engine behaviour off a literal card id (oath/hex passives,
+ *  WOUND_CARD_ID, deck recipes) must resolve through this. */
 export function baseCardId(id: string): string {
-    return id.endsWith(UPGRADE_SUFFIX) ? id.slice(0, -UPGRADE_SUFFIX.length) : id;
+    return id.replace(/\++$/, '');
+}
+
+/** How many upgrades an id carries: 0 for a base id, 3 for `<id>+++`. */
+export function upgradeLevel(id: string): number {
+    return id.length - baseCardId(id).length;
+}
+
+/** How many upgrades this card may take in all: its rarity's limit, 0 for a Curse. */
+export function upgradeLimit(card: Card): number {
+    if (card.cardType === 'curse') return 0;
+    return UPGRADE_LIMITS[rankToRarity(card.rank)];
+}
+
+/** True while the card (base or upgraded) has an upgrade left under its limit. */
+export function canUpgrade(card: Card): boolean {
+    return upgradeLevel(card.id) < upgradeLimit(card);
 }
 
 /** True for an upgraded card's id (`'some-card+'`). */
@@ -237,23 +266,26 @@ function paidPayloadSignature(card: Card): string {
 }
 
 /**
- * The upgraded copy of a card: `<id>+` / `<name>+`, numbers raised by the
- * card's authored {@link CardUpgrade} patch if it has one, otherwise by the
- * default rule documented at the top of this file.
+ * The next upgrade of a card: one more `+` on the id and the name, numbers
+ * raised by the card's authored {@link CardUpgrade} patch on the first upgrade
+ * if it has one, otherwise by the default rule documented at the top of this
+ * file; a program card rebuilds its lines at the new level (`programAt`).
+ * Returns undefined when the card is at its limit (the upgrade is refused).
  *
  * PURE: the input card (and every object reachable from it) is untouched — the
  * whole card is deep-copied first.
- *
- * Upgrading an already-upgraded card is not a supported operation (upgrades
- * are one level, as in Slay the Spire); it would produce `<id>++`.
  */
-export function upgradeCard(card: Card): Card {
+export function upgradeCard(card: Card): Card | undefined {
+    if (!canUpgrade(card)) return undefined;
+    const level = upgradeLevel(card.id) + 1;
     const up = deepCopy(card);
     const beforePaid = paidPayloadSignature(up);
+    // The patch is the FIRST upgrade only; the copy drops it below.
     const patch = card.upgrade;
 
     if (patch) applyPatch(up, patch);
     else applyDefaultRule(up);
+    if (card.programAt) up.program = card.programAt(upgradeScale(level));
 
     up.id = `${card.id}${UPGRADE_SUFFIX}`;
     up.name = patch?.name ?? `${card.name}${UPGRADE_SUFFIX}`;
@@ -265,20 +297,35 @@ export function upgradeCard(card: Card): Card {
     if (patch?.paidSummary) up.paidSummary = patch.paidSummary;
     else if (paidChanged && up.paidSummary !== undefined) delete up.paidSummary;
 
-    // The upgraded copy carries no patch of its own: one upgrade level.
+    // The upgraded copy carries no patch of its own: later upgrades use the
+    // default rule on top of it.
     delete up.upgrade;
     return up;
 }
 
+/** Upgraded copies by base card object, then level, so a hot lookup in a
+ *  fight does not rebuild the copy. Keyed by object: a sandbox card that
+ *  shadows a library id gets its own entries. */
+const upgradedCache = new WeakMap<Card, Map<number, Card | undefined>>();
+
+/** `base` upgraded `level` times, or undefined past its limit. */
+function upgradedAt(base: Card, level: number): Card | undefined {
+    let byLevel = upgradedCache.get(base);
+    if (!byLevel) upgradedCache.set(base, byLevel = new Map());
+    if (byLevel.has(level)) return byLevel.get(level);
+    let card: Card | undefined = base;
+    for (let k = 0; k < level && card; k++) card = upgradeCard(card);
+    byLevel.set(level, card);
+    return card;
+}
+
 /**
- * Resolve an upgraded card id (`'some-card+'`) to its computed upgraded card.
- * Accepts the base id too, so a caller that already stripped the suffix still
- * gets the `+` copy. Returns `undefined` when the base card does not exist.
- *
- * NOT wired into `cards.library.ts`'s `getCardById` here — the library owner
- * does that.
+ * Resolve an upgraded card id (`'some-card+'`, `'some-card++'`) to its
+ * computed upgraded card. Accepts the base id too, as one upgrade, so a caller
+ * that already stripped the suffix still gets the `+` copy. Returns
+ * `undefined` when the base card does not exist or the id is past its limit.
  */
 export function getUpgradedCardById(id: string): Card | undefined {
     const base = getCardById(baseCardId(id));
-    return base ? upgradeCard(base) : undefined;
+    return base ? upgradedAt(base, Math.max(1, upgradeLevel(id))) : undefined;
 }

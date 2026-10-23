@@ -31,7 +31,7 @@ import { createCharacter, allocateStatPoint } from '../Character';
 import {
     grantFirstNodeRelic, isFirstNodeRelicPending,
 } from '../Character/first-node-grant';
-import { learnCard } from '../Cards';
+import { learnCard, replaceCard } from '../Cards';
 import { createStartingWorld, emptyQuestLog } from '../World';
 import type { MapName } from '../World/map.library';
 import { moveToNode as moveWorld } from '../World/world.reducer';
@@ -431,6 +431,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
                     action.payload.cardId,
                 ),
             };
+        }
+
+        case 'REPLACE_CARD': {
+            const { cardId, withCardId } = action.payload;
+            const player = replaceCard(state.player, cardId, withCardId);
+            return player === state.player ? state : { ...state, player };
         }
 
         case 'SAVE_GAME': {
