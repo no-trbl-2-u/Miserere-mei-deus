@@ -13,7 +13,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { cardLibrary, getCardById } from '../cards.library';
+import { cardLibrary, getCardById, TRIAL_SETS } from '../cards.library';
 import { getCardLane } from '../card.lanes';
 import {
     baseCardId, canUpgrade, upgradeCard, upgradeLevel, upgradeLimit, UPGRADE_LIMITS,
@@ -127,6 +127,11 @@ const PAYOFF_VERBS = new Set([
 ]);
 const COST_VERBS = new Set(['sacrifice', 'sacrificeX', 'tether']);
 
+/** Costs T ruled may grow on upgrade, by card id, as each trial set records
+ *  them. Each entry is a ruling, not a loosening of the law. */
+const RULED_COST_GROWTH: Readonly<Record<string, readonly string[]>> =
+    Object.assign({}, ...TRIAL_SETS.map(set => set.ruledCostGrowth ?? {}));
+
 interface Call { verb: string; n: number; exact: boolean }
 
 function record(fn: (c: ProgramCtx) => void, q: ProgramQuery): Call[] {
@@ -236,6 +241,7 @@ describe('A3 — every upgrade makes the numbers bigger, never a cost', () => {
             for (const up of chain(card)) {
                 const t = verbTotals(up);
                 for (const v of COST_VERBS) {
+                    if (RULED_COST_GROWTH[card.id]?.includes(v)) continue;
                     if ((t.get(v) ?? 0) !== (base.get(v) ?? 0)) offenders.push(`${up.id}: ${v} ${base.get(v)} -> ${t.get(v)}`);
                 }
                 if (programLines(up).map(([, , exile]) => exile).join() !== baseExile) offenders.push(`${up.id}: EXILE changed`);
@@ -260,6 +266,10 @@ describe('A3 — every upgrade makes the numbers bigger, never a cost', () => {
                     const before = record(baseLines[li][1], deep);
                     record(run, deep).forEach((call, ci) => {
                         if (!PAYOFF_VERBS.has(call.verb) || call.n === before[ci]?.n) return;
+                        // "SACRIFICE any amount X (max m), DEAL kX": the deep probe pays the
+                        // cap, so the hit is k times m, both printed.
+                        const formula = /max (\d+)\).*?(\d+)X\./.exec(printed);
+                        if (formula && call.n === Number(formula[1]) * Number(formula[2])) return;
                         if (!nums.has(String(call.n))) offenders.push(`${up.id} ${name}: applies ${call.verb} ${call.n}, prints "${printed}"`);
                     });
                 });
