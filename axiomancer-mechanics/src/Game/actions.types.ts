@@ -55,6 +55,8 @@ export type GameAction =
     | { type: 'LEVEL_UP';       payload?: undefined }
     | { type: 'ALLOCATE_STAT_POINT'; payload: { stat: 'heart' | 'body' | 'mind' } }
     | { type: 'LEARN_CARD';    payload: { cardId: string } }
+    /** Swaps one owned copy of `cardId` for `withCardId` (an upgrade). */
+    | { type: 'REPLACE_CARD';  payload: { cardId: string; withCardId: string } }
     | { type: 'SAVE_GAME';      payload?: undefined }
     | { type: 'LOAD_GAME';      payload?: undefined }
     | { type: 'RESET_RUN';      payload: { keepCharacter: boolean } }

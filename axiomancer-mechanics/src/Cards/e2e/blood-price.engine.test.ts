@@ -632,3 +632,34 @@ describe('the SACRIFICE floor, as a number', () => {
         expect(mismatch).toEqual([]);
     });
 });
+
+describe('Blood Price upgrades (Phase UP1b)', () => {
+    it('an upgraded line prints and applies the bigger payoff, and keeps its SACRIFICE', () => {
+        const up = getCardById('bp-p-01a+');
+        expect(up?.program?.free?.text).toBe('SACRIFICE 2, DEAL {deal:10}.');
+        expect(up?.program?.paid?.text).toBe('SACRIFICE 4, DEAL {deal:22}.');
+        expect(getCardById('bp-p-07b+')?.program?.free?.text).toBe('DEAL half the VITAE you lost this combat (max 14).');
+        expect(getCardById('bp-e-01n+')?.program?.paid?.text).toBe('SACRIFICE 6, gain 5 Conviction.');
+    });
+
+    it('a Global adds to its trigger amount', () => {
+        expect(getCardById('bp-p-10c+')?.program?.global?.text).toBe('GUARD n+2.');
+        expect(getCardById('bp-p-10c+')?.program?.global?.paidDelta).toBe('DEAL n+2 instead.');
+        expect(getCardById('bp-e-09n+')?.program?.global?.text).toBe('your next DEAL this turn deals +n+2.');
+    });
+
+    it('Pinpricks and Name Your Price print no payoff, so their upgrade changes no number', () => {
+        for (const id of ['bp-e-02d', 'bp-e-10d']) {
+            const base = getCardById(id)?.program;
+            const up = getCardById(`${id}+`)?.program;
+            expect([up?.free?.text, up?.paid?.text]).toEqual([base?.free?.text, base?.paid?.text]);
+        }
+    });
+
+    it('every lane card is common and takes exactly one upgrade', () => {
+        for (const card of LANE_CARDS) {
+            expect(getCardById(`${card.id}+`)?.id).toBe(`${card.id}+`);
+            expect(getCardById(`${card.id}++`)).toBeUndefined();
+        }
+    });
+});
