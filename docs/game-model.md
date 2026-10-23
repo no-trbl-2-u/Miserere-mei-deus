@@ -20,9 +20,11 @@ the Expo app (`axiomancer-mobile`) presents it.
   Plain Blow (attack, DEAL), A Plain Ward (skill, GUARD), A Plain Word
   (spell, VULNERABLE), all colour `any`, rank 1 (Ash), tier 1. The trial
   set (`BLOOD_PRICE_SET`, `Cards/library/blood-price.cards.ts`, D80, D81):
-  30 cards (11 body, 8 mind, 11 heart, all rank 1): 25 kept from the Blood
+  30 cards (11 body, 8 mind, 11 heart, all rank 1 but one): 25 kept from the Blood
   Price ballot and five SACRIFICE cards T added in revision 2 (Bloodletting,
-  Open Vein, Blood for Blood, Crimson Pact, Transfusion). The grey Curse is
+  Open Vein, Blood for Blood, Crimson Pact, Transfusion). Blood for Blood
+  (`bp-e-08n`) is the library's one rare (rank 5, Skull; Phase UP1c): FREE
+  SACRIFICE 3, DEAL 9; PAID SACRIFICE X (max 12), DEAL 3X. The grey Curse is
   defined for foes to add later; no card adds it and it is in no lane, deck
   or reward pool. It joins the library through one `TRIAL_SETS` line in
   `Cards/cards.library.ts` and comes out by deleting that line and the file
@@ -293,7 +295,8 @@ without a ruling from T.
   (D20, parked). The upgrade law exists (Phase UP1b, `Cards/card-upgrades.ts`):
   rarity limits upgrades (common 1, uncommon 2, rare 3) as `<id>+`, `++`,
   `+++`; each raises payoffs (Blood Price programs through `programAt`) and
-  never a cost; `REPLACE_CARD` swaps one owned copy. The rest site, anvil and
+  never a cost; `REPLACE_CARD` swaps one owned copy. Blood for Blood, the
+  one rare, takes three (its FREE DEAL grows; PAID stays 3X). The rest site, anvil and
   elite grants are UP1d to UP1f.
 - No measured balance baseline (D57). A balance question gets "not
   measured".

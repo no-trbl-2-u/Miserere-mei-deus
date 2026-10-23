@@ -22,6 +22,8 @@ import { Player } from '../../Character/characters.mock';
 import { Sandbag_01, FloatEye } from '../../Enemy/enemy.library';
 import type { Enemy } from '../../Enemy/types';
 import { getCardById, cardLibrary } from '../cards.library';
+import { CARD_RANK_NAMES, rankToRarity } from '../types';
+import { canUpgrade, upgradeCard, upgradeLimit } from '../card-upgrades';
 import { programLineBlock, programLineShortfall } from '../../Combat/combat.engine';
 import { getCardLane, CARD_LANES } from '../card.lanes';
 import { BLOOD_PRICE_SET } from '../library/blood-price.cards';
@@ -405,14 +407,44 @@ describe('the revision 2 cards', () => {
         expect([paid.program!.leechTurns, paid.program!.leechPotency]).toEqual([3, 2]);
     });
 
-    it('Blood for Blood: FREE SACRIFICE 3, DEAL 6; PAID SACRIFICE X (max 12), DEAL 2X body-scaled', () => {
+    it('Blood for Blood: FREE SACRIFICE 3, DEAL 9; PAID SACRIFICE X (max 12), DEAL 3X body-scaled', () => {
         const free = play(fight(['bp-e-08n']), 't0', false);
-        expect([free.player.health, free.enemy.health]).toEqual([97, 494]);
+        expect([free.player.health, free.enemy.health]).toEqual([97, 491]);
         expect(programXRange(fight(['bp-e-08n']), 't0', true, PROGRAM_KIT)).toEqual({ min: 1, max: 12 });
         const paid = play(fight(['bp-e-08n']), 't0', true, 5);
-        expect([paid.player.health, paid.enemy.health]).toEqual([95, 490]);
+        expect([paid.player.health, paid.enemy.health]).toEqual([95, 485]);
         const strong = play(fight(['bp-e-08n'], 100, { body: 10, mind: 5, heart: 5 }), 't0', true, 5);
-        expect(strong.enemy.health).toBe(480);
+        expect(strong.enemy.health).toBe(470);
+    });
+
+    it('Blood for Blood is the first rare (UP1 A5): Skull, bigger than its Ash numbers, three upgrades and no fourth', () => {
+        const card = getCardById('bp-e-08n')!;
+        expect(card.rank).toBe(5);
+        expect(CARD_RANK_NAMES[card.rank]).toBe('Skull');
+        expect(rankToRarity(card.rank)).toBe('rare');
+        // Before UP1c: rank 1, FREE DEAL 6, PAID DEAL 2X.
+        expect(card.program!.free!.text).toBe('SACRIFICE 3, DEAL {deal:9}.');
+        expect(card.program!.paid!.text).toBe('SACRIFICE any amount X (max 12), DEAL 3X.');
+        // The only rare in the library today.
+        expect(cardLibrary.filter(c => rankToRarity(c.rank) === 'rare').map(c => c.id)).toEqual(['bp-e-08n']);
+
+        expect(upgradeLimit(card)).toBe(3);
+        const ups = ['bp-e-08n+', 'bp-e-08n++', 'bp-e-08n+++'].map(id => getCardById(id));
+        expect(ups.map(c => c?.id)).toEqual(['bp-e-08n+', 'bp-e-08n++', 'bp-e-08n+++']);
+        expect(ups.map(c => c!.program!.free!.text)).toEqual([
+            'SACRIFICE 3, DEAL {deal:13}.',
+            'SACRIFICE 3, DEAL {deal:18}.',
+            'SACRIFICE 3, DEAL {deal:25}.',
+        ]);
+        expect(canUpgrade(ups[2]!)).toBe(false);
+        expect(upgradeCard(ups[2]!)).toBeUndefined();
+        expect(getCardById('bp-e-08n++++')).toBeUndefined();
+
+        // Each upgrade hits harder on the FREE line; PAID stays 3X.
+        const hit = (id: string, paid: boolean) => 500 - play(fight([id]), 't0', paid, paid ? 5 : undefined).enemy.health;
+        const ids = ['bp-e-08n', ...ups.map(c => c!.id)];
+        expect(ids.map(id => hit(id, false))).toEqual([9, 13, 18, 25]);
+        expect(ids.map(id => hit(id, true))).toEqual([15, 15, 15, 15]);
     });
 
     it('Transfusion: SACRIFICE now, HEAL (mind-scaled) at the start of your next turn', () => {
@@ -656,8 +688,8 @@ describe('Blood Price upgrades (Phase UP1b)', () => {
         }
     });
 
-    it('every lane card is common and takes exactly one upgrade', () => {
-        for (const card of LANE_CARDS) {
+    it('every lane card but the rare is common and takes exactly one upgrade', () => {
+        for (const card of LANE_CARDS.filter(c => c.id !== 'bp-e-08n')) {
             expect(getCardById(`${card.id}+`)?.id).toBe(`${card.id}+`);
             expect(getCardById(`${card.id}++`)).toBeUndefined();
         }

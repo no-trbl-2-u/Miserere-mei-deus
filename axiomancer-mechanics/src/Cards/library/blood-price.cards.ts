@@ -24,7 +24,7 @@
  * This file is data-only.
  */
 
-import type { Card, CardAspect, CardType } from '../types';
+import type { Card, CardAspect, CardRank, CardType } from '../types';
 import type { CardProgram, ProgramCtx, ProgramLine } from '../card-program.types';
 import type { CardLane, TrialSet } from '../card.lanes';
 import { upgradeScale, type UpgradeScale } from '../card-upgrade.scale';
@@ -52,6 +52,8 @@ interface Entry {
     program: (u: UpgradeScale) => CardProgram;
     /** The card's name, read off what it does (Phase UP1a). The slot is the id, never the name. */
     name: string;
+    /** The card's rank when it is not Ash (1). Rarity, and so its upgrade limit, derives from it. */
+    rank?: CardRank;
 }
 
 const SUB_LANE: Record<string, string> = { P: 'Payoff', E: 'Engine', M: 'Misc' };
@@ -119,9 +121,11 @@ const ENTRIES: Entry[] = [
     { slot: 'e-07b', name: 'Raised Stakes', type: 'spell', color: BLUE, program: u => ({
         free: L('Your next SACRIFICE this turn is doubled (its cost and its payoffs).', c => { c.sacModifier({ kind: 'next-double' }); }),
         paid: L(`Same, and gain ${u.i(2)} Conviction.`, c => { c.sacModifier({ kind: 'next-double' }); c.conviction(u.i(2)); }) }) },
-    { slot: 'e-08n', name: 'Blood for Blood', type: 'attack', color: RED, program: u => ({
-        free: L(`SACRIFICE 3, DEAL {deal:${u.m(6)}}.`, c => { c.sacrifice(3); c.deal(u.m(6)); }),
-        paid: L('SACRIFICE any amount X (max 12), DEAL 2X.', c => { const x = c.sacrificeX(12); c.deal(2 * x); }) }) },
+    // The library's first rare (Phase UP1c): Skull, three upgrades. The PAID
+    // hit is a formula (3X) and X's cap is a cost, so upgrades grow the FREE hit.
+    { slot: 'e-08n', name: 'Blood for Blood', type: 'attack', color: RED, rank: 5, program: u => ({
+        free: L(`SACRIFICE 3, DEAL {deal:${u.m(9)}}.`, c => { c.sacrifice(3); c.deal(u.m(9)); }),
+        paid: L('SACRIFICE any amount X (max 12), DEAL 3X.', c => { const x = c.sacrificeX(12); c.deal(3 * x); }) }) },
     { slot: 'e-09n', name: 'Crimson Pact', type: 'global', color: RED, program: u => ({
         global: { trigger: 'sac', text: `your next DEAL this turn deals +${nPlus(u)}.`,
             free: (c, n) => { c.empowerNextDeal(n + u.plus); }, paid: (c, n) => { c.empowerNextDeal(n + u.plus); } } }) },
@@ -170,7 +174,7 @@ function toCard(e: Entry): Card {
         name: e.name,
         color: e.color,
         description: `Blood Price trial card, ${SUB_LANE[proposal[0]]} sub-lane.`,
-        tier: 1, rank: 1, cardType: e.type,
+        tier: 1, rank: e.rank ?? 1, cardType: e.type,
         targetType: e.color === BLUE ? 'self' : 'enemy',
         program: e.program(upgradeScale(0)),
         programAt: e.program,
