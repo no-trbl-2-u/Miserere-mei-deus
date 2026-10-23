@@ -36,6 +36,30 @@
 
 ## Pending
 
+### [ ] [contract] The Blood Price art index breaks the trial-set-removal contract (UP1a art, 2026-10-22)
+- category: contract
+- impact: 5
+- ease: 6
+- detail: `src/Cards/e2e/trial-set-removal.engine.test.ts` pins that no code
+  outside `blood-price.cards.ts` and its own test names a `bp-` card id, so
+  deleting that one file and its `TRIAL_SETS` line is a clean removal.
+  `feat(art): torio paintings for the 30 Blood Price cards` (7726a5730,
+  2026-10-22) added a `'bp-e-01n': require(...)` style dictionary to
+  `axiomancer-mobile/assets/images/cards/index.ts`, one entry per card, which
+  the test's whole-repo scan now flags: `npm run verify` is red on `main`
+  (confirmed on a clean checkout, unrelated to anything else). The PR that
+  shipped this only touched `axiomancer-mobile/assets/**`, so it never
+  triggered `verify-mechanics` (the workflow that runs this test) and
+  nothing caught it before merge — the mobile-vs-mechanics path-filter gap
+  LG1b was built to close, from the other direction (a mechanics-owned test
+  reads a mobile-owned path).
+- next: `/iterate` — decide whether the art index should key off a card's
+  art lookup type instead of its literal id string (so the scan stops
+  matching it), or whether the trial-set contract now only needs to hold for
+  `axiomancer-mechanics/src` since the Blood Price set is no longer slated
+  for removal post-D99; either way, read `plan/revamp/cards.md` ("The trial
+  set") before changing the rule, not just the index.
+
 ### [ ] [debt] The escape ledger classifies past PRs against today's verify-* filters, so verify-root reads as expected-but-not-run on every older scripts/ PR (LG1b, 2026-10-22)
 - category: debt
 - impact: 4

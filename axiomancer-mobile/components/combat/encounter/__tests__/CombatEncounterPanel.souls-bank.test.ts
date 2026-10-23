@@ -10,27 +10,28 @@
 
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 
-import { createCharacter, initializeCombatEncounter, type CombatEncounterState, type CombatOutcome } from '@mechanics';
+import { type CombatOutcome } from '@mechanics';
 
 import { applyHazardOutcome } from '@/components/combat/encounter/CombatEncounterPanel';
-import { createAppStore } from '@/state/store';
-import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
-import { createMockEncounterEnemy } from '@/state/mocks/combat.mock';
+import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 
 afterEach(() => {
     jest.restoreAllMocks();
 });
 
-function openEncounter(): CombatEncounterState {
-    const player = createCharacter({ name: 'Reaper', level: 3, baseStats: { heart: 8, body: 8, mind: 8 } });
-    return initializeCombatEncounter(player, createMockEncounterEnemy(), ['the-gleaners-due'], 7);
+/** The real bw-2 fight, dealt from the Gleaner's Due. */
+function realFight() {
+    return startRealFight(REAL_FIGHT_FIXTURE, {
+        player: { level: 3, baseStats: { heart: 8, body: 8, mind: 8 } },
+        deck: ['the-gleaners-due'],
+        seed: 7,
+    });
 }
 
 describe('applyHazardOutcome: Souls bank write-back (phase 32 part 1b)', () => {
     it('banks unspent souls onto a fresh character (starts at 0)', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter() });
-        const finalState = { ...openEncounter(), souls: 5 };
-        const enemy = createMockEncounterEnemy();
+        const { store, enemy, combat } = realFight();
+        const finalState = { ...combat, souls: 5 };
 
         applyHazardOutcome(store, 'victory' as CombatOutcome, finalState, enemy);
 
@@ -38,11 +39,10 @@ describe('applyHazardOutcome: Souls bank write-back (phase 32 part 1b)', () => {
     });
 
     it('accumulates across repeated combats rather than overwriting', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter() });
+        const { store, enemy, combat } = realFight();
         const player = store.getState().player;
         store.setState({ player: { ...player, bankedSouls: 3 } } as never);
-        const finalState = { ...openEncounter(), souls: 4 };
-        const enemy = createMockEncounterEnemy();
+        const finalState = { ...combat, souls: 4 };
 
         applyHazardOutcome(store, 'victory' as CombatOutcome, finalState, enemy);
 
@@ -50,9 +50,8 @@ describe('applyHazardOutcome: Souls bank write-back (phase 32 part 1b)', () => {
     });
 
     it('banks on every outcome, not just victory — the jar travels regardless', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter() });
-        const finalState = { ...openEncounter(), souls: 2 };
-        const enemy = createMockEncounterEnemy();
+        const { store, enemy, combat } = realFight();
+        const finalState = { ...combat, souls: 2 };
 
         applyHazardOutcome(store, 'defeat' as CombatOutcome, finalState, enemy);
 
@@ -60,10 +59,9 @@ describe('applyHazardOutcome: Souls bank write-back (phase 32 part 1b)', () => {
     });
 
     it('a combat that never generated souls contributes 0', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter() });
-        const finalState = openEncounter();
+        const { store, enemy, combat } = realFight();
+        const finalState = combat;
         expect(finalState.souls ?? 0).toBe(0);
-        const enemy = createMockEncounterEnemy();
 
         applyHazardOutcome(store, 'victory' as CombatOutcome, finalState, enemy);
 

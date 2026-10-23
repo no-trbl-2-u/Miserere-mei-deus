@@ -46,10 +46,9 @@ import { Tabs } from '@/lib/platform/router';
 import { CombatGate } from '@/components/CombatGate';
 import { CombatModeProvider, useCombatMode } from '@/state/combat-mode';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
-import { createAppStore, EMPTY_EVENT_SLICE, type AppStore } from '@/state/store';
+import { createAppStore, type AppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
-import { createMockEncounterEnemy } from '@/state/mocks/combat.mock';
-import type { ResolveMapEventResult } from '@mechanics';
+import { arriveAtRealFight } from '@/test-utils/realFight';
 
 import ExplorationScreen from '@/app/(tabs)/exploration';
 import TabLayout from '@/app/(tabs)/_layout';
@@ -67,24 +66,6 @@ afterEach(() => {
 function makeStore(): AppStore {
     return createAppStore({ adapter: createMemoryAdapter() });
 }
-
-function seedActiveEvent(store: AppStore, result: ResolveMapEventResult): void {
-    store.setState({ event: { ...EMPTY_EVENT_SLICE, pending: result } });
-}
-
-// A real `createEnemy(...)`-built Enemy (not a hand-rolled literal): the
-// route hands it straight to `CombatEncounterPanel`.
-const ENCOUNTER_EVENT: ResolveMapEventResult = {
-    state: undefined as never,
-    event: {
-        kind: 'encounter',
-        encounter: {
-            enemies: [createMockEncounterEnemy()],
-            origin: 'breakwater:bw-2',
-        },
-        isBoss: false,
-    } as never,
-};
 
 /** Reads the combat flag out of the provider for assertions. */
 let combat: { inCombat: boolean } = { inCombat: false };
@@ -131,8 +112,7 @@ describe('integration: a map fight runs on its own route', () => {
     });
 
     it('a combat-prelude is engaged and routed once; the map never hosts the fight', () => {
-        const store = makeStore();
-        seedActiveEvent(store, ENCOUNTER_EVENT);
+        const { store } = arriveAtRealFight();
         const tree = mount(store, false);
         flush();
 
@@ -149,8 +129,7 @@ describe('integration: a map fight runs on its own route', () => {
     });
 
     it('the route shows the staged fight; WITHDRAW ends it and leaves without re-routing', () => {
-        const store = makeStore();
-        seedActiveEvent(store, ENCOUNTER_EVENT);
+        const { store } = arriveAtRealFight();
         // The navigator mounts the route after the gate's push.
         const { rerender, getByTestId, queryByTestId } = mount(store, false);
         flush();
@@ -177,8 +156,7 @@ describe('integration: a map fight runs on its own route', () => {
     });
 
     it('WITHDRAW narrates the retreat at no grace cost (D39) even though the event slice is already cleared', () => {
-        const store = makeStore();
-        seedActiveEvent(store, ENCOUNTER_EVENT);
+        const { store } = arriveAtRealFight();
         const tree = mount(store, false);
         flush();
         tree.rerender(

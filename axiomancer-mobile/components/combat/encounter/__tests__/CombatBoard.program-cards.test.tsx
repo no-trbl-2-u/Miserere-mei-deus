@@ -13,12 +13,12 @@ import { fireEvent, render, screen } from '@testing-library/react-native';
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 
 import {
-    cardLibrary, initializeCombatEncounter, rollEncounterDice, playCombatCard,
+    cardLibrary, rollEncounterDice, playCombatCard,
     type Card, type CombatEncounterState,
 } from '@mechanics';
 import { CombatBoard, type DragController } from '@/components/combat/encounter/CombatBoard';
 import { buildCombatViewModel, type CombatViewModel } from '@/state/presenters/combat-encounter.engine';
-import { createMockEncounterEnemy } from '@/state/mocks/combat.mock';
+import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 import { tapCombatDie } from '@/test-utils/tapCombatDie';
 
@@ -39,18 +39,20 @@ const boardCallbacks = () => ({
     onSignature: jest.fn(), onEndPhase: jest.fn(), onInspect: jest.fn(),
 });
 
-function open(store: ReturnType<typeof withAllProviders>['store'], hand: string[], vitae: number): CombatEncounterState {
-    const base = store.getState().player;
-    const player = { ...base, baseStats: { heart: 5, body: 5, mind: 5 } };
-    let s = initializeCombatEncounter(player, createMockEncounterEnemy(), [...hand, 'grey-strike', 'grey-ward', 'grey-word'], 9);
-    s = rollEncounterDice(s).state;
-    return {
+function open(hand: string[], vitae: number): { store: ReturnType<typeof withAllProviders>['store']; s: CombatEncounterState } {
+    const { store, combat } = startRealFight(REAL_FIGHT_FIXTURE, {
+        player: { baseStats: { heart: 5, body: 5, mind: 5 } },
+        deck: [...hand, 'grey-strike', 'grey-ward', 'grey-word'],
+        seed: 9,
+    });
+    const s = rollEncounterDice(combat).state;
+    return { store, s: {
         ...s,
         hand: hand.map((cardId, i) => ({ uid: `h${i}`, cardId })),
         player: { ...s.player, health: vitae },
         dice: [{ id: 'w', color: 'wild', state: 'available', temporary: false, face: 'mana' }],
         reserve: [],
-    };
+    } };
 }
 
 function mount(vm: CombatViewModel, staged: string[], store: ReturnType<typeof withAllProviders>['store']) {
@@ -64,8 +66,8 @@ afterEach(() => { jest.clearAllMocks(); });
 
 describe('CombatBoard — program cards', () => {
     it('a FREE line the engine refuses names the refusal and does not commit', () => {
-        const { store } = withAllProviders(<></>);
-        const vm = buildCombatViewModel(open(store, [SACRIFICE_FREE.id], 2));
+        const { store, s: opened } = open([SACRIFICE_FREE.id], 2);
+        const vm = buildCombatViewModel(opened);
         const cbs = mount(vm, ['h0'], store);
         const ribbon = screen.getByTestId('combat-apply-h0');
         expect(screen.getByText(/below 1 VITAE/)).toBeTruthy();
@@ -74,8 +76,8 @@ describe('CombatBoard — program cards', () => {
     });
 
     it('an armed X line shows the amount stepper and commits the amount chosen', async () => {
-        const { store } = withAllProviders(<></>);
-        const vm = buildCombatViewModel(open(store, [X_LINE.id], 100));
+        const { store, s: opened } = open([X_LINE.id], 100);
+        const vm = buildCombatViewModel(opened);
         const cbs = mount(vm, ['h0'], store);
         expect(screen.queryByTestId('combat-x-h0')).toBeNull();
         await tapCombatDie('w');
@@ -88,8 +90,8 @@ describe('CombatBoard — program cards', () => {
     });
 
     it('lists a Global in play and opens its card', () => {
-        const { store } = withAllProviders(<></>);
-        const s = playCombatCard(open(store, [GLOBAL.id], 100), { uid: 'h0' }, false).state;
+        const { store, s: opened } = open([GLOBAL.id], 100);
+        const s = playCombatCard(opened, { uid: 'h0' }, false).state;
         const cbs = mount(buildCombatViewModel(s), [], store);
         expect(screen.getByTestId('combat-globals')).toBeTruthy();
         expect(buildCombatViewModel(s).globals[0].a11y).not.toMatch(/copy/);
@@ -98,8 +100,8 @@ describe('CombatBoard — program cards', () => {
     });
 
     it('two copies of a Global in play render as two chips, keyed by instance', () => {
-        const { store } = withAllProviders(<></>);
-        let s = playCombatCard(open(store, [GLOBAL.id, GLOBAL.id], 100), { uid: 'h0' }, false).state;
+        const { store, s: opened } = open([GLOBAL.id, GLOBAL.id], 100);
+        let s = playCombatCard(opened, { uid: 'h0' }, false).state;
         s = playCombatCard(s, { uid: 'h1' }, false).state;
         const uids = s.program!.globals.map((g) => g.uid);
         expect(uids).toHaveLength(2);
