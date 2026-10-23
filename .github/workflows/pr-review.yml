@@ -12,7 +12,9 @@ name: pr-review
 # not bookkeeping, naming it (LG1b; `verify-root` owns what the root
 # `npm test` checks), fails on a ticked acceptance line in the PR body
 # that names no proof (LG1c, `scripts/pr-acceptance.mjs`), fails when
-# job `judge` does, then waits for
+# job `judge` does, fails on an added test file that passes on the merge
+# base and carries no `guard-test:` reason (LG1d, `scripts/pr-review.mjs
+# parent-tests --gate`), then waits for
 # every `verify-*` the diff triggers on this head and is green only when all of them are (`scripts/pr-gate.mjs`).
 # A ruleset in evaluate mode requires it; T creates that ruleset with the
 # command in `.github/workflows/README.md`.
@@ -190,6 +192,21 @@ jobs:
       # re-run of this job checks an edited body.
       - name: Acceptance proof in the PR body
         run: node scripts/pr-acceptance.mjs --pr "$PR" --head "$HEAD_SHA"
+
+      # A test file the PR adds must fail on the merge base with its own
+      # version laid over, or carry a `guard-test: <reason>` comment (phase
+      # LG1d). Dependencies are installed only when there is one to run.
+      - name: Count the test files the PR adds
+        id: added
+        run: node scripts/pr-review.mjs parent-tests --pr "$PR" --head "$HEAD_SHA" --gate --list
+
+      - name: Install dependencies for the parent replay
+        if: steps.added.outputs.count != '0'
+        run: npm ci --no-audit --no-fund
+
+      - name: Fail-on-parent for added tests
+        if: steps.added.outputs.count != '0'
+        run: node scripts/pr-review.mjs parent-tests --pr "$PR" --head "$HEAD_SHA" --gate
 
       - name: Wait for every triggered verify-* on this head
         run: node scripts/pr-gate.mjs wait --pr "$PR" --head "$HEAD_SHA"

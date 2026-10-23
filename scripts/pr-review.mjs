@@ -29,6 +29,7 @@
 //
 //   node scripts/pr-review.mjs wanted --pr <n> [--dispatch]   # writes go, pr, head, digest to $GITHUB_OUTPUT
 //   node scripts/pr-review.mjs parent-tests --pr <n>           # the Tests lens's parent replay (RV1c)
+//   node scripts/pr-review.mjs parent-tests --pr <n> --gate [--head <sha>] [--list]   # the verify-gate step (LG1d)
 //   node scripts/pr-review.mjs fix-wanted --pr <n>             # writes go, branch, head to $GITHUB_OUTPUT (the fixer, D95)
 //
 // `parent-tests` runs each test file the PR adds or changes at the PR's
@@ -39,7 +40,17 @@
 // so the reviewer needs no `git worktree` or `git checkout` grant of its
 // own, and prints one line per file.
 //
-// `reviewWanted` and `formatParentTests` are pure; only `main` reads GitHub.
+// With `--gate` it is a step of the `verify-gate` check (phase LG1d,
+// `plan/phases/phase_LG1_loop_gates.md` A4): it replays only the test
+// files the PR adds and fails when one passes on the base, unless the file
+// carries a `guard-test: <reason>` comment (a guard pins behaviour that
+// already holds, so it passes on the base by design). A file that fails at
+// its own head is inconclusive and listed, not judged: the owning
+// `verify-*` already fails on it. `--list` only counts the added test
+// files, so the workflow installs dependencies only when there is one.
+//
+// `reviewWanted`, `formatParentTests`, `guardReason`, `decideParentGate`
+// and `describeParentGate` are pure; only `main` reads GitHub.
 
 import { execFileSync } from 'node:child_process'
 import { appendFileSync } from 'node:fs'
@@ -200,6 +211,101 @@ export function formatParentTests(files) {
   return [...lines, `parent-tests: ${weak} of ${files.length} file(s) could not fail on the change`].join('\n')
 }
 
+/** A `guard-test:` comment line; the reason is everything after the colon. */
+const GUARD = /^\s*(?:\/\/|\/\*+|\*|#)\s*guard-test:\s*(.*?)\s*(?:\*\/)?\s*$/m
+
+/**
+ * The reason a test file gives for passing on the base by design.
+ *
+ * @param {string|null} source the file's text.
+ * @returns {string|null} the reason, '' for a bare `guard-test:` with none, null when the file carries no such comment.
+ * @example guardReason('// guard-test: pins the old rule\n') // 'pins the old rule'
+ */
+export function guardReason(source) {
+  const m = GUARD.exec(source ?? '')
+  return m ? m[1] : null
+}
+
+/**
+ * The fail-on-parent step's state over the PR's added test files.
+ *
+ * @param {Array<{ path: string, verdict: string, reason: string, guard: string|null }>} files each added file's `verdictFor` result and its `guardReason`.
+ * @returns {{ state: 'green'|'red'|'none', lines: Array<{ path: string, verdict: string, reason: string, guard: string|null, status: 'fails-on-parent'|'guarded'|'could-not-fail'|'inconclusive' }> }} red when an added file passes on the base with no reasoned guard.
+ * @example decideParentGate([]).state // 'none'
+ */
+export function decideParentGate(files) {
+  const lines = files.map((f) => {
+    const status = f.verdict !== 'could-not-fail' ? f.verdict
+      : f.guard ? 'guarded' : 'could-not-fail'
+    return { ...f, status }
+  })
+  if (!lines.length) return { state: 'none', lines }
+  return { state: lines.some((l) => l.status === 'could-not-fail') ? 'red' : 'green', lines }
+}
+
+/**
+ * The summary the gate step prints and writes to the step summary.
+ *
+ * @param {ReturnType<typeof decideParentGate>} d the decision.
+ * @returns {string} markdown.
+ */
+export function describeParentGate(d) {
+  if (d.state === 'none') return 'fail-on-parent: the PR adds no test file (nothing to check)'
+  const out = [`fail-on-parent: ${d.state}`]
+  for (const l of d.lines) {
+    if (l.status === 'fails-on-parent') out.push(`- \`${l.path}\`: fails on the base (${l.reason})`)
+    else if (l.status === 'guarded') out.push(`- \`${l.path}\`: passes on the base, a guard by design: ${l.guard}`)
+    else if (l.status === 'inconclusive') out.push(`- \`${l.path}\`: not judged (${l.reason})`)
+    else {
+      const bare = l.guard === '' ? ' Its `guard-test:` comment gives no reason.' : ''
+      out.push(`- \`${l.path}\`: passes on the base, so it could not fail on this change.${bare} Make it pin what the PR adds, or add a \`// guard-test: <reason>\` comment if it guards behaviour that already holds.`)
+    }
+  }
+  return out.join('\n')
+}
+
+/**
+ * Replays test files at `head` (the control) and at `base` with the head's
+ * version laid over, in a detached worktree of `repo`.
+ *
+ * @param {{ repo?: string, base: string, head: string, tests: string[], timeoutMs?: number }} opts the repository, the two commits and the repo-relative test files.
+ * @returns {Array<{ path: string, verdict: string, reason: string, couldNotFailCases: string[], newCases: number, guard: string|null }>} one entry per file.
+ */
+export function replayTests({ repo, base, head, tests, timeoutMs }) {
+  // ls-tree first: `git show` of a path the commit lacks prints to stderr.
+  const show = (sha, path) => (git(['ls-tree', '--name-only', sha, '--', path], repo) ? git(['show', `${sha}:${path}`], repo) : null)
+  if (!tests.length) return []
+  const files = []
+  const dir = openWorktree('pr-review-parent-', repo)
+  try {
+    checkout(dir, head)
+    const control = runTests(dir, tests, timeoutMs)
+    checkout(dir, base)
+    git(['checkout', head, '--', ...tests], dir)
+    const onBase = runTests(dir, tests, timeoutMs)
+    for (const path of tests) {
+      const atHead = show(head, path) ?? ''
+      files.push({ path, ...verdictFor(control[path] ?? null, onBase[path] ?? null, newTitles(atHead, show(base, path))), guard: guardReason(atHead) })
+    }
+  } finally {
+    closeWorktree(dir, repo)
+  }
+  return files
+}
+
+/**
+ * The runnable test files a diff adds (`A`) or adds and changes (`AM`).
+ *
+ * @param {string} repo the repository.
+ * @param {string} base the merge base.
+ * @param {string} head the head.
+ * @param {string} [filter] git's `--diff-filter`.
+ * @returns {string[]} repo-relative paths.
+ */
+export function changedTests(repo, base, head, filter = 'AM') {
+  return git(['diff', '--name-only', `--diff-filter=${filter}`, base, head], repo).split('\n').filter((f) => f && runnerFor(f))
+}
+
 // --- I/O ----------------------------------------------------------------------
 
 // The review job runs main's copy of this file from `.review-tooling/scripts/`.
@@ -217,36 +323,27 @@ function arg(name, fallback) {
   return i > 0 ? process.argv[i + 1] : fallback
 }
 
+/** The gate's per-runner budget: two runs of each runner must fit the job beside the wait. */
+const GATE_TIMEOUT_MS = 8 * 60 * 1000
+
 function parentTests(pr) {
   const ref = `refs/remotes/origin/pr-review-${pr}`
   git(['fetch', '--quiet', '--no-tags', 'origin', '+main:refs/remotes/origin/main', `+pull/${pr}/head:${ref}`])
-  const head = git(['rev-parse', ref])
+  const gate = process.argv.includes('--gate')
+  const head = git(['rev-parse', arg('--head') ?? ref])
   const base = git(['merge-base', 'refs/remotes/origin/main', head])
-  const show = (sha, path) => {
-    try {
-      return git(['show', `${sha}:${path}`])
-    } catch {
-      return null
-    }
+  const tests = changedTests(ROOT, base, head, gate ? 'A' : 'AM')
+  if (!gate) return console.log(formatParentTests(replayTests({ repo: ROOT, base, head, tests })))
+  if (process.argv.includes('--list')) {
+    console.log(`fail-on-parent: the PR adds ${tests.length} test file(s)${tests.length ? `: ${tests.join(', ')}` : ''}`)
+    if (process.env.GITHUB_OUTPUT) appendFileSync(process.env.GITHUB_OUTPUT, `count=${tests.length}\n`)
+    return
   }
-  const tests = git(['diff', '--name-only', '--diff-filter=AM', base, head]).split('\n').filter((f) => f && runnerFor(f))
-  const files = []
-  if (tests.length) {
-    const dir = openWorktree('pr-review-parent-')
-    try {
-      checkout(dir, head)
-      const control = runTests(dir, tests)
-      checkout(dir, base)
-      git(['checkout', head, '--', ...tests], dir)
-      const onBase = runTests(dir, tests)
-      for (const path of tests) {
-        files.push({ path, ...verdictFor(control[path] ?? null, onBase[path] ?? null, newTitles(show(head, path) ?? '', show(base, path))) })
-      }
-    } finally {
-      closeWorktree(dir)
-    }
-  }
-  console.log(formatParentTests(files))
+  const d = decideParentGate(replayTests({ repo: ROOT, base, head, tests, timeoutMs: GATE_TIMEOUT_MS }))
+  const text = describeParentGate(d)
+  console.log(text)
+  if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${text}\n\n`)
+  if (d.state === 'red') process.exitCode = 1
 }
 
 function prDigest(pr, repo) {
@@ -263,7 +360,7 @@ async function main() {
   const pr = arg('--pr')
   const repo = process.env.GH_REPO || 'no-trbl-2-u/Miserere-mei-deus'
   if (!['wanted', 'parent-tests', 'fix-wanted'].includes(mode) || !/^\d+$/.test(pr ?? '')) {
-    console.error('usage: pr-review.mjs wanted --pr <n> [--dispatch] | parent-tests --pr <n> | fix-wanted --pr <n>')
+    console.error('usage: pr-review.mjs wanted --pr <n> [--dispatch] | parent-tests --pr <n> [--gate [--head <sha>] [--list]] | fix-wanted --pr <n>')
     process.exit(2)
   }
   if (mode === 'parent-tests') return parentTests(pr)

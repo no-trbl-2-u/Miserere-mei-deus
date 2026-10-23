@@ -211,7 +211,7 @@ done
 gh pr create --repo "$GH_REPO" --base main --head "loop/<verb>-<slug>" \
   --label loop:pr --label "size:<S|M|L>" --label "area:<area>" \
   --title "<subject naming the claim>" --body-file "$body"
-gh pr checks "loop/<verb>-<slug>" --repo "$GH_REPO" --watch --fail-fast
+gh pr checks "loop/<verb>-<slug>" --repo "$GH_REPO" --required --watch --fail-fast
 ```
 
 - **One size label per PR** (T, 2026-10-14), so T can spot the
