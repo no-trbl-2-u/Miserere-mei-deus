@@ -644,3 +644,19 @@ test('the visual step is report-only and the re-stamp never turns a verify run r
   assert.equal(steps.length, 5)
   for (const s of steps) assert.match(s, /continue-on-error: true/, s.split('\n')[0])
 })
+
+// --- pr-review.yml: report-only mutation on changed lines (phase LG1g, A7) ---
+
+test('the mutation job never fails a check and runs Stryker with no token in reach', () => {
+  const mutation = job(review, 'mutation')
+  assert.ok(mutation, 'mutation job present')
+  assert.match(mutation, /^ {4}if: github\.event_name == 'pull_request' && github\.event\.pull_request\.head\.repo\.full_name == github\.repository$/m)
+  assert.doesNotMatch(mutation, /\n {4}needs:/, 'it waits on nothing')
+  assert.doesNotMatch(code(review), /needs: \[?[^\n]*\bmutation\b/, 'nothing waits on it')
+  assert.match(mutation, /persist-credentials: false/)
+  assert.match(mutation, /node scripts\/eval\/mutation-pr\.mjs run [^\n]*\n[^\n]*--budget 900/)
+  const steps = mutation.split(/\n {6}- name: /).slice(1)
+  for (const s of steps.slice(2)) assert.match(s, /continue-on-error: true/, s.split('\n')[0])
+  const withToken = steps.filter((s) => /GH_TOKEN/.test(s))
+  assert.deepEqual(withToken.map((s) => s.split('\n')[0]), ['Post the score and survivors'])
+})

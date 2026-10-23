@@ -316,3 +316,76 @@ jobs:
         -p
         --disallowedTools "Bash(gh pr comment:*),Bash(gh pr edit:*),Bash(gh pr merge:*),Bash(gh pr close:*),Bash(gh api:*),Bash(git push --force:*),Bash(git push -f:*),Bash(git rebase:*),Bash(git merge:*),Bash(git reset:*)"
       timeout_minutes: 30
+
+  # Report-only mutation on the lines a PR changes (phase LG1g,
+  # `scripts/eval/mutation-pr.mjs`): StrykerJS on the changed source in
+  # `axiomancer-mechanics/src`, then the `axiomancer-mobile` app folders with
+  # what is left of a 15-minute budget; the score and each survivor's file
+  # and line go to the job summary and one comment, edited in place on each
+  # push. It never fails a check: every step that can fail continues, and
+  # nothing `needs` it. Stryker runs with no token in reach; only the last
+  # step holds one, to post.
+  mutation:
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    concurrency:
+      group: pr-review-mutation-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - name: Checkout the PR head with history (the diff is base...head)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Scope the mutants to the changed lines
+        id: scope
+        continue-on-error: true
+        run: node scripts/eval/mutation-pr.mjs scope --base "$BASE_SHA" --head "$HEAD_SHA"
+
+      - name: Install dependencies
+        id: install
+        if: steps.scope.outputs.count != '' && steps.scope.outputs.count != '0'
+        continue-on-error: true
+        run: npm ci --no-audit --no-fund
+
+      - name: Mutate the changed lines (15-minute budget)
+        id: run
+        if: steps.install.outcome == 'success'
+        continue-on-error: true
+        run: |
+          node scripts/eval/mutation-pr.mjs run --base "$BASE_SHA" --head "$HEAD_SHA" \
+            --budget 900 --out "$RUNNER_TEMP/mutation.md"
+          cat "$RUNNER_TEMP/mutation.md" >> "$GITHUB_STEP_SUMMARY"
+
+      # Posts only when Stryker ran; a PR with no changed source gets no comment.
+      - name: Post the score and survivors
+        if: steps.run.outcome == 'success'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          body="$RUNNER_TEMP/mutation.md"
+          [ -s "$body" ] || exit 0
+          id="$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
+            --jq '.[] | select(.body | startswith("<!-- eval:mutation-pr -->")) | .id' | tail -n1)"
+          if [ -n "$id" ]; then
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$id" -F "body=@$body" > /dev/null
+          else
+            gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body-file "$body"
+          fi
