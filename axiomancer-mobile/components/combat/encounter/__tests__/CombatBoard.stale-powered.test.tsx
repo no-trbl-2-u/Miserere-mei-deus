@@ -13,12 +13,12 @@ import { fireEvent, render, screen } from '@testing-library/react-native';
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 
 import {
-    initializeCombatEncounter, rollEncounterDice,
+    rollEncounterDice,
     type CombatEncounterState,
 } from '@mechanics';
 import { CombatBoard, resolveDieDropTarget, type DragController } from '@/components/combat/encounter/CombatBoard';
 import { buildCombatViewModel, type CombatViewModel } from '@/state/presenters/combat-encounter.engine';
-import { createMockEncounterEnemy } from '@/state/mocks/combat.mock';
+import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 import { tapCombatDie } from '@/test-utils/tapCombatDie';
 
@@ -38,15 +38,16 @@ const boardCallbacks = () => ({
 /** A rolled encounter whose first live tray die is a BODY mana face — legal
  *  for both A and B (colourless cards take any die). Returns the state and
  *  that die's id. */
-function openWithBodyDie(store: ReturnType<typeof withAllProviders>['store']): { s: CombatEncounterState; dieId: string } {
-    const base = store.getState().player;
-    const player = { ...base, knownCards: CARDS, baseStats: { heart: 8, body: 8, mind: 8 }, health: 200, maxHealth: 200 };
-    let s = initializeCombatEncounter(player, createMockEncounterEnemy(), undefined, 16);
-    s = rollEncounterDice(s).state;
+function openWithBodyDie(): { store: ReturnType<typeof withAllProviders>['store']; s: CombatEncounterState; dieId: string } {
+    const { store, combat } = startRealFight(REAL_FIGHT_FIXTURE, {
+        player: { knownCards: CARDS, baseStats: { heart: 8, body: 8, mind: 8 }, health: 200, maxHealth: 200 },
+        seed: 16,
+    });
+    const s = rollEncounterDice(combat).state;
     const first = s.dice.findIndex(d => d.state === 'available' && !d.floating && d.face !== 'miss');
     expect(first).toBeGreaterThanOrEqual(0);
     const dice = s.dice.map((d, i) => (i === first ? { ...d, color: 'body' as const, face: 'mana' as const } : d));
-    return { s: { ...s, dice }, dieId: dice[first].id };
+    return { store, s: { ...s, dice }, dieId: dice[first].id };
 }
 
 /** Renders the board for `stagedUids`, returning the callbacks and a
@@ -73,8 +74,7 @@ afterEach(() => { jest.clearAllMocks(); });
 
 describe('CombatBoard — a die that powered card A never re-attaches to card B', () => {
     it('after APPLYing A with the die, a staged B does NOT render powered and commits FREE', async () => {
-        const { store } = withAllProviders(<></>);
-        const { s, dieId } = openWithBodyDie(store);
+        const { store, s, dieId } = openWithBodyDie();
         // The die is still live after A's play (the refresh case): the VM the
         // board sees keeps it available.
         const vm = buildCombatViewModel(s);
@@ -102,8 +102,7 @@ describe('CombatBoard — a die that powered card A never re-attaches to card B'
     });
 
     it('the still-live die can be chosen again for B — the explicit re-choice powers it', async () => {
-        const { store } = withAllProviders(<></>);
-        const { s, dieId } = openWithBodyDie(store);
+        const { store, s, dieId } = openWithBodyDie();
         const vm = buildCombatViewModel(s);
         const [a, b] = vm.hand.filter(c => c.cardId === 'grey-strike');
 
@@ -119,8 +118,7 @@ describe('CombatBoard — a die that powered card A never re-attaches to card B'
     });
 
     it('a live die stays draggable and its re-drop targets legally', () => {
-        const { store } = withAllProviders(<></>);
-        const { s, dieId } = openWithBodyDie(store);
+        const { s, dieId } = openWithBodyDie();
         const die = buildCombatViewModel(s).dice.find(d => d.id === dieId)!;
         // The second life is an explicit re-drag, so the die must be grabbable…
         expect(die.draggable).toBe(true);

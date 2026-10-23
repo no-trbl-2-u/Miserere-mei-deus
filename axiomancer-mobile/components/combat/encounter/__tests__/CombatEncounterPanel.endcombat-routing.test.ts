@@ -1,8 +1,9 @@
 /**
  * `applyHazardOutcome` routes rewards through the engine's real `endCombat`
  * reducer rather than hand-rolling XP/loot/quest-advancement itself. These
- * tests stage `state.currentEncounter` via `startCombat` the way
- * `beginHazardEncounter` does, then assert `endCombat`'s full grant lands
+ * tests stage `state.currentEncounter` through a real fight (the
+ * Breakwater's bw-2, entered by `beginHazardEncounter`), or via
+ * `startCombat` for an authored foe the mercy path needs, then assert `endCombat`'s full grant lands
  * live: quest kill-objective advancement + completion reward, and — on a
  * merciful win — the authored `friendshipReward` payload (flags, codex
  * unlock, faction deltas).
@@ -12,32 +13,38 @@ import { afterEach, describe, expect, it, jest } from '@jest/globals';
 
 import {
     createCharacter, initializeCombatEncounter, type CombatEncounterState, type CombatOutcome,
-    ENEMY_REGISTRY, FIXTURE_QUEST, emptyQuestLog, startQuest,
+    ENEMY_REGISTRY, FIXTURE_QUEST, emptyQuestLog, startQuest, type Enemy,
 } from '@mechanics';
 
 import { applyHazardOutcome } from '@/components/combat/encounter/CombatEncounterPanel';
 import { createAppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
-import { createMockEncounterEnemy } from '@/state/mocks/combat.mock';
+import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 
 afterEach(() => {
     jest.restoreAllMocks();
 });
 
-function openEncounter(enemy = createMockEncounterEnemy()): CombatEncounterState {
+/** The real bw-2 fight, its final state dealt from the Gleaner's Due. */
+function realFight() {
+    return startRealFight(REAL_FIGHT_FIXTURE, {
+        player: { level: 3, baseStats: { heart: 8, body: 8, mind: 8 } },
+        deck: ['the-gleaners-due'],
+        seed: 7,
+    });
+}
+
+function openEncounter(enemy: Enemy): CombatEncounterState {
     const player = createCharacter({ name: 'Reaper', level: 3, baseStats: { heart: 8, body: 8, mind: 8 } });
     return initializeCombatEncounter(player, enemy, ['the-gleaners-due'], 7);
 }
 
 describe('applyHazardOutcome: routes through endCombat (phase 54)', () => {
     it('victory grants endCombat-derived XP and clears the staged encounter', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter() });
-        const enemy = createMockEncounterEnemy();
-        store.getState().startCombat(enemy);
+        const { store, enemy, combat: finalState } = realFight();
         expect(store.getState().currentEncounter).not.toBeUndefined();
 
         const before = store.getState().player!.experience;
-        const finalState = openEncounter(enemy);
 
         applyHazardOutcome(store, 'victory' as CombatOutcome, finalState, enemy);
 
@@ -46,12 +53,9 @@ describe('applyHazardOutcome: routes through endCombat (phase 54)', () => {
     });
 
     it('defeat routes through endCombat too (no XP, encounter still clears)', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter() });
-        const enemy = createMockEncounterEnemy();
-        store.getState().startCombat(enemy);
+        const { store, enemy, combat: finalState } = realFight();
 
         const before = store.getState().player!.experience;
-        const finalState = openEncounter(enemy);
 
         applyHazardOutcome(store, 'defeat' as CombatOutcome, finalState, enemy);
 

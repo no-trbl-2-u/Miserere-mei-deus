@@ -11,7 +11,8 @@
  * The default fixture is the Breakwater's bw-2 (a float-eye at the map's
  * fight level); `REAL_BOSS_FIGHT_FIXTURE` is its door boss. Pass another fixture ref to fight a different node's foe;
  * pass `deck` and `seed` where a test needs a known hand, as the panel's own
- * `deck` and `seed` props do.
+ * `deck` and `seed` props do, and `player` where it needs exact save fields
+ * (a known-card set, a health pool) on the fixture's player.
  *
  * Functions:
  *   realFightFixture(player)    the default fixture with player overrides
@@ -65,6 +66,12 @@ export interface RealFightOptions {
     readonly seed?: number;
     /** Floating dice the save holds before the fight (not a fixture field). */
     readonly floatingDice?: Character['floatingDice'];
+    /**
+     * Save fields set on the player before the fight: exact known cards,
+     * stats or a health pool the fixture's player overrides cannot express
+     * (they add known cards, and derive max health from the level).
+     */
+    readonly player?: Partial<Character>;
 }
 
 export interface RealFight extends RealFightArrival {
@@ -86,9 +93,10 @@ export interface RealFightArrival extends FixtureStoreHandle {
  */
 export function arriveAtRealFight(ref: FixtureRef = REAL_FIGHT_FIXTURE, options: RealFightOptions = {}): RealFightArrival {
     const handle = createFixtureStore(ref);
-    if (options.floatingDice) {
+    if (options.floatingDice || options.player) {
         const player = handle.store.getState().player;
-        handle.store.setState({ player: { ...player, floatingDice: options.floatingDice } });
+        const floating = options.floatingDice ? { floatingDice: options.floatingDice } : {};
+        handle.store.setState({ player: { ...player, ...options.player, ...floating } });
     }
     arriveFromFixture(handle);
     const pending = handle.store.getState().event?.pending ?? null;
