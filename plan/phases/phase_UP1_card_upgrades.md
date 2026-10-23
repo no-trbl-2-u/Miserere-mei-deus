@@ -28,7 +28,8 @@ boss exists, the measured report shows that upgrades are what get a Blood Price 
   test covers each rarity at its limit and one step past it. Each upgrade's id resolves in a deck and in a save.
 - **A3** Every upgrade makes the numbers bigger, Blood Price cards included. For a card whose effect is a
   `program`, the payoff amounts it deals (DEAL, GUARD, HEAL, LEECH, VULNERABLE %, "the foe loses", Conviction
-  gained, and the caps on those payoffs) grow with each upgrade. Costs (SACRIFICE, TETHER, EXILE) do not grow.
+  gained, and the caps on those payoffs) grow with each upgrade. Static costs (SACRIFICE n, TETHER n, EXILE) do not grow; a dynamic cost's cap
+  (SACRIFICE any amount X, max m) may (amended by T, 2026-10-23: "no 'static' costs ever grow").
   The card text shows the new numbers. A test checks every library card: after one upgrade, at least one payoff
   number is higher and no cost is higher. The formula is not shown to the player.
 - **A4** A `REPLACE_CARD` (or equally named) action swaps one owned copy of a card for its upgraded copy in
@@ -85,7 +86,7 @@ the A10 columns are the measure.
 - **"Bigger" is the agent's call, kept balanced and hidden** (T, t6: "just make the numbers bigger each
   upgrade… hide whatever equation you use"). Start from the existing default rule: +40% per upgrade, at least
   +2, effect intensity +1 within its cap. Each upgrade applies to the previous one. Payoffs and their caps grow;
-  costs never do. An authored `Card.upgrade` patch still wins over the default for the first upgrade.
+  static costs never do (a dynamic cost's cap may; T, 2026-10-23). An authored `Card.upgrade` patch still wins over the default for the first upgrade.
 - **The first phase names the Blood Price cards** (T, t6: "the first row for this phase MUST be to generate names
   for all of these blood price cards… thematic to their effect… we can always rename them"). Names only: no text,
   number or id changes. T's direct instruction in this guided session satisfies D37.

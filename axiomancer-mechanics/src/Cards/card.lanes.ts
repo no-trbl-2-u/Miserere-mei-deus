@@ -48,9 +48,6 @@ export interface TrialSet {
     readonly id: string;
     readonly cards: readonly Card[];
     readonly lanes: readonly CardLane[];
-    /** Costs T ruled may grow when a card upgrades, by card id (the upgrade law
-     *  otherwise holds every cost still). Each entry is a ruling of T's. */
-    readonly ruledCostGrowth?: Readonly<Record<string, readonly string[]>>;
 }
 
 /**

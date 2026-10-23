@@ -297,9 +297,10 @@ without a ruling from T.
   (D20, parked). The upgrade law exists (Phase UP1b, `Cards/card-upgrades.ts`):
   rarity limits upgrades (common 1, uncommon 2, rare 3) as `<id>+`, `++`,
   `+++`; each raises payoffs (Blood Price programs through `programAt`) and
-  never a cost; `REPLACE_CARD` swaps one owned copy. Blood for Blood, the
-  one rare, takes three (its FREE DEAL grows; PAID's X cap rises and the
-  third is 4X: the one cost an upgrade grows, by T's ruling). The rest site, anvil and
+  never a static cost (SACRIFICE n, TETHER n, EXILE); a dynamic cost's cap
+  (SACRIFICE any amount X, max m) may grow (T, 2026-10-23).
+  `REPLACE_CARD` swaps one owned copy. Blood for Blood, the one rare, takes
+  three (its FREE DEAL grows; PAID's X cap rises and the third is 4X). The rest site, anvil and
   elite grants are UP1d to UP1f.
 - No measured balance baseline (D57). A balance question gets "not
   measured".

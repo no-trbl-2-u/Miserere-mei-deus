@@ -13,7 +13,9 @@
  *   INTENSITY  n -> n + 1
  *     LEECH and Conviction: small counters where +40% rounds to nothing.
  *
- * Costs (SACRIFICE, TETHER, EXILE) never pass through either step.
+ * Static costs (SACRIFICE n, TETHER n, EXILE) never pass through either
+ * step. A dynamic cost's cap (SACRIFICE any amount X, max m) may grow, by the
+ * card's own rule (T, 2026-10-23).
  */
 
 /** MAGNITUDE bucket: +40%, at least +2. */

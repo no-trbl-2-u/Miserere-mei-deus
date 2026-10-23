@@ -48,7 +48,8 @@ interface Entry {
     type: CardType;
     color: CardAspect;
     /** The card's lines at an upgrade level (Phase UP1b): payoffs and their
-     *  caps go through `u`; costs (SACRIFICE, TETHER, EXILE) never do. */
+     *  caps go through `u`; static costs (SACRIFICE n, TETHER n, EXILE) never
+     *  do. A dynamic cost's cap (SACRIFICE any amount X) may grow. */
     program: (u: UpgradeScale) => CardProgram;
     /** The card's name, read off what it does (Phase UP1a). The slot is the id, never the name. */
     name: string;
@@ -127,7 +128,7 @@ const ENTRIES: Entry[] = [
         paid: L(`Same, and gain ${u.i(2)} Conviction.`, c => { c.sacModifier({ kind: 'next-double' }); c.conviction(u.i(2)); }) }) },
     // The library's first rare (Phase UP1c): Skull, three upgrades. FREE grows
     // by the scale. PAID by T's ruling (2026-10-23): X's cap rises by 3 per
-    // upgrade (12, 15, 18, 21; the one cost an upgrade may grow) and the third
+    // upgrade (12, 15, 18, 21; a dynamic cost's cap may grow) and the third
     // upgrade turns 3X into 4X.
     { slot: 'e-08n', name: 'Blood for Blood', type: 'attack', color: RED, rank: 5, program: u => {
         const cap = BLOOD_FOR_BLOOD_X_CAP + BLOOD_FOR_BLOOD_X_CAP_STEP * u.level;
@@ -231,6 +232,4 @@ export const BLOOD_PRICE_SET: TrialSet = Object.freeze({
     id: 'blood-price',
     cards: Object.freeze([...LANE_CARDS, GREY_CURSE]),
     lanes: Object.freeze([BLOOD_PRICE_LANE]),
-    // Blood for Blood's X cap rises 12, 15, 18, 21 (T, 2026-10-23).
-    ruledCostGrowth: Object.freeze({ 'bp-e-08n': Object.freeze(['sacrificeX']) }),
 });

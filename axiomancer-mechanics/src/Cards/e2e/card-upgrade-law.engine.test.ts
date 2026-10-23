@@ -7,13 +7,14 @@
  *       one past the limit is refused, and every legal id resolves in a deck
  *       and in a save.
  *   A3  every upgrade makes a payoff number bigger, Blood Price programs
- *       included, and no cost (SACRIFICE, TETHER, EXILE) grows; the face prints
- *       the applied numbers.
+ *       included, and no static cost (SACRIFICE n, TETHER n, EXILE) grows; a
+ *       dynamic cost's cap (SACRIFICE any amount X, max m) may (T, 2026-10-23);
+ *       the face prints the applied numbers.
  *   A4  `REPLACE_CARD` swaps one owned copy for its upgrade.
  */
 
 import { describe, expect, it } from 'vitest';
-import { cardLibrary, getCardById, TRIAL_SETS } from '../cards.library';
+import { cardLibrary, getCardById } from '../cards.library';
 import { getCardLane } from '../card.lanes';
 import {
     baseCardId, canUpgrade, upgradeCard, upgradeLevel, upgradeLimit, UPGRADE_LIMITS,
@@ -125,12 +126,10 @@ const PAYOFF_VERBS = new Set([
     'deal', 'guard', 'heal', 'vulnerable', 'foeLoses', 'leech', 'empowerNextDeal',
     'conviction', 'healNextTurn', 'drain',
 ]);
-const COST_VERBS = new Set(['sacrifice', 'sacrificeX', 'tether']);
-
-/** Costs T ruled may grow on upgrade, by card id, as each trial set records
- *  them. Each entry is a ruling, not a loosening of the law. */
-const RULED_COST_GROWTH: Readonly<Record<string, readonly string[]>> =
-    Object.assign({}, ...TRIAL_SETS.map(set => set.ruledCostGrowth ?? {}));
+/** Static costs: a fixed amount the card prints, never grown by an upgrade.
+ *  A dynamic cost (`sacrificeX`: the player picks X up to a printed cap) is
+ *  not here; its cap may grow (T, 2026-10-23: "no 'static' costs ever grow"). */
+const STATIC_COST_VERBS = new Set(['sacrifice', 'tether']);
 
 interface Call { verb: string; n: number; exact: boolean }
 
@@ -233,15 +232,14 @@ describe('A3 — every upgrade makes the numbers bigger, never a cost', () => {
         expect(offenders).toEqual([]);
     });
 
-    it('no cost grows: SACRIFICE, TETHER and the SACRIFICE-X cap are the same, and EXILE stays', () => {
+    it('no static cost grows: SACRIFICE n and TETHER n are the same, and EXILE stays', () => {
         const offenders: string[] = [];
         for (const card of upgradable.filter(c => c.program)) {
             const base = verbTotals(card);
             const baseExile = programLines(card).map(([, , exile]) => exile).join();
             for (const up of chain(card)) {
                 const t = verbTotals(up);
-                for (const v of COST_VERBS) {
-                    if (RULED_COST_GROWTH[card.id]?.includes(v)) continue;
+                for (const v of STATIC_COST_VERBS) {
                     if ((t.get(v) ?? 0) !== (base.get(v) ?? 0)) offenders.push(`${up.id}: ${v} ${base.get(v)} -> ${t.get(v)}`);
                 }
                 if (programLines(up).map(([, , exile]) => exile).join() !== baseExile) offenders.push(`${up.id}: EXILE changed`);
