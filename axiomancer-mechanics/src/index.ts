@@ -123,6 +123,16 @@ export type {
     // Card programs: the Global / Curse / SACRIFICE ledger
     ProgramLedger, GlobalInPlay, ProgramShortfall,
 } from './Combat';
+// The play-log API contract: the fight and deck change the preview app posts and the Worker stores.
+export {
+    PLAY_LOG_FIGHTS_PATH, PLAY_LOG_DECK_EVENTS_PATH, COMBAT_EVENT_KINDS, PLAY_LOG_UI_EVENT_KINDS,
+    PLAY_LOG_FIGHT_OUTCOMES, DECK_EVENT_KINDS, PLAY_LOG_LIMITS, validateFightPost, validateDeckEventPost,
+} from './Combat';
+export type {
+    CombatEventKind, PlayLogUiEventKind, DeckEventKind, PlayLogStamp, PlayLogCombatEvent, PlayLogUiEvent,
+    PlayLogEvent, PlayLogSource, FightPost, DeckEventWhere, DeckEventPost, FightRow, DeckEventRow, FightList,
+    DeckEventList, PlayLogCreated, PlayLogError, FightValidation, DeckEventValidation,
+} from './Combat';
 // Measured truth (R12a): the Act 1 ledger x spread x deck measurement.
 export { measuredTruthCells, MEASURED_DECK_LANES, MEASURED_SPREADS } from './Combat/combat.measured-truth';
 export type {
