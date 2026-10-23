@@ -25,7 +25,7 @@ import { createAppActions } from '@/state/actions';
 import { createAppStore, type AppStore } from '@/state/store';
 import { PLAYER_TIER_PRESETS } from '@/state/dev/player-presets';
 import { buildCombatViewModel } from '@/state/presenters/combat-encounter.engine';
-import { createMockEncounterEnemy } from '@/state/mocks/combat.mock';
+import { startRealFight } from '@/test-utils/realFight';
 import { selectInventoryViewModel } from '@/state/presenters/inventory.engine';
 
 afterEach(() => {
@@ -204,7 +204,7 @@ describe('grantAllRelics: every relic once, and worn for real', () => {
         expect(dock).toContain('relic-bleeding-signet');
 
         // The signature bar lists every signature the worn signets grant, and both cast.
-        const fight = initializeCombatEncounter(player, createMockEncounterEnemy(), ['grey-strike'], 1);
+        const fight = initializeCombatEncounter(player, startRealFight().enemy, ['grey-strike'], 1);
         const bar = buildCombatViewModel({ ...fight, conviction: 8 }).signatures;
         expect(bar.map((sig) => sig.name)).toEqual(
             player.equipment.accessories.map((a) => a.grantsSignature === 'sig-disarming-plea' ? 'The Open Hand' : 'Crimson Covenant'),
@@ -221,7 +221,7 @@ describe('grantAllRelics: every relic once, and worn for real', () => {
 
         const player = store.getState().player;
         expect(player.equipment.accessories.map((a) => a.id)).toEqual(['relic-disarming-plea', 'relic-bleeding-signet']);
-        const fight = initializeCombatEncounter(player, createMockEncounterEnemy(), ['grey-strike'], 1);
+        const fight = initializeCombatEncounter(player, startRealFight().enemy, ['grey-strike'], 1);
         expect(buildCombatViewModel(fight).signatures.map((sig) => sig.name)).toEqual(['The Open Hand', 'Crimson Covenant']);
     });
 

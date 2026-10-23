@@ -31,6 +31,15 @@ than execute stale information.
    pre-revamp archive under the `archive-pre-revamp` git tag, read only
    when T asks about history) — evidence, subordinate to current law.
 
+**Hand-written reports go in a package's `docs/reports/`** (for example
+`axiomancer-mobile/docs/reports/`). The root `docs/reports/` holds the
+loop's own generated reports. Every `/march` tick runs
+`scripts/report-sweep.mjs` (phase RS1), and it files one CRITIQUE row for
+each package report that `plan/CRITIQUE.md` and `plan/AUDIT.md` do not
+already cite, so `/iterate` reads the report and files its findings. The
+reports that were already handled when the sweep began are listed in
+`plan/report-sweep-baseline.json`.
+
 **A loop PR's body ranks below its commits** (R11). It summarizes what a
 `loop:pr` PR shipped, its decisions and its acceptance IDs, but the commits
 on `main` (and their messages) are the record; where the body and the

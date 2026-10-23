@@ -1030,6 +1030,21 @@ satisfied for exactly these.)
 - A `review:plan-only` PR (a critique pass, a lesson, a decision record) and a `plan:` title are ordinary PRs: the adversarial review runs and the `merge` job merges on a `pass`, under every D95 hold (kill switch, hold labels, pipeline paths, a green `verify-gate`, a trusted verdict on the exact head). `review:plan-only` stays a reading label only.
 - Why: critique passes (#681, #702) waited hours for T's hand with nothing for T to decide.
 
+**D100 — Lane relics stack: 3 of one lane give 2 lane cards, 5 give all 3.** (T, attended, 2026-10-22; amends D71's reward slot mix. T: "If a player equips 3 relics from the same lane, they are offered 2 cards from the reward pool during rewards and if they have all 5 relics of a lane equipped, then all the cards rewards are from that lane.")
+
+- The combat card reward still offers 3 cards. How many are lane cards depends on the most relics the player has equipped from any one lane (a lane is what a relic names: its family, D73):
+
+  | Relics of one lane equipped | Lane cards | Random cards |
+  |---|---|---|
+  | 0 | 0 | 3 |
+  | 1-2 | 1 | 2 |
+  | 3-4 | 2 | 1 |
+  | 5 (every relic slot: weapon, armor, 3 accessories) | 3 | 0 |
+
+- The extra lane cards come from that lane's pool. The single lane card at 1-2 relics is drawn as D71/D73 say (any lane an equipped relic opens).
+- Unchanged: non-combat card rewards ignore relics (D68); there is no starting relic (D71).
+- Ratified, not built: the 2 random + 1 lane reward (D71) is itself not yet wired, so this ships with it.
+
 ## Open follow-ups
 
 **D1 status at a glance (2026-09-28, after #408).** Card and keyword

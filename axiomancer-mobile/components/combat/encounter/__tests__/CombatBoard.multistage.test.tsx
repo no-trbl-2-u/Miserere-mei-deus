@@ -11,10 +11,10 @@ import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 
-import { initializeCombatEncounter, rollEncounterDice } from '@mechanics';
+import { rollEncounterDice } from '@mechanics';
 import { CombatBoard, type DragController } from '@/components/combat/encounter/CombatBoard';
 import { buildCombatViewModel } from '@/state/presenters/combat-encounter.engine';
-import { createMockEncounterEnemy } from '@/state/mocks/combat.mock';
+import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 import { tapCombatDie } from '@/test-utils/tapCombatDie';
 
@@ -33,11 +33,8 @@ afterEach(() => { jest.clearAllMocks(); });
 
 describe('CombatBoard — multi-card staging', () => {
     it('renders one staged frame per uid in stagedUids and shows the count', () => {
-        const { store } = withAllProviders(<></>);
-        const base = store.getState().player;
-        const player = { ...base, knownCards: CARDS, baseStats: { heart: 8, body: 8, mind: 8 }, health: 200, maxHealth: 200 };
-
-        let s = initializeCombatEncounter(player, createMockEncounterEnemy(), undefined, 16);
+        const { store, combat } = startRealFight(REAL_FIGHT_FIXTURE, { player: { knownCards: CARDS, baseStats: { heart: 8, body: 8, mind: 8 }, health: 200, maxHealth: 200 }, seed: 16 });
+        let s = combat;
         s = rollEncounterDice(s).state;
         const vm = buildCombatViewModel(s);
         expect(vm.hand.length).toBeGreaterThanOrEqual(2);
@@ -61,11 +58,8 @@ describe('CombatBoard — multi-card staging', () => {
     // hits END PHASE must be auto-APPLYd (never silently dropped) before the phase
     // resolves. Regression guard for the "staged cards vanish on END PHASE" bug.
     it('END PHASE auto-applies every still-staged card, then resolves the phase', () => {
-        const { store } = withAllProviders(<></>);
-        const base = store.getState().player;
-        const player = { ...base, knownCards: CARDS, baseStats: { heart: 8, body: 8, mind: 8 }, health: 200, maxHealth: 200 };
-
-        let s = initializeCombatEncounter(player, createMockEncounterEnemy(), undefined, 16);
+        const { store, combat } = startRealFight(REAL_FIGHT_FIXTURE, { player: { knownCards: CARDS, baseStats: { heart: 8, body: 8, mind: 8 }, health: 200, maxHealth: 200 }, seed: 16 });
+        let s = combat;
         s = rollEncounterDice(s).state;
         const vm = buildCombatViewModel(s);
         expect(vm.hand.length).toBeGreaterThanOrEqual(2);
@@ -92,11 +86,8 @@ describe('CombatBoard — multi-card staging', () => {
     // player turns between them. The board renders the button disabled and its
     // handler no-ops while `resolving`.
     it('END PHASE is disabled + press-inert while a phase is resolving', () => {
-        const { store } = withAllProviders(<></>);
-        const base = store.getState().player;
-        const player = { ...base, knownCards: CARDS, baseStats: { heart: 8, body: 8, mind: 8 }, health: 200, maxHealth: 200 };
-
-        let s = initializeCombatEncounter(player, createMockEncounterEnemy(), undefined, 16);
+        const { store, combat } = startRealFight(REAL_FIGHT_FIXTURE, { player: { knownCards: CARDS, baseStats: { heart: 8, body: 8, mind: 8 }, health: 200, maxHealth: 200 }, seed: 16 });
+        let s = combat;
         s = rollEncounterDice(s).state;
         const vm = buildCombatViewModel(s);
         const uids = [vm.hand[0].uid, vm.hand[1].uid];
@@ -116,11 +107,8 @@ describe('CombatBoard — multi-card staging', () => {
     });
 
     it('renders the empty play area (no staged cards) when stagedUids is empty', () => {
-        const { store } = withAllProviders(<></>);
-        const base = store.getState().player;
-        const player = { ...base, knownCards: CARDS, baseStats: { heart: 8, body: 8, mind: 8 }, health: 200, maxHealth: 200 };
-
-        let s = initializeCombatEncounter(player, createMockEncounterEnemy(), undefined, 16);
+        const { store, combat } = startRealFight(REAL_FIGHT_FIXTURE, { player: { knownCards: CARDS, baseStats: { heart: 8, body: 8, mind: 8 }, health: 200, maxHealth: 200 }, seed: 16 });
+        let s = combat;
         s = rollEncounterDice(s).state;
         const vm = buildCombatViewModel(s);
 
@@ -141,11 +129,8 @@ describe('CombatBoard — die-attribution invariants', () => {
     // dropped on — never every staged card at once, and staging a second card
     // afterwards never shares or moves it.
     it('a chosen die arms exactly ONE staged card (one staged-die slot)', async () => {
-        const { store } = withAllProviders(<></>);
-        const base = store.getState().player;
-        const player = { ...base, knownCards: CARDS, baseStats: { heart: 8, body: 8, mind: 8 }, health: 200, maxHealth: 200 };
-
-        let s = initializeCombatEncounter(player, createMockEncounterEnemy(), undefined, 16);
+        const { store, combat } = startRealFight(REAL_FIGHT_FIXTURE, { player: { knownCards: CARDS, baseStats: { heart: 8, body: 8, mind: 8 }, health: 200, maxHealth: 200 }, seed: 16 });
+        let s = combat;
         s = rollEncounterDice(s).state;
         // A live WILD mana die powers any card, so the only thing limiting the
         // arming is the one-die-one-card law itself.

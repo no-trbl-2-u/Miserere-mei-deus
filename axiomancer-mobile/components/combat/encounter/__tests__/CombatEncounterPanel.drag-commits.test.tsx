@@ -22,7 +22,7 @@ import { describe, expect, it, jest } from '@jest/globals';
 
 import { CombatEncounterPanel } from '@/components/combat/encounter/CombatEncounterPanel';
 import { clearPending, prunePending, type CombatBoardProps } from '@/components/combat/encounter/CombatBoard';
-import { createMockEncounterEnemy } from '@/state/mocks/combat.mock';
+import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
 const CARDS = ['grey-strike', 'grey-ward', 'grey-word', 'grey-strike', 'grey-ward'];
@@ -31,9 +31,10 @@ const CARDS = ['grey-strike', 'grey-ward', 'grey-word', 'grey-strike', 'grey-war
 function mountLiveBoard() {
     // Per commit: is the ghost mounted, and does the board's `drag` read live?
     const commits = { n: 0, log: [] as { ghost: 'card' | 'die' | 'none'; boardLive: boolean }[] };
-    const { store } = withAllProviders(<></>);
-    const base = store.getState().player!;
-    const bootstrapPlayer = { ...base, knownCards: CARDS, baseStats: { heart: 8, body: 8, mind: 8 }, health: 160, maxHealth: 160 };
+    const { store, enemy } = startRealFight(REAL_FIGHT_FIXTURE, {
+        player: { knownCards: CARDS, baseStats: { heart: 8, body: 8, mind: 8 }, health: 160, maxHealth: 160 },
+    });
+    const bootstrapPlayer = store.getState().player;
     const { tree } = withAllProviders(
         <Profiler id="combat-panel" onRender={() => {
             commits.n += 1;
@@ -49,7 +50,7 @@ function mountLiveBoard() {
                 });
             } catch { /* not mounted yet */ }
         }}>
-            <CombatEncounterPanel enemy={createMockEncounterEnemy()} bootstrapPlayer={bootstrapPlayer} deck={CARDS} seed={7} onExit={() => undefined} />
+            <CombatEncounterPanel enemy={enemy} bootstrapPlayer={bootstrapPlayer} deck={CARDS} seed={7} onExit={() => undefined} />
         </Profiler>,
         { store },
     );

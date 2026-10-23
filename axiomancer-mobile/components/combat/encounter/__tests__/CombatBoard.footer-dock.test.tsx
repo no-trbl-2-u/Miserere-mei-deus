@@ -14,14 +14,14 @@ import { fireEvent, render, screen, within } from '@testing-library/react-native
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
-import { initializeCombatEncounter, rollEncounterDice } from '@mechanics';
+import { rollEncounterDice } from '@mechanics';
 import { CombatBoard, type DragController } from '@/components/combat/encounter/CombatBoard';
 import {
     DOCK_GAP, DOCK_PAD_H, DOCK_PAD_V, DOCK_VITAE_MAX_WIDTH, END_BTN_W, END_BTN_H, VITAE_BAR_H, VITAE_LOW_RATIO, dockMinHeight, vitaeBarFill,
 } from '@/components/combat/encounter/CombatFooterDock';
 import { PLAYER_AVATAR_SIZE } from '@/components/combat/encounter/CombatCombatantPane';
 import { buildCombatViewModel, ledgerA11y, type CombatViewModel } from '@/state/presenters/combat-encounter.engine';
-import { createMockEncounterEnemy } from '@/state/mocks/combat.mock';
+import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 import { currentPalette } from '@/theme/runtime';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
@@ -44,9 +44,8 @@ const noopDrag = (): DragController =>
 
 function renderBoard(opts: { shape?: (vm: CombatViewModel) => CombatViewModel; resolving?: boolean } = {}) {
     Object.defineProperty(RN, 'useWindowDimensions', { configurable: true, value: () => PHONE });
-    const { store } = withAllProviders(<></>);
-    const player = { ...store.getState().player, knownCards: CARDS };
-    let s = initializeCombatEncounter(player, createMockEncounterEnemy(), undefined, 16);
+    const { store, combat } = startRealFight(REAL_FIGHT_FIXTURE, { player: { knownCards: CARDS }, seed: 16 });
+    let s = combat;
     s = rollEncounterDice(s).state;
     const base = { ...buildCombatViewModel(s), ledger: FIVE_PHASES };
     const vm = opts.shape ? opts.shape(base) : base;

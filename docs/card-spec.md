@@ -279,7 +279,8 @@ one random library card. Shops sell no cards. Pointers:
 **Ratified, not built.**
 
 - Relics open lanes: a combat card reward is 2 random and 1 guaranteed
-  lane card; with no lane relic, 3 random. D68, D71.
+  lane card; with no lane relic, 3 random. D68, D71. Lane relics stack:
+  3-4 relics of one lane give 2 lane cards, 5 give all 3. D100.
 
 **T's call.**
 

@@ -16,21 +16,21 @@
  */
 
 import {
-    createCharacter, initializeCombatEncounter, rollEncounterDice, playCombatCard,
+    rollEncounterDice, playCombatCard,
 } from '@mechanics';
 import type { CombatEncounterState, CombatManaDie } from '@mechanics';
 
 import { buildCombatViewModel } from '../combat-encounter.engine';
-import { createMockEncounterEnemy } from '../../mocks/combat.mock';
+import { realFightFixture, startRealFight } from '@/test-utils/realFight';
 
 const DECK = ['grey-strike', 'grey-strike', 'grey-ward', 'grey-ward', 'grey-strike', 'grey-ward'];
 
 function openEncounter(floating: ('heart' | 'body' | 'mind' | 'wild')[]): CombatEncounterState {
-    const player = createCharacter({ name: 'Hero', level: 3, baseStats: { heart: 8, body: 8, mind: 8 } });
-    player.knownCards = Array.from(new Set([...(player.knownCards ?? []), ...DECK]));
-    player.floatingDice = floating;
-    const state = initializeCombatEncounter(player, createMockEncounterEnemy(), DECK, 7);
-    return rollEncounterDice(state).state;
+    const { combat } = startRealFight(
+        realFightFixture({ level: 3, baseStats: { heart: 8, body: 8, mind: 8 }, knownCards: DECK }),
+        { deck: DECK, seed: 7, floatingDice: floating },
+    );
+    return rollEncounterDice(combat).state;
 }
 
 function findHand(state: CombatEncounterState, cardId: string): string {
@@ -91,10 +91,11 @@ describe('floating-die APPLY (the snap-back bug)', () => {
     describe('tray-die APPLY (D6d paid-commit bug)', () => {
         function openHeartEncounter(): CombatEncounterState {
             const deck = ['grey-strike', 'grey-strike', 'grey-ward', 'grey-ward', 'grey-word', 'grey-word'];
-            const player = createCharacter({ name: 'Hero', level: 3, baseStats: { heart: 8, body: 8, mind: 8 } });
-            player.knownCards = Array.from(new Set([...(player.knownCards ?? []), ...deck]));
-            const state = initializeCombatEncounter(player, createMockEncounterEnemy(), deck, 7);
-            return rollEncounterDice(state).state;
+            const { combat } = startRealFight(
+                realFightFixture({ level: 3, baseStats: { heart: 8, body: 8, mind: 8 }, knownCards: deck }),
+                { deck, seed: 7 },
+            );
+            return rollEncounterDice(combat).state;
         }
         const heartMana = (): CombatManaDie => ({ id: 'u-heart', color: 'heart', face: 'mana', state: 'available', temporary: false });
 

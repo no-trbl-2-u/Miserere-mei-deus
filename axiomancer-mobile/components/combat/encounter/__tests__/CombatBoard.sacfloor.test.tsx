@@ -20,13 +20,13 @@ import { AccessibilityInfo, StyleSheet } from 'react-native';
 import { act, fireEvent, render, screen, within } from '@testing-library/react-native';
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 
-import { initializeCombatEncounter, rollEncounterDice, type CombatEncounterState } from '@mechanics';
+import { rollEncounterDice, type CombatEncounterState } from '@mechanics';
 import { CombatBoard, refusedDieShortfall, type DragController } from '@/components/combat/encounter/CombatBoard';
 import { SACRIFICE_CALLOUT_MS, sacrificeGhostArcs } from '@/components/combat/encounter/VitaeSacrificeCallout';
 import { PLAYER_AVATAR_SIZE } from '@/components/combat/encounter/CombatCombatantPane';
 import { buildCombatViewModel, PROGRAM_COPY } from '@/state/presenters/combat-encounter.engine';
 import { createSettingsStore } from '@/state/settings';
-import { createMockEncounterEnemy } from '@/state/mocks/combat.mock';
+import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 import { tapCombatDie } from '@/test-utils/tapCombatDie';
 
@@ -43,10 +43,11 @@ const boardCallbacks = () => ({
 });
 
 function freshEncounter(): { store: ReturnType<typeof withAllProviders>['store']; s: CombatEncounterState } {
-    const { store } = withAllProviders(<></>);
-    const base = store.getState().player;
-    const player = { ...base, knownCards: CARDS, baseStats: { heart: 8, body: 8, mind: 8 }, health: 200, maxHealth: 200 };
-    const s = rollEncounterDice(initializeCombatEncounter(player, createMockEncounterEnemy(), undefined, 16)).state;
+    const { store, combat } = startRealFight(REAL_FIGHT_FIXTURE, {
+        player: { knownCards: CARDS, baseStats: { heart: 8, body: 8, mind: 8 }, health: 200, maxHealth: 200 },
+        seed: 16,
+    });
+    const s = rollEncounterDice(combat).state;
     return { store, s: { ...s, player: { ...s.player, health: 4 } } };
 }
 
