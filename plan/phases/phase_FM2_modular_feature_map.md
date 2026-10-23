@@ -100,7 +100,7 @@ group blocks, and two clicks reach any feature's note.
 - **Notes + nested canvases; coupling separate and off the canvases** (T,
   2026-10-22).
 - **Slot anytime** (T, 2026-10-22): after Phase BE2g, the last open row.
-- **Coupling is plain text, not links** [T to confirm]. Graph view cannot hide
+- **Coupling is plain text, not links** (T confirmed, 2026-10-22). Graph view cannot hide
   some of a note's links, so "off by default" is kept by not linking coupling
   at all; the names stay readable in each note. A switchable coupling layer
   (a second set of notes Graph view can filter in) is a Follow-up.
