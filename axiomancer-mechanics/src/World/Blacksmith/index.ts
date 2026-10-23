@@ -2,7 +2,8 @@
  * Blacksmith encounter ("The Anvil") — Public API.
  *
  * The die-gear upgrade surface: HONE (add a mana face),
- * TEMPER (mana → special), and gear SWAP, each priced in shillings
+ * TEMPER (mana → special), gear SWAP, and one card UPGRADE a visit
+ * (Phase UP1e), each priced in shillings
  * (`ANVIL_VERB_PRICING`). The engine is two-way like the
  * other minigames — it never reads `GameState`; the host passes the rail +
  * budget + variant offers and applies the upgraded rail to `Character.dieGear`
@@ -16,6 +17,7 @@
 export type {
     BlacksmithVariantOffer,
     BlacksmithSession,
+    BlacksmithCardUpgrade,
 } from './blacksmith.types';
 
 // ── Tuning ─────────────────────────────────────────────────────────────────
@@ -31,6 +33,10 @@ export {
     honeBlacksmith,
     temperBlacksmith,
     swapBlacksmith,
+    chooseBlacksmithCardUpgrade,
+    cancelBlacksmithCardUpgrade,
+    pickBlacksmithCardUpgrade,
+    blacksmithCardUpgradeRefusal,
     continueBlacksmithCard,
     leaveBlacksmith,
     claimBlacksmithOutcome,

@@ -11,10 +11,16 @@
  * greyed AND named, never a silent no-op). The reason strings are the SAME
  * cap authority the engine's refusal card uses (`validateDieGear`), so the
  * greyed-offer copy and the refusal-card copy always agree.
+ *
+ * The card upgrade (Phase UP1e) follows the same doctrine: its offer's
+ * reason is the engine's own `blacksmithCardUpgradeRefusal`, and the pick
+ * step hands the shared upgrade screen the rows the rest site uses.
  */
 
 import {
     ANVIL_VERB_PRICING,
+    blacksmithCardUpgradeRefusal,
+    getCardById,
     validateDieGear,
     dieGearMissFaces,
     dieSpecialCap,
@@ -27,6 +33,13 @@ import type {
     UpgradeableDieGear,
 } from '@mechanics';
 import type { AppStoreState } from '@/state/store';
+import {
+    BLACKSMITH_CARD_UPGRADE_EFFECT,
+    BLACKSMITH_CARD_UPGRADE_LABEL,
+    blacksmithCardUpgradePriceLine,
+    blacksmithUpgradedChip,
+} from './blacksmith.copy';
+import { cardUpgradeRowsVM, type CardUpgradeRowVM } from './card-upgrade.engine';
 
 // ---------------------------------------------------------------------------
 // VM shapes
@@ -34,10 +47,11 @@ import type { AppStoreState } from '@/state/store';
 
 /** One offered upgrade action: its price, whether it is takeable, and why not. */
 export interface BlacksmithOfferVM {
-    /** Verb + target: e.g. `hone:heart`, `swap:die-gear-heart-rich-payload`. */
+    /** Verb + target: e.g. `hone:heart`, `swap:die-gear-heart-rich-payload`, `upgrade`. */
     id: string;
-    verb: 'hone' | 'temper' | 'swap';
-    color: DieGearColor;
+    verb: 'hone' | 'temper' | 'swap' | 'upgrade';
+    /** The die the verb works; null for the card upgrade. */
+    color: DieGearColor | null;
     label: string;
     price: number;
     enabled: boolean;
@@ -74,14 +88,23 @@ export interface BlacksmithSwapVM {
     faceSummary: string;
 }
 
+/** A card before and after the anvil's upgrade, by name. */
+export interface BlacksmithUpgradedVM {
+    fromName: string;
+    toName: string;
+}
+
 export interface BlacksmithCardVM {
     title: string;
     body: string;
-    verb: 'hone' | 'temper' | 'swap';
-    color: DieGearColor;
+    verb: 'hone' | 'temper' | 'swap' | 'upgrade';
+    /** The die worked on; null for the card upgrade. */
+    color: DieGearColor | null;
     cost: number;
     refused: boolean;
     reason: string;
+    /** The card the anvil upgraded on this flash; null for a die verb or a refusal. */
+    upgraded: BlacksmithUpgradedVM | null;
 }
 
 export interface BlacksmithOutcomeVM {
@@ -104,6 +127,12 @@ export interface BlacksmithVM {
     spent: number;
     dice: readonly BlacksmithDieVM[];
     swaps: readonly BlacksmithSwapVM[];
+    /** The card upgrade offer (Phase UP1e): once a visit, its price, and why not. */
+    cardUpgrade: BlacksmithOfferVM | null;
+    /** The shared upgrade screen's rows, in the `upgrade-pick` phase only. */
+    upgradeRows: readonly CardUpgradeRowVM[] | null;
+    /** The anvil's price line above the upgrade screen's list. */
+    upgradePriceLine: string;
     card: BlacksmithCardVM | null;
     outcome: BlacksmithOutcomeVM | null;
 }
@@ -167,6 +196,9 @@ const EMPTY_VM: BlacksmithVM = Object.freeze({
     spent: 0,
     dice: Object.freeze([]),
     swaps: Object.freeze([]),
+    cardUpgrade: null,
+    upgradeRows: null,
+    upgradePriceLine: blacksmithCardUpgradePriceLine(ANVIL_VERB_PRICING.upgrade),
     card: null,
     outcome: null,
 });
@@ -250,6 +282,36 @@ function temperOffer(rail: DieGearRail, color: DieGearColor, budget: number): Bl
     };
 }
 
+function cardName(cardId: string): string {
+    return getCardById(cardId)?.name ?? cardId;
+}
+
+function upgradedVM(
+    upgrade: { fromCardId: string; toCardId: string } | null,
+): BlacksmithUpgradedVM | null {
+    if (upgrade === null) return null;
+    return { fromName: cardName(upgrade.fromCardId), toName: cardName(upgrade.toCardId) };
+}
+
+/**
+ * Build the card upgrade offer. Its reason is the engine's own refusal
+ * (`blacksmithCardUpgradeRefusal`), so the greyed offer and the refusal card
+ * say the same thing.
+ */
+function cardUpgradeOffer(s: BlacksmithSession): BlacksmithOfferVM {
+    const reason = blacksmithCardUpgradeRefusal(s) ?? '';
+    return {
+        id: 'upgrade',
+        verb: 'upgrade',
+        color: null,
+        label: BLACKSMITH_CARD_UPGRADE_LABEL,
+        price: ANVIL_VERB_PRICING.upgrade,
+        enabled: reason === '',
+        effect: BLACKSMITH_CARD_UPGRADE_EFFECT,
+        reason,
+    };
+}
+
 /**
  * Compose the forge screen's view-model from the engine session.
  *
@@ -309,6 +371,7 @@ export function selectBlacksmithVM(state: Pick<AppStoreState, 'blacksmith'>): Bl
         cost: s.card.cost,
         refused: s.card.refused,
         reason: s.card.reason,
+        upgraded: upgradedVM(s.card.cardUpgrade),
     };
 
     const outcome: BlacksmithOutcomeVM | null = s.outcome === null ? null : {
@@ -316,7 +379,7 @@ export function selectBlacksmithVM(state: Pick<AppStoreState, 'blacksmith'>): Bl
         honed: s.outcome.honed,
         tempered: s.outcome.tempered,
         swapped: s.outcome.swapped,
-        chips: composeOutcomeChips(s.outcome),
+        chips: composeOutcomeChips(s.outcome, upgradedVM(s.outcome.cardUpgrade)),
     };
 
     return {
@@ -328,21 +391,28 @@ export function selectBlacksmithVM(state: Pick<AppStoreState, 'blacksmith'>): Bl
         spent: s.spent,
         dice,
         swaps,
+        cardUpgrade: cardUpgradeOffer(s),
+        upgradeRows: s.phase === 'upgrade-pick' ? cardUpgradeRowsVM(s.upgradableCardIds, s.deckCardIds) : null,
+        upgradePriceLine: blacksmithCardUpgradePriceLine(ANVIL_VERB_PRICING.upgrade),
         card,
         outcome,
     };
 }
 
-function composeOutcomeChips(outcome: {
-    honed: number;
-    tempered: number;
-    swapped: number;
-    spent: number;
-}): string[] {
+function composeOutcomeChips(
+    outcome: {
+        honed: number;
+        tempered: number;
+        swapped: number;
+        spent: number;
+    },
+    upgraded: BlacksmithUpgradedVM | null,
+): string[] {
     const chips: string[] = [];
     if (outcome.honed > 0) chips.push(`${outcome.honed} HONED`);
     if (outcome.tempered > 0) chips.push(`${outcome.tempered} TEMPERED`);
     if (outcome.swapped > 0) chips.push(`${outcome.swapped} RE-GEARED`);
+    if (upgraded !== null) chips.push(blacksmithUpgradedChip(upgraded.fromName, upgraded.toName));
     if (outcome.spent > 0) chips.push(`−${outcome.spent}${CURRENCY_SUFFIX}`);
     if (chips.length === 0) chips.push('LEFT AS FOUND');
     return chips;

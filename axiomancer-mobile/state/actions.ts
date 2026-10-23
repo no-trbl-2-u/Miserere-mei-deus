@@ -103,10 +103,13 @@ import {
 import {
     abandonBlacksmithAction,
     beginBlacksmithAction,
+    cancelBlacksmithCardUpgradeAction,
+    chooseBlacksmithCardUpgradeAction,
     claimBlacksmithOutcomeAction,
     continueBlacksmithCardAction,
     honeBlacksmithAction,
     leaveBlacksmithAction,
+    pickBlacksmithCardUpgradeAction,
     startBlacksmithForgingAction,
     swapBlacksmithAction,
     temperBlacksmithAction,
@@ -495,6 +498,12 @@ export interface AppActions {
     swapBlacksmith: (variantId: string) => void;
     /** Acknowledge the open result/refusal flash: card → forging. */
     continueBlacksmithCard: () => void;
+    /** Open the anvil's card upgrade (once a visit). forging → upgrade-pick or a refusal card. */
+    chooseBlacksmithCardUpgrade: () => void;
+    /** Back out of the anvil's card picker, nothing charged. */
+    cancelBlacksmithCardUpgrade: () => void;
+    /** Upgrade the picked card for the anvil's price. Must be one of the upgradable ids. */
+    pickBlacksmithCardUpgrade: (cardId: string) => void;
     /** Leave the anvil, sealing the ledger: forging → outcome. */
     leaveBlacksmith: () => void;
     /** Confirm the ledger; writes the rail, deducts the spend, persists. */
@@ -789,6 +798,9 @@ export function createAppActions(store: AppStore): AppActions {
         temperBlacksmith: (color) => temperBlacksmithAction(store, color),
         swapBlacksmith: (variantId) => swapBlacksmithAction(store, variantId),
         continueBlacksmithCard: () => continueBlacksmithCardAction(store),
+        chooseBlacksmithCardUpgrade: () => chooseBlacksmithCardUpgradeAction(store),
+        cancelBlacksmithCardUpgrade: () => cancelBlacksmithCardUpgradeAction(store),
+        pickBlacksmithCardUpgrade: (cardId) => pickBlacksmithCardUpgradeAction(store, cardId),
         leaveBlacksmith: () => leaveBlacksmithAction(store),
         claimBlacksmithOutcome: () => claimBlacksmithOutcomeAction(store),
         abandonBlacksmith: () => abandonBlacksmithAction(store),

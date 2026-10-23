@@ -13,6 +13,10 @@
  *
  * Cap-violating OR unaffordable upgrades are refused LOUDLY by the engine
  * (a refusal card, rail + budget untouched); the slice just relays them.
+ *
+ * The anvil also upgrades one card a visit (Phase UP1e): the session is
+ * seeded with the deck (`buildCombatDeck`), and the claim swaps the one
+ * picked copy through `replaceCard`, the rest site's split.
  */
 
 import type { GameState } from '@mechanics';
@@ -25,7 +29,12 @@ import {
     continueBlacksmithCard as engineContinueCard,
     leaveBlacksmith as engineLeave,
     claimBlacksmithOutcome as engineClaim,
+    chooseBlacksmithCardUpgrade as engineChooseCardUpgrade,
+    cancelBlacksmithCardUpgrade as engineCancelCardUpgrade,
+    pickBlacksmithCardUpgrade as enginePickCardUpgrade,
+    buildCombatDeck,
     concreteDefaultRail,
+    replaceCard,
     DIE_GEAR_COLORS,
 } from '@mechanics';
 import type {
@@ -92,10 +101,11 @@ export function beginBlacksmithAction(store: AppStore, options: BeginBlacksmithO
     const rail = playerRail(gameState);
     const budget = options.budget ?? gameState.player?.currency ?? 0;
     const variants = options.variants ?? [];
+    const deck = gameState.player ? buildCombatDeck(gameState.player, gameState.flags ?? []) : [];
 
     store.setState({
         blacksmith: {
-            session: createBlacksmithSession(seed, rail, budget, variants),
+            session: createBlacksmithSession(seed, rail, budget, variants, deck),
         },
     });
     return true;
@@ -129,6 +139,27 @@ export function swapBlacksmithAction(store: AppStore, variantId: string): void {
     setSession(store, engineSwap(s, variantId));
 }
 
+/** Open the card upgrade's picker: forging → upgrade-pick (or a loud refusal card). */
+export function chooseBlacksmithCardUpgradeAction(store: AppStore): void {
+    const s = store.getState().blacksmith?.session;
+    if (!s) return;
+    setSession(store, engineChooseCardUpgrade(s));
+}
+
+/** Back out of the card picker: upgrade-pick → forging, nothing charged. */
+export function cancelBlacksmithCardUpgradeAction(store: AppStore): void {
+    const s = store.getState().blacksmith?.session;
+    if (!s) return;
+    setSession(store, engineCancelCardUpgrade(s));
+}
+
+/** Upgrade the picked card: upgrade-pick → card. Must be one of `upgradableCardIds`. */
+export function pickBlacksmithCardUpgradeAction(store: AppStore, cardId: string): void {
+    const s = store.getState().blacksmith?.session;
+    if (!s) return;
+    setSession(store, enginePickCardUpgrade(s, cardId));
+}
+
 /** Acknowledge the open result/refusal flash: card → forging. */
 export function continueBlacksmithCardAction(store: AppStore): void {
     const s = store.getState().blacksmith?.session;
@@ -149,6 +180,8 @@ export interface ClaimBlacksmithResult {
     honed: number;
     tempered: number;
     swapped: number;
+    /** The upgraded id now in the deck (`<id>+`), or null when no card was upgraded. */
+    upgradedToCardId: string | null;
 }
 
 const NOOP_CLAIM: ClaimBlacksmithResult = Object.freeze({
@@ -157,12 +190,14 @@ const NOOP_CLAIM: ClaimBlacksmithResult = Object.freeze({
     honed: 0,
     tempered: 0,
     swapped: 0,
+    upgradedToCardId: null,
 });
 
 /**
  * Confirms the ledger and applies the outcome to the engine `GameState`:
  * `outcome.rail` is written to `Character.dieGear`, `outcome.spent` is
- * deducted from the wallet (floors at 0). Clears the slice and persists.
+ * deducted from the wallet (floors at 0), and a card upgrade swaps exactly
+ * one owned copy for its upgraded id. Clears the slice and persists.
  */
 export function claimBlacksmithOutcomeAction(store: AppStore): ClaimBlacksmithResult {
     const s = store.getState().blacksmith?.session;
@@ -172,7 +207,16 @@ export function claimBlacksmithOutcomeAction(store: AppStore): ClaimBlacksmithRe
 
     const outcome = s.outcome;
     const state = store.getState() as unknown as GameState;
-    const player = state.player;
+    let player = state.player;
+
+    let upgradedToCardId: string | null = null;
+    if (outcome.cardUpgrade) {
+        const upgraded = replaceCard(player, outcome.cardUpgrade.fromCardId, outcome.cardUpgrade.toCardId);
+        if (upgraded !== player) {
+            player = upgraded;
+            upgradedToCardId = outcome.cardUpgrade.toCardId;
+        }
+    }
 
     store.setState({
         player: {
@@ -195,6 +239,7 @@ export function claimBlacksmithOutcomeAction(store: AppStore): ClaimBlacksmithRe
         honed: outcome.honed,
         tempered: outcome.tempered,
         swapped: outcome.swapped,
+        upgradedToCardId,
     };
 }
 
