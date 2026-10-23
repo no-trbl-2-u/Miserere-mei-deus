@@ -272,13 +272,8 @@ export function describeParentGate(d) {
  * @returns {Array<{ path: string, verdict: string, reason: string, couldNotFailCases: string[], newCases: number, guard: string|null }>} one entry per file.
  */
 export function replayTests({ repo, base, head, tests, timeoutMs }) {
-  const show = (sha, path) => {
-    try {
-      return git(['show', `${sha}:${path}`], repo)
-    } catch {
-      return null
-    }
-  }
+  // ls-tree first: `git show` of a path the commit lacks prints to stderr.
+  const show = (sha, path) => (git(['ls-tree', '--name-only', sha, '--', path], repo) ? git(['show', `${sha}:${path}`], repo) : null)
   if (!tests.length) return []
   const files = []
   const dir = openWorktree('pr-review-parent-', repo)
