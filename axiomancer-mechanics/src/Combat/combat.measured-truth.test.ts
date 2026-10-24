@@ -9,7 +9,12 @@ import { act1FightLedger } from '../Game/act1-progression';
 import {
     percentile, runOneEncounter, simulateHazardPatternCombatDetailed,
 } from './combat.encounter.sim';
-import { MEASURED_DECK_LANES, MEASURED_SPREADS, measuredTruthCells } from './combat.measured-truth';
+import { upgradeLevel } from '../Cards/card-upgrades';
+import { getCardById } from '../Cards/cards.library';
+import {
+    HALF_UPGRADED_DECK_SUFFIX, MEASURED_DECK_LANES, MEASURED_HALF_UPGRADED_LANES, MEASURED_SPREADS,
+    halfUpgradedDeck, measuredTruthCells,
+} from './combat.measured-truth';
 import { STARTING_CARD_IDS } from './combat.rewards';
 
 const CELL_KEYS = [
@@ -67,8 +72,10 @@ describe('measuredTruthCells (R12a A1, A2)', () => {
     const ledger = act1FightLedger();
     const report = measuredTruthCells({ runs: 5, seed: 1 });
 
+    const deckCount = MEASURED_DECK_LANES.length + MEASURED_HALF_UPGRADED_LANES.length;
+
     it('has one cell per ledger fight x spread x deck', () => {
-        expect(report.cells).toHaveLength(ledger.length * MEASURED_SPREADS.length * MEASURED_DECK_LANES.length);
+        expect(report.cells).toHaveLength(ledger.length * MEASURED_SPREADS.length * deckCount);
         expect(new Set(report.cells.map(c => `${c.fight}|${c.spread}|${c.deck}`)).size).toBe(report.cells.length);
     });
 
@@ -97,5 +104,48 @@ describe('measuredTruthCells (R12a A1, A2)', () => {
     it('rejects a lane the registry does not carry', () => {
         expect(() => measuredTruthCells({ runs: 1, deckLanes: ['no-such-lane'], fights: ledger.slice(0, 1) }))
             .toThrow(/no card lane/);
+        expect(() => measuredTruthCells({ runs: 1, halfUpgradedLanes: ['no-such-lane'], fights: ledger.slice(0, 1) }))
+            .toThrow(/no card lane/);
+    });
+});
+
+describe('the half-upgraded Blood Price deck (UP1 A10)', () => {
+    const ledger = act1FightLedger();
+    const report = measuredTruthCells({ runs: 5, seed: 1 });
+    const id = `blood-price${HALF_UPGRADED_DECK_SUFFIX}`;
+
+    it('measures blood-price half-upgraded beside the plain deck', () => {
+        expect(MEASURED_HALF_UPGRADED_LANES).toContain('blood-price');
+        expect(Object.keys(report.decks)).toEqual(['grey', 'blood-price', id]);
+    });
+
+    it('sits beside the plain deck in every ledger fight at every spread', () => {
+        for (const spread of MEASURED_SPREADS) {
+            const plain = report.cells.filter(c => c.deck === 'blood-price' && c.spread === spread);
+            const half = report.cells.filter(c => c.deck === id && c.spread === spread);
+            expect(plain).toHaveLength(ledger.length);
+            expect(half.map(c => [c.fight, c.playerLevel, c.enemyLevel]))
+                .toEqual(plain.map(c => [c.fight, c.playerLevel, c.enemyLevel]));
+        }
+    });
+
+    it('upgrades exactly half the lane deck once, every id resolving', () => {
+        const base = getCardLane('blood-price')!.testDeck;
+        const deck = report.decks[id]!.deckCards;
+        expect(deck).toHaveLength(base.length);
+        expect(deck.filter(c => upgradeLevel(c) === 1)).toHaveLength(Math.floor(base.length / 2));
+        expect(deck.every(c => upgradeLevel(c) <= 1)).toBe(true);
+        deck.forEach((c, i) => {
+            expect(c.replace(/\+$/, '')).toBe(base[i]);
+            expect(getCardById(c), c).toBeDefined();
+        });
+    });
+
+    it('halfUpgradedDeck alternates, keeps order and copies, and skips a card at its limit', () => {
+        expect(halfUpgradedDeck(['grey-strike', 'grey-ward', 'grey-strike', 'grey-word']))
+            .toEqual(['grey-strike+', 'grey-ward', 'grey-strike+', 'grey-word']);
+        expect(halfUpgradedDeck(['grey-strike+', 'grey-ward', 'grey-word', 'grey-strike']))
+            .toEqual(['grey-strike+', 'grey-ward+', 'grey-word', 'grey-strike+']);
+        expect(halfUpgradedDeck([])).toEqual([]);
     });
 });
