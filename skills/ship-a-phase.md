@@ -352,7 +352,8 @@ git push -u origin "loop/ship-<N>-<slug>"
 gh pr create --repo "$GH_REPO" --base main --head "loop/ship-<N>-<slug>" \
   --label loop:pr --label "size:<S|M|L>" --label "area:<area>" \
   --title "<type>: <summary> — phase <N>" --body-file "$body"
-# area:* from the files touched (several if the phase spans areas); add
+# area:* from the files touched (several if the phase spans areas), from the
+# closed list in skills/march.md §3: combat, cards, ui, mobile, ci, loop; add
 # --label review:rules-change when the phase changes cards, rules, prices
 # or tuning values (skills/march.md §3 "Area and review labels")
 ```
@@ -372,7 +373,9 @@ the next tick to fill.
 # exits 0 on "no checks reported" (lesson `checks-not-yet-registered`).
 # --required: only `verify-gate`, which waits on every verify-*; without it
 # the watch also waits on the advisory `review / run` job (up to 40 min).
-until gh pr checks "<PR>" --repo "$GH_REPO" 2>/dev/null | grep -q .; do sleep 5; done
+# Wait for the verify-gate row itself: with only advisory rows listed,
+# --required --watch exits on "no required checks reported" (BV2b).
+until gh pr checks "<PR>" --repo "$GH_REPO" 2>/dev/null | grep -q verify-gate; do sleep 10; done
 gh pr checks "<PR>" --repo "$GH_REPO" --required --watch --fail-fast
 ```
 

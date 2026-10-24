@@ -13,7 +13,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { cardLibrary, getCardById } from '../cards.library';
+import { cardLibrary, getCardById, TRIAL_SETS } from '../cards.library';
 import { getCardLane } from '../card.lanes';
 import {
     baseCardId, canUpgrade, upgradeCard, upgradeLevel, upgradeLimit, UPGRADE_LIMITS,
@@ -124,8 +124,15 @@ describe('A2 — the upgrade law', () => {
 const PAYOFF_VERBS = new Set([
     'deal', 'guard', 'heal', 'vulnerable', 'foeLoses', 'leech', 'empowerNextDeal',
     'conviction', 'healNextTurn', 'drain',
+    // The weather: an element's number and the STORM's extra growth.
+    'inferno', 'blizzard', 'storm', 'stormGrowthMarker',
 ]);
 const COST_VERBS = new Set(['sacrifice', 'sacrificeX', 'tether']);
+
+/** Costs T ruled may grow on upgrade, by card id, as each trial set records
+ *  them. Each entry is a ruling, not a loosening of the law. */
+const RULED_COST_GROWTH: Readonly<Record<string, readonly string[]>> =
+    Object.assign({}, ...TRIAL_SETS.map(set => set.ruledCostGrowth ?? {}));
 
 interface Call { verb: string; n: number; exact: boolean }
 
@@ -146,11 +153,15 @@ function record(fn: (c: ProgramCtx) => void, q: ProgramQuery): Call[] {
     return calls;
 }
 
+/** The weather reads, clear and stormy. */
+const CLEAR = { foeInferno: 0, yourInferno: 0, blizzard: 0, storm: 0, frozen: false, elementsOnFoe: 0, handSize: 4 };
+const STORMY = { foeInferno: 6, yourInferno: 3, blizzard: 4, storm: 3, frozen: true, elementsOnFoe: 3, handSize: 4 };
+
 /** Healthy, at half after damage, and deep enough that every cap binds. */
 const PROBES: readonly ProgramQuery[] = [
-    { vitae: 100, maxVitae: 100, missing: 0, atHalf: false, takenLastTurn: 0, lostThisCombat: 0, lostThisRound: 0, cursesInHand: 0, cursesInDiscard: 0 },
-    { vitae: 40, maxVitae: 100, missing: 60, atHalf: true, takenLastTurn: 10, lostThisCombat: 60, lostThisRound: 10, cursesInHand: 1, cursesInDiscard: 1 },
-    { vitae: 1, maxVitae: 1000, missing: 999, atHalf: true, takenLastTurn: 1000, lostThisCombat: 1000, lostThisRound: 1000, cursesInHand: 1, cursesInDiscard: 1 },
+    { ...CLEAR, vitae: 100, maxVitae: 100, missing: 0, atHalf: false, takenLastTurn: 0, lostThisCombat: 0, lostThisRound: 0, cursesInHand: 0, cursesInDiscard: 0 },
+    { ...STORMY, vitae: 40, maxVitae: 100, missing: 60, atHalf: true, takenLastTurn: 10, lostThisCombat: 60, lostThisRound: 10, cursesInHand: 1, cursesInDiscard: 1 },
+    { ...STORMY, vitae: 1, maxVitae: 1000, missing: 999, atHalf: true, takenLastTurn: 1000, lostThisCombat: 1000, lostThisRound: 1000, cursesInHand: 1, cursesInDiscard: 1 },
 ];
 
 /** Every line of a program card as a runnable, with its name. */
@@ -187,11 +198,16 @@ function plainPayoffs(card: Card): number[] {
     ];
 }
 
-/** Program cards with no payoff verb anywhere: an upgrade has nothing to grow.
- *  Named in `blood-price.engine.test.ts`, which pins them by id. */
+/** Program cards whose payoff numbers an upgrade leaves alone: no payoff verb
+ *  anywhere, or only a formula or a resolved number ("GUARD equal to the
+ *  foe's BLIZZARD"). Each set's own test pins them by id. */
 function cardsWithNoPayoff(cards: readonly Card[]): string[] {
     return cards
-        .filter(c => c.program && canUpgrade(c) && ![...verbTotals(c).keys()].some(v => PAYOFF_VERBS.has(v)))
+        .filter(c => {
+            if (!c.program || !canUpgrade(c)) return false;
+            const base = verbTotals(c), up = verbTotals(upgradeCard(c)!);
+            return ![...PAYOFF_VERBS].some(v => (up.get(v) ?? 0) !== (base.get(v) ?? 0));
+        })
         .map(c => c.id);
 }
 
@@ -199,8 +215,8 @@ describe('A3 — every upgrade makes the numbers bigger, never a cost', () => {
     const upgradable = cardLibrary.filter(canUpgrade);
     const noPayoff = new Set(cardsWithNoPayoff(cardLibrary));
 
-    it('only the two payoff-less Blood Price cards have nothing to grow', () => {
-        expect(noPayoff.size).toBe(2);
+    it('only the pinned cards have nothing to grow: two Blood Price, six Elementalist', () => {
+        expect(noPayoff.size).toBe(8);
     });
 
     it('covers every library card but the Curses', () => {
@@ -236,6 +252,7 @@ describe('A3 — every upgrade makes the numbers bigger, never a cost', () => {
             for (const up of chain(card)) {
                 const t = verbTotals(up);
                 for (const v of COST_VERBS) {
+                    if (RULED_COST_GROWTH[card.id]?.includes(v)) continue;
                     if ((t.get(v) ?? 0) !== (base.get(v) ?? 0)) offenders.push(`${up.id}: ${v} ${base.get(v)} -> ${t.get(v)}`);
                 }
                 if (programLines(up).map(([, , exile]) => exile).join() !== baseExile) offenders.push(`${up.id}: EXILE changed`);
@@ -260,6 +277,19 @@ describe('A3 — every upgrade makes the numbers bigger, never a cost', () => {
                     const before = record(baseLines[li][1], deep);
                     record(run, deep).forEach((call, ci) => {
                         if (!PAYOFF_VERBS.has(call.verb) || call.n === before[ci]?.n) return;
+                        // "SACRIFICE any amount X (max m), DEAL kX": the deep probe pays the
+                        // cap, so the hit is k times m, both printed.
+                        const formula = /max (\d+)\).*?(\d+)X\./.exec(printed);
+                        if (formula && call.n === Number(formula[1]) * Number(formula[2])) return;
+                        // "doubled if the foe is FROZEN": the deep probe meets the
+                        // condition, so the line applies twice the printed number.
+                        if (/\bdoubled\b/.test(printed) && nums.has(String(call.n / 2))) return;
+                        // "+n% per STORM", "n per different element": the printed rate
+                        // times the deep probe's count.
+                        const per = /per STORM/.test(printed) ? deep.storm : /per different element/.test(printed) ? deep.elementsOnFoe : 0;
+                        if (per > 0 && nums.has(String(call.n / per))) return;
+                        // "INFERNO equal to half the damage dealt": half the printed hit.
+                        if (/\bhalf the damage dealt\b/.test(printed) && nums.has(String(call.n * 2))) return;
                         if (!nums.has(String(call.n))) offenders.push(`${up.id} ${name}: applies ${call.verb} ${call.n}, prints "${printed}"`);
                     });
                 });

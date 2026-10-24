@@ -13,9 +13,9 @@ jest.unmock('@/lib/buildProfile');
 
 import Constants from 'expo-constants';
 
-import { getBuildProfile, isDevToolsEnabled } from '@/lib/buildProfile';
+import { getBuildCommit, getBuildProfile, isDevToolsEnabled } from '@/lib/buildProfile';
 
-type Extra = { devToolsEnabled?: boolean; buildProfile?: string | null };
+type Extra = { devToolsEnabled?: boolean; buildProfile?: string | null; buildCommit?: string | null };
 
 function setExtra(extra: Extra | undefined): void {
     const cfg = (Constants as unknown as { expoConfig: { extra?: Extra } }).expoConfig;
@@ -78,6 +78,20 @@ describe('lib/buildProfile', () => {
         it('returns null when extra is missing', () => {
             setExtra(undefined);
             expect(getBuildProfile()).toBeNull();
+        });
+    });
+
+    describe('getBuildCommit', () => {
+        it('returns the baked build commit', () => {
+            setExtra({ buildCommit: '238002d75abc' });
+            expect(getBuildCommit()).toBe('238002d75abc');
+        });
+
+        it('returns null when no commit is known (a local session, a web export)', () => {
+            setExtra({ buildCommit: '' });
+            expect(getBuildCommit()).toBeNull();
+            setExtra(undefined);
+            expect(getBuildCommit()).toBeNull();
         });
     });
 });

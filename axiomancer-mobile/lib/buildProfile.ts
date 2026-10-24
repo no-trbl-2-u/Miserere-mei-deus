@@ -1,6 +1,12 @@
 import Constants from '@/lib/platform/constants';
 
-type Extra = { devToolsEnabled?: boolean; buildProfile?: string | null; sentryDsn?: string | null; sentryRelease?: string | null };
+type Extra = {
+  devToolsEnabled?: boolean;
+  buildProfile?: string | null;
+  buildCommit?: string | null;
+  sentryDsn?: string | null;
+  sentryRelease?: string | null;
+};
 
 // `extra.devToolsEnabled` is set by `app.config.ts` from
 // `EAS_BUILD_PROFILE` (or `BUILD_PROFILE` for non-EAS web deploys):
@@ -33,6 +39,16 @@ export function isDevToolsEnabled(): boolean {
 export function getBuildProfile(): string | null {
   const extra = Constants.expoConfig?.extra as Extra | undefined;
   return extra?.buildProfile ?? null;
+}
+
+// The git commit this build was made from, baked into `extra.buildCommit` by
+// `app.config.ts` on the EAS builder or in CI. Null in a local session and a
+// static web export, where no commit is known; the play log (`lib/playLog.ts`)
+// sends null rather than guess.
+export function getBuildCommit(): string | null {
+  const extra = Constants.expoConfig?.extra as Extra | undefined;
+  const commit = extra?.buildCommit;
+  return typeof commit === 'string' && commit.length > 0 ? commit : null;
 }
 
 // The Sentry DSN, baked into `extra` by `app.config.ts`. Public by design —

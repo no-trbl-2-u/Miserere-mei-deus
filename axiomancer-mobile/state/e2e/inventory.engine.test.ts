@@ -26,6 +26,7 @@ import {
     selectInventoryViewModel,
     type InventoryViewModel,
 } from '@/state/presenters/inventory.engine';
+import { selectItemModalViewModel } from '@/state/presenters/inventory.modal.engine';
 
 afterEach(() => {
     jest.restoreAllMocks();
@@ -101,7 +102,11 @@ function tooth(): QuestItem {
     };
 }
 
-function makeStore(items: readonly Item[]) {
+/**
+ * A clean player carrying `items` and wearing `worn` in `player.equipment`,
+ * the one record of what is worn (inventory order means nothing).
+ */
+function makeStore(items: readonly Item[], worn: readonly Equipment[] = []) {
     const store = createAppStore({ adapter: createMemoryAdapter() });
     const state = store.getState();
     // Rebuild a clean, unequipped player (no signet relics) so the worn window
@@ -115,6 +120,7 @@ function makeStore(items: readonly Item[]) {
         currency: state.player.currency,
         knownCards: state.player.knownCards,
         inventory: [...items],
+        equipment: [...worn],
     });
     store.setState({ player: { ...state.player, ...clean } });
     return store;
@@ -140,7 +146,7 @@ describe('selectInventoryViewModel: signet relic granted signature (Phase 19)', 
 
     it('threads the granted signature into the worn equipment dock', () => {
         const relic = getRelicById('relic-disarming-plea')!;
-        const vm = selectInventoryViewModel(makeStore([relic]).getState());
+        const vm = selectInventoryViewModel(makeStore([relic], [relic]).getState());
         const ringSlot = vm.equipmentDock.slots.find((s) => s.item?.id === 'relic-disarming-plea');
         // A lone worn trinket relic surfaces its signature in the dock slot.
         expect(ringSlot?.item?.grantsSignature).toBe('The Open Hand');
@@ -386,16 +392,23 @@ describe('selectInventoryViewModel: categories', () => {
 // Equipped flag — first item per slot
 // ---------------------------------------------------------------------------
 
-describe('selectInventoryViewModel: equipped flag', () => {
-    it('marks the first equipment item per slot as equipped', () => {
-        const store = makeStore([sword('a'), dagger('b')]);
+describe('selectInventoryViewModel: equipped flag (EQ1 A1)', () => {
+    it('marks the pieces player.equipment wears, wherever they sit in the inventory', () => {
+        const store = makeStore([sword('a'), dagger('b')], [dagger('b')]);
 
         const vm = selectInventoryViewModel(store.getState());
 
-        const a = vm.items.find((i) => i.id === 'a')!;
-        const b = vm.items.find((i) => i.id === 'b')!;
-        expect(a.equipped).toBe(true);
-        expect(b.equipped).toBe(false);
+        expect(vm.items.find((i) => i.id === 'a')!.equipped).toBe(false);
+        expect(vm.items.find((i) => i.id === 'b')!.equipped).toBe(true);
+    });
+
+    it('marks nothing worn when the loadout is empty, however much is carried', () => {
+        const store = makeStore([sword('a'), trinket('r1'), trinket('r2')]);
+
+        const vm = selectInventoryViewModel(store.getState());
+
+        expect(vm.items.filter((i) => i.equipped)).toHaveLength(0);
+        expect(vm.equipmentDock.slots.every((s) => s.item === null)).toBe(true);
     });
 });
 
@@ -558,93 +571,119 @@ describe('useItem action: HP delta + stack decrement', () => {
     });
 });
 
-describe('equipItem action: reorders inventory by slot', () => {
-    it('promotes the target weapon to be first in the weapon slot', () => {
-        const store = makeStore([sword('first'), dagger('second')]);
+describe('equipItem action: wears the piece in player.equipment (EQ1 A3)', () => {
+    it('wears an unworn weapon, replacing the worn one, without reordering the inventory', () => {
+        const store = makeStore([sword('first'), dagger('second')], [sword('first')]);
+        const before = store.getState().player.inventory.map((i: Item) => i.id);
         const actions = createAppActions(store);
 
         actions.equipItem('second');
 
-        const inv = store.getState().player.inventory as readonly Item[];
-        const weapons = inv.filter((i: Item) => i.category === 'equipment') as Equipment[];
-        expect(weapons[0].id).toBe('second');
-        expect(weapons[1].id).toBe('first');
-    });
-
-    it('reports `equipped` on the new first-in-slot via the VM', () => {
-        const store = makeStore([sword('first'), dagger('second')]);
-        const actions = createAppActions(store);
-
-        actions.equipItem('second');
-
+        const player = store.getState().player;
+        expect(player.equipment.weapon?.id).toBe('second');
+        expect(player.inventory.map((i: Item) => i.id)).toEqual(before);
         const vm = selectInventoryViewModel(store.getState());
-        const a = vm.items.find((i) => i.id === 'first')!;
-        const b = vm.items.find((i) => i.id === 'second')!;
-        expect(b.equipped).toBe(true);
-        expect(a.equipped).toBe(false);
+        expect(vm.items.find((i) => i.id === 'second')!.equipped).toBe(true);
+        expect(vm.items.find((i) => i.id === 'first')!.equipped).toBe(false);
     });
 
-    it('no-ops when the item is missing or not equipment', () => {
-        const store = makeStore([potion('phial')]);
-        const before = store.getState().player.inventory;
+    it('fills a free accessory position', () => {
+        const store = makeStore([trinket('r1'), trinket('r2')], [trinket('r1')]);
+        createAppActions(store).equipItem('r2');
+        expect(store.getState().player.equipment.accessories.map((a) => a.id)).toEqual(['r1', 'r2']);
+    });
+
+    it('on a full accessory row takes off the last-worn piece, which stays in the satchel', () => {
+        const worn = [trinket('r1'), trinket('r2'), trinket('r3')];
+        const store = makeStore([...worn, trinket('r4')], worn);
+        createAppActions(store).equipItem('r4');
+
+        const player = store.getState().player;
+        expect(player.equipment.accessories.map((a) => a.id)).toEqual(['r1', 'r2', 'r4']);
+        expect(player.inventory.map((i: Item) => i.id)).toContain('r3');
+    });
+
+    it('no-ops when the item is missing, not equipment, or already worn', () => {
+        const store = makeStore([potion('phial'), sword('worn')], [sword('worn')]);
+        const before = store.getState().player;
         const actions = createAppActions(store);
 
         actions.equipItem('missing');
         actions.equipItem('phial');
+        actions.equipItem('worn');
 
-        expect(store.getState().player.inventory).toEqual(before);
+        expect(store.getState().player).toBe(before);
     });
 });
 
-describe('unequipItem action: swaps worn to back of slot peers (user-jot 2026-05-22)', () => {
-    it('moves the worn item to the END of its slot; next peer becomes worn', () => {
-        const store = makeStore([sword('first'), dagger('second')]);
-        const actions = createAppActions(store);
-        // 'first' is currently worn (first-in-slot).
-        actions.unequipItem('first');
+describe('unequipItem action: leaves the position empty (EQ1 A2, A3)', () => {
+    it('takes the sole worn piece off: the slot is bare and the item is still carried', () => {
+        const store = makeStore([sword('alone')], [sword('alone')]);
+        createAppActions(store).unequipItem('alone');
 
-        const inv = store.getState().player.inventory as readonly Item[];
-        const weapons = inv.filter((i: Item) => i.category === 'equipment') as Equipment[];
-        // 'second' is now first-in-slot (worn); 'first' is last.
-        expect(weapons[0].id).toBe('second');
-        expect(weapons[1].id).toBe('first');
-    });
-
-    it('reports the new worn item on the VM after unequip', () => {
-        const store = makeStore([sword('first'), dagger('second')]);
-        const actions = createAppActions(store);
-
-        actions.unequipItem('first');
-
+        const player = store.getState().player;
+        expect(player.equipment.weapon).toBeNull();
+        expect(player.inventory.map((i: Item) => i.id)).toEqual(['alone']);
         const vm = selectInventoryViewModel(store.getState());
-        const a = vm.items.find((i) => i.id === 'first')!;
-        const b = vm.items.find((i) => i.id === 'second')!;
-        expect(b.equipped).toBe(true);
-        expect(a.equipped).toBe(false);
+        expect(vm.items.find((i) => i.id === 'alone')!.equipped).toBe(false);
+        expect(vm.equipmentDock.slots.find((s) => s.key === 'weapon')!.item).toBeNull();
     });
 
-    it('no-ops when the item is the sole entry in its slot (no peer to swap to)', () => {
-        const store = makeStore([sword('alone')]);
-        const before = store.getState().player.inventory;
+    it('takes one relic off of two, wearing fewer than are carried', () => {
+        const ring = getRelicById('relic-disarming-plea')!;
+        const signet = getRelicById('relic-bleeding-signet')!;
+        const store = makeStore([ring, signet], [ring, signet]);
+        createAppActions(store).unequipItem(signet.id);
+
+        const player = store.getState().player;
+        expect(player.equipment.accessories.map((a) => a.id)).toEqual([ring.id]);
+        expect(player.inventory.map((i: Item) => i.id)).toEqual([ring.id, signet.id]);
+    });
+
+    it('wearing none is legal: both relics off leaves an empty loadout', () => {
+        const ring = getRelicById('relic-disarming-plea')!;
+        const signet = getRelicById('relic-bleeding-signet')!;
+        const store = makeStore([ring, signet], [ring, signet]);
         const actions = createAppActions(store);
+        actions.unequipItem(ring.id);
+        actions.unequipItem(signet.id);
 
-        actions.unequipItem('alone');
-
-        // Mobile convention can't express "wearing nothing" without
-        // a richer marker; sole-item unequip is a no-op (the modal
-        // surfaces this as mode='view' confirmLabel='WORN').
-        expect(store.getState().player.inventory).toEqual(before);
+        expect(store.getState().player.equipment.accessories).toEqual([]);
     });
 
-    it('no-ops when the item is missing or not equipment', () => {
-        const store = makeStore([potion('phial')]);
-        const before = store.getState().player.inventory;
+    it('no-ops when the item is missing, not equipment, or not worn', () => {
+        const store = makeStore([potion('phial'), sword('carried')]);
+        const before = store.getState().player;
         const actions = createAppActions(store);
 
         actions.unequipItem('missing');
         actions.unequipItem('phial');
+        actions.unequipItem('carried');
 
-        expect(store.getState().player.inventory).toEqual(before);
+        expect(store.getState().player).toBe(before);
+    });
+});
+
+describe('the Bleeding Signet round trip (EQ1 A3)', () => {
+    it('equip then unequip returns maxHealth and the loadout to their starting values', () => {
+        const signet = { ...getRelicById('relic-bleeding-signet')! };
+        const store = makeStore([signet]);
+        const start = store.getState().player;
+        const maxHp = (signet.statModifiers ?? [])
+            .filter((m) => m.stat === 'maxHp')
+            .reduce((sum, m) => sum + m.value, 0);
+        expect(maxHp).toBeGreaterThan(0);
+        const actions = createAppActions(store);
+
+        actions.equipItem(signet.id);
+        expect(store.getState().player.maxHealth).toBe(start.maxHealth + maxHp);
+        expect(store.getState().player.equipment.accessories.map((a) => a.id)).toEqual([signet.id]);
+
+        actions.unequipItem(signet.id);
+        const end = store.getState().player;
+        expect(end.maxHealth).toBe(start.maxHealth);
+        expect(end.equipment).toEqual(start.equipment);
+        expect(end.inventory.map((i: Item) => i.id)).toEqual([signet.id]);
     });
 });
 
@@ -761,11 +800,12 @@ describe('selectInventoryViewModel: equipmentDock', () => {
     });
 
     it('fills all three accessory positions with the worn accessories in order', () => {
-        const store = makeStore([
+        const rings = [
             trinket('ring-1', 'Iron Ring'),
             trinket('ring-2', 'Bone Charm'),
             trinket('ring-3', 'Copper Band'),
-        ]);
+        ];
+        const store = makeStore(rings, rings);
         const vm: InventoryViewModel = selectInventoryViewModel(store.getState());
 
         const accessorySlots = vm.equipmentDock.slots.filter((s) => s.key === 'accessory');
@@ -774,7 +814,7 @@ describe('selectInventoryViewModel: equipmentDock', () => {
     });
 
     it('leaves later accessory positions bare when fewer than three are worn', () => {
-        const store = makeStore([trinket('ring-1', 'Iron Ring')]);
+        const store = makeStore([trinket('ring-1', 'Iron Ring')], [trinket('ring-1', 'Iron Ring')]);
         const vm: InventoryViewModel = selectInventoryViewModel(store.getState());
 
         const accessorySlots = vm.equipmentDock.slots.filter((s) => s.key === 'accessory');
@@ -782,7 +822,7 @@ describe('selectInventoryViewModel: equipmentDock', () => {
     });
 
     it('fills the weapon slot with the equipped weapon row when one is in inventory', () => {
-        const store = makeStore([sword('long-blade-1')]);
+        const store = makeStore([sword('long-blade-1')], [sword('long-blade-1')]);
         const vm: InventoryViewModel = selectInventoryViewModel(store.getState());
 
         const weaponSlot = vm.equipmentDock.slots.find((s) => s.key === 'weapon');
@@ -795,13 +835,13 @@ describe('selectInventoryViewModel: equipmentDock', () => {
         });
     });
 
-    it('shows only the first equipped item per slot (mirrors selectCharacterViewModel convention)', () => {
-        const store = makeStore([sword('long-blade-1'), dagger('bone-dagger-1')]);
+    it('shows the worn weapon, not the first one carried (EQ1 A1)', () => {
+        const store = makeStore([sword('long-blade-1'), dagger('bone-dagger-1')], [dagger('bone-dagger-1')]);
         const vm: InventoryViewModel = selectInventoryViewModel(store.getState());
 
         const weaponSlot = vm.equipmentDock.slots.find((s) => s.key === 'weapon');
-        // First weapon in inventory wins; dagger appears as un-equipped in vm.items.
-        expect(weaponSlot!.item?.id).toBe('long-blade-1');
+        expect(weaponSlot!.item?.id).toBe('bone-dagger-1');
+        expect(vm.items.find((i) => i.id === 'long-blade-1')!.equipped).toBe(false);
     });
 
     it('leaves slots null when the player carries no equipment in that slot', () => {
@@ -908,7 +948,7 @@ describe('selectInventoryViewModel: equip-preview replacePreview', () => {
     });
 
     it('is null on the equipped equipment row itself (no self-replacement preview)', () => {
-        const store = makeStore([sword('long-blade-1')]);
+        const store = makeStore([sword('long-blade-1')], [sword('long-blade-1')]);
         const vm = selectInventoryViewModel(store.getState());
         const row = vm.items.find((r) => r.id === 'long-blade-1')!;
         expect(row.equipped).toBe(true);
@@ -916,11 +956,7 @@ describe('selectInventoryViewModel: equip-preview replacePreview', () => {
     });
 
     it('is null on non-equipped equipment when the slot is empty (no equipped sibling)', () => {
-        // Single sword — gets auto-marked equipped. Need a second
-        // sword in the same slot to surface the preview on the second.
-        // For the "slot empty" case we use armor (no equipped armor),
-        // so the second sword does have a sibling. Test the empty-slot
-        // case via a single armor item in an otherwise-empty inventory:
+        // A carried, unworn armor in an empty armor slot.
         const armor: Equipment = {
             id: 'cuirass',
             name: 'Brass Cuirass',
@@ -933,8 +969,7 @@ describe('selectInventoryViewModel: equip-preview replacePreview', () => {
         const store = makeStore([armor]);
         const vm = selectInventoryViewModel(store.getState());
         const row = vm.items.find((r) => r.id === 'cuirass')!;
-        // Auto-marked equipped (first in slot), so preview is null.
-        expect(row.equipped).toBe(true);
+        expect(row.equipped).toBe(false);
         expect(row.replacePreview).toBeNull();
     });
 
@@ -950,7 +985,7 @@ describe('selectInventoryViewModel: equip-preview replacePreview', () => {
             { stat: 'stamina', value: 1 },
             { stat: 'defense', value: 2 },
         ]);
-        const store = makeStore([equipped, replacer]);
+        const store = makeStore([equipped, replacer], [equipped]);
         const vm = selectInventoryViewModel(store.getState());
 
         const replacerRow = vm.items.find((r) => r.id === 'steel-edge')!;
@@ -980,7 +1015,7 @@ describe('selectInventoryViewModel: equip-preview replacePreview', () => {
             { stat: 'attack', value: 4 }, // identical → delta 0, should be dropped
             { stat: 'reach', value: 1 },  // new stat → delta +1
         ]);
-        const store = makeStore([equipped, replacer]);
+        const store = makeStore([equipped, replacer], [equipped]);
         const vm = selectInventoryViewModel(store.getState());
 
         const row = vm.items.find((r) => r.id === 'iron-edge')!;
@@ -999,19 +1034,26 @@ describe('selectInventoryViewModel: equipDelta surface (Phase 133)', () => {
         }
     });
 
-    it('is equip mode (gained only) on the lone worn item in an empty slot', () => {
+    it('is unequip mode (lost only) on the lone worn item', () => {
         const equipped = swordWithStats('long-blade', 'Long Blade', [
             { stat: 'attack', value: 4 },
         ]);
-        const store = makeStore([equipped]);
+        const store = makeStore([equipped], [equipped]);
         const vm = selectInventoryViewModel(store.getState());
         const row = vm.items.find((r) => r.id === 'long-blade')!;
-        // The lone item is auto-marked worn; against itself it would be
-        // unequip, but with no other sibling the worn map points to it,
-        // so the delta compares it against itself → unequip (lost only).
         expect(row.equipDelta).not.toBeNull();
         expect(row.equipDelta!.mode).toBe('unequip');
         expect(row.equipDelta!.stats).toEqual([{ stat: 'attack', delta: -4 }]);
+    });
+
+    it('is equip mode (gained only) on a carried, unworn item in an empty slot', () => {
+        const carried = swordWithStats('long-blade', 'Long Blade', [
+            { stat: 'attack', value: 4 },
+        ]);
+        const store = makeStore([carried]);
+        const row = selectInventoryViewModel(store.getState()).items.find((r) => r.id === 'long-blade')!;
+        expect(row.equipDelta!.mode).toBe('equip');
+        expect(row.equipDelta!.stats).toEqual([{ stat: 'attack', delta: 4 }]);
     });
 
     it('is swap mode with gained/lost split for a non-equipped sibling', () => {
@@ -1023,7 +1065,7 @@ describe('selectInventoryViewModel: equipDelta surface (Phase 133)', () => {
             { stat: 'attack', value: 5 },
             { stat: 'defense', value: 2 },
         ]);
-        const store = makeStore([equipped, replacer]);
+        const store = makeStore([equipped, replacer], [equipped]);
         const vm = selectInventoryViewModel(store.getState());
         const row = vm.items.find((r) => r.id === 'steel-edge')!;
         expect(row.equipDelta).not.toBeNull();
@@ -1040,7 +1082,7 @@ describe('selectInventoryViewModel: equipDelta surface (Phase 133)', () => {
     // Equipment carries no passive effects; the equip-delta surfaces
     // stat + signature changes only. A plain-gear swap surfaces just the stat diff.
     it('surfaces the stat diff on a plain-gear swap', () => {
-        const store = makeStore([sword('worn-blade'), dagger('new-fang')]);
+        const store = makeStore([sword('worn-blade'), dagger('new-fang')], [sword('worn-blade')]);
         const vm = selectInventoryViewModel(store.getState());
         const row = vm.items.find((r) => r.id === 'new-fang')!;
         expect(row.equipDelta!.mode).toBe('swap');
@@ -1050,18 +1092,23 @@ describe('selectInventoryViewModel: equipDelta surface (Phase 133)', () => {
 });
 
 // ---------------------------------------------------------------------------
-// The worn window and the engine loadout agree on equip
+// A loaded save (EQ1 A5)
 // ---------------------------------------------------------------------------
 
-describe('equipItem — a relic shown worn but missing from the loadout', () => {
-    it('is worn for real on EQUIP: its +max VITAE folds in and it joins the loadout once', () => {
+describe('a save carrying a relic the loadout lacks (EQ1 A5)', () => {
+    it('shows it unworn with EQUIP offered, and wearing it folds its +max VITAE in once', () => {
         const store = createAppStore({ adapter: createMemoryAdapter() });
         const actions = createAppActions(store);
         const signet = { ...getRelicById('relic-bleeding-signet')! };
         const player = store.getState().player;
-        // Carried inside the worn window, but never equipped in the engine.
-        store.setState({ player: { ...player, inventory: [...player.inventory, signet] } });
-        expect(store.getState().player.equipment.accessories.some((a) => a.id === signet.id)).toBe(false);
+        // The old dock drew the first trinkets carried as worn; the loadout,
+        // which combat used, never wore it. Nothing rewrites the loadout.
+        store.setState({ player: { ...player, inventory: [signet, ...player.inventory] } });
+        expect(store.getState().player.equipment).toEqual(player.equipment);
+
+        const row = selectInventoryViewModel(store.getState()).items.find((r) => r.id === signet.id)!;
+        expect(row.equipped).toBe(false);
+        expect(selectItemModalViewModel(store.getState(), signet.id)!.mode).toBe('equip');
 
         actions.equipItem(signet.id);
         const after = store.getState().player;

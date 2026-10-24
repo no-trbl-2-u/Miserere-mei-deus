@@ -24,7 +24,7 @@ import {
     createMapState,
     equipItem as engineEquipItem,
     unequipItem as engineUnequipItem,
-    wornPerSlot,
+    displacedBy,
     SLOT_CAPACITY,
     getDialogueNode,
     getMapDefinition,
@@ -59,6 +59,7 @@ import {
 
 import { COMBAT_CARDS } from '@/state/selectors/combat-cards';
 import { resolveWareItem } from '@/state/presenters/village.engine';
+import { findOwnedEquipment, isWornId, wornInSlot } from '@/state/presenters/loadout';
 import { EMPTY_EVENT_SLICE, EMPTY_LABYRINTH_SLICE, type AppStore } from './store';
 import {
     abandonHazardAction,
@@ -89,6 +90,7 @@ import {
     chooseRestChoiceOfferAction,
     claimRestChoiceOutcomeAction,
     pickRestChoiceCutAction,
+    pickRestChoiceUpgradeAction,
     type BeginRestOptions,
     type ClaimRestChoiceResult,
 } from './rest/store-actions';
@@ -102,10 +104,13 @@ import {
 import {
     abandonBlacksmithAction,
     beginBlacksmithAction,
+    cancelBlacksmithCardUpgradeAction,
+    chooseBlacksmithCardUpgradeAction,
     claimBlacksmithOutcomeAction,
     continueBlacksmithCardAction,
     honeBlacksmithAction,
     leaveBlacksmithAction,
+    pickBlacksmithCardUpgradeAction,
     startBlacksmithForgingAction,
     swapBlacksmithAction,
     temperBlacksmithAction,
@@ -142,6 +147,8 @@ import {
 import { getAporiaAct } from '@mechanics';
 import type { LabyrinthActId, LabyrinthBossOutcome } from '@mechanics';
 import { wrapActionsWithLogging } from './logging';
+import { endCombatOutcome, fightRecorder } from '@/lib/fightRecorder';
+import { deckEventPoster, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
 import { getMapLayout } from './exploration-maps';
 
 // ---------------------------------------------------------------------------
@@ -249,19 +256,16 @@ export interface AppActions {
      */
     useItem: (itemId: string) => UseItemResult;
     /**
-     * Equip an item: the engine folds its stats into the loadout and the
-     * inventory is reordered so it leads its slot peers (the worn window,
-     * `wornPerSlot`). Refuses with a toast when every accessory position is
-     * already worn. No-op when the item isn't equipment.
+     * Equip an item: the engine folds its stat line into `player.equipment`
+     * and wears its signature. When every position of its slot is worn, the
+     * last-worn piece comes off to make room (it stays in the satchel). No-op
+     * when the item isn't equipment or is already worn.
      */
     equipItem: (itemId: string) => void;
     /**
-     * The swap counterpart to equip. Under mobile's "the first
-     * `SLOT_CAPACITY[slot]` items per slot are worn" convention, unequip
-     * moves the target to the END of its slot peers in inventory so a
-     * benched peer scrolls into the worn window. When the slot holds no
-     * more items than its capacity the action is a no-op (the convention
-     * can't express "wearing fewer than are carried").
+     * Take a worn item off `player.equipment`, leaving its position empty.
+     * Wearing fewer pieces than are carried is legal, and so is wearing none.
+     * The item stays in the satchel. No-op when the item isn't worn.
      */
     unequipItem: (itemId: string) => void;
     /** Discard an item — wraps `removeItem` with a quest-item guard. */
@@ -293,11 +297,10 @@ export interface AppActions {
     /**
      * Dev-only GET ALL RELICS. Adds every relic in the engine's
      * `relicLibrary` the player does not already own (carried or worn) to
-     * the inventory. Nothing worn is displaced. The engine loadout then
-     * follows the dock's worn window (`wornPerSlot`: the first three
-     * trinkets carried are the worn ones), so a relic that lands in a free
-     * trinket position is worn with its stat line and signature, and one
-     * past the third trinket stays in the satchel.
+     * the inventory. Nothing worn is displaced: each new relic is worn into
+     * `player.equipment` while its slot has a free position (stat line and
+     * signature with it), and one past the last free position stays in the
+     * satchel, unworn.
      */
     grantAllRelics: () => GrantAllRelicsResult;
     /**
@@ -455,11 +458,13 @@ export interface AppActions {
 
     /** Start a rest node. Returns false if one is underway. */
     beginRest: (options?: BeginRestOptions) => boolean;
-    /** Commit one of the two offers. Locks the other. */
+    /** Commit one of the three offers. Locks the others. */
     chooseRestChoiceOffer: (offer: RestChoiceOfferId) => void;
     /** Pick a card to remove (`cut` sub-step). Must be one of the offered ids. */
     pickRestChoiceCut: (cardId: string) => void;
-    /** Confirm the settled ledger; applies heal/spend/removal and persists. */
+    /** Pick a card to upgrade (`upgrade` sub-step). Must be one of the upgradable ids. */
+    pickRestChoiceUpgrade: (cardId: string) => void;
+    /** Confirm the settled ledger; applies heal/upgrade/spend/removal and persists. */
     claimRestOutcome: () => ClaimRestChoiceResult;
 
     // -----------------------------------------------------------------
@@ -492,6 +497,12 @@ export interface AppActions {
     swapBlacksmith: (variantId: string) => void;
     /** Acknowledge the open result/refusal flash: card → forging. */
     continueBlacksmithCard: () => void;
+    /** Open the anvil's card upgrade (once a visit). forging → upgrade-pick or a refusal card. */
+    chooseBlacksmithCardUpgrade: () => void;
+    /** Back out of the anvil's card picker, nothing charged. */
+    cancelBlacksmithCardUpgrade: () => void;
+    /** Upgrade the picked card for the anvil's price. Must be one of the upgradable ids. */
+    pickBlacksmithCardUpgrade: (cardId: string) => void;
     /** Leave the anvil, sealing the ledger: forging → outcome. */
     leaveBlacksmith: () => void;
     /** Confirm the ledger; writes the rail, deducts the spend, persists. */
@@ -604,6 +615,34 @@ export function withScaledEnemyHp(enemy: Enemy, mult: number): Enemy {
     return { ...enemy, health, maxHealth };
 }
 
+/**
+ * Opens the play log's recording of the fight just staged (phase BE2c): the
+ * foe, the player's level and VITAE before the first card, and the HP
+ * multiplier the foe was scaled by. A no-op while the play-log gate is shut.
+ */
+function recordFightStart(store: AppStore, enemy: Enemy, enemyHpMultiplier: number): void {
+    const player = store.getState().player;
+    if (!player) return;
+    fightRecorder.start({ enemyId: enemy.id, playerLevel: player.level, enemyHpMultiplier, vitaeStart: player.health });
+}
+
+/**
+ * The play log's run-end deck event (phase BE2e): the deck the run ended
+ * with, read before the engine's reset clears it. A no-op with no player
+ * loaded or the play-log gate shut.
+ */
+function recordRunEnd(store: AppStore): void {
+    const state = store.getState() as unknown as DeckEventState;
+    if (!state.player) return;
+    void deckEventPoster.post({
+        kind: 'run-end',
+        cardId: null,
+        offered: null,
+        deck: runDeck(state),
+        where: deckEventWhere(state, 'run-end'),
+    });
+}
+
 // ---------------------------------------------------------------------------
 // Action creators
 // ---------------------------------------------------------------------------
@@ -621,6 +660,7 @@ export function createAppActions(store: AppStore): AppActions {
             // the encounter (`currentEncounter`) and fires `combat:started`.
             ensureStarterCards(store);
             store.getState().startCombat(enemy);
+            recordFightStart(store, enemy, 1);
         },
         beginHazardEncounter: () => {
             // Live map encounters run the hazard-pattern combat. Pull the foe out of
@@ -643,6 +683,7 @@ export function createAppActions(store: AppStore): AppActions {
             // turns to exercise status-effect play). See ENCOUNTER_ENEMY_HP_MULTIPLIER.
             const scaledEnemy = withScaledEnemyHp(enemy, ENCOUNTER_ENEMY_HP_MULTIPLIER);
             store.getState().startCombat(scaledEnemy);
+            recordFightStart(store, scaledEnemy, ENCOUNTER_ENEMY_HP_MULTIPLIER);
             return scaledEnemy;
         },
         endCombat: (outcome) => {
@@ -655,6 +696,9 @@ export function createAppActions(store: AppStore): AppActions {
             // (no reward) when unspecified. It returns a stub 'flee' report
             // when called outside an encounter.
             const report = store.getState().endCombat(outcome ?? 'flee');
+            // The play log: posts a fight the panel never finished (a WITHDRAW);
+            // one it finished has already posted, so this is a no-op then.
+            void fightRecorder.end(endCombatOutcome(outcome ?? 'flee'));
             return report ?? null;
         },
         // Action creators used elsewhere — wired here for completeness.
@@ -692,6 +736,7 @@ export function createAppActions(store: AppStore): AppActions {
             const engineStore = store.getState() as unknown as {
                 resetRun?: (o: { keepCharacter: boolean }) => unknown;
             };
+            recordRunEnd(store);
             engineStore.resetRun?.(opts);
             // A run reset regenerates the overworld (seating the player at
             // the starting node), so any in-flight Labyrinth visit is over.
@@ -775,6 +820,7 @@ export function createAppActions(store: AppStore): AppActions {
         beginRest: (options) => beginRestAction(store, options),
         chooseRestChoiceOffer: (offer) => chooseRestChoiceOfferAction(store, offer),
         pickRestChoiceCut: (cardId) => pickRestChoiceCutAction(store, cardId),
+        pickRestChoiceUpgrade: (cardId) => pickRestChoiceUpgradeAction(store, cardId),
         claimRestOutcome: () => claimRestChoiceOutcomeAction(store),
         beginLootCacheChoice: (options) => beginLootCacheChoiceAction(store, options),
         chooseLootCacheChoiceOffer: (offer) => chooseLootCacheChoiceOfferAction(store, offer),
@@ -785,6 +831,9 @@ export function createAppActions(store: AppStore): AppActions {
         temperBlacksmith: (color) => temperBlacksmithAction(store, color),
         swapBlacksmith: (variantId) => swapBlacksmithAction(store, variantId),
         continueBlacksmithCard: () => continueBlacksmithCardAction(store),
+        chooseBlacksmithCardUpgrade: () => chooseBlacksmithCardUpgradeAction(store),
+        cancelBlacksmithCardUpgrade: () => cancelBlacksmithCardUpgradeAction(store),
+        pickBlacksmithCardUpgrade: (cardId) => pickBlacksmithCardUpgradeAction(store, cardId),
         leaveBlacksmith: () => leaveBlacksmithAction(store),
         claimBlacksmithOutcome: () => claimBlacksmithOutcomeAction(store),
         abandonBlacksmith: () => abandonBlacksmithAction(store),
@@ -887,114 +936,40 @@ function pushToast(store: AppStore, text: string): void {
 
 function equipItemAction(store: AppStore, itemId: string): void {
     const state = store.getState();
-    const inventory: readonly Item[] = state.player.inventory;
-    const target = inventory.find((i: Item) => i.id === itemId);
+    const target = state.player.inventory.find((i: Item) => i.id === itemId);
     if (!target || !isEquipment(target)) return;
-
     const equip = target as Equipment;
-    const targetSlot = equip.slot;
+    if (isWornId(state.player.equipment, equip.id)) return;
 
-    // Accessory-full guard: with all 3 accessory positions worn and
-    // the target not already among them, refuse rather than silently displace.
-    let updatedPlayer = state.player;
-    if (targetSlot === 'accessory') {
-        const wornAcc = wornPerSlot(inventory).get('accessory') ?? [];
-        const alreadyWorn = wornAcc.some((a) => a.id === equip.id);
-        const inLoadout = state.player.equipment.accessories.some((a) => a.id === equip.id);
-        if (!alreadyWorn) {
-            if (wornAcc.length >= SLOT_CAPACITY.accessory) {
-                pushToast(store, 'Accessory slots full — remove one first.');
-                return;
-            }
-            // EQUIPMENT STATS FIX: engine equipItem folds stat bonuses / passives.
-            updatedPlayer = engineEquipItem(state.player, equip);
-        } else if (!inLoadout) {
-            // Shown worn (inside the worn window) but missing from the engine
-            // loadout: wear it for real so its stat line and signature apply.
-            updatedPlayer = engineEquipItem(state.player, equip);
-        }
-        // alreadyWorn and in the loadout → reorder only (no duplicate entry).
-    } else {
-        // weapon / armor replace in place.
-        updatedPlayer = engineEquipItem(state.player, equip);
-    }
-
-    // Build the reordered inventory:
-    //   1. The target item (now first in its slot).
-    //   2. All other items, preserving their relative order, with the
-    //      old "first in slot" item demoted behind the target.
-    const targetIndex = inventory.indexOf(target);
-    const rest = inventory.filter((_: Item, idx: number) => idx !== targetIndex);
-    const slotPeers: Item[] = [];
-    const nonSlot: Item[] = [];
-    for (const it of rest) {
-        if (isEquipment(it) && (it as Equipment).slot === targetSlot) {
-            slotPeers.push(it);
-        } else {
-            nonSlot.push(it);
-        }
-    }
-    const next: Item[] = [target, ...slotPeers, ...nonSlot];
-
-    store.setState({ player: { ...updatedPlayer, inventory: next } });
+    // The engine folds the stat line and wears the piece. A full accessory row
+    // gives up its last-worn piece (the one the modal names as REPLACE); it
+    // stays in the satchel, since worn pieces are carried too.
+    const { index } = displacedBy(state.player, equip);
+    const nextPlayer = engineEquipItem(
+        state.player,
+        equip,
+        index === null ? undefined : { replaceIndex: index },
+    );
+    if (nextPlayer === state.player) return;
+    store.setState({ player: nextPlayer });
 }
 
 function unequipItemAction(store: AppStore, itemId: string): void {
-    // Mobile "worn" convention: the first `SLOT_CAPACITY[slot]` equipment items
-    // per slot are worn (capacity-aware `wornPerSlot`). To "unequip"
-    // the target under that convention, move it to the END of its slot peers so
-    // a benched peer scrolls into the worn window. When a slot has no more items
-    // than its capacity the move can't reduce the worn set, so it's a no-op —
-    // the inventory convention can't express "wearing fewer than are carried".
+    // Taking a piece off leaves its position empty: a body may wear fewer
+    // relics than it carries, or none. The piece stays in the satchel.
     const state = store.getState();
-    const inventory: readonly Item[] = state.player.inventory;
-    const target = inventory.find((i: Item) => i.id === itemId);
-    if (!target || !isEquipment(target)) return;
-    const targetSlot = (target as Equipment).slot;
+    const loadout = state.player.equipment;
+    if (!isWornId(loadout, itemId)) return;
+    const target = findOwnedEquipment(state.player, itemId);
+    if (target === null) return;
 
-    const slotPeerCount = inventory.filter(
-        (it: Item) => isEquipment(it) && (it as Equipment).slot === targetSlot,
-    ).length;
-    if (slotPeerCount <= SLOT_CAPACITY[targetSlot]) return;
-
-    // EQUIPMENT STATS FIX: engine unequipItem strips the piece's stat bonuses.
-    // For an accessory, pass the loadout index so the right position is freed.
     const accessoryIndex =
-        targetSlot === 'accessory'
-            ? state.player.equipment.accessories.findIndex((a) => a.id === target.id)
+        target.slot === 'accessory'
+            ? loadout.accessories.findIndex((a) => a.id === itemId)
             : undefined;
-    let updatedPlayer = engineUnequipItem(state.player, targetSlot, accessoryIndex);
-
-    // Rebuild inventory:
-    //   1. All non-target, non-slot items in their original order.
-    //   2. All slot peers (except target) in their original order
-    //      — the formerly-benched peer scrolls into the worn window.
-    //   3. Target appended at the end of its slot peers (definitively NOT worn).
-    const slotPeersExceptTarget: Item[] = [];
-    const nonSlot: Item[] = [];
-    for (const it of inventory) {
-        if (it.id === target.id) continue;
-        if (isEquipment(it) && (it as Equipment).slot === targetSlot) {
-            slotPeersExceptTarget.push(it);
-        } else {
-            nonSlot.push(it);
-        }
-    }
-    const next: Item[] = [...nonSlot, ...slotPeersExceptTarget, target];
-
-    // Reconcile the engine loadout with the new worn window: an accessory that
-    // scrolled into the worn set but isn't in the loadout gets equipped so its
-    // stats fold in (keeps the loadout and the inventory-worn view consistent).
-    if (targetSlot === 'accessory') {
-        const loadoutAccIds = new Set(updatedPlayer.equipment.accessories.map((a) => a.id));
-        for (const acc of wornPerSlot(next).get('accessory') ?? []) {
-            if (!loadoutAccIds.has(acc.id)) {
-                updatedPlayer = engineEquipItem(updatedPlayer, acc);
-            }
-        }
-    }
-
-    store.setState({ player: { ...updatedPlayer, inventory: next } });
+    const nextPlayer = engineUnequipItem(state.player, target.slot, accessoryIndex);
+    if (nextPlayer === state.player) return;
+    store.setState({ player: nextPlayer });
 }
 
 function dropItemAction(store: AppStore, itemId: string): void {
@@ -1309,20 +1284,6 @@ function populateAllItemsAction(store: AppStore): PopulateAllItemsResult {
     return { itemsAdded, breakdown: { equipment, unique, consumable } };
 }
 
-/**
- * Wears every accessory in the dock's worn window that the engine loadout
- * lacks, so the loadout (stat lines, signatures) matches what the dock shows.
- */
-function wearWornWindow(player: Character, inventory: readonly Item[]): Character {
-    let next = player;
-    for (const acc of wornPerSlot(inventory).get('accessory') ?? []) {
-        if (next.equipment.accessories.some((a) => a.id === acc.id)) continue;
-        if (next.equipment.accessories.length >= SLOT_CAPACITY.accessory) break;
-        next = engineEquipItem(next, acc);
-    }
-    return next;
-}
-
 function grantAllRelicsAction(store: AppStore): GrantAllRelicsResult {
     const state = store.getState();
     const player = state.player;
@@ -1342,8 +1303,16 @@ function grantAllRelicsAction(store: AppStore): GrantAllRelicsResult {
     if (added.length === 0) {
         return { added, worn: player.equipment.accessories.map((a) => a.id) };
     }
-    const nextPlayer = wearWornWindow({ ...player, inventory }, inventory);
-    store.setState({ player: { ...nextPlayer, inventory } });
+    // Wear each new relic while its slot has a free position; nothing worn is
+    // displaced, so a relic past the last free position stays in the satchel.
+    let nextPlayer: Character = { ...player, inventory };
+    for (const id of added) {
+        const relic = inventory.find((i: Item) => i.id === id);
+        if (!relic || !isEquipment(relic)) continue;
+        if (wornInSlot(nextPlayer.equipment, relic.slot).length >= SLOT_CAPACITY[relic.slot]) continue;
+        nextPlayer = engineEquipItem(nextPlayer, relic);
+    }
+    store.setState({ player: nextPlayer });
     return { added, worn: nextPlayer.equipment.accessories.map((a) => a.id) };
 }
 

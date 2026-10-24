@@ -14,13 +14,15 @@
 //   node --test scripts/loop-pr.test.mjs
 
 import assert from 'node:assert/strict'
+import { execFileSync } from 'node:child_process'
 import fs from 'node:fs'
+import os from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
 import { fileURLToPath } from 'node:url'
 
 import { parseCloseTrailers } from './loop-issue.mjs'
-import { hasMarker, isUnionPath, keepCount, unionMerge } from './pr-resolve.mjs'
+import { hasMarker, isUnionPath, keepCount, MERGE_DRIVERS, registerMergeDrivers, unionMerge } from './pr-resolve.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const read = (rel) => fs.readFileSync(path.join(ROOT, rel), 'utf8')
@@ -103,6 +105,24 @@ test('pr-resolve runs Claude only on a dispatched run, never on push', () => {
 })
 
 // --- nothing in the loop merges, auto-merges or force-pushes a PR -----------
+
+test('pr-resolve registers every merge driver .gitattributes names, as the SessionStart hook does', () => {
+  const named = [...read('.gitattributes').matchAll(/\bmerge=(\w+)/g)].map((m) => m[1])
+  const settings = read('.claude/settings.json')
+  for (const key of new Set(named)) {
+    const d = MERGE_DRIVERS.find((x) => x.key === key)
+    assert.ok(d, `pr-resolve registers merge.${key}`)
+    assert.ok(settings.includes(`merge.${key}.driver '${d.driver}'`), `merge.${key}.driver matches the hook`)
+  }
+  // Registered before the merge it settles, not only in a Claude session.
+  assert.match(code(read('scripts/pr-resolve.mjs')), /function mergeMain\(branch\) \{\n\s*registerMergeDrivers\(\)/)
+  const repo = fs.mkdtempSync(path.join(os.tmpdir(), 'pr-resolve-drivers-'))
+  execFileSync('git', ['init', '-q'], { cwd: repo })
+  registerMergeDrivers(repo)
+  for (const d of MERGE_DRIVERS) {
+    assert.equal(execFileSync('git', ['config', `merge.${d.key}.driver`], { cwd: repo, encoding: 'utf8' }).trim(), d.driver)
+  }
+})
 
 test('no workflow but pr-review\'s merge job merges or auto-merges, and none force-pushes (D95)', () => {
   for (const f of fs.readdirSync(path.join(ROOT, WF)).filter((f) => f.endsWith('.yml'))) {
@@ -644,4 +664,20 @@ test('the visual step is report-only and the re-stamp never turns a verify run r
   const steps = restamp.split(/\n {6}- name: /).slice(1)
   assert.equal(steps.length, 5)
   for (const s of steps) assert.match(s, /continue-on-error: true/, s.split('\n')[0])
+})
+
+// --- pr-review.yml: report-only mutation on changed lines (phase LG1g, A7) ---
+
+test('the mutation job never fails a check and runs Stryker with no token in reach', () => {
+  const mutation = job(review, 'mutation')
+  assert.ok(mutation, 'mutation job present')
+  assert.match(mutation, /^ {4}if: github\.event_name == 'pull_request' && github\.event\.pull_request\.head\.repo\.full_name == github\.repository$/m)
+  assert.doesNotMatch(mutation, /\n {4}needs:/, 'it waits on nothing')
+  assert.doesNotMatch(code(review), /needs: \[?[^\n]*\bmutation\b/, 'nothing waits on it')
+  assert.match(mutation, /persist-credentials: false/)
+  assert.match(mutation, /node scripts\/eval\/mutation-pr\.mjs run [^\n]*\n[^\n]*--budget 900/)
+  const steps = mutation.split(/\n {6}- name: /).slice(1)
+  for (const s of steps.slice(2)) assert.match(s, /continue-on-error: true/, s.split('\n')[0])
+  const withToken = steps.filter((s) => /GH_TOKEN/.test(s))
+  assert.deepEqual(withToken.map((s) => s.split('\n')[0]), ['Post the score and survivors'])
 })

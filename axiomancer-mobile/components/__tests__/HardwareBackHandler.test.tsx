@@ -60,6 +60,7 @@ function fakeRestSession(): RestChoiceSession {
         health: 20,
         currency: 0,
         deckCardIds: [],
+        upgradableCardIds: [],
         removals: 0,
         offers: [],
         description: null,

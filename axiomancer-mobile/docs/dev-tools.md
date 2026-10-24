@@ -133,6 +133,69 @@ naming it. The token is only sent in the Authorization header and is never
 printed. Tests: `scripts/puzzle-times.test.mjs` (root `npm test`), over
 `scripts/fixtures/puzzle-attempts.json`.
 
+## The play log: fights and deck changes (2026-10-24)
+
+A preview build posts every fight T plays and every change to the run's deck
+to the same `miserere-api` Worker, so card tuning can read what was drawn,
+played, held and passed over (phases BE2a-BE2f,
+`plan/phases/phase_BE2_card_combat_logging.md`).
+
+**The switch.** `/dev` → RUN & DIAGNOSTICS → "Card & combat logging"
+(`components/DebugPlayLogSwitch.tsx`) reads and flips `playLogging`, kept in
+the dev-settings store (`state/dev/dev-settings.ts`) under its own
+AsyncStorage key, never in the save or the player settings. It **defaults to
+on only while T is the only player.** Before a preview APK goes to anyone but
+T, the default flips to off and BE1's playtester follow-up (device ids, a
+privacy note) is plotted first.
+
+**The gate** (`lib/playLog.ts`): a post goes out only when dev tools are on
+(`isDevToolsEnabled()`), the BE1 API URL and token are set, and the switch is
+on. With any one false no request is made and nothing is buffered. A failed
+post warns once in dev and is dropped (no retry, no queue). Production
+builds send nothing whatever the switch says. The puzzle poster above keeps
+its own gate; the switch does not touch it.
+
+**What is sent.** Both bodies carry the solver name, a session id minted per
+app launch (not a device id), the build commit (`getBuildCommit()`, null in
+a local session that does not know it) and the app build.
+
+| Route | When | Fields |
+|---|---|---|
+| `POST /v1/fights` | once per fight, at its end (`lib/fightRecorder.ts`) | enemy id, player level, the enemy HP multiplier, outcome, turns, VITAE at start, end and lowest, the start deck (an upgraded card keeps its `+` id), and every engine combat event stamped with `ms` since the fight began and the player's VITAE then, plus the panel's `ui-staged`, `ui-unstaged` and `ui-detail-opened` events |
+| `POST /v1/deck-events` | a combat reward claimed or skipped, a cache card taken or passed, a rest-site removal, a run's end (`lib/deckEvents.ts`) | `kind` (`reward`, `cache-reward`, `remove`, `run-end`), the card picked or removed, the cards offered, the deck after the change, the node and screen |
+
+`GET /v1/fights[?enemy=]` and `GET /v1/deck-events[?card=]` return the stored
+rows, newest first, behind the same bearer token.
+
+### Read the play log: `npm run api`
+
+From the repo root, `npm run api -- <report>` calls
+`GET /v1/reports/<report>` and prints tables (phase BE2f). The Worker serves
+exactly two reports whose SQL is fixed in `backend/src/reports.ts`; the
+script only names one and passes its flags as query values. Ad hoc questions
+go to `wrangler d1 execute miserere --remote`.
+
+| Report | Prints |
+|---|---|
+| `card-usage` | per card: fights with it in the start deck, drawn, played (FREE and paid), held (turn ends it sat in hand unplayed), fizzled, offered, picked, skipped (shown and not taken), removed |
+| `card-gaps` | per enemy: the threats that overwhelmed a phase, live dice left unspent at turn end by colour beside those rolled, and the threat or DoT tick that ended each lost fight |
+
+| Flag | Effect |
+|---|---|
+| `--build <sha>` | only fights and deck events from that build commit |
+| `--card <id>` | `card-usage` only: one card |
+| `--json` | the report body as JSON instead of the tables |
+| `--file <path>` | read a saved report body instead of calling the Worker |
+
+It reads `PUZZLE_API_URL` and `PUZZLE_API_TOKEN` the way `npm run
+puzzle:times` does (the environment, then `~/.config/miserere/puzzle-api.env`)
+and exits 2 naming whichever is missing. The opening hand is not in the
+engine's event stream, so `drawn` counts later draws only, and a scrap names
+no card, so a scrapped card counts as held to the fight's end. Every number
+is a count for T to read; nothing in `npm test` asserts a play rate. Tests:
+`backend/test/reports.test.ts` (both reports over fixture rows in workerd),
+`scripts/api.test.mjs` (root `npm test`).
+
 ## Layout
 
 | File | Role |

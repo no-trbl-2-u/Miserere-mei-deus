@@ -16,11 +16,13 @@
  * can pass fixture lanes):
  *   getCardLane(id)            one lane by id, or undefined
  *   laneRewardPool(laneIds)    the card ids of the named lanes, de-duplicated
+ *   deckLaneIds(cardIds)       the lanes a deck's cards belong to
  */
 
 import type { Card } from './types';
 import { GREY_OFFICE_CARDS } from './library/starters.cards';
 import { TRIAL_SETS } from './cards.library';
+import { baseCardId } from './card-upgrades';
 
 /**
  * One card lane.
@@ -48,6 +50,9 @@ export interface TrialSet {
     readonly id: string;
     readonly cards: readonly Card[];
     readonly lanes: readonly CardLane[];
+    /** Costs T ruled may grow when a card upgrades, by card id (the upgrade law
+     *  otherwise holds every cost still). Each entry is a ruling of T's. */
+    readonly ruledCostGrowth?: Readonly<Record<string, readonly string[]>>;
 }
 
 /**
@@ -100,4 +105,19 @@ export function laneRewardPool(laneIds: readonly string[], lanes: readonly CardL
         .filter((lane): lane is CardLane => lane !== undefined)
         .flatMap(lane => lane.cardIds);
     return [...new Set(ids)];
+}
+
+/**
+ * The lanes a deck draws on: every lane holding at least one of the deck's
+ * cards, upgraded copies counted as their base card. The elite reward reads
+ * this to promise one offer from the player's own lanes.
+ *
+ * @param cardIds - The deck's card ids, copies and upgrades allowed.
+ * @param lanes   - The registry to read; defaults to {@link CARD_LANES}.
+ * @returns The lane ids, in registry order; `[]` when no card is in a lane.
+ * @example deckLaneIds(['grey-strike+', 'grey-ward']) // ['grey']
+ */
+export function deckLaneIds(cardIds: readonly string[], lanes: readonly CardLane[] = CARD_LANES): string[] {
+    const owned = new Set(cardIds.map(baseCardId));
+    return lanes.filter(lane => lane.cardIds.some(id => owned.has(id))).map(lane => lane.id);
 }

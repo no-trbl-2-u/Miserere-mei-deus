@@ -343,7 +343,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/inventory/SlotBanner.test.tsx, axiomancer-mobile/components/inventory/__tests__/EquipmentDock.S3-sheet-C11.test.tsx, axiomancer-mobile/components/inventory/__tests__/EquipmentDock.portrait-box.test.tsx, ..."
+        "source": "axiomancer-mobile/components/inventory/SlotBanner.test.tsx, axiomancer-mobile/components/inventory/__tests__/EquipmentDetailModal.test.tsx, axiomancer-mobile/components/inventory/__tests__/EquipmentDock.S3-sheet-C11.test.tsx, ..."
       },
       "needsPitch": {
         "value": true,
@@ -393,7 +393,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/state/e2e/forge-vocabulary.S5-talk-C12.test.tsx, axiomancer-mobile/state/e2e/region-plate.rc-walk-10.test.tsx, axiomancer-mobile/state/e2e/scene-measure.S5-talk-C13.test.tsx"
+        "source": "axiomancer-mobile/state/e2e/blacksmith-upgrade.UP1e.test.tsx, axiomancer-mobile/state/e2e/forge-vocabulary.S5-talk-C12.test.tsx, axiomancer-mobile/state/e2e/region-plate.rc-walk-10.test.tsx, ..."
       },
       "needsPitch": {
         "value": false,
@@ -743,7 +743,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/__tests__/MainMenu.test.tsx, axiomancer-mobile/components/__tests__/TitleScreen.test.tsx, axiomancer-mobile/scripts/title-plate-legibility.test.mjs, ..."
+        "source": "axiomancer-mobile/components/__tests__/MainMenu.test.tsx, axiomancer-mobile/components/__tests__/TitleScreen.test.tsx, axiomancer-mobile/lib/__tests__/deckEvents.test.ts, ..."
       },
       "needsPitch": {
         "value": true,
@@ -818,7 +818,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/__tests__/RestGate.test.tsx, axiomancer-mobile/state/e2e/rest-village-column.critique-71.test.tsx"
+        "source": "axiomancer-mobile/components/__tests__/RestGate.test.tsx, axiomancer-mobile/state/e2e/rest-upgrade.UP1d.test.tsx, axiomancer-mobile/state/e2e/rest-village-column.critique-71.test.tsx"
       },
       "needsPitch": {
         "value": true,
@@ -1292,6 +1292,12 @@
       "from": "area:Combat",
       "to": "area:Enemy",
       "file": "axiomancer-mechanics/src/Combat/combat.playtest.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Enemy",
+      "file": "axiomancer-mechanics/src/Combat/combat.rewards.ts"
     },
     {
       "kind": "coupling",
@@ -1795,6 +1801,12 @@
       "kind": "coupling",
       "from": "area:World",
       "to": "area:Cards",
+      "file": "axiomancer-mechanics/src/World/Blacksmith/blacksmith.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:World",
+      "to": "area:Cards",
       "file": "axiomancer-mechanics/src/World/RestChoice/restchoice.engine.ts"
     },
     {
@@ -2107,12 +2119,6 @@
       "kind": "coupling",
       "from": "route:(tabs)/deck",
       "to": "area:Cards",
-      "file": "axiomancer-mobile/state/presenters/card-program.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:(tabs)/deck",
-      "to": "area:Cards",
       "file": "axiomancer-mobile/state/presenters/card-rarity.engine.ts"
     },
     {
@@ -2131,12 +2137,6 @@
       "kind": "coupling",
       "from": "route:(tabs)/deck",
       "to": "area:Combat",
-      "file": "axiomancer-mobile/state/presenters/card-program.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:(tabs)/deck",
-      "to": "area:Combat",
       "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
     },
     {
@@ -2144,6 +2144,12 @@
       "from": "route:(tabs)/deck",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/presenters/deck.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/deck",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/store.ts"
     },
     {
       "kind": "coupling",
@@ -2203,6 +2209,12 @@
       "kind": "coupling",
       "from": "route:(tabs)/exploration",
       "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/exploration",
+      "to": "area:Cards",
       "file": "axiomancer-mobile/state/presenters/cache.engine.ts"
     },
     {
@@ -2234,6 +2246,12 @@
       "from": "route:(tabs)/exploration",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/exploration",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/store.ts"
     },
     {
       "kind": "coupling",
@@ -2412,6 +2430,12 @@
     {
       "kind": "coupling",
       "from": "route:(tabs)/inventory",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/loadout.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/inventory",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/actions.ts"
     },
@@ -2498,6 +2522,12 @@
       "from": "route:(tabs)/inventory",
       "to": "area:Items",
       "file": "axiomancer-mobile/state/presenters/inventory.modal.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/inventory",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/loadout.ts"
     },
     {
       "kind": "coupling",
@@ -2640,6 +2670,18 @@
     {
       "kind": "coupling",
       "from": "route:blacksmith",
+      "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:blacksmith",
+      "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/card-upgrade.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:blacksmith",
       "to": "area:Character",
       "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
     },
@@ -2648,6 +2690,18 @@
       "from": "route:blacksmith",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:blacksmith",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/card-upgrade.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:blacksmith",
+      "to": "area:Effects",
+      "file": "axiomancer-mobile/state/presenters/card-upgrade.engine.ts"
     },
     {
       "kind": "coupling",
@@ -2713,19 +2767,31 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Cards",
+      "file": "axiomancer-mobile/state/combat/store-actions.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Cards",
       "file": "axiomancer-mobile/state/presenters/cache.engine.ts"
     },
     {
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Cards",
-      "file": "axiomancer-mobile/state/presenters/card-program.engine.ts"
+      "file": "axiomancer-mobile/state/presenters/card-rarity.engine.ts"
     },
     {
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Cards",
-      "file": "axiomancer-mobile/state/presenters/card-rarity.engine.ts"
+      "file": "axiomancer-mobile/state/presenters/card-upgrade.engine.ts"
     },
     {
       "kind": "coupling",
@@ -2791,6 +2857,18 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Combat",
+      "file": "axiomancer-mobile/lib/deckEvents.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/lib/fightRecorder.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Combat",
       "file": "axiomancer-mobile/state/actions.ts"
     },
     {
@@ -2809,13 +2887,25 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Combat",
-      "file": "axiomancer-mobile/state/presenters/card-program.engine.ts"
+      "file": "axiomancer-mobile/state/presenters/card-upgrade.engine.ts"
     },
     {
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Effects",
+      "file": "axiomancer-mobile/state/presenters/card-upgrade.engine.ts"
     },
     {
       "kind": "coupling",
@@ -2845,7 +2935,19 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Enemy",
+      "file": "axiomancer-mobile/state/combat/store-actions.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Enemy",
       "file": "axiomancer-mobile/state/presenters/navigation.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/lib/deckEvents.ts"
     },
     {
       "kind": "coupling",
@@ -3084,6 +3186,12 @@
     {
       "kind": "coupling",
       "from": "route:dev",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:dev",
       "to": "area:Effects",
       "file": "axiomancer-mobile/components/DebugEffectApply.tsx"
     },
@@ -3235,6 +3343,12 @@
       "kind": "coupling",
       "from": "route:dev",
       "to": "area:Log",
+      "file": "axiomancer-mobile/state/dev/dev-settings.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:dev",
+      "to": "area:Log",
       "file": "axiomancer-mobile/state/dev/skip-event.ts"
     },
     {
@@ -3272,6 +3386,12 @@
       "from": "route:dev",
       "to": "area:World",
       "file": "axiomancer-mobile/components/DebugWorldTravel.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:dev",
+      "to": "area:World",
+      "file": "axiomancer-mobile/lib/puzzleAttempts.ts"
     },
     {
       "kind": "coupling",
@@ -3350,6 +3470,12 @@
       "from": "route:devaftermath",
       "to": "area:Log",
       "file": "axiomancer-mobile/lib/platform/router.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devart/rooms",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/store.ts"
     },
     {
       "kind": "coupling",
@@ -3642,6 +3768,12 @@
     {
       "kind": "coupling",
       "from": "route:hazard-deck",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:hazard-deck",
       "to": "area:Effects",
       "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
     },
@@ -3727,6 +3859,12 @@
       "kind": "coupling",
       "from": "route:index",
       "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:index",
+      "to": "area:Cards",
       "file": "axiomancer-mobile/state/presenters/cache.engine.ts"
     },
     {
@@ -3746,6 +3884,12 @@
       "from": "route:index",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:index",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/store.ts"
     },
     {
       "kind": "coupling",
@@ -3906,6 +4050,12 @@
     {
       "kind": "coupling",
       "from": "route:item-reward",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/loadout.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:item-reward",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
     },
@@ -3960,6 +4110,12 @@
     {
       "kind": "coupling",
       "from": "route:item-reward",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/loadout.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:item-reward",
       "to": "area:Log",
       "file": "axiomancer-mobile/lib/platform/router.ts"
     },
@@ -3968,6 +4124,12 @@
       "from": "route:item-reward",
       "to": "area:World",
       "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:labyrinth",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/store.ts"
     },
     {
       "kind": "coupling",
@@ -4039,7 +4201,25 @@
       "kind": "coupling",
       "from": "route:rest",
       "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/card-upgrade.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:rest",
+      "to": "area:Cards",
       "file": "axiomancer-mobile/state/presenters/rest.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:rest",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/card-upgrade.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:rest",
+      "to": "area:Effects",
+      "file": "axiomancer-mobile/state/presenters/card-upgrade.engine.ts"
     },
     {
       "kind": "coupling",
@@ -4069,6 +4249,12 @@
       "kind": "coupling",
       "from": "route:saves",
       "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:saves",
+      "to": "area:Cards",
       "file": "axiomancer-mobile/state/presenters/cache.engine.ts"
     },
     {
@@ -4088,6 +4274,12 @@
       "from": "route:saves",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:saves",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/store.ts"
     },
     {
       "kind": "coupling",

@@ -6,15 +6,17 @@
 <title>Rehearsal Ballot</title>
 <!--
   Elementalist ballot (second family rehearsal, D73/D74 shape): Payoff, Engine and Misc tabs, 90 candidates.
-  Self-contained: no network, no storage. Open in any browser.
+  Runs on the shared ballot kit (ballot-kit.js, next to this file): the draft
+  autosaves on this device, and Submit sends the verdict to the miserere-api
+  Worker. Generate and Copy need no network. Open in any browser.
 
   How it works:
     1. Every candidate card is rendered from the CARDS array below.
     2. Tick the checkbox on each card you KEEP (any number per slot;
        ticking two in one slot reads as "merge these").
     3. Optional: type a per-slot note (a TWEAK number, a merge rule).
-    4. Press "Generate" — a plain-text verdict sheet appears; copy it
-       and paste it back to Claude.
+    4. Press "Submit" to send the verdict (the first time, it asks for the
+       API URL and the token), or "Generate" and copy the plain-text sheet.
   Unticked cards are CUT by default (plans §1: CUT is the default).
 -->
 <style>
@@ -124,6 +126,7 @@
            background: var(--btn); color: var(--btn-ink); cursor: pointer; margin: 8px 8px 0 0; }
   .count { color: var(--muted); margin-left: 6px; }
 </style>
+<script src="ballot-kit.js"></script>
 </head>
 <body>
 <header>
@@ -156,7 +159,7 @@
   <button id="gen" type="button">Generate</button>
   <button id="copy" type="button">Copy</button>
   <span class="count" id="count"></span>
-  <textarea id="out" readonly placeholder="Press Generate, then copy this text back to Claude."></textarea>
+  <textarea id="out" readonly placeholder="Press Submit, or Generate and copy this text back to Claude."></textarea>
 </footer>
 
 <script>
@@ -167,6 +170,8 @@
    glyph: placeholder art; free / paid: the two rules lines (plain text);
    why: the drafter's one-line rationale.
    ===================================================================== */
+const BALLOT_ID = 'elementalist-2026-10-22';
+
 const TABS = [
   { key: 'P', name: 'Payoff', blurb: 'Benefits for having the elements up on the foe (and, for Fire, on you).' },
   { key: 'E', name: 'Engine', blurb: 'Puts INFERNO, CHILL and STORM up and makes them grow; E-10 is the bend.' },
@@ -411,7 +416,7 @@ document.getElementById('tabs').addEventListener('click', (e) => {
 });
 
 /* =====================================================================
-   STATE — read straight from the DOM (no stored state).
+   STATE — read straight from the DOM (the kit saves and restores it).
    ===================================================================== */
 
 /** Ids of every ticked card. */
@@ -464,16 +469,8 @@ const sheet = () => {
   ].filter(Boolean).join('\n');
 };
 
-document.getElementById('gen').addEventListener('click', () => {
-  document.getElementById('out').value = sheet();
-});
-
-document.getElementById('copy').addEventListener('click', async () => {
-  const out = document.getElementById('out');
-  if (!out.value) out.value = sheet();
-  try { await navigator.clipboard.writeText(out.value); }
-  catch { out.select(); document.execCommand && document.execCommand('copy'); }
-});
+/* Generate, Copy, autosave, Clear and Submit come from the ballot kit. */
+BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
 
 /* Theme toggle: flips data-theme on <html>; no storage. */
 document.getElementById('themeBtn').addEventListener('click', () => {

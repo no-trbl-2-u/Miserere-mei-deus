@@ -1024,6 +1024,13 @@ satisfied for exactly these.)
 - The loop still never invents card, keyword or art content unprompted: `/expand` may only propose candidates, as for other content, and a proposal is never built until promoted.
 - Unchanged: `Potential Assets/` is a store, never a source (D96); a sprite sheet for an already-used enemy stays enhancement (D97). First use: a `/plot` phase renaming the Blood Price cards.
 
+**D102 — The lane-creator v1 flow is official.** (T, attended, 2026-10-23. T: "I LOVE this process so far so should we make it official? This can be our lane-Creator v1 flow. V2 we can hold off on until we do this process a few more times and see how we can make it better and see if there's more room for automation.")
+
+- The process Blood Price went through and the Elementalist is going through is the lane-creator v1 flow, written down in `docs/lane-creator.md`: Session 0, slot pitches, a 90-candidate ballot on the phone (`axiomancer-ballots.pages.dev`), the verdicts read from D1, sims, revisions, and the trial set by `/plot`.
+- T ratified it mid-way through the Elementalist run, before that run's verdicts, instead of waiting for the run to succeed as said on 2026-10-22.
+- v2 waits until v1 has run a few more times. Its first candidate (T, 2026-10-23): after a `final` verdict lands, a session records it, runs the sims and opens the trial-set `plot` PR, with T's merge as the gate. B5's skill shape (`plan/revamp/cards.md` §B5) is v2 too.
+- Why: T, after the Elementalist Session 0 and ballot: "I LOVE this process so far."
+
 **D101 — Only a `plot` PR waits for T.** (T, attended, 2026-10-23; amends D95's plan-PR bullet. T: "I keep seeing critique PRs getting stuck in review. Can you fix that for me? I really only want plot PRs to need review.")
 
 - A plan PR is now only a PR labelled `plot` or titled `plot:` (`PLAN_LABELS`, `PLAN_TITLE` in `scripts/pr-policy.mjs`). It is still never reviewed on `pull_request` and never merged by the job; T merges it (D93).

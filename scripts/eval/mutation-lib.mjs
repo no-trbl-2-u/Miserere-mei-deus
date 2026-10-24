@@ -149,3 +149,130 @@ export function spliceMarked(existing, section, start, end) {
   if (a < 0 || b < a) return `${existing.trimEnd()}\n\n${section}\n`
   return existing.slice(0, a) + section + existing.slice(b + end.length)
 }
+
+// --- Diff scoping for the PR mutation job (phase LG1g, brief A7) ------------
+
+/** Marker that opens the PR comment, so a later run edits it in place. */
+export const PR_MARKER = '<!-- eval:mutation-pr -->'
+
+/**
+ * The workspaces a PR's changed lines are mutated in, in run order: the
+ * engine first, the app with whatever budget is left. `include` is matched
+ * against the path inside the workspace; the engine's `src/CLI/` tools have
+ * no tests, so every mutant there would only read as uncovered.
+ */
+export const PR_SCOPES = [
+  { key: 'mechanics', name: 'mechanics', cwd: 'axiomancer-mechanics', config: 'scripts/eval/stryker/mechanics.config.mjs', include: /^src\/(?!CLI\/).+\.ts$/ },
+  { key: 'mobile', name: 'mobile', cwd: 'axiomancer-mobile', config: 'scripts/eval/stryker/mobile.config.mjs', include: /^(app|components|hooks|lib|state|theme)\/.+\.tsx?$/ },
+]
+
+/** Test, fixture and declaration files: never mutated, whatever the scope. */
+const NOT_SOURCE = /\.(test|spec)\.tsx?$|\.d\.ts$|(^|\/)(__tests__|__mocks__|test-utils|mocks)\//
+
+/**
+ * The added or modified lines of each file on the new side of a diff.
+ *
+ * @param {string} diff `git diff --unified=0` output.
+ * @returns {Map<string, [number, number][]>} repo-relative path to 1-based inclusive line ranges, in diff order; a file with only deletions is absent.
+ * @example parseChangedLines('+++ b/a.ts\n@@ -1,0 +2,3 @@\n').get('a.ts') // [[2, 4]]
+ */
+export function parseChangedLines(diff) {
+  const changed = new Map()
+  let file = null
+  for (const line of String(diff).split('\n')) {
+    if (line.startsWith('+++ ')) {
+      const target = line.slice(4)
+      file = target.startsWith('b/') ? target.slice(2) : null
+      continue
+    }
+    const hunk = file && line.match(/^@@ -\d+(?:,\d+)? \+(\d+)(?:,(\d+))? @@/)
+    if (!hunk) continue
+    const start = Number(hunk[1])
+    const count = hunk[2] === undefined ? 1 : Number(hunk[2])
+    if (count === 0) continue
+    if (!changed.has(file)) changed.set(file, [])
+    changed.get(file).push([start, start + count - 1])
+  }
+  return changed
+}
+
+/**
+ * The Stryker `mutate` line ranges each workspace gets from a PR's changed
+ * lines. A workspace with no changed source is left out.
+ *
+ * @param {Map<string, [number, number][]>} changed the result of `parseChangedLines`.
+ * @param {typeof PR_SCOPES} [scopes] the workspaces, in run order.
+ * @returns {{ key: string, name: string, cwd: string, config: string, mutate: string[], files: number, lines: number }[]} one entry per workspace with work to do.
+ * @example scopeChangedLines(new Map([['axiomancer-mechanics/src/a.ts', [[3, 5]]]]))[0].mutate // ['src/a.ts:3-5']
+ */
+export function scopeChangedLines(changed, scopes = PR_SCOPES) {
+  const out = []
+  for (const scope of scopes) {
+    const prefix = `${scope.cwd}/`
+    const mutate = []
+    let files = 0
+    let lines = 0
+    for (const [path, ranges] of [...changed].sort(([a], [b]) => a.localeCompare(b))) {
+      if (!path.startsWith(prefix)) continue
+      const rel = path.slice(prefix.length)
+      if (!scope.include.test(rel) || NOT_SOURCE.test(rel)) continue
+      files++
+      for (const [a, b] of ranges) {
+        mutate.push(`${rel}:${a}-${b}`)
+        lines += b - a + 1
+      }
+    }
+    if (mutate.length === 0) continue
+    const { include, ...rest } = scope
+    out.push({ ...rest, mutate, files, lines })
+  }
+  return out
+}
+
+/**
+ * A run outcome fit for a table cell: colour codes stripped, and Stryker's
+ * refusal to run with no related test said plainly.
+ *
+ * @param {string} outcome a `runTarget` outcome.
+ * @returns {string} the outcome as the PR comment shows it.
+ * @example prOutcome('failed (exit 1): ERROR Stryker No tests were executed.') // 'no test relates to these lines'
+ */
+export function prOutcome(outcome) {
+  const plain = String(outcome).replace(/\x1b\[[0-9;]*m/g, '')
+  return /No tests were executed/.test(plain) ? 'no test relates to these lines' : plain
+}
+
+/**
+ * The PR comment and job summary for one mutation run on changed lines.
+ *
+ * @param {{ base: string, head: string, budgetSeconds: number, targets: { name: string, files: number|object[], lines?: number, seconds: number, outcome: string, partial?: object|null, survivors: object[] }[] }} run the run; `targets` empty when no source line changed.
+ * @param {number} [listLimit] survivors listed per workspace.
+ * @returns {string} markdown, opening with `PR_MARKER`.
+ */
+export function renderPrReport(run, listLimit = 30) {
+  const { base, head, budgetSeconds, targets } = run
+  const out = [PR_MARKER, '## Mutation on changed lines (report only)', '']
+  out.push(`Base \`${base.slice(0, 8)}\`, head \`${head.slice(0, 8)}\`, budget ${Math.round(budgetSeconds / 60)} min. StrykerJS mutates only the lines this PR adds or changes and runs the workspace's related tests against each mutant. A survivor is a change to those lines that no test noticed. This job never fails a check; the score has no per-diff baseline yet.`, '')
+  if (targets.length === 0) {
+    out.push('No changed source line in `axiomancer-mechanics/src` or the `axiomancer-mobile` app folders, so nothing was mutated.')
+    return out.join('\n')
+  }
+  out.push('| Workspace | Lines | Mutants | Killed | Timed out | Survived | No coverage | Score | Run |', '|---|---|---|---|---|---|---|---|---|')
+  for (const t of targets) {
+    const ran = Array.isArray(t.files) && t.files.length > 0
+    const c = ran ? combineTallies(t.files.map((f) => f.tally)) : null
+    const p = t.partial
+    const n = (v) => (c ? v : '-')
+    const score = c?.score != null ? `${c.score}%` : c?.total > 0 ? 'n/a (all static or ignored)' : 'n/a'
+    out.push(`| ${t.name} | ${t.lines ?? '-'} | ${c ? c.total : p ? p.total : '-'} | ${n(c?.killed)} | ${c ? c.timeout : p ? p.timedOut : '-'} | ${c ? c.survived : p ? p.survived : '-'} | ${n(c?.noCoverage)} | ${score} | ${cell(prOutcome(t.outcome))}, ${t.seconds}s |`)
+  }
+  for (const t of targets) {
+    if (t.survivors.length === 0) continue
+    out.push('', `### Survivors: ${t.name}`, '')
+    const shown = t.survivors.slice(0, listLimit)
+    out.push('| File:line | Mutator | Replacement | Status |', '|---|---|---|---|')
+    for (const s of shown) out.push(`| \`${s.path}:${s.line}\` | ${s.mutator} | \`${cell(clip(s.replacement, 70)).replace(/`/g, "'")}\` | ${s.status} |`)
+    if (t.survivors.length > shown.length) out.push('', `${t.survivors.length - shown.length} more in the job's log.`)
+  }
+  return out.join('\n')
+}

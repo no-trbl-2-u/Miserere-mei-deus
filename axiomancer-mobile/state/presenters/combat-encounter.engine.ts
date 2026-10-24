@@ -24,6 +24,7 @@ import {
     MOMENTUM_CHAIN_ORDER, MOMENTUM_SURGE_LENGTH, activeDieGear, DEFAULT_DIE_GEAR,
     // Stat scaling: the hand prints final numbers in the family colour.
     scaleCardForStats,
+    weatherReading,
     type StatFamily,
     type CombatEncounterState, type CombatCard, type CombatManaDie, type CombatEvent,
     type CombatThreatPhase, type CombatIntentType,
@@ -31,6 +32,7 @@ import {
     type Card, type CardCombatEffects, type CardType,
     type UpgradeableDieGear,
     type WheelStance,
+    type WeatherElement,
 } from '@mechanics';
 // The card-text projection. The detail panel's printed clauses are DERIVED in
 // mechanics from the effect data; this presenter only formats them (keyword
@@ -484,8 +486,13 @@ export interface CombatSignatureVM {
     id: string; name: string; description: string; cost: number; affordable: boolean; icon: string;
     /** The refusal reason while the rune can't fire (null when castable):
      *  the engine's `signatureCastBlock` — Conviction short, or The Open Hand
-     *  on a foe that can't be befriended yet. */
+     *  on a foe that can't be befriended yet. A refusal outranks a Conviction
+     *  shortfall, so the reason names what more Conviction would not fix. */
     reason?: string | null;
+    /** Refused for a reason other than Conviction (Float-Eye will not be
+     *  befriended, not yet low enough to spare, already counts twice): the
+     *  column marks it apart from a rune that is merely short of ◆. */
+    refused?: boolean;
 }
 /**
  * The momentum chain chip. Momentum is a single chain `{ color, length }`. A BREAK collapses it to null and the chip must
@@ -669,11 +676,51 @@ export function selectCombatLogLines(events: readonly CombatEvent[]): CombatLogL
                     float: null,
                 });
                 break;
+            // The weather moving. A rise floats its word over the foe; a fall
+            // (the round's drift, a spend) is log-only, so the drift does not
+            // carpet the board every round.
+            case 'weather-changed':
+                out.push(weatherLine(e));
+                break;
+            case 'blizzard-softened':
+                out.push({
+                    kind: e.kind, side: 'player', color: HUE.guardBlue,
+                    text: `BLIZZARD takes ${e.amount} off its attack.`,
+                    float: null,
+                });
+                break;
             default:
                 break;
         }
     }
     return out;
+}
+
+/** The log names of the weather's elements. */
+const WEATHER_WORD: Record<WeatherElement, { name: string; owner: string; side: 'enemy' | 'player'; color: string }> = {
+    'foe-inferno': { name: 'INFERNO', owner: "The foe's", side: 'enemy', color: HUE.damageRed },
+    'your-inferno': { name: 'INFERNO', owner: 'Your', side: 'player', color: HUE.damageRed },
+    blizzard: { name: 'BLIZZARD', owner: "The foe's", side: 'enemy', color: HUE.guardBlue },
+    storm: { name: 'STORM', owner: "The foe's", side: 'enemy', color: HUE.goldAccent },
+    frozen: { name: 'FROZEN', owner: 'The foe is', side: 'enemy', color: HUE.hzBlueLite },
+};
+
+function weatherLine(e: Extract<CombatEvent, { kind: 'weather-changed' }>): CombatLogLineVM {
+    const w = WEATHER_WORD[e.element];
+    const base = { kind: e.kind, side: w.side, color: w.color };
+    if (e.element === 'frozen') {
+        return e.to > 0
+            ? { ...base, text: 'The foe is FROZEN: the next DEAL it takes is doubled.', float: '✻ FROZEN' }
+            : { ...base, text: 'FROZEN ends.', float: null };
+    }
+    // Your INFERNO rides your side of the board, so it never floats over the foe.
+    const float = (rise: string) => (w.side === 'enemy' ? rise : null);
+    if (e.from === 0) return { ...base, text: `${w.owner} ${w.name} ${e.to}.`, float: float(`${w.name} ${e.to}`) };
+    if (e.to === 0) return { ...base, text: `${w.owner} ${w.name} is gone.`, float: null };
+    if (e.to > e.from) {
+        return { ...base, text: `${w.owner} ${w.name} rises to ${e.to}.`, float: float(`${w.name} +${e.to - e.from}`) };
+    }
+    return { ...base, text: `${w.owner} ${w.name} falls to ${e.to}.`, float: null };
 }
 
 // ── The persistent combat log ───────────────────────────────────────────────
@@ -714,6 +761,9 @@ export function selectCombatLogHistory(state: CombatEncounterState): CombatLogHi
     const out: CombatLogHistoryEntryVM[] = [];
     let seq = 0;
     let lastTurn: number | null = null;
+    // A draw is narrated only when a card made it (DRAW): the turn's refill
+    // draw arrives before any card is played.
+    let midPlay = false;
     const push = (side: CombatLogHistoryEntryVM['side'], color: string, text: string) => {
         seq += 1;
         out.push({ id: `log-${seq}`, side, color, text });
@@ -724,6 +774,7 @@ export function selectCombatLogHistory(state: CombatEncounterState): CombatLogHi
             // Derived off the same event: `startTurn` emits exactly one of
             // these per turn, so a changed `turn` field IS the turn changing.
             case 'turn-dice-rolled': {
+                midPlay = false;
                 if (e.turn !== lastTurn) {
                     lastTurn = e.turn;
                     push('system', LOG_STAGE_COLOR, `TURN ${e.turn}`);
@@ -756,6 +807,7 @@ export function selectCombatLogHistory(state: CombatEncounterState): CombatLogHi
                 break;
             }
             case 'card-played': {
+                midPlay = true;
                 const card = getCardById(e.cardId);
                 const name = card?.name ?? e.cardId;
                 const color = (card && STANCE_COLORS[card.color]) ?? GUARD_COLOR;
@@ -763,11 +815,18 @@ export function selectCombatLogHistory(state: CombatEncounterState): CombatLogHi
                 break;
             }
             case 'threat-fired':
+                midPlay = false;
                 push('enemy', GLYPH_COLORS.control, stripThreatPayload(e.description));
+                break;
+            case 'hand-drawn':
+                if (midPlay && e.cards.length > 0) {
+                    push('player', GUARD_COLOR, `You DRAW ${e.cards.length} card${e.cards.length === 1 ? '' : 's'}.`);
+                }
                 break;
             // 'overwhelmed' phases already read through 'threat-fired'; the
             // DENIED half of the story (mark === 'clear') is otherwise silent.
             case 'phase-resolved':
+                midPlay = false;
                 if (e.mark === 'clear') {
                     push('player', GLYPH_COLORS.statup, `PHASE ${e.phaseIndex} — DENIED.`);
                 }
@@ -892,7 +951,7 @@ function enemyPane(state: CombatEncounterState): CombatEnemyPaneVM {
         isBoss,
         hp: Math.max(0, e.health), maxHp: e.maxHealth,
         hpPct: e.maxHealth > 0 ? Math.max(0, e.health) / e.maxHealth : 0,
-        effects: [...chips(e.effects), ...programChips(state)],
+        effects: [...chips(e.effects), ...programChips(state), ...weatherChips(state, 'enemy')],
         intent: intentVM(state),
         stagesEntered: (state.stagesEntered ?? []).length,
         pendingDot: lethality.pendingDot,
@@ -907,7 +966,7 @@ function playerPane(state: CombatEncounterState): CombatPlayerPaneVM {
         name: p.name ?? 'You', hp: Math.max(0, p.health), maxHp: p.maxHealth,
         hpPct: p.maxHealth > 0 ? Math.max(0, p.health) / p.maxHealth : 0,
         guard: state.guard ?? 0,
-        effects: chips(p.effects),
+        effects: [...chips(p.effects), ...weatherChips(state, 'player')],
     };
 }
 
@@ -1692,6 +1751,39 @@ function programChips(state: CombatEncounterState): CombatEffectChipVM[] {
 }
 
 /**
+ * The weather's board marks, one per element (`WEATHER_MARKS`): the foe's
+ * INFERNO, BLIZZARD, STORM and FROZEN on the foe, your INFERNO on you. Each
+ * chip's number is the element's number now, so it moves as the weather
+ * drifts; the weather has no turn count (it lasts the whole combat).
+ */
+interface WeatherMark {
+    element: WeatherElement;
+    side: 'enemy' | 'player';
+    keyword: string;
+    glyph: StatusGlyph;
+}
+const WEATHER_MARKS: readonly WeatherMark[] = [
+    { element: 'foe-inferno', side: 'enemy', keyword: 'Inferno', glyph: { glyph: '🔥', color: HUE.damageRed, kind: 'dot', label: 'Inferno' } },
+    { element: 'blizzard', side: 'enemy', keyword: 'Blizzard', glyph: { glyph: '❄', color: HUE.guardBlue, kind: 'statdown', label: 'Blizzard' } },
+    { element: 'storm', side: 'enemy', keyword: 'Storm', glyph: { glyph: '⚡', color: HUE.goldAccent, kind: 'dot', label: 'Storm' } },
+    { element: 'frozen', side: 'enemy', keyword: 'Frozen', glyph: { glyph: '✻', color: HUE.hzBlueLite, kind: 'control', label: 'Frozen' } },
+    { element: 'your-inferno', side: 'player', keyword: 'Inferno', glyph: { glyph: '🔥', color: HUE.damageRed, kind: 'dot', label: 'Your Inferno' } },
+];
+
+/** The weather's chips for one side of the board ([] when the sky is clear). */
+export function weatherChips(state: CombatEncounterState, side: 'enemy' | 'player'): CombatEffectChipVM[] {
+    const el = state.program?.el;
+    if (!el) return [];
+    const reading = weatherReading(el);
+    return WEATHER_MARKS
+        .filter((m) => m.side === side && reading[m.element] > 0)
+        .map((m) => ({
+            effectId: `weather-${m.element}`, intensity: reading[m.element], duration: 0,
+            glyph: m.glyph, gloss: keywordGloss(m.keyword),
+        }));
+}
+
+/**
  * One card's VM at FINAL numbers: the stat-scaled copy of the card (`card`
  * must already be built from it, as the engine's `handCards` does), with the
  * family colour marking each number the player's stats moved. The hand and the
@@ -1720,6 +1812,20 @@ function scaledCardVM(uid: string, card: CombatCard, stats: PlayerStats): Combat
         };
 }
 
+/**
+ * The signature info popup's lines, in reading order. A refused rune leads
+ * with its reason (the news), above the gloss; a rune short of Conviction
+ * keeps the reason on the cost line, as it always has.
+ */
+export function signatureInfoLines(s: CombatSignatureVM): { lead: string | null; meta: string } {
+    const refused = !s.affordable && !!s.refused;
+    const short = !s.affordable && !refused;
+    return {
+        lead: refused ? (s.reason ?? null) : null,
+        meta: `consumes ◆ ${s.cost} conviction${short ? ` — ${s.reason ?? 'you have too little'}` : ''}`,
+    };
+}
+
 const SIG_ICON: Record<SignatureSkill['kind'], string> = {
     mercy: '🕊',
     covenant: '🩸',
@@ -1734,11 +1840,15 @@ function signaturesVM(state: CombatEncounterState): CombatSignatureVM[] {
         .filter((s): s is SignatureSkill => !!s)
         .map((s: SignatureSkill) => {
             const reason = signatureCastBlock(state, s);
+            // The gate checks Conviction first; asking it again with the cost
+            // met finds a refusal that more Conviction would not lift.
+            const refusal = signatureCastBlock({ ...state, conviction: Math.max(state.conviction, s.cost) }, s);
             return {
                 id: s.id, name: s.name, description: s.description, cost: s.cost,
                 affordable: reason === null,
                 icon: SIG_ICON[s.kind] ?? '◆',
-                reason,
+                reason: refusal ?? reason,
+                refused: refusal !== null,
             };
         });
 }

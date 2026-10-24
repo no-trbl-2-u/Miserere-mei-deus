@@ -34,6 +34,7 @@ import {
     selectEncounterMercyChoice, buildCombatSummary,
     getLogger,
     type CombatEncounterState, type CombatOutcome, type Character, type Enemy, type CombatEvent,
+    type PlayLogUiEventKind,
 } from '@mechanics';
 
 import { CombatBoard, CombatCardFace, OutcomeText, HAND_CARD_W, HAND_CARD_H, type DragController, type DragPayload, type Rect } from '@/components/combat/encounter/CombatBoard';
@@ -44,16 +45,18 @@ import { CombatDie, combatDieFootprint } from '@/components/combat/encounter/Com
 import { CombatSummaryModal } from '@/components/combat/encounter/CombatSummaryModal';
 import { CombatRewardsOverlay } from '@/components/combat/encounter/CombatRewardsOverlay';
 import { Image } from '@/lib/platform/image';
+import { fightRecorder } from '@/lib/fightRecorder';
 import { getEncounterEnemyArt } from '@/assets/images/enemies';
 import {
     INTENT_ICONS, buildCombatViewModel, rewardCardVMs, STANCE_COLORS, threatPhaseHeader,
-    selectCombatLogHistory, COMBAT_LOG_TOGGLE_TEXT, COMBAT_LOG_TOGGLE_A11Y, COMBAT_LOG_CLOSE_A11Y, COMBAT_LOG_BACK_TEXT,
+    selectCombatLogHistory, signatureInfoLines, COMBAT_LOG_TOGGLE_TEXT, COMBAT_LOG_TOGGLE_A11Y, COMBAT_LOG_CLOSE_A11Y, COMBAT_LOG_BACK_TEXT,
     type CombatCardVM, type CombatEffectChipVM, type CombatSignatureVM,
 } from '@/state/presenters/combat-encounter.engine';
+import { cardUpgradeRowsVM } from '@/state/presenters/card-upgrade.engine';
 import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
 import { useGameState, useGameStore } from '@/state/GameStoreProvider';
 import {
-    claimCombatRewardAction, resetCombatRewardAction, rollCombatRewardAction,
+    claimCombatRewardAction, claimCombatUpgradeAction, resetCombatRewardAction, rollCombatRewardAction,
 } from '@/state/combat/store-actions';
 import { FONTS, HUE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
@@ -320,6 +323,7 @@ export function CombatEncounterPanel({
     // The live reward draft (store-owned so it survives a panel remount).
     const rewardOffers = useGameState((s) => s.combatReward?.offers ?? EMPTY_OFFERS);
     const rewardsClaimed = useGameState((s) => s.combatReward?.claimed ?? false);
+    const rewardUpgrade = useGameState((s) => s.combatReward?.upgrade ?? null);
 
     const [state, setState] = useState<CombatEncounterState | null>(null);
     // Multi-card staging (hazard model): several cards can be staged at once; each
@@ -350,6 +354,7 @@ export function CombatEncounterPanel({
     }, []);
     // Signature-rune info popup (long-press / unaffordable tap) + pilgrim modal.
     const [sigInfo, setSigInfo] = useState<CombatSignatureVM | null>(null);
+    const sigLines = sigInfo ? signatureInfoLines(sigInfo) : null;
     const [pilgrimOpen, setPilgrimOpen] = useState(false);
     // Deckbuilder reward — rolled once on victory, claimed before the summary.
     // The offer lives in the STORE, not here, so navigating away mid-draft
@@ -514,13 +519,30 @@ export function CombatEncounterPanel({
         setState((prev) => { const s = prev ?? initial; return fn(s); });
     }, [initial]);
 
+    // The play log's screen events (phase BE2d): read through refs so the
+    // handlers below keep their identity and the board's memo holds.
+    const screenRef = useRef({ live, stagedUids, persistOutcome });
+    screenRef.current = { live, stagedUids, persistOutcome };
+    const recordScreen = useCallback((kind: PlayLogUiEventKind, uid: string) => {
+        const { live: s, persistOutcome: persisted } = screenRef.current;
+        if (!persisted) return;
+        const cardId = s.hand.find((h) => h.uid === uid)?.cardId;
+        if (cardId) fightRecorder.screen(kind, cardId);
+    }, []);
+
     const unstageUid = useCallback((uid: string) => setStagedUids((prev) => prev.filter((u) => u !== uid)), []);
     const onEnter = useCallback(() => apply((s) => rollEncounterDice(s).state), [apply]);
     const onStage = useCallback((uid: string) => {
         if (resolvingRef.current) return; // no staging mid-resolution
+        if (!screenRef.current.stagedUids.includes(uid)) recordScreen('ui-staged', uid);
         setStagedUids((prev) => (prev.includes(uid) ? prev : [...prev, uid]));
-    }, []);
-    const onUnstage = useCallback((uid: string) => unstageUid(uid), [unstageUid]);
+    }, [recordScreen]);
+    // Only the player's own unstage is a screen event: a card leaving staging
+    // because it was played or discarded, or at the turn's end, is not.
+    const onUnstage = useCallback((uid: string) => {
+        if (screenRef.current.stagedUids.includes(uid)) recordScreen('ui-unstaged', uid);
+        unstageUid(uid);
+    }, [recordScreen, unstageUid]);
     // APPLY one staged card (hazard model — the die is OPTIONAL). `power` true →
     // the dragged die powers the card (bottom action); `power` false → the FREE
     // base action (top action, no die). One commit; the card leaves staging.
@@ -610,23 +632,44 @@ export function CombatEncounterPanel({
         if (persistOutcome) applyHazardOutcome(store, live.finalOutcome, live, enemy);
     }, [live.finalOutcome, live, persistOutcome, store, enemy]);
 
+    // The play log (phase BE2c): every live state goes to the fight recorder,
+    // which stamps the log entries it has not seen and posts once on the final
+    // outcome. Only a persisted fight was staged by the bridge that starts it.
+    useEffect(() => {
+        if (persistOutcome) fightRecorder.observe(live);
+    }, [live, persistOutcome]);
+
     // Roll the deckbuilder reward once, on victory. The roll is engine truth;
     // the action is idempotent, so a remount re-reads the SAME offer rather
     // than rerolling it.
     useEffect(() => {
-        if (live.finalOutcome === 'victory') rollCombatRewardAction(store);
-    }, [live.finalOutcome, store]);
+        if (live.finalOutcome === 'victory') rollCombatRewardAction(store, enemy);
+    }, [live.finalOutcome, store, enemy]);
 
     // Claim (or skip) — the action appends the card AND persists, so the pick
     // does not wait on some unrelated save() to happen along.
     const onRewardPick = useCallback((cardId: string | null) => {
         claimCombatRewardAction(store, cardId);
     }, [store]);
+    const onRewardUpgrade = useCallback((cardId: string) => {
+        claimCombatUpgradeAction(store, cardId);
+    }, [store]);
+    // The elite reward's upgrade as the shared picker's one row (null hides it).
+    const rewardUpgradeRows = useMemo(
+        () => (rewardUpgrade && player
+            ? cardUpgradeRowsVM([rewardUpgrade.fromCardId], [...player.knownCards, ...(player.combatRewardCards ?? [])])
+            : null),
+        [rewardUpgrade, player],
+    );
 
     // Identity-stable board props: inline arrows / fresh objects here defeat
     // CombatBoard's React.memo and re-render the whole 1200-line board on every
     // unrelated panel state change (tooltips, fx bumps) — felt as drag jank.
-    const onInspect = useCallback((c: CombatCardVM) => { detailOpenedAt.current = Date.now(); setDetailCard(c); }, []);
+    const onInspect = useCallback((c: CombatCardVM) => {
+        detailOpenedAt.current = Date.now();
+        if (screenRef.current.persistOutcome) fightRecorder.screen('ui-detail-opened', c.cardId);
+        setDetailCard(c);
+    }, []);
     /**
      * Dismiss the card detail overlay. Shared by the backdrop, the card body,
      * and the scrolled content so a tap ANYWHERE exits. The 350ms guard swallows the tail of the press that OPENED
@@ -978,10 +1021,13 @@ export function CombatEncounterPanel({
                         <View style={[styles.tipCorner, styles.tipCornerBr, { borderColor: AXM.sulfur }]} pointerEvents="none" />
                         <GlyphBurst color={AXM.sulfur} glyph={sigInfo.icon} />
                         <Text style={[styles.tipName, { color: AXM.sulfur, textShadowColor: AXM.sulfur }]}>{sigInfo.name.toUpperCase()}</Text>
+                        {/* A refused rune leads with why: the reason is the news,
+                          * the gloss is what it would have done. */}
+                        {sigLines?.lead != null && (
+                            <Text style={[styles.tipReason, { color: AXM.blood }]} testID="combat-signature-info-reason">{sigLines.lead}</Text>
+                        )}
                         <Text style={styles.tipGloss}>{sigInfo.description}</Text>
-                        <Text style={styles.tipMeta}>
-                            consumes ◆ {sigInfo.cost} conviction{sigInfo.affordable ? '' : ` — ${sigInfo.reason ?? 'you have too little'}`}
-                        </Text>
+                        <Text style={styles.tipMeta}>{sigLines?.meta}</Text>
                         <View style={styles.tipBadgeWrap} pointerEvents="none">
                             <Svg width={128} height={30} viewBox="0 0 128 30">
                                 <Polygon points="14,1 114,1 127,15 114,29 14,29 1,15" fill={AXM.panelBg} stroke={AXM.sulfur} strokeWidth={1.5} />
@@ -1124,7 +1170,12 @@ export function CombatEncounterPanel({
 
             {/* deckbuilder reward — claimed before the summary on a win */}
             {live.finalOutcome === 'victory' && !rewardsClaimed && rewardOffers.length > 0 && (
-                <CombatRewardsOverlay offers={rewardCardVMs(rewardOffers, live.player.baseStats)} onPick={onRewardPick} />
+                <CombatRewardsOverlay
+                    offers={rewardCardVMs(rewardOffers, live.player.baseStats)}
+                    onPick={onRewardPick}
+                    upgradeRows={rewardUpgradeRows}
+                    onUpgrade={onRewardUpgrade}
+                />
             )}
 
             {summary && (rewardsClaimed || live.finalOutcome !== 'victory') && (
@@ -1261,6 +1312,7 @@ const useStyles = makeStyles((AXM) => ({
     },
     tipGloss: { fontFamily: FONTS.serif, fontSize: 14, lineHeight: 20, color: AXM.parchmentDim, textAlign: 'center', marginTop: 8 },
     tipMeta: { fontFamily: FONTS.sans, fontSize: 11, color: AXM.bone, letterSpacing: 0.6, marginTop: 10 },
+    tipReason: { fontFamily: FONTS.sans, fontSize: 13, lineHeight: 18, letterSpacing: 0.4, textAlign: 'center', marginTop: 8 },
     tipBadgeWrap: { position: 'absolute', bottom: -15, alignSelf: 'center', width: 128, height: 30 },
     tipBadgeInner: { flex: 1, alignItems: 'center', justifyContent: 'center' },
     tipBadgeText: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 2 },

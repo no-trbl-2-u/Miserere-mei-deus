@@ -223,8 +223,29 @@ function stage(n, file) {
   }
 }
 
+/**
+ * The slug-aware merge drivers `.gitattributes` names. The SessionStart hook
+ * registers them for a Claude session; a workflow runner never runs that
+ * hook, so without this a merge here falls back to a line merge and the union
+ * below keeps both sides' bumps of one lesson as two rows (lesson
+ * `lessons-merge-dup-slug`).
+ */
+export const MERGE_DRIVERS = [
+  { key: 'lessons', name: 'lessons.md and NEEDS_T.md by slug', driver: 'node scripts/lessons-merge.mjs %O %A %B %P' },
+  { key: 'buildplan', name: 'the build plan, insertions unioned', driver: 'node scripts/build-plan-merge.mjs %O %A %B %P' },
+]
+
+/** Register MERGE_DRIVERS in the repo at `cwd` (idempotent). @param {string} [cwd] */
+export function registerMergeDrivers(cwd = ROOT) {
+  for (const d of MERGE_DRIVERS) {
+    execFileSync('git', ['config', `merge.${d.key}.name`, d.name], { cwd })
+    execFileSync('git', ['config', `merge.${d.key}.driver`, d.driver], { cwd })
+  }
+}
+
 /** Merge origin/main into the checked-out branch; settle union files. */
 function mergeMain(branch) {
+  registerMergeDrivers()
   git(['fetch', 'origin', 'main', branch])
   git(['switch', '-C', branch, `origin/${branch}`])
   try {

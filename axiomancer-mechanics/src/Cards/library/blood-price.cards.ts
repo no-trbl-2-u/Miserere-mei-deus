@@ -24,7 +24,7 @@
  * This file is data-only.
  */
 
-import type { Card, CardAspect, CardType } from '../types';
+import type { Card, CardAspect, CardRank, CardType } from '../types';
 import type { CardProgram, ProgramCtx, ProgramLine } from '../card-program.types';
 import type { CardLane, TrialSet } from '../card.lanes';
 import { upgradeScale, type UpgradeScale } from '../card-upgrade.scale';
@@ -52,7 +52,13 @@ interface Entry {
     program: (u: UpgradeScale) => CardProgram;
     /** The card's name, read off what it does (Phase UP1a). The slot is the id, never the name. */
     name: string;
+    /** The card's rank when it is not Ash (1). Rarity, and so its upgrade limit, derives from it. */
+    rank?: CardRank;
 }
+
+/** Blood for Blood's PAID X cap, and how much each upgrade raises it (T, 2026-10-23). */
+export const BLOOD_FOR_BLOOD_X_CAP = 12;
+export const BLOOD_FOR_BLOOD_X_CAP_STEP = 3;
 
 const SUB_LANE: Record<string, string> = { P: 'Payoff', E: 'Engine', M: 'Misc' };
 
@@ -119,9 +125,18 @@ const ENTRIES: Entry[] = [
     { slot: 'e-07b', name: 'Raised Stakes', type: 'spell', color: BLUE, program: u => ({
         free: L('Your next SACRIFICE this turn is doubled (its cost and its payoffs).', c => { c.sacModifier({ kind: 'next-double' }); }),
         paid: L(`Same, and gain ${u.i(2)} Conviction.`, c => { c.sacModifier({ kind: 'next-double' }); c.conviction(u.i(2)); }) }) },
-    { slot: 'e-08n', name: 'Blood for Blood', type: 'attack', color: RED, program: u => ({
-        free: L(`SACRIFICE 3, DEAL {deal:${u.m(6)}}.`, c => { c.sacrifice(3); c.deal(u.m(6)); }),
-        paid: L('SACRIFICE any amount X (max 12), DEAL 2X.', c => { const x = c.sacrificeX(12); c.deal(2 * x); }) }) },
+    // The library's first rare (Phase UP1c): Skull, three upgrades. FREE grows
+    // by the scale. PAID by T's ruling (2026-10-23): X's cap rises by 3 per
+    // upgrade (12, 15, 18, 21; the one cost an upgrade may grow) and the third
+    // upgrade turns 3X into 4X.
+    { slot: 'e-08n', name: 'Blood for Blood', type: 'attack', color: RED, rank: 5, program: u => {
+        const cap = BLOOD_FOR_BLOOD_X_CAP + BLOOD_FOR_BLOOD_X_CAP_STEP * u.level;
+        const mult = u.level >= 3 ? 4 : 3;
+        return {
+            free: L(`SACRIFICE 3, DEAL {deal:${u.m(9)}}.`, c => { c.sacrifice(3); c.deal(u.m(9)); }),
+            paid: L(`SACRIFICE any amount X (max ${cap}), DEAL ${mult}X.`, c => { const x = c.sacrificeX(cap); c.deal(mult * x); }),
+        };
+    } },
     { slot: 'e-09n', name: 'Crimson Pact', type: 'global', color: RED, program: u => ({
         global: { trigger: 'sac', text: `your next DEAL this turn deals +${nPlus(u)}.`,
             free: (c, n) => { c.empowerNextDeal(n + u.plus); }, paid: (c, n) => { c.empowerNextDeal(n + u.plus); } } }) },
@@ -170,7 +185,7 @@ function toCard(e: Entry): Card {
         name: e.name,
         color: e.color,
         description: `Blood Price trial card, ${SUB_LANE[proposal[0]]} sub-lane.`,
-        tier: 1, rank: 1, cardType: e.type,
+        tier: 1, rank: e.rank ?? 1, cardType: e.type,
         targetType: e.color === BLUE ? 'self' : 'enemy',
         program: e.program(upgradeScale(0)),
         programAt: e.program,
@@ -216,4 +231,6 @@ export const BLOOD_PRICE_SET: TrialSet = Object.freeze({
     id: 'blood-price',
     cards: Object.freeze([...LANE_CARDS, GREY_CURSE]),
     lanes: Object.freeze([BLOOD_PRICE_LANE]),
+    // Blood for Blood's X cap rises 12, 15, 18, 21 (T, 2026-10-23).
+    ruledCostGrowth: Object.freeze({ 'bp-e-08n': Object.freeze(['sacrificeX']) }),
 });

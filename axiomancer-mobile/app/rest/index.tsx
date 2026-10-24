@@ -1,8 +1,9 @@
 /**
  * /rest — the rest-choice screen.
  *
- * One irreversible choice of two: REST (free, flat 25% heal) or THE CUT
- * (paid deck removal). `resolveMapEvent` consumes the node on entry,
+ * One irreversible choice of three: REST (free, flat 25% heal), UPGRADE A
+ * CARD (free, one card upgraded on the shared upgrade screen, no heal) or
+ * THE CUT (paid deck removal). `resolveMapEvent` consumes the node on entry,
  * before any choice — there is no back-out: no header back, no
  * swipe-dismiss (`gestureEnabled: false` in the root layout), no Android
  * hardware-back (`<HardwareBackHandler>`). All rules live in
@@ -15,6 +16,7 @@ import { useRouter } from '@/lib/platform/router';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 import { ScreenBg } from '@/components/ScreenBg';
+import { CardUpgradePicker } from '@/components/upgrade/CardUpgradePicker';
 import { useGameActions, useGameState } from '@/state/GameStoreProvider';
 import {
     selectRestVM,
@@ -36,6 +38,7 @@ import {
     restOutcomeHealChip,
     restOutcomeRemovedChip,
     restOutcomeSpendChip,
+    restOutcomeUpgradedChip,
 } from '@/state/presenters/rest.copy';
 import { FONTS, TYPE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
@@ -171,6 +174,13 @@ export default function RestScreen() {
                         </View>
                     )}
 
+                    {vm.phase === 'upgrade-pick' && vm.upgrade !== null && (
+                        <CardUpgradePicker
+                            rows={vm.upgrade}
+                            onConfirm={(cardId) => actions.pickRestChoiceUpgrade(cardId)}
+                        />
+                    )}
+
                     {vm.phase === 'outcome' && vm.outcome !== null && (
                         <View style={styles.card} testID="rest-outcome">
                             <Text style={styles.eyebrow}>{REST_OUTCOME_EYEBROW}</Text>
@@ -184,6 +194,11 @@ export default function RestScreen() {
                                 )}
                                 {vm.outcome.removedCardName !== null && (
                                     <Text style={styles.chip}>{restOutcomeRemovedChip(vm.outcome.removedCardName)}</Text>
+                                )}
+                                {vm.outcome.upgraded !== null && (
+                                    <Text style={styles.chip} testID="rest-outcome-upgraded">
+                                        {restOutcomeUpgradedChip(vm.outcome.upgraded.fromName, vm.outcome.upgraded.toName)}
+                                    </Text>
                                 )}
                             </View>
                             <TouchableOpacity

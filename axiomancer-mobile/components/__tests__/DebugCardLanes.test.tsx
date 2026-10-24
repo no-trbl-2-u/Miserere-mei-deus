@@ -4,14 +4,15 @@
  * Pins:
  *   - DEV gate: both leaves render null when __DEV__ is false.
  *   - DebugLaneDeck: the drop-down opens, lists every lane, picks one, and
- *     SET DECK deals that lane's test deck.
+ *     SET DECK deals that lane's test deck; the Elementalist trial set's lane
+ *     is listed and deals its 20-card deck (Phase EL1c).
  *   - DebugRewardPool: one checkbox per lane; checking a lane and pressing
  *     SET REWARD POOL saves it; the grid starts from the saved override.
  */
 
 import { describe, expect, it } from '@jest/globals';
 import { fireEvent, render } from '@testing-library/react-native';
-import { CARD_LANES, GREY_LANE } from '@mechanics';
+import { CARD_LANES, GREY_LANE, getCardById, getCardLane, rewardPoolFor } from '@mechanics';
 import React from 'react';
 
 import { DebugLaneDeck } from '@/components/DebugLaneDeck';
@@ -59,6 +60,33 @@ describe('DebugLaneDeck', () => {
         expect(store.getState().player.knownCards).toEqual([...GREY_LANE.testDeck]);
         expect(store.getState().player.combatRewardCards).toEqual([]);
         expect(tree.getByTestId('debug-lane-deck-sub').props.children).toContain(GREY_LANE.name);
+    });
+});
+
+describe('DebugLaneDeck: the Elementalist', () => {
+    it('lists the Elementalist and SET DECK deals its 20-card test deck', () => {
+        const lane = getCardLane('elementalist');
+        expect(lane?.name).toBe('Elementalist');
+        expect(lane?.testDeck).toHaveLength(20);
+        expect(lane?.cardIds).toHaveLength(30);
+        for (const id of lane!.testDeck) expect(getCardById(id)).toBeDefined();
+
+        const store = makeStore();
+        const tree = render(withProvider(store, <DebugLaneDeck />));
+        fireEvent.press(tree.getByTestId('debug-lane-deck-select'));
+        fireEvent.press(tree.getByTestId('debug-lane-deck-select-option-elementalist'));
+        fireEvent.press(tree.getByTestId('debug-lane-deck-set'));
+        expect(store.getState().player.knownCards).toEqual([...lane!.testDeck]);
+        expect(tree.getByTestId('debug-lane-deck-sub').props.children).toContain('Elementalist');
+    });
+
+    it('offers all 30 Elementalist cards once its reward-pool box is checked', () => {
+        const store = makeStore();
+        const tree = render(withProvider(store, <DebugRewardPool />));
+        fireEvent.press(tree.getByTestId('debug-reward-pool-lane-elementalist'));
+        fireEvent.press(tree.getByTestId('debug-reward-pool-set'));
+        expect(store.getState().player.devRewardLaneIds).toEqual(['elementalist']);
+        expect([...rewardPoolFor(store.getState().player)].sort()).toEqual([...getCardLane('elementalist')!.cardIds].sort());
     });
 });
 

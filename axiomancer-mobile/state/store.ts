@@ -15,7 +15,7 @@ import {
 } from '@mechanics';
 
 import type { HazardSessionState } from '@mechanics';
-import type { BlacksmithSession, LootCacheChoiceSession, RestChoiceSession } from '@mechanics';
+import type { BlacksmithSession, EliteRewardUpgrade, LootCacheChoiceSession, RestChoiceSession } from '@mechanics';
 import type { LabyrinthActId, WorldState } from '@mechanics';
 
 import { resumeLabyrinthSession } from './labyrinth/resume';
@@ -157,6 +157,12 @@ export interface MobileCombatRewardSlice {
     offers: readonly string[];
     /** True once the player picked or skipped — the overlay must not re-open. */
     claimed: boolean;
+    /**
+     * After an elite fight, the other option: one upgrade of a random owned
+     * card (`rollEliteReward`). Null after any other fight, and when nothing
+     * owned can be upgraded, so the overlay hides the option.
+     */
+    upgrade: EliteRewardUpgrade | null;
 }
 
 /**
@@ -244,6 +250,7 @@ export const EMPTY_EVENT_SLICE: MobileEventSlice = Object.freeze({
 export const EMPTY_COMBAT_REWARD_SLICE: MobileCombatRewardSlice = Object.freeze({
     offers: Object.freeze([]),
     claimed: false,
+    upgrade: null,
 });
 
 export const EMPTY_ITEM_REWARD_SLICE: MobileItemRewardSlice = Object.freeze({

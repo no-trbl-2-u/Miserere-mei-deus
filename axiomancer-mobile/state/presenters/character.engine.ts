@@ -19,7 +19,7 @@ import {
 } from '@mechanics';
 
 import { freezeViewModel } from './freeze';
-import { wornPerSlot, SLOT_CAPACITY, getSignatureSkill } from '@mechanics';
+import { SLOT_CAPACITY, getSignatureSkill } from '@mechanics';
 import type { Equipment } from '@mechanics';
 
 export type StanceKey = 'heart' | 'body' | 'mind';
@@ -221,14 +221,12 @@ function equipmentRow(
 }
 
 function buildEquipment(player: Character): readonly EquipmentSlotRow[] {
-    // Worn-state convention lives in the engine's `Items/equipped.ts`
-    // (capacity-aware `wornPerSlot`). Five rows: Weapon, Armor, then
-    // three interchangeable accessory positions.
-    const worn = wornPerSlot(player.inventory);
-    const accessories = worn.get('accessory') ?? [];
+    // Worn state is the engine loadout, `player.equipment`. Five rows:
+    // Weapon, Armor, then three interchangeable accessory positions.
+    const { weapon, armor, accessories } = player.equipment;
     const rows: EquipmentSlotRow[] = [
-        equipmentRow('weapon', SLOT_LABELS.weapon, worn.get('weapon')?.[0]),
-        equipmentRow('armor', SLOT_LABELS.armor, worn.get('armor')?.[0]),
+        equipmentRow('weapon', SLOT_LABELS.weapon, weapon ?? undefined),
+        equipmentRow('armor', SLOT_LABELS.armor, armor ?? undefined),
     ];
     for (let i = 0; i < SLOT_CAPACITY.accessory; i++) {
         rows.push({

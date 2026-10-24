@@ -7,7 +7,9 @@
  */
 
 import {
+    displacedBy,
     equipItem as engineEquipItem,
+    unequipItem as engineUnequipItem,
     isConsumable,
     isEquipment,
     lookupEffect,
@@ -23,22 +25,17 @@ import { keywordForEffect } from '@/state/combat/keywords';
 import { freezeViewModel } from './freeze';
 import { parseHealAmount } from '../actions';
 import { computeEquipDelta } from '@mechanics';
-import {
-    findEquippedInSlot as selectFindEquippedInSlot,
-    isEquippedFirstOfSlot as selectIsEquippedFirstOfSlot,
-} from '@mechanics';
+import { findOwnedEquipment, loadoutActionFor } from './loadout';
 
 /**
  * Modal mode discriminator. The screen branches on this to pick
  * which action to dispatch on confirm:
  * - `'use'` → `actions.useItem` (consumables).
- * - `'equip'` → `actions.equipItem` (equipment NOT currently worn).
- * - `'unequip'` → `actions.unequipItem` (equipment currently worn
- *   AND has at least one other slot peer to swap to).
- * - `'view'` → no action (display-only; for items with no available
- *   action, including equipment that's the sole worn item in its
- *   slot — see notes on `unequipItemAction` for why sole-item
- *   unequip is a no-op under mobile's first-in-slot convention).
+ * - `'equip'` → `actions.equipItem` (equipment `player.equipment` does
+ *   not wear).
+ * - `'unequip'` → `actions.unequipItem` (equipment it wears; taking it
+ *   off leaves the position empty).
+ * - `'view'` → no action (display-only; items with no available action).
  */
 export type ItemModalMode = 'use' | 'equip' | 'unequip' | 'view';
 
@@ -122,7 +119,8 @@ export function selectItemModalViewModel(
     itemId: string,
 ): ItemModalViewModel | null {
     const inventory: readonly Item[] = state.player.inventory;
-    const item = inventory.find((i: Item) => i.id === itemId);
+    const item = inventory.find((i: Item) => i.id === itemId)
+        ?? findOwnedEquipment(state.player, itemId);
     if (!item) return null;
 
     if (isConsumable(item)) return buildConsumableModal(state.player, item);
@@ -206,92 +204,40 @@ function buildConsumableModal(player: Character, item: Item): ItemModalViewModel
 
 function buildEquipmentModal(player: Character, item: Item): ItemModalViewModel {
     const eq = item as Equipment;
-    const isAlreadyEquipped = selectIsEquippedFirstOfSlot(player.inventory, eq);
-    const replacing = isAlreadyEquipped ? null : selectFindEquippedInSlot(player.inventory, eq);
-
-    // Equipment offers 'unequip' in addition to equip + discard. Under
-    // mobile's "first-equipment-per-slot = worn" convention,
-    // unequip = swap to a different slot-peer (move the worn
-    // item to the back of its slot peers). When the worn item
-    // is the sole entry in its slot, there's no peer to swap to
-    // — the row falls back to display-only with the WORN label
-    // (there is no "unequip to bare").
-    const slotPeerCount = player.inventory.filter(
-        (it: Item): it is Equipment =>
-            isEquipment(it) && (it as Equipment).slot === eq.slot,
-    ).length;
-    const canUnequip = isAlreadyEquipped && slotPeerCount > 1;
-    const wornSibling = canUnequip
-        ? player.inventory.find(
-              (it: Item): it is Equipment =>
-                  isEquipment(it)
-                  && (it as Equipment).slot === eq.slot
-                  && it.id !== eq.id,
-          ) ?? null
-        : null;
-
-    // confirmLabel matrix:
-    // - Not equipped, slot empty → 'EQUIP'
-    // - Not equipped, slot has worn sibling → 'EQUIP · REPLACE <NAME>'
-    // - Equipped, has peer → 'UNEQUIP · WEAR <NAME>' (or just
-    //   'UNEQUIP' if no clear next-up — but slotPeerCount > 1
-    //   guarantees at least one)
-    // - Equipped, sole item in slot → 'WORN' (display-only).
-    let confirmLabel: string;
-    let mode: ItemModalMode;
-    if (isAlreadyEquipped && canUnequip) {
-        mode = 'unequip';
-        confirmLabel = wornSibling !== null
-            ? `UNEQUIP · WEAR ${wornSibling.name.toUpperCase()}`
-            : 'UNEQUIP';
-    } else if (isAlreadyEquipped) {
-        // Sole item in slot — 'view' mode (no action on confirm);
-        // confirmLabel stays 'WORN' to communicate display-only.
-        mode = 'view';
-        confirmLabel = 'WORN';
-    } else if (replacing !== null) {
-        mode = 'equip';
-        confirmLabel = `EQUIP · REPLACE ${replacing.name.toUpperCase()}`;
-    } else {
-        mode = 'equip';
-        confirmLabel = 'EQUIP';
-    }
+    // Worn state is `player.equipment`. confirmLabel matrix:
+    // - Worn → 'UNEQUIP' (the position is left empty).
+    // - Not worn, a position free → 'EQUIP'.
+    // - Not worn, slot full → 'EQUIP · REPLACE <NAME>' (the last-worn piece).
+    const action = loadoutActionFor(player, eq);
+    const mode: ItemModalMode = action.mode;
+    const confirmLabel = action.label;
+    const replacing = action.replacing;
 
     const previewLines: string[] = [
         `Slot · ${eq.slot.toUpperCase()}`,
         mode === 'unequip'
-            ? wornSibling !== null
-                ? `Worn now. Swaps with ${wornSibling.name}.`
-                : 'Worn now.'
-            : isAlreadyEquipped
-              ? 'Worn now.'
-              : `${eq.slot.charAt(0).toUpperCase() + eq.slot.slice(1)} slot.`,
+            ? 'Worn now.'
+            : `${eq.slot.charAt(0).toUpperCase() + eq.slot.slice(1)} slot.`,
     ];
 
-    // Compute the real before/after character for whichever operation
-    // the confirm button performs, then surface every changed stat and
-    // signature, keeping only entries that actually change.
-    //
-    // - equip   → wear `eq` (engine replaces any worn slot sibling).
-    // - unequip → take `eq` off and wear `wornSibling` in its place.
-    // - view    → display-only (sole worn item / no action) → no change.
-    let afterChar: Character = player;
-    let newlyWorn: Equipment | null = null;
-    let removed: Equipment | null = null;
+    // The real before/after character for the operation the confirm button
+    // performs; every changed stat and signature surfaces, nothing else.
+    let afterChar: Character;
     if (mode === 'equip') {
-        afterChar = engineEquipItem(player, eq);
-        newlyWorn = eq;
-        removed = replacing;
-    } else if (mode === 'unequip' && wornSibling !== null) {
-        afterChar = engineEquipItem(player, wornSibling);
-        newlyWorn = wornSibling;
-        removed = eq;
+        const { index } = displacedBy(player, eq);
+        afterChar = engineEquipItem(player, eq, index === null ? undefined : { replaceIndex: index });
+    } else {
+        const accessoryIndex = eq.slot === 'accessory'
+            ? player.equipment.accessories.findIndex((a) => a.id === eq.id)
+            : undefined;
+        afterChar = engineUnequipItem(player, eq.slot, accessoryIndex);
     }
 
     const statDeltas = computeStatDeltas(player, afterChar);
-    const effectDeltas = newlyWorn === null
-        ? []
-        : computeEffectDeltas(newlyWorn, removed, player);
+    // An unequip compares the piece against itself (the engine's lost-only case).
+    const effectDeltas = mode === 'equip'
+        ? computeEffectDeltas(eq, replacing, player)
+        : computeEffectDeltas(eq, eq, player);
     const itemModifiers = computeItemModifiers(eq);
 
     return freezeViewModel({

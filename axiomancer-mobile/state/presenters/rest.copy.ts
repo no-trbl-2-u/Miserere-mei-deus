@@ -7,17 +7,19 @@ import { isInnShelter } from '@mechanics';
 import type { RestChoiceOfferId, RestShelter } from '@mechanics';
 
 export const REST_CHOICE_EYEBROW = 'A MOMENT TO STOP';
-export const REST_CHOICE_TITLE = 'TWO DOORS, ONE STEP THROUGH';
+export const REST_CHOICE_TITLE = 'THREE DOORS, ONE STEP THROUGH';
 export const REST_CHOICE_INTRO =
     'The node is spent the moment you stopped here. Pick one — there is no walking back out.';
 
 export const REST_CHOICE_OFFER_LABEL: Record<RestChoiceOfferId, string> = Object.freeze({
     rest: 'REST',
+    upgrade: 'UPGRADE A CARD',
     cut: 'THE CUT',
 });
 
 export const REST_CHOICE_OFFER_DESC: Record<RestChoiceOfferId, string> = Object.freeze({
     rest: 'Sleep where you stand. Free.',
+    upgrade: 'No sleep tonight. Work one card sharper instead.',
     cut: 'Thin the deck by one card.',
 });
 
@@ -71,4 +73,8 @@ export function restOutcomeSpendChip(spent: number): string {
 
 export function restOutcomeRemovedChip(cardName: string): string {
     return `CUT: ${cardName}`;
+}
+
+export function restOutcomeUpgradedChip(fromName: string, toName: string): string {
+    return `UPGRADED: ${fromName} → ${toName}`;
 }

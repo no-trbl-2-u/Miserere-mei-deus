@@ -93,6 +93,8 @@ export {
     // Card rewards and the starting deck
     COMBAT_REWARD_POOL, STARTING_CARD_IDS, rollCombatCardRewards, rewardPoolFor, addRewardCard,
     unlockCardViaDilemma,
+    // The elite reward: the best cards or a random upgrade
+    isEliteEnemy, rollEliteReward, rollEliteCardRewards, rollEliteUpgrade,
     // Fate Engine — the dice get a second read
     riderText, RESERVE_MAX,
     // Upgradeable Dice (the combat dice model): the surfaces the app/sim
@@ -100,7 +102,7 @@ export {
     SPECIAL_CONVICTION_DEFAULT, MOMENTUM_CHAIN_ORDER, MOMENTUM_SURGE_LENGTH,
     DEFAULT_DIE_GEAR, activeDieGear,
 } from './Combat';
-export type { UpgradeableDieGear } from './Combat';
+export type { UpgradeableDieGear, EliteReward, EliteRewardUpgrade } from './Combat';
 // Stat scaling.
 export {
     scaleAmount, scaleFor, statFor, scaleRider, scaleCardForStats,
@@ -122,6 +124,19 @@ export type {
     WheelStance,
     // Card programs: the Global / Curse / SACRIFICE ledger
     ProgramLedger, GlobalInPlay, ProgramShortfall,
+    // The Elementalist's weather
+    ElementState, WeatherElement,
+} from './Combat';
+export { foeInferno, yourInferno, elementsOnFoe, weatherReading } from './Combat';
+// The play-log API contract: the fight and deck change the preview app posts and the Worker stores.
+export {
+    PLAY_LOG_FIGHTS_PATH, PLAY_LOG_DECK_EVENTS_PATH, COMBAT_EVENT_KINDS, PLAY_LOG_UI_EVENT_KINDS,
+    PLAY_LOG_FIGHT_OUTCOMES, DECK_EVENT_KINDS, PLAY_LOG_LIMITS, validateFightPost, validateDeckEventPost,
+} from './Combat';
+export type {
+    CombatEventKind, PlayLogUiEventKind, DeckEventKind, PlayLogStamp, PlayLogCombatEvent, PlayLogUiEvent,
+    PlayLogEvent, PlayLogSource, FightPost, DeckEventWhere, DeckEventPost, FightRow, DeckEventRow, FightList,
+    DeckEventList, PlayLogCreated, PlayLogError, FightValidation, DeckEventValidation,
 } from './Combat';
 // Measured truth (R12a): the Act 1 ledger x spread x deck measurement.
 export { measuredTruthCells, MEASURED_DECK_LANES, MEASURED_SPREADS } from './Combat/combat.measured-truth';
@@ -204,8 +219,9 @@ export {
     // Card upgrades (Phase UP1b): the law by rarity and the id helpers
     UPGRADE_LIMITS, upgradeCard, upgradeLimit, upgradeLevel, canUpgrade,
     baseCardId, isUpgradedCardId, getUpgradedCardById,
+    nextUpgradeId, upgradableCardIds,
     // Card lanes (the dev menu's CARDS section)
-    CARD_LANES, GREY_LANE, getCardLane, laneRewardPool,
+    CARD_LANES, GREY_LANE, getCardLane, laneRewardPool, deckLaneIds,
     // Runtime enumeration of the CardSpecialMechanic union, bound to
     // the type by compile-time assertions. Mobile KW-2 walks this list.
     CARD_SPECIAL_MECHANIC_KINDS,
@@ -352,22 +368,24 @@ export {
 export type { HazardPuzzleCandidate, HazardPuzzleCandidateAudit } from './World/Hazard';
 
 // Blacksmith encounter ("The Anvil" — die-gear upgrades: HONE / TEMPER /
-// gear swap).
+// gear swap, and one card upgrade a visit).
 export {
     ANVIL_VERB_PRICING, BLACKSMITH_WITNESS_VARIANTS, HEART_RICH_PAYLOAD_VARIANT,
     createBlacksmithSession, beginBlacksmith, honeBlacksmith, temperBlacksmith,
-    swapBlacksmith, continueBlacksmithCard, leaveBlacksmith,
+    swapBlacksmith, chooseBlacksmithCardUpgrade, cancelBlacksmithCardUpgrade,
+    pickBlacksmithCardUpgrade, blacksmithCardUpgradeRefusal,
+    continueBlacksmithCard, leaveBlacksmith,
     claimBlacksmithOutcome,
 } from './World/Blacksmith';
 export type {
-    BlacksmithVariantOffer, BlacksmithSession,
+    BlacksmithVariantOffer, BlacksmithSession, BlacksmithCardUpgrade,
 } from './World/Blacksmith';
 // Rest-choice encounter — the rest node's one irreversible choice of
-// `rest` / `cut`, composing the Cards/card.removal primitive rather than
+// `rest` / `upgrade` / `cut`, composing the Cards/card.removal primitive rather than
 // rebuilding it.
 export {
     RESTCHOICE_TUNING, createRestChoiceSession, previewRestChoiceHeal,
-    chooseRestChoiceOffer, pickRestChoiceCut, claimRestChoiceOutcome,
+    chooseRestChoiceOffer, pickRestChoiceCut, pickRestChoiceUpgrade, claimRestChoiceOutcome,
 } from './World/RestChoice';
 export type {
     RestChoiceOfferId, RestChoiceSession,

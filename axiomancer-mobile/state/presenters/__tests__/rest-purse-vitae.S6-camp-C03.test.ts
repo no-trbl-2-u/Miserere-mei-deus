@@ -82,6 +82,8 @@ describe('restDisplayHealth', () => {
             spent: 0,
             removedCardId: null,
             removals: 0,
+            upgradedCardId: null,
+            upgradedToCardId: null,
         };
         expect(restDisplayHealth(20, 175, ledger)).toBe(63);
         expect(restDisplayHealth(174, 175, ledger)).toBe(175);

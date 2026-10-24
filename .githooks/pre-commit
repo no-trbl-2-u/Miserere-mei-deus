@@ -35,3 +35,11 @@ if git diff --cached --name-only --diff-filter=ACMR \
   | grep -q '^devlog/'; then
   node scripts/check-devlog-not-served.mjs
 fi
+
+# The lessons ladder and T's moves are linted in root `npm test`, which no
+# local workspace gate runs, so an over-long row reached a PR twice. Lint them
+# whenever one is staged, however it was edited.
+if git diff --cached --name-only --diff-filter=ACMR \
+  | grep -Eq '^(plan/(lessons|reflexes|NEEDS_T)\.md|scripts/check-lessons\.mjs)$'; then
+  node scripts/check-lessons.mjs
+fi

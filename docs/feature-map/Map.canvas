@@ -859,6 +859,12 @@
 			"color": "6"
 		},
 		{
+			"id": "coupling:route:blacksmith->area:Cards",
+			"fromNode": "route:blacksmith",
+			"toNode": "area:Cards",
+			"color": "6"
+		},
+		{
 			"id": "coupling:route:blacksmith->area:Character",
 			"fromNode": "route:blacksmith",
 			"toNode": "area:Character",
@@ -868,6 +874,12 @@
 			"id": "coupling:route:blacksmith->area:Combat",
 			"fromNode": "route:blacksmith",
 			"toNode": "area:Combat",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:blacksmith->area:Effects",
+			"fromNode": "route:blacksmith",
+			"toNode": "area:Effects",
 			"color": "6"
 		},
 		{
@@ -1081,6 +1093,12 @@
 			"color": "6"
 		},
 		{
+			"id": "coupling:route:devart/rooms->area:Combat",
+			"fromNode": "route:devart/rooms",
+			"toNode": "area:Combat",
+			"color": "6"
+		},
+		{
 			"id": "coupling:route:devart/rooms->area:Game",
 			"fromNode": "route:devart/rooms",
 			"toNode": "area:Game",
@@ -1231,6 +1249,12 @@
 			"color": "6"
 		},
 		{
+			"id": "coupling:route:hazard-deck->area:Combat",
+			"fromNode": "route:hazard-deck",
+			"toNode": "area:Combat",
+			"color": "6"
+		},
+		{
 			"id": "coupling:route:hazard-deck->area:Effects",
 			"fromNode": "route:hazard-deck",
 			"toNode": "area:Effects",
@@ -1369,6 +1393,12 @@
 			"color": "6"
 		},
 		{
+			"id": "coupling:route:labyrinth->area:Combat",
+			"fromNode": "route:labyrinth",
+			"toNode": "area:Combat",
+			"color": "6"
+		},
+		{
 			"id": "coupling:route:labyrinth->area:Game",
 			"fromNode": "route:labyrinth",
 			"toNode": "area:Game",
@@ -1402,6 +1432,18 @@
 			"id": "coupling:route:rest->area:Cards",
 			"fromNode": "route:rest",
 			"toNode": "area:Cards",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:rest->area:Combat",
+			"fromNode": "route:rest",
+			"toNode": "area:Combat",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:rest->area:Effects",
+			"fromNode": "route:rest",
+			"toNode": "area:Effects",
 			"color": "6"
 		},
 		{

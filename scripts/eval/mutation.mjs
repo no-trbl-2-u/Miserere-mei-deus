@@ -39,10 +39,16 @@ function arg(name, fallback) {
 
 const git = (args, cwd = ROOT) => execFileSync('git', args, { cwd, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }).trim()
 
-function openWorktree() {
+/**
+ * A detached worktree at `ref` whose `node_modules` link to this checkout's.
+ *
+ * @param {string} [ref] the commit to check out.
+ * @returns {string} the worktree's path; remove it with `closeWorktree`.
+ */
+export function openWorktree(ref = 'HEAD') {
   const dir = mkdtempSync(join(tmpdir(), 'eval-mutation-'))
   rmSync(dir, { recursive: true, force: true })
-  git(['worktree', 'add', '--detach', '--quiet', dir, 'HEAD'])
+  git(['worktree', 'add', '--detach', '--quiet', dir, ref])
   for (const rel of NODE_MODULES) {
     const target = join(ROOT, rel)
     const link = join(dir, rel)
@@ -51,11 +57,21 @@ function openWorktree() {
   return dir
 }
 
-function runTarget(dir, target, budgetSeconds) {
+export const closeWorktree = (dir) => git(['worktree', 'remove', '--force', dir])
+
+/**
+ * Runs Stryker on one target inside a worktree, stopped at the budget.
+ *
+ * @param {string} dir the worktree from `openWorktree`.
+ * @param {{ name: string, key: string, cwd: string, config: string, mutate?: string[] }} target the workspace; `config` is repo-relative or absolute, and `mutate` (when given) is what the config mutates.
+ * @param {number} budgetSeconds the run is killed past this.
+ * @returns {Promise<object>} the outcome, tallies and survivors.
+ */
+export function runTarget(dir, target, budgetSeconds) {
   const json = join(dir, `.eval-mutation-${target.key}.json`)
   const log = join(tmpdir(), `eval-mutation-${target.key}.log`)
-  const config = join(ROOT, target.config)
-  const mutate = (readFileSync(config, 'utf8').match(/mutate:\s*\[([\s\S]*?)\]/)?.[1] ?? '').match(/'[^']+'/g)?.map((s) => s.slice(1, -1)) ?? []
+  const config = resolve(ROOT, target.config)
+  const mutate = target.mutate ?? (readFileSync(config, 'utf8').match(/mutate:\s*\[([\s\S]*?)\]/)?.[1] ?? '').match(/'[^']+'/g)?.map((s) => s.slice(1, -1)) ?? []
   const t0 = Date.now()
   return new Promise((done) => {
     const child = spawn('npx', ['--no-install', 'stryker', 'run', config, '--inPlace'], {
@@ -103,7 +119,7 @@ async function main() {
     }))
     targets.push(...results.filter(Boolean))
   } finally {
-    git(['worktree', 'remove', '--force', dir])
+    closeWorktree(dir)
   }
 
   const mutation = { stamp, targets }
