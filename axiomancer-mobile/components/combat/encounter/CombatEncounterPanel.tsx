@@ -44,6 +44,7 @@ import { CombatDie, combatDieFootprint } from '@/components/combat/encounter/Com
 import { CombatSummaryModal } from '@/components/combat/encounter/CombatSummaryModal';
 import { CombatRewardsOverlay } from '@/components/combat/encounter/CombatRewardsOverlay';
 import { Image } from '@/lib/platform/image';
+import { fightRecorder } from '@/lib/fightRecorder';
 import { getEncounterEnemyArt } from '@/assets/images/enemies';
 import {
     INTENT_ICONS, buildCombatViewModel, rewardCardVMs, STANCE_COLORS, threatPhaseHeader,
@@ -611,6 +612,13 @@ export function CombatEncounterPanel({
         wroteBackRef.current = true;
         if (persistOutcome) applyHazardOutcome(store, live.finalOutcome, live, enemy);
     }, [live.finalOutcome, live, persistOutcome, store, enemy]);
+
+    // The play log (phase BE2c): every live state goes to the fight recorder,
+    // which stamps the log entries it has not seen and posts once on the final
+    // outcome. Only a persisted fight was staged by the bridge that starts it.
+    useEffect(() => {
+        if (persistOutcome) fightRecorder.observe(live);
+    }, [live, persistOutcome]);
 
     // Roll the deckbuilder reward once, on victory. The roll is engine truth;
     // the action is idempotent, so a remount re-reads the SAME offer rather
