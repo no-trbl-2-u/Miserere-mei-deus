@@ -181,9 +181,58 @@ until the revisions step):
   as at the start of its turn. Whether the trigger also grows the STORM by 1, as
   the turn-start tick does, is open for the revisions step.
 
+### Sitting 2 — Engine (T, 2026-10-23, pasted in session)
+
+The second sheet repeats sitting 1's Payoff lines unchanged and adds Engine.
+Misc is still not voted (its "CUT slot" lines are unticked slots, not cuts).
+T's Engine lines, verbatim:
+
+```text
+-- Engine --
+E-01: KEEP E-01b | cut: E-01a, E-01c
+E-02: KEEP E-02c | cut: E-02a, E-02b | note: Remove the max
+E-03: KEEP E-03b | cut: E-03a, E-03c
+E-04: KEEP E-04c | cut: E-04a, E-04b | note: No max
+E-05: KEEP E-05b | cut: E-05a, E-05c
+E-06: KEEP E-06a | cut: E-06b, E-06c | note: Turn this into a global card where it reads the storm grows by 1 extra
+E-07: KEEP E-07b | cut: E-07a, E-07c | note: No max
+E-08: KEEP E-08c | cut: E-08a, E-08b
+E-09: KEEP E-09b | cut: E-09a, E-09c | note: No max
+E-10: KEEP E-10c | cut: E-10a, E-10b | note: free is draw 1, storm 1 instead
+```
+
+**Engine as kept, with T's notes applied:**
+
+| Slot | Kept | Type | FREE | PAID |
+|---|---|---|---|---|
+| E-01 | E-01b | Spell, Fire | INFERNO 3, GUARD 2. | INFERNO 8, GUARD 5. |
+| E-02 | E-02c | Attack, Fire | DEAL 5. | DEAL 8, then INFERNO equal to half the damage dealt. |
+| E-03 | E-03b | Spell, Frost | CHILL 2, DRAW 1. | CHILL 6, DRAW 1. |
+| E-04 | E-04c | Skill, Frost | CHILL 3. | CHILL 5, then GUARD equal to the foe's CHILL. |
+| E-05 | E-05b | Spell, Storm | STORM 1, DRAW 1. | STORM 3, DRAW 2. |
+| E-06 | E-06a | **Global**, Storm (was a Spell) | The STORM grows by 1 extra. | The same line, permanent. |
+| E-07 | E-07b | Skill, Storm | DRAW 2. | DRAW 2, then STORM equal to the cards in your hand. |
+| E-08 | E-08c | Spell, Fire + Frost | CHILL 2, INFERNO 2. | Steam: remove your INFERNO; the foe gains that much CHILL and INFERNO. |
+| E-09 | E-09b | Global, Frost + Storm | Start of your turn: CHILL equal to half the foe's STORM. | The same line, permanent. |
+| E-10 | E-10c | Spell, all | DRAW 1, STORM 1. | Swap the numbers of two elements on the foe. DRAW 1. |
+
+Notes on applying them:
+
+- **E-06** becomes a Global by T's note: while it is in play the STORM grows by
+  2 a turn instead of 1. Read as "each turn" (the STORM's own growth plus one);
+  confirm at the revisions step.
+- **E-09** follows sitting 1's Global rule (PAID equals FREE, permanent) and
+  T's "no max", so its PAID "instead" delta and both caps are gone.
+- **E-10**'s kept card is the swap, not BEND (E-10a/b). The family's "bend"
+  fantasy is carried by E-08c's Steam and E-10c's swap; BEND is not a keyword
+  for now.
+- Caps removed: E-02 PAID, E-04 PAID, E-07 PAID, E-09. **Every cap T has met
+  on this ballot so far, T has cut** except P-06 PAID and P-09 FREE, which T
+  did not name.
+
 ### Open
 
-- Engine (E-01 to E-10) and Misc (M-01 to M-10): not yet voted.
+- Misc (M-01 to M-10): not yet voted.
 - Whether "Globals PAID = FREE, permanent" and "no max" are rules for this
   family only or for every lane. The Blood Price Globals already live carry
   PAID deltas (P-10c, E-03d), so a lane-wide Global rule would revise them.
