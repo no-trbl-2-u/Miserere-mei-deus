@@ -12,13 +12,18 @@
  * `endCombat` bridge ends one the panel never finished (a WITHDRAW). Either
  * way the `FightPost` goes out exactly once.
  *
+ * The panel also reports three screen events (phase BE2d, A7) through
+ * `screen`: a card staged, a card unstaged before it was played, and the card
+ * detail popup opened. Each joins the same stream, stamped the same way, with
+ * the VITAE last observed (a screen event changes no state).
+ *
  * Nothing is recorded while the play-log gate is shut at `start`, and nothing
  * is posted when it has shut by the end. A failed post warns and is dropped
  * (BE1). Every number is a measurement for T; nothing here grades the game.
  *
  * Functions:
  *   endCombatOutcome(o)          the bridge's end outcome as the post's outcome
- *   createFightRecorder(deps)    start / observe / end / isRecording
+ *   createFightRecorder(deps)    start / observe / screen / end / isRecording
  *   fightRecorder                the app-wide instance
  */
 
@@ -29,6 +34,7 @@ import {
     type FightPost,
     type PlayLogEvent,
     type PlayLogSource,
+    type PlayLogUiEventKind,
 } from '@mechanics';
 
 import { playLogConfig, playLogSource, postPlayLog } from '@/lib/playLog';
@@ -53,6 +59,8 @@ export interface FightRecorder {
     start(start: FightStart): void;
     /** Stamps the state's unseen log entries; a final outcome ends and posts the fight. */
     observe(state: ObservedFight): void;
+    /** Adds a screen event for `cardId` to the open fight's stream; no-op when none is open. */
+    screen(kind: PlayLogUiEventKind, cardId: string): void;
     /** Ends the open fight with `outcome` and posts it; resolves false when nothing was posted. */
     end(outcome: CombatOutcome): Promise<boolean>;
     isRecording(): boolean;
@@ -110,6 +118,13 @@ export function createFightRecorder(deps: FightRecorderDeps = {}): FightRecorder
             rec.vitaeEnd = vitae;
             rec.vitaeLow = Math.min(rec.vitaeLow, vitae);
             if (state.finalOutcome) void recorder.end(state.finalOutcome);
+        },
+
+        screen(kind, cardId) {
+            const rec = open;
+            if (!rec) return;
+            const ms = Math.max(0, Math.round(now() - rec.startedAt));
+            rec.events.push({ kind, cardId, ms, vitae: rec.vitaeEnd });
         },
 
         async end(outcome) {

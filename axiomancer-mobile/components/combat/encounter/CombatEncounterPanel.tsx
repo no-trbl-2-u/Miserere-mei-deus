@@ -34,6 +34,7 @@ import {
     selectEncounterMercyChoice, buildCombatSummary,
     getLogger,
     type CombatEncounterState, type CombatOutcome, type Character, type Enemy, type CombatEvent,
+    type PlayLogUiEventKind,
 } from '@mechanics';
 
 import { CombatBoard, CombatCardFace, OutcomeText, HAND_CARD_W, HAND_CARD_H, type DragController, type DragPayload, type Rect } from '@/components/combat/encounter/CombatBoard';
@@ -518,13 +519,30 @@ export function CombatEncounterPanel({
         setState((prev) => { const s = prev ?? initial; return fn(s); });
     }, [initial]);
 
+    // The play log's screen events (phase BE2d): read through refs so the
+    // handlers below keep their identity and the board's memo holds.
+    const screenRef = useRef({ live, stagedUids, persistOutcome });
+    screenRef.current = { live, stagedUids, persistOutcome };
+    const recordScreen = useCallback((kind: PlayLogUiEventKind, uid: string) => {
+        const { live: s, persistOutcome: persisted } = screenRef.current;
+        if (!persisted) return;
+        const cardId = s.hand.find((h) => h.uid === uid)?.cardId;
+        if (cardId) fightRecorder.screen(kind, cardId);
+    }, []);
+
     const unstageUid = useCallback((uid: string) => setStagedUids((prev) => prev.filter((u) => u !== uid)), []);
     const onEnter = useCallback(() => apply((s) => rollEncounterDice(s).state), [apply]);
     const onStage = useCallback((uid: string) => {
         if (resolvingRef.current) return; // no staging mid-resolution
+        if (!screenRef.current.stagedUids.includes(uid)) recordScreen('ui-staged', uid);
         setStagedUids((prev) => (prev.includes(uid) ? prev : [...prev, uid]));
-    }, []);
-    const onUnstage = useCallback((uid: string) => unstageUid(uid), [unstageUid]);
+    }, [recordScreen]);
+    // Only the player's own unstage is a screen event: a card leaving staging
+    // because it was played or discarded, or at the turn's end, is not.
+    const onUnstage = useCallback((uid: string) => {
+        if (screenRef.current.stagedUids.includes(uid)) recordScreen('ui-unstaged', uid);
+        unstageUid(uid);
+    }, [recordScreen, unstageUid]);
     // APPLY one staged card (hazard model — the die is OPTIONAL). `power` true →
     // the dragged die powers the card (bottom action); `power` false → the FREE
     // base action (top action, no die). One commit; the card leaves staging.
@@ -647,7 +665,11 @@ export function CombatEncounterPanel({
     // Identity-stable board props: inline arrows / fresh objects here defeat
     // CombatBoard's React.memo and re-render the whole 1200-line board on every
     // unrelated panel state change (tooltips, fx bumps) — felt as drag jank.
-    const onInspect = useCallback((c: CombatCardVM) => { detailOpenedAt.current = Date.now(); setDetailCard(c); }, []);
+    const onInspect = useCallback((c: CombatCardVM) => {
+        detailOpenedAt.current = Date.now();
+        if (screenRef.current.persistOutcome) fightRecorder.screen('ui-detail-opened', c.cardId);
+        setDetailCard(c);
+    }, []);
     /**
      * Dismiss the card detail overlay. Shared by the backdrop, the card body,
      * and the scrolled content so a tap ANYWHERE exits. The 350ms guard swallows the tail of the press that OPENED

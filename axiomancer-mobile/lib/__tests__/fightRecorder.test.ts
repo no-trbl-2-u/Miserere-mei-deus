@@ -164,6 +164,28 @@ describe('the recorder over a real fight', () => {
     });
 });
 
+describe('screen events (phase BE2d)', () => {
+    it('join the open stream with the stamp and the VITAE last observed, in order', async () => {
+        const { fetcher, calls } = mockFetch();
+        const recorder = recorderWith({ fetcher });
+        recorder.screen('ui-staged', 'grey-strike'); // nothing open: dropped
+        recorder.start({ enemyId: 'foe', playerLevel: 1, enemyHpMultiplier: 2, vitaeStart: 40 });
+        recorder.screen('ui-staged', 'grey-strike');
+        recorder.screen('ui-unstaged', 'grey-strike');
+        recorder.screen('ui-detail-opened', 'grey-ward');
+        await recorder.end('retreat');
+
+        expect(calls).toHaveLength(1);
+        const post = JSON.parse(calls[0].init.body) as FightPost;
+        expect(validateFightPost(post)).toMatchObject({ ok: true });
+        expect(post.events).toEqual([
+            { kind: 'ui-staged', cardId: 'grey-strike', ms: 250, vitae: 40 },
+            { kind: 'ui-unstaged', cardId: 'grey-strike', ms: 500, vitae: 40 },
+            { kind: 'ui-detail-opened', cardId: 'grey-ward', ms: 750, vitae: 40 },
+        ]);
+    });
+});
+
 describe('the gate', () => {
     it('shut at the start: nothing is recorded and no call is made', async () => {
         const { combat, enemy } = startRealFight();
