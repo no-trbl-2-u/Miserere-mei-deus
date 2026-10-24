@@ -35,6 +35,11 @@ const CRESCENT: GlyphShape = { d: 'M15 3 A9 9 0 1 0 21 15 A7 7 0 1 1 15 3 Z' };
 const LINKS: GlyphShape = { d: 'M2 12 A4 4 0 0 1 6 8 H11 A4 4 0 0 1 11 16 H6 A4 4 0 0 1 2 12 Z M5 12 A1.5 1.5 0 0 0 6.5 13.5 H10.5 A1.5 1.5 0 0 0 10.5 10.5 H6.5 A1.5 1.5 0 0 0 5 12 Z M13 8 H18 A4 4 0 0 1 18 16 H13 A4 4 0 0 1 13 8 Z M13.5 10.5 A1.5 1.5 0 0 0 13.5 13.5 H17.5 A1.5 1.5 0 0 0 17.5 10.5 Z', evenodd: true };
 // DEAL — an upright blade: plain damage to the foe.
 const SWORD: GlyphShape = { d: 'M12 2 L14 5 V15 H18 V17 H13 V20 A1 1 0 0 1 11 20 V17 H6 V15 H10 V5 Z' };
+// INFERNO — a flame. BLIZZARD — a snowflake. STORM — a bolt. DRAW — two cards.
+const FLAME: GlyphShape = { d: 'M12 2 C13 6 18 8 18 14 A6 6 0 0 1 6 14 C6 10 9 9 9 5 C11 7 11 9 12 10 C13 8 12 5 12 2 Z' };
+const SNOWFLAKE: GlyphShape = { d: 'M11 2 H13 V22 H11 Z M2.3 7.2 L3.3 5.5 L21.7 16.8 L20.7 18.5 Z M3.3 18.5 L2.3 16.8 L20.7 5.5 L21.7 7.2 Z' };
+const BOLT: GlyphShape = { d: 'M14 2 L5 13 H11 L9 22 L19 10 H13 L15 2 Z' };
+const CARDS: GlyphShape = { d: 'M4 7 H14 V21 H4 Z M8 3 H19 A1 1 0 0 1 20 4 V17 H16 V6 H8 Z' };
 const EYE: GlyphShape = { d: 'M12 5.5 C6 5.5 2 12 2 12 C2 12 6 18.5 12 18.5 C18 18.5 22 12 22 12 C22 12 18 5.5 12 5.5 Z M12 8.5 A3.5 3.5 0 1 0 12 15.5 A3.5 3.5 0 1 0 12 8.5 Z', evenodd: true };
 
 /** UPPERCASE face keyword → silhouette, for the keys a live face can produce. */
@@ -50,6 +55,11 @@ export const GLYPH_SHAPES: Record<string, GlyphShape> = {
     SACRIFICE: DROP,
     LEECH: CRESCENT,
     TETHER: LINKS,
+    // ── the weather ──
+    INFERNO: FLAME,
+    BLIZZARD: SNOWFLAKE,
+    STORM: BOLT,
+    DRAW: CARDS,
 };
 
 /** The silhouette for a face keyword, or null → keep the text-rune fallback. */
