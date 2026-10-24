@@ -83,6 +83,12 @@ function main(): void {
     const decks: { id: string; cards: string[] }[] = [];
     if (DECKS.includes('test')) decks.push({ id: 'elementalist', cards: elementalistTestDeck() });
     if (DECKS.includes('full')) decks.push({ id: 'elementalist-30', cards: elementalistFullDeck() });
+    // `--deck=<slot>,<slot>,...` measures a named deck instead (`--deck-id=` names it).
+    const custom = flag('deck', '');
+    if (custom) {
+        decks.length = 0;
+        decks.push({ id: flag('deck-id', 'elementalist-custom'), cards: custom.split(',').map(elementalistId) });
+    }
 
     const fights = act1FightLedger();
     const { fightLevels } = walkAct1(fights);
