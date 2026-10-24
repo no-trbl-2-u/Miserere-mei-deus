@@ -5,6 +5,12 @@
 > process in (T: "If it's successful again, we can lock in the process").
 > Paper only until T's verdicts; nothing here is live content (THE CARD HOLD,
 > D37).
+>
+> **Live (Phase EL1c, 2026-10-24):** the 30 kept cards ship as a removable
+> trial set at the sims' adjusted numbers, with placeholder names:
+> `axiomancer-mechanics/src/Cards/library/elementalist.cards.ts`, lane
+> `elementalist` (all 30 in its reward pool, T's best-played 20 as its test
+> deck). T's revisions (lane-creator step 7) edit that file.
 
 ## Session 0 — rulings (T, 2026-10-22)
 

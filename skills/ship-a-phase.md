@@ -352,7 +352,8 @@ git push -u origin "loop/ship-<N>-<slug>"
 gh pr create --repo "$GH_REPO" --base main --head "loop/ship-<N>-<slug>" \
   --label loop:pr --label "size:<S|M|L>" --label "area:<area>" \
   --title "<type>: <summary> — phase <N>" --body-file "$body"
-# area:* from the files touched (several if the phase spans areas); add
+# area:* from the files touched (several if the phase spans areas), from the
+# closed list in skills/march.md §3: combat, cards, ui, mobile, ci, loop; add
 # --label review:rules-change when the phase changes cards, rules, prices
 # or tuning values (skills/march.md §3 "Area and review labels")
 ```

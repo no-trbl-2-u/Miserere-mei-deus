@@ -53,6 +53,11 @@ const HEADLINES: readonly { re: RegExp; keyword: string | null; value: (m: RegEx
     { re: /\bLEECH (\d+)\b/, keyword: 'LEECH', value: (m) => m[1] },
     { re: /\bLEECH\b/, keyword: 'LEECH', value: () => 'X' },
     { re: /\bTETHER (\d+)\b/, keyword: 'TETHER', value: (m) => m[1] },
+    // The weather and DRAW, by their printed number.
+    { re: /\bINFERNO (\d+)\b/, keyword: 'INFERNO', value: (m) => m[1] },
+    { re: /\bBLIZZARD (\d+)\b/, keyword: 'BLIZZARD', value: (m) => m[1] },
+    { re: /\bSTORM (\d+)\b/, keyword: 'STORM', value: (m) => m[1] },
+    { re: /\bDRAW (\d+)\b/, keyword: 'DRAW', value: (m) => m[1] },
     { re: /\bWAIVE\b/, keyword: 'WAIVE', value: () => '' },
     { re: /\bEXILE a Curse\b/, keyword: 'EXILE', value: () => 'Curse' },
     { re: /\bgain (\d+) Conviction\b/i, keyword: null, value: (m) => `+${m[1]} ◆` },
@@ -60,6 +65,13 @@ const HEADLINES: readonly { re: RegExp; keyword: string | null; value: (m: RegEx
     { re: /\bSACRIFICE any amount\b/, keyword: 'SACRIFICE', value: () => 'X' },
     { re: /\bSACRIFICE\b/, keyword: 'SACRIFICE', value: () => '×2' },
     { re: /\bCurses?\b/, keyword: null, value: () => 'Curse' },
+    // A line that only reads the weather ("GUARD equal to the foe's
+    // BLIZZARD", "Remove your INFERNO") headlines its verb, or the element.
+    { re: /\bGUARD\b/, keyword: 'GUARD', value: () => 'X' },
+    { re: /\bHEAL\b/, keyword: 'HEAL', value: () => 'X' },
+    { re: /\bINFERNO\b/, keyword: 'INFERNO', value: () => '' },
+    { re: /\bBLIZZARD\b/, keyword: 'BLIZZARD', value: () => '' },
+    { re: /\bSTORM\b/, keyword: 'STORM', value: () => '' },
 ];
 
 /**
@@ -85,6 +97,10 @@ const FREE_CELL: readonly { re: RegExp; keyword: string; value: (m: RegExpMatchA
     { re: /\bVULNERABLE \+(\d+)%/, keyword: 'VULNERABLE', value: (m) => `+${m[1]}%` },
     { re: /\bLEECH (\d+)\b/, keyword: 'LEECH', value: (m) => m[1] },
     { re: /\bTETHER (\d+)\b/, keyword: 'TETHER', value: (m) => m[1] },
+    { re: /\bINFERNO (\d+)\b/, keyword: 'INFERNO', value: (m) => m[1] },
+    { re: /\bBLIZZARD (\d+)\b/, keyword: 'BLIZZARD', value: (m) => m[1] },
+    { re: /\bSTORM (\d+)\b/, keyword: 'STORM', value: (m) => m[1] },
+    { re: /\bDRAW (\d+)\b/, keyword: 'DRAW', value: (m) => m[1] },
     // A cost reads as a loss, never as the "+N" the cell gives a gain.
     { re: /\bSACRIFICE (\d+)\b/, keyword: 'SACRIFICE', value: (m) => `−${m[1]}` },
     // A FREE line with none of the above still wears a pill (a pill
@@ -97,6 +113,14 @@ const FREE_CELL: readonly { re: RegExp; keyword: string; value: (m: RegExpMatchA
     { re: /\bDEAL\b/, keyword: 'DEAL', value: () => 'X' },
     { re: /\bfoe loses VITAE\b/, keyword: 'DEAL', value: () => 'X' },
     { re: /\bSACRIFICE\b/, keyword: 'SACRIFICE', value: () => '×2' },
+    // The weather read off the fight ("GUARD equal to the foe's BLIZZARD",
+    // "Remove your INFERNO") or grown by a Global ("the STORM grows by 1 extra").
+    { re: /\bSTORM grows by (\d+)\b/, keyword: 'STORM', value: (m) => `+${m[1]}` },
+    { re: /\bGUARD\b/, keyword: 'GUARD', value: () => 'X' },
+    { re: /\bHEAL\b/, keyword: 'HEAL', value: () => 'X' },
+    { re: /\bBLIZZARD\b/, keyword: 'BLIZZARD', value: () => 'X' },
+    { re: /\bINFERNO\b/, keyword: 'INFERNO', value: () => 'X' },
+    { re: /\bSTORM\b/, keyword: 'STORM', value: () => 'X' },
 ];
 
 /**

@@ -15,7 +15,8 @@ the Expo app (`axiomancer-mobile`) presents it.
 
 ## Cards
 
-- **The library is three grey cards and the Blood Price trial set.** The
+- **The library is three grey cards and two trial sets, Blood Price and the
+  Elementalist.** The
   grey office (`GREY_OFFICE_CARDS`, `Cards/library/starters.cards.ts`): A
   Plain Blow (attack, DEAL), A Plain Ward (skill, GUARD), A Plain Word
   (spell, VULNERABLE), all colour `any`, rank 1 (Ash), tier 1. The trial
@@ -31,6 +32,13 @@ the Expo app (`axiomancer-mobile`) presents it.
   or reward pool. It joins the library through one `TRIAL_SETS` line in
   `Cards/cards.library.ts` and comes out by deleting that line and the file
   (D75); saves drop removed card ids on load (`dropUnknownCardIds`).
+  The Elementalist trial set (`ELEMENTALIST_SET`,
+  `Cards/library/elementalist.cards.ts`, Phase EL1c) is 30 cards (9 body,
+  11 mind, 10 heart, all rank 1, one upgrade each) at the sims' adjusted
+  numbers, with placeholder names ("Elementalist P-01"): they put up and
+  read the weather (INFERNO, BLIZZARD, FROZEN, STORM; `Combat/combat.elements.ts`)
+  and DRAW. Its lane `elementalist` holds all 30 and deals T's 20-card test
+  deck; it comes out the same way, by its file and its `TRIAL_SETS` line.
 - **Card types** (`CardType`) are lifecycle rules. Attack, Skill and Spell
   play FREE or PAID, then discard. A **Global** stays in play and fires on
   its trigger (⟳ start of your turn, 🩸 when you SACRIFICE n, 📜 when you
@@ -73,8 +81,8 @@ the Expo app (`axiomancer-mobile`) presents it.
 - **Rewards:** a won fight offers 3 cards (`COMBAT_REWARD_OFFER_COUNT`,
   mobile) drawn uniformly from the whole library but the Curses
   (`COMBAT_REWARD_POOL`). A cache offers one. The dev menu's REWARD POOL
-  can narrow the draft to card lanes (`CARD_LANES`: the grey office and
-  Blood Price); there is no lane relic yet. A won elite fight
+  can narrow the draft to card lanes (`CARD_LANES`: the grey office, Blood
+  Price and the Elementalist); there is no lane relic yet. A won elite fight
   (`difficulty: 'elite'`, the Green Jelly) pays the elite reward instead
   (`rollEliteReward`, Phase UP1f): the best 3 cards by rarity, one from a
   lane the deck draws on (`deckLaneIds`), or one upgrade of a random owned
