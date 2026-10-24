@@ -172,17 +172,18 @@ describe('SACRIFICE, WAIVE, HEAL, EXILE', () => {
         expect(after.state.hand).toHaveLength(1);
     });
 
-    it('P-04c plays at any VITAE: FREE heals, PAID heals twice the VITAE lost this round, its own SACRIFICE included', () => {
+    it('P-04c plays at any VITAE: FREE heals, PAID heals three times the VITAE lost this round, its own SACRIFICE included', () => {
         // No half-VITAE gate on either line any more.
         expect(programIllegalReason(fight(['bp-p-04c'], 100), 't0', false, PROGRAM_KIT)).toBeNull();
         expect(programIllegalReason(fight(['bp-p-04c'], 100), 't0', true, PROGRAM_KIT)).toBeNull();
         expect(play(fight(['bp-p-04c'], 50), 't0', false).player.health).toBe(60);
-        // Nothing lost earlier this round: SACRIFICE 10, then HEAL 2 x 10.
-        expect(play(fight(['bp-p-04c'], 50), 't0', true).player.health).toBe(60);
-        // 15 lost earlier this round: SACRIFICE 10, then HEAL 2 x 25.
+        // Nothing lost earlier this round: SACRIFICE 10, then HEAL 3 x 10.
+        expect(play(fight(['bp-p-04c'], 50), 't0', true).player.health).toBe(70);
+        // 15 lost earlier this round: SACRIFICE 10, then HEAL 3 x 25.
         const hit = fight(['bp-p-04c'], 50);
         const s = play({ ...hit, program: { ...hit.program!, lostThisRound: 15 } }, 't0', true);
-        expect(s.player.health).toBe(90);
+        expect(s.player.health).toBe(115);
+        expect(s.program!.exiled).toContain('bp-p-04c');
         expect(s.program!.exiled).toContain('bp-p-04c');
         // The SACRIFICE floor still applies: at 10 VITAE the PAID line cannot be paid.
         expect(programIllegalReason(fight(['bp-p-04c'], 10), 't0', true, PROGRAM_KIT)).toMatch(/below 1 VITAE/);
@@ -241,7 +242,7 @@ describe('SACRIFICE, WAIVE, HEAL, EXILE', () => {
         expect(s.program!.sacrificeCount).toBe(1);
         // P-10c's GUARD n fires for the WAIVED SACRIFICE 2.
         expect(s.guard).toBe(2);
-        expect(s.conviction).toBe(1);
+        expect(s.conviction).toBe(2);
     });
 });
 
@@ -388,11 +389,12 @@ describe('Crimson Pact: the next DEAL this turn deals +n', () => {
 });
 
 describe('the revision 2 cards', () => {
-    it('Bloodletting: SACRIFICE 3 for 2 Conviction, 6 for 4', () => {
+    it('Bloodletting: SACRIFICE 3 for 2 Conviction, 6 for 5 (the Spell law)', () => {
         const free = play(fight(['bp-e-01n']), 't0', false);
         expect([free.player.health, free.conviction]).toEqual([97, 2]);
         const paid = play(fight(['bp-e-01n']), 't0', true);
-        expect([paid.player.health, paid.conviction]).toEqual([94, 4]);
+        expect([paid.player.health, paid.conviction]).toEqual([94, 5]);
+        expect(paid.program!.exiled).toContain('bp-e-01n');
     });
 
     it('Open Vein: TETHER comes first, so its own SACRIFICE lands on the foe; PAID adds LEECH 2', () => {
@@ -559,7 +561,7 @@ describe('TETHER, LEECH and the wards', () => {
     it('SACRIFICE any amount takes the player\'s X, capped by the printed max and the 1-VITAE floor', () => {
         const s = fight(['bp-e-10d'], 10);
         expect(programXRange(s, 't0', true, PROGRAM_KIT)).toEqual({ min: 1, max: 9 });
-        expect(programXRange(fight(['bp-e-10d'], 100), 't0', true, PROGRAM_KIT)).toEqual({ min: 1, max: 15 });
+        expect(programXRange(fight(['bp-e-10d'], 100), 't0', true, PROGRAM_KIT)).toEqual({ min: 1, max: 21 });
         expect(programXRange(s, 't0', false, PROGRAM_KIT)).toBeNull();
         const after = play(fight(['bp-e-10d'], 100), 't0', true, 7);
         expect(after.player.health).toBe(93);
@@ -678,7 +680,7 @@ describe('Blood Price upgrades (Phase UP1b)', () => {
         expect(up?.program?.free?.text).toBe('SACRIFICE 2, DEAL {deal:10}.');
         expect(up?.program?.paid?.text).toBe('SACRIFICE 4, DEAL {deal:22}.');
         expect(getCardById('bp-p-07b+')?.program?.free?.text).toBe('DEAL half the VITAE you lost this combat (max 14).');
-        expect(getCardById('bp-e-01n+')?.program?.paid?.text).toBe('SACRIFICE 6, gain 5 Conviction.');
+        expect(getCardById('bp-e-01n+')?.program?.paid?.text).toBe('SACRIFICE 6, gain 6 Conviction. EXILE.');
     });
 
     it('a Global adds to its trigger amount', () => {

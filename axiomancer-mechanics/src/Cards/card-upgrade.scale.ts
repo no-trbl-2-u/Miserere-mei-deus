@@ -56,3 +56,27 @@ export function upgradeScale(level: number): UpgradeScale {
         plus: k * UPGRADE_MAGNITUDE_MIN,
     };
 }
+
+/**
+ * THE SPELL STEP — a Spell's PAID line EXILEs, so it pays one more step than
+ * the card would as a plain discard card (T, 2026-10-24). Built on top of the
+ * card's own upgrade level, so an upgraded Spell stays a step ahead.
+ */
+export interface SpellPaidScale {
+    /** A MAGNITUDE payoff (or a cap on one), one step past `u.m`. */
+    m(n: number): number;
+    /** An INTENSITY payoff (LEECH, Conviction, DRAW), one past `u.i`. */
+    i(n: number): number;
+    /** A weather number (INFERNO, BLIZZARD, STORM): upgrades grow it by
+     *  INTENSITY, and the Spell step adds a MAGNITUDE step on top. */
+    w(n: number): number;
+}
+
+/** The PAID-line scale of a Spell at upgrade scale `u`. */
+export function spellPaidScale(u: UpgradeScale): SpellPaidScale {
+    return {
+        m: n => magnitudeStep(u.m(n)),
+        i: n => (n > 0 ? u.i(n) + UPGRADE_INTENSITY_STEP : n),
+        w: n => magnitudeStep(u.i(n)),
+    };
+}

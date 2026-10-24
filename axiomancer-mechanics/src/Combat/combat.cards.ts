@@ -246,7 +246,8 @@ export function paidText(card: Card, lookupEffect: EffectLookup): string {
         const t = mechanicText(m);
         if (t) parts.push(t);
     }
-    return parts.join(' + ') || 'utility';
+    const body = parts.join(' + ') || 'utility';
+    return card.paidExile ? `${body}. EXILE` : body;
 }
 
 function rankLabel(card: Card): string {

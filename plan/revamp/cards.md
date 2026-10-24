@@ -166,7 +166,7 @@ A type is a lifecycle rule. Five types:
 |---|---|
 | **Attack** | Play, then discard |
 | **Skill** | Play, then discard |
-| **Spell** | Play, then discard |
+| **Spell** | FREE: play, then discard. PAID: play, then EXILE; the PAID line is stronger than a Skill's would be (D103, below) |
 | **Global** | Stays in play and affects the combat (either side; there is no separate on-you / on-foe type). FREE: in play for 3 turns. PAID: in play for the rest of combat. No cap. Copies stack as independent instances; each fires and expires on its own (T, 2026-10-14: experimental, may change). Removed only by a card effect |
 | **Curse** | A dead card that holds a hand slot until played. It cannot be scrapped. No extra discard cost and no "While in your hand:" effect for now; later Curses may add them. The first Curse (D71) is below |
 
@@ -176,6 +176,19 @@ discard pile and is gone for the rest of combat. It is the word for every
 so the weak line keeps the card and the big line spends it.
 
 Attack, Skill and Spell share a lifecycle and stay as separate types (T).
+
+**The Spell law (T, 2026-10-24, D103; amends the Spell row above).** Every
+Spell, in every lane, ends its PAID line with EXILE; its FREE line does not
+(for now). Because losing the card is a real cost, a Spell's PAID line is
+stronger than its skill counterpart: at least one upgrade step past the
+numbers it would carry as a plain discard card (a MAGNITUDE payoff +40%, at
+least +2, the weather numbers included; LEECH, Conviction and DRAW +1). The
+guard is `checkSpellLaw` in `axiomancer-mechanics/src/Cards/card-rules.ts`,
+run by the card-rules fence; each Spell records its pre-law PAID payoffs as
+`spellLawBaseline`. Phase SP1 put the 17 trial-lane Spells under the law. A
+Plain Word is held for T: under the law the grey deck wins the first Act 1
+door in 2% of greedy runs (20% before), under the LV1 floor, so it is the
+law's one pinned exemption until T rules (`card-rules.exemptions.json`).
 The old `oath`/`hex` literals are not reused; Global replaces both.
 
 **The hand carries over.** Cards you neither play nor discard stay in your

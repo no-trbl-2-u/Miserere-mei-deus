@@ -27,7 +27,7 @@
 import type { Card, CardAspect, CardRank, CardType } from '../types';
 import type { CardProgram, ProgramCtx, ProgramLine } from '../card-program.types';
 import type { CardLane, TrialSet } from '../card.lanes';
-import { upgradeScale, type UpgradeScale } from '../card-upgrade.scale';
+import { spellPaidScale, upgradeScale, type UpgradeScale } from '../card-upgrade.scale';
 
 const ADDED = '2026-10-11';
 
@@ -54,11 +54,22 @@ interface Entry {
     name: string;
     /** The card's rank when it is not Ash (1). Rarity, and so its upgrade limit, derives from it. */
     rank?: CardRank;
+    /** A Spell's PAID payoffs before the Spell law raised them (`Card.spellLawBaseline`). */
+    spellLaw?: Readonly<Record<string, number>>;
 }
 
 /** Blood for Blood's PAID X cap, and how much each upgrade raises it (T, 2026-10-23). */
 export const BLOOD_FOR_BLOOD_X_CAP = 12;
 export const BLOOD_FOR_BLOOD_X_CAP_STEP = 3;
+
+/** Name Your Price's PAID X cap: 15 as a discard card, 21 once the Spell law
+ *  raised it a MAGNITUDE step (T, 2026-10-24). */
+export const NAME_YOUR_PRICE_X_CAP = 21;
+
+/** A Spell's PAID scale: one step past the card's upgrade level (`spellPaidScale`). */
+const S = spellPaidScale;
+/** A Spell's PAID line EXILEs (the Spell law). */
+const EX: Partial<ProgramLine> = { exile: true };
 
 const SUB_LANE: Record<string, string> = { P: 'Payoff', E: 'Engine', M: 'Misc' };
 
@@ -76,15 +87,16 @@ const ENTRIES: Entry[] = [
     // Reworked by T 2026-10-14: the half-VITAE gate left it dead above half.
     // The PAID line's own SACRIFICE counts toward the VITAE lost this round,
     // and the heal is unscaled (an already-resolved number, like P-07b).
-    { slot: 'p-04c', name: 'Returned Twofold', type: 'spell', color: BLUE, program: u => ({
+    // The Spell law (T, 2026-10-24) raised "twice" to "three times".
+    { slot: 'p-04c', name: 'Returned Twofold', type: 'spell', color: BLUE, spellLaw: { heal: 20 }, program: u => ({
         free: L(`HEAL {heal:${u.m(10)}}.`, c => { c.heal(u.m(10)); }),
-        paid: L('SACRIFICE 10, HEAL twice the VITAE you lost this round. EXILE.', c => {
+        paid: L('SACRIFICE 10, HEAL three times the VITAE you lost this round. EXILE.', c => {
             c.sacrifice(10);
-            c.heal(2 * c.q.lostThisRound, { exact: true });
+            c.heal(3 * c.q.lostThisRound, { exact: true });
         }, { exile: true }) }) },
-    { slot: 'p-05b', name: 'Shared Wound', type: 'spell', color: PURPLE, program: u => ({
+    { slot: 'p-05b', name: 'Shared Wound', type: 'spell', color: PURPLE, spellLaw: { vulnerable: 50 }, program: u => ({
         free: L(`SACRIFICE 3, VULNERABLE +{vuln:${u.m(20)}}% for 1 turn.`, c => { c.sacrifice(3); c.vulnerable(u.m(20), 1); }),
-        paid: L(`SACRIFICE 6, VULNERABLE +{vuln:${u.m(50)}}% for 2 turns.`, c => { c.sacrifice(6); c.vulnerable(u.m(50), 2); }) }) },
+        paid: L(`SACRIFICE 6, VULNERABLE +{vuln:${S(u).m(50)}}% for 2 turns. EXILE.`, c => { c.sacrifice(6); c.vulnerable(S(u).m(50), 2); }, EX) }) },
     { slot: 'p-06d', name: 'What Is Owed', type: 'skill', color: PURPLE, program: u => ({
         free: L(`GUARD {guard:${u.m(3)}}.`, c => { c.guard(u.m(3)); }),
         paid: L(`LEECH 1 per 10 VITAE missing (max ${u.i(8)}).`, c => { c.leech(Math.min(u.i(8), Math.floor(c.q.missing / 10))); }) }) },
@@ -94,17 +106,17 @@ const ENTRIES: Entry[] = [
     { slot: 'p-08d', name: 'Binding Vow', type: 'skill', color: PURPLE, program: u => ({
         free: L(`SACRIFICE 2, gain ${u.i(2)} Conviction.`, c => { c.sacrifice(2); c.conviction(u.i(2)); }),
         paid: L('TETHER 3. SACRIFICE 4.', c => { c.tether(3); c.sacrifice(4); }) }) },
-    { slot: 'p-09b', name: 'Uneven Trade', type: 'spell', color: RED, program: u => ({
+    { slot: 'p-09b', name: 'Uneven Trade', type: 'spell', color: RED, spellLaw: { foeLoses: 12, vulnerable: 25 }, program: u => ({
         free: L(`SACRIFICE 4; the foe loses ${u.m(6)} VITAE.`, c => { c.sacrifice(4); c.foeLoses(u.m(6)); }),
-        paid: L(`SACRIFICE 8; the foe loses ${u.m(12)} VITAE, VULNERABLE +{vuln:${u.m(25)}}% for 1 turn.`, c => { c.sacrifice(8); c.foeLoses(u.m(12)); c.vulnerable(u.m(25), 1); }) }) },
+        paid: L(`SACRIFICE 8; the foe loses ${S(u).m(12)} VITAE, VULNERABLE +{vuln:${S(u).m(25)}}% for 1 turn. EXILE.`, c => { c.sacrifice(8); c.foeLoses(S(u).m(12)); c.vulnerable(S(u).m(25), 1); }, EX) }) },
     { slot: 'p-10c', name: 'Callus', type: 'global', color: RED, program: u => ({
         global: { trigger: 'sac', text: `GUARD ${nPlus(u)}.`, paidDelta: `DEAL ${nPlus(u)} instead.`,
             free: (c, n) => { c.guard(n + u.plus); }, paid: (c, n) => { c.deal(n + u.plus); } } }) },
 
     // ── ENGINE: helps you trigger SACRIFICE ──────────────────────────────────
-    { slot: 'e-01n', name: 'Bloodletting', type: 'spell', color: BLUE, program: u => ({
+    { slot: 'e-01n', name: 'Bloodletting', type: 'spell', color: BLUE, spellLaw: { conviction: 4 }, program: u => ({
         free: L(`SACRIFICE 3, gain ${u.i(2)} Conviction.`, c => { c.sacrifice(3); c.conviction(u.i(2)); }),
-        paid: L(`SACRIFICE 6, gain ${u.i(4)} Conviction.`, c => { c.sacrifice(6); c.conviction(u.i(4)); }) }) },
+        paid: L(`SACRIFICE 6, gain ${S(u).i(4)} Conviction. EXILE.`, c => { c.sacrifice(6); c.conviction(S(u).i(4)); }, EX) }) },
     // No payoff number: SACRIFICE and TETHER are costs, so an upgrade
     // changes nothing here (Phase UP1b leaves this card to T).
     { slot: 'e-02d', name: 'Pinpricks', type: 'skill', color: PURPLE, program: () => ({
@@ -113,18 +125,18 @@ const ENTRIES: Entry[] = [
     { slot: 'e-03d', name: 'Slow Drip', type: 'global', color: PURPLE, program: u => ({
         global: { trigger: 'turn', text: `SACRIFICE 2, LEECH {leech:${u.i(1)}}.`,
             free: c => { c.sacrifice(2); c.leech(u.i(1)); }, paid: c => { c.sacrifice(2); c.leech(u.i(1)); } } }) },
-    { slot: 'e-04c', name: 'Remission', type: 'spell', color: BLUE, program: u => ({
+    { slot: 'e-04c', name: 'Remission', type: 'spell', color: BLUE, spellLaw: { conviction: 1 }, program: u => ({
         free: L(`GUARD {guard:${u.m(3)}}.`, c => { c.guard(u.m(3)); }),
-        paid: L(`WAIVE your next SACRIFICE this turn. Gain ${u.i(1)} Conviction.`, c => { c.sacModifier({ kind: 'next-free', count: 1 }); c.conviction(u.i(1)); }) }) },
+        paid: L(`WAIVE your next SACRIFICE this turn. Gain ${S(u).i(1)} Conviction. EXILE.`, c => { c.sacModifier({ kind: 'next-free', count: 1 }); c.conviction(S(u).i(1)); }, EX) }) },
     { slot: 'e-05n', name: 'Open Vein', type: 'skill', color: PURPLE, program: u => ({
         free: L('TETHER 2, SACRIFICE 2.', c => { c.tether(2); c.sacrifice(2); }),
         paid: L(`TETHER 3, SACRIFICE 4, LEECH {leech:${u.i(2)}}.`, c => { c.tether(3); c.sacrifice(4); c.leech(u.i(2)); }) }) },
     { slot: 'e-06b', name: 'Double-Edged', type: 'attack', color: RED, program: u => ({
         free: L(`DEAL {deal:${u.m(6)}}, then SACRIFICE 2.`, c => { c.deal(u.m(6)); c.sacrifice(2); }),
         paid: L(`DEAL {deal:${u.m(9)}}, twice; SACRIFICE 2 after each.`, c => { c.deal(u.m(9)); c.sacrifice(2); c.deal(u.m(9)); c.sacrifice(2); }) }) },
-    { slot: 'e-07b', name: 'Raised Stakes', type: 'spell', color: BLUE, program: u => ({
+    { slot: 'e-07b', name: 'Raised Stakes', type: 'spell', color: BLUE, spellLaw: { conviction: 2 }, program: u => ({
         free: L('Your next SACRIFICE this turn is doubled (its cost and its payoffs).', c => { c.sacModifier({ kind: 'next-double' }); }),
-        paid: L(`Same, and gain ${u.i(2)} Conviction.`, c => { c.sacModifier({ kind: 'next-double' }); c.conviction(u.i(2)); }) }) },
+        paid: L(`Same, and gain ${S(u).i(2)} Conviction. EXILE.`, c => { c.sacModifier({ kind: 'next-double' }); c.conviction(S(u).i(2)); }, EX) }) },
     // The library's first rare (Phase UP1c): Skull, three upgrades. FREE grows
     // by the scale. PAID by T's ruling (2026-10-23): X's cap rises by 3 per
     // upgrade (12, 15, 18, 21; the one cost an upgrade may grow) and the third
@@ -140,10 +152,12 @@ const ENTRIES: Entry[] = [
     { slot: 'e-09n', name: 'Crimson Pact', type: 'global', color: RED, program: u => ({
         global: { trigger: 'sac', text: `your next DEAL this turn deals +${nPlus(u)}.`,
             free: (c, n) => { c.empowerNextDeal(n + u.plus); }, paid: (c, n) => { c.empowerNextDeal(n + u.plus); } } }) },
-    // No payoff number, as Pinpricks.
-    { slot: 'e-10d', name: 'Name Your Price', type: 'spell', color: PURPLE, program: () => ({
+    // No payoff number an upgrade grows, as Pinpricks. The Spell law raised
+    // the X cap the TETHER reads its damage from, 15 to 21 (as Blood for
+    // Blood's cap grows); an upgrade still leaves it alone.
+    { slot: 'e-10d', name: 'Name Your Price', type: 'spell', color: PURPLE, spellLaw: { sacrificeX: 15 }, program: () => ({
         free: L('TETHER 1. SACRIFICE 2.', c => { c.tether(1); c.sacrifice(2); }),
-        paid: L('TETHER 1. SACRIFICE any amount (max 15).', c => { c.tether(1); c.sacrificeX(15); }) }) },
+        paid: L(`TETHER 1. SACRIFICE any amount (max ${NAME_YOUR_PRICE_X_CAP}). EXILE.`, c => { c.tether(1); c.sacrificeX(NAME_YOUR_PRICE_X_CAP); }, EX) }) },
 
     // ── MISC: related utility ────────────────────────────────────────────────
     { slot: 'm-01d', name: 'Siphon', type: 'skill', color: PURPLE, program: u => ({
@@ -164,18 +178,18 @@ const ENTRIES: Entry[] = [
     { slot: 'm-06c', name: 'Not Yet', type: 'skill', color: BLUE, program: u => ({
         free: L(`HEAL {heal:${u.m(2)}}.`, c => { c.heal(u.m(2)); }),
         paid: L(`This turn, damage cannot take you below 1 VITAE; HEAL {heal:${u.m(5)}} next turn. EXILE.`, c => { c.deathWard(); c.healNextTurn(u.m(5)); }, { exile: true }) }) },
-    { slot: 'm-07a', name: 'Feeding Mark', type: 'spell', color: PURPLE, program: u => ({
+    { slot: 'm-07a', name: 'Feeding Mark', type: 'spell', color: PURPLE, spellLaw: { vulnerable: 25, drain: 2 }, program: u => ({
         free: L(`VULNERABLE +{vuln:${u.m(10)}}% for 1 turn.`, c => { c.vulnerable(u.m(10), 1); }),
-        paid: L(`VULNERABLE +{vuln:${u.m(25)}}% for 2 turns; HEAL {heal:${u.m(2)}} each time you damage the foe while it lasts.`, c => { c.vulnerable(u.m(25), 2); c.drain(u.m(2), 2); }) }) },
+        paid: L(`VULNERABLE +{vuln:${S(u).m(25)}}% for 2 turns; HEAL {heal:${S(u).m(2)}} each time you damage the foe while it lasts. EXILE.`, c => { c.vulnerable(S(u).m(25), 2); c.drain(S(u).m(2), 2); }, EX) }) },
     { slot: 'm-08d', name: 'Nothing Wasted', type: 'global', color: PURPLE, program: u => ({
         global: { trigger: 'sac', text: `LEECH {leech:${u.i(1)}}.`,
             free: c => { c.leech(u.i(1)); }, paid: c => { c.leech(u.i(1)); } } }) },
     { slot: 'm-09a', name: 'Brimming', type: 'skill', color: BLUE, program: u => ({
         free: L(`HEAL {heal:${u.m(4)}}; healing past max VITAE becomes GUARD.`, c => { c.heal(u.m(4), { overflowToGuard: true }); }),
         paid: L(`HEAL {heal:${u.m(10)}}; healing past max VITAE becomes GUARD.`, c => { c.heal(u.m(10), { overflowToGuard: true }); }) }) },
-    { slot: 'm-10a', name: 'Repaid in Kind', type: 'spell', color: RED, program: u => ({
+    { slot: 'm-10a', name: 'Repaid in Kind', type: 'spell', color: RED, spellLaw: { foeLoses: 15 }, program: u => ({
         free: L(`The foe loses VITAE equal to the damage you took last turn (max ${u.m(5)}).`, c => { c.foeLoses(Math.min(u.m(5), c.q.takenLastTurn)); }),
-        paid: L(`Same, max ${u.m(15)}.`, c => { c.foeLoses(Math.min(u.m(15), c.q.takenLastTurn)); }) }) },
+        paid: L(`Same, max ${S(u).m(15)}. EXILE.`, c => { c.foeLoses(Math.min(S(u).m(15), c.q.takenLastTurn)); }, EX) }) },
 ];
 
 function toCard(e: Entry): Card {
@@ -189,6 +203,7 @@ function toCard(e: Entry): Card {
         targetType: e.color === BLUE ? 'self' : 'enemy',
         program: e.program(upgradeScale(0)),
         programAt: e.program,
+        ...(e.spellLaw ? { spellLawBaseline: e.spellLaw } : {}),
         addedIn: ADDED,
         tags: ['blood-price', 'trial'],
     };
