@@ -1,0 +1,11 @@
+{
+  "report": "card-usage",
+  "build": "rep1234",
+  "card": null,
+  "fights": 2,
+  "cards": [
+    { "cardId": "strike", "fightsInDeck": 2, "drawn": 1, "played": 2, "free": 1, "paid": 1, "held": 0, "fizzled": 1, "offered": 0, "picked": 0, "skipped": 0, "removed": 0 },
+    { "cardId": "spark", "fightsInDeck": 1, "drawn": 1, "played": 0, "free": 0, "paid": 0, "held": 1, "fizzled": 0, "offered": 2, "picked": 0, "skipped": 2, "removed": 0 },
+    { "cardId": "ember", "fightsInDeck": 0, "drawn": 0, "played": 0, "free": 0, "paid": 0, "held": 0, "fizzled": 0, "offered": 2, "picked": 1, "skipped": 1, "removed": 0 }
+  ]
+}

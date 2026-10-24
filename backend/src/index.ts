@@ -1,5 +1,5 @@
 /**
- * miserere-api: the dev Worker (phases BE1a, BE2a, BV1a, BV2a).
+ * miserere-api: the dev Worker (phases BE1a, BE2a, BE2f, BV1a, BV2a).
  *
  *   POST /v1/puzzle-attempts           store one ended attempt        -> 201 { id, receivedAt }
  *   GET  /v1/puzzle-attempts[?layout=] the stored rows, newest first  -> 200 { attempts }
@@ -7,6 +7,8 @@
  *   GET  /v1/fights[?enemy=]           the stored fights, newest first -> 200 { fights }
  *   POST /v1/deck-events               store one deck change          -> 201 { id, receivedAt }
  *   GET  /v1/deck-events[?card=]       the stored changes, newest first -> 200 { deckEvents }
+ *   GET  /v1/reports/<name>[?build=][&card=]
+ *                                      a fixed play-log report         -> 200 { report, ... }
  *   POST /v1/ballot-verdicts           store one ballot save or verdict -> 201 { id, receivedAt }
  *   GET  /v1/ballot-verdicts[?ballot=][&status=]
  *                                      the stored rows, newest first  -> 200 { ballotVerdicts }
@@ -20,6 +22,10 @@
  * (the default when a post leaves it out). The verdict in force for a ballot
  * is its newest `final` row, `?ballot=<id>&status=final`; a `draft` is
  * progress, never a verdict. A `status=` other than those two is a 400.
+ *
+ * The reports are `card-usage` and `card-gaps` (`reports.ts`); their SQL is
+ * fixed on the Worker and the query string only binds values. Another name is
+ * a 404 and any method but GET a 405.
  *
  * The ballot routes alone are called from a browser page on another origin
  * (the card-ledger ballots, `plan/card-ledger/ballot-kit.js`, phase BV1b):
@@ -48,6 +54,7 @@ import { insertDeckEvent, listDeckEvents } from './deck-events';
 import type { Env } from './env';
 import { insertFight, listFights } from './fights';
 import { error, json, readJsonBody } from './http';
+import { REPORTS_PATH_PREFIX, isReportName, runReport } from './reports';
 
 /** One path's two methods. `post` gets a parsed body already under the route's byte cap. */
 interface Route {
@@ -144,9 +151,23 @@ async function handle(route: Route, request: Request, url: URL, env: Env): Promi
     return error(405, 'method not allowed', undefined, { Allow: 'GET, POST' });
 }
 
+/** `GET /v1/reports/<name>`: token first, then the name, then the method. */
+async function handleReport(request: Request, url: URL, env: Env): Promise<Response> {
+    if (!isAuthorized(request, env.PUZZLE_API_TOKEN)) {
+        return error(401, 'unauthorized', undefined, { 'WWW-Authenticate': 'Bearer' });
+    }
+    const name = url.pathname.slice(REPORTS_PATH_PREFIX.length);
+    if (!isReportName(name)) return error(404, 'not found', [`report: expected card-usage or card-gaps, got ${JSON.stringify(name)}`]);
+    if (request.method !== 'GET') return error(405, 'method not allowed', undefined, { Allow: 'GET' });
+    const build = url.searchParams.get('build') || null;
+    const card = url.searchParams.get('card') || null;
+    return json(await runReport(name, env, { build, card }));
+}
+
 export default {
     async fetch(request: Request, env: Env): Promise<Response> {
         const url = new URL(request.url);
+        if (url.pathname.startsWith(REPORTS_PATH_PREFIX)) return handleReport(request, url, env);
         const route = Object.hasOwn(ROUTES, url.pathname) ? ROUTES[url.pathname] : undefined;
         if (!route) return error(404, 'not found');
         if (!route.cors) return handle(route, request, url, env);

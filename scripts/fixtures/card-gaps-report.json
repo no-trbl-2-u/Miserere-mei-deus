@@ -1,0 +1,11 @@
+{
+  "report": "card-gaps",
+  "build": null,
+  "fights": 2,
+  "threats": [{ "enemyId": "gutter-wretch", "threat": "Gnaw", "overwhelmed": 1, "fights": 1 }],
+  "unspentDice": [
+    { "enemyId": "gutter-wretch", "color": "body", "rolled": 2, "unspent": 1 },
+    { "enemyId": "gutter-wretch", "color": "wild", "rolled": 1, "unspent": 1 }
+  ],
+  "defeats": []
+}
