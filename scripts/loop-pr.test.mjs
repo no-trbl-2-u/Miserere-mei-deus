@@ -14,13 +14,15 @@
 //   node --test scripts/loop-pr.test.mjs
 
 import assert from 'node:assert/strict'
+import { execFileSync } from 'node:child_process'
 import fs from 'node:fs'
+import os from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
 import { fileURLToPath } from 'node:url'
 
 import { parseCloseTrailers } from './loop-issue.mjs'
-import { hasMarker, isUnionPath, keepCount, unionMerge } from './pr-resolve.mjs'
+import { hasMarker, isUnionPath, keepCount, MERGE_DRIVERS, registerMergeDrivers, unionMerge } from './pr-resolve.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const read = (rel) => fs.readFileSync(path.join(ROOT, rel), 'utf8')
@@ -103,6 +105,24 @@ test('pr-resolve runs Claude only on a dispatched run, never on push', () => {
 })
 
 // --- nothing in the loop merges, auto-merges or force-pushes a PR -----------
+
+test('pr-resolve registers every merge driver .gitattributes names, as the SessionStart hook does', () => {
+  const named = [...read('.gitattributes').matchAll(/\bmerge=(\w+)/g)].map((m) => m[1])
+  const settings = read('.claude/settings.json')
+  for (const key of new Set(named)) {
+    const d = MERGE_DRIVERS.find((x) => x.key === key)
+    assert.ok(d, `pr-resolve registers merge.${key}`)
+    assert.ok(settings.includes(`merge.${key}.driver '${d.driver}'`), `merge.${key}.driver matches the hook`)
+  }
+  // Registered before the merge it settles, not only in a Claude session.
+  assert.match(code(read('scripts/pr-resolve.mjs')), /function mergeMain\(branch\) \{\n\s*registerMergeDrivers\(\)/)
+  const repo = fs.mkdtempSync(path.join(os.tmpdir(), 'pr-resolve-drivers-'))
+  execFileSync('git', ['init', '-q'], { cwd: repo })
+  registerMergeDrivers(repo)
+  for (const d of MERGE_DRIVERS) {
+    assert.equal(execFileSync('git', ['config', `merge.${d.key}.driver`], { cwd: repo, encoding: 'utf8' }).trim(), d.driver)
+  }
+})
 
 test('no workflow but pr-review\'s merge job merges or auto-merges, and none force-pushes (D95)', () => {
   for (const f of fs.readdirSync(path.join(ROOT, WF)).filter((f) => f.endsWith('.yml'))) {
