@@ -20,19 +20,11 @@
  * CONFIRM. Back, swipe, and Android hardware-back all route there (the screen
  * commits on unmount): leaving keeps the item.
  *
- * ## Why the inventory is reordered after an EQUIP
+ * ## Worn state
  *
- * Worn-state has two representations that must agree: the engine's
- * `Character.equipment` loadout, and the positional convention every
- * inventory-driven client reads (`wornPerSlot` — the first
- * `SLOT_CAPACITY[slot]` equipment items per slot, in inventory order).
- * `grantItem` appends the clone to the END of the inventory, so a granted
- * relic that the loadout now wears can sit outside the worn window and the
- * SATCHEL would draw the displaced piece as still worn. Expressing the
- * loadout in inventory order is the CLIENT's convention (documented on
- * `Items/equipped.ts`), which is why the reordering lives here and not in the
- * engine — `state/actions.ts`'s own `equipItemAction` / `unequipItemAction`
- * do the same thing for the inventory screen.
+ * `grantItem` wears an EQUIP into `Character.equipment`, the one record of
+ * what is worn; the satchel and dock read that loadout, so nothing here
+ * reorders the inventory. A CONFIRM leaves the item carried and unworn.
  */
 
 import {
@@ -45,9 +37,7 @@ import {
     FIRST_NODE_RELIC_ID,
 } from '@mechanics';
 import type {
-    Character,
     Equipment,
-    EquipmentSlot,
     GameState,
     GrantOutcome,
     Item,
@@ -156,61 +146,6 @@ export function offerFirstNodeRelicAction(store: AppStore): boolean {
 }
 
 // ---------------------------------------------------------------------------
-// Worn-window reconciliation
-// ---------------------------------------------------------------------------
-
-/**
- * Reorder `player.inventory` so the positional worn convention reports exactly
- * the pieces the engine loadout wears.
- *
- * Within each equipment slot the loadout's members come first, in loadout
- * order, followed by the benched peers in their existing relative order. Every
- * inventory POSITION keeps its slot, so non-equipment rows and the overall
- * shape of the sack are untouched — only equipment of the same slot permutes
- * among the positions it already occupied.
- *
- * A duplicate id (two copies of one relic row) counts as worn for both copies;
- * `wornPerSlot` caps the window at the slot capacity regardless, so the worst
- * case is a cosmetic ordering, never a stat drift.
- */
-function reconcileWornWindow(player: Character): Character {
-    const loadout = player.equipment;
-    const wornIds: Record<EquipmentSlot, readonly string[]> = {
-        weapon: loadout.weapon ? [loadout.weapon.id] : [],
-        armor: loadout.armor ? [loadout.armor.id] : [],
-        accessory: loadout.accessories.map((a) => a.id),
-    };
-
-    const bySlot = new Map<EquipmentSlot, Item[]>();
-    for (const item of player.inventory) {
-        if (!isEquipment(item)) continue;
-        const list = bySlot.get(item.slot);
-        if (list === undefined) bySlot.set(item.slot, [item]);
-        else list.push(item);
-    }
-    if (bySlot.size === 0) return player;
-
-    for (const [slot, list] of bySlot) {
-        const ids = wornIds[slot];
-        const worn: Item[] = [];
-        const bench: Item[] = [];
-        for (const it of list) (ids.includes(it.id) ? worn : bench).push(it);
-        worn.sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
-        bySlot.set(slot, [...worn, ...bench]);
-    }
-
-    const cursor = new Map<EquipmentSlot, number>();
-    const inventory = player.inventory.map((item) => {
-        if (!isEquipment(item)) return item;
-        const at = cursor.get(item.slot) ?? 0;
-        cursor.set(item.slot, at + 1);
-        return bySlot.get(item.slot)?.[at] ?? item;
-    });
-
-    return { ...player, inventory };
-}
-
-// ---------------------------------------------------------------------------
 // Committing
 // ---------------------------------------------------------------------------
 
@@ -266,7 +201,7 @@ export function commitItemRewardAction(
         ...(head.replaceIndex === undefined ? {} : { replaceIndex: head.replaceIndex }),
     });
 
-    const player = equip ? reconcileWornWindow(result.character) : result.character;
+    const player = result.character;
     const rest = queue.slice(1);
 
     const patch: Record<string, unknown> = {

@@ -24,7 +24,7 @@ import {
     createMapState,
     equipItem as engineEquipItem,
     unequipItem as engineUnequipItem,
-    wornPerSlot,
+    displacedBy,
     SLOT_CAPACITY,
     getDialogueNode,
     getMapDefinition,
@@ -59,6 +59,7 @@ import {
 
 import { COMBAT_CARDS } from '@/state/selectors/combat-cards';
 import { resolveWareItem } from '@/state/presenters/village.engine';
+import { findOwnedEquipment, isWornId, wornInSlot } from '@/state/presenters/loadout';
 import { EMPTY_EVENT_SLICE, EMPTY_LABYRINTH_SLICE, type AppStore } from './store';
 import {
     abandonHazardAction,
@@ -253,19 +254,16 @@ export interface AppActions {
      */
     useItem: (itemId: string) => UseItemResult;
     /**
-     * Equip an item: the engine folds its stats into the loadout and the
-     * inventory is reordered so it leads its slot peers (the worn window,
-     * `wornPerSlot`). Refuses with a toast when every accessory position is
-     * already worn. No-op when the item isn't equipment.
+     * Equip an item: the engine folds its stat line into `player.equipment`
+     * and wears its signature. When every position of its slot is worn, the
+     * last-worn piece comes off to make room (it stays in the satchel). No-op
+     * when the item isn't equipment or is already worn.
      */
     equipItem: (itemId: string) => void;
     /**
-     * The swap counterpart to equip. Under mobile's "the first
-     * `SLOT_CAPACITY[slot]` items per slot are worn" convention, unequip
-     * moves the target to the END of its slot peers in inventory so a
-     * benched peer scrolls into the worn window. When the slot holds no
-     * more items than its capacity the action is a no-op (the convention
-     * can't express "wearing fewer than are carried").
+     * Take a worn item off `player.equipment`, leaving its position empty.
+     * Wearing fewer pieces than are carried is legal, and so is wearing none.
+     * The item stays in the satchel. No-op when the item isn't worn.
      */
     unequipItem: (itemId: string) => void;
     /** Discard an item — wraps `removeItem` with a quest-item guard. */
@@ -297,11 +295,10 @@ export interface AppActions {
     /**
      * Dev-only GET ALL RELICS. Adds every relic in the engine's
      * `relicLibrary` the player does not already own (carried or worn) to
-     * the inventory. Nothing worn is displaced. The engine loadout then
-     * follows the dock's worn window (`wornPerSlot`: the first three
-     * trinkets carried are the worn ones), so a relic that lands in a free
-     * trinket position is worn with its stat line and signature, and one
-     * past the third trinket stays in the satchel.
+     * the inventory. Nothing worn is displaced: each new relic is worn into
+     * `player.equipment` while its slot has a free position (stat line and
+     * signature with it), and one past the last free position stays in the
+     * satchel, unworn.
      */
     grantAllRelics: () => GrantAllRelicsResult;
     /**
@@ -903,114 +900,40 @@ function pushToast(store: AppStore, text: string): void {
 
 function equipItemAction(store: AppStore, itemId: string): void {
     const state = store.getState();
-    const inventory: readonly Item[] = state.player.inventory;
-    const target = inventory.find((i: Item) => i.id === itemId);
+    const target = state.player.inventory.find((i: Item) => i.id === itemId);
     if (!target || !isEquipment(target)) return;
-
     const equip = target as Equipment;
-    const targetSlot = equip.slot;
+    if (isWornId(state.player.equipment, equip.id)) return;
 
-    // Accessory-full guard: with all 3 accessory positions worn and
-    // the target not already among them, refuse rather than silently displace.
-    let updatedPlayer = state.player;
-    if (targetSlot === 'accessory') {
-        const wornAcc = wornPerSlot(inventory).get('accessory') ?? [];
-        const alreadyWorn = wornAcc.some((a) => a.id === equip.id);
-        const inLoadout = state.player.equipment.accessories.some((a) => a.id === equip.id);
-        if (!alreadyWorn) {
-            if (wornAcc.length >= SLOT_CAPACITY.accessory) {
-                pushToast(store, 'Accessory slots full — remove one first.');
-                return;
-            }
-            // EQUIPMENT STATS FIX: engine equipItem folds stat bonuses / passives.
-            updatedPlayer = engineEquipItem(state.player, equip);
-        } else if (!inLoadout) {
-            // Shown worn (inside the worn window) but missing from the engine
-            // loadout: wear it for real so its stat line and signature apply.
-            updatedPlayer = engineEquipItem(state.player, equip);
-        }
-        // alreadyWorn and in the loadout → reorder only (no duplicate entry).
-    } else {
-        // weapon / armor replace in place.
-        updatedPlayer = engineEquipItem(state.player, equip);
-    }
-
-    // Build the reordered inventory:
-    //   1. The target item (now first in its slot).
-    //   2. All other items, preserving their relative order, with the
-    //      old "first in slot" item demoted behind the target.
-    const targetIndex = inventory.indexOf(target);
-    const rest = inventory.filter((_: Item, idx: number) => idx !== targetIndex);
-    const slotPeers: Item[] = [];
-    const nonSlot: Item[] = [];
-    for (const it of rest) {
-        if (isEquipment(it) && (it as Equipment).slot === targetSlot) {
-            slotPeers.push(it);
-        } else {
-            nonSlot.push(it);
-        }
-    }
-    const next: Item[] = [target, ...slotPeers, ...nonSlot];
-
-    store.setState({ player: { ...updatedPlayer, inventory: next } });
+    // The engine folds the stat line and wears the piece. A full accessory row
+    // gives up its last-worn piece (the one the modal names as REPLACE); it
+    // stays in the satchel, since worn pieces are carried too.
+    const { index } = displacedBy(state.player, equip);
+    const nextPlayer = engineEquipItem(
+        state.player,
+        equip,
+        index === null ? undefined : { replaceIndex: index },
+    );
+    if (nextPlayer === state.player) return;
+    store.setState({ player: nextPlayer });
 }
 
 function unequipItemAction(store: AppStore, itemId: string): void {
-    // Mobile "worn" convention: the first `SLOT_CAPACITY[slot]` equipment items
-    // per slot are worn (capacity-aware `wornPerSlot`). To "unequip"
-    // the target under that convention, move it to the END of its slot peers so
-    // a benched peer scrolls into the worn window. When a slot has no more items
-    // than its capacity the move can't reduce the worn set, so it's a no-op —
-    // the inventory convention can't express "wearing fewer than are carried".
+    // Taking a piece off leaves its position empty: a body may wear fewer
+    // relics than it carries, or none. The piece stays in the satchel.
     const state = store.getState();
-    const inventory: readonly Item[] = state.player.inventory;
-    const target = inventory.find((i: Item) => i.id === itemId);
-    if (!target || !isEquipment(target)) return;
-    const targetSlot = (target as Equipment).slot;
+    const loadout = state.player.equipment;
+    if (!isWornId(loadout, itemId)) return;
+    const target = findOwnedEquipment(state.player, itemId);
+    if (target === null) return;
 
-    const slotPeerCount = inventory.filter(
-        (it: Item) => isEquipment(it) && (it as Equipment).slot === targetSlot,
-    ).length;
-    if (slotPeerCount <= SLOT_CAPACITY[targetSlot]) return;
-
-    // EQUIPMENT STATS FIX: engine unequipItem strips the piece's stat bonuses.
-    // For an accessory, pass the loadout index so the right position is freed.
     const accessoryIndex =
-        targetSlot === 'accessory'
-            ? state.player.equipment.accessories.findIndex((a) => a.id === target.id)
+        target.slot === 'accessory'
+            ? loadout.accessories.findIndex((a) => a.id === itemId)
             : undefined;
-    let updatedPlayer = engineUnequipItem(state.player, targetSlot, accessoryIndex);
-
-    // Rebuild inventory:
-    //   1. All non-target, non-slot items in their original order.
-    //   2. All slot peers (except target) in their original order
-    //      — the formerly-benched peer scrolls into the worn window.
-    //   3. Target appended at the end of its slot peers (definitively NOT worn).
-    const slotPeersExceptTarget: Item[] = [];
-    const nonSlot: Item[] = [];
-    for (const it of inventory) {
-        if (it.id === target.id) continue;
-        if (isEquipment(it) && (it as Equipment).slot === targetSlot) {
-            slotPeersExceptTarget.push(it);
-        } else {
-            nonSlot.push(it);
-        }
-    }
-    const next: Item[] = [...nonSlot, ...slotPeersExceptTarget, target];
-
-    // Reconcile the engine loadout with the new worn window: an accessory that
-    // scrolled into the worn set but isn't in the loadout gets equipped so its
-    // stats fold in (keeps the loadout and the inventory-worn view consistent).
-    if (targetSlot === 'accessory') {
-        const loadoutAccIds = new Set(updatedPlayer.equipment.accessories.map((a) => a.id));
-        for (const acc of wornPerSlot(next).get('accessory') ?? []) {
-            if (!loadoutAccIds.has(acc.id)) {
-                updatedPlayer = engineEquipItem(updatedPlayer, acc);
-            }
-        }
-    }
-
-    store.setState({ player: { ...updatedPlayer, inventory: next } });
+    const nextPlayer = engineUnequipItem(state.player, target.slot, accessoryIndex);
+    if (nextPlayer === state.player) return;
+    store.setState({ player: nextPlayer });
 }
 
 function dropItemAction(store: AppStore, itemId: string): void {
@@ -1325,20 +1248,6 @@ function populateAllItemsAction(store: AppStore): PopulateAllItemsResult {
     return { itemsAdded, breakdown: { equipment, unique, consumable } };
 }
 
-/**
- * Wears every accessory in the dock's worn window that the engine loadout
- * lacks, so the loadout (stat lines, signatures) matches what the dock shows.
- */
-function wearWornWindow(player: Character, inventory: readonly Item[]): Character {
-    let next = player;
-    for (const acc of wornPerSlot(inventory).get('accessory') ?? []) {
-        if (next.equipment.accessories.some((a) => a.id === acc.id)) continue;
-        if (next.equipment.accessories.length >= SLOT_CAPACITY.accessory) break;
-        next = engineEquipItem(next, acc);
-    }
-    return next;
-}
-
 function grantAllRelicsAction(store: AppStore): GrantAllRelicsResult {
     const state = store.getState();
     const player = state.player;
@@ -1358,8 +1267,16 @@ function grantAllRelicsAction(store: AppStore): GrantAllRelicsResult {
     if (added.length === 0) {
         return { added, worn: player.equipment.accessories.map((a) => a.id) };
     }
-    const nextPlayer = wearWornWindow({ ...player, inventory }, inventory);
-    store.setState({ player: { ...nextPlayer, inventory } });
+    // Wear each new relic while its slot has a free position; nothing worn is
+    // displaced, so a relic past the last free position stays in the satchel.
+    let nextPlayer: Character = { ...player, inventory };
+    for (const id of added) {
+        const relic = inventory.find((i: Item) => i.id === id);
+        if (!relic || !isEquipment(relic)) continue;
+        if (wornInSlot(nextPlayer.equipment, relic.slot).length >= SLOT_CAPACITY[relic.slot]) continue;
+        nextPlayer = engineEquipItem(nextPlayer, relic);
+    }
+    store.setState({ player: nextPlayer });
     return { added, worn: nextPlayer.equipment.accessories.map((a) => a.id) };
 }
 

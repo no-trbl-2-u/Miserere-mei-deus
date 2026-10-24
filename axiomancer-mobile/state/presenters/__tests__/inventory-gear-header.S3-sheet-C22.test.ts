@@ -55,13 +55,17 @@ function makeStore(items: readonly Item[]) {
         currency: state.player.currency,
         knownCards: state.player.knownCards,
         inventory: [...items],
+        // Five on the body: one weapon, the armor, three trinkets.
+        equipment: items.filter((i): i is Equipment => WORN_IDS.includes(i.id)),
     });
     store.setState({ player: { ...state.player, ...clean } });
     return store;
 }
 
 /** Eight pieces of equipment; slot capacity (1 weapon, 1 armor, 3 trinkets)
- *  puts five of them on the body and leaves three in the sack. */
+ *  lets five of them be worn (`WORN_IDS`) and leaves three in the sack. */
+const WORN_IDS: readonly string[] = ['blade-a', 'mail-a', 'ring-a', 'ring-b', 'ring-c'];
+
 const EIGHT_PIECES: readonly Item[] = [
     gear('blade-a', 'Long Blade', 'weapon'),
     gear('blade-b', 'Bone Dagger', 'weapon'),

@@ -23,6 +23,10 @@
  *                             cost, and EXACT in-game effect text (the engine's
  *                             own `description`; no added flare).
  *   - `flavor`              — the item's engine `description`, shown last.
+ *   - `action`              — the one loadout action the card offers: UNEQUIP
+ *                             for a worn piece, EQUIP (or EQUIP · REPLACE
+ *                             <NAME>) for an unworn one, read from
+ *                             `player.equipment`.
  *
  * PURITY
  * ------
@@ -32,14 +36,13 @@
  */
 
 import {
-    isEquipment,
     getSignatureSkill,
     type Equipment,
     type GameStore,
-    type Item,
 } from '@mechanics';
 
 import { freezeViewModel } from './freeze';
+import { findOwnedEquipment, loadoutActionFor } from './loadout';
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -85,6 +88,7 @@ export interface EquipmentSignatureInfo {
  * @property statLines - Stat modifiers the item grants. May be empty.
  * @property signature - Granted signature, or `null` for non-relic equipment.
  * @property flavor    - The item's engine description (flavour prose).
+ * @property action    - The loadout action the card's button performs.
  */
 export interface EquipmentDetailViewModel {
     itemId: string;
@@ -94,6 +98,18 @@ export interface EquipmentDetailViewModel {
     statLines: readonly EquipmentStatLine[];
     signature: EquipmentSignatureInfo | null;
     flavor: string;
+    action: EquipmentDetailAction;
+}
+
+/**
+ * The card's loadout button.
+ *
+ * @property mode  - `'equip'` for an unworn piece, `'unequip'` for a worn one.
+ * @property label - `'EQUIP'`, `'EQUIP · REPLACE <NAME>'` or `'UNEQUIP'`.
+ */
+export interface EquipmentDetailAction {
+    mode: 'equip' | 'unequip';
+    label: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -205,16 +221,18 @@ function buildSignature(eq: Equipment): EquipmentSignatureInfo | null {
  *
  * @param state  - The game store.
  * @param itemId - Engine id of the item to describe.
- * @returns The frozen view-model, or `null` when the id is absent from the
- *          inventory or names a non-equipment item (the card is equipment-only).
+ * @returns The frozen view-model, or `null` when the player owns no equipment
+ *          piece with this id, carried or worn (the card is equipment-only).
  */
 export function selectEquipmentDetailViewModel(
     state: GameStore,
     itemId: string,
 ): EquipmentDetailViewModel | null {
-    const inventory: readonly Item[] = state.player?.inventory ?? [];
-    const item = inventory.find((i: Item) => i.id === itemId);
-    if (!item || !isEquipment(item)) return null;
+    const player = state.player;
+    if (!player) return null;
+    const item = findOwnedEquipment(player, itemId);
+    if (item === null) return null;
+    const { mode, label } = loadoutActionFor(player, item);
 
     return freezeViewModel({
         itemId: item.id,
@@ -224,5 +242,6 @@ export function selectEquipmentDetailViewModel(
         statLines: buildStatLines(item) as readonly EquipmentStatLine[],
         signature: buildSignature(item),
         flavor: item.description,
+        action: { mode, label },
     });
 }

@@ -1,6 +1,9 @@
 /**
  * EquipmentDetailModal — the long-press card for a worn equipment slot.
  *
+ * The card's one action button equips or takes off the piece it describes
+ * (`vm.action`, read from `player.equipment`); CLOSE sits beside it.
+ *
  * WHY
  * ---
  * Equipment swaps announce which signature skill is gained or lost by name, but
@@ -51,16 +54,25 @@ interface EquipmentDetailModalProps {
     vm: EquipmentDetailViewModel | null;
     /** Dismiss handler — fired by the backdrop, the CLOSE button, and Android back. */
     onClose: () => void;
+    /** Wear the piece; the button shows when `vm.action.mode` is `'equip'`. */
+    onEquip?: (itemId: string) => void;
+    /** Take the piece off; the button shows when `vm.action.mode` is `'unequip'`. */
+    onUnequip?: (itemId: string) => void;
 }
 
 /**
  * Render the equipment detail card.
  *
- * @param vm      - Pre-formatted item detail, or `null` (modal stays hidden).
- * @param onClose - Called whenever the player dismisses the card.
+ * @param vm        - Pre-formatted item detail, or `null` (modal stays hidden).
+ * @param onClose   - Called whenever the player dismisses the card.
+ * @param onEquip   - Called with the item id when the player wears it.
+ * @param onUnequip - Called with the item id when the player takes it off.
  */
-export function EquipmentDetailModal({ vm, onClose }: EquipmentDetailModalProps) {
+export function EquipmentDetailModal({ vm, onClose, onEquip, onUnequip }: EquipmentDetailModalProps) {
     const styles = useStyles();
+    const onAction = vm === null
+        ? undefined
+        : vm.action.mode === 'equip' ? onEquip : onUnequip;
 
     return (
         <Modal
@@ -125,15 +137,28 @@ export function EquipmentDetailModal({ vm, onClose }: EquipmentDetailModalProps)
                                 </Text>
                             )}
 
-                            <TouchableOpacity
-                                accessibilityRole="button"
-                                accessibilityLabel="Close item details"
-                                onPress={onClose}
-                                style={styles.closeBtn}
-                                testID="equip-detail-close"
-                            >
-                                <Text style={styles.closeText}>CLOSE</Text>
-                            </TouchableOpacity>
+                            <View style={styles.buttonRow}>
+                                {onAction !== undefined && (
+                                    <TouchableOpacity
+                                        accessibilityRole="button"
+                                        accessibilityLabel={`${vm.action.label} ${vm.name}`}
+                                        onPress={() => onAction(vm.itemId)}
+                                        style={styles.closeBtn}
+                                        testID={`equip-detail-${vm.action.mode}`}
+                                    >
+                                        <Text style={styles.closeText}>{vm.action.label}</Text>
+                                    </TouchableOpacity>
+                                )}
+                                <TouchableOpacity
+                                    accessibilityRole="button"
+                                    accessibilityLabel="Close item details"
+                                    onPress={onClose}
+                                    style={styles.closeBtn}
+                                    testID="equip-detail-close"
+                                >
+                                    <Text style={styles.closeText}>CLOSE</Text>
+                                </TouchableOpacity>
+                            </View>
                         </ScrollView>
                     )}
                 </Pressable>
@@ -266,9 +291,14 @@ const useStyles = makeStyles((AXM) => ({
         opacity: 0.85,
         marginTop: 14,
     },
-    closeBtn: {
-        alignSelf: 'flex-end',
+    buttonRow: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'flex-end',
+        gap: 8,
         marginTop: 14,
+    },
+    closeBtn: {
         minHeight: 40,
         paddingHorizontal: 18,
         alignItems: 'center',

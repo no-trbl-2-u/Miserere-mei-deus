@@ -6,10 +6,9 @@
  * row with a `quantity` (Q3=A), and the screen renders an empty-state
  * placeholder when the player carries nothing (Q4=A).
  *
- * The engine ships no `equipped` flag — by convention shared with
- * `selectCharacterViewModel`, the *first* equipment item per slot is
- * treated as worn. `equipItem` (in `state/actions.ts`) reorders the
- * inventory to make a target item that "first".
+ * Worn state is `player.equipment`, the loadout combat reads (shared with
+ * `selectCharacterViewModel` through `./loadout`); inventory order means
+ * nothing, so a carried relic may be unworn.
  */
 
 import {
@@ -17,6 +16,7 @@ import {
     isEquipment,
     isMaterial,
     isQuestItem,
+    type Character,
     type Equipment,
     type GameStore,
     type Item,
@@ -24,7 +24,8 @@ import {
 
 import { freezeViewModel } from './freeze';
 import { computeEquipDelta, type EquipDelta } from '@mechanics';
-import { wornPerSlot, SLOT_CAPACITY, getSignatureSkill } from '@mechanics';
+import { SLOT_CAPACITY, getSignatureSkill } from '@mechanics';
+import { isWornId, replacedByEquip } from './loadout';
 
 export type { EquipDelta } from '@mechanics';
 
@@ -374,8 +375,8 @@ function computeReplacePreview(
 /**
  * Convert the raw engine inventory into display rows. Per Q3=A, items
  * with the same `id` collapse into a single row whose `quantity`
- * reflects the stack size. The *first* equipment item per slot is
- * marked `equipped` to match `selectCharacterViewModel`. Also
+ * reflects the stack size. An equipment row is `equipped` when
+ * `player.equipment` wears it (inventory order means nothing). Also
  * computes `replacePreview` for every non-equipped
  * equipment row whose slot has an equipped sibling.
  */
@@ -383,20 +384,14 @@ function buildRows(state: GameStore): InventoryItemRow[] {
     const inventory = state.player?.inventory ?? [];
     const rowsById = new Map<string, InventoryItemRow>();
     const order: string[] = [];
-    // Worn-state convention lives in the engine's capacity-aware `wornPerSlot`.
-    // Compute once; all consumers in this function read from it.
-    const wornBySlot = wornPerSlot(inventory);
-    const isWorn = (item: Equipment): boolean =>
-        (wornBySlot.get(item.slot) ?? []).some((w) => w.id === item.id);
+    // Worn means worn in `player.equipment`, the loadout combat reads.
+    const player = state.player;
+    const isWorn = (item: Equipment): boolean => isWornId(player.equipment, item.id);
     // The worn sibling a candidate is compared against: itself when already worn
     // (→ unequip delta), null when a position is free (→ equip), or the piece it
     // would displace when the slot is at capacity (→ swap).
-    const siblingFor = (item: Equipment): Equipment | null => {
-        const worn = wornBySlot.get(item.slot) ?? [];
-        if (worn.some((w) => w.id === item.id)) return item;
-        if (worn.length < SLOT_CAPACITY[item.slot]) return null;
-        return worn[worn.length - 1];
-    };
+    const siblingFor = (item: Equipment): Equipment | null =>
+        isWorn(item) ? item : replacedByEquip(player, item);
     // First-seen engine item per ID — used to grab the StatModifier
     // array on non-equipped equipment when we compute the preview.
     const itemById = new Map<string, Equipment>();
@@ -516,45 +511,17 @@ function computeBurden(rows: readonly InventoryItemRow[]): number {
     return rows.reduce((acc, r) => acc + r.quantity, 0);
 }
 
-/**
- * Resolve the item-row's `sub` field back to the engine slot key.
- * `subFor` produces title-case slot labels ("Weapon" / "Armor" / "Trinket")
- * from `SLOT_LABELS`; reverse the mapping here so the dock can build
- * its `worn` map without re-importing the engine's Equipment type at
- * the screen.
- */
-const SUB_TO_SLOT: Record<string, Equipment['slot']> = Object.fromEntries(
-    (Object.entries(SLOT_LABELS) as ReadonlyArray<[Equipment['slot'], string]>).map(
-        ([slot, sub]) => [sub, slot],
-    ),
-) as Record<string, Equipment['slot']>;
-
 function buildEquipmentDock(
-    rows: readonly InventoryItemRow[],
+    player: Character,
     selectedSlot: Equipment['slot'] | null,
 ): EquipmentDockViewModel {
-    // Bucket the worn rows by slot kind. Weapon/armor keep the first worn row;
-    // accessories collect up to `SLOT_CAPACITY.accessory` in worn order so each
-    // of the 3 positions renders its own dock row (worn window per the
-    // `wornPerSlot` convention already caps `r.equipped` at capacity).
-    let weapon: InventoryItemRow | null = null;
-    let armor: InventoryItemRow | null = null;
-    const accessories: InventoryItemRow[] = [];
-    for (const r of rows) {
-        if (r.category !== 'equipment' || !r.equipped || r.sub === null) continue;
-        const slot = SUB_TO_SLOT[r.sub];
-        if (slot === 'weapon') {
-            if (weapon === null) weapon = r;
-        } else if (slot === 'armor') {
-            if (armor === null) armor = r;
-        } else if (slot === 'accessory') {
-            if (accessories.length < SLOT_CAPACITY.accessory) accessories.push(r);
-        }
-    }
-    const toItem = (row: InventoryItemRow | null): EquipmentDockSlot['item'] =>
-        row === null
+    // The dock draws `player.equipment` itself: one row each for the weapon
+    // and the armor, then one per accessory position in loadout order.
+    const { weapon, armor, accessories } = player.equipment;
+    const toItem = (piece: Equipment | null | undefined): EquipmentDockSlot['item'] =>
+        piece == null
             ? null
-            : { id: row.id, name: row.name, sub: row.sub, grantsSignature: row.grantsSignature };
+            : { id: piece.id, name: piece.name, sub: subFor(piece), grantsSignature: grantsSignatureName(piece) };
     const slots: EquipmentDockSlot[] = [
         { key: 'weapon', label: DOCK_SLOT_TITLE.weapon, item: toItem(weapon) },
         { key: 'armor', label: DOCK_SLOT_TITLE.armor, item: toItem(armor) },
@@ -616,6 +583,6 @@ export function selectInventoryViewModel(
         emptyMessage: EMPTY_MESSAGE,
         sectionHeader: SECTION_HEADER,
         categoryHeaders: CATEGORY_HEADERS,
-        equipmentDock: buildEquipmentDock(rows, selectedSlot),
+        equipmentDock: buildEquipmentDock(state.player, selectedSlot),
     });
 }

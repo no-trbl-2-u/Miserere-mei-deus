@@ -24,11 +24,19 @@ afterEach(() => {
     jest.restoreAllMocks();
 });
 
-function makeStore(inventory: readonly (Consumable | Equipment)[]) {
+/**
+ * A store whose player carries `inventory` and wears `worn` (the
+ * `player.equipment` loadout, the one record of what is worn).
+ */
+function makeStore(
+    inventory: readonly (Consumable | Equipment)[],
+    worn: readonly Equipment[] = [],
+) {
     const base = createCharacter({
         name: 'Pilgrim',
         level: 1,
         baseStats: { heart: 4, body: 4, mind: 4 },
+        equipment: [...worn],
     });
     const player = { ...base, health: 5, inventory: [...inventory] };
     return createGameStore(createMemoryAdapter(), { player });
@@ -222,15 +230,8 @@ describe('selectItemModalViewModel: the desperation band (Phase 96)', () => {
 
 describe('selectItemModalViewModel: equipment preview (Q5)', () => {
     it('reports mode "equip" and an EQUIP · REPLACE label when there is a worn sibling (Phase 36)', () => {
-        const store = makeStore([blade]);
-        // First-in-slot is `blade` (worn). Add a second weapon — the
-        // modal for it should show the replace-label form.
         const second: Equipment = { ...blade, id: 'second', name: 'Whittled Stick' };
-        const player = {
-            ...store.getState().player,
-            inventory: [blade, second],
-        };
-        store.setState({ player });
+        const store = makeStore([blade, second], [blade]);
 
         const vm = selectItemModalViewModel(store.getState(), 'second')!;
 
@@ -240,104 +241,66 @@ describe('selectItemModalViewModel: equipment preview (Q5)', () => {
     });
 
     it('reports a plain EQUIP label + null replacingName when the slot is empty (Phase 36)', () => {
-        // No equipment in inventory at all → bare slot.
-        const armor: Equipment = {
-            id: 'cuirass',
-            name: 'Brass Cuirass',
-            description: 'Heavy.',
-            category: 'equipment',
-            slot: 'armor',
-            
-            
-        };
-        // armor is first-in-slot for `armor` so it's worn. To exercise
-        // the "bare slot, would equip" path we need an unworn item in
-        // a slot with no equipped sibling — that means a second item
-        // in a NEW slot, with no first-of-slot ahead of it. But the
-        // first item per slot is always equipped... so use two-slot
-        // inventory: blade (worn in weapon), unequipped armor in armor
-        // slot has no equipped sibling yet... wait, that armor is also
-        // first-in-slot. The only path to "would equip, no sibling" is
-        // a second item in a slot whose first item isn't present.
-        // Practically: ship a sword that's NOT the first-of-slot when
-        // no other weapon is worn. That's impossible with the
-        // first-in-slot=worn convention. So this case is structurally
-        // unreachable through normal inventory state — the path lives
-        // for completeness of the modal contract (selectInventoryView
-        // mirror) but realistically the equipped-sibling case is the
-        // only one a player hits at runtime. Skip the test body — the
-        // remaining cases pin the equip and equip-replace paths.
-        const store = makeStore([armor]);
-        const vm = selectItemModalViewModel(store.getState(), 'cuirass')!;
-        // cuirass is first-in-armor-slot → worn. confirmLabel is WORN.
-        // (See above for why the empty-slot would-equip path is
-        // unreachable through normal flow.)
-        expect(vm.confirmLabel).toBe('WORN');
-        expect(vm.replacingName).toBeNull();
-    });
-
-    it('reports "WORN" + null replacingName when the target is already first-in-slot AND sole item in slot', () => {
-        // Sole-item-in-slot falls back to mode='view' confirmLabel='WORN' — there's
-        // no other peer to swap to, so unequip is a no-op under
-        // the mobile first-per-slot convention.
+        // Carried but not worn: inventory order means nothing.
         const store = makeStore([blade]);
 
         const vm = selectItemModalViewModel(store.getState(), 'long-blade')!;
 
-        expect(vm.mode).toBe('view');
-        expect(vm.confirmLabel).toBe('WORN');
+        expect(vm.mode).toBe('equip');
+        expect(vm.confirmLabel).toBe('EQUIP');
         expect(vm.replacingName).toBeNull();
     });
 
-    it('reports mode "unequip" + UNEQUIP confirm label when target is worn AND has a slot peer (user-jot 2026-05-22)', () => {
-        // Worn weapon + a peer: tapping the worn one offers
-        // UNEQUIP · WEAR <peer-name>. After the action layer
-        // moves the worn item to the back of its slot peers,
-        // the peer becomes the new first-in-slot worn item.
-        const peer: Equipment = {
-            id: 'short-blade',
-            name: 'Short Blade',
-            description: 'Cracked at the hilt.',
-            category: 'equipment',
-            slot: 'weapon',
-            
-            
-        };
-        const store = makeStore([blade, peer]);
+    it('reports mode "unequip" + UNEQUIP for the sole worn item in its slot (EQ1 A2)', () => {
+        // Taking it off leaves the slot empty; that is legal.
+        const store = makeStore([blade], [blade]);
 
         const vm = selectItemModalViewModel(store.getState(), 'long-blade')!;
 
         expect(vm.mode).toBe('unequip');
-        expect(vm.confirmLabel).toContain('UNEQUIP');
-        expect(vm.confirmLabel).toContain('SHORT BLADE');
+        expect(vm.confirmLabel).toBe('UNEQUIP');
         expect(vm.confirmPrompt).toMatch(/stop wearing/i);
+        expect(vm.replacingName).toBeNull();
     });
 
-    it('reports mode "equip" + EQUIP confirm label when target is the peer (not worn)', () => {
-        // Same fixture as above; tap the peer (not worn) →
-        // standard equip flow with EQUIP · REPLACE Long Blade.
+    it('reads worn state from player.equipment, not inventory order (EQ1 A1)', () => {
         const peer: Equipment = {
             id: 'short-blade',
             name: 'Short Blade',
             description: 'Cracked at the hilt.',
             category: 'equipment',
             slot: 'weapon',
-            
-            
         };
-        const store = makeStore([blade, peer]);
+        // The worn blade sits SECOND in the inventory.
+        const store = makeStore([peer, blade], [blade]);
 
-        const vm = selectItemModalViewModel(store.getState(), 'short-blade')!;
+        expect(selectItemModalViewModel(store.getState(), 'long-blade')!.mode).toBe('unequip');
+        const peerVm = selectItemModalViewModel(store.getState(), 'short-blade')!;
+        expect(peerVm.mode).toBe('equip');
+        expect(peerVm.confirmLabel).toBe('EQUIP · REPLACE LONG BLADE');
+    });
 
+    it('a full accessory row offers EQUIP · REPLACE <the last-worn accessory> (EQ1 A2)', () => {
+        const trinket = (id: string, name: string): Equipment => ({
+            id, name, description: '', category: 'equipment', slot: 'accessory',
+        });
+        const worn = [trinket('t1', 'First'), trinket('t2', 'Second'), trinket('t3', 'Third')];
+        const spare = trinket('t4', 'Spare');
+        const store = makeStore([...worn, spare], worn);
+
+        const vm = selectItemModalViewModel(store.getState(), 't4')!;
         expect(vm.mode).toBe('equip');
-        expect(vm.confirmLabel).toContain('EQUIP · REPLACE');
-        expect(vm.confirmLabel).toContain('LONG BLADE');
+        expect(vm.confirmLabel).toBe('EQUIP · REPLACE THIRD');
+
+        // Two worn: a free position, plain EQUIP.
+        const roomy = makeStore([...worn, spare], worn.slice(0, 2));
+        expect(selectItemModalViewModel(roomy.getState(), 't4')!.confirmLabel).toBe('EQUIP');
     });
 
     it('exposes a stat delta table for the modal to render', () => {
         // `blade` is worn; tapping the stat-bearing peer previews the
         // swap, which changes at least one stat.
-        const store = makeStore([blade, runeBlade]);
+        const store = makeStore([blade, runeBlade], [blade]);
 
         const vm = selectItemModalViewModel(store.getState(), 'rune-blade')!;
 
@@ -371,7 +334,7 @@ describe('selectItemModalViewModel: equipment preview (Q5)', () => {
     // empty stat table.
     it('shows no stat rows when the equip changes no stats', () => {
         const twin: Equipment = { ...blade, id: 'twin-blade', name: 'Twin Blade' };
-        const store = makeStore([blade, twin]);
+        const store = makeStore([blade, twin], [blade]);
 
         const vm = selectItemModalViewModel(store.getState(), 'twin-blade')!;
 
@@ -411,7 +374,7 @@ describe('selectItemModalViewModel: equipment preview (Q5)', () => {
     it('rounds a fractional stat delta to one decimal', () => {
         // Worn plain blade + fractional peer: tapping the peer previews the
         // swap, whose max-health delta must read at one decimal.
-        const store = makeStore([blade, fractionBlade]);
+        const store = makeStore([blade, fractionBlade], [blade]);
 
         const vm = selectItemModalViewModel(store.getState(), 'fraction-blade')!;
 
@@ -427,7 +390,7 @@ describe('selectItemModalViewModel: equipment preview (Q5)', () => {
     // signature gained/lost; plain gear (no affixes / passive effects) surfaces
     // no non-stat effect lines.
     it('surfaces no non-stat effect lines for plain gear (no affixes / passives)', () => {
-        const store = makeStore([affixBladeWorn, affixBladeCandidate]);
+        const store = makeStore([affixBladeWorn, affixBladeCandidate], [affixBladeWorn]);
 
         const vm = selectItemModalViewModel(store.getState(), 'affix-candidate')!;
 

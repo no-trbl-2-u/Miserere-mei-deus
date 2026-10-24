@@ -200,14 +200,16 @@ export function selectFirstNodeRelicMoment(
 }
 
 /**
- * `selectEquipmentDetailViewModel` reads `state.player.inventory`, and the
+ * `selectEquipmentDetailViewModel` reads `state.player`, and the
  * pending item is deliberately NOT there yet (the grant is what CONFIRM and
  * EQUIP commit). Handing it a one-item projection reuses that presenter
  * verbatim instead of forking a second copy of the stat/signature/slot
  * formatting — the rule about where those strings come from stays in one file.
  */
 function detailOf(item: Equipment) {
-    const projection = { player: { inventory: [item as Item] } } as unknown as GameStore;
+    const projection = {
+        player: { inventory: [item as Item], equipment: { weapon: null, armor: null, accessories: [] } },
+    } as unknown as GameStore;
     return selectEquipmentDetailViewModel(projection, item.id);
 }
 

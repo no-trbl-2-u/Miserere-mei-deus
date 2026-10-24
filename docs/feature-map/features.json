@@ -343,7 +343,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/inventory/SlotBanner.test.tsx, axiomancer-mobile/components/inventory/__tests__/EquipmentDock.S3-sheet-C11.test.tsx, axiomancer-mobile/components/inventory/__tests__/EquipmentDock.portrait-box.test.tsx, ..."
+        "source": "axiomancer-mobile/components/inventory/SlotBanner.test.tsx, axiomancer-mobile/components/inventory/__tests__/EquipmentDetailModal.test.tsx, axiomancer-mobile/components/inventory/__tests__/EquipmentDock.S3-sheet-C11.test.tsx, ..."
       },
       "needsPitch": {
         "value": true,
@@ -2430,6 +2430,12 @@
     {
       "kind": "coupling",
       "from": "route:(tabs)/inventory",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/loadout.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/inventory",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/actions.ts"
     },
@@ -2516,6 +2522,12 @@
       "from": "route:(tabs)/inventory",
       "to": "area:Items",
       "file": "axiomancer-mobile/state/presenters/inventory.modal.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/inventory",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/loadout.ts"
     },
     {
       "kind": "coupling",
@@ -4026,6 +4038,12 @@
     {
       "kind": "coupling",
       "from": "route:item-reward",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/loadout.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:item-reward",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
     },
@@ -4076,6 +4094,12 @@
       "from": "route:item-reward",
       "to": "area:Items",
       "file": "axiomancer-mobile/state/presenters/item-reward.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:item-reward",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/loadout.ts"
     },
     {
       "kind": "coupling",

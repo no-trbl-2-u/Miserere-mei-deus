@@ -18,7 +18,6 @@ import {
     createCharacter,
     getConsumableById,
     getRelicById,
-    wornPerSlot,
     FIRST_NODE_RELIC_FLAG,
     FIRST_NODE_RELIC_ID,
     FIXTURE_ARMOR,
@@ -41,6 +40,7 @@ import {
     selectItemRewardVM,
     ITEM_REWARD_FREE_SLOT_NOTE,
 } from '@/state/presenters/item-reward.engine';
+import { selectInventoryViewModel } from '@/state/presenters/inventory.engine';
 import { createAppStore, type AppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 
@@ -259,17 +259,37 @@ describe('committing the reward', () => {
         expect(after.inventory.map((i) => i.id)).toContain(displacedBefore.id);
     });
 
-    it('EQUIP keeps the positional worn window agreeing with the engine loadout', () => {
+    it('EQUIP: the satchel shows exactly what the engine loadout wears', () => {
         const store = makeStore();
+        const displaced = player(store).equipment.accessories[SLOT_CAPACITY.accessory - 1]!;
         offerItemRewardAction(store, relic(BENCHED_ACCESSORY));
         equipItemRewardAction(store);
 
         const after = player(store);
-        const wornAccessories = (wornPerSlot(after.inventory).get('accessory') ?? []).map((a) => a.id);
-        expect([...wornAccessories].sort())
-            .toEqual([...after.equipment.accessories.map((a) => a.id)].sort());
+        const satchel = selectInventoryViewModel(store.getState(), {});
+        const wornRows = satchel.items
+            .filter((r) => r.category === 'equipment' && r.equipped)
+            .map((r) => r.id);
+        const loadoutIds = [
+            after.equipment.weapon?.id,
+            after.equipment.armor?.id,
+            ...after.equipment.accessories.map((a) => a.id),
+        ].filter((id): id is string => typeof id === 'string');
+        expect([...wornRows].sort()).toEqual([...loadoutIds].sort());
+        expect(wornRows).toContain(BENCHED_ACCESSORY);
         // The SATCHEL must not draw the displaced piece as still worn.
-        expect(wornAccessories).toContain(BENCHED_ACCESSORY);
+        expect(satchel.items.find((r) => r.id === displaced.id)?.equipped).toBe(false);
+    });
+
+    it('CONFIRM: the item arrives carried and unworn, and the satchel shows it unworn', () => {
+        const store = makeStore();
+        offerItemRewardAction(store, relic(BENCHED_ACCESSORY));
+        confirmItemRewardAction(store);
+
+        const after = player(store);
+        expect(after.equipment.accessories.map((a) => a.id)).not.toContain(BENCHED_ACCESSORY);
+        const row = selectInventoryViewModel(store.getState(), {}).items.find((r) => r.id === BENCHED_ACCESSORY);
+        expect(row?.equipped).toBe(false);
     });
 
     it('EQUIP on a weapon swap returns the old weapon to the satchel instead of dropping it', () => {
