@@ -28,7 +28,12 @@ card's colour. A new ballot is authored with the three colours in near-equal num
 
 ## Acceptance
 
-- **A1** A ballot candidate carries `color: 'body' | 'mind' | 'heart'` (or `'any'`). The ballot shell tints the card
+- **A0** One job-to-colour table, `JOB_COLORS` in `plan/card-ledger/ballot-kit.js` and printed in
+  `docs/lane-creator.md`: `hit` red (body), `wall` blue (mind), `heal` blue (mind), `utility` blue (mind),
+  `affliction` purple (heart), `colourless` grey (`any`). It is Blood Price's split written down, so every family
+  pitches the same job in the same colour (T, 2026-10-24: "even more important, it's consistent").
+- **A1** A ballot candidate carries `job` from that table, and its `color` is derived from the job, never typed by
+  hand (`body | mind | heart | any`). The ballot shell tints the card
   face by it (red, blue, purple, grey, each readable in light and dark), and the header reads
   `<Type> · <element> · <red|blue|purple> (<body|mind|heart>)`. A legend line names the four.
 - **A2** Each tab shows a live count of its kept cards per colour, and the page shows the family total, e.g.
@@ -36,7 +41,7 @@ card's colour. A new ballot is authored with the three colours in near-equal num
 - **A3** The Generate text prints each kept candidate's colour (`KEEP P-01b (red)`), and a slot note can overrule
   it in T's words ("make it blue"); nothing parses the note.
 - **A4** `scripts/ballot-kit.test.mjs` fails a ballot that is `open` in `BALLOTS` and has a candidate with no
-  `color`, and fails one where any colour's candidate count is more than 10% away from an equal share of the
+  `job` or a job outside `JOB_COLORS`, and fails one where any colour's candidate count is more than 10% away from an equal share of the
   coloured candidates (90 candidates: an equal share is 30, so each colour 27 to 33). `any` candidates are not counted.
 - **A5** `docs/lane-creator.md` step 3 and `plan/card-ledger/README.md` "Adding a ballot" say: pitch every
   candidate a colour by its job (red the hits, blue the walls, healing and utility, purple the afflictions, as
@@ -66,7 +71,8 @@ votes on colour as well as text without asking which colour a card would be.
 
 ## Decisions made upfront — DO NOT ASK
 
-- **Colour by job, not by keyword scaling.** INFERNO, CHILL and STORM have no scaling stat yet (T, 2026-10-24: "not
+- **Colour by job, not by keyword scaling** (T confirmed, 2026-10-24: "Yes, by job, so long as it's roughly evenly
+  divided and even more important, it's consistent"). INFERNO, CHILL and STORM have no scaling stat yet (T, 2026-10-24: "not
   sure yet"); Blood Price's own keywords were unscaled too, and its colours followed each card's job. A pitch never
   waits on a scaling ruling.
 - **Balance is checked across the candidates, shown across the keepers.** The author keeps the 90 near-equal (A4);
@@ -78,7 +84,8 @@ votes on colour as well as text without asking which colour a card would be.
 
 ## Tests matrix
 
-- Root (`node --test`): a fixture open ballot with an uncoloured candidate fails A4; one with 40/25/25 fails; one
+- Root (`node --test`): a fixture open ballot with a candidate missing `job` fails A4; every `JOB_COLORS` entry maps
+  to one of the four colours; one with 40/25/25 fails; one
   with 30/30/30 and one with 33/29/28 pass; a `closed` ballot is not checked.
 - Manual in the phase's Playwright run (evidence in the PR, not a gate): a coloured fixture ballot at 390 px, light
   and dark, tick three cards of different colours, the counts and the Generate text show them.
@@ -92,7 +99,7 @@ The root `npm test`; `node scripts/check-deadlines.mjs`.
 ```
 Phase BV3 — Every ballot candidate pitched in a colour
 
-Closes A1-A6 of plan/phases/phase_BV3_ballot_colours.md.
+Closes A0-A6 of plan/phases/phase_BV3_ballot_colours.md.
 <what changed>
 Verify: <commands and results>
 ```
