@@ -25,8 +25,9 @@ import { describe, it, expect } from 'vitest';
 
 import type { Card } from '../types';
 import { cardLibrary } from '../cards.library';
+import { upgradeCard } from '../card-upgrades';
 import {
-    checkCarrierRule, checkComplexityBudget, checkGlobalTemplate, checkScrapFloor,
+    checkCarrierRule, checkComplexityBudget, checkGlobalTemplate, checkScrapFloor, checkSpellLaw,
     parseAtlasKeywords, printedKeywords,
     type CardRuleId, type CardRuleViolation,
 } from '../card-rules';
@@ -74,6 +75,7 @@ function allViolations(cards: readonly Card[]): CardRuleViolation[] {
         ...checkScrapFloor(cards),
         ...checkGlobalTemplate(cards),
         ...checkCarrierRule({ cards, atlas: ATLAS, nonCardCarriers: NON_CARD_CARRIERS, barExempt: BAR_EXEMPT }),
+        ...checkSpellLaw(cards),
     ];
 }
 
@@ -119,7 +121,7 @@ describe('the card-rules fence reads real inputs', () => {
 
     it('every exemption row is well formed', () => {
         for (const e of EXEMPTIONS) {
-            expect(['complexity-budget', 'scrap-floor', 'global-template', 'carrier-rule']).toContain(e.rule);
+            expect(['complexity-budget', 'scrap-floor', 'global-template', 'carrier-rule', 'spell-law']).toContain(e.rule);
             expect(e.reason.length).toBeGreaterThan(0);
             expect(e.filed).toMatch(/^\d{4}-\d{2}-\d{2}$/);
         }
@@ -127,7 +129,7 @@ describe('the card-rules fence reads real inputs', () => {
     });
 });
 
-for (const rule of ['complexity-budget', 'scrap-floor', 'global-template', 'carrier-rule'] as const) {
+for (const rule of ['complexity-budget', 'scrap-floor', 'global-template', 'carrier-rule', 'spell-law'] as const) {
     describe(`rule: ${rule}`, () => {
         it('no card breaks it unless the fixture pins the break', () => {
             const fresh = LIVE.filter(v => v.rule === rule && !EXEMPT_KEYS.has(key(v)))
@@ -179,5 +181,52 @@ describe('each rule fires on a synthetic breaker', () => {
         expect(printedKeywords(card)).toContain('SMITE');
         const v = checkCarrierRule({ cards: [...cardLibrary, card], atlas: ATLAS, nonCardCarriers: NON_CARD_CARRIERS, barExempt: BAR_EXEMPT });
         expect(v.map(x => x.id)).toContain('syn-carrier:SMITE');
+    });
+});
+
+// ── The Spell law over every lane, upgrades included ───────────────────────
+
+describe('the Spell law (T, 2026-10-24)', () => {
+    const spells = cardLibrary.filter(c => c.cardType === 'spell');
+    const held = new Set(EXEMPTIONS.filter(e => e.rule === 'spell-law').map(e => e.id));
+
+    it('reads every Spell: the grey Word and both trial lanes; only A Plain Word is held, for T', () => {
+        expect(spells.length).toBe(18);
+        expect([...held]).toEqual(['grey-word']);
+        expect(spells.some(c => c.tags?.includes('grey'))).toBe(true);
+        expect(spells.some(c => c.tags?.includes('blood-price'))).toBe(true);
+        expect(spells.some(c => c.tags?.includes('elementalist'))).toBe(true);
+    });
+
+    it('every upgraded Spell keeps EXILE on PAID and stays a step past its baseline', () => {
+        const ups: Card[] = [];
+        const lawful = spells.filter(c => !held.has(c.id));
+        for (const card of lawful) for (let c = upgradeCard(card); c; c = upgradeCard(c)) ups.push(c);
+        expect(ups.length).toBeGreaterThanOrEqual(lawful.length);
+        expect(checkSpellLaw(ups).map(v => `${v.id}: ${v.detail}`)).toEqual([]);
+    });
+
+    it('fires on a Spell whose PAID does not EXILE, whose FREE does, or whose PAID is not a step up', () => {
+        const spell: Card = { ...base, cardType: 'spell', spellLawBaseline: { guard: 5 } };
+        const noExile: Card = { ...spell, id: 'syn-no-exile', program: {
+            free: { text: 'GUARD 2.', run: c => { c.guard(2); } },
+            paid: { text: 'GUARD 7.', run: c => { c.guard(7); } },
+        } };
+        const freeExile: Card = { ...spell, id: 'syn-free-exile', program: {
+            free: { text: 'GUARD 2. EXILE.', run: c => { c.guard(2); }, exile: true },
+            paid: { text: 'GUARD 7. EXILE.', run: c => { c.guard(7); }, exile: true },
+        } };
+        const flat: Card = { ...spell, id: 'syn-flat', program: {
+            free: { text: 'GUARD 2.', run: c => { c.guard(2); } },
+            paid: { text: 'GUARD 6. EXILE.', run: c => { c.guard(6); }, exile: true },
+        } };
+        const plain: Card = { ...base, cardType: 'spell', id: 'syn-plain', specialMechanics: [{ kind: 'guard', amount: 7 }] };
+        const v = checkSpellLaw([noExile, freeExile, flat, plain]);
+        expect(v.map(x => x.id)).toEqual(['syn-no-exile', 'syn-free-exile', 'syn-flat', 'syn-plain']);
+        expect(v[0].detail).toContain('PAID does not EXILE');
+        expect(v[1].detail).toContain('FREE EXILEs');
+        expect(v[2].detail).toContain('needs at least 7');
+        expect(v[3].detail).toContain('PAID does not EXILE');
+        expect(v[3].detail).toContain('no spellLawBaseline');
     });
 });

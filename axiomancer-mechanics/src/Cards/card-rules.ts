@@ -23,14 +23,17 @@
  *   checkScrapFloor(cards)              a line that only gains 1 Conviction
  *   checkGlobalTemplate(cards)          trigger first, no duration, PAID only if it differs
  *   checkCarrierRule(input)             every atlas word carried; every printed word in the atlas
+ *   spellPaidPayoffs(card)              a Spell's applied PAID payoffs at the law's probe
+ *   checkSpellLaw(cards)                a Spell's PAID EXILEs, its FREE does not, its PAID is a step up
  */
 
 import type { Card, CardRank } from './types';
 import type { ProgramCtx, ProgramQuery } from './card-program.types';
 import { GLOBAL_TRIGGER_TEXT, programFaceText } from '../Combat/combat.cards';
+import { magnitudeStep, UPGRADE_INTENSITY_STEP } from './card-upgrade.scale';
 
 /** The rules this module checks; the exemptions fixture keys on these. */
-export type CardRuleId = 'complexity-budget' | 'scrap-floor' | 'global-template' | 'carrier-rule';
+export type CardRuleId = 'complexity-budget' | 'scrap-floor' | 'global-template' | 'carrier-rule' | 'spell-law';
 
 /** One break of one rule. `id` is a card id, an atlas word, or `cardId:WORD`. */
 export interface CardRuleViolation {
@@ -341,6 +344,113 @@ export function checkCarrierRule(input: CarrierRuleInput): CardRuleViolation[] {
     for (const [word, ids] of printers) {
         if (atlasWords.has(word)) continue;
         for (const id of ids) out.push({ rule: 'carrier-rule', id: `${id}:${word}`, detail: `prints ${word}, which has no atlas row` });
+    }
+    return out;
+}
+
+// ── The Spell law (T, 2026-10-24) ───────────────────────────────────────────
+
+/** The one fight state the Spell law measures PAID payoffs at: mid-fight, at
+ *  half VITAE, the weather at 4 on every element, so a line that reads the
+ *  fight applies a number well past the scale's +2 floor. */
+export const SPELL_LAW_PROBE: ProgramQuery = Object.freeze({
+    vitae: 40, maxVitae: 100, missing: 60, atHalf: true, takenLastTurn: 30, lostThisCombat: 60,
+    lostThisRound: 10, cursesInHand: 0, cursesInDiscard: 0,
+    foeInferno: 4, yourInferno: 4, blizzard: 4, storm: 4, frozen: false, elementsOnFoe: 3, handSize: 4,
+});
+
+/** The payoff verbs the law raises by a MAGNITUDE step (+40%, at least +2).
+ *  `stormTick` is a triggered STORM (the foe loses its STORM); `sacrificeX` is
+ *  the cap on an X SACRIFICE, the number a TETHER's damage is read from. */
+const SPELL_MAGNITUDE_VERBS: ReadonlySet<string> = new Set([
+    'deal', 'guard', 'heal', 'vulnerable', 'foeLoses', 'healNextTurn', 'drain',
+    'inferno', 'blizzard', 'storm', 'stormTick', 'sacrificeX',
+]);
+/** The payoff verbs the law raises by an INTENSITY step (+1). */
+const SPELL_INTENSITY_VERBS: ReadonlySet<string> = new Set(['leech', 'conviction', 'draw']);
+
+/** Verbs that read the fight and hand the number back, as the probe has it. */
+const PROBE_RETURNS: Readonly<Record<string, (q: ProgramQuery) => number>> = {
+    removeYourInferno: q => q.yourInferno,
+    moveYourInferno: q => q.yourInferno,
+    spendBlizzard: q => q.blizzard,
+};
+
+/** Sum per verb of what `run` applies at the probe. */
+function probePayoffs(run: (c: ProgramCtx) => void, q: ProgramQuery): Record<string, number> {
+    const out: Record<string, number> = {};
+    const add = (verb: string, n: number): void => { out[verb] = (out[verb] ?? 0) + n; };
+    const ctx = new Proxy({ q } as unknown as ProgramCtx, {
+        get(target, prop) {
+            if (prop === 'q') return target.q;
+            const verb = String(prop);
+            return (...args: unknown[]) => {
+                if (verb === 'triggerStorm') { add('stormTick', q.storm); return 0; }
+                if (PROBE_RETURNS[verb]) return PROBE_RETURNS[verb](q);
+                const n = typeof args[0] === 'number' ? args[0] : 0;
+                const plus = (args[1] as { plus?: number } | undefined)?.plus ?? 0;
+                if (SPELL_MAGNITUDE_VERBS.has(verb) || SPELL_INTENSITY_VERBS.has(verb)) add(verb, n + plus);
+                return n + plus;
+            };
+        },
+    });
+    run(ctx);
+    return out;
+}
+
+/**
+ * A Spell's PAID payoffs, verb to amount: a program card's PAID line run at
+ * {@link SPELL_LAW_PROBE}, or a plain card's PAID mechanics and statuses
+ * (VULNERABLE by its percent). Unscaled by stats.
+ */
+export function spellPaidPayoffs(card: Card): Record<string, number> {
+    if (card.program?.paid) return probePayoffs(card.program.paid.run, SPELL_LAW_PROBE);
+    const out: Record<string, number> = {};
+    for (const m of card.specialMechanics ?? []) out[m.kind] = (out[m.kind] ?? 0) + m.amount;
+    for (const e of card.combatEffects ?? []) {
+        const verb = effectWord(e.effectId).toLowerCase();
+        out[verb] = (out[verb] ?? 0) + (e.intensity ?? 0);
+    }
+    return out;
+}
+
+/** The least a Spell's PAID payoff may be, one step past its pre-law number. */
+export function spellLawFloor(verb: string, before: number): number {
+    if (SPELL_INTENSITY_VERBS.has(verb)) return before + UPGRADE_INTENSITY_STEP;
+    return magnitudeStep(before);
+}
+
+/**
+ * The Spell law (T, 2026-10-24): every Spell, in every lane,
+ *   - EXILEs on its PAID line (a program line's `exile`, a plain card's
+ *     `paidExile`), and never on its FREE line;
+ *   - carries `spellLawBaseline`, its PAID payoffs as a plain discard card,
+ *     and its PAID line applies at least one upgrade step past each of them
+ *     (MAGNITUDE +40% at least +2; LEECH, Conviction and DRAW +1). A payoff
+ *     the line adds on top is not judged. Costs are not payoffs.
+ */
+export function checkSpellLaw(cards: readonly Card[]): CardRuleViolation[] {
+    const out: CardRuleViolation[] = [];
+    for (const card of cards) {
+        if (card.cardType !== 'spell') continue;
+        const issues: string[] = [];
+        const p = card.program;
+        if (p?.global) issues.push('a Global program on a Spell');
+        const paidExiles = p ? !!p.paid?.exile : !!card.paidExile;
+        if (!paidExiles) issues.push('PAID does not EXILE');
+        if (p?.free?.exile) issues.push('FREE EXILEs');
+        const base = card.spellLawBaseline;
+        if (!base) {
+            issues.push('no spellLawBaseline: record its PAID payoffs as a plain discard card');
+        } else {
+            const now = spellPaidPayoffs(card);
+            for (const [verb, before] of Object.entries(base)) {
+                const floor = spellLawFloor(verb, before);
+                if ((now[verb] ?? 0) < floor) issues.push(`PAID ${verb} ${now[verb] ?? 0}, needs at least ${floor} (was ${before})`);
+            }
+            if (Object.keys(base).length === 0) issues.push('an empty spellLawBaseline: a Spell must have a PAID payoff to raise');
+        }
+        if (issues.length) out.push({ rule: 'spell-law', id: card.id, detail: issues.join('; ') });
     }
     return out;
 }

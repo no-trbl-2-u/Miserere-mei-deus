@@ -628,6 +628,20 @@ function discardEntry(state: CombatEncounterState, uid: string): CombatEncounter
     };
 }
 
+/** Removes a hand entry to the EXILE pile (a plain card's PAID play that
+ *  says EXILE). The pile lives on the program ledger, opened here when the
+ *  deck holds no program card. */
+function exileEntry(state: CombatEncounterState, uid: string): CombatEncounterState {
+    const entry = state.hand.find(h => h.uid === uid);
+    if (!entry) return state;
+    const ledger = state.program ?? initProgramLedger();
+    return {
+        ...state,
+        hand: state.hand.filter(h => h.uid !== uid),
+        program: { ...ledger, exiled: [...ledger.exiled, entry.cardId] },
+    };
+}
+
 // ── Shared rider/state helpers ───────────────────────────────────────────────
 
 /** The 'damage-instance' clock — the shared enemy-damage funnel: applies the
@@ -1078,7 +1092,12 @@ function playBottomAction(
         souls,
         spellsPlayedThisTurn: (state.spellsPlayedThisTurn ?? 0) + 1,
     };
-    next = discardEntry(next, uid);
+    if (sourceCard.paidExile) {
+        next = exileEntry(next, uid);
+        events.push({ kind: 'card-exiled', cardId: card.id });
+    } else {
+        next = discardEntry(next, uid);
+    }
     next = withLog(next, events);
     return checkImmediateOutcome(next, events);
 }
