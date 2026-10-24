@@ -57,6 +57,14 @@
 - conflicts: the "Bias" and "Last pass" headers at the top of each queue are the conflict magnet; they move to a tiny separate file either way.
 
 
+### [ ] [score 4.0] Server-side merges skip the lessons merge driver: check the merged tree before the merge job merges
+- proposed: 2026-10-24, `/ship-a-phase` BE2e retro (lessons at the 40-open cap, so filed here instead)
+- source signals: PRs #866 (EQ1b), #868 (EL1c) and #870 (BE2c) each bumped `hook-refusal-half-done` in `plan/lessons.md`. GitHub merged them server-side, where `scripts/lessons-merge.mjs` is never registered, so its line merge kept three copies of the row and root `npm test` (`check-lessons`) went red on `main` at 730af1c41. BE2e's PR folded them into one row.
+- rationale: the slug-merge driver only runs where a session registered it; the `pr-review.yml` merge job and the merge button never do, so every burst of loop PRs that bump one lesson lands a red `main`.
+- proposed scope: 1 small phase. Either the merge job updates the PR head from `main` with the driver registered (a local merge plus push) before it merges, or it runs `check-lessons` on GitHub's test-merge ref and holds the PR when it fails.
+- estimated phases: 1
+- conflicts: none. CI only; no game code, content, rule, card or keyword (D88).
+
 ### [ ] [score 4.0] Run verify-mechanics when a mobile file a mechanics test reads changes
 - proposed: 2026-10-23, `/ship-a-phase` UP1b retro (lessons at the 40-open cap, so filed here instead)
 - source signals: `trial-set-removal.engine.test.ts` scans `axiomancer-mobile/` for `bp-` ids, but `verify-mechanics.yml`'s `paths:` filter leaves out `axiomancer-mobile/**`. PR #796 (mobile art only) added `bp-` ids to `assets/images/cards/index.ts` and merged green, so `main` held a red mechanics test no run had seen. UP1b's PR #824 found it and fixed it.

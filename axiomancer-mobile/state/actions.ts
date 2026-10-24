@@ -148,6 +148,7 @@ import { getAporiaAct } from '@mechanics';
 import type { LabyrinthActId, LabyrinthBossOutcome } from '@mechanics';
 import { wrapActionsWithLogging } from './logging';
 import { endCombatOutcome, fightRecorder } from '@/lib/fightRecorder';
+import { deckEventPoster, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
 import { getMapLayout } from './exploration-maps';
 
 // ---------------------------------------------------------------------------
@@ -625,6 +626,23 @@ function recordFightStart(store: AppStore, enemy: Enemy, enemyHpMultiplier: numb
     fightRecorder.start({ enemyId: enemy.id, playerLevel: player.level, enemyHpMultiplier, vitaeStart: player.health });
 }
 
+/**
+ * The play log's run-end deck event (phase BE2e): the deck the run ended
+ * with, read before the engine's reset clears it. A no-op with no player
+ * loaded or the play-log gate shut.
+ */
+function recordRunEnd(store: AppStore): void {
+    const state = store.getState() as unknown as DeckEventState;
+    if (!state.player) return;
+    void deckEventPoster.post({
+        kind: 'run-end',
+        cardId: null,
+        offered: null,
+        deck: runDeck(state),
+        where: deckEventWhere(state, 'run-end'),
+    });
+}
+
 // ---------------------------------------------------------------------------
 // Action creators
 // ---------------------------------------------------------------------------
@@ -718,6 +736,7 @@ export function createAppActions(store: AppStore): AppActions {
             const engineStore = store.getState() as unknown as {
                 resetRun?: (o: { keepCharacter: boolean }) => unknown;
             };
+            recordRunEnd(store);
             engineStore.resetRun?.(opts);
             // A run reset regenerates the overworld (seating the player at
             // the starting node), so any in-flight Labyrinth visit is over.
