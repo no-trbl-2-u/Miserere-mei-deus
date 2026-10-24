@@ -1024,6 +1024,12 @@ satisfied for exactly these.)
 - The loop still never invents card, keyword or art content unprompted: `/expand` may only propose candidates, as for other content, and a proposal is never built until promoted.
 - Unchanged: `Potential Assets/` is a store, never a source (D96); a sprite sheet for an already-used enemy stays enhancement (D97). First use: a `/plot` phase renaming the Blood Price cards.
 
+**D103 — A Spell's PAID line exiles, and is stronger for it.** (T, attended, 2026-10-24; amends D69's Spell lifecycle. T: "It should be every spell, all lanes. That's what makes a spell a spell. However, they should be stronger than regular skills so make sure their numbers are higher than their skill counterparts. And set into law that: Spells always end their paid line with EXILE and are always stronger than their skill counterpart (since the exiling of the card is such a downside, we want to make sure it's worth it to pay for it and lose it). For now, their free line does not exile.")
+
+- Every Spell, in every lane (the grey starter's A Plain Word included), ends its PAID line with EXILE. Its FREE line plays and discards, for now.
+- A Spell's PAID line is stronger than its skill counterpart: at least one upgrade step (+40%, at least +2; +1 for INTENSITY payoffs) over what the same line would be on a plain discard card. A card-rules guard holds both halves.
+- Built by Phase SP1 (`plan/phases/phase_SP1_spell_law.md`).
+
 **D102 — The lane-creator v1 flow is official.** (T, attended, 2026-10-23. T: "I LOVE this process so far so should we make it official? This can be our lane-Creator v1 flow. V2 we can hold off on until we do this process a few more times and see how we can make it better and see if there's more room for automation.")
 
 - The process Blood Price went through and the Elementalist is going through is the lane-creator v1 flow, written down in `docs/lane-creator.md`: Session 0, slot pitches, a 90-candidate ballot on the phone (`axiomancer-ballots.pages.dev`), the verdicts read from D1, sims, revisions, and the trial set by `/plot`.

@@ -215,6 +215,7 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - EL1b — loop work; follows EL1a; date not set.
 - EL1c — loop work; follows EL1a and EL1b; date not set.
 - EL1d — attended; T's check on the preview APK after EL1c; date not set.
+- SP1 — loop work, slotted asap (T); a card rule, blocks no window's goal; date not set.
 - FM2a — loop work; T slotted it anytime; date not set.
 - FM2b — loop work; follows FM2a; date not set.
 - FM2c — loop work; follows FM2a; date not set.
@@ -228,6 +229,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-24** — **the Spell law plotted** (T, attended session, `/plot asap`). **Added** an Unscheduled line for SP1: no date set, and it blocks no window's goal. **Edited** no Item. Nothing ticked; no date moved.
 - **2026-10-24** — **the Elementalist trial set plotted** (T, attended session, `/plot asap`). **Added** Unscheduled lines for EL1a-EL1d: T set no date; card lanes are v0.3 stretch (B5, B6) and block no window's goal. **Edited** no Item. Nothing ticked; no date moved.
 - **2026-10-24** — **relic loadout fix plotted** (T, attended session, `/plot`). **Added** Unscheduled lines for EQ1a-EQ1b: T set no date, and the rows fix a live defect rather than serve one window's goal. **Edited** no Item: the W5 relic pass (B1) is owner-led and its premise does not depend on how worn state is shown. Nothing ticked; no date moved.
 - **2026-10-24** — **ballot colours plotted** (T, attended session, `/plot`). **Added** an Unscheduled line for BV3: no date set, and it blocks no window's goal. **Edited** no Item. Nothing ticked; no date moved.
