@@ -31,6 +31,7 @@ export const COMBAT_EVENT_KINDS = [
     'dice-rolled', 'turn-dice-rolled', 'turn-law-blocked', 'conviction-gained', 'signature-cast',
     'card-played', 'effect-landed', 'effect-fizzled', 'damage-dealt', 'vitae-sacrificed', 'player-healed',
     'global-entered', 'global-left', 'card-exiled', 'curse-added', 'die-refreshed', 'die-spent', 'dot-tick',
+    'weather-changed', 'blizzard-softened',
     'barrier-absorbed', 'riposte-fired', 'die-banked', 'die-ripened', 'resonance-gained', 'pips-cashed',
     'floating-die-spent', 'soul-gained', 'stage-entered', 'enemy-healed', 'dots-boosted', 'phase-resolved',
     'threat-fired', 'threat-branch', 'threat-cleansed', 'hand-drawn', 'mercy-opened', 'momentum-advanced',

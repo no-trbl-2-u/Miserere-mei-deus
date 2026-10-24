@@ -70,6 +70,10 @@ export {
     isProgramCard, isCurseCard, GLOBAL_FREE_TURNS,
 } from './combat.card-program';
 export type { ProgramLedger, GlobalInPlay, ProgramShortfall } from './combat.card-program';
+// The Elementalist's weather: INFERNO, BLIZZARD, FROZEN, STORM.
+export { foeInferno, yourInferno, elementsOnFoe, weatherReading, initElementState } from './combat.elements';
+export type { ElementState } from './combat.elements';
+export type { WeatherElement } from './combat.encounter.types';
 // The live-encounter VITAE knob the app applies (and the pacing sim reads).
 export { LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER } from './live-encounter';
 // Stat scaling: the formula, the keyword families, and the

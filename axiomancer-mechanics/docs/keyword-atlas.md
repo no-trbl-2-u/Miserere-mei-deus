@@ -72,6 +72,26 @@ SACRIFICE n: your next DEAL this turn deals +n."), so it has no row: the +n
 is unscaled, stacks across SACRIFICES, goes to the next DEAL (a card's, a
 Global's or TETHER's) before VULNERABLE, and expires at the end of the turn.
 
+### The weather
+
+The Elementalist's elements (Phase EL1a, `src/Combat/combat.elements.ts`).
+All three last the whole combat, stack by adding and are unscaled; an
+element at 0 is gone. BLIZZARD and INFERNO drop by 1 every round after the
+round they were applied in; STORM never drops.
+
+| keyword | reminder text | carried by |
+|---|---|---|
+| **INFERNO N** | Both sides burn. At the start of its turn the foe loses N VITAE; at the start of yours you lose half of N, rounded down. Plain loss, not a DEAL, and yours can kill you. A "foe only" INFERNO burns only the foe; removing your INFERNO leaves the foe's. | the Elementalist trial set (EL1c) |
+| **BLIZZARD N** | Each of the foe's attacks deals N less. | the Elementalist trial set (EL1c) |
+| **FROZEN** | While the BLIZZARD is at least the foe's attack, the foe is FROZEN as it attacks: the next DEAL it takes is doubled, then FROZEN ends. The BLIZZARD stays, so it can freeze again. | the Elementalist trial set (EL1c) |
+| **STORM N** | At the start of its turn the foe loses N VITAE (plain loss), then the STORM grows by 1. | the Elementalist trial set (EL1c) |
+
+### Drawing
+
+| keyword | reminder text | carried by |
+|---|---|---|
+| **DRAW N** | Draw N cards now. When your draw pile is empty, your discard is shuffled into it. | the Elementalist trial set (EL1c) |
+
 ### The dice
 
 | keyword | reminder text | carried by |
