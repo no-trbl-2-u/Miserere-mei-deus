@@ -9,11 +9,14 @@
  * tuned from it.
  *
  * Decks are read from the card-lane registry by lane id, so a lane's revised
- * test deck changes nothing here.
+ * test deck changes nothing here. Each lane named in
+ * {@link MEASURED_HALF_UPGRADED_LANES} is measured a second time with half
+ * its test deck upgraded once, under the deck id `<lane>+half` (phase UP1g).
  */
 
 import { createCharacter } from '../Character';
 import { getCardLane } from '../Cards/card.lanes';
+import { nextUpgradeId } from '../Cards/card-upgrades';
 import { ENEMY_REGISTRY, type EnemySlug } from '../Enemy/enemy.library';
 import { scaleEnemyToLevel } from '../World/encounter';
 import {
@@ -23,6 +26,12 @@ import { simulateHazardPatternCombatDetailed } from './combat.encounter.sim';
 
 /** The lanes whose test decks are measured, by lane id. */
 export const MEASURED_DECK_LANES: readonly string[] = ['grey', 'blood-price'];
+
+/** The lanes also measured with half their test deck upgraded once. */
+export const MEASURED_HALF_UPGRADED_LANES: readonly string[] = ['blood-price'];
+
+/** The suffix on a half-upgraded deck's id: `blood-price+half`. */
+export const HALF_UPGRADED_DECK_SUFFIX = '+half';
 
 /** The stat spreads every fight is measured at. */
 export const MEASURED_SPREADS: readonly StatSpread[] = ['even', 'body-mind', 'body'];
@@ -74,6 +83,8 @@ export interface MeasuredTruthOptions {
     seed?: number;
     /** Lane ids to measure (default {@link MEASURED_DECK_LANES}). */
     deckLanes?: readonly string[];
+    /** Lane ids also measured half-upgraded (default {@link MEASURED_HALF_UPGRADED_LANES}). */
+    halfUpgradedLanes?: readonly string[];
     /** The fights to walk (default the full Act 1 ledger). */
     fights?: readonly Act1Fight[];
 }
@@ -81,6 +92,24 @@ export interface MeasuredTruthOptions {
 /** Rounds to 4 places so the history stays readable. */
 function r4(x: number): number {
     return Math.round(x * 10000) / 10000;
+}
+
+/**
+ * A deck with half its cards upgraded once: every other card that can take an
+ * upgrade, then the rest in order if that falls short, until half the deck
+ * (rounded down) carries one. Copies are upgraded one position at a time.
+ *
+ * @param cards - the deck's card ids, copies kept.
+ * @returns The same deck in the same order, half of it as `<id>+`.
+ * @example halfUpgradedDeck(['a', 'b', 'c', 'd']) // ['a+', 'b', 'c+', 'd']
+ */
+export function halfUpgradedDeck(cards: readonly string[]): string[] {
+    const open = cards.flatMap((id, i) => (nextUpgradeId(id) ? [i] : []));
+    const picked = new Set([
+        ...open.filter((_, k) => k % 2 === 0),
+        ...open.filter((_, k) => k % 2 === 1),
+    ].slice(0, Math.floor(cards.length / 2)));
+    return cards.map((id, i) => (picked.has(i) ? nextUpgradeId(id)! : id));
 }
 
 /** The enemy level a fight stages against a player at `playerLevel`. */
@@ -94,7 +123,7 @@ function fightEnemyLevel(fight: Act1Fight, playerLevel: number): number {
  * @param options - runs, seed, the lanes and the fights to measure.
  * @returns The report: one cell per fight × spread × deck, in ledger order.
  * @throws When a lane id names no registered lane.
- * @example measuredTruthCells({ runs: 5 }).cells.length // ledger × 3 × 2
+ * @example measuredTruthCells({ runs: 5 }).cells.length // ledger × 3 × 3
  */
 export function measuredTruthCells(options: MeasuredTruthOptions = {}): MeasuredTruthReport {
     const runs = options.runs ?? 300;
@@ -106,6 +135,11 @@ export function measuredTruthCells(options: MeasuredTruthOptions = {}): Measured
         if (!lane) throw new Error(`measuredTruthCells: no card lane '${id}'`);
         return { id, cards: [...lane.testDeck] };
     });
+    for (const id of options.halfUpgradedLanes ?? MEASURED_HALF_UPGRADED_LANES) {
+        const lane = getCardLane(id);
+        if (!lane) throw new Error(`measuredTruthCells: no card lane '${id}'`);
+        decks.push({ id: `${id}${HALF_UPGRADED_DECK_SUFFIX}`, cards: halfUpgradedDeck(lane.testDeck) });
+    }
     const { fightLevels } = walkAct1(fights);
     const seen = new Map<string, number>();
     const cells: MeasuredTruthCell[] = [];
