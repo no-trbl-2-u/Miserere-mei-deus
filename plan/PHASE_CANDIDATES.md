@@ -772,6 +772,13 @@
 - proposed scope: 1 phase. A check in `scripts/pr-gate.mjs` (or a `pr-review.yml` step) that fails a `loop:pr` or `plot` PR whose body holds a "Generated with" line, an author trailer or an emoji, with a test.
 - conflicts: none; creates no content.
 
+### [ ] [owner] [score 4.0] The FROZEN overlay: an ice tint on the foe while it is FROZEN
+- proposed: 2026-10-24, T's `/messy` ("A 'frozen' overlay for enemies to signify they're frozen")
+- part plan: `plan/revamp/mobile.md` "The FROZEN overlay on the foe (T, 2026-10-24, `/messy`)"
+- proposed scope: 1 phase (S). A code-drawn translucent icy-blue tint and frost edge over the enemy sprite while FROZEN, fading in and out, never hiding the animation or taking touches; an optional image slot for T's later art. Mobile only; reads the presenter's FROZEN state.
+- conflicts: none; no engine change; the art half is owner-led (D88) and waits on T's asset.
+- promote with `/plot`.
+
 ## Promoted
 
 Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_CANDIDATES_2026.md`.
