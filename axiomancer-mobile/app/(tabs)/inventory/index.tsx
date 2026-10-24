@@ -33,10 +33,9 @@ export default function InventoryScreen() {
     const [activeTab, setActiveTab] = useState<InventoryTab>('all');
     const [expandedItemId, setExpandedItemId] = useState<string | null>(null);
     const [modalItemId, setModalItemId] = useState<string | null>(null);
-    // Long-pressing a filled dock slot opens the read-only equipment detail
-    // card. Separate from `modalItemId`, which
-    // drives the ACTION modal (use / equip / unequip) — this one never commits
-    // anything, so the two must not share a slot of state.
+    // Long-pressing a filled dock slot opens the equipment detail card, whose
+    // one button equips or takes off the piece. Separate from `modalItemId`,
+    // which drives the ACTION modal (use / equip / unequip).
     const [detailItemId, setDetailItemId] = useState<string | null>(null);
     // Tap a dock slot to filter the sack
     // to compatible items. selectedSlot === null when no filter active;
@@ -86,16 +85,23 @@ export default function InventoryScreen() {
         } else if (modalVm.mode === 'equip') {
             actions.equipItem(modalVm.itemId);
         } else if (modalVm.mode === 'unequip') {
-            // Unequip is the
-            // swap counterpart to equip; mobile "first-per-slot =
-            // worn" convention surfaces it as a slot-peer swap.
+            // Takes the piece off `player.equipment`; its position stays empty.
             actions.unequipItem(modalVm.itemId);
         }
-        // mode === 'view' (e.g. WORN sole-item-in-slot) → no
-        // dispatch; just dismiss the modal.
+        // mode === 'view' → no dispatch; just dismiss the modal.
         setModalItemId(null);
         setExpandedItemId(null);
     }, [actions, modalVm]);
+
+    // The detail card's button: wear or take off the piece, then close the card.
+    const onDetailEquip = useCallback((itemId: string) => {
+        actions.equipItem(itemId);
+        setDetailItemId(null);
+    }, [actions]);
+    const onDetailUnequip = useCallback((itemId: string) => {
+        actions.unequipItem(itemId);
+        setDetailItemId(null);
+    }, [actions]);
 
     const onDiscard = useCallback(
         (itemId: string) => {
@@ -187,7 +193,12 @@ export default function InventoryScreen() {
                 onCancel={() => setModalItemId(null)}
             />
 
-            <EquipmentDetailModal vm={detailVm} onClose={() => setDetailItemId(null)} />
+            <EquipmentDetailModal
+                vm={detailVm}
+                onClose={() => setDetailItemId(null)}
+                onEquip={onDetailEquip}
+                onUnequip={onDetailUnequip}
+            />
         </ScreenBg>
     );
 }

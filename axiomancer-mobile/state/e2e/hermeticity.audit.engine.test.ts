@@ -134,6 +134,10 @@ describe('hermeticity guard: isolation (no disk in tests)', () => {
         // for a preference the caller already holds — the same standing as the
         // boundary guard above, and unprovable by rendering.
         'components/combat/frames/__tests__/reducedMotionSource.test.ts',
+        // The worn-state guard (phase EQ1a, A1) reads the committed mobile
+        // sources to prove no screen or action reads the inventory-order
+        // convention; an import is a source fact, unprovable by rendering.
+        'state/__tests__/worn-state-source.test.ts',
     ]);
 
     const FS_PATTERN =
