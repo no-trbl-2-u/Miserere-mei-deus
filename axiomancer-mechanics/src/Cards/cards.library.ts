@@ -28,6 +28,7 @@ import { getUpgradedCardById, isUpgradedCardId } from './card-upgrades';
 import { GREY_OFFICE_CARDS } from './library/starters.cards';
 import type { TrialSet } from './card.lanes';
 import { BLOOD_PRICE_SET } from './library/blood-price.cards';
+import { ELEMENTALIST_SET } from './library/elementalist.cards';
 
 /**
  * The registered trial sets (plan/revamp/cards.md → "The trial set"). Each
@@ -36,6 +37,7 @@ import { BLOOD_PRICE_SET } from './library/blood-price.cards';
  */
 export const TRIAL_SETS: readonly TrialSet[] = Object.freeze([
     BLOOD_PRICE_SET,
+    ELEMENTALIST_SET,
 ]);
 
 /**

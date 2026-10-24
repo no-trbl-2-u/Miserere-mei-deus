@@ -48,7 +48,7 @@ import { fightRecorder } from '@/lib/fightRecorder';
 import { getEncounterEnemyArt } from '@/assets/images/enemies';
 import {
     INTENT_ICONS, buildCombatViewModel, rewardCardVMs, STANCE_COLORS, threatPhaseHeader,
-    selectCombatLogHistory, COMBAT_LOG_TOGGLE_TEXT, COMBAT_LOG_TOGGLE_A11Y, COMBAT_LOG_CLOSE_A11Y, COMBAT_LOG_BACK_TEXT,
+    selectCombatLogHistory, signatureInfoLines, COMBAT_LOG_TOGGLE_TEXT, COMBAT_LOG_TOGGLE_A11Y, COMBAT_LOG_CLOSE_A11Y, COMBAT_LOG_BACK_TEXT,
     type CombatCardVM, type CombatEffectChipVM, type CombatSignatureVM,
 } from '@/state/presenters/combat-encounter.engine';
 import { cardUpgradeRowsVM } from '@/state/presenters/card-upgrade.engine';
@@ -353,6 +353,7 @@ export function CombatEncounterPanel({
     }, []);
     // Signature-rune info popup (long-press / unaffordable tap) + pilgrim modal.
     const [sigInfo, setSigInfo] = useState<CombatSignatureVM | null>(null);
+    const sigLines = sigInfo ? signatureInfoLines(sigInfo) : null;
     const [pilgrimOpen, setPilgrimOpen] = useState(false);
     // Deckbuilder reward — rolled once on victory, claimed before the summary.
     // The offer lives in the STORE, not here, so navigating away mid-draft
@@ -998,10 +999,13 @@ export function CombatEncounterPanel({
                         <View style={[styles.tipCorner, styles.tipCornerBr, { borderColor: AXM.sulfur }]} pointerEvents="none" />
                         <GlyphBurst color={AXM.sulfur} glyph={sigInfo.icon} />
                         <Text style={[styles.tipName, { color: AXM.sulfur, textShadowColor: AXM.sulfur }]}>{sigInfo.name.toUpperCase()}</Text>
+                        {/* A refused rune leads with why: the reason is the news,
+                          * the gloss is what it would have done. */}
+                        {sigLines?.lead != null && (
+                            <Text style={[styles.tipReason, { color: AXM.blood }]} testID="combat-signature-info-reason">{sigLines.lead}</Text>
+                        )}
                         <Text style={styles.tipGloss}>{sigInfo.description}</Text>
-                        <Text style={styles.tipMeta}>
-                            consumes ◆ {sigInfo.cost} conviction{sigInfo.affordable ? '' : ` — ${sigInfo.reason ?? 'you have too little'}`}
-                        </Text>
+                        <Text style={styles.tipMeta}>{sigLines?.meta}</Text>
                         <View style={styles.tipBadgeWrap} pointerEvents="none">
                             <Svg width={128} height={30} viewBox="0 0 128 30">
                                 <Polygon points="14,1 114,1 127,15 114,29 14,29 1,15" fill={AXM.panelBg} stroke={AXM.sulfur} strokeWidth={1.5} />
@@ -1286,6 +1290,7 @@ const useStyles = makeStyles((AXM) => ({
     },
     tipGloss: { fontFamily: FONTS.serif, fontSize: 14, lineHeight: 20, color: AXM.parchmentDim, textAlign: 'center', marginTop: 8 },
     tipMeta: { fontFamily: FONTS.sans, fontSize: 11, color: AXM.bone, letterSpacing: 0.6, marginTop: 10 },
+    tipReason: { fontFamily: FONTS.sans, fontSize: 13, lineHeight: 18, letterSpacing: 0.4, textAlign: 'center', marginTop: 8 },
     tipBadgeWrap: { position: 'absolute', bottom: -15, alignSelf: 'center', width: 128, height: 30 },
     tipBadgeInner: { flex: 1, alignItems: 'center', justifyContent: 'center' },
     tipBadgeText: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 2 },
