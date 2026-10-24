@@ -495,9 +495,14 @@ class LineCtx implements ProgramCtx {
         for (let k = 0; k < times; k++) {
             fireTriggers(w, 'sac', perN);
             if (perPaid > 0 && l.tetherUntil >= w.s.round && !isDefeated(w.s.enemy)) {
-                // TETHER's hit is a DEAL: it takes the next-DEAL bonus.
-                const dmg = Math.round((perPaid + l.nextDealBonus) * getDamageTakenMultiplier(w.s.enemy));
+                // TETHER's hit is a DEAL: it takes the next-DEAL bonus and FROZEN's doubling.
+                let dmg = perPaid + l.nextDealBonus;
                 l.nextDealBonus = 0;
+                if (l.el.frozen) {
+                    dmg *= 2;
+                    l.el.frozen = false;
+                }
+                dmg = Math.round(dmg * getDamageTakenMultiplier(w.s.enemy));
                 new LineCtx(w, 'apply', { cardId: l.tetherCardId ?? this.f.cardId, waived: false }).hitFoe(dmg, true);
             }
         }
@@ -738,6 +743,7 @@ class LineCtx implements ProgramCtx {
             const k = Math.min(el.infShared, 2);
             el.infShared -= k;
             el.infFoe += k;
+            el.upFoe = el.upFoe || el.upShared;
             rest -= before - Math.floor(el.infShared / 2);
         }
     }
@@ -746,7 +752,10 @@ class LineCtx implements ProgramCtx {
         const el = this.el();
         const yours = yourInferno(el);
         if (this.mode === 'value') { this.w.value += this.relieveValue(yours); return yours; }
-        if (this.mode === 'apply') { el.infFoe += el.infShared; el.infShared = 0; el.infSelf = 0; }
+        if (this.mode === 'apply') {
+            el.upFoe = el.upFoe || el.upShared;
+            el.infFoe += el.infShared; el.infShared = 0; el.infSelf = 0;
+        }
         return yours;
     }
 
@@ -764,8 +773,10 @@ class LineCtx implements ProgramCtx {
             return h;
         }
         if (this.mode !== 'apply') return h;
-        if (share === 'all') { el.infFoe += el.infShared; el.infShared = 0; el.infSelf = 0; }
-        else this.relieve(h);
+        if (share === 'all') {
+            el.upFoe = el.upFoe || el.upShared;
+            el.infFoe += el.infShared; el.infShared = 0; el.infSelf = 0;
+        } else this.relieve(h);
         el.infFoe += h;
         return h;
     }
