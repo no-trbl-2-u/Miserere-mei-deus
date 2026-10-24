@@ -18,6 +18,8 @@ import {
     type GameState,
 } from '@mechanics';
 
+import { deckEventPoster, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
+
 import { EMPTY_COMBAT_REWARD_SLICE, type AppStore } from '../store';
 
 // ---------------------------------------------------------------------------
@@ -68,11 +70,29 @@ export function rollCombatRewardAction(
  * app after taking a card silently lost it.
  */
 export function claimCombatRewardAction(store: AppStore, cardId: string | null): void {
+    const offered = [...(store.getState().combatReward?.offers ?? [])];
     const player = (store.getState() as unknown as GameState).player;
     const patch: Record<string, unknown> = { combatReward: { offers: [], claimed: true, upgrade: null } };
     if (cardId && player) patch.player = addRewardCard(player, cardId);
     store.setState(patch as never);
     try { store.getState().save(); } catch { /* persistence must not strand the reward screen */ }
+    postRewardEvent(store, offered, cardId);
+}
+
+/**
+ * The play log (phase BE2e): the draft just claimed, with the cards it showed
+ * and the deck after it. A claim with no open draft behind it posts nothing.
+ */
+function postRewardEvent(store: AppStore, offered: string[], cardId: string | null): void {
+    if (offered.length === 0) return;
+    const state = store.getState() as unknown as DeckEventState;
+    void deckEventPoster.post({
+        kind: 'reward',
+        cardId: cardId && offered.includes(cardId) ? cardId : null,
+        offered,
+        deck: runDeck(state),
+        where: deckEventWhere(state, 'combat-reward'),
+    });
 }
 
 /**

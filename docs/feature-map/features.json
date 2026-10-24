@@ -743,7 +743,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/__tests__/MainMenu.test.tsx, axiomancer-mobile/components/__tests__/TitleScreen.test.tsx, axiomancer-mobile/scripts/title-plate-legibility.test.mjs, ..."
+        "source": "axiomancer-mobile/components/__tests__/MainMenu.test.tsx, axiomancer-mobile/components/__tests__/TitleScreen.test.tsx, axiomancer-mobile/lib/__tests__/deckEvents.test.ts, ..."
       },
       "needsPitch": {
         "value": true,
@@ -2857,6 +2857,18 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Combat",
+      "file": "axiomancer-mobile/lib/deckEvents.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/lib/fightRecorder.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Combat",
       "file": "axiomancer-mobile/state/actions.ts"
     },
     {
@@ -2930,6 +2942,12 @@
       "from": "route:combat-encounter",
       "to": "area:Enemy",
       "file": "axiomancer-mobile/state/presenters/navigation.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/lib/deckEvents.ts"
     },
     {
       "kind": "coupling",
@@ -3422,12 +3440,6 @@
       "from": "route:dev",
       "to": "area:World",
       "file": "axiomancer-mobile/state/presenters/exploration.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:dev",
-      "to": "area:World",
-      "file": "axiomancer-mobile/state/presenters/hazard-puzzle-log.engine.ts"
     },
     {
       "kind": "coupling",

@@ -23,6 +23,8 @@ import {
     rollCombatCardRewards,
 } from '@mechanics';
 import type { CacheLootTier, LootCacheChoiceOfferId, LootCacheChoiceOutcome, LootCacheChoiceSession } from '@mechanics';
+import { deckEventPoster, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
+
 import { resolveMinigameSeed } from '../minigame-seeds';
 import { EMPTY_CACHE_SLICE, type AppStore } from '../store';
 
@@ -131,5 +133,23 @@ export function claimLootCacheChoiceOutcomeAction(store: AppStore): ClaimLootCac
         // Persistence failures must not strand the player on the ledger.
     }
 
+    postCacheRewardEvent(store, s.cardCandidate, outcome.chosen === 'card' ? outcome.rewardCardId : null);
     return { applied: true, outcome };
+}
+
+/**
+ * The play log (phase BE2e): the cache's one card, taken or passed over for
+ * the item haul (a skip), with the deck after the claim. A cache that rolled
+ * no card posts nothing.
+ */
+function postCacheRewardEvent(store: AppStore, cardCandidate: string | undefined, cardId: string | null): void {
+    if (typeof cardCandidate !== 'string' || cardCandidate.length === 0) return;
+    const state = store.getState() as unknown as DeckEventState;
+    void deckEventPoster.post({
+        kind: 'cache-reward',
+        cardId: cardId === cardCandidate ? cardId : null,
+        offered: [cardCandidate],
+        deck: runDeck(state),
+        where: deckEventWhere(state, 'cache'),
+    });
 }

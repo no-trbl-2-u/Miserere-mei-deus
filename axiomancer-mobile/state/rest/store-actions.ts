@@ -30,6 +30,8 @@ import type {
     RestShelter,
 } from '@mechanics';
 import { bankedScarMagnitude, HAZARD_SCAR_FLAG_PREFIX } from '../hazard/store-actions';
+import { deckEventPoster, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
+
 import { resolveMinigameSeed } from '../minigame-seeds';
 import { EMPTY_REST_SLICE, type AppStore } from '../store';
 
@@ -153,11 +155,13 @@ export function claimRestChoiceOutcomeAction(store: AppStore): ClaimRestChoiceRe
     let player: Character = state.player;
     let flags = state.flags ?? [];
 
+    let removedCardId: string | null = null;
     if (outcome.chosen === 'cut' && outcome.removedCardId) {
         const removal = removeCardFromCombatDeck(player, outcome.removedCardId, flags);
         if (removal.ok) {
             player = removal.player;
             flags = removal.flags;
+            removedCardId = outcome.removedCardId;
         }
     }
 
@@ -202,6 +206,7 @@ export function claimRestChoiceOutcomeAction(store: AppStore): ClaimRestChoiceRe
         // Persistence failures must not strand the player on the ledger.
     }
 
+    if (removedCardId) postRemoveEvent(store, removedCardId);
     return {
         applied: true,
         chosen: outcome.chosen,
@@ -211,4 +216,19 @@ export function claimRestChoiceOutcomeAction(store: AppStore): ClaimRestChoiceRe
         upgradedToCardId,
         scarMended,
     };
+}
+
+/**
+ * The play log (phase BE2e): the card cut at the rest site, with the deck
+ * after the cut (its size is the deck's length).
+ */
+function postRemoveEvent(store: AppStore, cardId: string): void {
+    const state = store.getState() as unknown as DeckEventState;
+    void deckEventPoster.post({
+        kind: 'remove',
+        cardId,
+        offered: null,
+        deck: runDeck(state),
+        where: deckEventWhere(state, 'rest'),
+    });
 }
