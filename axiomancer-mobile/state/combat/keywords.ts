@@ -64,8 +64,9 @@ const MECHANIC_KEYWORD: Record<string, string> = {
  *
  * The table holds only words something live prints: the grey office
  * (GUARD/VULNERABLE), the Blood Price trial cards (SACRIFICE, WAIVE, EXILE,
- * HEAL, TETHER, LEECH), the healing potions (HEAL), a map hazard (BLEED) and
- * the dice system (PIP, BOON, HONE, TEMPER).
+ * HEAL, TETHER, LEECH), the Elementalist's weather (INFERNO, BLIZZARD, FROZEN,
+ * STORM, DRAW), the healing potions (HEAL), a map hazard (BLEED) and the dice
+ * system (PIP, BOON, HONE, TEMPER).
  *
  * TERSE GLOSSES: every gloss is ONE short
  * sentence in the Dawncaster register ("Cards with Lifedrain restore health
@@ -89,6 +90,14 @@ const KEYWORD_GLOSS: Record<string, string> = {
         'The foe takes that much more damage from every hit. Adding more stacks it and refreshes the turns.',
     Tether: 'For that many turns, each SACRIFICE makes the foe take damage equal to the VITAE it paid.',
     Leech: 'Each LEECH adds 3 turns and its number to the potency. At the start of its turn the foe loses the potency in VITAE and you heal what it lost.',
+    // ── The weather (the Elementalist trial set) ──
+    Inferno:
+        'Both sides burn: the foe loses that much VITAE at the start of its turn, and you lose half, rounded down, at the start of yours. '
+        + 'It drops by 1 each round, and yours can kill you.',
+    Blizzard: "Each of the foe's attacks deals that much less. It drops by 1 each round.",
+    Frozen: "When the BLIZZARD is at least the foe's attack, the foe is FROZEN: the next DEAL it takes is doubled, then FROZEN ends.",
+    Storm: 'At the start of its turn the foe loses that much VITAE, then the STORM grows by 1. It lasts the whole combat.',
+    Draw: 'Draw that many cards now. An empty draw pile shuffles your discard back in.',
     // ── Dice ──
     Pip:
         'Each threat phase a Reserve die survives, it gains one pip, capped at 2. '
