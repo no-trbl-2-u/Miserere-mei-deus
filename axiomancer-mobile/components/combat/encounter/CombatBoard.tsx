@@ -283,7 +283,13 @@ const SignatureColumn = React.memo(function SignatureColumn({ conviction, signat
                   * CONVICTION rather than leaving it to the a11y label. */}
                 <Text style={styles.convictionCaption}>CONVICTION</Text>
             </View>
-            {signatures.map((s) => (
+            {signatures.map((s) => {
+                // Three faces: castable (sulfur), short of Conviction (dim, ◆n),
+                // refused for another reason (dashed blood ring and a ✕ mark), so
+                // a rune more Conviction will not unlock never reads as a wait.
+                const refused = !s.affordable && !!s.refused;
+                const ring = s.affordable ? AXM.sulfur : refused ? AXM.blood : AXM.ash;
+                return (
                 <Pressable
                     key={s.id}
                     // NOT disabled while unaffordable — a tap then opens the info popup
@@ -297,16 +303,25 @@ const SignatureColumn = React.memo(function SignatureColumn({ conviction, signat
                     testID={`combat-signature-${s.id}`}
                     accessibilityRole="button"
                     accessibilityState={{ disabled: !s.affordable }}
-                    accessibilityLabel={`${s.name}, costs ${s.cost} conviction. ${s.description}${s.affordable ? '' : ` — ${s.reason ?? 'not enough conviction'}`}`}
+                    accessibilityLabel={`${s.name}, costs ${s.cost} conviction. ${s.description}${s.affordable ? '' : ` — ${refused ? 'refused: ' : ''}${s.reason ?? 'not enough conviction'}`}`}
                     accessibilityHint="Long press for details"
-                    style={[styles.sigRune, { borderColor: s.affordable ? AXM.sulfur : AXM.ash, opacity: s.affordable ? 1 : 0.55 }]}
+                    style={[styles.sigRune, {
+                        borderColor: ring, borderStyle: refused ? 'dashed' : 'solid',
+                        opacity: s.affordable ? 1 : refused ? 0.8 : 0.55,
+                    }]}
                 >
                     <Text style={[styles.sigRuneIcon, { color: s.affordable ? AXM.sulfur : AXM.bone }]}>{s.icon}</Text>
+                    {refused && (
+                        <View style={[styles.sigRefusedMark, { borderColor: AXM.blood }]} testID={`combat-signature-refused-${s.id}`} pointerEvents="none">
+                            <Text style={[styles.sigRefusedText, { color: AXM.blood }]} allowFontScaling={false}>✕</Text>
+                        </View>
+                    )}
                     <View style={styles.sigCostBadge}>
                         <Text style={[styles.sigCostText, { color: s.affordable ? AXM.sulfur : AXM.ash }]} allowFontScaling={false}>◆{s.cost}</Text>
                     </View>
                 </Pressable>
-            ))}
+                );
+            })}
         </View>
     );
 });
@@ -2053,6 +2068,13 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
         borderWidth: 1, borderColor: 'rgba(255,255,255,0.22)', paddingHorizontal: 3, paddingVertical: 0,
     },
     sigCostText: { fontFamily: FONTS.mono, fontSize: 9, lineHeight: 12 },
+    // The refused mark sits opposite the cost badge, inside the rune's box, so
+    // the column's measured height does not move.
+    sigRefusedMark: {
+        position: 'absolute', left: -4, top: -3, backgroundColor: 'rgba(0,0,0,0.92)', borderRadius: 7,
+        borderWidth: 1, paddingHorizontal: 3, paddingVertical: 0,
+    },
+    sigRefusedText: { fontFamily: FONTS.mono, fontSize: 9, lineHeight: 12 },
 
     // ── dice row ──
     // gap 14 + wrap: four gems + the spare chip must fit a 375pt viewport
