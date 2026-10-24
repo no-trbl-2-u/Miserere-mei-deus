@@ -147,6 +147,7 @@ import {
 import { getAporiaAct } from '@mechanics';
 import type { LabyrinthActId, LabyrinthBossOutcome } from '@mechanics';
 import { wrapActionsWithLogging } from './logging';
+import { endCombatOutcome, fightRecorder } from '@/lib/fightRecorder';
 import { getMapLayout } from './exploration-maps';
 
 // ---------------------------------------------------------------------------
@@ -613,6 +614,17 @@ export function withScaledEnemyHp(enemy: Enemy, mult: number): Enemy {
     return { ...enemy, health, maxHealth };
 }
 
+/**
+ * Opens the play log's recording of the fight just staged (phase BE2c): the
+ * foe, the player's level and VITAE before the first card, and the HP
+ * multiplier the foe was scaled by. A no-op while the play-log gate is shut.
+ */
+function recordFightStart(store: AppStore, enemy: Enemy, enemyHpMultiplier: number): void {
+    const player = store.getState().player;
+    if (!player) return;
+    fightRecorder.start({ enemyId: enemy.id, playerLevel: player.level, enemyHpMultiplier, vitaeStart: player.health });
+}
+
 // ---------------------------------------------------------------------------
 // Action creators
 // ---------------------------------------------------------------------------
@@ -630,6 +642,7 @@ export function createAppActions(store: AppStore): AppActions {
             // the encounter (`currentEncounter`) and fires `combat:started`.
             ensureStarterCards(store);
             store.getState().startCombat(enemy);
+            recordFightStart(store, enemy, 1);
         },
         beginHazardEncounter: () => {
             // Live map encounters run the hazard-pattern combat. Pull the foe out of
@@ -652,6 +665,7 @@ export function createAppActions(store: AppStore): AppActions {
             // turns to exercise status-effect play). See ENCOUNTER_ENEMY_HP_MULTIPLIER.
             const scaledEnemy = withScaledEnemyHp(enemy, ENCOUNTER_ENEMY_HP_MULTIPLIER);
             store.getState().startCombat(scaledEnemy);
+            recordFightStart(store, scaledEnemy, ENCOUNTER_ENEMY_HP_MULTIPLIER);
             return scaledEnemy;
         },
         endCombat: (outcome) => {
@@ -664,6 +678,9 @@ export function createAppActions(store: AppStore): AppActions {
             // (no reward) when unspecified. It returns a stub 'flee' report
             // when called outside an encounter.
             const report = store.getState().endCombat(outcome ?? 'flee');
+            // The play log: posts a fight the panel never finished (a WITHDRAW);
+            // one it finished has already posted, so this is a no-op then.
+            void fightRecorder.end(endCombatOutcome(outcome ?? 'flee'));
             return report ?? null;
         },
         // Action creators used elsewhere — wired here for completeness.
