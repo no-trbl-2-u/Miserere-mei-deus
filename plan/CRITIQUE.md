@@ -852,6 +852,16 @@
 - source: critique:drive (unattended)
 
 
+### [LOW] play log / fight recorder — the opening hand never reaches the fight's event stream
+- pass: ship-a-phase BE2f (PR #877)
+- viewport: n/a
+- category: infra
+- observation: `initializeCombatEncounter` deals the opening hand without a `hand-drawn` event (the engine's only `hand-drawn` emitters are the between-phase refill and a draw effect), and `lib/fightRecorder.ts` stamps log entries only. So `npm run api -- card-usage` counts `drawn` from turn end 1 onward, and a card played from the opening hand looks like a play with no draw. The report header and `docs/dev-tools.md` state the caveat, but the draw counts for a short fight are mostly missing.
+- evidence: `axiomancer-mechanics/src/Combat/combat.engine.ts` (`initializeCombatEncounter`, `log: []`); `axiomancer-mobile/lib/fightRecorder.ts` `observe`; `backend/src/reports.ts` header.
+- suggested fix: have the recorder push one stamped `hand-drawn` event with the first observed state's hand (`state.hand.map(h => h.cardId)`, adding `hand` to `ObservedFight`) at `ms` 0, so no engine or contract change is needed; the held formula already treats it as a draw at turn end 0.
+- source: ship-a-phase BE2f
+
+
 ### [LOW] rest / cache — "The node is spent the moment you stopped here" mixes present and past tense
 - pass: 89 (commit 2927472f)
 - viewport: both (375x812 and 1280x800)
