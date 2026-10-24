@@ -62,4 +62,5 @@ jest.mock('@react-native-async-storage/async-storage', () =>
 jest.mock('@/lib/buildProfile', () => ({
     isDevToolsEnabled: () => (globalThis as { __DEV__?: boolean }).__DEV__ !== false,
     getBuildProfile: () => null,
+    getBuildCommit: () => null,
 }));

@@ -3313,6 +3313,12 @@
       "kind": "coupling",
       "from": "route:dev",
       "to": "area:Log",
+      "file": "axiomancer-mobile/state/dev/dev-settings.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:dev",
+      "to": "area:Log",
       "file": "axiomancer-mobile/state/dev/skip-event.ts"
     },
     {
@@ -3350,6 +3356,12 @@
       "from": "route:dev",
       "to": "area:World",
       "file": "axiomancer-mobile/components/DebugWorldTravel.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:dev",
+      "to": "area:World",
+      "file": "axiomancer-mobile/lib/puzzleAttempts.ts"
     },
     {
       "kind": "coupling",
@@ -3398,6 +3410,12 @@
       "from": "route:dev",
       "to": "area:World",
       "file": "axiomancer-mobile/state/presenters/exploration.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:dev",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/hazard-puzzle-log.engine.ts"
     },
     {
       "kind": "coupling",
