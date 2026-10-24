@@ -20,7 +20,7 @@ npm-workspaces monorepo. Three packages, flat at the root:
 |---|---|
 | `axiomancer-mechanics` | TypeScript game engine + CLI. Owns rules, state transitions, deterministic RNG, content libraries, balance/tuning, hermetic engine tests. |
 | `axiomancer-mobile` | Expo / React Native app. Consumes mechanics as **local source** via the `@mechanics` alias (`→ ../axiomancer-mechanics/src`). Owns screens, navigation, theming, presenters. |
-| `backend` | The `miserere-api` Cloudflare Worker and its D1 schema (numbered migrations): dev puzzle solve times, `POST`/`GET /v1/puzzle-attempts` behind a bearer token, and the ballot verdicts the card-ledger ballots submit, `POST`/`GET /v1/ballot-verdicts` (with CORS for the `axiomancer-ballots` Pages site). Imports the engine's attempt contract by path; tests run in workerd against a local D1 (`npm test -w backend`). |
+| `backend` | The `miserere-api` Cloudflare Worker and its D1 schema (numbered migrations): dev puzzle solve times, `POST`/`GET /v1/puzzle-attempts` behind a bearer token, the play log (fights and deck changes, `/v1/fights` and `/v1/deck-events`, with the switch on by default only while T is the only player, read by `npm run api` from the two fixed `/v1/reports/`), and the ballot verdicts the card-ledger ballots submit, `POST`/`GET /v1/ballot-verdicts` (with CORS for the `axiomancer-ballots` Pages site). Imports the engine's attempt contract by path; tests run in workerd against a local D1 (`npm test -w backend`). |
 
 A fourth top-level tree, `art-department/`, is **not** a workspace and is
 reached by path, never `npm --workspace` — see "The art department" below.
