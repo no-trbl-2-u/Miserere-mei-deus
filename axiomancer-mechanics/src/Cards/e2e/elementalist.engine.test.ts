@@ -107,10 +107,11 @@ describe('the Elementalist set', () => {
         const paid = (slot: string) => getCardById(idOf(slot))!.program!.paid!.text;
         expect(free('P-01')).toBe('DEAL {deal:3}.');
         expect(paid('P-02')).toBe('DEAL {deal:9}; INFERNO 4 (you and the foe both burn).');
-        expect(paid('E-01')).toBe('INFERNO 4, GUARD {guard:5}.');
-        expect(paid('E-05')).toBe('STORM 2, DRAW 2.');
+        // The Spells' PAID lines, a step up and EXILEd (the Spell law, T, 2026-10-24).
+        expect(paid('E-01')).toBe('INFERNO 6, GUARD {guard:7}. EXILE.');
+        expect(paid('E-05')).toBe('STORM 4, DRAW 3. EXILE.');
         expect(free('M-07')).toBe('STORM 1.');
-        expect(paid('M-07')).toBe('VULNERABLE +{vuln:10}% per STORM on the foe, for 2 turns.');
+        expect(paid('M-07')).toBe('VULNERABLE +{vuln:14}% per STORM on the foe, for 2 turns. EXILE.');
         expect(getCardById(idOf('P-10'))!.program!.global!.text).toBe('if the foe has two or more elements, DEAL {deal:3}.');
     });
 
@@ -185,9 +186,10 @@ describe('the cards play the weather', () => {
         expect(frozen.guard).toBe(2 * (plain.guard ?? 0));
     });
 
-    it('M-04 PAID puts all three elements up at 3', () => {
+    it('M-04 PAID puts all three elements up at 5, and EXILEs', () => {
         const s = play(fight([idOf('M-04')]), 't0', true);
-        expect(weather(s)).toMatchObject({ 'foe-inferno': 3, blizzard: 3, storm: 3 });
+        expect(weather(s)).toMatchObject({ 'foe-inferno': 5, blizzard: 5, storm: 5 });
+        expect(s.program!.exiled).toContain(idOf('M-04'));
     });
 
     it('E-06 in play makes the STORM grow by 1 extra', () => {
@@ -199,9 +201,9 @@ describe('the cards play the weather', () => {
         expect(weather(s).storm).toBe(3);
     });
 
-    it('E-08 PAID turns your INFERNO into the foe\'s BLIZZARD and INFERNO', () => {
+    it('E-08 PAID turns your INFERNO into twice that much of the foe\'s BLIZZARD and INFERNO', () => {
         const s = play(withWeather(fight([idOf('E-08')]), { infSelf: 3, upSelf: true }), 't0', true);
-        expect(weather(s)).toMatchObject({ 'your-inferno': 0, blizzard: 3, 'foe-inferno': 3 });
+        expect(weather(s)).toMatchObject({ 'your-inferno': 0, blizzard: 6, 'foe-inferno': 6 });
     });
 });
 
@@ -217,7 +219,9 @@ function printedEqualsApplied(stats: BaseStats): { checked: number; mismatches: 
             const before = fight([card.id], 100, stats);
             const hand = handCards(before).find(h => h.uid === 't0')!.card;
             const face = (paid ? hand.bottomActionText : hand.topActionText)
-                .replace(/^(FREE|PAID) — /, '').replace(/ \(Ash\)$/, '').replace(/ Costs 1 die\.$/, '');
+                .replace(/^(FREE|PAID) — /, '').replace(/ \(Ash\)$/, '').replace(/ Costs 1 die\.$/, '')
+                // A Spell's PAID ends in EXILE: a lifecycle word, no number.
+                .replace(/ EXILE\.$/, '');
             if (!PLAIN.test(face)) continue;
             checked++;
             const sum = (re: RegExp): number => [...face.matchAll(re)].reduce((a, m) => a + Number(m[1]), 0);

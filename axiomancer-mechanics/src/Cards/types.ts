@@ -52,8 +52,10 @@ export function rankToRarity(rank: CardRank): CardRarity {
 }
 
 /**
- * A card's type is a lifecycle rule. Attack, Skill and Spell play FREE or
- * PAID, then discard. A Global stays in play and affects the combat: FREE
+ * A card's type is a lifecycle rule. Attack and Skill play FREE or PAID,
+ * then discard. A Spell plays FREE and discards, or plays PAID and EXILEs,
+ * and its PAID line is one upgrade step stronger to pay for leaving
+ * (`spellPaidScale`, `checkSpellLaw`). A Global stays in play and affects the combat: FREE
  * for 3 turns, PAID for the rest of combat, one copy of each in play. A
  * Curse is a dead card that holds a hand slot until played; it cannot be
  * scrapped.
@@ -308,4 +310,16 @@ export interface Card {
      * scaled values. A program card without one keeps its numbers when upgraded.
      */
     programAt?: (scale: UpgradeScale) => CardProgram;
+    /**
+     * A plain card's PAID play EXILEs it instead of discarding it (a program
+     * card says so on its line, `ProgramLine.exile`). Every Spell's PAID does.
+     */
+    paidExile?: boolean;
+    /**
+     * A Spell's PAID payoffs as a plain discard card, before the Spell law
+     * raised them (T, 2026-10-24): verb to amount at the law's probe
+     * (`spellPaidPayoffs`). `checkSpellLaw` holds the PAID line a step past
+     * each. Data only.
+     */
+    spellLawBaseline?: Readonly<Record<string, number>>;
 }

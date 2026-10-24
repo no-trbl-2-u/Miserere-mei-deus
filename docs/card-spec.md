@@ -33,6 +33,16 @@ Pointers: `M/Cards/types.ts:58`, `M/Combat/combat.cards.ts:308`,
 `Mob/state/presenters/deck.engine.ts:171`, `:173`,
 `Mob/state/presenters/combat-encounter.engine.ts:188`, `:1337`.
 
+**The Spell law (D103, T 2026-10-24).** A Spell's FREE line plays and
+discards; its PAID line plays, then EXILEs, and is stronger than a Skill's
+would be: at least one upgrade step past the card's numbers as a plain
+discard card. A program card marks it on the line (`ProgramLine.exile`), a
+plain card with `paidExile` (`M/Combat/combat.engine.ts` sends it to the
+EXILE pile). `checkSpellLaw` (`M/Cards/card-rules.ts`) holds both halves
+against each Spell's `spellLawBaseline`; §17 maps it. Built by SP1 for the
+17 trial-lane Spells; A Plain Word is pinned as held for T (it would take
+the first Act 1 door under the LV1 floor).
+
 **Ratified, not built.**
 
 - Global and Curse card types (Global: FREE 3 turns, PAID rest of combat;
@@ -463,6 +473,7 @@ in `axiomancer-mechanics`.
 | Scrap floor | §6 | `card-rules.engine.test.ts` → "rule: scrap-floor" (`checkScrapFloor`) | same |
 | Global text template | §6 | `card-rules.engine.test.ts` → "rule: global-template" (`checkGlobalTemplate`) | same |
 | Carrier rule and admission bar | §8 | `card-rules.engine.test.ts` → "rule: carrier-rule" (`checkCarrierRule`) | same |
+| The Spell law: PAID EXILEs, FREE does not, PAID a step up (D103) | §1 | `card-rules.engine.test.ts` → "rule: spell-law" and "the Spell law" (`checkSpellLaw`) | same (A Plain Word, held for T) |
 | House voice and retired terms on card text | §6 | `scripts/check-prose.mjs` (the card libraries are content surfaces) | none needed: the text is clean |
 | Ledger and library agree on the Blood Price slots | §15 | `scripts/content-drift.test.mjs` → "the Blood Price lane ships exactly the slots the ledger keeps" | none |
 | Every Blood Price card has a real name; library names are distinct | §15 | `axiomancer-mechanics/src/Cards/e2e/blood-price.engine.test.ts` → "every lane card carries a real name" | none |

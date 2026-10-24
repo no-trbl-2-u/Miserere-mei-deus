@@ -40,7 +40,7 @@
 import type { Card, CardAspect, CardType } from '../types';
 import type { CardProgram, ProgramCtx, ProgramLine } from '../card-program.types';
 import type { CardLane, TrialSet } from '../card.lanes';
-import { upgradeScale, type UpgradeScale } from '../card-upgrade.scale';
+import { spellPaidScale, upgradeScale, type UpgradeScale } from '../card-upgrade.scale';
 
 const ADDED = '2026-10-24';
 
@@ -48,7 +48,13 @@ const RED: CardAspect = 'body';
 const BLUE: CardAspect = 'mind';
 const PURPLE: CardAspect = 'heart';
 
-const L = (text: string, run: (c: ProgramCtx) => void): ProgramLine => ({ text, run });
+const L = (text: string, run: (c: ProgramCtx) => void, extra?: Partial<ProgramLine>): ProgramLine => ({ text, run, ...extra });
+
+/** A Spell's PAID scale: one step past the card's upgrade level (`spellPaidScale`).
+ *  A DRAW is not on the upgrade scale, so a Spell's DRAW is written one higher. */
+const S = spellPaidScale;
+/** A Spell's PAID line EXILEs (the Spell law, T, 2026-10-24). */
+const EX: Partial<ProgramLine> = { exile: true };
 
 interface Entry {
     /** The ledger slot, `P-01`. */
@@ -58,6 +64,8 @@ interface Entry {
     type: CardType;
     color: CardAspect;
     program: (u: UpgradeScale) => CardProgram;
+    /** A Spell's PAID payoffs before the Spell law raised them (`Card.spellLawBaseline`). */
+    spellLaw?: Readonly<Record<string, number>>;
 }
 
 /** A start-of-turn Global whose PAID line equals its FREE line. */
@@ -89,11 +97,12 @@ const ENTRIES: Entry[] = [
             const b = c.spendBlizzard(); c.deal(u.m(3), { plus: 2 * b });
         }) }) },
     // The trigger does not grow the STORM (the sims' reading).
-    { slot: 'P-05', option: 'b', type: 'spell', color: RED, program: u => ({
+    // The Spell law (T, 2026-10-24): the STORM is triggered twice, not once.
+    { slot: 'P-05', option: 'b', type: 'spell', color: RED, spellLaw: { stormTick: 4 }, program: u => ({
         free: L(`STORM ${u.i(1)}; DEAL equal to the foe's STORM.`, c => {
             const s0 = c.q.storm; c.storm(u.i(1)); c.deal(0, { plus: s0 + u.i(1) });
         }),
-        paid: L("Trigger the foe's STORM.", c => { c.triggerStorm(); }) }) },
+        paid: L("Trigger the foe's STORM twice. EXILE.", c => { c.triggerStorm(); c.triggerStorm(); }, EX) }) },
     { slot: 'P-06', option: 'b', type: 'skill', color: BLUE, program: u => ({
         free: L(`GUARD {guard:${u.m(3)}}, DRAW 1.`, c => { c.guard(u.m(3)); c.draw(1); }),
         paid: L(`GUARD {guard:${u.m(5)}}, + the foe's STORM (max +${u.m(12)}). DRAW 1.`, c => {
@@ -120,25 +129,25 @@ const ENTRIES: Entry[] = [
         c => { if (c.q.elementsOnFoe >= 2) c.deal(u.m(3)); }) },
 
     // ── ENGINE: puts the elements up and makes them grow ─────────────────────
-    { slot: 'E-01', option: 'b', type: 'spell', color: PURPLE, program: u => ({
+    { slot: 'E-01', option: 'b', type: 'spell', color: PURPLE, spellLaw: { inferno: 4, guard: 5 }, program: u => ({
         free: L(`INFERNO ${u.i(2)}, GUARD {guard:${u.m(2)}}.`, c => { c.inferno(u.i(2), 'both'); c.guard(u.m(2)); }),
-        paid: L(`INFERNO ${u.i(4)}, GUARD {guard:${u.m(5)}}.`, c => { c.inferno(u.i(4), 'both'); c.guard(u.m(5)); }) }) },
+        paid: L(`INFERNO ${S(u).w(4)}, GUARD {guard:${S(u).m(5)}}. EXILE.`, c => { c.inferno(S(u).w(4), 'both'); c.guard(S(u).m(5)); }, EX) }) },
     { slot: 'E-02', option: 'c', type: 'attack', color: RED, program: u => ({
         free: L(`DEAL {deal:${u.m(3)}}.`, c => { c.deal(u.m(3)); }),
         paid: L(`DEAL {deal:${u.m(4)}}, then INFERNO equal to half the damage dealt.`, c => {
             const d = c.deal(u.m(4)); c.inferno(Math.floor(d / 2), 'both');
         }) }) },
-    { slot: 'E-03', option: 'b', type: 'spell', color: PURPLE, program: u => ({
+    { slot: 'E-03', option: 'b', type: 'spell', color: PURPLE, spellLaw: { blizzard: 6, draw: 1 }, program: u => ({
         free: L(`BLIZZARD ${u.i(2)}, DRAW 1.`, c => { c.blizzard(u.i(2)); c.draw(1); }),
-        paid: L(`BLIZZARD ${u.i(6)}, DRAW 1.`, c => { c.blizzard(u.i(6)); c.draw(1); }) }) },
+        paid: L(`BLIZZARD ${S(u).w(6)}, DRAW 2. EXILE.`, c => { c.blizzard(S(u).w(6)); c.draw(2); }, EX) }) },
     { slot: 'E-04', option: 'c', type: 'skill', color: PURPLE, program: u => ({
         free: L(`BLIZZARD ${u.i(3)}.`, c => { c.blizzard(u.i(3)); }),
         paid: L(`BLIZZARD ${u.i(5)}, then GUARD equal to the foe's BLIZZARD.`, c => {
             const b0 = c.q.blizzard; c.blizzard(u.i(5)); c.guard(0, { plus: b0 + u.i(5) });
         }) }) },
-    { slot: 'E-05', option: 'b', type: 'spell', color: PURPLE, program: u => ({
+    { slot: 'E-05', option: 'b', type: 'spell', color: PURPLE, spellLaw: { storm: 2, draw: 2 }, program: u => ({
         free: L(`STORM ${u.i(1)}, DRAW 1.`, c => { c.storm(u.i(1)); c.draw(1); }),
-        paid: L(`STORM ${u.i(2)}, DRAW 2.`, c => { c.storm(u.i(2)); c.draw(2); }) }) },
+        paid: L(`STORM ${S(u).w(2)}, DRAW 3. EXILE.`, c => { c.storm(S(u).w(2)); c.draw(3); }, EX) }) },
     // T's note: a Global; while it is in play the STORM grows by 1 extra.
     { slot: 'E-06', option: 'a', type: 'global', color: RED, program: u => turnGlobal(
         `(while in play) the STORM grows by ${u.i(1)} extra.`,
@@ -151,17 +160,18 @@ const ENTRIES: Entry[] = [
             const h = c.q.handSize > h0 ? c.q.handSize : h0 + 2;
             c.storm(h);
         }) }) },
-    { slot: 'E-08', option: 'c', type: 'spell', color: PURPLE, program: u => ({
+    // The Spell law (T, 2026-10-24): the foe gains twice your INFERNO, not once.
+    { slot: 'E-08', option: 'c', type: 'spell', color: PURPLE, spellLaw: { blizzard: 4, inferno: 4 }, program: u => ({
         free: L(`BLIZZARD ${u.i(2)}, INFERNO ${u.i(1)} on the foe only.`, c => { c.blizzard(u.i(2)); c.inferno(u.i(1), 'foe'); }),
-        paid: L('Steam: remove your INFERNO; the foe gains that much BLIZZARD and INFERNO.', c => {
-            const y = c.removeYourInferno(); c.blizzard(y); c.inferno(y, 'foe');
-        }) }) },
+        paid: L('Steam: remove your INFERNO; the foe gains twice that much BLIZZARD and INFERNO. EXILE.', c => {
+            const y = c.removeYourInferno(); c.blizzard(2 * y); c.inferno(2 * y, 'foe');
+        }, EX) }) },
     { slot: 'E-09', option: 'b', type: 'global', color: PURPLE, program: () => turnGlobal(
         "BLIZZARD equal to half the foe's STORM.",
         c => { c.blizzard(Math.floor(c.q.storm / 2)); }) },
-    { slot: 'E-10', option: 'c', type: 'spell', color: BLUE, program: u => ({
+    { slot: 'E-10', option: 'c', type: 'spell', color: BLUE, spellLaw: { draw: 1 }, program: u => ({
         free: L(`DRAW 1, STORM ${u.i(1)}.`, c => { c.draw(1); c.storm(u.i(1)); }),
-        paid: L('Swap the numbers of two elements on the foe. DRAW 1.', c => { c.swapElements(); c.draw(1); }) }) },
+        paid: L('Swap the numbers of two elements on the foe. DRAW 2. EXILE.', c => { c.swapElements(); c.draw(2); }, EX) }) },
 
     // ── MISC: related utility ────────────────────────────────────────────────
     { slot: 'M-01', option: 'a', type: 'skill', color: BLUE, program: () => ({
@@ -177,13 +187,13 @@ const ENTRIES: Entry[] = [
         paid: L(`DRAW 2, BLIZZARD ${u.i(2)}, GUARD {guard:${u.m(2)}}.`, c => {
             c.draw(2); c.blizzard(u.i(2)); c.guard(u.m(2));
         }) }) },
-    { slot: 'M-04', option: 'a', type: 'spell', color: PURPLE, program: u => ({
+    { slot: 'M-04', option: 'a', type: 'spell', color: PURPLE, spellLaw: { inferno: 3, blizzard: 3, storm: 3 }, program: u => ({
         free: L(`INFERNO ${u.i(1)}, BLIZZARD ${u.i(1)}, STORM ${u.i(1)}.`, c => {
             const k = u.i(1); c.inferno(k, 'both'); c.blizzard(k); c.storm(k);
         }),
-        paid: L(`INFERNO ${u.i(3)}, BLIZZARD ${u.i(3)}, STORM ${u.i(3)}.`, c => {
-            const k = u.i(3); c.inferno(k, 'both'); c.blizzard(k); c.storm(k);
-        }) }) },
+        paid: L(`INFERNO ${S(u).w(3)}, BLIZZARD ${S(u).w(3)}, STORM ${S(u).w(3)}. EXILE.`, c => {
+            const k = S(u).w(3); c.inferno(k, 'both'); c.blizzard(k); c.storm(k);
+        }, EX) }) },
     { slot: 'M-05', option: 'c', type: 'skill', color: BLUE, program: u => ({
         free: L(`DRAW 1; gain ${u.i(1)} Conviction.`, c => { c.draw(1); c.conviction(u.i(1)); }),
         paid: L(`DRAW 1; gain ${u.i(2)} Conviction per different element on the foe.`, c => {
@@ -192,11 +202,11 @@ const ENTRIES: Entry[] = [
     { slot: 'M-06', option: 'a', type: 'skill', color: BLUE, program: u => ({
         free: L(`GUARD {guard:${u.m(4)}}, doubled if the foe is FROZEN.`, c => { c.guard(u.m(4) * (c.q.frozen ? 2 : 1)); }),
         paid: L(`GUARD {guard:${u.m(9)}}, doubled if the foe is FROZEN.`, c => { c.guard(u.m(9) * (c.q.frozen ? 2 : 1)); }) }) },
-    { slot: 'M-07', option: 'b', type: 'spell', color: PURPLE, program: u => ({
+    { slot: 'M-07', option: 'b', type: 'spell', color: PURPLE, spellLaw: { vulnerable: 40 }, program: u => ({
         free: L(`STORM ${u.i(1)}.`, c => { c.storm(u.i(1)); }),
-        paid: L(`VULNERABLE +{vuln:${u.m(10)}}% per STORM on the foe, for 2 turns.`, c => {
-            c.vulnerable(u.m(10) * c.q.storm, 2);
-        }) }) },
+        paid: L(`VULNERABLE +{vuln:${S(u).m(10)}}% per STORM on the foe, for 2 turns. EXILE.`, c => {
+            c.vulnerable(S(u).m(10) * c.q.storm, 2);
+        }, EX) }) },
     { slot: 'M-08', option: 'c', type: 'global', color: PURPLE, program: u => turnGlobal(
         `STORM ${u.i(1)}, DRAW 1.`,
         c => { c.storm(u.i(1)); c.draw(1); }) },
@@ -224,6 +234,7 @@ function toCard(e: Entry): Card {
         targetType: e.color === BLUE ? 'self' : 'enemy',
         program: e.program(upgradeScale(0)),
         programAt: e.program,
+        ...(e.spellLaw ? { spellLawBaseline: e.spellLaw } : {}),
         addedIn: ADDED,
         tags: ['elementalist', 'trial'],
     };
