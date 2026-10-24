@@ -486,8 +486,13 @@ export interface CombatSignatureVM {
     id: string; name: string; description: string; cost: number; affordable: boolean; icon: string;
     /** The refusal reason while the rune can't fire (null when castable):
      *  the engine's `signatureCastBlock` — Conviction short, or The Open Hand
-     *  on a foe that can't be befriended yet. */
+     *  on a foe that can't be befriended yet. A refusal outranks a Conviction
+     *  shortfall, so the reason names what more Conviction would not fix. */
     reason?: string | null;
+    /** Refused for a reason other than Conviction (Float-Eye will not be
+     *  befriended, not yet low enough to spare, already counts twice): the
+     *  column marks it apart from a rune that is merely short of ◆. */
+    refused?: boolean;
 }
 /**
  * The momentum chain chip. Momentum is a single chain `{ color, length }`. A BREAK collapses it to null and the chip must
@@ -1807,6 +1812,20 @@ function scaledCardVM(uid: string, card: CombatCard, stats: PlayerStats): Combat
         };
 }
 
+/**
+ * The signature info popup's lines, in reading order. A refused rune leads
+ * with its reason (the news), above the gloss; a rune short of Conviction
+ * keeps the reason on the cost line, as it always has.
+ */
+export function signatureInfoLines(s: CombatSignatureVM): { lead: string | null; meta: string } {
+    const refused = !s.affordable && !!s.refused;
+    const short = !s.affordable && !refused;
+    return {
+        lead: refused ? (s.reason ?? null) : null,
+        meta: `consumes ◆ ${s.cost} conviction${short ? ` — ${s.reason ?? 'you have too little'}` : ''}`,
+    };
+}
+
 const SIG_ICON: Record<SignatureSkill['kind'], string> = {
     mercy: '🕊',
     covenant: '🩸',
@@ -1821,11 +1840,15 @@ function signaturesVM(state: CombatEncounterState): CombatSignatureVM[] {
         .filter((s): s is SignatureSkill => !!s)
         .map((s: SignatureSkill) => {
             const reason = signatureCastBlock(state, s);
+            // The gate checks Conviction first; asking it again with the cost
+            // met finds a refusal that more Conviction would not lift.
+            const refusal = signatureCastBlock({ ...state, conviction: Math.max(state.conviction, s.cost) }, s);
             return {
                 id: s.id, name: s.name, description: s.description, cost: s.cost,
                 affordable: reason === null,
                 icon: SIG_ICON[s.kind] ?? '◆',
-                reason,
+                reason: refusal ?? reason,
+                refused: refusal !== null,
             };
         });
 }
