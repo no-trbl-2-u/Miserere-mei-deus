@@ -155,6 +155,8 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 
 - AD1a — plotted 2026-10-21 (#716) without a deadline line; date not set.
 - AD1b — plotted 2026-10-21 (#716) without a deadline line; date not set.
+- EQ1a — a live defect T hit on device; loop work, needs no time from T; date not set.
+- EQ1b — loop work, needs no time from T; date not set.
 - FM1a — loop work, needs no time from T beyond confirming the pitch rule; date not set.
 - FM1b — loop work, needs no time from T beyond confirming the pitch rule; date not set.
 - FM1c — loop work, needs no time from T beyond confirming the pitch rule; date not set.
@@ -222,6 +224,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-24** — **relic loadout fix plotted** (T, attended session, `/plot`). **Added** Unscheduled lines for EQ1a-EQ1b: T set no date, and the rows fix a live defect rather than serve one window's goal. **Edited** no Item: the W5 relic pass (B1) is owner-led and its premise does not depend on how worn state is shown. Nothing ticked; no date moved.
 - **2026-10-24** — **ballot colours plotted** (T, attended session, `/plot`). **Added** an Unscheduled line for BV3: no date set, and it blocks no window's goal. **Edited** no Item. Nothing ticked; no date moved.
 - **2026-10-23** — **ballot Save plotted** (T, attended session, `/plot asap`). **Added** Unscheduled lines for BV2a-BV2b: T set no date, and the rows block no window's goal. **Edited** no Item. Nothing ticked; no date moved.
 - **2026-10-23** — **ballots on the phone plotted** (T, attended session, `/plot asap`). **Added** Unscheduled lines for BV1a-BV1c: T set no date, and the rows block no window's goal (card lanes are v0.3 stretch). **Edited** no Item: no open Item's premise depends on the ballot site. BE2a moved up the build plan's Status block (BV1a requires it); its Unscheduled line stands. Nothing ticked; no date moved.
