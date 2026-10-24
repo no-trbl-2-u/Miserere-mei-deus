@@ -208,6 +208,7 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - BV1c — attended; T creates the ballot Pages project and submits the first verdict from the phone; date not set.
 - BV2a — loop work, slotted asap (T); blocks no window's goal; date not set.
 - BV2b — loop work; follows BV2a; date not set.
+- BV3 — loop work; serves the next family's ballot, blocks no window's goal; date not set.
 - FM2a — loop work; T slotted it anytime; date not set.
 - FM2b — loop work; follows FM2a; date not set.
 - FM2c — loop work; follows FM2a; date not set.
@@ -221,6 +222,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-24** — **ballot colours plotted** (T, attended session, `/plot`). **Added** an Unscheduled line for BV3: no date set, and it blocks no window's goal. **Edited** no Item. Nothing ticked; no date moved.
 - **2026-10-23** — **ballot Save plotted** (T, attended session, `/plot asap`). **Added** Unscheduled lines for BV2a-BV2b: T set no date, and the rows block no window's goal. **Edited** no Item. Nothing ticked; no date moved.
 - **2026-10-23** — **ballots on the phone plotted** (T, attended session, `/plot asap`). **Added** Unscheduled lines for BV1a-BV1c: T set no date, and the rows block no window's goal (card lanes are v0.3 stretch). **Edited** no Item: no open Item's premise depends on the ballot site. BE2a moved up the build plan's Status block (BV1a requires it); its Unscheduled line stands. Nothing ticked; no date moved.
 - **2026-10-22** — **modular feature map plotted** (T, attended session, `/plot anytime`). **Added** Unscheduled lines for FM2a-FM2d: T set no date and the rows serve no window's goal. **Edited** no Item: the FM1 map they extend has shipped and no open Item depends on it.
