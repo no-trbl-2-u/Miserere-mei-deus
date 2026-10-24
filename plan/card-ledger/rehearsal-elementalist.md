@@ -288,10 +288,19 @@ are paper until the revisions step (`docs/lane-creator.md` step 7).
 
 ### Open
 
-- **Stacking** (T, M-04 note: "We need to discuss what it means to stack these
-  keywords"): what a second INFERNO, CHILL or STORM does to one already on the
-  foe. The ballot assumed each adds to the number; INFERNO's duration and split
-  are still unruled.
+- INFERNO's split (how much of the burn you take) and its turns per
+  application: still unruled; the ballot's placeholder is half and 3.
+
+### Stacking (T, 2026-10-24, after sitting 3)
+
+T asked "what it means to stack these keywords" (M-04 note). Ruled:
+
+- **INFERNO adds potency and turns**, like LEECH: INFERNO 4 burning plus INFERNO
+  3 is INFERNO 7, with the second application's turns added on.
+- **CHILL adds**: CHILL 3 plus CHILL 2 is CHILL 5, which then drops by 1 a
+  round. Big stacks are the road to FROZEN.
+- **STORM adds**: STORM 2 plus STORM 3 is STORM 5, and it keeps growing by 1 a
+  turn from there.
 - Whether "Globals PAID = FREE, permanent" and "no max" are rules for this
   family only or for every lane. The Blood Price Globals already live carry
   PAID deltas (P-10c, E-03d), so a lane-wide Global rule would revise them.
