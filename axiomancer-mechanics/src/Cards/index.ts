@@ -29,7 +29,7 @@ export {
 
 // Card lanes: the registry the dev menu's CARDS section lists.
 export type { CardLane } from './card.lanes';
-export { CARD_LANES, GREY_LANE, getCardLane, laneRewardPool } from './card.lanes';
+export { CARD_LANES, GREY_LANE, getCardLane, laneRewardPool, deckLaneIds } from './card.lanes';
 
 // The rank ladder and the card types.
 export type { CardRank, CardRarity, CardType, CardRider } from './types';

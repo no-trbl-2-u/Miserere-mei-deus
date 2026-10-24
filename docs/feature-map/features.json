@@ -1297,6 +1297,12 @@
       "kind": "coupling",
       "from": "area:Combat",
       "to": "area:Enemy",
+      "file": "axiomancer-mechanics/src/Combat/combat.rewards.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Enemy",
       "file": "axiomancer-mechanics/src/Combat/combat.signature.ts"
     },
     {
@@ -2142,6 +2148,12 @@
     {
       "kind": "coupling",
       "from": "route:(tabs)/deck",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/deck",
       "to": "area:Effects",
       "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
     },
@@ -2234,6 +2246,12 @@
       "from": "route:(tabs)/exploration",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/exploration",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/store.ts"
     },
     {
       "kind": "coupling",
@@ -2737,6 +2755,12 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Cards",
+      "file": "axiomancer-mobile/state/combat/store-actions.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Cards",
       "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
     },
     {
@@ -2750,6 +2774,12 @@
       "from": "route:combat-encounter",
       "to": "area:Cards",
       "file": "axiomancer-mobile/state/presenters/card-rarity.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/card-upgrade.engine.ts"
     },
     {
       "kind": "coupling",
@@ -2833,7 +2863,25 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/card-upgrade.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Combat",
       "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Effects",
+      "file": "axiomancer-mobile/state/presenters/card-upgrade.engine.ts"
     },
     {
       "kind": "coupling",
@@ -2858,6 +2906,12 @@
       "from": "route:combat-encounter",
       "to": "area:Enemy",
       "file": "axiomancer-mobile/state/actions.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Enemy",
+      "file": "axiomancer-mobile/state/combat/store-actions.ts"
     },
     {
       "kind": "coupling",
@@ -3098,6 +3152,12 @@
       "from": "route:dev",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/dev/skip-event.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:dev",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/store.ts"
     },
     {
       "kind": "coupling",
@@ -3368,6 +3428,12 @@
       "from": "route:devaftermath",
       "to": "area:Log",
       "file": "axiomancer-mobile/lib/platform/router.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devart/rooms",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/store.ts"
     },
     {
       "kind": "coupling",
@@ -3660,6 +3726,12 @@
     {
       "kind": "coupling",
       "from": "route:hazard-deck",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:hazard-deck",
       "to": "area:Effects",
       "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
     },
@@ -3770,6 +3842,12 @@
       "from": "route:index",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:index",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/store.ts"
     },
     {
       "kind": "coupling",
@@ -3996,6 +4074,12 @@
     {
       "kind": "coupling",
       "from": "route:labyrinth",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:labyrinth",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/GameStoreProvider.tsx"
     },
@@ -4136,6 +4220,12 @@
       "from": "route:saves",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:saves",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/store.ts"
     },
     {
       "kind": "coupling",

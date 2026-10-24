@@ -50,10 +50,11 @@ import {
     selectCombatLogHistory, COMBAT_LOG_TOGGLE_TEXT, COMBAT_LOG_TOGGLE_A11Y, COMBAT_LOG_CLOSE_A11Y, COMBAT_LOG_BACK_TEXT,
     type CombatCardVM, type CombatEffectChipVM, type CombatSignatureVM,
 } from '@/state/presenters/combat-encounter.engine';
+import { cardUpgradeRowsVM } from '@/state/presenters/card-upgrade.engine';
 import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
 import { useGameState, useGameStore } from '@/state/GameStoreProvider';
 import {
-    claimCombatRewardAction, resetCombatRewardAction, rollCombatRewardAction,
+    claimCombatRewardAction, claimCombatUpgradeAction, resetCombatRewardAction, rollCombatRewardAction,
 } from '@/state/combat/store-actions';
 import { FONTS, HUE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
@@ -320,6 +321,7 @@ export function CombatEncounterPanel({
     // The live reward draft (store-owned so it survives a panel remount).
     const rewardOffers = useGameState((s) => s.combatReward?.offers ?? EMPTY_OFFERS);
     const rewardsClaimed = useGameState((s) => s.combatReward?.claimed ?? false);
+    const rewardUpgrade = useGameState((s) => s.combatReward?.upgrade ?? null);
 
     const [state, setState] = useState<CombatEncounterState | null>(null);
     // Multi-card staging (hazard model): several cards can be staged at once; each
@@ -614,14 +616,24 @@ export function CombatEncounterPanel({
     // the action is idempotent, so a remount re-reads the SAME offer rather
     // than rerolling it.
     useEffect(() => {
-        if (live.finalOutcome === 'victory') rollCombatRewardAction(store);
-    }, [live.finalOutcome, store]);
+        if (live.finalOutcome === 'victory') rollCombatRewardAction(store, enemy);
+    }, [live.finalOutcome, store, enemy]);
 
     // Claim (or skip) — the action appends the card AND persists, so the pick
     // does not wait on some unrelated save() to happen along.
     const onRewardPick = useCallback((cardId: string | null) => {
         claimCombatRewardAction(store, cardId);
     }, [store]);
+    const onRewardUpgrade = useCallback((cardId: string) => {
+        claimCombatUpgradeAction(store, cardId);
+    }, [store]);
+    // The elite reward's upgrade as the shared picker's one row (null hides it).
+    const rewardUpgradeRows = useMemo(
+        () => (rewardUpgrade && player
+            ? cardUpgradeRowsVM([rewardUpgrade.fromCardId], [...player.knownCards, ...(player.combatRewardCards ?? [])])
+            : null),
+        [rewardUpgrade, player],
+    );
 
     // Identity-stable board props: inline arrows / fresh objects here defeat
     // CombatBoard's React.memo and re-render the whole 1200-line board on every
@@ -1124,7 +1136,12 @@ export function CombatEncounterPanel({
 
             {/* deckbuilder reward — claimed before the summary on a win */}
             {live.finalOutcome === 'victory' && !rewardsClaimed && rewardOffers.length > 0 && (
-                <CombatRewardsOverlay offers={rewardCardVMs(rewardOffers, live.player.baseStats)} onPick={onRewardPick} />
+                <CombatRewardsOverlay
+                    offers={rewardCardVMs(rewardOffers, live.player.baseStats)}
+                    onPick={onRewardPick}
+                    upgradeRows={rewardUpgradeRows}
+                    onUpgrade={onRewardUpgrade}
+                />
             )}
 
             {summary && (rewardsClaimed || live.finalOutcome !== 'victory') && (
