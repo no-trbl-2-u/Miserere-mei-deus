@@ -23,7 +23,7 @@
 | Element | Role | Effect (working keyword) |
 |---|---|---|
 | Fire | Big damage, at the cost of both sides getting hurt | **INFERNO**: a DoT on both the player and the foe, more on the foe |
-| Frost | Mainly defensive | **CHILL**: lowers the foe's damage by a flat amount; drops by 1 each round. **FROZEN** (below) |
+| Frost | Mainly defensive | **CHILL** (renamed **BLIZZARD**, T, 2026-10-24): lowers the foe's damage by a flat amount; drops by 1 each round. **FROZEN** (below) |
 | Storm | The long game: offence and defence through utility and card draw | **STORM**: a DoT that starts low and rises by n each turn; plus **DRAW** |
 
 ### Pairs (T)
@@ -160,12 +160,12 @@ until the revisions step):
 |---|---|---|---|---|
 | P-01 | P-01b | Attack, Fire | DEAL 5. | DEAL 8, doubled if the foe is burning. |
 | P-02 | P-02b | Attack, Fire | DEAL 6. | DEAL 18; INFERNO 8 (you and the foe both burn). |
-| P-03 | P-03a | Skill, Frost | GUARD equal to the foe's CHILL. | GUARD twice the foe's CHILL. |
-| P-04 | P-04a | Attack, Frost | DEAL 3, CHILL 2. | Spend all the foe's CHILL: DEAL 6, +2 per CHILL spent. |
+| P-03 | P-03a | Skill, Frost | GUARD equal to the foe's BLIZZARD. | GUARD twice the foe's BLIZZARD. |
+| P-04 | P-04a | Attack, Frost | DEAL 3, BLIZZARD 2. | Spend all the foe's BLIZZARD: DEAL 6, +2 per BLIZZARD spent. |
 | P-05 | P-05b | Spell, Storm | STORM 1; DEAL equal to the foe's STORM. | Trigger the foe's STORM. |
 | P-06 | P-06b | Skill, Storm | GUARD 3, DRAW 1. | GUARD 5, + the foe's STORM (max +12). DRAW 1. |
 | P-07 | P-07a | Attack, Fire + Frost | DEAL 5, INFERNO 2. | DEAL 10, INFERNO 4; if the foe is FROZEN, the INFERNO is doubled too. |
-| P-08 | P-08b | Skill, Frost + Storm | GUARD equal to the foe's CHILL + STORM. | Double the foe's CHILL and STORM. |
+| P-08 | P-08b | Skill, Frost + Storm | GUARD equal to the foe's BLIZZARD + STORM. | Double the foe's BLIZZARD and STORM. |
 | P-09 | P-09a | Attack, Fire + Storm | DEAL 4, + your INFERNO (max +6). | DEAL 8, + your INFERNO + the foe's STORM. |
 | P-10 | P-10b | Global, all | Start of your turn: if the foe has two or more elements, DEAL 5. | The same line, permanent (no "instead"). |
 
@@ -207,13 +207,13 @@ E-10: KEEP E-10c | cut: E-10a, E-10b | note: free is draw 1, storm 1 instead
 |---|---|---|---|---|
 | E-01 | E-01b | Spell, Fire | INFERNO 3, GUARD 2. | INFERNO 8, GUARD 5. |
 | E-02 | E-02c | Attack, Fire | DEAL 5. | DEAL 8, then INFERNO equal to half the damage dealt. |
-| E-03 | E-03b | Spell, Frost | CHILL 2, DRAW 1. | CHILL 6, DRAW 1. |
-| E-04 | E-04c | Skill, Frost | CHILL 3. | CHILL 5, then GUARD equal to the foe's CHILL. |
+| E-03 | E-03b | Spell, Frost | BLIZZARD 2, DRAW 1. | BLIZZARD 6, DRAW 1. |
+| E-04 | E-04c | Skill, Frost | BLIZZARD 3. | BLIZZARD 5, then GUARD equal to the foe's BLIZZARD. |
 | E-05 | E-05b | Spell, Storm | STORM 1, DRAW 1. | STORM 3, DRAW 2. |
 | E-06 | E-06a | **Global**, Storm (was a Spell) | The STORM grows by 1 extra. | The same line, permanent. |
 | E-07 | E-07b | Skill, Storm | DRAW 2. | DRAW 2, then STORM equal to the cards in your hand. |
-| E-08 | E-08c | Spell, Fire + Frost | CHILL 2, INFERNO 2. | Steam: remove your INFERNO; the foe gains that much CHILL and INFERNO. |
-| E-09 | E-09b | Global, Frost + Storm | Start of your turn: CHILL equal to half the foe's STORM. | The same line, permanent. |
+| E-08 | E-08c | Spell, Fire + Frost | BLIZZARD 2, INFERNO 2. | Steam: remove your INFERNO; the foe gains that much BLIZZARD and INFERNO. |
+| E-09 | E-09b | Global, Frost + Storm | Start of your turn: BLIZZARD equal to half the foe's STORM. | The same line, permanent. |
 | E-10 | E-10c | Spell, all | DRAW 1, STORM 1. | Swap the numbers of two elements on the foe. DRAW 1. |
 
 Notes on applying them:
@@ -256,9 +256,9 @@ general: I didn't select a 10th card because I'd like a new, different global: P
 | Slot | Kept | Type | FREE | PAID |
 |---|---|---|---|---|
 | M-01 | M-01a | Skill, Fire | Remove your INFERNO. | HEAL twice your INFERNO, then remove your INFERNO. |
-| M-02 | M-02a | Skill, Frost | HEAL 2, + the foe's CHILL. | HEAL 4, + twice the foe's CHILL. |
-| M-03 | M-03a | Skill, Storm | DRAW 2. | DRAW 2, CHILL 2, GUARD 2. |
-| M-04 | M-04a | Spell, all | INFERNO 1, CHILL 1, STORM 1. | INFERNO 3, CHILL 3, STORM 3. |
+| M-02 | M-02a | Skill, Frost | HEAL 2, + the foe's BLIZZARD. | HEAL 4, + twice the foe's BLIZZARD. |
+| M-03 | M-03a | Skill, Storm | DRAW 2. | DRAW 2, BLIZZARD 2, GUARD 2. |
+| M-04 | M-04a | Spell, all | INFERNO 1, BLIZZARD 1, STORM 1. | INFERNO 3, BLIZZARD 3, STORM 3. |
 | M-05 | M-05c | Skill, all | DRAW 1; gain 1 Conviction. | DRAW 1; gain 2 Conviction per different element on the foe. |
 | M-06 | M-06a | Skill, Frost | GUARD 4, doubled if the foe is FROZEN. | GUARD 9, doubled if the foe is FROZEN. |
 | M-07 | M-07b | Spell, Storm | STORM 2. | VULNERABLE +5% per STORM on the foe, for 2 turns. |
@@ -272,7 +272,7 @@ Notes on applying them:
   all three elements at once. That makes it the card that asks what stacking
   means (Open, below).
 - **M-05**, "each unique element?": yes. It counts the different elements on
-  the foe (INFERNO, CHILL, STORM), so the PAID line tops out at 6 Conviction
+  the foe (INFERNO, BLIZZARD, STORM), so the PAID line tops out at 6 Conviction
   with all three up; the printed cap is dropped as redundant.
 - **M-08 and M-10** follow the Global rule, now worded by T as "paid and free
   should *typically* be the same": the default, with room for an exception T
@@ -288,19 +288,40 @@ are paper until the revisions step (`docs/lane-creator.md` step 7).
 
 ### Open
 
-- INFERNO's split (how much of the burn you take) and its turns per
-  application: still unruled; the ballot's placeholder is half and 3.
 
 ### Stacking (T, 2026-10-24, after sitting 3)
 
 T asked "what it means to stack these keywords" (M-04 note). Ruled:
 
-- **INFERNO adds potency and turns**, like LEECH: INFERNO 4 burning plus INFERNO
-  3 is INFERNO 7, with the second application's turns added on.
-- **CHILL adds**: CHILL 3 plus CHILL 2 is CHILL 5, which then drops by 1 a
+- **INFERNO adds**: INFERNO 4 burning plus INFERNO 3 is INFERNO 7. (T first
+  answered "add potency and turns"; the whole-combat ruling below leaves no
+  turns to add.)
+- **BLIZZARD adds**: BLIZZARD 3 plus BLIZZARD 2 is BLIZZARD 5, which then drops by 1 a
   round. Big stacks are the road to FROZEN.
 - **STORM adds**: STORM 2 plus STORM 3 is STORM 5, and it keeps growing by 1 a
   turn from there.
 - Whether "Globals PAID = FREE, permanent" and "no max" are rules for this
   family only or for every lane. The Blood Price Globals already live carry
   PAID deltas (P-10c, E-03d), so a lane-wide Global rule would revise them.
+
+### The weather (T, 2026-10-24)
+
+T: "I'm imagining them controlling and changing the weather." The family's
+fantasy, "I bend the elements", is read as weather: the Elementalist sets and
+shifts the weather the foe fights in.
+
+- **CHILL is renamed BLIZZARD.** Every applied table above reads BLIZZARD; T's
+  verbatim verdict blocks keep the word T voted on. FROZEN keeps its name and
+  rule (BLIZZARD at least the foe's attack: the next DEAL it takes is doubled).
+- **INFERNO's split: you take half, rounded down.** INFERNO 7 on the foe burns
+  you for 3.
+- **All three elements last the whole combat.** No element has a turn count.
+- **BLIZZARD and INFERNO drop by 1 every round after the one they were applied
+  in**; STORM grows by 1 every turn. An element that drops to 0 is gone.
+- With the stacking rulings: a new application adds to the number, and the
+  weather then drifts on its own (fire and snow die down, the storm builds).
+
+Still open for the revisions step: the scaling stat of INFERNO, BLIZZARD and
+STORM (colours follow each card's job, BV3), names, the test deck and the family
+relic with its signature skill.
+
