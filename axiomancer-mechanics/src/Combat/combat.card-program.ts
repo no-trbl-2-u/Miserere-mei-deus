@@ -708,16 +708,17 @@ class LineCtx implements ProgramCtx {
         if (this.mode === 'apply') el.storm += n;
     }
 
-    draw(n: number): void {
-        if (n <= 0) return;
+    draw(n: number): number {
+        if (n <= 0) return 0;
         const avail = this.w.s.drawPile.length + this.w.s.discard.length;
-        if (this.mode === 'value') { this.w.value += DRAW_VALUE * Math.min(n, avail); return; }
-        if (this.mode !== 'apply' || avail === 0) return;
+        if (this.mode === 'value') { this.w.value += DRAW_VALUE * Math.min(n, avail); return Math.min(n, avail); }
+        if (this.mode !== 'apply' || avail === 0) return 0;
         const w = this.w;
         const d = drawCombatCards(w.s.drawPile, w.s.discard, [], n, () => getRng().random());
         const added = d.drawn.map(cardId => ({ uid: `ed${++w.l.el.drawUid}`, cardId }));
         w.s = { ...w.s, drawPile: d.drawPile, discard: d.discard, hand: [...w.s.hand, ...added] };
         w.events.push({ kind: 'hand-drawn', cards: d.drawn });
+        return d.drawn.length;
     }
 
     /** The witness's worth of taking `amount` off your INFERNO (burn avoided, death avoided). */

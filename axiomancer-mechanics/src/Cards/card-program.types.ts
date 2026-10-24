@@ -129,8 +129,10 @@ export interface ProgramCtx {
     blizzard(n: number): void;
     /** STORM n, unscaled; stacks by adding. */
     storm(n: number): void;
-    /** DRAW n: draw n cards now. */
-    draw(n: number): void;
+    /** DRAW n: draw n cards now. Returns how many actually landed (fewer
+     *  than n, or 0, when the draw pile and discard are both short or
+     *  empty); the witness's estimate in value mode. */
+    draw(n: number): number;
     /** Remove all your INFERNO (the foe keeps burning). Returns the amount removed. */
     removeYourInferno(): number;
     /** Move `share` of your INFERNO onto the foe (foe only). Returns the amount moved. */

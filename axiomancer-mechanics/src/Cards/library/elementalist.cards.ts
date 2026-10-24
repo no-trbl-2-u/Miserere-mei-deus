@@ -146,10 +146,9 @@ const ENTRIES: Entry[] = [
     { slot: 'E-07', option: 'b', type: 'skill', color: BLUE, program: () => ({
         free: L('DRAW 2.', c => { c.draw(2); }),
         paid: L('DRAW 2, then STORM equal to the cards in your hand.', c => {
-            const h0 = c.q.handSize; c.draw(2);
-            // Apply mode reads the hand after the draw; the witness's estimate assumes the draw landed.
-            const h = c.q.handSize > h0 ? c.q.handSize : h0 + 2;
-            c.storm(h);
+            const h0 = c.q.handSize;
+            const drawn = c.draw(2);
+            c.storm(h0 + drawn);
         }) }) },
     { slot: 'E-08', option: 'c', type: 'spell', color: PURPLE, program: u => ({
         free: L(`BLIZZARD ${u.i(2)}, INFERNO ${u.i(1)} on the foe only.`, c => { c.blizzard(u.i(2)); c.inferno(u.i(1), 'foe'); }),

@@ -203,6 +203,12 @@ describe('the cards play the weather', () => {
         const s = play(withWeather(fight([idOf('E-08')]), { infSelf: 3, upSelf: true }), 't0', true);
         expect(weather(s)).toMatchObject({ 'your-inferno': 0, blizzard: 3, 'foe-inferno': 3 });
     });
+
+    it('E-07 PAID STORMs by the real hand size even when DRAW is a no-op (empty deck)', () => {
+        const before = { ...fight([idOf('E-07')]), drawPile: [], discard: [] };
+        const s = play(before, 't0', true);
+        expect(weather(s).storm).toBe(0);
+    });
 });
 
 /** A face made only of DEAL / GUARD / HEAL / INFERNO / BLIZZARD / STORM numbers. */
