@@ -155,6 +155,18 @@
   - [ ] M-08d: 2 keywords (LEECH, SACRIFICE), max 1; 1 condition (trigger: sac), max 0.
 - next: T's next card session (D37). Ballot §3 ("rank follows complexity") points at re-ranking these cards rather than cutting keywords; either way the change is a card change. Re-seed the fixture after it (`docs/card-spec.md` §17). The loop does not touch these cards.
 
+### [content] Card-rules fence: 22 Elementalist cards pinned over the complexity budget, one over the Global template (Phase EL1c, 2026-10-24)
+- category: content
+- impact: 3
+- ease: 6
+- source: Phase EL1c (`axiomancer-mechanics/src/Cards/e2e/card-rules.engine.test.ts`); pinned in `card-rules.exemptions.json`.
+- detail: every Elementalist card is rank 1 (Ash), as Blood Price. Most print two or three weather keywords (BLIZZARD, DRAW, INFERNO, STORM, FROZEN, HEAL, VULNERABLE) where Ash allows 1, and the ⟳ Globals and the "if the foe is burning / FROZEN" lines carry a condition where Ash allows none:
+  - [ ] Over on keywords: P-06, P-08, P-09, E-03, E-05, E-07, E-08, E-10, M-01, M-02, M-03, M-04 (3), M-07, M-09.
+  - [ ] Over on conditions: P-01, M-06 (`if`); E-06 (trigger).
+  - [ ] Over on both: P-07, P-10, E-09, M-08, M-10.
+  - [ ] Global template: E-06 prints "(while in play)" in its body, a duration word (T's note's wording).
+- next: T's revisions (lane-creator step 7): re-rank or trim, as for Blood Price. Re-seed the fixture after it.
+
 ### [content] Card-rules fence: 5 atlas words pinned under the carrier rule or the admission bar (Phase CS1, 2026-10-13)
 - category: content
 - impact: 3

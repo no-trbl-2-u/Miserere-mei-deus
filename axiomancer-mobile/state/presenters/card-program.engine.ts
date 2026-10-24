@@ -113,6 +113,14 @@ const FREE_CELL: readonly { re: RegExp; keyword: string; value: (m: RegExpMatchA
     { re: /\bDEAL\b/, keyword: 'DEAL', value: () => 'X' },
     { re: /\bfoe loses VITAE\b/, keyword: 'DEAL', value: () => 'X' },
     { re: /\bSACRIFICE\b/, keyword: 'SACRIFICE', value: () => '×2' },
+    // The weather read off the fight ("GUARD equal to the foe's BLIZZARD",
+    // "Remove your INFERNO") or grown by a Global ("the STORM grows by 1 extra").
+    { re: /\bSTORM grows by (\d+)\b/, keyword: 'STORM', value: (m) => `+${m[1]}` },
+    { re: /\bGUARD\b/, keyword: 'GUARD', value: () => 'X' },
+    { re: /\bHEAL\b/, keyword: 'HEAL', value: () => 'X' },
+    { re: /\bBLIZZARD\b/, keyword: 'BLIZZARD', value: () => 'X' },
+    { re: /\bINFERNO\b/, keyword: 'INFERNO', value: () => 'X' },
+    { re: /\bSTORM\b/, keyword: 'STORM', value: () => 'X' },
 ];
 
 /**

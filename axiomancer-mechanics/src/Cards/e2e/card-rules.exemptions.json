@@ -7,45 +7,15 @@
   },
   {
     "rule": "carrier-rule",
-    "id": "BLIZZARD",
-    "reason": "the weather engine ships first (EL1a); its carriers, the Elementalist trial set, land in EL1c, which removes this row",
-    "filed": "2026-10-24"
-  },
-  {
-    "rule": "carrier-rule",
     "id": "BOON",
     "reason": "pinned at CS1, awaits T's card session",
     "filed": "2026-10-13"
   },
   {
     "rule": "carrier-rule",
-    "id": "DRAW",
-    "reason": "the weather engine ships first (EL1a); its carriers, the Elementalist trial set, land in EL1c, which removes this row",
-    "filed": "2026-10-24"
-  },
-  {
-    "rule": "carrier-rule",
-    "id": "FROZEN",
-    "reason": "the weather engine ships first (EL1a); its carriers, the Elementalist trial set, land in EL1c, which removes this row",
-    "filed": "2026-10-24"
-  },
-  {
-    "rule": "carrier-rule",
     "id": "HONE",
     "reason": "pinned at CS1, awaits T's card session",
     "filed": "2026-10-13"
-  },
-  {
-    "rule": "carrier-rule",
-    "id": "INFERNO",
-    "reason": "the weather engine ships first (EL1a); its carriers, the Elementalist trial set, land in EL1c, which removes this row",
-    "filed": "2026-10-24"
-  },
-  {
-    "rule": "carrier-rule",
-    "id": "STORM",
-    "reason": "the weather engine ships first (EL1a); its carriers, the Elementalist trial set, land in EL1c, which removes this row",
-    "filed": "2026-10-24"
   },
   {
     "rule": "carrier-rule",
@@ -166,5 +136,143 @@
     "id": "bp-p-10c",
     "reason": "pinned at CS1, awaits T's card session",
     "filed": "2026-10-13"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "el-e-03b",
+    "reason": "the Elementalist trial set as kept (EL1c), awaits T's revisions (lane-creator step 7)",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "el-e-05b",
+    "reason": "the Elementalist trial set as kept (EL1c), awaits T's revisions (lane-creator step 7)",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "el-e-06a",
+    "reason": "the Elementalist trial set as kept (EL1c), awaits T's revisions (lane-creator step 7)",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "el-e-07b",
+    "reason": "the Elementalist trial set as kept (EL1c), awaits T's revisions (lane-creator step 7)",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "el-e-08c",
+    "reason": "the Elementalist trial set as kept (EL1c), awaits T's revisions (lane-creator step 7)",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "el-e-09b",
+    "reason": "the Elementalist trial set as kept (EL1c), awaits T's revisions (lane-creator step 7)",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "el-e-10c",
+    "reason": "the Elementalist trial set as kept (EL1c), awaits T's revisions (lane-creator step 7)",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "el-m-01a",
+    "reason": "the Elementalist trial set as kept (EL1c), awaits T's revisions (lane-creator step 7)",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "el-m-02a",
+    "reason": "the Elementalist trial set as kept (EL1c), awaits T's revisions (lane-creator step 7)",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "el-m-03a",
+    "reason": "the Elementalist trial set as kept (EL1c), awaits T's revisions (lane-creator step 7)",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "el-m-04a",
+    "reason": "the Elementalist trial set as kept (EL1c), awaits T's revisions (lane-creator step 7)",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "el-m-06a",
+    "reason": "the Elementalist trial set as kept (EL1c), awaits T's revisions (lane-creator step 7)",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "el-m-07b",
+    "reason": "the Elementalist trial set as kept (EL1c), awaits T's revisions (lane-creator step 7)",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "el-m-08c",
+    "reason": "the Elementalist trial set as kept (EL1c), awaits T's revisions (lane-creator step 7)",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "el-m-09c",
+    "reason": "the Elementalist trial set as kept (EL1c), awaits T's revisions (lane-creator step 7)",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "el-m-10n",
+    "reason": "the Elementalist trial set as kept (EL1c), awaits T's revisions (lane-creator step 7)",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "el-p-01b",
+    "reason": "the Elementalist trial set as kept (EL1c), awaits T's revisions (lane-creator step 7)",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "el-p-06b",
+    "reason": "the Elementalist trial set as kept (EL1c), awaits T's revisions (lane-creator step 7)",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "el-p-07a",
+    "reason": "the Elementalist trial set as kept (EL1c), awaits T's revisions (lane-creator step 7)",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "el-p-08b",
+    "reason": "the Elementalist trial set as kept (EL1c), awaits T's revisions (lane-creator step 7)",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "el-p-09a",
+    "reason": "the Elementalist trial set as kept (EL1c), awaits T's revisions (lane-creator step 7)",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "el-p-10b",
+    "reason": "the Elementalist trial set as kept (EL1c), awaits T's revisions (lane-creator step 7)",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "global-template",
+    "id": "el-e-06a",
+    "reason": "the Elementalist trial set as kept (EL1c), awaits T's revisions (lane-creator step 7)",
+    "filed": "2026-10-24"
   }
 ]
