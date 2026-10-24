@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // scripts/feature-map-render.mjs — the feature map's README and canvas.
 //
-//   node scripts/feature-map-render.mjs           # write docs/feature-map/README.md and Map.canvas
-//   node scripts/feature-map-render.mjs --check   # exit 1 when either committed file differs from a fresh render
+//   node scripts/feature-map-render.mjs           # write docs/feature-map/README.md, Map.canvas and Features/*.md
+//   node scripts/feature-map-render.mjs --check   # exit 1 when a committed file differs from a fresh render, or Features/ holds an extra file
 //
 // Reads docs/feature-map/features.json (written by scripts/feature-map.mjs),
 // docs/game-model.md and, when present, the alias table
@@ -16,6 +16,11 @@
 //   Map.canvas  JSON Canvas 1.0: one text node per feature inside one group node
 //               per feature group, flow and coupling edges in two colours, and
 //               the node colour marks whether the feature needs a pitch.
+//   Features/   one note per feature (renderNotes): its flags and group tag in
+//               frontmatter, the player-flow targets as wikilinks, the coupling
+//               targets as plain text so Graph view draws flow only, and the
+//               missing pitch evidence. A write deletes a note the renderer no
+//               longer makes when it carries `generated: feature-map`.
 //
 // The evidence fields (named, reachable, driven, tested, needsPitch) are added
 // by the evidence pass; a field that is absent renders as "unknown", so the
@@ -40,6 +45,10 @@ export const README_PATH = 'docs/feature-map/README.md'
 export const CANVAS_PATH = 'docs/feature-map/Map.canvas'
 /** The evidence pass's alias table, `{ "<feature id>": { name, aliases } }`; optional. */
 export const NAMES_PATH = 'scripts/feature-map.names.json'
+/** One generated note per feature; the folder is mirrored into the vault as `Features/`. */
+export const NOTES_DIR = 'docs/feature-map/Features'
+/** The frontmatter `generated:` value that marks a note as the renderer's own. */
+export const NOTE_MARKER = 'feature-map'
 
 export const TABLE_START = '<!-- feature-table:start -->'
 export const TABLE_END = '<!-- feature-table:end -->'
@@ -281,6 +290,115 @@ export function renderCanvasObject(map) {
   return { nodes: [legend, ...nodes, ...featureNodes], edges }
 }
 
+/** Characters no note file name may hold: path separators, Windows' reserved set, and Obsidian's link syntax. */
+export const UNSAFE_IN_FILE_NAME = /[\\/:*?"<>|#^[\]]/g
+
+/**
+ * The file-name rule: every unsafe character becomes `-`, runs of whitespace
+ * become one space, and leading or trailing spaces and dots are trimmed. An
+ * empty result falls back to the same rule applied to the id.
+ */
+export function safeFileName(name, id = '') {
+  const clean = (s) => String(s).replace(UNSAFE_IN_FILE_NAME, '-').replace(/\s+/g, ' ').replace(/^[\s.]+|[\s.]+$/g, '')
+  return clean(name) || clean(id) || 'feature'
+}
+
+/**
+ * One note file stem per feature id, unique ignoring case (the vault may sit
+ * on a case-insensitive disk). In feature order the first holder of a stem
+ * keeps it; a later feature whose stem is taken gets its made-safe id
+ * appended in brackets.
+ */
+export function noteStems(map) {
+  const stems = new Map()
+  const taken = new Set()
+  for (const f of orderedFeatures(map)) {
+    let stem = safeFileName(f.name, f.id)
+    if (taken.has(stem.toLowerCase())) stem = `${stem} (${safeFileName(f.id)})`
+    taken.add(stem.toLowerCase())
+    stems.set(f.id, stem)
+  }
+  return stems
+}
+
+/** A note's repo path; its links are vault-relative, `Features/<stem>`. */
+export const notePath = (stem) => `${NOTES_DIR}/${stem}.md`
+
+const yamlString = (s) => JSON.stringify(String(s))
+const linkLabel = (s) => String(s).replace(/[[\]|]/g, '-')
+
+/** The features each feature points at by kind, from drawnEdges: a both-way pair counts for both ends. */
+function targetsByKind(map, kind) {
+  const out = new Map(map.features.map((f) => [f.id, new Set()]))
+  for (const e of drawnEdges(map)) {
+    if (e.kind !== kind) continue
+    out.get(e.from).add(e.to)
+    if (e.both) out.get(e.to).add(e.from)
+  }
+  return out
+}
+
+/** One generated note per feature: frontmatter flags and tags, Leads to as wikilinks, Uses as plain text. */
+export function renderNotes(map) {
+  const stems = noteStems(map)
+  const ordered = orderedFeatures(map)
+  const rank = new Map(ordered.map((f, i) => [f.id, i]))
+  const byId = new Map(map.features.map((f) => [f.id, f]))
+  const inOrder = (ids) => [...ids].sort((a, b) => rank.get(a) - rank.get(b))
+  const flows = targetsByKind(map, 'flow')
+  const uses = targetsByKind(map, 'coupling')
+  const gated = gateTargets(map)
+  const out = {}
+  for (const f of ordered) {
+    const pitch = flag(f.needsPitch)
+    const tags = [`feature-map/${f.group}`, ...(pitch === 'yes' ? ['needs-pitch'] : [])]
+    const group = (GROUPS.find((x) => x.id === f.group) || { label: f.group }).label
+    const leads = inOrder(flows.get(f.id)).map((t) => `- [[Features/${stems.get(t)}|${linkLabel(byId.get(t).name)}]]`)
+    const used = inOrder(uses.get(f.id)).map((t) => `- ${byId.get(t).name}`)
+    const missing = pitch === 'yes' ? missingList(f.needsPitch.missing) : []
+    const lines = [
+      '---',
+      `kind: ${yamlString(f.kind)}`,
+      `group: ${yamlString(f.group)}`,
+      `reachable: ${yamlString(flag(f.reachable))}`,
+      `driven: ${yamlString(flag(f.driven))}`,
+      `tested: ${yamlString(flag(f.tested))}`,
+      `needsPitch: ${yamlString(pitch)}`,
+      `source: ${yamlString(f.source || '')}`,
+      `generated: ${NOTE_MARKER}`,
+      'tags:',
+      ...tags.map((t) => `  - ${t}`),
+      '---',
+      '',
+      `# ${f.name}`,
+      '',
+      `Generated by \`scripts/feature-map-render.mjs\` from \`features.json\`; do not edit. Notes about this feature go in \`Threads/\`.`,
+      '',
+      `${KIND_LABEL[f.kind] || f.kind} in ${group}, from \`${f.source || 'unknown'}\`.`,
+      '',
+      '## Leads to',
+      '',
+      ...(gated.has(f.id) ? ['Opens from any screen.', ''] : []),
+      ...(leads.length ? leads : ['No player-flow edge leads out of it.']),
+      '',
+      '## Uses',
+      '',
+      'Code it uses, as plain text so Graph view draws player flow only.',
+      '',
+      ...(used.length ? used : ['- nothing']),
+      '',
+      '## Pitch',
+      '',
+      ...(pitch === 'yes'
+        ? [missing.length ? `Needs a pitch. Missing: ${missing.join('; ')}` : 'Needs a pitch.']
+        : [pitch === 'no' ? 'Has a pitch.' : 'Not known yet.']),
+      '',
+    ]
+    out[notePath(stems.get(f.id))] = lines.join('\n')
+  }
+  return out
+}
+
 export function renderCanvas(map) {
   return `${JSON.stringify(renderCanvasObject(map), null, '\t')}\n`
 }
@@ -318,8 +436,18 @@ export function render(root = ROOT) {
   const gameModel = fs.readFileSync(path.join(root, GAME_MODEL_PATH), 'utf8')
   const namesFile = path.join(root, NAMES_PATH)
   const names = fs.existsSync(namesFile) ? JSON.parse(fs.readFileSync(namesFile, 'utf8')) : {}
-  return { [README_PATH]: renderReadme(map, gameModel, names), [CANVAS_PATH]: renderCanvas(map) }
+  return { [README_PATH]: renderReadme(map, gameModel, names), [CANVAS_PATH]: renderCanvas(map), ...renderNotes(map) }
 }
+
+/** Files in Features/ the render does not make, as repo paths. */
+function extraNotes(root, out) {
+  const dir = path.join(root, NOTES_DIR)
+  if (!fs.existsSync(dir)) return []
+  return fs.readdirSync(dir).map((f) => `${NOTES_DIR}/${f}`).filter((rel) => !(rel in out)).sort()
+}
+
+/** Whether a note's frontmatter carries `generated: feature-map`. */
+export const isGeneratedNote = (text) => /^---\r?\n(?:(?!---\r?\n).*\r?\n)*?generated: feature-map\r?\n/.test(text)
 
 export function main(argv = process.argv.slice(2), root = ROOT) {
   const check = argv.includes('--check')
@@ -330,12 +458,21 @@ export function main(argv = process.argv.slice(2), root = ROOT) {
       return !fs.existsSync(p) || fs.readFileSync(p, 'utf8').replace(/\r\n/g, '\n') !== text
     })
     for (const [rel] of stale) console.error(`feature-map-render: ${rel} is stale; run node scripts/feature-map-render.mjs`)
-    return stale.length ? 1 : 0
+    const extra = extraNotes(root, out)
+    for (const rel of extra) console.error(`feature-map-render: ${rel} is not a feature; run node scripts/feature-map-render.mjs`)
+    return stale.length || extra.length ? 1 : 0
   }
   for (const [rel, text] of Object.entries(out)) {
     fs.mkdirSync(path.dirname(path.join(root, rel)), { recursive: true })
     fs.writeFileSync(path.join(root, rel), text)
-    console.log(`feature-map-render: wrote ${rel}`)
+  }
+  console.log(`feature-map-render: wrote ${README_PATH}, ${CANVAS_PATH} and ${Object.keys(out).length - 2} notes in ${NOTES_DIR}`)
+  for (const rel of extraNotes(root, out)) {
+    const p = path.join(root, rel)
+    if (fs.statSync(p).isFile() && isGeneratedNote(fs.readFileSync(p, 'utf8'))) {
+      fs.unlinkSync(p)
+      console.log(`feature-map-render: deleted ${rel}`)
+    } else console.error(`feature-map-render: left ${rel}, not marked generated: ${NOTE_MARKER}`)
   }
   return 0
 }
