@@ -143,7 +143,7 @@ export function EquipmentDetailModal({ vm, onClose, onEquip, onUnequip }: Equipm
                                         accessibilityRole="button"
                                         accessibilityLabel={`${vm.action.label} ${vm.name}`}
                                         onPress={() => onAction(vm.itemId)}
-                                        style={styles.closeBtn}
+                                        style={[styles.closeBtn, styles.actionBtn]}
                                         testID={`equip-detail-${vm.action.mode}`}
                                     >
                                         <Text style={styles.closeText}>{vm.action.label}</Text>
@@ -306,6 +306,12 @@ const useStyles = makeStyles((AXM) => ({
         borderWidth: 1,
         borderRadius: 8,
         borderColor: AXM.parchmentMed,
+    },
+    // The action label ("EQUIP · REPLACE <NAME>") can outgrow its hugged
+    // content width at narrow viewports; flex so it shares the row instead
+    // of overhanging, matching ItemModal.tsx's modalBtn.
+    actionBtn: {
+        flex: 1,
     },
     closeText: {
         fontFamily: FONTS.sans,

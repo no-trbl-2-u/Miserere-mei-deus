@@ -1,10 +1,11 @@
 /**
  * Worn state has one record: `player.equipment` (phase EQ1a, A1).
  *
- * The engine's `wornPerSlot` / `isEquippedFirstOfSlot` read "worn" off
- * inventory order, which cannot say "carried but not worn" and so disagreed
- * with the loadout combat reads. No mobile screen, presenter or action may
- * import them; `state/presenters/loadout.ts` reads the loadout instead.
+ * The engine's `wornPerSlot` / `isEquippedFirstOfSlot` / `findEquippedInSlot`
+ * read "worn" off inventory order, which cannot say "carried but not worn"
+ * and so disagreed with the loadout combat reads. No mobile screen,
+ * presenter or action may import them; `state/presenters/loadout.ts` reads
+ * the loadout instead.
  * Reads committed sources, allowlisted in the hermeticity guard.
  */
 
@@ -14,7 +15,7 @@ import * as path from 'path';
 
 const MOBILE_ROOT = path.resolve(__dirname, '..', '..');
 const SCAN_DIRS = ['state', 'app'];
-const BANNED = ['wornPerSlot', 'isEquippedFirstOfSlot'];
+const BANNED = ['wornPerSlot', 'isEquippedFirstOfSlot', 'findEquippedInSlot'];
 
 function walk(dir: string, out: string[] = []): string[] {
     for (const entry of readdirSync(dir)) {
