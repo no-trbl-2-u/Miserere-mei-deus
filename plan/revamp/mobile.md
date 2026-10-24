@@ -104,3 +104,26 @@ T revisits it here. Input — the 2026-09-28 dev-menu audit:
   QuestState, LogViewer, `/devaftermath` (DEFEAT + PARLEY/mercy).
 - A proposed seven-section baseline: STATE · PLAYER · ITEMS & HAZARD DECK ·
   WORLD · ENCOUNTERS · MINIGAMES & REWARDS · STORY / RUN (~1k LOC removed).
+
+## The FROZEN overlay on the foe (T, 2026-10-24, `/messy`)
+
+T: "A 'frozen' overlay for enemies to signify they're frozen."
+
+- **What exists.** EL1a/EL1b (the Elementalist trial set) put FROZEN in the
+  engine and on the board as a weather line in the combat log and the weather
+  reading (`state/presenters/combat-encounter.engine.ts`, `WEATHER_WORD.frozen`,
+  `HUE.hzBlueLite`), with its popup in `state/combat/keywords.ts`. The foe's
+  sprite does not change while it is FROZEN.
+- **T's calls (AskUserQuestion, 2026-10-24):** FROZEN only, not every weather;
+  a code-drawn ice tint now, and T's own ice art swapped in later.
+- **Shape.** While the foe is FROZEN: a translucent icy-blue tint and a frost
+  edge over the enemy sprite, drawn in code, fading in when FROZEN starts and
+  out when the doubled DEAL consumes it. It never hides the animation beneath
+  it: AN2a removed an overlay that covered the enemy animation, and this one
+  must stay translucent and must not intercept touches. The tint reads from
+  the presenter's FROZEN state, never a second copy of the rule.
+- **Later, T's art (D88).** The overlay takes an optional image the
+  code-drawn tint gives way to; the art phase is owner-led and waits on the
+  asset.
+- **Open questions:** none.
+
