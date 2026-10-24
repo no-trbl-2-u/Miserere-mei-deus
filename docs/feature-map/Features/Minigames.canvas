@@ -1,0 +1,44 @@
+{
+	"nodes": [
+		{
+			"id": "group:minigames",
+			"type": "group",
+			"x": 0,
+			"y": 0,
+			"width": 940,
+			"height": 170,
+			"label": "Minigames"
+		},
+		{
+			"id": "route:hazard",
+			"type": "file",
+			"file": "Features/The hazard minigame.md",
+			"x": 40,
+			"y": 40,
+			"width": 260,
+			"height": 90,
+			"color": "4"
+		},
+		{
+			"id": "route:hazard-deck",
+			"type": "file",
+			"file": "Features/The hazard deck.md",
+			"x": 340,
+			"y": 40,
+			"width": 260,
+			"height": 90,
+			"color": "4"
+		},
+		{
+			"id": "route:labyrinth",
+			"type": "file",
+			"file": "Features/The Labyrinth.md",
+			"x": 640,
+			"y": 40,
+			"width": 260,
+			"height": 90,
+			"color": "4"
+		}
+	],
+	"edges": []
+}

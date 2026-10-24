@@ -1,0 +1,192 @@
+{
+	"nodes": [
+		{
+			"id": "group:tabs",
+			"type": "group",
+			"x": 0,
+			"y": 0,
+			"width": 940,
+			"height": 300,
+			"label": "Tabs"
+		},
+		{
+			"id": "elsewhere",
+			"type": "group",
+			"x": 1060,
+			"y": 0,
+			"width": 340,
+			"height": 430,
+			"label": "Elsewhere"
+		},
+		{
+			"id": "route:(tabs)/character",
+			"type": "file",
+			"file": "Features/Character.md",
+			"x": 40,
+			"y": 40,
+			"width": 260,
+			"height": 90,
+			"color": "4"
+		},
+		{
+			"id": "route:(tabs)/deck",
+			"type": "file",
+			"file": "Features/Deck.md",
+			"x": 340,
+			"y": 40,
+			"width": 260,
+			"height": 90,
+			"color": "4"
+		},
+		{
+			"id": "route:(tabs)/exploration",
+			"type": "file",
+			"file": "Features/The map.md",
+			"x": 640,
+			"y": 40,
+			"width": 260,
+			"height": 90,
+			"color": "4"
+		},
+		{
+			"id": "route:(tabs)/inventory",
+			"type": "file",
+			"file": "Features/Inventory.md",
+			"x": 40,
+			"y": 170,
+			"width": 260,
+			"height": 90,
+			"color": "1"
+		},
+		{
+			"id": "route:(tabs)/memoir",
+			"type": "file",
+			"file": "Features/Memoir.md",
+			"x": 340,
+			"y": 170,
+			"width": 260,
+			"height": 90,
+			"color": "1"
+		},
+		{
+			"id": "elsewhere:route:settings",
+			"type": "file",
+			"file": "Features/Settings.md",
+			"x": 1100,
+			"y": 40,
+			"width": 260,
+			"height": 90,
+			"color": "1"
+		},
+		{
+			"id": "elsewhere:route:hazard-deck",
+			"type": "file",
+			"file": "Features/The hazard deck.md",
+			"x": 1100,
+			"y": 170,
+			"width": 260,
+			"height": 90,
+			"color": "4"
+		},
+		{
+			"id": "elsewhere:route:dev",
+			"type": "file",
+			"file": "Features/The dev menu.md",
+			"x": 1100,
+			"y": 300,
+			"width": 260,
+			"height": 90,
+			"color": "4"
+		}
+	],
+	"edges": [
+		{
+			"id": "flow:route:(tabs)/character->elsewhere:route:dev",
+			"fromNode": "route:(tabs)/character",
+			"toNode": "elsewhere:route:dev",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:(tabs)/character->elsewhere:route:hazard-deck",
+			"fromNode": "route:(tabs)/character",
+			"toNode": "elsewhere:route:hazard-deck",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:(tabs)/character->elsewhere:route:settings",
+			"fromNode": "route:(tabs)/character",
+			"toNode": "elsewhere:route:settings",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:(tabs)/character->route:(tabs)/deck",
+			"fromNode": "route:(tabs)/character",
+			"toNode": "route:(tabs)/deck",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:(tabs)/character->route:(tabs)/exploration",
+			"fromNode": "route:(tabs)/character",
+			"toNode": "route:(tabs)/exploration",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:(tabs)/character->route:(tabs)/inventory",
+			"fromNode": "route:(tabs)/character",
+			"toNode": "route:(tabs)/inventory",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:(tabs)/character->route:(tabs)/memoir",
+			"fromNode": "route:(tabs)/character",
+			"toNode": "route:(tabs)/memoir",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:(tabs)/deck->route:(tabs)/exploration",
+			"fromNode": "route:(tabs)/deck",
+			"toNode": "route:(tabs)/exploration",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:(tabs)/deck->route:(tabs)/inventory",
+			"fromNode": "route:(tabs)/deck",
+			"toNode": "route:(tabs)/inventory",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:(tabs)/deck->route:(tabs)/memoir",
+			"fromNode": "route:(tabs)/deck",
+			"toNode": "route:(tabs)/memoir",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:(tabs)/exploration->route:(tabs)/inventory",
+			"fromNode": "route:(tabs)/exploration",
+			"toNode": "route:(tabs)/inventory",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:(tabs)/exploration->route:(tabs)/memoir",
+			"fromNode": "route:(tabs)/exploration",
+			"toNode": "route:(tabs)/memoir",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:(tabs)/inventory->route:(tabs)/memoir",
+			"fromNode": "route:(tabs)/inventory",
+			"toNode": "route:(tabs)/memoir",
+			"color": "5",
+			"fromEnd": "arrow"
+		}
+	]
+}
