@@ -12,11 +12,14 @@
  */
 
 import { describe, expect, it } from '@jest/globals';
-import { COMBAT_REWARD_POOL, getCardById, type GameState } from '@mechanics';
+import {
+    COMBAT_REWARD_POOL, ENEMY_REGISTRY, STARTING_CARD_IDS, cardLibrary, getCardById, upgradeLimit, type GameState,
+} from '@mechanics';
 
 import {
     COMBAT_REWARD_OFFER_COUNT,
     claimCombatRewardAction,
+    claimCombatUpgradeAction,
     resetCombatRewardAction,
     rollCombatRewardAction,
 } from '@/state/combat/store-actions';
@@ -43,7 +46,7 @@ function storeWithPlayer(): AppStore {
 describe('combat reward draft — store actions', () => {
     it('starts with an empty, unclaimed slice', () => {
         const store = makeStore();
-        expect(store.getState().combatReward).toEqual({ offers: [], claimed: false });
+        expect(store.getState().combatReward).toEqual({ offers: [], claimed: false, upgrade: null });
     });
 
     it('rolls three distinct, resolvable offers into the store', () => {
@@ -73,7 +76,7 @@ describe('combat reward draft — store actions', () => {
         rollCombatRewardAction(store);
         claimCombatRewardAction(store, null);
         expect(rollCombatRewardAction(store)).toEqual([]);
-        expect(store.getState().combatReward).toEqual({ offers: [], claimed: true });
+        expect(store.getState().combatReward).toEqual({ offers: [], claimed: true, upgrade: null });
     });
 
     it('no-ops with no player loaded', () => {
@@ -94,7 +97,7 @@ describe('combat reward draft — store actions', () => {
         claimCombatRewardAction(store, offers[0]);
 
         expect(playerOf(store).combatRewardCards).toEqual([offers[0]]);
-        expect(store.getState().combatReward).toEqual({ offers: [], claimed: true });
+        expect(store.getState().combatReward).toEqual({ offers: [], claimed: true, upgrade: null });
         // The save actually reached the adapter — a reload sees the card.
         const saved = adapter.load() as GameState | null;
         expect(saved?.player?.combatRewardCards).toEqual([offers[0]]);
@@ -130,7 +133,7 @@ describe('combat reward draft — store actions', () => {
         rollCombatRewardAction(store);
         claimCombatRewardAction(store, null);
         resetCombatRewardAction(store);
-        expect(store.getState().combatReward).toEqual({ offers: [], claimed: false });
+        expect(store.getState().combatReward).toEqual({ offers: [], claimed: false, upgrade: null });
         expect(rollCombatRewardAction(store).length).toBe(COMBAT_REWARD_OFFER_COUNT);
     });
 
@@ -146,5 +149,66 @@ describe('combat reward draft — store actions', () => {
         // The next draft still produces a legal screen with the grown deck.
         const next = rollCombatRewardAction(store);
         expect(new Set(next).size).toBe(COMBAT_REWARD_OFFER_COUNT);
+    });
+});
+
+// Phase UP1f — after an elite fight the draft is the elite reward: the best
+// cards available, or one random upgrade of an owned card.
+describe('the elite reward — store actions', () => {
+    const ELITE = ENEMY_REGISTRY['green-jelly'];
+    const RARE = cardLibrary.find((card) => upgradeLimit(card) === 3)!.id;
+
+    function storeWithDeck(knownCards: readonly string[], rewards: readonly string[] = []): { store: AppStore; adapter: ReturnType<typeof createMemoryAdapter> } {
+        const adapter = createMemoryAdapter();
+        const store = createAppStore({ adapter });
+        store.setState({ player: { ...playerOf(store), knownCards: [...knownCards], combatRewardCards: [...rewards] } } as never);
+        return { store, adapter };
+    }
+
+    it('an elite win offers the rare among its cards and an upgrade of an owned card', () => {
+        const { store } = storeWithDeck(STARTING_CARD_IDS);
+        const offers = rollCombatRewardAction(store, ELITE);
+        expect(offers).toHaveLength(COMBAT_REWARD_OFFER_COUNT);
+        expect(offers).toContain(RARE);
+        const { upgrade } = store.getState().combatReward;
+        expect(STARTING_CARD_IDS).toContain(upgrade!.fromCardId);
+        expect(upgrade!.toCardId).toBe(`${upgrade!.fromCardId}+`);
+    });
+
+    it('a normal win carries no upgrade', () => {
+        const { store } = storeWithDeck(STARTING_CARD_IDS);
+        rollCombatRewardAction(store, ENEMY_REGISTRY['float-eye']);
+        expect(store.getState().combatReward.upgrade).toBeNull();
+        resetCombatRewardAction(store);
+        rollCombatRewardAction(store);
+        expect(store.getState().combatReward.upgrade).toBeNull();
+    });
+
+    it('the upgrade hides when nothing owned can be upgraded', () => {
+        const { store } = storeWithDeck(['grey-strike+', 'grey-ward+'], [`${RARE}+++`]);
+        rollCombatRewardAction(store, ELITE);
+        expect(store.getState().combatReward.offers).toHaveLength(COMBAT_REWARD_OFFER_COUNT);
+        expect(store.getState().combatReward.upgrade).toBeNull();
+    });
+
+    it('taking the upgrade swaps one owned copy, claims the draft and saves', () => {
+        const { store, adapter } = storeWithDeck(['grey-strike', 'grey-strike'], [RARE]);
+        rollCombatRewardAction(store, ELITE);
+        expect(store.getState().combatReward.upgrade).toEqual({ fromCardId: RARE, toCardId: `${RARE}+` });
+
+        claimCombatUpgradeAction(store, RARE);
+
+        expect(playerOf(store).combatRewardCards).toEqual([`${RARE}+`]);
+        expect(playerOf(store).knownCards).toEqual(['grey-strike', 'grey-strike']);
+        expect(store.getState().combatReward).toEqual({ offers: [], claimed: true, upgrade: null });
+        expect((adapter.load() as GameState | null)?.player?.combatRewardCards).toEqual([`${RARE}+`]);
+    });
+
+    it('an upgrade claim for any other card changes nothing', () => {
+        const { store } = storeWithDeck(['grey-strike'], [RARE]);
+        rollCombatRewardAction(store, ELITE);
+        claimCombatUpgradeAction(store, 'grey-strike');
+        expect(playerOf(store).knownCards).toEqual(['grey-strike']);
+        expect(store.getState().combatReward.claimed).toBe(false);
     });
 });

@@ -14,6 +14,12 @@
  *     not a greyed-out afterthought. The Threadbare Office exists to teach
  *     exactly that.
  *
+ * After an elite fight the draft carries a second option (Phase UP1f): one
+ * upgrade of a card the player owns, drawn at random by the engine. UPGRADE
+ * INSTEAD swaps the panel to the shared upgrade screen (`CardUpgradePicker`)
+ * with that one card, so the player reads NOW, AFTER and the locked slot
+ * before committing; BACK returns to the cards.
+ *
  * Rarity is never colour-only: the draft is the one moment the player compares
  * three cards and keeps one for the rest of the run. Each tile carries the
  * rarity-tinted frame and a printed rarity word beneath the face, and the
@@ -27,7 +33,15 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { CombatCardFace } from '@/components/combat/encounter/CombatBoard';
 import { FONTS, HUE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
+import { CardUpgradePicker } from '@/components/upgrade/CardUpgradePicker';
 import type { CombatCardVM } from '@/state/presenters/combat-encounter.engine';
+import type { CardUpgradeRowVM } from '@/state/presenters/card-upgrade.engine';
+import {
+    ELITE_REWARD_SUB,
+    ELITE_UPGRADE_BACK_LABEL,
+    ELITE_UPGRADE_OPEN_LABEL,
+    eliteUpgradeNote,
+} from '@/state/presenters/combat-reward.copy';
 // The ONE mobile source for the rarity band: the draft frame and the face's
 // pips both read `RARITY_COLOR`, so they cannot drift apart.
 import { rarityFor, RARITY_LABEL, RARITY_COLOR } from '@/state/presenters/card-rarity.engine';
@@ -43,22 +57,50 @@ const PREVIEW_H = 305;
 export function CombatRewardsOverlay({
     offers,
     onPick,
+    upgradeRows = null,
+    onUpgrade,
 }: {
     offers: CombatCardVM[];
     onPick: (cardId: string | null) => void;
+    /** The elite reward's upgrade, as the shared picker's rows (one card);
+     *  null or empty hides the option. */
+    upgradeRows?: readonly CardUpgradeRowVM[] | null;
+    /** Commits the upgrade of `cardId`, from the shared picker's confirm. */
+    onUpgrade?: (cardId: string) => void;
 }) {
     const AXM = usePalette();
     const styles = useStyles();
     const [picked, setPicked] = useState<string | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
+    const [upgrading, setUpgrading] = useState(false);
     const previewCard = preview ? offers.find((o) => o.cardId === preview) ?? null : null;
+    const upgradeRow = upgradeRows && upgradeRows.length > 0 && onUpgrade ? upgradeRows[0] : null;
+
+    if (upgrading && upgradeRow && onUpgrade) {
+        return (
+            <View style={styles.backdrop} testID="combat-rewards">
+                <View style={[styles.panel, styles.upgradePanel, { borderColor: AXM.sulfur }]} testID="combat-reward-upgrade-sheet">
+                    <CardUpgradePicker rows={[upgradeRow]} onConfirm={onUpgrade} />
+                    <Pressable
+                        onPress={() => setUpgrading(false)}
+                        testID="combat-reward-upgrade-back"
+                        accessibilityRole="button"
+                        accessibilityLabel="Back to the offered cards"
+                        style={[styles.btn, styles.upgradeBack, { borderColor: AXM.ash }]}
+                    >
+                        <Text style={[styles.btnText, { color: AXM.bone }]}>{ELITE_UPGRADE_BACK_LABEL}</Text>
+                    </Pressable>
+                </View>
+            </View>
+        );
+    }
 
     return (
         <View style={styles.backdrop} testID="combat-rewards">
             <View style={[styles.panel, { borderColor: AXM.sulfur }]}>
                 <Text style={styles.eyebrow}>✦ SPOILS</Text>
                 <Text style={styles.title}>Add a card to your deck</Text>
-                <Text style={styles.sub}>your deck grows as you fight — choose a card to read it</Text>
+                <Text style={styles.sub}>{upgradeRow ? ELITE_REWARD_SUB : 'your deck grows as you fight — choose a card to read it'}</Text>
 
                 <View style={styles.offerRow}>
                     {offers.map((card) => {
@@ -133,6 +175,19 @@ export function CombatRewardsOverlay({
                         <Text style={styles.btnNote}>{picked ? 'it joins your deck for the run' : 'choose a card first'}</Text>
                     </Pressable>
                 </View>
+
+                {upgradeRow && (
+                    <Pressable
+                        onPress={() => setUpgrading(true)}
+                        testID="combat-reward-upgrade-open"
+                        accessibilityRole="button"
+                        accessibilityLabel={`Upgrade ${upgradeRow.name} instead of taking a card`}
+                        style={[styles.btn, styles.upgradeOpen, { borderColor: AXM.sulfur }]}
+                    >
+                        <Text style={[styles.btnText, { color: AXM.sulfur }]}>{ELITE_UPGRADE_OPEN_LABEL}</Text>
+                        <Text style={styles.btnNote}>{eliteUpgradeNote(upgradeRow.name)}</Text>
+                    </Pressable>
+                )}
             </View>
 
             {/* tap-to-inspect — the FULL face plus its keyword definitions, so
@@ -214,6 +269,9 @@ const useStyles = makeStyles((AXM) => ({
     btnRow: { flexDirection: 'row', gap: 10, marginTop: 18 },
     btn: { flex: 1, borderWidth: 2, paddingHorizontal: 10, paddingVertical: 9, alignItems: 'center' },
     btnText: { fontFamily: FONTS.gothic, fontSize: 15, letterSpacing: 1 },
+    upgradeOpen: { flex: 0, alignSelf: 'stretch', marginTop: 10 },
+    upgradePanel: { alignItems: 'stretch' },
+    upgradeBack: { flex: 0, marginTop: 12 },
     btnNote: { fontFamily: FONTS.sans, fontSize: 9, color: AXM.bone, letterSpacing: 0.3, marginTop: 3, textAlign: 'center' },
     previewOverlay: { ...StyleSheet.absoluteFillObject, zIndex: 70, backgroundColor: 'rgba(0,0,0,0.92)', alignItems: 'center', justifyContent: 'center', padding: 14 },
     previewPanel: { width: '100%', maxWidth: 400, maxHeight: '92%', borderWidth: 2, backgroundColor: AXM.panelBg, paddingHorizontal: 14, paddingTop: 16, paddingBottom: 12 },

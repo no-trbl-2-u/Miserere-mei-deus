@@ -93,6 +93,8 @@ export {
     // Card rewards and the starting deck
     COMBAT_REWARD_POOL, STARTING_CARD_IDS, rollCombatCardRewards, rewardPoolFor, addRewardCard,
     unlockCardViaDilemma,
+    // The elite reward: the best cards or a random upgrade
+    isEliteEnemy, rollEliteReward, rollEliteCardRewards, rollEliteUpgrade,
     // Fate Engine — the dice get a second read
     riderText, RESERVE_MAX,
     // Upgradeable Dice (the combat dice model): the surfaces the app/sim
@@ -100,7 +102,7 @@ export {
     SPECIAL_CONVICTION_DEFAULT, MOMENTUM_CHAIN_ORDER, MOMENTUM_SURGE_LENGTH,
     DEFAULT_DIE_GEAR, activeDieGear,
 } from './Combat';
-export type { UpgradeableDieGear } from './Combat';
+export type { UpgradeableDieGear, EliteReward, EliteRewardUpgrade } from './Combat';
 // Stat scaling.
 export {
     scaleAmount, scaleFor, statFor, scaleRider, scaleCardForStats,
@@ -216,7 +218,7 @@ export {
     baseCardId, isUpgradedCardId, getUpgradedCardById,
     nextUpgradeId, upgradableCardIds,
     // Card lanes (the dev menu's CARDS section)
-    CARD_LANES, GREY_LANE, getCardLane, laneRewardPool,
+    CARD_LANES, GREY_LANE, getCardLane, laneRewardPool, deckLaneIds,
     // Runtime enumeration of the CardSpecialMechanic union, bound to
     // the type by compile-time assertions. Mobile KW-2 walks this list.
     CARD_SPECIAL_MECHANIC_KINDS,

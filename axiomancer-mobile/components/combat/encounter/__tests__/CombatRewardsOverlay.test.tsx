@@ -19,9 +19,10 @@ import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { describe, expect, it, jest } from '@jest/globals';
 
-import { getCardById } from '@mechanics';
+import { cardLibrary, getCardById, upgradeLimit } from '@mechanics';
 import { CombatRewardsOverlay } from '@/components/combat/encounter/CombatRewardsOverlay';
 import { rewardCardVMs } from '@/state/presenters/combat-encounter.engine';
+import { cardUpgradeRowsVM } from '@/state/presenters/card-upgrade.engine';
 import { RARITY_LABEL, rarityFor } from '@/state/presenters/card-rarity.engine';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
@@ -187,5 +188,50 @@ describe('CombatRewardsOverlay — D4 rarity, never colour alone', () => {
         expect(screen.getByTestId('combat-reward-preview')).toBeTruthy();
         const tags = screen.getAllByTestId('combat-card-face-rarity');
         expect(tags.some((t) => String(t.props.children) === RARITY_LABEL[rarityFor(first)].toUpperCase())).toBe(true);
+    });
+});
+
+// Phase UP1f — the elite reward's second option: one upgrade, read on the
+// shared upgrade screen before it commits.
+describe('CombatRewardsOverlay — the elite upgrade', () => {
+    const RARE = cardLibrary.find((card) => upgradeLimit(card) === 3)!.id;
+
+    function renderElite(rows = cardUpgradeRowsVM([RARE], [RARE])) {
+        const onPick = jest.fn<(cardId: string | null) => void>();
+        const onUpgrade = jest.fn<(cardId: string) => void>();
+        render(withAllProviders(
+            <CombatRewardsOverlay offers={rewardCardVMs(OFFER_IDS)} onPick={onPick} upgradeRows={rows} onUpgrade={onUpgrade} />,
+        ).tree);
+        return { onPick, onUpgrade };
+    }
+
+    it('no upgrade rows: no upgrade option', () => {
+        renderOverlay();
+        expect(screen.queryByTestId('combat-reward-upgrade-open')).toBeNull();
+        renderElite([]);
+        expect(screen.queryByTestId('combat-reward-upgrade-open')).toBeNull();
+    });
+
+    it('names the card chance picked, and opens the shared upgrade screen on it', () => {
+        const { onUpgrade, onPick } = renderElite();
+        const name = getCardById(RARE)!.name;
+        expect(screen.getByText(`chance picked ${name}`)).toBeTruthy();
+        fireEvent.press(screen.getByTestId('combat-reward-upgrade-open'));
+        expect(screen.getByTestId('card-upgrade-sheet')).toBeTruthy();
+        fireEvent.press(screen.getByTestId(`card-upgrade-row-${RARE}`));
+        expect(screen.getByTestId('card-upgrade-now-name').props.children).toBe(name);
+        expect(screen.getByTestId('card-upgrade-after-name').props.children).toBe(getCardById(`${RARE}+`)!.name);
+        expect(screen.getByTestId('card-upgrade-locked')).toBeTruthy();
+        fireEvent.press(screen.getByTestId('card-upgrade-confirm'));
+        expect(onUpgrade).toHaveBeenCalledWith(RARE);
+        expect(onPick).not.toHaveBeenCalled();
+    });
+
+    it('BACK returns to the cards without committing', () => {
+        const { onUpgrade } = renderElite();
+        fireEvent.press(screen.getByTestId('combat-reward-upgrade-open'));
+        fireEvent.press(screen.getByTestId('combat-reward-upgrade-back'));
+        expect(screen.getByTestId(`combat-reward-${OFFER_IDS[0]}`)).toBeTruthy();
+        expect(onUpgrade).not.toHaveBeenCalled();
     });
 });

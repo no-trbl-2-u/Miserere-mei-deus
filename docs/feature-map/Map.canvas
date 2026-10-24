@@ -1093,6 +1093,12 @@
 			"color": "6"
 		},
 		{
+			"id": "coupling:route:devart/rooms->area:Combat",
+			"fromNode": "route:devart/rooms",
+			"toNode": "area:Combat",
+			"color": "6"
+		},
+		{
 			"id": "coupling:route:devart/rooms->area:Game",
 			"fromNode": "route:devart/rooms",
 			"toNode": "area:Game",
@@ -1243,6 +1249,12 @@
 			"color": "6"
 		},
 		{
+			"id": "coupling:route:hazard-deck->area:Combat",
+			"fromNode": "route:hazard-deck",
+			"toNode": "area:Combat",
+			"color": "6"
+		},
+		{
 			"id": "coupling:route:hazard-deck->area:Effects",
 			"fromNode": "route:hazard-deck",
 			"toNode": "area:Effects",
@@ -1378,6 +1390,12 @@
 			"id": "coupling:route:item-reward->area:World",
 			"fromNode": "route:item-reward",
 			"toNode": "area:World",
+			"color": "6"
+		},
+		{
+			"id": "coupling:route:labyrinth->area:Combat",
+			"fromNode": "route:labyrinth",
+			"toNode": "area:Combat",
 			"color": "6"
 		},
 		{
