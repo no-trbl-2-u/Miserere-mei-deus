@@ -362,6 +362,9 @@ export type CombatEncounterPhase =
 // Events — typed stream for UI rendering
 // ---------------------------------------------------------------------------
 
+/** An element of the Elementalist's weather, as the board shows it (`combat.elements.ts`). */
+export type WeatherElement = 'foe-inferno' | 'your-inferno' | 'blizzard' | 'storm' | 'frozen';
+
 export type CombatEvent =
     | { kind: 'dice-rolled'; dice: CombatManaDie[] }
     | { kind: 'turn-dice-rolled'; turn: number; dice: CombatManaDie[] }
@@ -388,6 +391,10 @@ export type CombatEvent =
     | { kind: 'die-refreshed'; dieId: string; color: CombatDieColor }
     | { kind: 'die-spent'; dieId: string; color: CombatDieColor }
     | { kind: 'dot-tick'; effectId: string; label: string; amount: number; target: 'self' | 'enemy' }
+    /** The weather moved: one element's number on the board went from `from` to `to` (FROZEN as 0 or 1). */
+    | { kind: 'weather-changed'; element: WeatherElement; from: number; to: number }
+    /** BLIZZARD took `amount` off the foe's hits this phase. */
+    | { kind: 'blizzard-softened'; amount: number }
     // ── Card-mechanic events ─────────────────────────────────────────────────
     | { kind: 'barrier-absorbed'; amount: number }
     | { kind: 'riposte-fired'; amount: number }

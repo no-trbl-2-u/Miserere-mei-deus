@@ -7,15 +7,45 @@
   },
   {
     "rule": "carrier-rule",
+    "id": "BLIZZARD",
+    "reason": "the weather engine ships first (EL1a); its carriers, the Elementalist trial set, land in EL1c, which removes this row",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "carrier-rule",
     "id": "BOON",
     "reason": "pinned at CS1, awaits T's card session",
     "filed": "2026-10-13"
   },
   {
     "rule": "carrier-rule",
+    "id": "DRAW",
+    "reason": "the weather engine ships first (EL1a); its carriers, the Elementalist trial set, land in EL1c, which removes this row",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "carrier-rule",
+    "id": "FROZEN",
+    "reason": "the weather engine ships first (EL1a); its carriers, the Elementalist trial set, land in EL1c, which removes this row",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "carrier-rule",
     "id": "HONE",
     "reason": "pinned at CS1, awaits T's card session",
     "filed": "2026-10-13"
+  },
+  {
+    "rule": "carrier-rule",
+    "id": "INFERNO",
+    "reason": "the weather engine ships first (EL1a); its carriers, the Elementalist trial set, land in EL1c, which removes this row",
+    "filed": "2026-10-24"
+  },
+  {
+    "rule": "carrier-rule",
+    "id": "STORM",
+    "reason": "the weather engine ships first (EL1a); its carriers, the Elementalist trial set, land in EL1c, which removes this row",
+    "filed": "2026-10-24"
   },
   {
     "rule": "carrier-rule",

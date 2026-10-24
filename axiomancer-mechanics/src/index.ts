@@ -124,7 +124,10 @@ export type {
     WheelStance,
     // Card programs: the Global / Curse / SACRIFICE ledger
     ProgramLedger, GlobalInPlay, ProgramShortfall,
+    // The Elementalist's weather
+    ElementState, WeatherElement,
 } from './Combat';
+export { foeInferno, yourInferno, elementsOnFoe, weatherReading } from './Combat';
 // The play-log API contract: the fight and deck change the preview app posts and the Worker stores.
 export {
     PLAY_LOG_FIGHTS_PATH, PLAY_LOG_DECK_EVENTS_PATH, COMBAT_EVENT_KINDS, PLAY_LOG_UI_EVENT_KINDS,
