@@ -1,0 +1,89 @@
+{
+ "base": {},
+ "min_P-01": {
+  "P-01.free.deal": 1,
+  "P-01.paid.deal": 1
+ },
+ "min_P-02": {
+  "P-02.free.deal": 1,
+  "P-02.paid.deal": 1,
+  "P-02.paid.inferno": 1
+ },
+ "min_P-04": {
+  "P-04.free.deal": 1,
+  "P-04.free.blizzard": 1,
+  "P-04.paid.deal": 1,
+  "P-04.paid.per": 1
+ },
+ "min_P-05": {
+  "P-05.free.storm": 1
+ },
+ "min_P-07": {
+  "P-07.free.deal": 1,
+  "P-07.free.inferno": 1,
+  "P-07.paid.deal": 1,
+  "P-07.paid.inferno": 1
+ },
+ "min_P-10": {
+  "P-10.deal": 1,
+  "P-10.need": 99
+ },
+ "min_E-06": {
+  "E-06.growth": 1
+ },
+ "min_P-03": {
+  "P-03.paid.mult": 1
+ },
+ "min_P-06": {
+  "P-06.free.guard": 1,
+  "P-06.free.draw": 1,
+  "P-06.paid.guard": 1,
+  "P-06.paid.cap": 1,
+  "P-06.paid.draw": 1
+ },
+ "min_M-02": {
+  "M-02.free.heal": 1,
+  "M-02.paid.heal": 1,
+  "M-02.paid.mult": 1
+ },
+ "min_M-06": {
+  "M-06.free.guard": 1,
+  "M-06.paid.guard": 1
+ },
+ "min_M-01": {
+  "M-01.paid.mult": 1
+ },
+ "min_E-07": {
+  "E-07.free.draw": 1,
+  "E-07.paid.draw": 1
+ },
+ "min_M-10": {
+  "M-10.storm": 1
+ },
+ "min_E-01": {
+  "E-01.free.inferno": 1,
+  "E-01.free.guard": 1,
+  "E-01.paid.inferno": 1,
+  "E-01.paid.guard": 1
+ },
+ "min_E-03": {
+  "E-03.free.blizzard": 1,
+  "E-03.free.draw": 1,
+  "E-03.paid.blizzard": 1,
+  "E-03.paid.draw": 1
+ },
+ "min_E-05": {
+  "E-05.free.storm": 1,
+  "E-05.free.draw": 1,
+  "E-05.paid.storm": 1,
+  "E-05.paid.draw": 1
+ },
+ "min_E-08": {
+  "E-08.free.blizzard": 1,
+  "E-08.free.inferno": 1
+ },
+ "min_M-04": {
+  "M-04.free.each": 1,
+  "M-04.paid.each": 1
+ }
+}

@@ -40,7 +40,23 @@ export interface ProgramQuery {
     lostThisRound: number;
     cursesInHand: number;
     cursesInDiscard: number;
+    // ── Elementalist (sandbox/elementalist-sims only) ──
+    /** The foe's INFERNO: the number it loses at the start of its turn. */
+    foeInferno: number;
+    /** Your INFERNO: what you lose at the start of your turn (half the
+     *  both-sides INFERNO, rounded down, plus any INFERNO on you alone). */
+    yourInferno: number;
+    blizzard: number;
+    storm: number;
+    frozen: boolean;
+    /** Different elements on the foe (INFERNO, BLIZZARD, STORM): 0 to 3. */
+    elementsOnFoe: number;
+    /** Cards in your hand (the played card excluded). */
+    handSize: number;
 }
+
+/** Who an INFERNO line burns (sandbox): both sides (the default), the foe only, you only. */
+export type InfernoSide = 'both' | 'foe' | 'self';
 
 /** Per-turn SACRIFICE modifiers. */
 export type SacrificeModifier =
@@ -58,13 +74,13 @@ export interface ProgramCtx {
     /** DEAL n: damage to the foe, body-scaled, VULNERABLE applies. `exact`
      *  deals an already-resolved number (VITAE lost) unscaled. Returns the
      *  VITAE the foe actually lost (what "the damage dealt" heals). */
-    deal(n: number, opts?: { exact?: boolean }): number;
+    deal(n: number, opts?: { exact?: boolean; plus?: number }): number;
     /** GUARD n, mind-scaled. `exact` copies an already-resolved number. Returns the GUARD gained. */
-    guard(n: number, opts?: { exact?: boolean }): number;
+    guard(n: number, opts?: { exact?: boolean; plus?: number }): number;
     /** HEAL n, mind-scaled, capped at max VITAE. `exact` copies an already
      *  resolved number (damage dealt) unscaled. `overflowToGuard`: healing
      *  past max VITAE becomes GUARD. Returns the VITAE restored. */
-    heal(n: number, opts?: { exact?: boolean; overflowToGuard?: boolean }): number;
+    heal(n: number, opts?: { exact?: boolean; overflowToGuard?: boolean; plus?: number }): number;
     /** VULNERABLE +pct% for `turns` turns, heart-scaled. */
     vulnerable(pct: number, turns: number): void;
     /** The foe loses n VITAE: unscaled, not a DEAL (VULNERABLE does not apply). */
@@ -103,6 +119,30 @@ export interface ProgramCtx {
     /** For `turns` turns (this one included), HEAL `perHit` each time your
      *  card or Global makes the foe lose VITAE. */
     drain(perHit: number, turns: number): void;
+
+    // ── Elementalist verbs (sandbox/elementalist-sims only; T's rulings 2026-10-24) ──
+    /** INFERNO n, unscaled; stacks by adding. */
+    inferno(n: number, side?: InfernoSide): void;
+    /** BLIZZARD n, unscaled; stacks by adding. */
+    blizzard(n: number): void;
+    /** STORM n, unscaled; stacks by adding. */
+    storm(n: number): void;
+    /** DRAW n: draw n cards now. */
+    draw(n: number): void;
+    /** Remove all your INFERNO (the foe keeps burning). Returns the amount removed. */
+    removeYourInferno(): number;
+    /** Move `share` of your INFERNO onto the foe (foe only). Returns the amount moved. */
+    moveYourInferno(share: 'half' | 'all'): number;
+    /** Spend all the foe's BLIZZARD. Returns the amount spent. */
+    spendBlizzard(): number;
+    /** The foe takes its STORM tick now (plain loss; the STORM does not grow). */
+    triggerStorm(): void;
+    /** Double the foe's BLIZZARD and STORM. */
+    doubleBlizzardAndStorm(): void;
+    /** Swap the numbers of two elements on the foe (the witness picks the pair). */
+    swapElements(): void;
+    /** A static Global's marker: while in play the STORM grows by n extra (apply: nothing; value: an estimate). */
+    stormGrowthMarker(n: number): void;
 }
 
 /** One printed line (FREE or PAID) of a card that is not a Global. */
@@ -133,6 +173,8 @@ export interface ProgramGlobal {
     /** `n` is the SACRIFICE amount for a 🩸 trigger, 0 otherwise. */
     free: (c: ProgramCtx, n: number) => void;
     paid: (c: ProgramCtx, n: number) => void;
+    /** Sandbox (Elementalist E-06): while in play, the STORM grows by this much extra each foe turn. */
+    stormGrowth?: number;
 }
 
 /** A card's program: two lines, or a Global body. */

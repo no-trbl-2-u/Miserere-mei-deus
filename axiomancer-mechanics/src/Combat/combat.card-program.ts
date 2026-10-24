@@ -41,8 +41,14 @@
  */
 
 import type {
-    CardProgram, GlobalTrigger, ProgramCtx, ProgramLine, ProgramQuery, SacrificeModifier,
+    CardProgram, GlobalTrigger, InfernoSide, ProgramCtx, ProgramLine, ProgramQuery, SacrificeModifier,
 } from '../Cards/card-program.types';
+import {
+    ELEMENT_TELEMETRY, anyElement, driftElements, elementsOnFoe, foeInferno, initElementState, yourInferno,
+    type ElementState,
+} from './combat.elements';
+import { drawCombatCards } from './combat.deck';
+import { getRng } from '../Utils/rng';
 import { getCardById } from '../Cards/cards.library';
 import { lookupEffect, applyEffect } from '../Effects';
 import type { Enemy } from '../Enemy/types';
@@ -119,6 +125,8 @@ export interface ProgramLedger {
     /** LEECH potency: the VITAE the foe loses each of its turns. */
     leechPotency: number;
     leechCardId: string | null;
+    /** The Elementalist's weather (sandbox/elementalist-sims). */
+    el: ElementState;
 }
 
 export function initProgramLedger(): ProgramLedger {
@@ -129,6 +137,7 @@ export function initProgramLedger(): ProgramLedger {
         waives: 0, nextDouble: false, nextTwice: false, nextDealBonus: 0,
         drains: [], deathWardRound: null, pendingHeal: 0, curseUid: 0, globalUid: 0,
         tetherUntil: 0, tetherCardId: null, tetherSourceName: null, leechTurns: 0, leechPotency: 0, leechCardId: null,
+        el: initElementState(),
     };
 }
 
@@ -138,6 +147,7 @@ function cloneLedger(l: ProgramLedger): ProgramLedger {
         globals: l.globals.map(g => ({ ...g })),
         exiled: l.exiled.slice(),
         drains: l.drains.map(d => ({ ...d })),
+        el: { ...(l.el ?? initElementState()) },
     };
 }
 
@@ -167,6 +177,9 @@ export function deckHasProgramCards(deck: readonly string[]): boolean {
 
 export interface ProgramKit {
     convictionCap: number;
+    /** Sandbox: the foe's telegraphed hits this phase, each after the clock
+     *  and multipliers and before BLIZZARD and soak. */
+    incomingHits?(state: CombatEncounterState): number[];
     /** The telegraphed hit, netted against live GUARD (projectIncomingThreat). */
     incomingNet(state: CombatEncounterState): number;
 }
@@ -203,6 +216,13 @@ const CURSE_CLEARED_VALUE = 5;
 const VULN_VALUE_PER_PCT_TURN = 0.08;
 const TETHER_VALUE_PER_TURN = 3;
 const LEECH_VALUE_PER_POINT = 1.6;
+// The Elementalist witness (sandbox): rounds an element is valued over, and its weights.
+const ELEMENT_HORIZON = 3;
+const ELEMENT_DOT_VALUE = 0.9;
+const SELF_BURN_VALUE = 1.0;
+const LETHAL_BURN_VALUE = 100;
+const FROZEN_VALUE = 6;
+const DRAW_VALUE = 3;
 
 function expectedGlobalFires(trigger: GlobalTrigger, paid: boolean): number {
     const base = trigger === 'turn' ? GLOBAL_FREE_TURNS : trigger === 'sac' ? 2 : 1.5;
@@ -221,12 +241,19 @@ class LineCtx implements ProgramCtx {
 
     // -- foe -----------------------------------------------------------------
     /** Returns the VITAE the foe actually lost (a hit past 0 counts what was left). */
-    deal(n: number, opts?: { exact?: boolean }): number {
-        if (n <= 0) return 0;
+    deal(n: number, opts?: { exact?: boolean; plus?: number }): number {
+        const plus = Math.max(0, opts?.plus ?? 0);
+        if (n <= 0 && plus <= 0) return 0;
         const enemy = this.w.s.enemy;
         if (isDefeated(enemy)) return 0;
-        const base = opts?.exact ? n : scaleFor(n, this.stats(), 'body', 'one-shot');
+        const base = (n > 0 ? (opts?.exact ? n : scaleFor(n, this.stats(), 'body', 'one-shot')) : 0) + plus;
         let dmg = base + this.w.l.nextDealBonus;
+        // FROZEN: the next DEAL the foe takes is doubled, then FROZEN ends.
+        if (this.w.l.el.frozen && this.mode !== 'cost') {
+            dmg *= 2;
+            this.w.l.el.frozen = false;
+            if (this.mode === 'apply') ELEMENT_TELEMETRY.frozenDoubles += 1;
+        }
         const vuln = getDamageTakenMultiplier(enemy);
         if (vuln !== 1) dmg = Math.round(dmg * vuln);
         const landed = Math.min(dmg, enemy.health);
@@ -346,8 +373,8 @@ class LineCtx implements ProgramCtx {
     }
 
     // -- self ----------------------------------------------------------------
-    guard(n: number, opts?: { exact?: boolean }): number {
-        const amt = opts?.exact ? n : scaleFor(n, this.stats(), 'mind', 'one-shot');
+    guard(n: number, opts?: { exact?: boolean; plus?: number }): number {
+        const amt = (n > 0 ? (opts?.exact ? n : scaleFor(n, this.stats(), 'mind', 'one-shot')) : 0) + Math.max(0, opts?.plus ?? 0);
         if (amt <= 0) return 0;
         if (this.mode === 'value') {
             const need = Math.max(0, this.incoming());
@@ -359,8 +386,8 @@ class LineCtx implements ProgramCtx {
         return amt;
     }
 
-    heal(n: number, opts?: { exact?: boolean; overflowToGuard?: boolean }): number {
-        const amt = opts?.exact ? n : scaleFor(n, this.stats(), 'mind', 'one-shot');
+    heal(n: number, opts?: { exact?: boolean; overflowToGuard?: boolean; plus?: number }): number {
+        const amt = (n > 0 ? (opts?.exact ? n : scaleFor(n, this.stats(), 'mind', 'one-shot')) : 0) + Math.max(0, opts?.plus ?? 0);
         if (amt <= 0) return 0;
         return this.healExact(amt, opts?.overflowToGuard === true);
     }
@@ -591,6 +618,235 @@ class LineCtx implements ProgramCtx {
         if (this.mode === 'apply') this.w.l.pendingHeal += amt;
     }
 
+    // -- the Elementalist's weather (sandbox/elementalist-sims) ---------------
+    private el(): ElementState { return this.w.l.el; }
+
+    /** The foe's hits this phase (before BLIZZARD and soak). */
+    private hits(): number[] { return this.w.kit.incomingHits?.(this.w.s) ?? []; }
+
+    /** Foe VITAE an INFERNO or STORM stack takes over the witness horizon, capped at what the foe has. */
+    private foeLossValue(loss: number): number {
+        const hp = this.w.s.enemy.health;
+        return Math.min(loss, hp) * ELEMENT_DOT_VALUE;
+    }
+
+    /** Lethal-burn check for the witness: your next turn-start burn after the foe's telegraphed hit. */
+    private burnIsLethal(burn: number): boolean {
+        if (burn <= 0) return false;
+        const el = this.el();
+        // The foe dies to its own turn-start ticks before it can hit or you can burn.
+        if (foeInferno(el) + el.storm >= this.w.s.enemy.health) return false;
+        return this.w.s.player.health - Math.max(0, this.incoming()) - burn <= 0;
+    }
+
+    inferno(n: number, side: InfernoSide = 'both'): void {
+        if (n <= 0) return;
+        const el = this.el();
+        if (this.mode === 'value') {
+            let v = 0;
+            if (side !== 'self') {
+                const I = foeInferno(el);
+                let loss = 0;
+                for (let t = 0; t < ELEMENT_HORIZON; t++) loss += Math.max(0, I + n - t) - Math.max(0, I - t);
+                v += this.foeLossValue(loss);
+            }
+            const kills = foeInferno(el) + (side !== 'self' ? n : 0) + el.storm >= this.w.s.enemy.health;
+            if (kills) v += 15;
+            if (side !== 'foe' && !kills) {
+                const S = el.infShared, Y = el.infSelf;
+                let burn = 0;
+                for (let t = 0; t < ELEMENT_HORIZON; t++) {
+                    if (side === 'both') burn += Math.floor(Math.max(0, S + n - t) / 2) - Math.floor(Math.max(0, S - t) / 2);
+                    else burn += Math.max(0, Y + n - t) - Math.max(0, Y - t);
+                }
+                v -= burn * SELF_BURN_VALUE;
+                const next = side === 'both' ? Math.floor((S + n) / 2) + Y : Math.floor(S / 2) + Y + n;
+                if (this.burnIsLethal(next)) v -= LETHAL_BURN_VALUE;
+            }
+            this.w.value += v;
+            return;
+        }
+        if (this.mode !== 'apply') return;
+        if (side === 'both') el.infShared += n;
+        else if (side === 'foe') el.infFoe += n;
+        else el.infSelf += n;
+    }
+
+    /** The witness's worth of BLIZZARD going from `from` to `to`. */
+    private blizzardValue(from: number, to: number): number {
+        const hits = this.hits();
+        if (hits.length === 0) return Math.max(0, to - from) * 0.3;
+        const A = Math.max(...hits);
+        let v = 0;
+        for (let t = 0; t < ELEMENT_HORIZON; t++) {
+            const per = hits.reduce((s, h) => s + Math.min(Math.max(0, to - t), h) - Math.min(Math.max(0, from - t), h), 0);
+            v += per * (t === 0 ? 1 : 0.7);
+        }
+        if (from < A && to >= A) v += FROZEN_VALUE;
+        return v;
+    }
+
+    blizzard(n: number): void {
+        if (n <= 0) return;
+        const el = this.el();
+        if (this.mode === 'value') { this.w.value += this.blizzardValue(el.blizzard, el.blizzard + n); return; }
+        if (this.mode === 'apply') el.blizzard += n;
+    }
+
+    storm(n: number): void {
+        if (n <= 0) return;
+        const el = this.el();
+        if (this.mode === 'value') {
+            this.w.value += this.foeLossValue(n * ELEMENT_HORIZON);
+            if (foeInferno(el) + el.storm + n >= this.w.s.enemy.health) this.w.value += 15;
+            return;
+        }
+        if (this.mode === 'apply') el.storm += n;
+    }
+
+    draw(n: number): void {
+        if (n <= 0) return;
+        const avail = this.w.s.drawPile.length + this.w.s.discard.length;
+        if (this.mode === 'value') { this.w.value += DRAW_VALUE * Math.min(n, avail); return; }
+        if (this.mode !== 'apply' || avail === 0) return;
+        const w = this.w;
+        const d = drawCombatCards(w.s.drawPile, w.s.discard, [], n, () => getRng().random());
+        const added = d.drawn.map(cardId => ({ uid: `ed${++w.l.el.drawUid}`, cardId }));
+        w.s = { ...w.s, drawPile: d.drawPile, discard: d.discard, hand: [...w.s.hand, ...added] };
+        w.events.push({ kind: 'hand-drawn', cards: d.drawn });
+    }
+
+    /** The witness's worth of taking `amount` off your INFERNO (burn avoided, death avoided). */
+    private relieveValue(amount: number): number {
+        const yours = yourInferno(this.el());
+        if (amount <= 0 || yours <= 0) return 0;
+        let v = 0;
+        for (let t = 0; t < ELEMENT_HORIZON; t++) v += Math.min(amount, Math.max(0, yours - t));
+        v *= SELF_BURN_VALUE;
+        if (this.burnIsLethal(yours) && !this.burnIsLethal(yours - amount)) v += LETHAL_BURN_VALUE;
+        return v;
+    }
+
+    /** Takes `amount` off your INFERNO: first the INFERNO on you alone, then
+     *  by turning both-sides INFERNO into foe-only INFERNO, two at a time. */
+    private relieve(amount: number): void {
+        const el = this.el();
+        const fromSelf = Math.min(el.infSelf, amount);
+        el.infSelf -= fromSelf;
+        let rest = amount - fromSelf;
+        while (rest > 0 && el.infShared > 0) {
+            const before = Math.floor(el.infShared / 2);
+            const k = Math.min(el.infShared, 2);
+            el.infShared -= k;
+            el.infFoe += k;
+            rest -= before - Math.floor(el.infShared / 2);
+        }
+    }
+
+    removeYourInferno(): number {
+        const el = this.el();
+        const yours = yourInferno(el);
+        if (this.mode === 'value') { this.w.value += this.relieveValue(yours); return yours; }
+        if (this.mode === 'apply') { el.infFoe += el.infShared; el.infShared = 0; el.infSelf = 0; }
+        return yours;
+    }
+
+    moveYourInferno(share: 'half' | 'all'): number {
+        const el = this.el();
+        const yours = yourInferno(el);
+        const h = share === 'all' ? yours : Math.floor(yours / 2);
+        if (h <= 0) return 0;
+        if (this.mode === 'value') {
+            this.w.value += this.relieveValue(h);
+            const I = foeInferno(el);
+            let loss = 0;
+            for (let t = 0; t < ELEMENT_HORIZON; t++) loss += Math.max(0, I + h - t) - Math.max(0, I - t);
+            this.w.value += this.foeLossValue(loss);
+            return h;
+        }
+        if (this.mode !== 'apply') return h;
+        if (share === 'all') { el.infFoe += el.infShared; el.infShared = 0; el.infSelf = 0; }
+        else this.relieve(h);
+        el.infFoe += h;
+        return h;
+    }
+
+    spendBlizzard(): number {
+        const el = this.el();
+        const b = el.blizzard;
+        if (this.mode === 'value') this.w.value -= this.blizzardValue(0, b);
+        else if (this.mode === 'apply') el.blizzard = 0;
+        return b;
+    }
+
+    triggerStorm(): void {
+        const el = this.el();
+        const n = el.storm;
+        if (n <= 0 || isDefeated(this.w.s.enemy)) return;
+        if (this.mode === 'value') {
+            const hp = this.w.s.enemy.health;
+            this.w.value += Math.min(n, hp) + (n >= hp ? 20 : 0);
+            return;
+        }
+        if (this.mode !== 'apply') return;
+        ELEMENT_TELEMETRY.foeStormLoss += Math.min(n, this.w.s.enemy.health);
+        this.hitFoe(n, false);
+    }
+
+    doubleBlizzardAndStorm(): void {
+        const el = this.el();
+        const b = el.blizzard, st = el.storm;
+        this.blizzard(b);
+        this.storm(st);
+    }
+
+    /** The witness's score of a weather: what the elements are worth to you now. */
+    private weatherScore(e: ElementState): number {
+        const hits = this.hits();
+        const A = hits.length ? Math.max(...hits) : 0;
+        return 3 * e.storm + 2 * Math.min(e.blizzard, A) + (A > 0 && e.blizzard >= A ? FROZEN_VALUE : 0)
+            + 1.5 * foeInferno(e) - SELF_BURN_VALUE * 2 * yourInferno(e);
+    }
+
+    /** The three swaps of two elements' numbers, and the best one's gain. */
+    private bestSwap(): { next: ElementState; gain: number } | null {
+        const el = this.el();
+        const I = foeInferno(el);
+        const setInferno = (e: ElementState, v: number): void => {
+            if (I > 0) {
+                const shared = Math.round(v * el.infShared / I);
+                e.infShared = shared; e.infFoe = v - shared;
+            } else { e.infShared = v; e.infFoe = 0; }
+        };
+        const options: ElementState[] = [];
+        { const e = { ...el }; setInferno(e, el.blizzard); e.blizzard = I; options.push(e); }
+        { const e = { ...el }; setInferno(e, el.storm); e.storm = I; options.push(e); }
+        { const e = { ...el }; e.blizzard = el.storm; e.storm = el.blizzard; options.push(e); }
+        const base = this.weatherScore(el);
+        let best: { next: ElementState; gain: number } | null = null;
+        for (const e of options) {
+            const gain = this.weatherScore(e) - base;
+            if (gain > 0 && (!best || gain > best.gain)) best = { next: e, gain };
+        }
+        return best;
+    }
+
+    swapElements(): void {
+        const best = this.bestSwap();
+        if (!best) return;
+        if (this.mode === 'value') { this.w.value += best.gain; return; }
+        if (this.mode === 'apply') {
+            const el = this.el();
+            el.infShared = best.next.infShared; el.infFoe = best.next.infFoe;
+            el.blizzard = best.next.blizzard; el.storm = best.next.storm;
+        }
+    }
+
+    stormGrowthMarker(n: number): void {
+        if (n <= 0 || this.mode !== 'value') return;
+        this.w.value += (this.el().storm > 0 ? 1.5 : 0.7) * n;
+    }
+
     drain(perHit: number, turns: number): void {
         const amt = scaleFor(perHit, this.stats(), 'mind', 'one-shot');
         if (this.mode === 'value') { this.w.value += amt * 2 * turns * 0.8; return; }
@@ -631,6 +887,13 @@ function buildQuery(s: CombatEncounterState, spent: number): ProgramQuery {
         lostThisRound: l.lostThisRound,
         cursesInHand: s.hand.filter(h => isCurseCard(h.cardId)).length,
         cursesInDiscard: s.discard.filter(isCurseCard).length,
+        foeInferno: foeInferno(l.el ?? initElementState()),
+        yourInferno: yourInferno(l.el ?? initElementState()),
+        blizzard: l.el?.blizzard ?? 0,
+        storm: l.el?.storm ?? 0,
+        frozen: l.el?.frozen ?? false,
+        elementsOnFoe: elementsOnFoe(l.el ?? initElementState()),
+        handSize: s.hand.length,
     };
 }
 
@@ -916,6 +1179,22 @@ export function programTurnStart(state: CombatEncounterState, kit: ProgramKit): 
         if (healed > 0) w.events.push({ kind: 'player-healed', cardId: 'pending-heal', amount: healed });
         l.pendingHeal = 0;
     }
+    // INFERNO (sandbox): you lose half the both-sides INFERNO (rounded down)
+    // plus any INFERNO on you alone. Plain loss; it can kill you.
+    const burn = yourInferno(l.el ?? initElementState());
+    if (burn > 0 && !isDefeated(w.s.enemy)) {
+        const p = w.s.player;
+        const lost = Math.min(burn, Math.max(0, p.health));
+        w.s = { ...w.s, player: { ...p, health: p.health - lost } };
+        l.lostThisCombat += lost;
+        l.lostThisRound += lost;
+        ELEMENT_TELEMETRY.selfBurn += lost;
+        w.events.push({ kind: 'dot-tick', effectId: 'inferno', label: 'INFERNO', amount: lost, target: 'self' });
+        if (w.s.player.health <= 0) {
+            ELEMENT_TELEMETRY.selfKills += 1;
+            return { state: { ...w.s, program: l }, events: w.events };
+        }
+    }
     fireTriggers(w, 'turn', 0);
     const stay: GlobalInPlay[] = [];
     const leaving: string[] = [];
@@ -980,6 +1259,62 @@ export function programFoeTurnStart(state: CombatEncounterState): ProgramPlayRes
         },
         events,
     };
+}
+
+/**
+ * Start of the foe's turn, the weather (sandbox): the foe loses its INFERNO,
+ * then its STORM (both plain loss), then the STORM grows by 1, plus 1 per
+ * STORM-growth Global in play (E-06).
+ */
+export function programElementFoeTurnStart(state: CombatEncounterState): ProgramPlayResult {
+    const l = state.program;
+    if (!l || !anyElement(l.el) || isDefeated(state.enemy)) return { state, events: [] };
+    const el = { ...l.el };
+    const events: CombatEvent[] = [];
+    let s = state;
+    const lose = (amount: number, id: string, label: string): number => {
+        if (amount <= 0 || isDefeated(s.enemy)) return 0;
+        const before = s.enemy.health;
+        const lost = Math.min(amount, before);
+        s = {
+            ...s, enemy: applyDamage(s.enemy, lost),
+            attribution: recordAttribution(s.attribution, id, label, null, lost, before),
+        };
+        events.push({ kind: 'dot-tick', effectId: id, label, amount: lost, target: 'enemy' });
+        return lost;
+    };
+    ELEMENT_TELEMETRY.foeInfernoLoss += lose(foeInferno(el), 'inferno', 'INFERNO');
+    if (el.storm > 0) {
+        ELEMENT_TELEMETRY.foeStormLoss += lose(el.storm, 'storm', 'STORM');
+        const extra = l.globals.reduce((sum, g) => sum + (cardProgram(g.cardId)?.global?.stormGrowth ?? 0), 0);
+        el.storm += 1 + extra;
+    }
+    return { state: { ...s, program: { ...l, el } }, events };
+}
+
+/**
+ * The FROZEN check (sandbox), as the foe is about to attack: when its every
+ * hit this phase is at most the BLIZZARD, the foe is FROZEN. Returns the
+ * state and the BLIZZARD to take off each hit.
+ */
+export function programFrozenCheck(
+    state: CombatEncounterState, hits: readonly number[],
+): { state: CombatEncounterState; blizzard: number } {
+    const l = state.program;
+    if (!l || isDefeated(state.enemy)) return { state, blizzard: 0 };
+    ELEMENT_TELEMETRY.foeTurns += 1;
+    const el = l.el ?? initElementState();
+    if (el.blizzard <= 0) return { state, blizzard: 0 };
+    if (hits.length > 0 && el.blizzard >= Math.max(...hits)) {
+        ELEMENT_TELEMETRY.frozenTriggers += 1;
+        return { state: { ...state, program: { ...l, el: { ...el, frozen: true } } }, blizzard: el.blizzard };
+    }
+    return { state, blizzard: el.blizzard };
+}
+
+/** The round boundary for the weather (sandbox): INFERNO and BLIZZARD drift down. */
+export function programElementDrift(l: ProgramLedger): ProgramLedger {
+    return { ...l, el: driftElements(l.el ?? initElementState()) };
 }
 
 /** Damage the player takes from the foe: the death ward clamps it. Returns the clamped damage. */

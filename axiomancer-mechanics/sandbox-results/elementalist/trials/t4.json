@@ -1,0 +1,6 @@
+{
+ "draw1": {"E-05.paid.draw":1,"E-07.free.draw":1,"E-07.paid.draw":1,"M-03.free.draw":1,"M-03.paid.draw":1},
+ "s35_draw1": {"__scale":0.35,"E-05.paid.draw":1,"E-07.free.draw":1,"E-07.paid.draw":1,"M-03.free.draw":1,"M-03.paid.draw":1},
+ "s25": {"__scale":0.25},
+ "s25_draw1": {"__scale":0.25,"E-05.paid.draw":1,"E-07.free.draw":1,"E-07.paid.draw":1,"M-03.free.draw":1,"M-03.paid.draw":1}
+}

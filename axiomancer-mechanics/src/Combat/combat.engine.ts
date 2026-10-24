@@ -70,7 +70,9 @@ import {
     playProgramCard, programTurnStart, programFoeTurnStart, programClampDamage,
     programRecordDamage, programRollRound, programDrawFallback,
     programIllegalReason, programShortfall, programXRange, type ProgramShortfall,
+    programElementFoeTurnStart, programFrozenCheck, programElementDrift,
 } from './combat.card-program';
+import { ELEMENT_TELEMETRY } from './combat.elements';
 import type {
     CombatCard, CombatDieColor, CombatEncounterState, CombatEvent, CardPlay,
     CombatManaDie, CombatPhaseResult, CombatTransition, LandedEffect,
@@ -385,6 +387,8 @@ export function startTurn(
         const pt = programTurnStart(started, PROGRAM_KIT);
         started = withLog(pt.state, pt.events);
         events.push(...pt.events);
+        // Sandbox: your INFERNO can kill you at the start of your turn.
+        if (isDefeated(started.player)) return endCombat(started, 'defeat', events);
         if (isDefeated(started.enemy)) return endCombat(started, 'victory', events);
     }
     return { state: started, events };
@@ -1136,6 +1140,13 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
         state = leech.state;
         if (isDefeated(state.enemy)) return endCombat(withLog(state, leechEvents), 'victory', leechEvents);
     }
+    // Sandbox: the weather ticks on the foe (INFERNO, then STORM, which grows).
+    const weather = programElementFoeTurnStart(state);
+    if (weather.events.length > 0) {
+        leechEvents.push(...weather.events);
+        state = weather.state;
+        if (isDefeated(state.enemy)) return endCombat(withLog(state, leechEvents), 'victory', leechEvents);
+    } else state = weather.state;
 
     const idx = Math.min(state.currentPhaseIndex, state.threatPhases.length - 1);
     const phase = state.threatPhases[idx];
@@ -1190,6 +1201,13 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
 
     // An already-defeated enemy does not still hit the player this phase (the
     // victory check runs after this block).
+    // Sandbox: BLIZZARD takes n off each hit; the FROZEN check reads the hits.
+    let blizzardCut = 0;
+    if (!hindered && !isDefeated(enemy) && state.program) {
+        const frozen = programFrozenCheck(state, threatHits(state));
+        state = frozen.state;
+        blizzardCut = frozen.blizzard;
+    }
     if (!hindered && !isDefeated(enemy)) {
         // The enemy attacks: its telegraphed threat action fires on the player.
         const playerTakenMult = getDamageTakenMultiplier(state.player);
@@ -1208,6 +1226,11 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
                     * (1 + Math.min(STAGE_THREAT_BONUS_CAP, state.stageThreatBonus ?? 0))
                     * playerTakenMult,
                 );
+                if (blizzardCut > 0) {
+                    const cut = Math.min(dmg, blizzardCut);
+                    dmg -= cut;
+                    ELEMENT_TELEMETRY.blizzardPrevented += cut;
+                }
                 const preSoakDmg = dmg;
                 // RIPOSTE parry reduces the incoming hit once this phase.
                 if (riposte && !riposteFired && riposte.reduce > 0) {
@@ -1459,7 +1482,7 @@ export function processBetweenPhases(
             player = { ...player, health: 1 };
         }
         const dotTaken = Math.max(0, state.player.health - player.health);
-        ledger = programRollRound(programRecordDamage(ledger, dotTaken));
+        ledger = programElementDrift(programRollRound(programRecordDamage(ledger, dotTaken)));
     }
     const playerDotTicks = clampDotTickBreakdown(projectedPlayerDotTicks, playerStart.dotDamage);
 
@@ -1880,9 +1903,11 @@ export function projectIncomingThreat(state: CombatEncounterState): {
     const enemyOutgoingMult = getOutgoingDamageMult(state.enemy);
     const playerTakenMult = getDamageTakenMultiplier(state.player);
 
-    const projectedDamage = willDeny ? 0 : Math.round(
-        rawDamage * THREAT_DAMAGE_SCALE * escalation * enemyOutgoingMult * playerTakenMult,
-    );
+    const blizzard = state.program?.el?.blizzard ?? 0;
+    const projectedDamage = willDeny ? 0 : blizzard > 0
+        // Sandbox: BLIZZARD takes n off each hit, as the engine applies it.
+        ? threatHits(state).reduce((sum, h) => sum + Math.max(0, h - blizzard), 0)
+        : Math.round(rawDamage * THREAT_DAMAGE_SCALE * escalation * enemyOutgoingMult * playerTakenMult);
 
     const guard = state.guard ?? 0;
     const barrier = state.barrier ?? 0;
@@ -1923,7 +1948,28 @@ export { combatDieCanPower, availableDiceFor, effectImpact, cardStanceColor, rid
 export const PROGRAM_KIT: ProgramKit = {
     convictionCap: CONVICTION_CAP,
     incomingNet: (state: CombatEncounterState) => projectIncomingThreat(state).netDamage,
+    incomingHits: (state: CombatEncounterState) => threatHits(state),
 };
+
+/**
+ * Sandbox: the foe's hits this phase, each as the engine sizes it (the clock,
+ * the outgoing and taken multipliers, the stage bonus) before BLIZZARD and
+ * soak. Empty when the foe is denied its turn.
+ */
+export function threatHits(state: CombatEncounterState): number[] {
+    const idx = Math.min(state.currentPhaseIndex, state.threatPhases.length - 1);
+    const phase = state.threatPhases[idx];
+    if (!canAct(state.enemy.effects as ActiveEffect[]).canAct) return [];
+    const isBossTier = state.enemy.difficulty === 'boss' || state.enemy.difficulty === 'unique';
+    const escalationRate = THREAT_ESCALATION_PER_ROUND * (isBossTier ? THREAT_ESCALATION_BOSS_MULT : 1);
+    const escalation = Math.min(THREAT_ESCALATION_MAX, 1 + escalationRate * Math.max(0, state.round - THREAT_ESCALATION_GRACE));
+    const mult = escalation * getOutgoingDamageMult(state.enemy)
+        * (1 + Math.min(STAGE_THREAT_BONUS_CAP, state.stageThreatBonus ?? 0))
+        * getDamageTakenMultiplier(state.player);
+    return phase.threatAction.effects
+        .filter(e => (e.damage ?? 0) > 0)
+        .map(e => Math.round((e.damage as number) * THREAT_DAMAGE_SCALE * mult));
+}
 
 /**
  * Why a program card's FREE (`paid` false) or PAID line cannot be played

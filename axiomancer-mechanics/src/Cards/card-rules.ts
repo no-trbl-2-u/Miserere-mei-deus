@@ -218,8 +218,8 @@ function recordVerbs(fn: (c: ProgramCtx) => void, q: ProgramQuery): VerbCall[] {
 
 /** Two fight states a line may branch on: healthy, and at half VITAE after damage. */
 const PROBE_QUERIES: readonly ProgramQuery[] = [
-    { vitae: 100, maxVitae: 100, missing: 0, atHalf: false, takenLastTurn: 0, lostThisCombat: 0, lostThisRound: 0, cursesInHand: 0, cursesInDiscard: 0 },
-    { vitae: 40, maxVitae: 100, missing: 60, atHalf: true, takenLastTurn: 10, lostThisCombat: 60, lostThisRound: 10, cursesInHand: 1, cursesInDiscard: 1 },
+    { vitae: 100, maxVitae: 100, missing: 0, atHalf: false, takenLastTurn: 0, lostThisCombat: 0, lostThisRound: 0, cursesInHand: 0, cursesInDiscard: 0, foeInferno: 0, yourInferno: 0, blizzard: 0, storm: 0, frozen: false, elementsOnFoe: 0, handSize: 4 },
+    { vitae: 40, maxVitae: 100, missing: 60, atHalf: true, takenLastTurn: 10, lostThisCombat: 60, lostThisRound: 10, cursesInHand: 1, cursesInDiscard: 1, foeInferno: 6, yourInferno: 3, blizzard: 4, storm: 3, frozen: true, elementsOnFoe: 3, handSize: 4 },
 ];
 
 const onlyOneConviction = (calls: readonly VerbCall[]): boolean =>
