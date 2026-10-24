@@ -144,6 +144,9 @@ A1-A6 ticked across EQ1a and EQ1b; the Measure met on a preview build.
 
 ## Follow-ups (out of scope)
 
+- How many relics are worn, so how many signatures a fight carries: today both relics are accessories, so at most
+  3 (`SLOT_CAPACITY`), while D100 assumes "all 5 relics of a lane equipped". T, 2026-10-24: settled in the
+  owner-led relic pass (B1), not here. EQ1 keeps the current capacity.
 - A source for the Bleeding Signet (shop, loot or reward): still only the dev menu's GET ALL RELICS.
 - Retiring `wornPerSlot` in the engine too, once nothing outside the CLI and the grants reads it.
 - The slot banner's "choose a slot to see what else fits" filter, if it should list unworn relics differently.
