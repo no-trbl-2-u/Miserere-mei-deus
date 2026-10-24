@@ -10,9 +10,9 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import {
-  CANVAS_PATH, COLORS, FEATURES_PATH, GAME_MODEL_PATH, NAMES_PATH, NOTES_DIR, README_PATH, TABLE_END, TABLE_START,
-  anomalies, canvasProblems, drawnEdges, isGeneratedNote, main, noteStems, renderCanvas, renderCanvasObject,
-  renderNotes, renderReadme, safeFileName,
+  CANVAS_PATH, COLORS, FEATURES_PATH, GAME_MODEL_PATH, GROUPS, NAMES_PATH, NOTES_DIR, README_PATH, TABLE_END, TABLE_START,
+  anomalies, canvasProblems, drawnEdges, isGeneratedNote, isGroupCanvas, main, noteStems, renderCanvas, renderGroupCanvasObject,
+  renderGroupCanvases, renderNotes, renderOverviewObject, renderReadme, renderedCanvasProblems, render, safeFileName, vaultPath,
 } from './feature-map-render.mjs'
 import { featureTable } from './vault.mjs'
 
@@ -108,63 +108,100 @@ test('anomalies: a section named only through the alias table matches its featur
   assert.match(renderReadme(MAP, GAME_MODEL, names), /match no feature\n\n- Cards\n\n/)
 })
 
-test('canvas: valid JSON Canvas, one text node per feature, one group node per group', () => {
+const fileNodes = (canvas) => canvas.nodes.filter((n) => n.type === 'file')
+const generatedFiles = (map) => new Set([...Object.keys(renderNotes(map)), ...Object.keys(renderGroupCanvases(map))].map(vaultPath))
+
+test('overview: valid, one file node per group opening its group canvas, a legend, no feature node', () => {
   const canvas = JSON.parse(renderCanvas(MAP))
-  assert.deepEqual(canvasProblems(canvas), [])
-  const featureNodes = canvas.nodes.filter((n) => n.type === 'text' && n.id !== 'legend')
-  assert.deepEqual(featureNodes.map((n) => n.id).sort(), MAP.features.map((f) => f.id).sort())
-  const groups = canvas.nodes.filter((n) => n.type === 'group')
-  assert.deepEqual(groups.map((g) => g.label), ['Tabs', 'World routes', 'Minigames', 'Engine areas', 'Dev routes'])
-  for (const n of featureNodes) {
-    const g = groups.find((x) => x.id === `group:${MAP.features.find((f) => f.id === n.id).group}`)
-    assert.ok(n.x >= g.x && n.y >= g.y && n.x + n.width <= g.x + g.width && n.y + n.height <= g.y + g.height, `${n.id} sits inside ${g.id}`)
-  }
+  assert.deepEqual(canvasProblems(canvas, generatedFiles(MAP)), [])
+  assert.deepEqual(fileNodes(canvas).map((n) => n.file), [
+    'Features/Tabs.canvas', 'Features/World routes.canvas', 'Features/Minigames.canvas', 'Features/Engine areas.canvas', 'Features/Dev routes.canvas',
+  ])
+  assert.deepEqual(canvas.nodes.filter((n) => n.type !== 'file').map((n) => n.id), ['legend'])
+  for (const f of MAP.features) assert.ok(!canvas.nodes.some((n) => n.id === f.id), `no node for ${f.id}`)
   for (const n of canvas.nodes) assert.doesNotMatch(n.text || n.label || '', /\d/, `no numbers on the map (${n.id})`)
 })
 
-test('canvas: node colour marks needsPitch, absent evidence leaves the node uncoloured', () => {
-  const byId = Object.fromEntries(renderCanvasObject(MAP).nodes.map((n) => [n.id, n]))
-  assert.equal(byId['area:World'].color, COLORS.needsPitch)
-  assert.equal(byId['route:hazard'].color, COLORS.needsPitch)
-  assert.equal(byId['area:Combat'].color, COLORS.pitched)
-  assert.match(byId['area:World'].text, /needs a pitch/)
-  assert.match(byId['route:hazard'].text, /opens from any screen/)
-  const bare = renderCanvasObject(BARE).nodes.filter((n) => n.type === 'text' && n.id !== 'legend')
-  for (const n of bare) assert.equal(n.color, undefined)
+test('overview: one flow edge per ordered group pair with a drawn flow edge, no coupling, no shell gate', () => {
+  const canvas = renderOverviewObject(MAP)
+  // index->rest stays in world, deck<->map in tabs; index->devart leaves world for dev; the gate edges into hazard are not drawn.
+  assert.deepEqual(canvas.edges.map((e) => e.id), ['flow:group:world->group:dev'])
+  const both = { ...MAP, edges: [...MAP.edges, { kind: 'flow', from: 'route:devart', to: 'route:index', file: 'x.tsx' }, { kind: 'flow', from: 'route:rest', to: 'route:(tabs)/map', file: 'y.tsx' }] }
+  assert.deepEqual(renderOverviewObject(both).edges.map((e) => e.id), ['flow:group:world->group:tabs', 'flow:group:world->group:dev', 'flow:group:dev->group:world'])
+  for (const e of renderOverviewObject(both).edges) {
+    assert.equal(e.color, COLORS.flow)
+    assert.equal(e.fromEnd, undefined, 'each direction is its own edge')
+  }
 })
 
-test('canvas: edges coloured by kind, shell gates and self loops dropped, one edge per pair', () => {
-  const canvas = renderCanvasObject(MAP)
-  assert.notEqual(COLORS.flow, COLORS.coupling)
-  const ids = canvas.edges.map((e) => e.id)
-  assert.deepEqual(ids, [
-    'coupling:area:Combat->area:World',
-    'coupling:route:rest->area:World',
-    'flow:route:(tabs)/deck->route:(tabs)/map',
-    'flow:route:index->route:devart',
-    'flow:route:index->route:rest',
-  ])
-  for (const e of canvas.edges) assert.equal(e.color, e.id.startsWith('flow:') ? COLORS.flow : COLORS.coupling)
-  const both = canvas.edges.filter((e) => e.fromEnd === 'arrow').map((e) => e.id)
-  assert.deepEqual(both, ['coupling:area:Combat->area:World', 'flow:route:(tabs)/deck->route:(tabs)/map'])
-  assert.equal(drawnEdges(MAP).length, canvas.edges.length)
+test('group canvas: one file card per member opening its note, inside the group node, coloured by pitch', () => {
+  const canvas = renderGroupCanvasObject(MAP, 'world')
+  assert.deepEqual(canvasProblems(canvas, generatedFiles(MAP)), [])
+  const group = canvas.nodes.find((n) => n.id === 'group:world')
+  assert.equal(group.label, 'World routes')
+  const members = fileNodes(canvas).filter((n) => !n.id.startsWith('elsewhere:'))
+  assert.deepEqual(members.map((n) => n.file), ['Features/Title.md', 'Features/Rest - camp.md'])
+  for (const n of members) assert.ok(n.x >= group.x && n.y >= group.y && n.x + n.width <= group.x + group.width && n.y + n.height <= group.y + group.height, `${n.id} sits inside the group`)
+  const byId = Object.fromEntries(canvas.nodes.map((n) => [n.id, n]))
+  assert.equal(byId['route:rest'].color, COLORS.needsPitch)
+  assert.equal(byId['route:index'].color, COLORS.pitched)
+  for (const n of fileNodes(renderGroupCanvasObject(BARE, 'world'))) assert.equal(n.color, undefined)
 })
 
-test('canvas: layout is deterministic and independent of input order', () => {
+test('group canvas: flow edges between members, both-way pairs merged, no coupling and no shell gate', () => {
+  const tabs = renderGroupCanvasObject(MAP, 'tabs')
+  assert.deepEqual(tabs.edges.map((e) => [e.id, e.fromEnd]), [['flow:route:(tabs)/deck->route:(tabs)/map', 'arrow']])
+  assert.deepEqual(renderGroupCanvasObject(MAP, 'engine').edges, [], 'the engine areas only couple')
+  assert.deepEqual(renderGroupCanvasObject(MAP, 'minigames').edges, [], 'hazard is reached only by a shell gate')
+  for (const g of GROUPS) for (const e of renderGroupCanvasObject(MAP, g.id).edges) assert.equal(e.color, COLORS.flow)
+})
+
+test('group canvas: flow that leaves the group ends on an outside card in the Elsewhere column', () => {
+  const world = renderGroupCanvasObject(MAP, 'world')
+  const elsewhere = world.nodes.find((n) => n.id === 'elsewhere')
+  assert.equal(elsewhere.label, 'Elsewhere')
+  assert.ok(elsewhere.x > world.nodes.find((n) => n.id === 'group:world').width, 'a column apart')
+  const away = fileNodes(world).filter((n) => n.id.startsWith('elsewhere:'))
+  assert.deepEqual(away.map((n) => n.file), ['Features/Devart.md'])
+  for (const n of away) assert.ok(n.x >= elsewhere.x && n.y + n.height <= elsewhere.y + elsewhere.height)
+  assert.deepEqual(world.edges.map((e) => e.id), ['flow:route:index->elsewhere:route:devart', 'flow:route:index->route:rest'])
+  // dev only receives a one-way edge from world, so it has no Elsewhere column; a both-way one shows from both sides.
+  assert.equal(renderGroupCanvasObject(MAP, 'dev').nodes.some((n) => n.id === 'elsewhere'), false)
+  const both = { ...MAP, edges: [...MAP.edges, { kind: 'flow', from: 'route:devart', to: 'route:index', file: 'x.tsx' }] }
+  assert.deepEqual(renderGroupCanvasObject(both, 'dev').edges.map((e) => [e.id, e.fromEnd]), [['flow:route:devart->elsewhere:route:index', 'arrow']])
+})
+
+test('group canvases: one per group with a feature, at Features/<group label>.canvas, owned by the renderer', () => {
+  const canvases = renderGroupCanvases(MAP)
+  assert.deepEqual(Object.keys(canvases), GROUPS.map((g) => `${NOTES_DIR}/${g.label}.canvas`))
+  for (const rel of Object.keys(canvases)) assert.ok(isGroupCanvas(rel), rel)
+  assert.equal(isGroupCanvas(`${NOTES_DIR}/Mine.canvas`), false)
+  assert.equal(isGroupCanvas(`${NOTES_DIR}/Tabs.md`), false)
+  const files = generatedFiles(MAP)
+  for (const text of Object.values(canvases)) assert.deepEqual(canvasProblems(JSON.parse(text), files), [])
+})
+
+test('canvases: deterministic and independent of input order', () => {
   const shuffled = { ...MAP, features: [...MAP.features].reverse(), edges: [...MAP.edges].reverse() }
   assert.equal(renderCanvas(MAP), renderCanvas(MAP))
   assert.equal(renderCanvas(shuffled), renderCanvas(MAP))
+  assert.deepEqual(renderGroupCanvases(shuffled), renderGroupCanvases(MAP))
   assert.equal(renderReadme(shuffled, GAME_MODEL), renderReadme(MAP, GAME_MODEL))
 })
 
-test('canvasProblems catches a broken canvas', () => {
-  const canvas = renderCanvasObject(MAP)
+test('canvasProblems catches a broken canvas and a file node naming no generated file', () => {
+  const canvas = renderGroupCanvasObject(MAP, 'world')
   canvas.nodes.push({ ...canvas.nodes[1] })
+  canvas.nodes.push({ id: 'nofile', type: 'file', x: 0, y: 0, width: 1, height: 1 })
+  canvas.nodes.push({ id: 'stray', type: 'file', file: 'Features/Nowhere.md', x: 0, y: 0, width: 1, height: 1 })
   canvas.edges.push({ id: 'bad', fromNode: 'nowhere', toNode: 'route:index', color: '9' })
-  const problems = canvasProblems(canvas)
+  const problems = canvasProblems(canvas, generatedFiles(MAP))
   assert.ok(problems.some((p) => p.startsWith('duplicate id')))
   assert.ok(problems.some((p) => p.includes('unknown fromNode nowhere')))
   assert.ok(problems.some((p) => p.includes('bad color 9')))
+  assert.ok(problems.includes('node nofile: file node without a file'))
+  assert.ok(problems.includes('node stray: file Features/Nowhere.md is not a generated file'))
+  assert.equal(canvasProblems(canvas).some((p) => p.includes('stray')), false, 'without a file set only the shape is checked')
 })
 
 test('main: writes both files, --check passes on a fresh render and fails on drift', () => {
@@ -195,11 +232,16 @@ test('main: writes both files, --check passes on a fresh render and fails on dri
   }
 })
 
-test('the committed README and canvas are a fresh render of the committed features.json', () => {
+test('the committed README and canvases are a fresh render of the committed features.json', () => {
   const map = JSON.parse(fs.readFileSync(path.join(ROOT, FEATURES_PATH), 'utf8'))
-  const canvas = JSON.parse(fs.readFileSync(path.join(ROOT, CANVAS_PATH), 'utf8'))
-  assert.deepEqual(canvasProblems(canvas), [])
-  assert.equal(canvas.nodes.filter((n) => n.type === 'text' && n.id !== 'legend').length, map.features.length)
+  const out = render(ROOT)
+  assert.deepEqual(renderedCanvasProblems(out), [])
+  const overview = JSON.parse(fs.readFileSync(path.join(ROOT, CANVAS_PATH), 'utf8'))
+  assert.equal(fileNodes(overview).length, new Set(map.features.map((f) => f.group)).size)
+  for (const [rel, text] of Object.entries(out)) if (rel.endsWith('.canvas')) assert.equal(fs.readFileSync(path.join(ROOT, rel), 'utf8').replace(/\r\n/g, '\n'), text, rel)
+  const members = Object.keys(out).filter((rel) => rel.startsWith(`${NOTES_DIR}/`) && rel.endsWith('.canvas'))
+    .flatMap((rel) => fileNodes(JSON.parse(out[rel])).filter((n) => !n.id.startsWith('elsewhere:')))
+  assert.equal(members.length, map.features.length, 'every feature is a card in exactly one group canvas')
   assert.equal(tableRows(fs.readFileSync(path.join(ROOT, README_PATH), 'utf8')).length, map.features.length)
 })
 
@@ -328,9 +370,40 @@ test('main: --check fails on a stale note and an extra one; a write deletes only
   }
 })
 
-test('the committed notes are a fresh render, one per feature', () => {
+test('main: --check fails on a stale or extra group canvas; a write deletes a stale one and keeps a stray canvas', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'feature-map-canvases-'))
+  fs.mkdirSync(path.join(dir, 'docs', 'feature-map'), { recursive: true })
+  fs.writeFileSync(path.join(dir, FEATURES_PATH), JSON.stringify(MAP))
+  fs.writeFileSync(path.join(dir, GAME_MODEL_PATH), GAME_MODEL)
+  const log = console.log
+  const error = console.error
+  console.log = () => {}
+  console.error = () => {}
+  try {
+    assert.equal(main([], dir), 0)
+    for (const g of GROUPS) assert.ok(fs.existsSync(path.join(dir, NOTES_DIR, `${g.label}.canvas`)), g.label)
+    fs.writeFileSync(path.join(dir, NOTES_DIR, 'Tabs.canvas'), '{"nodes":[],"edges":[]}\n')
+    assert.equal(main(['--check'], dir), 1, 'a stale group canvas')
+    main([], dir)
+    // Emptying the dev group leaves its canvas stale: the generator owns it, so a write deletes it.
+    const noDev = { ...MAP, features: MAP.features.filter((f) => f.group !== 'dev') }
+    fs.writeFileSync(path.join(dir, FEATURES_PATH), JSON.stringify(noDev))
+    const stray = path.join(dir, NOTES_DIR, 'Mine.canvas')
+    fs.writeFileSync(stray, '{"nodes":[],"edges":[]}\n')
+    assert.equal(main(['--check'], dir), 1, 'an extra group canvas')
+    assert.equal(main([], dir), 0)
+    assert.equal(fs.existsSync(path.join(dir, NOTES_DIR, 'Dev routes.canvas')), false, 'the stale group canvas is deleted')
+    assert.equal(fs.existsSync(stray), true, 'a canvas not named for a group is left')
+  } finally {
+    console.log = log
+    console.error = error
+  }
+})
+
+test('the committed notes are a fresh render, one per feature, beside the group canvases', () => {
   const map = JSON.parse(fs.readFileSync(path.join(ROOT, FEATURES_PATH), 'utf8'))
   const notes = renderNotes(map)
-  assert.deepEqual(fs.readdirSync(path.join(ROOT, NOTES_DIR)).sort(), Object.keys(notes).map((p) => path.basename(p)).sort())
+  const canvases = renderGroupCanvases(map)
+  assert.deepEqual(fs.readdirSync(path.join(ROOT, NOTES_DIR)).sort(), [...Object.keys(notes), ...Object.keys(canvases)].map((p) => path.basename(p)).sort())
   for (const [rel, text] of Object.entries(notes)) assert.equal(fs.readFileSync(path.join(ROOT, rel), 'utf8').replace(/\r\n/g, '\n'), text, rel)
 })
