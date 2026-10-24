@@ -230,9 +230,68 @@ Notes on applying them:
   on this ballot so far, T has cut** except P-06 PAID and P-09 FREE, which T
   did not name.
 
+### Sitting 3 — Misc (T, 2026-10-24, pasted in session)
+
+The third sheet carries Misc only; its Payoff and Engine "CUT slot" lines are
+unticked slots in that sitting, not cuts (sittings 1 and 2 stand). T's Misc
+lines and general note, verbatim:
+
+```text
+-- Misc --
+M-01: KEEP M-01a | cut: M-01b, M-01c | note: Switch paid to: Heal for twice your inferno. Remove your inferno
+M-02: KEEP M-02a | cut: M-02b, M-02c | note: No maximum
+M-03: KEEP M-03a | cut: M-03b, M-03c | note: Paid is: Draw 2, chill 2, guard 2
+M-04: KEEP M-04a | cut: M-04b, M-04c | note: Free: Inferno 1, chill 1, storm 1; Paid: Inferno 3, Chill 3, Storm 3. We need to discuss what it means to stack these keywords.
+M-05: KEEP M-05c | cut: M-05a, M-05b | note: Each unique element?
+M-06: KEEP M-06a | cut: M-06b, M-06c
+M-07: KEEP M-07b | cut: M-07a, M-07c | note: No max
+M-08: KEEP M-08c | cut: M-08a, M-08b | note: For globals, paid and free should typically be the same. This should be: Paid: Start of your turn: Storm 1, DRAW 1
+M-09: KEEP M-09c | cut: M-09a, M-09b | note: Paid should read: Heal for your inferno. Move your inferno on to the foe
+M-10: CUT slot
+general: I didn't select a 10th card because I'd like a new, different global: Paid: Start of your turn: Storm 1 then heal equal to the amount of storm on the foe
+```
+
+**Misc as kept, with T's notes applied:**
+
+| Slot | Kept | Type | FREE | PAID |
+|---|---|---|---|---|
+| M-01 | M-01a | Skill, Fire | Remove your INFERNO. | HEAL twice your INFERNO, then remove your INFERNO. |
+| M-02 | M-02a | Skill, Frost | HEAL 2, + the foe's CHILL. | HEAL 4, + twice the foe's CHILL. |
+| M-03 | M-03a | Skill, Storm | DRAW 2. | DRAW 2, CHILL 2, GUARD 2. |
+| M-04 | M-04a | Spell, all | INFERNO 1, CHILL 1, STORM 1. | INFERNO 3, CHILL 3, STORM 3. |
+| M-05 | M-05c | Skill, all | DRAW 1; gain 1 Conviction. | DRAW 1; gain 2 Conviction per different element on the foe. |
+| M-06 | M-06a | Skill, Frost | GUARD 4, doubled if the foe is FROZEN. | GUARD 9, doubled if the foe is FROZEN. |
+| M-07 | M-07b | Spell, Storm | STORM 2. | VULNERABLE +5% per STORM on the foe, for 2 turns. |
+| M-08 | M-08c | Global, Storm | Start of your turn: STORM 1, DRAW 1. | The same line, permanent. |
+| M-09 | M-09c | Skill, Fire | Move half your INFERNO onto the foe. | HEAL equal to your INFERNO, then move your INFERNO onto the foe. |
+| M-10 | **new (T)** | Global, Storm | Start of your turn: STORM 1, then HEAL equal to the foe's STORM. | The same line, permanent. |
+
+Notes on applying them:
+
+- **M-04** changes its job: it was "extend the elements already up" and is now
+  all three elements at once. That makes it the card that asks what stacking
+  means (Open, below).
+- **M-05**, "each unique element?": yes. It counts the different elements on
+  the foe (INFERNO, CHILL, STORM), so the PAID line tops out at 6 Conviction
+  with all three up; the printed cap is dropped as redundant.
+- **M-08 and M-10** follow the Global rule, now worded by T as "paid and free
+  should *typically* be the same": the default, with room for an exception T
+  names.
+- **M-10** is T's own card, written in the general note; no candidate was kept
+  for the slot.
+- Caps removed: M-02 (both lines), M-07 PAID.
+
+### The kept family (after three sittings)
+
+29 kept candidates and one card of T's: 10 Payoff, 10 Engine, 10 Misc. The cards
+are paper until the revisions step (`docs/lane-creator.md` step 7).
+
 ### Open
 
-- Misc (M-01 to M-10): not yet voted.
+- **Stacking** (T, M-04 note: "We need to discuss what it means to stack these
+  keywords"): what a second INFERNO, CHILL or STORM does to one already on the
+  foe. The ballot assumed each adds to the number; INFERNO's duration and split
+  are still unruled.
 - Whether "Globals PAID = FREE, permanent" and "no max" are rules for this
   family only or for every lane. The Blood Price Globals already live carry
   PAID deltas (P-10c, E-03d), so a lane-wide Global rule would revise them.
