@@ -331,3 +331,18 @@ Still open for the revisions step: the scaling stat of INFERNO, BLIZZARD and
 STORM (colours follow each card's job, BV3), names, the test deck and the family
 relic with its signature skill.
 
+### Notes from play (T, 2026-10-24, after the first preview build)
+
+T: "elementalist cards are great!!" Notes, none of them built yet:
+
+- **BLIZZARD is too powerful.** T's direction: it should drop by the damage the
+  foe does (what it absorbs) instead of by 1 a round. **Held: T is still
+  testing ("Don't do it yet").**
+- **A Global shown as a Skill or Spell.** T saw a non-Global card reading "At the
+  start of turn..."; every Elementalist line with that trigger is a Global in
+  the code (P-10, E-06, E-09, M-08, M-10), so this is likely a display bug. T is
+  to point at the card (a screenshot or the play logs).
+- **Spells exile on PAID** (all lanes): D103, built by Phase SP1. This family's
+  eight Spells change.
+- **Some Skills may become Spells**, with EXILE, once T has play logs (BE2's
+  `card-usage` and `card-gaps` reports). Not decided.
