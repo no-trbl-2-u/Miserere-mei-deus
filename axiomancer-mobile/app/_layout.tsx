@@ -25,6 +25,7 @@ import { CorruptSaveModal } from '@/components/CorruptSaveModal';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { SaveSlotsProvider } from '@/state/SaveSlotsProvider';
 import { SettingsProvider, settingsStore } from '@/state/settings';
+import { devSettingsStore } from '@/state/dev/dev-settings';
 import { PrevSessionCrashPrompt } from '@/components/PrevSessionCrashPrompt';
 import { HardwareBackHandler } from '@/components/HardwareBackHandler';
 import { BlacksmithGate } from '@/components/BlacksmithGate';
@@ -106,6 +107,10 @@ const persistenceAdapter = createAsyncStorageAdapter();
 // They are a UX preference, not gameplay state — a new game never resets them.
 const settingsHydrated = settingsStore.hydrate();
 
+// Dev settings (the play-log switch) have their own key and hydrate only in
+// a dev-tools build; a production launch never reads them.
+const devSettingsHydrated = isDevToolsEnabled() ? devSettingsStore.hydrate() : Promise.resolve();
+
 // State-fixture boot (`state/fixtures.ts`): when a dev build
 // is asked for a fixture (`?fixture=<id>` or `__AXM_FIXTURE__`), the
 // store boots from that compiled state through an in-memory adapter —
@@ -145,7 +150,7 @@ function RootLayout() {
 
   useEffect(() => {
     let cancelled = false;
-    Promise.all([persistenceAdapter.preload(), settingsHydrated])
+    Promise.all([persistenceAdapter.preload(), settingsHydrated, devSettingsHydrated])
       .catch((err: unknown) => {
         // Surface "save corrupted — start new game?" to the user via
         // CorruptSaveModal; the

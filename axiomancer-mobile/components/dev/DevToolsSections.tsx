@@ -67,6 +67,7 @@ const DebugDialogueJump = lazyNamed(() => import('@/components/DebugDialogueJump
 const DebugCurrencyControl = lazyNamed(() => import('@/components/DebugCurrencyControl'), 'DebugCurrencyControl');
 const DebugRunControls = lazyNamed(() => import('@/components/DebugRunControls'), 'DebugRunControls');
 const DebugLogViewer = lazyNamed(() => import('@/components/DebugLogViewer'), 'DebugLogViewer');
+const DebugPlayLogSwitch = lazyNamed(() => import('@/components/DebugPlayLogSwitch'), 'DebugPlayLogSwitch');
 const DebugCrashTest = lazyNamed(() => import('@/components/DebugCrashTest'), 'DebugCrashTest');
 
 function LoadingFallback() {
@@ -158,10 +159,11 @@ export function DevToolsSections() {
                 <DebugDialogueJump />
             </DevSection>
 
-            <DevSection label="RUN & DIAGNOSTICS" hint="wallet · save · reset · galleries · log · crash test" testID="dev-section-run">
+            <DevSection label="RUN & DIAGNOSTICS" hint="wallet · save · reset · galleries · log · play log · crash test" testID="dev-section-run">
                 <DebugCurrencyControl />
                 <DebugRunControls />
                 <DebugLogViewer />
+                <DebugPlayLogSwitch />
                 <DebugCrashTest />
             </DevSection>
         </View>

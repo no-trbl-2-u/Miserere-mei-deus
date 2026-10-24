@@ -31,7 +31,8 @@ const expo = appJson.expo as ExpoConfig;
 
 // One Sentry release per build commit (`lib/sentryRelease.js` says why).
 // Null off the builder, where the SDK keeps its own default.
-const SENTRY_RELEASE = sentryReleaseFor(expo.version, buildCommit());
+const BUILD_COMMIT = buildCommit();
+const SENTRY_RELEASE = sentryReleaseFor(expo.version, BUILD_COMMIT);
 
 export default (): ExpoConfig => ({
   ...expo,
@@ -43,6 +44,8 @@ export default (): ExpoConfig => ({
     // in `isDevToolsEnabled()`.
     ...(devToolsEnabled !== undefined ? { devToolsEnabled } : {}),
     ...(buildProfile ? { buildProfile } : {}),
+    // The play log stamps every post with it (`getBuildCommit()`).
+    ...(BUILD_COMMIT ? { buildCommit: BUILD_COMMIT } : {}),
     ...(SENTRY_DSN ? { sentryDsn: SENTRY_DSN } : {}),
     ...(SENTRY_RELEASE ? { sentryRelease: SENTRY_RELEASE } : {}),
   },
