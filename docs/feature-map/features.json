@@ -2857,6 +2857,12 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Combat",
+      "file": "axiomancer-mobile/lib/fightRecorder.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Combat",
       "file": "axiomancer-mobile/state/actions.ts"
     },
     {
@@ -3422,12 +3428,6 @@
       "from": "route:dev",
       "to": "area:World",
       "file": "axiomancer-mobile/state/presenters/exploration.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:dev",
-      "to": "area:World",
-      "file": "axiomancer-mobile/state/presenters/hazard-puzzle-log.engine.ts"
     },
     {
       "kind": "coupling",
