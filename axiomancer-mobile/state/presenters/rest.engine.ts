@@ -15,6 +15,7 @@ import type {
 } from '@mechanics';
 import type { AppStoreState } from '@/state/store';
 import { REST_CHOICE_OFFER_DESC, REST_CHOICE_OFFER_LABEL, restOfferDesc } from './rest.copy';
+import { cardUpgradeRowsVM, type CardUpgradeRowVM } from './card-upgrade.engine';
 
 // ---------------------------------------------------------------------------
 // VM shapes
@@ -51,6 +52,8 @@ export interface RestChoiceOutcomeVM {
     healed: number;
     spent: number;
     removedCardName: string | null;
+    /** The upgraded card, before and after, or null when no upgrade was taken. */
+    upgraded: { fromName: string; toName: string } | null;
 }
 
 export interface RestChoiceVM {
@@ -62,6 +65,8 @@ export interface RestChoiceVM {
     currency: number;
     offers: readonly RestChoiceOfferVM[];
     cut: RestChoiceCutVM | null;
+    /** The shared upgrade screen's rows, in the `upgrade-pick` phase only. */
+    upgrade: readonly CardUpgradeRowVM[] | null;
     outcome: RestChoiceOutcomeVM | null;
     /** The authored MapEvent one-liner; `null` falls back to the placeholder intro. */
     description: string | null;
@@ -79,6 +84,7 @@ const EMPTY_VM: RestChoiceVM = Object.freeze({
     currency: 0,
     offers: Object.freeze([]),
     cut: null,
+    upgrade: null,
     outcome: null,
     description: null,
 });
@@ -144,12 +150,18 @@ export function selectRestVM(state: Pick<AppStoreState, 'rest'>): RestChoiceVM {
         })),
     };
 
+    const upgrade = s.phase !== 'upgrade-pick' ? null : cardUpgradeRowsVM(s.upgradableCardIds, s.deckCardIds);
+
     const outcome: RestChoiceOutcomeVM | null = s.outcome === null ? null : {
         chosen: s.outcome.chosen,
         label: REST_CHOICE_OFFER_LABEL[s.outcome.chosen],
         healed: s.outcome.healed,
         spent: s.outcome.spent,
         removedCardName: s.outcome.removedCardId === null ? null : cardName(s.outcome.removedCardId),
+        upgraded: s.outcome.upgradedCardId === null || s.outcome.upgradedToCardId === null ? null : {
+            fromName: cardName(s.outcome.upgradedCardId),
+            toName: cardName(s.outcome.upgradedToCardId),
+        },
     };
 
     return {
@@ -162,6 +174,7 @@ export function selectRestVM(state: Pick<AppStoreState, 'rest'>): RestChoiceVM {
         currency: s.currency,
         offers,
         cut,
+        upgrade,
         outcome,
         description: s.description,
     };

@@ -129,4 +129,110 @@ Element tags: 🔥 Fire, ❄ Frost, ⚡ Storm; a slot with two tags is a pair br
 
 ## Verdicts
 
-Pending (T).
+### Sitting 1 — Payoff (T, 2026-10-23, pasted in session)
+
+**Payoff is voted; Engine and Misc are not yet voted.** The pasted sheet printed
+every Engine and Misc slot as "CUT slot" only because nothing there was ticked
+yet; those slots are open, not cut.
+
+T's verdict text, verbatim:
+
+```text
+REHEARSAL BALLOT — the Elementalist (second family rehearsal; not live cards)
+kept 10 of 90
+-- Payoff --
+P-01: KEEP P-01b | cut: P-01a, P-01c
+P-02: KEEP P-02b | cut: P-02a, P-02c
+P-03: KEEP P-03a | cut: P-03b, P-03c | note: No Max to these values
+P-04: KEEP P-04a | cut: P-04b, P-04c | note: Free should be Deal 3, Chill 2. No max on paid
+P-05: KEEP P-05b | cut: P-05a, P-05c | note: Paid should read: Trigger the Foe's storm
+P-06: KEEP P-06b | cut: P-06a, P-06c
+P-07: KEEP P-07a | cut: P-07b, P-07c
+P-08: KEEP P-08b | cut: P-08a, P-08c | note: Free has no max. Paid should be Double the foe's chill and storm
+P-09: KEEP P-09a | cut: P-09b, P-09c | note: No max for paid
+P-10: KEEP P-10b | cut: P-10a, P-10c | note: Globals should not read "instead". They should only have one paid line (reads exactly how you have the free line). The benefit of paying is that it's permanent
+```
+
+**Payoff as kept, with T's notes applied** (paper; numbers are the ballot's
+until the revisions step):
+
+| Slot | Kept | Type | FREE | PAID |
+|---|---|---|---|---|
+| P-01 | P-01b | Attack, Fire | DEAL 5. | DEAL 8, doubled if the foe is burning. |
+| P-02 | P-02b | Attack, Fire | DEAL 6. | DEAL 18; INFERNO 8 (you and the foe both burn). |
+| P-03 | P-03a | Skill, Frost | GUARD equal to the foe's CHILL. | GUARD twice the foe's CHILL. |
+| P-04 | P-04a | Attack, Frost | DEAL 3, CHILL 2. | Spend all the foe's CHILL: DEAL 6, +2 per CHILL spent. |
+| P-05 | P-05b | Spell, Storm | STORM 1; DEAL equal to the foe's STORM. | Trigger the foe's STORM. |
+| P-06 | P-06b | Skill, Storm | GUARD 3, DRAW 1. | GUARD 5, + the foe's STORM (max +12). DRAW 1. |
+| P-07 | P-07a | Attack, Fire + Frost | DEAL 5, INFERNO 2. | DEAL 10, INFERNO 4; if the foe is FROZEN, the INFERNO is doubled too. |
+| P-08 | P-08b | Skill, Frost + Storm | GUARD equal to the foe's CHILL + STORM. | Double the foe's CHILL and STORM. |
+| P-09 | P-09a | Attack, Fire + Storm | DEAL 4, + your INFERNO (max +6). | DEAL 8, + your INFERNO + the foe's STORM. |
+| P-10 | P-10b | Global, all | Start of your turn: if the foe has two or more elements, DEAL 5. | The same line, permanent (no "instead"). |
+
+**T's rulings in the notes:**
+
+- **Globals (T):** a Global's PAID line reads exactly as its FREE line; the
+  benefit of paying is that it is permanent. No "instead" deltas. Applies to
+  every Global on this ballot (P-10, E-09, M-08).
+- **Caps removed** where T wrote "no max": P-03 (both lines), P-04 PAID, P-08
+  FREE, P-09 PAID. P-06's PAID cap and P-09's FREE cap were not named and
+  stand.
+- **P-05 PAID** is "Trigger the foe's STORM": the foe takes its STORM tick now,
+  as at the start of its turn. Whether the trigger also grows the STORM by 1, as
+  the turn-start tick does, is open for the revisions step.
+
+### Sitting 2 — Engine (T, 2026-10-23, pasted in session)
+
+The second sheet repeats sitting 1's Payoff lines unchanged and adds Engine.
+Misc is still not voted (its "CUT slot" lines are unticked slots, not cuts).
+T's Engine lines, verbatim:
+
+```text
+-- Engine --
+E-01: KEEP E-01b | cut: E-01a, E-01c
+E-02: KEEP E-02c | cut: E-02a, E-02b | note: Remove the max
+E-03: KEEP E-03b | cut: E-03a, E-03c
+E-04: KEEP E-04c | cut: E-04a, E-04b | note: No max
+E-05: KEEP E-05b | cut: E-05a, E-05c
+E-06: KEEP E-06a | cut: E-06b, E-06c | note: Turn this into a global card where it reads the storm grows by 1 extra
+E-07: KEEP E-07b | cut: E-07a, E-07c | note: No max
+E-08: KEEP E-08c | cut: E-08a, E-08b
+E-09: KEEP E-09b | cut: E-09a, E-09c | note: No max
+E-10: KEEP E-10c | cut: E-10a, E-10b | note: free is draw 1, storm 1 instead
+```
+
+**Engine as kept, with T's notes applied:**
+
+| Slot | Kept | Type | FREE | PAID |
+|---|---|---|---|---|
+| E-01 | E-01b | Spell, Fire | INFERNO 3, GUARD 2. | INFERNO 8, GUARD 5. |
+| E-02 | E-02c | Attack, Fire | DEAL 5. | DEAL 8, then INFERNO equal to half the damage dealt. |
+| E-03 | E-03b | Spell, Frost | CHILL 2, DRAW 1. | CHILL 6, DRAW 1. |
+| E-04 | E-04c | Skill, Frost | CHILL 3. | CHILL 5, then GUARD equal to the foe's CHILL. |
+| E-05 | E-05b | Spell, Storm | STORM 1, DRAW 1. | STORM 3, DRAW 2. |
+| E-06 | E-06a | **Global**, Storm (was a Spell) | The STORM grows by 1 extra. | The same line, permanent. |
+| E-07 | E-07b | Skill, Storm | DRAW 2. | DRAW 2, then STORM equal to the cards in your hand. |
+| E-08 | E-08c | Spell, Fire + Frost | CHILL 2, INFERNO 2. | Steam: remove your INFERNO; the foe gains that much CHILL and INFERNO. |
+| E-09 | E-09b | Global, Frost + Storm | Start of your turn: CHILL equal to half the foe's STORM. | The same line, permanent. |
+| E-10 | E-10c | Spell, all | DRAW 1, STORM 1. | Swap the numbers of two elements on the foe. DRAW 1. |
+
+Notes on applying them:
+
+- **E-06** becomes a Global by T's note: while it is in play the STORM grows by
+  2 a turn instead of 1. Read as "each turn" (the STORM's own growth plus one);
+  confirm at the revisions step.
+- **E-09** follows sitting 1's Global rule (PAID equals FREE, permanent) and
+  T's "no max", so its PAID "instead" delta and both caps are gone.
+- **E-10**'s kept card is the swap, not BEND (E-10a/b). The family's "bend"
+  fantasy is carried by E-08c's Steam and E-10c's swap; BEND is not a keyword
+  for now.
+- Caps removed: E-02 PAID, E-04 PAID, E-07 PAID, E-09. **Every cap T has met
+  on this ballot so far, T has cut** except P-06 PAID and P-09 FREE, which T
+  did not name.
+
+### Open
+
+- Misc (M-01 to M-10): not yet voted.
+- Whether "Globals PAID = FREE, permanent" and "no max" are rules for this
+  family only or for every lane. The Blood Price Globals already live carry
+  PAID deltas (P-10c, E-03d), so a lane-wide Global rule would revise them.

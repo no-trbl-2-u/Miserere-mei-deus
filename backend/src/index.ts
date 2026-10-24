@@ -1,5 +1,5 @@
 /**
- * miserere-api: the dev Worker (phases BE1a, BE2a, BV1a).
+ * miserere-api: the dev Worker (phases BE1a, BE2a, BV1a, BV2a).
  *
  *   POST /v1/puzzle-attempts           store one ended attempt        -> 201 { id, receivedAt }
  *   GET  /v1/puzzle-attempts[?layout=] the stored rows, newest first  -> 200 { attempts }
@@ -7,13 +7,19 @@
  *   GET  /v1/fights[?enemy=]           the stored fights, newest first -> 200 { fights }
  *   POST /v1/deck-events               store one deck change          -> 201 { id, receivedAt }
  *   GET  /v1/deck-events[?card=]       the stored changes, newest first -> 200 { deckEvents }
- *   POST /v1/ballot-verdicts           store one ballot's verdict     -> 201 { id, receivedAt }
- *   GET  /v1/ballot-verdicts[?ballot=] the stored verdicts, newest first -> 200 { ballotVerdicts }
+ *   POST /v1/ballot-verdicts           store one ballot save or verdict -> 201 { id, receivedAt }
+ *   GET  /v1/ballot-verdicts[?ballot=][&status=]
+ *                                      the stored rows, newest first  -> 200 { ballotVerdicts }
  *
  * Every route needs `Authorization: Bearer <PUZZLE_API_TOKEN>` (401 without
  * it). A POST body over its route's cap is a 413; one the route's validator
  * rejects is a 400 naming each problem. Only preview builds post the puzzle
  * and play-log routes; production never does.
+ *
+ * A ballot row carries `status`: `draft` for a Save, `final` for a Submit
+ * (the default when a post leaves it out). The verdict in force for a ballot
+ * is its newest `final` row, `?ballot=<id>&status=final`; a `draft` is
+ * progress, never a verdict. A `status=` other than those two is a 400.
  *
  * The ballot routes alone are called from a browser page on another origin
  * (the card-ledger ballots, `plan/card-ledger/ballot-kit.js`, phase BV1b):
@@ -24,7 +30,7 @@
 
 import { insertAttempt, listAttempts } from './attempts';
 import { isAuthorized } from './auth';
-import { BALLOT_LIMITS, BALLOT_VERDICTS_PATH, validateBallotVerdictPost } from './ballot';
+import { BALLOT_LIMITS, BALLOT_VERDICTS_PATH, isBallotVerdictStatus, validateBallotVerdictPost } from './ballot';
 import type { BallotVerdictList } from './ballot';
 import { insertBallotVerdict, listBallotVerdicts } from './ballot-verdicts';
 import {
@@ -112,7 +118,15 @@ const ROUTES: Record<string, Route> = {
         },
         async get(url, env) {
             const ballot = url.searchParams.get('ballot');
-            const list: BallotVerdictList = { ballotVerdicts: await listBallotVerdicts(env.DB, ballot ?? undefined) };
+            const status = url.searchParams.get('status');
+            if (status !== null && !isBallotVerdictStatus(status)) {
+                return error(400, 'invalid query', [`status: expected draft or final, got ${JSON.stringify(status)}`]);
+            }
+            const ballotVerdicts = await listBallotVerdicts(env.DB, {
+                ballotId: ballot ?? undefined,
+                status: status ?? undefined,
+            });
+            const list: BallotVerdictList = { ballotVerdicts };
             return json(list);
         },
     },

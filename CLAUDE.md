@@ -32,7 +32,7 @@ cannot see an Item whose premise is gone, so `/plot` and `/messy` carry a reconc
 
 Answering a **balance/measurement** question (win rates, engagement)? Read
 `docs/reports/measured/latest.md` (phase R12a: the grey and Blood Price
-decks across the Act 1 ledger) and name the commit its stamp gives. It is a
+decks across the Act 1 ledger, plus Blood Price half-upgraded, UP1g) and name the commit its stamp gives. It is a
 measurement, not a gated baseline (D57); a question it does not cover gets
 "not measured". Never cite the retired deck-matrix baseline (it lives only
 under the `archive-pre-revamp` tag) — see `docs/truth-sources.md` →

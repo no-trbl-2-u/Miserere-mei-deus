@@ -74,7 +74,12 @@ the Expo app (`axiomancer-mobile`) presents it.
   mobile) drawn uniformly from the whole library but the Curses
   (`COMBAT_REWARD_POOL`). A cache offers one. The dev menu's REWARD POOL
   can narrow the draft to card lanes (`CARD_LANES`: the grey office and
-  Blood Price); there is no lane relic yet.
+  Blood Price); there is no lane relic yet. A won elite fight
+  (`difficulty: 'elite'`, the Green Jelly) pays the elite reward instead
+  (`rollEliteReward`, Phase UP1f): the best 3 cards by rarity, one from a
+  lane the deck draws on (`deckLaneIds`), or one upgrade of a random owned
+  card at the highest rarity owned that can take one, read on the shared
+  upgrade screen; the upgrade option hides when nothing can be upgraded.
 
 ## Dice
 
@@ -206,12 +211,16 @@ keyword (`EnemyKeyword = never`).
   quests; that plumbing is kept and tested with fixtures.
 - **Currency:** shillings.
 - **Rest** offers one choice (`World/RestChoice/`): heal
-  `restHealFraction` = 25% of maximum VITAE, or cut a card for 5, 10, 15 …
-  shillings (`CARD_REMOVAL_PRICING`).
+  `restHealFraction` = 25% of maximum VITAE, upgrade one card the player
+  picks (free, no heal; the shared upgrade screen shows it before and after,
+  beside a locked "???" slot), or cut a card for 5, 10, 15 … shillings
+  (`CARD_REMOVAL_PRICING`).
 - **The Anvil** (one per region, near its exit; `ANVIL_VERB_PRICING`,
   `World/Blacksmith/blacksmith.engine.ts`): HONE turns a miss face to mana
   (3 shillings), TEMPER a mana face to special (5), SWAP changes a die's
-  gear (8). This is the only way dice grow.
+  gear (8). This is the only way dice grow. It also upgrades one card a
+  visit for 5 shillings (Phase UP1e), on the rest site's upgrade screen;
+  refused when the purse is short or no card can take another upgrade.
 - **Items** are healing potions (`Items/consumable.library.ts`): Minor 10
   VITAE (15 below half), Healing 20 (30), Greater 50 (75).
 - **Is X reachable in play?** `npm run roster-health -w axiomancer-mechanics`
@@ -287,20 +296,20 @@ without a ruling from T.
 - No preset decks and no deck draft. Every run starts with the grey deck.
 - No card pricing or power budget. The only prices are the cut and the
   Anvil. The trial cards keep their printed numbers, untuned.
-- No themes, synergy or reward steering.
+- No themes or synergy. The only reward steering is the elite reward's one
+  card from the deck's lanes (UP1f).
 - No enemy keywords, afflictions, summons or riders.
 - No alternate wins beyond befriend: no RELENT, no CONDEMN, no capitulation.
 - No alignment, GRACE or faction reputation.
 - No bonus for paying with the card's own colour: the die powers the card
   and adds nothing (D79). The gold die stays wild.
-- No card upgrade is granted in play yet, and no die growth beyond the Anvil
-  (D20, parked). The upgrade law exists (Phase UP1b, `Cards/card-upgrades.ts`):
+- No die growth beyond the Anvil (D20, parked). The rest site and the Anvil
+  grant card upgrades (Phases UP1d, UP1e), and so does an elite win (UP1f); the upgrade law (Phase UP1b, `Cards/card-upgrades.ts`):
   rarity limits upgrades (common 1, uncommon 2, rare 3) as `<id>+`, `++`,
   `+++`; each raises payoffs (Blood Price programs through `programAt`) and
   never a cost; `REPLACE_CARD` swaps one owned copy. Blood for Blood, the
   one rare, takes three (its FREE DEAL grows; PAID's X cap rises and the
-  third is 4X: the one cost an upgrade grows, by T's ruling). The rest site, anvil and
-  elite grants are UP1d to UP1f.
+  third is 4X: the one cost an upgrade grows, by T's ruling).
 - No measured balance baseline (D57). A balance question gets "not
   measured".
 

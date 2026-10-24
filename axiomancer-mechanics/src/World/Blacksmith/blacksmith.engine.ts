@@ -8,6 +8,9 @@
  *                                 │  ▲                                                            │
  *                                 │  └────────────────────────────────────────────────────────────┘
  *                                 │
+ *                                 ├──chooseBlacksmithCardUpgrade──▶ upgrade-pick ──pickBlacksmithCardUpgrade──▶ card
+ *                                 │                                     └──cancelBlacksmithCardUpgrade──▶ forging
+ *                                 │
  *                                 └──leaveBlacksmith──▶ outcome ──claimBlacksmithOutcome──▶ done
  *
  * The engine NEVER reads `GameState`. The host passes the authored payload —
@@ -16,6 +19,10 @@
  * shared `validateDieGear` (the SAME check the character-side reducer uses),
  * so a cap-violating upgrade is refused identically here and in the reducer.
  * Refusals are LOUD (a refusal card) and leave the rail + budget untouched.
+ *
+ * The card upgrade (Phase UP1e) works one card a visit: the engine names the
+ * copy and the id it becomes (`nextUpgradeId`), and the host's `replaceCard`
+ * swaps it at claim, the same split as the rest site's upgrade.
  *
  * Prices are in SHILLINGS. Access is a directly-authored `blacksmith`
  * MapEvent node (`MapEvents/types.ts`), priced by these per-verb tiers.
@@ -32,8 +39,10 @@ import {
     type DieGearRail,
 } from '../../Character/dieGear.reducer';
 import type { UpgradeableDieGear } from '../../Combat/combat.encounter.types';
+import { nextUpgradeId, upgradableCardIds } from '../../Cards/card-upgrades';
 import type {
     BlacksmithCard,
+    BlacksmithCardUpgrade,
     BlacksmithOutcome,
     BlacksmithSession,
     BlacksmithVariantOffer,
@@ -57,6 +66,8 @@ export const ANVIL_VERB_PRICING = Object.freeze({
     temper: 5,
     /** SWAP (replace a die's gear with an offered variant). */
     swap: 8,
+    /** UPGRADE one owned card, once per visit; the TEMPER price (UP1 brief). */
+    upgrade: 5,
 });
 
 const VERB_CHROME: Readonly<Record<BlacksmithVerb, { title: string; body: string }>> = Object.freeze({
@@ -72,6 +83,10 @@ const VERB_CHROME: Readonly<Record<BlacksmithVerb, { title: string; body: string
         title: 'RE-GEARED',
         body: 'The old fitting comes off cold; the new one seats with a click the anvil seems to approve of.',
     },
+    upgrade: {
+        title: 'WORKED SHARPER',
+        body: 'The smith lays the card flat on the anvil and works it until its numbers bite deeper.',
+    },
 });
 
 // ---------------------------------------------------------------------------
@@ -82,14 +97,16 @@ const VERB_CHROME: Readonly<Record<BlacksmithVerb, { title: string; body: string
  * Builds the anvil session from the authored payload. `rail` is the player's
  * current die gear (a host without one may pass a default rail via
  * `concreteDefaultRail()`); `budget` is the spendable resource; `variants` are
- * the swap offers. RNG is seeded and threaded but untouched by the
- * deterministic upgrade transitions.
+ * the swap offers; `deckCardIds` is the deck the card upgrade picks from
+ * (`buildCombatDeck` output; empty means no card can be upgraded). RNG is
+ * seeded and threaded but untouched by the deterministic upgrade transitions.
  */
 export function createBlacksmithSession(
     seed: SeedInput,
     rail: DieGearRail,
     budget: number,
     variants: readonly BlacksmithVariantOffer[] = [],
+    deckCardIds: readonly string[] = [],
 ): BlacksmithSession {
     return {
         phase: 'intro',
@@ -100,6 +117,9 @@ export function createBlacksmithSession(
         honed: 0,
         tempered: 0,
         swapped: 0,
+        deckCardIds: deckCardIds.slice(),
+        upgradableCardIds: upgradableCardIds(deckCardIds),
+        cardUpgrade: null,
         card: null,
         outcome: null,
         seed,
@@ -127,8 +147,8 @@ export function beginBlacksmith(s: BlacksmithSession): BlacksmithSession {
 
 function refusalCard(
     verb: BlacksmithVerb,
-    color: DieGearColor,
-    gear: UpgradeableDieGear,
+    color: DieGearColor | null,
+    gear: UpgradeableDieGear | null,
     reason: string,
 ): BlacksmithCard {
     return {
@@ -138,6 +158,7 @@ function refusalCard(
         color,
         cost: 0,
         gear,
+        cardUpgrade: null,
         refused: true,
         reason,
     };
@@ -157,6 +178,7 @@ function successCard(
         color,
         cost,
         gear,
+        cardUpgrade: null,
         refused: false,
         reason: '',
     };
@@ -270,6 +292,78 @@ export function swapBlacksmith(s: BlacksmithSession, variantId: string): Blacksm
 }
 
 // ---------------------------------------------------------------------------
+// The card upgrade (Phase UP1e)
+// ---------------------------------------------------------------------------
+
+/**
+ * Why the card upgrade can't be taken right now, or null when it can. The
+ * one authority for the refusal card and a host's greyed offer: once a
+ * visit, something to upgrade, and the price covered.
+ */
+export function blacksmithCardUpgradeRefusal(s: BlacksmithSession): string | null {
+    if (s.cardUpgrade !== null) return 'one card a visit, and that one is done';
+    if (s.upgradableCardIds.length === 0) return 'nothing you carry can take another upgrade';
+    const price = ANVIL_VERB_PRICING.upgrade;
+    if (price > s.budget) return `you can't cover the ${price} it costs`;
+    return null;
+}
+
+/**
+ * forging → upgrade-pick, or → card with a loud refusal when the visit's
+ * upgrade is spent, no card can take one, or the price can't be covered.
+ * Nothing is charged until a card is picked.
+ */
+export function chooseBlacksmithCardUpgrade(s: BlacksmithSession): BlacksmithSession {
+    if (s.phase !== 'forging') return s;
+    const reason = blacksmithCardUpgradeRefusal(s);
+    if (reason) return { ...s, phase: 'card', card: refusalCard('upgrade', null, null, reason) };
+    return { ...s, phase: 'upgrade-pick' };
+}
+
+/** upgrade-pick → forging. Backs out of the picker; nothing is charged. */
+export function cancelBlacksmithCardUpgrade(s: BlacksmithSession): BlacksmithSession {
+    if (s.phase !== 'upgrade-pick') return s;
+    return { ...s, phase: 'forging' };
+}
+
+/**
+ * upgrade-pick → card. Only a card actually offered (`upgradableCardIds`) is
+ * a valid pick; anything else is a silent no-op, the rest site's contract.
+ * Charges the price and records the copy and the id it becomes; the real
+ * `replaceCard` call is the host's, at claim.
+ */
+export function pickBlacksmithCardUpgrade(s: BlacksmithSession, cardId: string): BlacksmithSession {
+    if (s.phase !== 'upgrade-pick') return s;
+    if (!s.upgradableCardIds.includes(cardId)) return s;
+    const toCardId = nextUpgradeId(cardId);
+    if (toCardId === undefined) return s;
+    const reason = blacksmithCardUpgradeRefusal(s);
+    if (reason) return { ...s, phase: 'card', card: refusalCard('upgrade', null, null, reason) };
+
+    const price = ANVIL_VERB_PRICING.upgrade;
+    const cardUpgrade: BlacksmithCardUpgrade = { fromCardId: cardId, toCardId };
+    const chrome = VERB_CHROME.upgrade;
+    return {
+        ...s,
+        budget: s.budget - price,
+        spent: s.spent + price,
+        cardUpgrade,
+        phase: 'card',
+        card: {
+            title: chrome.title,
+            body: chrome.body,
+            verb: 'upgrade',
+            color: null,
+            cost: price,
+            gear: null,
+            cardUpgrade,
+            refused: false,
+            reason: '',
+        },
+    };
+}
+
+// ---------------------------------------------------------------------------
 // Cards & outcome
 // ---------------------------------------------------------------------------
 
@@ -288,6 +382,7 @@ export function leaveBlacksmith(s: BlacksmithSession): BlacksmithSession {
         honed: s.honed,
         tempered: s.tempered,
         swapped: s.swapped,
+        cardUpgrade: s.cardUpgrade,
     };
     return { ...s, phase: 'outcome', outcome };
 }

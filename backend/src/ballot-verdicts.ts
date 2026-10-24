@@ -1,10 +1,10 @@
 /**
- * The `ballot_verdicts` table: one submitted ballot per row
- * (`migrations/0003_ballot_verdicts.sql`). Rows map to the contract's
+ * The `ballot_verdicts` table: one saved or submitted ballot per row
+ * (`migrations/0003_ballot_verdicts.sql`, `status` from `0004`). Rows map to the contract's
  * camelCase shape here and nowhere else.
  */
 
-import type { BallotVerdictPost, BallotVerdictRow } from './ballot';
+import type { BallotVerdictPost, BallotVerdictRow, BallotVerdictStatus } from './ballot';
 
 interface BallotVerdictRecord {
     id: number;
@@ -15,6 +15,7 @@ interface BallotVerdictRecord {
     notes_json: string;
     general: string | null;
     client: string | null;
+    status: BallotVerdictStatus;
 }
 
 function toRow(record: BallotVerdictRecord): BallotVerdictRow {
@@ -27,6 +28,7 @@ function toRow(record: BallotVerdictRecord): BallotVerdictRow {
         notes: JSON.parse(record.notes_json) as Record<string, string>,
         general: record.general,
         client: record.client,
+        status: record.status,
     };
 }
 
@@ -39,8 +41,8 @@ export async function insertBallotVerdict(
     const result = await db
         .prepare(
             `INSERT INTO ballot_verdicts
-                (received_at, ballot_id, verdict_text, kept_json, notes_json, general, client)
-             VALUES (?, ?, ?, ?, ?, ?, ?)
+                (received_at, ballot_id, verdict_text, kept_json, notes_json, general, client, status)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
              RETURNING id`,
         )
         .bind(
@@ -51,17 +53,36 @@ export async function insertBallotVerdict(
             JSON.stringify(verdict.notes),
             verdict.general,
             verdict.client,
+            verdict.status,
         )
         .first<{ id: number }>();
     if (!result) throw new Error('insert returned no id');
     return { id: result.id, receivedAt };
 }
 
-/** Every stored verdict, newest first; `ballotId` narrows to one ballot exactly. */
-export async function listBallotVerdicts(db: D1Database, ballotId?: string): Promise<BallotVerdictRow[]> {
-    const statement = ballotId === undefined
-        ? db.prepare('SELECT * FROM ballot_verdicts ORDER BY id DESC')
-        : db.prepare('SELECT * FROM ballot_verdicts WHERE ballot_id = ? ORDER BY id DESC').bind(ballotId);
-    const { results } = await statement.all<BallotVerdictRecord>();
+export interface BallotVerdictFilter {
+    /** One ballot, exactly. */
+    ballotId?: string;
+    /** One status, exactly. */
+    status?: BallotVerdictStatus;
+}
+
+/** Every stored verdict, newest first, narrowed by each filter given. */
+export async function listBallotVerdicts(db: D1Database, filter: BallotVerdictFilter = {}): Promise<BallotVerdictRow[]> {
+    const clauses: string[] = [];
+    const values: string[] = [];
+    if (filter.ballotId !== undefined) {
+        clauses.push('ballot_id = ?');
+        values.push(filter.ballotId);
+    }
+    if (filter.status !== undefined) {
+        clauses.push('status = ?');
+        values.push(filter.status);
+    }
+    const where = clauses.length > 0 ? ` WHERE ${clauses.join(' AND ')}` : '';
+    const { results } = await db
+        .prepare(`SELECT * FROM ballot_verdicts${where} ORDER BY id DESC`)
+        .bind(...values)
+        .all<BallotVerdictRecord>();
     return results.map(toRow);
 }

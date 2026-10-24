@@ -134,7 +134,7 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 | [x] | 2026-11-16 | Loop gates, real-fight tests, report sweep | W2 | LG1a, LG1b, LG1c, LG1d, LG1e, LG1f, LG1g, CT1a, CT1b, RS1 |
 | [ ] | 2026-11-16 | W2 demo: an Act 1 run with every hazard a puzzle | W2 | T |
 | [ ] | 2026-11-17 | Event-node audit and fixes (all twelve kinds) | W3 | needs plot |
-| [ ] | 2026-11-17 | Card-upgrade path | W3 | UP1a, UP1b, UP1c, UP1d, UP1e, UP1f, UP1g |
+| [x] | 2026-11-17 | Card-upgrade path | W3 | UP1a, UP1b, UP1c, UP1d, UP1e, UP1f, UP1g |
 | [x] | 2026-11-18 | Upgrade grant call | W3 | T |
 | [ ] | 2026-11-30 | W3 demo: a four-region walk, every node resolves | W3 | T |
 | [ ] | 2026-12-02 | Enemy revamp session and the Act Boss | W4 | B2 |
@@ -206,6 +206,9 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - BV1a — loop work, slotted asap (T); waits on BE2a; blocks no window's goal; date not set.
 - BV1b — loop work; follows BV1a; date not set.
 - BV1c — attended; T creates the ballot Pages project and submits the first verdict from the phone; date not set.
+- BV2a — loop work, slotted asap (T); blocks no window's goal; date not set.
+- BV2b — loop work; follows BV2a; date not set.
+- BV3 — loop work; serves the next family's ballot, blocks no window's goal; date not set.
 - FM2a — loop work; T slotted it anytime; date not set.
 - FM2b — loop work; follows FM2a; date not set.
 - FM2c — loop work; follows FM2a; date not set.
@@ -219,6 +222,8 @@ attended session.
 
 ## Change log
 
+- **2026-10-24** — **ballot colours plotted** (T, attended session, `/plot`). **Added** an Unscheduled line for BV3: no date set, and it blocks no window's goal. **Edited** no Item. Nothing ticked; no date moved.
+- **2026-10-23** — **ballot Save plotted** (T, attended session, `/plot asap`). **Added** Unscheduled lines for BV2a-BV2b: T set no date, and the rows block no window's goal. **Edited** no Item. Nothing ticked; no date moved.
 - **2026-10-23** — **ballots on the phone plotted** (T, attended session, `/plot asap`). **Added** Unscheduled lines for BV1a-BV1c: T set no date, and the rows block no window's goal (card lanes are v0.3 stretch). **Edited** no Item: no open Item's premise depends on the ballot site. BE2a moved up the build plan's Status block (BV1a requires it); its Unscheduled line stands. Nothing ticked; no date moved.
 - **2026-10-22** — **modular feature map plotted** (T, attended session, `/plot anytime`). **Added** Unscheduled lines for FM2a-FM2d: T set no date and the rows serve no window's goal. **Edited** no Item: the FM1 map they extend has shipped and no open Item depends on it.
 - **2026-10-22** — **card and combat logging plotted** (T, attended session, `/plot`). **Added** Unscheduled lines for BE2a-BE2g: T set no date and the rows block no window's goal. **Edited** no Item: no open Item's premise depends on the play log. Nothing ticked; no date moved.

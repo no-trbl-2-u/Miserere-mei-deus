@@ -53,10 +53,10 @@ flowchart LR
 ### Cloudflare Pages — the card ballots
 
 - **Owner / location:** a Cloudflare Pages project, `axiomancer-ballots`, built from this repository's `main` with branch previews on, serving `plan/card-ledger/` as it stands (no build command, output directory `plan/card-ledger`). T creates it at the dashboard in phase BV1c; until then the ballots open from disk only. Its front page is `plan/card-ledger/index.html`, one entry per card family.
-- **Purpose:** T votes on a family's ballot from the phone. The shared ballot kit (`plan/card-ledger/ballot-kit.js`, phase BV1b) autosaves the draft on the device and Submit posts the verdict to the `miserere-api` Worker, `POST /v1/ballot-verdicts`, which stores it in D1 `miserere` table `ballot_verdicts`. How to add a ballot: `plan/card-ledger/README.md`.
+- **Purpose:** T votes on a family's ballot from the phone. The shared ballot kit (`plan/card-ledger/ballot-kit.js`, phases BV1b, BV2b) autosaves the draft on the device, Save posts it unfinished as a `draft` row (the page loads the newest save on any device) and Submit posts the verdict as a `final` row to the `miserere-api` Worker, `POST /v1/ballot-verdicts`, which stores it in D1 `miserere` table `ballot_verdicts`. How to add a ballot: `plan/card-ledger/README.md`.
 - **CORS:** the Worker answers the ballot routes for the origins in its `BALLOT_ORIGINS` var (`backend/wrangler.toml`): `https://axiomancer-ballots.pages.dev` and its `*.` branch previews. If the project is named differently, that var changes with it. The Worker's other routes send no CORS header.
 - **Availability:** card-design tooling only. No build, test, or gameplay path depends on it; a ballot opened from disk still Generates and Copies its verdict.
-- **Secrets:** none in-repo. The page asks for the API URL and `PUZZLE_API_TOKEN` on the first Submit and keeps them in the browser's `localStorage` on that device; the token is never in a committed file, a URL or a query string. The repo is public, so the ballots are too (Cloudflare Access in front of the site is a follow-up if T wants it private).
+- **Secrets:** none in-repo. The page asks for the API URL and `PUZZLE_API_TOKEN` on the first Save or Submit and keeps them in the browser's `localStorage` on that device; the token is never in a committed file, a URL or a query string. The repo is public, so the ballots are too (Cloudflare Access in front of the site is a follow-up if T wants it private).
 
 ### MCP servers and tool boundaries
 

@@ -89,6 +89,7 @@ import {
     chooseRestChoiceOfferAction,
     claimRestChoiceOutcomeAction,
     pickRestChoiceCutAction,
+    pickRestChoiceUpgradeAction,
     type BeginRestOptions,
     type ClaimRestChoiceResult,
 } from './rest/store-actions';
@@ -102,10 +103,13 @@ import {
 import {
     abandonBlacksmithAction,
     beginBlacksmithAction,
+    cancelBlacksmithCardUpgradeAction,
+    chooseBlacksmithCardUpgradeAction,
     claimBlacksmithOutcomeAction,
     continueBlacksmithCardAction,
     honeBlacksmithAction,
     leaveBlacksmithAction,
+    pickBlacksmithCardUpgradeAction,
     startBlacksmithForgingAction,
     swapBlacksmithAction,
     temperBlacksmithAction,
@@ -455,11 +459,13 @@ export interface AppActions {
 
     /** Start a rest node. Returns false if one is underway. */
     beginRest: (options?: BeginRestOptions) => boolean;
-    /** Commit one of the two offers. Locks the other. */
+    /** Commit one of the three offers. Locks the others. */
     chooseRestChoiceOffer: (offer: RestChoiceOfferId) => void;
     /** Pick a card to remove (`cut` sub-step). Must be one of the offered ids. */
     pickRestChoiceCut: (cardId: string) => void;
-    /** Confirm the settled ledger; applies heal/spend/removal and persists. */
+    /** Pick a card to upgrade (`upgrade` sub-step). Must be one of the upgradable ids. */
+    pickRestChoiceUpgrade: (cardId: string) => void;
+    /** Confirm the settled ledger; applies heal/upgrade/spend/removal and persists. */
     claimRestOutcome: () => ClaimRestChoiceResult;
 
     // -----------------------------------------------------------------
@@ -492,6 +498,12 @@ export interface AppActions {
     swapBlacksmith: (variantId: string) => void;
     /** Acknowledge the open result/refusal flash: card → forging. */
     continueBlacksmithCard: () => void;
+    /** Open the anvil's card upgrade (once a visit). forging → upgrade-pick or a refusal card. */
+    chooseBlacksmithCardUpgrade: () => void;
+    /** Back out of the anvil's card picker, nothing charged. */
+    cancelBlacksmithCardUpgrade: () => void;
+    /** Upgrade the picked card for the anvil's price. Must be one of the upgradable ids. */
+    pickBlacksmithCardUpgrade: (cardId: string) => void;
     /** Leave the anvil, sealing the ledger: forging → outcome. */
     leaveBlacksmith: () => void;
     /** Confirm the ledger; writes the rail, deducts the spend, persists. */
@@ -775,6 +787,7 @@ export function createAppActions(store: AppStore): AppActions {
         beginRest: (options) => beginRestAction(store, options),
         chooseRestChoiceOffer: (offer) => chooseRestChoiceOfferAction(store, offer),
         pickRestChoiceCut: (cardId) => pickRestChoiceCutAction(store, cardId),
+        pickRestChoiceUpgrade: (cardId) => pickRestChoiceUpgradeAction(store, cardId),
         claimRestOutcome: () => claimRestChoiceOutcomeAction(store),
         beginLootCacheChoice: (options) => beginLootCacheChoiceAction(store, options),
         chooseLootCacheChoiceOffer: (offer) => chooseLootCacheChoiceOfferAction(store, offer),
@@ -785,6 +798,9 @@ export function createAppActions(store: AppStore): AppActions {
         temperBlacksmith: (color) => temperBlacksmithAction(store, color),
         swapBlacksmith: (variantId) => swapBlacksmithAction(store, variantId),
         continueBlacksmithCard: () => continueBlacksmithCardAction(store),
+        chooseBlacksmithCardUpgrade: () => chooseBlacksmithCardUpgradeAction(store),
+        cancelBlacksmithCardUpgrade: () => cancelBlacksmithCardUpgradeAction(store),
+        pickBlacksmithCardUpgrade: (cardId) => pickBlacksmithCardUpgradeAction(store, cardId),
         leaveBlacksmith: () => leaveBlacksmithAction(store),
         claimBlacksmithOutcome: () => claimBlacksmithOutcomeAction(store),
         abandonBlacksmith: () => abandonBlacksmithAction(store),
