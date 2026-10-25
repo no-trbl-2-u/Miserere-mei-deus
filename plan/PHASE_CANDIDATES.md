@@ -843,13 +843,6 @@
 - conflicts: none; waits on T.
 - promote with `/plot` after the card session.
 
-### [ ] [owner] [score 5.5] One browser per playtester, seeds that survive the boot, and guides tested for truth
-- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm: four agents on one shared Playwright MCP browser; three guide lines contradicted by the tree)
-- part plan: `plan/playtest-harness.md` phases 1–2
-- proposed scope: 2 phases (S, S). (1) `playtester` drives its own Playwright (a context per agent, `addInitScript` seeds, a named screenshot path) or the swarm runs in series; done when four seeded agents report their own `encounter-mounted {seed}`. (2) `hazard.md`, `combat.md`, `minigames.md` corrected and `playtest-guides.test.mjs` checking each mechanisable claim.
-- conflicts: "The unattended critique lens sees settled screens" (this file) and CRITIQUE's mid-fade row concern the drive, not the agent; no overlap.
-- promote with `/plot`.
-
 ### [ ] [owner] [score 5.0] The Act 1 walk, proven: four doors, twelve kinds, `gathering` gone, node blurbs matched to their events
 - proposed: 2026-10-24, T's `/messy` (the Elementalist swarm, R13; `features.json` driven=false for blacksmith and item-reward; `plan/deadlines.md` W3 Item "Event-node audit and fixes (all twelve kinds)", `needs plot`)
 - part plan: `plan/playtest-harness.md` phase 3
@@ -861,6 +854,11 @@
 
 Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_CANDIDATES_2026.md`.
 
+- **[owner] [score 5.5] One browser per playtester, seeds that survive the boot, and guides tested for truth**
+  (proposed 2026-10-24, T's `/messy` of the Elementalist swarm) — plotted as **PH1a-PH1c** on 2026-10-25 (`/plot`,
+  run unattended for T; asap). Brief `plan/phases/phase_PH1_playtest_harness.md`; part plan
+  `plan/playtest-harness.md` phases 1-2. T answered the open question: the `playtester` gets its own Playwright and
+  the swarm stays 4-up.
 - (2026-10-18) Eight loop-gate `[owner]` candidates from T's `/messy` of the EV1d gate fixes (path coverage,
   acceptance map, plan-queue lint, builder/judge separation, critique record, fail-on-parent, diff-scoped
   mutation, Android smoke) were promoted by T the same day with `/plot` as Phases LG1a-LG1h
