@@ -28,7 +28,7 @@
   float closer to the enemy and float for longer so the player can see.
   Furthermore, for all DoT ticks, have each tick: 1) font = colour of the
   element; 2) each tick is its own unique damage tick (instead of
-  aggregating the numbers)." Closed by A8-A10.
+  aggregating the numbers)." Closed by A8-A10; "base, DEAL, be white numbers to separate" closed by A11.
 - Decisions: **D88/D99** (content per surface; cues and labels are new UI
   strings, not card text), **D91** (one card face; untouched), **D92**
   (board layout: intent and chips top-left, footer dock, no corner chrome,
@@ -166,6 +166,13 @@ Size: M
   table; no hex or `HUE` literal picks a tick colour in a component. A
   presenter test pins the colour per element; a board test pins two ticks
   in one event batch as two floats with two colours.
+- **A11** Base damage floats white on both sides: the `-n` for a hit the
+  foe takes (a card's DEAL) and for a hit the player takes is `HUE.white`,
+  read from one presenter export (a `HIT_FLOAT_COLOR` beside the tick
+  colour table), never a literal in a component. DoT ticks keep their
+  element colour (A10), so no tick is ever white and no plain hit is ever
+  coloured. A board test pins a DEAL float and a player-hit float as white
+  and an INFERNO tick in the same batch as red.
 - **A7** `npm run verify -w axiomancer-mechanics` and `npm run verify -w
   axiomancer-mobile` pass, and `node scripts/combat-round-e2e.mjs` and
   `node scripts/exploration-combat-roundtrip-e2e.mjs` pass.
@@ -175,8 +182,8 @@ swarm's own cases (a `your-inferno` reading of 4 shows `YOUR INFERNO −4
 each turn` and the tick floats `INFERNO −4`; BLIZZARD 5 over a 16 hit shows
 −11 and `after BLIZZARD −5`; an all-MISS tray with three cards in hand
 renders `combat-end-consequence`; an INFERNO 4 and a STORM 3 tick on the
-foe float as two separate numbers, red and gold, the second about 180 ms
-after the first; the enemy float layer sits inside the figure wrap;
+foe float as two separate numbers, red and gold (the second about 180 ms
+after the first) beside a white DEAL; the enemy float layer sits inside the figure wrap;
 numberPop holds at least 700 ms), and both workspace verifies pass. The
 swarm's numbers move to zero on its next run: self-burn VITAE deltas with
 no on-screen line, `blizzard-softened` events with no paired text, and
@@ -286,7 +293,7 @@ the captions use the same words.
   damage numbers"; a tick lasting longer than the hit beside it would read
   as a different system). About 1.6 s total; the exact hold and fade are the
   tick's to tune inside "readable, not lingering into the next beat".
-  `[T to confirm]` if only hit numbers should slow down.
+  Confirmed by T (2026-10-25): "yes to same timing for consistent tempo".
 - **"Its own unique tick" is one float per DoT source per beat**, which is
   what the engine already emits; the fix is on the board (stagger, stack,
   colour, label), not a new engine event. An INFERNO of intensity 4 is one
@@ -296,8 +303,14 @@ the captions use the same words.
 - **"Colour of the element"** is the colour each element already has on its
   chip and log line (INFERNO red, STORM gold); status DoTs (poison, bleed,
   creeping doom) have no element and take their own glyph colour.
-  INFERNO's red matches the player's hit red; the `INFERNO` label is what
-  tells them apart.
+- **Base damage floats white** (T, 2026-10-25: "let's have base, DEAL, be
+  white numbers to separate"). The plain hit, a card's DEAL on the foe and
+  the foe's hit on the player, floats `HUE.white` on both sides (today the
+  foe's is `AXM.parchment`, the player's `HUE.damageRed`), so colour alone
+  says "plain hit" versus "element tick": white is a hit, a colour is an
+  element. SACRIFICE's paid cost (`-n`, today `damageRed`) is not a hit and
+  keeps its colour; heals stay green; BLOCKED, DENIED and status words keep
+  theirs.
 
 ## Tests matrix
 
@@ -343,13 +356,13 @@ when BLIZZARD cuts the hit (projectIncomingThreat gains blizzardCut) and
 its a11y line carries one number. The dead tray counts MISS faces, so
 END carries its consequence on an all-MISS tray. The foe's floats rise
 from its figure and every combat float reads for about 1.6 s; each DoT
-tick floats on its own, labelled and in its element's colour.
-Acceptance A1-A10.
+tick floats on its own, labelled and in its element's colour; plain hits float white.
+Acceptance A1-A11.
 ```
 
 ## DoD
 
-A1 to A10 ticked.
+A1 to A11 ticked.
 
 ## Follow-ups (out of scope)
 
