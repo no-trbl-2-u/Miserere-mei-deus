@@ -55,8 +55,10 @@ left; otherwise after.
   amended once HP4e's rulings exist: the calibration set should be drawn from HP4's kept candidates, and HP2e's
   Spearman bar has nothing to fit while every solve is under ten seconds
   (`plan/phases/phase_HP4_graded_puzzle_set.md` Follow-ups).
-- To plot in W2: the Act 1 puzzle set, routing the live hazard nodes to the puzzle, and the cuts (RE-CAST cards,
-  the saved hazard deck, `deadcard`; B3 Follow-ups).
+- To plot in W2: routing the live hazard nodes to the puzzle board, each of the seven Act 1 hazard nodes drawing a
+  random puzzle from the thirty for now (T, 2026-10-24), and the cuts (RE-CAST cards, the saved hazard deck,
+  `deadcard`; B3 Follow-ups). The hand-picked set is a later `/plot` of T's, "the swap", once T has played the
+  thirty in `/dev` (candidate in `plan/PHASE_CANDIDATES.md`, part plan `plan/revamp/hazards.md`).
 - T's time (about 5 h): calibration solves (HP2e); a card session designing the first cost cards (Toll, Debt,
   Overdrive; HP1 Follow-ups).
 - Nov 11: the R11 watch ends; the five held loop-doctrine candidates come up for review.
@@ -123,7 +125,8 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 | [x] | 2026-10-23 | The twenty easy and medium candidates go | W1 | HP5c |
 | [x] | 2026-10-28 | Twenty cost-card puzzles on /devpuzzle | W1 | HP5d |
 | [ ] | 2026-11-02 | W1 demo: T plays the thirty (ten hard + twenty cost-card) | W1 | HP4e |
-| [ ] | 2026-11-04 | Act 1 puzzle set, live hazard routing and the cuts | W2 | needs plot |
+| [ ] | 2026-11-04 | Live hazard routing (each of the seven Act 1 hazard nodes draws a random puzzle from the thirty) and the cuts | W2 | needs plot |
+| [ ] | 2026-11-13 | Plot the hazard swap: hand-pick the seven Act 1 hazard puzzles (Breakwater 2, Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2) after playing the thirty in `/dev` | W2 | T |
 | [ ] | 2026-11-05 | The authoring patterns from the kept set | W2 | HP4f |
 | [ ] | 2026-11-06 | The band clocks, from the kept set's times | W2 | HP4g |
 | [ ] | 2026-11-07 | The calibration set | W2 | HP2d |
@@ -229,6 +232,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-24** — **the Elementalist swarm `/messy`** (T, attended session). **Edited** the W2 Item "Act 1 puzzle set, live hazard routing and the cuts": T ruled the Act 1 set is not authored now; each of the seven Act 1 hazard nodes (Breakwater 2, Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2) draws a random puzzle from the thirty, and the routing plus the cuts are what W2 plots (still `needs plot`). **Added** a `T` Item for 2026-11-13: plot the swap to a hand-picked seven after playing the thirty in `/dev`. Nothing ticked; no date moved; candidates only, no rows.
 - **2026-10-24** — **the Spell law plotted** (T, attended session, `/plot asap`). **Added** an Unscheduled line for SP1: no date set, and it blocks no window's goal. **Edited** no Item. Nothing ticked; no date moved.
 - **2026-10-24** — **the Elementalist trial set plotted** (T, attended session, `/plot asap`). **Added** Unscheduled lines for EL1a-EL1d: T set no date; card lanes are v0.3 stretch (B5, B6) and block no window's goal. **Edited** no Item. Nothing ticked; no date moved.
 - **2026-10-24** — **relic loadout fix plotted** (T, attended session, `/plot`). **Added** Unscheduled lines for EQ1a-EQ1b: T set no date, and the rows fix a live defect rather than serve one window's goal. **Edited** no Item: the W5 relic pass (B1) is owner-led and its premise does not depend on how worn state is shown. Nothing ticked; no date moved.

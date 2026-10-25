@@ -399,6 +399,7 @@
 - conflicts: none; creates no content.
 
 ### [ ] [score 5.0] Victory and mercy panels do not say what the player gained
+- **Swarm note (2026-10-24, T's `/messy`):** seen again on the Elementalist: `CombatVictoryPanel` is imported by nothing but its test (the live route exits from the summary), a level-up L15→16 applied with no screen, and SPARE / EXPLOIT are still bare words (`CombatEncounterPanel.tsx:825-826`). `plan/revamp/mobile.md` "The board says what it does".
 - proposed: 2026-10-02, RC walk (legs 2 and 3); accepted for the RC tag by T (2026-10-02), ships after it
 - source signals: a won fight's +XP and a mercy's +110 XP and potions are shown on no panel; potions arrive silently in the Satchel. The engine's `CombatEndReport` already carries `xpGained` and `loot`.
 - proposed scope: 1 small phase (presentation). The victory and mercy summaries print the report's XP and loot; a presenter test pins both.
@@ -631,6 +632,7 @@
   (CRITIQUE `[MED]` pass 85, #532), because `riderPairs` in the presenter
   maps only `guard` and `applyEffect`. Fixed alone in #534; the contract
   test this row proposes would have caught it.
+- **Swarm note (2026-10-24, T's `/messy`):** the DECK list omits the free NO-DIE line entirely, not only its scaling: P-02 reads DEAL 9 on the DECK tab, 19 in hand, "NO DIE 6 / +DIE 19" in the preview; with two dead dice on turn 1 every card an agent could play did something other than the list said (`docs/reports/playtest-elementalist-act1-2026-10-24.md` R2, all four agents).
 - proposed: 2026-10-12, expand pass 31
 - source signals:
   - `plan/CRITIQUE.md` `[LOW]` RC2 walk 2026-10-11, items 3 (the Hag's reveal lists phase 3 at 15, the HUD says "Deals 22"; a Float-Eye phase listed at 13 hit 19, 22 and 24), 4 (DECK prints base numbers, the hand prints scaled ones: P-01a DECK "DEAL 16", hand and log 22), 5 (card faces mix the free and paid lines, so a free play does what the face does not say), 8 (the summary counts LEECH ticks as plays and drops the EXPLOIT blow) and 10 (an unpowered Global's 3-turn chip against "in play for the rest of combat").
@@ -786,6 +788,74 @@
 - proposed scope: 1 phase (S). A code-drawn translucent icy-blue tint and frost edge over the enemy sprite while FROZEN, fading in and out, never hiding the animation or taking touches; an optional image slot for T's later art. Mobile only; reads the presenter's FROZEN state.
 - conflicts: none; no engine change; the art half is owner-led (D88) and waits on T's asset.
 - promote with `/plot`.
+
+### [ ] [owner] [score 7.0] W2: the live hazard routing (a random puzzle from the thirty per node) and the cuts
+- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm); `plan/deadlines.md` Item "Act 1 puzzle set, live hazard routing and the cuts" (2026-11-04, `needs plot`)
+- part plan: `plan/revamp/hazards.md` "The Act 1 rollout and the live board (T, 2026-10-24, `/messy`)"; B3 brief Decision and Follow-ups (`plan/phases/phase_B3_hazard_puzzle.md:185-188,269-277`)
+- T's call (2026-10-24): no authored set now. Each of the seven Act 1 hazard nodes (Breakwater 2, Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2) draws a random puzzle from the thirty; the hand-picked seven is a later `/plot` of T's ("the swap", `plan/deadlines.md` T Item 2026-11-13) once T has played the thirty in `/dev`.
+- proposed scope: 2 rows under one `/plot`. (a) `app/hazard` resolves to the puzzle board under the puzzle's clock and outcome, the node drawing one of the thirty at random (seeded, so a run replays). (b) The cuts: three-round engine paths, RE-CAST cards, the saved hazard deck and its screens, `deadcard`, a save migration dropping `hazard-card:` flags; the "Hazard deck-thinning remove-card consumer" candidate retired; a net VITAE line on the reckoning if it survives.
+- conflicts: HP4f/HP4g (patterns, clocks) and HP2d–HP2f (calibration) run in the same window on the same kept set; (a) may wait on HP4e's rulings (Nov 2). T's untracked `HazardPuzzleBoardView.tsx` draft is in this folder.
+- promote with `/plot`.
+
+### [ ] [owner] [score 6.0] The board says what it does: the player's own INFERNO, "after BLIZZARD", and the END consequence on a dead tray
+- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm, findings R1, R3, R9, R15; two to three agents each)
+- part plan: `plan/revamp/mobile.md` "The board says what it does (T, 2026-10-24, `/messy`)" items 1–4
+- T's call (2026-10-24): the drag-to-stage is "obvious enough"; no hint and no PLAY on the sheet. Item 1 withdrawn.
+- proposed scope: 1 phase (M), mobile only, reading presenter state. A labelled player-side burn badge and a ledger tick line; the intent line carrying "after BLIZZARD −n" and one number where its flavour and label now disagree; `combat-end-consequence` whenever no live die matches any card. Measured by the swarm's numbers: VITAE deltas with no on-screen line, `blizzard-softened` events paired with text, `consequence:null` on all-MISS rounds.
+- conflicts: D92 board layout (no new chrome in the corners); the intent flavour is enemy copy (D88). "Printed equals applied" (this file) owns the numbers; this row owns the cues.
+- promote with `/plot`.
+
+### [ ] [owner] [score 4.5] A glossary a sighted player can reach: Conviction, momentum, SURGE, GHOST, BANKED, BOON/MANA/MISS, the rail, and "X" as "varies"
+- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm, R9, R18; CRITIQUE RC2 item 15 for Momentum)
+- part plan: `plan/revamp/mobile.md` "The board says what it does" item 5
+- proposed scope: 1 phase (S). Tap-to-read on each chip, die and rail count, from the same keyword popup store (`state/combat/keywords.ts`); the card face's "X" rendered as "varies". No card text changes.
+- conflicts: D91 if any face glyph changes beyond the X; otherwise none.
+- promote with `/plot`.
+
+### [ ] [owner] [score 4.5] Fewer taps between a decision and the next node: interstitials, the spoils pick, the purse and a potion nudge
+- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm, R10, R12; taps per node measured: rest 4, cache 4, spoil 4, map 2)
+- part plan: `plan/revamp/mobile.md` "The board says what it does" items 6–7
+- proposed scope: 1 phase (M). Rest and cache outcome cards merge into the choice or auto-advance; in SPOILS a tap selects and TAKE CARD confirms; one anvil exit when nothing was forged; shillings on the node sheet of a node that charges them; a low-VITAE potion nudge where T says it belongs. Measured by taps per node and by dead rest/anvil visits at 0 shillings.
+- conflicts: "Victory and mercy panels do not say what the player gained" owns the aftermath panel; rest/cache copy is event copy (D88).
+- promote with `/plot`.
+
+### [ ] [owner] [score 5.0] The Elementalist in measured truth, with a self-burn metric
+- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm; the lane measured once by hand at 1fb78ac87: 100% every cell, min p10 0.89, mean VITAE taken 5.8 vs grey 41.0)
+- part plan: `plan/revamp/cards.md` "The Elementalist after the swarm (T, 2026-10-24, `/messy`)"
+- T's call (2026-10-24): the 20 are the lane's ceiling; measure it against Blood Price's ceiling (its 20-card test deck). Add two sampled columns: random 20-of-30 draws from the Elementalist pool (the lane's spread), and random 20-card decks from the mixed 60-card pool of both trial sets (the median a player who takes what the rewards offer would hold).
+- proposed scope: 1 phase (M), code only. `elementalist` joins `MEASURED_DECK_LANES` (`combat.measured-truth.ts:28`), its test and the workflow description; two sampled deck families (N seeded draws each, reported as the family's mean and spread per cell); a per-deck "VITAE lost to the player's own weather" column; `latest.md` regenerated. A measurement (D57), not a tune (D88).
+- conflicts: R12 (attended) decides what the matrix measures; this adds a column, not a policy. T's open question on whether the 20-card test deck is the lane's ceiling.
+- promote with `/plot`.
+
+### [ ] [owner] [score 5.0] The decided reward rule, implemented: relic lanes feed the reward slot and the cache shows its card
+- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm, R8; CRITIQUE RC2 item 11)
+- part plan: `plan/revamp/cards.md` "The Elementalist after the swarm" (Rewards); D68, D71, D100 at "Deck model"
+- T's reward rule (2026-10-24, refining D68/D71/D100): "random" means drawn from every lane the player has unlocked, and a lane unlocks the moment one of its relics is in the inventory (equipped or not). With one lane relic equipped the offer is 2 random + 1 from that lane; with three relics of one lane equipped, 1 random + 2 from the lane. Read here as the rule for every card reward, the cache included (T answered the cache question with the rule itself); if the cache is meant to stay outside it, that is one line to strike.
+- proposed scope: 1 phase (M). `rewardPoolFor` (`combat.rewards.ts:60-67`) reads the inventory for unlocked lanes and the equipped relics for the lane slots (0 / 1 / 2 of 3), with the dev override kept as an override; the cache's TAKE A CARD previews the card before the pick. Engine change verified against mobile. (A "no owned card re-offered" line was withdrawn 2026-10-24: duplicates are allowed, an agent took a second P-02; the swarm only noted that the spoils offered an owned card.)
+- conflicts: D68's "relics never touch non-combat rewards" is superseded by T's rule above if the cache follows it; the `/plot` records the amendment as a D-number. The lane relics themselves are EL1 step-7 content (D88), so until one exists every lane is locked and every offer is grey.
+- promote with `/plot`.
+
+### [ ] [owner] [score 4.0] The Elementalist's names and one sentence of identity (T's card session)
+- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm, R4: all four agents inferred the deck's purpose; the developer line "Elementalist trial card, Engine sub-lane." reaches the player via `deck-card-detail-flavor`)
+- part plan: `plan/revamp/cards.md` "The Elementalist after the swarm" (Identity); EL1 Follow-ups (lane-creator step 7)
+- proposed scope: T's session, not the loop (D99). The thirty names, one line on the DECK tab that says what the deck does, the sub-lane description gone from the player's view. The loop's half, once T has written them: the description field no longer rendered as flavour.
+- conflicts: none; waits on T.
+- promote with `/plot` after the card session.
+
+### [ ] [owner] [score 5.5] One browser per playtester, seeds that survive the boot, and guides tested for truth
+- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm: four agents on one shared Playwright MCP browser; three guide lines contradicted by the tree)
+- part plan: `plan/playtest-harness.md` phases 1–2
+- proposed scope: 2 phases (S, S). (1) `playtester` drives its own Playwright (a context per agent, `addInitScript` seeds, a named screenshot path) or the swarm runs in series; done when four seeded agents report their own `encounter-mounted {seed}`. (2) `hazard.md`, `combat.md`, `minigames.md` corrected and `playtest-guides.test.mjs` checking each mechanisable claim.
+- conflicts: "The unattended critique lens sees settled screens" (this file) and CRITIQUE's mid-fade row concern the drive, not the agent; no overlap.
+- promote with `/plot`.
+
+### [ ] [owner] [score 5.0] The Act 1 walk, proven: four doors, twelve kinds, `gathering` gone, node blurbs matched to their events
+- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm, R13; `features.json` driven=false for blacksmith and item-reward; `plan/deadlines.md` W3 Item "Event-node audit and fixes (all twelve kinds)", `needs plot`)
+- part plan: `plan/playtest-harness.md` phase 3
+- proposed scope: 2 phases (M, S). (a) `e2e:map-walk` or a sibling crosses all four doors and resolves every node kind it meets (the W3 audit's fixes ride on what it finds); the anvil and item-reward routes become driven by name and by walk. (b) `kind: 'gathering'` removed or re-pointed; a drift test pairs each node blurb with its event's copy.
+- conflicts: W3 window (Nov 17); map and event copy fixes are content (D88) and go to T as `[content]` rows.
+- promote with `/plot`.
+
 
 ## Promoted
 
