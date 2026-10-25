@@ -9,7 +9,9 @@
 // `pull_request` only, the only writer of `risk:*`, no merge wiring; and the
 // `review` job (phase RV1b; every same-repo PR since D95): after the gate,
 // a read-comment-label grant with no Edit, Write, push or merge; and its
-// three lenses (phase RV1c): distinct, behind the tier check, 30 minutes.
+// three lenses (phase RV1c): distinct, behind the tier check, 30 minutes; and
+// the plot PR body (What you'll see, Your calls) with claude.yml routing T's
+// @claude answers on a plot PR to skills/plot.md §3 (T, 2026-10-25).
 //
 //   node --test scripts/loop-pr.test.mjs
 
@@ -495,9 +497,14 @@ test('a plot PR carries a size label, size:multi-phase when it splits', () => {
 
 // --- /plot and /messy are only ever fired by T ------------------------------
 
+// The one exception: claude.yml's route step, which runs only on T's own
+// @claude comment on a plot PR (T answering its calls, 2026-10-25). T fires it.
+const routeStep = (text) => text.slice(text.indexOf("- name: Route T's answers on a plot PR"), text.indexOf('- name: Run Claude Code'))
+
 test('no workflow fires /plot or /messy', () => {
   for (const f of fs.readdirSync(path.join(ROOT, WF)).filter((f) => f.endsWith('.yml'))) {
-    const text = read(`${WF}/${f}`)
+    let text = read(`${WF}/${f}`)
+    if (f === 'claude.yml') text = text.replace(routeStep(text), '')
     assert.doesNotMatch(text, /\/(plot|messy)\b|skills\/(plot|messy)\.md/, f)
   }
 })
@@ -536,6 +543,52 @@ test('/plot decides the phase split, one tick per phase, every A-ID closed once'
 test('a row pointing at a shared brief section is pickable and built alone', () => {
   assert.match(read('skills/march.md'), /`§ <N>`/)
   assert.match(read('skills/ship-a-phase.md'), /A row pointing at `§ <id>` of a shared brief/)
+})
+
+// --- a plot PR reads for T, and T answers its calls by comment (2026-10-25) ---
+
+test("the plot body opens with What you'll see, then Your calls, then the engineering sections", () => {
+  const plot = read('skills/plot.md')
+  const start = plot.indexOf('```markdown', plot.indexOf('### Step 5'))
+  const block = plot.slice(start, plot.indexOf('\n```\n', start + 3))
+  const heads = block.split('\n').filter((l) => l.startsWith('## '))
+  assert.deepEqual(heads.slice(0, 2), ["## What you'll see", '## Your calls'])
+  for (const h of ['## The task', '## Recommendation', '## Slot', '## After merge']) assert.ok(heads.includes(h), h)
+  assert.doesNotMatch(block, /## To confirm/)
+  assert.match(block, /\| Today \| After this ships \|/)
+  assert.match(block, /^Cost: /m)
+  assert.match(block, /1\. <[^>]+>\? Default: <[^>]+>\. Or: /)
+  assert.match(block, /@claude 1: yes, 2: /)
+  assert.match(plot, /no\s+file paths, phase or acceptance IDs, D-numbers/)
+  assert.match(plot, /mark it `\[T to confirm #n\]`/)
+})
+
+test("plot.md carries the Answering T's calls procedure, and merge means agreement", () => {
+  const plot = read('skills/plot.md')
+  const from = plot.indexOf("## 3. Answering T's calls")
+  const to = plot.indexOf('## 4. Merge means agreement')
+  assert.ok(from > 0 && to > from + 200, 'section 3 exists before section 4')
+  const ans = plot.slice(from, to)
+  for (const re of [/Parse the answers/, /`Confirmed by T \(<YYYY-MM-DD>\): <answer/, /Regenerate the PR body/,
+    /check-deadlines|deadline lint/, /never force/, /reply on\s+the PR/, /plan\/steps\/01_build_plan\.md/]) {
+    assert.match(ans, re)
+  }
+  assert.match(plot, /a call\s+still unanswered at merge is its default, accepted/)
+  assert.match(read('skills/ship-a-phase.md'), /Rewrite each `\[T to confirm #n\]` still in the brief to `Accepted at\s+merge \(default\)`/)
+  assert.match(read('skills/march.md'), /`\[T to confirm #n\]` call left in a merged brief does not hold its\s+row/)
+})
+
+test("claude.yml routes T's comment on a plot PR to plot.md section 3, and changes nothing else", () => {
+  const wf = read(`${WF}/claude.yml`)
+  const step = routeStep(wf)
+  assert.match(step, /id: route/)
+  assert.match(step, /contains\(github\.event\.issue\.labels\.\*\.name, 'plot'\)/)
+  assert.match(step, /contains\(github\.event\.pull_request\.labels\.\*\.name, 'plot'\)/)
+  assert.match(step, /github\.event\.sender\.login == github\.repository_owner/)
+  assert.match(step, /--append-system-prompt[^\n]*skills\/plot\.md[^\n]*Answering T's calls/)
+  assert.match(step, /echo "args=" >> "\$GITHUB_OUTPUT"/, 'every other comment gets no extra argument')
+  assert.doesNotMatch(step, /messy/)
+  assert.match(wf, /claude_args: \|[\s\S]*\$\{\{ steps\.route\.outputs\.args \}\}/)
 })
 
 test('pr-resolve keeps plot PRs mergeable too', async () => {
