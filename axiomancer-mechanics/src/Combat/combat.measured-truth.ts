@@ -12,26 +12,52 @@
  * test deck changes nothing here. Each lane named in
  * {@link MEASURED_HALF_UPGRADED_LANES} is measured a second time with half
  * its test deck upgraded once, under the deck id `<lane>+half` (phase UP1g).
+ *
+ * Each family in {@link MEASURED_SAMPLED_FAMILIES} is measured as seeded
+ * draws of distinct cards from its lanes' pool (phase EM1). A family cell
+ * carries the median over its draws in the ordinary fields, plus the range of
+ * win rate and lowest-VITAE p10, so drift and the tables read it like a deck.
+ * Every cell carries `selfBurnMean`, the VITAE lost to the player's own
+ * INFERNO, beside `playerHpTakenMean` (VITAE lost to the foe's threats).
  */
 
 import { createCharacter } from '../Character';
-import { getCardLane } from '../Cards/card.lanes';
+import { getCardLane, laneRewardPool } from '../Cards/card.lanes';
 import { nextUpgradeId } from '../Cards/card-upgrades';
 import { ENEMY_REGISTRY, type EnemySlug } from '../Enemy/enemy.library';
 import { scaleEnemyToLevel } from '../World/encounter';
 import {
     act1FightLedger, stageStats, walkAct1, type Act1Fight, type StatSpread,
 } from '../Game/act1-progression';
+import { scrambleSeed } from '../Utils/rng';
 import { simulateHazardPatternCombatDetailed } from './combat.encounter.sim';
 
 /** The lanes whose test decks are measured, by lane id. */
-export const MEASURED_DECK_LANES: readonly string[] = ['grey', 'blood-price'];
+export const MEASURED_DECK_LANES: readonly string[] = ['grey', 'blood-price', 'elementalist'];
 
 /** The lanes also measured with half their test deck upgraded once. */
 export const MEASURED_HALF_UPGRADED_LANES: readonly string[] = ['blood-price'];
 
 /** The suffix on a half-upgraded deck's id: `blood-price+half`. */
 export const HALF_UPGRADED_DECK_SUFFIX = '+half';
+
+/** A sampled deck family: `drawSize` distinct cards drawn from its lanes' pool. */
+export interface MeasuredSampledFamily {
+    /** Deck id; the `~` marks a sampled family. */
+    id: string;
+    /** The lanes whose `cardIds` make the pool, through `laneRewardPool`. */
+    laneIds: readonly string[];
+    drawSize: number;
+}
+
+/** The sampled families: the Elementalist's spread and the mixed-pool median. */
+export const MEASURED_SAMPLED_FAMILIES: readonly MeasuredSampledFamily[] = [
+    { id: 'elementalist~20of30', laneIds: ['elementalist'], drawSize: 20 },
+    { id: 'mixed~20of60', laneIds: ['blood-price', 'elementalist'], drawSize: 20 },
+];
+
+/** Draws per sampled family when the caller names none. */
+export const DEFAULT_SAMPLE_DRAWS = 16;
 
 /** The stat spreads every fight is measured at. */
 export const MEASURED_SPREADS: readonly StatSpread[] = ['even', 'body-mind', 'body'];
@@ -53,6 +79,14 @@ export interface MeasuredTruthCell {
     lowestVitaeFractionMean: number;
     lowestVitaeFractionP10: number;
     playerHpTakenMean: number;
+    /** Mean VITAE per fight lost to the player's own INFERNO. */
+    selfBurnMean: number;
+    /** Family cells only: the lowest and highest draw's win rate. */
+    winRateMin?: number;
+    winRateMax?: number;
+    /** Family cells only: the lowest and highest draw's lowest-VITAE p10. */
+    lowestVitaeFractionP10Min?: number;
+    lowestVitaeFractionP10Max?: number;
     runs: number;
     seed: number;
 }
@@ -66,6 +100,18 @@ export interface MeasuredTruthDeck {
     deadCardRate: number;
 }
 
+/** One measured sampled family. */
+export interface MeasuredTruthFamily {
+    family: true;
+    laneIds: string[];
+    poolSize: number;
+    drawSize: number;
+    /** Every draw's card ids, in draw order; each replays as a plain deck. */
+    draws: string[][];
+    /** Mean over the draws of each draw's dead-card rate. */
+    deadCardRate: number;
+}
+
 /** The whole report `npm run measured-truth -- --json` prints. */
 export interface MeasuredTruthReport {
     runs: number;
@@ -73,7 +119,7 @@ export interface MeasuredTruthReport {
     policy: 'greedy';
     spreads: StatSpread[];
     cells: MeasuredTruthCell[];
-    decks: Record<string, MeasuredTruthDeck>;
+    decks: Record<string, MeasuredTruthDeck | MeasuredTruthFamily>;
 }
 
 export interface MeasuredTruthOptions {
@@ -85,6 +131,10 @@ export interface MeasuredTruthOptions {
     deckLanes?: readonly string[];
     /** Lane ids also measured half-upgraded (default {@link MEASURED_HALF_UPGRADED_LANES}). */
     halfUpgradedLanes?: readonly string[];
+    /** The sampled families (default {@link MEASURED_SAMPLED_FAMILIES}). */
+    sampledFamilies?: readonly MeasuredSampledFamily[];
+    /** Draws per sampled family (default {@link DEFAULT_SAMPLE_DRAWS}). */
+    sampleDraws?: number;
     /** The fights to walk (default the full Act 1 ledger). */
     fights?: readonly Act1Fight[];
 }
@@ -112,6 +162,65 @@ export function halfUpgradedDeck(cards: readonly string[]): string[] {
     return cards.map((id, i) => (picked.has(i) ? nextUpgradeId(id)! : id));
 }
 
+/** mulberry32: a local generator, so drawing never touches the global RNG. */
+function mulberry32(seed: number): () => number {
+    let a = seed >>> 0;
+    return () => {
+        a = (a + 0x6d2b79f5) | 0;
+        let t = Math.imul(a ^ (a >>> 15), 1 | a);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+}
+
+/** A 32-bit FNV-1a hash of a string, to mix a family id into a seed. */
+function hashId(id: string): number {
+    let h = 0x811c9dc5;
+    for (let i = 0; i < id.length; i++) h = Math.imul(h ^ id.charCodeAt(i), 0x01000193);
+    return h >>> 0;
+}
+
+/**
+ * The seeded draws of one sampled family: `draws` decks of `family.drawSize`
+ * distinct cards from its pool. Reads and writes no global RNG.
+ *
+ * @param family - the family to draw.
+ * @param seed - the run's seed; the family id and draw index are mixed in.
+ * @param draws - how many decks to draw.
+ * @returns The pool and the draws, each a deck in draw order.
+ * @throws When a lane id names no registered lane, or the pool is smaller than a draw.
+ * @example sampledFamilyDraws(MEASURED_SAMPLED_FAMILIES[0]!, 1, 2).draws.length // 2
+ */
+export function sampledFamilyDraws(
+    family: MeasuredSampledFamily, seed: number, draws: number,
+): { pool: string[]; draws: string[][] } {
+    for (const id of family.laneIds) {
+        if (!getCardLane(id)) throw new Error(`measuredTruthCells: no card lane '${id}'`);
+    }
+    const pool = laneRewardPool(family.laneIds);
+    if (pool.length < family.drawSize) {
+        throw new Error(`measuredTruthCells: family '${family.id}' pool of ${pool.length} is under ${family.drawSize}`);
+    }
+    const out: string[][] = [];
+    for (let k = 0; k < draws; k++) {
+        const next = mulberry32(scrambleSeed(scrambleSeed(seed) ^ hashId(family.id) ^ Math.imul(k + 1, 0x9e3779b9)));
+        const cards = [...pool];
+        for (let i = 0; i < family.drawSize; i++) {
+            const j = i + Math.floor(next() * (cards.length - i));
+            [cards[i], cards[j]] = [cards[j]!, cards[i]!];
+        }
+        out.push(cards.slice(0, family.drawSize));
+    }
+    return { pool, draws: out };
+}
+
+/** The median of a non-empty list (the mean of the middle two when even). */
+function median(xs: readonly number[]): number {
+    const s = [...xs].sort((a, b) => a - b);
+    const m = Math.floor(s.length / 2);
+    return s.length % 2 ? s[m]! : (s[m - 1]! + s[m]!) / 2;
+}
+
 /** The enemy level a fight stages against a player at `playerLevel`. */
 function fightEnemyLevel(fight: Act1Fight, playerLevel: number): number {
     return fight.level ?? Math.max(ENEMY_REGISTRY[fight.enemySlug].level, playerLevel);
@@ -120,10 +229,10 @@ function fightEnemyLevel(fight: Act1Fight, playerLevel: number): number {
 /**
  * Measures every cell.
  *
- * @param options - runs, seed, the lanes and the fights to measure.
- * @returns The report: one cell per fight × spread × deck, in ledger order.
+ * @param options - runs, seed, the lanes, the families, the draws and the fights to measure.
+ * @returns The report: one cell per fight × spread × deck or family, in ledger order.
  * @throws When a lane id names no registered lane.
- * @example measuredTruthCells({ runs: 5 }).cells.length // ledger × 3 × 3
+ * @example measuredTruthCells({ runs: 5 }).cells.length // ledger × 3 × 6
  */
 export function measuredTruthCells(options: MeasuredTruthOptions = {}): MeasuredTruthReport {
     const runs = options.runs ?? 300;
@@ -140,10 +249,16 @@ export function measuredTruthCells(options: MeasuredTruthOptions = {}): Measured
         if (!lane) throw new Error(`measuredTruthCells: no card lane '${id}'`);
         decks.push({ id: `${id}${HALF_UPGRADED_DECK_SUFFIX}`, cards: halfUpgradedDeck(lane.testDeck) });
     }
+    const sampleDraws = options.sampleDraws ?? DEFAULT_SAMPLE_DRAWS;
+    const families = (options.sampledFamilies ?? MEASURED_SAMPLED_FAMILIES).map(family => ({
+        family, ...sampledFamilyDraws(family, seed, sampleDraws),
+    }));
     const { fightLevels } = walkAct1(fights);
     const seen = new Map<string, number>();
     const cells: MeasuredTruthCell[] = [];
-    const deadRates: Record<string, number[]> = Object.fromEntries(decks.map(d => [d.id, []]));
+    const deadRates: Record<string, number[]> = Object.fromEntries(
+        [...decks.map(d => d.id), ...families.map(f => f.family.id)].map(id => [id, []]),
+    );
 
     fights.forEach((fight, i) => {
         const base = `${fight.nodeId}/${fight.enemySlug}`;
@@ -153,36 +268,66 @@ export function measuredTruthCells(options: MeasuredTruthOptions = {}): Measured
         const playerLevel = fightLevels[i]!;
         const enemyLevel = fightEnemyLevel(fight, playerLevel);
         const enemy = scaleEnemyToLevel(ENEMY_REGISTRY[fight.enemySlug], enemyLevel);
+        const play = (cards: readonly string[], spread: StatSpread) => {
+            const player = createCharacter({
+                name: 'Measured', level: playerLevel,
+                baseStats: stageStats(playerLevel, spread), knownCards: [...new Set(cards)],
+            });
+            return simulateHazardPatternCombatDetailed({
+                player, enemy, runs, startSeed: seed, policy: 'greedy', deck: [...cards],
+            }).stats;
+        };
+        const at = (spread: StatSpread, deck: string) => ({
+            fight: key, map: fight.map, nodeId: fight.nodeId, enemySlug: fight.enemySlug,
+            isBoss: fight.isBoss, playerLevel, enemyLevel, spread, deck,
+        });
         for (const spread of MEASURED_SPREADS) {
             for (const deck of decks) {
-                const player = createCharacter({
-                    name: 'Measured', level: playerLevel,
-                    baseStats: stageStats(playerLevel, spread), knownCards: [...new Set(deck.cards)],
-                });
-                const { stats } = simulateHazardPatternCombatDetailed({
-                    player, enemy, runs, startSeed: seed, policy: 'greedy', deck: deck.cards,
-                });
+                const stats = play(deck.cards, spread);
                 deadRates[deck.id]!.push(1 - stats.deckUtilization);
                 cells.push({
-                    fight: key, map: fight.map, nodeId: fight.nodeId, enemySlug: fight.enemySlug,
-                    isBoss: fight.isBoss, playerLevel, enemyLevel, spread, deck: deck.id,
+                    ...at(spread, deck.id),
                     winRate: r4(stats.winRate),
                     meanRounds: r4(stats.avgRounds),
                     lowestVitaeFractionMean: r4(stats.lowestVitaeFractionMean),
                     lowestVitaeFractionP10: r4(stats.lowestVitaeFractionP10),
                     playerHpTakenMean: r4(stats.playerHpTakenMean),
+                    selfBurnMean: r4(stats.selfBurnMean),
+                    runs, seed,
+                });
+            }
+            for (const { family, draws } of families) {
+                const all = draws.map(cards => play(cards, spread));
+                for (const stats of all) deadRates[family.id]!.push(1 - stats.deckUtilization);
+                const med = (pick: (s: (typeof all)[number]) => number) => r4(median(all.map(pick)));
+                const wins = all.map(s => r4(s.winRate));
+                const p10s = all.map(s => r4(s.lowestVitaeFractionP10));
+                cells.push({
+                    ...at(spread, family.id),
+                    winRate: med(s => s.winRate),
+                    meanRounds: med(s => s.avgRounds),
+                    lowestVitaeFractionMean: med(s => s.lowestVitaeFractionMean),
+                    lowestVitaeFractionP10: med(s => s.lowestVitaeFractionP10),
+                    playerHpTakenMean: med(s => s.playerHpTakenMean),
+                    selfBurnMean: med(s => s.selfBurnMean),
+                    winRateMin: Math.min(...wins), winRateMax: Math.max(...wins),
+                    lowestVitaeFractionP10Min: Math.min(...p10s), lowestVitaeFractionP10Max: Math.max(...p10s),
                     runs, seed,
                 });
             }
         }
     });
 
-    const deckReport: Record<string, MeasuredTruthDeck> = {};
-    for (const deck of decks) {
-        const rates = deadRates[deck.id]!;
-        deckReport[deck.id] = {
-            deckCards: deck.cards,
-            deadCardRate: r4(rates.length ? rates.reduce((a, b) => a + b, 0) / rates.length : 0),
+    const meanRate = (id: string) => {
+        const rates = deadRates[id]!;
+        return r4(rates.length ? rates.reduce((a, b) => a + b, 0) / rates.length : 0);
+    };
+    const deckReport: Record<string, MeasuredTruthDeck | MeasuredTruthFamily> = {};
+    for (const deck of decks) deckReport[deck.id] = { deckCards: deck.cards, deadCardRate: meanRate(deck.id) };
+    for (const { family, pool, draws } of families) {
+        deckReport[family.id] = {
+            family: true, laneIds: [...family.laneIds], poolSize: pool.length,
+            drawSize: family.drawSize, draws, deadCardRate: meanRate(family.id),
         };
     }
     return { runs, seed, policy: 'greedy', spreads: [...MEASURED_SPREADS], cells, decks: deckReport };
