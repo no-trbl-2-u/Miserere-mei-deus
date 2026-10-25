@@ -14,7 +14,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, ..."
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, ..."
       },
       "tested": {
         "value": true,
@@ -39,7 +39,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, ..."
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, ..."
       },
       "tested": {
         "value": true,
@@ -64,7 +64,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, ..."
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, ..."
       },
       "tested": {
         "value": true,
@@ -89,7 +89,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, ..."
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, ..."
       },
       "tested": {
         "value": true,
@@ -114,7 +114,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, ..."
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, ..."
       },
       "tested": {
         "value": true,
@@ -139,7 +139,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, ..."
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, ..."
       },
       "tested": {
         "value": true,
@@ -164,7 +164,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, ..."
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, ..."
       },
       "tested": {
         "value": true,
@@ -189,7 +189,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, ..."
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, ..."
       },
       "tested": {
         "value": true,
@@ -214,7 +214,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, ..."
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, ..."
       },
       "tested": {
         "value": true,
@@ -239,7 +239,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, ..."
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, ..."
       },
       "tested": {
         "value": true,
@@ -388,8 +388,8 @@
         "source": "flow path from route:index: route:index -> route:blacksmith"
       },
       "driven": {
-        "value": false,
-        "source": null
+        "value": true,
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs"
       },
       "tested": {
         "value": true,
@@ -414,7 +414,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/encounter-routing-e2e.mjs"
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs"
       },
       "tested": {
         "value": true,
@@ -464,7 +464,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
       },
       "tested": {
         "value": true,
@@ -663,8 +663,8 @@
         "source": "flow path from route:index: route:index -> route:event"
       },
       "driven": {
-        "value": false,
-        "source": null
+        "value": true,
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs"
       },
       "tested": {
         "value": true,
@@ -689,7 +689,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, ..."
       },
       "tested": {
         "value": true,
@@ -739,7 +739,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/feature-map-e2e.mjs, axiomancer-mobile/scripts/fixture-e2e.mjs, axiomancer-mobile/scripts/map-walk-e2e.mjs"
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/feature-map-e2e.mjs, axiomancer-mobile/scripts/fixture-e2e.mjs, ..."
       },
       "tested": {
         "value": true,
@@ -814,7 +814,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs"
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs"
       },
       "tested": {
         "value": true,
