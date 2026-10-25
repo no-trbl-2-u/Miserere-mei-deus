@@ -49,11 +49,11 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - ease: 6
 - next: not the loop's: the fix reverses T's BT2a A3 ruling (2026-10-13); waits on T
 
-### [2.8] The escape ledger classifies past PRs against today's verify-* filters
+### [2.8] The escape ledger classifies past PRs against today's verify-* filters (picked)
 - category: debt
 - impact: 4
 - ease: 7
-- next: `/iterate` (row below)
+- next: shipped on `loop/iterate-ledger-filters-at-merge`
 
 ### [2.4] CRITIQUE pass 100 [LOW]: the critique-drive hazard capture is unseeded
 - category: external-critique
@@ -93,7 +93,8 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   for removal post-D99; either way, read `plan/revamp/cards.md` ("The trial
   set") before changing the rule, not just the index.
 
-### [ ] [debt] The escape ledger classifies past PRs against today's verify-* filters, so verify-root reads as expected-but-not-run on every older scripts/ PR (LG1b, 2026-10-22)
+### [x] [debt] The escape ledger classifies past PRs against today's verify-* filters, so verify-root reads as expected-but-not-run on every older scripts/ PR (LG1b, 2026-10-22) — CLOSED 2026-10-25 (iterate: `escape-ledger.mjs` classifies each PR against `verifyWorkflowsAt(mergeCommit)`, the merge tree's `verify-*` files parsed by the new pure `verifyWorkflowsFrom` in `ledger-lib.mjs`; the ledger header and the Android seed keep today's filters; seed S4, which read unconfirmed once verify-root covered #526's paths, confirms again; `escape-ledger.test.mjs` pins it)
+- issue: #909
 - category: debt
 - impact: 4
 - ease: 7

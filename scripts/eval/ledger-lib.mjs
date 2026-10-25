@@ -75,6 +75,24 @@ export function parseWorkflowFilter(text) {
 }
 
 /**
+ * The `verify-*` workflows among a set of workflow files, parsed and sorted
+ * by name; one with no `pull_request` trigger is dropped. The escape ledger
+ * feeds it each PR's merge-commit tree, so a PR is classified against the
+ * filters it merged under, not today's.
+ *
+ * @param {{ file: string, text: string }[]} entries workflow file names (no directory) and their contents.
+ * @returns {{ file: string, text: string, name: string|null, paths: string[] }[]} the parsed `verify-*` filters.
+ * @example verifyWorkflowsFrom([{ file: 'deploy.yml', text: '' }]) // []
+ */
+export function verifyWorkflowsFrom(entries) {
+  return entries
+    .filter(({ file }) => /^verify-.*\.ya?ml$/.test(file))
+    .sort((a, b) => (a.file < b.file ? -1 : a.file > b.file ? 1 : 0))
+    .map(({ file, text }) => ({ file, text, ...parseWorkflowFilter(text) }))
+    .filter((wf) => wf.paths !== null)
+}
+
+/**
  * A GitHub Actions path glob as a RegExp: `**` crosses directories, `*`
  * and `?` do not.
  *
