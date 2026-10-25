@@ -70,6 +70,13 @@
 
 ## Open questions
 
-- Does `playtester` keep the MCP (and the swarm runs in series), or get its
-  own Playwright like the drive? T's call; the second is the one that keeps a
-  4-up swarm.
+- ~~Does `playtester` keep the MCP (and the swarm runs in series), or get its
+  own Playwright like the drive?~~ **Answered by T, 2026-10-25:** its own
+  Playwright (the `critique-drive.mjs` way: library import, a context per
+  agent, `addInitScript` seeds, a named screenshot path), keeping a 4-up swarm.
+
+## Plotted
+
+- Phases 1-2 were plotted on 2026-10-25 as PH1a (the session tool), PH1b (the
+  agent switches to it) and PH1c (guides tested for truth). Brief
+  `plan/phases/phase_PH1_playtest_harness.md`. Phase 3 is a separate candidate.
