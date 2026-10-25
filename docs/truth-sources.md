@@ -158,10 +158,15 @@ differently:
 - **Measured truth** (win rates, how close a fight gets) is only as
   fresh as the last sim run. The current one is
   **`docs/reports/measured/latest.md`** (phase R12a): the grey deck and
-  the Blood Price test deck in every Act 1 ledger fight, with the player
+  the Blood Price and Elementalist test decks (plus Blood Price
+  half-upgraded, UP1g) in every Act 1 ledger fight, with the player
   at the level a full clear brings there, at three stat spreads, played
   by the greedy witness. Each cell gives the win rate and the lowest
-  VITAE reached (mean and p10). Every run appends one line to
+  VITAE reached (mean and p10). Two sampled families (phase EM1),
+  `elementalist~20of30` (the lane's spread) and `mixed~20of60` (a
+  mixed-pool median), are 16 seeded draws each, read as the median with
+  the win-rate range; and every deck has a Self-burn figure, the VITAE
+  per fight it lost to its own INFERNO beside what the foe took. Every run appends one line to
   `docs/reports/measured/history.jsonl`; `.github/workflows/measured-truth.yml`
   runs it on every merge to `main` that touches `axiomancer-mechanics/src/`,
   on Sundays, and by hand. Engine: `npm run measured-truth -w

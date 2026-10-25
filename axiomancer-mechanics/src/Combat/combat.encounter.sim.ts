@@ -119,6 +119,9 @@ export interface CombatSimStats {
     lowestVitaeFractionP10: number;
     /** Mean VITAE the enemy's fired threats took off the player per run. */
     playerHpTakenMean: number;
+    /** Mean VITAE per run the player lost to their own INFERNO at the start
+     *  of their turn. `playerHpTakenMean` leaves it out. */
+    selfBurnMean: number;
 }
 
 /** Per-card telemetry for one run (or aggregated over many), keyed by the
@@ -473,6 +476,22 @@ export function playSimPhase(
     return upgradeablePlayPhase(state, policy, rng, usage, lines);
 }
 
+/**
+ * VITAE the player lost to their own INFERNO in a transcript: the sum of the
+ * `dot-tick` amounts aimed at the player with effect id `inferno`.
+ *
+ * @param log - a combat transcript (`state.log`).
+ * @returns The total; 0 when the player never burned.
+ * @example selfBurnFromLog([{ kind: 'dot-tick', effectId: 'inferno', label: 'INFERNO', amount: 3, target: 'self' }]) // 3
+ */
+export function selfBurnFromLog(log: readonly CombatEncounterState['log'][number][]): number {
+    let total = 0;
+    for (const ev of log) {
+        if (ev.kind === 'dot-tick' && ev.target === 'self' && ev.effectId === 'inferno') total += ev.amount;
+    }
+    return total;
+}
+
 /** Runs a single seeded encounter and returns its outcome (+ per-card telemetry). */
 export function runOneEncounter(
     player: Character,
@@ -484,6 +503,9 @@ export function runOneEncounter(
     outcome: CombatOutcome; rounds: number; plays: number; statusPlays: number; convictionSpent: number;
     dotHpDamage: number; mechanicBurstDamage: number; directHpDamage: number;
     guardOnAttack: number; playerHpTaken: number;
+    /** VITAE the player lost to their own INFERNO: the self `dot-tick`
+     *  amounts in the run's transcript. */
+    selfBurn: number;
     /** The lowest player VITAE this run reached, as a fraction of max VITAE:
      *  sampled after every enemy action and once more at the end. */
     lowestVitaeFraction: number;
@@ -620,6 +642,7 @@ export function runOneEncounter(
     // Derive HP-damage breakdown from the accumulated event log.
     let dotHpDamage = 0;
     let mechanicBurstDamage = 0;
+    const selfBurn = selfBurnFromLog(state.log);
     for (const ev of state.log) {
         if (ev.kind === 'dot-tick' && ev.target === 'enemy') dotHpDamage += ev.amount;
         // The engine-gated riposte is credited via its own event.
@@ -679,6 +702,7 @@ export function runOneEncounter(
         directHpDamage,
         guardOnAttack,
         playerHpTaken,
+        selfBurn,
         lowestVitaeFraction,
         activeEffectSamples,
         cardUsage,
@@ -777,7 +801,7 @@ export function simulateHazardPatternCombatDetailed(
     let victories = 0, mercies = 0, defeats = 0, retreats = 0;
     let totalRounds = 0, totalRoundsSq = 0, totalPlays = 0, totalStatusPlays = 0, totalConviction = 0;
     let totalDotHp = 0, totalMechanicBurst = 0, totalDirectHp = 0;
-    let totalGuardOnAttack = 0, totalPlayerHpTaken = 0;
+    let totalGuardOnAttack = 0, totalPlayerHpTaken = 0, totalSelfBurn = 0;
     let totalActiveEffectSamples = 0, totalPhaseSamples = 0;
     const lowestVitae: number[] = [];
     const winPathCounts = emptyWinPathCounts();
@@ -825,6 +849,7 @@ export function simulateHazardPatternCombatDetailed(
         totalDirectHp += r.directHpDamage;
         totalGuardOnAttack += r.guardOnAttack;
         totalPlayerHpTaken += r.playerHpTaken;
+        totalSelfBurn += r.selfBurn;
         lowestVitae.push(r.lowestVitaeFraction);
         for (const s of r.activeEffectSamples) totalActiveEffectSamples += s;
         totalPhaseSamples += r.activeEffectSamples.length;
@@ -892,6 +917,7 @@ export function simulateHazardPatternCombatDetailed(
             ? lowestVitae.reduce((a, b) => a + b, 0) / lowestVitae.length : 0,
         lowestVitaeFractionP10: percentile(lowestVitae, 0.1),
         playerHpTakenMean: totalPlayerHpTaken / count,
+        selfBurnMean: totalSelfBurn / count,
     };
     return { stats, cardUsage };
 }

@@ -37,23 +37,17 @@
 The bias banner above reads "until RC ships"; RC shipped 2026-10-02, so this
 pass scores without its 1.5x. The banner stays until `/oversight reset`.
 
-### [3.6] CRITIQUE pass 100 [LOW]: the hazard route-select strip ellipsizes its instruction at 375 (picked; issue #900)
-- category: external-critique
-- impact: 4
-- ease: 9
-- next: shipped on `loop/iterate-hazard-strip-fit`
-
 ### [3.6] CRITIQUE pass 100 [MED]: covered hand-fan names at 375 all read "A PLAIN …"
 - category: external-critique
 - impact: 6
 - ease: 6
 - next: not the loop's: the fix reverses T's BT2a A3 ruling (2026-10-13); waits on T
 
-### [2.8] The escape ledger classifies past PRs against today's verify-* filters (picked)
-- category: debt
-- impact: 4
-- ease: 7
-- next: shipped on `loop/iterate-ledger-filters-at-merge`
+### [3.0] CRITIQUE pass 89 [LOW]: the rest and cache spent-node line mixes tenses (picked; issue #911)
+- category: external-critique
+- impact: 3
+- ease: 10
+- next: shipped on `loop/iterate-rest-tense`
 
 ### [2.4] CRITIQUE pass 100 [LOW]: the critique-drive hazard capture is unseeded
 - category: external-critique

@@ -852,16 +852,6 @@
 - source: critique:drive (unattended)
 
 
-### [LOW] ci / critique-drive — the hazard capture is unseeded, so the two viewports (and two passes) play different hazards
-- pass: 100 (commit ee9c5b83)
-- viewport: both
-- category: infra
-- observation: the `l30-bw-hazard-arrive` fixture carries a seed, but the hazard minigame resolves its own seed through `resolveMinigameSeed`, which falls back to `Date.now() ^ Math.random()` when no `__AXM_MINIGAME_SEEDS__` global is set. `critique:drive` sets none, so this pass captured The Famine March at 375 and Flooded Undercroft at 1280, with different hands. A mobile/desktop comparison, or a before/after across passes, is not like for like.
-- evidence: `.critique-artifacts/mobile/10-hazard.txt` against `desktop/10-hazard.png`; `axiomancer-mobile/state/minigame-seeds.ts` `fallbackMinigameSeed`; `axiomancer-mobile/scripts/critique-drive.mjs` hazard entry (no seed); `scripts/minigame-seed-injector.mjs` already exists for `hazard-e2e`.
-- suggested fix: have the hazard entry in `critique-drive.mjs` inject a fixed hazard seed with the existing `minigame-seed-injector.mjs` before navigation; pin it in critique-drive.test.mjs.
-- source: critique:drive (unattended)
-
-
 ### [LOW] play log / fight recorder — the opening hand never reaches the fight's event stream
 - pass: ship-a-phase BE2f (PR #877)
 - viewport: n/a
@@ -870,16 +860,6 @@
 - evidence: `axiomancer-mechanics/src/Combat/combat.engine.ts` (`initializeCombatEncounter`, `log: []`); `axiomancer-mobile/lib/fightRecorder.ts` `observe`; `backend/src/reports.ts` header.
 - suggested fix: have the recorder push one stamped `hand-drawn` event with the first observed state's hand (`state.hand.map(h => h.cardId)`, adding `hand` to `ObservedFight`) at `ms` 0, so no engine or contract change is needed; the held formula already treats it as a draw at turn end 0.
 - source: ship-a-phase BE2f
-
-
-### [LOW] rest / cache — "The node is spent the moment you stopped here" mixes present and past tense
-- pass: 89 (commit 2927472f)
-- viewport: both (375x812 and 1280x800)
-- category: voice
-- observation: the italic line above the two rest offers reads "The node is spent the moment you stopped here. Pick one — there is no walking back out." "is spent" and "Pick one" are present tense, but "you stopped" is past, so the sentence reads as a slip in an otherwise careful voice. The treasure cache carries the same line.
-- evidence: `.critique-artifacts/mobile/09-rest.txt`, `desktop/09-rest.png` (fixture `apprentice-bw-rest`); `axiomancer-mobile/state/presenters/rest.copy.ts:12`, `cache.copy.ts:10`.
-- suggested fix: "The node is spent the moment you stop here." in both copy files (and any test that pins the string); copy only, no rule change.
-- source: critique:drive (unattended)
 
 
 ### [LOW] ci / pr-resolve — a hand dispatch with a non-`loop/` branch exits green having done nothing
@@ -1183,6 +1163,26 @@
 - source: loop
 
 ## Done
+
+### [x] [LOW] ci / critique-drive — the hazard capture is unseeded, so the two viewports (and two passes) play different hazards — RESOLVED 2026-10-25 (branch loop/iterate-critique-hazard-seed, db0dc4f6: every screen context opens through `openScreenContext`, which injects `minigame-seed-injector.mjs`'s shared seeds, so hazard, rest and cache resolve one seed at both viewports and across passes; pinned in critique-drive.test.mjs)
+- pass: 100 (commit ee9c5b83)
+- issue: #915
+- viewport: both
+- category: infra
+- observation: the `l30-bw-hazard-arrive` fixture carries a seed, but the hazard minigame resolves its own seed through `resolveMinigameSeed`, which falls back to `Date.now() ^ Math.random()` when no `__AXM_MINIGAME_SEEDS__` global is set. `critique:drive` sets none, so this pass captured The Famine March at 375 and Flooded Undercroft at 1280, with different hands. A mobile/desktop comparison, or a before/after across passes, is not like for like.
+- evidence: `.critique-artifacts/mobile/10-hazard.txt` against `desktop/10-hazard.png`; `axiomancer-mobile/state/minigame-seeds.ts` `fallbackMinigameSeed`; `axiomancer-mobile/scripts/critique-drive.mjs` hazard entry (no seed); `scripts/minigame-seed-injector.mjs` already exists for `hazard-e2e`.
+- suggested fix: have the hazard entry in `critique-drive.mjs` inject a fixed hazard seed with the existing `minigame-seed-injector.mjs` before navigation; pin it in critique-drive.test.mjs.
+- source: critique:drive (unattended)
+
+### [x] [LOW] rest / cache — "The node is spent the moment you stopped here" mixes present and past tense — RESOLVED 2026-10-25 (branch loop/iterate-rest-tense, 55b5aaa9: both copy files read "the moment you stop here"; no test pinned the string)
+- pass: 89 (commit 2927472f)
+- issue: #911
+- viewport: both (375x812 and 1280x800)
+- category: voice
+- observation: the italic line above the two rest offers reads "The node is spent the moment you stopped here. Pick one — there is no walking back out." "is spent" and "Pick one" are present tense, but "you stopped" is past, so the sentence reads as a slip in an otherwise careful voice. The treasure cache carries the same line.
+- evidence: `.critique-artifacts/mobile/09-rest.txt`, `desktop/09-rest.png` (fixture `apprentice-bw-rest`); `axiomancer-mobile/state/presenters/rest.copy.ts:12`, `cache.copy.ts:10`.
+- suggested fix: "The node is spent the moment you stop here." in both copy files (and any test that pins the string); copy only, no rule change.
+- source: critique:drive (unattended)
 
 ### [x] [LOW] hazard / mobile — the route-select top strip ellipsizes to "NO RETREAT — CHOOSE TO PROC…", cutting the instruction's verb — RESOLVED 2026-10-25 (branch loop/iterate-hazard-strip-fit, e574fe7d: the middle segment's letter spacing is fitted to the width by `topStripMidSpacing`, 2 at 414 and up, 1.2 at 375, floor 0.5; copy unchanged; pinned in RouteSelect.test.tsx)
 - pass: 100 (commit ee9c5b83)
