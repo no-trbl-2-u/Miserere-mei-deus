@@ -98,5 +98,12 @@ Inputs for that session:
 - **Relic sources (D71), for now:** quests give designated relics;
   elites have a low chance of dropping a random relic. There is no starting relic:
   the first lane opens with the first lane relic (D71).
+- **Lane relics plotted as LR1 (T, 2026-10-25).** The Bleeding Signet opens
+  Blood Price; every lane relic's detail view shows "Unlocks: <lane name>";
+  five new relics (two Blood Price, three Elementalist), T's content, written
+  in the attended LR1b session into a section "The lane relics (LR1b)" here;
+  quests are the primary source, elites drop at a lower chance, and each
+  lane's third relic comes only from an elite. Brief
+  `plan/phases/phase_LR1_lane_relics.md`. B1 keeps the rest of the pass.
 - Relic reward sources: the hazard deck's "Bonus Relic"/"Shrine Cache" lie
   (they pay shillings) and go in R6; B1 can give relics a real source.

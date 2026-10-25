@@ -83,7 +83,9 @@ left; otherwise after.
 
 ### W5 — Relic pass and ship (Dec 15 - Dec 28)
 
-- B1 (owner-led): T's relic session, then the loop builds.
+- B1 (owner-led): T's relic session, then the loop builds. The five lane relics, their "Unlocks:" line and their
+  sources (quests, elites) were plotted early as LR1a-LR1e (T, 2026-10-25); LR1b is T's attended authoring session,
+  undated, so B1 keeps the rest of the pass.
 - LG1h (attended): the Android smoke test on the preview APK.
 - Ship: a playtester walk of all four regions, the full gate, T tags v0.3 and the APK is built.
 - T's time (about 4 h): the relic session; the device check; the tag.
@@ -146,7 +148,7 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 | [ ] | 2026-12-11 | Combat playtest (winnable and dangerous) | W4 | R12 |
 | [ ] | 2026-12-12 | Upgrades proven on the Act 1 boss | W4 | UP1h |
 | [ ] | 2026-12-14 | W4 demo: an Act 1 clear ending at the Act Boss | W4 | T |
-| [ ] | 2026-12-16 | Relic pass session | W5 | B1 |
+| [ ] | 2026-12-16 | Relic pass session (the rest of B1: the starting ring, signatures; the five lane relics and their sources are LR1's, undated) | W5 | B1 |
 | [ ] | 2026-12-23 | Android smoke test on the preview APK | W5 | LG1h |
 | [ ] | 2026-12-26 | Playtester walk of all four regions | W5 | needs plot |
 | [ ] | 2026-12-28 | Tag v0.3 and build the APK | W5 | T |
@@ -234,6 +236,11 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - PH1c — loop tooling (guide fixes and the guide test); blocks no window's goal; date not set.
 - TQ1 — loop work, mobile UX from the Elementalist swarm; blocks no window's goal and T set no date; date not set.
 - GL1 — loop work; the board glossary from the Elementalist swarm, blocks no window's goal; date not set.
+- LR1a — loop work; the Signet opens Blood Price and the "Unlocks:" line, follows RW1a; date not set.
+- LR1b — attended; T writes the five lane relics and their quests (D88); T set no date (B1's W5 Item keeps the rest of the relic pass); date not set.
+- LR1c — loop work; relic sources in the engine, blocks no window's goal; date not set.
+- LR1d — loop work; follows LR1b's attended session; date not set.
+- LR1e — loop work; follows LR1c and LR1d; date not set.
 
 ## How a window closes
 
@@ -243,6 +250,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-25** — **lane relics plotted** (T in session, plot run unattended, `/plot`, slotted after SG1 and BC1). **Added** Unscheduled lines for LR1a-LR1e: T set no date, and LR1b is attended, so its date is T's to pick. **Edited** the W5 Item "Relic pass session" (B1) and the W5 notes: its premise narrowed, since the five lane relics and their sources are now LR1's; B1 keeps the starting ring, the signatures and the rest of the pass. **Ticked** nothing.
 - **2026-10-25** — **the board cues plotted** (T in conversation, plot run unattended, `/plot`). **Added** an Unscheduled line for BC1: T set no date and board legibility blocks no window's goal. **Edited** no Item: no open Item's premise rests on the self-burn, BLIZZARD or dead-tray cues. Nothing ticked; no date moved.
 - **2026-10-25** — **the reward rule plotted** (T, in conversation, `/plot` run unattended). **Added** Unscheduled lines for RW1a-RW1b: T set no date, and the rows block no window's goal. **Edited** no Item: the W5 "Relic pass session" (B1) still holds, since RW1 makes lane relics work but authors none, and the W3 four-region walk already covers the loot cache. Nothing ticked; no date moved.
 - **2026-10-25** — **fewer taps plotted** (T, `/plot`, run unattended by a workflow). **Added** an Unscheduled line for TQ1: T set no date, and it blocks no window's goal. **Edited** no Item: the W3 "Event-node audit and fixes (all twelve kinds)" Item still holds, since TQ1 changes the spoils pick and the map's node panel, not whether each node kind resolves (T cut its rest, cache and anvil changes the same day). Nothing ticked; no date moved.
