@@ -391,6 +391,7 @@ event-pool and layout files).
 - [x] (#884) Phase FM2b — The nested canvases (plotted by T, 2026-10-22): `Map.canvas` becomes five group blocks with the flow between groups, each opening a group canvas whose cards are the feature notes; no coupling edge drawn. Brief `plan/phases/phase_FM2_modular_feature_map.md` § FM2b. Requires FM2a.
 - [x] (#886) Phase FM2c — Into the vault (plotted by T, 2026-10-22): `node scripts/vault.mjs features` mirrors `Features/` into the vault, deleting only files the generator marks as its own; `docs/vault.md` gains the write zone. Brief `plan/phases/phase_FM2_modular_feature_map.md` § FM2c. Requires FM2a.
 - [ ] Phase FM2d — T's look (plotted by T, 2026-10-22) (attended): T clicks overview to group to note on phone and desktop and checks Graph view; one dated line in `docs/reports/feature-map-check.md`. Brief `plan/phases/phase_FM2_modular_feature_map.md` § FM2d. Requires FM2b, FM2c.
+- [ ] Phase TQ1 — The spoils pick in two taps, the purse on the map (plotted by T, 2026-10-25): a spoils tap selects a tile and TAKE CARD takes it, a second tap on the selected tile reads it in full, and the map node panel shows the purse at rest, anvil and village nodes, saying when the anvil's cheapest work is out of reach. Brief `plan/phases/phase_TQ1_fewer_taps.md`. Requires nothing.
 - [x] (#918) Phase AW1a — The four-door walk and the twelve-kind audit (plotted by T, 2026-10-25): `e2e:act1-walk` boots a new game and crosses all four Act 1 doors (bw-17, cw-17, bc-15, ld-16) to ld-18, meeting every kind the Act 1 pools carry on an engine-derived path and resolving each through its own screen (fights and hazard boards through the dev skip seam, after their screen mounts); wired into `verify-mobile`; `route:blacksmith` and `route:event` driven; `docs/reports/act1-event-audit.md` accounts for all twelve kinds; code defects fixed, copy and map defects filed `[content]` for T (D88). Brief `plan/phases/phase_AW1_act1_walk.md` § AW1a. Requires nothing.
 - [ ] Phase AW1b — Node blurbs matched to their events (plotted by T, 2026-10-25): a mobile test pairs each Act 1 node's layout label and blurb with its event's per-node copy by shared words, pins today's mismatches against `[content]` rows for T, sets the hazard nodes apart as unpairable until the hazard swap, and puts the `gathering` question (materials nothing spends) to T as a `[content]` row. Brief `plan/phases/phase_AW1_act1_walk.md` § AW1b. Requires nothing.
 - [ ] Phase GL1 — A glossary a sighted player can reach (plotted by T, 2026-10-25): the Conviction chip, the dice (long-press: BOON, MANA, MISS, BANKED, GHOST; the X die on a tap), the deck and discard piles, the phase ledger and the `IN PLAY` label open a gloss from one `BOARD_GLOSSARY` source; the momentum popup names SURGE; a card face's bare `X` reads `varies`. No card text changes (T). Brief `plan/phases/phase_GL1_board_glossary.md`. Requires nothing.
@@ -1049,6 +1050,14 @@ See the status rows above; generate briefs on demand.
 > "reason not stated" — never invent one), and the resulting
 > commit/issue/phase-brief when available.
 
+- **2026-10-25** — actor: **T, attended session, run unattended by a workflow** (`/plot`, branch
+  `loop/plot-TQ1-fewer-taps`). Action: **added Phase TQ1** after the last open row (anytime). Confirmed T's
+  request: yes ("plot them all, one plot run, one PR", after #890 merged). Reason: T asked to plot every swarm candidate; the
+  Elementalist swarm measured rest, cache and spoils at four taps each and a broke player walking into dead
+  doors; T dropped the low-VITAE potion nudge ("nowhere yet"). Then T cut the plot in session the same day ("I only
+  like spoils after a fight and map node panel. Remove the others."): TQ1 keeps the spoils pick and the purse on the
+  node panel; rest and cache settling on the choice, their toast and the idle anvil's single exit are cut. Brief
+  `plan/phases/phase_TQ1_fewer_taps.md`.
 - **2026-10-25** — actor: **T, conversation** (`/plot`, unattended run, branch `loop/plot-GL1-glossary`).
   Action: **added Phase GL1** after the last open row (FM2d), slot anytime. Confirmed T's request: yes,
   "plot them all, one plot run, one PR" over the Elementalist swarm's candidates; this run is the
