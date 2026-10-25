@@ -813,12 +813,6 @@
 - conflicts: D91 if any face glyph changes beyond the X; otherwise none.
 - promote with `/plot`.
 
-### [ ] [owner] [score 5.0] The Elementalist in measured truth, with a self-burn metric
-- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm; the lane measured once by hand at 1fb78ac87: 100% every cell, min p10 0.89, mean VITAE taken 5.8 vs grey 41.0)
-- part plan: `plan/revamp/cards.md` "The Elementalist after the swarm (T, 2026-10-24, `/messy`)"
-- T's call (2026-10-24): the 20 are the lane's ceiling; measure it against Blood Price's ceiling (its 20-card test deck). Add two sampled columns: random 20-of-30 draws from the Elementalist pool (the lane's spread), and random 20-card decks from the mixed 60-card pool of both trial sets (the median a player who takes what the rewards offer would hold).
-- proposed scope: 1 phase (M), code only. `elementalist` joins `MEASURED_DECK_LANES` (`combat.measured-truth.ts:28`), its test and the workflow description; two sampled deck families (N seeded draws each, reported as the family's mean and spread per cell); a per-deck "VITAE lost to the player's own weather" column; `latest.md` regenerated. A measurement (D57), not a tune (D88).
-- conflicts: R12 (attended) decides what the matrix measures; this adds a column, not a policy. T's open question on whether the 20-card test deck is the lane's ceiling.
 - promote with `/plot`.
 
 ### [ ] [owner] [score 5.0] The decided reward rule, implemented: relic lanes feed the reward slot and the cache shows its card
@@ -887,6 +881,9 @@ Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_
 
 
 - **[owner] [score 4.0] Roster-health lenses for /iterate** (proposed 2026-10-12, R11 item 6) — briefed via `/plot` 2026-10-12 as Phase **RH1**, slotted anytime after R12. Brief `plan/phases/phase_RH1_roster_health_lenses.md`. Dangling references become `gap` findings the loop fixes; orphans are pinned and filed `[content]` for T (D88). Shipped 2026-10-13 in PR #507: 0 dangling, 1 orphan (`relic-bleeding-signet`).
+
+
+- **[owner] [score 5.0] The Elementalist in measured truth, with a self-burn metric** (proposed 2026-10-24, T's `/messy` of the Elementalist swarm) — briefed via `/plot` 2026-10-25 as Phase **EM1**, slotted anytime. Brief `plan/phases/phase_EM1_elementalist_measured.md`. T's call kept: the 20-card test deck is the lane's ceiling against Blood Price's; two seeded sampled families (20-of-30 Elementalist, 20-of-60 mixed) reported as median and range; a self-burn column. A measurement (D57), not a tune (D88).
 
 
 ## Rejected

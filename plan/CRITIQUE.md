@@ -848,16 +848,7 @@
 - observation: on the opening Float-Eye board the five-card hand overlaps so much that every covered card's name band shows only "A PLAIN" and the first letter of the second word ("A PLAIN W", "A PLAIN U", "A PLAIN B"), and the effect rows are cut too ("Deal", "♥ VULN", "★ GU"). The starter deck's three grey cards differ only by that second word, so a first-time player cannot tell Blow from Word from Ward by name; only the right-end card prints whole. Phase 97 (2026-09-19) had the covered names wrap inside their visible strip; at 1280 the fan no longer overlaps and every name prints.
 - evidence: `.critique-artifacts/mobile/04-combat-board.png` (hand row) against `desktop/04-combat-board.png`; `axiomancer-mobile/components/combat/encounter/CombatBoard.tsx:428` `handFanLayout` (`HAND_FAN_MIN_STEP` 28).
 - suggested fix: size a covered card's name to the strip it shows, as `handNameFontSize` does for hazard hand cards, or print the name's last word first, so the distinguishing word (BLOW / WORD / WARD) is always readable; presentation only, pinned in a CombatBoard hand-fan test at 375.
-- source: critique:drive (unattended)
-
-
-### [LOW] hazard / mobile — the route-select top strip ellipsizes to "NO RETREAT — CHOOSE TO PROC…", cutting the instruction's verb
-- pass: 100 (commit ee9c5b83)
-- viewport: mobile (375x812)
-- category: voice
-- observation: since d63cf279 the middle segment of the hazard strip shrinks to one ellipsized line. At 375 wide it reads "NO RETREAT — CHOOSE TO PROC…", so the one line that tells the player what to do loses its last word. Desktop prints it whole.
-- evidence: `.critique-artifacts/mobile/10-hazard.png` (top strip); `axiomancer-mobile/components/hazard/RouteSelect.tsx:177`.
-- suggested fix: tighten the strip's letter spacing at narrow widths or shorten the copy so it fits at 375 (for example "NO RETREAT — CHOOSE A ROUTE"); pin the fit in RouteSelect.test.tsx.
+- loop note (iterate 2026-10-25): not picked. Both suggested fixes cap or reorder the covered name, which reverses T's ruling in `plan/phases/phase_BT2a_card_face.md` A3 (one uncapped line that runs on under its neighbour; T 2026-10-13, itself reversing the old wrap-in-the-sliver fix). The loop does not overturn a T call; this row waits on T's word.
 - source: critique:drive (unattended)
 
 
@@ -1192,6 +1183,16 @@
 - source: loop
 
 ## Done
+
+### [x] [LOW] hazard / mobile — the route-select top strip ellipsizes to "NO RETREAT — CHOOSE TO PROC…", cutting the instruction's verb — RESOLVED 2026-10-25 (branch loop/iterate-hazard-strip-fit, e574fe7d: the middle segment's letter spacing is fitted to the width by `topStripMidSpacing`, 2 at 414 and up, 1.2 at 375, floor 0.5; copy unchanged; pinned in RouteSelect.test.tsx)
+- pass: 100 (commit ee9c5b83)
+- issue: #900
+- viewport: mobile (375x812)
+- category: voice
+- observation: since d63cf279 the middle segment of the hazard strip shrinks to one ellipsized line. At 375 wide it reads "NO RETREAT — CHOOSE TO PROC…", so the one line that tells the player what to do loses its last word. Desktop prints it whole.
+- evidence: `.critique-artifacts/mobile/10-hazard.png` (top strip); `axiomancer-mobile/components/hazard/RouteSelect.tsx:177`.
+- suggested fix: tighten the strip's letter spacing at narrow widths or shorten the copy so it fits at 375 (for example "NO RETREAT — CHOOSE A ROUTE"); pin the fit in RouteSelect.test.tsx.
+- source: critique:drive (unattended)
 
 ### [x] [HIGH] ci / critique-drive — captures are taken mid-fade since VE1b: the onboarding menu and the hazard routes never show — RESOLVED 2026-10-25 (branch loop/iterate-critique-drive-settle, 70877f90: onboarding settles on `menuSettled` (the title menu opaque), hazard on `entranceSettled` (no finite CSS animation under the route select on two polls in a row), and the hub boots `fresh-start` and passes the omen and the first-waypoint ring instead of bouncing to the title; checked by eye at both viewports; pinned in critique-drive.test.mjs)
 - pass: 98 (commit f8058ad6); raised MED to HIGH at pass 99 (commit 02f94d07)
