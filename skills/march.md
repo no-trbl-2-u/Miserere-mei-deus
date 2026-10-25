@@ -276,7 +276,8 @@ gh pr checks "loop/<verb>-<slug>" --repo "$GH_REPO" --required --watch --fail-fa
   shot that exists on the PR head (a full path, or a bare file name
   the head holds), or a backticked `npm`, `node` or `npx` command;
   or it ends with `(no test: <reason>)`, which `verify-gate`'s
-  summary lists for T. A ticked line with neither, or naming a file
+  summary lists for T; the reason holds no parentheses of its own,
+  or the line reads as naming no proof (ship BV3). A ticked line with neither, or naming a file
   the head lacks, turns `verify-gate` red. Check the body before
   opening the PR: `node scripts/pr-acceptance.mjs --body-file
   "$body"`. The step reads the body live, so after editing a red
