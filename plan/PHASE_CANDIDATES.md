@@ -801,12 +801,7 @@
 
 - promote with `/plot`.
 
-### [ ] [owner] [score 5.0] The decided reward rule, implemented: relic lanes feed the reward slot and the cache shows its card
-- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm, R8; CRITIQUE RC2 item 11)
-- part plan: `plan/revamp/cards.md` "The Elementalist after the swarm" (Rewards); D68, D71, D100 at "Deck model"
-- T's reward rule (2026-10-24, refining D68/D71/D100): "random" means drawn from every lane the player has unlocked, and a lane unlocks the moment one of its relics is in the inventory (equipped or not). With one lane relic equipped the offer is 2 random + 1 from that lane; with three relics of one lane equipped, 1 random + 2 from the lane. Read here as the rule for every card reward, the cache included (T answered the cache question with the rule itself); if the cache is meant to stay outside it, that is one line to strike.
-- proposed scope: 1 phase (M). `rewardPoolFor` (`combat.rewards.ts:60-67`) reads the inventory for unlocked lanes and the equipped relics for the lane slots (0 / 1 / 2 of 3), with the dev override kept as an override; the cache's TAKE A CARD previews the card before the pick. Engine change verified against mobile. (A "no owned card re-offered" line was withdrawn 2026-10-24: duplicates are allowed, an agent took a second P-02; the swarm only noted that the spoils offered an owned card.)
-- conflicts: D68's "relics never touch non-combat rewards" is superseded by T's rule above if the cache follows it; the `/plot` records the amendment as a D-number. The lane relics themselves are EL1 step-7 content (D88), so until one exists every lane is locked and every offer is grey.
+
 - promote with `/plot`.
 
 ### [ ] [owner] [score 4.0] The Elementalist's names and one sentence of identity (T's card session)
@@ -869,6 +864,8 @@ Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_
 
 - **[score 6.0] No single owner for save/persistence policy — a mid-encounter reload still lands the player past the fight** — promoted via /oversight 2026-09-28 as Phase **R9a** (save checkpoint in fights), a gate item for RC. Brief: `plan/revamp/checkpoint.md` (decided: mobile stays the save owner, documented; a node is consumed when its encounter settles).
 
+
+- **[owner] [score 5.0] The decided reward rule, implemented: relic lanes feed the reward slot and the cache shows its card** (proposed 2026-10-24, T's `/messy` of the Elementalist swarm, R8; CRITIQUE RC2 item 11) — plotted as RW1 via `/plot` 2026-10-25 (T, "plot them all"), as Phases **RW1a** (the rule in the engine) and **RW1b** (the cache shows its card), slotted anytime. Brief `plan/phases/phase_RW1_reward_rule.md`. T's reward rule recorded as D104 (amends D68 and D71); duplicates allowed.
 
 - **[owner] [score 4.0] Roster-health lenses for /iterate** (proposed 2026-10-12, R11 item 6) — briefed via `/plot` 2026-10-12 as Phase **RH1**, slotted anytime after R12. Brief `plan/phases/phase_RH1_roster_health_lenses.md`. Dangling references become `gap` findings the loop fixes; orphans are pinned and filed `[content]` for T (D88). Shipped 2026-10-13 in PR #507: 0 dangling, 1 orphan (`relic-bleeding-signet`).
 
