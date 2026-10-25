@@ -31,8 +31,9 @@ A phase Item's Status is derived by `node scripts/deadlines.mjs --write`; never 
 cannot see an Item whose premise is gone, so `/plot` and `/messy` carry a reconcile step that edits such Items.
 
 Answering a **balance/measurement** question (win rates, engagement)? Read
-`docs/reports/measured/latest.md` (phase R12a: the grey and Blood Price
-decks across the Act 1 ledger, plus Blood Price half-upgraded, UP1g) and name the commit its stamp gives. It is a
+`docs/reports/measured/latest.md` (phase R12a: the grey, Blood Price and Elementalist
+decks across the Act 1 ledger, plus Blood Price half-upgraded, UP1g, and EM1's two sampled
+families and self-burn column) and name the commit its stamp gives. It is a
 measurement, not a gated baseline (D57); a question it does not cover gets
 "not measured". Never cite the retired deck-matrix baseline (it lives only
 under the `archive-pre-revamp` tag) — see `docs/truth-sources.md` →

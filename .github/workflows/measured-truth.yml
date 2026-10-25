@@ -1,8 +1,11 @@
 name: measured-truth
 
 # The measured-truth run (phase R12a). Measures the grey deck and the Blood
-# Price test deck across every Act 1 ledger fight at three stat spreads with
-# the greedy witness; appends one line to docs/reports/measured/history.jsonl,
+# Price and Elementalist test decks (plus Blood Price half-upgraded) across
+# every Act 1 ledger fight at three stat spreads with the greedy witness, two
+# sampled families (elementalist~20of30 and mixed~20of60, `draws` seeded
+# draws each, reported as median and range) and every deck's VITAE lost to its
+# own INFERNO (phase EM1); appends one line to docs/reports/measured/history.jsonl,
 # rewrites docs/reports/measured/latest.md, and files a `[content]` row in
 # plan/AUDIT.md (plus its issue) for each drift past thresholds.json against
 # the previous line. A measurement, not a gate (D57): a number never fails this
@@ -27,6 +30,10 @@ on:
         description: 'Seeded runs per cell'
         type: string
         default: '300'
+      draws:
+        description: 'Seeded draws per sampled family'
+        type: string
+        default: '16'
 
 permissions:
   contents: write
@@ -61,7 +68,8 @@ jobs:
         id: measure
         env:
           RUNS: ${{ inputs.runs || '300' }}
-        run: npm run measured:truth -- "--runs=${RUNS}" --seed=1
+          DRAWS: ${{ inputs.draws || '16' }}
+        run: npm run measured:truth -- "--runs=${RUNS}" --seed=1 "--draws=${DRAWS}"
 
       - name: Commit the report
         shell: bash

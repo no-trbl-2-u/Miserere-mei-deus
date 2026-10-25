@@ -4,7 +4,8 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 
 import {
-  auditRowPrefix, compare, fileDrifts, historyLine, renderAuditRow, renderDigestSection, renderLatest,
+  auditRowPrefix, compare, familyCellText, fileDrifts, historyLine, renderAuditRow, renderDigestSection,
+  renderLatest, selfBurnRows,
 } from './measured-compare.mjs'
 
 function cell(over = {}) {
@@ -125,4 +126,80 @@ test('renderDigestSection: no run, a stale run, a first run, no drift and drifts
   assert.match(withDrift, /1 drift\(s\)/)
   assert.match(withDrift, /bw-17\/death-beholder, grey even: winRate 50% -> 20%/)
   assert.match(withDrift, /compared with aaaaaaa/)
+})
+
+const family = {
+  family: true, laneIds: ['elementalist'], poolSize: 30, drawSize: 20,
+  draws: [['a'], ['b'], ['c']], deadCardRate: 0.05,
+}
+
+function famLine() {
+  return line([
+    cell({ selfBurnMean: 0 }),
+    cell({ deck: 'elementalist', selfBurnMean: 2.5, playerHpTakenMean: 6 }),
+    cell({
+      deck: 'elementalist~20of30', winRate: 0.9, lowestVitaeFractionP10: 0.4, selfBurnMean: 1,
+      winRateMin: 0.75, winRateMax: 1, lowestVitaeFractionP10Min: 0.2, lowestVitaeFractionP10Max: 0.6,
+    }),
+  ], {
+    decks: {
+      grey: { deckCards: ['grey-strike'], deadCardRate: 0 },
+      elementalist: { deckCards: Array(20).fill('x'), deadCardRate: 0 },
+      'elementalist~20of30': family,
+    },
+  })
+}
+
+test('historyLine: keeps selfBurnMean and the family range fields, and adds none a cell lacks', () => {
+  const report = famLine()
+  const h = historyLine(report, { date: '2026-10-25', commit: 'ccccccc' })
+  assert.equal(h.cells[0].selfBurnMean, 0)
+  assert.equal(h.cells[2].winRateMin, 0.75)
+  assert.equal(h.cells[2].lowestVitaeFractionP10Max, 0.6)
+  assert.equal('winRateMin' in h.cells[0], false)
+  const old = historyLine({ runs: 300, seed: 1, cells: [cell()], decks: {} }, { date: '2026-10-13', commit: 'b' })
+  assert.equal('selfBurnMean' in old.cells[0], false)
+  assert.equal(h.decks['elementalist~20of30'].draws.length, 3)
+})
+
+test('familyCellText: median win / median p10 and the win-rate range', () => {
+  assert.equal(familyCellText(famLine().cells[2]), '90% / 0.40 (75%-100%)')
+  assert.equal(familyCellText(undefined), '-')
+})
+
+test('renderLatest: plain decks in the fight table, families in Sampled decks, a Self-burn section', () => {
+  const md = renderLatest(famLine())
+  const [fightTable, rest] = md.split('## Sampled decks')
+  assert.match(fightTable, /\| fight \| level \| grey even \| elementalist even \|/)
+  assert.doesNotMatch(fightTable, /~20of30/)
+  assert.match(rest, /\| fight \| level \| elementalist~20of30 even \|/)
+  assert.match(rest, /\| 90% \/ 0\.40 \(75%-100%\) \|/)
+  assert.match(md, /## Self-burn/)
+  assert.match(md, /\| elementalist \| 6\.0 \| 2\.5 \| 6\.0 \| 2\.5 \|/)
+  assert.match(md, /\| grey \| 40\.0 \| 0\.0 \|/)
+  assert.match(md, /- \*\*elementalist~20of30\*\*: 3 draws of 20 distinct cards from a 30-card pool \(elementalist\); mean dead-card rate 5%/)
+  assert.doesNotMatch(md, /\["a"\]/)
+})
+
+test('selfBurnRows: an old line with no selfBurnMean renders no section; a missing field reads -', () => {
+  assert.deepEqual(selfBurnRows(line([cell()])), [])
+  assert.doesNotMatch(renderLatest(line([cell()])), /Self-burn|Sampled decks/)
+  const mixed = selfBurnRows(line([cell({ selfBurnMean: 1 }), cell({ deck: 'old' })]))
+  assert.ok(mixed.includes('| old | 40.0 | - | 40.0 | - |'))
+})
+
+test('compare: no drift for a deck the previous line lacks, a family cell drifts like a deck', () => {
+  const current = famLine()
+  assert.deepEqual(compare({ current, previous }), [])
+  const before = famLine()
+  const moved = famLine()
+  moved.cells[2] = { ...moved.cells[2], winRate: 0.5 }
+  const drifts = compare({ current: moved, previous: before })
+  assert.deepEqual(drifts.map((d) => [d.deck, d.metric]), [['elementalist~20of30', 'winRate']])
+})
+
+test('renderDigestSection: still renders the doors with families in the line', () => {
+  const out = renderDigestSection(famLine(), null, [])
+  assert.match(out, /Doors/)
+  assert.doesNotMatch(out, /~20of30/)
 })

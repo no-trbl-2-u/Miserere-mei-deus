@@ -8,8 +8,12 @@
 // A history line is `{ date, commit, runs, seed, cells, decks }`; a cell is
 // `{ fight, isBoss, playerLevel, enemyLevel, spread, deck, winRate,
 // meanRounds, lowestVitaeFractionMean, lowestVitaeFractionP10,
-// playerHpTakenMean }`. This is a measurement, not a gate (D57): nothing here
-// fails on a number.
+// playerHpTakenMean, selfBurnMean }`, and a sampled-family cell (phase EM1)
+// adds `winRateMin`, `winRateMax`, `lowestVitaeFractionP10Min` and
+// `lowestVitaeFractionP10Max`; a family's `decks` entry carries `family: true`.
+// Lines written before a field existed lack it, and every reader here treats a
+// missing field as absent, never as 0. This is a measurement, not a gate
+// (D57): nothing here fails on a number.
 
 /** Default drift thresholds; `docs/reports/measured/thresholds.json` overrides them. */
 export const DEFAULT_THRESHOLDS = Object.freeze({ winRatePoints: 10, lowestVitaeP10: 0.15, meanRounds: 2 })
@@ -165,6 +169,11 @@ export function fileDrifts(auditText, drifts, date) {
   return { text: lines.join('\n'), added, evidenced }
 }
 
+/** The optional cell fields a history line keeps when the report has them. */
+const OPTIONAL_CELL_FIELDS = Object.freeze([
+  'selfBurnMean', 'winRateMin', 'winRateMax', 'lowestVitaeFractionP10Min', 'lowestVitaeFractionP10Max',
+])
+
 /**
  * The history line a CLI report becomes: the stamp plus slimmed cells.
  *
@@ -179,13 +188,19 @@ export function historyLine(report, { date, commit }) {
     winRate: c.winRate, meanRounds: c.meanRounds,
     lowestVitaeFractionMean: c.lowestVitaeFractionMean, lowestVitaeFractionP10: c.lowestVitaeFractionP10,
     playerHpTakenMean: c.playerHpTakenMean,
+    ...Object.fromEntries(OPTIONAL_CELL_FIELDS.filter((k) => typeof c[k] === 'number').map((k) => [k, c[k]])),
   }))
   return { date, commit, runs: report.runs, seed: report.seed, cells, decks: report.decks }
 }
 
-/** Deck ids and spreads in first-seen order. */
-function axes(line) {
-  const decks = [...new Set(line.cells.map((c) => c.deck))]
+/** Whether a deck id names a sampled family in this line. */
+function isFamily(line, deck) {
+  return line.decks?.[deck]?.family === true
+}
+
+/** Deck ids and spreads in first-seen order; `families` picks the sampled ones. */
+function axes(line, { families = false } = {}) {
+  const decks = [...new Set(line.cells.map((c) => c.deck))].filter((d) => isFamily(line, d) === families)
   const spreads = [...new Set(line.cells.map((c) => c.spread))]
   return { decks, spreads }
 }
@@ -195,16 +210,25 @@ function cellText(cell) {
   return cell ? `${Math.round(cell.winRate * 100)}% / ${cell.lowestVitaeFractionP10.toFixed(2)}` : '-'
 }
 
-/** The fight-by-column table rows for a history line. */
-function tableRows(line, filter = () => true) {
-  const { decks, spreads } = axes(line)
+/** `median win% / median p10 (lowest-highest win%)` for one family cell, or `-`. */
+export function familyCellText(cell) {
+  if (!cell) return '-'
+  const pct = (x) => `${Math.round(x * 100)}%`
+  const range = typeof cell.winRateMin === 'number' ? ` (${pct(cell.winRateMin)}-${pct(cell.winRateMax)})` : ''
+  return `${cellText(cell)}${range}`
+}
+
+/** The fight-by-column table rows for a history line: the plain decks, or the families. */
+function tableRows(line, filter = () => true, { families = false } = {}) {
+  const { decks, spreads } = axes(line, { families })
+  const text = families ? familyCellText : cellText
   const header = ['fight', 'level', ...decks.flatMap((d) => spreads.map((s) => `${d} ${s}`))]
   const rows = [`| ${header.join(' | ')} |`, `|${header.map(() => '---').join('|')}|`]
   const fights = [...new Set(line.cells.filter(filter).map((c) => c.fight))]
   for (const fight of fights) {
     const row = line.cells.filter((c) => c.fight === fight)
     const first = row[0]
-    const cols = decks.flatMap((d) => spreads.map((s) => cellText(row.find((c) => c.deck === d && c.spread === s))))
+    const cols = decks.flatMap((d) => spreads.map((s) => text(row.find((c) => c.deck === d && c.spread === s))))
     rows.push(`| ${fight}${first.isBoss ? ' (door)' : ''} | L${first.playerLevel} v L${first.enemyLevel} | ${cols.join(' | ')} |`)
   }
   return rows
@@ -220,6 +244,40 @@ export function stamp(line) {
   return `measured at ${line.commit}, ${line.date}, ${line.runs} runs, seed ${line.seed}`
 }
 
+/** Mean of a field over cells that carry it, to one place, or `-` when none does. */
+function meanText(cells, field) {
+  const xs = cells.map((c) => c[field]).filter((x) => typeof x === 'number')
+  return xs.length ? (xs.reduce((a, b) => a + b, 0) / xs.length).toFixed(1) : '-'
+}
+
+/**
+ * The Self-burn section: per deck, the mean VITAE per fight taken from foes
+ * against lost to its own INFERNO, over all cells and at the doors.
+ *
+ * @param {object} line a history line.
+ * @returns {string[]} the section's lines, or none when no cell carries `selfBurnMean`.
+ */
+export function selfBurnRows(line) {
+  if (!line.cells.some((c) => typeof c.selfBurnMean === 'number')) return []
+  const decks = [...new Set(line.cells.map((c) => c.deck))]
+  const rows = [
+    '## Self-burn',
+    '',
+    'Mean VITAE per fight the deck lost to the foe\'s threats against what it lost to its own INFERNO '
+      + '(medians for a sampled family).',
+    '',
+    '| deck | from foes, all fights | own INFERNO, all fights | from foes, doors | own INFERNO, doors |',
+    '|---|---|---|---|---|',
+  ]
+  for (const deck of decks) {
+    const all = line.cells.filter((c) => c.deck === deck)
+    const doors = all.filter((c) => c.isBoss)
+    rows.push(`| ${deck} | ${meanText(all, 'playerHpTakenMean')} | ${meanText(all, 'selfBurnMean')} `
+      + `| ${meanText(doors, 'playerHpTakenMean')} | ${meanText(doors, 'selfBurnMean')} |`)
+  }
+  return [...rows, '']
+}
+
 /**
  * Renders `docs/reports/measured/latest.md` from a history line.
  *
@@ -227,9 +285,23 @@ export function stamp(line) {
  * @returns {string} the whole file.
  */
 export function renderLatest(line) {
-  const deckLines = Object.entries(line.decks).map(([id, d]) =>
-    `- **${id}**: ${d.deckCards.length} cards; dead-card rate ${Math.round(d.deadCardRate * 100)}% `
-      + '(mean share of the deck never played in a cell).')
+  const deckLines = Object.entries(line.decks).map(([id, d]) => (d.family
+    ? `- **${id}**: ${d.draws.length} draws of ${d.drawSize} distinct cards from a ${d.poolSize}-card pool `
+      + `(${d.laneIds.join(' + ')}); mean dead-card rate ${Math.round(d.deadCardRate * 100)}% `
+      + '(every draw is in `history.jsonl`).'
+    : `- **${id}**: ${d.deckCards.length} cards; dead-card rate ${Math.round(d.deadCardRate * 100)}% `
+      + '(mean share of the deck never played in a cell).'))
+  const familyRows = axes(line, { families: true }).decks.length
+    ? [
+        '## Sampled decks',
+        '',
+        'Each family is measured as seeded draws, each played as a deck. A cell reads **median win rate / median '
+          + 'lowest-VITAE p10 (lowest-highest win rate over the draws)**.',
+        '',
+        ...tableRows(line, () => true, { families: true }),
+        '',
+      ]
+    : []
   return [
     '# Measured truth',
     '',
@@ -244,6 +316,8 @@ export function renderLatest(line) {
     '',
     ...tableRows(line),
     '',
+    ...familyRows,
+    ...selfBurnRows(line),
     '## Decks',
     '',
     ...deckLines,
