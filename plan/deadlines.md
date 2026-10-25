@@ -65,9 +65,11 @@ left; otherwise after.
 
 ### W3 — Card upgrades and every event node works (Nov 17 - Nov 30)
 
-- To plot at the start of W3: an audit of all twelve map event kinds in Act 1 (encounter, interaction,
-  gathering, rest, village, cutscene, hazard, loot cache, narration, blacksmith, travel, labyrinth) with a fix for
-  each that does not work.
+- Plotted early (T, 2026-10-25) as AW1a-AW1b (`plan/phases/phase_AW1_act1_walk.md`): the audit of all twelve map
+  event kinds (encounter, interaction, gathering, rest, village, cutscene, hazard, loot cache, narration,
+  blacksmith, travel, labyrinth) rides on a browser walk across all four Act 1 doors, and a test pairs each node's
+  blurb with its event. The walk's code fixes are AW1a's; copy and map fixes are content (D88) and come to T as
+  `[content]` rows, so the W3 demo's "every node resolves" can also wait on T's answers to those.
 - Rows: UP1a-UP1g (plotted 2026-10-20, `plan/phases/phase_UP1_card_upgrades.md`): Blood Price names, the upgrade
   law (rarity limits upgrades; numbers go up), Blood for Blood as the first rare, and the rest, blacksmith and
   elite grant paths. The grant call was made in the 2026-10-20 session. UP1h, the boss check, waits for B2 (W4).
@@ -136,7 +138,7 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 | [ ] | 2026-11-13 | Bands on the calibrated measure | W2 | HP2f |
 | [x] | 2026-11-16 | Loop gates, real-fight tests, report sweep | W2 | LG1a, LG1b, LG1c, LG1d, LG1e, LG1f, LG1g, CT1a, CT1b, RS1 |
 | [ ] | 2026-11-16 | W2 demo: an Act 1 run with every hazard a puzzle | W2 | T |
-| [ ] | 2026-11-17 | Event-node audit and fixes (all twelve kinds) | W3 | needs plot |
+| [ ] | 2026-11-17 | Event-node audit (all twelve kinds): the Act 1 walk across four doors, its code fixes, blurbs paired; copy and map fixes go to T as `[content]` rows | W3 | AW1a, AW1b |
 | [x] | 2026-11-17 | Card-upgrade path | W3 | UP1a, UP1b, UP1c, UP1d, UP1e, UP1f, UP1g |
 | [x] | 2026-11-18 | Upgrade grant call | W3 | T |
 | [ ] | 2026-11-30 | W3 demo: a four-region walk, every node resolves | W3 | T |
@@ -235,6 +237,12 @@ attended session.
 ## Change log
 
 - **2026-10-25** — **fewer taps plotted** (T, `/plot`, run unattended by a workflow). **Added** an Unscheduled line for TQ1: T set no date, and it blocks no window's goal. **Edited** no Item: the W3 "Event-node audit and fixes (all twelve kinds)" Item still holds, since TQ1 changes how rest, cache and the anvil exit, not whether each node kind resolves. Nothing ticked; no date moved.
+- **2026-10-25** — **the Act 1 walk plotted** (T asked "plot them all, one plot run, one PR"; `/plot` run
+  unattended, anytime). **Edited** the W3 Item "Event-node audit and fixes (all twelve kinds)": its `needs plot` is
+  now AW1a, AW1b, and its name says the fixes split, code in AW1a and copy or map fixes to T as `[content]` rows
+  (D88). The W3 section's "to plot" line now names the plot. The W3 demo Item and the W5 "Playtester walk of all
+  four regions" Item still hold (a scripted walk that skips fights is not T's walk nor a playtester's), so neither
+  changed. Nothing ticked; no date moved.
 - **2026-10-25** — **the board glossary plotted** (T, conversation, `/plot`, unattended run). **Added** an Unscheduled line for GL1: T set no date, and the row blocks no window's goal (it serves the board, not a window demo). **Edited** no Item: no open Item's premise depends on the board's glossary. Nothing ticked; no date moved.
 - **2026-10-25** — **the Elementalist measured truth plotted** (T in conversation, `/plot` run unattended: "plot them all ... one plot run, one PR"). **Added** an Unscheduled line for EM1: T set no date, and it blocks no window's goal. **Edited** no Item: the W4 "Combat playtest (winnable and dangerous)" Item (R12) keeps its premise, since EM1 adds columns to the report R12 reads and decides no policy. Nothing ticked; no date moved.
 - **2026-10-24** — **the Elementalist swarm `/messy`** (T, attended session). **Edited** the W2 Item "Act 1 puzzle set, live hazard routing and the cuts": T ruled the Act 1 set is not authored now; each of the seven Act 1 hazard nodes (Breakwater 2, Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2) draws a random puzzle from the thirty, and the routing plus the cuts are what W2 plots (still `needs plot`). **Added** a `T` Item for 2026-11-13: plot the swap to a hand-picked seven after playing the thirty in `/dev`. Nothing ticked; no date moved; candidates only, no rows.
