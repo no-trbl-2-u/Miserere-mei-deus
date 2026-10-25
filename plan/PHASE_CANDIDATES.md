@@ -399,6 +399,7 @@
 - conflicts: none; creates no content.
 
 ### [ ] [score 5.0] Victory and mercy panels do not say what the player gained
+- **Swarm note (2026-10-24, T's `/messy`):** seen again on the Elementalist: `CombatVictoryPanel` is imported by nothing but its test (the live route exits from the summary), a level-up L15→16 applied with no screen, and SPARE / EXPLOIT are still bare words (`CombatEncounterPanel.tsx:825-826`). `plan/revamp/mobile.md` "The board says what it does".
 - proposed: 2026-10-02, RC walk (legs 2 and 3); accepted for the RC tag by T (2026-10-02), ships after it
 - source signals: a won fight's +XP and a mercy's +110 XP and potions are shown on no panel; potions arrive silently in the Satchel. The engine's `CombatEndReport` already carries `xpGained` and `loot`.
 - proposed scope: 1 small phase (presentation). The victory and mercy summaries print the report's XP and loot; a presenter test pins both.
@@ -631,6 +632,7 @@
   (CRITIQUE `[MED]` pass 85, #532), because `riderPairs` in the presenter
   maps only `guard` and `applyEffect`. Fixed alone in #534; the contract
   test this row proposes would have caught it.
+- **Swarm note (2026-10-24, T's `/messy`):** the DECK list omits the free NO-DIE line entirely, not only its scaling: P-02 reads DEAL 9 on the DECK tab, 19 in hand, "NO DIE 6 / +DIE 19" in the preview; with two dead dice on turn 1 every card an agent could play did something other than the list said (`docs/reports/playtest-elementalist-act1-2026-10-24.md` R2, all four agents).
 - proposed: 2026-10-12, expand pass 31
 - source signals:
   - `plan/CRITIQUE.md` `[LOW]` RC2 walk 2026-10-11, items 3 (the Hag's reveal lists phase 3 at 15, the HUD says "Deals 22"; a Float-Eye phase listed at 13 hit 19, 22 and 24), 4 (DECK prints base numbers, the hand prints scaled ones: P-01a DECK "DEAL 16", hand and log 22), 5 (card faces mix the free and paid lines, so a free play does what the face does not say), 8 (the summary counts LEECH ticks as plays and drops the EXPLOIT blow) and 10 (an unpowered Global's 3-turn chip against "in play for the rest of combat").
@@ -793,6 +795,28 @@
 - T's call (2026-10-24): no authored set now. Each of the seven Act 1 hazard nodes (Breakwater 2, Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2) draws a random puzzle from the thirty; the hand-picked seven is a later `/plot` of T's ("the swap", `plan/deadlines.md` T Item 2026-11-13) once T has played the thirty in `/dev`.
 - proposed scope: 2 rows under one `/plot`. (a) `app/hazard` resolves to the puzzle board under the puzzle's clock and outcome, the node drawing one of the thirty at random (seeded, so a run replays). (b) The cuts: three-round engine paths, RE-CAST cards, the saved hazard deck and its screens, `deadcard`, a save migration dropping `hazard-card:` flags; the "Hazard deck-thinning remove-card consumer" candidate retired; a net VITAE line on the reckoning if it survives.
 - conflicts: HP4f/HP4g (patterns, clocks) and HP2d–HP2f (calibration) run in the same window on the same kept set; (a) may wait on HP4e's rulings (Nov 2). T's untracked `HazardPuzzleBoardView.tsx` draft is in this folder.
+- promote with `/plot`.
+
+### [ ] [owner] [score 6.0] The board says what it does: the player's own INFERNO, "after BLIZZARD", and the END consequence on a dead tray
+- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm, findings R1, R3, R9, R15; two to three agents each)
+- part plan: `plan/revamp/mobile.md` "The board says what it does (T, 2026-10-24, `/messy`)" items 1–4
+- T's call (2026-10-24): the drag-to-stage is "obvious enough"; no hint and no PLAY on the sheet. Item 1 withdrawn.
+- proposed scope: 1 phase (M), mobile only, reading presenter state. A labelled player-side burn badge and a ledger tick line; the intent line carrying "after BLIZZARD −n" and one number where its flavour and label now disagree; `combat-end-consequence` whenever no live die matches any card. Measured by the swarm's numbers: VITAE deltas with no on-screen line, `blizzard-softened` events paired with text, `consequence:null` on all-MISS rounds.
+- conflicts: D92 board layout (no new chrome in the corners); the intent flavour is enemy copy (D88). "Printed equals applied" (this file) owns the numbers; this row owns the cues.
+- promote with `/plot`.
+
+### [ ] [owner] [score 4.5] A glossary a sighted player can reach: Conviction, momentum, SURGE, GHOST, BANKED, BOON/MANA/MISS, the rail, and "X" as "varies"
+- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm, R9, R18; CRITIQUE RC2 item 15 for Momentum)
+- part plan: `plan/revamp/mobile.md` "The board says what it does" item 5
+- proposed scope: 1 phase (S). Tap-to-read on each chip, die and rail count, from the same keyword popup store (`state/combat/keywords.ts`); the card face's "X" rendered as "varies". No card text changes.
+- conflicts: D91 if any face glyph changes beyond the X; otherwise none.
+- promote with `/plot`.
+
+### [ ] [owner] [score 4.5] Fewer taps between a decision and the next node: interstitials, the spoils pick, the purse and a potion nudge
+- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm, R10, R12; taps per node measured: rest 4, cache 4, spoil 4, map 2)
+- part plan: `plan/revamp/mobile.md` "The board says what it does" items 6–7
+- proposed scope: 1 phase (M). Rest and cache outcome cards merge into the choice or auto-advance; in SPOILS a tap selects and TAKE CARD confirms; one anvil exit when nothing was forged; shillings on the node sheet of a node that charges them; a low-VITAE potion nudge where T says it belongs. Measured by taps per node and by dead rest/anvil visits at 0 shillings.
+- conflicts: "Victory and mercy panels do not say what the player gained" owns the aftermath panel; rest/cache copy is event copy (D88).
 - promote with `/plot`.
 
 ## Promoted
