@@ -21,7 +21,7 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 | Dialogue | route | yes | yes | yes | no |
 | Event | route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Event") |
 | Index | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Index") |
-| Reward | route | yes | no | yes | no |
+| Reward | route | yes | yes | yes | no |
 | Rest | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Rest", "RestChoice", "rest node", "rest site") |
 | Saves | route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Saves") |
 | Settings | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Settings") |
