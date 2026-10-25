@@ -226,7 +226,6 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - PH1a — loop tooling, slotted asap; serves the attended playtester passes (HP2e, the W3 and W5 walks) but finishes no Item; date not set.
 - PH1b — loop tooling; follows PH1a; date not set.
 - PH1c — loop tooling (guide fixes and the guide test); blocks no window's goal; date not set.
-- EM1 — loop work; a measurement (D57) that blocks no window's goal; R12's Item (2026-12-11) still decides what the matrix measures; date not set.
 
 ## How a window closes
 
