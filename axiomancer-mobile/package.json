@@ -28,6 +28,7 @@
     "e2e:exploration-roundtrip": "node scripts/exploration-combat-roundtrip-e2e.mjs",
     "e2e:labyrinth-roundtrip": "node scripts/labyrinth-combat-roundtrip-e2e.mjs",
     "e2e:map-walk": "node scripts/map-walk-e2e.mjs",
+    "e2e:act1-walk": "node scripts/act1-walk-e2e.mjs",
     "e2e:feature-map": "node scripts/feature-map-e2e.mjs",
     "e2e:combat-round": "node scripts/combat-round-e2e.mjs",
     "e2e:combat-round:boss": "ENCOUNTER_KIND=boss PRESET=sage node scripts/combat-round-e2e.mjs",

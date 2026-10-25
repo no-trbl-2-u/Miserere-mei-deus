@@ -801,13 +801,6 @@
 
 - promote with `/plot`.
 
-### [ ] [owner] [score 4.5] Fewer taps between a decision and the next node: interstitials, the spoils pick, the purse and a potion nudge
-- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm, R10, R12; taps per node measured: rest 4, cache 4, spoil 4, map 2)
-- part plan: `plan/revamp/mobile.md` "The board says what it does" items 6–7
-- proposed scope: 1 phase (M). Rest and cache outcome cards merge into the choice or auto-advance; in SPOILS a tap selects and TAKE CARD confirms; one anvil exit when nothing was forged; shillings on the node sheet of a node that charges them; a low-VITAE potion nudge where T says it belongs. Measured by taps per node and by dead rest/anvil visits at 0 shillings.
-- conflicts: "Victory and mercy panels do not say what the player gained" owns the aftermath panel; rest/cache copy is event copy (D88).
-- promote with `/plot`.
-
 ### [ ] [owner] [score 5.0] The decided reward rule, implemented: relic lanes feed the reward slot and the cache shows its card
 - proposed: 2026-10-24, T's `/messy` (the Elementalist swarm, R8; CRITIQUE RC2 item 11)
 - part plan: `plan/revamp/cards.md` "The Elementalist after the swarm" (Rewards); D68, D71, D100 at "Deck model"
@@ -835,6 +828,12 @@
 Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_CANDIDATES_2026.md`.
 
 - (2026-10-25) **[owner] [score 6.0] The board says what it does: the player's own INFERNO, "after BLIZZARD", and the END consequence on a dead tray** (proposed 2026-10-24, T's `/messy` of the Elementalist swarm) was plotted as Phase **BC1** on T's request ("plot them all", 2026-10-25): your INFERNO captioned as yours with its per-turn loss and its tick named, `after BLIZZARD −n` on the intent from a new engine `blizzardCut`, one number on the intent's a11y line, and the dead tray counting MISS faces so END carries its consequence. Item 1 stays withdrawn (T, 2026-10-24). Brief `plan/phases/phase_BC1_board_cues.md`.
+- **[owner] [score 4.5] Fewer taps between a decision and the next node** (proposed 2026-10-24, T's `/messy`
+  of the Elementalist swarm, R10, R12) — plotted as **TQ1** by T's `/plot` on 2026-10-25, slotted anytime. Brief
+  `plan/phases/phase_TQ1_fewer_taps.md`. T then cut it to two changes (2026-10-25, "I only like spoils after a fight
+  and map node panel. Remove the others."): a spoils tap selects, and the node panel shows the purse. Rest and cache
+  settling on the choice, their toast and the idle anvil's single exit were cut by T; the low-VITAE potion nudge was
+  dropped by T ("nowhere yet"). Both sit under the brief's Follow-ups.
 - (2026-10-25) **[owner] [score 5.0] The Act 1 walk, proven: four doors, twelve kinds, `gathering` gone, node blurbs
   matched to their events** (T's `/messy` of 2026-10-24, R13) — plotted as AW1 (AW1a, AW1b) by T's `/plot`, run
   unattended 2026-10-25, slotted anytime. Brief `plan/phases/phase_AW1_act1_walk.md`; it answers the W3 Item

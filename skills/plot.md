@@ -107,8 +107,12 @@ Resolve every ambiguity under "Decisions made upfront — DO NOT ASK";
 if a call is genuinely T's and the session is attended, ask it
 (`AskUserQuestion`, at most 4 questions, recommendation first,
 `docs/asking-well.md`). If T is not present to answer, record the
-leading option as a decision and mark it `[T to confirm]`; the PR
-body lists each one.
+leading option as a decision and mark it `[T to confirm #n]`,
+numbered 1, 2, … in the order they appear in the brief. The PR
+body's `## Your calls` lists each one under the same number (Step
+5); a call T answers later by comment is rewritten in place
+(§3 "Answering T's calls"), and one still open when T merges is
+the default, accepted (§4 "Merge means agreement").
 
 ### Step 4 — Slot
 
@@ -200,9 +204,42 @@ loop/plot-<N>-<slug> <tmp> origin/main` instead (lesson
 
 The PR carries the `plot` label, **never `loop:pr`**: it does not
 count toward the PR cap (D85) and is not a claim. `pr-resolve` keeps
-it mergeable like a `loop:pr` PR (D87). Body:
+it mergeable like a `loop:pr` PR (D87).
+
+**The body is written for T first, the builder second (T,
+2026-10-25).** The brief speaks to the agent that builds the phase;
+the PR body opens by saying what the player or T will see, because
+T reads it to decide. `## What you'll see` comes first and holds no
+file paths, phase or acceptance IDs, D-numbers or code names: a
+before/after table in player or owner terms (what is on screen, what
+T can do, what changes in a run), one row per visible change, then
+one `Cost:` line giving the size in plain words and what it does not
+change. Write it as you would explain the plot to T across a table;
+if T would have to ask "what does that mean?", rewrite it. The
+engineering sections follow under it.
+
+`## Your calls` lists each `[T to confirm #n]` decision of the brief
+under the same number, as a question T can answer in a word: the
+default the brief assumes, then one or two alternatives in plain
+words. "nothing" when the brief has none. Body:
 
 ```markdown
+## What you'll see
+| Today | After this ships |
+|---|---|
+| <what the player or T sees or does now, in plain words> | <what they see or do once every phase lands> |
+
+Cost: <size in plain words, e.g. "one evening of agent work, one PR">. It does not change <what stays exactly as it is>.
+
+## Your calls
+1. <a question T can answer in a word>? Default: <what the brief assumes>. Or: <alternative>; or <alternative>.
+2. ...
+(or "nothing")
+
+To answer, comment `@claude 1: yes, 2: <word>` (or in your own words);
+the brief, the row and this body update on the branch. Merging with a
+call unanswered accepts its default.
+
 ## The task
 <1-3 lines, in T's terms>
 
@@ -221,17 +258,20 @@ attended piece, the contract first>
 <asap|anytime>: <where in the Status block, which rows come before
 it, and why>
 
-## To confirm
-- [T to confirm] <each such decision, or "nothing">
-
 ## After merge
 The next `/march` tick can pick <first id> (or why it cannot:
 attended, `Requires` unmet).
 ```
 
-To change the recommendation, T comments on the PR or asks in the
-session; the session edits the same branch (push, never force). T
-closing the PR unmerged drops the plot; nothing else needs undoing.
+`## Your calls` sits second, right under `## What you'll see`, so T
+reads what changes and what is asked before any engineering detail
+(`scripts/loop-pr.test.mjs` pins the order).
+
+To answer a call, T comments `@claude` on the PR (§3 "Answering T's
+calls"). To change the recommendation otherwise, T comments on the
+PR or asks in the session; the session edits the same branch (push,
+never force). T closing the PR unmerged drops the plot; nothing else
+needs undoing.
 
 `peek` stops before Step 4 and prints the brief and the phase table
 instead.
@@ -246,7 +286,71 @@ Two lines: the PR URL with its phase table, where the rows sit, and
 "merge to approve; the next `/march` tick can then pick <id>" (or
 why it cannot: attended, `Requires` unmet).
 
-## 3. Hard rules
+## 3. Answering T's calls
+
+T answers the PR's `## Your calls` by commenting on the open `plot`
+PR with `@claude`: numbered (`@claude 1: yes, 2: dock`) or in free
+text ("@claude keep the default for the first, and put it in the
+dock"). `.github/workflows/claude.yml` runs the Claude action on that
+comment and, because the PR carries the `plot` label and T wrote it,
+tells it to follow this section. The comment is T's word, so this is
+T firing the skill, not the loop. The action runs on the PR's branch.
+
+1. **Read.** The PR body's `## Your calls`, the brief it adds
+   (`plan/phases/phase_<N>_<topic>.md`), its build-plan row(s) in
+   `plan/steps/01_build_plan.md`, and any part-plan or
+   `plan/deadlines.md` lines the plot touched (the PR's diff names
+   them: `gh pr diff <n>`).
+2. **Parse the answers.** Map each to a call number. `yes`, `ok`,
+   `default` or `fine` keeps the default; a word or phrase that
+   matches an alternative picks it; anything else is a new answer in
+   T's words. Free text is matched to calls by what it talks about.
+   A call the comment does not mention stays open. If an answer is
+   genuinely ambiguous (it could mean two different builds), change
+   nothing for that call and ask about it in the reply.
+3. **Rewrite the plan to match**, on the PR's branch:
+   - the brief's decision for each answered call, and every
+     acceptance line, `Measure:`, Scope, Tests or phase block the
+     answer changes (a new answer can add or drop an acceptance ID;
+     keep every ID closed by exactly one phase);
+   - each answered marker `[T to confirm #n]` becomes
+     `Confirmed by T (<YYYY-MM-DD>): <answer in plain words>`; the
+     numbers of open calls do not change;
+   - the build-plan row's one line, size and `Requires` if the answer
+     changes them, and any part-plan or `plan/deadlines.md` line the
+     answer touches (a new date, a new row id, a premise gone).
+4. **Regenerate the PR body** (`gh pr edit <n> --body-file`): each
+   answered call reads `<n>. <question> Answered (<date>): <answer>`;
+   open calls stay as they were; `## What you'll see`, the phase
+   table and the size label are updated if the answer changes what
+   ships or how big it is (`gh pr edit <n> --add-label` /
+   `--remove-label`).
+5. **Re-run the deadline lint** (Step 4's two commands); both must
+   be clean.
+6. **Commit and push** to the PR's branch, plainly worded
+   (`phases: <N> — T's calls <numbers>`), never force; then **reply on
+   the PR**: one line per call (kept, changed to, or still open and
+   why), and the files the change touched.
+
+On a merged or closed `plot` PR, change nothing: reply that the plot
+is settled and that a new answer needs a new `/plot` (or `/plot <N>`
+to rewrite a row's brief). A comment on a `plot` PR that answers no
+call (a question, a different request) is handled as Step 5's "To
+change the recommendation": edit the same branch, push, reply.
+
+## 4. Merge means agreement
+
+T merging a `plot` PR approves the whole recommendation, so a call
+still unanswered at merge is its default, accepted. It does not hold
+the row (`skills/march.md` §3 "Pickable phase"). The marker is not
+left to go stale: when `/ship-a-phase` picks a row, it rewrites each
+`[T to confirm #n]` left in the row's brief to
+`Accepted at merge (default)` in its own PR
+(`skills/ship-a-phase.md` Step 2). An unnumbered `[T to confirm …]`
+in a brief plotted before 2026-10-25 reads the same way (default
+accepted) and is left as written.
+
+## 5. Hard rules
 
 1. **Never builds.** No code, no tests, no workflow edits.
 2. **Never fired by the loop.** A `skills/` file other than this

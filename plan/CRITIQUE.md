@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-10-25 at commit ee9c5b83
-> Pass count: 100
+> Last pass: 2026-10-25 at commit 83975010
+> Pass count: 101
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
@@ -839,7 +839,30 @@
 > per-arrival hazard draw (pass 64), and the unfixtured exploration hub
 > caught on the boot splash.
 
+> **[critique pass 101, 2026-10-25, commit 83975010] Unattended `/march`
+> tick.** `critique:drive` (`CRITIQUE_VIEWPORT=both`), full 11-screen
+> set: 22 captures, 0 nav trouble, 0 console/page errors. 13 commits
+> after pass 100: the hazard strip fit (#901), the rest/cache tense
+> (#912) and the hazard seed (#916) fixes, EM1 and AW1a (measurement and
+> the Act 1 walk audit, not in the set), and the plot PRs. The hazard
+> strip, hand fan and route cards render whole at both viewports, and
+> the rest screen reads in one tense. One fresh row (LOW, a11y): the
+> combat preview's "forfeit the path" line under WITHDRAW. Reconfirmed
+> and not re-filed: the covered fan names on a phone (pass 100, waiting
+> on T's BT2a call), the village Minor Healing Potion row, the map
+> legend's SEALED key, and the customs-house "takes shillings" line
+> above the free inn REST (pass 72's chosen copy).
+
 ## Pending
+
+### [LOW] combat preview — WITHDRAW's "forfeit the path" line prints at 8.5px in `AXM.ash`, about 1.95:1 against the page
+- pass: 101 (commit 83975010)
+- viewport: mobile (375x812) and desktop (1280x800)
+- category: a11y
+- observation: on the Float-Eye preview the WITHDRAW button's sub-line "FORFEIT THE PATH" is the only text that says what withdrawing costs, and it is the faintest text on the screen: barely legible in both captures. `withdrawSub` sets `fontSize: 8.5` and `color: AXM.ash` (`#46403a` in Ashen Gold), which measures 1.95:1 against the `#0b0a09` page (WCAG asks 4.5:1 for small text). The WITHDRAW label above it uses `AXM.bone`.
+- evidence: `.critique-artifacts/mobile/03-combat.png` and `desktop/03-combat.png` (below ENTER COMBAT); `axiomancer-mobile/components/combat/encounter/CombatEncounterPanel.tsx:811` and `:1375` `withdrawSub`.
+- suggested fix: draw the sub-line in `AXM.bone` at a size of at least 10, keeping it dimmer than WITHDRAW by opacity or weight, not by the ash token; presentation only, pinned in the panel's existing test.
+- source: critique:drive (unattended)
 
 ### [MED] combat / mobile — at 375 wide the hand fan cuts four of five card names to "A PLAIN" plus one letter, so Blow, Word and Ward look the same
 - pass: 100 (commit ee9c5b83)
