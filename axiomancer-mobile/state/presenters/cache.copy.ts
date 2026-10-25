@@ -7,7 +7,7 @@ import type { LootCacheChoiceOfferId } from '@mechanics';
 export const CACHE_CHOICE_EYEBROW = 'A FIND, UNCLAIMED';
 export const CACHE_CHOICE_TITLE = 'TWO WAYS TO LEAVE IT';
 export const CACHE_CHOICE_INTRO =
-    'The node is spent the moment you stopped here. Pick one — there is no walking back out.';
+    'The node is spent the moment you stop here. Pick one — there is no walking back out.';
 
 export const CACHE_CHOICE_OFFER_LABEL: Record<LootCacheChoiceOfferId, string> = Object.freeze({
     card: 'TAKE A CARD',
