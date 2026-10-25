@@ -389,6 +389,11 @@ the PR.
 gh pr checks loop/iterate-<slug> --repo "$GH_REPO" --required --watch --fail-fast
 ```
 
+Right after `gh pr create` the `verify-gate` row is not listed yet, and
+`--required --watch` exits at once on "no required checks" (lesson
+`checks-not-yet-registered`): poll `gh pr checks <n>` until `verify-gate`
+appears, then watch.
+
 Red on this fix: fix on the branch (push, never force), up to 3
 same-root-cause tries; then leave it to `pr-autofix` and report it.
 If the row carries `- issue: #N`, comment the PR URL on the issue

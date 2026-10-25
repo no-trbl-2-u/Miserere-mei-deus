@@ -225,7 +225,6 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - FM2d — attended; T's look in Obsidian once FM2b and FM2c ship; date not set.
 - RW1a — loop work; T's decided reward rule (D104), blocks no window's goal (lane relics are B1's, W5); date not set.
 - RW1b — loop work; the cache shows its card, blocks no window's goal; date not set.
-- EM1 — loop work; a measurement (D57) that blocks no window's goal; R12's Item (2026-12-11) still decides what the matrix measures; date not set.
 
 ## How a window closes
 
