@@ -35,6 +35,7 @@ import { readFile, stat, mkdir, writeFile, rm } from 'node:fs/promises'
 import { resolve, dirname, join, extname } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { enterLiveFight } from './live-fight-entry.mjs'
+import { injectMinigameSeeds } from './minigame-seed-injector.mjs'
 import { waitForReady } from './lib/page-ready.mjs'
 import { ensureWebExport } from './lib/web-export.mjs'
 
@@ -356,6 +357,15 @@ async function captureScreen(context, baseUrl, screen, viewport, outDir, index) 
     return entry
 }
 
+// A fresh context for one screen, with the shared minigame seeds pinned
+// (CRITIQUE pass 100: the hazard puzzle fell back to a clock seed, so the two
+// viewports and two passes captured different hazards and hands).
+export async function openScreenContext(browser, viewport) {
+    const context = await browser.newContext(contextOptions(viewport))
+    await injectMinigameSeeds(context)
+    return context
+}
+
 async function driveViewport(browser, baseUrl, viewport) {
     const dims = VIEWPORTS[viewport]
     const outDir = join(ARTIFACT_ROOT, viewport)
@@ -364,7 +374,7 @@ async function driveViewport(browser, baseUrl, viewport) {
     for (let i = 0; i < SCREENS.length; i++) {
         // Fresh context per screen = genuine cold, first-time-player state
         // (no leaked onboarding/combat state between screens).
-        const context = await browser.newContext(contextOptions(viewport))
+        const context = await openScreenContext(browser, viewport)
         try {
             entries.push(await captureScreen(context, baseUrl, SCREENS[i], viewport, outDir, i))
         } finally {
