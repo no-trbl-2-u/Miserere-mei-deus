@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-10-21 at commit 02f94d07
-> Pass count: 99
+> Last pass: 2026-10-25 at commit ee9c5b83
+> Pass count: 100
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
@@ -840,6 +840,35 @@
 > caught on the boot splash.
 
 ## Pending
+
+### [MED] combat / mobile — at 375 wide the hand fan cuts four of five card names to "A PLAIN" plus one letter, so Blow, Word and Ward look the same
+- pass: 100 (commit ee9c5b83)
+- viewport: mobile (375x812)
+- category: comprehension
+- observation: on the opening Float-Eye board the five-card hand overlaps so much that every covered card's name band shows only "A PLAIN" and the first letter of the second word ("A PLAIN W", "A PLAIN U", "A PLAIN B"), and the effect rows are cut too ("Deal", "♥ VULN", "★ GU"). The starter deck's three grey cards differ only by that second word, so a first-time player cannot tell Blow from Word from Ward by name; only the right-end card prints whole. Phase 97 (2026-09-19) had the covered names wrap inside their visible strip; at 1280 the fan no longer overlaps and every name prints.
+- evidence: `.critique-artifacts/mobile/04-combat-board.png` (hand row) against `desktop/04-combat-board.png`; `axiomancer-mobile/components/combat/encounter/CombatBoard.tsx:428` `handFanLayout` (`HAND_FAN_MIN_STEP` 28).
+- suggested fix: size a covered card's name to the strip it shows, as `handNameFontSize` does for hazard hand cards, or print the name's last word first, so the distinguishing word (BLOW / WORD / WARD) is always readable; presentation only, pinned in a CombatBoard hand-fan test at 375.
+- source: critique:drive (unattended)
+
+
+### [LOW] hazard / mobile — the route-select top strip ellipsizes to "NO RETREAT — CHOOSE TO PROC…", cutting the instruction's verb
+- pass: 100 (commit ee9c5b83)
+- viewport: mobile (375x812)
+- category: voice
+- observation: since d63cf279 the middle segment of the hazard strip shrinks to one ellipsized line. At 375 wide it reads "NO RETREAT — CHOOSE TO PROC…", so the one line that tells the player what to do loses its last word. Desktop prints it whole.
+- evidence: `.critique-artifacts/mobile/10-hazard.png` (top strip); `axiomancer-mobile/components/hazard/RouteSelect.tsx:177`.
+- suggested fix: tighten the strip's letter spacing at narrow widths or shorten the copy so it fits at 375 (for example "NO RETREAT — CHOOSE A ROUTE"); pin the fit in RouteSelect.test.tsx.
+- source: critique:drive (unattended)
+
+
+### [LOW] ci / critique-drive — the hazard capture is unseeded, so the two viewports (and two passes) play different hazards
+- pass: 100 (commit ee9c5b83)
+- viewport: both
+- category: infra
+- observation: the `l30-bw-hazard-arrive` fixture carries a seed, but the hazard minigame resolves its own seed through `resolveMinigameSeed`, which falls back to `Date.now() ^ Math.random()` when no `__AXM_MINIGAME_SEEDS__` global is set. `critique:drive` sets none, so this pass captured The Famine March at 375 and Flooded Undercroft at 1280, with different hands. A mobile/desktop comparison, or a before/after across passes, is not like for like.
+- evidence: `.critique-artifacts/mobile/10-hazard.txt` against `desktop/10-hazard.png`; `axiomancer-mobile/state/minigame-seeds.ts` `fallbackMinigameSeed`; `axiomancer-mobile/scripts/critique-drive.mjs` hazard entry (no seed); `scripts/minigame-seed-injector.mjs` already exists for `hazard-e2e`.
+- suggested fix: have the hazard entry in `critique-drive.mjs` inject a fixed hazard seed with the existing `minigame-seed-injector.mjs` before navigation; pin it in critique-drive.test.mjs.
+- source: critique:drive (unattended)
 
 
 ### [LOW] play log / fight recorder — the opening hand never reaches the fight's event stream
