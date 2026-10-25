@@ -77,3 +77,23 @@ test('the mobile context is a touch device and the desktop context keeps the mou
         viewport: { width: 1280, height: 800 }, hasTouch: false, isMobile: false,
     })
 })
+
+// CRITIQUE pass 100: the hazard capture was unseeded, so mobile and desktop
+// (and pass against pass) played different hazards. Every screen's context
+// carries the shared minigame seeds.
+test('every screen context pins the shared minigame seeds', async () => {
+    const { openScreenContext } = await import('./critique-drive.mjs')
+    const { DEFAULT_MINIGAME_SEEDS } = await import('./minigame-seed-injector.mjs')
+    const scripts = []
+    const browser = {
+        newContext: async (opts) => ({ opts, addInitScript: async (fn, arg) => { scripts.push(arg) } }),
+    }
+    for (const vp of ['mobile', 'desktop']) {
+        const context = await openScreenContext(browser, vp)
+        assert.equal(context.opts.viewport.width, vp === 'mobile' ? 375 : 1280)
+    }
+    assert.equal(scripts.length, 2)
+    for (const arg of scripts) {
+        assert.equal(arg.minigameSeeds.hazard.seed, DEFAULT_MINIGAME_SEEDS.hazard.seed)
+    }
+})
