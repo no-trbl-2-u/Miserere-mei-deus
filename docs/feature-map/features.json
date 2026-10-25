@@ -763,8 +763,8 @@
         "source": "flow path from route:index: route:index -> route:item-reward"
       },
       "driven": {
-        "value": false,
-        "source": null
+        "value": true,
+        "source": "axiomancer-mobile/scripts/critique-drive.mjs"
       },
       "tested": {
         "value": true,

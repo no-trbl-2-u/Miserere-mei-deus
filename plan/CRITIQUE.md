@@ -842,16 +842,6 @@
 ## Pending
 
 
-### [HIGH] ci / critique-drive — captures are taken mid-fade since VE1b: the onboarding menu and the hazard routes never show
-- pass: 98 (commit f8058ad6); raised MED to HIGH at pass 99 (commit 02f94d07)
-- viewport: both (375x812 and 1280x800)
-- category: infra
-- observation: VE1b replaced `captureScreen`'s fixed `waitForTimeout(700)` with `waitForReady`. The ready flag is set once at boot, when the fonts settle, so on the onboarding entry it is already true when EMBARK is clicked; the shot lands two frames after the click. Both `02-onboarding.png` captures show the title plate still up and the THE CHRONICLE / NEW GAME / LOAD GAME / SETTINGS menu faint beneath it, while `02-onboarding.txt` lists every menu line. The critique lens on the new-player menu is blind until this is fixed. The unfixtured `05-exploration-hub` capture now lands on the boot splash for the same reason. Pass 99: the hazard route select is caught mid-stagger too. `RouteSelect.tsx` fades the hand in at `220 + i * 70`ms and the routes at `320 + i * 120`ms (320ms each), so at both viewports the right-hand hand cards and the whole risk route (THE LEAP, THE DROWNED DOOR) are still ghosted. The lens is now blind on three of the eleven screens, and the hazard screen is where the HP4 puzzle work is about to land.
-- evidence: `.critique-artifacts/{mobile,desktop}/02-onboarding.png` against `.txt`, and `{mobile,desktop}/10-hazard.png` (risk route and right-hand fan cards faded) against `10-hazard.txt` (every route line present); `axiomancer-mobile/scripts/critique-drive.mjs` onboarding `prepare` (click, no settle) and `captureScreen` (`waitForReady` in place of the 700ms wait); `scripts/lib/page-ready.mjs`.
-- suggested fix: give the onboarding entry a `settle` that waits for the menu to be opaque (the `titleSettled` pattern, keyed on a menu testID such as the NEW GAME row), and the hazard entry one that waits for the last route card's entering animation to finish (or a short post-ready settle on every fixtured screen), rather than restoring a blind sleep.
-- source: critique:drive (unattended)
-
-
 ### [LOW] play log / fight recorder — the opening hand never reaches the fight's event stream
 - pass: ship-a-phase BE2f (PR #877)
 - viewport: n/a
@@ -1173,6 +1163,16 @@
 - source: loop
 
 ## Done
+
+### [x] [HIGH] ci / critique-drive — captures are taken mid-fade since VE1b: the onboarding menu and the hazard routes never show — RESOLVED 2026-10-25 (branch loop/iterate-critique-drive-settle, 70877f90: onboarding settles on `menuSettled` (the title menu opaque), hazard on `entranceSettled` (no finite CSS animation under the route select on two polls in a row), and the hub boots `fresh-start` and passes the omen and the first-waypoint ring instead of bouncing to the title; checked by eye at both viewports; pinned in critique-drive.test.mjs)
+- pass: 98 (commit f8058ad6); raised MED to HIGH at pass 99 (commit 02f94d07)
+- issue: #896
+- viewport: both (375x812 and 1280x800)
+- category: infra
+- observation: VE1b replaced `captureScreen`'s fixed `waitForTimeout(700)` with `waitForReady`. The ready flag is set once at boot, when the fonts settle, so on the onboarding entry it is already true when EMBARK is clicked; the shot lands two frames after the click. Both `02-onboarding.png` captures show the title plate still up and the THE CHRONICLE / NEW GAME / LOAD GAME / SETTINGS menu faint beneath it, while `02-onboarding.txt` lists every menu line. The critique lens on the new-player menu is blind until this is fixed. The unfixtured `05-exploration-hub` capture now lands on the boot splash for the same reason. Pass 99: the hazard route select is caught mid-stagger too. `RouteSelect.tsx` fades the hand in at `220 + i * 70`ms and the routes at `320 + i * 120`ms (320ms each), so at both viewports the right-hand hand cards and the whole risk route (THE LEAP, THE DROWNED DOOR) are still ghosted. The lens is now blind on three of the eleven screens, and the hazard screen is where the HP4 puzzle work is about to land.
+- evidence: `.critique-artifacts/{mobile,desktop}/02-onboarding.png` against `.txt`, and `{mobile,desktop}/10-hazard.png` (risk route and right-hand fan cards faded) against `10-hazard.txt` (every route line present); `axiomancer-mobile/scripts/critique-drive.mjs` onboarding `prepare` (click, no settle) and `captureScreen` (`waitForReady` in place of the 700ms wait); `scripts/lib/page-ready.mjs`.
+- suggested fix: give the onboarding entry a `settle` that waits for the menu to be opaque (the `titleSettled` pattern, keyed on a menu testID such as the NEW GAME row), and the hazard entry one that waits for the last route card's entering animation to finish (or a short post-ready settle on every fixtured screen), rather than restoring a blind sleep.
+- source: critique:drive (unattended)
 
 ### [x] [LOW] combat / rune column — the CONVICTION caption under the ◆ chip is 6px text that ignores the system font size — RESOLVED 2026-10-18 (branch loop/iterate-conviction-caption, 7debe9d9: the caption is 9px on an 11pt line with font scaling on; the chip is 38pt and five runes still clear the tray at 375x812; pinned in CombatBoard.sig-column.test.tsx)
 - pass: 93 (commit 1a0e7b58)
