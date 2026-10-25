@@ -228,6 +228,7 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - PH1a — loop tooling, slotted asap; serves the attended playtester passes (HP2e, the W3 and W5 walks) but finishes no Item; date not set.
 - PH1b — loop tooling; follows PH1a; date not set.
 - PH1c — loop tooling (guide fixes and the guide test); blocks no window's goal; date not set.
+- TQ1 — loop work, mobile UX from the Elementalist swarm; blocks no window's goal and T set no date; date not set.
 - GL1 — loop work; the board glossary from the Elementalist swarm, blocks no window's goal; date not set.
 
 ## How a window closes
@@ -238,6 +239,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-25** — **fewer taps plotted** (T, `/plot`, run unattended by a workflow). **Added** an Unscheduled line for TQ1: T set no date, and it blocks no window's goal. **Edited** no Item: the W3 "Event-node audit and fixes (all twelve kinds)" Item still holds, since TQ1 changes the spoils pick and the map's node panel, not whether each node kind resolves (T cut its rest, cache and anvil changes the same day). Nothing ticked; no date moved.
 - **2026-10-25** — **the Act 1 walk plotted** (T asked "plot them all, one plot run, one PR"; `/plot` run
   unattended, anytime). **Edited** the W3 Item "Event-node audit and fixes (all twelve kinds)": its `needs plot` is
   now AW1a, AW1b, and its name says the fixes split, code in AW1a and copy or map fixes to T as `[content]` rows
