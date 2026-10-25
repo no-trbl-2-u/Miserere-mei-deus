@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="300" height="400" role="img" aria-label="Bloodletting">
+  <title>Bloodletting</title>
+  <desc>SACRIFICE 6, gain 5 Conviction. EXILE.</desc>
+  <style>
+    .plate { fill: #15110c; }
+    .name { font-family: Georgia, 'Times New Roman', serif; font-size: 19px; fill: #ece0c8; }
+    .free { font-family: ui-monospace, Menlo, monospace; font-size: 13px; fill: #dcb04a; }
+    .paid { font-family: Georgia, 'Times New Roman', serif; font-size: 12.5px; fill: rgba(236,224,200,0.78); }
+    .note { font-family: ui-monospace, Menlo, monospace; font-size: 10px; fill: #9c937f; }
+    .rule { stroke: rgba(236,224,200,0.14); stroke-width: 1; }
+  </style>
+  <rect class="plate" x="0.5" y="0.5" width="299" height="399" fill="#15110c" stroke="#4f7fd6" stroke-width="2"/>
+  <text x="14" y="30" class="name">Bloodletting</text>
+  <line class="rule" x1="14" y1="52" x2="286" y2="52"/>
+  <text x="14" y="78" class="free"></text>
+  <line class="rule" x1="14" y1="94" x2="286" y2="94"/>
+  <text x="14" y="116" class="paid">SACRIFICE 6, gain 5 Conviction. EXILE.</text>
+  <line class="rule" x1="14" y1="366" x2="286" y2="366"/>
+  <text x="14" y="384" class="note">as it stands on 2026-10-25</text>
+</svg>
