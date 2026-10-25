@@ -813,13 +813,6 @@
 - conflicts: D91 if any face glyph changes beyond the X; otherwise none.
 - promote with `/plot`.
 
-### [ ] [owner] [score 4.5] Fewer taps between a decision and the next node: interstitials, the spoils pick, the purse and a potion nudge
-- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm, R10, R12; taps per node measured: rest 4, cache 4, spoil 4, map 2)
-- part plan: `plan/revamp/mobile.md` "The board says what it does" items 6–7
-- proposed scope: 1 phase (M). Rest and cache outcome cards merge into the choice or auto-advance; in SPOILS a tap selects and TAKE CARD confirms; one anvil exit when nothing was forged; shillings on the node sheet of a node that charges them; a low-VITAE potion nudge where T says it belongs. Measured by taps per node and by dead rest/anvil visits at 0 shillings.
-- conflicts: "Victory and mercy panels do not say what the player gained" owns the aftermath panel; rest/cache copy is event copy (D88).
-- promote with `/plot`.
-
 ### [ ] [owner] [score 5.0] The Elementalist in measured truth, with a self-burn metric
 - proposed: 2026-10-24, T's `/messy` (the Elementalist swarm; the lane measured once by hand at 1fb78ac87: 100% every cell, min p10 0.89, mean VITAE taken 5.8 vs grey 41.0)
 - part plan: `plan/revamp/cards.md` "The Elementalist after the swarm (T, 2026-10-24, `/messy`)"
@@ -860,6 +853,12 @@
 ## Promoted
 
 Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_CANDIDATES_2026.md`.
+
+- **[owner] [score 4.5] Fewer taps between a decision and the next node** (proposed 2026-10-24, T's `/messy`
+  of the Elementalist swarm, R10, R12) — plotted as **TQ1** by T's `/plot` on 2026-10-25, slotted anytime. Brief
+  `plan/phases/phase_TQ1_fewer_taps.md`. Rest and cache settle on the choice with a toast, a spoils tap selects, an
+  idle anvil has one exit, the node panel shows the purse. The low-VITAE potion nudge was dropped by T ("nowhere
+  yet") and sits under the brief's Follow-ups.
 
 - (2026-10-18) Eight loop-gate `[owner]` candidates from T's `/messy` of the EV1d gate fixes (path coverage,
   acceptance map, plan-queue lint, builder/judge separation, critique record, fail-on-parent, diff-scoped
