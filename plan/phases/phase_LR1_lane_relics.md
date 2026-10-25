@@ -217,7 +217,8 @@ with its "Unlocks:" line.
   LR1a builds on RW1a's resolver.
 - **No quest exists, so LR1 builds both halves of the quest source.** The engine half (LR1c: rewards paid on every
   completion path, an item reward granted) is loop work over the fixture quest; the quests themselves (giver, words,
-  objective) are T's content, written in LR1b and wired in LR1e. A quest is given by an event kind that exists today
+  objective) are T's content, written in LR1b and wired in LR1e: one quest per quest relic, one in each
+  Act 1 region (four). A quest is given by an event kind that exists today
   (an `interaction` or `narration` node playing a dialogue whose choice starts it) and finished by an objective the
   engine counts (`kill`, `reach`, `collect`); no new quest UI is built (the Memoir tab already lists quests).
   `[T to confirm #3]`
