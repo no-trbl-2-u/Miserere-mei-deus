@@ -20,8 +20,8 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import {
-  antagonistAtMerge, checksOnHead, classifyPaths, detectFollowUps, evaluateSeeds, parseWorkflowFilter, reviewAtMerge,
-  renderLedgerSection, spliceReport,
+  antagonistAtMerge, checksOnHead, classifyPaths, detectFollowUps, evaluateSeeds, reviewAtMerge,
+  renderLedgerSection, spliceReport, verifyWorkflowsFrom,
 } from './ledger-lib.mjs'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
@@ -51,16 +51,20 @@ const REPO = readEnv('GH_REPO') || 'no-trbl-2-u/Miserere-mei-deus'
 const ghJson = (args) => JSON.parse(sh('gh', args) || 'null')
 const api = (path) => ghJson(['api', '-H', 'Accept: application/vnd.github+json', `repos/${REPO}/${path}`])
 
+/** Today's `verify-*` filters: the ledger's header, the Android seed. */
 function verifyWorkflows() {
   const dir = join(ROOT, '.github/workflows')
-  return readdirSync(dir)
-    .filter((f) => /^verify-.*\.ya?ml$/.test(f))
-    .sort()
-    .map((file) => {
-      const text = readFileSync(join(dir, file), 'utf8')
-      return { file, text, ...parseWorkflowFilter(text) }
-    })
-    .filter((wf) => wf.paths !== null)
+  return verifyWorkflowsFrom(readdirSync(dir).map((file) => ({ file, text: readFileSync(join(dir, file), 'utf8') })))
+}
+
+/**
+ * The `verify-*` filters as they stood at `sha`, so a PR merged before a
+ * workflow existed is not read as having skipped it.
+ */
+function verifyWorkflowsAt(sha) {
+  const listed = sh('git', ['ls-tree', '--name-only', `${sha}:.github/workflows`]).split('\n').filter(Boolean)
+  return verifyWorkflowsFrom(listed.filter((file) => /^verify-.*\.ya?ml$/.test(file))
+    .map((file) => ({ file, text: sh('git', ['show', `${sha}:.github/workflows/${file}`]) })))
 }
 
 function filesOf(sha) {
@@ -116,8 +120,9 @@ function main() {
   const history = landings(from, mainRef)
   const rows = prs.map((p) => {
     const mergeCommit = p.mergeCommit?.oid
-    const files = mergeCommit && commitFacts(mergeCommit) ? filesOf(mergeCommit) : []
-    const { triggered, skipped, uncovered } = classifyPaths(files, workflows)
+    const known = mergeCommit && commitFacts(mergeCommit)
+    const files = known ? filesOf(mergeCommit) : []
+    const { triggered, skipped, uncovered } = classifyPaths(files, known ? verifyWorkflowsAt(mergeCommit) : workflows)
     const ran = checksOnHead(checksFor(p.headRefOid), p.mergedAt)
     const ranPaths = new Set(ran.map((c) => c.path).filter(Boolean))
     const expectedNotRun = triggered.filter((f) => !ranPaths.has(`.github/workflows/${f}`))
