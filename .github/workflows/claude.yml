@@ -46,6 +46,22 @@ jobs:
       - name: Install workspace dependencies
         run: npm ci
 
+      # A plot PR: T answering its "Your calls" by comment (T, 2026-10-25).
+      # Only T's own comment on a PR labelled plot is routed; everything
+      # else runs exactly as before (no extra argument).
+      - name: Route T's answers on a plot PR
+        id: route
+        env:
+          IS_PLOT: ${{ contains(github.event.issue.labels.*.name, 'plot') || contains(github.event.pull_request.labels.*.name, 'plot') }}
+          IS_PR: ${{ github.event.issue.pull_request != null || github.event.pull_request != null }}
+          BY_OWNER: ${{ github.event.sender.login == github.repository_owner }}
+        run: |
+          if [ "$IS_PLOT" = "true" ] && [ "$IS_PR" = "true" ] && [ "$BY_OWNER" = "true" ]; then
+            echo "args=--append-system-prompt \"This comment is T's, on a plot PR. Read skills/plot.md and follow its section 3, Answering T's calls, exactly: parse the answers, rewrite the brief, the build-plan row and any part-plan or deadline lines they touch, regenerate the PR body, rerun the deadline lint, push to this branch without force, and reply on the PR with what changed.\"" >> "$GITHUB_OUTPUT"
+          else
+            echo "args=" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Run Claude Code
         uses: anthropics/claude-code-action@v1
         with:
@@ -57,3 +73,4 @@ jobs:
             --dangerously-skip-permissions
             --model claude-opus-5-5
             --allowedTools "Bash,Edit,Write,Read,Glob,Grep,Task,TodoWrite,WebFetch,WebSearch"
+            ${{ steps.route.outputs.args }}
