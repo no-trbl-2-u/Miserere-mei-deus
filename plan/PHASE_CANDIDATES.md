@@ -816,11 +816,6 @@
 - conflicts: none; waits on T.
 - promote with `/plot` after the card session.
 
-### [ ] [owner] [score 5.5] One browser per playtester, seeds that survive the boot, and guides tested for truth
-- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm: four agents on one shared Playwright MCP browser; three guide lines contradicted by the tree)
-- part plan: `plan/playtest-harness.md` phases 1–2
-- proposed scope: 2 phases (S, S). (1) `playtester` drives its own Playwright (a context per agent, `addInitScript` seeds, a named screenshot path) or the swarm runs in series; done when four seeded agents report their own `encounter-mounted {seed}`. (2) `hazard.md`, `combat.md`, `minigames.md` corrected and `playtest-guides.test.mjs` checking each mechanisable claim.
-- conflicts: "The unattended critique lens sees settled screens" (this file) and CRITIQUE's mid-fade row concern the drive, not the agent; no overlap.
 - promote with `/plot`.
 
 ## Promoted
@@ -828,6 +823,11 @@
 Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_CANDIDATES_2026.md`.
 
 - (2026-10-25) **[owner] [score 6.0] The board says what it does: the player's own INFERNO, "after BLIZZARD", and the END consequence on a dead tray** (proposed 2026-10-24, T's `/messy` of the Elementalist swarm) was plotted as Phase **BC1** on T's request ("plot them all", 2026-10-25): your INFERNO captioned as yours with its per-turn loss and its tick named, `after BLIZZARD −n` on the intent from a new engine `blizzardCut`, one number on the intent's a11y line, and the dead tray counting MISS faces so END carries its consequence. Item 1 stays withdrawn (T, 2026-10-24). Brief `plan/phases/phase_BC1_board_cues.md`.
+- **[owner] [score 5.5] One browser per playtester, seeds that survive the boot, and guides tested for truth**
+  (proposed 2026-10-24, T's `/messy` of the Elementalist swarm) — plotted as **PH1a-PH1c** on 2026-10-25 (`/plot`,
+  run unattended for T; asap). Brief `plan/phases/phase_PH1_playtest_harness.md`; part plan
+  `plan/playtest-harness.md` phases 1-2. T answered the open question: the `playtester` gets its own Playwright and
+  the swarm stays 4-up.
 - **[owner] [score 4.5] Fewer taps between a decision and the next node** (proposed 2026-10-24, T's `/messy`
   of the Elementalist swarm, R10, R12) — plotted as **TQ1** by T's `/plot` on 2026-10-25, slotted anytime. Brief
   `plan/phases/phase_TQ1_fewer_taps.md`. T then cut it to two changes (2026-10-25, "I only like spoils after a fight
