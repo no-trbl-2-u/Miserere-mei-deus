@@ -819,6 +819,29 @@
 - conflicts: "Victory and mercy panels do not say what the player gained" owns the aftermath panel; rest/cache copy is event copy (D88).
 - promote with `/plot`.
 
+### [ ] [owner] [score 5.0] The Elementalist in measured truth, with a self-burn metric
+- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm; the lane measured once by hand at 1fb78ac87: 100% every cell, min p10 0.89, mean VITAE taken 5.8 vs grey 41.0)
+- part plan: `plan/revamp/cards.md` "The Elementalist after the swarm (T, 2026-10-24, `/messy`)"
+- T's call (2026-10-24): the 20 are the lane's ceiling; measure it against Blood Price's ceiling (its 20-card test deck). Add two sampled columns: random 20-of-30 draws from the Elementalist pool (the lane's spread), and random 20-card decks from the mixed 60-card pool of both trial sets (the median a player who takes what the rewards offer would hold).
+- proposed scope: 1 phase (M), code only. `elementalist` joins `MEASURED_DECK_LANES` (`combat.measured-truth.ts:28`), its test and the workflow description; two sampled deck families (N seeded draws each, reported as the family's mean and spread per cell); a per-deck "VITAE lost to the player's own weather" column; `latest.md` regenerated. A measurement (D57), not a tune (D88).
+- conflicts: R12 (attended) decides what the matrix measures; this adds a column, not a policy. T's open question on whether the 20-card test deck is the lane's ceiling.
+- promote with `/plot`.
+
+### [ ] [owner] [score 5.0] The decided reward rule, implemented: relic lanes feed the reward slot and the cache shows its card
+- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm, R8; CRITIQUE RC2 item 11)
+- part plan: `plan/revamp/cards.md` "The Elementalist after the swarm" (Rewards); D68, D71, D100 at "Deck model"
+- T's reward rule (2026-10-24, refining D68/D71/D100): "random" means drawn from every lane the player has unlocked, and a lane unlocks the moment one of its relics is in the inventory (equipped or not). With one lane relic equipped the offer is 2 random + 1 from that lane; with three relics of one lane equipped, 1 random + 2 from the lane. Read here as the rule for every card reward, the cache included (T answered the cache question with the rule itself); if the cache is meant to stay outside it, that is one line to strike.
+- proposed scope: 1 phase (M). `rewardPoolFor` (`combat.rewards.ts:60-67`) reads the inventory for unlocked lanes and the equipped relics for the lane slots (0 / 1 / 2 of 3), with the dev override kept as an override; the cache's TAKE A CARD previews the card before the pick. Engine change verified against mobile. (A "no owned card re-offered" line was withdrawn 2026-10-24: duplicates are allowed, an agent took a second P-02; the swarm only noted that the spoils offered an owned card.)
+- conflicts: D68's "relics never touch non-combat rewards" is superseded by T's rule above if the cache follows it; the `/plot` records the amendment as a D-number. The lane relics themselves are EL1 step-7 content (D88), so until one exists every lane is locked and every offer is grey.
+- promote with `/plot`.
+
+### [ ] [owner] [score 4.0] The Elementalist's names and one sentence of identity (T's card session)
+- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm, R4: all four agents inferred the deck's purpose; the developer line "Elementalist trial card, Engine sub-lane." reaches the player via `deck-card-detail-flavor`)
+- part plan: `plan/revamp/cards.md` "The Elementalist after the swarm" (Identity); EL1 Follow-ups (lane-creator step 7)
+- proposed scope: T's session, not the loop (D99). The thirty names, one line on the DECK tab that says what the deck does, the sub-lane description gone from the player's view. The loop's half, once T has written them: the description field no longer rendered as flavour.
+- conflicts: none; waits on T.
+- promote with `/plot` after the card session.
+
 ## Promoted
 
 Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_CANDIDATES_2026.md`.
