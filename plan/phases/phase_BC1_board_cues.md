@@ -24,6 +24,11 @@
   damage). Deals 8"), R15 and §3 line 104 (END with cards in hand and an
   all-MISS tray in six of eight door-fight rounds, `combat-end-consequence`
   absent in all six).
+- T's additions on PR #906 (2026-10-25, in session): "the damage numbers
+  float closer to the enemy and float for longer so the player can see.
+  Furthermore, for all DoT ticks, have each tick: 1) font = colour of the
+  element; 2) each tick is its own unique damage tick (instead of
+  aggregating the numbers)." Closed by A8-A10.
 - Decisions: **D88/D99** (content per surface; cues and labels are new UI
   strings, not card text), **D91** (one card face; untouched), **D92**
   (board layout: intent and chips top-left, footer dock, no corner chrome,
@@ -70,12 +75,34 @@
   The rule and its copy live in the component, against the house style (no
   player-facing copy in a component; rules derived in the presenter).
 
+- **The floats sit high and leave fast.** The enemy float layer is pinned
+  at `top: 116` (`CombatCombatantPane.tsx:891`), under the HUD crest, while
+  the figure is bottom-anchored in `enemyFigureWrap` (`:813`, `top:
+  COMBAT_HUD_HEIGHT - 14`, `bottom: '9%'`, `justifyContent: 'flex-end'`),
+  so on a tall screen the numbers rise from above the foe's head, well
+  clear of its body. Every combat float uses the shared number-pop timeline
+  `JUICE_TIMING.numberPop` (`lib/juice/juice.timing.ts:55`: rise 34 px over
+  880 ms, fade starting at 120 ms over 760 ms), so a number is readable for
+  well under a second.
+- **DoT floats are one colour and land on top of each other.** The engine
+  already emits one `dot-tick` per DoT source (`dotTickBreakdown`,
+  `combat.engine.ts:1672`, one entry per active effect; the weather ticks
+  one per element, `combat.card-program.ts:1201,1290`), but the board
+  paints every enemy tick `HUE.hexAmber` (`CombatCombatantPane.tsx:556-560`)
+  and every self tick `HUE.tickPurple` (`:347`), all in the same frame with
+  a 20-36 px jitter, so two or three ticks read as one smeared number, and
+  nothing says which element each one is. The element colours already exist
+  once, in the presenter (`WEATHER_WORD`, `combat-encounter.engine.ts:700`:
+  INFERNO `damageRed`, STORM `goldAccent`; status DoTs via `effectGlyph`).
+
 ## Outcome
 
 On the combat board, the player can see without opening LOG that their own
 INFERNO is burning them and by how much, that the foe's hit is smaller
 because of BLIZZARD and by how much, and what END does whenever no unspent
-die can power any card in hand (MISS faces included).
+die can power any card in hand (MISS faces included). Damage numbers rise
+from the foe's body and stay long enough to read, and every DoT tick lands
+as its own number in its element's colour.
 
 Size: M
 
@@ -115,6 +142,30 @@ Size: M
   `combat-dead-tray`, lights FREE, and END carries
   `combat-end-consequence`. A tray whose every die is spent is not a dead
   tray (no line). The consequence and dead-tray copy are presenter exports.
+- **A8** The enemy's floats rise from the foe's figure, not the HUD crest:
+  the enemy float layer is positioned inside (or measured against)
+  `enemyFigureWrap`, its origin over the upper third of the drawn figure for
+  both the normal and the boss figure sizes. The player medallion's floats
+  stay where they are. A component test pins the enemy float layer as a
+  child of the figure wrap (or its computed top against the figure's).
+- **A9** Combat floats stay on screen longer: `JUICE_TIMING.numberPop`
+  becomes a full read of about 1.6 s (fully opaque for at least 700 ms,
+  then fading over about 900 ms, rising over the whole span), set once in
+  `juice.timing.ts` so every combat float (hits, ticks, BLOCKED, DENIED,
+  status words) moves together. Reduced motion is unchanged (instant). The
+  juice timing test pins the new numbers.
+- **A10** Every DoT tick, on either side, floats as its own number in its
+  element's colour: one float per `dot-tick` event, never summed with
+  another tick or with the hit; ticks resolved in the same beat are
+  staggered (each starts about 180 ms after the previous, and stacks
+  vertically so none overlaps another); each float carries its source
+  label (`INFERNO −4`, `STORM −3`, `POISON −2`, extending A2 to the enemy
+  side). The colour comes from one presenter export keyed by the tick's
+  `effectId` (INFERNO `damageRed`, STORM `goldAccent`, any other DoT its
+  `effectGlyph` colour), so the float, the chip and the log line share one
+  table; no hex or `HUE` literal picks a tick colour in a component. A
+  presenter test pins the colour per element; a board test pins two ticks
+  in one event batch as two floats with two colours.
 - **A7** `npm run verify -w axiomancer-mechanics` and `npm run verify -w
   axiomancer-mobile` pass, and `node scripts/combat-round-e2e.mjs` and
   `node scripts/exploration-combat-roundtrip-e2e.mjs` pass.
@@ -123,7 +174,10 @@ Size: M
 swarm's own cases (a `your-inferno` reading of 4 shows `YOUR INFERNO −4
 each turn` and the tick floats `INFERNO −4`; BLIZZARD 5 over a 16 hit shows
 −11 and `after BLIZZARD −5`; an all-MISS tray with three cards in hand
-renders `combat-end-consequence`), and both workspace verifies pass. The
+renders `combat-end-consequence`; an INFERNO 4 and a STORM 3 tick on the
+foe float as two separate numbers, red and gold, the second about 180 ms
+after the first; the enemy float layer sits inside the figure wrap;
+numberPop holds at least 700 ms), and both workspace verifies pass. The
 swarm's numbers move to zero on its next run: self-burn VITAE deltas with
 no on-screen line, `blizzard-softened` events with no paired text, and
 `consequence:null` on all-MISS rounds.
@@ -151,6 +205,13 @@ no on-screen line, `blizzard-softened` events with no paired text, and
   line and the one-number a11y line.
 - `components/combat/encounter/CombatBoard.tsx`: reads the presenter's dead
   tray and copy instead of deriving them; no layout change.
+- `components/combat/encounter/CombatCombatantPane.tsx` (A8, A10): the
+  enemy float layer moves under `enemyFigureWrap`; the tick loops on both
+  sides read the presenter's tick colour and label and stagger their pushes.
+- `lib/juice/juice.timing.ts` and its test (A9): the longer number-pop.
+- `state/presenters/combat-encounter.engine.ts` (A10): an exported
+  `dotTickFloat(event)` (or equivalent) returning `{ text, color }` from the
+  one element table.
 
 ## Consumers to update
 
@@ -216,6 +277,28 @@ the captions use the same words.
   board. The swarm's measure is that the softening is *paired with text*,
   which A4 gives.
 
+- **Closer to the enemy means the figure, not the crest** (T, 2026-10-25).
+  The float origin moves onto the drawn figure's upper third; the HUD,
+  intent and chips do not move (D92). The player's floats are already on
+  the medallion and stay.
+- **Longer applies to every combat float**, through the one shared
+  timeline, so hits, ticks and words keep one rhythm (T asked for "the
+  damage numbers"; a tick lasting longer than the hit beside it would read
+  as a different system). About 1.6 s total; the exact hold and fade are the
+  tick's to tune inside "readable, not lingering into the next beat".
+  `[T to confirm]` if only hit numbers should slow down.
+- **"Its own unique tick" is one float per DoT source per beat**, which is
+  what the engine already emits; the fix is on the board (stagger, stack,
+  colour, label), not a new engine event. An INFERNO of intensity 4 is one
+  `INFERNO −4`, not four `−1`s. `[T to confirm]` (the alternative, one
+  float per stack point, needs an engine event change and turns a 12-stack
+  into twelve floats).
+- **"Colour of the element"** is the colour each element already has on its
+  chip and log line (INFERNO red, STORM gold); status DoTs (poison, bleed,
+  creeping doom) have no element and take their own glyph colour.
+  INFERNO's red matches the player's hit red; the `INFERNO` label is what
+  tells them apart.
+
 ## Tests matrix
 
 - `axiomancer-mechanics/src/Combat/e2e/weather.engine.test.ts`: A3
@@ -235,7 +318,13 @@ the captions use the same words.
   `combat-end-consequence` and `combat-dead-tray` on an all-MISS tray (A6);
   the existing dead-tray case unchanged.
 - `CombatCombatantPane` tests: the caption renders and the weather chip
-  a11y line (A1); the self tick float text `INFERNO −4` (A2).
+  a11y line (A1); the self tick float text `INFERNO −4` (A2); the enemy
+  float layer inside the figure wrap (A8); two enemy ticks in one batch
+  float as two labelled numbers in two colours, the second staggered (A10).
+- The numberPop timing test under `lib/juice/`: the new hold, fade and rise
+  (A9).
+- The presenter suite: `dotTickFloat` colour and label per element and for
+  a status DoT (A10).
 
 ## Verify gate
 
@@ -252,13 +341,15 @@ Your INFERNO reads as yours on the status strip with its per-turn loss,
 and its tick floats with its name. The intent says "after BLIZZARD -n"
 when BLIZZARD cuts the hit (projectIncomingThreat gains blizzardCut) and
 its a11y line carries one number. The dead tray counts MISS faces, so
-END carries its consequence on an all-MISS tray.
-Acceptance A1-A7.
+END carries its consequence on an all-MISS tray. The foe's floats rise
+from its figure and every combat float reads for about 1.6 s; each DoT
+tick floats on its own, labelled and in its element's colour.
+Acceptance A1-A10.
 ```
 
 ## DoD
 
-A1 to A7 ticked.
+A1 to A10 ticked.
 
 ## Follow-ups (out of scope)
 
