@@ -139,9 +139,13 @@ export type {
     DeckEventList, PlayLogCreated, PlayLogError, FightValidation, DeckEventValidation,
 } from './Combat';
 // Measured truth (R12a): the Act 1 ledger x spread x deck measurement.
-export { measuredTruthCells, MEASURED_DECK_LANES, MEASURED_SPREADS } from './Combat/combat.measured-truth';
+export {
+    measuredTruthCells, sampledFamilyDraws, MEASURED_DECK_LANES, MEASURED_SAMPLED_FAMILIES, MEASURED_SPREADS,
+    DEFAULT_SAMPLE_DRAWS,
+} from './Combat/combat.measured-truth';
 export type {
-    MeasuredTruthReport, MeasuredTruthCell, MeasuredTruthDeck, MeasuredTruthOptions,
+    MeasuredTruthReport, MeasuredTruthCell, MeasuredTruthDeck, MeasuredTruthFamily, MeasuredTruthOptions,
+    MeasuredSampledFamily,
 } from './Combat/combat.measured-truth';
 
 // ─── Sandbox cards — the deck-forge experimentation surface ───────────────────
