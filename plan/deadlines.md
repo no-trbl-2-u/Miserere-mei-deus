@@ -225,6 +225,7 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - FM2d — attended; T's look in Obsidian once FM2b and FM2c ship; date not set.
 - RW1a — loop work; T's decided reward rule (D104), blocks no window's goal (lane relics are B1's, W5); date not set.
 - RW1b — loop work; the cache shows its card, blocks no window's goal; date not set.
+- GL1 — loop work; the board glossary from the Elementalist swarm, blocks no window's goal; date not set.
 
 ## How a window closes
 
@@ -235,6 +236,7 @@ attended session.
 ## Change log
 
 - **2026-10-25** — **the reward rule plotted** (T, in conversation, `/plot` run unattended). **Added** Unscheduled lines for RW1a-RW1b: T set no date, and the rows block no window's goal. **Edited** no Item: the W5 "Relic pass session" (B1) still holds, since RW1 makes lane relics work but authors none, and the W3 four-region walk already covers the loot cache. Nothing ticked; no date moved.
+- **2026-10-25** — **the board glossary plotted** (T, conversation, `/plot`, unattended run). **Added** an Unscheduled line for GL1: T set no date, and the row blocks no window's goal (it serves the board, not a window demo). **Edited** no Item: no open Item's premise depends on the board's glossary. Nothing ticked; no date moved.
 - **2026-10-25** — **the Elementalist measured truth plotted** (T in conversation, `/plot` run unattended: "plot them all ... one plot run, one PR"). **Added** an Unscheduled line for EM1: T set no date, and it blocks no window's goal. **Edited** no Item: the W4 "Combat playtest (winnable and dangerous)" Item (R12) keeps its premise, since EM1 adds columns to the report R12 reads and decides no policy. Nothing ticked; no date moved.
 - **2026-10-24** — **the Elementalist swarm `/messy`** (T, attended session). **Edited** the W2 Item "Act 1 puzzle set, live hazard routing and the cuts": T ruled the Act 1 set is not authored now; each of the seven Act 1 hazard nodes (Breakwater 2, Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2) draws a random puzzle from the thirty, and the routing plus the cuts are what W2 plots (still `needs plot`). **Added** a `T` Item for 2026-11-13: plot the swap to a hand-picked seven after playing the thirty in `/dev`. Nothing ticked; no date moved; candidates only, no rows.
 - **2026-10-24** — **the Spell law plotted** (T, attended session, `/plot asap`). **Added** an Unscheduled line for SP1: no date set, and it blocks no window's goal. **Edited** no Item. Nothing ticked; no date moved.
