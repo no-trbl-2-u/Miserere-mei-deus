@@ -8,14 +8,14 @@
 
 import assert from 'node:assert/strict'
 import { execFileSync } from 'node:child_process'
-import { mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
 import { fileURLToPath } from 'node:url'
 
 import { isZoned } from './check-lexicon.mjs'
-import { cleanEnv, ensure, FEATURES_HEADER, featuresNote, featureTable, features, mainRoot, status, TABLE_END, TABLE_START } from './vault.mjs'
+import { cleanEnv, ensure, FEATURES_HEADER, featuresNote, featureTable, features, isGeneratedCanvas, mainRoot, status, TABLE_END, TABLE_START } from './vault.mjs'
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -219,14 +219,18 @@ test('features is idempotent: a second run reports up to date and rewrites nothi
   assert.equal(features({ cwd: f.host }).code, 0)
   const r = features({ cwd: f.host })
   assert.equal(r.code, 0)
-  assert.deepEqual(r.lines, ['vault: Feature Map.canvas is up to date', 'vault: 02 Features.md is up to date'])
+  assert.deepEqual(r.lines, [
+    'vault: Feature Map.canvas is up to date',
+    'vault: 02 Features.md is up to date',
+    'vault: skipped Features/: ' + path.join(f.src, 'Features') + ' does not exist yet (the feature map is not generated).',
+  ])
 })
 
 test('features skips a source that is not generated yet, exits 0, and writes nothing for it', (t) => {
   const f = featureFixture(t, { canvas: null, readme: null })
   const r = features({ cwd: f.host })
   assert.equal(r.code, 0, r.lines.join('\n'))
-  assert.equal(r.lines.length, 2)
+  assert.equal(r.lines.length, 3)
   for (const line of r.lines) assert.match(line, /skipped .*does not exist yet/)
   assert.equal(vaultChanges(f), '')
 
@@ -273,4 +277,112 @@ test('the CLI runs features as a verb', (t) => {
   })
   assert.match(out, /wrote Feature Map\.canvas/)
   assert.equal(read(f.vault, 'Feature Map.canvas'), CANVAS)
+})
+
+
+// --- FM2c: the Features/ folder mirrored into the vault ------------------
+
+const note = (name, marker = true) =>
+  `---\nkind: "route"\ngroup: "world"\n${marker ? 'generated: feature-map\n' : ''}tags:\n  - feature-map/world\n---\n\n# ${name}\n`
+const groupCanvas = (group, files) =>
+  `${JSON.stringify({
+    nodes: [
+      { id: `group:${group}`, type: 'group', x: 0, y: 0, width: 400, height: 200, label: group },
+      ...files.map((file, i) => ({ id: `n${i}`, type: 'file', file, x: 40, y: 40 + i * 100, width: 260, height: 90 })),
+    ],
+    edges: [],
+  })}\n`
+
+/** featureFixture plus a generated Features/ folder in the host checkout. */
+function mirrorFixture(t, files = { 'Village.md': note('Village'), 'Rest.md': note('Rest'), 'World routes.canvas': groupCanvas('world', ['Features/Village.md', 'Features/Rest.md']) }) {
+  const f = featureFixture(t)
+  const srcFeatures = path.join(f.src, 'Features')
+  mkdirSync(srcFeatures, { recursive: true })
+  for (const [name, body] of Object.entries(files)) writeFileSync(path.join(srcFeatures, name), body)
+  return { ...f, srcFeatures, vaultFeatures: path.join(f.vault, 'Features') }
+}
+
+const vaultNames = (f) => readdirSync(f.vaultFeatures).sort()
+
+test('A8: features mirrors Features/ into the vault, new files written', (t) => {
+  const f = mirrorFixture(t)
+  const r = features({ cwd: f.host })
+  assert.equal(r.code, 0, r.lines.join('\n'))
+  assert.deepEqual(vaultNames(f), ['Rest.md', 'Village.md', 'World routes.canvas'])
+  for (const name of vaultNames(f)) assert.ok(readFileSync(path.join(f.vaultFeatures, name)).equals(readFileSync(path.join(f.srcFeatures, name))), name)
+  assert.match(r.lines.join('\n'), /wrote Features\/Village\.md/)
+  assert.match(r.lines.join('\n'), /Features\/ mirrors 3 files \(0 already up to date\)/)
+})
+
+test('A8: a changed file is rewritten and a matching one is left alone', (t) => {
+  const f = mirrorFixture(t)
+  assert.equal(features({ cwd: f.host }).code, 0)
+  sh(f.vault, 'add', '-A')
+  sh(f.vault, 'commit', '-q', '-m', 'vault: features')
+  writeFileSync(path.join(f.srcFeatures, 'Rest.md'), note('Rest, renamed'))
+  const r = features({ cwd: f.host })
+  assert.equal(r.code, 0)
+  const wrote = r.lines.filter((l) => /wrote Features\//.test(l))
+  assert.deepEqual(wrote, ['vault: wrote Features/Rest.md'])
+  assert.match(r.lines.join('\n'), /mirrors 3 files \(2 already up to date\)/)
+  assert.equal(read(f.vaultFeatures, 'Rest.md'), note('Rest, renamed'))
+  assert.equal(vaultChanges(f), 'M Features/Rest.md')
+})
+
+test('A8: a stale generated note and a stale group canvas are deleted; a T-written file is kept', (t) => {
+  const f = mirrorFixture(t)
+  mkdirSync(f.vaultFeatures, { recursive: true })
+  writeFileSync(path.join(f.vaultFeatures, 'Old feature.md'), note('Old feature'))
+  writeFileSync(path.join(f.vaultFeatures, 'Old group.canvas'), groupCanvas('old', ['Features/Old feature.md']))
+  writeFileSync(path.join(f.vaultFeatures, 'Tabs.canvas'), '{"nodes":[],"edges":[]}\n')
+  writeFileSync(path.join(f.vaultFeatures, 'My thoughts.md'), note('My thoughts', false))
+  writeFileSync(path.join(f.vaultFeatures, 'My board.canvas'), '{"nodes":[{"id":"a1b2","type":"text","text":"idea","x":0,"y":0,"width":200,"height":60}],"edges":[]}\n')
+  const r = features({ cwd: f.host })
+  assert.equal(r.code, 0, r.lines.join('\n'))
+  assert.deepEqual(vaultNames(f), ['My board.canvas', 'My thoughts.md', 'Rest.md', 'Village.md', 'World routes.canvas'])
+  const out = r.lines.join('\n')
+  assert.match(out, /deleted Features\/Old feature\.md/)
+  assert.match(out, /deleted Features\/Old group\.canvas/)
+  assert.match(out, /deleted Features\/Tabs\.canvas/)
+  assert.match(out, /left Features\/My thoughts\.md, not a generated feature-map file/)
+  assert.match(out, /left Features\/My board\.canvas/)
+  assert.equal(read(f.vaultFeatures, 'My thoughts.md'), note('My thoughts', false))
+})
+
+test('A8: the mirror writes nothing outside Features/ and the two FM1 files', (t) => {
+  const f = mirrorFixture(t)
+  commitFile(f.vault, 'Inbox.md', '- T idea\n', 'vault: inbox')
+  mkdirSync(path.join(f.vault, 'Threads'))
+  commitFile(f.vault, 'Threads/Village.md', 'T on the village\n', 'vault: thread')
+  assert.equal(features({ cwd: f.host }).code, 0)
+  const changed = vaultChanges(f).split('\n').map((l) => l.slice(3).replace(/"/g, '')).sort()
+  assert.deepEqual(changed, ['02 Features.md', 'Feature Map.canvas', 'Features/Rest.md', 'Features/Village.md', 'Features/World routes.canvas'])
+  assert.equal(read(f.vault, 'Inbox.md'), '- T idea\n')
+  assert.equal(read(path.join(f.vault, 'Threads'), 'Village.md'), 'T on the village\n')
+})
+
+test('A8: a second mirror run writes nothing and reports every file up to date', (t) => {
+  const f = mirrorFixture(t)
+  assert.equal(features({ cwd: f.host }).code, 0)
+  const r = features({ cwd: f.host })
+  assert.equal(r.code, 0)
+  assert.deepEqual(r.lines.slice(2), ['vault: Features/ mirrors 3 files (3 already up to date)'])
+})
+
+test('isGeneratedCanvas: a group name or the generator shape, never a hand-made canvas', () => {
+  for (const name of ['Tabs.canvas', 'World routes.canvas', 'Minigames.canvas', 'Engine areas.canvas', 'Dev routes.canvas']) assert.ok(isGeneratedCanvas(name, ''), name)
+  assert.ok(isGeneratedCanvas('Renamed.canvas', groupCanvas('renamed', ['Features/A.md'])))
+  assert.ok(!isGeneratedCanvas('Mine.canvas', 'not json'))
+  assert.ok(!isGeneratedCanvas('Mine.canvas', groupCanvas('x', ['Threads/A.md'])), 'a card outside Features/')
+  assert.ok(!isGeneratedCanvas('Mine.canvas', groupCanvas('x', [])), 'no cards')
+  assert.ok(!isGeneratedCanvas('Mine.canvas', '{"nodes":[{"id":"g1","type":"group","x":0,"y":0,"width":1,"height":1}],"edges":[]}'))
+})
+
+test('the committed Features/ notes and group canvases all count as generated', () => {
+  const dir = path.join(REPO, 'docs', 'feature-map', 'Features')
+  for (const name of readdirSync(dir)) {
+    const text = readFileSync(path.join(dir, name), 'utf8')
+    if (name.endsWith('.canvas')) assert.ok(isGeneratedCanvas(name, text), name)
+    else assert.match(text, /^---\n(?:.*\n)*?generated: feature-map\n/, name)
+  }
 })
