@@ -828,11 +828,6 @@
 - conflicts: none; waits on T.
 - promote with `/plot` after the card session.
 
-### [ ] [owner] [score 5.0] The Act 1 walk, proven: four doors, twelve kinds, `gathering` gone, node blurbs matched to their events
-- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm, R13; `features.json` driven=false for blacksmith and item-reward; `plan/deadlines.md` W3 Item "Event-node audit and fixes (all twelve kinds)", `needs plot`)
-- part plan: `plan/playtest-harness.md` phase 3
-- proposed scope: 2 phases (M, S). (a) `e2e:map-walk` or a sibling crosses all four doors and resolves every node kind it meets (the W3 audit's fixes ride on what it finds); the anvil and item-reward routes become driven by name and by walk. (b) `kind: 'gathering'` removed or re-pointed; a drift test pairs each node blurb with its event's copy.
-- conflicts: W3 window (Nov 17); map and event copy fixes are content (D88) and go to T as `[content]` rows.
 - promote with `/plot`.
 
 ## Promoted
@@ -844,6 +839,11 @@ Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_
   run unattended for T; asap). Brief `plan/phases/phase_PH1_playtest_harness.md`; part plan
   `plan/playtest-harness.md` phases 1-2. T answered the open question: the `playtester` gets its own Playwright and
   the swarm stays 4-up.
+- (2026-10-25) **[owner] [score 5.0] The Act 1 walk, proven: four doors, twelve kinds, `gathering` gone, node blurbs
+  matched to their events** (T's `/messy` of 2026-10-24, R13) — plotted as AW1 (AW1a, AW1b) by T's `/plot`, run
+  unattended 2026-10-25, slotted anytime. Brief `plan/phases/phase_AW1_act1_walk.md`; it answers the W3 Item
+  "Event-node audit and fixes (all twelve kinds)". `gathering` is kept [T to confirm]: it is the retired
+  minigame's live replacement, so its seven nodes go to T as a `[content]` row (D88).
 - **[owner] [score 4.5] A glossary a sighted player can reach** (proposed 2026-10-24, T's `/messy` of the Elementalist
   swarm, R9/R18) — plotted as **GL1** by T's "plot them all" (2026-10-25), slotted anytime. Brief
   `plan/phases/phase_GL1_board_glossary.md`: one `BOARD_GLOSSARY` source; the Conviction chip, dice (long-press), piles,
