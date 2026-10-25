@@ -806,9 +806,6 @@
 - conflicts: D92 board layout (no new chrome in the corners); the intent flavour is enemy copy (D88). "Printed equals applied" (this file) owns the numbers; this row owns the cues.
 - promote with `/plot`.
 
-
-- promote with `/plot`.
-
 ### [ ] [owner] [score 5.0] The decided reward rule, implemented: relic lanes feed the reward slot and the cache shows its card
 - proposed: 2026-10-24, T's `/messy` (the Elementalist swarm, R8; CRITIQUE RC2 item 11)
 - part plan: `plan/revamp/cards.md` "The Elementalist after the swarm" (Rewards); D68, D71, D100 at "Deck model"
@@ -837,9 +834,10 @@ Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_
 
 - **[owner] [score 4.5] Fewer taps between a decision and the next node** (proposed 2026-10-24, T's `/messy`
   of the Elementalist swarm, R10, R12) — plotted as **TQ1** by T's `/plot` on 2026-10-25, slotted anytime. Brief
-  `plan/phases/phase_TQ1_fewer_taps.md`. Rest and cache settle on the choice with a toast, a spoils tap selects, an
-  idle anvil has one exit, the node panel shows the purse. The low-VITAE potion nudge was dropped by T ("nowhere
-  yet") and sits under the brief's Follow-ups.
+  `plan/phases/phase_TQ1_fewer_taps.md`. T then cut it to two changes (2026-10-25, "I only like spoils after a fight
+  and map node panel. Remove the others."): a spoils tap selects, and the node panel shows the purse. Rest and cache
+  settling on the choice, their toast and the idle anvil's single exit were cut by T; the low-VITAE potion nudge was
+  dropped by T ("nowhere yet"). Both sit under the brief's Follow-ups.
 - (2026-10-25) **[owner] [score 5.0] The Act 1 walk, proven: four doors, twelve kinds, `gathering` gone, node blurbs
   matched to their events** (T's `/messy` of 2026-10-24, R13) — plotted as AW1 (AW1a, AW1b) by T's `/plot`, run
   unattended 2026-10-25, slotted anytime. Brief `plan/phases/phase_AW1_act1_walk.md`; it answers the W3 Item

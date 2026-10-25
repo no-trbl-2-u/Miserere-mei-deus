@@ -236,7 +236,7 @@ attended session.
 
 ## Change log
 
-- **2026-10-25** — **fewer taps plotted** (T, `/plot`, run unattended by a workflow). **Added** an Unscheduled line for TQ1: T set no date, and it blocks no window's goal. **Edited** no Item: the W3 "Event-node audit and fixes (all twelve kinds)" Item still holds, since TQ1 changes how rest, cache and the anvil exit, not whether each node kind resolves. Nothing ticked; no date moved.
+- **2026-10-25** — **fewer taps plotted** (T, `/plot`, run unattended by a workflow). **Added** an Unscheduled line for TQ1: T set no date, and it blocks no window's goal. **Edited** no Item: the W3 "Event-node audit and fixes (all twelve kinds)" Item still holds, since TQ1 changes the spoils pick and the map's node panel, not whether each node kind resolves (T cut its rest, cache and anvil changes the same day). Nothing ticked; no date moved.
 - **2026-10-25** — **the Act 1 walk plotted** (T asked "plot them all, one plot run, one PR"; `/plot` run
   unattended, anytime). **Edited** the W3 Item "Event-node audit and fixes (all twelve kinds)": its `needs plot` is
   now AW1a, AW1b, and its name says the fixes split, code in AW1a and copy or map fixes to T as `[content]` rows
