@@ -3,7 +3,7 @@
 //
 //   node scripts/vault.mjs ensure   # clone vault/ when missing, else fast-forward it
 //   node scripts/vault.mjs status   # head commit, ahead/behind, dirty
-//   node scripts/vault.mjs features # copy the repo's feature map into the vault (FM1e)
+//   node scripts/vault.mjs features # copy the repo's feature map into the vault (FM1e, FM2c)
 //
 // The vault is its own repo (no-trbl-2-u/miserere-vault), cloned into `vault/`
 // at the MAIN checkout's root and ignored by Miserere (`/vault/`). From a linked
@@ -13,9 +13,11 @@
 // VAULT_REMOTE overrides the clone URL (tests, forks). See docs/vault.md.
 
 import { spawnSync } from 'node:child_process'
-import { existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, unlinkSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+
+import { isGeneratedNote, isGroupCanvas, NOTES_DIR } from './feature-map-render.mjs'
 
 export const DEFAULT_REMOTE = 'https://github.com/no-trbl-2-u/miserere-vault.git'
 
@@ -125,10 +127,17 @@ export function status({ cwd = process.cwd(), git = runGit } = {}) {
   }
 }
 
-// The feature map (phase FM1e). The repo generates docs/feature-map/ (FM1c);
-// `features` copies two files from it into the vault and overwrites nothing else:
+// The feature map (phases FM1e, FM2c). The repo generates docs/feature-map/ (FM1c,
+// FM2a, FM2b); `features` copies it into the vault and overwrites nothing else:
 //   docs/feature-map/Map.canvas -> vault/Feature Map.canvas   (byte for byte)
 //   docs/feature-map/README.md  -> vault/02 Features.md       (the feature table)
+//   docs/feature-map/Features/  -> vault/Features/            (mirrored, below)
+// The Features/ mirror writes new and changed files and leaves matching ones
+// alone. A file in vault/Features/ the repo no longer has is deleted only when
+// the generator owns it: a note whose frontmatter carries `generated:
+// feature-map`, or a group canvas (named for a feature group, or holding the
+// generator's `group:<id>` node with every card opening a Features/ file).
+// Anything else there is left and named, so a note T drops in survives.
 // CONTRACT with the generator: README.md holds the feature table between two
 // marker lines, each exactly once and on a line of its own, start before end:
 //   <!-- feature-table:start -->
@@ -164,6 +173,71 @@ export function featureTable(readme) {
 export function featuresNote(readme) {
   const table = featureTable(readme)
   return `${FEATURES_HEADER}\n\n${table}${table.endsWith('\n') ? '' : '\n'}`
+}
+
+export const FEATURES_DIR = 'Features'
+
+/** Whether a canvas in vault/Features/ is a group canvas the generator wrote. */
+export function isGeneratedCanvas(name, text) {
+  if (isGroupCanvas(`${NOTES_DIR}/${name}`)) return true
+  let canvas
+  try {
+    canvas = JSON.parse(text)
+  } catch {
+    return false
+  }
+  const nodes = Array.isArray(canvas?.nodes) ? canvas.nodes : []
+  const files = nodes.filter((n) => n?.type === 'file')
+  return (
+    nodes.some((n) => n?.type === 'group' && typeof n.id === 'string' && n.id.startsWith('group:')) &&
+    files.length > 0 &&
+    files.every((n) => typeof n.file === 'string' && n.file.startsWith(`${FEATURES_DIR}/`))
+  )
+}
+
+/** Whether the generator owns a file in vault/Features/, so the mirror may delete it. */
+export function isGeneratedFeatureFile(name, data) {
+  const text = data.toString('utf8')
+  if (name.endsWith('.md')) return isGeneratedNote(text)
+  if (name.endsWith('.canvas')) return isGeneratedCanvas(name, text)
+  return false
+}
+
+const filesIn = (dir) => (existsSync(dir) ? readdirSync(dir).filter((f) => statSync(path.join(dir, f)).isFile()).sort() : [])
+
+/**
+ * Mirror docs/feature-map/Features/ into vault/Features/: write new and changed
+ * files, leave matching ones, delete only stale files the generator owns.
+ * Returns the report lines.
+ */
+export function mirrorFeatures(srcDir, vault) {
+  const src = path.join(srcDir, FEATURES_DIR)
+  const dest = path.join(vault, FEATURES_DIR)
+  if (!existsSync(src)) return [`vault: skipped ${FEATURES_DIR}/: ${src} does not exist yet (the feature map is not generated).`]
+  const lines = []
+  const names = filesIn(src)
+  let same = 0
+  mkdirSync(dest, { recursive: true })
+  for (const name of names) {
+    const data = readFileSync(path.join(src, name))
+    const to = path.join(dest, name)
+    if (existsSync(to) && readFileSync(to).equals(data)) {
+      same += 1
+      continue
+    }
+    writeFileSync(to, data)
+    lines.push(`vault: wrote ${FEATURES_DIR}/${name}`)
+  }
+  const kept = new Set(names)
+  for (const name of filesIn(dest).filter((f) => !kept.has(f))) {
+    const p = path.join(dest, name)
+    if (isGeneratedFeatureFile(name, readFileSync(p))) {
+      unlinkSync(p)
+      lines.push(`vault: deleted ${FEATURES_DIR}/${name}, the repo no longer generates it`)
+    } else lines.push(`vault: left ${FEATURES_DIR}/${name}, not a generated feature-map file`)
+  }
+  lines.push(`vault: ${FEATURES_DIR}/ mirrors ${names.length} file${names.length === 1 ? '' : 's'} (${same} already up to date)`)
+  return lines
 }
 
 /**
@@ -207,6 +281,7 @@ export function features({ cwd = process.cwd(), git = runGit } = {}) {
     writeFileSync(dest, data)
     lines.push(`vault: wrote ${to}`)
   }
+  lines.push(...mirrorFeatures(srcDir, dir))
   return { code: 0, lines }
 }
 
