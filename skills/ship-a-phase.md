@@ -342,7 +342,9 @@ The build-plan row stays `[ ]` with a `- pr: #<PR>` field (the
 commit** flips it to `[x] (#<PR>)` so T's merge ticks it, and in the
 same commit re-derives the deadline Items' Status cells: if the flip
 finishes an Item, `scripts/check-deadlines.mjs` fails the root `npm
-test` until `plan/deadlines.md` says so (phase DL1b):
+test` until `plan/deadlines.md` says so (phase DL1b). A row listed under
+`## Unscheduled` instead loses that line in the same commit; the check
+reads a closed row's line as naming no row:
 
 ```bash
 node scripts/deadlines.mjs --write && git checkout -- LIVE_DEADLINES.md
