@@ -134,6 +134,12 @@ brief: `/plot <N>`" and return (§3 above). Note the brief's
 acceptance IDs (`A1…`) and its `Measure:` line; the PR body ticks
 the IDs this phase closes.
 
+**Calls left open at merge are accepted** (`skills/plot.md` §4).
+Rewrite each `[T to confirm #n]` still in the brief to `Accepted at
+merge (default)` and build the default it describes; the edit rides
+in this phase's PR. A `Confirmed by T (<date>): …` line is T's
+answer: build that.
+
 **A row pointing at `§ <id>` of a shared brief** (one of several
 phases `/plot` split a task into, D93) builds only that phase: read
 the brief's shared sections (Sources, Outcome, Acceptance, Decisions)

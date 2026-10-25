@@ -14,12 +14,12 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 | The map | route | yes | yes | yes | no |
 | Inventory | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Inventory") |
 | Memoir | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Memoir") |
-| The Anvil | route | yes | no | yes | no |
+| The Anvil | route | yes | yes | yes | no |
 | Loot cache | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Loot cache", "loot-cache", "loot cache") |
 | Encounter | route | yes | yes | yes | no |
 | Cutscene | route | yes | yes | yes | no |
 | Dialogue | route | yes | yes | yes | no |
-| Event | route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Event") |
+| Event | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Event") |
 | Index | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Index") |
 | Reward | route | yes | yes | yes | no |
 | Rest | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Rest", "RestChoice", "rest node", "rest site") |

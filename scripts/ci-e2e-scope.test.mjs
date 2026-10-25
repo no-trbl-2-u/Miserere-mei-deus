@@ -50,6 +50,12 @@ test('the map walk script selects the encounter suite it runs with', () => {
     assert.equal(result.full, false)
 })
 
+test('the Act 1 walk script selects the encounter suite it runs with', () => {
+    const result = classify('mobile', ['axiomancer-mobile/scripts/act1-walk-e2e.mjs'])
+    assert.equal(result.encounters, true)
+    assert.equal(result.full, false)
+})
+
 test('mixed mobile subsystems select the union', () => {
     const result = classify('mobile', [
         'axiomancer-mobile/components/hazard/HazardCard.tsx',
