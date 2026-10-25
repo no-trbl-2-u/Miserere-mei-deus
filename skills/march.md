@@ -140,6 +140,10 @@ that:
    for the row's id before building; a held row is skipped and named
    in the tick's output, the same as a blocked one.
 
+A `[T to confirm #n]` call left in a merged brief does not hold its
+row: T merging the `plot` PR accepted its default (`skills/plot.md`
+§4), and `/ship-a-phase` rewrites the marker when it picks the row.
+
 Rows marked `[x]`, `[-]`, `[skipped]` or `[blocked: …]` are
 never pickable. A blocked row (including every owner-led B-row)
 is a conversation for `/oversight` or T's session, not work for

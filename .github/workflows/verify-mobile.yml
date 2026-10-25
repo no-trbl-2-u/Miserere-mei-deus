@@ -313,6 +313,15 @@ jobs:
         if: steps.scope.outputs.encounters == 'true'
         run: npm run e2e:map-walk --workspace axiomancer-mobile
 
+      # Act 1 walked from a new game across all four doors (phase AW1a): the
+      # route comes from the engine (`npm run act1-walk` in mechanics) and meets
+      # every event kind each region carries; fights and hazard boards go
+      # through the dev skip seam after their screen mounts. Same scope as the
+      # map walk.
+      - name: Act 1 walk (four doors, every kind)
+        if: steps.scope.outputs.encounters == 'true'
+        run: npm run e2e:act1-walk --workspace axiomancer-mobile
+
       # The feature map's reachability drive (phase FM1d): from a fresh save,
       # every route docs/feature-map/features.json marks reachable is reached
       # by play or a dev seam; the flow-edge report lands in the step summary.
