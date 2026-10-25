@@ -842,6 +842,20 @@
 - conflicts: none; waits on T.
 - promote with `/plot` after the card session.
 
+### [ ] [owner] [score 5.5] One browser per playtester, seeds that survive the boot, and guides tested for truth
+- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm: four agents on one shared Playwright MCP browser; three guide lines contradicted by the tree)
+- part plan: `plan/playtest-harness.md` phases 1–2
+- proposed scope: 2 phases (S, S). (1) `playtester` drives its own Playwright (a context per agent, `addInitScript` seeds, a named screenshot path) or the swarm runs in series; done when four seeded agents report their own `encounter-mounted {seed}`. (2) `hazard.md`, `combat.md`, `minigames.md` corrected and `playtest-guides.test.mjs` checking each mechanisable claim.
+- conflicts: "The unattended critique lens sees settled screens" (this file) and CRITIQUE's mid-fade row concern the drive, not the agent; no overlap.
+- promote with `/plot`.
+
+### [ ] [owner] [score 5.0] The Act 1 walk, proven: four doors, twelve kinds, `gathering` gone, node blurbs matched to their events
+- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm, R13; `features.json` driven=false for blacksmith and item-reward; `plan/deadlines.md` W3 Item "Event-node audit and fixes (all twelve kinds)", `needs plot`)
+- part plan: `plan/playtest-harness.md` phase 3
+- proposed scope: 2 phases (M, S). (a) `e2e:map-walk` or a sibling crosses all four doors and resolves every node kind it meets (the W3 audit's fixes ride on what it finds); the anvil and item-reward routes become driven by name and by walk. (b) `kind: 'gathering'` removed or re-pointed; a drift test pairs each node blurb with its event's copy.
+- conflicts: W3 window (Nov 17); map and event copy fixes are content (D88) and go to T as `[content]` rows.
+- promote with `/plot`.
+
 ## Promoted
 
 Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_CANDIDATES_2026.md`.
