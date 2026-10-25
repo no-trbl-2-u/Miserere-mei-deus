@@ -799,11 +799,6 @@
 - conflicts: HP4f/HP4g (patterns, clocks) and HP2d–HP2f (calibration) run in the same window on the same kept set; (a) may wait on HP4e's rulings (Nov 2). T's untracked `HazardPuzzleBoardView.tsx` draft is in this folder.
 - promote with `/plot`.
 
-### [ ] [owner] [score 4.5] A glossary a sighted player can reach: Conviction, momentum, SURGE, GHOST, BANKED, BOON/MANA/MISS, the rail, and "X" as "varies"
-- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm, R9, R18; CRITIQUE RC2 item 15 for Momentum)
-- part plan: `plan/revamp/mobile.md` "The board says what it does" item 5
-- proposed scope: 1 phase (S). Tap-to-read on each chip, die and rail count, from the same keyword popup store (`state/combat/keywords.ts`); the card face's "X" rendered as "varies". No card text changes.
-- conflicts: D91 if any face glyph changes beyond the X; otherwise none.
 - promote with `/plot`.
 
 ### [ ] [owner] [score 4.5] Fewer taps between a decision and the next node: interstitials, the spoils pick, the purse and a potion nudge
@@ -847,6 +842,10 @@
 Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_CANDIDATES_2026.md`.
 
 - (2026-10-25) **[owner] [score 6.0] The board says what it does: the player's own INFERNO, "after BLIZZARD", and the END consequence on a dead tray** (proposed 2026-10-24, T's `/messy` of the Elementalist swarm) was plotted as Phase **BC1** on T's request ("plot them all", 2026-10-25): your INFERNO captioned as yours with its per-turn loss and its tick named, `after BLIZZARD −n` on the intent from a new engine `blizzardCut`, one number on the intent's a11y line, and the dead tray counting MISS faces so END carries its consequence. Item 1 stays withdrawn (T, 2026-10-24). Brief `plan/phases/phase_BC1_board_cues.md`.
+- **[owner] [score 4.5] A glossary a sighted player can reach** (proposed 2026-10-24, T's `/messy` of the Elementalist
+  swarm, R9/R18) — plotted as **GL1** by T's "plot them all" (2026-10-25), slotted anytime. Brief
+  `plan/phases/phase_GL1_board_glossary.md`: one `BOARD_GLOSSARY` source; the Conviction chip, dice (long-press), piles,
+  ledger and `IN PLAY` open a gloss; the momentum popup names SURGE; a bare `X` on a face reads `varies`. No card text changes.
 
 - (2026-10-18) Eight loop-gate `[owner]` candidates from T's `/messy` of the EV1d gate fixes (path coverage,
   acceptance map, plan-queue lint, builder/judge separation, critique record, fail-on-parent, diff-scoped
