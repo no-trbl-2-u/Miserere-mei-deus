@@ -806,13 +806,6 @@
 - conflicts: D92 board layout (no new chrome in the corners); the intent flavour is enemy copy (D88). "Printed equals applied" (this file) owns the numbers; this row owns the cues.
 - promote with `/plot`.
 
-### [ ] [owner] [score 4.5] A glossary a sighted player can reach: Conviction, momentum, SURGE, GHOST, BANKED, BOON/MANA/MISS, the rail, and "X" as "varies"
-- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm, R9, R18; CRITIQUE RC2 item 15 for Momentum)
-- part plan: `plan/revamp/mobile.md` "The board says what it does" item 5
-- proposed scope: 1 phase (S). Tap-to-read on each chip, die and rail count, from the same keyword popup store (`state/combat/keywords.ts`); the card face's "X" rendered as "varies". No card text changes.
-- conflicts: D91 if any face glyph changes beyond the X; otherwise none.
-- promote with `/plot`.
-
 ### [ ] [owner] [score 4.5] Fewer taps between a decision and the next node: interstitials, the spoils pick, the purse and a potion nudge
 - proposed: 2026-10-24, T's `/messy` (the Elementalist swarm, R10, R12; taps per node measured: rest 4, cache 4, spoil 4, map 2)
 - part plan: `plan/revamp/mobile.md` "The board says what it does" items 6–7
@@ -852,6 +845,11 @@
 ## Promoted
 
 Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_CANDIDATES_2026.md`.
+
+- **[owner] [score 4.5] A glossary a sighted player can reach** (proposed 2026-10-24, T's `/messy` of the Elementalist
+  swarm, R9/R18) — plotted as **GL1** by T's "plot them all" (2026-10-25), slotted anytime. Brief
+  `plan/phases/phase_GL1_board_glossary.md`: one `BOARD_GLOSSARY` source; the Conviction chip, dice (long-press), piles,
+  ledger and `IN PLAY` open a gloss; the momentum popup names SURGE; a bare `X` on a face reads `varies`. No card text changes.
 
 - (2026-10-18) Eight loop-gate `[owner]` candidates from T's `/messy` of the EV1d gate fixes (path coverage,
   acceptance map, plan-queue lint, builder/judge separation, critique record, fail-on-parent, diff-scoped
