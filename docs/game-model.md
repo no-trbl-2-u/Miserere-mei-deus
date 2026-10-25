@@ -39,8 +39,11 @@ the Expo app (`axiomancer-mobile`) presents it.
   read the weather (INFERNO, BLIZZARD, FROZEN, STORM; `Combat/combat.elements.ts`)
   and DRAW. Its lane `elementalist` holds all 30 and deals T's 20-card test
   deck; it comes out the same way, by its file and its `TRIAL_SETS` line.
-- **Card types** (`CardType`) are lifecycle rules. Attack, Skill and Spell
-  play FREE or PAID, then discard. A **Global** stays in play and fires on
+- **Card types** (`CardType`) are lifecycle rules. Attack and Skill play
+  FREE or PAID, then discard. A **Spell** plays FREE and discards, or PAID
+  and EXILEs, and its PAID line is a step stronger to pay for it (the Spell
+  law, D103; A Plain Word is held out of it for T, so today it discards on
+  both lines). A **Global** stays in play and fires on
   its trigger (⟳ start of your turn, 🩸 when you SACRIFICE n, 📜 when you
   play a Curse): FREE for `GLOBAL_FREE_TURNS` = 3 turn starts, PAID for the
   rest of combat. Copies stack as independent instances, each firing and

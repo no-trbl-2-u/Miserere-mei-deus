@@ -166,7 +166,7 @@ A type is a lifecycle rule. Five types:
 |---|---|
 | **Attack** | Play, then discard |
 | **Skill** | Play, then discard |
-| **Spell** | Play, then discard |
+| **Spell** | FREE: play, then discard. PAID: play, then EXILE; the PAID line is stronger than a Skill's would be (D103, below) |
 | **Global** | Stays in play and affects the combat (either side; there is no separate on-you / on-foe type). FREE: in play for 3 turns. PAID: in play for the rest of combat. No cap. Copies stack as independent instances; each fires and expires on its own (T, 2026-10-14: experimental, may change). Removed only by a card effect |
 | **Curse** | A dead card that holds a hand slot until played. It cannot be scrapped. No extra discard cost and no "While in your hand:" effect for now; later Curses may add them. The first Curse (D71) is below |
 
@@ -176,6 +176,19 @@ discard pile and is gone for the rest of combat. It is the word for every
 so the weak line keeps the card and the big line spends it.
 
 Attack, Skill and Spell share a lifecycle and stay as separate types (T).
+
+**The Spell law (T, 2026-10-24, D103; amends the Spell row above).** Every
+Spell, in every lane, ends its PAID line with EXILE; its FREE line does not
+(for now). Because losing the card is a real cost, a Spell's PAID line is
+stronger than its skill counterpart: at least one upgrade step past the
+numbers it would carry as a plain discard card (a MAGNITUDE payoff +40%, at
+least +2, the weather numbers included; LEECH, Conviction and DRAW +1). The
+guard is `checkSpellLaw` in `axiomancer-mechanics/src/Cards/card-rules.ts`,
+run by the card-rules fence; each Spell records its pre-law PAID payoffs as
+`spellLawBaseline`. Phase SP1 put the 17 trial-lane Spells under the law. A
+Plain Word is held for T: under the law the grey deck wins the first Act 1
+door in 2% of greedy runs (20% before), under the LV1 floor, so it is the
+law's one pinned exemption until T rules (`card-rules.exemptions.json`).
 The old `oath`/`hex` literals are not reused; Global replaces both.
 
 **The hand carries over.** Cards you neither play nor discard stay in your
@@ -463,3 +476,14 @@ grey library.
 - estimated phases: 1
 - conflicts: none against spec.md non-goals; doesn't touch the 3
   surviving big-numbers constraints or the LOCKED MECHANICS.
+
+## The Elementalist after the swarm (T, 2026-10-24, `/messy`)
+
+Four `playtester` agents ran Act 1 on the Elementalist test deck (`docs/reports/playtest-elementalist-act1-2026-10-24.md`), and the measured-truth call was run with the lane added (300 runs, seed 1, HEAD 1fb78ac87).
+
+- **Measured.** The 20-card test deck wins every Act 1 ledger fight and never drops below 0.89 lowest-VITAE p10, where the grey deck dies at every Death Beholder door (bw-17: 21% / 0.00) and Blood Price+half body ends bw-17 at 0.65. Mean VITAE taken per fight: grey 41.0, Elementalist 5.8. Live play agreed: no agent lost VITAE to a foe after round 3; the one VITAE the deck loses is its own INFERNO. A measurement, not a gate (D57) and not a licence to tune (D88); the deck is "the sims' best-played 20" (`elementalist.cards.ts:258`), 20 cards against grey's 10. Now in `docs/reports/measured/latest.md` (phase EM1, measured at `768dc7bf2`): the lane's column, the `elementalist~20of30` and `mixed~20of60` families (16 draws each, median and range) and a Self-burn section; the test deck loses 5.8 VITAE a fight to foes and 1.6 to its own INFERNO (3.8 at the doors).
+- **Identity.** Names are the placeholders EL1 promised (`toCard()` at `elementalist.cards.ts:230-232`: `Elementalist <slot>`, description `Elementalist trial card, <sub-lane> sub-lane.`), and that description reaches the player as `deck-card-detail-flavor` (`DeckCardDetailOverlay.tsx:105-109`, via `deck.engine.ts:287` and `combat-encounter.engine.ts:1811`). All four agents inferred "weather engine" from the HUD ticking; none was told. Names and the sentence are lane-creator step 7, T's revisions (EL1 Follow-ups `:149`; `plan/card-ledger/rehearsal-elementalist.md:10-13`), D99.
+- **Rewards.** The rule is decided: relics open lanes (D68), the combat reward is 2 random + 1 lane card from a relic's lane (D71, D100), and non-combat rewards (the cache) are unaffected by relics. The code honours none of it: `rewardPoolFor` (`combat.rewards.ts:60-67`) reads only the dev override `devRewardLaneIds` ("Set by the dev menu's CARDS section only", `Character/types.ts:99`) and falls back to the whole library; SET DECK (`DebugLaneDeck`) does not set the override, so an Elementalist test deck is handed Blood Price LEECH cards from the cache (`cache/store-actions.ts:72` uses the same roll). The cache's TAKE A CARD is blind (CRITIQUE RC2 item 11). The spoils offered an owned card (M-09) as a reward.
+- **Proposed.** (a) The lane names and the identity line: T's card session, not the loop. (b) `elementalist` joins `MEASURED_DECK_LANES` (`combat.measured-truth.ts:28`, its test, the workflow's description) so `latest.md` carries the column, plus a self-burn metric (VITAE lost to the player's own weather) the greedy witness exposes; code only. (c) The D71/D100 reward slot wired to equipped lane relics, the cache preview, and no owned card re-offered; the dev override stays as the dev override.
+- **T's calls (2026-10-24):** the 20 are the ceiling; measure them against Blood Price's ceiling, plus random 20-of-30 Elementalist draws (the spread) and random 20 from the mixed 60-card pool of both trial sets (the median). "No owned card re-offered" withdrawn: duplicates are allowed; the swarm only noted an owned card offered.
+- **T's reward rule (2026-10-24, refining D68/D71/D100): "random" means drawn from every lane the player has unlocked, and a lane unlocks the moment one of its relics is in the inventory (equipped or not). With one lane relic equipped the offer is 2 random + 1 from that lane; with three relics of one lane equipped, 1 random + 2 from the lane. Read here as the rule for every card reward, the cache included (T answered the cache question with the rule itself); if the cache is meant to stay outside it, that is one line to strike.**

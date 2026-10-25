@@ -21,12 +21,14 @@ Steps:
    repo must be attached (`add_repo` for `no-trbl-2-u/miserere-vault`) before
    `ensure` can clone it.
    Then run `node scripts/vault.mjs features`: it copies the repo's
-   generated feature map to `vault/Feature Map.canvas` and
-   `vault/02 Features.md` and touches no other file (`docs/vault.md`
-   "Generated files"). A "skipped" line just means the map is not generated
-   yet; carry on. If it exits non-zero, show T its message and carry on
-   without the copy. Never edit those two files by hand; they ride in
-   step 6's commit.
+   generated feature map to `vault/Feature Map.canvas` (the overview),
+   `vault/02 Features.md` and the `vault/Features/` folder (a note per
+   feature and a canvas per group, mirrored: stale generated files are
+   deleted, anything else there is left and named) and touches no other file
+   (`docs/vault.md` "Generated files"). A "skipped" line just means the map
+   is not generated yet; carry on. If it exits non-zero, show T its message
+   and carry on without the copy. Never edit those files by hand; they ride
+   in step 6's commit.
 2. **The goal.** Read `vault/00 Goal.md`. If the goal sentence is empty, or
    T says it has moved, ask T at most three questions with `AskUserQuestion`
    (shaped per `docs/asking-well.md`) to sharpen it, then write T's own

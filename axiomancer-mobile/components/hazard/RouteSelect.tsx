@@ -158,6 +158,38 @@ export function routeFanOverlap(n: number, rowWidth: number): number {
     return Math.min(FAN_MAX_OVERLAP, Math.max(-FAN_MIN_GAP, needed));
 }
 
+/** The top strip's three segments, and the type they share. */
+export const TOP_STRIP_SIDE_LEFT = '◆ HAZARD';
+export const TOP_STRIP_SIDE_RIGHT = '◆';
+export const TOP_STRIP_MID = 'NO RETREAT — CHOOSE TO PROCEED';
+const TOP_STRIP_SIZE = 11;
+const TOP_STRIP_SPACING = 2;
+/** The floor the middle segment's letter spacing tightens to. */
+export const TOP_STRIP_SPACING_FLOOR = 0.5;
+const TOP_STRIP_PAD_X = 12;
+const TOP_STRIP_GAP = 10;
+/** JetBrains Mono advance per px of font size, with a little slack; the ◆ falls back
+ *  to a wider face, so it is counted as a full em. */
+const STRIP_MONO_EM = 0.62;
+const STRIP_DIAMOND_EM = 1;
+
+/** A strip segment's width at `spacing`, in points. */
+function stripTextWidth(text: string, spacing: number): number {
+    return [...text].reduce((w, ch) => w + (ch === '◆' ? STRIP_DIAMOND_EM : STRIP_MONO_EM) * TOP_STRIP_SIZE + spacing, 0);
+}
+
+/** The middle segment's letter spacing at `screenW`: the full 2 when it fits, otherwise
+ *  tightened (to a tenth) until the instruction prints whole, never under the floor.
+ *  At 375 the full spacing ellipsized it to "NO RETREAT — CHOOSE TO PROC…". Computed,
+ *  not `adjustsFontSizeToFit`, which react-native-web ignores. */
+export function topStripMidSpacing(screenW: number): number {
+    const room = screenW - TOP_STRIP_PAD_X * 2 - TOP_STRIP_GAP * 2
+        - stripTextWidth(TOP_STRIP_SIDE_LEFT, TOP_STRIP_SPACING) - stripTextWidth(TOP_STRIP_SIDE_RIGHT, TOP_STRIP_SPACING);
+    const glyphs = [...TOP_STRIP_MID].length;
+    const fit = Math.floor(((room - stripTextWidth(TOP_STRIP_MID, 0)) / glyphs) * 10) / 10;
+    return Math.max(TOP_STRIP_SPACING_FLOOR, Math.min(TOP_STRIP_SPACING, fit));
+}
+
 export function RouteSelect({
     vm,
     onPick,
@@ -173,9 +205,9 @@ export function RouteSelect({
     return (
         <Animated.View entering={FadeIn.duration(220)} style={styles.root} testID="hazard-route-select">
             <View style={styles.topStrip}>
-                <Text style={styles.topStripSide}>◆ HAZARD</Text>
-                <Text style={styles.topStripMid} numberOfLines={1}>NO RETREAT — CHOOSE TO PROCEED</Text>
-                <Text style={styles.topStripSide}>◆</Text>
+                <Text style={styles.topStripSide}>{TOP_STRIP_SIDE_LEFT}</Text>
+                <Text style={[styles.topStripMid, { letterSpacing: topStripMidSpacing(width) }]} numberOfLines={1}>{TOP_STRIP_MID}</Text>
+                <Text style={styles.topStripSide}>{TOP_STRIP_SIDE_RIGHT}</Text>
             </View>
             <ScrollView contentContainerStyle={{ paddingBottom: 24 }}>
                 <View style={styles.column} testID="hazard-route-column">
@@ -248,15 +280,16 @@ const useStyles = makeStyles((AXM) => ({
         // At 375 the three segments fill the row and space-between
         // leaves no gap; the gap keeps them apart and the middle one
         // shrinks (ellipsizes) instead of butting into the diamonds.
-        gap: 10,
+        gap: TOP_STRIP_GAP,
         paddingVertical: 5,
-        paddingHorizontal: 12,
+        paddingHorizontal: TOP_STRIP_PAD_X,
         backgroundColor: HUE.black,
         borderBottomWidth: 1,
         borderBottomColor: AXM.ash,
     },
-    topStripSide: { fontFamily: FONTS.mono, fontSize: 11, color: AXM.blood, letterSpacing: 2 },
-    topStripMid: { flexShrink: 1, textAlign: 'center', fontFamily: FONTS.mono, fontSize: 11, color: AXM.bone, letterSpacing: 2 },
+    topStripSide: { fontFamily: FONTS.mono, fontSize: TOP_STRIP_SIZE, color: AXM.blood, letterSpacing: TOP_STRIP_SPACING },
+    // Its letter spacing is set per width (`topStripMidSpacing`).
+    topStripMid: { flexShrink: 1, textAlign: 'center', fontFamily: FONTS.mono, fontSize: TOP_STRIP_SIZE, color: AXM.bone },
     header: { paddingHorizontal: 16, paddingTop: 14, paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: AXM.ash },
     headerEyebrow: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 2, color: AXM.blood },
     title: { fontFamily: FONTS.gothic, fontSize: 28, lineHeight: 29, color: AXM.parchment, letterSpacing: 0.5, marginTop: 6, textShadowColor: HUE.black, textShadowOffset: { width: 1, height: 1 }, textShadowRadius: 0 },

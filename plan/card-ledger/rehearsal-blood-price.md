@@ -206,3 +206,13 @@ half-VITAE card; 7 red, 6 blue, 7 purple; no copies.
 **Fight length (T's target):** Float-Eye about 3 player turns, Brine Hag
 about 5, the Doorwarden about 7. The measured table and the proposed number
 changes are in D81; card numbers change only when T approves.
+
+## The Spell law (Phase SP1, 2026-10-24)
+
+D103: every Spell ends its PAID line with EXILE and its PAID payoffs rise one
+upgrade step. This lane's nine Spells changed: P-04c HEAL twice to three times
+the VITAE lost this round; P-05b VULNERABLE +50% to +70%; P-09b the foe loses
+12 to 17 VITAE and VULNERABLE +25% to +35%; E-01n Conviction 4 to 5; E-04c
+Conviction 1 to 2; E-07b Conviction 2 to 3; E-10d the X cap 15 to 21; M-07a
+VULNERABLE +25% to +35% and HEAL 2 to 4 per hit; M-10a the cap 15 to 21. Each
+now EXILEs on PAID (P-04c already did). FREE lines are unchanged.

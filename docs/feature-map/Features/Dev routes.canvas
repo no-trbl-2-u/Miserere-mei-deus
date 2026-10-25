@@ -1,0 +1,130 @@
+{
+	"nodes": [
+		{
+			"id": "group:dev",
+			"type": "group",
+			"x": 0,
+			"y": 0,
+			"width": 940,
+			"height": 300,
+			"label": "Dev routes"
+		},
+		{
+			"id": "elsewhere",
+			"type": "group",
+			"x": 1060,
+			"y": 0,
+			"width": 340,
+			"height": 170,
+			"label": "Elsewhere"
+		},
+		{
+			"id": "route:dev",
+			"type": "file",
+			"file": "Features/The dev menu.md",
+			"x": 40,
+			"y": 40,
+			"width": 260,
+			"height": 90,
+			"color": "4"
+		},
+		{
+			"id": "route:devaftermath",
+			"type": "file",
+			"file": "Features/Devaftermath.md",
+			"x": 340,
+			"y": 40,
+			"width": 260,
+			"height": 90,
+			"color": "1"
+		},
+		{
+			"id": "route:devart",
+			"type": "file",
+			"file": "Features/Devart.md",
+			"x": 640,
+			"y": 40,
+			"width": 260,
+			"height": 90,
+			"color": "1"
+		},
+		{
+			"id": "route:devart/rooms",
+			"type": "file",
+			"file": "Features/Devart Rooms.md",
+			"x": 40,
+			"y": 170,
+			"width": 260,
+			"height": 90,
+			"color": "1"
+		},
+		{
+			"id": "route:devframes",
+			"type": "file",
+			"file": "Features/Devframes.md",
+			"x": 340,
+			"y": 170,
+			"width": 260,
+			"height": 90,
+			"color": "1"
+		},
+		{
+			"id": "route:devpuzzle",
+			"type": "file",
+			"file": "Features/The hazard puzzle demos.md",
+			"x": 640,
+			"y": 170,
+			"width": 260,
+			"height": 90,
+			"color": "4"
+		},
+		{
+			"id": "elsewhere:route:(tabs)/exploration",
+			"type": "file",
+			"file": "Features/The map.md",
+			"x": 1100,
+			"y": 40,
+			"width": 260,
+			"height": 90,
+			"color": "4"
+		}
+	],
+	"edges": [
+		{
+			"id": "flow:route:dev->elsewhere:route:(tabs)/exploration",
+			"fromNode": "route:dev",
+			"toNode": "elsewhere:route:(tabs)/exploration",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:dev->route:devaftermath",
+			"fromNode": "route:dev",
+			"toNode": "route:devaftermath",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:dev->route:devart",
+			"fromNode": "route:dev",
+			"toNode": "route:devart",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:dev->route:devart/rooms",
+			"fromNode": "route:dev",
+			"toNode": "route:devart/rooms",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:dev->route:devframes",
+			"fromNode": "route:dev",
+			"toNode": "route:devframes",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:dev->route:devpuzzle",
+			"fromNode": "route:dev",
+			"toNode": "route:devpuzzle",
+			"color": "5"
+		}
+	]
+}

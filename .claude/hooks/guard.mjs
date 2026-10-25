@@ -93,6 +93,22 @@ const RULES = [
       'chain, not just the commit.',
   },
   {
+    // lesson pkill-self-match: the Bash tool runs the whole command line in
+    // one shell, so `pkill -f <pattern>` finds that shell (its argv holds
+    // the pattern) and kills the call itself.
+    name: 'pkill-self-match',
+    test: (cmd) => {
+      // In command position only, so prose naming pkill (a commit body) passes.
+      const m = cmd.match(/(?:^|[;&|(\n])\s*(?:sudo\s+)?pkill\b([^|;&\n]*)/)
+      return !!m && /\s-[a-zA-Z]*f\b|\s--full\b/.test(m[1]) && !/\[[^\]]+\]/.test(m[1])
+    },
+    message:
+      'guard: `pkill -f <pattern>` matches this Bash call\'s own shell and ' +
+      'kills it (lesson pkill-self-match). Bracket one letter of the ' +
+      'pattern (`pkill -f "[h]ttp.server 8931"`), or kill by pid from ' +
+      '`ps aux | grep "[h]ttp.server"`.',
+  },
+  {
     name: 'trailer-or-emoji-in-commit',
     test: (cmd) =>
       /\bgit\b[^|;&]*\bcommit\b/.test(cmd) &&
@@ -383,6 +399,9 @@ function selfTest() {
     ['git clean -fd', 'destructive-reset'],
     ['git checkout -- .', 'destructive-reset'],
     ['git commit -m "feat: x\n\nCo-Authored-By: bot"', 'trailer-or-emoji-in-commit'],
+    ['pkill -f "http.server 8931"', 'pkill-self-match'],
+    ['cd x && pkill -f wrangler; npm test', 'pkill-self-match'],
+    ['pkill --full wrangler', 'pkill-self-match'],
     // allowed commands — must NOT match any rule
     ['git push origin main', null],
     ['git commit -m "feat: ship phase 8"', null],
@@ -391,6 +410,9 @@ function selfTest() {
     ['gh issue list -n 5', null],
     ['git log -n 5', null],
     ['npm run verify', null],
+    ['pkill -f "[h]ttp.server 8931"', null],
+    ['pkill node', null],
+    ['git commit -m "guard refuses an unbracketed pkill -f now"', null],
   ]
   let failed = 0
   for (const [cmd, expected] of cases) {

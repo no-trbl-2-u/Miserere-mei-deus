@@ -23,5 +23,5 @@
 
 ## Open
 
-- **ruleset-bypass-for-t** · put T on the bypass list of ruleset 25469169 with the `gh api -X PUT .../rulesets/25469169` call in `.github/workflows/README.md` ("The `verify-gate` ruleset") · blocks: every direct push to `main` on T's token (plan-only ticks, telemetry, `fix-ci`, the `measured-truth` report commit) · workaround: open a PR from a throwaway branch instead of pushing `main`, and let `verify-gate` pass it · seen 6× · last 2026-10-24
+- **ruleset-bypass-for-t** · put T on the bypass list of ruleset 25469169 with the `gh api -X PUT .../rulesets/25469169` call in `.github/workflows/README.md` ("The `verify-gate` ruleset") · blocks: every direct push to `main` on T's token (plan-only ticks, telemetry, `fix-ci`, the `measured-truth` report commit) · workaround: open a PR from a throwaway branch instead of pushing `main`, and let `verify-gate` pass it · seen 10× · last 2026-10-25
 - **rotate-env-gh-token** · rotate the `GH_TOKEN` PAT in `.env` (and the `GH_PAT` secret if it is the same token): `/march` ticks printed it through a status echo, whole on 2026-10-21 (ship VE1c), its first nine characters on 2026-10-22 (ship LG1b) · blocks: nothing yet; those run logs may hold it · workaround: never echo it; test it with `[ -n "$GH_TOKEN" ]` · seen 2× · last 2026-10-22

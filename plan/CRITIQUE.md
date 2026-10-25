@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-10-21 at commit 02f94d07
-> Pass count: 99
+> Last pass: 2026-10-25 at commit ee9c5b83
+> Pass count: 100
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
@@ -841,14 +841,14 @@
 
 ## Pending
 
-
-### [HIGH] ci / critique-drive — captures are taken mid-fade since VE1b: the onboarding menu and the hazard routes never show
-- pass: 98 (commit f8058ad6); raised MED to HIGH at pass 99 (commit 02f94d07)
-- viewport: both (375x812 and 1280x800)
-- category: infra
-- observation: VE1b replaced `captureScreen`'s fixed `waitForTimeout(700)` with `waitForReady`. The ready flag is set once at boot, when the fonts settle, so on the onboarding entry it is already true when EMBARK is clicked; the shot lands two frames after the click. Both `02-onboarding.png` captures show the title plate still up and the THE CHRONICLE / NEW GAME / LOAD GAME / SETTINGS menu faint beneath it, while `02-onboarding.txt` lists every menu line. The critique lens on the new-player menu is blind until this is fixed. The unfixtured `05-exploration-hub` capture now lands on the boot splash for the same reason. Pass 99: the hazard route select is caught mid-stagger too. `RouteSelect.tsx` fades the hand in at `220 + i * 70`ms and the routes at `320 + i * 120`ms (320ms each), so at both viewports the right-hand hand cards and the whole risk route (THE LEAP, THE DROWNED DOOR) are still ghosted. The lens is now blind on three of the eleven screens, and the hazard screen is where the HP4 puzzle work is about to land.
-- evidence: `.critique-artifacts/{mobile,desktop}/02-onboarding.png` against `.txt`, and `{mobile,desktop}/10-hazard.png` (risk route and right-hand fan cards faded) against `10-hazard.txt` (every route line present); `axiomancer-mobile/scripts/critique-drive.mjs` onboarding `prepare` (click, no settle) and `captureScreen` (`waitForReady` in place of the 700ms wait); `scripts/lib/page-ready.mjs`.
-- suggested fix: give the onboarding entry a `settle` that waits for the menu to be opaque (the `titleSettled` pattern, keyed on a menu testID such as the NEW GAME row), and the hazard entry one that waits for the last route card's entering animation to finish (or a short post-ready settle on every fixtured screen), rather than restoring a blind sleep.
+### [MED] combat / mobile — at 375 wide the hand fan cuts four of five card names to "A PLAIN" plus one letter, so Blow, Word and Ward look the same
+- pass: 100 (commit ee9c5b83)
+- viewport: mobile (375x812)
+- category: comprehension
+- observation: on the opening Float-Eye board the five-card hand overlaps so much that every covered card's name band shows only "A PLAIN" and the first letter of the second word ("A PLAIN W", "A PLAIN U", "A PLAIN B"), and the effect rows are cut too ("Deal", "♥ VULN", "★ GU"). The starter deck's three grey cards differ only by that second word, so a first-time player cannot tell Blow from Word from Ward by name; only the right-end card prints whole. Phase 97 (2026-09-19) had the covered names wrap inside their visible strip; at 1280 the fan no longer overlaps and every name prints.
+- evidence: `.critique-artifacts/mobile/04-combat-board.png` (hand row) against `desktop/04-combat-board.png`; `axiomancer-mobile/components/combat/encounter/CombatBoard.tsx:428` `handFanLayout` (`HAND_FAN_MIN_STEP` 28).
+- suggested fix: size a covered card's name to the strip it shows, as `handNameFontSize` does for hazard hand cards, or print the name's last word first, so the distinguishing word (BLOW / WORD / WARD) is always readable; presentation only, pinned in a CombatBoard hand-fan test at 375.
+- loop note (iterate 2026-10-25): not picked. Both suggested fixes cap or reorder the covered name, which reverses T's ruling in `plan/phases/phase_BT2a_card_face.md` A3 (one uncapped line that runs on under its neighbour; T 2026-10-13, itself reversing the old wrap-in-the-sliver fix). The loop does not overturn a T call; this row waits on T's word.
 - source: critique:drive (unattended)
 
 
@@ -860,16 +860,6 @@
 - evidence: `axiomancer-mechanics/src/Combat/combat.engine.ts` (`initializeCombatEncounter`, `log: []`); `axiomancer-mobile/lib/fightRecorder.ts` `observe`; `backend/src/reports.ts` header.
 - suggested fix: have the recorder push one stamped `hand-drawn` event with the first observed state's hand (`state.hand.map(h => h.cardId)`, adding `hand` to `ObservedFight`) at `ms` 0, so no engine or contract change is needed; the held formula already treats it as a draw at turn end 0.
 - source: ship-a-phase BE2f
-
-
-### [LOW] rest / cache — "The node is spent the moment you stopped here" mixes present and past tense
-- pass: 89 (commit 2927472f)
-- viewport: both (375x812 and 1280x800)
-- category: voice
-- observation: the italic line above the two rest offers reads "The node is spent the moment you stopped here. Pick one — there is no walking back out." "is spent" and "Pick one" are present tense, but "you stopped" is past, so the sentence reads as a slip in an otherwise careful voice. The treasure cache carries the same line.
-- evidence: `.critique-artifacts/mobile/09-rest.txt`, `desktop/09-rest.png` (fixture `apprentice-bw-rest`); `axiomancer-mobile/state/presenters/rest.copy.ts:12`, `cache.copy.ts:10`.
-- suggested fix: "The node is spent the moment you stop here." in both copy files (and any test that pins the string); copy only, no rule change.
-- source: critique:drive (unattended)
 
 
 ### [LOW] ci / pr-resolve — a hand dispatch with a non-`loop/` branch exits green having done nothing
@@ -1173,6 +1163,46 @@
 - source: loop
 
 ## Done
+
+### [x] [LOW] ci / critique-drive — the hazard capture is unseeded, so the two viewports (and two passes) play different hazards — RESOLVED 2026-10-25 (branch loop/iterate-critique-hazard-seed, db0dc4f6: every screen context opens through `openScreenContext`, which injects `minigame-seed-injector.mjs`'s shared seeds, so hazard, rest and cache resolve one seed at both viewports and across passes; pinned in critique-drive.test.mjs)
+- pass: 100 (commit ee9c5b83)
+- issue: #915
+- viewport: both
+- category: infra
+- observation: the `l30-bw-hazard-arrive` fixture carries a seed, but the hazard minigame resolves its own seed through `resolveMinigameSeed`, which falls back to `Date.now() ^ Math.random()` when no `__AXM_MINIGAME_SEEDS__` global is set. `critique:drive` sets none, so this pass captured The Famine March at 375 and Flooded Undercroft at 1280, with different hands. A mobile/desktop comparison, or a before/after across passes, is not like for like.
+- evidence: `.critique-artifacts/mobile/10-hazard.txt` against `desktop/10-hazard.png`; `axiomancer-mobile/state/minigame-seeds.ts` `fallbackMinigameSeed`; `axiomancer-mobile/scripts/critique-drive.mjs` hazard entry (no seed); `scripts/minigame-seed-injector.mjs` already exists for `hazard-e2e`.
+- suggested fix: have the hazard entry in `critique-drive.mjs` inject a fixed hazard seed with the existing `minigame-seed-injector.mjs` before navigation; pin it in critique-drive.test.mjs.
+- source: critique:drive (unattended)
+
+### [x] [LOW] rest / cache — "The node is spent the moment you stopped here" mixes present and past tense — RESOLVED 2026-10-25 (branch loop/iterate-rest-tense, 55b5aaa9: both copy files read "the moment you stop here"; no test pinned the string)
+- pass: 89 (commit 2927472f)
+- issue: #911
+- viewport: both (375x812 and 1280x800)
+- category: voice
+- observation: the italic line above the two rest offers reads "The node is spent the moment you stopped here. Pick one — there is no walking back out." "is spent" and "Pick one" are present tense, but "you stopped" is past, so the sentence reads as a slip in an otherwise careful voice. The treasure cache carries the same line.
+- evidence: `.critique-artifacts/mobile/09-rest.txt`, `desktop/09-rest.png` (fixture `apprentice-bw-rest`); `axiomancer-mobile/state/presenters/rest.copy.ts:12`, `cache.copy.ts:10`.
+- suggested fix: "The node is spent the moment you stop here." in both copy files (and any test that pins the string); copy only, no rule change.
+- source: critique:drive (unattended)
+
+### [x] [LOW] hazard / mobile — the route-select top strip ellipsizes to "NO RETREAT — CHOOSE TO PROC…", cutting the instruction's verb — RESOLVED 2026-10-25 (branch loop/iterate-hazard-strip-fit, e574fe7d: the middle segment's letter spacing is fitted to the width by `topStripMidSpacing`, 2 at 414 and up, 1.2 at 375, floor 0.5; copy unchanged; pinned in RouteSelect.test.tsx)
+- pass: 100 (commit ee9c5b83)
+- issue: #900
+- viewport: mobile (375x812)
+- category: voice
+- observation: since d63cf279 the middle segment of the hazard strip shrinks to one ellipsized line. At 375 wide it reads "NO RETREAT — CHOOSE TO PROC…", so the one line that tells the player what to do loses its last word. Desktop prints it whole.
+- evidence: `.critique-artifacts/mobile/10-hazard.png` (top strip); `axiomancer-mobile/components/hazard/RouteSelect.tsx:177`.
+- suggested fix: tighten the strip's letter spacing at narrow widths or shorten the copy so it fits at 375 (for example "NO RETREAT — CHOOSE A ROUTE"); pin the fit in RouteSelect.test.tsx.
+- source: critique:drive (unattended)
+
+### [x] [HIGH] ci / critique-drive — captures are taken mid-fade since VE1b: the onboarding menu and the hazard routes never show — RESOLVED 2026-10-25 (branch loop/iterate-critique-drive-settle, 70877f90: onboarding settles on `menuSettled` (the title menu opaque), hazard on `entranceSettled` (no finite CSS animation under the route select on two polls in a row), and the hub boots `fresh-start` and passes the omen and the first-waypoint ring instead of bouncing to the title; checked by eye at both viewports; pinned in critique-drive.test.mjs)
+- pass: 98 (commit f8058ad6); raised MED to HIGH at pass 99 (commit 02f94d07)
+- issue: #896
+- viewport: both (375x812 and 1280x800)
+- category: infra
+- observation: VE1b replaced `captureScreen`'s fixed `waitForTimeout(700)` with `waitForReady`. The ready flag is set once at boot, when the fonts settle, so on the onboarding entry it is already true when EMBARK is clicked; the shot lands two frames after the click. Both `02-onboarding.png` captures show the title plate still up and the THE CHRONICLE / NEW GAME / LOAD GAME / SETTINGS menu faint beneath it, while `02-onboarding.txt` lists every menu line. The critique lens on the new-player menu is blind until this is fixed. The unfixtured `05-exploration-hub` capture now lands on the boot splash for the same reason. Pass 99: the hazard route select is caught mid-stagger too. `RouteSelect.tsx` fades the hand in at `220 + i * 70`ms and the routes at `320 + i * 120`ms (320ms each), so at both viewports the right-hand hand cards and the whole risk route (THE LEAP, THE DROWNED DOOR) are still ghosted. The lens is now blind on three of the eleven screens, and the hazard screen is where the HP4 puzzle work is about to land.
+- evidence: `.critique-artifacts/{mobile,desktop}/02-onboarding.png` against `.txt`, and `{mobile,desktop}/10-hazard.png` (risk route and right-hand fan cards faded) against `10-hazard.txt` (every route line present); `axiomancer-mobile/scripts/critique-drive.mjs` onboarding `prepare` (click, no settle) and `captureScreen` (`waitForReady` in place of the 700ms wait); `scripts/lib/page-ready.mjs`.
+- suggested fix: give the onboarding entry a `settle` that waits for the menu to be opaque (the `titleSettled` pattern, keyed on a menu testID such as the NEW GAME row), and the hazard entry one that waits for the last route card's entering animation to finish (or a short post-ready settle on every fixtured screen), rather than restoring a blind sleep.
+- source: critique:drive (unattended)
 
 ### [x] [LOW] combat / rune column — the CONVICTION caption under the ◆ chip is 6px text that ignores the system font size — RESOLVED 2026-10-18 (branch loop/iterate-conviction-caption, 7debe9d9: the caption is 9px on an 11pt line with font scaling on; the chip is 38pt and five runes still clear the tray at 375x812; pinned in CombatBoard.sig-column.test.tsx)
 - pass: 93 (commit 1a0e7b58)

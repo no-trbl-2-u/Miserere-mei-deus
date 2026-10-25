@@ -2,7 +2,10 @@ import React from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
 import { fireEvent, render } from '@testing-library/react-native';
 
-import { ROUTE_COLUMN_MAX_WIDTH, RouteSelect, routeFanOverlap } from '../RouteSelect';
+import {
+    ROUTE_COLUMN_MAX_WIDTH, RouteSelect, routeFanOverlap,
+    TOP_STRIP_MID, TOP_STRIP_SPACING_FLOOR, topStripMidSpacing,
+} from '../RouteSelect';
 import { HAZARD_HAND_LABEL, type HazardViewModel } from '@/state/presenters/hazard.engine';
 
 // Mock react-native-reanimated
@@ -141,6 +144,24 @@ describe('RouteSelect', () => {
         expect(mid.props.numberOfLines).toBe(1);
         expect(mid).toHaveStyle({ flexShrink: 1 });
         expect(mid.parent?.parent).toHaveStyle({ gap: 10 });
+    });
+
+    // Critique pass 100: at 375 the full 2pt spacing ellipsized the strip to
+    // "NO RETREAT — CHOOSE TO PROC…", cutting the instruction's verb.
+    it('the top strip tightens its middle segment so the instruction prints whole on a phone', () => {
+        // 375 fits at 1.2 by the mono estimate; a wide window keeps the full 2.
+        expect(topStripMidSpacing(375)).toBeLessThan(2);
+        expect(topStripMidSpacing(375)).toBeGreaterThanOrEqual(1);
+        expect(topStripMidSpacing(1280)).toBe(2);
+        expect(topStripMidSpacing(200)).toBe(TOP_STRIP_SPACING_FLOOR);
+        for (let w = 300; w < 600; w += 5) {
+            expect(topStripMidSpacing(w + 5)).toBeGreaterThanOrEqual(topStripMidSpacing(w));
+        }
+        const phone = { width: 375, height: 812, scale: 2, fontScale: 1 };
+        const spy = jest.spyOn(Dimensions, 'get').mockReturnValue(phone);
+        const { getByText } = render(<RouteSelect {...mockProps} />);
+        expect(getByText(TOP_STRIP_MID)).toHaveStyle({ letterSpacing: topStripMidSpacing(375) });
+        spy.mockRestore();
     });
 
     it('on a phone a card the next one overlaps wraps its name clear of the covered edge', () => {

@@ -35,6 +35,7 @@ import { readFile, stat, mkdir, writeFile, rm } from 'node:fs/promises'
 import { resolve, dirname, join, extname } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { enterLiveFight } from './live-fight-entry.mjs'
+import { injectMinigameSeeds } from './minigame-seed-injector.mjs'
 import { waitForReady } from './lib/page-ready.mjs'
 import { ensureWebExport } from './lib/web-export.mjs'
 
@@ -89,15 +90,43 @@ export async function diceSettled(page) {
     await skip.waitFor({ state: 'detached', timeout: 8000 })
 }
 
+// The app's ready flag is set once at boot, so a screen reached by a click or
+// a gate push after boot is already "ready" while it fades in (CRITIQUE pass
+// 98/99). These wait on the screen's own entrance instead.
+export async function menuSettled(page) {
+    // EMBARK hands off to the menu with a fade; it is over when the menu is opaque.
+    await page.waitForFunction(() => {
+        const menu = document.querySelector('[data-testid="title-menu"]')
+        return menu != null && getComputedStyle(menu).opacity === '1'
+    }, null, { timeout: 8000 })
+}
+
+// Reanimated's web entering animations are CSS animations, so a staggered
+// entrance is over when nothing under the root still runs a finite one. The
+// check must hold on two polls in a row: the stagger starts a frame after mount.
+export function entranceSettled(testId) {
+    return async (page) => {
+        await page.getByTestId(testId).first().waitFor({ state: 'attached', timeout: 8000 })
+        await page.waitForFunction((id) => {
+            const root = document.querySelector(`[data-testid="${id}"]`)
+            const idle = root != null && root.getAnimations({ subtree: true }).every((a) =>
+                a.playState !== 'running' || a.effect?.getComputedTiming().endTime === Infinity)
+            const stable = idle && globalThis.__axmEntranceIdle === id
+            globalThis.__axmEntranceIdle = idle ? id : null
+            return stable
+        }, testId, { timeout: 8000, polling: 100 })
+    }
+}
+
 // The critique screen set (skill §3). Each entry navigates a route and captures
 // what renders. `prepare` is a best-effort interaction to reach a downstream
 // state; if it throws, we capture whatever is on screen and move on.
 //
 // Three ways a screen gets reached:
 //
-//   1. COLD-ENTERABLE routes — `/` (title→onboarding), `/(tabs)/exploration`
-//      (the default landing tab). Navigating to them by URL renders real
-//      content.
+//   1. COLD-ENTERABLE routes — `/` (title→onboarding). Navigating to it by
+//      URL renders real content. (`/(tabs)/exploration` is not: with no save
+//      it bounces to the title, so the hub boots from `fresh-start`.)
 //
 //   1b. THE LIVE FIGHT — `/combat-encounter` holds only a fight the store
 //      has staged and leaves when there is none, so a `liveFight` entry is
@@ -134,6 +163,7 @@ export const SCREENS = [
             await titleSettled(page)
             await page.getByLabel('Embark on your journey').click({ timeout: 4000 })
         },
+        settle: menuSettled,
     },
     {
         name: 'combat',
@@ -157,6 +187,20 @@ export const SCREENS = [
     {
         name: 'exploration-hub',
         path: '/(tabs)/exploration',
+        // Opened bare, the route bounces a saveless boot to the title (pass 98).
+        // A fresh game lands on the start node's omen, then the first
+        // waypoint's ring; pass both as a player would, then capture the hub.
+        fixture: 'fresh-start',
+        waitForPath: '/cutscene',
+        prepare: async (page) => {
+            const at = (path) => (u) => u.pathname.endsWith(path)
+            await page.getByTestId('cutscene-skip').click({ timeout: 8000 })
+            await page.waitForURL((u) => at('/exploration')(u) || at('/item-reward')(u), { timeout: 15000 })
+            if (at('/item-reward')(new URL(page.url()))) {
+                await page.getByTestId('item-reward-confirm').click({ timeout: 8000 })
+                await page.waitForURL(at('/exploration'), { timeout: 15000 })
+            }
+        },
         why: 'Town / exploration hub — navigation, voice, orientation, and the early-progression state a cold player lands on.',
     },
     // ── Fixture-booted screens (state-gated routes, opened cold) ──────────
@@ -194,6 +238,7 @@ export const SCREENS = [
         fixture: 'l30-bw-hazard-arrive',
         waitForPath: '/hazard',
         why: 'The hazard minigame entry with a late-game kit — does the danger read before the first card is dragged?',
+        settle: entranceSettled('hazard-route-select'),
     },
     {
         name: 'late-game-hub',
@@ -312,6 +357,15 @@ async function captureScreen(context, baseUrl, screen, viewport, outDir, index) 
     return entry
 }
 
+// A fresh context for one screen, with the shared minigame seeds pinned
+// (CRITIQUE pass 100: the hazard puzzle fell back to a clock seed, so the two
+// viewports and two passes captured different hazards and hands).
+export async function openScreenContext(browser, viewport) {
+    const context = await browser.newContext(contextOptions(viewport))
+    await injectMinigameSeeds(context)
+    return context
+}
+
 async function driveViewport(browser, baseUrl, viewport) {
     const dims = VIEWPORTS[viewport]
     const outDir = join(ARTIFACT_ROOT, viewport)
@@ -320,7 +374,7 @@ async function driveViewport(browser, baseUrl, viewport) {
     for (let i = 0; i < SCREENS.length; i++) {
         // Fresh context per screen = genuine cold, first-time-player state
         // (no leaked onboarding/combat state between screens).
-        const context = await browser.newContext(contextOptions(viewport))
+        const context = await openScreenContext(browser, viewport)
         try {
             entries.push(await captureScreen(context, baseUrl, SCREENS[i], viewport, outDir, i))
         } finally {

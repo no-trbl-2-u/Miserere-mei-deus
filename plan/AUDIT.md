@@ -30,13 +30,40 @@
 > Pass narrative through the eleventh pass (2026-09-24) and resolved rows
 > moved verbatim to `archive-pre-revamp:plan/archive/AUDIT_2026.md` (TRIM THE FAT T4, 2026-09-25).
 
-# Site audit — 2026-09-11
+# Site audit — 2026-10-25
 
 ## Top 5 findings (scored)
 
+The bias banner above reads "until RC ships"; RC shipped 2026-10-02, so this
+pass scores without its 1.5x. The banner stays until `/oversight reset`.
+
+### [3.6] CRITIQUE pass 100 [MED]: covered hand-fan names at 375 all read "A PLAIN …"
+- category: external-critique
+- impact: 6
+- ease: 6
+- next: not the loop's: the fix reverses T's BT2a A3 ruling (2026-10-13); waits on T
+
+### [3.0] CRITIQUE pass 89 [LOW]: the rest and cache spent-node line mixes tenses (picked; issue #911)
+- category: external-critique
+- impact: 3
+- ease: 10
+- next: shipped on `loop/iterate-rest-tense`
+
+### [2.4] CRITIQUE pass 100 [LOW]: the critique-drive hazard capture is unseeded
+- category: external-critique
+- impact: 3
+- ease: 8
+- next: `/iterate`: inject a fixed seed with `minigame-seed-injector.mjs`
+
+### [2.1] CRITIQUE [LOW]: the opening hand never reaches the fight's event stream (BE2f)
+- category: external-critique
+- impact: 3
+- ease: 7
+- next: `/iterate`: the recorder stamps one `hand-drawn` at ms 0
+
 ## Pending
 
-### [ ] [contract] The Blood Price art index breaks the trial-set-removal contract (UP1a art, 2026-10-22)
+### [x] [contract] The Blood Price art index breaks the trial-set-removal contract (UP1a art, 2026-10-22) — CLOSED 2026-10-25 (already fixed in 3b4e618c, phase UP1b: `trial-set-removal.engine.test.ts` allowlists `axiomancer-mobile/assets/images/cards/index.ts`, since Metro needs a literal id per painting and an unmapped id falls back; the test passes on main; found unticked this pass)
 - category: contract
 - impact: 5
 - ease: 6
@@ -60,7 +87,8 @@
   for removal post-D99; either way, read `plan/revamp/cards.md` ("The trial
   set") before changing the rule, not just the index.
 
-### [ ] [debt] The escape ledger classifies past PRs against today's verify-* filters, so verify-root reads as expected-but-not-run on every older scripts/ PR (LG1b, 2026-10-22)
+### [x] [debt] The escape ledger classifies past PRs against today's verify-* filters, so verify-root reads as expected-but-not-run on every older scripts/ PR (LG1b, 2026-10-22) — CLOSED 2026-10-25 (iterate: `escape-ledger.mjs` classifies each PR against `verifyWorkflowsAt(mergeCommit)`, the merge tree's `verify-*` files parsed by the new pure `verifyWorkflowsFrom` in `ledger-lib.mjs`; the ledger header and the Android seed keep today's filters; seed S4, which read unconfirmed once verify-root covered #526's paths, confirms again; `escape-ledger.test.mjs` pins it)
+- issue: #909
 - category: debt
 - impact: 4
 - ease: 7

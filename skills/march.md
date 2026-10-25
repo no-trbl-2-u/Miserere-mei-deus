@@ -276,7 +276,8 @@ gh pr checks "loop/<verb>-<slug>" --repo "$GH_REPO" --required --watch --fail-fa
   shot that exists on the PR head (a full path, or a bare file name
   the head holds), or a backticked `npm`, `node` or `npx` command;
   or it ends with `(no test: <reason>)`, which `verify-gate`'s
-  summary lists for T. A ticked line with neither, or naming a file
+  summary lists for T; the reason holds no parentheses of its own,
+  or the line reads as naming no proof (ship BV3). A ticked line with neither, or naming a file
   the head lacks, turns `verify-gate` red. Check the body before
   opening the PR: `node scripts/pr-acceptance.mjs --body-file
   "$body"`. The step reads the body live, so after editing a red
@@ -285,7 +286,11 @@ gh pr checks "loop/<verb>-<slug>" --repo "$GH_REPO" --required --watch --fail-fa
   command on the head (phase LG1f) and `verify-gate` fails when one
   fails, so name a command that runs on a plain runner with no shell
   and no token (no `&&`, pipes or `$VAR`; one proof per backtick);
-  anything else is `(no test: <reason>)`. Try a body's proofs before
+  anything else is `(no test: <reason>)`. Never write the bare root
+  `npm test` in a ticked line, even as prose: the judge runs it in a
+  shallow checkout, where the git-history tests
+  (`scripts/eval/worktree-root.test.mjs` needs `HEAD~1`) fail (ship
+  FM2b); name the one test file or `--check` that proves the line. Try a body's proofs before
   opening the PR: `node scripts/pr-judge.mjs run --body-file
   "$body"`. `Closes #<N>` is the last line, one
   issue per line; `close-trailers` reads it from the commit range of

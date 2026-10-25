@@ -14,7 +14,7 @@
 //   npm run measured:truth
 //   npm run measured:truth -- --dry-run      # print the table, write nothing
 //   npm run measured:truth -- --no-issues    # file AUDIT rows but open no issues
-//   npm run measured:truth -- --runs=300 --seed=1
+//   npm run measured:truth -- --runs=300 --seed=1 --draws=16
 //
 // `.github/workflows/measured-truth.yml` runs it on mechanics merges to main
 // and on Sundays, and commits what it wrote.
@@ -41,6 +41,7 @@ const NO_ISSUES = args.has('--no-issues')
 const flag = (k, fallback) => argv.find((a) => a.startsWith(`--${k}=`))?.slice(k.length + 3) ?? fallback
 const RUNS = flag('runs', '300')
 const SEED = flag('seed', '1')
+const DRAWS = flag('draws', '16')
 
 function log(msg) { process.stderr.write(`measured-truth: ${msg}\n`) }
 
@@ -59,7 +60,7 @@ function lastHistoryLine() {
 function measure() {
   const r = spawnSync('npm', [
     'run', '-s', 'measured-truth', '--workspace', 'axiomancer-mechanics', '--',
-    '--json', `--runs=${RUNS}`, `--seed=${SEED}`,
+    '--json', `--runs=${RUNS}`, `--seed=${SEED}`, `--draws=${DRAWS}`,
   ], {
     cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'inherit'],
     shell: process.platform === 'win32', maxBuffer: 64 * 1024 * 1024,
@@ -104,7 +105,7 @@ function addIssueLine(text, title, issue) {
 }
 
 function main() {
-  log(`measuring (${RUNS} runs per cell, seed ${SEED})`)
+  log(`measuring (${RUNS} runs per cell, seed ${SEED}, ${DRAWS} draws per family)`)
   const report = measure()
   const date = new Date().toISOString().slice(0, 10)
   const commit = spawnSync('git', ['rev-parse', '--short', 'HEAD'], { cwd: ROOT, encoding: 'utf8' }).stdout.trim()

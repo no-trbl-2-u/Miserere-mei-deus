@@ -1,0 +1,114 @@
+{
+	"nodes": [
+		{
+			"id": "group:engine",
+			"type": "group",
+			"x": 0,
+			"y": 0,
+			"width": 940,
+			"height": 560,
+			"label": "Engine areas"
+		},
+		{
+			"id": "area:Cards",
+			"type": "file",
+			"file": "Features/Cards.md",
+			"x": 40,
+			"y": 40,
+			"width": 260,
+			"height": 90,
+			"color": "4"
+		},
+		{
+			"id": "area:Character",
+			"type": "file",
+			"file": "Features/VITAE and stats.md",
+			"x": 340,
+			"y": 40,
+			"width": 260,
+			"height": 90,
+			"color": "4"
+		},
+		{
+			"id": "area:Combat",
+			"type": "file",
+			"file": "Features/A fight.md",
+			"x": 640,
+			"y": 40,
+			"width": 260,
+			"height": 90,
+			"color": "4"
+		},
+		{
+			"id": "area:Effects",
+			"type": "file",
+			"file": "Features/Effects.md",
+			"x": 40,
+			"y": 170,
+			"width": 260,
+			"height": 90,
+			"color": "1"
+		},
+		{
+			"id": "area:Enemy",
+			"type": "file",
+			"file": "Features/The foes.md",
+			"x": 340,
+			"y": 170,
+			"width": 260,
+			"height": 90,
+			"color": "4"
+		},
+		{
+			"id": "area:Game",
+			"type": "file",
+			"file": "Features/Game.md",
+			"x": 640,
+			"y": 170,
+			"width": 260,
+			"height": 90,
+			"color": "4"
+		},
+		{
+			"id": "area:Items",
+			"type": "file",
+			"file": "Features/Items.md",
+			"x": 40,
+			"y": 300,
+			"width": 260,
+			"height": 90,
+			"color": "4"
+		},
+		{
+			"id": "area:Log",
+			"type": "file",
+			"file": "Features/Log.md",
+			"x": 340,
+			"y": 300,
+			"width": 260,
+			"height": 90,
+			"color": "1"
+		},
+		{
+			"id": "area:NPCs",
+			"type": "file",
+			"file": "Features/NPCs.md",
+			"x": 640,
+			"y": 300,
+			"width": 260,
+			"height": 90,
+			"color": "4"
+		},
+		{
+			"id": "area:World",
+			"type": "file",
+			"file": "Features/The world.md",
+			"x": 40,
+			"y": 430,
+			"width": 260,
+			"height": 90,
+			"color": "4"
+		}
+	],
+	"edges": []
+}
