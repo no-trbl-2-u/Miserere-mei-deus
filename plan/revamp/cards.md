@@ -150,6 +150,9 @@ relics. This replaces the stat-threshold idea.
   **Amended by D100 (lane relics stack):** with 3-4 relics of one lane
   equipped, 2 of the 3 are from that lane; with all 5 relic slots holding
   that lane's relics, all 3 are.
+  **Amended by D104 (T, 2026-10-24):** a lane unlocks when one of its relics is carried (equipped or not),
+  "random" draws from every unlocked lane (grey always), and the rule covers every card reward, the cache
+  included. Plotted as Phase RW1 (`plan/phases/phase_RW1_reward_rule.md`).
 
 **The first lane opens with the first lane relic** (T, D71). There is no
 starting relic; until a quest or elite gives one, the deck is grey plus

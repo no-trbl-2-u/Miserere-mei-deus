@@ -1024,6 +1024,14 @@ satisfied for exactly these.)
 - The loop still never invents card, keyword or art content unprompted: `/expand` may only propose candidates, as for other content, and a proposal is never built until promoted.
 - Unchanged: `Potential Assets/` is a store, never a source (D96); a sprite sheet for an already-used enemy stays enhancement (D97). First use: a `/plot` phase renaming the Blood Price cards.
 
+**D104 — Every card reward follows the relic lanes; a carried lane relic unlocks its lane.** (T, 2026-10-24, the Elementalist swarm `/messy`; recorded by the RW1 plot, 2026-10-25. Amends D68 and D71; D100's table stands.)
+
+- "Random" means drawn from every lane the player has unlocked. The grey office is always unlocked; a lane unlocks the moment one of its relics is in the inventory, equipped or not (D71 said the first lane opens with the first lane relic equipped).
+- The lane slots are counted from equipped relics, as D100 says: one equipped gives 2 random + 1 lane card; three of one lane give 1 random + 2 lane cards.
+- The rule applies to every card reward, the cache included (T answered the cache question with the rule itself). This supersedes D68's "card rewards outside of combat are not affected by relics".
+- Duplicates are allowed: "no owned card re-offered" was withdrawn the same day.
+- Built by Phase RW1 (`plan/phases/phase_RW1_reward_rule.md`).
+
 **D103 — A Spell's PAID line exiles, and is stronger for it.** (T, attended, 2026-10-24; amends D69's Spell lifecycle. T: "It should be every spell, all lanes. That's what makes a spell a spell. However, they should be stronger than regular skills so make sure their numbers are higher than their skill counterparts. And set into law that: Spells always end their paid line with EXILE and are always stronger than their skill counterpart (since the exiling of the card is such a downside, we want to make sure it's worth it to pay for it and lose it). For now, their free line does not exile.")
 
 - Every Spell, in every lane (the grey starter's A Plain Word included), ends its PAID line with EXILE. Its FREE line plays and discards, for now.
