@@ -297,9 +297,8 @@ the captions use the same words.
 - **"Its own unique tick" is one float per DoT source per beat**, which is
   what the engine already emits; the fix is on the board (stagger, stack,
   colour, label), not a new engine event. An INFERNO of intensity 4 is one
-  `INFERNO −4`, not four `−1`s. `[T to confirm]` (the alternative, one
-  float per stack point, needs an engine event change and turns a 12-stack
-  into twelve floats).
+  `INFERNO −4`, not four `−1`s. Confirmed by T (2026-10-25): "if they
+  have inferno 4, show inferno 4".
 - **"Colour of the element"** is the colour each element already has on its
   chip and log line (INFERNO red, STORM gold); status DoTs (poison, bleed,
   creeping doom) have no element and take their own glyph colour.
