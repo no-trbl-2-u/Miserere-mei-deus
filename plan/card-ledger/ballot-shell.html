@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ballot shell</title>
+<!--
+  The ballot shell (phase BV3): the page a new family's ballot is copied from
+  (plan/card-ledger/README.md "Adding the next ballot"). It runs on the shared
+  ballot kit (ballot-kit.js, next to this file) and holds a few sample
+  candidates, so it opens as a working ballot.
+
+  Every candidate carries a `job`; its colour comes from the kit's JOB_COLORS
+  table (red the hits, blue the walls, healing and utility, purple the
+  afflictions, grey colourless) and is never typed by hand. The face is
+  tinted by it, the header names it, each tab counts its kept cards per
+  colour, and the Generate text prints each kept card's colour.
+
+  How it works:
+    1. Every candidate card is rendered from the CARDS array below.
+    2. Tick the checkbox on each card you KEEP (any number per slot;
+       ticking two in one slot reads as "merge these").
+    3. Optional: type a per-slot note (a TWEAK number, a merge rule, or a
+       colour overrule such as "make it blue").
+    4. Press "Submit" to send the verdict (the first time, it asks for the
+       API URL and the token), or "Generate" and copy the plain-text sheet.
+  Unticked cards are CUT by default.
+-->
+<style>
+  /* ---- Colour tokens (light default, dark via media query or toggle) ---- */
+  :root {
+    --bg: #efe9dc;          /* page: aged paper */
+    --ink: #1b1714;         /* body text */
+    --muted: #6b6259;       /* secondary text */
+    --card: #fbf7ee;        /* card face */
+    --edge: #2a2420;        /* card border */
+    --accent: #8e1b1b;      /* banner accent */
+    --free: #3d5a40;        /* FREE line accent */
+    --paid: #7a5a12;        /* PAID line accent */
+    --art: #d9cfbd;         /* art box fill */
+    --sel: #1b1714;         /* selected card ring */
+    --btn: #1b1714;
+    --btn-ink: #fbf7ee;
+    /* The pitched colours: a face tint and an edge (border, header word) each. */
+    --body-face: #f6e2dd;  --body-edge: #9e2b25;   /* red, body */
+    --mind-face: #e0e9f4;  --mind-edge: #2b5c8c;   /* blue, mind */
+    --heart-face: #ece2f3; --heart-edge: #6a4396;  /* purple, heart */
+    --any-face: #ebe8e2;   --any-edge: #5f5850;    /* grey, any */
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141110; --ink: #ece4d6; --muted: #a39887; --card: #1f1a17;
+      --edge: #ece4d6; --accent: #e0504a; --free: #8fbf8f; --paid: #e0b54a;
+      --art: #2c2521; --sel: #ece4d6; --btn: #ece4d6; --btn-ink: #141110;
+      --body-face: #301a17;  --body-edge: #f08a80;
+      --mind-face: #16232f;  --mind-edge: #86b8e8;
+      --heart-face: #261b31; --heart-edge: #c3a2ea;
+      --any-face: #232020;   --any-edge: #b3a898;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141110; --ink: #ece4d6; --muted: #a39887; --card: #1f1a17;
+    --edge: #ece4d6; --accent: #e0504a; --free: #8fbf8f; --paid: #e0b54a;
+    --art: #2c2521; --sel: #ece4d6; --btn: #ece4d6; --btn-ink: #141110;
+    --body-face: #301a17;  --body-edge: #f08a80;
+    --mind-face: #16232f;  --mind-edge: #86b8e8;
+    --heart-face: #261b31; --heart-edge: #c3a2ea;
+    --any-face: #232020;   --any-edge: #b3a898;
+  }
+
+  /* ---- Layout ---- */
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 16px; background: var(--bg); color: var(--ink);
+    font: 15px/1.45 Georgia, "Times New Roman", serif;
+  }
+  header, main, footer { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; letter-spacing: .02em; }
+  .sub { color: var(--muted); margin: 0 0 12px; }
+  .legend { font-size: .9rem; color: var(--muted); margin-bottom: 16px; }
+  .legend b { color: var(--ink); }
+  .theme { float: right; }
+
+  /* One slot = heading + role + row of candidate cards + note field */
+  .slot { margin: 22px 0 8px; padding-top: 10px; border-top: 2px solid var(--edge); }
+  .slot h2 { font-size: 1.1rem; margin: 0; }
+  .slot .role { color: var(--muted); margin: 2px 0 10px; }
+  .row { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+  .note { width: 100%; margin-top: 8px; padding: 6px 8px; font: inherit;
+          background: var(--card); color: var(--ink); border: 1px solid var(--muted); border-radius: 4px; }
+
+  /* ---- Card face ---- */
+  label.card {
+    display: flex; flex-direction: column; cursor: pointer;
+    background: var(--card); border: 2px solid var(--edge); border-radius: 10px;
+    padding: 10px; min-height: 300px; position: relative;
+    transition: box-shadow .12s, transform .12s;
+  }
+  label.card:hover { transform: translateY(-2px); }
+  label.card.on { box-shadow: 0 0 0 4px var(--sel); }
+  label.card.c-body { background: var(--body-face); border-color: var(--body-edge); }
+  label.card.c-mind { background: var(--mind-face); border-color: var(--mind-edge); }
+  label.card.c-heart { background: var(--heart-face); border-color: var(--heart-edge); }
+  label.card.c-any { background: var(--any-face); border-color: var(--any-edge); }
+  .hue { font-weight: bold; }
+  .hue.c-body { color: var(--body-edge); }
+  .hue.c-mind { color: var(--mind-edge); }
+  .hue.c-heart { color: var(--heart-edge); }
+  .hue.c-any { color: var(--any-edge); }
+  .top { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
+  .name { font-weight: bold; }
+  .type { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); text-align: right; }
+  .art {
+    margin: 8px 0; height: 96px; border: 1px solid var(--edge); border-radius: 6px;
+    background: repeating-linear-gradient(45deg, var(--art) 0 6px, transparent 6px 12px);
+    display: grid; place-items: center; font-size: 2.6rem;
+  }
+  .line { margin: 4px 0; font-size: .92rem; }
+  .tag { display: inline-block; min-width: 42px; font-size: .7rem; font-weight: bold;
+         letter-spacing: .08em; padding: 1px 5px; border-radius: 3px; margin-right: 4px;
+         color: var(--card); vertical-align: 1px; }
+  .tag.free { background: var(--free); }
+  .tag.paid { background: var(--paid); }
+  .kw { font-variant: small-caps; font-weight: bold; }
+  .dur { display: flex; gap: 4px; margin: 2px 0 4px; }
+  .dur .tag { min-width: 0; }
+  .trig .ticon { display: inline-block; width: 1.3em; }
+  .why { margin-top: auto; padding-top: 8px; font-size: .8rem; color: var(--muted); font-style: italic; }
+  .pick { position: absolute; top: 8px; right: 8px; width: 20px; height: 20px; accent-color: var(--sel); }
+  .top { padding-right: 26px; }
+
+  .banner { margin: 0 0 10px; padding: 8px 10px; border: 2px dashed var(--accent); border-radius: 6px; color: var(--accent); }
+  /* ---- Tabs ---- */
+  .tabs { max-width: 1100px; margin: 0 auto; display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+          position: sticky; top: 0; background: var(--bg); padding: 8px 0; z-index: 2; }
+  .tabs button { margin: 0; background: transparent; color: var(--ink); border: 2px solid var(--edge); }
+  .tabs button[aria-selected="true"] { background: var(--btn); color: var(--btn-ink); }
+  .tabs .n { font-size: .8rem; opacity: .8; margin-left: 4px; }
+  .family { font-size: .85rem; color: var(--muted); margin-left: auto; }
+  .panel[hidden] { display: none; }
+  .blurb { color: var(--muted); margin: 10px 0 0; }
+  .tally { color: var(--muted); font-size: .9rem; margin: 4px 0 0; }
+  /* ---- Footer / output ---- */
+  footer { margin-top: 28px; padding-top: 12px; border-top: 2px solid var(--edge); }
+  textarea { width: 100%; font: 13px/1.4 ui-monospace, Menlo, Consolas, monospace;
+             background: var(--card); color: var(--ink); border: 1px solid var(--muted);
+             border-radius: 4px; padding: 8px; }
+  #general { min-height: 60px; }
+  #out { min-height: 220px; margin-top: 10px; }
+  button { font: inherit; padding: 8px 18px; border-radius: 6px; border: 0;
+           background: var(--btn); color: var(--btn-ink); cursor: pointer; margin: 8px 8px 0 0; }
+  .count { color: var(--muted); margin-left: 6px; }
+</style>
+<script src="ballot-kit.js"></script>
+</head>
+<body>
+<header>
+  <button class="theme" id="themeBtn" type="button" aria-label="Toggle colour theme">◐</button>
+  <p class="banner" role="note"><b>BALLOT SHELL</b> — sample candidates only. Copy this file to start a family's ballot; nothing here ships.</p>
+  <h1>The Family — ballot</h1>
+  <p class="sub">Family: the one-line fantasy. Three sub-lanes, one per tab: Payoff, Engine, Misc. Each has 10 slots × 3 candidates (90 cards in all); the target is about 1 survivor per slot, 30 in all.</p>
+  <p class="legend">
+    <b>Tick</b> each card you keep. Ticking two in one slot means "merge". <b>Unticked = CUT</b>.
+    Use a slot's note box for a TWEAK (one number), a merge rule, or a colour change ("make it blue").<br>
+    <b>Colour</b> is pitched by the card's job:
+    <span class="hue c-body">red (body)</span> the hits,
+    <span class="hue c-mind">blue (mind)</span> the walls, healing and utility,
+    <span class="hue c-heart">purple (heart)</span> the afflictions,
+    <span class="hue c-any">grey (any)</span> colourless.<br>
+    <b>DEAL</b>: damage. <b>GUARD</b>: block. <b>HEAL</b>: restore VITAE. <b>VULNERABLE</b>: the foe takes more damage from DEALs.
+    Numbers are base values before stat scaling. For reference, A Plain Blow is FREE DEAL 2 / PAID DEAL 5.<br>
+    <b>Globals:</b> FREE ⏳3 = in play 3 turns, PAID ∞ = rest of combat; all open on ⟳ start of your turn. A PAID line shows only what changes.
+    <b>Scrap floor:</b> no line gives only "gain 1 Conviction".
+  </p>
+</header>
+
+<nav class="tabs" id="tabs" role="tablist" aria-label="Sub-lanes"></nav>
+<main id="slots"></main>
+
+<footer>
+  <label for="general"><b>General notes</b> (optional)</label>
+  <textarea id="general" placeholder="Anything about the lane as a whole…"></textarea>
+  <button id="gen" type="button">Generate</button>
+  <button id="copy" type="button">Copy</button>
+  <span class="count" id="count"></span>
+  <textarea id="out" readonly placeholder="Press Submit, or Generate and copy this text back to Claude."></textarea>
+</footer>
+
+<script>
+/* =====================================================================
+   DATA — the ballot. One entry per candidate card.
+   slot: slot code; role: the slot's one-line job (shown once per slot);
+   el: optional family tag shown in the card header (an element, a sub-theme);
+   id: slot + candidate letter; type: Attack | Skill | Spell | Global;
+   job: hit | wall | heal | utility | affliction | colourless (the kit's
+   JOB_COLORS; the colour is derived from it, never typed);
+   free / paid: the two rules lines (plain text);
+   why: the drafter's one-line rationale.
+   Keep red, blue and purple near-equal across the candidates: the ballot
+   test fails an open ballot whose colours sit more than 10% off an equal
+   share (90 coloured candidates: 27 to 33 each).
+   ===================================================================== */
+const BALLOT_ID = 'ballot-shell';
+
+const TABS = [
+  { key: 'P', name: 'Payoff', blurb: 'What the family is paid for doing its thing.' },
+  { key: 'E', name: 'Engine', blurb: 'What sets the family\'s thing up and makes it grow.' },
+];
+
+const SLOTS = [
+  // Payoff
+  { slot: 'P-01', el: '⚔', role: 'Attack — a sample hit, with a wall and a rider beside it', glyph: '⚔' },
+  { slot: 'P-02', role: 'Skill — a sample defence, with an affliction and a heal beside it', glyph: '🛡' },
+  // Engine
+  { slot: 'E-01', role: 'Spell — a sample affliction, with a hit and some utility beside it', glyph: '✦' },
+  { slot: 'E-02', role: 'Global — a sample colourless engine', glyph: '⟳' },
+];
+
+const CARDS = [
+  // P-01
+  { id: 'P-01a', type: 'Attack', job: 'hit', free: 'DEAL 3.', paid: 'DEAL 7.', why: 'The plain hit the slot is for.' },
+  { id: 'P-01b', type: 'Skill', job: 'wall', free: 'GUARD 3.', paid: 'GUARD 7.', why: 'The same numbers as a wall.' },
+  { id: 'P-01c', type: 'Spell', job: 'affliction', free: 'The foe is VULNERABLE 1.', paid: 'The foe is VULNERABLE 2.', why: 'The rider on its own.' },
+  // P-02
+  { id: 'P-02a', type: 'Skill', job: 'heal', free: 'HEAL 2.', paid: 'HEAL 5.', why: 'Sustain in place of a wall.' },
+  { id: 'P-02b', type: 'Attack', job: 'hit', free: 'DEAL 2, twice.', paid: 'DEAL 4, twice.', why: 'Two small hits.' },
+  { id: 'P-02c', type: 'Spell', job: 'affliction', free: 'The foe loses 1 VITAE at the start of its turn, for 3 turns.', paid: 'The foe loses 2 VITAE at the start of its turn, for 3 turns.', why: 'A slow drain.' },
+  // E-01
+  { id: 'E-01a', type: 'Spell', job: 'affliction', free: 'The foe is VULNERABLE 1, and loses 1 VITAE.', paid: 'The foe is VULNERABLE 2, and loses 2 VITAE.', why: 'An affliction that also bites.' },
+  { id: 'E-01b', type: 'Attack', job: 'hit', free: 'DEAL 4.', paid: 'DEAL 9.', why: 'A heavier hit.' },
+  { id: 'E-01c', type: 'Skill', job: 'utility', free: 'Gain 1 Conviction. GUARD 1.', paid: 'Gain 2 Conviction. GUARD 2.', why: 'Utility that clears the scrap floor.' },
+  // E-02
+  { id: 'E-02a', type: 'Global', job: 'colourless', trig: 'turn', body: 'GUARD 1.', paidDelta: null, why: 'A colourless engine; not counted in the balance.' },
+  { id: 'E-02b', type: 'Global', job: 'colourless', trig: 'turn', body: 'HEAL 1.', paidDelta: null, why: 'A colourless engine; not counted in the balance.' },
+  { id: 'E-02c', type: 'Global', job: 'colourless', trig: 'turn', body: 'Gain 1 Conviction and GUARD 1.', paidDelta: null, why: 'A colourless engine; not counted in the balance.' },
+];
+
+/* Globals use the turn trigger only (the trigger set is closed). */
+const TRIGGERS = {
+  turn:  { icon: '⟳', text: 'Start of your turn:' },
+};
+
+/* =====================================================================
+   RENDER — pure helpers that turn data into DOM nodes.
+   ===================================================================== */
+
+/** Escape text for safe insertion as HTML. */
+const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+/** Wrap the known keywords in styled spans. */
+const markKeywords = (s) =>
+  esc(s).replace(/\b(DEAL|GUARD|HEAL|VULNERABLE|EXILE)\b/g, '<span class="kw">$1</span>');
+
+/** A card's colour (`body | mind | heart | any`), from its job through the kit's table. */
+const colorOf = (card) => BallotKit.colorOf(card.job) || 'any';
+
+/** Body of a Global card: duration badges, trigger line, optional PAID delta. */
+const globalBody = (card) => {
+  const t = TRIGGERS[card.trig];
+  return `
+    <div class="dur"><span class="tag free">FREE ⏳3</span><span class="tag paid">PAID ∞</span></div>
+    <div class="line trig"><span class="ticon" aria-hidden="true">${t.icon}</span><b>${markKeywords(t.text)}</b> ${markKeywords(card.body)}</div>
+    ${card.paidDelta ? `<div class="line"><span class="tag paid">PAID</span>${markKeywords(card.paidDelta)}</div>` : ''}`;
+};
+
+/** FREE and PAID lines for every non-Global card. */
+const plainBody = (card) => `
+    <div class="line"><span class="tag free">FREE</span>${markKeywords(card.free)}</div>
+    <div class="line"><span class="tag paid">PAID</span>${markKeywords(card.paid)}</div>`;
+
+/** Build one card face as an HTML string, tinted by its colour. */
+const cardHtml = (card, glyph, el) => {
+  const c = colorOf(card);
+  return `
+  <label class="card c-${c}" data-id="${card.id}">
+    <input class="pick" type="checkbox" value="${card.id}" aria-label="Keep ${card.id}">
+    <div class="top"><span class="name">${card.id}</span><span class="type">${card.type}${el ? ` · ${el}` : ''} · <span class="hue c-${c}">${BallotKit.colorLabel(c)}</span></span></div>
+    <div class="art" aria-hidden="true">${glyph}</div>
+    ${card.type === 'Global' ? globalBody(card) : plainBody(card)}
+    <div class="why">${esc(card.why)}</div>
+  </label>`;
+};
+
+/** Build one slot section: heading, role, its candidate cards, a note box. */
+const slotHtml = (s) => `
+  <section class="slot" data-slot="${s.slot}">
+    <h2>${s.slot}</h2>
+    <p class="role">${esc(s.role)}</p>
+    <div class="row">${CARDS.filter((c) => c.id.startsWith(s.slot)).map((c) => cardHtml(c, s.glyph, s.el)).join('')}</div>
+    <input class="note" type="text" data-note="${s.slot}" placeholder="Note for ${s.slot}: TWEAK / merge rule / colour (optional)">
+  </section>`;
+
+/** One tab panel: blurb, its live colour tally, its slots. Hidden unless it is the active tab. */
+const panelHtml = (t, i) => `
+  <div class="panel" id="panel-${t.key}" role="tabpanel" ${i ? 'hidden' : ''}>
+    <p class="blurb"><b>${t.name}</b>: ${esc(t.blurb)}</p>
+    <p class="tally" data-tally="${t.key}"></p>
+    ${SLOTS.filter((s) => s.slot.startsWith(t.key + '-')).map(slotHtml).join('')}
+  </div>`;
+
+/** Tab button with a live "kept / total" counter. */
+const tabHtml = (t, i) =>
+  `<button type="button" role="tab" data-tab="${t.key}" aria-selected="${i === 0}">${t.name}<span class="n" data-n="${t.key}"></span></button>`;
+
+document.getElementById('slots').innerHTML = TABS.map(panelHtml).join('');
+document.getElementById('tabs').innerHTML = TABS.map(tabHtml).join('') + '<span class="family" id="family"></span>';
+
+/** Show one tab's panel, hide the others. */
+const showTab = (key) => {
+  document.querySelectorAll('[data-tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === key)));
+  TABS.forEach((t) => { document.getElementById(`panel-${t.key}`).hidden = t.key !== key; });
+};
+document.getElementById('tabs').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-tab]');
+  if (b) showTab(b.dataset.tab);
+});
+
+/* =====================================================================
+   STATE — read straight from the DOM (the kit saves and restores it).
+   ===================================================================== */
+
+/** Ids of every ticked card. */
+const kept = () => [...document.querySelectorAll('.pick:checked')].map((i) => i.value);
+
+/** The family's kept cards per colour, in words: "4 red · 3 blue · 3 purple". */
+const familyTally = (k) => BallotKit.tallyWords(BallotKit.colorTally(CARDS, k));
+
+/** Update the selected-card ring, the running count and the colour tallies. */
+const refresh = () => {
+  const k = kept();
+  document.querySelectorAll('label.card').forEach((l) =>
+    l.classList.toggle('on', l.querySelector('.pick').checked));
+  document.getElementById('count').textContent = `${k.length} kept of ${CARDS.length}`;
+  document.getElementById('family').textContent = `kept: ${familyTally(k)}`;
+  TABS.forEach((t) => {
+    const cards = CARDS.filter((c) => c.id.startsWith(t.key + '-'));
+    const here = k.filter((id) => id.startsWith(t.key + '-'));
+    document.querySelector(`[data-n="${t.key}"]`).textContent = `${here.length}/${cards.length}`;
+    document.querySelector(`[data-tally="${t.key}"]`).textContent =
+      `kept in ${t.name}: ${BallotKit.tallyWords(BallotKit.colorTally(cards, here))}`;
+  });
+};
+document.getElementById('slots').addEventListener('change', refresh);
+refresh();
+
+/* =====================================================================
+   OUTPUT — build the plain-text verdict sheet from the current picks.
+   ===================================================================== */
+
+/** A kept candidate with its colour: "P-01b (red)". */
+const withColor = (id) => `${id} (${BallotKit.COLOR_TINTS[colorOf(CARDS.find((c) => c.id === id))]})`;
+
+/** One line per slot: KEEP / MERGE / CUT, the cut candidates, the note. */
+const slotLine = (s, keptIds) => {
+  const ids = CARDS.filter((c) => c.id.startsWith(s.slot)).map((c) => c.id);
+  const keep = ids.filter((id) => keptIds.includes(id));
+  const cut = ids.filter((id) => !keptIds.includes(id));
+  const note = document.querySelector(`[data-note="${s.slot}"]`).value.trim();
+  const verdict = keep.length === 0 ? 'CUT slot'
+    : keep.length === 1 ? `KEEP ${withColor(keep[0])}`
+    : `MERGE ${keep.map(withColor).join(' + ')}`;
+  return `${s.slot}: ${verdict}` +
+    (keep.length ? ` | cut: ${cut.join(', ') || '-'}` : '') +
+    (note ? ` | note: ${note}` : '');
+};
+
+/** The whole sheet: header, the colour tally, one line per slot, general notes. */
+const sheet = () => {
+  const k = kept();
+  const general = document.getElementById('general').value.trim();
+  return [
+    'BALLOT — the Family (ballot shell; sample candidates)',
+    `kept ${k.length} of ${CARDS.length}: ${familyTally(k)}`,
+    ...TABS.flatMap((t) => [
+      `-- ${t.name} --`,
+      ...SLOTS.filter((s) => s.slot.startsWith(t.key + '-')).map((s) => slotLine(s, k)),
+    ]),
+    general ? `general: ${general}` : null,
+  ].filter(Boolean).join('\n');
+};
+
+/* Generate, Copy, autosave, Clear and Submit come from the ballot kit. */
+BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
+
+/* Theme toggle: flips data-theme on <html>; no storage. */
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme
+    ? root.dataset.theme === 'dark'
+    : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+});
+</script>
+</body>
+</html>

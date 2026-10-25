@@ -1,5 +1,5 @@
 /*
-  ballot-kit.js: the shared ballot kit (phases BV1b, BV2b).
+  ballot-kit.js: the shared ballot kit (phases BV1b, BV2b, BV3).
 
   A classic script, so a ballot opened straight from disk still runs it. A
   ballot page loads it with one tag and mounts it once its cards are rendered:
@@ -30,7 +30,8 @@
 
   The pure parts (draft serialise and restore, payload build, error to words,
   post and fetch with an injected fetch, the newer-wins choice, the load
-  words) carry no DOM and are tested in Node by
+  words, and the job-to-colour table with its tally and pitch check, phase
+  BV3) carry no DOM and are tested in Node by
   `scripts/ballot-kit.test.mjs`.
 */
 (function (root) {
@@ -256,6 +257,90 @@
   }
 
   /* ---------------------------------------------------------------------
+     Colours (phase BV3). A candidate carries a `job`; its colour is derived
+     from the job through one table, never typed by hand, so every family
+     pitches the same job in the same colour. The table is Blood Price's
+     split written down: the hits red, the walls, healing and utility blue,
+     the afflictions purple (docs/lane-creator.md step 3).
+     --------------------------------------------------------------------- */
+
+  var JOB_COLORS = {
+    hit: 'body',
+    wall: 'mind',
+    heal: 'mind',
+    utility: 'mind',
+    affliction: 'heart',
+    colourless: 'any',
+  };
+
+  /** The tint each colour shows on a ballot face (the engine's colour names). */
+  var COLOR_TINTS = { body: 'red', mind: 'blue', heart: 'purple', any: 'grey' };
+
+  /** The three colours a ballot keeps near-equal; `any` is not counted. */
+  var PITCHED = ['body', 'mind', 'heart'];
+
+  /** A job's colour (`body | mind | heart | any`), or null for a job outside the table. */
+  function colorOf(job) {
+    return Object.prototype.hasOwnProperty.call(JOB_COLORS, job) ? JOB_COLORS[job] : null;
+  }
+
+  /** A colour as the ballot header names it: `red (body)`. */
+  function colorLabel(color) {
+    return COLOR_TINTS[color] + ' (' + color + ')';
+  }
+
+  /** Kept cards per colour: `{ body, mind, heart, any }`, counting only the ids in `keptIds`. */
+  function colorTally(cards, keptIds) {
+    var tally = { body: 0, mind: 0, heart: 0, any: 0 };
+    var keep = {};
+    (keptIds || []).forEach(function (id) { keep[id] = true; });
+    (cards || []).forEach(function (card) {
+      var color = colorOf(card.job);
+      if (color && keep[card.id]) tally[color] += 1;
+    });
+    return tally;
+  }
+
+  /** A tally in words: `4 red · 3 blue · 3 purple`, with grey only when some are kept. */
+  function tallyWords(tally) {
+    var parts = PITCHED.map(function (c) { return tally[c] + ' ' + COLOR_TINTS[c]; });
+    if (tally.any) parts.push(tally.any + ' ' + COLOR_TINTS.any);
+    return parts.join(' · ');
+  }
+
+  /**
+   * What is wrong with a ballot's colour pitch, as sentences; empty when it is
+   * sound. Every candidate needs a job from the table, and each of the three
+   * colours holds within 10% of an equal share of the coloured candidates
+   * (90 coloured: 27 to 33 each). `any` candidates are not counted.
+   */
+  function pitchProblems(cards) {
+    var problems = [];
+    var counts = { body: 0, mind: 0, heart: 0 };
+    (cards || []).forEach(function (card) {
+      if (card.job == null || card.job === '') {
+        problems.push(card.id + ' has no job');
+        return;
+      }
+      var color = colorOf(card.job);
+      if (!color) {
+        problems.push(card.id + ' has job "' + card.job + '", which is not in JOB_COLORS');
+        return;
+      }
+      if (color !== 'any') counts[color] += 1;
+    });
+    var total = counts.body + counts.mind + counts.heart;
+    PITCHED.forEach(function (c) {
+      // |count - total/3| <= total/30, in whole numbers.
+      if (Math.abs(3 * counts[c] - total) * 10 > total) {
+        problems.push(COLOR_TINTS[c] + ' has ' + counts[c] + ' of ' + total +
+          ' coloured candidates, more than 10% off an equal share');
+      }
+    });
+    return problems;
+  }
+
+  /* ---------------------------------------------------------------------
      The page wiring. Everything below touches the DOM and localStorage.
      --------------------------------------------------------------------- */
 
@@ -475,6 +560,13 @@
     errorWords: errorWords,
     submitVerdict: submitVerdict,
     fetchNewest: fetchNewest,
+    JOB_COLORS: JOB_COLORS,
+    COLOR_TINTS: COLOR_TINTS,
+    colorOf: colorOf,
+    colorLabel: colorLabel,
+    colorTally: colorTally,
+    tallyWords: tallyWords,
+    pitchProblems: pitchProblems,
     mount: mount,
   };
 })(typeof window !== 'undefined' ? window : globalThis);
