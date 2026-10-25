@@ -872,16 +872,6 @@
 - source: ship-a-phase BE2f
 
 
-### [LOW] rest / cache — "The node is spent the moment you stopped here" mixes present and past tense
-- pass: 89 (commit 2927472f)
-- viewport: both (375x812 and 1280x800)
-- category: voice
-- observation: the italic line above the two rest offers reads "The node is spent the moment you stopped here. Pick one — there is no walking back out." "is spent" and "Pick one" are present tense, but "you stopped" is past, so the sentence reads as a slip in an otherwise careful voice. The treasure cache carries the same line.
-- evidence: `.critique-artifacts/mobile/09-rest.txt`, `desktop/09-rest.png` (fixture `apprentice-bw-rest`); `axiomancer-mobile/state/presenters/rest.copy.ts:12`, `cache.copy.ts:10`.
-- suggested fix: "The node is spent the moment you stop here." in both copy files (and any test that pins the string); copy only, no rule change.
-- source: critique:drive (unattended)
-
-
 ### [LOW] ci / pr-resolve — a hand dispatch with a non-`loop/` branch exits green having done nothing
 - pass: antagonist on PR #526 (commit efc7f371)
 - viewport: n/a
@@ -1183,6 +1173,16 @@
 - source: loop
 
 ## Done
+
+### [x] [LOW] rest / cache — "The node is spent the moment you stopped here" mixes present and past tense — RESOLVED 2026-10-25 (branch loop/iterate-rest-tense, 55b5aaa9: both copy files read "the moment you stop here"; no test pinned the string)
+- pass: 89 (commit 2927472f)
+- issue: #911
+- viewport: both (375x812 and 1280x800)
+- category: voice
+- observation: the italic line above the two rest offers reads "The node is spent the moment you stopped here. Pick one — there is no walking back out." "is spent" and "Pick one" are present tense, but "you stopped" is past, so the sentence reads as a slip in an otherwise careful voice. The treasure cache carries the same line.
+- evidence: `.critique-artifacts/mobile/09-rest.txt`, `desktop/09-rest.png` (fixture `apprentice-bw-rest`); `axiomancer-mobile/state/presenters/rest.copy.ts:12`, `cache.copy.ts:10`.
+- suggested fix: "The node is spent the moment you stop here." in both copy files (and any test that pins the string); copy only, no rule change.
+- source: critique:drive (unattended)
 
 ### [x] [LOW] hazard / mobile — the route-select top strip ellipsizes to "NO RETREAT — CHOOSE TO PROC…", cutting the instruction's verb — RESOLVED 2026-10-25 (branch loop/iterate-hazard-strip-fit, e574fe7d: the middle segment's letter spacing is fitted to the width by `topStripMidSpacing`, 2 at 414 and up, 1.2 at 375, floor 0.5; copy unchanged; pinned in RouteSelect.test.tsx)
 - pass: 100 (commit ee9c5b83)
