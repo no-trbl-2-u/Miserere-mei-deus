@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url'
 import {
   SECTION_END, SECTION_START, antagonistAtMerge, checksOnHead, classifyComment, classifyPaths, detectFollowUps,
   countMedPlus, evaluateSeeds, globToRegExp, parseWorkflowFilter, pathMatches, renderLedgerSection, reviewAtMerge, spliceReport,
-  summarize,
+  summarize, verifyWorkflowsFrom,
 } from './ledger-lib.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
@@ -67,6 +67,20 @@ test('classifyPaths: the #526 paths, .github/workflows and root scripts, are ver
   assert.deepEqual(got.uncovered, [])
   assert.deepEqual(classifyPaths(files, workflows.filter((w) => w.file !== 'verify-root.yml')).uncovered,
     ['.github/workflows/pr-resolve.yml', 'scripts/loop-pr.test.mjs'], 'the gap, without the root lane')
+})
+
+test('verifyWorkflowsFrom: verify-* files only, sorted, a push-only one dropped; #526 against the tree it merged into', () => {
+  const dir = join(ROOT, '.github/workflows')
+  const live = readdirSync(dir).map((file) => ({ file, text: readFileSync(join(dir, file), 'utf8') }))
+  assert.deepEqual(verifyWorkflowsFrom(live).map((w) => w.file), workflows.map((w) => w.file))
+  const pushOnly = { file: 'verify-aaa.yml', text: "name: a\non:\n  push:\n    paths:\n      - 'a/**'\n" }
+  const other = { file: 'deploy.yml', text: "name: d\non:\n  pull_request:\n" }
+  assert.deepEqual(verifyWorkflowsFrom([...live].reverse().concat(pushOnly, other)).map((w) => w.file), workflows.map((w) => w.file))
+  // #526 merged before LG1b added verify-root.yml: at its merge commit nothing ran on these paths (seed S4).
+  const before = verifyWorkflowsFrom(live.filter((e) => e.file !== 'verify-root.yml'))
+  const got = classifyPaths(['.github/workflows/pr-resolve.yml', 'scripts/loop-pr.test.mjs'], before)
+  assert.deepEqual(got.triggered, [])
+  assert.equal(got.uncovered.length, 2)
 })
 
 test('classifyPaths: a mobile copy file triggers mobile and prose, and nothing is uncovered', () => {
