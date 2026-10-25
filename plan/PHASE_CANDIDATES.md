@@ -633,6 +633,7 @@
   maps only `guard` and `applyEffect`. Fixed alone in #534; the contract
   test this row proposes would have caught it.
 - **Swarm note (2026-10-24, T's `/messy`):** the DECK list omits the free NO-DIE line entirely, not only its scaling: P-02 reads DEAL 9 on the DECK tab, 19 in hand, "NO DIE 6 / +DIE 19" in the preview; with two dead dice on turn 1 every card an agent could play did something other than the list said (`docs/reports/playtest-elementalist-act1-2026-10-24.md` R2, all four agents).
+- **BC1 note (2026-10-25, `/plot`):** two threat cases for (b), left here by Phase BC1 (which owns only the cues): `projectIncomingThreat`'s no-BLIZZARD branch omits the stage-threat bonus `threatHits` applies, so the intent pill can read below the hit once a stage is entered; and the reveal panel prints each phase's authored payload (`CombatEncounterPanel.tsx:791`). Brief `plan/phases/phase_BC1_board_cues.md` Follow-ups.
 - proposed: 2026-10-12, expand pass 31
 - source signals:
   - `plan/CRITIQUE.md` `[LOW]` RC2 walk 2026-10-11, items 3 (the Hag's reveal lists phase 3 at 15, the HUD says "Deals 22"; a Float-Eye phase listed at 13 hit 19, 22 and 24), 4 (DECK prints base numbers, the hand prints scaled ones: P-01a DECK "DEAL 16", hand and log 22), 5 (card faces mix the free and paid lines, so a free play does what the face does not say), 8 (the summary counts LEECH ticks as plays and drops the EXPLOIT blow) and 10 (an unpowered Global's 3-turn chip against "in play for the rest of combat").
@@ -798,12 +799,6 @@
 - conflicts: HP4f/HP4g (patterns, clocks) and HP2d–HP2f (calibration) run in the same window on the same kept set; (a) may wait on HP4e's rulings (Nov 2). T's untracked `HazardPuzzleBoardView.tsx` draft is in this folder.
 - promote with `/plot`.
 
-### [ ] [owner] [score 6.0] The board says what it does: the player's own INFERNO, "after BLIZZARD", and the END consequence on a dead tray
-- proposed: 2026-10-24, T's `/messy` (the Elementalist swarm, findings R1, R3, R9, R15; two to three agents each)
-- part plan: `plan/revamp/mobile.md` "The board says what it does (T, 2026-10-24, `/messy`)" items 1–4
-- T's call (2026-10-24): the drag-to-stage is "obvious enough"; no hint and no PLAY on the sheet. Item 1 withdrawn.
-- proposed scope: 1 phase (M), mobile only, reading presenter state. A labelled player-side burn badge and a ledger tick line; the intent line carrying "after BLIZZARD −n" and one number where its flavour and label now disagree; `combat-end-consequence` whenever no live die matches any card. Measured by the swarm's numbers: VITAE deltas with no on-screen line, `blizzard-softened` events paired with text, `consequence:null` on all-MISS rounds.
-- conflicts: D92 board layout (no new chrome in the corners); the intent flavour is enemy copy (D88). "Printed equals applied" (this file) owns the numbers; this row owns the cues.
 - promote with `/plot`.
 
 
@@ -822,6 +817,7 @@
 
 Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_CANDIDATES_2026.md`.
 
+- (2026-10-25) **[owner] [score 6.0] The board says what it does: the player's own INFERNO, "after BLIZZARD", and the END consequence on a dead tray** (proposed 2026-10-24, T's `/messy` of the Elementalist swarm) was plotted as Phase **BC1** on T's request ("plot them all", 2026-10-25): your INFERNO captioned as yours with its per-turn loss and its tick named, `after BLIZZARD −n` on the intent from a new engine `blizzardCut`, one number on the intent's a11y line, and the dead tray counting MISS faces so END carries its consequence. Item 1 stays withdrawn (T, 2026-10-24). Brief `plan/phases/phase_BC1_board_cues.md`.
 - **[owner] [score 5.5] One browser per playtester, seeds that survive the boot, and guides tested for truth**
   (proposed 2026-10-24, T's `/messy` of the Elementalist swarm) — plotted as **PH1a-PH1c** on 2026-10-25 (`/plot`,
   run unattended for T; asap). Brief `plan/phases/phase_PH1_playtest_harness.md`; part plan
