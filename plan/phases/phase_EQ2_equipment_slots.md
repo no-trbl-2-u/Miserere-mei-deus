@@ -195,7 +195,12 @@ Listed per phase. Cross-plot overlaps, neither of which requires the other:
   default, the most a player can wear of one lane is three, which already gives two lane cards; the five-relic row
   becomes unreachable, as RW1 already noted. Whether three of a lane should now give all three lane cards is a
   reward rule (RW1a's slot function, D100), not a slot change, so EQ2 does not touch it; the answer, if T gives
-  one, amends D100 and RW1a's row.
+  one, amends D100 and RW1a's row. **Answered by T (2026-10-26), after merge:** "Well, not necessarily. They can
+  still be only weapons or armor and not GRANT a lane, but they could still help by completing a set, which could
+  help the player with set bonuses including but not limited to increasing the 2 lane-specific rewards to 3
+  lane-specific rewards. But we can work that out later with an additional attended phase row (doesn't need to be
+  part of the Act 1 MVP deadline) where we plot set bonuses." The five-relic row is now Phase SB1's question (set
+  bonuses, T's design session, `plan/phases/phase_SB1_set_bonuses.md`), not B1's. Calls 1 and 2 stand.
 - **Weapon and armor rows stay on screen when empty.** T put them at the top; the bare row is the dock's existing
   empty state.
 - **Labels: WEAPON, ARMOR, RELIC I, RELIC II, RELIC III** in the dock's capitals and numerals (the TRINKET I/II/III
@@ -234,8 +239,8 @@ A1-A8 ticked across EQ2a and EQ2b; the Measure met.
 
 ## Follow-ups (out of scope)
 
-- `plan/revamp/relics.md` (B1) still says "all 5 relic slots give 3" (D100 bullet): amended by B1, or by the
-  answer to call 3, not here (PR #922 edits the same file).
+- `plan/revamp/relics.md` (B1) still says "all 5 relic slots give 3" (D100 bullet): amended by SB1 (T's answer
+  to call 3, 2026-10-26), not here (PR #922 edits the same file).
 - Weapon and armor content: none exists; their rows are bare until B1 or a later plot authors some.
 - Whether a weapon or armor could ever grant a signature or open a lane (call 2's alternative) would reopen D100's
   five-relic row; a new `/plot` if T wants it.
