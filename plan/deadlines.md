@@ -1,38 +1,45 @@
-# Deadlines — v0.3 "Act 1 complete, playable"
+# Deadlines — MVP Nov 16, then v0.3 "Act 1 complete, playable"
 
 > Set by T in an attended session, 2026-10-19, to focus the work. Five two-week windows from Monday 2026-10-20
-> to 2026-12-28. Each window has one goal and a demo T checks at its end. T's attended time is 5-8 hours a week.
-> **The loop is not restricted to the current window** (T): `/march` keeps picking open rows top to bottom; the
-> windows tell T what to plot, attend and check, and when.
+> to 2026-12-28. Each window has one goal and a demo T checks at its end. T's attended time is 5-8 hours a week
+> (T recommitted to that pace for the MVP, 2026-10-26). **The loop is not restricted to the current window** (T):
+> `/march` keeps picking open rows top to bottom; the windows tell T what to plot, attend and check, and when.
 
-## The milestone
+## The milestones
 
-**v0.3: Act 1 complete and playable on a phone**, a build T would hand a tester. T's bar: with Blood Price, upgraded
-cards and a levelled-up player, Act 1 can be cleared. In scope:
+**MVP, Nov 16 (T, 2026-10-26): a full Act 1 run on the phone** with all the real Act 1 enemies, the six lane relics
+T authored (three per lane, LR1b), actual item icons, and a proper UI/UX treatment for every event node. T: "I think
+we could get all this done by Nov 16 if we push hard enough." The MVP pulls the enemy revamp (B2, was W4), the lane
+relics (LR1, was undated), the item icons (IT1b, was undated) and the event-node UX (was after v0.3) into W2. The
+MVP is a run, not a tuned run: hazard calibration, the hand-picked hazard swap, the cost-card session and the combat
+playtest move to W3, after the MVP.
+
+**v0.3, Dec 28: Act 1 complete and playable on a phone**, a build T would hand a tester. T's bar: with Blood Price,
+upgraded cards and a levelled-up player, Act 1 can be cleared. In scope:
 
 - hazards are fixed puzzles, with scripted results that look random (dice rolls, draws and rerolls animate like
   live play);
-- every Act 1 event node works (the event UX redesign comes after v0.3);
+- every Act 1 event node works, with its UI/UX treatment (moved into the MVP, T, 2026-10-26);
 - card upgrades;
-- the enemy revamp and the Act Boss;
-- the relic pass.
+- the enemy revamp and the Act Boss (moved into the MVP);
+- the relic pass (the six lane relics are the MVP's; B1 keeps the rest).
 
 **Lowest priority (stretch):** new cards and the card-creator workflow (B5, B6). In v0.3 only if a window has time
-left; otherwise after.
+left; otherwise after. W4 now has room for them.
 
-**After v0.3:** the event UX redesign, B7 deck tab UI, B8 card art, B10 dev menu, B9 Labyrinth re-theme, PF2.
+**After v0.3:** B7 deck tab UI, B8 card art, B10 dev menu, B9 Labyrinth re-theme, PF2.
 
 ## Windows
 
 | Window | Dates | Goal | Demo T checks at the end |
 |---|---|---|---|
-| W1 | Oct 20 - Nov 2 | Hazard puzzles locked | T plays the thirty graded candidates on the live board with scripted randomness; the kept set, its patterns and its clocks follow |
-| W2 | Nov 3 - Nov 16 | Act 1 hazards are puzzles | An Act 1 run where every hazard is a puzzle; difficulty measured |
-| W3 | Nov 17 - Nov 30 | Card upgrades and every event node works | A walk of all four regions where every node type resolves; a card upgraded and used in a fight |
-| W4 | Dec 1 - Dec 14 | Enemy revamp and the Act Boss | An Act 1 clear with Blood Price, upgrades and a levelled player, ending at the Act Boss |
-| W5 | Dec 15 - Dec 28 | Relic pass and ship | The v0.3 APK on T's device; a playtester walk; T tags v0.3 |
+| W1 | Oct 20 - Nov 2 | Hazard puzzles locked; the MVP's sessions held | T plays the thirty graded candidates on the live board with scripted randomness; the enemy sessions are held and plotted |
+| W2 | Nov 3 - Nov 16 | MVP: a full Act 1 run on the phone | A full Act 1 run on T's phone: every hazard a puzzle, the real enemies and Act Boss, the six lane relics, real item icons, every event node in its new UI |
+| W3 | Nov 17 - Nov 30 | Hazards tuned and combat proven | A walk of all four regions where every node type resolves; calibrated hazard bands; the combat playtest's verdict |
+| W4 | Dec 1 - Dec 14 | The rest of the relic pass, and an Act 1 clear | An Act 1 clear with Blood Price, upgrades and a levelled player, ending at the Act Boss |
+| W5 | Dec 15 - Dec 28 | Ship | The v0.3 APK on T's device; a playtester walk; T tags v0.3 |
 
-### W1 — Hazard puzzles locked (Oct 20 - Nov 2)
+### W1 — Hazard puzzles locked; the MVP's sessions held (Oct 20 - Nov 2)
 
 - Shipped in the first days of the window: HP1c, HP1c2, HP1d (cost cards and the worse-copy test), HP3a, HP3b
   (the illusion of randomness), HP2c (the move log), HP2a (the card audit and the pool), HP2b (five difficulty
@@ -45,50 +52,77 @@ left; otherwise after.
 - Also in the window: DL1a-DL1c, the deadline lint, so this plan cannot silently drift from the build plan again.
 - Alongside, needing no time from T: LG1a-LG1e (loop gates), CT1 (real-fight combat tests), RS1 (the loop sweeps
   reports), VE1c-VE1d, IT1a.
-- T's time (about 3 h): playing the thirty candidates once each (HP4e) at the end of the window, timed by HP2c's
-  move log, with no candidate's label described beforehand.
+- **Pulled forward for the MVP (2026-10-26):** the item-icon pick (IT1b) and both enemy sessions (B2), so the loop
+  can build enemies and icons from Nov 2.
+- T's time (about 8 h, Oct 26 - Nov 2; see "MVP schedule" below): the icon pick, two enemy sessions, the thirty
+  candidates in two sittings (HP4e), and the B2 plot.
 
-### W2 — Act 1 hazards are puzzles (Nov 3 - Nov 16)
+### W2 — MVP: a full Act 1 run on the phone (Nov 3 - Nov 16)
 
-- Rows: HP4f (the authoring patterns from the kept set), HP4g (the band clocks from the kept set's times), then
-  HP2d-HP2f (calibration set, attended calibration solves, bands on the measure). HP2c moved to W1. HP2d-HP2f are
-  amended once HP4e's rulings exist: the calibration set should be drawn from HP4's kept candidates, and HP2e's
-  Spearman bar has nothing to fit while every solve is under ten seconds
-  (`plan/phases/phase_HP4_graded_puzzle_set.md` Follow-ups).
+- Rows: HP4f (the authoring patterns from the kept set) and HP4g (the band clocks from the kept set's times), as
+  before. **Moved to W3:** HP2d-HP2f (calibration), which the MVP does not need; they are still amended once HP4e's
+  rulings exist (`plan/phases/phase_HP4_graded_puzzle_set.md` Follow-ups).
 - To plot in W2: routing the live hazard nodes to the puzzle board, each of the seven Act 1 hazard nodes drawing a
   random puzzle from the thirty for now (T, 2026-10-24), and the cuts (RE-CAST cards, the saved hazard deck,
-  `deadcard`; B3 Follow-ups). The hand-picked set is a later `/plot` of T's, "the swap", once T has played the
-  thirty in `/dev` (candidate in `plan/PHASE_CANDIDATES.md`, part plan `plan/revamp/hazards.md`).
-- T's time (about 5 h): calibration solves (HP2e); a card session designing the first cost cards (Toll, Debt,
-  Overdrive; HP1 Follow-ups).
+  `deadcard`; B3 Follow-ups). The hand-picked set, "the swap", moves to W3.
+- The MVP's loop work, which the reminder never names: the enemy revamp B2 plots on Nov 2; the lane relics
+  RW1a, LR1a and LR1c-LR1f (`plan/phases/phase_LR1_lane_relics.md`); the icons IT1b applies once T picks; AW1b; and
+  the event-node UX once plotted on Nov 6.
+- To pitch and plot in W2: the event-node UI/UX for all twelve kinds (encounter, interaction, gathering, rest,
+  village, cutscene, hazard, loot cache, narration, blacksmith, travel, labyrinth). AW1a's walk and audit
+  (`docs/reports/act1-event-audit.md`) are its starting picture.
+- T's time (about 11 h, Nov 3 - Nov 15): the hazard plot, the event-node pitch and plot, the walk's `[content]`
+  answers, a mid-MVP check on the preview build, the quest lines, the R11 review, and the MVP run.
 - Nov 11: the R11 watch ends; the five held loop-doctrine candidates come up for review.
 
-### W3 — Card upgrades and every event node works (Nov 17 - Nov 30)
+### W3 — Hazards tuned and combat proven (Nov 17 - Nov 30)
 
-- Plotted early (T, 2026-10-25) as AW1a-AW1b (`plan/phases/phase_AW1_act1_walk.md`): the audit of all twelve map
-  event kinds (encounter, interaction, gathering, rest, village, cutscene, hazard, loot cache, narration,
-  blacksmith, travel, labyrinth) rides on a browser walk across all four Act 1 doors, and a test pairs each node's
-  blurb with its event. The walk's code fixes are AW1a's; copy and map fixes are content (D88) and come to T as
-  `[content]` rows, so the W3 demo's "every node resolves" can also wait on T's answers to those.
-- Rows: UP1a-UP1g (plotted 2026-10-20, `plan/phases/phase_UP1_card_upgrades.md`): Blood Price names, the upgrade
-  law (rarity limits upgrades; numbers go up), Blood for Blood as the first rare, and the rest, blacksmith and
-  elite grant paths. The grant call was made in the 2026-10-20 session. UP1h, the boss check, waits for B2 (W4).
-- T's time (about 2 h): the region walk at the end.
+- Plotted early (T, 2026-10-25) as AW1a-AW1b (`plan/phases/phase_AW1_act1_walk.md`); AW1a shipped (#918) and AW1b
+  moved to W2 with the MVP.
+- Rows: UP1a-UP1g shipped; UP1h, the boss check, moves here from W4, since B2's boss lands in the MVP. HP2d-HP2f
+  (calibration) move here from W2. R12, the combat playtest, moves here from W4.
+- T's time (about 10 h): the hazard swap plot, calibration solves (HP2e), the cost-card session, R12 in two
+  sittings, and the region walk at the end.
 
-### W4 — Enemy revamp and the Act Boss (Dec 1 - Dec 14)
+### W4 — The rest of the relic pass, and an Act 1 clear (Dec 1 - Dec 14)
 
-- B2 (owner-led): T's enemy session (normal, elite, region boss, Act Boss), then the loop builds from its brief.
-- R12 (attended): the new combat playtest, asking whether the Act 1 roster is winnable and dangerous.
-- T's time (about 5 h): the enemy session; R12.
+- B1 (owner-led): T's session for the rest of the relic pass (the starting ring, stat-only relics), then the loop
+  builds. Moved here from W5, so W5 is only the ship.
+- The stretch (B5, B6) can take the window's spare time.
+- T's time (about 4 h): the relic session; the Act 1 clear.
 
-### W5 — Relic pass and ship (Dec 15 - Dec 28)
+### W5 — Ship (Dec 15 - Dec 28)
 
-- B1 (owner-led): T's relic session, then the loop builds. The six lane relics, their "Unlocks:" line, their
-  sources (quests, elites) and signature tracking were plotted early as LR1a-LR1g (T, 2026-10-25); T authored the
-  relics in session the same day (LR1b, done), so B1 keeps the rest of the pass.
 - LG1h (attended): the Android smoke test on the preview APK.
 - Ship: a playtester walk of all four regions, the full gate, T tags v0.3 and the APK is built.
-- T's time (about 4 h): the relic session; the device check; the tag.
+- T's time (about 3 h): the device check; the walk's plot; the tag.
+
+## MVP schedule
+
+T's human-in-the-loop work from 2026-10-26 to the MVP, in pieces of one to two hours (T works 9-5 on weekdays,
+so weekday pieces are evenings and weekends carry the longer sessions; Thursdays are left free). Each piece is a
+`T` row or a named Item in the Items table below, on the same date; loop work is not listed. The daily reminder
+reads this table for the day's piece, the high-level task it serves, how AI can help, and the next days' pieces.
+
+| Date | Hours | Piece | High-level task | How AI helps |
+|---|---|---|---|---|
+| Mon Oct 26 | 0.5 | Merge the lane-relic plot (#922), then this plan's PR | Lock the MVP plan | Ask Claude for each PR's summary and its lint result before you merge |
+| Tue Oct 27 | 1 | Pick the item icons (IT1b), the six lane relics included | Real item icons | Claude renders the 2026-10-19 candidate sheet at 28 px beside each item and finds candidates for the six new relics; you pick (art is yours, D88) |
+| Wed Oct 28 | 1.5 | Enemy session 1: the normal roster (B2) | Real Act 1 enemies | Claude drafts stat blocks and decks against measured truth and the S3 curve; you decide each foe |
+| Fri Oct 30 | 1 | Play the ten hard candidates (HP4e, part 1) | Hazard puzzles locked | None while you play (no labels shown); afterwards Claude writes the rows from the move log |
+| Sat Oct 31 | 2 | Enemy session 2: elites, the four region bosses, the Act Boss (B2) | Real Act 1 enemies | Claude drafts decks and telegraphs and checks every keyword has a live counter (D45) |
+| Sun Nov 1 | 2 | Play the twenty cost-card candidates; rule keep or cut (HP4e, part 2) | Hazard puzzles locked | Claude records your rulings in your words |
+| Mon Nov 2 | 1 | `/plot` the enemy revamp from the two sessions (B2) | Real Act 1 enemies | `/plot` writes the rows and briefs; you confirm the slot |
+| Tue Nov 3 | 1 | `/plot` live hazard routing and the cuts | Every hazard a puzzle | `/plot` |
+| Wed Nov 4 | 1.5 | Pitch the event-node UI/UX for all twelve kinds | Event-node UX | `/pitch`; Claude brings AW1's screenshots of each node and two or three directions to react to |
+| Fri Nov 6 | 1 | `/plot` the event-node UX | Event-node UX | `/messy` if the pitch spans many kinds, `/plot` if one |
+| Sat Nov 7 | 1.5 | Answer the Act 1 walk's `[content]` rows (node copy, map fixes) | Event-node UX | Claude drafts copy options per row in the game's voice; you pick and edit |
+| Mon Nov 9 | 1 | Mid-MVP check: one region on the preview build | The MVP run | Claude turns your notes into `/plot` or `/messy` rows |
+| Tue Nov 10 | 1 | Write the four quest lines LR1f files as `[content]` | The six lane relics | Claude drafts giver lines per region; you rewrite |
+| Wed Nov 11 | 1 | Review the held loop-doctrine candidates (R11 watch ends) | Loop health | Claude summarises each candidate's evidence since Oct 12 |
+| Sun Nov 15 | 2 | The MVP run: a full Act 1 run on the phone | The MVP | Afterwards Claude reads the play log and lists what broke; `/messy` the dump |
+
+Fri Nov 13 is left as buffer. Total: about 19 hours in three weeks (8, 6 and 5), inside T's 5-8 a week.
 
 ## Items
 
@@ -128,30 +162,42 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 | [x] | 2026-10-24 | Five hazard cost cards, shown on the board | W1 | HP5a, HP5b |
 | [x] | 2026-10-23 | The twenty easy and medium candidates go | W1 | HP5c |
 | [x] | 2026-10-28 | Twenty cost-card puzzles on /devpuzzle | W1 | HP5d |
-| [ ] | 2026-11-02 | W1 demo: T plays the thirty (ten hard + twenty cost-card) | W1 | HP4e |
-| [ ] | 2026-11-04 | Live hazard routing (each of the seven Act 1 hazard nodes draws a random puzzle from the thirty) and the cuts | W2 | needs plot |
-| [ ] | 2026-11-13 | Plot the hazard swap: hand-pick the seven Act 1 hazard puzzles (Breakwater 2, Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2) after playing the thirty in `/dev` | W2 | T |
+| [ ] | 2026-10-26 | Merge the lane-relic plot (#922), then the MVP plan PR (0.5 h) | W1 | T |
+| [ ] | 2026-10-27 | Pick the item icons, the six lane relics included; the loop applies them (1 h) | W1 | IT1b |
+| [ ] | 2026-10-28 | Enemy session 1: the normal roster (1.5 h) | W1 | T |
+| [ ] | 2026-10-30 | W1 demo part 1: T plays the ten hard candidates (1 h) | W1 | T |
+| [ ] | 2026-10-31 | Enemy session 2: elites, the four region bosses, the Act Boss (2 h) | W1 | T |
+| [ ] | 2026-11-01 | W1 demo part 2: T plays the twenty cost-card candidates and rules keep or cut (2 h) | W1 | HP4e |
+| [ ] | 2026-11-02 | Plot the enemy revamp from the two sessions (1 h) | W1 | B2 |
+| [ ] | 2026-11-03 | Live hazard routing (each of the seven Act 1 hazard nodes draws a random puzzle from the thirty) and the cuts (plot, 1 h) | W2 | needs plot |
+| [ ] | 2026-11-04 | Pitch the event-node UI/UX for all twelve kinds (1.5 h) | W2 | T |
 | [ ] | 2026-11-05 | The authoring patterns from the kept set | W2 | HP4f |
+| [ ] | 2026-11-05 | Node blurbs matched to their events (the Act 1 walk's second half) | W2 | AW1a, AW1b |
 | [ ] | 2026-11-06 | The band clocks, from the kept set's times | W2 | HP4g |
-| [ ] | 2026-11-07 | The calibration set | W2 | HP2d |
-| [ ] | 2026-11-11 | Calibration solves | W2 | HP2e |
-| [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends) | W2 | T |
-| [ ] | 2026-11-12 | Cost-card design session (Toll, Debt, Overdrive) | W2 | T |
-| [ ] | 2026-11-13 | Bands on the calibrated measure | W2 | HP2f |
+| [ ] | 2026-11-06 | Event-node UI/UX for all twelve kinds (plot, 1 h) | W2 | needs plot |
+| [ ] | 2026-11-07 | Answer the Act 1 walk's `[content]` rows: node copy and map fixes (1.5 h) | W2 | T |
+| [ ] | 2026-11-09 | Mid-MVP check: one region on the preview build, file what broke (1 h) | W2 | T |
+| [ ] | 2026-11-10 | Write the four quest lines LR1f files as `[content]` (1 h) | W2 | T |
+| [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | W2 | T |
+| [ ] | 2026-11-13 | The six lane relics in play: the reward rule, Unlocks line, sources, both lanes' relics, the Act 1 quests | W2 | RW1a, LR1a, LR1c, LR1d, LR1e, LR1f |
 | [x] | 2026-11-16 | Loop gates, real-fight tests, report sweep | W2 | LG1a, LG1b, LG1c, LG1d, LG1e, LG1f, LG1g, CT1a, CT1b, RS1 |
-| [ ] | 2026-11-16 | W2 demo: an Act 1 run with every hazard a puzzle | W2 | T |
-| [ ] | 2026-11-17 | Event-node audit (all twelve kinds): the Act 1 walk across four doors, its code fixes, blurbs paired; copy and map fixes go to T as `[content]` rows | W3 | AW1a, AW1b |
+| [ ] | 2026-11-16 | MVP demo: a full Act 1 run on the phone, every hazard a puzzle, real enemies, lane relics, icons, new event UI (2 h, Sun Nov 15) | W2 | T |
 | [x] | 2026-11-17 | Card-upgrade path | W3 | UP1a, UP1b, UP1c, UP1d, UP1e, UP1f, UP1g |
 | [x] | 2026-11-18 | Upgrade grant call | W3 | T |
-| [ ] | 2026-11-30 | W3 demo: a four-region walk, every node resolves | W3 | T |
-| [ ] | 2026-12-02 | Enemy revamp session and the Act Boss | W4 | B2 |
-| [ ] | 2026-12-11 | Combat playtest (winnable and dangerous) | W4 | R12 |
-| [ ] | 2026-12-12 | Upgrades proven on the Act 1 boss | W4 | UP1h |
-| [ ] | 2026-12-14 | W4 demo: an Act 1 clear ending at the Act Boss | W4 | T |
-| [ ] | 2026-12-16 | Relic pass session (the rest of B1: the starting ring, stat-only relics; the six lane relics, their signatures and sources are LR1's, undated) | W5 | B1 |
-| [ ] | 2026-12-23 | Android smoke test on the preview APK | W5 | LG1h |
-| [ ] | 2026-12-26 | Playtester walk of all four regions | W5 | needs plot |
-| [ ] | 2026-12-28 | Tag v0.3 and build the APK | W5 | T |
+| [ ] | 2026-11-18 | The calibration set | W3 | HP2d |
+| [ ] | 2026-11-19 | Plot the hazard swap: hand-pick the seven Act 1 hazard puzzles (Breakwater 2, Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2) after playing the thirty in `/dev` (1 h) | W3 | T |
+| [ ] | 2026-11-21 | Calibration solves (2 h) | W3 | HP2e |
+| [ ] | 2026-11-22 | Cost-card design session: Toll, Debt, Overdrive (1.5 h) | W3 | T |
+| [ ] | 2026-11-24 | Combat playtest part 1: the questions the command asks (1 h) | W3 | T |
+| [ ] | 2026-11-24 | Bands on the calibrated measure | W3 | HP2f |
+| [ ] | 2026-11-25 | Upgrades proven on the Act 1 boss | W3 | UP1h |
+| [ ] | 2026-11-28 | Combat playtest part 2: winnable and dangerous (2 h) | W3 | R12 |
+| [ ] | 2026-11-30 | W3 demo: a four-region walk, every node resolves (2 h) | W3 | T |
+| [ ] | 2026-12-05 | Relic pass session (the rest of B1: the starting ring, stat-only relics; the six lane relics are LR1's, in the MVP) (2 h) | W4 | B1 |
+| [ ] | 2026-12-14 | W4 demo: an Act 1 clear ending at the Act Boss (2 h) | W4 | T |
+| [ ] | 2026-12-23 | Android smoke test on the preview APK (1 h) | W5 | LG1h |
+| [ ] | 2026-12-26 | Playtester walk of all four regions (plot, 1 h) | W5 | needs plot |
+| [ ] | 2026-12-28 | Tag v0.3 and build the APK (1 h) | W5 | T |
 
 ## Unscheduled
 
@@ -174,7 +220,6 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - VE1c — loop work listed alongside W1, needing no time from T; date not set.
 - VE1d — loop work listed alongside W1, needing no time from T; date not set.
 - PF2 — attended; after v0.3 (The milestone), and waits on T's Android baseline numbers.
-- IT1b — blocked: owner-led, art is T's; date not set.
 - ML1a — loop work; fixes a live merge defect, needs no time from T; date not set.
 - ML1b — loop work; follows ML1a, and the brief asks for a comparison before building it; date not set.
 - TP1b — blocked: owner-led, art is T's; date not set.
@@ -233,18 +278,12 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - FM2c — loop work; follows FM2a; date not set.
 - FM2d — attended; T's look in Obsidian once FM2b and FM2c ship; date not set.
 - EM1 — loop work; a measurement (D57) that blocks no window's goal; R12's Item (2026-12-11) still decides what the matrix measures; date not set.
-- RW1a — loop work; T's decided reward rule (D104), blocks no window's goal (lane relics are B1's, W5); date not set.
 - RW1b — loop work; the cache shows its card, blocks no window's goal; date not set.
 - PH1a — loop tooling, slotted asap; serves the attended playtester passes (HP2e, the W3 and W5 walks) but finishes no Item; date not set.
 - PH1b — loop tooling; follows PH1a; date not set.
 - PH1c — loop tooling (guide fixes and the guide test); blocks no window's goal; date not set.
 - TQ1 — loop work, mobile UX from the Elementalist swarm; blocks no window's goal and T set no date; date not set.
 - GL1 — loop work; the board glossary from the Elementalist swarm, blocks no window's goal; date not set.
-- LR1a — loop work; the Signet opens Blood Price and the "Unlocks:" line, follows RW1a; date not set.
-- LR1c — loop work; relic sources in the engine, blocks no window's goal; date not set.
-- LR1d — loop work; Blood Price's relics and per-signature costs, follows LR1a and LR1c; date not set.
-- LR1e — loop work; the Elementalist's relics, follows LR1d; date not set.
-- LR1f — loop work; the Act 1 quests, follows LR1c, LR1d and LR1e; date not set.
 - LR1g — loop work; signature tracking, blocks no window's goal; date not set.
 
 ## How a window closes
@@ -255,6 +294,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-26** — **the MVP milestone, Nov 16** (T, in conversation: "I think we could get all this done by Nov 16 if we push hard enough"; T committed to 5-8 attended hours a week; plan edit run for T, merged by T). **Added** the MVP to the milestones: a full Act 1 run on the phone with the real Act 1 enemies, T's six lane relics, actual item icons and the event-node UI/UX. **Added** the "MVP schedule" table and a `T` row for each human piece from Oct 26 to Nov 15, one to two hours each, weekday evenings and weekend sessions. **Moved** the enemy revamp (B2) from Dec 2 to Nov 2 (now "Plot the enemy revamp from the two sessions", with two session rows before it), split HP4e into two sittings (Oct 30 and Nov 1; HP4e's Item moved from Nov 2 to Nov 1), re-dated hazard routing from Nov 4 to Nov 3, and moved the Act 1 walk Item (AW1a, AW1b) from W3 Nov 17 to W2 Nov 5. **Added** Items for the item icons (IT1b, Oct 27), the event-node pitch (`T`, Nov 4) and plot (`needs plot`, Nov 6; it was listed as after v0.3), the lane relics (RW1a, LR1a, LR1c-LR1f, Nov 13) and four `T` pieces (the walk's `[content]` answers, a mid-MVP check, the quest lines, the plan merge); **removed** their Unscheduled lines. LR1g stays Unscheduled (signature tracking, not needed for the run). **Moved after the MVP** (W3), since the MVP is a run, not a tuned run: HP2d-HP2f (Nov 7-13 to Nov 18-24), the hazard swap plot (Nov 13 to Nov 19), the cost-card session (Nov 12 to Nov 22), UP1h (Dec 12 to Nov 25) and R12 (Dec 11 to Nov 28, with a 1 h questions piece on Nov 24). **Moved** B1's rest-of-pass session from Dec 16 (W5) to Dec 5 (W4). **Renamed** W1, W2, W3, W4 and W5 to their new goals; the W2 demo is now the MVP demo. Windows' dates unchanged; v0.3 still tags Dec 28. Nothing ticked.
 - **2026-10-25** — **lane relics re-plotted on T's relics** (T authored them in session; plot update run unattended on #922). **Removed** LR1b's Unscheduled line (done in session). **Edited** LR1d's and LR1e's Unscheduled lines to their new scope and **added** lines for LR1f (the quests, was LR1e) and LR1g (signature tracking): T set no date. **Edited** the W5 Item "Relic pass session" (B1) and the W5 notes: the six lane relics and their signatures are now LR1's, so B1 keeps the starting ring and stat-only relics. Nothing ticked (LR1b is a build-plan row, not an Item); no date moved.
 - **2026-10-25** — **lane relics plotted** (T in session, plot run unattended, `/plot`, slotted after SG1 and BC1). **Added** Unscheduled lines for LR1a-LR1e: T set no date, and LR1b is attended, so its date is T's to pick. **Edited** the W5 Item "Relic pass session" (B1) and the W5 notes: its premise narrowed, since the five lane relics and their sources are now LR1's; B1 keeps the starting ring, the signatures and the rest of the pass. **Ticked** nothing.
 - **2026-10-25** — **the signature trigger re-plotted** (T in session after #921 merged, plot rework run unattended). **Edited** SG1's Unscheduled line to the new scope (no starting ring, every relic grant worn, unworn relics flagged); T set no date. **Edited** no Item: W5's "Relic pass session" (B1) still holds and gains the ring as an unsourced relic for T's later lane; W4's enemy revamp (B2) no longer meets a befriendable Float-Eye, since that call is cut. Nothing ticked; no date moved.
