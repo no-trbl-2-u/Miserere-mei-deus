@@ -1028,9 +1028,10 @@ satisfied for exactly these.)
 
 - The player picks a character at run start. Each character has a unique portrait, a starting relic that starts equipped, a starting stat allocation, two starting lanes different from its relic's lane, and a one-line playstyle.
 - The reward pool is the character's two starting lanes plus the lane of every worn relic. Worn relics weight the offer toward their lane (D100's slots); starting lanes widen the pool and add no guaranteed slot. Unequipping a relic removes its lane, the starting relic included. A carried, unworn relic does nothing.
-- Grey starter cards are not a lane and are never offered as rewards. A run with no character (an old save) keeps D107's stopgap pool.
+- Grey starter cards are not a lane and are never offered as rewards. Once the first character goes live, every run starts at character select, so the pool is never empty and D107's grey fallback is deleted; a save made before characters cannot be continued and is offered for deletion (T, 2026-10-26).
+- A character starts with Blow 3 / Ward 2 / Word 2 plus one card from each of its three lanes (no Spell or Global), and its stats total 15 (T, 2026-10-26).
 - The select screen is a fighting-game character select: a two-row carousel of squares at the bottom, locked squares a question-mark icon; the portrait and the starting relic are its two focal elements, then stats and the playstyle; the starting lanes are never named.
-- Portraits, relics, stat spreads and playstyle lines are T's content (D88). One character for the mid-November deadline, three for December. Character content waits on a third lane, because a character needs three distinct lanes.
+- Portraits, relics, stat spreads and playstyle lines are T's content (D88). The first character is due 2026-10-26 (T); three for December. Character content waits on at least one new lane, because a character needs three distinct lanes; T plans two new lanes before a character goes live.
 - Built by Phase CH1 (`plan/phases/phase_CH1_character_select.md`).
 
 **D105 — Three kinds of slot: one Weapon, one Armor, three Relic slots.** (T, 2026-10-25, in session; recorded by the EQ2 plot, run unattended. T: "There are only 3 types of slots: Weapon (top), Armor (2nd from top), 3x relics. Relics can be named anything, but ultimately they all take up the same 3 relic slots.")

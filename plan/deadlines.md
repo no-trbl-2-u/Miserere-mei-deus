@@ -151,6 +151,7 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 | [x] | 2026-10-24 | Cost-card engine and the worse-copy test | W1 | HP1c, HP1c2, HP1d |
 | [x] | 2026-10-27 | The puzzle looks random (roll, draw, reroll) | W1 | HP3a, HP3b |
 | [x] | 2026-10-26 | The dev-only move log (times HP4e's solves) | W1 | HP2c |
+| [ ] | 2026-10-26 | First character playable (T: end of day; waits on a third lane) | W1 | CH1a, CH1b, CH1c, CH1d, CH1e, CH1f |
 | [x] | 2026-10-30 | Card audit; T rules the cut at the HP2a merge | W1 | HP2a |
 | [x] | 2026-10-31 | Difficulty features in the solver | W1 | HP2b |
 | [x] | 2026-10-23 | Decision pressure in the puzzle report | W1 | HP4a |
@@ -285,12 +286,6 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - EQ2b — loop work; follows EQ2a, the slot words on screen; date not set.
 - SB1 — attended: T's set-bonus design session; T said it is not part of the Act 1 MVP deadline; date not set.
 - ER1 — loop work; every fought elite in the act respawns after a rest until it drops its relic, blocks no window's goal and T set no date; date not set.
-- CH1a — loop work, slotted asap (T); T targets one character for the Nov 16 MVP, but no MVP Item covers characters and the milestone does not name them; date not set (call #8 on the plot PR).
-- CH1b — loop work; follows CH1a; date not set.
-- CH1c — loop work; follows CH1a; date not set.
-- CH1d — loop work; follows CH1b; date not set.
-- CH1e — attended and blocked: T authors the first character once a third lane is plotted, which T has not done; T's Nov 16 target is not a set date; date not set.
-- CH1f — blocked on the third lane, as CH1e; follows CH1b-CH1e; date not set.
 
 ## How a window closes
 
@@ -300,6 +295,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-26** — **first character dated** (T on the CH1 plot PR, call 8). **Added** the Item "First character playable", due 2026-10-26 in W1, naming CH1a-CH1f; **removed** their six Unscheduled lines. T wants the first character playable by end of day and knows the date is tight: RW1a and the CH1 chain must ship, and CH1e/CH1f wait on a third lane T has not plotted. **Ticked** nothing.
 - **2026-10-26** — **character selection plotted** (T in session, `/plot asap` from the pitch, run unattended). **Added** Unscheduled lines for CH1a-CH1f: T targets one character for the Nov 16 MVP and three for a December milestone T is formalising, but no Item covers characters, the MVP milestone does not name them, and CH1e-CH1f are blocked on a third lane T has not plotted; a Nov 16 Item is call #8 on the plot PR. **Edited** no Item: the MVP and W2 relic Items keep their premise (CH1 changes how the pool opens, not whether the six relics ship). **Ticked** nothing; no date moved.
 - **2026-10-26** — **set bonuses plotted** (T in session, plot run unattended, `/plot`). **Added** an Unscheduled line for SB1 (attended design session): T said it "doesn't need to be part of the Act 1 MVP deadline" and set no date. **Edited** no Item: the MVP Items keep their premise (SB1 builds nothing), and W4's "Relic pass session" (B1) keeps its scope (the starting ring, stat-only relics); D100's five-relic row, which EQ2 had left to B1, moves to SB1 and was never in that Item. **Ticked** nothing.
 - **2026-10-26** — **elite respawn plotted** (T in session, plot run unattended, `/plot`). **Added** an Unscheduled line for ER1: T set no date, and the row blocks no window's goal. No Item edited: the MVP and W2 relic Items keep their premise (ER1 changes how often the elite's relic can roll, not whether the six relics ship).

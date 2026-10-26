@@ -49,10 +49,13 @@ plus the lane of every worn relic, never grey, so late-run lane control differs 
 ## Acceptance
 
 - **A1** A character definition (engine) carries a portrait key, a starting relic id, base stats, two starting lane
-  ids and a short playstyle line. A content test fails if a character's starting lanes include its relic's lane,
-  or name an unregistered lane.
-- **A2** Starting a run with a character equips its relic, applies its stats, and records its two starting lanes on
-  the save; old saves load with no character and keep the D107 stopgap pool.
+  ids, three starting lane cards and a short playstyle line. A content test fails if a character's starting lanes
+  include its relic's lane, or name an unregistered lane; if its stats do not total 15; or if its starting lane
+  cards are not exactly one card from each of its three lanes (the two starting lanes and the relic's), or include
+  a Spell, a Global or a Curse.
+- **A2** Starting a run with a character equips its relic, applies its stats, deals the character deck (Blow 3,
+  Ward 2, Word 2 plus its three lane cards), and records its two starting lanes on the save. Until the first
+  character goes live (CH1f), a save with no character loads as today's run.
 - **A3** The reward pool is the character's two starting lanes plus every worn relic's lane. Wearing an off-lane
   relic adds its lane; unwearing removes it; an unworn relic changes nothing; grey is never offered. An engine test
   covers each case.
@@ -62,10 +65,13 @@ plus the lane of every worn relic, never grey, so late-run lane control differs 
   the absence of lane names.
 - **A5** The measured report gains a column: the lane mix of reward offers at run start and after three worn
   relics, per character.
-- **A6** The first character (mid-November) is selectable; the other carousel squares are locked.
+- **A6** The first character is selectable; the other carousel squares are locked. From then on every run starts at
+  character select: the grey empty-pool fallback is deleted (a test asserts a run's pool is never empty), and a save
+  made before characters cannot be continued: its slot reads "Made before characters" and offers only deletion
+  (T, 2026-10-26).
 - **A7** T's first character is written down in this brief's "T's characters" table: the portrait (a gallery id or
   an image T supplies), the starting relic (an existing library relic or one T writes, with its lane), the stat
-  spread, the two starting lanes and the playstyle line, each in T's words. (Split out of A6 so the authoring and
+  spread, the two starting lanes, the three starting lane cards and the playstyle line, each in T's words. (Split out of A6 so the authoring and
   the wiring are closed by different phases.)
 
 Measure: the A3 engine test passes, and the A5 report column shows the late-run lane mix includes a lane absent at
@@ -80,15 +86,18 @@ content test, the validator's fixture cases and the new-run-with-character test 
 no character loads unchanged.
 
 - Scope: new `axiomancer-mechanics/src/Character/roster.ts`: `CharacterDefinition` (`id`, `name`, `portraitKey`,
-  `startingRelicId`, `baseStats`, `startingLaneIds: readonly [string, string]`, `playstyle`), `CHARACTER_ROSTER`
+  `startingRelicId`, `baseStats`, `startingLaneIds: readonly [string, string]`, `startingCardIds: readonly [string,
+  string, string]`, `playstyle`), `CHARACTER_ROSTER`
   (empty in this phase; T's content lands in CH1f), `getCharacterDefinition(id)`, and
   `characterProblems(def, lanes?, relics?)` returning every broken rule (relic not in the library, relic with no
   registered lane, a starting lane equal to the relic's lane, a starting lane not registered, the two starting
-  lanes equal, `grey` named as a lane, stats not totalling the fresh-run budget). `Character/types.ts`:
+  lanes equal, `grey` named as a lane, stats not totalling the fresh-run budget, starting lane cards that are not
+  one card from each of the three lanes, or that include a Spell, a Global or a Curse). `Character/types.ts`:
   `characterId?: string` and `startingLaneIds?: string[]` on `Character`. `Game/game.reducer.ts`:
   `createNewGameState({ startMap?, characterId? })`; with a character it applies the stats (and the max VITAE they
-  give), equips the starting relic through the existing equip path (it takes the first relic position) and
-  records `characterId` and `startingLaneIds`; with an unknown id it throws. Exports from `Character/index.ts` and
+  give), equips the starting relic through the existing equip path (it takes the first relic position), deals the
+  character deck (Blow 3, Ward 2, Word 2 plus its three `startingCardIds`; a run with no character keeps Blow 5,
+  Ward 3, Word 2) and records `characterId` and `startingLaneIds`; with an unknown id it throws. Exports from `Character/index.ts` and
   `src/index.ts`. Mobile: `startNewGameAction` gains an optional `characterId` passed through; no screen change.
 - Consumers: `startNewGameAction`, the CLI's new-game path if it builds a state (it passes no character), the
   catalog exporter if the typecheck names it.
@@ -98,7 +107,7 @@ no character loads unchanged.
 - Tests matrix: new `Character/e2e/character-roster.engine.test.ts` (A1: the real roster passes
   `characterProblems`; fixture definitions, fixture lanes and fixture relics hit each broken rule once); new
   `Game/e2e/new-run-character.engine.test.ts` (A2: a fixture character's run has its relic worn, its stats and max
-  VITAE, its two lanes and its id on the player; a fresh run with no character is today's run; an unknown id
+  VITAE, the ten-card character deck, its two lanes and its id on the player; a fresh run with no character is today's run; an unknown id
   throws; a saved fixture with no `characterId` round-trips through `migrate` with both fields absent); a mobile
   store test that `startNewGameAction(…, characterId)` writes the character's run to the slot.
 - Verify gate: `npm run verify -w axiomancer-mechanics`, `npm run verify -w axiomancer-mobile`.
@@ -130,8 +139,9 @@ a fixture character rendered in the test) is attached to the PR.
   `state/presenters/character-select.engine.ts` building the view model from `CHARACTER_ROSTER`; components under
   `components/character-select/`. Layout, top to bottom: the portrait and the starting relic (icon and name) as the
   two largest elements, then the stats (HEART, BODY, MIND numbers), then the one-line playstyle, then a CONFIRM
-  button, then the carousel: two rows of squares at the very bottom, a selectable square showing the character's
-  portrait cropped to the square, a locked square a question-mark icon. Tapping a selectable square shows that
+  button, then the carousel: two rows of squares at the very bottom, a selectable square showing a small version of the
+  character's portrait (T, 2026-10-26: the small portrait in the square and the large one above), a locked square a
+  question-mark icon. Tapping a selectable square shows that
   character; tapping a locked square does nothing (its a11y label reads "Locked"). No lane name, lane colour key or
   card list appears anywhere on the screen. Flow: after the slot pick on `/saves?mode=new`, the app opens
   `/character-select?slot=<n>` when the roster holds at least one character; CONFIRM calls
@@ -170,10 +180,13 @@ Measure: the "T's characters" table below holds one complete row in T's words, a
 against the lanes then registered.
 
 - T, in session: picks the portrait, the starting relic (from the library or newly written, with its lane), the
-  stats, the two starting lanes and the playstyle line. The session records them below and in
+  stats, the two starting lanes, the three starting lane cards (one per lane, no Spell or Global, ideally thematic
+  enough to show the player what each lane is about) and the playstyle line. The stats are already set: Body 7,
+  with Heart and Mind 5 and 3 (T settles which in the sitting). The session records them below and in
   `plan/revamp/relics.md` if the relic is new. Nothing is built.
 - The row is `[blocked: T to plot a third lane …]`: a character needs its relic's lane plus two others, and two
-  lanes exist. The plot that registers a third lane (or T) turns the row to `[ ]`.
+  lanes exist. T keeps the block (2026-10-26): the character waits on at least one new lane, and T plans two new
+  lanes before a character goes live. The plot that registers the third lane (or T) turns the row to `[ ]`.
 
 ### CH1f — The first character, selectable · M · closes A6 · requires CH1b, CH1c, CH1d, CH1e · blocked until a third lane is registered
 
@@ -183,21 +196,29 @@ against the Measure above.
 
 - Scope: T's character from CH1e into `CHARACTER_ROSTER`; its relic into `relicLibrary` with its `laneId` if T
   wrote a new one (content T authored, D88); its portrait key in `PLAYER_PORTRAITS` if T supplied a new image;
-  `PlayerPortraitImage` reads the character's portrait for a run with a character. `npm run measured:truth`
+  `PlayerPortraitImage` reads the character's portrait for a run with a character. The character becomes
+  mandatory: NEW GAME always goes through the select screen; RW1a's grey empty-pool fallback is deleted, and the
+  new-run path cannot build a player with an empty pool (dev presets, the CLI and the sims pass a roster character
+  or an explicit lane list); a save with no `characterId` shows "Made before characters" on its slot with only a
+  delete action (the existing delete-slot path), and cannot be continued (T, 2026-10-26). `npm run measured:truth`
   regenerated.
-- Consumers: the SELF screen bust, the combat medallion, the pilgrim inspect modal (all via `PlayerPortraitImage`).
+- Consumers: the SELF screen bust, the combat medallion, the pilgrim inspect modal (all via `PlayerPortraitImage`);
+  `app/saves/index.tsx` (the old-save slot); `rewardPoolFor`'s callers (no fallback).
 - Save / schema: none.
 - Tests matrix: the roster content test (A1) now covers a real character; a screen test with the real roster (one
   selectable square, the rest locked); a store test that confirming T's character starts a run with its relic worn
-  and its lanes recorded; the portrait test for a character run.
+  and its lanes recorded; the portrait test for a character run; a pool test that no run's pool is ever empty and
+  no offer is grey; a saves screen test that a slot with no `characterId` reads "Made before characters", offers
+  delete, and offers no continue.
 - Verify gate: `npm run verify -w axiomancer-mechanics`, `npm run verify -w axiomancer-mobile`, root `npm test`.
 
 ## T's characters
 
-Filled in CH1e. Empty until then.
+Filled in CH1e. T set the first character's stats on 2026-10-26; the rest waits for the sitting.
 
-| Character | Portrait | Starting relic (lane) | HEART / BODY / MIND | Starting lanes | Playstyle |
-|---|---|---|---|---|---|
+| Character | Portrait | Starting relic (lane) | HEART / BODY / MIND | Starting lanes | Starting lane cards | Playstyle |
+|---|---|---|---|---|---|---|
+| 1 (first) | CH1e | CH1e | 5 or 3 / **7** / 3 or 5 (Body "since it's going to need that extra raw deal to start"; max VITAE 182, against 170 at 5/5/5) | CH1e | CH1e | CH1e |
 
 ## Scope
 
@@ -220,7 +241,8 @@ Listed per phase. Cross-plot overlaps:
 ## Save / schema contracts
 
 - `Character.characterId?: string` and `Character.startingLaneIds?: string[]`, optional and additive (CH1a).
-- No migration hop expected; an old save is a run with no character and keeps the D107 stopgap pool.
+- No migration hop expected. Until CH1f a save with no character plays as today's run; from CH1f it cannot be
+  continued and its slot offers only deletion (T, 2026-10-26).
 
 ## Decisions made upfront — DO NOT ASK
 
@@ -246,24 +268,33 @@ Calls this plot made, T not present:
 
 - **The empty-pool fallback for a run with no character is PR #944's call, not this plot's.** For a character run
   the pool is never empty (two starting lanes), so the fallback only reaches old saves and runs started while the
-  roster is empty. CH1b keeps whatever RW1a ships. `[T to confirm #1]`
+  roster is empty. CH1b keeps whatever RW1a ships. Confirmed by T (2026-10-26): grey only until the first
+  character goes live; then every run starts at character select and CH1f deletes the fallback. A save made before
+  characters cannot be continued: its slot offers only deletion.
 - **One attended authoring phase per milestone.** CH1e authors the November character; the December roster gets
-  one attended phase for both characters, plotted with it. `[T to confirm #2]`
+  one attended phase for both characters, plotted with it. Confirmed by T (2026-10-26).
 - **The Measure stays as written, and it cannot pass until a fourth lane exists.** With three lanes, a character's
   start already holds all three (two starting lanes plus the relic's), so no late lane can be absent at the start.
   The report column also prints each lane's share at start and late, so the shift toward worn lanes shows from the
-  first character; the "absent lane" clause is met once the December roster brings a fourth lane. `[T to confirm #3]`
+  first character; the "absent lane" clause is met once the December roster brings a fourth lane. Confirmed by T
+  (2026-10-26): keep it as written. T plans two new lanes before a character goes live, so four lanes exist and the
+  first character's start leaves one out; the clause can pass with the first character.
 - **A character run shows the character's portrait, and the SELF screen bust stops cycling for it.** Old saves and
-  runs with no character keep the tap-to-cycle gallery. `[T to confirm #4]`
-- **A character changes no cards: every character starts with the grey deck** (Blow 5 / Ward 3 / Word 2). The
-  character is its relic, stats and lanes. `[T to confirm #5]`
+  runs with no character keep the tap-to-cycle gallery. Confirmed by T (2026-10-26).
+- **A character starts with a smaller grey deck plus one card from each of its lanes.** Confirmed by T (2026-10-26),
+  changed from the default: Blow 3 / Ward 2 / Word 2, plus one card from each of the two starting lanes and one from
+  the starting relic's lane (ten cards). No Spell or Global; ideally cards thematic enough that the player gets a
+  sense of each lane. T picks them in CH1e.
 - **A character's stats total the fresh-run budget of 15 points**, as every level-1 preset does; the content test
-  enforces it, so no character starts stronger than another. `[T to confirm #6]`
+  enforces it, so no character starts stronger than another. Confirmed by T (2026-10-26). The first character is
+  7/5/3 with Body at 7. Max VITAE is 50 + 12·Body + 6·Mind + 6·Heart (`calculateMaxHealth`), so Body is the one
+  stat that buys extra VITAE.
 - **The carousel is two rows of four squares**: roster characters first, the rest locked. Three characters in
-  December still leave five locked squares. `[T to confirm #7]`
-- **No date is set: the six rows go under Unscheduled.** No MVP Item covers characters, and the MVP milestone does
-  not name them; T's Nov 16 target for one character is recorded in the reason line, and the rows wait on a third
-  lane T has not plotted. Adding a Nov 16 Item is T's to do. `[T to confirm #8]`
+  December still leave five locked squares. Confirmed by T (2026-10-26); each unlocked square shows a small version
+  of the character's portrait, with the large portrait above.
+- **The first character is due 2026-10-26, end of day (T).** Confirmed by T (2026-10-26), changed from the default
+  (no date): one Item, "First character playable", dated 2026-10-26 in W1, names CH1a-CH1f. T knows the date is
+  tight: RW1a and five CH1 phases must ship, and CH1e/CH1f wait on a third lane T has not plotted yet.
 
 Further decisions, no call needed:
 
