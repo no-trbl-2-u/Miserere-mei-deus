@@ -1025,6 +1025,20 @@ satisfied for exactly these.)
 - The loop still never invents card, keyword or art content unprompted: `/expand` may only propose candidates, as for other content, and a proposal is never built until promoted.
 - Unchanged: `Potential Assets/` is a store, never a source (D96); a sprite sheet for an already-used enemy stays enhancement (D97). First use: a `/plot` phase renaming the Blood Price cards.
 
+**D110 — A card's colour is only which die pays for it; THORNS scales with Heart.** (T, attended, 2026-10-26; amends D40's last clause and T's 2026-10-13 card-spec ruling. T: "A card's colour is ONLY what die pays for them and is not categorized otherwise. This means for lane-creator, don't have it pitch a color for the cards. Instead, I pick the cards, then afterwards, it can split the colors up evenly." And: "We can move THORNS to heart.")
+
+- A card's colour says which die pays for it (the Color Law, D65) and nothing else. It is not read from the card's text, its keyword or its job.
+- Stat scaling stays on the keyword (D40): each keyword scales with its family's stat whatever the card's colour. A GUARD on a red card scales with Mind.
+- A family's colours are a budget, split evenly across its kept lane cards after T picks them (lane-creator step 7), so a specialist deck still spans the three colours a rolled tray needs. Ballots pitch no colour (phase CL1).
+- THORNS (the Defender, not yet built) scales with Heart: it sits on you, but what it does lands on the foe. A repeating amount, so at half rate (D41).
+- *Rejected:* colour by job (BV3's `JOB_COLORS`, which clusters a specialist lane into one or two colours); sub-kinds of utility; lane cards colourless (it removes the tray's choice and reopens D65).
+
+**D109 — No caps on cards.** (T, attended, 2026-10-26. T: "remove the "(max +n)" from every card. If there should be a max, I'll call it out.")
+
+- No card line prints or applies a cap ("max n", "max +n", "capped"): an amount that grows with something grows without limit, as D41 already has the stat formula. A cap exists only where T calls one out.
+- Not a cap: the SACRIFICE floor (a payment always leaves 1 VITAE) and "max VITAE" (a stat).
+- Paper landed in PR #958 (the Defender ballot, `/lane-creator` pitches none); the live library is phase NC1.
+
 **D106 — Each region is a chapter: Act 1 is four chapters, Breakwater first.** (T, 2026-10-26, in the Claude Duet channel; amends D23, D27 and D28. T: "All 4 regions combined is Act 1 and the deadline is the end of the year. Act 1 Chapter 1 completed is the mid November deadline. Each region is: Act x Chapter y (With the caveat that later acts may revisit certain regions if the story requires it)". T confirmed the order and the Nov 16 scope the same day: "Yes that's all correct".)
 
 - A region is named "Act X, Chapter Y". Act 1 is the four D23 regions in D23's order: Chapter 1 the Breakwater, Chapter 2 the Charcoal Wood, Chapter 3 the Beacon Crags, Chapter 4 the Lantern Deep.
