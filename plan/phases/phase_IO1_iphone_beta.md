@@ -115,7 +115,7 @@ None. No save data, no API route, no D1 table.
 - **Bundle id `com.axiomancer.mobile`**, the Android package name, so both stores carry one id. It is
   permanent once the App Store Connect record exists.
 - **Enroll as an individual** (T, 2026-10-22: "I'll enroll"). An organization account needs a D-U-N-S number
-  and takes weeks. TestFlight will show T's legal name as the seller. [T to confirm]
+  and takes weeks. TestFlight will show T's legal name as the seller. Accepted at merge (default).
 - **iPhone only: `supportsTablet: false`.** T asked for iPhones. The game is portrait-only, and a tablet build
   would need its own layout pass. iPads still run it in iPhone compatibility mode.
 - **TestFlight only** (T, 2026-10-26, replacing T's 2026-10-22 choice of both channels). T's own iPhone
@@ -126,7 +126,7 @@ None. No save data, no API route, no D1 table.
   tools off. Keeping beta apart lets it keep the dev menu and lets the App Store release path change later
   without touching friends' builds.
 - **Friends' builds keep the dev menu**, as the Android preview APK does, so a tester can skip past a block.
-  The `beta` profile is not `production`, so `app.config.ts` already gives that. [T to confirm]
+  The `beta` profile is not `production`, so `app.config.ts` already gives that. Accepted at merge (default).
 - **Friends' builds post nothing** (BE2's DoD). The TestFlight build carries no puzzle-API values, so neither
   the BE1 poster nor the BE2 play log can send. Telemetry from testers waits on BE1's playtester follow-up
   (device ids, a privacy note). Sentry crash reports still flow, as they do from every build today.

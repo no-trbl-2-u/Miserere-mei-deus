@@ -96,6 +96,7 @@ flowchart LR
 
 - **Owner / location:** Expo-hosted EAS; configuration lives in `axiomancer-mobile/`.
 - **Purpose:** hosted Android/iOS preview builds after the mobile verification gate.
+- **iPhone beta:** the `beta` profile builds iOS for TestFlight only (no ad hoc channel, no registered devices) and submits to App Store Connect (`submit.beta.ios`); `npm run deploy:ios-beta` in `axiomancer-mobile/`. T's Apple Developer membership, the iOS credentials and the App Store Connect API key are set up once by [`axiomancer-mobile/docs/ios-beta.md`](../axiomancer-mobile/docs/ios-beta.md).
 - **Data flow:** `.github/workflows/preview-build.yml` verifies mobile, optionally runs visual smoke, then calls `npx eas-cli@latest build` with `EXPO_TOKEN`.
 - **Availability:** preview/distribution only; not required for local Expo development or mechanics execution.
 - **Failure behavior:** a failed or absent EAS build blocks claiming a hosted preview, but does not erase local verification evidence.

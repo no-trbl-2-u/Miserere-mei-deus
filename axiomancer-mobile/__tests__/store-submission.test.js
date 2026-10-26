@@ -42,7 +42,7 @@ describe('Store Submission Requirements', () => {
       
       // iOS configuration
       expect(expo.ios).toBeDefined();
-      expect(expo.ios.supportsTablet).toBe(true);
+      expect(expo.ios.supportsTablet).toBe(false); // iPhone only (IO1)
       
       // Android configuration
       expect(expo.android).toBeDefined();
