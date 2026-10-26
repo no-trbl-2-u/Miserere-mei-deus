@@ -1,11 +1,13 @@
-# Phase SG1 — The starting ring's signature is on the board and fires
+# Phase SG1 — No starting ring; every relic grant is worn, and its signature reaches the board
 
 > Agent-facing brief, plotted by T (`/plot asap`, 2026-10-25, run unattended
-> on T's in-session report). A live defect: the Suppliant's Ring can reach the
-> first fight unworn, so the board shows no rune at all, and when it is worn
-> its only signature, The Open Hand, is refused in Act 1's common fight. Ship
-> without asking; record judgment calls in the commit body. Two calls are
-> T's and carry a default (`[T to confirm #n]`).
+> on T's in-session report), rewritten the same day on T's answers (in
+> session, after #921 merged). Three changes: a fresh run starts with no
+> relic (the Suppliant's Ring hand-over goes); every dev relic grant wears
+> the relic while a position is free, which is the Bleeding Signet defect
+> T hit; and the satchel says when a relic is carried but not worn. Ship
+> without asking; record judgment calls in the commit body. One call is
+> T's and carries a default (`[T to confirm #1]`).
 
 ## Sources
 
@@ -13,201 +15,316 @@
   no icon in combat to trigger them. And even the starting relic's signature
   skill doesn't allow the player to trigger the sigSkill." T named it "most
   important first", so it is slotted asap.
-- Decisions: **D47** (relics keep signatures; "Leave the starting ring with
-  befriend": The Open Hand opens the mercy choice), **D48** (the roster is
-  one normal, one elite and one boss: Float-Eye, Green Jelly, Death
-  Beholder), **D88/D99** (an enemy content edit is allowed because T is
-  asking now), **D84** (code by `loop:pr` PR), **D93** (this plot lands by
-  PR).
-- Prior phases this extends: EQ1a (#862, the loadout is the truth: CONFIRM
-  carries a relic unworn) and EQ1b (#866, a refused rune says why). Brief
-  `plan/phases/phase_EQ1_relic_loadout.md`. Nothing in the build plan,
-  `PHASE_CANDIDATES.md`, `AUDIT.md` or `CRITIQUE.md` Pending already covers
-  this.
+- T's answers, 2026-10-25, in session, after the first plot (#921) merged:
+  1. The player no longer starts with the Suppliant's Ring. The first-node
+     hand-over, `STARTING_RELICS` and the fight-start floor go; a fresh run
+     starts with no relic. The ring stays in `relicLibrary`: T will build a
+     healing, stalling and utility lane for it later. Old saves that carry
+     the ring keep it.
+  2. The two calls of #921 are cut by T: "the starting ring always arrives
+     worn" and "Float-Eye befriendable" are both moot once nobody starts with
+     the ring.
+  3. Every relic grant wears the relic while a slot is free; the dev
+     POPULATE and add-item-by-id paths must wear like GET ALL RELICS.
+  4. An unworn relic is flagged: the satchel or the relic's detail says it is
+     not worn, so its signature is off, and offers WEAR. Short UI copy.
+  5. The Bleeding Signet's signature never shows, even via the dev menu's
+     "GET ALL RELICS", while the store-level tests pass. Find it.
+- Decisions: **D47** (relics keep signatures), **D88/D99** (a relic content
+  edit is allowed because T is asking now), **D84** (code by `loop:pr` PR),
+  **D93** (this plot lands by PR), **D104** (relic lanes feed the reward slot;
+  the ring's future lane is T's, not this phase's).
+- Prior phases this extends: EQ1a (#862, the loadout is the truth; GET ALL
+  RELICS wears while a position is free) and EQ1b (#866, a refused rune says
+  why). Brief `plan/phases/phase_EQ1_relic_loadout.md`. The open plot LR1
+  (#922, lane relics and their sources) is not touched: it adds relic sources
+  through the item-reward screen, which this phase keeps.
 
-## What exists (mapped 2026-10-25 on `main` 9cc5e20e9)
+## What exists (mapped 2026-10-25 on `main` ade555829)
 
-The board, the engine and the cast path all work. The rune column renders
-unconditionally (`axiomancer-mobile/components/combat/encounter/CombatBoard.tsx:253-330`,
-`combat-signature-bar` at :269, one `Pressable` per signature at :303, mounted
-at :1450 with `onCast={onSignature}`); a castable rune's tap calls
-`playSignatureSkill` (`CombatEncounterPanel.tsx:566`), which checks
-`signatureCastBlock`, spends the Conviction and applies the skill
-(`axiomancer-mechanics/src/Combat/combat.engine.ts:1802-1823`). No flag, dev
-setting or Conviction gate hides the column. The defect is in what reaches it:
+### The Signet defect (T's answer 5): root cause found
 
-1. **The ring can be carried unworn into every fight (no rune at all).**
-   Signatures come only from worn equipment: `getSignaturesForLoadout(player.equipment)`
-   at combat init (`combat.engine.ts:250`, `Items/relic.library.ts:91-107`).
-   A fresh run has no ring; after the first resolved node `<ItemRewardGate>`
-   offers it on `/item-reward` (`components/item-reward/ItemRewardGate.tsx:33`,
-   `state/item-reward/store-actions.ts:126-145`) with `settleFlags:
-   [FIRST_NODE_RELIC_FLAG]` (:140). The screen has two buttons, EQUIP and
-   "put in the satchel" (`app/item-reward/index.tsx:141-160`), and **every
-   exit (Back, swipe, Android back) is CONFIRM** (`app/item-reward/index.tsx:69`,
-   `dismissItemRewardAction`, store-actions :247). CONFIRM grants with
-   `equip: false` (store-actions :197) and still stamps the settle flag
-   (:212-216), so the `START_COMBAT` floor that would wear the ring
-   (`Game/game.reducer.ts:220-224, 243`) sees a settled grant and does
-   nothing. Result: the ring sits in the satchel, `state.signatures` is `[]`,
-   and the column draws only the CONVICTION chip.
-   Reproduced on this tree with a probe on the real fight
-   (`arriveAtRealFight()`, bw-2 Float-Eye): ring stripped and offered, then
-   `dismissItemRewardAction` → worn `[]`, signatures `[]`, runes `[]`;
-   offered then `equipItemRewardAction` → signatures
-   `['sig-disarming-plea']`. With no hand-over at all, `beginHazardEncounter`
-   → `START_COMBAT` floor wears it (signatures `['sig-disarming-plea']`).
-   `state/e2e/item-reward.engine.test.ts:393` ("CONFIRM also settles the
-   grant — the ring is owned, just not worn") pins today's behaviour.
-   **History:** the CONFIRM path has left the ring unworn since the hand-over
-   screen landed (087245ea5, 2026-09-21); before EQ1a the satchel drew it as
-   WORN by inventory position while combat (which reads `player.equipment`)
-   never had it. EQ1a made the satchel honest; it did not cause the miss.
-2. **Worn, The Open Hand is refused in Act 1's common fight.**
-   `signatureCastBlock` (`combat.signature.ts:62-73`) refuses a `mercy`
-   skill unless `isEnemyBefriendable(enemy)` (`Enemy/befriend.ts:13`:
-   `friendshipReward !== undefined`) and `befriendHpGateOpen`. Of the three
-   live foes (`Enemy/enemy.library.ts:221`) only Green Jelly (the elite,
-   pinned per node, gate 30% VITAE) has a `friendshipReward`; Float-Eye, the
-   whole wandering pool (`ACT1_POOL`, :228), has none. So on nearly every
-   fight the rune reads refused (EQ1b's dashed ring and cross) and a tap
-   opens the info sheet instead of casting (`CombatBoard.tsx:296-299`), the
-   intended EQ1b behaviour. The probe above shows it: `{ affordable: false,
-   reason: "Float-Eye will not be befriended" }` at 9 Conviction.
-3. **The mercy branch already exists end to end.** `applySignatureSkill`'s
-   `mercy` arm moves to `phase: 'mercy-choice'` (`combat.signature.ts:84-91`),
-   the panel shows `combat-mercy` with spare/exploit
-   (`CombatEncounterPanel.tsx:607, 696`), and a friendship outcome appends
-   the foe's `flagSet` and codex entry (`game.reducer.ts:332-350`).
-   `scripts/combat-round-e2e.mjs` already fires the first affordable rune
-   (:412-432) and takes the spare branch when `combat-mercy` shows (:588-591),
-   but never fails when no rune is drawn.
+**The dev menu has had no GET ALL RELICS button since 2026-10-16.**
+`DebugGetAllRelics` (added 839393c05, 2026-10-11) was deleted by a82a4fd10
+("dev: cut the blacksmith and relics leaves", 2026-10-16) on the argument
+that `DebugItemPicker` "already chips every id in `relicLibrary`". It does
+chip them, but a chip does not do what the button did:
+
+- `components/DebugItemPicker.tsx:31` calls `actions.addItemById(id)`;
+  `state/dev/item-by-id.ts:64` resolves the relic and calls the store's
+  `addItem`, which only pushes into `player.inventory`
+  (`axiomancer-mechanics/src/Game/store.ts:452-455`). Nothing is worn.
+- Signatures come only from the worn loadout, read once when the fight starts
+  (`getSignaturesForLoadout(clonedPlayer.equipment)`,
+  `axiomancer-mechanics/src/Combat/combat.engine.ts:250`). A carried Signet
+  gives `signatures: []`, so the board draws no Crimson Covenant rune.
+- `actions.grantAllRelics()` (`state/actions.ts:1287-1316`) still wears each
+  relic while a position is free, which is why
+  `state/e2e/loadout-truth.engine.test.ts` "GET ALL RELICS wears each relic
+  while a position is free" and `dev-presets.engine.test.ts` pass. No UI calls
+  it any more (grep: only tests and `state/actions.ts:716`). The same holds
+  for `populateAllItems` (`state/actions.ts:1249`, satchel only, no caller)
+  and `debugSeedAction` (`state/actions.ts:1172`, satchel only).
+- Before EQ1a (2026-10-24) the satchel drew a relic as WORN by its inventory
+  position while combat read `player.equipment`, so a chip-added Signet could
+  even look worn in the satchel and still be missing from the fight.
+
+Reproduced on this tree with a throwaway jest probe (deleted, not
+committed): the real bw-2 fight (`startRealFight`) stripped of relics,
+`<DebugItemPicker>` rendered in `GameStoreProvider`, a press on
+`debug-item-relic-bleeding-signet`, then a fight started from the store's
+player and `<CombatBoard>` rendered: inventory
+`['minor-healing-potion', 'relic-bleeding-signet']`, worn `[]`,
+`signatures: []`, no `combat-signature-sig-crimson-covenant`. The same board
+after `actions.grantAllRelics()`: `['sig-disarming-plea',
+'sig-crimson-covenant']`, both runes rendered. `populateAllItems`:
+`signatures: []`.
+
+Ruled out on the way: `signaturesVM` / `getSignatureSkill`
+(`combat.signature.ts:30-40` keys `sig-crimson-covenant`; the grant-all board
+renders it); the board hiding a second rune (`CombatBoard.tsx` renders both
+in jest); the store dropping `equipment.accessories` (the grant-all path
+reaches the fight intact). Not ruled out but not the cause: a relic worn
+mid-fight joins the next fight only, because the fight's `signatures` are
+fixed at `combat.engine.ts:250`. This phase keeps that rule.
+
+### The starting ring (T's answer 1)
+
+- A fresh run already starts relic-free (`NEW_GAME`,
+  `Game/game.reducer.ts:150-166`, `seedStartingRelics: false`); the ring
+  arrives later by three routes, all of which go:
+  1. the hand-over screen: `<ItemRewardGate>` arms it
+     (`components/item-reward/ItemRewardGate.tsx:30-35`) on
+     `selectFirstNodeRelicMoment` (`state/presenters/item-reward.engine.ts:160-185`),
+     which calls `offerFirstNodeRelicAction`
+     (`state/item-reward/store-actions.ts:115-145`);
+  2. the reducer floors: `settleFirstNodeRelic` (`game.reducer.ts:220-226`) on
+     `START_COMBAT` (:244) and `PROCESS_NODE` (:388);
+  3. the engine grant itself: `Character/first-node-grant.ts`
+     (`grantFirstNodeRelic`, `withholdFirstNodeRelic`,
+     `isFirstNodeRelicPending`, `FIRST_NODE_RELIC_ID`, `FIRST_NODE_RELIC_FLAG`),
+     exported from `Character/index.ts:173-175` and `src/index.ts:25`.
+- `STARTING_RELICS` / `cloneStartingRelics` (`Items/relic.library.ts:69-83`)
+  seed the ring into every character built with `seedStartingRelics: true`:
+  `createCharacter` (`Character/index.ts:57-74`), the presets
+  (`Character/presets.ts:259`), the state-fixture builder
+  (`Game/fixtures/state-fixture.builder.ts:64`), the mock player
+  (`Character/characters.mock.ts:12`), and through them `startRealFight` and
+  the measured harness. `World/roster-health.ts:137` lists the ring as a
+  starting item. `Game/game.migrate.ts:102, 165` use `cloneStartingRelics()`
+  inside historical migrations, and :437 stamps `FIRST_NODE_RELIC_FLAG` in
+  v23 → v24.
+- The item-reward screen itself (`app/item-reward/index.tsx`, EQUIP / CONFIRM)
+  is generic and stays: the ring was its only in-game relic today, and LR1
+  plans to route quest and elite relics through it.
+- Harnesses that wait for the hand-over: `scripts/act1-walk-e2e.mjs:329-330`,
+  `scripts/feature-map-e2e.mjs:279-280`, `scripts/map-walk-e2e.mjs:239-240`
+  ("the first relic"), and `scripts/critique-drive.mjs:198-200` (tolerant).
+  Docs that state it: `docs/game-model.md:199-200`, `plan/revamp/relics.md:29,
+  55`, `axiomancer-mobile/docs/playtest-guides/minigames.md:43`,
+  `docs/feature-map/features.json` (generated; `first-node-grant.ts`,
+  `ItemRewardGate.tsx` edges).
+
+### The satchel (T's answer 4)
+
+The satchel shows a WORN badge on a worn relic (`components/inventory/ItemCard.tsx:259`,
+`state/presenters/inventory.engine.ts:244`) and nothing on a carried one. The
+detail's primary button reads `EQUIP` or `EQUIP · REPLACE <NAME>`
+(`state/presenters/loadout.ts:82`, `inventory.modal.engine.ts:209-210`); the
+row's quick button reads `EQUIP` (`ItemCard.tsx:326`). Nothing tells the
+player that a carried relic's signature is off.
 
 ## Outcome
 
-On a fresh run, every fight after the Suppliant's Ring is handed over shows
-The Open Hand on the combat board whatever the player tapped on the hand-over
-screen, and in Act 1's common fight (Float-Eye) the rune can be tapped to open
-the mercy choice once the foe is low enough and the player has the Conviction.
+A fresh run starts with no relic and is never handed one at the first node.
+Any relic the player is given (the dev menu included) is worn when a position
+is free, so its signature is on the next fight's board; one that is carried
+unworn says so in the satchel and offers WEAR. The Bleeding Signet added from
+the dev menu shows Crimson Covenant in the next fight, and it fires.
 
-Size: M
+Size: L
 
 ## Acceptance
 
-- **A1** The first-node ring hand-over always leaves the ring worn: EQUIP,
-  CONFIRM and every exit of `/item-reward` (dismiss on unmount) wear it into
-  `player.equipment` and settle `FIRST_NODE_RELIC_FLAG`. For that entry the
-  screen shows one button (testID `item-reward-equip`, label from the
-  presenter) and no "put in the satchel" button. Other item rewards keep
-  EQUIP and CONFIRM exactly as today (CONFIRM carries unworn). The test at
-  `state/e2e/item-reward.engine.test.ts:393` is rewritten to the new rule.
-  [T to confirm #1]
-- **A2** A journey test that fails on today's `main`: from a fresh store
-  (`createAppStore`) the run resolves a node, the gate's
-  `offerFirstNodeRelicAction` queues the ring, the player leaves the screen
-  (`dismissItemRewardAction`), the fight starts through
-  `actions.beginHazardEncounter()` as the live route does, and
-  `<CombatEncounterPanel>` mounted with the store's player as
-  `bootstrapPlayer` shows `combat-signature-sig-disarming-plea`.
-- **A3** Float-Eye can be befriended: it gains `befriendabilityConfig:
-  { hpGate: { belowPct: 0.3 } }` and a `friendshipReward` (one
-  `minor-healing-potion`, `xpBonus` 10, a short narrative in the house voice,
-  `flagSet: 'befriended-float-eye'`). Death Beholder stays unbefriendable.
-  `World/roster-health.ts` and the enemy-library guards stay green.
-  [T to confirm #2]
-- **A4** A panel test that fails on today's `main`: the real bw-2 Float-Eye
-  fight (`startRealFight`) with the ring worn, the foe at or below 30% VITAE
-  and Conviction at `SIGNATURE_COST`: the rune is castable (not refused, no
-  cross), a press on `combat-signature-sig-disarming-plea` casts it (the log
-  carries `signature-cast`, Conviction drops by the cost) and `combat-mercy`
-  appears. At full VITAE the same rune reads refused with "not yet low
-  enough to spare", and a press opens the info sheet, not the mercy choice.
-  Short of Conviction it reads `◆4` dim, and a press casts nothing.
-- **A5** `scripts/combat-round-e2e.mjs` fails a run whose board draws no
-  rune on round 1 (it counts `combat-signature-<id>` elements other than the
-  bar and the refused marks, and the live-fight player wears the ring by
-  then), and its summary prints how many signatures it fired.
+- **A1** A fresh run starts with no relic, and nothing hands one over: from a
+  fresh store (`createAppStore`) a new game resolves its first node and starts
+  its first fight through `actions.beginHazardEncounter()` (the live route),
+  and `player.inventory` holds no relic, `player.equipment.accessories` is
+  empty, the item-reward queue is empty, and the fight's `signatures` is `[]`.
+  `Character/first-node-grant.ts` and its exports, `offerFirstNodeRelicAction`,
+  `selectFirstNodeRelicMoment`, the gate's first-node arm, `settleFirstNodeRelic`
+  (both floors), `STARTING_RELICS`, `cloneStartingRelics` and the
+  `seedStartingRelics` option are gone. The Suppliant's Ring is still in
+  `relicLibrary` and `getRelicById('relic-disarming-plea')` resolves. The test
+  fails on today's `main` (the floor wears the ring at `START_COMBAT`).
+- **A2** Old saves keep what they carry: a save whose player wears the ring,
+  and one that carries it unworn, load and start a fight with the ring exactly
+  where it was (worn gives `sig-disarming-plea`; carried gives none). The
+  v23 → v24 migration still stamps the `first-node-relic-granted` flag (an
+  inert string now, kept as a local constant in `game.migrate.ts`), and the
+  older migrations that seeded the ring still produce it byte-for-byte (a local
+  clone of the ring replaces `cloneStartingRelics()`). No save version bump.
+- **A3** Every dev relic grant wears the relic while a position is free:
+  `addItemById`, `populateAllItems`, `debugSeedAction`, `grantAllRelics` and
+  the mechanics CLI `devGrantAllEquipment` share one helper (wear when the
+  slot has a free position; never displace a worn relic; otherwise carry). A
+  test drives each: on a bare player each relic is worn; with the slot full
+  the relic is carried and nothing worn moves. The `addItemById` and
+  `populateAllItems` cases fail on today's `main`.
+- **A4** The Signet defect, pinned through the real dev button: a jest test
+  renders `<DebugItemPicker>` in a `GameStoreProvider` on the real bw-2 fight's
+  store stripped of relics, presses `debug-item-relic-bleeding-signet`, starts
+  the fight as the route does (`<CombatEncounterPanel>` with the store's player
+  as `bootstrapPlayer`), and asserts `combat-signature-sig-crimson-covenant`
+  renders; with Conviction at `SIGNATURE_COST` a press casts it (the log
+  carries `signature-cast`, Conviction drops by the cost). Fails on today's
+  `main` (`signatures: []`, no rune).
+- **A5** An unworn relic says so: in the satchel a carried, unworn relic's row
+  shows a `NOT WORN` badge where a worn one shows `WORN` (testID
+  `item-not-worn-<id>`), and its detail shows one line naming the signature
+  that is off ("Not worn: Crimson Covenant is off.", built in the presenter)
+  above a primary button that reads `WEAR` (`WEAR · REPLACE <NAME>` when the
+  slot is full). A press wears it, the badge becomes `WORN`, and the next
+  fight from the store carries its signature. A worn relic shows neither the
+  badge nor the line.
+- **A6** The live fight shows the Signet: `scripts/combat-round-e2e.mjs` opens
+  `/dev` DECKS & ITEMS (`dev-section-decks`), presses
+  `debug-item-relic-bleeding-signet` before it arms the encounter, and fails a
+  run whose round-1 board draws no `combat-signature-sig-crimson-covenant`
+  (counting `combat-signature-<id>` elements, not the bar or the refused
+  marks). Its summary prints the signatures drawn and fired. Fails on today's
+  `main`.
+- **A7** No harness or doc still expects the ring: `act1-walk-e2e.mjs`,
+  `feature-map-e2e.mjs`, `map-walk-e2e.mjs` and `critique-drive.mjs` no longer
+  wait for "the first relic"; `docs/game-model.md`, `plan/revamp/relics.md`,
+  `axiomancer-mobile/docs/playtest-guides/minigames.md` and
+  `axiomancer-mobile/docs/dev-tools.md` (the removed-leaves row for
+  `DebugGetAllRelics` now says the chips wear) say a run starts with no relic;
+  `docs/feature-map/features.json` is regenerated; `npm test` (root) is green.
 
-Measure: `npm run verify -w axiomancer-mobile` with the A2 and A4 tests
-(both fail on 9cc5e20e9), `npm run verify -w axiomancer-mechanics`, and
-`node scripts/combat-round-e2e.mjs` green with a rune drawn every run.
+Measure: `npm run verify -w axiomancer-mobile` with the A1, A3, A4 and A5
+tests (A1, A3 and A4 fail on ade555829), `npm run verify -w
+axiomancer-mechanics`, `node axiomancer-mobile/scripts/combat-round-e2e.mjs`
+green with Crimson Covenant drawn every run, and `npm test`.
 
 ## Scope
 
-- `axiomancer-mobile/state/item-reward/store-actions.ts`: the queue entry
-  gains a `wearOnCommit` (or equivalent) field; `offerFirstNodeRelicAction`
-  sets it; `commitItemRewardAction` equips when it is set, in either mode, so
-  `dismissItemRewardAction` wears it too.
-- `axiomancer-mobile/state/presenters/item-reward.engine.ts`: the VM says
-  the entry is wear-only (`canConfirm: false` or equivalent) and gives the
-  one button its label; the copy stays in the presenter.
-- `axiomancer-mobile/app/item-reward/index.tsx`: hide the CONFIRM button for
-  a wear-only entry; the keep note reads true for it.
-- `axiomancer-mechanics/src/Enemy/enemy.library.ts`: Float-Eye's
-  `befriendabilityConfig` and `friendshipReward` (A3), following Green
-  Jelly's block.
-- `axiomancer-mobile/scripts/combat-round-e2e.mjs`: the rune-drawn
-  assertion and the fired count (A5).
-- No change to `CombatBoard.tsx`, `combat.signature.ts`, `playSignatureSkill`
-  or the relic library: the rune, the gate and the cast already behave.
+- `axiomancer-mechanics/src/Character/first-node-grant.ts`: delete. Drop its
+  exports from `Character/index.ts` and `src/index.ts`.
+- `axiomancer-mechanics/src/Game/game.reducer.ts`: delete
+  `settleFirstNodeRelic` and its two calls (`START_COMBAT`, `PROCESS_NODE`);
+  rewrite the `NEW_GAME` comment (a run starts with no relic).
+- `axiomancer-mechanics/src/Items/relic.library.ts`: delete `STARTING_RELICS`
+  and `cloneStartingRelics`; keep `SUPPLIANTS_RING` in `relicLibrary`; export
+  the relic clone helper if callers need one. Rewrite the header comment.
+- `axiomancer-mechanics/src/Character/index.ts`: drop `seedStartingRelics`;
+  `createCharacter` wears only the `equipment` it is given.
+- `axiomancer-mechanics/src/Character/presets.ts`,
+  `Game/fixtures/state-fixture.builder.ts`, `Character/characters.mock.ts`:
+  drop `seedStartingRelics: true`. A fixture or preset that needs the ring
+  passes it as `equipment` explicitly.
+- `axiomancer-mechanics/src/Game/game.migrate.ts`: local constants for the
+  flag string and a local ring clone in the historical migrations (A2).
+- `axiomancer-mechanics/src/World/roster-health.ts`: `startingItemIds: []`.
+  The ring becomes an orphan finding like the Signet (orphans are a design
+  state, `roster-health.ts:13`, not a failure).
+- `axiomancer-mechanics/src/Items/item-grant.ts`: the shared "wear while a
+  position is free" grant (A3), used by `CLI/dev-tools.ts`
+  `devGrantAllEquipment` and the mobile dev paths.
+- `axiomancer-mobile/state/dev/item-by-id.ts`, `state/actions.ts`
+  (`populateAllItemsAction`, `debugSeedAction`, `grantAllRelicsAction`): use
+  the shared grant.
+- `axiomancer-mobile/components/item-reward/ItemRewardGate.tsx`: keep the
+  pending-reward push; drop the first-node arm.
+  `state/item-reward/store-actions.ts`: delete `offerFirstNodeRelicAction`.
+  `state/presenters/item-reward.engine.ts`: delete `selectFirstNodeRelicMoment`.
+- `axiomancer-mobile/state/presenters/inventory.engine.ts`,
+  `inventory.modal.engine.ts`, `loadout.ts`, `components/inventory/ItemCard.tsx`
+  and the detail modal: the `NOT WORN` badge, the "Not worn: <signature> is
+  off." line and the `WEAR` label (A5). Copy lives in the presenters.
+- `axiomancer-mobile/scripts/combat-round-e2e.mjs` (A6); the four walk and
+  drive scripts and the docs in A7.
+- No change to `CombatBoard.tsx`, `combat.signature.ts`, `combat.engine.ts`,
+  `playSignatureSkill` or the item-reward screen's EQUIP / CONFIRM.
 
 ## Consumers to update
 
-- `state/e2e/item-reward.engine.test.ts` (the CONFIRM-on-the-ring case),
-  `state/e2e/loadout-truth.engine.test.ts` (add the hand-over case beside
-  "the first-node grant arrives worn").
+Mechanics (grep `first-node-grant`, `FIRST_NODE_RELIC`, `seedStartingRelics`,
+`cloneStartingRelics`, `withholdFirstNodeRelic`):
+
+- delete `Character/e2e/first-node-relic-grant.engine.test.ts`;
+- rewrite `Game/e2e/fresh-start.engine.test.ts` (a fresh start holds no
+  relic) and `Game/e2e/first-node-relic-migration.engine.test.ts` (keep the
+  v23 → v24 flag cases; drop the grant cases);
+- `Items/e2e/relic-library.engine.test.ts`, `Character/e2e/relic-equip.engine.test.ts`,
+  `Items/e2e/item-grant.engine.test.ts`,
+  `Game/e2e/derived-stats-retirement-migration.engine.test.ts`,
+  `Game/e2e/equipment-progression-migration.engine.test.ts`,
+  `Game/e2e/relic-migration.engine.test.ts`,
+  `World/e2e/roster-health.engine.test.ts`: build the ring explicitly where a
+  case needs it.
+
+Mobile (same greps plus `ItemRewardGate`, `offerFirstNodeRelic`):
+
+- delete `app/(tabs)/inventory/__tests__/satchel-first-node-relic.test.ts`
+  or rewrite it to the NOT WORN badge (A5);
+- `state/e2e/item-reward.engine.test.ts` (drop the hand-over cases, keep the
+  generic EQUIP / CONFIRM cases with the ring as an ordinary relic),
+  `state/e2e/item-reward.screen.test.tsx`, `state/e2e/loadout-truth.engine.test.ts`
+  (drop "the first-node grant arrives worn"; add the chip case),
+  `state/e2e/dev-presets.engine.test.ts`,
+  `state/e2e/ware-effect-line.S5-talk-C04.test.tsx`: replace
+  `FIRST_NODE_RELIC_ID` with the relic id;
 - `components/combat/encounter/__tests__/CombatBoard.refused-rune.test.tsx`:
-  its premise "Float-Eye, a foe with no friendship reward, so The Open Hand is
-  refused there however much Conviction" no longer holds; rewrite the Open
-  Hand cases to the HP gate (refused above 30%, castable at or below it) and
-  keep the Covenant cases.
-- Any mechanics test that asserts Float-Eye is unbefriendable or counts
-  befriendable foes (grep `isEnemyBefriendable`, `friendshipReward`,
-  `befriended-` under `axiomancer-mechanics/src` and `audit/`).
-- The codex: if Green Jelly's friendship carries a `journalEntry`, give
-  Float-Eye's the same treatment only if the codex guard requires it;
-  otherwise none.
+  set signatures explicitly already; check its fixture still builds;
+- any suite that leaned on `startRealFight`'s player wearing the ring (run the
+  mobile suite; fix each by wearing the ring explicitly in that test);
+- `scripts/feature-map-render.test.mjs:45` (the `ItemRewardGate` flow edge
+  stays if the gate stays).
 
 ## Save / schema contracts
 
-- One optional field on the mobile item-reward queue entry; the queue is
-  persisted with the save, so an old save's entries read the field as absent
-  (CONFIRM as before). No `Game/game.migrate.ts` change, no save version bump.
-- No repair of saves that already carry the ring unworn: the satchel's EQUIP
-  wears it in one tap, and a forced wear would override a player who took it
-  off on purpose. Named under Follow-ups.
+- No save version bump, no new migration. `first-node-relic-granted` stays as
+  an inert string in old saves; nothing reads it after this phase except the
+  v23 → v24 step that writes it.
+- A save carrying the ring, worn or not, keeps it (A2). A save that never got
+  the ring is not given it.
 
 ## Decisions made upfront — DO NOT ASK
 
-- **The fix is at the hand-over, not at the board.** The rune column, the
-  engine gate and the cast path already work (What exists); adding a board
-  hint for "a relic in your satchel is not worn" would treat the symptom.
-- **Only the first-node ring is wear-only.** It is the run's starting kit and
-  D47's starting signature; every other reward keeps the EQUIP / CONFIRM
-  choice EQ1a built (EQ1a's "the loadout is the truth" stands). [T to confirm #1]
-- **The Open Hand keeps D47's befriend rule.** "Leave the starting ring with
-  befriend": the skill stays a mercy that only a befriendable foe answers. The
-  common foe is made befriendable instead of loosening the gate. [T to confirm #2]
-- **Float-Eye's terms follow Green Jelly's at a normal foe's scale:** the same
-  30% VITAE gate; a smaller reward than the elite's (a minor potion against a
-  healing potion, `xpBonus` 10 against 35). A spared Float-Eye ends the fight
-  as a friendship outcome, as the Jelly's does today; the wandering pool keeps
-  drawing Float-Eye after a befriend (the flag gates nothing yet).
-- **A refused rune still opens the info sheet on tap** (EQ1b); it never casts.
-- **The e2e asserts a rune is drawn, not that one was cast.** A cast needs the
-  foe under 30% with 4 Conviction in hand, which a seed sweep may not reach;
-  A4 pins the cast hermetically.
+- **The ring stays in the library, unsourced.** T will give it a lane; until
+  then only the dev menu and old saves hold it. Roster health reports it as an
+  orphan, which is a report, not a gate.
+- **Cut by T (2026-10-25): "the starting ring always arrives worn" and
+  "Float-Eye befriendable"** (#921's calls 1 and 2). Moot once no run starts
+  with the ring. Float-Eye keeps no `friendshipReward`; The Open Hand stays a
+  Green Jelly tool for old saves and the dev menu.
+- **"Wear while a position is free" is EQ1a's rule, extended.** A grant never
+  displaces a worn relic; past the last free position the relic is carried
+  and the A5 badge says so.
+- **A fight's signatures stay fixed when it starts** (`combat.engine.ts:250`).
+  A relic worn mid-fight joins the next fight.
+- **The item-reward screen's "put in the satchel" stays.** It is the player's
+  explicit choice to carry a relic unworn, and A5 now flags it.
+  [T to confirm #1]
+- **Copy:** the badge reads `NOT WORN`; the detail line reads "Not worn:
+  <signature name> is off."; the button reads `WEAR` (T's word) for relics,
+  replacing `EQUIP` in the satchel only. The item-reward screen keeps its own
+  labels.
+- **No GET ALL RELICS button returns.** The chips are the dev path; making
+  them wear closes the gap without adding a leaf back.
 
 ## Tests matrix
 
 | Suite | Kind | Subject |
 |---|---|---|
-| `state/e2e/item-reward.engine.test.ts` | rewritten case | the ring's CONFIRM and dismiss wear it; another relic's CONFIRM still carries unworn (A1) |
-| `state/e2e/signature-trigger.engine.test.tsx` (new) | journey | fresh store → hand-over → leave the screen → live fight → rune on the board (A2) |
-| `components/combat/encounter/__tests__/CombatEncounterPanel.signature-cast.test.tsx` (new) | panel | Float-Eye low: press casts and `combat-mercy` shows; full VITAE: refused, info sheet; short: nothing (A4) |
-| `CombatBoard.refused-rune.test.tsx` | rewritten cases | The Open Hand refused by the HP gate, not by "will not be befriended" |
-| mechanics enemy-library / befriend tests | added case | Float-Eye befriendable at or below 30%, Death Beholder not (A3) |
-| `scripts/combat-round-e2e.mjs` | e2e assertion | a rune drawn on round 1; fired count in the summary (A5) |
+| `state/e2e/no-starting-relic.engine.test.ts` (new) | journey | fresh store, first node, live fight: no relic, no hand-over, `signatures: []` (A1) |
+| mechanics migration suites | rewritten cases | a save wearing or carrying the ring keeps it; v23 → v24 still stamps the flag (A2) |
+| `state/e2e/dev-relic-grants.engine.test.ts` (new) and an `item-grant` engine case | engine + store | every dev grant wears while free, never displaces (A3) |
+| `state/e2e/signet-signature.screen.test.tsx` (new) | UI | press the real chip, mount the panel, rune renders and casts (A4) |
+| satchel presenter and `ItemCard` tests | presenter + component | `NOT WORN`, the off line, `WEAR` wears it, next fight carries it (A5) |
+| `scripts/combat-round-e2e.mjs` | e2e | Signet chip before the fight; Crimson Covenant drawn on round 1 (A6) |
+| root `npm test`, walk and drive scripts | harness | no wait for the first relic; feature map regenerated (A7) |
 
 ## Verify gate
 
@@ -221,12 +338,14 @@ npm test
 ## Commit body template
 
 ```
-fix: the starting ring's signature is on the board and fires — phase SG1
+fix: no starting ring; every relic grant is worn — phase SG1
 
-Closes A1-A5 of plan/phases/phase_SG1_signature_trigger.md.
-- The first-node ring hand-over wears the ring whatever the player taps ...
-- Float-Eye can be befriended below 30% VITAE ...
-- combat-round-e2e fails a run with no rune on the board ...
+Closes A1-A7 of plan/phases/phase_SG1_signature_trigger.md.
+- A fresh run starts with no relic; the first-node hand-over, the fight-start
+  floor and STARTING_RELICS are gone; the ring stays in relicLibrary ...
+- Every dev relic grant wears while a position is free (the Signet defect:
+  the dev chips only added to the satchel) ...
+- The satchel flags a carried relic NOT WORN and offers WEAR ...
 
 Decisions:
 - ...
@@ -236,15 +355,14 @@ Verify: npm run verify -w axiomancer-mechanics; npm run verify -w axiomancer-mob
 
 ## DoD
 
-A1, A2, A3, A4 and A5 ticked.
+A1, A2, A3, A4, A5, A6 and A7 ticked.
 
 ## Follow-ups (out of scope)
 
-- A save that already carries the ring unworn stays that way until the player
-  taps EQUIP in the satchel (T's current run included). A one-time repair would
-  need a save migration; not planned.
-- The measured report (`docs/reports/measured/latest.md`) does not model mercy;
-  whether the harness should spare a befriendable Float-Eye is for the next
-  report regeneration, not this phase.
-- The relic pass (B1, W5) may give the starting kit a second, always-castable
-  signature; this phase does not author one.
+- The ring's lane (healing, stalling, utility) and where a run finds it: T's,
+  later; LR1 (#922) builds relic sources.
+- The measured report (`docs/reports/measured/latest.md`) loses the ring from
+  its preset players. The harness never cast The Open Hand on Float-Eye, so no
+  number should move; the next report regeneration confirms it.
+- `PHASE_CANDIDATES.md`: a fight that shows a relic worn mid-fight would need
+  `signatures` re-read on equip; not planned.
