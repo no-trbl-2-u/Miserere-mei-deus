@@ -322,6 +322,13 @@ jobs:
         if: steps.scope.outputs.encounters == 'true'
         run: npm run e2e:act1-walk --workspace axiomancer-mobile
 
+      # The playtest session tool (phase PH1a): four sessions started at once,
+      # each with its own browser, server and seed, and a hazard minigame seed
+      # read back from the log. Same scope as the map walk.
+      - name: Playtest sessions (four browsers, four seeds)
+        if: steps.scope.outputs.encounters == 'true'
+        run: npm run e2e:playtest-sessions --workspace axiomancer-mobile
+
       # The feature map's reachability drive (phase FM1d): from a fresh save,
       # every route docs/feature-map/features.json marks reachable is reached
       # by play or a dev seam; the flow-edge report lands in the step summary.

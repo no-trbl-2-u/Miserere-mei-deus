@@ -45,6 +45,7 @@
     "eval:miss-rates": "node scripts/eval/miss-rates.mjs",
     "eval:fixes": "node scripts/eval/fixes.mjs",
     "critique:drive": "npm --workspace axiomancer-mobile run critique:drive",
+    "playtest:session": "node axiomancer-mobile/scripts/playtest-session.mjs",
     "lint:prose": "node scripts/check-prose.mjs",
     "lint:content": "npm run lint:prose",
     "lint:grants": "node scripts/check-harness-grants.mjs",

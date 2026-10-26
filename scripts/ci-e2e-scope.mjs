@@ -93,6 +93,8 @@ function classifyMobilePath(path, result) {
         /^axiomancer-mobile\/components\/LabyrinthGate/,
         // The feature map's reachability drive rides an integration run.
         /^axiomancer-mobile\/scripts\/(?:feature-map-e2e|lib\/feature-map-drive)\.mjs$/,
+        // The playtest session tool and its four-session proof ride the encounter suite.
+        /^axiomancer-mobile\/scripts\/(?:playtest-session|playtest-sessions-e2e)\.mjs$/,
     ]
 
     let matched = false

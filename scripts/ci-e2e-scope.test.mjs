@@ -56,6 +56,16 @@ test('the Act 1 walk script selects the encounter suite it runs with', () => {
     assert.equal(result.full, false)
 })
 
+test('the playtest session tool and its e2e select the encounter suite they run with', () => {
+    for (const path of ['axiomancer-mobile/scripts/playtest-session.mjs', 'axiomancer-mobile/scripts/playtest-sessions-e2e.mjs']) {
+        const result = classify('mobile', [path])
+        assert.equal(result.encounters, true, path)
+        assert.equal(result.full, false, path)
+    }
+    const unitTest = classify('mobile', ['axiomancer-mobile/scripts/playtest-session.test.mjs'])
+    assert.equal(unitTest.encounters, false)
+})
+
 test('mixed mobile subsystems select the union', () => {
     const result = classify('mobile', [
         'axiomancer-mobile/components/hazard/HazardCard.tsx',

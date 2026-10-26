@@ -7,7 +7,12 @@
  * same precedence everywhere:
  *
  *   explicit begin option > unified global > per-minigame global > fallback
+ *
+ * Every resolved seed is logged as `rng/minigame-seed {key, seed, source}`
+ * at info level, so a harness can read which seed a minigame used.
  */
+
+import { getLogger } from '@mechanics';
 
 export type MinigameSeedKey = 'hazard' | 'rest' | 'cache' | 'blacksmith';
 
@@ -36,17 +41,28 @@ export function fallbackMinigameSeed(): number {
     return (Date.now() ^ Math.floor(Math.random() * 0xffffffff)) >>> 0;
 }
 
+/** Which tier of the precedence chain supplied a resolved seed. */
+export type MinigameSeedSource = 'explicit' | 'unified' | 'legacy' | 'fallback';
+
+function logMinigameSeed(key: MinigameSeedKey, seed: number, source: MinigameSeedSource): number {
+    try {
+        getLogger().info('rng', 'minigame-seed', { key, seed, source });
+    } catch { /* logging never breaks play */ }
+    return seed;
+}
+
 export function resolveMinigameSeed(
     key: MinigameSeedKey,
     explicitSeed: number | undefined,
     legacySeed: number | undefined,
     fallbackSeed: number | (() => number) = fallbackMinigameSeed,
 ): number {
-    if (finiteNumber(explicitSeed)) return explicitSeed;
+    if (finiteNumber(explicitSeed)) return logMinigameSeed(key, explicitSeed, 'explicit');
     const unified = globalThis.__AXM_MINIGAME_SEEDS__?.[key]?.seed;
-    if (finiteNumber(unified)) return unified;
-    if (finiteNumber(legacySeed)) return legacySeed;
-    return typeof fallbackSeed === 'function' ? fallbackSeed() : fallbackSeed;
+    if (finiteNumber(unified)) return logMinigameSeed(key, unified, 'unified');
+    if (finiteNumber(legacySeed)) return logMinigameSeed(key, legacySeed, 'legacy');
+    const fallback = typeof fallbackSeed === 'function' ? fallbackSeed() : fallbackSeed;
+    return logMinigameSeed(key, fallback, 'fallback');
 }
 
 export function resolveMinigameString(
