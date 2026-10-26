@@ -83,9 +83,9 @@ left; otherwise after.
 
 ### W5 — Relic pass and ship (Dec 15 - Dec 28)
 
-- B1 (owner-led): T's relic session, then the loop builds. The five lane relics, their "Unlocks:" line and their
-  sources (quests, elites) were plotted early as LR1a-LR1e (T, 2026-10-25); LR1b is T's attended authoring session,
-  undated, so B1 keeps the rest of the pass.
+- B1 (owner-led): T's relic session, then the loop builds. The six lane relics, their "Unlocks:" line, their
+  sources (quests, elites) and signature tracking were plotted early as LR1a-LR1g (T, 2026-10-25); T authored the
+  relics in session the same day (LR1b, done), so B1 keeps the rest of the pass.
 - LG1h (attended): the Android smoke test on the preview APK.
 - Ship: a playtester walk of all four regions, the full gate, T tags v0.3 and the APK is built.
 - T's time (about 4 h): the relic session; the device check; the tag.
@@ -148,7 +148,7 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 | [ ] | 2026-12-11 | Combat playtest (winnable and dangerous) | W4 | R12 |
 | [ ] | 2026-12-12 | Upgrades proven on the Act 1 boss | W4 | UP1h |
 | [ ] | 2026-12-14 | W4 demo: an Act 1 clear ending at the Act Boss | W4 | T |
-| [ ] | 2026-12-16 | Relic pass session (the rest of B1: the starting ring, signatures; the five lane relics and their sources are LR1's, undated) | W5 | B1 |
+| [ ] | 2026-12-16 | Relic pass session (the rest of B1: the starting ring, stat-only relics; the six lane relics, their signatures and sources are LR1's, undated) | W5 | B1 |
 | [ ] | 2026-12-23 | Android smoke test on the preview APK | W5 | LG1h |
 | [ ] | 2026-12-26 | Playtester walk of all four regions | W5 | needs plot |
 | [ ] | 2026-12-28 | Tag v0.3 and build the APK | W5 | T |
@@ -241,10 +241,11 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - TQ1 — loop work, mobile UX from the Elementalist swarm; blocks no window's goal and T set no date; date not set.
 - GL1 — loop work; the board glossary from the Elementalist swarm, blocks no window's goal; date not set.
 - LR1a — loop work; the Signet opens Blood Price and the "Unlocks:" line, follows RW1a; date not set.
-- LR1b — attended; T writes the five lane relics and their quests (D88); T set no date (B1's W5 Item keeps the rest of the relic pass); date not set.
 - LR1c — loop work; relic sources in the engine, blocks no window's goal; date not set.
-- LR1d — loop work; follows LR1b's attended session; date not set.
-- LR1e — loop work; follows LR1c and LR1d; date not set.
+- LR1d — loop work; Blood Price's relics and per-signature costs, follows LR1a and LR1c; date not set.
+- LR1e — loop work; the Elementalist's relics, follows LR1d; date not set.
+- LR1f — loop work; the Act 1 quests, follows LR1c, LR1d and LR1e; date not set.
+- LR1g — loop work; signature tracking, blocks no window's goal; date not set.
 
 ## How a window closes
 
@@ -254,6 +255,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-25** — **lane relics re-plotted on T's relics** (T authored them in session; plot update run unattended on #922). **Removed** LR1b's Unscheduled line (done in session). **Edited** LR1d's and LR1e's Unscheduled lines to their new scope and **added** lines for LR1f (the quests, was LR1e) and LR1g (signature tracking): T set no date. **Edited** the W5 Item "Relic pass session" (B1) and the W5 notes: the six lane relics and their signatures are now LR1's, so B1 keeps the starting ring and stat-only relics. Nothing ticked (LR1b is a build-plan row, not an Item); no date moved.
 - **2026-10-25** — **lane relics plotted** (T in session, plot run unattended, `/plot`, slotted after SG1 and BC1). **Added** Unscheduled lines for LR1a-LR1e: T set no date, and LR1b is attended, so its date is T's to pick. **Edited** the W5 Item "Relic pass session" (B1) and the W5 notes: its premise narrowed, since the five lane relics and their sources are now LR1's; B1 keeps the starting ring, the signatures and the rest of the pass. **Ticked** nothing.
 - **2026-10-25** — **the signature trigger re-plotted** (T in session after #921 merged, plot rework run unattended). **Edited** SG1's Unscheduled line to the new scope (no starting ring, every relic grant worn, unworn relics flagged); T set no date. **Edited** no Item: W5's "Relic pass session" (B1) still holds and gains the ring as an unsourced relic for T's later lane; W4's enemy revamp (B2) no longer meets a befriendable Float-Eye, since that call is cut. Nothing ticked; no date moved.
 - **2026-10-25** — **the signature trigger plotted** (T in session, plot run unattended, `/plot asap`). **Added** an Unscheduled line for SG1: T set no date, and the fix blocks no window's goal. **Edited** no Item: the W4 "Enemy revamp session and the Act Boss" (B2) still holds, since SG1 only gives Float-Eye befriend terms and the revamp may redo the roster; the W5 "Relic pass session" (B1) still holds, since SG1 authors no relic. Nothing ticked; no date moved.
