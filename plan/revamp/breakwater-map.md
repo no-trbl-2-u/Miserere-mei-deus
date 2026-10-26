@@ -98,8 +98,7 @@ the events hold:
 - **Enemies:** three foes only, all R2 survivors: Float-Eye on every normal node, the Green Jelly as the elite, the
   Death Beholder at the door. B2 (the enemy revamp) is where the real roster comes from.
 - **Boss tiers:** the watchtower holds the region's door fight, and it is Chapter 1's boss, B2's "region boss" tier
-  (T, 2026-10-26; D106). Where Act 1's Act Boss sits is open for T to confirm (proposed: the end of the Lantern Deep,
-  Chapter 4), in enemy session 2.
+  (T, 2026-10-26; D106). Act 1's Act Boss sits at the end of the Lantern Deep, Chapter 4, not here (T, 2026-10-26).
 - **Hazards:** bw-3 and bw-12 deal a flat 2 damage. They become puzzle boards when the live hazard routing is
   plotted (`plan/deadlines.md`, W2).
 - **No people:** Act 1 stages no NPC, shop, village or narration node (`MapEvents/content.ts` header), so the
