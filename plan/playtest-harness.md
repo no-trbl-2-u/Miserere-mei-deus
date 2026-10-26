@@ -42,12 +42,16 @@
   gathering, a fight to defeat, the hazard intro) and crosses no door. The W3
   Item "Event-node audit and fixes (all twelve kinds)" (`plan/deadlines.md:136`)
   is `needs plot`; the W5 "Playtester walk of all four regions" likewise.
-  `kind: 'gathering'` survives in `World/MapEvents/content.ts:44-56,93-97`,
-  `types.ts`, `handlers.ts:94-107,358` after the minigame was retired; the walk
-  still labels bw-4 "a gathering: acknowledge". No content-drift test compares
-  a node's blurb (`World/Continents/*/breakwater.ts:32`) with the event it
-  opens: "The Sea Cave — the tide comes in faster than you leave" opened THE
-  CREEPING ROT.
+  `kind: 'gathering'` is a live kind, not a survivor of the retired minigame
+  (corrected by phase AW1b, 2026-10-26): it is the Gleaning minigame's
+  deliberate replacement (save v18 to v19), grants one named material through
+  the paced `/event` receipt, advances `collect` quests and feeds the hazard
+  puzzle outcome and the labyrinth pools. The real finding is that nothing
+  spends a material; that question is T's, a `[content]` row in
+  `plan/AUDIT.md`. A node blurb was compared with the event it opens by no
+  test ("The Sea Cave — the tide comes in faster than you leave" opened THE
+  CREEPING ROT, a hazard board drawn at random); phase AW1b's
+  `node-blurb-event.test.ts` now pairs them and pins the mismatches for T.
 
 ## Proposed phases
 
@@ -65,8 +69,10 @@
    handler on the hand id.
 3. **The Act 1 walk, proven.** `e2e:map-walk` (or a sibling) crosses all four
    doors and resolves every node kind it meets; the twelve-kind audit the W3
-   Item asks for rides on it; `gathering` is removed or re-pointed; a drift
-   test pairs each node blurb with its event's copy.
+   Item asks for rides on it; a drift test pairs each node blurb with its
+   event's copy (AW1b). `gathering` stays a live kind: whether materials get a
+   use, or the seven nodes are re-pointed, is T's `[content]` row, not this
+   item's (corrected 2026-10-26).
 
 ## Open questions
 
