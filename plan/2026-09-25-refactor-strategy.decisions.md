@@ -1029,6 +1029,7 @@ satisfied for exactly these.)
 - A character wears one weapon, one armor and up to three relics. Every screen lists them in that order: Weapon first, Armor second, then the three relic slots.
 - Any relic fits any relic slot, whatever it is called (a ring, a brooch, a belt, a circlet). The accessory kinds (head, hands, feet, amulet, ring, charm) carry no rule and are retired; the engine's `accessory` slot becomes `relic`.
 - At most three relics are worn, so D100's "all 5 relics of a lane" row is out of reach unless weapon and armor can be lane pieces (the EQ2 plot's call 2 and 3, defaults: they cannot, and D100 is left as written).
+- T, 2026-10-26, on call 3: weapons and armor still grant no lane, "but they could still help by completing a set, which could help the player with set bonuses including but not limited to increasing the 2 lane-specific rewards to 3 lane-specific rewards". How the top row becomes reachable is Phase SB1's (set bonuses, T's attended design session, `plan/phases/phase_SB1_set_bonuses.md`), not B1's.
 - Built by Phase EQ2 (`plan/phases/phase_EQ2_equipment_slots.md`).
 
 **D104 — Every card reward follows the relic lanes; a carried lane relic unlocks its lane.** (T, 2026-10-24, the Elementalist swarm `/messy`; recorded by the RW1 plot, 2026-10-25. Amends D68 and D71; D100's table stands.)
@@ -1072,6 +1073,7 @@ satisfied for exactly these.)
 - The extra lane cards come from that lane's pool. The single lane card at 1-2 relics is drawn as D71/D73 say (any lane an equipped relic opens).
 - Unchanged: non-combat card rewards ignore relics (D68); there is no starting relic (D71).
 - Ratified, not built: the 2 random + 1 lane reward (D71) is itself not yet wired, so this ships with it.
+- Note (2026-10-26): with three relic slots (D105) the 5 row is reached, if at all, through a set bonus; T moved that question from B1 to Phase SB1 (`plan/phases/phase_SB1_set_bonuses.md`).
 
 ## Open follow-ups
 

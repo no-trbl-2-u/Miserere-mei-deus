@@ -85,7 +85,7 @@ T's words, verbatim. Costs are T's starting pitch, to revisit after playthroughs
 | Relic | Lane | Signature (cost in Conviction) | Stats | Source |
 |---|---|---|---|---|
 | Elementalist's Signet | elementalist | Clear your INFERNO; trigger the foe's STORM (6) | +5 Heart, +20 max VITAE | elite only |
-| Elementalist's Brooch | elementalist | Convert the foe's INFERNO into STORM (4) | +5 Mind | quest |
+| Elementalist's Brooch | elementalist | Convert the foe's INFERNO into STORM (4) (only the foe-only INFERNO; you keep burning, T 2026-10-26) | +5 Mind | quest |
 | Elementalist's Belt | elementalist | Convert all BLIZZARD into STORM (3) | +5 Body | quest |
 | Crimson Circlet | blood-price | Your next SACRIFICE heals you instead; it still counts as a SACRIFICE (TETHER, sacrifice-triggered Globals, anything that reads SACRIFICE) (5) | +5 Body, +20 max VITAE | elite only |
 | Ruby Signet | blood-price | Your next SACRIFICE adds LEECH equal to the VITAE paid, unscaled, to the foe (3) | +5 Heart | quest |
@@ -169,11 +169,13 @@ their signatures, and a `signature-usage` report shows how each signature is wor
   - Signet (cost 6): clear your INFERNO with the existing remove-your-INFERNO semantics (the both-sides stack becomes
     foe-only; INFERNO on you alone is cleared), then trigger the foe's STORM: the foe loses the STORM's current
     amount now, and the STORM does not grow.
-  - Brooch (cost 4): the foe's INFERNO (`foeInferno`: the both-sides and foe-only stacks) becomes STORM of the same
-    amount, added to any STORM up; both stacks go to 0, INFERNO on you alone stays. (Builder's reading of "the foe's
-    INFERNO"; T may correct it on the PR.)
+  - Brooch (cost 4): the foe-only INFERNO (`infFoe`) becomes STORM of the same amount, added to any STORM up;
+    `infFoe` goes to 0. The both-sides stack (`infShared`) and INFERNO on you alone (`infSelf`) stay, so you are
+    still burning. Confirmed by T (2026-10-26): only the foe's own INFERNO converts; the player still burns. A test:
+    with both a shared and a foe-only stack up, casting the Brooch turns only the foe-only stack into STORM, and the
+    player's next-turn INFERNO loss (`floor(infShared / 2) + infSelf`) is unchanged.
   - Belt (cost 3): all BLIZZARD becomes STORM of the same amount, added to any STORM up; BLIZZARD goes to 0.
-  Each is refused when it would do nothing (no INFERNO and no STORM for the Signet; no foe INFERNO for the Brooch;
+  Each is refused when it would do nothing (no INFERNO and no STORM for the Signet; no foe-only INFERNO (`infFoe` 0) for the Brooch, even with a shared stack up;
   no BLIZZARD for the Belt), with a reason the bar prints. A test per signature's effect and per refusal.
 - **A16** Every lane relic (the six) resolves to a registered lane and its detail VM reads `Unlocks: <lane name>`;
   the library header comment names each relic's source. A library test.
@@ -270,12 +272,13 @@ Measure: the A15 signature and refusal tests and the A16 library test pass, and 
 the dev relic chips and worn, puts its signature on the bar at its own cost and reads "Unlocks: Elementalist".
 - Scope: `Items/relic.library.ts` (three entries; `accessoryKind: 'ring'` for the Signet, `'amulet'` for the Brooch,
   `'charm'` for the Belt, see Decisions "Slot type"); `Combat/combat.signature.ts` and `combat.encounter.types.ts`
-  (three kinds); `Combat/combat.elements.ts` or the card program's element helpers (convert foe INFERNO to STORM,
+  (three kinds); `Combat/combat.elements.ts` or the card program's element helpers (convert the foe-only INFERNO `infFoe` to STORM,
   convert BLIZZARD to STORM, trigger STORM without growth, reusing `removeYourInferno`); the sim policies and pacing
   sim; glosses and atlas rows.
 - Consumers: the signature bar, the weather row (the elements change mid-turn), the dev relic chips.
 - Save / schema: additive library entries; no migration.
-- Tests: `Combat/combat.signature.test.ts` (one effect and one refusal case per signature), a
+- Tests: `Combat/combat.signature.test.ts` (one effect and one refusal case per signature, plus the Brooch's
+  shared-plus-foe-only case of A15: only `infFoe` becomes STORM, the player's next-turn INFERNO loss unchanged), a
   `Combat/e2e/` element case if the weather row's numbers need pinning, `Items/e2e/relic-library.engine.test.ts`
   (A16 over all six), the A2 presenter test extended.
 - Verify gate: `npm run verify -w axiomancer-mechanics`; `npm run verify -w axiomancer-mobile`; `npm run e2e:combat`;
@@ -354,6 +357,10 @@ a recorded fight.
   defined but is no longer handed out (SG1, #923).
 - **"Trigger" means one extra tick now (default, T did not object, 2026-10-25):** a triggered STORM deals its current
   amount without growing; a triggered LEECH deals and heals its potency without losing a turn.
+- **The Brooch converts only the foe-only INFERNO (T, 2026-10-26).** Confirmed by T (2026-10-26): "it should only
+  be theirs. The player should still be burning." `infFoe` becomes STORM; `infShared` stays, so the Brooch is purely
+  offensive and distinct from the Signet (which clears your INFERNO). This replaces the builder's reading accepted at
+  #922's merge (both the shared and foe-only stacks).
 - **"Clear your INFERNO" (the Elementalist's Signet) uses the existing remove-your-INFERNO semantics (T,
   2026-10-25):** the both-sides stack becomes foe-only (`combat.elements.ts`).
 - **Slot type (T, 2026-10-25).** T is separately plotting an equipment-slot change (only Weapon, Armor and three
