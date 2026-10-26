@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-10-25 at commit 83975010
-> Pass count: 101
+> Last pass: 2026-10-26 at commit 4b316aa2
+> Pass count: 102
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
@@ -852,6 +852,20 @@
 > on T's BT2a call), the village Minor Healing Potion row, the map
 > legend's SEALED key, and the customs-house "takes shillings" line
 > above the free inn REST (pass 72's chosen copy).
+
+> **[critique pass 102, 2026-10-26, commit 4b316aa2] Unattended `/march`
+> tick.** `critique:drive` (`CRITIQUE_VIEWPORT=both`), full 11-screen
+> set: 22 captures, 0 nav trouble, 0 console/page errors. 12 commits
+> after pass 101: BC1 (board cues: your own INFERNO, the BLIZZARD cut,
+> END on a dead tray, the float timing) and SG1 (no starting ring), plus
+> the plot PRs (LR1, EQ2, SG1 rework, IO1, RW1, PH1, TQ1, BC1). The BC1
+> cues need an Elementalist fight or an all-MISS tray, and the set's
+> Float-Eye opening board shows neither; its intent pill, chips, hand
+> and footer dock render as in pass 101 at both viewports. SG1 leaves no
+> mark on the fresh hub. No fresh row. Reconfirmed and not re-filed: the
+> WITHDRAW sub-line contrast (pass 101), the covered fan names on a phone
+> (pass 100, waiting on T's BT2a call), and the customs-house "takes
+> shillings" line above the free inn REST (pass 72's chosen copy).
 
 ## Pending
 
