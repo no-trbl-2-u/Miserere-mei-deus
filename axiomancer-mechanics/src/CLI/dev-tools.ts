@@ -3,6 +3,7 @@ import { getEquippedItems } from '../Character/equipment.reducer';
 import type { BaseStats } from '../Character/types';
 import type { EquipmentSlot } from '../Items/types';
 import { relicLibrary, getRelicById } from '../Items/relic.library';
+import { grantWearingIfFree } from '../Items/item-grant';
 import { consumableLibrary } from '../Items/consumable.library';
 import { cardLibrary } from '../Cards/cards.library';
 import { ENEMY_REGISTRY, EnemySlug } from '../Enemy/enemy.library';
@@ -91,14 +92,15 @@ export function devUnlockCards(store: Store, cardIds: string[] | 'all'): DevResu
 }
 
 export function devGrantAllEquipment(store: Store, _rarity: string = 'common'): DevResult {
-    // The only equipment is the signet relics. Grant a fresh clone of each
-    // (`_rarity` is ignored).
-    const state = store.getState();
+    // The only equipment is the signet relics. Grant each, worn while a
+    // position is free (`_rarity` is ignored).
+    let player = store.getState().player;
     let count = 0;
     for (const relic of relicLibrary) {
-        state.addItem({ ...relic });
+        player = grantWearingIfFree(player, relic).character;
         count++;
     }
+    store.setState({ player });
     return { ok: true, detail: `Granted ${count} signet relics` };
 }
 

@@ -254,9 +254,13 @@ export function ItemCard({ item, expanded, onTap, onUseOrEquip, onDiscard }: Ite
                     <Text style={styles.qtyText}>{'×'}{item.quantity}</Text>
                 </View>
             )}
-            {item.equipped && (
-                <View style={styles.wornBadge} pointerEvents="none">
-                    <Text style={styles.wornText}>WORN</Text>
+            {item.wornLabel !== null && (
+                <View
+                    style={item.equipped ? styles.wornBadge : styles.notWornBadge}
+                    pointerEvents="none"
+                    testID={item.equipped ? undefined : `item-not-worn-${item.id}`}
+                >
+                    <Text style={item.equipped ? styles.wornText : styles.notWornText}>{item.wornLabel}</Text>
                 </View>
             )}
             {expanded && (
@@ -317,13 +321,13 @@ export function ItemCard({ item, expanded, onTap, onUseOrEquip, onDiscard }: Ite
                         {item.canUse && (
                             <TouchableOpacity
                                 accessibilityRole="button"
-                                accessibilityLabel={item.category === 'equipment' ? `Equip ${item.name}` : `Use ${item.name}`}
+                                accessibilityLabel={`${item.actionLabel.charAt(0)}${item.actionLabel.slice(1).toLowerCase()} ${item.name}`}
                                 style={styles.actionBtn}
                                 onPress={onUseOrEquip}
                                 testID={`use-${item.id}`}
                             >
                                 <Text style={styles.actionBtnText}>
-                                    {item.category === 'equipment' ? 'EQUIP' : 'USE'}
+                                    {item.actionLabel}
                                 </Text>
                             </TouchableOpacity>
                         )}
@@ -368,6 +372,13 @@ const useStyles = makeStyles((AXM) => ({
     qtyText: { fontFamily: FONTS.mono, fontSize: 11, color: AXM.bg },
     wornBadge: { position: 'absolute', top: 2, left: 2, backgroundColor: AXM.sulfur, paddingHorizontal: 3 },
     wornText: { fontFamily: FONTS.sans, fontSize: 9, letterSpacing: 1, color: AXM.bg },
+    // A carried relic whose signature is off: an outlined badge, so it reads
+    // as a state to fix rather than a second WORN.
+    notWornBadge: {
+        position: 'absolute', top: 2, left: 2, borderWidth: 1, borderColor: AXM.rust,
+        backgroundColor: AXM.bg, paddingHorizontal: 3,
+    },
+    notWornText: { fontFamily: FONTS.sans, fontSize: 9, letterSpacing: 1, color: AXM.bone },
     expandedContent: { marginTop: 6, paddingTop: 6, borderTopWidth: 1, borderTopColor: AXM.ash, borderStyle: 'dashed' },
     itemDesc: { fontFamily: FONTS.serifItalic, fontSize: 13, color: AXM.bone },
     actionsRow: { flexDirection: 'row', gap: 4, marginTop: 6 },

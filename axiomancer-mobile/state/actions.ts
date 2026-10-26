@@ -25,7 +25,6 @@ import {
     equipItem as engineEquipItem,
     unequipItem as engineUnequipItem,
     displacedBy,
-    SLOT_CAPACITY,
     getDialogueNode,
     getMapDefinition,
     getNodePrimaryEventKind,
@@ -59,7 +58,7 @@ import {
 
 import { COMBAT_CARDS } from '@/state/selectors/combat-cards';
 import { resolveWareItem } from '@/state/presenters/village.engine';
-import { findOwnedEquipment, isWornId, wornInSlot } from '@/state/presenters/loadout';
+import { findOwnedEquipment, isWornId } from '@/state/presenters/loadout';
 import { EMPTY_EVENT_SLICE, EMPTY_LABYRINTH_SLICE, type AppStore } from './store';
 import {
     abandonHazardAction,
@@ -124,6 +123,7 @@ import {
 } from './dev/player-presets';
 import {
     addItemByIdAction,
+    devGrantItem,
     type AddItemByIdResult,
 } from './dev/item-by-id';
 import {
@@ -1162,14 +1162,14 @@ function debugSeedAction(store: AppStore): DebugSeedResult {
 
         // 2. One relic per slot kind (weapon / armor / accessory). The only
         //    equipment is the signet relics; grant the first of each
-        //    slot kind so the inventory dock + equip-replace preview have a
-        //    piece to render for every slot.
+        //    slot kind, worn while a position is free, so the inventory
+        //    dock + equip-replace preview have a piece to render for every slot.
         const seedSlots: ReadonlyArray<EquipmentSlot> = ['weapon', 'armor', 'accessory'];
         for (const slot of seedSlots) {
             try {
                 const relic = relicLibrary.find(r => r.slot === slot);
                 if (relic) {
-                    addItem({ ...relic });
+                    devGrantItem(store, relic);
                     itemsAdded++;
                 }
             } catch (error) {
@@ -1240,6 +1240,8 @@ function debugSeedAction(store: AppStore): DebugSeedResult {
  * POPULATE button. Mirrors the `debugSeedAction` shape so the Debug
  * button can render a uniform toast.
  *
+ * Each relic is worn while a position is free (`devGrantItem`).
+ *
  * "Every item" means every entry in the engine's central item
  * registries: `relicLibrary` (the signet relics, the only equipment)
  * and `consumableLibrary`. Materials and quest-items aren't in central registries (materials are
@@ -1258,7 +1260,7 @@ function populateAllItemsAction(store: AppStore): PopulateAllItemsResult {
         // The only equipment is the signet relics.
         for (const relic of relicLibrary) {
             try {
-                addItem({ ...relic });
+                devGrantItem(store, relic);
                 equipment++;
             } catch (error) {
                 console.warn(`Failed to add relic ${relic.name}:`, error);
@@ -1294,26 +1296,14 @@ function grantAllRelicsAction(store: AppStore): GrantAllRelicsResult {
         ...(player.equipment.armor ? [player.equipment.armor.id] : []),
     ]);
     const added: string[] = [];
-    let inventory: Item[] = [...player.inventory];
-    for (const relic of relicLibrary) {
-        if (owned.has(relic.id)) continue;
-        inventory = [...inventory, { ...relic, statModifiers: (relic.statModifiers ?? []).map((m) => ({ ...m })) }];
-        added.push(relic.id);
-    }
-    if (added.length === 0) {
-        return { added, worn: player.equipment.accessories.map((a) => a.id) };
-    }
     // Wear each new relic while its slot has a free position; nothing worn is
     // displaced, so a relic past the last free position stays in the satchel.
-    let nextPlayer: Character = { ...player, inventory };
-    for (const id of added) {
-        const relic = inventory.find((i: Item) => i.id === id);
-        if (!relic || !isEquipment(relic)) continue;
-        if (wornInSlot(nextPlayer.equipment, relic.slot).length >= SLOT_CAPACITY[relic.slot]) continue;
-        nextPlayer = engineEquipItem(nextPlayer, relic);
+    for (const relic of relicLibrary) {
+        if (owned.has(relic.id)) continue;
+        devGrantItem(store, relic);
+        added.push(relic.id);
     }
-    store.setState({ player: nextPlayer });
-    return { added, worn: nextPlayer.equipment.accessories.map((a) => a.id) };
+    return { added, worn: store.getState().player.equipment.accessories.map((a) => a.id) };
 }
 
 function applyCharacterPresetAction(

@@ -30,11 +30,7 @@
 import {
     grantItem,
     isEquipment,
-    isFirstNodeRelicPending,
     partitionGrantsForReward,
-    getRelicById,
-    FIRST_NODE_RELIC_FLAG,
-    FIRST_NODE_RELIC_ID,
 } from '@mechanics';
 import type {
     Equipment,
@@ -110,39 +106,6 @@ export function offerItemRewardAction(
 
     setQueue(store, [...currentQueue(store), ...entries]);
     return { queued: toQueue, inline };
-}
-
-/**
- * Offer the first-node Suppliant's Ring, if the run still owes it.
- *
- * This is W1's grant given a ceremony: `game.reducer.ts` deliberately settles
- * the ring silently only as a floor (`START_COMBAT`, `PROCESS_NODE`) and
- * leaves the hand-over to "clients with a screen to show it on". Mobile is
- * that client, and this is that screen's door.
- *
- * Returns `false` when the grant is already settled — idempotent, so a gate
- * may call it on every state change.
- */
-export function offerFirstNodeRelicAction(store: AppStore): boolean {
-    const state = store.getState() as unknown as GameState;
-    const player = state.player;
-    const flags = state.flags ?? [];
-    if (!player) return false;
-    if (!isFirstNodeRelicPending(player, flags)) return false;
-    // Already queued — do not stack a second copy of the same hand-over.
-    if (currentQueue(store).some((e) => e.item.id === FIRST_NODE_RELIC_ID)) return false;
-
-    const ring = getRelicById(FIRST_NODE_RELIC_ID);
-    if (!ring) return false;
-
-    offerItemRewardAction(store, ring, {
-        source: 'Handed over at the first waypoint',
-        settleFlags: [FIRST_NODE_RELIC_FLAG],
-        // The ring qualifies for the screen on its own (signature + stat grant); the
-        // flag makes that independent of a future content edit.
-        includeInline: true,
-    });
-    return true;
 }
 
 // ---------------------------------------------------------------------------

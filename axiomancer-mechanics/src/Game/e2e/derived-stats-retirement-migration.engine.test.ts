@@ -16,6 +16,7 @@ import { migrate } from '../game.migrate';
 import { createNewGameState, GAME_STATE_VERSION } from '../game.reducer';
 import { createCharacter } from '../../Character';
 import type { Equipment } from '../../Items/types';
+import { cloneRelic, getRelicById } from '../../Items/relic.library';
 import { FIXTURE_WEAPON, FIXTURE_ARMOR } from '../fixtures';
 
 /** The pre-v25 stat line shape: any stat, optional multiplier flag. */
@@ -38,8 +39,10 @@ function legacyRelic(relic: Equipment): Record<string, unknown> {
  */
 function v24Save(): Record<string, unknown> {
     const fresh = createNewGameState();
+    const ring = cloneRelic(getRelicById('relic-disarming-plea')!);
     const ringed = createCharacter({
-        name: 'Player', level: 3, baseStats: { heart: 5, body: 6, mind: 4 }, seedStartingRelics: true,
+        name: 'Player', level: 3, baseStats: { heart: 5, body: 6, mind: 4 },
+        inventory: [ring], equipment: [ring],
     });
     const kitted = {
         ...ringed,

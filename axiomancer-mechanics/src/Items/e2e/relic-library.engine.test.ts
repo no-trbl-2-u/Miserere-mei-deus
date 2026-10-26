@@ -3,13 +3,13 @@
  * Bleeding Signet).
  *
  * Locks the library invariants (roster, shape, no stat line), the
- * `cloneStartingRelics` seed and the `getSignaturesForLoadout` derivation
+ * `cloneRelic` copy and the `getSignaturesForLoadout` derivation
  * that supplies the signature kit at combat-init.
  */
 
 import { describe, it, expect } from 'vitest';
 import {
-    relicLibrary, getRelicById, getSignaturesForLoadout, cloneStartingRelics,
+    relicLibrary, getRelicById, getSignaturesForLoadout, cloneRelic,
 } from '../relic.library';
 import { SIGNATURE_SKILLS } from '../../Combat/combat.signature';
 import type { SignatureSkillId } from '../../Combat/combat.encounter.types';
@@ -62,12 +62,12 @@ describe('relic library — roster', () => {
     });
 });
 
-describe('cloneStartingRelics', () => {
-    it('returns the starting relic (the Ring alone) as fresh, non-aliased clones', () => {
-        const a = cloneStartingRelics();
-        const b = cloneStartingRelics();
-        expect(a.map(r => r.id)).toEqual([RING_ID]);
-        expect(a).toEqual([getRelicById(RING_ID)]);
+describe('cloneRelic', () => {
+    it('returns fresh, non-aliased clones of a library relic', () => {
+        const ring = getRelicById(RING_ID)!;
+        const a = [cloneRelic(ring)];
+        const b = [cloneRelic(ring)];
+        expect(a).toEqual([ring]);
         // Fresh objects each call (equipping must not mutate the singleton library).
         expect(a[0]).not.toBe(b[0]);
         expect(a[0]).not.toBe(getRelicById(a[0].id));
@@ -77,7 +77,7 @@ describe('cloneStartingRelics', () => {
 
 describe('getSignaturesForLoadout', () => {
     it('derives the ring\'s signature from a worn ring', () => {
-        const loadout = { weapon: null, armor: null, accessories: cloneStartingRelics() };
+        const loadout = { weapon: null, armor: null, accessories: [cloneRelic(getRelicById(RING_ID)!)] };
         expect(getSignaturesForLoadout(loadout)).toEqual(['sig-disarming-plea']);
     });
 

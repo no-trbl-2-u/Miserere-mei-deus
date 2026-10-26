@@ -7,7 +7,7 @@
 > the relic while a position is free, which is the Bleeding Signet defect
 > T hit; and the satchel says when a relic is carried but not worn. Ship
 > without asking; record judgment calls in the commit body. One call is
-> T's and carries a default (`[T to confirm #1]`).
+> T's and carried a default, accepted at merge (call #1).
 
 ## Sources
 
@@ -306,7 +306,7 @@ Mobile (same greps plus `ItemRewardGate`, `offerFirstNodeRelic`):
   A relic worn mid-fight joins the next fight.
 - **The item-reward screen's "put in the satchel" stays.** It is the player's
   explicit choice to carry a relic unworn, and A5 now flags it.
-  [T to confirm #1]
+  Accepted at merge (default).
 - **Copy:** the badge reads `NOT WORN`; the detail line reads "Not worn:
   <signature name> is off."; the button reads `WEAR` (T's word) for relics,
   replacing `EQUIP` in the satchel only. The item-reward screen keeps its own

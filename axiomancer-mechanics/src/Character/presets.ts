@@ -248,15 +248,14 @@ export function buildCharacterFromPreset(preset: CharacterPreset): Character {
 
     // The declared `preset.equipment` template entries resolve to nothing
     // (there is no procedural gear), so presets carry only their consumables
-    // and wear the starting relics seeded by `createCharacter`. The
-    // `equipment` field stays on the recipe as vestigial metadata.
+    // and wear no relic (a run starts with none). The `equipment` field stays
+    // on the recipe as vestigial metadata.
     return createCharacter({
         name: preset.name,
         level: preset.level,
         baseStats: preset.baseStats,
         currency: preset.currency,
         inventory: consumables,
-        seedStartingRelics: true,
         knownCards: preset.knownCards,
     });
 }

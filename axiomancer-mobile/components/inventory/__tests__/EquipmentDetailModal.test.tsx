@@ -55,23 +55,23 @@ describe('EquipmentDetailModal — the loadout button (EQ1 A2)', () => {
         expect(onEquip).not.toHaveBeenCalled();
     });
 
-    it('an unworn relic with a free position offers EQUIP, which calls onEquip', () => {
+    it('an unworn relic with a free position offers WEAR, which calls onEquip', () => {
         const vm = selectEquipmentDetailViewModel(stateWith([RING, SIGNET], [RING]), SIGNET.id)!;
-        expect(vm.action).toEqual({ mode: 'equip', label: 'EQUIP' });
+        expect(vm.action).toEqual({ mode: 'equip', label: 'WEAR' });
 
         const onEquip = jest.fn();
         const { getByTestId, getByText } = render(
             <EquipmentDetailModal vm={vm} onClose={jest.fn()} onEquip={onEquip} onUnequip={jest.fn()} />,
         );
-        expect(getByText('EQUIP')).toBeTruthy();
+        expect(getByText('WEAR')).toBeTruthy();
         fireEvent.press(getByTestId('equip-detail-equip'));
         expect(onEquip).toHaveBeenCalledWith(SIGNET.id);
     });
 
-    it('with every trinket position worn it offers EQUIP · REPLACE the last-worn one', () => {
+    it('with every trinket position worn it offers WEAR · REPLACE the last-worn one', () => {
         const worn = [trinket('t1', 'First'), trinket('t2', 'Second'), trinket('t3', 'Third')];
         const vm = selectEquipmentDetailViewModel(stateWith([...worn, SIGNET], worn), SIGNET.id)!;
-        expect(vm.action).toEqual({ mode: 'equip', label: 'EQUIP · REPLACE THIRD' });
+        expect(vm.action).toEqual({ mode: 'equip', label: 'WEAR · REPLACE THIRD' });
     });
 
     it('shows no action button when no handler is wired, and CLOSE still closes', () => {

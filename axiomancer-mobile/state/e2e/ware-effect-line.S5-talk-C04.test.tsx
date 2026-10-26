@@ -20,7 +20,6 @@ import React from 'react';
 import {
     consumableLibrary,
     getRelicById,
-    FIRST_NODE_RELIC_ID,
     FIXTURE_ARMOR,
     type Consumable,
     type Item,
@@ -46,7 +45,7 @@ jest.mock('@/lib/platform/router', () => ({
 const HEAL_WARE = consumableLibrary.find((c) => (c.healAmount ?? 0) > 0)!;
 // The live library's one relic (the ring) grants a signature and no stat; the
 // fixture armor carries the +maxHp line, so the stat-bump clause has a witness.
-const RELIC = getRelicById(FIRST_NODE_RELIC_ID)!;
+const RELIC = getRelicById('relic-disarming-plea')!;
 
 /** A village seated on one stall selling `ware`, with coin enough to buy it. */
 function villageStore(wareId: string): AppStore {

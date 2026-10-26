@@ -1024,6 +1024,13 @@ satisfied for exactly these.)
 - The loop still never invents card, keyword or art content unprompted: `/expand` may only propose candidates, as for other content, and a proposal is never built until promoted.
 - Unchanged: `Potential Assets/` is a store, never a source (D96); a sprite sheet for an already-used enemy stays enhancement (D97). First use: a `/plot` phase renaming the Blood Price cards.
 
+**D105 — Three kinds of slot: one Weapon, one Armor, three Relic slots.** (T, 2026-10-25, in session; recorded by the EQ2 plot, run unattended. T: "There are only 3 types of slots: Weapon (top), Armor (2nd from top), 3x relics. Relics can be named anything, but ultimately they all take up the same 3 relic slots.")
+
+- A character wears one weapon, one armor and up to three relics. Every screen lists them in that order: Weapon first, Armor second, then the three relic slots.
+- Any relic fits any relic slot, whatever it is called (a ring, a brooch, a belt, a circlet). The accessory kinds (head, hands, feet, amulet, ring, charm) carry no rule and are retired; the engine's `accessory` slot becomes `relic`.
+- At most three relics are worn, so D100's "all 5 relics of a lane" row is out of reach unless weapon and armor can be lane pieces (the EQ2 plot's call 2 and 3, defaults: they cannot, and D100 is left as written).
+- Built by Phase EQ2 (`plan/phases/phase_EQ2_equipment_slots.md`).
+
 **D104 — Every card reward follows the relic lanes; a carried lane relic unlocks its lane.** (T, 2026-10-24, the Elementalist swarm `/messy`; recorded by the RW1 plot, 2026-10-25. Amends D68 and D71; D100's table stands.)
 
 - "Random" means drawn from every lane the player has unlocked. The grey office is always unlocked; a lane unlocks the moment one of its relics is in the inventory, equipped or not (D71 said the first lane opens with the first lane relic equipped).

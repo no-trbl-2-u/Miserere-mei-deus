@@ -9,6 +9,7 @@
 import {
     displacedBy,
     equipItem as engineEquipItem,
+    getSignatureSkill,
     unequipItem as engineUnequipItem,
     isConsumable,
     isEquipment,
@@ -107,6 +108,11 @@ export interface ItemModalViewModel {
      * parsing the label string back out.
      */
     replacingName: string | null;
+    /**
+     * "Not worn: <signature> is off." on a relic carried unworn, shown above
+     * the WEAR button; `null` for a worn relic and anything else.
+     */
+    notWornLine: string | null;
 }
 
 /**
@@ -138,6 +144,7 @@ export function selectItemModalViewModel(
         effectDeltas: [] as readonly ModalEffectDelta[],
         itemModifiers: [] as readonly ItemModifierLine[],
         replacingName: null,
+        notWornLine: null,
     });
 }
 
@@ -199,7 +206,15 @@ function buildConsumableModal(player: Character, item: Item): ItemModalViewModel
         effectDeltas: [] as readonly ModalEffectDelta[],
         itemModifiers: [] as readonly ItemModifierLine[],
         replacingName: null,
+        notWornLine: null,
     });
+}
+
+/** The off-signature line for a relic carried unworn (copy lives here). */
+function notWornLineFor(item: Equipment, mode: ItemModalMode): string | null {
+    if (mode !== 'equip' || !item.grantsSignature) return null;
+    const signature = getSignatureSkill(item.grantsSignature)?.name;
+    return signature ? `Not worn: ${signature} is off.` : null;
 }
 
 function buildEquipmentModal(player: Character, item: Item): ItemModalViewModel {
@@ -254,6 +269,7 @@ function buildEquipmentModal(player: Character, item: Item): ItemModalViewModel 
         effectDeltas: effectDeltas as readonly ModalEffectDelta[],
         itemModifiers: itemModifiers as readonly ItemModifierLine[],
         replacingName: replacing === null ? null : replacing.name,
+        notWornLine: notWornLineFor(eq, mode),
     });
 }
 

@@ -15,12 +15,9 @@
 import { describe, expect, it } from '@jest/globals';
 import {
     getRelicById,
-    grantFirstNodeRelic,
     initializeCombatEncounter,
-    FIRST_NODE_RELIC_ID,
     type Character,
     type Enemy,
-    type GameState,
     type Item,
 } from '@mechanics';
 
@@ -108,13 +105,11 @@ describe('every wearing grant wears into player.equipment (EQ1 A4)', () => {
         expect(worn).toContain(SIGNET);
     });
 
-    it('the first-node grant arrives worn', () => {
+    it('a dev relic chip (add item by id) arrives worn', () => {
         const store = bareStore();
-        const state = store.getState() as unknown as GameState;
-        const result = grantFirstNodeRelic(state.player, state.flags ?? []);
-        store.setState({ player: result.character } as never);
-        expect(store.getState().player.equipment.accessories.map((a) => a.id)).toContain(FIRST_NODE_RELIC_ID);
-        expect(selectInventoryViewModel(store.getState(), {}).items.find((r) => r.id === FIRST_NODE_RELIC_ID)?.equipped)
+        createAppActions(store).addItemById(SIGNET);
+        expect(store.getState().player.equipment.accessories.map((a) => a.id)).toEqual([SIGNET]);
+        expect(selectInventoryViewModel(store.getState(), {}).items.find((r) => r.id === SIGNET)?.equipped)
             .toBe(true);
     });
 

@@ -79,6 +79,11 @@ export function ItemModal({ modalVm, onConfirm, onCancel }: ItemModalProps) {
                                         ))}
                                     </View>
                                 )}
+                                {modalVm.notWornLine !== null && (
+                                    <Text style={styles.modalNotWorn} testID="modal-not-worn">
+                                        {modalVm.notWornLine}
+                                    </Text>
+                                )}
                                 {modalVm.confirmPrompt !== '' && (
                                     <Text style={styles.modalPrompt}>{modalVm.confirmPrompt}</Text>
                                 )}
@@ -211,6 +216,13 @@ const useStyles = makeStyles((AXM) => ({
     },
     modalEffectLoss: {
         color: AXM.blood,
+    },
+    modalNotWorn: {
+        fontFamily: FONTS.sans,
+        fontSize: 12,
+        letterSpacing: 0.5,
+        color: AXM.rust,
+        marginBottom: 6,
     },
     modalPrompt: {
         fontFamily: FONTS.serifItalic,

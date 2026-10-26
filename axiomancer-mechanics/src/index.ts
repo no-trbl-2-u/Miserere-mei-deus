@@ -21,8 +21,6 @@ export {
     dieSpecialCap, dieGearMissFaces,
     DIE_GEAR_COLORS,
     characterPresets, getPresetById, buildCharacterFromPreset,
-    grantFirstNodeRelic, withholdFirstNodeRelic, isFirstNodeRelicPending,
-    FIRST_NODE_RELIC_ID, FIRST_NODE_RELIC_FLAG,
     levelLadderPresets,
     previewStatAllocation,
     experienceForLevel,
@@ -196,7 +194,7 @@ export {
     // re-deriving the unequip -> addItem -> equipItem chain.
     // `qualifiesForItemRewardScreen` is the one predicate that decides
     // ceremony (reward screen) vs. the lightweight inline grant.
-    grantItem, qualifiesForItemRewardScreen, partitionGrantsForReward, displacedBy,
+    grantItem, grantWearingIfFree, qualifiesForItemRewardScreen, partitionGrantsForReward, displacedBy,
 } from './Items';
 export type {
     Item, Equipment, Consumable, Material, QuestItem,

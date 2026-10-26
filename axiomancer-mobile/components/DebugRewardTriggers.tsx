@@ -12,22 +12,29 @@
  *   ANVIL      — the blacksmith with a fixed budget so die-gear upgrades
  *                are affordable regardless of the wallet.
  *   JOURNAL    — unlock every foe's codex entry (`unlockAllJournal`).
+ *   RELIC REWARD — offer the Bleeding Signet through the item-reward
+ *                screen (`offerItemRewardAction`), so `<ItemRewardGate>`
+ *                routes to `/item-reward`. No run hands out a relic yet,
+ *                so this is the screen's only way in until relic sources
+ *                land.
  *
  * Renders null outside dev builds.
  */
 
 import React, { useState } from 'react';
-import { BLACKSMITH_WITNESS_VARIANTS } from '@mechanics';
+import { BLACKSMITH_WITNESS_VARIANTS, getRelicById } from '@mechanics';
 
 import { DevButton, DevButtons, DevChip, DevChips, DevRow } from '@/components/dev/DevControls';
 import { isDevToolsEnabled } from '@/lib/buildProfile';
 import { useGameActions, useGameStore } from '@/state/GameStoreProvider';
 import { CACHE_TIERS, listHazards, listJournalEntries, unlockAllJournal } from '@/state/dev/rewards';
+import { offerItemRewardAction } from '@/state/item-reward/store-actions';
 
 const HAZARDS = listHazards();
 const JOURNAL_COUNT = listJournalEntries().length;
 const ANVIL_BUDGET = 500;
 const CACHE_SEED_COIN = 25;
+const REWARD_RELIC_ID = 'relic-bleeding-signet';
 
 export function DebugRewardTriggers() {
     const store = useGameStore();
@@ -51,6 +58,13 @@ export function DebugRewardTriggers() {
         setFeedback(ok ? `anvil · budget ${ANVIL_BUDGET}` : 'a session is already open');
     };
 
+    const onRelicReward = () => {
+        const relic = getRelicById(REWARD_RELIC_ID);
+        if (!relic) { setFeedback(`no relic ${REWARD_RELIC_ID}`); return; }
+        offerItemRewardAction(store, relic, { source: 'From the dev menu' });
+        setFeedback(`relic reward · ${relic.name}`);
+    };
+
     const onJournal = () => setFeedback(`journal · ${unlockAllJournal(store)} new of ${JOURNAL_COUNT}`);
 
     return (
@@ -68,6 +82,7 @@ export function DebugRewardTriggers() {
                     ))}
                     <DevButton label="ANVIL ×500" onPress={onAnvil} a11y={`Open the blacksmith with a ${ANVIL_BUDGET} shilling budget`} testID="debug-anvil-budget-button" />
                     <DevButton label="UNLOCK JOURNAL" onPress={onJournal} a11y="Unlock every journal entry" testID="debug-journal-unlock-button" />
+                    <DevButton label="RELIC REWARD" onPress={onRelicReward} a11y="Offer a relic on the item-reward screen" testID="debug-relic-reward-button" />
                 </DevButtons>
             </DevRow>
             <DevRow label="DEBUG · HAZARD BY ID" sub="start a specific authored hazard" stacked>

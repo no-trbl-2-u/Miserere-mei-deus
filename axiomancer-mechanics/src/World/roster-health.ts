@@ -39,10 +39,9 @@ import type { Enemy } from '../Enemy/types';
 import { ENEMY_REGISTRY, EnemiesByMap, EnemyLibrary } from '../Enemy/enemy.library';
 import type { Equipment, Item } from '../Items/types';
 import { consumableLibrary } from '../Items/consumable.library';
-import { relicLibrary, cloneStartingRelics } from '../Items/relic.library';
+import { relicLibrary } from '../Items/relic.library';
 import { SIGNATURE_SKILLS } from '../Combat/combat.signature';
 import { getCardById } from '../Cards/cards.library';
-import { FIRST_NODE_RELIC_ID } from '../Character/first-node-grant';
 import type { DialogueTree } from '../NPCs/types';
 import { MAP_REGISTRY } from './map.registry';
 import type { MapDefinition, Reward } from './types';
@@ -111,7 +110,7 @@ export interface RosterSources {
     relics: readonly Equipment[];
     signatureIds: ReadonlySet<string>;
     cardExists: (id: string) => boolean;
-    /** Item ids a new run hands over (the first-node relic, starting relics). */
+    /** Item ids a new run hands over (none today). */
     startingItemIds: readonly string[];
     /** Item ids a loot cache tier can roll (`rollCacheReward`'s pool). */
     cacheItemIds: readonly string[];
@@ -134,7 +133,8 @@ export function collectRosterSources(): RosterSources {
         relics: relicLibrary,
         signatureIds: new Set(Object.keys(SIGNATURE_SKILLS)),
         cardExists: id => getCardById(id) !== undefined,
-        startingItemIds: [FIRST_NODE_RELIC_ID, ...cloneStartingRelics().map(r => r.id)],
+        // A run starts with no item and is handed none.
+        startingItemIds: [],
         // `rollCacheReward` draws uniformly from the whole consumable library.
         cacheItemIds: consumableLibrary.map(c => c.id),
     };

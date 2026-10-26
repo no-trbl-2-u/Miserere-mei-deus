@@ -8,6 +8,7 @@
  *   - A hazard chip opens a hazard session for that id
  *   - ANVIL opens a blacksmith session
  *   - UNLOCK JOURNAL fills codex.unlockedEntries
+ *   - RELIC REWARD queues the Bleeding Signet on the item-reward screen
  */
 
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
@@ -34,6 +35,7 @@ describe('DebugRewardTriggers: DEV gate', () => {
         expect(tree.queryByTestId('debug-cache-rich-button')).not.toBeNull();
         expect(tree.queryByTestId('debug-anvil-budget-button')).not.toBeNull();
         expect(tree.queryByTestId('debug-journal-unlock-button')).not.toBeNull();
+        expect(tree.queryByTestId('debug-relic-reward-button')).not.toBeNull();
         for (const h of listHazards()) expect(tree.queryByTestId(`debug-hazard-id-${h.id}`)).not.toBeNull();
     });
 
@@ -51,6 +53,14 @@ describe('DebugRewardTriggers: DEV gate', () => {
 });
 
 describe('DebugRewardTriggers: sessions + grants', () => {
+    it('RELIC REWARD queues the Bleeding Signet for the item-reward screen, granting nothing yet', () => {
+        const store = makeStore();
+        const tree = render(withProvider(store, <DebugRewardTriggers />));
+        fireEvent.press(tree.getByTestId('debug-relic-reward-button'));
+        expect(store.getState().itemReward.queue.map((e) => e.item.id)).toEqual(['relic-bleeding-signet']);
+        expect(store.getState().player.inventory.map((i) => i.id)).not.toContain('relic-bleeding-signet');
+    });
+
     it('RELIQUARY RICH opens a rich loot-cache session', () => {
         const store = makeStore();
         const tree = render(withProvider(store, <DebugRewardTriggers />));

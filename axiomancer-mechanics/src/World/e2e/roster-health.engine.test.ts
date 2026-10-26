@@ -27,6 +27,9 @@ const LIVE = auditRosterHealth();
 
 /** The orphans on the live tree, by lens and id. Change with the content. */
 const PINNED_ORPHANS: ReadonlyArray<{ lens: string; id: string }> = [
+    // No run starts with the ring or is handed it any more; old saves and
+    // the dev menu hold it until it gets a lane.
+    { lens: 'item-ungranted', id: 'relic-disarming-plea' },
     // No shop, loot or reward carries it; only the dev menu hands it over.
     { lens: 'item-ungranted', id: 'relic-bleeding-signet' },
 ];
