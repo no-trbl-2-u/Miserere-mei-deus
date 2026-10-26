@@ -72,7 +72,10 @@ and parallelize independent work.
 
 - **`scout`** — every external research need.
 - **`playtester`** — when the phase needs the running app driven
-  and observed. See `.claude/agents/` for what else exists; the
+  and observed. It plays in its own browser through the playtest
+  session tool (`npm run --silent playtest:session -- prepare` once,
+  then hand each playtester an agent name, a seed and a screenshot
+  directory; four can run at once), not the Playwright MCP. See `.claude/agents/` for what else exists; the
   archived design agents (banner) are not options.
 - **Parallel calls** when work is independent.
 
@@ -582,7 +585,7 @@ spec.md                                      # product spec
 
 # Sub-agents
 Agent({ subagent_type: "scout", prompt: "..." })
-Agent({ subagent_type: "playtester", prompt: "..." })
+Agent({ subagent_type: "playtester", prompt: "agent pt1, seed 1101, shots under <dir> ..." })  # after playtest:session prepare
 
 # Truth-source MCPs (main agent holds the grants)
 # axio-query: axio_overview / axio_cards / axio_effects / axio_keywords
