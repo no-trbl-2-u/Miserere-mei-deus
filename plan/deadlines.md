@@ -164,6 +164,7 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - AD1b — plotted 2026-10-21 (#716) without a deadline line; date not set.
 - EQ1a — a live defect T hit on device; loop work, needs no time from T; date not set.
 - EQ1b — loop work, needs no time from T; date not set.
+- SG1 — a live defect T reported in session (the starting ring's signature never fires); loop work, needs no time from T; date not set.
 - FM1a — loop work, needs no time from T beyond confirming the pitch rule; date not set.
 - FM1b — loop work, needs no time from T beyond confirming the pitch rule; date not set.
 - FM1c — loop work, needs no time from T beyond confirming the pitch rule; date not set.
@@ -251,6 +252,7 @@ attended session.
 ## Change log
 
 - **2026-10-25** — **lane relics plotted** (T in session, plot run unattended, `/plot`, slotted after SG1 and BC1). **Added** Unscheduled lines for LR1a-LR1e: T set no date, and LR1b is attended, so its date is T's to pick. **Edited** the W5 Item "Relic pass session" (B1) and the W5 notes: its premise narrowed, since the five lane relics and their sources are now LR1's; B1 keeps the starting ring, the signatures and the rest of the pass. **Ticked** nothing.
+- **2026-10-25** — **the signature trigger plotted** (T in session, plot run unattended, `/plot asap`). **Added** an Unscheduled line for SG1: T set no date, and the fix blocks no window's goal. **Edited** no Item: the W4 "Enemy revamp session and the Act Boss" (B2) still holds, since SG1 only gives Float-Eye befriend terms and the revamp may redo the roster; the W5 "Relic pass session" (B1) still holds, since SG1 authors no relic. Nothing ticked; no date moved.
 - **2026-10-25** — **the board cues plotted** (T in conversation, plot run unattended, `/plot`). **Added** an Unscheduled line for BC1: T set no date and board legibility blocks no window's goal. **Edited** no Item: no open Item's premise rests on the self-burn, BLIZZARD or dead-tray cues. Nothing ticked; no date moved.
 - **2026-10-25** — **the reward rule plotted** (T, in conversation, `/plot` run unattended). **Added** Unscheduled lines for RW1a-RW1b: T set no date, and the rows block no window's goal. **Edited** no Item: the W5 "Relic pass session" (B1) still holds, since RW1 makes lane relics work but authors none, and the W3 four-region walk already covers the loot cache. Nothing ticked; no date moved.
 - **2026-10-25** — **fewer taps plotted** (T, `/plot`, run unattended by a workflow). **Added** an Unscheduled line for TQ1: T set no date, and it blocks no window's goal. **Edited** no Item: the W3 "Event-node audit and fixes (all twelve kinds)" Item still holds, since TQ1 changes the spoils pick and the map's node panel, not whether each node kind resolves (T cut its rest, cache and anvil changes the same day). Nothing ticked; no date moved.
