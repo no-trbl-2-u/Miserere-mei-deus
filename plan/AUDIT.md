@@ -63,6 +63,29 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 
 ## Pending
 
+### [ ] [ci] SG1 leaves `route:item-reward` with no play path and no dev seam (feature-map drive red on PR #928)
+- category: ci
+- impact: 4
+- ease: 5
+- detail: run 40262955599 (`verify-mobile`, head 8a810580, branch
+  `loop/ship-SG1-no-starting-ring`) and `verify-mechanics` fail the
+  `e2e:feature-map` drive: `reachable route not reached: route:item-reward`
+  ("no play path and no dev seam reaches route:item-reward"). Root cause:
+  the reward screen was reached only through the first-node relic hand-over
+  (`ItemRewardGate` first-node arm), which SG1 deleted. The screen now opens
+  only for equipment with a signature or modifiers (`qualifiesForItemRewardScreen`),
+  and the cache, gathering, fight and hazard in the drive's play walk queue
+  none. The dev chips wear relics directly (SG1), so no `SEAMS` entry in
+  `scripts/feature-map-e2e.mjs` can open it. Fix needs a seam decision: a dev
+  control that offers a signature relic through `offerItemRewardAction`, or a
+  state-fixture field that stages a pending reward with `arrive` → `/item-reward`
+  (the fixture builder cannot stage the transient `itemReward` slice today).
+  Not a one-line fix, so it is filed here, not suppressed. Note the SEAMS
+  table and the feature map `driven` / `reachable` values for item-reward
+  must move with whichever seam lands.
+- proposed: add the dev seam, add a `SEAMS['route:item-reward']` entry, rerun
+  `npm run e2e:feature-map -w axiomancer-mobile` and `npm run verify -w axiomancer-mobile`.
+
 ### [x] [contract] The Blood Price art index breaks the trial-set-removal contract (UP1a art, 2026-10-22) — CLOSED 2026-10-25 (already fixed in 3b4e618c, phase UP1b: `trial-set-removal.engine.test.ts` allowlists `axiomancer-mobile/assets/images/cards/index.ts`, since Metro needs a literal id per painting and an unmapped id falls back; the test passes on main; found unticked this pass)
 - category: contract
 - impact: 5
