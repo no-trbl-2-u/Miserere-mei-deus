@@ -1,7 +1,7 @@
 # Playtest field guides
 
-Short per-screen guides for an AI playtester (Read/Grep/Glob + Playwright,
-no skills). Each one says what the screen is for, how to enter it directly,
+Short per-screen guides for an AI playtester (Read/Grep/Glob + the playtest
+session tool `scripts/playtest-session.mjs`, no skills). Each one says what the screen is for, how to enter it directly,
 which `testID`s exist, the minimal correct play, what only *looks* stuck,
 what a real dead end looks like, and which `globalThis.__AXM_LOG__` lines
 to read.
@@ -26,8 +26,13 @@ Shared facts (every guide assumes them):
   and stands down if a session already exists. The run is ephemeral — no save slot is read or written.
 - `/dev` is reached from the SELF tab (`self-dev-tools-link`); its controls are
   catalogued in `docs/dev-tools.md`.
-- Seed globals are read at bundle boot, so set them in a Playwright
-  `addInitScript` before `page.goto`. Full list: `__AXM_MINIGAME_SEEDS__`
+- Seed globals are read at bundle boot, so a session sets them before every
+  page load: `playtest-session.mjs start --agent <name> --seed <n>` sets
+  `__AXM_COMBAT_SEED__`, `--minigame-seeds '<json>'` sets
+  `__AXM_MINIGAME_SEEDS__` and the legacy per-minigame globals, `--fixture <id>`
+  sets `__AXM_FIXTURE__`, and dev tools are always on; all of them survive a
+  reload. The rest have no `start` flag (a harness sets them in its own
+  `addInitScript` before `page.goto`). Full list: `__AXM_MINIGAME_SEEDS__`
   (unified: `{hazard:{seed,hazardId}, rest:{seed}, cache:{seed}, blacksmith:{seed}}`),
   legacy `__AXM_HAZARD_SEED__`, `__AXM_HAZARD_ID__`, `__AXM_REST_SEED__`,
   `__AXM_CACHE_SEED__`, `__AXM_BLACKSMITH_SEED__`, plus `__AXM_COMBAT_SEED__`,

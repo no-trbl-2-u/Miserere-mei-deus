@@ -233,7 +233,7 @@ Defined under `.claude/agents/`. Spawn aggressively.
 | Agent | When to spawn | Returns |
 |---|---|---|
 | `scout` | External fact, prior-art, spec, date, signal | Structured findings with citations |
-| `playtester` | Play the game via the running expo-web build (Playwright) — the real `/critique` observer for this project | Structured playtest report |
+| `playtester` | Play the game in its own browser through the playtest session tool (`axiomancer-mobile/scripts/playtest-session.mjs`: Bash restricted to that tool, no Playwright MCP; the caller runs `prepare` once and hands each an agent name, seed and screenshot directory, four at once) — the real attended `/critique` observer for this project | Structured playtest report |
 
 `reader`, `mechanics-expert`, `content-curator` and `card-expert` were
 archived in R0 (D58); a fresh card agent is written at the first card

@@ -26,8 +26,12 @@ modes: §7. Who plays depends on whether a user is present
   `playtester`.** Run `npm run critique:drive` and read its
   screenshots, text and errors yourself.
 - **Attended** (a user is present): delegate the playthrough to
-  the `playtester` sub-agent, which drives the local expo-web
-  build via Playwright with the fresh-eyes mandate.
+  the `playtester` sub-agent, which plays the web export in its
+  own browser through the playtest session tool
+  (`playtest-session.mjs`, not the Playwright MCP) with the
+  fresh-eyes mandate. Run `npm run --silent playtest:session --
+  prepare` once, then give each playtester an agent name, a seed
+  and a screenshot directory; four can run at once.
 
 Either way your job is orchestration, self-assessment, filtering,
 committing.
