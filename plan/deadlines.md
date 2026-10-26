@@ -237,6 +237,8 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - PH1c — loop tooling (guide fixes and the guide test); blocks no window's goal; date not set.
 - TQ1 — loop work, mobile UX from the Elementalist swarm; blocks no window's goal and T set no date; date not set.
 - GL1 — loop work; the board glossary from the Elementalist swarm, blocks no window's goal; date not set.
+- EQ2a — loop work; T's slot rule (D105), the engine contract and save migration; blocks no window's goal and T set no date; date not set.
+- EQ2b — loop work; follows EQ2a, the slot words on screen; date not set.
 
 ## How a window closes
 
@@ -246,6 +248,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-25** — **the equipment slots plotted** (T in session, plot run unattended, `/plot`). **Added** Unscheduled lines for EQ2a-EQ2b: T set no date, and the rows block no window's goal. **Edited** no Item: W5's "Relic pass session" (B1) keeps its premise; EQ2 settles only how many relics are worn (three, D105) and leaves the relic set, signatures and D100's five-relic row to B1. **Ticked** nothing.
 - **2026-10-25** — **the signature trigger re-plotted** (T in session after #921 merged, plot rework run unattended). **Edited** SG1's Unscheduled line to the new scope (no starting ring, every relic grant worn, unworn relics flagged); T set no date. **Edited** no Item: W5's "Relic pass session" (B1) still holds and gains the ring as an unsourced relic for T's later lane; W4's enemy revamp (B2) no longer meets a befriendable Float-Eye, since that call is cut. Nothing ticked; no date moved.
 - **2026-10-25** — **the signature trigger plotted** (T in session, plot run unattended, `/plot asap`). **Added** an Unscheduled line for SG1: T set no date, and the fix blocks no window's goal. **Edited** no Item: the W4 "Enemy revamp session and the Act Boss" (B2) still holds, since SG1 only gives Float-Eye befriend terms and the revamp may redo the roster; the W5 "Relic pass session" (B1) still holds, since SG1 authors no relic. Nothing ticked; no date moved.
 - **2026-10-25** — **the board cues plotted** (T in conversation, plot run unattended, `/plot`). **Added** an Unscheduled line for BC1: T set no date and board legibility blocks no window's goal. **Edited** no Item: no open Item's premise rests on the self-burn, BLIZZARD or dead-tray cues. Nothing ticked; no date moved.
