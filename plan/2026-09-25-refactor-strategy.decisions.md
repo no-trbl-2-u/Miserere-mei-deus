@@ -1029,7 +1029,7 @@ satisfied for exactly these.)
 - The reward pool is the character's two starting lanes plus the lane of every worn relic. Worn relics also weight the offer toward their lane (D100's slots, RW1a A3). Unequipping a relic removes its lane from the pool.
 - A carried, unworn relic does nothing for the pool. This replaces D104's "a lane unlocks the moment one of its relics is in the inventory, equipped or not".
 - The grey starter cards are not a lane and are never offered as card rewards.
-- Stopgap until character selection exists (it waits on T plotting a third lane): the pool is the worn relics' lanes only. When it is empty (no lane relic worn), the reward falls back to grey cards (`[T to confirm #1]` on the plot PR; the alternative is no card reward when the pool is empty). The starting lanes join the pool when character selection lands.
+- Stopgap until character selection exists (it waits on T plotting a third lane): the pool is the worn relics' lanes only. When it is empty (no lane relic worn), the reward falls back to grey cards (confirmed by T, 2026-10-26). The starting lanes join the pool when character selection lands, and the fallback is then deleted: every run starts at character select, so the pool is never empty.
 - Built by Phase RW1a (`plan/phases/phase_RW1_reward_rule.md`); the relic detail line reads "Lane: <lane> (while worn)" (Phase LR1a).
 
 **D105 — Three kinds of slot: one Weapon, one Armor, three Relic slots.** (T, 2026-10-25, in session; recorded by the EQ2 plot, run unattended. T: "There are only 3 types of slots: Weapon (top), Armor (2nd from top), 3x relics. Relics can be named anything, but ultimately they all take up the same 3 relic slots.")

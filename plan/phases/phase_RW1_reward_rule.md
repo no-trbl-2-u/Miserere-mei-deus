@@ -50,7 +50,7 @@ single card follows the same rule, and the cache shows the card it offers before
 - **A2** `unlockedLaneIds(player)` returns every registered lane named by a relic in `player.equipment` (worn), in
   registry order; `player.inventory` is not read, and `grey` is never in it (the grey starter cards are not a lane).
   `rewardPoolFor` is those lanes' cards; when the list is empty it falls back to the grey lane's cards, the only way
-  a grey card is ever offered (D107). `[T to confirm #1]` A test: a worn lane relic puts its lane in the list; the
+  a grey card is ever offered (D107). Confirmed by T (2026-10-26): grey until character selection; CH1a removes the fallback. A test: a worn lane relic puts its lane in the list; the
   same relic carried in the satchel, unworn, gives an empty list and the grey fallback; unequipping it removes the
   lane again; no worn lane relic gives the grey fallback.
 - **A3** The lane slot count follows D100 from the worn relics (`player.equipment` only): the most relics worn from
@@ -145,7 +145,9 @@ Measure: the A8 presenter and screen tests pass, the A9 screenshot shows the car
   card rewards. Character selection, which supplies the starting lanes, does not exist yet (it waits on a third
   lane), so until it lands the pool is the worn relics' lanes only; with one lane worn, every offer is that lane's.
 - **When the pool is empty (no lane relic worn), the reward falls back to grey cards** (D107's stopgap), so a fresh
-  run still gets a card reward. The alternative is no card reward when the pool is empty. `[T to confirm #1]`
+  run still gets a card reward. Confirmed by T (2026-10-26): grey, and only until character selection ships. Once
+  it does, every run starts at character select and a character always brings two lanes, so the pool is never
+  empty; CH1a deletes this fallback and a test asserts the pool is non-empty.
 - **T's reward rule (T, 2026-10-24), recorded as D104 by this plot (2026-10-25); its carry rule is replaced by
   D107 (above):** "random" means drawn from every
   lane the player has unlocked; a lane unlocks the moment one of its relics is in the inventory, equipped or not;
@@ -214,8 +216,8 @@ A1-A9 ticked across RW1a and RW1b; the Measure met on the web build.
 - The relic's detail view showing the lane it opens (D71): worth building once a relic has a lane.
 - Families with more than one lane (D73), when a family registers its second lane.
 - Starting lanes join the pool when character selection lands (D107): `unlockedLaneIds` then returns the
-  character's two starting lanes plus the worn relics' lanes, and the grey fallback is reached only by a character
-  with no starting lane (none planned). Character selection waits on T plotting a third lane.
+  character's two starting lanes plus the worn relics' lanes, and CH1a deletes the grey fallback (T, 2026-10-26:
+  a run cannot reach the map without a character, so the pool is never empty). Character selection waits on T plotting a third lane.
 - SET DECK setting the reward override to match the dealt deck (the swarm's LEECH-from-the-cache case): dev menu,
   B10.
 - Whether five relics can be worn (weapon and armor relics): settled by D105 (three relic slots); reaching 3 lane
