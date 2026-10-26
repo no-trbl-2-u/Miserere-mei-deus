@@ -30,6 +30,13 @@ measured (R12a's report carries its columns). Card names are content T approves 
 | 8 | **The trial set.** A `/plot` for the removable trial set (its own library file, one `TRIAL_SETS` line, its lane and test deck) and any engine work its keywords need. T merges the plot; the loop builds it. | Session plots, T merges, loop builds | A `plot` PR, then `loop:pr` PRs |
 | 9 | **Measured.** The trial set joins the measured-truth report's decks. | Loop | `docs/reports/measured/latest.md` columns |
 
+## No caps
+
+T, 2026-10-26: "remove the '(max +n)' from every card. If there should be a max, I'll call it out." A slot
+pitch or ballot candidate never prints a cap ("max n", "max +n", "capped"); an effect that grows with
+something grows without limit. A cap exists only where T asks for one, in a slot note or at the revisions
+step, and the sims (step 6) are where a runaway number shows up.
+
 ## Pitching a colour
 
 Phase BV3, from T's ballot on 2026-10-24: every ballot candidate is shown in the colour the engine would give it, so
