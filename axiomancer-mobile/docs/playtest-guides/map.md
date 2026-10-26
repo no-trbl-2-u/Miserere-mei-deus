@@ -7,7 +7,7 @@
 ## 2. Enter it directly
 
 - Any fixture without `arrive` lands here: `sage-bw-door-gate` (bw-15; door fight bw-17 adjacent, travel door bw-18 beyond it), `fresh-start`, `broke-l1-bw-rest`, `l30-bw-hazard`.
-- `/dev`: `debug-travel-map-<map>` (start node of any map), `debug-travel-node-<id>` (jump + fire that node's event; travel doors in red), `debug-map-reset-button`, `debug-map-complete-button`, `debug-aporia-act1|2|3` (→ `/labyrinth`).
+- `/dev` (every section starts closed; `dev-section-<key>-toggle` opens one), under WORLD (`dev-section-world-toggle`): `debug-travel-map-<map>` (start node of any map), `debug-travel-node-<id>` (jump + fire that node's event; travel doors in red), `debug-map-reset-button`, `debug-map-complete-button`, `debug-aporia-act1|2|3` (→ `/labyrinth`).
 - Node kinds (`ExplorationNode.kind`): `available` (glowing, tappable), `current`, `completed`, `locked`. Only `available` opens the confirm panel. Reachability is the no-back-travel rule: a node is available only if adjacent to where you stand and not yet walked.
 - No seed globals; `__AXM_JUICE_INSTANT__` is irrelevant here.
 
