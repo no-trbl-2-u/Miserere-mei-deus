@@ -64,10 +64,11 @@ CLI (`--fixture <id>`) and the Jest suites:
 
 - **Unattended transport** (`critique:drive`, §3.5) already carries
   these as `SCREENS` entries with a `fixture` key — nothing to do.
-- **Attended pass** (`playtester`, §4): hand the sub-agent URLs of the
-  form `http://localhost:8081/exploration?fixture=<id>`. The dev
-  server has dev tools on, so the query is honoured; a fixture with
-  `arrive` opens the gated screen on its own. Tell the playtester the
+- **Attended pass** (`playtester`, §4): hand the sub-agent fixture ids
+  (it starts its session with `--fixture <id>`, or goes to
+  `/exploration?fixture=<id>`). The session turns dev tools on, so the
+  fixture is honoured; a fixture with `arrive` opens the gated screen
+  on its own. Tell the playtester the
   state is a *starting point*, not a save it earned — first-time-player
   confusion about how it got there is not a finding.
 - Need a state nobody has authored? File an AUDIT row asking for a
@@ -78,12 +79,15 @@ Skip screens that don't exist yet. Note in pass log.
 
 ## 3.5 Unattended ticks — use the non-MCP transport (Phase 34)
 
-The `playtester` sub-agent's Playwright **MCP** tool grants do not
+The `playtester` sub-agent's Playwright **MCP** tool grants did not
 propagate into Agent-tool sub-agent contexts on unattended runs (8 of
 11 passes filed zero findings — `plan/CRITIQUE.md` Done section,
 "Playwright MCP tools unavailable to sub-agents"). The fix (Phase 34,
 shipped 2026-07-16) is **not** to drop Playwright — it is to drop the
-MCP + sub-agent hop.
+MCP + sub-agent hop. (Since PH1b the agent has no MCP grant at all; it
+drives its own browser through Bash and the session tool, a grant that
+does reach sub-agents. Unattended passes still use `critique:drive`
+until T asks otherwise.)
 
 **When there is no interactive user (loop / `/march` / cron):** do NOT
 spawn `playtester`. Instead:
@@ -114,9 +118,14 @@ spawn `playtester`. Instead:
    `playtester` delegation for unattended passes only.
 
 **When a user IS present (interactive `/critique`):** keep delegating
-to `playtester` with the Playwright MCP tools (§4) — grants work live,
-and the fresh sub-agent context is the better first-time lens. The
-transport above is the unattended fallback, not a replacement.
+to `playtester` (§4), which drives its own browser through the playtest
+session tool (`axiomancer-mobile/scripts/playtest-session.mjs`, phase
+PH1a), not the Playwright MCP. Run `npm run --silent playtest:session --
+prepare` once, then hand each playtester an agent name, a seed and a
+screenshot directory; up to four can run at once, each in its own
+browser with its own seed. The fresh sub-agent context is the better
+first-time lens. The transport above is the unattended fallback, not a
+replacement.
 
 Do not re-diagnose the MCP-grant mechanism — that path is closed.
 
@@ -127,12 +136,19 @@ the fresh-eyes observer. **When a user is present, always
 delegate the playthrough to it.** (Unattended passes never spawn
 it — they use the §3.5 transport.) Reasons:
 
-- It has Playwright tools (`mcp__playwright__*`) to actually
-  drive the local expo-web build.
+- It drives the web export in its own browser through the playtest
+  session tool (`playtest-session.mjs`: `start`, `tap`, `drag`,
+  `snapshot`, `shot`, `log`, `stop`). Its only Bash is that tool; it
+  has no Playwright MCP grant.
 - Fresh sub-agent context = genuine first-time-player perspective.
 - Output is structured JSON; easy to filter and file.
 
-Pass it:
+Run `npm run --silent playtest:session -- prepare` once (one web
+export for every playtester; `start` refuses a stale one), then pass
+each playtester:
+- Its agent name (`pt1` to `pt4`), its seed (combat, plus minigame
+  seeds as JSON when it plays one) and its screenshot directory.
+  Four can run at once; spawn them in one message.
 - The screen list.
 - Voice cue from `plan/bearings.md`.
 - Current `plan/CRITIQUE.md` Done section (so it doesn't
@@ -155,9 +171,10 @@ If no green deploy: defer. Write a one-line entry to CRITIQUE.md
 "deferred at <date>: no green deploy" and exit 0. **Don't commit
 on no-ops.**
 
-Attended: ensure the local expo-web build is running (serves at
-`http://localhost:8081`); start it if needed before spawning
-the playtester. Unattended: skip Step 2 and run the §3.5
+Attended: run `npm run --silent playtest:session -- prepare` once
+before spawning playtesters; each serves the export in its own
+session (no dev server needed; `--base-url http://localhost:8081`
+points a session at one that is already running). Unattended: skip Step 2 and run the §3.5
 transport instead (it exports and serves its own build).
 
 ### Step 1 — Build the screen set
@@ -170,9 +187,10 @@ non-existent screens), recent shipping focus.
 ```
 Agent({
   subagent_type: "playtester",
-  prompt: "Play the local expo-web build at http://localhost:8081
-           as a first-time player. Cover these screens: [list —
-           state-gated ones as /exploration?fixture=<id> URLs, §3].
+  prompt: "Play the web build as a first-time player in your own
+           session: agent name pt1, seed 1101, screenshots under
+           axiomancer-mobile/.critique-artifacts/attended/pt1/. Cover these screens:
+           [list — state-gated ones as fixture ids, §3].
            Voice cue from plan/bearings.md: <quote>.
            Already-addressed (skip): <Done section>.
            Focus: <from arg or 'general'>.
@@ -342,7 +360,8 @@ plan/bearings.md                     # voice, URL contract
 # Known-state entry (state-gated screens)
 docs/state-fixtures.md               # the fixture contract
 npm run game -w axiomancer-mechanics -- --fixture list   # registry ids
-http://localhost:8081/exploration?fixture=<id>           # attended URL form
+npm run --silent playtest:session -- prepare             # attended: once, before the playtesters
+playtest-session.mjs start --agent pt1 --seed 1101 --fixture <id>   # what each playtester runs
 
 # Commands
 git pull --ff-only                   # Step 0
