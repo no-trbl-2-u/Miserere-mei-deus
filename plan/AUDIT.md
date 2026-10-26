@@ -63,7 +63,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 
 ## Pending
 
-### [ ] [ci] SG1 leaves `route:item-reward` with no play path and no dev seam (feature-map drive red on PR #928)
+### [x] [ci] SG1 leaves `route:item-reward` with no play path and no dev seam (feature-map drive red on PR #928) — CLOSED 2026-10-26 (fixed on the PR in e7a1033c8: the dev REWARDS row's RELIC REWARD offers the Bleeding Signet through `offerItemRewardAction`, and `SEAMS['route:item-reward']` reaches the route through it; `e2e:feature-map` passes locally)
 - category: ci
 - impact: 4
 - ease: 5
