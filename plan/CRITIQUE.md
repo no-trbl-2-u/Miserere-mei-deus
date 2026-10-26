@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-10-26 at commit 4b316aa2
-> Pass count: 102
+> Last pass: 2026-10-26 at commit 79ecad63
+> Pass count: 103
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
@@ -867,7 +867,30 @@
 > (pass 100, waiting on T's BT2a call), and the customs-house "takes
 > shillings" line above the free inn REST (pass 72's chosen copy).
 
+> **[critique pass 103, 2026-10-26, commit 79ecad63] Unattended `/march`
+> tick.** `critique:drive` (`CRITIQUE_VIEWPORT=both`), full 11-screen
+> set: 22 captures, 0 nav trouble, 0 console/page errors. 13 commits
+> after pass 102: RW1b (the cache's card offer prints its face), PH1a-c
+> (the playtest session tool), IO1a/IO1c (iOS beta config and submit),
+> the lane-creator skill and the plot PRs (ER1, LR1e, SB1). The only
+> player-facing diff is `app/cache/index.tsx`, and `/cache` is not in
+> the set, so RW1b shipped unseen by any pass: one fresh row (LOW,
+> process). The 11 screens render as in pass 102 at both viewports.
+> Reconfirmed and not re-filed: the WITHDRAW sub-line contrast (pass
+> 101), the covered fan names on a phone (pass 100, waiting on T's BT2a
+> call), the village Minor Healing Potion row and the map legend's
+> SEALED key.
+
 ## Pending
+
+### [LOW] ci / critique-drive — `/cache` is not in the critique set, so RW1b's card-face offer shipped unseen
+- pass: 103 (commit 79ecad63)
+- viewport: n/a (both)
+- category: navigation
+- observation: RW1b (#947) changed the loot cache's card offer to print a `CombatCardFace` beside the label, the only player-facing diff since pass 102, but the drive's 11 screens never reach `/cache`. The registry already holds `apprentice-bw-cache` (`arrive` starts the cache session and pushes `/cache`), and the drive's own header names `/cache` among the gated routes, yet no `SCREENS` entry uses it.
+- evidence: `axiomancer-mobile/scripts/critique-drive.mjs` SCREENS (fixtures at lines 193-242, none for the cache); `axiomancer-mechanics/src/Game/fixtures/state-fixture.registry.ts:95` `apprentice-bw-cache`; `axiomancer-mobile/app/cache/index.tsx` (RW1b).
+- suggested fix: add a `cache` screen entry booting `apprentice-bw-cache` with `waitForPath: '/cache'` (its seed is already shared through `openScreenContext`), and pin it in `critique-drive.test.mjs`; if that fixture's offers hold no card, note it so the face is judged on the next pass that rolls one.
+- source: critique:drive (unattended)
 
 ### [LOW] combat preview — WITHDRAW's "forfeit the path" line prints at 8.5px in `AXM.ash`, about 1.95:1 against the page
 - pass: 101 (commit 83975010)
