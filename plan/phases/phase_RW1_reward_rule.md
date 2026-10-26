@@ -202,4 +202,5 @@ A1-A9 ticked across RW1a and RW1b; the Measure met on the web build.
 - Families with more than one lane (D73), when a family registers its second lane.
 - SET DECK setting the reward override to match the dealt deck (the swarm's LEECH-from-the-cache case): dev menu,
   B10.
-- Whether five relics can be worn (weapon and armor relics): B1 (EQ1 Follow-ups).
+- Whether five relics can be worn (weapon and armor relics): settled by D105 (three relic slots); reaching 3 lane
+  cards through a set bonus is SB1's (`plan/phases/phase_SB1_set_bonuses.md`, T 2026-10-26).

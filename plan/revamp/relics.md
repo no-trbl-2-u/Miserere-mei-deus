@@ -96,6 +96,9 @@ Inputs for that session:
   (B6) are coupled: a lane relic needs its lane's cards.
 - **Lane relics stack (D100).** 1-2 relics of one lane give 1 lane card
   in the 3-card combat reward; 3-4 give 2; all 5 relic slots give 3.
+  Only three relic slots exist (D105), so the 3-of-3 row is reached, if at
+  all, by a set bonus: T's design session SB1
+  (`plan/phases/phase_SB1_set_bonuses.md`), not B1.
 - **Relic sources (D71), for now:** quests give designated relics;
   elites have a low chance of dropping a random relic. There is no starting relic:
   the first lane opens with the first lane relic (D71).
