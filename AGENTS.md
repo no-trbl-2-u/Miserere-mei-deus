@@ -222,6 +222,14 @@ store, and deep-links the web build (`?fixture=<id>` /
   options between them can fail with e.g. `TS5095`) — installing first
   avoids the detour.
 
+## Deploy
+
+- `npm run deploy:preview -w axiomancer-mobile` — the Android preview APK
+  (EAS internal distribution); `preview-build.yml` dispatches the same build.
+- `npm run deploy:ios-beta -w axiomancer-mobile` — the iPhone beta: one
+  TestFlight build for T and friends, no ad hoc channel. Runbook
+  `axiomancer-mobile/docs/ios-beta.md`.
+
 ## Nexus — the autonomous loop (live)
 
 The unified **nexus** harness was re-onboarded onto the monorepo on

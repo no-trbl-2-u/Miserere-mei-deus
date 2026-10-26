@@ -5,12 +5,15 @@
  *
  * Both offers are always enabled — unlike `RestChoiceOffer`, nothing
  * here can be unaffordable or capped, so there is no `disabledReason` to
- * shape.
+ * shape. The card offer carries the rolled candidate's face (the same
+ * `rewardCardVMs` the combat reward draws), so the player sees the card
+ * before choosing it.
  */
 
 import { getCardById } from '@mechanics';
 import type { LootCacheChoiceOfferId, LootCacheChoiceSession } from '@mechanics';
 import type { AppStoreState } from '@/state/store';
+import { rewardCardVMs, type CombatCardVM } from './combat-encounter.engine';
 import {
     CACHE_CHOICE_OFFER_DESC,
     CACHE_CHOICE_OFFER_LABEL,
@@ -24,6 +27,8 @@ export interface CacheChoiceOfferVM {
     id: LootCacheChoiceOfferId;
     label: string;
     desc: string;
+    /** The rolled card's face, scaled to the player's stats. Set iff `id === 'card'` and the id resolves. */
+    card: CombatCardVM | null;
 }
 
 export interface CacheChoiceOutcomeVM {
@@ -52,11 +57,16 @@ export interface CacheChoiceVM {
 
 const OFFER_IDS: readonly LootCacheChoiceOfferId[] = Object.freeze(['card', 'item']);
 
-const OFFERS: readonly CacheChoiceOfferVM[] = Object.freeze(OFFER_IDS.map(id => ({
-    id,
-    label: CACHE_CHOICE_OFFER_LABEL[id],
-    desc: CACHE_CHOICE_OFFER_DESC[id],
-})));
+type PlayerStats = Parameters<typeof rewardCardVMs>[1];
+
+function offersFor(cardCandidate: string, stats: PlayerStats): readonly CacheChoiceOfferVM[] {
+    return OFFER_IDS.map(id => ({
+        id,
+        label: CACHE_CHOICE_OFFER_LABEL[id],
+        desc: CACHE_CHOICE_OFFER_DESC[id],
+        card: id === 'card' ? (rewardCardVMs([cardCandidate], stats)[0] ?? null) : null,
+    }));
+}
 
 const EMPTY_VM: CacheChoiceVM = Object.freeze({
     active: false,
@@ -70,8 +80,10 @@ export function selectHasActiveCache(state: Pick<AppStoreState, 'cache'>): boole
     return state.cache?.session != null;
 }
 
+/** `stats` are the player's base stats, so the card face's numbers match the combat reward's. */
 export function selectCacheVM(
     state: Pick<AppStoreState, 'cache'>,
+    stats?: PlayerStats,
 ): CacheChoiceVM {
     const s = state.cache?.session;
     if (!s) return EMPTY_VM;
@@ -87,7 +99,7 @@ export function selectCacheVM(
     return {
         active: true,
         phase: s.phase,
-        offers: OFFERS,
+        offers: offersFor(s.cardCandidate, stats),
         outcome,
         description: s.description,
     };

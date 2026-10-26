@@ -43,6 +43,7 @@
     "deploy:check": "node scripts/deploy-check.mjs",
     "deploy": "npm run deploy:preview",
     "deploy:preview": "npm run verify && node scripts/with-env.mjs eas build --platform android --profile preview",
+    "deploy:ios-beta": "npm run verify && node scripts/with-env.mjs eas build --platform ios --profile beta --auto-submit",
     "deploy:production": "npm run verify && node scripts/with-env.mjs eas build --platform all --profile production",
     "assets:check": "node --test scripts/asset-provenance.test.mjs scripts/potential-assets-sealed.test.mjs scripts/frame-cells.test.mjs",
     "assets:ingest": "node scripts/ingest-art.mjs",
