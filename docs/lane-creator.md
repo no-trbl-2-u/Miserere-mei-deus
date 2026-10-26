@@ -6,7 +6,8 @@
 >
 > v1 is the process Blood Price went through (`plan/card-ledger/rehearsal-blood-price.md`, 2026-09-30 to
 > 2026-10-11) and the Elementalist is going through (`plan/card-ledger/rehearsal-elementalist.md`, from
-> 2026-10-22). It is run by a session with T, step by step. Nothing in it fires on its own.
+> 2026-10-22). It is run by a session with T, step by step, with `/lane-creator` (`.claude/commands/lane-creator.md`,
+> T, 2026-10-26), which finds the step a family is on from its ledger and runs it. Nothing in it fires on its own.
 
 ## The rules a lane meets
 
