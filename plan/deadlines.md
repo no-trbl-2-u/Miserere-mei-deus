@@ -258,7 +258,6 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - BE2f — loop work; follows BE2a; date not set.
 - BE2g — attended; T's check on a preview APK once BE2c-BE2f ship; date not set.
 - IO1b — attended; waits on T enrolling in the Apple Developer Program; date not set.
-- IO1c — loop work; follows IO1a; date not set.
 - IO1d — attended; T and a friend install the first iPhone builds once IO1b and IO1c ship; date not set.
 - BV1a — loop work, slotted asap (T); waits on BE2a; blocks no window's goal; date not set.
 - BV1b — loop work; follows BV1a; date not set.
