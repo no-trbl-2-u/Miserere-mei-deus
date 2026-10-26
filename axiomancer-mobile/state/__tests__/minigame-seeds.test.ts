@@ -18,13 +18,17 @@
  * fully restored around every case so no test leaks state.
  */
 
-import { afterEach, beforeEach, describe, expect, it } from '@jest/globals';
+import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
+
+import { configureLogging, getLogger, resetLoggingForTests } from '@mechanics';
 
 import {
     fallbackMinigameSeed,
     resolveMinigameSeed,
     resolveMinigameString,
     type MinigameSeedConfig,
+    type MinigameSeedKey,
+    type MinigameSeedSource,
 } from '@/state/minigame-seeds';
 
 const setUnified = (config: MinigameSeedConfig | undefined) => {
@@ -184,5 +188,53 @@ describe('fallbackMinigameSeed', () => {
         expect(Number.isInteger(seed)).toBe(true);
         expect(seed).toBeGreaterThanOrEqual(0);
         expect(seed).toBeLessThanOrEqual(0xffffffff);
+    });
+});
+
+describe('the rng/minigame-seed log line', () => {
+    beforeEach(() => {
+        configureLogging({ enabled: true, level: 'info', capacity: 100 });
+        getLogger().clear();
+    });
+
+    afterEach(() => {
+        jest.restoreAllMocks();
+        resetLoggingForTests();
+    });
+
+    const lastSeedLine = () => getLogger().entries({ domains: ['rng'], kind: 'minigame-seed' }).at(-1);
+
+    const cases: { source: MinigameSeedSource; key: MinigameSeedKey; seed: number; resolve: () => number }[] = [
+        { source: 'explicit', key: 'hazard', seed: 11, resolve: () => resolveMinigameSeed('hazard', 11, 33, 44) },
+        {
+            source: 'unified', key: 'rest', seed: 22,
+            resolve: () => { setUnified({ rest: { seed: 22 } }); return resolveMinigameSeed('rest', undefined, 33, 44); },
+        },
+        { source: 'legacy', key: 'cache', seed: 33, resolve: () => resolveMinigameSeed('cache', undefined, 33, 44) },
+        {
+            source: 'fallback', key: 'blacksmith', seed: 44,
+            resolve: () => resolveMinigameSeed('blacksmith', undefined, undefined, () => 44),
+        },
+    ];
+
+    for (const { source, key, seed, resolve } of cases) {
+        it(`logs the ${source} source at info level`, () => {
+            expect(resolve()).toBe(seed);
+            const line = lastSeedLine();
+            expect(line?.level).toBe('info');
+            expect(line?.data).toEqual({ key, seed, source });
+        });
+    }
+
+    it('returns the same seed when the logger throws', () => {
+        const info = jest.spyOn(getLogger(), 'info').mockImplementation(() => {
+            throw new Error('sink down');
+        });
+        setUnified({ hazard: { seed: 99 } });
+        expect(resolveMinigameSeed('hazard', 7, 1, 2)).toBe(7);
+        expect(resolveMinigameSeed('hazard', undefined, 1, 2)).toBe(99);
+        expect(resolveMinigameSeed('rest', undefined, 1, 2)).toBe(1);
+        expect(resolveMinigameSeed('cache', undefined, undefined, 2)).toBe(2);
+        expect(info).toHaveBeenCalledTimes(4);
     });
 });

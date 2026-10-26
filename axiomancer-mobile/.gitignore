@@ -30,6 +30,9 @@ expo-env.d.ts
 # Playwright MCP scratch
 .playwright-mcp/
 
+# scripts/playtest-session.mjs: session records, logs and default shots
+.playtest-sessions/
+
 # /playtest skill screenshots — written to repo root by the
 # Playwright-driven encounter walks; never committed.
 walk-*.png

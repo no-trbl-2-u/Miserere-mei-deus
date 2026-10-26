@@ -19,7 +19,7 @@
     "typecheck": "tsc --noEmit",
     "test": "jest",
     "test:watch": "jest --watch",
-    "verify": "npm run lint && npm run typecheck && npm test && npm run assets:check && npm run art:test && npm run critique-drive:test && npm run smoke:test && npm run feature-map-drive:test",
+    "verify": "npm run lint && npm run typecheck && npm test && npm run assets:check && npm run art:test && npm run critique-drive:test && npm run smoke:test && npm run feature-map-drive:test && npm run playtest-session:test",
     "verify:visual": "node scripts/smoke-screens.mjs",
     "e2e:hazard": "node scripts/hazard-e2e.mjs",
     "e2e:combat": "node scripts/combat-round-e2e.mjs",
@@ -54,7 +54,10 @@
     "feature-map-drive:test": "node --test scripts/feature-map-drive.test.mjs",
     "smoke:test": "node --test scripts/smoke-screens.test.mjs scripts/web-export.test.mjs scripts/smoke-routes-for.test.mjs",
     "assets:acquire": "node scripts/acquire-art.mjs",
-    "eas-build-on-success": "node scripts/sentry-release.mjs"
+    "eas-build-on-success": "node scripts/sentry-release.mjs",
+    "e2e:playtest-sessions": "node scripts/playtest-sessions-e2e.mjs",
+    "playtest:session": "node scripts/playtest-session.mjs",
+    "playtest-session:test": "node --test scripts/playtest-session.test.mjs"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",

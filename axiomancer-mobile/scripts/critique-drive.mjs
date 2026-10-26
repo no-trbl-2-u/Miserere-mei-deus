@@ -265,7 +265,7 @@ async function fileCandidate(p) {
     catch { return { p, exists: false, dir: false } }
 }
 
-function startStaticServer(rootDir) {
+export function startStaticServer(rootDir) {
     return new Promise((resolveServer, rejectServer) => {
         const server = createServer(async (req, res) => {
             try {
