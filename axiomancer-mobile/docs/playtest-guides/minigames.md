@@ -40,7 +40,7 @@ Each kind starts its own session slice in `state/actions.ts` (`resolveCurrentMap
 
 ## 4. A correct play, step by step
 
-- Rest: on `rest-choice-offers` tap an enabled `rest-choice-offer-<id>` (if you chose THE CUT, pick a `rest-cut-card-<key>`); `rest-outcome` → `rest-claim`. On a new game the Breakwater start rest is followed by a stacked `/item-reward` (the first-waypoint trinket): the map's `node-*` exist in the DOM but are hidden under it — `item-reward-equip` or `item-reward-confirm` to reach the map.
+- Rest: on `rest-choice-offers` tap an enabled `rest-choice-offer-<id>` (if you chose THE CUT, pick a `rest-cut-card-<key>`); `rest-outcome` → `rest-claim`. A new game hands over no relic, so no `/item-reward` stacks on the start rest; a relic reward elsewhere still opens `/item-reward` over the map — `item-reward-equip` or `item-reward-confirm` to reach it.
 - Cache: tap a `cache-choice-offer-<id>`; `cache-outcome` → `cache-claim`.
 - Blacksmith: `blacksmith-begin`; tap one enabled `blacksmith-offer-<id>` (watch `blacksmith-budget`); if `blacksmith-card` appears, `blacksmith-continue`; `blacksmith-leave`; `blacksmith-outcome` → `blacksmith-claim`.
 - Gathering: on `/event` read the card, tap an `event-choice-<id>` if any, else `event-skip`.

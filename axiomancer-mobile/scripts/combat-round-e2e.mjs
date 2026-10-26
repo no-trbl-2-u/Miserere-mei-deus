@@ -66,6 +66,13 @@
 //     (`CombatEncounterPanel.tsx`) runs mid-aftermath, the exact code path
 //     the crash report implicated.
 //
+// THE SIGNET (phase SG1). Before arming the fight the harness opens /dev
+// DECKS & ITEMS and presses the Bleeding Signet chip, which wears the relic
+// while a position is free. A run whose round-1 board draws no
+// `combat-signature-sig-crimson-covenant` rune FAILS: that was T's "signature
+// skills do not work" report (the chip used to add the Signet unworn). The
+// summary prints the signatures drawn and fired.
+//
 // Exit codes: 0 = every seed played clean · 1 = crash/assertion · 3 = boot failure.
 
 import { createServer } from 'node:http'
@@ -107,6 +114,21 @@ const MIME = {
 }
 
 function log(msg) { console.log(`combat-round-e2e: ${msg}`) }
+
+// The relic the run wears from the dev chip, and the rune it must draw.
+const SIGNET_RELIC = 'relic-bleeding-signet'
+const SIGNET_SIGNATURE = 'sig-crimson-covenant'
+
+/**
+ * The signature runes on the board, by id. Counts `combat-signature-<id>`
+ * elements only: the `combat-signature-bar` container and the
+ * `combat-signature-refused-<id>` marks share the prefix and are not runes.
+ */
+async function readSignatures(page) {
+    return page.locator('[data-testid^="combat-signature-"]').evaluateAll((ns) => ns
+        .map((n) => (n.getAttribute('data-testid') ?? '').replace('combat-signature-', ''))
+        .filter((id) => id.startsWith('sig-')))
+}
 function note(msg) { console.log(`combat-round-e2e: NOTE — ${msg}`) }
 
 class CombatCrash extends Error {
@@ -317,7 +339,7 @@ async function skipRoll(page) {
  */
 async function playRound(page, sink, seed, round) {
     const at = (step) => `seed ${seed}, round ${round}, ${step}`
-    const acted = { staged: 0, powered: 0, powerMissed: 0, applied: 0, signature: 0, ledger: null }
+    const acted = { staged: 0, powered: 0, powerMissed: 0, applied: 0, signature: 0, fired: [], ledger: null }
 
     // The board's own counter ("PHASE 2/4 · R2 · T2") plus the hand size, so a
     // round that does nothing is legible as "the hand ran dry" or "the phase
@@ -430,6 +452,7 @@ async function playRound(page, sink, seed, round) {
         await page.waitForTimeout(300)
         await assertAlive(page, sink, at(`firing signature ${sig.id}`))
         acted.signature++
+        acted.fired.push(sig.id)
     }
 
     // END PHASE — the enemy acts.
@@ -511,6 +534,11 @@ async function enterLive(page, baseUrl, seed) {
             + `${XP_GAP_TO_LEVEL - XP_GRANT_CLICKS * XP_GRANT_STEP} short of the next-level threshold, `
             + 'so a won fight\'s own XP reward crosses it mid-aftermath')
     }
+    // The Signet, worn from the dev chip, so its rune must reach the board.
+    await openDevSection(page, 'decks', `debug-item-${SIGNET_RELIC}`)
+    await page.getByTestId(`debug-item-${SIGNET_RELIC}`).click({ force: true })
+    await page.waitForTimeout(150)
+    log(`live: pressed the ${SIGNET_RELIC} chip before arming the fight`)
     await openDevSection(page, 'encounters', `debug-trigger-encounter-${ENCOUNTER_KIND}`)
     const trigger = page.getByTestId(`debug-trigger-encounter-${ENCOUNTER_KIND}`)
     await trigger.waitFor({ state: 'visible', timeout: 15000 })
@@ -567,6 +595,16 @@ async function playSeed(browser, baseUrl, seed, mode) {
 
         await page.getByTestId('combat-board').waitFor({ state: 'visible', timeout: 25000 })
         await assertAlive(page, sink, `${tag}, the board mounting`)
+
+        const drawn = await readSignatures(page)
+        log(`${tag} — round 1 board draws ${drawn.length ? drawn.join(', ') : 'no signature'}`)
+        if (!drawn.includes(SIGNET_SIGNATURE)) {
+            throw new CombatCrash(
+                `${tag} — the ${SIGNET_RELIC} chip was pressed but the round-1 board draws no `
+                + `combat-signature-${SIGNET_SIGNATURE} (drawn: ${drawn.join(', ') || 'none'})`,
+                { kind: 'signature-missing', message: `no ${SIGNET_SIGNATURE} rune` },
+            )
+        }
 
         for (let round = 1; round <= MAX_ROUNDS; round++) {
             if (await terminal(page)) break
@@ -677,9 +715,10 @@ async function playSeed(browser, baseUrl, seed, mode) {
             )
         }
 
+        const fired = [...new Set(rounds.flatMap((r) => r.fired ?? []))]
         await shot(page, `${mode}-seed-${seed}-final`)
         await assertAlive(page, sink, `${tag}, the end of the run`)
-        return { seed, mode, ok: true, rounds: rounds.length, applied, powered, resolved, soft: sink.soft }
+        return { seed, mode, ok: true, rounds: rounds.length, applied, powered, resolved, drawn, fired, soft: sink.soft }
     } catch (err) {
         const shotPath = await shot(page, `${mode}-seed-${seed}-CRASH`)
         return {
@@ -726,7 +765,8 @@ async function main() {
     for (const r of results) {
         if (r.ok) {
             log(`PASS ${r.mode} seed ${r.seed} — ${r.withdrew ? 'withdrew from the reveal' : `${r.rounds} rounds, `
-                + `${r.applied} cards committed (${r.powered} powered)${r.resolved ? ', combat resolved' : ', still live at the round cap'}`}`)
+                + `${r.applied} cards committed (${r.powered} powered)${r.resolved ? ', combat resolved' : ', still live at the round cap'}`}`
+                + (r.drawn ? ` · signatures drawn: ${r.drawn.join(', ') || 'none'}, fired: ${r.fired.join(', ') || 'none'}` : ''))
         } else {
             console.error(`combat-round-e2e: FAIL ${r.mode} seed ${r.seed} — ${r.error.message}`)
             if (r.error.detail?.stack) console.error(String(r.error.detail.stack).split('\n').slice(0, 12).join('\n'))

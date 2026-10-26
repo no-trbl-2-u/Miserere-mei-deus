@@ -18,7 +18,7 @@
 
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 
-import { getEquippedItems, grantFirstNodeRelic, initializeCombatEncounter, isEquipment, relicLibrary } from '@mechanics';
+import { getEquippedItems, getRelicById, grantItem, initializeCombatEncounter, isEquipment, relicLibrary } from '@mechanics';
 
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 import { createAppActions } from '@/state/actions';
@@ -61,15 +61,15 @@ describe('applyPlayerTierPreset: L1/L15/L30/L50 ladder', () => {
         },
     );
 
-    it('seeds the starting relics for the higher tiers', () => {
+    it('wears no relic at the higher tiers (a run starts with none)', () => {
         const { store, actions } = makeStore();
 
         actions.applyPlayerTierPreset('kid-l50');
         const player = store.getState().player;
-        // The preset's declared equipment is ignored; the build wears the
-        // starting relic `createCharacter` seeds — the Suppliant's Ring alone.
+        // The preset's declared equipment is ignored, and no starting relic
+        // is seeded.
         const worn = getEquippedItems(player.equipment);
-        expect(worn.map((i) => i.id)).toEqual(['relic-disarming-plea']);
+        expect(worn).toEqual([]);
     });
 
     it('L1 is a leaner build than L50 (ladder escalates)', () => {
@@ -214,7 +214,7 @@ describe('grantAllRelics: every relic once, and worn for real', () => {
 
     it('beside the Suppliant\'s Ring: two trinket slots worn, both signatures on the bar', () => {
         const { store, actions } = makeStore();
-        const granted = grantFirstNodeRelic(store.getState().player, []);
+        const granted = grantItem(store.getState().player, getRelicById('relic-disarming-plea')!, { equip: true });
         store.setState({ player: granted.character });
 
         actions.grantAllRelics();
@@ -227,7 +227,7 @@ describe('grantAllRelics: every relic once, and worn for real', () => {
 
     it('displaces nothing already worn', () => {
         const { store, actions } = makeStore();
-        const granted = grantFirstNodeRelic(store.getState().player, []);
+        const granted = grantItem(store.getState().player, getRelicById('relic-disarming-plea')!, { equip: true });
         store.setState({ player: granted.character });
         const wornBefore = getEquippedItems(store.getState().player.equipment).map((i) => i.id);
 

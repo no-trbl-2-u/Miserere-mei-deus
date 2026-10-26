@@ -35,7 +35,7 @@ import type { Character, EquipmentLoadout } from '../Character/types';
 import type { Equipment, Item } from '../Items/types';
 import { isEquipment } from '../Items/types';
 import { getEquippedItems, wornMaxHpBonus } from '../Character/equipment.reducer';
-import { cloneStartingRelics, getRelicById } from '../Items/relic.library';
+import { cloneRelic, getRelicById } from '../Items/relic.library';
 import { calculateMaxHealth } from '../Utils';
 import { experienceForLevel } from '../Character/experience';
 import { getCardById } from '../Cards/cards.library';
@@ -44,12 +44,27 @@ import { reslotLegacyLoadout, reslotLegacyEquipment, type LegacySlot } from './l
 import { concreteDefaultRail } from '../Character/dieGear.reducer';
 import { GAME_STATE_VERSION } from './game.reducer';
 import { COMBAT_LOADOUT_FLAG_PREFIX } from '../Combat/combat.loadout';
-import { FIRST_NODE_RELIC_FLAG } from '../Character/first-node-grant';
 import { FloatEye, LIVE_ENEMY_IDS } from '../Enemy/enemy.library';
 import type { Continent, MapState, QuestLog, WorldState } from '../World/types';
 import type { MapName } from '../World/map.library';
 import { createMapState, getMapDefinition } from '../World/map.registry';
 import { changeContinent, changeMap, placeOnNode, unlockMap } from '../World/world.reducer';
+
+/**
+ * The flag the v23 -> v24 hop stamps. It marked the retired first-node relic
+ * hand-over settled; nothing reads it now, but the hop still writes it so a
+ * migrated save is the same string it always was.
+ */
+const FIRST_NODE_RELIC_FLAG = 'first-node-relic-granted';
+
+/**
+ * The relics the older hops seeded: the Suppliant's Ring alone (the starting
+ * kit before a run began with no relic). Fresh clones each call.
+ */
+function historicalStartingRelics(): Equipment[] {
+    const ring = getRelicById('relic-disarming-plea');
+    return ring ? [cloneRelic(ring)] : [];
+}
 
 /**
  * v11 → v12: fold the player's 7-slot equipment record into the
@@ -99,7 +114,7 @@ function migrateV12ToV13(raw: Record<string, unknown>): Record<string, unknown> 
         return { ...raw, version: 13 };
     }
 
-    const worn = cloneStartingRelics();
+    const worn = historicalStartingRelics();
     const relicLoadout: EquipmentLoadout = {
         weapon: worn.find(w => w.slot === 'weapon') ?? null,
         armor: worn.find(w => w.slot === 'armor') ?? null,
@@ -162,7 +177,7 @@ function migrateV13ToV14(raw: Record<string, unknown>): Record<string, unknown> 
     // with the default relic for that slot, and backfill the accessory row to 3.
     // The starting relics are the ring alone, so a slot with no
     // default stays empty (the v35 hop drops the deleted relics anyway).
-    const defaults = cloneStartingRelics();
+    const defaults = historicalStartingRelics();
     const loadout = player.equipment;
     const weapon = loadout?.weapon && isRelic(loadout.weapon)
         ? loadout.weapon : defaults.find(r => r.slot === 'weapon') ?? null;

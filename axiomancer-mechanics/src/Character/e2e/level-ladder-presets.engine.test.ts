@@ -64,14 +64,14 @@ describe('level-ladder presets', () => {
         expect(character.knownCards.length).toBeGreaterThan(0);
     });
 
-    it('escalates: L50 is tougher than L1, both wearing the ring alone', () => {
+    it('escalates: L50 is tougher than L1, neither wearing a relic', () => {
         const l1 = buildCharacterFromPreset(getPresetById('kid-l1')!);
         const l50 = buildCharacterFromPreset(getPresetById('kid-l50')!);
 
-        // The declared `equipment` entries do not resolve; every tier wears
-        // the starting relics, the Suppliant's Ring.
+        // The declared `equipment` entries do not resolve, and no tier is
+        // given a starting relic.
         for (const c of [l1, l50]) {
-            expect(getEquippedItems(c.equipment).map(e => e.id)).toEqual(['relic-disarming-plea']);
+            expect(getEquippedItems(c.equipment)).toEqual([]);
         }
         expect(l50.maxHealth).toBeGreaterThan(l1.maxHealth);
     });

@@ -18,8 +18,6 @@ import {
     createCharacter,
     getConsumableById,
     getRelicById,
-    FIRST_NODE_RELIC_FLAG,
-    FIRST_NODE_RELIC_ID,
     FIXTURE_ARMOR,
     FIXTURE_TRINKETS,
     FIXTURE_WEAPON,
@@ -31,11 +29,9 @@ import {
     confirmItemRewardAction,
     dismissItemRewardAction,
     equipItemRewardAction,
-    offerFirstNodeRelicAction,
     offerItemRewardAction,
 } from '@/state/item-reward/store-actions';
 import {
-    selectFirstNodeRelicMoment,
     selectHasPendingItemReward,
     selectItemRewardVM,
     ITEM_REWARD_FREE_SLOT_NOTE,
@@ -86,7 +82,8 @@ function relic(id: string): Equipment {
 }
 
 /** A relic the seeded character is guaranteed NOT to be wearing: the ring. */
-const BENCHED_ACCESSORY = FIRST_NODE_RELIC_ID;
+const RING_ID = 'relic-disarming-plea';
+const BENCHED_ACCESSORY = RING_ID;
 
 /** A second armor piece; its +max VITAE line earns it the screen under D5. */
 const SPARE_ARMOR: Equipment = { ...FIXTURE_ARMOR, id: 'fixture-armor-2' };
@@ -137,7 +134,7 @@ describe('D5 — the reward-screen trigger', () => {
 describe('item-reward view model', () => {
     it('carries the engine signature copy, the stat block, and the flavour', () => {
         const store = makeStore();
-        offerItemRewardAction(store, relic(FIRST_NODE_RELIC_ID), { source: 'A first waypoint' });
+        offerItemRewardAction(store, relic(RING_ID), { source: 'A first waypoint' });
         const vm = vmOf(store);
 
         expect(vm.active).toBe(true);
@@ -173,7 +170,7 @@ describe('item-reward view model', () => {
     it('D6 — names the signature a swap loses', () => {
         const store = makeStore();
         // The ring sits in the seat EQUIP would displace.
-        const ring = relic(FIRST_NODE_RELIC_ID);
+        const ring = relic(RING_ID);
         setLoadout(store, { accessories: [FIXTURE_TRINKETS[0]!, FIXTURE_TRINKETS[1]!, ring] });
 
         offerItemRewardAction(store, FIXTURE_TRINKETS[2]!, { includeInline: true });
@@ -354,92 +351,5 @@ describe('D7 — leaving the screen keeps the item', () => {
     it('dismissing an empty queue is harmless', () => {
         const store = makeStore();
         expect(dismissItemRewardAction(store).applied).toBe(false);
-    });
-});
-
-// ---------------------------------------------------------------------------
-// The first-node hand-over (W1's grant, given its ceremony)
-// ---------------------------------------------------------------------------
-
-describe('the first-node Suppliant\'s Ring', () => {
-    it('a fresh run owes the ring, and offering it opens the screen', () => {
-        const store = makeStore();
-        expect(player(store).inventory.map((i) => i.id)).not.toContain(FIRST_NODE_RELIC_ID);
-
-        expect(offerFirstNodeRelicAction(store)).toBe(true);
-        expect(vmOf(store).name).toBe("Suppliant's Ring");
-        // A second call must not stack a duplicate hand-over.
-        expect(offerFirstNodeRelicAction(store)).toBe(false);
-        expect(store.getState().itemReward.queue).toHaveLength(1);
-    });
-
-    it('EQUIP hands it over, displaces the last worn trinket, and settles the grant flag', () => {
-        const store = makeStore();
-        expect(player(store).equipment.accessories).toHaveLength(SLOT_CAPACITY.accessory);
-        const lastWorn = player(store).equipment.accessories[SLOT_CAPACITY.accessory - 1]!.id;
-
-        offerFirstNodeRelicAction(store);
-        const result = equipItemRewardAction(store);
-
-        const after = player(store);
-        expect(after.equipment.accessories.map((a) => a.id)).toContain(FIRST_NODE_RELIC_ID);
-        expect(after.inventory.map((i) => i.id)).toContain(FIRST_NODE_RELIC_ID);
-        // The displaced trinket goes back to the bench, not the bin.
-        expect(result.displaced?.id).toBe(lastWorn);
-        expect(after.inventory.map((i) => i.id)).toContain(lastWorn);
-
-        expect(gameState(store).flags).toContain(FIRST_NODE_RELIC_FLAG);
-        expect(offerFirstNodeRelicAction(store)).toBe(false);
-    });
-
-    it('CONFIRM also settles the grant — the ring is owned, just not worn', () => {
-        const store = makeStore();
-        offerFirstNodeRelicAction(store);
-        confirmItemRewardAction(store);
-
-        expect(player(store).inventory.map((i) => i.id)).toContain(FIRST_NODE_RELIC_ID);
-        expect(gameState(store).flags).toContain(FIRST_NODE_RELIC_FLAG);
-        expect(offerFirstNodeRelicAction(store)).toBe(false);
-    });
-});
-
-// ---------------------------------------------------------------------------
-// The gate's quiet-moment guard
-// ---------------------------------------------------------------------------
-
-describe('when the first-node hand-over is armed', () => {
-    /** Mark a node resolved so the run counts as past its first node. */
-    function resolveANode(store: AppStore): void {
-        const w = store.getState().world;
-        store.setState({
-            world: {
-                ...w,
-                currentMap: { ...w.currentMap, completedNodes: [w.currentMap.currentNode] },
-            },
-        } as never);
-    }
-
-    it('holds off until the player has actually resolved a node', () => {
-        const store = makeStore();
-        expect(selectFirstNodeRelicMoment(store.getState())).toBe(false);
-        resolveANode(store);
-        expect(selectFirstNodeRelicMoment(store.getState())).toBe(true);
-    });
-
-    it('never paints over another full-screen surface', () => {
-        const store = makeStore();
-        resolveANode(store);
-        store.setState({ cache: { session: {} } } as never);
-        expect(selectFirstNodeRelicMoment(store.getState())).toBe(false);
-    });
-
-    it('stands down once the grant is settled', () => {
-        const store = makeStore();
-        resolveANode(store);
-        offerFirstNodeRelicAction(store);
-        // Already queued — do not arm a second time.
-        expect(selectFirstNodeRelicMoment(store.getState())).toBe(false);
-        confirmItemRewardAction(store);
-        expect(selectFirstNodeRelicMoment(store.getState())).toBe(false);
     });
 });

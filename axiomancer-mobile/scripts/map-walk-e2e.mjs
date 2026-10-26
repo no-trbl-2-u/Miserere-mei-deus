@@ -11,7 +11,7 @@
 // works across node types, and the only walk of the Breakwater was a
 // throwaway script. This is that walk, kept:
 //
-//   1. NEW GAME: the windmill's arrival scene (D31), the first relic, the map;
+//   1. NEW GAME: the windmill's arrival scene (D31), then the map (no relic);
 //   2. bw-5, a loot cache: take a card, move on, back on the map;
 //   3. bw-4, a gathering: acknowledge, back on the map (lateral rib);
 //   4. bw-6, a fight: the reveal, the board on the plain black scene (D32),
@@ -236,10 +236,7 @@ async function newGame(page, baseUrl) {
     log('new game: windmill arrival scene')
     await playOutCutscene(page)
 
-    await waitFor(page, 'item-reward-confirm', 'the first relic')
-    await tap(page, 'item-reward-confirm')
-    log('new game: first relic taken')
-
+    // A run starts with no relic and is handed none: the scene opens the map.
     await settleOnMap(page, 'new game')
     await expectHere(page, 'bw-1')
     log('new game: on the Breakwater, at the windmill')

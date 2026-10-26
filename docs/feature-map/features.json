@@ -763,8 +763,8 @@
         "source": "flow path from route:index: route:index -> route:item-reward"
       },
       "driven": {
-        "value": true,
-        "source": "axiomancer-mobile/scripts/critique-drive.mjs"
+        "value": false,
+        "source": null
       },
       "tested": {
         "value": true,
@@ -1015,6 +1015,12 @@
       "kind": "coupling",
       "from": "area:Character",
       "to": "area:Items",
+      "file": "axiomancer-mechanics/src/Character/characters.mock.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Character",
+      "to": "area:Items",
       "file": "axiomancer-mechanics/src/Character/equip-delta.ts"
     },
     {
@@ -1022,12 +1028,6 @@
       "from": "area:Character",
       "to": "area:Items",
       "file": "axiomancer-mechanics/src/Character/equipment.reducer.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "area:Character",
-      "to": "area:Items",
-      "file": "axiomancer-mechanics/src/Character/first-node-grant.ts"
     },
     {
       "kind": "coupling",
@@ -1848,12 +1848,6 @@
     {
       "kind": "coupling",
       "from": "area:World",
-      "to": "area:Character",
-      "file": "axiomancer-mechanics/src/World/roster-health.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "area:World",
       "to": "area:Combat",
       "file": "axiomancer-mechanics/src/World/Blacksmith/blacksmith.engine.ts"
     },
@@ -2450,6 +2444,12 @@
       "from": "route:(tabs)/inventory",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/inventory",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/inventory.modal.engine.ts"
     },
     {
       "kind": "coupling",
@@ -4028,12 +4028,6 @@
       "from": "route:item-reward",
       "to": "area:Character",
       "file": "axiomancer-mobile/components/item-reward/ItemRewardTradePanel.tsx"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:item-reward",
-      "to": "area:Character",
-      "file": "axiomancer-mobile/state/item-reward/store-actions.ts"
     },
     {
       "kind": "coupling",

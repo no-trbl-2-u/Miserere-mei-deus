@@ -28,9 +28,6 @@ import {
     wornMaxHpBonus,
 } from '../Character/equipment.reducer';
 import { createCharacter, allocateStatPoint } from '../Character';
-import {
-    grantFirstNodeRelic, isFirstNodeRelicPending,
-} from '../Character/first-node-grant';
 import { learnCard, replaceCard } from '../Cards';
 import { createStartingWorld, emptyQuestLog } from '../World';
 import type { MapName } from '../World/map.library';
@@ -94,11 +91,11 @@ import { generateRunId } from './run-loop';
  *   `knownCards` ownership guard mid-combat. `knownCards` +
  *   `combatRewardCards` is the deck. The loadout codec stays (dev/e2e
  *   harnesses pin decks through it); it is never seeded.
- * - v24: the Suppliant's Ring is handed over at the run's first node, not in
+ * - v24: the Suppliant's Ring was handed over at the run's first node, not in
  *   `createCharacter`. The hop stamps `first-node-relic-granted` on every
- *   existing save, which already owns the ring, so no save is offered it
- *   twice. (A fresh save seeds no relics at all, with empty inventory and
- *   loadout, zero coin and zero XP; that needs no version bump.)
+ *   existing save, which already owned the ring, so no save was offered it
+ *   twice. The hand-over has since been removed (a run starts with no relic
+ *   and is given none); the flag is inert, and saves keep what they carry.
  * - v25: derived stats, luck, the non-combat saves, every non-maxHp stat
  *   line on equipment and the write-only `factionReputations` slice are
  *   stripped.
@@ -149,21 +146,14 @@ export function createNewGameState(opts: { startMap?: MapName } = {}): GameState
         // client on first combat (`ensureStarterCards`).
         //
         // A fresh run seeds NO items,
-        // no equipment, no currency and no XP. `seedStartingRelics` is off, so
-        // the inventory and the worn loadout are both empty. The one relic
-        // the run owes the player, the Suppliant's Ring, is handed over
-        // at the first node (`Character/first-node-grant.ts` — with an empty
-        // accessory row it simply fills the first seat, displacing nothing).
-        //
-        // Presets, fixtures, mocks and sims still seed the starting relics via
-        // `buildCharacterFromPreset` / `cloneStartingRelics`; only the
-        // real-player origination point differs. (`withholdFirstNodeRelic` is
-        // kept exported for callers that seed the kit themselves.)
+        // no equipment, no currency and no XP: the inventory and the worn
+        // loadout are both empty, and a run starts with no relic. Nothing
+        // hands one over later; a relic arrives only from a reward or the
+        // dev menu.
         player: createCharacter({
             name: 'Player',
             level: 1,
             baseStats: { heart: 5, body: 5, mind: 5 },
-            seedStartingRelics: false,
         }),
         world: createStartingWorld(opts.startMap),
         quests: emptyQuestLog(),
@@ -210,20 +200,6 @@ function applyLevelUps(player: Character): Character {
 // ─── Reducer ──────────────────────────────────────────────────────────────────
 
 /**
- * Settle a still-pending first-node relic grant (the Suppliant's Ring) onto
- * `state`, returning the same reference when there was nothing to settle.
- *
- * This is the reducer's floor, not the ceremony. See
- * `Character/first-node-grant.ts` for why the grant exists and what the
- * client-side hand-over looks like.
- */
-function settleFirstNodeRelic(state: GameState): GameState {
-    if (!isFirstNodeRelicPending(state.player, state.flags)) return state;
-    const result = grantFirstNodeRelic(state.player, state.flags);
-    return { ...state, player: result.character, flags: [...result.flags] };
-}
-
-/**
  * Pure dispatch spine. Routes every `GameAction` to the corresponding sub-
  * reducer and returns the resulting `GameState`. Never throws on unknown
  * action types — instead returns state unchanged (caller is responsible for
@@ -235,14 +211,6 @@ function settleFirstNodeRelic(state: GameState): GameState {
 export function gameReducer(state: GameState, action: GameAction): GameState {
     switch (action.type) {
         case 'START_COMBAT': {
-            // The first-node grant's hard floor: nobody fights without their
-            // starting kit. The ceremony belongs to the first node (a client
-            // calls `grantFirstNodeRelic` there and shows what arrived), but
-            // if a run reaches a fight with the grant still pending, settle
-            // it here rather than let the player swing without The Open Hand.
-            // Idempotent — a settled grant is a no-op.
-            const staged = settleFirstNodeRelic(state);
-
             const encounter: Encounter = isEncounter(action.payload.target)
                 ? action.payload.target
                 : { enemies: [action.payload.target] };
@@ -260,7 +228,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
                 enemies: [scaledEnemy, ...encounter.enemies.slice(1)],
             };
             return {
-                ...staged,
+                ...state,
                 currentEncounter: scaledEncounter,
             };
         }
@@ -367,13 +335,8 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         }
 
         case 'MOVE_TO_NODE': {
-            // Deliberately does NOT settle the first-node relic grant. Moving
-            // is a world-only transition — `game.loop.engine.test.ts` pins
-            // `next.player === state.player` — and handing the player an item
-            // for walking would be a side effect nothing asked for. The grant
-            // settles where a node is RESOLVED (`PROCESS_NODE`, or a client
-            // calling `grantFirstNodeRelic` with a screen to show it), with
-            // `START_COMBAT` as the floor.
+            // A world-only transition: `game.loop.engine.test.ts` pins
+            // `next.player === state.player`.
             return {
                 ...state,
                 world: moveWorld(state.world, action.payload.nodeId),
@@ -381,11 +344,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         }
 
         case 'PROCESS_NODE': {
-            // Resolving a node IS the first node happening. Clients with a
-            // screen to show the hand-over on — mobile — call
-            // `grantFirstNodeRelic` themselves and present the result; this
-            // settles it for everyone else (the CLI, the engine store).
-            return resolveMapEvent(settleFirstNodeRelic(state)).state;
+            return resolveMapEvent(state).state;
         }
 
         case 'APPLY_DIALOGUE': {

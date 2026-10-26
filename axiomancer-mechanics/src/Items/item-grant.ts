@@ -264,3 +264,24 @@ export function grantItem(
         outcome: 'swapped',
     };
 }
+
+/** True iff `slot` has a free worn position on `character`. */
+function hasFreePosition(character: Character, slot: Equipment['slot']): boolean {
+    const { weapon, armor, accessories } = character.equipment;
+    if (slot === 'weapon') return weapon === null;
+    if (slot === 'armor') return armor === null;
+    return accessories.length < SLOT_CAPACITY.accessory;
+}
+
+/**
+ * Grant `item` and wear it while its slot has a free position: the rule
+ * every dev relic grant follows. A grant never displaces a worn piece, so
+ * past the last free position (or when the same id is already worn) the item
+ * is carried. Non-equipment is a plain stacking grant.
+ */
+export function grantWearingIfFree(character: Character, item: Item): ItemGrantResult {
+    const equip = isEquipment(item)
+        && !wearsId(character, item.id)
+        && hasFreePosition(character, item.slot);
+    return grantItem(character, item, { equip });
+}

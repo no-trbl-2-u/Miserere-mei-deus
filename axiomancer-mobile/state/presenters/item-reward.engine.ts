@@ -34,7 +34,7 @@
  * Pure: state in, view-model out. No store writes, no rolls, no rule decisions.
  */
 
-import { computeEquipDelta, displacedBy, isEquipment, isFirstNodeRelicPending } from '@mechanics';
+import { computeEquipDelta, displacedBy, isEquipment } from '@mechanics';
 import type { Equipment, EquipDelta, GameStore, Item } from '@mechanics';
 
 import type { AppStoreState } from '@/state/store';
@@ -155,48 +155,6 @@ export function selectHasPendingItemReward(
     state: Pick<AppStoreState, 'itemReward'>,
 ): boolean {
     return (state.itemReward?.queue?.length ?? 0) > 0;
-}
-
-/**
- * True at the moment the first-node Suppliant's Ring should be handed over:
- * the run still owes it, the player has resolved at least one node, and no
- * other full-screen surface is up.
- *
- * The quiet-moment guard matters because `/item-reward` is a full-screen modal:
- * arming it while an event card, a hazard, a rest, a cache, the Anvil, the
- * Aporia or a fight is on screen would paint over something the player is in
- * the middle of. Waiting until they are back on the map makes the hand-over the
- * next thing that happens rather than an interruption.
- *
- * `isFirstNodeRelicPending` is the engine's own predicate — the flag/ownership
- * rule is not restated here.
- */
-export function selectFirstNodeRelicMoment(
-    state: Pick<
-        AppStoreState,
-        | 'itemReward' | 'player' | 'flags' | 'world' | 'event'
-        | 'hazard' | 'rest' | 'cache' | 'blacksmith' | 'labyrinthUi' | 'currentEncounter'
-    >,
-): boolean {
-    const player = state.player;
-    if (!player) return false;
-    if (!isFirstNodeRelicPending(player, state.flags ?? [])) return false;
-    if (selectHasPendingItemReward(state)) return false;
-
-    const map = state.world?.currentMap;
-    const resolvedAnyNode =
-        (map?.completedNodes?.length ?? 0) > 0 || (map?.consumedNodes?.length ?? 0) > 0;
-    if (!resolvedAnyNode) return false;
-
-    return (
-        state.event?.pending == null
-        && state.hazard?.session == null
-        && state.rest?.session == null
-        && state.cache?.session == null
-        && state.blacksmith?.session == null
-        && state.labyrinthUi?.session == null
-        && state.currentEncounter == null
-    );
 }
 
 /**

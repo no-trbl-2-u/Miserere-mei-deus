@@ -239,7 +239,7 @@ shaping who the player is.
 
 | Leaf | What it does | Test ids |
 |---|---|---|
-| `DebugItemPicker` | One chip per relic (red) and consumable → `actions.addItemById` | `debug-item-<id>` |
+| `DebugItemPicker` | One chip per relic (red) and consumable → `actions.addItemById`; a relic is worn while a position is free, else carried | `debug-item-<id>` |
 
 ### WORLD — `dev-section-world`
 
@@ -300,7 +300,7 @@ shaping who the player is.
 | `DebugHazardDeckRandomize` | Owner call 2026-10-16. `HAZARD_DECK_PRESETS` and `actions.randomizeHazardDeck()` stay; only the dev-menu leaf is gone. |
 | KNOW ALL CARDS (in `DebugRewardTriggers`) | Owner call 2026-10-16. `learnAllCards` (`state/dev/rewards.ts`) stays and is now unreferenced by any surface. |
 | `DebugBlacksmithButton` | Owner call 2026-10-16. ANVIL ×500 in `DebugRewardTriggers` strictly dominated it: `BLACKSMITH_WITNESS_VARIANTS` *is* `[HEART_RICH_PAYLOAD_VARIANT]`, the single variant this button offered, and ANVIL adds a 500-shilling budget. The only reach lost is the Anvil on the player's real wallet, which the `wanderer-bw-blacksmith` fixture gives (180 shillings). It carried no test and no harness drove it. |
-| `DebugGetAllRelics` | Owner call 2026-10-16. `DebugItemPicker` chips every id in `relicLibrary` — the same library `grantAllRelics` walks — so the only unique reach was every relic in one tap. The action stays on the store surface; its behaviour (once each, nothing displaced, a free trinket position worn for real) moved from the deleted component test to `state/e2e/dev-presets.engine.test.ts`. |
+| `DebugGetAllRelics` | Owner call 2026-10-16. `DebugItemPicker` chips every id in `relicLibrary` — the same library `grantAllRelics` walks — so the only unique reach was every relic in one tap. The action stays on the store surface; its behaviour (once each, nothing displaced, a free trinket position worn for real) moved from the deleted component test to `state/e2e/dev-presets.engine.test.ts`. Since phase SG1 the chips wear a relic the same way (while a position is free, displacing nothing), as do POPULATE and the seed (`state/e2e/dev-relic-grants.engine.test.ts`). |
 | HIDE MANA / HIDE STANCE toggles | The HUD presenter never read them. |
 | `DebugHudOverrides`, the `devOverrides` store slice, `state/presenters/combat-hud.engine.ts` | HIDE EFFECTS fed a presenter no screen rendered, so the toggle was a no-op (TRIM THE FAT T3, 2026-09-25). |
 | `DebugCombatDeck`, `applyCombatDeckPreset` / `randomizeCombatDeck` actions | Superseded by the Deck tab (TRIM THE FAT T3, 2026-09-25). |

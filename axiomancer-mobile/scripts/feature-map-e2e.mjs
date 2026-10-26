@@ -6,7 +6,7 @@
 // from the title screen; this drive checks it in a browser, from a fresh save.
 //
 //   1. PLAY: a new game the way a player starts one (title, save slot, the
-//      windmill arrival, the first relic), every tab, the hazard deck and
+//      windmill arrival; a run starts with no relic), every tab, the hazard deck and
 //      settings from the SELF sheet, then the start map node to node: a loot
 //      cache, a gathering, a fight to its end, a hazard.
 //   2. SEAMS: every reachable route play did not reach is provoked from the
@@ -276,8 +276,7 @@ async function newGame(page, baseUrl) {
     await page.getByTestId('save-slot-1-action').click()
     await waitFor(page, 'cutscene-advance', 'the windmill arrival scene')
     await playOutCutscene(page)
-    await waitFor(page, 'item-reward-confirm', 'the first relic')
-    await tap(page, 'item-reward-confirm')
+    // A run starts with no relic and is handed none: the scene opens the map.
     await settleOnMap(page, 'new game')
     log('play: new game, on the map')
 }

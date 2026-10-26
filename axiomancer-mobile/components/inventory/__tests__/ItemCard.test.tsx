@@ -28,6 +28,10 @@ const mockEquipmentWeapon: InventoryItemRow = {
     quantity: 1,
     
     equipped: false,
+    
+    wornLabel: null,
+    
+    actionLabel: 'EQUIP',
     description: 'A sturdy iron blade.',
     canUse: true,
     canDiscard: true,
@@ -43,6 +47,10 @@ const mockEquippedArmor: InventoryItemRow = {
     quantity: 1,
     
     equipped: true,
+    
+    wornLabel: 'WORN',
+    
+    actionLabel: 'EQUIP',
     description: 'Well-worn protection.',
     canUse: false,
     canDiscard: false,
@@ -58,6 +66,8 @@ const mockConsumable: InventoryItemRow = {
     quantity: 3,
     rarity: null,
     equipped: false,
+    wornLabel: null,
+    actionLabel: 'USE',
     description: 'Restores vitality.',
     canUse: true,
     canDiscard: true,
@@ -73,6 +83,8 @@ const mockMaterial: InventoryItemRow = {
     quantity: 5,
     rarity: null,
     equipped: false,
+    wornLabel: null,
+    actionLabel: 'USE',
     description: 'Raw metal for smithing.',
     canUse: false,
     canDiscard: true,
@@ -88,6 +100,8 @@ const mockQuestItem: InventoryItemRow = {
     quantity: 1,
     rarity: null,
     equipped: false,
+    wornLabel: null,
+    actionLabel: 'USE',
     description: 'Opens forgotten doors.',
     canUse: false,
     canDiscard: false,
@@ -103,6 +117,10 @@ const mockEquipmentWithPreview: InventoryItemRow = {
     quantity: 1,
     
     equipped: false,
+    
+    wornLabel: null,
+    
+    actionLabel: 'EQUIP',
     description: 'Sharp steel blade.',
     canUse: true,
     canDiscard: true,
@@ -606,7 +624,7 @@ describe('ItemCard: rarity shine affordances (Phase 135)', () => {
     });
 
     it('keeps the unique outline and WORN badge on an equipped unique', () => {
-        const item = makeItem('unique', { equipped: true, sub: 'Armor' });
+        const item = makeItem('unique', { equipped: true, wornLabel: 'WORN', sub: 'Armor' });
         const { tree } = withAllProviders(
             <ItemCard item={item} expanded={false} {...handlers} />
         );

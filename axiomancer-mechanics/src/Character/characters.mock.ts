@@ -1,5 +1,11 @@
 import { Character } from './types';
 import { createCharacter } from './index';
+import { cloneRelic, getRelicById } from '../Items/relic.library';
+
+// The fixture player wears the Suppliant's Ring explicitly (a real run starts
+// with no relic) so combat / sim fixtures have a signature to spend
+// Conviction on. It carries the ring too, worn-first, as a granted relic is.
+const ring = cloneRelic(getRelicById('relic-disarming-plea')!);
 
 export const Player: Character = createCharacter({
     name: 'Player',
@@ -7,7 +13,6 @@ export const Player: Character = createCharacter({
     // A real fresh run's stats (5/5/5, VITAE 170): neutral under stat
     // scaling, so fixture plays land their printed numbers.
     baseStats: { heart: 5, body: 5, mind: 5 },
-    // The fixture player wears the starting relics so combat / sim fixtures
-    // derive the signature kit from the worn equipment.
-    seedStartingRelics: true,
+    inventory: [ring],
+    equipment: [ring],
 });
