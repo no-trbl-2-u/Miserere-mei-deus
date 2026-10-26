@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Defender — ballot</title>
+<!--
+  The Defender's ballot (lane-creator step 3, /lane-creator, 2026-10-26),
+  copied from the ballot shell (plan/card-ledger/README.md "Adding the next
+  ballot"). Session 0 and the approved slot roles: rehearsal-defender.md.
+  It runs on the shared ballot kit (ballot-kit.js, next to this file).
+
+  Every candidate carries a `job`; its colour comes from the kit's JOB_COLORS
+  table (red the hits, blue the walls, healing and utility, purple the
+  afflictions, grey colourless) and is never typed by hand. The face is
+  tinted by it, the header names it, each tab counts its kept cards per
+  colour, and the Generate text prints each kept card's colour.
+
+  How it works:
+    1. Every candidate card is rendered from the CARDS array below.
+    2. Tick the checkbox on each card you KEEP (any number per slot;
+       ticking two in one slot reads as "merge these").
+    3. Optional: type a per-slot note (a TWEAK number, a merge rule, or a
+       colour overrule such as "make it blue").
+    4. Press "Submit" to send the verdict (the first time, it asks for the
+       API URL and the token), or "Generate" and copy the plain-text sheet.
+  Unticked cards are CUT by default.
+-->
+<style>
+  /* ---- Colour tokens (light default, dark via media query or toggle) ---- */
+  :root {
+    --bg: #efe9dc;          /* page: aged paper */
+    --ink: #1b1714;         /* body text */
+    --muted: #6b6259;       /* secondary text */
+    --card: #fbf7ee;        /* card face */
+    --edge: #2a2420;        /* card border */
+    --accent: #8e1b1b;      /* banner accent */
+    --free: #3d5a40;        /* FREE line accent */
+    --paid: #7a5a12;        /* PAID line accent */
+    --art: #d9cfbd;         /* art box fill */
+    --sel: #1b1714;         /* selected card ring */
+    --btn: #1b1714;
+    --btn-ink: #fbf7ee;
+    /* The pitched colours: a face tint and an edge (border, header word) each. */
+    --body-face: #f6e2dd;  --body-edge: #9e2b25;   /* red, body */
+    --mind-face: #e0e9f4;  --mind-edge: #2b5c8c;   /* blue, mind */
+    --heart-face: #ece2f3; --heart-edge: #6a4396;  /* purple, heart */
+    --any-face: #ebe8e2;   --any-edge: #5f5850;    /* grey, any */
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141110; --ink: #ece4d6; --muted: #a39887; --card: #1f1a17;
+      --edge: #ece4d6; --accent: #e0504a; --free: #8fbf8f; --paid: #e0b54a;
+      --art: #2c2521; --sel: #ece4d6; --btn: #ece4d6; --btn-ink: #141110;
+      --body-face: #301a17;  --body-edge: #f08a80;
+      --mind-face: #16232f;  --mind-edge: #86b8e8;
+      --heart-face: #261b31; --heart-edge: #c3a2ea;
+      --any-face: #232020;   --any-edge: #b3a898;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141110; --ink: #ece4d6; --muted: #a39887; --card: #1f1a17;
+    --edge: #ece4d6; --accent: #e0504a; --free: #8fbf8f; --paid: #e0b54a;
+    --art: #2c2521; --sel: #ece4d6; --btn: #ece4d6; --btn-ink: #141110;
+    --body-face: #301a17;  --body-edge: #f08a80;
+    --mind-face: #16232f;  --mind-edge: #86b8e8;
+    --heart-face: #261b31; --heart-edge: #c3a2ea;
+    --any-face: #232020;   --any-edge: #b3a898;
+  }
+
+  /* ---- Layout ---- */
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 16px; background: var(--bg); color: var(--ink);
+    font: 15px/1.45 Georgia, "Times New Roman", serif;
+  }
+  header, main, footer { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; letter-spacing: .02em; }
+  .sub { color: var(--muted); margin: 0 0 12px; }
+  .legend { font-size: .9rem; color: var(--muted); margin-bottom: 16px; }
+  .legend b { color: var(--ink); }
+  .theme { float: right; }
+
+  /* One slot = heading + role + row of candidate cards + note field */
+  .slot { margin: 22px 0 8px; padding-top: 10px; border-top: 2px solid var(--edge); }
+  .slot h2 { font-size: 1.1rem; margin: 0; }
+  .slot .role { color: var(--muted); margin: 2px 0 10px; }
+  .row { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+  .note { width: 100%; margin-top: 8px; padding: 6px 8px; font: inherit;
+          background: var(--card); color: var(--ink); border: 1px solid var(--muted); border-radius: 4px; }
+
+  /* ---- Card face ---- */
+  label.card {
+    display: flex; flex-direction: column; cursor: pointer;
+    background: var(--card); border: 2px solid var(--edge); border-radius: 10px;
+    padding: 10px; min-height: 300px; position: relative;
+    transition: box-shadow .12s, transform .12s;
+  }
+  label.card:hover { transform: translateY(-2px); }
+  label.card.on { box-shadow: 0 0 0 4px var(--sel); }
+  label.card.c-body { background: var(--body-face); border-color: var(--body-edge); }
+  label.card.c-mind { background: var(--mind-face); border-color: var(--mind-edge); }
+  label.card.c-heart { background: var(--heart-face); border-color: var(--heart-edge); }
+  label.card.c-any { background: var(--any-face); border-color: var(--any-edge); }
+  .hue { font-weight: bold; }
+  .hue.c-body { color: var(--body-edge); }
+  .hue.c-mind { color: var(--mind-edge); }
+  .hue.c-heart { color: var(--heart-edge); }
+  .hue.c-any { color: var(--any-edge); }
+  .top { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
+  .name { font-weight: bold; }
+  .type { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); text-align: right; }
+  .art {
+    margin: 8px 0; height: 96px; border: 1px solid var(--edge); border-radius: 6px;
+    background: repeating-linear-gradient(45deg, var(--art) 0 6px, transparent 6px 12px);
+    display: grid; place-items: center; font-size: 2.6rem;
+  }
+  .line { margin: 4px 0; font-size: .92rem; }
+  .tag { display: inline-block; min-width: 42px; font-size: .7rem; font-weight: bold;
+         letter-spacing: .08em; padding: 1px 5px; border-radius: 3px; margin-right: 4px;
+         color: var(--card); vertical-align: 1px; }
+  .tag.free { background: var(--free); }
+  .tag.paid { background: var(--paid); }
+  .kw { font-variant: small-caps; font-weight: bold; }
+  .dur { display: flex; gap: 4px; margin: 2px 0 4px; }
+  .dur .tag { min-width: 0; }
+  .trig .ticon { display: inline-block; width: 1.3em; }
+  .why { margin-top: auto; padding-top: 8px; font-size: .8rem; color: var(--muted); font-style: italic; }
+  .pick { position: absolute; top: 8px; right: 8px; width: 20px; height: 20px; accent-color: var(--sel); }
+  .top { padding-right: 26px; }
+
+  .banner { margin: 0 0 10px; padding: 8px 10px; border: 2px dashed var(--accent); border-radius: 6px; color: var(--accent); }
+  /* ---- Tabs ---- */
+  .tabs { max-width: 1100px; margin: 0 auto; display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+          position: sticky; top: 0; background: var(--bg); padding: 8px 0; z-index: 2; }
+  .tabs button { margin: 0; background: transparent; color: var(--ink); border: 2px solid var(--edge); }
+  .tabs button[aria-selected="true"] { background: var(--btn); color: var(--btn-ink); }
+  .tabs .n { font-size: .8rem; opacity: .8; margin-left: 4px; }
+  .family { font-size: .85rem; color: var(--muted); margin-left: auto; }
+  .panel[hidden] { display: none; }
+  .blurb { color: var(--muted); margin: 10px 0 0; }
+  .tally { color: var(--muted); font-size: .9rem; margin: 4px 0 0; }
+  /* ---- Footer / output ---- */
+  footer { margin-top: 28px; padding-top: 12px; border-top: 2px solid var(--edge); }
+  textarea { width: 100%; font: 13px/1.4 ui-monospace, Menlo, Consolas, monospace;
+             background: var(--card); color: var(--ink); border: 1px solid var(--muted);
+             border-radius: 4px; padding: 8px; }
+  #general { min-height: 60px; }
+  #out { min-height: 220px; margin-top: 10px; }
+  button { font: inherit; padding: 8px 18px; border-radius: 6px; border: 0;
+           background: var(--btn); color: var(--btn-ink); cursor: pointer; margin: 8px 8px 0 0; }
+  .count { color: var(--muted); margin-left: 6px; }
+</style>
+<script src="ballot-kit.js"></script>
+</head>
+<body>
+<header>
+  <button class="theme" id="themeBtn" type="button" aria-label="Toggle colour theme">◐</button>
+  <p class="banner" role="note"><b>CANDIDATES</b> — nothing here ships until the trial set is plotted and built. Numbers are placeholders for the sims.</p>
+  <h1>The Defender — ballot</h1>
+  <p class="sub">Family: "I'm a turtle with spikes who discards random cards from my own hand for bigger payouts." Three sub-lanes, one per tab: Payoff, Engine, Misc. Each has 10 slots × 3 candidates (90 cards in all); the target is about 1 survivor per slot, 30 in all.</p>
+  <p class="legend">
+    <b>Tick</b> each card you keep. Ticking two in one slot means "merge". <b>Unticked = CUT</b>.
+    Use a slot's note box for a TWEAK (one number), a merge rule, or a colour change ("make it blue").<br>
+    <b>Colour</b> is pitched by the card's job:
+    <span class="hue c-body">red (body)</span> the hits,
+    <span class="hue c-mind">blue (mind)</span> the walls, healing and utility,
+    <span class="hue c-heart">purple (heart)</span> the afflictions,
+    <span class="hue c-any">grey (any)</span> colourless.<br>
+    <b>DEAL</b>: damage. <b>GUARD</b>: block. <b>HEAL</b>: restore VITAE. <b>VULNERABLE</b>: the foe takes more damage from DEALs. <b>DRAW</b>: draw cards.<br>
+    <b>THORNS N</b>: each foe strike deals N back to the foe (a DEAL); drops by 1 each round. <b>REFLECT N%</b>: each foe strike sends N% of the whole attack back (a DEAL); placeholder: lasts this turn, stacks by adding.<br>
+    <b>Discard N cards at random</b> appears only on PAID lines: a PAID line you cannot pay cannot be played, and FREE always can. A Spell's PAID line EXILEs it.
+    Numbers are base values before stat scaling. For reference, A Plain Blow is FREE DEAL 2 / PAID DEAL 5.<br>
+    <b>Globals:</b> FREE ⏳3 = in play 3 turns, PAID ∞ = rest of combat; all open on ⟳ start of your turn. A PAID line shows only what changes.
+    <b>Scrap floor:</b> no line gives only "gain 1 Conviction".
+  </p>
+</header>
+
+<nav class="tabs" id="tabs" role="tablist" aria-label="Sub-lanes"></nav>
+<main id="slots"></main>
+
+<footer>
+  <label for="general"><b>General notes</b> (optional)</label>
+  <textarea id="general" placeholder="Anything about the lane as a whole…"></textarea>
+  <button id="gen" type="button">Generate</button>
+  <button id="copy" type="button">Copy</button>
+  <span class="count" id="count"></span>
+  <textarea id="out" readonly placeholder="Press Submit, or Generate and copy this text back to Claude."></textarea>
+</footer>
+
+<script>
+/* =====================================================================
+   DATA — the ballot. One entry per candidate card.
+   slot: slot code; role: the slot's one-line job (shown once per slot);
+   el: optional family tag shown in the card header (an element, a sub-theme);
+   id: slot + candidate letter; type: Attack | Skill | Spell | Global;
+   job: hit | wall | heal | utility | affliction | colourless (the kit's
+   JOB_COLORS; the colour is derived from it, never typed);
+   free / paid: the two rules lines (plain text);
+   why: the drafter's one-line rationale.
+   Keep red, blue and purple near-equal across the candidates: the ballot
+   test fails an open ballot whose colours sit more than 10% off an equal
+   share (90 coloured candidates: 27 to 33 each).
+   ===================================================================== */
+const BALLOT_ID = 'defender-2026-10-26';
+
+const TABS = [
+  { key: 'P', name: 'Payoff', blurb: 'What the Defender is paid for: spikes up, a shell held, cards thrown away.' },
+  { key: 'E', name: 'Engine', blurb: 'What puts the shell and the spikes up, and keeps the hand stocked.' },
+  { key: 'M', name: 'Misc', blurb: 'Utility around it: drawing, mending, softening the random discard.' },
+];
+
+const SLOTS = [
+  // Payoff
+  { slot: 'P-01', el: 'THORNS', role: 'Attack — DEAL more for your THORNS (capped)', glyph: '🌵' },
+  { slot: 'P-02', el: 'GUARD', role: 'Attack — shield bash: DEAL equal to your GUARD; PAID discards 1 for double', glyph: '🛡' },
+  { slot: 'P-03', el: 'discard', role: 'Attack — the big swing: PAID discards 2 for much more', glyph: '⚔' },
+  { slot: 'P-04', el: 'REFLECT', role: 'Skill — GUARD; PAID discards 2 for a large REFLECT', glyph: '↩' },
+  { slot: 'P-05', el: 'THORNS', role: 'Skill — GUARD that grows with your THORNS', glyph: '🐢' },
+  { slot: 'P-06', el: 'spikes', role: 'Attack — retaliate: DEAL equal to what your spikes dealt last foe turn', glyph: '↺' },
+  { slot: 'P-07', el: 'discard', role: 'Spell — cast off: PAID discards 3, paid out per card discarded', glyph: '🂠' },
+  { slot: 'P-08', el: 'GUARD + THORNS', role: 'Skill — spiked shell: while the GUARD holds, THORNS deals double', glyph: '🦔' },
+  { slot: 'P-09', el: 'GUARD', role: 'Attack — riposte: DEAL equal to the foe\'s telegraphed attack', glyph: '🤺' },
+  { slot: 'P-10', el: 'THORNS', role: 'Global — paid each turn for the THORNS you hold', glyph: '⟳' },
+  // Engine
+  { slot: 'E-01', el: 'GUARD', role: 'Skill — a big GUARD; PAID discards 1 for more', glyph: '🛡' },
+  { slot: 'E-02', el: 'THORNS', role: 'Skill — THORNS', glyph: '🌵' },
+  { slot: 'E-03', el: 'REFLECT', role: 'Skill — REFLECT this turn', glyph: '↩' },
+  { slot: 'E-04', el: 'GUARD + THORNS', role: 'Skill — GUARD and THORNS', glyph: '🐢' },
+  { slot: 'E-05', el: 'THORNS', role: 'Spell — THORNS; PAID discards 2 for a huge THORNS', glyph: '✦' },
+  { slot: 'E-06', el: 'THORNS', role: 'Skill — harden: THORNS skips its next drop', glyph: '🪨' },
+  { slot: 'E-07', el: 'THORNS', role: 'Attack — DEAL, then THORNS', glyph: '🗡' },
+  { slot: 'E-08', el: 'GUARD + REFLECT', role: 'Skill — GUARD and REFLECT', glyph: '🪞' },
+  { slot: 'E-09', el: 'THORNS', role: 'Global — THORNS 1 each turn', glyph: '⟳' },
+  { slot: 'E-10', el: 'discard', role: 'Skill — refill: DRAW 2 (fuel for the discards)', glyph: '🂡' },
+  // Misc
+  { slot: 'M-01', el: 'discard', role: 'Skill — DRAW 2', glyph: '🂡' },
+  { slot: 'M-02', el: 'spikes', role: 'Skill — HEAL equal to what your spikes dealt last foe turn', glyph: '✚' },
+  { slot: 'M-03', el: 'DEAL', role: 'Skill — VULNERABLE (from another lane: it boosts the spikes\' DEALs)', glyph: '◎' },
+  { slot: 'M-04', el: 'GUARD', role: 'Skill — turtle up: GUARD equal to the foe\'s telegraphed attack', glyph: '🐢' },
+  { slot: 'M-05', el: 'discard', role: 'Skill — Conviction; PAID discards 1 for more', glyph: '◆' },
+  { slot: 'M-06', el: 'discard', role: 'Global — DRAW 1 each turn', glyph: '⟳' },
+  { slot: 'M-07', el: 'discard', role: 'Skill — retrieve: return a randomly discarded card to your hand', glyph: '⤺' },
+  { slot: 'M-08', el: '', role: 'Attack — a cheap poke: a small DEAL, DRAW 1', glyph: '·' },
+  { slot: 'M-09', el: 'discard', role: 'Skill — plant: one card is safe from the next random discard', glyph: '⚓' },
+  { slot: 'M-10', el: 'spikes', role: 'Skill — withdraw: each foe strike deals less', glyph: '🫧' },
+];
+
+const CARDS = [
+  // P-01
+  { id: 'P-01a', type: 'Attack', job: 'hit', free: 'DEAL 4, +1 per THORNS you have (max +5).', paid: 'DEAL 8, +2 per THORNS you have (max +12).', why: 'Reads the spikes\' size; capped.' },
+  { id: 'P-01b', type: 'Skill', job: 'wall', free: 'GUARD 4, or GUARD 6 if you have THORNS.', paid: 'GUARD 10, or GUARD 16 if you have THORNS 3 or more.', why: 'One yes/no check, as a wall.' },
+  { id: 'P-01c', type: 'Attack', job: 'affliction', free: 'DEAL 3, THORNS 1.', paid: 'Discard 1 card at random. DEAL 6, THORNS 3.', why: 'Grows the spikes it reads.' },
+  // P-02
+  { id: 'P-02a', type: 'Attack', job: 'hit', free: 'DEAL equal to your GUARD (max 8).', paid: 'Discard 1 card at random. DEAL twice your GUARD (max 20).', why: 'The plain shield bash.' },
+  { id: 'P-02b', type: 'Skill', job: 'wall', free: 'GUARD 4.', paid: 'Discard 1 card at random. GUARD 8, then DEAL equal to your GUARD (max 12).', why: 'Builds the shell first, then bashes.' },
+  { id: 'P-02c', type: 'Attack', job: 'affliction', free: 'DEAL equal to your GUARD (max 6). The foe is VULNERABLE 1.', paid: 'Discard 1 card at random. DEAL twice your GUARD (max 16). The foe is VULNERABLE 2.', why: 'The bash that opens the foe up for the spikes.' },
+  // P-03
+  { id: 'P-03a', type: 'Attack', job: 'hit', free: 'DEAL 5.', paid: 'Discard 2 cards at random. DEAL 18.', why: 'The purest trade: two cards for a huge hit.' },
+  { id: 'P-03b', type: 'Skill', job: 'wall', free: 'GUARD 5.', paid: 'Discard 2 cards at random. GUARD 18.', why: 'The big swing as a wall.' },
+  { id: 'P-03c', type: 'Attack', job: 'affliction', free: 'DEAL 4. The foe is VULNERABLE 1.', paid: 'Discard 2 cards at random. DEAL 12. The foe is VULNERABLE 3.', why: 'The swing that sets up every spike after it.' },
+  // P-04
+  { id: 'P-04a', type: 'Attack', job: 'hit', free: 'DEAL 3, REFLECT 25%.', paid: 'Discard 2 cards at random. DEAL 6, REFLECT 75%.', why: 'Hits now and sends the foe\'s hit back.' },
+  { id: 'P-04b', type: 'Skill', job: 'wall', free: 'GUARD 4.', paid: 'Discard 2 cards at random. GUARD 6, REFLECT 100%.', why: 'The whole attack goes back to the foe.' },
+  { id: 'P-04c', type: 'Skill', job: 'affliction', free: 'GUARD 3, THORNS 1.', paid: 'Discard 2 cards at random. REFLECT 50%, THORNS 3.', why: 'Both spikes at once.' },
+  // P-05
+  { id: 'P-05a', type: 'Attack', job: 'hit', free: 'DEAL 3, + your THORNS.', paid: 'DEAL 6, + twice your THORNS.', why: 'The spikes as a straight hit.' },
+  { id: 'P-05b', type: 'Skill', job: 'wall', free: 'GUARD 3, +1 per THORNS you have (max +6).', paid: 'GUARD 6, +2 per THORNS you have (max +14).', why: 'The slot\'s plain job.' },
+  { id: 'P-05c', type: 'Skill', job: 'affliction', free: 'THORNS 2, then GUARD equal to your THORNS.', paid: 'THORNS 3, then GUARD twice your THORNS.', why: 'Feeds the spikes and reads them in one card.' },
+  // P-06
+  { id: 'P-06a', type: 'Attack', job: 'hit', free: 'DEAL 3, + what your THORNS and REFLECT dealt last foe turn (max +8).', paid: 'DEAL 6, + twice what they dealt (max +20).', why: 'Pays back the last turn\'s spikes.' },
+  { id: 'P-06b', type: 'Skill', job: 'wall', free: 'GUARD equal to what your THORNS and REFLECT dealt last foe turn (max 8).', paid: 'GUARD twice what they dealt (max 20).', why: 'The spikes rebuild the shell.' },
+  { id: 'P-06c', type: 'Skill', job: 'affliction', free: 'THORNS 1 per strike the foe made last turn (max 3).', paid: 'Discard 1 card at random. THORNS 2 per strike the foe made last turn (max 6).', why: 'Many-strike foes grow the spikes.' },
+  // P-07
+  { id: 'P-07a', type: 'Spell', job: 'hit', free: 'DEAL 4.', paid: 'Discard 3 cards at random. DEAL 7 for each card discarded. EXILE.', why: 'The cast-off as damage.' },
+  { id: 'P-07b', type: 'Spell', job: 'wall', free: 'GUARD 4.', paid: 'Discard 3 cards at random. GUARD 7 for each card discarded. EXILE.', why: 'The cast-off as a shell.' },
+  { id: 'P-07c', type: 'Spell', job: 'affliction', free: 'The foe is VULNERABLE 1.', paid: 'Discard 3 cards at random. THORNS 2 for each card discarded. EXILE.', why: 'The cast-off as spikes.' },
+  // P-08
+  { id: 'P-08a', type: 'Attack', job: 'hit', free: 'DEAL 3, GUARD 2.', paid: 'Discard 1 card at random. DEAL 8, GUARD 6.', why: 'Hits and shells; no condition.' },
+  { id: 'P-08b', type: 'Skill', job: 'wall', free: 'GUARD 4. While it holds, THORNS deals double.', paid: 'GUARD 9. While it holds, THORNS deals double.', why: 'The slot\'s plain job.' },
+  { id: 'P-08c', type: 'Skill', job: 'affliction', free: 'GUARD 2, THORNS 2.', paid: 'Discard 1 card at random. GUARD 5, THORNS 3. While the GUARD holds, THORNS deals double.', why: 'Brings its own spikes.' },
+  // P-09
+  { id: 'P-09a', type: 'Attack', job: 'hit', free: 'DEAL equal to the foe\'s telegraphed attack (max 8).', paid: 'Discard 1 card at random. DEAL twice the foe\'s telegraphed attack (max 24).', why: 'The bigger the threat, the bigger the answer.' },
+  { id: 'P-09b', type: 'Skill', job: 'wall', free: 'GUARD 3, REFLECT 25%.', paid: 'GUARD 6. If the foe telegraphs an attack, REFLECT 50%.', why: 'Riposte as a parry.' },
+  { id: 'P-09c', type: 'Skill', job: 'affliction', free: 'If the foe telegraphs an attack, it is VULNERABLE 1; if not, THORNS 2.', paid: 'The foe is VULNERABLE 2. THORNS 2.', why: 'Never blank.' },
+  // P-10
+  { id: 'P-10a', type: 'Global', job: 'hit', trig: 'turn', body: 'DEAL equal to your THORNS.', paidDelta: null, why: 'The spikes hurt on your turn too.' },
+  { id: 'P-10b', type: 'Global', job: 'wall', trig: 'turn', body: 'GUARD equal to your THORNS.', paidDelta: null, why: 'The spikes hold the shell up.' },
+  { id: 'P-10c', type: 'Global', job: 'affliction', trig: 'turn', body: 'If you have THORNS, the foe is VULNERABLE 1.', paidDelta: null, why: 'Keeps the foe open while the spikes are up.' },
+  // E-01
+  { id: 'E-01a', type: 'Attack', job: 'hit', free: 'DEAL 2, GUARD 3.', paid: 'Discard 1 card at random. DEAL 4, GUARD 10.', why: 'A wall with a jab.' },
+  { id: 'E-01b', type: 'Skill', job: 'wall', free: 'GUARD 5.', paid: 'Discard 1 card at random. GUARD 13.', why: 'The slot\'s plain job.' },
+  { id: 'E-01c', type: 'Skill', job: 'affliction', free: 'GUARD 4, THORNS 1.', paid: 'Discard 1 card at random. GUARD 10, THORNS 2.', why: 'The shell with spikes on.' },
+  // E-02
+  { id: 'E-02a', type: 'Attack', job: 'hit', free: 'DEAL 3, THORNS 1.', paid: 'DEAL 6, THORNS 2.', why: 'Spikes on a hit.' },
+  { id: 'E-02b', type: 'Skill', job: 'wall', free: 'GUARD 3, THORNS 1.', paid: 'GUARD 5, THORNS 3.', why: 'Spikes on a wall.' },
+  { id: 'E-02c', type: 'Skill', job: 'affliction', free: 'THORNS 2.', paid: 'THORNS 4.', why: 'The slot\'s plain job.' },
+  // E-03
+  { id: 'E-03a', type: 'Attack', job: 'hit', free: 'DEAL 3, REFLECT 25%.', paid: 'DEAL 5, REFLECT 50%.', why: 'REFLECT on a hit.' },
+  { id: 'E-03b', type: 'Skill', job: 'wall', free: 'REFLECT 50%.', paid: 'REFLECT 100%.', why: 'The slot\'s plain job.' },
+  { id: 'E-03c', type: 'Skill', job: 'affliction', free: 'REFLECT 25%. The foe is VULNERABLE 1.', paid: 'REFLECT 50%. The foe is VULNERABLE 2.', why: 'VULNERABLE makes the reflected DEAL bigger.' },
+  // E-04
+  { id: 'E-04a', type: 'Attack', job: 'hit', free: 'DEAL 3, GUARD 2, THORNS 1.', paid: 'DEAL 5, GUARD 4, THORNS 2.', why: 'All three at once.' },
+  { id: 'E-04b', type: 'Skill', job: 'wall', free: 'GUARD 4, THORNS 1.', paid: 'GUARD 8, THORNS 2.', why: 'Shell-heavy.' },
+  { id: 'E-04c', type: 'Skill', job: 'affliction', free: 'GUARD 2, THORNS 2.', paid: 'GUARD 4, THORNS 4.', why: 'Spike-heavy.' },
+  // E-05
+  { id: 'E-05a', type: 'Spell', job: 'hit', free: 'DEAL 4.', paid: 'Discard 2 cards at random. DEAL 8, THORNS 4. EXILE.', why: 'A hit now, spikes for later.' },
+  { id: 'E-05b', type: 'Spell', job: 'wall', free: 'GUARD 4.', paid: 'Discard 2 cards at random. GUARD 8, THORNS 4. EXILE.', why: 'A shell now, spikes for later.' },
+  { id: 'E-05c', type: 'Spell', job: 'affliction', free: 'THORNS 3.', paid: 'Discard 2 cards at random. THORNS 8. EXILE.', why: 'The slot\'s plain job.' },
+  // E-06
+  { id: 'E-06a', type: 'Attack', job: 'hit', free: 'DEAL 3. THORNS skips its next drop.', paid: 'DEAL 7. THORNS skips its next two drops.', why: 'Keeps the spikes on a hit.' },
+  { id: 'E-06b', type: 'Skill', job: 'wall', free: 'GUARD 3. THORNS skips its next drop.', paid: 'GUARD 7. THORNS skips its next two drops.', why: 'Keeps the spikes on a wall.' },
+  { id: 'E-06c', type: 'Skill', job: 'affliction', free: 'THORNS 1. THORNS skips its next drop.', paid: 'THORNS 2. THORNS skips its next three drops.', why: 'The slot\'s plain job.' },
+  // E-07
+  { id: 'E-07a', type: 'Attack', job: 'hit', free: 'DEAL 5, THORNS 1.', paid: 'DEAL 10, THORNS 1.', why: 'The slot\'s plain job, hit-heavy.' },
+  { id: 'E-07b', type: 'Attack', job: 'utility', free: 'DEAL 3, DRAW 1, THORNS 1.', paid: 'DEAL 5, DRAW 2, THORNS 1.', why: 'Refills the hand the discards empty.' },
+  { id: 'E-07c', type: 'Attack', job: 'affliction', free: 'DEAL 2, THORNS 2.', paid: 'Discard 1 card at random. DEAL 4, THORNS 5.', why: 'Spike-heavy.' },
+  // E-08
+  { id: 'E-08a', type: 'Attack', job: 'hit', free: 'DEAL 4. If the foe telegraphs an attack, REFLECT 25%.', paid: 'DEAL 8, REFLECT 25%.', why: 'A hit that answers the threat.' },
+  { id: 'E-08b', type: 'Skill', job: 'wall', free: 'GUARD 3, REFLECT 25%.', paid: 'GUARD 6, REFLECT 50%.', why: 'The slot\'s plain job.' },
+  { id: 'E-08c', type: 'Skill', job: 'affliction', free: 'THORNS 1, REFLECT 25%.', paid: 'THORNS 2, REFLECT 50%.', why: 'Both spikes, no shell.' },
+  // E-09
+  { id: 'E-09a', type: 'Global', job: 'hit', trig: 'turn', body: 'DEAL 2, then THORNS 1.', paidDelta: null, why: 'A steady poke that grows the spikes.' },
+  { id: 'E-09b', type: 'Global', job: 'wall', trig: 'turn', body: 'GUARD 2, then THORNS 1.', paidDelta: null, why: 'A steady shell that grows the spikes.' },
+  { id: 'E-09c', type: 'Global', job: 'affliction', trig: 'turn', body: 'THORNS 1.', paidDelta: null, why: 'The slot\'s plain job; it outpaces the drop.' },
+  // E-10
+  { id: 'E-10a', type: 'Attack', job: 'hit', free: 'DEAL 2, DRAW 1.', paid: 'DRAW 2, then DEAL 2 per card in your hand (max 12).', why: 'A full hand is a weapon.' },
+  { id: 'E-10b', type: 'Skill', job: 'utility', free: 'DRAW 2.', paid: 'DRAW 3.', why: 'The slot\'s plain job.' },
+  { id: 'E-10c', type: 'Skill', job: 'affliction', free: 'DRAW 1, THORNS 1.', paid: 'DRAW 2, THORNS 2.', why: 'Fuel and spikes.' },
+  // M-01
+  { id: 'M-01a', type: 'Attack', job: 'hit', free: 'DEAL 2, DRAW 1.', paid: 'DEAL 4, DRAW 2.', why: 'Draw on a hit.' },
+  { id: 'M-01b', type: 'Skill', job: 'utility', free: 'DRAW 2.', paid: 'DRAW 2, GUARD 4.', why: 'The slot\'s plain job.' },
+  { id: 'M-01c', type: 'Skill', job: 'affliction', free: 'DRAW 1. The foe is VULNERABLE 1.', paid: 'DRAW 2. The foe is VULNERABLE 1.', why: 'Draw that opens the foe up.' },
+  // M-02
+  { id: 'M-02a', type: 'Attack', job: 'hit', free: 'DEAL 3.', paid: 'DEAL 4. HEAL equal to what your THORNS and REFLECT dealt last foe turn (max 8).', why: 'A hit with the mend on PAID.' },
+  { id: 'M-02b', type: 'Skill', job: 'heal', free: 'HEAL equal to what your THORNS and REFLECT dealt last foe turn (max 5).', paid: 'HEAL twice what they dealt (max 14).', why: 'The slot\'s plain job.' },
+  { id: 'M-02c', type: 'Skill', job: 'affliction', free: 'THORNS 1. HEAL 2.', paid: 'THORNS 2. HEAL twice your THORNS (max 10).', why: 'The spikes as a mend.' },
+  // M-03
+  { id: 'M-03a', type: 'Attack', job: 'hit', free: 'DEAL 3. The foe is VULNERABLE 1.', paid: 'DEAL 6. The foe is VULNERABLE 1.', why: 'VULNERABLE on a hit.' },
+  { id: 'M-03b', type: 'Skill', job: 'wall', free: 'GUARD 3. The foe is VULNERABLE 1.', paid: 'GUARD 6. The foe is VULNERABLE 2.', why: 'VULNERABLE on a wall.' },
+  { id: 'M-03c', type: 'Skill', job: 'affliction', free: 'The foe is VULNERABLE 2.', paid: 'The foe is VULNERABLE 4.', why: 'The slot\'s plain job.' },
+  // M-04
+  { id: 'M-04a', type: 'Attack', job: 'hit', free: 'DEAL 2. GUARD equal to half the foe\'s telegraphed attack.', paid: 'DEAL 4. GUARD equal to the foe\'s telegraphed attack (max 15).', why: 'Turtle up with a jab.' },
+  { id: 'M-04b', type: 'Skill', job: 'wall', free: 'GUARD equal to the foe\'s telegraphed attack (max 6).', paid: 'GUARD equal to the foe\'s telegraphed attack (max 18).', why: 'The slot\'s plain job: block it exactly.' },
+  { id: 'M-04c', type: 'Skill', job: 'affliction', free: 'GUARD 2. THORNS 1 per strike the foe telegraphs (max 3).', paid: 'GUARD 4. THORNS 2 per strike the foe telegraphs (max 6).', why: 'Readies spikes for each incoming strike.' },
+  // M-05
+  { id: 'M-05a', type: 'Attack', job: 'hit', free: 'DEAL 2. Gain 1 Conviction.', paid: 'Discard 1 card at random. DEAL 4. Gain 3 Conviction.', why: 'Conviction on a hit.' },
+  { id: 'M-05b', type: 'Skill', job: 'utility', free: 'Gain 1 Conviction. GUARD 2.', paid: 'Discard 1 card at random. Gain 3 Conviction. GUARD 3.', why: 'The slot\'s plain job; clears the scrap floor.' },
+  { id: 'M-05c', type: 'Skill', job: 'affliction', free: 'Gain 1 Conviction. THORNS 1.', paid: 'Discard 1 card at random. Gain 3 Conviction. THORNS 2.', why: 'Conviction with spikes.' },
+  // M-06
+  { id: 'M-06a', type: 'Global', job: 'hit', trig: 'turn', body: 'DEAL 1 per card in your hand (max 5).', paidDelta: null, why: 'Rewards keeping a hand to throw away.' },
+  { id: 'M-06b', type: 'Global', job: 'utility', trig: 'turn', body: 'DRAW 1.', paidDelta: null, why: 'The slot\'s plain job.' },
+  { id: 'M-06c', type: 'Global', job: 'affliction', trig: 'turn', body: 'If your hand holds 4 or more cards, THORNS 1.', paidDelta: null, why: 'A full hand grows the spikes.' },
+  // M-07
+  { id: 'M-07a', type: 'Attack', job: 'hit', free: 'DEAL 3.', paid: 'DEAL 4. Return a card you discarded at random this turn to your hand.', why: 'A hit that takes back the PAID cost.' },
+  { id: 'M-07b', type: 'Skill', job: 'utility', free: 'Return a card you discarded at random this combat to your hand.', paid: 'Return two of them.', why: 'The slot\'s plain job.' },
+  { id: 'M-07c', type: 'Skill', job: 'affliction', free: 'Return a card you discarded at random this turn to your hand.', paid: 'Return a card you discarded at random this turn to your hand. THORNS 2.', why: 'Retrieve with spikes.' },
+  // M-08
+  { id: 'M-08a', type: 'Attack', job: 'hit', free: 'DEAL 3.', paid: 'DEAL 6, DRAW 1.', why: 'The slot\'s plain job.' },
+  { id: 'M-08b', type: 'Skill', job: 'utility', free: 'GUARD 2, DRAW 1.', paid: 'GUARD 4, DRAW 1.', why: 'The poke as a small wall.' },
+  { id: 'M-08c', type: 'Attack', job: 'affliction', free: 'DEAL 1, THORNS 1.', paid: 'DEAL 2, THORNS 1, DRAW 1.', why: 'The poke as a spike.' },
+  // M-09
+  { id: 'M-09a', type: 'Attack', job: 'hit', free: 'DEAL 3. The next random discard skips a card you choose.', paid: 'DEAL 6. The next random discard skips a card you choose.', why: 'Plant on a hit.' },
+  { id: 'M-09b', type: 'Skill', job: 'utility', free: 'Choose a card in your hand: the next random discard skips it.', paid: 'Choose two cards in your hand: random discards skip them this turn.', why: 'The slot\'s plain job.' },
+  { id: 'M-09c', type: 'Skill', job: 'affliction', free: 'Choose a card in your hand: random discards skip it this turn. THORNS 1.', paid: 'Choose a card in your hand: random discards skip it this turn. THORNS 2.', why: 'Plant with spikes.' },
+  // M-10
+  { id: 'M-10a', type: 'Attack', job: 'hit', free: 'DEAL 3. Each foe strike in the next threat phase deals 1 less.', paid: 'DEAL 6. Each foe strike in the next threat phase deals 2 less.', why: 'Withdraw on a hit.' },
+  { id: 'M-10b', type: 'Skill', job: 'wall', free: 'Each foe strike in the next threat phase deals 2 less.', paid: 'Each foe strike in the next threat phase deals 4 less.', why: 'The slot\'s plain job; strong against many strikes.' },
+  { id: 'M-10c', type: 'Skill', job: 'affliction', free: 'Each foe strike in the next threat phase deals 1 less. THORNS 1.', paid: 'Each foe strike in the next threat phase deals 2 less. THORNS 2.', why: 'Withdraw with spikes: the strikes still trigger them.' },
+];
+
+/* Globals use the turn trigger only (the trigger set is closed). */
+const TRIGGERS = {
+  turn:  { icon: '⟳', text: 'Start of your turn:' },
+};
+
+/* =====================================================================
+   RENDER — pure helpers that turn data into DOM nodes.
+   ===================================================================== */
+
+/** Escape text for safe insertion as HTML. */
+const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+/** Wrap the known keywords in styled spans. */
+const markKeywords = (s) =>
+  esc(s).replace(/\b(DEAL|GUARD|HEAL|VULNERABLE|EXILE|THORNS|REFLECT|DRAW)\b/g, '<span class="kw">$1</span>');
+
+/** A card's colour (`body | mind | heart | any`), from its job through the kit's table. */
+const colorOf = (card) => BallotKit.colorOf(card.job) || 'any';
+
+/** Body of a Global card: duration badges, trigger line, optional PAID delta. */
+const globalBody = (card) => {
+  const t = TRIGGERS[card.trig];
+  return `
+    <div class="dur"><span class="tag free">FREE ⏳3</span><span class="tag paid">PAID ∞</span></div>
+    <div class="line trig"><span class="ticon" aria-hidden="true">${t.icon}</span><b>${markKeywords(t.text)}</b> ${markKeywords(card.body)}</div>
+    ${card.paidDelta ? `<div class="line"><span class="tag paid">PAID</span>${markKeywords(card.paidDelta)}</div>` : ''}`;
+};
+
+/** FREE and PAID lines for every non-Global card. */
+const plainBody = (card) => `
+    <div class="line"><span class="tag free">FREE</span>${markKeywords(card.free)}</div>
+    <div class="line"><span class="tag paid">PAID</span>${markKeywords(card.paid)}</div>`;
+
+/** Build one card face as an HTML string, tinted by its colour. */
+const cardHtml = (card, glyph, el) => {
+  const c = colorOf(card);
+  return `
+  <label class="card c-${c}" data-id="${card.id}">
+    <input class="pick" type="checkbox" value="${card.id}" aria-label="Keep ${card.id}">
+    <div class="top"><span class="name">${card.id}</span><span class="type">${card.type}${el ? ` · ${el}` : ''} · <span class="hue c-${c}">${BallotKit.colorLabel(c)}</span></span></div>
+    <div class="art" aria-hidden="true">${glyph}</div>
+    ${card.type === 'Global' ? globalBody(card) : plainBody(card)}
+    <div class="why">${esc(card.why)}</div>
+  </label>`;
+};
+
+/** Build one slot section: heading, role, its candidate cards, a note box. */
+const slotHtml = (s) => `
+  <section class="slot" data-slot="${s.slot}">
+    <h2>${s.slot}</h2>
+    <p class="role">${esc(s.role)}</p>
+    <div class="row">${CARDS.filter((c) => c.id.startsWith(s.slot)).map((c) => cardHtml(c, s.glyph, s.el)).join('')}</div>
+    <input class="note" type="text" data-note="${s.slot}" placeholder="Note for ${s.slot}: TWEAK / merge rule / colour (optional)">
+  </section>`;
+
+/** One tab panel: blurb, its live colour tally, its slots. Hidden unless it is the active tab. */
+const panelHtml = (t, i) => `
+  <div class="panel" id="panel-${t.key}" role="tabpanel" ${i ? 'hidden' : ''}>
+    <p class="blurb"><b>${t.name}</b>: ${esc(t.blurb)}</p>
+    <p class="tally" data-tally="${t.key}"></p>
+    ${SLOTS.filter((s) => s.slot.startsWith(t.key + '-')).map(slotHtml).join('')}
+  </div>`;
+
+/** Tab button with a live "kept / total" counter. */
+const tabHtml = (t, i) =>
+  `<button type="button" role="tab" data-tab="${t.key}" aria-selected="${i === 0}">${t.name}<span class="n" data-n="${t.key}"></span></button>`;
+
+document.getElementById('slots').innerHTML = TABS.map(panelHtml).join('');
+document.getElementById('tabs').innerHTML = TABS.map(tabHtml).join('') + '<span class="family" id="family"></span>';
+
+/** Show one tab's panel, hide the others. */
+const showTab = (key) => {
+  document.querySelectorAll('[data-tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === key)));
+  TABS.forEach((t) => { document.getElementById(`panel-${t.key}`).hidden = t.key !== key; });
+};
+document.getElementById('tabs').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-tab]');
+  if (b) showTab(b.dataset.tab);
+});
+
+/* =====================================================================
+   STATE — read straight from the DOM (the kit saves and restores it).
+   ===================================================================== */
+
+/** Ids of every ticked card. */
+const kept = () => [...document.querySelectorAll('.pick:checked')].map((i) => i.value);
+
+/** The family's kept cards per colour, in words: "4 red · 3 blue · 3 purple". */
+const familyTally = (k) => BallotKit.tallyWords(BallotKit.colorTally(CARDS, k));
+
+/** Update the selected-card ring, the running count and the colour tallies. */
+const refresh = () => {
+  const k = kept();
+  document.querySelectorAll('label.card').forEach((l) =>
+    l.classList.toggle('on', l.querySelector('.pick').checked));
+  document.getElementById('count').textContent = `${k.length} kept of ${CARDS.length}`;
+  document.getElementById('family').textContent = `kept: ${familyTally(k)}`;
+  TABS.forEach((t) => {
+    const cards = CARDS.filter((c) => c.id.startsWith(t.key + '-'));
+    const here = k.filter((id) => id.startsWith(t.key + '-'));
+    document.querySelector(`[data-n="${t.key}"]`).textContent = `${here.length}/${cards.length}`;
+    document.querySelector(`[data-tally="${t.key}"]`).textContent =
+      `kept in ${t.name}: ${BallotKit.tallyWords(BallotKit.colorTally(cards, here))}`;
+  });
+};
+document.getElementById('slots').addEventListener('change', refresh);
+refresh();
+
+/* =====================================================================
+   OUTPUT — build the plain-text verdict sheet from the current picks.
+   ===================================================================== */
+
+/** A kept candidate with its colour: "P-01b (red)". */
+const withColor = (id) => `${id} (${BallotKit.COLOR_TINTS[colorOf(CARDS.find((c) => c.id === id))]})`;
+
+/** One line per slot: KEEP / MERGE / CUT, the cut candidates, the note. */
+const slotLine = (s, keptIds) => {
+  const ids = CARDS.filter((c) => c.id.startsWith(s.slot)).map((c) => c.id);
+  const keep = ids.filter((id) => keptIds.includes(id));
+  const cut = ids.filter((id) => !keptIds.includes(id));
+  const note = document.querySelector(`[data-note="${s.slot}"]`).value.trim();
+  const verdict = keep.length === 0 ? 'CUT slot'
+    : keep.length === 1 ? `KEEP ${withColor(keep[0])}`
+    : `MERGE ${keep.map(withColor).join(' + ')}`;
+  return `${s.slot}: ${verdict}` +
+    (keep.length ? ` | cut: ${cut.join(', ') || '-'}` : '') +
+    (note ? ` | note: ${note}` : '');
+};
+
+/** The whole sheet: header, the colour tally, one line per slot, general notes. */
+const sheet = () => {
+  const k = kept();
+  const general = document.getElementById('general').value.trim();
+  return [
+    'BALLOT — the Family (ballot shell; sample candidates)',
+    `kept ${k.length} of ${CARDS.length}: ${familyTally(k)}`,
+    ...TABS.flatMap((t) => [
+      `-- ${t.name} --`,
+      ...SLOTS.filter((s) => s.slot.startsWith(t.key + '-')).map((s) => slotLine(s, k)),
+    ]),
+    general ? `general: ${general}` : null,
+  ].filter(Boolean).join('\n');
+};
+
+/* Generate, Copy, autosave, Clear and Submit come from the ballot kit. */
+BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
+
+/* Theme toggle: flips data-theme on <html>; no storage. */
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme
+    ? root.dataset.theme === 'dark'
+    : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+});
+</script>
+</body>
+</html>
