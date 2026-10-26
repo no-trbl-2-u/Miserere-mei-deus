@@ -137,7 +137,7 @@ Size: M
   on several elites' lists; no uniqueness check across nodes. A relic the
   player already carries (worn or in the satchel) is skipped, so a shared
   relic won from one elite never drops again from another, and a list the
-  player fully carries drops nothing. `[T to confirm #2]` Or: duplicates can
+  player fully carries drops nothing. Accepted by T as the default (2026-10-26, "update the PRs, then merge them"). Or: duplicates can
   drop (a shared relic can drop again while carried). Which relics go on
   which list is content for T (LR1f); ER1 ships the field and fixture lists
   only. A seeded engine test over a respawned kill sequence with two fixture
@@ -179,7 +179,7 @@ Size: M
   `markEliteUpgradeTaken` touches nothing else and survives `respawnElites`.
   Confirmed by T (2026-10-26): the upgrade option can be taken only once;
   later wins over that same elite no longer offer it. Read as once per elite
-  node (each region's elite has its own). `[T to confirm #1]` Or: once per
+  node (each region's elite has its own). Accepted by T as the default (2026-10-26, "update the PRs, then merge them"). Or: once per
   run, across all elites (a run-level flag instead of the per-node list).
 - **A11** When a relic drops, it is the whole reward. After every won elite
   fight, first or repeat, the relic roll (A7) runs before the reward: on a
@@ -290,7 +290,7 @@ passing.
   Confirmed by T (2026-10-26): the upgrade option can be taken only once; XP
   and cards come with every repeat win; when a relic drops, it is the whole
   reward. The "only once" is read as once per elite node (each region's
-  elite has its own), recorded in `eliteUpgradeTakenNodes`. `[T to confirm #1]`
+  elite has its own), recorded in `eliteUpgradeTakenNodes`. Accepted by T as the default (2026-10-26, "update the PRs, then merge them").
   Or: once per run, across all elites. T's relic rule is applied to every
   elite win, first included, so a first-win drop also pays only the relic;
   this reorders LR1c's "relic after the unchanged elite reward" for elite
@@ -301,7 +301,7 @@ passing.
   Confirmed by T (2026-10-26): "Not all elites drop a unique relic; some drop
   the same relic. No telling the player the drop chance." A relic the player
   already carries is skipped, including a shared one won from another elite.
-  `[T to confirm #2]` Or: duplicates can drop. Consequence, stated for T: the
+  Accepted by T as the default (2026-10-26, "update the PRs, then merge them"). Or: duplicates can drop. Consequence, stated for T: the
   lane's third relic, elite-only by T's LR1 decision, can roll again at 8% a
   kill on a returning elite until it drops.
   Confirmed by T (2026-10-26, PR #931, call #4): once an elite drops its
