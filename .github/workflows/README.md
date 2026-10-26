@@ -50,7 +50,8 @@ gets checked.
 | `GH_PAT` | **recommended** | A PAT (classic: `repo` + `workflow` scopes; or fine-grained: contents/issues/PRs read-write + actions read). Without it workflows fall back to the default `GITHUB_TOKEN`, and **pushes/PRs made by the skills will not trigger the `verify-*` workflows** — the deploy gate then **fails closed** (`deploy-check.mjs` exits 1 when a code tick has zero verify runs), tuning PRs get no CI, and `ci-autofix` never fires for loop pushes. Diagnose with `pat-probe.yml`. |
 | `NOTIFY_NTFY_TOPIC` / `NOTIFY_WEBHOOK_URL` | optional | Pager channels for `scripts/notify.mjs` (failure-mode stops, `[needs-user-call]`s). |
 | `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` / `PUZZLE_API_TOKEN` | required for `backend-deploy` (configured) | Cloudflare token with Workers and D1 edit rights, T's account id, and the shared dev bearer token the Worker reads as its `PUZZLE_API_TOKEN` secret (phase BE1b). |
-| `EXPO_PUBLIC_PUZZLE_API_URL` / `EXPO_PUBLIC_PUZZLE_API_TOKEN` | optional (configured) | Written into the preview build profile by `preview-build`, so preview APKs post `/devpuzzle` solve times (phase BE1c). |
+| `EXPO_PUBLIC_PUZZLE_API_URL` / `EXPO_PUBLIC_PUZZLE_API_TOKEN` | optional (configured) | Written into the preview build profile by `preview-build`, so preview APKs post `/devpuzzle` solve times (phase BE1c). Never written into `beta` or `production`, so a TestFlight build posts nothing (phase IO1c). |
+| `ASC_API_KEY_P8` / `ASC_API_KEY_ID` / `ASC_API_ISSUER_ID` | required for a `preview-build` submit (set in phase IO1b) | The App Store Connect API key (App Manager role): the `.p8` contents, its key id and the issuer id. `preview-build` with `submit: true` writes the key to a temp file for the `beta` profile's non-interactive `--auto-submit` to TestFlight (phase IO1c) and fails naming any that is missing. Made by `axiomancer-mobile/docs/ios-beta.md` step 4. |
 
 ## The workflows
 

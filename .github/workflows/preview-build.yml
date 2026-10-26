@@ -27,6 +27,11 @@ on:
         required: false
         default: false
         type: boolean
+      submit:
+        description: 'Submit the build to TestFlight (iOS beta only: platform ios, profile beta)'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -43,7 +48,18 @@ jobs:
     env:
       PREVIEW_PLATFORM: ${{ inputs.platform || 'android' }}
       PREVIEW_PROFILE: ${{ inputs.profile || 'preview' }}
+      PREVIEW_SUBMIT: ${{ inputs.submit == true }}
     steps:
+      # A TestFlight submit (phase IO1c) is the iOS beta build only: refuse any
+      # other platform or profile before the verify gate spends its minutes.
+      - name: Check the submit inputs
+        if: inputs.submit == true
+        run: |
+          if [ "$PREVIEW_PLATFORM" != "ios" ] || [ "$PREVIEW_PROFILE" != "beta" ]; then
+            echo "::error::submit needs platform ios and profile beta (got $PREVIEW_PLATFORM, $PREVIEW_PROFILE)"
+            exit 1
+          fi
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -69,10 +85,11 @@ jobs:
       # /devpuzzle attempt when both EXPO_PUBLIC_PUZZLE_API_* values are baked
       # in. An EAS cloud build does not see this runner's env, but it archives
       # the working tree, so the values go into the profile's `env` in this
-      # checkout's eas.json (never committed). Skipped for production, and
+      # checkout's eas.json (never committed). Skipped for production and for
+      # beta, the TestFlight build friends install, which posts no play data;
       # when either secret is unset the build simply never posts.
       - name: Pass the puzzle API values to the build
-        if: env.PREVIEW_PROFILE != 'production'
+        if: env.PREVIEW_PROFILE != 'production' && env.PREVIEW_PROFILE != 'beta'
         working-directory: axiomancer-mobile
         env:
           EXPO_PUBLIC_PUZZLE_API_URL: ${{ secrets.EXPO_PUBLIC_PUZZLE_API_URL }}
@@ -89,8 +106,49 @@ jobs:
             eas.json > eas.json.tmp && mv eas.json.tmp eas.json
           echo "puzzle API values passed to the $PREVIEW_PROFILE profile"
 
+      # The App Store Connect API key for the non-interactive submit (phase
+      # IO1c): the .p8 goes to a temp file outside the checkout, and the beta
+      # submit profile in this checkout's eas.json (never committed) points at
+      # it. A missing key secret, or the app id IO1b has not filled in yet,
+      # fails the run by name.
+      - name: Write the App Store Connect key
+        if: inputs.submit == true
+        working-directory: axiomancer-mobile
+        env:
+          ASC_API_KEY_P8: ${{ secrets.ASC_API_KEY_P8 }}
+          ASC_API_KEY_ID: ${{ secrets.ASC_API_KEY_ID }}
+          ASC_API_ISSUER_ID: ${{ secrets.ASC_API_ISSUER_ID }}
+        run: |
+          missing=0
+          for name in ASC_API_KEY_P8 ASC_API_KEY_ID ASC_API_ISSUER_ID; do
+            if [ -z "${!name}" ]; then
+              echo "::error::the repo secret $name is not set (axiomancer-mobile/docs/ios-beta.md step 4)"
+              missing=1
+            fi
+          done
+          [ "$missing" = 0 ] || exit 1
+          if ! jq -e '.submit.beta.ios.ascAppId | test("^[0-9]+$")' eas.json > /dev/null; then
+            echo "::error::eas.json submit.beta.ios.ascAppId is not the numeric App Store Connect app id yet (phase IO1b)"
+            exit 1
+          fi
+          key="$RUNNER_TEMP/asc-api-key.p8"
+          printf '%s\n' "$ASC_API_KEY_P8" > "$key"
+          chmod 600 "$key"
+          jq --arg path "$key" \
+            '.submit.beta.ios += {
+               ascApiKeyPath: $path,
+               ascApiKeyId: env.ASC_API_KEY_ID,
+               ascApiKeyIssuerId: env.ASC_API_ISSUER_ID }' \
+            eas.json > eas.json.tmp && mv eas.json.tmp eas.json
+          echo "App Store Connect key written for the beta submit"
+
       - name: EAS build
         working-directory: axiomancer-mobile
-        run: npx eas-cli@latest build --platform "$PREVIEW_PLATFORM" --profile "$PREVIEW_PROFILE" --non-interactive
+        run: |
+          submit_flag=()
+          if [ "$PREVIEW_SUBMIT" = "true" ]; then
+            submit_flag=(--auto-submit)
+          fi
+          npx eas-cli@latest build --platform "$PREVIEW_PLATFORM" --profile "$PREVIEW_PROFILE" --non-interactive "${submit_flag[@]}"
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
