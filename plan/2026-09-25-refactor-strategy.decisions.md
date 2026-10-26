@@ -187,7 +187,7 @@ can replace a plate later, with a provenance edit and no code change.
 *Rejected:* Upscayl run by T; Real-ESRGAN downloaded and run by the agent.
 
 **D23 — Act 1 order: coast → forest → mountains → underworld.** (T,
-2026-09-25.) The underworld is last. The plates' drawn seams (the forest's
+2026-09-25; amended by D106: each region is a chapter.) The underworld is last. The plates' drawn seams (the forest's
 cave mouths drop into the underworld, and the underworld's tunnel leads
 into the mountains) are imagery and do not bind the travel doors.
 *Rejected:* coast → forest → underworld → mountains, which followed the
@@ -220,7 +220,7 @@ Wood**, mountains **The Beacon Crags**, underworld **The Lantern Deep**
 The descriptions are in `plan/2026-09-25-map-revamp-m3.prompt.md` §1.
 
 **D27 — A new game starts on the coast as soon as it ships.** (T,
-2026-09-25.) `createStartingWorld()` moves from fishing-village to the
+2026-09-25; amended by D106: the coast is Act 1, Chapter 1.) `createStartingWorld()` moves from fishing-village to the
 Act 1 coast map in M3a. Act 1 runs coast → forest → mountains → underworld
 (D23). The underworld's exit door leads into the shipped chain at
 fishing-village until the later re-slot. While a later Act 1 map is still
@@ -230,7 +230,8 @@ opening narration's placement, new-game and save handling, the first-map
 e2e tests). *Rejected:* reaching Act 1 through a door from the shipped
 chain until all four ship.
 
-**D28 — The Act 1 maps live in the existing continents.** (T, 2026-09-25.)
+**D28 — The Act 1 maps live in the existing continents.** (T, 2026-09-25;
+amended by D106: each map is one chapter of Act 1.)
 Coast and forest go under `coastal-continent`; mountains and underworld
 under `northern-continent`. Each map still takes its own node-id prefix in
 `nodeIdToMapName()`, distinct from every shipped prefix. *Rejected:* a new
@@ -1031,6 +1032,15 @@ satisfied for exactly these.)
 - The grey starter cards are not a lane and are never offered as card rewards.
 - Stopgap until character selection exists (it waits on T plotting a third lane): the pool is the worn relics' lanes only. When it is empty (no lane relic worn), the reward falls back to grey cards (confirmed by T, 2026-10-26). The starting lanes join the pool when character selection lands, and the fallback is then deleted: every run starts at character select, so the pool is never empty.
 - Built by Phase RW1a (`plan/phases/phase_RW1_reward_rule.md`); the relic detail line reads "Lane: <lane> (while worn)" (Phase LR1a).
+
+**D106 — Each region is a chapter: Act 1 is four chapters, Breakwater first.** (T, 2026-10-26, in the Claude Duet channel; amends D23, D27 and D28. T: "All 4 regions combined is Act 1 and the deadline is the end of the year. Act 1 Chapter 1 completed is the mid November deadline. Each region is: Act x Chapter y (With the caveat that later acts may revisit certain regions if the story requires it)". T confirmed the order and the Nov 16 scope the same day: "Yes that's all correct".)
+
+- A region is named "Act X, Chapter Y". Act 1 is the four D23 regions in D23's order: Chapter 1 the Breakwater, Chapter 2 the Charcoal Wood, Chapter 3 the Beacon Crags, Chapter 4 the Lantern Deep.
+- A later act may revisit a region when the story needs it; a region is not owned by one act.
+- Deadlines (`plan/deadlines.md`): Act 1 Chapter 1 complete by the Nov 16 MVP (its real enemies, the lane relics, item icons and the event-node UI/UX for the Breakwater's kinds); all of Act 1 by v0.3 on Dec 28, including the enemies and enemy art of Chapters 2-4.
+- Unchanged: D23's order, D27's start on the coast (Chapter 1's first node), D28's continents and node-id prefixes.
+- The Breakwater's watchtower fight (`bw-17`) is Chapter 1's boss, B2's "region boss" tier (T, 2026-10-26: "Chapter 1 boss").
+- Act 1's Act Boss sits at the end of the Lantern Deep, Chapter 4 (T, 2026-10-26: "Yes, end of Ch4").
 
 **D105 — Three kinds of slot: one Weapon, one Armor, three Relic slots.** (T, 2026-10-25, in session; recorded by the EQ2 plot, run unattended. T: "There are only 3 types of slots: Weapon (top), Armor (2nd from top), 3x relics. Relics can be named anything, but ultimately they all take up the same 3 relic slots.")
 
