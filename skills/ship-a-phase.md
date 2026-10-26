@@ -375,7 +375,11 @@ phase closes, ticked, each naming its proof or `(no test: <reason>)`;
 `verify-gate` fails an unproven line, phase LG1c, and the `judge` job runs every named proof, phase LG1f), Verify (the Step 9 commands and results), and
 `Closes #<phase-issue-number>` as the last line. Record the PR number
 on the row in the same commit if you know it, or leave `- pr:` for
-the next tick to fill.
+the next tick to fill. Never predict it: the pre-push hook makes the
+row commit land before `gh pr create`, and issues and other sessions
+share the number sequence (ship RW1b guessed #946 and got #947). Fill
+the number in a follow-up commit, carrying the same `Closes` trailer,
+once `gh pr create` prints it.
 
 ### Step 12 — Watch the PR's checks
 
