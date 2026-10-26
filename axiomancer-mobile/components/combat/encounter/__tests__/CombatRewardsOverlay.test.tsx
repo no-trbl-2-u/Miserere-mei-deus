@@ -4,8 +4,8 @@
  * What this pins:
  *   · the tiles render REAL card faces (the card's own name off `CombatCardVM`,
  *     not a bespoke mini-tile's re-derivation of it);
- *   · tapping a tile opens the full inspect preview, and choosing from the
- *     preview selects the card;
+ *   · a tap on a tile selects it, and a second tap on the selected tile opens
+ *     the full inspect preview (Phase TQ1);
  *   · TAKE CARD is inert until something is selected, then reports that id;
  *   · SKIP always works and reports `null` — a lean deck is a real play;
  *   · nothing the overlay prints invents a number the presenter did not give it
@@ -69,8 +69,21 @@ describe('CombatRewardsOverlay', () => {
         expect(onPick).not.toHaveBeenCalled();
     });
 
-    it('tapping a tile opens the inspect preview with the full face', () => {
+    it('a tap on a tile selects it and enables TAKE CARD, two taps in all (Phase TQ1)', () => {
+        const onPick = jest.fn();
+        renderOverlay(onPick as (cardId: string | null) => void);
+        fireEvent.press(screen.getByTestId(`combat-reward-${OFFER_IDS[1]}`));
+        expect(screen.queryByTestId('combat-reward-preview')).toBeNull();
+        expect(screen.getByTestId(`combat-reward-${OFFER_IDS[1]}`).props.accessibilityState.selected).toBe(true);
+        const confirm = screen.getByTestId('combat-reward-confirm');
+        expect(confirm.props.accessibilityState.disabled).toBe(false);
+        fireEvent.press(confirm);
+        expect(onPick).toHaveBeenCalledWith(OFFER_IDS[1]);
+    });
+
+    it('a second tap on the selected tile opens the inspect preview with the full face', () => {
         renderOverlay();
+        fireEvent.press(screen.getByTestId(`combat-reward-${OFFER_IDS[0]}`));
         expect(screen.queryByTestId('combat-reward-preview')).toBeNull();
         fireEvent.press(screen.getByTestId(`combat-reward-${OFFER_IDS[0]}`));
         expect(screen.getByTestId('combat-reward-preview')).toBeTruthy();
@@ -78,19 +91,29 @@ describe('CombatRewardsOverlay', () => {
         expect(screen.getByTestId('combat-reward-preview-flavor')).toBeTruthy();
     });
 
-    it('BACK closes the preview without selecting anything', () => {
+    it('each tile says how it answers a tap', () => {
+        const { offers } = renderOverlay();
+        for (const offer of offers) {
+            const label = screen.getByTestId(`combat-reward-${offer.cardId}`).props.accessibilityLabel as string;
+            expect(label).toContain('Tap to choose; tap again to read it in full');
+        }
+    });
+
+    it('BACK closes the preview and keeps the selection', () => {
         const onPick = jest.fn();
         renderOverlay(onPick as (cardId: string | null) => void);
         fireEvent.press(screen.getByTestId(`combat-reward-${OFFER_IDS[1]}`));
+        fireEvent.press(screen.getByTestId(`combat-reward-${OFFER_IDS[1]}`));
         fireEvent.press(screen.getByTestId('combat-reward-preview-close'));
         expect(screen.queryByTestId('combat-reward-preview')).toBeNull();
-        expect(screen.getByTestId('combat-reward-confirm').props.accessibilityState.disabled).toBe(true);
+        expect(screen.getByTestId(`combat-reward-${OFFER_IDS[1]}`).props.accessibilityState.selected).toBe(true);
         expect(onPick).not.toHaveBeenCalled();
     });
 
-    it('choosing from the preview selects that card, and TAKE CARD reports it', () => {
+    it('CHOOSE THIS keeps the read card selected and closes the preview', () => {
         const onPick = jest.fn();
         renderOverlay(onPick as (cardId: string | null) => void);
+        fireEvent.press(screen.getByTestId(`combat-reward-${OFFER_IDS[1]}`));
         fireEvent.press(screen.getByTestId(`combat-reward-${OFFER_IDS[1]}`));
         fireEvent.press(screen.getByTestId('combat-reward-preview-select'));
         expect(screen.queryByTestId('combat-reward-preview')).toBeNull();
@@ -100,13 +123,12 @@ describe('CombatRewardsOverlay', () => {
         expect(onPick).toHaveBeenCalledWith(OFFER_IDS[1]);
     });
 
-    it('selecting a second card replaces the first', () => {
+    it('a tap on another tile moves the selection without opening a read', () => {
         const onPick = jest.fn();
         renderOverlay(onPick as (cardId: string | null) => void);
         fireEvent.press(screen.getByTestId(`combat-reward-${OFFER_IDS[0]}`));
-        fireEvent.press(screen.getByTestId('combat-reward-preview-select'));
         fireEvent.press(screen.getByTestId(`combat-reward-${OFFER_IDS[2]}`));
-        fireEvent.press(screen.getByTestId('combat-reward-preview-select'));
+        expect(screen.queryByTestId('combat-reward-preview')).toBeNull();
         expect(screen.getByTestId(`combat-reward-${OFFER_IDS[0]}`).props.accessibilityState.selected).toBe(false);
         expect(screen.getByTestId(`combat-reward-${OFFER_IDS[2]}`).props.accessibilityState.selected).toBe(true);
         fireEvent.press(screen.getByTestId('combat-reward-confirm'));
@@ -117,7 +139,6 @@ describe('CombatRewardsOverlay', () => {
         const onPick = jest.fn();
         renderOverlay(onPick as (cardId: string | null) => void);
         fireEvent.press(screen.getByTestId(`combat-reward-${OFFER_IDS[0]}`));
-        fireEvent.press(screen.getByTestId('combat-reward-preview-select'));
         const skip = screen.getByTestId('combat-reward-skip');
         expect(skip.props.accessibilityState?.disabled).toBeFalsy();
         fireEvent.press(skip);
@@ -184,6 +205,7 @@ describe('CombatRewardsOverlay — D4 rarity, never colour alone', () => {
         // `large` face, which is the size that has room for the named tag.
         const { offers } = renderOverlay();
         const first = offers[0]!;
+        fireEvent.press(screen.getByTestId(`combat-reward-${first.cardId}`));
         fireEvent.press(screen.getByTestId(`combat-reward-${first.cardId}`));
         expect(screen.getByTestId('combat-reward-preview')).toBeTruthy();
         const tags = screen.getAllByTestId('combat-card-face-rarity');

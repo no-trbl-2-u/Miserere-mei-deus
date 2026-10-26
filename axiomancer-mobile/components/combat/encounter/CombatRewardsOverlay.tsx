@@ -5,9 +5,11 @@
  *  1. REAL CARD FACES. The tiles render `CombatCardFace` off a real
  *     `CombatCardVM` — byte-identical to the face the card will
  *     show in hand. A card you are committing to for the rest of the run must
- *     be readable BEFORE you commit, so tapping a tile opens a full inspect
- *     (the hazard `RewardsOverlay`'s `hazard-card-preview` pattern): the large
- *     face, its keyword definitions, and the flavor.
+ *     be readable BEFORE you commit, so a second tap on the selected tile
+ *     opens a full inspect (the hazard `RewardsOverlay`'s
+ *     `hazard-card-preview` pattern): the large face, its keyword
+ *     definitions, and the flavor. The first tap only selects, so taking a
+ *     card is two taps: the tile, then TAKE CARD (Phase TQ1).
  *
  *  2. SKIP IS A CHOICE, not an escape hatch. It carries its own line — a lean
  *     deck draws its good cards more often — and is styled as a peer of TAKE,
@@ -40,6 +42,8 @@ import {
     ELITE_REWARD_SUB,
     ELITE_UPGRADE_BACK_LABEL,
     ELITE_UPGRADE_OPEN_LABEL,
+    SPOILS_SUB,
+    SPOILS_TILE_HINT,
     eliteUpgradeNote,
 } from '@/state/presenters/combat-reward.copy';
 // The ONE mobile source for the rarity band: the draft frame and the face's
@@ -100,7 +104,7 @@ export function CombatRewardsOverlay({
             <View style={[styles.panel, { borderColor: AXM.sulfur }]}>
                 <Text style={styles.eyebrow}>✦ SPOILS</Text>
                 <Text style={styles.title}>Add a card to your deck</Text>
-                <Text style={styles.sub}>{upgradeRow ? ELITE_REWARD_SUB : 'your deck grows as you fight — choose a card to read it'}</Text>
+                <Text style={styles.sub}>{upgradeRow ? ELITE_REWARD_SUB : SPOILS_SUB}</Text>
 
                 <View style={styles.offerRow}>
                     {offers.map((card) => {
@@ -113,11 +117,12 @@ export function CombatRewardsOverlay({
                         return (
                             <Pressable
                                 key={card.cardId}
-                                onPress={() => setPreview(card.cardId)}
+                                // First tap selects; a tap on the selected tile reads it.
+                                onPress={() => (on ? setPreview(card.cardId) : setPicked(card.cardId))}
                                 testID={`combat-reward-${card.cardId}`}
                                 accessibilityRole="button"
                                 accessibilityState={{ selected: on }}
-                                accessibilityLabel={`${card.name}, ${RARITY_LABEL[band]}, ${card.stance} card. ${card.detail.outcomeLine}. Tap to read it in full${on ? ', selected' : ''}`}
+                                accessibilityLabel={`${card.name}, ${RARITY_LABEL[band]}, ${card.stance} card. ${card.detail.outcomeLine}. ${SPOILS_TILE_HINT}${on ? ', selected' : ''}`}
                                 style={[
                                     styles.offerFrame,
                                     {

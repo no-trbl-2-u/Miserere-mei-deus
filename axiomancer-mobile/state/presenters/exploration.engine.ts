@@ -10,13 +10,14 @@
  */
 
 import type { GameStore, MapEventKind } from '@mechanics';
-import { getMapDefinition, getNodePrimaryEventKind, getNodeEventPool, legalMovesFrom, forwardEdges } from '@mechanics';
+import { getMapDefinition, getNodePrimaryEventKind, getNodeEventPool, legalMovesFrom, forwardEdges, ANVIL_VERB_PRICING } from '@mechanics';
 
 import { readCurrentNodeId } from '../actions';
 import { getMapLayout } from '@/state/exploration-maps';
 import type { MapSheet } from '@/state/exploration-maps';
 import { FALLBACK_SHEET, LEGACY_SHEET_SIZE } from '@/state/exploration-maps/sheet';
 import { freezeViewModel } from './freeze';
+import { anvilShortLine, nodePurseLine } from './node-confirm.copy';
 
 export type NodeKind = 'completed' | 'current' | 'available' | 'locked';
 export type NodeType =
@@ -96,6 +97,23 @@ export interface ExplorationOption {
     description: string;
     /** Distance indicator for the step-card right column. */
     leagues: LeagueBucket;
+    /** The player's shillings, for the node kinds that can charge them (rest,
+     *  the anvil, the village); null elsewhere. */
+    purse: number | null;
+    /** The anvil's cheapest work in shillings (`ANVIL_VERB_PRICING.hone`);
+     *  null on every other kind. */
+    cheapestWork: number | null;
+}
+
+/** The node kinds whose confirm panel shows the purse: the ones that can charge. */
+const PURSE_NODE_TYPES: ReadonlySet<NodeType> = new Set<NodeType>(['rest', 'blacksmith', 'village']);
+
+/** An option's purse fields for a node of `type`, given the player's shillings. */
+export function purseFieldsFor(type: NodeType, currency: number): Pick<ExplorationOption, 'purse' | 'cheapestWork'> {
+    return {
+        purse: PURSE_NODE_TYPES.has(type) ? currency : null,
+        cheapestWork: type === 'blacksmith' ? ANVIL_VERB_PRICING.hone : null,
+    };
 }
 
 export interface ExplorationViewModel {
@@ -376,6 +394,7 @@ function buildOptions(
     reachable: readonly string[],
     currentNodeId: string,
     sheet: MapSheet,
+    currency: number,
 ): ExplorationOption[] {
     // Leagues are calibrated on `LEGACY_SHEET_SIZE`. Measure in rendered
     // device px, then express that in its units, so the same on-screen hop
@@ -397,8 +416,23 @@ function buildOptions(
                 type: n.type,
                 description: n.description,
                 leagues: leaguesFromDistance(distance),
+                ...purseFieldsFor(n.type, currency),
             };
         });
+}
+
+/**
+ * The selected option's purse line for the node panel, or null when the
+ * node's kind charges nothing. `short` is set only at the anvil, when the
+ * purse is below its cheapest work.
+ */
+export function nodePurseLines(option: ExplorationOption): { purse: string; short: string | null } | null {
+    if (option.purse === null) return null;
+    const short =
+        option.cheapestWork !== null && option.purse < option.cheapestWork
+            ? anvilShortLine(option.cheapestWork)
+            : null;
+    return { purse: nodePurseLine(option.purse), short };
 }
 
 function buildActions(options: readonly ExplorationOption[]): ExplorationAction[] {
@@ -486,13 +520,22 @@ const FALLBACK_VM: ExplorationViewModel = {
 // The other presenters dodge this by returning frozen singletons; this one
 // builds a fresh frozen VM, so we cache it against the immutable `world`
 // reference (Zustand replaces it only when the world actually changes).
+// The purse on the node options is the one read outside `world`, so the
+// shilling count is part of the key.
 let _expWorldRef: unknown;
+let _expCurrency: number | undefined;
 let _expVm: ExplorationViewModel | null = null;
 
+function readCurrency(state: GameStore): number {
+    return Number(state.player?.currency ?? 0);
+}
+
 export function selectExplorationViewModel(state: GameStore): ExplorationViewModel {
-    if (state.world === _expWorldRef && _expVm !== null) return _expVm;
+    const currency = readCurrency(state);
+    if (state.world === _expWorldRef && currency === _expCurrency && _expVm !== null) return _expVm;
     const vm = computeExplorationViewModel(state);
     _expWorldRef = state.world;
+    _expCurrency = currency;
     _expVm = vm;
     return vm;
 }
@@ -625,7 +668,7 @@ function computeExplorationViewModel(state: GameStore): ExplorationViewModel {
         && !consumedNodes.includes(currentNodeId)
         && getNodeEventPool(continent, mapName, currentNodeId) !== undefined;
 
-    const options = buildOptions(metaById, orderById, reachable, currentNodeId, layout.sheet);
+    const options = buildOptions(metaById, orderById, reachable, currentNodeId, layout.sheet, readCurrency(state));
     const actions = buildActions(options);
     const edges = buildEdges(def.nodes, forward, spent, locked);
 
