@@ -16,6 +16,7 @@ import { useRouter } from '@/lib/platform/router';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 import { ScreenBg } from '@/components/ScreenBg';
+import { CombatCardFace } from '@/components/combat/encounter/CombatBoard';
 import { mapBackdropFor } from '@/state/exploration-maps';
 import { useGameActions, useGameState } from '@/state/GameStoreProvider';
 import {
@@ -35,19 +36,33 @@ import {
 import { FONTS, TYPE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
+/** The card offer's face, the combat reward tile's size. */
+export const CACHE_OFFER_CARD_W = 100;
+export const CACHE_OFFER_CARD_H = 147;
+
 function OfferCard({ offer, onPress }: { offer: CacheChoiceOfferVM; onPress: () => void }) {
     const styles = useStyles();
+    const label = offer.card
+        ? `${offer.label}: ${offer.card.name}. ${offer.card.detail.outcomeLine}. ${offer.desc}`
+        : `${offer.label}. ${offer.desc}`;
     return (
         <View style={styles.offerCol}>
             <TouchableOpacity
                 accessibilityRole="button"
-                accessibilityLabel={`${offer.label}. ${offer.desc}`}
+                accessibilityLabel={label}
                 onPress={onPress}
-                style={styles.offerButton}
+                style={[styles.offerButton, offer.card ? styles.offerButtonWithCard : null]}
                 testID={`cache-choice-offer-${offer.id}`}
             >
-                <Text style={styles.offerLabel}>{offer.label}</Text>
-                <Text style={styles.offerDesc}>{offer.desc}</Text>
+                {offer.card ? (
+                    <View testID={`cache-choice-card-face-${offer.card.cardId}`}>
+                        <CombatCardFace card={offer.card} width={CACHE_OFFER_CARD_W} height={CACHE_OFFER_CARD_H} />
+                    </View>
+                ) : null}
+                <View style={styles.offerText}>
+                    <Text style={styles.offerLabel}>{offer.label}</Text>
+                    <Text style={styles.offerDesc}>{offer.desc}</Text>
+                </View>
             </TouchableOpacity>
         </View>
     );
@@ -57,8 +72,9 @@ export default function CacheScreen() {
     const styles = useStyles();
     const AXM = usePalette();
     const slice = useGameState((s) => s.cache);
+    const stats = useGameState((s) => s.player?.baseStats);
     const regionPlate = useGameState((s) => mapBackdropFor(s.world?.currentMap?.name));
-    const vm = useMemo(() => selectCacheVM({ cache: slice }), [slice]);
+    const vm = useMemo(() => selectCacheVM({ cache: slice }, stats), [slice, stats]);
     const actions = useGameActions();
     const router = useRouter();
 
@@ -172,6 +188,10 @@ const useStyles = makeStyles((AXM) => ({
         padding: 10,
         backgroundColor: AXM.bg,
     },
+    // The card offer prints its face beside the label, so the pick is seen before it is made.
+    // The top pad keeps the face's free corner pill inside the frame.
+    offerButtonWithCard: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingTop: 16 },
+    offerText: { flexShrink: 1 },
     offerLabel: { fontFamily: FONTS.gothic, fontSize: 17, letterSpacing: 1.2, color: AXM.sulfur },
     offerDesc: {
         fontFamily: FONTS.mono,

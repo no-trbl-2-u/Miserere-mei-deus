@@ -1,10 +1,16 @@
 {
-  "cli": { "version": ">= 16.0.0" },
+  "cli": { "version": ">= 16.0.0", "appVersionSource": "remote" },
   "build": {
     "preview": {
       "android": {
         "buildType": "apk",
         "distribution": "internal"
+      }
+    },
+    "beta": {
+      "ios": {
+        "distribution": "store",
+        "autoIncrement": "buildNumber"
       }
     },
     "production": {
@@ -16,6 +22,13 @@
         "distribution": "store",
         "autoIncrement": "versionCode",
         "buildType": "app-bundle"
+      }
+    }
+  },
+  "submit": {
+    "beta": {
+      "ios": {
+        "ascAppId": "IO1B_FILLS_THE_APP_STORE_CONNECT_APP_ID"
       }
     }
   }
