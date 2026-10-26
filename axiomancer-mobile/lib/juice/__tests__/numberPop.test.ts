@@ -12,4 +12,12 @@ describe('numberPopTimeline', () => {
         const t = numberPopTimeline();
         expect(t.fadeDelayMs + t.fadeDurationMs).toBeLessThanOrEqual(t.riseDurationMs);
     });
+
+    it('holds a full read: opaque at least 700 ms, about 1.6 s in all (phase BC1, A9)', () => {
+        const t = numberPopTimeline();
+        expect(t.fadeDelayMs).toBeGreaterThanOrEqual(700);
+        expect(t.fadeDurationMs).toBe(900);
+        expect(t.riseDurationMs).toBe(1600);
+        expect(t.fadeDelayMs + t.fadeDurationMs).toBe(t.riseDurationMs);
+    });
 });

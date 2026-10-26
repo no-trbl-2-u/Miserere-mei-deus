@@ -1913,6 +1913,8 @@ export function getEnemyIncomingDamageMultiplier(state: CombatEncounterState): n
  */
 export function projectIncomingThreat(state: CombatEncounterState): {
     rawDamage: number; projectedDamage: number; willDeny: boolean; guard: number; barrier: number; netDamage: number;
+    /** What BLIZZARD takes off this phase's hits, as the engine applies it (0 with none or a denied turn). */
+    blizzardCut: number;
 } {
     const idx = Math.min(state.currentPhaseIndex, state.threatPhases.length - 1);
     const phase = state.threatPhases[idx];
@@ -1928,6 +1930,8 @@ export function projectIncomingThreat(state: CombatEncounterState): {
     const playerTakenMult = getDamageTakenMultiplier(state.player);
 
     const blizzard = state.program?.el?.blizzard ?? 0;
+    const blizzardCut = willDeny || blizzard <= 0 ? 0
+        : threatHits(state).reduce((sum, h) => sum + Math.min(h, blizzard), 0);
     const projectedDamage = willDeny ? 0 : blizzard > 0
         // BLIZZARD takes n off each hit, as the engine applies it.
         ? threatHits(state).reduce((sum, h) => sum + Math.max(0, h - blizzard), 0)
@@ -1944,7 +1948,7 @@ export function projectIncomingThreat(state: CombatEncounterState): {
     remaining = soakFlatHit(remaining, { guard, barrier }).dealt;
 
     return {
-        rawDamage, projectedDamage, willDeny, guard, barrier, netDamage: remaining,
+        rawDamage, projectedDamage, willDeny, guard, barrier, netDamage: remaining, blizzardCut,
     };
 }
 

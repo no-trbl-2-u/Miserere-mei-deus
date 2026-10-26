@@ -52,7 +52,9 @@ export const JUICE_TIMING: JuiceTiming = {
     shake: { amplitudePx: { low: 3, medium: 6, high: 10 }, stepMs: 45, steps: 4 },
     flash: { inMs: 90, outMs: 260, peakOpacity: 0.4 },
     pulse: { peakScale: 1.12, inMs: 90, outMs: 220 },
-    numberPop: { riseDistancePx: 34, fadeDelayMs: 120, fadeDurationMs: 760, riseDurationMs: 880 },
+    // A full read: opaque for 700 ms, then fading over 900 ms while it rises
+    // over the whole 1.6 s. Every combat float shares it, so they keep one tempo.
+    numberPop: { riseDistancePx: 40, fadeDelayMs: 700, fadeDurationMs: 900, riseDurationMs: 1600 },
     idle: {
         breathMs: { light: 1500, heavy: 2600 },
         breathScale: { light: 1.014, heavy: 1.032 },

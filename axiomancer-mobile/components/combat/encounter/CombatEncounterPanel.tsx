@@ -80,8 +80,8 @@ const DIE_GHOST_SIZE = 49;
 const DIE_GHOST_FOOT = combatDieFootprint(DIE_GHOST_SIZE);
 
 /** How long an END-phase press locks the button + staging while the
- *  threat resolves and its fx timeline plays out (IMPACT 100ms + the longest
- *  resolution animation ~880ms in CombatCombatantPane, with headroom). The lock
+ *  threat resolves and its hit lands (IMPACT 100ms + the hit reaction, with
+ *  headroom; the ~1.6 s number floats outlive it and block nothing). The lock
  *  exists only to swallow machine-gun double-taps; a legitimately new end-phase
  *  after the state has fully advanced is always ~1s away. */
 const RESOLVE_LOCK_MS = 1100;
