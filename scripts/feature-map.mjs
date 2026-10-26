@@ -125,7 +125,7 @@ export function inventory(root = ROOT) {
 
 // ─── Parsing ──────────────────────────────────────────────────────────────────
 
-function makeParser(root) {
+export function makeParser(root) {
   const cache = new Map()
   return function parse(rel) {
     if (cache.has(rel)) return cache.get(rel)
@@ -178,7 +178,7 @@ function importedNames(node) {
 }
 
 /** Resolves a local module specifier to the repo-relative code files it can load (platform variants included). */
-function makeResolver(root) {
+export function makeResolver(root) {
   const exists = (rel) => {
     try { return fs.statSync(path.join(root, rel)).isFile() } catch { return false }
   }

@@ -6,6 +6,7 @@ Each kind starts its own session slice in `state/actions.ts` (`resolveCurrentMap
 
 ## 2. Enter it directly
 
+- `/dev` sections start closed; `dev-section-<key>-toggle` opens one (the launchers below sit under MINIGAMES & REWARDS, `dev-section-rewards-toggle`, and the quick triggers under ENCOUNTERS, `dev-section-encounters-toggle`).
 - Rest: `/exploration?fixture=apprentice-bw-rest` (`arrive` → `/rest`); `broke-l1-bw-rest` (0 shillings, 1 vitae, on bw-9, no `arrive` — the empty-wallet case). `/dev`: `debug-rest-button` (camp), `debug-rest-inn-button`, `debug-trigger-encounter-rest`. Seed: `__AXM_MINIGAME_SEEDS__.rest.seed` / `__AXM_REST_SEED__` (default 515151).
 - Loot cache: `/exploration?fixture=apprentice-bw-cache` (`arrive` → `/cache`). `/dev`: `debug-cache-button` (modest), `debug-cache-rich-button`, `debug-trigger-encounter-treasure`. Seed: `__AXM_MINIGAME_SEEDS__.cache.seed` / `__AXM_CACHE_SEED__` (default 626262).
 - Blacksmith: `/exploration?fixture=wanderer-bw-blacksmith` (`arrive` → `/blacksmith`, 180 shillings — the real-wallet case). `/dev`: `debug-anvil-budget-button` (the same witness variant on a fixed ×500 budget; `debug-blacksmith-button` was cut on 2026-10-16 as its strict subset). Seed: `__AXM_MINIGAME_SEEDS__.blacksmith.seed` / `__AXM_BLACKSMITH_SEED__`.
@@ -20,6 +21,7 @@ Each kind starts its own session slice in `state/actions.ts` (`resolveCurrentMap
 | `rest-choice-offers` / `rest-choice-intro` / `rest-choice-intro-one-way` | Offer list and intro copy |
 | `rest-choice-offer-<id>` / `rest-choice-offer-<id>-reason` | One offer; disabled ones state why (e.g. deck at floor of 12) |
 | `rest-cut-sheet` / `rest-cut-price` / `rest-cut-card-<key>` | THE CUT: pick a card to remove |
+| `card-upgrade-row-<cardId>` / `card-upgrade-preview` / `card-upgrade-confirm` | The upgrade sheet (`components/upgrade/CardUpgradePicker.tsx`, opened by the rest site's upgrade offer and by the blacksmith): a row only previews the card before and after; UPGRADE IT commits it |
 | `rest-outcome` / `rest-claim` | Outcome card; CLAIM returns to the map |
 | `cache-inactive` | `/cache` with no session |
 | `cache-choice-offers` / `cache-choice-intro` / `cache-choice-intro-one-way` | Offer list |
@@ -40,7 +42,7 @@ Each kind starts its own session slice in `state/actions.ts` (`resolveCurrentMap
 
 ## 4. A correct play, step by step
 
-- Rest: on `rest-choice-offers` tap an enabled `rest-choice-offer-<id>` (if you chose THE CUT, pick a `rest-cut-card-<key>`); `rest-outcome` → `rest-claim`. A new game hands over no relic, so no `/item-reward` stacks on the start rest; a relic reward elsewhere still opens `/item-reward` over the map — `item-reward-equip` or `item-reward-confirm` to reach it.
+- Rest: on `rest-choice-offers` tap an enabled `rest-choice-offer-<id>` (if you chose THE CUT, pick a `rest-cut-card-<key>`; if you chose the upgrade, press a `card-upgrade-row-<cardId>` to preview it, then `card-upgrade-confirm`); `rest-outcome` → `rest-claim`. A new game hands over no relic, so no `/item-reward` stacks on the start rest; a relic reward elsewhere still opens `/item-reward` over the map — `item-reward-equip` or `item-reward-confirm` to reach it.
 - Cache: tap a `cache-choice-offer-<id>`; `cache-outcome` → `cache-claim`.
 - Blacksmith: `blacksmith-begin`; tap one enabled `blacksmith-offer-<id>` (watch `blacksmith-budget`); if `blacksmith-card` appears, `blacksmith-continue`; `blacksmith-leave`; `blacksmith-outcome` → `blacksmith-claim`.
 - Gathering: on `/event` read the card, tap an `event-choice-<id>` if any, else `event-skip`.
@@ -49,6 +51,7 @@ Each kind starts its own session slice in `state/actions.ts` (`resolveCurrentMap
 
 - A greyed offer is `disabled` + `aria-disabled` with its reason in `*-reason` (rest's THE CUT at the 12-card floor; blacksmith offers over budget or with nothing to hone). Pick another.
 - `*-inactive` for a frame after CLAIM while the gate pops the route is normal.
+- The upgrade sheet with no confirm button: no row is picked yet; `card-upgrade-confirm` appears with the preview once you press a `card-upgrade-row-<cardId>`.
 - One-way note (`*-intro-one-way`): there is no back button by design; the only exits are an offer or (blacksmith) `blacksmith-abandon`.
 - Blacksmith `blacksmith-card` interlude blocks the forge until `blacksmith-continue`.
 - `/event` for gathering has no choices on many cards — `event-skip` is the correct exit, not a bug.
