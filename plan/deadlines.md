@@ -164,7 +164,7 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - AD1b — plotted 2026-10-21 (#716) without a deadline line; date not set.
 - EQ1a — a live defect T hit on device; loop work, needs no time from T; date not set.
 - EQ1b — loop work, needs no time from T; date not set.
-- SG1 — a live defect T reported in session (the starting ring's signature never fires); loop work, needs no time from T; date not set.
+- SG1 — a live defect T reported in session (signatures missing from the board: no starting ring any more, every relic grant worn, unworn relics flagged); loop work, needs no time from T; date not set.
 - FM1a — loop work, needs no time from T beyond confirming the pitch rule; date not set.
 - FM1b — loop work, needs no time from T beyond confirming the pitch rule; date not set.
 - FM1c — loop work, needs no time from T beyond confirming the pitch rule; date not set.
@@ -213,6 +213,10 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - BE2e — loop work; follows BE2a and BE2b; date not set.
 - BE2f — loop work; follows BE2a; date not set.
 - BE2g — attended; T's check on a preview APK once BE2c-BE2f ship; date not set.
+- IO1a — loop work; config and the runbook for iPhone beta builds; date not set.
+- IO1b — attended; waits on T enrolling in the Apple Developer Program; date not set.
+- IO1c — loop work; follows IO1a; date not set.
+- IO1d — attended; T and a friend install the first iPhone builds once IO1b and IO1c ship; date not set.
 - BV1a — loop work, slotted asap (T); waits on BE2a; blocks no window's goal; date not set.
 - BV1b — loop work; follows BV1a; date not set.
 - BV1c — attended; T creates the ballot Pages project and submits the first verdict from the phone; date not set.
@@ -252,6 +256,7 @@ attended session.
 ## Change log
 
 - **2026-10-25** — **lane relics plotted** (T in session, plot run unattended, `/plot`, slotted after SG1 and BC1). **Added** Unscheduled lines for LR1a-LR1e: T set no date, and LR1b is attended, so its date is T's to pick. **Edited** the W5 Item "Relic pass session" (B1) and the W5 notes: its premise narrowed, since the five lane relics and their sources are now LR1's; B1 keeps the starting ring, the signatures and the rest of the pass. **Ticked** nothing.
+- **2026-10-25** — **the signature trigger re-plotted** (T in session after #921 merged, plot rework run unattended). **Edited** SG1's Unscheduled line to the new scope (no starting ring, every relic grant worn, unworn relics flagged); T set no date. **Edited** no Item: W5's "Relic pass session" (B1) still holds and gains the ring as an unsourced relic for T's later lane; W4's enemy revamp (B2) no longer meets a befriendable Float-Eye, since that call is cut. Nothing ticked; no date moved.
 - **2026-10-25** — **the signature trigger plotted** (T in session, plot run unattended, `/plot asap`). **Added** an Unscheduled line for SG1: T set no date, and the fix blocks no window's goal. **Edited** no Item: the W4 "Enemy revamp session and the Act Boss" (B2) still holds, since SG1 only gives Float-Eye befriend terms and the revamp may redo the roster; the W5 "Relic pass session" (B1) still holds, since SG1 authors no relic. Nothing ticked; no date moved.
 - **2026-10-25** — **the board cues plotted** (T in conversation, plot run unattended, `/plot`). **Added** an Unscheduled line for BC1: T set no date and board legibility blocks no window's goal. **Edited** no Item: no open Item's premise rests on the self-burn, BLIZZARD or dead-tray cues. Nothing ticked; no date moved.
 - **2026-10-25** — **the reward rule plotted** (T, in conversation, `/plot` run unattended). **Added** Unscheduled lines for RW1a-RW1b: T set no date, and the rows block no window's goal. **Edited** no Item: the W5 "Relic pass session" (B1) still holds, since RW1 makes lane relics work but authors none, and the W3 four-region walk already covers the loot cache. Nothing ticked; no date moved.
@@ -272,6 +277,7 @@ attended session.
 - **2026-10-24** — **ballot colours plotted** (T, attended session, `/plot`). **Added** an Unscheduled line for BV3: no date set, and it blocks no window's goal. **Edited** no Item. Nothing ticked; no date moved.
 - **2026-10-23** — **ballot Save plotted** (T, attended session, `/plot asap`). **Added** Unscheduled lines for BV2a-BV2b: T set no date, and the rows block no window's goal. **Edited** no Item. Nothing ticked; no date moved.
 - **2026-10-23** — **ballots on the phone plotted** (T, attended session, `/plot asap`). **Added** Unscheduled lines for BV1a-BV1c: T set no date, and the rows block no window's goal (card lanes are v0.3 stretch). **Edited** no Item: no open Item's premise depends on the ballot site. BE2a moved up the build plan's Status block (BV1a requires it); its Unscheduled line stands. Nothing ticked; no date moved.
+- **2026-10-22** — **iPhone beta builds plotted** (T, attended session, `/plot`). **Added** Unscheduled lines for IO1a-IO1d: T set no date, and the rows block no window's goal. **Edited** no Item: none in the open windows rests on iOS builds. **Ticked** nothing.
 - **2026-10-22** — **modular feature map plotted** (T, attended session, `/plot anytime`). **Added** Unscheduled lines for FM2a-FM2d: T set no date and the rows serve no window's goal. **Edited** no Item: the FM1 map they extend has shipped and no open Item depends on it.
 - **2026-10-22** — **card and combat logging plotted** (T, attended session, `/plot`). **Added** Unscheduled lines for BE2a-BE2g: T set no date and the rows block no window's goal. **Edited** no Item: no open Item's premise depends on the play log. Nothing ticked; no date moved.
 - **2026-10-21** — **cost-card puzzles plotted** (T, attended session, `/plot asap`). **Added** three W1 Items for HP5a-HP5d (five hazard cost cards and their board display, the twenty easy and medium candidates deleted, twenty cost-card puzzles). **Edited** the W1 demo Item: T's thirty are now HP4c's ten hard plus HP5d's twenty, and HP4e requires HP5d. Nothing ticked; no date moved.
