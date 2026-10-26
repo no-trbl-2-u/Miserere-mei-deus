@@ -3,7 +3,7 @@ import { View, Text, Pressable } from 'react-native';
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { ActionIcon } from '@/components/ActionIcon';
-import { ACTION_ICON_BY_TYPE, NODE_KIND_LABEL, type ExplorationOption } from '@/state/presenters/exploration.engine';
+import { ACTION_ICON_BY_TYPE, NODE_KIND_LABEL, nodePurseLines, type ExplorationOption } from '@/state/presenters/exploration.engine';
 
 interface NodeConfirmPanelProps {
     /** The node the player has selected, or null when nothing is selected. */
@@ -18,7 +18,9 @@ interface NodeConfirmPanelProps {
  * Bottom panel for the exploration screen: instead of listing every neighbour,
  * the player taps a node on the map to SELECT it; this panel names the chosen
  * node, briefly explains what it is, and offers a Confirm button to travel
- * there. Confirm commits the move; Cancel clears the selection.
+ * there. Confirm commits the move; Cancel clears the selection. At a node
+ * that can charge shillings it prints the purse, so the player reads it
+ * before the walk rather than inside.
  */
 export function NodeConfirmPanel({ selected, onConfirm, onCancel, emptyMessage }: NodeConfirmPanelProps) {
     const styles = useStyles();
@@ -34,6 +36,7 @@ export function NodeConfirmPanel({ selected, onConfirm, onCancel, emptyMessage }
 
     const kindLabel = NODE_KIND_LABEL[selected.type];
     const iconKey = ACTION_ICON_BY_TYPE[selected.type] ?? 'sword';
+    const purse = nodePurseLines(selected);
 
     return (
         <View style={styles.panel} testID="node-confirm-panel">
@@ -46,6 +49,14 @@ export function NodeConfirmPanel({ selected, onConfirm, onCancel, emptyMessage }
                     <Text style={styles.name} numberOfLines={1}>{selected.label}</Text>
                     {selected.description.length > 0 && (
                         <Text style={styles.blurb} numberOfLines={2}>{selected.description}</Text>
+                    )}
+                    {purse !== null && (
+                        <Text style={styles.purse} testID="node-confirm-purse">
+                            {purse.purse}
+                            {purse.short !== null && (
+                                <Text style={styles.purseShort} testID="node-confirm-purse-short">{purse.short}</Text>
+                            )}
+                        </Text>
                     )}
                 </View>
             </View>
@@ -117,6 +128,16 @@ const useStyles = makeStyles((AXM) => ({
         fontSize: 12,
         color: AXM.bone,
         marginTop: 2,
+    },
+    purse: {
+        fontFamily: FONTS.mono,
+        fontSize: 10,
+        letterSpacing: 1,
+        color: AXM.parchment,
+        marginTop: 4,
+    },
+    purseShort: {
+        color: AXM.blood,
     },
     actions: {
         flexDirection: 'row',

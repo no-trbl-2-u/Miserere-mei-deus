@@ -637,13 +637,14 @@ async function playSeed(browser, baseUrl, seed, mode) {
 
         if (mode === 'live') {
             // TAKE CARD, not skip. The reward draft's ACCEPT path (tap an offer
-            // tile → CHOOSE THIS → TAKE CARD) is a different code path from
+            // tile to select it → TAKE CARD, two taps since phase TQ1; a second
+            // tap on the tile would open the read panel instead) is a different code path from
             // SKIP — `claimCombatRewardAction` mutates the player and the panel
             // re-renders off the new state — and the old walk below never
             // reached it: `combat-reward-confirm` is disabled until a tile is
             // picked, so every prior run silently skipped. That hole shipped a
-            // real crash-on-accept. Tap the first offer tile first, so the
-            // walk's preview-select/confirm clicks land on a real pick.
+            // real crash-on-accept. Tap the first offer tile once, so the
+            // walk's confirm click lands on a real pick.
             const outcomeLine = (await page.getByTestId('combat-summary').innerText().catch(() => ''))
                 .split('\n')[0] || '(no summary yet)'
             log(`${tag} — outcome read: ${outcomeLine}`)
@@ -658,7 +659,7 @@ async function playSeed(browser, baseUrl, seed, mode) {
                 if (await has(tile)) {
                     await tile.click({ force: true, timeout: 3000 }).catch(() => {})
                     await page.waitForTimeout(350)
-                    await assertAlive(page, sink, `${tag}, opening a reward offer`)
+                    await assertAlive(page, sink, `${tag}, selecting a reward offer`)
                 }
             }
             // Walk whichever aftermath panel the outcome produced, in the order
@@ -671,7 +672,6 @@ async function playSeed(browser, baseUrl, seed, mode) {
                 'combat-victory-panel-carry-on',
                 'combat-defeat-panel-begin-again',
                 'combat-friendship-panel-part-as-friends',
-                'combat-reward-preview-select',
                 'combat-reward-confirm',
                 'combat-reward-skip',
             ]
