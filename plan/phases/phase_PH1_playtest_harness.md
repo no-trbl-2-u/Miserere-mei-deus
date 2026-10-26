@@ -195,7 +195,7 @@ lines.
   shared one. The Playwright MCP server stays in `.mcp.json` for an attended main session's own use.
 - **The agent gets `Bash`, restricted in its hard rules and by the A5 test to `playtest-session.mjs`.** The agent
   cannot run its own Playwright without a process. The frontmatter `tools` list takes tool names, so the narrower
-  limit is written as a rule. `[T to confirm]`
+  limit is written as a rule. Accepted at merge (default).
 - **The unattended `/critique` path keeps `critique:drive`.** This phase changes the attended path only.
 - **The guide fixes are documentation, a loop surface under D88.** They change no game copy.
 - **"Tap to <verb>" is checked as "the element carrying the id has an `onPress`".** Asking for the exact verb would
