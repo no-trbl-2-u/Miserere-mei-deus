@@ -47,7 +47,7 @@ reached by path, never `npm --workspace` — see "The art department" below.
   trade-off; lead with prose; every question states its defer path;
   answers are policy — file them durably and never re-ask. Autonomous
   loop skills never ask at all — `AskUserQuestion` is reserved for
-  `/oversight` there, and for `/plot`, `/messy` and `/vault` with T
+  `/oversight` there, and for `/plot`, `/messy`, `/vault` and `/lane-creator` with T
   present (standing rule 6 below); they decide, document
   the call, and file load-bearing calls as `[loop-call]` residue for T to
   audit afterwards (THE OPEN GATE retired `[needs-user-call]`).
@@ -101,7 +101,8 @@ writes a new one. The playtest matrix stays as
 
 Live, at the repo root:
 - `.claude/commands/` — the loop verbs' doorways, plus T's attended `/vault`
-  session (`docs/vault.md`, phase OV1b). No domain command is live: `combat-tuning`, `legacy-combat-tuning`, `playtest`,
+  session (`docs/vault.md`, phase OV1b) and `/lane-creator`, which runs the
+  lane-creator v1 flow with T for one card family (`docs/lane-creator.md`, D102). No domain command is live: `combat-tuning`, `legacy-combat-tuning`, `playtest`,
   `resolve-playtest` and `bump-engine` were trimmed earlier, the eight
   tuning/playtest commands above went in trim T5 (D10), and `combat-playtest`
   was archived in R0 (Phase R12 rebuilds it).
@@ -337,7 +338,7 @@ them; update here first.
    same-root-cause iterations, then leave it to `pr-autofix`). Red on
    `main` is `ci-autofix`'s.
 6. **`AskUserQuestion` only in `/oversight`, and in `/plot`, `/messy` or
-   `/vault` when T is present.** Every other skill decides, documents the call in
+   `/vault` or `/lane-creator` when T is present.** Every other skill decides, documents the call in
    the commit body or PR, and ships. Since
    THE OPEN GATE (T direct, 2026-08-28 — see `plan/bearings.md`)
    there are no owner-blocked decisions: the loop answers every open

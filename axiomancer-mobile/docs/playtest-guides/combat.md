@@ -57,7 +57,7 @@ An encounter node resolves to a `combat-prelude` event. `<CombatGate>` (`compone
 4. Press `combat-apply-<uid>`. Repeat 2–4 while dice remain, or discard via `combat-trash`.
 5. Press `combat-end-phase`; the enemy acts (its lunge plays and the damage floats rise), the tray re-rolls.
 6. Repeat until the foe breaks. Answer `combat-mercy-spare`/`-exploit` if asked.
-7. Pick a reward (`combat-reward-<cardId>` → `combat-reward-confirm`) or `combat-reward-skip`; press `combat-summary-close`. The route leaves at once and you are back on the map; no seal or carry-on panel follows.
+7. Pick a reward: one tap on `combat-reward-<cardId>` selects it, then `combat-reward-confirm` takes it (a second tap on the selected tile opens `combat-reward-preview` to read it in full; its `combat-reward-preview-select` keeps the pick and closes); or `combat-reward-skip`; press `combat-summary-close`. The route leaves at once and you are back on the map; no seal or carry-on panel follows.
 
 ## 5. Looks stuck but isn't
 
