@@ -66,6 +66,13 @@ export interface InventoryItemRow {
      */
     rarity?: 'common' | 'uncommon' | 'rare' | 'unique' | null;
     equipped: boolean;
+    /**
+     * The row's worn badge: `WORN` on a worn piece, `NOT WORN` on a relic
+     * carried unworn (its signature is off), `null` otherwise.
+     */
+    wornLabel: string | null;
+    /** The row's quick-action label: `WEAR` for a relic, `EQUIP`, or `USE`. */
+    actionLabel: string;
     description: string;
     /** Whether the item can currently be used / equipped. */
     canUse: boolean;
@@ -318,6 +325,22 @@ function rarityFor(_item: Item): InventoryItemRow['rarity'] {
 
 /** The display name of the signature a signet relic grants, or `null` for
  *  non-relic items. */
+/** The satchel's worn-state copy. */
+export const WORN_LABEL = 'WORN';
+export const NOT_WORN_LABEL = 'NOT WORN';
+/** The verb that puts a relic on (T's word); other equipment keeps EQUIP. */
+export const WEAR_LABEL = 'WEAR';
+
+function wornLabelFor(item: Item, equipped: boolean): string | null {
+    if (equipped) return WORN_LABEL;
+    return isEquipment(item) && item.grantsSignature ? NOT_WORN_LABEL : null;
+}
+
+function actionLabelFor(item: Item): string {
+    if (!isEquipment(item)) return 'USE';
+    return item.grantsSignature ? WEAR_LABEL : 'EQUIP';
+}
+
 function grantsSignatureName(item: Item): string | null {
     if (!isEquipment(item) || !item.grantsSignature) return null;
     return getSignatureSkill(item.grantsSignature)?.name ?? null;
@@ -421,6 +444,8 @@ function buildRows(state: GameStore): InventoryItemRow[] {
             quantity: quantityFor(item),
             rarity: rarityFor(item),
             equipped,
+            wornLabel: wornLabelFor(item, equipped),
+            actionLabel: actionLabelFor(item),
             description: item.description,
             canUse: canUseFor(item),
             canDiscard: canDiscardFor(item),

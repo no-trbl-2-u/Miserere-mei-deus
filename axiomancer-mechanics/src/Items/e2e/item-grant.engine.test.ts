@@ -22,6 +22,7 @@ import { getRelicById, relicLibrary } from '../relic.library';
 import { FIXTURE_WEAPON, FIXTURE_ARMOR, FIXTURE_TRINKETS } from '../../Game/fixtures';
 import {
     grantItem,
+    grantWearingIfFree,
     qualifiesForItemRewardScreen,
     partitionGrantsForReward,
     displacedBy,
@@ -52,14 +53,17 @@ const armor2 = (): Equipment => clone({ ...FIXTURE_ARMOR, id: 'fixture-armor-2',
 const trinket = (i: 0 | 1 | 2): Equipment => clone(FIXTURE_TRINKETS[i]!);
 const [T1, T2, T3] = FIXTURE_TRINKETS.map(t => t.id) as [string, string, string];
 
-/** A seeded player: the Suppliant's Ring, worn. */
+/** A player given the Suppliant's Ring, worn and carried. */
 const seededPlayer = (): Character =>
-    createCharacter({
-        name: 'Grantee',
-        level: 3,
-        baseStats: { body: 3, mind: 3, heart: 3 },
-        seedStartingRelics: true,
-    });
+    grantItem(
+        createCharacter({
+            name: 'Grantee',
+            level: 3,
+            baseStats: { body: 3, mind: 3, heart: 3 },
+        }),
+        getRelicById(RING_ID)!,
+        { equip: true },
+    ).character;
 
 /** A bare player: nothing worn, nothing carried. */
 const barePlayer = (): Character =>
@@ -389,5 +393,44 @@ describe('qualifiesForItemRewardScreen — the D5 trigger (routes the intended i
         const { reward, inline } = partitionGrantsForReward(haul);
         expect(reward.map(i => i.id)).toEqual([RING_ID, FIXTURE_ARMOR.id]);
         expect(inline.map(i => i.id)).toEqual(['iron', 'elixir']);
+    });
+});
+
+describe('grantWearingIfFree — every dev relic grant wears while a position is free', () => {
+    const SIGNET_ID = 'relic-bleeding-signet';
+
+    it('wears each relic on a bare player', () => {
+        let player = barePlayer();
+        for (const relic of relicLibrary) {
+            const res = grantWearingIfFree(player, relic);
+            expect(res.equipped).toBe(true);
+            expect(res.displaced).toBeNull();
+            player = res.character;
+        }
+        expect(player.equipment.accessories.map(a => a.id)).toEqual([RING_ID, SIGNET_ID]);
+        expect(player.inventory.map(i => i.id)).toEqual([RING_ID, SIGNET_ID]);
+    });
+
+    it('carries the relic when the slot is full, and nothing worn moves', () => {
+        const full = loadoutOnlyPlayer([...FIXTURE_TRINKETS]);
+        const before = full.equipment.accessories.map(a => a.id);
+        const res = grantWearingIfFree(full, getRelicById(SIGNET_ID)!);
+        expect(res.equipped).toBe(false);
+        expect(res.outcome).toBe('inventory');
+        expect(res.character.equipment.accessories.map(a => a.id)).toEqual(before);
+        expect(res.character.inventory.map(i => i.id)).toContain(SIGNET_ID);
+    });
+
+    it('does not wear a second copy of a relic already worn', () => {
+        const player = seededPlayer();
+        const res = grantWearingIfFree(player, getRelicById(RING_ID)!);
+        expect(res.equipped).toBe(false);
+        expect(res.character.equipment.accessories.map(a => a.id)).toEqual([RING_ID]);
+    });
+
+    it('grants a consumable as a plain stacking grant', () => {
+        const res = grantWearingIfFree(barePlayer(), potion('elixir', 2));
+        expect(res.outcome).toBe('inventory');
+        expect(res.character.inventory.map(i => i.id)).toEqual(['elixir']);
     });
 });

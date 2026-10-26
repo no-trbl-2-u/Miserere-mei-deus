@@ -6,6 +6,9 @@ import { createEventEmitter } from '../../Game/events';
 import { nullAdapter } from '../../Game/persistence/null.adapter';
 import { cardLibrary } from '../../Cards/cards.library';
 import { consumableLibrary } from '../../Items/consumable.library';
+import { getSignaturesForLoadout } from '../../Items/relic.library';
+import { equipItem } from '../../Character/equipment.reducer';
+import { FIXTURE_TRINKETS } from '../../Game/fixtures';
 import {
     devSetLevel, devSetStats, devLearnCards,
     devGrantAllEquipment, devGrantAllConsumables, devGrantCurrency,
@@ -107,6 +110,26 @@ describe('devGrantAllEquipment', () => {
         const r = devGrantAllEquipment(store);
         expect(r.ok).toBe(true);
         expect(store.getState().player.inventory.length).toBeGreaterThan(0);
+    });
+
+    it('wears each relic while a position is free, so its signature reaches the fight', () => {
+        const store = freshStore();
+        devGrantAllEquipment(store);
+        const { player } = store.getState();
+        expect(player.equipment.accessories.map(a => a.id))
+            .toEqual(['relic-disarming-plea', 'relic-bleeding-signet']);
+        expect(getSignaturesForLoadout(player.equipment))
+            .toEqual(['sig-disarming-plea', 'sig-crimson-covenant']);
+    });
+
+    it('carries a relic when the row is full, and moves nothing worn', () => {
+        const store = freshStore();
+        const full = FIXTURE_TRINKETS.reduce((c, t) => equipItem(c, t), store.getState().player);
+        store.setState({ player: full });
+        devGrantAllEquipment(store);
+        const { player } = store.getState();
+        expect(player.equipment.accessories.map(a => a.id)).toEqual(FIXTURE_TRINKETS.map(t => t.id));
+        expect(player.inventory.map(i => i.id)).toEqual(['relic-disarming-plea', 'relic-bleeding-signet']);
     });
 });
 

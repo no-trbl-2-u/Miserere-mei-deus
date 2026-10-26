@@ -28,6 +28,7 @@ const mockConsumableModalVm: ItemModalViewModel = {
     effectDeltas: [],
     itemModifiers: [],
     replacingName: null,
+    notWornLine: null,
 };
 
 const mockEquipmentModalVm: ItemModalViewModel = {
@@ -47,6 +48,7 @@ const mockEquipmentModalVm: ItemModalViewModel = {
     effectDeltas: [],
     itemModifiers: [],
     replacingName: 'Rusty Dagger',
+    notWornLine: null,
 };
 
 const mockViewOnlyModalVm: ItemModalViewModel = {
@@ -61,6 +63,7 @@ const mockViewOnlyModalVm: ItemModalViewModel = {
     effectDeltas: [],
     itemModifiers: [],
     replacingName: null,
+    notWornLine: null,
 };
 
 function makeStore(): AppStore {

@@ -61,7 +61,11 @@ const applyPlayer = (overrides: StateFixturePlayer | undefined) => (state: GameS
             currency: current.currency,
             inventory: current.inventory,
             knownCards: current.knownCards,
-            seedStartingRelics: true,
+            equipment: [
+                ...(current.equipment.weapon ? [current.equipment.weapon] : []),
+                ...(current.equipment.armor ? [current.equipment.armor] : []),
+                ...current.equipment.accessories,
+            ],
         })
         : { ...current, name: overrides.name ?? current.name };
     const knownCards = dedupe([...rebuilt.knownCards, ...(overrides.knownCards ?? [])]);

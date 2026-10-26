@@ -5,7 +5,6 @@ import { calculateMaxHealth } from '../Utils';
 import { getRng } from '../Utils/rng';
 import { experienceForLevel } from './experience';
 import { equipItem, wornMaxHpBonus } from './equipment.reducer';
-import { cloneStartingRelics } from '../Items/relic.library';
 
 /**
  * Produce a stable character id drawn from `getRng()`. Seeded
@@ -45,16 +44,6 @@ export interface CreateCharacterOptions {
      * `Character` is already "post-equipment".
      */
     equipment?: Equipment[];
-    /**
-     * Seed the starting relics (`cloneStartingRelics`, the Suppliant's Ring),
-     * worn, so the character enters combat with the signature kit
-     * they grant (signatures derive from the worn loadout). Off by default so bare
-     * `createCharacter` fixtures keep their exact (relic-free) stats;
-     * `buildCharacterFromPreset` and the `Player` mock opt in (`createNewGameState`
-     * does not seed relics). Ignored when an explicit `equipment` list is
-     * passed (the caller is choosing the loadout).
-     */
-    seedStartingRelics?: boolean;
     effects?: ActiveEffect[];
     knownCards?: string[];
 }
@@ -66,19 +55,8 @@ export interface CreateCharacterOptions {
 export function createCharacter(options: CreateCharacterOptions): Character {
     const {
         id, name, level, baseStats, inventory = [], currency = 0, equipment = [], effects = [],
-        knownCards = [], seedStartingRelics = false,
+        knownCards = [],
     } = options;
-
-    // Opt-in and only when the caller hasn't chosen an explicit loadout.
-    const useRelics = seedStartingRelics && equipment.length === 0;
-    const wornPieces = useRelics ? cloneStartingRelics() : equipment;
-
-    // The worn relics live in inventory too, ahead of the caller's inventory,
-    // so the presenter's inventory-position worn convention (`wornPerSlot`)
-    // agrees with the engine `equipment` loadout combat reads.
-    const seededInventory: Item[] = useRelics
-        ? [...wornPieces, ...inventory]
-        : [...inventory];
 
     const maxHealth = calculateMaxHealth(level, baseStats);
 
@@ -91,7 +69,7 @@ export function createCharacter(options: CreateCharacterOptions): Character {
         health: maxHealth,
         maxHealth,
         baseStats,
-        inventory: seededInventory,
+        inventory: [...inventory],
         currency,
         equipment: emptyLoadout(),
         effects,
@@ -103,7 +81,7 @@ export function createCharacter(options: CreateCharacterOptions): Character {
     // canonical path (weapon/armor replace,
     // accessories fill the first 3 positions).
     let initialised = baseChar;
-    for (const piece of wornPieces) {
+    for (const piece of equipment) {
         initialised = equipItem(initialised, piece);
     }
     return initialised;
@@ -169,10 +147,6 @@ export function previewStatAllocation(
 
 export type { Character, BaseStats } from './types';
 export { equipItem, unequipItem, getEquippedItems } from './equipment.reducer';
-export {
-    grantFirstNodeRelic, withholdFirstNodeRelic, isFirstNodeRelicPending,
-    FIRST_NODE_RELIC_ID, FIRST_NODE_RELIC_FLAG,
-} from './first-node-grant';
 export { computeEquipDelta } from './equip-delta';
 export { experienceForLevel, experienceToNext, levelForExperience } from './experience';
 export type {

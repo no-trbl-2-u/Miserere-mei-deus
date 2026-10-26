@@ -12,7 +12,7 @@ import React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 import {
-    createCharacter, getConsumableById, getRelicById, FIRST_NODE_RELIC_ID, FIXTURE_ARMOR, FIXTURE_TRINKETS,
+    createCharacter, getConsumableById, getRelicById, FIXTURE_ARMOR, FIXTURE_TRINKETS,
     FIXTURE_WEAPON, SLOT_CAPACITY,
 } from '@mechanics';
 import type { Character, Equipment, GameState, Item } from '@mechanics';
@@ -38,7 +38,7 @@ function relic(id: string): Equipment {
 }
 
 /** A relic the seeded character is guaranteed NOT to be wearing: the ring. */
-const BENCHED_ACCESSORY = FIRST_NODE_RELIC_ID;
+const BENCHED_ACCESSORY = 'relic-disarming-plea';
 
 /** A second armor piece; its +max VITAE line earns it the screen under D5. */
 const SPARE_ARMOR: Equipment = { ...FIXTURE_ARMOR, id: 'fixture-armor-2' };

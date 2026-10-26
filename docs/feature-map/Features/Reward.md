@@ -2,7 +2,7 @@
 kind: "route"
 group: "world"
 reachable: "yes"
-driven: "yes"
+driven: "no"
 tested: "yes"
 needsPitch: "no"
 source: "axiomancer-mobile/app/item-reward/index.tsx"

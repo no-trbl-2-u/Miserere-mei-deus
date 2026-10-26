@@ -43,16 +43,15 @@ describe('buildCharacterFromPreset', () => {
         expect(player.name).toBe('Apprentice');
         expect(player.level).toBe(1);
         expect(player.baseStats).toEqual({ heart: 5, body: 5, mind: 5 });
-        // Every preset wears the starting relics (the Suppliant's Ring
-        // alone; signatures come from worn equipment, not archetype).
+        // A preset wears no relic, like a fresh run (signatures come from
+        // worn equipment, not archetype).
         expect(player.equipment.weapon).toBeNull();
         expect(player.equipment.armor).toBeNull();
-        expect(player.equipment.accessories.map(a => a.id)).toEqual(['relic-disarming-plea']);
+        expect(player.equipment.accessories).toEqual([]);
         // Every preset seeds the grey deck.
         expect(player.knownCards).toEqual([...STARTING_CARD_IDS]);
-        // Apprentice declares no procedural gear: inventory = the ring (worn-first)
-        // + the 1 declared potion.
-        expect(player.inventory.map(i => i.id)).toEqual(['relic-disarming-plea', 'minor-healing-potion']);
+        // Apprentice declares no procedural gear: inventory = the 1 declared potion.
+        expect(player.inventory.map(i => i.id)).toEqual(['minor-healing-potion']);
         const potion = player.inventory.find(i => i.id === 'minor-healing-potion');
         expect(potion).toBeDefined();
         expect((potion as Consumable | undefined)?.quantity).toBe(3);
@@ -65,10 +64,10 @@ describe('buildCharacterFromPreset', () => {
         expect(player.level).toBe(8);
         expect(player.baseStats).toEqual({ heart: 7, body: 8, mind: 7 });
         expect(player.knownCards).toEqual([...STARTING_CARD_IDS]); // grey deck at every tier
-        // Presets wear the ring and carry NO procedural gear (the ring is the only equipment).
-        expect(player.equipment.accessories.map(a => a.id)).toEqual(['relic-disarming-plea']);
+        // Presets wear no relic and carry NO procedural gear.
+        expect(player.equipment.accessories).toEqual([]);
         const invEquipmentIds = player.inventory.filter(i => i.category === 'equipment').map(i => i.id);
-        expect(invEquipmentIds).toEqual(['relic-disarming-plea']);
+        expect(invEquipmentIds).toEqual([]);
         expect(player.currency).toBe(25);
     });
 
@@ -78,11 +77,10 @@ describe('buildCharacterFromPreset', () => {
         expect(player.level).toBe(15);
         expect(player.baseStats).toEqual({ heart: 8, body: 11, mind: 10 });
         expect(player.knownCards).toEqual([...STARTING_CARD_IDS]); // grey deck at every tier
-        // Wears the ring; declared procedural gear does not resolve,
-        // so the ring is the only equipment.
-        expect(player.equipment.accessories.map(a => a.id)).toEqual(['relic-disarming-plea']);
+        // Declared procedural gear does not resolve, so it owns no equipment.
+        expect(player.equipment.accessories).toEqual([]);
         const invEquipmentIds = player.inventory.filter(i => i.category === 'equipment').map(i => i.id);
-        expect(invEquipmentIds).toEqual(['relic-disarming-plea']);
+        expect(invEquipmentIds).toEqual([]);
         expect(player.currency).toBe(75);
     });
 

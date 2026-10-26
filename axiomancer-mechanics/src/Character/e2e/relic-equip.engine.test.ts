@@ -1,56 +1,47 @@
 /**
- * Hermetic engine test — relic equipping: the createCharacter relic-seeding
- * option (the Suppliant's Ring), the maxHp fold and phase-18 slot semantics,
+ * Hermetic engine test — relic equipping: createCharacter wears no relic
+ * unless given one, the maxHp fold and phase-18 slot semantics,
  * witnessed across every slot by the fixture relics (R7e2).
  */
 
 import { describe, it, expect } from 'vitest';
 import { createCharacter, equipItem, unequipItem } from '../index';
 import { calculateMaxHealth } from '../../Utils';
-import { getRelicById, getSignaturesForLoadout } from '../../Items/relic.library';
+import { cloneRelic, getRelicById, getSignaturesForLoadout } from '../../Items/relic.library';
 import { FIXTURE_WEAPON, FIXTURE_ARMOR, FIXTURE_TRINKETS } from '../../Game/fixtures';
 
 const BASE = { heart: 5, body: 5, mind: 5 };
 
-describe('createCharacter — seedStartingRelics', () => {
-    it('wears the Suppliant\'s Ring and owns it (worn-first in inventory)', () => {
-        const c = createCharacter({ name: 'T', level: 1, baseStats: BASE, seedStartingRelics: true });
-        expect(c.equipment.weapon).toBeNull();
-        expect(c.equipment.armor).toBeNull();
-        expect(c.equipment.accessories.map(a => a.id)).toEqual(['relic-disarming-plea']);
-        expect(c.inventory.map(i => i.id)).toEqual(['relic-disarming-plea']);
-    });
-
-    it('leaves maxHealth at the base value (the ring carries no stat line) and starts at full health', () => {
-        const c = createCharacter({ name: 'T', level: 1, baseStats: BASE, seedStartingRelics: true });
-        expect(c.maxHealth).toBe(calculateMaxHealth(1, BASE));
-        expect(c.health).toBe(c.maxHealth);
-    });
-
-    it('is off by default — a bare character has an empty loadout and no relics', () => {
+describe('createCharacter — no starting relic', () => {
+    it('wears and owns nothing by default (a run starts with no relic)', () => {
         const c = createCharacter({ name: 'T', level: 1, baseStats: BASE });
         expect(c.equipment.weapon).toBeNull();
         expect(c.equipment.armor).toBeNull();
         expect(c.equipment.accessories).toEqual([]);
         expect(c.inventory).toEqual([]);
+        expect(getSignaturesForLoadout(c.equipment)).toEqual([]);
     });
 
-    it('is ignored when an explicit equipment list is passed', () => {
-        const c = createCharacter({ name: 'T', level: 1, baseStats: BASE, equipment: [FIXTURE_WEAPON], seedStartingRelics: true });
+    it('wears the Suppliant\'s Ring when it is passed as equipment, at the base maxHealth', () => {
+        const ring = getRelicById('relic-disarming-plea')!;
+        const c = createCharacter({ name: 'T', level: 1, baseStats: BASE, equipment: [cloneRelic(ring)] });
+        expect(c.equipment.accessories.map(a => a.id)).toEqual(['relic-disarming-plea']);
+        expect(c.maxHealth).toBe(calculateMaxHealth(1, BASE));
+        expect(c.health).toBe(c.maxHealth);
+        expect(getSignaturesForLoadout(c.equipment)).toEqual(['sig-disarming-plea']);
+    });
+
+    it('wears an explicit equipment list as given', () => {
+        const c = createCharacter({ name: 'T', level: 1, baseStats: BASE, equipment: [FIXTURE_WEAPON] });
         expect(c.equipment.weapon?.id).toBe(FIXTURE_WEAPON.id);
         expect(c.equipment.accessories).toEqual([]);
-        expect(c.inventory).toEqual([]); // the ring is not seeded
+        expect(c.inventory).toEqual([]);
     });
 
     it('folds a worn armor piece passed as explicit equipment onto maxHealth', () => {
         const c = createCharacter({ name: 'T', level: 1, baseStats: BASE, equipment: [FIXTURE_ARMOR] });
         expect(c.maxHealth).toBe(calculateMaxHealth(1, BASE) + 5);
         expect(c.health).toBe(c.maxHealth);
-    });
-
-    it('derives its signature kit from the worn loadout', () => {
-        const c = createCharacter({ name: 'T', level: 1, baseStats: BASE, seedStartingRelics: true });
-        expect(getSignaturesForLoadout(c.equipment)).toEqual(['sig-disarming-plea']);
     });
 });
 

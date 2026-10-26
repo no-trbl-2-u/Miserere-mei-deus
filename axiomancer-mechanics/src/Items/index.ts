@@ -7,7 +7,7 @@ export {
 // The shared grant/equip/swap path — the one door every "the player now has
 // this item" transition walks through, plus the reward-screen predicate.
 export {
-    grantItem, qualifiesForItemRewardScreen, partitionGrantsForReward, displacedBy,
+    grantItem, grantWearingIfFree, qualifiesForItemRewardScreen, partitionGrantsForReward, displacedBy,
 } from './item-grant';
 export type { GrantOutcome } from './item-grant';
 // The desperation band. `resolveConsumableHeal` is the ONE resolver

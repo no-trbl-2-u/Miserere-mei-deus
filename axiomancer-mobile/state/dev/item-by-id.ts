@@ -10,6 +10,9 @@
  * ids return a graceful failure the UI surfaces rather than a silent
  * no-op. Surfaced on `/dev` by `DebugItemPicker` (one chip per id).
  *
+ * A relic is worn while its slot has a free position (`grantWearingIfFree`),
+ * so its signature is on the next fight's board; a full row carries it.
+ *
  * Component mount is `isDevToolsEnabled()`-guarded; production never
  * reaches this.
  */
@@ -17,7 +20,9 @@
 import {
     getConsumableById,
     getRelicById,
+    grantWearingIfFree,
 } from '@mechanics';
+import type { Item } from '@mechanics';
 
 import type { AppStore } from '@/state/store';
 
@@ -33,6 +38,16 @@ export interface AddItemByIdResult {
     name: string | null;
     /** Human-readable reason when `added` is false. */
     reason: string | null;
+}
+
+/**
+ * Give the store's player `item` by the dev rule: worn while its slot has a
+ * free position, never displacing a worn piece, otherwise carried. Shared by
+ * every dev relic grant (the chips, POPULATE, the seed, GET ALL RELICS).
+ */
+export function devGrantItem(store: AppStore, item: Item): void {
+    const player = store.getState().player;
+    store.setState({ player: grantWearingIfFree(player, item).character });
 }
 
 /**
@@ -61,7 +76,7 @@ export function addItemByIdAction(
         // The only equipment is the signet relics (resolve by id).
         const relic = getRelicById(id);
         if (relic) {
-            addItem({ ...relic });
+            devGrantItem(store, relic);
             return {
                 added: true,
                 id,

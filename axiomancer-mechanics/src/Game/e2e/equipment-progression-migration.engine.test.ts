@@ -10,12 +10,12 @@
 import { describe, it, expect } from 'vitest';
 import { migrate } from '../game.migrate';
 import { createNewGameState, GAME_STATE_VERSION } from '../game.reducer';
-import { cloneStartingRelics } from '../../Items/relic.library';
+import { cloneRelic, getRelicById } from '../../Items/relic.library';
 
 /** A v21 save: a fresh state stamped back to v21, wearing and holding the ring. */
 function v21Save(): Record<string, unknown> {
     const fresh = createNewGameState();
-    const relics = cloneStartingRelics();
+    const relics = [cloneRelic(getRelicById('relic-disarming-plea')!)];
     return {
         ...fresh,
         player: {

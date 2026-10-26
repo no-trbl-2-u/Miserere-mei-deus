@@ -162,7 +162,6 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - AD1b — plotted 2026-10-21 (#716) without a deadline line; date not set.
 - EQ1a — a live defect T hit on device; loop work, needs no time from T; date not set.
 - EQ1b — loop work, needs no time from T; date not set.
-- SG1 — a live defect T reported in session (signatures missing from the board: no starting ring any more, every relic grant worn, unworn relics flagged); loop work, needs no time from T; date not set.
 - FM1a — loop work, needs no time from T beyond confirming the pitch rule; date not set.
 - FM1b — loop work, needs no time from T beyond confirming the pitch rule; date not set.
 - FM1c — loop work, needs no time from T beyond confirming the pitch rule; date not set.

@@ -196,12 +196,15 @@ keyword (`EnemyKeyword = never`).
 
 ## Befriend and mercy
 
-- **Two relics** (`relicLibrary`, `Items/relic.library.ts`). The Suppliant's
-  Ring, granted at the first node, is the only starting relic; its
-  signature is The Open Hand. The Bleeding Signet (+20 max VITAE while
-  worn, folded onto `maxHealth`; signature Crimson Covenant: TETHER 3, and
-  the next SACRIFICE this turn counts twice) has no source yet but the dev
-  menu's GET ALL RELICS. Relics are accessories and a character wears up
+- **Two relics** (`relicLibrary`, `Items/relic.library.ts`), and a run
+  starts with neither: no relic is handed over at the first node (phase
+  SG1). The Suppliant's Ring's signature is The Open Hand; old saves keep
+  the ring they were given. The Bleeding Signet (+20 max VITAE while worn,
+  folded onto `maxHealth`; signature Crimson Covenant: TETHER 3, and the
+  next SACRIFICE this turn counts twice) has no source yet. Both come only
+  from the dev menu's relic chips, which wear the relic while a position is
+  free; a relic carried unworn shows NOT WORN in the satchel, its signature
+  off until the player taps WEAR. Relics are accessories and a character wears up
   to three (`SLOT_CAPACITY.accessory`), so both are worn together and the
   signature bar lists every signature the worn relics grant.
 - **The Open Hand** befriends a foe that has a `friendshipReward` and sits

@@ -2,7 +2,7 @@
  * Hermetic engine test — relic save migration (v12 → v13).
  *
  * A v12 save has the 5-slot loadout but no signet relics. Migrating seeds the
- * starting relics via `cloneStartingRelics` — the Suppliant's Ring alone,
+ * starting relics (the Suppliant's Ring alone, the kit before a run began with none),
  * worn — displaces the old gear to inventory and recomputes
  * maxHealth, so a loaded save derives its signature kit from the worn loadout
  * instead of the old archetype kit.

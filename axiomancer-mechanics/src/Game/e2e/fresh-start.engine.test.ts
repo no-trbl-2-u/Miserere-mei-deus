@@ -2,24 +2,20 @@
  * Hermetic engine test — the very start.
  *
  * A brand-new run begins with NOTHING: no items, no worn equipment, no coin,
- * no experience. Two things make that a game rather than a punishment:
- *
- *   1. The Suppliant's Ring is still handed over at the run's first node
- *      (`Character/first-node-grant.ts`), and it now grants ONLY its
- *      signature skill (The Open Hand) — no stat bump.
- *   2. No other relic exists to buy or find.
- *
- * Presets, fixtures and sims still seed a kit; only `createNewGameState`,
- * the one real-player origination point, starts empty. This file pins all
- * of that.
+ * no experience, and no relic. Nothing hands one over later: resolving a node
+ * and staging a fight leave the player exactly as they were. The Suppliant's
+ * Ring stays in the library, unsourced. Presets build the same relic-free
+ * character.
  */
 
 import { describe, it, expect } from 'vitest';
-import { createNewGameState } from '../game.reducer';
+import { createNewGameState, gameReducer } from '../game.reducer';
 import { createCharacter } from '../../Character';
-import { grantFirstNodeRelic, FIRST_NODE_RELIC_ID } from '../../Character/first-node-grant';
-import { getRelicById, getSignaturesForLoadout } from '../../Items/relic.library';
+import { getRelicById, getSignaturesForLoadout, relicLibrary } from '../../Items/relic.library';
 import { buildCharacterFromPreset, characterPresets } from '../../Character/presets';
+import { initializeCombatEncounter } from '../../Combat/combat.engine';
+import { FloatEye } from '../../Enemy/enemy.library';
+import { deepClone } from '../../Utils';
 
 describe('createNewGameState — the very start', () => {
     it('seeds no items, no equipment, no coin and no experience', () => {
@@ -37,38 +33,34 @@ describe('createNewGameState — the very start', () => {
     it('keeps the apprentice baseline stats (5/5/5) — the floor is items, not stats', () => {
         const s = createNewGameState();
         expect(s.player.baseStats).toEqual({ heart: 5, body: 5, mind: 5 });
-        // No worn armor → maxHealth is the bare level-1 ceiling.
         const bare = createCharacter({ name: 'Bare', level: 1, baseStats: { heart: 5, body: 5, mind: 5 } });
         expect(s.player.maxHealth).toBe(bare.maxHealth);
     });
 
-    it('the first node hands over the ring and nothing else', () => {
+    it('resolving the first node and staging the first fight hand over nothing', () => {
         const s = createNewGameState();
-        const g = grantFirstNodeRelic(s.player, s.flags);
-        expect(g.reason).toBe('granted');
-        expect(g.character.inventory.map(i => i.id)).toEqual([FIRST_NODE_RELIC_ID]);
-        expect(g.character.equipment.accessories.map(a => a.id)).toEqual([FIRST_NODE_RELIC_ID]);
-        expect(getSignaturesForLoadout(g.character.equipment)).toEqual(['sig-disarming-plea']);
+        const afterNode = gameReducer(s, { type: 'PROCESS_NODE' });
+        const staged = gameReducer(afterNode, { type: 'START_COMBAT', payload: { target: deepClone(FloatEye) } });
+        expect(staged.player.inventory.filter(i => i.category === 'equipment')).toEqual([]);
+        expect(staged.player.equipment.accessories).toEqual([]);
+        expect(staged.flags).not.toContain('first-node-relic-granted');
+        const fight = initializeCombatEncounter(staged.player, deepClone(FloatEye), undefined, 3);
+        expect(fight.signatures).toEqual([]);
     });
 });
 
-describe("the Suppliant's Ring — skill only", () => {
-    it('carries no stat modifier', () => {
-        expect(getRelicById(FIRST_NODE_RELIC_ID)!.statModifiers).toEqual([]);
-    });
-
-    it('wearing it changes no maxHealth', () => {
-        const s = createNewGameState();
-        const g = grantFirstNodeRelic(s.player, s.flags);
-        expect(g.character.maxHealth).toBe(s.player.maxHealth);
+describe("the Suppliant's Ring — kept in the library, unsourced", () => {
+    it('still resolves by id and carries no stat modifier', () => {
+        const ring = getRelicById('relic-disarming-plea');
+        expect(ring?.grantsSignature).toBe('sig-disarming-plea');
+        expect(ring!.statModifiers).toEqual([]);
+        expect(relicLibrary.map(r => r.id)).toContain('relic-disarming-plea');
     });
 });
 
-describe('presets and sims are untouched', () => {
-    it('a preset-built character still seeds the Phase-19 kit', () => {
-        const preset = characterPresets[0]!;
-        const c = buildCharacterFromPreset(preset);
-        expect(c.inventory.length).toBeGreaterThan(0);
-        expect(getSignaturesForLoadout(c.equipment).length).toBeGreaterThan(0);
+describe('presets start relic-free too', () => {
+    it('a preset-built character wears no relic', () => {
+        const c = buildCharacterFromPreset(characterPresets[0]!);
+        expect(getSignaturesForLoadout(c.equipment)).toEqual([]);
     });
 });

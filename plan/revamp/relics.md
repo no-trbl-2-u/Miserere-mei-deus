@@ -52,8 +52,9 @@ more keywords." Then: keep the names, flat cost.
    control/dot/conclude branches and their constants
    (`HARD_CONTROL_BOSS_STAGGER`, `PRESS_FATE_COST`, …).
 2. **The Open Hand stays special — it becomes a real befriend.** The
-   Suppliant's Ring is the first-node hand-over (`Character/first-node-grant.ts`)
-   and T keeps it: "Leave the starting ring with befriend." Today it applies
+   Suppliant's Ring was the first-node hand-over (removed in phase SG1, T
+   2026-10-25: a run starts with no relic; the ring stays in the library for
+   a later lane) and T kept it then: "Leave the starting ring with befriend." Today it applies
    QUARTER + 6 damage and *never* opens mercy; the only door into the mercy
    choice is the `befriend_attempt` card rider (`Cards/card.engine.ts:382`,
    `Combat/combat.engine.ts:2674`), which no card carries. Rewire The Open

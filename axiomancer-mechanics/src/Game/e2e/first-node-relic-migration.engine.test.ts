@@ -1,121 +1,102 @@
 /**
- * Hermetic engine test — the v23 → v24 hop: the first-node relic grant.
+ * Hermetic engine test — the v23 → v24 hop, and old saves that carry the ring.
  *
  * v24 moved the Suppliant's Ring out of the silent seed and into the run's
- * first node. Every save written at v23 or earlier already OWNS the ring (it
- * was folded in by `createCharacter` at t=0), so this hop must grant nothing,
- * take nothing away, and simply stamp the grant settled — otherwise a
- * returning player would be handed a relic they are already wearing.
+ * first node, and stamped `first-node-relic-granted` on every save it
+ * migrated. The hand-over is gone now (a run starts with no relic and is
+ * given none), so the flag is inert, but the hop still writes it and a save
+ * keeps exactly the relic it carries, worn or not.
  */
 
 import { describe, it, expect } from 'vitest';
 import { migrate } from '../game.migrate';
 import { createNewGameState, GAME_STATE_VERSION, gameReducer } from '../game.reducer';
+import type { GameState } from '../types';
 import { createCharacter } from '../../Character';
-import {
-    grantFirstNodeRelic, isFirstNodeRelicPending,
-    FIRST_NODE_RELIC_ID, FIRST_NODE_RELIC_FLAG,
-} from '../../Character/first-node-grant';
+import type { Character } from '../../Character/types';
+import { grantItem } from '../../Items/item-grant';
+import { getRelicById } from '../../Items/relic.library';
+import { initializeCombatEncounter } from '../../Combat/combat.engine';
+import { FloatEye } from '../../Enemy/enemy.library';
+import { deepClone } from '../../Utils';
 
-/**
- * A v23 save: the pre-v24 shape — the ring already seeded and worn, no
- * settle flag. Built by settling the grant on a fresh state, which reproduces
- * exactly what `createCharacter` used to hand back.
- */
-function v23Save(extraFlags: string[] = []): Record<string, unknown> {
+const RING_ID = 'relic-disarming-plea';
+const FLAG = 'first-node-relic-granted';
+
+/** A level-1 player given the ring: worn (`equip`) or carried. */
+function ringPlayer(equip: boolean): Character {
+    const bare = createCharacter({ name: 'Player', level: 1, baseStats: { heart: 5, body: 5, mind: 5 } });
+    return grantItem(bare, getRelicById(RING_ID)!, { equip }).character;
+}
+
+/** A save at `version` around `player`, no first-node flag. */
+function saveAt(version: number, player: Character, extraFlags: string[] = []): Record<string, unknown> {
     const fresh = createNewGameState();
-    // A v23 save carried the starting kit, worn. Since 2026-09-23 a fresh run
-    // seeds nothing, so the pre-v24 shape is rebuilt here from a kit-seeded
-    // character (the ring alone since R7e2) rather than from the fresh state.
-    const kitted = createCharacter({
-        name: 'Player', level: 1, baseStats: { heart: 5, body: 5, mind: 5 }, seedStartingRelics: true,
-    });
-    const settled = grantFirstNodeRelic(kitted, []);
     return {
         ...fresh,
-        version: 23,
-        player: settled.character,
+        version,
+        player,
         flags: [...fresh.flags, ...extraFlags],
     } as unknown as Record<string, unknown>;
 }
 
-describe('migrate v23 → v24 — the first-node relic grant', () => {
+describe('migrate v23 → v24 — the inert first-node flag', () => {
     it('the v23 → v24 hop is on the supported chain', () => {
         expect(GAME_STATE_VERSION).toBeGreaterThanOrEqual(24);
-        expect(migrate(v23Save(), 23, 24).version).toBe(24);
+        expect(migrate(saveAt(23, ringPlayer(true)), 23, 24).version).toBe(24);
     });
 
-    it('stamps the grant settled so a returning player is never offered it again', () => {
-        const migrated = migrate(v23Save(), 23, 24);
-        expect(migrated.flags).toContain(FIRST_NODE_RELIC_FLAG);
-        expect(isFirstNodeRelicPending(migrated.player, migrated.flags)).toBe(false);
+    it('still stamps the flag string', () => {
+        const migrated = migrate(saveAt(23, ringPlayer(true)), 23, 24);
+        expect(migrated.flags).toContain(FLAG);
     });
 
     it('does not touch the player — the ring and the worn loadout pass through', () => {
-        const raw = v23Save();
+        const raw = saveAt(23, ringPlayer(true));
         const before = JSON.parse(JSON.stringify(raw.player));
         const migrated = migrate(raw, 23, 24);
         expect(JSON.parse(JSON.stringify(migrated.player))).toEqual(before);
-        expect(migrated.player.inventory.map(i => i.id)).toContain(FIRST_NODE_RELIC_ID);
-        expect(migrated.player.inventory).toHaveLength(1);
     });
 
     it('keeps every other flag', () => {
-        const migrated = migrate(v23Save(['some-story-flag', 'starter-bundle-chosen']), 23, 24);
+        const migrated = migrate(saveAt(23, ringPlayer(true), ['some-story-flag', 'starter-bundle-chosen']), 23, 24);
         expect(migrated.flags).toContain('some-story-flag');
         expect(migrated.flags).toContain('starter-bundle-chosen');
     });
 
     it('is idempotent — a save already carrying the flag gets one copy', () => {
-        const migrated = migrate(v23Save([FIRST_NODE_RELIC_FLAG]), 23, 24);
-        expect(migrated.flags.filter(f => f === FIRST_NODE_RELIC_FLAG)).toHaveLength(1);
+        const migrated = migrate(saveAt(23, ringPlayer(true), [FLAG]), 23, 24);
+        expect(migrated.flags.filter(f => f === FLAG)).toHaveLength(1);
     });
 
-    it('a migrated save never re-grants at the first node, or at a fight', () => {
-        const migrated = migrate(v23Save(), 23, 24);
-        const g = grantFirstNodeRelic(migrated.player, migrated.flags);
-        expect(g.reason).toBe('already-settled');
-        expect(g.granted).toBeNull();
-        expect(g.character).toBe(migrated.player);
+    it('a save whose player parted with the ring is not given one', () => {
+        const bare = createCharacter({ name: 'Player', level: 1, baseStats: { heart: 5, body: 5, mind: 5 } });
+        const migrated = migrate(saveAt(23, bare), 23, 24);
+        expect(migrated.flags).toContain(FLAG);
+        expect(migrated.player.inventory.map(i => i.id)).not.toContain(RING_ID);
+    });
+});
+
+describe('old saves keep the ring where it was', () => {
+    function loadAndFight(equip: boolean) {
+        const loaded = migrate(saveAt(23, ringPlayer(equip)), 23, GAME_STATE_VERSION) as GameState;
+        const staged = gameReducer(loaded, { type: 'START_COMBAT', payload: { target: deepClone(FloatEye) } });
+        const fight = initializeCombatEncounter(staged.player, deepClone(FloatEye), undefined, 7);
+        return { loaded, staged, fight };
+    }
+
+    it('a save wearing the ring loads and fights with The Open Hand', () => {
+        const { loaded, staged, fight } = loadAndFight(true);
+        expect(loaded.player.equipment.accessories.map(a => a.id)).toEqual([RING_ID]);
+        expect(staged.player).toBe(loaded.player);
+        expect(fight.signatures).toEqual(['sig-disarming-plea']);
     });
 
-    it('a save whose player parted with the ring is not force-fed a replacement', () => {
-        // Selling or dropping a relic is legal. The first-node grant is a
-        // new-run ceremony, not restitution, so the flag is stamped anyway.
-        const raw = v23Save();
-        const player = raw.player as Record<string, unknown> & { inventory: { id: string }[] };
-        raw.player = {
-            ...player,
-            inventory: player.inventory.filter(i => i.id !== FIRST_NODE_RELIC_ID),
-        };
-        const migrated = migrate(raw, 23, 24);
-        expect(migrated.flags).toContain(FIRST_NODE_RELIC_FLAG);
-        expect(migrated.player.inventory.map(i => i.id)).not.toContain(FIRST_NODE_RELIC_ID);
-        expect(isFirstNodeRelicPending(migrated.player, migrated.flags)).toBe(false);
-    });
-
-    it('chains a v22 save straight to v24 in one call', () => {
-        const raw = v23Save();
-        raw.version = 22;
-        const migrated = migrate(raw, 22, 24);
-        expect(migrated.version).toBe(24);
-        expect(migrated.flags).toContain(FIRST_NODE_RELIC_FLAG);
-        expect(migrated.player.inventory.map(i => i.id)).toContain(FIRST_NODE_RELIC_ID);
-    });
-
-    it('a FRESH v24 run is still pending — the migration only settles loaded saves', () => {
-        const fresh = createNewGameState();
-        expect(fresh.version).toBe(GAME_STATE_VERSION);
-        expect(fresh.flags).not.toContain(FIRST_NODE_RELIC_FLAG);
-        expect(isFirstNodeRelicPending(fresh.player, fresh.flags)).toBe(true);
-    });
-
-    it('RESET_RUN keepCharacter clears flags but never re-grants a ring in hand', () => {
-        const migrated = migrate(v23Save(), 23, 24);
-        const reset = gameReducer(migrated, { type: 'RESET_RUN', payload: { keepCharacter: true } });
-        expect(reset.flags).not.toContain(FIRST_NODE_RELIC_FLAG);
-        const g = grantFirstNodeRelic(reset.player, reset.flags);
-        expect(g.reason).toBe('already-owned');
-        expect(g.character.inventory.filter(i => i.id === FIRST_NODE_RELIC_ID)).toHaveLength(1);
+    it('a save carrying the ring unworn loads with it carried, and fights without it', () => {
+        const { loaded, staged, fight } = loadAndFight(false);
+        expect(loaded.player.inventory.map(i => i.id)).toContain(RING_ID);
+        expect(loaded.player.equipment.accessories).toEqual([]);
+        expect(staged.player.equipment.accessories).toEqual([]);
+        expect(fight.signatures).toEqual([]);
     });
 });

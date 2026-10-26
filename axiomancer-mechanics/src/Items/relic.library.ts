@@ -6,10 +6,11 @@
  * Relic identity = `grantsSignature !== undefined` (plus the `relic-` id
  * prefix). There is no new item category and no slot marker.
  *
- * There are two. The Suppliant's Ring, handed over at the run's first node
- * (`Character/first-node-grant.ts`), is the only starting relic. The Bleeding
- * Signet (+20 max VITAE, Crimson Covenant) has no source yet: no shop, loot
- * or reward carries it; the dev menu's GET ALL RELICS hands it over.
+ * There are two, and a run starts with neither. The Suppliant's Ring (The
+ * Open Hand) and the Bleeding Signet (+20 max VITAE, Crimson Covenant) have no
+ * in-run source yet: no shop, loot or reward carries them. Old saves keep the
+ * ring they were given; the dev menu's relic chips hand either over, worn
+ * while a position is free.
  *
  * Relics are accessories, and a character wears up to three
  * (`SLOT_CAPACITY.accessory`), so the Ring and the Signet are worn together
@@ -21,8 +22,7 @@ import type { EquipmentLoadout } from '../Character/types';
 import type { SignatureSkillId } from '../Combat/combat.encounter.types';
 
 /**
- * The relic library — one row: the Suppliant's Ring, the
- * first-node hand-over. It carries no stat line; it grants The Open Hand (the
+ * The Suppliant's Ring. It carries no stat line; it grants The Open Hand (the
  * befriend) and nothing else.
  */
 const SUPPLIANTS_RING: Equipment = {
@@ -53,33 +53,21 @@ const BLEEDING_SIGNET: Equipment = {
 };
 
 /** A fresh copy of a relic (never aliases the library singleton). */
-function cloneRelic(relic: Equipment): Equipment {
+export function cloneRelic(relic: Equipment): Equipment {
     return { ...relic, statModifiers: (relic.statModifiers ?? []).map(m => ({ ...m })) };
 }
 
 /**
  * The relics as canonical singletons (source of truth). Callers that
- * mutate/equip should clone via `cloneStartingRelics` — combat and the equip
+ * mutate/equip should clone via `cloneRelic` — combat and the equip
  * reducers deep-clone the wearer, but the library itself must never be aliased
  * into a mutable character.
  */
 export const relicLibrary: readonly Equipment[] = [SUPPLIANTS_RING, BLEEDING_SIGNET];
 
-/** The relics a fresh character wears: the Suppliant's Ring alone. */
-const STARTING_RELICS: readonly Equipment[] = [SUPPLIANTS_RING];
-
 /** Resolve a relic by id (returns the canonical singleton, not a clone). */
 export function getRelicById(id: string): Equipment | undefined {
     return relicLibrary.find(r => r.id === id);
-}
-
-/**
- * Fresh deep clones of the starting relics, all worn: the kit presets,
- * fixtures and the mock character seed (`createCharacter({ seedStartingRelics })`).
- * Every call returns brand-new objects so nothing aliases the library.
- */
-export function cloneStartingRelics(): Equipment[] {
-    return STARTING_RELICS.map(cloneRelic);
 }
 
 /**

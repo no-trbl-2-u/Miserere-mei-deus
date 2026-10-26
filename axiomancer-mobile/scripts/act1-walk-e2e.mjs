@@ -326,8 +326,7 @@ async function newGame(page, baseUrl, plan) {
     const first = plan.regions[0]
     await waitFor(page, 'cutscene-advance', `${first.start} arrival scene`)
     await playOutCutscene(page)
-    await waitFor(page, 'item-reward-confirm', 'the first relic')
-    await tap(page, 'item-reward-confirm')
+    // A run starts with no relic and is handed none: the scene opens the map.
     await settleOnMap(page, 'new game')
     await expectHere(page, first.start)
     log(`new game: on ${first.map}, at ${first.start}`)

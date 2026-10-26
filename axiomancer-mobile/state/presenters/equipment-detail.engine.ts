@@ -24,7 +24,7 @@
  *                             own `description`; no added flare).
  *   - `flavor`              — the item's engine `description`, shown last.
  *   - `action`              — the one loadout action the card offers: UNEQUIP
- *                             for a worn piece, EQUIP (or EQUIP · REPLACE
+ *                             for a worn piece, WEAR for a relic or EQUIP (or <VERB> · REPLACE
  *                             <NAME>) for an unworn one, read from
  *                             `player.equipment`.
  *
@@ -105,7 +105,7 @@ export interface EquipmentDetailViewModel {
  * The card's loadout button.
  *
  * @property mode  - `'equip'` for an unworn piece, `'unequip'` for a worn one.
- * @property label - `'EQUIP'`, `'EQUIP · REPLACE <NAME>'` or `'UNEQUIP'`.
+ * @property label - `'WEAR'` (a relic) or `'EQUIP'`, either `· REPLACE <NAME>`, or `'UNEQUIP'`.
  */
 export interface EquipmentDetailAction {
     mode: 'equip' | 'unequip';

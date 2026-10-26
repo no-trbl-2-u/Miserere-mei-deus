@@ -188,18 +188,14 @@ export const SCREENS = [
         name: 'exploration-hub',
         path: '/(tabs)/exploration',
         // Opened bare, the route bounces a saveless boot to the title (pass 98).
-        // A fresh game lands on the start node's omen, then the first
-        // waypoint's ring; pass both as a player would, then capture the hub.
+        // A fresh game lands on the start node's omen, then the map (a run
+        // starts with no relic); pass it as a player would, then capture the hub.
         fixture: 'fresh-start',
         waitForPath: '/cutscene',
         prepare: async (page) => {
             const at = (path) => (u) => u.pathname.endsWith(path)
             await page.getByTestId('cutscene-skip').click({ timeout: 8000 })
-            await page.waitForURL((u) => at('/exploration')(u) || at('/item-reward')(u), { timeout: 15000 })
-            if (at('/item-reward')(new URL(page.url()))) {
-                await page.getByTestId('item-reward-confirm').click({ timeout: 8000 })
-                await page.waitForURL(at('/exploration'), { timeout: 15000 })
-            }
+            await page.waitForURL(at('/exploration'), { timeout: 15000 })
         },
         why: 'Town / exploration hub — navigation, voice, orientation, and the early-progression state a cold player lands on.',
     },

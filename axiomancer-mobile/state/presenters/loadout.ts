@@ -65,21 +65,25 @@ export function replacedByEquip(player: Character, item: Equipment): Equipment |
 /** The one loadout action an owned equipment piece offers. */
 export interface LoadoutAction {
     mode: 'equip' | 'unequip';
-    /** `EQUIP`, `EQUIP · REPLACE <NAME>` or `UNEQUIP`. */
+    /**
+     * `UNEQUIP`, or the put-on verb (`WEAR` for a relic, `EQUIP` otherwise),
+     * as `<VERB> · REPLACE <NAME>` when the slot is full.
+     */
     label: string;
     /** The worn piece an equip takes off; `null` for a free position or an unequip. */
     replacing: Equipment | null;
 }
 
-/** Worn → UNEQUIP; unworn → EQUIP, naming the piece it replaces when the slot is full. */
+/** Worn → UNEQUIP; unworn → WEAR (a relic) or EQUIP, naming the piece it replaces when the slot is full. */
 export function loadoutActionFor(player: Character, item: Equipment): LoadoutAction {
     if (isWornId(player.equipment, item.id)) {
         return { mode: 'unequip', label: 'UNEQUIP', replacing: null };
     }
     const replacing = replacedByEquip(player, item);
+    const verb = item.grantsSignature ? 'WEAR' : 'EQUIP';
     return {
         mode: 'equip',
-        label: replacing === null ? 'EQUIP' : `EQUIP · REPLACE ${replacing.name.toUpperCase()}`,
+        label: replacing === null ? verb : `${verb} · REPLACE ${replacing.name.toUpperCase()}`,
         replacing,
     };
 }
