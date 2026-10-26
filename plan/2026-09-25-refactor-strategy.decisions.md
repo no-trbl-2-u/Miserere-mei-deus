@@ -1031,7 +1031,8 @@ satisfied for exactly these.)
 - A later act may revisit a region when the story needs it; a region is not owned by one act.
 - Deadlines (`plan/deadlines.md`): Act 1 Chapter 1 complete by the Nov 16 MVP (its real enemies, the lane relics, item icons and the event-node UI/UX for the Breakwater's kinds); all of Act 1 by v0.3 on Dec 28, including the enemies and enemy art of Chapters 2-4.
 - Unchanged: D23's order, D27's start on the coast (Chapter 1's first node), D28's continents and node-id prefixes.
-- Open (T's call, not ruled here): whether the Breakwater's watchtower fight is Chapter 1's boss (B2's "region boss" tier) and where Act 1's Act Boss sits. `plan/deadlines.md` puts the question to T in the enemy sessions.
+- The Breakwater's watchtower fight (`bw-17`) is Chapter 1's boss, B2's "region boss" tier (T, 2026-10-26: "Chapter 1 boss").
+- Open, T to confirm: where Act 1's Act Boss sits. Proposed: the end of the Lantern Deep (Chapter 4). `plan/deadlines.md` puts it to T in enemy session 2.
 
 **D105 — Three kinds of slot: one Weapon, one Armor, three Relic slots.** (T, 2026-10-25, in session; recorded by the EQ2 plot, run unattended. T: "There are only 3 types of slots: Weapon (top), Armor (2nd from top), 3x relics. Relics can be named anything, but ultimately they all take up the same 3 relic slots.")
 
