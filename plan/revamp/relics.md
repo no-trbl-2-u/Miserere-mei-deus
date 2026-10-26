@@ -99,5 +99,29 @@ Inputs for that session:
 - **Relic sources (D71), for now:** quests give designated relics;
   elites have a low chance of dropping a random relic. There is no starting relic:
   the first lane opens with the first lane relic (D71).
+- **Lane relics plotted as LR1 (T, 2026-10-25).** The Bleeding Signet opens
+  Blood Price; every lane relic's detail view shows "Unlocks: <lane name>";
+  five new relics (two Blood Price, three Elementalist), T's content, written
+  by T in session (LR1b, done 2026-10-25) and recorded in "The lane relics
+  (LR1b)" below; quests are the primary source, elites drop at a lower
+  chance, and each lane's third relic comes only from an elite. Crimson
+  Covenant is retired. Brief `plan/phases/phase_LR1_lane_relics.md`. B1
+  keeps the rest of the pass.
 - Relic reward sources: the hazard deck's "Bonus Relic"/"Shrine Cache" lie
   (they pay shillings) and go in R6; B1 can give relics a real source.
+
+## The lane relics (LR1b)
+
+Authored by T in session, 2026-10-25, verbatim. Signature costs (in
+Conviction) are T's starting pitch, to revisit after playthroughs. Built by
+LR1d (Blood Price) and LR1e (Elementalist); the quests are drafted on
+existing Act 1 map events in LR1f and listed here when that phase ships.
+
+| Relic | Lane | Signature (cost in Conviction) | Stats | Source |
+|---|---|---|---|---|
+| Elementalist's Signet | elementalist | Clear your INFERNO; trigger the foe's STORM (6) | +5 Heart, +20 max VITAE | elite only |
+| Elementalist's Brooch | elementalist | Convert the foe's INFERNO into STORM (4) | +5 Mind | quest |
+| Elementalist's Belt | elementalist | Convert all BLIZZARD into STORM (3) | +5 Body | quest |
+| Crimson Circlet | blood-price | Your next SACRIFICE heals you instead; it still counts as a SACRIFICE (TETHER, sacrifice-triggered Globals, anything that reads SACRIFICE) (5) | +5 Body, +20 max VITAE | elite only |
+| Ruby Signet | blood-price | Your next SACRIFICE adds LEECH equal to the VITAE paid, unscaled, to the foe (3) | +5 Heart | quest |
+| Bleeding Signet (existing, reworked) | blood-price | HEAL 5; trigger the foe's LEECH (4) | +5 Mind (the +20 max VITAE is removed) | quest |
