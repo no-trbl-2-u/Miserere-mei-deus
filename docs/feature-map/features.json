@@ -3283,6 +3283,12 @@
       "kind": "coupling",
       "from": "route:dev",
       "to": "area:Game",
+      "file": "axiomancer-mobile/state/item-reward/store-actions.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:dev",
+      "to": "area:Game",
       "file": "axiomancer-mobile/state/presenters/exploration.engine.ts"
     },
     {
@@ -3301,6 +3307,12 @@
       "kind": "coupling",
       "from": "route:dev",
       "to": "area:Items",
+      "file": "axiomancer-mobile/components/DebugRewardTriggers.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:dev",
+      "to": "area:Items",
       "file": "axiomancer-mobile/components/DebugTriggerEncounter.tsx"
     },
     {
@@ -3314,6 +3326,12 @@
       "from": "route:dev",
       "to": "area:Items",
       "file": "axiomancer-mobile/state/dev/rewards.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:dev",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/item-reward/store-actions.ts"
     },
     {
       "kind": "coupling",
