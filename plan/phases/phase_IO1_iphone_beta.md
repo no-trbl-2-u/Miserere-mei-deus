@@ -6,6 +6,9 @@
   friends with iPhones can beta test the game." In the same session T answered two questions: T has **no Apple
   Developer Program membership yet and will enroll**, and friends install by **both** channels: ad hoc
   (EAS internal distribution, registered devices) and TestFlight.
+- T, 2026-10-26 (PR #803): "Merge it as testflight only." T has a monthly cap on Expo builds, and an ad hoc
+  build installs only on devices registered before it was built, so every new tester's iPhone would cost
+  another build. One TestFlight build serves every tester. The ad hoc channel is dropped from this phase.
 - D84-D87 and D95 (code lands by PR and merges on a green adversarial review; a plan merges by T's hand), D93
   (`/plot` lands by a `plot` PR). No D-number governs mobile distribution; bearings' Expo-decouple exception
   (47c-47e) names "the EAS build path" as one of the things that stays on Expo until a native project ships, and
@@ -46,30 +49,29 @@
 
 ## Outcome
 
-T can build the game for iPhone from GitHub Actions in two ways: an ad hoc build that installs from a link on
-registered iPhones, and a TestFlight build that friends install from one public link. A friend with an iPhone
-has installed it and played a fight.
+T can build the game for iPhone from GitHub Actions as one TestFlight build that T and friends install from
+TestFlight, friends by one public link. A friend with an iPhone has installed it and played a fight.
 
 ## Acceptance
 
 - **A1** `app.json` `ios` carries `bundleIdentifier: "com.axiomancer.mobile"` (the Android package name),
   `buildNumber: "1"`, `supportsTablet: false` and `config.usesNonExemptEncryption: false`. A mobile test reads
   the resolved config (`app.config.ts` default export) and pins all four.
-- **A2** `eas.json` `preview` gains `ios: { distribution: "internal" }` (ad hoc), and a new `beta` profile
+- **A2** `eas.json` `preview` stays Android-only (no `ios` block: no ad hoc channel), and a new `beta` profile
   builds iOS with `distribution: "store"` and `autoIncrement: "buildNumber"`, with `appVersionSource` set so
   build numbers are kept by EAS. A `submit.beta.ios` block names the App Store Connect app id, filled in IO1b.
   The same test pins the profile shapes. `production` is unchanged.
-- **A3** `axiomancer-mobile/package.json` gains `deploy:ios-preview` (`eas build --platform ios --profile
-  preview`) and `deploy:ios-beta` (`eas build --platform ios --profile beta --auto-submit`), both behind
-  `npm run verify` and `scripts/with-env.mjs` as `deploy:preview` is.
+- **A3** `axiomancer-mobile/package.json` gains `deploy:ios-beta` (`eas build --platform ios --profile beta
+  --auto-submit`), behind `npm run verify` and `scripts/with-env.mjs` as `deploy:preview` is. No
+  `deploy:ios-preview`.
 - **A4** `axiomancer-mobile/docs/ios-beta.md` is the runbook T follows in IO1b and IO1d: enrolling as an
-  individual, the first interactive `eas credentials -p ios`, registering an iPhone (`eas device:create` and the
-  link the friend opens), creating the App Store Connect app record, making the App Store Connect API key and
-  which GitHub secrets hold it, adding a friend to the TestFlight external group or sending the public link,
-  the 90-day expiry, and that a newly registered device needs a fresh ad hoc build. `AGENTS.md` and
+  individual, the first interactive `eas credentials -p ios`, creating the App Store Connect app record, making the App
+  Store Connect API key and which GitHub secrets hold it, adding T to the TestFlight internal group, adding a
+  friend to the TestFlight external group or sending the public link, the 90-day expiry, and that no device
+  is ever registered (no ad hoc builds). `AGENTS.md` and
   `docs/external-architecture.md` § Expo EAS name it.
-- **A5** (attended) T is enrolled in the Apple Developer Program. The iOS distribution certificate and the ad
-  hoc provisioning profile exist on EAS. T's own iPhone is registered. The App Store Connect app record exists
+- **A5** (attended) T is enrolled in the Apple Developer Program. The iOS distribution certificate and the App
+  Store provisioning profile exist on EAS. No device is registered. The App Store Connect app record exists
   for `com.axiomancer.mobile`, and its numeric id is in `eas.json` `submit.beta.ios.ascAppId`. An App Store
   Connect API key (App Manager role) is stored as the repo secrets `ASC_API_KEY_P8`, `ASC_API_KEY_ID` and
   `ASC_API_ISSUER_ID`, and as an EAS submit credential.
@@ -80,10 +82,10 @@ has installed it and played a fight.
 - **A7** No build meant for anyone but T posts play data. The puzzle-API step in `preview-build.yml` skips the
   `beta` profile as it skips `production`, so a TestFlight build carries no `EXPO_PUBLIC_PUZZLE_API_*` values,
   and `canSendPlayLog()` (BE2b) and the BE1 poster both stay closed. The A6 test pins the skip.
-- **A8** (attended) An ad hoc `preview` iOS build from `main` installs on T's iPhone from its EAS link and
-  reaches the end of one combat round. T notes anything that looks wrong only on iOS: safe areas around the
+- **A8** (attended) The first `beta` build from `main` installs on T's iPhone from TestFlight's internal
+  group (no Beta App Review for internal testers) and reaches the end of one combat round. T notes anything that looks wrong only on iOS: safe areas around the
   notch and home indicator, fonts, haptics, the splash.
-- **A9** (attended) A `beta` build submitted from the workflow passes Beta App Review. The TestFlight external
+- **A9** (attended) That same `beta` build, submitted from the workflow passes Beta App Review. The TestFlight external
   group "Friends" has a public link, and at least one friend installs from it and finishes a fight.
 
 **Measure:** A9: a friend's iPhone runs the TestFlight build through one fight, recorded in
@@ -91,8 +93,8 @@ has installed it and played a fight.
 
 ## Scope
 
-- `axiomancer-mobile/app.json` `ios` block; `eas.json` `preview.ios`, the `beta` profile and `submit.beta`;
-  two `deploy:ios-*` scripts; `docs/ios-beta.md`; a config test.
+- `axiomancer-mobile/app.json` `ios` block; `eas.json` the `beta` profile and `submit.beta`;
+  the `deploy:ios-beta` script; `docs/ios-beta.md`; a config test.
 - `.github/workflows/preview-build.yml`: the `submit` input, the key-file step, `--auto-submit`, the `beta` skip
   on the puzzle-API step; a root test that reads the workflow.
 - `docs/reports/ios-beta.md` (IO1d's record).
@@ -116,8 +118,10 @@ None. No save data, no API route, no D1 table.
   and takes weeks. TestFlight will show T's legal name as the seller. [T to confirm]
 - **iPhone only: `supportsTablet: false`.** T asked for iPhones. The game is portrait-only, and a tablet build
   would need its own layout pass. iPads still run it in iPhone compatibility mode.
-- **Both channels** (T, 2026-10-22). Ad hoc (`preview` profile) is for T's own devices and quick checks with no
-  Apple review. TestFlight (`beta` profile) is for friends: no device registration, one public link.
+- **TestFlight only** (T, 2026-10-26, replacing T's 2026-10-22 choice of both channels). T's own iPhone
+  installs from the internal group, friends from the external group's public link. No ad hoc channel: each
+  newly registered device would need a fresh build, and T's Expo plan caps builds a month. One `beta` build
+  serves every tester, so a beta round costs one iOS build.
 - **A new `beta` profile rather than reusing `production`.** `production` is the store build and turns the dev
   tools off. Keeping beta apart lets it keep the dev menu and lets the App Store release path change later
   without touching friends' builds.
@@ -140,7 +144,7 @@ None. No save data, no API route, no D1 table.
 ## Tests matrix
 
 - Mobile: a config test over `app.config.ts`'s resolved config and `eas.json` (A1, A2): the four `ios` keys,
-  `preview.ios.distribution`, the `beta` profile's distribution and autoIncrement, `appVersionSource`, the
+  `preview` has no `ios` block, the `beta` profile's distribution and autoIncrement, `appVersionSource`, the
   `submit.beta.ios` block's presence, and `production` unchanged.
 - Root: a workflow test that parses `preview-build.yml` (A6, A7): the `submit` input exists; `--auto-submit`
   appears only behind `submit`; the key-file step reads the three secrets and fails on a missing one; the
@@ -178,19 +182,20 @@ data and why. `docs/reports/ios-beta.md` records the first TestFlight build a fr
 ## Phases
 
 ### IO1a — iOS build config and the runbook · S · closes A1, A2, A3, A4 · requires nothing
-Measure: `npm run verify -w axiomancer-mobile`; the config test pins the `ios` block and both iOS profiles.
-- Scope: `app.json` `ios`; `eas.json` `preview.ios`, `beta`, `submit.beta.ios` with `ascAppId` left as a
-  clearly named placeholder that IO1b fills; the two deploy scripts; `docs/ios-beta.md`; the AGENTS and
+Measure: `npm run verify -w axiomancer-mobile`; the config test pins the `ios` block, the `beta` profile and
+`preview` staying Android-only.
+- Scope: `app.json` `ios`; `eas.json` `beta`, `submit.beta.ios` with `ascAppId` left as a clearly named
+  placeholder that IO1b fills; the `deploy:ios-beta` script; `docs/ios-beta.md`; the AGENTS and
   external-architecture lines.
 - Consumers: `AGENTS.md`, `docs/external-architecture.md`.
 - Tests: the mobile config test.
 - Verify gate: mobile verify, prose verify for the docs, root `npm test`.
 
 ### IO1b — Apple enrollment and the credentials (attended) · S · closes A5 · requires IO1a
-Measure: `eas credentials -p ios` lists a distribution certificate and an ad hoc profile naming T's iPhone;
+Measure: `eas credentials -p ios` lists a distribution certificate and an App Store provisioning profile;
 `gh secret list` shows the three ASC secrets; `eas.json` carries the real `ascAppId`.
 - Scope: T, following `docs/ios-beta.md`: enroll; run `eas credentials -p ios` once (Apple ID login on T's
-  machine); `eas device:create` for T's iPhone; create the App Store Connect record and the API key; add the
+  machine); create the App Store Connect record and the API key; add the
   three GitHub secrets. The agent then writes the `ascAppId` into `eas.json` and fixes any runbook step that
   did not match what T saw.
 - Consumers: none.
@@ -209,9 +214,9 @@ puzzle-API skip for `beta`.
 
 ### IO1d — First builds on real iPhones (attended) · S · closes A8, A9 · requires IO1b, IO1c
 Measure: A9, with the build number, commit and friend's install recorded in `docs/reports/ios-beta.md`.
-- Scope: T dispatches `preview-build.yml` with `platform: ios`, `profile: preview` and installs on T's
-  iPhone (A8); then `platform: ios`, `profile: beta`, `submit: true`; in App Store Connect T creates the
-  external group "Friends", submits the build for Beta App Review and turns on the public link; one friend
+- Scope: T dispatches `preview-build.yml` once, with `platform: ios`, `profile: beta`, `submit: true`; T
+  installs it from TestFlight's internal group (A8); in App Store Connect T creates the external group
+  "Friends", submits the build for Beta App Review and turns on the public link; one friend
   installs and plays a fight (A9). The agent writes `docs/reports/ios-beta.md` and files each iOS-only defect
   as a CRITIQUE row.
 - Consumers: none.
