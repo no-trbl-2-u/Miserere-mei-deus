@@ -1,11 +1,11 @@
-# The Breakwater: node map (draft for T's review)
+# The Breakwater (Act 1, Chapter 1): node map (draft for T's review)
 
 > A rough map of every Breakwater node, read from the current tree on 2026-10-26: the graph in
 > `axiomancer-mechanics/src/World/Continents/Coastal-Village/breakwater.ts`, the events in
 > `axiomancer-mechanics/src/World/MapEvents/content.ts`, and the labels in
 > `axiomancer-mobile/state/exploration-maps/breakwater.layout.ts`. It describes what ships today, not a design.
-> T (2026-10-26): "Breakwater is Act 1". The repo still treats Act 1 as four maps (`ACT1_MAPS` in
-> `Game/act1-progression.ts`; D23, D27, D28), so this page covers the Breakwater alone and leaves that call to T.
+> Each region is a chapter (D106, T 2026-10-26): Act 1 is the four regions, and the Breakwater is Chapter 1, the
+> Nov 16 MVP's scope.
 
 ## The shape
 
@@ -97,8 +97,8 @@ the events hold:
 
 - **Enemies:** three foes only, all R2 survivors: Float-Eye on every normal node, the Green Jelly as the elite, the
   Death Beholder at the door. B2 (the enemy revamp) is where the real roster comes from.
-- **Boss tiers:** the watchtower holds a region's door fight. If the Breakwater is all of Act 1, it is also where the
-  Act Boss would sit, and B2's four tiers (normal, elite, region boss, Act Boss) need a ruling.
+- **Boss tiers:** the watchtower holds the region's door fight. Whether that is Chapter 1's boss (B2's "region boss"
+  tier) and where Act 1's Act Boss sits is T's call (D106, open), put to T in enemy session 2.
 - **Hazards:** bw-3 and bw-12 deal a flat 2 damage. They become puzzle boards when the live hazard routing is
   plotted (`plan/deadlines.md`, W2).
 - **No people:** Act 1 stages no NPC, shop, village or narration node (`MapEvents/content.ts` header), so the
@@ -109,5 +109,4 @@ the events hold:
   the question to T.
 - **Loot caches:** shillings and the cache's card offer; no item or relic comes from a Breakwater node besides
   fight rewards until LR1's quests and elite drops land.
-- **The door:** bw-18 travels to the Charcoal Wood. If the Breakwater is Act 1, this is the act's end, and what it
-  leads to needs a ruling.
+- **The door:** bw-18 travels to the Charcoal Wood, Chapter 2.
