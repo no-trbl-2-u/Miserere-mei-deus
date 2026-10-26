@@ -73,6 +73,13 @@
 - estimated phases: 1
 - conflicts: none. CI only; no game code, content, rule, card or keyword (D88).
 
+### [ ] [score 3.0] Briefs name journeys the way they run: lint a brief's `node scripts/<x>-e2e.mjs` against the root (lesson `brief-e2e-script-paths`, seen 2×)
+- proposed: 2026-10-26, ship BC1 retro (lesson `brief-e2e-script-paths`, seen 2×)
+- source signals: `plan/lessons.md` `brief-e2e-script-paths`, seen 2×, last 2026-10-26. The PF4 and BC1 briefs' verify gates and Acceptance lines named `node scripts/combat-round-e2e.mjs` and `node scripts/exploration-combat-roundtrip-e2e.mjs` from the root; both live in `axiomancer-mobile/scripts/`, so the root call dies with MODULE_NOT_FOUND and costs a rerun.
+- proposed scope: one `/iterate` tick. A root test (beside `scripts/check-deadlines.mjs`) reads `plan/phases/*.md` for open rows and fails on a backticked `node scripts/<x>.mjs` that does not exist at the root, naming the `npm run e2e:<name> -w axiomancer-mobile` form when the file is in the mobile workspace; `skills/plot.md` says the same form. Then mark the lesson `guarded by`.
+- estimated phases: 1
+- conflicts: none. Loop tooling only; no game code, content, rule, card or keyword (D88). Label `review:plan-only` for the docs half.
+
 ### [ ] [score 3.5] Stop `<rev>:<path>` git reads from breaking on Windows (lesson `msys-rev-path`, seen 2x)
 - proposed: 2026-10-21, `/plot` AD1 retro (lesson `msys-rev-path`, seen 2×)
 - source signals: `plan/lessons.md` `msys-rev-path`, seen 2×, last 2026-10-21. Git Bash path conversion rewrites `git show origin/main:<path>` to `origin\main;<path>` and git reports "ambiguous argument". It bit twice inside one plot session reading `main`'s build plan and workflows, costing a retry each time; the same family as `sed-flattens-crlf` and `isolated-worktree-shell` — this box's shell, not the repo's logic.

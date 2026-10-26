@@ -48,7 +48,7 @@ import type {
     CombatSignatureVM, CombatEffectChipVM,
     CombatMomentumV2VM,
 } from '@/state/presenters/combat-encounter.engine';
-import { armedValue, dieCanPowerCardVM, STANCE_COLORS, PROGRAM_COPY } from '@/state/presenters/combat-encounter.engine';
+import { armedValue, dieCanPowerCardVM, DEAD_TRAY_COPY, selectDeadTray, STANCE_COLORS, PROGRAM_COPY } from '@/state/presenters/combat-encounter.engine';
 // The ONE mobile source for the rarity band. The face never
 // re-bands a rank and never re-types a rarity hue; see `card-rarity.engine.ts`.
 import { rarityFor, RARITY_LABEL, RARITY_COLOR } from '@/state/presenters/card-rarity.engine';
@@ -1221,16 +1221,10 @@ export const CombatBoard = React.memo(function CombatBoard({
     // hand (no matching color, no wild). The outs get lit instead of leaving
     // the player staring: FREE ribbons read prominent, and END carries its
     // honest consequence line.
-    const playableDice = vm.dice.filter((d) => d.draggable && !d.isX && !d.spent);
-    const deadTray = vm.diceRolled && playableDice.length > 0 && vm.hand.length > 0
-        && playableDice.every((d) => vm.hand.every((c) => !dieCanPowerCardVM(d, c.stance)));
-    // The END consequence on a dead tray. Engine truth (`endTurn`): ONE
-    // unspent mana/special die banks to the Reserve when a slot is free; the
-    // rest expire and the fresh tray rolls next phase. The line does not name
-    // the bank.
-    const endConsequence = deadTray
-        ? 'unusable dice are discarded · fresh roll next phase'
-        : null;
+    // The rule and its words are the presenter's (`selectDeadTray`): a MISS
+    // face and an X die count as unable to power.
+    const deadTray = selectDeadTray(vm);
+    const endConsequence = deadTray ? DEAD_TRAY_COPY.endConsequence : null;
 
     // Commit ONE staged card: powered by the die the player dropped on it
     // (when still usable and colour-legal), else FREE (no die). Commit
@@ -1368,7 +1362,7 @@ export const CombatBoard = React.memo(function CombatBoard({
                         {stagedCards.length > 0 && !stagedCards.some((c) => assignedDieFor(c.uid)) && !cardDragLive && !dropReject.reason ? (
                             <Text style={styles.stageHint} numberOfLines={1} testID="combat-stage-hint">
                                 {/* This line is for the card already lifted out of the fan. */}
-                                {deadTray ? 'no die matches your hand — APPLY · FREE still works' : 'drag a die onto your card · APPLY to commit'}
+                                {deadTray ? DEAD_TRAY_COPY.stageHint : 'drag a die onto your card · APPLY to commit'}
                             </Text>
                         ) : null}
                     </View>
@@ -1414,7 +1408,7 @@ export const CombatBoard = React.memo(function CombatBoard({
                     point at the outs (FREE plays; END rolls fresh). */}
                 {deadTray && stagedCards.length === 0 ? (
                     <Text style={styles.deadTrayLine} numberOfLines={2} testID="combat-dead-tray">
-                        no die matches your hand — FREE plays still work · END rolls fresh dice
+                        {DEAD_TRAY_COPY.line}
                     </Text>
                 ) : null}
                 {/* The tray outranks the rune column in z-order. `sigTop` keeps the column clear of the

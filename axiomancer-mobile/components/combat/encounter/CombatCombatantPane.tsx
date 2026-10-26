@@ -40,7 +40,9 @@ import { makeStyles, usePalette } from '@/theme/runtime';
 import type {
     CombatEnemyPaneVM, CombatPlayerPaneVM, CombatEffectChipVM,
 } from '@/state/presenters/combat-encounter.engine';
-import { PROGRAM_COPY, selectCombatLogLines } from '@/state/presenters/combat-encounter.engine';
+import {
+    DOT_TICK_STAGGER_MS, HIT_FLOAT_COLOR, PROGRAM_COPY, dotTickFloat, effectChipA11y, selectCombatLogLines,
+} from '@/state/presenters/combat-encounter.engine';
 import { type CombatEvent } from '@mechanics';
 import { effectGlyph } from '@/components/combat/statusGlyphs';
 import { keywordForEffect } from '@/state/combat/keywords';
@@ -97,7 +99,14 @@ export const COMBAT_HUD_PAD_TOP = 8;
  *  in a 92-unit box scaled to this size. */
 export const PLAYER_AVATAR_SIZE = 48;
 
-type Float = { id: number; text: string; color: string; dx: number };
+/** `dy` stacks a float vertically off the layer's origin; `delayMs` holds it
+ *  back so a batch of ticks reads one at a time. */
+type Float = { id: number; text: string; color: string; dx: number; dy?: number; delayMs?: number };
+
+/** One DoT tick per row: ticks in one beat stack this far apart. */
+const TICK_ROW_PX = 28;
+/** The first tick row's distance from the hit, so a tick never lands on it. */
+const TICK_ROW_GAP_PX = 30;
 
 // ── Enemy HP bar + crest ─────────────────────────────────────────────────────
 
@@ -187,16 +196,18 @@ function HudMeter({ glyph, label, value, target, color, testID }: {
 /** A single floating "-N" / "DENIED" / keyword that rises and fades, then
  *  self-removes. `dx` jitters it horizontally so simultaneous floats (−N + DoT
  *  tick + BLOCKED) don't pile onto one pixel. */
-function FloatNum({ text, color, dx, onDone }: { text: string; color: string; dx: number; onDone: () => void }) {
+function FloatNum({ text, color, dx, dy = 0, delayMs = 0, onDone }: {
+    text: string; color: string; dx: number; dy?: number; delayMs?: number; onDone: () => void;
+}) {
     const styles = useStyles();
     // lib/juice number-pop primitive — the rise+fade math lives in the
     // module; this call site only supplies the horizontal jitter (a
     // static per-instance offset, so it rides the OUTER plain View — a style
     // array can't merge two `transform` arrays, so the animated translateY
     // stays on its own nested Animated.View).
-    const popStyle = useJuiceNumberPop(onDone);
+    const popStyle = useJuiceNumberPop(onDone, delayMs);
     return (
-        <View style={[styles.floatNum, { transform: [{ translateX: dx }] }]} pointerEvents="none">
+        <View style={[styles.floatNum, { transform: [{ translateX: dx }, { translateY: dy }] }]} pointerEvents="none">
             <Animated.View style={popStyle}>
                 <Text style={[styles.floatNumText, { color }]}>{text}</Text>
             </Animated.View>
@@ -219,13 +230,13 @@ export function EffectChips({ effects, onChip, align = 'flex-start', testID }: {
     return (
         <View style={[styles.chipRow, { justifyContent: align }]} pointerEvents="box-none" testID={testID}>
             {effects.map((e) => (
+                <View key={e.effectId} style={e.caption ? styles.chipWithCaption : null} pointerEvents="box-none">
                 <Pressable
-                    key={e.effectId}
                     onPress={() => onChip?.(e)}
                     style={[styles.chip, { borderColor: e.glyph.color }]}
                     testID={`combat-effect-${e.effectId}`}
                     accessibilityRole="button"
-                    accessibilityLabel={`${e.glyph.label}, intensity ${e.intensity}, ${e.duration} turns left`}
+                    accessibilityLabel={effectChipA11y(e)}
                 >
                     <View style={[StyleSheet.absoluteFill, { backgroundColor: e.glyph.color, opacity: 0.16 }]} />
                     <Text style={[styles.chipGlyph, { color: e.glyph.color, textShadowColor: e.glyph.color }]}>{e.glyph.glyph}</Text>
@@ -242,6 +253,17 @@ export function EffectChips({ effects, onChip, align = 'flex-start', testID }: {
                         <Text style={styles.chipBadgeText} allowFontScaling={false}>{e.intensity}</Text>
                     </View>
                 </Pressable>
+                {e.caption ? (
+                    <Text
+                        style={[styles.chipCaption, { color: e.glyph.color }]}
+                        testID="combat-self-burn"
+                        numberOfLines={1}
+                        allowFontScaling={false}
+                    >
+                        {e.caption}
+                    </Text>
+                ) : null}
+                </View>
             ))}
         </View>
     );
@@ -292,13 +314,13 @@ export const PlayerMedallion = React.memo(function PlayerMedallion({
         const sub = AccessibilityInfo.addEventListener('reduceMotionChanged', (on) => { reduceMotion.current = on; });
         return () => { alive = false; sub?.remove?.(); };
     }, []);
-    const push = useCallback((text: string, color: string, dx = 0) => {
+    const push = useCallback((text: string, color: string, dx = 0, dy = 0, delayMs = 0) => {
         const id = (idRef.current += 1);
-        setFloats((p) => [...p, { id, text, color, dx }]);
+        setFloats((p) => [...p, { id, text, color, dx, dy, delayMs }]);
     }, []);
     const drop = useCallback((id: number) => setFloats((p) => p.filter((f) => f.id !== id)), []);
     const landHit = useCallback((dmg: number, blocked: number, fired: boolean) => {
-        if (dmg > 0) push(`-${dmg}`, HUE.damageRed, 0);
+        if (dmg > 0) push(`-${dmg}`, HIT_FLOAT_COLOR, 0);
         if (fired && blocked > 0) push(`BLOCKED ${blocked}`, HUE.guardSteel, 40);
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy).catch(() => undefined);
     }, [push]);
@@ -308,7 +330,7 @@ export const PlayerMedallion = React.memo(function PlayerMedallion({
         lastSeq.current = fx.seq;
         let dmg = 0;
         let threatFired = false;
-        const ticks: number[] = [];
+        const ticks: { effectId: string; label: string; amount: number }[] = [];
         const statuses: { text: string; color: string }[] = [];
         // SACRIFICE costs and heals float on the medallion too, so a card's
         // VITAE change reads where the bar is.
@@ -318,7 +340,7 @@ export const PlayerMedallion = React.memo(function PlayerMedallion({
             if (e.kind === 'vitae-sacrificed') paid += e.amount;
             else if (e.kind === 'player-healed') healed += e.amount;
             else if (e.kind === 'damage-dealt' && e.target === 'self') dmg += e.amount;
-            else if (e.kind === 'dot-tick' && e.target === 'self') ticks.push(e.amount);
+            else if (e.kind === 'dot-tick' && e.target === 'self') ticks.push(e);
             else if (e.kind === 'threat-fired') threatFired = true;
             else if (e.kind === 'effect-landed' && e.target === 'self') {
                 const kw = (keywordForEffect(e.effectId) ?? e.effectKind ?? 'effect').toUpperCase();
@@ -345,7 +367,13 @@ export const PlayerMedallion = React.memo(function PlayerMedallion({
             impact.value = 0;
             impact.value = withDelay(IMPACT, withTiming(1, { duration: 1 }, (fin) => { if (fin) runOnJS(landHit)(dmg, blocked, threatFired); }));
         }
-        ticks.forEach((t, k) => push(`-${t}`, HUE.tickPurple, (k % 2 === 0 ? -1 : 1) * (20 + Math.floor(k / 2) * 16)));
+        // Each tick is its own labelled float in its element's colour, stacked
+        // upward off the medallion (the hand is above, the screen edge left)
+        // and staggered so none reads as one smeared number.
+        ticks.forEach((t, k) => {
+            const f = dotTickFloat(t);
+            push(f.text, f.color, 40, -(TICK_ROW_GAP_PX + k * TICK_ROW_PX), k * DOT_TICK_STAGGER_MS);
+        });
         if (paid > 0) push(`-${paid}`, HUE.damageRed, -36);
         if (healed > 0) push(`+${healed}`, HUE.boonGreen, 36);
         const hadFloat = dmg > 0 || ticks.length > 0;
@@ -400,7 +428,9 @@ export const PlayerMedallion = React.memo(function PlayerMedallion({
             </Animated.View>
             </Animated.View>
             <View style={styles.playerFloatLayer} pointerEvents="none">
-                {floats.map((f) => <FloatNum key={f.id} text={f.text} color={f.color} dx={f.dx} onDone={() => drop(f.id)} />)}
+                {floats.map((f) => (
+                    <FloatNum key={f.id} text={f.text} color={f.color} dx={f.dx} dy={f.dy} delayMs={f.delayMs} onDone={() => drop(f.id)} />
+                ))}
             </View>
         </View>
     );
@@ -471,9 +501,9 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
         return () => { alive = false; sub?.remove?.(); };
     }, []);
 
-    const pushEnemy = useCallback((text: string, color: string, dx = 0) => {
+    const pushEnemy = useCallback((text: string, color: string, dx = 0, dy = 0, delayMs = 0) => {
         const id = (idRef.current += 1);
-        setEnemyFloats((p) => [...p, { id, text, color, dx }]);
+        setEnemyFloats((p) => [...p, { id, text, color, dx, dy, delayMs }]);
     }, []);
     const dropEnemy = useCallback((id: number) => setEnemyFloats((p) => p.filter((f) => f.id !== id)), []);
 
@@ -484,7 +514,7 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
         let enemyDmg = 0;
         let denied = false;
         let threatFired = false;
-        const ticks: { side: 'enemy' | 'player'; amount: number }[] = [];
+        const ticks: { side: 'enemy' | 'player'; effectId: string; label: string; amount: number }[] = [];
         // (d) status applications the engine already emits — zero-damage
         // control/buff/debuff intents that must never be silent.
         const statusFloats: { side: 'enemy' | 'player'; text: string; color: string }[] = [];
@@ -492,7 +522,7 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
             if (e.kind === 'damage-dealt') {
                 if (e.target === 'self') playerDmg += e.amount; else enemyDmg += e.amount;
             } else if (e.kind === 'dot-tick') {
-                ticks.push({ side: e.target === 'self' ? 'player' : 'enemy', amount: e.amount });
+                ticks.push({ side: e.target === 'self' ? 'player' : 'enemy', effectId: e.effectId, label: e.label, amount: e.amount });
             } else if (e.kind === 'phase-resolved' && e.mark === 'clear') {
                 denied = true;
             } else if (e.kind === 'threat-fired') {
@@ -551,13 +581,14 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
         // (d-symmetric) the player's APPLY landed on the enemy → flinch + float.
         if (enemyDmg > 0) {
             enemyShift.value = withSequence(withTiming(-6, { duration: 70 }), withTiming(0, { duration: 160 }));
-            pushEnemy(`-${enemyDmg}`, AXM.parchment, 0);
+            pushEnemy(`-${enemyDmg}`, HIT_FLOAT_COLOR, 0);
         }
-        // (c) enemy-side DoT ticks float over the figure (alternating x-jitter).
+        // (c) enemy-side DoT ticks: one labelled float per tick in its element's
+        //     colour, stacked in rows under the hit and staggered in time.
         const enemyTicks = ticks.filter((t) => t.side === 'enemy');
         enemyTicks.forEach((t, k) => {
-            const dx = (k % 2 === 0 ? -1 : 1) * (20 + Math.floor(k / 2) * 16);
-            pushEnemy(`-${t.amount}`, HUE.hexAmber, dx);
+            const f = dotTickFloat(t);
+            pushEnemy(f.text, f.color, 0, TICK_ROW_GAP_PX + k * TICK_ROW_PX, k * DOT_TICK_STAGGER_MS);
         });
         // (d) never-silent status: float the applied KEYWORD when the enemy had no
         //     other float (a -N / tick already says "something happened" there).
@@ -565,7 +596,7 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
         statusFloats.forEach((s, k) => {
             if (s.side === 'enemy' && !enemyHadFloat) pushEnemy(s.text, s.color, (k % 2 === 0 ? 1 : -1) * 30);
         });
-    }, [fx, enemy.intent.damage, player.maxHp, AXM.parchment, enemyScale, enemyShift, pushEnemy]);
+    }, [fx, enemy.intent.damage, player.maxHp, enemyScale, enemyShift, pushEnemy]);
 
     const enemyAnim = useAnimatedStyle(() => ({ transform: [{ translateX: enemyShift.value }, { scale: enemyScale.value }] }));
 
@@ -602,6 +633,10 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
     // While `ARENA_PLATES_SHOWN` is off, every fight gets
     // a plain black scene instead (the palette's darkest ink, `deepBg`).
     const arenaBg = arenaBackdropFor(region);
+    // Live anchor: 14pt tucked under the HUD's measured full-width block. The
+    // static top in the stylesheet is only the pre-layout fallback. The figure
+    // and its float layer share it.
+    const figureTop = hudBlockH > 0 ? { top: topInset + COMBAT_HUD_PAD_TOP + hudBlockH - 14 } : null;
     const arenaAlt = arenaAltTextFor(region);
 
     return (
@@ -629,10 +664,7 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                     <View
                         style={[
                             styles.enemyFigureWrap,
-                            // Live anchor: 14pt tucked under the HUD's measured
-                            // full-width block. The static top in the stylesheet
-                            // is only the pre-layout fallback.
-                            hudBlockH > 0 ? { top: topInset + COMBAT_HUD_PAD_TOP + hudBlockH - 14 } : null,
+                            figureTop,
                         ]}
                         testID="combat-enemy-figure-wrap"
                     >
@@ -792,9 +824,18 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                         <EffectChips effects={enemy.effects} onChip={onChip} align="flex-start" testID="combat-enemy-effects" />
                     </View>
                 </View>
-                {/* enemy floats rise from under the crest, over the figure */}
-                <View style={styles.enemyFloatLayer} pointerEvents="none">
-                    {enemyFloats.map((f) => <FloatNum key={f.id} text={f.text} color={f.color} dx={f.dx} onDone={() => dropEnemy(f.id)} />)}
+            </View>
+            {/* The enemy's floats rise from the foe's body: a twin of the scene
+                band and the figure wrap (same geometry, same live top), drawn
+                above the HUD and the scrims, with its origin over the upper
+                third of the drawn figure for either figure size. */}
+            <View style={styles.floatBand} pointerEvents="none" testID="combat-enemy-float-band">
+                <View style={[styles.enemyFigureWrap, figureTop]} pointerEvents="none" testID="combat-enemy-float-anchor">
+                    <View style={styles.enemyFloatLayer} pointerEvents="none" testID="combat-enemy-float-layer">
+                        {enemyFloats.map((f) => (
+                            <FloatNum key={f.id} text={f.text} color={f.color} dx={f.dx} dy={f.dy} delayMs={f.delayMs} onDone={() => dropEnemy(f.id)} />
+                        ))}
+                    </View>
                 </View>
             </View>
         </Animated.View>
@@ -878,6 +919,9 @@ const useStyles = makeStyles((AXM) => ({
         paddingHorizontal: 2, backgroundColor: 'rgba(0,0,0,0.92)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.28)',
         alignItems: 'center', justifyContent: 'center',
     },
+    // A captioned chip sits beside its caption, the pair one item of the row.
+    chipWithCaption: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+    chipCaption: { fontFamily: FONTS.mono, fontSize: 9, letterSpacing: 0.4 },
     chipBadgeText: { fontFamily: FONTS.sans, fontSize: 9, lineHeight: 11, color: HUE.white },
     // Remaining-duration tag (top-left), distinct from the stacks badge.
     chipDur: {
@@ -888,7 +932,12 @@ const useStyles = makeStyles((AXM) => ({
     chipDurText: { fontFamily: FONTS.mono, fontSize: 8, lineHeight: 10, color: 'rgba(255,255,255,0.82)' },
 
     // Floats.
-    enemyFloatLayer: { position: 'absolute', top: 116, left: 0, right: 0, alignItems: 'center', zIndex: 20 },
+    // The float band mirrors `sceneBand`'s geometry (no paint) so the anchor
+    // inside it lands exactly on `enemyFigureWrap`.
+    floatBand: { position: 'absolute', top: 0, left: 0, right: 0, height: '62%', zIndex: 20 },
+    // The figure fills ~96% of the wrap from its feet up (both sizes share the
+    // height), so 22% down the wrap is the upper third of the drawn foe.
+    enemyFloatLayer: { position: 'absolute', top: '22%', left: 0, right: 0, alignItems: 'center', zIndex: 20 },
     playerFloatLayer: { position: 'absolute', top: -26, left: 0, right: 0, alignItems: 'center', zIndex: 20 },
     floatNum: { position: 'absolute', top: 0, alignItems: 'center' },
     floatNumText: {

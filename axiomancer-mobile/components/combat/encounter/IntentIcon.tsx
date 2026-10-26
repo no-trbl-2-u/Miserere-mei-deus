@@ -13,6 +13,9 @@ import { Text, View } from 'react-native';
 import { FONTS, HUE } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 import type { CombatIntentVM } from '@/state/presenters/combat-encounter.engine';
+import {
+    INTENT_BLIZZARD_COLOR, intentBlizzardLine, stripThreatPayload,
+} from '@/state/presenters/combat-encounter.engine';
 
 /** One a11y sentence for a fork: condition + both outcomes (+ taken). */
 function branchA11y(branch: NonNullable<CombatIntentVM['branch']>): string {
@@ -26,15 +29,21 @@ export function IntentIcon({ intent, onPress }: { intent: CombatIntentVM; onPres
     // prints `projectedDamage`, the hit after the engine's threat scale and
     // escalation, and the → badge prints `netDamage`, what lands through the
     // live guard/barrier. State the REAL outcome in a11y, not the raw one.
-    const { willDeny, netDamage, projectedDamage } = intent.wallMath;
+    const { willDeny, netDamage, projectedDamage, blizzardCut } = intent.wallMath;
     const hit = willDeny ? intent.damage : projectedDamage;
+    // BLIZZARD already shrank `hit`; this line says by how much.
+    const blizzardLine = !willDeny && (blizzardCut ?? 0) > 0 ? intentBlizzardLine(blizzardCut) : null;
     const wallMathLabel = willDeny
         ? ' This turn will be DENIED — no damage lands.'
         : intent.damage > 0 && netDamage !== hit
             ? ` ${netDamage} will actually land through your current guard.`
             : '';
-    const a11y = `Enemy intent: ${intent.label}. ${intent.description}`
+    // One damage number: the authored payload parenthetical is dropped (as the
+    // log drops it) and the pill's number is the one said.
+    const description = stripThreatPayload(intent.description ?? '');
+    const a11y = `Enemy intent: ${intent.label}.${description ? ` ${description}.` : ''}`
         + (intent.damage > 0 ? ` Deals ${hit} damage.` : '')
+        + (blizzardLine ? ` ${blizzardLine[0].toUpperCase()}${blizzardLine.slice(1)}.` : '')
         + (intent.debuffs ? ' Applies a debuff.' : '')
         + wallMathLabel
         + (intent.branch ? branchA11y(intent.branch) : '')
@@ -64,6 +73,11 @@ export function IntentIcon({ intent, onPress }: { intent: CombatIntentVM; onPres
                     {intent.branch && <Text style={[styles.pillText, { color: intent.color }]} allowFontScaling={false}>⑂</Text>}
                 </View>
             )}
+            {blizzardLine ? (
+                <Text style={[styles.wallMathBlizzard, { color: INTENT_BLIZZARD_COLOR }]} testID="combat-intent-blizzard" allowFontScaling={false}>
+                    {blizzardLine}
+                </Text>
+            ) : null}
             {willDeny ? (
                 <Text style={styles.wallMathDenied} testID="combat-intent-wallmath" allowFontScaling={false}>DENIED</Text>
             ) : intent.damage > 0 && netDamage !== hit ? (
@@ -88,5 +102,6 @@ const useStyles = makeStyles((AXM) => ({
     pillText: { fontFamily: FONTS.mono, fontSize: 11, letterSpacing: 0.3 },
     debuffMark: { fontFamily: FONTS.sans, fontSize: 10, color: HUE.tickPurple },
     wallMathDenied: { fontFamily: FONTS.sans, fontSize: 9, color: HUE.goldAccent, marginTop: 1, letterSpacing: 0.5 },
+    wallMathBlizzard: { fontFamily: FONTS.mono, fontSize: 9, marginTop: 1 },
     wallMathNet: { fontFamily: FONTS.mono, fontSize: 9, color: HUE.stoneGrey, marginTop: 1 },
 }));

@@ -275,6 +275,58 @@ describe('the witness values the weather', () => {
     });
 });
 
+describe('projectIncomingThreat.blizzardCut (phase BC1, A3)', () => {
+    const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
+    /** The current phase, rewritten to strike with the given printed hits. */
+    const withHits = (s: CombatEncounterState, damages: number[]): CombatEncounterState => {
+        const idx = Math.min(s.currentPhaseIndex, s.threatPhases.length - 1);
+        const phases = s.threatPhases.map((p, i) => i !== idx ? p : {
+            ...p, threatAction: { ...p.threatAction, effects: damages.map(damage => ({ damage })) },
+        });
+        return { ...s, threatPhases: phases } as CombatEncounterState;
+    };
+    const softened = (s: CombatEncounterState) => sum(resolveThreatPhase(s).events
+        .flatMap(e => e.kind === 'blizzard-softened' ? [e.amount] : []));
+
+    it('is 0 with no BLIZZARD, and projectedDamage is unchanged', () => {
+        const s = fight([]);
+        const p = projectIncomingThreat(s);
+        expect(p.blizzardCut).toBe(0);
+        expect(p.projectedDamage).toBe(projectIncomingThreat(withWeather(s, { blizzard: 0 })).projectedDamage);
+        expect(softened(s)).toBe(0);
+    });
+
+    it('below a hit, above a hit and over two hits: projected + cut is the hits, and the cut is what the engine softens', () => {
+        const one = fight([]);
+        const big = Math.max(...threatHits(one));
+        const two = withHits(fight([]), [10, 4]);
+        const cases: Array<[CombatEncounterState, number]> = [
+            [one, big - 1], [one, big + 3], [two, Math.max(...threatHits(two)) - 1], [two, 1],
+        ];
+        for (const [base, blizzard] of cases) {
+            const s = withWeather(base, { blizzard });
+            const p = projectIncomingThreat(s);
+            const hits = threatHits(s);
+            expect(p.blizzardCut).toBe(sum(hits.map(h => Math.min(h, blizzard))));
+            expect(p.projectedDamage + p.blizzardCut).toBe(sum(hits));
+            expect(p.blizzardCut).toBe(softened(s));
+        }
+        expect(threatHits(two)).toHaveLength(2);
+    });
+
+    it('is 0 when the foe is denied its turn', () => {
+        const base = fight([]);
+        const petrified = {
+            ...base,
+            enemy: { ...base.enemy, effects: [{ effectId: 'debuff_petrify', remainingDuration: 1, intensity: 1, appliedAt: 0, tier: 3 }] },
+        } as CombatEncounterState;
+        const p = projectIncomingThreat(withWeather(petrified, { blizzard: 5 }));
+        expect(p.willDeny).toBe(true);
+        expect(p.blizzardCut).toBe(0);
+        expect(p.projectedDamage).toBe(0);
+    });
+});
+
 describe('the weather module', () => {
     it('an element at 0 is gone; drift reads "up when the round began"', () => {
         const fresh = { ...initElementState(), blizzard: 2 };

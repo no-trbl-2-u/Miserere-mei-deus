@@ -208,7 +208,7 @@ describe('CombatCombatantPane — the enemy\'s states animate (phases AN1b, AN1c
     it('selects the struck clip for a damage-over-time tick on the enemy', () => {
         frames.getEnemyFrameSet.mockReturnValue(SYNTHETIC_FRAME_SET);
         const poison = [
-            { kind: 'dot-tick', target: 'enemy', amount: 3 },
+            { kind: 'dot-tick', effectId: 'inferno', label: 'INFERNO', target: 'enemy', amount: 3 },
         ] as unknown as CombatEvent[];
         renderPane({ seq: 1, events: poison });
         act(() => { jest.advanceTimersByTime(CARD_MOTION_SETTLE_MS); });
