@@ -131,11 +131,11 @@ test('no workflow but pr-review\'s merge job merges or auto-merges, and none for
     const text = code(read(`${WF}/${f}`))
     if (f !== 'pr-review.yml') {
       assert.doesNotMatch(text, /gh pr merge/, f)
-      assert.doesNotMatch(text, /--auto\b/, f)
+      assert.doesNotMatch(text, /--auto(?![\w-])/, f) // --auto-submit (EAS) is not gh's --auto
     } else {
       // Outside the merge job, pr-review.yml merges nothing either.
       const outside = text.replace(/\n {2}merge:\n[\s\S]*$/, '')
-      assert.doesNotMatch(outside, /gh pr merge|--auto\b/, 'pr-review.yml merges only in its merge job')
+      assert.doesNotMatch(outside, /gh pr merge|--auto(?![\w-])/, 'pr-review.yml merges only in its merge job')
     }
     assert.doesNotMatch(text, /git push[^\n]*(--force|\s-f\b)/, f)
   }
