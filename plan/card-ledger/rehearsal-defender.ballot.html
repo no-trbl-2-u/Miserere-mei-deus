@@ -248,13 +248,13 @@ const SLOTS = [
 
 const CARDS = [
   // P-01
-  { id: 'P-01a', type: 'Attack', job: 'hit', free: 'DEAL 4, +1 per THORNS you have (max +5).', paid: 'DEAL 8, +2 per THORNS you have (max +12).', why: 'Reads the spikes\' size; capped.' },
+  { id: 'P-01a', type: 'Attack', job: 'hit', free: 'DEAL 4, +1 per THORNS you have.', paid: 'DEAL 8, +2 per THORNS you have.', why: 'Reads the spikes\' size; capped.' },
   { id: 'P-01b', type: 'Skill', job: 'wall', free: 'GUARD 4, or GUARD 6 if you have THORNS.', paid: 'GUARD 10, or GUARD 16 if you have THORNS 3 or more.', why: 'One yes/no check, as a wall.' },
   { id: 'P-01c', type: 'Attack', job: 'affliction', free: 'DEAL 3, THORNS 1.', paid: 'Discard 1 card at random. DEAL 6, THORNS 3.', why: 'Grows the spikes it reads.' },
   // P-02
-  { id: 'P-02a', type: 'Attack', job: 'hit', free: 'DEAL equal to your GUARD (max 8).', paid: 'Discard 1 card at random. DEAL twice your GUARD (max 20).', why: 'The plain shield bash.' },
-  { id: 'P-02b', type: 'Skill', job: 'wall', free: 'GUARD 4.', paid: 'Discard 1 card at random. GUARD 8, then DEAL equal to your GUARD (max 12).', why: 'Builds the shell first, then bashes.' },
-  { id: 'P-02c', type: 'Attack', job: 'affliction', free: 'DEAL equal to your GUARD (max 6). The foe is VULNERABLE 1.', paid: 'Discard 1 card at random. DEAL twice your GUARD (max 16). The foe is VULNERABLE 2.', why: 'The bash that opens the foe up for the spikes.' },
+  { id: 'P-02a', type: 'Attack', job: 'hit', free: 'DEAL equal to your GUARD.', paid: 'Discard 1 card at random. DEAL twice your GUARD.', why: 'The plain shield bash.' },
+  { id: 'P-02b', type: 'Skill', job: 'wall', free: 'GUARD 4.', paid: 'Discard 1 card at random. GUARD 8, then DEAL equal to your GUARD.', why: 'Builds the shell first, then bashes.' },
+  { id: 'P-02c', type: 'Attack', job: 'affliction', free: 'DEAL equal to your GUARD. The foe is VULNERABLE 1.', paid: 'Discard 1 card at random. DEAL twice your GUARD. The foe is VULNERABLE 2.', why: 'The bash that opens the foe up for the spikes.' },
   // P-03
   { id: 'P-03a', type: 'Attack', job: 'hit', free: 'DEAL 5.', paid: 'Discard 2 cards at random. DEAL 18.', why: 'The purest trade: two cards for a huge hit.' },
   { id: 'P-03b', type: 'Skill', job: 'wall', free: 'GUARD 5.', paid: 'Discard 2 cards at random. GUARD 18.', why: 'The big swing as a wall.' },
@@ -265,12 +265,12 @@ const CARDS = [
   { id: 'P-04c', type: 'Skill', job: 'affliction', free: 'GUARD 3, THORNS 1.', paid: 'Discard 2 cards at random. REFLECT 50%, THORNS 3.', why: 'Both spikes at once.' },
   // P-05
   { id: 'P-05a', type: 'Attack', job: 'hit', free: 'DEAL 3, + your THORNS.', paid: 'DEAL 6, + twice your THORNS.', why: 'The spikes as a straight hit.' },
-  { id: 'P-05b', type: 'Skill', job: 'wall', free: 'GUARD 3, +1 per THORNS you have (max +6).', paid: 'GUARD 6, +2 per THORNS you have (max +14).', why: 'The slot\'s plain job.' },
+  { id: 'P-05b', type: 'Skill', job: 'wall', free: 'GUARD 3, +1 per THORNS you have.', paid: 'GUARD 6, +2 per THORNS you have.', why: 'The slot\'s plain job.' },
   { id: 'P-05c', type: 'Skill', job: 'affliction', free: 'THORNS 2, then GUARD equal to your THORNS.', paid: 'THORNS 3, then GUARD twice your THORNS.', why: 'Feeds the spikes and reads them in one card.' },
   // P-06
-  { id: 'P-06a', type: 'Attack', job: 'hit', free: 'DEAL 3, + what your THORNS and REFLECT dealt last foe turn (max +8).', paid: 'DEAL 6, + twice what they dealt (max +20).', why: 'Pays back the last turn\'s spikes.' },
-  { id: 'P-06b', type: 'Skill', job: 'wall', free: 'GUARD equal to what your THORNS and REFLECT dealt last foe turn (max 8).', paid: 'GUARD twice what they dealt (max 20).', why: 'The spikes rebuild the shell.' },
-  { id: 'P-06c', type: 'Skill', job: 'affliction', free: 'THORNS 1 per strike the foe made last turn (max 3).', paid: 'Discard 1 card at random. THORNS 2 per strike the foe made last turn (max 6).', why: 'Many-strike foes grow the spikes.' },
+  { id: 'P-06a', type: 'Attack', job: 'hit', free: 'DEAL 3, + what your THORNS and REFLECT dealt last foe turn.', paid: 'DEAL 6, + twice what they dealt.', why: 'Pays back the last turn\'s spikes.' },
+  { id: 'P-06b', type: 'Skill', job: 'wall', free: 'GUARD equal to what your THORNS and REFLECT dealt last foe turn.', paid: 'GUARD twice what they dealt.', why: 'The spikes rebuild the shell.' },
+  { id: 'P-06c', type: 'Skill', job: 'affliction', free: 'THORNS 1 per strike the foe made last turn.', paid: 'Discard 1 card at random. THORNS 2 per strike the foe made last turn.', why: 'Many-strike foes grow the spikes.' },
   // P-07
   { id: 'P-07a', type: 'Spell', job: 'hit', free: 'DEAL 4.', paid: 'Discard 3 cards at random. DEAL 7 for each card discarded. EXILE.', why: 'The cast-off as damage.' },
   { id: 'P-07b', type: 'Spell', job: 'wall', free: 'GUARD 4.', paid: 'Discard 3 cards at random. GUARD 7 for each card discarded. EXILE.', why: 'The cast-off as a shell.' },
@@ -280,7 +280,7 @@ const CARDS = [
   { id: 'P-08b', type: 'Skill', job: 'wall', free: 'GUARD 4. While it holds, THORNS deals double.', paid: 'GUARD 9. While it holds, THORNS deals double.', why: 'The slot\'s plain job.' },
   { id: 'P-08c', type: 'Skill', job: 'affliction', free: 'GUARD 2, THORNS 2.', paid: 'Discard 1 card at random. GUARD 5, THORNS 3. While the GUARD holds, THORNS deals double.', why: 'Brings its own spikes.' },
   // P-09
-  { id: 'P-09a', type: 'Attack', job: 'hit', free: 'DEAL equal to the foe\'s telegraphed attack (max 8).', paid: 'Discard 1 card at random. DEAL twice the foe\'s telegraphed attack (max 24).', why: 'The bigger the threat, the bigger the answer.' },
+  { id: 'P-09a', type: 'Attack', job: 'hit', free: 'DEAL equal to the foe\'s telegraphed attack.', paid: 'Discard 1 card at random. DEAL twice the foe\'s telegraphed attack.', why: 'The bigger the threat, the bigger the answer.' },
   { id: 'P-09b', type: 'Skill', job: 'wall', free: 'GUARD 3, REFLECT 25%.', paid: 'GUARD 6. If the foe telegraphs an attack, REFLECT 50%.', why: 'Riposte as a parry.' },
   { id: 'P-09c', type: 'Skill', job: 'affliction', free: 'If the foe telegraphs an attack, it is VULNERABLE 1; if not, THORNS 2.', paid: 'The foe is VULNERABLE 2. THORNS 2.', why: 'Never blank.' },
   // P-10
@@ -324,7 +324,7 @@ const CARDS = [
   { id: 'E-09b', type: 'Global', job: 'wall', trig: 'turn', body: 'GUARD 2, then THORNS 1.', paidDelta: null, why: 'A steady shell that grows the spikes.' },
   { id: 'E-09c', type: 'Global', job: 'affliction', trig: 'turn', body: 'THORNS 1.', paidDelta: null, why: 'The slot\'s plain job; it outpaces the drop.' },
   // E-10
-  { id: 'E-10a', type: 'Attack', job: 'hit', free: 'DEAL 2, DRAW 1.', paid: 'DRAW 2, then DEAL 2 per card in your hand (max 12).', why: 'A full hand is a weapon.' },
+  { id: 'E-10a', type: 'Attack', job: 'hit', free: 'DEAL 2, DRAW 1.', paid: 'DRAW 2, then DEAL 2 per card in your hand.', why: 'A full hand is a weapon.' },
   { id: 'E-10b', type: 'Skill', job: 'utility', free: 'DRAW 2.', paid: 'DRAW 3.', why: 'The slot\'s plain job.' },
   { id: 'E-10c', type: 'Skill', job: 'affliction', free: 'DRAW 1, THORNS 1.', paid: 'DRAW 2, THORNS 2.', why: 'Fuel and spikes.' },
   // M-01
@@ -332,23 +332,23 @@ const CARDS = [
   { id: 'M-01b', type: 'Skill', job: 'utility', free: 'DRAW 2.', paid: 'DRAW 2, GUARD 4.', why: 'The slot\'s plain job.' },
   { id: 'M-01c', type: 'Skill', job: 'affliction', free: 'DRAW 1. The foe is VULNERABLE 1.', paid: 'DRAW 2. The foe is VULNERABLE 1.', why: 'Draw that opens the foe up.' },
   // M-02
-  { id: 'M-02a', type: 'Attack', job: 'hit', free: 'DEAL 3.', paid: 'DEAL 4. HEAL equal to what your THORNS and REFLECT dealt last foe turn (max 8).', why: 'A hit with the mend on PAID.' },
-  { id: 'M-02b', type: 'Skill', job: 'heal', free: 'HEAL equal to what your THORNS and REFLECT dealt last foe turn (max 5).', paid: 'HEAL twice what they dealt (max 14).', why: 'The slot\'s plain job.' },
-  { id: 'M-02c', type: 'Skill', job: 'affliction', free: 'THORNS 1. HEAL 2.', paid: 'THORNS 2. HEAL twice your THORNS (max 10).', why: 'The spikes as a mend.' },
+  { id: 'M-02a', type: 'Attack', job: 'hit', free: 'DEAL 3.', paid: 'DEAL 4. HEAL equal to what your THORNS and REFLECT dealt last foe turn.', why: 'A hit with the mend on PAID.' },
+  { id: 'M-02b', type: 'Skill', job: 'heal', free: 'HEAL equal to what your THORNS and REFLECT dealt last foe turn.', paid: 'HEAL twice what they dealt.', why: 'The slot\'s plain job.' },
+  { id: 'M-02c', type: 'Skill', job: 'affliction', free: 'THORNS 1. HEAL 2.', paid: 'THORNS 2. HEAL twice your THORNS.', why: 'The spikes as a mend.' },
   // M-03
   { id: 'M-03a', type: 'Attack', job: 'hit', free: 'DEAL 3. The foe is VULNERABLE 1.', paid: 'DEAL 6. The foe is VULNERABLE 1.', why: 'VULNERABLE on a hit.' },
   { id: 'M-03b', type: 'Skill', job: 'wall', free: 'GUARD 3. The foe is VULNERABLE 1.', paid: 'GUARD 6. The foe is VULNERABLE 2.', why: 'VULNERABLE on a wall.' },
   { id: 'M-03c', type: 'Skill', job: 'affliction', free: 'The foe is VULNERABLE 2.', paid: 'The foe is VULNERABLE 4.', why: 'The slot\'s plain job.' },
   // M-04
-  { id: 'M-04a', type: 'Attack', job: 'hit', free: 'DEAL 2. GUARD equal to half the foe\'s telegraphed attack.', paid: 'DEAL 4. GUARD equal to the foe\'s telegraphed attack (max 15).', why: 'Turtle up with a jab.' },
-  { id: 'M-04b', type: 'Skill', job: 'wall', free: 'GUARD equal to the foe\'s telegraphed attack (max 6).', paid: 'GUARD equal to the foe\'s telegraphed attack (max 18).', why: 'The slot\'s plain job: block it exactly.' },
-  { id: 'M-04c', type: 'Skill', job: 'affliction', free: 'GUARD 2. THORNS 1 per strike the foe telegraphs (max 3).', paid: 'GUARD 4. THORNS 2 per strike the foe telegraphs (max 6).', why: 'Readies spikes for each incoming strike.' },
+  { id: 'M-04a', type: 'Attack', job: 'hit', free: 'DEAL 2. GUARD equal to half the foe\'s telegraphed attack.', paid: 'DEAL 4. GUARD equal to the foe\'s telegraphed attack.', why: 'Turtle up with a jab.' },
+  { id: 'M-04b', type: 'Skill', job: 'wall', free: 'GUARD equal to the foe\'s telegraphed attack.', paid: 'GUARD equal to the foe\'s telegraphed attack.', why: 'The slot\'s plain job: block it exactly.' },
+  { id: 'M-04c', type: 'Skill', job: 'affliction', free: 'GUARD 2. THORNS 1 per strike the foe telegraphs.', paid: 'GUARD 4. THORNS 2 per strike the foe telegraphs.', why: 'Readies spikes for each incoming strike.' },
   // M-05
   { id: 'M-05a', type: 'Attack', job: 'hit', free: 'DEAL 2. Gain 1 Conviction.', paid: 'Discard 1 card at random. DEAL 4. Gain 3 Conviction.', why: 'Conviction on a hit.' },
   { id: 'M-05b', type: 'Skill', job: 'utility', free: 'Gain 1 Conviction. GUARD 2.', paid: 'Discard 1 card at random. Gain 3 Conviction. GUARD 3.', why: 'The slot\'s plain job; clears the scrap floor.' },
   { id: 'M-05c', type: 'Skill', job: 'affliction', free: 'Gain 1 Conviction. THORNS 1.', paid: 'Discard 1 card at random. Gain 3 Conviction. THORNS 2.', why: 'Conviction with spikes.' },
   // M-06
-  { id: 'M-06a', type: 'Global', job: 'hit', trig: 'turn', body: 'DEAL 1 per card in your hand (max 5).', paidDelta: null, why: 'Rewards keeping a hand to throw away.' },
+  { id: 'M-06a', type: 'Global', job: 'hit', trig: 'turn', body: 'DEAL 1 per card in your hand.', paidDelta: null, why: 'Rewards keeping a hand to throw away.' },
   { id: 'M-06b', type: 'Global', job: 'utility', trig: 'turn', body: 'DRAW 1.', paidDelta: null, why: 'The slot\'s plain job.' },
   { id: 'M-06c', type: 'Global', job: 'affliction', trig: 'turn', body: 'If your hand holds 4 or more cards, THORNS 1.', paidDelta: null, why: 'A full hand grows the spikes.' },
   // M-07

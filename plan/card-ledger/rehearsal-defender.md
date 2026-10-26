@@ -55,7 +55,7 @@ The discard appears only on a PAID line. Approved as drafted (T, 2026-10-26: "Ap
 
 | Slot | Type | Piece | Role |
 |---|---|---|---|
-| P-01 | Attack | THORNS | DEAL more for your THORNS (capped) |
+| P-01 | Attack | THORNS | DEAL more for your THORNS |
 | P-02 | Attack | GUARD | Shield bash: DEAL equal to your GUARD; PAID discards 1 for double |
 | P-03 | Attack | discard | The big swing: DEAL; PAID discards 2 for much more |
 | P-04 | Skill | REFLECT | GUARD; PAID discards 2 for a large REFLECT this turn |
@@ -111,4 +111,5 @@ candidates, three per slot. Every slot offers one red, one blue and one purple t
 
 Numbers are placeholders for the sims (step 6), scaled from the grey cards (A Plain Blow: FREE DEAL 2, PAID DEAL 5)
 and the Elementalist's ballot; a PAID line that discards pays roughly half again over a plain PAID line. REFLECT is
-printed as lasting this turn and stacking by adding (Open, above).
+printed as lasting this turn and stacking by adding (Open, above). No candidate prints a cap ("max"):
+T, 2026-10-26: "remove the '(max +n)' from every card. If there should be a max, I'll call it out."
