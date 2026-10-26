@@ -24,7 +24,7 @@ import {
     MOMENTUM_CHAIN_ORDER, MOMENTUM_SURGE_LENGTH, activeDieGear, DEFAULT_DIE_GEAR,
     // Stat scaling: the hand prints final numbers in the family colour.
     scaleCardForStats,
-    weatherReading,
+    weatherReading, yourInferno,
     type StatFamily,
     type CombatEncounterState, type CombatCard, type CombatManaDie, type CombatEvent,
     type CombatThreatPhase, type CombatIntentType,
@@ -214,6 +214,9 @@ export interface CombatEffectChipVM {
     effectId: string; glyph: StatusGlyph; intensity: number; duration: number;
     /** General keyword definition for the on-board status tooltip (null if unmapped). */
     gloss: string | null;
+    /** A visible line beside the chip (set only on your own weather, e.g. the
+     *  per-turn loss of your INFERNO); absent everywhere else. */
+    caption?: string;
 }
 /** The fork telegraph of a BRANCH phase: the condition
  *  plus BOTH outcomes stay visible; `taken` is stamped once the phase starts. */
@@ -240,6 +243,8 @@ export interface CombatIntentVM {
      *  barrier and denial state — the number `damage` above can't show. */
     wallMath: {
         projectedDamage: number; netDamage: number; willDeny: boolean; guard: number; barrier: number;
+        /** What BLIZZARD takes off this phase's hits (engine truth; 0 with none). */
+        blizzardCut: number;
     };
 }
 export interface CombatEnemyPaneVM {
@@ -316,6 +321,28 @@ export function dieCanPowerCardVM(
     if (cardStance === 'any') return true;
     return die.color === 'wild' || die.color === cardStance;
 }
+
+/**
+ * The DEAD TRAY: dice are rolled, the hand holds cards, at least one tray or
+ * Reserve die is unspent, and no unspent die can power any card in hand (a
+ * MISS face or an X die powers nothing). A fully spent tray is not dead: END
+ * has nothing to discard there.
+ */
+export function selectDeadTray(vm: Pick<CombatViewModel, 'dice' | 'diceRolled' | 'hand'>): boolean {
+    const unspent = vm.dice.filter((d) => !d.spent);
+    return vm.diceRolled && vm.hand.length > 0 && unspent.length > 0
+        && unspent.every((d) => vm.hand.every((c) => !dieCanPowerCardVM(d, c.stance)));
+}
+
+/** The dead tray's words: the tray line, the staged-card hint and END's
+ *  consequence. Engine truth (`endTurn`): unusable dice are discarded (one
+ *  unspent mana or special die banks to the Reserve when a slot is free) and
+ *  the fresh tray rolls next phase; the line does not name the bank. */
+export const DEAD_TRAY_COPY = {
+    line: 'no die matches your hand — FREE plays still work · END rolls fresh dice',
+    stageHint: 'no die matches your hand — APPLY · FREE still works',
+    endConsequence: 'unusable dice are discarded · fresh roll next phase',
+} as const;
 
 export type CombatCardKind =
     | 'dot' | 'stun' | 'guard' | 'weaken' | 'inert' | 'befriend'
@@ -611,7 +638,7 @@ function branchVM(phase: CombatThreatPhase | undefined): CombatIntentBranchVM | 
  *  drop the payload parenthetical (the log narrates the payload through its own
  *  damage and status lines). A description in any other shape falls through
  *  unchanged. */
-function stripThreatPayload(description: string): string {
+export function stripThreatPayload(description: string): string {
     const m = /^(.*?)\s*\([^()]*\)\.?$/.exec(description.trim());
     return (m ? m[1] : description.replace(/\.$/, '')).trim();
 }
@@ -795,7 +822,9 @@ export function selectCombatLogHistory(state: CombatEncounterState): CombatLogHi
             case 'dot-tick': {
                 const side = e.target === 'enemy' ? 'enemy' as const : 'player' as const;
                 const who = e.target === 'enemy' ? 'the foe' : 'you';
-                push(side, GLYPH_COLORS.dot, `${e.label} ticks for ${e.amount} on ${who}.`);
+                const color = dotTickColor(e.effectId);
+                if (e.target === 'self' && e.effectId === 'inferno') push(side, color, `Your INFERNO burns you for ${e.amount}.`);
+                else push(side, color, `${e.label} ticks for ${e.amount} on ${who}.`);
                 break;
             }
             case 'effect-landed': {
@@ -933,6 +962,7 @@ function intentVM(state: CombatEncounterState): CombatIntentVM {
         wallMath: {
             projectedDamage: threat.projectedDamage, netDamage: threat.netDamage,
             willDeny: threat.willDeny, guard: threat.guard, barrier: threat.barrier,
+            blizzardCut: threat.blizzardCut,
         },
     };
 }
@@ -1770,7 +1800,13 @@ const WEATHER_MARKS: readonly WeatherMark[] = [
     { element: 'your-inferno', side: 'player', keyword: 'Inferno', glyph: { glyph: '🔥', color: HUE.damageRed, kind: 'dot', label: 'Your Inferno' } },
 ];
 
-/** The weather's chips for one side of the board ([] when the sky is clear). */
+/** Your INFERNO's caption: what it takes from you at the start of each turn. */
+export function selfBurnCaption(perTurn: number): string {
+    return `YOUR INFERNO −${perTurn} each turn`;
+}
+
+/** The weather's chips for one side of the board ([] when the sky is clear).
+ *  Your INFERNO's chip carries its per-turn loss as a caption. */
 export function weatherChips(state: CombatEncounterState, side: 'enemy' | 'player'): CombatEffectChipVM[] {
     const el = state.program?.el;
     if (!el) return [];
@@ -1780,8 +1816,50 @@ export function weatherChips(state: CombatEncounterState, side: 'enemy' | 'playe
         .map((m) => ({
             effectId: `weather-${m.element}`, intensity: reading[m.element], duration: 0,
             glyph: m.glyph, gloss: keywordGloss(m.keyword),
+            ...(m.element === 'your-inferno' ? { caption: selfBurnCaption(yourInferno(el)) } : {}),
         }));
 }
+
+/** A status chip's a11y line. Weather has no turn count: it lasts the combat
+ *  (drifting down on its own), so it never reads "0 turns left". */
+export function effectChipA11y(e: CombatEffectChipVM): string {
+    const span = e.effectId.startsWith('weather-') ? 'lasts the combat' : `${e.duration} turns left`;
+    return `${e.glyph.label}, intensity ${e.intensity}, ${span}${e.caption ? `. ${e.caption}` : ''}`;
+}
+
+/** The colour a plain hit floats in, on either side: white, so colour alone
+ *  tells a hit from an element's tick. */
+export const HIT_FLOAT_COLOR = HUE.white;
+
+/** The one tick-colour table: the weather's elements by their own colour, any
+ *  other DoT by its status glyph's. The float, the chip and the log share it. */
+const TICK_COLOR: Record<string, string> = {
+    inferno: WEATHER_WORD['foe-inferno'].color,
+    storm: WEATHER_WORD.storm.color,
+};
+
+/** The colour of a `dot-tick` by its `effectId`. */
+export function dotTickColor(effectId: string): string {
+    const weather = TICK_COLOR[effectId];
+    if (weather) return weather;
+    const def = lookupEffect(effectId);
+    return def ? effectGlyph(def as Parameters<typeof effectGlyph>[0]).color : GLYPH_COLORS.dot;
+}
+
+/** One DoT tick's float: its source's name and loss, in its element's colour. */
+export function dotTickFloat(e: { effectId: string; label: string; amount: number }): { text: string; color: string } {
+    return { text: `${e.label.toUpperCase()} −${e.amount}`, color: dotTickColor(e.effectId) };
+}
+
+/** Ticks resolved in one beat start this far apart, so each reads alone. */
+export const DOT_TICK_STAGGER_MS = 180;
+
+/** The intent's BLIZZARD line: what BLIZZARD takes off the foe's hit. */
+export function intentBlizzardLine(cut: number): string {
+    return `after BLIZZARD −${cut}`;
+}
+/** The BLIZZARD line's colour: BLIZZARD's own guard-blue. */
+export const INTENT_BLIZZARD_COLOR = WEATHER_WORD.blizzard.color;
 
 /**
  * One card's VM at FINAL numbers: the stat-scaled copy of the card (`card`

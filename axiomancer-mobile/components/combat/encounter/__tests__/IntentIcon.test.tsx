@@ -19,7 +19,7 @@ const baseIntent: CombatIntentVM = {
     type: 'damage', icon: '⚔', label: 'ATTACKS', color: '#e2543b',
     description: 'A telegraphed strike.', damage: 10, debuffs: false, branch: null, next: null,
     wallMath: {
-        projectedDamage: 10, netDamage: 10, willDeny: false, guard: 0, barrier: 0,
+        projectedDamage: 10, netDamage: 10, willDeny: false, guard: 0, barrier: 0, blizzardCut: 0,
     },
 };
 
@@ -56,7 +56,7 @@ describe('IntentIcon — wall-math readout', () => {
         const intent: CombatIntentVM = {
             ...baseIntent,
             wallMath: {
-                projectedDamage: 0, netDamage: 0, willDeny: true, guard: 0, barrier: 0,
+                projectedDamage: 0, netDamage: 0, willDeny: true, guard: 0, barrier: 0, blizzardCut: 0,
             },
         };
         const { tree } = withAllProviders(<IntentIcon intent={intent} />);
@@ -85,5 +85,49 @@ describe('FE-020: the intent pill does not wear a heart', () => {
         const { tree } = withAllProviders(<IntentIcon intent={baseIntent} />);
         render(tree);
         expect(screen.getByTestId('combat-intent').props.accessibilityLabel).toMatch(/Deals 10 damage/);
+    });
+});
+
+/** Phase BC1, A4 and A5: the BLIZZARD line, and one damage number in a11y. */
+describe('IntentIcon: after BLIZZARD, and one number', () => {
+    // The swarm's case: BLIZZARD 5 over a 16 hit, so the pill reads 11.
+    const blizzard: CombatIntentVM = {
+        ...baseIntent,
+        description: 'It lunges at you (12 damage).',
+        damage: 12,
+        wallMath: { ...baseIntent.wallMath, projectedDamage: 11, netDamage: 11, blizzardCut: 5 },
+    };
+
+    it('shows "after BLIZZARD −5" under the pill while BLIZZARD cuts the hit', () => {
+        const { tree } = withAllProviders(<IntentIcon intent={blizzard} />);
+        render(tree);
+        expect(screen.getByText('−11')).toBeTruthy();
+        expect(screen.getByTestId('combat-intent-blizzard').props.children).toBe('after BLIZZARD −5');
+        expect(screen.getByTestId('combat-intent').props.accessibilityLabel).toMatch(/After BLIZZARD −5\./);
+    });
+
+    it('renders as before with no BLIZZARD', () => {
+        const { tree } = withAllProviders(<IntentIcon intent={baseIntent} />);
+        render(tree);
+        expect(screen.queryByTestId('combat-intent-blizzard')).toBeNull();
+        expect(screen.getByTestId('combat-intent').props.accessibilityLabel).not.toMatch(/BLIZZARD/);
+    });
+
+    it('hides the BLIZZARD line on a DENIED turn', () => {
+        const denied: CombatIntentVM = {
+            ...blizzard, wallMath: { ...blizzard.wallMath, willDeny: true, projectedDamage: 0, netDamage: 0 },
+        };
+        const { tree } = withAllProviders(<IntentIcon intent={denied} />);
+        render(tree);
+        expect(screen.queryByTestId('combat-intent-blizzard')).toBeNull();
+    });
+
+    it('says one damage number: the payload parenthetical is gone', () => {
+        const { tree } = withAllProviders(<IntentIcon intent={blizzard} />);
+        render(tree);
+        const a11y: string = screen.getByTestId('combat-intent').props.accessibilityLabel;
+        expect(a11y).toMatch(/^Enemy intent: ATTACKS\. It lunges at you\. Deals 11 damage\./);
+        expect(a11y).not.toMatch(/\(12 damage\)/);
+        expect(a11y.match(/\d+ damage/g)).toEqual(['11 damage']);
     });
 });

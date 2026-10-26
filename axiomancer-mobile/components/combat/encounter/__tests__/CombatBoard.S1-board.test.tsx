@@ -23,7 +23,7 @@ import {
     HAND_CARD_W, HAND_FAN_BOARD_EDGE, HAND_FAN_MIN_STEP,
     type DragController,
 } from '@/components/combat/encounter/CombatBoard';
-import { buildCombatViewModel, type CombatViewModel } from '@/state/presenters/combat-encounter.engine';
+import { buildCombatViewModel, DEAD_TRAY_COPY, type CombatViewModel } from '@/state/presenters/combat-encounter.engine';
 import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
@@ -133,6 +133,34 @@ describe('S1-board-C12 — nothing on the board runs past the viewport', () => {
         expect(wrap.left).toBeUndefined();
         // Its own footprint (the dock's right inset 10 + width) still lands on-screen.
         expect(10 + (wrap.width as number)).toBeLessThanOrEqual(PHONE.width);
+    });
+});
+
+// ── The dead tray counts MISS faces (phase BC1, A6) ────────────────────
+
+/** Every die rolled MISS, cards in hand: nothing can power anything. */
+const withAllMiss = (vm: CombatViewModel): CombatViewModel => ({
+    ...vm,
+    dice: vm.dice.map((d) => ({ ...d, face: 'miss' as const, spent: false, isX: false, draggable: false })),
+});
+
+describe('BC1 A6 — an all-MISS tray is a dead tray', () => {
+    it('shows the dead-tray line and END carries its consequence', () => {
+        const vm = renderBoard(withAllMiss);
+        expect(vm.hand.length).toBeGreaterThan(0);
+        expect(screen.getByTestId('combat-dead-tray')).toBeTruthy();
+        expect(screen.getByTestId('combat-end-consequence').props.children).toBe(DEAD_TRAY_COPY.endConsequence);
+    });
+
+    it('a tray whose every die is spent shows no line', () => {
+        renderBoard((vm) => ({ ...vm, dice: vm.dice.map((d) => ({ ...d, spent: true, draggable: false })) }));
+        expect(screen.queryByTestId('combat-dead-tray')).toBeNull();
+        expect(screen.queryByTestId('combat-end-consequence')).toBeNull();
+    });
+
+    it('the off-colour dead tray still reads as before', () => {
+        renderBoard(withDeadTray);
+        expect(screen.getByTestId('combat-dead-tray').props.children).toBe(DEAD_TRAY_COPY.line);
     });
 });
 

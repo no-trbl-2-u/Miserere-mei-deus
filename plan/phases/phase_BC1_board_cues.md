@@ -248,8 +248,8 @@ the captions use the same words.
 - **The self-burn caption rides the existing player status strip, not the
   footer dock.** The strip is in flow above the hand and already holds the
   chip; a line in the dock's VITAE column would change D92's dock, which
-  needs T's say-so. `[T to confirm]` (the leading option; the alternative
-  is a dock line under the phase ledger).
+  needs T's say-so. Accepted at merge (default): the leading option; the
+  alternative was a dock line under the phase ledger.
 - **The caption names the per-turn loss, not the stack.** `n` is
   `yourInferno(el)` (half the both-sides INFERNO, rounded down, plus any
   INFERNO on you alone), the number the next tick takes; the chip's badge
