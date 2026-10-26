@@ -286,7 +286,7 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - LR1g — loop work; signature tracking, blocks no window's goal; date not set.
 - EQ2a — loop work; T's slot rule (D105), the engine contract and save migration; blocks no window's goal and T set no date; date not set.
 - EQ2b — loop work; follows EQ2a, the slot words on screen; date not set.
-- ER1 — loop work; elites respawn after a rest, blocks no window's goal and T set no date; date not set.
+- ER1 — loop work; elites respawn after a rest until one drops its relic, blocks no window's goal and T set no date; date not set.
 
 ## How a window closes
 

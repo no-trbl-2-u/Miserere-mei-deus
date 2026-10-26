@@ -16,6 +16,8 @@
   carries") and the decision "a lane's third relic comes only from an elite
   (T, 2026-10-25)". A respawned elite makes that drop repeatable; this brief
   says how (Decisions, call #4).
+- T's answer to call #4 on PR #931 (2026-10-26): "Once an elite drops it's
+  relic, it can no longer spawn again from rest." 
 - Decisions: **D30** as amended by **D59** and the current Act 1 content (one
   elite per region, the Green Jelly), **D71** (elites drop relics at a low
   chance), **D100** / **D104** (the elite reward draws over the lane pool,
@@ -69,7 +71,7 @@
 After the player claims a rest, every elite node already fought on the map
 they are on is live again: the same foe at the same level, paying the normal
 elite reward and the LR1c relic roll, and the rest screen says it has
-returned.
+returned. An elite whose win dropped its relic is retired: it never returns.
 
 Size: M
 
@@ -78,8 +80,9 @@ Size: M
 - **A1** `respawnElites(world)` (new, `axiomancer-mechanics/src/World/elite-respawn.ts`,
   exported from `World/index.ts` and the package index) returns `{ world,
   respawned: NodeId[] }`: every node on `world.currentMap` whose event pool's
-  encounter names an `elite`-difficulty foe and which is in `consumedNodes` or
-  `completedNodes` is removed from both, the frontier lists are re-synced as
+  encounter names an `elite`-difficulty foe, which is in `consumedNodes` or
+  `completedNodes`, and which is not in `retiredEliteNodes` (A9) is removed
+  from both, the frontier lists are re-synced as
   `markNodeConsumed` does, and nothing else in the world changes (current node,
   discovered nodes, hazard outcomes, blocked routes, other maps). Pure; a map
   with no settled elite returns the same world and `[]`.
@@ -110,20 +113,37 @@ Size: M
   player does not carry (worn or in the satchel); once the player carries every
   elite-only relic nothing drops. A seeded engine test over a respawned kill
   sequence: no carried relic is ever dropped and the rate per kill is the
-  constant's. `[T to confirm #4]`
+  constant's. Confirmed by T (2026-10-26): the roll stays per win at the
+  constant's rate, and a win that drops a relic retires that elite (A9).
 - **A8** An old save loads and respawns correctly: a save fixture written
-  before ER1, standing past a consumed elite with a rest node ahead, loads
-  unchanged (no migration, no new field) and the next claimed rest respawns
-  the elite. A mobile persistence test.
+  before ER1 (no `retiredEliteNodes`), standing past a consumed elite with a
+  rest node ahead, loads with no migration (the absent field reads as none
+  retired) and the next claimed rest respawns the elite. A mobile persistence
+  test.
+- **A9** An elite that drops its relic never returns. `MapState` gains
+  `retiredEliteNodes?: NodeId[]` (absent = `[]`, like `pendingArrival`), and
+  `retireEliteNode(world, nodeId)` (same file as A1, pure) adds the node on
+  `world.currentMap`. When LR1c's `rollEliteRelicDrop` drops a relic after a
+  won elite fight (`state/combat/store-actions.ts`), the fight's node is
+  retired in the same `setState` that queues the relic, so the one save after
+  the fight carries both. A no-drop win, a flee or a spare retires nothing.
+  The A5 line never names a retired elite. An engine test (`respawnElites`
+  skips a retired node; `retireEliteNode` touches nothing else) and a mobile
+  store e2e: win with a forced drop, rest, claim, the elite stays spent and
+  the rest screen shows no return line; a save round-trip keeps it retired
+  (Confirmed by T, 2026-10-26).
 
 Measure: `npm run verify -w axiomancer-mechanics` and `npm run verify -w
-axiomancer-mobile` with `World/e2e/elite-respawn.engine.test.ts` (A1-A3, A7)
-and the mobile rest and persistence tests (A4-A6, A8) passing.
+axiomancer-mobile` with `World/e2e/elite-respawn.engine.test.ts` (A1-A3, A7,
+A9's engine half) and the mobile rest, combat and persistence tests (A4-A6,
+A8, A9's store half) passing.
 
 ## Scope
 
 - `axiomancer-mechanics`: new `src/World/elite-respawn.ts` (`respawnElites`,
-  and `settledEliteNodes(map)` for the presenter's preview), elite detection
+  `retireEliteNode`, and `settledEliteNodes(map)` for the presenter's preview,
+  which leaves retired nodes out); `World/types.ts` (`MapState.retiredEliteNodes?`,
+  documented beside `pendingArrival`); elite detection
   through `getNodeEventPool` plus `ENEMY_REGISTRY[slug].difficulty === 'elite'`
   (the same read as `act1-elites.engine.test.ts`); exports in `World/index.ts`
   and `src/index.ts`; the "cannot be re-entered or re-farmed" comments in
@@ -131,7 +151,8 @@ and the mobile rest and persistence tests (A4-A6, A8) passing.
   in `resolve-map-event.ts` name the one exception. The relic test (A7) calls
   LR1c's `rollEliteRelicDrop` and changes nothing in it.
 - `axiomancer-mobile`: `state/rest/store-actions.ts` (claim runs the respawn;
-  result field), `state/dev/skip-event.ts` (same path), `state/presenters/rest.engine.ts`
+  result field), `state/combat/store-actions.ts` (a dropped elite relic retires
+  the fight's node, A9), `state/dev/skip-event.ts` (same path), `state/presenters/rest.engine.ts`
   and `rest.copy.ts` (the return line), `app/rest/index.tsx` (renders it).
 - Nothing is parked or deleted.
 
@@ -152,11 +173,16 @@ and the mobile rest and persistence tests (A4-A6, A8) passing.
 
 ## Save / schema contracts
 
-- None. The respawn edits the existing `consumedNodes` / `completedNodes`
-  arrays of `world.currentMap`; no new field, no migration in
-  `Game/game.migrate.ts`. A save taken after the claim carries the respawned
-  node as unspent; a save taken between arriving at the rest node and claiming
-  carries nothing new (the rest node is already consumed, as today).
+- One optional field, no migration. The respawn edits the existing
+  `consumedNodes` / `completedNodes` arrays of `world.currentMap`; A9 adds
+  `MapState.retiredEliteNodes?: NodeId[]`, optional so a save written before
+  ER1 loads as none retired (the `pendingArrival` precedent), with no hop in
+  `Game/game.migrate.ts` and no save-version bump (EQ2a's v38 -> v39 hop is
+  untouched). If the save validator rejects unknown map fields, it learns this
+  one. A save taken after the claim carries the respawned node as unspent; a
+  save taken between arriving at the rest node and claiming carries nothing
+  new (the rest node is already consumed, as today); a save after a fight that
+  dropped the elite's relic carries the node as retired.
 
 ## Decisions made upfront — DO NOT ASK
 
@@ -174,13 +200,18 @@ and the mobile rest and persistence tests (A4-A6, A8) passing.
 - **The relic roll stays per kill and never re-drops a carried relic.** LR1c's
   pool already excludes relics the player carries, so ER1 adds no rule, only
   the test that proves it holds across repeats (A7). Consequence, stated for
-  T: the lane's third relic, elite-only by T's LR1 decision, becomes farmable
-  at 8% a kill; the cap is that only the two elite-only relics can ever drop.
-  `[T to confirm #4]`
+  T: the lane's third relic, elite-only by T's LR1 decision, can roll again
+  at 8% a kill on a returning elite.
+  Confirmed by T (2026-10-26): once an elite drops its relic, it can no longer
+  spawn again from rest. The retirement is per elite node (each region has its
+  own), recorded in `retiredEliteNodes` (A9); a win with no drop, a flee or a
+  spare leaves it free to return. So each region's elite yields at most one
+  relic, and an elite that never drops keeps returning at each rest.
 - **The rest node stays used up.** A rest node is still one-shot; only elites
   return. This bounds the farm: at most one extra elite fight per rest node on
-  the map, 11 across Act 1 (about 1,650 XP, 11 elite picks and 11 relic rolls,
-  0.88 relics expected, if the player rests after every elite).
+  the map, 11 across Act 1 (about 1,650 XP, 11 elite picks and up to 11 relic
+  rolls, if the player rests after every elite; fewer once an elite drops its
+  relic and retires, call #4).
   `[T to confirm #5]`
 - **The trigger is the claim, not the arrival** (the night is the trigger, as
   the scar mend in `claimRestChoiceOutcomeAction` already reads). Walking onto a
@@ -197,8 +228,8 @@ and the mobile rest and persistence tests (A4-A6, A8) passing.
 
 | Suite | Subject |
 |---|---|
-| `axiomancer-mechanics/src/World/e2e/elite-respawn.engine.test.ts` (new) | A1 purity and the no-elite case; A2 per Act 1 map; A3 sweep; A7 seeded relic sequence over LR1c's roll |
-| `axiomancer-mobile/state/e2e/elite-respawn.ER1.test.tsx` (new) | A4 claim respawns, arrival alone does not, one save; A6 the elite reward twice |
+| `axiomancer-mechanics/src/World/e2e/elite-respawn.engine.test.ts` (new) | A1 purity and the no-elite case; A2 per Act 1 map; A3 sweep; A7 seeded relic sequence over LR1c's roll; A9 a retired node is skipped and `retireEliteNode` touches nothing else |
+| `axiomancer-mobile/state/e2e/elite-respawn.ER1.test.tsx` (new) | A4 claim respawns, arrival alone does not, one save; A6 the elite reward twice; A9 a forced drop retires the elite through rest, claim and a save round-trip |
 | `axiomancer-mobile` rest presenter and screen tests (extended) | A5 the return line, and none when nothing returns |
 | `axiomancer-mobile` persistence test (extended) | A8 an old save respawns at its next claim |
 | Unchanged and must pass | `act1-elites.engine.test.ts`, `fight-checkpoint.engine.test.ts`, `arrival-debt.engine.test.ts`, `map-traversal.engine.test.ts`, `elite-reward.engine.test.ts`, `hazard-scar-rest-recovery.engine.test.ts`, `rest-upgrade.UP1d.test.tsx` |
@@ -215,18 +246,19 @@ ER1: elites come back after a night's rest
 
 respawnElites un-spends every settled elite node on the current map when a
 rest is claimed; the rest screen names the returning foe. Same foe, same
-level, full elite reward; LR1c's relic roll unchanged (never a carried relic).
-No save change. Closes A1-A8.
+level, full elite reward; LR1c's relic roll unchanged (never a carried relic),
+and an elite that drops its relic is retired for good (optional
+retiredEliteNodes, no migration). Closes A1-A9.
 ```
 
 ## DoD
 
-A1-A8 ticked.
+A1-A9 ticked.
 
 ## Follow-ups (out of scope)
 
 - **Measure the farm.** A measured-truth variant that rests after every elite
-  (11 extra Green Jelly fights in Act 1) and reports the level and relic count
+  (up to 11 extra Green Jelly fights in Act 1) and reports the level and relic count
   it reaches, so T can see whether the repeat needs a cap. Not filed as a row.
 - **A respawn cap or diminishing reward** if that measure says so (T's call).
 - More elites (B2) respawn with no change; their relic pool grows with LR1f.
