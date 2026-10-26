@@ -138,6 +138,9 @@ describe('hermeticity guard: isolation (no disk in tests)', () => {
         // sources to prove no screen or action reads the inventory-order
         // convention; an import is a source fact, unprovable by rendering.
         'state/__tests__/worn-state-source.test.ts',
+        // The node blurb guard (phase AW1b) reads the committed plan/AUDIT.md
+        // to prove each pinned mismatch names a row filed for T.
+        'state/exploration-maps/__tests__/node-blurb-event.test.ts',
     ]);
 
     const FS_PATTERN =

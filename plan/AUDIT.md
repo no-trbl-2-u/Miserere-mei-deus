@@ -168,6 +168,43 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - next: name mass and energyThreshold on the three hazard springs (or share
   `DiceSpring` values), then check the cast's timing on the built app.
 
+### [content] map copy: Breakwater node blurbs that do not match their events (AW1b, 2026-10-26)
+- category: content
+- impact: 3
+- ease: -
+- source: Phase AW1b, `axiomancer-mobile/state/exploration-maps/__tests__/node-blurb-event.test.ts` (`PINNED_MISMATCHES`); the swarm's R13 in `docs/reports/playtest-elementalist-act1-2026-10-24.md`.
+- detail: three Breakwater nodes share no content word between the map blurb (`axiomancer-mobile/state/exploration-maps/breakwater.layout.ts`) and the event copy the node opens (`axiomancer-mechanics/src/World/MapEvents/content.ts`). The two caches draw from the shared `COAST_LOOT_CACHES` rotation, not copy written for the place; the Anvil uses the one `ANVIL_LINE` every region shares.
+  - [ ] bw-5 The Smugglers' Cove (loot-cache). Blurb: "Boats beached under the cliff. Their owners are elsewhere." Event: "A waterlogged strongbox wedged under the pilings."
+  - [ ] bw-15 The Clifftop Chapel (loot-cache). Blurb: "An empty chapel over the sea. The poor box is not." Event: "A purse of shillings snagged in the netting, its owner long gone."
+  - [ ] bw-16 The Fishing Hamlet (blacksmith). Blurb: "Fish dry on the racks. Nobody is watching them." Event: "A lean-to forge, coals still breathing. The smith looks up from the anvil and nods at your dice."
+- next: T's call per node (map copy, D88): rewrite the blurb, give the node event copy of its own, or rule the pair fine. The test's pin for a node goes in the same change, or the stale-pin case fails.
+
+### [content] map copy: Charcoal Wood node blurb that does not match its event (AW1b, 2026-10-26)
+- category: content
+- impact: 3
+- ease: -
+- source: Phase AW1b, `axiomancer-mobile/state/exploration-maps/__tests__/node-blurb-event.test.ts` (`PINNED_MISMATCHES`).
+- detail: one Charcoal Wood node shares no content word between its map blurb (`charcoal-wood.layout.ts`) and its event copy (`World/MapEvents/content.ts`, the shared `ANVIL_LINE`).
+  - [ ] cw-18 The Well (blacksmith). Blurb: "A covered well. The cover is rotten." Event: "A lean-to forge, coals still breathing. The smith looks up from the anvil and nods at your dice."
+- next: T's call (map copy, D88): a blurb that names the forge, an Anvil line of its own for the well, or the pair ruled fine. The pin goes in the same change.
+
+### [content] map copy: Beacon Crags node blurb that does not match its event (AW1b, 2026-10-26)
+- category: content
+- impact: 3
+- ease: -
+- source: Phase AW1b, `axiomancer-mobile/state/exploration-maps/__tests__/node-blurb-event.test.ts` (`PINNED_MISMATCHES`).
+- detail: one Beacon Crags node shares no content word between its map blurb (`beacon-crags.layout.ts`) and its event copy (`World/MapEvents/content.ts`, the shared `ANVIL_LINE`).
+  - [ ] bc-12 The Gorge Falls (blacksmith). Blurb: "The water has cut the seam open. The iron is free." Event: "A lean-to forge, coals still breathing. The smith looks up from the anvil and nods at your dice."
+- next: T's call (map copy, D88): a blurb that names the forge, an Anvil line of its own for the falls, or the pair ruled fine. The pin goes in the same change.
+
+### [content] map content: the seven Act 1 gathering nodes grant materials nothing spends (AW1b, 2026-10-26)
+- category: content
+- impact: 4
+- ease: -
+- source: Phase AW1b (A10); `plan/phases/phase_AW1_act1_walk.md` Sources; `plan/playtest-harness.md` "Where things stand".
+- detail: `kind: 'gathering'` is live, not minigame residue: it replaced the retired Gleaning minigame (save v18 to v19), grants one named material through the paced `/event` receipt, advances `collect` quest objectives and feeds the hazard puzzle outcome and the labyrinth pools. Seven Act 1 nodes carry it: bw-4, bw-11 (Breakwater), cw-4, cw-8, cw-14 (Charcoal Wood), bc-7 (Beacon Crags), ld-7 (Lantern Deep). But no code in mechanics or mobile spends a material, so every grant is a dead end for the player.
+- next: T's call (map content, D88), one of: (a) keep the nodes as they are; (b) give materials a use (a brief T approves: the Anvil, a quest, a shop); (c) re-point the seven nodes to another kind. The plot's leading option is (a) with (b) to follow.
+
 ### [content] roster: the Bleeding Signet is granted by nothing (item-ungranted, RH1, 2026-10-13)
 - category: content
 - impact: 4

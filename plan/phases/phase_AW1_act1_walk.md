@@ -173,7 +173,7 @@ Measure: `npm test -w axiomancer-mobile` runs `node-blurb-event.test.ts` green; 
   and names their hermetic witnesses rather than inventing a carrier (that would be map content, D88).
 - **Duration budget: the walk should finish within six minutes in CI** (the `verify-mobile` job has 45). Over
   budget is a finding in the report, not a failure.
-- **`gathering` stays [T to confirm].** The candidate's premise, that the kind survived the retired minigame, does
+- **`gathering` stays. Accepted at merge (default).** The candidate's premise, that the kind survived the retired minigame, does
   not hold: it is the minigame's deliberate replacement, wired into quests, hazard outcomes and the labyrinth
   pools. Removing it or re-pointing its seven nodes changes Act 1's maps, which is T's call (D88). The leading
   option is recorded: keep the kind, and put the real finding (materials have no use) to T as a `[content]` row

@@ -195,7 +195,7 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 | [ ] | 2026-11-03 | Live hazard routing (each of the seven Act 1 hazard nodes draws a random puzzle from the thirty) and the cuts (plot, 1 h) | W2 | needs plot |
 | [ ] | 2026-11-04 | Pitch the event-node UI/UX for the Breakwater's eight kinds, all of Act 1's (1 h) | W2 | T |
 | [ ] | 2026-11-05 | The authoring patterns from the kept set | W2 | HP4f |
-| [ ] | 2026-11-05 | Node blurbs matched to their events (the Act 1 walk's second half) | W2 | AW1a, AW1b |
+| [x] | 2026-11-05 | Node blurbs matched to their events (the Act 1 walk's second half) | W2 | AW1a, AW1b |
 | [ ] | 2026-11-06 | The band clocks, from the kept set's times | W2 | HP4g |
 | [ ] | 2026-11-06 | Event-node UI/UX for the Breakwater's eight kinds (plot, 1 h) | W2 | needs plot |
 | [ ] | 2026-11-08 | Chapter 1's enemy art: pick from the loop's candidates (2 h) | W2 | T |
