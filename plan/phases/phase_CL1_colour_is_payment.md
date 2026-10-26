@@ -40,8 +40,11 @@ Size: S
   `job` fields are removed in the same PR.
 - **A3** The even split, after T picks: `docs/lane-creator.md` replaces "Pitching a colour" with "Colours after the
   picks": at step 7 (the revisions) the session proposes a colour for every kept lane card so red, blue and purple
-  are as even as the count allows (a family of 30: 10 each), by the rule T rules for how [T to confirm #4]; T
-  edits; the ledger's "Revisions" records the colours; no card's colour is read from its text.
+  are as even as the count allows (a family of 30: 10 each), and as even as it can within each sub-lane (Payoff,
+  Engine and Misc each split about 3/3/4 across the three colours, so every colour holds setup and payoff cards)
+  (Confirmed by T, 2026-10-26: split colours evenly within each of Payoff, Engine and Misc); T edits; the ledger's
+  "Revisions" records the colours; no card's colour is read from its text. The doc states the within-sub-lane rule
+  and why: a rolled tray of one colour can still set up and cash out.
 - **A4** `.claude/commands/lane-creator.md` steps 3, 5 and 7 and `plan/card-ledger/README.md` "Adding the next
   ballot" say the same: no `job`, no colour at the ballot or the verdicts, colours proposed at the revisions.
 - **A5** `docs/card-spec.md`'s 2026-10-13 colour ruling carries a dated "Amended by D110 (T, 2026-10-26)" line
@@ -79,9 +82,9 @@ shows its 90 candidates untinted.
 
 - D110: a card's colour is only which die pays for it. Keyword scaling stays per D40, on the keyword.
 - The even split is of a family's kept lane cards, ignoring colourless (grey) cards, as the BV3 tally did.
-- [T to confirm #4] How the split is proposed. Default: the session proposes a split that keeps each sub-lane
-  (Payoff, Engine, Misc) as even as it can and T edits it at the revisions sitting; T is weighing a rule that ties
-  colour to sub-lane, which would replace this default.
+- Confirmed by T (2026-10-26): the split is even within each sub-lane (Payoff, Engine and Misc), proposed by the
+  session and edited by T at the revisions sitting. *Rejected:* one colour per sub-lane, fixed or rotated per lane
+  (the roll would decide whether a turn can set up or pay off).
 
 ## Definition of done
 
