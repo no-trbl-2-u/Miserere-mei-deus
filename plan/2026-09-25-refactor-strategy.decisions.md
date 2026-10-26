@@ -1024,6 +1024,15 @@ satisfied for exactly these.)
 - The loop still never invents card, keyword or art content unprompted: `/expand` may only propose candidates, as for other content, and a proposal is never built until promoted.
 - Unchanged: `Potential Assets/` is a store, never a source (D96); a sprite sheet for an already-used enemy stays enhancement (D97). First use: a `/plot` phase renaming the Blood Price cards.
 
+**D108 — Each run opens as a character; the reward pool is its two starting lanes plus the worn relics' lanes.** (T, 2026-10-26, the character-selection `/pitch`; recorded by the CH1 plot, run unattended. Overrides D104's carry-to-unlock rule; builds on D107, PR #944, open at the time. D106 and D107 are taken by the open chapters and RW1a/LR1a plots.)
+
+- The player picks a character at run start. Each character has a unique portrait, a starting relic that starts equipped, a starting stat allocation, two starting lanes different from its relic's lane, and a one-line playstyle.
+- The reward pool is the character's two starting lanes plus the lane of every worn relic. Worn relics weight the offer toward their lane (D100's slots); starting lanes widen the pool and add no guaranteed slot. Unequipping a relic removes its lane, the starting relic included. A carried, unworn relic does nothing.
+- Grey starter cards are not a lane and are never offered as rewards. A run with no character (an old save) keeps D107's stopgap pool.
+- The select screen is a fighting-game character select: a two-row carousel of squares at the bottom, locked squares a question-mark icon; the portrait and the starting relic are its two focal elements, then stats and the playstyle; the starting lanes are never named.
+- Portraits, relics, stat spreads and playstyle lines are T's content (D88). One character for the mid-November deadline, three for December. Character content waits on a third lane, because a character needs three distinct lanes.
+- Built by Phase CH1 (`plan/phases/phase_CH1_character_select.md`).
+
 **D105 — Three kinds of slot: one Weapon, one Armor, three Relic slots.** (T, 2026-10-25, in session; recorded by the EQ2 plot, run unattended. T: "There are only 3 types of slots: Weapon (top), Armor (2nd from top), 3x relics. Relics can be named anything, but ultimately they all take up the same 3 relic slots.")
 
 - A character wears one weapon, one armor and up to three relics. Every screen lists them in that order: Weapon first, Armor second, then the three relic slots.
