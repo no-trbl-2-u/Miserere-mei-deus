@@ -418,7 +418,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/__tests__/CacheGate.test.tsx, axiomancer-mobile/state/e2e/region-plate.rc-walk-10.test.tsx"
+        "source": "axiomancer-mobile/components/__tests__/CacheGate.test.tsx, axiomancer-mobile/state/e2e/cache-card-preview.screen.test.tsx, axiomancer-mobile/state/e2e/region-plate.rc-walk-10.test.tsx"
       },
       "needsPitch": {
         "value": true,
@@ -443,7 +443,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/assets/images/cards/__tests__/card-art.test.ts, axiomancer-mobile/assets/images/combat/__tests__/index.test.ts, axiomancer-mobile/assets/images/enemies/__tests__/frames.test.ts, ..."
+        "source": "axiomancer-mobile/components/__tests__/CombatGate.test.tsx, axiomancer-mobile/components/combat/encounter/__tests__/CombatEncounterPanel.drag-commits.test.tsx, axiomancer-mobile/components/combat/encounter/__tests__/CombatEncounterPanel.drag-spans.test.tsx, ..."
       },
       "needsPitch": {
         "value": false,
@@ -2736,6 +2736,42 @@
     {
       "kind": "coupling",
       "from": "route:cache",
+      "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/card-rarity.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
+      "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/components/combat/encounter/CombatCombatantPane.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/components/combat/encounter/CombatDie.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
+      "to": "area:Effects",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/GameStoreProvider.tsx"
     },
@@ -2744,6 +2780,12 @@
       "from": "route:cache",
       "to": "area:Log",
       "file": "axiomancer-mobile/lib/platform/router.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
+      "to": "area:Log",
+      "file": "axiomancer-mobile/state/settings.ts"
     },
     {
       "kind": "coupling",
