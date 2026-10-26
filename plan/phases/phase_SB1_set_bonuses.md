@@ -90,10 +90,10 @@ engine row says so.
   calls 1 and 2. The session does not reopen this.
 - **The five-relic row of D100 is this phase's question, not B1's.** EQ2's call 3 left it to B1; T moved it here.
   EQ2's brief, D105 and D100 now point at SB1.
-- **The record lives in a new `plan/revamp/sets.md`** `[T to confirm #1]`. Why: sets cut across relics, weapons
+- **The record lives in a new `plan/revamp/sets.md`** Accepted by T as the default (2026-10-26, "update the PRs, then merge them").. Why: sets cut across relics, weapons
   and armor, and `plan/revamp/relics.md` is B1's part plan, already edited by LR1 and EQ2. `relics.md` gets a
   one-line pointer. If T prefers it inside `relics.md`, it becomes a "## Sets (SB1)" section there instead.
-- **No order against B1** `[T to confirm #2]`. The row requires nothing and can be sat whenever T picks a date;
+- **No order against B1** Accepted by T as the default (2026-10-26, "update the PRs, then merge them").. The row requires nothing and can be sat whenever T picks a date;
   sitting it before B1's session (Dec 5) lets B1 author set pieces and the first weapons and armor with the rule
   in hand, so that is the suggestion, not a gate.
 - **Not part of the Act 1 MVP.** T: "doesn't need to be part of the Act 1 MVP deadline". The row is under
