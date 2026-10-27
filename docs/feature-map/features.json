@@ -1345,6 +1345,12 @@
       "kind": "coupling",
       "from": "area:Combat",
       "to": "area:Game",
+      "file": "axiomancer-mechanics/src/Combat/combat.rewards.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Game",
       "file": "axiomancer-mechanics/src/Combat/effects.ts"
     },
     {
@@ -1866,6 +1872,12 @@
     {
       "kind": "coupling",
       "from": "area:World",
+      "to": "area:Character",
+      "file": "axiomancer-mechanics/src/World/quest.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:World",
       "to": "area:Combat",
       "file": "axiomancer-mechanics/src/World/Blacksmith/blacksmith.engine.ts"
     },
@@ -2012,6 +2024,12 @@
       "from": "area:World",
       "to": "area:Items",
       "file": "axiomancer-mechanics/src/World/MapEvents/types.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:World",
+      "to": "area:Items",
+      "file": "axiomancer-mechanics/src/World/quest.engine.ts"
     },
     {
       "kind": "coupling",
@@ -3067,6 +3085,12 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Game",
+      "file": "axiomancer-mobile/state/item-reward/relic-sources.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Game",
       "file": "axiomancer-mobile/state/presenters/exploration.engine.ts"
     },
     {
@@ -3092,6 +3116,18 @@
       "from": "route:combat-encounter",
       "to": "area:Items",
       "file": "axiomancer-mobile/state/combat-mode.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/combat/store-actions.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/item-reward/relic-sources.ts"
     },
     {
       "kind": "coupling",
@@ -3152,6 +3188,12 @@
       "from": "route:combat-encounter",
       "to": "area:World",
       "file": "axiomancer-mobile/state/actions.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/item-reward/relic-sources.ts"
     },
     {
       "kind": "coupling",
