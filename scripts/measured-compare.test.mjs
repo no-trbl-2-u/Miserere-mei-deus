@@ -5,7 +5,7 @@ import assert from 'node:assert/strict'
 
 import {
   auditRowPrefix, compare, familyCellText, fileDrifts, historyLine, renderAuditRow, renderDigestSection,
-  renderLatest, selfBurnRows,
+  renderLatest, rewardLaneRows, selfBurnRows,
 } from './measured-compare.mjs'
 
 function cell(over = {}) {
@@ -202,4 +202,54 @@ test('renderDigestSection: still renders the doors with families in the line', (
   const out = renderDigestSection(famLine(), null, [])
   assert.match(out, /Doors/)
   assert.doesNotMatch(out, /~20of30/)
+})
+
+const state = (worn, lanes, shares) => ({ worn, lanes, offered: 360, shares })
+
+const baselineRow = {
+  character: null, name: 'No character',
+  start: state([], [], { grey: 1 }),
+  late: state(['relic-a', 'relic-b', 'relic-c'], ['blood-price', 'elementalist'], { 'blood-price': 0.6, elementalist: 0.4 }),
+}
+
+test('historyLine: carries rewardLanes when the report has them, and none otherwise', () => {
+  const rewardLanes = { rolls: 400, seed: 1, rows: [baselineRow] }
+  const withRows = historyLine({ runs: 300, seed: 1, cells: [cell()], decks: {}, rewardLanes }, { date: 'd', commit: 'c' })
+  assert.deepEqual(withRows.rewardLanes, rewardLanes)
+  const without = historyLine({ runs: 300, seed: 1, cells: [cell()], decks: {} }, { date: 'd', commit: 'c' })
+  assert.equal('rewardLanes' in without, false)
+})
+
+test('rewardLaneRows: an old line with no rewardLanes renders no section', () => {
+  assert.deepEqual(rewardLaneRows(line([cell()])), [])
+  assert.equal(renderLatest(line([cell()])).includes('Reward lanes by character'), false)
+})
+
+test('rewardLaneRows: an empty roster holds the baseline row only, with the empty-roster note', () => {
+  const text = rewardLaneRows(line([cell()], { rewardLanes: { rolls: 400, seed: 1, rows: [baselineRow] } })).join('\n')
+  assert.match(text, /^## Reward lanes by character/)
+  assert.match(text, /No roster character yet: the no-character baseline row only\./)
+  assert.match(text, /\| no character \| start \| none \| grey fallback \| grey 100% \|/)
+  assert.match(text, /\| no character \| late \| relic-a, relic-b, relic-c \| blood-price, elementalist \| blood-price 60%, elementalist 40% \|/)
+  assert.equal(text.split('\n').filter((l) => l.startsWith('| ') && !l.includes('---')).length, 3)
+})
+
+test('rewardLaneRows: a character row gets start and late lines and drops the empty-roster note', () => {
+  const hero = {
+    character: 'hero', name: 'Hero',
+    start: state(['relic-a'], ['a', 'b'], { a: 0.5, b: 0.5 }),
+    late: state(['relic-a', 'relic-b', 'relic-c'], ['a', 'b', 'c'], { a: 0.4, b: 0.3, c: 0.3 }),
+  }
+  const text = rewardLaneRows(line([cell()], { rewardLanes: { rolls: 400, seed: 1, rows: [hero, baselineRow] } })).join('\n')
+  assert.equal(text.includes('No roster character yet'), false)
+  assert.match(text, /\| Hero \| start \| relic-a \| a, b \| a 50%, b 50% \|/)
+  assert.match(text, /\| Hero \| late \| relic-a, relic-b, relic-c \| a, b, c \| a 40%, b 30%, c 30% \|/)
+})
+
+test('renderLatest: the section sits before Decks; compare ignores it', () => {
+  const rewardLanes = { rolls: 400, seed: 1, rows: [baselineRow] }
+  const current = line([cell({ winRate: 0.5 })], { rewardLanes })
+  const text = renderLatest(current)
+  assert.ok(text.indexOf('## Reward lanes by character') < text.indexOf('## Decks'))
+  assert.deepEqual(compare({ current, previous: line([cell()], { rewardLanes: { ...rewardLanes, rolls: 1 } }) }), [])
 })
