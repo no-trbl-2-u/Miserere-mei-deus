@@ -97,7 +97,8 @@ export default function RestScreen() {
     const styles = useStyles();
     const AXM = usePalette();
     const slice = useGameState((s) => s.rest);
-    const vm = useMemo(() => selectRestVM({ rest: slice }), [slice]);
+    const world = useGameState((s) => s.world);
+    const vm = useMemo(() => selectRestVM({ rest: slice, world }), [slice, world]);
     const actions = useGameActions();
     const router = useRouter();
 
@@ -201,6 +202,11 @@ export default function RestScreen() {
                                     </Text>
                                 )}
                             </View>
+                            {vm.outcome.eliteReturns.map((line, i) => (
+                                <Text key={`elite-return-${i}`} style={styles.eliteReturn} testID="rest-elite-respawn">
+                                    {line}
+                                </Text>
+                            ))}
                             <TouchableOpacity
                                 accessibilityRole="button"
                                 accessibilityLabel="Move on"
@@ -260,6 +266,8 @@ const useStyles = makeStyles((AXM) => ({
         color: AXM.parchment,
         marginBottom: 8,
     },
+    // The night brings a fought elite back: one quiet line per foe.
+    eliteReturn: { fontFamily: FONTS.serifItalic, fontSize: 13, color: AXM.parchment, lineHeight: 18, marginTop: 8 },
     // The irreversibility line, quieter than the scene but always there.
     oneWayNote: { fontFamily: FONTS.serifItalic, fontSize: 12, color: AXM.bone, lineHeight: 16, marginTop: 6, marginBottom: 2 },
     offerCol: { marginBottom: 8 },

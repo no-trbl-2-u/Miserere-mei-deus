@@ -299,7 +299,12 @@ const BREAKWATER_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> =
  * one mid-region node, the Death Beholder every region's door fight. A node with
  * no line of its own falls back to the foe's own description.
  */
-interface ActOneFoe { slug: EnemySlug; level: number; description?: string; isBoss?: boolean }
+/**
+ * One authored Act 1 fight. `eliteRelicDrops` is an elite's own relic drop
+ * list; every Act 1 elite leaves it absent until T authors the lists, so each
+ * draws from the whole elite-only pool.
+ */
+interface ActOneFoe { slug: EnemySlug; level: number; description?: string; isBoss?: boolean; eliteRelicDrops?: string[] }
 
 const CW_FIGHT_LEVEL_EARLY = 2;
 const CW_FIGHT_LEVEL_LATE = 3;
@@ -326,7 +331,10 @@ function cwEncounterPool(nodeId: string, foe: ActOneFoe): MapEventPool {
         id: `${nodeId}.encounter`,
         entries: [{
             kind: 'encounter', weight: 1,
-            payload: { kind: 'encounter', enemySlug: foe.slug, isBoss: foe.isBoss ?? false, level: foe.level, description: foe.description },
+            payload: {
+                kind: 'encounter', enemySlug: foe.slug, isBoss: foe.isBoss ?? false, level: foe.level, description: foe.description,
+                ...(foe.eliteRelicDrops ? { eliteRelicDrops: [...foe.eliteRelicDrops] } : {}),
+            },
         }],
     };
 }

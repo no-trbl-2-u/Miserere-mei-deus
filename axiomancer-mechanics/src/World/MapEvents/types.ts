@@ -49,6 +49,13 @@ export interface EncounterPayload {
      * beatable by a fresh player even though the shared enemy is endgame-tier.
      */
     level?: number;
+    /**
+     * An elite fight's own relic drop list: the relic ids a won fight here can
+     * drop (`rollEliteRelicDrop`). Several elites may list the same relic.
+     * Absent = the whole elite-only pool (`eliteRelicPool`). Authored content,
+     * never saved; ignored on a non-elite fight.
+     */
+    eliteRelicDrops?: string[];
     description?: string;
 }
 
