@@ -39,9 +39,12 @@ function fight(over: Partial<FightPost> = {}): FightPost {
         vitaeEnd: 22,
         vitaeLow: 18,
         deck: ['card-1', 'card-h+'],
+        relics: ['relic-bleeding-signet'],
+        signatures: ['sig-crimson-covenant'],
         events: [
             { kind: 'hand-drawn', cards: ['card-1'], ms: 0, vitae: 30 },
             { kind: 'ui-staged', cardId: 'card-1', ms: 1500, vitae: 30 },
+            { kind: 'ui-signature-refused', signatureId: 'sig-crimson-covenant', reason: 'Need 4 Conviction', ms: 1800, vitae: 30 },
             { kind: 'card-played', cardId: 'card-1', useBottom: true, dieId: 'd1', ms: 2100, vitae: 30 },
             { kind: 'effect-fizzled', cardId: 'card-1', effectId: 'e1', message: 'no target', ms: 2100, vitae: 30 },
             { kind: 'combat-ended', outcome: 'victory', ms: 60000, vitae: 22 },
@@ -115,6 +118,25 @@ describe('POST /v1/fights', () => {
         expect((await fights())[0]).toMatchObject(local);
     });
 
+    it('A19: a post from a build that sends no relics or signatures reads as empty', async () => {
+        const { relics: _relics, signatures: _signatures, ...old } = fight();
+        expect((await post(FIGHTS, old)).status).toBe(201);
+        expect((await fights())[0]).toMatchObject({ ...old, relics: [], signatures: [] });
+    });
+
+    it('A19: a bad relics or signatures field and a refused tap with no reason are rejected', async () => {
+        const body = { ...fight(), relics: 'relic-bleeding-signet', signatures: [''] };
+        (body.events as unknown[]).push({ kind: 'ui-signature-refused', signatureId: 'sig-x', ms: 2, vitae: 1 });
+        const response = await post(FIGHTS, body);
+        expect(response.status).toBe(400);
+        expect((await response.json<PlayLogError>()).reasons).toEqual([
+            'relics: expected an array',
+            'signatures[0]: must not be empty',
+            'events[6].reason: expected a string',
+        ]);
+        expect(await fights()).toEqual([]);
+    });
+
     it('rejects an unknown event kind and a bad field with the validator reasons', async () => {
         const body = fight({ turns: -1 });
         (body.events as unknown[]).push({ kind: 'card-burned', ms: 1, vitae: 1 });
@@ -122,7 +144,7 @@ describe('POST /v1/fights', () => {
         expect(response.status).toBe(400);
         expect(await response.json<PlayLogError>()).toEqual({
             error: 'invalid fight',
-            reasons: ['turns: expected a whole number of at least 0', 'events[5].kind: unknown event kind "card-burned"'],
+            reasons: ['turns: expected a whole number of at least 0', 'events[6].kind: unknown event kind "card-burned"'],
         });
         expect(await fights()).toEqual([]);
     });

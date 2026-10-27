@@ -132,7 +132,7 @@ export {
     PLAY_LOG_FIGHT_OUTCOMES, DECK_EVENT_KINDS, PLAY_LOG_LIMITS, validateFightPost, validateDeckEventPost,
 } from './Combat';
 export type {
-    CombatEventKind, PlayLogUiEventKind, DeckEventKind, PlayLogStamp, PlayLogCombatEvent, PlayLogUiEvent,
+    CombatEventKind, PlayLogUiEventKind, DeckEventKind, PlayLogStamp, PlayLogCombatEvent, PlayLogUiEvent, PlayLogCardUiEvent, PlayLogSignatureRefusedEvent,
     PlayLogEvent, PlayLogSource, FightPost, DeckEventWhere, DeckEventPost, FightRow, DeckEventRow, FightList,
     DeckEventList, PlayLogCreated, PlayLogError, FightValidation, DeckEventValidation,
 } from './Combat';
