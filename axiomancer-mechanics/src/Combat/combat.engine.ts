@@ -71,6 +71,7 @@ import {
     programRecordDamage, programRollRound, programDrawFallback,
     programIllegalReason, programShortfall, programXRange, type ProgramShortfall,
     programElementFoeTurnStart, programFrozenCheck, programElementDrift,
+    programDefenderAttackStart, programDefenderStrike, programDefenderDrift, programHoldsGuard, programOnScrap,
 } from './combat.card-program';
 import { weatherEvents } from './combat.elements';
 import type {
@@ -604,13 +605,15 @@ export function discardCombatCard(state: CombatEncounterState, uid: string): Com
     const scrapsThisTurn = state.scrapsThisTurn ?? 0;
     const pays = scrapsThisTurn < SCRAP_CONVICTION_CAP_PER_TURN;
     const conviction = pays ? Math.min(CONVICTION_CAP, state.conviction + 1) : state.conviction;
-    const next: CombatEncounterState = {
+    let next: CombatEncounterState = {
         ...state,
         hand: state.hand.filter(h => h.uid !== uid),
         discard: [...state.discard, entry.cardId],
         conviction,
         scrapsThisTurn: scrapsThisTurn + 1,
     };
+    // Sandbox (Defender M-09): "if this card is discarded" fires on a scrap too.
+    if (isProgramCard(entry.cardId)) next = programOnScrap(next, entry.cardId, PROGRAM_KIT);
     const events: CombatEvent[] = pays
         ? [{ kind: 'conviction-gained', amount: 1, total: conviction, reason: 'scrap' }]
         : [];
@@ -1228,12 +1231,17 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
         state = frozen.state;
         blizzardCut = frozen.blizzard;
         events.push(...frozen.events);
+        // Sandbox (Defender P-09 PAID): REFLECT is in place before the first strike.
+        if (threatHits(state).length > 0) {
+            state = { ...state, program: programDefenderAttackStart(state.program!, state.round) };
+        }
     }
     if (!hindered && !isDefeated(enemy)) {
         // The enemy attacks: its telegraphed threat action fires on the player.
         const playerTakenMult = getDamageTakenMultiplier(state.player);
         for (const eff of phase.threatAction.effects) {
-            if (eff.damage && eff.damage > 0) {
+            // Sandbox: a foe the spikes killed mid-attack strikes no more.
+            if (eff.damage && eff.damage > 0 && !isDefeated(enemy)) {
                 attacksLanded += 1;
                 let dmg = Math.round(
                     eff.damage * THREAT_DAMAGE_SCALE * escalation
@@ -1292,6 +1300,16 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
                 else {
                     attacksFullyBlocked += 1;
                     blockedBlowTotal += preSoakDmg;
+                }
+                // Sandbox (Defender): THORNS and REFLECT answer the strike, each a DEAL.
+                if (state.program) {
+                    const spikes = programDefenderStrike(state.program, enemy, preSoakDmg, enemyDamageDealt === 0, state.round);
+                    if (spikes.dealt > 0 || spikes.ledger !== state.program) {
+                        state = { ...state, program: spikes.ledger };
+                        enemy = spikes.enemy;
+                        directDamage += spikes.dealt;
+                        events.push(...spikes.events);
+                    }
                 }
             }
             if (eff.effectId) {
@@ -1381,7 +1399,8 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
         player,
         enemy,
         directDamageDealt: directDamage,
-        guard: 0,                       // brace is spent on this phase's threat; resets each phase
+        // brace is spent on this phase's threat; resets each phase (sandbox: M-04 PAID holds what is left)
+        guard: programHoldsGuard(state) ? guard : 0,
         barrier,                        // persistent soak — carries the unspent remainder across phases
         riposte: undefined,             // cleared each phase (like guard)
         // The enemy-damage ledger (rolled over between phases)
@@ -1505,7 +1524,7 @@ export function processBetweenPhases(
         }
         const dotTaken = Math.max(0, state.player.health - player.health);
         const rolled = programRollRound(programRecordDamage(ledger, dotTaken));
-        ledger = programElementDrift(rolled);
+        ledger = programDefenderDrift(programElementDrift(rolled));
         events.push(...weatherEvents(rolled.el, ledger.el));
     }
     const playerDotTicks = clampDotTickBreakdown(projectedPlayerDotTicks, playerStart.dotDamage);

@@ -53,6 +53,15 @@ export interface ProgramQuery {
     elementsOnFoe: number;
     /** Cards in your hand (the played card excluded). */
     handSize: number;
+    // ── The Defender (sandbox/defender-sims only; `Combat/combat.defender.ts`) ──
+    /** Your THORNS: what each foe strike takes back. */
+    thorns: number;
+    /** Your REFLECT, in percent. */
+    reflect: number;
+    /** Your GUARD right now. */
+    guard: number;
+    /** VITAE your DEALs took off the foe this turn (P-06). */
+    dealtThisTurn: number;
 }
 
 /** Who an INFERNO line burns: both sides (the default), the foe only, you only. */
@@ -145,6 +154,31 @@ export interface ProgramCtx {
     swapElements(): void;
     /** A static Global's marker: while in play the STORM grows by n extra (apply: nothing; value: an estimate). */
     stormGrowthMarker(n: number): void;
+
+    // ── The Defender verbs (sandbox/defender-sims only) ──
+    /** THORNS n, heart-scaled (repeating) when applied; `exact` adds an
+     *  already-resolved number unscaled. Stacks by adding. Returns the THORNS gained. */
+    thorns(n: number, opts?: { exact?: boolean }): number;
+    /** Double your THORNS. */
+    doubleThorns(): void;
+    /** REFLECT +pct%: adds to your REFLECT and refreshes it to 2 turns. */
+    reflect(pct: number): void;
+    /** If the foe attacks on its turn this round, REFLECT +pct% before its first strike lands (P-09 PAID). */
+    reflectOnAttack(pct: number): void;
+    /** On the foe's turn this round, while you have taken no damage, each THORNS trigger deals double (P-08). */
+    thornsDoubleWhileUnhurt(): void;
+    /** Your GUARD is not lost at the end of the foe's turn this round (M-04 PAID). */
+    holdGuard(): void;
+    /** Discard n cards from your hand at random (a PAID cost). Returns how many. */
+    discardRandom(n: number): number;
+    /** Discard your hand. Returns how many cards. */
+    discardHand(): number;
+    /** RETRIEVE n: return n random cards from your discard to your hand. */
+    retrieve(n: number): void;
+    /** Return a random EXILED card to your draw pile (at a random place). */
+    unexileRandom(): void;
+    /** Lose n VITAE: a self-loss GUARD does not block (E-09). */
+    loseVitae(n: number): void;
 }
 
 /** One printed line (FREE or PAID) of a card that is not a Global. */
@@ -157,6 +191,11 @@ export interface ProgramLine {
     run: (c: ProgramCtx) => void;
     /** PAID only: the card leaves combat (EXILE) instead of going to discard. */
     exile?: boolean;
+}
+
+/** A card property: what happens when the card is discarded (M-09, sandbox). */
+export interface OnDiscard {
+    thorns: number;
 }
 
 /**
@@ -184,4 +223,6 @@ export interface CardProgram {
     free?: ProgramLine;
     paid?: ProgramLine;
     global?: ProgramGlobal;
+    /** Sandbox (Defender M-09): a rider that fires when the card is discarded. */
+    onDiscard?: OnDiscard;
 }

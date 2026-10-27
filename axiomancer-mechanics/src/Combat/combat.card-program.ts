@@ -48,6 +48,9 @@ import {
     type ElementState,
 } from './combat.elements';
 import { drawCombatCards } from './combat.deck';
+import {
+    addReflect, driftDefender, initDefenderState, noteThorns, DEFENDER_TELEMETRY, type DefenderState,
+} from './combat.defender';
 import { getRng } from '../Utils/rng';
 import { getCardById } from '../Cards/cards.library';
 import { lookupEffect, applyEffect } from '../Effects';
@@ -127,6 +130,8 @@ export interface ProgramLedger {
     leechCardId: string | null;
     /** The Elementalist's weather (`combat.elements.ts`). */
     el: ElementState;
+    /** The Defender's THORNS and REFLECT (`combat.defender.ts`, sandbox). */
+    df: DefenderState;
 }
 
 export function initProgramLedger(): ProgramLedger {
@@ -138,6 +143,7 @@ export function initProgramLedger(): ProgramLedger {
         drains: [], deathWardRound: null, pendingHeal: 0, curseUid: 0, globalUid: 0,
         tetherUntil: 0, tetherCardId: null, tetherSourceName: null, leechTurns: 0, leechPotency: 0, leechCardId: null,
         el: initElementState(),
+        df: initDefenderState(),
     };
 }
 
@@ -148,6 +154,7 @@ function cloneLedger(l: ProgramLedger): ProgramLedger {
         exiled: l.exiled.slice(),
         drains: l.drains.map(d => ({ ...d })),
         el: { ...(l.el ?? initElementState()) },
+        df: { ...(l.df ?? initDefenderState()) },
     };
 }
 
@@ -224,6 +231,9 @@ const LETHAL_BURN_VALUE = 100;
 const FROZEN_VALUE = 6;
 const DRAW_VALUE = 3;
 
+/** Re-entry guard: a discard's cost estimate values the other cards' FREE lines once, not recursively. */
+let discardDepth = 0;
+
 function expectedGlobalFires(trigger: GlobalTrigger, paid: boolean): number {
     const base = trigger === 'turn' ? GLOBAL_FREE_TURNS : trigger === 'sac' ? 2 : 1.5;
     return paid ? base * 2 : base;
@@ -233,7 +243,10 @@ class LineCtx implements ProgramCtx {
     constructor(private w: Work, private mode: Mode, private f: Frame) {}
 
     get q(): ProgramQuery {
-        return buildQuery(this.w.s, this.mode === 'cost' ? this.w.cost : 0);
+        const q = buildQuery(this.w.s, this.mode === 'cost' ? this.w.cost : 0);
+        // The Defender's numbers read the working ledger, so a line sees its own earlier verbs.
+        const df = this.w.l.df ?? initDefenderState();
+        return { ...q, thorns: df.thorns, reflect: df.reflect, dealtThisTurn: df.dealtThisTurn };
     }
 
     private stats() { return this.w.s.player.baseStats; }
@@ -254,14 +267,20 @@ class LineCtx implements ProgramCtx {
             this.w.l.el.frozen = false;
         }
         const vuln = getDamageTakenMultiplier(enemy);
+        const preVuln = Math.min(dmg, enemy.health);
         if (vuln !== 1) dmg = Math.round(dmg * vuln);
         const landed = Math.min(dmg, enemy.health);
         if (this.mode === 'cost') return landed;
+        const df = this.w.l.df ?? (this.w.l.df = initDefenderState());
         if (this.mode === 'value') {
             this.w.value += landed + (dmg >= enemy.health ? 20 : 0) + this.drainValue();
+            df.dealtThisTurn += landed;
             return landed;
         }
         this.w.l.nextDealBonus = 0;
+        df.dealtThisTurn += landed;
+        DEFENDER_TELEMETRY.dealDamage += landed;
+        DEFENDER_TELEMETRY.vulnExtra += Math.max(0, landed - preVuln);
         this.hitFoe(dmg, true);
         return landed;
     }
@@ -379,6 +398,8 @@ class LineCtx implements ProgramCtx {
             const need = Math.max(0, this.incoming());
             const useful = Math.min(amt, need);
             this.w.value += useful + 0.2 * (amt - useful);
+            // Sandbox: later verbs on the line read this GUARD ("DEAL equal to your GUARD").
+            this.w.s = { ...this.w.s, guard: (this.w.s.guard ?? 0) + amt };
         } else if (this.mode === 'apply') {
             this.w.s = { ...this.w.s, guard: (this.w.s.guard ?? 0) + amt };
         }
@@ -856,6 +877,198 @@ class LineCtx implements ProgramCtx {
         this.w.value += (this.el().storm > 0 ? 1.5 : 0.7) * n;
     }
 
+    // -- the Defender (sandbox/defender-sims) -------------------------------------
+    private df(): DefenderState { return this.w.l.df ?? (this.w.l.df = initDefenderState()); }
+
+    /** The witness's worth of THORNS going up by `add`: the strikes it meets over the next foe turns. */
+    private thornsValue(add: number): number {
+        const hits = this.hits();
+        const k = Math.max(1, hits.length);
+        const T = this.df().thorns;
+        const vuln = getDamageTakenMultiplier(this.w.s.enemy);
+        // Applied this round: full on this foe turn and the next, then drifting.
+        const drops = [0, 0, 1];
+        let v = 0;
+        drops.forEach((d, t) => {
+            v += (Math.max(0, T + add - d) - Math.max(0, T - d)) * k * (t === 0 ? 1 : 0.7);
+        });
+        return Math.min(v * vuln, this.w.s.enemy.health + 10);
+    }
+
+    thorns(n: number, opts?: { exact?: boolean }): number {
+        if (n <= 0) return 0;
+        const amt = opts?.exact ? n : scaleFor(n, this.stats(), 'heart', 'repeating');
+        if (amt <= 0) return 0;
+        const df = this.df();
+        if (this.mode === 'value') this.w.value += this.thornsValue(amt);
+        if (this.mode === 'cost') return amt;
+        df.thorns += amt;
+        if (this.mode === 'apply') noteThorns(df.thorns);
+        return amt;
+    }
+
+    doubleThorns(): void {
+        const t = this.df().thorns;
+        if (t > 0) this.thorns(t, { exact: true });
+    }
+
+    /** The witness's worth of a new REFLECT +pct%. */
+    private reflectValue(pct: number): number {
+        const df = this.df();
+        const H = this.hits().reduce((a, b) => a + b, 0);
+        if (H <= 0) return pct * 0.05;
+        const left = df.reflectTurns;
+        const before = df.reflect * Math.min(left, 2);
+        const after = (df.reflect + pct) * 2;
+        // The second foe turn is worth less (the fight may be over).
+        const v = ((after - before) / 100) * H * 0.85;
+        return Math.min(v * getDamageTakenMultiplier(this.w.s.enemy), this.w.s.enemy.health + 10);
+    }
+
+    reflect(pct: number): void {
+        if (pct <= 0) return;
+        if (this.mode === 'value') this.w.value += this.reflectValue(pct);
+        if (this.mode === 'cost') return;
+        addReflect(this.df(), pct);
+    }
+
+    reflectOnAttack(pct: number): void {
+        if (pct <= 0) return;
+        const hits = this.hits();
+        if (this.mode === 'value') { if (hits.length) this.w.value += this.reflectValue(pct); return; }
+        if (this.mode !== 'apply') return;
+        const df = this.df();
+        df.reflectOnAttack += pct;
+        df.reflectOnAttackRound = this.w.s.round;
+    }
+
+    thornsDoubleWhileUnhurt(): void {
+        const df = this.df();
+        if (this.mode === 'value') {
+            // Worth the THORNS that would land before the first VITAE is lost.
+            if (df.thorns > 0 && this.incoming() <= 0) this.w.value += df.thorns * Math.max(1, this.hits().length) * 0.8;
+            return;
+        }
+        if (this.mode === 'apply') df.thornsDoubleRound = this.w.s.round;
+    }
+
+    holdGuard(): void {
+        if (this.mode === 'value') {
+            // The GUARD left after this foe turn carries into the next one.
+            const left = Math.max(0, (this.w.s.guard ?? 0) - this.hits().reduce((a, b) => a + b, 0));
+            this.w.value += left * 0.6;
+            return;
+        }
+        if (this.mode === 'apply') this.df().guardHoldRound = this.w.s.round;
+    }
+
+    /** The witness's worth of the cards a random discard throws away (their FREE lines). */
+    private discardCost(n: number): number {
+        const hand = this.w.s.hand;
+        if (n <= 0 || hand.length === 0) return 0;
+        if (discardDepth > 0) return n * 3;
+        discardDepth++;
+        try {
+            const st: CombatEncounterState = { ...this.w.s, program: this.w.l };
+            let sum = 0;
+            for (const h of hand) {
+                const program = cardProgram(h.cardId);
+                let v = 3;
+                if (program) {
+                    v = Math.max(0, programLineValue(st, h.uid, false, this.w.kit));
+                    if (program.onDiscard) v -= this.thornsValue(scaleFor(program.onDiscard.thorns, this.stats(), 'heart', 'repeating'));
+                }
+                sum += v;
+            }
+            return (sum / hand.length) * Math.min(n, hand.length);
+        } finally { discardDepth--; }
+    }
+
+    private discardEntries(picks: CombatHandEntry[]): number {
+        if (this.mode === 'value') { this.w.value -= this.discardCost(picks.length); return picks.length; }
+        if (this.mode !== 'apply' || picks.length === 0) return picks.length;
+        const gone = new Set(picks.map(p => p.uid));
+        this.w.s = {
+            ...this.w.s,
+            hand: this.w.s.hand.filter(h => !gone.has(h.uid)),
+            discard: [...this.w.s.discard, ...picks.map(p => p.cardId)],
+        };
+        DEFENDER_TELEMETRY.cardsDiscarded += picks.length;
+        for (const p of picks) {
+            const rider = cardProgram(p.cardId)?.onDiscard;
+            if (rider && rider.thorns > 0) {
+                DEFENDER_TELEMETRY.m09Triggers += 1;
+                new LineCtx(this.w, 'apply', { cardId: p.cardId, waived: false }).thorns(rider.thorns);
+            }
+        }
+        return picks.length;
+    }
+
+    discardRandom(n: number): number {
+        if (n <= 0) return 0;
+        const hand = this.w.s.hand.slice();
+        const k = Math.min(n, hand.length);
+        if (this.mode !== 'apply') return this.discardEntries(hand.slice(0, k));
+        const picks: CombatHandEntry[] = [];
+        for (let i = 0; i < k; i++) {
+            const j = Math.floor(getRng().random() * hand.length);
+            picks.push(hand.splice(j, 1)[0]!);
+        }
+        return this.discardEntries(picks);
+    }
+
+    discardHand(): number {
+        return this.discardEntries(this.w.s.hand.slice());
+    }
+
+    retrieve(n: number): void {
+        if (n <= 0) return;
+        const pile = this.w.s.discard;
+        if (this.mode === 'value') { this.w.value += DRAW_VALUE * Math.min(n, pile.length); return; }
+        if (this.mode !== 'apply' || pile.length === 0) return;
+        const discard = pile.slice();
+        const drawn: string[] = [];
+        for (let i = 0; i < n && discard.length > 0; i++) {
+            const j = Math.floor(getRng().random() * discard.length);
+            drawn.push(discard.splice(j, 1)[0]!);
+        }
+        const w = this.w;
+        const el = w.l.el ?? (w.l.el = initElementState());
+        const added = drawn.map(cardId => ({ uid: `rt${++el.drawUid}`, cardId }));
+        w.s = { ...w.s, discard, hand: [...w.s.hand, ...added] };
+        DEFENDER_TELEMETRY.retrieves += drawn.length;
+        w.events.push({ kind: 'hand-drawn', cards: drawn });
+    }
+
+    unexileRandom(): void {
+        const ex = this.w.l.exiled;
+        if (this.mode === 'value') { if (ex.length) this.w.value += 6; return; }
+        if (this.mode !== 'apply' || ex.length === 0) return;
+        const j = Math.floor(getRng().random() * ex.length);
+        const [cardId] = ex.splice(j, 1);
+        const pile = this.w.s.drawPile.slice();
+        pile.splice(Math.floor(getRng().random() * (pile.length + 1)), 0, cardId!);
+        this.w.s = { ...this.w.s, drawPile: pile };
+        DEFENDER_TELEMETRY.unexiles += 1;
+    }
+
+    loseVitae(n: number): void {
+        if (n <= 0) return;
+        if (this.mode === 'value') {
+            this.w.value -= n;
+            if (this.w.s.player.health - Math.max(0, this.incoming()) - n <= 0) this.w.value -= LETHAL_BURN_VALUE;
+            return;
+        }
+        if (this.mode !== 'apply') return;
+        const p = this.w.s.player;
+        const lost = Math.min(n, Math.max(0, p.health));
+        this.w.s = { ...this.w.s, player: { ...p, health: p.health - lost } };
+        this.w.l.lostThisCombat += lost;
+        this.w.l.lostThisRound += lost;
+        DEFENDER_TELEMETRY.selfLoss += lost;
+        this.w.events.push({ kind: 'dot-tick', effectId: 'self-loss', label: 'VITAE lost', amount: lost, target: 'self' });
+    }
+
     drain(perHit: number, turns: number): void {
         const amt = scaleFor(perHit, this.stats(), 'mind', 'one-shot');
         if (this.mode === 'value') { this.w.value += amt * 2 * turns * 0.8; return; }
@@ -903,6 +1116,10 @@ function buildQuery(s: CombatEncounterState, spent: number): ProgramQuery {
         frozen: l.el?.frozen ?? false,
         elementsOnFoe: elementsOnFoe(l.el ?? initElementState()),
         handSize: s.hand.length,
+        thorns: l.df?.thorns ?? 0,
+        reflect: l.df?.reflect ?? 0,
+        guard: s.guard ?? 0,
+        dealtThisTurn: l.df?.dealtThisTurn ?? 0,
     };
 }
 
@@ -1181,6 +1398,7 @@ export function programTurnStart(state: CombatEncounterState, kit: ProgramKit): 
     l.nextDouble = false;
     l.nextTwice = false;
     l.nextDealBonus = 0;
+    l.df = { ...(l.df ?? initDefenderState()), dealtThisTurn: 0 };
     l.drains = l.drains.filter(d => d.untilRound >= state.round);
     if (l.pendingHeal > 0) {
         const p = w.s.player;
@@ -1369,4 +1587,95 @@ export function programDrawFallback(state: CombatEncounterState): readonly strin
         if (i >= 0) out.splice(i, 1);
     }
     return out;
+}
+
+// ── The Defender's spikes (sandbox/defender-sims) ─────────────────────────────
+
+/**
+ * The foe's turn, as it attacks: P-09 PAID's REFLECT lands before the first
+ * strike. Call once per foe turn, only when the foe attacks.
+ */
+export function programDefenderAttackStart(l: ProgramLedger, round: number): ProgramLedger {
+    const df = l.df ?? initDefenderState();
+    if (df.reflectOnAttack <= 0) return l;
+    const next = { ...df };
+    if (df.reflectOnAttackRound === round) addReflect(next, df.reflectOnAttack);
+    next.reflectOnAttack = 0;
+    next.reflectOnAttackRound = 0;
+    return { ...l, df: next };
+}
+
+/**
+ * One foe strike meets the spikes: THORNS, then REFLECT (of the strike's
+ * damage before GUARD), each a DEAL: VULNERABLE applies and FROZEN doubles
+ * (then ends). P-08: while you are unhurt this foe turn, THORNS deals double.
+ * Neither reduces the damage you take. Returns the foe after, the ledger and
+ * the VITAE the foe lost.
+ */
+export function programDefenderStrike(
+    l: ProgramLedger, enemyIn: Enemy, preGuard: number, unhurt: boolean, round: number,
+): { enemy: Enemy; ledger: ProgramLedger; dealt: number; events: CombatEvent[] } {
+    const df = l.df ?? initDefenderState();
+    DEFENDER_TELEMETRY.strikes += 1;
+    if ((df.thorns <= 0 && df.reflect <= 0) || isDefeated(enemyIn)) return { enemy: enemyIn, ledger: l, dealt: 0, events: [] };
+    let enemy = enemyIn;
+    let el = l.el ?? initElementState();
+    let dealt = 0;
+    const events: CombatEvent[] = [];
+    const strike = (base: number, kind: 'thorns' | 'reflect'): void => {
+        if (base <= 0 || isDefeated(enemy)) return;
+        let dmg = base;
+        if (el.frozen) { dmg *= 2; el = { ...el, frozen: false }; }
+        const preVuln = Math.min(dmg, enemy.health);
+        dmg = Math.round(dmg * getDamageTakenMultiplier(enemy));
+        const landed = Math.min(dmg, enemy.health);
+        let next = applyDamage(enemy, dmg);
+        const clock = fireDotTrigger(next, 'damage-instance', round);
+        if (clock.damage > 0) next = clock.target;
+        enemy = next;
+        dealt += landed + clock.damage;
+        if (kind === 'thorns') { DEFENDER_TELEMETRY.thornsDamage += landed; DEFENDER_TELEMETRY.thornsTriggers += 1; }
+        else { DEFENDER_TELEMETRY.reflectDamage += landed; DEFENDER_TELEMETRY.reflectTriggers += 1; }
+        DEFENDER_TELEMETRY.vulnExtra += Math.max(0, landed - preVuln);
+        events.push({ kind: 'damage-dealt', cardId: kind, target: 'enemy', amount: landed });
+    };
+    if (df.thorns > 0) {
+        const doubled = df.thornsDoubleRound === round && unhurt;
+        if (doubled) DEFENDER_TELEMETRY.thornsDoubled += 1;
+        strike(df.thorns * (doubled ? 2 : 1), 'thorns');
+    }
+    if (df.reflect > 0) strike(Math.round(preGuard * df.reflect / 100), 'reflect');
+    return { enemy, ledger: { ...l, el }, dealt, events };
+}
+
+/** The round boundary for the spikes: THORNS drifts, REFLECT loses a turn. */
+export function programDefenderDrift(l: ProgramLedger): ProgramLedger {
+    return { ...l, df: driftDefender(l.df ?? initDefenderState()) };
+}
+
+/** M-04 PAID: true when this round's foe turn does not take your GUARD away. */
+export function programHoldsGuard(state: CombatEncounterState): boolean {
+    return (state.program?.df?.guardHoldRound ?? 0) === state.round && state.round > 0;
+}
+
+/** A card the player scraps (the manual discard): its "if this card is discarded" rider fires (M-09). */
+export function programOnScrap(state: CombatEncounterState, cardId: string, kit: ProgramKit): CombatEncounterState {
+    const rider = cardProgram(cardId)?.onDiscard;
+    if (!rider || rider.thorns <= 0) return state;
+    const l = cloneLedger(state.program ?? initProgramLedger());
+    const w: Work = { s: { ...state, program: l }, l, events: [], kit, cost: 0, value: 0 };
+    DEFENDER_TELEMETRY.m09Triggers += 1;
+    new LineCtx(w, 'apply', { cardId, waived: false }).thorns(rider.thorns);
+    return { ...w.s, program: l };
+}
+
+/** The witness's worth of scrapping a card: its rider plus the Conviction (sandbox). */
+export function programScrapValue(state: CombatEncounterState, cardId: string, kit: ProgramKit): number {
+    const rider = cardProgram(cardId)?.onDiscard;
+    if (!rider) return -Infinity;
+    const ledger = state.program ?? initProgramLedger();
+    const w: Work = { s: { ...state, program: ledger }, l: cloneLedger(ledger), events: [], kit, cost: 0, value: 0 };
+    new LineCtx(w, 'value', { cardId, waived: false }).thorns(rider.thorns);
+    w.value += 1;
+    return w.value;
 }

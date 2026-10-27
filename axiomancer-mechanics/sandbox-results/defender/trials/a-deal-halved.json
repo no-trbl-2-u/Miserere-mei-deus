@@ -1,0 +1,9 @@
+{
+ "P-01.free.deal": 2, "P-01.paid.deal": 4,
+ "P-03.free.deal": 2, "P-03.paid.deal": 8,
+ "P-04.paid.deal": 3,
+ "E-04.free.deal": 2, "E-04.paid.deal": 3,
+ "E-07.free.deal": 1, "E-07.paid.deal": 5,
+ "M-08.free.deal": 1, "M-08.paid.deal": 2,
+ "M-09.paid.deal": 5
+}

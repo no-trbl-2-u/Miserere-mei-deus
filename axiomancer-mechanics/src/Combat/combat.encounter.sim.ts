@@ -21,8 +21,10 @@ import {
     initializeCombatEncounter, rollEncounterDice, playCombatCard,
     resolveThreatPhase, startTurn, endTurn,
     playSignatureSkill, handCards, selectMercyChoice, getSignatureSkill,
-    signatureCastBlock,
+    signatureCastBlock, PROGRAM_KIT, discardCombatCard,
 } from './combat.engine';
+import { programIllegalReason, programLineValue, programScrapValue, cardProgram } from './combat.card-program';
+import { DEFENDER_TELEMETRY, DEFENDER_WITNESS, DISCARD_WHY, endDefenderFight } from './combat.defender';
 import { MOMENTUM_CHAIN_ORDER } from './combat.upgradeable-dice';
 import { getRng } from '../Utils/rng';
 import type {
@@ -196,6 +198,46 @@ export interface CombatSimRunOptions {
 /** Dominates every policy score band so a focused card always ranks first. */
 const FOCUS_CARD_BOOST = 1e18;
 
+// ── The Defender witness (sandbox/defender-sims only) ─────────────────────────
+// The greedy ranking reads a program card's printed damage preview, which is
+// 0 for every program card, so it plays them in hand order. For the Defender
+// sandbox cards (ids `df-`), the witness instead reads the program system's
+// own value estimate, as the Elementalist's sims did: a die goes to the card
+// whose PAID line gains most over its FREE line (a PAID line it cannot pay is
+// never chosen), and the FREE drain plays the best FREE line first, holds one
+// worth less than nothing, and scraps a card whose discard rider (M-09) is
+// worth more than its FREE line. Every other card is ranked exactly as before.
+
+function isDefenderWitnessCard(cardId: string): boolean {
+    return DEFENDER_WITNESS.on && cardId.startsWith('df-');
+}
+
+/** A line's witness value, or -Infinity when it cannot be played. */
+function defenderLineValue(s: CombatEncounterState, uid: string, paid: boolean): number {
+    if (programIllegalReason(s, uid, paid, PROGRAM_KIT) !== null) return -Infinity;
+    return programLineValue(s, uid, paid, PROGRAM_KIT);
+}
+
+/** What spending a die on this card gains over playing it FREE. */
+function defenderDieGain(s: CombatEncounterState, uid: string): number {
+    const paid = defenderLineValue(s, uid, true);
+    const free = defenderLineValue(s, uid, false);
+    return paid - Math.max(0, free);
+}
+
+/** True when the card's PAID line carries a random discard (its legality reads the hand). */
+function hasDiscardLine(cardId: string): boolean {
+    return cardProgram(cardId)?.paid?.requires?.why === DISCARD_WHY;
+}
+
+/** The colours of the dice still unspent this turn. */
+function unspentColours(s: CombatEncounterState): Set<string> {
+    const out = new Set<string>();
+    for (const d of s.dice) if (d.state === 'available' && d.color !== 'x' && (d.floating || d.face !== 'miss')) out.add(d.color);
+    for (const d of s.reserve ?? []) out.add(d.color);
+    return out;
+}
+
 /**
  * The best card in hand to POWER now, per the active policy's `rankCard`
  * (highest score wins; ties resolve to the earliest card in hand order, which
@@ -218,12 +260,16 @@ function selectCard(
     let best: { uid: string; card: CombatCard } | null = null;
     let bestScore = -Infinity;
     for (const c of cards) {
-        let score = policy.rankCard(s, c.card, rng);
+        let score = isDefenderWitnessCard(c.card.id)
+            ? defenderDieGain(s, c.uid)
+            : policy.rankCard(s, c.card, rng);
         if (focusIds && focusIds.has(c.card.id)) {
             score += FOCUS_CARD_BOOST;
         }
         if (score > bestScore) { bestScore = score; best = c; }
     }
+    // A Defender card only takes the die when the PAID line gains something.
+    if (best && isDefenderWitnessCard(best.card.id) && !(bestScore > 0)) return null;
     return best;
 }
 
@@ -384,6 +430,13 @@ export function upgradeablePlayPhase(
         if (working.phase !== 'phase-play') return { state: working, plays, statusPlays, decisionPoints, liveOptions };
     }
 
+    // Sandbox: how often a discard PAID line in hand is unpayable as the turn starts.
+    for (const h of working.hand) {
+        if (!isDefenderWitnessCard(h.cardId) || !hasDiscardLine(h.cardId)) continue;
+        DEFENDER_TELEMETRY.discardTurnStartChecks += 1;
+        if (programIllegalReason(working, h.uid, true, PROGRAM_KIT) === DISCARD_WHY) DEFENDER_TELEMETRY.discardTurnStartUnpayable += 1;
+    }
+
     // ── Powered plays: iterate the live dice, momentum-steered. ──────────────
     while (working.phase === 'phase-play' && guard < 60) {
         guard++;
@@ -439,8 +492,33 @@ export function upgradeablePlayPhase(
     const heldUids = new Set<string>();
     while (working.phase === 'phase-play' && !working.finalOutcome && !working.mercyChoiceActive && drain < 30) {
         drain++;
-        const resT = handCards(working).find(c => c.card.verbClass !== 'retreat' && !heldUids.has(c.uid));
+        let resT = handCards(working).find(c => c.card.verbClass !== 'retreat' && !heldUids.has(c.uid));
         if (!resT) break;
+        if (isDefenderWitnessCard(resT.card.id)) {
+            // The best FREE line first; one worth less than nothing is held.
+            let bestV = -Infinity;
+            let scrap: { uid: string; v: number } | null = null;
+            for (const c of handCards(working)) {
+                if (heldUids.has(c.uid) || !isDefenderWitnessCard(c.card.id)) continue;
+                const v = defenderLineValue(working, c.uid, false);
+                if (v > bestV) { bestV = v; resT = c; }
+                const sv = programScrapValue(working, c.card.id, PROGRAM_KIT);
+                if (sv > Math.max(0, v) && (!scrap || sv > scrap.v)) scrap = { uid: c.uid, v: sv };
+            }
+            if (scrap) {
+                working = discardCombatCard(working, scrap.uid).state;
+                continue;
+            }
+            if (!(bestV >= 0)) {
+                for (const c of handCards(working)) if (isDefenderWitnessCard(c.card.id)) heldUids.add(c.uid);
+                continue;
+            }
+            // A discard card played FREE while a die of its colour is still unspent: was its PAID line payable?
+            if (hasDiscardLine(resT.card.id) && (unspentColours(working).has(String(resT.card.stance)) || unspentColours(working).has('wild'))) {
+                DEFENDER_TELEMETRY.discardChances += 1;
+                if (programIllegalReason(working, resT.uid, true, PROGRAM_KIT) === DISCARD_WHY) DEFENDER_TELEMETRY.discardUnpayable += 1;
+            }
+        }
         const play = playCombatCard(working, { uid: resT.uid }, false);
         const row = lineRow(lines, resT.card.id);
         row.freeHpSwing += playHpSwing(working, play.state, play.events);
@@ -625,6 +703,7 @@ export function runOneEncounter(
         }
     }
 
+    endDefenderFight();
     const convictionSpent = Math.max(0, state.turn - state.conviction);
     // The end state too: a defeat (or a self-inflicted cost) that ends the
     // fight before the next enemy action still counts as the trough.

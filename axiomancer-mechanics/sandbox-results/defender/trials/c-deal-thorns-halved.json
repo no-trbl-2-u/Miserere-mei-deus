@@ -1,0 +1,14 @@
+{
+ "P-01.free.deal": 2, "P-01.paid.deal": 4,
+ "P-03.free.deal": 2, "P-03.paid.deal": 8,
+ "P-04.paid.deal": 3,
+ "E-04.free.deal": 2, "E-04.paid.deal": 3,
+ "E-07.free.deal": 1, "E-07.paid.deal": 5,
+ "M-08.free.deal": 1, "M-08.paid.deal": 2,
+ "M-09.paid.deal": 5,
+ "P-03.paid.vuln": 75, "P-03.free.vuln": 25,
+ "P-04.free.thorns": 1, "P-05.free.thorns": 1, "P-05.paid.thorns": 2, "P-07.paid.thornsPerCard": 2,
+ "E-02.paid.thorns": 2, "E-05.free.thorns": 2, "E-05.paid.thorns": 4, "E-06.free.thorns": 2,
+ "E-07.free.thorns": 1, "E-07.paid.thorns": 3, "E-09.thorns": 2, "M-08.free.thorns": 1, "M-08.paid.thorns": 1,
+ "E-01.paid.thorns": 1, "E-04.paid.thorns": 1, "E-10.paid.thorns": 1, "M-05.paid.thorns": 1, "M-09.onDiscard.thorns": 1
+}
