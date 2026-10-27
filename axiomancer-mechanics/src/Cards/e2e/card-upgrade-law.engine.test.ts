@@ -290,6 +290,10 @@ describe('A3 — every upgrade makes the numbers bigger, never a cost', () => {
                         if (per > 0 && nums.has(String(call.n / per))) return;
                         // "INFERNO equal to half the damage dealt": half the printed hit.
                         if (/\bhalf the damage dealt\b/.test(printed) && nums.has(String(call.n * 2))) return;
+                        // An uncapped read with a flat bonus ("DEAL all the VITAE you lost this
+                        // combat +2"): the upgrade added exactly the printed "+n".
+                        const delta = call.n - (before[ci]?.n ?? 0);
+                        if (new RegExp(`\\+${delta}\\b`).test(printed)) return;
                         if (!nums.has(String(call.n))) offenders.push(`${up.id} ${name}: applies ${call.verb} ${call.n}, prints "${printed}"`);
                     });
                 });

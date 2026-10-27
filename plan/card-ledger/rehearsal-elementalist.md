@@ -169,10 +169,10 @@ until the revisions step):
 | P-03 | P-03a | Skill, Frost | GUARD equal to the foe's BLIZZARD. | GUARD twice the foe's BLIZZARD. |
 | P-04 | P-04a | Attack, Frost | DEAL 3, BLIZZARD 2. | Spend all the foe's BLIZZARD: DEAL 6, +2 per BLIZZARD spent. |
 | P-05 | P-05b | Spell, Storm | STORM 1; DEAL equal to the foe's STORM. | Trigger the foe's STORM. |
-| P-06 | P-06b | Skill, Storm | GUARD 3, DRAW 1. | GUARD 5, + the foe's STORM (max +12). DRAW 1. |
+| P-06 | P-06b | Skill, Storm | GUARD 3, DRAW 1. | GUARD 5, + the foe's STORM (max +12). DRAW 1. Cap removed (T, 2026-10-26, phase NC1): GUARD 5, + the foe's STORM. DRAW 1. |
 | P-07 | P-07a | Attack, Fire + Frost | DEAL 5, INFERNO 2. | DEAL 10, INFERNO 4; if the foe is FROZEN, the INFERNO is doubled too. |
 | P-08 | P-08b | Skill, Frost + Storm | GUARD equal to the foe's BLIZZARD + STORM. | Double the foe's BLIZZARD and STORM. |
-| P-09 | P-09a | Attack, Fire + Storm | DEAL 4, + your INFERNO (max +6). | DEAL 8, + your INFERNO + the foe's STORM. |
+| P-09 | P-09a | Attack, Fire + Storm | DEAL 4, + your INFERNO (max +6). Cap removed (T, 2026-10-26, phase NC1): + your INFERNO. | DEAL 8, + your INFERNO + the foe's STORM. |
 | P-10 | P-10b | Global, all | Start of your turn: if the foe has two or more elements, DEAL 5. | The same line, permanent (no "instead"). |
 
 **T's rulings in the notes:**
