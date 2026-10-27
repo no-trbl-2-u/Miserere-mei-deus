@@ -179,7 +179,7 @@ const TABS = [
 
 const SLOTS = [
   // Payoff
-  { slot: 'P-01', el: 'THORNS', role: 'Attack — DEAL more for your THORNS (capped)', glyph: '🌵' },
+  { slot: 'P-01', el: 'THORNS', role: 'Attack — DEAL more for your THORNS', glyph: '🌵' },
   { slot: 'P-02', el: 'GUARD', role: 'Attack — shield bash: DEAL equal to your GUARD; PAID discards 1 for double', glyph: '🛡' },
   { slot: 'P-03', el: 'discard', role: 'Attack — the big swing: PAID discards 2 for much more', glyph: '⚔' },
   { slot: 'P-04', el: 'REFLECT', role: 'Skill — GUARD; PAID discards 2 for a large REFLECT', glyph: '↩' },
@@ -215,7 +215,7 @@ const SLOTS = [
 
 const CARDS = [
   // P-01
-  { id: 'P-01a', type: 'Attack', free: 'DEAL 4, +1 per THORNS you have.', paid: 'DEAL 8, +2 per THORNS you have.', why: 'Reads the spikes\' size; capped.' },
+  { id: 'P-01a', type: 'Attack', free: 'DEAL 4, +1 per THORNS you have.', paid: 'DEAL 8, +2 per THORNS you have.', why: 'Reads the spikes\' size.' },
   { id: 'P-01b', type: 'Skill', free: 'GUARD 4, or GUARD 6 if you have THORNS.', paid: 'GUARD 10, or GUARD 16 if you have THORNS 3 or more.', why: 'One yes/no check, as a wall.' },
   { id: 'P-01c', type: 'Attack', free: 'DEAL 3, THORNS 1.', paid: 'Discard 1 card at random. DEAL 6, THORNS 3.', why: 'Grows the spikes it reads.' },
   // P-02
@@ -454,7 +454,7 @@ const sheet = () => {
   const k = kept();
   const general = document.getElementById('general').value.trim();
   return [
-    'BALLOT — the Family (ballot shell; sample candidates)',
+    'BALLOT — The Defender (defender-2026-10-26)',
     `kept ${k.length} of ${CARDS.length}`,
     ...TABS.flatMap((t) => [
       `-- ${t.name} --`,
