@@ -145,11 +145,14 @@ export interface GameActions {
      * Resolves the staged encounter. The Hazard-Pattern combat driver reports
      * the `outcome` and (optionally) the post-fight `finalPlayer` snapshot.
      * Grants loot / XP / quest progress / friendship rewards accordingly and
-     * returns the after-action `CombatEndReport`.
+     * returns the after-action `CombatEndReport`. `options.withholdSpoils`
+     * grants no XP and no loot (an elite whose relic dropped: the relic is
+     * the whole reward); quest progress and the arrival still settle.
      */
     endCombat: (
         outcome: CombatEndReport['outcome'],
         finalPlayer?: Character,
+        options?: { withholdSpoils?: boolean },
     ) => CombatEndReport;
 
     // ── World / dialogue ─────────────────────────────────────────────────────
@@ -367,7 +370,7 @@ export function createGameStore(
                 dispatch({ type: 'START_COMBAT', payload: { target } });
             },
 
-            endCombat(outcome, finalPlayer) {
+            endCombat(outcome, finalPlayer, options) {
                 const pre = get();
                 const encounter = pre.currentEncounter;
                 if (!encounter) {
@@ -394,6 +397,11 @@ export function createGameStore(
                         if (fr.items) loot = [...loot, ...fr.items];
                         if (fr.xpBonus) xpGained += fr.xpBonus;
                     }
+                }
+
+                if (options?.withholdSpoils) {
+                    xpGained = 0;
+                    loot = [];
                 }
 
                 const report: CombatEndReport = { outcome, xpGained, loot };

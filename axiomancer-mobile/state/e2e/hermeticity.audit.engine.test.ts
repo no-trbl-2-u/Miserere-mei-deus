@@ -143,6 +143,10 @@ describe('hermeticity guard: isolation (no disk in tests)', () => {
         // The node blurb guard (phase AW1b) reads the committed plan/AUDIT.md
         // to prove each pinned mismatch names a row filed for T.
         'state/exploration-maps/__tests__/node-blurb-event.test.ts',
+        // The drop-chance guard (phase ER1, A12) reads every committed
+        // `*.copy.ts` to prove none says the elite relic drop chance; a copy
+        // module added later is swept with no edit to the test.
+        'state/presenters/__tests__/elite-drop-chance-hidden.ER1.test.tsx',
     ]);
 
     const FS_PATTERN =

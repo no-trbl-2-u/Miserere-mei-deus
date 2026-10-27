@@ -82,8 +82,10 @@ export function visitedNodes(map: MapState): NodeId[] {
 /**
  * True when `nodeId` has been resolved on this map — "spent/sealed".
  * A spent node still renders and still carries its authored content; it
- * simply cannot be re-entered or re-farmed. The node the player is standing
- * on is NOT spent by standing there (see `visitedSet`).
+ * simply cannot be re-entered or re-farmed. The one exception: a claimed rest
+ * un-spends the act's settled elite nodes (`respawnElites`, elite-respawn.ts),
+ * so a fought elite returns. The node the player is standing on is NOT spent
+ * by standing there (see `visitedSet`).
  */
 export function isNodeSpent(map: MapState, nodeId: NodeId): boolean {
     return map.completedNodes.includes(nodeId) || map.consumedNodes.includes(nodeId);
@@ -157,8 +159,10 @@ export function isFrontierExhausted(map: MapState): boolean {
  * that has joined the frontier stops reading as locked.
  *
  * No-ops on labyrinth maps, which do not consult either list.
+ * Exported for the elite respawn (`elite-respawn.ts`), which un-spends nodes
+ * and keeps the same lists in step.
  */
-function syncFrontierLists(map: MapState): MapState {
+export function syncFrontierLists(map: MapState): MapState {
     const def = getMapDefinition(map.continent, map.name);
     if (def.traversal === 'labyrinth') return map;
     const frontier = new Set<NodeId>(frontierNodes(map));
@@ -182,7 +186,8 @@ function syncFrontierLists(map: MapState): MapState {
  *   2. The destination must not be SPENT — a node the player has already
  *      resolved (`completedNodes` / `consumedNodes`) is answered; it stays
  *      drawn on the canvas but is not a destination, so nothing can
- *      be re-farmed.
+ *      be re-farmed, except an elite a claimed rest brought back
+ *      (`respawnElites`), which is unspent again and so a destination.
  *   3. The destination must be on the FRONTIER: unvisited, and joined by an
  *      unblocked edge to ANY visited node — not merely to the node the
  *      player is standing on. That is the whole rule: the explored edge of

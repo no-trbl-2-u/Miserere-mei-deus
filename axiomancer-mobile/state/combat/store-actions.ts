@@ -10,14 +10,20 @@
 
 import {
     addRewardCard,
+    eliteRelicDropsAt,
     isEliteEnemy,
+    isEliteNode,
+    isEliteUpgradeTaken,
+    markEliteUpgradeTaken,
     replaceCard,
+    retireEliteNode,
     rollCombatCardRewards,
     rollEliteReward,
     rollEliteRelicDrop,
     type Enemy,
     type Equipment,
     type GameState,
+    type WorldState,
 } from '@mechanics';
 
 import { deckEventPoster, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
@@ -39,33 +45,76 @@ import { offerEliteRelicAction } from '../item-reward/relic-sources';
 export const COMBAT_REWARD_OFFER_COUNT = 3;
 
 /**
+ * The elite node the player stands on after a fight (the fight's node: the
+ * settle never moves the player), or null when the node is no elite node or
+ * no world is loaded.
+ */
+function eliteFightNode(world: WorldState | undefined): string | null {
+    const map = world?.currentMap;
+    if (!map) return null;
+    return isEliteNode(map.continent, map.name, map.currentNode) ? map.currentNode : null;
+}
+
+/**
+ * A won elite fight's relic roll, made BEFORE any other reward: the fight's
+ * own drop list (`eliteRelicDrops` on its node, else the elite-only pool from
+ * `relics`, the relic library by default). On a drop the relic is the whole
+ * reward: the draft is closed as claimed (no cards, no upgrade), the fight's
+ * node is retired so it never returns from a rest, and the relic is queued on
+ * the item-reward screen. Returns true on a drop, so the caller withholds the
+ * XP and loot (`endCombat(..., { withholdSpoils: true })`). A non-elite foe
+ * rolls nothing.
+ */
+export function settleEliteRelicAction(
+    store: AppStore,
+    enemy: Pick<Enemy, 'difficulty'> & Partial<Pick<Enemy, 'name'>>,
+    relics?: readonly Equipment[],
+): boolean {
+    if (!isEliteEnemy(enemy)) return false;
+    const state = store.getState() as unknown as GameState;
+    if (!state.player) return false;
+    const map = state.world?.currentMap;
+    const node = eliteFightNode(state.world);
+    const dropList = map && node ? eliteRelicDropsAt(map.continent, map.name, node) : undefined;
+    const relic = rollEliteRelicDrop(state.player, Math.random, relics, dropList);
+    if (!relic) return false;
+    const eliteName = enemy.name ?? '';
+    const patch: Record<string, unknown> = {
+        combatReward: { offers: [], claimed: true, upgrade: null, relicDrop: { item: relic, eliteName } },
+    };
+    if (node) patch.world = retireEliteNode(state.world, node);
+    store.setState(patch as never);
+    offerEliteRelicAction(store, relic, eliteName);
+    return true;
+}
+
+/**
  * Rolls the post-combat draft into the store, once. After an elite fight
  * (`isEliteEnemy`) the draft is the elite reward: the best cards available
- * and, when an owned card can take one, a random upgrade as the other option.
- * No-ops when a draft is already open, when the reward was already claimed
- * this encounter, or when no player is loaded — so a re-render (or a panel
- * remount mid-draft) re-reads the SAME offer instead of rerolling it.
- * After an elite it also rolls the elite's relic (`rollEliteRelicDrop`, from
- * `relics`, the relic library by default), held on the draft and queued on
- * the item-reward screen once the draft is claimed.
+ * and, when an owned card can take one and the player has not yet taken the
+ * upgrade over this elite (`isEliteUpgradeTaken`), a random upgrade as the
+ * other option. No-ops when a draft is already open, when the reward was
+ * already claimed this encounter (an elite whose relic dropped,
+ * `settleEliteRelicAction`, closes it as claimed), or when no player is
+ * loaded, so a re-render (or a panel remount mid-draft) re-reads the SAME
+ * offer instead of rerolling it.
  */
 export function rollCombatRewardAction(
     store: AppStore,
     enemy?: Pick<Enemy, 'difficulty'> & Partial<Pick<Enemy, 'name'>>,
-    relics?: readonly Equipment[],
 ): readonly string[] {
     const state = store.getState();
     const slice = state.combatReward ?? EMPTY_COMBAT_REWARD_SLICE;
     if (slice.claimed || slice.offers.length > 0) return slice.offers;
-    const player = (state as unknown as GameState).player;
+    const game = state as unknown as GameState;
+    const player = game.player;
     if (!player) return EMPTY_COMBAT_REWARD_SLICE.offers;
     if (enemy && isEliteEnemy(enemy)) {
         const elite = rollEliteReward(player, Math.random, COMBAT_REWARD_OFFER_COUNT);
-        // The elite's relic is its own roll, after the reward and never
-        // replacing it; held on the draft and queued once the draft is claimed.
-        const relic = relics ? rollEliteRelicDrop(player, Math.random, relics) : rollEliteRelicDrop(player, Math.random);
-        const relicDrop = relic ? { item: relic, eliteName: enemy.name ?? '' } : null;
-        store.setState({ combatReward: { offers: elite.cards, claimed: false, upgrade: elite.upgrade, relicDrop } } as never);
+        const node = eliteFightNode(game.world);
+        const upgradeTaken = node !== null && isEliteUpgradeTaken(game.world, node);
+        const upgrade = upgradeTaken ? null : elite.upgrade;
+        store.setState({ combatReward: { offers: elite.cards, claimed: false, upgrade, relicDrop: null } } as never);
         return elite.cards;
     }
     const offers = rollCombatCardRewards(player, Math.random, COMBAT_REWARD_OFFER_COUNT);
@@ -86,10 +135,8 @@ export function claimCombatRewardAction(store: AppStore, cardId: string | null):
     const player = (store.getState() as unknown as GameState).player;
     const patch: Record<string, unknown> = { combatReward: { offers: [], claimed: true, upgrade: null } };
     if (cardId && player) patch.player = addRewardCard(player, cardId);
-    const relicDrop = store.getState().combatReward?.relicDrop ?? null;
     store.setState(patch as never);
     try { store.getState().save(); } catch { /* persistence must not strand the reward screen */ }
-    if (relicDrop) offerEliteRelicAction(store, relicDrop.item, relicDrop.eliteName);
     postRewardEvent(store, offered, cardId);
 }
 
@@ -111,22 +158,26 @@ function postRewardEvent(store: AppStore, offered: string[], cardId: string | nu
 
 /**
  * Takes the elite reward's upgrade instead of a card: one owned copy of the
- * drawn card becomes its upgrade (`replaceCard`), the draft is claimed and the
- * save written. `cardId` must be the draft's own drawn card; anything else
- * (no upgrade on offer, a stale id) changes nothing.
+ * drawn card becomes its upgrade (`replaceCard`), the fight's elite node is
+ * marked (`markEliteUpgradeTaken`, so a repeat win over it offers cards only)
+ * in the same `setState`, the draft is claimed and the save written. `cardId`
+ * must be the draft's own drawn card; anything else (no upgrade on offer, a
+ * stale id) changes nothing.
  */
 export function claimCombatUpgradeAction(store: AppStore, cardId: string): void {
     const state = store.getState();
     const upgrade = state.combatReward?.upgrade ?? null;
-    const player = (state as unknown as GameState).player;
+    const game = state as unknown as GameState;
+    const player = game.player;
     if (!upgrade || !player || upgrade.fromCardId !== cardId) return;
-    const relicDrop = state.combatReward?.relicDrop ?? null;
-    store.setState({
+    const patch: Record<string, unknown> = {
         player: replaceCard(player, upgrade.fromCardId, upgrade.toCardId),
         combatReward: { offers: [], claimed: true, upgrade: null },
-    } as never);
+    };
+    const node = eliteFightNode(game.world);
+    if (node) patch.world = markEliteUpgradeTaken(game.world, node);
+    store.setState(patch as never);
     try { store.getState().save(); } catch { /* persistence must not strand the reward screen */ }
-    if (relicDrop) offerEliteRelicAction(store, relicDrop.item, relicDrop.eliteName);
 }
 
 /** Clears the draft for the next encounter (called when combat is left). */

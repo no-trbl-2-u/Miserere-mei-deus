@@ -11,6 +11,11 @@
 // playerHpTakenMean, selfBurnMean }`, and a sampled-family cell (phase EM1)
 // adds `winRateMin`, `winRateMax`, `lowestVitaeFractionP10Min` and
 // `lowestVitaeFractionP10Max`; a family's `decks` entry carries `family: true`.
+// A line may also carry `rewardLanes` (phase CH1d): one row per roster
+// character and a no-character baseline, each with the lanes in its reward
+// pool and each lane's share of the offers at run start and after three worn
+// relics. It is a section of its own: `compare` reads cells only, so it never
+// drifts.
 // Lines written before a field existed lack it, and every reader here treats a
 // missing field as absent, never as 0. This is a measurement, not a gate
 // (D57): nothing here fails on a number.
@@ -190,7 +195,10 @@ export function historyLine(report, { date, commit }) {
     playerHpTakenMean: c.playerHpTakenMean,
     ...Object.fromEntries(OPTIONAL_CELL_FIELDS.filter((k) => typeof c[k] === 'number').map((k) => [k, c[k]])),
   }))
-  return { date, commit, runs: report.runs, seed: report.seed, cells, decks: report.decks }
+  return {
+    date, commit, runs: report.runs, seed: report.seed, cells, decks: report.decks,
+    ...(report.rewardLanes ? { rewardLanes: report.rewardLanes } : {}),
+  }
 }
 
 /** Whether a deck id names a sampled family in this line. */
@@ -278,6 +286,46 @@ export function selfBurnRows(line) {
   return [...rows, '']
 }
 
+/** `lane 62%, lane 38%` for a state's shares, or `-` when it offered nothing. */
+function shareText(shares) {
+  const parts = Object.entries(shares ?? {}).map(([lane, x]) => `${lane} ${Math.round(x * 100)}%`)
+  return parts.length ? parts.join(', ') : '-'
+}
+
+/**
+ * The Reward lanes by character section: per character (and a no-character
+ * baseline), the lanes in the reward pool and each lane's share of the cards
+ * offered at run start and after three worn relics.
+ *
+ * @param {object} line a history line.
+ * @returns {string[]} the section's lines, or none when the line carries no `rewardLanes` (an old line).
+ */
+export function rewardLaneRows(line) {
+  const report = line.rewardLanes
+  if (!report) return []
+  const rows = [
+    '## Reward lanes by character',
+    '',
+    `Each state rolls ${report.rolls} seeded combat rewards (seed ${report.seed}). **start** is the run as dealt, `
+      + 'the starting relic worn; **late** adds relics until three are worn, each the library lane relic that '
+      + 'adds the most lanes the pool lacks (ties in library order). A lane reads its share of the cards offered; '
+      + '`grey fallback` is a pool with no lane in it.',
+    '',
+  ]
+  if (!report.rows.some((r) => r.character !== null)) {
+    rows.push('No roster character yet: the no-character baseline row only.', '')
+  }
+  rows.push('| character | state | relics worn | lanes in the pool | share of offers |', '|---|---|---|---|---|')
+  for (const r of report.rows) {
+    for (const [label, state] of [['start', r.start], ['late', r.late]]) {
+      const lanes = state.lanes.length ? state.lanes.join(', ') : 'grey fallback'
+      const worn = state.worn.length ? state.worn.join(', ') : 'none'
+      rows.push(`| ${r.character === null ? 'no character' : r.name} | ${label} | ${worn} | ${lanes} | ${shareText(state.shares)} |`)
+    }
+  }
+  return [...rows, '']
+}
+
 /**
  * Renders `docs/reports/measured/latest.md` from a history line.
  *
@@ -318,6 +366,7 @@ export function renderLatest(line) {
     '',
     ...familyRows,
     ...selfBurnRows(line),
+    ...rewardLaneRows(line),
     '## Decks',
     '',
     ...deckLines,

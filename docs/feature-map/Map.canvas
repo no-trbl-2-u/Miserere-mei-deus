@@ -85,6 +85,12 @@
 			"fromNode": "group:dev",
 			"toNode": "group:tabs",
 			"color": "5"
+		},
+		{
+			"id": "flow:group:dev->group:world",
+			"fromNode": "group:dev",
+			"toNode": "group:world",
+			"color": "5"
 		}
 	]
 }

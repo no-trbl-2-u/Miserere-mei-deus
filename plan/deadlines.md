@@ -312,7 +312,6 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - LR1g — loop work; signature tracking, blocks no window's goal; date not set.
 - EQ2b — loop work; follows EQ2a, the slot words on screen; date not set.
 - SB1 — attended: T's set-bonus design session; T said it is not part of the Act 1 MVP deadline; date not set.
-- ER1 — loop work; every fought elite in the act respawns after a rest until it drops its relic, blocks no window's goal and T set no date; date not set.
 
 ## How a window closes
 
