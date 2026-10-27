@@ -121,8 +121,7 @@ export const FIXTURE_ELITE_RELICS: readonly Equipment[] = [1, 2].map(i => ({
     name: `Fixture Elite Relic ${i}`,
     description: 'A placeholder elite-only relic.',
     category: 'equipment',
-    slot: 'accessory',
-    accessoryKind: 'charm',
+    slot: 'relic',
     statModifiers: [{ stat: 'maxHp', value: i }],
     relicSource: 'elite',
 }));
@@ -136,8 +135,7 @@ export const FIXTURE_QUEST_RELIC: Equipment = {
     name: 'Fixture Quest Relic',
     description: 'A placeholder quest relic.',
     category: 'equipment',
-    slot: 'accessory',
-    accessoryKind: 'amulet',
+    slot: 'relic',
     statModifiers: [{ stat: 'maxHp', value: 3 }],
     relicSource: 'quest',
 };
