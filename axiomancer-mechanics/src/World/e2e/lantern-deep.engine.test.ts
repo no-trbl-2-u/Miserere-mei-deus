@@ -79,11 +79,11 @@ describe('the Lantern Deep\'s events (D29)', () => {
         expect(Object.keys(kinds)).toHaveLength(18);
     });
 
-    it('spreads 7 encounters, 3 rests, a loot cache, 1 gathering, 1 hazard, 1 Anvil, a quest giver, an arrival and two sealed doors', () => {
+    it('spreads 7 encounters, 3 rests, a loot cache, 1 gathering, 2 hazards, 1 Anvil, an arrival and two sealed doors', () => {
         const tally: Record<string, number> = {};
         for (const k of Object.values(kinds)) tally[k] = (tally[k] ?? 0) + 1;
         expect(tally).toEqual({
-            encounter: 7, rest: 3, 'loot-cache': 1, gathering: 1, hazard: 1, blacksmith: 1, narration: 1, cutscene: 3,
+            encounter: 7, rest: 3, 'loot-cache': 1, gathering: 1, hazard: 2, blacksmith: 1, cutscene: 3,
         });
     });
 

@@ -117,8 +117,8 @@ Inputs for that session:
 
 Authored by T in session, 2026-10-25, verbatim. Signature costs (in
 Conviction) are T's starting pitch, to revisit after playthroughs. Built by
-LR1d (Blood Price) and LR1e (Elementalist); the quests that pay the four
-quest relics are LR1f's, listed under "The quests (LR1f)" below.
+LR1d (Blood Price) and LR1e (Elementalist); LR1f's one quest so far is
+listed under "The quests (LR1f)" below.
 
 | Relic | Lane | Signature (cost in Conviction) | Stats | Source |
 |---|---|---|---|---|
@@ -153,19 +153,21 @@ lone shared stack of 1 (you lose 0) does not make the Signet live.
 
 ## The quests (LR1f)
 
-One quest per Act 1 region and per quest relic (`World/quest.library.ts`, on
-each map's `quests`). Act 1 had no `interaction` or `narration` node, so each
-giver is an existing node turned into a `narration` whose first reply starts
-the quest: a node of a kind its region has another of. Lines are the
-builder's, `[content]` for T to rewrite (`World/MapEvents/content.ts`
+**Chapter 1 only (T, 2026-10-27):** "Let's rewrite this PR as to where only
+Chapter 1 is focused on. We haven't really discussed what quests look like
+yet." So the Breakwater carries the one quest below, as a placeholder until T
+and the loop settle what a quest is; Chapters 2-4 carry none, and the
+Bleeding Signet, Elementalist's Brooch and Elementalist's Belt have no quest
+yet (only the dev menu hands them over).
+
+Act 1 had no `interaction` or `narration` node, so the giver is an existing
+node turned into a `narration` whose first reply starts the quest. Lines are
+the builder's, `[content]` for T to rewrite (`World/MapEvents/content.ts`
 `QUEST_GIVERS`).
 
 | Quest | Region | Giver node (was) | Objective | Relic |
 |---|---|---|---|---|
 | The Watchtower Lamp | Breakwater | `bw-12` the sea cave (hazard) | kill The Death Beholder (the watchtower door, `bw-17`) | Ruby Signet |
-| Moonbells for the Tower | Charcoal Wood | `cw-2` the ruined tower (loot cache; its 8 shillings still paid) | collect Moonbell Petals (`cw-8`) | Bleeding Signet |
-| Word to the Mountain Inn | Beacon Crags | `bc-3` the hanging lake (hazard) | reach `bc-14` the mountain inn | Elementalist's Brooch |
-| Iron for the Lanterns | Lantern Deep | `ld-4` the north aqueduct (hazard) | collect Iron Ore (`ld-7`) | Elementalist's Belt |
 
 No quest pays an elite-only relic (`World/quest.library.test.ts`). The elites
 carry no drop list of their own (`eliteRelicDrops` absent), so the Green Jelly

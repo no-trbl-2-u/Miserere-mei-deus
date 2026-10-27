@@ -6,8 +6,8 @@
  * so the dispatcher reproduces (and extends) the authored events
  * `processNode` fires. Act 1 stages no NPC or shop, so the `interaction`
  * and `village` kinds have no carrier here; their witnesses are the neutral
- * fixtures in `Game/fixtures/`. Its one `narration` per region is a quest
- * giver (see "The quest givers" below).
+ * fixtures in `Game/fixtures/`. The Breakwater's one `narration` is a quest
+ * giver (see "The quest giver" below); Chapters 2-4 stage none yet.
  *
  * This file side-effects on import: `src/World/index.ts` imports it
  * for that side effect, so consumers of the package get the pools
@@ -22,9 +22,7 @@ import type { MapEventPool } from './types';
 import type { EnemySlug } from '../../Enemy/enemy.library';
 import { BLACKSMITH_WITNESS_VARIANTS } from '../Blacksmith/blacksmith.content';
 import type { Quest } from '../types';
-import {
-    LANTERN_IRON_QUEST, MOONBELLS_QUEST, MOUNTAIN_INN_QUEST, WATCHTOWER_LAMP_QUEST,
-} from '../quest.library';
+import { WATCHTOWER_LAMP_QUEST } from '../quest.library';
 
 // ─── Shared builders (Act 1) ─────────────────────────────────────────────────
 //
@@ -157,14 +155,13 @@ export const ACT1_ANVIL_NODES: Readonly<Record<string, string>> = {
 };
 const ANVIL_NODE_IDS: ReadonlySet<string> = new Set(Object.values(ACT1_ANVIL_NODES));
 
-// ─── The quest givers, once per region (phase LR1f) ──────────────────────────
+// ─── The quest giver, Chapter 1 only (phase LR1f) ────────────────────────────
 //
-// One node per Act 1 region is a `narration` whose first choice starts that
-// region's quest (`World/quest.library.ts`): the sea cave (bw-12), the
-// ruined tower (cw-2), the hanging lake (bc-3) and the north aqueduct (ld-4).
-// Each was a hazard or a loot cache the region has another of; the ruined
-// tower's giver still pays its cache's shillings on either choice. Every line
-// here is a plain placeholder, [content] for T to rewrite.
+// The Breakwater's sea cave (bw-12) is a `narration` whose first choice
+// starts the region's quest (`World/quest.library.ts`). It was a hazard; the
+// region keeps the other (bw-3). Chapters 2-4 carry no giver until T settles
+// what a quest is (T, 2026-10-27). Every line here is a plain placeholder,
+// [content] for T to rewrite.
 
 interface QuestGiver {
     nodeId: string;
@@ -176,12 +173,9 @@ interface QuestGiver {
     accepted: string;
     decline: string;
     declined: string;
-    /** Shillings handed over on either choice (a loot cache's, kept). */
-    shillings?: number;
 }
 
 function questGiverPool(g: QuestGiver): MapEventPool {
-    const pay = g.shillings ? { grantCurrency: g.shillings } : undefined;
     return {
         id: `${g.nodeId}.narration`,
         entries: [{
@@ -197,8 +191,8 @@ function questGiverPool(g: QuestGiver): MapEventPool {
                             id: 'ask',
                             text: g.ask,
                             choices: [
-                                { text: g.accept, nextNodeId: 'accepted', effect: { startQuest: g.quest.name, ...pay } },
-                                { text: g.decline, nextNodeId: 'declined', ...(pay ? { effect: pay } : {}) },
+                                { text: g.accept, nextNodeId: 'accepted', effect: { startQuest: g.quest.name } },
+                                { text: g.decline, nextNodeId: 'declined' },
                             ],
                         },
                         accepted: { id: 'accepted', text: g.accepted },
@@ -210,7 +204,7 @@ function questGiverPool(g: QuestGiver): MapEventPool {
     };
 }
 
-/** [content] The four givers' lines. */
+/** [content] The giver's lines, by node. */
 const QUEST_GIVERS: Readonly<Record<string, QuestGiver>> = {
     'bw-12': {
         nodeId: 'bw-12', quest: WATCHTOWER_LAMP_QUEST,
@@ -221,41 +215,6 @@ const QUEST_GIVERS: Readonly<Record<string, QuestGiver>> = {
         decline: 'Not my business.',
         declined: '"Then mind the tide."',
     },
-    'cw-2': {
-        nodeId: 'cw-2', quest: MOONBELLS_QUEST, shillings: 8,
-        description: 'The strongbox under the tower\'s fallen stair has an owner, and she came back for it.',
-        ask: 'She pays you eight shillings to lift the stair. "Bring me moonbells from the great tree and you can have my mother\'s signet."',
-        accept: 'I\'ll bring them.',
-        accepted: '"They grow in its shadow. Mind the burners."',
-        decline: 'Just the shillings.',
-        declined: '"Fair. Go on, then."',
-    },
-    'bc-3': {
-        nodeId: 'bc-3', quest: MOUNTAIN_INN_QUEST,
-        description: 'A shepherd watches the falls from the edge of the hanging lake.',
-        ask: '"My brother keeps the cart at the mountain inn. Tell him the flock is down. He\'ll give you the brooch he keeps for luck."',
-        accept: 'I\'ll tell him.',
-        accepted: '"Past the castle and the chapel. You\'ll see the cart."',
-        decline: 'Not this way.',
-        declined: '"Then the flock waits."',
-    },
-    'ld-4': {
-        nodeId: 'ld-4', quest: LANTERN_IRON_QUEST,
-        description: 'A lamplighter mends a lantern on the north aqueduct\'s walkway.',
-        ask: '"The lanterns want iron for their hooks. There\'s iron in the crystal grotto. Bring me some and the belt is yours."',
-        accept: 'I\'ll bring it.',
-        accepted: '"West, past the temple. The crystal is worthless. The iron isn\'t."',
-        decline: 'Not now.',
-        declined: '"The lanterns will hold a while."',
-    },
-};
-
-/** The giver node of each Act 1 region, by map (the quest is on that map's `quests`). */
-export const ACT1_QUEST_GIVER_NODES: Readonly<Record<string, string>> = {
-    'breakwater':    'bw-12',
-    'charcoal-wood': 'cw-2',
-    'beacon-crags':  'bc-3',
-    'lantern-deep':  'ld-4',
 };
 
 // ─── The Breakwater (Act 1, map 1) ───────────────────────────────────────────
@@ -267,8 +226,8 @@ export const ACT1_QUEST_GIVER_NODES: Readonly<Record<string, string>> = {
 //
 // Kind spread over 18 nodes: 6 encounter, 2 rest, 3 loot-cache,
 // 2 gathering, 1 hazard, 1 blacksmith (the Anvil, bw-16), 1 quest giver
-// (bw-12), 1 arrival cutscene, 1 travel. The watchtower (bw-17), the one node every run crosses
-// before the door, holds the region's door fight.
+// (bw-12), 1 arrival cutscene, 1 travel. The watchtower (bw-17), the one node
+// every run crosses before the door, holds the region's door fight.
 
 /**
  * The windmill is where a new game starts. It opens on a short
@@ -395,9 +354,9 @@ const BREAKWATER_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> =
 // descriptions and the two arrival lines sit on the plate's landmarks (see
 // `Continents/Coastal-Village/charcoal-wood.ts`).
 //
-// Kind spread over 20 nodes: 7 encounter, 3 rest, 2 loot-cache,
-// 3 gathering, 1 hazard, 1 blacksmith (the Anvil, cw-18), 1 quest giver
-// (cw-2, the ruined tower's cache), 1 arrival cutscene, 1 travel. The northern forest's roster is level 9 and up, so
+// Kind spread over 20 nodes: 7 encounter, 3 rest, 3 loot-cache,
+// 3 gathering, 1 hazard, 1 blacksmith (the Anvil, cw-18), 1 arrival
+// cutscene, 1 travel. The northern forest's roster is level 9 and up, so
 // every fight here is pinned to a low absolute level,
 // ramping ring by ring from 2 to 3.
 
@@ -492,6 +451,7 @@ const CW_HAZARD_NODES: Record<string, string> = {
 };
 
 const CW_LOOT_NODES: Record<string, { currency: number; description: string }> = {
+    'cw-2':  { currency: 8,  description: 'A strongbox under the tower\'s fallen stair. The lock rusted before its owner came back.' },
     'cw-6':  { currency: 6,  description: 'Shillings in a niche at the cave mouth. Someone paid the dark and left.' },
     'cw-13': { currency: 12, description: 'The hermit is gone. His purse is under the hearthstone, where they all keep it.' },
 };
@@ -521,8 +481,6 @@ const CHARCOAL_WOOD_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }>
             const nodeId = `cw-${i}`;
             if (nodeId === 'cw-1') {
                 out.push({ nodeId, pool: cwArrival });
-            } else if (QUEST_GIVERS[nodeId]) {
-                out.push({ nodeId, pool: questGiverPool(QUEST_GIVERS[nodeId]!) });
             } else if (nodeId === 'cw-20') {
                 out.push({ nodeId, pool: cwStairCave });
             } else if (ANVIL_NODE_IDS.has(nodeId)) {
@@ -553,8 +511,7 @@ const CHARCOAL_WOOD_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }>
 // `Continents/Northern-Continent/beacon-crags.ts`).
 //
 // Kind spread over 17 nodes: 6 encounter, 3 rest, 2 loot-cache, 1 gathering,
-// 1 hazard, 1 blacksmith (the Anvil, bc-12), 1 quest giver (bc-3), 1 arrival
-// cutscene, 1 travel.
+// 2 hazard, 1 blacksmith (the Anvil, bc-12), 1 arrival cutscene, 1 travel.
 // The caverns' roster is level 13 and up, so every fight is pinned low, one
 // step above the Charcoal Wood: 3 on the upper mountain, 4 below
 // the gorge.
@@ -606,6 +563,7 @@ const BC_GATHER_NODES: Record<string, string> = {
 };
 
 const BC_HAZARD_NODES: Record<string, { damage: number; description: string }> = {
+    'bc-3':  { damage: 2, description: 'The spray from the falls freezes on the path. The lake is a long way down.' },
     'bc-9':  { damage: 3, description: 'The rope bridge charges for the crossing. Halfway over, a plank charges again.' },
 };
 
@@ -639,8 +597,6 @@ const BEACON_CRAGS_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> 
             const nodeId = `bc-${i}`;
             if (nodeId === 'bc-1') {
                 out.push({ nodeId, pool: bcArrival });
-            } else if (QUEST_GIVERS[nodeId]) {
-                out.push({ nodeId, pool: questGiverPool(QUEST_GIVERS[nodeId]!) });
             } else if (nodeId === 'bc-17') {
                 out.push({ nodeId, pool: bcGlacierShrine });
             } else if (ANVIL_NODE_IDS.has(nodeId)) {
@@ -673,8 +629,8 @@ const BEACON_CRAGS_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> 
 // `Continents/Northern-Continent/lantern-deep.ts`).
 //
 // Kind spread over 18 nodes: 7 encounter, 3 rest, 1 loot-cache, 1 gathering,
-// 1 hazard, 1 blacksmith (the Anvil, ld-14), 1 quest giver (ld-4), 1 arrival
-// cutscene, 2 sealed doors (the vault door and the deep stair). No boss; one elite on the last
+// 2 hazard, 1 blacksmith (the Anvil, ld-14), 1 arrival cutscene, 2 sealed
+// doors (the vault door and the deep stair). No boss; one elite on the last
 // fight column. Every fight pinned low, level with the Beacon Crags: 3 above
 // the aqueducts, 4 below them.
 
@@ -727,6 +683,7 @@ const LD_GATHER_NODES: Record<string, string> = {
 };
 
 const LD_HAZARD_NODES: Record<string, { damage: number; description: string }> = {
+    'ld-4':  { damage: 2, description: 'The aqueduct leaks. The walkway is slick, and the lake is a long way down.' },
     'ld-9':  { damage: 3, description: 'The giant turns in its sleep. The dais is not wide enough for the both of you.' },
 };
 
@@ -773,8 +730,6 @@ const LANTERN_DEEP_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> 
             const nodeId = `ld-${i}`;
             if (nodeId === 'ld-1') {
                 out.push({ nodeId, pool: ldArrival });
-            } else if (QUEST_GIVERS[nodeId]) {
-                out.push({ nodeId, pool: questGiverPool(QUEST_GIVERS[nodeId]!) });
             } else if (nodeId === 'ld-15') {
                 out.push({ nodeId, pool: ldVaultDoor });
             } else if (nodeId === 'ld-18') {

@@ -75,11 +75,11 @@ describe('the Beacon Crags\' events (D29)', () => {
         expect(Object.keys(kinds)).toHaveLength(17);
     });
 
-    it('spreads 6 encounters, 3 rests, 2 loot caches, 1 gathering, 1 hazard, 1 Anvil, a quest giver, an arrival and a door', () => {
+    it('spreads 6 encounters, 3 rests, 2 loot caches, 1 gathering, 2 hazards, 1 Anvil, an arrival and a door', () => {
         const tally: Record<string, number> = {};
         for (const k of Object.values(kinds)) tally[k] = (tally[k] ?? 0) + 1;
         expect(tally).toEqual({
-            encounter: 6, rest: 3, 'loot-cache': 2, gathering: 1, hazard: 1, blacksmith: 1, narration: 1, cutscene: 1, travel: 1,
+            encounter: 6, rest: 3, 'loot-cache': 2, gathering: 1, hazard: 2, blacksmith: 1, cutscene: 1, travel: 1,
         });
     });
 

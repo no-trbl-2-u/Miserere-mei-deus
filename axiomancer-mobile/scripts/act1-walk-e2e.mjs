@@ -266,7 +266,8 @@ const RESOLVERS = {
         return 'screen'
     },
     async gathering(page, nodeId) {
-        // A gathering that finishes a taken quest (LR1f) hands its relic over first.
+        // A gathering that finishes a taken `collect` quest hands its relic over first
+        // (none does yet: Chapter 1's quest is a kill).
         await page.waitForURL((url) => url.pathname === '/event' || url.pathname === '/item-reward', { timeout: 10000 })
             .catch(() => fail(`${nodeId}: expected /event, landed on ${pathname(page)}`))
         if (pathname(page) === '/item-reward') {
@@ -302,7 +303,7 @@ const RESOLVERS = {
         await playOutCutscene(page)
         return 'screen'
     },
-    // A quest giver (LR1f): take the quest (the first reply), then walk away.
+    // A quest giver (LR1f, the Breakwater's bw-12): take the quest (the first reply), then walk away.
     async narration(page, nodeId) {
         await expectPath(page, '/dialogue', nodeId)
         await waitFor(page, 'dialogue-choice-0', `${nodeId} quest giver`)

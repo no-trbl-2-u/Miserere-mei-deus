@@ -1,23 +1,22 @@
 /**
- * The quest library: the quests Act 1 hands out (phase LR1f).
+ * The quest library: the quests the game hands out (phase LR1f).
  *
  * `QuestName` names a quest-LOG quest — the objective-tracking quests
  * consumed by `quest.engine.ts`, dialogue gating
  * (`DialogueChoice.requires.quest`) and reach objectives.
  *
- * Act 1 carries four quests, one per region and one per quest relic. Each is
- * on its map's `quests`, is started by a choice in its giver's narration
- * (`MapEvents/content.ts`), is finished by an objective the engine counts
- * (`kill`, `reach`, `collect`) and pays its relic through the one reward door
- * (`payCompletedQuests`):
+ * Only Chapter 1, the Breakwater, carries a quest so far (T, 2026-10-27:
+ * "only Chapter 1 is focused on. We haven't really discussed what quests
+ * look like yet"). It is on its map's `quests`, is started by a choice in
+ * its giver's narration (`MapEvents/content.ts`), is finished by an
+ * objective the engine counts (`kill`, `reach`, `collect`) and pays its
+ * relic through the one reward door (`payCompletedQuests`):
  *
  *   The Watchtower Lamp      breakwater     giver bw-12  kill The Death Beholder   Ruby Signet
- *   Moonbells for the Tower  charcoal-wood  giver cw-2   collect Moonbell Petals   Bleeding Signet
- *   Word to the Mountain Inn beacon-crags   giver bc-3   reach bc-14               Elementalist's Brooch
- *   Iron for the Lanterns    lantern-deep   giver ld-4   collect Iron Ore          Elementalist's Belt
  *
+ * Chapters 2-4 carry no quest until T and the loop settle what a quest is.
  * No quest pays an elite-only relic: those drop only from elites.
- * Names, descriptions and objective lines are plain placeholders,
+ * The name, description and objective line are plain placeholders,
  * [content] for T to rewrite.
  */
 
@@ -58,34 +57,5 @@ export const WATCHTOWER_LAMP_QUEST: Quest = laneRelicQuest(
     'relic-ruby-signet',
 );
 
-/** The Charcoal Wood's quest: moonbells from the great tree. Pays the Bleeding Signet. */
-export const MOONBELLS_QUEST: Quest = laneRelicQuest(
-    'Moonbells for the Tower',
-    'The woman at the ruined tower wants moonbells from the great tree.',
-    'charcoal-wood',
-    { id: 'collect-moonbells', type: 'collect', description: 'Gather Moonbell Petals at the great tree.', target: 'moonbell-petals', requiredCount: 1 },
-    'relic-bleeding-signet',
-);
-
-/** The Beacon Crags' quest: carry word to the mountain inn. Pays the Elementalist's Brooch. */
-export const MOUNTAIN_INN_QUEST: Quest = laneRelicQuest(
-    'Word to the Mountain Inn',
-    'A shepherd at the hanging lake asks you to carry word to the mountain inn.',
-    'beacon-crags',
-    { id: 'reach-inn', type: 'reach', description: 'Reach the mountain inn.', target: 'bc-14', requiredCount: 1 },
-    'relic-elementalist-brooch',
-);
-
-/** The Lantern Deep's quest: iron for the lamplighter. Pays the Elementalist's Belt. */
-export const LANTERN_IRON_QUEST: Quest = laneRelicQuest(
-    'Iron for the Lanterns',
-    'The lamplighter on the north aqueduct needs iron from the crystal grotto.',
-    'lantern-deep',
-    { id: 'collect-iron', type: 'collect', description: 'Gather Iron Ore in the crystal grotto.', target: 'iron-ore', requiredCount: 1 },
-    'relic-elementalist-belt',
-);
-
 /** Every authored quest, in Act 1 order. */
-export const QUEST_LIBRARY: readonly Quest[] = [
-    WATCHTOWER_LAMP_QUEST, MOONBELLS_QUEST, MOUNTAIN_INN_QUEST, LANTERN_IRON_QUEST,
-];
+export const QUEST_LIBRARY: readonly Quest[] = [WATCHTOWER_LAMP_QUEST];

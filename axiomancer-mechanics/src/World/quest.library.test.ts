@@ -2,10 +2,11 @@
  * The quest library's rules (phase LR1f, A5 and A18 of the LR1 brief).
  *
  * Every authored quest pays a lane relic whose library entry says
- * `relicSource: 'quest'`, so no quest ever pays an elite-only relic; the four
- * pay the four quest relics, one each; each quest sits on its own Act 1 map's
- * `quests` and is started by a choice in a narration on that map. The
- * Breakwater's elite draws from the elite-only relics alone.
+ * `relicSource: 'quest'`, so no quest ever pays an elite-only relic; no quest
+ * relic is paid twice; only Chapter 1 (the Breakwater) carries a quest so far
+ * (T, 2026-10-27), started by a choice in a narration on that map, and
+ * Chapters 2-4 carry none. The Breakwater's elite draws from the elite-only
+ * relics alone.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -19,8 +20,10 @@ import { getRelicById, relicLibrary } from '../Items/relic.library';
 import { createNewGameState } from '../Game/game.reducer';
 import type { ContinentName, MapName } from './map.library';
 
-const ACT1: ReadonlyArray<{ continent: ContinentName; map: MapName }> = [
-    { continent: 'coastal-continent', map: 'breakwater' },
+const CHAPTER_1 = { continent: 'coastal-continent', map: 'breakwater' } as const;
+
+/** Chapters 2-4: no quest until T settles what a quest is. */
+const LATER_CHAPTERS: ReadonlyArray<{ continent: ContinentName; map: MapName }> = [
     { continent: 'coastal-continent', map: 'charcoal-wood' },
     { continent: 'northern-continent', map: 'beacon-crags' },
     { continent: 'northern-continent', map: 'lantern-deep' },
@@ -44,34 +47,38 @@ describe('A18 · no quest pays an elite-only relic', () => {
         }
     });
 
-    it('the quest relics are paid once each, and every quest relic has its quest', () => {
-        const paid = authoredQuests().map(q => questRewardItem(q.reward)!.id).sort();
-        const questRelics = relicLibrary.filter(r => r.relicSource === 'quest').map(r => r.id).sort();
-        expect(paid).toEqual(questRelics);
-        expect(paid).toHaveLength(4);
+    it('no quest relic is paid twice, and Chapter 1 pays the Ruby Signet', () => {
+        const paid = authoredQuests().map(q => questRewardItem(q.reward)!.id);
+        expect(new Set(paid).size).toBe(paid.length);
+        expect(paid).toEqual(['relic-ruby-signet']);
+        const questRelics = new Set(relicLibrary.filter(r => r.relicSource === 'quest').map(r => r.id));
+        for (const id of paid) expect(questRelics.has(id), id).toBe(true);
     });
 });
 
-describe('A5 · one quest per Act 1 region, given by a narration on that map', () => {
-    it('each Act 1 map carries exactly one library quest', () => {
-        for (const { continent, map } of ACT1) {
-            const quests = getMapDefinition(continent, map).quests ?? [];
-            expect(quests.map(q => q.mapName), map).toEqual([map]);
-            expect(QUEST_LIBRARY).toContain(quests[0]);
-        }
+describe('A5 · Chapter 1 carries one quest, given by a narration on its map', () => {
+    it('the Breakwater carries exactly one library quest', () => {
+        const quests = getMapDefinition(CHAPTER_1.continent, CHAPTER_1.map).quests ?? [];
+        expect(quests.map(q => q.mapName)).toEqual([CHAPTER_1.map]);
+        expect(QUEST_LIBRARY).toContain(quests[0]);
     });
 
-    it('a narration on the quest\'s own map has a choice that starts it', () => {
-        for (const { continent, map } of ACT1) {
-            const def = getMapDefinition(continent, map);
-            const quest = def.quests![0]!;
-            const starters = def.nodes.filter(node => {
-                const payload = getNodeEventPool(continent, map, node.id)?.entries[0]?.payload;
-                if (payload?.kind !== 'narration') return false;
-                return Object.values(payload.dialogue.nodes)
-                    .some(n => (n.choices ?? []).some(c => c.effect?.startQuest === quest.name));
-            });
-            expect(starters, `${map}: ${quest.name}`).toHaveLength(1);
+    it('a narration on the Breakwater has the one choice that starts it', () => {
+        const { continent, map } = CHAPTER_1;
+        const def = getMapDefinition(continent, map);
+        const quest = def.quests![0]!;
+        const starters = def.nodes.filter(node => {
+            const payload = getNodeEventPool(continent, map, node.id)?.entries[0]?.payload;
+            if (payload?.kind !== 'narration') return false;
+            return Object.values(payload.dialogue.nodes)
+                .some(n => (n.choices ?? []).some(c => c.effect?.startQuest === quest.name));
+        });
+        expect(starters.map(n => n.id)).toEqual(['bw-12']);
+    });
+
+    it('Chapters 2-4 carry no quest yet', () => {
+        for (const { continent, map } of LATER_CHAPTERS) {
+            expect(getMapDefinition(continent, map).quests ?? [], map).toEqual([]);
         }
     });
 });

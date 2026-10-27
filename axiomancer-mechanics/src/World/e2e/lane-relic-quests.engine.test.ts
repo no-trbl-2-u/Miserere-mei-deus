@@ -1,20 +1,18 @@
 /**
- * The Act 1 lane-relic quests, giver to relic to lane card (phase LR1f, A17
- * of the LR1 brief).
+ * The Chapter 1 lane-relic quest, giver to relic to lane card (phase LR1f,
+ * A17 of the LR1 brief, cut to Chapter 1 by T on 2026-10-27).
  *
- * One journey per quest, through the real map graph and the real pools: from
- * a fresh game on the region's arrival, walk to the giver, take the quest in
- * its narration, meet the objective on the map, and the quest's relic is in
- * the satchel. Carried unworn, its lane is not unlocked; worn, it is,
+ * One journey, through the real map graph and the real pools: from a fresh
+ * game on the Breakwater's arrival, walk to the giver, take the quest in its
+ * narration, meet the objective on the map, and the quest's relic is in the
+ * satchel. Carried unworn, its lane is not unlocked; worn, it is,
  * and the next combat reward holds a card of that lane.
  */
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { applyDialogueChoice, createMapState, getMapDefinition, moveToNode, resolveMapEvent } from '../index';
-import {
-    LANTERN_IRON_QUEST, MOONBELLS_QUEST, MOUNTAIN_INN_QUEST, QUEST_LIBRARY, WATCHTOWER_LAMP_QUEST,
-} from '../quest.library';
+import { QUEST_LIBRARY, WATCHTOWER_LAMP_QUEST } from '../quest.library';
 import { questRewardItem } from '../quest.engine';
 import { createNewGameState, gameReducer } from '../../Game/game.reducer';
 import { equipItem } from '../../Character/equipment.reducer';
@@ -90,11 +88,9 @@ function expectLaneCardOnceWorn(state: GameState, relic: Equipment): void {
     }
 }
 
-describe('A17 · every Act 1 quest pays its lane relic, and the lane follows the worn relic', () => {
-    it('authors exactly the four journeys below', () => {
-        expect(QUEST_LIBRARY.map(q => q.name)).toEqual([
-            WATCHTOWER_LAMP_QUEST.name, MOONBELLS_QUEST.name, MOUNTAIN_INN_QUEST.name, LANTERN_IRON_QUEST.name,
-        ]);
+describe('A17 · the Chapter 1 quest pays its lane relic, and the lane follows the worn relic', () => {
+    it('authors exactly the one journey below', () => {
+        expect(QUEST_LIBRARY.map(q => q.name)).toEqual([WATCHTOWER_LAMP_QUEST.name]);
     });
 
     it('the Breakwater: the smuggler in the sea cave, the watchtower door, the Ruby Signet', () => {
@@ -107,36 +103,9 @@ describe('A17 · every Act 1 quest pays its lane relic, and the lane follows the
         expectLaneCardOnceWorn(state, relicOf(q));
     });
 
-    it('the Charcoal Wood: the ruined tower, the moonbells, the Bleeding Signet', () => {
-        const q = MOONBELLS_QUEST;
-        let state = takeQuest(arrive('coastal-continent', 'charcoal-wood'), 'cw-2', q);
-        state = walk(state, 'cw-8');
-        expect(state.quests.completed).toContain(q.name);
-        expect(carries(state, relicOf(q).id)).toBe(true);
-        expectLaneCardOnceWorn(state, relicOf(q));
-    });
-
-    it('the Beacon Crags: the hanging lake, the mountain inn, the Elementalist\'s Brooch', () => {
-        const q = MOUNTAIN_INN_QUEST;
-        let state = takeQuest(arrive('northern-continent', 'beacon-crags'), 'bc-3', q);
-        state = walk(state, 'bc-5', 'bc-8', 'bc-14');
-        expect(state.quests.completed).toContain(q.name);
-        expect(carries(state, relicOf(q).id)).toBe(true);
-        expectLaneCardOnceWorn(state, relicOf(q));
-    });
-
-    it('the Lantern Deep: the north aqueduct, the crystal grotto\'s iron, the Elementalist\'s Belt', () => {
-        const q = LANTERN_IRON_QUEST;
-        let state = takeQuest(arrive('northern-continent', 'lantern-deep'), 'ld-4', q);
-        state = walk(state, 'ld-2', 'ld-7');
-        expect(state.quests.completed).toContain(q.name);
-        expect(carries(state, relicOf(q).id)).toBe(true);
-        expectLaneCardOnceWorn(state, relicOf(q));
-    });
-
-    it('a quest not taken pays nothing: the objective alone does not start it', () => {
-        const state = walk(arrive('coastal-continent', 'charcoal-wood'), 'cw-3', 'cw-8');
-        expect(state.quests.completed).not.toContain(MOONBELLS_QUEST.name);
-        expect(carries(state, relicOf(MOONBELLS_QUEST).id)).toBe(false);
+    it('a quest not taken pays nothing: the door fight alone, past the sea cave, does not start it', () => {
+        const state = walk(arrive('coastal-continent', 'breakwater'), 'bw-3', 'bw-9', 'bw-13', 'bw-15', 'bw-17');
+        expect(state.quests.completed).not.toContain(WATCHTOWER_LAMP_QUEST.name);
+        expect(carries(state, relicOf(WATCHTOWER_LAMP_QUEST).id)).toBe(false);
     });
 });

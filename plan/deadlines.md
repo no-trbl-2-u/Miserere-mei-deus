@@ -203,7 +203,7 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 | [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T |
 | [ ] | 2026-11-10 | Answer Chapter 1's `[content]` rows (node copy, map fixes) and write the Breakwater's quest line (1.5 h) | W2 | T |
 | [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | W2 | T |
-| [x] | 2026-11-13 | The six lane relics in play: the reward rule, Lane line, sources, both lanes' relics, the Act 1 quests | W2 | RW1a, LR1a, LR1c, LR1d, LR1e, LR1f |
+| [ ] | 2026-11-13 | The six lane relics in play: the reward rule, Lane line, sources, both lanes' relics, the Act 1 quests | W2 | RW1a, LR1a, LR1c, LR1d, LR1e, LR1f |
 | [x] | 2026-11-16 | Loop gates, real-fight tests, report sweep | W2 | LG1a, LG1b, LG1c, LG1d, LG1e, LG1f, LG1g, CT1a, CT1b, RS1 |
 | [ ] | 2026-11-16 | MVP demo: Act 1, Chapter 1 complete, a full Breakwater run on the phone with puzzle hazards, Chapter 1's enemies and art, lane relics, icons, new event UI (1.5 h, Sun Nov 15) | W2 | T |
 | [x] | 2026-11-17 | Card-upgrade path | W3 | UP1a, UP1b, UP1c, UP1d, UP1e, UP1f, UP1g |
