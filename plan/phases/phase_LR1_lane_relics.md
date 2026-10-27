@@ -133,8 +133,7 @@ their signatures, and a `signature-usage` report shows how each signature is wor
 - **A8** Library relics carry `relicSource?: 'quest' | 'elite'`. After a won elite fight, `rollEliteRelicDrop(player,
   rng)` drops one relic with probability `ELITE_RELIC_DROP_CHANCE` from the elite pool, never a relic the player
   carries; same seed, same drop; an empty pool drops nothing. A seeded table test over fixture relics: the rate over
-  10,000 seeds is within 1 point of the constant, and no carried relic is ever dropped. `[T to confirm #1]`
-  `[T to confirm #2]`
+  10,000 seeds is within 1 point of the constant, and no carried relic is ever dropped. Calls #1 and #2 accepted at merge (default).
 - **A9** The elite's relic does not replace the elite reward: the cards-or-upgrade offer is unchanged
   (`elite-reward.engine.test.ts` passes) and the relic is queued after it.
 - **A10** Blood Price's three relics are in `relicLibrary` as T wrote them: the Crimson Circlet (`relicSource:
@@ -382,9 +381,9 @@ a recorded fight.
   an event that exists today and finished by an objective the engine counts; no new quest UI.
   `[T to confirm #3]`
 - **The elite's drop chance: 8% per won elite fight,** one relic at most, rolled after the elite reward and never
-  replacing it. `[T to confirm #1]`
+  replacing it. Accepted at merge (default).
 - **The elite pool: only the elite-only relics the player does not carry.** Quest relics come only from their
-  quests. `[T to confirm #2]`
+  quests. Accepted at merge (default).
 - **Signature tracking is its own phase (T, 2026-10-25), LR1g, requiring nothing:** the fight post records the worn
   relics and signatures, a `signature-usage` report reads them, and a refused tap is a UI event. It measures; it
   gates nothing (D57).

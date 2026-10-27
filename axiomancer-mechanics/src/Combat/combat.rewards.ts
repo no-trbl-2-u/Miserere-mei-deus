@@ -24,7 +24,9 @@ import { cardLibrary, getCardById } from '../Cards/cards.library';
 import { CARD_LANES, GREY_LANE, deckLaneIds, getCardLane, laneRewardPool, type CardLane } from '../Cards/card.lanes';
 import type { Equipment } from '../Items/types';
 import { relicLibrary } from '../Items/relic.library';
-import { wornLaneCounts, type Wearer } from '../Items/relic-lanes';
+import { wornLaneCounts, wornPieces, type Wearer } from '../Items/relic-lanes';
+import { ELITE_RELIC_DROP_CHANCE } from '../Game/game-mechanics.constants';
+import { deepClone } from '../Utils';
 import { nextUpgradeId, upgradableCardIds } from '../Cards/card-upgrades';
 
 /**
@@ -322,6 +324,43 @@ export function rollEliteUpgrade(player: Character, rng: () => number): EliteRew
 export function rollEliteReward(player: Character, rng: () => number, count = 3): EliteReward {
     const cards = rollEliteCardRewards(player, rng, count);
     return { cards, upgrade: rollEliteUpgrade(player, rng) };
+}
+
+/**
+ * The relics a won elite fight can drop for `player`: the library's
+ * `relicSource: 'elite'` relics the player does not carry (in the satchel or
+ * worn). Quest relics come only from their quests.
+ */
+export function eliteRelicPool(
+    player: Pick<Character, 'inventory'> & Wearer,
+    relics: readonly Equipment[] = relicLibrary,
+): Equipment[] {
+    const carried = new Set<string>([
+        ...(player.inventory ?? []).map(item => item.id),
+        ...wornPieces(player).map(piece => piece.id),
+    ]);
+    return relics.filter(relic => relic.relicSource === 'elite' && !carried.has(relic.id));
+}
+
+/**
+ * After a won elite fight (and after its unchanged cards-or-upgrade reward):
+ * one relic from {@link eliteRelicPool} with probability
+ * `ELITE_RELIC_DROP_CHANCE`, else `null`. Pure and seeded: the first draw is
+ * the chance, the second picks uniformly from the pool. An empty pool drops
+ * nothing and draws nothing. The relic comes back deep-cloned.
+ *
+ * @example rollEliteRelicDrop(player, Math.random) // null, or { id: 'relic-...', ... }
+ */
+export function rollEliteRelicDrop(
+    player: Pick<Character, 'inventory'> & Wearer,
+    rng: () => number,
+    relics: readonly Equipment[] = relicLibrary,
+): Equipment | null {
+    const pool = eliteRelicPool(player, relics);
+    if (pool.length === 0) return null;
+    if (rng() >= ELITE_RELIC_DROP_CHANCE) return null;
+    const pick = pool[Math.min(Math.floor(rng() * pool.length), pool.length - 1)]!;
+    return deepClone(pick);
 }
 
 /** Appends a chosen reward card to the player's persistent deck collection. */

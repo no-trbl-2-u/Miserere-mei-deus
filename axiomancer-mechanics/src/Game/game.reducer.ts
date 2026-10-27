@@ -40,7 +40,7 @@ import type { MapName } from '../World/map.library';
 import { moveToNode as moveWorld } from '../World/world.reducer';
 import { resolveMapEvent, settleArrival } from '../World';
 import { applyDialogueChoice as applyDialogueRuntime } from '../World/dialogue.runtime';
-import { killObjectives, progressQuest, findQuest } from '../World/quest.engine';
+import { settleKill } from '../World/quest.engine';
 import { calculateMaxHealth } from '../Utils';
 import { STAT_POINTS_PER_LEVEL } from './game-mechanics.constants';
 import { experienceForLevel } from '../Character/experience';
@@ -321,23 +321,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
                     experience: nextPlayer.experience + grantedXp,
                     inventory: nextInventory,
                 };
-                // Advance any active `kill` objectives whose target matches.
+                // Advance any active `kill` objectives whose target matches,
+                // and pay the quests they complete (the one reward door).
                 for (const enemy of encounter.enemies) {
-                    const kills = killObjectives(nextQuests, enemy.name);
-                    for (const k of kills) {
-                        const res = progressQuest(nextQuests, k.questName, k.objectiveId, 1);
-                        nextQuests = res.log;
-                        if (res.completedName) {
-                            const q = findQuest(state.quests, res.completedName);
-                            if (q && typeof q.reward !== 'string' && q.reward && 'kind' in q.reward) {
-                                if (q.reward.kind === 'currency') {
-                                    nextPlayer = { ...nextPlayer, currency: nextPlayer.currency + q.reward.amount };
-                                } else if (q.reward.kind === 'experience') {
-                                    nextPlayer = { ...nextPlayer, experience: nextPlayer.experience + q.reward.amount };
-                                }
-                            }
-                        }
-                    }
+                    const kill = settleKill(nextPlayer, nextQuests, enemy.name);
+                    nextPlayer = kill.player;
+                    nextQuests = kill.quests;
                 }
             }
 

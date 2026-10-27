@@ -108,3 +108,34 @@ export const FIXTURE_TRINKETS: readonly Equipment[] = (['amulet', 'charm', 'head
     accessoryKind: kind,
     statModifiers: [],
 }));
+
+/**
+ * Two elite-only fixture relics (`relicSource: 'elite'`): the elite drop's
+ * pool in tests, since no live relic is elite-only yet. Each carries a stat
+ * line so it routes to the item-reward screen.
+ */
+export const FIXTURE_ELITE_RELICS: readonly Equipment[] = [1, 2].map(i => ({
+    id: `fixture-elite-relic-${i}`,
+    name: `Fixture Elite Relic ${i}`,
+    description: 'A placeholder elite-only relic.',
+    category: 'equipment',
+    slot: 'accessory',
+    accessoryKind: 'charm',
+    statModifiers: [{ stat: 'maxHp', value: i }],
+    relicSource: 'elite',
+}));
+
+/**
+ * A quest fixture relic (`relicSource: 'quest'`): the fixture quest's relic
+ * reward in tests (`{ ...FIXTURE_QUEST, reward: { kind: 'item', item } }`).
+ */
+export const FIXTURE_QUEST_RELIC: Equipment = {
+    id: 'fixture-quest-relic',
+    name: 'Fixture Quest Relic',
+    description: 'A placeholder quest relic.',
+    category: 'equipment',
+    slot: 'accessory',
+    accessoryKind: 'amulet',
+    statModifiers: [{ stat: 'maxHp', value: 3 }],
+    relicSource: 'quest',
+};

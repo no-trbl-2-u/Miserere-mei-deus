@@ -94,7 +94,9 @@ export type { QuestName } from './quest.library';
 export {
     emptyQuestLog, isQuestComplete, findActiveQuest,
     startQuest, progressQuest, completeQuest,
+    payQuestReward, payCompletedQuests, newlyCompletedQuests, questRewardItem, settleKill,
 } from './quest.engine';
+export type { PaidQuestReward } from './quest.engine';
 
 export {
     moveToNode, completeCurrentNode, IllegalMoveError,

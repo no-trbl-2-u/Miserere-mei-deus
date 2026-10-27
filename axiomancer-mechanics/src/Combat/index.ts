@@ -112,6 +112,7 @@ export {
     unlockedLaneIds, laneSlotCount, rewardLaneSlots,
     unlockCardViaDilemma,
     isEliteEnemy, rollEliteReward, rollEliteCardRewards, rollEliteUpgrade,
+    eliteRelicPool, rollEliteRelicDrop,
     type EliteReward, type EliteRewardUpgrade, type RewardLaneSlots,
 } from './combat.rewards';
 

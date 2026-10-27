@@ -78,6 +78,10 @@ export const SLOT_CAPACITY: Record<EquipmentSlot, number> = {
  *                            and fill the reward's lane slots. Optional;
  *                            resolved by `relicLaneId` (`Items/relic-lanes.ts`),
  *                            which prefers the relic library's entry.
+ * @property relicSource    - How a player earns this relic: `'quest'` (a
+ *                            quest's reward) or `'elite'` (the elite-only drop,
+ *                            `rollEliteRelicDrop`). Optional; read from the
+ *                            relic library's entry by id, like `laneId`.
  */
 export interface Equipment extends BaseItem {
     category: 'equipment';
@@ -86,7 +90,11 @@ export interface Equipment extends BaseItem {
     statModifiers?: StatModifier[];
     grantsSignature?: SignatureSkillId;
     laneId?: string;
+    relicSource?: RelicSource;
 }
+
+/** How a player earns a relic: a quest's reward, or the elite-only drop. */
+export type RelicSource = 'quest' | 'elite';
 
 /**
  * Consumable item that can be used once (quantity decrements).
