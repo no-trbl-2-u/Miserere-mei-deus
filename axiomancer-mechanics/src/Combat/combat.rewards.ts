@@ -24,7 +24,7 @@ import { cardLibrary, getCardById } from '../Cards/cards.library';
 import { CARD_LANES, GREY_LANE, deckLaneIds, getCardLane, laneRewardPool, type CardLane } from '../Cards/card.lanes';
 import type { Equipment } from '../Items/types';
 import { relicLibrary } from '../Items/relic.library';
-import { wornLaneCounts } from '../Items/relic-lanes';
+import { wornLaneCounts, type Wearer } from '../Items/relic-lanes';
 import { nextUpgradeId, upgradableCardIds } from '../Cards/card-upgrades';
 
 /**
@@ -68,7 +68,7 @@ export const STARTING_CARD_IDS: readonly string[] = GREY_LANE.testDeck;
  * @example rewardPoolFor(freshPlayer) // ['grey-strike', 'grey-ward', 'grey-word']
  */
 export function rewardPoolFor(
-    player: Pick<Character, 'devRewardLaneIds' | 'equipment'>,
+    player: Pick<Character, 'devRewardLaneIds'> & Wearer,
     lanes: readonly CardLane[] = CARD_LANES,
     relics: readonly Equipment[] = relicLibrary,
 ): string[] {
@@ -108,7 +108,7 @@ function devOverridePool(
  * @example unlockedLaneIds(wearingABloodPriceRelic) // ['blood-price']
  */
 export function unlockedLaneIds(
-    player: Pick<Character, 'equipment'>,
+    player: Wearer,
     lanes: readonly CardLane[] = CARD_LANES,
     relics: readonly Equipment[] = relicLibrary,
 ): string[] {
@@ -147,7 +147,7 @@ export interface RewardLaneSlots {
  * @param relics - The relic library; defaults to {@link relicLibrary}.
  */
 export function rewardLaneSlots(
-    player: Pick<Character, 'equipment'>,
+    player: Wearer,
     rng: () => number,
     lanes: readonly CardLane[] = CARD_LANES,
     relics: readonly Equipment[] = relicLibrary,

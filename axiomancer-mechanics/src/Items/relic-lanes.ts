@@ -16,6 +16,9 @@ import type { Character } from '../Character/types';
 import { CARD_LANES, getCardLane, type CardLane } from '../Cards/card.lanes';
 import { relicLibrary } from './relic.library';
 
+/** Whoever may wear relics: a character, or a partial one in a test (no loadout wears nothing). */
+export type Wearer = Partial<Pick<Character, 'equipment'>>;
+
 /**
  * The registered lane a relic opens.
  *
@@ -40,7 +43,7 @@ export function relicLaneId(
  * Every piece the player wears, in slot order: weapon, armor, accessories.
  * The one place the reward rule reads worn state.
  */
-export function wornPieces(player: Pick<Character, 'equipment'>): Equipment[] {
+export function wornPieces(player: Wearer): Equipment[] {
     const loadout = player.equipment;
     if (!loadout) return [];
     const pieces: Equipment[] = [];
@@ -59,7 +62,7 @@ export function wornPieces(player: Pick<Character, 'equipment'>): Equipment[] {
  * @returns A map of lane id to worn-relic count; lanes with none are absent.
  */
 export function wornLaneCounts(
-    player: Pick<Character, 'equipment'>,
+    player: Wearer,
     lanes: readonly CardLane[] = CARD_LANES,
     relics: readonly Equipment[] = relicLibrary,
 ): Map<string, number> {
