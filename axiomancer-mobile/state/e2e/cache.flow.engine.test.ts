@@ -87,7 +87,7 @@ describe('cache store flow (three-offer choice)', () => {
         /** A fixture lane relic: no library relic names a lane yet, so the item carries its own. */
         const laneRelic = (laneId: string): Equipment => ({
             id: `fixture-relic-${laneId}`, name: 'Fixture relic', description: '',
-            category: 'equipment', slot: 'accessory', statModifiers: [], laneId,
+            category: 'equipment', slot: 'relic', statModifiers: [], laneId,
         });
 
         /** Opens a cache for a player holding the Elementalist test deck, and returns its card. */
@@ -99,7 +99,7 @@ describe('cache store flow (three-offer choice)', () => {
                     ...state.player,
                     knownCards: [...getCardLane('elementalist')!.testDeck],
                     inventory: [...worn, ...carried],
-                    equipment: { weapon: null, armor: null, accessories: worn },
+                    equipment: { weapon: null, armor: null, relics: worn },
                     devRewardLaneIds: undefined,
                 },
             } as never);
