@@ -1037,6 +1037,7 @@ satisfied for exactly these.)
 
 - No card line prints or applies a cap ("max n", "max +n", "capped"): an amount that grows with something grows without limit, as D41 already has the stat formula. A cap exists only where T calls one out.
 - Not a cap: the SACRIFICE floor (a payment always leaves 1 VITAE) and "max VITAE" (a stat).
+- The SACRIFICE X caps stay: Blood for Blood (12, +3 per upgrade) and Name Your Price (21) (T, 2026-10-26: "Sacrifice caps stay").
 - Paper landed in PR #958 (the Defender ballot, `/lane-creator` pitches none); the live library is phase NC1.
 
 **D106 — Each region is a chapter: Act 1 is four chapters, Breakwater first.** (T, 2026-10-26, in the Claude Duet channel; amends D23, D27 and D28. T: "All 4 regions combined is Act 1 and the deadline is the end of the year. Act 1 Chapter 1 completed is the mid November deadline. Each region is: Act x Chapter y (With the caveat that later acts may revisit certain regions if the story requires it)". T confirmed the order and the Nov 16 scope the same day: "Yes that's all correct".)

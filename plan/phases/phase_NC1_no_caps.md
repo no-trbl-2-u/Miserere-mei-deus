@@ -41,7 +41,8 @@
 ## Outcome
 
 No live card prints or applies a cap: every amount that grows with something (the foe's STORM, your INFERNO,
-VITAE lost or missing, damage taken, X) grows without limit, and every upgrade still grows something.
+VITAE lost or missing, damage taken) grows without limit, and every upgrade still grows something. The two
+SACRIFICE X caps stay (T: "Sacrifice caps stay").
 
 Size: M
 
@@ -51,37 +52,35 @@ Size: M
   P-09a FREE `DEAL 2, + your INFERNO.`, each applying the whole stack (no `Math.min`).
 - **A2** Blood Price's fixed-number caps go: What Is Owed, Full Tally (both lines), Reclaim and Repaid in Kind
   (both lines) print no "max" and apply the whole amount they read.
-- **A3** The X caps go [T to confirm #1]:
-  Blood for Blood and Name Your Price read `SACRIFICE any amount X` with no "max"; X runs from 1 to the most the
-  player can pay and keep 1 VITAE. `BLOOD_FOR_BLOOD_X_CAP`, `BLOOD_FOR_BLOOD_X_CAP_STEP` and
-  `NAME_YOUR_PRICE_X_CAP` are deleted, and so is Blood for Blood's `ruledCostGrowth` entry. The X picker's range
-  (`programXRange`) comes from VITAE, and a test plays Blood for Blood at 150 VITAE and pays more than 21.
+- **A3** The X caps stay (Confirmed by T (2026-10-26): "Sacrifice caps stay"): Blood for Blood keeps
+  `SACRIFICE any amount X (max 12)`, rising 3 per upgrade (`BLOOD_FOR_BLOOD_X_CAP`, `_STEP`, its
+  `ruledCostGrowth` entry), and Name Your Price keeps `(max 21)` (`NAME_YOUR_PRICE_X_CAP`, its `spellLaw`
+  entry). Neither card, `sacrificeX` nor `programXRange` changes; a test pins both caps so the no-max scan (A7)
+  cannot remove them.
 - **A4** Every upgrade still grows something. A line whose only upgrade-grown number was its cap grows a flat
   `+n` instead, n being the upgrade scale's `plus` (0 at no upgrade, so an un-upgraded card's text is unchanged
-  but for the cap) [T to confirm #2]: Full Tally `DEAL half the VITAE you lost this combat +2` at one upgrade,
+  but for the cap) (Confirmed by T (2026-10-26): "Sounds good"): Full Tally `DEAL half the VITAE you lost this combat +2` at one upgrade,
   What Is Owed PAID `LEECH 1 per 10 VITAE missing, +1` (an INTENSITY line grows by its step), Repaid in Kind
-  likewise, Blood for Blood PAID `DEAL 3X +2` at one and two upgrades and `4X` at three as today. The upgrade law
+  likewise. Blood for Blood is unchanged (its cap still grows on upgrade, A3). The upgrade law
   suite (A3 "payoffs grow, costs do not") passes with no new exception.
-- **A5** Repaid in Kind's PAID stays a bigger line than its FREE once both are uncapped [T to confirm #3]:
+- **A5** Repaid in Kind's PAID stays a bigger line than its FREE once both are uncapped (Confirmed by T (2026-10-26): "Fine
+  with me"):
   PAID reads `The foe loses VITAE equal to twice the damage you took last turn. EXILE.`; the Spell law's
   `foeLoses` baseline is re-read from the new line, and the Spell law suite passes for every Spell.
-- **A6** Name Your Price still satisfies the Spell law with no X cap: its `spellLaw` entry is rewritten or
-  removed so the suite checks a number the line still has, and no other Spell's entry changes.
+- **A6** The Spell law suite passes for every Spell; only Repaid in Kind's `spellLaw` entry changes (A5).
 - **A7** No "max" left: a library test fails any live card line (FREE, PAID, Global text) matching
-  `/\(max\b|\bmax \d/i`; "max VITAE" (a stat, not a cap) is allowed by name.
+  `/\(max\b|\bmax \d/i`; "max VITAE" (a stat, not a cap) and the X cap on a `SACRIFICE any amount` line
+  (A3) are allowed by name.
 - **A8** The docs agree: `docs/game-model.md`, the two ledgers' live-card rows (a dated "caps removed (T,
   2026-10-26)" note, the voted text kept beside it) and `plan/revamp/card-rules-inventory.md` print the uncapped
   lines.
 
-Measure: `npm run verify` green with A7's test in it, and on T's next preview build Blood for Blood's X picker
-goes past 21 at full VITAE and P-06b's GUARD counts the whole STORM.
+Measure: `npm run verify` green with A7's test in it, and on T's next preview build P-06b's GUARD counts the
+whole STORM and Full Tally deals all the VITAE lost past 30.
 
 ## Scope
 
 - `axiomancer-mechanics/src/Cards/library/elementalist.cards.ts`, `blood-price.cards.ts` (A1-A6).
-- `axiomancer-mechanics/src/Combat/combat.card-program.ts`: `sacrificeX` takes no cap (or an optional one) and
-  `programXRange` bounds the loop by VITAE (A3).
-- `axiomancer-mechanics/src/Cards/card.lanes.ts` only if `ruledCostGrowth` is left empty (A3).
 - Docs per A8. Not touched: the grey cards (no caps), card ids, names, colours, ranks, every uncapped number.
 
 ## Consumers to update
@@ -99,7 +98,7 @@ goes past 21 at full VITAE and P-06b's GUARD counts the whole STORM.
 
 - Update `blood-price.engine.test.ts` (`:412-449`, `:682`) to the uncapped amounts and the `+n` upgrade growth;
   the mobile presenter tests' fixtures may keep their strings (parser input), or move to uncapped ones.
-- New: A3's 150-VITAE Blood for Blood play, A7's no-max scan.
+- New: A3's pin on the two X caps, A7's no-max scan.
 - `card-upgrade-law.engine.test.ts` and the Spell law suite pass unchanged in their rules (A4-A6).
 
 ## Verify gate
@@ -108,13 +107,13 @@ goes past 21 at full VITAE and P-06b's GUARD counts the whole STORM.
 
 ## Decisions made upfront — DO NOT ASK
 
-- A cap that only kept a number small (every line here) goes. A cap that keeps a line legal (X never takes the
-  last VITAE) is not a cap on the card: it is the SACRIFICE floor, and it stays.
+- A cap that only kept a number small goes. The SACRIFICE floor (X never takes the last VITAE) is not a cap and
+  stays; the two X caps stay by T's call (A3).
 - "max VITAE" is a stat name, not a cap, and is untouched.
 - An un-upgraded card prints exactly its old text minus the cap (A4's `+0` is never printed).
-- [T to confirm #1] The X caps go too. Default: yes, T's ruling names every card.
-- [T to confirm #2] Lines whose cap was their only upgrade growth grow a flat `+n` per upgrade.
-- [T to confirm #3] Repaid in Kind's PAID is "twice the damage you took last turn".
+- Confirmed by T (2026-10-26): the SACRIFICE X caps stay (call 1, changed from the default).
+- Confirmed by T (2026-10-26): lines whose cap was their only upgrade growth grow a flat `+n` per upgrade (call 2).
+- Confirmed by T (2026-10-26): Repaid in Kind's PAID is "twice the damage you took last turn" (call 3).
 
 ## Definition of done
 
