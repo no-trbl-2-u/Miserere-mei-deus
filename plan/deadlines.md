@@ -203,11 +203,11 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 | [x] | 2026-11-05 | Node blurbs matched to their events (the Act 1 walk's second half) | W2 | AW1a, AW1b |
 | [ ] | 2026-11-06 | The band clocks, from the kept set's times | W2 | HP4g |
 | [ ] | 2026-11-06 | Event-node UI/UX for the Breakwater's nine kinds (plot, 1 h) | W2 | needs plot |
-| [ ] | 2026-11-08 | The Breakwater's questline on the map: four quest nodes, four steps, the Belt, placeholder lines | W2 | QL1a, QL1b, QL1c, QL1d |
+| [ ] | 2026-11-08 | The Breakwater's questline on the map: four quest nodes, three turned in and the fourth the boss, the Belt, the sealed roads, placeholder lines | W2 | QL1a, QL1b, QL1c, QL1d |
 | [ ] | 2026-11-08 | Chapter 1's enemy art: pick from the loop's candidates (2 h) | W2 | T |
 | [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T |
 | [ ] | 2026-11-10 | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | W2 | T |
-| [ ] | 2026-11-10 | Write the Breakwater's quest line: the giver's lines, each step's requirement, XP and extra (0.5 h) | W2 | QL1e |
+| [ ] | 2026-11-10 | Write the Breakwater's quest line: the giver's lines per node, steps 1-3's requirement, every step's XP and extra (0.5 h) | W2 | QL1e |
 | [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | W2 | T |
 | [x] | 2026-11-13 | The six lane relics in play: the reward rule, Lane line, sources, both lanes' relics | W2 | RW1a, LR1a, LR1c, LR1d, LR1e |
 | [ ] | 2026-11-13 | T's quest line in the game | W2 | QL1f |
@@ -328,6 +328,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-27** — **Chapter 1's questline re-shaped** (T's answers to the plot's six calls: steps 1-3 turned in at the next quest node, step 4 the boss, the bridge unreachable by map routing, no runtime shortfall fallback). **Edited** the Nov 8 Item (three turn-ins, the boss as the fourth step, the sealed roads) and the Nov 10 Item (lines per node). No date moved, nothing ticked.
 - **2026-10-27** — **Chapter 1's questline plotted** (T, `/plot asap` run unattended on T's word: one questline in Chapter 1 on a ninth node kind, `quest`, D111; LR1f and its PR #987 dropped). **Added** Items for QL1a-QL1d (the questline on the map, Nov 8), QL1e (T writes the quest line, Nov 10, split out of the Nov 10 `T` Item, which keeps the node copy at 1 h) and QL1f (T's lines in the game, Nov 13); the loop dates are the plot's, before the Nov 9 mid-MVP check and the Nov 16 MVP, and T can move them. **Edited** the event-node pitch (Nov 4) and plot (Nov 6) Items, the milestones, the W2 notes and the schedule from eight kinds to nine; the Nov 13 lane-relics Item drops the Act 1 quests and LR1f (skipped, superseded by QL1); the Nov 25 Item names the four quest relics left for Chapters 2-4 instead of LR1f's `[content]` rows. **Ticked** nothing by hand; `--write` ticked the Nov 13 lane-relics Item, since every row it still names has shipped.
 - **2026-10-27** — **Thursdays opened** (T, in conversation: "open them up. I should be getting work done for Miserere everyday"). **Edited** the MVP schedule's rule that left Thursdays free; it now says T works every day. No Item, date or piece moved; nothing ticked.
 - **2026-10-27** — **first character moved to Fri Oct 30** (T, in conversation: "Let's move character creation deadline to Friday since it turned out to be more work than I thought"). **Moved** the Item "First character playable" from 2026-10-26 to 2026-10-30, still in W1; its rows (CH1a-CH1f, DF1a-DF1d) and premise hold. Nothing ticked; no other date moved.

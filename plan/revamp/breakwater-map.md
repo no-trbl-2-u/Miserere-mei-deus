@@ -104,8 +104,11 @@ the events hold:
 - **No people:** Act 1 stages no NPC, shop, village or narration node (`MapEvents/content.ts` header), so the
   `interaction`, `village` and `narration` kinds have no Breakwater node.
 - **No quests:** none exist yet. QL1 (T, 2026-10-27, D111; LR1f skipped) adds one four-step questline on four new
-  `quest` nodes, bw-19..bw-22, spurs off bw-1, bw-9, bw-13 and bw-15 (positions T's call #5 on the plot PR), the
-  Breakwater's ninth kind; T writes its lines on Nov 10.
+  `quest` nodes, bw-19..bw-22, the Breakwater's ninth kind: spurs off bw-1, bw-9 and bw-13, and bw-22 on the road
+  between the c4 landmarks and the watchtower (bw-14/15/16 join bw-22, bw-22 joins bw-17), with two sealed roads
+  (bw-22 to bw-17, opened by accepting step 4; bw-17 to bw-18, opened by the boss victory). Steps 1-3 are turned in
+  at the next quest node and step 4 is the boss (T, 2026-10-27). T checks the spots in the Nov 3 map review and
+  writes the lines on Nov 10.
 - **Gathering has no sink:** nothing spends Driftwood or Kelp Frond (`docs/reports/act1-event-audit.md`). AW1b puts
   the question to T.
 - **Loot caches:** shillings and the cache's card offer; no item or relic comes from a Breakwater node besides

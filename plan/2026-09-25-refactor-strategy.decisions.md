@@ -1047,7 +1047,7 @@ satisfied for exactly these.)
 
 - Chapter 1 (the Breakwater, D106) carries one questline of four steps. The other quest relics (the Ruby Signet, the Bleeding Signet, the Elementalist's Brooch, and the Defender's Carapace Belt) stay quest rewards for Chapters 2-4's quest lines.
 - A quest is given by its own node kind, `quest`, with its own map icon and screen: the Breakwater's ninth kind (its eight of 2026-10-26 plus `quest`), and part of the event-node UI/UX pitch.
-- Four steps on four quest nodes, done in order; a quest node is revisitable until its step is done. Requirements are kills of any foe, kills of elites, and hazards crossed, counted only from when the player accepts the step.
+- Four steps on four quest nodes, done in order (T, 2026-10-27, restructured the same day): the first node offers step 1, each later node turns in the step before it and offers the next, and the fourth step is beating the Chapter 1 boss, paid on that victory. Requirements are kills of any foe, kills of elites, hazards crossed and the boss, counted only from when the player accepts the step. The questline cannot be left unfinished: the map's routing and two sealed roads put every quest node and the boss before the river bridge, and a test proves it. A step asking for more than the map holds is an authoring failure caught by a test, never a runtime fallback.
 - Each step pays XP plus exactly one extra: shillings, a card reward or a consumable; the fourth also pays the Elementalist's Belt (`relicSource: 'quest'`).
 - The quest line and the giver's copy are T's (D88), written on Nov 10 and in the game for the Nov 16 MVP.
 - Built by Phase QL1 (`plan/phases/phase_QL1_breakwater_questline.md`).
