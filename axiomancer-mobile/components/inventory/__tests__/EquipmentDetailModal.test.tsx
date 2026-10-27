@@ -74,6 +74,21 @@ describe('EquipmentDetailModal — the loadout button (EQ1 A2)', () => {
         expect(vm.action).toEqual({ mode: 'equip', label: 'WEAR · REPLACE THIRD' });
     });
 
+    it('a lane relic shows its Lane line and carries it in the button label (LR1a A3)', () => {
+        const vm = selectEquipmentDetailViewModel(stateWith([SIGNET], []), SIGNET.id)!;
+        const { getByTestId, getByLabelText } = render(
+            <EquipmentDetailModal vm={vm} onClose={jest.fn()} onEquip={jest.fn()} />,
+        );
+        expect(getByTestId('equip-detail-lane').props.children).toBe('Lane: Blood Price (while worn)');
+        expect(getByLabelText('WEAR Bleeding Signet. Lane: Blood Price (while worn)')).toBeTruthy();
+    });
+
+    it('a relic with no lane draws no Lane line', () => {
+        const vm = selectEquipmentDetailViewModel(stateWith([RING], []), RING.id)!;
+        const { queryByTestId } = render(<EquipmentDetailModal vm={vm} onClose={jest.fn()} onEquip={jest.fn()} />);
+        expect(queryByTestId('equip-detail-lane')).toBeNull();
+    });
+
     it('shows no action button when no handler is wired, and CLOSE still closes', () => {
         const vm = selectEquipmentDetailViewModel(stateWith([RING], [RING]), RING.id)!;
         const onClose = jest.fn();

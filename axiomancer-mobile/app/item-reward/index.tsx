@@ -128,6 +128,11 @@ export default function ItemRewardScreen() {
                         </View>
                     )}
 
+                    {/* The card lane a worn relic opens. */}
+                    {vm.lane !== null && (
+                        <Text style={styles.laneLine} testID="item-reward-lane">{vm.lane}</Text>
+                    )}
+
                     {/* Gained, lost, and the piece that returns to the satchel. */}
                     {vm.canEquip && (
                         <ItemRewardTradePanel itemId={vm.itemId} delta={vm.delta} trade={vm.trade} />
@@ -254,6 +259,13 @@ const useStyles = makeStyles((AXM) => ({
         lineHeight: 17,
         color: AXM.bone,
         marginTop: 5,
+    },
+    laneLine: {
+        fontFamily: FONTS.serif,
+        fontSize: 12,
+        lineHeight: 17,
+        color: AXM.sulfur,
+        marginTop: 10,
     },
     // The one unbordered block, matching EquipmentDetailModal's flavour rule.
     flavor: {

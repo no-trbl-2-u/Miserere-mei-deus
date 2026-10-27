@@ -107,6 +107,8 @@ export interface ItemRewardVM {
     sub: string | null;
     statLines: readonly EquipmentStatLine[];
     signature: EquipmentSignatureInfo | null;
+    /** `Lane: <name> (while worn)` for a relic that opens a lane, else `null`. */
+    lane: string | null;
     flavor: string;
     /**
      * EQUIP's before/after, or `null` when the item is not equippable.
@@ -135,6 +137,7 @@ const EMPTY_VM: ItemRewardVM = Object.freeze({
     sub: null,
     statLines: Object.freeze([]),
     signature: null,
+    lane: null,
     flavor: '',
     delta: null,
     trade: null,
@@ -243,6 +246,7 @@ export function selectItemRewardVM(
         sub: detail.sub,
         statLines: detail.statLines,
         signature: detail.signature,
+        lane: detail.lane,
         flavor: detail.flavor,
         delta,
         trade: tradeOf(preview.item),
