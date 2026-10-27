@@ -49,6 +49,7 @@ type RouteEntry = { screen: string; tab: boolean };
 export const ROUTE_TABLE: Readonly<Record<string, RouteEntry>> = {
   '': { screen: 'index', tab: false },
   saves: { screen: 'saves/index', tab: false },
+  'character-select': { screen: 'character-select/index', tab: false },
   settings: { screen: 'settings/index', tab: false },
   event: { screen: 'event/index', tab: false },
   hazard: { screen: 'hazard/index', tab: false },
@@ -94,6 +95,7 @@ export const linking = {
     screens: {
       index: '',
       'saves/index': 'saves',
+      'character-select/index': 'character-select',
       'settings/index': 'settings',
       'event/index': 'event',
       'hazard/index': 'hazard',

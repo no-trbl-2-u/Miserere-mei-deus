@@ -318,7 +318,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/__tests__/DebugEnemyPicker.test.tsx, axiomancer-mobile/components/__tests__/DebugTriggerEncounter.test.tsx, axiomancer-mobile/components/__tests__/DebugWorldTravel.test.tsx, ..."
+        "source": "axiomancer-mobile/app/__tests__/character-select.screen.test.tsx, axiomancer-mobile/components/__tests__/DebugEnemyPicker.test.tsx, axiomancer-mobile/components/__tests__/DebugTriggerEncounter.test.tsx, ..."
       },
       "needsPitch": {
         "value": false,
@@ -423,6 +423,31 @@
       "needsPitch": {
         "value": true,
         "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Loot cache\", \"loot-cache\", \"loot cache\")",
+        "source": null
+      }
+    },
+    {
+      "id": "route:character-select",
+      "name": "Character Select",
+      "kind": "route",
+      "group": "world",
+      "source": "axiomancer-mobile/app/character-select/index.tsx",
+      "named": false,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:saves -> route:character-select"
+      },
+      "driven": {
+        "value": false,
+        "source": null
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/app/__tests__/character-select.screen.test.tsx, axiomancer-mobile/state/e2e/saves.screen.test.tsx"
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Character Select\")",
         "source": null
       }
     },
@@ -2885,6 +2910,168 @@
     },
     {
       "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/cache.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/rest.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Effects",
+      "file": "axiomancer-mobile/state/presenters/event.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Enemy",
+      "file": "axiomancer-mobile/state/presenters/navigation.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/GameStoreProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/persistence/saveSlots.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/presenters/navigation.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/event.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Log",
+      "file": "axiomancer-mobile/lib/platform/router.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:NPCs",
+      "file": "axiomancer-mobile/state/presenters/event.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:NPCs",
+      "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/cache.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/event.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/hazard.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/rest.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Cards",
       "file": "axiomancer-mobile/state/actions.ts"
@@ -3320,6 +3507,12 @@
       "from": "route:dev",
       "to": "area:Cards",
       "file": "axiomancer-mobile/state/dev/rewards.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:dev",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
     },
     {
       "kind": "coupling",
@@ -4057,6 +4250,12 @@
       "kind": "coupling",
       "from": "route:index",
       "to": "area:Character",
+      "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:index",
+      "to": "area:Character",
       "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
     },
     {
@@ -4441,7 +4640,19 @@
       "kind": "coupling",
       "from": "route:saves",
       "to": "area:Character",
+      "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:saves",
+      "to": "area:Character",
       "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:saves",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
     },
     {
       "kind": "coupling",
@@ -4490,6 +4701,12 @@
       "from": "route:saves",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:saves",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
     },
     {
       "kind": "coupling",
@@ -4562,6 +4779,12 @@
       "from": "route:saves",
       "to": "area:World",
       "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:settings",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
     },
     {
       "kind": "coupling",
@@ -5195,6 +5418,102 @@
     },
     {
       "kind": "flow",
+      "from": "route:character-select",
+      "to": "route:(tabs)/character",
+      "file": "axiomancer-mobile/app/character-select/index.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:character-select",
+      "to": "route:(tabs)/deck",
+      "file": "axiomancer-mobile/app/character-select/index.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:character-select",
+      "to": "route:(tabs)/exploration",
+      "file": "axiomancer-mobile/app/character-select/index.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:character-select",
+      "to": "route:(tabs)/inventory",
+      "file": "axiomancer-mobile/app/character-select/index.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:character-select",
+      "to": "route:(tabs)/memoir",
+      "file": "axiomancer-mobile/app/character-select/index.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:character-select",
+      "to": "route:blacksmith",
+      "file": "axiomancer-mobile/components/BlacksmithGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:character-select",
+      "to": "route:cache",
+      "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:character-select",
+      "to": "route:combat-encounter",
+      "file": "axiomancer-mobile/components/CombatGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:character-select",
+      "to": "route:cutscene",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:character-select",
+      "to": "route:dialogue",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:character-select",
+      "to": "route:event",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:character-select",
+      "to": "route:hazard",
+      "file": "axiomancer-mobile/components/HazardGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:character-select",
+      "to": "route:item-reward",
+      "file": "axiomancer-mobile/components/item-reward/ItemRewardGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:character-select",
+      "to": "route:labyrinth",
+      "file": "axiomancer-mobile/components/LabyrinthGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:character-select",
+      "to": "route:rest",
+      "file": "axiomancer-mobile/components/RestGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:character-select",
+      "to": "route:village",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
       "from": "route:combat-encounter",
       "to": "route:(tabs)/exploration",
       "file": "axiomancer-mobile/app/combat-encounter/index.tsx"
@@ -5354,6 +5673,12 @@
       "from": "route:dev",
       "to": "route:cache",
       "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:dev",
+      "to": "route:character-select",
+      "file": "axiomancer-mobile/app/dev/index.tsx"
     },
     {
       "kind": "flow",
@@ -6344,6 +6669,12 @@
       "from": "route:saves",
       "to": "route:cache",
       "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:saves",
+      "to": "route:character-select",
+      "file": "axiomancer-mobile/app/saves/index.tsx"
     },
     {
       "kind": "flow",

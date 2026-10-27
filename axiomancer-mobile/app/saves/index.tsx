@@ -12,7 +12,9 @@
  * The rows come from `selectSaveSlotRows` over the live slot summaries;
  * the verbs are the `useSaveSlots()` actions. After a BEGIN / RESUME the
  * screen replaces itself with the run's active tab (combat if a fight was
- * saved mid-encounter, the map otherwise).
+ * saved mid-encounter, the map otherwise). Once the character roster holds a
+ * character, a new game's slot pick opens `/character-select` instead, and
+ * its CONFIRM starts the run.
  */
 
 import React, { useCallback, useState } from 'react';
@@ -32,6 +34,7 @@ import {
     type SaveSlotRowVM,
     type SaveSlotsMode,
 } from '@/state/presenters/main-menu.engine';
+import { selectRoster } from '@/state/presenters/character-select.engine';
 import { selectActiveTab } from '@/state/presenters/navigation.engine';
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
@@ -61,16 +64,29 @@ export default function SaveSlotsScreen() {
         router.replace(`/${selectActiveTab(store.getState())}`);
     }, [router, store]);
 
+    /**
+     * Begin a new game in `slot`: straight into the run while the roster is
+     * empty, otherwise through the character select (which starts the run on
+     * CONFIRM, so an abandoned select writes nothing to the slot).
+     */
+    const beginRun = useCallback((slot: SaveSlotId) => {
+        if (selectRoster().length > 0) {
+            router.push(`/character-select?slot=${slot}`);
+            return;
+        }
+        startNewGame(slot);
+        enterRun();
+    }, [enterRun, router, startNewGame]);
+
     const onAction = useCallback((row: SaveSlotRowVM) => {
         if (row.action === 'start') {
-            startNewGame(row.id);
-            enterRun();
+            beginRun(row.id);
         } else if (row.action === 'overwrite') {
             setPending({ kind: 'overwrite', slot: row.id });
         } else if (row.action === 'load') {
             if (loadGame(row.id)) enterRun();
         }
-    }, [enterRun, loadGame, startNewGame]);
+    }, [beginRun, enterRun, loadGame]);
 
     const onClear = useCallback((row: SaveSlotRowVM) => {
         setPending({ kind: 'clear', slot: row.id });
@@ -81,12 +97,11 @@ export default function SaveSlotsScreen() {
         const { kind, slot } = pending;
         setPending(null);
         if (kind === 'overwrite') {
-            startNewGame(slot);
-            enterRun();
+            beginRun(slot);
         } else {
             void clearSlot(slot);
         }
-    }, [clearSlot, enterRun, pending, startNewGame]);
+    }, [beginRun, clearSlot, pending]);
 
     return (
         <ScreenBg>

@@ -387,6 +387,10 @@ const SEAMS = {
     // reward screen is provoked by the dev REWARDS row's RELIC REWARD.
     'route:item-reward': { section: 'rewards', leaf: 'debug-relic-reward-button', landing: 'item-reward-card' },
     'route:labyrinth': { section: 'world', leaf: 'debug-world-travel', press: (p) => tapFirstPrefixed(p, 'debug-aporia-'), landing: null },
+    // The select screen opens from play only once the roster holds a character
+    // (CH1f), so until then the `/dev` row that opens it (all locked) is the seam.
+    // That row sits outside every section, so it has no section to open.
+    'route:character-select': { leaf: 'dev-open-character-select', landing: 'character-select-carousel' },
 }
 
 async function seamLeg(page, baseUrl, id) {
@@ -414,7 +418,7 @@ async function openSeamFromDevTools(page, baseUrl, seam) {
         .catch(() => fail('the SELF sheet has no DEV TOOLS link'))
     await page.getByTestId('self-dev-tools-link').click()
     await waitForPath(page, '/dev', 'the dev tools')
-    await openDevSection(page, seam.section, seam.leaf)
+    if (seam.section) await openDevSection(page, seam.section, seam.leaf)
     if (seam.press) await seam.press(page)
     else await page.getByTestId(seam.leaf).click()
     if (seam.after) await seam.after(page)

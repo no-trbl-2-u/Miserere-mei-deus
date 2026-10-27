@@ -56,6 +56,15 @@ export default function DevToolsScreen() {
             </View>
 
             <View style={styles.body}>
+                <Pressable
+                    style={styles.linkRow}
+                    onPress={() => router.push('/character-select?locked=1')}
+                    accessibilityRole="button"
+                    accessibilityLabel="Open the character select, all locked"
+                    testID="dev-open-character-select"
+                >
+                    <Text style={styles.linkLabel}>CHARACTER SELECT (all locked)</Text>
+                </Pressable>
                 <DevToolsSections />
             </View>
         </ScreenBg>
@@ -100,6 +109,20 @@ const useStyles = makeStyles((AXM) => ({
         fontFamily: FONTS.mono,
         fontSize: 16,
         color: AXM.bone,
+    },
+    linkRow: {
+        borderWidth: 1,
+        borderColor: AXM.ash,
+        backgroundColor: AXM.panelBg,
+        paddingVertical: 10,
+        paddingHorizontal: 12,
+        marginBottom: 8,
+    },
+    linkLabel: {
+        fontFamily: FONTS.mono,
+        fontSize: 11,
+        color: AXM.bone,
+        letterSpacing: 0.5,
     },
     body: {
         paddingHorizontal: 12,
