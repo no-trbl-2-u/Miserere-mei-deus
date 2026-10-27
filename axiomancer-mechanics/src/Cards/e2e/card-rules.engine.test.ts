@@ -27,7 +27,7 @@ import type { Card } from '../types';
 import { cardLibrary } from '../cards.library';
 import { upgradeCard } from '../card-upgrades';
 import {
-    checkCarrierRule, checkComplexityBudget, checkGlobalTemplate, checkScrapFloor, checkSpellLaw,
+    checkCarrierRule, checkComplexityBudget, checkDiscardCost, checkGlobalTemplate, checkScrapFloor, checkSpellLaw,
     parseAtlasKeywords, printedKeywords,
     type CardRuleId, type CardRuleViolation,
 } from '../card-rules';
@@ -76,6 +76,7 @@ function allViolations(cards: readonly Card[]): CardRuleViolation[] {
         ...checkGlobalTemplate(cards),
         ...checkCarrierRule({ cards, atlas: ATLAS, nonCardCarriers: NON_CARD_CARRIERS, barExempt: BAR_EXEMPT }),
         ...checkSpellLaw(cards),
+        ...checkDiscardCost(cards),
     ];
 }
 

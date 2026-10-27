@@ -114,13 +114,13 @@ strike, with their numbers on the board changing as ruled.
 
 ## Decisions made upfront — DO NOT ASK
 
-- **REFLECT is unscaled** [T to confirm #1]: the % prints and applies as written; THORNS's n scales with Heart (D110).
-- **The End-turn refusal** [T to confirm #2]: End turn is held only while an unpayable PAID discard play is staged
+- **REFLECT is unscaled** (Accepted at merge, default): the % prints and applies as written; THORNS's n scales with Heart (D110).
+- **The End-turn refusal** (Accepted at merge, default): End turn is held only while an unpayable PAID discard play is staged
   (a die on the PAID line of a card that cannot pay); with no such play, End turn ends the turn as today.
 - **Numbers.** Confirmed by T (2026-10-27): "Ship the sims' fixes": P-01, P-03, P-04, P-06, E-01, E-04, E-07, M-04,
   M-08 and M-09 change as the ledger's "The numbers" table lists; every other number is T's as voted and revised.
   The numbers live in the one trial-set file, so T can restore any.
-- **The quest relics' source** [T to confirm #3]: the Mirror Brooch and Carapace Belt get `relicSource: 'quest'` but
+- **The quest relics' source** (Accepted at merge, default): the Mirror Brooch and Carapace Belt get `relicSource: 'quest'` but
   no new Act 1 quest; until a quest hands them out they are reachable from `/dev` only. The Thornback Signet joins
   the elite drop pool.
 - **The sims' rule readings are adopted** where the ledger is silent (listed in `defender-sims.md`, "The setup").

@@ -375,6 +375,9 @@ export type CombatEncounterPhase =
 /** An element of the Elementalist's weather, as the board shows it (`combat.elements.ts`). */
 export type WeatherElement = 'foe-inferno' | 'your-inferno' | 'blizzard' | 'storm' | 'frozen';
 
+/** A number of the Defender's spikes, as the board shows it (`combat.spikes.ts`). */
+export type SpikeReading = 'thorns' | 'reflect' | 'reflect-turns';
+
 export type CombatEvent =
     | { kind: 'dice-rolled'; dice: CombatManaDie[] }
     | { kind: 'turn-dice-rolled'; turn: number; dice: CombatManaDie[] }
@@ -405,6 +408,12 @@ export type CombatEvent =
     | { kind: 'weather-changed'; element: WeatherElement; from: number; to: number }
     /** BLIZZARD took `amount` off the foe's hits this phase. */
     | { kind: 'blizzard-softened'; amount: number }
+    /** The spikes moved: THORNS, REFLECT's % or its turns left went from `from` to `to` (a rise, the drift, an expiry). */
+    | { kind: 'spikes-changed'; spike: SpikeReading; from: number; to: number }
+    /** A foe strike met THORNS or REFLECT: the foe took `amount` back (a DEAL, after VULNERABLE and FROZEN). */
+    | { kind: 'spike-struck'; spike: 'thorns' | 'reflect'; amount: number }
+    /** A PAID cost discarded these cards from your hand at random. */
+    | { kind: 'cards-discarded'; cardIds: string[] }
     // ── Card-mechanic events ─────────────────────────────────────────────────
     | { kind: 'barrier-absorbed'; amount: number }
     | { kind: 'riposte-fired'; amount: number }

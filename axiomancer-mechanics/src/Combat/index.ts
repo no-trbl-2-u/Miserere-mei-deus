@@ -63,17 +63,21 @@ export {
     // Floating dice save-back
     getFloatingDiceColors,
     // Card programs: why a line cannot be played, and an X line's range
-    programLineBlock, programLineShortfall, programXChoice,
+    programLineBlock, programLineShortfall, programLineDiscardShortfall, programXChoice,
 } from './combat.engine';
 // Card programs: the Global / Curse / SACRIFICE ledger and its reads.
 export {
-    isProgramCard, isCurseCard, GLOBAL_FREE_TURNS,
+    isProgramCard, isCurseCard, GLOBAL_FREE_TURNS, DISCARD_SHORTFALL_REASON,
 } from './combat.card-program';
-export type { ProgramLedger, GlobalInPlay, ProgramShortfall } from './combat.card-program';
+export type { ProgramLedger, GlobalInPlay, ProgramShortfall, DiscardShortfall } from './combat.card-program';
 // The Elementalist's weather: INFERNO, BLIZZARD, FROZEN, STORM.
 export { foeInferno, yourInferno, elementsOnFoe, weatherReading, initElementState } from './combat.elements';
 export type { ElementState } from './combat.elements';
 export type { WeatherElement } from './combat.encounter.types';
+// The Defender's spikes: THORNS and REFLECT.
+export { spikeReading, initSpikeState, REFLECT_TURNS } from './combat.spikes';
+export type { SpikeState } from './combat.spikes';
+export type { SpikeReading } from './combat.encounter.types';
 // The live-encounter VITAE knob the app applies (and the pacing sim reads).
 export { LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER } from './live-encounter';
 // Stat scaling: the formula, the keyword families, and the

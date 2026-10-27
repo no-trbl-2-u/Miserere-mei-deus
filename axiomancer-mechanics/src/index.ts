@@ -88,7 +88,8 @@ export {
     // Floating dice save-back
     getFloatingDiceColors,
     // Card programs (Global, Curse, SACRIFICE): the reads the board needs
-    programLineBlock, programLineShortfall, programXChoice, isProgramCard, isCurseCard, GLOBAL_FREE_TURNS,
+    programLineBlock, programLineShortfall, programLineDiscardShortfall, programXChoice, isProgramCard, isCurseCard,
+    GLOBAL_FREE_TURNS, DISCARD_SHORTFALL_REASON,
     programFaceText, GLOBAL_TRIGGER_TEXT,
     LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER,
     // Card rewards and the starting deck
@@ -128,11 +129,13 @@ export type {
     // The three chain colours (momentum chain)
     WheelStance,
     // Card programs: the Global / Curse / SACRIFICE ledger
-    ProgramLedger, GlobalInPlay, ProgramShortfall,
+    ProgramLedger, GlobalInPlay, ProgramShortfall, DiscardShortfall,
     // The Elementalist's weather
     ElementState, WeatherElement,
+    // The Defender's spikes
+    SpikeState, SpikeReading,
 } from './Combat';
-export { foeInferno, yourInferno, elementsOnFoe, weatherReading } from './Combat';
+export { foeInferno, yourInferno, elementsOnFoe, weatherReading, spikeReading, REFLECT_TURNS } from './Combat';
 // The play-log API contract: the fight and deck change the preview app posts and the Worker stores.
 export {
     PLAY_LOG_FIGHTS_PATH, PLAY_LOG_DECK_EVENTS_PATH, COMBAT_EVENT_KINDS, PLAY_LOG_UI_EVENT_KINDS,
@@ -237,7 +240,7 @@ export {
     // The card-rules checkers (Phase CS1, `docs/card-spec.md` §17)
     COMPLEXITY_BUDGET, ADMISSION_BAR,
     cardLinesText, printedKeywords, cardConditions, parseAtlasKeywords,
-    checkComplexityBudget, checkScrapFloor, checkGlobalTemplate, checkCarrierRule,
+    checkComplexityBudget, checkScrapFloor, checkGlobalTemplate, checkCarrierRule, checkDiscardCost,
 } from './Cards';
 
 // ─── Game (state, store, persistence, constants) ──────────────────────────────

@@ -145,6 +145,18 @@ export interface ProgramCtx {
     swapElements(): void;
     /** A static Global's marker: while in play the STORM grows by n extra (apply: nothing; value: an estimate). */
     stormGrowthMarker(n: number): void;
+
+    // ── The spikes (Defender; `Combat/combat.spikes.ts`, T's rulings 2026-10-26) ──
+    /** THORNS n, heart-scaled (repeating) when applied; `exact` adds an
+     *  already-resolved number unscaled. Stacks by adding. Returns the THORNS gained. */
+    thorns(n: number, opts?: { exact?: boolean }): number;
+    /** REFLECT +pct%, unscaled: adds to your REFLECT and refreshes it to 2 turns. */
+    reflect(pct: number): void;
+    /** "Discard n cards at random": a PAID-only cost, paid before the line's
+     *  effects (write it first). Picks from the other cards in hand with the
+     *  combat's seeded rng; a line holding fewer other cards than it discards
+     *  is refused. Returns how many were discarded. */
+    discardRandom(n: number): number;
 }
 
 /** One printed line (FREE or PAID) of a card that is not a Global. */
