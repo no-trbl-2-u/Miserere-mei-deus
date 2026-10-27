@@ -5,7 +5,7 @@
 - T, 2026-10-26 (attended): voted the Defender ballot (`defender-2026-10-26`), pasted the verdict when Submit could
   not reach the Worker, then asked for the verdicts, the sims and the revisions in the same session and a `/plot` of
   the trial set ("Verdicts + revisions now + sims").
-- The family: `plan/card-ledger/rehearsal-defender.md` on PR "plan: Defender — verdicts and revisions" (branch
+- The family: `plan/card-ledger/rehearsal-defender.md` on PR #975, "plan: Defender — verdicts, sims and revisions" (branch
   `plan/defender-verdicts`): Session 0, the slot pitches, the ballot, `## Verdicts` (T's text verbatim and the thirty
   cards with T's notes applied) and `## Revisions` (T's rules, colours, names, relics, test deck). That ledger is the
   card text of record; this brief does not repeat it.
