@@ -22,6 +22,8 @@ export {
     DIE_GEAR_COLORS,
     characterPresets, getPresetById, buildCharacterFromPreset,
     levelLadderPresets,
+    CHARACTER_ROSTER, CHARACTER_GREY_DECK, FRESH_RUN_BASE_STATS, FRESH_RUN_STAT_BUDGET,
+    getCharacterDefinition, characterDeck, characterProblems,
     previewStatAllocation,
     experienceForLevel,
     experienceToNext,
@@ -30,6 +32,7 @@ export {
 export type {
     Character, BaseStats,
     CharacterPreset,
+    CharacterDefinition, CharacterProblem, CharacterProblemCode,
     EquipDelta,
     SignatureDeltaEntry,
     DieGearColor, DieGearRail,
@@ -95,6 +98,8 @@ export {
     unlockCardViaDilemma,
     // The elite reward: the best cards or a random upgrade
     isEliteEnemy, rollEliteReward, rollEliteCardRewards, rollEliteUpgrade,
+    // The elite-only relic drop, rolled after the elite reward
+    eliteRelicPool, rollEliteRelicDrop,
     // Fate Engine — the dice get a second read
     riderText, RESERVE_MAX,
     // Upgradeable Dice (the combat dice model): the surfaces the app/sim
@@ -244,13 +249,14 @@ export {
     nullAdapter,
     MAX_EFFECT_INTENSITY,
     STAT_POINTS_PER_LEVEL,
+    ELITE_RELIC_DROP_CHANCE,
     // State fixtures — one declarative state for CLI / Jest / web.
     buildStateFromFixture,
     validateStateFixture,
     getStateFixtureById, listStateFixtureIds,
     FIXTURE_NPC, FIXTURE_SHOP, FIXTURE_QUEST,
     FIXTURE_DIALOGUE_EVENT, FIXTURE_VILLAGE_EVENT, FIXTURE_CUTSCENE_EVENT,
-    FIXTURE_WEAPON, FIXTURE_ARMOR, FIXTURE_TRINKETS,
+    FIXTURE_WEAPON, FIXTURE_ARMOR, FIXTURE_TRINKETS, FIXTURE_ELITE_RELICS, FIXTURE_QUEST_RELIC,
     // The relic re-slot: the v38 -> v39 hop's helper, and the one the mobile
     // item-reward queue reads a pending piece through.
     reslotRelicPiece, reslotRelicSave,
@@ -272,7 +278,9 @@ export {
     applyDialogueChoice,
     emptyQuestLog, findActiveQuest,
     startQuest, progressQuest, completeQuest,
+    payQuestReward, payCompletedQuests, newlyCompletedQuests, questRewardItem, settleKill,
 } from './World';
+export type { PaidQuestReward } from './World';
 
 // Hazard Minigame. The engine transitions, content, tuning, deck-flag codec
 // and types mobile consumes; the rest of the Hazard module's surface is

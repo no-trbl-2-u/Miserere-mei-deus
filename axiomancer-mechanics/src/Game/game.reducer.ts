@@ -28,13 +28,19 @@ import {
     wornMaxHpBonus,
 } from '../Character/equipment.reducer';
 import { createCharacter, allocateStatPoint } from '../Character';
+import {
+    CHARACTER_ROSTER, FRESH_RUN_BASE_STATS, characterDeck, getCharacterDefinition,
+    type CharacterDefinition,
+} from '../Character/roster';
+import type { Equipment } from '../Items/types';
+import { cloneRelic, relicLibrary } from '../Items/relic.library';
 import { learnCard, replaceCard } from '../Cards';
 import { createStartingWorld, emptyQuestLog } from '../World';
 import type { MapName } from '../World/map.library';
 import { moveToNode as moveWorld } from '../World/world.reducer';
 import { resolveMapEvent, settleArrival } from '../World';
 import { applyDialogueChoice as applyDialogueRuntime } from '../World/dialogue.runtime';
-import { killObjectives, progressQuest, findQuest } from '../World/quest.engine';
+import { settleKill } from '../World/quest.engine';
 import { calculateMaxHealth } from '../Utils';
 import { STAT_POINTS_PER_LEVEL } from './game-mechanics.constants';
 import { experienceForLevel } from '../Character/experience';
@@ -127,14 +133,59 @@ import { generateRunId } from './run-loop';
  */
 export const GAME_STATE_VERSION = 39;
 
+/** Options for {@link createNewGameState}. */
+export interface NewGameOptions {
+    /** Start on another campaign map instead of `STARTING_MAP`. */
+    startMap?: MapName;
+    /** The roster character the run opens as; absent is a run with no character. */
+    characterId?: string;
+    /** The roster `characterId` is looked up in; defaults to `CHARACTER_ROSTER` (tests pass fixtures). */
+    roster?: readonly CharacterDefinition[];
+    /** The relic library the starting relic is drawn from; defaults to `relicLibrary`. */
+    relics?: readonly Equipment[];
+}
+
+/**
+ * The level-1 player a run opens with. With a character: its stats (and the
+ * max VITAE they give), its starting relic worn through the equip path, its
+ * ten-card deck, and its id and starting lanes recorded. Without one: the
+ * apprentice baseline, nothing worn, no cards (the client deals the grey
+ * office on the first fight).
+ *
+ * @throws When `characterId` names no roster character, or its relic is not
+ *         in the relic library.
+ */
+function createNewRunPlayer(opts: NewGameOptions): Character {
+    if (opts.characterId === undefined) {
+        return createCharacter({ name: 'Player', level: 1, baseStats: { ...FRESH_RUN_BASE_STATS } });
+    }
+    const def = getCharacterDefinition(opts.characterId, opts.roster ?? CHARACTER_ROSTER);
+    if (!def) throw new Error(`createNewGameState: no character with id "${opts.characterId}".`);
+    const relic = (opts.relics ?? relicLibrary).find(r => r.id === def.startingRelicId);
+    if (!relic) {
+        throw new Error(`createNewGameState: character "${def.id}" names relic "${def.startingRelicId}", which is not in the relic library.`);
+    }
+    const player = createCharacter({
+        name: def.name,
+        level: 1,
+        baseStats: { ...def.baseStats },
+        equipment: [cloneRelic(relic)],
+        knownCards: characterDeck(def),
+    });
+    return { ...player, characterId: def.id, startingLaneIds: [...def.startingLaneIds] };
+}
+
 /**
  * Builds a brand-new GameState with default player and world.
  *
  * `opts.startMap` places the new game on another campaign map instead of the
  * default start (`STARTING_MAP`, the Breakwater). Used by the dev
  * "start on any map" tools and by tests pinned to one map's content.
+ *
+ * `opts.characterId` opens the run as a roster character
+ * (`Character/roster.ts`); an unknown id throws.
  */
-export function createNewGameState(opts: { startMap?: MapName } = {}): GameState {
+export function createNewGameState(opts: NewGameOptions = {}): GameState {
     // No curated-loadout seed (see v23 in the version log above):
     // the combat deck is `knownCards` + `combatRewardCards`, and the client
     // seeds `knownCards` from the chosen starter bundle (`ensureStarterCards`).
@@ -152,12 +203,9 @@ export function createNewGameState(opts: { startMap?: MapName } = {}): GameState
         // no equipment, no currency and no XP: the inventory and the worn
         // loadout are both empty, and a run starts with no relic. Nothing
         // hands one over later; a relic arrives only from a reward or the
-        // dev menu.
-        player: createCharacter({
-            name: 'Player',
-            level: 1,
-            baseStats: { heart: 5, body: 5, mind: 5 },
-        }),
+        // dev menu. A run opened as a character is the exception: it wears
+        // the character's starting relic and is dealt its deck here.
+        player: createNewRunPlayer(opts),
         world: createStartingWorld(opts.startMap),
         quests: emptyQuestLog(),
         flags,
@@ -276,23 +324,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
                     experience: nextPlayer.experience + grantedXp,
                     inventory: nextInventory,
                 };
-                // Advance any active `kill` objectives whose target matches.
+                // Advance any active `kill` objectives whose target matches,
+                // and pay the quests they complete (the one reward door).
                 for (const enemy of encounter.enemies) {
-                    const kills = killObjectives(nextQuests, enemy.name);
-                    for (const k of kills) {
-                        const res = progressQuest(nextQuests, k.questName, k.objectiveId, 1);
-                        nextQuests = res.log;
-                        if (res.completedName) {
-                            const q = findQuest(state.quests, res.completedName);
-                            if (q && typeof q.reward !== 'string' && q.reward && 'kind' in q.reward) {
-                                if (q.reward.kind === 'currency') {
-                                    nextPlayer = { ...nextPlayer, currency: nextPlayer.currency + q.reward.amount };
-                                } else if (q.reward.kind === 'experience') {
-                                    nextPlayer = { ...nextPlayer, experience: nextPlayer.experience + q.reward.amount };
-                                }
-                            }
-                        }
-                    }
+                    const kill = settleKill(nextPlayer, nextQuests, enemy.name);
+                    nextPlayer = kill.player;
+                    nextQuests = kill.quests;
                 }
             }
 

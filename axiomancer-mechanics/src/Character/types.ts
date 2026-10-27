@@ -102,6 +102,20 @@ export interface Character {
      */
     devRewardLaneIds?: string[];
     /**
+     * The roster character this run opened as (`Character/roster.ts`), set
+     * by `createNewGameState({ characterId })`. Optional + sparse — absent
+     * means a run with no character, which plays as a run did before
+     * characters existed.
+     */
+    characterId?: string;
+    /**
+     * The two card lanes the run's character starts with (never grey, never
+     * its starting relic's lane), recorded at run start. Optional + sparse —
+     * absent on a run with no character. Read by nothing yet; the reward
+     * pool takes it in a later phase.
+     */
+    startingLaneIds?: string[];
+    /**
      * The GHOST DIE pool (live-tray model). Forged in combat
      * by the FORGE verb; never rerolls; carried ACROSS combats until spent.
      * Written back from `CombatEncounterState.floatingDice` at combat end

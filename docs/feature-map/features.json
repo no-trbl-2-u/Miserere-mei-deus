@@ -168,7 +168,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mechanics/src/CLI/e2e/dev-tools.engine.test.ts, axiomancer-mechanics/src/Character/e2e/character.engine.test.ts, axiomancer-mechanics/src/Character/e2e/equip-delta.engine.test.ts, ..."
+        "source": "axiomancer-mechanics/src/CLI/e2e/dev-tools.engine.test.ts, axiomancer-mechanics/src/Character/e2e/character-roster.engine.test.ts, axiomancer-mechanics/src/Character/e2e/character.engine.test.ts, ..."
       },
       "needsPitch": {
         "value": false,
@@ -966,6 +966,12 @@
     {
       "kind": "coupling",
       "from": "area:Character",
+      "to": "area:Cards",
+      "file": "axiomancer-mechanics/src/Character/roster.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Character",
       "to": "area:Combat",
       "file": "axiomancer-mechanics/src/Character/dieGear.reducer.ts"
     },
@@ -1040,6 +1046,12 @@
       "from": "area:Character",
       "to": "area:Items",
       "file": "axiomancer-mechanics/src/Character/presets.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Character",
+      "to": "area:Items",
+      "file": "axiomancer-mechanics/src/Character/roster.ts"
     },
     {
       "kind": "coupling",
@@ -1340,6 +1352,12 @@
       "from": "area:Combat",
       "to": "area:Game",
       "file": "axiomancer-mechanics/src/Combat/combat.measured-truth.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Game",
+      "file": "axiomancer-mechanics/src/Combat/combat.rewards.ts"
     },
     {
       "kind": "coupling",
@@ -1866,6 +1884,12 @@
     {
       "kind": "coupling",
       "from": "area:World",
+      "to": "area:Character",
+      "file": "axiomancer-mechanics/src/World/quest.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:World",
       "to": "area:Combat",
       "file": "axiomancer-mechanics/src/World/Blacksmith/blacksmith.engine.ts"
     },
@@ -2012,6 +2036,12 @@
       "from": "area:World",
       "to": "area:Items",
       "file": "axiomancer-mechanics/src/World/MapEvents/types.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:World",
+      "to": "area:Items",
+      "file": "axiomancer-mechanics/src/World/quest.engine.ts"
     },
     {
       "kind": "coupling",
@@ -3067,6 +3097,12 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Game",
+      "file": "axiomancer-mobile/state/item-reward/relic-sources.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Game",
       "file": "axiomancer-mobile/state/presenters/exploration.engine.ts"
     },
     {
@@ -3092,6 +3128,18 @@
       "from": "route:combat-encounter",
       "to": "area:Items",
       "file": "axiomancer-mobile/state/combat-mode.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/combat/store-actions.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/item-reward/relic-sources.ts"
     },
     {
       "kind": "coupling",
@@ -3152,6 +3200,12 @@
       "from": "route:combat-encounter",
       "to": "area:World",
       "file": "axiomancer-mobile/state/actions.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/item-reward/relic-sources.ts"
     },
     {
       "kind": "coupling",

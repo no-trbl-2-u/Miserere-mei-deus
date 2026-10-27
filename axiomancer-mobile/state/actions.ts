@@ -12,6 +12,7 @@
 
 import {
     applyDialogueChoice,
+    payCompletedQuests,
     buyItem as engineBuyItem,
     sellItem as engineSellItem,
     defaultSellPrice as engineDefaultSellPrice,
@@ -147,6 +148,7 @@ import {
 import { getAporiaAct } from '@mechanics';
 import type { LabyrinthActId, LabyrinthBossOutcome } from '@mechanics';
 import { wrapActionsWithLogging } from './logging';
+import { offerCompletedQuestItemsAction } from './item-reward/relic-sources';
 import { endCombatOutcome, fightRecorder } from '@/lib/fightRecorder';
 import { deckEventPoster, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
 import { getMapLayout } from './exploration-maps';
@@ -697,7 +699,10 @@ export function createAppActions(store: AppStore): AppActions {
             // `endCombat` requires an explicit outcome; default to `'flee'`
             // (no reward) when unspecified. It returns a stub 'flee' report
             // when called outside an encounter.
+            const questsBefore = (store.getState() as unknown as GameState).quests;
             const report = store.getState().endCombat(outcome ?? 'flee');
+            // A kill that completed a quest: its relic goes to the reward screen.
+            if (questsBefore) offerCompletedQuestItemsAction(store, questsBefore);
             // The play log: posts a fight the panel never finished (a WITHDRAW);
             // one it finished has already posted, so this is a no-op then.
             void fightRecorder.end(endCombatOutcome(outcome ?? 'flee'));
@@ -1331,7 +1336,28 @@ function applyCharacterPresetAction(
 // Event actions
 // ---------------------------------------------------------------------------
 
+/**
+ * The pre-event player a host restores (hazard, rest, cache: the host's own
+ * screen settles VITAE and the haul), with the quest rewards the resolve paid
+ * on arrival kept: a reach that completed a quest still pays it.
+ */
+function withQuestRewards(before: GameState, after: GameState): GameState['player'] {
+    return payCompletedQuests(before.player, before.quests, after.quests).player;
+}
+
+/**
+ * Resolves the current node's event, then routes any relic a completed
+ * quest paid on the way (a `reach` on arrival, a `collect` from a
+ * gathering) to the item-reward screen.
+ */
 function resolveCurrentMapEventAction(store: AppStore, sourceNodeType?: string, staged?: MapEventPayload): boolean {
+    const questsBefore = (store.getState() as unknown as GameState).quests;
+    const resolved = resolveCurrentMapEventInner(store, sourceNodeType, staged);
+    if (questsBefore) offerCompletedQuestItemsAction(store, questsBefore);
+    return resolved;
+}
+
+function resolveCurrentMapEventInner(store: AppStore, sourceNodeType?: string, staged?: MapEventPayload): boolean {
     try {
         const state = store.getState();
         const gameState = state as unknown as GameState;
@@ -1371,7 +1397,7 @@ function resolveCurrentMapEventAction(store: AppStore, sourceNodeType?: string, 
         if (result.event.kind === 'hazard') {
             store.setState({
                 ...resolvedState,
-                player: gameState.player,
+                player: withQuestRewards(gameState, resolvedState),
                 event: EMPTY_EVENT_SLICE,
             });
             beginHazardAction(store);
@@ -1395,7 +1421,7 @@ function resolveCurrentMapEventAction(store: AppStore, sourceNodeType?: string, 
         if (result.event.kind === 'rest') {
             store.setState({
                 ...resolvedState,
-                player: gameState.player,
+                player: withQuestRewards(gameState, resolvedState),
                 event: EMPTY_EVENT_SLICE,
             });
             beginRestAction(store, {
@@ -1420,7 +1446,7 @@ function resolveCurrentMapEventAction(store: AppStore, sourceNodeType?: string, 
         if (result.event.kind === 'loot-cache') {
             store.setState({
                 ...resolvedState,
-                player: gameState.player,
+                player: withQuestRewards(gameState, resolvedState),
                 event: EMPTY_EVENT_SLICE,
             });
             beginLootCacheChoiceAction(store, {
@@ -1641,7 +1667,10 @@ function pickEventChoiceAction(store: AppStore, choiceId: string): void {
                 }
 
                 // applyDialogue advances engine state. Mobile-side: walk the cursor.
+                const questsBefore = (store.getState() as unknown as GameState).quests;
                 store.getState().applyDialogue(tree, choice);
+                // A choice that completed a quest: its relic goes to the reward screen.
+                if (questsBefore) offerCompletedQuestItemsAction(store, questsBefore);
                 const nextState = store.getState() as unknown as GameState;
                 const result = applyDialogueChoice(nextState, tree, choice);
 
