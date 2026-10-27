@@ -9,12 +9,13 @@ import { SELF } from 'cloudflare:test';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import type { DeckEventPost, FightPost, PlayLogEvent } from '../src/contract';
-import type { CardGapsReport, CardUsageReport } from '../src/reports';
+import type { CardGapsReport, CardUsageReport, SignatureUsageReport } from '../src/reports';
 
 const BASE = 'https://miserere-api.test';
 const AUTH = { Authorization: 'Bearer test-token' };
 const BUILD = 'rep1234';
 const OTHER = 'other99';
+const SIG = 'sig5678';
 
 const die = (id: string, color: string, state = 'available', face = 'mana') => ({ id, color, state, face, temporary: false });
 
@@ -90,6 +91,22 @@ beforeAll(async () => {
     }));
     await post('/v1/fights', fight({ buildCommit: OTHER, deck: ['other-card'], outcome: 'victory' }));
 
+    // Signature tracking (LR1g), under its own build. Fight 1 wears the Covenant and the Plea, casts the
+    // Covenant twice and has the Plea refused once; fight 2 wears the Covenant and never casts it, with
+    // two refused taps; fight 3 is an old post with nothing worn.
+    const cast = (id: string) => ({ kind: 'signature-cast', signatureId: id, name: id, cost: 4 });
+    const refused = (id: string) => ({ kind: 'ui-signature-refused', signatureId: id, reason: 'Need 4 Conviction' });
+    await post('/v1/fights', fight({
+        buildCommit: SIG, relics: ['relic-bleeding-signet', 'relic-disarming-plea'],
+        signatures: ['sig-crimson-covenant', 'sig-disarming-plea'],
+        events: stamp([cast('sig-crimson-covenant'), refused('sig-disarming-plea'), cast('sig-crimson-covenant')] as never),
+    }));
+    await post('/v1/fights', fight({
+        buildCommit: SIG, relics: ['relic-bleeding-signet'], signatures: ['sig-crimson-covenant'],
+        events: stamp([refused('sig-crimson-covenant'), refused('sig-crimson-covenant')] as never),
+    }));
+    await post('/v1/fights', fight({ buildCommit: SIG, events: stamp([{ kind: 'combat-ended', outcome: 'defeat' }] as never) }));
+
     await post('/v1/deck-events', deckEvent({ cardId: 'ember', offered: ['spark', 'ember', 'guard'] }));
     await post('/v1/deck-events', deckEvent({ cardId: null, offered: ['spark', 'ember'] }));
     await post('/v1/deck-events', deckEvent({ kind: 'remove', cardId: 'guard' }));
@@ -103,7 +120,7 @@ describe('the reports route', () => {
         expect((await get('/v1/reports/card-gaps', { Authorization: 'Bearer nope' })).status).toBe(401);
     });
 
-    it('serves only the two named reports, and only to GET', async () => {
+    it('serves only the named reports, and only to GET', async () => {
         const unknown = await get('/v1/reports/everything');
         expect(unknown.status).toBe(404);
         const posted = await SELF.fetch(`${BASE}/v1/reports/card-usage`, { method: 'POST', headers: AUTH, body: '{}' });
@@ -140,6 +157,27 @@ describe('card-usage', () => {
         const strike = body.cards.find(c => c.cardId === 'strike');
         expect(strike?.removed).toBeGreaterThanOrEqual(1);
         expect(body.cards.some(c => c.cardId === 'other-card')).toBe(true);
+    });
+});
+
+describe('signature-usage', () => {
+    it('A20: counts worn, cast, casts, casts per fight worn and refused taps per signature', async () => {
+        const body = await report<SignatureUsageReport>(`/v1/reports/signature-usage?build=${SIG}`);
+        expect(body).toMatchObject({ report: 'signature-usage', build: SIG, fights: 3 });
+        expect(body.signatures).toEqual([
+            // Worn in two fights, cast twice in one: 2 casts over 2 fights worn; two taps refused in the other.
+            { signatureId: 'sig-crimson-covenant', fightsWorn: 2, fightsCast: 1, casts: 2, castsPerFight: 1, refused: 2 },
+            // Worn once and never cast: still a row.
+            { signatureId: 'sig-disarming-plea', fightsWorn: 1, fightsCast: 0, casts: 0, castsPerFight: 0, refused: 1 },
+        ]);
+    });
+
+    it('is empty for a build that wore none, and reads every build without ?build=', async () => {
+        const none = await report<SignatureUsageReport>(`/v1/reports/signature-usage?build=${OTHER}`);
+        expect(none).toMatchObject({ fights: 1, signatures: [] });
+        const all = await report<SignatureUsageReport>('/v1/reports/signature-usage');
+        expect(all.build).toBeNull();
+        expect(all.signatures.map(s => s.signatureId)).toContain('sig-crimson-covenant');
     });
 });
 
