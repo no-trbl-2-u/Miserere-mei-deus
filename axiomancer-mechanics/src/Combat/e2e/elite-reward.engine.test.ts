@@ -4,8 +4,9 @@
  * The contract this file pins, against the live elite (the Green Jelly, once
  * the brine-hag):
  *   · a fight pays the elite reward exactly when its foe is `difficulty: 'elite'`;
- *   · the cards are the best three available: the library's highest rarity
- *     first, so the one rare (Blood for Blood) is always offered;
+ *   · the cards are the best three of the reward pool (the worn relics'
+ *     lanes, the grey office when none is worn), highest rarity first, so the
+ *     one rare (Blood for Blood) is always offered once its lane is worn;
  *   · at least one offer comes from a lane the player's deck draws on;
  *   · the other option upgrades one random owned card at the highest rarity
  *     the player owns that can still take an upgrade;
@@ -28,6 +29,7 @@ import { DeathBeholder, FloatEye, GreenJelly } from '../../Enemy/enemy.library';
 import { Player } from '../../Character/characters.mock';
 import { deepClone } from '../../Utils';
 import type { Character } from '../../Character/types';
+import type { Equipment } from '../../Items/types';
 
 /** The library's one rare, Blood for Blood, found by its limit (no trial id is named outside the set). */
 const BLOOD_FOR_BLOOD = cardLibrary.find(card => upgradeLimit(card) === 3)!.id;
@@ -43,6 +45,15 @@ function seededRng(seed: number): () => number {
 
 function playerWith(knownCards: readonly string[], combatRewardCards: readonly string[] = []): Character {
     return { ...deepClone(Player), knownCards: [...knownCards], combatRewardCards: [...combatRewardCards] };
+}
+
+/** The player wearing one fixture accessory relic per lane id (no library relic names a lane yet). */
+function wearing(player: Character, ...laneIds: string[]): Character {
+    const relics: Equipment[] = laneIds.map((laneId, i) => ({
+        id: `fixture-relic-${laneId}-${i}`, name: `Fixture ${laneId}`, description: '',
+        category: 'equipment', slot: 'accessory', laneId,
+    } as Equipment));
+    return { ...player, equipment: { weapon: null, armor: null, accessories: relics } };
 }
 
 const greyPlayer = (): Character => playerWith(STARTING_CARD_IDS);
@@ -79,11 +90,19 @@ describe('the elite cards: the best three, one from the player\'s lanes', () => 
         }
     });
 
-    it('always offers the library\'s one rare, Blood for Blood', () => {
+    it('always offers the library\'s one rare, Blood for Blood, once its lane is worn', () => {
         expect(rarityOf(BLOOD_FOR_BLOOD)).toBe('rare');
         for (const seed of SEEDS) {
-            expect(rollEliteCardRewards(greyPlayer(), seededRng(seed))).toContain(BLOOD_FOR_BLOOD);
-            expect(rollEliteCardRewards(bloodPricePlayer(), seededRng(seed))).toContain(BLOOD_FOR_BLOOD);
+            expect(rollEliteCardRewards(wearing(greyPlayer(), 'blood-price'), seededRng(seed))).toContain(BLOOD_FOR_BLOOD);
+            expect(rollEliteCardRewards(wearing(bloodPricePlayer(), 'blood-price'), seededRng(seed))).toContain(BLOOD_FOR_BLOOD);
+        }
+    });
+
+    it('with no lane relic worn, every elite card is grey', () => {
+        for (const seed of SEEDS) {
+            for (const player of [greyPlayer(), bloodPricePlayer()]) {
+                for (const id of rollEliteCardRewards(player, seededRng(seed))) expect(GREY_LANE.cardIds).toContain(id);
+            }
         }
     });
 
@@ -94,10 +113,13 @@ describe('the elite cards: the best three, one from the player\'s lanes', () => 
         }
     });
 
-    it('after the lane pick, the best band left comes first: a grey deck sees its grey card, then the rare', () => {
+    it('after the lane pick, the best band left comes first: an Elementalist card, then the rare', () => {
+        const elementalist = getCardLane('elementalist')!;
+        const deck = [...STARTING_CARD_IDS, elementalist.cardIds[0]];
         for (const seed of SEEDS) {
-            const [lanePick, best] = rollEliteCardRewards(greyPlayer(), seededRng(seed));
-            expect(GREY_LANE.cardIds).toContain(lanePick);
+            const player = wearing(playerWith(deck), 'blood-price', 'elementalist');
+            const [lanePick, best] = rollEliteCardRewards(player, seededRng(seed));
+            expect(elementalist.cardIds).toContain(lanePick);
             expect(best).toBe(BLOOD_FOR_BLOOD);
         }
     });

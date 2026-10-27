@@ -10,15 +10,16 @@
  *   · the grey lane's test deck is the fresh-run deck;
  *   · `laneRewardPool` merges lanes in order, once per card, skipping
  *     unknown ids;
- *   · `rewardPoolFor` narrows the draft to the checked lanes and falls back
- *     to the whole library when the override is absent, empty or unknown.
+ *   · `rewardPoolFor` narrows the draft to the checked lanes and, when the
+ *     override is absent, empty or unknown, falls back to the real rule: the
+ *     worn relics' lanes, the grey office when none is worn.
  */
 
 import { describe, it, expect } from 'vitest';
 
 import { CARD_LANES, GREY_LANE, getCardLane, laneRewardPool, type CardLane } from '../card.lanes';
 import { cardLibrary, getCardById } from '../cards.library';
-import { COMBAT_REWARD_POOL, STARTING_CARD_IDS, rewardPoolFor, rollCombatCardRewards } from '../../Combat/combat.rewards';
+import { STARTING_CARD_IDS, rewardPoolFor, rollCombatCardRewards } from '../../Combat/combat.rewards';
 import { Player } from '../../Character/characters.mock';
 import { deepClone } from '../../Utils';
 
@@ -65,11 +66,11 @@ describe('laneRewardPool', () => {
 });
 
 describe('rewardPoolFor', () => {
-    it('is the whole library when the override is absent, empty or unknown', () => {
-        const whole = [...COMBAT_REWARD_POOL];
-        expect(rewardPoolFor({}, FIXTURE_LANES)).toEqual(whole);
-        expect(rewardPoolFor({ devRewardLaneIds: [] }, FIXTURE_LANES)).toEqual(whole);
-        expect(rewardPoolFor({ devRewardLaneIds: ['nope'] }, FIXTURE_LANES)).toEqual(whole);
+    it('is the grey office when the override is absent, empty or unknown and no lane relic is worn', () => {
+        const grey = [...GREY_LANE.cardIds];
+        expect(rewardPoolFor({}, FIXTURE_LANES)).toEqual(grey);
+        expect(rewardPoolFor({ devRewardLaneIds: [] }, FIXTURE_LANES)).toEqual(grey);
+        expect(rewardPoolFor({ devRewardLaneIds: ['nope'] }, FIXTURE_LANES)).toEqual(grey);
     });
 
     it('narrows to the checked lanes', () => {

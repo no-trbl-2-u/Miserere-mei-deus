@@ -90,6 +90,8 @@ export {
     LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER,
     // Card rewards and the starting deck
     COMBAT_REWARD_POOL, STARTING_CARD_IDS, rollCombatCardRewards, rewardPoolFor, addRewardCard,
+    // The reward rule: worn relics' lanes feed the pool and the lane slots
+    unlockedLaneIds, laneSlotCount, rewardLaneSlots,
     unlockCardViaDilemma,
     // The elite reward: the best cards or a random upgrade
     isEliteEnemy, rollEliteReward, rollEliteCardRewards, rollEliteUpgrade,
@@ -100,7 +102,7 @@ export {
     SPECIAL_CONVICTION_DEFAULT, MOMENTUM_CHAIN_ORDER, MOMENTUM_SURGE_LENGTH,
     DEFAULT_DIE_GEAR, activeDieGear,
 } from './Combat';
-export type { UpgradeableDieGear, EliteReward, EliteRewardUpgrade } from './Combat';
+export type { UpgradeableDieGear, EliteReward, EliteRewardUpgrade, RewardLaneSlots } from './Combat';
 // Stat scaling.
 export {
     scaleAmount, scaleFor, statFor, scaleRider, scaleCardForStats,
@@ -187,7 +189,7 @@ export {
     SLOT_CAPACITY,
     consumableLibrary, getConsumableById,
     buyItem, sellItem, defaultSellPrice,
-    relicLibrary, getRelicById,
+    relicLibrary, getRelicById, relicLaneId, wornLaneCounts,
     // The shared grant/equip/swap path. `equipItem` never returns the displaced
     // piece (weapon/armor replace in place; a full accessory row is a guarded
     // no-op), so every grant site routes through `grantItem` rather than

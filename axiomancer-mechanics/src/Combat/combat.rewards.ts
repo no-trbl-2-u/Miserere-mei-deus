@@ -21,13 +21,16 @@ import type { Character } from '../Character/types';
 import type { Enemy } from '../Enemy/types';
 import { rankToRarity, type CardRarity } from '../Cards/types';
 import { cardLibrary, getCardById } from '../Cards/cards.library';
-import { CARD_LANES, GREY_LANE, deckLaneIds, laneRewardPool, type CardLane } from '../Cards/card.lanes';
+import { CARD_LANES, GREY_LANE, deckLaneIds, getCardLane, laneRewardPool, type CardLane } from '../Cards/card.lanes';
+import type { Equipment } from '../Items/types';
+import { relicLibrary } from '../Items/relic.library';
+import { wornLaneCounts } from '../Items/relic-lanes';
 import { nextUpgradeId, upgradableCardIds } from '../Cards/card-upgrades';
 
 /**
- * The card-reward pool: the whole library except Curses (a Curse is never a
- * reward; a card adds it mid-combat). The grey office and every registered
- * trial set's cards.
+ * The whole library except Curses (a Curse is never a reward; a card adds it
+ * mid-combat): the grey office and every registered trial set's cards. No
+ * reward draws from it directly; {@link rewardPoolFor} is the pool.
  */
 export const COMBAT_REWARD_POOL: readonly string[] = Object.freeze(
     cardLibrary.filter(card => card.cardType !== 'curse').map(card => card.id),
@@ -47,44 +50,170 @@ export const COMBAT_REWARD_POOL: readonly string[] = Object.freeze(
 export const STARTING_CARD_IDS: readonly string[] = GREY_LANE.testDeck;
 
 /**
- * The pool one player's reward draft draws from: the card ids of the lanes
- * in `player.devRewardLaneIds` (set from the dev menu), or the whole
- * {@link COMBAT_REWARD_POOL} when that field is absent, empty, or names no
- * registered lane. Only ids the library resolves are kept.
+ * The pool one player's reward draft draws from, in priority order:
+ *
+ *  1. the dev override: the cards of the lanes in `player.devRewardLaneIds`,
+ *     when it names a registered lane;
+ *  2. the cards of every lane a worn relic opens ({@link unlockedLaneIds});
+ *  3. when no worn relic opens a lane, the grey office's cards, the only way a
+ *     grey card is ever offered (a stopgap until character selection supplies
+ *     starting lanes).
+ *
+ * Curses and ids the library cannot resolve are never in it.
  *
  * @param player - The player whose draft is being rolled.
  * @param lanes  - The lane registry; defaults to {@link CARD_LANES}.
+ * @param relics - The relic library; defaults to {@link relicLibrary}.
  * @returns The candidate card ids, library order within each lane.
- * @example rewardPoolFor({ ...player, devRewardLaneIds: ['grey'] })
+ * @example rewardPoolFor(freshPlayer) // ['grey-strike', 'grey-ward', 'grey-word']
  */
 export function rewardPoolFor(
-    player: Pick<Character, 'devRewardLaneIds'>,
+    player: Pick<Character, 'devRewardLaneIds' | 'equipment'>,
     lanes: readonly CardLane[] = CARD_LANES,
+    relics: readonly Equipment[] = relicLibrary,
 ): string[] {
-    const lanePool = laneRewardPool(player.devRewardLaneIds ?? [], lanes);
-    const pool = lanePool.length > 0 ? lanePool : COMBAT_REWARD_POOL;
-    return pool.filter(id => !!getCardById(id));
+    const override = devOverridePool(player, lanes);
+    if (override.length > 0) return override;
+    const worn = rewardable(laneRewardPool(unlockedLaneIds(player, lanes, relics), lanes));
+    if (worn.length > 0) return worn;
+    return rewardable(getCardLane(GREY_LANE.id, lanes)?.cardIds ?? GREY_LANE.cardIds);
+}
+
+/** The ids a reward may offer: resolvable by the library and not a Curse. */
+function rewardable(ids: readonly string[]): string[] {
+    return ids.filter(id => {
+        const card = getCardById(id);
+        return card !== undefined && card.cardType !== 'curse';
+    });
+}
+
+/** The dev override's pool, or `[]` when the override names no registered lane. */
+function devOverridePool(
+    player: Pick<Character, 'devRewardLaneIds'>,
+    lanes: readonly CardLane[],
+): string[] {
+    return rewardable(laneRewardPool(player.devRewardLaneIds ?? [], lanes));
 }
 
 /**
- * Rolls `count` distinct card-reward offers after a won combat: a uniform
- * draw over {@link rewardPoolFor} the player. Pure: every decision is seeded by
- * `rng`, so the same seed always yields the same offers. There is no theme
- * pull, keyword guarantee or rarity weighting: all three grey cards share
- * one rank.
+ * The lanes the player's reward pool draws on: every registered lane a worn
+ * relic opens, in registry order. A carried, unworn relic opens nothing, and
+ * the grey office is never returned (its cards are the starter deck, not a
+ * reward lane).
+ *
+ * @param player - The wearer (`player.equipment` is read; `inventory` is not).
+ * @param lanes  - The lane registry; defaults to {@link CARD_LANES}.
+ * @param relics - The relic library; defaults to {@link relicLibrary}.
+ * @returns The lane ids; `[]` when no worn relic opens a lane.
+ * @example unlockedLaneIds(wearingABloodPriceRelic) // ['blood-price']
+ */
+export function unlockedLaneIds(
+    player: Pick<Character, 'equipment'>,
+    lanes: readonly CardLane[] = CARD_LANES,
+    relics: readonly Equipment[] = relicLibrary,
+): string[] {
+    const counts = wornLaneCounts(player, lanes, relics);
+    return lanes.filter(lane => lane.id !== GREY_LANE.id && counts.has(lane.id)).map(lane => lane.id);
+}
+
+/**
+ * How many of a 3-card reward's slots come from one lane, by the number of
+ * relics worn from it: 0 gives 0, 1-2 give 1, 3-4 give 2, 5 or more give 3.
+ *
+ * @param wornFromLane - Relics worn that open the lane.
+ * @example laneSlotCount(3) // 2
+ */
+export function laneSlotCount(wornFromLane: number): number {
+    if (wornFromLane >= 5) return 3;
+    if (wornFromLane >= 3) return 2;
+    if (wornFromLane >= 1) return 1;
+    return 0;
+}
+
+/** The lane that fills a reward's lane slots, and how many slots it fills. */
+export interface RewardLaneSlots {
+    readonly laneId: string;
+    readonly slots: number;
+}
+
+/**
+ * The reward's lane slots: the lane the player wears the most relics from
+ * (a tie broken by `rng`, drawn only when there is a tie) and its
+ * {@link laneSlotCount}. Null when no worn relic opens a lane.
+ *
+ * @param player - The wearer.
+ * @param rng    - The roll's seeded rng.
+ * @param lanes  - The lane registry; defaults to {@link CARD_LANES}.
+ * @param relics - The relic library; defaults to {@link relicLibrary}.
+ */
+export function rewardLaneSlots(
+    player: Pick<Character, 'equipment'>,
+    rng: () => number,
+    lanes: readonly CardLane[] = CARD_LANES,
+    relics: readonly Equipment[] = relicLibrary,
+): RewardLaneSlots | null {
+    const counts = wornLaneCounts(player, lanes, relics);
+    const ranked = unlockedLaneIds(player, lanes, relics);
+    if (ranked.length === 0) return null;
+    const most = Math.max(...ranked.map(id => counts.get(id) ?? 0));
+    const tied = ranked.filter(id => counts.get(id) === most);
+    const laneId = tied.length === 1 ? tied[0] : tied[pick(tied.length, rng)];
+    return { laneId, slots: laneSlotCount(most) };
+}
+
+/** A seeded index in `[0, length)`. */
+function pick(length: number, rng: () => number): number {
+    return Math.min(Math.floor(rng() * length), length - 1);
+}
+
+/** Draws up to `count` distinct ids from `pool` into `offers`, skipping ids already offered. */
+function drawDistinct(pool: readonly string[], count: number, offers: string[], rng: () => number): void {
+    const remaining = pool.filter(id => !offers.includes(id));
+    let drawn = 0;
+    while (drawn < count && remaining.length > 0) {
+        const idx = pick(remaining.length, rng);
+        offers.push(remaining[idx]);
+        remaining.splice(idx, 1);
+        drawn += 1;
+    }
+}
+
+/**
+ * Rolls `count` distinct card-reward offers after a won combat (the cache
+ * rolls its one card with `count = 1`).
+ *
+ * The lane slots come first: {@link rewardLaneSlots} cards from the lane the
+ * player wears most, then the rest from {@link rewardPoolFor}. A card the
+ * player already owns may be offered. When the dev override names a lane,
+ * every slot draws from the override and the lane slots are not read.
+ * Pure: every decision is seeded by `rng`, so the same seed always yields the
+ * same offers.
+ *
+ * @param player - The player being rewarded.
+ * @param rng    - The seeded rng.
+ * @param count  - Offers to roll; defaults to 3.
+ * @param lanes  - The lane registry; defaults to {@link CARD_LANES}.
+ * @param relics - The relic library; defaults to {@link relicLibrary}.
+ * @example rollCombatCardRewards(freshPlayer, seeded(1)) // three grey ids
  */
 export function rollCombatCardRewards(
     player: Character,
     rng: () => number,
     count = 3,
+    lanes: readonly CardLane[] = CARD_LANES,
+    relics: readonly Equipment[] = relicLibrary,
 ): string[] {
-    const remaining = rewardPoolFor(player);
     const offers: string[] = [];
-    while (offers.length < count && remaining.length > 0) {
-        const idx = Math.min(Math.floor(rng() * remaining.length), remaining.length - 1);
-        offers.push(remaining[idx]);
-        remaining.splice(idx, 1);
+    const override = devOverridePool(player, lanes);
+    if (override.length > 0) {
+        drawDistinct(override, count, offers, rng);
+        return offers;
     }
+    const slots = rewardLaneSlots(player, rng, lanes, relics);
+    if (slots !== null) {
+        drawDistinct(rewardable(laneRewardPool([slots.laneId], lanes)), Math.min(slots.slots, count), offers, rng);
+    }
+    drawDistinct(rewardPoolFor(player, lanes, relics), count - offers.length, offers, rng);
     return offers;
 }
 
@@ -144,9 +273,15 @@ function drawBest(ids: readonly string[], rng: () => number): string | undefined
  * theirs; the rest fill from the best bands left. Distinct; seeded by `rng`.
  * While rares are few, the highest rarity available stands in for "rare".
  */
-export function rollEliteCardRewards(player: Character, rng: () => number, count = 3): string[] {
-    const remaining = rewardPoolFor(player);
-    const laneCards = new Set(laneRewardPool(deckLaneIds(ownedCardIds(player))));
+export function rollEliteCardRewards(
+    player: Character,
+    rng: () => number,
+    count = 3,
+    lanes: readonly CardLane[] = CARD_LANES,
+    relics: readonly Equipment[] = relicLibrary,
+): string[] {
+    const remaining = rewardPoolFor(player, lanes, relics);
+    const laneCards = new Set(laneRewardPool(deckLaneIds(ownedCardIds(player), lanes), lanes));
     const offers: string[] = [];
     const take = (id: string | undefined): void => {
         if (id === undefined) return;

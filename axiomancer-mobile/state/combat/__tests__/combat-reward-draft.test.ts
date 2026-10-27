@@ -14,6 +14,7 @@
 import { describe, expect, it } from '@jest/globals';
 import {
     COMBAT_REWARD_POOL, ENEMY_REGISTRY, STARTING_CARD_IDS, cardLibrary, getCardById, upgradeLimit, type GameState,
+    type Equipment,
 } from '@mechanics';
 
 import {
@@ -167,6 +168,15 @@ describe('the elite reward — store actions', () => {
 
     it('an elite win offers the rare among its cards and an upgrade of an owned card', () => {
         const { store } = storeWithDeck(STARTING_CARD_IDS);
+        // The rare's lane must be worn to be in the pool: a fixture relic
+        // naming it (no library relic names a lane yet).
+        const laneRelic: Equipment = {
+            id: 'fixture-relic-blood-price', name: 'Fixture relic', description: '',
+            category: 'equipment', slot: 'accessory', statModifiers: [], laneId: 'blood-price',
+        };
+        store.setState({
+            player: { ...playerOf(store), equipment: { weapon: null, armor: null, accessories: [laneRelic] } },
+        } as never);
         const offers = rollCombatRewardAction(store, ELITE);
         expect(offers).toHaveLength(COMBAT_REWARD_OFFER_COUNT);
         expect(offers).toContain(RARE);

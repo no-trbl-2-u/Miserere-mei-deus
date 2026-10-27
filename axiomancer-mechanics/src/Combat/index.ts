@@ -109,9 +109,10 @@ export {
 
 export {
     COMBAT_REWARD_POOL, STARTING_CARD_IDS, rollCombatCardRewards, rewardPoolFor, addRewardCard,
+    unlockedLaneIds, laneSlotCount, rewardLaneSlots,
     unlockCardViaDilemma,
     isEliteEnemy, rollEliteReward, rollEliteCardRewards, rollEliteUpgrade,
-    type EliteReward, type EliteRewardUpgrade,
+    type EliteReward, type EliteRewardUpgrade, type RewardLaneSlots,
 } from './combat.rewards';
 
 export {
