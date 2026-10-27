@@ -141,7 +141,7 @@ describe('the section rides the measured report (CH1d A5)', () => {
         });
         expect(report.rewardLanes.seed).toBe(3);
         expect(report.rewardLanes.rolls).toBe(10);
-        expect(report.rewardLanes.rows.at(-1)!.character).toBeNull();
+        expect(report.rewardLanes.rows[report.rewardLanes.rows.length - 1]!.character).toBeNull();
         expect(CARD_LANES.length).toBeGreaterThan(0);
     });
 });

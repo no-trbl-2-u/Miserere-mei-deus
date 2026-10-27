@@ -1111,6 +1111,12 @@
       "kind": "coupling",
       "from": "area:Combat",
       "to": "area:Cards",
+      "file": "axiomancer-mechanics/src/Combat/combat.reward-lanes.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Cards",
       "file": "axiomancer-mechanics/src/Combat/combat.rewards.ts"
     },
     {
@@ -1172,6 +1178,12 @@
       "from": "area:Combat",
       "to": "area:Character",
       "file": "axiomancer-mechanics/src/Combat/combat.playtest.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Character",
+      "file": "axiomancer-mechanics/src/Combat/combat.reward-lanes.ts"
     },
     {
       "kind": "coupling",
@@ -1357,6 +1369,12 @@
       "kind": "coupling",
       "from": "area:Combat",
       "to": "area:Game",
+      "file": "axiomancer-mechanics/src/Combat/combat.reward-lanes.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Game",
       "file": "axiomancer-mechanics/src/Combat/combat.rewards.ts"
     },
     {
@@ -1370,6 +1388,12 @@
       "from": "area:Combat",
       "to": "area:Items",
       "file": "axiomancer-mechanics/src/Combat/combat.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Items",
+      "file": "axiomancer-mechanics/src/Combat/combat.reward-lanes.ts"
     },
     {
       "kind": "coupling",
