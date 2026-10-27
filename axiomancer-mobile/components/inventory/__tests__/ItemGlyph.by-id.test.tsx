@@ -69,8 +69,10 @@ describe('ItemGlyph: id-keyed resolution', () => {
         expect(relicLibrary.length).toBeGreaterThan(0);
     });
 
-    it.each(LIBRARY_ITEMS.map((it) => [it.id, it] as const))(
-        '%s draws the glyph it drew before the table existed',
+    const withRow = (id: string) => Object.prototype.hasOwnProperty.call(ITEM_GLYPH_BY_ID, id);
+
+    it.each(LIBRARY_ITEMS.filter((it) => !withRow(it.id)).map((it) => [it.id, it] as const))(
+        '%s (no row) draws the glyph it drew before the table existed',
         (_id, item) => {
             const byId = renderJson(<ItemGlyph category={item.category} sub={item.sub} itemId={item.id} />);
             const byCategory = renderJson(<ItemGlyph category={item.category} sub={item.sub} />);
@@ -78,6 +80,28 @@ describe('ItemGlyph: id-keyed resolution', () => {
             expect(byId).toEqual(byCategory);
         },
     );
+
+    it.each(LIBRARY_ITEMS.filter((it) => withRow(it.id)).map((it) => [it.id, it] as const))(
+        '%s (picked) draws its own icon, not the category glyph',
+        (id, item) => {
+            const name = getItemGlyph(id);
+            expect(name).not.toBeNull();
+            const { tree } = withAllProviders(<ItemGlyph category={item.category} sub={item.sub} itemId={id} />);
+            const rendered = render(tree);
+            expect(rendered.getByLabelText(AXM_ICON_SPECS[name as AxmIconName].label)).toBeTruthy();
+            expect(rendered.queryByLabelText('Relic equipment icon')).toBeNull();
+        },
+    );
+
+    it('every table row names an item in the libraries', () => {
+        const ids = new Set(LIBRARY_ITEMS.map((it) => it.id));
+        for (const id of Object.keys(ITEM_GLYPH_BY_ID)) expect(ids.has(id)).toBe(true);
+    });
+
+    it('picked items draw distinct icons', () => {
+        const names = Object.values(ITEM_GLYPH_BY_ID) as string[];
+        expect(new Set(names).size).toBe(names.length);
+    });
 
     it('an id with a table entry draws that registry icon', () => {
         const glyphs: ItemGlyphTable = { 'healing-potion': 'action-herbs' };

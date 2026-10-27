@@ -5,5 +5,9 @@ export {
     isAxmIconName,
     type AxmIconName,
     type AxmIconSpec,
+    type AccentGrow,
+    type AccentHue,
+    type AccentShape,
+    type IconAccent,
     type IconPrimitive,
 } from './icon-registry';
