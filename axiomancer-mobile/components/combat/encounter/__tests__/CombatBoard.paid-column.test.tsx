@@ -14,7 +14,7 @@ import { StyleSheet } from 'react-native';
 import { render, screen, within } from '@testing-library/react-native';
 import { describe, expect, it } from '@jest/globals';
 
-import { rollEncounterDice } from '@mechanics';
+import { cardLibrary, rollEncounterDice } from '@mechanics';
 import {
     CombatCardFace, HAND_CARD_H, HAND_CARD_W, PAID_LINE_FLOOR, PAID_LINE_SIZE, paidLedgerFit,
 } from '@/components/combat/encounter/CombatBoard';
@@ -99,6 +99,35 @@ describe('the PAID line is die : PAID on one row', () => {
                 unmount();
             }
         }
+    });
+});
+
+describe('an amount the card does not print reads "varies" on one line (GL1 A8)', () => {
+    it('every live program card whose PAID headline was a bare X renders varies, at hand size, on one line', () => {
+        const ids = cardLibrary.filter((c) => c.program).map((c) => c.id);
+        const { combat } = startRealFight(REAL_FIGHT_FIXTURE, {
+            player: { knownCards: ids.slice(0, 1), baseStats: { heart: 8, body: 8, mind: 8 } }, seed: 16,
+        });
+        const base = rollEncounterDice(combat).state;
+        let seen = 0;
+        for (const id of ids) {
+            const vm = buildCombatViewModel({ ...base, hand: [{ uid: 'v0', cardId: id }] }).hand[0];
+            if (!vm || !/varies/.test(vm.face.heroText)) continue;
+            seen += 1;
+            const { unmount } = renderFace(vm);
+            const line = screen.getByTestId('combat-card-face-paid-line');
+            expect(line.props.numberOfLines).toBe(1);
+            const val = screen.getByTestId('combat-card-face-value');
+            expect(String(val.props.children)).toMatch(/varies/);
+            expect(flat(val).fontSize as number).toBeGreaterThanOrEqual(PAID_LINE_FLOOR);
+            unmount();
+        }
+        expect(seen).toBeGreaterThan(0);
+    });
+
+    it('the longest headline ("Foe − varies" beside no keyword) still fits the hand face', () => {
+        expect(paidLedgerFit({ width: HAND_CARD_W, keyword: '', value: 'Foe − varies' }).size).toBeGreaterThanOrEqual(PAID_LINE_FLOOR);
+        expect(paidLedgerFit({ width: HAND_CARD_W, keyword: '♥ SACRIFICE', value: 'varies' }).size).toBeGreaterThanOrEqual(PAID_LINE_FLOOR);
     });
 });
 
