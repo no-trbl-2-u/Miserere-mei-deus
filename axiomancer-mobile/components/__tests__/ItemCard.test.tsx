@@ -115,10 +115,10 @@ describe('ItemGlyph: category-based icon rendering', () => {
     });
 
     it('renders custom SVG for Accessory equipment', () => {
-        const tree = render(<ItemGlyph category="equipment" sub="Accessory" />);
+        const tree = render(<ItemGlyph category="equipment" sub="Relic" />);
         const svgs = tree.UNSAFE_queryAllByType(Svg);
         expect(svgs).toHaveLength(1);
-        expect(svgs[0].props.accessibilityLabel).toBe('Accessory equipment icon');
+        expect(svgs[0].props.accessibilityLabel).toBe('Relic equipment icon');
     });
 
     it('renders custom SVG for consumable category', () => {

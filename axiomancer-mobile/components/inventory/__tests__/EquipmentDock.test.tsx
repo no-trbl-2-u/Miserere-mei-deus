@@ -63,9 +63,9 @@ const mockEquippedSlots: EquipmentDockViewModel = {
     slots: [
         { key: 'weapon', label: 'WEAPON', item: { id: 'sword-1', name: 'Iron Sword', sub: 'Weapon' } },
         { key: 'armor', label: 'ARMOR', item: { id: 'armor-1', name: 'Leather Armor', sub: 'Armor' } },
-        { key: 'relic', relicIndex: 0, label: 'TRINKET I', item: { id: 'helm-1', name: 'Iron Helm', sub: 'Accessory' } },
-        { key: 'relic', relicIndex: 1, label: 'TRINKET II', item: { id: 'ring-1', name: 'Bone Ring', sub: 'Accessory' } },
-        { key: 'relic', relicIndex: 2, label: 'TRINKET III', item: null },
+        { key: 'relic', relicIndex: 0, label: 'RELIC I', item: { id: 'helm-1', name: 'Iron Helm', sub: 'Relic' } },
+        { key: 'relic', relicIndex: 1, label: 'RELIC II', item: { id: 'ring-1', name: 'Bone Ring', sub: 'Relic' } },
+        { key: 'relic', relicIndex: 2, label: 'RELIC III', item: null },
     ],
     headerLabel: 'equipment dock',
     hintLabel: 'worn vs unworn at a glance',
@@ -80,9 +80,9 @@ const mockEmptySlots: EquipmentDockViewModel = {
     slots: [
         { key: 'weapon', label: 'WEAPON', item: null },
         { key: 'armor', label: 'ARMOR', item: null },
-        { key: 'relic', relicIndex: 0, label: 'TRINKET I', item: null },
-        { key: 'relic', relicIndex: 1, label: 'TRINKET II', item: null },
-        { key: 'relic', relicIndex: 2, label: 'TRINKET III', item: null },
+        { key: 'relic', relicIndex: 0, label: 'RELIC I', item: null },
+        { key: 'relic', relicIndex: 1, label: 'RELIC II', item: null },
+        { key: 'relic', relicIndex: 2, label: 'RELIC III', item: null },
     ],
     headerLabel: 'equipment dock',
     hintLabel: 'worn vs unworn at a glance',
@@ -294,8 +294,8 @@ describe('EquipmentDock', () => {
             expect(getByTestId('equipment-slot-weapon')).toBeDefined();
 
             // Verify content is displayed through Text components
-            expect(getByText('TRINKET I - Iron Helm')).toBeDefined();
-            expect(getByText('TRINKET II - Bone Ring')).toBeDefined();
+            expect(getByText('RELIC I - Iron Helm')).toBeDefined();
+            expect(getByText('RELIC II - Bone Ring')).toBeDefined();
             expect(getByText('WEAPON - Iron Sword')).toBeDefined();
         });
 
@@ -313,7 +313,7 @@ describe('EquipmentDock', () => {
             expect(getByTestId('equipment-slot-weapon')).toBeDefined();
 
             // Verify empty content is displayed
-            expect(getByText('TRINKET I - empty')).toBeDefined();
+            expect(getByText('RELIC I - empty')).toBeDefined();
             expect(getByText('WEAPON - empty')).toBeDefined();
         });
     });
@@ -412,9 +412,9 @@ describe('EquipmentDock', () => {
                 slots: [
                     { key: 'weapon', label: 'WEAPON', item: { id: 'sword-1', name: 'Iron Sword', sub: 'Weapon' } },
                     { key: 'armor', label: 'ARMOR', item: null },
-                    { key: 'relic', relicIndex: 0, label: 'TRINKET I', item: { id: 'helm-1', name: 'Iron Helm', sub: 'Accessory' } },
-                    { key: 'relic', relicIndex: 1, label: 'TRINKET II', item: null },
-                    { key: 'relic', relicIndex: 2, label: 'TRINKET III', item: null },
+                    { key: 'relic', relicIndex: 0, label: 'RELIC I', item: { id: 'helm-1', name: 'Iron Helm', sub: 'Relic' } },
+                    { key: 'relic', relicIndex: 1, label: 'RELIC II', item: null },
+                    { key: 'relic', relicIndex: 2, label: 'RELIC III', item: null },
                 ],
             };
 

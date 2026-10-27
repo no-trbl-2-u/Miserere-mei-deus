@@ -271,7 +271,7 @@ describe('selectVillageVM', () => {
             makeState({
                 wares: [],
                 inventory: [
-                    { id: 'unlisted-trinket', name: 'Trinket', description: '', category: 'material', quantity: 1 },
+                    { id: 'unlisted-trinket', name: 'Relic', description: '', category: 'material', quantity: 1 },
                 ],
             }),
         );
