@@ -10,6 +10,7 @@ export {
 export type { GameStore, StoreApi } from './store';
 
 export { createNewGameState, GAME_STATE_VERSION } from './game.reducer';
+export type { NewGameOptions } from './game.reducer';
 export type { GameState, CodexEntry } from './types';
 
 export { migrate, dropUnknownCardIds, dropRetiredFlags } from './game.migrate';

@@ -22,6 +22,8 @@ export {
     DIE_GEAR_COLORS,
     characterPresets, getPresetById, buildCharacterFromPreset,
     levelLadderPresets,
+    CHARACTER_ROSTER, CHARACTER_GREY_DECK, FRESH_RUN_BASE_STATS, FRESH_RUN_STAT_BUDGET,
+    getCharacterDefinition, characterDeck, characterProblems,
     previewStatAllocation,
     experienceForLevel,
     experienceToNext,
@@ -30,6 +32,7 @@ export {
 export type {
     Character, BaseStats,
     CharacterPreset,
+    CharacterDefinition, CharacterProblem, CharacterProblemCode,
     EquipDelta,
     SignatureDeltaEntry,
     DieGearColor, DieGearRail,
