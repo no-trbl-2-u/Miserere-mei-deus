@@ -279,7 +279,9 @@ test('a failed load turns offline, 401, 400 and 413 into words', async () => {
   }
 });
 
-// Phase BV3: every candidate pitched in a colour, derived from its job.
+// Phase CL1: a ballot pitches no colour (T, 2026-10-26: "don't have it pitch a
+// color for the cards. Instead, I pick the cards, then afterwards, it can split
+// the colors up evenly"). Colours are proposed at the revisions step.
 
 /** The CARDS array a ballot page declares. */
 function ballotCards(html) {
@@ -288,103 +290,43 @@ function ballotCards(html) {
   return plain(vm.runInNewContext(match[1]));
 }
 
-// Ballots opened before BV3 keep their faces as they stand (BV3 A6): T's
-// sittings are recorded against them, and their keepers are pitched colours
-// at the revisions step instead.
-const PRE_COLOUR_BALLOTS = ['elementalist-2026-10-22'];
-
-/** The pitch problems the ballot test holds an index entry to: none for a closed or pre-colour ballot. */
-function openBallotProblems(entry, html) {
-  if (entry.status !== 'open' || PRE_COLOUR_BALLOTS.includes(entry.id)) return [];
-  return kit.pitchProblems(ballotCards(html));
+/** Candidates that carry a colour of any kind: a `job`, `color` or `colour` field. */
+function colouredCandidates(cards) {
+  return cards.filter((c) => 'job' in c || 'color' in c || 'colour' in c).map((c) => c.id);
 }
 
-/** A fixture of coloured candidates: n red hits, n blue walls, n purple afflictions. */
-function fixtureCards(red, blue, purple, extra = []) {
-  const cards = [];
-  const add = (count, job) => { for (let i = 0; i < count; i++) cards.push({ id: `P-${String(cards.length + 1).padStart(2, '0')}a`, job }); };
-  add(red, 'hit');
-  add(blue, 'wall');
-  add(purple, 'affliction');
-  return [...cards, ...extra];
-}
+// Ballots opened before CL1 keep the faces T voted on (Blood Price predates
+// colours; the Elementalist was voted before BV3).
+const VOTED_BEFORE_CL1 = ['blood-price-2026-09-30', 'elementalist-2026-10-22'];
 
-test('one job-to-colour table, Blood Price\'s split, onto the four colours', () => {
-  assert.deepEqual(plain(kit.JOB_COLORS), {
-    hit: 'body', wall: 'mind', heal: 'mind', utility: 'mind', affliction: 'heart', colourless: 'any',
-  });
-  for (const color of Object.values(kit.JOB_COLORS)) {
-    assert.ok(['body', 'mind', 'heart', 'any'].includes(color), `${color} is one of the four colours`);
-  }
-  assert.deepEqual(plain(kit.COLOR_TINTS), { body: 'red', mind: 'blue', heart: 'purple', any: 'grey' });
-  assert.equal(kit.colorOf('hit'), 'body');
-  assert.equal(kit.colorOf('heal'), 'mind');
-  assert.equal(kit.colorOf('toString'), null, 'only the table\'s own jobs');
-  assert.equal(kit.colorOf(undefined), null);
-  assert.equal(kit.colorLabel('heart'), 'purple (heart)');
-});
-
-test('the docs print the same job-to-colour table', () => {
-  const doc = readFileSync(join(ROOT, 'docs/lane-creator.md'), 'utf8');
-  for (const [job, color] of Object.entries(kit.JOB_COLORS)) {
-    const row = new RegExp(`\\|\\s*\`${job}\`\\s*\\|\\s*${kit.COLOR_TINTS[color]}\\s*\\|\\s*\`${color}\`\\s*\\|`);
-    assert.match(doc, row, `docs/lane-creator.md names ${job} -> ${kit.COLOR_TINTS[color]} (${color})`);
+test('the kit carries no colour table, tally or pitch check', () => {
+  for (const name of ['JOB_COLORS', 'COLOR_TINTS', 'colorOf', 'colorLabel', 'colorTally', 'tallyWords', 'pitchProblems']) {
+    assert.equal(kit[name], undefined, `${name} is gone`);
   }
 });
 
-test('the kept tally counts per colour and reads in words', () => {
-  const cards = [
-    { id: 'P-01a', job: 'hit' }, { id: 'P-01b', job: 'wall' }, { id: 'P-01c', job: 'affliction' },
-    { id: 'P-02a', job: 'hit' }, { id: 'P-02b', job: 'colourless' }, { id: 'P-02c', job: 'heal' },
-  ];
-  const tally = plain(kit.colorTally(cards, ['P-01a', 'P-02a', 'P-01c', 'P-02c']));
-  assert.deepEqual(tally, { body: 2, mind: 1, heart: 1, any: 0 });
-  assert.equal(kit.tallyWords(tally), '2 red · 1 blue · 1 purple');
-  assert.equal(kit.tallyWords(kit.colorTally(cards, ['P-02b'])), '0 red · 0 blue · 0 purple · 1 grey');
-  assert.equal(kit.tallyWords(kit.colorTally(cards, [])), '0 red · 0 blue · 0 purple');
-});
-
-test('a candidate with no job, or a job outside the table, fails the pitch', () => {
-  const missing = kit.pitchProblems([...fixtureCards(30, 30, 30), { id: 'M-10c' }]);
-  assert.deepEqual(plain(missing), ['M-10c has no job']);
-  const unknown = kit.pitchProblems([...fixtureCards(30, 30, 30), { id: 'M-10c', job: 'hits' }]);
-  assert.deepEqual(plain(unknown), ['M-10c has job "hits", which is not in JOB_COLORS']);
-});
-
-test('colours more than 10% off an equal share fail; within it they pass', () => {
-  const lopsided = plain(kit.pitchProblems(fixtureCards(40, 25, 25)));
-  assert.equal(lopsided.length, 3, 'red over, blue and purple under');
-  assert.match(lopsided[0], /^red has 40 of 90 coloured candidates/);
-  assert.deepEqual(plain(kit.pitchProblems(fixtureCards(30, 30, 30))), []);
-  assert.deepEqual(plain(kit.pitchProblems(fixtureCards(33, 29, 28))), []);
-  assert.deepEqual(plain(kit.pitchProblems(fixtureCards(27, 33, 30))), [], 'the band edges are in');
-  assert.equal(kit.pitchProblems(fixtureCards(34, 28, 28)).length, 1, 'one past the edge is out');
-});
-
-test('colourless candidates are not counted in the balance', () => {
-  const grey = Array.from({ length: 12 }, (_, i) => ({ id: `M-${String(i + 1).padStart(2, '0')}a`, job: 'colourless' }));
-  assert.deepEqual(plain(kit.pitchProblems(fixtureCards(30, 30, 30, grey))), []);
-});
-
-test('an open ballot is held to the pitch; a closed or pre-colour one is not', () => {
-  const unpitched = 'const CARDS = [\n  { id: \'P-01a\', type: \'Attack\' },\n];';
-  assert.deepEqual(plain(openBallotProblems({ id: 'next-2026-11-01', status: 'open' }, unpitched)), ['P-01a has no job']);
-  assert.deepEqual(openBallotProblems({ id: 'next-2026-11-01', status: 'closed' }, unpitched), []);
-  assert.deepEqual(openBallotProblems({ id: 'elementalist-2026-10-22', status: 'open' }, unpitched), []);
+test('a candidate with a colour fails an open ballot', () => {
+  const pitched = 'const CARDS = [\n  { id: \'P-01a\', type: \'Attack\', job: \'hit\' },\n  { id: \'P-01b\', color: \'mind\' },\n];';
+  assert.deepEqual(colouredCandidates(ballotCards(pitched)), ['P-01a', 'P-01b']);
   for (const b of indexBallots()) {
+    if (VOTED_BEFORE_CL1.includes(b.id)) continue;
     const html = readFileSync(join(LEDGER, b.file), 'utf8');
-    assert.deepEqual(plain(openBallotProblems(b, html)), [], `${b.file} pitches every candidate a colour`);
+    assert.deepEqual(colouredCandidates(ballotCards(html)), [], `${b.file} pitches no colour`);
   }
 });
 
-test('the ballot shell pitches every sample by job and wires the colours', () => {
+test('the ballot shell pitches no colour and prints none', () => {
   const html = readFileSync(join(LEDGER, 'ballot-shell.html'), 'utf8');
-  const cards = ballotCards(html);
-  assert.deepEqual(plain(kit.pitchProblems(cards)), []);
-  assert.ok(!/\bcolou?r\s*:/.test(html.match(/const CARDS = (\[[\s\S]*?\n\]);/)[1]), 'no candidate types its colour by hand');
+  assert.deepEqual(colouredCandidates(ballotCards(html)), []);
   assert.ok(html.includes('<script src="ballot-kit.js"></script>'), 'the shell loads the kit');
   assert.match(html, /BallotKit\.mount\(\{ ballotId: BALLOT_ID/);
-  assert.match(html, /BallotKit\.colorOf\(card\.job\)/, 'the face colour comes from the job');
-  assert.match(html, /data-tally=/, 'each tab keeps a live colour tally');
-  assert.match(html, /KEEP \$\{withColor/, 'the Generate text names each kept card\'s colour');
+  assert.doesNotMatch(html, /BallotKit\.(colorOf|colorLabel|colorTally|tallyWords|COLOR_TINTS)/);
+  assert.doesNotMatch(html, /data-tally=/, 'no tab keeps a colour tally');
+  assert.match(html, /`KEEP \$\{keep\[0\]\}`/, 'the Generate text names the kept card alone');
+});
+
+test('the docs say colours come after the picks', () => {
+  const doc = readFileSync(join(ROOT, 'docs/lane-creator.md'), 'utf8');
+  assert.match(doc, /## Colours after the picks/);
+  assert.doesNotMatch(doc, /## Pitching a colour/);
 });

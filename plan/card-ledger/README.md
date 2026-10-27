@@ -6,16 +6,14 @@ One ledger per card family (`rehearsal-<family>.md`), the ballot T votes on
 - `index.html` lists every ballot, one entry per family, from its `BALLOTS`
   array.
 - `ballot-shell.html` is the page a new ballot is copied from (phase BV3):
-  sample candidates on tinted faces, the colour legend, live per-colour kept
-  counts and a Generate text that names each kept card's colour.
+  sample candidates, live kept counts and a Generate text; no candidate
+  carries a colour (phase CL1).
 - `ballot-kit.js` is the shared ballot kit (phases BV1b, BV2b, BV3): it autosaves
   every tick and note on the device, restores them on a reload, clears the
   draft, saves the ballot unfinished online (Save, a `draft` row), loads the
   newest online save when it is newer than the device's draft, and submits the
   verdict (Submit, a `final` row) to the `miserere-api` Worker
-  (`POST /v1/ballot-verdicts`, `backend/src/index.ts`). It also holds
-  `JOB_COLORS`, the one job-to-colour table every ballot pitches its
-  candidates by.
+  (`POST /v1/ballot-verdicts`, `backend/src/index.ts`).
 
 The `axiomancer-ballots` Cloudflare Pages project serves this directory as it
 stands on `main`, with branch previews (`docs/external-architecture.md`).
@@ -31,14 +29,9 @@ the load from the save need the Pages site.
    the DOM the kit reads: `.pick` checkboxes whose value is the candidate id
    (`P-01a`), `[data-note]` inputs whose attribute is the slot id (`P-01`),
    `#general`, `#gen`, `#copy` and `#out`.
-2. **The colours.** Pitch every candidate a colour by its job: give it a
-   `job` from the kit's `JOB_COLORS` (`hit` red, `wall`, `heal` and `utility`
-   blue, `affliction` purple, `colourless` grey), as Blood Price split; the
-   shell derives the colour, tints the face and counts the keepers per colour.
-   Never type a colour by hand. Keep red, blue and purple near-equal across
-   the ninety (27 to 33 each; grey is not counted), and let T's slot notes
-   overrule ("make it blue"). The table and the rules: `docs/lane-creator.md`
-   "Pitching a colour".
+2. **No colours.** Give no candidate a `job`, `color` or `colour` (D110): T
+   votes on the text, and colours are split after the picks, at the
+   revisions step (`docs/lane-creator.md` "Colours after the picks").
 3. **The kit tag.** Keep `<script src="ballot-kit.js"></script>` in the head,
    set `const BALLOT_ID = '<family>-<YYYY-MM-DD>';` (lowercase letters, digits
    and hyphens, 3 to 64), and end the script with
@@ -49,9 +42,9 @@ the load from the save need the Pages site.
 
 `node --test scripts/ballot-kit.test.mjs` (in the root `npm test`) fails when a
 ballot file has no `BALLOTS` entry, an open ballot does not load the kit
-under its index id, or an open ballot has a candidate with no job (or one
-outside `JOB_COLORS`) or colours more than 10% off an equal share. The
-Elementalist ballot, opened before the colours, is exempt and stands as voted.
+under its index id, or an open ballot has a candidate carrying a colour. The
+Blood Price and Elementalist ballots, voted before CL1, are exempt and stand as
+voted.
 
 The whole flow a ballot sits in is `docs/lane-creator.md` (lane-creator v1, D102).
 
