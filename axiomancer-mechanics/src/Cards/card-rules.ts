@@ -33,7 +33,7 @@ import { GLOBAL_TRIGGER_TEXT, programFaceText } from '../Combat/combat.cards';
 import { magnitudeStep, UPGRADE_INTENSITY_STEP } from './card-upgrade.scale';
 
 /** The rules this module checks; the exemptions fixture keys on these. */
-export type CardRuleId = 'complexity-budget' | 'scrap-floor' | 'global-template' | 'carrier-rule' | 'spell-law';
+export type CardRuleId = 'complexity-budget' | 'scrap-floor' | 'global-template' | 'carrier-rule' | 'spell-law' | 'discard-cost';
 
 /** One break of one rule. `id` is a card id, an atlas word, or `cardId:WORD`. */
 export interface CardRuleViolation {
@@ -250,6 +250,33 @@ export function checkScrapFloor(cards: readonly Card[]): CardRuleViolation[] {
             .filter(([, run]) => PROBE_QUERIES.some(q => onlyOneConviction(recordVerbs(run, q))))
             .map(([name]) => name);
         if (dead.length) out.push({ rule: 'scrap-floor', id: card.id, detail: `${dead.join(' and ')} only gains 1 Conviction` });
+    }
+    return out;
+}
+
+/**
+ * The random discard is a PAID cost (T, 2026-10-26, the Defender): "Discard n
+ * cards at random" sits only on a PAID line, and as the line's first verb so
+ * it is paid before the effects. A FREE line or a Global body that discards
+ * breaks the rule, as does a PAID line that discards after another verb.
+ */
+export function checkDiscardCost(cards: readonly Card[]): CardRuleViolation[] {
+    const out: CardRuleViolation[] = [];
+    for (const card of cards) {
+        const p = card.program;
+        if (!p) continue;
+        const free: (c: ProgramCtx) => void = p.free?.run ?? (p.global ? c => p.global!.free(c, 2) : () => {});
+        const paid: (c: ProgramCtx) => void = p.paid?.run ?? (p.global ? c => p.global!.paid(c, 2) : () => {});
+        const bad: string[] = [];
+        for (const q of PROBE_QUERIES) {
+            if (recordVerbs(free, q).some(v => v.verb === 'discardRandom')) bad.push('FREE discards');
+            const calls = recordVerbs(paid, q);
+            const at = calls.findIndex(v => v.verb === 'discardRandom');
+            if (p.global && at >= 0) bad.push('a Global discards');
+            else if (at > 0) bad.push('PAID discards after another verb');
+        }
+        const unique = [...new Set(bad)];
+        if (unique.length) out.push({ rule: 'discard-cost', id: card.id, detail: unique.join('; ') });
     }
     return out;
 }
