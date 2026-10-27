@@ -1356,6 +1356,12 @@
     {
       "kind": "coupling",
       "from": "area:Combat",
+      "to": "area:Items",
+      "file": "axiomancer-mechanics/src/Combat/combat.rewards.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
       "to": "area:Log",
       "file": "axiomancer-mechanics/src/Combat/combat.engine.ts"
     },
@@ -1734,6 +1740,12 @@
     {
       "kind": "coupling",
       "from": "area:Items",
+      "to": "area:Cards",
+      "file": "axiomancer-mechanics/src/Items/relic-lanes.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Items",
       "to": "area:Character",
       "file": "axiomancer-mechanics/src/Items/equipment.engine.ts"
     },
@@ -1742,6 +1754,12 @@
       "from": "area:Items",
       "to": "area:Character",
       "file": "axiomancer-mechanics/src/Items/item-grant.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Items",
+      "to": "area:Character",
+      "file": "axiomancer-mechanics/src/Items/relic-lanes.ts"
     },
     {
       "kind": "coupling",
