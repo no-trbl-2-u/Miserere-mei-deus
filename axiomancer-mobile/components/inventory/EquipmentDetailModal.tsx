@@ -127,6 +127,11 @@ export function EquipmentDetailModal({ vm, onClose, onEquip, onUnequip }: Equipm
                                             <Text style={styles.sigDesc}>{vm.signature.description}</Text>
                                         </View>
                                     )}
+
+                                    {/* Under the signature: the card lane a worn relic opens. */}
+                                    {vm.lane !== null && (
+                                        <Text style={styles.laneLine} testID="equip-detail-lane">{vm.lane}</Text>
+                                    )}
                                 </View>
                             </View>
 
@@ -141,7 +146,11 @@ export function EquipmentDetailModal({ vm, onClose, onEquip, onUnequip }: Equipm
                                 {onAction !== undefined && (
                                     <TouchableOpacity
                                         accessibilityRole="button"
-                                        accessibilityLabel={`${vm.action.label} ${vm.name}`}
+                                        accessibilityLabel={
+                                            vm.lane === null
+                                                ? `${vm.action.label} ${vm.name}`
+                                                : `${vm.action.label} ${vm.name}. ${vm.lane}`
+                                        }
                                         onPress={() => onAction(vm.itemId)}
                                         style={[styles.closeBtn, styles.actionBtn]}
                                         testID={`equip-detail-${vm.action.mode}`}
@@ -281,6 +290,13 @@ const useStyles = makeStyles((AXM) => ({
         lineHeight: 17,
         color: AXM.bone,
         marginTop: 5,
+    },
+    laneLine: {
+        fontFamily: FONTS.serif,
+        fontSize: 12,
+        lineHeight: 17,
+        color: AXM.sulfur,
+        marginTop: 8,
     },
     // Deliberately borderless — the owner's one exception to the rounded-edge rule.
     flavor: {
