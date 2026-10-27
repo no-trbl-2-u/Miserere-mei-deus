@@ -129,9 +129,11 @@ preview build each word R9 lists opens a gloss.
 - **Dice open their gloss on a long-press, not a tap.** A tap on a die already powers the staged card
   (`tapDieJS`, `CombatBoard.tsx:1149-1152`); taking that tap would break the play path. A long-press is how the
   board already explains a signature rune. The struck X die has no gesture, so it reads on a tap.
-  `[T to confirm]` (the candidate said "tap-to-read on each ... die").
+  Accepted at merge (default): the candidate said "tap-to-read on each ... die". A die that cannot be dragged (a
+  MISS face, a spent die) keeps a mounted detector with the long-press alone, so MISS reads too.
 - **The FREE corner pill keeps its X.** D91 fixes the pill's geometry and a six-letter word does not fit it; the
-  card detail (one tap on the card) prints the full rules text that says what sets the amount. `[T to confirm]`
+  card detail (one tap on the card) prints the full rules text that says what sets the amount. Accepted at merge
+  (default).
 - **Only a bare `X` becomes `varies`.** `Deal 2X` (a formula) and the `n` amounts (`GUARD n`, `Next Deal +n`)
   keep their letter; changing them is a further face change, T's call (Follow-ups).
 - **No new ⓘ marks.** The momentum chip keeps its mark; the other targets are found by touch, as the effect

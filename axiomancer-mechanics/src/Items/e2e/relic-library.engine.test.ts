@@ -16,6 +16,13 @@ import type { SignatureSkillId } from '../../Combat/combat.encounter.types';
 import { emptyLoadout } from '../../Character/types';
 import { FIXTURE_WEAPON, FIXTURE_ARMOR, FIXTURE_TRINKETS } from '../../Game/fixtures';
 
+import { unlockedLaneIds, laneSlotCount, rewardLaneSlots } from '../../Combat/combat.rewards';
+import { relicLaneId, wornLaneCounts } from '../relic-lanes';
+import { Player } from '../../Character/characters.mock';
+import { deepClone } from '../../Utils';
+import type { Character } from '../../Character/types';
+import type { Equipment } from '../types';
+
 const ALL_SIGNATURE_IDS = Object.keys(SIGNATURE_SKILLS) as SignatureSkillId[];
 const RING_ID = 'relic-disarming-plea';
 const SIGNET_ID = 'relic-bleeding-signet';
@@ -44,8 +51,10 @@ describe('relic library — roster', () => {
         for (const r of relicLibrary) {
             const keys = Object.keys(r).sort();
             expect(keys).toEqual(
-                ['category', 'description', 'grantsSignature', 'id', 'name', 'slot', 'statModifiers'],
-            );
+                (r.slot === 'accessory'
+                    ? ['accessoryKind', 'category', 'description', 'grantsSignature', 'id', ...(r.laneId ? ['laneId'] : []), 'name', 'slot', 'statModifiers']
+                    : ['category', 'description', 'grantsSignature', 'id', ...(r.laneId ? ['laneId'] : []), 'name', 'slot', 'statModifiers']),
+>            );
         }
     });
 
@@ -57,6 +66,39 @@ describe('relic library — roster', () => {
     it('resolves an unknown or deleted relic id to undefined', () => {
         expect(getRelicById('relic-overwhelming')).toBeUndefined();
         expect(getRelicById('nope')).toBeUndefined();
+    });
+});
+
+describe('A1 · the Bleeding Signet opens Blood Price while worn', () => {
+    const signet = (): Equipment => getRelicById(SIGNET_ID)!;
+    const wearer = (worn: Equipment[], carried: Equipment[] = []): Character => ({
+        ...deepClone(Player),
+        inventory: [...worn, ...carried],
+        equipment: { weapon: null, armor: null, accessories: worn },
+        devRewardLaneIds: undefined,
+    });
+
+    it('the library entry names the blood-price lane; the Ring names none', () => {
+        expect(signet().laneId).toBe('blood-price');
+        expect(getRelicById(RING_ID)!.laneId).toBeUndefined();
+    });
+
+    it('a worn Signet puts blood-price in the unlocked lanes and earns one lane slot', () => {
+        const p = wearer([cloneRelic(signet())]);
+        expect(unlockedLaneIds(p)).toEqual(['blood-price']);
+        expect(laneSlotCount(wornLaneCounts(p).get('blood-price') ?? 0)).toBe(1);
+        expect(rewardLaneSlots(p, () => 0.5)).toEqual({ laneId: 'blood-price', slots: 1 });
+    });
+
+    it('a Signet only carried in the satchel opens nothing', () => {
+        const p = wearer([], [cloneRelic(signet())]);
+        expect(unlockedLaneIds(p)).not.toContain('blood-price');
+    });
+
+    it('a saved Signet copy without the field resolves to the lane through the library', () => {
+        const { laneId: _omitted, ...saved } = cloneRelic(signet());
+        expect(relicLaneId(saved)).toBe('blood-price');
+        expect(unlockedLaneIds(wearer([saved as Equipment]))).toEqual(['blood-price']);
     });
 });
 

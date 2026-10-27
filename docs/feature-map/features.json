@@ -443,7 +443,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/__tests__/CombatGate.test.tsx, axiomancer-mobile/components/combat/encounter/__tests__/CombatEncounterPanel.drag-commits.test.tsx, axiomancer-mobile/components/combat/encounter/__tests__/CombatEncounterPanel.drag-spans.test.tsx, ..."
+        "source": "axiomancer-mobile/components/__tests__/CombatGate.test.tsx, axiomancer-mobile/components/combat/encounter/__tests__/CombatBoard.glossary.test.tsx, axiomancer-mobile/components/combat/encounter/__tests__/CombatEncounterPanel.drag-commits.test.tsx, ..."
       },
       "needsPitch": {
         "value": false,
@@ -2418,6 +2418,12 @@
     {
       "kind": "coupling",
       "from": "route:(tabs)/inventory",
+      "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/equipment-detail.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/inventory",
       "to": "area:Character",
       "file": "axiomancer-mobile/components/inventory/EquipDeltaPanel.tsx"
     },
@@ -2450,6 +2456,12 @@
       "from": "route:(tabs)/inventory",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/actions.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/inventory",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/combat/keywords.ts"
     },
     {
       "kind": "coupling",
@@ -2767,6 +2779,12 @@
       "kind": "coupling",
       "from": "route:cache",
       "to": "area:Combat",
+      "file": "axiomancer-mobile/components/combat/encounter/CombatBoard.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
+      "to": "area:Combat",
       "file": "axiomancer-mobile/components/combat/encounter/CombatCombatantPane.tsx"
     },
     {
@@ -2774,6 +2792,12 @@
       "from": "route:cache",
       "to": "area:Combat",
       "file": "axiomancer-mobile/components/combat/encounter/CombatDie.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/combat/keywords.ts"
     },
     {
       "kind": "coupling",
@@ -2893,6 +2917,12 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Combat",
+      "file": "axiomancer-mobile/components/combat/encounter/CombatBoard.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Combat",
       "file": "axiomancer-mobile/components/combat/encounter/CombatCombatantPane.tsx"
     },
     {
@@ -2930,6 +2960,12 @@
       "from": "route:combat-encounter",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/actions.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/combat/keywords.ts"
     },
     {
       "kind": "coupling",

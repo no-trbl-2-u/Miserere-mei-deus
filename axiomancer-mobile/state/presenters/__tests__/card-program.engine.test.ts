@@ -139,6 +139,32 @@ describe('the board reads the program ledger', () => {
         expect(programHeadline('SACRIFICE any amount X (max 12), DEAL 2X.')).toEqual({ keyword: null, value: 'Deal 2X' });
     });
 
+    it('a PAID headline whose amount is not printed reads "varies", never a bare X (GL1 A8)', () => {
+        expect(programHeadline('DEAL half the VITAE you lost this combat (max 10).')).toEqual({ keyword: null, value: 'Deal varies' });
+        expect(programHeadline('The foe loses VITAE equal to your Conviction.')).toEqual({ keyword: null, value: 'Foe − varies' });
+        expect(programHeadline("GUARD equal to the foe's BLIZZARD")).toEqual({ keyword: 'GUARD', value: 'varies' });
+        expect(programHeadline('HEAL equal to your Conviction.')).toEqual({ keyword: 'HEAL', value: 'varies' });
+        expect(programHeadline('LEECH {leech:0}.')).toEqual({ keyword: 'LEECH', value: 'varies' });
+        expect(programHeadline('SACRIFICE any amount X (max 12).')).toEqual({ keyword: 'SACRIFICE', value: 'varies' });
+        // A formula and the n amounts keep their letter; the FREE pill keeps its X.
+        expect(programHeadline('SACRIFICE any amount X (max 12), DEAL 2X.')).toEqual({ keyword: null, value: 'Deal 2X' });
+        expect(programHeadline('SACRIFICE n, GUARD n.')).toEqual({ keyword: 'GUARD', value: 'n' });
+        expect(programFreeCell('DEAL half the VITAE you lost this combat (max 10).')).toEqual({ keyword: 'DEAL', value: 'X' });
+    });
+
+    it('no live card face headlines a bare X, and the cards that did now say varies (GL1 A8)', () => {
+        const bare: string[] = [];
+        const varies: string[] = [];
+        for (const card of programCards) {
+            const vm = buildCombatViewModel(encounter([card.id])).hand.find((c) => c.cardId === card.id);
+            if (!vm) continue;
+            if (/(^|\s)X$/.test(vm.face.heroText.trim())) bare.push(`${card.id}: ${vm.face.heroText}`);
+            if (/varies/.test(vm.face.heroText)) varies.push(card.id);
+        }
+        expect(bare).toEqual([]);
+        expect(varies.length).toBeGreaterThan(0);
+    });
+
     it('narrates SACRIFICE and a Global entering play in the log', () => {
         let s = playCombatCard(encounter([SACRIFICE_FREE.id, TURN_GLOBAL.id]), { uid: 'h0' }, false).state;
         s = paid(s, 'h1');

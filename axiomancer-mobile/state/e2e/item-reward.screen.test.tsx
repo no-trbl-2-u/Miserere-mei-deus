@@ -63,6 +63,18 @@ function mount(offer?: (store: AppStore) => void) {
     return { store, view };
 }
 
+describe('/item-reward screen — lane line (LR1a A3)', () => {
+    it('a lane relic hands over with "Lane: Blood Price (while worn)"; a laneless one draws none', () => {
+        mount((store) => offerItemRewardAction(store, relic('relic-bleeding-signet')));
+        expect(screen.getByTestId('item-reward-lane').props.children).toBe('Lane: Blood Price (while worn)');
+    });
+
+    it('the Suppliant\'s Ring draws no lane line', () => {
+        mount((store) => offerItemRewardAction(store, relic(BENCHED_ACCESSORY)));
+        expect(screen.queryByTestId('item-reward-lane')).toBeNull();
+    });
+});
+
 describe('/item-reward screen', () => {
     it('presents the item, its signature skill, and the trade EQUIP would make', () => {
         mount((store) => offerItemRewardAction(store, relic(BENCHED_ACCESSORY)));

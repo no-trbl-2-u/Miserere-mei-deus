@@ -49,6 +49,7 @@ const BLEEDING_SIGNET: Equipment = {
     slot: 'relic',
     statModifiers: [{ stat: 'maxHp', value: 20 }],
     grantsSignature: 'sig-crimson-covenant',
+    laneId: 'blood-price',
 };
 
 /** A fresh copy of a relic (never aliases the library singleton). */
