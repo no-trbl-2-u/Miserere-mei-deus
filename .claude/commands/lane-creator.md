@@ -56,8 +56,9 @@ Say the step back to T in one line before doing anything.
    the ballot shell per `plan/card-ledger/README.md` "Adding the next
    ballot": the data file, a `job` per candidate (never a typed colour), the
    three colours within 27 to 33, the kit tag and the `BALLOTS` entry. Every
-   line clears the scrap floor and every Global opens on a trigger from the
-   closed set (`docs/card-spec.md` §15). Run `node --test
+   line clears the scrap floor, every Global opens on a trigger from the
+   closed set (`docs/card-spec.md` §15), and no line prints a cap ("max n",
+   "max +n", "capped"): T calls out a cap when one is wanted (T, 2026-10-26). Run `node --test
    scripts/ballot-kit.test.mjs`; it must pass. Land it as the plan PR (below)
    and send T the branch preview link for the ballot.
 4. **The vote (T, on the phone).** Nothing to run. Tell T the ballot id and
