@@ -275,7 +275,7 @@ describe('no caps (Phase NC1)', () => {
     });
 
     it("P-06b PAID adds the whole STORM to its GUARD, past the old 12", () => {
-        const guardAt = (storm: number) => play(withWeather(fight(['el-p-06b']), { storm }), 't0', true).guard;
+        const guardAt = (storm: number) => play(withWeather(fight(['el-p-06b']), { storm }), 't0', true).guard ?? 0;
         expect(guardAt(20) - guardAt(0)).toBe(20);
     });
 });
