@@ -82,10 +82,15 @@ the Expo app (`axiomancer-mobile`) presents it.
   (`STARTING_CARD_IDS`, `Combat/combat.rewards.ts`). The deck never drops
   below `MIN_COMBAT_DECK_SIZE` = 10.
 - **Rewards:** a won fight offers 3 cards (`COMBAT_REWARD_OFFER_COUNT`,
-  mobile) drawn uniformly from the whole library but the Curses
-  (`COMBAT_REWARD_POOL`). A cache offers one. The dev menu's REWARD POOL
-  can narrow the draft to card lanes (`CARD_LANES`: the grey office, Blood
-  Price and the Elementalist); there is no lane relic yet. A won elite fight
+  mobile) drawn from `rewardPoolFor`: the cards of every lane in
+  `unlockedLaneIds`, which is the character's two starting lanes
+  (`player.startingLaneIds`, always, worn or not) plus the lane of each
+  relic worn (an unworn relic opens nothing), grey never. A run with no
+  character and no worn lane relic draws the grey office. The guaranteed
+  lane slots (`rewardLaneSlots`, D100) count worn relics only, so starting
+  lanes widen the pool and never add a slot. A cache offers one. The dev
+  menu's REWARD POOL can narrow the draft to card lanes (`CARD_LANES`: the
+  grey office, Blood Price and the Elementalist). A won elite fight
   (`difficulty: 'elite'`, the Green Jelly) pays the elite reward instead
   (`rollEliteReward`, Phase UP1f): the best 3 cards by rarity, one from a
   lane the deck draws on (`deckLaneIds`), or one upgrade of a random owned
@@ -211,8 +216,8 @@ keyword (`EnemyKeyword = never`).
   next SACRIFICE this turn counts twice) has no source yet. Both come only
   from the dev menu's relic chips, which wear the relic while a position is
   free; a relic carried unworn shows NOT WORN in the satchel, its signature
-  off until the player taps WEAR. Relics are accessories and a character wears up
-  to three (`SLOT_CAPACITY.accessory`), so both are worn together and the
+  off until the player taps WEAR. A character wears one weapon, one armor and up
+  to three relics (`SLOT_CAPACITY.relic`); any relic fits any relic slot, so both are worn together and the
   signature bar lists every signature the worn relics grant.
 - **The Open Hand** befriends a foe that has a `friendshipReward` and sits
   under its `hpGate` (the Green Jelly: below 30% VITAE; `Enemy/befriend.ts`).

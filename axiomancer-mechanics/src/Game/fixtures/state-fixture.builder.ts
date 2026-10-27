@@ -64,7 +64,7 @@ const applyPlayer = (overrides: StateFixturePlayer | undefined) => (state: GameS
             equipment: [
                 ...(current.equipment.weapon ? [current.equipment.weapon] : []),
                 ...(current.equipment.armor ? [current.equipment.armor] : []),
-                ...current.equipment.accessories,
+                ...current.equipment.relics,
             ],
         })
         : { ...current, name: overrides.name ?? current.name };

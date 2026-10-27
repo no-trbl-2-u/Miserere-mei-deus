@@ -39,10 +39,10 @@ jest.mock('../EquipmentSlot', () => {
             // spacer for a null slot); the dock stacks all 5 real slots in one
             // column, so this branch is not normally hit.
             if (slot === null || slot === undefined) return null;
-            // The three accessory rows share `key: 'accessory'`; disambiguate the
+            // The three relic rows share `key: 'relic'`; disambiguate the
             // testID by position, mirroring the real component's `slotId`.
             const slotId =
-                slot.accessoryIndex !== undefined ? `${slot.key}-${slot.accessoryIndex}` : slot.key;
+                slot.relicIndex !== undefined ? `${slot.key}-${slot.relicIndex}` : slot.key;
             return React.createElement(
                 TouchableOpacity,
                 {
@@ -57,15 +57,15 @@ jest.mock('../EquipmentSlot', () => {
 });
 
 // The dock renders the full loadout: Weapon, Armor, and the 3 interchangeable
-// accessory positions (Trinket I/II/III). The accessory rows share
-// `key: 'accessory'` and disambiguate via `accessoryIndex`.
+// relic positions (Trinket I/II/III). The relic rows share
+// `key: 'relic'` and disambiguate via `relicIndex`.
 const mockEquippedSlots: EquipmentDockViewModel = {
     slots: [
         { key: 'weapon', label: 'WEAPON', item: { id: 'sword-1', name: 'Iron Sword', sub: 'Weapon' } },
         { key: 'armor', label: 'ARMOR', item: { id: 'armor-1', name: 'Leather Armor', sub: 'Armor' } },
-        { key: 'accessory', accessoryIndex: 0, label: 'TRINKET I', item: { id: 'helm-1', name: 'Iron Helm', sub: 'Accessory' } },
-        { key: 'accessory', accessoryIndex: 1, label: 'TRINKET II', item: { id: 'ring-1', name: 'Bone Ring', sub: 'Accessory' } },
-        { key: 'accessory', accessoryIndex: 2, label: 'TRINKET III', item: null },
+        { key: 'relic', relicIndex: 0, label: 'TRINKET I', item: { id: 'helm-1', name: 'Iron Helm', sub: 'Accessory' } },
+        { key: 'relic', relicIndex: 1, label: 'TRINKET II', item: { id: 'ring-1', name: 'Bone Ring', sub: 'Accessory' } },
+        { key: 'relic', relicIndex: 2, label: 'TRINKET III', item: null },
     ],
     headerLabel: 'equipment dock',
     hintLabel: 'worn vs unworn at a glance',
@@ -80,9 +80,9 @@ const mockEmptySlots: EquipmentDockViewModel = {
     slots: [
         { key: 'weapon', label: 'WEAPON', item: null },
         { key: 'armor', label: 'ARMOR', item: null },
-        { key: 'accessory', accessoryIndex: 0, label: 'TRINKET I', item: null },
-        { key: 'accessory', accessoryIndex: 1, label: 'TRINKET II', item: null },
-        { key: 'accessory', accessoryIndex: 2, label: 'TRINKET III', item: null },
+        { key: 'relic', relicIndex: 0, label: 'TRINKET I', item: null },
+        { key: 'relic', relicIndex: 1, label: 'TRINKET II', item: null },
+        { key: 'relic', relicIndex: 2, label: 'TRINKET III', item: null },
     ],
     headerLabel: 'equipment dock',
     hintLabel: 'worn vs unworn at a glance',
@@ -160,7 +160,7 @@ describe('EquipmentDock', () => {
     });
 
     describe('Slot pairing and grid layout', () => {
-        it('renders all 5 slots (weapon, armor, 3 accessory positions)', () => {
+        it('renders all 5 slots (weapon, armor, 3 relic positions)', () => {
             const { getByTestId } = render(
                 <EquipmentDock
                     vm={mockEquippedSlots}
@@ -171,9 +171,9 @@ describe('EquipmentDock', () => {
 
             expect(getByTestId('equipment-slot-weapon')).toBeDefined();
             expect(getByTestId('equipment-slot-armor')).toBeDefined();
-            expect(getByTestId('equipment-slot-accessory-0')).toBeDefined();
-            expect(getByTestId('equipment-slot-accessory-1')).toBeDefined();
-            expect(getByTestId('equipment-slot-accessory-2')).toBeDefined();
+            expect(getByTestId('equipment-slot-relic-0')).toBeDefined();
+            expect(getByTestId('equipment-slot-relic-1')).toBeDefined();
+            expect(getByTestId('equipment-slot-relic-2')).toBeDefined();
         });
 
         it('passes bare label to all slots consistently', () => {
@@ -190,7 +190,7 @@ describe('EquipmentDock', () => {
             expect(weaponSlot).toBeDefined();
         });
 
-        it('renders the final accessory slot in the stacked column', () => {
+        it('renders the final relic slot in the stacked column', () => {
             const { queryByTestId } = render(
                 <EquipmentDock
                     vm={mockEquippedSlots}
@@ -199,7 +199,7 @@ describe('EquipmentDock', () => {
                 />
             );
 
-            expect(queryByTestId('equipment-slot-accessory-2')).toBeDefined();
+            expect(queryByTestId('equipment-slot-relic-2')).toBeDefined();
         });
     });
 
@@ -220,20 +220,20 @@ describe('EquipmentDock', () => {
             expect(armorSlot.props.accessibilityState.selected).toBe(false);
         });
 
-        it('highlights every accessory position when the accessory slot is selected', () => {
-            // The 3 accessory positions are interchangeable and share the
-            // `accessory` slot key, so selecting one lights all three.
+        it('highlights every relic position when the relic slot is selected', () => {
+            // The 3 relic positions are interchangeable and share the
+            // `relic` slot key, so selecting one lights all three.
             const { getByTestId } = render(
                 <EquipmentDock
                     vm={mockEquippedSlots}
-                    selectedSlot="accessory"
+                    selectedSlot="relic"
                     onSelectSlot={mockOnSelectSlot}
                 />
             );
 
-            expect(getByTestId('equipment-slot-accessory-0').props.accessibilityState.selected).toBe(true);
-            expect(getByTestId('equipment-slot-accessory-1').props.accessibilityState.selected).toBe(true);
-            expect(getByTestId('equipment-slot-accessory-2').props.accessibilityState.selected).toBe(true);
+            expect(getByTestId('equipment-slot-relic-0').props.accessibilityState.selected).toBe(true);
+            expect(getByTestId('equipment-slot-relic-1').props.accessibilityState.selected).toBe(true);
+            expect(getByTestId('equipment-slot-relic-2').props.accessibilityState.selected).toBe(true);
             expect(getByTestId('equipment-slot-weapon').props.accessibilityState.selected).toBe(false);
         });
 
@@ -265,7 +265,7 @@ describe('EquipmentDock', () => {
             expect(mockOnSelectSlot).toHaveBeenCalledWith('weapon');
         });
 
-        it('forwards the accessory slot key when an accessory position is pressed', () => {
+        it('forwards the relic slot key when a relic position is pressed', () => {
             const { getByTestId } = render(
                 <EquipmentDock
                     vm={mockEquippedSlots}
@@ -274,8 +274,8 @@ describe('EquipmentDock', () => {
                 />
             );
 
-            fireEvent.press(getByTestId('equipment-slot-accessory-1'));
-            expect(mockOnSelectSlot).toHaveBeenCalledWith('accessory');
+            fireEvent.press(getByTestId('equipment-slot-relic-1'));
+            expect(mockOnSelectSlot).toHaveBeenCalledWith('relic');
         });
     });
 
@@ -290,7 +290,7 @@ describe('EquipmentDock', () => {
             );
 
             // Verify slots are rendered
-            expect(getByTestId('equipment-slot-accessory-0')).toBeDefined();
+            expect(getByTestId('equipment-slot-relic-0')).toBeDefined();
             expect(getByTestId('equipment-slot-weapon')).toBeDefined();
 
             // Verify content is displayed through Text components
@@ -309,7 +309,7 @@ describe('EquipmentDock', () => {
             );
 
             // Verify slots are rendered
-            expect(getByTestId('equipment-slot-accessory-0')).toBeDefined();
+            expect(getByTestId('equipment-slot-relic-0')).toBeDefined();
             expect(getByTestId('equipment-slot-weapon')).toBeDefined();
 
             // Verify empty content is displayed
@@ -323,12 +323,12 @@ describe('EquipmentDock', () => {
             const { getByTestId } = render(
                 <EquipmentDock
                     vm={mockEquippedSlots}
-                    selectedSlot="accessory"
+                    selectedSlot="relic"
                     onSelectSlot={mockOnSelectSlot}
                 />
             );
 
-            const accessorySlot = getByTestId('equipment-slot-accessory-0');
+            const accessorySlot = getByTestId('equipment-slot-relic-0');
             expect(accessorySlot.props.accessibilityState.selected).toBe(true);
         });
 
@@ -344,12 +344,12 @@ describe('EquipmentDock', () => {
             // Test multiple slot interactions
             fireEvent.press(getByTestId('equipment-slot-weapon'));
             fireEvent.press(getByTestId('equipment-slot-armor'));
-            fireEvent.press(getByTestId('equipment-slot-accessory-0'));
+            fireEvent.press(getByTestId('equipment-slot-relic-0'));
 
             expect(mockOnSelectSlot).toHaveBeenCalledTimes(3);
             expect(mockOnSelectSlot).toHaveBeenNthCalledWith(1, 'weapon');
             expect(mockOnSelectSlot).toHaveBeenNthCalledWith(2, 'armor');
-            expect(mockOnSelectSlot).toHaveBeenNthCalledWith(3, 'accessory');
+            expect(mockOnSelectSlot).toHaveBeenNthCalledWith(3, 'relic');
         });
     });
 
@@ -412,9 +412,9 @@ describe('EquipmentDock', () => {
                 slots: [
                     { key: 'weapon', label: 'WEAPON', item: { id: 'sword-1', name: 'Iron Sword', sub: 'Weapon' } },
                     { key: 'armor', label: 'ARMOR', item: null },
-                    { key: 'accessory', accessoryIndex: 0, label: 'TRINKET I', item: { id: 'helm-1', name: 'Iron Helm', sub: 'Accessory' } },
-                    { key: 'accessory', accessoryIndex: 1, label: 'TRINKET II', item: null },
-                    { key: 'accessory', accessoryIndex: 2, label: 'TRINKET III', item: null },
+                    { key: 'relic', relicIndex: 0, label: 'TRINKET I', item: { id: 'helm-1', name: 'Iron Helm', sub: 'Accessory' } },
+                    { key: 'relic', relicIndex: 1, label: 'TRINKET II', item: null },
+                    { key: 'relic', relicIndex: 2, label: 'TRINKET III', item: null },
                 ],
             };
 

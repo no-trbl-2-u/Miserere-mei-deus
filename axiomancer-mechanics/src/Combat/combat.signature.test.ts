@@ -119,7 +119,7 @@ describe('the Bleeding Signet worn beside the Suppliant\'s Ring', () => {
         const worn = equipItem(deepClone(Player), deepClone(getRelicById('relic-bleeding-signet')!));
         expect(worn.maxHealth).toBe(Player.maxHealth + 20);
         expect(worn.health).toBe(Player.health + 20);
-        expect(worn.equipment.accessories.map(a => a.id)).toEqual(['relic-disarming-plea', 'relic-bleeding-signet']);
+        expect(worn.equipment.relics.map(a => a.id)).toEqual(['relic-disarming-plea', 'relic-bleeding-signet']);
         const s = initializeCombatEncounter(worn, FloatEye, ['grey-strike'], 1);
         expect(s.signatures).toEqual([OPEN_HAND, COVENANT]);
         expect(s.player.maxHealth).toBe(Player.maxHealth + 20);

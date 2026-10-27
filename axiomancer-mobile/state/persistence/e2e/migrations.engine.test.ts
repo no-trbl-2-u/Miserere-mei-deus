@@ -179,8 +179,9 @@ describe('migrations.engine', () => {
             // v34: the parked world's content hop;
             // v35: the deleted relic hop;
             // v36: the XP curve hop; v37: the level-20 curve hop;
-            // v38: the Brine Hag to Green Jelly rename hop.
-            expect(GAME_STATE_VERSION).toBe(38);
+            // v38: the Brine Hag to Green Jelly rename hop;
+            // v39: the relic slot hop.
+            expect(GAME_STATE_VERSION).toBe(39);
             expect(result.version).toBe(GAME_STATE_VERSION);
         });
     });

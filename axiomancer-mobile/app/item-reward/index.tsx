@@ -11,7 +11,7 @@
  *   - CONFIRM — the item goes to the satchel;
  *   - EQUIP   — the item goes to the satchel AND onto the body.
  * Both route through the engine's shared `grantItem` path, so nothing is ever
- * destroyed and a full accessory row swaps instead of silently no-oping.
+ * destroyed and a full relic row swaps instead of silently no-oping.
  * EQUIP is HIDDEN, not greyed, for an item that cannot be worn.
  *
  * ## Dismissal posture — deliberately the inverse of /cache

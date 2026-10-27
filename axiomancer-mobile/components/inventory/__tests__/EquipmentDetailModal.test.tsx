@@ -22,7 +22,7 @@ const RING = getRelicById('relic-disarming-plea')!;
 const SIGNET = getRelicById('relic-bleeding-signet')!;
 
 function trinket(id: string, name: string): Equipment {
-    return { id, name, description: '', category: 'equipment', slot: 'accessory' };
+    return { id, name, description: '', category: 'equipment', slot: 'relic' };
 }
 
 function stateWith(inventory: readonly Equipment[], worn: readonly Equipment[]) {

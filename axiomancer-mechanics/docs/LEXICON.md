@@ -33,8 +33,8 @@
   Doxa/Lemma/Thesis/Theorem/Axiom/Aporia) is the QUALITY axis; rarity
   derives from rank.
 - **Equipment (post-phase-18):** 5 pieces across 3 slot kinds — 1
-  weapon, 1 armor, 3 accessories (`AccessoryKind`: head / hands / feet
-  / amulet / ring / charm). The 7-slot model and (per the phase 19-23
+  weapon, 1 armor, 3 relics. A relic may be named anything and fits any
+  relic position; it has no kind (D105, v39). The 7-slot model and (per the phase 19-23
   epic, as it ships) the procedural modifier/rarity/affix machinery are
   legacy.
 - **The colour-match bonus is RETIRED** (D79, 2026-10-10): a die of the

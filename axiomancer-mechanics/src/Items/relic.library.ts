@@ -12,9 +12,10 @@
  * ring they were given; the dev menu's relic chips hand either over, worn
  * while a position is free.
  *
- * Relics are accessories, and a character wears up to three
- * (`SLOT_CAPACITY.accessory`), so the Ring and the Signet are worn together
- * and both signatures are on the bar.
+ * Every relic takes the `relic` slot, and a character wears up to three
+ * (`SLOT_CAPACITY.relic`), so the Ring and the Signet are worn together
+ * and both signatures are on the bar. A relic's flavour (a ring, a brooch, a
+ * circlet) is its name alone; any relic fits any relic position.
  */
 
 import type { Equipment } from './types';
@@ -30,8 +31,7 @@ const SUPPLIANTS_RING: Equipment = {
     name: "Suppliant's Ring",
     description: 'Offer a foe that can be befriended the choice of mercy, once it is low enough.',
     category: 'equipment',
-    slot: 'accessory',
-    accessoryKind: 'ring',
+    slot: 'relic',
     statModifiers: [],
     grantsSignature: 'sig-disarming-plea',
 };
@@ -46,8 +46,7 @@ const BLEEDING_SIGNET: Equipment = {
     name: 'Bleeding Signet',
     description: '+20 max VITAE while worn. TETHER 3, and your next SACRIFICE this turn counts twice.',
     category: 'equipment',
-    slot: 'accessory',
-    accessoryKind: 'ring',
+    slot: 'relic',
     statModifiers: [{ stat: 'maxHp', value: 20 }],
     grantsSignature: 'sig-crimson-covenant',
     laneId: 'blood-price',
@@ -72,20 +71,16 @@ export function getRelicById(id: string): Equipment | undefined {
 }
 
 /**
- * The signatures granted by a worn loadout, in stable slot order (weapon, armor,
- * accessories), de-duplicated (first occurrence wins). Replaces
+ * The signatures granted by a worn loadout: the worn relics' `grantsSignature`
+ * values in relic-position order, de-duplicated (first occurrence wins). Only
+ * the relic slot grants signatures; the weapon and armor never do. Replaces
  * `SIGNATURE_KITS[archetype]` at combat-init. An empty loadout yields `[]`
  * (combat legally begins with zero signatures and resolves via cards).
  */
 export function getSignaturesForLoadout(loadout: EquipmentLoadout): SignatureSkillId[] {
-    const ordered: Equipment[] = [];
-    if (loadout.weapon) ordered.push(loadout.weapon);
-    if (loadout.armor) ordered.push(loadout.armor);
-    for (const a of loadout.accessories) ordered.push(a);
-
     const out: SignatureSkillId[] = [];
     const seen = new Set<SignatureSkillId>();
-    for (const piece of ordered) {
+    for (const piece of loadout.relics) {
         const sig = piece.grantsSignature;
         if (sig && !seen.has(sig)) {
             seen.add(sig);

@@ -242,10 +242,10 @@ function buildEquipmentModal(player: Character, item: Item): ItemModalViewModel 
         const { index } = displacedBy(player, eq);
         afterChar = engineEquipItem(player, eq, index === null ? undefined : { replaceIndex: index });
     } else {
-        const accessoryIndex = eq.slot === 'accessory'
-            ? player.equipment.accessories.findIndex((a) => a.id === eq.id)
+        const relicIndex = eq.slot === 'relic'
+            ? player.equipment.relics.findIndex((a) => a.id === eq.id)
             : undefined;
-        afterChar = engineUnequipItem(player, eq.slot, accessoryIndex);
+        afterChar = engineUnequipItem(player, eq.slot, relicIndex);
     }
 
     const statDeltas = computeStatDeltas(player, afterChar);

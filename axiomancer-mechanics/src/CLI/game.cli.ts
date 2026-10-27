@@ -600,14 +600,13 @@ async function characterTab(store: GameStoreHandle): Promise<void> {
             log(`  ${label.padEnd(12)} (empty)`);
         } else {
             const sig = eq.grantsSignature ? ` [grants ${eq.grantsSignature}]` : '';
-            const kind = eq.accessoryKind ? ` (${eq.accessoryKind})` : '';
-            log(`  ${label.padEnd(12)} ${eq.name}${sig}${kind}`);
+            log(`  ${label.padEnd(12)} ${eq.name}${sig}`);
         }
     };
     logSlot('weapon', loadout.weapon);
     logSlot('armor', loadout.armor);
-    for (let i = 0; i < SLOT_CAPACITY.accessory; i++) {
-        logSlot(`accessory ${i + 1}`, loadout.accessories[i] ?? null);
+    for (let i = 0; i < SLOT_CAPACITY.relic; i++) {
+        logSlot(`Relic ${i + 1}`, loadout.relics[i] ?? null);
     }
 
     log('\nActive effects:');
@@ -812,7 +811,7 @@ async function devTab(store: GameStoreHandle): Promise<void> {
                 type: 'rawlist', name: 'templateId', message: 'Which template?',
                 choices: templates.map(id => ({ name: id, value: id })),
             }]);
-            const slots: EquipmentSlot[] = ['weapon', 'armor', 'accessory'];
+            const slots: EquipmentSlot[] = ['weapon', 'armor', 'relic'];
             const { slot } = await prompt<{ slot: EquipmentSlot }>([{
                 type: 'rawlist', name: 'slot', message: 'Slot:',
                 choices: slots.map(s => ({ name: s, value: s })),

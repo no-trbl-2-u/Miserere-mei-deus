@@ -39,7 +39,7 @@ const LANES: readonly CardLane[] = [
 ];
 
 function relic(id: string, laneId?: string): Equipment {
-    return { id, name: id, description: '', category: 'equipment', slot: 'accessory', statModifiers: [], laneId };
+    return { id, name: id, description: '', category: 'equipment', slot: 'relic', statModifiers: [], laneId };
 }
 
 /** The fixture relic library: one relic per fixture lane, one naming grey, one naming no lane. */
@@ -64,12 +64,12 @@ function seededRng(seed: number): () => number {
     };
 }
 
-/** A fresh player wearing `worn` (accessories) and carrying `carried` unworn. */
+/** A fresh player wearing `worn` (relics) and carrying `carried` unworn. */
 function player(worn: Equipment[] = [], carried: Equipment[] = []): Character {
     return {
         ...deepClone(Player),
         inventory: [...worn, ...carried],
-        equipment: { weapon: null, armor: null, accessories: worn },
+        equipment: { weapon: null, armor: null, relics: worn },
         devRewardLaneIds: undefined,
     };
 }
@@ -112,7 +112,7 @@ describe('A2 · the unlocked lanes are the worn relics\' lanes', () => {
 
     it('unequipping it removes the lane again', () => {
         const worn = player([saved('fx-relic-blood')]);
-        const unequipped = { ...worn, equipment: { weapon: null, armor: null, accessories: [] } };
+        const unequipped = { ...worn, equipment: { weapon: null, armor: null, relics: [] } };
         expect(unlockedLaneIds(worn, LANES, RELICS)).toEqual(['fx-blood']);
         expect(unlockedLaneIds(unequipped, LANES, RELICS)).toEqual([]);
         expect(rewardPoolFor(unequipped, LANES, RELICS)).toEqual([...GREY_LANE.cardIds]);
@@ -129,9 +129,9 @@ describe('A2 · the unlocked lanes are the worn relics\' lanes', () => {
         expect(unlockedLaneIds(p, LANES, RELICS)).toEqual(['fx-blood', 'fx-ember']);
     });
 
-    it('reads worn weapon and armor pieces too', () => {
-        const p = { ...player(), equipment: { weapon: saved('fx-relic-ember'), armor: null, accessories: [] } };
-        expect(unlockedLaneIds(p, LANES, RELICS)).toEqual(['fx-ember']);
+    it('reads the relic slot only: a lane piece worn as a weapon or armor opens nothing', () => {
+        const p = { ...player(), equipment: { weapon: saved('fx-relic-ember'), armor: saved('fx-relic-blood'), relics: [] } };
+        expect(unlockedLaneIds(p, LANES, RELICS)).toEqual([]);
     });
 });
 

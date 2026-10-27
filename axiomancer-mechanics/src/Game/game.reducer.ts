@@ -127,8 +127,11 @@ import { generateRunId } from './run-loop';
  *   is dropped.
  * - v36: levels cost a rising `L × 250` XP; a save's progress is
  *   re-expressed on that curve.
+ * - v39: the third slot kind is `relic` (one weapon, one armor, three
+ *   relics); the old slot name, its flavour kind and the loadout row named
+ *   after it are re-slotted onto the relic model.
  */
-export const GAME_STATE_VERSION = 38;
+export const GAME_STATE_VERSION = 39;
 
 /** Options for {@link createNewGameState}. */
 export interface NewGameOptions {
