@@ -159,9 +159,9 @@ describe('selectTooltipContentFor', () => {
             expect(typeof content?.body).toBe('string');
         });
 
-        it("renders 'relic' as TRINKET in the title (chrome convention)", () => {
+        it("renders 'relic' as RELIC in the title (chrome convention)", () => {
             const content = selectTooltipContentFor('slot', 'relic', EMPTY_STATE);
-            expect(content?.title).toBe('TRINKET');
+            expect(content?.title).toBe('RELIC');
         });
 
         it('returns null for an unknown slot id', () => {

@@ -19,7 +19,8 @@ import {
 } from '@mechanics';
 
 import { freezeViewModel } from './freeze';
-import { SLOT_CAPACITY, getSignatureSkill } from '@mechanics';
+import { getSignatureSkill } from '@mechanics';
+import { LOADOUT_ROWS, wornAtRow } from './loadout';
 import type { Equipment } from '@mechanics';
 
 export type StanceKey = 'heart' | 'body' | 'mind';
@@ -164,17 +165,6 @@ export interface CharacterViewModel {
     };
 }
 
-// Equipment slot kinds, matching the engine's Phase-18 EquipmentSlot literals.
-type SlotKey = 'weapon' | 'armor' | 'relic';
-
-const SLOT_LABELS: Record<SlotKey, string> = {
-    weapon: 'Weapon',
-    armor: 'Armor',
-    // [3.0] DRIFT fix: aligned to 'Trinket' (matches the inventory dock's
-    // 'TRINKET' chrome). The three relic rows share this label.
-    relic: 'Trinket',
-};
-
 function buildBase(player: Character): readonly BaseStatRow[] {
     const { heart, body, mind } = player.baseStats;
     return [
@@ -221,20 +211,12 @@ function equipmentRow(
 }
 
 function buildEquipment(player: Character): readonly EquipmentSlotRow[] {
-    // Worn state is the engine loadout, `player.equipment`. Five rows:
-    // Weapon, Armor, then three interchangeable relic positions.
-    const { weapon, armor, relics } = player.equipment;
-    const rows: EquipmentSlotRow[] = [
-        equipmentRow('weapon', SLOT_LABELS.weapon, weapon ?? undefined),
-        equipmentRow('armor', SLOT_LABELS.armor, armor ?? undefined),
-    ];
-    for (let i = 0; i < SLOT_CAPACITY.relic; i++) {
-        rows.push({
-            ...equipmentRow('relic', SLOT_LABELS.relic, relics[i]),
-            relicIndex: i as 0 | 1 | 2,
-        });
-    }
-    return rows;
+    // Worn state is the engine loadout, `player.equipment`. Five rows in the
+    // dock's order, from `LOADOUT_ROWS`: Weapon, Armor, then three Relics.
+    return LOADOUT_ROWS.map((row) => ({
+        ...equipmentRow(row.key, row.selfLabel, wornAtRow(player.equipment, row) ?? undefined),
+        ...(row.relicIndex !== undefined ? { relicIndex: row.relicIndex } : {}),
+    }));
 }
 
 /** "3 levels gained · 3 points banked"; singular for one. */

@@ -4,7 +4,7 @@ import { EquipmentSlot } from '../EquipmentSlot';
 
 const mockSlot = {
     key: 'relic' as const,
-    label: 'Trinket',
+    label: 'Relic',
     item: {
         id: 'item-1',
         name: 'Iron Helm',
@@ -35,7 +35,7 @@ describe('EquipmentSlot', () => {
             />
         );
 
-        expect(getByText('Trinket')).toBeDefined();
+        expect(getByText('Relic')).toBeDefined();
         expect(getByText('Iron Helm')).toBeDefined();
         expect(getByTestId('dock-slot-relic')).toBeDefined();
     });
@@ -87,7 +87,7 @@ describe('EquipmentSlot', () => {
         const positioned = {
             key: 'relic' as const,
             relicIndex: 1 as const,
-            label: 'Trinket II',
+            label: 'Relic II',
             item: null,
         };
         const { getByTestId } = render(

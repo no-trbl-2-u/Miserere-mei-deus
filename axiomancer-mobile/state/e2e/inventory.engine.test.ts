@@ -774,9 +774,9 @@ describe('selectInventoryViewModel: equipmentDock', () => {
     }> = [
         { key: 'weapon', label: 'WEAPON' },
         { key: 'armor', label: 'ARMOR' },
-        { key: 'relic', label: 'TRINKET I', relicIndex: 0 },
-        { key: 'relic', label: 'TRINKET II', relicIndex: 1 },
-        { key: 'relic', label: 'TRINKET III', relicIndex: 2 },
+        { key: 'relic', label: 'RELIC I', relicIndex: 0 },
+        { key: 'relic', label: 'RELIC II', relicIndex: 1 },
+        { key: 'relic', label: 'RELIC III', relicIndex: 2 },
     ];
 
     it('ships 5 slots in the design grid order with chrome labels and null items by default', () => {

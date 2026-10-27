@@ -19,7 +19,7 @@ import { ITEM_GLYPH_BY_ID, getItemGlyph, type ItemGlyphTable } from '@/component
 import { withAllProviders } from '@/test-utils/withAllProviders';
 import type { InventoryCategory } from '@/state/presenters/inventory.engine';
 
-const SLOT_SUB: Record<string, string> = { weapon: 'Weapon', armor: 'Armor', relic: 'Trinket' };
+const SLOT_SUB: Record<string, string> = { weapon: 'Weapon', armor: 'Armor', relic: 'Relic' };
 
 interface LibraryItem {
     id: string;

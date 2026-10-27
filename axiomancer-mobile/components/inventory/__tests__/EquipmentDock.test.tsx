@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
+import Svg from 'react-native-svg';
 import { EquipmentDock } from '../EquipmentDock';
 import type { EquipmentDockViewModel } from '@/state/presenters/inventory.engine';
 
@@ -34,6 +35,10 @@ jest.mock('../EquipmentSlot', () => {
         }) => {
             const React = require('react');
             const { TouchableOpacity, Text } = require('react-native');
+            // The icon is the one real (unmocked) piece of the stand-in: it is
+            // what the real EquipmentSlot renders for a filled slot, so the
+            // icon and its a11y label stay under this file's coverage too.
+            const { ItemGlyph } = require('../ItemCard');
 
             // Defensive null-slot path (the real EquipmentSlot renders an empty
             // spacer for a null slot); the dock stacks all 5 real slots in one
@@ -50,6 +55,13 @@ jest.mock('../EquipmentSlot', () => {
                     accessibilityState: { selected },
                     onPress: () => onPress(slot.key),
                 },
+                slot.item
+                    ? React.createElement(ItemGlyph, {
+                        category: 'equipment',
+                        sub: slot.item.sub,
+                        itemId: slot.item.id,
+                    })
+                    : null,
                 React.createElement(Text, {}, `${slot.label} - ${slot.item?.name || 'empty'}`)
             );
         },
@@ -63,9 +75,9 @@ const mockEquippedSlots: EquipmentDockViewModel = {
     slots: [
         { key: 'weapon', label: 'WEAPON', item: { id: 'sword-1', name: 'Iron Sword', sub: 'Weapon' } },
         { key: 'armor', label: 'ARMOR', item: { id: 'armor-1', name: 'Leather Armor', sub: 'Armor' } },
-        { key: 'relic', relicIndex: 0, label: 'TRINKET I', item: { id: 'helm-1', name: 'Iron Helm', sub: 'Accessory' } },
-        { key: 'relic', relicIndex: 1, label: 'TRINKET II', item: { id: 'ring-1', name: 'Bone Ring', sub: 'Accessory' } },
-        { key: 'relic', relicIndex: 2, label: 'TRINKET III', item: null },
+        { key: 'relic', relicIndex: 0, label: 'RELIC I', item: { id: 'helm-1', name: 'Iron Helm', sub: 'Relic' } },
+        { key: 'relic', relicIndex: 1, label: 'RELIC II', item: { id: 'ring-1', name: 'Bone Ring', sub: 'Relic' } },
+        { key: 'relic', relicIndex: 2, label: 'RELIC III', item: null },
     ],
     headerLabel: 'equipment dock',
     hintLabel: 'worn vs unworn at a glance',
@@ -80,9 +92,9 @@ const mockEmptySlots: EquipmentDockViewModel = {
     slots: [
         { key: 'weapon', label: 'WEAPON', item: null },
         { key: 'armor', label: 'ARMOR', item: null },
-        { key: 'relic', relicIndex: 0, label: 'TRINKET I', item: null },
-        { key: 'relic', relicIndex: 1, label: 'TRINKET II', item: null },
-        { key: 'relic', relicIndex: 2, label: 'TRINKET III', item: null },
+        { key: 'relic', relicIndex: 0, label: 'RELIC I', item: null },
+        { key: 'relic', relicIndex: 1, label: 'RELIC II', item: null },
+        { key: 'relic', relicIndex: 2, label: 'RELIC III', item: null },
     ],
     headerLabel: 'equipment dock',
     hintLabel: 'worn vs unworn at a glance',
@@ -294,9 +306,25 @@ describe('EquipmentDock', () => {
             expect(getByTestId('equipment-slot-weapon')).toBeDefined();
 
             // Verify content is displayed through Text components
-            expect(getByText('TRINKET I - Iron Helm')).toBeDefined();
-            expect(getByText('TRINKET II - Bone Ring')).toBeDefined();
+            expect(getByText('RELIC I - Iron Helm')).toBeDefined();
+            expect(getByText('RELIC II - Bone Ring')).toBeDefined();
             expect(getByText('WEAPON - Iron Sword')).toBeDefined();
+        });
+
+        it('renders the Relic item card icon and its accessibility label for a worn relic', () => {
+            const { UNSAFE_getAllByType } = render(
+                <EquipmentDock
+                    vm={mockEquippedSlots}
+                    selectedSlot={null}
+                    onSelectSlot={mockOnSelectSlot}
+                />
+            );
+
+            const svgs = UNSAFE_getAllByType(Svg);
+            const relicIcon = svgs.find(
+                (svg) => svg.props.accessibilityLabel === 'Relic equipment icon'
+            );
+            expect(relicIcon).toBeDefined();
         });
 
         it('displays empty slots correctly', () => {
@@ -313,7 +341,7 @@ describe('EquipmentDock', () => {
             expect(getByTestId('equipment-slot-weapon')).toBeDefined();
 
             // Verify empty content is displayed
-            expect(getByText('TRINKET I - empty')).toBeDefined();
+            expect(getByText('RELIC I - empty')).toBeDefined();
             expect(getByText('WEAPON - empty')).toBeDefined();
         });
     });
@@ -412,9 +440,9 @@ describe('EquipmentDock', () => {
                 slots: [
                     { key: 'weapon', label: 'WEAPON', item: { id: 'sword-1', name: 'Iron Sword', sub: 'Weapon' } },
                     { key: 'armor', label: 'ARMOR', item: null },
-                    { key: 'relic', relicIndex: 0, label: 'TRINKET I', item: { id: 'helm-1', name: 'Iron Helm', sub: 'Accessory' } },
-                    { key: 'relic', relicIndex: 1, label: 'TRINKET II', item: null },
-                    { key: 'relic', relicIndex: 2, label: 'TRINKET III', item: null },
+                    { key: 'relic', relicIndex: 0, label: 'RELIC I', item: { id: 'helm-1', name: 'Iron Helm', sub: 'Relic' } },
+                    { key: 'relic', relicIndex: 1, label: 'RELIC II', item: null },
+                    { key: 'relic', relicIndex: 2, label: 'RELIC III', item: null },
                 ],
             };
 
