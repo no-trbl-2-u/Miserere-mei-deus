@@ -297,6 +297,10 @@ no copies; 7 red, 6 blue, 7 purple.
 | Blue | P-02, P-08, P-10, E-01, E-03, M-01 |
 | Purple | P-07, E-05, E-06, E-09, M-06, M-07, M-10 |
 
+### Two more rules (T, same sitting)
+
+| Call | Ruling |
+|---|---|
 | M-09 "if discarded" | T: "There's definitely a discard by choice. There's a trash can icon to the left in combat. It nets you 1 conviction." The manual discard is the scrap (`discardCombatCard`); M-09's THORNS 2 fires on a scrap and on a random discard. It is a property of the card, printed once, whichever line would have been played. |
 | P-07 with no other card | T: "Not Paid you can't. The free line can be played without discarding." PAID is refused (the shake) when no other card is in hand, as every PAID discard line is; FREE plays. |
 
