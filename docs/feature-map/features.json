@@ -3013,6 +3013,12 @@
     {
       "kind": "coupling",
       "from": "route:character-select",
+      "to": "area:Enemy",
+      "file": "axiomancer-mobile/state/presenters/rest.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/GameStoreProvider.tsx"
     },
