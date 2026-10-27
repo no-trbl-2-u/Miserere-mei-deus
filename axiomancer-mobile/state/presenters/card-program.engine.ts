@@ -136,6 +136,9 @@ const FREE_CELL: readonly { re: RegExp; keyword: string; value: (m: RegExpMatchA
     { re: /\bBLIZZARD\b/, keyword: 'BLIZZARD', value: () => 'X' },
     { re: /\bINFERNO\b/, keyword: 'INFERNO', value: () => 'X' },
     { re: /\bSTORM\b/, keyword: 'STORM', value: () => 'X' },
+    // The spikes read off the fight ("THORNS equal to half the damage you've done").
+    { re: /\bTHORNS\b/, keyword: 'THORNS', value: () => 'X' },
+    { re: /\bREFLECT\b/, keyword: 'REFLECT', value: () => 'X' },
 ];
 
 /**

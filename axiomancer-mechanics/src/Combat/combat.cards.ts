@@ -341,7 +341,7 @@ export function programFaceText(card: Card): { free: string; paid: string } {
     }
     return {
         free: p.free ? programText(p.free.text, undefined) : 'no effect.',
-        paid: p.paid ? programText(p.paid.text, undefined) : 'no effect.',
+        paid: p.paid ? programText(p.paid.text, undefined) + (p.onDiscard ? ` ${programText(p.onDiscard.text, undefined)}` : '') : 'no effect.',
     };
 }
 

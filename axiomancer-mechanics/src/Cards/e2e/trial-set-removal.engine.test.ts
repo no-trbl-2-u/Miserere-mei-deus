@@ -2,7 +2,7 @@
  * Hermetic E2E — a trial set comes out cleanly (plan/revamp/cards.md →
  * "The trial set").
  *
- * The Blood Price and Elementalist sets' modules are replaced by empty sets,
+ * The Blood Price, Elementalist and Defender sets' modules are replaced by empty sets,
  * which is what every consumer sees once their files and their `TRIAL_SETS`
  * lines are deleted.
  * The game must still run: the library is the grey office, the lane
@@ -22,6 +22,9 @@ vi.mock('../library/blood-price.cards', () => ({
 }));
 vi.mock('../library/elementalist.cards', () => ({
     ELEMENTALIST_SET: { id: 'elementalist', cards: [], lanes: [] },
+}));
+vi.mock('../library/defender.cards', () => ({
+    DEFENDER_SET: { id: 'defender', cards: [], lanes: [] },
 }));
 
 import { cardLibrary, getCardById } from '../cards.library';
@@ -75,6 +78,8 @@ const ALLOWED = new Set([
     path.join('axiomancer-mechanics', 'src', 'Cards', 'e2e', 'blood-price.engine.test.ts'),
     path.join('axiomancer-mechanics', 'src', 'Cards', 'library', 'elementalist.cards.ts'),
     path.join('axiomancer-mechanics', 'src', 'Cards', 'e2e', 'elementalist.engine.test.ts'),
+    path.join('axiomancer-mechanics', 'src', 'Cards', 'library', 'defender.cards.ts'),
+    path.join('axiomancer-mechanics', 'src', 'Cards', 'e2e', 'defender.engine.test.ts'),
     path.join('axiomancer-mobile', 'assets', 'images', 'cards', 'index.ts'),
 ]);
 const SKIP_DIRS = new Set(['node_modules', '.expo', '.audit-dist', '.smoke-dist', 'dist', 'android', 'ios', 'screenshots']);
@@ -91,7 +96,7 @@ function codeFiles(dir: string, out: string[] = []): string[] {
 }
 
 describe('no code outside the set names a trial card id', () => {
-    it('only the set files and their own tests carry a bp- or el- card id', () => {
+    it('only the set files and their own tests carry a bp-, el- or df- card id', () => {
         const root = path.resolve(__dirname, '../../../..');
         const files = [
             ...codeFiles(path.join(root, 'axiomancer-mechanics', 'src')),
@@ -99,7 +104,7 @@ describe('no code outside the set names a trial card id', () => {
         ];
         const offenders = files
             .filter(f => !ALLOWED.has(path.relative(root, f)))
-            .filter(f => /['"`](bp-[a-z0-9-]+|el-[pem]-\d{2}[a-z]\+*)['"`]/.test(fs.readFileSync(f, 'utf8')))
+            .filter(f => /['"`](bp-[a-z0-9-]+|el-[pem]-\d{2}[a-z]\+*|df-[pem]-\d{2}[a-z]\+*)['"`]/.test(fs.readFileSync(f, 'utf8')))
             .map(f => path.relative(root, f));
         expect(offenders).toEqual([]);
         // The walk reads every file in two packages; a loaded full verify pushed it past the 5s default.
