@@ -33,27 +33,22 @@ export interface BaseItem {
 
 /**
  * Equipment slot kinds. A character wears at most 5 pieces: 1 weapon,
- * 1 armor, 3 accessories (see `SLOT_CAPACITY`). The save migration maps old
- * `head`/`hands`/`feet` slots into `accessory` as `AccessoryKind`s and `body`
- * into `armor` (torso wear is armor, not an accessory); see `LEGACY_SLOT_MAP`.
+ * 1 armor, 3 relics (see `SLOT_CAPACITY`). A relic may be named anything (a
+ * ring, a brooch, a circlet); every relic fits any of the three relic
+ * positions, and its flavour is its name and description alone. The save
+ * migration maps old `head`/`hands`/`feet` slots into `relic` and `body` into
+ * `armor`; see `LEGACY_SLOT_MAP` and `reslotRelicPiece`.
  */
-export type EquipmentSlot = 'weapon' | 'armor' | 'accessory';
-
-/**
- * The kind of an `accessory`-slot piece. Explicit and deliberately
- * extensible — adding a kind later is additive (no slot change). Set on an
- * `Equipment` iff `slot === 'accessory'`; absent on weapons and armor.
- */
-export type AccessoryKind = 'head' | 'hands' | 'feet' | 'amulet' | 'ring' | 'charm';
+export type EquipmentSlot = 'weapon' | 'armor' | 'relic';
 
 /**
  * Worn capacity per slot kind. The wear-cap of 5 is not a bolt-on
- * counter — it *is* the slot model: 1 weapon + 1 armor + 3 accessories.
+ * counter — it *is* the slot model: 1 weapon + 1 armor + 3 relics.
  */
 export const SLOT_CAPACITY: Record<EquipmentSlot, number> = {
     weapon: 1,
     armor: 1,
-    accessory: 3,
+    relic: 3,
 };
 
 /**
@@ -63,9 +58,8 @@ export const SLOT_CAPACITY: Record<EquipmentSlot, number> = {
  * one `grantsSignature`. Nothing else drives combat.
  *
  * @property category       - Always `'equipment'`.
- * @property slot           - The equipment slot this item occupies.
- * @property accessoryKind  - Set iff `slot === 'accessory'`; the worn
- *                            flavour (head / hands / feet / amulet / ring / charm).
+ * @property slot           - The equipment slot this item occupies; a piece
+ *                            has exactly one slot kind.
  * @property statModifiers  - Persistent stat lines; only `maxHp`, folded onto
  *                            `maxHealth` at equip-time.
  * @property grantsSignature - The one signature skill this signet relic grants
@@ -77,7 +71,6 @@ export const SLOT_CAPACITY: Record<EquipmentSlot, number> = {
 export interface Equipment extends BaseItem {
     category: 'equipment';
     slot: EquipmentSlot;
-    accessoryKind?: AccessoryKind;
     statModifiers?: StatModifier[];
     grantsSignature?: SignatureSkillId;
 }

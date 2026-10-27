@@ -105,7 +105,7 @@ describe('CombatVictoryPanel: render contract', () => {
                     rewards: {
                         ...BASE_VM.rewards,
                         loot: [
-                            { name: 'Iron-Tongue Shard', slot: 'accessory', rarity: 'rare' },
+                            { name: 'Iron-Tongue Shard', slot: 'relic', rarity: 'rare' },
                             { name: "Hierarch's Tooth", slot: 'weapon', rarity: 'unique' },
                         ],
                     },
@@ -115,7 +115,7 @@ describe('CombatVictoryPanel: render contract', () => {
         );
         expect(tree.queryByText('Iron-Tongue Shard')).not.toBeNull();
         expect(tree.queryByText("Hierarch's Tooth")).not.toBeNull();
-        expect(tree.queryByText('ACCESSORY')).not.toBeNull();
+        expect(tree.queryByText('RELIC')).not.toBeNull();
         expect(tree.queryByText('WEAPON')).not.toBeNull();
         // The empty flavor line is suppressed.
         expect(tree.queryByTestId('combat-victory-panel-loot-empty')).toBeNull();
@@ -146,7 +146,7 @@ describe('CombatVictoryPanel: rarity rail affordances (Phase 135)', () => {
     }
 
     it('paints the uncommon rail green and labels "one affix"', () => {
-        const tree = renderLoot([{ name: 'Green Charm', slot: 'accessory', rarity: 'uncommon' }]);
+        const tree = renderLoot([{ name: 'Green Charm', slot: 'relic', rarity: 'uncommon' }]);
         expect(flatBg(tree.getByTestId('loot-rarity-0'))).toBe(AXM.heal);
         expect(tree.getByTestId('loot-row-0').props.accessibilityLabel)
             .toContain('uncommon, one affix');

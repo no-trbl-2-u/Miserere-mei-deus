@@ -36,7 +36,7 @@ describe('a fresh run starts with no relic (SG1 A1)', () => {
         const state = store.getState();
         expect(state.currentEncounter).toBeDefined();
         expect(state.player.inventory.filter((i: Item) => isEquipment(i))).toEqual([]);
-        expect(state.player.equipment.accessories).toEqual([]);
+        expect(state.player.equipment.relics).toEqual([]);
         expect(state.itemReward.queue).toEqual([]);
         expect(selectHasPendingItemReward(state)).toBe(false);
 

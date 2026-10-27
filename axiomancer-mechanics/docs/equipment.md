@@ -8,7 +8,7 @@ engine's equipment code.
 
 One piece of equipment exists: the **Suppliant's Ring**
 (`relic-disarming-plea`, [`src/Items/relic.library.ts`](../src/Items/relic.library.ts)),
-an accessory of kind `ring`. It has no stat line and grants one signature,
+a relic (its slot is `relic`; that it is a ring is its name alone). It has no stat line and grants one signature,
 The Open Hand (`sig-disarming-plea`). Nothing else in Act 1 grants
 equipment: caches never yield it (`src/Items/cache-reward.ts` rolls
 consumables only) and Act 1 has no shops.
@@ -17,9 +17,11 @@ consumables only) and Act 1 has no shops.
 
 A character wears up to five pieces across three slot kinds
 (`SLOT_CAPACITY`, [`src/Items/types.ts`](../src/Items/types.ts)): one
-`weapon`, one `armor` and three interchangeable `accessory` positions. The
-worn set is `Character.equipment: EquipmentLoadout`
-(`{ weapon, armor, accessories[] }`, [`src/Character/types.ts`](../src/Character/types.ts));
+`weapon`, one `armor` and three interchangeable `relic` positions. A relic
+can be named anything (a ring, a brooch, a circlet) and fits any of the three
+relic positions; a piece has exactly one slot kind, so a weapon or armor never
+fills a relic position. The worn set is `Character.equipment: EquipmentLoadout`
+(`{ weapon, armor, relics[] }`, [`src/Character/types.ts`](../src/Character/types.ts));
 `emptyLoadout()` is the empty one.
 
 ## The `Equipment` shape
@@ -27,14 +29,15 @@ worn set is `Character.equipment: EquipmentLoadout`
 ```ts
 interface Equipment extends BaseItem {
     category: 'equipment';
-    slot: 'weapon' | 'armor' | 'accessory';
-    accessoryKind?: 'head' | 'hands' | 'feet' | 'amulet' | 'ring' | 'charm'; // iff accessory
+    slot: 'weapon' | 'armor' | 'relic';
     statModifiers?: StatModifier[];     // only { stat: 'maxHp', value }
     grantsSignature?: SignatureSkillId; // the signature it grants while worn
 }
 ```
 
-A relic is an `Equipment` with `grantsSignature` set.
+A relic is an `Equipment` in the `relic` slot with `grantsSignature` set.
+Only the relic slot grants signatures (and reward lanes); weapon and armor
+carry neither.
 
 ## What wearing does
 
@@ -47,8 +50,8 @@ no procs.
   and level-up add it back when they rebuild `maxHealth`. The ring has no
   `maxHp` line, so today this is always 0.
 - **Signatures.** Combat start sets `CombatEncounterState.signatures` from
-  `getSignaturesForLoadout(loadout)` (weapon, then armor, then accessories,
-  de-duplicated). An empty loadout means no signature.
+  `getSignaturesForLoadout(loadout)` (the worn relics in position order,
+  de-duplicated; the weapon and armor are not read). An empty loadout means no signature.
 
 ## Equipping
 
@@ -57,9 +60,9 @@ all pure:
 
 | Function | What it does |
 |---|---|
-| `equipItem(character, item, { replaceIndex }?)` | Weapon and armor replace in place. An accessory fills the first free position; with all three full it swaps `replaceIndex`, or without one returns the same character unchanged. |
-| `unequipItem(character, slot, index?)` | Frees the slot (for an accessory, the position at `index`); the rest compact forward. A no-op on an empty slot. |
-| `getEquippedItems(loadout)` | Every worn piece, weapon then armor then accessories. |
+| `equipItem(character, item, { replaceIndex }?)` | Weapon and armor replace in place. A relic fills the first free relic position; with all three full it swaps `replaceIndex`, or without one returns the same character unchanged. |
+| `unequipItem(character, slot, index?)` | Frees the slot (for a relic, the position at `index`); the rest compact forward. A no-op on an empty slot. |
+| `getEquippedItems(loadout)` | Every worn piece, weapon then armor then relics. |
 | `wornMaxHpBonus(loadout)` | The summed worn `maxHp` bonus. |
 
 [`src/Items/item-grant.ts`](../src/Items/item-grant.ts)'s `grantItem` adds
@@ -79,19 +82,10 @@ Worn pieces also sit in `inventory`. The convention
 | `isEquippedFirstOfSlot(inventory, item)` | Whether `item` is inside its slot's worn window. |
 | `findEquippedInSlot(inventory, candidate)` | The piece a candidate would displace when its slot is full, else `null`. |
 
-## The first-node grant
+## A fresh run
 
-`createNewGameState()` starts the player with nothing worn. The ring is
-handed over at the run's first node
-([`src/Character/first-node-grant.ts`](../src/Character/first-node-grant.ts)):
-`grantFirstNodeRelic` adds it to the inventory and equips it, giving up the
-last worn accessory to the satchel if the row is full, and stamps
-`FIRST_NODE_RELIC_FLAG` in `GameState.flags`. It is idempotent. The mobile
-app calls it at the first node to show the hand-over; the game reducer
-settles it on `PROCESS_NODE`, and on `START_COMBAT` as a floor so no fight
-starts without The Open Hand. `withholdFirstNodeRelic` is its inverse, for
-callers that seed relics themselves (`createCharacter({ seedStartingRelics })`,
-`cloneStartingRelics()`). Pinned by
+`createNewGameState()` starts the player with nothing worn and nothing
+carried, and no relic is handed over at the first node. Pinned by
 `src/Game/e2e/fresh-start.engine.test.ts`.
 
 ## Saves
@@ -100,4 +94,8 @@ callers that seed relics themselves (`createCharacter({ seedStartingRelics })`,
 saves to this shape; `LEGACY_SLOT_MAP`
 ([`src/Game/legacy-slots.ts`](../src/Game/legacy-slots.ts)) maps the old
 seven slots (`head`, `body`, `hands`, `feet` and the rest) onto the three
-slot kinds.
+slot kinds. Saves up to v38 named the relic slot `accessory`, gave each piece
+an `accessoryKind` and stored the relic row as `accessories`; the v38 → v39
+hop's `reslotRelicSave` deep-walks the save (inventory, loadout, inline quest
+rewards) onto `relic` / `relics` and drops the kind, and `reslotRelicPiece`
+does the same for one piece.

@@ -144,7 +144,7 @@ const STAT_LABELS: Record<string, string> = {
 const SLOT_LABELS: Record<Equipment['slot'], string> = {
     weapon: 'Weapon',
     armor: 'Armor',
-    accessory: 'Trinket',
+    relic: 'Trinket',
 };
 
 /**

@@ -189,7 +189,7 @@ export {
     buyItem, sellItem, defaultSellPrice,
     relicLibrary, getRelicById,
     // The shared grant/equip/swap path. `equipItem` never returns the displaced
-    // piece (weapon/armor replace in place; a full accessory row is a guarded
+    // piece (weapon/armor replace in place; a full relic row is a guarded
     // no-op), so every grant site routes through `grantItem` rather than
     // re-deriving the unequip -> addItem -> equipItem chain.
     // `qualifiesForItemRewardScreen` is the one predicate that decides
@@ -249,6 +249,9 @@ export {
     FIXTURE_NPC, FIXTURE_SHOP, FIXTURE_QUEST,
     FIXTURE_DIALOGUE_EVENT, FIXTURE_VILLAGE_EVENT, FIXTURE_CUTSCENE_EVENT,
     FIXTURE_WEAPON, FIXTURE_ARMOR, FIXTURE_TRINKETS,
+    // The relic re-slot: the v38 -> v39 hop's helper, and the one the mobile
+    // item-reward queue reads a pending piece through.
+    reslotRelicPiece, reslotRelicSave,
 } from './Game';
 export type {
     StateFixture,

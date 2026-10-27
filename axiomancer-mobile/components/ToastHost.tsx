@@ -101,7 +101,7 @@ const useStyles = makeStyles((AXM) => ({
            screen's <ScreenBg> is flex:1 with an opaque background, so without an
            explicit stacking order the navigator paints straight over the strip
            and EVERY toast in the app is silent — the region crossing, the
-           accessory-slots-full refusal, the flee cost. `elevation` is the same
+           relic-slots-full refusal, the flee cost. `elevation` is the same
            statement for Android, which orders by elevation before zIndex. */
         zIndex: 100,
         elevation: 100,

@@ -5,7 +5,7 @@
  * encode "worn" via ordering: the FIRST `SLOT_CAPACITY[slot]` equipment items
  * per slot are treated as worn (a reorder that moves a target item to the front
  * of its slot equips it). For weapon/armor the cap is 1 (first-per-slot); for
- * accessories it is 3. Every consumer that surfaces worn-state must agree on
+ * relics it is 3. Every consumer that surfaces worn-state must agree on
  * this convention for the picture to stay coherent, so it lives here as the
  * single source of truth rather than re-implemented per call site.
  */

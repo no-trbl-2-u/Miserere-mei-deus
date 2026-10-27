@@ -36,14 +36,13 @@ const ironWeapon: Equipment = {
     statModifiers: [{ stat: 'maxHp', value: 3 }],
 };
 
-/** A plain accessory (no effects — equipment is stat-only post-epic). */
+/** A plain relic (no effects — equipment is stat-only post-epic). */
 const plainCirclet: Equipment = {
     id: 'eq_circlet_courage',
     name: 'Circlet of Courage',
     description: 'A quiet circlet.',
     category: 'equipment',
-    slot: 'accessory',
-    accessoryKind: 'head',
+    slot: 'relic',
 };
 
 const healingPotion: Consumable = {
@@ -81,7 +80,7 @@ describe('equipItem / unequipItem', () => {
         expect(player.effects).toHaveLength(0);
         const equipped = equipItem(player, plainCirclet);
         expect(equipped.effects).toHaveLength(0);
-        const unequipped = unequipItem(equipped, 'accessory', 0);
+        const unequipped = unequipItem(equipped, 'relic', 0);
         expect(unequipped.effects).toHaveLength(0);
     });
 

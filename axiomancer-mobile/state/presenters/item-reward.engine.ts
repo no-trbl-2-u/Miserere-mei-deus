@@ -166,7 +166,7 @@ export function selectHasPendingItemReward(
  */
 function detailOf(item: Equipment) {
     const projection = {
-        player: { inventory: [item as Item], equipment: { weapon: null, armor: null, accessories: [] } },
+        player: { inventory: [item as Item], equipment: { weapon: null, armor: null, relics: [] } },
     } as unknown as GameStore;
     return selectEquipmentDetailViewModel(projection, item.id);
 }

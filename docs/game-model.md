@@ -204,8 +204,8 @@ keyword (`EnemyKeyword = never`).
   next SACRIFICE this turn counts twice) has no source yet. Both come only
   from the dev menu's relic chips, which wear the relic while a position is
   free; a relic carried unworn shows NOT WORN in the satchel, its signature
-  off until the player taps WEAR. Relics are accessories and a character wears up
-  to three (`SLOT_CAPACITY.accessory`), so both are worn together and the
+  off until the player taps WEAR. A character wears one weapon, one armor and up
+  to three relics (`SLOT_CAPACITY.relic`); any relic fits any relic slot, so both are worn together and the
   signature bar lists every signature the worn relics grant.
 - **The Open Hand** befriends a foe that has a `friendshipReward` and sits
   under its `hpGate` (the Green Jelly: below 30% VITAE; `Enemy/befriend.ts`).

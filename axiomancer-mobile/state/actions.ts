@@ -941,7 +941,7 @@ function equipItemAction(store: AppStore, itemId: string): void {
     const equip = target as Equipment;
     if (isWornId(state.player.equipment, equip.id)) return;
 
-    // The engine folds the stat line and wears the piece. A full accessory row
+    // The engine folds the stat line and wears the piece. A full relic row
     // gives up its last-worn piece (the one the modal names as REPLACE); it
     // stays in the satchel, since worn pieces are carried too.
     const { index } = displacedBy(state.player, equip);
@@ -963,11 +963,11 @@ function unequipItemAction(store: AppStore, itemId: string): void {
     const target = findOwnedEquipment(state.player, itemId);
     if (target === null) return;
 
-    const accessoryIndex =
-        target.slot === 'accessory'
-            ? loadout.accessories.findIndex((a) => a.id === itemId)
+    const relicIndex =
+        target.slot === 'relic'
+            ? loadout.relics.findIndex((a) => a.id === itemId)
             : undefined;
-    const nextPlayer = engineUnequipItem(state.player, target.slot, accessoryIndex);
+    const nextPlayer = engineUnequipItem(state.player, target.slot, relicIndex);
     if (nextPlayer === state.player) return;
     store.setState({ player: nextPlayer });
 }
@@ -1160,11 +1160,12 @@ function debugSeedAction(store: AppStore): DebugSeedResult {
             console.warn('Failed to add consumable item:', error);
         }
 
-        // 2. One relic per slot kind (weapon / armor / accessory). The only
-        //    equipment is the signet relics; grant the first of each
-        //    slot kind, worn while a position is free, so the inventory
-        //    dock + equip-replace preview have a piece to render for every slot.
-        const seedSlots: ReadonlyArray<EquipmentSlot> = ['weapon', 'armor', 'accessory'];
+        // 2. One relic for the relic slot. The only equipment is the
+        //    signet relics, and every relic takes the relic slot (weapon
+        //    and armor have no content); grant the first, worn while a
+        //    position is free, so the dock + equip-replace preview have a
+        //    piece to render.
+        const seedSlots: ReadonlyArray<EquipmentSlot> = ['relic'];
         for (const slot of seedSlots) {
             try {
                 const relic = relicLibrary.find(r => r.slot === slot);
@@ -1291,7 +1292,7 @@ function grantAllRelicsAction(store: AppStore): GrantAllRelicsResult {
     const player = state.player;
     const owned = new Set<string>([
         ...player.inventory.map((i: Item) => i.id),
-        ...player.equipment.accessories.map((a) => a.id),
+        ...player.equipment.relics.map((a) => a.id),
         ...(player.equipment.weapon ? [player.equipment.weapon.id] : []),
         ...(player.equipment.armor ? [player.equipment.armor.id] : []),
     ]);
@@ -1303,7 +1304,7 @@ function grantAllRelicsAction(store: AppStore): GrantAllRelicsResult {
         devGrantItem(store, relic);
         added.push(relic.id);
     }
-    return { added, worn: store.getState().player.equipment.accessories.map((a) => a.id) };
+    return { added, worn: store.getState().player.equipment.relics.map((a) => a.id) };
 }
 
 function applyCharacterPresetAction(

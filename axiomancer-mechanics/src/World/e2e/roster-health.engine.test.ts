@@ -58,7 +58,7 @@ const potion: Item = {
     id: 'healing-potion', name: 'Healing Potion', description: '', category: 'consumable', quantity: 1,
 } as Item;
 const ring: Equipment = {
-    id: 'relic-test', name: 'Test Ring', description: '', category: 'equipment', slot: 'accessory',
+    id: 'relic-test', name: 'Test Ring', description: '', category: 'equipment', slot: 'relic',
     statModifiers: [], grantsSignature: 'sig-disarming-plea',
 } as Equipment;
 

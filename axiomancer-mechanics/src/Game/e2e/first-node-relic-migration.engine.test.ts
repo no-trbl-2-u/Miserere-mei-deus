@@ -87,7 +87,7 @@ describe('old saves keep the ring where it was', () => {
 
     it('a save wearing the ring loads and fights with The Open Hand', () => {
         const { loaded, staged, fight } = loadAndFight(true);
-        expect(loaded.player.equipment.accessories.map(a => a.id)).toEqual([RING_ID]);
+        expect(loaded.player.equipment.relics.map(a => a.id)).toEqual([RING_ID]);
         expect(staged.player).toBe(loaded.player);
         expect(fight.signatures).toEqual(['sig-disarming-plea']);
     });
@@ -95,8 +95,8 @@ describe('old saves keep the ring where it was', () => {
     it('a save carrying the ring unworn loads with it carried, and fights without it', () => {
         const { loaded, staged, fight } = loadAndFight(false);
         expect(loaded.player.inventory.map(i => i.id)).toContain(RING_ID);
-        expect(loaded.player.equipment.accessories).toEqual([]);
-        expect(staged.player.equipment.accessories).toEqual([]);
+        expect(loaded.player.equipment.relics).toEqual([]);
+        expect(staged.player.equipment.relics).toEqual([]);
         expect(fight.signatures).toEqual([]);
     });
 });
