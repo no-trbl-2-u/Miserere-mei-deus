@@ -117,8 +117,10 @@ Inputs for that session:
 
 Authored by T in session, 2026-10-25, verbatim. Signature costs (in
 Conviction) are T's starting pitch, to revisit after playthroughs. Built by
-LR1d (Blood Price) and LR1e (Elementalist); the quests are drafted on
-existing Act 1 map events in LR1f and listed here when that phase ships.
+LR1d (Blood Price) and LR1e (Elementalist). Quests (T, 2026-10-27, D111; LR1f
+skipped): the Elementalist's Belt is the reward of Chapter 1's questline
+(`plan/phases/phase_QL1_breakwater_questline.md`); the Ruby Signet, the Bleeding
+Signet and the Brooch wait for Chapters 2-4's quest lines.
 
 | Relic | Lane | Signature (cost in Conviction) | Stats | Source |
 |---|---|---|---|---|

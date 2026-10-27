@@ -103,8 +103,9 @@ the events hold:
   plotted (`plan/deadlines.md`, W2).
 - **No people:** Act 1 stages no NPC, shop, village or narration node (`MapEvents/content.ts` header), so the
   `interaction`, `village` and `narration` kinds have no Breakwater node.
-- **No quests:** none exist yet. LR1f adds one per region, given by an existing map event, with its lines filed as
-  `[content]` for T.
+- **No quests:** none exist yet. QL1 (T, 2026-10-27, D111; LR1f skipped) adds one four-step questline on four new
+  `quest` nodes, bw-19..bw-22, spurs off bw-1, bw-9, bw-13 and bw-15 (positions T's call #5 on the plot PR), the
+  Breakwater's ninth kind; T writes its lines on Nov 10.
 - **Gathering has no sink:** nothing spends Driftwood or Kelp Frond (`docs/reports/act1-event-audit.md`). AW1b puts
   the question to T.
 - **Loot caches:** shillings and the cache's card offer; no item or relic comes from a Breakwater node besides

@@ -1043,6 +1043,15 @@ satisfied for exactly these.)
 - Portraits, relics, stat spreads and playstyle lines are T's content (D88). The first character is due 2026-10-26 (T); three for December. Character content waits on at least one new lane, because a character needs three distinct lanes; T plans two new lanes before a character goes live.
 - Built by Phase CH1 (`plan/phases/phase_CH1_character_select.md`).
 
+**D111 — Chapter 1 has one questline, on a ninth node kind.** (T, 2026-10-27, in an attended session; recorded by the QL1 plot, run unattended on T's word. Supersedes LR1f's scope: four quests, one per Act 1 region, given by existing map events.)
+
+- Chapter 1 (the Breakwater, D106) carries one questline of four steps. The other quest relics (the Ruby Signet, the Bleeding Signet, the Elementalist's Brooch, and the Defender's Carapace Belt) stay quest rewards for Chapters 2-4's quest lines.
+- A quest is given by its own node kind, `quest`, with its own map icon and screen: the Breakwater's ninth kind (its eight of 2026-10-26 plus `quest`), and part of the event-node UI/UX pitch.
+- Four steps on four quest nodes, done in order; a quest node is revisitable until its step is done. Requirements are kills of any foe, kills of elites, and hazards crossed, counted only from when the player accepts the step.
+- Each step pays XP plus exactly one extra: shillings, a card reward or a consumable; the fourth also pays the Elementalist's Belt (`relicSource: 'quest'`).
+- The quest line and the giver's copy are T's (D88), written on Nov 10 and in the game for the Nov 16 MVP.
+- Built by Phase QL1 (`plan/phases/phase_QL1_breakwater_questline.md`).
+
 **D110 — A card's colour is only which die pays for it; THORNS scales with Heart.** (T, attended, 2026-10-26; amends D40's last clause and T's 2026-10-13 card-spec ruling. T: "A card's colour is ONLY what die pays for them and is not categorized otherwise. This means for lane-creator, don't have it pitch a color for the cards. Instead, I pick the cards, then afterwards, it can split the colors up evenly." And: "We can move THORNS to heart.")
 
 - A card's colour says which die pays for it (the Color Law, D65) and nothing else. It is not read from the card's text, its keyword or its job.
