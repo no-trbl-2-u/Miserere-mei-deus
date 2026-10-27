@@ -5,7 +5,8 @@
  *   - DEV gate: both leaves render null when __DEV__ is false.
  *   - DebugLaneDeck: the drop-down opens, lists every lane, picks one, and
  *     SET DECK deals that lane's test deck; the Elementalist trial set's lane
- *     is listed and deals its 20-card deck (Phase EL1c).
+ *     is listed and deals its 20-card deck (Phase EL1c), and so does the
+ *     Defender's (Phase DF1d).
  *   - DebugRewardPool: one checkbox per lane; checking a lane and pressing
  *     SET REWARD POOL saves it; the grid starts from the saved override.
  */
@@ -87,6 +88,33 @@ describe('DebugLaneDeck: the Elementalist', () => {
         fireEvent.press(tree.getByTestId('debug-reward-pool-set'));
         expect(store.getState().player.devRewardLaneIds).toEqual(['elementalist']);
         expect([...rewardPoolFor(store.getState().player)].sort()).toEqual([...getCardLane('elementalist')!.cardIds].sort());
+    });
+});
+
+describe('DebugLaneDeck: the Defender', () => {
+    it('lists the Defender and SET DECK deals its 20-card test deck', () => {
+        const lane = getCardLane('defender');
+        expect(lane?.name).toBe('Defender');
+        expect(lane?.testDeck).toHaveLength(20);
+        expect(lane?.cardIds).toHaveLength(30);
+        for (const id of lane!.testDeck) expect(getCardById(id)).toBeDefined();
+
+        const store = makeStore();
+        const tree = render(withProvider(store, <DebugLaneDeck />));
+        fireEvent.press(tree.getByTestId('debug-lane-deck-select'));
+        fireEvent.press(tree.getByTestId('debug-lane-deck-select-option-defender'));
+        fireEvent.press(tree.getByTestId('debug-lane-deck-set'));
+        expect(store.getState().player.knownCards).toEqual([...lane!.testDeck]);
+        expect(tree.getByTestId('debug-lane-deck-sub').props.children).toContain('Defender');
+    });
+
+    it('offers all 30 Defender cards once its reward-pool box is checked', () => {
+        const store = makeStore();
+        const tree = render(withProvider(store, <DebugRewardPool />));
+        fireEvent.press(tree.getByTestId('debug-reward-pool-lane-defender'));
+        fireEvent.press(tree.getByTestId('debug-reward-pool-set'));
+        expect(store.getState().player.devRewardLaneIds).toEqual(['defender']);
+        expect([...rewardPoolFor(store.getState().player)].sort()).toEqual([...getCardLane('defender')!.cardIds].sort());
     });
 });
 

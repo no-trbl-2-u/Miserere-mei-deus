@@ -18,6 +18,7 @@
  *   {heal:n}   mind-scaled one-shot (HEAL)
  *   {vuln:n}   VULNERABLE percent, heart-scaled like the status
  *   {leech:n}  heart-scaled repeating (LEECH)
+ *   {thorns:n} heart-scaled repeating (THORNS)
  *
  * Every other number (SACRIFICE, Conviction, caps, "the foe loses n") is
  * unscaled and printed as written.

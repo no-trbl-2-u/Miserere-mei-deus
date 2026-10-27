@@ -13,26 +13,14 @@
   },
   {
     "rule": "carrier-rule",
-    "id": "HOLDS",
-    "reason": "the \"GUARD holds\" term ships with its engine (DF1b); its carriers, the Defender trial set, land in DF1d, which removes this row",
-    "filed": "2026-10-27"
-  },
-  {
-    "rule": "carrier-rule",
     "id": "HONE",
     "reason": "pinned at CS1, awaits T's card session",
     "filed": "2026-10-13"
   },
   {
     "rule": "carrier-rule",
-    "id": "REFLECT",
-    "reason": "the spikes engine ships first (DF1a, DF1b); its carriers, the Defender trial set, land in DF1d, which removes this row",
-    "filed": "2026-10-27"
-  },
-  {
-    "rule": "carrier-rule",
     "id": "RETRIEVE",
-    "reason": "the RETRIEVE verb ships first (DF1b); its carriers, the Defender trial set, land in DF1d, which removes this row",
+    "reason": "admission bar: the Defender trial set carries RETRIEVE on one card (M-07 FREE, T's thirty as voted); the keyword is for every lane, so a second carrier is T's call after play",
     "filed": "2026-10-27"
   },
   {
@@ -40,12 +28,6 @@
     "id": "TEMPER",
     "reason": "pinned at CS1, awaits T's card session",
     "filed": "2026-10-13"
-  },
-  {
-    "rule": "carrier-rule",
-    "id": "THORNS",
-    "reason": "the spikes engine ships first (DF1a, DF1b); its carriers, the Defender trial set, land in DF1d, which removes this row",
-    "filed": "2026-10-27"
   },
   {
     "rule": "carrier-rule",
@@ -160,6 +142,60 @@
     "id": "bp-p-10c",
     "reason": "pinned at CS1, awaits T's card session",
     "filed": "2026-10-13"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "df-e-09c",
+    "reason": "the Defender trial set as kept and revised (DF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-27"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "df-e-10c",
+    "reason": "the Defender trial set as kept and revised (DF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-27"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "df-m-02b",
+    "reason": "the Defender trial set as kept and revised (DF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-27"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "df-m-06b",
+    "reason": "the Defender trial set as kept and revised (DF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-27"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "df-m-08c",
+    "reason": "the Defender trial set as kept and revised (DF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-27"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "df-m-10n",
+    "reason": "the Defender trial set as kept and revised (DF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-27"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "df-p-04a",
+    "reason": "the Defender trial set as kept and revised (DF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-27"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "df-p-09b",
+    "reason": "the Defender trial set as kept and revised (DF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-27"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "df-p-10b",
+    "reason": "the Defender trial set as kept and revised (DF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-27"
   },
   {
     "rule": "complexity-budget",
@@ -298,6 +334,12 @@
     "id": "el-e-06a",
     "reason": "the Elementalist trial set as kept (EL1c), awaits T's revisions (lane-creator step 7)",
     "filed": "2026-10-24"
+  },
+  {
+    "rule": "spell-law",
+    "id": "df-e-06c",
+    "reason": "E-06 PAID is \"Double your THORNS. EXILE.\" (T): a multiplier with no number for a Spell-law step to raise; as voted, held for T",
+    "filed": "2026-10-27"
   },
   {
     "rule": "spell-law",

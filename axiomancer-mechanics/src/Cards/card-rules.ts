@@ -395,7 +395,7 @@ export const SPELL_LAW_PROBE: ProgramQuery = Object.freeze({
  *  the cap on an X SACRIFICE, the number a TETHER's damage is read from. */
 const SPELL_MAGNITUDE_VERBS: ReadonlySet<string> = new Set([
     'deal', 'guard', 'heal', 'vulnerable', 'foeLoses', 'healNextTurn', 'drain',
-    'inferno', 'blizzard', 'storm', 'stormTick', 'sacrificeX',
+    'inferno', 'blizzard', 'storm', 'stormTick', 'sacrificeX', 'thorns',
 ]);
 /** The payoff verbs the law raises by an INTENSITY step (+1). */
 const SPELL_INTENSITY_VERBS: ReadonlySet<string> = new Set(['leech', 'conviction', 'draw']);
@@ -405,6 +405,7 @@ const PROBE_RETURNS: Readonly<Record<string, (q: ProgramQuery) => number>> = {
     removeYourInferno: q => q.yourInferno,
     moveYourInferno: q => q.yourInferno,
     spendBlizzard: q => q.blizzard,
+    discardHand: q => q.handSize,
 };
 
 /** Sum per verb of what `run` applies at the probe. */
