@@ -25,9 +25,10 @@ import { EMPTY_COMBAT_REWARD_SLICE, type AppStore } from '../store';
 // ---------------------------------------------------------------------------
 // Post-combat card reward — the 1-of-3 draft.
 //
-// The ROLL is engine truth (`rollCombatCardRewards` draws uniformly from
-// `COMBAT_REWARD_POOL`; after an elite, `rollEliteReward` offers the best
-// cards or a random upgrade). Mobile owns exactly two things: WHEN the draft
+// The ROLL is engine truth (`rollCombatCardRewards` fills the lane slots from
+// the lane the player wears most, then draws from `rewardPoolFor`: the worn
+// relics' lanes, grey when none is worn; after an elite, `rollEliteReward`
+// offers the best cards or a random upgrade). Mobile owns exactly two things: WHEN the draft
 // opens, and persisting the claim.
 // ---------------------------------------------------------------------------
 

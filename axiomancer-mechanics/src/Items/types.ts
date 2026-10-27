@@ -67,12 +67,18 @@ export const SLOT_CAPACITY: Record<EquipmentSlot, number> = {
  *                            `CombatEncounterState.signatures` from the worn
  *                            loadout's `grantsSignature` values. Absent on
  *                            non-relic equipment.
+ * @property laneId         - The card lane (`CardLane.id`) this relic opens
+ *                            while worn: its cards join the card-reward pool
+ *                            and fill the reward's lane slots. Optional;
+ *                            resolved by `relicLaneId` (`Items/relic-lanes.ts`),
+ *                            which prefers the relic library's entry.
  */
 export interface Equipment extends BaseItem {
     category: 'equipment';
     slot: EquipmentSlot;
     statModifiers?: StatModifier[];
     grantsSignature?: SignatureSkillId;
+    laneId?: string;
 }
 
 /**
