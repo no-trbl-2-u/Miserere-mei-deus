@@ -31,7 +31,7 @@ import {
     startTurn,
 } from '../combat.engine';
 import { UPGRADEABLE_DIE_COLORS } from '../combat.upgradeable-dice';
-import { SIGNATURE_COST } from '../combat.signature';
+import { getSignatureSkill } from '../combat.signature';
 import { getSignaturesForLoadout } from '../../Items/relic.library';
 import { equipItem, unequipItem } from '../../Character';
 import { FIXTURE_TRINKETS } from '../../Game/fixtures';
@@ -316,6 +316,9 @@ describe('Spec 25 §4.5 — between-phases processing', () => {
 });
 
 // ── Signature Skills (§4) ────────────────────────────────────────────────────
+
+/** The Open Hand's own Conviction cost. */
+const SIGNATURE_COST = getSignatureSkill('sig-disarming-plea')!.cost;
 
 describe('Spec 26b §4 — Signature Skills (Conviction-funded)', () => {
     it('a signature skill fizzles (no-op, nothing spent) when underfunded', () => {

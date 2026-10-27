@@ -28,6 +28,7 @@ import {
     selectMercyChoice, handCards, PROGRAM_KIT,
 } from './combat.engine';
 import { programLineValue, programLineCost, programIllegalReason, isProgramCard } from './combat.card-program';
+import { OPEN_VEIN_HEAL } from './combat.signature';
 import { upgradeablePlayPhase } from './combat.encounter.sim';
 import { COMBAT_SIM_POLICIES } from './combat.sim-policies';
 import { getRng } from '../Utils/rng';
@@ -61,17 +62,24 @@ export interface PacingRun {
 }
 
 /** The human-like signature step: The Open Hand when it can open mercy (and
- *  `mercy` is on); Crimson Covenant when the hand holds a SACRIFICE to double. */
+ *  `mercy` is on); the Circlet's and the Ruby Signet's when the hand holds a
+ *  SACRIFICE to arm; Open Vein when the foe carries LEECH or the HEAL would
+ *  land in full. */
 function castSignatures(s: CombatEncounterState, mercy: boolean): CombatEncounterState {
     let state = s;
     for (const id of state.signatures) {
         const sig = getSignatureSkill(id);
         if (!sig || signatureCastBlock(state, sig)) continue;
         if (sig.kind === 'mercy' && !mercy) continue;
-        if (sig.kind === 'covenant') {
+        if (sig.kind === 'sacrifice-heals' || sig.kind === 'sacrifice-leech') {
             const sacInHand = state.hand.some(h => isProgramCard(h.cardId)
                 && (programLineCost(state, h.uid, false, PROGRAM_KIT) > 0 || programLineCost(state, h.uid, true, PROGRAM_KIT) > 0));
             if (!sacInHand) continue;
+        }
+        if (sig.kind === 'heal-trigger-leech') {
+            const leech = (state.program?.leechTurns ?? 0) > 0 && (state.program?.leechPotency ?? 0) > 0;
+            const missing = state.player.maxHealth - state.player.health;
+            if (!leech && missing < OPEN_VEIN_HEAL) continue;
         }
         state = playSignatureSkill(state, id).state;
         if (state.finalOutcome || state.mercyChoiceActive) return state;

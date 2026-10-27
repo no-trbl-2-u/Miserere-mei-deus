@@ -2,11 +2,22 @@
  * Signature Skills.
  *
  * A small, ALWAYS-available kit (independent of the shuffled deck) funded by
- * Conviction (◆) and granted only by worn signet relics. There are two: The
- * Open Hand (the Suppliant's Ring), the befriend — it opens the mercy choice
- * on a foe that can be befriended and is low enough; and Crimson Covenant
- * (the Bleeding Signet) — TETHER 3, and the next SACRIFICE this turn counts
- * twice.
+ * Conviction (◆) and granted only by worn signet relics. Each signature pays
+ * its own Conviction price (`SignatureSkill.cost`); nothing assumes one price.
+ *
+ *   The Open Hand (the Suppliant's Ring, ◆4) — the befriend: it opens the
+ *     mercy choice on a foe that can be befriended and is low enough.
+ *   Crimson Return (the Crimson Circlet, ◆5) — your next SACRIFICE HEALs
+ *     you by the VITAE it would have cost instead of costing it; it still
+ *     counts as a SACRIFICE.
+ *   Ruby Tithe (the Ruby Signet, ◆3) — your next SACRIFICE also adds LEECH
+ *     to the foe equal to the VITAE paid, unscaled.
+ *   Open Vein (the Bleeding Signet, ◆4) — HEAL 5, then trigger the foe's
+ *     LEECH (it loses its potency now and you HEAL what it lost; no turn
+ *     ticks off).
+ *
+ * The three Blood Price names and descriptions are plain placeholders
+ * [content] for T to rewrite; the costs are T's.
  *
  * `applySignatureSkill` is a pure transition; the engine wraps it in
  * `playSignatureSkill` to gate on `signatureCastBlock`, spend Conviction and
@@ -15,27 +26,34 @@
  */
 
 import { befriendHpGateOpen, isEnemyBefriendable } from '../Enemy/befriend';
-import { programTetherAndTwice } from './combat.card-program';
+import {
+    programArmSacrifice, programSacrificeArmed, programSignatureHeal, programTriggerLeech,
+} from './combat.card-program';
 import type {
     CombatEncounterState, CombatEvent, CombatTransition, SignatureSkill,
     SignatureSkillId, PlayerArchetype,
 } from './combat.encounter.types';
 
-/** The one Conviction price every signature pays (A Plain Ward's paid parity). */
-export const SIGNATURE_COST = 4;
-
-/** Crimson Covenant's TETHER turns. */
-export const COVENANT_TETHER_TURNS = 3;
+/** Open Vein's HEAL (mind-scaled, as a card's HEAL). */
+export const OPEN_VEIN_HEAL = 5;
 
 /** The signatures, keyed by id. */
 export const SIGNATURE_SKILLS: Record<SignatureSkillId, SignatureSkill> = {
     'sig-disarming-plea': {
-        id: 'sig-disarming-plea', name: 'The Open Hand', kind: 'mercy', cost: SIGNATURE_COST,
+        id: 'sig-disarming-plea', name: 'The Open Hand', kind: 'mercy', cost: 4,
         description: 'Offer the foe mercy. A foe that can be befriended, once low enough, may be spared.',
     },
-    'sig-crimson-covenant': {
-        id: 'sig-crimson-covenant', name: 'Crimson Covenant', kind: 'covenant', cost: SIGNATURE_COST,
-        description: `TETHER ${COVENANT_TETHER_TURNS}. Your next SACRIFICE this turn counts twice.`,
+    'sig-crimson-circlet': {
+        id: 'sig-crimson-circlet', name: 'Crimson Return', kind: 'sacrifice-heals', cost: 5,
+        description: 'Your next SACRIFICE heals you instead of costing VITAE. It still counts as a SACRIFICE.',
+    },
+    'sig-ruby-signet': {
+        id: 'sig-ruby-signet', name: 'Ruby Tithe', kind: 'sacrifice-leech', cost: 3,
+        description: 'Your next SACRIFICE also gives the foe LEECH equal to the VITAE paid.',
+    },
+    'sig-bleeding-signet': {
+        id: 'sig-bleeding-signet', name: 'Open Vein', kind: 'heal-trigger-leech', cost: 4,
+        description: `HEAL ${OPEN_VEIN_HEAL}. Trigger the foe's LEECH: it loses its LEECH now and you HEAL what it lost.`,
     },
 };
 
@@ -57,19 +75,24 @@ export function getSignatureSkill(id: string): SignatureSkill | undefined {
 /**
  * Why this signature can't be cast right now, or null when it can. The engine
  * refuses on it and the signature bar prints it, so the two never disagree.
- * A refused cast spends nothing.
+ * A refused cast spends nothing. A signature that would do nothing is refused
+ * here with a reason; Open Vein never is (its HEAL always lands).
  */
 export function signatureCastBlock(state: CombatEncounterState, skill: SignatureSkill): string | null {
     if (state.conviction < skill.cost) return `Need ${skill.cost} ◆ Conviction`;
-    if (skill.kind === 'mercy') {
-        if (state.mercyChoiceActive) return 'Mercy is already offered';
-        if (!isEnemyBefriendable(state.enemy)) return `${state.enemy.name} will not be befriended`;
-        if (!befriendHpGateOpen(state.enemy)) return `${state.enemy.name} is not yet low enough to spare`;
+    switch (skill.kind) {
+        case 'mercy':
+            if (state.mercyChoiceActive) return 'Mercy is already offered';
+            if (!isEnemyBefriendable(state.enemy)) return `${state.enemy.name} will not be befriended`;
+            if (!befriendHpGateOpen(state.enemy)) return `${state.enemy.name} is not yet low enough to spare`;
+            return null;
+        case 'sacrifice-heals':
+            return programSacrificeArmed(state, 'heals') ? 'Your next SACRIFICE already heals you' : null;
+        case 'sacrifice-leech':
+            return programSacrificeArmed(state, 'leech') ? 'Your next SACRIFICE already adds LEECH' : null;
+        case 'heal-trigger-leech':
+            return null;
     }
-    if (skill.kind === 'covenant') {
-        if (state.program?.nextTwice) return 'Your next SACRIFICE already counts twice';
-    }
-    return null;
 }
 
 /**
@@ -89,10 +112,14 @@ export function applySignatureSkill(
             // modal on; `selectMercyChoice` resolves it.
             return { state: { ...state, phase: 'mercy-choice', mercyChoiceActive: true }, events };
         }
-        case 'covenant':
-            return {
-                state: programTetherAndTwice(state, { id: skill.id, name: skill.name }, COVENANT_TETHER_TURNS),
-                events: [],
-            };
+        case 'sacrifice-heals':
+            return { state: programArmSacrifice(state, 'heals'), events: [] };
+        case 'sacrifice-leech':
+            return { state: programArmSacrifice(state, 'leech'), events: [] };
+        case 'heal-trigger-leech': {
+            const healed = programSignatureHeal(state, OPEN_VEIN_HEAL, skill.id);
+            const triggered = programTriggerLeech(healed.state);
+            return { state: triggered.state, events: [...healed.events, ...triggered.events] };
+        }
     }
 }

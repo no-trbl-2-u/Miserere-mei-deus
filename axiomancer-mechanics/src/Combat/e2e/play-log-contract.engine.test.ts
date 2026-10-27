@@ -162,9 +162,9 @@ describe('validateFightPost', () => {
         const old = validateFightPost(fight());
         expect(old.ok && old.fight.relics).toEqual([]);
         expect(old.ok && old.fight.signatures).toEqual([]);
-        const worn = validateFightPost(fight({ relics: ['relic-bleeding-signet'], signatures: ['sig-crimson-covenant'] }));
+        const worn = validateFightPost(fight({ relics: ['relic-bleeding-signet'], signatures: ['sig-bleeding-signet'] }));
         expect(worn.ok && worn.fight.relics).toEqual(['relic-bleeding-signet']);
-        expect(worn.ok && worn.fight.signatures).toEqual(['sig-crimson-covenant']);
+        expect(worn.ok && worn.fight.signatures).toEqual(['sig-bleeding-signet']);
         expect(fightReasons(fight({ relics: 'x', signatures: [1] }))).toEqual([
             'relics: expected an array',
             'signatures[0]: expected a string',
@@ -175,7 +175,7 @@ describe('validateFightPost', () => {
     });
 
     it('LR1g: a refused signature tap needs a signature id and a reason, and keeps only its own keys', () => {
-        const tap = { kind: 'ui-signature-refused', signatureId: 'sig-crimson-covenant', reason: 'Need 4 Conviction', ms: 5, vitae: 30 };
+        const tap = { kind: 'ui-signature-refused', signatureId: 'sig-bleeding-signet', reason: 'Need 4 Conviction', ms: 5, vitae: 30 };
         expect(fightReasons(fight({ events: [tap] }))).toEqual([]);
         const kept = validateFightPost(fight({ events: [{ ...tap, extra: 1 }] }));
         expect(kept.ok && kept.fight.events).toEqual([tap]);

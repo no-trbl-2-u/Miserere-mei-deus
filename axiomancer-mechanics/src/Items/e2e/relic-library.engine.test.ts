@@ -1,15 +1,15 @@
 /**
- * Hermetic engine test — the relic library (the Suppliant's Ring and the
- * Bleeding Signet).
+ * Hermetic engine test — the relic library (the Suppliant's Ring and Blood
+ * Price's three: the Crimson Circlet, the Ruby Signet, the Bleeding Signet).
  *
- * Locks the library invariants (roster, shape, no stat line), the
+ * Locks the library invariants (roster, shape, stat lines), the
  * `cloneRelic` copy and the `getSignaturesForLoadout` derivation
  * that supplies the signature kit at combat-init.
  */
 
 import { describe, it, expect } from 'vitest';
 import {
-    relicLibrary, getRelicById, getSignaturesForLoadout, cloneRelic,
+    relicLibrary, getRelicById, getSignaturesForLoadout, cloneRelic, relicStatLines,
 } from '../relic.library';
 import { SIGNATURE_SKILLS } from '../../Combat/combat.signature';
 import type { SignatureSkillId } from '../../Combat/combat.encounter.types';
@@ -26,17 +26,29 @@ import type { Equipment } from '../types';
 const ALL_SIGNATURE_IDS = Object.keys(SIGNATURE_SKILLS) as SignatureSkillId[];
 const RING_ID = 'relic-disarming-plea';
 const SIGNET_ID = 'relic-bleeding-signet';
+const CIRCLET_ID = 'relic-crimson-circlet';
+const RUBY_ID = 'relic-ruby-signet';
 
 describe('relic library — roster', () => {
-    it('ships two relics: the Suppliant\'s Ring and the Bleeding Signet', () => {
-        expect(relicLibrary.map(r => r.id)).toEqual([RING_ID, SIGNET_ID]);
-        const signet = getRelicById(SIGNET_ID)!;
-        expect(signet.slot).toBe('accessory');
-        expect(signet.grantsSignature).toBe('sig-crimson-covenant');
+    it('ships the Suppliant\'s Ring and Blood Price\'s three relics', () => {
+        expect(relicLibrary.map(r => r.id)).toEqual([RING_ID, CIRCLET_ID, RUBY_ID, SIGNET_ID]);
         const ring = getRelicById(RING_ID)!;
         expect(ring.name).toBe("Suppliant's Ring");
         expect(ring.slot).toBe('accessory');
         expect(ring.accessoryKind).toBe('ring');
+    });
+
+    it('A10 · Blood Price\'s three relics are as T wrote them: lane, source, stat lines, signature', () => {
+        const row = (id: string) => {
+            const r = getRelicById(id)!;
+            return [r.name, r.laneId, r.relicSource, r.statModifiers, r.grantsSignature, r.slot, r.accessoryKind];
+        };
+        expect(row(CIRCLET_ID)).toEqual(['Crimson Circlet', 'blood-price', 'elite',
+            [{ stat: 'body', value: 5 }, { stat: 'maxHp', value: 20 }], 'sig-crimson-circlet', 'accessory', 'head']);
+        expect(row(RUBY_ID)).toEqual(['Ruby Signet', 'blood-price', 'quest',
+            [{ stat: 'heart', value: 5 }], 'sig-ruby-signet', 'accessory', 'ring']);
+        expect(row(SIGNET_ID)).toEqual(['Bleeding Signet', 'blood-price', 'quest',
+            [{ stat: 'mind', value: 5 }], 'sig-bleeding-signet', 'accessory', 'ring']);
     });
 
     it('every relic grants exactly one signature; together they cover the full roster with no dupes', () => {
@@ -47,20 +59,25 @@ describe('relic library — roster', () => {
         expect(getRelicById(RING_ID)!.grantsSignature).toBe('sig-disarming-plea');
     });
 
-    it('relics are the lean signet shape — only stat/signature fields (Phase 23)', () => {
+    it('relics are the lean signet shape — only stat/signature/lane/source fields', () => {
         for (const r of relicLibrary) {
             const keys = Object.keys(r).sort();
-            expect(keys).toEqual(
-                (r.slot === 'accessory'
-                    ? ['accessoryKind', 'category', 'description', 'grantsSignature', 'id', ...(r.laneId ? ['laneId'] : []), 'name', 'slot', 'statModifiers']
-                    : ['category', 'description', 'grantsSignature', 'id', 'name', 'slot', 'statModifiers']),
-            );
+            expect(keys).toEqual([
+                ...(r.slot === 'accessory' ? ['accessoryKind'] : []),
+                'category', 'description', 'grantsSignature', 'id', ...(r.laneId ? ['laneId'] : []), 'name',
+                ...(r.relicSource ? ['relicSource'] : []), 'slot', 'statModifiers',
+            ]);
         }
     });
 
-    it('the ring carries no stat line; the Signet carries +20 max VITAE', () => {
+    it('the ring carries no stat line', () => {
         expect(getRelicById(RING_ID)!.statModifiers).toEqual([]);
-        expect(getRelicById(SIGNET_ID)!.statModifiers).toEqual([{ stat: 'maxHp', value: 20 }]);
+    });
+
+    it('a saved copy reads its stat lines from the library entry', () => {
+        const stale = { ...cloneRelic(getRelicById(SIGNET_ID)!), statModifiers: [{ stat: 'maxHp' as const, value: 20 }] };
+        expect(relicStatLines(stale)).toEqual([{ stat: 'mind', value: 5 }]);
+        expect(relicStatLines(FIXTURE_ARMOR)).toEqual(FIXTURE_ARMOR.statModifiers);
     });
 
     it('resolves an unknown or deleted relic id to undefined', () => {
@@ -123,7 +140,7 @@ describe('getSignaturesForLoadout', () => {
 
     it('the Ring and the Signet worn together grant both signatures, in slot order', () => {
         const loadout = { weapon: null, armor: null, accessories: [getRelicById(RING_ID)!, getRelicById(SIGNET_ID)!] };
-        expect(getSignaturesForLoadout(loadout)).toEqual(['sig-disarming-plea', 'sig-crimson-covenant']);
+        expect(getSignaturesForLoadout(loadout)).toEqual(['sig-disarming-plea', 'sig-bleeding-signet']);
     });
 
     it('returns [] for an empty loadout (combat may legally begin signature-less)', () => {

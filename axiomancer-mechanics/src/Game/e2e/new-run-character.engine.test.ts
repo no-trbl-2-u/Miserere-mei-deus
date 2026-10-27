@@ -15,14 +15,14 @@ import { getRelicById } from '../../Items/relic.library';
 import { STARTING_CARD_IDS } from '../../Combat/combat.rewards';
 import { calculateMaxHealth, deepClone } from '../../Utils';
 
-/** The Bleeding Signet: a real relic with a +20 max VITAE line. */
-const SIGNET_ID = 'relic-bleeding-signet';
+/** The Crimson Circlet: a real relic with a +20 max VITAE line. */
+const RELIC_ID = 'relic-crimson-circlet';
 
 const FIXTURE: CharacterDefinition = {
     id: 'fixture-knight',
     name: 'Fixture Knight',
     portraitKey: 'portrait-1',
-    startingRelicId: SIGNET_ID,
+    startingRelicId: RELIC_ID,
     baseStats: { heart: 5, body: 7, mind: 3 },
     startingLaneIds: ['lane-x', 'lane-y'],
     startingCardIds: ['card-x', 'card-y', 'card-z'],
@@ -36,14 +36,14 @@ describe('createNewGameState with a character (CH1 A2)', () => {
 
     it('wears the starting relic in the first relic position', () => {
         const worn = getEquippedItems(run().player.equipment);
-        expect(worn.map(p => p.id)).toEqual([SIGNET_ID]);
-        expect(worn[0]).not.toBe(getRelicById(SIGNET_ID));
+        expect(worn.map(p => p.id)).toEqual([RELIC_ID]);
+        expect(worn[0]).not.toBe(getRelicById(RELIC_ID));
     });
 
     it('takes the character\'s stats and the max VITAE they and the relic give', () => {
         const { player } = run();
         expect(player.baseStats).toEqual({ heart: 5, body: 7, mind: 3 });
-        const relicBonus = getRelicById(SIGNET_ID)!.statModifiers!.find(m => m.stat === 'maxHp')!.value;
+        const relicBonus = getRelicById(RELIC_ID)!.statModifiers!.find(m => m.stat === 'maxHp')!.value;
         expect(player.maxHealth).toBe(calculateMaxHealth(1, FIXTURE.baseStats) + relicBonus);
         expect(player.health).toBe(player.maxHealth);
         expect(player.level).toBe(1);

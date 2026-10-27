@@ -80,7 +80,7 @@ export {
     // Turn lifecycle, Conviction, Signature Skills
     startTurn, endTurn, discardCombatCard,
     playSignatureSkill,
-    getSignatureSkill, signatureCastBlock, SIGNATURE_COST,
+    getSignatureSkill, signatureCastBlock,
     // Incoming-threat readout
     projectIncomingThreat,
     // Projected-lethality readout

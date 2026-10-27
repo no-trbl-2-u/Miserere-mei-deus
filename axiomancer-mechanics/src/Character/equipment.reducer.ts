@@ -17,11 +17,14 @@
 import { Character, EquipmentLoadout } from './types';
 import { Equipment, EquipmentSlot, SLOT_CAPACITY } from '../Items/types';
 import { StatModifier } from '../Effects/types';
+import type { BaseStats } from './types';
+import { relicStatLines } from '../Items/relic.library';
 
 /**
  * Summed worn `maxHp` bonus: the flat `{ stat: 'maxHp' }` lines of
- * every worn item. Folded onto `Character.maxHealth` by `withLoadout`, and by
- * stat allocation / level-up so a rebuilt `maxHealth` keeps the relic bonus.
+ * every worn item (a library relic's read from its library entry). Folded
+ * onto `Character.maxHealth` by `withLoadout`, and by stat allocation /
+ * level-up so a rebuilt `maxHealth` keeps the relic bonus.
  *
  * @param loadout - The worn equipment.
  * @returns The total max-VITAE bonus from worn equipment (0 when none).
@@ -29,11 +32,44 @@ import { StatModifier } from '../Effects/types';
 export function wornMaxHpBonus(loadout: EquipmentLoadout): number {
     let total = 0;
     for (const piece of getEquippedItems(loadout)) {
-        for (const mod of piece.statModifiers ?? []) {
+        for (const mod of relicStatLines(piece)) {
             if (mod.stat === 'maxHp') total += mod.value;
         }
     }
     return total;
+}
+
+/**
+ * Summed worn Heart / Body / Mind lines (a library relic's read from its
+ * library entry). Added to the fighter's stats at combat start, never to the
+ * saved `baseStats`.
+ *
+ * @param loadout - The worn equipment.
+ * @returns The bonus per stat (each 0 when none).
+ */
+export function wornStatBonus(loadout: EquipmentLoadout): BaseStats {
+    const total: BaseStats = { heart: 0, body: 0, mind: 0 };
+    for (const piece of getEquippedItems(loadout)) {
+        for (const mod of relicStatLines(piece)) {
+            if (mod.stat !== 'maxHp') total[mod.stat] += mod.value;
+        }
+    }
+    return total;
+}
+
+/**
+ * The fighter's stats: base stats plus every worn Heart / Body / Mind line.
+ *
+ * @param character - The wearer.
+ * @returns A fresh stats object.
+ */
+export function statsWithWorn(character: Pick<Character, 'baseStats' | 'equipment'>): BaseStats {
+    const bonus = character.equipment ? wornStatBonus(character.equipment) : { heart: 0, body: 0, mind: 0 };
+    return {
+        heart: character.baseStats.heart + bonus.heart,
+        body: character.baseStats.body + bonus.body,
+        mind: character.baseStats.mind + bonus.mind,
+    };
 }
 
 /**

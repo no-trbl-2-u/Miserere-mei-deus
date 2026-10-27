@@ -65,6 +65,7 @@ import { canAct, getActiveEffectModifiers, getActiveDotTotal, ticksOnRoundClock 
 import { getThreatSequence, commitThreatBranch } from './combat.threat';
 import { getSignatureSkill, applySignatureSkill, signatureCastBlock, playerArchetype } from './combat.signature';
 import { getSignaturesForLoadout } from '../Items/relic.library';
+import { statsWithWorn } from '../Character/equipment.reducer';
 import {
     type ProgramKit, deckHasProgramCards, initProgramLedger, isProgramCard, isCurseCard,
     playProgramCard, programTurnStart, programFoeTurnStart, programClampDamage,
@@ -214,6 +215,9 @@ export function initializeCombatEncounter(
     if (seed !== undefined) setSeed(seed);
 
     const clonedPlayer = deepClone(player);
+    // Worn Heart / Body / Mind lines join the fighter's stats for this fight
+    // only; the fight writes back VITAE, never stats.
+    clonedPlayer.baseStats = statsWithWorn(clonedPlayer);
     const clonedEnemy = deepClone(enemy);
     const deck = playerDeck && playerDeck.length > 0 ? playerDeck.slice() : buildCombatDeck(clonedPlayer, flags);
 
@@ -1825,7 +1829,7 @@ export function playSignatureSkill(
 /** The baseline signature kit (for the presenter / UI bar). */
 export {
     SIGNATURE_SKILLS, SIGNATURE_SKILL_LIST, getSignatureSkill,
-    signatureCastBlock, SIGNATURE_COST,
+    signatureCastBlock,
 } from './combat.signature';
 
 // ── Summary ──────────────────────────────────────────────────────────────────

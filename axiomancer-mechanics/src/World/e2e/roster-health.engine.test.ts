@@ -30,7 +30,11 @@ const PINNED_ORPHANS: ReadonlyArray<{ lens: string; id: string }> = [
     // No run starts with the ring or is handed it any more; old saves and
     // the dev menu hold it until it gets a lane.
     { lens: 'item-ungranted', id: 'relic-disarming-plea' },
-    // No shop, loot or reward carries it; only the dev menu hands it over.
+    // Blood Price's relics: the Circlet drops from elites (`rollEliteRelicDrop`,
+    // a source this audit does not read); the two quest relics wait on the Act 1
+    // quests (LR1f). Until then only the dev menu hands them over.
+    { lens: 'item-ungranted', id: 'relic-crimson-circlet' },
+    { lens: 'item-ungranted', id: 'relic-ruby-signet' },
     { lens: 'item-ungranted', id: 'relic-bleeding-signet' },
 ];
 
