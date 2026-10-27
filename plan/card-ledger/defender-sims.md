@@ -29,7 +29,8 @@
   64, max 178 (test deck). Taking P-06 out drops the p90 to 16 to 22 and the max
   to 54; E-06's doubling is not the driver. Highest REFLECT: median 20 to 95%,
   p90 113 to 130%, max 295% (30-card deck: p90 to 200%, max 275%), from
-  E-03 PAID 100% and P-04 PAID 75% stacking; M-10 adds 15% a turn and a fight
+  E-03 (100% PAID) landing again inside its 2-turn refresh (in the 30 cards also
+  P-04 PAID 75%, E-08 and P-09); M-10 adds 15% a turn and a fight
   lasts about 3.
 - **A PAID discard line is never unpayable at turn start** (0 of 76,699
   checks). It is refused later in the turn, once the hand has emptied: of the
@@ -234,8 +235,9 @@ P-06's FREE line turns the turn's whole DEAL into THORNS, after a P-03 PAID
 doubles that; E-06 then doubles a stack that is already large. Without
 P-06 the deck is no slower: THORNS is a quarter of the kill, and the rest is DEAL.
 
-**REFLECT stacks high because E-03 PAID (100%) and P-04 PAID (75%) stack**; the
-2-turn refresh keeps it up. M-10's +15% a turn is small at these fight lengths
+**REFLECT stacks high because each new REFLECT adds and refreshes**: in the test
+deck E-03 (50% FREE, 100% PAID) landing a second time inside its 2 turns, with
+M-10; in the 30 cards also P-04 PAID (75%), E-08 and P-09. M-10's +15% a turn is small at these fight lengths
 (about 3 turns, so +45% at most from one M-10). If the revisions bring fights to
 T's targets, a PAID M-10 from turn 1 reaches 105% on its own by turn 7 and keeps
 growing, uncapped; REFLECT never cuts the damage you take, so its size is bounded
