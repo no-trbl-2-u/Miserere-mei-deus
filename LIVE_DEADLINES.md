@@ -6,6 +6,7 @@
 
 | Due | Item | What it needs | Window |
 |---|---|---|---|
+| 2026-10-26 (1 day overdue) | First character playable (T: end of day; waits on a third lane) | needs you: CH1e ready for you | W1 |
 | 2026-10-27 (today) | Pick the item icons, the six lane relics included; the loop applies them (1 h) | needs you: IT1b ready for you | W1 |
 | 2026-10-28 (tomorrow) | Enemy session 1: Chapter 1's normal roster, the Breakwater's four fight nodes (1 h) | needs you: your task | W1 |
 | 2026-10-30 (in 3 days) | W1 demo part 1: T plays the ten hard candidates (1 h) | needs you: your task | W1 |

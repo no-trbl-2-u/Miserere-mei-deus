@@ -26,7 +26,7 @@
   drop chance."; the rest spot stays used up.
 - Decisions: **D30** as amended by **D59** and the current Act 1 content (one
   elite per region, the Green Jelly), **D71** (elites drop relics at a low
-  chance), **D100** / **D104** (the elite reward draws over the lane pool,
+  chance), **D100** / **D104** / **D107** (the elite reward draws over the lane pool,
   unchanged here), **D88** (content allowed because T is asking), **D93**
   (lands by `plot` PR). The frontier rule (W-01 as amended by D1,
   `plan/bearings.md` "Traversal") is unchanged: a respawned node simply

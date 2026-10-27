@@ -1025,6 +1025,24 @@ satisfied for exactly these.)
 - The loop still never invents card, keyword or art content unprompted: `/expand` may only propose candidates, as for other content, and a proposal is never built until promoted.
 - Unchanged: `Potential Assets/` is a store, never a source (D96); a sprite sheet for an already-used enemy stays enhancement (D97). First use: a `/plot` phase renaming the Blood Price cards.
 
+**D107 — The reward pool is the starting lanes plus the worn relics' lanes; grey is never a reward lane.** (T, 2026-10-26, in session, from the character-selection `/pitch` still in progress; recorded by the RW1a/LR1a plot amend, run unattended. Amends D104. D106 is taken by the open chapters plot.)
+
+- The reward pool is the character's two starting lanes plus the lane of every worn relic. Worn relics also weight the offer toward their lane (D100's slots, RW1a A3). Unequipping a relic removes its lane from the pool.
+- A carried, unworn relic does nothing for the pool. This replaces D104's "a lane unlocks the moment one of its relics is in the inventory, equipped or not".
+- The grey starter cards are not a lane and are never offered as card rewards.
+- Stopgap until character selection exists (it waits on T plotting a third lane): the pool is the worn relics' lanes only. When it is empty (no lane relic worn), the reward falls back to grey cards (confirmed by T, 2026-10-26). The starting lanes join the pool when character selection lands, and the fallback is then deleted: every run starts at character select, so the pool is never empty.
+- Built by Phase RW1a (`plan/phases/phase_RW1_reward_rule.md`); the relic detail line reads "Lane: <lane> (while worn)" (Phase LR1a).
+
+**D108 — Each run opens as a character; the reward pool is its two starting lanes plus the worn relics' lanes.** (T, 2026-10-26, the character-selection `/pitch`; recorded by the CH1 plot, run unattended. Overrides D104's carry-to-unlock rule; builds on D107, PR #944, open at the time. D106 and D107 are taken by the open chapters and RW1a/LR1a plots.)
+
+- The player picks a character at run start. Each character has a unique portrait, a starting relic that starts equipped, a starting stat allocation, two starting lanes different from its relic's lane, and a one-line playstyle.
+- The reward pool is the character's two starting lanes plus the lane of every worn relic. Worn relics weight the offer toward their lane (D100's slots); starting lanes widen the pool and add no guaranteed slot. Unequipping a relic removes its lane, the starting relic included. A carried, unworn relic does nothing.
+- Grey starter cards are not a lane and are never offered as rewards. Once the first character goes live, every run starts at character select, so the pool is never empty and D107's grey fallback is deleted; a save made before characters cannot be continued and is offered for deletion (T, 2026-10-26).
+- A character starts with Blow 3 / Ward 2 / Word 2 plus one card from each of its three lanes (no Spell or Global), and its stats total 15 (T, 2026-10-26).
+- The select screen is a fighting-game character select: a two-row carousel of squares at the bottom, locked squares a question-mark icon; the portrait and the starting relic are its two focal elements, then stats and the playstyle; the starting lanes are never named.
+- Portraits, relics, stat spreads and playstyle lines are T's content (D88). The first character is due 2026-10-26 (T); three for December. Character content waits on at least one new lane, because a character needs three distinct lanes; T plans two new lanes before a character goes live.
+- Built by Phase CH1 (`plan/phases/phase_CH1_character_select.md`).
+
 **D110 — A card's colour is only which die pays for it; THORNS scales with Heart.** (T, attended, 2026-10-26; amends D40's last clause and T's 2026-10-13 card-spec ruling. T: "A card's colour is ONLY what die pays for them and is not categorized otherwise. This means for lane-creator, don't have it pitch a color for the cards. Instead, I pick the cards, then afterwards, it can split the colors up evenly." And: "We can move THORNS to heart.")
 
 - A card's colour says which die pays for it (the Color Law, D65) and nothing else. It is not read from the card's text, its keyword or its job.
@@ -1064,6 +1082,7 @@ satisfied for exactly these.)
 - The rule applies to every card reward, the cache included (T answered the cache question with the rule itself). This supersedes D68's "card rewards outside of combat are not affected by relics".
 - Duplicates are allowed: "no owned card re-offered" was withdrawn the same day.
 - Built by Phase RW1 (`plan/phases/phase_RW1_reward_rule.md`).
+- **Amended by D107 (T, 2026-10-26):** the carry rule above is replaced; only worn relics put their lane in the pool, and grey is offered only when the pool is empty.
 
 **D103 — A Spell's PAID line exiles, and is stronger for it.** (T, attended, 2026-10-24; amends D69's Spell lifecycle. T: "It should be every spell, all lanes. That's what makes a spell a spell. However, they should be stronger than regular skills so make sure their numbers are higher than their skill counterparts. And set into law that: Spells always end their paid line with EXILE and are always stronger than their skill counterpart (since the exiling of the card is such a downside, we want to make sure it's worth it to pay for it and lose it). For now, their free line does not exile.")
 

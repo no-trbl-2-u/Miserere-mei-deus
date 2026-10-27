@@ -22,11 +22,11 @@ measured (R12a's report carries its columns). Card names are content T approves 
 |---|---|---|---|
 | 1 | **Session 0.** The one-line fantasy, the sub-lane shape, the keywords the family needs and T's rulings on how they work. | Session with T | The family's ledger, `plan/card-ledger/rehearsal-<family>.md`, Session 0 section |
 | 2 | **Slot pitches.** Ten slot roles per sub-lane, plain text, each one job. | Session drafts, T approves | Ledger, "Sub-lane pitches" |
-| 3 | **The ballot.** Three candidates per slot, ninety in all, on the ballot shell with the shared kit (`plan/card-ledger/README.md` "Adding a ballot"), and a `BALLOTS` entry. Every candidate is pitched a colour by its job (below, "Pitching a colour"), the three colours near-equal. | Session | `rehearsal-<family>.ballot.html`, a plan PR, and **the branch preview link sent to T** |
+| 3 | **The ballot.** Three candidates per slot, ninety in all, on the ballot shell with the shared kit (`plan/card-ledger/README.md` "Adding a ballot"), and a `BALLOTS` entry. Candidates carry no colour (below, "Colours after the picks"). | Session | `rehearsal-<family>.ballot.html`, a plan PR, and **the branch preview link sent to T** |
 | 4 | **The vote.** T ticks keepers and writes slot notes on the phone at `axiomancer-ballots.pages.dev`, over as many sittings as it takes, then submits. | T | A `final` row in D1 `ballot_verdicts` |
 | 5 | **The verdicts.** The session reads the newest `final` row for the ballot (the D1 query tool, or `GET /v1/ballot-verdicts?ballot=<id>&status=final`) and writes it into the ledger; it never asks T to paste. | Session | Ledger, "Verdicts"; the `BALLOTS` entry set `closed` |
 | 6 | **The sims.** The kept cards simulated in a sandbox against the Act 1 fights, to inform the revisions; a measurement, not a gate. | Session | A sandbox branch and its numbers in the ledger |
-| 7 | **The revisions.** T's cuts, additions and number changes; the open keyword math settled; names; the test deck; the family relic. | Session with T | Ledger, "Revisions" |
+| 7 | **The revisions.** T's cuts, additions and number changes; the open keyword math settled; names; each kept card's colour, split evenly (below, "Colours after the picks"); the test deck; the family relic. | Session with T | Ledger, "Revisions" |
 | 8 | **The trial set.** A `/plot` for the removable trial set (its own library file, one `TRIAL_SETS` line, its lane and test deck) and any engine work its keywords need. T merges the plot; the loop builds it. | Session plots, T merges, loop builds | A `plot` PR, then `loop:pr` PRs |
 | 9 | **Measured.** The trial set joins the measured-truth report's decks. | Loop | `docs/reports/measured/latest.md` columns |
 
@@ -37,30 +37,24 @@ pitch or ballot candidate never prints a cap ("max n", "max +n", "capped"); an e
 something grows without limit. A cap exists only where T asks for one, in a slot note or at the revisions
 step, and the sims (step 6) are where a runaway number shows up.
 
-## Pitching a colour
+## Colours after the picks
 
-Phase BV3, from T's ballot on 2026-10-24: every ballot candidate is shown in the colour the engine would give it, so
-T votes on colour as well as text. A candidate carries a `job`, and its colour comes from one table, `JOB_COLORS` in
-`plan/card-ledger/ballot-kit.js`; it is never typed by hand. The table is Blood Price's split written down (the hits
-red, the walls, healing and utility blue, the afflictions purple), so every family pitches the same job the same
-colour:
+Phase CL1, from T on 2026-10-26 (D110): "A card's colour is ONLY what die pays for them and is not categorized
+otherwise. This means for lane-creator, don't have it pitch a color for the cards. Instead, I pick the cards, then
+afterwards, it can split the colors up evenly." A card's colour is only which die pays for it (the Color Law, D65);
+what scales a number is its keyword (D40), whatever the card's colour.
 
-| Job | Tint | Colour |
-|---|---|---|
-| `hit` | red | `body` |
-| `wall` | blue | `mind` |
-| `heal` | blue | `mind` |
-| `utility` | blue | `mind` |
-| `affliction` | purple | `heart` |
-| `colourless` | grey | `any` |
-
-- **Pitch by job, not by keyword scaling.** A keyword with no ruled scaling stat never holds a pitch up.
-- **Keep the three near-equal.** Across the ninety, each of red, blue and purple sits within 10% of an equal share
-  of the coloured candidates (27 to 33 of 90); `colourless` is not counted. `node --test
-  scripts/ballot-kit.test.mjs` fails an open ballot that misses it, or has a candidate with no job.
-- **T's notes overrule.** A slot note such as "make it blue" changes the keeper's colour at the verdicts step;
-  nothing parses the note. The Generate text prints each kept card's colour (`KEEP P-01b (red)`).
-- The Elementalist ballot predates the pitch and stands as voted; its keepers are pitched colours at step 7.
+- **No colour on the ballot.** A candidate carries no `job`, `color` or `colour`; the face is untinted and the
+  Generate text names keepers alone (`KEEP P-01b`). `node --test scripts/ballot-kit.test.mjs` fails an open
+  ballot whose candidates carry one.
+- **The split, at the revisions (step 7).** The session proposes a colour for every kept lane card so red, blue
+  and purple are as even as the count allows (a family of 30: 10 each), and as even as it can within each
+  sub-lane: Payoff, Engine and Misc each split about 3/3/4 across the colours (T, 2026-10-26: "split colours
+  evenly within each of Payoff, Engine and Misc"). Every colour then holds setup and payoff cards, so a tray that
+  rolls one colour can still set up and cash out. Grey (colourless) cards are not counted.
+- **T edits the proposal**, and the ledger's `## Revisions` records each card's colour. No card's colour is read
+  from its text.
+- Ballots voted before CL1 (Blood Price, the Elementalist) stand as voted.
 
 ## What T does
 

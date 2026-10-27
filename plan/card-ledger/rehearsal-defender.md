@@ -111,5 +111,7 @@ candidates, three per slot. Every slot offers one red, one blue and one purple t
 
 Numbers are placeholders for the sims (step 6), scaled from the grey cards (A Plain Blow: FREE DEAL 2, PAID DEAL 5)
 and the Elementalist's ballot; a PAID line that discards pays roughly half again over a plain PAID line. REFLECT is
-printed as lasting this turn and stacking by adding (Open, above). No candidate prints a cap ("max"):
+printed as lasting this turn and stacking by adding (Open, above). The colours above were taken off the ballot by phase CL1
+(D110, T, 2026-10-26): a card's colour is only which die pays for it, and the kept cards' colours are split evenly
+within each sub-lane at the revisions step. THORNS scales with Heart (D110). No candidate prints a cap ("max"):
 T, 2026-10-26: "remove the '(max +n)' from every card. If there should be a max, I'll call it out."
