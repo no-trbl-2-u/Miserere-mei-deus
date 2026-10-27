@@ -81,6 +81,9 @@ const ATLAS_WITHOUT_REGISTRY_ROW = new Set([
   // (MTG's rule: keyword what COMPRESSES). The atlas documents it as the
   // library's primary verb; it has no gloss because it needs none.
   'DEAL',
+  // The Defender's words (DF1b): the atlas rows ship with the engine; their
+  // glosses land in DF1c, which removes these four.
+  'THORNS', 'REFLECT', 'RETRIEVE', 'HOLDS',
 ])
 
 test('every keyword the atlas registers has a gloss in a live registry', () => {

@@ -414,6 +414,10 @@ export type CombatEvent =
     | { kind: 'spike-struck'; spike: 'thorns' | 'reflect'; amount: number }
     /** A PAID cost discarded these cards from your hand at random. */
     | { kind: 'cards-discarded'; cardIds: string[] }
+    /** RETRIEVE returned these cards from your discard to your hand. */
+    | { kind: 'cards-retrieved'; cardIds: string[] }
+    /** A card came back from EXILE into your draw pile. */
+    | { kind: 'card-unexiled'; cardId: string }
     // ── Card-mechanic events ─────────────────────────────────────────────────
     | { kind: 'barrier-absorbed'; amount: number }
     | { kind: 'riposte-fired'; amount: number }

@@ -13,15 +13,39 @@
   },
   {
     "rule": "carrier-rule",
+    "id": "HOLDS",
+    "reason": "the \"GUARD holds\" term ships with its engine (DF1b); its carriers, the Defender trial set, land in DF1d, which removes this row",
+    "filed": "2026-10-27"
+  },
+  {
+    "rule": "carrier-rule",
     "id": "HONE",
     "reason": "pinned at CS1, awaits T's card session",
     "filed": "2026-10-13"
   },
   {
     "rule": "carrier-rule",
+    "id": "REFLECT",
+    "reason": "the spikes engine ships first (DF1a, DF1b); its carriers, the Defender trial set, land in DF1d, which removes this row",
+    "filed": "2026-10-27"
+  },
+  {
+    "rule": "carrier-rule",
+    "id": "RETRIEVE",
+    "reason": "the RETRIEVE verb ships first (DF1b); its carriers, the Defender trial set, land in DF1d, which removes this row",
+    "filed": "2026-10-27"
+  },
+  {
+    "rule": "carrier-rule",
     "id": "TEMPER",
     "reason": "pinned at CS1, awaits T's card session",
     "filed": "2026-10-13"
+  },
+  {
+    "rule": "carrier-rule",
+    "id": "THORNS",
+    "reason": "the spikes engine ships first (DF1a, DF1b); its carriers, the Defender trial set, land in DF1d, which removes this row",
+    "filed": "2026-10-27"
   },
   {
     "rule": "carrier-rule",
