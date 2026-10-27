@@ -19,6 +19,8 @@
  * pop (card face, glossary header). The combat log uses Title-Case directly.
  */
 
+import { RESERVE_MAX, RESERVE_PIP_CAP } from '../../../axiomancer-mechanics/src/Combat/combat.dice';
+
 /** Effect id → keyword (Title-Case). The CARD vocabulary. */
 const EFFECT_KEYWORD: Record<string, string> = {
     // ── The effect-backed keywords ──
@@ -180,7 +182,7 @@ export function allRegistryKeywords(): readonly string[] {
 export const SYSTEM_GLOSSARY: readonly { term: string; def: string }[] = [
     { term: 'CONVICTION ◆', def: 'A spend-anytime resource banked from unspent dice and overflow. It never decays.' },
     { term: 'RESERVE & PIPS', def: 'Up to 2 dice held between phases instead of played. Each gains +1 pip per phase it survives, spent for extra intensity or Guard.' },
-    { term: 'WILD / X', def: 'A WILD die counts as any color. A dead X die powers nothing.' },
+    { term: 'WILD / X', def: "A WILD die counts as any color. A dead X die powers nothing, unlike an X on a card's line, which means the amount varies." },
     { term: 'GLOBAL', def: 'Stays in play and fires on its trigger (⟳ your turn starts, 🩸 you SACRIFICE): 3 turns played FREE, all combat PAID. Copies stack (experimental).' },
     { term: 'CURSE', def: 'A dead card that holds a hand slot until played. It cannot be scrapped.' },
 ];
@@ -220,3 +222,160 @@ export function systemTermsForCard(
         return !(SYSTEM_TERM_COVERED_BY[term] ?? []).some(kw => chips.has(kw));
     });
 }
+
+// ── The board glossary ───────────────────────────────────────────────────────
+//
+// Words and marks the combat board shows with no text of their own (the
+// Conviction chip, the dice faces, the piles, the phase ledger, the globals
+// row). A sighted player touches one and the shared plaque opens its entry.
+// ONE source: an entry the systems glossary or the keyword registry already
+// defines is looked up here, never copied, so the card detail and the board
+// cannot drift. The numbers an entry states come from the engine constants.
+
+/** Every term the board can open. */
+export type BoardTermId =
+    | 'conviction' | 'boon' | 'mana' | 'miss' | 'banked' | 'ghost'
+    | 'xdie' | 'xvaries' | 'piles' | 'ledger' | 'global';
+
+export interface BoardGlossEntry {
+    /** The plaque's heading, uppercase. */
+    title: string;
+    /** The rule, one or two short sentences. */
+    def: string;
+    /** One more short sentence the rule needs, or null. */
+    more: string | null;
+}
+
+/** A system-glossary definition by term name (the board never copies it). */
+function systemDef(term: string): string {
+    const hit = SYSTEM_GLOSSARY.find((s) => s.term === term);
+    return hit ? hit.def : '';
+}
+
+export const BOARD_GLOSSARY: Readonly<Record<BoardTermId, BoardGlossEntry>> = {
+    conviction: { title: 'CONVICTION ◆', def: systemDef('CONVICTION ◆'), more: null },
+    boon: { title: 'BOON', def: KEYWORD_GLOSS.Boon, more: null },
+    mana: {
+        title: 'MANA',
+        def: "A MANA face powers one paid line of a card of the die's color. It grants no Conviction.",
+        more: null,
+    },
+    miss: {
+        title: 'MISS',
+        def: 'A MISS face is dead. It powers nothing and cannot be banked.',
+        more: null,
+    },
+    banked: {
+        title: 'BANKED DIE',
+        def: systemDef('RESERVE & PIPS'),
+        more: `A pip shows each phase it has survived, up to ${RESERVE_PIP_CAP}. The Reserve holds ${RESERVE_MAX}.`,
+    },
+    ghost: {
+        title: 'GHOST DIE',
+        def: 'A spare die kept until you spend it. It never rerolls, and spending it uses it up.',
+        more: null,
+    },
+    xdie: {
+        title: 'X DIE',
+        def: 'A struck X die is dead. It powers nothing this round.',
+        more: null,
+    },
+    xvaries: {
+        title: 'X ON A CARD',
+        def: "An X on a card's line, or varies, means the amount is set when you play it.",
+        more: 'Open the card to read what sets it.',
+    },
+    piles: {
+        title: 'DECK & DISCARD',
+        def: 'The first pile is the cards you will draw. The second is the cards you have played.',
+        more: 'An empty deck shuffles the discard back in.',
+    },
+    ledger: {
+        title: 'PHASE LEDGER',
+        def: 'One mark per threat phase. O means cleared (the foe was hindered), X means overwhelmed (the foe acted).',
+        more: 'A dim mark is a phase still ahead.',
+    },
+    global: {
+        title: 'GLOBAL',
+        def: systemDef('GLOBAL'),
+        more: '⏳n is the turns it has left. ∞ lasts the whole combat.',
+    },
+};
+
+/** The live numbers a gloss prints under its rule. */
+export interface BoardGlossLive {
+    /** Conviction in hand (the chip). */
+    conviction?: number;
+    /** The Conviction this die's BOON face grants (the gear's payload). */
+    boon?: number;
+    /** A banked die's ripening pips. */
+    pips?: number;
+    deck?: number;
+    discard?: number;
+    ledger?: { clear: number; overwhelmed: number; pending: number };
+}
+
+/** What the plaque prints for a set of terms: the first term is the heading,
+ *  each later one a smaller section beneath it, and `live` the table's own
+ *  numbers (null when the touch carried none). */
+export interface BoardGlossView {
+    title: string;
+    sections: { title: string | null; def: string; more: string | null }[];
+    live: string | null;
+}
+
+function liveLine(id: BoardTermId, live: BoardGlossLive | undefined): string | null {
+    if (!live) return null;
+    switch (id) {
+        case 'conviction':
+            return live.conviction === undefined ? null : `You hold ◆ ${live.conviction}.`;
+        case 'boon':
+            return live.boon === undefined ? null : `This die grants +${live.boon} ◆ when it powers a card.`;
+        case 'banked':
+            return live.pips === undefined ? null : `This die holds ${live.pips} of ${RESERVE_PIP_CAP} pips.`;
+        case 'piles':
+            return live.deck === undefined || live.discard === undefined
+                ? null : `Deck ${live.deck}, discard ${live.discard}.`;
+        case 'ledger': {
+            const l = live.ledger;
+            return l ? `${l.clear} cleared, ${l.overwhelmed} overwhelmed, ${l.pending} ahead.` : null;
+        }
+        default:
+            return null;
+    }
+}
+
+/**
+ * The plaque content for one touch: `ids` in order (the die's face, then
+ * BANKED or GHOST), each term's rule from {@link BOARD_GLOSSARY}, and the live
+ * numbers of whichever term carries one.
+ */
+export function boardGlossView(ids: readonly BoardTermId[], live?: BoardGlossLive): BoardGlossView {
+    const entries = ids.map((id) => ({ id, entry: BOARD_GLOSSARY[id] }));
+    const lines = entries
+        .map(({ id }) => liveLine(id, live))
+        .filter((l): l is string => l !== null);
+    return {
+        title: entries[0]?.entry.title ?? '',
+        sections: entries.map(({ entry }, i) => ({
+            title: i === 0 ? null : entry.title,
+            def: entry.def,
+            more: entry.more,
+        })),
+        live: lines.length > 0 ? lines.join(' ') : null,
+    };
+}
+
+/**
+ * The momentum popup's copy. The third node lights a MOMENTUM SURGE, which
+ * forges a wild die the engine marks `floating`: the tray names that die
+ * GHOST, so the popup says so (pinned by `keywords.board-glossary.test.ts`).
+ */
+export const MOMENTUM_GLOSS = {
+    title: 'MOMENTUM',
+    def: 'Play cards around the wheel: HEART, then BODY, then MIND (starting on any of them). '
+        + 'Each right colour lights the next node. A wrong colour resets the wheel.',
+    surge: 'Light the third node and the wheel SURGES: a wild ✦ GHOST die joins the tray. '
+        + 'Drag it onto ANY card, regardless of colour, to power it.',
+    meta: 'wrong colour resets · the GHOST die lasts until spent or the fight ends',
+} as const;

@@ -34,6 +34,10 @@ export function programLifecycle(card: Pick<Card, 'cardType'>): string {
     }
 }
 
+/** What a PAID headline prints for an amount the card does not print as a number
+ *  (a bare `X` would read as the dead X die). The FREE corner pill keeps its X. */
+export const VARIES = 'varies';
+
 /**
  * The ordered headline patterns: the first that matches a line is its face.
  * A registry keyword headlines as KEYWORD · value; DEAL, Conviction, "the foe
@@ -44,14 +48,14 @@ const HEADLINES: readonly { re: RegExp; keyword: string | null; value: (m: RegEx
     { re: /\bnext DEAL this turn deals \+n\b/, keyword: null, value: () => 'Next Deal +n' },
     { re: /\bDEAL 2X\b/, keyword: null, value: () => 'Deal 2X' },
     { re: /\bDEAL (\d+|n)\b/, keyword: null, value: (m) => `Deal ${m[1]}` },
-    { re: /\bDEAL\b/, keyword: null, value: () => 'Deal X' },
+    { re: /\bDEAL\b/, keyword: null, value: () => `Deal ${VARIES}` },
     { re: /\bGUARD (\d+|n)\b/, keyword: 'GUARD', value: (m) => m[1] },
     { re: /\bloses (\d+) VITAE\b/, keyword: null, value: (m) => `Foe −${m[1]}` },
-    { re: /\bfoe loses VITAE\b/, keyword: null, value: () => 'Foe −X' },
+    { re: /\bfoe loses VITAE\b/, keyword: null, value: () => `Foe − ${VARIES}` },
     { re: /\bVULNERABLE \+(\d+)%/, keyword: 'VULNERABLE', value: (m) => `+${m[1]}%` },
     { re: /\bHEAL (\d+)\b/, keyword: 'HEAL', value: (m) => m[1] },
     { re: /\bLEECH (\d+)\b/, keyword: 'LEECH', value: (m) => m[1] },
-    { re: /\bLEECH\b/, keyword: 'LEECH', value: () => 'X' },
+    { re: /\bLEECH\b/, keyword: 'LEECH', value: () => VARIES },
     { re: /\bTETHER (\d+)\b/, keyword: 'TETHER', value: (m) => m[1] },
     // The weather and DRAW, by their printed number.
     { re: /\bINFERNO (\d+)\b/, keyword: 'INFERNO', value: (m) => m[1] },
@@ -62,13 +66,13 @@ const HEADLINES: readonly { re: RegExp; keyword: string | null; value: (m: RegEx
     { re: /\bEXILE a Curse\b/, keyword: 'EXILE', value: () => 'Curse' },
     { re: /\bgain (\d+) Conviction\b/i, keyword: null, value: (m) => `+${m[1]} ◆` },
     { re: /\bSACRIFICE (\d+)\b/, keyword: 'SACRIFICE', value: (m) => m[1] },
-    { re: /\bSACRIFICE any amount\b/, keyword: 'SACRIFICE', value: () => 'X' },
+    { re: /\bSACRIFICE any amount\b/, keyword: 'SACRIFICE', value: () => VARIES },
     { re: /\bSACRIFICE\b/, keyword: 'SACRIFICE', value: () => '×2' },
     { re: /\bCurses?\b/, keyword: null, value: () => 'Curse' },
     // A line that only reads the weather ("GUARD equal to the foe's
     // BLIZZARD", "Remove your INFERNO") headlines its verb, or the element.
-    { re: /\bGUARD\b/, keyword: 'GUARD', value: () => 'X' },
-    { re: /\bHEAL\b/, keyword: 'HEAL', value: () => 'X' },
+    { re: /\bGUARD\b/, keyword: 'GUARD', value: () => VARIES },
+    { re: /\bHEAL\b/, keyword: 'HEAL', value: () => VARIES },
     { re: /\bINFERNO\b/, keyword: 'INFERNO', value: () => '' },
     { re: /\bBLIZZARD\b/, keyword: 'BLIZZARD', value: () => '' },
     { re: /\bSTORM\b/, keyword: 'STORM', value: () => '' },
