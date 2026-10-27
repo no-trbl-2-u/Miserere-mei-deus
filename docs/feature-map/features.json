@@ -1819,6 +1819,12 @@
       "kind": "coupling",
       "from": "area:Items",
       "to": "area:Effects",
+      "file": "axiomancer-mechanics/src/Items/relic.library.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Items",
+      "to": "area:Effects",
       "file": "axiomancer-mechanics/src/Items/types.ts"
     },
     {
