@@ -51,10 +51,8 @@ describe('relic library — roster', () => {
         for (const r of relicLibrary) {
             const keys = Object.keys(r).sort();
             expect(keys).toEqual(
-                (r.slot === 'accessory'
-                    ? ['accessoryKind', 'category', 'description', 'grantsSignature', 'id', ...(r.laneId ? ['laneId'] : []), 'name', 'slot', 'statModifiers']
-                    : ['category', 'description', 'grantsSignature', 'id', ...(r.laneId ? ['laneId'] : []), 'name', 'slot', 'statModifiers']),
->            );
+                ['category', 'description', 'grantsSignature', 'id', ...(r.laneId ? ['laneId'] : []), 'name', 'slot', 'statModifiers'],
+            );
         }
     });
 
@@ -74,7 +72,7 @@ describe('A1 · the Bleeding Signet opens Blood Price while worn', () => {
     const wearer = (worn: Equipment[], carried: Equipment[] = []): Character => ({
         ...deepClone(Player),
         inventory: [...worn, ...carried],
-        equipment: { weapon: null, armor: null, accessories: worn },
+        equipment: { weapon: null, armor: null, relics: worn },
         devRewardLaneIds: undefined,
     });
 
