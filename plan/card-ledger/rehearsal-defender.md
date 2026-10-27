@@ -5,6 +5,9 @@
 > needs three registered lanes before its first character can exist, and T plans
 > a fourth lane after this one. Paper only until the trial set is plotted and
 > built (step 8); nothing here is live content.
+>
+> **Live (Phase DF1d, 2026-10-27):** the thirty cards are the removable trial set `axiomancer-mechanics/src/Cards/library/defender.cards.ts`
+> (one `TRIAL_SETS` line), with lane `defender` and the test deck below. The numbers shipped are "The numbers" table's.
 
 ## Session 0 — rulings (T, 2026-10-26)
 

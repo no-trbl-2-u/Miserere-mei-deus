@@ -99,15 +99,15 @@ double on that foe turn.
 
 | keyword | reminder text | carried by |
 |---|---|---|
-| **THORNS N** | Each foe strike deals N back to the foe. THORNS drops by 1 at the end of each round after the one it was gained in. | the Defender trial set (DF1d) |
-| **REFLECT N%** | Each foe strike sends N% of its damage before GUARD back to the foe. You still take the hit. Lasts 2 turns; a new REFLECT adds its % and refreshes to 2 turns. No cap. | the Defender trial set (DF1d) |
+| **THORNS N** | Each foe strike deals N back to the foe. THORNS drops by 1 at the end of each round after the one it was gained in. | the Defender trial set |
+| **REFLECT N%** | Each foe strike sends N% of its damage before GUARD back to the foe. You still take the hit. Lasts 2 turns; a new REFLECT adds its % and refreshes to 2 turns. No cap. | the Defender trial set |
 
 ### Drawing
 
 | keyword | reminder text | carried by |
 |---|---|---|
 | **DRAW N** | Draw N cards now. When your draw pile is empty, your discard is shuffled into it. | the Elementalist trial set (EL1c) |
-| **RETRIEVE N** | Return N random cards from your discard to your hand. | the Defender trial set (DF1d) |
+| **RETRIEVE N** | Return N random cards from your discard to your hand. | the Defender trial set |
 
 ### The dice
 
