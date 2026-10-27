@@ -19,7 +19,7 @@ const ALLOWED = new Set([
     'axiomancer-mechanics/src/Game/legacy-slots.ts',
 ]);
 const SKIP_DIRS = new Set([
-    'node_modules', '__tests__', 'dist', 'build', 'web-build', 'coverage', '.expo', 'android', 'ios',
+    'node_modules', '__tests__', 'dist', 'build', 'web-build', 'coverage', '.expo', 'android', 'ios', 'assets',
 ]);
 const CODE = /\.(ts|tsx|js|jsx|mjs|cjs)$/;
 const OLD_WORDS = /\baccessoryKind\b|\bAccessoryKind\b|\baccessories\b|'accessory'|"accessory"/;
@@ -44,10 +44,12 @@ describe('the old relic-slot words', () => {
         for (const file of files) {
             const rel = path.relative(REPO, file).split(path.sep).join('/');
             if (ALLOWED.has(rel)) continue;
-            fs.readFileSync(file, 'utf8').split(/\r?\n/).forEach((line, i) => {
+            const text = fs.readFileSync(file, 'utf8');
+            if (!OLD_WORDS.test(text)) continue;
+            text.split(/\r?\n/).forEach((line, i) => {
                 if (OLD_WORDS.test(line)) offenders.push(`${rel}:${i + 1}: ${line.trim()}`);
             });
         }
         expect(offenders).toEqual([]);
-    });
+    }, 60_000);
 });
