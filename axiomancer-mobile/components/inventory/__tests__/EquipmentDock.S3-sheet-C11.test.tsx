@@ -24,9 +24,9 @@ function makeVm(): EquipmentDockViewModel {
         slots: [
             { key: 'weapon', label: 'WEAPON', item: { id: 'w', name: 'Long Blade', sub: 'Weapon' } },
             { key: 'armor', label: 'ARMOR', item: null },
-            { key: 'relic', relicIndex: 0, label: 'TRINKET I', item: null },
-            { key: 'relic', relicIndex: 1, label: 'TRINKET II', item: null },
-            { key: 'relic', relicIndex: 2, label: 'TRINKET III', item: null },
+            { key: 'relic', relicIndex: 0, label: 'RELIC I', item: null },
+            { key: 'relic', relicIndex: 1, label: 'RELIC II', item: null },
+            { key: 'relic', relicIndex: 2, label: 'RELIC III', item: null },
         ],
         headerLabel: '✠ WORN UPON THE BODY',
         hintLabel: 'CHOOSE A SLOT TO SEE WHAT ELSE FITS',

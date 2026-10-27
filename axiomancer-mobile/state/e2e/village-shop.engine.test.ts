@@ -36,7 +36,7 @@ function potion(id = 'phial', qty = 1): Consumable {
 function trinket(id = 'unlisted-trinket'): Material {
     return {
         id,
-        name: 'Trinket',
+        name: 'Relic',
         description: 'Of no particular provenance.',
         category: 'material',
         quantity: 1,

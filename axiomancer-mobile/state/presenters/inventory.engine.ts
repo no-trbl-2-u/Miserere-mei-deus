@@ -24,8 +24,8 @@ import {
 
 import { freezeViewModel } from './freeze';
 import { computeEquipDelta, type EquipDelta } from '@mechanics';
-import { SLOT_CAPACITY, getSignatureSkill } from '@mechanics';
-import { isWornId, replacedByEquip } from './loadout';
+import { getSignatureSkill } from '@mechanics';
+import { LOADOUT_ROWS, isWornId, replacedByEquip, wornAtRow } from './loadout';
 
 export type { EquipDelta } from '@mechanics';
 
@@ -56,7 +56,7 @@ export interface InventoryItemRow {
     id: string;
     name: string;
     category: InventoryCategory;
-    /** Slot label for equipment (`'Weapon'`, `'Armor'`, `'Trinket'`), else `null`. */
+    /** Slot label for equipment (`'Weapon'`, `'Armor'`, `'Relic'`), else `null`. */
     sub: string | null;
     /** Stack size — always 1 for non-stackable items. */
     quantity: number;
@@ -270,9 +270,8 @@ const TAB_LABELS: Record<InventoryTab, string> = {
 const SLOT_LABELS: Record<Equipment['slot'], string> = {
     weapon: 'Weapon',
     armor: 'Armor',
-    // 'Trinket', not 'Accessory': matches the dock's TRINKET I/II/III and the
-    // SELF sheet, so the slot has one name on every surface.
-    relic: 'Trinket',
+    // One name on every surface: Weapon, Armor, Relic.
+    relic: 'Relic',
 };
 
 const BURDEN_MAX = 50;
@@ -281,17 +280,14 @@ const EMPTY_MESSAGE = 'nothing in the satchel.';
 /**
  * Uppercase chrome label per slot — distinct from `SLOT_LABELS`
  * (which is title-case "Weapon" / "Armor" for the item-row sub
- * field). The dock chrome uses TRINKET for relic per the design;
- * the three relic rows append a numeral (TRINKET I/II/III).
+ * field). The three relic rows read RELIC I/II/III from `LOADOUT_ROWS`.
  */
 const DOCK_SLOT_TITLE: Record<Equipment['slot'], string> = {
     weapon: 'WEAPON',
     armor: 'ARMOR',
-    relic: 'TRINKET',
+    relic: 'RELIC',
 };
 
-/** Roman numeral suffix per relic position (indexed by `relicIndex`). */
-const DOCK_RELIC_NUMERALS = ['I', 'II', 'III'] as const;
 
 const DOCK_HEADER_LABEL = '✠ WORN UPON THE BODY';
 // The dock lists only worn slots; the worn-vs-unworn comparison is behind a
@@ -542,21 +538,16 @@ function buildEquipmentDock(
 ): EquipmentDockViewModel {
     // The dock draws `player.equipment` itself: one row each for the weapon
     // and the armor, then one per relic position in loadout order.
-    const { weapon, armor, relics } = player.equipment;
     const toItem = (piece: Equipment | null | undefined): EquipmentDockSlot['item'] =>
         piece == null
             ? null
             : { id: piece.id, name: piece.name, sub: subFor(piece), grantsSignature: grantsSignatureName(piece) };
-    const slots: EquipmentDockSlot[] = [
-        { key: 'weapon', label: DOCK_SLOT_TITLE.weapon, item: toItem(weapon) },
-        { key: 'armor', label: DOCK_SLOT_TITLE.armor, item: toItem(armor) },
-        ...Array.from({ length: SLOT_CAPACITY.relic }, (_, i): EquipmentDockSlot => ({
-            key: 'relic',
-            relicIndex: i as 0 | 1 | 2,
-            label: `${DOCK_SLOT_TITLE.relic} ${DOCK_RELIC_NUMERALS[i]}`,
-            item: toItem(relics[i] ?? null),
-        })),
-    ];
+    const slots: EquipmentDockSlot[] = LOADOUT_ROWS.map((row): EquipmentDockSlot => ({
+        key: row.key,
+        ...(row.relicIndex !== undefined ? { relicIndex: row.relicIndex } : {}),
+        label: row.dockLabel,
+        item: toItem(wornAtRow(player.equipment, row)),
+    }));
     return {
         slots,
         headerLabel: DOCK_HEADER_LABEL,

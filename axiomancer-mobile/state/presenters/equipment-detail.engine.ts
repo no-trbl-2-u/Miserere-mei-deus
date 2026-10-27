@@ -15,7 +15,7 @@
  *
  *   - `name` / `slotLabel`  — identity and which slot it occupies.
  *   - `sub`                 — the ItemGlyph discriminator ('Weapon' | 'Armor' |
- *                             'Trinket' | …), so the view can draw the item's
+ *                             'Relic' | …), so the view can draw the item's
  *                             placeholder art without re-deriving it.
  *   - `statLines`           — every stat modifier the item grants, pre-formatted
  *                             as a label/value pair ("BODY", "+2").
@@ -85,7 +85,7 @@ export interface EquipmentSignatureInfo {
  *
  * @property itemId    - Engine item id (stable key / testIDs).
  * @property name      - Display name of the item.
- * @property slotLabel - Human slot name ("Weapon" / "Armor" / "Trinket").
+ * @property slotLabel - Human slot name ("Weapon" / "Armor" / "Relic").
  * @property sub       - ItemGlyph discriminator for the placeholder art.
  * @property statLines - Stat modifiers the item grants. May be empty.
  * @property signature - Granted signature, or `null` for non-relic equipment.
@@ -144,12 +144,12 @@ const STAT_LABELS: Record<string, string> = {
 
 /**
  * Human slot names. Mirrors the inventory presenter's `SLOT_LABELS` so the
- * detail card and the sack rows agree on wording ('Trinket', not 'Accessory').
+ * detail card and the sack rows agree on wording ('Relic').
  */
 const SLOT_LABELS: Record<Equipment['slot'], string> = {
     weapon: 'Weapon',
     armor: 'Armor',
-    relic: 'Trinket',
+    relic: 'Relic',
 };
 
 /**

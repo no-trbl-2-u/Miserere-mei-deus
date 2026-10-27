@@ -448,7 +448,7 @@ describe('ItemGlyph: category-based icon rendering', () => {
 
     it('renders relic icon for relics', () => {
         const { tree } = withAllProviders(
-            <ItemGlyph category="equipment" sub="Accessory" />
+            <ItemGlyph category="equipment" sub="Relic" />
         );
         const rendered = render(tree);
         expect(rendered.toJSON()).not.toBeNull();
