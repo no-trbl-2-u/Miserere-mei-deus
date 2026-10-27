@@ -56,10 +56,10 @@ export const STARTING_CARD_IDS: readonly string[] = GREY_LANE.testDeck;
  *
  *  1. the dev override: the cards of the lanes in `player.devRewardLaneIds`,
  *     when it names a registered lane;
- *  2. the cards of every lane a worn relic opens ({@link unlockedLaneIds});
- *  3. when no worn relic opens a lane, the grey office's cards, the only way a
- *     grey card is ever offered (a stopgap until character selection supplies
- *     starting lanes).
+ *  2. the cards of every lane the character starts with or a worn relic opens
+ *     ({@link unlockedLaneIds});
+ *  3. when that is no lane (a run with no character and no worn lane relic),
+ *     the grey office's cards, the only way a grey card is ever offered.
  *
  * Curses and ids the library cannot resolve are never in it.
  *
@@ -70,7 +70,7 @@ export const STARTING_CARD_IDS: readonly string[] = GREY_LANE.testDeck;
  * @example rewardPoolFor(freshPlayer) // ['grey-strike', 'grey-ward', 'grey-word']
  */
 export function rewardPoolFor(
-    player: Pick<Character, 'devRewardLaneIds'> & Wearer,
+    player: Pick<Character, 'devRewardLaneIds'> & LaneHolder,
     lanes: readonly CardLane[] = CARD_LANES,
     relics: readonly Equipment[] = relicLibrary,
 ): string[] {
@@ -97,22 +97,40 @@ function devOverridePool(
     return rewardable(laneRewardPool(player.devRewardLaneIds ?? [], lanes));
 }
 
+/** A wearer who may also hold a character's starting lanes (`Character.startingLaneIds`). */
+export type LaneHolder = Wearer & Partial<Pick<Character, 'startingLaneIds'>>;
+
 /**
- * The lanes the player's reward pool draws on: every registered lane a worn
- * relic opens, in registry order. A carried, unworn relic opens nothing, and
- * the grey office is never returned (its cards are the starter deck, not a
- * reward lane).
+ * The lanes the player's reward pool draws on: the character's starting lanes
+ * (always, worn or not) plus every registered lane a worn relic opens, each
+ * once, in registry order. A carried, unworn relic opens nothing, a lane id the
+ * registry does not carry is ignored, and the grey office is never returned
+ * (its cards are the starter deck, not a reward lane). A run with no character
+ * has no starting lanes, so the worn relics decide alone.
  *
- * @param player - The wearer (`player.equipment` is read; `inventory` is not).
+ * @param player - The wearer (`player.equipment` and `player.startingLaneIds` are read; `inventory` is not).
  * @param lanes  - The lane registry; defaults to {@link CARD_LANES}.
  * @param relics - The relic library; defaults to {@link relicLibrary}.
- * @returns The lane ids; `[]` when no worn relic opens a lane.
+ * @returns The lane ids; `[]` when there is neither a starting lane nor a worn lane relic.
  * @example unlockedLaneIds(wearingABloodPriceRelic) // ['blood-price']
  */
 export function unlockedLaneIds(
-    player: Wearer,
+    player: LaneHolder,
     lanes: readonly CardLane[] = CARD_LANES,
     relics: readonly Equipment[] = relicLibrary,
+): string[] {
+    const counts = wornLaneCounts(player, lanes, relics);
+    const starting = new Set(player.startingLaneIds ?? []);
+    return lanes
+        .filter(lane => lane.id !== GREY_LANE.id && (counts.has(lane.id) || starting.has(lane.id)))
+        .map(lane => lane.id);
+}
+
+/** The lanes worn relics open, registry order, grey never: the lanes that can earn lane slots. */
+function wornLaneIds(
+    player: Wearer,
+    lanes: readonly CardLane[],
+    relics: readonly Equipment[],
 ): string[] {
     const counts = wornLaneCounts(player, lanes, relics);
     return lanes.filter(lane => lane.id !== GREY_LANE.id && counts.has(lane.id)).map(lane => lane.id);
@@ -155,7 +173,7 @@ export function rewardLaneSlots(
     relics: readonly Equipment[] = relicLibrary,
 ): RewardLaneSlots | null {
     const counts = wornLaneCounts(player, lanes, relics);
-    const ranked = unlockedLaneIds(player, lanes, relics);
+    const ranked = wornLaneIds(player, lanes, relics);
     if (ranked.length === 0) return null;
     const most = Math.max(...ranked.map(id => counts.get(id) ?? 0));
     const tied = ranked.filter(id => counts.get(id) === most);
