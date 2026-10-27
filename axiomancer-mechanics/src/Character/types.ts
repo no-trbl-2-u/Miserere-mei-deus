@@ -94,8 +94,10 @@ export interface Character {
     /**
      * Dev-menu override of the card-reward pool: the ids of the card lanes
      * (`Cards/card.lanes.ts`) whose cards the post-combat draft may offer.
-     * Set by the dev menu's CARDS section only. Optional + sparse — absent or
-     * empty means the whole library, and an id no lane carries is ignored
+     * Set by the dev menu's CARDS section only. It overrides the real rule
+     * (the worn relics' lanes, grey when none is worn) for every slot of the
+     * draft. Optional + sparse — absent, empty or naming no registered lane
+     * means the real rule applies, and an id no lane carries is ignored
      * (`rewardPoolFor`, `Combat/combat.rewards.ts`).
      */
     devRewardLaneIds?: string[];

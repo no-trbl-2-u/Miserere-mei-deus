@@ -174,13 +174,13 @@ Measure: the A8 presenter and screen tests pass, the A9 screenshot shows the car
 - **The dev override stays the override** (candidate scope): `devRewardLaneIds` replaces the pool for every slot,
   and EL1d's reward-pool check keeps working. SET DECK still does not set it.
 - **The elite reward keeps its UP1f shape** over the new pool (A7) rather than taking the 3-slot composition; its
-  "one from the deck's lanes" guarantee is its own rule. `[T to confirm]`
+  "one from the deck's lanes" guarantee is its own rule. Accepted at merge (default).
 - **The cache's single card is the first slot of the 3-card rule** (A6): with a lane slot earned it is always the
-  lane card. The alternative, a lane card with probability slots/3, is one line. `[T to confirm]`
+  lane card. The alternative, a lane card with probability slots/3, is one line. Accepted at merge (default).
 - **The cache preview reuses the combat reward's face** (`rewardCardVMs` into `CombatCardFace`), so the card reads
   the same in the cache, the reward overlay and the hand.
 - **Ships even though it narrows today's rewards to grey.** Until a lane relic exists, players stop being offered
-  Blood Price and Elementalist cards outside the dev override. That is T's rule as written. `[T to confirm]`
+  Blood Price and Elementalist cards outside the dev override. That is T's rule as written. Accepted at merge (default).
 
 ## Tests matrix
 

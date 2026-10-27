@@ -31,3 +31,5 @@ export type { ShopWare } from './shop.types';
 export {
     relicLibrary, getRelicById,
 } from './relic.library';
+// The lane a relic opens while worn (the card-reward rule reads it).
+export { relicLaneId, wornLaneCounts } from './relic-lanes';

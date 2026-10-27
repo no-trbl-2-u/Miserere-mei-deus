@@ -8,7 +8,8 @@
  */
 
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
-import type { GameState } from '@mechanics';
+import { GREY_LANE, getCardLane } from '@mechanics';
+import type { Equipment, GameState } from '@mechanics';
 
 import { createAppActions, type AppActions } from '@/state/actions';
 import { createAppStore, type AppStore } from '@/state/store';
@@ -80,6 +81,53 @@ describe('cache store flow (three-offer choice)', () => {
         actions.chooseLootCacheChoiceOffer('sacrifice' as never);
         expect(store.getState().cache!.session!.phase).toBe('offer');
         expect(store.getState().cache!.session!.outcome).toBeNull();
+    });
+
+    describe('the card follows the reward rule (RW1a A6)', () => {
+        /** A fixture lane relic: no library relic names a lane yet, so the item carries its own. */
+        const laneRelic = (laneId: string): Equipment => ({
+            id: `fixture-relic-${laneId}`, name: 'Fixture relic', description: '',
+            category: 'equipment', slot: 'accessory', statModifiers: [], laneId,
+        });
+
+        /** Opens a cache for a player holding the Elementalist test deck, and returns its card. */
+        function cacheCard(worn: Equipment[], carried: Equipment[], random: number): string | null {
+            const { store, actions } = makeStoreAndActions();
+            const state = store.getState() as unknown as GameState;
+            store.setState({
+                player: {
+                    ...state.player,
+                    knownCards: [...getCardLane('elementalist')!.testDeck],
+                    inventory: [...worn, ...carried],
+                    equipment: { weapon: null, armor: null, accessories: worn },
+                    devRewardLaneIds: undefined,
+                },
+            } as never);
+            jest.spyOn(Math, 'random').mockReturnValue(random);
+            actions.beginLootCacheChoice({ tier: 'modest', currency: 10, seed: 7 });
+            return store.getState().cache!.session!.cardCandidate;
+        }
+
+        const RANDOMS = [0, 0.2, 0.45, 0.7, 0.99];
+        const grey = GREY_LANE.cardIds;
+        const bloodPrice = getCardLane('blood-price')!.cardIds;
+        const elementalist = getCardLane('elementalist')!.cardIds;
+
+        it('no lane relic: the card is grey, never a Blood Price card', () => {
+            for (const r of RANDOMS) {
+                const card = cacheCard([], [], r);
+                expect(grey).toContain(card);
+                expect(bloodPrice).not.toContain(card);
+            }
+        });
+
+        it('a lane relic carried in the satchel but not worn: still grey', () => {
+            for (const r of RANDOMS) expect(grey).toContain(cacheCard([], [laneRelic('elementalist')], r));
+        });
+
+        it('the lane relic worn: the card is from its lane', () => {
+            for (const r of RANDOMS) expect(elementalist).toContain(cacheCard([laneRelic('elementalist')], [], r));
+        });
     });
 
     it('cannot claim before an offer is chosen', () => {
