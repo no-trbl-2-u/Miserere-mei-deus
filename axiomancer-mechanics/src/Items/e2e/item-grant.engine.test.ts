@@ -4,7 +4,7 @@
  * Two of these tests exist to pin the SILENT failure modes that make this
  * module necessary. `equipItem` does not return the displaced piece: on
  * weapon/armor it replaces in place (the worn relic is gone), and on a FULL
- * accessory row it is a guarded no-op that returns the SAME character
+ * relic row it is a guarded no-op that returns the SAME character
  * reference, so a shallow equality check reads the failure as success. The
  * `equipItem — the failure modes this module exists to prevent` block asserts
  * that behaviour directly, and the `grantItem` blocks assert that the shared
@@ -114,7 +114,7 @@ const countById = (inventory: readonly Item[], id: string): number =>
 const wornIds = (c: Character): string[] => [
     ...(c.equipment.weapon ? [c.equipment.weapon.id] : []),
     ...(c.equipment.armor ? [c.equipment.armor.id] : []),
-    ...c.equipment.accessories.map(a => a.id),
+    ...c.equipment.relics.map(a => a.id),
 ];
 
 // ─── the failure modes ────────────────────────────────────────────────────────
@@ -133,9 +133,9 @@ describe('equipItem — the failure modes this module exists to prevent', () => 
         expect(wornIds(after)).not.toContain(worn.id);
     });
 
-    it('full accessory row: a naive equip is a SILENT no-op returning the same reference', () => {
+    it('full relic row: a naive equip is a SILENT no-op returning the same reference', () => {
         const player = loadoutOnlyPlayer([trinket(0), trinket(1), trinket(2)]);
-        expect(player.equipment.accessories).toHaveLength(SLOT_CAPACITY.accessory);
+        expect(player.equipment.relics).toHaveLength(SLOT_CAPACITY.relic);
 
         const incoming = ring();
         const after = equipItem(player, incoming);
@@ -209,7 +209,7 @@ describe('grantItem — equipping into a free slot', () => {
         expect(countById(res.character.inventory, incoming.id)).toBe(1);
     });
 
-    it('fills a free accessory position without displacing anything', () => {
+    it('fills a free relic position without displacing anything', () => {
         const player = loadoutOnlyPlayer([trinket(0)]);
         const incoming = ring();
 
@@ -217,7 +217,7 @@ describe('grantItem — equipping into a free slot', () => {
 
         expect(res.outcome).toBe('equipped');
         expect(res.displaced).toBeNull();
-        expect(res.character.equipment.accessories.map(a => a.id)).toEqual([T1, RING_ID]);
+        expect(res.character.equipment.relics.map(a => a.id)).toEqual([T1, RING_ID]);
     });
 
     it('folds the grant stat modifiers into the wearer (the sole equipment channel)', () => {
@@ -263,7 +263,7 @@ describe('grantItem — swap never destroys (D6)', () => {
         expect(countById(res.character.inventory, worn.id)).toBe(1);
     });
 
-    it('a FULL accessory row swaps instead of silently no-op-ing', () => {
+    it('a FULL relic row swaps instead of silently no-op-ing', () => {
         const player = loadoutOnlyPlayer([trinket(0), trinket(1), trinket(2)]);
         const incoming = ring();
 
@@ -272,14 +272,14 @@ describe('grantItem — swap never destroys (D6)', () => {
         expect(res.character).not.toBe(player);
         expect(res.outcome).toBe('swapped');
         expect(res.equipped).toBe(true);
-        expect(res.character.equipment.accessories).toHaveLength(SLOT_CAPACITY.accessory);
+        expect(res.character.equipment.relics).toHaveLength(SLOT_CAPACITY.relic);
         expect(wornIds(res.character)).toContain(incoming.id);
-        // Default displacement is the LAST worn accessory.
+        // Default displacement is the LAST worn relic.
         expect(res.displaced?.id).toBe(T3);
         expect(countById(res.character.inventory, T3)).toBe(1);
     });
 
-    it('honours an explicit replaceIndex on a full accessory row', () => {
+    it('honours an explicit replaceIndex on a full relic row', () => {
         const player = loadoutOnlyPlayer([trinket(0), trinket(1), trinket(2)]);
         const incoming = ring();
 
@@ -307,14 +307,14 @@ describe('grantItem — swap never destroys (D6)', () => {
         let player = seededPlayer();
         player = grantItem(player, trinket(0), { equip: true }).character;
         player = grantItem(player, trinket(1), { equip: true }).character;
-        expect(player.equipment.accessories).toHaveLength(SLOT_CAPACITY.accessory);
+        expect(player.equipment.relics).toHaveLength(SLOT_CAPACITY.relic);
         const before = player.inventory.length;
 
         const res = grantItem(player, trinket(2), { equip: true });
 
         // One row added (the granted clone); nothing removed.
         expect(res.character.inventory.length).toBe(before + 1);
-        expect(res.character.equipment.accessories).toHaveLength(SLOT_CAPACITY.accessory);
+        expect(res.character.equipment.relics).toHaveLength(SLOT_CAPACITY.relic);
         expect(res.displaced?.id).toBe(T2);
         expect(countById(res.character.inventory, T2)).toBe(1);
         expect(countById(res.character.inventory, RING_ID)).toBe(1);
@@ -324,13 +324,13 @@ describe('grantItem — swap never destroys (D6)', () => {
 // ─── displacedBy ──────────────────────────────────────────────────────────────
 
 describe('displacedBy — the swap preview', () => {
-    it('reports null for an empty slot and for a free accessory position', () => {
+    it('reports null for an empty slot and for a free relic position', () => {
         const bare = barePlayer();
         expect(displacedBy(bare, weapon()).item).toBeNull();
         expect(displacedBy(bare, ring()).item).toBeNull();
     });
 
-    it('reports the worn weapon and the last accessory at capacity', () => {
+    it('reports the worn weapon and the last relic at capacity', () => {
         const player = loadoutOnlyPlayer([weapon(), trinket(0), trinket(1), trinket(2)]);
         expect(displacedBy(player, weapon2()).item?.id).toBe(FIXTURE_WEAPON.id);
         const acc = displacedBy(player, ring());
@@ -402,24 +402,24 @@ describe('grantWearingIfFree — every dev relic grant wears while a position is
     it('wears each relic on a bare player while a position is free, then carries the rest', () => {
         let player = barePlayer();
         const ids = relicLibrary.map(r => r.id);
-        const fits = SLOT_CAPACITY.accessory;
+        const fits = SLOT_CAPACITY.relic;
         for (const [i, relic] of relicLibrary.entries()) {
             const res = grantWearingIfFree(player, relic);
             expect(res.equipped).toBe(i < fits);
             expect(res.displaced).toBeNull();
             player = res.character;
         }
-        expect(player.equipment.accessories.map(a => a.id)).toEqual(ids.slice(0, fits));
+        expect(player.equipment.relics.map(a => a.id)).toEqual(ids.slice(0, fits));
         expect(player.inventory.map(i => i.id)).toEqual(ids);
     });
 
     it('carries the relic when the slot is full, and nothing worn moves', () => {
         const full = loadoutOnlyPlayer([...FIXTURE_TRINKETS]);
-        const before = full.equipment.accessories.map(a => a.id);
+        const before = full.equipment.relics.map(a => a.id);
         const res = grantWearingIfFree(full, getRelicById(SIGNET_ID)!);
         expect(res.equipped).toBe(false);
         expect(res.outcome).toBe('inventory');
-        expect(res.character.equipment.accessories.map(a => a.id)).toEqual(before);
+        expect(res.character.equipment.relics.map(a => a.id)).toEqual(before);
         expect(res.character.inventory.map(i => i.id)).toContain(SIGNET_ID);
     });
 
@@ -427,7 +427,7 @@ describe('grantWearingIfFree — every dev relic grant wears while a position is
         const player = seededPlayer();
         const res = grantWearingIfFree(player, getRelicById(RING_ID)!);
         expect(res.equipped).toBe(false);
-        expect(res.character.equipment.accessories.map(a => a.id)).toEqual([RING_ID]);
+        expect(res.character.equipment.relics.map(a => a.id)).toEqual([RING_ID]);
     });
 
     it('grants a consumable as a plain stacking grant', () => {

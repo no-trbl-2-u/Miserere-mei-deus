@@ -17,7 +17,7 @@ describe('createCharacter — no starting relic', () => {
         const c = createCharacter({ name: 'T', level: 1, baseStats: BASE });
         expect(c.equipment.weapon).toBeNull();
         expect(c.equipment.armor).toBeNull();
-        expect(c.equipment.accessories).toEqual([]);
+        expect(c.equipment.relics).toEqual([]);
         expect(c.inventory).toEqual([]);
         expect(getSignaturesForLoadout(c.equipment)).toEqual([]);
     });
@@ -25,7 +25,7 @@ describe('createCharacter — no starting relic', () => {
     it('wears the Suppliant\'s Ring when it is passed as equipment, at the base maxHealth', () => {
         const ring = getRelicById('relic-disarming-plea')!;
         const c = createCharacter({ name: 'T', level: 1, baseStats: BASE, equipment: [cloneRelic(ring)] });
-        expect(c.equipment.accessories.map(a => a.id)).toEqual(['relic-disarming-plea']);
+        expect(c.equipment.relics.map(a => a.id)).toEqual(['relic-disarming-plea']);
         expect(c.maxHealth).toBe(calculateMaxHealth(1, BASE));
         expect(c.health).toBe(c.maxHealth);
         expect(getSignaturesForLoadout(c.equipment)).toEqual(['sig-disarming-plea']);
@@ -34,7 +34,7 @@ describe('createCharacter — no starting relic', () => {
     it('wears an explicit equipment list as given', () => {
         const c = createCharacter({ name: 'T', level: 1, baseStats: BASE, equipment: [FIXTURE_WEAPON] });
         expect(c.equipment.weapon?.id).toBe(FIXTURE_WEAPON.id);
-        expect(c.equipment.accessories).toEqual([]);
+        expect(c.equipment.relics).toEqual([]);
         expect(c.inventory).toEqual([]);
     });
 
@@ -55,20 +55,20 @@ describe('equip reducers — every slot', () => {
         expect(removed.equipment.weapon).toBeNull();
     });
 
-    it('fills the three accessory positions in order and unequips by index', () => {
+    it('fills the three relic positions in order and unequips by index', () => {
         const c = createCharacter({ name: 'T', level: 3, baseStats: { heart: 6, body: 6, mind: 6 } });
         let next = c;
         for (const t of FIXTURE_TRINKETS) next = equipItem(next, t);
-        expect(next.equipment.accessories.map(a => a.id)).toEqual(FIXTURE_TRINKETS.map(t => t.id));
-        const removed = unequipItem(next, 'accessory', 1);
-        expect(removed.equipment.accessories.map(a => a.id))
+        expect(next.equipment.relics.map(a => a.id)).toEqual(FIXTURE_TRINKETS.map(t => t.id));
+        const removed = unequipItem(next, 'relic', 1);
+        expect(removed.equipment.relics.map(a => a.id))
             .toEqual([FIXTURE_TRINKETS[0].id, FIXTURE_TRINKETS[2].id]);
     });
 
-    it('honours phase-18 slot semantics: a 4th accessory is a guarded no-op', () => {
+    it('honours phase-18 slot semantics: a 4th relic is a guarded no-op', () => {
         let c = createCharacter({ name: 'T', level: 1, baseStats: BASE });
         for (const t of FIXTURE_TRINKETS) c = equipItem(c, t);
-        // Accessory row full (3). Equipping a 4th accessory (the ring) is a
+        // Accessory row full (3). Equipping a 4th relic (the ring) is a
         // guarded no-op (returns the same reference).
         const after = equipItem(c, getRelicById('relic-disarming-plea')!);
         expect(after).toBe(c);

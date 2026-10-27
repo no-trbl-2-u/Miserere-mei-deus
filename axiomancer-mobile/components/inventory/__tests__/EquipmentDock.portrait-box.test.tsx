@@ -51,9 +51,9 @@ function makeVm(): EquipmentDockViewModel {
         slots: [
             { key: 'weapon', label: 'WEAPON', item: { id: 'w', name: 'Fixture Weapon', sub: 'Weapon', grantsSignature: null } },
             { key: 'armor', label: 'ARMOR', item: { id: 'a', name: 'Fixture Armor', sub: 'Armor', grantsSignature: null } },
-            { key: 'accessory', accessoryIndex: 0, label: 'TRINKET I', item: null },
-            { key: 'accessory', accessoryIndex: 1, label: 'TRINKET II', item: null },
-            { key: 'accessory', accessoryIndex: 2, label: 'TRINKET III', item: null },
+            { key: 'relic', relicIndex: 0, label: 'TRINKET I', item: null },
+            { key: 'relic', relicIndex: 1, label: 'TRINKET II', item: null },
+            { key: 'relic', relicIndex: 2, label: 'TRINKET III', item: null },
         ],
         headerLabel: '✠ WORN UPON THE BODY',
         hintLabel: 'CHOOSE A SLOT TO SEE WHAT ELSE FITS',

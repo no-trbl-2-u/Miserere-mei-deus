@@ -225,7 +225,7 @@ describe('the Bleeding Signet worn beside the Suppliant\'s Ring', () => {
         const worn = equipItem(deepClone(Player), deepClone(getRelicById('relic-bleeding-signet')!));
         expect(worn.maxHealth).toBe(Player.maxHealth);
         expect(worn.baseStats).toEqual(Player.baseStats);
-        expect(worn.equipment.accessories.map(a => a.id)).toEqual(['relic-disarming-plea', 'relic-bleeding-signet']);
+        expect(worn.equipment.relics.map(a => a.id)).toEqual(['relic-disarming-plea', 'relic-bleeding-signet']);
         const s = initializeCombatEncounter(worn, FloatEye, ['grey-strike'], 1);
         expect(s.signatures).toEqual([OPEN_HAND, VEIN]);
         expect(s.player.baseStats).toEqual({ ...Player.baseStats, mind: Player.baseStats.mind + 5 });
@@ -234,7 +234,7 @@ describe('the Bleeding Signet worn beside the Suppliant\'s Ring', () => {
     it('a saved Signet copy from before the rework grants the new signature and stats (read by id)', () => {
         const stale = { ...deepClone(getRelicById('relic-bleeding-signet')!),
             grantsSignature: 'sig-crimson-covenant' as never, statModifiers: [{ stat: 'maxHp' as const, value: 20 }] };
-        const worn = { ...deepClone(Player), equipment: { ...Player.equipment, accessories: [...Player.equipment.accessories, stale] } };
+        const worn = { ...deepClone(Player), equipment: { ...Player.equipment, relics: [...Player.equipment.relics, stale] } };
         const s = initializeCombatEncounter(worn, FloatEye, ['grey-strike'], 1);
         expect(s.signatures).toEqual([OPEN_HAND, VEIN]);
         expect(s.player.baseStats.mind).toBe(Player.baseStats.mind + 5);

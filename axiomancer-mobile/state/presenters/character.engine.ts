@@ -55,15 +55,15 @@ export interface CharacterEffectRow {
 
 export interface EquipmentSlotRow {
     /**
-     * Engine slot kind (`weapon | armor | accessory`). The SELF
+     * Engine slot kind (`weapon | armor | relic`). The SELF
      * tooltip wrapper passes this to `selectTooltipContentFor('slot', slotKey)`.
      */
-    slotKey: 'weapon' | 'armor' | 'accessory';
+    slotKey: 'weapon' | 'armor' | 'relic';
     /**
-     * Which of the 3 interchangeable accessory positions this row is (0-2).
-     * Present only on `accessory` rows; absent for weapon/armor.
+     * Which of the 3 interchangeable relic positions this row is (0-2).
+     * Present only on `relic` rows; absent for weapon/armor.
      */
-    accessoryIndex?: 0 | 1 | 2;
+    relicIndex?: 0 | 1 | 2;
     /** Slot label, e.g. `'Weapon'`. */
     name: string;
     /** Equipped item name, or `null` when empty. */
@@ -165,14 +165,14 @@ export interface CharacterViewModel {
 }
 
 // Equipment slot kinds, matching the engine's Phase-18 EquipmentSlot literals.
-type SlotKey = 'weapon' | 'armor' | 'accessory';
+type SlotKey = 'weapon' | 'armor' | 'relic';
 
 const SLOT_LABELS: Record<SlotKey, string> = {
     weapon: 'Weapon',
     armor: 'Armor',
     // [3.0] DRIFT fix: aligned to 'Trinket' (matches the inventory dock's
-    // 'TRINKET' chrome). The three accessory rows share this label.
-    accessory: 'Trinket',
+    // 'TRINKET' chrome). The three relic rows share this label.
+    relic: 'Trinket',
 };
 
 function buildBase(player: Character): readonly BaseStatRow[] {
@@ -207,7 +207,7 @@ function buildEffects(player: Character): readonly CharacterEffectRow[] {
 /** Build one equipment slot row, resolving a worn signet relic's granted
  *  signature to its display name. */
 function equipmentRow(
-    slotKey: 'weapon' | 'armor' | 'accessory',
+    slotKey: 'weapon' | 'armor' | 'relic',
     name: string,
     piece: Equipment | undefined,
 ): EquipmentSlotRow {
@@ -222,16 +222,16 @@ function equipmentRow(
 
 function buildEquipment(player: Character): readonly EquipmentSlotRow[] {
     // Worn state is the engine loadout, `player.equipment`. Five rows:
-    // Weapon, Armor, then three interchangeable accessory positions.
-    const { weapon, armor, accessories } = player.equipment;
+    // Weapon, Armor, then three interchangeable relic positions.
+    const { weapon, armor, relics } = player.equipment;
     const rows: EquipmentSlotRow[] = [
         equipmentRow('weapon', SLOT_LABELS.weapon, weapon ?? undefined),
         equipmentRow('armor', SLOT_LABELS.armor, armor ?? undefined),
     ];
-    for (let i = 0; i < SLOT_CAPACITY.accessory; i++) {
+    for (let i = 0; i < SLOT_CAPACITY.relic; i++) {
         rows.push({
-            ...equipmentRow('accessory', SLOT_LABELS.accessory, accessories[i]),
-            accessoryIndex: i as 0 | 1 | 2,
+            ...equipmentRow('relic', SLOT_LABELS.relic, relics[i]),
+            relicIndex: i as 0 | 1 | 2,
         });
     }
     return rows;

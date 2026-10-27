@@ -34,21 +34,21 @@ describe('relic library — roster', () => {
         expect(relicLibrary.map(r => r.id)).toEqual([RING_ID, CIRCLET_ID, RUBY_ID, SIGNET_ID]);
         const ring = getRelicById(RING_ID)!;
         expect(ring.name).toBe("Suppliant's Ring");
-        expect(ring.slot).toBe('accessory');
-        expect(ring.accessoryKind).toBe('ring');
+        expect(ring.slot).toBe('relic');
+        expect('accessoryKind' in ring).toBe(false);
     });
 
     it('A10 · Blood Price\'s three relics are as T wrote them: lane, source, stat lines, signature', () => {
         const row = (id: string) => {
             const r = getRelicById(id)!;
-            return [r.name, r.laneId, r.relicSource, r.statModifiers, r.grantsSignature, r.slot, r.accessoryKind];
+            return [r.name, r.laneId, r.relicSource, r.statModifiers, r.grantsSignature, r.slot];
         };
         expect(row(CIRCLET_ID)).toEqual(['Crimson Circlet', 'blood-price', 'elite',
-            [{ stat: 'body', value: 5 }, { stat: 'maxHp', value: 20 }], 'sig-crimson-circlet', 'accessory', 'head']);
+            [{ stat: 'body', value: 5 }, { stat: 'maxHp', value: 20 }], 'sig-crimson-circlet', 'relic']);
         expect(row(RUBY_ID)).toEqual(['Ruby Signet', 'blood-price', 'quest',
-            [{ stat: 'heart', value: 5 }], 'sig-ruby-signet', 'accessory', 'ring']);
+            [{ stat: 'heart', value: 5 }], 'sig-ruby-signet', 'relic']);
         expect(row(SIGNET_ID)).toEqual(['Bleeding Signet', 'blood-price', 'quest',
-            [{ stat: 'mind', value: 5 }], 'sig-bleeding-signet', 'accessory', 'ring']);
+            [{ stat: 'mind', value: 5 }], 'sig-bleeding-signet', 'relic']);
     });
 
     it('every relic grants exactly one signature; together they cover the full roster with no dupes', () => {
@@ -63,7 +63,6 @@ describe('relic library — roster', () => {
         for (const r of relicLibrary) {
             const keys = Object.keys(r).sort();
             expect(keys).toEqual([
-                ...(r.slot === 'accessory' ? ['accessoryKind'] : []),
                 'category', 'description', 'grantsSignature', 'id', ...(r.laneId ? ['laneId'] : []), 'name',
                 ...(r.relicSource ? ['relicSource'] : []), 'slot', 'statModifiers',
             ]);
@@ -91,7 +90,7 @@ describe('A1 · the Bleeding Signet opens Blood Price while worn', () => {
     const wearer = (worn: Equipment[], carried: Equipment[] = []): Character => ({
         ...deepClone(Player),
         inventory: [...worn, ...carried],
-        equipment: { weapon: null, armor: null, accessories: worn },
+        equipment: { weapon: null, armor: null, relics: worn },
         devRewardLaneIds: undefined,
     });
 
@@ -134,12 +133,12 @@ describe('cloneRelic', () => {
 
 describe('getSignaturesForLoadout', () => {
     it('derives the ring\'s signature from a worn ring', () => {
-        const loadout = { weapon: null, armor: null, accessories: [cloneRelic(getRelicById(RING_ID)!)] };
+        const loadout = { weapon: null, armor: null, relics: [cloneRelic(getRelicById(RING_ID)!)] };
         expect(getSignaturesForLoadout(loadout)).toEqual(['sig-disarming-plea']);
     });
 
     it('the Ring and the Signet worn together grant both signatures, in slot order', () => {
-        const loadout = { weapon: null, armor: null, accessories: [getRelicById(RING_ID)!, getRelicById(SIGNET_ID)!] };
+        const loadout = { weapon: null, armor: null, relics: [getRelicById(RING_ID)!, getRelicById(SIGNET_ID)!] };
         expect(getSignaturesForLoadout(loadout)).toEqual(['sig-disarming-plea', 'sig-bleeding-signet']);
     });
 
@@ -149,19 +148,22 @@ describe('getSignaturesForLoadout', () => {
 
     it('dedupes when two worn pieces grant the same signature (first occurrence wins)', () => {
         const ring = getRelicById(RING_ID)!;
-        const loadout = { weapon: null, armor: null, accessories: [ring, { ...ring, id: 'dup' }] };
+        const loadout = { weapon: null, armor: null, relics: [ring, { ...ring, id: 'dup' }] };
         expect(getSignaturesForLoadout(loadout)).toEqual(['sig-disarming-plea']);
     });
 
-    it('reads the signature from any slot (a weapon-slot carrier counts)', () => {
+    it('reads signatures from the relic slot only (a weapon-slot carrier grants nothing)', () => {
         const ringAsWeapon = { ...FIXTURE_WEAPON, grantsSignature: 'sig-disarming-plea' as const };
-        expect(getSignaturesForLoadout({ weapon: ringAsWeapon, armor: null, accessories: [] }))
+        expect(getSignaturesForLoadout({ weapon: ringAsWeapon, armor: null, relics: [] }))
+            .toEqual([]);
+        const ring = getRelicById(RING_ID)!;
+        expect(getSignaturesForLoadout({ weapon: ringAsWeapon, armor: null, relics: [ring] }))
             .toEqual(['sig-disarming-plea']);
     });
 
     it('ignores non-relic worn pieces (no grantsSignature)', () => {
         expect(getSignaturesForLoadout({
-            weapon: FIXTURE_WEAPON, armor: FIXTURE_ARMOR, accessories: [...FIXTURE_TRINKETS],
+            weapon: FIXTURE_WEAPON, armor: FIXTURE_ARMOR, relics: [...FIXTURE_TRINKETS],
         })).toEqual([]);
     });
 });

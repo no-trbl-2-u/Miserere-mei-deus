@@ -23,7 +23,7 @@ import {
  * Build one equipment item for the fixture.
  *
  * Inputs: `id` (item id), `name` (display name), `slot` (body position).
- * Output: an `Equipment` item, ring-kinded when it is an accessory.
+ * Output: an `Equipment` item, ring-kinded when it is a relic.
  * Resolves: S3-sheet-C22 — fixture helper only, no production behaviour.
  */
 function gear(id: string, name: string, slot: Equipment['slot']): Equipment {
@@ -33,7 +33,6 @@ function gear(id: string, name: string, slot: Equipment['slot']): Equipment {
         description: 'Iron, notched.',
         category: 'equipment',
         slot,
-        ...(slot === 'accessory' ? { accessoryKind: 'ring' as const } : {}),
     };
 }
 
@@ -70,11 +69,11 @@ const EIGHT_PIECES: readonly Item[] = [
     gear('blade-a', 'Long Blade', 'weapon'),
     gear('blade-b', 'Bone Dagger', 'weapon'),
     gear('mail-a', 'Rusted Mail', 'armor'),
-    gear('ring-a', 'Iron Ring', 'accessory'),
-    gear('ring-b', 'Copper Ring', 'accessory'),
-    gear('ring-c', 'Bone Ring', 'accessory'),
-    gear('ring-d', 'Glass Ring', 'accessory'),
-    gear('ring-e', 'Ash Ring', 'accessory'),
+    gear('ring-a', 'Iron Ring', 'relic'),
+    gear('ring-b', 'Copper Ring', 'relic'),
+    gear('ring-c', 'Bone Ring', 'relic'),
+    gear('ring-d', 'Glass Ring', 'relic'),
+    gear('ring-e', 'Ash Ring', 'relic'),
 ];
 
 const CATEGORIES: readonly InventoryCategory[] = [

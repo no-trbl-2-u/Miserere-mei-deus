@@ -191,8 +191,8 @@ export interface PendingItemReward {
      */
     settleFlags: readonly string[];
     /**
-     * Which accessory position EQUIP should displace when the row is full.
-     * Omitted means the engine default (the last worn accessory).
+     * Which relic position EQUIP should displace when the row is full.
+     * Omitted means the engine default (the last worn relic).
      */
     replaceIndex?: number;
 }

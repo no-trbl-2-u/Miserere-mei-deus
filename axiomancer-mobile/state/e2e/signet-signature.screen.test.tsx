@@ -43,7 +43,7 @@ function pressSignetChip() {
         player: {
             ...player,
             inventory: player.inventory.filter((i: Item) => !i.id.startsWith('relic-')),
-            equipment: { weapon: null, armor: null, accessories: [] },
+            equipment: { weapon: null, armor: null, relics: [] },
         },
     });
     const { tree } = withAllProviders(<DebugItemPicker />, { store });
@@ -56,7 +56,7 @@ function pressSignetChip() {
 describe('the Bleeding Signet from the dev chip reaches the board (SG1 A4)', () => {
     it('the chip wears the Signet, and the panel draws Open Vein at ◆4', () => {
         const { store, actions } = pressSignetChip();
-        expect(store.getState().player.equipment.accessories.map((a) => a.id)).toEqual([SIGNET]);
+        expect(store.getState().player.equipment.relics.map((a) => a.id)).toEqual([SIGNET]);
 
         const enemy = actions.beginHazardEncounter()!;
         const bootstrapPlayer = store.getState().player;

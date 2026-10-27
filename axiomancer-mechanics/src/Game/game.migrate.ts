@@ -25,9 +25,15 @@
  * v33 → v34 (the parked world's maps, quests and flags dropped), v34 → v35
  * (every relic but the Suppliant's Ring dropped), v35 → v36 (XP
  * re-expressed on the rising level curve), v36 → v37 (XP re-expressed on
- * the level-20 curve) and v37 → v38 (the Brine Hag's befriend flag and codex
- * entry renamed to the Green Jelly's). The hops chain, so a v11 save lands at
- * v38 in one `migrate` call. Every other version mismatch rejects.
+ * the level-20 curve), v37 → v38 (the Brine Hag's befriend flag and codex
+ * entry renamed to the Green Jelly's) and v38 → v39 (the `accessory` slot
+ * renamed `relic`, the loadout's `accessories` row renamed `relics`, and the
+ * `accessoryKind` flavour field dropped). The hops chain, so a v11 save lands
+ * at v39 in one `migrate` call. Every other version mismatch rejects.
+ *
+ * The older hops are written against the current equipment shape, so a save
+ * older than v39 has the v39 re-slot applied once before its first hop (the
+ * re-slot is idempotent, so the v38 → v39 hop applying it again is a no-op).
  */
 
 import { GameState } from './types';
@@ -40,7 +46,7 @@ import { calculateMaxHealth } from '../Utils';
 import { experienceForLevel } from '../Character/experience';
 import { getCardById } from '../Cards/cards.library';
 import { STARTING_CARD_IDS } from '../Combat/combat.rewards';
-import { reslotLegacyLoadout, reslotLegacyEquipment, type LegacySlot } from './legacy-slots';
+import { reslotLegacyLoadout, reslotLegacyEquipment, reslotRelicSave, type LegacySlot } from './legacy-slots';
 import { concreteDefaultRail } from '../Character/dieGear.reducer';
 import { GAME_STATE_VERSION } from './game.reducer';
 import { COMBAT_LOADOUT_FLAG_PREFIX } from '../Combat/combat.loadout';
@@ -69,7 +75,7 @@ function historicalStartingRelics(): Equipment[] {
 /**
  * v11 → v12: fold the player's 7-slot equipment record into the
  * 5-slot `EquipmentLoadout`, re-slot every persisted inventory equipment
- * instance, return worn overflow (a displaced `body` piece, 4th+ accessories)
+ * instance, return worn overflow (a displaced `body` piece, 4th+ relics)
  * to inventory. Pure over a
  * raw (untyped) save payload — casts are expected for save-data plumbing.
  */
@@ -118,7 +124,7 @@ function migrateV12ToV13(raw: Record<string, unknown>): Record<string, unknown> 
     const relicLoadout: EquipmentLoadout = {
         weapon: worn.find(w => w.slot === 'weapon') ?? null,
         armor: worn.find(w => w.slot === 'armor') ?? null,
-        accessories: worn.filter(w => w.slot === 'accessory'),
+        relics: worn.filter(w => w.slot === 'relic'),
     };
 
     // The relics lead the inventory (worn-first per slot) so the presenter's
@@ -174,7 +180,7 @@ function migrateV13ToV14(raw: Record<string, unknown>): Record<string, unknown> 
         .filter(it => !isEquipment(it) || isRelic(it));
 
     // Rebuild the loadout: keep worn relics, replace any non-relic worn piece
-    // with the default relic for that slot, and backfill the accessory row to 3.
+    // with the default relic for that slot, and backfill the relic row to 3.
     // The starting relics are the ring alone, so a slot with no
     // default stays empty (the v35 hop drops the deleted relics anyway).
     const defaults = historicalStartingRelics();
@@ -183,12 +189,12 @@ function migrateV13ToV14(raw: Record<string, unknown>): Record<string, unknown> 
         ? loadout.weapon : defaults.find(r => r.slot === 'weapon') ?? null;
     const armor = loadout?.armor && isRelic(loadout.armor)
         ? loadout.armor : defaults.find(r => r.slot === 'armor') ?? null;
-    const accessories: Equipment[] = (loadout?.accessories ?? []).filter(isRelic).slice(0, 3);
-    for (const d of defaults.filter(r => r.slot === 'accessory')) {
-        if (accessories.length >= 3) break;
-        if (!accessories.some(a => a.id === d.id)) accessories.push(d);
+    const relics: Equipment[] = (loadout?.relics ?? []).filter(isRelic).slice(0, 3);
+    for (const d of defaults.filter(r => r.slot === 'relic')) {
+        if (relics.length >= 3) break;
+        if (!relics.some(a => a.id === d.id)) relics.push(d);
     }
-    const relicLoadout: EquipmentLoadout = { weapon, armor, accessories };
+    const relicLoadout: EquipmentLoadout = { weapon, armor, relics };
 
     const baseMaxHealth = calculateMaxHealth(player.level, player.baseStats);
     const nextMaxHealth = baseMaxHealth + wornMaxHpBonus(relicLoadout);
@@ -503,7 +509,7 @@ function migrateV24ToV25(raw: Record<string, unknown>): Record<string, unknown> 
                 ...eq,
                 weapon: stripRetiredStatLines(eq.weapon ?? null),
                 armor: stripRetiredStatLines(eq.armor ?? null),
-                accessories: Array.isArray(eq.accessories) ? eq.accessories.map(stripRetiredStatLines) : eq.accessories,
+                relics: Array.isArray(eq.relics) ? eq.relics.map(stripRetiredStatLines) : eq.relics,
             };
         }
         out.player = next;
@@ -887,7 +893,7 @@ function migrateV34ToV35(raw: Record<string, unknown>): Record<string, unknown> 
     const equipment: EquipmentLoadout = {
         weapon: deleted(loadout.weapon) ? null : loadout.weapon,
         armor: deleted(loadout.armor) ? null : loadout.armor,
-        accessories: (loadout.accessories ?? []).filter(a => !deleted(a)),
+        relics: (loadout.relics ?? []).filter(a => !deleted(a)),
     };
 
     const next: Record<string, unknown> = { ...player, inventory, equipment };
@@ -998,6 +1004,18 @@ function migrateV37ToV38(raw: Record<string, unknown>): Record<string, unknown> 
 }
 
 /**
+ * v38 → v39: the third slot kind is `relic`, not `accessory`. Every
+ * equipment object anywhere in the save (inventory, worn loadout, inline
+ * quest rewards) is re-slotted from `accessory` to `relic` and loses its
+ * `accessoryKind`, and the loadout's `accessories` row becomes `relics`, by
+ * the one deep walk `reslotRelicSave`. Worn and carried pieces, `maxHealth`
+ * and the signatures they grant are unchanged. Pure over a raw v38 payload.
+ */
+function migrateV38ToV39(raw: Record<string, unknown>): Record<string, unknown> {
+    return { ...reslotRelicSave(raw), version: 39 };
+}
+
+/**
  * Narrow a raw save payload to the current `GameState`. Only the current
  * version is accepted; any other version throws (the caller resets to a new
  * game). The name/signature is kept so the persistence layer's call site is
@@ -1042,7 +1060,12 @@ export function migrate(
     // relic but the Suppliant's Ring; v35 → v36 re-expresses XP on the
     // rising level curve; v36 → v37 re-expresses it on the level-20 curve;
     // v37 → v38 renames the Brine Hag's flag and codex entry to the Green
-    // Jelly's. Chained so a v11 save lands at v38 in one call.
+    // Jelly's; v38 → v39 renames the accessory slot and row to relic. Chained
+    // so a v11 save lands at v39 in one call. The older hops speak the relic
+    // shape, so a pre-v39 save is re-slotted once before its first hop.
+    if (version >= 11 && version < 39) {
+        working = reslotRelicSave(working);
+    }
     if (version === 11 && toVersion >= 12) {
         working = migrateV11ToV12(working);
         version = 12;
@@ -1150,6 +1173,10 @@ export function migrate(
     if (version === 37 && toVersion >= 38) {
         working = migrateV37ToV38(working);
         version = 38;
+    }
+    if (version === 38 && toVersion >= 39) {
+        working = migrateV38ToV39(working);
+        version = 39;
     }
 
     if (version !== toVersion) {

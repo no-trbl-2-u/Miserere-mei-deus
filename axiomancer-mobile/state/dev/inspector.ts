@@ -114,7 +114,7 @@ export function selectInspectorSections(state: AppStoreState): readonly Inspecto
                 {
                     k: 'worn relics',
                     v: equipped
-                        ? [equipped.weapon?.id, equipped.armor?.id, ...(equipped.accessories ?? []).map((a) => a?.id)]
+                        ? [equipped.weapon?.id, equipped.armor?.id, ...(equipped.relics ?? []).map((a) => a?.id)]
                               .filter(Boolean)
                               .join(', ') || 'none'
                         : '—',

@@ -197,9 +197,9 @@ describe('grantAllRelics: every relic once, and worn for real', () => {
         actions.grantAllRelics();
 
         const player = store.getState().player;
-        const worn = player.equipment.accessories.map((a) => a.id);
+        const worn = player.equipment.relics.map((a) => a.id);
         expect(worn).toContain('relic-crimson-circlet');
-        const newlyWorn = worn.filter((id) => !before.equipment.accessories.some((a) => a.id === id));
+        const newlyWorn = worn.filter((id) => !before.equipment.relics.some((a) => a.id === id));
         const maxHp = newlyWorn.flatMap((id) => getRelicById(id)!.statModifiers ?? [])
             .filter((m) => m.stat === 'maxHp').reduce((n, m) => n + m.value, 0);
         expect(maxHp).toBe(20);
@@ -207,14 +207,14 @@ describe('grantAllRelics: every relic once, and worn for real', () => {
 
         // The dock shows it in a trinket slot.
         const dock = selectInventoryViewModel(store.getState()).equipmentDock.slots
-            .filter((sl) => sl.key === 'accessory').map((sl) => sl.item?.id ?? null);
+            .filter((sl) => sl.key === 'relic').map((sl) => sl.item?.id ?? null);
         expect(dock).toContain('relic-crimson-circlet');
 
         // The signature bar lists every signature the worn signets grant, each at its own cost.
         const fight = initializeCombatEncounter(player, startRealFight().enemy, ['grey-strike'], 1);
         const bar = buildCombatViewModel({ ...fight, conviction: 8 }).signatures;
         expect(bar.map((sig) => [sig.name, sig.cost])).toEqual(
-            player.equipment.accessories.map((a) => {
+            player.equipment.relics.map((a) => {
                 const sig = getSignatureSkill(getRelicById(a.id)!.grantsSignature!)!;
                 return [sig.name, sig.cost];
             }),
@@ -230,7 +230,7 @@ describe('grantAllRelics: every relic once, and worn for real', () => {
         actions.grantAllRelics();
 
         const player = store.getState().player;
-        expect(player.equipment.accessories.map((a) => a.id))
+        expect(player.equipment.relics.map((a) => a.id))
             .toEqual(['relic-disarming-plea', 'relic-crimson-circlet', 'relic-ruby-signet']);
         const fight = initializeCombatEncounter(player, startRealFight().enemy, ['grey-strike'], 1);
         expect(buildCombatViewModel(fight).signatures.map((sig) => sig.name))

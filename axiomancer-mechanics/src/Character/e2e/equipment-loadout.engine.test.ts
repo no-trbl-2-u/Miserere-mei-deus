@@ -3,9 +3,9 @@
  *
  * Proves the `EquipmentLoadout` semantics end-to-end:
  *   • weapon / armor replace in place.
- *   • accessories fill the first free of 3 positions; a 4th with the row full
+ *   • relics fill the first free of 3 positions; a 4th with the row full
  *     is a guarded no-op (same reference) unless `replaceIndex` is passed.
- *   • unequipItem frees the right accessory position (index required).
+ *   • unequipItem frees the right relic position (index required).
  *   • getEquippedItems / wornMaxHpBonus fold the whole loadout.
  *   • maxHealth tracks the worn maxHp lines on every equip/unequip.
  */
@@ -16,7 +16,7 @@ import { createCharacter } from '../index';
 import {
     equipItem, unequipItem, getEquippedItems, wornMaxHpBonus,
 } from '../equipment.reducer';
-import type { Equipment, AccessoryKind } from '../../Items/types';
+import type { Equipment } from '../../Items/types';
 import type { StatModifier } from '../../Effects/types';
 
 function weapon(id: string, maxHp = 0): Equipment {
@@ -27,9 +27,9 @@ function armor(id: string, maxHp = 0): Equipment {
     const statModifiers: StatModifier[] = maxHp ? [{ stat: 'maxHp', value: maxHp }] : [];
     return { id, name: id, description: '', category: 'equipment', slot: 'armor', statModifiers };
 }
-function accessory(id: string, kind: AccessoryKind = 'ring', maxHp = 0): Equipment {
+function relic(id: string, maxHp = 0): Equipment {
     const statModifiers: StatModifier[] = maxHp ? [{ stat: 'maxHp', value: maxHp }] : [];
-    return { id, name: id, description: '', category: 'equipment', slot: 'accessory', accessoryKind: kind, statModifiers };
+    return { id, name: id, description: '', category: 'equipment', slot: 'relic', statModifiers };
 }
 
 const fresh = () => createCharacter({ name: 'Test', level: 5, baseStats: { heart: 5, body: 5, mind: 5 } });
@@ -37,7 +37,7 @@ const fresh = () => createCharacter({ name: 'Test', level: 5, baseStats: { heart
 describe('Phase 18 — EquipmentLoadout equip/unequip', () => {
     it('starts with an empty loadout', () => {
         const c = fresh();
-        expect(c.equipment).toEqual({ weapon: null, armor: null, accessories: [] });
+        expect(c.equipment).toEqual({ weapon: null, armor: null, relics: [] });
         expect(getEquippedItems(c.equipment)).toEqual([]);
     });
 
@@ -51,47 +51,47 @@ describe('Phase 18 — EquipmentLoadout equip/unequip', () => {
         expect(getEquippedItems(c.equipment).map(i => i.id)).toEqual(['axe', 'mail']);
     });
 
-    it('accessories fill the first free position (up to 3)', () => {
+    it('relics fill the first free position (up to 3)', () => {
         let c = fresh();
-        c = equipItem(c, accessory('a'));
-        c = equipItem(c, accessory('b'));
-        c = equipItem(c, accessory('c'));
-        expect(c.equipment.accessories.map(i => i.id)).toEqual(['a', 'b', 'c']);
+        c = equipItem(c, relic('a'));
+        c = equipItem(c, relic('b'));
+        c = equipItem(c, relic('c'));
+        expect(c.equipment.relics.map(i => i.id)).toEqual(['a', 'b', 'c']);
     });
 
-    it('a 4th accessory with the row full is a guarded no-op (same reference)', () => {
+    it('a 4th relic with the row full is a guarded no-op (same reference)', () => {
         let c = fresh();
-        c = equipItem(c, accessory('a'));
-        c = equipItem(c, accessory('b'));
-        c = equipItem(c, accessory('c'));
-        const blocked = equipItem(c, accessory('d'));
+        c = equipItem(c, relic('a'));
+        c = equipItem(c, relic('b'));
+        c = equipItem(c, relic('c'));
+        const blocked = equipItem(c, relic('d'));
         expect(blocked).toBe(c);
-        expect(blocked.equipment.accessories.map(i => i.id)).toEqual(['a', 'b', 'c']);
+        expect(blocked.equipment.relics.map(i => i.id)).toEqual(['a', 'b', 'c']);
     });
 
-    it('replaceIndex swaps a specific accessory position when full', () => {
+    it('replaceIndex swaps a specific relic position when full', () => {
         let c = fresh();
-        c = equipItem(c, accessory('a'));
-        c = equipItem(c, accessory('b'));
-        c = equipItem(c, accessory('c'));
-        c = equipItem(c, accessory('d'), { replaceIndex: 1 });
-        expect(c.equipment.accessories.map(i => i.id)).toEqual(['a', 'd', 'c']);
+        c = equipItem(c, relic('a'));
+        c = equipItem(c, relic('b'));
+        c = equipItem(c, relic('c'));
+        c = equipItem(c, relic('d'), { replaceIndex: 1 });
+        expect(c.equipment.relics.map(i => i.id)).toEqual(['a', 'd', 'c']);
     });
 
-    it('unequipItem frees exactly the indexed accessory and compacts the rest', () => {
+    it('unequipItem frees exactly the indexed relic and compacts the rest', () => {
         let c = fresh();
-        c = equipItem(c, accessory('a'));
-        c = equipItem(c, accessory('b'));
-        c = equipItem(c, accessory('c'));
-        c = unequipItem(c, 'accessory', 0);
-        expect(c.equipment.accessories.map(i => i.id)).toEqual(['b', 'c']);
+        c = equipItem(c, relic('a'));
+        c = equipItem(c, relic('b'));
+        c = equipItem(c, relic('c'));
+        c = unequipItem(c, 'relic', 0);
+        expect(c.equipment.relics.map(i => i.id)).toEqual(['b', 'c']);
     });
 
-    it('unequipItem on accessory with no / out-of-range index is a no-op', () => {
+    it('unequipItem on relic with no / out-of-range index is a no-op', () => {
         let c = fresh();
-        c = equipItem(c, accessory('a'));
-        expect(unequipItem(c, 'accessory')).toBe(c);
-        expect(unequipItem(c, 'accessory', 5)).toBe(c);
+        c = equipItem(c, relic('a'));
+        expect(unequipItem(c, 'relic')).toBe(c);
+        expect(unequipItem(c, 'relic', 5)).toBe(c);
     });
 
     it('unequip weapon/armor clears the slot', () => {
@@ -107,7 +107,7 @@ describe('Phase 18 — EquipmentLoadout equip/unequip', () => {
         let c = fresh();
         const hpBefore = c.maxHealth;
         c = equipItem(c, weapon('sword', 4));
-        c = equipItem(c, accessory('ring', 'ring', 6));
+        c = equipItem(c, relic('ring', 6));
         const withGear = c.maxHealth;
         expect(withGear).toBeGreaterThan(hpBefore);
 

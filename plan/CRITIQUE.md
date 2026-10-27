@@ -1134,16 +1134,6 @@
 - suggested fix: a token-hygiene pass folds the recurring combat/hazard colors into the AXM runtime palette; new code then has a token to reach for.
 - source: owner session 2026-07-19 (press-fate/momentum/dice PR)
 
-### [LOW] general — AccessoryKind union must open when accessory flavors grow
-- pass: user-jot (commit 4e045d05)
-- viewport: unspecified
-- auth_state: anonymous
-- category: content
-- observation: Equipment model confirmed with owner (2026-07-18): 5 worn slots (1 weapon / 1 armor / 3 accessories), accessories are flavor-free mechanically — but AccessoryKind in axiomancer-mechanics/src/Items/types.ts is a CLOSED union (`head|hands|feet|amulet|ring|charm`) that pure flavor must register in. Owner intent: accessories can be literally anything (a cape, etc.). When new accessory content lands, extending the union is a one-word additive change, no migration, nothing reads the kind. Not blocking anything today.
-- evidence: user-spotted at 2026-07-18T19:40:08Z
-- suggested fix: [user has not specified — iterate to determine]
-- source: user
-
 ### [MED] engine hooks missing for two ratified-adjacent bridge shapes
 - pass: session-closeout 2026-07-12 (commit ffadca96)
 - viewport: n/a
@@ -1223,6 +1213,16 @@
 - source: loop
 
 ## Done
+
+### [x] [LOW] general — AccessoryKind union must open when accessory flavors grow — RESOLVED 2026-10-26 (phase EQ2a, branch loop/ship-EQ2a-relic-slot: the union and `Equipment.accessoryKind` are deleted; the slot is `relic`, a relic is named anything and fits any relic position, and the v38 -> v39 hop drops the kind from old saves)
+- pass: user-jot (commit 4e045d05)
+- viewport: unspecified
+- auth_state: anonymous
+- category: content
+- observation: Equipment model confirmed with owner (2026-07-18): 5 worn slots (1 weapon / 1 armor / 3 accessories), accessories are flavor-free mechanically — but AccessoryKind in axiomancer-mechanics/src/Items/types.ts is a CLOSED union (`head|hands|feet|amulet|ring|charm`) that pure flavor must register in. Owner intent: accessories can be literally anything (a cape, etc.). When new accessory content lands, extending the union is a one-word additive change, no migration, nothing reads the kind. Not blocking anything today.
+- evidence: user-spotted at 2026-07-18T19:40:08Z
+- suggested fix: [user has not specified — iterate to determine]
+- source: user
 
 ### [x] [LOW] ci / critique-drive — the hazard capture is unseeded, so the two viewports (and two passes) play different hazards — RESOLVED 2026-10-25 (branch loop/iterate-critique-hazard-seed, db0dc4f6: every screen context opens through `openScreenContext`, which injects `minigame-seed-injector.mjs`'s shared seeds, so hazard, rest and cache resolve one seed at both viewports and across passes; pinned in critique-drive.test.mjs)
 - pass: 100 (commit ee9c5b83)

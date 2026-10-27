@@ -51,7 +51,7 @@ function carryingBoth() {
         player: {
             ...player,
             inventory: [...player.inventory.filter((i: Item) => i.id !== RING && i.id !== SIGNET), relic(RING), relic(SIGNET)],
-            equipment: { weapon: null, armor: null, accessories: [] },
+            equipment: { weapon: null, armor: null, relics: [] },
         },
     });
     return { store, enemy: fight.enemy, actions: createAppActions(store) };
@@ -91,7 +91,7 @@ describe('every wearing grant wears into player.equipment (EQ1 A4)', () => {
         const store = createAppStore({ adapter: createMemoryAdapter() });
         const player = store.getState().player;
         store.setState({
-            player: { ...player, inventory: [], equipment: { weapon: null, armor: null, accessories: [] } },
+            player: { ...player, inventory: [], equipment: { weapon: null, armor: null, relics: [] } },
         });
         return store;
     }
@@ -99,7 +99,7 @@ describe('every wearing grant wears into player.equipment (EQ1 A4)', () => {
     it('GET ALL RELICS wears each relic while a position is free', () => {
         const store = bareStore();
         const result = createAppActions(store).grantAllRelics();
-        const worn = store.getState().player.equipment.accessories.map((a) => a.id);
+        const worn = store.getState().player.equipment.relics.map((a) => a.id);
         expect(worn).toEqual(result.worn);
         expect(worn).toContain(RING);
         expect(worn).toContain('relic-crimson-circlet');
@@ -108,7 +108,7 @@ describe('every wearing grant wears into player.equipment (EQ1 A4)', () => {
     it('a dev relic chip (add item by id) arrives worn', () => {
         const store = bareStore();
         createAppActions(store).addItemById(SIGNET);
-        expect(store.getState().player.equipment.accessories.map((a) => a.id)).toEqual([SIGNET]);
+        expect(store.getState().player.equipment.relics.map((a) => a.id)).toEqual([SIGNET]);
         expect(selectInventoryViewModel(store.getState(), {}).items.find((r) => r.id === SIGNET)?.equipped)
             .toBe(true);
     });
@@ -117,13 +117,13 @@ describe('every wearing grant wears into player.equipment (EQ1 A4)', () => {
         const equipped = bareStore();
         offerItemRewardAction(equipped, relic(SIGNET));
         equipItemRewardAction(equipped);
-        expect(equipped.getState().player.equipment.accessories.map((a) => a.id)).toEqual([SIGNET]);
+        expect(equipped.getState().player.equipment.relics.map((a) => a.id)).toEqual([SIGNET]);
 
         const confirmed = bareStore();
         offerItemRewardAction(confirmed, relic(SIGNET));
         confirmItemRewardAction(confirmed);
         const player = confirmed.getState().player;
-        expect(player.equipment.accessories).toEqual([]);
+        expect(player.equipment.relics).toEqual([]);
         expect(player.inventory.map((i: Item) => i.id)).toEqual([SIGNET]);
         expect(selectInventoryViewModel(confirmed.getState(), {}).items.find((r) => r.id === SIGNET)?.equipped)
             .toBe(false);

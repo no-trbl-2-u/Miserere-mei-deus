@@ -36,7 +36,7 @@ const full = (): Character => createCharacter({
     inventory: [...FIXTURE_TRINKETS], equipment: [...FIXTURE_TRINKETS],
 });
 
-const worn = (store: AppStore) => store.getState().player.equipment.accessories.map((a) => a.id);
+const worn = (store: AppStore) => store.getState().player.equipment.relics.map((a) => a.id);
 const carried = (store: AppStore) => store.getState().player.inventory.map((i) => i.id);
 
 const GRANTS: readonly [string, (store: AppStore) => void, readonly string[]][] = [

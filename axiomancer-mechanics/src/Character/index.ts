@@ -38,7 +38,7 @@ export interface CreateCharacterOptions {
     /**
      * Optional starting equipment as an ordered list of pieces to equip.
      * Each is equipped via `equipItem`, so weapon/armor replace in
-     * place and accessories fill the first 3 free positions (a 4th accessory is
+     * place and relics fill the first 3 free positions (a 4th relic is
      * a guarded no-op — order the list so the worn 3 come first). A worn
      * armor relic's +max VITAE is folded in at create-time, so the returned
      * `Character` is already "post-equipment".
@@ -79,7 +79,7 @@ export function createCharacter(options: CreateCharacterOptions): Character {
 
     // Equip every worn piece in order so the maxHp fold gets applied via the
     // canonical path (weapon/armor replace,
-    // accessories fill the first 3 positions).
+    // relics fill the first 3 positions).
     let initialised = baseChar;
     for (const piece of equipment) {
         initialised = equipItem(initialised, piece);

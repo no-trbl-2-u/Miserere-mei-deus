@@ -47,13 +47,13 @@ function playerWith(knownCards: readonly string[], combatRewardCards: readonly s
     return { ...deepClone(Player), knownCards: [...knownCards], combatRewardCards: [...combatRewardCards] };
 }
 
-/** The player wearing one fixture accessory relic per lane id (no library relic names a lane yet). */
+/** The player wearing one fixture relic relic per lane id (no library relic names a lane yet). */
 function wearing(player: Character, ...laneIds: string[]): Character {
     const relics: Equipment[] = laneIds.map((laneId, i) => ({
         id: `fixture-relic-${laneId}-${i}`, name: `Fixture ${laneId}`, description: '',
-        category: 'equipment', slot: 'accessory', laneId,
+        category: 'equipment', slot: 'relic', laneId,
     } as Equipment));
-    return { ...player, equipment: { weapon: null, armor: null, accessories: relics } };
+    return { ...player, equipment: { weapon: null, armor: null, relics: relics } };
 }
 
 const greyPlayer = (): Character => playerWith(STARTING_CARD_IDS);

@@ -24,7 +24,7 @@ const hop = (raw: Record<string, unknown>): GameState => migrate(raw, 37, 38);
 
 describe('migrate v37 → v38 (AN3a: the Brine Hag becomes the Green Jelly)', () => {
     it('lands at the current version', () => {
-        expect(GAME_STATE_VERSION).toBe(38);
+        expect(GAME_STATE_VERSION).toBeGreaterThanOrEqual(38);
         expect(hop(v37With([], [])).version).toBe(38);
     });
 
@@ -50,11 +50,11 @@ describe('migrate v37 → v38 (AN3a: the Brine Hag becomes the Green Jelly)', ()
         expect(migrated.codex.unlockedEntries).toEqual(['codex-other']);
     });
 
-    it('a v36 save chains through to v38', () => {
+    it('a v36 save chains through to the current version', () => {
         const fresh = createNewGameState({ startMap: 'breakwater' });
         const raw = { ...fresh, version: 36, flags: ['befriended-brine-hag'] };
         const migrated = migrate(raw, 36);
-        expect(migrated.version).toBe(38);
+        expect(migrated.version).toBe(GAME_STATE_VERSION);
         expect(migrated.flags).toEqual(['befriended-green-jelly']);
     });
 });

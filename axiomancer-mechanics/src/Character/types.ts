@@ -4,22 +4,22 @@ import type { UpgradeableDieGear } from '../Combat/combat.encounter.types';
 
 /**
  * A character's worn loadout. Exactly 5 worn pieces across 3 slot
- * kinds: 1 weapon, 1 armor, up to 3 interchangeable accessories. The three
- * accessory positions have no identity — an accessory occupies *an* accessory
- * position; declaration/array order is cosmetic. `accessories.length` is capped
- * at `SLOT_CAPACITY.accessory` (3).
+ * kinds: 1 weapon, 1 armor, up to 3 interchangeable relics. The three
+ * relic positions have no identity — a relic occupies *a* relic position;
+ * array order is the display order (Relic I, II, III). `relics.length` is
+ * capped at `SLOT_CAPACITY.relic` (3).
  */
 export interface EquipmentLoadout {
     weapon: Equipment | null;
     armor: Equipment | null;
-    accessories: Equipment[];
+    relics: Equipment[];
 }
 
 /** A fresh, empty loadout (no piece worn in any slot). */
 export const emptyLoadout = (): EquipmentLoadout => ({
     weapon: null,
     armor: null,
-    accessories: [],
+    relics: [],
 });
 
 /**
@@ -49,7 +49,7 @@ export interface BaseStats {
  * @property baseStats              - Heart/Body/Mind core attributes.
  * @property inventory              - Items the character is carrying.
  * @property equipment              - The worn `EquipmentLoadout`:
- *                                    1 weapon + 1 armor + ≤3 accessories.
+ *                                    1 weapon + 1 armor + ≤3 relics.
  *                                    Equipment's only stat line is the armor
  *                                    relics' `maxHp`, folded onto `maxHealth`
  *                                    at equip-time.
@@ -111,8 +111,9 @@ export interface Character {
     /**
      * The two card lanes the run's character starts with (never grey, never
      * its starting relic's lane), recorded at run start. Optional + sparse —
-     * absent on a run with no character. Read by nothing yet; the reward
-     * pool takes it in a later phase.
+     * absent on a run with no character. Read by `unlockedLaneIds`
+     * (`Combat/combat.rewards.ts`): these lanes are always in the reward
+     * pool, worn relic or not, and never earn a guaranteed lane slot.
      */
     startingLaneIds?: string[];
     /**

@@ -150,14 +150,14 @@ describe('selectCharacterViewModel: shape contract', () => {
         const vm = selectCharacterViewModel(store.getState());
 
         // The slot model is Weapon, Armor, and three interchangeable
-        // accessory positions. 'Trinket' (not 'Accessory')
+        // relic positions. 'Trinket' (not 'Accessory')
         // aligns the SELF tab with the inventory dock's TRINKET chrome.
         expect(vm.equipment).toHaveLength(5);
         const names = vm.equipment.map((s) => s.name);
         expect(names).toEqual(['Weapon', 'Armor', 'Trinket', 'Trinket', 'Trinket']);
-        // The three accessory rows carry their 0-2 position index.
-        const accessories = vm.equipment.filter((s) => s.slotKey === 'accessory');
-        expect(accessories.map((s) => s.accessoryIndex)).toEqual([0, 1, 2]);
+        // The three relic rows carry their 0-2 position index.
+        const relics = vm.equipment.filter((s) => s.slotKey === 'relic');
+        expect(relics.map((s) => s.relicIndex)).toEqual([0, 1, 2]);
     });
 });
 

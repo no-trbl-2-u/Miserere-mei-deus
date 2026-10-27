@@ -77,8 +77,7 @@ function trinket(id: string, name = 'Iron Ring'): Equipment {
         name,
         description: 'A small worn thing.',
         category: 'equipment',
-        slot: 'accessory',
-        accessoryKind: 'ring',
+        slot: 'relic',
     };
 }
 
@@ -587,19 +586,19 @@ describe('equipItem action: wears the piece in player.equipment (EQ1 A3)', () =>
         expect(vm.items.find((i) => i.id === 'first')!.equipped).toBe(false);
     });
 
-    it('fills a free accessory position', () => {
+    it('fills a free relic position', () => {
         const store = makeStore([trinket('r1'), trinket('r2')], [trinket('r1')]);
         createAppActions(store).equipItem('r2');
-        expect(store.getState().player.equipment.accessories.map((a) => a.id)).toEqual(['r1', 'r2']);
+        expect(store.getState().player.equipment.relics.map((a) => a.id)).toEqual(['r1', 'r2']);
     });
 
-    it('on a full accessory row takes off the last-worn piece, which stays in the satchel', () => {
+    it('on a full relic row takes off the last-worn piece, which stays in the satchel', () => {
         const worn = [trinket('r1'), trinket('r2'), trinket('r3')];
         const store = makeStore([...worn, trinket('r4')], worn);
         createAppActions(store).equipItem('r4');
 
         const player = store.getState().player;
-        expect(player.equipment.accessories.map((a) => a.id)).toEqual(['r1', 'r2', 'r4']);
+        expect(player.equipment.relics.map((a) => a.id)).toEqual(['r1', 'r2', 'r4']);
         expect(player.inventory.map((i: Item) => i.id)).toContain('r3');
     });
 
@@ -636,7 +635,7 @@ describe('unequipItem action: leaves the position empty (EQ1 A2, A3)', () => {
         createAppActions(store).unequipItem(signet.id);
 
         const player = store.getState().player;
-        expect(player.equipment.accessories.map((a) => a.id)).toEqual([ring.id]);
+        expect(player.equipment.relics.map((a) => a.id)).toEqual([ring.id]);
         expect(player.inventory.map((i: Item) => i.id)).toEqual([ring.id, signet.id]);
     });
 
@@ -648,7 +647,7 @@ describe('unequipItem action: leaves the position empty (EQ1 A2, A3)', () => {
         actions.unequipItem(ring.id);
         actions.unequipItem(signet.id);
 
-        expect(store.getState().player.equipment.accessories).toEqual([]);
+        expect(store.getState().player.equipment.relics).toEqual([]);
     });
 
     it('no-ops when the item is missing, not equipment, or not worn', () => {
@@ -677,7 +676,7 @@ describe('the Crimson Circlet round trip (EQ1 A3; the Circlet carries the +max V
 
         actions.equipItem(signet.id);
         expect(store.getState().player.maxHealth).toBe(start.maxHealth + maxHp);
-        expect(store.getState().player.equipment.accessories.map((a) => a.id)).toEqual([signet.id]);
+        expect(store.getState().player.equipment.relics.map((a) => a.id)).toEqual([signet.id]);
 
         actions.unequipItem(signet.id);
         const end = store.getState().player;
@@ -766,18 +765,18 @@ describe('selectInventoryViewModel: chrome strings', () => {
 
 describe('selectInventoryViewModel: equipmentDock', () => {
     // The dock renders the full loadout: Weapon, Armor, and the 3 interchangeable
-    // accessory positions (Trinket I/II/III). The three accessory rows share
-    // `key: 'accessory'` and disambiguate via `accessoryIndex`.
+    // relic positions (Trinket I/II/III). The three relic rows share
+    // `key: 'relic'` and disambiguate via `relicIndex`.
     const expectedSlotOrder: ReadonlyArray<{
         key: string;
         label: string;
-        accessoryIndex?: number;
+        relicIndex?: number;
     }> = [
         { key: 'weapon', label: 'WEAPON' },
         { key: 'armor', label: 'ARMOR' },
-        { key: 'accessory', label: 'TRINKET I', accessoryIndex: 0 },
-        { key: 'accessory', label: 'TRINKET II', accessoryIndex: 1 },
-        { key: 'accessory', label: 'TRINKET III', accessoryIndex: 2 },
+        { key: 'relic', label: 'TRINKET I', relicIndex: 0 },
+        { key: 'relic', label: 'TRINKET II', relicIndex: 1 },
+        { key: 'relic', label: 'TRINKET III', relicIndex: 2 },
     ];
 
     it('ships 5 slots in the design grid order with chrome labels and null items by default', () => {
@@ -794,12 +793,12 @@ describe('selectInventoryViewModel: equipmentDock', () => {
         vm.equipmentDock.slots.forEach((slot, i) => {
             expect(slot.key).toBe(expectedSlotOrder[i].key);
             expect(slot.label).toBe(expectedSlotOrder[i].label);
-            expect(slot.accessoryIndex).toBe(expectedSlotOrder[i].accessoryIndex);
+            expect(slot.relicIndex).toBe(expectedSlotOrder[i].relicIndex);
             expect(slot.item).toBeNull();
         });
     });
 
-    it('fills all three accessory positions with the worn accessories in order', () => {
+    it('fills all three relic positions with the worn relics in order', () => {
         const rings = [
             trinket('ring-1', 'Iron Ring'),
             trinket('ring-2', 'Bone Charm'),
@@ -808,16 +807,16 @@ describe('selectInventoryViewModel: equipmentDock', () => {
         const store = makeStore(rings, rings);
         const vm: InventoryViewModel = selectInventoryViewModel(store.getState());
 
-        const accessorySlots = vm.equipmentDock.slots.filter((s) => s.key === 'accessory');
+        const accessorySlots = vm.equipmentDock.slots.filter((s) => s.key === 'relic');
         expect(accessorySlots).toHaveLength(3);
         expect(accessorySlots.map((s) => s.item?.id)).toEqual(['ring-1', 'ring-2', 'ring-3']);
     });
 
-    it('leaves later accessory positions bare when fewer than three are worn', () => {
+    it('leaves later relic positions bare when fewer than three are worn', () => {
         const store = makeStore([trinket('ring-1', 'Iron Ring')], [trinket('ring-1', 'Iron Ring')]);
         const vm: InventoryViewModel = selectInventoryViewModel(store.getState());
 
-        const accessorySlots = vm.equipmentDock.slots.filter((s) => s.key === 'accessory');
+        const accessorySlots = vm.equipmentDock.slots.filter((s) => s.key === 'relic');
         expect(accessorySlots.map((s) => s.item?.id ?? null)).toEqual(['ring-1', null, null]);
     });
 
@@ -1112,11 +1111,11 @@ describe('a save carrying a relic the loadout lacks (EQ1 A5)', () => {
 
         actions.equipItem(signet.id);
         const after = store.getState().player;
-        expect(after.equipment.accessories.filter((a) => a.id === signet.id)).toHaveLength(1);
+        expect(after.equipment.relics.filter((a) => a.id === signet.id)).toHaveLength(1);
         expect(after.maxHealth).toBe(player.maxHealth + 20);
 
         actions.equipItem(signet.id);
-        expect(store.getState().player.equipment.accessories.filter((a) => a.id === signet.id)).toHaveLength(1);
+        expect(store.getState().player.equipment.relics.filter((a) => a.id === signet.id)).toHaveLength(1);
         expect(store.getState().player.maxHealth).toBe(player.maxHealth + 20);
     });
 });

@@ -7,7 +7,7 @@
  *
  *   - `equipItem` drops the worn weapon/armor on the floor unless the caller
  *     rescues it first;
- *   - `equipItem` on a FULL accessory row is a guarded no-op that returns the
+ *   - `equipItem` on a FULL relic row is a guarded no-op that returns the
  *     SAME character reference, so a shallow equality check calls it done.
  *
  * Seeded; no timers, no network, no rendering.
@@ -47,7 +47,7 @@ import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 /**
  * A store whose player wears the fixture relics on every slot, the ring not
  * yet granted. A real fresh run wears NOTHING (THE VERY START), so the swap /
- * displacement cases seed a loadout explicitly: a full accessory row is what
+ * displacement cases seed a loadout explicitly: a full relic row is what
  * makes EQUIP a swap rather than a free fill.
  */
 function makeStore(): AppStore {
@@ -153,9 +153,9 @@ describe('item-reward view model', () => {
 
     it('D6 — names the piece EQUIP would push out, and the signature gained', () => {
         const store = makeStore();
-        // A full accessory row is the case that must never swap blind.
-        expect(player(store).equipment.accessories).toHaveLength(SLOT_CAPACITY.accessory);
-        const worn = player(store).equipment.accessories[SLOT_CAPACITY.accessory - 1]!;
+        // A full relic row is the case that must never swap blind.
+        expect(player(store).equipment.relics).toHaveLength(SLOT_CAPACITY.relic);
+        const worn = player(store).equipment.relics[SLOT_CAPACITY.relic - 1]!;
 
         offerItemRewardAction(store, relic(BENCHED_ACCESSORY));
         const vm = vmOf(store);
@@ -171,7 +171,7 @@ describe('item-reward view model', () => {
         const store = makeStore();
         // The ring sits in the seat EQUIP would displace.
         const ring = relic(RING_ID);
-        setLoadout(store, { accessories: [FIXTURE_TRINKETS[0]!, FIXTURE_TRINKETS[1]!, ring] });
+        setLoadout(store, { relics: [FIXTURE_TRINKETS[0]!, FIXTURE_TRINKETS[1]!, ring] });
 
         offerItemRewardAction(store, FIXTURE_TRINKETS[2]!, { includeInline: true });
         const vm = vmOf(store);
@@ -183,7 +183,7 @@ describe('item-reward view model', () => {
 
     it('a free slot trades nothing away', () => {
         const store = makeStore();
-        setLoadout(store, { accessories: [] });
+        setLoadout(store, { relics: [] });
         offerItemRewardAction(store, relic(BENCHED_ACCESSORY));
         const vm = vmOf(store);
 
@@ -226,15 +226,15 @@ describe('committing the reward', () => {
         expect(result.outcome).toBe('inventory');
         expect(result.displaced).toBeNull();
         expect(player(store).inventory.map((i) => i.id)).toContain(BENCHED_ACCESSORY);
-        expect(player(store).equipment.accessories.map((a) => a.id))
-            .toEqual(before.accessories.map((a) => a.id));
+        expect(player(store).equipment.relics.map((a) => a.id))
+            .toEqual(before.relics.map((a) => a.id));
         expect(selectHasPendingItemReward(store.getState())).toBe(false);
     });
 
     it('EQUIP puts it in the satchel AND on the body, swapping rather than no-oping', () => {
         const store = makeStore();
-        expect(player(store).equipment.accessories).toHaveLength(SLOT_CAPACITY.accessory);
-        const displacedBefore = player(store).equipment.accessories[SLOT_CAPACITY.accessory - 1]!;
+        expect(player(store).equipment.relics).toHaveLength(SLOT_CAPACITY.relic);
+        const displacedBefore = player(store).equipment.relics[SLOT_CAPACITY.relic - 1]!;
         const characterBefore = player(store);
 
         offerItemRewardAction(store, relic(BENCHED_ACCESSORY));
@@ -247,8 +247,8 @@ describe('committing the reward', () => {
         expect(player(store)).not.toBe(characterBefore);
 
         const after = player(store);
-        expect(after.equipment.accessories.map((a) => a.id)).toContain(BENCHED_ACCESSORY);
-        expect(after.equipment.accessories).toHaveLength(SLOT_CAPACITY.accessory);
+        expect(after.equipment.relics.map((a) => a.id)).toContain(BENCHED_ACCESSORY);
+        expect(after.equipment.relics).toHaveLength(SLOT_CAPACITY.relic);
         expect(after.inventory.map((i) => i.id)).toContain(BENCHED_ACCESSORY);
 
         // Nothing is ever destroyed: the displaced relic is still owned.
@@ -258,7 +258,7 @@ describe('committing the reward', () => {
 
     it('EQUIP: the satchel shows exactly what the engine loadout wears', () => {
         const store = makeStore();
-        const displaced = player(store).equipment.accessories[SLOT_CAPACITY.accessory - 1]!;
+        const displaced = player(store).equipment.relics[SLOT_CAPACITY.relic - 1]!;
         offerItemRewardAction(store, relic(BENCHED_ACCESSORY));
         equipItemRewardAction(store);
 
@@ -270,7 +270,7 @@ describe('committing the reward', () => {
         const loadoutIds = [
             after.equipment.weapon?.id,
             after.equipment.armor?.id,
-            ...after.equipment.accessories.map((a) => a.id),
+            ...after.equipment.relics.map((a) => a.id),
         ].filter((id): id is string => typeof id === 'string');
         expect([...wornRows].sort()).toEqual([...loadoutIds].sort());
         expect(wornRows).toContain(BENCHED_ACCESSORY);
@@ -284,7 +284,7 @@ describe('committing the reward', () => {
         confirmItemRewardAction(store);
 
         const after = player(store);
-        expect(after.equipment.accessories.map((a) => a.id)).not.toContain(BENCHED_ACCESSORY);
+        expect(after.equipment.relics.map((a) => a.id)).not.toContain(BENCHED_ACCESSORY);
         const row = selectInventoryViewModel(store.getState(), {}).items.find((r) => r.id === BENCHED_ACCESSORY);
         expect(row?.equipped).toBe(false);
     });
@@ -335,7 +335,7 @@ describe('committing the reward', () => {
 describe('D7 — leaving the screen keeps the item', () => {
     it('dismissal grants every queued item to the satchel and wears none', () => {
         const store = makeStore();
-        const wornBefore = player(store).equipment.accessories.map((a) => a.id);
+        const wornBefore = player(store).equipment.relics.map((a) => a.id);
         offerItemRewardAction(store, [relic(BENCHED_ACCESSORY), SPARE_ARMOR]);
 
         const result = dismissItemRewardAction(store);
@@ -344,12 +344,38 @@ describe('D7 — leaving the screen keeps the item', () => {
         const after = player(store);
         expect(after.inventory.map((i) => i.id)).toContain(BENCHED_ACCESSORY);
         expect(after.inventory.map((i) => i.id)).toContain(SPARE_ARMOR.id);
-        expect(after.equipment.accessories.map((a) => a.id)).toEqual(wornBefore);
+        expect(after.equipment.relics.map((a) => a.id)).toEqual(wornBefore);
         expect(selectHasPendingItemReward(store.getState())).toBe(false);
     });
 
     it('dismissing an empty queue is harmless', () => {
         const store = makeStore();
         expect(dismissItemRewardAction(store).applied).toBe(false);
+    });
+});
+
+// ---------------------------------------------------------------------------
+// The relic slot — a piece queued on the old slot model reads as a relic
+// ---------------------------------------------------------------------------
+
+describe('a pending piece queued with the old slot name', () => {
+    it('is read as a relic through the engine re-slot helper and worn in a relic position', () => {
+        const store = createAppStore({ adapter: createMemoryAdapter() });
+        store.setState({
+            player: createCharacter({ name: 'Bare', level: 1, baseStats: { heart: 5, body: 5, mind: 5 } }),
+        } as never);
+        const oldPiece = { ...relic(RING_ID), slot: 'accessory', accessoryKind: 'ring' } as unknown as Equipment;
+        store.setState({
+            itemReward: { queue: [{ item: oldPiece, source: null, settleFlags: [] }] },
+        } as never);
+
+        const result = equipItemRewardAction(store);
+
+        expect(result.applied).toBe(true);
+        const worn = player(store).equipment.relics;
+        expect(worn.map((r) => r.id)).toEqual([RING_ID]);
+        expect(worn[0]!.slot).toBe('relic');
+        expect('accessoryKind' in worn[0]!).toBe(false);
+        expect(JSON.stringify(player(store))).not.toMatch(/accessoryKind|"accessory"/);
     });
 });

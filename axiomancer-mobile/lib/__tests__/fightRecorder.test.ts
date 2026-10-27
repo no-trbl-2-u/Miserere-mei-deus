@@ -227,7 +227,7 @@ describe('what was worn (phase LR1g, A19)', () => {
         try {
             const arrival = arriveAtRealFight();
             const worn = arrival.store.getState().player.equipment;
-            const ids = [worn.weapon, worn.armor, ...worn.accessories].flatMap((p) => (p ? [p.id] : []));
+            const ids = [worn.weapon, worn.armor, ...worn.relics].flatMap((p) => (p ? [p.id] : []));
             arrival.actions.beginHazardEncounter();
             arrival.actions.endCombat('flee');
             await flush();

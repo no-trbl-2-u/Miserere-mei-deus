@@ -65,7 +65,7 @@ function v24Save(): Record<string, unknown> {
         equipment: {
             weapon: kitted.equipment.weapon ? legacyRelic(kitted.equipment.weapon) : null,
             armor: kitted.equipment.armor ? legacyRelic(kitted.equipment.armor) : null,
-            accessories: kitted.equipment.accessories.map(legacyRelic),
+            accessories: kitted.equipment.relics.map(legacyRelic),
         },
     };
     return {
@@ -82,8 +82,8 @@ function v24Save(): Record<string, unknown> {
 /** Every stat line on every item the player owns or wears. */
 function allStatLines(player: Record<string, unknown>): LegacyStatLine[] {
     const inv = (player.inventory as Record<string, unknown>[]) ?? [];
-    const eq = player.equipment as { weapon: unknown; armor: unknown; accessories: unknown[] };
-    const worn = [eq.weapon, eq.armor, ...eq.accessories].filter(Boolean) as Record<string, unknown>[];
+    const eq = player.equipment as { weapon: unknown; armor: unknown; relics?: unknown[]; accessories?: unknown[] };
+    const worn = [eq.weapon, eq.armor, ...(eq.relics ?? eq.accessories ?? [])].filter(Boolean) as Record<string, unknown>[];
     return [...inv, ...worn].flatMap(it => (it.statModifiers as LegacyStatLine[] | undefined) ?? []);
 }
 

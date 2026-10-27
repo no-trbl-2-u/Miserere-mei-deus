@@ -136,7 +136,7 @@ describe('Phase 20 — equipment applies no effect, so equipment never sources a
             name: 'Regen Band',
             description: 'Ticks heal each round.',
             category: 'equipment' as const,
-            slot: 'accessory' as const,
+            slot: 'relic' as const,
             tier: 1,
             rarity: 'common' as const,
             requiredLevel: 1,

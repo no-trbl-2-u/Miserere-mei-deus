@@ -16,8 +16,10 @@
  * A run starts with none. The dev menu's relic chips hand any over, worn
  * while a position is free.
  *
- * Relics are accessories, and a character wears up to three
- * (`SLOT_CAPACITY.accessory`), so their signatures share the bar.
+ * Every relic takes the `relic` slot, and a character wears up to three
+ * (`SLOT_CAPACITY.relic`), so their signatures share the bar. A relic's
+ * flavour (a ring, a brooch, a circlet) is its name alone; any relic fits any
+ * relic position.
  *
  * A worn relic's stat lines and signature are read from the library entry by
  * id when there is one (`relicStatLines`, `getSignaturesForLoadout`), so a
@@ -38,8 +40,7 @@ const SUPPLIANTS_RING: Equipment = {
     name: "Suppliant's Ring",
     description: 'Offer a foe that can be befriended the choice of mercy, once it is low enough.',
     category: 'equipment',
-    slot: 'accessory',
-    accessoryKind: 'ring',
+    slot: 'relic',
     statModifiers: [],
     grantsSignature: 'sig-disarming-plea',
 };
@@ -53,8 +54,7 @@ const CRIMSON_CIRCLET: Equipment = {
     name: 'Crimson Circlet',
     description: '+5 Body and +20 max VITAE while worn. Your next SACRIFICE heals you instead of costing VITAE; it still counts as a SACRIFICE.',
     category: 'equipment',
-    slot: 'accessory',
-    accessoryKind: 'head',
+    slot: 'relic',
     statModifiers: [{ stat: 'body', value: 5 }, { stat: 'maxHp', value: 20 }],
     grantsSignature: 'sig-crimson-circlet',
     laneId: 'blood-price',
@@ -70,8 +70,7 @@ const RUBY_SIGNET: Equipment = {
     name: 'Ruby Signet',
     description: '+5 Heart while worn. Your next SACRIFICE also gives the foe LEECH equal to the VITAE paid.',
     category: 'equipment',
-    slot: 'accessory',
-    accessoryKind: 'ring',
+    slot: 'relic',
     statModifiers: [{ stat: 'heart', value: 5 }],
     grantsSignature: 'sig-ruby-signet',
     laneId: 'blood-price',
@@ -87,8 +86,7 @@ const BLEEDING_SIGNET: Equipment = {
     name: 'Bleeding Signet',
     description: "+5 Mind while worn. HEAL 5, then trigger the foe's LEECH.",
     category: 'equipment',
-    slot: 'accessory',
-    accessoryKind: 'ring',
+    slot: 'relic',
     statModifiers: [{ stat: 'mind', value: 5 }],
     grantsSignature: 'sig-bleeding-signet',
     laneId: 'blood-price',
@@ -122,21 +120,17 @@ export function relicStatLines(piece: Equipment): readonly StatModifier[] {
 }
 
 /**
- * The signatures granted by a worn loadout, in stable slot order (weapon, armor,
- * accessories), de-duplicated (first occurrence wins). A library relic grants
- * its library entry's signature, so a saved copy takes the current one. An
- * empty loadout yields `[]` (combat legally begins with zero signatures and
+ * The signatures granted by a worn loadout: the worn relics' signatures in
+ * relic-position order, de-duplicated (first occurrence wins). Only the relic
+ * slot grants signatures; the weapon and armor never do. A library relic
+ * grants its library entry's signature, so a saved copy takes the current one.
+ * An empty loadout yields `[]` (combat legally begins with zero signatures and
  * resolves via cards).
  */
 export function getSignaturesForLoadout(loadout: EquipmentLoadout): SignatureSkillId[] {
-    const ordered: Equipment[] = [];
-    if (loadout.weapon) ordered.push(loadout.weapon);
-    if (loadout.armor) ordered.push(loadout.armor);
-    for (const a of loadout.accessories) ordered.push(a);
-
     const out: SignatureSkillId[] = [];
     const seen = new Set<SignatureSkillId>();
-    for (const piece of ordered) {
+    for (const piece of loadout.relics) {
         const sig = getRelicById(piece.id)?.grantsSignature ?? piece.grantsSignature;
         if (sig && !seen.has(sig)) {
             seen.add(sig);

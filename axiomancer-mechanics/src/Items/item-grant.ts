@@ -9,7 +9,7 @@
  *
  *   - **weapon / armor** — replace in place; the worn piece is dropped on the
  *     floor unless the caller rescued it first;
- *   - **accessory** — fills the first free position of three, and when the row
+ *   - **relic** — fills the first free position of three, and when the row
  *     is FULL it is a **guarded no-op that returns the same character
  *     reference** unless an explicit `replaceIndex` is passed.
  *
@@ -62,10 +62,10 @@ export interface GrantItemOptions {
      */
     equip?: boolean;
     /**
-     * Which of the three accessory positions to displace when the row is
+     * Which of the three relic positions to displace when the row is
      * already full. Ignored for weapon/armor (capacity 1 — the sole worn piece
      * is the displaced one) and when the row has a free position. Out-of-range
-     * values fall back to the default. Default: the LAST worn accessory, which
+     * values fall back to the default. Default: the LAST worn relic, which
      * mirrors `findEquippedInSlot`'s replace-preview.
      */
     replaceIndex?: number;
@@ -147,13 +147,13 @@ export function partitionGrantsForReward(
 
 /**
  * Which worn piece equipping `item` would push out of the loadout, and at which
- * accessory index. Pure preview — nothing is mutated. A screen calls this to
+ * relic index. Pure preview — nothing is mutated. A screen calls this to
  * name the trade *before* the player commits, so nobody ever swaps blind.
  *
  *   - weapon / armor → the worn piece in that slot (capacity 1), index `null`.
- *   - accessory with a free position → `{ item: null, index: null }`.
- *   - accessory at capacity → the piece at `replaceIndex`, defaulting to the
- *     last worn accessory.
+ *   - relic with a free position → `{ item: null, index: null }`.
+ *   - relic at capacity → the piece at `replaceIndex`, defaulting to the
+ *     last worn relic.
  */
 export function displacedBy(
     character: Character,
@@ -164,8 +164,8 @@ export function displacedBy(
     if (item.slot === 'weapon') return { item: loadout.weapon, index: null };
     if (item.slot === 'armor') return { item: loadout.armor, index: null };
 
-    const acc = loadout.accessories;
-    if (acc.length < SLOT_CAPACITY.accessory) return { item: null, index: null };
+    const acc = loadout.relics;
+    if (acc.length < SLOT_CAPACITY.relic) return { item: null, index: null };
 
     const requested = opts?.replaceIndex;
     const index =
@@ -186,10 +186,10 @@ function hasItemId(inventory: readonly Item[], id: string): boolean {
 }
 
 function wearsId(character: Character, id: string): boolean {
-    const { weapon, armor, accessories } = character.equipment;
+    const { weapon, armor, relics } = character.equipment;
     if (weapon?.id === id) return true;
     if (armor?.id === id) return true;
-    return accessories.some(a => a.id === id);
+    return relics.some(a => a.id === id);
 }
 
 /**
@@ -199,7 +199,7 @@ function wearsId(character: Character, id: string): boolean {
  * With `{ equip: true }` on equipment: the displaced piece (if any) is
  * unequipped, guaranteed back in inventory, and only then is the grant worn —
  * the `unequipItem → addItem → equipItem` chain the equipment reducer's
- * contract requires. Because the slot is freed first, the accessory row is
+ * contract requires. Because the slot is freed first, the relic row is
  * never full at equip-time, so the guarded no-op cannot fire.
  */
 export function grantItem(
@@ -245,7 +245,7 @@ export function grantItem(
     const unequipped = unequipItem(
         withItem,
         granted.slot,
-        granted.slot === 'accessory' ? (index ?? undefined) : undefined,
+        granted.slot === 'relic' ? (index ?? undefined) : undefined,
     );
 
     // Return the displaced piece to the satchel. Worn relics normally live in
@@ -267,10 +267,10 @@ export function grantItem(
 
 /** True iff `slot` has a free worn position on `character`. */
 function hasFreePosition(character: Character, slot: Equipment['slot']): boolean {
-    const { weapon, armor, accessories } = character.equipment;
+    const { weapon, armor, relics } = character.equipment;
     if (slot === 'weapon') return weapon === null;
     if (slot === 'armor') return armor === null;
-    return accessories.length < SLOT_CAPACITY.accessory;
+    return relics.length < SLOT_CAPACITY.relic;
 }
 
 /**

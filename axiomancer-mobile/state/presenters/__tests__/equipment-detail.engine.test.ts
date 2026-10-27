@@ -48,7 +48,7 @@ describe('equipment detail view-model — lane', () => {
     it('a relic naming an unregistered lane (a removed trial set) is null', () => {
         const orphan: Equipment = {
             id: 'orphan-relic', name: 'Orphan', description: '', category: 'equipment',
-            slot: 'accessory', laneId: 'no-such-lane',
+            slot: 'relic', laneId: 'no-such-lane',
         };
         const vm = selectEquipmentDetailViewModel(stateWith([orphan], [orphan]), orphan.id)!;
         expect(vm.lane).toBeNull();

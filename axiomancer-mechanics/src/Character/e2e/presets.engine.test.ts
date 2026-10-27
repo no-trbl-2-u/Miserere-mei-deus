@@ -47,7 +47,7 @@ describe('buildCharacterFromPreset', () => {
         // worn equipment, not archetype).
         expect(player.equipment.weapon).toBeNull();
         expect(player.equipment.armor).toBeNull();
-        expect(player.equipment.accessories).toEqual([]);
+        expect(player.equipment.relics).toEqual([]);
         // Every preset seeds the grey deck.
         expect(player.knownCards).toEqual([...STARTING_CARD_IDS]);
         // Apprentice declares no procedural gear: inventory = the 1 declared potion.
@@ -65,7 +65,7 @@ describe('buildCharacterFromPreset', () => {
         expect(player.baseStats).toEqual({ heart: 7, body: 8, mind: 7 });
         expect(player.knownCards).toEqual([...STARTING_CARD_IDS]); // grey deck at every tier
         // Presets wear no relic and carry NO procedural gear.
-        expect(player.equipment.accessories).toEqual([]);
+        expect(player.equipment.relics).toEqual([]);
         const invEquipmentIds = player.inventory.filter(i => i.category === 'equipment').map(i => i.id);
         expect(invEquipmentIds).toEqual([]);
         expect(player.currency).toBe(25);
@@ -78,7 +78,7 @@ describe('buildCharacterFromPreset', () => {
         expect(player.baseStats).toEqual({ heart: 8, body: 11, mind: 10 });
         expect(player.knownCards).toEqual([...STARTING_CARD_IDS]); // grey deck at every tier
         // Declared procedural gear does not resolve, so it owns no equipment.
-        expect(player.equipment.accessories).toEqual([]);
+        expect(player.equipment.relics).toEqual([]);
         const invEquipmentIds = player.inventory.filter(i => i.category === 'equipment').map(i => i.id);
         expect(invEquipmentIds).toEqual([]);
         expect(player.currency).toBe(75);

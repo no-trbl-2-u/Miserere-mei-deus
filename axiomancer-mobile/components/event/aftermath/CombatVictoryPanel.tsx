@@ -226,7 +226,7 @@ function ItemGlyph({ slot, size = 18 }: { slot: string; size?: number }) {
         // Canonical sword mark from the icon registry.
         return <AxmIcon name="action-sword" size={size} color={c} />;
     }
-    if (slot === 'accessory' || slot === 'trinket') {
+    if (slot === 'relic' || slot === 'trinket') {
         return (
             <Svg width={size} height={size} viewBox="0 0 32 32">
                 <Circle cx="16" cy="18" r="8" fill="none" stroke={c} strokeWidth="2" />
