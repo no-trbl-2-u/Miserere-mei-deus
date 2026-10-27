@@ -11,8 +11,9 @@
  */
 
 import {
-    programFaceText, programLineBlock, programLineShortfall, programXChoice, isCurseCard, GLOBAL_FREE_TURNS,
-    type Card, type CombatEncounterState, type ProgramShortfall,
+    programFaceText, programLineBlock, programLineShortfall, programLineDiscardShortfall, programXChoice, isCurseCard,
+    GLOBAL_FREE_TURNS,
+    type Card, type CombatEncounterState, type ProgramShortfall, type DiscardShortfall,
 } from '@mechanics';
 
 /** The type tag a program card wears on its face, or null for a plain type. */
@@ -62,6 +63,10 @@ const HEADLINES: readonly { re: RegExp; keyword: string | null; value: (m: RegEx
     { re: /\bBLIZZARD (\d+)\b/, keyword: 'BLIZZARD', value: (m) => m[1] },
     { re: /\bSTORM (\d+)\b/, keyword: 'STORM', value: (m) => m[1] },
     { re: /\bDRAW (\d+)\b/, keyword: 'DRAW', value: (m) => m[1] },
+    // The spikes and RETRIEVE, by their printed number.
+    { re: /\bTHORNS (\d+)\b/, keyword: 'THORNS', value: (m) => m[1] },
+    { re: /\bREFLECT (\d+)%/, keyword: 'REFLECT', value: (m) => `${m[1]}%` },
+    { re: /\bRETRIEVE (\d+)\b/, keyword: 'RETRIEVE', value: (m) => m[1] },
     { re: /\bWAIVE\b/, keyword: 'WAIVE', value: () => '' },
     { re: /\bEXILE a Curse\b/, keyword: 'EXILE', value: () => 'Curse' },
     { re: /\bgain (\d+) Conviction\b/i, keyword: null, value: (m) => `+${m[1]} ◆` },
@@ -76,6 +81,9 @@ const HEADLINES: readonly { re: RegExp; keyword: string | null; value: (m: RegEx
     { re: /\bINFERNO\b/, keyword: 'INFERNO', value: () => '' },
     { re: /\bBLIZZARD\b/, keyword: 'BLIZZARD', value: () => '' },
     { re: /\bSTORM\b/, keyword: 'STORM', value: () => '' },
+    // A line that only reads the spikes ("Double your THORNS").
+    { re: /\bTHORNS\b/, keyword: 'THORNS', value: () => '' },
+    { re: /\bREFLECT\b/, keyword: 'REFLECT', value: () => '' },
 ];
 
 /**
@@ -105,6 +113,9 @@ const FREE_CELL: readonly { re: RegExp; keyword: string; value: (m: RegExpMatchA
     { re: /\bBLIZZARD (\d+)\b/, keyword: 'BLIZZARD', value: (m) => m[1] },
     { re: /\bSTORM (\d+)\b/, keyword: 'STORM', value: (m) => m[1] },
     { re: /\bDRAW (\d+)\b/, keyword: 'DRAW', value: (m) => m[1] },
+    { re: /\bTHORNS (\d+)\b/, keyword: 'THORNS', value: (m) => m[1] },
+    { re: /\bREFLECT (\d+)%/, keyword: 'REFLECT', value: (m) => `${m[1]}%` },
+    { re: /\bRETRIEVE (\d+)\b/, keyword: 'RETRIEVE', value: (m) => m[1] },
     // A cost reads as a loss, never as the "+N" the cell gives a gain.
     { re: /\bSACRIFICE (\d+)\b/, keyword: 'SACRIFICE', value: (m) => `−${m[1]}` },
     // A FREE line with none of the above still wears a pill (a pill
@@ -159,6 +170,10 @@ export interface ProgramPlayVM {
     freeShortfall: ProgramShortfall | null;
     /** The same for the PAID line. */
     paidShortfall: ProgramShortfall | null;
+    /** The random discard the PAID line cannot pay (`discard`, the other
+     *  cards `held`), non-null exactly when `paidBlock` is that refusal. A
+     *  FREE line never discards. */
+    paidDiscard: DiscardShortfall | null;
     /** A Curse: the scrap bin refuses it. */
     unscrappable: boolean;
     /** The amounts a "SACRIFICE any amount" PAID line accepts, or null. */
@@ -172,6 +187,7 @@ export function programPlayVM(state: CombatEncounterState, uid: string, cardId: 
         paidBlock: programLineBlock(state, uid, true),
         freeShortfall: programLineShortfall(state, uid, false),
         paidShortfall: programLineShortfall(state, uid, true),
+        paidDiscard: programLineDiscardShortfall(state, uid, true),
         unscrappable: isCurseCard(cardId),
         xRange: programXChoice(state, uid),
     };

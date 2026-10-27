@@ -202,7 +202,7 @@ describe('CombatBoard — a staged card whose PAID line cannot be played now', (
      *  the engine refuses right now. */
     function blockedVM(s: CombatEncounterState) {
         const vm = buildCombatViewModel(s);
-        const card = { ...vm.hand[0], play: { freeBlock: null, paidBlock: WHY, freeShortfall: null, paidShortfall: null, unscrappable: false, xRange: null } };
+        const card = { ...vm.hand[0], play: { freeBlock: null, paidBlock: WHY, freeShortfall: null, paidShortfall: null, paidDiscard: null, unscrappable: false, xRange: null } };
         return { vm: { ...vm, hand: [card, ...vm.hand.slice(1)] }, card };
     }
 
