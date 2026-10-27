@@ -165,3 +165,8 @@ export {
     getPresetById, buildCharacterFromPreset,
 } from './presets';
 export type { CharacterPreset } from './presets';
+export {
+    CHARACTER_ROSTER, CHARACTER_GREY_DECK, FRESH_RUN_BASE_STATS, FRESH_RUN_STAT_BUDGET,
+    getCharacterDefinition, characterDeck, characterProblems,
+} from './roster';
+export type { CharacterDefinition, CharacterProblem, CharacterProblemCode } from './roster';
