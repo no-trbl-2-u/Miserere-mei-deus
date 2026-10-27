@@ -71,8 +71,8 @@ in the relic library with their signatures. The Defender is the third registered
 - **A6** Mobile: an unpayable PAID discard line is refused loudly: on apply the card gets the reject shake and a short
   vibration and nothing is played; End turn with that play staged gets the same and the turn does not end. A store or
   component test for each.
-- **A7** `Cards/library/defender.cards.ts` holds the 30 cards with the ledger's text, T's revised numbers
-  [T to confirm #3], T's names and T's colours (10 red, 10 blue, 10 purple), one upgrade each as commons, as a
+- **A7** `Cards/library/defender.cards.ts` holds the 30 cards with the ledger's text, the numbers T chose to ship
+  (the ledger's "The numbers" table: the sims' fixes), T's names and T's colours (10 red, 10 blue, 10 purple), one upgrade each as commons, as a
   removable trial set joined by one `TRIAL_SETS` line.
 - **A8** The lane `defender` ("Defender") lists all 30 as `cardIds`; its `testDeck` is the ledger's 20 (every Global
   and every Spell; T, 2026-10-26).
@@ -117,9 +117,10 @@ strike, with their numbers on the board changing as ruled.
 - **REFLECT is unscaled** [T to confirm #1]: the % prints and applies as written; THORNS's n scales with Heart (D110).
 - **The End-turn refusal** [T to confirm #2]: End turn is held only while an unpayable PAID discard play is staged
   (a die on the PAID line of a card that cannot pay); with no such play, End turn ends the turn as today.
-- **Numbers** [T to confirm #3]: the cards ship at T's numbers as voted and revised in the ledger. The sims'
-  suggested changes (`defender-sims.md`) are listed for T, not applied.
-- **The quest relics' source** [T to confirm #4]: the Mirror Brooch and Carapace Belt get `relicSource: 'quest'` but
+- **Numbers.** Confirmed by T (2026-10-27): "Ship the sims' fixes": P-01, P-03, P-04, P-06, E-01, E-04, E-07, M-04,
+  M-08 and M-09 change as the ledger's "The numbers" table lists; every other number is T's as voted and revised.
+  The numbers live in the one trial-set file, so T can restore any.
+- **The quest relics' source** [T to confirm #3]: the Mirror Brooch and Carapace Belt get `relicSource: 'quest'` but
   no new Act 1 quest; until a quest hands them out they are reachable from `/dev` only. The Thornback Signet joins
   the elite drop pool.
 - **The sims' rule readings are adopted** where the ledger is silent (listed in `defender-sims.md`, "The setup").
@@ -156,11 +157,13 @@ A1-A10 closed by DF1a-DF1e. A11 is T's check on the preview build.
 
 ## Follow-ups (out of scope)
 
-- Act 1 quests that hand out the Mirror Brooch and the Carapace Belt (unless T answers #4 otherwise).
+- Act 1 quests that hand out the Mirror Brooch and the Carapace Belt (unless T answers #3 otherwise).
 - T's names for the three signature skills.
 - The illegal-PAID refusal for an unpayable SACRIFICE on the board, if it is not already loud the same way (Session 0
   Open: "an engine and UI rule for every card"); A6 builds the discard case on the shared shake.
 - The Defender's pair identities with Blood Price and the Elementalist (Session 0 Open).
+- The pace: with the shipped numbers the Defender still runs under T's 3 / 5 / 7 turn targets (the sims); and the
+  structure questions the sims raised (M-07 PAID, M-09 FREE, M-02 and M-05 PAID), for after T plays it.
 
 ## Phases
 
