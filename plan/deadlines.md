@@ -173,7 +173,7 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 | [x] | 2026-10-24 | Cost-card engine and the worse-copy test | W1 | HP1c, HP1c2, HP1d |
 | [x] | 2026-10-27 | The puzzle looks random (roll, draw, reroll) | W1 | HP3a, HP3b |
 | [x] | 2026-10-26 | The dev-only move log (times HP4e's solves) | W1 | HP2c |
-| [ ] | 2026-10-26 | First character playable (T: end of day; waits on a third lane) | W1 | CH1a, CH1b, CH1c, CH1d, CH1e, CH1f |
+| [ ] | 2026-10-26 | First character playable (T: end of day; the third lane is the Defender, DF1a-DF1d) | W1 | CH1a, CH1b, CH1c, CH1d, CH1e, CH1f, DF1a, DF1b, DF1c, DF1d |
 | [x] | 2026-10-30 | Card audit; T rules the cut at the HP2a merge | W1 | HP2a |
 | [x] | 2026-10-31 | Difficulty features in the solver | W1 | HP2b |
 | [x] | 2026-10-23 | Decision pressure in the puzzle report | W1 | HP4a |
@@ -238,6 +238,8 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - AD1a — plotted 2026-10-21 (#716) without a deadline line; date not set.
 - AD1b — plotted 2026-10-21 (#716) without a deadline line; date not set.
 - EQ1a — a live defect T hit on device; loop work, needs no time from T; date not set.
+- DF1e — the Defender's relics; loop work, waits on LR1d; blocks no window's goal; date not set.
+- DF1f — attended; T plays the Defender test deck on a preview build once DF1d ships; date not set.
 - EQ1b — loop work, needs no time from T; date not set.
 - CL1 — plotted 2026-10-26 (ballots pitch no colour, D110); loop work, needs no time from T; date not set.
 - NC1 — plotted 2026-10-26 (no caps, D109); loop work, needs no time from T; date not set.
@@ -320,6 +322,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-26** — **the third lane plotted** (T in session, `/plot` of the Defender trial set after its verdicts, sims and revisions). **Edited** the Item "First character playable": its premise moved from "waits on a third lane" to the Defender, and it now names DF1a-DF1d, the rows that register the lane CH1e and CH1f were blocked on; its date (T's) is unchanged. **Added** Unscheduled lines for DF1e (the relics, waits on LR1d) and DF1f (T's check). **Ticked** nothing.
 - **2026-10-26** — **reward pool narrowed to worn relics** (T in session, plot amend run unattended on RW1a and LR1a, D107). **Edited** the Nov 13 lane-relics Item's name ("Unlocks line" is now "Lane line"); its rows, date and premise hold (the six relics still ship and still feed rewards, now only while worn). **Added** nothing, **ticked** nothing; no date moved.
 - **2026-10-26** — **first character dated** (T on the CH1 plot PR, call 8). **Added** the Item "First character playable", due 2026-10-26 in W1, naming CH1a-CH1f; **removed** their six Unscheduled lines. T wants the first character playable by end of day and knows the date is tight: RW1a and the CH1 chain must ship, and CH1e/CH1f wait on a third lane T has not plotted. **Ticked** nothing.
 - **2026-10-26** — **character selection plotted** (T in session, `/plot asap` from the pitch, run unattended). **Added** Unscheduled lines for CH1a-CH1f: T targets one character for the Nov 16 MVP and three for a December milestone T is formalising, but no Item covers characters, the MVP milestone does not name them, and CH1e-CH1f are blocked on a third lane T has not plotted; a Nov 16 Item is call #8 on the plot PR. **Edited** no Item: the MVP and W2 relic Items keep their premise (CH1 changes how the pool opens, not whether the six relics ship). **Ticked** nothing; no date moved.
