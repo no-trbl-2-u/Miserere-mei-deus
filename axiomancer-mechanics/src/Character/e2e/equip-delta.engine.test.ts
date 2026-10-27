@@ -37,6 +37,16 @@ describe('computeEquipDelta (Phase 23 — stat + signature diff only)', () => {
         expect(d.stats.some((s) => s.delta > 0)).toBe(true);
     });
 
+    it('a multi-stat relic surfaces every changed line in the full recomputed diff, not just maxHealth', () => {
+        const circlet = makeEquipment('circlet', {
+            slot: 'relic',
+            statModifiers: [{ stat: 'body', value: 5 }, { stat: 'maxHp', value: 20 }],
+        });
+        const d = computeEquipDelta(circlet, null, buildPlayer());
+        expect(d.stats.some((s) => s.stat === 'body' && s.delta === 5)).toBe(true);
+        expect(d.stats.some((s) => s.delta === 20)).toBe(true);
+    });
+
     it('unequip the worn item → mode unequip, against the item', () => {
         const worn = makeEquipment('blade', { statModifiers: [{ stat: 'maxHp', value: 3 }] });
         const d = computeEquipDelta(worn, worn, buildPlayer());

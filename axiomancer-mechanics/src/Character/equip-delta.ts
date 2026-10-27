@@ -19,7 +19,7 @@
  * job.
  */
 
-import { equipItem as engineEquipItem, unequipItem as engineUnequipItem } from './equipment.reducer';
+import { equipItem as engineEquipItem, unequipItem as engineUnequipItem, statsWithWorn } from './equipment.reducer';
 import { getSignatureSkill } from '../Combat/combat.signature';
 import type { Character } from './types';
 import type { Equipment } from '../Items/types';
@@ -92,6 +92,13 @@ function characterStats(character: Character): Map<string, number> {
     if (typeof character.maxHealth === 'number' && Number.isFinite(character.maxHealth)) {
         out.set('maxHealth', character.maxHealth);
     }
+    // Worn Heart/Body/Mind lines (e.g. the Crimson Circlet's +5 Body) never
+    // touch `maxHealth`, so they must be folded in here too, or a multi-stat
+    // relic's non-HP lines vanish from the full recomputed-character diff.
+    const worn = statsWithWorn(character);
+    out.set('heart', worn.heart);
+    out.set('body', worn.body);
+    out.set('mind', worn.mind);
     return out;
 }
 
