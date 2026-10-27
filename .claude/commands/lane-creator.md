@@ -4,7 +4,7 @@ description: Run the lane-creator v1 flow with T for one card family (a new lane
 
 You are running the lane-creator flow with T. Read `docs/lane-creator.md` end
 to end first: it is the single source of truth for the nine steps, the rules a
-lane meets and how a ballot is pitched colours (D102). Then read the newest
+lane meets and how colours are split after T picks (D102, D110). Then read the newest
 family's ledger as a worked example (`plan/card-ledger/rehearsal-elementalist.md`,
 and `rehearsal-blood-price.md` when a step's shape is unclear) and
 `plan/card-ledger/README.md` for the ballot kit. This command is attended
@@ -54,8 +54,8 @@ Say the step back to T in one line before doing anything.
    the thirty and ask for approval or edits; record "approved (T, <date>)".
 3. **The ballot (session).** Three candidates per slot, ninety in all, on
    the ballot shell per `plan/card-ledger/README.md` "Adding the next
-   ballot": the data file, a `job` per candidate (never a typed colour), the
-   three colours within 27 to 33, the kit tag and the `BALLOTS` entry. Every
+   ballot": the data file (no `job` or colour on any candidate, D110), the
+   kit tag and the `BALLOTS` entry. Every
    line clears the scrap floor, every Global opens on a trigger from the
    closed set (`docs/card-spec.md` §15), and no line prints a cap ("max n",
    "max +n", "capped"): T calls out a cap when one is wanted (T, 2026-10-26). Run `node --test
@@ -66,8 +66,8 @@ Say the step back to T in one line before doing anything.
 5. **The verdicts (session).** Read the newest `final` row for the ballot id
    (the D1 query tool on `miserere`, table `ballot_verdicts`, or `GET
    /v1/ballot-verdicts?ballot=<id>&status=final`); a `draft` row is never a
-   verdict. Never ask T to paste. Write `## Verdicts` (keepers per slot with
-   colour, T's slot notes and general note), then set the `BALLOTS` entry
+   verdict. Never ask T to paste. Write `## Verdicts` (keepers per slot, T's
+   slot notes and general note), then set the `BALLOTS` entry
    `closed`. If no `final` row exists yet, say so and stop.
 6. **The sims (session).** Simulate the kept cards against the Act 1 fights
    on a `sandbox/<family>-sims` branch, as `sandbox/elementalist-sims` did,
@@ -76,7 +76,9 @@ Say the step back to T in one line before doing anything.
 7. **The revisions (with T).** Put the sims' findings and every Open line
    to T in batches: cuts, additions and number changes, the open keyword
    math, names (content T approves, D99), the test deck and the family
-   relic. Record each ruling under `## Revisions` in T's words.
+   relic. Propose each kept lane card's colour, split evenly within each
+   sub-lane (`docs/lane-creator.md` "Colours after the picks"), and let T
+   edit it. Record each ruling under `## Revisions` in T's words.
 8. **The trial set.** Run `/plot` (`skills/plot.md`) for the removable trial
    set: its own library file, one `TRIAL_SETS` line, its lane and test deck,
    and any engine work its keywords need. The plot opens its own `plot` PR;
