@@ -115,7 +115,7 @@ describe('A6 — the column shows the three states', () => {
         expect(onSignature).not.toHaveBeenCalled();
         expect(onSignatureInfo).toHaveBeenCalledWith(expect.objectContaining({
             id: 'sig-disarming-plea', refused: true, reason: `${combat.enemy.name} will not be befriended`,
-        }));
+        }), true); // `true`: a tap, not a long-press (LR1g logs it)
     });
 });
 

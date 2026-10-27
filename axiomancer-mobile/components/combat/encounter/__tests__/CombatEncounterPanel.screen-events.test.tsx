@@ -106,6 +106,35 @@ describe('CombatEncounterPanel — screen events in the play log', () => {
         expect([...ms].sort((a, b) => a - b)).toEqual(ms);
     });
 
+    it('A21: a tap on a refused signature logs ui-signature-refused with the reason; a long-press does not', async () => {
+        const { health } = mountLiveBoard(true);
+        const rune = {
+            id: 'sig-crimson-covenant', name: 'Crimson Covenant', description: '', cost: 4, affordable: false,
+            icon: 'x', reason: 'Need 4 ◆ Conviction',
+        };
+
+        act(() => { board().onSignatureInfo?.(rune); }); // long-press: info only
+        act(() => { board().onSignatureInfo?.(rune, true); });
+
+        const events = await postedScreenEvents();
+        expect(events).toHaveLength(1);
+        expect(events[0]).toMatchObject({
+            kind: 'ui-signature-refused', signatureId: rune.id, reason: rune.reason, vitae: health,
+        });
+        expect(events[0].ms).toBeGreaterThanOrEqual(0);
+    });
+
+    it('a refused signature tap on a panel that does not persist its outcome records nothing', async () => {
+        mountLiveBoard(false);
+        act(() => {
+            board().onSignatureInfo?.({
+                id: 'sig-crimson-covenant', name: 'Crimson Covenant', description: '', cost: 4, affordable: false,
+                icon: 'x', reason: 'Need 4 ◆ Conviction',
+            }, true);
+        });
+        expect(await postedScreenEvents()).toEqual([]);
+    });
+
     it('a card played from staging is not an unstage', async () => {
         mountLiveBoard(true);
         const card = board().vm.hand[0];
