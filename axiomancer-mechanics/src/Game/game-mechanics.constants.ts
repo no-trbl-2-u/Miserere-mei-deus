@@ -78,6 +78,11 @@ export const RESOURCE_GENERATION = {
 // tuning candidate.
 export const ENEMY_CARD_ANSWER_CHANCE = 0.10;
 
+// The chance a won elite fight also drops one elite-only relic the player
+// does not carry (`rollEliteRelicDrop`), rolled after the unchanged elite
+// reward. Quests are the primary relic source; this is the rarer one.
+export const ELITE_RELIC_DROP_CHANCE = 0.08;
+
 // Effects-driven resolution thresholds
 // Combined intensity of control/debuff effects needed to force saturation yield (friendship route)
 export const EFFECTS_RESOLUTION_DEBUFF_INTENSITY_THRESHOLD = 3;

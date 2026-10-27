@@ -32,6 +32,7 @@ export type {
 export {
     MAX_EFFECT_INTENSITY,
     STAT_POINTS_PER_LEVEL,
+    ELITE_RELIC_DROP_CHANCE,
 } from './game-mechanics.constants';
 
 export type { PersistenceAdapter } from './persistence/types';
@@ -46,5 +47,5 @@ export {
     // R7e / R7e2 — the neutral witnesses for dialogue, shops, quests and gear.
     FIXTURE_NPC, FIXTURE_SHOP, FIXTURE_QUEST,
     FIXTURE_DIALOGUE_EVENT, FIXTURE_VILLAGE_EVENT, FIXTURE_CUTSCENE_EVENT,
-    FIXTURE_WEAPON, FIXTURE_ARMOR, FIXTURE_TRINKETS,
+    FIXTURE_WEAPON, FIXTURE_ARMOR, FIXTURE_TRINKETS, FIXTURE_ELITE_RELICS, FIXTURE_QUEST_RELIC,
 } from './fixtures';
