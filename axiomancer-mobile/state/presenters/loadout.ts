@@ -87,3 +87,34 @@ export function loadoutActionFor(player: Character, item: Equipment): LoadoutAct
         replacing,
     };
 }
+
+/** One row of the loadout as the player reads it: the dock and the SELF sheet map over these. */
+export interface LoadoutRow {
+    /** Engine slot kind. */
+    readonly key: EquipmentSlot;
+    /** Which relic position this row is (0-2); absent on weapon and armor. */
+    readonly relicIndex?: 0 | 1 | 2;
+    /** Dock chrome label (uppercase, numbered for relics). */
+    readonly dockLabel: string;
+    /** SELF sheet label. */
+    readonly selfLabel: string;
+}
+
+/**
+ * The one order and wording of the loadout: Weapon, Armor, then three Relic
+ * positions. A weapon or armor row stays on screen bare when nothing is worn.
+ */
+export const LOADOUT_ROWS: readonly LoadoutRow[] = [
+    { key: 'weapon', dockLabel: 'WEAPON', selfLabel: 'Weapon' },
+    { key: 'armor', dockLabel: 'ARMOR', selfLabel: 'Armor' },
+    { key: 'relic', relicIndex: 0, dockLabel: 'RELIC I', selfLabel: 'Relic' },
+    { key: 'relic', relicIndex: 1, dockLabel: 'RELIC II', selfLabel: 'Relic' },
+    { key: 'relic', relicIndex: 2, dockLabel: 'RELIC III', selfLabel: 'Relic' },
+];
+
+/** The piece worn in a loadout row, or `null` when the position is empty. */
+export function wornAtRow(loadout: EquipmentLoadout, row: LoadoutRow): Equipment | null {
+    if (row.key === 'weapon') return loadout.weapon ?? null;
+    if (row.key === 'armor') return loadout.armor ?? null;
+    return loadout.relics[row.relicIndex ?? 0] ?? null;
+}

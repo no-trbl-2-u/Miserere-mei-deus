@@ -6,7 +6,7 @@
 			"x": 0,
 			"y": 0,
 			"width": 940,
-			"height": 560,
+			"height": 690,
 			"label": "World routes"
 		},
 		{
@@ -39,11 +39,21 @@
 			"color": "1"
 		},
 		{
+			"id": "route:character-select",
+			"type": "file",
+			"file": "Features/Character Select.md",
+			"x": 640,
+			"y": 40,
+			"width": 260,
+			"height": 90,
+			"color": "1"
+		},
+		{
 			"id": "route:combat-encounter",
 			"type": "file",
 			"file": "Features/Encounter.md",
-			"x": 640,
-			"y": 40,
+			"x": 40,
+			"y": 170,
 			"width": 260,
 			"height": 90,
 			"color": "4"
@@ -52,7 +62,7 @@
 			"id": "route:cutscene",
 			"type": "file",
 			"file": "Features/Cutscene.md",
-			"x": 40,
+			"x": 340,
 			"y": 170,
 			"width": 260,
 			"height": 90,
@@ -62,7 +72,7 @@
 			"id": "route:dialogue",
 			"type": "file",
 			"file": "Features/Dialogue.md",
-			"x": 340,
+			"x": 640,
 			"y": 170,
 			"width": 260,
 			"height": 90,
@@ -72,8 +82,8 @@
 			"id": "route:event",
 			"type": "file",
 			"file": "Features/Event.md",
-			"x": 640,
-			"y": 170,
+			"x": 40,
+			"y": 300,
 			"width": 260,
 			"height": 90,
 			"color": "1"
@@ -82,7 +92,7 @@
 			"id": "route:index",
 			"type": "file",
 			"file": "Features/Index.md",
-			"x": 40,
+			"x": 340,
 			"y": 300,
 			"width": 260,
 			"height": 90,
@@ -92,7 +102,7 @@
 			"id": "route:item-reward",
 			"type": "file",
 			"file": "Features/Reward.md",
-			"x": 340,
+			"x": 640,
 			"y": 300,
 			"width": 260,
 			"height": 90,
@@ -102,8 +112,8 @@
 			"id": "route:rest",
 			"type": "file",
 			"file": "Features/Rest.md",
-			"x": 640,
-			"y": 300,
+			"x": 40,
+			"y": 430,
 			"width": 260,
 			"height": 90,
 			"color": "1"
@@ -112,7 +122,7 @@
 			"id": "route:saves",
 			"type": "file",
 			"file": "Features/Saves.md",
-			"x": 40,
+			"x": 340,
 			"y": 430,
 			"width": 260,
 			"height": 90,
@@ -122,7 +132,7 @@
 			"id": "route:settings",
 			"type": "file",
 			"file": "Features/Settings.md",
-			"x": 340,
+			"x": 640,
 			"y": 430,
 			"width": 260,
 			"height": 90,
@@ -132,8 +142,8 @@
 			"id": "route:village",
 			"type": "file",
 			"file": "Features/Village.md",
-			"x": 640,
-			"y": 430,
+			"x": 40,
+			"y": 560,
 			"width": 260,
 			"height": 90,
 			"color": "1"
@@ -190,6 +200,36 @@
 		}
 	],
 	"edges": [
+		{
+			"id": "flow:route:character-select->elsewhere:route:(tabs)/character",
+			"fromNode": "route:character-select",
+			"toNode": "elsewhere:route:(tabs)/character",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:character-select->elsewhere:route:(tabs)/deck",
+			"fromNode": "route:character-select",
+			"toNode": "elsewhere:route:(tabs)/deck",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:character-select->elsewhere:route:(tabs)/exploration",
+			"fromNode": "route:character-select",
+			"toNode": "elsewhere:route:(tabs)/exploration",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:character-select->elsewhere:route:(tabs)/inventory",
+			"fromNode": "route:character-select",
+			"toNode": "elsewhere:route:(tabs)/inventory",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:character-select->elsewhere:route:(tabs)/memoir",
+			"fromNode": "route:character-select",
+			"toNode": "elsewhere:route:(tabs)/memoir",
+			"color": "5"
+		},
 		{
 			"id": "flow:route:combat-encounter->elsewhere:route:(tabs)/exploration",
 			"fromNode": "route:combat-encounter",
@@ -267,6 +307,12 @@
 			"id": "flow:route:saves->elsewhere:route:(tabs)/memoir",
 			"fromNode": "route:saves",
 			"toNode": "elsewhere:route:(tabs)/memoir",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:saves->route:character-select",
+			"fromNode": "route:saves",
+			"toNode": "route:character-select",
 			"color": "5"
 		}
 	]

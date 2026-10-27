@@ -165,6 +165,7 @@ references them.
 
 `(tabs)/`: character, exploration, inventory, memoir, deck. Plus
 `index` (title → main menu), `saves` (the three save slots),
+`character-select` (after the slot pick once the roster holds a character),
 `settings`, `combat-encounter`, `hazard`, `hazard-deck`,
 `item-reward`, `rest`, `cache`, `blacksmith`, `labyrinth`,
 `dialogue`, `event`, `cutscene`, `village`, and dev routes (`dev`,

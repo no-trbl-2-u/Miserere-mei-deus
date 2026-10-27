@@ -67,12 +67,12 @@ describe('SlotBanner', () => {
     it('reflects updated label props', () => {
         const { getByText } = renderBanner({
             bannerEyebrow: 'EQUIPPABLE HERE',
-            bannerSlotLabel: 'Trinket',
+            bannerSlotLabel: 'Relic',
             bannerClearLabel: 'Show all',
         });
 
         expect(getByText('EQUIPPABLE HERE')).toBeDefined();
-        expect(getByText('✦ Trinket')).toBeDefined();
+        expect(getByText('✦ Relic')).toBeDefined();
         expect(getByText('Show all')).toBeDefined();
     });
 });
