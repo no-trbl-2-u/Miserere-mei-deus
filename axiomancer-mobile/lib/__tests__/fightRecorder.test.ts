@@ -186,6 +186,60 @@ describe('screen events (phase BE2d)', () => {
     });
 });
 
+describe('what was worn (phase LR1g, A19)', () => {
+    it('posts the relics from start and the signatures from the first observed state, and a refused tap', async () => {
+        const { combat, enemy } = startRealFight();
+        const { fetcher, calls } = mockFetch();
+        const recorder = recorderWith({ fetcher });
+        recorder.signatureRefused('sig-crimson-covenant', 'Need 4 Conviction'); // nothing open: dropped
+        recorder.start({
+            enemyId: enemy.id, playerLevel: 1, enemyHpMultiplier: 2, vitaeStart: 10, relics: ['relic-bleeding-signet'],
+        });
+        recorder.observe({ ...combat, signatures: ['sig-crimson-covenant'] });
+        recorder.signatureRefused('sig-crimson-covenant', 'Need 4 Conviction');
+        await recorder.end('retreat');
+
+        const post = JSON.parse(calls[0].init.body) as FightPost;
+        expect(validateFightPost(post)).toMatchObject({ ok: true });
+        expect(post.relics).toEqual(['relic-bleeding-signet']);
+        expect(post.signatures).toEqual(['sig-crimson-covenant']);
+        expect(post.events.filter((e) => e.kind === 'ui-signature-refused')).toEqual([
+            { kind: 'ui-signature-refused', signatureId: 'sig-crimson-covenant', reason: 'Need 4 Conviction', ms: expect.any(Number), vitae: combat.player.health },
+        ]);
+    });
+
+    it('wearing nothing posts empty lists', async () => {
+        const { combat, enemy } = startRealFight();
+        const { fetcher, calls } = mockFetch();
+        const recorder = recorderWith({ fetcher });
+        recorder.start({ enemyId: enemy.id, playerLevel: 1, enemyHpMultiplier: 2, vitaeStart: 10 });
+        recorder.observe({ ...combat, signatures: [] });
+        await recorder.end('retreat');
+        expect(JSON.parse(calls[0].init.body)).toMatchObject({ relics: [], signatures: [] });
+    });
+
+    it('the app bridge fills the worn relics at the fight start', async () => {
+        process.env.EXPO_PUBLIC_PUZZLE_API_URL = CONFIG.url;
+        process.env.EXPO_PUBLIC_PUZZLE_API_TOKEN = CONFIG.token;
+        devTools.mockReturnValue(true);
+        const fetchSpy = jest.fn<PuzzleFetch>(async () => ({ ok: true, status: 201 }));
+        (globalThis as { fetch: unknown }).fetch = fetchSpy;
+        try {
+            const arrival = arriveAtRealFight();
+            const worn = arrival.store.getState().player.equipment;
+            const ids = [worn.weapon, worn.armor, ...worn.accessories].flatMap((p) => (p ? [p.id] : []));
+            arrival.actions.beginHazardEncounter();
+            arrival.actions.endCombat('flee');
+            await flush();
+            expect(JSON.parse(fetchSpy.mock.calls[0][1].body).relics).toEqual(ids);
+        } finally {
+            delete process.env.EXPO_PUBLIC_PUZZLE_API_URL;
+            delete process.env.EXPO_PUBLIC_PUZZLE_API_TOKEN;
+            void fightRecorder.end('retreat');
+        }
+    });
+});
+
 describe('the gate', () => {
     it('shut at the start: nothing is recorded and no call is made', async () => {
         const { combat, enemy } = startRealFight();

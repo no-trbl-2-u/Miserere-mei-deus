@@ -17,6 +17,11 @@
  * detail popup opened. Each joins the same stream, stamped the same way, with
  * the VITAE last observed (a screen event changes no state).
  *
+ * Phase LR1g adds what was worn: the relic ids come with `start`, the signature
+ * ids from the first state `observe` sees (the engine derived them from the
+ * same loadout), and `signatureRefused` records a tap on a signature the engine
+ * would not cast, with the reason.
+ *
  * Nothing is recorded while the play-log gate is shut at `start`, and nothing
  * is posted when it has shut by the end. A failed post warns and is dropped
  * (BE1). Every number is a measurement for T; nothing here grades the game.
@@ -46,10 +51,15 @@ export interface FightStart {
     playerLevel: number;
     enemyHpMultiplier: number;
     vitaeStart: number;
+    /** The relic ids worn as the fight starts (LR1g); omitted by callers that wear none. */
+    relics?: string[];
 }
 
 /** The slice of the panel's combat state the recorder reads. */
-export type ObservedFight = Pick<CombatEncounterState, 'log' | 'player' | 'enemy' | 'deck' | 'turn' | 'finalOutcome'>;
+export type ObservedFight = Pick<CombatEncounterState, 'log' | 'player' | 'enemy' | 'deck' | 'turn' | 'finalOutcome'> & {
+    /** The signatures the worn relics grant; absent on a partial state. */
+    signatures?: readonly string[];
+};
 
 /** The outcome the store's `endCombat` takes. */
 export type EndCombatOutcome = 'victory' | 'defeat' | 'friendship' | 'flee';
@@ -60,7 +70,9 @@ export interface FightRecorder {
     /** Stamps the state's unseen log entries; a final outcome ends and posts the fight. */
     observe(state: ObservedFight): void;
     /** Adds a screen event for `cardId` to the open fight's stream; no-op when none is open. */
-    screen(kind: PlayLogUiEventKind, cardId: string): void;
+    screen(kind: Exclude<PlayLogUiEventKind, 'ui-signature-refused'>, cardId: string): void;
+    /** Adds a refused signature tap (LR1g) with the engine's reason; no-op when no fight is open. */
+    signatureRefused(signatureId: string, reason: string): void;
     /** Ends the open fight with `outcome` and posts it; resolves false when nothing was posted. */
     end(outcome: CombatOutcome): Promise<boolean>;
     isRecording(): boolean;
@@ -84,6 +96,7 @@ interface Recording extends FightStart {
     startedAt: number;
     cursor: number;
     deck: string[] | null;
+    signatures: string[];
     turns: number;
     vitaeEnd: number;
     vitaeLow: number;
@@ -100,14 +113,18 @@ export function createFightRecorder(deps: FightRecorderDeps = {}): FightRecorder
         start(start) {
             open = config() === null
                 ? null
-                : { ...start, startedAt: now(), cursor: 0, deck: null, turns: 0, vitaeEnd: start.vitaeStart, vitaeLow: start.vitaeStart, events: [] };
+                : { ...start, startedAt: now(), cursor: 0, deck: null, signatures: [], turns: 0, vitaeEnd: start.vitaeStart, vitaeLow: start.vitaeStart, events: [] };
         },
 
         observe(state) {
             const rec = open;
             // A fight this recording was not started for (a dev sandbox foe) is not ours.
             if (!rec || state.enemy.id !== rec.enemyId) return;
-            rec.deck ??= [...state.deck];
+            if (rec.deck === null) {
+                rec.deck = [...state.deck];
+                // The engine derived these from the worn loadout at combat-init, so the post agrees with the fight.
+                rec.signatures = [...(state.signatures ?? [])];
+            }
             // The log only grows within a fight; a shorter one is the panel's fight begun again.
             if (state.log.length < rec.cursor) rec.cursor = 0;
             const vitae = state.player.health;
@@ -127,6 +144,13 @@ export function createFightRecorder(deps: FightRecorderDeps = {}): FightRecorder
             rec.events.push({ kind, cardId, ms, vitae: rec.vitaeEnd });
         },
 
+        signatureRefused(signatureId, reason) {
+            const rec = open;
+            if (!rec) return;
+            const ms = Math.max(0, Math.round(now() - rec.startedAt));
+            rec.events.push({ kind: 'ui-signature-refused', signatureId, reason, ms, vitae: rec.vitaeEnd });
+        },
+
         async end(outcome) {
             const rec = open;
             open = null;
@@ -144,6 +168,8 @@ export function createFightRecorder(deps: FightRecorderDeps = {}): FightRecorder
                 vitaeEnd: rec.vitaeEnd,
                 vitaeLow: rec.vitaeLow,
                 deck: rec.deck ?? [],
+                relics: rec.relics ?? [],
+                signatures: rec.signatures,
                 events: rec.events,
             };
             return postPlayLog(PLAY_LOG_FIGHTS_PATH, post, cfg, deps.fetcher);

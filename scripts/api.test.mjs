@@ -14,7 +14,7 @@ import path from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
-import { REPORTS_PATH_PREFIX, REPORT_NAMES, checkBody, formatCardGaps, formatCardUsage, main, parseArgs, reportPath, table } from './api.mjs'
+import { REPORTS_PATH_PREFIX, REPORT_NAMES, checkBody, formatCardGaps, formatCardUsage, formatSignatureUsage, main, parseArgs, reportPath, table } from './api.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const USAGE_FIXTURE = path.join(HERE, 'fixtures', 'card-usage-report.json')
@@ -118,4 +118,26 @@ test('main: 2 on bad arguments or a missing variable, 1 on an HTTP failure', asy
   }), 1)
   assert.match(failed.text, /returned 401 \(check PUZZLE_API_TOKEN\)/)
   assert.doesNotMatch(failed.text, /sekrit/)
+})
+
+test('signature-usage: parses, the path has no card, the table lists one row per signature', () => {
+  assert.deepEqual(parseArgs(['signature-usage', '--build', 'abc']),
+    { report: 'signature-usage', build: 'abc', card: undefined, json: false, file: undefined })
+  assert.throws(() => parseArgs(['signature-usage', '--card', 'x']), /card-usage only/)
+  assert.equal(reportPath({ report: 'signature-usage', build: 'abc' }), '/v1/reports/signature-usage?build=abc')
+  const body = {
+    report: 'signature-usage', build: null, fights: 3,
+    signatures: [
+      { signatureId: 'sig-crimson-covenant', fightsWorn: 2, fightsCast: 1, casts: 2, castsPerFight: 1, refused: 2 },
+      { signatureId: 'sig-orphan', fightsWorn: 0, fightsCast: 0, casts: 0, castsPerFight: null, refused: 1 },
+    ],
+  }
+  assert.equal(checkBody(body, 'signature-usage'), body)
+  assert.throws(() => checkBody({ report: 'signature-usage', build: null, fights: 0 }, 'signature-usage'), /no signatures list/)
+  const lines = formatSignatureUsage(body).split('\n')
+  assert.match(lines[0], /^Signature usage: 3 fights \(every build\)\./)
+  const head = lines.findIndex((l) => l.startsWith('signature '))
+  assert.deepEqual(lines[head + 1].split(/\s+/), ['sig-crimson-covenant', '2', '1', '2', '1', '2'])
+  assert.deepEqual(lines[head + 2].split(/\s+/), ['sig-orphan', '0', '0', '0', '-', '1'])
+  assert.match(formatSignatureUsage({ ...body, signatures: [] }), /No signatures recorded\./)
 })

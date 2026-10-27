@@ -179,6 +179,7 @@ go to `wrangler d1 execute miserere --remote`.
 |---|---|
 | `card-usage` | per card: fights with it in the start deck, drawn, played (FREE and paid), held (turn ends it sat in hand unplayed), fizzled, offered, picked, skipped (shown and not taken), removed |
 | `card-gaps` | per enemy: the threats that overwhelmed a phase, live dice left unspent at turn end by colour beside those rolled, and the threat or DoT tick that ended each lost fight |
+| `signature-usage` | per signature (LR1g): fights it was worn in, fights it was cast in, casts, casts per fight worn, and taps the engine refused (`ui-signature-refused`); a fight post carries `relics` and `signatures` worn at its start |
 
 | Flag | Effect |
 |---|---|
