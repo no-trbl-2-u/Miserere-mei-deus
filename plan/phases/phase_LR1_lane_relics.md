@@ -14,7 +14,7 @@
 - Decisions: D47 (signet relics; a relic grants one signature), D68 (relics open lanes), D71 (the detail view shows
   the lane; relics come from quests and elites), D72 (the quest, dialogue and equipment plumbing stays, each
   witnessed by a fixture), D73 (a relic names a family), D88/D99 (relic content is T's; T wrote it), D100 (lane
-  relics stack), D104 (a carried lane relic unlocks its lane; worn relics count lane slots), D57 (a measurement is
+  relics stack), D104 as amended by D107 (only a worn lane relic puts its lane in the reward pool; worn relics count lane slots), D57 (a measurement is
   not a gate).
 - Code read while shaping this:
   - Relics: `axiomancer-mechanics/src/Items/relic.library.ts` holds two, the Suppliant's Ring (`relic-disarming-plea`,
@@ -98,18 +98,19 @@ after its relic is fine) and marks them `[content]` for T to rewrite. The same t
 ## Outcome
 
 The Bleeding Signet (reworked) and five new lane relics (two Blood Price, three Elementalist), each with its own
-signature at its own Conviction cost, name the lane they open and say so in their detail view ("Unlocks: <lane
-name>"); Act 1 quests hand out the four quest relics and the elite drops the two elite-only relics, so a player who
-earns a lane relic sees that lane's cards in their next reward (D104). Every fight post records the worn relics and
+signature at its own Conviction cost, name their lane and say so in their detail view ("Lane: <lane
+name> (while worn)"); Act 1 quests hand out the four quest relics and the elite drops the two elite-only relics, so a
+player who earns and wears a lane relic sees that lane's cards in their next reward (D107). Every fight post records the worn relics and
 their signatures, and a `signature-usage` report shows how each signature is worn, cast and refused.
 
 ## Acceptance
 
-- **A1** The Bleeding Signet's library entry carries `laneId: 'blood-price'`. A test: a player holding the Signet
-  (worn or in the satchel) has `blood-price` in `unlockedLaneIds`; wearing it earns one Blood Price lane slot (D100);
+- **A1** The Bleeding Signet's library entry carries `laneId: 'blood-price'`. A test: a player wearing the Signet
+  has `blood-price` in `unlockedLaneIds` and earns one Blood Price lane slot (D100); with the Signet only in the
+  satchel, unworn, `blood-price` is absent (D107);
   a saved Signet copy without the field resolves to the lane through the library (RW1a's resolver).
-- **A2** The equipment detail VM gains `unlocks: string | null`: `Unlocks: <CardLane.name>` for an item whose resolved
-  lane is a registered lane, `null` otherwise. The Signet's reads exactly "Unlocks: Blood Price"; the Suppliant's
+- **A2** The equipment detail VM gains `lane: string | null`: `Lane: <CardLane.name> (while worn)` for an item whose
+  resolved lane is a registered lane, `null` otherwise. The Signet's reads exactly "Lane: Blood Price (while worn)"; the Suppliant's
   Ring's is `null`; a relic naming an unregistered lane (a removed trial set) is `null`. A presenter test covers the
   three.
 - **A3** The line renders wherever the detail VM does: the inventory's `EquipmentDetailModal` and the `/item-reward`
@@ -159,10 +160,10 @@ their signatures, and a `signature-usage` report shows how each signature is wor
   kinds, and the keyword atlas and `docs/game-model.md` no longer name it. A saved Signet worn before LR1d grants
   the new signature (the library entry is read by id). `git grep -i "crimson covenant\|COVENANT_TETHER"` outside
   `plan/` returns nothing.
-- **A13** Browser evidence on the web build: a 375-wide screenshot of the Signet's detail view showing "Unlocks:
-  Blood Price", attached to the LR1a PR.
+- **A13** Browser evidence on the web build: a 375-wide screenshot of the Signet's detail view showing "Lane:
+  Blood Price (while worn)", attached to the LR1a PR.
 - **A14** Browser evidence on the web build: a 375-wide screenshot of the `/item-reward` screen handing over a quest
-  relic with its "Unlocks:" line, attached to the LR1f PR.
+  relic with its "Lane:" line, attached to the LR1f PR.
 - **A15** The Elementalist's three relics are in `relicLibrary` as T wrote them, all `laneId: 'elementalist'`: the
   Elementalist's Signet (`'elite'`, +5 Heart, +20 max VITAE), Brooch (`'quest'`, +5 Mind) and Belt (`'quest'`,
   +5 Body), each granting its own new signature:
@@ -177,11 +178,12 @@ their signatures, and a `signature-usage` report shows how each signature is wor
   - Belt (cost 3): all BLIZZARD becomes STORM of the same amount, added to any STORM up; BLIZZARD goes to 0.
   Each is refused when it would do nothing (no INFERNO and no STORM for the Signet; no foe-only INFERNO (`infFoe` 0) for the Brooch, even with a shared stack up;
   no BLIZZARD for the Belt), with a reason the bar prints. A test per signature's effect and per refusal.
-- **A16** Every lane relic (the six) resolves to a registered lane and its detail VM reads `Unlocks: <lane name>`;
+- **A16** Every lane relic (the six) resolves to a registered lane and its detail VM reads `Lane: <lane name> (while worn)`;
   the library header comment names each relic's source. A library test.
 - **A17** The quests of A5 are on their Act 1 maps' `quests` and their giver nodes play the dialogue that starts them.
   An engine e2e per quest: from a fresh game, reach the giver, start the quest, meet the objective, and the relic is
-  queued, its lane is in `unlockedLaneIds`, and with it worn the next combat reward holds a card of that lane.
+  queued; carried unworn, its lane is not in `unlockedLaneIds` (D107); worn, its lane is, and the next combat
+  reward holds a card of that lane.
 - **A18** No quest pays an elite-only relic, and no relic is both a quest's reward and outside `relicSource:
   'quest'`: a library test over every authored quest.
 - **A19** `FightPost` gains `relics: string[]` (the worn relic ids at the fight's start) and `signatures: string[]`
@@ -199,16 +201,16 @@ their signatures, and a `signature-usage` report shows how each signature is wor
   refused signature on the board records one such event; pressing an affordable one records none.
 
 Measure: the A17 engine e2e passes for every quest (a quest relic, once earned and worn, puts its lane's card in the
-next reward), on the web build the Signet's detail view reads "Unlocks: Blood Price", and `npm run api --
+next reward), on the web build the Signet's detail view reads "Lane: Blood Price (while worn)", and `npm run api --
 signature-usage` prints a row per worn signature.
 
 ## Phases
 
-### LR1a — The Signet opens Blood Price, and every lane relic says what it unlocks · S · closes A1, A2, A3, A13 · requires RW1a
-Measure: the A1 unlock test and the A2/A3 presenter and screen tests pass; A13's screenshot shows
-"Unlocks: Blood Price".
+### LR1a — The Signet names Blood Price, and every lane relic says its lane · S · closes A1, A2, A3, A13 · requires RW1a
+Measure: the A1 worn-lane test and the A2/A3 presenter and screen tests pass; A13's screenshot shows
+"Lane: Blood Price (while worn)".
 - Scope: `axiomancer-mechanics/src/Items/relic.library.ts` (the Signet's `laneId`); mobile
-  `state/presenters/equipment-detail.engine.ts` (`unlocks`, read through RW1a's lane resolver and the lane
+  `state/presenters/equipment-detail.engine.ts` (`lane`, read through RW1a's lane resolver and the lane
   registry, never re-derived), `components/inventory/EquipmentDetailModal.tsx`, the item-reward screen
   (`app/item-reward/index.tsx`) and its presenter if the VM shape needs passing through.
 - Consumers: the inventory tab's detail modal, `/item-reward`, `DebugCardLanes` (unchanged).
@@ -269,7 +271,7 @@ shows its new signature at ◆4 on the bar.
 
 ### LR1e — The Elementalist's three relics · M · closes A15, A16 · requires LR1d
 Measure: the A15 signature and refusal tests and the A16 library test pass, and each Elementalist relic, granted from
-the dev relic chips and worn, puts its signature on the bar at its own cost and reads "Unlocks: Elementalist".
+the dev relic chips and worn, puts its signature on the bar at its own cost and reads "Lane: Elementalist (while worn)".
 - Scope: `Items/relic.library.ts` (three entries; `accessoryKind: 'ring'` for the Signet, `'amulet'` for the Brooch,
   `'charm'` for the Belt, see Decisions "Slot type"); `Combat/combat.signature.ts` and `combat.encounter.types.ts`
   (three kinds); `Combat/combat.elements.ts` or the card program's element helpers (convert the foe-only INFERNO `infFoe` to STORM,
@@ -286,7 +288,7 @@ the dev relic chips and worn, puts its signature on the bar at its own cost and 
 
 ### LR1f — The quests in Act 1 and the elite's pool · M · closes A5, A14, A17, A18 · requires LR1c, LR1d, LR1e
 Measure: the A17 e2e passes for every quest, A18 passes, and A14's `/item-reward` screenshot shows a quest relic
-with its "Unlocks:" line.
+with its "Lane:" line.
 - Scope: the four Act 1 map definitions (`World/Continents/*/*.ts`, `quests`), one existing `interaction` or
   `narration` event per region in `World/MapEvents/content.ts` whose dialogue gains the choice that starts the quest,
   and the dialogue trees; `World/quest.library.ts` (the quests); the four listed in `plan/revamp/relics.md` (A5); the
@@ -343,8 +345,9 @@ a recorded fight.
 
 ## Decisions made upfront — DO NOT ASK
 
-- **The Bleeding Signet names Blood Price (T, 2026-10-25),** and its detail view says exactly "Unlocks: Blood Price".
-- **Every lane relic's detail view shows "Unlocks: <lane name>" (T, 2026-10-25).** The name is `CardLane.name`. A
+- **The Bleeding Signet names Blood Price (T, 2026-10-25),** and its detail view says exactly "Lane: Blood Price (while worn)".
+- **Every lane relic's detail view shows "Lane: <lane name> (while worn)" (T, 2026-10-25; copy changed by T,
+  2026-10-26, D107, because only a worn relic puts its lane in the reward pool).** The name is `CardLane.name`. A
   relic that opens no lane (the Suppliant's Ring) shows no line; a relic whose lane is not registered shows none.
 - **The relics are T's table (T, 2026-10-25),** verbatim in "T's lane relics". Confirmed by T (2026-10-25): the
   Elementalist's Signet and the Crimson Circlet are the elite-only relics; the Bleeding Signet comes from a quest
@@ -373,7 +376,7 @@ a recorded fight.
   each phase one tick without adding a keyword cards could use.
 - **Quests are the primary source; elites drop relics at a lower chance; a lane's third relic comes only from an
   elite (T, 2026-10-25).** Two `'elite'` relics and four `'quest'` relics.
-- **The Signet and the "Unlocks:" line are their own phase, LR1a, requiring RW1a (T, 2026-10-25).**
+- **The Signet and the "Lane:" line are their own phase, LR1a, requiring RW1a (T, 2026-10-25).**
 - **No quest exists, so LR1 builds both halves of the quest source.** The engine half is LR1c over the fixture
   quest; the quests themselves are LR1f, one quest per quest relic, one in each Act 1 region (four), each given by
   an event that exists today and finished by an objective the engine counts; no new quest UI.

@@ -103,7 +103,7 @@ Inputs for that session:
   elites have a low chance of dropping a random relic. There is no starting relic:
   the first lane opens with the first lane relic (D71).
 - **Lane relics plotted as LR1 (T, 2026-10-25).** The Bleeding Signet opens
-  Blood Price; every lane relic's detail view shows "Unlocks: <lane name>";
+  Blood Price; every lane relic's detail view shows "Lane: <lane name> (while worn)" (D107);
   five new relics (two Blood Price, three Elementalist), T's content, written
   by T in session (LR1b, done 2026-10-25) and recorded in "The lane relics
   (LR1b)" below; quests are the primary source, elites drop at a lower
