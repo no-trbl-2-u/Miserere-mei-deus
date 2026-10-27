@@ -844,6 +844,17 @@
 - estimated phases: 1
 - conflicts: none. Requires DF1d. The witness's play of the PAID random discard is a choice the brief has to name.
 
+### [ ] [score 4.0] `loop-issue.mjs phase-open` falls back to REST when GraphQL is refused, labels included
+- proposed: 2026-10-27, triage (march tick), the lessons ladder for `ccr-graphql-403`
+- source signals:
+  - Lesson `ccr-graphql-403` reaches seen 2× in PR #1000's retro (ship DF1d): in a cloud session every GraphQL call returns 403, so `phase-open` cannot run and the mirror is opened by a hand-built REST POST.
+  - That hand-built mirror, #999, carried no `loop:phase` or `loop:opened` label and a shortened body footer, so the next `/march` tick saw it as an unlabeled user issue and dispatched `/triage` on the loop's own mirror. The triage tick added the two labels by hand.
+  - Expand pass 39 named the fix already: "a REST fallback in `scripts/loop-issue.mjs`, and that is the loop's to make".
+- rationale: the ladder automates a lesson at 2×. The fallback belongs in the script, not in each tick's memory, so the mirror always has its labels and the `ship-a-phase` body.
+- proposed scope: 1 phase, size S. On a GraphQL 403, `phase-open` (and `findPhaseIssue`, `ensureLabel`) use `gh api repos/<repo>/...` REST calls; the created issue carries `loop:phase` and `loop:opened` and the same body; a test stubs the 403 and checks the REST call shape. Marks `ccr-graphql-403` guarded.
+- estimated phases: 1
+- conflicts: none; no content.
+
 ### [ ] [owner] [score 5.5] Every lane deck wins every Act 1 fight: T sets a danger band for the B2 enemy sessions, and measured truth marks the cells outside it
 - proposed: 2026-10-27, expand pass 41
 - source signals:
