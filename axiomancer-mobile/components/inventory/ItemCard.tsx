@@ -52,10 +52,8 @@ export function ItemGlyph({ category, sub, itemId, glyphs }: ItemGlyphProps) {
     if (category === 'equipment' && (sub === 'Armor' || sub === 'Shield')) {
         return <ActionIcon kind="shield" size={32} color={AXM.parchment} />;
     }
-    // The presenter's relic label is 'Trinket'; 'Accessory' stays
-    // accepted so a persisted or fixture row with the older label still
-    // draws its glyph instead of falling through to the generic icon.
-    if (category === 'equipment' && (sub === 'Trinket' || sub === 'Accessory')) {
+    // The icon is chosen by the slot kind the presenter labels 'Relic'.
+    if (category === 'equipment' && sub === 'Relic') {
         return (
             <Svg 
                 width={28} 
@@ -63,7 +61,7 @@ export function ItemGlyph({ category, sub, itemId, glyphs }: ItemGlyphProps) {
                 viewBox="0 0 28 28" 
                 fill="none"
                 accessibilityRole="image"
-                accessibilityLabel="Accessory equipment icon"
+                accessibilityLabel="Relic equipment icon"
             >
                 <Circle cx={14} cy={14} r={10} stroke={AXM.parchment} strokeWidth={1.5} fill="none" />
                 <Circle cx={14} cy={10} r={3.5} fill={AXM.sulfur} />

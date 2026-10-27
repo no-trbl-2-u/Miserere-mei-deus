@@ -140,7 +140,7 @@ describe('item-reward view model', () => {
         expect(vm.active).toBe(true);
         expect(vm.eyebrow).toBe('A first waypoint');
         expect(vm.name).toBe("Suppliant's Ring");
-        expect(vm.slotLabel).toBe('Trinket');
+        expect(vm.slotLabel).toBe('Relic');
         expect(vm.canEquip).toBe(true);
         // Straight from `SIGNATURE_SKILLS` — never re-authored on the screen.
         expect(vm.signature?.name).toBe('The Open Hand');

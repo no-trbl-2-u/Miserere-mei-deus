@@ -2106,6 +2106,12 @@
     {
       "kind": "coupling",
       "from": "route:(tabs)/character",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/loadout.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/character",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/presenters/character.engine.ts"
     },
@@ -2150,6 +2156,12 @@
       "from": "route:(tabs)/character",
       "to": "area:Items",
       "file": "axiomancer-mobile/state/presenters/character.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/character",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/loadout.ts"
     },
     {
       "kind": "coupling",

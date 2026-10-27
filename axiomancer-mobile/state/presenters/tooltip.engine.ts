@@ -212,8 +212,7 @@ const BURDEN_CONTENT: Record<string, TooltipContent> = {
 
 // Equipment slot content. Keys match the engine `EquipmentSlot` kinds
 // (`weapon | armor | relic`). SELF equipment cells pass the slotKey verbatim as the tooltip
-// id; "relic" stays the engine key (the chrome label "Trinket" lives on
-// the row, not the tooltip lookup).
+// id.
 const SLOT_CONTENT: Record<string, TooltipContent> = {
     weapon: {
         title: 'WEAPON',
@@ -224,7 +223,7 @@ const SLOT_CONTENT: Record<string, TooltipContent> = {
         body: 'harness, surcoat, ritual mantle — everything worn on the torso. raw defense; the heaviest single item the burden bar feels.',
     },
     relic: {
-        title: 'TRINKET',
+        title: 'RELIC',
         body: 'helms, gauntlets, boots, rings, charms — three interchangeable worn things. small numbers; sometimes the only place a particular blessing or sigil appears.',
     },
 };
