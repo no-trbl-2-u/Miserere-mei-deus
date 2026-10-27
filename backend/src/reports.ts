@@ -1,11 +1,11 @@
 /**
- * The two play-log reports (phase BE2f): `GET /v1/reports/card-usage` and
- * `GET /v1/reports/card-gaps`. The SQL is fixed here and never taken from the
+ * The play-log reports (phase BE2f): `GET /v1/reports/card-usage` and
+ * `GET /v1/reports/card-gaps`, and (phase LR1g) `signature-usage`. The SQL is fixed here and never taken from the
  * client; a query string only binds values (`?build=`, and `?card=` on
  * card-usage). Every number is a count for T to read; nothing grades the game
  * from it. Ad hoc questions go to `wrangler d1 execute --remote`.
  *
- * Both reports read `events_json` with SQLite's JSON functions: each fight's
+ * The reports read `events_json` with SQLite's JSON functions: each fight's
  * stream is unrolled by `json_each`, whose `key` is the event's position, and
  * a running count of `phase-resolved` events numbers the turn ends.
  *
@@ -36,13 +36,22 @@
  *                 colour, beside the live dice rolled
  *   defeats       for each lost fight, the last threat or DoT tick on the
  *                 player before it ended
+ *
+ * signature-usage, per signature id (a fight counts once however often it
+ * cast; `?card=` does not apply):
+ *   fightsWorn    fights that posted the signature as worn (`signatures_json`;
+ *                 a fight stored before migration 0005 reads as none)
+ *   fightsCast    fights that cast it at least once (`signature-cast`)
+ *   casts         `signature-cast` events naming it
+ *   castsPerFight casts over fightsWorn, to two places; null when never worn
+ *   refused       `ui-signature-refused` taps naming it
  */
 
 import type { Env } from './env';
 
 export const REPORTS_PATH_PREFIX = '/v1/reports/';
 
-export const REPORT_NAMES = ['card-usage', 'card-gaps'] as const;
+export const REPORT_NAMES = ['card-usage', 'card-gaps', 'signature-usage'] as const;
 export type ReportName = (typeof REPORT_NAMES)[number];
 
 export function isReportName(value: string): value is ReportName {
@@ -101,7 +110,23 @@ export interface CardGapsReport {
     defeats: DefeatGapRow[];
 }
 
-export type Report = CardUsageReport | CardGapsReport;
+export interface SignatureUsageRow {
+    signatureId: string;
+    fightsWorn: number;
+    fightsCast: number;
+    casts: number;
+    castsPerFight: number | null;
+    refused: number;
+}
+
+export interface SignatureUsageReport {
+    report: 'signature-usage';
+    build: string | null;
+    fights: number;
+    signatures: SignatureUsageRow[];
+}
+
+export type Report = CardUsageReport | CardGapsReport | SignatureUsageReport;
 
 export interface ReportQuery {
     build: string | null;
@@ -263,6 +288,33 @@ FROM (
 GROUP BY enemy_id, cause
 ORDER BY enemyId, fights DESC, cause`;
 
+const SIGNATURE_USAGE_SQL = `
+WITH ${FIGHTS_CTE},
+    worn AS (
+        SELECT s.value AS sig, COUNT(DISTINCT f.id) AS n FROM f, json_each(f.signatures_json) AS s GROUP BY s.value
+    ),
+    casts AS (
+        SELECT json_extract(v, '$.signatureId') AS sig, COUNT(*) AS casts, COUNT(DISTINCT fight_id) AS fights
+        FROM ev WHERE kind = 'signature-cast' GROUP BY 1
+    ),
+    refusals AS (
+        SELECT json_extract(v, '$.signatureId') AS sig, COUNT(*) AS n
+        FROM ev WHERE kind = 'ui-signature-refused' GROUP BY 1
+    ),
+    sigs AS (SELECT sig FROM worn UNION SELECT sig FROM casts UNION SELECT sig FROM refusals)
+SELECT s.sig AS signatureId,
+       COALESCE(w.n, 0) AS fightsWorn,
+       COALESCE(c.fights, 0) AS fightsCast,
+       COALESCE(c.casts, 0) AS casts,
+       CASE WHEN COALESCE(w.n, 0) = 0 THEN NULL ELSE ROUND(1.0 * COALESCE(c.casts, 0) / w.n, 2) END AS castsPerFight,
+       COALESCE(r.n, 0) AS refused
+FROM sigs AS s
+LEFT JOIN worn AS w ON w.sig = s.sig
+LEFT JOIN casts AS c ON c.sig = s.sig
+LEFT JOIN refusals AS r ON r.sig = s.sig
+WHERE s.sig IS NOT NULL
+ORDER BY fightsWorn DESC, casts DESC, signatureId`;
+
 async function fightCount(db: D1Database, build: string | null): Promise<number> {
     const row = await db.prepare(FIGHT_COUNT_SQL).bind(build).first<{ n: number }>();
     return row?.n ?? 0;
@@ -289,7 +341,14 @@ export async function cardGaps(db: D1Database, query: ReportQuery): Promise<Card
     };
 }
 
+export async function signatureUsage(db: D1Database, query: ReportQuery): Promise<SignatureUsageReport> {
+    const { results } = await db.prepare(SIGNATURE_USAGE_SQL).bind(query.build).all<SignatureUsageRow>();
+    return { report: 'signature-usage', build: query.build, fights: await fightCount(db, query.build), signatures: results };
+}
+
 /** Runs one named report; `?card=` only narrows card-usage. */
 export function runReport(name: ReportName, env: Env, query: ReportQuery): Promise<Report> {
-    return name === 'card-usage' ? cardUsage(env.DB, query) : cardGaps(env.DB, query);
+    if (name === 'card-usage') return cardUsage(env.DB, query);
+    if (name === 'signature-usage') return signatureUsage(env.DB, query);
+    return cardGaps(env.DB, query);
 }

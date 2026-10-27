@@ -21,6 +21,8 @@ interface FightRecord {
     vitae_end: number;
     vitae_low: number;
     deck_json: string;
+    relics_json: string;
+    signatures_json: string;
     events_json: string;
 }
 
@@ -41,6 +43,8 @@ function toRow(record: FightRecord): FightRow {
         vitaeEnd: record.vitae_end,
         vitaeLow: record.vitae_low,
         deck: JSON.parse(record.deck_json) as string[],
+        relics: JSON.parse(record.relics_json) as string[],
+        signatures: JSON.parse(record.signatures_json) as string[],
         events: JSON.parse(record.events_json) as PlayLogEvent[],
     };
 }
@@ -55,8 +59,8 @@ export async function insertFight(
         .prepare(
             `INSERT INTO fights
                 (received_at, solver, session_id, build_commit, app_build, enemy_id, player_level,
-                 enemy_hp_multiplier, outcome, turns, vitae_start, vitae_end, vitae_low, deck_json, events_json)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 enemy_hp_multiplier, outcome, turns, vitae_start, vitae_end, vitae_low, deck_json, relics_json, signatures_json, events_json)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
              RETURNING id`,
         )
         .bind(
@@ -74,6 +78,8 @@ export async function insertFight(
             fight.vitaeEnd,
             fight.vitaeLow,
             JSON.stringify(fight.deck),
+            JSON.stringify(fight.relics ?? []),
+            JSON.stringify(fight.signatures ?? []),
             JSON.stringify(fight.events),
         )
         .first<{ id: number }>();

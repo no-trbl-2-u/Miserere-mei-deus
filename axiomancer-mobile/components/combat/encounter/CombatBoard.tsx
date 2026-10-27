@@ -258,7 +258,8 @@ const SignatureColumn = React.memo(function SignatureColumn({ conviction, signat
     onConviction?: () => void;
     signatures: CombatSignatureVM[];
     onCast: (id: string) => void;
-    onInfo?: (s: CombatSignatureVM) => void;
+    /** `tapped` is true when a tap on a rune that cannot fire opened it (not a long-press). */
+    onInfo?: (s: CombatSignatureVM, tapped?: boolean) => void;
     /** Measured anchor that keeps the column clear of the dice tray (see
      *  `sigTop` in `CombatBoard`). Undefined until the first layout pass, when
      *  the stylesheet's proportional `top` stands in. */
@@ -301,7 +302,7 @@ const SignatureColumn = React.memo(function SignatureColumn({ conviction, signat
                     // instead of casting, and a long-press explains any rune.
                     onPress={() => {
                         if (s.affordable) { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => undefined); onCast(s.id); }
-                        else onInfo?.(s);
+                        else onInfo?.(s, true);
                     }}
                     onLongPress={() => onInfo?.(s)}
                     delayLongPress={350}
@@ -875,7 +876,7 @@ export interface CombatBoardProps {
      *  the touch while a drag is live or a phase resolves. */
     onGloss?: BoardGlossOpen;
     /** Long-press (or tap while unaffordable) on a signature rune → info popup. */
-    onSignatureInfo?: (s: CombatSignatureVM) => void;
+    onSignatureInfo?: (s: CombatSignatureVM, tapped?: boolean) => void;
     /** Tap the player avatar → the pilgrim modal (stats, effects, combat log). */
     onPlayerInspect?: () => void;
     /** Tap the momentum chip → how-momentum-works popup. */
