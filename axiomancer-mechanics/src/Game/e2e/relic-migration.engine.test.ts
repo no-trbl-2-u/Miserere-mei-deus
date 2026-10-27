@@ -46,7 +46,7 @@ describe('migrate v12 → v13 — seed the signet relics', () => {
         expect(migrated.version).toBe(13);
         expect(migrated.player.equipment.weapon).toBeNull();
         expect(migrated.player.equipment.armor).toBeNull();
-        expect(migrated.player.equipment.accessories.map(a => a.id)).toEqual(['relic-disarming-plea']);
+        expect(migrated.player.equipment.relics.map(a => a.id)).toEqual(['relic-disarming-plea']);
     });
 
     it('displaces the old worn gear to inventory behind the ring', () => {
@@ -109,7 +109,7 @@ describe('migrate v13 → v14 — purge non-relic equipment', () => {
         // No starting weapon relic is left, so the procedural weapon's slot empties.
         expect(migrated.player.equipment.weapon).toBeNull();
         expect(migrated.player.equipment.armor).toBeNull();
-        expect(migrated.player.equipment.accessories.map(a => a.id)).toEqual(['relic-disarming-plea']);
+        expect(migrated.player.equipment.relics.map(a => a.id)).toEqual(['relic-disarming-plea']);
         expect(migrated.player.inventory.map(i => i.id)).not.toContain('old-sword');
     });
 });

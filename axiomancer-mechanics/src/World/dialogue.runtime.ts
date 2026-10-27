@@ -9,7 +9,7 @@
 import { GameState } from '../Game/types';
 import { DialogueChoice, DialogueTree, DialogueNode } from '../NPCs/types';
 import {
-    discoverQuest, startQuest, progressQuest, completeQuest, findActiveQuest,
+    discoverQuest, startQuest, progressQuest, completeQuest, findActiveQuest, payCompletedQuests,
 } from './quest.engine';
 import { getMapDefinition } from './map.registry';
 import { QuestName } from './quest.library';
@@ -101,6 +101,9 @@ export function applyDialogueChoice(
             player = { ...player, currency: player.currency + e.grantCurrency };
             effects.grantedCurrency = e.grantCurrency;
         }
+        // A `progressQuest` or `completeQuest` that finished a quest pays its
+        // reward through the one reward door.
+        player = payCompletedQuests(player, gameState.quests, quests).player;
     }
 
     const nextNode = choice.nextNodeId ? (tree.nodes[choice.nextNodeId] ?? null) : null;

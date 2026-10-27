@@ -5,7 +5,10 @@
  */
 
 import { describe, expect, it } from '@jest/globals';
-import { createNewGameState, getRng, type GameState } from '@mechanics';
+import {
+    CHARACTER_GREY_DECK, createNewGameState, getEquippedItems, getRng,
+    type CharacterDefinition, type GameState,
+} from '@mechanics';
 
 import {
     continueGameAction,
@@ -84,6 +87,39 @@ describe('startNewGameAction — NEW GAME', () => {
         expect(a.runId).not.toBe(b.runId);
         expect(slots.readSlot(1)?.runId).toBe(a.runId);
         expect(slots.readSlot(3)?.runId).toBe(b.runId);
+    });
+
+    it('with a character, writes that character\'s run to the slot', () => {
+        const fixture: CharacterDefinition = {
+            id: 'fixture-knight',
+            name: 'Fixture Knight',
+            portraitKey: 'portrait-1',
+            startingRelicId: 'relic-bleeding-signet',
+            baseStats: { heart: 5, body: 7, mind: 3 },
+            startingLaneIds: ['lane-x', 'lane-y'],
+            startingCardIds: ['card-x', 'card-y', 'card-z'],
+            playstyle: 'Bleeds to win.',
+        };
+        const slots = createMemorySlotStore();
+        const store = makeStore(slots);
+
+        startNewGameAction(store, slots, 2, undefined, fixture.id, [fixture]);
+
+        const saved = slots.readSlot(2)?.player;
+        expect(saved?.characterId).toBe('fixture-knight');
+        expect(saved?.startingLaneIds).toEqual(['lane-x', 'lane-y']);
+        expect(saved?.baseStats).toEqual({ heart: 5, body: 7, mind: 3 });
+        expect(getEquippedItems(saved!.equipment).map(p => p.id)).toEqual(['relic-bleeding-signet']);
+        expect(saved?.knownCards).toEqual([...CHARACTER_GREY_DECK, 'card-x', 'card-y', 'card-z']);
+        expect(store.getState().player.characterId).toBe('fixture-knight');
+    });
+
+    it('without a character, the slot holds a run with no character', () => {
+        const slots = createMemorySlotStore();
+        const store = makeStore(slots);
+        startNewGameAction(store, slots, 1);
+        expect(slots.readSlot(1)?.player).not.toHaveProperty('characterId');
+        expect(slots.readSlot(1)?.player).not.toHaveProperty('startingLaneIds');
     });
 });
 

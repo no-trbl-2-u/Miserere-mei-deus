@@ -58,6 +58,8 @@ import { CombatCombatantPane, EffectChips, PlayerMedallion, COMBAT_HUD_HEIGHT, t
 import { CombatFooterDock, dockMinHeight } from './CombatFooterDock';
 import { SACRIFICE_CALLOUT_MS } from './VitaeSacrificeCallout';
 import { CARD_ENTER_MS, CARD_LAYOUT_MS } from './cardMotion';
+import { SPECIAL_CONVICTION_DEFAULT } from '@mechanics';
+import type { BoardGlossLive, BoardTermId } from '@/state/combat/keywords';
 import { CombatDie, combatDieA11yLabel } from './CombatDie';
 import { RollingDie } from './RollingDie';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -250,8 +252,10 @@ export function OutcomeText({ text, names, base, bold, numberOfLines }: { text: 
 
 // ── Signature rune column (left edge) ────────────────────────────────────────
 
-const SignatureColumn = React.memo(function SignatureColumn({ conviction, signatures, onCast, onInfo, top, onMeasureHeight }: {
+const SignatureColumn = React.memo(function SignatureColumn({ conviction, signatures, onCast, onInfo, onConviction, top, onMeasureHeight }: {
     conviction: number;
+    /** Tap the Conviction chip: opens its gloss. */
+    onConviction?: () => void;
     signatures: CombatSignatureVM[];
     onCast: (id: string) => void;
     /** `tapped` is true when a tap on a rune that cannot fire opened it (not a long-press). */
@@ -271,19 +275,20 @@ const SignatureColumn = React.memo(function SignatureColumn({ conviction, signat
             pointerEvents="box-none"
             onLayout={(e) => onMeasureHeight?.(e.nativeEvent.layout.height)}
         >
-            <View
+            <Pressable
                 style={styles.convictionChip}
                 testID="combat-conviction"
-                accessible
-                accessibilityRole="text"
+                onPress={onConviction}
+                accessibilityRole="button"
                 accessibilityLabel={`${conviction} conviction`}
+                accessibilityHint="Tap to read what Conviction is"
             >
                 <Text style={[styles.convictionText, { color: AXM.sulfur }]} allowFontScaling={false}>◆ {conviction}</Text>
                 {/* Name the economy: every rune below is priced in ◆ and the
                   * enemy telegraph offers '+1◆', so the chip prints the word
                   * CONVICTION rather than leaving it to the a11y label. */}
                 <Text style={styles.convictionCaption}>CONVICTION</Text>
-            </View>
+            </Pressable>
             {signatures.map((s) => {
                 // Three faces: castable (sulfur), short of Conviction (dim, ◆n),
                 // refused for another reason (dashed blood ring and a ✕ mark), so
@@ -434,15 +439,37 @@ export function handFanLayout(screenW: number, n: number): { band: number; step:
     return { band, step, overlap: HAND_CARD_W - step };
 }
 
+/** What a touch on the board asks the glossary to open: the terms in order
+ *  (the first is the heading) and the live numbers they print. */
+export type BoardGlossOpen = (ids: readonly BoardTermId[], live?: BoardGlossLive) => void;
+
+/**
+ * The glossary terms a tray die opens: its face (BOON, MANA or MISS), then
+ * BANKED when it sits in the Reserve and GHOST when it floats. A struck X die
+ * opens X DIE and the card-side X beside it.
+ */
+export function dieGlossTerms(die: Pick<CombatDieVM, 'isX' | 'face' | 'cracked' | 'reserve' | 'floating'>): BoardTermId[] {
+    if (die.isX) return ['xdie', 'xvaries'];
+    const ids: BoardTermId[] = [];
+    if (die.cracked || die.face === 'miss') ids.push('miss');
+    else if (die.face === 'special') ids.push('boon');
+    else if (die.face === 'mana') ids.push('mana');
+    if (die.reserve) ids.push('banked');
+    if (die.floating) ids.push('ghost');
+    return ids.length > 0 ? ids : ['mana'];
+}
+
 // Memoized: a card drag's pickup and drop re-render the board, and the tray's
 // GestureDetectors must not re-push their configs to the native module then.
 const DiceRow = React.memo(function DiceRow({
-    vm, dieGesture, draggingDieId, assignedDieIds,
+    vm, dieGesture, draggingDieId, assignedDieIds, onGloss,
 }: {
     vm: CombatViewModel;
-    dieGesture: (die: CombatDieVM) => ReturnType<typeof Gesture.Exclusive>;
+    dieGesture: (die: CombatDieVM) => ReturnType<typeof Gesture.Exclusive> | ReturnType<typeof Gesture.LongPress>;
     draggingDieId: string | null;
     assignedDieIds: Set<string>;
+    /** Opens the X die's gloss on a tap (a live die opens its gloss on a long-press instead). */
+    onGloss?: BoardGlossOpen;
 }) {
     const AXM = usePalette();
     const styles = useStyles();
@@ -481,18 +508,26 @@ const DiceRow = React.memo(function DiceRow({
                 // Every live die — tray face, Reserve, or GHOST — drags onto a
                 // card until it is spent (one die per play).
                 // Presenter-computed (CombatDieVM.draggable) so it can never flip
-                // while the die's own drag is live — that unmounted the
-                // GestureDetector mid-gesture, which on web killed the pan without
-                // onEnd/onFinalize: the drop never resolved and the ghost stuck.
-                const draggable = die.draggable;
+                // while the die's own drag is live. Every die keeps ONE mounted
+                // GestureDetector for the same reason: unmounting it mid-gesture
+                // killed the pan on web without onEnd/onFinalize (the drop never
+                // resolved and the ghost stuck).
                 const isAssigned = assignedDieIds.has(die.id);
                 // An X die (the `reroll_spent` bag can still land one) is
                 // dead — a static struck pip, never draggable.
                 if (die.isX) {
                     return (
-                        <View key={die.id} style={styles.dieXPip} accessible accessibilityLabel="X die — blocked, powers nothing">
+                        <Pressable
+                            key={die.id}
+                            style={styles.dieXPip}
+                            onPress={() => onGloss?.(dieGlossTerms(die))}
+                            testID={`combat-die-x-${die.id}`}
+                            accessibilityRole="button"
+                            accessibilityLabel="X die — blocked, powers nothing"
+                            accessibilityHint="Tap to read what an X die is"
+                        >
                             <Text style={styles.dieXGlyph}>✕</Text>
-                        </View>
+                        </Pressable>
                     );
                 }
                 const dieDimmed = draggingDieId === die.id;
@@ -528,14 +563,14 @@ const DiceRow = React.memo(function DiceRow({
                         ) : null}
                     </View>
                 );
-                return draggable ? (
+                // A die that cannot be dragged (a MISS face, a spent die) still
+                // reads on a long-press, so it keeps a detector with the hold alone.
+                return (
                     <GestureDetector key={die.id} gesture={dieGesture(die)}>
                         <Animated.View>
                             {node}
                         </Animated.View>
                     </GestureDetector>
-                ) : (
-                    <View key={die.id}>{node}</View>
                 );
             })}
             {/* Tap-to-skip: while any die is mid-tumble a
@@ -836,6 +871,10 @@ export interface CombatBoardProps {
     resolving?: boolean;
     onInspect: (card: CombatCardVM) => void;
     onChip?: (e: CombatEffectChipVM) => void;
+    /** A touch on a board word or mark (the Conviction chip, a die, the piles,
+     *  the phase ledger, `IN PLAY`) asks the glossary to open. The board drops
+     *  the touch while a drag is live or a phase resolves. */
+    onGloss?: BoardGlossOpen;
     /** Long-press (or tap while unaffordable) on a signature rune → info popup. */
     onSignatureInfo?: (s: CombatSignatureVM, tapped?: boolean) => void;
     /** Tap the player avatar → the pilgrim modal (stats, effects, combat log). */
@@ -856,7 +895,7 @@ export interface CombatBoardProps {
 }
 
 export const CombatBoard = React.memo(function CombatBoard({
-    vm, drag, stagedUids, onApply, onStage, onUnstage, onDiscard, onSignature, onEndPhase, resolving = false, onInspect, onChip, onSignatureInfo, onPlayerInspect, onMomentumInfo, fx,
+    vm, drag, stagedUids, onApply, onStage, onUnstage, onDiscard, onSignature, onEndPhase, resolving = false, onInspect, onChip, onGloss, onSignatureInfo, onPlayerInspect, onMomentumInfo, fx,
     onHudLayout, region,
 }: CombatBoardProps) {
     const AXM = usePalette();
@@ -1089,6 +1128,28 @@ export const CombatBoard = React.memo(function CombatBoard({
     };
     const tapDieJS = useCallback((dieId: string) => { dieTapRef.current(dieId); }, []);
 
+    // The glossary. A gloss never opens over a live drag or a resolving phase;
+    // the gate reads latest values through a ref so the callback stays stable
+    // (the tray's memoized gestures and rows capture it once).
+    const glossRef = useRef<{ blocked: boolean; open?: BoardGlossOpen }>({ blocked: false });
+    glossRef.current = { blocked: resolving || drag.active !== null, open: onGloss };
+    const openGloss = useCallback<BoardGlossOpen>((ids, live) => {
+        const g = glossRef.current;
+        if (!g.blocked) g.open?.(ids, live);
+    }, []);
+    const convictionRef = useRef(vm.conviction); convictionRef.current = vm.conviction;
+    const openConvictionGloss = useCallback(() => {
+        openGloss(['conviction'], { conviction: convictionRef.current });
+    }, [openGloss]);
+    const dieGearRef = useRef(vm.dieGear); dieGearRef.current = vm.dieGear;
+    const glossDieJS = useCallback((dieId: string) => {
+        const die = diceMapRef.current.get(dieId);
+        if (!die) return;
+        const boon = dieGearRef.current?.slots.find((s) => s.color === die.color)?.specialConviction
+            ?? SPECIAL_CONVICTION_DEFAULT;
+        openGloss(dieGlossTerms(die), { boon, pips: die.pips ?? 0 });
+    }, [openGloss]);
+
     const gestureCacheRef = useRef(new Map<string, ReturnType<typeof Gesture.Exclusive>>());
     // drag.x/drag.y are the SAME SharedValue objects across renders (created once
     // in the panel), so gestures capturing them can be cached indefinitely.
@@ -1136,6 +1197,17 @@ export const CombatBoard = React.memo(function CombatBoard({
     // Identity-stable (everything it closes over is) so the memoized DiceRow
     // never re-renders just because the board did.
     const dieGesture = useCallback((die: CombatDieVM) => {
+        if (!die.draggable) {
+            const holdKey = `die-hold-${die.id}`;
+            let h = gestureCacheRef.current.get(holdKey) as ReturnType<typeof Gesture.LongPress> | undefined;
+            if (!h) {
+                h = Gesture.LongPress().minDuration(450).maxDistance(9)
+                    .withTestId(`combat-die-hold-${die.id}`)
+                    .onStart(() => { runOnJS(glossDieJS)(die.id); });
+                gestureCacheRef.current.set(holdKey, h as never);
+            }
+            return h;
+        }
         const key = `die-${die.id}`;
         let g = gestureCacheRef.current.get(key);
         if (!g) {
@@ -1150,11 +1222,17 @@ export const CombatBoard = React.memo(function CombatBoard({
             const tap = Gesture.Tap().maxDistance(9)
                 .withTestId(`combat-die-tap-${die.id}`)
                 .onEnd(() => { runOnJS(tapDieJS)(die.id); });
-            g = Gesture.Exclusive(pan, tap);
+            // A held press reads the die. The tap above already powers the
+            // staged card, so the gloss rides the long-press (the way a rune
+            // explains itself); a drag moves past the hold's slop first.
+            const hold = Gesture.LongPress().minDuration(450).maxDistance(9)
+                .withTestId(`combat-die-hold-${die.id}`)
+                .onStart(() => { runOnJS(glossDieJS)(die.id); });
+            g = Gesture.Exclusive(pan, hold, tap);
             gestureCacheRef.current.set(key, g);
         }
         return g;
-    }, [gx, gy, beginDieJS, endJS, tapDieJS]);
+    }, [gx, gy, beginDieJS, endJS, tapDieJS, glossDieJS]);
 
     const stagedSet = new Set(stagedUids);
     // Staged cards, in stage order (filtered to those still in hand).
@@ -1375,7 +1453,16 @@ export const CombatBoard = React.memo(function CombatBoard({
                 {/* Globals in play — each with its turns left; tap reads the card. */}
                 {vm.globals.length > 0 ? (
                     <View style={styles.globalsRow} pointerEvents="box-none" testID="combat-globals">
-                        <Text style={styles.globalsLabel} allowFontScaling={false}>{PROGRAM_COPY.inPlay}</Text>
+                        <Pressable
+                            onPress={() => openGloss(['global'])}
+                            testID="combat-globals-label"
+                            accessibilityRole="button"
+                            accessibilityLabel={PROGRAM_COPY.inPlay}
+                            accessibilityHint="Tap to read what a Global is"
+                            hitSlop={6}
+                        >
+                            <Text style={styles.globalsLabel} allowFontScaling={false}>{PROGRAM_COPY.inPlay}</Text>
+                        </Pressable>
                         {vm.globals.map((g) => (
                             <Pressable
                                 key={g.uid}
@@ -1435,7 +1522,7 @@ export const CombatBoard = React.memo(function CombatBoard({
                     style={styles.trayLayer}
                     testID="combat-tray-layer"
                 >
-                    <DiceRow vm={vm} dieGesture={dieGesture} draggingDieId={draggingDieId} assignedDieIds={assignedDieIds} />
+                    <DiceRow vm={vm} dieGesture={dieGesture} draggingDieId={draggingDieId} assignedDieIds={assignedDieIds} onGloss={openGloss} />
                 </View>
 
                 {/* signature rune column — left edge. A sibling of the tray
@@ -1444,6 +1531,7 @@ export const CombatBoard = React.memo(function CombatBoard({
                     context — see the comment on the tray layer. */}
                 <SignatureColumn
                     conviction={vm.conviction} signatures={vm.signatures} onCast={onSignature} onInfo={onSignatureInfo}
+                    onConviction={openConvictionGloss}
                     top={sigTop} onMeasureHeight={setSigH}
                 />
 
@@ -1494,6 +1582,7 @@ export const CombatBoard = React.memo(function CombatBoard({
                     onEndPhase={handleEndPhase}
                     endConsequence={endConsequence}
                     resolving={resolving}
+                    onGloss={openGloss}
                     onLayout={handleDockLayout}
                 />
             </View>

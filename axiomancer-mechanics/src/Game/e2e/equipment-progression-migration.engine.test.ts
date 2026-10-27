@@ -9,13 +9,15 @@
 
 import { describe, it, expect } from 'vitest';
 import { migrate } from '../game.migrate';
+import { reslotRelicSave } from '../legacy-slots';
 import { createNewGameState, GAME_STATE_VERSION } from '../game.reducer';
 import { cloneRelic, getRelicById } from '../../Items/relic.library';
 
 /** A v21 save: a fresh state stamped back to v21, wearing and holding the ring. */
 function v21Save(): Record<string, unknown> {
     const fresh = createNewGameState();
-    const relics = [cloneRelic(getRelicById('relic-disarming-plea')!)];
+    // The ring as a v21 save stored it: the old slot name and its kind.
+    const relics = [{ ...cloneRelic(getRelicById('relic-disarming-plea')!), slot: 'accessory', accessoryKind: 'ring' }];
     return {
         ...fresh,
         player: {
@@ -37,7 +39,7 @@ describe('migrate v21 → v22 — a version bump since R7e2', () => {
         const raw = v21Save();
         const before = JSON.parse(JSON.stringify(raw.player));
         const migrated = migrate(raw, 21, 22);
-        expect(JSON.parse(JSON.stringify(migrated.player))).toEqual(before);
+        expect(JSON.parse(JSON.stringify(migrated.player))).toEqual(reslotRelicSave(before));
     });
 
     it('chains a v20 save straight to v22 in one call', () => {
@@ -49,7 +51,7 @@ describe('migrate v21 → v22 — a version bump since R7e2', () => {
 
         const migrated = migrate(raw, 20, 22);
         expect(migrated.version).toBe(22);
-        expect(JSON.parse(JSON.stringify(migrated.player.inventory))).toEqual(before);
+        expect(JSON.parse(JSON.stringify(migrated.player.inventory))).toEqual(reslotRelicSave(before));
         expect(migrated.player.inventory.map(i => i.id)).toEqual(['relic-disarming-plea']);
     });
 });

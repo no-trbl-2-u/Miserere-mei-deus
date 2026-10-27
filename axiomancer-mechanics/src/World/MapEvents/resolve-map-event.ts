@@ -31,7 +31,7 @@ import type { GameState } from '../../Game/types';
 import { revealAdjacent, markNodeConsumed, unlockAdjacent } from '../world.reducer';
 import { getRng } from '../../Utils/rng';
 import { applyPayload } from './handlers';
-import { reachableObjectives, collectObjectives, progressQuest } from '../quest.engine';
+import { reachableObjectives, collectObjectives, progressQuest, payCompletedQuests } from '../quest.engine';
 import type { QuestLog, NodeId } from '../types';
 import type {
     MapEventPayload, MapEventPool, MapEventPoolEntry, MapEventKind, ResolveMapEventResult, ResolvedEvent,
@@ -50,6 +50,17 @@ function advanceReachObjectives(quests: QuestLog, nodeId: NodeId): QuestLog {
         log = progressQuest(log, r.questName, r.objectiveId).log;
     }
     return log;
+}
+
+/**
+ * Moves `state` onto the quest log `quests` and pays every quest the move
+ * completed (`payCompletedQuests`, the one reward door). Same reference back
+ * when the log did not change.
+ */
+function withQuestLog(state: GameState, quests: QuestLog): GameState {
+    if (quests === state.quests) return state;
+    const pay = payCompletedQuests(state.player, state.quests, quests);
+    return { ...state, player: pay.player, quests };
 }
 
 /**
@@ -286,10 +297,9 @@ export function resolveMapEvent(
     // Restore the pre-Phase-25 reach-objective auto-advance — any active
     // `reach: target=nodeId` quest objective ticks on arrival, before the
     // pool roll. Pure no-op for non-reach quests or fully-completed reaches.
+    // A reach that completes a quest pays its reward here.
     const questsAfterReach = advanceReachObjectives(answered.quests, nodeId);
-    const stateAfterReach: GameState = questsAfterReach === answered.quests
-        ? answered
-        : { ...answered, quests: questsAfterReach };
+    const stateAfterReach: GameState = withQuestLog(answered, questsAfterReach);
 
     // The two early branches below (no pool, no entry) rebuild the map from
     // `answeredMap`, never from the pre-answer `map` — rebuilding from `map`
@@ -329,9 +339,7 @@ export function resolveMapEvent(
     // against the unanswered state, and return before step 5. Only the
     // reveal runs, so the map can draw what lies past the fight.
     if (entry.payload.kind === 'encounter') {
-        const reachedOwed: GameState = questsAfterReach === state.quests
-            ? state
-            : { ...state, quests: questsAfterReach };
+        const reachedOwed: GameState = withQuestLog(state, questsAfterReach);
         const fight = applyPayload(reachedOwed, entry.payload, rng);
         const revealed = revealAdjacent(fight.state.world.currentMap, nodeId);
         return {
@@ -345,11 +353,12 @@ export function resolveMapEvent(
     // 4a. Advance any active `collect`-type quest objectives the granted
     // items satisfy. Mirrors the reach-objective auto-advance above, but
     // fires on the resolved event's items rather than the arrived-at node.
+    // A collect that completes a quest pays its reward here.
     const stateAfterCollect: GameState = result.event.kind === 'gathering'
-        ? {
-            ...result.state,
-            quests: advanceCollectObjectives(result.state.quests, result.event.items.map(i => i.id)),
-        }
+        ? withQuestLog(
+            result.state,
+            advanceCollectObjectives(result.state.quests, result.event.items.map(i => i.id)),
+        )
         : result.state;
 
     // 4a-travel. A resolved travel event has already crossed —

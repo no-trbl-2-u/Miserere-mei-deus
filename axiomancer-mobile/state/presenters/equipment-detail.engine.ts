@@ -36,7 +36,9 @@
  */
 
 import {
+    getCardLane,
     getSignatureSkill,
+    relicLaneId,
     type Equipment,
     type GameStore,
 } from '@mechanics';
@@ -87,8 +89,10 @@ export interface EquipmentSignatureInfo {
  * @property sub       - ItemGlyph discriminator for the placeholder art.
  * @property statLines - Stat modifiers the item grants. May be empty.
  * @property signature - Granted signature, or `null` for non-relic equipment.
+ * @property lane      - `Lane: <lane name> (while worn)` for a relic whose
+ *                       resolved lane is registered, else `null`.
  * @property flavor    - The item's engine description (flavour prose).
- * @property action    - The loadout action the card's button performs.
+ * @property action   - The loadout action the card's button performs.
  */
 export interface EquipmentDetailViewModel {
     itemId: string;
@@ -97,6 +101,7 @@ export interface EquipmentDetailViewModel {
     sub: string | null;
     statLines: readonly EquipmentStatLine[];
     signature: EquipmentSignatureInfo | null;
+    lane: string | null;
     flavor: string;
     action: EquipmentDetailAction;
 }
@@ -144,7 +149,7 @@ const STAT_LABELS: Record<string, string> = {
 const SLOT_LABELS: Record<Equipment['slot'], string> = {
     weapon: 'Weapon',
     armor: 'Armor',
-    accessory: 'Trinket',
+    relic: 'Trinket',
 };
 
 /**
@@ -212,6 +217,21 @@ function buildSignature(eq: Equipment): EquipmentSignatureInfo | null {
     };
 }
 
+/**
+ * The "Lane:" line for a relic that opens a card lane while worn. The lane is
+ * resolved by the engine (`relicLaneId`, library first) and named from the
+ * lane registry; an unresolved or unregistered lane gives `null`.
+ *
+ * @param eq - The equipment item.
+ * @returns `'Lane: Blood Price (while worn)'`, or `null`.
+ */
+function buildLaneLine(eq: Equipment): string | null {
+    const id = relicLaneId(eq);
+    if (id === undefined) return null;
+    const lane = getCardLane(id);
+    return lane ? `Lane: ${lane.name} (while worn)` : null;
+}
+
 // ---------------------------------------------------------------------------
 // Public selector
 // ---------------------------------------------------------------------------
@@ -241,6 +261,7 @@ export function selectEquipmentDetailViewModel(
         sub: SLOT_LABELS[item.slot] ?? null,
         statLines: buildStatLines(item) as readonly EquipmentStatLine[],
         signature: buildSignature(item),
+        lane: buildLaneLine(item),
         flavor: item.description,
         action: { mode, label },
     });

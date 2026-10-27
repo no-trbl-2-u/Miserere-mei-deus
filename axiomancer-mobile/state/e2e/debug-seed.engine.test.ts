@@ -42,7 +42,7 @@ describe('debugSeed: items + cards + map reset', () => {
         const after = store.getState().player.inventory ?? [];
         expect(after.length).toBeGreaterThanOrEqual(2);
         // One consumable + the first relic of each slot the library fills
-        // (the Suppliant's Ring alone: an accessory).
+        // (the Suppliant's Ring alone: a relic).
         const categories = new Set(after.map((i: { category: string }) => i.category));
         expect(categories.has('consumable')).toBe(true);
         expect(categories.has('equipment')).toBe(true);

@@ -3,7 +3,7 @@
  *
  * The RULES live in `axiomancer-mechanics`:
  *   - `grantItem` owns the `unequipItem -> addItem -> equipItem` chain, so
- *     nothing is destroyed and a full accessory row swaps instead of no-oping;
+ *     nothing is destroyed and a full relic row swaps instead of no-oping;
  *   - `qualifiesForItemRewardScreen` is the one predicate that decides
  *     ceremony vs. the lightweight inline grant;
  *   - `displacedBy` previews the trade so the screen can name it.
@@ -31,6 +31,7 @@ import {
     grantItem,
     isEquipment,
     partitionGrantsForReward,
+    reslotRelicPiece,
 } from '@mechanics';
 import type {
     Equipment,
@@ -50,7 +51,7 @@ export interface OfferItemRewardOptions {
     source?: string | null;
     /** Flags stamped onto `GameState.flags` when the entry commits. */
     settleFlags?: readonly string[];
-    /** Accessory position EQUIP should displace when the row is full. */
+    /** Relic position EQUIP should displace when the row is full. */
     replaceIndex?: number;
     /**
      * Queue items that do NOT pass the reward-screen predicate as well.
@@ -73,8 +74,22 @@ function setQueue(store: AppStore, queue: readonly PendingItemReward[]): void {
     store.setState({ itemReward: { queue } });
 }
 
+/**
+ * A pending entry whose piece was queued on the old slot model (an
+ * equipment piece with the pre-v39 slot name) reads as a relic, through the
+ * engine's own re-slot helper, the one the save hop uses. Same reference
+ * when nothing changes.
+ */
+function reslotPending(entry: PendingItemReward): PendingItemReward {
+    if (!isEquipment(entry.item)) return entry;
+    const item = reslotRelicPiece(entry.item);
+    return item === entry.item ? entry : { ...entry, item };
+}
+
 function currentQueue(store: AppStore): readonly PendingItemReward[] {
-    return store.getState().itemReward?.queue ?? EMPTY_ITEM_REWARD_SLICE.queue;
+    const queue = store.getState().itemReward?.queue ?? EMPTY_ITEM_REWARD_SLICE.queue;
+    const read = queue.map(reslotPending);
+    return read.every((entry, i) => entry === queue[i]) ? queue : read;
 }
 
 /**

@@ -195,19 +195,19 @@ describe('grantAllRelics: every relic once, and worn for real', () => {
         actions.grantAllRelics();
 
         const player = store.getState().player;
-        expect(player.equipment.accessories.map((a) => a.id)).toContain('relic-bleeding-signet');
+        expect(player.equipment.relics.map((a) => a.id)).toContain('relic-bleeding-signet');
         expect(player.maxHealth).toBe(before.maxHealth + 20);
 
         // The dock shows it in a trinket slot beside the Ring.
         const dock = selectInventoryViewModel(store.getState()).equipmentDock.slots
-            .filter((sl) => sl.key === 'accessory').map((sl) => sl.item?.id ?? null);
+            .filter((sl) => sl.key === 'relic').map((sl) => sl.item?.id ?? null);
         expect(dock).toContain('relic-bleeding-signet');
 
         // The signature bar lists every signature the worn signets grant, and both cast.
         const fight = initializeCombatEncounter(player, startRealFight().enemy, ['grey-strike'], 1);
         const bar = buildCombatViewModel({ ...fight, conviction: 8 }).signatures;
         expect(bar.map((sig) => sig.name)).toEqual(
-            player.equipment.accessories.map((a) => a.grantsSignature === 'sig-disarming-plea' ? 'The Open Hand' : 'Crimson Covenant'),
+            player.equipment.relics.map((a) => a.grantsSignature === 'sig-disarming-plea' ? 'The Open Hand' : 'Crimson Covenant'),
         );
         expect(bar.find((sig) => sig.name === 'Crimson Covenant')?.affordable).toBe(true);
     });
@@ -220,7 +220,7 @@ describe('grantAllRelics: every relic once, and worn for real', () => {
         actions.grantAllRelics();
 
         const player = store.getState().player;
-        expect(player.equipment.accessories.map((a) => a.id)).toEqual(['relic-disarming-plea', 'relic-bleeding-signet']);
+        expect(player.equipment.relics.map((a) => a.id)).toEqual(['relic-disarming-plea', 'relic-bleeding-signet']);
         const fight = initializeCombatEncounter(player, startRealFight().enemy, ['grey-strike'], 1);
         expect(buildCombatViewModel(fight).signatures.map((sig) => sig.name)).toEqual(['The Open Hand', 'Crimson Covenant']);
     });

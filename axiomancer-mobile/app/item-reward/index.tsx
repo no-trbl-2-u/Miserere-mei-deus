@@ -11,7 +11,7 @@
  *   - CONFIRM — the item goes to the satchel;
  *   - EQUIP   — the item goes to the satchel AND onto the body.
  * Both route through the engine's shared `grantItem` path, so nothing is ever
- * destroyed and a full accessory row swaps instead of silently no-oping.
+ * destroyed and a full relic row swaps instead of silently no-oping.
  * EQUIP is HIDDEN, not greyed, for an item that cannot be worn.
  *
  * ## Dismissal posture — deliberately the inverse of /cache
@@ -126,6 +126,11 @@ export default function ItemRewardScreen() {
                             </View>
                             <Text style={styles.sigDesc}>{vm.signature.description}</Text>
                         </View>
+                    )}
+
+                    {/* The card lane a worn relic opens. */}
+                    {vm.lane !== null && (
+                        <Text style={styles.laneLine} testID="item-reward-lane">{vm.lane}</Text>
                     )}
 
                     {/* Gained, lost, and the piece that returns to the satchel. */}
@@ -254,6 +259,13 @@ const useStyles = makeStyles((AXM) => ({
         lineHeight: 17,
         color: AXM.bone,
         marginTop: 5,
+    },
+    laneLine: {
+        fontFamily: FONTS.serif,
+        fontSize: 12,
+        lineHeight: 17,
+        color: AXM.sulfur,
+        marginTop: 10,
     },
     // The one unbordered block, matching EquipmentDetailModal's flavour rule.
     flavor: {

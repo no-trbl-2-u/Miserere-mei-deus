@@ -165,7 +165,7 @@ export interface GameActions {
 
     // ── Equipment ────────────────────────────────────────────────────────────
     equipItem: (item: Equipment, opts?: { replaceIndex?: number }) => void;
-    /** For `slot === 'accessory'`, `index` selects which of the ≤3 to remove. */
+    /** For `slot === 'relic'`, `index` selects which of the ≤3 to remove. */
     unequipItem: (slot: EquipmentSlot, index?: number) => void;
 
     // ── Progression / persistence ────────────────────────────────────────────

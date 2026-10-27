@@ -25,7 +25,7 @@ export interface CharacterPresetEquipmentEntry {
      * EquipmentTemplate id (e.g. 'iron-blade'). The dropped item's slot kind is
      * taken from the template itself (presets do not restate the slot).
      * Declaration order is the equip order: the worn loadout takes the
-     * first weapon, first armor, and first 3 accessories; the rest seed the
+     * first weapon, first armor, and first 3 relics; the rest seed the
      * inventory.
      */
     templateId: string;

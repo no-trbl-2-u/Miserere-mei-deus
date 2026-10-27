@@ -12,6 +12,7 @@
 
 import {
     applyDialogueChoice,
+    payCompletedQuests,
     buyItem as engineBuyItem,
     sellItem as engineSellItem,
     defaultSellPrice as engineDefaultSellPrice,
@@ -147,6 +148,7 @@ import {
 import { getAporiaAct } from '@mechanics';
 import type { LabyrinthActId, LabyrinthBossOutcome } from '@mechanics';
 import { wrapActionsWithLogging } from './logging';
+import { offerCompletedQuestItemsAction } from './item-reward/relic-sources';
 import { endCombatOutcome, fightRecorder } from '@/lib/fightRecorder';
 import { deckEventPoster, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
 import { getMapLayout } from './exploration-maps';
@@ -623,8 +625,8 @@ export function withScaledEnemyHp(enemy: Enemy, mult: number): Enemy {
 function recordFightStart(store: AppStore, enemy: Enemy, enemyHpMultiplier: number): void {
     const player = store.getState().player;
     if (!player) return;
-    const { weapon, armor, accessories } = player.equipment;
-    const relics = [weapon, armor, ...accessories].flatMap((piece) => (piece ? [piece.id] : []));
+    const { weapon, armor } = player.equipment;
+    const relics = [weapon, armor, ...player.equipment.relics].flatMap((piece) => (piece ? [piece.id] : []));
     fightRecorder.start({ enemyId: enemy.id, playerLevel: player.level, enemyHpMultiplier, vitaeStart: player.health, relics });
 }
 
@@ -697,7 +699,10 @@ export function createAppActions(store: AppStore): AppActions {
             // `endCombat` requires an explicit outcome; default to `'flee'`
             // (no reward) when unspecified. It returns a stub 'flee' report
             // when called outside an encounter.
+            const questsBefore = (store.getState() as unknown as GameState).quests;
             const report = store.getState().endCombat(outcome ?? 'flee');
+            // A kill that completed a quest: its relic goes to the reward screen.
+            if (questsBefore) offerCompletedQuestItemsAction(store, questsBefore);
             // The play log: posts a fight the panel never finished (a WITHDRAW);
             // one it finished has already posted, so this is a no-op then.
             void fightRecorder.end(endCombatOutcome(outcome ?? 'flee'));
@@ -943,7 +948,7 @@ function equipItemAction(store: AppStore, itemId: string): void {
     const equip = target as Equipment;
     if (isWornId(state.player.equipment, equip.id)) return;
 
-    // The engine folds the stat line and wears the piece. A full accessory row
+    // The engine folds the stat line and wears the piece. A full relic row
     // gives up its last-worn piece (the one the modal names as REPLACE); it
     // stays in the satchel, since worn pieces are carried too.
     const { index } = displacedBy(state.player, equip);
@@ -965,11 +970,11 @@ function unequipItemAction(store: AppStore, itemId: string): void {
     const target = findOwnedEquipment(state.player, itemId);
     if (target === null) return;
 
-    const accessoryIndex =
-        target.slot === 'accessory'
-            ? loadout.accessories.findIndex((a) => a.id === itemId)
+    const relicIndex =
+        target.slot === 'relic'
+            ? loadout.relics.findIndex((a) => a.id === itemId)
             : undefined;
-    const nextPlayer = engineUnequipItem(state.player, target.slot, accessoryIndex);
+    const nextPlayer = engineUnequipItem(state.player, target.slot, relicIndex);
     if (nextPlayer === state.player) return;
     store.setState({ player: nextPlayer });
 }
@@ -1162,11 +1167,12 @@ function debugSeedAction(store: AppStore): DebugSeedResult {
             console.warn('Failed to add consumable item:', error);
         }
 
-        // 2. One relic per slot kind (weapon / armor / accessory). The only
-        //    equipment is the signet relics; grant the first of each
-        //    slot kind, worn while a position is free, so the inventory
-        //    dock + equip-replace preview have a piece to render for every slot.
-        const seedSlots: ReadonlyArray<EquipmentSlot> = ['weapon', 'armor', 'accessory'];
+        // 2. One relic for the relic slot. The only equipment is the
+        //    signet relics, and every relic takes the relic slot (weapon
+        //    and armor have no content); grant the first, worn while a
+        //    position is free, so the dock + equip-replace preview have a
+        //    piece to render.
+        const seedSlots: ReadonlyArray<EquipmentSlot> = ['relic'];
         for (const slot of seedSlots) {
             try {
                 const relic = relicLibrary.find(r => r.slot === slot);
@@ -1293,7 +1299,7 @@ function grantAllRelicsAction(store: AppStore): GrantAllRelicsResult {
     const player = state.player;
     const owned = new Set<string>([
         ...player.inventory.map((i: Item) => i.id),
-        ...player.equipment.accessories.map((a) => a.id),
+        ...player.equipment.relics.map((a) => a.id),
         ...(player.equipment.weapon ? [player.equipment.weapon.id] : []),
         ...(player.equipment.armor ? [player.equipment.armor.id] : []),
     ]);
@@ -1305,7 +1311,7 @@ function grantAllRelicsAction(store: AppStore): GrantAllRelicsResult {
         devGrantItem(store, relic);
         added.push(relic.id);
     }
-    return { added, worn: store.getState().player.equipment.accessories.map((a) => a.id) };
+    return { added, worn: store.getState().player.equipment.relics.map((a) => a.id) };
 }
 
 function applyCharacterPresetAction(
@@ -1330,7 +1336,28 @@ function applyCharacterPresetAction(
 // Event actions
 // ---------------------------------------------------------------------------
 
+/**
+ * The pre-event player a host restores (hazard, rest, cache: the host's own
+ * screen settles VITAE and the haul), with the quest rewards the resolve paid
+ * on arrival kept: a reach that completed a quest still pays it.
+ */
+function withQuestRewards(before: GameState, after: GameState): GameState['player'] {
+    return payCompletedQuests(before.player, before.quests, after.quests).player;
+}
+
+/**
+ * Resolves the current node's event, then routes any relic a completed
+ * quest paid on the way (a `reach` on arrival, a `collect` from a
+ * gathering) to the item-reward screen.
+ */
 function resolveCurrentMapEventAction(store: AppStore, sourceNodeType?: string, staged?: MapEventPayload): boolean {
+    const questsBefore = (store.getState() as unknown as GameState).quests;
+    const resolved = resolveCurrentMapEventInner(store, sourceNodeType, staged);
+    if (questsBefore) offerCompletedQuestItemsAction(store, questsBefore);
+    return resolved;
+}
+
+function resolveCurrentMapEventInner(store: AppStore, sourceNodeType?: string, staged?: MapEventPayload): boolean {
     try {
         const state = store.getState();
         const gameState = state as unknown as GameState;
@@ -1370,7 +1397,7 @@ function resolveCurrentMapEventAction(store: AppStore, sourceNodeType?: string, 
         if (result.event.kind === 'hazard') {
             store.setState({
                 ...resolvedState,
-                player: gameState.player,
+                player: withQuestRewards(gameState, resolvedState),
                 event: EMPTY_EVENT_SLICE,
             });
             beginHazardAction(store);
@@ -1394,7 +1421,7 @@ function resolveCurrentMapEventAction(store: AppStore, sourceNodeType?: string, 
         if (result.event.kind === 'rest') {
             store.setState({
                 ...resolvedState,
-                player: gameState.player,
+                player: withQuestRewards(gameState, resolvedState),
                 event: EMPTY_EVENT_SLICE,
             });
             beginRestAction(store, {
@@ -1419,7 +1446,7 @@ function resolveCurrentMapEventAction(store: AppStore, sourceNodeType?: string, 
         if (result.event.kind === 'loot-cache') {
             store.setState({
                 ...resolvedState,
-                player: gameState.player,
+                player: withQuestRewards(gameState, resolvedState),
                 event: EMPTY_EVENT_SLICE,
             });
             beginLootCacheChoiceAction(store, {
@@ -1640,7 +1667,10 @@ function pickEventChoiceAction(store: AppStore, choiceId: string): void {
                 }
 
                 // applyDialogue advances engine state. Mobile-side: walk the cursor.
+                const questsBefore = (store.getState() as unknown as GameState).quests;
                 store.getState().applyDialogue(tree, choice);
+                // A choice that completed a quest: its relic goes to the reward screen.
+                if (questsBefore) offerCompletedQuestItemsAction(store, questsBefore);
                 const nextState = store.getState() as unknown as GameState;
                 const result = applyDialogueChoice(nextState, tree, choice);
 

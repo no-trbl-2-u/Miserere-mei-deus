@@ -116,7 +116,7 @@ describe('devGrantAllEquipment', () => {
         const store = freshStore();
         devGrantAllEquipment(store);
         const { player } = store.getState();
-        expect(player.equipment.accessories.map(a => a.id))
+        expect(player.equipment.relics.map(a => a.id))
             .toEqual(['relic-disarming-plea', 'relic-bleeding-signet']);
         expect(getSignaturesForLoadout(player.equipment))
             .toEqual(['sig-disarming-plea', 'sig-crimson-covenant']);
@@ -128,7 +128,7 @@ describe('devGrantAllEquipment', () => {
         store.setState({ player: full });
         devGrantAllEquipment(store);
         const { player } = store.getState();
-        expect(player.equipment.accessories.map(a => a.id)).toEqual(FIXTURE_TRINKETS.map(t => t.id));
+        expect(player.equipment.relics.map(a => a.id)).toEqual(FIXTURE_TRINKETS.map(t => t.id));
         expect(player.inventory.map(i => i.id)).toEqual(['relic-disarming-plea', 'relic-bleeding-signet']);
     });
 });

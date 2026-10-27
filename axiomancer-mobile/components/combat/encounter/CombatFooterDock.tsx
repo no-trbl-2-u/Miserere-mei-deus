@@ -23,7 +23,15 @@ import { FONTS, HUE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { ledgerA11y } from '@/state/presenters/combat-encounter.engine';
 import type { CombatViewModel } from '@/state/presenters/combat-encounter.engine';
+import type { BoardGlossLive, BoardTermId } from '@/state/combat/keywords';
 import { LedgerMark } from '@/components/hazard/glyphs';
+
+/** The ledger's marks tallied, for the gloss's live line. */
+function ledgerCounts(ledger: CombatViewModel['ledger']): { clear: number; overwhelmed: number; pending: number } {
+    const n = { clear: 0, overwhelmed: 0, pending: 0 };
+    for (const m of ledger) n[m] += 1;
+    return n;
+}
 
 /** The dock's tallest cell (the END button); the row's height before padding. */
 export const DOCK_ROW_H = 56;
@@ -124,7 +132,7 @@ export const EndPhaseButton = React.memo(function EndPhaseButton({ onPress, cons
 });
 
 export const CombatFooterDock = React.memo(function CombatFooterDock({
-    vm, avatar, bottomInset, onEndPhase, endConsequence, resolving, onLayout,
+    vm, avatar, bottomInset, onEndPhase, endConsequence, resolving, onGloss, onLayout,
 }: {
     vm: Pick<CombatViewModel, 'player' | 'ledger' | 'deckCount' | 'discardCount'>;
     /** The player's portrait, rendered by the board (it owns the hit FX). */
@@ -133,6 +141,8 @@ export const CombatFooterDock = React.memo(function CombatFooterDock({
     onEndPhase: () => void;
     endConsequence: string | null;
     resolving: boolean;
+    /** Tap the piles or the phase ledger: opens that word's gloss. */
+    onGloss?: (ids: readonly BoardTermId[], live?: BoardGlossLive) => void;
     onLayout?: (e: LayoutChangeEvent) => void;
 }) {
     const styles = useStyles();
@@ -160,28 +170,33 @@ export const CombatFooterDock = React.memo(function CombatFooterDock({
                     >
                         ♥ {vm.player.hp}<Text style={styles.vitaeMax}> / {vm.player.maxHp}</Text>
                     </Text>
-                    <View
+                    <Pressable
                         style={styles.piles}
-                        accessible
-                        accessibilityRole="text"
+                        testID="combat-piles"
+                        onPress={() => onGloss?.(['piles'], { deck: vm.deckCount, discard: vm.discardCount })}
+                        accessibilityRole="button"
                         accessibilityLabel={`Deck ${vm.deckCount} cards, discard ${vm.discardCount}`}
+                        accessibilityHint="Tap to read what the piles are"
+                        hitSlop={6}
                     >
                         <View style={styles.pileGlyph}><Text style={styles.pileGlyphText} allowFontScaling={false}>▮</Text></View>
                         <Text style={styles.pileCount} allowFontScaling={false}>{vm.deckCount}</Text>
                         <View style={[styles.pileGlyph, { transform: [{ rotate: '8deg' }] }]}><Text style={styles.pileGlyphText} allowFontScaling={false}>▯</Text></View>
                         <Text style={styles.pileCount} allowFontScaling={false}>{vm.discardCount}</Text>
-                    </View>
+                    </Pressable>
                 </View>
                 <VitaeBar hp={vm.player.hp} maxHp={vm.player.maxHp} />
-                <View
+                <Pressable
                     style={styles.ledger}
                     testID="combat-ledger"
-                    accessible
-                    accessibilityRole="text"
+                    onPress={() => onGloss?.(['ledger'], { ledger: ledgerCounts(vm.ledger) })}
+                    accessibilityRole="button"
                     accessibilityLabel={ledgerA11y(vm.ledger)}
+                    accessibilityHint="Tap to read what the marks mean"
+                    hitSlop={4}
                 >
                     {vm.ledger.map((m, i) => <LedgerMark key={i} kind={m === 'clear' ? 'O' : m === 'overwhelmed' ? 'X' : 'pending'} size={DOCK_LEDGER_MARK} />)}
-                </View>
+                </Pressable>
             </View>
             <EndPhaseButton onPress={onEndPhase} consequence={endConsequence} disabled={resolving} />
         </View>

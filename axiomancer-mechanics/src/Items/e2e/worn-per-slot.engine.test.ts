@@ -2,7 +2,7 @@
  * Hermetic E2E — capacity-aware worn-state convention.
  *
  * `wornPerSlot` treats the first `SLOT_CAPACITY[slot]` equipment items per slot
- * as worn (weapon/armor: 1; accessory: 3). `isEquippedFirstOfSlot` /
+ * as worn (weapon/armor: 1; relic: 3). `isEquippedFirstOfSlot` /
  * `findEquippedInSlot` report membership and the would-be-displaced piece.
  */
 
@@ -12,10 +12,10 @@ import {
     wornPerSlot, isEquippedFirstOfSlot, findEquippedInSlot,
     SLOT_CAPACITY,
 } from '../index';
-import type { Equipment, Item, AccessoryKind } from '../types';
+import type { Equipment, Item } from '../types';
 
-function acc(id: string, kind: AccessoryKind = 'ring'): Equipment {
-    return { id, name: id, description: '', category: 'equipment', slot: 'accessory', accessoryKind: kind };
+function acc(id: string): Equipment {
+    return { id, name: id, description: '', category: 'equipment', slot: 'relic' };
 }
 function wpn(id: string): Equipment {
     return { id, name: id, description: '', category: 'equipment', slot: 'weapon' };
@@ -23,11 +23,11 @@ function wpn(id: string): Equipment {
 const material: Item = { id: 'wood', name: 'Wood', description: '', category: 'material', quantity: 3 };
 
 describe('Phase 18 — wornPerSlot capacity', () => {
-    it('keeps only the first 3 accessories worn', () => {
+    it('keeps only the first 3 relics worn', () => {
         const inv: Item[] = [acc('a'), acc('b'), acc('c'), acc('d'), acc('e')];
-        const worn = wornPerSlot(inv).get('accessory') ?? [];
+        const worn = wornPerSlot(inv).get('relic') ?? [];
         expect(worn.map(i => i.id)).toEqual(['a', 'b', 'c']);
-        expect(worn.length).toBe(SLOT_CAPACITY.accessory);
+        expect(worn.length).toBe(SLOT_CAPACITY.relic);
     });
 
     it('keeps only the first weapon worn', () => {
@@ -37,7 +37,7 @@ describe('Phase 18 — wornPerSlot capacity', () => {
 
     it('is stable under non-equipment items interleaved', () => {
         const inv: Item[] = [acc('a'), material, acc('b'), material, acc('c')];
-        expect((wornPerSlot(inv).get('accessory') ?? []).map(i => i.id)).toEqual(['a', 'b', 'c']);
+        expect((wornPerSlot(inv).get('relic') ?? []).map(i => i.id)).toEqual(['a', 'b', 'c']);
     });
 
     it('isEquippedFirstOfSlot is true for any of the worn 3, false past the window', () => {
@@ -52,7 +52,7 @@ describe('Phase 18 — wornPerSlot capacity', () => {
         expect(findEquippedInSlot(twoWorn, acc('candidate'))).toBeNull();
 
         const full: Item[] = [acc('a'), acc('b'), acc('c')];
-        // Full row → the last worn accessory is displaced.
+        // Full row → the last worn relic is displaced.
         expect(findEquippedInSlot(full, acc('candidate'))?.id).toBe('c');
 
         // Target already worn → nothing displaced.

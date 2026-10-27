@@ -280,9 +280,9 @@ describe('selectItemModalViewModel: equipment preview (Q5)', () => {
         expect(peerVm.confirmLabel).toBe('EQUIP · REPLACE LONG BLADE');
     });
 
-    it('a full accessory row offers EQUIP · REPLACE <the last-worn accessory> (EQ1 A2)', () => {
+    it('a full relic row offers EQUIP · REPLACE <the last-worn relic> (EQ1 A2)', () => {
         const trinket = (id: string, name: string): Equipment => ({
-            id, name, description: '', category: 'equipment', slot: 'accessory',
+            id, name, description: '', category: 'equipment', slot: 'relic',
         });
         const worn = [trinket('t1', 'First'), trinket('t2', 'Second'), trinket('t3', 'Third')];
         const spare = trinket('t4', 'Spare');

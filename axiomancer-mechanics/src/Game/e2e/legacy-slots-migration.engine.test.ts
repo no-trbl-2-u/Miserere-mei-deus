@@ -11,7 +11,7 @@ import { describe, it, expect } from 'vitest';
 
 import {
     reslotLegacyEquipment, reslotLegacyLoadout, LEGACY_SLOT_MAP,
-    migrate, createNewGameState,
+    migrate, createNewGameState, GAME_STATE_VERSION,
 } from '../index';
 import { getEquippedItems } from '../../Character';
 import type { Equipment } from '../../Items/types';
@@ -28,16 +28,27 @@ function legacy(id: string, slot: LegacySlot, maxHp = 0): Equipment {
 }
 
 describe('Phase 18 — reslotLegacyEquipment', () => {
-    it('maps head/hands/feet to accessory kinds and body to armor', () => {
-        expect(reslotLegacyEquipment(legacy('h', 'head'))).toMatchObject({ slot: 'accessory', accessoryKind: 'head' });
-        expect(reslotLegacyEquipment(legacy('g', 'hands'))).toMatchObject({ slot: 'accessory', accessoryKind: 'hands' });
-        expect(reslotLegacyEquipment(legacy('b', 'feet'))).toMatchObject({ slot: 'accessory', accessoryKind: 'feet' });
+    it('maps head/hands/feet to relic and body to armor, with no kind', () => {
+        for (const [id, slot] of [['h', 'head'], ['g', 'hands'], ['b', 'feet']] as const) {
+            const out = reslotLegacyEquipment(legacy(id, slot));
+            expect(out.slot).toBe('relic');
+            expect('accessoryKind' in out).toBe(false);
+        }
         expect(reslotLegacyEquipment(legacy('coat', 'body'))).toMatchObject({ slot: 'armor' });
-        expect(reslotLegacyEquipment(legacy('coat', 'body')).accessoryKind).toBeUndefined();
     });
 
-    it('gives a generic legacy accessory the charm kind', () => {
-        expect(reslotLegacyEquipment(legacy('trinket', 'accessory'))).toMatchObject({ slot: 'accessory', accessoryKind: 'charm' });
+    it('maps the old generic slot to relic and drops any carried kind', () => {
+        const old = { ...legacy('trinket', 'accessory'), accessoryKind: 'charm' } as Equipment;
+        const out = reslotLegacyEquipment(old);
+        expect(out.slot).toBe('relic');
+        expect('accessoryKind' in out).toBe(false);
+    });
+
+    it('LEGACY_SLOT_MAP sends head, hands, feet and the old generic slot to relic', () => {
+        for (const slot of ['accessory', 'head', 'hands', 'feet'] as const) {
+            expect(LEGACY_SLOT_MAP[slot].slot).toBe('relic');
+        }
+        expect(LEGACY_SLOT_MAP.body.slot).toBe('armor');
     });
 
     it('LEGACY_SLOT_MAP is total over the 7 legacy slots', () => {
@@ -62,15 +73,16 @@ describe('Phase 18 — reslotLegacyLoadout', () => {
         expect(loadout.armor?.id).toBe('coat');
     });
 
-    it('fills accessories in fixed order [accessory, head, hands, feet]; the 4th overflows', () => {
+    it('fills relics in fixed order [accessory, head, hands, feet]; the 4th overflows', () => {
         const { loadout, overflow } = reslotLegacyLoadout({
             head: legacy('helm', 'head'),
             hands: legacy('gaunt', 'hands'),
             feet: legacy('boots', 'feet'),
             accessory: legacy('ring', 'accessory'),
         });
-        // ring (accessory) first, then head, hands — feet overflows.
-        expect(loadout.accessories.map(i => i.id)).toEqual(['ring', 'helm', 'gaunt']);
+        // ring (old generic slot) first, then head, hands — feet overflows.
+        expect(loadout.relics.map(i => i.id)).toEqual(['ring', 'helm', 'gaunt']);
+        expect(loadout.relics.every(i => i.slot === 'relic')).toBe(true);
         expect(overflow.map(i => i.id)).toEqual(['boots']);
     });
 });
@@ -110,20 +122,28 @@ describe('Phase 18 — migrate v11 → v12', () => {
         const loadout = migrated.player.equipment;
         expect(loadout.weapon?.id).toBe('sword');
         expect(loadout.armor?.id).toBe('plate');           // armor wins over body
-        expect(loadout.accessories.length).toBe(3);
-        // worn set is exactly 5 pieces (1 weapon + 1 armor + 3 accessories).
+        expect(loadout.relics.length).toBe(3);
+        // worn set is exactly 5 pieces (1 weapon + 1 armor + 3 relics).
         expect(getEquippedItems(loadout).length).toBe(5);
     });
 
-    it('returns worn overflow (body + 4th accessory) and re-slots inventory equipment', () => {
+    it('returns worn overflow (body + 4th relic) and re-slots inventory equipment', () => {
         const migrated = migrate(v11Save(), 11, 12);
         const invIds = migrated.player.inventory.map(i => i.id);
-        // coat (body loses to armor) and one accessory overflow land in inventory,
-        // alongside the pre-existing spare-cap (re-slotted to accessory).
+        // coat (body loses to armor) and one relic overflow land in inventory,
+        // alongside the pre-existing spare-cap (re-slotted to relic).
         expect(invIds).toContain('coat');
         const spare = migrated.player.inventory.find(i => i.id === 'spare-cap') as Equipment;
-        expect(spare.slot).toBe('accessory');
-        expect(spare.accessoryKind).toBe('head');
+        expect(spare.slot).toBe('relic');
+        expect('accessoryKind' in spare).toBe(false);
+    });
+
+    it('a v11 save still chains to the current version on the relic model', () => {
+        const migrated = migrate(v11Save(), 11);
+        expect(migrated.version).toBe(GAME_STATE_VERSION);
+        const json = JSON.stringify(migrated);
+        expect(json).not.toMatch(/accessoryKind|"accessories"|"accessory"/);
+        expect(Array.isArray(migrated.player.equipment.relics)).toBe(true);
     });
 
     it('still rejects an unsupported (non-v11) version', () => {

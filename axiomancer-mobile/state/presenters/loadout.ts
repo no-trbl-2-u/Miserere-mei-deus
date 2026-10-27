@@ -25,7 +25,7 @@ type EquipmentLoadout = Character['equipment'];
 export function wornInSlot(loadout: EquipmentLoadout, slot: EquipmentSlot): readonly Equipment[] {
     if (slot === 'weapon') return loadout.weapon ? [loadout.weapon] : [];
     if (slot === 'armor') return loadout.armor ? [loadout.armor] : [];
-    return loadout.accessories;
+    return loadout.relics;
 }
 
 /** True iff the loadout wears a piece with this id. */
@@ -33,7 +33,7 @@ export function isWornId(loadout: EquipmentLoadout, id: string): boolean {
     return (
         loadout.weapon?.id === id
         || loadout.armor?.id === id
-        || loadout.accessories.some((a) => a.id === id)
+        || loadout.relics.some((a) => a.id === id)
     );
 }
 
@@ -44,8 +44,8 @@ export function isWornId(loadout: EquipmentLoadout, id: string): boolean {
 export function findOwnedEquipment(player: Character, id: string): Equipment | null {
     const carried = player.inventory.find((i: Item) => i.id === id);
     if (carried !== undefined) return isEquipment(carried) ? carried : null;
-    const { weapon, armor, accessories } = player.equipment;
-    for (const piece of [weapon, armor, ...accessories]) {
+    const { weapon, armor, relics } = player.equipment;
+    for (const piece of [weapon, armor, ...relics]) {
         if (piece && piece.id === id) return piece;
     }
     return null;
@@ -53,7 +53,7 @@ export function findOwnedEquipment(player: Character, id: string): Equipment | n
 
 /**
  * The worn piece equipping `item` would take off, or `null` when a position is
- * free (or `item` is already worn). A full accessory row gives up its last-worn
+ * free (or `item` is already worn). A full relic row gives up its last-worn
  * piece, the engine's `displacedBy` default.
  */
 export function replacedByEquip(player: Character, item: Equipment): Equipment | null {

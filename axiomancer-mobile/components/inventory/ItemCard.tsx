@@ -52,7 +52,7 @@ export function ItemGlyph({ category, sub, itemId, glyphs }: ItemGlyphProps) {
     if (category === 'equipment' && (sub === 'Armor' || sub === 'Shield')) {
         return <ActionIcon kind="shield" size={32} color={AXM.parchment} />;
     }
-    // The presenter's accessory label is 'Trinket'; 'Accessory' stays
+    // The presenter's relic label is 'Trinket'; 'Accessory' stays
     // accepted so a persisted or fixture row with the older label still
     // draws its glyph instead of falling through to the generic icon.
     if (category === 'equipment' && (sub === 'Trinket' || sub === 'Accessory')) {

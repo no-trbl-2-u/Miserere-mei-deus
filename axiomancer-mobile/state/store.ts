@@ -3,6 +3,7 @@ import {
     createGameStore,
     nullAdapter,
     type DialogueTree,
+    type Equipment,
     type GameEvent,
     type GameEventEmitter,
     type GameState,
@@ -163,6 +164,12 @@ export interface MobileCombatRewardSlice {
      * owned can be upgraded, so the overlay hides the option.
      */
     upgrade: EliteRewardUpgrade | null;
+    /**
+     * After an elite fight, the elite-only relic it dropped
+     * (`rollEliteRelicDrop`), queued on the item-reward screen once the draft
+     * is claimed. Absent or null when nothing dropped.
+     */
+    relicDrop?: { item: Equipment; eliteName: string } | null;
 }
 
 /**
@@ -184,8 +191,8 @@ export interface PendingItemReward {
      */
     settleFlags: readonly string[];
     /**
-     * Which accessory position EQUIP should displace when the row is full.
-     * Omitted means the engine default (the last worn accessory).
+     * Which relic position EQUIP should displace when the row is full.
+     * Omitted means the engine default (the last worn relic).
      */
     replaceIndex?: number;
 }

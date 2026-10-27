@@ -27,7 +27,10 @@
  *   returnToTitleAction(store, slots)          save + flush so the menu is current
  */
 
-import { createNewGameState, getLogger, getRng, type GameState, type MapName } from '@mechanics';
+import {
+    createNewGameState, getLogger, getRng,
+    type CharacterDefinition, type GameState, type MapName,
+} from '@mechanics';
 
 import { resumeLabyrinthSession } from '../labyrinth/resume';
 import type { SaveSlotId, SaveSlotStore } from '../persistence/saveSlots';
@@ -88,14 +91,21 @@ export function hydrateStoreWithGameState(store: AppStore, next: GameState): voi
  * `startMap` (dev tools only) starts the fresh game on another campaign map
  * instead of the default start (the Breakwater). The player
  * path never passes it.
+ *
+ * `characterId` opens the run as a roster character (its relic worn, its
+ * stats and deck dealt; see the engine's `createNewGameState`). Absent, the
+ * run has no character, as before. `roster` replaces the engine's roster
+ * (tests pass a fixture character; the player path never passes it).
  */
 export function startNewGameAction(
     store: AppStore,
     slots: SaveSlotStore,
     slot: SaveSlotId,
     startMap?: MapName,
+    characterId?: string,
+    roster?: readonly CharacterDefinition[],
 ): GameState {
-    const fresh = createNewGameState({ startMap });
+    const fresh = createNewGameState({ startMap, characterId, roster });
     slots.selectSlot(slot);
     hydrateStoreWithGameState(store, fresh);
     try {

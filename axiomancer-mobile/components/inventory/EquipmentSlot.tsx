@@ -42,9 +42,9 @@ export function EquipmentSlot({
     }
     
     const filled = slot.item !== null;
-    // The three accessory rows share `key: 'accessory'`; disambiguate the
+    // The three relic rows share `key: 'relic'`; disambiguate the
     // testID / a11y identity by position so each of the 5 rows is unique.
-    const slotId = slot.accessoryIndex !== undefined ? `${slot.key}-${slot.accessoryIndex}` : slot.key;
+    const slotId = slot.relicIndex !== undefined ? `${slot.key}-${slot.relicIndex}` : slot.key;
 
     return (
         <TouchableOpacity

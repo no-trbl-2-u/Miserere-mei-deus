@@ -2,7 +2,7 @@
  * Hermetic E2E — preset loadouts are legal.
  *
  * Every character/ladder preset must build a `Character` whose worn loadout
- * obeys the 5-slot cap (≤1 weapon, ≤1 armor, ≤3 accessories) and returns any
+ * obeys the 5-slot cap (≤1 weapon, ≤1 armor, ≤3 relics) and returns any
  * overflow to inventory rather than dropping it.
  */
 
@@ -18,10 +18,10 @@ describe('Phase 18 — preset loadouts (Phase 21: relics are the only equipment)
     it.each(allPresets.map(p => [p.id, p] as const))('%s builds a legal loadout', (_id, preset) => {
         const c = buildCharacterFromPreset(preset);
         const l = c.equipment;
-        expect(l.accessories.length).toBeLessThanOrEqual(SLOT_CAPACITY.accessory);
+        expect(l.relics.length).toBeLessThanOrEqual(SLOT_CAPACITY.relic);
         expect(getEquippedItems(l).length).toBeLessThanOrEqual(5);
-        // Every worn accessory carries a kind; weapon/armor never do.
-        for (const a of l.accessories) expect(a.accessoryKind).toBeDefined();
+        // Every worn relic is in the relic slot; weapon/armor keep their own.
+        for (const a of l.relics) expect(a.slot).toBe('relic');
         if (l.weapon) expect(l.weapon.slot).toBe('weapon');
         if (l.armor) expect(l.armor.slot).toBe('armor');
     });
