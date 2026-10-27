@@ -12,6 +12,9 @@
  *   Crimson Circlet (Crimson Return)  Blood Price elite only
  *   Ruby Signet (Ruby Tithe)          Blood Price quest
  *   Bleeding Signet (Open Vein)       Blood Price quest
+ *   Elementalist's Signet             Elementalist elite only
+ *   Elementalist's Brooch             Elementalist quest
+ *   Elementalist's Belt               Elementalist quest
  *
  * A run starts with none. The dev menu's relic chips hand any over, worn
  * while a position is free.
@@ -93,6 +96,54 @@ const BLEEDING_SIGNET: Equipment = {
     relicSource: 'quest',
 };
 
+/**
+ * The Elementalist's Signet (T's): +5 Heart, +20 max VITAE, and Eye of the
+ * Storm (◆6): clear your INFERNO, then trigger the foe's STORM. Elite only.
+ */
+const ELEMENTALIST_SIGNET: Equipment = {
+    id: 'relic-elementalist-signet',
+    name: "Elementalist's Signet",
+    description: "+5 Heart and +20 max VITAE while worn. Clear your INFERNO, then trigger the foe's STORM.",
+    category: 'equipment',
+    slot: 'relic',
+    statModifiers: [{ stat: 'heart', value: 5 }, { stat: 'maxHp', value: 20 }],
+    grantsSignature: 'sig-elementalist-signet',
+    laneId: 'elementalist',
+    relicSource: 'elite',
+};
+
+/**
+ * The Elementalist's Brooch (T's): +5 Mind, and Kindle the Gale (◆4): the
+ * foe-only INFERNO becomes STORM; the shared stack stays. A quest's reward.
+ */
+const ELEMENTALIST_BROOCH: Equipment = {
+    id: 'relic-elementalist-brooch',
+    name: "Elementalist's Brooch",
+    description: "+5 Mind while worn. Turn the foe's own INFERNO into STORM; INFERNO that burns you too stays.",
+    category: 'equipment',
+    slot: 'relic',
+    statModifiers: [{ stat: 'mind', value: 5 }],
+    grantsSignature: 'sig-elementalist-brooch',
+    laneId: 'elementalist',
+    relicSource: 'quest',
+};
+
+/**
+ * The Elementalist's Belt (T's): +5 Body, and Thaw into Thunder (◆3): all
+ * BLIZZARD becomes STORM. A quest's reward.
+ */
+const ELEMENTALIST_BELT: Equipment = {
+    id: 'relic-elementalist-belt',
+    name: "Elementalist's Belt",
+    description: '+5 Body while worn. Turn all BLIZZARD into STORM.',
+    category: 'equipment',
+    slot: 'relic',
+    statModifiers: [{ stat: 'body', value: 5 }],
+    grantsSignature: 'sig-elementalist-belt',
+    laneId: 'elementalist',
+    relicSource: 'quest',
+};
+
 /** A fresh copy of a relic (never aliases the library singleton). */
 export function cloneRelic(relic: Equipment): Equipment {
     return { ...relic, statModifiers: (relic.statModifiers ?? []).map(m => ({ ...m })) };
@@ -104,7 +155,10 @@ export function cloneRelic(relic: Equipment): Equipment {
  * reducers deep-clone the wearer, but the library itself must never be aliased
  * into a mutable character.
  */
-export const relicLibrary: readonly Equipment[] = [SUPPLIANTS_RING, CRIMSON_CIRCLET, RUBY_SIGNET, BLEEDING_SIGNET];
+export const relicLibrary: readonly Equipment[] = [
+    SUPPLIANTS_RING, CRIMSON_CIRCLET, RUBY_SIGNET, BLEEDING_SIGNET,
+    ELEMENTALIST_SIGNET, ELEMENTALIST_BROOCH, ELEMENTALIST_BELT,
+];
 
 /** Resolve a relic by id (returns the canonical singleton, not a clone). */
 export function getRelicById(id: string): Equipment | undefined {

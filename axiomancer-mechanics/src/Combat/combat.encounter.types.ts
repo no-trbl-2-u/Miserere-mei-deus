@@ -165,13 +165,19 @@ export type SignatureSkillKind =
     | 'mercy'               // The Open Hand: open the mercy choice on a befriendable foe
     | 'sacrifice-heals'     // the Crimson Circlet: the next SACRIFICE heals instead of costing
     | 'sacrifice-leech'     // the Ruby Signet: the next SACRIFICE adds LEECH equal to the VITAE paid
-    | 'heal-trigger-leech'; // the Bleeding Signet: HEAL 5, then trigger the foe's LEECH
+    | 'heal-trigger-leech'  // the Bleeding Signet: HEAL 5, then trigger the foe's LEECH
+    | 'clear-yours-trigger-storm' // the Elementalist's Signet: clear your INFERNO, trigger the foe's STORM
+    | 'foe-inferno-to-storm'      // the Elementalist's Brooch: the foe-only INFERNO becomes STORM
+    | 'blizzard-to-storm';        // the Elementalist's Belt: all BLIZZARD becomes STORM
 
 export type SignatureSkillId =
     | 'sig-disarming-plea'
     | 'sig-crimson-circlet'
     | 'sig-ruby-signet'
-    | 'sig-bleeding-signet';
+    | 'sig-bleeding-signet'
+    | 'sig-elementalist-signet'
+    | 'sig-elementalist-brooch'
+    | 'sig-elementalist-belt';
 
 /** Player archetype, derived from the dominant base stat. Drives (mobile) the
  *  portrait only. */

@@ -138,3 +138,15 @@ Open Vein (`heal-trigger-leech`, ◆4). The Open Hand keeps ◆4. Relic stat lin
 now include Heart, Body and Mind, added to the fighter's stats at combat
 start. An armed SACRIFICE redirect lasts across turns until a SACRIFICE
 resolves, and a WAIVED SACRIFICE spends it while healing or adding nothing.
+
+**Built (LR1e).** The Elementalist's three are in `relicLibrary` with
+`laneId: 'elementalist'`: `relic-elementalist-signet` (`'elite'`, +5 Heart, +20
+max VITAE; `sig-elementalist-signet` Eye of the Storm, `clear-yours-trigger-storm`,
+◆6), `relic-elementalist-brooch` (`'quest'`, +5 Mind; `sig-elementalist-brooch`
+Kindle the Gale, `foe-inferno-to-storm`, ◆4: only `infFoe` becomes STORM, the
+shared stack stays) and `relic-elementalist-belt` (`'quest'`, +5 Body;
+`sig-elementalist-belt` Thaw into Thunder, `blizzard-to-storm`, ◆3). The
+signature names are placeholders `[content]` for T. The engine helpers are
+`programWeatherSignature` and `programWeatherSignatureLive` in
+`combat.card-program.ts`. "Your INFERNO" for the refusal is `yourInferno`, so a
+lone shared stack of 1 (you lose 0) does not make the Signet live.

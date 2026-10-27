@@ -1909,6 +1909,9 @@ const SIG_ICON: Record<SignatureSkill['kind'], string> = {
     'sacrifice-heals': '🩸',
     'sacrifice-leech': '💎',
     'heal-trigger-leech': '🫀',
+    'clear-yours-trigger-storm': '🌩',
+    'foe-inferno-to-storm': '🔥',
+    'blizzard-to-storm': '❄',
 };
 
 function signaturesVM(state: CombatEncounterState): CombatSignatureVM[] {

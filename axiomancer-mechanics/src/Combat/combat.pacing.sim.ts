@@ -81,6 +81,7 @@ function castSignatures(s: CombatEncounterState, mercy: boolean): CombatEncounte
             const missing = state.player.maxHealth - state.player.health;
             if (!leech && missing < OPEN_VEIN_HEAL) continue;
         }
+        if (sig.kind === 'clear-yours-trigger-storm' && (state.program?.el?.storm ?? 0) <= 0) continue;
         state = playSignatureSkill(state, id).state;
         if (state.finalOutcome || state.mercyChoiceActive) return state;
     }

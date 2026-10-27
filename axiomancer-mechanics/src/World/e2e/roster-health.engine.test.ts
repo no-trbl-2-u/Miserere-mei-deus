@@ -36,6 +36,11 @@ const PINNED_ORPHANS: ReadonlyArray<{ lens: string; id: string }> = [
     { lens: 'item-ungranted', id: 'relic-crimson-circlet' },
     { lens: 'item-ungranted', id: 'relic-ruby-signet' },
     { lens: 'item-ungranted', id: 'relic-bleeding-signet' },
+    // The Elementalist's relics, the same way: the Signet drops from elites, the
+    // Brooch and the Belt wait on the Act 1 quests (LR1f).
+    { lens: 'item-ungranted', id: 'relic-elementalist-signet' },
+    { lens: 'item-ungranted', id: 'relic-elementalist-brooch' },
+    { lens: 'item-ungranted', id: 'relic-elementalist-belt' },
 ];
 
 describe('roster health — live tree', () => {

@@ -18,6 +18,7 @@ import { FIXTURE_WEAPON, FIXTURE_ARMOR, FIXTURE_TRINKETS } from '../../Game/fixt
 
 import { unlockedLaneIds, laneSlotCount, rewardLaneSlots } from '../../Combat/combat.rewards';
 import { relicLaneId, wornLaneCounts } from '../relic-lanes';
+import { getCardLane } from '../../Cards/card.lanes';
 import { Player } from '../../Character/characters.mock';
 import { deepClone } from '../../Utils';
 import type { Character } from '../../Character/types';
@@ -30,8 +31,9 @@ const CIRCLET_ID = 'relic-crimson-circlet';
 const RUBY_ID = 'relic-ruby-signet';
 
 describe('relic library — roster', () => {
-    it('ships the Suppliant\'s Ring and Blood Price\'s three relics', () => {
-        expect(relicLibrary.map(r => r.id)).toEqual([RING_ID, CIRCLET_ID, RUBY_ID, SIGNET_ID]);
+    it('ships the Suppliant\'s Ring, Blood Price\'s three relics and the Elementalist\'s three', () => {
+        expect(relicLibrary.map(r => r.id)).toEqual([RING_ID, CIRCLET_ID, RUBY_ID, SIGNET_ID,
+            'relic-elementalist-signet', 'relic-elementalist-brooch', 'relic-elementalist-belt']);
         const ring = getRelicById(RING_ID)!;
         expect(ring.name).toBe("Suppliant's Ring");
         expect(ring.slot).toBe('relic');
@@ -115,6 +117,47 @@ describe('A1 · the Bleeding Signet opens Blood Price while worn', () => {
         const { laneId: _omitted, ...saved } = cloneRelic(signet());
         expect(relicLaneId(saved)).toBe('blood-price');
         expect(unlockedLaneIds(wearer([saved as Equipment]))).toEqual(['blood-price']);
+    });
+});
+
+describe('A15 · the Elementalist\'s three relics', () => {
+    const E_SIGNET = 'relic-elementalist-signet';
+    const BROOCH = 'relic-elementalist-brooch';
+    const BELT = 'relic-elementalist-belt';
+
+    it('are as T wrote them: lane, source, stat lines, signature', () => {
+        const row = (id: string) => {
+            const r = getRelicById(id)!;
+            return [r.name, r.laneId, r.relicSource, r.statModifiers, r.grantsSignature, r.slot];
+        };
+        expect(row(E_SIGNET)).toEqual(["Elementalist's Signet", 'elementalist', 'elite',
+            [{ stat: 'heart', value: 5 }, { stat: 'maxHp', value: 20 }], 'sig-elementalist-signet', 'relic']);
+        expect(row(BROOCH)).toEqual(["Elementalist's Brooch", 'elementalist', 'quest',
+            [{ stat: 'mind', value: 5 }], 'sig-elementalist-brooch', 'relic']);
+        expect(row(BELT)).toEqual(["Elementalist's Belt", 'elementalist', 'quest',
+            [{ stat: 'body', value: 5 }], 'sig-elementalist-belt', 'relic']);
+    });
+
+    it('a worn Brooch opens the elementalist lane', () => {
+        const worn = [cloneRelic(getRelicById(BROOCH)!)];
+        const p: Character = {
+            ...deepClone(Player), inventory: worn,
+            equipment: { weapon: null, armor: null, relics: worn },
+            devRewardLaneIds: undefined,
+        };
+        expect(unlockedLaneIds(p)).toEqual(['elementalist']);
+    });
+});
+
+describe('A16 · every lane relic resolves to a registered lane', () => {
+    it('the six lane relics name a registered lane; each lane has one elite-only relic and two quest relics', () => {
+        const laneRelics = relicLibrary.filter(r => r.laneId);
+        expect(laneRelics).toHaveLength(6);
+        for (const r of laneRelics) expect(getCardLane(relicLaneId(r)!), r.id).toBeDefined();
+        for (const lane of ['blood-price', 'elementalist']) {
+            expect(laneRelics.filter(r => r.laneId === lane && r.relicSource === 'elite')).toHaveLength(1);
+            expect(laneRelics.filter(r => r.laneId === lane && r.relicSource === 'quest')).toHaveLength(2);
+        }
     });
 });
 

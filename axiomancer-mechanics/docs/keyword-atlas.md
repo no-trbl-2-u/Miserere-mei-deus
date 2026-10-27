@@ -77,7 +77,11 @@ Global's or TETHER's) before VULNERABLE, and expires at the end of the turn.
 The Elementalist's elements (Phase EL1a, `src/Combat/combat.elements.ts`).
 All three last the whole combat, stack by adding and are unscaled; an
 element at 0 is gone. BLIZZARD and INFERNO drop by 1 every round after the
-round they were applied in; STORM never drops.
+round they were applied in; STORM never drops. Three signatures (the Elementalist's relics, LR1e) move
+the weather: Eye of the Storm (the Signet, ◆6) clears your INFERNO and triggers the foe's STORM (it loses
+its STORM now, no growth); Kindle the Gale (the Brooch, ◆4) turns only the foe-only INFERNO into STORM, so
+the both-sides stack stays and you keep burning; Thaw into Thunder (the Belt, ◆3) turns all BLIZZARD into
+STORM. Each is refused when it would change nothing.
 
 | keyword | reminder text | carried by |
 |---|---|---|
