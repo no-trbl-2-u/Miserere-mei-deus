@@ -6,8 +6,11 @@
  * artist (`LICENSE-game-icons.txt`, beside the geometry), curated
  * through `scripts/extract-game-icons.mjs` into the generated
  * `game-icon-paths.ts` — the app never reads the library at runtime.
- * Every mark renders as a monochrome silhouette in the caller's color
- * over the AXM token contract; no baked hex ever.
+ * Every mark renders as a silhouette in the caller's color over the AXM
+ * token contract; no baked hex ever. A placement may add accents
+ * (`IconAccent`): the same silhouette redrawn in a named hue, clipped to
+ * shapes in the icon's own units, so part of the mark takes a colour
+ * while the geometry stays one piece.
  *
  * Adding an icon: add a manifest row in the extraction script, run it,
  * give the mark a label here, and add a row to the `AxmIcon` test —
@@ -29,6 +32,42 @@ export interface IconPrimitive {
     readonly strokeWidth?: number;
     readonly strokeLinecap?: 'round';
     readonly opacity?: number;
+}
+
+/**
+ * A named accent hue. `blood` follows the theme (`AXM.blood`); the others
+ * are the fixed combat hues the weather already speaks in (`HUE`):
+ * `storm` is STORM's gold, `ember` the amber, `frost` BLIZZARD's blue.
+ */
+export type AccentHue = 'blood' | 'storm' | 'ember' | 'frost';
+
+/** A clip shape, in the icon's own viewBox units (0-512 for game-icons). */
+export type AccentShape =
+    | { readonly kind: 'rect'; readonly x: number; readonly y: number; readonly w: number; readonly h: number }
+    | { readonly kind: 'circle'; readonly cx: number; readonly cy: number; readonly r: number }
+    | { readonly kind: 'ellipse'; readonly cx: number; readonly cy: number; readonly rx: number; readonly ry: number }
+    | { readonly kind: 'polygon'; readonly points: readonly (readonly [number, number])[] };
+
+/**
+ * Enlarge an accent's part of the mark: the layer is drawn scaled by
+ * `factor` about (`ax`, `ay`), its clip grows with it, and the plain
+ * silhouette is hidden under the grown clip so the original part does
+ * not show through.
+ */
+export interface AccentGrow {
+    readonly factor: number;
+    readonly ax: number;
+    readonly ay: number;
+}
+
+/**
+ * One accent layer: the icon's geometry filled with `hue`, visible only
+ * inside the union of `clip`. Later layers paint over earlier ones.
+ */
+export interface IconAccent {
+    readonly hue: AccentHue;
+    readonly clip: readonly AccentShape[];
+    readonly grow?: AccentGrow;
 }
 
 export interface AxmIconSpec {
@@ -68,6 +107,12 @@ const ICON_LABELS: Record<GameIconName, string> = {
     'action-coin': 'Coin or currency',
     'action-tombstone': 'Tombstone or remains',
     'action-village': 'Village',
+    'relic-tiara': 'Jewelled tiara',
+    'relic-diamond-ring': 'Ring set with a gem',
+    'relic-chalice-drops': 'Chalice with falling drops',
+    'relic-bolt-eye': 'Eye with a lightning bolt',
+    'relic-gem-pendant': 'Gem pendant on a chain',
+    'relic-frostfire': 'Fire and frost',
 };
 
 function buildSpecs(): Record<GameIconName, AxmIconSpec> {
