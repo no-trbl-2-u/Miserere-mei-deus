@@ -623,7 +623,9 @@ export function withScaledEnemyHp(enemy: Enemy, mult: number): Enemy {
 function recordFightStart(store: AppStore, enemy: Enemy, enemyHpMultiplier: number): void {
     const player = store.getState().player;
     if (!player) return;
-    fightRecorder.start({ enemyId: enemy.id, playerLevel: player.level, enemyHpMultiplier, vitaeStart: player.health });
+    const { weapon, armor, accessories } = player.equipment;
+    const relics = [weapon, armor, ...accessories].flatMap((piece) => (piece ? [piece.id] : []));
+    fightRecorder.start({ enemyId: enemy.id, playerLevel: player.level, enemyHpMultiplier, vitaeStart: player.health, relics });
 }
 
 /**

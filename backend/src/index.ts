@@ -23,7 +23,7 @@
  * is its newest `final` row, `?ballot=<id>&status=final`; a `draft` is
  * progress, never a verdict. A `status=` other than those two is a 400.
  *
- * The reports are `card-usage` and `card-gaps` (`reports.ts`); their SQL is
+ * The reports are `card-usage`, `card-gaps` and `signature-usage` (`reports.ts`); their SQL is
  * fixed on the Worker and the query string only binds values. Another name is
  * a 404 and any method but GET a 405.
  *
@@ -157,7 +157,7 @@ async function handleReport(request: Request, url: URL, env: Env): Promise<Respo
         return error(401, 'unauthorized', undefined, { 'WWW-Authenticate': 'Bearer' });
     }
     const name = url.pathname.slice(REPORTS_PATH_PREFIX.length);
-    if (!isReportName(name)) return error(404, 'not found', [`report: expected card-usage or card-gaps, got ${JSON.stringify(name)}`]);
+    if (!isReportName(name)) return error(404, 'not found', [`report: expected card-usage, card-gaps or signature-usage, got ${JSON.stringify(name)}`]);
     if (request.method !== 'GET') return error(405, 'method not allowed', undefined, { Allow: 'GET' });
     const build = url.searchParams.get('build') || null;
     const card = url.searchParams.get('card') || null;

@@ -523,7 +523,7 @@ export function CombatEncounterPanel({
     // handlers below keep their identity and the board's memo holds.
     const screenRef = useRef({ live, stagedUids, persistOutcome });
     screenRef.current = { live, stagedUids, persistOutcome };
-    const recordScreen = useCallback((kind: PlayLogUiEventKind, uid: string) => {
+    const recordScreen = useCallback((kind: Exclude<PlayLogUiEventKind, 'ui-signature-refused'>, uid: string) => {
         const { live: s, persistOutcome: persisted } = screenRef.current;
         if (!persisted) return;
         const cardId = s.hand.find((h) => h.uid === uid)?.cardId;
@@ -563,6 +563,12 @@ export function CombatEncounterPanel({
         unstageUid(uid);
     }, [apply, unstageUid]);
     const onDiscard = useCallback((uid: string) => { apply((s) => discardCombatCard(s, uid).state); unstageUid(uid); }, [apply, unstageUid]);
+    // A tap on a rune that cannot fire opens its info and is a refused tap in the
+    // play log (LR1g); a long-press opens the same info and is not.
+    const onSignatureInfo = useCallback((s: CombatSignatureVM, tapped?: boolean) => {
+        setSigInfo(s);
+        if (tapped && screenRef.current.persistOutcome) fightRecorder.signatureRefused(s.id, s.reason ?? 'refused');
+    }, []);
     const onSignature = useCallback((id: string) => apply((s) => playSignatureSkill(s, id).state), [apply]);
     const onEndPhase = useCallback(() => {
         // The synchronous gate: a second tap in the same frame (touch
@@ -716,7 +722,7 @@ export function CombatEncounterPanel({
                     resolving={resolving}
                     onInspect={onInspect}
                     onChip={setTipEffect}
-                    onSignatureInfo={setSigInfo}
+                    onSignatureInfo={onSignatureInfo}
                     onPlayerInspect={onPlayerInspect}
                     onMomentumInfo={onMomentumInfo}
                     fx={fx}

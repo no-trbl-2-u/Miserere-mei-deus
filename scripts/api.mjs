@@ -28,7 +28,7 @@ import { ENV_FILE, resolveConfig } from './puzzle-times.mjs'
 
 /** Mirrors `REPORTS_PATH_PREFIX` and `REPORT_NAMES` in `backend/src/reports.ts`. */
 export const REPORTS_PATH_PREFIX = '/v1/reports/'
-export const REPORT_NAMES = ['card-usage', 'card-gaps']
+export const REPORT_NAMES = ['card-usage', 'card-gaps', 'signature-usage']
 
 const USAGE = `usage: npm run api -- <${REPORT_NAMES.join('|')}> [--build <sha>] [--card <id>] [--json] [--file <report.json>]`
 
@@ -113,10 +113,33 @@ export function formatCardGaps(body) {
   return out.join('\n')
 }
 
+const SIGNATURE_COLUMNS = [
+  ['signature', 'signatureId'], ['worn', 'fightsWorn'], ['cast', 'fightsCast'], ['casts', 'casts'],
+  ['per fight', 'castsPerFight'], ['refused', 'refused'],
+]
+
+/** The signature-usage body as text: one row per signature worn, cast or refused. */
+export function formatSignatureUsage(body) {
+  const out = [`Signature usage: ${plural(body.fights, 'fight')} (${scopeOf(body)}).`]
+  if (body.signatures.length === 0) {
+    out.push('No signatures recorded.')
+    return out.join('\n')
+  }
+  out.push(
+    'worn = fights that wore it; cast = fights that cast it at least once; per fight = casts / worn;',
+    'refused = taps the engine would not cast (not enough Conviction, or another reason).',
+    '',
+    table(SIGNATURE_COLUMNS.map(([h]) => h), body.signatures.map((row) => SIGNATURE_COLUMNS.map(([, k]) => row[k] ?? '-'))),
+  )
+  return out.join('\n')
+}
+
+const REPORT_LISTS = { 'card-usage': ['cards'], 'card-gaps': ['threats', 'unspentDice', 'defeats'], 'signature-usage': ['signatures'] }
+
 /** Checks the body is the named report. Throws a one-line Error otherwise. */
 export function checkBody(body, report) {
   if (!body || body.report !== report) throw new Error(`response is not a ${report} report`)
-  const lists = report === 'card-usage' ? ['cards'] : ['threats', 'unspentDice', 'defeats']
+  const lists = REPORT_LISTS[report]
   for (const key of lists) if (!Array.isArray(body[key])) throw new Error(`response has no ${key} list`)
   return body
 }
@@ -169,7 +192,8 @@ export async function main(argv, { env = process.env, envFile = ENV_FILE, fetchI
     return 1
   }
 
-  const text = opts.json ? JSON.stringify(body, null, 2) : opts.report === 'card-usage' ? formatCardUsage(body) : formatCardGaps(body)
+  const format = { 'card-usage': formatCardUsage, 'card-gaps': formatCardGaps, 'signature-usage': formatSignatureUsage }[opts.report]
+  const text = opts.json ? JSON.stringify(body, null, 2) : format(body)
   stdout.write(`${text}\n`)
   return 0
 }

@@ -94,7 +94,8 @@ describe('validateFightPost', () => {
     it('accepts an ended fight and returns it unchanged', () => {
         const result = validateFightPost(fight());
         expect(result.ok).toBe(true);
-        if (result.ok) expect(result.fight).toEqual(fight());
+        // A post with no relics or signatures (a build from before LR1g) reads as empty lists.
+        if (result.ok) expect(result.fight).toEqual({ ...fight(), relics: [], signatures: [] });
     });
 
     it('accepts a null build commit and an empty event stream', () => {
@@ -154,6 +155,33 @@ describe('validateFightPost', () => {
             'events[1].cardId: expected a string',
             'events[1].ms: expected whole milliseconds of at least 0',
             'events[1].vitae: expected a number',
+        ]);
+    });
+
+    it('LR1g: relics and signatures are optional, kept when sent and defaulted to empty', () => {
+        const old = validateFightPost(fight());
+        expect(old.ok && old.fight.relics).toEqual([]);
+        expect(old.ok && old.fight.signatures).toEqual([]);
+        const worn = validateFightPost(fight({ relics: ['relic-bleeding-signet'], signatures: ['sig-crimson-covenant'] }));
+        expect(worn.ok && worn.fight.relics).toEqual(['relic-bleeding-signet']);
+        expect(worn.ok && worn.fight.signatures).toEqual(['sig-crimson-covenant']);
+        expect(fightReasons(fight({ relics: 'x', signatures: [1] }))).toEqual([
+            'relics: expected an array',
+            'signatures[0]: expected a string',
+        ]);
+        expect(fightReasons(fight({ relics: Array.from({ length: PLAY_LOG_LIMITS.worn + 1 }, () => 'r') }))).toEqual([
+            `relics: more than ${PLAY_LOG_LIMITS.worn} entries`,
+        ]);
+    });
+
+    it('LR1g: a refused signature tap needs a signature id and a reason, and keeps only its own keys', () => {
+        const tap = { kind: 'ui-signature-refused', signatureId: 'sig-crimson-covenant', reason: 'Need 4 Conviction', ms: 5, vitae: 30 };
+        expect(fightReasons(fight({ events: [tap] }))).toEqual([]);
+        const kept = validateFightPost(fight({ events: [{ ...tap, extra: 1 }] }));
+        expect(kept.ok && kept.fight.events).toEqual([tap]);
+        expect(fightReasons(fight({ events: [{ kind: 'ui-signature-refused', ms: 5, vitae: 30 }] }))).toEqual([
+            'events[0].signatureId: expected a string',
+            'events[0].reason: expected a string',
         ]);
     });
 

@@ -39,8 +39,12 @@ export const COMBAT_EVENT_KINDS = [
     'coveted-die-stolen', 'combat-ended',
 ] as const satisfies readonly CombatEvent['kind'][];
 
-/** The screen events the combat panel adds to a fight's stream. */
-export const PLAY_LOG_UI_EVENT_KINDS = ['ui-staged', 'ui-unstaged', 'ui-detail-opened'] as const;
+/**
+ * The screen events the combat panel adds to a fight's stream. The first three
+ * name a card; `ui-signature-refused` (phase LR1g) is a tap on a signature the
+ * engine would not cast, with the refusal's reason.
+ */
+export const PLAY_LOG_UI_EVENT_KINDS = ['ui-staged', 'ui-unstaged', 'ui-detail-opened', 'ui-signature-refused'] as const;
 
 export const PLAY_LOG_FIGHT_OUTCOMES = ['victory', 'mercy', 'defeat', 'retreat'] as const satisfies readonly CombatOutcome[];
 
@@ -55,6 +59,8 @@ export const PLAY_LOG_LIMITS = {
     text: 200,
     events: 5000,
     deck: 500,
+    /** Worn relics and signatures per fight (a loadout holds a handful). */
+    worn: 50,
     offered: 20,
     fightBytes: 1024 * 1024,
     deckEventBytes: 64 * 1024,
@@ -74,10 +80,19 @@ export interface PlayLogStamp {
 export type PlayLogCombatEvent = CombatEvent & PlayLogStamp;
 
 /** A screen event: a card staged, unstaged before it was played, or its detail popup opened. */
-export interface PlayLogUiEvent extends PlayLogStamp {
-    kind: PlayLogUiEventKind;
+export interface PlayLogCardUiEvent extends PlayLogStamp {
+    kind: Exclude<PlayLogUiEventKind, 'ui-signature-refused'>;
     cardId: string;
 }
+
+/** A tap on a signature the engine refused (LR1g): which one, and `signatureCastBlock`'s reason. */
+export interface PlayLogSignatureRefusedEvent extends PlayLogStamp {
+    kind: 'ui-signature-refused';
+    signatureId: string;
+    reason: string;
+}
+
+export type PlayLogUiEvent = PlayLogCardUiEvent | PlayLogSignatureRefusedEvent;
 
 export type PlayLogEvent = PlayLogCombatEvent | PlayLogUiEvent;
 
@@ -106,6 +121,10 @@ export interface FightPost extends PlayLogSource {
     vitaeLow: number;
     /** The deck at the fight's start; an upgraded card keeps its `+` id. */
     deck: string[];
+    /** The relic ids worn at the fight's start (LR1g); stored empty when absent. */
+    relics?: string[];
+    /** The signature ids those relics grant (LR1g); stored empty when absent. */
+    signatures?: string[];
     events: PlayLogEvent[];
 }
 
@@ -174,7 +193,7 @@ const SOURCE_KEYS: readonly (keyof PlayLogSource)[] = ['solver', 'sessionId', 'b
 
 const FIGHT_KEYS: readonly (keyof FightPost)[] = [
     ...SOURCE_KEYS, 'enemyId', 'playerLevel', 'enemyHpMultiplier', 'outcome', 'turns',
-    'vitaeStart', 'vitaeEnd', 'vitaeLow', 'deck', 'events',
+    'vitaeStart', 'vitaeEnd', 'vitaeLow', 'deck', 'relics', 'signatures', 'events',
 ];
 
 const DECK_EVENT_KEYS: readonly (keyof DeckEventPost)[] = [
@@ -238,6 +257,9 @@ function checkEvent(event: unknown, i: number, reasons: string[]): void {
     }
     if (typeof event.kind !== 'string' || !(COMBAT_KINDS.has(event.kind) || UI_KINDS.has(event.kind))) {
         reasons.push(`${at}.kind: unknown event kind ${JSON.stringify(event.kind)}`);
+    } else if (event.kind === 'ui-signature-refused') {
+        checkText(event.signatureId, `${at}.signatureId`, reasons, false);
+        checkText(event.reason, `${at}.reason`, reasons, false);
     } else if (UI_KINDS.has(event.kind)) {
         checkText(event.cardId, `${at}.cardId`, reasons, false);
     }
@@ -245,8 +267,13 @@ function checkEvent(event: unknown, i: number, reasons: string[]): void {
     if (!isFiniteNumber(event.vitae)) reasons.push(`${at}.vitae: expected a number`);
 }
 
-/** An engine event is kept whole; a screen event keeps only its four keys. */
+/** An engine event is kept whole; a screen event keeps only its own keys. */
 function pickEvent(event: Record<string, unknown>): PlayLogEvent {
+    if (event.kind === 'ui-signature-refused') {
+        return {
+            kind: event.kind, signatureId: event.signatureId, reason: event.reason, ms: event.ms, vitae: event.vitae,
+        } as PlayLogSignatureRefusedEvent;
+    }
     if (UI_KINDS.has(event.kind as string)) {
         return { kind: event.kind, cardId: event.cardId, ms: event.ms, vitae: event.vitae } as PlayLogUiEvent;
     }
@@ -279,6 +306,10 @@ export function validateFightPost(body: unknown): FightValidation {
         if (!isFiniteNumber(body[key])) reasons.push(`${key}: expected a number`);
     }
     checkCardIds(body.deck, 'deck', PLAY_LOG_LIMITS.deck, reasons);
+    // Optional on the wire: an installed build from before LR1g sends neither.
+    for (const key of ['relics', 'signatures'] as const) {
+        if (body[key] !== undefined) checkCardIds(body[key], key, PLAY_LOG_LIMITS.worn, reasons);
+    }
 
     if (!Array.isArray(body.events)) {
         reasons.push('events: expected an array');
@@ -293,7 +324,12 @@ export function validateFightPost(body: unknown): FightValidation {
     const fight = pick<FightPost>(body, FIGHT_KEYS);
     return {
         ok: true,
-        fight: { ...fight, events: (body.events as Record<string, unknown>[]).map(pickEvent) },
+        fight: {
+            ...fight,
+            relics: (body.relics as string[] | undefined) ?? [],
+            signatures: (body.signatures as string[] | undefined) ?? [],
+            events: (body.events as Record<string, unknown>[]).map(pickEvent),
+        },
         reasons: [],
     };
 }
