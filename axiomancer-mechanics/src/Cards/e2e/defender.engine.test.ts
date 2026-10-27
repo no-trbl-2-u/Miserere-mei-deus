@@ -28,7 +28,7 @@ import { deepClone } from '../../Utils';
 import { dropUnknownCardIds } from '../../Game/game.migrate';
 import type { GameState } from '../../Game/types';
 import {
-    initializeCombatEncounter, rollEncounterDice, playCombatCard, discardCombatCard, handCards, PROGRAM_KIT,
+    initializeCombatEncounter, rollEncounterDice, playCombatCard, discardCombatCard, handCards, PROGRAM_KIT, resolveThreatPhase, startTurn,
 } from '../../Combat/combat.engine';
 import { DISCARD_SHORTFALL_REASON, programIllegalReason as illegalReason } from '../../Combat/combat.card-program';
 import { programFaceText } from '../../Combat/combat.cards';
@@ -266,6 +266,114 @@ describe('the cards play the spikes', () => {
     it('M-04 PAID keeps GUARD through the foe turn (a hold is armed)', () => {
         const s = play(fight([idOf('M-04')]), 't0', true);
         expect(s.program!.spikes?.guardHoldRound).toBeDefined();
+    });
+});
+
+/** A fight with `spikes` already up, `guard` held and `dealt` VITAE of DEALs done this turn. */
+function primed(hand: string[], over: { thorns?: number; guard?: number; hp?: number } = {}): CombatEncounterState {
+    const s = fight(hand, over.hp ?? 60);
+    const sp = s.program!.spikes ?? { thorns: 0, upThorns: false, reflect: 0, reflectTurns: 0 };
+    return { ...s, guard: over.guard ?? 0, program: { ...s.program!, spikes: { ...sp, thorns: over.thorns ?? 0 } } };
+}
+const loss = (a: CombatEncounterState, b: CombatEncounterState): number => a.enemy.health - b.enemy.health;
+
+describe('the cards that read the fight', () => {
+    it('P-01 adds 1 per 2 THORNS on FREE and 1 per THORNS on PAID', () => {
+        const base = loss(fight([idOf('P-01')]), play(fight([idOf('P-01')]), 't0', false));
+        const free = primed([idOf('P-01')], { thorns: 6 });
+        expect(loss(free, play(free, 't0', false))).toBe(base + 3);
+        const paidBase = loss(fight([idOf('P-01')]), play(fight([idOf('P-01')]), 't0', true));
+        const paid = primed([idOf('P-01')], { thorns: 6 });
+        expect(loss(paid, play(paid, 't0', true))).toBe(paidBase + 6);
+    });
+
+    it('P-02 PAID deals as much as the GUARD it holds, and nothing extra with none', () => {
+        const s = primed([idOf('P-02'), FILLER], { guard: 3 });
+        const after = play(s, 't0', true);
+        expect(loss(s, after)).toBe(after.guard);
+        expect(after.guard).toBeGreaterThan(3);
+        expect(after.hand).toHaveLength(0);
+    });
+
+    it('P-05 turns THORNS into GUARD: once on FREE, twice on PAID', () => {
+        const free = play(primed([idOf('P-05')], { thorns: 4 }), 't0', false);
+        expect(free.guard).toBe(thorns(free));
+        const paid = play(primed([idOf('P-05')], { thorns: 4 }), 't0', true);
+        expect(paid.guard).toBe(2 * thorns(paid));
+    });
+
+    it('P-06 turns the damage done this turn into THORNS: half on FREE, all of it on PAID', () => {
+        const hit = (paid: boolean) => {
+            const s = play(fight([idOf('E-04'), idOf('P-06')]), 't0', true);
+            const dealt = loss(fight([idOf('E-04'), idOf('P-06')]), s);
+            const t0 = thorns(s);
+            const after = play(s, 't1', paid);
+            return { dealt, gained: thorns(after) - t0 };
+        };
+        const free = hit(false), paid = hit(true);
+        expect(free.dealt).toBeGreaterThan(1);
+        expect(free.gained).toBe(Math.floor(free.dealt / 2));
+        expect(paid.gained).toBe(paid.dealt);
+        expect(loss(fight([idOf('P-06')]), play(fight([idOf('P-06')]), 't0', true))).toBe(0);
+        expect(thorns(play(fight([idOf('P-06')]), 't0', true))).toBe(0);
+    });
+
+    it('M-02 heals the GUARD you hold, and PAID adds your THORNS', () => {
+        const free = primed([idOf('M-02')], { guard: 7, thorns: 3, hp: 40 });
+        expect(play(free, 't0', false).player.health - 40).toBe(7);
+        const paid = primed([idOf('M-02')], { guard: 7, thorns: 3, hp: 40 });
+        expect(play(paid, 't0', true).player.health - 40).toBe(10);
+        const none = primed([idOf('M-02')], { hp: 40 });
+        expect(play(none, 't0', false).player.health).toBe(40);
+    });
+
+    it('P-08 and P-09 arm their riders, and P-09 FREE puts REFLECT up at once', () => {
+        expect(play(fight([idOf('P-08')]), 't0', false).program!.spikes?.thornsDoubleRound).toBeDefined();
+        expect(play(fight([idOf('P-08')]), 't0', true).program!.spikes?.thornsDoubleRound).toBeDefined();
+        const armed = play(fight([idOf('P-09')]), 't0', true);
+        expect(armed.program!.spikes?.reflectOnAttack).toBe(50);
+        expect(reflect(armed)).toBe(0);
+        expect(reflect(play(fight([idOf('P-09')]), 't0', false))).toBe(25);
+    });
+
+    it('M-03 puts VULNERABLE on the foe; P-03 lands it before the DEAL', () => {
+        const m = play(fight([idOf('M-03')]), 't0', false);
+        expect(m.enemy.effects?.length ?? 0).toBeGreaterThan(0);
+        const plain = loss(fight([idOf('P-03')]), play(fight([idOf('P-03')]), 't0', false));
+        const dealOnly = loss(fight([idOf('E-04')]), play(fight([idOf('E-04')]), 't0', false));
+        expect(plain).toBeGreaterThan(dealOnly - 1);
+        expect(plain).toBeGreaterThanOrEqual(3);
+    });
+
+    it('M-05 gains Conviction (1 FREE, 3 PAID) and THORNS', () => {
+        expect(play(fight([idOf('M-05')]), 't0', false).conviction).toBe(1);
+        expect(play(fight([idOf('M-05'), FILLER]), 't0', true).conviction).toBe(3);
+    });
+
+    it('M-01 and E-10 draw, M-08 PAID draws 1', () => {
+        const draws = (slot: string, paid: boolean) => {
+            const s = { ...fight([idOf(slot), FILLER]), drawPile: [FILLER, FILLER, FILLER, FILLER] };
+            return play(s, 't0', paid).hand.length;
+        };
+        expect(draws('M-01', false)).toBe(2);
+        expect(draws('M-01', true)).toBe(3);
+        expect(draws('E-10', true)).toBe(3);
+        expect(draws('M-08', true)).toBe(2);
+        expect(draws('M-08', false)).toBe(1);
+    });
+
+    it('the Globals fire at the start of the turn: GUARD per THORNS, THORNS and the VITAE cost, DRAW, REFLECT', () => {
+        const start = (slot: string, over: { thorns?: number } = {}) => {
+            let s = play(primed([idOf(slot)], over), 't0', false);
+            s = { ...s, drawPile: [FILLER, FILLER, FILLER], hand: [] };
+            return startTurn(resolveThreatPhase(s).state).state;
+        };
+        expect(start('P-10', { thorns: 6 }).guard).toBeGreaterThan(0);
+        const rose = start('E-09');
+        expect(thorns(rose)).toBeGreaterThan(0);
+        expect(rose.player.health).toBeLessThan(60);
+        expect(start('M-06').hand.length).toBeGreaterThan(0);
+        expect(reflect(start('M-10'))).toBeGreaterThan(0);
     });
 });
 
