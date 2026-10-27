@@ -7,7 +7,9 @@
  *      happens before any handler runs.
  *   1. Look up the active node on the current map.
  *   2. If the node is already in `consumedNodes`, return
- *      `{ kind: 'none' }` immediately (one-shot enforcement).
+ *      `{ kind: 'none' }` immediately (one-shot enforcement). The one way
+ *      back is a claimed rest, which un-consumes the act's settled elite
+ *      nodes (`respawnElites`, `World/elite-respawn.ts`).
  *   3. Roll one entry from the node's event pool. Pool resolution
  *      prefers the node override (`setNodeEventPoolOverride`) over the
  *      map default (`setDefaultMapEventPool`). Missing pool → `{ kind: 'none' }`.

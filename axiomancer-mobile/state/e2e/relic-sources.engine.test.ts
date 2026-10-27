@@ -7,7 +7,8 @@
  * commit is the one grant. One store test per source path: a kill
  * (`endCombat`), a reach on arrival (`resolveCurrentMapEvent`, including a
  * host that restores the pre-event player), a dialogue choice
- * (`pickEventChoice`), and the elite drop (queued after the card draft).
+ * (`pickEventChoice`), and the elite drop (rolled first and, on a drop, the
+ * whole reward: phase ER1).
  */
 
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
@@ -26,7 +27,7 @@ import type { DialogueTree, GameState, Quest, QuestObjective } from '@mechanics'
 type Reward = Quest['reward'];
 
 import { createAppActions } from '@/state/actions';
-import { claimCombatRewardAction, rollCombatRewardAction } from '@/state/combat/store-actions';
+import { claimCombatRewardAction, rollCombatRewardAction, settleEliteRelicAction } from '@/state/combat/store-actions';
 import { confirmItemRewardAction } from '@/state/item-reward/store-actions';
 import { eliteDropSource, questRewardSource } from '@/state/presenters/relic-source.copy';
 import { createAppStore, type AppStore } from '@/state/store';
@@ -126,7 +127,7 @@ describe('a quest relic reaches the item-reward screen', () => {
     });
 });
 
-describe("the elite's relic reaches the item-reward screen after the draft", () => {
+describe("the elite's relic reaches the item-reward screen, and is the whole reward", () => {
     const ELITE = { difficulty: 'elite' as const, name: 'Fixture Elite' };
 
     function playerStore(): AppStore {
@@ -138,31 +139,29 @@ describe("the elite's relic reaches the item-reward screen after the draft", () 
         return store;
     }
 
-    it('a drop is held on the draft, then queued with the elite named once the draft is claimed', () => {
+    it('a drop is queued with the elite named, and the card draft never opens', () => {
         const store = playerStore();
         jest.spyOn(Math, 'random').mockReturnValue(0);
-        const offers = rollCombatRewardAction(store, ELITE, FIXTURE_ELITE_RELICS);
-        expect(offers.length).toBeGreaterThan(0);
-        // The elite reward is unchanged and comes first: nothing queued yet.
-        expect(store.getState().itemReward.queue).toHaveLength(0);
-        expect(store.getState().combatReward.relicDrop?.item.id).toBe(FIXTURE_ELITE_RELICS[0]!.id);
-        claimCombatRewardAction(store, offers[0]!);
+        expect(settleEliteRelicAction(store, ELITE, FIXTURE_ELITE_RELICS)).toBe(true);
         const queue = store.getState().itemReward.queue;
         expect(queue.map(e => e.item.id)).toEqual([FIXTURE_ELITE_RELICS[0]!.id]);
         expect(queue[0]!.source).toBe(eliteDropSource(ELITE.name));
-        expect(store.getState().combatReward.relicDrop ?? null).toBeNull();
+        expect(rollCombatRewardAction(store, ELITE)).toEqual([]);
+        expect(store.getState().combatReward.claimed).toBe(true);
     });
 
     it('no drop when the chance misses, and none after a non-elite fight', () => {
         const missed = playerStore();
         jest.spyOn(Math, 'random').mockReturnValue(0.99);
-        rollCombatRewardAction(missed, ELITE, FIXTURE_ELITE_RELICS);
+        expect(settleEliteRelicAction(missed, ELITE, FIXTURE_ELITE_RELICS)).toBe(false);
+        expect(rollCombatRewardAction(missed, ELITE).length).toBeGreaterThan(0);
         claimCombatRewardAction(missed, null);
         expect(missed.getState().itemReward.queue).toHaveLength(0);
 
         const normal = playerStore();
         (Math.random as jest.Mock).mockReturnValue(0);
-        rollCombatRewardAction(normal, { difficulty: 'normal' } as never, FIXTURE_ELITE_RELICS);
+        expect(settleEliteRelicAction(normal, { difficulty: 'normal' } as never, FIXTURE_ELITE_RELICS)).toBe(false);
+        rollCombatRewardAction(normal, { difficulty: 'normal' } as never);
         claimCombatRewardAction(normal, null);
         expect(normal.getState().itemReward.queue).toHaveLength(0);
     });

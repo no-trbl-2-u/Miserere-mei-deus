@@ -276,8 +276,12 @@ export {
     emptyQuestLog, findActiveQuest,
     startQuest, progressQuest, completeQuest,
     payQuestReward, payCompletedQuests, newlyCompletedQuests, questRewardItem, settleKill,
+    // Elites come back after a night's rest (phase ER1).
+    respawnElites, settledEliteNodes, retireEliteNode,
+    markEliteUpgradeTaken, isEliteUpgradeTaken,
+    eliteEncounterAt, isEliteNode, eliteRelicDropsAt,
 } from './World';
-export type { PaidQuestReward } from './World';
+export type { PaidQuestReward, EliteNodeRef, SettledEliteNode, RespawnElitesResult } from './World';
 
 // Hazard Minigame. The engine transitions, content, tuning, deck-flag codec
 // and types mobile consumes; the rest of the Hazard module's surface is

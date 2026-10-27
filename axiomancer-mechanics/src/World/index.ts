@@ -134,6 +134,14 @@ export {
 } from './MapEvents/rest-shelter';
 
 
+// Elites come back after a night's rest (phase ER1).
+export {
+    respawnElites, settledEliteNodes, retireEliteNode,
+    markEliteUpgradeTaken, isEliteUpgradeTaken,
+    eliteEncounterAt, isEliteNode, eliteRelicDropsAt,
+} from './elite-respawn';
+export type { EliteNodeRef, SettledEliteNode, RespawnElitesResult } from './elite-respawn';
+
 export {
     applyDialogueChoice,
 } from './dialogue.runtime';

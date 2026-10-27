@@ -327,24 +327,32 @@ export function rollEliteReward(player: Character, rng: () => number, count = 3)
 }
 
 /**
- * The relics a won elite fight can drop for `player`: the library's
- * `relicSource: 'elite'` relics the player does not carry (in the satchel or
- * worn). Quest relics come only from their quests.
+ * The relics a won elite fight can drop for `player`: the relics the player
+ * does not carry (in the satchel or worn) out of the fight's own drop list
+ * `dropList` (relic ids, looked up in `relics`), or, when the fight authors
+ * none, the library's `relicSource: 'elite'` relics. Several elites may list
+ * the same relic; one the player carries is skipped, so a shared relic won
+ * from one elite never drops again from another. Quest relics come only from
+ * their quests.
  */
 export function eliteRelicPool(
     player: Pick<Character, 'inventory'> & Wearer,
     relics: readonly Equipment[] = relicLibrary,
+    dropList?: readonly string[],
 ): Equipment[] {
     const carried = new Set<string>([
         ...(player.inventory ?? []).map(item => item.id),
         ...wornPieces(player).map(piece => piece.id),
     ]);
-    return relics.filter(relic => relic.relicSource === 'elite' && !carried.has(relic.id));
+    const listed = dropList ? new Set(dropList) : null;
+    return relics.filter(relic =>
+        (listed ? listed.has(relic.id) : relic.relicSource === 'elite') && !carried.has(relic.id));
 }
 
 /**
- * After a won elite fight (and after its unchanged cards-or-upgrade reward):
- * one relic from {@link eliteRelicPool} with probability
+ * A won elite fight's relic roll, made before any other reward (a drop is
+ * the whole reward): one relic from {@link eliteRelicPool} (the fight's
+ * `dropList`, else the elite-only pool) with probability
  * `ELITE_RELIC_DROP_CHANCE`, else `null`. Pure and seeded: the first draw is
  * the chance, the second picks uniformly from the pool. An empty pool drops
  * nothing and draws nothing. The relic comes back deep-cloned.
@@ -355,8 +363,9 @@ export function rollEliteRelicDrop(
     player: Pick<Character, 'inventory'> & Wearer,
     rng: () => number,
     relics: readonly Equipment[] = relicLibrary,
+    dropList?: readonly string[],
 ): Equipment | null {
-    const pool = eliteRelicPool(player, relics);
+    const pool = eliteRelicPool(player, relics, dropList);
     if (pool.length === 0) return null;
     if (rng() >= ELITE_RELIC_DROP_CHANCE) return null;
     const pick = pool[Math.min(Math.floor(rng() * pool.length), pool.length - 1)]!;

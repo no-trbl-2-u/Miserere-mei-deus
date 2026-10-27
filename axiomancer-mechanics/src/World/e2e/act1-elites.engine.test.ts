@@ -11,7 +11,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { getMapDefinition, getNodeEventPool } from '../index';
+import { getMapDefinition, getNodeEventPool, isEliteNode, eliteRelicDropsAt } from '../index';
 import { ENEMY_REGISTRY } from '../../Enemy/enemy.library';
 import type { Enemy } from '../../Enemy/types';
 
@@ -49,6 +49,14 @@ describe.each(ACT1_MAPS)('Act 1 fights on %s / %s (D30, D61)', (continent, mapNa
         const rest = fights.filter(f => !f.payload.isBoss && f.foe?.difficulty !== 'elite');
         expect(rest.length).toBeGreaterThan(0);
         for (const f of rest) expect(f.payload.enemySlug, f.node.id).toBe('float-eye');
+    });
+
+    it('the elite node is the one node the rest respawn reads as elite (phase ER1)', () => {
+        const flagged = map.nodes.filter(n => isEliteNode(continent, mapName, n.id)).map(n => n.id);
+        const elites = fights.filter(f => f.foe?.difficulty === 'elite').map(f => f.node.id);
+        expect(flagged).toEqual(elites);
+        // No drop list authored yet: the whole elite-only pool applies.
+        expect(eliteRelicDropsAt(continent, mapName, elites[0]!)).toBeUndefined();
     });
 
     it('pins the elite to an Act 1 level', () => {

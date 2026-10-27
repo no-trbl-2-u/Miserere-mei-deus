@@ -230,7 +230,16 @@ export interface BlockedRoute {
  *                             of walking past it. Absent/`null` = nothing
  *                             owed; saves written before this field default
  *                             to that.
- * @property hazardOutcomes   - Persistent hazard effects applied to this map.
+ * @property retiredEliteNodes - Elite nodes whose relic dropped: a claimed
+ *                             rest never brings them back
+ *                             (`retireEliteNode`, `respawnElites`). Absent =
+ *                             none retired; saves written before this field
+ *                             default to that, with no migration.
+ * @property eliteUpgradeTakenNodes - Elite nodes whose reward upgrade the
+ *                             player already took; a later win over that elite
+ *                             offers cards only (`markEliteUpgradeTaken`).
+ *                             Absent = none taken, the same way.
+ * @property hazardOutcomes  - Persistent hazard effects applied to this map.
  *                             Tracks modifier effects and cleared/blocked/modified states.
  * @property blockedRoutes    - Routes blocked by hazard outcomes (e.g., collapsed bridge).
  *                             Checked by moveToNode validation for path availability.
@@ -246,6 +255,8 @@ export interface MapState {
     discoveredNodes: NodeId[];
     consumedNodes: NodeId[];
     pendingArrival?: NodeId | null;
+    retiredEliteNodes?: NodeId[];
+    eliteUpgradeTakenNodes?: NodeId[];
     hazardOutcomes: HazardNodeOutcome[];
     blockedRoutes: BlockedRoute[];
 }

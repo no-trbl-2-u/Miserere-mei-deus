@@ -6,7 +6,8 @@
  * flat 25% heal) / `upgrade` (free, one card upgraded) / `cut` (paid deck
  * removal) — through the mobile `rest` slice and, at claim, apply the
  * settled ledger to the real `GameState`: heal, the upgraded copy, shillings
- * spent, `cardRemovals` incremented, and the scar mend.
+ * spent, `cardRemovals` incremented, the scar mend, and the act's fought
+ * elites brought back (`respawnElites`, phase ER1).
  */
 
 import type { GameState } from '@mechanics';
@@ -22,9 +23,11 @@ import {
     pickRestChoiceUpgrade as engineUpgrade,
     removeCardFromCombatDeck,
     replaceCard,
+    respawnElites,
 } from '@mechanics';
 import type {
     Character,
+    EliteNodeRef,
     RestChoiceOfferId,
     RestChoiceSession,
     RestShelter,
@@ -116,6 +119,8 @@ export interface ClaimRestChoiceResult {
     upgradedToCardId: string | null;
     /** Max-VITAE mended back from hazard scars (any rest, inn or camp). */
     scarMended: number;
+    /** The act's elite nodes the night brought back (`respawnElites`). */
+    respawnedElites: readonly EliteNodeRef[];
 }
 
 const NOOP_CLAIM: ClaimRestChoiceResult = Object.freeze({
@@ -126,6 +131,7 @@ const NOOP_CLAIM: ClaimRestChoiceResult = Object.freeze({
     removedCardId: null,
     upgradedToCardId: null,
     scarMended: 0,
+    respawnedElites: Object.freeze([]) as readonly EliteNodeRef[],
 });
 
 /**
@@ -143,6 +149,11 @@ const NOOP_CLAIM: ClaimRestChoiceResult = Object.freeze({
  * computes `rest`'s heal against the PRE-mend maxHealth (it never reads
  * `GameState`), so the clamp below re-caps it against the post-mend max
  * rather than under-healing by the mended amount.
+ *
+ * The night also brings back every elite already fought anywhere in the act
+ * (`respawnElites`), in the same `setState` as the outcome, before the one
+ * `save()`. Arriving at the rest and leaving before the claim brings back
+ * nothing: the claim is the trigger.
  */
 export function claimRestChoiceOutcomeAction(store: AppStore): ClaimRestChoiceResult {
     const s = store.getState().rest?.session;
@@ -194,9 +205,12 @@ export function claimRestChoiceOutcomeAction(store: AppStore): ClaimRestChoiceRe
         cardRemovals: outcome.removals,
     };
 
+    const respawn = respawnElites(state.world);
+
     store.setState({
         player: nextPlayer,
         flags,
+        world: respawn.world,
         rest: EMPTY_REST_SLICE,
     } as never);
 
@@ -215,6 +229,7 @@ export function claimRestChoiceOutcomeAction(store: AppStore): ClaimRestChoiceRe
         removedCardId: outcome.removedCardId,
         upgradedToCardId,
         scarMended,
+        respawnedElites: respawn.respawned,
     };
 }
 

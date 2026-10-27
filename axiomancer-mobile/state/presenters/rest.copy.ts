@@ -75,6 +75,16 @@ export function restOutcomeRemovedChip(cardName: string): string {
     return `CUT: ${cardName}`;
 }
 
+/**
+ * One line per elite the night brings back (phase ER1): the foe and the
+ * place, the place worded as the map screen names the node.
+ *
+ * @example restEliteReturnLine('Green Jelly', 'The North Pier') // 'The Green Jelly is back at The North Pier.'
+ */
+export function restEliteReturnLine(foeName: string, place: string): string {
+    return `The ${foeName} is back at ${place}.`;
+}
+
 export function restOutcomeUpgradedChip(fromName: string, toName: string): string {
     return `UPGRADED: ${fromName} → ${toName}`;
 }

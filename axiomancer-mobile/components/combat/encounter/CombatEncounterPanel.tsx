@@ -34,7 +34,7 @@ import {
     selectEncounterMercyChoice, buildCombatSummary,
     getLogger,
     type CombatEncounterState, type CombatOutcome, type Character, type Enemy, type CombatEvent,
-    type PlayLogUiEventKind,
+    type Equipment, type PlayLogUiEventKind,
 } from '@mechanics';
 
 import { CombatBoard, CombatCardFace, OutcomeText, HAND_CARD_W, HAND_CARD_H, type DragController, type DragPayload, type Rect } from '@/components/combat/encounter/CombatBoard';
@@ -57,6 +57,7 @@ import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
 import { useGameState, useGameStore } from '@/state/GameStoreProvider';
 import {
     claimCombatRewardAction, claimCombatUpgradeAction, resetCombatRewardAction, rollCombatRewardAction,
+    settleEliteRelicAction,
 } from '@/state/combat/store-actions';
 import { FONTS, HUE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
@@ -184,13 +185,17 @@ function mapHazardOutcomeToEndCombat(
  * bankedSouls on `state.player` first, and `endCombat` builds its grant on
  * top of that already-current root player. The deckbuilder card is handled
  * separately (rolled into the store on victory, claimed via
- * `claimCombatRewardAction`).
+ * `claimCombatRewardAction`). A won elite fight rolls its relic first
+ * (`settleEliteRelicAction`, from `relics`, the relic library by default):
+ * on a drop the relic is the whole reward and `endCombat` withholds the XP
+ * and loot.
  */
 export function applyHazardOutcome(
     store: StoreLike,
     outcome: CombatOutcome,
     finalState: CombatEncounterState,
     enemy: Enemy,
+    relics?: readonly Equipment[],
 ): void {
     const finalHp = finalState.player.health;
     // The surviving floating dice, in engine truth (spent dice
@@ -216,7 +221,10 @@ export function applyHazardOutcome(
     // completion rewards, and (on 'friendship') flags/codex/faction
     // deltas, all read off Enemy.xpReward / .loot /
     // .friendshipReward / .journalEntry via state.currentEncounter.
-    store.getState().endCombat(mapHazardOutcomeToEndCombat(outcome));
+    // A won elite fight rolls its relic FIRST: a drop is the whole reward,
+    // so the XP and loot are withheld and the card draft never opens.
+    const relicOnly = outcome === 'victory' && settleEliteRelicAction(store, enemy, relics);
+    store.getState().endCombat(mapHazardOutcomeToEndCombat(outcome), undefined, { withholdSpoils: relicOnly });
     // Cascade level-ups through the engine store (applyLevelUps isn't exported,
     // so the LEVEL_UP reducer is the only public path). applyLevelUps already
     // loops internally; the guarded while-loop is belt-and-braces. Runs after

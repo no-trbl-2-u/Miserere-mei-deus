@@ -41,6 +41,9 @@ it recommended):
    re-offer pattern that closed the prelude hole: a reload mid-fight puts
    the player back on the node with the fight offered again from the start.
    Rebuilding a half-played fight's turn state is out of scope.
+   The one way back (phase ER1, 2026-10-27): a claimed rest un-consumes
+   every settled elite node of the act (`respawnElites`), except an elite
+   whose relic dropped (`retiredEliteNodes`); every other node stays spent.
 3. Tests: an engine test that a save taken mid-encounter reloads onto the
    unconsumed node with its onward edges closed, for a normal fight and a
    door fight; a mobile e2e that reload mid-fight re-offers the fight.

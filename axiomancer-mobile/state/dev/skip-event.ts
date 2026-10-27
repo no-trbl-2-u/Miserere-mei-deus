@@ -503,6 +503,7 @@ function skipRest(store: AppStore, nodeId: string | null): SkipEventResult {
             spent: claim.spent,
             removedCardId: claim.removedCardId,
             scarMended: claim.scarMended,
+            respawnedElites: claim.respawnedElites.map(e => `${e.map}/${e.node}`),
         },
     };
 }
