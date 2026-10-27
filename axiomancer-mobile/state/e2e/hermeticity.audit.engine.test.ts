@@ -147,6 +147,10 @@ describe('hermeticity guard: isolation (no disk in tests)', () => {
         // `*.copy.ts` to prove none says the elite relic drop chance; a copy
         // module added later is swept with no edit to the test.
         'state/presenters/__tests__/elite-drop-chance-hidden.ER1.test.tsx',
+        // The icon manifest guard (phase IT1b) reads the committed extraction
+        // script, which CI cannot run (it needs the local icon archive), to
+        // pin its MANIFEST against the generated geometry.
+        'components/icons/__tests__/icon-manifest.test.ts',
     ]);
 
     const FS_PATTERN =
