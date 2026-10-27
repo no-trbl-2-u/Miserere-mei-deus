@@ -1331,7 +1331,7 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
                     // cards land" (the face is the contract).
                 }
             }
-            if (eff.enemyHeal && eff.enemyHeal > 0) {
+            if (eff.enemyHeal && eff.enemyHeal > 0 && !isDefeated(enemy)) {
                 const healAmt = Math.round(eff.enemyHeal);
                 if (healAmt > 0) {
                     const hpBefore = enemy.health;
@@ -1364,7 +1364,7 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
         // blow's actual size, not a flat printed number — floored at the
         // card's printed `damage` (the wall IS the weapon; bigger threats
         // become bigger paydays).
-        if (riposte && attacksLanded > 0 && attacksFullyBlocked > 0) {
+        if (riposte && attacksLanded > 0 && attacksFullyBlocked > 0 && !isDefeated(enemy)) {
             const counter = Math.round(Math.max(riposte.damage, blockedBlowTotal) * getDamageTakenMultiplier(enemy));
             if (counter > 0) {
                 const hit = applyEnemyDamage(enemy, counter, state.round, events);
