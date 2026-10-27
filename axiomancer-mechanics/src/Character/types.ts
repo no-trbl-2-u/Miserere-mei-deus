@@ -111,8 +111,9 @@ export interface Character {
     /**
      * The two card lanes the run's character starts with (never grey, never
      * its starting relic's lane), recorded at run start. Optional + sparse —
-     * absent on a run with no character. Read by nothing yet; the reward
-     * pool takes it in a later phase.
+     * absent on a run with no character. Read by `unlockedLaneIds`
+     * (`Combat/combat.rewards.ts`): these lanes are always in the reward
+     * pool, worn relic or not, and never earn a guaranteed lane slot.
      */
     startingLaneIds?: string[];
     /**
