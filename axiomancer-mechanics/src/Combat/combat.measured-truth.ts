@@ -31,6 +31,7 @@ import {
 } from '../Game/act1-progression';
 import { scrambleSeed } from '../Utils/rng';
 import { simulateHazardPatternCombatDetailed } from './combat.encounter.sim';
+import { rewardLanesByCharacter, type RewardLanesOptions, type RewardLanesReport } from './combat.reward-lanes';
 
 /** The lanes whose test decks are measured, by lane id. */
 export const MEASURED_DECK_LANES: readonly string[] = ['grey', 'blood-price', 'elementalist'];
@@ -120,6 +121,8 @@ export interface MeasuredTruthReport {
     spreads: StatSpread[];
     cells: MeasuredTruthCell[];
     decks: Record<string, MeasuredTruthDeck | MeasuredTruthFamily>;
+    /** Reward lanes by character at run start and after three worn relics (phase CH1d). */
+    rewardLanes: RewardLanesReport;
 }
 
 export interface MeasuredTruthOptions {
@@ -137,6 +140,8 @@ export interface MeasuredTruthOptions {
     sampleDraws?: number;
     /** The fights to walk (default the full Act 1 ledger). */
     fights?: readonly Act1Fight[];
+    /** The reward-lane section's roster, lanes, relics, rolls and seed (default the live ones). */
+    rewardLanes?: RewardLanesOptions;
 }
 
 /** Rounds to 4 places so the history stays readable. */
@@ -330,5 +335,8 @@ export function measuredTruthCells(options: MeasuredTruthOptions = {}): Measured
             drawSize: family.drawSize, draws, deadCardRate: meanRate(family.id),
         };
     }
-    return { runs, seed, policy: 'greedy', spreads: [...MEASURED_SPREADS], cells, decks: deckReport };
+    return {
+        runs, seed, policy: 'greedy', spreads: [...MEASURED_SPREADS], cells, decks: deckReport,
+        rewardLanes: rewardLanesByCharacter({ seed, ...options.rewardLanes }),
+    };
 }
