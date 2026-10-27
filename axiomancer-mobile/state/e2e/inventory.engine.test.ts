@@ -663,9 +663,9 @@ describe('unequipItem action: leaves the position empty (EQ1 A2, A3)', () => {
     });
 });
 
-describe('the Bleeding Signet round trip (EQ1 A3)', () => {
+describe('the Crimson Circlet round trip (EQ1 A3; the Circlet carries the +max VITAE line since LR1d)', () => {
     it('equip then unequip returns maxHealth and the loadout to their starting values', () => {
-        const signet = { ...getRelicById('relic-bleeding-signet')! };
+        const signet = { ...getRelicById('relic-crimson-circlet')! };
         const store = makeStore([signet]);
         const start = store.getState().player;
         const maxHp = (signet.statModifiers ?? [])
@@ -1098,7 +1098,7 @@ describe('a save carrying a relic the loadout lacks (EQ1 A5)', () => {
     it('shows it unworn with EQUIP offered, and wearing it folds its +max VITAE in once', () => {
         const store = createAppStore({ adapter: createMemoryAdapter() });
         const actions = createAppActions(store);
-        const signet = { ...getRelicById('relic-bleeding-signet')! };
+        const signet = { ...getRelicById('relic-crimson-circlet')! };
         const player = store.getState().player;
         // The old dock drew the first trinkets carried as worn; the loadout,
         // which combat used, never wore it. Nothing rewrites the loadout.

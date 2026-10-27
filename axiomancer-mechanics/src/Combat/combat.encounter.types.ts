@@ -162,12 +162,16 @@ export interface CardPlay {
 
 /** What a signature skill does (drives the engine dispatch + the UI icon). */
 export type SignatureSkillKind =
-    | 'mercy'          // The Open Hand: open the mercy choice on a befriendable foe
-    | 'covenant';      // Crimson Covenant: TETHER, and the next SACRIFICE counts twice
+    | 'mercy'               // The Open Hand: open the mercy choice on a befriendable foe
+    | 'sacrifice-heals'     // the Crimson Circlet: the next SACRIFICE heals instead of costing
+    | 'sacrifice-leech'     // the Ruby Signet: the next SACRIFICE adds LEECH equal to the VITAE paid
+    | 'heal-trigger-leech'; // the Bleeding Signet: HEAL 5, then trigger the foe's LEECH
 
 export type SignatureSkillId =
     | 'sig-disarming-plea'
-    | 'sig-crimson-covenant';
+    | 'sig-crimson-circlet'
+    | 'sig-ruby-signet'
+    | 'sig-bleeding-signet';
 
 /** Player archetype, derived from the dominant base stat. Drives (mobile) the
  *  portrait only. */

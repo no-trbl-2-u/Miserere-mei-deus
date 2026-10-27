@@ -65,7 +65,7 @@ describe('the fight carries exactly the worn relics (EQ1 A4)', () => {
 
         const signatures = fightFrom(store, enemy).signatures;
         expect(signatures).toContain('sig-disarming-plea');
-        expect(signatures).toContain('sig-crimson-covenant');
+        expect(signatures).toContain('sig-bleeding-signet');
     });
 
     it('taking the Signet off leaves the next fight only the Ring', () => {
@@ -102,7 +102,7 @@ describe('every wearing grant wears into player.equipment (EQ1 A4)', () => {
         const worn = store.getState().player.equipment.relics.map((a) => a.id);
         expect(worn).toEqual(result.worn);
         expect(worn).toContain(RING);
-        expect(worn).toContain(SIGNET);
+        expect(worn).toContain('relic-crimson-circlet');
     });
 
     it('a dev relic chip (add item by id) arrives worn', () => {

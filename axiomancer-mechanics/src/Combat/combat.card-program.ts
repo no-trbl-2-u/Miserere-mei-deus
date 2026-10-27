@@ -108,6 +108,13 @@ export interface ProgramLedger {
     nextTwice: boolean;
     /** Added to the next DEAL this turn (unscaled); 0 = none. */
     nextDealBonus: number;
+    /** A signature armed the next SACRIFICE to HEAL what it would have cost
+     *  instead of costing it (it still counts). Lasts until a SACRIFICE
+     *  resolves, across turns. Absent on a ledger saved before it existed. */
+    nextSacHeals?: boolean;
+    /** A signature armed the next SACRIFICE to add LEECH equal to the VITAE
+     *  it paid, unscaled. Lasts until a SACRIFICE resolves, across turns. */
+    nextSacLeech?: boolean;
     drains: { perHit: number; untilRound: number }[];
     deathWardRound: number | null;
     pendingHeal: number;
@@ -135,6 +142,7 @@ export function initProgramLedger(): ProgramLedger {
         lostThisCombat: 0, lostThisRound: 0, takenThisRound: 0, takenLastRound: 0,
         sacrificeCount: 0, sacrificePaid: 0,
         waives: 0, nextDouble: false, nextTwice: false, nextDealBonus: 0,
+        nextSacHeals: false, nextSacLeech: false,
         drains: [], deathWardRound: null, pendingHeal: 0, curseUid: 0, globalUid: 0,
         tetherUntil: 0, tetherCardId: null, tetherSourceName: null, leechTurns: 0, leechPotency: 0, leechCardId: null,
         el: initElementState(),
@@ -463,6 +471,11 @@ class LineCtx implements ProgramCtx {
         let echo = 1;
         if (l.nextDouble) { costMult = 2; l.nextDouble = false; }
         if (l.nextTwice) { echo = 2; l.nextTwice = false; }
+        // The signature-armed redirects ride the next SACRIFICE, whatever it costs.
+        const heals = l.nextSacHeals === true;
+        const leeches = l.nextSacLeech === true;
+        l.nextSacHeals = false;
+        l.nextSacLeech = false;
         const nominal = nominalIn * costMult;
         const times = costMult * echo;
         let cost = nominal;
@@ -470,9 +483,15 @@ class LineCtx implements ProgramCtx {
         else if (l.waives > 0) { cost = 0; l.waives -= 1; }
         const perN = nominalIn;
 
-        if (this.mode === 'cost') { this.w.cost += cost; return; }
+        if (this.mode === 'cost') { this.w.cost += heals ? 0 : cost; return; }
         if (this.mode === 'value') {
-            this.w.value -= cost * SAC_COST_VALUE;
+            if (heals) {
+                const p = this.w.s.player;
+                this.w.value += Math.min(cost, Math.max(0, p.maxHealth - p.health)) * 0.9;
+            } else {
+                this.w.value -= cost * SAC_COST_VALUE;
+            }
+            if (leeches && cost > 0) this.w.value += cost * LEECH_TURNS_PER_APPLICATION * LEECH_VALUE_PER_POINT;
             const tethered = l.tetherUntil >= this.w.s.round;
             for (let k = 0; k < times; k++) {
                 this.fireTriggersValue('sac', perN);
@@ -482,7 +501,10 @@ class LineCtx implements ProgramCtx {
         }
         const w = this.w;
         const p = w.s.player;
-        const paid = Math.max(0, Math.min(cost, p.health - 1));
+        // Healed instead: nothing is paid, and what it would have cost is
+        // what TETHER and an armed LEECH read as paid.
+        const paid = heals ? 0 : Math.max(0, Math.min(cost, p.health - 1));
+        const counted = heals ? cost : paid;
         if (paid > 0) {
             w.s = { ...w.s, player: { ...p, health: p.health - paid } };
             l.lostThisCombat += paid;
@@ -491,7 +513,13 @@ class LineCtx implements ProgramCtx {
         }
         l.sacrificeCount += times;
         w.events.push({ kind: 'vitae-sacrificed', cardId: this.f.cardId, amount: paid, counted: nominalIn * times });
-        const perPaid = Math.floor(paid / costMult);
+        if (heals && cost > 0) this.healExact(cost, false);
+        if (leeches && counted > 0 && !isDefeated(w.s.enemy)) {
+            l.leechTurns += LEECH_TURNS_PER_APPLICATION;
+            l.leechPotency += counted;
+            l.leechCardId = this.f.cardId;
+        }
+        const perPaid = Math.floor(counted / costMult);
         for (let k = 0; k < times; k++) {
             fireTriggers(w, 'sac', perN);
             if (perPaid > 0 && l.tetherUntil >= w.s.round && !isDefeated(w.s.enemy)) {
@@ -1217,34 +1245,53 @@ export function programTurnStart(state: CombatEncounterState, kit: ProgramKit): 
     return { state: { ...w.s, program: l }, events: w.events };
 }
 
+/** The SACRIFICE redirects a signature arms (`ProgramLedger.nextSacHeals`, `.nextSacLeech`). */
+export type SacrificeRedirect = 'heals' | 'leech';
+
+/** Whether the next SACRIFICE is already armed with this redirect. */
+export function programSacrificeArmed(state: CombatEncounterState, redirect: SacrificeRedirect): boolean {
+    const l = state.program;
+    if (!l) return false;
+    return redirect === 'heals' ? l.nextSacHeals === true : l.nextSacLeech === true;
+}
+
 /**
- * A signature's TETHER and SACRIFICE modifier, applied outside any card line:
- * TETHER `turns` (this turn included) and the next SACRIFICE this turn counts
- * twice. Creates the ledger when the fight has none, so the rest of the
- * program runtime (turn starts, foe turns) picks it up.
+ * A signature arms the next SACRIFICE, outside any card line: it HEALs what it
+ * would have cost instead (`'heals'`), or it also adds LEECH equal to the
+ * VITAE paid (`'leech'`). Creates the ledger when the fight has none, so the
+ * rest of the program runtime picks it up.
  */
-export function programTetherAndTwice(
-    state: CombatEncounterState, source: { id: string; name: string }, turns: number,
-): CombatEncounterState {
+export function programArmSacrifice(state: CombatEncounterState, redirect: SacrificeRedirect): CombatEncounterState {
     const l = cloneLedger(state.program ?? initProgramLedger());
-    l.tetherUntil = Math.max(l.tetherUntil, state.round + turns - 1);
-    l.tetherCardId = source.id;
-    l.tetherSourceName = source.name;
-    l.nextTwice = true;
+    if (redirect === 'heals') l.nextSacHeals = true;
+    else l.nextSacLeech = true;
     return { ...state, program: l };
 }
 
 /**
- * Start of the foe's turn (before its telegraphed action): the foe loses its
- * LEECH potency in VITAE (not a DEAL: unscaled, no VULNERABLE), the player
- * HEALs the VITAE actually lost (capped at max), then a LEECH turn ticks off.
- * At 0 turns LEECH ends and the potency resets.
+ * A signature's HEAL n, outside any card line: mind-scaled, capped at max
+ * VITAE, as a card's HEAL.
  */
-export function programFoeTurnStart(state: CombatEncounterState): ProgramPlayResult {
+export function programSignatureHeal(
+    state: CombatEncounterState, n: number, sourceId: string,
+): ProgramPlayResult {
+    const amt = n > 0 ? scaleFor(n, state.player.baseStats, 'mind', 'one-shot') : 0;
+    const p = state.player;
+    const healed = Math.min(amt, Math.max(0, p.maxHealth - p.health));
+    if (healed <= 0) return { state, events: [] };
+    return {
+        state: { ...state, player: healCombatant(p, healed) },
+        events: [{ kind: 'player-healed', cardId: sourceId, amount: healed }],
+    };
+}
+
+/** One LEECH tick: the foe loses the potency, you HEAL what it lost, and a
+ *  turn ticks off only when `tick` (a foe turn), never on a trigger. */
+function leechTick(state: CombatEncounterState, tick: boolean): ProgramPlayResult {
     const l = state.program;
     const n = l && l.leechTurns > 0 ? l.leechPotency : 0;
     if (!l || n <= 0 || isDefeated(state.enemy)) return { state, events: [] };
-    const turns = l.leechTurns - 1;
+    const turns = tick ? l.leechTurns - 1 : l.leechTurns;
     const lost = Math.min(n, state.enemy.health);
     const cardId = l.leechCardId ?? 'leech';
     const cardName = getCardById(cardId)?.name ?? cardId;
@@ -1266,6 +1313,25 @@ export function programFoeTurnStart(state: CombatEncounterState): ProgramPlayRes
         },
         events,
     };
+}
+
+/**
+ * Trigger the foe's LEECH now (a signature): the foe loses its LEECH potency
+ * and you HEAL what it lost, as at the start of its turn, but no turn ticks
+ * off. With no LEECH on the foe it does nothing.
+ */
+export function programTriggerLeech(state: CombatEncounterState): ProgramPlayResult {
+    return leechTick(state, false);
+}
+
+/**
+ * Start of the foe's turn (before its telegraphed action): the foe loses its
+ * LEECH potency in VITAE (not a DEAL: unscaled, no VULNERABLE), the player
+ * HEALs the VITAE actually lost (capped at max), then a LEECH turn ticks off.
+ * At 0 turns LEECH ends and the potency resets.
+ */
+export function programFoeTurnStart(state: CombatEncounterState): ProgramPlayResult {
+    return leechTick(state, true);
 }
 
 /**

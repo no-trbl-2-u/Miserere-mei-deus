@@ -32,14 +32,14 @@ export type EffectCategory =
     | 'stat' | 'damage' | 'defense' | 'control' | 'regeneration';
 
 /**
- * A persistent stat line on a piece of equipment. The only stat an item can
- * modify is `maxHp` (no live relic carries one; `FIXTURE_ARMOR`
- * witnesses it), folded onto
- * `Character.maxHealth` by the equip reducers.
+ * A persistent stat line on a piece of equipment, while worn. `maxHp` is
+ * folded onto `Character.maxHealth` by the equip reducers; `heart`, `body`
+ * and `mind` are added to the fighter's stats at combat start
+ * (`wornStatBonus`), so they feed the stat scaling of every line.
  */
 export interface StatModifier {
-    stat: 'maxHp';
-    /** Flat delta added to max VITAE while the item is worn. */
+    stat: 'maxHp' | 'heart' | 'body' | 'mind';
+    /** Flat delta added to that stat while the item is worn. */
     value: number;
 }
 

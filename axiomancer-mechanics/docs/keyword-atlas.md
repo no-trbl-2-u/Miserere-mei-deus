@@ -44,8 +44,8 @@ Global's trigger is a condition. `COMPLEXITY_BUDGET` in
 | keyword | reminder text | carried by |
 |---|---|---|
 | **VULNERABLE +N% dM** | The foe takes that much more damage from every hit. Adding more stacks it and refreshes the turns. Heart scales N. | grey-word; Blood Price P-05b, P-09b, M-07a |
-| **LEECH N** | Each LEECH adds 3 turns and its number to the potency. At the start of its turn the foe loses the potency in VITAE and you heal what it lost. A debuff with two numbers: each application, the first included, adds 3 turns (`LEECH_TURNS_PER_APPLICATION`) and adds N, heart-scaled when applied, to the potency. Each foe turn the foe loses the potency (unscaled, not a DEAL), you heal what it lost, and a turn ticks off. The potency never decays; at 0 turns LEECH ends and the potency resets. | Blood Price P-06d, E-03d, E-05n, M-01d, M-03d, M-08d |
-| **TETHER N** | For that many turns, each SACRIFICE makes the foe take damage equal to the VITAE it paid (a DEAL: unscaled, VULNERABLE applies; a WAIVED SACRIFICE deals 0). | Blood Price P-08d, E-02d, E-05n, E-10d; the Crimson Covenant signature (Bleeding Signet) |
+| **LEECH N** | Each LEECH adds 3 turns and its number to the potency. At the start of its turn the foe loses the potency in VITAE and you heal what it lost. A debuff with two numbers: each application, the first included, adds 3 turns (`LEECH_TURNS_PER_APPLICATION`) and adds N, heart-scaled when applied, to the potency. Each foe turn the foe loses the potency (unscaled, not a DEAL), you heal what it lost, and a turn ticks off. The potency never decays; at 0 turns LEECH ends and the potency resets. | Blood Price P-06d, E-03d, E-05n, M-01d, M-03d, M-08d; the Ruby Tithe and Open Vein signatures (Ruby Signet, Bleeding Signet) |
+| **TETHER N** | For that many turns, each SACRIFICE makes the foe take damage equal to the VITAE it paid (a DEAL: unscaled, VULNERABLE applies; a WAIVED SACRIFICE deals 0). | Blood Price P-08d, E-02d, E-05n, E-10d |
 | **BLEED** | Each hit the bearer takes deals 3 more VITAE per Bleed stack, then removes a stack. | no live carrier: no card, foe, hazard or item applies `debuff_bleed`; the effect stays in `src/Effects/debuffs.library.json` and mobile still glosses it |
 
 ### Walls
@@ -64,7 +64,7 @@ Global's trigger is a condition. `COMPLEXITY_BUDGET` in
 
 | keyword | reminder text | carried by |
 |---|---|---|
-| **SACRIFICE N** | Lose that much VITAE as a cost. It never takes you below 1, so a line you cannot pay cannot be played. Unscaled. A SACRIFICE that fires n times counts as n; one that "counts twice" (Crimson Covenant) is paid once and fires twice. | Blood Price P-01a, P-02a, P-05b, P-08d, P-09b, E-01n, E-02d, E-03d, E-05n, E-06b, E-08n, E-10d, M-04n and the grey Curse |
+| **SACRIFICE N** | Lose that much VITAE as a cost. It never takes you below 1, so a line you cannot pay cannot be played. Unscaled. A SACRIFICE that fires n times counts as n; one that "counts twice" is paid once and fires twice. Two signatures ride the next SACRIFICE: Crimson Return (the Crimson Circlet) makes it heal what it would have cost instead, and it still counts; Ruby Tithe (the Ruby Signet) makes it add LEECH equal to the VITAE paid, unscaled. | Blood Price P-01a, P-02a, P-05b, P-08d, P-09b, E-01n, E-02d, E-03d, E-05n, E-06b, E-08n, E-10d, M-04n and the grey Curse |
 | **WAIVE** | Your next SACRIFICE this turn costs no VITAE but still counts. | Blood Price E-04c |
 
 Crimson Pact (E-09n) prints its rule in full on the card ("🩸 When you

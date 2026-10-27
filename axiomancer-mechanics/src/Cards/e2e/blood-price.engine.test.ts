@@ -33,7 +33,7 @@ import { dropUnknownCardIds } from '../../Game/game.migrate';
 import type { GameState } from '../../Game/types';
 import {
     initializeCombatEncounter, rollEncounterDice, playCombatCard, discardCombatCard,
-    startTurn, resolveThreatPhase, handCards, PROGRAM_KIT, playSignatureSkill, SIGNATURE_COST,
+    startTurn, resolveThreatPhase, handCards, PROGRAM_KIT, playSignatureSkill, getSignatureSkill,
 } from '../../Combat/combat.engine';
 import {
     programIllegalReason, programXRange, programDrawFallback, programLineValue,
@@ -468,17 +468,41 @@ describe('the revision 2 cards', () => {
     });
 });
 
-describe('Crimson Covenant on the trial cards', () => {
-    it('the next SACRIFICE counts twice: paid once, and each instance fires TETHER and the 🩸 Globals', () => {
-        let s = play(fight(['bp-m-08d', 'bp-p-01a']), 't0', false);
-        s = playSignatureSkill({ ...s, conviction: SIGNATURE_COST }, 'sig-crimson-covenant').state;
-        s = play(s, 't1', false);
-        expect(s.player.health).toBe(98);
-        expect(s.program!.sacrificeCount).toBe(2);
-        // TETHER 2 per instance, then DEAL 7.
-        expect(s.enemy.health).toBe(500 - 2 - 2 - 7);
-        expect([s.program!.leechTurns, s.program!.leechPotency]).toEqual([6, 2]);
-        expect(s.program!.nextTwice).toBe(false);
+describe('the Blood Price signatures on the trial cards (LR1d)', () => {
+    /** Nothing Wasted (🩸: LEECH 1) in play, then Pinpricks PAID (TETHER 2,
+     *  SACRIFICE 1 three times), Forfeit Strike left in hand. */
+    function tethered(): CombatEncounterState {
+        let s = play(fight(['bp-m-08d', 'bp-e-02d', 'bp-p-01a'], 80), 't0', false);
+        s = play(s, 't1', true);
+        expect(s.player.health).toBe(77);
+        expect(s.program!.tetherUntil).toBeGreaterThanOrEqual(s.round);
+        return s;
+    }
+
+    it('Crimson Return: the SACRIFICE heals instead, and still fires TETHER and the 🩸 Global', () => {
+        const base = tethered();
+        const cost = getSignatureSkill('sig-crimson-circlet')!.cost;
+        const armed = playSignatureSkill({ ...base, conviction: cost }, 'sig-crimson-circlet').state;
+        const healed = play(armed, 't2', false);
+        const paid = play(base, 't2', false);
+        expect(paid.player.health).toBe(75);
+        expect(healed.player.health).toBe(79);
+        // TETHER dealt the 2 it would have cost, then DEAL 7, either way.
+        expect(paid.enemy.health).toBe(base.enemy.health - 2 - 7);
+        expect(healed.enemy.health).toBe(paid.enemy.health);
+        // The 🩸 Global's LEECH fired, and the count moved, either way.
+        expect(healed.program!.leechPotency).toBe(paid.program!.leechPotency);
+        expect(healed.program!.leechPotency).toBeGreaterThan(base.program!.leechPotency);
+        expect(healed.program!.sacrificeCount).toBe(paid.program!.sacrificeCount);
+    });
+
+    it('Ruby Tithe: the SACRIFICE adds LEECH equal to the VITAE paid, beside the 🩸 Global\'s', () => {
+        const base = tethered();
+        const armed = playSignatureSkill({ ...base, conviction: 3 }, 'sig-ruby-signet').state;
+        const after = play(armed, 't2', false);
+        const plain = play(base, 't2', false);
+        expect(after.program!.leechPotency).toBe(plain.program!.leechPotency + 2);
+        expect(after.program!.leechTurns).toBe(plain.program!.leechTurns + 3);
     });
 });
 

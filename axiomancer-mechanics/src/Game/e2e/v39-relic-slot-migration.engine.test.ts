@@ -86,7 +86,7 @@ describe('migrate v38 → v39 — the relic slot', () => {
         const staged = gameReducer(migrated, { type: 'START_COMBAT', payload: { target: deepClone(FloatEye) } });
         const fight = initializeCombatEncounter(staged.player, deepClone(FloatEye), undefined, 7);
         const expected = initializeCombatEncounter(today, deepClone(FloatEye), undefined, 7);
-        expect(fight.signatures).toEqual(['sig-crimson-covenant']);
+        expect(fight.signatures).toEqual(['sig-bleeding-signet']);
         expect(fight.signatures).toEqual(expected.signatures);
     });
 

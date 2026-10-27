@@ -90,7 +90,7 @@ describe('SATCHEL — NOT WORN (SG1 A5)', () => {
     it('the detail names the signature that is off, above WEAR; a worn relic shows neither', () => {
         const store = storeWith([relic(SIGNET)], [relic(RING)]);
         const carried = selectItemModalViewModel(store.getState(), SIGNET)!;
-        expect(carried.notWornLine).toBe('Not worn: Crimson Covenant is off.');
+        expect(carried.notWornLine).toBe('Not worn: Open Vein is off.');
         expect(carried.confirmLabel).toBe('WEAR');
 
         const worn = selectItemModalViewModel(store.getState(), RING)!;
@@ -105,20 +105,20 @@ describe('SATCHEL — NOT WORN (SG1 A5)', () => {
         expect(vm.confirmLabel).toBe(`WEAR · REPLACE ${last.name.toUpperCase()}`);
     });
 
-    it('pressing WEAR wears it: the badge becomes WORN and the next fight carries Crimson Covenant', () => {
+    it('pressing WEAR wears it: the badge becomes WORN and the next fight carries Open Vein', () => {
         const store = storeWith([relic(SIGNET)]);
         expect(nextFightSignatures(store)).toEqual([]);
 
         const tree = screen(store);
         fireEvent.press(tree.getByTestId(`item-${SIGNET}`));
         expect(tree.getByTestId('modal-not-worn')).toBeTruthy();
-        expect(tree.getByText('Not worn: Crimson Covenant is off.')).toBeTruthy();
+        expect(tree.getByText('Not worn: Open Vein is off.')).toBeTruthy();
         expect(tree.getByText('WEAR')).toBeTruthy();
         fireEvent.press(tree.getByTestId('modal-confirm'));
 
         expect(tree.queryByTestId(`item-not-worn-${SIGNET}`)).toBeNull();
         expect(selectInventoryViewModel(store.getState(), {}).items.find((r) => r.id === SIGNET)?.wornLabel)
             .toBe('WORN');
-        expect(nextFightSignatures(store)).toEqual(['sig-crimson-covenant']);
+        expect(nextFightSignatures(store)).toEqual(['sig-bleeding-signet']);
     });
 });

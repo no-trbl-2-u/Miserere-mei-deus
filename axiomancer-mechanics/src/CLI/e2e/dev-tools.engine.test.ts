@@ -6,7 +6,7 @@ import { createEventEmitter } from '../../Game/events';
 import { nullAdapter } from '../../Game/persistence/null.adapter';
 import { cardLibrary } from '../../Cards/cards.library';
 import { consumableLibrary } from '../../Items/consumable.library';
-import { getSignaturesForLoadout } from '../../Items/relic.library';
+import { getSignaturesForLoadout, relicLibrary } from '../../Items/relic.library';
 import { equipItem } from '../../Character/equipment.reducer';
 import { FIXTURE_TRINKETS } from '../../Game/fixtures';
 import {
@@ -112,14 +112,14 @@ describe('devGrantAllEquipment', () => {
         expect(store.getState().player.inventory.length).toBeGreaterThan(0);
     });
 
-    it('wears each relic while a position is free, so its signature reaches the fight', () => {
+    it('wears each relic while a position is free (the fourth is carried), so its signature reaches the fight', () => {
         const store = freshStore();
         devGrantAllEquipment(store);
         const { player } = store.getState();
         expect(player.equipment.relics.map(a => a.id))
-            .toEqual(['relic-disarming-plea', 'relic-bleeding-signet']);
+            .toEqual(['relic-disarming-plea', 'relic-crimson-circlet', 'relic-ruby-signet']);
         expect(getSignaturesForLoadout(player.equipment))
-            .toEqual(['sig-disarming-plea', 'sig-crimson-covenant']);
+            .toEqual(['sig-disarming-plea', 'sig-crimson-circlet', 'sig-ruby-signet']);
     });
 
     it('carries a relic when the row is full, and moves nothing worn', () => {
@@ -129,7 +129,7 @@ describe('devGrantAllEquipment', () => {
         devGrantAllEquipment(store);
         const { player } = store.getState();
         expect(player.equipment.relics.map(a => a.id)).toEqual(FIXTURE_TRINKETS.map(t => t.id));
-        expect(player.inventory.map(i => i.id)).toEqual(['relic-disarming-plea', 'relic-bleeding-signet']);
+        expect(player.inventory.map(i => i.id)).toEqual(relicLibrary.map(r => r.id));
     });
 });
 

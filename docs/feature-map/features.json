@@ -1868,6 +1868,12 @@
       "kind": "coupling",
       "from": "area:Items",
       "to": "area:Effects",
+      "file": "axiomancer-mechanics/src/Items/relic.library.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Items",
+      "to": "area:Effects",
       "file": "axiomancer-mechanics/src/Items/types.ts"
     },
     {
@@ -3003,6 +3009,12 @@
       "from": "route:character-select",
       "to": "area:Enemy",
       "file": "axiomancer-mobile/state/presenters/navigation.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Enemy",
+      "file": "axiomancer-mobile/state/presenters/rest.engine.ts"
     },
     {
       "kind": "coupling",

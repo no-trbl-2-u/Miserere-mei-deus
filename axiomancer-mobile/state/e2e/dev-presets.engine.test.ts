@@ -18,7 +18,9 @@
 
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 
-import { getEquippedItems, getRelicById, grantItem, initializeCombatEncounter, isEquipment, relicLibrary } from '@mechanics';
+import {
+    getEquippedItems, getRelicById, getSignatureSkill, grantItem, initializeCombatEncounter, isEquipment, relicLibrary,
+} from '@mechanics';
 
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 import { createAppActions } from '@/state/actions';
@@ -188,31 +190,39 @@ describe('grantAllRelics: every relic once, and worn for real', () => {
         expect(relicIds(store)).toEqual(after);
     });
 
-    it('a relic landing in a free trinket position is worn: +20 max VITAE and Crimson Covenant on the bar', () => {
+    it('relics landing in free trinket positions are worn: the Circlet\'s +20 max VITAE and each signature on the bar', () => {
         const { store, actions } = makeStore();
         const before = store.getState().player;
 
         actions.grantAllRelics();
 
         const player = store.getState().player;
-        expect(player.equipment.relics.map((a) => a.id)).toContain('relic-bleeding-signet');
-        expect(player.maxHealth).toBe(before.maxHealth + 20);
+        const worn = player.equipment.relics.map((a) => a.id);
+        expect(worn).toContain('relic-crimson-circlet');
+        const newlyWorn = worn.filter((id) => !before.equipment.relics.some((a) => a.id === id));
+        const maxHp = newlyWorn.flatMap((id) => getRelicById(id)!.statModifiers ?? [])
+            .filter((m) => m.stat === 'maxHp').reduce((n, m) => n + m.value, 0);
+        expect(maxHp).toBe(20);
+        expect(player.maxHealth).toBe(before.maxHealth + maxHp);
 
-        // The dock shows it in a trinket slot beside the Ring.
+        // The dock shows it in a trinket slot.
         const dock = selectInventoryViewModel(store.getState()).equipmentDock.slots
             .filter((sl) => sl.key === 'relic').map((sl) => sl.item?.id ?? null);
-        expect(dock).toContain('relic-bleeding-signet');
+        expect(dock).toContain('relic-crimson-circlet');
 
-        // The signature bar lists every signature the worn signets grant, and both cast.
+        // The signature bar lists every signature the worn signets grant, each at its own cost.
         const fight = initializeCombatEncounter(player, startRealFight().enemy, ['grey-strike'], 1);
         const bar = buildCombatViewModel({ ...fight, conviction: 8 }).signatures;
-        expect(bar.map((sig) => sig.name)).toEqual(
-            player.equipment.relics.map((a) => a.grantsSignature === 'sig-disarming-plea' ? 'The Open Hand' : 'Crimson Covenant'),
+        expect(bar.map((sig) => [sig.name, sig.cost])).toEqual(
+            player.equipment.relics.map((a) => {
+                const sig = getSignatureSkill(getRelicById(a.id)!.grantsSignature!)!;
+                return [sig.name, sig.cost];
+            }),
         );
-        expect(bar.find((sig) => sig.name === 'Crimson Covenant')?.affordable).toBe(true);
+        expect(bar.find((sig) => sig.name === 'Crimson Return')?.affordable).toBe(true);
     });
 
-    it('beside the Suppliant\'s Ring: two trinket slots worn, both signatures on the bar', () => {
+    it('beside the Suppliant\'s Ring: the row fills, every worn signature on the bar', () => {
         const { store, actions } = makeStore();
         const granted = grantItem(store.getState().player, getRelicById('relic-disarming-plea')!, { equip: true });
         store.setState({ player: granted.character });
@@ -220,9 +230,11 @@ describe('grantAllRelics: every relic once, and worn for real', () => {
         actions.grantAllRelics();
 
         const player = store.getState().player;
-        expect(player.equipment.relics.map((a) => a.id)).toEqual(['relic-disarming-plea', 'relic-bleeding-signet']);
+        expect(player.equipment.relics.map((a) => a.id))
+            .toEqual(['relic-disarming-plea', 'relic-crimson-circlet', 'relic-ruby-signet']);
         const fight = initializeCombatEncounter(player, startRealFight().enemy, ['grey-strike'], 1);
-        expect(buildCombatViewModel(fight).signatures.map((sig) => sig.name)).toEqual(['The Open Hand', 'Crimson Covenant']);
+        expect(buildCombatViewModel(fight).signatures.map((sig) => sig.name))
+            .toEqual(['The Open Hand', 'Crimson Return', 'Ruby Tithe']);
     });
 
     it('displaces nothing already worn', () => {

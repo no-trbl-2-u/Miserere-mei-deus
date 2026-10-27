@@ -101,7 +101,7 @@ describe('each piece has one slot kind; only relics grant', () => {
         const carrier = { grantsSignature: 'sig-disarming-plea' as const };
         expect(getSignaturesForLoadout({
             weapon: { ...FIXTURE_WEAPON, ...carrier },
-            armor: { ...FIXTURE_ARMOR, grantsSignature: 'sig-crimson-covenant' },
+            armor: { ...FIXTURE_ARMOR, grantsSignature: 'sig-bleeding-signet' },
             relics: [],
         })).toEqual([]);
         expect(getSignaturesForLoadout({

@@ -83,11 +83,16 @@ Rules: [Cards](../../docs/game-model.md#cards) and
 Conviction, paying only up to `SCRAP_CONVICTION_CAP_PER_TURN` per turn.
 Conviction never passes `CONVICTION_CAP`.
 
-**The signature.** `playSignatureSkill(state, id)` spends `SIGNATURE_COST`
-Conviction. `signatureCastBlock` (`Combat/combat.signature.ts`) names why a
-cast is refused, and the UI prints the same string. The one signature in
-`SIGNATURE_SKILLS` is The Open Hand (`sig-disarming-plea`), granted by the
-Suppliant's Ring. It opens the mercy choice; see the ending below.
+**The signature.** `playSignatureSkill(state, id)` spends that signature's
+own `cost` in Conviction (`SignatureSkill.cost`; there is no single price).
+`signatureCastBlock` (`Combat/combat.signature.ts`) names why a cast is
+refused, and the UI prints the same string. `SIGNATURE_SKILLS` holds The Open
+Hand (`sig-disarming-plea`, ◆4, the Suppliant's Ring), which opens the mercy
+choice (see the ending below), and Blood Price's three: Crimson Return
+(`sig-crimson-circlet`, ◆5), Ruby Tithe (`sig-ruby-signet`, ◆3) and Open
+Vein (`sig-bleeding-signet`, ◆4). A worn relic's stat lines and signature are
+read from the relic library by id; its Heart, Body and Mind lines join the
+fighter's stats for the fight (`statsWithWorn`).
 
 **End the turn.** `endTurn` banks one unspent tray die into `reserve`
 (best face first, up to `RESERVE_MAX`) and clears the tray.

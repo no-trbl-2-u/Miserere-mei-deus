@@ -101,8 +101,10 @@ function greedyRankCard(s: CombatEncounterState, card: CombatCard): number {
     return score;
 }
 
-/** Every signature kind: The Open Hand and Crimson Covenant. */
-const ALL_SIGNATURE_KINDS: readonly SignatureSkillKind[] = Object.freeze(['mercy', 'covenant']);
+/** Every signature kind: The Open Hand and the three Blood Price signatures. */
+const ALL_SIGNATURE_KINDS: readonly SignatureSkillKind[] = Object.freeze([
+    'mercy', 'sacrifice-heals', 'sacrifice-leech', 'heal-trigger-leech',
+]);
 
 /** The killers never offer mercy, and no other signature is left to cast. */
 const NO_SIGNATURES: readonly SignatureSkillKind[] = Object.freeze([]);

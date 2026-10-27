@@ -399,16 +399,18 @@ describe('qualifiesForItemRewardScreen — the D5 trigger (routes the intended i
 describe('grantWearingIfFree — every dev relic grant wears while a position is free', () => {
     const SIGNET_ID = 'relic-bleeding-signet';
 
-    it('wears each relic on a bare player', () => {
+    it('wears each relic on a bare player while a position is free, then carries the rest', () => {
         let player = barePlayer();
-        for (const relic of relicLibrary) {
+        const ids = relicLibrary.map(r => r.id);
+        const fits = SLOT_CAPACITY.relic;
+        for (const [i, relic] of relicLibrary.entries()) {
             const res = grantWearingIfFree(player, relic);
-            expect(res.equipped).toBe(true);
+            expect(res.equipped).toBe(i < fits);
             expect(res.displaced).toBeNull();
             player = res.character;
         }
-        expect(player.equipment.relics.map(a => a.id)).toEqual([RING_ID, SIGNET_ID]);
-        expect(player.inventory.map(i => i.id)).toEqual([RING_ID, SIGNET_ID]);
+        expect(player.equipment.relics.map(a => a.id)).toEqual(ids.slice(0, fits));
+        expect(player.inventory.map(i => i.id)).toEqual(ids);
     });
 
     it('carries the relic when the slot is full, and nothing worn moves', () => {

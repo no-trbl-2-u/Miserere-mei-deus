@@ -31,7 +31,7 @@ import {
     startTurn,
 } from '../combat.engine';
 import { UPGRADEABLE_DIE_COLORS } from '../combat.upgradeable-dice';
-import { SIGNATURE_COST } from '../combat.signature';
+import { getSignatureSkill } from '../combat.signature';
 import { getSignaturesForLoadout } from '../../Items/relic.library';
 import { equipItem, unequipItem } from '../../Character';
 import { FIXTURE_TRINKETS } from '../../Game/fixtures';
@@ -317,14 +317,17 @@ describe('Spec 25 §4.5 — between-phases processing', () => {
 
 // ── Signature Skills (§4) ────────────────────────────────────────────────────
 
+/** The Open Hand's own Conviction cost. */
+const OPEN_HAND_COST = getSignatureSkill('sig-disarming-plea')!.cost;
+
 describe('Spec 26b §4 — Signature Skills (Conviction-funded)', () => {
     it('a signature skill fizzles (no-op, nothing spent) when underfunded', () => {
         mockSequentialRng(0.5);
         let state = initializeCombatEncounter(makePlayer([DOT_BODY]), makeEnemy(60, 'mind'), [DOT_BODY], 1);
         state = rollEncounterDice(state).state;
-        state = { ...state, conviction: SIGNATURE_COST - 1 };
+        state = { ...state, conviction: OPEN_HAND_COST - 1 };
         const r = playSignatureSkill(state, 'sig-disarming-plea');
-        expect(r.state.conviction).toBe(SIGNATURE_COST - 1);
+        expect(r.state.conviction).toBe(OPEN_HAND_COST - 1);
         expect(r.state.guard ?? 0).toBe(state.guard ?? 0);
         expect(r.events.some(e => e.kind === 'effect-fizzled')).toBe(true);
     });
