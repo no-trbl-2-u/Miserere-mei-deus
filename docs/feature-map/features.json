@@ -2418,6 +2418,12 @@
     {
       "kind": "coupling",
       "from": "route:(tabs)/inventory",
+      "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/equipment-detail.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/inventory",
       "to": "area:Character",
       "file": "axiomancer-mobile/components/inventory/EquipDeltaPanel.tsx"
     },
