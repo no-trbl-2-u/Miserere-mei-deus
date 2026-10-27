@@ -8,6 +8,8 @@
  * row added without regenerating (or the reverse), fails here instead of on
  * the next regeneration. Source-level, so it is on the hermeticity audit's
  * FS allowlist.
+ *
+ * guard-test: pins the manifest rows #989 shipped, which already agree with the generated geometry
  */
 import { describe, expect, it } from '@jest/globals';
 import fs from 'node:fs';
