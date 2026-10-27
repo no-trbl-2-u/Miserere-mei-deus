@@ -19,7 +19,7 @@
  * pop (card face, glossary header). The combat log uses Title-Case directly.
  */
 
-import { RESERVE_MAX, RESERVE_PIP_CAP } from '@mechanics/Combat/combat.dice';
+import { RESERVE_MAX, RESERVE_PIP_CAP } from '../../../axiomancer-mechanics/src/Combat/combat.dice';
 
 /** Effect id → keyword (Title-Case). The CARD vocabulary. */
 const EFFECT_KEYWORD: Record<string, string> = {
