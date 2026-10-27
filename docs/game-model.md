@@ -142,9 +142,12 @@ the Expo app (`axiomancer-mobile`) presents it.
 - **Conviction** is capped at `CONVICTION_CAP` = 12. It is spent only on
   signatures, each at its own cost (`SignatureSkill.cost`,
   `Combat/combat.signature.ts`), one per worn signet relic: The Open Hand
-  ◆4, Crimson Return ◆5, Ruby Tithe ◆3, Open Vein ◆4. A signature that would
+  ◆4, Crimson Return ◆5, Ruby Tithe ◆3, Open Vein ◆4, Eye of the Storm ◆6,
+  Kindle the Gale ◆4, Thaw into Thunder ◆3. A signature that would
   do nothing is refused with a reason the bar prints (Crimson Return and Ruby
-  Tithe while one is already armed); Open Vein never is, its HEAL always lands.
+  Tithe while one is already armed); Open Vein never is, its HEAL always lands. The Elementalist's three are refused
+  when the weather would not change (no INFERNO on you and no STORM; no foe-only
+  INFERNO; no BLIZZARD).
 - **GUARD** resets to 0 after each threat phase.
 - **The program ledger** (`CombatEncounterState.program`) exists only when
   the deck holds a trial card: Globals in play with their turns left,
@@ -224,7 +227,10 @@ keyword (`EnemyKeyword = never`).
   +20 max VITAE; Crimson Return), the Ruby Signet (a quest's; +5 Heart; Ruby
   Tithe) and the Bleeding Signet (a quest's; +5 Mind; Open Vein: HEAL 5,
   then trigger the foe's LEECH, which loses its potency now and heals you
-  that, no turn ticking off). A worn relic's stat lines and signature are
+  that, no turn ticking off). The Elementalist's three (phase LR1e), opening
+  the `elementalist` lane: the Signet (elite only; +5 Heart, +20 max VITAE; Eye
+  of the Storm), the Brooch (a quest's; +5 Mind; Kindle the Gale) and the Belt
+  (a quest's; +5 Body; Thaw into Thunder). A worn relic's stat lines and signature are
   read from the library by id, so a saved copy takes the current ones; Heart,
   Body and Mind lines join the fighter's stats for each fight, `maxHp` folds
   onto `maxHealth`. The elite drop (`rollEliteRelicDrop`) can hand over the

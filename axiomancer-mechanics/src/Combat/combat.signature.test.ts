@@ -19,6 +19,7 @@ import {
     SIGNATURE_SKILL_LIST, getSignatureSkill, signatureCastBlock, OPEN_VEIN_HEAL,
 } from './combat.signature';
 import { LEECH_TURNS_PER_APPLICATION, initProgramLedger, programTurnStart } from './combat.card-program';
+import { weatherReading, foeInferno, yourInferno, type ElementState } from './combat.elements';
 import { scaleFor } from './stat-scaling';
 import type { CombatEncounterState, SignatureSkill } from './combat.encounter.types';
 import { equipItem } from '../Character/equipment.reducer';
@@ -30,6 +31,9 @@ const OPEN_HAND = 'sig-disarming-plea';
 const CIRCLET = 'sig-crimson-circlet';
 const RUBY = 'sig-ruby-signet';
 const VEIN = 'sig-bleeding-signet';
+const E_SIGNET = 'sig-elementalist-signet';
+const E_BROOCH = 'sig-elementalist-brooch';
+const E_BELT = 'sig-elementalist-belt';
 const cost = (id: string): number => getSignatureSkill(id)!.cost;
 /** Forfeit Strike (FREE: SACRIFICE 2, DEAL 7), found by name so no trial card id is written here. */
 const FORFEIT = BLOOD_PRICE_SET.cards.find(c => c.name === 'Forfeit Strike')!.id;
@@ -63,6 +67,9 @@ describe('the signature kit', () => {
             [CIRCLET, 'sacrifice-heals', 5],
             [RUBY, 'sacrifice-leech', 3],
             [VEIN, 'heal-trigger-leech', 4],
+            [E_SIGNET, 'clear-yours-trigger-storm', 6],
+            [E_BROOCH, 'foe-inferno-to-storm', 4],
+            [E_BELT, 'blizzard-to-storm', 3],
         ]);
     });
 
@@ -217,6 +224,88 @@ describe('A10 · Open Vein (the Bleeding Signet)', () => {
         expect(r.state.enemy.health).toBe(494);
         expect(r.state.player.health).toBe(60 + heal + 6);
         expect([r.state.program!.leechTurns, r.state.program!.leechPotency]).toEqual([2, 6]);
+    });
+});
+
+/** A weather fight: the sandbag with the given elements up and `conviction` banked. */
+function weatherFight(el: Partial<ElementState>, conviction = 6): CombatEncounterState {
+    const s = sacFight(100, conviction);
+    const base = s.program ?? initProgramLedger();
+    return { ...s, program: { ...base, el: { ...base.el, ...el } } };
+}
+const reading = (s: CombatEncounterState) => weatherReading(s.program!.el);
+
+describe('A15 · Eye of the Storm (the Elementalist\'s Signet)', () => {
+    it('clears your INFERNO (the shared stack goes foe-only) and triggers the STORM without growth', () => {
+        const s = weatherFight({ infShared: 4, infSelf: 3, storm: 5 });
+        const r = playSignatureSkill(s, E_SIGNET);
+        expect(r.state.conviction).toBe(0);
+        expect(r.state.program!.el).toMatchObject({ infShared: 0, infFoe: 4, infSelf: 0, storm: 5 });
+        expect(yourInferno(r.state.program!.el)).toBe(0);
+        expect(r.state.enemy.health).toBe(495);
+    });
+
+    it('with INFERNO and no STORM it only clears; with STORM and no INFERNO it only triggers', () => {
+        const burn = playSignatureSkill(weatherFight({ infSelf: 2 }), E_SIGNET).state;
+        expect(yourInferno(burn.program!.el)).toBe(0);
+        expect(burn.enemy.health).toBe(500);
+        const storm = playSignatureSkill(weatherFight({ storm: 3 }), E_SIGNET).state;
+        expect(storm.enemy.health).toBe(497);
+        expect(reading(storm).storm).toBe(3);
+    });
+
+    it('is refused with no INFERNO on you and no STORM, spending nothing; a lone shared 1 burns you for 0, so it is refused too', () => {
+        for (const el of [{}, { infFoe: 4 }, { blizzard: 2 }, { infShared: 1 }] as Partial<ElementState>[]) {
+            const s = weatherFight(el);
+            expect(signatureCastBlock(s, getSignatureSkill(E_SIGNET)!)).toBe('No INFERNO on you and no STORM to trigger');
+            const r = playSignatureSkill(s, E_SIGNET);
+            expect(r.state.conviction).toBe(6);
+            expect(r.state.program!.el).toEqual(s.program!.el);
+        }
+    });
+
+    it('is refused in a fight with no program ledger', () => {
+        const s = encounter(FloatEye, 1, 6);
+        expect(signatureCastBlock(s, getSignatureSkill(E_SIGNET)!)).toBe('No INFERNO on you and no STORM to trigger');
+    });
+
+    it('needs 6 Conviction', () => {
+        expect(signatureCastBlock(weatherFight({ storm: 2 }, 5), getSignatureSkill(E_SIGNET)!)).toBe('Need 6 ◆ Conviction');
+    });
+});
+
+describe('A15 · Kindle the Gale (the Elementalist\'s Brooch)', () => {
+    it('turns only the foe-only INFERNO into STORM, added to any STORM up; you keep burning', () => {
+        const s = weatherFight({ infShared: 4, infFoe: 3, infSelf: 1, storm: 2 }, 4);
+        const burnBefore = yourInferno(s.program!.el);
+        const r = playSignatureSkill(s, E_BROOCH);
+        expect(r.state.conviction).toBe(0);
+        expect(r.state.program!.el).toMatchObject({ infShared: 4, infFoe: 0, infSelf: 1, storm: 5 });
+        expect(yourInferno(r.state.program!.el)).toBe(burnBefore);
+        expect(foeInferno(r.state.program!.el)).toBe(4);
+        expect(r.events).toContainEqual(expect.objectContaining({ kind: 'weather-changed', element: 'storm', from: 2, to: 5 }));
+    });
+
+    it('is refused with no foe-only INFERNO, even with a shared stack up', () => {
+        for (const el of [{}, { infShared: 6 }, { infSelf: 2 }, { blizzard: 3, storm: 2 }] as Partial<ElementState>[]) {
+            const s = weatherFight(el, 4);
+            expect(signatureCastBlock(s, getSignatureSkill(E_BROOCH)!)).toBe('The foe has no INFERNO of its own to turn');
+            expect(playSignatureSkill(s, E_BROOCH).state.conviction).toBe(4);
+        }
+    });
+});
+
+describe('A15 · Thaw into Thunder (the Elementalist\'s Belt)', () => {
+    it('turns all BLIZZARD into STORM, added to any STORM up', () => {
+        const r = playSignatureSkill(weatherFight({ blizzard: 4, storm: 1, infFoe: 2 }, 3), E_BELT);
+        expect(r.state.conviction).toBe(0);
+        expect(r.state.program!.el).toMatchObject({ blizzard: 0, storm: 5, infFoe: 2 });
+    });
+
+    it('is refused with no BLIZZARD, spending nothing', () => {
+        const s = weatherFight({ storm: 3, infFoe: 2 }, 3);
+        expect(signatureCastBlock(s, getSignatureSkill(E_BELT)!)).toBe('No BLIZZARD to turn');
+        expect(playSignatureSkill(s, E_BELT).state.conviction).toBe(3);
     });
 });
 

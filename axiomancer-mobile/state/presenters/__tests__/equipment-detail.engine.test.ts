@@ -59,4 +59,12 @@ describe('equipment detail view-model — lane', () => {
         const vm = selectEquipmentDetailViewModel(stateWith([saved as Equipment], []), SIGNET.id)!;
         expect(vm.lane).toBe('Lane: Blood Price (while worn)');
     });
+
+    it.each([
+        'relic-elementalist-signet', 'relic-elementalist-brooch', 'relic-elementalist-belt',
+    ])('the Elementalist relic %s reads exactly "Lane: Elementalist (while worn)" (LR1e, A16)', (id) => {
+        const relic = getRelicById(id)!;
+        const vm = selectEquipmentDetailViewModel(stateWith([relic], [relic]), id)!;
+        expect(vm.lane).toBe('Lane: Elementalist (while worn)');
+    });
 });

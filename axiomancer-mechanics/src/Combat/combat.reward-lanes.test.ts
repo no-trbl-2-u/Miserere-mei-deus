@@ -65,8 +65,10 @@ describe('the live roster is empty (CH1d A5)', () => {
 
     it('the baseline late state wears the live lane relics and opens their lanes', () => {
         const baseline = rewardLanesByCharacter({ rolls: 30 }).rows[0]!;
-        expect(baseline.late.worn).toContain('relic-bleeding-signet');
+        expect(baseline.late.worn).toContain('relic-crimson-circlet');
+        expect(baseline.late.worn).toContain('relic-elementalist-signet');
         expect(baseline.late.lanes).toContain('blood-price');
+        expect(baseline.late.lanes).toContain('elementalist');
         expect(baseline.late.shares['blood-price']).toBeGreaterThan(0);
     });
 });

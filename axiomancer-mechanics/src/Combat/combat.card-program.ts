@@ -1324,6 +1324,62 @@ export function programTriggerLeech(state: CombatEncounterState): ProgramPlayRes
     return leechTick(state, false);
 }
 
+/** A weather signature's change to the elements (Elementalist relics, LR1e). */
+export type WeatherSignatureOp = 'clear-yours-trigger-storm' | 'foe-inferno-to-storm' | 'blizzard-to-storm';
+
+/** Whether the weather signature would change anything now (false: it is refused). */
+export function programWeatherSignatureLive(state: CombatEncounterState, op: WeatherSignatureOp): boolean {
+    const el = state.program?.el;
+    if (!el) return false;
+    switch (op) {
+        case 'clear-yours-trigger-storm': return yourInferno(el) > 0 || el.storm > 0;
+        case 'foe-inferno-to-storm': return el.infFoe > 0;
+        case 'blizzard-to-storm': return el.blizzard > 0;
+    }
+}
+
+/**
+ * A weather signature, outside any card line. Creates the ledger when the
+ * fight has none. The Signet clears your INFERNO (the both-sides stack becomes
+ * foe-only) and then triggers the STORM: the foe loses its current amount now,
+ * the STORM does not grow. The Brooch turns only the foe-only INFERNO into
+ * STORM (the shared stack stays, so you keep burning). The Belt turns all
+ * BLIZZARD into STORM.
+ */
+export function programWeatherSignature(state: CombatEncounterState, op: WeatherSignatureOp): ProgramPlayResult {
+    const l = cloneLedger(state.program ?? initProgramLedger());
+    const before = l.el ?? initElementState();
+    const el = { ...before };
+    let s = state;
+    const events: CombatEvent[] = [];
+    if (op === 'clear-yours-trigger-storm') {
+        el.upFoe = el.upFoe || el.upShared;
+        el.infFoe += el.infShared;
+        el.infShared = 0;
+        el.infSelf = 0;
+        const n = el.storm;
+        if (n > 0 && !isDefeated(s.enemy)) {
+            const hp = s.enemy.health;
+            const lost = Math.min(n, hp);
+            s = {
+                ...s, enemy: applyDamage(s.enemy, lost),
+                attribution: recordAttribution(s.attribution, 'storm', 'STORM', null, lost, hp),
+            };
+            events.push({ kind: 'dot-tick', effectId: 'storm', label: 'STORM', amount: lost, target: 'enemy' });
+        }
+    } else if (op === 'foe-inferno-to-storm') {
+        el.storm += el.infFoe;
+        el.infFoe = 0;
+        el.upFoe = false;
+    } else {
+        el.storm += el.blizzard;
+        el.blizzard = 0;
+        el.upBlizzard = false;
+    }
+    events.push(...weatherEvents(before, el));
+    return { state: { ...s, program: { ...l, el } }, events };
+}
+
 /**
  * Start of the foe's turn (before its telegraphed action): the foe loses its
  * LEECH potency in VITAE (not a DEAL: unscaled, no VULNERABLE), the player
