@@ -680,6 +680,22 @@ describe('no caps (Phase NC1)', () => {
         expect(getCardById('bp-e-08n+')?.program?.paid?.text).toContain('(max 15)');
         expect(getCardById('bp-e-10d')?.program?.paid?.text).toContain('SACRIFICE any amount (max 21)');
     });
+
+    it('What Is Owed PAID leeches 1 per 10 VITAE missing, past the old 8', () => {
+        const max = fight([]).player.maxHealth;
+        const missing = (n: number) => play(fight(['bp-p-06d'], max - n), 't0', true).program!.leechPotency;
+        expect(missing(60)).toBe(6);
+        expect(missing(100)).toBe(10);
+    });
+
+    it('Repaid in Kind: FREE takes the damage you took last turn, PAID twice it, past the old 5 and 15', () => {
+        const took = (n: number) => {
+            const s = fight(['bp-m-10a'], 100);
+            return { ...s, program: { ...s.program!, takenLastRound: n } };
+        };
+        expect(500 - play(took(12), 't0', false).enemy.health).toBe(12);
+        expect(500 - play(took(12), 't0', true).enemy.health).toBe(24);
+    });
 });
 
 describe('Blood Price upgrades (Phase UP1b)', () => {
