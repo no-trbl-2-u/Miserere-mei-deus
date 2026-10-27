@@ -304,6 +304,45 @@ no copies; 7 red, 6 blue, 7 purple.
 | M-09 "if discarded" | T: "There's definitely a discard by choice. There's a trash can icon to the left in combat. It nets you 1 conviction." The manual discard is the scrap (`discardCombatCard`); M-09's THORNS 2 fires on a scrap and on a random discard. It is a property of the card, printed once, whichever line would have been played. |
 | P-07 with no other card | T: "Not Paid you can't. The free line can be played without discarding." PAID is refused (the shake) when no other card is in hand, as every PAID discard line is; FREE plays. |
 
-### Still open
+## Sims (lane-creator step 6)
 
-- The sims' number changes (below, once they land).
+Branch `sandbox/defender-sims` (head `2cafd40df`, cut from `origin/main` at `72b0186b7`), report
+`plan/card-ledger/defender-sims.md` on that branch; never merged. 300 seeded runs per cell, the 26 Act 1 ledger fights,
+the three stat spreads; grey, Blood Price and the Elementalist re-measured on the branch match the last measured line
+exactly. The relics are not modelled.
+
+- **The Defender kills faster than every lane**: the test deck takes 1.90 / 2.21 / 2.82 turns on Float-Eye, the Green
+  Jelly and the Death Beholder (T's targets about 3 / 5 / 7); the 30-card deck 2.08 / 2.42 / 3.09. Grey 3.03 / 4.19 /
+  6.82, Blood Price 2.10 / 2.56 / 3.75, the Elementalist 2.76 / 3.32 / 4.58.
+- **100% wins in all 78 cells**, lowest-VITAE p10 0.79 to 0.98; E-09's self-loss never killed.
+- **DEAL does most of the killing** (67 to 73%), THORNS about a quarter, REFLECT 3 to 20%. P-03 PAID is the biggest
+  card; VULNERABLE adds about a quarter of the Death Beholder's VITAE.
+- **THORNS runs away through P-06** (p90 27 to 64, max 178); **REFLECT** peaks at p90 113 to 200%, max 295%, from E-03
+  refreshing; M-10 hardly matters in fights of about 3 turns.
+- **A PAID discard is never unpayable at turn start**; it is refused later in a turn once the hand empties.
+- **No card is dead on both lines.** Near-dead PAID lines: M-07, M-02, M-04, M-05, E-01, P-06. M-09's FREE line loses
+  to scrapping it.
+- Numbers alone do not reach T's targets: halving every DEAL leaves the Death Beholder at about 3.3 turns.
+
+### The numbers (T, 2026-10-27: "Ship the sims' fixes")
+
+T chose the sims' suggested changes 1, 2, 3, 4, 6 and 7 for the trial set; THORNS numbers (5) and M-10 (8) unchanged.
+
+| Card | Was (as revised) | Ships |
+|---|---|---|
+| P-01 | DEAL 4, +1 per THORNS / DEAL 8, +2 per THORNS | DEAL 2, +1 per 2 THORNS / DEAL 4, +1 per THORNS |
+| P-03 | VULNERABLE +50% 1 turn, DEAL 4 / VULNERABLE +150% 2 turns, DEAL 15 | VULNERABLE +25% 1 turn, DEAL 2 / VULNERABLE +75% 2 turns, DEAL 8 |
+| P-04 | PAID DEAL 5 | PAID DEAL 3 |
+| P-06 | THORNS equal to / twice the damage you've done this turn | THORNS equal to half / equal to the damage you've done this turn |
+| E-01 | PAID GUARD 10, THORNS 2 | PAID GUARD 10, THORNS 3 |
+| E-04 | DEAL 3 / DEAL 5 | DEAL 2 / DEAL 3 |
+| E-07 | DEAL 2 / DEAL 10 | DEAL 1 / DEAL 5 |
+| M-04 | PAID: keep your GUARD | PAID: GUARD 4, and keep your GUARD |
+| M-08 | DEAL 2 / DEAL 4 | DEAL 1 / DEAL 2 |
+| M-09 | PAID DEAL 10 | PAID DEAL 5 |
+
+### Still open (after the trial set is played)
+
+- The pace: even with these numbers the Defender runs under T's targets.
+- Structure: M-07 PAID rarely has an exiled card to return; M-09 FREE loses to scrapping it; M-02 and M-05 PAID are
+  rarely worth paying.
