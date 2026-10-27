@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
+import Svg from 'react-native-svg';
 import { EquipmentDock } from '../EquipmentDock';
 import type { EquipmentDockViewModel } from '@/state/presenters/inventory.engine';
 
@@ -34,6 +35,10 @@ jest.mock('../EquipmentSlot', () => {
         }) => {
             const React = require('react');
             const { TouchableOpacity, Text } = require('react-native');
+            // The icon is the one real (unmocked) piece of the stand-in: it is
+            // what the real EquipmentSlot renders for a filled slot, so the
+            // icon and its a11y label stay under this file's coverage too.
+            const { ItemGlyph } = require('../ItemCard');
 
             // Defensive null-slot path (the real EquipmentSlot renders an empty
             // spacer for a null slot); the dock stacks all 5 real slots in one
@@ -50,6 +55,13 @@ jest.mock('../EquipmentSlot', () => {
                     accessibilityState: { selected },
                     onPress: () => onPress(slot.key),
                 },
+                slot.item
+                    ? React.createElement(ItemGlyph, {
+                        category: 'equipment',
+                        sub: slot.item.sub,
+                        itemId: slot.item.id,
+                    })
+                    : null,
                 React.createElement(Text, {}, `${slot.label} - ${slot.item?.name || 'empty'}`)
             );
         },
@@ -297,6 +309,22 @@ describe('EquipmentDock', () => {
             expect(getByText('RELIC I - Iron Helm')).toBeDefined();
             expect(getByText('RELIC II - Bone Ring')).toBeDefined();
             expect(getByText('WEAPON - Iron Sword')).toBeDefined();
+        });
+
+        it('renders the Relic item card icon and its accessibility label for a worn relic', () => {
+            const { UNSAFE_getAllByType } = render(
+                <EquipmentDock
+                    vm={mockEquippedSlots}
+                    selectedSlot={null}
+                    onSelectSlot={mockOnSelectSlot}
+                />
+            );
+
+            const svgs = UNSAFE_getAllByType(Svg);
+            const relicIcon = svgs.find(
+                (svg) => svg.props.accessibilityLabel === 'Relic equipment icon'
+            );
+            expect(relicIcon).toBeDefined();
         });
 
         it('displays empty slots correctly', () => {
