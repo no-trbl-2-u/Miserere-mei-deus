@@ -73,6 +73,7 @@ import {
     programIllegalReason, programShortfall, programXRange, type ProgramShortfall,
     programElementFoeTurnStart, programFrozenCheck, programElementDrift,
     programSpikeStrike, programSpikeDrift, programDiscardShortfall, type DiscardShortfall,
+    programSpikeAttackStart, programHoldsGuard, programOnScrap,
 } from './combat.card-program';
 import { weatherEvents } from './combat.elements';
 import { spikeEvents } from './combat.spikes';
@@ -610,7 +611,7 @@ export function discardCombatCard(state: CombatEncounterState, uid: string): Com
     const scrapsThisTurn = state.scrapsThisTurn ?? 0;
     const pays = scrapsThisTurn < SCRAP_CONVICTION_CAP_PER_TURN;
     const conviction = pays ? Math.min(CONVICTION_CAP, state.conviction + 1) : state.conviction;
-    const next: CombatEncounterState = {
+    let next: CombatEncounterState = {
         ...state,
         hand: state.hand.filter(h => h.uid !== uid),
         discard: [...state.discard, entry.cardId],
@@ -620,6 +621,12 @@ export function discardCombatCard(state: CombatEncounterState, uid: string): Com
     const events: CombatEvent[] = pays
         ? [{ kind: 'conviction-gained', amount: 1, total: conviction, reason: 'scrap' }]
         : [];
+    // "If this card is discarded" fires on the scrap as on a random discard.
+    if (isProgramCard(entry.cardId)) {
+        const rider = programOnScrap(next, entry.cardId, PROGRAM_KIT);
+        next = rider.state;
+        events.push(...rider.events);
+    }
     return { state: withLog(next, events), events };
 }
 
@@ -1234,6 +1241,14 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
         state = frozen.state;
         blizzardCut = frozen.blizzard;
         events.push(...frozen.events);
+        // A REFLECT armed for the foe's attack is up before its first strike.
+        if (threatHits(state).length > 0) {
+            const armed = programSpikeAttackStart(state.program!, state.round);
+            if (armed !== state.program) {
+                events.push(...spikeEvents(state.program!.spikes, armed.spikes));
+                state = { ...state, program: armed };
+            }
+        }
     }
     if (!hindered && !isDefeated(enemy)) {
         // The enemy attacks: its telegraphed threat action fires on the player.
@@ -1302,7 +1317,9 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
                 }
                 // THORNS and REFLECT answer the strike, each a DEAL off the pre-GUARD hit.
                 if (state.program) {
-                    const spikes = programSpikeStrike(state.program, enemy, preSoakDmg);
+                    const spikes = programSpikeStrike(state.program, enemy, preSoakDmg, {
+                        round: state.round, unhurt: enemyDamageDealt === 0,
+                    });
                     if (spikes.hits.length > 0) {
                         events.push(...weatherEvents(state.program.el, spikes.ledger.el));
                         state = { ...state, program: spikes.ledger };
@@ -1403,7 +1420,8 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
         player,
         enemy,
         directDamageDealt: directDamage,
-        guard: 0,                       // brace is spent on this phase's threat; resets each phase
+        // brace is spent on this phase's threat; resets each phase, unless a card keeps it this round
+        guard: programHoldsGuard(state) ? guard : 0,
         barrier,                        // persistent soak — carries the unspent remainder across phases
         riposte: undefined,             // cleared each phase (like guard)
         // The enemy-damage ledger (rolled over between phases)

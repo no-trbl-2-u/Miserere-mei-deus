@@ -53,6 +53,15 @@ export interface ProgramQuery {
     elementsOnFoe: number;
     /** Cards in your hand (the played card excluded). */
     handSize: number;
+    // ── The spikes (Defender; `Combat/combat.spikes.ts`) ──
+    /** Your THORNS, an earlier verb on the same line included. */
+    thorns: number;
+    /** Your REFLECT, in percent. */
+    reflect: number;
+    /** Your GUARD right now, an earlier GUARD on the same line included. */
+    guard: number;
+    /** VITAE your DEALs took off the foe this turn. */
+    dealtThisTurn: number;
 }
 
 /** Who an INFERNO line burns: both sides (the default), the foe only, you only. */
@@ -157,6 +166,25 @@ export interface ProgramCtx {
      *  combat's seeded rng; a line holding fewer other cards than it discards
      *  is refused. Returns how many were discarded. */
     discardRandom(n: number): number;
+    /** "Discard your hand": a PAID-only cost like {@link discardRandom},
+     *  refused with no other card in hand. Returns how many were discarded. */
+    discardHand(): number;
+    /** Double your THORNS (adds your THORNS again, unscaled). */
+    doubleThorns(): void;
+    /** "If the foe attacks on their turn, REFLECT pct% before they DEAL
+     *  damage": armed now, it lands as the foe starts to attack this round. */
+    reflectOnAttack(pct: number): void;
+    /** "While GUARD holds": on this round's foe turn each THORNS hit deals
+     *  double while you have taken no damage that turn. */
+    thornsDoubleWhileGuardHolds(): void;
+    /** "You don't lose your GUARD at the end of the enemy's turn this turn." */
+    holdGuard(): void;
+    /** RETRIEVE n: return n random cards from your discard to your hand. */
+    retrieve(n: number): void;
+    /** Return a random EXILED card to your draw pile, at a random place. */
+    unexileRandom(): void;
+    /** Lose n VITAE: a plain self-loss GUARD does not block; it can kill you. */
+    loseVitae(n: number): void;
 }
 
 /** One printed line (FREE or PAID) of a card that is not a Global. */
@@ -196,4 +224,15 @@ export interface CardProgram {
     free?: ProgramLine;
     paid?: ProgramLine;
     global?: ProgramGlobal;
+    /** "If this card is discarded": runs when a random discard or the scrap
+     *  takes it from your hand (not when it is played). A card property,
+     *  printed once, whichever line would have been played. */
+    onDiscard?: ProgramRider;
+}
+
+/** A card property that fires on an event rather than when the card is played. */
+export interface ProgramRider {
+    /** The printed text, with number tokens. */
+    text: string;
+    run: (c: ProgramCtx) => void;
 }

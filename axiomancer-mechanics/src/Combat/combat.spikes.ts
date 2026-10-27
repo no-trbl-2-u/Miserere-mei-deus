@@ -18,6 +18,18 @@
  * A "turn" of REFLECT is one round: the foe turn of the round it was applied
  * in, then the next. It loses a turn at each round boundary and is gone at 0.
  *
+ * The armed riders (Phase DF1b) ride beside them, each keyed to the round it
+ * was played in so a stale one does nothing:
+ *
+ *   REFLECT on attack  "If the foe attacks on their turn, REFLECT n% before
+ *                      they DEAL damage" (P-09 PAID): lands as the foe starts
+ *                      to attack, so it reflects the first strike too.
+ *   THORNS doubled     "while GUARD holds" (P-08): on that round's foe turn,
+ *                      each THORNS hit deals double while you have taken no
+ *                      damage that turn.
+ *   GUARD kept         (M-04 PAID) the foe turn of that round does not take
+ *                      your GUARD away.
+ *
  * The spikes live on the combat's program ledger only; they are never saved
  * between fights.
  */
@@ -36,10 +48,31 @@ export interface SpikeState {
     reflect: number;
     /** Rounds REFLECT has left (0 = none). */
     reflectTurns: number;
+    /** REFLECT % armed for the foe's attack in round {@link reflectOnAttackRound}. */
+    reflectOnAttack?: number;
+    reflectOnAttackRound?: number;
+    /** The round whose foe turn doubles THORNS while GUARD holds (0 = none). */
+    thornsDoubleRound?: number;
+    /** The round whose foe turn keeps your GUARD (0 = none). */
+    guardHoldRound?: number;
 }
 
 export function initSpikeState(): SpikeState {
     return { thorns: 0, upThorns: false, reflect: 0, reflectTurns: 0 };
+}
+
+/** Arms REFLECT +pct% for the foe's attack this round (several add). */
+export function armReflectOnAttack(sp: SpikeState, pct: number, round: number): SpikeState {
+    if (pct <= 0) return sp;
+    const held = sp.reflectOnAttackRound === round ? sp.reflectOnAttack ?? 0 : 0;
+    return { ...sp, reflectOnAttack: held + pct, reflectOnAttackRound: round };
+}
+
+/** The foe starts to attack in `round`: an armed REFLECT for that round lands; any armed REFLECT is spent. */
+export function fireReflectOnAttack(sp: SpikeState, round: number): SpikeState {
+    if (!sp.reflectOnAttack) return sp;
+    const next: SpikeState = { ...sp, reflectOnAttack: 0, reflectOnAttackRound: 0 };
+    return sp.reflectOnAttackRound === round ? addReflect(next, sp.reflectOnAttack) : next;
 }
 
 /** True when THORNS or REFLECT is up (so a foe strike has work to do). */
@@ -57,10 +90,16 @@ export function addReflect(sp: SpikeState, pct: number): SpikeState {
     return pct > 0 ? { ...sp, reflect: sp.reflect + pct, reflectTurns: REFLECT_TURNS } : sp;
 }
 
-/** What one foe strike sends back before VULNERABLE and FROZEN: THORNS, then REFLECT's share of the pre-GUARD hit. */
-export function spikeReturns(sp: SpikeState, preGuard: number): { spike: 'thorns' | 'reflect'; amount: number }[] {
+/**
+ * What one foe strike sends back before VULNERABLE and FROZEN: THORNS (doubled
+ * when `thornsDoubled`, P-08 while GUARD holds), then REFLECT's share of the
+ * pre-GUARD hit.
+ */
+export function spikeReturns(
+    sp: SpikeState, preGuard: number, thornsDoubled = false,
+): { spike: 'thorns' | 'reflect'; amount: number }[] {
     const out: { spike: 'thorns' | 'reflect'; amount: number }[] = [];
-    if (sp.thorns > 0) out.push({ spike: 'thorns', amount: sp.thorns });
+    if (sp.thorns > 0) out.push({ spike: 'thorns', amount: sp.thorns * (thornsDoubled ? 2 : 1) });
     const share = sp.reflect > 0 ? Math.round(Math.max(0, preGuard) * sp.reflect / 100) : 0;
     if (share > 0) out.push({ spike: 'reflect', amount: share });
     return out;
@@ -75,6 +114,7 @@ export function driftSpikes(sp: SpikeState): SpikeState {
     const thorns = sp.upThorns ? Math.max(0, sp.thorns - 1) : sp.thorns;
     const reflectTurns = Math.max(0, sp.reflectTurns - 1);
     return {
+        ...sp,
         thorns,
         upThorns: thorns > 0,
         reflect: reflectTurns > 0 ? sp.reflect : 0,

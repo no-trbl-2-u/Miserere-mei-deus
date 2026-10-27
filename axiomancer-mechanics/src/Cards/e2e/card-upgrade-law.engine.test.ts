@@ -153,9 +153,9 @@ function record(fn: (c: ProgramCtx) => void, q: ProgramQuery): Call[] {
     return calls;
 }
 
-/** The weather reads, clear and stormy. */
-const CLEAR = { foeInferno: 0, yourInferno: 0, blizzard: 0, storm: 0, frozen: false, elementsOnFoe: 0, handSize: 4 };
-const STORMY = { foeInferno: 6, yourInferno: 3, blizzard: 4, storm: 3, frozen: true, elementsOnFoe: 3, handSize: 4 };
+/** The weather and spikes reads, clear and busy. */
+const CLEAR = { foeInferno: 0, yourInferno: 0, blizzard: 0, storm: 0, frozen: false, elementsOnFoe: 0, handSize: 4, thorns: 0, reflect: 0, guard: 0, dealtThisTurn: 0 };
+const STORMY = { foeInferno: 6, yourInferno: 3, blizzard: 4, storm: 3, frozen: true, elementsOnFoe: 3, handSize: 4, thorns: 3, reflect: 50, guard: 6, dealtThisTurn: 5 };
 
 /** Healthy, at half after damage, and deep enough that every cap binds. */
 const PROBES: readonly ProgramQuery[] = [
