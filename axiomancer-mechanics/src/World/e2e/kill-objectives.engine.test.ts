@@ -2,7 +2,9 @@
  * Kill-objective progression.
  *
  * `advanceKillObjectives` is the reusable reducer that advances a quest's
- * kill objectives when a foe dies, on any combat path.
+ * kill objectives when a foe dies, on any combat path. It is scoped to the
+ * current map, because a kill objective's target is the enemy's display
+ * name and that name is not unique across maps.
  *
  * No authored quest carries a kill objective, so the reducer's contract
  * is pinned on a fixture quest whose target is a real rostered foe (the
@@ -41,7 +43,7 @@ describe('advanceKillObjectives', () => {
         const before = logWithDoorQuest();
         expect(before.active.map(q => q.name)).toContain('gather-wood');
 
-        const { log, completed } = advanceKillObjectives(before, BOSS_NAME);
+        const { log, completed } = advanceKillObjectives(before, BOSS_NAME, 'breakwater');
 
         expect(completed).toEqual(['gather-wood']);
         expect(log.completed).toContain('gather-wood');
@@ -50,15 +52,23 @@ describe('advanceKillObjectives', () => {
 
     it('leaves the log untouched for an unrelated kill', () => {
         const before = logWithDoorQuest();
-        const { log, completed } = advanceKillObjectives(before, 'Float-Eye');
+        const { log, completed } = advanceKillObjectives(before, 'Float-Eye', 'breakwater');
+
+        expect(completed).toEqual([]);
+        expect(log).toBe(before);
+    });
+
+    it('leaves the log untouched for the same-named kill target on a different map', () => {
+        const before = logWithDoorQuest();
+        const { log, completed } = advanceKillObjectives(before, BOSS_NAME, 'charcoal-wood');
 
         expect(completed).toEqual([]);
         expect(log).toBe(before);
     });
 
     it('is idempotent once the quest has completed', () => {
-        const once = advanceKillObjectives(logWithDoorQuest(), BOSS_NAME);
-        const twice = advanceKillObjectives(once.log, BOSS_NAME);
+        const once = advanceKillObjectives(logWithDoorQuest(), BOSS_NAME, 'breakwater');
+        const twice = advanceKillObjectives(once.log, BOSS_NAME, 'breakwater');
 
         expect(twice.completed).toEqual([]);
         expect(twice.log.completed.filter(n => n === 'gather-wood')).toHaveLength(1);
@@ -78,12 +88,12 @@ describe('advanceKillObjectives', () => {
             reward: { kind: 'currency', amount: 1 },
         };
         let log = startQuest(emptyQuestLog(), hunt);
-        for (let i = 0; i < 2; i++) log = advanceKillObjectives(log, 'Float-Eye').log;
+        for (let i = 0; i < 2; i++) log = advanceKillObjectives(log, 'Float-Eye', 'breakwater').log;
 
         expect(log.active[0]!.objectives[0]!.currentCount).toBe(2);
         expect(log.completed).not.toContain('gather-wood');
 
-        const third = advanceKillObjectives(log, 'Float-Eye');
+        const third = advanceKillObjectives(log, 'Float-Eye', 'breakwater');
         expect(third.completed).toEqual(['gather-wood']);
     });
 });
