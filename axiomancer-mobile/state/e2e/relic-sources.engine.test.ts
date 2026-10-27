@@ -21,7 +21,9 @@ import {
     emptyQuestLog,
     startQuest,
 } from '@mechanics';
-import type { DialogueTree, GameState, Quest, QuestObjective, Reward } from '@mechanics';
+import type { DialogueTree, GameState, Quest, QuestObjective } from '@mechanics';
+
+type Reward = Quest['reward'];
 
 import { createAppActions } from '@/state/actions';
 import { claimCombatRewardAction, rollCombatRewardAction } from '@/state/combat/store-actions';
@@ -30,7 +32,9 @@ import { eliteDropSource, questRewardSource } from '@/state/presenters/relic-sou
 import { createAppStore, type AppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 
-afterEach(() => jest.restoreAllMocks());
+afterEach(() => {
+    jest.restoreAllMocks();
+});
 
 const FOE = ENEMY_REGISTRY['death-beholder'];
 const RELIC_REWARD: Reward = { kind: 'item', item: FIXTURE_QUEST_RELIC };
