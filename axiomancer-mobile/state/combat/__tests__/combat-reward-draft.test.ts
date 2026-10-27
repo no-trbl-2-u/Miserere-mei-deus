@@ -172,10 +172,10 @@ describe('the elite reward — store actions', () => {
         // naming it (no library relic names a lane yet).
         const laneRelic: Equipment = {
             id: 'fixture-relic-blood-price', name: 'Fixture relic', description: '',
-            category: 'equipment', slot: 'accessory', statModifiers: [], laneId: 'blood-price',
+            category: 'equipment', slot: 'relic', statModifiers: [], laneId: 'blood-price',
         };
         store.setState({
-            player: { ...playerOf(store), equipment: { weapon: null, armor: null, accessories: [laneRelic] } },
+            player: { ...playerOf(store), equipment: { weapon: null, armor: null, relics: [laneRelic] } },
         } as never);
         const offers = rollCombatRewardAction(store, ELITE);
         expect(offers).toHaveLength(COMBAT_REWARD_OFFER_COUNT);

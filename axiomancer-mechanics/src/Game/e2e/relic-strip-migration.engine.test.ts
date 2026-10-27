@@ -60,7 +60,7 @@ describe('migrate v34 → v35 (THE REVAMP R7e2 / D72: the ring alone)', () => {
         const { equipment } = hop(v34WithOldKit()).player;
         expect(equipment.weapon).toBeNull();
         expect(equipment.armor).toBeNull();
-        expect(ids(equipment.accessories)).toEqual(['relic-disarming-plea']);
+        expect(ids(equipment.relics)).toEqual(['relic-disarming-plea']);
     });
 
     it('takes the deleted armor bonus off max VITAE and clamps health', () => {

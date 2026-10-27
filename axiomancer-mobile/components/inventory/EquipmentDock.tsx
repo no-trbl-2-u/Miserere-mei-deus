@@ -7,10 +7,10 @@ import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
 import { EquipmentSlot } from './EquipmentSlot';
 import type { EquipmentDockViewModel, EquipmentDockSlot } from '@/state/presenters/inventory.engine';
 
-/** Stable React key per dock slot (the 3 accessory rows share a slot key, so
- *  fold in `accessoryIndex` to disambiguate — mirrors EquipmentSlot's testID). */
+/** Stable React key per dock slot (the 3 relic rows share a slot key, so
+ *  fold in `relicIndex` to disambiguate — mirrors EquipmentSlot's testID). */
 function dockSlotKey(slot: EquipmentDockSlot): string {
-    return slot.accessoryIndex !== undefined ? `${slot.key}-${slot.accessoryIndex}` : slot.key;
+    return slot.relicIndex !== undefined ? `${slot.key}-${slot.relicIndex}` : slot.key;
 }
 
 /** Viewport width (pt) at or above which the dock stops being width-starved:

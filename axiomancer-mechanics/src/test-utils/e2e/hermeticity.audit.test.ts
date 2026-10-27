@@ -130,6 +130,8 @@ describe('hermeticity guard: isolation (no disk / network / subprocess)', () => 
         'Cards/e2e/curated-library.engine.test.ts',
         'Cards/e2e/trial-set-removal.engine.test.ts',
         'Cards/e2e/card-rules.engine.test.ts',
+        // Read-only source scan: the old relic-slot words stay out of the code.
+        'Items/e2e/no-old-slot-words.engine.test.ts',
     ]);
 
     const IO_PATTERN =

@@ -20,6 +20,7 @@ export type { HazardPuzzleClaim } from './hazard-puzzle.claim';
 
 export {
     LEGACY_SLOT_MAP, reslotLegacyEquipment, reslotLegacyLoadout,
+    reslotRelicPiece, reslotRelicSave,
 } from './legacy-slots';
 export type { LegacySlot } from './legacy-slots';
 

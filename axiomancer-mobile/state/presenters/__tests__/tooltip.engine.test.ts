@@ -150,8 +150,8 @@ describe('selectTooltipContentFor', () => {
     });
 
     describe('kind: slot (Phase 74 walkthrough Tick 3)', () => {
-        // Only weapon / armor / accessory tooltip ids resolve.
-        const slotKeys = ['weapon', 'armor', 'accessory'] as const;
+        // Only weapon / armor / relic tooltip ids resolve.
+        const slotKeys = ['weapon', 'armor', 'relic'] as const;
         it.each(slotKeys)('returns content for slot id %s', (key) => {
             const content = selectTooltipContentFor('slot', key, EMPTY_STATE);
             expect(content).not.toBeNull();
@@ -159,8 +159,8 @@ describe('selectTooltipContentFor', () => {
             expect(typeof content?.body).toBe('string');
         });
 
-        it("renders 'accessory' as TRINKET in the title (chrome convention)", () => {
-            const content = selectTooltipContentFor('slot', 'accessory', EMPTY_STATE);
+        it("renders 'relic' as TRINKET in the title (chrome convention)", () => {
+            const content = selectTooltipContentFor('slot', 'relic', EMPTY_STATE);
             expect(content?.title).toBe('TRINKET');
         });
 

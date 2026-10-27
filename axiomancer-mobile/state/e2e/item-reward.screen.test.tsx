@@ -49,7 +49,7 @@ function player(store: AppStore): Character {
 
 function mount(offer?: (store: AppStore) => void) {
     const { tree, store } = withAllProviders(<ItemRewardScreen />);
-    // A fresh run wears NOTHING, so the D6 "trade" cases seed the fixture relics explicitly: a full accessory
+    // A fresh run wears NOTHING, so the D6 "trade" cases seed the fixture relics explicitly: a full relic
     // row is what makes EQUIP a swap rather than a free fill.
     const kit = [FIXTURE_WEAPON, FIXTURE_ARMOR, ...FIXTURE_TRINKETS];
     store.setState({
@@ -103,7 +103,7 @@ describe('/item-reward screen', () => {
 
     it('CONFIRM puts it in the satchel and changes nothing on the body', () => {
         const { store } = mount((s) => offerItemRewardAction(s, relic(BENCHED_ACCESSORY)));
-        const wornBefore = player(store).equipment.accessories.map((a) => a.id);
+        const wornBefore = player(store).equipment.relics.map((a) => a.id);
 
         act(() => {
             fireEvent.press(screen.getByTestId('item-reward-confirm'));
@@ -111,20 +111,20 @@ describe('/item-reward screen', () => {
 
         const after = player(store);
         expect(after.inventory.map((i) => i.id)).toContain(BENCHED_ACCESSORY);
-        expect(after.equipment.accessories.map((a) => a.id)).toEqual(wornBefore);
+        expect(after.equipment.relics.map((a) => a.id)).toEqual(wornBefore);
         expect(store.getState().itemReward.queue).toHaveLength(0);
     });
 
     it('EQUIP puts it in the satchel AND on the body, returning the displaced piece', () => {
         const { store } = mount((s) => offerItemRewardAction(s, relic(BENCHED_ACCESSORY)));
-        const displaced = player(store).equipment.accessories[SLOT_CAPACITY.accessory - 1]!;
+        const displaced = player(store).equipment.relics[SLOT_CAPACITY.relic - 1]!;
 
         act(() => {
             fireEvent.press(screen.getByTestId('item-reward-equip'));
         });
 
         const after = player(store);
-        expect(after.equipment.accessories.map((a) => a.id)).toContain(BENCHED_ACCESSORY);
+        expect(after.equipment.relics.map((a) => a.id)).toContain(BENCHED_ACCESSORY);
         expect(after.inventory.map((i) => i.id)).toContain(BENCHED_ACCESSORY);
         // Nothing is destroyed by a swap.
         expect(after.inventory.map((i) => i.id)).toContain(displaced.id);
@@ -133,7 +133,7 @@ describe('/item-reward screen', () => {
 
     it('D7 — unmounting the screen (back / swipe / hardware-back) behaves as CONFIRM', () => {
         const { store, view } = mount((s) => offerItemRewardAction(s, relic(BENCHED_ACCESSORY)));
-        const wornBefore = player(store).equipment.accessories.map((a) => a.id);
+        const wornBefore = player(store).equipment.relics.map((a) => a.id);
 
         act(() => {
             view.unmount();
@@ -141,7 +141,7 @@ describe('/item-reward screen', () => {
 
         const after = player(store);
         expect(after.inventory.map((i) => i.id)).toContain(BENCHED_ACCESSORY);
-        expect(after.equipment.accessories.map((a) => a.id)).toEqual(wornBefore);
+        expect(after.equipment.relics.map((a) => a.id)).toEqual(wornBefore);
         expect(store.getState().itemReward.queue).toHaveLength(0);
     });
 

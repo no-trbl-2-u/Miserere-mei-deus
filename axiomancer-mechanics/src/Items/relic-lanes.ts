@@ -40,17 +40,12 @@ export function relicLaneId(
 }
 
 /**
- * Every piece the player wears, in slot order: weapon, armor, accessories.
- * The one place the reward rule reads worn state.
+ * The worn pieces that can open a lane: the relics, in relic-position order.
+ * Only the relic slot grants lanes; a worn weapon or armor never does. The
+ * one place the reward rule reads worn state.
  */
 export function wornPieces(player: Wearer): Equipment[] {
-    const loadout = player.equipment;
-    if (!loadout) return [];
-    const pieces: Equipment[] = [];
-    if (loadout.weapon) pieces.push(loadout.weapon);
-    if (loadout.armor) pieces.push(loadout.armor);
-    pieces.push(...(loadout.accessories ?? []));
-    return pieces;
+    return [...(player.equipment?.relics ?? [])];
 }
 
 /**
