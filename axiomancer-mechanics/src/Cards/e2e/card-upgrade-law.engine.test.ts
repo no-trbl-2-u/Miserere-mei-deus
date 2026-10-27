@@ -267,6 +267,9 @@ describe('A3 — every upgrade makes the numbers bigger, never a cost', () => {
         // ("DEAL 2X") or a resolved number, and the base honesty suites own it.
         const deep = PROBES[PROBES.length - 1];
         const offenders: string[] = [];
+        // How many payoff changes only the flat "+n" escape below explains:
+        // a live card must actually use it, or it is dead code pinning nothing.
+        let flatPlusHits = 0;
         for (const card of upgradable.filter(c => c.program && !c.program.global)) {
             const baseLines = programLines(card);
             for (const up of chain(card)) {
@@ -290,12 +293,20 @@ describe('A3 — every upgrade makes the numbers bigger, never a cost', () => {
                         if (per > 0 && nums.has(String(call.n / per))) return;
                         // "INFERNO equal to half the damage dealt": half the printed hit.
                         if (/\bhalf the damage dealt\b/.test(printed) && nums.has(String(call.n * 2))) return;
-                        if (!nums.has(String(call.n))) offenders.push(`${up.id} ${name}: applies ${call.verb} ${call.n}, prints "${printed}"`);
+                        if (nums.has(String(call.n))) return;
+                        // An uncapped read with a flat bonus ("DEAL all the VITAE you lost this
+                        // combat +2"): the upgrade added exactly the printed "+n".
+                        const delta = call.n - (before[ci]?.n ?? 0);
+                        if (new RegExp(`\\+${delta}\\b`).test(printed)) { flatPlusHits += 1; return; }
+                        offenders.push(`${up.id} ${name}: applies ${call.verb} ${call.n}, prints "${printed}"`);
                     });
                 });
             }
         }
         expect(offenders).toEqual([]);
+        // The escape above must earn its keep: at least one live, uncapped
+        // line actually relies on it today (Phase NC1 A4), or it pins nothing.
+        expect(flatPlusHits).toBeGreaterThan(0);
     });
 
     it('a Global prints its trigger bonus once upgraded', () => {
