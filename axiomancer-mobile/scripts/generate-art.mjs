@@ -24,7 +24,7 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 
 import { generate, generationProvenance, selectionReason } from './art/adapter.mjs'
 import { compileFile } from './art/prompt.mjs'
@@ -156,6 +156,9 @@ async function writeSheet(sharp, { request, result, dryRun }) {
   console.log('entry in assets/images/enemies/frames.ts naming the clips per row (see the float-eye\'s).')
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+// pathToFileURL, not a `file://` prefix: on Windows `argv[1]` is `C:\...` and
+// the naive compare never matches, so the CLI exited 0 having printed nothing
+// (the same fix as `ingest-art.mjs`).
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main().catch((err) => { console.error(String(err.message ?? err)); process.exit(1) })
 }
