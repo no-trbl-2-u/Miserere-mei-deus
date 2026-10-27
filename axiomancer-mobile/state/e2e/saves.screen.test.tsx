@@ -15,16 +15,24 @@ import { mockFixedRng } from '@/test-utils/rng';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
 const mockReplace = jest.fn();
+const mockPush = jest.fn();
 const mockBack = jest.fn();
 let mockParams: Record<string, string> = {};
 jest.mock('@/lib/platform/router', () => ({
-    useRouter: () => ({ replace: mockReplace, push: jest.fn(), back: mockBack, canGoBack: () => true }),
+    useRouter: () => ({ replace: mockReplace, push: mockPush, back: mockBack, canGoBack: () => true }),
     useLocalSearchParams: () => mockParams,
+}));
+
+let mockRoster: unknown[] = [];
+jest.mock('@/state/presenters/character-select.engine', () => ({
+    ...(jest.requireActual('@/state/presenters/character-select.engine') as object),
+    selectRoster: () => mockRoster,
 }));
 
 afterEach(() => {
     jest.clearAllMocks();
     mockParams = {};
+    mockRoster = [];
 });
 beforeEach(() => {
     mockFixedRng(0.5);
@@ -72,6 +80,31 @@ describe('/saves — NEW GAME', () => {
         expect(slots.readSlot(1)?.player.level).toBe(1);
         expect(store.getState().player.level).toBe(1);
         expect(mockReplace).toHaveBeenCalledWith('/exploration');
+    });
+});
+
+describe('/saves — NEW GAME with a character roster', () => {
+    beforeEach(() => {
+        mockRoster = [{ id: 'fixture-knight' }];
+    });
+
+    it('BEGIN on an empty slot opens the character select and writes nothing yet', () => {
+        const { slots } = mount('new');
+        act(() => { fireEvent.press(screen.getByTestId('save-slot-2-action')); });
+
+        expect(mockPush).toHaveBeenCalledWith('/character-select?slot=2');
+        expect(mockReplace).not.toHaveBeenCalled();
+        expect(slots.readSlot(2)).toBeNull();
+    });
+
+    it('confirming an OVERWRITE opens the select and leaves the saved slot as it was', () => {
+        const slots = createMemorySlotStore({ initial: { 1: { state: savedState('Keep', 4), savedAt: 10 } } });
+        mount('new', slots);
+        act(() => { fireEvent.press(screen.getByTestId('save-slot-1-action')); });
+        act(() => { fireEvent.press(screen.getByTestId('saves-confirm-confirm')); });
+
+        expect(mockPush).toHaveBeenCalledWith('/character-select?slot=1');
+        expect(slots.readSlot(1)?.player.level).toBe(4);
     });
 });
 

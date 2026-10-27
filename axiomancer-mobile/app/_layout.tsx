@@ -43,6 +43,7 @@ import { initAppLogging } from '@/state/logging';
 import { attachCrashBreadcrumbs, initCrashReporting, registerNavigationTracing, withCrashReporting } from '@/lib/monitoring';
 import IndexScreen from './index';
 import SaveSlotsScreen from './saves/index';
+import CharacterSelectScreen from './character-select/index';
 import SettingsScreen from './settings/index';
 import TabLayout from './(tabs)/_layout';
 import EventScreen from './event/index';
@@ -305,6 +306,11 @@ function RootLayout() {
             <Stack.Screen
               name="saves/index"
               component={SaveSlotsScreen}
+              options={{ headerShown: false, presentation: 'fullScreenModal' }}
+            />
+            <Stack.Screen
+              name="character-select/index"
+              component={CharacterSelectScreen}
               options={{ headerShown: false, presentation: 'fullScreenModal' }}
             />
             <Stack.Screen
