@@ -788,8 +788,8 @@
         "source": "flow path from route:index: route:index -> route:item-reward"
       },
       "driven": {
-        "value": false,
-        "source": null
+        "value": true,
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs"
       },
       "tested": {
         "value": true,
