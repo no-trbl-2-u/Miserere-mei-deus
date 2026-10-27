@@ -23,6 +23,8 @@ afterEach(() => {
 
 const RING = 'relic-disarming-plea';
 const SIGNET = 'relic-bleeding-signet';
+/** The first three library relics fill the three positions; the fourth is carried. */
+const FIRST_THREE = [RING, 'relic-crimson-circlet', 'relic-ruby-signet'];
 
 function storeWith(player: Character): AppStore {
     return createAppStore({ adapter: createMemoryAdapter(), overrides: { player } });
@@ -39,9 +41,9 @@ const carried = (store: AppStore) => store.getState().player.inventory.map((i) =
 
 const GRANTS: readonly [string, (store: AppStore) => void, readonly string[]][] = [
     ['addItemById (the dev chip)', (s) => { createAppActions(s).addItemById(SIGNET); }, [SIGNET]],
-    ['populateAllItems', (s) => { createAppActions(s).populateAllItems(); }, [RING, SIGNET]],
+    ['populateAllItems', (s) => { createAppActions(s).populateAllItems(); }, FIRST_THREE],
     ['debugSeed', (s) => { createAppActions(s).debugSeed(); }, [RING]],
-    ['grantAllRelics', (s) => { createAppActions(s).grantAllRelics(); }, [RING, SIGNET]],
+    ['grantAllRelics', (s) => { createAppActions(s).grantAllRelics(); }, FIRST_THREE],
 ];
 
 describe('every dev relic grant wears while a position is free (SG1 A3)', () => {
@@ -60,12 +62,12 @@ describe('every dev relic grant wears while a position is free (SG1 A3)', () => 
         for (const id of expected) expect(carried(store)).toContain(id);
     });
 
-    it('a chip-added Signet reaches the next fight with Crimson Covenant', () => {
+    it('a chip-added Signet reaches the next fight with Open Vein', () => {
         const store = storeWith(bare());
         createAppActions(store).addItemById(SIGNET);
         const fight = initializeCombatEncounter(
             store.getState().player, { ...ENEMY_REGISTRY['float-eye'] }, ['grey-strike'], 1,
         );
-        expect(fight.signatures).toEqual(['sig-crimson-covenant']);
+        expect(fight.signatures).toEqual(['sig-bleeding-signet']);
     });
 });

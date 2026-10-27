@@ -128,3 +128,13 @@ existing Act 1 map events in LR1f and listed here when that phase ships.
 | Crimson Circlet | blood-price | Your next SACRIFICE heals you instead; it still counts as a SACRIFICE (TETHER, sacrifice-triggered Globals, anything that reads SACRIFICE) (5) | +5 Body, +20 max VITAE | elite only |
 | Ruby Signet | blood-price | Your next SACRIFICE adds LEECH equal to the VITAE paid, unscaled, to the foe (3) | +5 Heart | quest |
 | Bleeding Signet (existing, reworked) | blood-price | HEAL 5; trigger the foe's LEECH (4) | +5 Mind (the +20 max VITAE is removed) | quest |
+
+**Built (LR1d).** Blood Price's three are in `relicLibrary` with
+`laneId: 'blood-price'` and their `relicSource`; Crimson Covenant is gone.
+Signature ids, kinds and the builder's placeholder names (`[content]`, T to
+rewrite): `sig-crimson-circlet` Crimson Return (`sacrifice-heals`, ◆5),
+`sig-ruby-signet` Ruby Tithe (`sacrifice-leech`, ◆3), `sig-bleeding-signet`
+Open Vein (`heal-trigger-leech`, ◆4). The Open Hand keeps ◆4. Relic stat lines
+now include Heart, Body and Mind, added to the fighter's stats at combat
+start. An armed SACRIFICE redirect lasts across turns until a SACRIFICE
+resolves, and a WAIVED SACRIFICE spends it while healing or adding nothing.

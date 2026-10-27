@@ -191,20 +191,20 @@ describe('what was worn (phase LR1g, A19)', () => {
         const { combat, enemy } = startRealFight();
         const { fetcher, calls } = mockFetch();
         const recorder = recorderWith({ fetcher });
-        recorder.signatureRefused('sig-crimson-covenant', 'Need 4 Conviction'); // nothing open: dropped
+        recorder.signatureRefused('sig-bleeding-signet', 'Need 4 Conviction'); // nothing open: dropped
         recorder.start({
             enemyId: enemy.id, playerLevel: 1, enemyHpMultiplier: 2, vitaeStart: 10, relics: ['relic-bleeding-signet'],
         });
-        recorder.observe({ ...combat, signatures: ['sig-crimson-covenant'] });
-        recorder.signatureRefused('sig-crimson-covenant', 'Need 4 Conviction');
+        recorder.observe({ ...combat, signatures: ['sig-bleeding-signet'] });
+        recorder.signatureRefused('sig-bleeding-signet', 'Need 4 Conviction');
         await recorder.end('retreat');
 
         const post = JSON.parse(calls[0].init.body) as FightPost;
         expect(validateFightPost(post)).toMatchObject({ ok: true });
         expect(post.relics).toEqual(['relic-bleeding-signet']);
-        expect(post.signatures).toEqual(['sig-crimson-covenant']);
+        expect(post.signatures).toEqual(['sig-bleeding-signet']);
         expect(post.events.filter((e) => e.kind === 'ui-signature-refused')).toEqual([
-            { kind: 'ui-signature-refused', signatureId: 'sig-crimson-covenant', reason: 'Need 4 Conviction', ms: expect.any(Number), vitae: combat.player.health },
+            { kind: 'ui-signature-refused', signatureId: 'sig-bleeding-signet', reason: 'Need 4 Conviction', ms: expect.any(Number), vitae: combat.player.health },
         ]);
     });
 

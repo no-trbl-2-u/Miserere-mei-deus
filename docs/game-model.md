@@ -76,8 +76,13 @@ the Expo app (`axiomancer-mobile`) presents it.
   plain VITAE loss, not a DEAL. Crimson Pact's "your next DEAL this turn
   deals +n" adds n unscaled before VULNERABLE, stacks across SACRIFICES,
   goes to the next DEAL (a card's, a Global's or TETHER's) and expires at
-  the end of the turn. A SACRIFICE that "counts twice" (Crimson Covenant)
-  is paid once and fires its triggers and TETHER twice.
+  the end of the turn. A SACRIFICE that "counts twice" (a `next-twice`
+  SACRIFICE modifier) is paid once and fires its triggers and TETHER twice.
+  A signature can arm the next SACRIFICE, across turns, until one resolves:
+  Crimson Return makes it HEAL what it would have cost instead of costing it
+  (it still counts: TETHER deals that amount, the 🩸 Globals fire, the count
+  moves); Ruby Tithe makes it also add LEECH equal to the VITAE paid,
+  unscaled, with LEECH's 3 turns.
 - **The starting deck is ten cards:** Blow ×5, Ward ×3, Word ×2
   (`STARTING_CARD_IDS`, `Combat/combat.rewards.ts`). The deck never drops
   below `MIN_COMBAT_DECK_SIZE` = 10.
@@ -130,8 +135,11 @@ the Expo app (`axiomancer-mobile`) presents it.
 - **Scrap:** discarding a card pays +1 Conviction, for the first
   `SCRAP_CONVICTION_CAP_PER_TURN` = 2 each turn. A Curse cannot be scrapped.
 - **Conviction** is capped at `CONVICTION_CAP` = 12. It is spent only on
-  signatures (`SIGNATURE_COST` = 4, `Combat/combat.signature.ts`): The Open
-  Hand and Crimson Covenant, one per worn signet relic.
+  signatures, each at its own cost (`SignatureSkill.cost`,
+  `Combat/combat.signature.ts`), one per worn signet relic: The Open Hand
+  ◆4, Crimson Return ◆5, Ruby Tithe ◆3, Open Vein ◆4. A signature that would
+  do nothing is refused with a reason the bar prints (Crimson Return and Ruby
+  Tithe while one is already armed); Open Vein never is, its HEAL always lands.
 - **GUARD** resets to 0 after each threat phase.
 - **The program ledger** (`CombatEncounterState.program`) exists only when
   the deck holds a trial card: Globals in play with their turns left,
@@ -203,17 +211,23 @@ keyword (`EnemyKeyword = never`).
 
 ## Befriend and mercy
 
-- **Two relics** (`relicLibrary`, `Items/relic.library.ts`), and a run
-  starts with neither: no relic is handed over at the first node (phase
+- **Four relics** (`relicLibrary`, `Items/relic.library.ts`), and a run
+  starts with none: no relic is handed over at the first node (phase
   SG1). The Suppliant's Ring's signature is The Open Hand; old saves keep
-  the ring they were given. The Bleeding Signet (+20 max VITAE while worn,
-  folded onto `maxHealth`; signature Crimson Covenant: TETHER 3, and the
-  next SACRIFICE this turn counts twice) has no source yet. Both come only
-  from the dev menu's relic chips, which wear the relic while a position is
-  free; a relic carried unworn shows NOT WORN in the satchel, its signature
+  the ring they were given. Blood Price's three (phase LR1d), all opening the
+  `blood-price` lane while worn: the Crimson Circlet (elite only; +5 Body,
+  +20 max VITAE; Crimson Return), the Ruby Signet (a quest's; +5 Heart; Ruby
+  Tithe) and the Bleeding Signet (a quest's; +5 Mind; Open Vein: HEAL 5,
+  then trigger the foe's LEECH, which loses its potency now and heals you
+  that, no turn ticking off). A worn relic's stat lines and signature are
+  read from the library by id, so a saved copy takes the current ones; Heart,
+  Body and Mind lines join the fighter's stats for each fight, `maxHp` folds
+  onto `maxHealth`. The elite drop (`rollEliteRelicDrop`) can hand over the
+  Circlet; the quests are not authored yet, so the dev menu's relic chips,
+  which wear the relic while a position is free, hand over the rest; a relic carried unworn shows NOT WORN in the satchel, its signature
   off until the player taps WEAR. Relics are accessories and a character wears up
-  to three (`SLOT_CAPACITY.accessory`), so both are worn together and the
-  signature bar lists every signature the worn relics grant.
+  to three (`SLOT_CAPACITY.accessory`), and the signature bar lists every
+  signature the worn relics grant.
 - **The Open Hand** befriends a foe that has a `friendshipReward` and sits
   under its `hpGate` (the Green Jelly: below 30% VITAE; `Enemy/befriend.ts`).
 - **The mercy choice** (`selectMercyChoice`) follows. Spare ends the fight

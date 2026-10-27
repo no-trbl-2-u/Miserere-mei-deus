@@ -69,7 +69,7 @@
 // THE SIGNET (phase SG1). Before arming the fight the harness opens /dev
 // DECKS & ITEMS and presses the Bleeding Signet chip, which wears the relic
 // while a position is free. A run whose round-1 board draws no
-// `combat-signature-sig-crimson-covenant` rune FAILS: that was T's "signature
+// `combat-signature-sig-bleeding-signet` rune (Open Vein) FAILS: that was T's "signature
 // skills do not work" report (the chip used to add the Signet unworn). The
 // summary prints the signatures drawn and fired.
 //
@@ -117,7 +117,7 @@ function log(msg) { console.log(`combat-round-e2e: ${msg}`) }
 
 // The relic the run wears from the dev chip, and the rune it must draw.
 const SIGNET_RELIC = 'relic-bleeding-signet'
-const SIGNET_SIGNATURE = 'sig-crimson-covenant'
+const SIGNET_SIGNATURE = 'sig-bleeding-signet'
 
 /**
  * The signature runes on the board, by id. Counts `combat-signature-<id>`

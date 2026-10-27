@@ -109,7 +109,7 @@ describe('CombatEncounterPanel — screen events in the play log', () => {
     it('A21: a tap on a refused signature logs ui-signature-refused with the reason; a long-press does not', async () => {
         const { health } = mountLiveBoard(true);
         const rune = {
-            id: 'sig-crimson-covenant', name: 'Crimson Covenant', description: '', cost: 4, affordable: false,
+            id: 'sig-bleeding-signet', name: 'Open Vein', description: '', cost: 4, affordable: false,
             icon: 'x', reason: 'Need 4 ◆ Conviction',
         };
 
@@ -128,7 +128,7 @@ describe('CombatEncounterPanel — screen events in the play log', () => {
         mountLiveBoard(false);
         act(() => {
             board().onSignatureInfo?.({
-                id: 'sig-crimson-covenant', name: 'Crimson Covenant', description: '', cost: 4, affordable: false,
+                id: 'sig-bleeding-signet', name: 'Open Vein', description: '', cost: 4, affordable: false,
                 icon: 'x', reason: 'Need 4 ◆ Conviction',
             }, true);
         });

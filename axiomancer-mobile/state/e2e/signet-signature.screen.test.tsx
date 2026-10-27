@@ -1,20 +1,21 @@
 /**
  * The Signet defect, pinned through the real dev button (phase SG1 A4).
  *
- * T's report: the Bleeding Signet's Crimson Covenant never showed in combat.
+ * T's report: the Bleeding Signet's signature never showed in combat.
  * The dev menu's only relic path is the ADD ITEM chip, which only pushed the
  * relic into the satchel, unworn, and a fight reads its signatures from the
  * worn loadout, so the board drew no rune. Now the chip wears the relic while
  * a position is free. This test presses the real chip on the real bw-2
  * fight's store (stripped of relics), mounts the panel the way the route
  * does, and finds the rune; with Conviction at the cost a press casts it.
+ * Since LR1d the Signet's signature is Open Vein, at its own cost of ◆4.
  */
 
 import React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { describe, expect, it, jest } from '@jest/globals';
 import {
-    initializeCombatEncounter, playSignatureSkill, rollEncounterDice, SIGNATURE_COST,
+    getSignatureSkill, initializeCombatEncounter, playSignatureSkill, rollEncounterDice,
     type Item,
 } from '@mechanics';
 
@@ -26,7 +27,8 @@ import { REAL_FIGHT_FIXTURE, arriveAtRealFight } from '@/test-utils/realFight';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
 const SIGNET = 'relic-bleeding-signet';
-const COVENANT = 'sig-crimson-covenant';
+const VEIN = 'sig-bleeding-signet';
+const VEIN_COST = getSignatureSkill(VEIN)!.cost;
 const CARDS = ['grey-strike', 'grey-ward', 'grey-word', 'grey-strike'];
 
 const noopDrag = (): DragController =>
@@ -52,7 +54,7 @@ function pressSignetChip() {
 }
 
 describe('the Bleeding Signet from the dev chip reaches the board (SG1 A4)', () => {
-    it('the chip wears the Signet, and the panel draws Crimson Covenant', () => {
+    it('the chip wears the Signet, and the panel draws Open Vein at ◆4', () => {
         const { store, actions } = pressSignetChip();
         expect(store.getState().player.equipment.accessories.map((a) => a.id)).toEqual([SIGNET]);
 
@@ -64,7 +66,9 @@ describe('the Bleeding Signet from the dev chip reaches the board (SG1 A4)', () 
         );
         render(tree);
         act(() => { fireEvent.press(screen.getByTestId('combat-enter')); });
-        expect(screen.getByTestId(`combat-signature-${COVENANT}`)).toBeTruthy();
+        expect(screen.getByTestId(`combat-signature-${VEIN}`)).toBeTruthy();
+        expect(VEIN_COST).toBe(4);
+        expect(screen.getByText(`◆${VEIN_COST}`)).toBeTruthy();
     });
 
     it('with Conviction at the cost, a press casts it and spends the cost', () => {
@@ -72,8 +76,8 @@ describe('the Bleeding Signet from the dev chip reaches the board (SG1 A4)', () 
         const enemy = actions.beginHazardEncounter()!;
         const flags = (store.getState() as unknown as { flags?: string[] }).flags;
         const opening = initializeCombatEncounter(store.getState().player, enemy, CARDS, 7, flags);
-        expect(opening.signatures).toEqual([COVENANT]);
-        const combat = { ...rollEncounterDice(opening).state, conviction: SIGNATURE_COST };
+        expect(opening.signatures).toEqual([VEIN]);
+        const combat = { ...rollEncounterDice(opening).state, conviction: VEIN_COST };
 
         const cast = jest.fn((id: string) => playSignatureSkill(combat, id));
         const { tree } = withAllProviders(
@@ -85,11 +89,11 @@ describe('the Bleeding Signet from the dev chip reaches the board (SG1 A4)', () 
             { store },
         );
         render(tree);
-        fireEvent.press(screen.getByTestId(`combat-signature-${COVENANT}`));
+        fireEvent.press(screen.getByTestId(`combat-signature-${VEIN}`));
 
-        expect(cast).toHaveBeenCalledWith(COVENANT);
+        expect(cast).toHaveBeenCalledWith(VEIN);
         const result = cast.mock.results[0]!.value as ReturnType<typeof playSignatureSkill>;
         expect(result.events.some((e) => e.kind === 'signature-cast')).toBe(true);
-        expect(result.state.conviction).toBe(combat.conviction - SIGNATURE_COST);
+        expect(result.state.conviction).toBe(combat.conviction - VEIN_COST);
     });
 });

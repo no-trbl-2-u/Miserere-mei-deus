@@ -1906,7 +1906,9 @@ export function signatureInfoLines(s: CombatSignatureVM): { lead: string | null;
 
 const SIG_ICON: Record<SignatureSkill['kind'], string> = {
     mercy: '🕊',
-    covenant: '🩸',
+    'sacrifice-heals': '🩸',
+    'sacrifice-leech': '💎',
+    'heal-trigger-leech': '🫀',
 };
 
 function signaturesVM(state: CombatEncounterState): CombatSignatureVM[] {
