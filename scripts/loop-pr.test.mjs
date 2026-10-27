@@ -501,11 +501,11 @@ test('a plot PR carries a size label, size:multi-phase when it splits', () => {
 // @claude comment on a plot PR (T answering its calls, 2026-10-25). T fires it.
 const routeStep = (text) => text.slice(text.indexOf("- name: Route T's answers on a plot PR"), text.indexOf('- name: Run Claude Code'))
 
-test('no workflow fires /plot or /messy', () => {
+test('no workflow fires /plot, /messy or /lane-creator', () => {
   for (const f of fs.readdirSync(path.join(ROOT, WF)).filter((f) => f.endsWith('.yml'))) {
     let text = read(`${WF}/${f}`)
     if (f === 'claude.yml') text = text.replace(routeStep(text), '')
-    assert.doesNotMatch(text, /\/(plot|messy)\b|skills\/(plot|messy)\.md/, f)
+    assert.doesNotMatch(text, /\/(plot|messy|lane-creator)\b|skills\/(plot|messy)\.md/, f)
   }
 })
 

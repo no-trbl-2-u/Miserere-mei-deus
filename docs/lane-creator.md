@@ -6,7 +6,8 @@
 >
 > v1 is the process Blood Price went through (`plan/card-ledger/rehearsal-blood-price.md`, 2026-09-30 to
 > 2026-10-11) and the Elementalist is going through (`plan/card-ledger/rehearsal-elementalist.md`, from
-> 2026-10-22). It is run by a session with T, step by step. Nothing in it fires on its own.
+> 2026-10-22). It is run by a session with T, step by step, with `/lane-creator` (`.claude/commands/lane-creator.md`,
+> T, 2026-10-26), which finds the step a family is on from its ledger and runs it. Nothing in it fires on its own.
 
 ## The rules a lane meets
 
@@ -28,6 +29,13 @@ measured (R12a's report carries its columns). Card names are content T approves 
 | 7 | **The revisions.** T's cuts, additions and number changes; the open keyword math settled; names; the test deck; the family relic. | Session with T | Ledger, "Revisions" |
 | 8 | **The trial set.** A `/plot` for the removable trial set (its own library file, one `TRIAL_SETS` line, its lane and test deck) and any engine work its keywords need. T merges the plot; the loop builds it. | Session plots, T merges, loop builds | A `plot` PR, then `loop:pr` PRs |
 | 9 | **Measured.** The trial set joins the measured-truth report's decks. | Loop | `docs/reports/measured/latest.md` columns |
+
+## No caps
+
+T, 2026-10-26: "remove the '(max +n)' from every card. If there should be a max, I'll call it out." A slot
+pitch or ballot candidate never prints a cap ("max n", "max +n", "capped"); an effect that grows with
+something grows without limit. A cap exists only where T asks for one, in a slot note or at the revisions
+step, and the sims (step 6) are where a runaway number shows up.
 
 ## Pitching a colour
 
