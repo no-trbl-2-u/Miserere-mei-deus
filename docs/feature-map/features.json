@@ -168,7 +168,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mechanics/src/CLI/e2e/dev-tools.engine.test.ts, axiomancer-mechanics/src/Character/e2e/character.engine.test.ts, axiomancer-mechanics/src/Character/e2e/equip-delta.engine.test.ts, ..."
+        "source": "axiomancer-mechanics/src/CLI/e2e/dev-tools.engine.test.ts, axiomancer-mechanics/src/Character/e2e/character-roster.engine.test.ts, axiomancer-mechanics/src/Character/e2e/character.engine.test.ts, ..."
       },
       "needsPitch": {
         "value": false,
@@ -966,6 +966,12 @@
     {
       "kind": "coupling",
       "from": "area:Character",
+      "to": "area:Cards",
+      "file": "axiomancer-mechanics/src/Character/roster.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Character",
       "to": "area:Combat",
       "file": "axiomancer-mechanics/src/Character/dieGear.reducer.ts"
     },
@@ -1040,6 +1046,12 @@
       "from": "area:Character",
       "to": "area:Items",
       "file": "axiomancer-mechanics/src/Character/presets.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Character",
+      "to": "area:Items",
+      "file": "axiomancer-mechanics/src/Character/roster.ts"
     },
     {
       "kind": "coupling",
