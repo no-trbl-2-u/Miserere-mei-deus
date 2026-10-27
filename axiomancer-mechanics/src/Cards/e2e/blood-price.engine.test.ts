@@ -206,9 +206,9 @@ describe('SACRIFICE, WAIVE, HEAL, EXILE', () => {
 
     it('"HEAL all the damage dealt" heals the actual amount, unscaled', () => {
         const s = play(fight(['bp-m-02b'], 100, { body: 10, mind: 10, heart: 5 }), 't0', true);
-        // DEAL 6 at body 10 is 12; the heal copies it, capped at 8, and mind does not rescale it.
+        // DEAL 6 at body 10 is 12; the heal copies all of it (no cap), and mind does not rescale it.
         expect(500 - s.enemy.health).toBe(12);
-        expect(s.player.health).toBe(108);
+        expect(s.player.health).toBe(112);
         // A hit past the foe's last VITAE heals only what it had left.
         const low = fight(['bp-m-02b'], 100);
         const finisher = play({ ...low, enemy: { ...low.enemy, health: 5 } }, 't0', true);
@@ -216,16 +216,16 @@ describe('SACRIFICE, WAIVE, HEAL, EXILE', () => {
         expect(finisher.player.health).toBe(105);
     });
 
-    it('P-07b deals the VITAE you lost, unscaled, up to its printed max', () => {
+    it('P-07b deals the VITAE you lost, unscaled, with no cap', () => {
         const raised = { body: 19, mind: 5, heart: 5 };
         const lost = (n: number) => {
             const s = fight(['bp-p-07b'], 100, raised);
             return { ...s, program: { ...s.program!, lostThisCombat: n } };
         };
         expect(500 - play(lost(20), 't0', true).enemy.health).toBe(20);
-        expect(500 - play(lost(200), 't0', true).enemy.health).toBe(30);
+        expect(500 - play(lost(200), 't0', true).enemy.health).toBe(200);
         expect(500 - play(lost(15), 't0', false).enemy.health).toBe(7);
-        expect(500 - play(lost(200), 't0', false).enemy.health).toBe(10);
+        expect(500 - play(lost(200), 't0', false).enemy.health).toBe(100);
     });
 
     it('EXILE on a PAID line removes the card from combat', () => {
@@ -674,12 +674,40 @@ describe('the SACRIFICE floor, as a number', () => {
     });
 });
 
+describe('no caps (Phase NC1)', () => {
+    it('the two SACRIFICE X caps stay (T, 2026-10-26)', () => {
+        expect(getCardById('bp-e-08n')?.program?.paid?.text).toContain('SACRIFICE any amount X (max 12)');
+        expect(getCardById('bp-e-08n+')?.program?.paid?.text).toContain('(max 15)');
+        expect(getCardById('bp-e-10d')?.program?.paid?.text).toContain('SACRIFICE any amount (max 21)');
+    });
+
+    it('What Is Owed PAID leeches 1 per 10 VITAE missing, past the old 8', () => {
+        const max = fight([]).player.maxHealth;
+        const missing = (n: number) => play(fight(['bp-p-06d'], max - n), 't0', true).program!.leechPotency;
+        expect(missing(60)).toBe(6);
+        expect(missing(100)).toBe(10);
+    });
+
+    it('Repaid in Kind: FREE takes the damage you took last turn, PAID twice it, past the old 5 and 15', () => {
+        const took = (n: number) => {
+            const s = fight(['bp-m-10a'], 100);
+            return { ...s, program: { ...s.program!, takenLastRound: n } };
+        };
+        expect(500 - play(took(12), 't0', false).enemy.health).toBe(12);
+        expect(500 - play(took(12), 't0', true).enemy.health).toBe(24);
+    });
+});
+
 describe('Blood Price upgrades (Phase UP1b)', () => {
     it('an upgraded line prints and applies the bigger payoff, and keeps its SACRIFICE', () => {
         const up = getCardById('bp-p-01a+');
         expect(up?.program?.free?.text).toBe('SACRIFICE 2, DEAL {deal:10}.');
         expect(up?.program?.paid?.text).toBe('SACRIFICE 4, DEAL {deal:22}.');
-        expect(getCardById('bp-p-07b+')?.program?.free?.text).toBe('DEAL half the VITAE you lost this combat (max 14).');
+        expect(getCardById('bp-p-07b')?.program?.free?.text).toBe('DEAL half the VITAE you lost this combat.');
+        expect(getCardById('bp-p-07b+')?.program?.free?.text).toBe('DEAL half the VITAE you lost this combat +2.');
+        expect(getCardById('bp-p-06d+')?.program?.paid?.text).toBe('LEECH 1 per 10 VITAE missing, +1.');
+        expect(getCardById('bp-m-10a+')?.program?.paid?.text)
+            .toBe('The foe loses VITAE equal to twice the damage you took last turn +2. EXILE.');
         expect(getCardById('bp-e-01n+')?.program?.paid?.text).toBe('SACRIFICE 6, gain 6 Conviction. EXILE.');
     });
 

@@ -268,6 +268,18 @@ describe('printed equals applied', () => {
     });
 });
 
+describe('no caps (Phase NC1)', () => {
+    it('P-06b and P-09a read the whole stack (T, 2026-10-26)', () => {
+        expect(getCardById('el-p-06b')?.program?.paid?.text).toBe("GUARD {guard:5}, + the foe's STORM. DRAW 1.");
+        expect(getCardById('el-p-09a')?.program?.free?.text).toBe('DEAL {deal:2}, + your INFERNO.');
+    });
+
+    it("P-06b PAID adds the whole STORM to its GUARD, past the old 12", () => {
+        const guardAt = (storm: number) => play(withWeather(fight(['el-p-06b']), { storm }), 't0', true).guard ?? 0;
+        expect(guardAt(20) - guardAt(0)).toBe(20);
+    });
+});
+
 describe('the upgrade', () => {
     it('leaves alone only the six cards whose numbers are formulas or read off the fight', () => {
         const same = CARDS.filter(card => {

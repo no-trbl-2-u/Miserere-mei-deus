@@ -73,6 +73,13 @@ const EX: Partial<ProgramLine> = { exile: true };
 
 const SUB_LANE: Record<string, string> = { P: 'Payoff', E: 'Engine', M: 'Misc' };
 
+/** An uncapped line's upgrade growth (T, 2026-10-26: no caps): a flat MAGNITUDE
+ *  bonus, "+2" a step, printed only once the card is upgraded. */
+const mPlus = (u: UpgradeScale): string => (u.plus > 0 ? ` +${u.plus}` : '');
+/** The same for an INTENSITY line (LEECH): +1 a step. */
+const iBonus = (u: UpgradeScale): number => u.i(1) - 1;
+const iPlus = (u: UpgradeScale): string => (iBonus(u) > 0 ? `, +${iBonus(u)}` : '');
+
 const ENTRIES: Entry[] = [
     // ── PAYOFF: benefits for sacrificing ─────────────────────────────────────
     { slot: 'p-01a', name: 'Forfeit Strike', type: 'attack', color: RED, program: u => ({
@@ -99,10 +106,10 @@ const ENTRIES: Entry[] = [
         paid: L(`SACRIFICE 6, VULNERABLE +{vuln:${S(u).m(50)}}% for 2 turns. EXILE.`, c => { c.sacrifice(6); c.vulnerable(S(u).m(50), 2); }, EX) }) },
     { slot: 'p-06d', name: 'What Is Owed', type: 'skill', color: PURPLE, program: u => ({
         free: L(`GUARD {guard:${u.m(3)}}.`, c => { c.guard(u.m(3)); }),
-        paid: L(`LEECH 1 per 10 VITAE missing (max ${u.i(8)}).`, c => { c.leech(Math.min(u.i(8), Math.floor(c.q.missing / 10))); }) }) },
+        paid: L(`LEECH 1 per 10 VITAE missing${iPlus(u)}.`, c => { c.leech(Math.floor(c.q.missing / 10) + iBonus(u)); }) }) },
     { slot: 'p-07b', name: 'Full Tally', type: 'attack', color: RED, program: u => ({
-        free: L(`DEAL half the VITAE you lost this combat (max ${u.m(10)}).`, c => { c.deal(Math.min(u.m(10), Math.floor(c.q.lostThisCombat / 2)), { exact: true }); }),
-        paid: L(`DEAL all the VITAE you lost this combat (max ${u.m(30)}). EXILE.`, c => { c.deal(Math.min(u.m(30), c.q.lostThisCombat), { exact: true }); }, { exile: true }) }) },
+        free: L(`DEAL half the VITAE you lost this combat${mPlus(u)}.`, c => { c.deal(Math.floor(c.q.lostThisCombat / 2) + u.plus, { exact: true }); }),
+        paid: L(`DEAL all the VITAE you lost this combat${mPlus(u)}. EXILE.`, c => { c.deal(c.q.lostThisCombat + u.plus, { exact: true }); }, { exile: true }) }) },
     { slot: 'p-08d', name: 'Binding Vow', type: 'skill', color: PURPLE, program: u => ({
         free: L(`SACRIFICE 2, gain ${u.i(2)} Conviction.`, c => { c.sacrifice(2); c.conviction(u.i(2)); }),
         paid: L('TETHER 3. SACRIFICE 4.', c => { c.tether(3); c.sacrifice(4); }) }) },
@@ -165,7 +172,7 @@ const ENTRIES: Entry[] = [
         paid: L(`LEECH {leech:${u.i(4)}}.`, c => { c.leech(u.i(4)); }) }) },
     { slot: 'm-02b', name: 'Reclaim', type: 'attack', color: RED, program: u => ({
         free: L(`DEAL {deal:${u.m(2)}}.`, c => { c.deal(u.m(2)); }),
-        paid: L(`DEAL {deal:${u.m(6)}}; HEAL all the damage dealt (max ${u.m(8)}).`, c => { const d = c.deal(u.m(6)); c.heal(Math.min(u.m(8), d), { exact: true }); }) }) },
+        paid: L(`DEAL {deal:${u.m(6)}}; HEAL all the damage dealt.`, c => { const d = c.deal(u.m(6)); c.heal(d, { exact: true }); }) }) },
     { slot: 'm-03d', name: 'Famished', type: 'skill', color: PURPLE, program: u => ({
         free: L(`GUARD {guard:${u.m(3)}}.`, c => { c.guard(u.m(3)); }),
         paid: L(`LEECH {leech:${u.i(3)}}, or {leech:${u.i(6)}} at half VITAE or less.`, c => { c.leech(c.q.atHalf ? u.i(6) : u.i(3)); }) }) },
@@ -187,9 +194,11 @@ const ENTRIES: Entry[] = [
     { slot: 'm-09a', name: 'Brimming', type: 'skill', color: BLUE, program: u => ({
         free: L(`HEAL {heal:${u.m(4)}}; healing past max VITAE becomes GUARD.`, c => { c.heal(u.m(4), { overflowToGuard: true }); }),
         paid: L(`HEAL {heal:${u.m(10)}}; healing past max VITAE becomes GUARD.`, c => { c.heal(u.m(10), { overflowToGuard: true }); }) }) },
-    { slot: 'm-10a', name: 'Repaid in Kind', type: 'spell', color: RED, spellLaw: { foeLoses: 15 }, program: u => ({
-        free: L(`The foe loses VITAE equal to the damage you took last turn (max ${u.m(5)}).`, c => { c.foeLoses(Math.min(u.m(5), c.q.takenLastTurn)); }),
-        paid: L(`Same, max ${S(u).m(15)}. EXILE.`, c => { c.foeLoses(Math.min(S(u).m(15), c.q.takenLastTurn)); }, EX) }) },
+    // Uncapped (T, 2026-10-26), PAID is twice the damage taken: as a plain
+    // discard card it would read the damage once (30 at the Spell law probe).
+    { slot: 'm-10a', name: 'Repaid in Kind', type: 'spell', color: RED, spellLaw: { foeLoses: 30 }, program: u => ({
+        free: L(`The foe loses VITAE equal to the damage you took last turn${mPlus(u)}.`, c => { c.foeLoses(c.q.takenLastTurn + u.plus); }),
+        paid: L(`The foe loses VITAE equal to twice the damage you took last turn${mPlus(u)}. EXILE.`, c => { c.foeLoses(2 * c.q.takenLastTurn + u.plus); }, EX) }) },
 ];
 
 function toCard(e: Entry): Card {
