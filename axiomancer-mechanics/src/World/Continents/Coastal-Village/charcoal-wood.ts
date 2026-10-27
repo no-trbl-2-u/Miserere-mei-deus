@@ -31,6 +31,7 @@
  */
 
 import { MapDefinition } from '../../types';
+import { MOONBELLS_QUEST } from '../../quest.library';
 
 const charcoalWood: MapDefinition = {
     name: 'charcoal-wood',
@@ -72,7 +73,8 @@ const charcoalWood: MapDefinition = {
     npcs: [],
     enemies: [],
     uniqueEvents: [],
-    quests: [],
+    // Given at the ruined tower (cw-2): `World/quest.library.ts`.
+    quests: [MOONBELLS_QUEST],
     images: {
         mapImage: { alt: '', src: '' },
         combatImage: { alt: '', src: '' },

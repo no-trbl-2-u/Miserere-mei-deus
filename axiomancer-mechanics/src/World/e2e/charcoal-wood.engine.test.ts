@@ -71,11 +71,11 @@ describe('the Charcoal Wood\'s events (D29)', () => {
         expect(Object.keys(kinds)).toHaveLength(20);
     });
 
-    it('spreads 7 encounters, 3 rests, 3 loot caches, 3 gatherings, 1 hazard, 1 Anvil, an arrival and a door', () => {
+    it('spreads 7 encounters, 3 rests, 2 loot caches, 3 gatherings, 1 hazard, 1 Anvil, a quest giver, an arrival and a door', () => {
         const tally: Record<string, number> = {};
         for (const k of Object.values(kinds)) tally[k] = (tally[k] ?? 0) + 1;
         expect(tally).toEqual({
-            encounter: 7, rest: 3, 'loot-cache': 3, gathering: 3, hazard: 1, blacksmith: 1, cutscene: 1, travel: 1,
+            encounter: 7, rest: 3, 'loot-cache': 2, gathering: 3, hazard: 1, blacksmith: 1, narration: 1, cutscene: 1, travel: 1,
         });
     });
 

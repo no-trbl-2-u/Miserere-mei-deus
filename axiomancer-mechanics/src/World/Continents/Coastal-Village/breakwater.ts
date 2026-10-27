@@ -25,6 +25,7 @@
  */
 
 import { MapDefinition } from '../../types';
+import { WATCHTOWER_LAMP_QUEST } from '../../quest.library';
 
 const breakwater: MapDefinition = {
     name: 'breakwater',
@@ -65,7 +66,8 @@ const breakwater: MapDefinition = {
     npcs: [],
     enemies: [],
     uniqueEvents: [],
-    quests: [],
+    // Given at the sea cave (bw-12): `World/quest.library.ts`.
+    quests: [WATCHTOWER_LAMP_QUEST],
     images: {
         mapImage: { alt: '', src: '' },
         combatImage: { alt: '', src: '' },

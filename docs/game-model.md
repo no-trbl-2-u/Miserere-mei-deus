@@ -254,8 +254,19 @@ keyword (`EnemyKeyword = never`).
   (`ld-18`) and the Labyrinth vault door (`ld-15`) are sealed cutscenes.
   The Labyrinth and the other continents' maps are parked and unreachable.
 - **Nodes** in play: encounter, hazard, rest, blacksmith (the Anvil),
-  loot-cache, gathering, cutscene, travel. Act 1 has no NPCs, shops or
-  quests; that plumbing is kept and tested with fixtures.
+  loot-cache, gathering, cutscene, narration, travel. Act 1 has no NPCs or
+  shops; that plumbing is kept and tested with fixtures.
+- **Quests** (`World/quest.library.ts`, phase LR1f): one per Act 1 region,
+  on its map's `quests`. A `narration` node is the giver; its first reply
+  starts the quest. A `kill`, `reach` or `collect` objective finishes it,
+  and `payCompletedQuests` pays the quest's relic through the item-reward
+  screen. The four: The Watchtower Lamp (sea cave `bw-12`, kill the
+  Breakwater's Death Beholder, Ruby Signet), Moonbells for the Tower (ruined
+  tower `cw-2`, which still pays its 8 shillings, gather Moonbell Petals,
+  Bleeding Signet), Word to the Mountain Inn (hanging lake `bc-3`, reach
+  `bc-14`, Elementalist's Brooch), Iron for the Lanterns (north aqueduct
+  `ld-4`, gather Iron Ore, Elementalist's Belt). No quest pays an elite-only
+  relic. A quest turned down at its giver is gone for the run.
 - **Currency:** shillings.
 - **Rest** offers one choice (`World/RestChoice/`): heal
   `restHealFraction` = 25% of maximum VITAE, upgrade one card the player

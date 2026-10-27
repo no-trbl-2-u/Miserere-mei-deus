@@ -14,7 +14,8 @@
 // Each node is resolved through its own screen by test id, the way a player
 // does: a cache by taking an offer, a gathering by acknowledging `/event`, a
 // cutscene by advancing it, a rest by REST on `/rest`, the Anvil by leaving
-// `/blacksmith` unchanged, a door by its crossing. Fights (the four door fights
+// `/blacksmith` unchanged, a quest giver by taking its quest on `/dialogue`,
+// a door by its crossing. Fights (the four door fights
 // included) and hazard boards are resolved with the dev seam
 // `globalThis.__AXM_SKIP_EVENT__`, and only after the walk has seen the
 // encounter reveal or the hazard route select mount. Playing a round is
@@ -265,6 +266,13 @@ const RESOLVERS = {
         return 'screen'
     },
     async gathering(page, nodeId) {
+        // A gathering that finishes a taken quest (LR1f) hands its relic over first.
+        await page.waitForURL((url) => url.pathname === '/event' || url.pathname === '/item-reward', { timeout: 10000 })
+            .catch(() => fail(`${nodeId}: expected /event, landed on ${pathname(page)}`))
+        if (pathname(page) === '/item-reward') {
+            await tap(page, 'item-reward-confirm')
+            log(`${nodeId}: a quest relic was handed over first`)
+        }
         await expectPath(page, '/event', nodeId)
         await waitFor(page, 'event-choice-acknowledge', `${nodeId} gathering`)
         await tap(page, 'event-choice-acknowledge')
@@ -292,6 +300,15 @@ const RESOLVERS = {
         await expectPath(page, '/cutscene', nodeId)
         await waitFor(page, 'cutscene-advance', `${nodeId} cutscene`)
         await playOutCutscene(page)
+        return 'screen'
+    },
+    // A quest giver (LR1f): take the quest (the first reply), then walk away.
+    async narration(page, nodeId) {
+        await expectPath(page, '/dialogue', nodeId)
+        await waitFor(page, 'dialogue-choice-0', `${nodeId} quest giver`)
+        await tap(page, 'dialogue-choice-0')
+        await waitFor(page, 'dialogue-leave', `${nodeId} quest giver reply`)
+        await tap(page, 'dialogue-leave')
         return 'screen'
     },
     async encounter(page, nodeId) {

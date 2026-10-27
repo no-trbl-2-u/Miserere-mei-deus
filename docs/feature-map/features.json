@@ -664,7 +664,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/fixture-e2e.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/fixture-e2e.mjs, ..."
       },
       "tested": {
         "value": true,
@@ -2103,6 +2103,12 @@
       "from": "area:World",
       "to": "area:Items",
       "file": "axiomancer-mechanics/src/World/quest.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:World",
+      "to": "area:Items",
+      "file": "axiomancer-mechanics/src/World/quest.library.ts"
     },
     {
       "kind": "coupling",

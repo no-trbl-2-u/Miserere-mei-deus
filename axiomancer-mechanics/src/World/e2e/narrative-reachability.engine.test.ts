@@ -8,8 +8,9 @@
  * structural guard; this file is the hermetic invariant test over the
  * whole registry, mirroring `e2e/map-traversal.engine.test.ts`.
  *
- * The four Act 1 maps are the playable world, they carry no NPC roster, and
- * nothing on them starts a quest or sets a story flag.
+ * The four Act 1 maps are the playable world and carry no NPC roster. Each
+ * carries one quest (phase LR1f), started by one choice on one node, its
+ * giver's narration; nothing on them sets a story flag.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -43,19 +44,24 @@ describe('narrative reachability — pinned to Act 1 (R3c)', () => {
                 expect(audit.sceneryAsPeople).toEqual([]);
             });
 
-            it('carries no NPC roster and no quests', () => {
+            it('carries no NPC roster and one quest', () => {
                 expect(def.npcs ?? []).toEqual([]);
-                expect(def.quests ?? []).toEqual([]);
+                expect(def.quests ?? []).toHaveLength(1);
             });
 
-            it('no node event starts a quest or sets a story flag', () => {
-                // R3c deleted the unstartable quests and unread flags; in Act 1
-                // there are none left to read, so none may be written.
+            it('one node event starts the map quest, and none sets a story flag', () => {
+                // R3c deleted the unread flags; in Act 1 there are none left
+                // to read, so none may be written. The one quest is started by
+                // its giver alone.
+                const starters: string[] = [];
                 for (const node of def.nodes) {
                     const pool = getNodeEventPool(def.continent, def.name, node.id);
                     const text = JSON.stringify(pool?.entries ?? []);
-                    expect(text, `${name} ${node.id}`).not.toMatch(/"(startQuest|setFlag)"/);
+                    expect(text, `${name} ${node.id}`).not.toMatch(/"setFlag"/);
+                    if (text.includes(`"startQuest":"${def.quests![0]!.name}"`)) starters.push(node.id);
+                    expect(text.match(/"startQuest"/g)?.length ?? 0, `${name} ${node.id}`).toBeLessThanOrEqual(1);
                 }
+                expect(starters).toHaveLength(1);
             });
         });
     }

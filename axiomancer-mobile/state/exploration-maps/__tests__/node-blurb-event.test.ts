@@ -49,7 +49,7 @@ const PINNED_MISMATCHES: Readonly<Record<string, string>> = {
 
 /** The hazard nodes, unpairable while their board is drawn at random. */
 const UNPAIRABLE_HAZARD_NODES: readonly string[] = [
-    'bc-3', 'bc-9', 'bw-12', 'bw-3', 'cw-3', 'ld-4', 'ld-9',
+    'bc-9', 'bw-3', 'cw-3', 'ld-9',
 ];
 
 const STOP_WORDS: ReadonlySet<string> = new Set([

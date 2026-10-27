@@ -30,11 +30,16 @@ const FIXTURE_NPC_CHOICE: NpcChoice = {
 const FIXTURE_QUEST_CHOICE: QuestChoice = { key: FIXTURE_QUEST.name, map: 'breakwater', quest: FIXTURE_QUEST };
 
 describe('story-catalog dev helpers', () => {
-    // No map stages an NPC or carries a quest, so both lists are
-    // empty and the helpers below run on the neutral fixtures.
-    it('lists no staged NPC and no authored quest', () => {
+    // No map stages an NPC, so that list is empty; the four Act 1 maps carry
+    // one quest each (LR1f). The helpers below run on the neutral fixtures.
+    it('lists no staged NPC and the four Act 1 quests in campaign order', () => {
         expect(listNpcs()).toEqual([]);
-        expect(listQuests()).toEqual([]);
+        expect(listQuests().map(q => [q.map, q.key])).toEqual([
+            ['breakwater', 'The Watchtower Lamp'],
+            ['charcoal-wood', 'Moonbells for the Tower'],
+            ['beacon-crags', 'Word to the Mountain Inn'],
+            ['lantern-deep', 'Iron for the Lanterns'],
+        ]);
     });
 
     it('openNpcDialogue seeds an interaction with a cursor at the root', () => {

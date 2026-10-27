@@ -30,17 +30,11 @@ const PINNED_ORPHANS: ReadonlyArray<{ lens: string; id: string }> = [
     // No run starts with the ring or is handed it any more; old saves and
     // the dev menu hold it until it gets a lane.
     { lens: 'item-ungranted', id: 'relic-disarming-plea' },
-    // Blood Price's relics: the Circlet drops from elites (`rollEliteRelicDrop`,
-    // a source this audit does not read); the two quest relics wait on the Act 1
-    // quests (LR1f). Until then only the dev menu hands them over.
+    // The elite-only relics drop from elites (`rollEliteRelicDrop`, a source
+    // this audit does not read). The quest relics are granted by the Act 1
+    // quests' rewards, so they are not orphans.
     { lens: 'item-ungranted', id: 'relic-crimson-circlet' },
-    { lens: 'item-ungranted', id: 'relic-ruby-signet' },
-    { lens: 'item-ungranted', id: 'relic-bleeding-signet' },
-    // The Elementalist's relics, the same way: the Signet drops from elites, the
-    // Brooch and the Belt wait on the Act 1 quests (LR1f).
     { lens: 'item-ungranted', id: 'relic-elementalist-signet' },
-    { lens: 'item-ungranted', id: 'relic-elementalist-brooch' },
-    { lens: 'item-ungranted', id: 'relic-elementalist-belt' },
 ];
 
 describe('roster health — live tree', () => {

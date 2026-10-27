@@ -32,6 +32,7 @@
  */
 
 import { MapDefinition } from '../../types';
+import { LANTERN_IRON_QUEST } from '../../quest.library';
 
 const lanternDeep: MapDefinition = {
     name: 'lantern-deep',
@@ -72,7 +73,8 @@ const lanternDeep: MapDefinition = {
     npcs: [],
     enemies: [],
     uniqueEvents: [],
-    quests: [],
+    // Given at the north aqueduct (ld-4): `World/quest.library.ts`.
+    quests: [LANTERN_IRON_QUEST],
     images: {
         mapImage: { alt: '', src: '' },
         combatImage: { alt: '', src: '' },

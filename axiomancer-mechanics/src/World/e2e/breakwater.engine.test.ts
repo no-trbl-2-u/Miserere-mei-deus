@@ -110,11 +110,11 @@ describe('the Breakwater\'s events (D29)', () => {
         expect(Object.keys(kinds)).toHaveLength(18);
     });
 
-    it('spreads 6 encounters, 2 rests, 3 loot caches, 2 gatherings, 2 hazards, 1 Anvil, an arrival and 1 door', () => {
+    it('spreads 6 encounters, 2 rests, 3 loot caches, 2 gatherings, 1 hazard, 1 Anvil, a quest giver, an arrival and 1 door', () => {
         const tally: Record<string, number> = {};
         for (const k of Object.values(kinds)) tally[k] = (tally[k] ?? 0) + 1;
         expect(tally).toEqual({
-            encounter: 6, rest: 2, 'loot-cache': 3, gathering: 2, hazard: 2, blacksmith: 1, cutscene: 1, travel: 1,
+            encounter: 6, rest: 2, 'loot-cache': 3, gathering: 2, hazard: 1, blacksmith: 1, narration: 1, cutscene: 1, travel: 1,
         });
     });
 

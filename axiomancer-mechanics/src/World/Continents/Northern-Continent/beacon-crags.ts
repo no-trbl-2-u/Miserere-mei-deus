@@ -31,6 +31,7 @@
  */
 
 import { MapDefinition } from '../../types';
+import { MOUNTAIN_INN_QUEST } from '../../quest.library';
 
 const beaconCrags: MapDefinition = {
     name: 'beacon-crags',
@@ -70,7 +71,8 @@ const beaconCrags: MapDefinition = {
     npcs: [],
     enemies: [],
     uniqueEvents: [],
-    quests: [],
+    // Given at the hanging lake (bc-3): `World/quest.library.ts`.
+    quests: [MOUNTAIN_INN_QUEST],
     images: {
         mapImage: { alt: '', src: '' },
         combatImage: { alt: '', src: '' },
