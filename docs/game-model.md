@@ -113,7 +113,14 @@ the Expo app (`axiomancer-mobile`) presents it.
 - **Momentum (the Surge meter):** using heart, body and mind dice in chain
   order (`MOMENTUM_CHAIN_ORDER`, `MOMENTUM_SURGE_LENGTH` = 3) grants a
   temporary gold die. At most `UPGRADEABLE_TABLE_CEILING` = 7 dice sit on the
-  table; a grant past that becomes +1 Conviction.
+  table; a grant past that becomes +1 Conviction. The die is a floating die,
+  which the tray names GHOST.
+- **The board's words** (Conviction, the BOON, MANA and MISS faces, BANKED,
+  GHOST, the X die, the piles, the phase ledger, GLOBAL) are glossed from one
+  source, `BOARD_GLOSSARY` in `axiomancer-mobile/state/combat/keywords.ts`.
+  A player long-presses a die or taps the chip, pile, ledger or `IN PLAY`
+  label to read its entry. A card's amount the face does not print reads
+  `varies`, never a bare X (the X die is a different thing).
 
 ## A fight
 

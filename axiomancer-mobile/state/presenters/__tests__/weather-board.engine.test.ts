@@ -159,7 +159,7 @@ describe('the weather on card faces and in the glossary', () => {
         expect(programHeadline('BLIZZARD 3, DRAW 1')).toEqual({ keyword: 'BLIZZARD', value: '3' });
         expect(programHeadline('INFERNO 1, BLIZZARD 1, STORM 1')).toEqual({ keyword: 'INFERNO', value: '1' });
         expect(programHeadline('DRAW 2')).toEqual({ keyword: 'DRAW', value: '2' });
-        expect(programHeadline("GUARD equal to the foe's BLIZZARD")).toEqual({ keyword: 'GUARD', value: 'X' });
+        expect(programHeadline("GUARD equal to the foe's BLIZZARD")).toEqual({ keyword: 'GUARD', value: 'varies' });
         expect(programHeadline('Remove your INFERNO')).toEqual({ keyword: 'INFERNO', value: '' });
         expect(programFreeCell('DEAL 3, INFERNO 2')).toEqual({ keyword: 'INFERNO', value: '2' });
         expect(programFreeCell('STORM 2, DRAW 1')).toEqual({ keyword: 'STORM', value: '2' });

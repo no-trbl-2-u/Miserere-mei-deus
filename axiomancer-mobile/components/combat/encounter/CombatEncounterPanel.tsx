@@ -60,6 +60,14 @@ import {
 } from '@/state/combat/store-actions';
 import { FONTS, HUE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
+import { boardGlossView, MOMENTUM_GLOSS } from '@/state/combat/keywords';
+import type { BoardGlossLive, BoardTermId } from '@/state/combat/keywords';
+
+/** The mark the gloss plaque's burst wears for each board term. */
+const GLOSS_GLYPH: Record<BoardTermId, string> = {
+    conviction: '◆', boon: '◆', mana: '●', miss: '○', banked: '⏳', ghost: '✦',
+    xdie: '✕', xvaries: 'X', piles: '▮', ledger: 'O', global: '⟳',
+};
 
 type DropResolver = (payload: DragPayload, x: number, y: number) => void | Promise<void>;
 
@@ -417,6 +425,9 @@ export function CombatEncounterPanel({
     // ── momentum chain — `vm.momentumV2` is read
     // straight off engine state; the panel owns only the how-it-works popup. ──
     const [momentumInfoOpen, setMomentumInfoOpen] = useState(false);
+    // The board glossary: one word or mark the player touched, shown in the
+    // same plaque the effect chips use.
+    const [gloss, setGloss] = useState<{ ids: readonly BoardTermId[]; live?: BoardGlossLive } | null>(null);
 
     // The persistent combat log. It opens inside the pilgrim modal (LOG in
     // its XP row) and returns to the stats view with BACK; closing the modal
@@ -686,6 +697,10 @@ export function CombatEncounterPanel({
     }, []);
     const onPlayerInspect = useCallback(() => setPilgrimOpen(true), []);
     const onMomentumInfo = useCallback(() => setMomentumInfoOpen(true), []);
+    const onGloss = useCallback((ids: readonly BoardTermId[], liveNumbers?: BoardGlossLive) => {
+        if (resolvingRef.current) return; // nothing opens mid-resolution
+        setGloss({ ids, live: liveNumbers });
+    }, []);
 
     // Ghost stays MOUNTED once the first drag begins (opacity-gated by dragShown):
     // remounting the face + image on every drag begin cost a mount + decode while
@@ -722,6 +737,7 @@ export function CombatEncounterPanel({
                     resolving={resolving}
                     onInspect={onInspect}
                     onChip={setTipEffect}
+                    onGloss={onGloss}
                     onSignatureInfo={onSignatureInfo}
                     onPlayerInspect={onPlayerInspect}
                     onMomentumInfo={onMomentumInfo}
@@ -1057,14 +1073,10 @@ export function CombatEncounterPanel({
                         <View style={[styles.tipCorner, styles.tipCornerBl, { borderColor: AXM.sulfur }]} pointerEvents="none" />
                         <View style={[styles.tipCorner, styles.tipCornerBr, { borderColor: AXM.sulfur }]} pointerEvents="none" />
                         <GlyphBurst color={AXM.sulfur} glyph="✦" />
-                        <Text style={[styles.tipName, { color: AXM.sulfur, textShadowColor: AXM.sulfur }]}>MOMENTUM</Text>
-                        <Text style={styles.tipGloss}>
-                            Play cards around the wheel — HEART, then BODY, then MIND (starting on any of
-                            them). Each right colour lights the next node; a wrong colour resets the wheel.
-                            Light all three and you forge a wild ✦ MOMENTUM die — drag it onto ANY card,
-                            regardless of colour, to power it.
-                        </Text>
-                        <Text style={styles.tipMeta}>wrong colour resets · the wild die lasts until spent or the turn ends</Text>
+                        <Text style={[styles.tipName, { color: AXM.sulfur, textShadowColor: AXM.sulfur }]}>{MOMENTUM_GLOSS.title}</Text>
+                        <Text style={styles.tipGloss} testID="combat-momentum-info-def">{MOMENTUM_GLOSS.def}</Text>
+                        <Text style={styles.tipGloss} testID="combat-momentum-info-surge">{MOMENTUM_GLOSS.surge}</Text>
+                        <Text style={styles.tipMeta}>{MOMENTUM_GLOSS.meta}</Text>
                         <View style={styles.tipBadgeWrap} pointerEvents="none">
                             <Svg width={128} height={30} viewBox="0 0 128 30">
                                 <Polygon points="14,1 114,1 127,15 114,29 14,29 1,15" fill={AXM.panelBg} stroke={AXM.sulfur} strokeWidth={1.5} />
@@ -1078,6 +1090,42 @@ export function CombatEncounterPanel({
                     </View>
                 </Pressable>
             )}
+
+            {/* board glossary — a word or mark the player touched (Conviction,
+                a die, the piles, the phase ledger, IN PLAY), from one source in
+                keywords.ts. Closes on a backdrop tap. */}
+            {gloss && (() => {
+                const view = boardGlossView(gloss.ids, gloss.live);
+                return (
+                    <Pressable style={styles.backdrop} testID="combat-gloss" onPress={() => setGloss(null)}>
+                        <View style={[styles.tipPlaque, { borderColor: `${AXM.sulfur}66` }]}>
+                            <View style={[styles.tipCorner, styles.tipCornerTl, { borderColor: AXM.sulfur }]} pointerEvents="none" />
+                            <View style={[styles.tipCorner, styles.tipCornerTr, { borderColor: AXM.sulfur }]} pointerEvents="none" />
+                            <View style={[styles.tipCorner, styles.tipCornerBl, { borderColor: AXM.sulfur }]} pointerEvents="none" />
+                            <View style={[styles.tipCorner, styles.tipCornerBr, { borderColor: AXM.sulfur }]} pointerEvents="none" />
+                            <GlyphBurst color={AXM.sulfur} glyph={GLOSS_GLYPH[gloss.ids[0]]} />
+                            <Text style={[styles.tipName, { color: AXM.sulfur, textShadowColor: AXM.sulfur }]} testID="combat-gloss-title">{view.title}</Text>
+                            {view.sections.map((s, i) => (
+                                <View key={i}>
+                                    {s.title ? <Text style={[styles.tipName, { color: AXM.sulfur, textShadowColor: AXM.sulfur }]}>{s.title}</Text> : null}
+                                    <Text style={styles.tipGloss} testID={`combat-gloss-def-${i}`}>{s.more ? `${s.def} ${s.more}` : s.def}</Text>
+                                </View>
+                            ))}
+                            {view.live ? <Text style={styles.tipMeta} testID="combat-gloss-live">{view.live}</Text> : null}
+                            <View style={styles.tipBadgeWrap} pointerEvents="none">
+                                <Svg width={128} height={30} viewBox="0 0 128 30">
+                                    <Polygon points="14,1 114,1 127,15 114,29 14,29 1,15" fill={AXM.panelBg} stroke={AXM.sulfur} strokeWidth={1.5} />
+                                </Svg>
+                                <View style={StyleSheet.absoluteFill}>
+                                    <View style={styles.tipBadgeInner}>
+                                        <Text style={[styles.tipBadgeText, { color: AXM.sulfur }]} allowFontScaling={false}>GLOSSARY</Text>
+                                    </View>
+                                </View>
+                            </View>
+                        </View>
+                    </Pressable>
+                );
+            })()}
 
             {/* pilgrim modal — tap the player avatar: base stats, XP, status
                 effects, and the combat log behind LOG */}
