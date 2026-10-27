@@ -40,6 +40,10 @@ const FLAME: GlyphShape = { d: 'M12 2 C13 6 18 8 18 14 A6 6 0 0 1 6 14 C6 10 9 9
 const SNOWFLAKE: GlyphShape = { d: 'M11 2 H13 V22 H11 Z M2.3 7.2 L3.3 5.5 L21.7 16.8 L20.7 18.5 Z M3.3 18.5 L2.3 16.8 L20.7 5.5 L21.7 7.2 Z' };
 const BOLT: GlyphShape = { d: 'M14 2 L5 13 H11 L9 22 L19 10 H13 L15 2 Z' };
 const CARDS: GlyphShape = { d: 'M4 7 H14 V21 H4 Z M8 3 H19 A1 1 0 0 1 20 4 V17 H16 V6 H8 Z' };
+// THORNS — a spiked burst. REFLECT — a two-way arrow. RETRIEVE — a return arrow.
+const BURST: GlyphShape = { d: 'M12 2 L14 8 L20 4 L16 10 L22 12 L16 14 L20 20 L14 16 L12 22 L10 16 L4 20 L8 14 L2 12 L8 10 L4 4 L10 8 Z' };
+const RICOCHET: GlyphShape = { d: 'M2 12 L9 5 V9 H15 V5 L22 12 L15 19 V15 H9 V19 Z' };
+const RETURN: GlyphShape = { d: 'M9 3 L3 8 L9 13 V10 H15 A4 4 0 0 1 15 18 H7 V21 H15 A7 7 0 0 0 15 7 H9 Z' };
 const EYE: GlyphShape = { d: 'M12 5.5 C6 5.5 2 12 2 12 C2 12 6 18.5 12 18.5 C18 18.5 22 12 22 12 C22 12 18 5.5 12 5.5 Z M12 8.5 A3.5 3.5 0 1 0 12 15.5 A3.5 3.5 0 1 0 12 8.5 Z', evenodd: true };
 
 /** UPPERCASE face keyword → silhouette, for the keys a live face can produce. */
@@ -60,6 +64,10 @@ export const GLYPH_SHAPES: Record<string, GlyphShape> = {
     BLIZZARD: SNOWFLAKE,
     STORM: BOLT,
     DRAW: CARDS,
+    // ── the spikes ──
+    THORNS: BURST,
+    REFLECT: RICOCHET,
+    RETRIEVE: RETURN,
 };
 
 /** The silhouette for a face keyword, or null → keep the text-rune fallback. */

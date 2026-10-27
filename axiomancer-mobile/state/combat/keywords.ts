@@ -67,8 +67,9 @@ const MECHANIC_KEYWORD: Record<string, string> = {
  * The table holds only words something live prints: the grey office
  * (GUARD/VULNERABLE), the Blood Price trial cards (SACRIFICE, WAIVE, EXILE,
  * HEAL, TETHER, LEECH), the Elementalist's weather (INFERNO, BLIZZARD, FROZEN,
- * STORM, DRAW), the healing potions (HEAL), a map hazard (BLEED) and the dice
- * system (PIP, BOON, HONE, TEMPER).
+ * STORM, DRAW), the Defender's spikes (THORNS, REFLECT, RETRIEVE), the
+ * healing potions (HEAL), a map hazard (BLEED) and the dice system (PIP,
+ * BOON, HONE, TEMPER).
  *
  * TERSE GLOSSES: every gloss is ONE short
  * sentence in the Dawncaster register ("Cards with Lifedrain restore health
@@ -100,6 +101,12 @@ const KEYWORD_GLOSS: Record<string, string> = {
     Frozen: "When the BLIZZARD is at least the foe's attack, the foe is FROZEN: the next DEAL it takes is doubled, then FROZEN ends.",
     Storm: 'At the start of its turn the foe loses that much VITAE, then the STORM grows by 1. It lasts the whole combat.',
     Draw: 'Draw that many cards now. An empty draw pile shuffles your discard back in.',
+    // ── The spikes (the Defender trial set) ──
+    Thorns: 'Each foe strike deals that much back to the foe. It drops by 1 at the end of each round.',
+    Reflect:
+        'Each foe strike sends that % of its damage before GUARD back to the foe, and you still take the hit. '
+        + 'It lasts 2 turns, and more REFLECT adds to it and refreshes it.',
+    Retrieve: 'Return that many random cards from your discard to your hand.',
     // ── Dice ──
     Pip:
         'Each threat phase a Reserve die survives, it gains one pip, capped at 2. '
@@ -185,6 +192,7 @@ export const SYSTEM_GLOSSARY: readonly { term: string; def: string }[] = [
     { term: 'WILD / X', def: "A WILD die counts as any color. A dead X die powers nothing, unlike an X on a card's line, which means the amount varies." },
     { term: 'GLOBAL', def: 'Stays in play and fires on its trigger (⟳ your turn starts, 🩸 you SACRIFICE): 3 turns played FREE, all combat PAID. Copies stack (experimental).' },
     { term: 'CURSE', def: 'A dead card that holds a hand slot until played. It cannot be scrapped.' },
+    { term: 'HOLDS', def: 'GUARD holds: you have taken no damage this turn. A card that works "while GUARD holds" stops the moment a hit gets through.' },
 ];
 
 /** How a card's PRINTED lines reference each system term. Matched against the
@@ -196,6 +204,7 @@ const SYSTEM_TERM_MATCH: Record<string, RegExp> = {
     'WILD / X': /\bwild\b|\bX die\b/,
     'GLOBAL': /\bGlobal\b/,
     'CURSE': /\bCurses?\b/,
+    'HOLDS': /\bGUARD holds\b/i,
 };
 
 /** Keyword chips whose own gloss already explains a system term — when such a

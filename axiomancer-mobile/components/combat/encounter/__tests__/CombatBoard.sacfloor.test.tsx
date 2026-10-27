@@ -60,7 +60,7 @@ type Play = {
 function boardWith(play: Play, opts: { reduced?: boolean; allDraggable?: boolean } = {}) {
     const { store, s } = freshEncounter();
     const vm0 = buildCombatViewModel(s);
-    const card = { ...vm0.hand[0], play: { ...play, unscrappable: false, xRange: null } };
+    const card = { ...vm0.hand[0], play: { ...play, paidDiscard: null, unscrappable: false, xRange: null } };
     // The opening roll leaves one draggable die; `allDraggable` frees the rest
     // so a case can offer the card a second die.
     const dice = opts.allDraggable ? vm0.dice.map((d) => ({ ...d, draggable: true })) : vm0.dice;
@@ -183,7 +183,7 @@ describe('CombatBoard — any other refusal leaves the VITAE ring alone', () => 
 
 describe('refusedDieShortfall — which refused die drop points at the ring', () => {
     const vm = buildCombatViewModel(freshEncounter().s);
-    const card = { ...vm.hand[0], play: { freeBlock: null, paidBlock: FLOOR, freeShortfall: null, paidShortfall: SHORT, unscrappable: false, xRange: null } };
+    const card = { ...vm.hand[0], play: { freeBlock: null, paidBlock: FLOOR, freeShortfall: null, paidShortfall: SHORT, paidDiscard: null, unscrappable: false, xRange: null } };
     const hand = [card, ...vm.hand.slice(1)];
     const legal = { color: card.stance };
     // The grey hand's stance is 'any', which every die powers; a body card

@@ -25,6 +25,7 @@ import {
     // Stat scaling: the hand prints final numbers in the family colour.
     scaleCardForStats,
     weatherReading, yourInferno,
+    spikeReading,
     type StatFamily,
     type CombatEncounterState, type CombatCard, type CombatManaDie, type CombatEvent,
     type CombatThreatPhase, type CombatIntentType,
@@ -33,6 +34,7 @@ import {
     type UpgradeableDieGear,
     type WheelStance,
     type WeatherElement,
+    type SpikeReading,
 } from '@mechanics';
 // The card-text projection. The detail panel's printed clauses are DERIVED in
 // mechanics from the effect data; this presenter only formats them (keyword
@@ -212,6 +214,8 @@ export interface CombatEffectChipVM {
     // No `isMax`: the engine has no intensity cap, so the chip shows the real
     // stack count.
     effectId: string; glyph: StatusGlyph; intensity: number; duration: number;
+    /** A unit the badge prints after the number (REFLECT's '%'); absent = a bare count. */
+    unit?: string;
     /** General keyword definition for the on-board status tooltip (null if unmapped). */
     gloss: string | null;
     /** A visible line beside the chip (set only on your own weather, e.g. the
@@ -508,6 +512,12 @@ export const PROGRAM_COPY = Object.freeze({
     /** The VITAE ring's label during that callout. */
     floorA11y: (vitae: number, max: number, cost: number) =>
         `VITAE ${vitae} of ${max}. SACRIFICE ${cost} would leave you below 1.`,
+    /** A refused APPLY on a PAID line whose random discard cannot be paid. */
+    discardShort: (name: string, discard: number, held: number) =>
+        `${name} can't be played: it discards ${discard}, you hold ${held} other card${held === 1 ? '' : 's'}`,
+    /** End turn held while such a play is staged. */
+    endHeld: (name: string, discard: number, held: number) =>
+        `End turn held: ${name} discards ${discard}, you hold ${held} other card${held === 1 ? '' : 's'}. Unstage it or take its die off`,
 });
 export interface CombatSignatureVM {
     id: string; name: string; description: string; cost: number; affordable: boolean; icon: string;
@@ -716,6 +726,21 @@ export function selectCombatLogLines(events: readonly CombatEvent[]): CombatLogL
                     float: null,
                 });
                 break;
+            // The spikes. Each hit back floats its number over the foe (the
+            // engine sends it as its own event, not a damage-dealt); a rise
+            // is your side of the log, the drift and an expiry log-only.
+            case 'spike-struck':
+                out.push({
+                    kind: e.kind, side: 'enemy', color: SPIKE_WORD[e.spike].color,
+                    text: `${SPIKE_WORD[e.spike].name} deals ${e.amount} back to the foe.`,
+                    float: `${SPIKE_WORD[e.spike].name} −${e.amount}`,
+                });
+                break;
+            case 'spikes-changed': {
+                const line = spikeLine(e);
+                if (line) out.push(line);
+                break;
+            }
             default:
                 break;
         }
@@ -748,6 +773,32 @@ function weatherLine(e: Extract<CombatEvent, { kind: 'weather-changed' }>): Comb
         return { ...base, text: `${w.owner} ${w.name} rises to ${e.to}.`, float: float(`${w.name} +${e.to - e.from}`) };
     }
     return { ...base, text: `${w.owner} ${w.name} falls to ${e.to}.`, float: null };
+}
+
+/** The log names of the spikes. */
+const SPIKE_WORD: Record<'thorns' | 'reflect', { name: string; color: string }> = {
+    thorns: { name: 'THORNS', color: HUE.damageRed },
+    reflect: { name: 'REFLECT', color: HUE.hzBlueLite },
+};
+
+/**
+ * One spikes-changed event as a log line, or null. THORNS and REFLECT's %
+ * read their rise, fall and expiry; REFLECT's turns read only as they run
+ * down (a refresh rides the % line, and the expiry is REFLECT's own line).
+ */
+function spikeLine(e: Extract<CombatEvent, { kind: 'spikes-changed' }>): CombatLogLineVM | null {
+    const base = { kind: e.kind, side: 'player' as const, float: null };
+    if (e.spike === 'reflect-turns') {
+        if (e.to <= 0 || e.to >= e.from) return null;
+        return { ...base, color: SPIKE_WORD.reflect.color, text: `Your REFLECT has ${e.to} turn${e.to === 1 ? '' : 's'} left.` };
+    }
+    const w = SPIKE_WORD[e.spike];
+    const n = (v: number) => (e.spike === 'reflect' ? `${v}%` : `${v}`);
+    const base2 = { ...base, color: w.color };
+    if (e.to === 0) return { ...base2, text: `Your ${w.name} is gone.` };
+    if (e.from === 0) return { ...base2, text: `Your ${w.name} ${n(e.to)}.` };
+    if (e.to > e.from) return { ...base2, text: `Your ${w.name} rises to ${n(e.to)}.` };
+    return { ...base2, text: `Your ${w.name} falls to ${n(e.to)}.` };
 }
 
 // ── The persistent combat log ───────────────────────────────────────────────
@@ -890,6 +941,15 @@ export function selectCombatLogHistory(state: CombatEncounterState): CombatLogHi
             case 'card-exiled':
                 push('player', GUARD_COLOR, `${getCardById(e.cardId)?.name ?? e.cardId} is EXILED for this combat.`);
                 break;
+            case 'card-unexiled':
+                push('player', GUARD_COLOR, `${getCardById(e.cardId)?.name ?? e.cardId} returns from EXILE to your draw pile.`);
+                break;
+            case 'cards-discarded':
+                if (e.cardIds.length > 0) push('player', GUARD_COLOR, `You discard ${cardNames(e.cardIds)} at random.`);
+                break;
+            case 'cards-retrieved':
+                if (e.cardIds.length > 0) push('player', GUARD_COLOR, `You RETRIEVE ${cardNames(e.cardIds)}.`);
+                break;
             case 'curse-added':
                 push('player', GLYPH_COLORS.control, `${e.count === 1 ? 'A Curse' : `${e.count} Curses`} enter your hand.`);
                 break;
@@ -903,6 +963,12 @@ export function selectCombatLogHistory(state: CombatEncounterState): CombatLogHi
         }
     }
     return out.length > LOG_HISTORY_CAP ? out.slice(out.length - LOG_HISTORY_CAP) : out;
+}
+
+/** Card names for a log line: "Blow", "Blow and Ward", "Blow, Ward and Word". */
+function cardNames(ids: readonly string[]): string {
+    const names = ids.map((id) => getCardById(id)?.name ?? id);
+    return names.length <= 1 ? names.join('') : `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
 }
 
 /** The reveal's collapsed phase header: "PHASE 2 · ATTACKS · 13". Since R2
@@ -996,7 +1062,7 @@ function playerPane(state: CombatEncounterState): CombatPlayerPaneVM {
         name: p.name ?? 'You', hp: Math.max(0, p.health), maxHp: p.maxHealth,
         hpPct: p.maxHealth > 0 ? Math.max(0, p.health) / p.maxHealth : 0,
         guard: state.guard ?? 0,
-        effects: [...chips(p.effects), ...weatherChips(state, 'player')],
+        effects: [...chips(p.effects), ...weatherChips(state, 'player'), ...spikeChips(state)],
     };
 }
 
@@ -1805,6 +1871,33 @@ export function selfBurnCaption(perTurn: number): string {
     return `YOUR INFERNO −${perTurn} each turn`;
 }
 
+/**
+ * The spikes' badges on you: THORNS (its number; it drops by 1 each round, so
+ * no turn tag) and REFLECT (its %, with the turns it has left). Each number is
+ * the engine's reading now, so the badge moves as the spikes rise and drift.
+ */
+export function spikeChips(state: CombatEncounterState): CombatEffectChipVM[] {
+    const sp = state.program?.spikes;
+    if (!sp) return [];
+    const r: Record<SpikeReading, number> = spikeReading(sp);
+    const out: CombatEffectChipVM[] = [];
+    if (r.thorns > 0) {
+        out.push({
+            effectId: 'spike-thorns', intensity: r.thorns, duration: 0,
+            glyph: { glyph: '✷', color: SPIKE_WORD.thorns.color, kind: 'statup', label: 'Thorns' },
+            gloss: keywordGloss('Thorns'),
+        });
+    }
+    if (r.reflect > 0) {
+        out.push({
+            effectId: 'spike-reflect', intensity: r.reflect, unit: '%', duration: r['reflect-turns'],
+            glyph: { glyph: '◈', color: SPIKE_WORD.reflect.color, kind: 'statup', label: 'Reflect' },
+            gloss: keywordGloss('Reflect'),
+        });
+    }
+    return out;
+}
+
 /** The weather's chips for one side of the board ([] when the sky is clear).
  *  Your INFERNO's chip carries its per-turn loss as a caption. */
 export function weatherChips(state: CombatEncounterState, side: 'enemy' | 'player'): CombatEffectChipVM[] {
@@ -1823,8 +1916,10 @@ export function weatherChips(state: CombatEncounterState, side: 'enemy' | 'playe
 /** A status chip's a11y line. Weather has no turn count: it lasts the combat
  *  (drifting down on its own), so it never reads "0 turns left". */
 export function effectChipA11y(e: CombatEffectChipVM): string {
-    const span = e.effectId.startsWith('weather-') ? 'lasts the combat' : `${e.duration} turns left`;
-    return `${e.glyph.label}, intensity ${e.intensity}, ${span}${e.caption ? `. ${e.caption}` : ''}`;
+    const span = e.effectId.startsWith('weather-') ? 'lasts the combat'
+        : e.effectId === 'spike-thorns' ? 'drops by 1 each round'
+        : `${e.duration} turns left`;
+    return `${e.glyph.label}, intensity ${e.intensity}${e.unit ?? ''}, ${span}${e.caption ? `. ${e.caption}` : ''}`;
 }
 
 /** The colour a plain hit floats in, on either side: white, so colour alone
