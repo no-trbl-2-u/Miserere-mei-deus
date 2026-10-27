@@ -234,3 +234,72 @@ the live library prints it (Blood Price: "VULNERABLE +25% for 1 turn"); T rememb
 - REFLECT: whether it stops at 100% (the No caps rule says it grows unless T names a cap); M-10 adds 15% every turn
   and refreshes, so it grows each turn the Global is in play.
 - P-07 PAID with no other cards in hand: payable (it discards nothing) or refused.
+
+## Revisions (T, 2026-10-26, in session)
+
+Settled in the same sitting as the verdicts; the sims (`sandbox/defender-sims`, `plan/card-ledger/defender-sims.md`)
+ran alongside and inform the number changes the trial-set plot carries.
+
+### Rules
+
+| Call | Ruling |
+|---|---|
+| REFLECT and your damage | T: "the player still takes the damage the enemy does, regardless of reflect. So 10 dmg vs. 100% reflect means both entities take 10 dmg." REFLECT never reduces the hit; GUARD still blocks your share. |
+| REFLECT cap | **No cap** (T). REFLECT grows without limit; above 100% it sends back more than the hit. |
+| P-08 | **While GUARD holds** (T): on the foe's next turn, every THORNS hit deals double while you have taken no damage that turn. T: "that would mean 'holds' would have to be added to the glossary." |
+| P-09 PAID | **REFLECT is up in time** (T): the 50% is in place before the foe's first strike lands, so it reflects that strike too. |
+| VULNERABLE | T thought VULNERABLE lasted 3 turns; it lasts 1 or 2, so T chose bigger numbers: **P-03** FREE "VULNERABLE +50% for 1 turn, then DEAL 4", PAID "Discard 2 cards at random. VULNERABLE +150% for 2 turns, then DEAL 15"; **M-03** FREE "GUARD 3, VULNERABLE +50% for 1 turn", PAID "GUARD 6, VULNERABLE +75% for 2 turns". |
+
+### Colours (proposed by the session, approved by T as is)
+
+Ten per colour, split within each sub-lane:
+
+| Colour | Payoff | Engine | Misc |
+|---|---|---|---|
+| Red | P-01, P-03, P-06 | E-04, E-07, E-10 | M-03, M-05, M-08, M-09 |
+| Blue | P-02, P-08, P-09, P-10 | E-01, E-03, E-08 | M-01, M-02, M-04 |
+| Purple | P-04, P-05, P-07 | E-02, E-05, E-06, E-09 | M-06, M-07, M-10 |
+
+### Names (drafted by the session, approved by T)
+
+| Payoff | Engine | Misc |
+|---|---|---|
+| P-01 Bristling Blow | E-01 Studded Guard | M-01 Hunker Down |
+| P-02 Shield Bash | E-02 Barbed Wall | M-02 Mend the Shell |
+| P-03 Cracking Swing | E-03 Mirrorhide | M-03 Crack the Armour |
+| P-04 Mirror Barb | E-04 Hedge Strike | M-04 Turtle Up |
+| P-05 Thornwall | E-05 Briar Surge | M-05 Prickly Resolve |
+| P-06 Spite Growth | E-06 Overgrowth | M-06 Steady Shell |
+| P-07 Shed the Shell | E-07 Thorn Lash | M-07 Rummage |
+| P-08 Spiked Shell | E-08 Polished Shell | M-08 Nettle Poke |
+| P-09 Riposte | E-09 Rose Wrap | M-09 Loose Spine |
+| P-10 Bramble Carapace | E-10 Gather Thistles | M-10 Lacquered Shell |
+
+### The family relics (drafted by the session on LR1's pattern, approved by T)
+
+One elite-only relic and two quest relics, as LR1 gives Blood Price and the Elementalist
+(`plan/phases/phase_LR1_lane_relics.md`). Signature names and descriptions are plain, for T to rewrite.
+
+| Relic | Signature (cost in Conviction) | Stats | Source |
+|---|---|---|---|
+| Thornback Signet | THORNS equal to your GUARD (5) | +5 Heart, +20 max VITAE | elite only |
+| Mirror Brooch | REFLECT 50% (3) | +5 Mind | quest |
+| Carapace Belt | Your GUARD isn't lost at the end of the foe's next turn (4) | +5 Body | quest |
+
+### The test deck (20, T: "Include all globals and all spells in the trial deck I can get from the dev menu")
+
+Every Global (P-10, E-09, M-06, M-10) and every Spell (P-07, E-05, E-06); every payoff has its setup in the deck;
+no copies; 7 red, 6 blue, 7 purple.
+
+| Colour | Cards |
+|---|---|
+| Red | P-01, P-03, P-06, E-04, E-07, M-08, M-09 |
+| Blue | P-02, P-08, P-10, E-01, E-03, M-01 |
+| Purple | P-07, E-05, E-06, E-09, M-06, M-07, M-10 |
+
+| M-09 "if discarded" | T: "There's definitely a discard by choice. There's a trash can icon to the left in combat. It nets you 1 conviction." The manual discard is the scrap (`discardCombatCard`); M-09's THORNS 2 fires on a scrap and on a random discard. It is a property of the card, printed once, whichever line would have been played. |
+| P-07 with no other card | T: "Not Paid you can't. The free line can be played without discarding." PAID is refused (the shake) when no other card is in hand, as every PAID discard line is; FREE plays. |
+
+### Still open
+
+- The sims' number changes (below, once they land).
