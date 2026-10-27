@@ -105,8 +105,8 @@ const ENTRIES: Entry[] = [
         paid: L("Trigger the foe's STORM twice. EXILE.", c => { c.triggerStorm(); c.triggerStorm(); }, EX) }) },
     { slot: 'P-06', option: 'b', type: 'skill', color: BLUE, program: u => ({
         free: L(`GUARD {guard:${u.m(3)}}, DRAW 1.`, c => { c.guard(u.m(3)); c.draw(1); }),
-        paid: L(`GUARD {guard:${u.m(5)}}, + the foe's STORM (max +${u.m(12)}). DRAW 1.`, c => {
-            c.guard(u.m(5), { plus: Math.min(u.m(12), c.q.storm) }); c.draw(1);
+        paid: L(`GUARD {guard:${u.m(5)}}, + the foe's STORM. DRAW 1.`, c => {
+            c.guard(u.m(5), { plus: c.q.storm }); c.draw(1);
         }) }) },
     { slot: 'P-07', option: 'a', type: 'attack', color: RED, program: u => ({
         free: L(`DEAL {deal:${u.m(3)}}, INFERNO ${u.i(1)}.`, c => { c.deal(u.m(3)); c.inferno(u.i(1), 'both'); }),
@@ -118,8 +118,8 @@ const ENTRIES: Entry[] = [
         free: L("GUARD equal to the foe's BLIZZARD + STORM.", c => { c.guard(0, { plus: c.q.blizzard + c.q.storm }); }),
         paid: L("Double the foe's BLIZZARD and STORM.", c => { c.doubleBlizzardAndStorm(); }) }) },
     { slot: 'P-09', option: 'a', type: 'attack', color: RED, program: u => ({
-        free: L(`DEAL {deal:${u.m(2)}}, + your INFERNO (max +${u.m(6)}).`, c => {
-            c.deal(u.m(2), { plus: Math.min(u.m(6), c.q.yourInferno) });
+        free: L(`DEAL {deal:${u.m(2)}}, + your INFERNO.`, c => {
+            c.deal(u.m(2), { plus: c.q.yourInferno });
         }),
         paid: L(`DEAL {deal:${u.m(4)}}, + your INFERNO + the foe's STORM.`, c => {
             c.deal(u.m(4), { plus: c.q.yourInferno + c.q.storm });

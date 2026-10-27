@@ -239,8 +239,8 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - AD1b — plotted 2026-10-21 (#716) without a deadline line; date not set.
 - EQ1a — a live defect T hit on device; loop work, needs no time from T; date not set.
 - EQ1b — loop work, needs no time from T; date not set.
-- NC1 — plotted 2026-10-26 (no caps, D109); loop work, needs no time from T; date not set.
 - CL1 — plotted 2026-10-26 (ballots pitch no colour, D110); loop work, needs no time from T; date not set.
+- NC1 — plotted 2026-10-26 (no caps, D109); loop work, needs no time from T; date not set.
 - FM1a — loop work, needs no time from T beyond confirming the pitch rule; date not set.
 - FM1b — loop work, needs no time from T beyond confirming the pitch rule; date not set.
 - FM1c — loop work, needs no time from T beyond confirming the pitch rule; date not set.

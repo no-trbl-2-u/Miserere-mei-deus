@@ -129,6 +129,10 @@ T's call (ballot, 2026-10-13):
 - **Momentum (same-colour chains) is dormant code. Keep, cut, or ratify?** → Cut it; re-add through a lane that wants it
 ```
 
+Amended by D110 (T, 2026-10-26): a lane card's colour is only which die pays for it; its keywords scale per D40
+whatever its colour, and a family's colours are split evenly after T picks (`docs/lane-creator.md` "Colours after
+the picks").
+
 ## 5. FREE / PAID anatomy
 
 **Live rule.** The FREE line is the card's rider, played with no die. The
