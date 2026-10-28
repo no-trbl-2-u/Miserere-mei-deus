@@ -984,15 +984,6 @@
 - suggested fix: cap the item tile's width (a `maxWidth` near the phone width, ~140) so the grid packs more tiles per row on a wide window instead of stretching each one; presentation only, pinned in the ItemCard test.
 - source: critique:drive (unattended)
 
-### [MED] hazard / village / forge / deck — the barred gothic zero still prints in about a dozen numeric styles, so the hazard ladder reads "RI 28" for a threshold of 20
-- pass: 106 (commit 4edd5433)
-- viewport: both (375x812, 1280x800)
-- category: comprehension
-- observation: #1005 moved the CONVICTION chip, the rest PURSE and the hazard card FORCE/ESCAPE values to `FONTS.sans`, and those three now read correctly. The same Pirata One zero still prints wherever another style puts a number in `FONTS.gothic`. In this pass's captures the Ledge Crawl ladder's first cell reads "RI 28" for a threshold of 20 when enlarged, beside "RII 23" and "RIII 25". The other styles are off the critique set but print live figures: a 10, 20 or 30-shilling stall price reads 18, 28 or 38, and a forge budget of 200 reads 288.
-- evidence: enlarged crop of `.critique-artifacts/desktop/10-hazard.png` (the Ledge Crawl PASS row, y~460-484); `components/hazard/RouteSelect.tsx:315` `ladderValue`; other numeric styles still in `FONTS.gothic`: `app/village/index.tsx:336` `warePrice`, `app/blacksmith/index.tsx:416` `budgetValue`, `app/(tabs)/deck/index.tsx:177,192` `statValue`/`tallyValue`, `app/hazard-deck/index.tsx:221,228`, `app/character-select/index.tsx:272` `statValue`, `app/(tabs)/character/index.tsx:329,343` `levelText`/`baseStatValue`, `components/hazard/HazardOverlays.tsx:310` `flashStatValue`, `components/combat/encounter/CombatEncounterPanel.tsx:1389,1392` `pilgrimConviction`/`pilgrimStatVal`.
-- suggested fix: move each style that prints a number to `FONTS.sans`, leaving names and titles in the gothic face as #1005 did. Then guard it so a fourth spot-fix is not needed: a lint test over `app/` and `components/` that fails when a style named for a figure (`*Value`, `*Price`, `*Stat*`, `level*`, `*Budget*`, `*Count`, ...) uses `FONTS.gothic`, or a shared `TYPE.figure` token used by every one of them.
-- source: critique:drive (unattended)
-
 ### [LOW] combat preview — WITHDRAW's "forfeit the path" line prints at 8.5px in `AXM.ash`, about 1.95:1 against the page
 - pass: 101 (commit 83975010)
 - viewport: mobile (375x812) and desktop (1280x800)
@@ -1324,6 +1315,15 @@
 - suggested fix: wrap the cache's content in a `column` style `{ width: '100%', maxWidth: CACHE_COLUMN_MAX_WIDTH, alignSelf: 'center' }` with `CACHE_COLUMN_MAX_WIDTH = 520`, as rest and quest do; presentation only, pinned by the cache screen test reading the exported constant.
 - source: critique:drive (unattended)
 - issue: #1034
+### [x] [MED] hazard / village / forge / deck — the barred gothic zero still prints in about a dozen numeric styles, so the hazard ladder reads "RI 28" for a threshold of 20 — RESOLVED 2026-10-28 (branch loop/iterate-gothic-figures, 9be8fceb: the 18 figure styles the guard names (the ladder, stall price, forge budget, DECK and hazard-deck stats and tallies, character-select and SELF stats and level, the hazard flash stat, the pilgrim conviction and stats, the satchel purse, the puzzle clock, the level-up number, the labyrinth room number) and the SACRIFICE floor tag print in FONTS.sans; names and titles stay gothic; `theme/__tests__/no-gothic-figures.test.ts` fails on any figure-named style in app/ or components/ that sets FONTS.gothic)
+- pass: 106 (commit 4edd5433)
+- viewport: both (375x812, 1280x800)
+- category: comprehension
+- observation: #1005 moved the CONVICTION chip, the rest PURSE and the hazard card FORCE/ESCAPE values to `FONTS.sans`, and those three now read correctly. The same Pirata One zero still prints wherever another style puts a number in `FONTS.gothic`. In this pass's captures the Ledge Crawl ladder's first cell reads "RI 28" for a threshold of 20 when enlarged, beside "RII 23" and "RIII 25". The other styles are off the critique set but print live figures: a 10, 20 or 30-shilling stall price reads 18, 28 or 38, and a forge budget of 200 reads 288.
+- evidence: enlarged crop of `.critique-artifacts/desktop/10-hazard.png` (the Ledge Crawl PASS row, y~460-484); `components/hazard/RouteSelect.tsx:315` `ladderValue`; other numeric styles still in `FONTS.gothic`: `app/village/index.tsx:336` `warePrice`, `app/blacksmith/index.tsx:416` `budgetValue`, `app/(tabs)/deck/index.tsx:177,192` `statValue`/`tallyValue`, `app/hazard-deck/index.tsx:221,228`, `app/character-select/index.tsx:272` `statValue`, `app/(tabs)/character/index.tsx:329,343` `levelText`/`baseStatValue`, `components/hazard/HazardOverlays.tsx:310` `flashStatValue`, `components/combat/encounter/CombatEncounterPanel.tsx:1389,1392` `pilgrimConviction`/`pilgrimStatVal`.
+- suggested fix: move each style that prints a number to `FONTS.sans`, leaving names and titles in the gothic face as #1005 did. Then guard it so a fourth spot-fix is not needed: a lint test over `app/` and `components/` that fails when a style named for a figure (`*Value`, `*Price`, `*Stat*`, `level*`, `*Budget*`, `*Count`, ...) uses `FONTS.gothic`, or a shared `TYPE.figure` token used by every one of them.
+- source: critique:drive (unattended)
+- issue: #1036
 
 ### [x] [HIGH] ci / critique-drive — `/cache`, the satchel, `/quest` and `/death-return` are not in the critique set, so four passes of shipped surfaces went unseen — RESOLVED 2026-10-28 (branch loop/iterate-critique-drive-new-routes, cf5957ead: `cache` and `quest` boot their arrival fixtures and wait for the gate's push, `satchel` opens `/inventory` on `sage-bw-door-gate`, `death-return` opens the `?preview=1` dev view through a new `devTools` flag; the mobile drive captured all 15 screens with no errors; pinned in critique-drive.test.mjs. No preset wears a relic and no fixture boots a dying board, so the relic icons and the DY1d skull wait on fixtures: AUDIT row filed)
 - pass: 103 (commit 79ecad63); raised LOW to MED at pass 105 (commit 02372412); raised MED to HIGH at pass 107 (commit bf5bae72)

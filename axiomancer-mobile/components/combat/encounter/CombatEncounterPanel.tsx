@@ -1397,10 +1397,10 @@ const useStyles = makeStyles((AXM) => ({
     pilgrimPortrait: { width: 60, height: 72, borderRadius: 6, borderWidth: 1.5, borderColor: AXM.sulfur, backgroundColor: AXM.deepBg, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
     pilgrimName: { fontFamily: FONTS.gothic, fontSize: 20, color: AXM.parchment },
     pilgrimVitae: { fontFamily: FONTS.mono, fontSize: 12, color: AXM.bone, marginTop: 3, letterSpacing: 0.4 },
-    pilgrimConviction: { fontFamily: FONTS.gothic, fontSize: 18 },
+    pilgrimConviction: { fontFamily: FONTS.sans, fontSize: 18 },
     pilgrimStatRow: { flexDirection: 'row', gap: 8, marginBottom: 6 },
     pilgrimStat: { flex: 1, borderWidth: 1, borderRadius: 6, backgroundColor: 'rgba(0,0,0,0.45)', alignItems: 'center', paddingVertical: 7 },
-    pilgrimStatVal: { fontFamily: FONTS.gothic, fontSize: 20, lineHeight: 23 },
+    pilgrimStatVal: { fontFamily: FONTS.sans, fontSize: 20, lineHeight: 23 },
     pilgrimStatLabel: { fontFamily: FONTS.sans, fontSize: 9, letterSpacing: 1.6, color: AXM.bone, marginTop: 1 },
     // full stat table
     pilgrimMetaRow: { flexDirection: 'row', gap: 8, marginTop: 6 },
