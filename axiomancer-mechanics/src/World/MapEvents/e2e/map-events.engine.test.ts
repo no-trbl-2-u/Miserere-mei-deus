@@ -276,23 +276,23 @@ describe('resolveMapEvent — Phase 31 traversal fix', () => {
         const startId = state.world.currentMap.currentNode;
         const startNode = state.world.currentMap;
 
-        // Before resolution: bw-1's adjacent (bw-2) is already available,
+        // Before resolution: bw-1's adjacent (bw-4) is already available,
         // but bw-7 is locked.
-        expect(startNode.availableNodes).toContain('bw-2');
+        expect(startNode.availableNodes).toContain('bw-4');
         expect(startNode.lockedNodes).toContain('bw-7');
 
         const afterBw1 = resolveMapEvent(state).state.world.currentMap;
         expect(afterBw1.consumedNodes).toContain(startId);
-        // bw-2 was already available — still there; no regression.
-        expect(afterBw1.availableNodes).toContain('bw-2');
-        // bw-1's adjacents are bw-2..bw-5, all already available; bw-7 is
+        // bw-4 was already available — still there; no regression.
+        expect(afterBw1.availableNodes).toContain('bw-4');
+        // bw-1's adjacents are bw-19, bw-4 and bw-5, all already available; bw-7 is
         // two steps out (no new unlock from bw-1 itself).
         expect(afterBw1.lockedNodes).toContain('bw-7');
     });
 
     it('unlocks the next-step adjacent when the player resolves the just-walked node', () => {
         mockSequentialRng(0.5);
-        // Reach bw-2 by moving (legal — bw-2 is in initial availableNodes).
+        // Reach bw-4 by moving (legal — bw-4 is in initial availableNodes).
         let state = withPool(freshState(), {
             id: 'pool.cutscene',
             entries: [{
@@ -300,17 +300,17 @@ describe('resolveMapEvent — Phase 31 traversal fix', () => {
                 payload: { kind: 'cutscene', lines: ['…'] },
             }],
         });
-        state = { ...state, world: { ...state.world, currentMap: { ...state.world.currentMap, currentNode: 'bw-2' } } };
+        state = { ...state, world: { ...state.world, currentMap: { ...state.world.currentMap, currentNode: 'bw-4' } } };
 
-        // Before resolving bw-2: bw-7 is locked.
+        // Before resolving bw-4: bw-7 is locked.
         expect(state.world.currentMap.lockedNodes).toContain('bw-7');
         expect(state.world.currentMap.availableNodes).not.toContain('bw-7');
 
-        const afterBw2 = resolveMapEvent(state).state.world.currentMap;
+        const afterBw4 = resolveMapEvent(state).state.world.currentMap;
 
-        // After resolving bw-2: bw-7 has moved from locked → available.
-        expect(afterBw2.availableNodes).toContain('bw-7');
-        expect(afterBw2.lockedNodes).not.toContain('bw-7');
+        // After resolving bw-4: bw-7 has moved from locked → available.
+        expect(afterBw4.availableNodes).toContain('bw-7');
+        expect(afterBw4.lockedNodes).not.toContain('bw-7');
     });
 
     it('idempotent — re-resolving a consumed node does not re-promote unlocked adjacents', () => {
@@ -333,11 +333,11 @@ describe('resolveMapEvent — Phase 31 traversal fix', () => {
         mockSequentialRng(0.5);
         const state = freshState();
         _clearMapEventPoolRegistry();
-        // Move to bw-2 first (legal — bw-2 is already available; no pool needed
+        // Move to bw-4 first (legal — bw-4 is already available; no pool needed
         // to move).
-        const atBw2 = { ...state, world: { ...state.world, currentMap: { ...state.world.currentMap, currentNode: 'bw-2' } } };
-        expect(atBw2.world.currentMap.lockedNodes).toContain('bw-7');
-        const result = resolveMapEvent(atBw2);
+        const atBw4 = { ...state, world: { ...state.world, currentMap: { ...state.world.currentMap, currentNode: 'bw-4' } } };
+        expect(atBw4.world.currentMap.lockedNodes).toContain('bw-7');
+        const result = resolveMapEvent(atBw4);
         expect(result.event.kind).toBe('none');
         // Discovery + traversal both advance even without a pool.
         expect(result.state.world.currentMap.availableNodes).toContain('bw-7');

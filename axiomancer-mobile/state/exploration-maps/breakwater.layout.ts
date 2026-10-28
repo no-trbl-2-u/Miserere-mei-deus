@@ -31,7 +31,7 @@ const sheet: MapSheet = {
     chartTexture: false,
 };
 
-/** Node id → the landmark it sits on. Every coast landmark appears exactly once. */
+/** Node id → the mark it sits on. Every coast mark appears exactly once. */
 export const BREAKWATER_LANDMARKS: Readonly<Record<string, string>> = {
     'bw-1':  'windmill',
     'bw-2':  'crane-quay',
@@ -51,6 +51,12 @@ export const BREAKWATER_LANDMARKS: Readonly<Record<string, string>> = {
     'bw-16': 'fishing-hamlet',
     'bw-17': 'watchtower',
     'bw-18': 'river-bridge',
+    // The questline's four quest markers (QL1d), each on its own mark beside
+    // its anchor; T reviews the spots at the Nov 3 map review.
+    'bw-19': 'quest-windmill',
+    'bw-20': 'quest-customs-house',
+    'bw-21': 'quest-south-pier',
+    'bw-22': 'quest-chapel-road',
 };
 
 /** Where a landmark sits on the sheet: its plate fraction times the sheet size. */
@@ -97,5 +103,10 @@ export const breakwaterLayout: MapLayout = {
         { id: 'bw-17', ...at('bw-17'), label: 'The Watchtower', description: 'The lamp is lit. Its keeper watches the road.' },
         // ── c6 — the door ──
         { id: 'bw-18', ...at('bw-18'), label: 'The River Bridge', description: 'A toll-house with no keeper. Across it, a wood full of smoke.' },
+        // ── the questline's four quest markers (placeholder copy, T's on Nov 10) ──
+        { id: 'bw-19', ...at('bw-19'), label: '[content] The Windmill Marker', description: '[content] Someone has left word here.' },
+        { id: 'bw-20', ...at('bw-20'), label: '[content] The Customs Marker', description: '[content] The word goes on.' },
+        { id: 'bw-21', ...at('bw-21'), label: '[content] The Pier Marker', description: '[content] The word goes on.' },
+        { id: 'bw-22', ...at('bw-22'), label: '[content] The Chapel Road Marker', description: '[content] The watchtower is close.' },
     ],
 };

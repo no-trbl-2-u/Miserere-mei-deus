@@ -18,7 +18,11 @@
     { "id": "windmill", "x": 0.49, "y": 0.62, "what": "windmill in a fenced field" },
     { "id": "gallows", "x": 0.69, "y": 0.68, "what": "gallows on a low hill" },
     { "id": "smugglers-cove", "x": 0.34, "y": 0.76, "what": "cave cove with huts and beached boats" },
-    { "id": "foothill-pass", "x": 0.62, "y": 0.88, "what": "road climbing into the foothills", "edge": "bottom" }
+    { "id": "foothill-pass", "x": 0.62, "y": 0.88, "what": "road climbing into the foothills", "edge": "bottom" },
+    { "id": "quest-windmill", "x": 0.57, "y": 0.7, "what": "a quest marker beside the windmill, on open ground (no drawn landmark)" },
+    { "id": "quest-customs-house", "x": 0.75, "y": 0.4, "what": "a quest marker beside the customs house (no drawn landmark)" },
+    { "id": "quest-south-pier", "x": 0.22, "y": 0.38, "what": "a quest marker beside the south pier (no drawn landmark)" },
+    { "id": "quest-chapel-road", "x": 0.69, "y": 0.11, "what": "a quest marker on the road between the clifftop chapel and the watchtower (no drawn landmark)" }
   ],
   "act1-forest": [
     { "id": "ruined-tower", "x": 0.27, "y": 0.10, "what": "ruined tower on a rocky knoll" },

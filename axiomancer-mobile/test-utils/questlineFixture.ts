@@ -1,8 +1,8 @@
 /**
  * Hermetic test helper - a staged four-step questline on the Breakwater's
- * first nodes (phase QL1c). The Breakwater's own questline arrives with QL1d;
- * the quest screen and its payout are proven on this one, the way fixtures
- * stage an NPC the live Act 1 does not carry.
+ * first nodes (phase QL1c). The Breakwater's own questline lives on
+ * bw-19..bw-22 (`quest.library.ts`); the quest screen and its payout are
+ * proven hermetically on this one, the way fixtures stage an NPC.
  *
  *   step 1  cross 1 hazard           pays XP + shillings        (node 1, bw-1)
  *   step 2  win 2 fights             pays XP + a card pick      (node 2, bw-2)

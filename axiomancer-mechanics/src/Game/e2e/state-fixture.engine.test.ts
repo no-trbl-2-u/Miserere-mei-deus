@@ -19,6 +19,7 @@ import { migrate } from '../game.migrate';
 import { setSeed } from '../../Utils/rng';
 import { getMapDefinition } from '../../World/map.registry';
 import { resolveMapEvent } from '../../World/MapEvents/resolve-map-event';
+import { legalMovesFrom } from '../../World/world.reducer';
 import { getQuestline, _unregisterQuestline } from '../../World/questline';
 import {
     STATE_FIXTURES, buildStateFromFixture, getStateFixtureById, listStateFixtureIds,
@@ -120,6 +121,24 @@ describe('buildStateFromFixture', () => {
         expect(currentMap.discoveredNodes).toContain('cw-8');
     });
 
+    it('world.questNodesSettled spends the map\'s quest nodes and opens their locks; without it the watchtower stays shut', () => {
+        const at = (questNodesSettled?: boolean) => buildStateFromFixture({
+            id: 'settled',
+            seed: 3,
+            world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-15', ...(questNodesSettled === undefined ? {} : { questNodesSettled }) },
+        }).world.currentMap;
+        const settled = at(true);
+        expect(legalMovesFrom(settled)).toContain('bw-17');
+        expect(settled.consumedNodes).toEqual(expect.arrayContaining(['bw-19', 'bw-20', 'bw-21', 'bw-22']));
+        expect(settled.blockedRoutes).toEqual([]);
+        for (const plain of [at(), at(false)]) {
+            expect(legalMovesFrom(plain)).not.toContain('bw-17');
+            expect(plain.blockedRoutes).toHaveLength(4);
+        }
+        expect(problemsFor({ id: 'bad', world: { continent: 'coastal-continent', map: 'breakwater', questNodesSettled: 'yes' } }))
+            .toContain('world.questNodesSettled: expected a boolean');
+    });
+
     it('flags append without duplicates', () => {
         const base = buildStateFromFixture({ id: 'base', seed: 4 });
         const withFlags = buildStateFromFixture({ id: 'flags', seed: 4, flags: [base.flags[0]!, 'x-flag', 'x-flag'] });
@@ -218,9 +237,9 @@ describe('createFixtureGameStore (src/test-utils/fixture-store.ts)', () => {
         expect(result.state.world.currentMap.consumedNodes).toContain(f.world?.node);
     });
 
-    // QL1c — the live Act 1 carries no questline until QL1d, so the quest
-    // screen's witness is a fixture that stages the quest node and brings its
-    // questline along. A quest node is not spent by being resolved.
+    // QL1c — the quest screen's hermetic witness is a fixture that stages the
+    // quest node and brings its questline along (the live Breakwater's own
+    // questline is registered at load). A quest node is not spent by being resolved.
     it('only a fixture that stages the fixture questline registers it', () => {
         _unregisterQuestline('fixture-questline');
         createFixtureGameStore('wanderer-staged-cutscene');

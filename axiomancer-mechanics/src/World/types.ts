@@ -2,7 +2,7 @@ import { Item } from '../Items/types';
 import { Enemy } from '../Enemy/types';
 import { Image } from '../Utils/types';
 import { ContinentName, MapName } from './map.library';
-import { QuestName } from './quest.library';
+import type { QuestName } from './quest.library';
 import { NPC } from '../NPCs/types';
 import type { QuestlineId } from './questline';
 

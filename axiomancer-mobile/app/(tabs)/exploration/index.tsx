@@ -107,7 +107,9 @@ export default function ExplorationScreen() {
      */
     const onNodePress = (node: ExplorationNode) => {
         if (node.kind === 'locked') {
-            setNodeTip('This path is sealed.');
+            // A road blocked by a questline's lock says why; any other
+            // locked node is simply out of reach.
+            setNodeTip(node.blockedReason ?? 'This path is sealed.');
             return;
         }
         if (node.kind === 'completed') {

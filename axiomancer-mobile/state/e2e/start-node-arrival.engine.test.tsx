@@ -15,6 +15,7 @@
  */
 
 import { createStartingWorld } from '@mechanics';
+import { settledBreakwater } from '@/test-utils/settledBreakwater';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { act, render } from '@testing-library/react-native';
 import React from 'react';
@@ -171,7 +172,7 @@ describe('start-node arrival: the map resolves the node it puts you on', () => {
 describe('an arrival the player never answered survives a reload', () => {
     it('engages the encounter when the map screen remounts on the saved node', () => {
         const adapter = createMemoryAdapter();
-        const store = createAppStore({ adapter, overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter, overrides: { world: settledBreakwater() } });
         const actions = createAppActions(store);
         actions.moveTo('bw-2'); // engine kind `encounter`
 
@@ -211,9 +212,10 @@ describe('an arrival the player never answered survives a reload', () => {
 describe('a save taken mid-fight survives a reload', () => {
     it('re-offers the fight, with the onward nodes still shut', () => {
         const adapter = createMemoryAdapter();
-        const store = createAppStore({ adapter, overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter, overrides: { world: settledBreakwater() } });
         const actions = createAppActions(store);
-        actions.moveTo('bw-2'); // engine kind `encounter`
+        // The watchtower: the door fight, whose way on is the bridge.
+        actions.moveTo('bw-17'); // engine kind `encounter`
         mountExploration(store).unmount();
         // The gate engaged: the fight is under way.
         expect(store.getState().currentEncounter).toBeDefined();
@@ -223,10 +225,10 @@ describe('a save taken mid-fight survives a reload', () => {
         const reloaded = createAppStore({ adapter });
         const map = reloaded.getState().world.currentMap;
         expect(reloaded.getState().currentEncounter).toBeUndefined();
-        expect(map.currentNode).toBe('bw-2');
-        expect(map.pendingArrival).toBe('bw-2');
-        // bw-2's way on (the pier fan) is not open: the fight is still owed.
-        for (const onward of ['bw-7', 'bw-8', 'bw-9']) {
+        expect(map.currentNode).toBe('bw-17');
+        expect(map.pendingArrival).toBe('bw-17');
+        // The watchtower's way on (the bridge) is not open: the fight is still owed.
+        for (const onward of ['bw-18']) {
             expect(map.availableNodes).not.toContain(onward);
         }
 
@@ -236,7 +238,7 @@ describe('a save taken mid-fight survives a reload', () => {
     });
 
     it('a fight walked away from leaves its node unspent, and tapping it tries it again', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: settledBreakwater() } });
         const actions = createAppActions(store);
         actions.moveTo('bw-2');
         mountExploration(store).unmount();

@@ -407,8 +407,8 @@ export interface AppActions {
     pickEventChoice: (choiceId: string) => void;
     /**
      * Withdraw from an encounter already entered (the combat reveal's
-     * WITHDRAW). Toasts the retreat (free; it only narrates) and settles
-     * the node, without requiring a pending event slice, which
+     * WITHDRAW). Toasts the retreat (free; it only narrates) and answers
+     * the arrival, leaving the node unspent, without requiring a pending event slice, which
      * `beginHazardEncounter` has already cleared by then. Only offered where retreat is allowed;
      * boss encounters never surface it.
      */
@@ -1120,8 +1120,9 @@ function moveToAction(store: AppStore, nodeId: string): MoveToResult {
     // Node kind comes from the engine's authored event pools. Encounter /
     // boss nodes (both resolve to the `encounter` kind) are not completed or
     // consumed BY THE MOVE, and the move does not open their way on either:
-    // a fight's node is settled when the fight ends, by the
-    // engine's `END_COMBAT` (`settleArrival`) or by a flee below. Until then
+    // a fight's node is settled only when the fight is won, by the
+    // engine's `END_COMBAT` (`settleArrival`); a flee leaves it unspent with
+    // its arrival answered (`answerArrivalAction` below). Until then
     // a save, mid-fight included, stands the player on the node with the
     // fight owed and nowhere else to go, and the map re-offers it on reload.
     // Every other kind completes here, and resolving its arrival consumes it
@@ -1154,8 +1155,14 @@ function moveToAction(store: AppStore, nodeId: string): MoveToResult {
     const engineNode = getMapDefinition(map.continent, map.name).nodes.find(
         (n) => n.id === nodeId,
     );
+    // A blocked road (a questline's lock on the next quest node) opens
+    // nothing: the engine opens it, and lists the node, once the step fills.
+    const blocked = (targetId: string) => map.blockedRoutes.some(
+        (r) => (r.from === nodeId && r.to === targetId) || (r.from === targetId && r.to === nodeId),
+    );
     for (const targetId of isEncounterNode ? [] : engineNode?.connectedNodes ?? []) {
         if (completed.includes(targetId)) continue;
+        if (blocked(targetId)) continue;
         if (nextWorld.currentMap.availableNodes.includes(targetId)) continue;
         nextWorld = worldUnlockNode(nextWorld, targetId);
     }
@@ -1686,7 +1693,7 @@ function announceFlee(store: AppStore): void {
  * combat reveal's WITHDRAW. By then `beginHazardEncounter` has already cleared the event slice,
  * so unlike `pickEventChoice('flee')` this narrates the retreat without needing a
  * pending event; the slice is cleared defensively for any path that still has
- * one, and the node is settled. The modal teardown is the caller's (the overlay's) concern.
+ * one, and the arrival is answered with the node left unspent. The modal teardown is the caller's (the overlay's) concern.
  */
 function fleeEncounterAction(store: AppStore): void {
     try {
