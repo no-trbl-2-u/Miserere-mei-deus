@@ -145,7 +145,11 @@ export function entranceSettled(testId) {
 //      axiomancer-mechanics/src/Game/fixtures/state-fixture.registry.ts
 //      (`npm run game -w axiomancer-mechanics -- --fixture list`).
 //
-// Add a route only through one of those two doors — a bare state-gated URL
+//   3. DEV PREVIEWS — a route that leaves when nothing armed it but has a
+//      `?preview=1` dev view (`/death-return`). `devTools: true` forces dev
+//      tools so the export honours the preview.
+//
+// Add a route only through one of those doors — a bare state-gated URL
 // captures a blank bounce, which is a transport artifact, not a finding.
 export const SCREENS = [
     {
@@ -242,6 +246,36 @@ export const SCREENS = [
         fixture: 'sage-bw-door-gate',
         why: 'The exploration hub as a mid-campaign player sees it — a walked map, the boss node and the door one step away.',
     },
+    // CRITIQUE pass 103-107: four shipped surfaces no entry reached.
+    {
+        name: 'cache',
+        path: '/(tabs)/exploration',
+        fixture: 'apprentice-bw-cache',
+        waitForPath: '/cache',
+        why: 'The loot cache — whether the offers (a card offer prints its face) read as a one-way pick.',
+    },
+    {
+        name: 'satchel',
+        path: '/inventory',
+        // No preset wears a relic yet, so this shows the sage's consumables;
+        // the relic icons wait on a relic-holding fixture (AUDIT row).
+        fixture: 'sage-bw-door-gate',
+        why: 'The satchel tab — item icons, burden and what a carried item does.',
+    },
+    {
+        name: 'quest',
+        path: '/(tabs)/exploration',
+        fixture: 'apprentice-staged-quest',
+        waitForPath: '/quest',
+        why: "A quest node — the giver's line, the step on offer and what accepting it costs.",
+    },
+    {
+        name: 'death-return',
+        // An unarmed open leaves for the map; the dev preview shows the screen.
+        path: '/death-return?preview=1',
+        devTools: true,
+        why: 'The moment after a first death — whether the player knows they are back on the map, dying.',
+    },
 ]
 
 const MIME = {
@@ -327,6 +361,8 @@ async function captureScreen(context, baseUrl, screen, viewport, outDir, index) 
                 globalThis.__AXM_FIXTURE__ = id
                 globalThis.__AXM_FORCE_DEV_TOOLS__ = true
             }, screen.fixture)
+        } else if (screen.devTools) {
+            await page.addInitScript(() => { globalThis.__AXM_FORCE_DEV_TOOLS__ = true })
         }
         if (screen.liveFight) await enterLiveFight(page, baseUrl, { seed: screen.seed })
         else await page.goto(`${baseUrl}${screen.path}`, { waitUntil: 'networkidle', timeout: 20000 })

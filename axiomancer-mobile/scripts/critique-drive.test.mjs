@@ -97,3 +97,18 @@ test('every screen context pins the shared minigame seeds', async () => {
         assert.equal(arg.minigameSeeds.hazard.seed, DEFAULT_MINIGAME_SEEDS.hazard.seed)
     }
 })
+
+// CRITIQUE pass 103-107: /cache, the satchel, /quest and /death-return shipped
+// and four passes never saw them. Each is reached through a real door.
+test('the cache, satchel, quest and death-return screens are in the set', async () => {
+    const { SCREENS } = await import('./critique-drive.mjs')
+    const byName = Object.fromEntries(SCREENS.map((s) => [s.name, s]))
+    assert.equal(byName.cache.fixture, 'apprentice-bw-cache')
+    assert.equal(byName.cache.waitForPath, '/cache')
+    assert.equal(byName.satchel.path, '/inventory')
+    assert.equal(typeof byName.satchel.fixture, 'string')
+    assert.equal(byName.quest.fixture, 'apprentice-staged-quest')
+    assert.equal(byName.quest.waitForPath, '/quest')
+    assert.equal(byName['death-return'].path, '/death-return?preview=1')
+    assert.equal(byName['death-return'].devTools, true)
+})

@@ -955,17 +955,6 @@
 - suggested fix: move each style that prints a number to `FONTS.sans`, leaving names and titles in the gothic face as #1005 did. Then guard it so a fourth spot-fix is not needed: a lint test over `app/` and `components/` that fails when a style named for a figure (`*Value`, `*Price`, `*Stat*`, `level*`, `*Budget*`, `*Count`, ...) uses `FONTS.gothic`, or a shared `TYPE.figure` token used by every one of them.
 - source: critique:drive (unattended)
 
-### [HIGH] ci / critique-drive — `/cache`, the satchel, `/quest` and `/death-return` are not in the critique set, so four passes of shipped surfaces went unseen
-- pass: 103 (commit 79ecad63); raised LOW to MED at pass 105 (commit 02372412); raised MED to HIGH at pass 107 (commit bf5bae72)
-- viewport: n/a (both)
-- category: navigation
-- observation: RW1b (#947) changed the loot cache's card offer to print a `CombatCardFace` beside the label, the only player-facing diff since pass 102, but the drive's 11 screens never reach `/cache`. The registry already holds `apprentice-bw-cache` (`arrive` starts the cache session and pushes `/cache`), and the drive's own header names `/cache` among the gated routes, yet no `SCREENS` entry uses it.
-- evidence: `axiomancer-mobile/scripts/critique-drive.mjs` SCREENS (fixtures at lines 193-242, none for the cache); `axiomancer-mechanics/src/Game/fixtures/state-fixture.registry.ts:95` `apprentice-bw-cache`; `axiomancer-mobile/app/cache/index.tsx` (RW1b).
-- pass 105: IT1b (#989) gave the relics T's icons with colour accents (`components/icons/item-glyphs.ts`, `components/inventory/ItemCard.tsx`); they draw only on the satchel tab (`app/(tabs)/inventory`), which no SCREENS entry opens, so a second shipped surface went unseen in two passes.
-- pass 107: QL1c (#1023) shipped `/quest` (`app/quest/index.tsx`, pushed by `components/QuestGate.tsx`) and DY1b (#1018) shipped `/death-return` (`app/death-return/index.tsx`); DY1d (#1022) added the dying skull to the combat panes. The registry already holds `apprentice-staged-quest` (`state-fixture.registry.ts:86`, `arrive` pushes `/quest`) and the death screen has a `?preview=1` dev view, but no SCREENS entry opens either, and no fixture boots a dying board.
-- suggested fix: add a `cache` screen entry booting `apprentice-bw-cache` with `waitForPath: '/cache'` (its seed is already shared through `openScreenContext`), and pin it in `critique-drive.test.mjs`; if that fixture's offers hold no card, note it so the face is judged on the next pass that rolls one. Add a `satchel` entry the same way: boot a fixture whose inventory holds at least one relic (or add one to the registry, which is an AUDIT row, not drive code) and open the inventory tab. Add `quest` (fixture `apprentice-staged-quest`, `waitForPath: '/quest'`) and `death-return` (path `/death-return?preview=1`) entries the same way; a dying-board fixture for the skull is an AUDIT row, not drive code.
-- source: critique:drive (unattended)
-
 ### [LOW] combat preview — WITHDRAW's "forfeit the path" line prints at 8.5px in `AXM.ash`, about 1.95:1 against the page
 - pass: 101 (commit 83975010)
 - viewport: mobile (375x812) and desktop (1280x800)
@@ -1287,6 +1276,18 @@
 - source: loop
 
 ## Done
+
+### [x] [HIGH] ci / critique-drive — `/cache`, the satchel, `/quest` and `/death-return` are not in the critique set, so four passes of shipped surfaces went unseen — RESOLVED 2026-10-28 (branch loop/iterate-critique-drive-new-routes, cf5957ead: `cache` and `quest` boot their arrival fixtures and wait for the gate's push, `satchel` opens `/inventory` on `sage-bw-door-gate`, `death-return` opens the `?preview=1` dev view through a new `devTools` flag; the mobile drive captured all 15 screens with no errors; pinned in critique-drive.test.mjs. No preset wears a relic and no fixture boots a dying board, so the relic icons and the DY1d skull wait on fixtures: AUDIT row filed)
+- pass: 103 (commit 79ecad63); raised LOW to MED at pass 105 (commit 02372412); raised MED to HIGH at pass 107 (commit bf5bae72)
+- viewport: n/a (both)
+- category: navigation
+- observation: RW1b (#947) changed the loot cache's card offer to print a `CombatCardFace` beside the label, the only player-facing diff since pass 102, but the drive's 11 screens never reach `/cache`. The registry already holds `apprentice-bw-cache` (`arrive` starts the cache session and pushes `/cache`), and the drive's own header names `/cache` among the gated routes, yet no `SCREENS` entry uses it.
+- evidence: `axiomancer-mobile/scripts/critique-drive.mjs` SCREENS (fixtures at lines 193-242, none for the cache); `axiomancer-mechanics/src/Game/fixtures/state-fixture.registry.ts:95` `apprentice-bw-cache`; `axiomancer-mobile/app/cache/index.tsx` (RW1b).
+- pass 105: IT1b (#989) gave the relics T's icons with colour accents (`components/icons/item-glyphs.ts`, `components/inventory/ItemCard.tsx`); they draw only on the satchel tab (`app/(tabs)/inventory`), which no SCREENS entry opens, so a second shipped surface went unseen in two passes.
+- pass 107: QL1c (#1023) shipped `/quest` (`app/quest/index.tsx`, pushed by `components/QuestGate.tsx`) and DY1b (#1018) shipped `/death-return` (`app/death-return/index.tsx`); DY1d (#1022) added the dying skull to the combat panes. The registry already holds `apprentice-staged-quest` (`state-fixture.registry.ts:86`, `arrive` pushes `/quest`) and the death screen has a `?preview=1` dev view, but no SCREENS entry opens either, and no fixture boots a dying board.
+- suggested fix: add a `cache` screen entry booting `apprentice-bw-cache` with `waitForPath: '/cache'` (its seed is already shared through `openScreenContext`), and pin it in `critique-drive.test.mjs`; if that fixture's offers hold no card, note it so the face is judged on the next pass that rolls one. Add a `satchel` entry the same way: boot a fixture whose inventory holds at least one relic (or add one to the registry, which is an AUDIT row, not drive code) and open the inventory tab. Add `quest` (fixture `apprentice-staged-quest`, `waitForPath: '/quest'`) and `death-return` (path `/death-return?preview=1`) entries the same way; a dying-board fixture for the skull is an AUDIT row, not drive code.
+- source: critique:drive (unattended)
+- issue: #1032
 
 ### [x] [MED] combat / rest / hazard — the display face's zero reads as an 8, so a fresh fight shows "◆ 8 CONVICTION" and an empty purse shows "8" — RESOLVED 2026-10-28 (branch loop/iterate-open-zero-numerals, 0992025c2: the conviction chip, the rest PURSE figure and the hazard FORCE/ESCAPE values print in `FONTS.sans`; names and titles keep the gothic face; each pinned in its component test)
 - pass: 104 (commit f7f5530f)

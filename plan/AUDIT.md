@@ -171,6 +171,13 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - detail: `scripts/eval/escape-ledger.mjs` reads the live `.github/workflows/verify-*.yml` filters once and classifies every merged PR in the window with them (`classifyPaths`, then `expectedNotRun`). Phase LG1b added `verify-root.yml`, which owns `scripts/`, `.github/`, `skills/` and the top-level files, so the next ledger run lists `verify-root.yml` as triggered but not run on every PR merged before it existed (#526 among them) and stops counting those paths as uncovered. Any earlier filter change had the same skew, just smaller. Reading each workflow's filter at the PR's merge commit (`git show <sha>:.github/workflows/<file>`, skipping a file that did not exist there) keeps the history as it was. The seeded replay should keep the live filters: it measures today's gate.
 - next: `/iterate` — a `verifyWorkflowsAt(sha)` in `escape-ledger.mjs` with a fixture test in `scripts/eval/escape-ledger.test.mjs`.
 
+### [ ] [tests] No state fixture wears a relic or boots a dying board, so the critique drive cannot see the relic icons or the DY1d skull (iterate 2026-10-28)
+- category: tests
+- impact: 4
+- ease: 6
+- detail: The critique drive now opens the satchel (`sage-bw-door-gate`) and `/death-return`, but every preset's `equipment` resolves to nothing (`Character/presets.ts`, "a run starts with none"), so the satchel shows only phials and IT1b's relic icons stay unseen; and no fixture stages a fight with the player dying, so DY1d's skull on the combat panes has no capture. Fix: a registry fixture with a `player.equipment` (or relic) override wearing one live relic, and one whose fight boots at 1 VITAE with `dying` set; then point the drive's `satchel` entry at the first and add a `combat-dying` entry. Fixture test data only, no roster change.
+- source: iterate (CRITIQUE pass 107 HIGH, follow-up)
+
 ### [ ] [finding] Five reachable routes have no play path from a fresh save, only shell-gate edges (FM1d drive, 2026-10-21)
 - category: finding
 - impact: 4
