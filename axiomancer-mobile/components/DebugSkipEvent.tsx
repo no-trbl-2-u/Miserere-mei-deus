@@ -30,7 +30,10 @@ export function DebugSkipEvent() {
     const onSkip = () => {
         const result = skipCurrentEvent(store, actions);
         setFeedback(`${result.kind} @ ${result.nodeId ?? '?'} · ${result.outcome}`);
-        if (result.kind !== 'none') router.push('/(tabs)/exploration');
+        // A lethal crossing revives behind the return moment, which also
+        // consumes the flag the revive armed.
+        if (result.detail?.deathOutcome === 'revived') router.push('/death-return');
+        else if (result.kind !== 'none') router.push('/(tabs)/exploration');
     };
 
     return (

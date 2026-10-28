@@ -8,10 +8,15 @@
 //   node --test scripts/pr-merge.test.mjs
 
 import assert from 'node:assert/strict'
+import { execFileSync } from 'node:child_process'
+import fs from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
 import test from 'node:test'
+import { fileURLToPath } from 'node:url'
 
 import * as policy from './pr-policy.mjs'
-import { AUTO_MARKER, HOLD_LABELS, PIPELINE_PATHS, PLAN_LABELS, TRUSTED_AUTHORS, auditComment, countAutoMerges, mergeWanted, reviewStartedAt, verdictFor, verifyGateGreen } from './pr-merge.mjs'
+import { AUTO_MARKER, HOLD_LABELS, PIPELINE_PATHS, PLAN_LABELS, TREE_LINTS, TRUSTED_AUTHORS, treeCheckSafe, auditComment, countAutoMerges, lintTree, mergeWanted, reviewStartedAt, treeUpdateComment, treeUpdated, treeVerdict, verdictFor, verifyGateGreen } from './pr-merge.mjs'
 import { headMarker } from './pr-review.mjs'
 
 const HEAD = 'a'.repeat(40)
@@ -228,4 +233,84 @@ test('the audit comment names the head and the run and carries the marker', () =
   assert.ok(c.includes(HEAD))
   assert.match(c, /run 123/)
   assert.ok(c.endsWith(AUTO_MARKER))
+})
+
+// --- the merged-tree check (phase MD1c) ---------------------------------------
+
+const RED = [{ name: 'check-lessons', detail: 'plan/lessons.md: duplicate slug x' }]
+
+test('treeVerdict: green goes on, red updates once, red after an update or a failed update holds naming the lint', () => {
+  assert.equal(treeVerdict({ red: [] }).action, 'go')
+  assert.equal(treeVerdict({ red: [], updated: true }).action, 'go', 'a green tree after an update goes on')
+  const first = treeVerdict({ red: RED })
+  assert.equal(first.action, 'update')
+  assert.match(first.reason, /check-lessons/)
+  const after = treeVerdict({ red: RED, updated: true })
+  assert.equal(after.action, 'hold')
+  assert.match(after.reason, /still red under check-lessons.*duplicate slug x/)
+  const failed = treeVerdict({ red: RED, updateFailed: true })
+  assert.equal(failed.action, 'hold')
+  assert.match(failed.reason, /conflicted or changed nothing/)
+  assert.match(treeVerdict({ red: [{ name: 'check-deadlines' }, { name: 'check-plan-queues' }], updated: true }).reason, /check-deadlines, check-plan-queues/)
+})
+
+test('treeUpdated: one update per head, from a trusted account only', () => {
+  const NEW = 'c'.repeat(40)
+  const body = treeUpdateComment({ from: HEAD, to: NEW, red: ['check-lessons'] })
+  assert.match(body, /check-lessons/)
+  const mine = [{ body, author: 'no-trbl-2-u' }]
+  assert.equal(treeUpdated(mine, HEAD), true, 'the head the update started from')
+  assert.equal(treeUpdated(mine, NEW), true, 'the head the update produced')
+  assert.equal(treeUpdated(mine, OLD), false, 'any other head has its update to come')
+  assert.equal(treeUpdated([{ body, author: 'someone-else' }], HEAD), false, 'a stranger\'s forged marker suppresses nothing')
+  assert.equal(treeUpdated([], HEAD), false)
+})
+
+test('the live plan passes the tree lints, and a doubled lessons row fails them (main\'s scripts, the tree\'s plan/)', () => {
+  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+  const scriptsDir = path.join(root, 'scripts')
+  const green = lintTree({ scriptsDir, repo: root, treeish: 'HEAD' })
+  assert.deepEqual(green.map((r) => r.name), TREE_LINTS.map((l) => l.name))
+  assert.ok(green.every((r) => r.ok), JSON.stringify(green.filter((r) => !r.ok)))
+
+  const repo = fs.mkdtempSync(path.join(os.tmpdir(), 'pr-merge-tree-'))
+  try {
+    const run = (...a) => execFileSync('git', a, { cwd: repo, stdio: 'pipe' })
+    run('init', '-q')
+    run('config', 'user.email', 't@example.com')
+    run('config', 'user.name', 't')
+    fs.cpSync(path.join(root, 'plan'), path.join(repo, 'plan'), { recursive: true })
+    const file = path.join(repo, 'plan', 'lessons.md')
+    const lines = fs.readFileSync(file, 'utf8').split('\n')
+    const at = lines.findIndex((l) => l.startsWith('- **'))
+    lines.splice(at + 1, 0, lines[at])
+    fs.writeFileSync(file, lines.join('\n'))
+    run('add', '-A')
+    run('commit', '-q', '-m', 'doubled row')
+    const red = lintTree({ scriptsDir, repo, treeish: 'HEAD' }).filter((r) => !r.ok)
+    assert.deepEqual(red.map((r) => r.name), ['check-lessons'])
+    assert.ok(red[0].detail.length > 0)
+  } finally {
+    fs.rmSync(repo, { recursive: true, force: true })
+  }
+})
+
+test('a throwing tree check becomes a hold outcome with a comment, never a thrown step', async () => {
+  const out = path.join(os.tmpdir(), `pr-merge-output-${process.pid}-${Date.now()}`)
+  const before = process.env.GITHUB_OUTPUT
+  process.env.GITHUB_OUTPUT = out
+  const comments = []
+  try {
+    await treeCheckSafe('o/r', '7', HEAD, { run: async () => { throw new Error('gh: 502 bad gateway') }, comment: (b) => comments.push(b) })
+    const text = fs.readFileSync(out, 'utf8')
+    assert.match(text, /^go=false$/m)
+    assert.match(text, /^reason=tree check: errored, so no merge \(gh: 502 bad gateway\)$/m)
+    assert.equal(comments.length, 1)
+    assert.match(comments[0], /502 bad gateway/)
+    await treeCheckSafe('o/r', '7', HEAD, { run: async () => { throw new Error('x') }, comment: () => { throw new Error('comment failed too') } })
+  } finally {
+    if (before === undefined) delete process.env.GITHUB_OUTPUT
+    else process.env.GITHUB_OUTPUT = before
+    fs.rmSync(out, { force: true })
+  }
 })

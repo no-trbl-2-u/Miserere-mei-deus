@@ -10,6 +10,15 @@
 			"label": "Minigames"
 		},
 		{
+			"id": "elsewhere",
+			"type": "group",
+			"x": 1060,
+			"y": 0,
+			"width": 340,
+			"height": 170,
+			"label": "Elsewhere"
+		},
+		{
 			"id": "route:hazard",
 			"type": "file",
 			"file": "Features/The hazard minigame.md",
@@ -38,7 +47,24 @@
 			"width": 260,
 			"height": 90,
 			"color": "4"
+		},
+		{
+			"id": "elsewhere:route:death-return",
+			"type": "file",
+			"file": "Features/Death Return.md",
+			"x": 1100,
+			"y": 40,
+			"width": 260,
+			"height": 90,
+			"color": "1"
 		}
 	],
-	"edges": []
+	"edges": [
+		{
+			"id": "flow:route:hazard->elsewhere:route:death-return",
+			"fromNode": "route:hazard",
+			"toNode": "elsewhere:route:death-return",
+			"color": "5"
+		}
+	]
 }

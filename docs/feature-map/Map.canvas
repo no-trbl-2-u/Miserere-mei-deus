@@ -81,6 +81,12 @@
 			"color": "5"
 		},
 		{
+			"id": "flow:group:minigames->group:world",
+			"fromNode": "group:minigames",
+			"toNode": "group:world",
+			"color": "5"
+		},
+		{
 			"id": "flow:group:dev->group:tabs",
 			"fromNode": "group:dev",
 			"toNode": "group:tabs",

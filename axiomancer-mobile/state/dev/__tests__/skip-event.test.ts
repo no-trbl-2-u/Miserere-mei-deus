@@ -19,11 +19,12 @@
  */
 
 import {
-    BREAKWATER_QUESTLINE, ENEMY_REGISTRY, completeQuest, configureLogging, getLogger, placeOnNode, resetLoggingForTests, startQuest, stepQuest,
+    BREAKWATER_QUESTLINE, ENEMY_REGISTRY, HAZARD_CRACK_CARD, completeQuest, configureLogging, getLogger, placeOnNode, resetLoggingForTests, startQuest, stepQuest,
     type GameState,
 } from '@mechanics';
 
 import { createAppActions } from '@/state/actions';
+import { clearDeathReturn, isDeathReturnArmed } from '@/state/death-return';
 import { stageEncounter, listEnemies } from '@/state/dev/enemy-picker';
 import { installDevSkipHook, SKIP_EVENT_LOG_KIND, skipCurrentEvent } from '@/state/dev/skip-event';
 import { createAppStore, EMPTY_EVENT_SLICE } from '@/state/store';
@@ -149,6 +150,34 @@ describe('skipCurrentEvent — minigames', () => {
         expect(result.outcome).toMatch(/^(complete|perfect):\d+\/\d+$/);
         expect(result.detail).toMatchObject({ hazardId, died: false });
         expect(store.getState().hazard.session).toBeNull();
+    });
+
+    it('hazard: a lethal skipped crossing revives, arms the return moment and reports the outcome', () => {
+        const { store, actions } = freshHandle();
+        actions.moveTo('bw-2');
+        store.setState({ player: { ...player(store), health: 15, maxHealth: 15 } } as never);
+        clearDeathReturn();
+        // A lost cracked-cliff crossing (-20 VITAE), left on its rewards ledger.
+        actions.beginHazard({ seed: 9, hazardId: 'cracked-cliff' });
+        actions.selectHazardRoute('risk');
+        actions.finishHazardRolling();
+        for (let r = 0; r < 3; r++) {
+            const sess = store.getState().hazard.session!;
+            const hand = [{ uid: `t${sess.round}-0`, cardId: HAZARD_CRACK_CARD.id, dieId: null }];
+            store.setState({ hazard: { session: { ...sess, hand, play: [] } } });
+            actions.stageHazardCard(`t${sess.round}-0`);
+            actions.resolveHazardRound();
+            actions.continueHazardAfterResolve();
+        }
+        actions.acknowledgeHazardOutcome();
+
+        const result = skipCurrentEvent(store, actions, DEV);
+
+        expect(result.detail).toMatchObject({ died: true, deathOutcome: 'revived' });
+        expect(isDeathReturnArmed()).toBe(true);
+        expect((store.getState() as unknown as GameState).dying).toBe(true);
+        expect(store.getState().world.currentMap.currentNode).toBe('bw-1');
+        clearDeathReturn();
     });
 
     it('rest: takes the free REST offer and heals', () => {

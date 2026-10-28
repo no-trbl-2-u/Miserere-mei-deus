@@ -3,12 +3,15 @@
  *
  * Pins the lethality contract through the store action layer:
  *  - a Hazard crossing whose net VITAE swing would drop the player to
- *    `health <= 0` (engine `isDefeated` threshold) is FATAL: it routes
- *    through the engine `resetRun({ keepCharacter: true })` primitive,
- *    stamps a durable `hazard-death:` tombstone flag, clears the
- *    session, and returns `died: true` with zeroed deltas;
+ *    `health <= 0` (engine `isDefeated` threshold) is FATAL: it runs the
+ *    death rule (`playerDied('hazard')`), stamps a durable `hazard-death:`
+ *    tombstone flag, clears the session, and returns `died: true` with
+ *    zeroed deltas and the rule's `outcome`;
+ *  - a FIRST death revives: 1 VITAE, dying, back on the node walked from,
+ *    the hazard node unspent and open to cross again (phase DY1c);
+ *  - a death while dying ends the run (fresh run, full VITAE, not dying);
  *  - the killing crossing FORFEITS its spoils (no shillings banked);
- *  - the character survives the reset (level kept) — only the run resets;
+ *  - the character survives (level kept);
  *  - a survivable failing crossing still floors VITAE at 1, reports
  *    `died: false`, applies its (negative) delta, and stamps NO tombstone.
  *
@@ -74,41 +77,90 @@ function driveFailingCrossing(store: AppStore, actions: AppActions): void {
 }
 
 describe('hazard out-of-combat death', () => {
-    it('a lethal crossing resets the run, stamps a tombstone, and forfeits spoils', () => {
+    /** Walks onto bw-2 (the crossing's node), wounds the player, plays the failing crossing. */
+    function dieOnce(store: AppStore, actions: AppActions, health = 15) {
+        actions.moveTo('bw-2');
+        setHealth(store, health, Math.max(health, 15));
+        driveFailingCrossing(store, actions);
+        return actions.claimHazardRewards(null);
+    }
+
+    it('a first lethal crossing revives dying on the node walked from, node open, spoils forfeit', () => {
         const { store, actions } = makeStoreAndActions();
         const levelBefore = gameState(store).player.level;
         const shillingsBefore = gameState(store).player.currency;
-        // Wound the player low so the failing crossing's −20 swing crosses the
-        // isDefeated threshold.
-        setHealth(store, 15, gameState(store).player.maxHealth);
+        const runId = gameState(store).runId;
 
-        driveFailingCrossing(store, actions);
-        const result = actions.claimHazardRewards(null);
+        const result = dieOnce(store, actions);
 
         expect(result.applied).toBe(true);
         expect(result.died).toBe(true);
-        // Death yields no reward: every delta zeroed.
+        expect(result.outcome).toBe('revived');
         expect(result.vitaeDelta).toBe(0);
         expect(result.maxVitaeDelta).toBe(0);
         expect(result.shillings).toBe(0);
         expect(result.cardAdded).toBeNull();
 
         const after = gameState(store);
-        // Run reset: session cleared, a tombstone recorded.
         expect(store.getState().hazard.session).toBeNull();
         expect(hazardDeathCount(after.flags ?? [])).toBe(1);
-        expect((after.flags ?? []).some((f) => f.startsWith(HAZARD_DEATH_FLAG_PREFIX))).toBe(true);
-        // Character survives the reset (keepCharacter): level kept, VITAE
-        // restored by the fresh run rather than left at/below zero.
+        expect(after.runId).toBe(runId);
+        expect(after.dying).toBe(true);
+        expect(after.player.health).toBe(1);
         expect(after.player.level).toBe(levelBefore);
-        expect(after.player.health).toBeGreaterThan(0);
-        // Spoils forfeit: no shillings banked on the killing crossing.
         expect(after.player.currency).toBe(shillingsBefore);
+        const map = after.world.currentMap;
+        expect(map.currentNode).toBe('bw-1');
+        expect(map.completedNodes).not.toContain('bw-2');
+        expect(map.availableNodes).toContain('bw-2');
+    });
+
+    it('a revive is written to the slot', () => {
+        const adapter = createMemoryAdapter();
+        const store = createAppStore({ adapter });
+        const actions = createAppActions(store);
+        const before = adapter.saveCount;
+
+        dieOnce(store, actions);
+
+        expect(adapter.saveCount).toBeGreaterThan(before);
+        expect(adapter.load()?.dying).toBe(true);
+    });
+
+    it('the hazard node can be walked into again after the revive', () => {
+        const { store, actions } = makeStoreAndActions();
+        dieOnce(store, actions);
+
+        actions.moveTo('bw-2');
+        expect(gameState(store).world.currentMap.currentNode).toBe('bw-2');
+        expect(gameState(store).dying).toBe(true);
+    });
+
+    it('a lethal crossing while dying ends the run', () => {
+        const { store, actions } = makeStoreAndActions();
+        const runId = gameState(store).runId;
+        dieOnce(store, actions);
+        expect(gameState(store).dying).toBe(true);
+
+        // Dying at 1 VITAE: the same failing crossing is fatal again.
+        actions.moveTo('bw-2');
+        driveFailingCrossing(store, actions);
+        const result = actions.claimHazardRewards(null);
+
+        expect(result.died).toBe(true);
+        expect(result.outcome).toBe('run-over');
+        const after = gameState(store);
+        expect(after.runId).not.toBe(runId);
+        expect(after.dying).toBeUndefined();
+        expect(after.player.health).toBe(after.player.maxHealth);
+        expect(after.world.currentMap.currentNode).toBe('bw-1');
+        expect(hazardDeathCount(after.flags ?? [])).toBe(1);
+        expect(store.getState().hazard.session).toBeNull();
     });
 
     it('a survivable crossing still floors VITAE and stamps no tombstone', () => {
         const { store, actions } = makeStoreAndActions();
-        // 40 VITAE absorbs the −20 swing — maimed, not killed.
+        // 40 VITAE absorbs the -20 swing: maimed, not killed.
         setHealth(store, 40, 40);
 
         driveFailingCrossing(store, actions);
@@ -116,9 +168,11 @@ describe('hazard out-of-combat death', () => {
 
         expect(result.applied).toBe(true);
         expect(result.died).toBe(false);
+        expect(result.outcome).toBeNull();
         expect(result.vitaeDelta).toBeLessThan(0);
 
         const after = gameState(store);
+        expect(after.dying).toBeUndefined();
         expect(after.player.health).toBeGreaterThan(0);
         expect(after.player.health).toBeLessThan(40);
         expect(hazardDeathCount(after.flags ?? [])).toBe(0);
@@ -127,7 +181,6 @@ describe('hazard out-of-combat death', () => {
 
     it('an exactly-lethal swing to zero VITAE is fatal (isDefeated boundary)', () => {
         const { store, actions } = makeStoreAndActions();
-        // 20 VITAE − a 20 swing lands on exactly 0 → isDefeated → death.
         setHealth(store, 20, 20);
 
         driveFailingCrossing(store, actions);
@@ -139,7 +192,6 @@ describe('hazard out-of-combat death', () => {
 
     it('a crossing landing on 1 VITAE survives (maim, not death)', () => {
         const { store, actions } = makeStoreAndActions();
-        // 21 VITAE − a 20 swing lands on 1 → above the isDefeated floor.
         setHealth(store, 21, 21);
 
         driveFailingCrossing(store, actions);
