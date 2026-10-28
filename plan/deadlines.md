@@ -322,6 +322,9 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - EQ2b — loop work; follows EQ2a, the slot words on screen; date not set.
 - SB1 — attended: T's set-bonus design session; T said it is not part of the Act 1 MVP deadline; date not set.
 - QL1g — loop work; the boss fought again, blocked on T's death rule (a separate plot, id TBD) so it has no date until that plot is dated; not needed for the Nov 16 run unless a lost boss fight must be retryable by then.
+- MD1a — plotted 2026-10-28 (merge driver for this file); loop work, needs no time from T; date not set.
+- MD1b — plotted 2026-10-28 (`pr-resolve` settles a plot-on-plot merge); loop work, needs no time from T; date not set.
+- MD1c — plotted 2026-10-28 (the merge job checks the merged tree); loop work, but a pipeline PR T merges by hand; date not set.
 
 ## How a window closes
 
@@ -331,6 +334,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-28** — **two open plot PRs stop conflicting** (T, in conversation: "whenever we have two plot/plan PRs open, once I merge one, the other always ends up with a conflict"; `/plot anytime`, run unattended). **Added** Unscheduled lines for MD1a, MD1b and MD1c (T folded MD1c in on the PR): T set no date, the work is a merge driver for this file and a `pr-resolve` step, and it blocks no window's goal. **Edited** no Item: none has a premise this changes.
 - **2026-10-28** — **Chapter 1's questline: T answered the plot's four open items** (the next quest node locked until the step is met; every node may move, so each step's supply sits behind its own marker; the bridge by routing, with sealed roads only if routing could not, and a fled fight does not complete its node; a lost boss fight can be fought again, relying on T's death rule, plotted separately). **Edited** the Nov 8 Item's name (no more sealed roads: locks, pockets and the fled-fight rule). **Added** an Unscheduled line for QL1g (`[blocked]` on the death rule's plot, no date). No date moved (QL1b is now sized L; the dates are still the plot's, for T to move), nothing ticked.
 - **2026-10-27** — **Chapter 1's questline re-shaped** (T's answers to the plot's six calls: steps 1-3 turned in at the next quest node, step 4 the boss, the bridge unreachable by map routing, no runtime shortfall fallback). **Edited** the Nov 8 Item (three turn-ins, the boss as the fourth step, the sealed roads) and the Nov 10 Item (lines per node). No date moved, nothing ticked.
 - **2026-10-27** — **Chapter 1's questline plotted** (T, `/plot asap` run unattended on T's word: one questline in Chapter 1 on a ninth node kind, `quest`, D111; LR1f and its PR #987 dropped). **Added** Items for QL1a-QL1d (the questline on the map, Nov 8), QL1e (T writes the quest line, Nov 10, split out of the Nov 10 `T` Item, which keeps the node copy at 1 h) and QL1f (T's lines in the game, Nov 13); the loop dates are the plot's, before the Nov 9 mid-MVP check and the Nov 16 MVP, and T can move them. **Edited** the event-node pitch (Nov 4) and plot (Nov 6) Items, the milestones, the W2 notes and the schedule from eight kinds to nine; the Nov 13 lane-relics Item drops the Act 1 quests and LR1f (skipped, superseded by QL1); the Nov 25 Item names the four quest relics left for Chapters 2-4 instead of LR1f's `[content]` rows. **Ticked** nothing by hand; `--write` ticked the Nov 13 lane-relics Item, since every row it still names has shipped.
