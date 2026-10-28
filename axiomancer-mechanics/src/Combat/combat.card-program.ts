@@ -48,6 +48,10 @@ import {
     type ElementState,
 } from './combat.elements';
 import { drawCombatCards } from './combat.deck';
+import {
+    addReflect, addThorns, anySpikes, armReflectOnAttack, driftSpikes, fireReflectOnAttack, initSpikeState,
+    spikeEvents, spikeReturns, REFLECT_TURNS, type SpikeState,
+} from './combat.spikes';
 import { getRng } from '../Utils/rng';
 import { getCardById } from '../Cards/cards.library';
 import { lookupEffect, applyEffect } from '../Effects';
@@ -134,6 +138,10 @@ export interface ProgramLedger {
     leechCardId: string | null;
     /** The Elementalist's weather (`combat.elements.ts`). */
     el: ElementState;
+    /** The Defender's THORNS and REFLECT (`combat.spikes.ts`). */
+    spikes: SpikeState;
+    /** VITAE your DEALs took off the foe this turn (reset at your turn start). */
+    dealtThisTurn?: number;
 }
 
 export function initProgramLedger(): ProgramLedger {
@@ -146,6 +154,7 @@ export function initProgramLedger(): ProgramLedger {
         drains: [], deathWardRound: null, pendingHeal: 0, curseUid: 0, globalUid: 0,
         tetherUntil: 0, tetherCardId: null, tetherSourceName: null, leechTurns: 0, leechPotency: 0, leechCardId: null,
         el: initElementState(),
+        spikes: initSpikeState(),
     };
 }
 
@@ -156,6 +165,7 @@ function cloneLedger(l: ProgramLedger): ProgramLedger {
         exiled: l.exiled.slice(),
         drains: l.drains.map(d => ({ ...d })),
         el: { ...(l.el ?? initElementState()) },
+        spikes: { ...(l.spikes ?? initSpikeState()) },
     };
 }
 
@@ -208,6 +218,10 @@ interface Work {
     x?: number;
     /** The largest printed max a "SACRIFICE any amount" line asked for (cost mode). */
     xMax?: number;
+    /** Cards a "Discard n cards at random" cost asked for (cost mode). */
+    discard?: number;
+    /** GUARD an earlier verb on the line gained (value mode), so a later read sees it. */
+    guardPlus?: number;
 }
 
 interface Frame {
@@ -231,6 +245,20 @@ const SELF_BURN_VALUE = 1.0;
 const LETHAL_BURN_VALUE = 100;
 const FROZEN_VALUE = 6;
 const DRAW_VALUE = 3;
+// The witness's spikes: a later foe turn is worth less (the fight may be over).
+const SPIKE_LATER_TURN_WEIGHT = 0.7;
+const REFLECT_LATER_TURN_WEIGHT = 0.85;
+/** A discarded card with no program, or one valued from inside another discard's estimate. */
+const DISCARD_PLAIN_CARD_VALUE = 3;
+
+/** Re-entry guard: a discard's cost values the other cards' FREE lines once, never recursively. */
+let discardDepth = 0;
+/** THORNS doubled while GUARD holds: a share of the strikes, since a hit may get through. */
+const GUARD_HOLDS_VALUE = 0.8;
+/** GUARD kept into the next foe turn: worth less than GUARD now (the foe's next hit is unknown). */
+const HELD_GUARD_VALUE = 0.6;
+/** A card back from EXILE into the draw pile: a later draw, worth about two DRAWs. */
+const UNEXILE_VALUE = 6;
 
 function expectedGlobalFires(trigger: GlobalTrigger, paid: boolean): number {
     const base = trigger === 'turn' ? GLOBAL_FREE_TURNS : trigger === 'sac' ? 2 : 1.5;
@@ -241,7 +269,15 @@ class LineCtx implements ProgramCtx {
     constructor(private w: Work, private mode: Mode, private f: Frame) {}
 
     get q(): ProgramQuery {
-        return buildQuery(this.w.s, this.mode === 'cost' ? this.w.cost : 0);
+        const q = buildQuery(this.w.s, this.mode === 'cost' ? this.w.cost : 0);
+        // The spikes read the working ledger, so a line sees its own earlier verbs.
+        const sp = this.w.l.spikes ?? initSpikeState();
+        return {
+            ...q,
+            thorns: sp.thorns, reflect: sp.reflect,
+            guard: q.guard + (this.w.guardPlus ?? 0),
+            dealtThisTurn: this.w.l.dealtThisTurn ?? 0,
+        };
     }
 
     private stats() { return this.w.s.player.baseStats; }
@@ -265,6 +301,7 @@ class LineCtx implements ProgramCtx {
         if (vuln !== 1) dmg = Math.round(dmg * vuln);
         const landed = Math.min(dmg, enemy.health);
         if (this.mode === 'cost') return landed;
+        this.w.l.dealtThisTurn = (this.w.l.dealtThisTurn ?? 0) + landed;
         if (this.mode === 'value') {
             this.w.value += landed + (dmg >= enemy.health ? 20 : 0) + this.drainValue();
             return landed;
@@ -387,6 +424,7 @@ class LineCtx implements ProgramCtx {
             const need = Math.max(0, this.incoming());
             const useful = Math.min(amt, need);
             this.w.value += useful + 0.2 * (amt - useful);
+            this.w.guardPlus = (this.w.guardPlus ?? 0) + amt;
         } else if (this.mode === 'apply') {
             this.w.s = { ...this.w.s, guard: (this.w.s.guard ?? 0) + amt };
         }
@@ -884,6 +922,181 @@ class LineCtx implements ProgramCtx {
         this.w.value += (this.el().storm > 0 ? 1.5 : 0.7) * n;
     }
 
+    // -- the spikes (Defender) ----------------------------------------------
+    private spikes(): SpikeState { return this.w.l.spikes ?? (this.w.l.spikes = initSpikeState()); }
+
+    /** The witness's worth of THORNS going up by `add`: the strikes it meets this foe turn and the next two, drifting. */
+    private thornsValue(add: number): number {
+        const strikes = Math.max(1, this.hits().length);
+        const T = this.spikes().thorns;
+        let v = 0;
+        [0, 0, 1].forEach((drop, t) => {
+            const gained = Math.max(0, T + add - drop) - Math.max(0, T - drop);
+            v += gained * strikes * (t === 0 ? 1 : SPIKE_LATER_TURN_WEIGHT);
+        });
+        const enemy = this.w.s.enemy;
+        return Math.min(v * getDamageTakenMultiplier(enemy), enemy.health + 10);
+    }
+
+    thorns(n: number, opts?: { exact?: boolean }): number {
+        if (n <= 0) return 0;
+        const amt = opts?.exact ? n : scaleFor(n, this.stats(), 'heart', 'repeating');
+        if (amt <= 0) return 0;
+        if (this.mode === 'cost') return amt;
+        if (this.mode === 'value') this.w.value += this.thornsValue(amt);
+        this.w.l.spikes = addThorns(this.spikes(), amt);
+        return amt;
+    }
+
+    /** The witness's worth of REFLECT +pct%: its share of the telegraphed hits over the turns it adds. */
+    private reflectValue(pct: number): number {
+        const sp = this.spikes();
+        const total = this.hits().reduce((a, b) => a + b, 0);
+        if (total <= 0) return pct * 0.05;
+        const before = sp.reflect * Math.min(sp.reflectTurns, REFLECT_TURNS);
+        const after = (sp.reflect + pct) * REFLECT_TURNS;
+        const v = ((after - before) / 100) * total * REFLECT_LATER_TURN_WEIGHT;
+        const enemy = this.w.s.enemy;
+        return Math.min(v * getDamageTakenMultiplier(enemy), enemy.health + 10);
+    }
+
+    reflect(pct: number): void {
+        if (pct <= 0) return;
+        if (this.mode === 'cost') return;
+        if (this.mode === 'value') this.w.value += this.reflectValue(pct);
+        this.w.l.spikes = addReflect(this.spikes(), pct);
+    }
+
+    /** The witness's worth of the cards a random discard throws away: the mean FREE line in hand, per card. */
+    private discardCost(n: number): number {
+        const pool = discardPool(this.w.s);
+        if (n <= 0 || pool.length === 0) return 0;
+        const k = Math.min(n, pool.length);
+        if (discardDepth > 0) return k * DISCARD_PLAIN_CARD_VALUE;
+        discardDepth++;
+        try {
+            const st: CombatEncounterState = { ...this.w.s, program: this.w.l };
+            let sum = 0;
+            for (const h of pool) {
+                const program = cardProgram(h.cardId);
+                sum += program
+                    ? Math.max(0, programLineValue(st, h.uid, false, this.w.kit)) - riderValue(this.w, h.cardId)
+                    : DISCARD_PLAIN_CARD_VALUE;
+            }
+            return (sum / pool.length) * k;
+        } finally { discardDepth--; }
+    }
+
+    discardRandom(n: number): number {
+        if (n <= 0) return 0;
+        if (this.mode === 'cost') { this.w.discard = (this.w.discard ?? 0) + n; return n; }
+        if (this.mode === 'value') { this.w.value -= this.discardCost(n); return Math.min(n, discardPool(this.w.s).length); }
+        const pool = discardPool(this.w.s).slice();
+        const picks: CombatHandEntry[] = [];
+        for (let i = 0; i < n && pool.length > 0; i++) {
+            picks.push(pool.splice(Math.floor(getRng().random() * pool.length), 1)[0]!);
+        }
+        return this.discardEntries(picks);
+    }
+
+    discardHand(): number {
+        if (this.mode === 'cost') { this.w.discard = Math.max(this.w.discard ?? 0, 1); return 1; }
+        const pool = discardPool(this.w.s);
+        if (this.mode === 'value') { this.w.value -= this.discardCost(pool.length); return pool.length; }
+        return this.discardEntries(pool.slice());
+    }
+
+    /** Moves the picks from hand to the discard, then fires each one's "if this card is discarded". */
+    private discardEntries(picks: readonly CombatHandEntry[]): number {
+        if (picks.length === 0) return 0;
+        const gone = new Set(picks.map(p => p.uid));
+        this.w.s = {
+            ...this.w.s,
+            hand: this.w.s.hand.filter(h => !gone.has(h.uid)),
+            discard: [...this.w.s.discard, ...picks.map(p => p.cardId)],
+        };
+        this.w.events.push({ kind: 'cards-discarded', cardIds: picks.map(p => p.cardId) });
+        for (const p of picks) runDiscardRider(this.w, p.cardId);
+        return picks.length;
+    }
+
+    doubleThorns(): void {
+        const t = this.spikes().thorns;
+        if (t > 0) this.thorns(t, { exact: true });
+    }
+
+    reflectOnAttack(pct: number): void {
+        if (pct <= 0) return;
+        if (this.mode === 'value') { if (this.hits().length) this.w.value += this.reflectValue(pct); return; }
+        if (this.mode === 'apply') this.w.l.spikes = armReflectOnAttack(this.spikes(), pct, this.w.s.round);
+    }
+
+    thornsDoubleWhileGuardHolds(): void {
+        if (this.mode === 'value') {
+            // Worth the THORNS that land again while no hit gets through.
+            const T = this.spikes().thorns;
+            if (T > 0 && this.incoming() <= 0) this.w.value += T * Math.max(1, this.hits().length) * GUARD_HOLDS_VALUE;
+            return;
+        }
+        if (this.mode === 'apply') this.w.l.spikes = { ...this.spikes(), thornsDoubleRound: this.w.s.round };
+    }
+
+    holdGuard(): void {
+        if (this.mode === 'value') {
+            // The GUARD left after this foe turn carries into the next.
+            const total = this.hits().reduce((a, b) => a + b, 0);
+            const left = Math.max(0, (this.w.s.guard ?? 0) + (this.w.guardPlus ?? 0) - total);
+            this.w.value += left * HELD_GUARD_VALUE;
+            return;
+        }
+        if (this.mode === 'apply') this.w.l.spikes = { ...this.spikes(), guardHoldRound: this.w.s.round };
+    }
+
+    retrieve(n: number): void {
+        if (n <= 0) return;
+        const pile = this.w.s.discard;
+        if (this.mode === 'value') { this.w.value += DRAW_VALUE * Math.min(n, pile.length); return; }
+        if (this.mode !== 'apply' || pile.length === 0) return;
+        const w = this.w;
+        const discard = pile.slice();
+        const back: string[] = [];
+        for (let i = 0; i < n && discard.length > 0; i++) {
+            back.push(discard.splice(Math.floor(getRng().random() * discard.length), 1)[0]!);
+        }
+        const added = back.map(cardId => ({ uid: `ed${++w.l.el.drawUid}`, cardId }));
+        w.s = { ...w.s, discard, hand: [...w.s.hand, ...added] };
+        w.events.push({ kind: 'cards-retrieved', cardIds: back });
+    }
+
+    unexileRandom(): void {
+        const ex = this.w.l.exiled;
+        if (ex.length === 0) return;
+        if (this.mode === 'value') { this.w.value += UNEXILE_VALUE; return; }
+        if (this.mode !== 'apply') return;
+        const [cardId] = ex.splice(Math.floor(getRng().random() * ex.length), 1);
+        const pile = this.w.s.drawPile.slice();
+        pile.splice(Math.floor(getRng().random() * (pile.length + 1)), 0, cardId!);
+        this.w.s = { ...this.w.s, drawPile: pile };
+        this.w.events.push({ kind: 'card-unexiled', cardId: cardId! });
+    }
+
+    loseVitae(n: number): void {
+        if (n <= 0) return;
+        if (this.mode === 'value') {
+            this.w.value -= n * SELF_BURN_VALUE;
+            if (this.w.s.player.health - Math.max(0, this.incoming()) - n <= 0) this.w.value -= LETHAL_BURN_VALUE;
+            return;
+        }
+        if (this.mode !== 'apply') return;
+        const p = this.w.s.player;
+        const lost = Math.min(n, Math.max(0, p.health));
+        if (lost <= 0) return;
+        this.w.s = { ...this.w.s, player: { ...p, health: p.health - lost } };
+        this.w.l.lostThisCombat += lost;
+        this.w.l.lostThisRound += lost;
+        this.w.events.push({ kind: 'dot-tick', effectId: 'self-loss', label: 'VITAE lost', amount: lost, target: 'self' });
+    }
+
     drain(perHit: number, turns: number): void {
         const amt = scaleFor(perHit, this.stats(), 'mind', 'one-shot');
         if (this.mode === 'value') { this.w.value += amt * 2 * turns * 0.8; return; }
@@ -931,6 +1144,10 @@ function buildQuery(s: CombatEncounterState, spent: number): ProgramQuery {
         frozen: l.el?.frozen ?? false,
         elementsOnFoe: elementsOnFoe(l.el ?? initElementState()),
         handSize: s.hand.length,
+        thorns: l.spikes?.thorns ?? 0,
+        reflect: l.spikes?.reflect ?? 0,
+        guard: s.guard ?? 0,
+        dealtThisTurn: l.dealtThisTurn ?? 0,
     };
 }
 
@@ -956,12 +1173,39 @@ function lineFor(program: CardProgram, paid: boolean): ProgramLine | undefined {
     return paid ? program.paid : program.free;
 }
 
+function probeLine(
+    s: CombatEncounterState, l: ProgramLedger, cardId: string, line: ProgramLine, kit: ProgramKit, x?: number,
+): Work {
+    const w: Work = { s: { ...s, program: l }, l: cloneLedger(l), events: [], kit, cost: 0, value: 0, x };
+    line.run(new LineCtx(w, 'cost', { cardId, waived: false }));
+    return w;
+}
+
 function probeLineCost(
     s: CombatEncounterState, l: ProgramLedger, cardId: string, line: ProgramLine, kit: ProgramKit, x?: number,
 ): number {
-    const w: Work = { s: { ...s, program: l }, l: cloneLedger(l), events: [], kit, cost: 0, value: 0, x };
-    line.run(new LineCtx(w, 'cost', { cardId, waived: false }));
-    return w.cost;
+    return probeLine(s, l, cardId, line, kit, x).cost;
+}
+
+/** The cards a random discard may take: the hand (the played card already out), Curses excepted (a Curse cannot be scrapped). */
+function discardPool(s: CombatEncounterState): CombatHandEntry[] {
+    return s.hand.filter(h => !isCurseCard(h.cardId));
+}
+
+/** Runs a discarded card's "if this card is discarded" rider (apply mode) on the work. */
+function runDiscardRider(w: Work, cardId: string): void {
+    const rider = cardProgram(cardId)?.onDiscard;
+    if (!rider || isDefeated(w.s.enemy)) return;
+    rider.run(new LineCtx(w, 'apply', { cardId, waived: false }));
+}
+
+/** The witness's worth of a card's "if this card is discarded" rider, on a scratch copy of the work. */
+function riderValue(w: Work, cardId: string): number {
+    const rider = cardProgram(cardId)?.onDiscard;
+    if (!rider) return 0;
+    const scratch: Work = { s: w.s, l: cloneLedger(w.l), events: [], kit: w.kit, cost: 0, value: 0 };
+    rider.run(new LineCtx(scratch, 'value', { cardId, waived: false }));
+    return scratch.value;
 }
 
 /** The state with the played card out of hand (lines never see themselves). */
@@ -971,6 +1215,15 @@ function withoutEntry(state: CombatEncounterState, uid: string): CombatEncounter
 
 /** The reason a line is refused at the SACRIFICE floor. */
 export const SACRIFICE_FLOOR_REASON = 'that SACRIFICE would leave you below 1 VITAE';
+
+/** The reason a line is refused when its random discard cannot be paid. */
+export const DISCARD_SHORTFALL_REASON = 'not enough other cards in hand to discard';
+
+/** A random discard the player cannot pay: the cards it discards and the other cards they hold. */
+export interface DiscardShortfall {
+    discard: number;
+    held: number;
+}
 
 /** A SACRIFICE the player cannot pay: what it costs and the VITAE they hold. */
 export interface ProgramShortfall {
@@ -1005,9 +1258,25 @@ export function programIllegalReason(
     const line = lineFor(program, paid);
     if (!line) return 'this card has no such line';
     if (line.requires && !line.requires.test(buildQuery({ ...s, program: ledger }, 0))) return line.requires.why;
-    const cost = probeLineCost(s, ledger, entry.cardId, line, kit, x);
-    if (floorShortfall(s.player.health, cost)) return SACRIFICE_FLOOR_REASON;
+    const probe = probeLine(s, ledger, entry.cardId, line, kit, x);
+    if ((probe.discard ?? 0) > discardPool(s).length) return DISCARD_SHORTFALL_REASON;
+    if (floorShortfall(s.player.health, probe.cost)) return SACRIFICE_FLOOR_REASON;
     return null;
+}
+
+/**
+ * The random discard a line cannot pay, or null. Non-null exactly when
+ * `programIllegalReason` refuses the line for its discard.
+ */
+export function programDiscardShortfall(
+    state: CombatEncounterState, uid: string, paid: boolean, kit: ProgramKit,
+): DiscardShortfall | null {
+    if (programIllegalReason(state, uid, paid, kit) !== DISCARD_SHORTFALL_REASON) return null;
+    const entry = state.hand.find(h => h.uid === uid)!;
+    const line = lineFor(cardProgram(entry.cardId)!, paid)!;
+    const s = withoutEntry(state, uid);
+    const probe = probeLine(s, state.program ?? initProgramLedger(), entry.cardId, line, kit);
+    return { discard: probe.discard ?? 0, held: discardPool(s).length };
 }
 
 /** The SACRIFICE a line would cost right now (0 for a Global). */
@@ -1141,6 +1410,10 @@ export function playProgramCard(
     });
 
     const reason = programIllegalReason(state, uid, useBottom, kit, x);
+    if (reason === DISCARD_SHORTFALL_REASON) {
+        const short = programDiscardShortfall(state, uid, useBottom, kit)!;
+        return fizzle(`${reason}: it discards ${short.discard}, you hold ${short.held}`);
+    }
     if (reason) return fizzle(reason);
 
     let s = state;
@@ -1193,6 +1466,7 @@ export function playProgramCard(
     }
     if (useBottom) w.s = { ...w.s, spellsPlayedThisTurn: (w.s.spellsPlayedThisTurn ?? 0) + 1 };
     w.events.push(...weatherEvents(ledgerIn.el, w.l.el));
+    w.events.push(...spikeEvents(ledgerIn.spikes, w.l.spikes));
     return { state: { ...w.s, program: w.l }, events: w.events };
 }
 
@@ -1209,6 +1483,7 @@ export function programTurnStart(state: CombatEncounterState, kit: ProgramKit): 
     l.nextDouble = false;
     l.nextTwice = false;
     l.nextDealBonus = 0;
+    l.dealtThisTurn = 0;
     l.drains = l.drains.filter(d => d.untilRound >= state.round);
     if (l.pendingHeal > 0) {
         const p = w.s.player;
@@ -1242,6 +1517,7 @@ export function programTurnStart(state: CombatEncounterState, kit: ProgramKit): 
     for (const cardId of leaving) w.events.push({ kind: 'global-left', cardId });
     if (leaving.length) w.s = { ...w.s, discard: [...w.s.discard, ...leaving] };
     w.events.push(...weatherEvents(state.program.el, l.el));
+    w.events.push(...spikeEvents(state.program.spikes, l.spikes));
     return { state: { ...w.s, program: l }, events: w.events };
 }
 
@@ -1380,6 +1656,37 @@ export function programWeatherSignature(state: CombatEncounterState, op: Weather
     return { state: { ...s, program: { ...l, el } }, events };
 }
 
+/** A spike signature's change to the spikes (Defender relics, DF1e). */
+export type SpikeSignatureOp = 'guard-to-thorns' | 'reflect-half' | 'hold-guard';
+
+/** Mirror Brooch's REFLECT, in percent. */
+export const MIRROR_BROOCH_REFLECT = 50;
+
+/** Whether the spike signature would change anything now (false: it is refused). */
+export function programSpikeSignatureLive(state: CombatEncounterState, op: SpikeSignatureOp): boolean {
+    switch (op) {
+        case 'guard-to-thorns': return (state.guard ?? 0) > 0;
+        case 'reflect-half': return true;
+        case 'hold-guard': return !programHoldsGuard(state);
+    }
+}
+
+/**
+ * A spike signature, outside any card line. The Signet adds THORNS equal to
+ * your GUARD now (unscaled, as Ruby Tithe is). The Brooch adds REFLECT 50%
+ * (adds and refreshes to 2 turns). The Belt keeps your GUARD through this
+ * round's foe turn.
+ */
+export function programSpikeSignature(state: CombatEncounterState, op: SpikeSignatureOp): ProgramPlayResult {
+    const l = cloneLedger(state.program ?? initProgramLedger());
+    const before = l.spikes ?? initSpikeState();
+    let after: SpikeState = before;
+    if (op === 'guard-to-thorns') after = addThorns(before, state.guard ?? 0);
+    else if (op === 'reflect-half') after = addReflect(before, MIRROR_BROOCH_REFLECT);
+    else after = { ...before, guardHoldRound: state.round };
+    return { state: { ...state, program: { ...l, spikes: after } }, events: spikeEvents(before, after) };
+}
+
 /**
  * Start of the foe's turn (before its telegraphed action): the foe loses its
  * LEECH potency in VITAE (not a DEAL: unscaled, no VULNERABLE), the player
@@ -1491,4 +1798,71 @@ export function programDrawFallback(state: CombatEncounterState): readonly strin
         if (i >= 0) out.splice(i, 1);
     }
     return out;
+}
+
+// ── The spikes (Defender; `combat.spikes.ts`) ──────────────────────────────
+
+/**
+ * One foe strike meets the spikes: THORNS, then REFLECT's share of the
+ * strike before GUARD. While GUARD holds (`holds`: P-08 armed for this
+ * round and no hit has got through this foe turn) THORNS deals double.
+ * Each is a DEAL: a pending "+n to your next DEAL" rides
+ * on the first, a FROZEN foe takes the first doubled (then FROZEN ends), and
+ * VULNERABLE applies. Neither changes the damage you take. Returns the hits
+ * the engine lands, in order, and the ledger after (FROZEN and the bonus
+ * spent). Pure.
+ */
+export function programSpikeStrike(
+    l: ProgramLedger, enemy: Enemy, preGuard: number, holds?: { round: number; unhurt: boolean },
+): { ledger: ProgramLedger; hits: { spike: 'thorns' | 'reflect'; amount: number }[] } {
+    if (!anySpikes(l.spikes) || isDefeated(enemy)) return { ledger: l, hits: [] };
+    const doubled = !!holds && holds.unhurt && l.spikes.thornsDoubleRound === holds.round;
+    const returns = spikeReturns(l.spikes, preGuard, doubled);
+    if (returns.length === 0) return { ledger: l, hits: [] };
+    const ledger = cloneLedger(l);
+    const vuln = getDamageTakenMultiplier(enemy);
+    const hits = returns.map(r => {
+        let dmg = r.amount + ledger.nextDealBonus;
+        ledger.nextDealBonus = 0;
+        if (ledger.el.frozen) { dmg *= 2; ledger.el.frozen = false; }
+        return { spike: r.spike, amount: Math.round(dmg * vuln) };
+    });
+    return { ledger, hits };
+}
+
+/** The round boundary for the spikes: THORNS drifts, REFLECT loses a turn. */
+export function programSpikeDrift(l: ProgramLedger): ProgramLedger {
+    return { ...l, spikes: driftSpikes(l.spikes ?? initSpikeState()) };
+}
+
+/**
+ * The foe starts to attack in `round`: a REFLECT armed for this round ("if the
+ * foe attacks on their turn, REFLECT n% before they DEAL damage") lands before
+ * the first strike; one armed for an earlier round is dropped.
+ */
+export function programSpikeAttackStart(l: ProgramLedger, round: number): ProgramLedger {
+    const sp = l.spikes ?? initSpikeState();
+    if (!sp.reflectOnAttack) return l;
+    return { ...l, spikes: fireReflectOnAttack(sp, round) };
+}
+
+/** True when this round's foe turn keeps your GUARD ("you don't lose your GUARD at the end of the enemy's turn"). */
+export function programHoldsGuard(state: CombatEncounterState): boolean {
+    return state.round > 0 && state.program?.spikes?.guardHoldRound === state.round;
+}
+
+/**
+ * The scrap took `cardId` from your hand: its "if this card is discarded"
+ * rider fires, as on a random discard. The state passed in already has the
+ * card in the discard.
+ */
+export function programOnScrap(state: CombatEncounterState, cardId: string, kit: ProgramKit): ProgramPlayResult {
+    if (!cardProgram(cardId)?.onDiscard) return { state, events: [] };
+    const ledgerIn = state.program ?? initProgramLedger();
+    const l = cloneLedger(ledgerIn);
+    const w: Work = { s: { ...state, program: l }, l, events: [], kit, cost: 0, value: 0 };
+    runDiscardRider(w, cardId);
+    w.events.push(...weatherEvents(ledgerIn.el, w.l.el));
+    w.events.push(...spikeEvents(ledgerIn.spikes, w.l.spikes));
+    return { state: { ...w.s, program: w.l }, events: w.events };
 }

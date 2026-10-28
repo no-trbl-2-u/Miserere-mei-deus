@@ -232,6 +232,24 @@ export function clearPending(prev: Record<string, string>): Record<string, strin
     return Object.keys(prev).length === 0 ? prev : {};
 }
 
+/**
+ * The first staged card that holds a die on a PAID line whose random discard
+ * cannot be paid (the engine's `paidDiscard`), or null. End turn is held
+ * while one is staged.
+ */
+export function unpayableDiscardStaged(
+    stagedUids: readonly string[],
+    hand: readonly CombatCardVM[],
+    armed: (uid: string) => boolean,
+): { uid: string; name: string; discard: number; held: number } | null {
+    for (const uid of stagedUids) {
+        const card = hand.find((c) => c.uid === uid);
+        const sf = card?.play?.paidDiscard;
+        if (card && sf && armed(uid)) return { uid, name: card.name, discard: sf.discard, held: sf.held };
+    }
+    return null;
+}
+
 /** The armed staged card's tint (keyword/value/border + the APPLY ribbon).
  *  Every play lands printed, so there is one armed tint. */
 const ARMED_ACCENT = HUE.stoneGrey;
@@ -594,9 +612,12 @@ const DiceRow = React.memo(function DiceRow({
 
 export const StagedCard = React.memo(function StagedCard({
     card, assignedDie, onApply, gesture, register, compact = false, popKey = 0, socketPulse = false,
-    dropIneligible = false, rejectKey = 0, freeProminent = false, x = null, onX, onRefuse,
+    dropIneligible = false, rejectKey = 0, freeProminent = false, x = null, onX, onRefuse, onRefuseDiscard,
 }: {
     card: CombatCardVM;
+    /** A refused APPLY on an armed PAID line whose random discard cannot be
+     *  paid: the board shakes this card and names the shortfall (uid). */
+    onRefuseDiscard?: (uid: string) => void;
     /** A refused APPLY hands up the line's unpaid SACRIFICE (null when the
      *  refusal is not the SACRIFICE floor) for the VITAE ring callout. */
     onRefuse?: (shortfall: { cost: number; vitae: number } | null) => void;
@@ -738,6 +759,7 @@ export const StagedCard = React.memo(function StagedCard({
                     if (blocked) {
                         juiceHaptics.notify(Haptics.NotificationFeedbackType.Error);
                         onRefuse?.((armed ? card.play?.paidShortfall : card.play?.freeShortfall) ?? null);
+                        if (armed && card.play?.paidDiscard) onRefuseDiscard?.(card.uid);
                         return;
                     }
                     Haptics.impactAsync(armed ? Haptics.ImpactFeedbackStyle.Heavy : Haptics.ImpactFeedbackStyle.Medium).catch(() => undefined);
@@ -1349,12 +1371,28 @@ export const CombatBoard = React.memo(function CombatBoard({
     // would: honoring a dropped die, else FREE), THEN resolve the phase. The
     // applies and the resolve all compose through the panel's functional setState, so
     // cards land before the enemy acts.
+    // One exception: a staged card holding a die on a PAID line whose random
+    // discard cannot be paid holds the turn (it shakes, the phone buzzes, the
+    // reason shows) until the player unstages it or takes the die off.
     const handleEndPhaseRef = useRef<() => void>(() => undefined);
     handleEndPhaseRef.current = () => {
         if (resolving) return; // a phase is already resolving; ignore the tap
+        const held = unpayableDiscardStaged(stagedUids, vm.hand, (uid) => assignedDieFor(uid) !== null);
+        if (held) {
+            juiceHaptics.notify(Haptics.NotificationFeedbackType.Error);
+            setDropReject((prev) => ({ uid: held.uid, reason: PROGRAM_COPY.endHeld(held.name, held.discard, held.held), n: prev.n + 1 }));
+            return;
+        }
         for (const uid of stagedUids) handleApplyRef.current(uid);
         onEndPhase();
     };
+    // A refused APPLY on an unpayable PAID discard: shake the card, name why.
+    const handleRefuseDiscard = useCallback((uid: string) => {
+        const card = vm.hand.find((c) => c.uid === uid);
+        const sf = card?.play?.paidDiscard;
+        if (!card || !sf) return;
+        setDropReject((prev) => ({ uid, reason: PROGRAM_COPY.discardShort(card.name, sf.discard, sf.held), n: prev.n + 1 }));
+    }, [vm.hand]);
     // Stable, so the memoized medallion sits out the drag re-renders.
     const handleEndPhase = useCallback(() => handleEndPhaseRef.current(), []);
 
@@ -1428,6 +1466,7 @@ export const CombatBoard = React.memo(function CombatBoard({
                                         x={adie ? xFor(card.uid) : null}
                                         onX={handleX}
                                         onRefuse={flagShortfall}
+                                        onRefuseDiscard={handleRefuseDiscard}
                                     />
                                 );
                             })}

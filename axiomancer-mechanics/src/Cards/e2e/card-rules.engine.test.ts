@@ -27,7 +27,7 @@ import type { Card } from '../types';
 import { cardLibrary } from '../cards.library';
 import { upgradeCard } from '../card-upgrades';
 import {
-    checkCarrierRule, checkComplexityBudget, checkGlobalTemplate, checkScrapFloor, checkSpellLaw,
+    checkCarrierRule, checkComplexityBudget, checkDiscardCost, checkGlobalTemplate, checkScrapFloor, checkSpellLaw,
     parseAtlasKeywords, printedKeywords,
     type CardRuleId, type CardRuleViolation,
 } from '../card-rules';
@@ -76,6 +76,7 @@ function allViolations(cards: readonly Card[]): CardRuleViolation[] {
         ...checkGlobalTemplate(cards),
         ...checkCarrierRule({ cards, atlas: ATLAS, nonCardCarriers: NON_CARD_CARRIERS, barExempt: BAR_EXEMPT }),
         ...checkSpellLaw(cards),
+        ...checkDiscardCost(cards),
     ];
 }
 
@@ -190,12 +191,15 @@ describe('the Spell law (T, 2026-10-24)', () => {
     const spells = cardLibrary.filter(c => c.cardType === 'spell');
     const held = new Set(EXEMPTIONS.filter(e => e.rule === 'spell-law').map(e => e.id));
 
-    it('reads every Spell: the grey Word and both trial lanes; only A Plain Word is held, for T', () => {
-        expect(spells.length).toBe(18);
-        expect([...held]).toEqual(['grey-word']);
+    it('reads every Spell: the grey Word and the three trial lanes; A Plain Word and one Defender Spell are held, for T', () => {
+        expect(spells.length).toBe(21);
+        expect(held.size).toBe(2);
+        expect(held.has('grey-word')).toBe(true);
+        expect([...held].filter(id => id !== 'grey-word').every(id => cardLibrary.find(c => c.id === id)?.tags?.includes('defender'))).toBe(true);
         expect(spells.some(c => c.tags?.includes('grey'))).toBe(true);
         expect(spells.some(c => c.tags?.includes('blood-price'))).toBe(true);
         expect(spells.some(c => c.tags?.includes('elementalist'))).toBe(true);
+        expect(spells.some(c => c.tags?.includes('defender'))).toBe(true);
     });
 
     it('every upgraded Spell keeps EXILE on PAID and stays a step past its baseline', () => {

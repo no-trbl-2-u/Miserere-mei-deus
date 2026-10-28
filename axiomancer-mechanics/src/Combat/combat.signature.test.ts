@@ -18,7 +18,7 @@ import {
 import {
     SIGNATURE_SKILL_LIST, getSignatureSkill, signatureCastBlock, OPEN_VEIN_HEAL,
 } from './combat.signature';
-import { LEECH_TURNS_PER_APPLICATION, initProgramLedger, programTurnStart } from './combat.card-program';
+import { LEECH_TURNS_PER_APPLICATION, initProgramLedger, programTurnStart, programHoldsGuard } from './combat.card-program';
 import { weatherReading, foeInferno, yourInferno, type ElementState } from './combat.elements';
 import { scaleFor } from './stat-scaling';
 import type { CombatEncounterState, SignatureSkill } from './combat.encounter.types';
@@ -34,6 +34,9 @@ const VEIN = 'sig-bleeding-signet';
 const E_SIGNET = 'sig-elementalist-signet';
 const E_BROOCH = 'sig-elementalist-brooch';
 const E_BELT = 'sig-elementalist-belt';
+const D_SIGNET = 'sig-defender-signet';
+const D_BROOCH = 'sig-defender-brooch';
+const D_BELT = 'sig-defender-belt';
 const cost = (id: string): number => getSignatureSkill(id)!.cost;
 /** Forfeit Strike (FREE: SACRIFICE 2, DEAL 7), found by name so no trial card id is written here. */
 const FORFEIT = BLOOD_PRICE_SET.cards.find(c => c.name === 'Forfeit Strike')!.id;
@@ -70,6 +73,9 @@ describe('the signature kit', () => {
             [E_SIGNET, 'clear-yours-trigger-storm', 6],
             [E_BROOCH, 'foe-inferno-to-storm', 4],
             [E_BELT, 'blizzard-to-storm', 3],
+            [D_SIGNET, 'guard-to-thorns', 5],
+            [D_BROOCH, 'reflect-half', 3],
+            [D_BELT, 'hold-guard', 4],
         ]);
     });
 
@@ -327,5 +333,43 @@ describe('the Bleeding Signet worn beside the Suppliant\'s Ring', () => {
         const s = initializeCombatEncounter(worn, FloatEye, ['grey-strike'], 1);
         expect(s.signatures).toEqual([OPEN_HAND, VEIN]);
         expect(s.player.baseStats.mind).toBe(Player.baseStats.mind + 5);
+    });
+});
+
+describe('DF1e · the Defender\'s three signatures', () => {
+    const withGuard = (guard: number, conviction: number): CombatEncounterState => ({ ...sacFight(100, conviction), guard });
+
+    it('Thorn Mantle gives THORNS equal to your GUARD, and is refused with no GUARD', () => {
+        const sig = getSignatureSkill(D_SIGNET)!;
+        expect(signatureCastBlock(withGuard(0, 5), sig)).toBe('No GUARD to turn into THORNS');
+        const refused = playSignatureSkill(withGuard(0, 5), D_SIGNET);
+        expect(refused.state.conviction).toBe(5);
+        expect(refused.state.program?.spikes?.thorns ?? 0).toBe(0);
+        const cast = playSignatureSkill(withGuard(7, 5), D_SIGNET);
+        expect(cast.state.conviction).toBe(0);
+        expect(cast.state.program!.spikes.thorns).toBe(7);
+        expect(cast.state.guard).toBe(7);
+        expect(cast.events).toContainEqual(expect.objectContaining({ kind: 'spikes-changed', spike: 'thorns', from: 0, to: 7 }));
+    });
+
+    it('Mirror Ward adds REFLECT 50% for 2 turns, and a second cast adds and refreshes', () => {
+        const first = playSignatureSkill(withGuard(0, 6), D_BROOCH);
+        expect(first.state.conviction).toBe(3);
+        expect(first.state.program!.spikes).toMatchObject({ reflect: 50, reflectTurns: 2 });
+        const second = playSignatureSkill(first.state, D_BROOCH);
+        expect(second.state.program!.spikes).toMatchObject({ reflect: 100, reflectTurns: 2 });
+        expect(playSignatureSkill(withGuard(0, 2), D_BROOCH).state.program?.spikes?.reflect ?? 0).toBe(0);
+    });
+
+    it('Hold the Line keeps your GUARD through this round\'s foe turn, and is refused when already held', () => {
+        const sig = getSignatureSkill(D_BELT)!;
+        const start = withGuard(4, 8);
+        expect(programHoldsGuard(start)).toBe(false);
+        const cast = playSignatureSkill(start, D_BELT);
+        expect(cast.state.conviction).toBe(4);
+        expect(programHoldsGuard(cast.state)).toBe(true);
+        expect(signatureCastBlock(cast.state, sig)).toBe('Your GUARD is already held');
+        const again = playSignatureSkill(cast.state, D_BELT);
+        expect(again.state.conviction).toBe(4);
     });
 });

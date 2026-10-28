@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-10-26 at commit 79ecad63
-> Pass count: 103
+> Last pass: 2026-10-27 at commit 02372412
+> Pass count: 105
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
@@ -881,15 +881,55 @@
 > call), the village Minor Healing Potion row and the map legend's
 > SEALED key.
 
+> **[critique pass 104, 2026-10-27, commit f7f5530f] Unattended `/march`
+> tick.** `critique:drive` (`CRITIQUE_VIEWPORT=both`), full 11-screen
+> set: 22 captures, 0 nav trouble, 0 console/page errors. 46 first-parent
+> commits after pass 103 (LR1e relics, EQ2a relic slot, art CLI fixes,
+> the truth run). Zoomed crops of the small numerals found one fresh
+> row: Pirata One's zero is a barred slab that reads as an 8, and three
+> screens print a live 0 in it (MED, comprehension). Reconfirmed and not
+> re-filed: the covered fan names on a phone (pass 100), the WITHDRAW
+> sub-line contrast (pass 101), the `/cache` gap (pass 103), the village
+> Minor Healing Potion row and the map legend's SEALED key. The
+> pre-fight "PHASE n · ATTACKS · N" header was checked against its
+> 2026-10-07 resolution and left alone.
+
+> **[critique pass 105, 2026-10-27, commit 02372412] Unattended `/march`
+> tick.** `critique:drive` (`CRITIQUE_VIEWPORT=both`), full 11-screen
+> set: 22 captures, 0 nav trouble, 0 console/page errors. 12 first-parent
+> commits after pass 104: IT1b (T's relic icons with colour accents on
+> the item cards), DF1a/DF1b (the Defender's spikes engine, verbs and
+> keywords, with no card in the starter hand), the expand pass and two
+> truth runs. IT1b's only surface is the satchel's item cards, and no
+> screen in the set opens the satchel, so like RW1b's cache face it
+> shipped unseen. That is the `/cache` row's cause again, not a new one:
+> the row now names the satchel too and is raised LOW to MED. No fresh
+> row. Reconfirmed and not re-filed: the barred zero ("◆ 8 CONVICTION",
+> the rest screen's "PURSE 8"), the covered fan names on a phone, the
+> WITHDRAW sub-line contrast, the village Minor Healing Potion row and
+> the map legend's SEALED key. The dialogue and cutscene "A placeholder
+> line." and the "Fixture Shop" names are the fixtures' own content, not
+> findings.
+
 ## Pending
 
-### [LOW] ci / critique-drive — `/cache` is not in the critique set, so RW1b's card-face offer shipped unseen
-- pass: 103 (commit 79ecad63)
+### [MED] combat / rest / hazard — the display face's zero reads as an 8, so a fresh fight shows "◆ 8 CONVICTION" and an empty purse shows "8"
+- pass: 104 (commit f7f5530f)
+- viewport: mobile (375x812) and desktop (1280x800)
+- category: comprehension
+- observation: Pirata One (`FONTS.gothic`) draws 0 as a narrow slab with a bar through it; at 15-17px it is the same silhouette as its 8. Three readouts print a live number in it: the CONVICTION chip on the combat board (0 at the start of every fight), the rest screen's PURSE figure (0 in the `apprentice-bw-rest` fixture, beside "VITAE 20/170" in Bebas, which reads correctly), and the FORCE/ESCAPE values on hazard cards (Cliffrunner and Scramble print 0 FORCE). A first-time player reads "8 conviction" and "8 shillings" and plans on both.
+- evidence: zoomed crops of `mobile/04-combat-board.png` (the ◆ chip, top left) and `mobile/09-rest.png` (PURSE) show the slab glyph while the DOM text is "◆ 0" and "PURSE 0"; `mobile/10-hazard.png` Cliffrunner's FORCE cells. Sources: `components/combat/encounter/CombatBoard.tsx:2140` `convictionText`, `app/rest/index.tsx:261` `purseValue`, `components/hazard/HazardCard.tsx:117` value text, all `FONTS.gothic`.
+- suggested fix: print numerals in a face with an open zero (`FONTS.sans` Bebas, as VITAE and the shilling labels already do) for these three readouts, keeping the gothic face for names and titles; pin the font choice in each component's existing test.
+- source: critique:drive (unattended)
+
+### [MED] ci / critique-drive — `/cache` and the satchel are not in the critique set, so RW1b's card-face offer and IT1b's relic icons shipped unseen
+- pass: 103 (commit 79ecad63); raised LOW to MED at pass 105 (commit 02372412)
 - viewport: n/a (both)
 - category: navigation
 - observation: RW1b (#947) changed the loot cache's card offer to print a `CombatCardFace` beside the label, the only player-facing diff since pass 102, but the drive's 11 screens never reach `/cache`. The registry already holds `apprentice-bw-cache` (`arrive` starts the cache session and pushes `/cache`), and the drive's own header names `/cache` among the gated routes, yet no `SCREENS` entry uses it.
 - evidence: `axiomancer-mobile/scripts/critique-drive.mjs` SCREENS (fixtures at lines 193-242, none for the cache); `axiomancer-mechanics/src/Game/fixtures/state-fixture.registry.ts:95` `apprentice-bw-cache`; `axiomancer-mobile/app/cache/index.tsx` (RW1b).
-- suggested fix: add a `cache` screen entry booting `apprentice-bw-cache` with `waitForPath: '/cache'` (its seed is already shared through `openScreenContext`), and pin it in `critique-drive.test.mjs`; if that fixture's offers hold no card, note it so the face is judged on the next pass that rolls one.
+- pass 105: IT1b (#989) gave the relics T's icons with colour accents (`components/icons/item-glyphs.ts`, `components/inventory/ItemCard.tsx`); they draw only on the satchel tab (`app/(tabs)/inventory`), which no SCREENS entry opens, so a second shipped surface went unseen in two passes.
+- suggested fix: add a `cache` screen entry booting `apprentice-bw-cache` with `waitForPath: '/cache'` (its seed is already shared through `openScreenContext`), and pin it in `critique-drive.test.mjs`; if that fixture's offers hold no card, note it so the face is judged on the next pass that rolls one. Add a `satchel` entry the same way: boot a fixture whose inventory holds at least one relic (or add one to the registry, which is an AUDIT row, not drive code) and open the inventory tab.
 - source: critique:drive (unattended)
 
 ### [LOW] combat preview — WITHDRAW's "forfeit the path" line prints at 8.5px in `AXM.ash`, about 1.95:1 against the page

@@ -6,7 +6,7 @@ import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { ActionIcon } from '@/components/ActionIcon';
 import { AxmIcon } from '@/components/icons/AxmIcon';
-import { getItemGlyph, type ItemGlyphTable } from '@/components/icons/item-glyphs';
+import { getItemGlyph, getItemGlyphAccents, type ItemGlyphTable } from '@/components/icons/item-glyphs';
 import { TooltipTarget } from '@/components/tooltip/TooltipTarget';
 import { EquipDeltaPanel } from '@/components/inventory/EquipDeltaPanel';
 import { rarityAffordance, rarityColors } from '@/components/inventory/rarityAffordance';
@@ -44,7 +44,10 @@ export function ItemGlyph({ category, sub, itemId, glyphs }: ItemGlyphProps) {
     const AXM = usePalette();
     const byId = getItemGlyph(itemId, glyphs);
     if (byId !== null) {
-        return <AxmIcon name={byId} size={28} color={AXM.parchment} />;
+        // Accents only ride the production table: a test's fixture table names
+        // its own icons, so the shipped accents would not fit them.
+        const accents = glyphs === undefined ? getItemGlyphAccents(itemId) : [];
+        return <AxmIcon name={byId} size={28} color={AXM.parchment} accents={accents} />;
     }
     if (category === 'equipment' && sub === 'Weapon') {
         return <ActionIcon kind="sword" size={32} color={AXM.parchment} />;

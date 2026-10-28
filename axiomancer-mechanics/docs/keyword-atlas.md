@@ -90,11 +90,24 @@ STORM. Each is refused when it would change nothing.
 | **FROZEN** | While the BLIZZARD is at least the foe's attack, the foe is FROZEN as it attacks: the next DEAL it takes is doubled, then FROZEN ends. The BLIZZARD stays, so it can freeze again. | the Elementalist trial set (EL1c) |
 | **STORM N** | At the start of its turn the foe loses N VITAE (plain loss), then the STORM grows by 1. | the Elementalist trial set (EL1c) |
 
+### The spikes
+
+The Defender's answer to a foe strike (T, 2026-10-26; `src/Combat/combat.spikes.ts`). Each foe strike meets
+THORNS first, then REFLECT; each is a DEAL, so VULNERABLE boosts it and a FROZEN foe takes it doubled. Neither
+lowers the damage you take: GUARD still blocks your share. While GUARD holds (below), a card can make THORNS deal
+double on that foe turn.
+
+| keyword | reminder text | carried by |
+|---|---|---|
+| **THORNS N** | Each foe strike deals N back to the foe. THORNS drops by 1 at the end of each round after the one it was gained in. | the Defender trial set |
+| **REFLECT N%** | Each foe strike sends N% of its damage before GUARD back to the foe. You still take the hit. Lasts 2 turns; a new REFLECT adds its % and refreshes to 2 turns. No cap. | the Defender trial set |
+
 ### Drawing
 
 | keyword | reminder text | carried by |
 |---|---|---|
 | **DRAW N** | Draw N cards now. When your draw pile is empty, your discard is shuffled into it. | the Elementalist trial set (EL1c) |
+| **RETRIEVE N** | Return N random cards from your discard to your hand. | the Defender trial set |
 
 ### The dice
 
@@ -136,6 +149,7 @@ in `SYSTEM_GLOSSARY`.
 | CONVICTION ◆ | A spend-anytime resource banked from unspent dice and overflow. It never decays. |
 | RESERVE & PIPS | Up to 2 dice held between phases instead of played. Each gains +1 pip per phase it survives, spent for extra intensity or Guard. |
 | WILD / X | A WILD die (the gold die) counts as any color. A dead X die (a miss face) powers nothing. |
+| HOLDS | GUARD holds: you have taken no damage this turn. A card that works "while GUARD holds" stops the moment a hit gets through. |
 | CURSE | A card type: a dead card that holds a hand slot until played. It cannot be scrapped. The grey Curse is defined, but no card adds it and it is in no lane, deck or reward pool (foes will add Curses later). |
 
 ---

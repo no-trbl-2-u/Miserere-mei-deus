@@ -8,6 +8,7 @@
 |---|---|---|---|
 | 2026-10-27 (today) | Pick the item icons, the six lane relics included; the loop applies them (1 h) | needs you: IT1b ready for you | W1 |
 | 2026-10-28 (tomorrow) | Enemy session 1: Chapter 1's normal roster, the Breakwater's four fight nodes (1 h) | needs you: your task | W1 |
+| 2026-10-30 (in 3 days) | First character playable (T moved it from Oct 26: more work than expected; the third lane is the Defender, DF1a-DF1d) | needs you: CH1e ready for you | W1 |
 | 2026-10-30 (in 3 days) | W1 demo part 1: T plays the ten hard candidates (1 h) | needs you: your task | W1 |
 | 2026-10-31 (in 4 days) | Enemy session 2: Chapter 1's elite and the watchtower boss (1 h) | needs you: your task | W1 |
 | 2026-11-01 (in 5 days) | W1 demo part 2: T plays the twenty cost-card candidates and rules keep or cut (2 h) | needs you: HP4e ready for you | W1 |

@@ -250,7 +250,7 @@ export function EffectChips({ effects, onChip, align = 'flex-start', testID }: {
                         </View>
                     ) : null}
                     <View style={styles.chipBadge}>
-                        <Text style={styles.chipBadgeText} allowFontScaling={false}>{e.intensity}</Text>
+                        <Text style={styles.chipBadgeText} allowFontScaling={false}>{`${e.intensity}${e.unit ?? ''}`}</Text>
                     </View>
                 </Pressable>
                 {e.caption ? (
@@ -512,6 +512,7 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
         lastSeq.current = fx.seq;
         let playerDmg = 0;
         let enemyDmg = 0;
+        let spikeDmg = 0;
         let denied = false;
         let threatFired = false;
         const ticks: { side: 'enemy' | 'player'; effectId: string; label: string; amount: number }[] = [];
@@ -521,6 +522,10 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
         for (const e of fx.events) {
             if (e.kind === 'damage-dealt') {
                 if (e.target === 'self') playerDmg += e.amount; else enemyDmg += e.amount;
+            } else if (e.kind === 'spike-struck') {
+                // THORNS and REFLECT float their own number (the log line's
+                // float); they still make the foe flinch.
+                spikeDmg += e.amount;
             } else if (e.kind === 'dot-tick') {
                 ticks.push({ side: e.target === 'self' ? 'player' : 'enemy', effectId: e.effectId, label: e.label, amount: e.amount });
             } else if (e.kind === 'phase-resolved' && e.mark === 'clear') {
@@ -546,7 +551,7 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
             setAttackBeat((n) => n + 1);
         }
         const enemyDotDmg = ticks.reduce((sum, t) => (t.side === 'enemy' ? sum + t.amount : sum), 0);
-        if (isEnemyStruckBeat({ enemyDamage: enemyDmg, enemyDotDamage: enemyDotDmg })) {
+        if (isEnemyStruckBeat({ enemyDamage: enemyDmg + spikeDmg, enemyDotDamage: enemyDotDmg })) {
             setStruckBeat((n) => n + 1);
         }
         // The ledgers and the enemy's STAGE beat each float the word that moved

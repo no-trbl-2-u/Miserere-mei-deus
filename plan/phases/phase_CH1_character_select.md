@@ -39,6 +39,7 @@
     first character's content.
   - **Missing primitive, named:** a character needs three distinct lanes (its relic's plus two starting lanes), and
     only two are registered. The third lane is T's to plot (pitch, out of scope). CH1e and CH1f wait on it.
+    Met by DF1d: the Defender is the third registered lane (`defender`, 2026-10-27).
 
 ## Outcome
 

@@ -116,7 +116,8 @@ left; otherwise after.
 ## MVP schedule
 
 T's human-in-the-loop work from 2026-10-26 to the MVP, in pieces of one to two hours (T works 9-5 on weekdays,
-so weekday pieces are evenings and weekends carry the longer sessions; Thursdays are left free). Each piece is a
+so weekday pieces are evenings and weekends carry the longer sessions). No weekday is held free: T works on
+Miserere every day, Thursdays included (T, 2026-10-27). Each piece is a
 `T` row or a named Item in the Items table below, on the same date; loop work is not listed. The daily reminder
 reads this table for the day's piece, the high-level task it serves, how AI can help, and the next days' pieces.
 
@@ -173,7 +174,7 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 | [x] | 2026-10-24 | Cost-card engine and the worse-copy test | W1 | HP1c, HP1c2, HP1d |
 | [x] | 2026-10-27 | The puzzle looks random (roll, draw, reroll) | W1 | HP3a, HP3b |
 | [x] | 2026-10-26 | The dev-only move log (times HP4e's solves) | W1 | HP2c |
-| [ ] | 2026-10-26 | First character playable (T: end of day; the third lane is the Defender, DF1a-DF1d) | W1 | CH1a, CH1b, CH1c, CH1d, CH1e, CH1f, DF1a, DF1b, DF1c, DF1d |
+| [ ] | 2026-10-30 | First character playable (T moved it from Oct 26: more work than expected; the third lane is the Defender, DF1a-DF1d) | W1 | CH1a, CH1b, CH1c, CH1d, CH1e, CH1f, DF1a, DF1b, DF1c, DF1d |
 | [x] | 2026-10-30 | Card audit; T rules the cut at the HP2a merge | W1 | HP2a |
 | [x] | 2026-10-31 | Difficulty features in the solver | W1 | HP2b |
 | [x] | 2026-10-23 | Decision pressure in the puzzle report | W1 | HP4a |
@@ -321,6 +322,8 @@ attended session.
 
 ## Change log
 
+- **2026-10-27** — **Thursdays opened** (T, in conversation: "open them up. I should be getting work done for Miserere everyday"). **Edited** the MVP schedule's rule that left Thursdays free; it now says T works every day. No Item, date or piece moved; nothing ticked.
+- **2026-10-27** — **first character moved to Fri Oct 30** (T, in conversation: "Let's move character creation deadline to Friday since it turned out to be more work than I thought"). **Moved** the Item "First character playable" from 2026-10-26 to 2026-10-30, still in W1; its rows (CH1a-CH1f, DF1a-DF1d) and premise hold. Nothing ticked; no other date moved.
 - **2026-10-26** — **the third lane plotted** (T in session, `/plot` of the Defender trial set after its verdicts, sims and revisions). **Edited** the Item "First character playable": its premise moved from "waits on a third lane" to the Defender, and it now names DF1a-DF1d, the rows that register the lane CH1e and CH1f were blocked on; its date (T's) is unchanged. **Added** Unscheduled lines for DF1e (the relics, waits on LR1d) and DF1f (T's check). **Ticked** nothing.
 - **2026-10-26** — **reward pool narrowed to worn relics** (T in session, plot amend run unattended on RW1a and LR1a, D107). **Edited** the Nov 13 lane-relics Item's name ("Unlocks line" is now "Lane line"); its rows, date and premise hold (the six relics still ship and still feed rewards, now only while worn). **Added** nothing, **ticked** nothing; no date moved.
 - **2026-10-26** — **first character dated** (T on the CH1 plot PR, call 8). **Added** the Item "First character playable", due 2026-10-26 in W1, naming CH1a-CH1f; **removed** their six Unscheduled lines. T wants the first character playable by end of day and knows the date is tight: RW1a and the CH1 chain must ship, and CH1e/CH1f wait on a third lane T has not plotted. **Ticked** nothing.

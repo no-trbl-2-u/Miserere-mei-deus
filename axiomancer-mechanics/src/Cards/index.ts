@@ -45,5 +45,5 @@ export type { CardRuleId, CardRuleViolation, AtlasKeyword, AtlasKeywordKind, Car
 export {
     COMPLEXITY_BUDGET, ADMISSION_BAR,
     cardLinesText, printedKeywords, cardConditions, parseAtlasKeywords,
-    checkComplexityBudget, checkScrapFloor, checkGlobalTemplate, checkCarrierRule,
+    checkComplexityBudget, checkScrapFloor, checkGlobalTemplate, checkCarrierRule, checkDiscardCost,
 } from './card-rules';

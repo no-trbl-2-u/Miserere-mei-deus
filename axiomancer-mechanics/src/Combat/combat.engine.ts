@@ -72,8 +72,11 @@ import {
     programRecordDamage, programRollRound, programDrawFallback,
     programIllegalReason, programShortfall, programXRange, type ProgramShortfall,
     programElementFoeTurnStart, programFrozenCheck, programElementDrift,
+    programSpikeStrike, programSpikeDrift, programDiscardShortfall, type DiscardShortfall,
+    programSpikeAttackStart, programHoldsGuard, programOnScrap,
 } from './combat.card-program';
 import { weatherEvents } from './combat.elements';
+import { spikeEvents } from './combat.spikes';
 import type {
     CombatCard, CombatDieColor, CombatEncounterState, CombatEvent, CardPlay,
     CombatManaDie, CombatPhaseResult, CombatTransition, LandedEffect,
@@ -608,7 +611,7 @@ export function discardCombatCard(state: CombatEncounterState, uid: string): Com
     const scrapsThisTurn = state.scrapsThisTurn ?? 0;
     const pays = scrapsThisTurn < SCRAP_CONVICTION_CAP_PER_TURN;
     const conviction = pays ? Math.min(CONVICTION_CAP, state.conviction + 1) : state.conviction;
-    const next: CombatEncounterState = {
+    let next: CombatEncounterState = {
         ...state,
         hand: state.hand.filter(h => h.uid !== uid),
         discard: [...state.discard, entry.cardId],
@@ -618,6 +621,12 @@ export function discardCombatCard(state: CombatEncounterState, uid: string): Com
     const events: CombatEvent[] = pays
         ? [{ kind: 'conviction-gained', amount: 1, total: conviction, reason: 'scrap' }]
         : [];
+    // "If this card is discarded" fires on the scrap as on a random discard.
+    if (isProgramCard(entry.cardId)) {
+        const rider = programOnScrap(next, entry.cardId, PROGRAM_KIT);
+        next = rider.state;
+        events.push(...rider.events);
+    }
     return { state: withLog(next, events), events };
 }
 
@@ -1232,12 +1241,21 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
         state = frozen.state;
         blizzardCut = frozen.blizzard;
         events.push(...frozen.events);
+        // A REFLECT armed for the foe's attack is up before its first strike.
+        if (threatHits(state).length > 0) {
+            const armed = programSpikeAttackStart(state.program!, state.round);
+            if (armed !== state.program) {
+                events.push(...spikeEvents(state.program!.spikes, armed.spikes));
+                state = { ...state, program: armed };
+            }
+        }
     }
     if (!hindered && !isDefeated(enemy)) {
         // The enemy attacks: its telegraphed threat action fires on the player.
         const playerTakenMult = getDamageTakenMultiplier(state.player);
         for (const eff of phase.threatAction.effects) {
-            if (eff.damage && eff.damage > 0) {
+            // A foe the spikes defeated mid-attack strikes no more.
+            if (eff.damage && eff.damage > 0 && !isDefeated(enemy)) {
                 attacksLanded += 1;
                 let dmg = Math.round(
                     eff.damage * THREAT_DAMAGE_SCALE * escalation
@@ -1297,6 +1315,23 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
                     attacksFullyBlocked += 1;
                     blockedBlowTotal += preSoakDmg;
                 }
+                // THORNS and REFLECT answer the strike, each a DEAL off the pre-GUARD hit.
+                if (state.program) {
+                    const spikes = programSpikeStrike(state.program, enemy, preSoakDmg, {
+                        round: state.round, unhurt: enemyDamageDealt === 0,
+                    });
+                    if (spikes.hits.length > 0) {
+                        events.push(...weatherEvents(state.program.el, spikes.ledger.el));
+                        state = { ...state, program: spikes.ledger };
+                        for (const h of spikes.hits) {
+                            if (isDefeated(enemy) || h.amount <= 0) continue;
+                            const hit = applyEnemyDamage(enemy, h.amount, state.round, events);
+                            enemy = hit.enemy;
+                            directDamage += h.amount + hit.clockDamage;
+                            events.push({ kind: 'spike-struck', spike: h.spike, amount: h.amount });
+                        }
+                    }
+                }
             }
             if (eff.effectId) {
                 const def = lookupEffectDef(eff.effectId);
@@ -1313,7 +1348,7 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
                     // cards land" (the face is the contract).
                 }
             }
-            if (eff.enemyHeal && eff.enemyHeal > 0) {
+            if (eff.enemyHeal && eff.enemyHeal > 0 && !isDefeated(enemy)) {
                 const healAmt = Math.round(eff.enemyHeal);
                 if (healAmt > 0) {
                     const hpBefore = enemy.health;
@@ -1346,7 +1381,7 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
         // blow's actual size, not a flat printed number — floored at the
         // card's printed `damage` (the wall IS the weapon; bigger threats
         // become bigger paydays).
-        if (riposte && attacksLanded > 0 && attacksFullyBlocked > 0) {
+        if (riposte && attacksLanded > 0 && attacksFullyBlocked > 0 && !isDefeated(enemy)) {
             const counter = Math.round(Math.max(riposte.damage, blockedBlowTotal) * getDamageTakenMultiplier(enemy));
             if (counter > 0) {
                 const hit = applyEnemyDamage(enemy, counter, state.round, events);
@@ -1385,7 +1420,8 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
         player,
         enemy,
         directDamageDealt: directDamage,
-        guard: 0,                       // brace is spent on this phase's threat; resets each phase
+        // brace is spent on this phase's threat; resets each phase, unless a card keeps it this round
+        guard: programHoldsGuard(state) ? guard : 0,
         barrier,                        // persistent soak — carries the unspent remainder across phases
         riposte: undefined,             // cleared each phase (like guard)
         // The enemy-damage ledger (rolled over between phases)
@@ -1509,8 +1545,9 @@ export function processBetweenPhases(
         }
         const dotTaken = Math.max(0, state.player.health - player.health);
         const rolled = programRollRound(programRecordDamage(ledger, dotTaken));
-        ledger = programElementDrift(rolled);
+        ledger = programSpikeDrift(programElementDrift(rolled));
         events.push(...weatherEvents(rolled.el, ledger.el));
+        events.push(...spikeEvents(rolled.spikes, ledger.spikes));
     }
     const playerDotTicks = clampDotTickBreakdown(projectedPlayerDotTicks, playerStart.dotDamage);
 
@@ -2031,6 +2068,22 @@ export function programLineShortfall(
     const entry = state.hand.find(h => h.uid === uid);
     if (!entry || !isProgramCard(entry.cardId)) return null;
     return programShortfall(state, uid, paid, PROGRAM_KIT, x);
+}
+
+/**
+ * The random discard a program card's FREE (`paid` false) or PAID line
+ * cannot pay right now: `{ discard, held }`, non-null exactly when
+ * `programLineBlock` refuses the line for its discard. Null for a card
+ * without a program.
+ *
+ * @example programLineDiscardShortfall(state, 'c3', true) // { discard: 2, held: 1 }
+ */
+export function programLineDiscardShortfall(
+    state: CombatEncounterState, uid: string, paid: boolean,
+): DiscardShortfall | null {
+    const entry = state.hand.find(h => h.uid === uid);
+    if (!entry || !isProgramCard(entry.cardId)) return null;
+    return programDiscardShortfall(state, uid, paid, PROGRAM_KIT);
 }
 
 /** The amounts a program card's "SACRIFICE any amount" PAID line accepts

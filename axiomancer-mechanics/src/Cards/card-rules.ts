@@ -33,7 +33,7 @@ import { GLOBAL_TRIGGER_TEXT, programFaceText } from '../Combat/combat.cards';
 import { magnitudeStep, UPGRADE_INTENSITY_STEP } from './card-upgrade.scale';
 
 /** The rules this module checks; the exemptions fixture keys on these. */
-export type CardRuleId = 'complexity-budget' | 'scrap-floor' | 'global-template' | 'carrier-rule' | 'spell-law';
+export type CardRuleId = 'complexity-budget' | 'scrap-floor' | 'global-template' | 'carrier-rule' | 'spell-law' | 'discard-cost';
 
 /** One break of one rule. `id` is a card id, an atlas word, or `cardId:WORD`. */
 export interface CardRuleViolation {
@@ -221,8 +221,8 @@ function recordVerbs(fn: (c: ProgramCtx) => void, q: ProgramQuery): VerbCall[] {
 
 /** Two fight states a line may branch on: healthy, and at half VITAE after damage. */
 const PROBE_QUERIES: readonly ProgramQuery[] = [
-    { vitae: 100, maxVitae: 100, missing: 0, atHalf: false, takenLastTurn: 0, lostThisCombat: 0, lostThisRound: 0, cursesInHand: 0, cursesInDiscard: 0, foeInferno: 0, yourInferno: 0, blizzard: 0, storm: 0, frozen: false, elementsOnFoe: 0, handSize: 4 },
-    { vitae: 40, maxVitae: 100, missing: 60, atHalf: true, takenLastTurn: 10, lostThisCombat: 60, lostThisRound: 10, cursesInHand: 1, cursesInDiscard: 1, foeInferno: 6, yourInferno: 3, blizzard: 4, storm: 3, frozen: true, elementsOnFoe: 3, handSize: 4 },
+    { vitae: 100, maxVitae: 100, missing: 0, atHalf: false, takenLastTurn: 0, lostThisCombat: 0, lostThisRound: 0, cursesInHand: 0, cursesInDiscard: 0, foeInferno: 0, yourInferno: 0, blizzard: 0, storm: 0, frozen: false, elementsOnFoe: 0, handSize: 4, thorns: 0, reflect: 0, guard: 0, dealtThisTurn: 0 },
+    { vitae: 40, maxVitae: 100, missing: 60, atHalf: true, takenLastTurn: 10, lostThisCombat: 60, lostThisRound: 10, cursesInHand: 1, cursesInDiscard: 1, foeInferno: 6, yourInferno: 3, blizzard: 4, storm: 3, frozen: true, elementsOnFoe: 3, handSize: 4, thorns: 3, reflect: 50, guard: 6, dealtThisTurn: 5 },
 ];
 
 const onlyOneConviction = (calls: readonly VerbCall[]): boolean =>
@@ -250,6 +250,36 @@ export function checkScrapFloor(cards: readonly Card[]): CardRuleViolation[] {
             .filter(([, run]) => PROBE_QUERIES.some(q => onlyOneConviction(recordVerbs(run, q))))
             .map(([name]) => name);
         if (dead.length) out.push({ rule: 'scrap-floor', id: card.id, detail: `${dead.join(' and ')} only gains 1 Conviction` });
+    }
+    return out;
+}
+
+/**
+ * The random discard is a PAID cost (T, 2026-10-26, the Defender): "Discard n
+ * cards at random" sits only on a PAID line, and as the line's first verb so
+ * it is paid before the effects. A FREE line or a Global body that discards
+ * breaks the rule, as does a PAID line that discards after another verb.
+ * "Discard your hand" is the same cost.
+ */
+const DISCARD_VERBS: ReadonlySet<string> = new Set(['discardRandom', 'discardHand']);
+
+export function checkDiscardCost(cards: readonly Card[]): CardRuleViolation[] {
+    const out: CardRuleViolation[] = [];
+    for (const card of cards) {
+        const p = card.program;
+        if (!p) continue;
+        const free: (c: ProgramCtx) => void = p.free?.run ?? (p.global ? c => p.global!.free(c, 2) : () => {});
+        const paid: (c: ProgramCtx) => void = p.paid?.run ?? (p.global ? c => p.global!.paid(c, 2) : () => {});
+        const bad: string[] = [];
+        for (const q of PROBE_QUERIES) {
+            if (recordVerbs(free, q).some(v => DISCARD_VERBS.has(v.verb))) bad.push('FREE discards');
+            const calls = recordVerbs(paid, q);
+            const at = calls.findIndex(v => DISCARD_VERBS.has(v.verb));
+            if (p.global && at >= 0) bad.push('a Global discards');
+            else if (at > 0) bad.push('PAID discards after another verb');
+        }
+        const unique = [...new Set(bad)];
+        if (unique.length) out.push({ rule: 'discard-cost', id: card.id, detail: unique.join('; ') });
     }
     return out;
 }
@@ -357,6 +387,7 @@ export const SPELL_LAW_PROBE: ProgramQuery = Object.freeze({
     vitae: 40, maxVitae: 100, missing: 60, atHalf: true, takenLastTurn: 30, lostThisCombat: 60,
     lostThisRound: 10, cursesInHand: 0, cursesInDiscard: 0,
     foeInferno: 4, yourInferno: 4, blizzard: 4, storm: 4, frozen: false, elementsOnFoe: 3, handSize: 4,
+    thorns: 0, reflect: 0, guard: 0, dealtThisTurn: 0,
 });
 
 /** The payoff verbs the law raises by a MAGNITUDE step (+40%, at least +2).
@@ -364,7 +395,7 @@ export const SPELL_LAW_PROBE: ProgramQuery = Object.freeze({
  *  the cap on an X SACRIFICE, the number a TETHER's damage is read from. */
 const SPELL_MAGNITUDE_VERBS: ReadonlySet<string> = new Set([
     'deal', 'guard', 'heal', 'vulnerable', 'foeLoses', 'healNextTurn', 'drain',
-    'inferno', 'blizzard', 'storm', 'stormTick', 'sacrificeX',
+    'inferno', 'blizzard', 'storm', 'stormTick', 'sacrificeX', 'thorns',
 ]);
 /** The payoff verbs the law raises by an INTENSITY step (+1). */
 const SPELL_INTENSITY_VERBS: ReadonlySet<string> = new Set(['leech', 'conviction', 'draw']);
@@ -374,6 +405,7 @@ const PROBE_RETURNS: Readonly<Record<string, (q: ProgramQuery) => number>> = {
     removeYourInferno: q => q.yourInferno,
     moveYourInferno: q => q.yourInferno,
     spendBlizzard: q => q.blizzard,
+    discardHand: q => q.handSize,
 };
 
 /** Sum per verb of what `run` applies at the probe. */

@@ -15,8 +15,8 @@ the Expo app (`axiomancer-mobile`) presents it.
 
 ## Cards
 
-- **The library is three grey cards and two trial sets, Blood Price and the
-  Elementalist.** The
+- **The library is three grey cards and three trial sets, Blood Price, the
+  Elementalist and the Defender.** The
   grey office (`GREY_OFFICE_CARDS`, `Cards/library/starters.cards.ts`): A
   Plain Blow (attack, DEAL), A Plain Ward (skill, GUARD), A Plain Word
   (spell, VULNERABLE), all colour `any`, rank 1 (Ash), tier 1. The trial
@@ -39,6 +39,14 @@ the Expo app (`axiomancer-mobile`) presents it.
   read the weather (INFERNO, BLIZZARD, FROZEN, STORM; `Combat/combat.elements.ts`)
   and DRAW. Its lane `elementalist` holds all 30 and deals T's 20-card test
   deck; it comes out the same way, by its file and its `TRIAL_SETS` line.
+  The Defender trial set (`DEFENDER_SET`, `Cards/library/defender.cards.ts`,
+  Phase DF1d) is 30 cards (10 body, 10 mind, 10 heart, all rank 1, one upgrade
+  each) in T's names and colours at the numbers T chose to ship: they put up
+  THORNS and REFLECT (`Combat/combat.spikes.ts`), pay for bigger payouts by
+  discarding random cards from your own hand (a PAID-only cost the engine
+  refuses when it cannot pay), and use RETRIEVE and "while GUARD holds". Its
+  lane `defender` holds all 30 and deals T's 20-card test deck (every Global
+  and every Spell); it comes out by its file and its `TRIAL_SETS` line.
 - **Card types** (`CardType`) are lifecycle rules. Attack and Skill play
   FREE or PAID, then discard. A **Spell** plays FREE and discards, or PAID
   and EXILEs, and its PAID line is a step stronger to pay for it (the Spell
@@ -95,7 +103,7 @@ the Expo app (`axiomancer-mobile`) presents it.
   lane slots (`rewardLaneSlots`, D100) count worn relics only, so starting
   lanes widen the pool and never add a slot. A cache offers one. The dev
   menu's REWARD POOL can narrow the draft to card lanes (`CARD_LANES`: the
-  grey office, Blood Price and the Elementalist). A won elite fight
+  grey office, Blood Price, the Elementalist and the Defender). A won elite fight
   (`difficulty: 'elite'`, the Green Jelly) pays the elite reward instead
   (`rollEliteReward`, Phase UP1f): the best 3 cards by rarity, one from a
   lane the deck draws on (`deckLaneIds`), or one upgrade of a random owned

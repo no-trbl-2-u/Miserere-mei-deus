@@ -69,6 +69,12 @@ const MANIFEST = {
     'action-coin': 'lorc/crown-coin',
     'action-tombstone': 'lorc/tombstone',
     'action-village': 'delapouite/huts-village',
+    'relic-tiara': 'delapouite/tiara',
+    'relic-diamond-ring': 'delapouite/diamond-ring',
+    'relic-chalice-drops': 'lorc/chalice-drops',
+    'relic-bolt-eye': 'lorc/bolt-eye',
+    'relic-gem-pendant': 'lorc/gem-pendant',
+    'relic-frostfire': 'lorc/frostfire',
 };
 
 const rows = Object.entries(MANIFEST).map(([name, source]) => {

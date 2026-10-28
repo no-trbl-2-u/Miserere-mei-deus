@@ -126,6 +126,8 @@ const PAYOFF_VERBS = new Set([
     'conviction', 'healNextTurn', 'drain',
     // The weather: an element's number and the STORM's extra growth.
     'inferno', 'blizzard', 'storm', 'stormGrowthMarker',
+    // The spikes: THORNS and REFLECT numbers.
+    'thorns', 'reflect', 'reflectOnAttack',
 ]);
 const COST_VERBS = new Set(['sacrifice', 'sacrificeX', 'tether']);
 
@@ -153,9 +155,9 @@ function record(fn: (c: ProgramCtx) => void, q: ProgramQuery): Call[] {
     return calls;
 }
 
-/** The weather reads, clear and stormy. */
-const CLEAR = { foeInferno: 0, yourInferno: 0, blizzard: 0, storm: 0, frozen: false, elementsOnFoe: 0, handSize: 4 };
-const STORMY = { foeInferno: 6, yourInferno: 3, blizzard: 4, storm: 3, frozen: true, elementsOnFoe: 3, handSize: 4 };
+/** The weather and spikes reads, clear and busy. */
+const CLEAR = { foeInferno: 0, yourInferno: 0, blizzard: 0, storm: 0, frozen: false, elementsOnFoe: 0, handSize: 4, thorns: 0, reflect: 0, guard: 0, dealtThisTurn: 0 };
+const STORMY = { foeInferno: 6, yourInferno: 3, blizzard: 4, storm: 3, frozen: true, elementsOnFoe: 3, handSize: 4, thorns: 3, reflect: 50, guard: 6, dealtThisTurn: 5 };
 
 /** Healthy, at half after damage, and deep enough that every cap binds. */
 const PROBES: readonly ProgramQuery[] = [
@@ -215,8 +217,12 @@ describe('A3 — every upgrade makes the numbers bigger, never a cost', () => {
     const upgradable = cardLibrary.filter(canUpgrade);
     const noPayoff = new Set(cardsWithNoPayoff(cardLibrary));
 
-    it('only the pinned cards have nothing to grow: two Blood Price, six Elementalist', () => {
-        expect(noPayoff.size).toBe(8);
+    it('only the pinned cards have nothing to grow: two Blood Price, six Elementalist, five Defender', () => {
+        expect(noPayoff.size).toBe(13);
+        // The Defender's five: formulas and holds (THORNS or HEAL read off the fight, a Global GUARD
+        // equal to THORNS, DRAW 1, RETRIEVE and the exile return).
+        const defender = cardLibrary.filter(c => noPayoff.has(c.id) && c.tags?.includes('defender'));
+        expect(defender.map(c => c.name)).toEqual(['Spite Growth', 'Bramble Carapace', 'Mend the Shell', 'Steady Shell', 'Rummage']);
     });
 
     it('covers every library card but the Curses', () => {

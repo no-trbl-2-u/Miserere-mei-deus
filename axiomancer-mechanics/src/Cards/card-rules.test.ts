@@ -8,7 +8,7 @@ import { describe, it, expect } from 'vitest';
 import type { Card } from './types';
 import {
     cardConditions, cardLinesText, checkCarrierRule, checkComplexityBudget,
-    checkGlobalTemplate, checkScrapFloor, parseAtlasKeywords, printedKeywords,
+    checkDiscardCost, checkGlobalTemplate, checkScrapFloor, parseAtlasKeywords, printedKeywords,
     type AtlasKeyword,
 } from './card-rules';
 
@@ -83,6 +83,26 @@ describe('checkScrapFloor', () => {
             paid: { text: 'GUARD 2. Gain 1 Conviction.', run: c => { c.guard(2); c.conviction(1); } },
         } };
         expect(checkScrapFloor([card])).toEqual([]);
+    });
+});
+
+describe('checkDiscardCost', () => {
+    it('passes a PAID line that discards first', () => {
+        const card: Card = { ...base, program: {
+            free: { text: 'GUARD 2.', run: c => { c.guard(2); } },
+            paid: { text: 'Discard 1 card at random. GUARD 6.', run: c => { c.discardRandom(1); c.guard(6); } },
+        } };
+        expect(checkDiscardCost([card])).toEqual([]);
+    });
+
+    it('flags a FREE line that discards, and a PAID line that discards after an effect', () => {
+        const card: Card = { ...base, program: {
+            free: { text: 'Discard 1 card at random. GUARD 2.', run: c => { c.discardRandom(1); c.guard(2); } },
+            paid: { text: 'GUARD 6. Discard 1 card at random.', run: c => { c.guard(6); c.discardRandom(1); } },
+        } };
+        expect(checkDiscardCost([card])).toEqual([
+            { rule: 'discard-cost', id: 'c', detail: 'FREE discards; PAID discards after another verb' },
+        ]);
     });
 });
 

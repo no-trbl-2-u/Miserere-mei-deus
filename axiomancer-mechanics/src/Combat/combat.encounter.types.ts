@@ -168,7 +168,10 @@ export type SignatureSkillKind =
     | 'heal-trigger-leech'  // the Bleeding Signet: HEAL 5, then trigger the foe's LEECH
     | 'clear-yours-trigger-storm' // the Elementalist's Signet: clear your INFERNO, trigger the foe's STORM
     | 'foe-inferno-to-storm'      // the Elementalist's Brooch: the foe-only INFERNO becomes STORM
-    | 'blizzard-to-storm';        // the Elementalist's Belt: all BLIZZARD becomes STORM
+    | 'blizzard-to-storm'         // the Elementalist's Belt: all BLIZZARD becomes STORM
+    | 'guard-to-thorns'           // the Thornback Signet: THORNS equal to your GUARD
+    | 'reflect-half'              // the Mirror Brooch: REFLECT 50%
+    | 'hold-guard';               // the Carapace Belt: your GUARD is kept through the foe's next turn
 
 export type SignatureSkillId =
     | 'sig-disarming-plea'
@@ -177,7 +180,10 @@ export type SignatureSkillId =
     | 'sig-bleeding-signet'
     | 'sig-elementalist-signet'
     | 'sig-elementalist-brooch'
-    | 'sig-elementalist-belt';
+    | 'sig-elementalist-belt'
+    | 'sig-defender-signet'
+    | 'sig-defender-brooch'
+    | 'sig-defender-belt';
 
 /** Player archetype, derived from the dominant base stat. Drives (mobile) the
  *  portrait only. */
@@ -375,6 +381,9 @@ export type CombatEncounterPhase =
 /** An element of the Elementalist's weather, as the board shows it (`combat.elements.ts`). */
 export type WeatherElement = 'foe-inferno' | 'your-inferno' | 'blizzard' | 'storm' | 'frozen';
 
+/** A number of the Defender's spikes, as the board shows it (`combat.spikes.ts`). */
+export type SpikeReading = 'thorns' | 'reflect' | 'reflect-turns';
+
 export type CombatEvent =
     | { kind: 'dice-rolled'; dice: CombatManaDie[] }
     | { kind: 'turn-dice-rolled'; turn: number; dice: CombatManaDie[] }
@@ -405,6 +414,16 @@ export type CombatEvent =
     | { kind: 'weather-changed'; element: WeatherElement; from: number; to: number }
     /** BLIZZARD took `amount` off the foe's hits this phase. */
     | { kind: 'blizzard-softened'; amount: number }
+    /** The spikes moved: THORNS, REFLECT's % or its turns left went from `from` to `to` (a rise, the drift, an expiry). */
+    | { kind: 'spikes-changed'; spike: SpikeReading; from: number; to: number }
+    /** A foe strike met THORNS or REFLECT: the foe took `amount` back (a DEAL, after VULNERABLE and FROZEN). */
+    | { kind: 'spike-struck'; spike: 'thorns' | 'reflect'; amount: number }
+    /** A PAID cost discarded these cards from your hand at random. */
+    | { kind: 'cards-discarded'; cardIds: string[] }
+    /** RETRIEVE returned these cards from your discard to your hand. */
+    | { kind: 'cards-retrieved'; cardIds: string[] }
+    /** A card came back from EXILE into your draw pile. */
+    | { kind: 'card-unexiled'; cardId: string }
     // ── Card-mechanic events ─────────────────────────────────────────────────
     | { kind: 'barrier-absorbed'; amount: number }
     | { kind: 'riposte-fired'; amount: number }
