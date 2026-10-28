@@ -20,8 +20,9 @@ export {
     emptyQuestLog, isQuestComplete, findActiveQuest,
     startQuest, progressQuest, completeQuest,
     payQuestReward, payCompletedQuests, newlyCompletedQuests, questRewardItem, settleKill,
+    advanceHazardObjectives,
 } from './quest.engine';
-export type { PaidQuestReward } from './quest.engine';
+export type { PaidQuestReward, KilledFoe } from './quest.engine';
 
 export {
     moveToNode, completeCurrentNode, IllegalMoveError,
@@ -49,9 +50,12 @@ export {
     getNodePrimaryEventKind,
 } from './MapEvents/resolve-map-event';
 export type {
-    MapEventKind,
+    MapEventKind, QuestPayload,
     MapEventPayload, ResolvedEvent, ResolveMapEventResult,
 } from './MapEvents/types';
+export type {
+    Questline, QuestlineStep, QuestlineId, QuestlineSettle, QuestNodeStage, QuestStepView, RouteRef,
+} from './questline';
 // Rest shelter classification. Mobile words an inn night as a bed.
 export type { RestShelter } from './MapEvents/types';
 export {

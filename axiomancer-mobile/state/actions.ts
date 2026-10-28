@@ -1406,7 +1406,7 @@ function resolveCurrentMapEventInner(store: AppStore, sourceNodeType?: string, s
         // start node — mirroring the engine dispatcher's own travel
         // short-circuit. Doors stay repeatable.
         const shouldConsumeNode = result.event.kind !== 'none' &&
-            !['encounter', 'travel', 'labyrinth'].includes(result.event.kind);
+            !['encounter', 'travel', 'labyrinth', 'quest'].includes(result.event.kind);
         if (shouldConsumeNode) {
             const currentNodeId = resolvedState.world?.currentMap?.currentNode;
             if (currentNodeId) {
@@ -1542,6 +1542,18 @@ function resolveCurrentMapEventInner(store: AppStore, sourceNodeType?: string, s
             // crossing lost to an app close would strand the run on the
             // wrong map.
             try { store.getState().save(); } catch { /* persistence must not block the road */ }
+            return true;
+        }
+
+        // A quest node has no card: it routes to its own screen (QL1c
+        // replaces this branch with that route). Until then the player stays
+        // on the map with no pending event, and the node stays unspent (the
+        // engine does not consume it and the exclusion above keeps it so).
+        if (result.event.kind === 'quest') {
+            store.setState({
+                ...resolvedState,
+                event: EMPTY_EVENT_SLICE,
+            });
             return true;
         }
 

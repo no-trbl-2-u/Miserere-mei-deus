@@ -32,7 +32,7 @@ import { REST_PASSIVE_HEAL_FRACTION, restShelterOf } from './rest-shelter';
 import type {
     EncounterPayload, InteractionPayload, GatheringPayload, RestPayload,
     VillagePayload, CutscenePayload, HazardPayload, LootCachePayload,
-    NarrationPayload, BlacksmithPayload, TravelPayload, LabyrinthDoorPayload,
+    NarrationPayload, BlacksmithPayload, TravelPayload, LabyrinthDoorPayload, QuestPayload,
     ResolveMapEventResult,
 } from './types';
 
@@ -344,6 +344,30 @@ export function resolveLabyrinthDoor(
     };
 }
 
+// ─── quest ────────────────────────────────────────────────────────────────────
+
+/**
+ * Resolves a quest node. The state is untouched: the node's stage is read,
+ * never written. This is the contract (QL1a): node 1 is the chapter start and
+ * reads `offer`; nodes 2-4 read `locked` until the step rules (QL1b) look at
+ * the log. The dispatcher does not consume a quest node.
+ */
+export function resolveQuest(
+    state: GameState,
+    payload: QuestPayload,
+): ResolveMapEventResult {
+    return {
+        state,
+        event: {
+            kind: 'quest',
+            questline: payload.questline,
+            node: payload.node,
+            stage: payload.node === 1 ? 'offer' : 'locked',
+            description: payload.description,
+        },
+    };
+}
+
 // ─── dispatch table ───────────────────────────────────────────────────────────
 
 import type { MapEventPayload } from './types';
@@ -366,5 +390,6 @@ export function applyPayload(
         case 'blacksmith':  return resolveBlacksmith(state, payload);
         case 'travel':      return resolveTravel(state, payload);
         case 'labyrinth':   return resolveLabyrinthDoor(state, payload);
+        case 'quest':       return resolveQuest(state, payload);
     }
 }

@@ -36,7 +36,7 @@ import { revealAdjacent, markNodeConsumed, unlockAdjacent } from '../world.reduc
 import { getRng } from '../../Utils/rng';
 import { applyPayload } from './handlers';
 import { resolveDeath } from '../../Game/death';
-import { reachableObjectives, collectObjectives, progressQuest, payCompletedQuests } from '../quest.engine';
+import { reachableObjectives, collectObjectives, progressQuest, payCompletedQuests, advanceHazardObjectives } from '../quest.engine';
 import type { QuestLog, NodeId } from '../types';
 import type {
     MapEventPayload, MapEventPool, MapEventPoolEntry, MapEventKind, ResolveMapEventResult, ResolvedEvent,
@@ -62,9 +62,9 @@ function advanceReachObjectives(quests: QuestLog, nodeId: NodeId): QuestLog {
  * completed (`payCompletedQuests`, the one reward door). Same reference back
  * when the log did not change.
  */
-function withQuestLog(state: GameState, quests: QuestLog): GameState {
+function withQuestLog(state: GameState, quests: QuestLog, rng: () => number): GameState {
     if (quests === state.quests) return state;
-    const pay = payCompletedQuests(state.player, state.quests, quests);
+    const pay = payCompletedQuests(state.player, state.quests, quests, rng);
     return { ...state, player: pay.player, quests };
 }
 
@@ -304,7 +304,7 @@ export function resolveMapEvent(
     // pool roll. Pure no-op for non-reach quests or fully-completed reaches.
     // A reach that completes a quest pays its reward here.
     const questsAfterReach = advanceReachObjectives(answered.quests, nodeId);
-    const stateAfterReach: GameState = withQuestLog(answered, questsAfterReach);
+    const stateAfterReach: GameState = withQuestLog(answered, questsAfterReach, rng);
 
     // The two early branches below (no pool, no entry) rebuild the map from
     // `answeredMap`, never from the pre-answer `map` — rebuilding from `map`
@@ -344,7 +344,7 @@ export function resolveMapEvent(
     // against the unanswered state, and return before step 5. Only the
     // reveal runs, so the map can draw what lies past the fight.
     if (entry.payload.kind === 'encounter') {
-        const reachedOwed: GameState = withQuestLog(state, questsAfterReach);
+        const reachedOwed: GameState = withQuestLog(state, questsAfterReach, rng);
         const fight = applyPayload(reachedOwed, entry.payload, rng);
         const revealed = revealAdjacent(fight.state.world.currentMap, nodeId);
         return {
@@ -366,12 +366,21 @@ export function resolveMapEvent(
     // items satisfy. Mirrors the reach-objective auto-advance above, but
     // fires on the resolved event's items rather than the arrived-at node.
     // A collect that completes a quest pays its reward here.
+    // 4a-hazard. A resolved hazard node counts toward an active `hazard`
+    // objective on this map, whatever the hazard did to the player.
     const stateAfterCollect: GameState = result.event.kind === 'gathering'
         ? withQuestLog(
             result.state,
             advanceCollectObjectives(result.state.quests, result.event.items.map(i => i.id)),
+            rng,
         )
-        : result.state;
+        : result.event.kind === 'hazard'
+            ? withQuestLog(
+                result.state,
+                advanceHazardObjectives(result.state.quests, result.state.world.currentMap.name).log,
+                rng,
+            )
+            : result.state;
 
     // 4a-travel. A resolved travel event has already crossed —
     // `result.state.world.currentMap` IS the destination map. Return here:
@@ -393,8 +402,12 @@ export function resolveMapEvent(
         nodeId,
     );
     // The Labyrinth door opens the way on like any node but is
-    // never consumed: it stays a door, and the next arrival enters again.
-    const consumed = result.event.kind === 'labyrinth' ? next : markNodeConsumed(next, nodeId);
+    // never consumed: it stays a door, and the next arrival enters again. A
+    // quest node is the same until its step is accepted (QL1b); QL1a never
+    // accepts, so it never consumes.
+    const consumed = (result.event.kind === 'labyrinth' || result.event.kind === 'quest')
+        ? next
+        : markNodeConsumed(next, nodeId);
     const nextState: GameState = {
         ...stateAfterCollect,
         world: { ...stateAfterCollect.world, currentMap: consumed },

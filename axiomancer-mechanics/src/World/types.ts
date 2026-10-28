@@ -4,6 +4,7 @@ import { Image } from '../Utils/types';
 import { ContinentName, MapName } from './map.library';
 import { QuestName } from './quest.library';
 import { NPC } from '../NPCs/types';
+import type { QuestlineId } from './questline';
 
 /**
  * A reward grantable on event/combat completion. Either a tag (`'experience'`,
@@ -18,7 +19,13 @@ export type Reward =
     | { kind: 'currency'; amount: number }
     | { kind: 'experience'; amount: number }
     | { kind: 'card'; cardId: string }
-    | { kind: 'item'; item: Item };
+    | { kind: 'item'; item: Item }
+    /**
+     * A pick of `count` cards from the lane pool, the offer a won fight makes
+     * (`rollCombatCardRewards`). Paying it adds no card: the offers ride the
+     * `PaidQuestReward.cardOffers` for the host to put on the spoils tiles.
+     */
+    | { kind: 'card-pick'; count: number };
 
 /**
  * A combat encounter. Wraps the list of enemies that take
@@ -46,8 +53,16 @@ export interface Encounter {
  * - `reach`   — arrive at the node `target` (counts as 1).
  * - `talk`    — talk to the NPC named `target` (counts as 1).
  * - `flag`    — generic world-flag advanced explicitly by the dialogue or CLI.
+ * - `hazard`  — resolve N hazard nodes on the quest's map, whatever the outcome.
  */
-export type QuestObjectiveType = 'kill' | 'collect' | 'reach' | 'talk' | 'flag';
+export type QuestObjectiveType = 'kill' | 'collect' | 'reach' | 'talk' | 'flag' | 'hazard';
+
+/**
+ * Which foes a `kill` objective with no `target` counts: every won fight
+ * (`'any'`), only an elite (`'elite'`, `isEliteEnemy`) or only a boss
+ * (`difficulty: 'boss'`).
+ */
+export type KillFoeClass = 'any' | 'elite' | 'boss';
 
 /** Per-objective state attached to a Quest. */
 export interface QuestObjective {
@@ -56,6 +71,8 @@ export interface QuestObjective {
     description: string;
     /** Enemy slug / item id / node id / npc name / flag key. */
     target?: string;
+    /** A `kill` objective with no `target`: the class of foe it counts. */
+    foeClass?: KillFoeClass;
     requiredCount: number;
     currentCount: number;
 }
@@ -70,6 +87,13 @@ export type QuestStatus = 'available' | 'active' | 'completed' | 'failed';
  * @property objectives  - Sub-goals — quest completes when all are at `currentCount === requiredCount`.
  * @property reward      - Granted on completion.
  * @property nextQuest   - Next quest in a chain, if any.
+ * @property questline    - The questline this quest is a step of, if any.
+ * @property step         - Its step number within that questline.
+ * @property rewards      - Further rewards, paid in order after `reward`. A
+ *                          quest with only `reward` pays as it always has.
+ * @property holdForTurnIn - When every objective fills the quest stays active
+ *                          ("ready"): neither completed nor paid until
+ *                          `turnInQuestStep` (QL1b).
  */
 export interface Quest {
     name: QuestName;
@@ -78,6 +102,10 @@ export interface Quest {
     objectives: QuestObjective[];
     reward: Reward;
     nextQuest?: QuestName;
+    questline?: QuestlineId;
+    step?: number;
+    rewards?: Reward[];
+    holdForTurnIn?: boolean;
     status: QuestStatus;
 }
 

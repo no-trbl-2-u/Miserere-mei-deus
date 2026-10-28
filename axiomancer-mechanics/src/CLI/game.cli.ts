@@ -430,6 +430,7 @@ function describeResolvedEvent(event: ResolvedEvent): string {
         case 'blacksmith':  return `The anvil (budget ${event.budget}${event.variants.length > 0 ? `, ${event.variants.length} variant${event.variants.length === 1 ? '' : 's'} on offer` : ''}).`;
         case 'travel':      return `${event.description ?? 'You walk on.'} (→ ${event.destinationContinent} / ${event.destinationMap})`;
         case 'labyrinth':   return `${event.description ?? 'A door into the Aporia.'} (the Aporia, ${event.act}: run \`npm run labyrinth\` to walk it)`;
+        case 'quest':       return `${event.description ?? 'A quest giver waits.'} (questline ${event.questline}, node ${event.node}: ${event.stage})`;
         case 'none':        return 'Nothing of note happens.';
     }
 }

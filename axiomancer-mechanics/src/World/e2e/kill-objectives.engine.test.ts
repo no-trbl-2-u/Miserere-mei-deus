@@ -97,3 +97,32 @@ describe('advanceKillObjectives', () => {
         expect(third.completed).toEqual(['gather-wood']);
     });
 });
+
+describe('advanceKillObjectives by foe class (QL1a)', () => {
+    const classQuest = (foeClass: 'any' | 'elite' | 'boss'): Quest => ({
+        ...DOOR_QUEST,
+        objectives: [{
+            id: 'class', type: 'kill', foeClass, description: 'fixture',
+            requiredCount: 1, currentCount: 0,
+        }],
+    });
+    const run = (
+        foeClass: 'any' | 'elite' | 'boss',
+        difficulty: 'normal' | 'elite' | 'boss',
+        map: 'breakwater' | 'charcoal-wood' = 'breakwater',
+    ) => advanceKillObjectives(
+        startQuest(emptyQuestLog(), classQuest(foeClass)), { name: 'Any Foe', difficulty }, map,
+    ).completed;
+
+    it('counts by class and not by name', () => {
+        expect(run('any', 'normal')).toEqual(['gather-wood']);
+        expect(run('elite', 'normal')).toEqual([]);
+        expect(run('elite', 'elite')).toEqual(['gather-wood']);
+        expect(run('boss', 'elite')).toEqual([]);
+        expect(run('boss', 'boss')).toEqual(['gather-wood']);
+    });
+
+    it('stays scoped to the quest map', () => {
+        expect(run('any', 'normal', 'charcoal-wood')).toEqual([]);
+    });
+});

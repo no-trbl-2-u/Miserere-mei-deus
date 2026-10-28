@@ -89,16 +89,20 @@ of this conversation. It carries:
 3. what NOT to touch: every sibling worker's PR, branch and owned
    files, named one by one;
 4. the callouts so far that matter to this row (Step 5), pasted in;
-5. the house constraints that bite a worker (§4 notes);
+5. the house constraints that bite a worker (§5 notes);
 6. **push once**: the branch is pushed when the verify gate is
    green, and not again while its review runs; a second push
    mid-review cancels the `judge` and red-gates the old SHA;
-7. the fixed final-report shape:
+7. **UI shots, when the row changes what is on screen**: a before
+   and after of every screen it touches, shown in the PR description
+   and never committed (§4, hard rule 10);
+8. the fixed final-report shape:
 
 ```
 STATUS: pr-open | green | blocked
 PR: <number or none>
 CHECKS: <commands and results>
+SHOTS: <screens attached, and how> | none: <not a UI change, or why not>
 CALLOUTS:
 - footgun: <what> | file: <path or n/a> | fix: <how to avoid> | matters to: <next phase id or all>
 OPEN: <anything for T>
@@ -173,8 +177,73 @@ by the phase it matters to.
 8. **Durable lessons go through the skills' own retro** into
    `plan/lessons.md`; the callout digest is never a second log.
 9. **No emojis, no attribution trailers** (AGENTS.md rule 2).
+10. **UI shots live in the PR description, never in the repo.** A
+    worker whose row changes what is on screen puts a before and after
+    of each touched screen in its PR body (§4). It never stages a
+    shot: they are written outside the worktree, and the only PNGs a
+    PR commits are the `baseline:approve` baselines it already owes.
+    A report with no `SHOTS:` line, or a UI PR whose body has no
+    shots and no reason, goes back to its worker.
 
-## 4. Environment notes (tell every worker)
+## 4. UI before/after shots (tell every UI worker)
+
+A row is a UI change when its diff touches `axiomancer-mobile/src/`,
+`axiomancer-mobile/app/` or a screen's layout constants, or its PR
+carries `area:ui` or `area:mobile`. The reviewer reads the shots from
+the PR body (`skills/review.md`), so they must be there before the
+review runs: attach them as soon as the PR opens. Editing the PR body
+is not a push, so it keeps the push-once rule.
+
+1. **Capture, outside the worktree.** Write every shot to
+   `/tmp/pr-shots/<branch>/`, named `pr<N>-<screen>.before.png` and
+   `pr<N>-<screen>.after.png`.
+   - **Before** is `origin/main`. A screen with a committed baseline:
+     `git show origin/main:axiomancer-mobile/screenshots/baseline/<screen>.png`
+     into the before file. A screen without one: capture it on a
+     detached `origin/main` worktree the same way as the after shot,
+     or write "new screen" in its before cell.
+   - **After** is the branch head: `npm run verify:visual` in
+     `axiomancer-mobile/` leaves it in `screenshots/current/<screen>.png`
+     (gitignored); copy it out. A state no route renders: the
+     `playwright` MCP (`browser_take_screenshot`), saved to the same
+     directory.
+   - Only screens the diff touches, at most six pairs. Name any left
+     out in the PR body.
+2. **Host, outside the repo.** Use the first route that works:
+   - **A browser signed in to GitHub** (the Chrome MCP in T's
+     attended session): open the PR, edit the description, drop each
+     file into the editor (a drag-and-drop, or `browser_file_upload`
+     on its file input) and keep the
+     `https://github.com/user-attachments/assets/...` URL GitHub writes
+     in. These live in GitHub's attachment store, not in any branch.
+     The cloud container's `playwright` MCP is signed in to nothing,
+     so this route needs T's browser.
+   - **The `pr-shots` prerelease** (the headless default): release
+     assets are not git objects, and on this public repo they render
+     for anyone who opens the PR. Create it once if
+     `gh release view pr-shots` fails:
+     `gh release create pr-shots --prerelease --latest=false --target main --title "PR screenshots (not a release)" --notes "Before/after shots for PR descriptions. Never a game release."`.
+     Upload each file:
+     `gh release upload pr-shots /tmp/pr-shots/<branch>/pr<N>-<screen>.after.png --clobber`.
+     Its URL is
+     `https://github.com/no-trbl-2-u/Miserere-mei-deus/releases/download/pr-shots/pr<N>-<screen>.after.png`.
+   - Neither works: write `SHOTS: none: <why>` in the report and a
+     "Screenshots not attached: <why>" line in the PR body. Never
+     commit the shots to get round it, and never push them to any
+     branch.
+3. **Show them.** Add a `## Screenshots` section to the PR body with
+   `gh api -X PATCH repos/no-trbl-2-u/Miserere-mei-deus/pulls/<N> -F body=@<file>`
+   (`gh pr edit` needs GraphQL, refused here), one row per screen:
+
+```
+## Screenshots
+
+| Screen | Before (`main`) | After (this PR) |
+|---|---|---|
+| village | <img src="<before url>" width="320"> | <img src="<after url>" width="320"> |
+```
+
+## 5. Environment notes (tell every worker)
 
 - **Restarts kill workers silently.** A container restart ends
   background workers with no report (one died a minute in, its branch

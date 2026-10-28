@@ -118,6 +118,7 @@ export type SkipEventKind =
     | 'gathering'
     | 'travel'
     | 'labyrinth'
+    | 'quest'
     | 'item-reward'
     | 'none';
 
