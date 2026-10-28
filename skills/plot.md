@@ -137,12 +137,17 @@ existed, move it to Rejected as "briefed".
 the rows. `plan/deadlines.md` is edited by hand here; nothing
 regenerates it from the build plan except the Status cells:
 
-- **Every row the plot added** gets a home: name it in an `## Items`
-  row whose due date sits inside its Window (a `needs plot` Item
-  this plot answers has its `needs plot` replaced by the new ids), or
-  a `- <id> — <reason>` line under `## Unscheduled` ("date not set"
-  when the date is T's to pick and T is not here to pick it). Never
-  guess a date for T.
+- **Every row the plot added** gets a home, and every Item is a T act
+  (phase DL2b). A loop row goes in the `Waits on` cell of the T act it
+  unblocks, never into an Item of its own and never into an Item's
+  `Rows` (the lint fails that). A row that waits on T (attended or
+  owner-led) may be named in an `## Items` row's `Rows` whose due
+  date sits inside its Window. A `needs plot` Item this plot answers
+  is ticked `[x]` by hand, and its new loop rows go under the
+  `Waits on` of the T act that follows. A row with no T act after it
+  gets a `- <id> — <reason>` line under `## Unscheduled` ("date not
+  set" when the date is T's to pick and T is not here to pick it).
+  Never guess a date for T.
 - **Every Item the plot supersedes, re-scopes or completes** is
   edited itself, not only its Rows cell: its name, date or rows are
   changed to the work that now finishes it, or a `T` Item T has

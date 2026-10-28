@@ -9,9 +9,11 @@
 //     and no `## Unscheduled` line excuses, or an `## Unscheduled` line with no reason;
 //   - an Items row (or `## Unscheduled` line) naming a phase id with no build-plan row,
 //     in its `Rows` or its `Waits on` cell (phase DL2a);
-//   - one phase id named twice in the Items table (`Rows` and `Waits on` both count),
+//   - one phase id named twice in the Items table (`Rows` and `Waits on` both count, in
+//     one Item or two),
 //     or by an Items row and `## Unscheduled`;
-//   - not built yet (phase DL2b): an Item whose `Rows` names a loop row.
+//   - an Item whose `Rows` names an open loop row (not attended, not owner-led): every Item is
+//     a T act, and a loop row goes in the `Waits on` of the act it unblocks (phase DL2b);
 //   - an Items row whose due date falls outside its window in the `## Windows` table,
 //     or whose window has no row there;
 //   - a phase Item whose Status cell disagrees with the one `deadlines.mjs --write`
@@ -61,6 +63,12 @@ export const checkDeadlines = (deadlinesMd, buildPlanMd) => {
         for (const id of named.filter((id) => !phases.has(id))) {
             errors.push(`${DEADLINES}: Item "${item.name}" names ${id}, which has no row in ${BUILD_PLAN}; fix the id or plot the row.`)
         }
+        for (const id of Array.isArray(item.rows) ? item.rows : []) {
+            const row = phases.get(id)
+            if (row && row.open && !row.waitsOnT) {
+                errors.push(`${DEADLINES}: Item "${item.name}" names loop row ${id} in Rows; every Item is a T act, so move ${id} to the Waits on cell of the T act it unblocks, or under ## Unscheduled.`)
+            }
+        }
         const want = derivedStatus(item, phases)
         if (want && want !== (item.done ? '[x]' : '[ ]')) {
             errors.push(`${DEADLINES}: Item "${item.name}" has Status ${item.done ? '[x]' : '[ ]'}, but its rows say ${want}; run \`node scripts/deadlines.mjs --write\` instead of editing the cell.`)
@@ -74,7 +82,9 @@ export const checkDeadlines = (deadlinesMd, buildPlanMd) => {
     }
 
     for (const [id, places] of namedBy) {
-        if (places.length > 1) {
+        if (places.length > 1 && places.every((p) => p.item === places[0].item)) {
+            errors.push(`${DEADLINES}: Item "${places[0].item}" names ${id} twice (${places.map((p) => p.label).join(', ')}); keep it in one cell.`)
+        } else if (places.length > 1) {
             errors.push(`${DEADLINES}: ${id} is named by ${places.length} Items (${places.map((p) => p.label).join(', ')}); keep it in one.`)
         }
     }

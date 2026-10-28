@@ -29,14 +29,14 @@ ${unscheduled ? `\n## Unscheduled\n\nIntro prose.\n\n${unscheduled}\n` : ''}
 ## How a window closes
 `
 
-// A0 shipped, A1 open, W1 wraps (its Requires on a continuation line), K1 skipped,
+// A0 shipped, A1 open and attended, W1 wraps (its Requires on a continuation line), K1 skipped,
 // P1 partial, X1 blocked; one shipped row outside the Status block is ignored.
 const BUILD_PLAN = `# Build plan
 
 ## Status (at-a-glance)
 
 - [x] (#600) Phase A0 — shipped. Requires nothing.
-- [ ] Phase A1 — open loop work. Requires A0.
+- [ ] Phase A1 — open work for T (attended). Requires A0.
 - [ ] Phase W1 — a wrapped row (plotted by T) (attended): its text runs
       on past the first line. Requires A1.
 - [skipped] Phase K1 — skipped by T. Requires A0.
@@ -108,6 +108,42 @@ test('A3: one id in two Items fails, naming both', () => {
     ])
 })
 
+// Phase DL2b: an Item's Rows names only T's acts; a loop row goes in the Waits on of the act it unblocks.
+const LOOP_PLAN = BUILD_PLAN.replace('- [skipped]', '- [ ] Phase L1 — open loop work (plotted by T). Requires A0.\n- [skipped]')
+
+test('DL2b A3: a loop row in Rows fails, naming the Item and the row and where to move it', () => {
+    const rows = [...COVER_ALL, '| [ ] | 2026-11-06 | Build it | W2 | L1 | - |']
+    const errors = checkDeadlines(deadlines(rows, EXCUSE_REST), LOOP_PLAN)
+    assert.deepEqual(errors, [
+        'plan/deadlines.md: Item "Build it" names loop row L1 in Rows; every Item is a T act, so move L1 to the Waits on cell of the T act it unblocks, or under ## Unscheduled.',
+    ])
+})
+
+test('DL2b A3: the same loop row under the Waits on of a T act passes', () => {
+    // guard-test: DL2a already covers a Waits on id; this pins that the A3 rule leaves the cell it points to alone.
+    const rows = [...COVER_ALL, '| [ ] | 2026-11-06 | Play it | W2 | T | L1 |']
+    assert.deepEqual(checkDeadlines(deadlines(rows, EXCUSE_REST), LOOP_PLAN), [])
+})
+
+test('DL2b A3: attended, owner-led, shipped and skipped rows, T and needs plot all pass in Rows', () => {
+    // guard-test: the exempt kinds passed before the rule existed; this pins that the rule flags only open loop rows.
+    const rows = [
+        ...COVER_ALL,
+        '| [ ] | 2026-11-06 | Owner work | W2 | X1 | L1 |',
+        '| [x] | 2026-11-07 | Shipped work | W2 | A0 |',
+        '| [x] | 2026-11-08 | Skipped work | W2 | K1 |',
+        '| [ ] | 2026-11-09 | Plot it | W2 | needs plot | - |',
+        '| [ ] | 2026-11-10 | Do it | W2 | T | - |',
+    ]
+    assert.deepEqual(checkDeadlines(deadlines(rows, '- P1 — pre-revamp partial.'), LOOP_PLAN), [])
+})
+
+test('DL2b A3: a loop row in Rows and in the same Item\'s Waits on gets its own message', () => {
+    const rows = [COVER_ALL[1], '| [ ] | 2026-11-06 | Play it | W2 | A1 | A1 |']
+    const errors = checkDeadlines(deadlines(rows, EXCUSE_REST), BUILD_PLAN)
+    assert.deepEqual(errors, ['plan/deadlines.md: Item "Play it" names A1 twice ("Play it", "Play it" (Waits on)); keep it in one cell.'])
+})
+
 // Phase DL2a: an id in the sixth column, `Waits on`, is named like one in `Rows`.
 test('DL2a A2: an open row named in Waits on is covered, and a five-column row beside it still passes', () => {
     const rows = ['| [ ] | 2026-10-24 | Play it | W1 | T | A1 |', '| [ ] | 2026-11-05 | Wrapped | W2 | W1 |']
@@ -127,7 +163,7 @@ test('DL2a A2: an id in Waits on and in another Item, or twice, fails naming bot
     assert.deepEqual(errors, ['plan/deadlines.md: A1 is named by 3 Items ("Loop work", "Play it" (Waits on), "Play it" (Waits on)); keep it in one.'])
     const same = [COVER_ALL[1], '| [ ] | 2026-10-25 | Play it | W1 | A1 | A1 |']
     assert.deepEqual(checkDeadlines(deadlines(same, EXCUSE_REST), BUILD_PLAN), [
-        'plan/deadlines.md: A1 is named by 2 Items ("Play it", "Play it" (Waits on)); keep it in one.',
+        'plan/deadlines.md: Item "Play it" names A1 twice ("Play it", "Play it" (Waits on)); keep it in one cell.',
     ])
 })
 
@@ -224,6 +260,16 @@ for (const [file, step, commitStep] of [
         assert.match(section(text, commitStep), /git add [^\n]*plan\/deadlines\.md/)
     })
 }
+
+test('DL2b A7: /plot and /messy file a new loop row under the Waits on of a T act, never an Item of its own', () => {
+    const plot = section(fs.readFileSync(path.join(ROOT, 'skills/plot.md'), 'utf8'), '### Step 4 — Slot')
+    assert.match(plot, /every Item is a T act/)
+    assert.match(plot, /`Waits on` cell of the T act it\s+unblocks/)
+    assert.match(plot, /is ticked `\[x\]` by hand/)
+    const messy = section(fs.readFileSync(path.join(ROOT, 'skills/messy.md'), 'utf8'), '### Step 4 — Refine')
+    assert.match(messy, /Every Item is a T act/)
+    assert.match(messy, /`Waits on` cell, never into an Item's\s+`Rows`/)
+})
 
 test('A9: /plot gives every row it adds an Item or an ## Unscheduled line', () => {
     const body = section(fs.readFileSync(path.join(ROOT, 'skills/plot.md'), 'utf8'), '### Step 4 — Slot')

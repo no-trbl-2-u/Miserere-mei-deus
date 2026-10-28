@@ -210,6 +210,7 @@ test('A8: a six-column row both sides edited merges cell by cell, and a five-col
 })
 
 test('A8: a six-column row both sides inserted is refused as doubled, and new six-column rows stay in due-date order', () => {
+  // guard-test: the doubled-row refusal and the due-date sort already hold for six cells; this pins them on the sixth column.
   const same = item6('Same', { due: '2026-11-12', waits: 'S1' })
   const dupOurs = doc({ items: [same, ...base6Items], unscheduled: baseUns, changes: baseLog })
   const dupTheirs = doc({ items: [...base6Items, same], unscheduled: baseUns, changes: baseLog })
@@ -332,9 +333,9 @@ test('a real git merge with the driver registered keeps both plots, and the live
       text = text.replace('\n## Change log\n\n', `\n## Change log\n\n- **2026-10-28** — **plot ${tag}** (T).\n`)
       text = text.replace('\n## How a window closes', `- ${tag} — loop work; date not set.\n\n## How a window closes`)
       const lines = text.split('\n')
-      const at = lines.indexOf('| Status | Due | Item | Window | Rows |')
+      const at = lines.indexOf('| Status | Due | Item | Window | Rows | Waits on |')
       assert.ok(at > 0)
-      lines.splice(at + 2, 0, `| [ ] | ${due} | Item ${tag} | W1 | ${tag} |`)
+      lines.splice(at + 2, 0, `| [ ] | ${due} | Item ${tag} | W1 | T | ${tag} |`)
       return lines.join('\n')
     }
     git('switch', '-q', '-c', 'plot-t')

@@ -122,7 +122,7 @@ left; otherwise after.
 T's human-in-the-loop work from 2026-10-26 to the MVP, in pieces of one to two hours (T works 9-5 on weekdays,
 so weekday pieces are evenings and weekends carry the longer sessions). No weekday is held free: T works on
 Miserere every day, Thursdays included (T, 2026-10-27). Each piece is a
-`T` row or a named Item in the Items table below, on the same date; loop work is not listed. The daily reminder
+Item in the Items table below, on the same date; every Item is T's act, and loop work appears only as the `Waits on` of the act it unblocks. The daily reminder
 reads this table for the day's piece, the high-level task it serves, how AI can help, and the next days' pieces.
 
 | Date | Hours | Piece | High-level task | How AI helps |
@@ -160,96 +160,76 @@ W4 about 10.5 (B1, the cost-card session, R12, Chapters 2-4's art on Dec 13).
 
 ## Items
 
-The reminder reads this table (`scripts/deadlines.mjs`; T, 2026-10-19). Each row is one deadline item: a due date,
-a name, its window, and **Rows**: the build-plan phase ids that finish it, `needs plot` (no rows yet), or `T` (a task
-only T does; tick its Status `[x]` when done). Status is only set by hand on `T` rows; phase items read their state
-from the build plan. A session that `/plot`s an item replaces its `needs plot` with the new phase ids.
+The reminder reads this table (`scripts/deadlines.mjs`; T, 2026-10-19). **Every Item is something T does** (T,
+2026-10-28: "make sure each item is something I need to do, not just running an agent against a phase row";
+"Realistically every item in deadline should be this way"): plot, pitch, decide, pick, author, play, review, merge
+or tag. Each row is one such act: a due date, a name, its window, **Rows**, and **Waits on**. **Rows** is `T` (a task
+only T does; tick its Status `[x]` when done), `needs plot` (no rows yet; tick it `[x]` by hand once a plot has
+answered it), or the ids of build-plan rows that wait on T (attended or owner-led), which finish the Item.
+**Waits on** is the loop rows this act needs before T can do it, or `-`; the loop has no dates of its own, so a
+loop row is listed under the first T act it unblocks, and the reminder says `the loop still owes <ids>` while one is
+open. Status is only set by hand on `T` and `needs plot` rows; phase Items read their state from the build plan, and
+`Waits on` never ticks an Item. A session that `/plot`s an Item replaces its `needs plot` with the new phase ids
+only when they wait on T; loop rows go under the `Waits on` of the T act that follows, or under `## Unscheduled`.
 
 **Status is derived for phase Items; never hand-edit it** (DL1b, 2026-10-21): `node scripts/deadlines.mjs --write`
 recomputes it from the build plan (`[x]` when every row the Item names has shipped or been skipped, `[ ]`
 otherwise) and rewrites only those cells; the `deadlines` workflow and the tick that ships a phase both run it.
 `scripts/check-deadlines.mjs` (DL1a) fails the root `npm test` when an open build-plan row has no Item and no
-`## Unscheduled` line, when an Item names a row that does not exist, when two Items name one row, when a date falls
-outside its window, or when a phase Item's Status disagrees with what `--write` would write. **A `T` Item's Status is hand-ticked and derivable by nothing.** One
+`## Unscheduled` line, when an Item names a row that does not exist (in `Rows` or `Waits on`), when a row is named
+twice, when an Item's `Rows` names a loop row (DL2b), when a date falls outside its window, or when a phase Item's Status disagrees with what `--write` would write. **A `T` Item's Status is hand-ticked and derivable by nothing.** One
 drift no check can see: an Item whose *premise* is superseded while the rows it names still exist — the
 `W1 demo: T plays the three demos` case of 2026-10-20. The guard for that is the reconcile step `/plot` and
 `/messy` carry (DL1c), not a lint.
 
 The reminder, printed when T starts a chat and kept in `LIVE_DEADLINES.md`, names only what is stuck without T,
 due within two weeks or overdue: "needs a plot" (`needs plot`, or a named id with no row) and "needs you" (an open
-`T` task, or a named row that is attended or owner-led and whose prerequisites have shipped). Work the loop can
-finish alone stays silent. Dates are drafts T can move; a moved date is recorded in the change log below.
+`T` task, or a named row that is attended or owner-led and whose prerequisites have shipped), each with the loop rows
+its act still waits on. Work the loop can finish alone, with no T act after it, stays silent. Dates are drafts T can move; a moved date is recorded in the change log below.
 
-| Status | Due | Item | Window | Rows |
-|---|---|---|---|---|
-| [x] | 2026-10-24 | Cost-card engine and the worse-copy test | W1 | HP1c, HP1c2, HP1d |
-| [x] | 2026-10-27 | The puzzle looks random (roll, draw, reroll) | W1 | HP3a, HP3b |
-| [x] | 2026-10-26 | The dev-only move log (times HP4e's solves) | W1 | HP2c |
-| [ ] | 2026-10-30 | First character playable (T moved it from Oct 26: more work than expected; the third lane is the Defender, DF1a-DF1d) | W1 | CH1a, CH1b, CH1c, CH1d, CH1f, DF1a, DF1b, DF1c, DF1d |
-| [x] | 2026-10-30 | Card audit; T rules the cut at the HP2a merge | W1 | HP2a |
-| [x] | 2026-10-31 | Difficulty features in the solver | W1 | HP2b |
-| [x] | 2026-10-23 | Decision pressure in the puzzle report | W1 | HP4a |
-| [x] | 2026-10-23 | The candidate library shape | W1 | HP4b |
-| [x] | 2026-10-24 | The deadline lint and its reconcile step | W1 | DL1a, DL1b, DL1c |
-| [x] | 2026-10-27 | Author the thirty candidates | W1 | HP4c |
-| [x] | 2026-10-30 | Solve times stored online (Workers + D1) | W1 | BE1a, BE1b, BE1c, BE1d |
-| [x] | 2026-10-28 | The thirty on the live board | W1 | HP4d |
-| [x] | 2026-10-24 | Five hazard cost cards, shown on the board | W1 | HP5a, HP5b |
-| [x] | 2026-10-23 | The twenty easy and medium candidates go | W1 | HP5c |
-| [x] | 2026-10-28 | Twenty cost-card puzzles on /devpuzzle | W1 | HP5d |
-| [x] | 2026-10-26 | Merge the lane-relic plot (#922), then the MVP plan PR (0.5 h) | W1 | T |
-| [ ] | 2026-10-27 | Pick the item icons, the six lane relics included; the loop applies them (1 h) | W1 | IT1b |
-| [ ] | 2026-10-28 | Enemy session 1: Chapter 1's normal roster, the Breakwater's four fight nodes (1 h) | W1 | T |
-| [ ] | 2026-10-29 | Author the first character: portrait, starting relic and its lane, two starting lanes, three lane cards, the playstyle line (1 h) | W1 | CH1e |
-| [ ] | 2026-10-30 | W1 demo part 1: T plays the ten hard candidates (1 h) | W1 | T |
-| [ ] | 2026-10-31 | Enemy session 2: Chapter 1's elite and the watchtower boss (1 h) | W1 | T |
-| [ ] | 2026-11-01 | W1 demo part 2: T plays the twenty cost-card candidates and rules keep or cut (2 h) | W1 | HP4e |
-| [ ] | 2026-11-02 | Plot Chapter 1's enemies and their art brief from the two sessions (1 h) | W1 | B2 |
-| [ ] | 2026-11-03 | Review the Breakwater node map before the event-node pitch (1 h) | W2 | T |
-| [ ] | 2026-11-03 | Live hazard routing (each of the seven Act 1 hazard nodes draws a random puzzle from the thirty) and the cuts (plot, 1 h) | W2 | needs plot |
-| [ ] | 2026-11-04 | Pitch the event-node UI/UX for the Breakwater's nine kinds, all of Act 1's, the quest node included (1 h) | W2 | T |
-| [ ] | 2026-11-05 | The authoring patterns from the kept set | W2 | HP4f |
-| [ ] | 2026-11-05 | Settle the event-node pitch's open questions: one direction per node kind, before the plot (0.5 h) | W2 | T |
-| [x] | 2026-11-05 | Node blurbs matched to their events (the Act 1 walk's second half) | W2 | AW1a, AW1b |
-| [ ] | 2026-11-06 | The band clocks, from the kept set's times | W2 | HP4g |
-| [ ] | 2026-11-06 | Event-node UI/UX for the Breakwater's nine kinds (plot, 1 h) | W2 | needs plot |
-| [ ] | 2026-11-07 | Pick the title plate and the four arena backgrounds (coast, forest, mountains, underworld) from your art dossier (0.5 h) | W2 | TP1b |
-| [ ] | 2026-11-07 | Plot the arena-background swap from your picks (0.5 h) | W2 | needs plot |
-| [ ] | 2026-11-08 | The Breakwater's questline on the map: four quest nodes, three turned in and the fourth the boss, each step's foes and hazards behind its own node, the Belt, fled fights leave a node incomplete, placeholder lines | W2 | QL1a, QL1b, QL1c, QL1d |
-| [x] | 2026-11-08 | A first death comes back dying: 1 VITAE, back a node, the fight or hazard open to retry, a full-screen moment and a skull in the fight; a second death ends the run; a rest's heal clears it (so Chapter 1's boss can be fought again) | W2 | DY1a, DY1b, DY1c, DY1d |
-| [ ] | 2026-11-08 | Chapter 1's enemy art: pick from the loop's candidates (2 h) | W2 | T |
-| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T |
-| [ ] | 2026-11-10 | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | W2 | T |
-| [ ] | 2026-11-10 | Write the Breakwater's quest line: the giver's lines per node, steps 1-3's requirement, every step's XP and extra (0.5 h) | W2 | QL1e |
-| [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | W2 | T |
-| [ ] | 2026-11-12 | Play the Defender test deck on the preview build and check the reward pool (0.5 h) | W2 | DF1f |
-| [x] | 2026-11-13 | The six lane relics in play: the reward rule, Lane line, sources, both lanes' relics | W2 | RW1a, LR1a, LR1c, LR1d, LR1e |
-| [ ] | 2026-11-13 | T's quest line in the game | W2 | QL1f |
-| [ ] | 2026-11-13 | Play your quest line on the preview build and rule on its lines (0.5 h) | W2 | T |
-| [ ] | 2026-11-14 | File what is still broken (`/plot` or `/messy`) and decide what the MVP run must show (1 h) | W2 | T |
-| [x] | 2026-11-16 | Loop gates, real-fight tests, report sweep | W2 | LG1a, LG1b, LG1c, LG1d, LG1e, LG1f, LG1g, CT1a, CT1b, RS1 |
-| [ ] | 2026-11-16 | MVP demo: Act 1, Chapter 1 complete, a full Breakwater run on the phone with puzzle hazards, Chapter 1's enemies and art, lane relics, icons, new event UI (1.5 h, Sun Nov 15) | W2 | T |
-| [x] | 2026-11-17 | Card-upgrade path | W3 | UP1a, UP1b, UP1c, UP1d, UP1e, UP1f, UP1g |
-| [x] | 2026-11-18 | Upgrade grant call | W3 | T |
-| [ ] | 2026-11-18 | The calibration set | W3 | HP2d |
-| [ ] | 2026-11-19 | Plot the hazard swap: hand-pick the seven Act 1 hazard puzzles (Breakwater 2, Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2) after playing the thirty in `/dev` (1 h) | W3 | T |
-| [ ] | 2026-11-21 | Enemy session 3: Chapters 2-4's normal rosters and elites (2 h) | W3 | T |
-| [ ] | 2026-11-22 | Enemy session 4: Chapters 2-4's bosses and the Act Boss, at the end of Chapter 4 (2 h) | W3 | T |
-| [ ] | 2026-11-23 | Plot Chapters 2-4's enemies and their art brief (1 h) | W3 | needs plot |
-| [ ] | 2026-11-25 | Write Chapters 2-4's quest lines, on Chapter 1's questline shape (QL1): the Ruby Signet, the Bleeding Signet, the Elementalist's Brooch and the Carapace Belt (1 h) | W3 | T |
-| [ ] | 2026-11-25 | Upgrades proven on the Act 1 boss | W3 | UP1h |
-| [ ] | 2026-11-28 | Calibration solves (2 h) | W3 | HP2e |
-| [ ] | 2026-11-30 | Bands on the calibrated measure | W3 | HP2f |
-| [ ] | 2026-11-30 | W3 demo: a four-chapter walk, every node resolves (2 h) | W3 | T |
-| [ ] | 2026-12-05 | Relic pass session (the rest of B1: the starting ring, stat-only relics; the six lane relics are LR1's, in the MVP) (2 h) | W4 | B1 |
-| [ ] | 2026-12-06 | Cost-card design session: Toll, Debt, Overdrive (1.5 h) | W4 | T |
-| [ ] | 2026-12-08 | Combat playtest part 1: the questions the command asks (1 h) | W4 | T |
-| [ ] | 2026-12-12 | Combat playtest part 2: winnable and dangerous (2 h) | W4 | R12 |
-| [ ] | 2026-12-13 | Chapters 2-4's enemy art: pick from the loop's candidates (2 h) | W4 | T |
-| [ ] | 2026-12-14 | W4 demo: an Act 1 clear ending at the Act Boss (2 h) | W4 | T |
-| [ ] | 2026-12-23 | Android smoke test on the preview APK (1 h) | W5 | LG1h |
-| [ ] | 2026-12-26 | Playtester walk of all four chapters (plot, 1 h) | W5 | needs plot |
-| [ ] | 2026-12-28 | Tag v0.3 and build the APK (1 h) | W5 | T |
+| Status | Due | Item | Window | Rows | Waits on |
+|---|---|---|---|---|---|
+| [x] | 2026-10-26 | Merge the lane-relic plot (#922), then the MVP plan PR (0.5 h) | W1 | T | - |
+| [ ] | 2026-10-27 | Pick the item icons, the six lane relics included; the loop applies them (1 h) | W1 | IT1b | - |
+| [ ] | 2026-10-28 | Enemy session 1: Chapter 1's normal roster, the Breakwater's four fight nodes (1 h) | W1 | T | - |
+| [ ] | 2026-10-29 | Author the first character: portrait, starting relic and its lane, two starting lanes, three lane cards, the playstyle line (1 h) | W1 | CH1e | - |
+| [ ] | 2026-10-30 | W1 demo part 1: T plays the ten hard candidates (1 h) | W1 | T | - |
+| [ ] | 2026-10-31 | Enemy session 2: Chapter 1's elite and the watchtower boss (1 h) | W1 | T | - |
+| [ ] | 2026-11-01 | W1 demo part 2: T plays the twenty cost-card candidates and rules keep or cut (2 h) | W1 | HP4e | - |
+| [ ] | 2026-11-02 | Plot Chapter 1's enemies and their art brief from the two sessions (1 h) | W1 | B2 | - |
+| [ ] | 2026-11-03 | Review the Breakwater node map before the event-node pitch (1 h) | W2 | T | - |
+| [ ] | 2026-11-03 | Live hazard routing (each of the seven Act 1 hazard nodes draws a random puzzle from the thirty) and the cuts (plot, 1 h) | W2 | needs plot | - |
+| [ ] | 2026-11-04 | Pitch the event-node UI/UX for the Breakwater's nine kinds, all of Act 1's, the quest node included (1 h) | W2 | T | - |
+| [ ] | 2026-11-05 | Settle the event-node pitch's open questions: one direction per node kind, before the plot (0.5 h) | W2 | T | - |
+| [ ] | 2026-11-06 | Event-node UI/UX for the Breakwater's nine kinds (plot, 1 h) | W2 | needs plot | - |
+| [ ] | 2026-11-07 | Pick the title plate and the four arena backgrounds (coast, forest, mountains, underworld) from your art dossier (0.5 h) | W2 | TP1b | - |
+| [ ] | 2026-11-07 | Plot the arena-background swap from your picks (0.5 h) | W2 | needs plot | - |
+| [ ] | 2026-11-08 | Chapter 1's enemy art: pick from the loop's candidates (2 h) | W2 | T | - |
+| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1f |
+| [ ] | 2026-11-10 | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | W2 | T | - |
+| [ ] | 2026-11-10 | Write the Breakwater's quest line: the giver's lines per node, steps 1-3's requirement, every step's XP and extra (0.5 h) | W2 | QL1e | QL1d |
+| [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | W2 | T | - |
+| [ ] | 2026-11-12 | Play the Defender test deck on the preview build and check the reward pool (0.5 h) | W2 | DF1f | - |
+| [ ] | 2026-11-13 | Play your quest line on the preview build and rule on its lines (0.5 h) | W2 | T | QL1f |
+| [ ] | 2026-11-14 | File what is still broken (`/plot` or `/messy`) and decide what the MVP run must show (1 h) | W2 | T | - |
+| [ ] | 2026-11-16 | MVP demo: Act 1, Chapter 1 complete, a full Breakwater run on the phone with puzzle hazards, Chapter 1's enemies and art, lane relics, icons, new event UI (1.5 h, Sun Nov 15) | W2 | T | - |
+| [x] | 2026-11-18 | Upgrade grant call | W3 | T | - |
+| [ ] | 2026-11-19 | Plot the hazard swap: hand-pick the seven Act 1 hazard puzzles (Breakwater 2, Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2) after playing the thirty in `/dev` (1 h) | W3 | T | HP4f, HP4g |
+| [ ] | 2026-11-21 | Enemy session 3: Chapters 2-4's normal rosters and elites (2 h) | W3 | T | - |
+| [ ] | 2026-11-22 | Enemy session 4: Chapters 2-4's bosses and the Act Boss, at the end of Chapter 4 (2 h) | W3 | T | - |
+| [ ] | 2026-11-23 | Plot Chapters 2-4's enemies and their art brief (1 h) | W3 | needs plot | - |
+| [ ] | 2026-11-25 | Write Chapters 2-4's quest lines, on Chapter 1's questline shape (QL1): the Ruby Signet, the Bleeding Signet, the Elementalist's Brooch and the Carapace Belt (1 h) | W3 | T | - |
+| [ ] | 2026-11-28 | Calibration solves (2 h) | W3 | HP2e | HP2d |
+| [ ] | 2026-11-30 | W3 demo: a four-chapter walk, every node resolves (2 h) | W3 | T | HP2f |
+| [ ] | 2026-12-05 | Relic pass session (the rest of B1: the starting ring, stat-only relics; the six lane relics are LR1's, in the MVP) (2 h) | W4 | B1 | - |
+| [ ] | 2026-12-06 | Cost-card design session: Toll, Debt, Overdrive (1.5 h) | W4 | T | - |
+| [ ] | 2026-12-08 | Combat playtest part 1: the questions the command asks (1 h) | W4 | T | - |
+| [ ] | 2026-12-12 | Combat playtest part 2: winnable and dangerous (2 h) | W4 | R12 | - |
+| [ ] | 2026-12-13 | Chapters 2-4's enemy art: pick from the loop's candidates (2 h) | W4 | T | - |
+| [ ] | 2026-12-14 | W4 demo: an Act 1 clear ending at the Act Boss (2 h) | W4 | T | UP1h |
+| [ ] | 2026-12-23 | Android smoke test on the preview APK (1 h) | W5 | LG1h | - |
+| [ ] | 2026-12-26 | Playtester walk of all four chapters (plot, 1 h) | W5 | needs plot | - |
+| [ ] | 2026-12-28 | Tag v0.3 and build the APK (1 h) | W5 | T | - |
 
 ## Unscheduled
 
@@ -345,6 +325,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-28** — **every Item is a T act; the Items table gains `Waits on`** (T, in conversation: "make sure each item is something I need to do, not just running an agent against a phase row"; "Realistically every item in deadline should be this way"; phase DL2b). **Dropped** the 27 Items that named only loop rows (20 shipped or mostly shipped, 7 open): "Cost-card engine and the worse-copy test", "The puzzle looks random", "The dev-only move log", "First character playable" (CH1a-CH1d, CH1f, DF1a-DF1d; CH1e is its own Item), "Card audit", "Difficulty features in the solver", "Decision pressure in the puzzle report", "The candidate library shape", "The deadline lint and its reconcile step", "Author the thirty candidates", "Solve times stored online", "The thirty on the live board", "Five hazard cost cards", "The twenty easy and medium candidates go", "Twenty cost-card puzzles on /devpuzzle", "Node blurbs matched to their events", "A first death comes back dying", "The six lane relics in play", "Loop gates, real-fight tests, report sweep" and "Card-upgrade path"; and, as open loop-only Items, "The authoring patterns from the kept set", "The band clocks", "The Breakwater's questline on the map", "T's quest line in the game", "The calibration set", "Upgrades proven on the Act 1 boss" and "Bands on the calibrated measure". The build plan and `plan/ARCHIVE.md` keep the record. **Folded** the open loop rows into the `Waits on` of the T act each unblocks: CH1f under the Nov 9 mid-MVP check; HP4f and HP4g under the Nov 19 hazard swap plot; QL1d under the Nov 10 quest-line write; QL1f under the Nov 13 quest-line play; HP2d under the Nov 28 calibration solves; UP1h under the Dec 14 W4 demo; HP2f under the Nov 30 W3 demo. **Removed** the Unscheduled line for DL2b when the phase shipped. **Edited** the Items prose, the MVP schedule prose and the reminder paragraph. No `T`, attended, owner-led or `needs plot` Item changed its date; Status cells are derived. The lint now fails a loop row in an Item's `Rows`.
 - **2026-10-28** — **every day before the MVP gets a piece of T's own; DL2 plotted** (T, in conversation: "yes, but make sure each item is something I need to do, not just running an agent against a phase row. (For instance, what do I need to plot, pitch, or decide on)"; "Realistically every item in deadline should be this way"; "Yes" to plotting it; and "I also want to add that I want to switch some combat backgrounds and the title screen from here [T's art dossier] ... I just need to decide"). **Added** Items and MVP-schedule pieces on the six empty days: author the first character (Oct 29, CH1e, split out of "First character playable"), settle the event-node pitch (Nov 5), pick the title plate and four arena backgrounds (Nov 7, TP1b) and plot their swap (Nov 7, `needs plot`), the Defender check (Nov 12, DF1f), play the quest line (Nov 13), and the pre-run triage (Nov 14). **Moved** TP1b and DF1f from Unscheduled to those Items. **Added** DL2a and DL2b under Unscheduled; DL2b converts this table so every Item is T's act. W1's hours 6.5 to 7.5, W2's 12 to 15.5. Nothing ticked.
 - **2026-10-28** — **Chapter 1's questline: T answered the plot's notes** (a spare in each pocket: one extra hazard, fight and fight-or-elite behind the three markers, re-pointing existing nodes; old saves are abandoned for a new run; the Nov 8 date keeps; the death rule is plot DY1, merged). **Edited** the Unscheduled line for QL1g (it follows DY1b; its `[blocked]` marker is gone, as DY1's rows are on `main`) and the W2 note. No date moved, nothing ticked.
 - **2026-10-28** — **two open plot PRs stop conflicting** (T, in conversation: "whenever we have two plot/plan PRs open, once I merge one, the other always ends up with a conflict"; `/plot anytime`, run unattended). **Added** Unscheduled lines for MD1a, MD1b and MD1c (T folded MD1c in on the PR): T set no date, the work is a merge driver for this file and a `pr-resolve` step, and it blocks no window's goal. **Edited** no Item: none has a premise this changes.
