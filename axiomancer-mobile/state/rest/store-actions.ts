@@ -152,7 +152,8 @@ const NOOP_CLAIM: ClaimRestChoiceResult = Object.freeze({
  *
  * The night also brings back every elite already fought anywhere in the act
  * (`respawnElites`), in the same `setState` as the outcome, before the one
- * `save()`. Arriving at the rest and leaving before the claim brings back
+ * `save()`. The `rest` (heal) choice also clears `dying` there; upgrade and
+ * cut leave it set. Arriving at the rest and leaving before the claim brings back
  * nothing: the claim is the trigger.
  */
 export function claimRestChoiceOutcomeAction(store: AppStore): ClaimRestChoiceResult {
@@ -211,6 +212,9 @@ export function claimRestChoiceOutcomeAction(store: AppStore): ClaimRestChoiceRe
         player: nextPlayer,
         flags,
         world: respawn.world,
+        // Only the heal choice mends dying; an explicit undefined, because
+        // the store's set() merges.
+        ...(outcome.chosen === 'rest' ? { dying: undefined } : {}),
         rest: EMPTY_REST_SLICE,
     } as never);
 

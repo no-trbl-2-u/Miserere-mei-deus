@@ -15,8 +15,9 @@
 //   2. bw-5, a loot cache: take a card, move on, back on the map;
 //   3. bw-4, a gathering: acknowledge, back on the map (lateral rib);
 //   4. bw-6, a fight: the reveal, the board on the plain black scene (D32),
-//      played to its end by ending phases (a defeat, which restarts the run
-//      at the windmill), back on the map;
+//      played to its end by ending phases. A defeat is the death rule: the
+//      full-screen return moment, then the map on bw-4 (the node walked
+//      from) at 1 VITAE, dying, with bw-6 still open;
 //   5. bw-3, a hazard: lands on the hazard intro. Playing the board itself is
 //      `hazard-e2e.mjs`'s job (its drag helpers); this pins the routing.
 //
@@ -287,15 +288,34 @@ async function fight(page) {
     await waitFor(page, 'combat-summary', 'bw-6 combat summary', 10000)
     const verdict = (await page.getByTestId('combat-summary').innerText()).split('\n')[0]
     log(`bw-6 fight: over (${verdict})`)
+    if (/defeat/i.test(verdict)) {
+        // The first death: the return moment, then the node walked from.
+        await tap(page, 'combat-summary-close')
+        await waitFor(page, 'death-return', 'the return moment after the bw-6 defeat')
+        await tap(page, 'death-return-continue') || fail('the return moment has no CONTINUE')
+        await settleOnMap(page, 'bw-6 return')
+        await expectHere(page, 'bw-4')
+        const label = await nodeLabel(page, 'bw-6')
+        if (!label || !/open/.test(label)) fail(`bw-6 is not open after the defeat (label: "${label}")`)
+        const vitae = (await page.locator('[data-testid^="statbar-value"]').first().innerText()).trim()
+        if (!/^1\//.test(vitae)) fail(`expected 1 VITAE on the return, the status card reads "${vitae}"`)
+        let dying = false
+        for (let k = 0; k < 20 && !dying; k++) {
+            dying = await page.evaluate(() => Object.keys(localStorage).some((key) => (localStorage.getItem(key) ?? '').includes('"dying":true')))
+            if (!dying) await sleep(250)
+        }
+        if (!dying) fail('the save does not carry dying after the defeat')
+        log('bw-6 fight: lost; back on bw-4 at 1 VITAE, dying, bw-6 open')
+        return
+    }
     await settleOnMap(page, 'bw-6')
-    // A defeat starts a new run at the windmill; a win leaves you at the fort.
-    await expectHere(page, /defeat/i.test(verdict) ? 'bw-1' : 'bw-6')
-    log('bw-6 fight: back on the map')
+    await expectHere(page, 'bw-6')
+    log('bw-6 fight: won; back on the map')
 }
 
 async function hazard(page) {
-    // A defeat restarts the run at the windmill; a win leaves bw-3 a rib away
-    // too, so bw-3 is open either way.
+    // A defeat returns the player to bw-4 and a win leaves bw-6; bw-3 is a rib
+    // away from both, so it is open either way.
     await travelTo(page, 'bw-3')
     await waitFor(page, 'hazard-route-select', 'bw-3 hazard')
     log('bw-3 hazard: landed on the route select (the board is hazard-e2e.mjs\'s)')

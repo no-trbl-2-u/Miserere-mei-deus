@@ -22,6 +22,7 @@ route in World routes, from `axiomancer-mobile/app/combat-encounter/index.tsx`.
 Opens from any screen.
 
 - [[Features/The map|The map]]
+- [[Features/Death Return|Death Return]]
 
 ## Uses
 

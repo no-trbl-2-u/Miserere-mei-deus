@@ -5,7 +5,8 @@
  * `onWithdraw`, so each way out of a fight is pinned on the route's own
  * wiring: the panel's fight rules are covered by its own suites. Pins:
  * the staged foe reaches the panel; every exit lowers the combat flag and
- * leaves; defeat resets the run; WITHDRAW ends the staged fight; a boss
+ * leaves; a first defeat revives behind the return moment and a defeat while dying
+ * resets the run (a Labyrinth defeat resets too); WITHDRAW ends the staged fight; a boss
  * seals WITHDRAW; an empty route leaves at once (back, else the map); the
  * combat flag the route raises holds Android back. The route's
  * `gestureEnabled: false` registration is pinned in
@@ -50,6 +51,7 @@ jest.mock('@/components/combat/encounter/CombatEncounterPanel', () => {
 import CombatEncounterScreen from '@/app/combat-encounter/index';
 import { HardwareBackHandler } from '@/components/HardwareBackHandler';
 import { CombatModeProvider, useCombatMode } from '@/state/combat-mode';
+import { clearDeathReturn, isDeathReturnArmed } from '@/state/death-return';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { createAppStore, type AppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
@@ -64,6 +66,7 @@ function Probe() {
 
 beforeEach(() => {
     mockCanGoBack = true;
+    clearDeathReturn();
 });
 
 afterEach(() => {
@@ -108,17 +111,57 @@ describe('the live combat route', () => {
         expect(store.getState().runId).toBe(runId);
     });
 
-    it('defeat: resets the run, keeping the character, then leaves', () => {
+    it('a first defeat revives on the node walked from, dying, and shows the return moment', () => {
         const store = stagedStore();
+        const runId = store.getState().runId;
+        const tree = mount(store);
+
+        fireEvent.press(tree.getByTestId('stub-exit-defeat'));
+
+        const s = store.getState();
+        expect(s.runId).toBe(runId);
+        expect(s.dying).toBe(true);
+        expect(s.player.health).toBe(1);
+        expect(s.world.currentMap.currentNode).not.toBe('bw-2');
+        expect(s.world.currentMap.availableNodes).toContain('bw-2');
+        expect(isDeathReturnArmed()).toBe(true);
+        expect(mockReplace).toHaveBeenCalledWith('/death-return');
+        expect(mockBack).not.toHaveBeenCalled();
+        expect(combat.inCombat).toBe(false);
+    });
+
+    it('a defeat while dying ends the run as today: a fresh run, no return moment', () => {
+        const store = stagedStore();
+        store.setState({ dying: true } as never);
         const runId = store.getState().runId;
         const name = store.getState().player.name;
         const tree = mount(store);
 
         fireEvent.press(tree.getByTestId('stub-exit-defeat'));
 
-        expect(store.getState().runId).not.toBe(runId);
-        expect(store.getState().player.name).toBe(name);
+        const s = store.getState();
+        expect(s.runId).not.toBe(runId);
+        expect(s.player.name).toBe(name);
+        expect(s.dying).toBeUndefined();
+        expect(s.player.health).toBe(s.player.maxHealth);
+        expect(isDeathReturnArmed()).toBe(false);
+        expect(mockReplace).not.toHaveBeenCalled();
+        expect(mockBack).toHaveBeenCalledTimes(1);
         expect(combat.inCombat).toBe(false);
+    });
+
+    it('a defeat inside the Labyrinth resets the run and never revives', () => {
+        const store = stagedStore();
+        const runId = store.getState().runId;
+        store.setState({ labyrinthUi: { session: { actId: 'act1' } } } as never);
+        const tree = mount(store);
+
+        fireEvent.press(tree.getByTestId('stub-exit-defeat'));
+
+        const s = store.getState();
+        expect(s.runId).not.toBe(runId);
+        expect(s.dying).toBeUndefined();
+        expect(isDeathReturnArmed()).toBe(false);
         expect(mockBack).toHaveBeenCalledTimes(1);
     });
 
