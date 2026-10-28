@@ -57,31 +57,28 @@ export function mergeRow(base, ours, theirs) {
   return cells.every((c) => c !== null) ? cells.join('|') : null
 }
 
+/** The Item name cell: a row's identity, which a Status, Due or Rows edit leaves alone. */
+const itemName = (l) => l.split('|')[3]?.trim()
+
 /**
  * Keep rows a clash added in due-date order: when the settled block is Items
- * rows only, the rows that are not in the base are stable-sorted by date among
- * their own slots; base rows stay where they are.
+ * rows only, the rows that are new (their Item name is not among the base
+ * block's) are stable-sorted by date among their own slots. A base row keeps
+ * its place whether or not a side edited it, since the table is not strictly
+ * date-ordered.
  * @param {string[]} settled  @param {string[]} base  @returns {string[]}
  */
 export function tidyItems(settled, base) {
   if (!settled.length || !settled.every((l) => ITEM_ROW.test(l))) return settled
-  const pool = new Map()
-  for (const l of base) pool.set(l, (pool.get(l) ?? 0) + 1)
-  const fresh = []
-  const slots = settled.map((l) => {
-    if (pool.get(l) > 0) {
-      pool.set(l, pool.get(l) - 1)
-      return false
-    }
-    fresh.push(l)
-    return true
-  })
-  const sorted = fresh
+  const known = new Set(base.map(itemName))
+  const isNew = settled.map((l) => !known.has(itemName(l)))
+  const sorted = settled
+    .filter((_, i) => isNew[i])
     .map((l, i) => ({ l, i, d: ITEM_ROW.exec(l)[1] }))
     .sort((x, y) => (x.d < y.d ? -1 : x.d > y.d ? 1 : x.i - y.i))
     .map((x) => x.l)
   let n = 0
-  return settled.map((l, i) => (slots[i] ? sorted[n++] : l))
+  return settled.map((l, i) => (isNew[i] ? sorted[n++] : l))
 }
 
 /**

@@ -155,6 +155,19 @@ test('Items inserted at the same spot by two plots stay in due-date order', () =
   )
 })
 
+test('two edited base rows out of date order keep their places (ticks on both rows)', () => {
+  const [p, q, r] = [item('Pee', { due: '2026-12-01', rows: 'P1' }), item('Queue', { due: '2026-11-01', rows: 'Q1' }), item('Arr', { due: '2026-11-20', rows: 'R1' })]
+  const b = doc({ items: [p, q, r], unscheduled: baseUns, changes: baseLog })
+  const ours = doc({ items: [item('Pee', { mark: 'x', due: '2026-12-01', rows: 'P1' }), q, r], unscheduled: baseUns, changes: baseLog })
+  const theirs = doc({ items: [p, item('Queue', { mark: 'x', due: '2026-11-01', rows: 'Q1' }), r], unscheduled: baseUns, changes: baseLog })
+  assert.equal(
+    merged(b, ours, theirs),
+    doc({ items: [item('Pee', { mark: 'x', due: '2026-12-01', rows: 'P1' }), item('Queue', { mark: 'x', due: '2026-11-01', rows: 'Q1' }), r], unscheduled: baseUns, changes: baseLog }),
+  )
+  const [p2, q2] = [item('Pee', { mark: 'x', due: '2026-12-01', rows: 'P1' }), item('Queue', { mark: 'x', due: '2026-11-01', rows: 'Q1' })]
+  assert.deepEqual(tidyItems([p2, q2], [p, q]), [p2, q2])
+})
+
 test('tidyItems sorts only the new rows, leaves base rows in place, and ignores other blocks', () => {
   const [a, b, c] = [item('A', { due: '2026-11-09' }), item('B', { due: '2026-11-01' }), item('C', { due: '2026-11-05' })]
   assert.deepEqual(tidyItems([a, c, b], [a]), [a, b, c])
