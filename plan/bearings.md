@@ -221,7 +221,8 @@ Axiomancer/
 
 Loop verbs live in root `skills/`; `.claude/commands/` holds their doorways
 (the `combat-playtest` command was archived in R0; R12 rebuilds it). `plot`
-and `messy` live there too but are T's intake, never loop verbs. The content
+and `messy` live there too but are T's intake, never loop verbs, and so
+does `heads-down`, T's attended parallel-shipping orchestrator. The content
 stewards, the design skills and four agents were archived in R0 (2026-09-28,
 D58); a content agent is written at the first owner-led content session.
 There is no `plan/archive/` (D66, R10b2): pre-revamp history is read with
@@ -486,7 +487,7 @@ here (tokens match `skills/iterate.md` §4 "Audit categories"):
 
 Rules 1-5 are the nexus standing rules, **canonical in `AGENTS.md`
 § "Nexus standing rules"** (which now numbers nine — including
-`AskUserQuestion` only in `/oversight` (and `/plot`/`/messy` with T
+`AskUserQuestion` only in `/oversight` (and `/plot`/`/messy`/`/heads-down` with T
 present), **file the residue**, and **T's buildable direction goes
 through `/plot` or `/messy`**, and **`Potential Assets/` is a store,
 never a source** (D96)). Read them there; update them there
