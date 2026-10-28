@@ -11,8 +11,9 @@
  *
  * card-usage, per card (a fight counts once per card however many copies):
  *   fightsInDeck  fights whose start deck held the card
- *   drawn         times it came into the hand (`hand-drawn`; the opening hand
- *                 is not in the engine's stream, so it is not counted)
+ *   drawn         times it came into the hand (`hand-drawn`; the app's fight
+ *                 recorder stamps the opening hand as the stream's first one,
+ *                 so fights posted before that missed it)
  *   played        `card-played`; `free` the top line, `paid` the bottom line
  *   held          turn ends the card sat in the hand unplayed (below)
  *   fizzled       `effect-fizzled` naming the card
@@ -25,7 +26,7 @@
  * `d` turn ends and played after `p` sat through `p - d` of them; a copy never
  * played sat until the fight's last turn end `F`. Summed, the pairing drops
  * out: held = sum(p) - sum(d) + max(0, draws - plays) * F, where a play with
- * no draw before it (the opening hand) counts from 0. A scrap carries no card
+ * no draw before it (an opening hand from an older build) counts from 0. A scrap carries no card
  * id, so a scrapped card counts as held to the end.
  *
  * card-gaps, per enemy:

@@ -190,9 +190,10 @@ go to `wrangler d1 execute miserere --remote`.
 
 It reads `PUZZLE_API_URL` and `PUZZLE_API_TOKEN` the way `npm run
 puzzle:times` does (the environment, then `~/.config/miserere/puzzle-api.env`)
-and exits 2 naming whichever is missing. The opening hand is not in the
-engine's event stream, so `drawn` counts later draws only, and a scrap names
-no card, so a scrapped card counts as held to the fight's end. Every number
+and exits 2 naming whichever is missing. The engine deals the opening hand
+with no event, so the fight recorder stamps it as the stream's first
+`hand-drawn` and `drawn` counts it (fights posted before that count later
+draws only), and a scrap names no card, so a scrapped card counts as held to the fight's end. Every number
 is a count for T to read; nothing in `npm test` asserts a play rate. Tests:
 `backend/test/reports.test.ts` (both reports over fixture rows in workerd),
 `scripts/api.test.mjs` (root `npm test`).

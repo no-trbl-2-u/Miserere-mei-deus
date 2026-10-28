@@ -121,8 +121,11 @@ describe('the recorder over a real fight', () => {
         expect(post.vitaeEnd).toBe(last.player.health);
         expect(post.vitaeLow).toBe(Math.min(player.health, ...states.map((s) => s.player.health)));
 
-        // Every engine event, in order, each stamped once; the stamps never go back.
-        expect(post.events.map((e) => e.kind)).toEqual(last.log.map((e) => e.kind));
+        // The opening hand first (the engine deals it with no event), then every engine event, in order,
+        // each stamped once; the stamps never go back.
+        expect(post.events[0]).toMatchObject({ kind: 'hand-drawn', cards: combat.hand.map((h) => h.cardId), vitae: player.health });
+        expect(combat.log.some((e) => e.kind === 'hand-drawn')).toBe(false);
+        expect(post.events.slice(1).map((e) => e.kind)).toEqual(last.log.map((e) => e.kind));
         const ms = post.events.map((e) => e.ms);
         expect(ms.every((m, i) => i === 0 || m >= ms[i - 1])).toBe(true);
         expect(ms[ms.length - 1]).toBeGreaterThan(ms[0]);
