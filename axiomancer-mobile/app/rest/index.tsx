@@ -258,7 +258,7 @@ const useStyles = makeStyles((AXM) => ({
         marginBottom: 10,
     },
     purseLabel: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 1.5, color: AXM.bone },
-    purseValue: { fontFamily: FONTS.gothic, fontSize: 16, letterSpacing: 1, color: AXM.sulfur },
+    purseValue: { fontFamily: FONTS.sans, fontSize: 16, letterSpacing: 1, color: AXM.sulfur },
     body: {
         fontFamily: FONTS.serif,
         fontSize: 13,
