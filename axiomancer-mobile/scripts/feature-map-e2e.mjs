@@ -334,6 +334,13 @@ async function walk(page) {
         await sleep(150)
     }
     await waitFor(page, 'combat-summary', 'bw-6 combat summary', 10000)
+    const verdict = (await page.getByTestId('combat-summary').innerText()).split('\n')[0]
+    if (/defeat/i.test(verdict)) {
+        // A lost fight is the death rule: the return moment, then the map on bw-4.
+        await tap(page, 'combat-summary-close')
+        await waitFor(page, 'death-return', 'the return moment after the bw-6 defeat')
+        await tap(page, 'death-return-continue') || fail('the return moment has no CONTINUE')
+    }
     await settleOnMap(page, 'bw-6')
     log('play: bw-6 fight, played to its end')
 
