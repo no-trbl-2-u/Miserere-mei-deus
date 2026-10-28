@@ -1170,7 +1170,7 @@ export function CombatEncounterPanel({
                             ) : (
                             <ScrollView contentContainerStyle={styles.pilgrimStack} showsVerticalScrollIndicator={false}>
                                 <View style={styles.pilgrimHead}>
-                                    <View style={styles.pilgrimPortrait}><PlayerPortraitImage width={56} height={68} fit="cover" /></View>
+                                    <View style={styles.pilgrimPortrait}><PlayerPortraitImage width={56} height={68} fit="cover" skullWhenDying /></View>
                                     <View style={{ flex: 1 }}>
                                         <Text style={styles.pilgrimName}>{vm.player.name}</Text>
                                         <Text style={styles.pilgrimVitae}>LVL {p.level ?? 1}   ♥ {vm.player.hp} / {vm.player.maxHp} VITAE{vm.player.guard > 0 ? `   🛡 ${vm.player.guard}` : ''}</Text>
