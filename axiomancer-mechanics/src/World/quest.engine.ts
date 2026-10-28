@@ -370,10 +370,11 @@ export function payQuestReward(
 
 /**
  * THE quest-reward door: pays every quest that completed between `before`
- * and `after`, once each. Every completion path calls it — `endCombat`'s and
- * the hazard host's kills (`settleKill`), `reach` and `collect` in
- * `resolveMapEvent`, and the dialogue `progressQuest` / `completeQuest`
- * effects — so no path pays twice and none pays nothing.
+ * and `after`, once each. Every completion path reaches it through the
+ * settle seam (`settleQuestLog`, `questline.ts`) — `endCombat`'s kills,
+ * the hazard, `reach` and `collect` branches of `resolveMapEvent`, the
+ * dialogue `progressQuest` / `completeQuest` effects and a questline turn-in —
+ * or through `settleKill` — so no path pays twice and none pays nothing.
  */
 export function payCompletedQuests(
     player: Character,
@@ -395,8 +396,10 @@ export function payCompletedQuests(
  * A won fight's kill, settled on the quest log AND paid: advances every
  * `kill` objective that counts `enemy` on `mapName` (`advanceKillObjectives`:
  * by display name, or by class for `foeClass`) and pays the quests it
- * completed. `endCombat` calls it per foe; a host whose fight never routes
- * through `endCombat` calls it when the fight ends. A bare name counts only
+ * completed. A host whose fight never routes through `endCombat` calls it
+ * when the fight ends (`endCombat` itself advances the kills and settles
+ * them through `settleQuestLog`, which also opens a ready questline step's
+ * roads; this helper opens none). A bare name counts only
  * name-targeted objectives; pass the enemy to count a class.
  */
 export function settleKill(

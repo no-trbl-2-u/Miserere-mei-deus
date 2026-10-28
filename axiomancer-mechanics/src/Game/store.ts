@@ -77,6 +77,8 @@ const DURABLE_ACTIONS: ReadonlySet<GameAction['type']> = new Set<GameAction['typ
     'SAVE_GAME',
     'RESET_RUN', // Persist new runId + reset world immediately.
     'PLAYER_DIED', // A revive (or a run over) must survive a reload.
+    'ACCEPT_QUEST_STEP', // Spends the quest node: a reload must not re-offer it.
+    'TURN_IN_QUEST_STEP', // Pays the step once: a reload must not lose the payout.
     'UNLOCK_CODEX_ENTRY', // Persist codex unlock immediately.
 ]);
 
