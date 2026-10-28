@@ -107,6 +107,8 @@ export {
     teleportToNode, placeOnNode, unblockMapRoute,
     // Traversal queries + the strand audit.
     legalMovesFrom,
+    // A node the map holds (`holdRoadsUntilSettled`) opens its roads once spent.
+    isHoldingRoads,
     // Frontier roaming: the derived spent/frontier sets
     // every surface classifies nodes from, plus the forward skeleton the
     // progression audits walk.
@@ -121,6 +123,7 @@ import './MapEvents/content';
 export {
     resolveMapEvent,
     settleArrival,
+    answerUnsettledArrival,
     getNodeEventPool,
     getNodePrimaryEventKind,
 } from './MapEvents/resolve-map-event';
@@ -130,6 +133,13 @@ export type {
 } from './MapEvents/types';
 export type {
     Questline, QuestlineStep, QuestlineId, QuestlineSettle, QuestNodeStage, QuestStepView, RouteRef,
+    QuestStepState,
+} from './questline';
+// The questline step rules.
+export {
+    registerQuestline, getQuestline, listQuestlines, questlineStep,
+    questStepState, stepQuest, questStepView, questNodeStage, resolveQuestNodeEvent,
+    openReadyQuestRoutes, settleQuestLog, acceptQuestStep, turnInQuestStep,
 } from './questline';
 // Rest shelter classification. Mobile words an inn night as a bed.
 export type { RestShelter } from './MapEvents/types';

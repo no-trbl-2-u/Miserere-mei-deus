@@ -113,7 +113,7 @@ describe.each(cases)('a save taken during $name', ({ approach, node, onward, bos
         expect(event.encounter.enemies[0]?.level).toBe(foe.level);
     });
 
-    it.each(['victory', 'flee', 'friendship', 'defeat'] as const)(
+    it.each(['victory', 'friendship'] as const)(
         'the fight ending in %s settles the node',
         (outcome) => {
             const { store } = saveMidFight(approach(), node);
@@ -123,6 +123,24 @@ describe.each(cases)('a save taken during $name', ({ approach, node, onward, bos
 
             expect(map.pendingArrival ?? null).toBeNull();
             expect(map.consumedNodes).toContain(node);
+            expect(map.availableNodes).toContain(onward);
+        },
+    );
+
+    // A fight that was fled or lost answers the arrival but leaves its node
+    // unspent (phase QL1b): the Breakwater lists no held node yet, so the way
+    // on stays open from where the player stands, as before.
+    it.each(['flee', 'defeat'] as const)(
+        'the fight ending in %s answers the arrival and leaves the node unspent',
+        (outcome) => {
+            const { store } = saveMidFight(approach(), node);
+
+            store.getState().endCombat(outcome);
+            const map = store.getState().world.currentMap;
+
+            expect(map.pendingArrival ?? null).toBeNull();
+            expect(map.consumedNodes).not.toContain(node);
+            expect(map.completedNodes).not.toContain(node);
             expect(map.availableNodes).toContain(onward);
         },
     );

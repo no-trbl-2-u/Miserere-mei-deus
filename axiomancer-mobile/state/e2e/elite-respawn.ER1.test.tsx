@@ -231,7 +231,16 @@ describe('a relic drop is the whole reward, and retires the elite (A9, A11)', ()
             jest.restoreAllMocks();
             expect(store.getState().itemReward.queue).toHaveLength(0);
             expect(gs(store).world.currentMap.retiredEliteNodes ?? []).toEqual([]);
-            expect(restAndClaim(store).respawnedElites).toEqual([{ map: 'breakwater', node: 'bw-8' }]);
+            if (outcome === 'flee') {
+                // A fled fight leaves its node unspent (phase QL1b): the
+                // elite is still there, so the rest has nothing to bring back.
+                expect(gs(store).world.currentMap.consumedNodes).not.toContain('bw-8');
+                expect(restAndClaim(store).respawnedElites).toEqual([]);
+            } else {
+                // A spare is a won fight (friendship): the node is spent, and
+                // the rest brings the elite back.
+                expect(restAndClaim(store).respawnedElites).toEqual([{ map: 'breakwater', node: 'bw-8' }]);
+            }
         }
     });
 });

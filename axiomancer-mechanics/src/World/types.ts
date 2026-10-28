@@ -188,6 +188,14 @@ export interface MapDefinition {
      */
     readonly initialBlockedRoutes?: readonly BlockedRoute[];
     /**
+     * Nodes that add their roads to the frontier only once they are spent:
+     * standing on one opens nothing (`isHoldingRoads`, `frontierNodes`). A
+     * quest node holds its pocket until its step is accepted; a boss holds
+     * the road past it until it falls. Static (not saved). Not map-wide: the
+     * rule would empty the frontier between every move and its resolve.
+     */
+    readonly holdRoadsUntilSettled?: readonly NodeId[];
+    /**
      * NPCs on this map's `npcs` roster that are deliberately NOT
      * homed to any node yet. A written reason (not a boolean) so the
      * narrative-reachability guard (`auditNarrativeReachability`) can tell a
