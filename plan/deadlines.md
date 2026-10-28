@@ -77,7 +77,8 @@ left; otherwise after.
   `deadcard`; B3 Follow-ups). The hand-picked set, "the swap", moves to W3.
 - The MVP's loop work, which the reminder never names: Chapter 1's enemies and their art, from the B2 plot on Nov 2;
   the lane relics RW1a, LR1a and LR1c-LR1e (`plan/phases/phase_LR1_lane_relics.md`); the Breakwater's questline
-  QL1a-QL1f (`plan/phases/phase_QL1_breakwater_questline.md`; LR1f skipped for it, D111); the icons IT1b applies once T
+  QL1a-QL1f (`plan/phases/phase_QL1_breakwater_questline.md`; LR1f skipped for it, D111; QL1g waits on the death
+  rule's plot); the icons IT1b applies once T
   picks; AW1b; and the event-node UX once plotted on Nov 6.
 - To pitch and plot in W2: the event-node UI/UX for the nine kinds the Breakwater uses (cutscene, encounter,
   hazard, gathering, loot cache, rest, blacksmith, travel, and quest, QL1's new kind, D111). They are all of Act 1's
@@ -203,7 +204,7 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 | [x] | 2026-11-05 | Node blurbs matched to their events (the Act 1 walk's second half) | W2 | AW1a, AW1b |
 | [ ] | 2026-11-06 | The band clocks, from the kept set's times | W2 | HP4g |
 | [ ] | 2026-11-06 | Event-node UI/UX for the Breakwater's nine kinds (plot, 1 h) | W2 | needs plot |
-| [ ] | 2026-11-08 | The Breakwater's questline on the map: four quest nodes, three turned in and the fourth the boss, the Belt, the sealed roads, placeholder lines | W2 | QL1a, QL1b, QL1c, QL1d |
+| [ ] | 2026-11-08 | The Breakwater's questline on the map: four quest nodes, three turned in and the fourth the boss, each step's foes and hazards behind its own node, the Belt, fled fights leave a node incomplete, placeholder lines | W2 | QL1a, QL1b, QL1c, QL1d |
 | [ ] | 2026-11-08 | Chapter 1's enemy art: pick from the loop's candidates (2 h) | W2 | T |
 | [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T |
 | [ ] | 2026-11-10 | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | W2 | T |
@@ -319,6 +320,7 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - LR1g — loop work; signature tracking, blocks no window's goal; date not set.
 - EQ2b — loop work; follows EQ2a, the slot words on screen; date not set.
 - SB1 — attended: T's set-bonus design session; T said it is not part of the Act 1 MVP deadline; date not set.
+- QL1g — loop work; the boss fought again, blocked on T's death rule (a separate plot, id TBD) so it has no date until that plot is dated; not needed for the Nov 16 run unless a lost boss fight must be retryable by then.
 
 ## How a window closes
 
@@ -328,6 +330,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-28** — **Chapter 1's questline: T answered the plot's four open items** (the next quest node locked until the step is met; every node may move, so each step's supply sits behind its own marker; the bridge by routing, with sealed roads only if routing could not, and a fled fight does not complete its node; a lost boss fight can be fought again, relying on T's death rule, plotted separately). **Edited** the Nov 8 Item's name (no more sealed roads: locks, pockets and the fled-fight rule). **Added** an Unscheduled line for QL1g (`[blocked]` on the death rule's plot, no date). No date moved (QL1b is now sized L; the dates are still the plot's, for T to move), nothing ticked.
 - **2026-10-27** — **Chapter 1's questline re-shaped** (T's answers to the plot's six calls: steps 1-3 turned in at the next quest node, step 4 the boss, the bridge unreachable by map routing, no runtime shortfall fallback). **Edited** the Nov 8 Item (three turn-ins, the boss as the fourth step, the sealed roads) and the Nov 10 Item (lines per node). No date moved, nothing ticked.
 - **2026-10-27** — **Chapter 1's questline plotted** (T, `/plot asap` run unattended on T's word: one questline in Chapter 1 on a ninth node kind, `quest`, D111; LR1f and its PR #987 dropped). **Added** Items for QL1a-QL1d (the questline on the map, Nov 8), QL1e (T writes the quest line, Nov 10, split out of the Nov 10 `T` Item, which keeps the node copy at 1 h) and QL1f (T's lines in the game, Nov 13); the loop dates are the plot's, before the Nov 9 mid-MVP check and the Nov 16 MVP, and T can move them. **Edited** the event-node pitch (Nov 4) and plot (Nov 6) Items, the milestones, the W2 notes and the schedule from eight kinds to nine; the Nov 13 lane-relics Item drops the Act 1 quests and LR1f (skipped, superseded by QL1); the Nov 25 Item names the four quest relics left for Chapters 2-4 instead of LR1f's `[content]` rows. **Ticked** nothing by hand; `--write` ticked the Nov 13 lane-relics Item, since every row it still names has shipped.
 - **2026-10-27** — **Thursdays opened** (T, in conversation: "open them up. I should be getting work done for Miserere everyday"). **Edited** the MVP schedule's rule that left Thursdays free; it now says T works every day. No Item, date or piece moved; nothing ticked.
