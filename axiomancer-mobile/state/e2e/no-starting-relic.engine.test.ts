@@ -15,6 +15,7 @@ import { getRelicById, initializeCombatEncounter, isEquipment, type Item } from 
 import { createAppActions } from '@/state/actions';
 import { createAppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
+import { settledBreakwater } from '@/test-utils/settledBreakwater';
 import { selectHasPendingItemReward } from '@/state/presenters/item-reward.engine';
 
 afterEach(() => {
@@ -23,7 +24,8 @@ afterEach(() => {
 
 describe('a fresh run starts with no relic (SG1 A1)', () => {
     it('first node resolved, first fight entered: no relic, no hand-over, no signatures', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter() });
+        // The quest nodes settled (test-only), so the first fight is a step away.
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: settledBreakwater() } });
         const actions = createAppActions(store);
 
         // The first node: resolve whatever bw-1 offers, then walk to the first fight.

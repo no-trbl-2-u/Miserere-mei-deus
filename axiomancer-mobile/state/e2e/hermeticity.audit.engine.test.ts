@@ -151,6 +151,10 @@ describe('hermeticity guard: isolation (no disk in tests)', () => {
         // script, which CI cannot run (it needs the local icon archive), to
         // pin its MANIFEST against the generated geometry.
         'components/icons/__tests__/icon-manifest.test.ts',
+        // The endCombat-caller guard (phase QL1d) reads the committed sources
+        // to prove every engine endCombat caller routes the quest extras; a
+        // caller added later is swept with no edit to the test.
+        'state/__tests__/end-combat-callers-source.test.ts',
     ]);
 
     const FS_PATTERN =

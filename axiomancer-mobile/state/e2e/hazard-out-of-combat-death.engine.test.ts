@@ -29,6 +29,7 @@ import { createAppActions, type AppActions } from '@/state/actions';
 import { createAppStore, type AppStore } from '@/state/store';
 import { HAZARD_DEATH_FLAG_PREFIX, hazardDeathCount } from '@/state/hazard/store-actions';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
+import { settledBreakwater } from '@/test-utils/settledBreakwater';
 
 afterEach(() => {
     jest.restoreAllMocks();
@@ -37,7 +38,8 @@ afterEach(() => {
 });
 
 function makeStoreAndActions(): { store: AppStore; actions: AppActions } {
-    const store = createAppStore({ adapter: createMemoryAdapter() });
+    // The quest nodes settled (test-only): bw-2 sits in a questline pocket.
+    const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: settledBreakwater() } });
     return { store, actions: createAppActions(store) };
 }
 
@@ -117,7 +119,7 @@ describe('hazard out-of-combat death', () => {
 
     it('a revive is written to the slot', () => {
         const adapter = createMemoryAdapter();
-        const store = createAppStore({ adapter });
+        const store = createAppStore({ adapter, overrides: { world: settledBreakwater() } });
         const actions = createAppActions(store);
         const before = adapter.saveCount;
 

@@ -863,8 +863,8 @@
         "source": "flow path from route:index: route:index -> route:quest"
       },
       "driven": {
-        "value": false,
-        "source": null
+        "value": true,
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs"
       },
       "tested": {
         "value": true,
@@ -1810,6 +1810,12 @@
       "kind": "coupling",
       "from": "area:Game",
       "to": "area:World",
+      "file": "axiomancer-mechanics/src/Game/fixtures/quest-nodes.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:World",
       "file": "axiomancer-mechanics/src/Game/fixtures/state-fixture.builder.ts"
     },
     {
@@ -2086,6 +2092,12 @@
       "kind": "coupling",
       "from": "area:World",
       "to": "area:Enemy",
+      "file": "axiomancer-mechanics/src/World/questline-supply.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:World",
+      "to": "area:Enemy",
       "file": "axiomancer-mechanics/src/World/roster-health.ts"
     },
     {
@@ -2177,6 +2189,12 @@
       "from": "area:World",
       "to": "area:Items",
       "file": "axiomancer-mechanics/src/World/quest.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:World",
+      "to": "area:Items",
+      "file": "axiomancer-mechanics/src/World/quest.library.ts"
     },
     {
       "kind": "coupling",

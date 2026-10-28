@@ -43,6 +43,13 @@ export interface StateFixtureWorld {
     node?: string;
     /** Maps stamped complete on `continent` before the player is placed. */
     completedMaps?: MapName[];
+    /**
+     * When true, the map's quest nodes are settled after the placement
+     * (`settleQuestNodes`, test-only): the markers spent and their locks
+     * open, so a fixture past a questline's pockets reads every road open.
+     * The quest log is untouched.
+     */
+    questNodesSettled?: boolean;
 }
 
 /** The fixture document. Author these in `state-fixture.registry.ts` or as JSON. */

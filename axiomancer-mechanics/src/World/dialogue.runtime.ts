@@ -13,7 +13,7 @@ import {
 } from './quest.engine';
 import { settleQuestLog } from './questline';
 import { getMapDefinition } from './map.registry';
-import { QuestName } from './quest.library';
+import type { QuestName } from './quest.library';
 
 /** Result of applying a dialogue choice to the GameState. */
 export interface ApplyDialogueChoiceResult {

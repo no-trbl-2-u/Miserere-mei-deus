@@ -139,8 +139,16 @@ D1 (2026-09-21) replaced Spec 08's linear, no-back-travel rule.
 - **Held roads.** `MapDefinition.holdRoadsUntilSettled` lists nodes that add
   their roads to the frontier only once spent (`isHoldingRoads`): standing
   on one opens nothing. It is a list, never map-wide (the rule would empty
-  the frontier between every move and its resolve). The Breakwater's quest
-  nodes and its watchtower use it (QL1d).
+  the frontier between every move and its resolve). The Breakwater lists
+  its four quest nodes (bw-19..bw-22) and its watchtower (bw-17).
+- **Pockets.** On a map that holds a questline every fight and hazard sits
+  in a pocket: nodes joined only to their step's quest node, dead ends by
+  design. The generic gauntlet audit lets a pocket end outside the last
+  column; the questline's own routing test
+  (`World/e2e/breakwater-questline.engine.test.ts`) walks the real frontier
+  with the questline played. `questline-supply.ts` reads a step's supply
+  strictly downstream of its marker (the authoring test,
+  `World/quest.library.test.ts`).
 - **The retry.** `moveToNode` onto the node the player stands on re-owes its
   arrival when the node is unspent and its arrival was answered (a fled or
   lost fight, an unaccepted quest node), so a held node with no other move
@@ -149,7 +157,12 @@ D1 (2026-09-21) replaced Spec 08's linear, no-back-travel rule.
 - **Quest-node locks.** A questline's next quest node sits behind blocked
   roads (`initialBlockedRoutes`, one reason each); a step's `opensOnReady`
   unblocks them in the call that fills its last objective, through the one
-  settle seam (`settleQuestLog`, see "Quest Engine").
+  settle seam (`settleQuestLog`, see "Quest Engine"). The Breakwater seeds
+  four: bw-9 to bw-20, bw-7 to bw-21, and bw-15 and bw-16 to bw-22.
+  Test-only, `settleQuestNodes(map)` (`Game/fixtures/quest-nodes.ts`) spends
+  a map's quest nodes and opens their locks so a walker that is not about
+  the questline can cross the map; a state fixture opts in with
+  `world.questNodesSettled`.
 - **Legacy lists.** `completeCurrentNode` keeps `availableNodes` and
   `lockedNodes` in sync with the frontier. The CLI's move filter and
   mobile's tap gate still read them, but `legalMovesFrom(map)` is the
@@ -308,7 +321,10 @@ and grants the reward when the quest fills.
 ### Questlines (`src/World/questline.ts`)
 
 A questline is data (`Questline { id, mapName, steps }`), registered with
-`registerQuestline` and looked up by the `quest` node's payload.
+`registerQuestline` and looked up by the `quest` node's payload. The authored
+lines live in `src/World/quest.library.ts`, which registers them on load (the
+World barrel imports it beside the map-event pools); an unregistered line
+reads node 1 as `offer` and every later node as `locked`.
 
 | Function | Purpose |
 |----------|---------|

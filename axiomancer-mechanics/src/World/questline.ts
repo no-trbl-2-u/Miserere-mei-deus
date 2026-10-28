@@ -13,8 +13,8 @@
  * which spends the node), turning one in at the next node (`turnInQuestStep`),
  * and the one settle seam every quest-log change goes through
  * (`settleQuestLog`: pays what completed and opens the roads of a step that
- * became ready, `opensOnReady`). The Breakwater's own questline arrives with
- * QL1d.
+ * became ready, `opensOnReady`). The authored questlines (the Breakwater's)
+ * live in `quest.library.ts`, which registers them on load.
  */
 
 import type { MapName } from './map.library';
@@ -28,7 +28,7 @@ import {
 import { markNodeConsumed, revealAdjacent, syncFrontierLists, unblockMapRoute } from './world.reducer';
 import { getRng } from '../Utils/rng';
 
-/** A questline's id (the Breakwater's is authored by QL1d). */
+/** A questline's id (the Breakwater's is `BREAKWATER_QUESTLINE_ID`). */
 export type QuestlineId = string;
 
 /** A road between two nodes: the shape of a `BlockedRoute` without its reason. */

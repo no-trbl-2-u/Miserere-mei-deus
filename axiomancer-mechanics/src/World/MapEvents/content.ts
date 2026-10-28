@@ -20,6 +20,7 @@ import {
 import type { MapEventPool } from './types';
 import type { EnemySlug } from '../../Enemy/enemy.library';
 import { BLACKSMITH_WITNESS_VARIANTS } from '../Blacksmith/blacksmith.content';
+import { BREAKWATER_QUESTLINE_ID } from '../quest.library';
 
 // ─── Shared builders (Act 1) ─────────────────────────────────────────────────
 //
@@ -159,10 +160,11 @@ const ANVIL_NODE_IDS: ReadonlySet<string> = new Set(Object.values(ACT1_ANVIL_NOD
 // its own. The one-line descriptions sit on the plate's landmarks (see
 // `Continents/Coastal-Village/breakwater.ts` for the node map).
 //
-// Kind spread over 18 nodes: 6 encounter, 2 rest, 3 loot-cache,
+// Kind spread over 22 nodes: 6 encounter, 2 rest, 3 loot-cache,
 // 2 gathering, 2 hazard, 1 blacksmith (the Anvil, bw-16), 1 arrival
-// cutscene, 1 travel. The watchtower (bw-17), the one node every run crosses
-// before the door, holds the region's door fight.
+// cutscene, 1 travel, and the questline's 4 quest nodes (bw-19..bw-22). The
+// watchtower (bw-17), the one node every run crosses before the door, holds
+// the region's door fight.
 
 /**
  * The windmill is where a new game starts. It opens on a short
@@ -247,10 +249,31 @@ const bwRiverBridge: MapEventPool = {
     }],
 };
 
+/**
+ * The questline's four markers, bw-19..bw-22 (`quest.library.ts`): node k of
+ * the Breakwater questline. Placeholder lines until T's sitting.
+ */
+const BW_QUEST_NODES: Record<string, { node: number; description: string }> = {
+    'bw-19': { node: 1, description: '[content] A marker by the windmill. Someone has left word here.' },
+    'bw-20': { node: 2, description: '[content] A marker by the customs house. The word goes on.' },
+    'bw-21': { node: 3, description: '[content] A marker by the south pier. The word goes on.' },
+    'bw-22': { node: 4, description: '[content] A marker on the chapel road. The watchtower is close.' },
+};
+
+function questPool(nodeId: string, node: number, description: string): MapEventPool {
+    return {
+        id: `${nodeId}.quest`,
+        entries: [{
+            kind: 'quest', weight: 1,
+            payload: { kind: 'quest', questline: BREAKWATER_QUESTLINE_ID, node, description },
+        }],
+    };
+}
+
 const BREAKWATER_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> =
     (() => {
         const out: Array<{ nodeId: string; pool: MapEventPool }> = [];
-        for (let i = 1; i <= 18; i++) {
+        for (let i = 1; i <= 22; i++) {
             const nodeId = `bw-${i}`;
             if (nodeId === 'bw-1') {
                 out.push({ nodeId, pool: bwWindmillArrival });
@@ -260,6 +283,9 @@ const BREAKWATER_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> =
                 out.push({ nodeId, pool: cwEncounterPool(nodeId, BW_DOOR) });
             } else if (nodeId === 'bw-18') {
                 out.push({ nodeId, pool: bwRiverBridge });
+            } else if (BW_QUEST_NODES[nodeId]) {
+                const q = BW_QUEST_NODES[nodeId]!;
+                out.push({ nodeId, pool: questPool(nodeId, q.node, q.description) });
             } else if (ANVIL_NODE_IDS.has(nodeId)) {
                 out.push({ nodeId, pool: blacksmithPool(nodeId, ANVIL_LINE) });
             } else if (BW_REST_NODES[nodeId]) {

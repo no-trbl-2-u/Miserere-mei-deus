@@ -17,6 +17,7 @@ import {
 import { createNewGameState } from '../../Game/game.reducer';
 import { GameState } from '../../Game/types';
 import { mockSequentialRng } from '../../test-utils/rng';
+import { settleQuestNodesIn } from '../../Game/fixtures/quest-nodes';
 import {
     FIXTURE_DIALOGUE_EVENT, FIXTURE_NPC, FIXTURE_QUEST, FIXTURE_VILLAGE_EVENT,
 } from '../../Game/fixtures/fixture-content';
@@ -25,7 +26,7 @@ afterEach(() => vi.restoreAllMocks());
 
 const startingState = (): GameState => createNewGameState({ startMap: 'breakwater' });
 
-// The Act 1 maps carry no NPC, village or quest: the varied kinds
+// The Act 1 maps carry no NPC, village or log quest (the Breakwater's questline is its own test): the varied kinds
 // and the quest/dialogue mechanics run on the neutral fixtures, staged on the
 // Breakwater. Sets currentNode directly — resolveMapEvent works off
 // currentNode regardless of traversal.
@@ -43,8 +44,8 @@ const bwStateAt = (nodeId: string): GameState => {
 describe('moveToNode', () => {
     it('moves to a connected, unlocked, uncompleted node', () => {
         const world = createStartingWorld('breakwater');
-        const next = moveToNode(world, 'bw-2');
-        expect(next.currentMap.currentNode).toBe('bw-2');
+        const next = moveToNode(world, 'bw-4');
+        expect(next.currentMap.currentNode).toBe('bw-4');
     });
 
     it('rejects non-adjacent nodes', () => {
@@ -54,20 +55,20 @@ describe('moveToNode', () => {
 
     it('rejects locked nodes', () => {
         const world = createStartingWorld('breakwater');
-        // bw-7 (the south pier) starts locked (only bw-2..bw-5 touch the windmill).
+        // bw-7 (the south pier) starts locked (only bw-19, bw-4 and bw-5 touch the windmill).
         expect(world.currentMap.lockedNodes).toContain('bw-7');
         expect(() => moveToNode(world, 'bw-7')).toThrow(IllegalMoveError);
     });
 
     it('locks completed nodes against back-travel (Q2)', () => {
         let world = createStartingWorld('breakwater');
-        world = moveToNode(world, 'bw-2');
+        world = moveToNode(world, 'bw-4');
         world = completeCurrentNode(world);
-        // After completing bw-2, the south pier (bw-7) becomes available.
+        // After completing bw-4, the south pier (bw-7) becomes available.
         expect(world.currentMap.availableNodes).toContain('bw-7');
         world = moveToNode(world, 'bw-7');
-        // Can't go back to the completed bw-2.
-        expect(() => moveToNode(world, 'bw-2')).toThrow(IllegalMoveError);
+        // Can't go back to the completed bw-4.
+        expect(() => moveToNode(world, 'bw-4')).toThrow(IllegalMoveError);
     });
 
     it('returns the same state when target equals current node', () => {
@@ -136,8 +137,9 @@ describe('resolveMapEvent dispatch', () => {
 
     it('returns kind=encounter on encounter nodes', () => {
         mockSequentialRng(0.5);
-        let state = startingState();
-        // bw-2 (the crane quay) is a Float-Eye fight one step from the windmill.
+        // bw-2 (the crane quay) is a Float-Eye fight in the second step's
+        // pocket; the quest nodes are settled to reach it.
+        let state = settleQuestNodesIn(startingState());
         state = { ...state, world: moveToNode(state.world, 'bw-2') };
         const result = resolveMapEvent(state);
         expect(result.event.kind).toBe('encounter');
@@ -161,9 +163,10 @@ describe('resolveMapEvent dispatch', () => {
 
     it('returns kind=encounter with isBoss=true on the boss node', () => {
         mockSequentialRng(0.5);
-        let state = startingState();
-        // The watchtower (bw-17) holds the Breakwater's door fight.
-        for (const target of ['bw-2', 'bw-7', 'bw-11', 'bw-14', 'bw-17'] as const) {
+        // The watchtower (bw-17) holds the Breakwater's door fight, behind
+        // the last quest node; the quest nodes are settled to reach it.
+        let state = settleQuestNodesIn(startingState());
+        for (const target of ['bw-4', 'bw-9', 'bw-13', 'bw-16', 'bw-17'] as const) {
             state = { ...state, world: moveToNode(state.world, target) };
             if (target !== 'bw-17') state = { ...state, world: completeCurrentNode(state.world) };
         }

@@ -18,7 +18,10 @@
  *   - `installDevSkipHook` installs / removes `__AXM_SKIP_EVENT__`.
  */
 
-import { HAZARD_CRACK_CARD, configureLogging, getLogger, resetLoggingForTests, type GameState } from '@mechanics';
+import {
+    BREAKWATER_QUESTLINE, ENEMY_REGISTRY, HAZARD_CRACK_CARD, completeQuest, configureLogging, getLogger, placeOnNode, resetLoggingForTests, startQuest, stepQuest,
+    type GameState,
+} from '@mechanics';
 
 import { createAppActions } from '@/state/actions';
 import { clearDeathReturn, isDeathReturnArmed } from '@/state/death-return';
@@ -26,6 +29,7 @@ import { stageEncounter, listEnemies } from '@/state/dev/enemy-picker';
 import { installDevSkipHook, SKIP_EVENT_LOG_KIND, skipCurrentEvent } from '@/state/dev/skip-event';
 import { createAppStore, EMPTY_EVENT_SLICE } from '@/state/store';
 import { createFixtureStore } from '@/test-utils/fixtureStore';
+import { settledBreakwater } from '@/test-utils/settledBreakwater';
 
 const DEV = { devToolsEnabled: true, seed: 7 } as const;
 
@@ -103,6 +107,34 @@ describe('skipCurrentEvent — combat', () => {
         expect(result.detail).toMatchObject({ entered: 'live' });
         expect(store.getState().currentEncounter ?? null).toBeNull();
         expect(player(store).health).toBeGreaterThanOrEqual(1);
+    });
+});
+
+describe('skipCurrentEvent — a skipped fight that completes a quest', () => {
+    it('routes the questline\'s relic to /item-reward, as the combat host does', () => {
+        const { store, actions } = freshHandle();
+        let quests = (store.getState() as unknown as GameState).quests;
+        for (const step of BREAKWATER_QUESTLINE.steps.slice(0, 3)) {
+            quests = completeQuest(startQuest(quests, stepQuest(BREAKWATER_QUESTLINE, step)), step.quest.name);
+        }
+        quests = startQuest(quests, stepQuest(BREAKWATER_QUESTLINE, BREAKWATER_QUESTLINE.steps[3]!));
+        store.setState({ quests, world: placeOnNode(settledBreakwater(), 'bw-17') } as never);
+        // The watchtower's foe, stamped as the encounter handler stamps a boss.
+        stageEncounter(store, { ...ENEMY_REGISTRY['death-beholder']!, difficulty: 'boss' as const }, 'dev:test', true);
+
+        jest.useFakeTimers();
+        try {
+            const result = skipCurrentEvent(store, actions, DEV);
+
+            expect(result).toMatchObject({ kind: 'encounter', outcome: 'victory' });
+            expect((store.getState() as unknown as GameState).quests.completed).toContain(BREAKWATER_QUESTLINE.steps[3]!.quest.name);
+            // The relic waits for the combat screen to have left on the skip.
+            expect(store.getState().itemReward.queue).toEqual([]);
+            jest.runOnlyPendingTimers();
+            expect(store.getState().itemReward.queue.map((e) => e.item.id)).toEqual(['relic-elementalist-belt']);
+        } finally {
+            jest.useRealTimers();
+        }
     });
 });
 
@@ -242,6 +274,18 @@ describe('skipCurrentEvent — paced events and idle', () => {
         expect(result).toMatchObject({ kind: 'quest', outcome: 'dismissed', detail: { questline: 'fixture-line', node: 1 } });
         expect(store.getState().quest.open).toBeNull();
         expect((store.getState() as unknown as GameState).quests).toBe(before);
+    });
+
+    it('dismisses a quest card pick waiting with no node open, taking nothing', () => {
+        const { store, actions } = freshHandle();
+        const before = player(store).combatRewardCards ?? [];
+        store.setState({ quest: { open: null, paid: null, cardOffers: ['grey-ward', 'grey-strike'] } });
+
+        const result = skipCurrentEvent(store, actions, DEV);
+
+        expect(result).toMatchObject({ kind: 'quest', outcome: 'dismissed', detail: { questline: null, node: null, cardOffers: 2 } });
+        expect(store.getState().quest.cardOffers).toEqual([]);
+        expect(player(store).combatRewardCards ?? []).toEqual(before);
     });
 
     it('reports nothing-to-skip when idle with no arrival owed, without bumping the seq', () => {

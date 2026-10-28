@@ -27,12 +27,13 @@ import {
 
 beforeAll(() => {
     registerFixtureQuestline();
-    // bw-2 is a quest node for this file only (jest isolates each file's modules).
+    // bw-5 (an open-fan node since QL1d moved bw-2 into a pocket) is a quest
+    // node for this file only (jest isolates each file's modules).
     registerMapEventPool({
-        id: 'ql1c.map.bw-2',
+        id: 'ql1c.map.bw-5',
         entries: [{ kind: 'quest', weight: 1, payload: { kind: 'quest', questline: FIXTURE_LINE, node: 2 } }],
     });
-    setNodeEventPoolOverride('coastal-continent', 'breakwater', 'bw-2', 'ql1c.map.bw-2');
+    setNodeEventPoolOverride('coastal-continent', 'breakwater', 'bw-5', 'ql1c.map.bw-5');
 });
 afterAll(() => { unregisterFixtureQuestline(); });
 
@@ -47,10 +48,22 @@ function nodeOf(store: AppStore, id: string) {
 
 describe('node types and labels (A12)', () => {
     it('the quest kind is NodeType quest: QUEST and the scroll', () => {
-        const { node } = nodeOf(breakwater(), 'bw-2');
+        const { node } = nodeOf(breakwater(), 'bw-5');
         expect(node.type).toBe('quest');
         expect(NODE_KIND_LABEL.quest).toBe('QUEST');
         expect(ACTION_ICON_BY_TYPE.quest).toBe('scroll');
+    });
+
+    it('the Breakwater questline\'s own four nodes (bw-19..bw-22) read QUEST, with no step state (QL1d)', () => {
+        const store = breakwater();
+        for (const id of ['bw-19', 'bw-20', 'bw-21', 'bw-22']) {
+            const { node } = nodeOf(store, id);
+            expect(node.type).toBe('quest');
+            expect(node.label).not.toMatch(/step|ready|\d+ of \d+/i);
+        }
+        // The first is open from the windmill; the other three sit behind their locks.
+        expect(nodeOf(store, 'bw-19').node.kind).toBe('available');
+        for (const id of ['bw-20', 'bw-21', 'bw-22']) expect(nodeOf(store, id).node.kind).toBe('locked');
     });
 
     it('the windmill cutscene (bw-1) is STORY and the quill, no longer QUEST', () => {
@@ -63,7 +76,7 @@ describe('node types and labels (A12)', () => {
 
 describe('the map shows no step state (A12)', () => {
     function snapshot(store: AppStore) {
-        const { node, option } = nodeOf(store, 'bw-2');
+        const { node, option } = nodeOf(store, 'bw-5');
         return JSON.stringify({ node, option });
     }
 
@@ -83,7 +96,7 @@ describe('the map shows no step state (A12)', () => {
         const store = breakwater();
         acceptFixtureStep(store, 1);
         fillFixtureStep(store, 1);
-        const text = JSON.stringify(nodeOf(store, 'bw-2'));
+        const text = JSON.stringify(nodeOf(store, 'bw-5'));
         expect(text).not.toMatch(/\bstep\b/i);
         expect(text).not.toMatch(/\bready\b/i);
         expect(text).not.toMatch(/\d+\s*(of|\/)\s*\d+/i);
@@ -94,11 +107,11 @@ describe('walking onto a quest node does not spend it', () => {
     it('moveTo leaves the quest node uncompleted and unconsumed; only accepting its step spends it', () => {
         const store = breakwater();
         const actions = createAppActions(store);
-        expect(actions.moveTo('bw-2').moved).toBe(true);
+        expect(actions.moveTo('bw-5').moved).toBe(true);
         actions.resolveCurrentMapEvent('quest');
         const map = store.getState().world.currentMap;
-        expect(map.completedNodes).not.toContain('bw-2');
-        expect(map.consumedNodes).not.toContain('bw-2');
+        expect(map.completedNodes).not.toContain('bw-5');
+        expect(map.consumedNodes).not.toContain('bw-5');
         expect(store.getState().quest.open).toMatchObject({ node: 2 });
     });
 });

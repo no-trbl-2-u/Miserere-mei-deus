@@ -12,16 +12,17 @@ import { describe, expect, it } from '@jest/globals';
 import { createAppActions } from '@/state/actions';
 import { createAppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
+import { settledBreakwater } from '@/test-utils/settledBreakwater';
 
 function makeStoreAndActions() {
-    const store = createAppStore({ adapter: createMemoryAdapter() });
+    const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: settledBreakwater() } });
     return { store, actions: createAppActions(store) };
 }
 
 describe('playerDied saves', () => {
     it('a revive is written to the slot with dying, the player back on the node walked from', () => {
         const adapter = createMemoryAdapter();
-        const store = createAppStore({ adapter });
+        const store = createAppStore({ adapter, overrides: { world: settledBreakwater() } });
         const actions = createAppActions(store);
         actions.moveTo('bw-2');
         const before = adapter.saveCount;

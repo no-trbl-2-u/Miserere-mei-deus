@@ -9,6 +9,10 @@
 
 ## The shape
 
+> **Since QL1d (2026-10-28)** the Breakwater carries 22 nodes: the eighteen below plus the questline's four quest
+> nodes, and the graph is the one under "The questline's routing" (built). The diagram in this section is the
+> pre-QL1d shape, kept for the Nov 3 map review's before and after.
+
 Eighteen nodes in seven columns. The windmill (bw-1) is the start; the map fans out in rings and closes on one
 chokepoint, the watchtower (bw-17), before the river bridge (bw-18), the door out.
 
@@ -103,7 +107,7 @@ the events hold:
   plotted (`plan/deadlines.md`, W2).
 - **No people:** Act 1 stages no NPC, shop, village or narration node (`MapEvents/content.ts` header), so the
   `interaction`, `village` and `narration` kinds have no Breakwater node.
-- **No quests:** none exist yet. QL1 (T, 2026-10-27, D111; LR1f skipped; routing answered by T 2026-10-28) adds one
+- **One questline (built, QL1d):** QL1 (T, 2026-10-27, D111; LR1f skipped; routing answered by T 2026-10-28) adds one
   four-step questline on four new `quest` nodes, bw-19..bw-22, the Breakwater's ninth kind, and re-points the graph
   so each step's foes and hazards sit in a pocket behind that step's own node (see "Planned: the questline's
   routing" below). Steps 1-3 are turned in at the next quest node and step 4 is the boss. T checks the spots in the
@@ -114,7 +118,7 @@ the events hold:
   fight rewards until LR1's quests and elite drops land.
 - **The door:** bw-18 travels to the Charcoal Wood, Chapter 2.
 
-## Planned: the questline's routing (QL1, not built; T may move any of it)
+## The questline's routing (built in QL1d, 2026-10-28; T may move any of it)
 
 T, 2026-10-28: the next quest node is locked until the current step is met, and "we can move around all the nodes
 whenever we need to". The plan keeps every kind, foe and level, and re-points edges so that a step's supply cannot
@@ -159,3 +163,10 @@ gathering, cache, rest and blacksmith nodes (bw-4, bw-5, bw-7, bw-9, bw-11, bw-1
 hazard sits in a pocket, and the Lighthouse leaves the road to bw-22, which is now bw-15 and bw-16 (two locked
 roads, opened together by step 3; four locks in all). The Sea Cave's two lateral roads become one rib, bw-11 to
 bw-13.
+
+As built (QL1d): the abstract columns are c0 the windmill; c1 bw-19, bw-4, bw-5; c2 the hazard pocket, bw-7, bw-9;
+c3 bw-21, bw-11, bw-13, bw-20; c4 the two fight pockets, bw-15, bw-16; c5 bw-22; c6 the watchtower; c7 the bridge.
+The open fan's three ribs are bw-4 to bw-5, bw-11 to bw-13 and bw-15 to bw-16. The four plate marks sit beside the
+windmill, the customs house and the south pier, and on the chapel road (`act1-landmarks.json`, the `quest-*`
+marks), for T's Nov 3 review. A blocked road draws dotted on the map, and a tap on the node behind it says the
+road's reason (`[content]` until Nov 10).

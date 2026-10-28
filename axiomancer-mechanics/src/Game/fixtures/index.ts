@@ -15,3 +15,4 @@ export {
     FIXTURE_DIALOGUE_EVENT, FIXTURE_VILLAGE_EVENT, FIXTURE_CUTSCENE_EVENT, FIXTURE_QUEST_EVENT,
     FIXTURE_WEAPON, FIXTURE_ARMOR, FIXTURE_TRINKETS, FIXTURE_ELITE_RELICS, FIXTURE_QUEST_RELIC,
 } from './fixture-content';
+export { settleQuestNodes, settleQuestNodesIn, questNodeIdsOn } from './quest-nodes';

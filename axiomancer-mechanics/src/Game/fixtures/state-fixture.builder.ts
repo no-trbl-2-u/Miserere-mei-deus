@@ -30,6 +30,7 @@ import { FIXTURE_QUESTLINE } from './fixture-content';
 import {
     changeContinent, changeMap, completeMap, placeOnNode, unlockMap,
 } from '../../World/world.reducer';
+import { settleQuestNodes } from './quest-nodes';
 import type { WorldState } from '../../World/types';
 import { createNewGameState } from '../game.reducer';
 import type { GameState } from '../types';
@@ -89,7 +90,10 @@ const applyWorld = (target: StateFixtureWorld | undefined) => (state: GameState)
     );
     const onMap = changeMap(unlockMap(withCompleted, target.map), createMapState(def));
     const placed = target.node === undefined ? onMap : placeOnNode(onMap, target.node);
-    return { ...state, world: placed };
+    const settled = target.questNodesSettled
+        ? { ...placed, currentMap: settleQuestNodes(placed.currentMap) }
+        : placed;
+    return { ...state, world: settled };
 };
 
 const applyFlags = (flags: readonly string[] | undefined) => (state: GameState): GameState =>
