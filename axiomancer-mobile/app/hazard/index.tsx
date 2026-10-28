@@ -22,6 +22,7 @@ import {
 import { RewardsOverlay } from '@/components/hazard/RewardsOverlay';
 import { RouteSelect } from '@/components/hazard/RouteSelect';
 import { useHazardDrag } from '@/components/hazard/useHazardDrag';
+import { isDeathReturnArmed } from '@/state/death-return';
 import { useGameActions, useGameState } from '@/state/GameStoreProvider';
 import { selectHazardViewModel, type HazardCardVM } from '@/state/presenters/hazard.engine';
 import { HUE } from '@/theme/axm';
@@ -40,7 +41,12 @@ export default function HazardScreen() {
     // Leave the screen when the session clears (rewards claimed /
     // abandoned elsewhere).
     useEffect(() => {
-        if (!vm.active && router.canGoBack()) router.back();
+        if (vm.active) return;
+        // A revive (armed in the claim, by the rewards ledger or the dev SKIP
+        // EVENT alike) hands off to the return moment, which owns the way
+        // back to the map: do not pop it as well.
+        if (isDeathReturnArmed()) router.replace('/death-return');
+        else if (router.canGoBack()) router.back();
     }, [vm.active, router]);
 
     if (!vm.active) return <View style={styles.root} testID="hazard-empty" />;

@@ -69,6 +69,7 @@ import {
     applyHazardDeckPresetAction,
     applyHazardCardAction,
     beginHazardAction,
+    armingHazardDeath,
     claimHazardRewardsAction,
     continueHazardAfterResolveAction,
     discardHazardCardAction,
@@ -850,7 +851,8 @@ export function createAppActions(store: AppStore): AppActions {
         resolveHazardRound: () => resolveHazardRoundAction(store),
         continueHazardAfterResolve: () => continueHazardAfterResolveAction(store),
         acknowledgeHazardOutcome: () => acknowledgeHazardOutcomeAction(store),
-        claimHazardRewards: (cardId) => claimHazardRewardsAction(store, cardId),
+        claimHazardRewards: (cardId) =>
+            claimHazardRewardsAction(store, cardId, armingHazardDeath(actions.playerDied)),
         abandonHazard: () => abandonHazardAction(store),
         claimHazardPuzzle: (layout, route, p, seed) => claimHazardPuzzleAction(store, layout, route, p, seed),
         randomizeHazardDeck: () => randomizeHazardDeckAction(store),
