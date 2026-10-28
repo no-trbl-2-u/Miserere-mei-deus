@@ -118,12 +118,12 @@ describe('every completion path pays the quest reward', () => {
 
     it('the hazard host: settleKill advances the kill and pays', () => {
         const start = stateWith(KILL);
-        const out = settleKill(start.player, start.quests, FOE.name);
+        const out = settleKill(start.player, start.quests, FOE.name, start.world.currentMap.name);
         expect(out.quests.completed).toContain(KILL.name);
         expect(out.paid.map(p => p.questName)).toEqual([KILL.name]);
         expect(relicCount(out)).toBe(1);
         // A second kill of the same foe pays nothing more.
-        const again = settleKill(out.player, out.quests, FOE.name);
+        const again = settleKill(out.player, out.quests, FOE.name, start.world.currentMap.name);
         expect(again.paid).toEqual([]);
         expect(relicCount(again)).toBe(1);
     });

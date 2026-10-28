@@ -17,6 +17,7 @@
 import { Quest, QuestLog, QuestObjective, QuestStatus, Reward } from './types';
 import { QuestName } from './quest.library';
 import { NodeId } from './types';
+import type { MapName } from './map.library';
 import type { Character } from '../Character/types';
 import type { Item } from '../Items/types';
 import { grantItem } from '../Items/item-grant';
@@ -123,12 +124,16 @@ export function collectObjectives(log: QuestLog, itemId: string): Array<{
 }
 
 /**
- * Advances every active `kill` objective that names `enemyName`, returning the
- * updated log plus the quests that completed as a result.
+ * Advances every active `kill` objective that names `enemyName` AND belongs
+ * to `mapName`, returning the updated log plus the quests that completed as
+ * a result.
  *
  * Matching is on the enemy's DISPLAY NAME (`Enemy.name`), which is what the
  * authored objectives carry — e.g. an objective targets "The Death Beholder",
- * not the `death-beholder` slug.
+ * not the `death-beholder` slug. Several Act 1 regions share a door-fight
+ * display name, so `mapName` (the current map) is required: without it, a
+ * kill in one region would wrongly advance a same-named kill objective
+ * authored for another region's quest.
  *
  * It is a reusable reducer because the hazard-pattern combat never routes
  * through `endCombat`, so the host calls it when a fight ends.
@@ -136,12 +141,13 @@ export function collectObjectives(log: QuestLog, itemId: string): Array<{
 export function advanceKillObjectives(
     log: QuestLog,
     enemyName: string,
+    mapName: MapName,
 ): { log: QuestLog; completed: QuestName[] } {
     let next = log;
     const completed: QuestName[] = [];
     // Re-read the objectives each pass: progressQuest may move a quest out of
     // `active`, and one kill can fill objectives on more than one quest.
-    for (const { questName, objectiveId } of killObjectives(log, enemyName)) {
+    for (const { questName, objectiveId } of killObjectives(log, enemyName, mapName)) {
         const step = progressQuest(next, questName, objectiveId);
         next = step.log;
         if (step.completedName) completed.push(step.completedName);
@@ -199,14 +205,18 @@ export function reachableObjectives(log: QuestLog, nodeId: NodeId): Array<{
 
 /**
  * Returns active-quest objectives that fire on `kill`-type completion for
- * `enemySlug`. Used by `endCombat` to auto-advance kill counters.
+ * `enemySlug` on `mapName`. Used by `endCombat` to auto-advance kill
+ * counters. Scoped to `mapName` because a kill objective's `target` is the
+ * enemy's display name, and that name is not unique across maps (every Act 1
+ * region's door fight is "The Death Beholder").
  */
-export function killObjectives(log: QuestLog, enemySlug: string): Array<{
+export function killObjectives(log: QuestLog, enemySlug: string, mapName: MapName): Array<{
     questName: QuestName;
     objectiveId: string;
 }> {
     const out: Array<{ questName: QuestName; objectiveId: string }> = [];
     for (const q of log.active) {
+        if (q.mapName !== mapName) continue;
         for (const o of q.objectives) {
             if (o.type === 'kill' && o.target === enemySlug && o.currentCount < o.requiredCount) {
                 out.push({ questName: q.name, objectiveId: o.id });
@@ -297,16 +307,17 @@ export function payCompletedQuests(
 
 /**
  * A won fight's kill, settled on the quest log AND paid: advances every
- * `kill` objective naming `enemyName` (`advanceKillObjectives`) and pays the
- * quests it completed. `endCombat` calls it per foe; a host whose fight never
- * routes through `endCombat` calls it when the fight ends.
+ * `kill` objective naming `enemyName` on `mapName` (`advanceKillObjectives`)
+ * and pays the quests it completed. `endCombat` calls it per foe; a host
+ * whose fight never routes through `endCombat` calls it when the fight ends.
  */
 export function settleKill(
     player: Character,
     quests: QuestLog,
     enemyName: string,
+    mapName: MapName,
 ): { player: Character; quests: QuestLog; paid: PaidQuestReward[] } {
-    const { log } = advanceKillObjectives(quests, enemyName);
+    const { log } = advanceKillObjectives(quests, enemyName, mapName);
     if (log === quests) return { player, quests, paid: [] };
     const pay = payCompletedQuests(player, quests, log);
     return { player: pay.player, quests: log, paid: pay.paid };

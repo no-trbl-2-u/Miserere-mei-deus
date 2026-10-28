@@ -47,7 +47,7 @@ reached by path, never `npm --workspace` — see "The art department" below.
   trade-off; lead with prose; every question states its defer path;
   answers are policy — file them durably and never re-ask. Autonomous
   loop skills never ask at all — `AskUserQuestion` is reserved for
-  `/oversight` there, and for `/plot`, `/messy`, `/vault` and `/lane-creator` with T
+  `/oversight` there, and for `/plot`, `/messy`, `/vault`, `/lane-creator` and `/heads-down` with T
   present (standing rule 6 below); they decide, document
   the call, and file load-bearing calls as `[loop-call]` residue for T to
   audit afterwards (THE OPEN GATE retired `[needs-user-call]`).
@@ -102,7 +102,8 @@ writes a new one. The playtest matrix stays as
 Live, at the repo root:
 - `.claude/commands/` — the loop verbs' doorways, plus T's attended `/vault`
   session (`docs/vault.md`, phase OV1b) and `/lane-creator`, which runs the
-  lane-creator v1 flow with T for one card family (`docs/lane-creator.md`, D102). No domain command is live: `combat-tuning`, `legacy-combat-tuning`, `playtest`,
+  lane-creator v1 flow with T for one card family (`docs/lane-creator.md`, D102), and `/heads-down`,
+  T's orchestrated parallel shipping (`skills/heads-down.md`). No domain command is live: `combat-tuning`, `legacy-combat-tuning`, `playtest`,
   `resolve-playtest` and `bump-engine` were trimmed earlier, the eight
   tuning/playtest commands above went in trim T5 (D10), and `combat-playtest`
   was archived in R0 (Phase R12 rebuilds it).
@@ -238,8 +239,10 @@ The unified **nexus** harness was re-onboarded onto the monorepo on
 
 - `skills/` — the loop verbs: `ship-a-phase`, `plan-a-phase`, `iterate`,
   `critique`, `triage`, `expand`, `march`, `oversight`, `jot`, `digest`,
-  `consolidate`, `fix-ci`, and T's intake `plot` and `messy` (never
-  fired by the loop, rule 8). (Heavyweight source-of-truth files; the
+  `consolidate`, `fix-ci`, T's intake `plot` and `messy` (never
+  fired by the loop, rule 8), and T's attended `heads-down` (an
+  orchestrator that ships several rows in parallel, one `/ship-a-phase`
+  worker per row, in waves gated on merges; never fired by the loop). (Heavyweight source-of-truth files; the
   `.claude/commands/<verb>.md` pointers are the doorways.) `/march` runs
   the upstream chain (triage → critique → phase → expand → iterate) and
   builds only briefed, unattended, unclaimed build-plan rows. **Content
@@ -337,8 +340,8 @@ them; update here first.
    tick's PR: read the log, patch on the branch, push again (≤3
    same-root-cause iterations, then leave it to `pr-autofix`). Red on
    `main` is `ci-autofix`'s.
-6. **`AskUserQuestion` only in `/oversight`, and in `/plot`, `/messy` or
-   `/vault` or `/lane-creator` when T is present.** Every other skill decides, documents the call in
+6. **`AskUserQuestion` only in `/oversight`, and in `/plot`, `/messy`,
+   `/vault`, `/lane-creator` or `/heads-down` when T is present.** Every other skill decides, documents the call in
    the commit body or PR, and ships. Since
    THE OPEN GATE (T direct, 2026-08-28 — see `plan/bearings.md`)
    there are no owner-blocked decisions: the loop answers every open
@@ -370,7 +373,8 @@ them; update here first.
    file this dump?", `AskUserQuestion` per `docs/asking-well.md`) and run
    the one T picks; a no files nothing beyond rule 7's residue. No
    `/march` step, cron, workflow or loop verb ever fires them
-   (`scripts/loop-pr.test.mjs`).
+   (`scripts/loop-pr.test.mjs`), nor `/heads-down`, T's attended
+   parallel-shipping orchestrator.
 9. **`Potential Assets/` is a store, never a source (T, 2026-10-19,
    D96).** It holds candidate art, licensed packs and extracted
    reference material. An agent may read it to FIND something and may

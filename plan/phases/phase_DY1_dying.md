@@ -7,7 +7,8 @@
 > fight or hazard, and that node stays open to retry. A second death while
 > dying ends the run as a defeat does today. A rest removes dying. T needs it
 > for the Nov 16 MVP: Chapter 1's boss is fought again after a loss in the
-> QL1 questline (open PR #1001).
+> QL1 questline (open PR #1001). T answered four of the five calls on
+> 2026-10-28 (recorded below as Confirmed by T); call 5 stays open.
 
 ## Sources
 
@@ -25,10 +26,13 @@
   dying.
 - Open PR #1001 (`loop/plot-QL1-breakwater-questline`, brief
   `plan/phases/phase_QL1_breakwater_questline.md` on that branch, read at
-  b784a80): QL1b scopes "a boss fight settles only on victory or friendship;
-  defeat or flee leaves it unspent" (its A9) and T's rule that fleeing a
-  fight does not complete its node. DY1 does not edit that PR and does not
-  scope flee (see Decisions).
+  d7e1897, round 2): **QL1b's A9(a)** makes `END_COMBAT` settle a fight's
+  node only on victory or friendship (a flee or a defeat answers the
+  arrival and leaves the node unspent); **QL1c's A24** makes a fled fight
+  in the app leave its node incomplete; **QL1g** (the boss fought again) is
+  `[blocked: waits on the death rule's plot]` and is DY1's seam (see
+  Decisions). DY1 points at those lines and does not scope them again; it
+  does not edit that PR.
 
 ## What exists
 
@@ -95,8 +99,9 @@ Checked on `main` at the plot's base:
   a revived fight at 1 VITAE ("not measured").
 
 New: the dying status and its save field, the previous node, the death
-verb, the return to the map, the dying mark, rest clearing it, and the
-hazard death routed the same way.
+verb, the return to the map behind a full-screen moment, the skull in
+the fight, the heal choice at a rest clearing it, and the hazard death
+routed the same way.
 
 ## Outcome
 
@@ -136,11 +141,14 @@ death while dying ends the run as today; a rest clears dying.
   current map: the map's starting node; if the death node is the starting
   node, the player stays on it with its arrival owed (`pendingArrival` set),
   as a reload re-offers a fight today. Engine test for both.
-- **A5** A lost fight never settles. `END_COMBAT` with `'defeat'` leaves the
-  arrival owed, the node unspent and its way on shut; victory and
-  friendship settle as today; `'flee'` is unchanged by DY1 (QL1's). Engine
-  test on a normal fight and an `isBoss` fight: defeat, `resolveDeath`,
-  walk back, win, and the node settles and opens its way on.
+- **A5** The revive does not depend on how a lost fight settled. The
+  `END_COMBAT` change itself (settle only on victory or friendship; a defeat
+  or a flee leaves the node unspent) is QL1b's A9(a), not DY1's, so DY1a
+  leaves `END_COMBAT` as it is. `resolveDeath` un-spends the death node
+  whatever `END_COMBAT` did on the defeat, so the rule holds before and
+  after QL1b lands. Engine test on a normal fight and an `isBoss` fight:
+  defeat, `resolveDeath`, walk back from `arrivedFrom`, win; the node then
+  settles and opens its way on.
 - **A6** The engine's other death sites. `clearDying(state)` is exported
   for the rest claim. A node hazard (`resolveHazard`) whose flat `damage`
   takes VITAE to 0 is a death: `resolveMapEvent` returns the state
@@ -149,7 +157,8 @@ death while dying ends the run as today; a rest clears dying.
   `--route` walker still stops at the first defeat and reports `blocked`
   (its evidence contract: no survivorship claim past a death).
   `docs/game-model.md` ("Ending" and a Death bullet under the world rules)
-  says the rule.
+  says the rule; it states what dying does (the next death is final) and
+  never that dying has no other effect (call 3 is provisional).
 - **A7** A lost fight in the app. `app/combat-encounter/index.tsx`'s
   `onExit('defeat')` calls `actions.playerDied('fight')`. `'revived'`: the
   combat flag clears and the player lands on the map on the previous node,
@@ -157,38 +166,59 @@ death while dying ends the run as today; a rest clears dying.
   `'run-over'`: today's path, unchanged (`resetRun`, so the `run-end` deck
   event, the Labyrinth cleanup and `resetRunStats`). Screen test:
   `state/e2e/combat-route.screen.test.tsx` covers both.
-- **A8** Dying is shown. The map's status card shows a DYING mark beside
-  VITAE while `dying` is set and nothing when it is not (copy from a
-  presenter, colour from a theme token); the return to the map shows a
-  one-line notice (placeholder copy marked `[content]`). Presenter and
-  component tests for both states.
-- **A9** A rest clears dying. `claimRestChoiceOutcomeAction` clears `dying`
-  on every claimed rest (heal, upgrade or cut), in the same `setState` as
-  the claim, before its `save()`. A potion, a level-up, a travel door or
-  arriving at a rest and leaving unclaimed does not. Store test.
+- **A8** The return moment (Confirmed by T, 2026-10-28). A revive in the
+  app, from a fight or a hazard, shows a full-screen moment before the map:
+  a new route `app/death-return/index.tsx` with a title line and one line of
+  placeholder copy marked `[content]` (D88) and a CONTINUE that goes to the
+  map. Copy from a presenter, colours from theme tokens. Shown once per
+  revive and not saved: a reload during it lands on the map with `dying`
+  still set. The map's status card is unchanged (no DYING mark: T chose the
+  moment and the skull). Presenter and screen tests; a row in
+  `screenshots/baseline/README.md` and a `death-return.png` baseline (the
+  CI re-stamp, as that README describes).
+- **A9** The heal choice clears dying (Confirmed by T, 2026-10-28: only
+  the heal). `claimRestChoiceOutcomeAction` clears `dying` when the claimed
+  choice is `rest` (the 25% heal), in the same `setState` as the claim,
+  before its `save()`. The upgrade and cut choices do not; nor does a
+  potion, a level-up, a travel door, or arriving at a rest and leaving
+  unclaimed. Store test for all five.
 - **A10** The Labyrinth keeps today's rule. A defeat while a Labyrinth
   session is live calls `resetRun` as today, never `playerDied`;
   `state/e2e/labyrinth-defeat-reset.engine.test.ts` passes unchanged.
 - **A11** The map walk proves it. `scripts/map-walk-e2e.mjs`'s bw-6 fight,
-  played to its end by ending phases: on a defeat the player lands on
-  `bw-4` (the node walked from) with 1 VITAE and the DYING mark, and bw-6 is
-  still open; on a win, `bw-6` as today. The play log still posts the fight
+  played to its end by ending phases: on a defeat the player reaches the
+  return moment, then the map on `bw-4` (the node walked from) with 1 VITAE
+  and `dying` set, and bw-6 is still open; on a win, `bw-6` as today. The play log still posts the fight
   row as `defeat`, and posts `run-end` only on a run over (store test).
 - **A12** A lethal hazard in the app. `claimHazardRewardsAction` routes a
   lethal crossing through `playerDied('hazard')`. `'revived'`: the spoils
   are forfeit (as today), VITAE 1, dying, the player back on the previous
   node, the hazard node unspent and open to cross again, the tombstone flag
   stamped, the session cleared, the state saved, `died: true` and a new
-  `outcome: 'revived' | 'run-over'` on the result. `'run-over'`: today's
-  reset and tombstone. The dev SKIP EVENT hazard path reports the same.
+  `outcome: 'revived' | 'run-over'` on the result, and the player reaches
+  A8's return moment before the map. `'run-over'`: today's reset and
+  tombstone. The dev SKIP EVENT hazard path reports the same.
 - **A13** The hazard tests. `state/e2e/hazard-out-of-combat-death.engine.test.ts`
   is rewritten for a first lethal crossing (revived, node open) and a
   lethal crossing while dying (run over), and keeps the survivable case
   (floor at 1, no tombstone); `npm run e2e:hazard` passes.
+- **A14** The skull in the fight (Confirmed by T, 2026-10-28: "a skull in
+  place of the player's portrait in combat while dying"). While `dying` is
+  set, the combat board's player portrait is a skull: the footer-dock
+  medallion (`CombatCombatantPane.tsx`, 44x52 inside the sulfur ring) and the
+  pilgrim inspect modal's head (`CombatEncounterPanel.tsx`, 56x68). Done by
+  an opt-in on `components/art/PlayerPortraitImage.tsx` that only the two
+  combat call sites pass, so the character tab and the equipment dock keep
+  the portrait and no screen outside a fight changes. The skull is a glyph
+  from the existing icon registry (`components/icons/`) in a theme token, not
+  new art (D88); the medallion's accessibility label says the pilgrim is
+  dying. Not dying: the portrait exactly as today, and the seeded
+  `combat-encounter.png` baseline does not change. Component tests for both
+  call sites in both states; the `combat-player-medallion` test id is kept.
 
-Measure: `npm run e2e:map-walk` lands a bw-6 defeat on bw-4 at 1 VITAE with
-the DYING mark and bw-6 open; the DY1a engine tests pass a death, a retry
-win, and two deaths ending the run.
+Measure: `npm run e2e:map-walk` lands a bw-6 defeat on bw-4 at 1 VITAE,
+dying, through the return moment, with bw-6 open; the DY1a engine tests pass
+a death, a retry win, and two deaths ending the run.
 
 ## Scope
 
@@ -196,7 +226,7 @@ win, and two deaths ending the run.
   (`arrivedFrom?`), `World/world.reducer.ts` (`moveToNode`, `arriveAtNode`,
   the placement verbs, the un-spend helper the revive shares with
   `placeOnNode`'s logic), a new `Game/death.ts` (`resolveDeath`,
-  `clearDying`), `Game/game.reducer.ts` (`END_COMBAT` defeat, `PLAYER_DIED`),
+  `clearDying`), `Game/game.reducer.ts` (`PLAYER_DIED`),
   `Game/actions.types.ts`, `Game/store.ts` (`playerDied`, `durableSlice`,
   `DURABLE_ACTIONS`), `World/MapEvents/resolve-map-event.ts` (the hazard
   death, the header comment's "every outcome"), the travel handler (clears
@@ -204,22 +234,30 @@ win, and two deaths ending the run.
   `docs/game-model.md`.
 - `axiomancer-mobile`: `state/actions.ts` (`writeArrivalNodeId` delegates,
   `playerDied` action creator, the `resetRun` comment), `app/combat-encounter/index.tsx`,
-  `components/StatusCard.tsx` and a presenter for the mark, the map's notice
-  (`NodeToast` or the exploration screen's toast path),
-  `state/rest/store-actions.ts`, `state/hazard/store-actions.ts`,
-  `state/dev/skip-event.ts`, `scripts/map-walk-e2e.mjs`.
-- Not touched: the flee path (QL1's), the measured report, the backend and
-  the play-log contract (no new outcome), the Labyrinth.
+  the new `app/death-return/index.tsx` and its presenter, the route
+  registration in `app/_layout.tsx`, `state/rest/store-actions.ts`,
+  `state/hazard/store-actions.ts`, `state/dev/skip-event.ts`,
+  `scripts/map-walk-e2e.mjs`; and for the skull
+  `components/art/PlayerPortraitImage.tsx`,
+  `components/combat/encounter/CombatCombatantPane.tsx` and
+  `CombatEncounterPanel.tsx`; `screenshots/baseline/README.md` and the new
+  baseline.
+- Not touched: `END_COMBAT`'s settling and the flee path (QL1's), the status
+  card, the character tab and equipment dock portraits, the measured report,
+  the backend and the play-log contract (no new outcome), the Labyrinth.
 
 ## Consumers to update
 
 - Engine exports: `resolveDeath`, `clearDying`, `arriveAtNode`, the
   `PLAYER_DIED` action and `playerDied` verb.
-- Mobile: the combat route, the hazard claim, the rest claim, the status
-  card, the dev SKIP EVENT hazard result, `map-walk-e2e.mjs`.
+- Mobile: the combat route, the hazard claim, the rest claim, the return
+  moment route, the combat board's two portrait sites, the dev SKIP EVENT
+  hazard result, `map-walk-e2e.mjs`. The portrait's other consumers (the
+  character tab, `EquipmentDock`) and the visual baselines `combat-encounter.png`
+  and `character.png` are checked unchanged.
 - CLI: `game.cli.ts`'s fight settle and `--route` walker.
-- Docs: `docs/game-model.md`; `axiomancer-mechanics/docs/world.md` if it
-  states "a fight settles its node on every outcome".
+- Docs: `docs/game-model.md`. (`axiomancer-mechanics/docs/world.md`'s "a
+  fight settles its node on every outcome" is QL1b's to change.)
 
 ## Save / schema contracts
 
@@ -234,29 +272,34 @@ node" (A4's fallback). No `GAME_STATE_VERSION` bump, no hop in
 - **The rule (Confirmed by T, 2026-10-28).** (1) When VITAE reaches 0 in a
   fight, the first time the player does not lose the run: they come back
   with 1 VITAE and a "dying" status. (2) A death while dying is game over:
-  the run ends as a defeat does today. (3) Resting removes dying. (4) After
+  the run ends as a defeat does today. (3) Resting's heal removes dying
+  (T, later the same day: only the heal choice). (4) After
   the first death the player is returned to the spot before they triggered
   the fight or hazard, and that node stays incomplete so it can be retried;
   T named hazards too, and a hazard can kill today (`claimHazardRewardsAction`),
   so DY1c covers it. (5) Fleeing a fight does not complete its node: that
   rule is QL1's (PR #1001), not DY1's.
 - **The spot before the fight is the node the player stood on before
-  arriving at the fight or hazard node** `[T to confirm #1]`. Recorded as
-  `arrivedFrom` on the arrival. Alternative: the player stays on the fight
-  or hazard node itself with its event reset, so the fight starts again on
-  the next tap and there is no walk back (no new save field, but no chance
-  to step away to a rest first).
-- **Dying is shown as a DYING mark on the map's status card beside VITAE,
-  and one line of notice on the return** `[T to confirm #2]`. The notice is
-  placeholder copy marked `[content]` until T rewrites it (D88).
-  Alternatives: the mark also on the combat board's VITAE bar; or a
-  full-screen beat before the map ("You come back from the edge").
-- **Dying does nothing else: the only effect is that the next death is
-  final** `[T to confirm #3]`. Alternatives: healing is weaker while dying
-  (rest or potions); or max VITAE is held low until the rest.
-- **Any claimed rest clears dying: heal, upgrade or cut** `[T to confirm
-  #4]`. The night is the trigger, as it is for elites (ER1). Alternative:
-  only the heal choice clears it.
+  arriving at the fight or hazard node.** Confirmed by T (2026-10-28):
+  default kept; the player comes back on the node they walked from and
+  walks back in when ready. Recorded as `arrivedFrom` on the arrival.
+- **Dying is shown by a full-screen moment on the return, and a skull in
+  place of the player's portrait in combat while dying.** Confirmed by T
+  (2026-10-28): changed from the default (a DYING mark on the map's status
+  card and a notice line); the status card is not touched. The moment is
+  A8 (DY1b; the hazard death reaches it in DY1c) and the skull A14 (DY1d).
+  The moment's copy is placeholder `[content]` until T rewrites it (D88).
+- **Dying has no other effect for now, and that is not a rule.** Confirmed
+  by T (2026-10-28): "For now, no, but don't make it law. We can do some
+  testing after the full act 1 MVP." Provisional, revisited after the Act 1
+  MVP (Follow-ups). So no test, doc line or D-entry pins "dying has no
+  other effect"; the tests assert what dying does (the next death is final,
+  the heal clears it) and never that nothing else changes, and nothing is
+  written to stop a later phase from adding an effect.
+- **Only the heal choice at a rest clears dying.** Confirmed by T
+  (2026-10-28): changed from the default (any claimed rest); the upgrade
+  and cut choices leave dying set. This differs from ER1, where any claimed
+  rest brings elites back.
 - **Inside the Labyrinth, death stays a run reset** `[T to confirm #5]`. The
   Labyrinth is parked and unreachable in Act 1, so nothing a player meets
   changes; A10 keeps today's path. Alternative: the same rule there too,
@@ -270,16 +313,21 @@ node" (A4's fallback). No `GAME_STATE_VERSION` bump, no hop in
   (HP)"). Nothing else is lost: XP, cards, relics, shillings and quest
   progress stay. A hazard's spoils are forfeit on the killing crossing, as
   today.
-- **A lost fight never settles its node (A5), boss or not.** QL1b (A9 of
-  `phase_QL1_breakwater_questline.md`, PR #1001) makes a lost boss fight
-  leave its node unspent; DY1a's rule is the general case. Whichever lands
-  second keeps the other's tests: if QL1b ships first, DY1a widens its boss
-  check to every fight; if DY1a ships first, QL1b's boss-defeat case already
-  holds and QL1b adds only flee and the sealed roads. Neither phase requires
-  the other.
-- **Flee is not touched.** T's rule 5 is scoped in QL1. DY1 changes only
-  the defeat path and leaves `fleeEncounterAction` and `END_COMBAT`'s
-  `'flee'` branch as they are.
+- **A lost fight's settling is QL1's.** QL1b's A9(a) (PR #1001) changes
+  `END_COMBAT` so a defeat or a flee leaves the node unspent and answers the
+  arrival; QL1c's A24 does the fled fight in the app. DY1 does not touch
+  `END_COMBAT` and adds no second scope of those lines. `resolveDeath`
+  un-spends the death node itself (A2, A5), so the revive works with or
+  without QL1b, and neither phase requires the other.
+- **The seam with QL1g (T, 2026-10-28).** QL1g, the boss fought again, is
+  `[blocked: waits on the death rule's plot]` on #1001's branch. When DY1
+  merges, QL1g's blocked marker is lifted and DY1b (the app revive; the
+  engine rule DY1a is reached through it) is added to its `Requires`. Its
+  row lives only on #1001's branch today, so DY1 does not edit it: whichever
+  of #1001 and #1003 merges second applies the edit (Follow-ups).
+- **Flee is not touched.** T's rule on flee is QL1b's A9 and QL1c's A24.
+  DY1 leaves `fleeEncounterAction` and `END_COMBAT`'s `'flee'` branch as
+  they are.
 - **The revive does not re-lock the way past a hazard.** Mobile's move
   completes a hazard node and unlocks its neighbours before the crossing is
   played; the revive un-spends the hazard node but leaves those neighbours
@@ -298,23 +346,23 @@ node" (A4's fallback). No `GAME_STATE_VERSION` bump, no hop in
   full VITAE; a retry at 1 VITAE is "not measured" (D57), and DY1 adds no
   measurement.
 - **Not slotted behind QL1.** DY1 requires nothing from PR #1001 and stands
-  on `main` alone; QL1's boss re-fight needs DY1b to be live in the app for
-  the MVP run.
+  on `main` alone; QL1g (the boss re-fight) needs DY1b to be live in the
+  app for the MVP run.
 
 ## Tests matrix
 
 - Added (mechanics): `Game/e2e/death-rule.engine.test.ts` (A1-A5: the save
-  round-trip, revive, run over, fallback, a lost fight unsettled and won on
+  round-trip, revive, run over, fallback, a lost fight revived and won on
   retry, a boss fight the same), cases in the hazard handler tests (A6), a
   CLI test that a lost CLI fight leaves the node unspent and `--route`
   still reports `blocked`.
-- Added (mobile): the status-card mark and its presenter (A8), a rest-claim
-  case (A9), a play-log case (A11).
+- Added (mobile): the return moment's presenter and screen (A8), a rest-claim
+  case for the five rest outcomes (A9), a play-log case (A11), the skull
+  in both combat portrait sites in both states (A14).
 - Rewritten: `state/e2e/combat-route.screen.test.tsx` (A7),
   `state/e2e/hazard-out-of-combat-death.engine.test.ts` (A13),
-  `scripts/map-walk-e2e.mjs` (A11), any engine test that pins "`END_COMBAT`
-  settles on defeat" (`Game/e2e/combat-retrigger.engine.test.ts` and
-  `World/MapEvents` tests found by grepping `settleArrival` with `defeat`).
+  `scripts/map-walk-e2e.mjs` (A11). No engine test that pins `END_COMBAT`
+  settling on a defeat is touched (QL1b's).
 - Unchanged and must pass: `state/e2e/labyrinth-defeat-reset.engine.test.ts`
   (A10), `Game/e2e/run-loop.engine.test.ts`, `scripts/act1-walk-e2e.mjs`
   (never loses), the R9a mid-fight reload tests.
@@ -322,14 +370,15 @@ node" (A4's fallback). No `GAME_STATE_VERSION` bump, no hop in
 ## Verify gate
 
 `npm run verify -w axiomancer-mechanics`; `npm run verify -w
-axiomancer-mobile` (every phase touches `src/Game/**` or `src/World/**`,
-the cross-package checklist); `npm run e2e:map-walk` (DY1b) and `npm run
-e2e:hazard` (DY1c); the root `npm test`.
+axiomancer-mobile` (DY1a touches `src/Game/**` and `src/World/**`, the
+cross-package checklist; the app phases run it too); `npm run e2e:map-walk`
+(DY1b) and `npm run e2e:hazard` (DY1c); `npm run verify:visual` for the new
+route and the two unchanged baselines (DY1b, DY1d); the root `npm test`.
 
 ## Commit body template
 
 ```
-Phase DY1<a|b|c> — <title>
+Phase DY1<a|b|c|d> — <title>
 
 Closes <ids> of plan/phases/phase_DY1_dying.md.
 <what changed>
@@ -338,7 +387,7 @@ Verify: <commands and results>
 
 ## DoD
 
-A1-A13 ticked across DY1a-DY1c; the Measure met.
+A1-A14 ticked across DY1a-DY1d; the Measure met.
 
 ## Follow-ups (out of scope)
 
@@ -347,8 +396,23 @@ A1-A13 ticked across DY1a-DY1c; the Measure met.
   hazard to be unavoidable after a death.
 - The Labyrinth's death rule, when the Labyrinth is unparked (B9), if T
   answers call 5 "the same rule".
-- T's line for the return notice (`[content]`), with the Nov 10 copy
+- **Dying's other effects, after the Act 1 MVP.** T (2026-10-28): "For now,
+  no, but don't make it law. We can do some testing after the full act 1
+  MVP." Revisit with playtests once the MVP is out (weaker healing, held
+  max VITAE and so on are the candidates); a new `/plot` then.
+- **QL1g, whichever of #1001 and #1003 merges second.** On #1001's branch
+  (`plan/steps/01_build_plan.md`, Phase QL1g): lift
+  `[blocked: waits on the death rule's plot ...]` and set its `Requires` to
+  QL1d and DY1b. If #1003 merges second the next session that reads both
+  makes the edit on `main` (a plan-only change); if #1001 merges second its
+  merge is the moment. DY1 does not edit #1001's branch.
+- The map has no standing mark of dying after the return moment (T chose
+  the moment and the skull); if play shows players forgetting they are
+  dying between fights, a status-card mark is the cheap add.
+- T's line for the return moment (`[content]`), with the Nov 10 copy
   sitting or the event-node UX plot.
+- The skull is an existing icon glyph; if T wants painted skull art, that
+  is an art brief (D88).
 - The puzzle demos' `lethal` result (dev menu only) through `playerDied`,
   if they ever go live: the live-hazard routing plot (W2, needs plot)
   carries the check.
@@ -367,30 +431,50 @@ retry win and two deaths ending the run.
 - Consumers: engine exports; the CLI; `docs/game-model.md`.
 - Save / schema: `dying?`, `arrivedFrom?`; no bump, no hop (A1).
 - Tests: `death-rule.engine.test.ts`, the hazard handler cases, the CLI
-  case, and the rewritten settle-on-defeat pins.
+  case. `END_COMBAT` is not touched (QL1b's).
 - Verify gate: both workspace verifies; the root `npm test`.
 
 ### DY1b — A lost fight in the app: back on the map, dying · M · closes A7, A8, A9, A10, A11 · requires DY1a
-Measure: `npm run e2e:map-walk`: the bw-6 defeat lands on bw-4 at 1 VITAE
-with the DYING mark and bw-6 open.
-- Scope: `app/combat-encounter/index.tsx`, `components/StatusCard.tsx` and
-  its presenter, the return notice, `state/rest/store-actions.ts`,
-  `scripts/map-walk-e2e.mjs`.
-- Consumers: the combat route; the status card; the rest claim.
+Measure: `npm run e2e:map-walk`: the bw-6 defeat reaches the return moment,
+then lands on bw-4 at 1 VITAE, dying, with bw-6 open.
+- Scope: `app/combat-encounter/index.tsx`, the new `app/death-return/`
+  route (screen, presenter, layout registration), `state/rest/store-actions.ts`
+  (the heal choice clears dying), `scripts/map-walk-e2e.mjs`, the baselines
+  README row and the `death-return.png` baseline.
+- Consumers: the combat route; the rest claim; the visual-smoke route list.
 - Save / schema: none new.
-- Tests: `combat-route.screen.test.tsx` rewritten; the mark, rest and
-  play-log cases; `labyrinth-defeat-reset.engine.test.ts` unchanged.
+- Tests: `combat-route.screen.test.tsx` rewritten; the return moment's
+  presenter and screen; the rest (five outcomes) and play-log cases;
+  `labyrinth-defeat-reset.engine.test.ts` unchanged.
 - Verify gate: `npm run verify -w axiomancer-mobile`; `npm run
-  e2e:map-walk`; the root `npm test`.
+  e2e:map-walk`; `npm run verify:visual`; the root `npm test`.
 
 ### DY1c — A lethal hazard in the app · S · closes A12, A13 · requires DY1b
 Measure: `hazard-out-of-combat-death.engine.test.ts` passes a first lethal
 crossing (revived, node open) and a lethal crossing while dying (run over);
 `npm run e2e:hazard` passes.
 - Scope: `state/hazard/store-actions.ts` (`claimHazardRewardsAction`, its
-  result type), `state/dev/skip-event.ts`.
+  result type), the hazard screen's hand-off to the return moment,
+  `state/dev/skip-event.ts`.
 - Consumers: the hazard claim and the dev SKIP EVENT hazard result.
 - Save / schema: none new.
 - Tests: `hazard-out-of-combat-death.engine.test.ts` rewritten.
 - Verify gate: `npm run verify -w axiomancer-mobile`; `npm run e2e:hazard`;
   the root `npm test`.
+
+### DY1d — The skull in the fight · S · closes A14 · requires DY1b
+Measure: the combat board shows a skull in the footer-dock medallion and the
+pilgrim modal head while `dying` is set, and the portrait as before when it
+is not; `npm run verify:visual` leaves `combat-encounter.png` and
+`character.png` unchanged.
+- Scope: `components/art/PlayerPortraitImage.tsx` (an opt-in prop),
+  `CombatCombatantPane.tsx` (the medallion and its accessibility label),
+  `CombatEncounterPanel.tsx` (the pilgrim modal head).
+- Consumers: the combat board's two portrait sites; not the character tab or
+  `EquipmentDock`.
+- Save / schema: none.
+- Tests: component tests for both sites in both states; the existing
+  `CombatBoard.footer-dock`, `CombatBoard.sacfloor` and
+  `CombatEncounterPanel.log` tests pass unchanged.
+- Verify gate: `npm run verify -w axiomancer-mobile`; `npm run
+  verify:visual`; the root `npm test`.
