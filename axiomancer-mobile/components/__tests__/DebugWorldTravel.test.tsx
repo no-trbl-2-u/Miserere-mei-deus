@@ -77,15 +77,31 @@ describe('DebugWorldTravel: travel', () => {
         expect(world.currentMap.currentNode).toBe(getMapDefinition('northern-continent', 'beacon-crags').startingNode.id);
     });
 
+    it('a node chip on a quest node jumps there and opens the quest screen, and nothing else', () => {
+        const store = makeStore();
+        const target = listNodes(store.getState()).find((n) => n.kind === 'quest')!;
+        expect(target.id).toBe('bw-19');
+        const tree = render(withProvider(store, <DebugWorldTravel />));
+        fireEvent.press(tree.getByTestId(`debug-travel-node-${target.id}`));
+        const state = store.getState();
+        expect(state.world.currentMap.currentNode).toBe('bw-19');
+        expect(state.quest.open).toMatchObject({ node: 1 });
+        expect(state.event.pending).toBeNull();
+        expect(state.hazard.session).toBeNull();
+        expect(state.rest.session).toBeNull();
+        expect(state.cache.session).toBeNull();
+        expect(state.blacksmith.session).toBeNull();
+    });
+
     it('a node chip jumps to WILDS, moves the cursor, and fires the authored event', () => {
         const store = makeStore();
-        const target = listNodes(store.getState()).find((n) => !n.isCurrent && n.kind && n.kind !== 'encounter' && n.kind !== 'travel')!;
+        const target = listNodes(store.getState()).find((n) => !n.isCurrent && n.kind && n.kind !== 'encounter' && n.kind !== 'travel' && n.kind !== 'quest')!;
         const tree = render(withProvider(store, <DebugWorldTravel />));
         fireEvent.press(tree.getByTestId(`debug-travel-node-${target.id}`));
         expect(mockPush).toHaveBeenCalledWith('/(tabs)/exploration');
         const state = store.getState();
         expect(state.world.currentMap.currentNode).toBe(target.id);
-        const opened = state.event.pending !== null || (state.quest?.open ?? null) !== null || state.hazard.session !== null || state.rest.session !== null || state.cache.session !== null || state.blacksmith.session !== null || (state.player.inventory?.length ?? 0) > 0;
+        const opened = state.event.pending !== null || state.hazard.session !== null || state.rest.session !== null || state.cache.session !== null || state.blacksmith.session !== null || (state.player.inventory?.length ?? 0) > 0;
         expect(opened).toBe(true);
     });
 

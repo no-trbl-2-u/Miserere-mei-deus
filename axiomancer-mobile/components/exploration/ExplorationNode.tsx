@@ -110,12 +110,14 @@ export function ExplorationNode({ node: n, onNodePress, isSelected }: Exploratio
             ref={ref}
             accessibilityRole="button"
             accessibilityLabel={`${n.label}, ${
-                n.kind === 'locked' ? 'sealed'
+                n.kind === 'locked' ? (n.blockedReason ? `sealed: ${n.blockedReason}` : 'sealed')
                     : n.kind === 'completed' ? 'walked'
                         : n.kind === 'current' ? 'here'
                             : `open, ${NODE_KIND_LABEL[n.type].toLowerCase()}`
             }`}
             accessibilityHint="hold to read node type description"
+            // A node behind a blocked road (a questline's lock) also reads its
+            // reason, as the tap toast does.
             // Every kind answers a tap — a sealed node says it is sealed, a
             // walked one says it is walked, the node you stand on says so.
             // The label carries the state, so the control is not marked

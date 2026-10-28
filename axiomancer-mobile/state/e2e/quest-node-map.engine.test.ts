@@ -27,7 +27,8 @@ import {
 
 beforeAll(() => {
     registerFixtureQuestline();
-    // bw-5 is a quest node for this file only (jest isolates each file's modules).
+    // bw-5 (an open-fan node since QL1d moved bw-2 into a pocket) is a quest
+    // node for this file only (jest isolates each file's modules).
     registerMapEventPool({
         id: 'ql1c.map.bw-5',
         entries: [{ kind: 'quest', weight: 1, payload: { kind: 'quest', questline: FIXTURE_LINE, node: 2 } }],
@@ -51,6 +52,18 @@ describe('node types and labels (A12)', () => {
         expect(node.type).toBe('quest');
         expect(NODE_KIND_LABEL.quest).toBe('QUEST');
         expect(ACTION_ICON_BY_TYPE.quest).toBe('scroll');
+    });
+
+    it('the Breakwater questline\'s own four nodes (bw-19..bw-22) read QUEST, with no step state (QL1d)', () => {
+        const store = breakwater();
+        for (const id of ['bw-19', 'bw-20', 'bw-21', 'bw-22']) {
+            const { node } = nodeOf(store, id);
+            expect(node.type).toBe('quest');
+            expect(node.label).not.toMatch(/step|ready|\d+ of \d+/i);
+        }
+        // The first is open from the windmill; the other three sit behind their locks.
+        expect(nodeOf(store, 'bw-19').node.kind).toBe('available');
+        for (const id of ['bw-20', 'bw-21', 'bw-22']) expect(nodeOf(store, id).node.kind).toBe('locked');
     });
 
     it('the windmill cutscene (bw-1) is STORY and the quill, no longer QUEST', () => {

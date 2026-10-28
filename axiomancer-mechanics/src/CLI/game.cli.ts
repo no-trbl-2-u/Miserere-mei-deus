@@ -238,8 +238,9 @@ async function resolveCurrentNodeEvent(
 function playQuestNode(store: GameStoreHandle, event: Extract<ResolvedEvent, { kind: 'quest' }>): void {
     let state = store.getState() as GameState;
     if (event.stage === 'turn-in') {
-        state = turnInQuestStep(state, event.questline, event.node - 1).state;
-        log(`Turned in step ${event.node - 1} of ${event.questline}.`);
+        const turnedIn = turnInQuestStep(state, event.questline, event.node - 1).state;
+        if (turnedIn !== state) log(`Turned in step ${event.node - 1} of ${event.questline}.`);
+        state = turnedIn;
     }
     if (event.stage === 'turn-in' || event.stage === 'offer') {
         const accepted = acceptQuestStep(state, event.questline, event.node);
