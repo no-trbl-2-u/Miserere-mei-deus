@@ -34,7 +34,7 @@ import {
     selectEncounterMercyChoice, buildCombatSummary,
     getLogger,
     type CombatEncounterState, type CombatOutcome, type Character, type Enemy, type CombatEvent,
-    type Equipment, type PlayLogUiEventKind,
+    type Equipment, type GameState, type PlayLogUiEventKind,
 } from '@mechanics';
 
 import { CombatBoard, CombatCardFace, OutcomeText, HAND_CARD_W, HAND_CARD_H, type DragController, type DragPayload, type Rect } from '@/components/combat/encounter/CombatBoard';
@@ -53,6 +53,7 @@ import {
     type CombatCardVM, type CombatEffectChipVM, type CombatSignatureVM,
 } from '@/state/presenters/combat-encounter.engine';
 import { cardUpgradeRowsVM } from '@/state/presenters/card-upgrade.engine';
+import { offerCompletedQuestExtrasAction } from '@/state/quest/store-actions';
 import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
 import { useGameState, useGameStore } from '@/state/GameStoreProvider';
 import {
@@ -224,7 +225,11 @@ export function applyHazardOutcome(
     // A won elite fight rolls its relic FIRST: a drop is the whole reward,
     // so the XP and loot are withheld and the card draft never opens.
     const relicOnly = outcome === 'victory' && settleEliteRelicAction(store, enemy, relics);
+    const questsBefore = (store.getState() as unknown as GameState).quests;
     store.getState().endCombat(mapHazardOutcomeToEndCombat(outcome), undefined, { withholdSpoils: relicOnly });
+    // A kill that completed a quest (the questline's boss step pays here): its
+    // relic goes to the item-reward screen and a card pick to the spoils tiles.
+    if (questsBefore) offerCompletedQuestExtrasAction(store, questsBefore);
     // Cascade level-ups through the engine store (applyLevelUps isn't exported,
     // so the LEVEL_UP reducer is the only public path). applyLevelUps already
     // loops internally; the guarded while-loop is belt-and-braces. Runs after

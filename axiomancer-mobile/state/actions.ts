@@ -37,7 +37,8 @@ import {
     isEquipment,
     markNodeConsumed,
     resolveMapEvent,
-    settleArrival,
+    moveToNode,
+    answerUnsettledArrival,
     revealAdjacent,
     STARTING_CARD_IDS,
     unlockNode as worldUnlockNode,
@@ -149,7 +150,14 @@ import {
 import { getAporiaAct } from '@mechanics';
 import type { LabyrinthActId, LabyrinthBossOutcome } from '@mechanics';
 import { wrapActionsWithLogging } from './logging';
-import { offerCompletedQuestItemsAction } from './item-reward/relic-sources';
+import {
+    acceptQuestStepAction,
+    claimQuestCardAction,
+    closeQuestAction,
+    offerCompletedQuestExtrasAction,
+    openQuestScreenAction,
+    turnInQuestStepAction,
+} from './quest/store-actions';
 import { endCombatOutcome, fightRecorder } from '@/lib/fightRecorder';
 import { deckEventPoster, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
 import { getMapLayout } from './exploration-maps';
@@ -479,6 +487,21 @@ export interface AppActions {
     claimRestOutcome: () => ClaimRestChoiceResult;
 
     // -----------------------------------------------------------------
+    // The quest screen (see state/quest/). ACCEPT starts the step the open
+    // quest node offers; TURN IN pays the finished step behind it; LEAVE
+    // closes the screen; the card pick settles a `card-pick` reward.
+    // -----------------------------------------------------------------
+
+    /** Accept the step the open quest node offers. True when it was accepted. */
+    acceptQuestStep: () => boolean;
+    /** Turn in the finished step behind the open quest node. True when paid. */
+    turnInQuestStep: () => boolean;
+    /** LEAVE the quest screen. Nothing changes; the node stays as it was. */
+    closeQuest: () => void;
+    /** Take one of the quest's offered cards, or `null` to take nothing. */
+    claimQuestCard: (cardId: string | null) => void;
+
+    // -----------------------------------------------------------------
     // Loot-cache-choice encounter ("The Reliquary" — see state/cache/).
     // One irreversible choice of two: card / item.
     // -----------------------------------------------------------------
@@ -734,7 +757,7 @@ export function createAppActions(store: AppStore): AppActions {
             const questsBefore = (store.getState() as unknown as GameState).quests;
             const report = store.getState().endCombat(outcome ?? 'flee');
             // A kill that completed a quest: its relic goes to the reward screen.
-            if (questsBefore) offerCompletedQuestItemsAction(store, questsBefore);
+            if (questsBefore) offerCompletedQuestExtrasAction(store, questsBefore);
             // The play log: posts a fight the panel never finished (a WITHDRAW);
             // one it finished has already posted, so this is a no-op then.
             void fightRecorder.end(endCombatOutcome(outcome ?? 'flee'));
@@ -858,6 +881,10 @@ export function createAppActions(store: AppStore): AppActions {
         pickRestChoiceCut: (cardId) => pickRestChoiceCutAction(store, cardId),
         pickRestChoiceUpgrade: (cardId) => pickRestChoiceUpgradeAction(store, cardId),
         claimRestOutcome: () => claimRestChoiceOutcomeAction(store),
+        acceptQuestStep: () => acceptQuestStepAction(store),
+        turnInQuestStep: () => turnInQuestStepAction(store),
+        closeQuest: () => closeQuestAction(store),
+        claimQuestCard: (cardId) => claimQuestCardAction(store, cardId),
         beginLootCacheChoice: (options) => beginLootCacheChoiceAction(store, options),
         chooseLootCacheChoiceOffer: (offer) => chooseLootCacheChoiceOfferAction(store, offer),
         claimLootCacheChoiceOutcome: () => claimLootCacheChoiceOutcomeAction(store),
@@ -1055,6 +1082,20 @@ function moveToAction(store: AppStore, nodeId: string): MoveToResult {
 
     const currentNodeId = readCurrentNodeId(world);
     const map = world.currentMap;
+
+    // The retry: the node the player stands on, still unspent, with its
+    // arrival answered (a fled or lost fight, a quest node left unaccepted),
+    // is owed again by the engine's own move. The caller resolves the arrival
+    // afterwards, as for any move.
+    if (nodeId === currentNodeId) {
+        const retried = moveToNode(world, nodeId);
+        if (retried !== world) {
+            store.setState({ world: retried });
+            try { store.getState().save(); } catch { /* persistence must not block the road */ }
+            return { moved: true, currentNodeId, locked: false };
+        }
+    }
+
     const available = map.availableNodes;
     const completed = map.completedNodes;
 
@@ -1384,7 +1425,7 @@ function withQuestRewards(before: GameState, after: GameState): GameState['playe
 function resolveCurrentMapEventAction(store: AppStore, sourceNodeType?: string, staged?: MapEventPayload): boolean {
     const questsBefore = (store.getState() as unknown as GameState).quests;
     const resolved = resolveCurrentMapEventInner(store, sourceNodeType, staged);
-    if (questsBefore) offerCompletedQuestItemsAction(store, questsBefore);
+    if (questsBefore) offerCompletedQuestExtrasAction(store, questsBefore);
     return resolved;
 }
 
@@ -1546,14 +1587,19 @@ function resolveCurrentMapEventInner(store: AppStore, sourceNodeType?: string, s
             return true;
         }
 
-        // A quest node has no card: it routes to its own screen (QL1c
-        // replaces this branch with that route). Until then the player stays
-        // on the map with no pending event, and the node stays unspent (the
-        // engine does not consume it and the exclusion above keeps it so).
+        // A quest node has no card: it opens the quest screen (`<QuestGate>`
+        // routes to /quest when the slice fills). The node stays unspent (the
+        // engine does not consume it and the exclusion above keeps it so)
+        // until its step is accepted, and the map shows no step state.
         if (result.event.kind === 'quest') {
             store.setState({
                 ...resolvedState,
                 event: EMPTY_EVENT_SLICE,
+            });
+            openQuestScreenAction(store, {
+                questline: result.event.questline,
+                node: result.event.node,
+                description: result.event.description,
             });
             return true;
         }
@@ -1637,17 +1683,19 @@ function fleeEncounterAction(store: AppStore): void {
         console.error('Failed to process flee action:', error);
     }
     clearEventSlice(store);
-    settleArrivalAction(store);
+    answerArrivalAction(store);
 }
 
 /**
- * Settle the fight's node when the player walks away from it. A fight that
- * runs to an end settles through the engine's `END_COMBAT`; a flee does not,
- * so both flee paths settle here. The node is spent and its way on opens.
+ * Answer the fight's arrival when the player walks away from it. A fight that
+ * runs to a win settles through the engine's `END_COMBAT`; a flee settles
+ * nothing: the engine's `answerUnsettledArrival` clears the debt (so the
+ * exploration screen does not re-fire the fight) and leaves the node unspent,
+ * with nothing opened or revealed from it, so the player can try it again.
  */
-function settleArrivalAction(store: AppStore): void {
-    const settled = settleArrival(store.getState() as unknown as GameState);
-    store.setState({ world: settled.world });
+function answerArrivalAction(store: AppStore): void {
+    const answered = answerUnsettledArrival(store.getState() as unknown as GameState);
+    store.setState({ world: answered.world });
 }
 
 function pickEventChoiceAction(store: AppStore, choiceId: string): void {
@@ -1682,7 +1730,7 @@ function pickEventChoiceAction(store: AppStore, choiceId: string): void {
                     console.error('Failed to process flee action:', error);
                     clearEventSlice(store);
                 }
-                settleArrivalAction(store);
+                answerArrivalAction(store);
                 return;
             }
             // Unknown choice id on combat-prelude — defensive no-op.
@@ -1714,7 +1762,7 @@ function pickEventChoiceAction(store: AppStore, choiceId: string): void {
                 const questsBefore = (store.getState() as unknown as GameState).quests;
                 store.getState().applyDialogue(tree, choice);
                 // A choice that completed a quest: its relic goes to the reward screen.
-                if (questsBefore) offerCompletedQuestItemsAction(store, questsBefore);
+                if (questsBefore) offerCompletedQuestExtrasAction(store, questsBefore);
                 const nextState = store.getState() as unknown as GameState;
                 const result = applyDialogueChoice(nextState, tree, choice);
 

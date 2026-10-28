@@ -115,6 +115,12 @@ export default function ExplorationScreen() {
             return;
         }
         if (node.kind === 'current') {
+            // A fled or lost fight, or a quest node left unaccepted, is
+            // unspent: tapping the node under the player tries it again.
+            if (vm.retryable && node.id === vm.currentNodeId) {
+                if (actions.moveTo(node.id).moved) actions.resolveCurrentMapEvent(node.type);
+                return;
+            }
             setNodeTip('you stand here');
             return;
         }

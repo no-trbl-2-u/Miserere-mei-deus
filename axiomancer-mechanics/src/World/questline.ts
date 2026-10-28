@@ -58,6 +58,8 @@ export interface QuestlineStep {
 /** A chapter's questline. */
 export interface Questline {
     readonly id: QuestlineId;
+    /** The questline's display name (T's to write); the item-reward eyebrow names it. */
+    readonly name?: string;
     readonly mapName: MapName;
     readonly steps: readonly QuestlineStep[];
 }

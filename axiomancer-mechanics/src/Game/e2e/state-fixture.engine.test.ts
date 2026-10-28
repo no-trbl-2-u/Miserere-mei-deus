@@ -19,6 +19,7 @@ import { migrate } from '../game.migrate';
 import { setSeed } from '../../Utils/rng';
 import { getMapDefinition } from '../../World/map.registry';
 import { resolveMapEvent } from '../../World/MapEvents/resolve-map-event';
+import { getQuestline, _unregisterQuestline } from '../../World/questline';
 import {
     STATE_FIXTURES, buildStateFromFixture, getStateFixtureById, listStateFixtureIds,
     parseStateFixture, problemsFor, validateStateFixture, StateFixtureError,
@@ -215,5 +216,19 @@ describe('createFixtureGameStore (src/test-utils/fixture-store.ts)', () => {
         const result = resolveMapEvent(state, () => 0, f.stagedEvent);
         expect(result.event.kind).toBe(kind);
         expect(result.state.world.currentMap.consumedNodes).toContain(f.world?.node);
+    });
+
+    // QL1c — the live Act 1 carries no questline until QL1d, so the quest
+    // screen's witness is a fixture that stages the quest node and brings its
+    // questline along. A quest node is not spent by being resolved.
+    it('"apprentice-staged-quest" stages the fixture questline\'s first node and registers the line', () => {
+        const f = getStateFixtureById('apprentice-staged-quest')!;
+        expect(f.stagedEvent?.kind).toBe('quest');
+        _unregisterQuestline('fixture-questline');
+        const { state } = createFixtureGameStore('apprentice-staged-quest');
+        expect(getQuestline('fixture-questline')?.steps).toHaveLength(2);
+        const result = resolveMapEvent(state, () => 0, f.stagedEvent);
+        expect(result.event).toMatchObject({ kind: 'quest', questline: 'fixture-questline', node: 1, stage: 'offer' });
+        expect(result.state.world.currentMap.consumedNodes).not.toContain(f.world?.node);
     });
 });

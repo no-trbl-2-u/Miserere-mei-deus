@@ -45,6 +45,7 @@ import {
     EMPTY_ITEM_REWARD_SLICE,
     EMPTY_LABYRINTH_SLICE,
     EMPTY_REST_SLICE,
+    EMPTY_QUEST_SLICE,
     type AppStore,
     type AppStoreState,
 } from '../store';
@@ -68,6 +69,7 @@ export function hydrateStoreWithGameState(store: AppStore, next: GameState): voi
         itemReward: EMPTY_ITEM_REWARD_SLICE,
         hazard: EMPTY_HAZARD_SLICE,
         rest: EMPTY_REST_SLICE,
+        quest: EMPTY_QUEST_SLICE,
         cache: EMPTY_CACHE_SLICE,
         blacksmith: EMPTY_BLACKSMITH_SLICE,
         // A save taken inside the Aporia resumes there.
