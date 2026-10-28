@@ -84,10 +84,11 @@ describe('A5 · Chapter 1 carries one quest, given by a narration on its map', (
 });
 
 describe('the elite pool: the Act 1 elite draws only the elite-only relics', () => {
-    it('a fresh player\'s pool is the Crimson Circlet and the Elementalist\'s Signet', () => {
+    it('a fresh player\'s pool is the Crimson Circlet, the Elementalist\'s Signet and the Thornback Signet', () => {
         const pool = eliteRelicPool(createNewGameState().player).map(r => r.id).sort();
         const eliteOnly = relicLibrary.filter(r => r.relicSource === 'elite').map(r => r.id).sort();
         expect(pool).toEqual(eliteOnly);
-        expect(pool).toHaveLength(2);
+        // The Thornback Signet is the Defender's elite relic (DF1e).
+        expect(pool).toHaveLength(3);
     });
 });
