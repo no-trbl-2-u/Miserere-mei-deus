@@ -63,6 +63,27 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 
 ## Pending
 
+### [ ] [content] measured drift: bw-8/green-jelly grey winRate 100% -> 83% (even, 2026-10-28)
+- issue: #1029
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved winRate for bw-8/green-jelly with the grey deck (even spread) from 100% at 160385b to 83% at 6ba3c34 (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-10-28: body-mind 100% -> 83% at 6ba3c34
+- evidence 2026-10-28: body 100% -> 83% at 6ba3c34
+
+### [ ] [content] measured drift: bw-8/green-jelly grey lowestVitaeFractionP10 0.25 -> 0.00 (even, 2026-10-28)
+- issue: #1030
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-8/green-jelly with the grey deck (even spread) from 0.25 at 160385b to 0.00 at 6ba3c34 (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-10-28: body-mind 0.25 -> 0.00 at 6ba3c34
+- evidence 2026-10-28: body 0.25 -> 0.00 at 6ba3c34
+
+
 ### [ ] [content] Rename the grey starters: drop "A Plain" from every name (T, via /oversight 2026-10-27)
 - category: content
 - impact: 6
