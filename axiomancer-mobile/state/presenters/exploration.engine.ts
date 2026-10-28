@@ -28,6 +28,7 @@ export type NodeType =
     | 'treasure'
     | 'boss'
     | 'quest'
+    | 'story'
     | 'hazard'
     | 'blacksmith'
     | 'village'
@@ -161,6 +162,13 @@ export interface ExplorationViewModel {
      * the debt is legible off the bytes on disk.
      */
     arrivalPending: boolean;
+    /**
+     * True when the node under the player is unspent and its arrival is
+     * answered: a fled or lost fight, or a quest node whose step was not
+     * accepted. Tapping it tries it again (the engine's `moveToNode` onto the
+     * node the player stands on re-owes its arrival).
+     */
+    retryable: boolean;
     nodes: readonly ExplorationNode[];
     edges: readonly ExplorationEdge[];
     actions: readonly ExplorationAction[];
@@ -203,6 +211,8 @@ export const ACTION_ICON_BY_TYPE: Record<NodeType, string> = {
     treasure: 'chest',
     boss: 'boss',
     quest: 'scroll',
+    // The story kinds (cutscene, narration, interaction) wear the quill.
+    story: 'quill',
     hazard: 'hazard',
     blacksmith: 'anvil',
     village: 'village',
@@ -218,6 +228,7 @@ const ACTION_TAG_BY_TYPE: Record<NodeType, string> = {
     treasure: 'CARD · MIND',
     boss: 'TRAVEL · BOSS',
     quest: 'LORE',
+    story: 'LORE',
     hazard: 'PERIL · BRAVE IT',
     blacksmith: 'FORGE · DIE GEAR',
     village: 'HAVEN · TRADE',
@@ -233,6 +244,7 @@ export const NODE_KIND_LABEL: Record<NodeType, string> = {
     encounter: 'BATTLE',
     boss: 'BOSS · BATTLE',
     quest: 'QUEST',
+    story: 'STORY',
     rest: 'REST',
     gather: 'GATHER',
     treasure: 'TREASURE',
@@ -256,18 +268,19 @@ const KIND_TO_NODE_TYPE: Record<MapEventKind, NodeType> = {
     rest: 'rest',
     'loot-cache': 'treasure',
     hazard: 'hazard',
-    interaction: 'quest',
+    interaction: 'story',
     // Village and blacksmith wear their own woodcuts (huts and anvil).
     village: 'village',
-    cutscene: 'quest',
-    narration: 'quest',
+    cutscene: 'story',
+    narration: 'story',
     blacksmith: 'blacksmith',
     // Inter-map travel doors.
     travel: 'door',
     // The Labyrinth door (the Lantern Deep's vault door), a door like travel.
     labyrinth: 'door',
-    // The questline's giver wears the existing quest glyph for now; QL1c
-    // moves the story kinds off it.
+    // The questline's giver wears the scroll and QUEST; the story kinds above
+    // wear the quill and STORY. The map shows no step state (the quest screen
+    // alone carries progress).
     quest: 'quest',
 };
 
@@ -506,6 +519,7 @@ const FALLBACK_VM: ExplorationViewModel = {
     currentNodeId: '',
     startNodePending: false,
     arrivalPending: false,
+    retryable: false,
     nodes: [],
     edges: [],
     actions: [],
@@ -582,6 +596,7 @@ function computeExplorationViewModel(state: GameStore): ExplorationViewModel {
             currentNodeId: readCurrentNodeId(world),
             startNodePending: false,
             arrivalPending: false,
+            retryable: false,
         });
     }
 
@@ -684,6 +699,7 @@ function computeExplorationViewModel(state: GameStore): ExplorationViewModel {
         currentNodeId,
         startNodePending,
         arrivalPending,
+        retryable: !arrivalPending && !spent.has(currentNodeId) && currentNodeId !== def.startingNode.id,
         nodes,
         edges,
         actions,

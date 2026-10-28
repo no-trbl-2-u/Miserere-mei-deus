@@ -13,6 +13,7 @@
  */
 
 import {
+    getQuestline,
     newlyCompletedQuests,
     qualifiesForItemRewardScreen,
     questRewardItem,
@@ -51,7 +52,9 @@ export function offerCompletedQuestItemsAction(store: AppStore, before: QuestLog
             if (!item || !qualifiesForItemRewardScreen(item)) continue;
             if (!inventory.some(row => row.id === item.id)) continue;
             inventory = withoutLastRow(inventory, item.id);
-            offers.push({ item, source: questRewardSource(quest.name) });
+            // A questline step names its questline; any other quest names itself.
+            const line = quest.questline ? getQuestline(quest.questline) : undefined;
+            offers.push({ item, source: questRewardSource(line?.name ?? quest.name) });
         }
     }
     if (offers.length === 0) return [];

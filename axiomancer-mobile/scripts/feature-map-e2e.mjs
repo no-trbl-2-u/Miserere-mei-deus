@@ -242,6 +242,7 @@ async function settleOnMap(page, what) {
         await sleep(400)
         if (await tap(page, 'combat-summary-close')) continue
         if (await page.getByTestId('cutscene-advance').count()) { await playOutCutscene(page); continue }
+        if (await tap(page, 'death-return-continue')) continue
         if (await tap(page, 'item-reward-confirm')) continue
         if (await tap(page, 'rest-claim')) continue
     }
@@ -334,6 +335,13 @@ async function walk(page) {
         await sleep(150)
     }
     await waitFor(page, 'combat-summary', 'bw-6 combat summary', 10000)
+    const verdict = (await page.getByTestId('combat-summary').innerText()).split('\n')[0]
+    if (/defeat/i.test(verdict)) {
+        // A lost fight is the death rule: the return moment, then the map on bw-4.
+        await tap(page, 'combat-summary-close')
+        await waitFor(page, 'death-return', 'the return moment after the bw-6 defeat')
+        await tap(page, 'death-return-continue') || fail('the return moment has no CONTINUE')
+    }
     await settleOnMap(page, 'bw-6')
     log('play: bw-6 fight, played to its end')
 
@@ -383,6 +391,9 @@ const SEAMS = {
     // The STORY section's NPC chips list no one (Act 1 stages no NPC), so
     // the dialogue route is provoked by the state fixture that stages one.
     'route:dialogue': { fixture: 'apprentice-staged-dialogue', landing: 'dialogue-nameplate' },
+    // Act 1 carries no questline until QL1d, so the quest screen is provoked by the
+    // state fixture that stages the first quest node of the fixture questline.
+    'route:quest': { fixture: 'apprentice-staged-quest', landing: 'quest-column' },
     // No run hands out a relic yet (phase SG1 cut the first-node ring), so the
     // reward screen is provoked by the dev REWARDS row's RELIC REWARD.
     'route:item-reward': { section: 'rewards', leaf: 'debug-relic-reward-button', landing: 'item-reward-card' },
@@ -390,13 +401,18 @@ const SEAMS = {
     // The select screen opens from play only once the roster holds a character
     // (CH1f), so until then the `/dev` row that opens it (all locked) is the seam.
     // That row sits outside every section, so it has no section to open.
+    // A revive arms this screen in memory and a lost fight is not a seam, so the
+    // forced-dev-tools leg opens its preview (`?preview=1`) directly.
+    'route:death-return': { url: '/death-return?preview=1', landing: 'death-return' },
     'route:character-select': { leaf: 'dev-open-character-select', landing: 'character-select-carousel' },
 }
 
 async function seamLeg(page, baseUrl, id) {
     const seam = SEAMS[id]
     const path = routePathForId(id)
-    if (seam.fixture) {
+    if (seam.url) {
+        await page.goto(`${baseUrl}${seam.url}`, { waitUntil: 'networkidle' })
+    } else if (seam.fixture) {
         // docs/state-fixtures.md: `?fixture=<id>` boots the fixture and its
         // `arrive` pushes the staged route.
         await page.goto(`${baseUrl}/exploration?fixture=${seam.fixture}`, { waitUntil: 'networkidle' })

@@ -18,13 +18,17 @@ import { BackHandler, Platform } from 'react-native';
 import { useCombatMode } from '@/state/combat-mode';
 import { useGameState } from '@/state/GameStoreProvider';
 import { selectHasActivePacedEvent } from '@/state/presenters/event.engine';
+import { selectHasActiveQuest } from '@/state/presenters/quest.engine';
 import { selectHasActiveRest } from '@/state/presenters/rest.engine';
 
 export function HardwareBackHandler() {
   const { inCombat } = useCombatMode();
   const hasActiveRest = useGameState(selectHasActiveRest);
   const hasPacedEvent = useGameState(selectHasActivePacedEvent);
-  const locked = inCombat || hasActiveRest || hasPacedEvent;
+  // The quest screen has its own LEAVE; a hardware back that popped it would
+  // leave the quest slice open with no screen showing it.
+  const hasActiveQuest = useGameState(selectHasActiveQuest);
+  const locked = inCombat || hasActiveRest || hasPacedEvent || hasActiveQuest;
 
   useEffect(() => {
     if (Platform.OS !== 'android') return;

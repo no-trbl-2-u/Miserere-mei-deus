@@ -273,9 +273,13 @@ keyword (`EnemyKeyword = never`).
   set. The node they died on is open again, so it can be walked into and
   retried. A death while dying ends the run as a reset does: a fresh run and
   world, full VITAE, the character kept. `clearDying` takes
-  dying off, for the rest claim's heal choice to call. A player with no previous node comes back on the
-  map's starting node. The store verb is `playerDied`; the app's defeat
-  still resets the run until it is wired to it.
+  dying off: the rest's heal choice calls it, and the upgrade and cut
+  choices do not. A player with no previous node comes back on the
+  map's starting node. The store verb is `playerDied`. In the app a lost
+  fight on the map calls it: a first death shows a full-screen return moment
+  (`/death-return`) and then the map on the node walked from; a death while
+  dying resets the run. A defeat inside the Labyrinth still resets the run.
+  A lethal hazard crossing in the app still resets the run until phase DY1c.
 - **Rest** offers one choice (`World/RestChoice/`): heal
   `restHealFraction` = 25% of maximum VITAE, upgrade one card the player
   picks (free, no heal; the shared upgrade screen shows it before and after,

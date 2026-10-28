@@ -79,6 +79,9 @@ export const ROUTES = [
     // minigame-seed injector), `hazardRoute` picks the route, and the shot
     // waits out the dice roll.
     { name: 'hazard-board', path: '/exploration', fixture: 'l30-bw-hazard-arrive', waitForPath: '/hazard', hazardRoute: 'risk' },
+    // The full-screen moment after a first death; `preview=1` shows it on a
+    // dev build (a real revive arms it in memory), hence the forced context.
+    { name: 'death-return', path: '/death-return?preview=1', fixture: 'fresh-start' },
     // Dev-menu HAZARD PUZZLES board on the live hazard board (a dev route,
     // so it needs the forced dev-tools context a fixture route gets): the
     // hard demo's board, and its outcome panel after an immediate confirm.

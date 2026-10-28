@@ -27,6 +27,7 @@ import { useRouter } from '@/lib/platform/router';
 import { CombatEncounterPanel } from '@/components/combat/encounter/CombatEncounterPanel';
 import { isDevToolsEnabled } from '@/lib/buildProfile';
 import { useCombatMode } from '@/state/combat-mode';
+import { armDeathReturn } from '@/state/death-return';
 import { useGameActions, useGameState, useGameStore } from '@/state/GameStoreProvider';
 import { selectExplorationViewModel } from '@/state/presenters/exploration.engine';
 import { selectResumableFight } from '@/state/presenters/navigation.engine';
@@ -76,16 +77,28 @@ export default function CombatEncounterScreen() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // The panel already persisted the outcome. Defeat also resets the run,
-    // keeping the character (full heal, fresh world), before leaving.
+    // The panel already persisted the outcome. A defeat in the Labyrinth
+    // resets the run, keeping the character (full heal, fresh world). On the
+    // map it is the death rule: a first death revives the player on the node
+    // they walked from, dying, behind the full-screen return moment; a death
+    // while dying ends the run (`playerDied` resets it, play log included).
     const onExit = useCallback((outcome: CombatOutcome | null) => {
         if (outcome === 'defeat') {
-            actions.resetRun({ keepCharacter: true });
-            resetRunStats();
+            if (store.getState().labyrinthUi?.session) {
+                actions.resetRun({ keepCharacter: true });
+                resetRunStats();
+            } else if (actions.playerDied('fight') === 'revived') {
+                exitCombat();
+                armDeathReturn();
+                router.replace('/death-return');
+                return;
+            } else {
+                resetRunStats();
+            }
         }
         exitCombat();
         leave();
-    }, [actions, resetRunStats, exitCombat, leave]);
+    }, [actions, store, router, resetRunStats, exitCombat, leave]);
 
     // WITHDRAW, from the reveal: pay the retreat and settle the node, then end
     // the staged encounter so the gate does not route straight back into it.

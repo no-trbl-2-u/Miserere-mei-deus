@@ -63,6 +63,7 @@ export function ExplorationNode({ node: n, onNodePress, isSelected }: Exploratio
         treasure: AXM.sulfur,
         boss: AXM.blood,
         quest: AXM.sulfur,
+        story: AXM.bone,
         rest: AXM.rust,
         gather: AXM.bone,
         current: AXM.sulfur,
