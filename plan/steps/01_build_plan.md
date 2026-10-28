@@ -446,7 +446,7 @@ event-pool and layout files).
       stop conflicting when one merges: same-spot insertions both kept, a row both sides edited merged cell by
       cell, a doubled Unscheduled id refused, Items kept in date order. Reuses the clash core of
       `build-plan-merge.mjs`. Brief `plan/phases/phase_MD1_deadlines_merge_driver.md` § MD1a. Requires nothing.
-- [ ] Phase MD1b — `pr-resolve` settles a plot-on-plot merge on its own (plotted by T, 2026-10-28): after a merge
+- [x] (#1016) Phase MD1b — `pr-resolve` settles a plot-on-plot merge on its own (plotted by T, 2026-10-28): after a merge
       it commits, `pr-resolve` re-derives the Item Status cells (`deadlines.mjs --write`, `LIVE_DEADLINES.md`
       restored); `mergeMain` takes the repository directory; a fixture test runs two plot branches that both add
       asap rows and deadline Items through it with no Haiku entry and `check-deadlines` green. Brief

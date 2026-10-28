@@ -27,7 +27,7 @@
 //
 // Status cells are not re-derived here (the build plan may not be merged yet);
 // they are left for `node scripts/deadlines.mjs --write` to re-derive after the
-// merge. Having pr-resolve run it is not built yet (phase MD1b).
+// merge; pr-resolve runs it after a committed merge (`rederiveStatus`).
 //
 // Exit codes: 0 merged cleanly; 1 conflicts left in <ours> for a human.
 
@@ -36,9 +36,9 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { settleClashes } from './build-plan-merge.mjs'
+import { ITEM_ROW } from './deadlines-lib.mjs'
 import { conflictText } from './lessons-merge.mjs'
 
-const ITEM_ROW = /^\| \[[ x]\] \| (\d{4}-\d{2}-\d{2}) \|/
 const UNSCHEDULED_ID = /^- (\S+) —/
 
 const isTableRow = (l) => l.startsWith('|')
@@ -74,7 +74,7 @@ export function tidyItems(settled, base) {
   const isNew = settled.map((l) => !known.has(itemName(l)))
   const sorted = settled
     .filter((_, i) => isNew[i])
-    .map((l, i) => ({ l, i, d: ITEM_ROW.exec(l)[1] }))
+    .map((l, i) => ({ l, i, d: ITEM_ROW.exec(l)[2] }))
     .sort((x, y) => (x.d < y.d ? -1 : x.d > y.d ? 1 : x.i - y.i))
     .map((x) => x.l)
   let n = 0
