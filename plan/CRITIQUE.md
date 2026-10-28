@@ -913,15 +913,6 @@
 
 ## Pending
 
-### [MED] combat / rest / hazard — the display face's zero reads as an 8, so a fresh fight shows "◆ 8 CONVICTION" and an empty purse shows "8"
-- pass: 104 (commit f7f5530f)
-- viewport: mobile (375x812) and desktop (1280x800)
-- category: comprehension
-- observation: Pirata One (`FONTS.gothic`) draws 0 as a narrow slab with a bar through it; at 15-17px it is the same silhouette as its 8. Three readouts print a live number in it: the CONVICTION chip on the combat board (0 at the start of every fight), the rest screen's PURSE figure (0 in the `apprentice-bw-rest` fixture, beside "VITAE 20/170" in Bebas, which reads correctly), and the FORCE/ESCAPE values on hazard cards (Cliffrunner and Scramble print 0 FORCE). A first-time player reads "8 conviction" and "8 shillings" and plans on both.
-- evidence: zoomed crops of `mobile/04-combat-board.png` (the ◆ chip, top left) and `mobile/09-rest.png` (PURSE) show the slab glyph while the DOM text is "◆ 0" and "PURSE 0"; `mobile/10-hazard.png` Cliffrunner's FORCE cells. Sources: `components/combat/encounter/CombatBoard.tsx:2140` `convictionText`, `app/rest/index.tsx:261` `purseValue`, `components/hazard/HazardCard.tsx:117` value text, all `FONTS.gothic`.
-- suggested fix: print numerals in a face with an open zero (`FONTS.sans` Bebas, as VITAE and the shilling labels already do) for these three readouts, keeping the gothic face for names and titles; pin the font choice in each component's existing test.
-- source: critique:drive (unattended)
-
 ### [MED] ci / critique-drive — `/cache` and the satchel are not in the critique set, so RW1b's card-face offer and IT1b's relic icons shipped unseen
 - pass: 103 (commit 79ecad63); raised LOW to MED at pass 105 (commit 02372412)
 - viewport: n/a (both)
@@ -1253,6 +1244,16 @@
 - source: loop
 
 ## Done
+
+### [x] [MED] combat / rest / hazard — the display face's zero reads as an 8, so a fresh fight shows "◆ 8 CONVICTION" and an empty purse shows "8" — RESOLVED 2026-10-28 (branch loop/iterate-open-zero-numerals, 0992025c2: the conviction chip, the rest PURSE figure and the hazard FORCE/ESCAPE values print in `FONTS.sans`; names and titles keep the gothic face; each pinned in its component test)
+- pass: 104 (commit f7f5530f)
+- viewport: mobile (375x812) and desktop (1280x800)
+- category: comprehension
+- observation: Pirata One (`FONTS.gothic`) draws 0 as a narrow slab with a bar through it; at 15-17px it is the same silhouette as its 8. Three readouts print a live number in it: the CONVICTION chip on the combat board (0 at the start of every fight), the rest screen's PURSE figure (0 in the `apprentice-bw-rest` fixture, beside "VITAE 20/170" in Bebas, which reads correctly), and the FORCE/ESCAPE values on hazard cards (Cliffrunner and Scramble print 0 FORCE). A first-time player reads "8 conviction" and "8 shillings" and plans on both.
+- evidence: zoomed crops of `mobile/04-combat-board.png` (the ◆ chip, top left) and `mobile/09-rest.png` (PURSE) show the slab glyph while the DOM text is "◆ 0" and "PURSE 0"; `mobile/10-hazard.png` Cliffrunner's FORCE cells. Sources: `components/combat/encounter/CombatBoard.tsx:2140` `convictionText`, `app/rest/index.tsx:261` `purseValue`, `components/hazard/HazardCard.tsx:117` value text, all `FONTS.gothic`.
+- suggested fix: print numerals in a face with an open zero (`FONTS.sans` Bebas, as VITAE and the shilling labels already do) for these three readouts, keeping the gothic face for names and titles; pin the font choice in each component's existing test.
+- source: critique:drive (unattended)
+- issue: #1004
 
 ### [x] [LOW] general — AccessoryKind union must open when accessory flavors grow — RESOLVED 2026-10-26 (phase EQ2a, branch loop/ship-EQ2a-relic-slot: the union and `Equipment.accessoryKind` are deleted; the slot is `relic`, a relic is named anything and fits any relic position, and the v38 -> v39 hop drops the kind from old saves)
 - pass: user-jot (commit 4e045d05)
