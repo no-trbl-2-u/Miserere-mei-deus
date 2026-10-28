@@ -131,6 +131,10 @@ describe('hermeticity guard: isolation (no disk in tests)', () => {
         // the same standing as the route guards above; mounting the whole
         // encounter panel to rediscover it would test the fixture instead.
         'components/combat/encounter/__tests__/CombatEncounterPanel.card-detail.test.ts',
+        // The WITHDRAW sub-line guard (CRITIQUE pass 101) pins an authored
+        // style value in the panel's private `useStyles`, which no render
+        // exposes without mounting a staged fight for one colour.
+        'components/combat/encounter/__tests__/CombatEncounterPanel.withdraw-sub.test.ts',
         // The enemy frame engine's reduced-motion guard (phase AN1b, A4) reads
         // the engine's committed sources to prove it never asks the platform
         // for a preference the caller already holds — the same standing as the
