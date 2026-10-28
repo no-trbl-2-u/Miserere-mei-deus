@@ -41,7 +41,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - category: external-critique
 - impact: 6
 - ease: 6
-- next: not the loop's: the fix reverses T's BT2a A3 ruling (2026-10-13); waits on T
+- next: `/iterate`: T ruled 2026-10-27 (via /oversight): rename the grey starters, dropping "A Plain" (see the `[content]` Pending row "Rename the grey starters"); BT2a A3's one-line names stand
 
 ### [3.0] CRITIQUE pass 89 [LOW]: the rest and cache spent-node line mixes tenses (picked; issue #911)
 - category: external-critique
@@ -62,6 +62,39 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - next: `/iterate`: the recorder stamps one `hand-drawn` at ms 0
 
 ## Pending
+
+### [ ] [content] Rename the grey starters: drop "A Plain" from every name (T, via /oversight 2026-10-27)
+- category: content
+- impact: 6
+- ease: 6
+- detail: CRITIQUE pass 100 [MED]: at 375 the hand fan covers every card but the
+  last, and BT2a A3 (one-line names, T 2026-10-13) leaves only "A PLAIN W…"
+  visible, so Blow, Word and Ward look the same. T's call: keep A3 and rename
+  the cards instead, dropping the "A Plain" prefix (`A Plain Blow` -> `Blow`,
+  `A Plain Ward` -> `Ward`, `A Plain Word` -> `Word`, and any other "A Plain"
+  card). Source: `axiomancer-mechanics/src/Cards/library/starters.cards.ts`;
+  pinned at least in `cards-sandbox.engine.test.ts`. Grep the tree (mobile
+  copy, glossary, guides, ballots, critique fixtures) for the old names. T
+  authored this content call, so D58 does not block it; the bias banner's
+  `[content]` skip does not apply to an owner-ruled rename. "Let's try this":
+  re-capture the 375 hand fan after the rename and note in the Done line
+  whether the covered names now read apart.
+- next: `/iterate` (rename + tests + a 375 capture).
+
+### [ ] [ci] The shadow review burns runs on cancel-in-progress: 418 of ~1000 `pr-review.yml` runs cancelled (2026-10-17..27) (T, via /oversight 2026-10-27)
+- category: ci
+- impact: 5
+- ease: 6
+- detail: R11 watch count for the window since the 2026-10-17 oversight:
+  `pr-review.yml` 506 success, 73 failure, 418 cancelled, 3 blank. The job's
+  concurrency `pr-review-<PR>` with `cancel-in-progress: true` (brief RV1)
+  throws away a review whenever a new head lands mid-run (autofix, merges of
+  main into the PR head, the loop's own follow-up pushes). Measure how many
+  cancelled runs had already reached the Claude step (the paid part), then
+  pick the fix: debounce (wait N minutes for the head to settle before the
+  Claude step), skip the review on heads that only merge `main`, or let a run
+  finish once Claude has started. File the choice as `[loop-call]` residue.
+- next: `/iterate` (measure, then the workflow change).
 
 ### [x] [ci] SG1 leaves `route:item-reward` with no play path and no dev seam (feature-map drive red on PR #928) — CLOSED 2026-10-26 (fixed on the PR in e7a1033c8: the dev REWARDS row's RELIC REWARD offers the Bleeding Signet through `offerItemRewardAction`, and `SEAMS['route:item-reward']` reaches the route through it; `e2e:feature-map` passes locally)
 - category: ci
@@ -281,7 +314,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   preceding routes (`SMOKE_ONLY` with growing prefixes) to find the one that leaves state behind, and fix that
   leak or give the live fight a fresh browser.
 
-### [ ] [loop-call] RV1 A7's seeded-branch push is still `[T to confirm]` (2026-10-19)
+### [x] [loop-call] RV1 A7's seeded-branch push is still `[T to confirm]` (2026-10-19) — RATIFIED via /oversight 2026-10-27 (T confirmed the eval/* draft pushes as written; the brief records it, and the seeded-replay row below is unblocked on that side)
 - category: loop-call
 - impact: 3
 - ease: 9
