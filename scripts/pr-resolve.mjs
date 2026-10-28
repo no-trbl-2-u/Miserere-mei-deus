@@ -233,6 +233,7 @@ function stage(n, file) {
 export const MERGE_DRIVERS = [
   { key: 'lessons', name: 'lessons.md and NEEDS_T.md by slug', driver: 'node scripts/lessons-merge.mjs %O %A %B %P' },
   { key: 'buildplan', name: 'the build plan, insertions unioned', driver: 'node scripts/build-plan-merge.mjs %O %A %B %P' },
+  { key: 'deadlines', name: 'plan/deadlines.md, insertions unioned and rows by cell', driver: 'node scripts/deadlines-merge.mjs %O %A %B %P' },
 ]
 
 /** Register MERGE_DRIVERS in the repo at `cwd` (idempotent). @param {string} [cwd] */

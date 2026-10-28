@@ -68,27 +68,38 @@ function around(base, side) {
  * Settle one clash of git's line merge, or return null to leave it to a human.
  * Pure.
  * @param {string[]} b  base lines  @param {string[]} o  ours  @param {string[]} t  theirs
+ * @param {(base: string, ours: string, theirs: string) => string | null} [mergeLine]
+ *   Optional: settles one line both sides edited (a table row, cell by cell).
  * @returns {string[] | null}
  */
-export function resolveHunk(b, o, t) {
+export function resolveHunk(b, o, t, mergeLine) {
   const ao = around(b, o)
   const at = around(b, t)
   if (ao && at) return [...ao.before, ...at.before, ...b, ...ao.after, ...at.after]
   if (ao) return [...ao.before, ...t, ...ao.after]
   if (at) return [...at.before, ...o, ...at.after]
   if (b.length === o.length && b.length === t.length) {
-    const lines = b.map((l, i) => (o[i] === t[i] || t[i] === l ? o[i] : o[i] === l ? t[i] : null))
+    const lines = b.map((l, i) => {
+      if (o[i] === t[i] || t[i] === l) return o[i]
+      if (o[i] === l) return t[i]
+      return mergeLine ? mergeLine(l, o[i], t[i]) : null
+    })
     if (lines.every((l) => l !== null)) return lines
   }
   return null
 }
 
 /**
- * Merge three versions of the build plan.
+ * git's line merge of three texts, with every clash that needs no judgment
+ * settled; the rest stay as conflict markers. Shared by the other plan merge
+ * drivers (deadlines-merge.mjs).
  * @param {string} base  @param {string} ours  @param {string} theirs
- * @returns {{ ok: true, text: string } | { ok: false, reason: string, text: string }}
+ * @param {{ mergeLine?: (base: string, ours: string, theirs: string) => string | null,
+ *           tidy?: (settled: string[], base: string[]) => string[] }} [opts]
+ *   mergeLine settles one line both sides edited; tidy post-processes each settled clash.
+ * @returns {{ text: string, open: number }}
  */
-export function mergeBuildPlan(base, ours, theirs) {
+export function settleClashes(base, ours, theirs, opts = {}) {
   const out = mergeFile(base, ours, theirs, ['--diff3', `--marker-size=${MARKER}`])
   const mark = (c) => c.repeat(MARKER)
   const lines = []
@@ -102,8 +113,8 @@ export function mergeBuildPlan(base, ours, theirs) {
     } else if (part && line.startsWith(mark('|'))) part = 'b'
     else if (part && line.startsWith(mark('='))) part = 't'
     else if (part && line.startsWith(mark('>'))) {
-      const settled = resolveHunk(hunk.b, hunk.o, hunk.t)
-      if (settled) lines.push(...settled)
+      const settled = resolveHunk(hunk.b, hunk.o, hunk.t, opts.mergeLine)
+      if (settled) lines.push(...(opts.tidy ? opts.tidy(settled, hunk.b) : settled))
       else {
         open += 1
         lines.push('<<<<<<< ours', ...hunk.o, '=======', ...hunk.t, '>>>>>>> theirs')
@@ -112,7 +123,16 @@ export function mergeBuildPlan(base, ours, theirs) {
     } else if (part) hunk[part].push(line)
     else lines.push(line)
   }
-  const text = lines.join('\n')
+  return { text: lines.join('\n'), open }
+}
+
+/**
+ * Merge three versions of the build plan.
+ * @param {string} base  @param {string} ours  @param {string} theirs
+ * @returns {{ ok: true, text: string } | { ok: false, reason: string, text: string }}
+ */
+export function mergeBuildPlan(base, ours, theirs) {
+  const { text, open } = settleClashes(base, ours, theirs)
   if (open) return { ok: false, reason: `${open} clash${open > 1 ? 'es' : ''} both sides edited`, text }
 
   const [o, t] = [phaseRowCounts(ours), phaseRowCounts(theirs)]
