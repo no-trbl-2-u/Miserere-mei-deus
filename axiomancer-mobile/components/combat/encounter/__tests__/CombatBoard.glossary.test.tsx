@@ -11,6 +11,7 @@
 
 import React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 import { describe, expect, it, jest } from '@jest/globals';
 import { State } from 'react-native-gesture-handler';
 import { fireGestureHandler, getByGestureTestId } from 'react-native-gesture-handler/jest-utils';
@@ -26,6 +27,7 @@ import { BOARD_GLOSSARY, MOMENTUM_GLOSS } from '@/state/combat/keywords';
 import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 import { tapCombatDie } from '@/test-utils/tapCombatDie';
 import { withAllProviders } from '@/test-utils/withAllProviders';
+import { FONTS } from '@/theme/axm';
 
 const CARDS = ['grey-strike', 'grey-ward', 'grey-word', 'grey-strike', 'grey-ward'];
 const INSETS = { top: 47, bottom: 34, left: 0, right: 0 };
@@ -91,6 +93,12 @@ describe('A3 — the Conviction chip', () => {
         expect(chip.props.accessibilityHint).toMatch(/Conviction/);
         fireEvent.press(chip);
         expect(onGloss).toHaveBeenCalledWith(['conviction'], { conviction: vm.conviction });
+    });
+
+    it('prints the count in the open-zero face, so 0 never reads as 8 (critique pass 104)', () => {
+        const { vm } = renderBoard();
+        const count = screen.getByText(`◆ ${vm.conviction}`);
+        expect(StyleSheet.flatten(count.props.style).fontFamily).toBe(FONTS.sans);
     });
 });
 

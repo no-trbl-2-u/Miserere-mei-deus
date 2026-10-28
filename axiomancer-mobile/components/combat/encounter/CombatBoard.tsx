@@ -2176,7 +2176,7 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
         borderWidth: 1, borderColor: AXM.sulfur, borderRadius: 6, backgroundColor: 'rgba(0,0,0,0.6)',
         paddingHorizontal: 7, paddingVertical: 3,
     },
-    convictionText: { fontFamily: FONTS.gothic, fontSize: 15, lineHeight: 18, letterSpacing: 0.5, textAlign: 'center' },
+    convictionText: { fontFamily: FONTS.sans, fontSize: 15, lineHeight: 18, letterSpacing: 0.5, textAlign: 'center' },
     // The CONVICTION caption — small enough to stay chrome, large enough to
     // read: 9px, the floor the HUD clock line was raised past, and it scales
     // with the system text size, so the chip widens rather than shrinks it.

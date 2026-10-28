@@ -17,7 +17,7 @@
  */
 
 import { describe, expect, it, jest } from '@jest/globals';
-import { render } from '@testing-library/react-native';
+import { render, within } from '@testing-library/react-native';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
@@ -28,6 +28,7 @@ import VillageScreen, { VILLAGE_COLUMN_MAX_WIDTH } from '@/app/village/index';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { createAppStore, EMPTY_EVENT_SLICE, type AppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
+import { FONTS } from '@/theme/axm';
 
 // Hoisted above the imports by babel-plugin-jest-hoist: both screens pop the
 // route the moment their slice empties, so the router must be stubbed.
@@ -106,6 +107,16 @@ describe('rest and settlement screens hold one centred column (critique pass 71)
         expect(column).toContainElement(r.getByTestId('rest-purse'));
         expect(column).toContainElement(r.getByTestId('rest-choice-offer-rest'));
         expect(column).toContainElement(r.getByTestId('rest-choice-offer-cut'));
+    });
+
+    it('rest: the purse figure prints in the open-zero face, so 0 never reads as 8 (critique pass 104)', () => {
+        const r = render(
+            <GameStoreProvider store={restStore()}>
+                <RestScreen />
+            </GameStoreProvider>,
+        );
+        const figure = within(r.getByTestId('rest-purse')).getByText(/^\d+$/);
+        expect(StyleSheet.flatten(figure.props.style).fontFamily).toBe(FONTS.sans);
     });
 
     it('village: the tabs and stalls sit in the capped column, and the exit shares the cap', () => {

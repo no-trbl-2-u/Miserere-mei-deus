@@ -1,5 +1,7 @@
 import React from 'react';
 import { render, within } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
+import { FONTS } from '@/theme/axm';
 
 import { HAZARD_DECK } from '@mechanics';
 import { HazardCard, CardArt, DETAIL_EFFECT_LINE_H, handArtSize, handEffectFontSize, handNameFontSize } from '../HazardCard';
@@ -62,6 +64,13 @@ describe('HazardCard', () => {
 
         expect(getByLabelText('FORCE 3, ESCAPE 1')).toBeTruthy();
         expect(getByLabelText('FORCE 5, ESCAPE 2')).toBeTruthy();
+    });
+
+    it('prints FORCE and ESCAPE in the open-zero face, so 0 never reads as 8 (critique pass 104)', () => {
+        const { getByLabelText } = render(<HazardCard card={mockCardVM} mode="hand" />);
+        const values = within(getByLabelText('FORCE 3, ESCAPE 1')).getAllByText(/\d/);
+        expect(values).toHaveLength(2);
+        for (const v of values) expect(StyleSheet.flatten(v.props.style).fontFamily).toBe(FONTS.sans);
     });
 
     it('renders card in offer mode for rewards', () => {
