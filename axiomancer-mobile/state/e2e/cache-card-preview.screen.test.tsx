@@ -5,7 +5,8 @@
  * Contract asserted here: in the offer phase the TAKE A CARD button renders
  * the rolled card's face and names the card in its accessibility label; TAKE
  * THE GOODS renders no face; choosing the card still settles to the outcome
- * ledger naming the same card.
+ * ledger naming the same card. TAKE THE GOODS prints the rolled goods as
+ * the ledger's chips and names them in its label (CRITIQUE pass 108).
  *
  * Hermetic = self-contained + deterministic + isolated.
  * See docs/testing.md for the full standard.
@@ -15,7 +16,7 @@ import { describe, expect, it, jest } from '@jest/globals';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import React from 'react';
 
-import { createLootCacheChoiceSession, getCardById } from '@mechanics';
+import { createLootCacheChoiceSession, getCardById, getConsumableById } from '@mechanics';
 
 import CacheScreen from '@/app/cache/index';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
@@ -40,7 +41,7 @@ function cacheStore(): AppStore {
         cache: {
             session: createLootCacheChoiceSession(11, {
                 cardCandidate: CARD_ID,
-                itemCandidates: [],
+                itemCandidates: [getConsumableById('healing-potion')!],
                 currencyCandidate: 8,
             }),
         },
@@ -67,11 +68,16 @@ describe('/cache — the card offer shows its card', () => {
         expect(label).toContain(name);
     });
 
-    it('TAKE THE GOODS renders no face and keeps its label', () => {
+    it('TAKE THE GOODS renders no face but prints its goods and names them in its label', () => {
         renderCache(cacheStore());
         const goods = screen.getByTestId('cache-choice-offer-item');
-        expect(goods.props.accessibilityLabel).toBe("TAKE THE GOODS. Whatever's inside, plus what it's worth.");
+        expect(goods.props.accessibilityLabel).toBe(
+            "TAKE THE GOODS: + HEALING POTION, +8 SHILLINGS. Whatever's inside, plus what it's worth.",
+        );
         expect(screen.queryAllByTestId(/^cache-choice-card-face-/).length).toBe(1);
+        expect(screen.getByTestId('cache-choice-goods-item')).toBeTruthy();
+        expect(screen.getByText('+ HEALING POTION')).toBeTruthy();
+        expect(screen.getByText('+8 SHILLINGS')).toBeTruthy();
     });
 
     it('choosing the card settles to the ledger naming the same card', () => {
