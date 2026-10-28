@@ -83,7 +83,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - evidence 2026-10-28: body-mind 0.25 -> 0.00 at 6ba3c34
 - evidence 2026-10-28: body 0.25 -> 0.00 at 6ba3c34
 
-
 ### [ ] [content] Rename the grey starters: drop "A Plain" from every name (T, via /oversight 2026-10-27)
 - category: content
 - impact: 6
