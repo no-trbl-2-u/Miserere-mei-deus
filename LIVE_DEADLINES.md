@@ -24,5 +24,5 @@
 | 2026-11-08 (in 11 days) | Chapter 1's enemy art: pick from the loop's candidates (2 h) | needs you: your task | W2 |
 | 2026-11-09 (in 12 days) | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | needs you: your task | W2 |
 | 2026-11-10 (in 13 days) | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | needs you: your task | W2 |
-| 2026-11-10 (in 13 days) | Write the Breakwater's quest line: the giver's lines per node, steps 1-3's requirement, every step's XP and extra (0.5 h) | waiting on the loop: the loop still owes QL1d | W2 |
+| 2026-11-10 (in 13 days) | Write the Breakwater's quest line: the giver's lines per node, steps 1-3's requirement, every step's XP and extra (0.5 h) | needs you: QL1e ready for you | W2 |
 | 2026-11-11 (in 14 days) | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | needs you: your task | W2 |
