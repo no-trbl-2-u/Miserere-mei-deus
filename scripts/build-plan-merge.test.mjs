@@ -15,7 +15,7 @@ import path from 'node:path'
 import test from 'node:test'
 import { fileURLToPath } from 'node:url'
 
-import { mergeBuildPlan, phaseRowCounts, resolveHunk } from './build-plan-merge.mjs'
+import { mergeBuildPlan, phaseRowCounts, resolveHunk, settleClashes } from './build-plan-merge.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const SCRIPT = path.join(ROOT, 'scripts', 'build-plan-merge.mjs')
@@ -184,4 +184,24 @@ test('a real git merge with the driver registered keeps both plots', () => {
   } finally {
     fs.rmSync(dir, { recursive: true, force: true })
   }
+})
+
+test('settleClashes: opts.mergeLine settles a line both sides edited, opts.tidy post-processes a settled clash', () => {
+  const edit = settleClashes('a\nX\nb\n', 'a\nX1\nb\n', 'a\nX2\nb\n', { mergeLine: (b, o, t) => `${b}|${o}|${t}` })
+  assert.deepEqual(edit, { text: 'a\nX|X1|X2\nb\n', open: 0 })
+  // Without mergeLine the same clash stays open, with markers.
+  const plain = settleClashes('a\nX\nb\n', 'a\nX1\nb\n', 'a\nX2\nb\n')
+  assert.equal(plain.open, 1)
+  assert.match(plain.text, /^<<<<<<< ours$/m)
+  // Same-spot insertions settle by resolveHunk; tidy sees them with the base block and may reorder.
+  const seen = []
+  const tidy = (settled, baseLines) => {
+    seen.push([settled, baseLines])
+    return [...settled].reverse()
+  }
+  const tidied = settleClashes('a\nb\n', 'a\no\nb\n', 'a\nt\nb\n', { tidy })
+  assert.equal(tidied.open, 0)
+  assert.equal(seen.length, 1)
+  assert.deepEqual([...seen[0][0]].sort(), ['o', 't'])
+  assert.equal(tidied.text, `a\n${[...seen[0][0]].reverse().join('\n')}\nb\n`)
 })

@@ -1,0 +1,210 @@
+// scripts/pr-resolve.test.mjs — witness for pr-resolve's merge of main into a
+// plot PR (Phase MD1b). Runs the real `mergeMain(branch, cwd)` against a
+// scratch bare origin: two plot branches that each add asap build-plan rows, an
+// Item, an Unscheduled line and a Change log line settle with no Haiku entry,
+// keep every added row once, re-derive the Item Status cells main's shipped
+// rows made stale, leave LIVE_DEADLINES.md alone, and pass check-deadlines.
+//
+//   node --test scripts/pr-resolve.test.mjs
+
+import assert from 'node:assert/strict'
+import { execFileSync } from 'node:child_process'
+import fs from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
+import test from 'node:test'
+import { fileURLToPath } from 'node:url'
+
+import { mergeMain } from './pr-resolve.mjs'
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+const PLAN = 'plan/steps/01_build_plan.md'
+const DEADLINES = 'plan/deadlines.md'
+const COPIED_SCRIPTS = [
+  'build-plan-merge.mjs',
+  'check-deadlines.mjs',
+  'check-lessons.mjs',
+  'deadlines-lib.mjs',
+  'deadlines-merge.mjs',
+  'deadlines.mjs',
+  'lessons-merge.mjs',
+]
+
+const read = (dir, rel) => fs.readFileSync(path.join(dir, rel), 'utf8')
+const write = (dir, rel, text) => fs.writeFileSync(path.join(dir, rel), text)
+const count = (text, needle) => text.split(needle).length - 1
+
+/** Run git in `dir`; stdout. */
+const git = (dir, ...args) => execFileSync('git', args, { cwd: dir, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] })
+
+// --- text edits shaped like a plot's own ------------------------------------
+
+/** An asap row above the first open row of the build plan, and a Queue change log entry. */
+function addPlanRow(md, id, extra = '') {
+  const lines = md.split('\n')
+  const open = lines.findIndex((l) => l.startsWith('- [ ] Phase '))
+  assert.ok(open > 0, 'the live build plan has an open row')
+  lines.splice(open, 0, `- [ ] Phase ${id} — fixture row ${id}${extra}. Requires nothing.`)
+  const log = lines.findIndex((l) => l === '## Queue change log')
+  const entry = lines.findIndex((l, i) => i > log && l.startsWith('- **'))
+  lines.splice(entry, 0, `- **2026-10-28** — fixture entry **added Phase ${id}**.`, '')
+  return lines.join('\n')
+}
+
+/** Close a build-plan row the way a shipped PR does. */
+const shipPlanRow = (md, id) => md.replace(`- [ ] Phase ${id} —`, `- [x] (#9001) Phase ${id} —`)
+
+/** An Items row at the top of the table. */
+function addItem(md, name, due, rows) {
+  const lines = md.split('\n')
+  const head = lines.indexOf('| Status | Due | Item | Window | Rows |')
+  assert.ok(head > 0)
+  lines.splice(head + 2, 0, `| [ ] | ${due} | ${name} | W1 | ${rows} |`)
+  return lines.join('\n')
+}
+
+/** A line at the end of `## Unscheduled`. */
+function addUnscheduled(md, id) {
+  return md.replace('\n## How a window closes', `- ${id} — fixture; date not set.\n\n## How a window closes`).replace(/\n\n\n## How a window closes/, '\n\n## How a window closes')
+}
+
+/** A line at the head of the Unscheduled list, away from the tail every plot appends to. */
+const addUnscheduledFirst = (md, id) => md.replace(/^- AD1a — /m, `- ${id} — fixture; date not set.\n- AD1a — `)
+
+const addChangeLog = (md, what) => md.replace('\n## Change log\n\n', `\n## Change log\n\n- **2026-10-28** — **${what}** (T).\n`)
+
+const dropUnscheduled = (md, id) => md.replace(new RegExp(`^- ${id} — .*\\n`, 'm'), '')
+
+/**
+ * A scratch bare origin and a clone of it holding the live plan files, the
+ * scripts the merge needs and `.gitattributes`. `base(dir)` edits the base
+ * commit; the clone is left on main.
+ */
+function scratch(base) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'pr-resolve-test-'))
+  const origin = path.join(dir, 'origin.git')
+  const work = path.join(dir, 'work')
+  git(dir, 'init', '-q', '--bare', '-b', 'main', origin)
+  git(dir, 'clone', '-q', origin, work)
+  git(work, 'config', 'user.email', 't@example.com')
+  git(work, 'config', 'user.name', 't')
+  git(work, 'switch', '-q', '-c', 'main')
+  fs.mkdirSync(path.join(work, 'plan', 'steps'), { recursive: true })
+  fs.mkdirSync(path.join(work, 'scripts'), { recursive: true })
+  for (const f of ['.gitattributes', 'LIVE_DEADLINES.md', PLAN, DEADLINES]) write(work, f, fs.readFileSync(path.join(ROOT, f), 'utf8'))
+  for (const f of COPIED_SCRIPTS) fs.copyFileSync(path.join(ROOT, 'scripts', f), path.join(work, 'scripts', f))
+  write(work, 'notes.txt', 'one\n')
+  base?.(work)
+  git(work, 'add', '-A')
+  git(work, 'commit', '-q', '-m', 'base')
+  git(work, 'push', '-q', 'origin', 'main')
+  return { dir, work }
+}
+
+/** Commit the working tree on `branch` (cut from main) and push it. */
+function branchWith(work, branch, edit) {
+  git(work, 'switch', '-q', '-c', branch, 'main')
+  edit(work)
+  git(work, 'add', '-A')
+  git(work, 'commit', '-q', '-m', `plot ${branch}`)
+  git(work, 'push', '-q', 'origin', branch)
+  git(work, 'switch', '-q', 'main')
+}
+
+const plot = (tag, due) => (dir) => {
+  write(dir, PLAN, addPlanRow(addPlanRow(read(dir, PLAN), `${tag}1`), `${tag}2`))
+  let d = addItem(read(dir, DEADLINES), `Item ${tag}`, due, `${tag}1`)
+  d = addUnscheduled(d, `${tag}2`)
+  write(dir, DEADLINES, addChangeLog(d, `plot ${tag}`))
+}
+
+const checkDeadlines = (dir) =>
+  execFileSync(process.execPath, ['scripts/check-deadlines.mjs'], { cwd: dir, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] })
+
+test('two plot branches settle through mergeMain: no Haiku entry, every added row once, Status re-derived, check-deadlines green', () => {
+  // ZS1 is an open row under Unscheduled; plot B gives it an Item while main ships it.
+  const { dir, work } = scratch((d) => {
+    write(d, PLAN, addPlanRow(read(d, PLAN), 'ZS1'))
+    write(d, DEADLINES, addUnscheduledFirst(read(d, DEADLINES), 'ZS1'))
+  })
+  try {
+    assert.equal(checkDeadlines(work).length > 0, true, 'the base passes check-deadlines')
+    branchWith(work, 'plot-a', plot('ZA', '2026-10-30'))
+    branchWith(work, 'plot-b', (d) => {
+      plot('ZB', '2026-10-29')(d)
+      write(d, DEADLINES, addItem(dropUnscheduled(read(d, DEADLINES), 'ZS1'), 'Item ZS', '2026-10-31', 'ZS1'))
+    })
+    // main: plot A merges by the merge button, then ZS1 ships (its Unscheduled line goes).
+    git(work, 'merge', '-q', '--no-edit', '--no-ff', 'plot-a')
+    write(work, PLAN, shipPlanRow(read(work, PLAN), 'ZS1'))
+    write(work, DEADLINES, dropUnscheduled(read(work, DEADLINES), 'ZS1'))
+    git(work, 'commit', '-q', '-am', 'ship ZS1')
+    git(work, 'push', '-q', 'origin', 'main')
+
+    const before = Number(git(work, 'rev-list', '--count', 'origin/plot-b').trim())
+    const { merged, rest } = mergeMain('plot-b', work)
+
+    assert.equal(merged, true)
+    assert.deepEqual(rest, [], 'nothing is left for a Haiku run')
+    const plan = read(work, PLAN)
+    const dl = read(work, DEADLINES)
+    for (const needle of ['Phase ZA1 —', 'Phase ZA2 —', 'Phase ZB1 —', 'Phase ZB2 —', 'added Phase ZA1', 'added Phase ZB1']) {
+      assert.equal(count(plan, needle), 1, `build plan: ${needle}`)
+    }
+    for (const needle of ['| Item ZA |', '| Item ZB |', '| Item ZS |', '- ZA2 —', '- ZB2 —', 'plot ZA**', 'plot ZB**']) {
+      assert.equal(count(dl, needle), 1, `deadlines: ${needle}`)
+    }
+    assert.ok(!/^(<{7}|={7}|>{7})/m.test(plan + dl), 'no conflict marker')
+    assert.match(dl, /\| \[x\] \| 2026-10-31 \| Item ZS \|/, 'the Status main made stale is re-derived')
+    assert.ok(dl.indexOf('| Item ZB |') < dl.indexOf('| Item ZA |'), 'new Items stay in due-date order')
+    const head = git(work, 'rev-list', '--parents', '-n', '1', 'HEAD').trim().split(' ')
+    assert.equal(head.length, 3, 'HEAD is the merge commit')
+    assert.equal(Number(git(work, 'rev-list', '--count', 'HEAD').trim()) - before, 4, 'the Status edit amended the merge: no extra commit')
+    assert.equal(git(work, 'status', '--porcelain').trim(), '', 'LIVE_DEADLINES.md is back as the merge left it')
+    assert.equal(read(work, 'LIVE_DEADLINES.md'), fs.readFileSync(path.join(ROOT, 'LIVE_DEADLINES.md'), 'utf8'))
+    checkDeadlines(work) // throws when red
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('a merge that touches neither deadline file adds no commit beyond the merge', () => {
+  const { dir, work } = scratch()
+  try {
+    branchWith(work, 'code-b', (d) => write(d, 'branch.txt', 'b\n'))
+    write(work, 'main.txt', 'm\n')
+    git(work, 'add', '-A')
+    git(work, 'commit', '-q', '-m', 'main moves')
+    git(work, 'push', '-q', 'origin', 'main')
+    const { merged, rest } = mergeMain('code-b', work)
+    assert.equal(merged, true)
+    assert.deepEqual(rest, [])
+    assert.equal(git(work, 'log', '--format=%s', '-n', '1').trim().startsWith('Merge'), true)
+    assert.equal(git(work, 'rev-list', '--count', 'HEAD').trim(), '4', 'base, the branch commit, main, one merge')
+    assert.equal(git(work, 'status', '--porcelain').trim(), '')
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('a cell both plots changed to different values is listed for Haiku, as before', () => {
+  const { dir, work } = scratch((d) => {
+    write(d, PLAN, addPlanRow(addPlanRow(addPlanRow(read(d, PLAN), 'ZC1'), 'ZC2'), 'ZC3'))
+    write(d, DEADLINES, addItem(read(d, DEADLINES), 'Item ZC', '2026-10-31', 'ZC1'))
+    write(d, DEADLINES, addUnscheduled(addUnscheduled(read(d, DEADLINES), 'ZC2'), 'ZC3'))
+  })
+  try {
+    const setRows = (rows) => (d) => write(d, DEADLINES, read(d, DEADLINES).replace('| Item ZC | W1 | ZC1 |', `| Item ZC | W1 | ${rows} |`))
+    branchWith(work, 'plot-c', setRows('ZC1, ZC2'))
+    branchWith(work, 'plot-d', setRows('ZC1, ZC3'))
+    setRows('ZC1, ZC2')(work)
+    git(work, 'commit', '-q', '-am', 'plot C merged')
+    git(work, 'push', '-q', 'origin', 'main')
+    const { merged, rest } = mergeMain('plot-d', work)
+    assert.equal(merged, false)
+    assert.deepEqual(rest, [DEADLINES])
+    git(work, 'merge', '--abort')
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
