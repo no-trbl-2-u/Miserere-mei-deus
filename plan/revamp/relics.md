@@ -150,3 +150,16 @@ signature names are placeholders `[content]` for T. The engine helpers are
 `programWeatherSignature` and `programWeatherSignatureLive` in
 `combat.card-program.ts`. "Your INFERNO" for the refusal is `yourInferno`, so a
 lone shared stack of 1 (you lose 0) does not make the Signet live.
+
+**Built (DF1e).** The Defender's three are in `relicLibrary` with `laneId:
+'defender'`: `relic-thornback-signet` (`'elite'`, +5 Heart, +20 max VITAE;
+`sig-defender-signet` Thorn Mantle, `guard-to-thorns`, ◆5: THORNS equal to your
+GUARD, unscaled, refused at 0 GUARD), `relic-mirror-brooch` (`'quest'`, +5 Mind;
+`sig-defender-brooch` Mirror Ward, `reflect-half`, ◆3: REFLECT 50%, adds and
+refreshes, never refused) and `relic-carapace-belt` (`'quest'`, +5 Body;
+`sig-defender-belt` Hold the Line, `hold-guard`, ◆4: sets the same
+`guardHoldRound` M-04 PAID sets, refused once held this round). Names are
+placeholders `[content]` for T; no icons picked (fallback glyph). No quest hands
+out the Brooch or Belt yet. Helpers: `programSpikeSignature` and
+`programSpikeSignatureLive`. The sim witness's `ALL_SIGNATURE_KINDS` is left
+without the three kinds so the witness stays as measured.

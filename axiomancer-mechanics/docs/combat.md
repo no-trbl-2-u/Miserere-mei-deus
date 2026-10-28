@@ -92,7 +92,9 @@ choice (see the ending below), and Blood Price's three: Crimson Return
 (`sig-crimson-circlet`, ◆5), Ruby Tithe (`sig-ruby-signet`, ◆3) and Open
 Vein (`sig-bleeding-signet`, ◆4), and the Elementalist's three: Eye of the
 Storm (`sig-elementalist-signet`, ◆6), Kindle the Gale (`sig-elementalist-brooch`,
-◆4) and Thaw into Thunder (`sig-elementalist-belt`, ◆3). A worn relic's stat lines and signature are
+◆4) and Thaw into Thunder (`sig-elementalist-belt`, ◆3), and the Defender's three: Thorn Mantle
+(`sig-defender-signet`, ◆5), Mirror Ward (`sig-defender-brooch`, ◆3) and Hold the Line
+(`sig-defender-belt`, ◆4). A worn relic's stat lines and signature are
 read from the relic library by id; its Heart, Body and Mind lines join the
 fighter's stats for the fight (`statsWithWorn`).
 

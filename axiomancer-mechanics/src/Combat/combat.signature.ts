@@ -16,7 +16,12 @@
  *     LEECH (it loses its potency now and you HEAL what it lost; no turn
  *     ticks off).
  *
- * The three Blood Price names and descriptions are plain placeholders
+ *   Thorn Mantle (the Thornback Signet, ◆5) — THORNS equal to your GUARD.
+ *   Mirror Ward (the Mirror Brooch, ◆3) — REFLECT 50%.
+ *   Hold the Line (the Carapace Belt, ◆4) — your GUARD is kept through the
+ *     foe's next turn.
+ *
+ * The Blood Price and Defender names and descriptions are plain placeholders
  * [content] for T to rewrite; the costs are T's.
  *
  * `applySignatureSkill` is a pure transition; the engine wraps it in
@@ -28,7 +33,7 @@
 import { befriendHpGateOpen, isEnemyBefriendable } from '../Enemy/befriend';
 import {
     programArmSacrifice, programSacrificeArmed, programSignatureHeal, programTriggerLeech,
-    programWeatherSignature, programWeatherSignatureLive,
+    programSpikeSignature, programSpikeSignatureLive, programWeatherSignature, programWeatherSignatureLive,
 } from './combat.card-program';
 import type {
     CombatEncounterState, CombatEvent, CombatTransition, SignatureSkill,
@@ -67,6 +72,18 @@ export const SIGNATURE_SKILLS: Record<SignatureSkillId, SignatureSkill> = {
     'sig-elementalist-belt': {
         id: 'sig-elementalist-belt', name: 'Thaw into Thunder', kind: 'blizzard-to-storm', cost: 3,
         description: 'Turn all BLIZZARD into STORM.',
+    },
+    'sig-defender-signet': {
+        id: 'sig-defender-signet', name: 'Thorn Mantle', kind: 'guard-to-thorns', cost: 5,
+        description: 'Gain THORNS equal to your GUARD.',
+    },
+    'sig-defender-brooch': {
+        id: 'sig-defender-brooch', name: 'Mirror Ward', kind: 'reflect-half', cost: 3,
+        description: 'Gain REFLECT 50%.',
+    },
+    'sig-defender-belt': {
+        id: 'sig-defender-belt', name: 'Hold the Line', kind: 'hold-guard', cost: 4,
+        description: "Your GUARD isn't lost at the end of the foe's next turn.",
     },
 };
 
@@ -111,6 +128,12 @@ export function signatureCastBlock(state: CombatEncounterState, skill: Signature
             return programWeatherSignatureLive(state, skill.kind) ? null : 'The foe has no INFERNO of its own to turn';
         case 'blizzard-to-storm':
             return programWeatherSignatureLive(state, skill.kind) ? null : 'No BLIZZARD to turn';
+        case 'guard-to-thorns':
+            return programSpikeSignatureLive(state, skill.kind) ? null : 'No GUARD to turn into THORNS';
+        case 'reflect-half':
+            return null;
+        case 'hold-guard':
+            return programSpikeSignatureLive(state, skill.kind) ? null : 'Your GUARD is already held';
     }
 }
 
@@ -144,5 +167,9 @@ export function applySignatureSkill(
         case 'foe-inferno-to-storm':
         case 'blizzard-to-storm':
             return programWeatherSignature(state, skill.kind);
+        case 'guard-to-thorns':
+        case 'reflect-half':
+        case 'hold-guard':
+            return programSpikeSignature(state, skill.kind);
     }
 }

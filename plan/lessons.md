@@ -133,6 +133,8 @@
 - **registry-is-not-one-file** · the asset orphan sweep read only `<category>/index.ts`, so 24 cells whose `require()` literals sat two re-exports down read as dead bundle weight (ship AN1e) → follow the local modules an index re-exports rather than exempting the directory; an exemption stops the category being swept at all · seen 1× · last 2026-10-21 · guarded by asset-provenance.test.mjs
 - **frame-set-per-painting** · the float-eye's 256px rig settings did not carry to the beholder (ship AN4b): its torio portrait is opaque on black, so it had to be matted before it could scale, and its detail encoded to 21490 B a cell against the 12000 ceiling → before rigging a new enemy, check its portrait's alpha and trial-encode one cell at q44; when a set overshoots, change its `RIGS` frame edge, not the ceiling · seen 1× · last 2026-10-22 · open
 
+- **signature-kind-has-five-homes** · a new signature kind touched the kind union, `SIGNATURE_SKILLS`, the two exhaustive switches, mobile's `SIG_ICON`, and `ALL_SIGNATURE_KINDS`, whose test pins the witness list (ship DF1e) → grep `blizzard-to-storm` for every home; leave `ALL_SIGNATURE_KINDS` alone unless re-measuring · seen 1× · last 2026-10-28 · guarded by axiomancer-mechanics/src/Combat/e2e/combat-sim-policies.engine.test.ts
+
 ## Adding a domain
 
 Append a new `<!-- @domain:<name> -->` anchor + `##` heading
