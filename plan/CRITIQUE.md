@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-10-28 at commit bf5bae72
-> Pass count: 107
+> Last pass: 2026-10-28 at commit 850ce863
+> Pass count: 108
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
@@ -944,7 +944,54 @@
 > Reconfirmed and not re-filed: the barred zero sweep, the covered fan
 > names on a phone, the WITHDRAW sub-line contrast.
 
+> **[critique pass 108, 2026-10-28, commit 850ce863] Unattended `/march`
+> tick.** `critique:drive` (`CRITIQUE_VIEWPORT=both`), the full 15-screen
+> set for the first time (#1033 added `/cache`, the satchel, `/quest` and
+> `/death-return`): 30 captures, 0 nav trouble, 0 console/page errors. 21
+> first-parent commits after pass 107: QL1d (Breakwater quest steps),
+> QL1g (the death seam), DY1c (hazard death), DL2a/DL2b and MD1c (tooling)
+> and the truth runs. No regression on the 11 known screens. Three rows
+> filed, all on the newly reached screens: the cache's column runs the
+> full desktop width where rest and quest cap at 520 (MED), TAKE THE GOODS
+> hides the rolled goods while the card offer prints its face (LOW), and a
+> satchel item tile on desktop is a 390px black well round a 28px glyph
+> (LOW). Checked and not filed: `/death-return` prints "[content] YOU
+> FELL" and a "[content]" body on purpose (`death-return.copy.ts`; the
+> copy waits on T, D88); `/quest` shows the fixture's placeholder giver
+> line and step name (fixture data, not shipped copy); the satchel's
+> "bare" WEAPON/ARMOR slots (RC2 row 16, accepted). Reconfirmed and not
+> re-filed: the barred zero sweep, the covered fan names on a phone, the
+> WITHDRAW sub-line contrast, the mobile hub's black band (the no-clamp
+> trade).
+
 ## Pending
+
+### [MED] /cache / desktop — the choice column runs the full 1280 width, so both offers are 1250px bars with the card and its text crowded at the left edge
+- pass: 108 (commit 850ce863)
+- viewport: desktop (1280x800); mobile unaffected
+- category: visual
+- observation: on the loot cache at 1280 the TAKE A CARD and TAKE THE GOODS buttons stretch from x=14 to x=1266. The card face and "TAKE A CARD / ONE CARD, STRAIGHT INTO THE DECK." sit in the first ~370px, leaving ~880px of empty gold-bordered box, and the eyebrow, title and intro hug the left edge too. The sibling one-choice screens centre a capped column: `/rest` and `/quest` both cap at 520 (this pass's `desktop/14-quest.png` shows the column centred over the art), so the cache is the one node screen that reads as an unstyled stretch.
+- evidence: `.critique-artifacts/desktop/12-cache.png` against `desktop/14-quest.png` and `desktop/09-rest.png`; `axiomancer-mobile/app/cache/index.tsx:160` `scroll` (no column, no `maxWidth`); `app/rest/index.tsx:228,235` `REST_COLUMN_MAX_WIDTH = 520` and `app/quest/index.tsx:185,190`.
+- suggested fix: wrap the cache's content in a `column` style `{ width: '100%', maxWidth: CACHE_COLUMN_MAX_WIDTH, alignSelf: 'center' }` with `CACHE_COLUMN_MAX_WIDTH = 520`, as rest and quest do; presentation only, pinned by the cache screen test reading the exported constant.
+- source: critique:drive (unattended)
+
+### [LOW] /cache — TAKE THE GOODS says only "whatever's inside", while TAKE A CARD prints the exact card, so the one irreversible choice weighs a known card against a blind box
+- pass: 108 (commit 850ce863)
+- viewport: both (375x812, 1280x800)
+- category: comprehension
+- observation: the intro warns "Pick one — there is no walking back out." The card offer shows its rolled card face (A Plain Word, RW1b); the goods offer shows "WHATEVER'S INSIDE, PLUS WHAT IT'S WORTH." and nothing else, though the session already holds the rolled items and the shilling sum (`itemCandidates`, `currencyCandidate`) before the player picks. A first-time player cannot tell whether the goods are a potion and 10 shillings or a relic and 60, so the choice is a guess. RW1b's brief left TAKE THE GOODS unchanged; it did not rule the goods must stay hidden.
+- evidence: `.critique-artifacts/mobile/12-cache.png`, `desktop/12-cache.png`; `axiomancer-mobile/state/presenters/cache.copy.ts:19`; `axiomancer-mechanics/src/World/LootCacheChoice/lootcachechoice.types.ts:40-43` (candidates rolled before the choice); `plan/phases/phase_RW1_reward_rule.md:78`.
+- suggested fix: print the rolled goods under the goods offer as chips, reusing the outcome's `cacheOutcomeItemChip` and `cacheOutcomeCurrencyChip` (e.g. "+ HEALING POTION · +10 SHILLINGS"), and add them to its accessibility label; presentation only. If the blind box is meant, the loop leaves the reveal alone and instead makes the copy say so ("sight unseen"), which is T's copy call.
+- source: critique:drive (unattended)
+
+### [LOW] satchel / desktop — a lone item tile is a 390px-wide black well with a 28px glyph in the middle, so the Healing Potion reads as an empty box
+- pass: 108 (commit 850ce863)
+- viewport: desktop (1280x800); on a phone the tile is ~100px and reads fine
+- category: visual
+- observation: under PHIALS & SOPS the only item, Healing Potion x6, draws as a tile 31.5% of the panel wide (~390px) with a 50px-high black glyph well; the vial glyph is a thin sliver at its centre, so at a glance the tile looks like a blank placeholder with a name under it. The tile width is a percentage, so it grows with the window while the glyph stays 28px.
+- evidence: `.critique-artifacts/desktop/13-satchel.png` (y~585-675) against `mobile/13-satchel.png`; `axiomancer-mobile/components/inventory/ItemCard.tsx:50` (`size={28}`), `:355` (`width: '31.5%'`), `:363-364` (well `height: 50`).
+- suggested fix: cap the item tile's width (a `maxWidth` near the phone width, ~140) so the grid packs more tiles per row on a wide window instead of stretching each one; presentation only, pinned in the ItemCard test.
+- source: critique:drive (unattended)
 
 ### [MED] hazard / village / forge / deck — the barred gothic zero still prints in about a dozen numeric styles, so the hazard ladder reads "RI 28" for a threshold of 20
 - pass: 106 (commit 4edd5433)
