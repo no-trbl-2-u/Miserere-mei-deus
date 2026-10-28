@@ -14,7 +14,9 @@ Argument handling:
 Procedure: §2 of `skills/heads-down.md` (map the graph, pick verb and
 model per worker, show T the plan and ask, launch the wave, keep the
 callout bus, react and start the next wave on a merge, route new loop
-work through `/plot`, wrap up). Hard rules: §3. Never build, merge or
+work through `/plot`, wrap up). Hard rules: §3. A worker whose row
+changes what is on screen puts before/after shots in its PR
+description, hosted outside the repo (§4). Never build, merge or
 push `main` yourself.
 
 Argument: $ARGUMENTS

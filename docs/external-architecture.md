@@ -80,6 +80,7 @@ flowchart LR
 
 - **Owner / location:** `no-trbl-2-u/Miserere-mei-deus`; workflows are versioned in `.github/workflows/` and execute on GitHub-hosted runners.
 - **Purpose:** repository hosting, issues/PRs, verification, autonomous Nexus commands, tuning/playtest jobs, dependency upkeep, and preview-build orchestration.
+- **PR screenshots:** before/after shots for a UI PR's description (`skills/heads-down.md` §4) live outside the git tree: GitHub's `user-attachments` store when a signed-in browser drops them in, otherwise assets on the `pr-shots` prerelease (`--latest=false`, never a game release). They are evidence for review, never source, and are never committed.
 - **External actions and runtimes:** workflows use GitHub-maintained actions such as `actions/checkout@v4` and `actions/setup-node@v4`; Claude-powered jobs use `anthropics/claude-code-action@v1`; mobile preview builds invoke Expo's `eas-cli` service.
 - **Credentials:** `GITHUB_TOKEN` is supplied by GitHub. `GH_PAT` is used when autonomous pushes must trigger downstream verification. `CLAUDE_CODE_OAUTH_TOKEN` authorizes Claude workflows. `EXPO_TOKEN` authorizes EAS preview builds. Optional notification integrations use `NOTIFY_NTFY_TOPIC` and `NOTIFY_WEBHOOK_URL`.
 - **Secret boundary:** values live only in GitHub Actions secrets or ignored local environment files. Documentation and committed workflows name variables but never contain values.

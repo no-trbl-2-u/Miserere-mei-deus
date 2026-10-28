@@ -546,6 +546,16 @@ test('/heads-down workers run /ship-a-phase per row, never /march, and waves wai
   assert.match(hd, /\*\*push once\*\*/)
 })
 
+test('/heads-down UI workers show before/after shots in the PR body, never in the repo', () => {
+  const hd = read('skills/heads-down.md')
+  assert.match(hd, /^SHOTS: /m)
+  assert.match(hd, /UI shots live in the PR description, never in the repo/)
+  assert.match(hd, /\/tmp\/pr-shots\//)
+  assert.match(hd, /gh release upload pr-shots/)
+  assert.match(hd, /user-attachments\/assets/)
+  assert.match(hd, /## Screenshots/)
+})
+
 // --- /plot splits into phases and lands by a `plot` PR (D93) ----------------
 
 test('/plot opens a plot-labelled PR, never loop:pr, never a push to main', () => {
