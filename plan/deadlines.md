@@ -77,8 +77,7 @@ left; otherwise after.
   `deadcard`; B3 Follow-ups). The hand-picked set, "the swap", moves to W3.
 - The MVP's loop work, which the reminder never names: Chapter 1's enemies and their art, from the B2 plot on Nov 2;
   the lane relics RW1a, LR1a and LR1c-LR1e (`plan/phases/phase_LR1_lane_relics.md`); the Breakwater's questline
-  QL1a-QL1f (`plan/phases/phase_QL1_breakwater_questline.md`; LR1f skipped for it, D111; QL1g waits on the death
-  rule's plot); the icons IT1b applies once T
+  QL1a-QL1f (`plan/phases/phase_QL1_breakwater_questline.md`; LR1f skipped for it, D111; QL1g follows DY1b); the icons IT1b applies once T
   picks; AW1b; and the event-node UX once plotted on Nov 6.
 - To pitch and plot in W2: the event-node UI/UX for the nine kinds the Breakwater uses (cutscene, encounter,
   hazard, gathering, loot cache, rest, blacksmith, travel, and quest, QL1's new kind, D111). They are all of Act 1's
@@ -321,7 +320,7 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - LR1g — loop work; signature tracking, blocks no window's goal; date not set.
 - EQ2b — loop work; follows EQ2a, the slot words on screen; date not set.
 - SB1 — attended: T's set-bonus design session; T said it is not part of the Act 1 MVP deadline; date not set.
-- QL1g — loop work; the boss fought again, blocked on T's death rule (a separate plot, id TBD) so it has no date until that plot is dated; not needed for the Nov 16 run unless a lost boss fight must be retryable by then.
+- QL1g — loop work; the boss fought again, follows QL1d and DY1b (the death rule, due Nov 8); no date of its own; not needed for the Nov 16 run unless a lost boss fight must be retryable by then.
 - MD1a — plotted 2026-10-28 (merge driver for this file); loop work, needs no time from T; date not set.
 - MD1b — plotted 2026-10-28 (`pr-resolve` settles a plot-on-plot merge); loop work, needs no time from T; date not set.
 - MD1c — plotted 2026-10-28 (the merge job checks the merged tree); loop work, but a pipeline PR T merges by hand; date not set.
@@ -334,6 +333,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-28** — **Chapter 1's questline: T answered the plot's notes** (a spare in each pocket: one extra hazard, fight and fight-or-elite behind the three markers, re-pointing existing nodes; old saves are abandoned for a new run; the Nov 8 date keeps; the death rule is plot DY1, merged). **Edited** the Unscheduled line for QL1g (it follows DY1b; its `[blocked]` marker is gone, as DY1's rows are on `main`) and the W2 note. No date moved, nothing ticked.
 - **2026-10-28** — **two open plot PRs stop conflicting** (T, in conversation: "whenever we have two plot/plan PRs open, once I merge one, the other always ends up with a conflict"; `/plot anytime`, run unattended). **Added** Unscheduled lines for MD1a, MD1b and MD1c (T folded MD1c in on the PR): T set no date, the work is a merge driver for this file and a `pr-resolve` step, and it blocks no window's goal. **Edited** no Item: none has a premise this changes.
 - **2026-10-28** — **Chapter 1's questline: T answered the plot's four open items** (the next quest node locked until the step is met; every node may move, so each step's supply sits behind its own marker; the bridge by routing, with sealed roads only if routing could not, and a fled fight does not complete its node; a lost boss fight can be fought again, relying on T's death rule, plotted separately). **Edited** the Nov 8 Item's name (no more sealed roads: locks, pockets and the fled-fight rule). **Added** an Unscheduled line for QL1g (`[blocked]` on the death rule's plot, no date). No date moved (QL1b is now sized L; the dates are still the plot's, for T to move), nothing ticked.
 - **2026-10-27** — **Chapter 1's questline re-shaped** (T's answers to the plot's six calls: steps 1-3 turned in at the next quest node, step 4 the boss, the bridge unreachable by map routing, no runtime shortfall fallback). **Edited** the Nov 8 Item (three turn-ins, the boss as the fourth step, the sealed roads) and the Nov 10 Item (lines per node). No date moved, nothing ticked.

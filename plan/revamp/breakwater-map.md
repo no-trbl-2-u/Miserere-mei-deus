@@ -118,41 +118,44 @@ the events hold:
 
 T, 2026-10-28: the next quest node is locked until the current step is met, and "we can move around all the nodes
 whenever we need to". The plan keeps every kind, foe and level, and re-points edges so that a step's supply cannot
-be used before the step is accepted: it lives in a pocket reachable only through that step's marker. A quest node
-(and the watchtower) opens its roads only once spent, so a fled or lost fight at the watchtower leaves the bridge
-shut with no sealed road. Edges are undirected; spots are picked by plate neighbours and are T's to move on Nov 3.
+be used before the step is accepted: it lives in a pocket reachable only through that step's marker. T also asked
+(2026-10-28) for one spare in each pocket, so a modest count change on Nov 10 needs no map edit; the spares are the
+Sea Cave, the Lighthouse and the Sea Fort, re-pointed from the open fan. A quest node (and the watchtower) opens its
+roads only once spent, so a fled or lost fight at the watchtower leaves the bridge shut with no sealed road. Edges are
+undirected; spots are picked by plate neighbours and are T's to move on Nov 3.
 
 ```mermaid
 graph LR
   bw1[bw-1 Windmill, start] --- bw19[bw-19 quest 1]
   bw19 -.opens on accept.- bw3[bw-3 Gallows Hill<br/>hazard, step 1's supply]
+  bw19 -.opens on accept.- bw12[bw-12 Sea Cave<br/>hazard, step 1's spare]
   bw1 --- bw4[bw-4 Foothill Pass] & bw5[bw-5 Smugglers' Cove]
   bw4 --- bw5 & bw7[bw-7 South Pier] & bw9[bw-9 Customs House]
-  bw5 --- bw6[bw-6 Sea Fort] & bw7
-  bw6 --- bw7 & bw11[bw-11 Wreck]
-  bw7 --- bw11 & bw12[bw-12 Sea Cave]
-  bw9 --- bw12 & bw13[bw-13 Harbour Town]
+  bw5 --- bw7
+  bw7 --- bw11[bw-11 Wreck]
+  bw9 --- bw13[bw-13 Harbour Town]
+  bw11 --- bw13
   bw9 -. locked until step 1 met .- bw20[bw-20 quest 2]
-  bw20 -.opens on accept.- bw2[bw-2 Crane Quay<br/>fight] & bw10[bw-10 Walled Manor<br/>fight]
+  bw20 -.opens on accept.- bw2[bw-2 Crane Quay<br/>fight] & bw10[bw-10 Walled Manor<br/>fight] & bw14[bw-14 Lighthouse<br/>fight, step 2's spare]
   bw7 -. locked until step 2 met .- bw21[bw-21 quest 3]
-  bw21 -.opens on accept.- bw8[bw-8 North Pier<br/>elite, step 3's supply]
-  bw11 --- bw14[bw-14] & bw12
-  bw12 --- bw14 & bw15[bw-15] & bw13
-  bw13 --- bw15 & bw16[bw-16]
-  bw14 --- bw15
+  bw21 -.opens on accept.- bw8[bw-8 North Pier<br/>elite, step 3's supply] & bw6[bw-6 Sea Fort<br/>fight, step 3's spare]
+  bw13 --- bw15[bw-15 Clifftop Chapel] & bw16[bw-16 Fishing Hamlet]
   bw15 --- bw16
-  bw14 & bw15 & bw16 -. locked until step 3 met .- bw22[bw-22 quest 4]
+  bw15 & bw16 -. locked until step 3 met .- bw22[bw-22 quest 4]
   bw22 -.opens on accept.- bw17[bw-17 Watchtower, boss]
   bw17 -.opens when beaten.- bw18[bw-18 River Bridge]
 ```
 
-| Step | Marker | Locked until | Supply (opens when the marker is spent) |
-|---|---|---|---|
-| 1 | bw-19, off the windmill | (the chapter start) | bw-3, the Gallows Hill hazard (1) |
-| 2 | bw-20, off the customs house | step 1 is met | bw-2 and bw-10, two normal fights (2) |
-| 3 | bw-21, off the south pier | step 2 is met | bw-8, the North Pier elite (1) |
-| 4 | bw-22, between the chapel and the watchtower | step 3 is met | bw-17, the boss (1), then bw-18 |
+| Step | Marker | Locked until | Supply (opens when the marker is spent) | Spare |
+|---|---|---|---|---|
+| 1 | bw-19, off the windmill | (the chapter start) | bw-3, the Gallows Hill hazard (1) | bw-12, the Sea Cave hazard |
+| 2 | bw-20, off the customs house | step 1 is met | bw-2 and bw-10, two normal fights (2) | bw-14, the Lighthouse fight |
+| 3 | bw-21, off the south pier | step 2 is met | bw-8, the North Pier elite (1) | bw-6, the Sea Fort, a normal fight |
+| 4 | bw-22, between the chapel and the watchtower | step 3 is met | bw-17, the boss (1), then bw-18 | none (one boss) |
 
-Each pocket holds exactly as many nodes as the placeholder goal, so a goal T raises on Nov 10 needs a node moved into
-its pocket (the supply test fails loudly otherwise). The sea cave (bw-12) is a second hazard in the open fan, and
-counts toward step 1 once accepted but not as supply the test relies on.
+The map holds one elite, so step 3's spare is a normal fight: it covers a raised count only if T retypes step 3 as
+"win fights"; two elites would need a second elite, and the supply test fails loudly. The open fan keeps only the
+gathering, cache, rest and blacksmith nodes (bw-4, bw-5, bw-7, bw-9, bw-11, bw-13, bw-15, bw-16): every fight and
+hazard sits in a pocket, and the Lighthouse leaves the road to bw-22, which is now bw-15 and bw-16 (two locked
+roads, opened together by step 3; four locks in all). The Sea Cave's two lateral roads become one rib, bw-11 to
+bw-13.
