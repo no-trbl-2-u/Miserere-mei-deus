@@ -16,7 +16,7 @@ import test from 'node:test'
 import { fileURLToPath } from 'node:url'
 
 import * as policy from './pr-policy.mjs'
-import { AUTO_MARKER, HOLD_LABELS, PIPELINE_PATHS, PLAN_LABELS, TREE_LINTS, TRUSTED_AUTHORS, auditComment, countAutoMerges, lintTree, mergeWanted, reviewStartedAt, treeUpdateComment, treeUpdated, treeVerdict, verdictFor, verifyGateGreen } from './pr-merge.mjs'
+import { AUTO_MARKER, HOLD_LABELS, PIPELINE_PATHS, PLAN_LABELS, TREE_LINTS, TRUSTED_AUTHORS, treeCheckSafe, auditComment, countAutoMerges, lintTree, mergeWanted, reviewStartedAt, treeUpdateComment, treeUpdated, treeVerdict, verdictFor, verifyGateGreen } from './pr-merge.mjs'
 import { headMarker } from './pr-review.mjs'
 
 const HEAD = 'a'.repeat(40)
@@ -292,5 +292,25 @@ test('the live plan passes the tree lints, and a doubled lessons row fails them 
     assert.ok(red[0].detail.length > 0)
   } finally {
     fs.rmSync(repo, { recursive: true, force: true })
+  }
+})
+
+test('a throwing tree check becomes a hold outcome with a comment, never a thrown step', async () => {
+  const out = path.join(os.tmpdir(), `pr-merge-output-${process.pid}-${Date.now()}`)
+  const before = process.env.GITHUB_OUTPUT
+  process.env.GITHUB_OUTPUT = out
+  const comments = []
+  try {
+    await treeCheckSafe('o/r', '7', HEAD, { run: async () => { throw new Error('gh: 502 bad gateway') }, comment: (b) => comments.push(b) })
+    const text = fs.readFileSync(out, 'utf8')
+    assert.match(text, /^go=false$/m)
+    assert.match(text, /^reason=tree check: errored, so no merge \(gh: 502 bad gateway\)$/m)
+    assert.equal(comments.length, 1)
+    assert.match(comments[0], /502 bad gateway/)
+    await treeCheckSafe('o/r', '7', HEAD, { run: async () => { throw new Error('x') }, comment: () => { throw new Error('comment failed too') } })
+  } finally {
+    if (before === undefined) delete process.env.GITHUB_OUTPUT
+    else process.env.GITHUB_OUTPUT = before
+    fs.rmSync(out, { force: true })
   }
 })

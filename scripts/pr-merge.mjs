@@ -304,6 +304,27 @@ async function fetchMergeRef(pr, head) {
   return null
 }
 
+/**
+ * The tree check, with any thrown error turned into a hold: a failed step would skip both the
+ * merge and the Hold step (neither `if` has a status function) and leave the PR silently unmerged.
+ *
+ * @param {string} repo  @param {string} pr  @param {string} head
+ * @param {{ run?: (repo: string, pr: string, head: string) => Promise<void>, comment?: (body: string) => void }} [deps] seams for the test
+ */
+export async function treeCheckSafe(repo, pr, head, { run = treeCheck, comment = (body) => gh(['pr', 'comment', pr, '--repo', repo, '--body', body]) } = {}) {
+  try {
+    await run(repo, pr, head)
+  } catch (err) {
+    const msg = String(err?.message ?? err).split('\n')[0].slice(0, 200)
+    setOutput(false, `tree check: errored, so no merge (${msg})`)
+    try {
+      comment(`Merge job tree check errored on head \`${head}\`: ${msg}. No merge was requested.`)
+    } catch {
+      // best effort
+    }
+  }
+}
+
 async function treeCheck(repo, pr, head) {
   const view = JSON.parse(gh(['pr', 'view', pr, '--repo', repo, '--json', 'headRefName,headRefOid,comments']))
   if (view.headRefOid !== head) return setOutput(false, `tree check: head moved to ${view.headRefOid.slice(0, 8)}`)
@@ -348,7 +369,7 @@ async function main() {
   const repo = process.env.GH_REPO || 'no-trbl-2-u/Miserere-mei-deus'
   const ok = /^\d+$/.test(pr ?? '') && /^[0-9a-f]{40}$/.test(head ?? '')
   if (mode === 'audit' && ok && arg('--run')) return console.log(auditComment({ pr, head, run: arg('--run') }))
-  if (mode === 'tree' && ok) return treeCheck(repo, pr, head)
+  if (mode === 'tree' && ok) return treeCheckSafe(repo, pr, head)
   if (mode === 'since' && /^\d+$/.test(arg('--run') ?? '')) {
     const run = arg('--run')
     const jobs = JSON.parse(gh(['api', `repos/${repo}/actions/runs/${run}/jobs`])).jobs ?? []
