@@ -15,7 +15,6 @@
 | 2026-10-31 (in 3 days) | Enemy session 2: Chapter 1's elite and the watchtower boss (1 h) | needs you: your task | W1 |
 | 2026-11-01 (in 4 days) | W1 demo part 2: T plays the twenty cost-card candidates and rules keep or cut (2 h) | needs you: HP4e ready for you | W1 |
 | 2026-11-02 (in 5 days) | Plot Chapter 1's enemies and their art brief from the two sessions (1 h) | needs you: B2 ready for you | W1 |
-| 2026-11-03 (in 6 days) | Review the Breakwater node map before the event-node pitch (1 h) | needs you: your task | W2 |
 | 2026-11-03 (in 6 days) | Live hazard routing (each of the seven Act 1 hazard nodes draws a random puzzle from the thirty) and the cuts (plot, 1 h) | needs a plot: no build-plan rows yet | W2 |
 | 2026-11-04 (in 7 days) | Pitch the event-node UI/UX for the Breakwater's nine kinds, all of Act 1's, the quest node included (1 h) | needs you: your task | W2 |
 | 2026-11-05 (in 8 days) | Settle the event-node pitch's open questions: one direction per node kind, before the plot (0.5 h) | needs you: your task | W2 |
