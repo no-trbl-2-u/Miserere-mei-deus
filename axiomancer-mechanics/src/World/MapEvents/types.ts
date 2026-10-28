@@ -1,7 +1,7 @@
 /**
  * MapEvents — type surface.
  *
- * Twelve event kinds plus a weighted-pool authoring model. See
+ * Thirteen event kinds plus a weighted-pool authoring model. See
  * `src/World/MapEvents/resolve-map-event.ts` for the dispatcher.
  */
 
@@ -15,6 +15,7 @@ import type { ContinentName, MapName } from '../map.library';
 import type { Encounter, NodeId } from '../types';
 import type { BlacksmithVariantOffer } from '../Blacksmith/blacksmith.types';
 import type { LabyrinthActId } from '../Labyrinth/types';
+import type { QuestlineId, QuestNodeStage, QuestStepView } from '../questline';
 
 /**
  * The MapEvent kinds. 'narration' is a dialogue-backed monologue shell;
@@ -32,7 +33,8 @@ export type MapEventKind =
     | 'narration'
     | 'blacksmith'
     | 'travel'
-    | 'labyrinth';
+    | 'labyrinth'
+    | 'quest';
 
 // ─── Per-kind authoring payloads ──────────────────────────────────────────────
 
@@ -196,6 +198,20 @@ export interface LabyrinthDoorPayload {
     description?: string;
 }
 
+/**
+ * Quest node: the giver of one questline step. `node` (1-4) is its place in
+ * the questline: it turns in the step before it (node 2-4) and offers the step
+ * of its own number. Never consumed until the step it offers is accepted
+ * (QL1b); resolving one touches no state.
+ */
+export interface QuestPayload {
+    kind: 'quest';
+    questline: QuestlineId;
+    /** 1-4: the node's place in the questline. */
+    node: number;
+    description?: string;
+}
+
 /** Discriminated union of all authoring payloads. */
 export type MapEventPayload =
     | EncounterPayload
@@ -209,7 +225,8 @@ export type MapEventPayload =
     | NarrationPayload
     | BlacksmithPayload
     | TravelPayload
-    | LabyrinthDoorPayload;
+    | LabyrinthDoorPayload
+    | QuestPayload;
 
 // ─── Pools ────────────────────────────────────────────────────────────────────
 
@@ -252,6 +269,17 @@ export type ResolvedEvent =
     | { kind: 'travel';      destinationContinent: ContinentName; destinationMap: MapName; description?: string }
     // The state is unchanged; the host enters `act` through its own snapshot.
     | { kind: 'labyrinth';   act: LabyrinthActId; description?: string }
+    // A quest node. `behind` is the step this node turns in (node 2-4) and
+    // `ahead` the step it offers; both are Quests with progress and rewards.
+    | {
+        kind: 'quest';
+        questline: QuestlineId;
+        node: number;
+        stage: QuestNodeStage;
+        behind?: QuestStepView;
+        ahead?: QuestStepView;
+        description?: string;
+    }
     | { kind: 'none' };
 
 export interface ResolveMapEventResult {

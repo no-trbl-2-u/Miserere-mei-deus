@@ -282,12 +282,13 @@ export {
     emptyQuestLog, findActiveQuest,
     startQuest, progressQuest, completeQuest,
     payQuestReward, payCompletedQuests, newlyCompletedQuests, questRewardItem, settleKill,
+    advanceHazardObjectives,
     // Elites come back after a night's rest (phase ER1).
     respawnElites, settledEliteNodes, retireEliteNode,
     markEliteUpgradeTaken, isEliteUpgradeTaken,
     eliteEncounterAt, isEliteNode, eliteRelicDropsAt,
 } from './World';
-export type { PaidQuestReward, EliteNodeRef, SettledEliteNode, RespawnElitesResult } from './World';
+export type { PaidQuestReward, KilledFoe, EliteNodeRef, SettledEliteNode, RespawnElitesResult } from './World';
 
 // Hazard Minigame. The engine transitions, content, tuning, deck-flag codec
 // and types mobile consumes; the rest of the Hazard module's surface is
@@ -437,8 +438,9 @@ export {
     getNodePrimaryEventKind,
 } from './World';
 export type {
-    MapEventKind,
+    MapEventKind, QuestPayload,
     MapEventPayload, ResolvedEvent, ResolveMapEventResult,
+    Questline, QuestlineStep, QuestlineId, QuestlineSettle, QuestNodeStage, QuestStepView, RouteRef,
 } from './World';
 // Rest shelter classification. Mobile gates the hazard-scar max-VITAE mend on this.
 export type { RestShelter } from './World';

@@ -266,6 +266,9 @@ const KIND_TO_NODE_TYPE: Record<MapEventKind, NodeType> = {
     travel: 'door',
     // The Labyrinth door (the Lantern Deep's vault door), a door like travel.
     labyrinth: 'door',
+    // The questline's giver wears the existing quest glyph for now; QL1c
+    // moves the story kinds off it.
+    quest: 'quest',
 };
 
 /** Node display type, sourced from the engine's authored event pools. */

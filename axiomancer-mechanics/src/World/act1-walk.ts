@@ -24,7 +24,7 @@
  *
  * Functions:
  *   planAct1Walk()            the four regions with their derived paths
- *   ACT1_WALK_EVENT_KINDS     all twelve map-event kinds, for the audit table
+ *   ACT1_WALK_EVENT_KINDS     all thirteen map-event kinds, for the audit table
  */
 
 import { MAP_REGISTRY } from './map.registry';
@@ -38,7 +38,7 @@ import { STARTING_MAP } from './index';
 /** Every map-event kind, in `MapEventKind` declaration order. */
 export const ACT1_WALK_EVENT_KINDS: readonly MapEventKind[] = [
     'encounter', 'interaction', 'gathering', 'rest', 'village', 'cutscene',
-    'hazard', 'loot-cache', 'narration', 'blacksmith', 'travel', 'labyrinth',
+    'hazard', 'loot-cache', 'narration', 'blacksmith', 'travel', 'labyrinth', 'quest',
 ];
 
 /** Why a step is on the path. */
