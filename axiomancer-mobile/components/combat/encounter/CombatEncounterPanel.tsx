@@ -335,6 +335,7 @@ export function CombatEncounterPanel({
     // sized so keyword panels + the full card fit a ~844pt viewport together.
     const detailCardW = Math.min(264, screenW - 116);
     const player = useGameState((s) => s.player);
+    const dying = useGameState((s) => s.dying === true);
     const store = useGameStore();
     // The live reward draft (store-owned so it survives a panel remount).
     const rewardOffers = useGameState((s) => s.combatReward?.offers ?? EMPTY_OFFERS);
@@ -1170,7 +1171,12 @@ export function CombatEncounterPanel({
                             ) : (
                             <ScrollView contentContainerStyle={styles.pilgrimStack} showsVerticalScrollIndicator={false}>
                                 <View style={styles.pilgrimHead}>
-                                    <View style={styles.pilgrimPortrait}><PlayerPortraitImage width={56} height={68} fit="cover" skullWhenDying /></View>
+                                    <View
+                                        style={styles.pilgrimPortrait}
+                                        testID="combat-pilgrim-portrait"
+                                        accessible={dying}
+                                        accessibilityLabel={dying ? 'Dying' : undefined}
+                                    ><PlayerPortraitImage width={56} height={68} fit="cover" skullWhenDying /></View>
                                     <View style={{ flex: 1 }}>
                                         <Text style={styles.pilgrimName}>{vm.player.name}</Text>
                                         <Text style={styles.pilgrimVitae}>LVL {p.level ?? 1}   ♥ {vm.player.hp} / {vm.player.maxHp} VITAE{vm.player.guard > 0 ? `   🛡 ${vm.player.guard}` : ''}</Text>

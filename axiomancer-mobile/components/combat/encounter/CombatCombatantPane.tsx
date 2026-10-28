@@ -400,7 +400,7 @@ export const PlayerMedallion = React.memo(function PlayerMedallion({
                     testID="combat-player-medallion"
                     accessibilityRole="button"
                     accessibilityLabel={sacrificeCallout
-                        ? PROGRAM_COPY.floorA11y(sacrificeCallout.vitae, player.maxHp, sacrificeCallout.cost)
+                        ? `${PROGRAM_COPY.floorA11y(sacrificeCallout.vitae, player.maxHp, sacrificeCallout.cost)}${dying ? ' You are dying.' : ''}`
                         : `${player.name}${dying ? ', dying' : ''}, VITAE ${player.hp} of ${player.maxHp}. Inspect your pilgrim — stats, status effects and cards.`}
                     // Slop only toward the screen edge and the bottom, never up
                     // into the hand above the dock.
