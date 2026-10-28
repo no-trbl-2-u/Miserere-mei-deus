@@ -15,6 +15,9 @@
  *   Elementalist's Signet             Elementalist elite only
  *   Elementalist's Brooch             Elementalist quest
  *   Elementalist's Belt               Elementalist quest
+ *   Thornback Signet                  Defender      elite only
+ *   Mirror Brooch                     Defender      quest
+ *   Carapace Belt                     Defender      quest
  *
  * A run starts with none. The dev menu's relic chips hand any over, worn
  * while a position is free.
@@ -144,6 +147,55 @@ const ELEMENTALIST_BELT: Equipment = {
     relicSource: 'quest',
 };
 
+/**
+ * The Thornback Signet (T's): +5 Heart, +20 max VITAE, and Thorn Mantle (◆5):
+ * THORNS equal to your GUARD. Elite only.
+ */
+const THORNBACK_SIGNET: Equipment = {
+    id: 'relic-thornback-signet',
+    name: 'Thornback Signet',
+    description: '+5 Heart and +20 max VITAE while worn. Gain THORNS equal to your GUARD.',
+    category: 'equipment',
+    slot: 'relic',
+    statModifiers: [{ stat: 'heart', value: 5 }, { stat: 'maxHp', value: 20 }],
+    grantsSignature: 'sig-defender-signet',
+    laneId: 'defender',
+    relicSource: 'elite',
+};
+
+/**
+ * The Mirror Brooch (T's): +5 Mind, and Mirror Ward (◆3): REFLECT 50%. A
+ * quest's reward (no quest hands it out yet).
+ */
+const MIRROR_BROOCH: Equipment = {
+    id: 'relic-mirror-brooch',
+    name: 'Mirror Brooch',
+    description: '+5 Mind while worn. Gain REFLECT 50%.',
+    category: 'equipment',
+    slot: 'relic',
+    statModifiers: [{ stat: 'mind', value: 5 }],
+    grantsSignature: 'sig-defender-brooch',
+    laneId: 'defender',
+    relicSource: 'quest',
+};
+
+/**
+ * The Carapace Belt (T's): +5 Body, and Hold the Line (◆4): your GUARD is not
+ * lost at the end of the foe's next turn. A quest's reward (no quest hands it
+ * out yet).
+ */
+const CARAPACE_BELT: Equipment = {
+    id: 'relic-carapace-belt',
+    name: 'Carapace Belt',
+    description: "+5 Body while worn. Your GUARD isn't lost at the end of the foe's next turn.",
+    category: 'equipment',
+    slot: 'relic',
+    statModifiers: [{ stat: 'body', value: 5 }],
+    grantsSignature: 'sig-defender-belt',
+    laneId: 'defender',
+    relicSource: 'quest',
+};
+
 /** A fresh copy of a relic (never aliases the library singleton). */
 export function cloneRelic(relic: Equipment): Equipment {
     return { ...relic, statModifiers: (relic.statModifiers ?? []).map(m => ({ ...m })) };
@@ -158,6 +210,7 @@ export function cloneRelic(relic: Equipment): Equipment {
 export const relicLibrary: readonly Equipment[] = [
     SUPPLIANTS_RING, CRIMSON_CIRCLET, RUBY_SIGNET, BLEEDING_SIGNET,
     ELEMENTALIST_SIGNET, ELEMENTALIST_BROOCH, ELEMENTALIST_BELT,
+    THORNBACK_SIGNET, MIRROR_BROOCH, CARAPACE_BELT,
 ];
 
 /** Resolve a relic by id (returns the canonical singleton, not a clone). */
