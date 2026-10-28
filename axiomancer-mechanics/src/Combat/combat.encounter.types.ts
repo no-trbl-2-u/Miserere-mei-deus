@@ -168,7 +168,10 @@ export type SignatureSkillKind =
     | 'heal-trigger-leech'  // the Bleeding Signet: HEAL 5, then trigger the foe's LEECH
     | 'clear-yours-trigger-storm' // the Elementalist's Signet: clear your INFERNO, trigger the foe's STORM
     | 'foe-inferno-to-storm'      // the Elementalist's Brooch: the foe-only INFERNO becomes STORM
-    | 'blizzard-to-storm';        // the Elementalist's Belt: all BLIZZARD becomes STORM
+    | 'blizzard-to-storm'         // the Elementalist's Belt: all BLIZZARD becomes STORM
+    | 'guard-to-thorns'           // the Thornback Signet: THORNS equal to your GUARD
+    | 'reflect-half'              // the Mirror Brooch: REFLECT 50%
+    | 'hold-guard';               // the Carapace Belt: your GUARD is kept through the foe's next turn
 
 export type SignatureSkillId =
     | 'sig-disarming-plea'
@@ -177,7 +180,10 @@ export type SignatureSkillId =
     | 'sig-bleeding-signet'
     | 'sig-elementalist-signet'
     | 'sig-elementalist-brooch'
-    | 'sig-elementalist-belt';
+    | 'sig-elementalist-belt'
+    | 'sig-defender-signet'
+    | 'sig-defender-brooch'
+    | 'sig-defender-belt';
 
 /** Player archetype, derived from the dominant base stat. Drives (mobile) the
  *  portrait only. */

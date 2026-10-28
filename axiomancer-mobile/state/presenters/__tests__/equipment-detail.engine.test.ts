@@ -67,4 +67,12 @@ describe('equipment detail view-model — lane', () => {
         const vm = selectEquipmentDetailViewModel(stateWith([relic], [relic]), id)!;
         expect(vm.lane).toBe('Lane: Elementalist (while worn)');
     });
+
+    it.each([
+        'relic-thornback-signet', 'relic-mirror-brooch', 'relic-carapace-belt',
+    ])('the Defender relic %s reads exactly "Lane: Defender (while worn)" (DF1e, A10)', (id) => {
+        const relic = getRelicById(id)!;
+        const vm = selectEquipmentDetailViewModel(stateWith([relic], [relic]), id)!;
+        expect(vm.lane).toBe('Lane: Defender (while worn)');
+    });
 });

@@ -2007,6 +2007,9 @@ const SIG_ICON: Record<SignatureSkill['kind'], string> = {
     'clear-yours-trigger-storm': '🌩',
     'foe-inferno-to-storm': '🔥',
     'blizzard-to-storm': '❄',
+    'guard-to-thorns': '🌵',
+    'reflect-half': '🪞',
+    'hold-guard': '🛡',
 };
 
 function signaturesVM(state: CombatEncounterState): CombatSignatureVM[] {

@@ -1656,6 +1656,37 @@ export function programWeatherSignature(state: CombatEncounterState, op: Weather
     return { state: { ...s, program: { ...l, el } }, events };
 }
 
+/** A spike signature's change to the spikes (Defender relics, DF1e). */
+export type SpikeSignatureOp = 'guard-to-thorns' | 'reflect-half' | 'hold-guard';
+
+/** Mirror Brooch's REFLECT, in percent. */
+export const MIRROR_BROOCH_REFLECT = 50;
+
+/** Whether the spike signature would change anything now (false: it is refused). */
+export function programSpikeSignatureLive(state: CombatEncounterState, op: SpikeSignatureOp): boolean {
+    switch (op) {
+        case 'guard-to-thorns': return (state.guard ?? 0) > 0;
+        case 'reflect-half': return true;
+        case 'hold-guard': return !programHoldsGuard(state);
+    }
+}
+
+/**
+ * A spike signature, outside any card line. The Signet adds THORNS equal to
+ * your GUARD now (unscaled, as Ruby Tithe is). The Brooch adds REFLECT 50%
+ * (adds and refreshes to 2 turns). The Belt keeps your GUARD through this
+ * round's foe turn.
+ */
+export function programSpikeSignature(state: CombatEncounterState, op: SpikeSignatureOp): ProgramPlayResult {
+    const l = cloneLedger(state.program ?? initProgramLedger());
+    const before = l.spikes ?? initSpikeState();
+    let after: SpikeState = before;
+    if (op === 'guard-to-thorns') after = addThorns(before, state.guard ?? 0);
+    else if (op === 'reflect-half') after = addReflect(before, MIRROR_BROOCH_REFLECT);
+    else after = { ...before, guardHoldRound: state.round };
+    return { state: { ...state, program: { ...l, spikes: after } }, events: spikeEvents(before, after) };
+}
+
 /**
  * Start of the foe's turn (before its telegraphed action): the foe loses its
  * LEECH potency in VITAE (not a DEAL: unscaled, no VULNERABLE), the player

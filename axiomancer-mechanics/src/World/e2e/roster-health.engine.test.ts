@@ -41,6 +41,11 @@ const PINNED_ORPHANS: ReadonlyArray<{ lens: string; id: string }> = [
     { lens: 'item-ungranted', id: 'relic-elementalist-signet' },
     { lens: 'item-ungranted', id: 'relic-elementalist-brooch' },
     { lens: 'item-ungranted', id: 'relic-elementalist-belt' },
+    // The Defender's relics, the same way: the Signet drops from elites; the Brooch
+    // and the Belt wait on a quest that hands them out.
+    { lens: 'item-ungranted', id: 'relic-thornback-signet' },
+    { lens: 'item-ungranted', id: 'relic-mirror-brooch' },
+    { lens: 'item-ungranted', id: 'relic-carapace-belt' },
 ];
 
 describe('roster health — live tree', () => {
