@@ -45,7 +45,7 @@ function addPlanRow(md, id, extra = '') {
   const lines = md.split('\n')
   const open = lines.findIndex((l) => l.startsWith('- [ ] Phase '))
   assert.ok(open > 0, 'the live build plan has an open row')
-  lines.splice(open, 0, `- [ ] Phase ${id} — fixture row ${id}${extra}. Requires nothing.`)
+  lines.splice(open, 0, `- [ ] Phase ${id} — fixture row ${id}${extra} (attended). Requires nothing.`)
   const log = lines.findIndex((l) => l === '## Queue change log')
   const entry = lines.findIndex((l, i) => i > log && l.startsWith('- **'))
   lines.splice(entry, 0, `- **2026-10-28** — fixture entry **added Phase ${id}**.`, '')
@@ -55,12 +55,12 @@ function addPlanRow(md, id, extra = '') {
 /** Close a build-plan row the way a shipped PR does. */
 const shipPlanRow = (md, id) => md.replace(`- [ ] Phase ${id} —`, `- [x] (#9001) Phase ${id} —`)
 
-/** An Items row at the top of the table. */
+/** An Items row at the top of the table; its fixture rows are attended, so `Rows` may name them. */
 function addItem(md, name, due, rows) {
   const lines = md.split('\n')
-  const head = lines.indexOf('| Status | Due | Item | Window | Rows |')
+  const head = lines.indexOf('| Status | Due | Item | Window | Rows | Waits on |')
   assert.ok(head > 0)
-  lines.splice(head + 2, 0, `| [ ] | ${due} | ${name} | W1 | ${rows} |`)
+  lines.splice(head + 2, 0, `| [ ] | ${due} | ${name} | W1 | ${rows} | - |`)
   return lines.join('\n')
 }
 
@@ -195,7 +195,7 @@ test('a cell both plots changed to different values is listed for Haiku, as befo
     write(d, DEADLINES, addUnscheduled(addUnscheduled(read(d, DEADLINES), 'ZC2'), 'ZC3'))
   })
   try {
-    const setRows = (rows) => (d) => write(d, DEADLINES, read(d, DEADLINES).replace('| Item ZC | W1 | ZC1 |', `| Item ZC | W1 | ${rows} |`))
+    const setRows = (rows) => (d) => write(d, DEADLINES, read(d, DEADLINES).replace('| Item ZC | W1 | ZC1 | - |', `| Item ZC | W1 | ${rows} | - |`))
     branchWith(work, 'plot-c', setRows('ZC1, ZC2'))
     branchWith(work, 'plot-d', setRows('ZC1, ZC3'))
     setRows('ZC1, ZC2')(work)

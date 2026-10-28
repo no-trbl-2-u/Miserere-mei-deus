@@ -63,7 +63,9 @@ fewer, do it inline.
   `plan/deadlines.md` edits that Item itself: its name, date or rows
   are changed to the work that now finishes it (`needs plot` when
   that work is only a candidate), or a `T` Item T says is done is
-  ticked `[x]`. Add one `## Change log` line at the top of that
+  ticked `[x]`. Every Item is a T act (phase DL2b): loop work the
+  Item needs goes in its `Waits on` cell, never into an Item's
+  `Rows`. Add one `## Change log` line at the top of that
   section naming the edit and why. No lint sees an Item whose
   premise is gone while its rows still exist; this step is the only
   guard. Then run `node scripts/check-deadlines.mjs`; it must be

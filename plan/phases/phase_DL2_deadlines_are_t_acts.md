@@ -132,7 +132,7 @@ act after it before v0.3, it goes under the demo of its window.
 
 The 18 shipped loop-only Items (Status `[x]`, `Rows` naming loop rows only) are
 dropped: the build plan and `plan/ARCHIVE.md` keep their record, and the change
-log line names them. [T to confirm #1]
+log line names them. Accepted at merge (default).
 
 ## Decisions made upfront — DO NOT ASK
 
@@ -151,7 +151,7 @@ log line names them. [T to confirm #1]
   table without a failure.
 - **Slot asap.** The daily reminder T reads every morning is the thing being
   changed, and the MVP is Nov 16; two ticks ahead of the questline rows cost
-  less than two weeks of a reminder that lists loop rows. [T to confirm #2]
+  less than two weeks of a reminder that lists loop rows. Accepted at merge (default).
 - **No new D-number.** This sharpens DL1's Items rule; the change log records
   T's words.
 
