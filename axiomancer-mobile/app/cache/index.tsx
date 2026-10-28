@@ -40,6 +40,9 @@ import { makeStyles, usePalette } from '@/theme/runtime';
 export const CACHE_OFFER_CARD_W = 100;
 export const CACHE_OFFER_CARD_H = 147;
 
+/** The cache column's widest extent, in points (the rest column's width). */
+export const CACHE_COLUMN_MAX_WIDTH = 520;
+
 function OfferCard({ offer, onPress }: { offer: CacheChoiceOfferVM; onPress: () => void }) {
     const styles = useStyles();
     const label = offer.card
@@ -97,59 +100,61 @@ export default function CacheScreen() {
     return (
         <ScreenBg scrollable={false} art="cache" regionPlate={regionPlate}>
             <ScrollView style={styles.scrollOuter} contentContainerStyle={styles.scroll}>
-                <Text style={styles.eyebrow}>{CACHE_CHOICE_EYEBROW}</Text>
-                <Text style={styles.title}>{CACHE_CHOICE_TITLE}</Text>
+                <View style={styles.column} testID="cache-column">
+                    <Text style={styles.eyebrow}>{CACHE_CHOICE_EYEBROW}</Text>
+                    <Text style={styles.title}>{CACHE_CHOICE_TITLE}</Text>
 
-                {vm.phase === 'offer' && (
-                    <View testID="cache-choice-offers">
-                        {/* The authored node line sits ABOVE the one-way warning;
-                          * the warning always shows, so the player is always told
-                          * the node is spent and there is no leaving without
-                          * choosing. */}
-                        {vm.description ? (
-                            <Text style={styles.body} testID="cache-choice-intro">
-                                {vm.description}
+                    {vm.phase === 'offer' && (
+                        <View testID="cache-choice-offers">
+                            {/* The authored node line sits ABOVE the one-way warning;
+                              * the warning always shows, so the player is always told
+                              * the node is spent and there is no leaving without
+                              * choosing. */}
+                            {vm.description ? (
+                                <Text style={styles.body} testID="cache-choice-intro">
+                                    {vm.description}
+                                </Text>
+                            ) : null}
+                            <Text style={styles.oneWayNote} testID="cache-choice-intro-one-way">
+                                {CACHE_CHOICE_INTRO}
                             </Text>
-                        ) : null}
-                        <Text style={styles.oneWayNote} testID="cache-choice-intro-one-way">
-                            {CACHE_CHOICE_INTRO}
-                        </Text>
-                        {vm.offers.map((offer) => (
-                            <OfferCard
-                                key={offer.id}
-                                offer={offer}
-                                onPress={() => actions.chooseLootCacheChoiceOffer(offer.id)}
-                            />
-                        ))}
-                    </View>
-                )}
-
-                {vm.phase === 'outcome' && vm.outcome !== null && (
-                    <View style={styles.card} testID="cache-outcome">
-                        <Text style={styles.eyebrow}>{CACHE_OUTCOME_EYEBROW}</Text>
-                        <Text style={[styles.cardTitle, { color: AXM.sulfur }]}>{vm.outcome.label}</Text>
-                        <View style={styles.chipRow}>
-                            {vm.outcome.cardName !== null && (
-                                <Text style={styles.chip}>{cacheOutcomeCardChip(vm.outcome.cardName)}</Text>
-                            )}
-                            {vm.outcome.itemNames.map((name, i) => (
-                                <Text key={`${name}:${i}`} style={styles.chip}>{cacheOutcomeItemChip(name)}</Text>
+                            {vm.offers.map((offer) => (
+                                <OfferCard
+                                    key={offer.id}
+                                    offer={offer}
+                                    onPress={() => actions.chooseLootCacheChoiceOffer(offer.id)}
+                                />
                             ))}
-                            {vm.outcome.currency > 0 && (
-                                <Text style={styles.chip}>{cacheOutcomeCurrencyChip(vm.outcome.currency)}</Text>
-                            )}
                         </View>
-                        <TouchableOpacity
-                            accessibilityRole="button"
-                            accessibilityLabel="Move on"
-                            onPress={actions.claimLootCacheChoiceOutcome}
-                            style={styles.bigButton}
-                            testID="cache-claim"
-                        >
-                            <Text style={styles.bigButtonText}>{CACHE_OUTCOME_CLAIM_LABEL}</Text>
-                        </TouchableOpacity>
-                    </View>
-                )}
+                    )}
+
+                    {vm.phase === 'outcome' && vm.outcome !== null && (
+                        <View style={styles.card} testID="cache-outcome">
+                            <Text style={styles.eyebrow}>{CACHE_OUTCOME_EYEBROW}</Text>
+                            <Text style={[styles.cardTitle, { color: AXM.sulfur }]}>{vm.outcome.label}</Text>
+                            <View style={styles.chipRow}>
+                                {vm.outcome.cardName !== null && (
+                                    <Text style={styles.chip}>{cacheOutcomeCardChip(vm.outcome.cardName)}</Text>
+                                )}
+                                {vm.outcome.itemNames.map((name, i) => (
+                                    <Text key={`${name}:${i}`} style={styles.chip}>{cacheOutcomeItemChip(name)}</Text>
+                                ))}
+                                {vm.outcome.currency > 0 && (
+                                    <Text style={styles.chip}>{cacheOutcomeCurrencyChip(vm.outcome.currency)}</Text>
+                                )}
+                            </View>
+                            <TouchableOpacity
+                                accessibilityRole="button"
+                                accessibilityLabel="Move on"
+                                onPress={actions.claimLootCacheChoiceOutcome}
+                                style={styles.bigButton}
+                                testID="cache-claim"
+                            >
+                                <Text style={styles.bigButtonText}>{CACHE_OUTCOME_CLAIM_LABEL}</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )}
+                </View>
             </ScrollView>
         </ScreenBg>
     );
@@ -158,6 +163,9 @@ export default function CacheScreen() {
 const useStyles = makeStyles((AXM) => ({
     scrollOuter: { flex: 1 },
     scroll: { padding: 14, paddingBottom: 24, flexGrow: 1, justifyContent: 'center' },
+    // A phone fills the column edge to edge; a wide window keeps each
+    // offer's face beside its label instead of across the screen.
+    column: { width: '100%', maxWidth: CACHE_COLUMN_MAX_WIDTH, alignSelf: 'center' },
     eyebrow: {
         fontFamily: FONTS.sans,
         fontSize: 12,
