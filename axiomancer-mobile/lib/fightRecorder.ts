@@ -8,7 +8,9 @@
  * the combat panel's own state, so the panel hands each new state to
  * `observe`: every log entry it has not seen yet is stamped with milliseconds
  * since `start` and the player's VITAE at that moment, and the first state
- * gives the start deck. A state with a final outcome ends the fight; the
+ * gives the start deck and the opening hand. The engine deals that hand
+ * without a `hand-drawn` event, so the recorder stamps one for it, first in
+ * the stream, and the card-usage report counts it as drawn at turn end 0. A state with a final outcome ends the fight; the
  * `endCombat` bridge ends one the panel never finished (a WITHDRAW). Either
  * way the `FightPost` goes out exactly once.
  *
@@ -56,7 +58,7 @@ export interface FightStart {
 }
 
 /** The slice of the panel's combat state the recorder reads. */
-export type ObservedFight = Pick<CombatEncounterState, 'log' | 'player' | 'enemy' | 'deck' | 'turn' | 'finalOutcome'> & {
+export type ObservedFight = Pick<CombatEncounterState, 'log' | 'player' | 'enemy' | 'deck' | 'hand' | 'turn' | 'finalOutcome'> & {
     /** The signatures the worn relics grant; absent on a partial state. */
     signatures?: readonly string[];
 };
@@ -120,15 +122,17 @@ export function createFightRecorder(deps: FightRecorderDeps = {}): FightRecorder
             const rec = open;
             // A fight this recording was not started for (a dev sandbox foe) is not ours.
             if (!rec || state.enemy.id !== rec.enemyId) return;
+            const vitae = state.player.health;
+            const ms = Math.max(0, Math.round(now() - rec.startedAt));
             if (rec.deck === null) {
                 rec.deck = [...state.deck];
                 // The engine derived these from the worn loadout at combat-init, so the post agrees with the fight.
                 rec.signatures = [...(state.signatures ?? [])];
+                // The opening hand is dealt with no `hand-drawn` in the log; it enters the stream here.
+                if (state.hand.length > 0) rec.events.push({ kind: 'hand-drawn', cards: state.hand.map((h) => h.cardId), ms, vitae });
             }
             // The log only grows within a fight; a shorter one is the panel's fight begun again.
             if (state.log.length < rec.cursor) rec.cursor = 0;
-            const vitae = state.player.health;
-            const ms = Math.max(0, Math.round(now() - rec.startedAt));
             for (const event of state.log.slice(rec.cursor)) rec.events.push({ ...event, ms, vitae });
             rec.cursor = state.log.length;
             rec.turns = state.turn;
