@@ -7,7 +7,9 @@
  * here can be unaffordable or capped, so there is no `disabledReason` to
  * shape. The card offer carries the rolled candidate's face (the same
  * `rewardCardVMs` the combat reward draws), so the player sees the card
- * before choosing it.
+ * before choosing it. The goods offer carries the rolled goods as the same
+ * chips the outcome ledger prints, so neither side of the one-way pick is
+ * blind (CRITIQUE pass 108).
  */
 
 import { getCardById } from '@mechanics';
@@ -17,6 +19,8 @@ import { rewardCardVMs, type CombatCardVM } from './combat-encounter.engine';
 import {
     CACHE_CHOICE_OFFER_DESC,
     CACHE_CHOICE_OFFER_LABEL,
+    cacheOutcomeCurrencyChip,
+    cacheOutcomeItemChip,
 } from './cache.copy';
 
 // ---------------------------------------------------------------------------
@@ -29,6 +33,8 @@ export interface CacheChoiceOfferVM {
     desc: string;
     /** The rolled card's face, scaled to the player's stats. Set iff `id === 'card'` and the id resolves. */
     card: CombatCardVM | null;
+    /** The rolled goods as ledger chips ("+ HEALING POTION", "+10 SHILLINGS"). Empty unless `id === 'item'`. */
+    goods: readonly string[];
 }
 
 export interface CacheChoiceOutcomeVM {
@@ -59,12 +65,19 @@ const OFFER_IDS: readonly LootCacheChoiceOfferId[] = Object.freeze(['card', 'ite
 
 type PlayerStats = Parameters<typeof rewardCardVMs>[1];
 
-function offersFor(cardCandidate: string, stats: PlayerStats): readonly CacheChoiceOfferVM[] {
+/** The chips the outcome ledger prints for the goods, built before the pick from the same candidates. */
+function goodsChips(s: LootCacheChoiceSession): readonly string[] {
+    const chips = s.itemCandidates.map(i => cacheOutcomeItemChip(i.name));
+    return s.currencyCandidate > 0 ? [...chips, cacheOutcomeCurrencyChip(s.currencyCandidate)] : chips;
+}
+
+function offersFor(s: LootCacheChoiceSession, stats: PlayerStats): readonly CacheChoiceOfferVM[] {
     return OFFER_IDS.map(id => ({
         id,
         label: CACHE_CHOICE_OFFER_LABEL[id],
         desc: CACHE_CHOICE_OFFER_DESC[id],
-        card: id === 'card' ? (rewardCardVMs([cardCandidate], stats)[0] ?? null) : null,
+        card: id === 'card' ? (rewardCardVMs([s.cardCandidate], stats)[0] ?? null) : null,
+        goods: id === 'item' ? goodsChips(s) : [],
     }));
 }
 
@@ -99,7 +112,7 @@ export function selectCacheVM(
     return {
         active: true,
         phase: s.phase,
-        offers: offersFor(s.cardCandidate, stats),
+        offers: offersFor(s, stats),
         outcome,
         description: s.description,
     };
