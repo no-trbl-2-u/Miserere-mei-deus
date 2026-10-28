@@ -8,6 +8,7 @@
 | Due | Item | What it needs | Window |
 |---|---|---|---|
 | 2026-10-27 (1 day overdue) | Pick the item icons, the six lane relics included; the loop applies them (1 h) | needs you: IT1b ready for you | W1 |
+| 2026-10-28 (today) | Design the Breakwater map before enemy session 1: total node count and count per kind, drop the gathering nodes, check the coast art for room for more keep nodes (0.5 h) | needs you: your task | W1 |
 | 2026-10-28 (today) | Enemy session 1: Chapter 1's normal roster, the Breakwater's four fight nodes (1 h) | needs you: your task | W1 |
 | 2026-10-29 (tomorrow) | Author the first character: portrait, starting relic and its lane, two starting lanes, three lane cards, the playstyle line (1 h) | needs you: CH1e ready for you | W1 |
 | 2026-10-30 (in 2 days) | W1 demo part 1: T plays the ten hard candidates (1 h) | needs you: your task | W1 |

@@ -3,6 +3,8 @@
  *
  * One irreversible choice of two: TAKE A CARD (a rolled reward card) or
  * TAKE THE GOODS (a tier-scaled consumable haul + the node's currency).
+ * Both offers show what they hold before the pick: the card's face, and
+ * the goods as the outcome ledger's chips.
  * `resolveMapEvent` consumes the node on entry,
  * before any choice — there is no back-out: no header back, no
  * swipe-dismiss (`gestureEnabled: false` in the root layout), no Android
@@ -47,7 +49,9 @@ function OfferCard({ offer, onPress }: { offer: CacheChoiceOfferVM; onPress: () 
     const styles = useStyles();
     const label = offer.card
         ? `${offer.label}: ${offer.card.name}. ${offer.card.detail.outcomeLine}. ${offer.desc}`
-        : `${offer.label}. ${offer.desc}`;
+        : offer.goods.length > 0
+            ? `${offer.label}: ${offer.goods.join(', ')}. ${offer.desc}`
+            : `${offer.label}. ${offer.desc}`;
     return (
         <View style={styles.offerCol}>
             <TouchableOpacity
@@ -65,6 +69,13 @@ function OfferCard({ offer, onPress }: { offer: CacheChoiceOfferVM; onPress: () 
                 <View style={styles.offerText}>
                     <Text style={styles.offerLabel}>{offer.label}</Text>
                     <Text style={styles.offerDesc}>{offer.desc}</Text>
+                    {offer.goods.length > 0 ? (
+                        <View style={styles.chipRow} testID={`cache-choice-goods-${offer.id}`}>
+                            {offer.goods.map((chip, i) => (
+                                <Text key={`${chip}:${i}`} style={styles.chip}>{chip}</Text>
+                            ))}
+                        </View>
+                    ) : null}
                 </View>
             </TouchableOpacity>
         </View>

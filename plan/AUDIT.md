@@ -30,6 +30,10 @@
 > Pass narrative through the eleventh pass (2026-09-24) and resolved rows
 > moved verbatim to `archive-pre-revamp:plan/archive/AUDIT_2026.md` (TRIM THE FAT T4, 2026-09-25).
 
+### [loop-call] 2026-10-28 — the cache's TAKE THE GOODS reveals its rolled goods (CRITIQUE pass 108, issue #1041)
+- call: show the goods before the pick rather than rewrite the copy to say "sight unseen". RW1b (A8) treated a blind TAKE A CARD as a defect (CRITIQUE RC2 item 11) and left TAKE THE GOODS untouched without ruling it hidden; the goods are rolled at session creation, so the reveal is presentation only and makes the one-way pick symmetric.
+- reversible by T: drop the offer's `goods` chips in `cache.engine.ts` and the copy can say the box is blind.
+
 # Site audit — 2026-10-25
 
 ## Top 5 findings (scored)
