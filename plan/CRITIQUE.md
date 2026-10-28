@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-10-27 at commit 02372412
-> Pass count: 105
+> Last pass: 2026-10-28 at commit 4edd5433
+> Pass count: 106
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
@@ -911,7 +911,33 @@
 > line." and the "Fixture Shop" names are the fixtures' own content, not
 > findings.
 
+> **[critique pass 106, 2026-10-28, commit 4edd5433] Unattended `/march`
+> tick.** `critique:drive` (`CRITIQUE_VIEWPORT=both`), full 11-screen
+> set: 22 captures, 0 nav trouble, 0 console/page errors. 24 first-parent
+> commits after pass 105: the pass-104 zero fix (#1005), DF1c-DF1e (the
+> Defender's spikes board, cards and relics), QL1's map-scoped kills,
+> three `plot` merges and the truth runs. The fix reached its three named
+> readouts (CONVICTION reads "◆ 0", the rest PURSE reads "0"), but an
+> enlarged crop of the hazard route ladder shows "RI 28" for a threshold
+> of 20: the same barred zero, in a style the fix did not touch. A grep
+> finds about a dozen more numeric styles still in `FONTS.gothic`. Filed
+> as one MED row for the sweep and a guard, not one per screen. Reconfirmed and not
+> re-filed: the covered fan names on a phone, the WITHDRAW sub-line
+> contrast, the `/cache` and satchel gap, the village Minor Healing
+> Potion row and the map legend's SEALED key. No screen in the set shows
+> a Defender card or relic, so DF1d/DF1e also shipped unseen. That is the
+> same coverage gap as the `/cache` row, so it gets no new row.
+
 ## Pending
+
+### [MED] hazard / village / forge / deck — the barred gothic zero still prints in about a dozen numeric styles, so the hazard ladder reads "RI 28" for a threshold of 20
+- pass: 106 (commit 4edd5433)
+- viewport: both (375x812, 1280x800)
+- category: comprehension
+- observation: #1005 moved the CONVICTION chip, the rest PURSE and the hazard card FORCE/ESCAPE values to `FONTS.sans`, and those three now read correctly. The same Pirata One zero still prints wherever another style puts a number in `FONTS.gothic`. In this pass's captures the Ledge Crawl ladder's first cell reads "RI 28" for a threshold of 20 when enlarged, beside "RII 23" and "RIII 25". The other styles are off the critique set but print live figures: a 10, 20 or 30-shilling stall price reads 18, 28 or 38, and a forge budget of 200 reads 288.
+- evidence: enlarged crop of `.critique-artifacts/desktop/10-hazard.png` (the Ledge Crawl PASS row, y~460-484); `components/hazard/RouteSelect.tsx:315` `ladderValue`; other numeric styles still in `FONTS.gothic`: `app/village/index.tsx:336` `warePrice`, `app/blacksmith/index.tsx:416` `budgetValue`, `app/(tabs)/deck/index.tsx:177,192` `statValue`/`tallyValue`, `app/hazard-deck/index.tsx:221,228`, `app/character-select/index.tsx:272` `statValue`, `app/(tabs)/character/index.tsx:329,343` `levelText`/`baseStatValue`, `components/hazard/HazardOverlays.tsx:310` `flashStatValue`, `components/combat/encounter/CombatEncounterPanel.tsx:1389,1392` `pilgrimConviction`/`pilgrimStatVal`.
+- suggested fix: move each style that prints a number to `FONTS.sans`, leaving names and titles in the gothic face as #1005 did. Then guard it so a fourth spot-fix is not needed: a lint test over `app/` and `components/` that fails when a style named for a figure (`*Value`, `*Price`, `*Stat*`, `level*`, `*Budget*`, `*Count`, ...) uses `FONTS.gothic`, or a shared `TYPE.figure` token used by every one of them.
+- source: critique:drive (unattended)
 
 ### [MED] ci / critique-drive — `/cache` and the satchel are not in the critique set, so RW1b's card-face offer and IT1b's relic icons shipped unseen
 - pass: 103 (commit 79ecad63); raised LOW to MED at pass 105 (commit 02372412)
