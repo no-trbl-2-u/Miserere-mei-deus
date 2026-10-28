@@ -191,9 +191,9 @@ layout-engine parity test holds both halves to the same node ids.
 The current dispatcher is `resolveMapEvent(state, rng?)` from
 `src/World/MapEvents/resolve-map-event.ts`, shipped in Spec 23 and
 populated with content in Phase 24. It returns `{ state, event }`
-where `event` is a discriminated union over the twelve `MapEventKind`
-values ('quest' joined the original eight in Phase 137 and was retired
-in Phase 61; 'narration' joined in 2026-06, 'blacksmith' and 'travel'
+where `event` is a discriminated union over the thirteen `MapEventKind`
+values ('quest' joined the original eight in Phase 137, was retired
+in Phase 61 and came back in QL1a as the questline's giver node; 'narration' joined in 2026-06, 'blacksmith' and 'travel'
 later in 2026-08, 'labyrinth' in M4, 2026-09-27):
 
 | Event kind     | Result shape                                                              |
@@ -206,6 +206,7 @@ later in 2026-08, 'labyrinth' in M4, 2026-09-27):
 | `cutscene`     | `{ kind: 'cutscene', lines }` — narration only.                           |
 | `hazard`       | `{ kind: 'hazard', effects, damage }` — applies effects + damage.         |
 | `loot-cache`   | `{ kind: 'loot-cache', items, currency }` — fixed grant.                  |
+| `quest`        | `{ kind: 'quest', questline, node, stage, behind?, ahead? }` — a questline step's giver (`QuestPayload`, node 1-4); never consumed until its step is accepted. Contract in `src/World/questline.ts`; the step rules, locks and held roads arrive with QL1b. |
 | `narration`    | `{ kind: 'narration', dialogue }` — inline monologue; the `DialogueTree` is authored directly on the node (no map NPC lookup). Barrel: `NarrationPayload`. |
 | `none`         | Consumed node (one-shot) or no pool registered.                            |
 

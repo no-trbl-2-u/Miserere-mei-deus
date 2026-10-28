@@ -63,6 +63,8 @@ export function selectEventArtSlug(event: ResolvedEvent): EventArtSlug {
         case 'travel':
         // The Labyrinth door enters the Aporia straight from its interceptor.
         case 'labyrinth':
+        // A quest node routes to its own screen (QL1c); no modal art yet.
+        case 'quest':
         case 'none':
             return 'interaction-generic';
     }
@@ -91,6 +93,8 @@ const DEFAULT_BODY_BY_KIND: Record<ResolvedEvent['kind'], string> = {
     // The Labyrinth door never renders in the modal (its
     // interceptor enters the Aporia); the exhaustive record needs the entry.
     labyrinth: 'A door that was not open before.',
+    // A quest node routes to its own screen (QL1c); the record needs the entry.
+    quest: 'Someone is waiting on an answer.',
     none: '',
 };
 

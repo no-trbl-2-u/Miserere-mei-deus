@@ -1375,7 +1375,7 @@ function resolveCurrentMapEventInner(store: AppStore, sourceNodeType?: string, s
         // start node — mirroring the engine dispatcher's own travel
         // short-circuit. Doors stay repeatable.
         const shouldConsumeNode = result.event.kind !== 'none' &&
-            !['encounter', 'travel', 'labyrinth'].includes(result.event.kind);
+            !['encounter', 'travel', 'labyrinth', 'quest'].includes(result.event.kind);
         if (shouldConsumeNode) {
             const currentNodeId = resolvedState.world?.currentMap?.currentNode;
             if (currentNodeId) {

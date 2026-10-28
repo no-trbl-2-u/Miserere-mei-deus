@@ -330,7 +330,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
                 // target is the enemy's display name, shared by every Act 1
                 // region's door fight.
                 for (const enemy of encounter.enemies) {
-                    const kill = settleKill(nextPlayer, nextQuests, enemy.name, state.world.currentMap.name);
+                    const kill = settleKill(nextPlayer, nextQuests, enemy, state.world.currentMap.name);
                     nextPlayer = kill.player;
                     nextQuests = kill.quests;
                 }
