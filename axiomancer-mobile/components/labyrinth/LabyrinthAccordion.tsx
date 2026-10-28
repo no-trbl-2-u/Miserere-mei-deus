@@ -136,7 +136,7 @@ const useStyles = makeStyles((AXM) => ({
         gap: 10,
     },
     stripNumber: {
-        fontFamily: FONTS.gothic,
+        fontFamily: FONTS.sans,
         fontSize: 22,
         color: AXM.sulfur,
     },

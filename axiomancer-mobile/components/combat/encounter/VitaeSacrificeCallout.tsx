@@ -121,7 +121,7 @@ const useStyles = makeStyles((AXM) => ({
         position: 'absolute', top: -22, left: -4, width: 140, alignItems: 'flex-start',
     },
     tagText: {
-        fontFamily: FONTS.gothic, fontSize: 12, letterSpacing: 0.6, color: AXM.blood,
+        fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 0.6, color: AXM.blood,
         backgroundColor: AXM.deepBg, borderColor: AXM.blood, borderWidth: 1, borderRadius: 3,
         paddingHorizontal: 5, paddingVertical: 1, overflow: 'hidden',
     },

@@ -413,7 +413,7 @@ const useStyles = makeStyles((AXM) => ({
         marginBottom: 10,
     },
     budgetLabel: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 2, color: AXM.bone },
-    budgetValue: { fontFamily: FONTS.gothic, fontSize: 20, letterSpacing: 1, color: AXM.sulfur },
+    budgetValue: { fontFamily: FONTS.sans, fontSize: 20, letterSpacing: 1, color: AXM.sulfur },
     sectionLabel: {
         fontFamily: FONTS.sans,
         fontSize: 11,

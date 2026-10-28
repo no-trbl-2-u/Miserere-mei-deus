@@ -80,7 +80,7 @@ const useStyles = makeStyles((AXM) => ({
         gap: 2,
     },
     row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10 },
-    clock: { fontFamily: FONTS.gothic, fontSize: 22, lineHeight: 24, letterSpacing: 1 },
+    clock: { fontFamily: FONTS.sans, fontSize: 22, lineHeight: 24, letterSpacing: 1 },
     back: { borderWidth: 1, borderColor: AXM.ash, paddingHorizontal: 10, paddingVertical: 3 },
     backText: { fontFamily: FONTS.sans, fontSize: 11, letterSpacing: 1.6, color: AXM.bone },
     reserve: { fontFamily: FONTS.mono, fontSize: 11, letterSpacing: 1, color: HZ.acid },

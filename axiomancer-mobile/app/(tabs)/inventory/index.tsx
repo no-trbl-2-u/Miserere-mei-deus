@@ -209,7 +209,7 @@ const useStyles = makeStyles((AXM) => ({
     title: { fontFamily: FONTS.gothic, fontSize: 28, lineHeight: 30, color: AXM.parchment, marginTop: 2 },
     shillingBox: { alignItems: 'flex-end' },
     shillingLabel: { fontFamily: FONTS.mono, fontSize: 11, color: AXM.bone, letterSpacing: 1 },
-    shillingVal: { fontFamily: FONTS.gothic, fontSize: 22, color: AXM.sulfur, lineHeight: 24 },
+    shillingVal: { fontFamily: FONTS.sans, fontSize: 22, color: AXM.sulfur, lineHeight: 24 },
     burdenSection: {
         marginTop: 8,
     },

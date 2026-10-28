@@ -83,7 +83,7 @@ const useStyles = makeStyles((AXM) => ({
     justifyContent: 'center',
   },
   levelText: {
-    fontFamily: FONTS.gothic,
+    fontFamily: FONTS.sans,
     fontSize: 22,
     color: AXM.sulfur,
   },
