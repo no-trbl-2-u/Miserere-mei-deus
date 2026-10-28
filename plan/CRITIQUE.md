@@ -1297,6 +1297,7 @@
 - suggested fix: draw the sub-line in `AXM.bone` at a size of at least 10, keeping it dimmer than WITHDRAW by opacity or weight, not by the ash token; presentation only, pinned in the panel's existing test.
 - source: critique:drive (unattended)
 - issue: #1038
+
 ### [x] [LOW] /cache — TAKE THE GOODS says only "whatever's inside", while TAKE A CARD prints the exact card, so the one irreversible choice weighs a known card against a blind box — RESOLVED 2026-10-28 (branch loop/iterate-cache-goods-reveal, 1273ff68: the goods offer prints its rolled items and shillings as the outcome ledger's chips and names them in its accessibility label; loop-call, the reveal over "sight unseen" copy; pinned in `cache.engine.test.ts` and `cache-card-preview.screen.test.tsx`)
 - pass: 108 (commit 850ce863)
 - viewport: both (375x812, 1280x800)
