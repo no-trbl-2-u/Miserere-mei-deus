@@ -136,8 +136,7 @@ export interface SkipEventResult {
 }
 
 /** The two app actions the skip needs beyond raw store access. */
-export type SkipEventActions = Pick<AppActions, 'resolveCurrentMapEvent' | 'beginHazardEncounter'> &
-    Partial<Pick<AppActions, 'playerDied'>>;
+export type SkipEventActions = Pick<AppActions, 'resolveCurrentMapEvent' | 'beginHazardEncounter' | 'playerDied'>;
 
 export interface SkipEventOptions {
     /** Override the gate (tests). Defaults to `isDevToolsEnabled()`. */
@@ -471,7 +470,7 @@ function skipHazard(store: AppStore, actions: SkipEventActions, nodeId: string |
     const claim = claimHazardRewardsAction(
         store,
         cardId,
-        actions.playerDied ? armingHazardDeath(actions.playerDied) : undefined,
+        armingHazardDeath(actions.playerDied),
     );
     if (!claim.applied) {
         abandonHazardAction(store);

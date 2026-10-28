@@ -317,12 +317,12 @@ const NOOP_CLAIM: ClaimHazardRewardsResult = Object.freeze({
  * A survivable crossing floors VITAE at 1. A crossing whose net swing
  * reaches `health <= 0` is a death and runs the death rule through `die`
  * (the app passes `actions.playerDied`, which also posts the play log's
- * `run-end` on a run over); without one it falls back to the engine verb.
+ * `run-end` on a run over).
  */
 export function claimHazardRewardsAction(
     store: AppStore,
     cardId: string | null,
-    die?: HazardDeathVerb,
+    die: HazardDeathVerb,
 ): ClaimHazardRewardsResult {
     const s = store.getState().hazard?.session;
     if (!s || !s.outcome) return NOOP_CLAIM;
@@ -370,13 +370,7 @@ export function claimHazardRewardsAction(
     // `setState` below.
     const nominalHealth = player.health + vitaeDelta;
     if (engineIsDefeated({ ...player, health: nominalHealth })) {
-        const engineDie: HazardDeathVerb = (cause) => {
-            const verb = (store.getState() as unknown as {
-                playerDied?: (c: 'fight' | 'hazard') => 'revived' | 'run-over';
-            }).playerDied;
-            return verb?.(cause) ?? 'run-over';
-        };
-        const outcomeKind = (die ?? engineDie)('hazard');
+        const outcomeKind = die('hazard');
         // Stamp the tombstone onto the post-death flags (a run over rebuilds
         // run flags, so it is appended after the death rule ran). `dying` is
         // never written here: the death rule owns it.

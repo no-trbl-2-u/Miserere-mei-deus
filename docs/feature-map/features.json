@@ -518,7 +518,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/app/__tests__/death-return.screen.test.tsx, axiomancer-mobile/state/e2e/combat-route.screen.test.tsx, axiomancer-mobile/state/e2e/hazard-death-return.screen.test.tsx"
+        "source": "axiomancer-mobile/app/__tests__/death-return.screen.test.tsx, axiomancer-mobile/components/__tests__/DebugSkipEvent.test.tsx, axiomancer-mobile/state/e2e/combat-route.screen.test.tsx, ..."
       },
       "needsPitch": {
         "value": true,
@@ -6179,6 +6179,12 @@
       "from": "route:dev",
       "to": "route:cutscene",
       "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:dev",
+      "to": "route:death-return",
+      "file": "axiomancer-mobile/components/DebugSkipEvent.tsx"
     },
     {
       "kind": "flow",
