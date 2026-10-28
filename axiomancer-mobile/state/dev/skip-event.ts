@@ -84,6 +84,7 @@ import {
 import {
     abandonHazardAction,
     acknowledgeHazardOutcomeAction,
+    armingHazardDeath,
     claimHazardRewardsAction,
     continueHazardAfterResolveAction,
 } from '@/state/hazard/store-actions';
@@ -459,7 +460,11 @@ function skipHazard(store: AppStore, actions: SkipEventActions, nodeId: string |
         return { kind: 'hazard', nodeId, outcome: 'abandoned', detail: { hazardId: session.hazardId } };
     }
     const cardId = outcome.canSkip ? null : (outcome.offerCards[0]?.id ?? null);
-    const claim = claimHazardRewardsAction(store, cardId, actions.playerDied);
+    const claim = claimHazardRewardsAction(
+        store,
+        cardId,
+        actions.playerDied ? armingHazardDeath(actions.playerDied) : undefined,
+    );
     if (!claim.applied) {
         abandonHazardAction(store);
         return { kind: 'hazard', nodeId, outcome: 'abandoned', detail: { hazardId: session.hazardId } };

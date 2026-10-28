@@ -13,6 +13,7 @@ import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
 import HazardScreen from '@/app/hazard/index';
+import { deckEventPoster } from '@/lib/deckEvents';
 import { createAppActions, type AppActions } from '@/state/actions';
 import { clearDeathReturn, isDeathReturnArmed } from '@/state/death-return';
 import type { AppStore } from '@/state/store';
@@ -36,6 +37,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+    jest.restoreAllMocks();
     jest.clearAllMocks();
 });
 
@@ -101,9 +103,13 @@ describe('hazard screen -- a lethal crossing', () => {
         });
         toFailedRewards(store, actions);
 
+        const post = jest.spyOn(deckEventPoster, 'post').mockResolvedValue(undefined as never);
         mockBack.mockClear();
         fireEvent.press(screen.getByTestId('hazard-rewards-confirm'));
 
+        // The run over goes through the app's death verb: the play log gets its run-end.
+        expect(post).toHaveBeenCalledWith(expect.objectContaining({ kind: 'run-end' }));
+        expect((store.getState() as unknown as GameState).dying).toBeUndefined();
         expect(isDeathReturnArmed()).toBe(false);
         expect(mockReplace).not.toHaveBeenCalled();
         expect(mockBack).toHaveBeenCalled();

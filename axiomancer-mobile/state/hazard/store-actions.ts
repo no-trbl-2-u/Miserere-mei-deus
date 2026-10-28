@@ -37,6 +37,7 @@ import {
 import { appendAcquiredCard, HAZARD_CARD_FLAG_PREFIX, hazardDeckBag } from '@mechanics';
 import type { HazardRouteKey, HazardSessionState } from '@mechanics';
 import { resolveMinigameSeed, resolveMinigameString } from '../minigame-seeds';
+import { armDeathReturn } from '../death-return';
 import type { AppStore } from '../store';
 
 export interface MobileHazardSlice {
@@ -274,6 +275,22 @@ export interface ClaimHazardRewardsResult {
 
 /** The death verb a fatal crossing runs; the app's `actions.playerDied` is the real one. */
 export type HazardDeathVerb = (cause: 'hazard') => 'revived' | 'run-over';
+
+/**
+ * The death verb every claim path shares: runs the app's `playerDied` and
+ * arms the return moment on a revive. It arms here, before the claim clears
+ * the session, so the hazard screen (which watches the session) routes to
+ * `/death-return` instead of popping.
+ */
+export function armingHazardDeath(
+    playerDied: (cause: 'hazard') => 'revived' | 'run-over',
+): HazardDeathVerb {
+    return (cause) => {
+        const outcome = playerDied(cause);
+        if (outcome === 'revived') armDeathReturn();
+        return outcome;
+    };
+}
 
 const NOOP_CLAIM: ClaimHazardRewardsResult = Object.freeze({
     applied: false,
