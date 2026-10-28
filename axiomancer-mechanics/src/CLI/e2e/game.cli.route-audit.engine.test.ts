@@ -108,6 +108,42 @@ describe('Phase 14 — route survivorship vs coverage-audit classification', () 
         expect(summary.unvisitedNodeIds).toContain('bw-12');
     });
 
+    it('a lost CLI fight is a death: back on the node walked from, 1 VITAE, dying, the fight node unspent', async () => {
+        const logPath = tmpPath('defeat-death');
+        const registry = ENEMY_REGISTRY as Record<string, unknown>;
+        registry['test-ceiling'] = scaleEnemyToLevel(DeathBeholder, 110);
+        try {
+            await runGameCli([
+                '--start-map', 'breakwater', '--route', 'bw-2,bw-8,bw-12',
+                '--auto-combat',
+                '--combat-policy', 'naive',
+                '--combat-seed', '1',
+                '--combat-max-turns', '2',
+                '--combat-enemy', 'test-ceiling',
+                '--combat-enemy-node', 'bw-8',
+                '--state-log', logPath,
+            ]);
+        } finally {
+            delete registry['test-ceiling'];
+        }
+
+        const end = readLog(logPath).find(r => r.action === 'route:end')!;
+        const after = end.after as {
+            dying?: boolean;
+            player: { health: number };
+            world: { currentMap: { currentNode: string; consumedNodes: string[]; completedNodes: string[]; pendingArrival?: string | null } };
+        };
+        const map = after.world.currentMap;
+        expect(after.dying).toBe(true);
+        expect(after.player.health).toBe(1);
+        expect(map.currentNode).toBe('bw-2');
+        expect(map.pendingArrival ?? null).toBeNull();
+        expect(map.consumedNodes).not.toContain('bw-8');
+        expect(map.completedNodes).not.toContain('bw-8');
+        // The walker's evidence contract is unchanged: it still stops as blocked.
+        expect((end.event as Record<string, unknown>).classification).toBe('blocked');
+    });
+
     it('--resolve-start resolves bw-1\'s own arrival cutscene before walking the route; without it, the start node is explicitly unresolved', async () => {
         const withFlag = tmpPath('resolve-start-on');
         await runGameCli([

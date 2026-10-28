@@ -47,6 +47,7 @@ import { experienceForLevel } from '../Character/experience';
 import { addItemStacking, rollEncounterLoot, totalEncounterXp } from './combat-grants';
 import { getRng } from '../Utils/rng';
 import { generateRunId } from './run-loop';
+import { resolveDeath, freshRunKeepingCharacter } from './death';
 
 /**
  * Increment when GameState's shape changes. Save loaders branch on this so
@@ -461,7 +462,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
                 // reset the seed mid-session, that breaks deterministic
                 // replay) and assign a fresh runId.
                 const fresh = createNewGameState();
-                return { ...fresh, runId: freshRunId, rngState: state.rngState };
+                return { ...fresh, runId: freshRunId, rngState: state.rngState, dying: undefined };
             }
 
             // keepCharacter: true — preserve persistent character ledger
@@ -470,19 +471,16 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
             // state. HP refills to maxHealth; effects clears defensively
             // (already empty between combats).
             return {
+                ...freshRunKeepingCharacter(state, freshRunId),
                 version: GAME_STATE_VERSION,
-                runId: freshRunId,
-                player: {
-                    ...state.player,
-                    health: state.player.maxHealth,
-                    effects: [],
-                },
-                world: createStartingWorld(),
-                quests: emptyQuestLog(),
-                flags: [],
-                rngState: state.rngState,
-                codex: state.codex,
             };
+        }
+
+        case 'PLAYER_DIED': {
+            const death = resolveDeath(state, action.payload.cause);
+            return death.outcome === 'run-over'
+                ? { ...death.state, version: GAME_STATE_VERSION }
+                : death.state;
         }
 
         case 'UNLOCK_CODEX_ENTRY': {

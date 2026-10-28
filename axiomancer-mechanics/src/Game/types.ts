@@ -93,4 +93,10 @@ export interface GameState {
      * saves need no migration.
      */
     labyrinth?: LabyrinthProgress;
+    /**
+     * Run-scoped: set after a first death (`resolveDeath`), so the next death
+     * ends the run. Absent means not dying; a rest's heal clears it
+     * (`clearDying`) and every run reset drops it. Persisted only when set.
+     */
+    dying?: true;
 }

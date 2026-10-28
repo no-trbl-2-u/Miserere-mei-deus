@@ -244,7 +244,7 @@ export function moveToNode(state: WorldState, nodeId: NodeId): WorldState {
         }
         return {
             ...state,
-            currentMap: { ...map, currentNode: nodeId, pendingArrival: nodeId },
+            currentMap: arriveAtNode(map, nodeId),
         };
     }
 
@@ -272,8 +272,22 @@ export function moveToNode(state: WorldState, nodeId: NodeId): WorldState {
     }
     return {
         ...state,
-        currentMap: { ...map, currentNode: nodeId, pendingArrival: nodeId },
+        currentMap: arriveAtNode(map, nodeId),
     };
+}
+
+/**
+ * Writes an ARRIVAL onto a map: the cursor moves to `nodeId`, the node's
+ * unanswered arrival is recorded (`pendingArrival`), and the node the player
+ * stood on is recorded as `arrivedFrom`, the spot a first death returns them
+ * to. The three fields are one sentence, so they are written together. The
+ * engine's `moveToNode` and mobile's own move both arrive through here.
+ * Arriving at the node already under the player keeps the `arrivedFrom` it
+ * had: nothing was walked.
+ */
+export function arriveAtNode(map: MapState, nodeId: NodeId): MapState {
+    const arrivedFrom = map.currentNode === nodeId ? (map.arrivedFrom ?? null) : map.currentNode;
+    return { ...map, currentNode: nodeId, pendingArrival: nodeId, arrivedFrom };
 }
 
 /**
@@ -508,7 +522,7 @@ export function teleportToNode(state: WorldState, nodeId: NodeId): WorldState {
     if (map.currentNode === nodeId) return state;
     // A teleport PLACES the player (the Oubliette's eject, a waystone recall):
     // no door was walked, so no arrival is owed at the far end.
-    return { ...state, currentMap: { ...map, currentNode: nodeId, pendingArrival: null } };
+    return { ...state, currentMap: { ...map, currentNode: nodeId, pendingArrival: null, arrivedFrom: null } };
 }
 
 /**
@@ -679,6 +693,26 @@ export function auditMapTraversal(
 }
 
 /**
+ * Makes `nodeId` live again: out of `lockedNodes`, `completedNodes` and
+ * `consumedNodes`, and in `availableNodes` and `discoveredNodes`. Moves no
+ * one and touches no other node. `placeOnNode` places the player on a node it
+ * has un-spent; the death rule (`resolveDeath`) un-spends the node a first
+ * death happened on so it can be walked into again.
+ */
+export function unspendNode(map: MapState, nodeId: NodeId): MapState {
+    const without = (xs: readonly NodeId[]) => xs.filter(x => x !== nodeId);
+    const withOnce = (xs: readonly NodeId[]) => (xs.includes(nodeId) ? [...xs] : [...xs, nodeId]);
+    return {
+        ...map,
+        lockedNodes: without(map.lockedNodes),
+        completedNodes: without(map.completedNodes),
+        consumedNodes: without(map.consumedNodes),
+        availableNodes: withOnce(map.availableNodes),
+        discoveredNodes: withOnce(map.discoveredNodes),
+    };
+}
+
+/**
  * Stand the player on `nodeId` with no adjacency or back-travel rule and
  * no event fired — the state-fixture / dev-tools placement primitive.
  * Unlike `teleportToNode` it works on every map kind; unlike
@@ -705,17 +739,11 @@ export function placeOnNode(state: WorldState, nodeId: NodeId): WorldState {
     if (!def.nodes.some(n => n.id === nodeId)) {
         throw new IllegalMoveError(`placeOnNode: '${nodeId}' is unknown on map '${map.name}'.`);
     }
-    const without = (xs: readonly NodeId[]) => xs.filter(x => x !== nodeId);
-    const withOnce = (xs: readonly NodeId[]) => (xs.includes(nodeId) ? [...xs] : [...xs, nodeId]);
     const placed: MapState = {
-        ...map,
+        ...unspendNode(map, nodeId),
         currentNode: nodeId,
         pendingArrival: null,
-        lockedNodes: without(map.lockedNodes),
-        completedNodes: without(map.completedNodes),
-        consumedNodes: without(map.consumedNodes),
-        availableNodes: withOnce(map.availableNodes),
-        discoveredNodes: withOnce(map.discoveredNodes),
+        arrivedFrom: null,
     };
     return { ...state, currentMap: unlockAdjacent(revealAdjacent(placed, nodeId), nodeId) };
 }

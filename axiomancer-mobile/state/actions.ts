@@ -33,6 +33,7 @@ import {
     getCardById,
     healCharacter,
     isConsumable,
+    arriveAtNode,
     isEquipment,
     markNodeConsumed,
     resolveMapEvent,
@@ -359,6 +360,14 @@ export interface AppActions {
      * clears any in-flight Labyrinth visit and its return point.
      */
     resetRun: (opts: { keepCharacter: boolean }) => void;
+    /**
+     * Engine `playerDied` (the death rule). A first death revives the player
+     * on the node they walked from at 1 VITAE, dying (`'revived'`); a death
+     * while dying ends the run exactly as `resetRun({ keepCharacter: true })`
+     * does (`'run-over'`), including the play log's `run-end` and the
+     * Labyrinth cleanup. Nothing calls it yet: the app's defeat still resets.
+     */
+    playerDied: (cause: 'fight' | 'hazard') => 'revived' | 'run-over';
     save: () => void;
     /**
      * Run `resolveMapEvent(state)` on the current node, cache the
@@ -647,6 +656,29 @@ function recordRunEnd(store: AppStore): void {
     });
 }
 
+/**
+ * What a run over leaves behind in the mobile slices, after the engine has
+ * reset the run.
+ */
+function clearRunScopedSessions(store: AppStore): void {
+    // A run reset regenerates the overworld (seating the player at
+    // the starting node), so any in-flight Labyrinth visit is over.
+    // Clear the mobile session slice — otherwise the still-mounted
+    // Labyrinth presenter looks the fresh overworld node up in the
+    // act and throws LabyrinthContentError (the "battle loss → THE
+    // BINDING TORE" crash). This is the single choke point for
+    // every reset (combat defeat + hazard out-of-combat death).
+    if (store.getState().labyrinthUi?.session) {
+        store.setState({ labyrinthUi: EMPTY_LABYRINTH_SLICE });
+    }
+    // The visit's durable return point goes with it:
+    // the fresh overworld is where the run now stands.
+    const lab = store.getState().labyrinth;
+    if (lab?.returnWorld) {
+        store.setState({ labyrinth: withoutReturnWorld(lab) });
+    }
+}
+
 // ---------------------------------------------------------------------------
 // Action creators
 // ---------------------------------------------------------------------------
@@ -745,22 +777,19 @@ export function createAppActions(store: AppStore): AppActions {
             };
             recordRunEnd(store);
             engineStore.resetRun?.(opts);
-            // A run reset regenerates the overworld (seating the player at
-            // the starting node), so any in-flight Labyrinth visit is over.
-            // Clear the mobile session slice — otherwise the still-mounted
-            // Labyrinth presenter looks the fresh overworld node up in the
-            // act and throws LabyrinthContentError (the "battle loss → THE
-            // BINDING TORE" crash). This is the single choke point for
-            // every reset (combat defeat + hazard out-of-combat death).
-            if (store.getState().labyrinthUi?.session) {
-                store.setState({ labyrinthUi: EMPTY_LABYRINTH_SLICE });
-            }
-            // The visit's durable return point goes with it:
-            // the fresh overworld is where the run now stands.
-            const lab = store.getState().labyrinth;
-            if (lab?.returnWorld) {
-                store.setState({ labyrinth: withoutReturnWorld(lab) });
-            }
+            clearRunScopedSessions(store);
+        },
+        playerDied: (cause) => {
+            const engineStore = store.getState() as unknown as {
+                playerDied?: (c: 'fight' | 'hazard') => 'revived' | 'run-over';
+            };
+            // A death while dying is a run over: post the run's end before
+            // the engine drops it, as `resetRun` does.
+            const runOver = store.getState().dying === true;
+            if (runOver) recordRunEnd(store);
+            const outcome = engineStore.playerDied?.(cause) ?? 'run-over';
+            if (outcome === 'run-over') clearRunScopedSessions(store);
+            return outcome;
         },
         levelUp: () => {
             // Engine `levelUp` action. Same
@@ -1013,7 +1042,9 @@ export function readCurrentNodeId(world: WorldState): string {
  * player standing on a node with no record of what they still owe it.
  */
 function writeArrivalNodeId(map: MapState, nodeId: string): MapState {
-    return { ...map, currentNode: nodeId, pendingArrival: nodeId };
+    // The engine's own arrival write: cursor, owed arrival and `arrivedFrom`
+    // (where a first death returns the player) as one sentence.
+    return arriveAtNode(map, nodeId);
 }
 
 function moveToAction(store: AppStore, nodeId: string): MoveToResult {
