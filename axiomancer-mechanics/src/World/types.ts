@@ -230,6 +230,13 @@ export interface BlockedRoute {
  *                             of walking past it. Absent/`null` = nothing
  *                             owed; saves written before this field default
  *                             to that.
+ * @property arrivedFrom    - The node the player stood on when they arrived at
+ *                             `currentNode`. Written with the arrival
+ *                             (`arriveAtNode`), cleared by the placement
+ *                             verbs and by a `travel` crossing. A first
+ *                             death returns the player here. Absent/`null` =
+ *                             no previous node (saves written before this
+ *                             field default to that).
  * @property retiredEliteNodes - Elite nodes whose relic dropped: a claimed
  *                             rest never brings them back
  *                             (`retireEliteNode`, `respawnElites`). Absent =
@@ -255,6 +262,7 @@ export interface MapState {
     discoveredNodes: NodeId[];
     consumedNodes: NodeId[];
     pendingArrival?: NodeId | null;
+    arrivedFrom?: NodeId | null;
     retiredEliteNodes?: NodeId[];
     eliteUpgradeTakenNodes?: NodeId[];
     hazardOutcomes: HazardNodeOutcome[];

@@ -1748,6 +1748,12 @@
       "kind": "coupling",
       "from": "area:Game",
       "to": "area:World",
+      "file": "axiomancer-mechanics/src/Game/death.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:World",
       "file": "axiomancer-mechanics/src/Game/fixtures/fixture-content.ts"
     },
     {

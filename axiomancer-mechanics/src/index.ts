@@ -263,10 +263,13 @@ export {
     // The relic re-slot: the v38 -> v39 hop's helper, and the one the mobile
     // item-reward queue reads a pending piece through.
     reslotRelicPiece, reslotRelicSave,
+    // The death rule: a first death revives, a death while dying ends the run.
+    resolveDeath, clearDying,
 } from './Game';
 export type {
     StateFixture,
     GameState, GameStore, PersistenceAdapter, StoreApi,
+    DeathCause, DeathResult,
     GameEvent, GameEventEmitter, GameEventHandler,
     CodexEntry,
 } from './Game';
@@ -277,7 +280,7 @@ export {
     // The new-game start and "start on any map" (dev tools).
     createStartingWorld, STARTING_MAP, STARTABLE_MAPS,
     moveToNode,
-    teleportToNode, placeOnNode, unblockMapRoute,
+    teleportToNode, placeOnNode, unblockMapRoute, arriveAtNode, unspendNode,
     applyDialogueChoice,
     emptyQuestLog, findActiveQuest,
     startQuest, progressQuest, completeQuest,

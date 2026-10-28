@@ -60,4 +60,6 @@ export type GameAction =
     | { type: 'SAVE_GAME';      payload?: undefined }
     | { type: 'LOAD_GAME';      payload?: undefined }
     | { type: 'RESET_RUN';      payload: { keepCharacter: boolean } }
+    /** The player's VITAE reached 0 (a fight or an engine hazard): `resolveDeath`. */
+    | { type: 'PLAYER_DIED';    payload: { cause: 'fight' | 'hazard' } }
     | { type: 'UNLOCK_CODEX_ENTRY'; payload: { entryId: string } };
