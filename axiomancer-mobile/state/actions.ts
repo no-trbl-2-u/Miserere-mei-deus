@@ -83,6 +83,7 @@ import {
     type HazardDeckPresetId,
     type HazardDeckPresetResult,
 } from './hazard/store-actions';
+import { armDeathReturn } from './death-return';
 import { claimHazardPuzzleAction, type ClaimHazardPuzzleResult } from './hazard/puzzle-store-actions';
 import type { HazardPuzzleLayout, HazardRouteKey } from '@mechanics';
 import type { LootCacheChoiceOfferId, RestChoiceOfferId } from '@mechanics';
@@ -827,7 +828,14 @@ export function createAppActions(store: AppStore): AppActions {
         resolveHazardRound: () => resolveHazardRoundAction(store),
         continueHazardAfterResolve: () => continueHazardAfterResolveAction(store),
         acknowledgeHazardOutcome: () => acknowledgeHazardOutcomeAction(store),
-        claimHazardRewards: (cardId) => claimHazardRewardsAction(store, cardId),
+        claimHazardRewards: (cardId) =>
+            // A revive owes the return moment: arm it before the claim clears
+            // the session, so the hazard screen does not pop on its way out.
+            claimHazardRewardsAction(store, cardId, (cause) => {
+                const outcome = actions.playerDied(cause);
+                if (outcome === 'revived') armDeathReturn();
+                return outcome;
+            }),
         abandonHazard: () => abandonHazardAction(store),
         claimHazardPuzzle: (layout, route, p, seed) => claimHazardPuzzleAction(store, layout, route, p, seed),
         randomizeHazardDeck: () => randomizeHazardDeckAction(store),

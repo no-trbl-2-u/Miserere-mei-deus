@@ -134,7 +134,8 @@ export interface SkipEventResult {
 }
 
 /** The two app actions the skip needs beyond raw store access. */
-export type SkipEventActions = Pick<AppActions, 'resolveCurrentMapEvent' | 'beginHazardEncounter'>;
+export type SkipEventActions = Pick<AppActions, 'resolveCurrentMapEvent' | 'beginHazardEncounter'> &
+    Partial<Pick<AppActions, 'playerDied'>>;
 
 export interface SkipEventOptions {
     /** Override the gate (tests). Defaults to `isDevToolsEnabled()`. */
@@ -261,7 +262,7 @@ function skipActive(store: AppStore, actions: SkipEventActions, options: SkipEve
     if (state.currentEncounter) {
         return skipCombat(store, state.currentEncounter.enemies[0] ?? null, nodeId, options, 'live');
     }
-    if (state.hazard?.session) return skipHazard(store, nodeId);
+    if (state.hazard?.session) return skipHazard(store, actions, nodeId);
     if (state.rest?.session) return skipRest(store, nodeId);
     if (state.cache?.session) return skipCache(store, nodeId);
     if (state.blacksmith?.session) return skipBlacksmith(store, nodeId);
@@ -414,7 +415,7 @@ function skipCombat(
 }
 
 /** Median crossing: `complete` tier with ceil(rounds/2) cleared, via the engine's own outcome path. */
-function skipHazard(store: AppStore, nodeId: string | null): SkipEventResult {
+function skipHazard(store: AppStore, actions: SkipEventActions, nodeId: string | null): SkipEventResult {
     const slice = store.getState().hazard;
     const session = slice.session as HazardSessionState;
     const total = Math.max(1, session.totalRounds);
@@ -458,7 +459,7 @@ function skipHazard(store: AppStore, nodeId: string | null): SkipEventResult {
         return { kind: 'hazard', nodeId, outcome: 'abandoned', detail: { hazardId: session.hazardId } };
     }
     const cardId = outcome.canSkip ? null : (outcome.offerCards[0]?.id ?? null);
-    const claim = claimHazardRewardsAction(store, cardId);
+    const claim = claimHazardRewardsAction(store, cardId, actions.playerDied);
     if (!claim.applied) {
         abandonHazardAction(store);
         return { kind: 'hazard', nodeId, outcome: 'abandoned', detail: { hazardId: session.hazardId } };
@@ -477,6 +478,7 @@ function skipHazard(store: AppStore, nodeId: string | null): SkipEventResult {
             shillings: claim.shillings,
             cardAdded: claim.cardAdded,
             died: claim.died,
+            deathOutcome: claim.outcome,
         },
     };
 }

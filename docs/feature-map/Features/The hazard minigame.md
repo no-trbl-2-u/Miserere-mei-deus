@@ -21,7 +21,7 @@ route in Minigames, from `axiomancer-mobile/app/hazard/index.tsx`.
 
 Opens from any screen.
 
-No player-flow edge leads out of it.
+- [[Features/Death Return|Death Return]]
 
 ## Uses
 

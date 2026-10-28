@@ -67,7 +67,6 @@ Routes with no outgoing player-flow edge to another feature, not counting the sh
 - Reward (`route:item-reward`)
 - Rest (`route:rest`)
 - Village (`route:village`)
-- The hazard minigame (`route:hazard`)
 - The hazard deck (`route:hazard-deck`)
 - The Labyrinth (`route:labyrinth`)
 - Devaftermath (`route:devaftermath`)
