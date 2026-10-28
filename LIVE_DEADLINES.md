@@ -2,7 +2,8 @@
 
 > Generated 2026-10-28 by `node scripts/deadlines.mjs --write` from `plan/deadlines.md` (the whole plan) and the
 > build plan. Do not edit by hand: change `plan/deadlines.md`. Lists only what needs T: an item with no
-> build-plan rows yet ("needs a plot"), or a task or attended row ready for T ("needs you").
+> build-plan rows yet ("needs a plot"), a task or attended row ready for T ("needs you"), or an attended row
+> whose prerequisites are not shipped ("waiting on the loop"). A T act lists the loop rows it waits on.
 
 | Due | Item | What it needs | Window |
 |---|---|---|---|
@@ -23,4 +24,5 @@
 | 2026-11-08 (in 11 days) | Chapter 1's enemy art: pick from the loop's candidates (2 h) | needs you: your task | W2 |
 | 2026-11-09 (in 12 days) | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | needs you: your task | W2 |
 | 2026-11-10 (in 13 days) | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | needs you: your task | W2 |
+| 2026-11-10 (in 13 days) | Write the Breakwater's quest line: the giver's lines per node, steps 1-3's requirement, every step's XP and extra (0.5 h) | waiting on the loop: the loop still owes QL1d | W2 |
 | 2026-11-11 (in 14 days) | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | needs you: your task | W2 |
