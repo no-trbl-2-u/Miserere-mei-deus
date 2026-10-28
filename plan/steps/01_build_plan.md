@@ -453,7 +453,7 @@ event-pool and layout files).
       restored); `mergeMain` takes the repository directory; a fixture test runs two plot branches that both add
       asap rows and deadline Items through it with no Haiku entry and `check-deadlines` green. Brief
       `plan/phases/phase_MD1_deadlines_merge_driver.md` § MD1b. Requires MD1a.
-- [ ] Phase MD1c — The merge job checks the merged tree before it merges (plotted by T, 2026-10-28): GitHub's
+- [x] (#1019) Phase MD1c — The merge job checks the merged tree before it merges (plotted by T, 2026-10-28): GitHub's
       server-side merge never runs our drivers, so a PR with no conflict can leave `plan/` red (three bumps of one
       lesson became three rows, #866/#868/#870). The `pr-review.yml` merge job copies the test-merge ref's `plan/`
       over main's checkout and runs main's `check-lessons`, `check-plan-queues` and `check-deadlines`; red once

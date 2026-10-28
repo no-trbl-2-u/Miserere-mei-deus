@@ -173,6 +173,13 @@ secrets, variables, labels' meaning): a session never changes them, even
 at T's word in the moment; it writes the exact command as a
 `plan/NEEDS_T.md` row and T runs it (the 2026-10-20 ruleset, created
 in session without a bypass list, blocked every push to `main`).
+Before it requests a merge the job checks the tree GitHub would merge
+(`refs/pull/<n>/merge`) with main's `check-lessons`, `check-plan-queues` and
+`check-deadlines`; GitHub's server-side merge never runs the merge drivers, so
+a red tree gets one update of the PR branch from `main` (`updateBranchIsolated` in `pr-resolve.mjs`, called in-process; main's
+drivers and scripts by absolute path; no PR-branch code runs), then
+a hold naming the lint. The check is point-in-time (`--auto` merges later) and
+sits after the kill switch and the plot and pipeline holds.
 `pr-autofix` (Haiku, two runs per PR) keeps
 a red `loop:pr` PR green and `pr-resolve` keeps it mergeable (D87); at
 most 5 are open at once (D85).
