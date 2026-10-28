@@ -78,8 +78,10 @@ test('itemNeed: an attended row whose prerequisites shipped needs T', () => {
     assert.deepEqual(itemNeed(byName('Attended solves'), phases), { kind: 'needs you', detail: 'B1 ready for you' })
 })
 
-test('itemNeed: an attended row still waiting on loop work is silent', () => {
-    assert.equal(itemNeed(byName('Attended, not ready'), phases), null)
+test('A5: an attended row still waiting on loop work is never silent: it names what the loop owes', () => {
+    assert.deepEqual(itemNeed(byName('Attended, not ready'), phases), { kind: 'waiting on the loop', detail: 'the loop still owes A2' })
+    const text = reminderText(dueNeeds(items, phases, '2026-10-20'), null, '2026-10-20')
+    assert.match(text, /Attended, not ready — waiting on the loop \(the loop still owes A2\)\./)
 })
 
 test('itemNeed: needs plot, and a named id with no row, need a plot', () => {
@@ -94,8 +96,9 @@ test('itemNeed: T tasks need T until ticked', () => {
 
 test('dueNeeds keeps the horizon and overdue items, earliest first', () => {
     const needs = dueNeeds(items, phases, '2026-10-26')
-    assert.deepEqual(needs.map((n) => n.name), ['Attended solves', 'Unplotted thing', 'Half-plotted thing', 'An open task'])
-    assert.equal(needs[0].days, -1)
+    assert.deepEqual(needs.map((n) => n.name), ['Attended, not ready', 'Attended solves', 'Unplotted thing', 'Half-plotted thing', 'An open task'])
+    assert.equal(needs[0].days, -5)
+    assert.equal(needs[1].days, -1)
     assert.equal(nextNeed(items, phases, '2026-10-26').name, 'Far away')
 })
 
@@ -176,7 +179,7 @@ test('A12: the live HP4e row is not ready while its requirements are open, and i
     const plan = (box) => `${requires.map((id) => `- [${box}] Phase ${id} — ${id}.`).join('\n')}\n${live}\n`
     const open = parsePhaseRows(plan(' '))
     assert.deepEqual(open.get('HP4e').requires, requires)
-    assert.equal(itemNeed(item, open), null)
+    assert.deepEqual(itemNeed(item, open), { kind: 'waiting on the loop', detail: `the loop still owes ${requires.join(', ')}` })
     const shipped = parsePhaseRows(plan('x'))
     assert.deepEqual(itemNeed(item, shipped), { kind: 'needs you', detail: 'HP4e ready for you' })
 })
@@ -269,4 +272,66 @@ test('A6: the real plan/deadlines.md is already what --write would write', () =>
     const { md, unmatched } = rewriteItemStatus(real, parsePhaseRows(read('plan/steps/01_build_plan.md')))
     assert.deepEqual(unmatched, [])
     assert.equal(md, real)
+})
+
+// Phase DL2a: the sixth column, `Waits on`.
+const SIX = `# Deadlines
+
+## Items
+
+| Status | Due | Item | Window | Rows | Waits on |
+|---|---|---|---|---|---|
+| [ ] | 2026-10-24 | Play the loop's work | W1 | T | A1, A2 |
+| [ ] | 2026-10-25 | Decide it | W1 | T | A0 |
+| [ ] | 2026-10-26 | Pick it | W1 | T | - |
+| [ ] | 2026-10-27 | Old five-column row | W1 | T |
+| [ ] | 2026-10-28 | Solve it | W1 | C1 | A1, \`A2\` |
+| [ ] | 2026-10-29 | Unplotted | W1 | needs plot | A1 |
+| [ ] | 2026-10-30 | Rows done, waits open | W1 | A0 | A1 |
+
+## How a window closes
+`
+
+const six = parseItems(SIX)
+const sixBy = (name) => six.find((i) => i.name === name)
+
+test('A1: a six-column row parses its Waits on cell; "-", empty and a five-column row are none', () => {
+    assert.deepEqual(sixBy("Play the loop's work").waitsOn, ['A1', 'A2'])
+    assert.equal(sixBy("Play the loop's work").rows, 'T')
+    assert.deepEqual(sixBy('Pick it').waitsOn, [])
+    assert.deepEqual(sixBy('Old five-column row').waitsOn, [])
+    assert.equal(sixBy('Old five-column row').rows, 'T')
+    assert.deepEqual(sixBy('Solve it').waitsOn, ['A1', 'A2'])
+    assert.deepEqual(sixBy('Solve it').rows, ['C1'])
+    assert.equal(six.length, 7)
+    assert.equal(items.every((i) => Array.isArray(i.waitsOn) && i.waitsOn.length === 0), true)
+})
+
+test('A4: Waits on never ticks an Item: Status derives from Rows only', () => {
+    assert.equal(derivedStatus(sixBy('Rows done, waits open'), phases), '[x]')
+    assert.equal(derivedStatus(sixBy('Solve it'), phases), '[ ]')
+    assert.equal(derivedStatus(sixBy("Play the loop's work"), phases), null)
+    const out = rewriteItemStatus(SIX, phases)
+    assert.deepEqual(out.unmatched, [])
+    assert.deepEqual(out.changed, ['Rows done, waits open: [ ] -> [x]'])
+    assert.ok(out.md.includes('| [x] | 2026-10-30 | Rows done, waits open | W1 | A0 | A1 |'))
+    assert.ok(out.md.includes("| [ ] | 2026-10-24 | Play the loop's work | W1 | T | A1, A2 |"))
+    assert.equal(rewriteItemStatus(out.md, phases).md, out.md)
+})
+
+test('A5: a T act reads "the loop still owes" its open Waits on rows, and "your task" once they ship', () => {
+    assert.deepEqual(itemNeed(sixBy("Play the loop's work"), phases), { kind: 'needs you', detail: 'your task; the loop still owes A1, A2' })
+    assert.deepEqual(itemNeed(sixBy('Decide it'), phases), { kind: 'needs you', detail: 'your task' })
+    assert.deepEqual(itemNeed(sixBy('Old five-column row'), phases), { kind: 'needs you', detail: 'your task' })
+    assert.deepEqual(itemNeed(sixBy('Solve it'), phases), { kind: 'waiting on the loop', detail: 'the loop still owes A2, A1' })
+    assert.equal(itemNeed(sixBy('Unplotted'), phases).kind, 'needs a plot')
+    assert.equal(itemNeed({ ...sixBy("Play the loop's work"), done: true }, phases), null)
+    const needs = dueNeeds(six, phases, '2026-10-24')
+    assert.match(reminderText(needs, null, '2026-10-24'), /Play the loop's work — needs you \(your task; the loop still owes A1, A2\)\. Due Sat, Oct 24, today\./)
+    assert.match(liveMarkdown(needs, null, '2026-10-24'), /needs you: your task; the loop still owes A1, A2/)
+})
+
+test('A5: an attended row that is ready shows beside its open Waits on rows', () => {
+    const item = { done: false, due: '2026-10-25', name: 'x', window: 'W1', rows: ['B1'], waitsOn: ['A1'] }
+    assert.deepEqual(itemNeed(item, phases), { kind: 'needs you', detail: 'B1 ready for you; the loop still owes A1' })
 })

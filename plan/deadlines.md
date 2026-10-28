@@ -335,7 +335,6 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - SB1 — attended: T's set-bonus design session; T said it is not part of the Act 1 MVP deadline; date not set.
 - QL1g — loop work; the boss fought again, follows QL1d and DY1b (the death rule, due Nov 8); no date of its own; not needed for the Nov 16 run unless a lost boss fight must be retryable by then.
 - MD1c — plotted 2026-10-28 (the merge job checks the merged tree); loop work, but a pipeline PR T merges by hand; date not set.
-- DL2a — plotted 2026-10-28 (every deadline Item a T act); loop work, needs no time from T; date not set.
 - DL2b — plotted 2026-10-28; loop work, follows DL2a; its PR converts this file, so T reads it before merging; date not set.
 
 ## How a window closes
