@@ -122,7 +122,7 @@ their signatures, and a `signature-usage` report shows how each signature is wor
   `interaction` or `narration` node, playing a dialogue whose choice starts the quest) and finished by an objective
   the engine counts (`kill`, `reach`, `collect`); its lines are written plainly by the builder and marked
   `[content]` for T. The four are listed in `plan/revamp/relics.md` § "The lane relics (LR1b)" with giver node,
-  event, objective and relic. `[T to confirm #3]`
+  event, objective and relic. `[T to confirm #3]` **Superseded (T, 2026-10-27):** LR1f was skipped for QL1 (`plan/phases/phase_QL1_breakwater_questline.md`, D111); this ID closes nowhere.
 - **A6** One engine function pays a completed quest's reward, and every completion path calls it: `endCombat`'s kill
   objectives, the hazard host's `advanceKillObjectives`, `reach` and `collect` objectives in `resolveMapEvent`, and
   the dialogue `progressQuest` and `completeQuest` effects. `currency` and `experience` pay as today; an `Item` or
@@ -162,7 +162,7 @@ their signatures, and a `signature-usage` report shows how each signature is wor
 - **A13** Browser evidence on the web build: a 375-wide screenshot of the Signet's detail view showing "Lane:
   Blood Price (while worn)", attached to the LR1a PR.
 - **A14** Browser evidence on the web build: a 375-wide screenshot of the `/item-reward` screen handing over a quest
-  relic with its "Lane:" line, attached to the LR1f PR.
+  relic with its "Lane:" line, attached to the LR1f PR. **Superseded (T, 2026-10-27):** LR1f was skipped for QL1 (`plan/phases/phase_QL1_breakwater_questline.md`, D111); this ID closes nowhere.
 - **A15** The Elementalist's three relics are in `relicLibrary` as T wrote them, all `laneId: 'elementalist'`: the
   Elementalist's Signet (`'elite'`, +5 Heart, +20 max VITAE), Brooch (`'quest'`, +5 Mind) and Belt (`'quest'`,
   +5 Body), each granting its own new signature:
@@ -182,9 +182,9 @@ their signatures, and a `signature-usage` report shows how each signature is wor
 - **A17** The quests of A5 are on their Act 1 maps' `quests` and their giver nodes play the dialogue that starts them.
   An engine e2e per quest: from a fresh game, reach the giver, start the quest, meet the objective, and the relic is
   queued; carried unworn, its lane is not in `unlockedLaneIds` (D107); worn, its lane is, and the next combat
-  reward holds a card of that lane.
+  reward holds a card of that lane. **Superseded (T, 2026-10-27):** LR1f was skipped for QL1 (`plan/phases/phase_QL1_breakwater_questline.md`, D111); this ID closes nowhere.
 - **A18** No quest pays an elite-only relic, and no relic is both a quest's reward and outside `relicSource:
-  'quest'`: a library test over every authored quest.
+  'quest'`: a library test over every authored quest. **Superseded (T, 2026-10-27):** LR1f was skipped for QL1 (`plan/phases/phase_QL1_breakwater_questline.md`, D111); this ID closes nowhere.
 - **A19** `FightPost` gains `relics: string[]` (the worn relic ids at the fight's start) and `signatures: string[]`
   (the signature ids on the bar); the validator accepts and bounds them (an old client's post without them is
   accepted and stored as empty); a D1 migration `backend/migrations/0005_fight_signatures.sql` (or the next free
@@ -286,6 +286,10 @@ the dev relic chips and worn, puts its signature on the bar at its own cost and 
   the root `npm test`.
 
 ### LR1f — The quests in Act 1 and the elite's pool · M · closes A5, A14, A17, A18 · requires LR1c, LR1d, LR1e
+**Skipped by T, 2026-10-27: superseded by QL1** (`plan/phases/phase_QL1_breakwater_questline.md`, D111). Chapter 1
+gets one four-step questline on new `quest` nodes, paying the Elementalist's Belt; the Ruby Signet, the Bleeding
+Signet and the Brooch wait for Chapters 2-4's quest lines. PR #987 is T's to close. The block below is kept as the
+record.
 Measure: the A17 e2e passes for every quest, A18 passes, and A14's `/item-reward` screenshot shows a quest relic
 with its "Lane:" line.
 - Scope: the four Act 1 map definitions (`World/Continents/*/*.ts`, `quests`), one existing `interaction` or
@@ -419,7 +423,8 @@ Verify: <commands and results>
 
 ## DoD
 
-A1-A21 ticked across LR1a-LR1g (A4 by LR1b, done in session); the Measure met.
+A1-A21 ticked across LR1a-LR1g (A4 by LR1b, done in session), except A5, A14, A17 and A18, superseded with LR1f
+by QL1 (T, 2026-10-27); the Measure met for the relics, and for the quest relics by QL1's Belt.
 
 ## Follow-ups (out of scope)
 
