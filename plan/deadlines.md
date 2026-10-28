@@ -200,7 +200,7 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 | [x] | 2026-11-05 | Node blurbs matched to their events (the Act 1 walk's second half) | W2 | AW1a, AW1b |
 | [ ] | 2026-11-06 | The band clocks, from the kept set's times | W2 | HP4g |
 | [ ] | 2026-11-06 | Event-node UI/UX for the Breakwater's eight kinds (plot, 1 h) | W2 | needs plot |
-| [ ] | 2026-11-08 | A first death comes back dying: 1 VITAE, back a node, the fight or hazard open to retry; a second death ends the run; a rest clears it (so Chapter 1's boss can be fought again) | W2 | DY1a, DY1b, DY1c |
+| [ ] | 2026-11-08 | A first death comes back dying: 1 VITAE, back a node, the fight or hazard open to retry, a full-screen moment and a skull in the fight; a second death ends the run; a rest's heal clears it (so Chapter 1's boss can be fought again) | W2 | DY1a, DY1b, DY1c, DY1d |
 | [ ] | 2026-11-08 | Chapter 1's enemy art: pick from the loop's candidates (2 h) | W2 | T |
 | [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T |
 | [ ] | 2026-11-10 | Answer Chapter 1's `[content]` rows (node copy, map fixes) and write the Breakwater's quest line (1.5 h) | W2 | T |
@@ -323,7 +323,7 @@ attended session.
 
 ## Change log
 
-- **2026-10-28** — **the death rule plotted** (T's rule, `/plot` run unattended on T's word, DY1). **Added** the Item "A first death comes back dying", due 2026-11-08 in W2, naming DY1a-DY1c: loop work for the MVP, dated with the Chapter 1 questline rows it serves (the boss re-fight); the date is the plot's, not T's, so move it freely. **Edited** nothing: the MVP demo and the mid-MVP check still hold, and no open Item's premise changed. **Ticked** nothing.
+- **2026-10-28** — **the death rule plotted** (T's rule, `/plot` run unattended on T's word, DY1). **Added** the Item "A first death comes back dying", due 2026-11-08 in W2, naming DY1a-DY1d: loop work for the MVP, dated with the Chapter 1 questline rows it serves (the boss re-fight); the date is the plot's, not T's, so move it freely. **Edited** nothing else: the MVP demo and the mid-MVP check still hold, and no open Item's premise changed. **Ticked** nothing. Same day, T answered four calls: the Item's name now says how dying is shown (a full-screen moment and a skull) and that a rest's heal clears it, and it gains DY1d (the skull).
 - **2026-10-27** — **Thursdays opened** (T, in conversation: "open them up. I should be getting work done for Miserere everyday"). **Edited** the MVP schedule's rule that left Thursdays free; it now says T works every day. No Item, date or piece moved; nothing ticked.
 - **2026-10-27** — **first character moved to Fri Oct 30** (T, in conversation: "Let's move character creation deadline to Friday since it turned out to be more work than I thought"). **Moved** the Item "First character playable" from 2026-10-26 to 2026-10-30, still in W1; its rows (CH1a-CH1f, DF1a-DF1d) and premise hold. Nothing ticked; no other date moved.
 - **2026-10-26** — **the third lane plotted** (T in session, `/plot` of the Defender trial set after its verdicts, sims and revisions). **Edited** the Item "First character playable": its premise moved from "waits on a third lane" to the Defender, and it now names DF1a-DF1d, the rows that register the lane CH1e and CH1f were blocked on; its date (T's) is unchanged. **Added** Unscheduled lines for DF1e (the relics, waits on LR1d) and DF1f (T's check). **Ticked** nothing.
