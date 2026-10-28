@@ -13,17 +13,21 @@
 //     build-plan row yet;
 //   - "needs you": a `T` task not yet done, or a named row that is open, waits on
 //     T (attended, or blocked owner-led) and whose `Requires` are all shipped.
+//   - "waiting on the loop": an attended row's `Requires` are not all shipped yet.
+// An Item may also list `Waits on` rows (a sixth column, phase DL2a): loop rows a T
+// act needs. They never tick the Item; the reminder names the open ones beside the act.
 // Everything the loop can finish alone stays silent.
 
 export const HORIZON_DAYS = 14
 
-export const ITEM_ROW =/^\|\s*(\[[ x]\])\s*\|\s*(\d{4}-\d{2}-\d{2})\s*\|\s*(.+?)\s*\|\s*(W\d+)\s*\|\s*(.+?)\s*\|\s*$/
+// Group 6 is the optional `Waits on` cell: a five-column row still matches, with it undefined.
+export const ITEM_ROW = /^\|\s*(\[[ x]\])\s*\|\s*(\d{4}-\d{2}-\d{2})\s*\|\s*(.+?)\s*\|\s*(W\d+)\s*\|\s*(.+?)\s*(?:\|\s*(.*?)\s*)?\|\s*$/
 const PHASE_ROW = /^- \[([^\]]*)\]\s+(?:\(#\d+\)\s+)?Phase\s+([A-Za-z0-9]+)\s+—\s+(.*)$/
 
 /**
  * Parse the Items table of plan/deadlines.md.
  * @param {string} md
- * @returns {{done: boolean, due: string, name: string, window: string, rows: string[] | 'needs plot' | 'T'}[]}
+ * @returns {{done: boolean, due: string, name: string, window: string, rows: string[] | 'needs plot' | 'T', waitsOn: string[]}[]}
  */
 export const parseItems = (md) => {
     const start = md.indexOf('\n## Items')
@@ -34,13 +38,21 @@ export const parseItems = (md) => {
         .split('\n')
         .map((line) => line.match(ITEM_ROW))
         .filter(Boolean)
-        .map(([, status, due, name, window, rowsCell]) => ({
+        .map(([, status, due, name, window, rowsCell, waitsCell]) => ({
             done: status === '[x]',
             due,
             name,
             window,
             rows: parseRowsCell(rowsCell),
+            waitsOn: parseWaitsCell(waitsCell),
         }))
+}
+
+/** The `Waits on` cell: comma-separated phase ids; `-`, empty or absent means none. */
+export const parseWaitsCell = (cell) => {
+    const plain = (cell ?? '').replace(/`/g, '').trim()
+    if (plain === '' || plain === '-') return []
+    return plain.split(',').map((id) => id.trim()).filter(Boolean)
 }
 
 /** `needs plot`, `T`, or a comma-separated list of phase ids (backticks allowed). */
@@ -204,8 +216,8 @@ export const rewriteItemStatus = (md, phases) => {
             unmatched.push(line)
             return line
         }
-        const [, status, due, name, window, rowsCell] = m
-        const want = derivedStatus({ done: status === '[x]', due, name, window, rows: parseRowsCell(rowsCell) }, phases)
+        const [, status, due, name, window, rowsCell, waitsCell] = m
+        const want = derivedStatus({ done: status === '[x]', due, name, window, rows: parseRowsCell(rowsCell), waitsOn: parseWaitsCell(waitsCell) }, phases)
         if (!want || want === status) return line
         changed.push(`${name}: ${status} -> ${want}`)
         return line.replace(STATUS_CELL, `$1${want}`)
@@ -224,21 +236,30 @@ export const whenText = (days) =>
             : days > 1 ? `in ${days} days`
                 : `${-days} day${days === -1 ? '' : 's'} overdue`
 
+/** The `Waits on` rows still open in the build plan, in the order the Item lists them. */
+const owedRows = (item, phases) => (item.waitsOn ?? []).filter((id) => phases.get(id)?.open)
+
 /**
- * What an item needs from T now, or null when the loop can carry it.
- * @returns {null | {kind: 'needs a plot' | 'needs you', detail: string}}
+ * What an item needs from T now, or null when the loop can carry it. An open `Waits on`
+ * row is named in the detail; it never ticks the Item and never hides it.
+ * @returns {null | {kind: 'needs a plot' | 'needs you' | 'waiting on the loop', detail: string}}
  */
 export const itemNeed = (item, phases) => {
     if (item.rows === 'needs plot') return { kind: 'needs a plot', detail: 'no build-plan rows yet' }
-    if (item.rows === 'T') return item.done ? null : { kind: 'needs you', detail: 'your task' }
+    const owed = owedRows(item, phases)
+    const owes = owed.length ? `the loop still owes ${owed.join(', ')}` : ''
+    if (item.rows === 'T') {
+        if (item.done) return null
+        return { kind: 'needs you', detail: owes ? `your task; ${owes}` : 'your task' }
+    }
     const missing = item.rows.filter((id) => !phases.has(id))
     if (missing.length) return { kind: 'needs a plot', detail: `no row for ${missing.join(', ')}` }
-    const ready = item.rows.filter((id) => {
-        const row = phases.get(id)
-        const reqsMet = row.requires.every((r) => phases.get(r)?.shipped)
-        return !row.shipped && row.waitsOnT && reqsMet
-    })
-    return ready.length ? { kind: 'needs you', detail: `${ready.join(', ')} ready for you` } : null
+    const open = item.rows.filter((id) => phases.get(id).waitsOnT && !phases.get(id).shipped)
+    const ready = open.filter((id) => phases.get(id).requires.every((r) => phases.get(r)?.shipped))
+    if (ready.length) return { kind: 'needs you', detail: [`${ready.join(', ')} ready for you`, owes].filter(Boolean).join('; ') }
+    const unmet = open.flatMap((id) => phases.get(id).requires.filter((r) => !phases.get(r)?.shipped))
+    const owing = [...new Set([...unmet, ...owed])]
+    return owing.length ? { kind: 'waiting on the loop', detail: `the loop still owes ${owing.join(', ')}` } : null
 }
 
 /**
@@ -284,7 +305,8 @@ export const liveMarkdown = (needs, next, today) => {
         '',
         `> Generated ${today} by \`node scripts/deadlines.mjs --write\` from \`plan/deadlines.md\` (the whole plan) and the`,
         '> build plan. Do not edit by hand: change `plan/deadlines.md`. Lists only what needs T: an item with no',
-        '> build-plan rows yet ("needs a plot"), or a task or attended row ready for T ("needs you").',
+        '> build-plan rows yet ("needs a plot"), a task or attended row ready for T ("needs you"), or an attended row',
+        '> whose prerequisites are not shipped ("waiting on the loop"). A T act lists the loop rows it waits on.',
         '',
         body,
         '',

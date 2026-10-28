@@ -108,6 +108,43 @@ test('A3: one id in two Items fails, naming both', () => {
     ])
 })
 
+// Phase DL2a: an id in the sixth column, `Waits on`, is named like one in `Rows`.
+test('DL2a A2: an open row named in Waits on is covered, and a five-column row beside it still passes', () => {
+    const rows = ['| [ ] | 2026-10-24 | Play it | W1 | T | A1 |', '| [ ] | 2026-11-05 | Wrapped | W2 | W1 |']
+    assert.deepEqual(checkDeadlines(deadlines(rows, EXCUSE_REST), BUILD_PLAN), [])
+})
+
+test('DL2a A2: without the Waits on cell the same row is uncovered', () => {
+    const rows = ['| [ ] | 2026-10-24 | Play it | W1 | T | - |', '| [ ] | 2026-11-05 | Wrapped | W2 | W1 |']
+    const errors = checkDeadlines(deadlines(rows, EXCUSE_REST), BUILD_PLAN)
+    assert.equal(errors.length, 1)
+    assert.match(errors[0], /open row A1 /)
+})
+
+test('DL2a A2: an id in Waits on and in another Item, or twice, fails naming both places', () => {
+    const rows = [...COVER_ALL, '| [ ] | 2026-10-25 | Play it | W1 | T | A1, A1 |']
+    const errors = checkDeadlines(deadlines(rows, EXCUSE_REST), BUILD_PLAN)
+    assert.deepEqual(errors, ['plan/deadlines.md: A1 is named by 3 Items ("Loop work", "Play it" (Waits on), "Play it" (Waits on)); keep it in one.'])
+    const same = [COVER_ALL[1], '| [ ] | 2026-10-25 | Play it | W1 | A1 | A1 |']
+    assert.deepEqual(checkDeadlines(deadlines(same, EXCUSE_REST), BUILD_PLAN), [
+        'plan/deadlines.md: A1 is named by 2 Items ("Play it", "Play it" (Waits on)); keep it in one.',
+    ])
+})
+
+test('DL2a A2: an id in Waits on and under Unscheduled fails', () => {
+    const rows = [...COVER_ALL, '| [ ] | 2026-10-25 | Play it | W1 | T | P1 |']
+    const errors = checkDeadlines(deadlines(rows, EXCUSE_REST), BUILD_PLAN)
+    assert.equal(errors.length, 1)
+    assert.match(errors[0], /P1 is both under ## Unscheduled and named by Item "Play it"/)
+})
+
+test('DL2a A2: an unknown id in Waits on fails like one in Rows', () => {
+    const rows = [...COVER_ALL, '| [ ] | 2026-10-25 | Play it | W1 | T | `Z9` |']
+    const errors = checkDeadlines(deadlines(rows, EXCUSE_REST), BUILD_PLAN)
+    assert.equal(errors.length, 1)
+    assert.match(errors[0], /Item "Play it" names Z9, which has no row/)
+})
+
 test('A4: due dates inside their window pass, on both edges and across the year', () => {
     const rows = [
         '| [ ] | 2026-10-20 | First day | W1 | A1 |',

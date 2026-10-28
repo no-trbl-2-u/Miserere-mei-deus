@@ -18,7 +18,8 @@
 // clashes of edited lines) and adds:
 //   - a table row both sides edited is merged cell by cell, each cell from the
 //     side that changed it; a cell both changed to different values stays a
-//     conflict for a human;
+//     conflict for a human. An Items row may have five cells or, with the
+//     `Waits on` column (phase DL2a), six; both go through the same code;
 //   - an Items block that settles out of a clash keeps its new rows in due-date
 //     order (stable);
 //   - the whole merge is REFUSED when an `## Unscheduled` id ends up with more

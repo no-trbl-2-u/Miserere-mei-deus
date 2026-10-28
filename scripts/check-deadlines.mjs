@@ -7,8 +7,11 @@
 // disagree:
 //   - an open build-plan row (`[ ]`, `[-]`, `[blocked: …]`) that no Items row names
 //     and no `## Unscheduled` line excuses, or an `## Unscheduled` line with no reason;
-//   - an Items row (or `## Unscheduled` line) naming a phase id with no build-plan row;
-//   - one phase id named by two Items rows, or by an Items row and `## Unscheduled`;
+//   - an Items row (or `## Unscheduled` line) naming a phase id with no build-plan row,
+//     in its `Rows` or its `Waits on` cell (phase DL2a);
+//   - one phase id named twice in the Items table (`Rows` and `Waits on` both count),
+//     or by an Items row and `## Unscheduled`;
+//   - not built yet (phase DL2b): an Item whose `Rows` names a loop row.
 //   - an Items row whose due date falls outside its window in the `## Windows` table,
 //     or whose window has no row there;
 //   - a phase Item whose Status cell disagrees with the one `deadlines.mjs --write`
@@ -45,17 +48,18 @@ export const checkDeadlines = (deadlinesMd, buildPlanMd) => {
     const windows = parseWindows(deadlinesMd)
     const errors = []
 
+    // An id in `Rows` or in `Waits on` is named; each place is recorded so a clash names both.
     const namedBy = new Map()
+    const name = (id, item, label) => namedBy.set(id, [...(namedBy.get(id) ?? []), { item: item.name, label }])
     for (const item of items) {
-        if (!Array.isArray(item.rows)) continue
-        for (const id of item.rows) namedBy.set(id, [...(namedBy.get(id) ?? []), item.name])
+        if (Array.isArray(item.rows)) for (const id of item.rows) name(id, item, `"${item.name}"`)
+        for (const id of item.waitsOn) name(id, item, `"${item.name}" (Waits on)`)
     }
 
     for (const item of items) {
-        if (Array.isArray(item.rows)) {
-            for (const id of item.rows.filter((id) => !phases.has(id))) {
-                errors.push(`${DEADLINES}: Item "${item.name}" names ${id}, which has no row in ${BUILD_PLAN}; fix the id or plot the row.`)
-            }
+        const named = [...(Array.isArray(item.rows) ? item.rows : []), ...item.waitsOn]
+        for (const id of named.filter((id) => !phases.has(id))) {
+            errors.push(`${DEADLINES}: Item "${item.name}" names ${id}, which has no row in ${BUILD_PLAN}; fix the id or plot the row.`)
         }
         const want = derivedStatus(item, phases)
         if (want && want !== (item.done ? '[x]' : '[ ]')) {
@@ -69,9 +73,9 @@ export const checkDeadlines = (deadlinesMd, buildPlanMd) => {
         }
     }
 
-    for (const [id, names] of namedBy) {
-        if (names.length > 1) {
-            errors.push(`${DEADLINES}: ${id} is named by ${names.length} Items (${names.map((n) => `"${n}"`).join(', ')}); keep it in one.`)
+    for (const [id, places] of namedBy) {
+        if (places.length > 1) {
+            errors.push(`${DEADLINES}: ${id} is named by ${places.length} Items (${places.map((p) => p.label).join(', ')}); keep it in one.`)
         }
     }
 
@@ -79,7 +83,7 @@ export const checkDeadlines = (deadlinesMd, buildPlanMd) => {
     for (const { id, reason } of unscheduled) {
         if (!reason) errors.push(`${DEADLINES}: ## Unscheduled lists ${id} with no reason; write one after an em dash.`)
         if (!phases.has(id)) errors.push(`${DEADLINES}: ## Unscheduled lists ${id}, which has no row in ${BUILD_PLAN}; remove the line or fix the id.`)
-        if (namedBy.has(id)) errors.push(`${DEADLINES}: ${id} is both under ## Unscheduled and named by Item "${namedBy.get(id)[0]}"; keep one.`)
+        if (namedBy.has(id)) errors.push(`${DEADLINES}: ${id} is both under ## Unscheduled and named by Item "${namedBy.get(id)[0].item}"; keep one.`)
         if (excused.has(id)) errors.push(`${DEADLINES}: ## Unscheduled lists ${id} twice; keep one line.`)
         excused.set(id, reason)
     }

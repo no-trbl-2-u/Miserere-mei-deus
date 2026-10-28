@@ -18,6 +18,7 @@ import { fileURLToPath } from 'node:url'
 
 import { mergeBuildPlan } from './build-plan-merge.mjs'
 import { dupCounts, mergeDeadlines, mergeRow, tidyItems } from './deadlines-merge.mjs'
+import { rederiveStatus } from './pr-resolve.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const SCRIPT = path.join(ROOT, 'scripts', 'deadlines-merge.mjs')
@@ -183,6 +184,99 @@ test('the build-plan core is shared: mergeBuildPlan still settles the same-spot 
   const r = mergeBuildPlan(wrap([row('B1')]), wrap([row('O1'), row('B1')]), wrap([row('T1'), row('B1')]))
   assert.equal(r.ok, true)
   assert.equal(r.text, wrap([row('O1'), row('T1'), row('B1')]))
+})
+
+// Phase DL2a (A8): the Items table gains a sixth column, `Waits on`.
+const item6 = (name, { mark = ' ', due = '2026-11-02', rows = 'T', waits = '-' } = {}) => `| [${mark}] | ${due} | ${name} | W1 | ${rows} | ${waits} |`
+const base6Items = [
+  item6('Alpha', { due: '2026-10-30', waits: 'A1' }),
+  item6('Beta', { due: '2026-11-04', waits: 'B1' }),
+  item6('Gamma', { due: '2026-11-10', rows: 'C1' }),
+]
+const base6 = doc({ items: base6Items, unscheduled: baseUns, changes: baseLog })
+
+test('A8: a six-column row both sides edited merges cell by cell, and a five-column row beside it still does', () => {
+  // guard-test: mergeRow is already cell-wise for any column count; this pins that the sixth column keeps it so.
+  const b = '| [ ] | 2026-11-01 | Name | W1 | T | A1 |'
+  assert.equal(mergeRow(b, '| [x] | 2026-11-01 | Name | W1 | T | A1 |', '| [ ] | 2026-11-01 | Name | W1 | T | A1, A2 |'), '| [x] | 2026-11-01 | Name | W1 | T | A1, A2 |')
+  assert.equal(mergeRow(b, '| [ ] | 2026-11-01 | Name | W1 | T | A1, A2 |', '| [ ] | 2026-11-01 | Name | W1 | T | A1, A3 |'), null)
+  assert.equal(mergeRow(b, b, '| [ ] | 2026-11-01 | Name | W1 | T |'), null)
+  const ours = doc({ items: [item6('Alpha', { due: '2026-10-30', waits: 'A1, A2' }), ...base6Items.slice(1)], unscheduled: baseUns, changes: baseLog })
+  const theirs = doc({ items: [item6('Alpha', { mark: 'x', due: '2026-10-30', waits: 'A1' }), ...base6Items.slice(1)], unscheduled: baseUns, changes: baseLog })
+  assert.equal(
+    merged(base6, ours, theirs),
+    doc({ items: [item6('Alpha', { mark: 'x', due: '2026-10-30', waits: 'A1, A2' }), ...base6Items.slice(1)], unscheduled: baseUns, changes: baseLog }),
+  )
+})
+
+test('A8: a six-column row both sides inserted is refused as doubled, and new six-column rows stay in due-date order', () => {
+  const same = item6('Same', { due: '2026-11-12', waits: 'S1' })
+  const dupOurs = doc({ items: [same, ...base6Items], unscheduled: baseUns, changes: baseLog })
+  const dupTheirs = doc({ items: [...base6Items, same], unscheduled: baseUns, changes: baseLog })
+  const r = mergeDeadlines(base6, dupOurs, dupTheirs)
+  assert.equal(r.ok, false)
+  assert.match(r.reason, /doubles 1 Items row/)
+  assert.equal(dupCounts(doc({ items: [same, same], unscheduled: [], changes: [] })).rows.get(same), 2)
+
+  const late = item6('Late', { due: '2026-11-20', waits: 'L1' })
+  const early = item6('Early', { due: '2026-11-11', waits: 'E1' })
+  const ours = doc({ items: [...base6Items, late], unscheduled: baseUns, changes: baseLog })
+  const theirs = doc({ items: [...base6Items, early], unscheduled: baseUns, changes: baseLog })
+  assert.equal(merged(base6, ours, theirs), doc({ items: [...base6Items, early, late], unscheduled: baseUns, changes: baseLog }))
+  assert.deepEqual(tidyItems([late, early], base6Items), [early, late])
+})
+
+test('A8: a real git merge keeps both plots and an edited Waits on cell in a six-column table', () => {
+  // guard-test: the driver already merged any pipe-delimited row; this pins the six-column shape end to end through git.
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'deadlines-merge-six-'))
+  const git = (...a) => execFileSync('git', a, { cwd: dir, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] })
+  try {
+    git('init', '-q', '-b', 'main')
+    git('config', 'user.email', 't@example.com')
+    git('config', 'user.name', 't')
+    git('config', 'merge.deadlines.driver', `"${process.execPath}" "${SCRIPT}" %O %A %B %P`)
+    fs.mkdirSync(path.join(dir, 'plan'), { recursive: true })
+    fs.writeFileSync(path.join(dir, '.gitattributes'), 'plan/deadlines.md merge=deadlines\n')
+    const file = path.join(dir, 'plan', 'deadlines.md')
+    fs.writeFileSync(file, base6)
+    git('add', '.')
+    git('commit', '-q', '-m', 'base')
+    const edit = (extra, alpha) => doc({ items: [alpha, ...base6Items.slice(1), extra], unscheduled: baseUns, changes: baseLog })
+    git('switch', '-q', '-c', 'plot-t')
+    fs.writeFileSync(file, edit(item6('Theirs', { due: '2026-11-13', waits: 'TT1' }), item6('Alpha', { mark: 'x', due: '2026-10-30', waits: 'A1' })))
+    git('commit', '-q', '-am', 'plot T')
+    git('switch', '-q', 'main')
+    fs.writeFileSync(file, edit(item6('Ours', { due: '2026-11-12', waits: 'OO1' }), item6('Alpha', { due: '2026-10-30', waits: 'A1, A2' })))
+    git('commit', '-q', '-am', 'plot O')
+    git('merge', '-q', '--no-edit', 'plot-t')
+    assert.equal(
+      fs.readFileSync(file, 'utf8'),
+      doc({
+        items: [item6('Alpha', { mark: 'x', due: '2026-10-30', waits: 'A1, A2' }), ...base6Items.slice(1), item6('Ours', { due: '2026-11-12', waits: 'OO1' }), item6('Theirs', { due: '2026-11-13', waits: 'TT1' })],
+        unscheduled: baseUns,
+        changes: baseLog,
+      }),
+    )
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('A8: pr-resolve rederiveStatus needs no change: it re-derives a six-column table and keeps the Waits on cell', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'deadlines-rederive-six-'))
+  try {
+    execFileSync('git', ['init', '-q', '-b', 'main'], { cwd: dir })
+    fs.mkdirSync(path.join(dir, 'plan', 'steps'), { recursive: true })
+    fs.writeFileSync(path.join(dir, 'plan', 'steps', '01_build_plan.md'), '## Status (at-a-glance)\n\n- [x] (#1) Phase R1 — shipped. Requires nothing.\n- [ ] Phase R2 — open. Requires nothing.\n')
+    const stale = doc({ items: [item6('Act', { rows: 'R1', waits: 'R2' }), item6('Loop wait', { rows: 'T', waits: 'R2' })], unscheduled: [], changes: [] })
+    fs.writeFileSync(path.join(dir, 'plan', 'deadlines.md'), stale)
+    assert.equal(rederiveStatus(dir, ROOT), true)
+    const next = fs.readFileSync(path.join(dir, 'plan', 'deadlines.md'), 'utf8')
+    assert.ok(next.includes(item6('Act', { mark: 'x', rows: 'R1', waits: 'R2' })))
+    assert.ok(next.includes(item6('Loop wait', { rows: 'T', waits: 'R2' })))
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
 })
 
 test('registration: .gitattributes names the driver, SessionStart and MERGE_DRIVERS register it', () => {
