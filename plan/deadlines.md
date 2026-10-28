@@ -203,7 +203,7 @@ finish alone stays silent. Dates are drafts T can move; a moved date is recorded
 | [x] | 2026-11-05 | Node blurbs matched to their events (the Act 1 walk's second half) | W2 | AW1a, AW1b |
 | [ ] | 2026-11-06 | The band clocks, from the kept set's times | W2 | HP4g |
 | [ ] | 2026-11-06 | Event-node UI/UX for the Breakwater's nine kinds (plot, 1 h) | W2 | needs plot |
-| [ ] | 2026-11-08 | The Breakwater's questline on the map: four quest nodes, three turned in and the fourth the boss, each step's foes and hazards behind its own node, the Belt, fled fights leave a node incomplete, placeholder lines | W2 | QL1a, QL1b, QL1c, QL1d |
+| [x] | 2026-11-08 | The Breakwater's questline on the map: four quest nodes, three turned in and the fourth the boss, each step's foes and hazards behind its own node, the Belt, fled fights leave a node incomplete, placeholder lines | W2 | QL1a, QL1b, QL1c, QL1d |
 | [ ] | 2026-11-08 | A first death comes back dying: 1 VITAE, back a node, the fight or hazard open to retry, a full-screen moment and a skull in the fight; a second death ends the run; a rest's heal clears it (so Chapter 1's boss can be fought again) | W2 | DY1a, DY1b, DY1c, DY1d |
 | [ ] | 2026-11-08 | Chapter 1's enemy art: pick from the loop's candidates (2 h) | W2 | T |
 | [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T |
