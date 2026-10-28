@@ -117,7 +117,7 @@ test('pr-resolve registers every merge driver .gitattributes names, as the Sessi
     assert.ok(settings.includes(`merge.${key}.driver '${d.driver}'`), `merge.${key}.driver matches the hook`)
   }
   // Registered before the merge it settles, not only in a Claude session.
-  assert.match(code(read('scripts/pr-resolve.mjs')), /function mergeMain\(branch, cwd = ROOT\) \{\n\s*registerMergeDrivers\(cwd\)/)
+  assert.match(code(read('scripts/pr-resolve.mjs')), /function mergeMain\(branch, cwd = ROOT, scriptsRoot = null\) \{\n\s*registerMergeDrivers\(cwd, scriptsRoot\)/)
   const repo = fs.mkdtempSync(path.join(os.tmpdir(), 'pr-resolve-drivers-'))
   execFileSync('git', ['init', '-q'], { cwd: repo })
   registerMergeDrivers(repo)

@@ -16,7 +16,7 @@ import test from 'node:test'
 import { fileURLToPath } from 'node:url'
 
 import { lintTree, treeVerdict } from './pr-merge.mjs'
-import { mergeMain, updateBranch } from './pr-resolve.mjs'
+import { driverCommand, MERGE_DRIVERS, mergeMain, updateBranch } from './pr-resolve.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const PLAN = 'plan/steps/01_build_plan.md'
@@ -226,13 +226,16 @@ function insertRow(md, n, line) {
 }
 
 /** A scratch repo with the live lessons file; the branch and main add one slug in different places. */
-function lessonsClash(branchRule, mainRule) {
+function lessonsClash(branchRule, mainRule, extra) {
   const made = scratch((d) => {
     for (const f of [LESSONS, 'plan/AUDIT.md', 'plan/CRITIQUE.md', 'plan/PHASE_CANDIDATES.md']) write(d, f, fs.readFileSync(path.join(ROOT, f), 'utf8'))
   })
   const { work } = made
   assert.throws(() => git(work, 'config', 'merge.lessons.driver'), 'the scratch repo registers no driver, as GitHub has none')
-  branchWith(work, 'pr-branch', (d) => write(d, LESSONS, insertRow(read(d, LESSONS), 1, lessonRow(branchRule))))
+  branchWith(work, 'pr-branch', (d) => {
+    write(d, LESSONS, insertRow(read(d, LESSONS), 1, lessonRow(branchRule)))
+    extra?.(d)
+  })
   write(work, LESSONS, insertRow(read(work, LESSONS), 12, lessonRow(mainRule)))
   git(work, 'commit', '-q', '-am', 'main bumps the same slug')
   git(work, 'push', '-q', 'origin', 'main')
@@ -306,6 +309,34 @@ test('updateBranch aborts a conflict outside the union files and pushes nothing;
     assert.equal(updateBranch('pr-y', work).state, 'current')
     assert.throws(() => updateBranch('main', work), /never main/)
   } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('update runs main\'s drivers and scripts by absolute path: the PR worktree\'s own copies never run', () => {
+  const sentinel = path.join(os.tmpdir(), `md1c-sentinel-${process.pid}-${Date.now()}`)
+  const poison = `import fs from 'node:fs'\nfs.writeFileSync(${JSON.stringify(sentinel)}, 'ran')\nprocess.exit(1)\n`
+  const { dir, work } = lessonsClash('a rule', 'a rule', (d) => {
+    write(d, 'scripts/lessons-merge.mjs', poison)
+    write(d, 'scripts/deadlines.mjs', poison)
+  })
+  try {
+    const mainRoot = path.join(dir, 'main-checkout')
+    fs.cpSync(path.join(ROOT, 'scripts'), path.join(mainRoot, 'scripts'), { recursive: true })
+    const wt = path.join(dir, 'pr-worktree')
+    git(work, 'worktree', 'add', '-q', '--detach', wt, 'origin/main')
+    const r = updateBranch('pr-branch', wt, undefined, mainRoot)
+    assert.equal(r.state, 'updated')
+    assert.equal(fs.existsSync(sentinel), false, 'no PR-branch script ran')
+    for (const d of MERGE_DRIVERS) {
+      const set = git(wt, 'config', `merge.${d.key}.driver`).trim()
+      assert.equal(set, driverCommand(d.driver, mainRoot))
+      assert.ok(set.includes(path.join(mainRoot, 'scripts')), 'main\'s absolute script path')
+      assert.ok(!set.includes(wt), 'never the worktree\'s')
+    }
+    assert.equal(count(git(work, 'show', `origin/pr-branch:${LESSONS}`), '**zz-md1c-dup**'), 1, 'main\'s lessons driver merged by slug')
+  } finally {
+    fs.rmSync(sentinel, { force: true })
     fs.rmSync(dir, { recursive: true, force: true })
   }
 })
