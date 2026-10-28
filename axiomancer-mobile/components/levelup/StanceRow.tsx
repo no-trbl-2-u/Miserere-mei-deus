@@ -118,7 +118,7 @@ const useStyles = makeStyles((AXM) => ({
     counterCol: { flex: 1, alignItems: 'flex-start' },
     numericRow: { flexDirection: 'row', alignItems: 'baseline', gap: 8 },
     bigNumber: {
-        fontFamily: FONTS.gothic,
+        fontFamily: FONTS.sans,
         fontSize: 36,
         color: AXM.sulfur,
         letterSpacing: 1,

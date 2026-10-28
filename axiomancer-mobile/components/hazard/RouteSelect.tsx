@@ -312,7 +312,7 @@ const useStyles = makeStyles((AXM) => ({
     ladderCells: { flexDirection: 'row', gap: 4, flex: 1 },
     ladderCell: { flex: 1, flexDirection: 'row', alignItems: 'baseline', justifyContent: 'center', paddingVertical: 3, borderWidth: 1, borderColor: AXM.ash, backgroundColor: 'rgba(0,0,0,0.35)' },
     ladderRound: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.bone },
-    ladderValue: { fontFamily: FONTS.gothic, fontSize: 15, lineHeight: 16 },
+    ladderValue: { fontFamily: FONTS.sans, fontSize: 15, lineHeight: 16 },
     chipsRow: { flexDirection: 'row', gap: 6, marginTop: 10 },
     rewardChip: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 8, paddingVertical: 5, borderWidth: 1 },
     failChip: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 8, paddingVertical: 5, borderWidth: 1, backgroundColor: 'rgba(122,58,58,0.1)' },

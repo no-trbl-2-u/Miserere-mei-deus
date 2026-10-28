@@ -333,7 +333,7 @@ const useStyles = makeStyles((AXM) => ({
         letterSpacing: 0.4,
         textTransform: 'uppercase',
     },
-    warePrice: { fontFamily: FONTS.gothic, fontSize: 18, color: AXM.sulfur },
+    warePrice: { fontFamily: FONTS.sans, fontSize: 18, color: AXM.sulfur },
     // Price tracks affordability, not just the row's opacity: value-gold
     // is loud enough to survive the unaffordable dim, so mute the colour
     // to bone when the player can't afford it.

@@ -307,7 +307,7 @@ const useStyles = makeStyles((AXM) => ({
     flashStats: { flexDirection: 'row', gap: 14, marginTop: 10 },
     flashStat: { alignItems: 'center', gap: 3, paddingHorizontal: 12, paddingVertical: 6, borderWidth: 1, backgroundColor: 'rgba(0,0,0,0.4)' },
     flashStatLabel: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 1 },
-    flashStatValue: { fontFamily: FONTS.gothic, fontSize: 20, lineHeight: 21 },
+    flashStatValue: { fontFamily: FONTS.sans, fontSize: 20, lineHeight: 21 },
     flashStatNeed: { fontFamily: FONTS.mono, fontSize: 13, color: AXM.bone },
     flashCarry: { fontFamily: FONTS.mono, fontSize: 12, letterSpacing: 1, color: HZ.gold, marginTop: 14 },
     tapToContinue: { marginTop: 22, fontFamily: FONTS.mono, fontSize: 12, color: AXM.bone, letterSpacing: 1.5, textAlign: 'center' },

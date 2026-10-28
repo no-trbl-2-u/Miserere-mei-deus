@@ -269,7 +269,7 @@ const useStyles = makeStyles((AXM) => ({
         paddingVertical: 6,
     },
     statLabel: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.bone, letterSpacing: 1 },
-    statValue: { fontFamily: FONTS.gothic, fontSize: 22, color: AXM.parchment },
+    statValue: { fontFamily: FONTS.sans, fontSize: 22, color: AXM.parchment },
     playstyle: { fontFamily: FONTS.serifItalic, fontSize: 13, color: AXM.bone, marginTop: 8 },
     confirm: {
         marginTop: 12,
