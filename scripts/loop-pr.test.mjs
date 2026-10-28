@@ -501,11 +501,11 @@ test('a plot PR carries a size label, size:multi-phase when it splits', () => {
 // @claude comment on a plot PR (T answering its calls, 2026-10-25). T fires it.
 const routeStep = (text) => text.slice(text.indexOf("- name: Route T's answers on a plot PR"), text.indexOf('- name: Run Claude Code'))
 
-test('no workflow fires /plot, /messy or /lane-creator', () => {
+test('no workflow fires /plot, /messy, /lane-creator or /heads-down', () => {
   for (const f of fs.readdirSync(path.join(ROOT, WF)).filter((f) => f.endsWith('.yml'))) {
     let text = read(`${WF}/${f}`)
     if (f === 'claude.yml') text = text.replace(routeStep(text), '')
-    assert.doesNotMatch(text, /\/(plot|messy|lane-creator)\b|skills\/(plot|messy)\.md/, f)
+    assert.doesNotMatch(text, /\/(plot|messy|lane-creator|heads-down)\b|skills\/(plot|messy|heads-down)\.md/, f)
   }
 })
 
@@ -517,10 +517,33 @@ test('no other skill dispatches /plot or /messy', () => {
   }
 })
 
-test('the two intake skills say the loop never fires them', () => {
-  for (const f of ['skills/plot.md', 'skills/messy.md']) {
+test('the two intake skills and /heads-down say the loop never fires them', () => {
+  for (const f of ['skills/plot.md', 'skills/messy.md', 'skills/heads-down.md']) {
     assert.match(read(f), /Never fired by the loop/, f)
   }
+})
+
+// --- /heads-down: T's attended parallel shipping (2026-10-28) ---------------
+
+test('no other skill dispatches /heads-down, and it has a doorway', () => {
+  const dispatch = /(Read|Execute|dispatch(es)? (to|into)|run) `?skills\/heads-down\.md|Skill\(\s*['"]?heads-down/i
+  for (const f of fs.readdirSync(path.join(ROOT, 'skills')).filter((f) => f.endsWith('.md'))) {
+    if (f === 'heads-down.md') continue
+    assert.doesNotMatch(read(`skills/${f}`), dispatch, f)
+  }
+  const door = read('.claude/commands/heads-down.md')
+  assert.match(door, /^---\ndescription: /)
+  assert.match(door, /skills\/heads-down\.md/)
+  assert.match(door, /Argument: \$ARGUMENTS/)
+})
+
+test('/heads-down workers run /ship-a-phase per row, never /march, and waves wait on merges', () => {
+  const hd = read('skills/heads-down.md')
+  assert.match(hd, /`\/ship-a-phase phase <id>`/)
+  assert.match(hd, /Never `\/march`/)
+  assert.match(hd, /\*\*merged on\s+`main`\*\*/)
+  assert.match(hd, /The orchestrator never builds/)
+  assert.match(hd, /\*\*push once\*\*/)
 })
 
 // --- /plot splits into phases and lands by a `plot` PR (D93) ----------------

@@ -1,0 +1,198 @@
+# Skill: heads-down
+
+> **T's orchestrated parallel shipping (2026-10-28).** T names some
+> build-plan rows or a goal ("finish the Defender lane"); the session
+> becomes an orchestrator. It maps which rows can ship in parallel
+> now and which wait for a merge, shows T the waves with a model per
+> worker, then launches one background worker per row, each in its
+> own git worktree, running `/ship-a-phase` on its row (or driving an
+> open PR to green). It carries every worker's callouts to the
+> workers after it, starts the next wave only when its prerequisite
+> PR has merged, and reports at the end. It never does the build work
+> itself. **Attended only. Never fired by the loop:** no `/march`
+> step, cron, workflow or loop verb dispatches it. It runs when T
+> types `/heads-down`, or says "heads down" on some rows in an
+> attended session.
+>
+> Codified from the DF1d/DF1e run of 2026-10-27/28 (wave 1: DF1d and
+> the open PR #987; wave 2: DF1e once DF1d merged).
+
+## 1. Invocation
+
+```
+/heads-down <id> <id> ...      # these build-plan rows (and their open PRs)
+/heads-down "<goal>"           # every open row the goal names, e.g. "finish the Defender lane"
+/heads-down peek <ids|goal>    # map the waves and print the plan; launch nothing
+```
+
+## 2. The procedure
+
+### Step 1 — Map the graph
+
+Read `plan/steps/01_build_plan.md` (Status block), then the open PRs:
+`gh pr list --label loop:pr` (claims, D85) and `gh pr list --label
+plot` (rows not yet on `main`). For each row in scope, note:
+
+- its state: `[ ]` pickable, already claimed by an open `loop:pr` PR
+  (drive that PR instead of building), `(attended)`, held on another
+  row's outcome (grep `plan/phases/` for its id, `skills/march.md` §3
+  "Pickable phase" rule 5), or briefless (it needs `/plot <N>` first);
+- its `Requires`, and whether each is ticked `[x]` on `main`.
+
+Build the dependency graph and cut it into **waves**: wave 1 is every
+row (and open PR) that can move now with no unmerged prerequisite;
+wave k+1 is what wave k's merges unlock. Two rows that edit the same
+files are not parallel even with no `Requires` between them: put one
+in the next wave. Count against the PR cap (5 open `loop:pr` PRs,
+D85): a wave that would push past it waits.
+
+Be honest when parallelism is low. "One row now, one after it
+merges" is a real answer; say so instead of inventing fan-out.
+
+### Step 2 — Pick the verb and the model per worker
+
+- **Verb.** A row: `/ship-a-phase phase <id>` (`skills/ship-a-phase.md`
+  §2). Never `/march`: it takes no row argument, and two concurrent
+  marches pick the same first row, because a row is only claimed once
+  its PR is open. An open PR: drive it to green with the `fix-ci
+  --branch` posture (`skills/fix-ci.md` §3.5); the worker never
+  merges it.
+- **Model**, for efficiency, stated with its reason in the plan:
+  - **Sonnet** (the default; `_claude-skill.yml` runs the loop on it)
+    for S and M phases and for driving a PR to green;
+  - **Opus** for briefs, plot calls, mechanism mapping and L phases
+    that cross several workspaces;
+  - **Haiku** for nothing that touches the repo's hard rules
+    (commits, PRs, plan files); at most read-only lookups.
+
+### Step 3 — Show T the plan and ask
+
+Print the waves as a table (wave, row or PR, verb, model and why,
+what it waits on, files it owns). Then propose **three improvements**
+to the strategy (a row to split, a wave to reorder, a model to
+change, a held row to unhold by a call) and ask T with
+`AskUserQuestion` (`docs/asking-well.md`: at most four questions,
+recommendation first and marked, each with its defer path). Tell T,
+in the same message, not to merge or turn on auto-merge for any
+`plot` PR a worker is about to edit (hard rule 6). `peek` stops
+here.
+
+### Step 4 — Launch the wave
+
+One background subagent per row or PR, each in its own git worktree
+(isolation). The prompt is self-contained; the worker sees nothing
+of this conversation. It carries:
+
+1. the row id, the brief path and its `§`, and the verb with its
+   argument;
+2. the merged prerequisites (PR numbers and what they landed);
+3. what NOT to touch: every sibling worker's PR, branch and owned
+   files, named one by one;
+4. the callouts so far that matter to this row (Step 5), pasted in;
+5. the house constraints that bite a worker (§4 notes);
+6. **push once**: the branch is pushed when the verify gate is
+   green, and not again while its review runs; a second push
+   mid-review cancels the `judge` and red-gates the old SHA;
+7. the fixed final-report shape:
+
+```
+STATUS: pr-open | green | blocked
+PR: <number or none>
+CHECKS: <commands and results>
+CALLOUTS:
+- footgun: <what> | file: <path or n/a> | fix: <how to avoid> | matters to: <next phase id or all>
+OPEN: <anything for T>
+```
+
+### Step 5 — The callout bus
+
+Keep a running digest in the session's scratchpad: one block per
+worker report, its callouts verbatim. Paste the callouts tagged for a
+row into that row's worker prompt (Step 4, item 4) and every `all`
+callout into every later prompt. The digest is the session's working
+memory, not a lessons log: durable lessons reach `plan/lessons.md`
+only through each worker's own skill retro (`skills/march.md` §3
+"Retro"). Never write a second lessons file, and never copy the
+digest into a skill.
+
+### Step 6 — React, then the next wave
+
+- A worker's PR goes red: forward the failing check and log line to
+  the owning worker (`SendMessage`); never patch it yourself.
+- Mutation or review reports: forward to the owner as advisory.
+- T's decision mid-run: relay it to the worker it concerns.
+- A `loop:pr` PR merges itself on a green adversarial review (D95).
+  Start wave k+1 only when its prerequisite PR has **merged on
+  `main`** (`gh pr view <n> --json state,mergedAt`), never on a green
+  check alone; re-read the build plan from `origin/main` first.
+
+The orchestrator never builds, edits, commits to or merges a
+worker's branch.
+
+### Step 7 — New loop work mid-run
+
+When T asks for new loop work during the run ("let's add…", "make a
+phase for…"), route it through `/plot` (or `/messy` for a loose dump)
+per AGENTS.md rule 8. Ask T's calls in the session with
+`AskUserQuestion`, then hand the answers to a worker that applies
+them to the `plot` PR as `skills/plot.md` §3 "Answering T's calls"
+lays out. That worker fetches the PR's state before its first edit
+(hard rule 6).
+
+### Step 8 — Wrap up
+
+Report to T in one block: each merged PR (number, row, one line),
+each PR still open and what it waits on, the open items for T (calls,
+`plot` PRs to merge, attended rows), and the callout digest grouped
+by the phase it matters to.
+
+## 3. Hard rules
+
+1. **Never fired by the loop.** Only T fires it, attended.
+2. **The orchestrator never builds.** Workers build; it maps,
+   launches, relays and reports. It never merges a PR, never
+   force-pushes, never pushes `main`.
+3. **One worker per row, `/ship-a-phase phase <id>`, never `/march`.**
+   Each in its own worktree.
+4. **A wave starts on a merge, not on a green check.** And never past
+   the PR cap (D85).
+5. **Every worker is told which sibling PRs, branches and files to
+   leave alone.**
+6. **No `plot` PR merges under a calls worker.** T merged #1003 by
+   hand mid-edit; #1001 had auto-merge on, and `pr-resolve`'s merge
+   of main cleared its conflict, so auto-merge fired before the
+   answers landed. Tell T not to merge or enable auto-merge on a
+   `plot` PR while a calls worker runs; the worker fetches the PR
+   state before editing. If it merged anyway, land the answers as a
+   follow-up plot PR off `main` titled `plot: <N> — T's calls
+   (<date>)` and comment a pointer on the merged PR.
+7. **One `plot` PR merges at a time.** Two open at once conflict on
+   `plan/steps/01_build_plan.md` and `plan/deadlines.md`;
+   `pr-resolve` settles it after the next push to `main`. Wait for it
+   before the next merge.
+8. **Durable lessons go through the skills' own retro** into
+   `plan/lessons.md`; the callout digest is never a second log.
+9. **No emojis, no attribution trailers** (AGENTS.md rule 2).
+
+## 4. Environment notes (tell every worker)
+
+- **Restarts kill workers silently.** A container restart ends
+  background workers with no report (one died a minute in, its branch
+  empty); a finished worker's result may arrive only as an output
+  file. After a restart, check each worker's transcript mtime and
+  branch state and relaunch the dead ones. A stale worktree can still
+  hold the branch name: push from a new local branch with `git push
+  origin HEAD:<branch>`.
+- **Telemetry.** Stop hooks write the session's `telemetry/` shard;
+  commit it with a plain message whenever asked, and never edit rows.
+- **GitHub.** `gh` GraphQL is refused (403) in the cloud container:
+  use REST (`gh api`) or the `mcp__github__` tools.
+  `create_pull_request` takes no labels; add them with an
+  `issue_write` update after.
+- **The worktree guard** refuses compound Bash that contains git,
+  `$var` in option positions, `sed -i` on a variable path, and
+  heredoc python that contains "git". One plain command per call;
+  write scripts with Write and run them with `python3 -I`.
+- **Fresh worktrees have no `node_modules`.** Run `npm install` at
+  the root first, or the root `npm test` shows false failures; revert
+  any `package-lock.json` churn before committing.
