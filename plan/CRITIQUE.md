@@ -1315,6 +1315,7 @@
 - suggested fix: wrap the cache's content in a `column` style `{ width: '100%', maxWidth: CACHE_COLUMN_MAX_WIDTH, alignSelf: 'center' }` with `CACHE_COLUMN_MAX_WIDTH = 520`, as rest and quest do; presentation only, pinned by the cache screen test reading the exported constant.
 - source: critique:drive (unattended)
 - issue: #1034
+
 ### [x] [MED] hazard / village / forge / deck — the barred gothic zero still prints in about a dozen numeric styles, so the hazard ladder reads "RI 28" for a threshold of 20 — RESOLVED 2026-10-28 (branch loop/iterate-gothic-figures, 9be8fceb: the 18 figure styles the guard names (the ladder, stall price, forge budget, DECK and hazard-deck stats and tallies, character-select and SELF stats and level, the hazard flash stat, the pilgrim conviction and stats, the satchel purse, the puzzle clock, the level-up number, the labyrinth room number) and the SACRIFICE floor tag print in FONTS.sans; names and titles stay gothic; `theme/__tests__/no-gothic-figures.test.ts` fails on any figure-named style in app/ or components/ that sets FONTS.gothic)
 - pass: 106 (commit 4edd5433)
 - viewport: both (375x812, 1280x800)
