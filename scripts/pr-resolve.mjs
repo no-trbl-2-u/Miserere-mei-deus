@@ -17,6 +17,10 @@
 //   node scripts/pr-resolve.mjs finish --branch <b>
 //       Post-run: fail if any listed file still has a marker; else stage,
 //       commit the merge and push <b>.
+//   node scripts/pr-resolve.mjs update --branch <b>
+//       The merge job's tree check (phase MD1c): `mergeMain` plus the push,
+//       for a PR whose merged tree is red. Exit 3 (nothing pushed) when the
+//       branch was already current or the merge conflicted.
 //
 // After a merge it commits (or, for `finish`, is about to commit), it re-derives
 // the Status cell of every deadline Item (`rederiveStatus`: `deadlines.mjs
@@ -313,6 +317,33 @@ export function mergeMain(branch, cwd = ROOT) {
   return { merged: false, rest }
 }
 
+/**
+ * Bring `branch` up to date with origin/main (the merge drivers registered,
+ * union files settled, Status re-derived) and push it. The merge job's tree
+ * check runs this on a PR whose merged tree is red (phase MD1c). Never a
+ * force, never `main`; a conflict the drivers and the union cannot settle is
+ * aborted and the branch is left as it was.
+ * @param {string} branch  @param {string} [cwd] repository directory
+ * @param {(head: string) => void} [beforePush] called with the new head just before the push, so a marker can name it first
+ * @returns {{ state: 'updated' | 'current' | 'conflict', head?: string, rest?: string[] }}
+ */
+export function updateBranch(branch, cwd = ROOT, beforePush) {
+  if (!branch || branch === 'main') throw new Error('updateBranch: a PR branch is required, never main')
+  const { merged, rest } = mergeMain(branch, cwd)
+  if (!merged) {
+    if (rest.length > 0) {
+      git(['merge', '--abort'], { cwd })
+      return { state: 'conflict', rest }
+    }
+    git(['commit', '--no-edit'], { cwd })
+  }
+  const head = git(['rev-parse', 'HEAD'], { cwd }).trim()
+  if (head === git(['rev-parse', `origin/${branch}`], { cwd }).trim()) return { state: 'current', head }
+  beforePush?.(head)
+  git(['push', 'origin', `HEAD:${branch}`], { cwd })
+  return { state: 'updated', head }
+}
+
 function commitAndPush(branch) {
   git(['commit', '--no-edit'])
   git(['push', 'origin', `HEAD:${branch}`])
@@ -379,7 +410,13 @@ function main() {
     else git(['push', 'origin', `HEAD:${branch}`])
     return
   }
-  console.error('usage: pr-resolve.mjs scan | prepare --branch <b> | finish --branch <b>')
+  if (mode === 'update') {
+    const r = updateBranch(branch)
+    console.log(r.state === 'conflict' ? `conflict: ${r.rest.join(', ')}` : `${r.state} ${r.head}`)
+    if (r.state !== 'updated') process.exit(3)
+    return
+  }
+  console.error('usage: pr-resolve.mjs scan | prepare --branch <b> | finish --branch <b> | update --branch <b>')
   process.exit(2)
 }
 

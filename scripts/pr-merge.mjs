@@ -15,6 +15,7 @@
 //   node scripts/pr-merge.mjs decide --pr <n> --head <sha> --since <ISO> [--digest <40-hex>]   # writes go, reason to $GITHUB_OUTPUT
 //   node scripts/pr-merge.mjs audit --pr <n> --head <sha> --run <id>        # prints the audit comment the job posts
 //   node scripts/pr-merge.mjs since --run <id>                               # writes since=<ISO> (this run's review start) to $GITHUB_OUTPUT
+//   node scripts/pr-merge.mjs tree --pr <n> --head <sha>                     # after a go: lints the merged tree, updates the branch once when red; writes go, reason
 //
 // Holds, each a tested line of `mergeWanted`:
 //   - the kill switch: repository variable PR_AUTO_MERGE=off, or the label `no-auto-merge`
@@ -34,16 +35,22 @@
 // named in the pass reason, so a runaway loop shows in the audit trail; the open-PR cap bounds
 // what is in flight.
 //
+// The merged-tree check (phase MD1c) runs only after `mergeWanted` says go, so the
+// kill switch, plot PRs and pipeline PRs never reach it and it adds no hold to a PR
+// they already hold; see `treeVerdict`.
+//
 // `mergeWanted` is pure; only `main` reads GitHub. The merge job checks out
 // `main`'s copy of this file, so a PR cannot rewrite the decision that merges it.
 
-import { execFileSync } from 'node:child_process'
-import { appendFileSync } from 'node:fs'
-import { dirname, resolve } from 'node:path'
+import { execFileSync, spawnSync } from 'node:child_process'
+import { appendFileSync, cpSync, mkdtempSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { REVIEW_VERDICT } from './eval/ledger-lib.mjs'
 import { AUTO_MARKER, HOLD_LABELS, MERGEABLE_STATES, PIPELINE_PATHS, PLAN_LABELS, PLAN_TITLE, TRUSTED_AUTHORS } from './pr-policy.mjs'
+import { updateBranch } from './pr-resolve.mjs'
 import { markedHeads } from './pr-review.mjs'
 
 // The policy constants live in `pr-policy.mjs` so `pr-review.mjs` can read
@@ -170,6 +177,97 @@ export function countAutoMerges(merged, now) {
   return merged.filter((p) => Date.parse(p.mergedAt) >= t0 && p.comments.some((c) => (c.body ?? '').includes(AUTO_MARKER))).length
 }
 
+// --- the merged-tree check (phase MD1c) ----------------------------------------
+//
+// GitHub's server-side merge (the merge button, `--auto`) never runs the
+// registered merge drivers, so a PR can merge with no conflict and still leave
+// `plan/` red (three lessons bumps kept as three rows: #866, #868, #870). After
+// `mergeWanted` says go, the job looks at the tree GitHub would merge
+// (`refs/pull/<n>/merge`), runs main's own plan lints on its `plan/`, and
+// updates the PR branch from main (drivers registered) when they are red. The
+// check is point-in-time: `gh pr merge --auto` merges later and `main` can move
+// in between, so it narrows the review-to-merge gap and does not close it;
+// `pr-resolve` and the root `npm test` stay the backstop.
+
+/** The plan lints the tree check runs: main's copy of each, on the merged tree's `plan/`. */
+export const TREE_LINTS = Object.freeze([
+  { name: 'check-lessons', script: 'check-lessons.mjs' },
+  { name: 'check-plan-queues', script: 'check-plan-queues.mjs' },
+  { name: 'check-deadlines', script: 'check-deadlines.mjs' },
+])
+
+/**
+ * What the merge job does with the merged tree.
+ *
+ * @param {{ red?: { name: string, detail?: string }[], updated?: boolean, updateFailed?: boolean }} facts `red` the lints that failed on the merged tree; `updated` this head already came from (or went through) a tree-check update; `updateFailed` the update just attempted conflicted or changed nothing.
+ * @returns {{ action: 'go' | 'update' | 'hold', reason: string }} go on to the merge; update the branch and request no merge; or hold, naming the lint.
+ */
+export function treeVerdict({ red = [], updated = false, updateFailed = false }) {
+  if (red.length === 0) return { action: 'go', reason: 'merged tree is green under check-lessons, check-plan-queues and check-deadlines' }
+  const names = red.map((r) => r.name).join(', ')
+  const detail = red[0].detail ? `: ${red[0].detail}` : ''
+  if (updateFailed) return { action: 'hold', reason: `merged tree is red under ${names}${detail}; updating the branch from main conflicted or changed nothing` }
+  if (updated) return { action: 'hold', reason: `merged tree is still red under ${names}${detail} after the one update from main` }
+  return { action: 'update', reason: `merged tree is red under ${names}${detail}; updating the branch from main with the merge drivers registered` }
+}
+
+const TREE_MARKER = /<!-- pr-merge:tree-update from=([0-9a-f]{40}) to=([0-9a-f]{40}) -->/g
+
+/**
+ * The comment that records one tree-check update: it names the head before
+ * and the head after, so the run the update's push starts sees it.
+ *
+ * @param {{ from: string, to: string, red: string[] }} facts the heads and the failing lints.
+ * @returns {string} the comment body.
+ */
+export function treeUpdateComment({ from, to, red }) {
+  return [
+    `Merge job tree check: the tree GitHub would merge is red under ${red.join(', ')}. Updating this branch from \`main\` with the merge drivers registered, once per head; no merge is requested on this run.`,
+    `<!-- pr-merge:tree-update from=${from} to=${to} -->`,
+  ].join('\n')
+}
+
+/**
+ * Whether a tree-check update already ran for this head: a marker from a
+ * trusted account naming it as the head the update started from or the head
+ * it produced.
+ *
+ * @param {{ body: string, author?: string }[]} comments the PR's comments.
+ * @param {string} head the full head SHA.
+ * @param {readonly string[]} [trusted] the accounts whose markers count.
+ * @returns {boolean} true when this head has had its one update.
+ */
+export function treeUpdated(comments, head, trusted = TRUSTED_AUTHORS) {
+  return (comments ?? [])
+    .filter((c) => trusted.includes(c.author ?? ''))
+    .some((c) => [...(c.body ?? '').matchAll(TREE_MARKER)].some((m) => m[1] === head || m[2] === head))
+}
+
+/**
+ * Run the plan lints on a tree: main's scripts (`scriptsDir`) against the
+ * `plan/` directory of `treeish` in the repository at `repo`, copied into a
+ * scratch directory. The lints find their files from their own location, so
+ * the PR's lints never run and never judge themselves.
+ *
+ * @param {{ scriptsDir: string, repo: string, treeish: string, lints?: readonly { name: string, script: string }[] }} args
+ * @returns {{ name: string, ok: boolean, detail: string }[]} one result per lint; `detail` is the first line it printed when red.
+ */
+export function lintTree({ scriptsDir, repo, treeish, lints = TREE_LINTS }) {
+  const dir = mkdtempSync(join(tmpdir(), 'pr-merge-tree-'))
+  try {
+    cpSync(scriptsDir, join(dir, 'scripts'), { recursive: true })
+    const tar = execFileSync('git', ['archive', '--format=tar', treeish, 'plan'], { cwd: repo, maxBuffer: 256 * 1024 * 1024 })
+    execFileSync('tar', ['-x', '-C', dir], { input: tar })
+    return lints.map((l) => {
+      const r = spawnSync(process.execPath, [join(dir, 'scripts', l.script)], { cwd: dir, encoding: 'utf8' })
+      const first = `${r.stderr ?? ''}\n${r.stdout ?? ''}`.split('\n').map((s) => s.trim()).find((s) => s && !/disagreement|finding/i.test(s))
+      return { name: l.name, ok: r.status === 0, detail: r.status === 0 ? '' : (first ?? `exit ${r.status}`).slice(0, 200) }
+    })
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+}
+
 // --- I/O ----------------------------------------------------------------------
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -183,6 +281,63 @@ function gh(args) {
   return execFileSync('gh', args, { cwd: ROOT, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
 }
 
+const BRANCH = /^[A-Za-z0-9][\w./-]*$/
+
+function setOutput(go, reason) {
+  console.log(`pr-merge tree check: ${go ? 'go' : 'no merge'} (${reason})`)
+  if (process.env.GITHUB_OUTPUT) appendFileSync(process.env.GITHUB_OUTPUT, `go=${go}\nreason=${reason.replace(/\n/g, ' ')}\n`)
+}
+
+/** The merge ref GitHub keeps for the PR, once it names this head as its second parent. */
+async function fetchMergeRef(pr, head) {
+  for (let i = 0; i < 4; i++) {
+    try {
+      execFileSync('git', ['fetch', '--no-tags', 'origin', `refs/pull/${pr}/merge`], { cwd: ROOT, stdio: 'pipe' })
+      const sha = execFileSync('git', ['rev-parse', 'FETCH_HEAD'], { cwd: ROOT, encoding: 'utf8' }).trim()
+      const parents = execFileSync('git', ['rev-list', '--parents', '-n', '1', sha], { cwd: ROOT, encoding: 'utf8' }).trim().split(' ')
+      if (parents[2] === head) return sha
+    } catch {
+      // not there yet
+    }
+    await new Promise((r) => setTimeout(r, 15_000))
+  }
+  return null
+}
+
+async function treeCheck(repo, pr, head) {
+  const view = JSON.parse(gh(['pr', 'view', pr, '--repo', repo, '--json', 'headRefName,headRefOid,comments']))
+  if (view.headRefOid !== head) return setOutput(false, `tree check: head moved to ${view.headRefOid.slice(0, 8)}`)
+  const mergeSha = await fetchMergeRef(pr, head)
+  if (!mergeSha) return setOutput(false, `tree check: GitHub's merge ref for #${pr} is not at head ${head.slice(0, 8)}`)
+  const red = lintTree({ scriptsDir: join(ROOT, 'scripts'), repo: ROOT, treeish: mergeSha }).filter((r) => !r.ok)
+  const comments = view.comments.map((c) => ({ body: c.body ?? '', author: c.author?.login ?? '' }))
+  let v = treeVerdict({ red, updated: treeUpdated(comments, head) })
+  if (v.action === 'update') {
+    let failed = !BRANCH.test(view.headRefName)
+    if (!failed) {
+      try {
+        const r = updateBranch(view.headRefName, ROOT, (to) => {
+          gh(['pr', 'comment', pr, '--repo', repo, '--body', treeUpdateComment({ from: head, to, red: red.map((x) => x.name) })])
+        })
+        failed = r.state !== 'updated'
+      } catch (err) {
+        console.error(`pr-merge: the tree-check update failed: ${err.message}`)
+        failed = true
+      }
+    }
+    if (failed) {
+      // Mark the head, so the next run does not try again.
+      try {
+        gh(['pr', 'comment', pr, '--repo', repo, '--body', treeUpdateComment({ from: head, to: head, red: red.map((x) => x.name) })])
+      } catch {
+        // best effort
+      }
+      v = treeVerdict({ red, updated: true, updateFailed: true })
+    }
+  }
+  setOutput(v.action === 'go', `tree check: ${v.reason}`)
+}
+
 async function main() {
   const [mode] = process.argv.slice(2)
   const pr = arg('--pr')
@@ -191,6 +346,7 @@ async function main() {
   const repo = process.env.GH_REPO || 'no-trbl-2-u/Miserere-mei-deus'
   const ok = /^\d+$/.test(pr ?? '') && /^[0-9a-f]{40}$/.test(head ?? '')
   if (mode === 'audit' && ok && arg('--run')) return console.log(auditComment({ pr, head, run: arg('--run') }))
+  if (mode === 'tree' && ok) return treeCheck(repo, pr, head)
   if (mode === 'since' && /^\d+$/.test(arg('--run') ?? '')) {
     const run = arg('--run')
     const jobs = JSON.parse(gh(['api', `repos/${repo}/actions/runs/${run}/jobs`])).jobs ?? []
@@ -201,7 +357,7 @@ async function main() {
     return
   }
   if (mode !== 'decide' || !ok || !since) {
-    console.error('usage: pr-merge.mjs decide --pr <n> --head <40-hex sha> --since <ISO> | audit --pr <n> --head <sha> --run <id> | since --run <id>')
+    console.error('usage: pr-merge.mjs decide --pr <n> --head <40-hex sha> --since <ISO> | audit --pr <n> --head <sha> --run <id> | since --run <id> | tree --pr <n> --head <sha>')
     process.exit(2)
   }
   let view = JSON.parse(gh(['pr', 'view', pr, '--repo', repo, '--json', 'state,isDraft,isCrossRepository,labels,title,headRefOid,mergeStateStatus,comments,files']))

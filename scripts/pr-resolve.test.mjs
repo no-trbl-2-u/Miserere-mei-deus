@@ -15,7 +15,8 @@ import path from 'node:path'
 import test from 'node:test'
 import { fileURLToPath } from 'node:url'
 
-import { mergeMain } from './pr-resolve.mjs'
+import { lintTree, treeVerdict } from './pr-merge.mjs'
+import { mergeMain, updateBranch } from './pr-resolve.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const PLAN = 'plan/steps/01_build_plan.md'
@@ -204,6 +205,106 @@ test('a cell both plots changed to different values is listed for Haiku, as befo
     assert.equal(merged, false)
     assert.deepEqual(rest, [DEADLINES])
     git(work, 'merge', '--abort')
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+// --- the merge job's tree check (phase MD1c) ---------------------------------
+
+const LESSONS = 'plan/lessons.md'
+const lessonRow = (rule) => `- **zz-md1c-dup** · bit once (P1) → ${rule} · seen 1× · last 2026-10-28 · guarded by scripts/pr-resolve.test.mjs`
+
+/** Insert `line` after the `n`th lesson row of the live file. */
+function insertRow(md, n, line) {
+  const lines = md.split('\n')
+  let seen = 0
+  const at = lines.findIndex((l) => l.startsWith('- **') && ++seen === n)
+  assert.ok(at > 0, `the live lessons file has ${n} rows`)
+  lines.splice(at + 1, 0, line)
+  return lines.join('\n')
+}
+
+/** A scratch repo with the live lessons file; the branch and main add one slug in different places. */
+function lessonsClash(branchRule, mainRule) {
+  const made = scratch((d) => {
+    for (const f of [LESSONS, 'plan/AUDIT.md', 'plan/CRITIQUE.md', 'plan/PHASE_CANDIDATES.md']) write(d, f, fs.readFileSync(path.join(ROOT, f), 'utf8'))
+  })
+  const { work } = made
+  assert.throws(() => git(work, 'config', 'merge.lessons.driver'), 'the scratch repo registers no driver, as GitHub has none')
+  branchWith(work, 'pr-branch', (d) => write(d, LESSONS, insertRow(read(d, LESSONS), 1, lessonRow(branchRule))))
+  write(work, LESSONS, insertRow(read(work, LESSONS), 12, lessonRow(mainRule)))
+  git(work, 'commit', '-q', '-am', 'main bumps the same slug')
+  git(work, 'push', '-q', 'origin', 'main')
+  // The tree GitHub's merge button would make: a plain line merge, no driver.
+  git(work, 'switch', '-q', '-c', 'server-merge', 'origin/pr-branch')
+  git(work, 'merge', '-q', '--no-edit', 'origin/main')
+  const serverTree = git(work, 'rev-parse', 'HEAD').trim()
+  git(work, 'switch', '-q', 'main')
+  return { ...made, serverTree }
+}
+
+const treeLints = (work, treeish) => lintTree({ scriptsDir: path.join(ROOT, 'scripts'), repo: work, treeish })
+const redOf = (results) => results.filter((r) => !r.ok)
+
+test('a same-slug lessons bump is red as GitHub merges it, green and one row after update, and the verdicts go update then go', () => {
+  const { dir, work, serverTree } = lessonsClash('a rule', 'a rule')
+  try {
+    const red = redOf(treeLints(work, serverTree))
+    assert.deepEqual(red.map((r) => r.name), ['check-lessons'], 'the line merge keeps two rows of one slug')
+    assert.match(red[0].detail, /zz-md1c-dup/)
+    assert.equal(count(git(work, 'show', `${serverTree}:${LESSONS}`), '**zz-md1c-dup**'), 2)
+    assert.equal(treeVerdict({ red }).action, 'update')
+
+    let named = ''
+    const r = updateBranch('pr-branch', work, (head) => { named = head })
+    assert.equal(r.state, 'updated')
+    assert.equal(named, r.head, 'the marker can name the new head before the push')
+    assert.equal(git(work, 'rev-parse', 'origin/pr-branch').trim(), r.head, 'pushed')
+    assert.equal(count(git(work, 'show', `origin/pr-branch:${LESSONS}`), '**zz-md1c-dup**'), 1, 'one row')
+    assert.deepEqual(redOf(treeLints(work, 'origin/pr-branch')), [], 'green under the same lints')
+    assert.equal(treeVerdict({ red: [], updated: true }).action, 'go')
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('a clash the drivers cannot fix holds, naming the lint', () => {
+  const { dir, work, serverTree } = lessonsClash('the branch rule', 'the main rule')
+  try {
+    const red = redOf(treeLints(work, serverTree))
+    assert.deepEqual(red.map((r) => r.name), ['check-lessons'])
+    assert.equal(treeVerdict({ red }).action, 'update')
+    assert.equal(updateBranch('pr-branch', work).state, 'updated', 'the union settles the file, so the push happens')
+    const again = redOf(treeLints(work, 'origin/pr-branch'))
+    assert.deepEqual(again.map((x) => x.name), ['check-lessons'], 'both rewrites survive as two rows')
+    const held = treeVerdict({ red: again, updated: true })
+    assert.equal(held.action, 'hold')
+    assert.match(held.reason, /check-lessons/)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('updateBranch aborts a conflict outside the union files and pushes nothing; a current branch pushes nothing', () => {
+  const { dir, work } = scratch()
+  try {
+    branchWith(work, 'pr-x', (d) => write(d, 'notes.txt', 'branch\n'))
+    write(work, 'notes.txt', 'main\n')
+    git(work, 'commit', '-q', '-am', 'main edits notes')
+    git(work, 'push', '-q', 'origin', 'main')
+    const before = git(work, 'rev-parse', 'origin/pr-x').trim()
+    const r = updateBranch('pr-x', work)
+    assert.equal(r.state, 'conflict')
+    assert.deepEqual(r.rest, ['notes.txt'])
+    assert.equal(git(work, 'status', '--porcelain').trim(), '', 'the merge was aborted')
+    assert.equal(git(work, 'rev-parse', 'origin/pr-x').trim(), before)
+    assert.equal(treeVerdict({ red: [{ name: 'check-lessons' }], updated: true, updateFailed: true }).action, 'hold')
+
+    branchWith(work, 'pr-y', (d) => write(d, 'other.txt', 'y\n'))
+    git(work, 'merge', '-q', '--no-edit', 'origin/pr-y')
+    assert.equal(updateBranch('pr-y', work).state, 'current')
+    assert.throws(() => updateBranch('main', work), /never main/)
   } finally {
     fs.rmSync(dir, { recursive: true, force: true })
   }

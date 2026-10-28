@@ -220,10 +220,33 @@ test('the one gh pr merge is --auto, in the merge job, gated on the scripted dec
   assert.match(mj, /PR_AUTO_MERGE: \$\{\{ vars\.PR_AUTO_MERGE \}\}/, 'the kill switch is a repository variable')
   assert.match(mj, /id: since\n\s+run: node scripts\/pr-merge\.mjs since --run "\$GITHUB_RUN_ID"/, 'the review-start boundary is the tested script, not inline shell')
   assert.doesNotMatch(mj, /--jq/, 'no inline jq in the merge job')
-  assert.match(mj, /REASON: \$\{\{ steps\.decide\.outputs\.reason \}\}/, 'the reason reaches the shell through env, never inline')
+  assert.match(mj, /REASON: \$\{\{ steps\.tree\.outputs\.reason \|\| steps\.decide\.outputs\.reason \}\}/, 'the reason reaches the shell through env, never inline')
   assert.match(mj, /^ {6}contents: write$/m)
   assert.doesNotMatch(mj, /claude-code-action|_claude-skill\.yml/, 'no model in the merge job')
   assert.doesNotMatch(mj, /--admin|--delete-branch|gh api -X (PUT|DELETE|PATCH)/, 'no bypass, no settings edits')
+})
+
+test('the merge job checks the merged tree after the decision and before the merge, with main\'s scripts only (MD1c)', () => {
+  const mj = job(review, 'merge')
+  const at = (needle) => {
+    const i = mj.indexOf(needle)
+    assert.ok(i > 0, `merge job has ${needle}`)
+    return i
+  }
+  const decide = at('id: decide')
+  const tree = at('id: tree')
+  const merge = at('gh pr merge')
+  assert.ok(decide < tree && tree < merge, 'decide, then the tree check, then the merge')
+  assert.ok(at('path: tree') < tree, 'the full checkout comes first')
+  const checkout = mj.slice(at('path: tree') - 120, tree)
+  assert.match(checkout, /ref: main\n\s+path: tree\n\s+fetch-depth: 0/, 'a full checkout of main, beside the sparse one')
+  assert.match(mj, /id: tree\n\s+if: steps\.decide\.outputs\.go == 'true'/, 'a hold never reaches the tree check')
+  assert.match(mj, /run: node tree\/scripts\/pr-merge\.mjs tree --pr "\$PR" --head "\$HEAD_SHA"/, 'main\'s script, on the tree check')
+  assert.match(mj, /if: steps\.decide\.outputs\.go == 'true' && steps\.tree\.outputs\.go == 'true'\n\s+run: \|\n\s+gh pr merge/, 'the merge needs both')
+  // The merged tree's plan/ is data for main's lints; no step runs the PR's own lints or tests.
+  assert.doesNotMatch(code(mj), /npm (ci|test|run)|node --test|scripts\/check-/, 'no step runs the PR\'s lints')
+  const decideOnly = code(read('scripts/pr-merge.mjs')).match(/export function mergeWanted[\s\S]*?\n}\n/)[0]
+  assert.doesNotMatch(decideOnly, /tree/i, 'the tree check is not part of the pure decision')
 })
 
 test('the fixer is a separate run from the reviewer: writes and pushes once, never comments, labels, merges or force-pushes', () => {

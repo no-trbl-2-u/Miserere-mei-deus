@@ -326,15 +326,39 @@ jobs:
       - name: Decide (plan PR, holds, this run's verdict on this head, CLEAN, cap, kill switch)
         id: decide
         run: node scripts/pr-merge.mjs decide --pr "$PR" --head "$HEAD_SHA" --since "${{ steps.since.outputs.since }}" --digest "${{ needs.review-wanted.outputs.digest }}"
-      - name: Auto-merge (GitHub's ruleset decides), then the audit comment
+      # The merged-tree check (phase MD1c), after the decision so the kill
+      # switch, plot PRs, pipeline PRs and every other hold never reach it.
+      # GitHub's merge never runs the merge drivers, so the tree it would
+      # merge can leave plan/ red. Main's lints, run on that tree's plan/;
+      # a red tree updates the PR branch from main once (drivers registered)
+      # and requests no merge on this run. A full checkout of main, beside the
+      # sparse one, for the update's history; never the PR's scripts.
+      - name: Full checkout of main for the tree check
         if: steps.decide.outputs.go == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: tree
+          fetch-depth: 0
+          token: ${{ secrets.GH_PAT || github.token }}
+      - name: Tree check (main's plan lints on the merged tree; update the branch once when red)
+        id: tree
+        if: steps.decide.outputs.go == 'true'
+        env:
+          GIT_AUTHOR_NAME: claude[bot]
+          GIT_AUTHOR_EMAIL: 41898282+claude[bot]@users.noreply.github.com
+          GIT_COMMITTER_NAME: claude[bot]
+          GIT_COMMITTER_EMAIL: 41898282+claude[bot]@users.noreply.github.com
+        run: node tree/scripts/pr-merge.mjs tree --pr "$PR" --head "$HEAD_SHA"
+      - name: Auto-merge (GitHub's ruleset decides), then the audit comment
+        if: steps.decide.outputs.go == 'true' && steps.tree.outputs.go == 'true'
         run: |
           gh pr merge "$PR" --repo "$GH_REPO" --auto --merge --match-head-commit "$HEAD_SHA"
           gh pr comment "$PR" --repo "$GH_REPO" --body "$(node scripts/pr-merge.mjs audit --pr "$PR" --head "$HEAD_SHA" --run "$GITHUB_RUN_ID")" || echo "::warning::merge requested; the audit comment failed"
       - name: Hold
-        if: steps.decide.outputs.go != 'true'
+        if: steps.decide.outputs.go != 'true' || steps.tree.outputs.go != 'true'
         env:
-          REASON: ${{ steps.decide.outputs.reason }}
+          REASON: ${{ steps.tree.outputs.reason || steps.decide.outputs.reason }}
         run: |
           echo "::notice::PR $PR not merged: $REASON"
 
