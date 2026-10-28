@@ -244,8 +244,9 @@ keyword (`EnemyKeyword = never`).
   read from the library by id, so a saved copy takes the current ones; Heart,
   Body and Mind lines join the fighter's stats for each fight, `maxHp` folds
   onto `maxHealth`. The elite drop (`rollEliteRelicDrop`) can hand over the
-  Circlet; the quests are not authored yet, so the dev menu's relic chips,
-  which wear the relic while a position is free, hand over the rest; a relic
+  Circlet; the Breakwater questline's last step pays the Belt (through
+  `/item-reward`); the dev menu's relic chips, which wear the relic while a
+  position is free, hand over the rest; a relic
   carried unworn shows NOT WORN in the satchel, its signature off until the
   player taps WEAR. A character wears one weapon, one armor and up to three
   relics (`SLOT_CAPACITY.relic`); any relic fits any relic slot, and the
@@ -264,8 +265,18 @@ keyword (`EnemyKeyword = never`).
   (`ld-18`) and the Labyrinth vault door (`ld-15`) are sealed cutscenes.
   The Labyrinth and the other continents' maps are parked and unreachable.
 - **Nodes** in play: encounter, hazard, rest, blacksmith (the Anvil),
-  loot-cache, gathering, cutscene, travel. Act 1 has no NPCs, shops or
-  quests; that plumbing is kept and tested with fixtures.
+  loot-cache, gathering, cutscene, travel, and quest (the Breakwater only).
+  Act 1 has no NPCs or shops; that plumbing is kept and tested with fixtures.
+- **The Breakwater questline** (`World/quest.library.ts`, phase QL1d): four
+  quest nodes, bw-19..bw-22. Node 1 (off the windmill) offers step 1; nodes
+  2-4 turn in the step before and offer the next. Placeholder steps and
+  rewards until T's sitting (`[content]`): cross 1 hazard (40 XP, 10
+  shillings), win 2 fights (40 XP, a minor healing potion), beat the elite
+  (40 XP, a card pick of three), beat the watchtower boss (40 XP, 15
+  shillings, the Elementalist's Belt). Every fight and hazard sits in a
+  pocket behind its step's quest node, with one spare; the roads into nodes
+  2-4 are locked until the step before is met; the quest nodes and the
+  watchtower open their roads only once spent, so the bridge needs the boss.
 - **Currency:** shillings.
 - **Death** (`Game/death.ts`, `resolveDeath`): the first time VITAE reaches 0
   in a fight or on a node hazard, the player is put back on the node they

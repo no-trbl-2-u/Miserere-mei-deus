@@ -38,10 +38,10 @@ export const STATE_FIXTURES: readonly StateFixture[] = Object.freeze([
     },
     {
         id: 'sage-bw-door-gate',
-        description: 'Sage (L15) on the Breakwater\'s bw-15, one step from the door fight (bw-17, the Death Beholder) and two from the river bridge (bw-18). Combat + travel surfaces.',
+        description: 'Sage (L15) on the Breakwater\'s bw-15 with the questline\'s quest nodes settled, so the door fight (bw-17, the Death Beholder) is open and the river bridge (bw-18) lies behind it. Combat + travel surfaces.',
         seed: 'fixture-sage-bw-door-gate',
         preset: 'sage',
-        world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-15' },
+        world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-15', questNodesSettled: true },
     },
     {
         id: 'wanderer-staged-village',
@@ -84,7 +84,7 @@ export const STATE_FIXTURES: readonly StateFixture[] = Object.freeze([
     },
     {
         id: 'apprentice-staged-quest',
-        description: 'Apprentice on the Breakwater\'s bw-2 with the fixture questline\'s first quest node staged on it (the live Act 1 has no questline until QL1d); `arrive` pushes /quest.',
+        description: 'Apprentice on the Breakwater\'s bw-2 with the fixture questline\'s first quest node staged on it (the live Breakwater questline is on bw-19..bw-22); `arrive` pushes /quest.',
         seed: 'fixture-apprentice-staged-quest',
         preset: 'apprentice',
         world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-2' },

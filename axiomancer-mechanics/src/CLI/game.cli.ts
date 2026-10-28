@@ -55,7 +55,10 @@ import { createNodeAdapter } from '../Game/persistence/node.adapter';
 import type { PersistenceAdapter } from '../Game/persistence/types';
 import type { TypedLevelUpEvent } from '../Game/events.types';
 import { getMapDefinition } from '../World/map.registry';
-import { resolveMapEvent, settleArrival, MAP_REGISTRY, getNodePrimaryEventKind } from '../World';
+import {
+    resolveMapEvent, settleArrival, MAP_REGISTRY, getNodePrimaryEventKind,
+    legalMovesFrom, acceptQuestStep, turnInQuestStep,
+} from '../World';
 import { resolveDeath } from '../Game/death';
 import type { ResolvedEvent, ContinentName, MapName } from '../World';
 import { getCardById } from '../Cards/cards.library';
@@ -221,15 +224,37 @@ async function resolveCurrentNodeEvent(
         await shopLoop(store, result.event.shop);
     }
 
+    if (result.event.kind === 'quest') playQuestNode(store, result.event);
+
     return { event: result.event, combatOutcome };
+}
+
+/**
+ * A quest node on a scripted walk is played as a player would: the step it
+ * turns in is turned in (paid through the reward door), then the step it
+ * offers is accepted, which spends the node and opens its pocket. A node
+ * that is locked or waiting changes nothing.
+ */
+function playQuestNode(store: GameStoreHandle, event: Extract<ResolvedEvent, { kind: 'quest' }>): void {
+    let state = store.getState() as GameState;
+    if (event.stage === 'turn-in') {
+        state = turnInQuestStep(state, event.questline, event.node - 1).state;
+        log(`Turned in step ${event.node - 1} of ${event.questline}.`);
+    }
+    if (event.stage === 'turn-in' || event.stage === 'offer') {
+        const accepted = acceptQuestStep(state, event.questline, event.node);
+        if (accepted !== state) log(`Accepted step ${event.node} of ${event.questline}.`);
+        state = accepted;
+    }
+    store.setState({ player: state.player, world: state.world, quests: state.quests });
 }
 
 async function moveAndResolveMapNode(store: GameStoreHandle, target: string, flags: CliFlags): Promise<NodeResolutionResult> {
     const state = store.getState();
     const current = state.world.currentMap.currentNode;
-    const def = getMapDefinition(state.world.currentMap.continent, state.world.currentMap.name);
-    const node = def.nodes.find(n => n.id === current);
-    const reachable = (node?.connectedNodes ?? []).filter(id => state.world.currentMap.availableNodes.includes(id));
+    // The engine's frontier is the authority on where a walk may go: a
+    // questline's pockets and its locks read only there.
+    const reachable = legalMovesFrom(state.world.currentMap);
     if (!reachable.includes(target)) {
         throw new Error(`Route target '${target}' is not reachable from '${current}'. Reachable: ${reachable.join(', ') || '(none)'}`);
     }

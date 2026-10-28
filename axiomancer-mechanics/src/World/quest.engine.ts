@@ -15,7 +15,7 @@
  */
 
 import { Quest, QuestLog, QuestObjective, QuestStatus, Reward } from './types';
-import { QuestName } from './quest.library';
+import type { QuestName } from './quest.library';
 import { NodeId } from './types';
 import type { MapName } from './map.library';
 import type { Character } from '../Character/types';

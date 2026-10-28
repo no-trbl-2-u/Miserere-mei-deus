@@ -9,7 +9,7 @@
  * A won fight still settles it (the control).
  */
 
-import { createStartingWorld } from '@mechanics';
+import { settledBreakwater } from '@/test-utils/settledBreakwater';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { act, render } from '@testing-library/react-native';
 import React from 'react';
@@ -48,7 +48,7 @@ afterEach(() => {
 });
 
 function makeStore(): AppStore {
-    return createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+    return createAppStore({ adapter: createMemoryAdapter(), overrides: { world: settledBreakwater() } });
 }
 
 function mountExploration(store: AppStore) {

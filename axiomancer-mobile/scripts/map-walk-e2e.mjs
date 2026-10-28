@@ -14,12 +14,18 @@
 //   1. NEW GAME: the windmill's arrival scene (D31), then the map (no relic);
 //   2. bw-5, a loot cache: take a card, move on, back on the map;
 //   3. bw-4, a gathering: acknowledge, back on the map (lateral rib);
-//   4. bw-6, a fight: the reveal, the board on the plain black scene (D32),
-//      played to its end by ending phases. A defeat is the death rule: the
-//      full-screen return moment, then the map on bw-4 (the node walked
-//      from) at 1 VITAE, dying, with bw-6 still open;
-//   5. bw-3, a hazard: lands on the hazard intro. Playing the board itself is
-//      `hazard-e2e.mjs`'s job (its drag helpers); this pins the routing.
+//   4. bw-19, the first quest node: ACCEPT step 1 on `/quest`, LEAVE; the
+//      hazard pocket behind it opens (QL1d: every fight and hazard sits in a
+//      pocket behind its quest node);
+//   5. bw-3, a hazard: lands on the route select, and the dev skip seam
+//      crosses it. Playing the board itself is `hazard-e2e.mjs`'s job (its
+//      drag helpers); this pins the routing. Arriving counts step 1;
+//   6. bw-9, a rest: REST, claim, back on the map;
+//   7. bw-20, the second quest node: TURN IN step 1, ACCEPT step 2;
+//   8. bw-2, a fight in its pocket: the reveal, the board on the plain black
+//      scene (D32), played to its end by ending phases. A defeat is the death
+//      rule: the full-screen return moment, then the map on bw-20 (the node
+//      walked from) at 1 VITAE, dying, with bw-2 still open.
 //
 // Node clicks go through the DOM: nodes off a phone viewport would need the
 // camera panned first, and panning is not what this journey tests.
@@ -196,6 +202,7 @@ async function settleOnMap(page, what) {
         }
         await sleep(400)
         if (await tap(page, 'combat-summary-close')) continue
+        if (await tap(page, 'death-return-continue')) continue
         if (await page.getByTestId('cutscene-advance').count()) { await playOutCutscene(page); continue }
         if (await tap(page, 'item-reward-confirm')) continue
         if (await tap(page, 'rest-claim')) continue
@@ -224,6 +231,10 @@ async function expectHere(page, nodeId) {
 // ---------------------------------------------------------------------------
 
 async function newGame(page, baseUrl) {
+    // A static web export can't surface `extra.devToolsEnabled` at runtime; this
+    // is the documented opt-in (lib/buildProfile.ts) that installs the skip
+    // seam the hazard step crosses its board with.
+    await page.addInitScript(() => { globalThis.__AXM_FORCE_DEV_TOOLS__ = true })
     await page.goto(`${baseUrl}/`, { waitUntil: 'networkidle' })
     await page.getByLabel('Embark on your journey').click({ timeout: 15000 })
     await tap(page, 'main-menu-new-game') || fail('the main menu has no NEW GAME')
@@ -264,19 +275,47 @@ async function gathering(page) {
     log('bw-4 gathering: acknowledged, back on the map')
 }
 
+/** A quest node: TURN IN the step before when it is ready, ACCEPT the one offered, LEAVE. */
+async function questNode(page, nodeId, { turnIn }) {
+    await travelTo(page, nodeId)
+    await waitFor(page, 'quest-column', `${nodeId} quest screen`)
+    if (turnIn) {
+        await tap(page, 'quest-turn-in-button') || fail(`${nodeId}: the ready step has no TURN IN`)
+        await waitFor(page, 'quest-paid', `${nodeId} turn-in payout`)
+    }
+    await waitFor(page, 'quest-accept-button', `${nodeId} offer`)
+    await tap(page, 'quest-accept-button')
+    await waitFor(page, 'quest-accepted-line', `${nodeId} accepted`)
+    await tap(page, 'quest-leave-button') || fail(`${nodeId}: the quest screen has no LEAVE`)
+    await settleOnMap(page, nodeId)
+    await expectHere(page, nodeId)
+    log(`${nodeId} quest node: ${turnIn ? 'turned in, ' : ''}accepted, back on the map`)
+}
+
+async function rest(page) {
+    await travelTo(page, 'bw-9')
+    await waitFor(page, 'rest-choice-offer-rest', 'bw-9 rest')
+    await page.getByTestId('rest-choice-offer-rest').first().click({ force: true })
+    await waitFor(page, 'rest-claim', 'bw-9 rest outcome')
+    await tap(page, 'rest-claim')
+    await settleOnMap(page, 'bw-9')
+    await expectHere(page, 'bw-9')
+    log('bw-9 rest: rested, back on the map')
+}
+
 async function fight(page) {
-    await travelTo(page, 'bw-6')
-    await waitFor(page, 'combat-reveal', 'bw-6 encounter reveal')
-    await tap(page, 'combat-enter') || fail('bw-6: the reveal has no ENTER COMBAT')
-    await waitFor(page, 'combat-arena-backdrop', 'bw-6 combat board')
+    await travelTo(page, 'bw-2')
+    await waitFor(page, 'combat-reveal', 'bw-2 encounter reveal')
+    await tap(page, 'combat-enter') || fail('bw-2: the reveal has no ENTER COMBAT')
+    await waitFor(page, 'combat-arena-backdrop', 'bw-2 combat board')
 
     // D32: combat draws a plain black scene, never a plate image.
     const backdrop = await page.getByTestId('combat-arena-backdrop').first().evaluate((el) => ({
         img: el.tagName === 'IMG' || !!el.querySelector('img'),
         bgImage: getComputedStyle(el).backgroundImage,
     }))
-    if (backdrop.img || backdrop.bgImage !== 'none') fail(`bw-6: the combat scene draws a plate (${JSON.stringify(backdrop)})`)
-    log('bw-6 fight: on the board, plain black scene')
+    if (backdrop.img || backdrop.bgImage !== 'none') fail(`bw-2: the combat scene draws a plate (${JSON.stringify(backdrop)})`)
+    log('bw-2 fight: on the board, plain black scene')
 
     // Play it to its end by ending phases (no cards staged), then close out.
     for (let k = 0; k < 120; k++) {
@@ -285,18 +324,18 @@ async function fight(page) {
         await tap(page, 'combat-end-phase')
         await sleep(150)
     }
-    await waitFor(page, 'combat-summary', 'bw-6 combat summary', 10000)
+    await waitFor(page, 'combat-summary', 'bw-2 combat summary', 10000)
     const verdict = (await page.getByTestId('combat-summary').innerText()).split('\n')[0]
-    log(`bw-6 fight: over (${verdict})`)
+    log(`bw-2 fight: over (${verdict})`)
     if (/defeat/i.test(verdict)) {
         // The first death: the return moment, then the node walked from.
         await tap(page, 'combat-summary-close')
-        await waitFor(page, 'death-return', 'the return moment after the bw-6 defeat')
+        await waitFor(page, 'death-return', 'the return moment after the bw-2 defeat')
         await tap(page, 'death-return-continue') || fail('the return moment has no CONTINUE')
-        await settleOnMap(page, 'bw-6 return')
-        await expectHere(page, 'bw-4')
-        const label = await nodeLabel(page, 'bw-6')
-        if (!label || !/open/.test(label)) fail(`bw-6 is not open after the defeat (label: "${label}")`)
+        await settleOnMap(page, 'bw-2 return')
+        await expectHere(page, 'bw-20')
+        const label = await nodeLabel(page, 'bw-2')
+        if (!label || !/open/.test(label)) fail(`bw-2 is not open after the defeat (label: "${label}")`)
         const vitae = (await page.locator('[data-testid^="statbar-value"]').first().innerText()).trim()
         if (!/^1\//.test(vitae)) fail(`expected 1 VITAE on the return, the status card reads "${vitae}"`)
         let dying = false
@@ -305,20 +344,29 @@ async function fight(page) {
             if (!dying) await sleep(250)
         }
         if (!dying) fail('the save does not carry dying after the defeat')
-        log('bw-6 fight: lost; back on bw-4 at 1 VITAE, dying, bw-6 open')
+        log('bw-2 fight: lost; back on bw-20 at 1 VITAE, dying, bw-2 open')
         return
     }
-    await settleOnMap(page, 'bw-6')
-    await expectHere(page, 'bw-6')
-    log('bw-6 fight: won; back on the map')
+    await settleOnMap(page, 'bw-2')
+    await expectHere(page, 'bw-2')
+    log('bw-2 fight: won; back on the map')
 }
 
 async function hazard(page) {
-    // A defeat returns the player to bw-4 and a win leaves bw-6; bw-3 is a rib
-    // away from both, so it is open either way.
+    // The hazard pocket opened when step 1 was accepted at bw-19.
     await travelTo(page, 'bw-3')
     await waitFor(page, 'hazard-route-select', 'bw-3 hazard')
     log('bw-3 hazard: landed on the route select (the board is hazard-e2e.mjs\'s)')
+    await page.waitForFunction(() => typeof globalThis.__AXM_SKIP_EVENT__ === 'function', null, { timeout: 15000 })
+        .catch(() => fail('bw-3: the dev skip seam is not installed'))
+    const r = await page.evaluate(() => {
+        const out = globalThis.__AXM_SKIP_EVENT__()
+        return out ? { kind: out.kind, nodeId: out.nodeId, outcome: out.outcome } : null
+    })
+    if (!r || r.kind !== 'hazard' || r.outcome === 'abandoned') fail(`bw-3: the skip did not cross the hazard (${JSON.stringify(r)})`)
+    await settleOnMap(page, 'bw-3')
+    await expectHere(page, 'bw-3')
+    log(`bw-3 hazard: crossed by the skip seam (${r.outcome}), back on the map`)
 }
 
 // ---------------------------------------------------------------------------
@@ -345,11 +393,14 @@ async function main() {
         await newGame(page, baseUrl)
         await lootCache(page)
         await gathering(page)
-        await fight(page)
+        await questNode(page, 'bw-19', { turnIn: false })
         await hazard(page)
+        await rest(page)
+        await questNode(page, 'bw-20', { turnIn: true })
+        await fight(page)
         if (pageErrors.length) fail(`${pageErrors.length} page error(s) during the walk`)
         await context.close()
-        log('ALL PASS — new game, cache, gathering, fight and hazard, node to node')
+        log('ALL PASS — new game, cache, gathering, quest, hazard, rest, quest and fight, node to node')
     } finally {
         await browser.close()
         server.close()

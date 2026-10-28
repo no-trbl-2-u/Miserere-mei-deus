@@ -20,13 +20,14 @@
 
 import { describe, it, expect, afterEach, vi } from 'vitest';
 
-import { moveToNode, placeOnNode, teleportToNode, unlockAdjacent } from '../world.reducer';
+import { completeCurrentNode, moveToNode, placeOnNode, teleportToNode, unlockAdjacent } from '../world.reducer';
 import { createMapState, getMapDefinition } from '../map.registry';
 import { createStartingWorld } from '../index';
 import { resolveMapEvent, settleArrival } from '../MapEvents/resolve-map-event';
 import { createNewGameState } from '../../Game/game.reducer';
 import { mockSequentialRng } from '../../test-utils/rng';
 import type { GameState } from '../../Game/types';
+import { settleQuestNodes } from '../../Game/fixtures/quest-nodes';
 import type { WorldState } from '../types';
 // Import for side effect — registers the Breakwater pools (bw-14 encounter,
 // bw-18 door) that the dispatcher rolls from.
@@ -34,7 +35,11 @@ import '../MapEvents/content';
 
 afterEach(() => vi.restoreAllMocks());
 
-const freshWorld = (): WorldState => createStartingWorld('breakwater');
+/** A new Breakwater with its quest nodes settled, so the walks reach the pockets. */
+const freshWorld = (): WorldState => {
+    const w = createStartingWorld('breakwater');
+    return { ...w, currentMap: settleQuestNodes(w.currentMap) };
+};
 
 function gameOn(world: WorldState): GameState {
     mockSequentialRng(0.5);
@@ -142,7 +147,8 @@ describe('resolving the arrival is what answers it', () => {
         // the destination and files the departed map under `mapStates`, so a
         // clear applied afterwards would leave the Breakwater owing its door
         // forever and returning through it would cross again with no input.
-        const before = gameOn(placeOnNode(freshWorld(), 'bw-17'));
+        // The watchtower beaten (completed): it holds the bridge until then.
+        const before = gameOn(completeCurrentNode(placeOnNode(freshWorld(), 'bw-17')));
         const walked = { ...before, world: moveToNode(before.world, 'bw-18') };
         expect(walked.world.currentMap.pendingArrival).toBe('bw-18');
 

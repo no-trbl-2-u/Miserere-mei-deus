@@ -85,7 +85,7 @@ describe('DebugWorldTravel: travel', () => {
         expect(mockPush).toHaveBeenCalledWith('/(tabs)/exploration');
         const state = store.getState();
         expect(state.world.currentMap.currentNode).toBe(target.id);
-        const opened = state.event.pending !== null || state.hazard.session !== null || state.rest.session !== null || state.cache.session !== null || state.blacksmith.session !== null || (state.player.inventory?.length ?? 0) > 0;
+        const opened = state.event.pending !== null || (state.quest?.open ?? null) !== null || state.hazard.session !== null || state.rest.session !== null || state.cache.session !== null || state.blacksmith.session !== null || (state.player.inventory?.length ?? 0) > 0;
         expect(opened).toBe(true);
     });
 

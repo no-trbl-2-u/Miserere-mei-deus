@@ -22,6 +22,8 @@ import type { WorldState } from '../types';
 import { Player } from '../../Character/characters.mock';
 import { mockSequentialRng } from '../../test-utils/rng';
 import '../MapEvents/content';
+import { questNodeIdsOn, settleQuestNodes } from '../../Game/fixtures/quest-nodes';
+import { legalMovesFrom } from '../world.reducer';
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -32,6 +34,12 @@ function memoryDisk(): PersistenceAdapter {
         load: () => (saved ? structuredClone(saved) : null),
         save: (state) => { saved = structuredClone(state); },
     };
+}
+
+/** A new Breakwater with its quest nodes settled, so a walk reaches the pockets. */
+function bwWorld(): WorldState {
+    const w = createStartingWorld('breakwater');
+    return { ...w, currentMap: settleQuestNodes(w.currentMap) };
 }
 
 /** Walk the route, opening each node's way on as a settled arrival would. */
@@ -67,16 +75,17 @@ function saveMidFight(approach: WorldState, fightNode: string) {
 
 const cases = [
     {
+        // A pocket fight: its pocket leads nowhere, so it has no way on.
         name: 'a normal fight (Float-Eye at bw-14)',
-        approach: () => walk(createStartingWorld('breakwater'), 'bw-2', 'bw-7', 'bw-11'),
+        approach: () => walk(bwWorld(), 'bw-4', 'bw-9'),
         node: 'bw-14',
-        onward: 'bw-17',
+        onward: null,
         boss: false,
     },
     {
         name: 'the door fight (the Death Beholder at bw-17)',
         approach: () => {
-            const placed = placeOnNode(createStartingWorld('breakwater'), 'bw-16');
+            const placed = placeOnNode(bwWorld(), 'bw-16');
             return { ...placed, currentMap: unlockAdjacent(placed.currentMap, 'bw-16') };
         },
         node: 'bw-17',
@@ -96,7 +105,7 @@ describe.each(cases)('a save taken during $name', ({ approach, node, onward, bos
         expect(map.currentNode).toBe(node);
         expect(map.pendingArrival).toBe(node);
         expect(map.consumedNodes).not.toContain(node);
-        expect(map.availableNodes).not.toContain(onward);
+        if (onward) expect(map.availableNodes).not.toContain(onward);
     });
 
     it('offers the same fight again when the arrival is resolved', () => {
@@ -123,13 +132,15 @@ describe.each(cases)('a save taken during $name', ({ approach, node, onward, bos
 
             expect(map.pendingArrival ?? null).toBeNull();
             expect(map.consumedNodes).toContain(node);
-            expect(map.availableNodes).toContain(onward);
+            if (onward) expect(map.availableNodes).toContain(onward);
+            if (onward) expect(legalMovesFrom(map)).toContain(onward);
         },
     );
 
     // A fight that was fled or lost answers the arrival but leaves its node
-    // unspent (phase QL1b): the Breakwater lists no held node yet, so the way
-    // on stays open from where the player stands, as before.
+    // unspent (phase QL1b). The watchtower holds its road
+    // (`holdRoadsUntilSettled`), so an unspent watchtower keeps the bridge
+    // off the frontier even while the player stands on it.
     it.each(['flee', 'defeat'] as const)(
         'the fight ending in %s answers the arrival and leaves the node unspent',
         (outcome) => {
@@ -141,7 +152,8 @@ describe.each(cases)('a save taken during $name', ({ approach, node, onward, bos
             expect(map.pendingArrival ?? null).toBeNull();
             expect(map.consumedNodes).not.toContain(node);
             expect(map.completedNodes).not.toContain(node);
-            expect(map.availableNodes).toContain(onward);
+            if (onward) expect(map.availableNodes).not.toContain(onward);
+            if (onward) expect(legalMovesFrom(map)).not.toContain(onward);
         },
     );
 });
@@ -149,19 +161,20 @@ describe.each(cases)('a save taken during $name', ({ approach, node, onward, bos
 describe('settleArrival', () => {
     it('is the identity when nothing is owed at the node underfoot', () => {
         const state: GameState = createGameStore(memoryDisk(), {
-            world: placeOnNode(createStartingWorld('breakwater'), 'bw-14'),
+            world: placeOnNode(bwWorld(), 'bw-14'),
         }).getState();
 
         expect(settleArrival(state)).toBe(state);
     });
 
     it('settles only the node the debt names', () => {
-        const world = walk(createStartingWorld('breakwater'), 'bw-2');
+        const world = walk(bwWorld(), 'bw-2');
         const state: GameState = createGameStore(memoryDisk(), { world }).getState();
 
         const settled = settleArrival(state).world.currentMap;
 
-        expect(settled.consumedNodes).toEqual(['bw-2']);
+        const markers = questNodeIdsOn('breakwater');
+        expect(settled.consumedNodes.filter(id => !markers.includes(id))).toEqual(['bw-2']);
         expect(settled.pendingArrival ?? null).toBeNull();
     });
 });

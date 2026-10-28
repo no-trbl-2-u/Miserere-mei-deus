@@ -45,6 +45,13 @@ export interface ExplorationNode {
     type: NodeType;
     /** True when tapping the node should trigger combat. */
     triggersCombat: boolean;
+    /**
+     * For a locked node shut behind a BLOCKED ROAD from where the player has
+     * been (a questline's lock on its next quest node), the road's one-line
+     * reason; the tap on it says this instead of the bare "sealed". Absent
+     * or null otherwise.
+     */
+    blockedReason?: string | null;
 }
 
 export interface ExplorationEdge {
@@ -66,6 +73,13 @@ export interface ExplorationEdge {
      * here".
      */
     lateral: boolean;
+    /**
+     * True when the road itself is blocked (`MapState.blockedRoutes`): a
+     * questline's lock on its next quest node, opened when the step fills.
+     * The canvas draws it closed (dotted), apart from a road that is merely
+     * not reached yet.
+     */
+    blocked?: boolean;
 }
 
 export interface ExplorationAction {
@@ -361,6 +375,7 @@ function buildEdges(
     forward: ReadonlyMap<string, readonly string[]>,
     spent: ReadonlySet<string>,
     locked: readonly string[],
+    blockedReason: (a: string, b: string) => string | null,
 ): ExplorationEdge[] {
     const edges: ExplorationEdge[] = [];
     const seen = new Set<string>();
@@ -383,6 +398,7 @@ function buildEdges(
                 traveled,
                 locked: isLocked,
                 lateral: !isForward(node.id, target),
+                blocked: blockedReason(node.id, target) !== null,
             });
         }
     }
@@ -634,9 +650,25 @@ function computeExplorationViewModel(state: GameStore): ExplorationViewModel {
         });
     }
 
+    // A blocked road's reason, either direction (the engine's
+    // `isRouteBlocked` reading of `MapState.blockedRoutes`).
+    const blockedRoutes = world.currentMap.blockedRoutes ?? [];
+    const blockedReason = (a: string, b: string): string | null =>
+        blockedRoutes.find((r) => (r.from === a && r.to === b) || (r.from === b && r.to === a))?.reason ?? null;
+    // Where the player has been: the spent nodes and the one underfoot.
+    const been = (id: string): boolean => spent.has(id) || id === currentNodeId;
+    const neighboursOf = (id: string): string[] => [
+        ...(def.nodes.find((n) => n.id === id)?.connectedNodes ?? []),
+        ...def.nodes.filter((n) => n.connectedNodes.includes(id)).map((n) => n.id),
+    ];
+
     const nodes: ExplorationNode[] = def.nodes.map((eng) => {
         const meta = metaById.get(eng.id)!;
         const nodeKind = classifyNode(eng.id, currentNodeId, spent, reachable);
+        // A locked node met across a blocked road from where the player has
+        // been says why (the first such road, in map order).
+        const reason = nodeKind !== 'locked' ? null
+            : neighboursOf(eng.id).filter(been).map((n) => blockedReason(n, eng.id)).find((r) => r !== null) ?? null;
         return {
             id: eng.id,
             x: meta.x,
@@ -645,6 +677,7 @@ function computeExplorationViewModel(state: GameStore): ExplorationViewModel {
             label: meta.label,
             type: meta.type,
             triggersCombat: nodeKind === 'available' && ENCOUNTER_NODE_TYPES.has(meta.type),
+            blockedReason: reason,
         };
     });
 
@@ -688,7 +721,7 @@ function computeExplorationViewModel(state: GameStore): ExplorationViewModel {
 
     const options = buildOptions(metaById, orderById, reachable, currentNodeId, layout.sheet, readCurrency(state));
     const actions = buildActions(options);
-    const edges = buildEdges(def.nodes, forward, spent, locked);
+    const edges = buildEdges(def.nodes, forward, spent, locked, blockedReason);
 
     return freezeViewModel({
         continent: layout.continent,

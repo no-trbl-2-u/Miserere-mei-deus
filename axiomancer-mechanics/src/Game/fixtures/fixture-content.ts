@@ -81,9 +81,10 @@ export const FIXTURE_CUTSCENE_EVENT: MapEventPayload = {
 
 /**
  * A two-step questline on the Breakwater's bw-2 and bw-3 (placeholder copy):
- * step 1 cross a hazard, step 2 win a fight. The live Act 1 carries no
- * questline until QL1d; this is the quest screen's witness, staged by
- * `FIXTURE_QUEST_EVENT` and registered by `buildStateFromFixture`.
+ * step 1 cross a hazard, step 2 win a fight. The live Breakwater carries
+ * its own questline (`quest.library.ts`) on bw-19..bw-22; this one is the
+ * quest screen's hermetic witness, staged by `FIXTURE_QUEST_EVENT` and
+ * registered by `buildStateFromFixture`.
  */
 export const FIXTURE_QUESTLINE: Questline = {
     id: 'fixture-questline',

@@ -19,7 +19,7 @@ import { describe, expect, it } from '@jest/globals';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import React from 'react';
 
-import { ANVIL_VERB_PRICING, createStartingWorld, getMapDefinition } from '@mechanics';
+import { ANVIL_VERB_PRICING, createStartingWorld, getMapDefinition, settleQuestNodes } from '@mechanics';
 
 import { CombatRewardsOverlay } from '@/components/combat/encounter/CombatRewardsOverlay';
 import { NodeConfirmPanel } from '@/components/exploration/NodeConfirmPanel';
@@ -97,7 +97,11 @@ describe('the spoils pick takes two presses (TQ1 A1, A5)', () => {
  * found by standing the player on each node in turn.
  */
 function optionOf(map: string, type: NodeType, currency: number): ExplorationOption {
-    const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld(map as never) } });
+    // A questline's quest nodes are settled (test-only) so its pockets'
+    // fights are offered from the open fan.
+    const fresh = createStartingWorld(map as never);
+    const world0 = { ...fresh, currentMap: settleQuestNodes(fresh.currentMap) };
+    const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: world0 } });
     const { player } = store.getState();
     store.setState({ player: { ...player, currency } } as never);
     const world = store.getState().world!;

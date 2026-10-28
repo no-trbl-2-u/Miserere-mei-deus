@@ -238,6 +238,49 @@ async function expectHere(page, nodeId) {
     if (!label || !/here/.test(label)) fail(`expected to stand on ${nodeId}, its label reads "${label}"`)
 }
 
+/** The player's VITAE off the status card, as `[health, max]`; null when it is not on screen. */
+async function vitae(page) {
+    const text = await page.locator('[data-testid^="statbar-value"]').first().innerText().catch(() => null)
+    const m = text?.trim().match(/^(\d+)\/(\d+)/)
+    return m ? [Number(m[1]), Number(m[2])] : null
+}
+
+const POTIONS = ['greater-healing-potion', 'healing-potion', 'minor-healing-potion']
+
+/**
+ * Drink the satchel's healing potions before a fight or a hazard when VITAE
+ * is under half, as a player would. The skip seam's fights bleed (a witness
+ * toll), and the Breakwater's questline puts five fights before the door
+ * (QL1d), so a walk that never drinks reaches the Charcoal Wood's first
+ * hazard at 1 VITAE and dies on its arrival damage. Back on the map after.
+ */
+async function mendIfLow(page, what) {
+    const before = await vitae(page)
+    if (!before || before[0] * 2 >= before[1]) return
+    await page.locator('[aria-label="Inventory tab"]:visible').first().click({ timeout: 5000 })
+        .catch(() => fail(`${what}: no satchel tab to mend from`))
+    let drunk = 0
+    for (const id of POTIONS) {
+        for (let k = 0; k < 5; k++) {
+            if (!(await page.getByTestId(`item-${id}`).count())) break
+            if (!(await tap(page, `use-${id}`))) {
+                await tap(page, `item-${id}`)
+                await sleep(200)
+                if (!(await tap(page, `use-${id}`))) break
+            }
+            // USE opens the item modal; its confirm drinks the potion.
+            await waitFor(page, 'modal-confirm', `${what}: the ${id} modal`, 5000)
+            await tap(page, 'modal-confirm')
+            drunk += 1
+            await sleep(250)
+        }
+    }
+    await page.locator('[aria-label="Exploration tab"]:visible').first().click({ timeout: 5000 })
+        .catch(() => fail(`${what}: no map tab to come back to`))
+    await settleOnMap(page, `${what} mend`)
+    log(`${what}: VITAE ${before[0]}/${before[1]}, drank ${drunk} potion(s), now ${(await vitae(page))?.join('/') ?? '?'}`)
+}
+
 /** Fire the dev skip seam once its bridge has mounted; returns its `{ kind, nodeId, outcome }`. */
 async function skipEvent(page, what) {
     await page.waitForFunction(() => typeof globalThis.__AXM_SKIP_EVENT__ === 'function', null, { timeout: 10000 })
@@ -299,6 +342,25 @@ const RESOLVERS = {
         const r = await skipEvent(page, nodeId)
         if (r.kind !== 'encounter' || r.outcome !== 'victory') fail(`${nodeId}: the skip did not win the fight (${r.kind} ${r.outcome})`)
         return 'skip'
+    },
+    // A questline's quest node, played as a player does: TURN IN the step
+    // before when it is ready (a card pick it pays is skipped on the spoils
+    // tiles), then ACCEPT the step the node offers, then LEAVE. The plan
+    // visits the nodes in step order, so every one has a step to accept.
+    async quest(page, nodeId) {
+        await expectPath(page, '/quest', nodeId)
+        await waitFor(page, 'quest-column', `${nodeId} quest screen`)
+        if (await tap(page, 'quest-turn-in-button')) {
+            await waitFor(page, 'quest-paid', `${nodeId} turn-in payout`)
+            if (await page.getByTestId('combat-rewards').count()) {
+                await tap(page, 'combat-reward-skip') || fail(`${nodeId}: the quest card pick has no SKIP`)
+            }
+        }
+        await waitFor(page, 'quest-accept-button', `${nodeId} offer`)
+        await tap(page, 'quest-accept-button')
+        await waitFor(page, 'quest-accepted-line', `${nodeId} accepted`)
+        await tap(page, 'quest-leave-button') || fail(`${nodeId}: the quest screen has no LEAVE`)
+        return 'screen'
     },
     async hazard(page, nodeId) {
         await expectPath(page, '/hazard', nodeId)
@@ -373,6 +435,7 @@ async function walk(page, baseUrl, plan, tally) {
             }
             const resolve = RESOLVERS[step.kind]
             if (!resolve) fail(`${step.nodeId}: the walk has no way to resolve a ${step.kind} node`)
+            if (step.kind === 'encounter' || step.kind === 'hazard') await mendIfLow(page, step.nodeId)
             await travelTo(page, step.nodeId)
             const how = await resolve(page, step.nodeId)
             await settleOnMap(page, step.nodeId)

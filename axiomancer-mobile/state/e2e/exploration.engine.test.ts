@@ -8,11 +8,24 @@
  */
 
 import { afterEach, describe, it, expect, jest } from '@jest/globals';
-import { createMapState, getMapDefinition, getNodeEventPool, createStartingWorld, settleArrival, type GameState } from '@mechanics';
+import {
+    createMapState, getMapDefinition, getNodeEventPool, createStartingWorld, settleArrival, settleQuestNodes,
+    type GameState, type WorldState,
+} from '@mechanics';
 
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 import { createAppActions } from '@/state/actions';
 import { createAppStore, type AppStore } from '@/state/store';
+
+/**
+ * A new Breakwater with its quest nodes settled (test-only): the markers
+ * spent and their locks open, so these walks reach the pockets' fights
+ * without playing the questline.
+ */
+function bwWorld(): WorldState {
+    const w = createStartingWorld('breakwater');
+    return { ...w, currentMap: settleQuestNodes(w.currentMap) };
+}
 
 /**
  * The fight on the node underfoot ends. A fight's node stays owed,
@@ -40,7 +53,7 @@ afterEach(() => {
 
 describe('selectExplorationViewModel: shape contract', () => {
     it('returns a totally-shaped ExplorationViewModel for a fresh game', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
 
         const vm: ExplorationViewModel = selectExplorationViewModel(store.getState());
 
@@ -58,7 +71,7 @@ describe('selectExplorationViewModel: shape contract', () => {
     });
 
     it('eventCallout is either null or a {title, iconKey} object', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
 
         const vm = selectExplorationViewModel(store.getState());
 
@@ -73,7 +86,7 @@ describe('selectExplorationViewModel: shape contract', () => {
 
 describe('selectExplorationViewModel: invariants', () => {
     it('the returned VM is deep-frozen', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
 
         const vm = selectExplorationViewModel(store.getState());
 
@@ -87,7 +100,7 @@ describe('selectExplorationViewModel: invariants', () => {
 describe('selectExplorationViewModel: store lifecycle', () => {
     it('selecting the VM does not call adapter.save', () => {
         const adapter = createMemoryAdapter();
-        const store = createAppStore({ adapter, overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter, overrides: { world: bwWorld() } });
         const saveSpy = jest.spyOn(adapter, 'save');
 
         selectExplorationViewModel(store.getState());
@@ -111,10 +124,11 @@ describe('selectExplorationViewModel: engine reads', () => {
 
         const byId = Object.fromEntries(vm.nodes.map((n) => [n.id, n]));
         expect(byId['bw-1'].kind).toBe('current');
-        expect(byId['bw-2'].kind).toBe('available');
-        // The customs-house rest (column 2) and the river-bridge door
-        // (the terminal column) are beyond the first ring.
+        expect(byId['bw-4'].kind).toBe('available');
+        // The customs-house rest (column 2), a pocket's fight (behind its
+        // quest marker) and the river-bridge door are beyond the first ring.
         expect(byId['bw-9'].kind).toBe('locked');
+        expect(byId['bw-2'].kind).toBe('locked');
         expect(byId['bw-18'].kind).toBe('locked');
     });
 
@@ -123,41 +137,36 @@ describe('selectExplorationViewModel: engine reads', () => {
 
         const vm = selectExplorationViewModel(store.getState());
 
-        // The windmill (bw-1) opens on the whole first ring: crane quay,
-        // gallows, foothill pass and smugglers' cove.
-        expect(vm.options.map((o) => o.nodeId).sort()).toEqual(['bw-2', 'bw-3', 'bw-4', 'bw-5'].sort());
+        // The windmill (bw-1) opens on the whole first ring: the first quest
+        // marker, the foothill pass and smugglers' cove.
+        expect(vm.options.map((o) => o.nodeId).sort()).toEqual(['bw-19', 'bw-4', 'bw-5'].sort());
         for (const opt of vm.options) {
             expect(opt.description.length).toBeGreaterThan(0);
         }
     });
 
     it('marks available encounter nodes as triggersCombat; rest nodes do not', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
 
-        // The crane quay bw-2 (an `encounter`) is on the windmill's first
-        // ring — available and a combat trigger from the very start. The
-        // customs-house rest bw-9 sits one ring further out, so it is still
-        // locked here.
+        // With the quest nodes settled, the crane quay bw-2 (an `encounter`
+        // in the second step's pocket) is available and a combat trigger.
         const vm = selectExplorationViewModel(store.getState());
         const bw2 = vm.nodes.find((n) => n.id === 'bw-2')!;
         expect(bw2.kind).toBe('available');
         expect(bw2.type).toBe('encounter');
         expect(bw2.triggersCombat).toBe(true);
-        const bw9Locked = vm.nodes.find((n) => n.id === 'bw-9')!;
-        expect(bw9Locked.kind).toBe('locked');
-        expect(bw9Locked.triggersCombat).toBe(false);
 
-        // The lighthouse bw-14 is an encounter too, but it's several rings
-        // out — still locked, so not yet a combat trigger regardless of type.
-        const bw14 = vm.nodes.find((n) => n.id === 'bw-14')!;
+        // On a new game the lighthouse bw-14 is an encounter too, but it sits
+        // behind its quest marker: locked, so not a combat trigger.
+        const fresh = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const bw14 = selectExplorationViewModel(fresh.getState()).nodes.find((n) => n.id === 'bw-14')!;
         expect(bw14.type).toBe('encounter');
         expect(bw14.kind).not.toBe('available');
         expect(bw14.triggersCombat).toBe(false);
 
-        // Standing on the crane quay opens the rest node bw-9: available,
-        // and never a combat trigger.
-        actions.moveTo('bw-2');
+        // The customs-house rest bw-9: available, and never a combat trigger.
+        actions.moveTo('bw-4');
         const vm2 = selectExplorationViewModel(store.getState());
         const bw9 = vm2.nodes.find((n) => n.id === 'bw-9')!;
         expect(bw9.kind).toBe('available');
@@ -171,9 +180,10 @@ describe('selectExplorationViewModel: engine reads', () => {
         // surfacing as "this step lets you flee" rather than
         // "this step starts combat". Pin the new mapping so a
         // future refactor doesn't silently revert.
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
-        // The crane quay bw-2 (encounter) is on the start node's first ring.
+        // The crane quay bw-2 (encounter) is on the frontier once the quest
+        // nodes are settled.
 
         const vm = selectExplorationViewModel(store.getState());
         const encounterOption = vm.options.find((o) => o.nodeId === 'bw-2');
@@ -195,34 +205,30 @@ describe('moveTo action: happy path', () => {
         const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
         const actions = createAppActions(store);
 
-        const result = actions.moveTo('bw-2');
+        const result = actions.moveTo('bw-4');
 
-        expect(result).toEqual({ moved: true, currentNodeId: 'bw-2', locked: false });
+        expect(result).toEqual({ moved: true, currentNodeId: 'bw-4', locked: false });
 
         const vm = selectExplorationViewModel(store.getState());
-        expect(vm.currentNodeId).toBe('bw-2');
-        expect(Object.fromEntries(vm.nodes.map((n) => [n.id, n]))['bw-2'].kind).toBe('current');
-        // The crane quay is a fight: the move does not open its way on, the
-        // fight's end does.
-        expect(store.getState().world.currentMap.availableNodes).not.toContain('bw-7');
-
-        fightOut(store);
-        const byId = Object.fromEntries(
-            selectExplorationViewModel(store.getState()).nodes.map((n) => [n.id, n]),
-        );
-        // The crane quay's forward fan (bw-7 / bw-8 / bw-9) opens; the third
-        // ring (bw-12 / bw-13) opens only once the player stands on it.
+        expect(vm.currentNodeId).toBe('bw-4');
+        const byId = Object.fromEntries(vm.nodes.map((n) => [n.id, n]));
+        expect(byId['bw-4'].kind).toBe('current');
+        expect(store.getState().world.currentMap.completedNodes).toContain('bw-4');
+        // The foothill pass's forward fan (bw-7 / bw-9) opens; the third
+        // ring (bw-13) opens only once the player stands on the customs house.
         expect(byId['bw-7'].kind).toBe('available');
-        expect(byId['bw-8'].kind).toBe('available');
         expect(byId['bw-9'].kind).toBe('available');
-        expect(byId['bw-12'].kind).toBe('locked');
         expect(byId['bw-13'].kind).toBe('locked');
 
         actions.moveTo('bw-9');
         const after = selectExplorationViewModel(store.getState());
         const byId2 = Object.fromEntries(after.nodes.map((n) => [n.id, n]));
-        expect(byId2['bw-12'].kind).toBe('available');
         expect(byId2['bw-13'].kind).toBe('available');
+        // The customs house's road to the second quest marker is the step-1
+        // lock: standing there opens it in no list, and the tap is refused.
+        expect(byId2['bw-20'].kind).toBe('locked');
+        expect(store.getState().world.currentMap.availableNodes).not.toContain('bw-20');
+        expect(actions.moveTo('bw-20').moved).toBe(false);
     });
 
     it('refreshes the options drawer with the new available nodes after a move', () => {
@@ -230,18 +236,18 @@ describe('moveTo action: happy path', () => {
         const actions = createAppActions(store);
 
         actions.moveTo('bw-4'); // the foothill pass — gathering, completed on entry
-        actions.moveTo('bw-10'); // the walled manor — an encounter
+        actions.moveTo('bw-9'); // the customs house — a rest, completed on entry
 
         const vm = selectExplorationViewModel(store.getState());
         const optionIds = vm.options.map((o) => o.nodeId).sort();
         // Frontier roaming: the drawer offers the whole explored edge, so the
-        // manor's fan and the pass's lateral neighbours arrive together AND
+        // customs house's fan and the pass's neighbours arrive together AND
         // `bw-1` is back: this harness moves off the windmill without ever
         // resolving it, and a node is spent on RESOLUTION, not on departure. (In play `resolveMapEvent` consumes
         // the start node and seals it; see the engine's matching case,
         // `src/World/world.reducer.test.ts` → 'spends a node on RESOLUTION,
         // not on departure'.)
-        expect(optionIds).toEqual(['bw-1', 'bw-13', 'bw-3', 'bw-5', 'bw-9'].sort());
+        expect(optionIds).toEqual(['bw-1', 'bw-13', 'bw-5', 'bw-7'].sort());
     });
 });
 
@@ -268,7 +274,7 @@ describe('moveTo action: locked / invalid targets', () => {
     });
 
     it('refuses to move to a non-existent node', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
 
         const result = actions.moveTo('not-a-real-node');
@@ -277,12 +283,12 @@ describe('moveTo action: locked / invalid targets', () => {
     });
 
     it('allows re-entering a reusable encounter node (gauntlet re-fight)', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
 
-        // The sea fort bw-6 resolves to an engine `encounter` kind (reached
-        // via bw-2 → bw-7 → bw-6), so it is not completed on entry — it
-        // stays reachable and can be re-entered.
+        // The sea fort bw-6 resolves to an engine `encounter` kind (in the
+        // third step's pocket, the quest nodes settled), so it is not
+        // completed on entry — it stays reachable and can be re-entered.
         actions.moveTo('bw-2');
         fightOut(store);
         actions.moveTo('bw-7');
@@ -293,7 +299,7 @@ describe('moveTo action: locked / invalid targets', () => {
     });
 
     it('exposes locked nodes through the VM so the screen can desaturate them', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
 
         const vm = selectExplorationViewModel(store.getState());
 
@@ -312,7 +318,7 @@ describe('moveTo action: locked / invalid targets', () => {
 
 describe('changeMap action: map transition', () => {
     it('swaps the engine currentMap and resets currentNodeId to the new startingNode', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
 
         actions.changeMap('charcoal-wood');
@@ -324,7 +330,7 @@ describe('changeMap action: map transition', () => {
     });
 
     it('loads the new layout fixture so node positions and labels update', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
 
         actions.changeMap('charcoal-wood');
@@ -354,7 +360,7 @@ describe('changeMap action: map transition', () => {
 
 describe('exploration lifecycle: multi-step navigation', () => {
     it('encounter nodes stay reusable and unlock their engine neighbours', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
 
         actions.moveTo('bw-2'); // the crane quay — encounter, reusable
@@ -373,11 +379,11 @@ describe('exploration lifecycle: multi-step navigation', () => {
         const vm = selectExplorationViewModel(store.getState());
         const byId = Object.fromEntries(vm.nodes.map((n) => [n.id, n]));
         expect(byId['bw-6'].kind).toBe('current');
-        // The shipwreck (bw-11) is bw-6's only forward neighbour in the
-        // ENGINE graph; the lighthouse ring and the watchtower sit behind it.
+        // The shipwreck (bw-11) is the south pier's neighbour in the ENGINE
+        // graph; the bridge sits behind the watchtower, which holds it until
+        // the boss falls.
         expect(byId['bw-11'].kind).toBe('available');
-        expect(byId['bw-14'].kind).toBe('locked');
-        expect(byId['bw-17'].kind).toBe('locked');
+        expect(byId['bw-18'].kind).toBe('locked');
     });
 
     /**
@@ -400,7 +406,7 @@ describe('exploration lifecycle: multi-step navigation', () => {
      */
     it('a move IS a save checkpoint — mobile policy, at the Spec 09 Q4 / Phase 51 granularity', () => {
         const adapter = createMemoryAdapter();
-        const store = createAppStore({ adapter, overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter, overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
         const saveSpy = jest.spyOn(adapter, 'save');
 
@@ -437,7 +443,7 @@ describe('exploration lifecycle: multi-step navigation', () => {
         // `MOVE_TO_NODE` IS on the engine's DURABLE_ACTIONS allowlist, so a
         // bare engine store would write here. On mobile it must not.
         const engineArm = createMemoryAdapter();
-        const engineStore = createAppStore({ adapter: engineArm, overrides: { world: createStartingWorld('breakwater') } });
+        const engineStore = createAppStore({ adapter: engineArm, overrides: { world: bwWorld() } });
         const engineSpy = jest.spyOn(engineArm, 'save');
 
         engineStore.getState().moveToNode('bw-2');
@@ -448,7 +454,7 @@ describe('exploration lifecycle: multi-step navigation', () => {
         // explicit checkpoint `moveToAction` takes (`state/actions.ts`),
         // which is mobile policy, not the engine allowlist.
         const mobileArm = createMemoryAdapter();
-        const mobileStore = createAppStore({ adapter: mobileArm, overrides: { world: createStartingWorld('breakwater') } });
+        const mobileStore = createAppStore({ adapter: mobileArm, overrides: { world: bwWorld() } });
         const mobileSpy = jest.spyOn(mobileArm, 'save');
 
         createAppActions(mobileStore).moveTo('bw-2');
@@ -458,7 +464,7 @@ describe('exploration lifecycle: multi-step navigation', () => {
 
     it('a UI-tier action still does NOT write through (Spec 09 Path B)', () => {
         const adapter = createMemoryAdapter();
-        const store = createAppStore({ adapter, overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter, overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
         const saveSpy = jest.spyOn(adapter, 'save');
 
@@ -476,7 +482,7 @@ describe('exploration lifecycle: multi-step navigation', () => {
 
 describe('moveTo action: engine discoveredNodes population (Phase 27)', () => {
     it('populates discoveredNodes with the moved-to node’s neighbours per engine MapDefinition', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
 
         actions.moveTo('bw-2');
@@ -492,7 +498,7 @@ describe('moveTo action: engine discoveredNodes population (Phase 27)', () => {
     });
 
     it('revealing the same neighbours twice is idempotent', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
 
         actions.moveTo('bw-2');
@@ -514,7 +520,7 @@ describe('moveTo action: engine discoveredNodes population (Phase 27)', () => {
 
 describe('resolveCurrentMapEvent: engine consumedNodes population (Phase 27)', () => {
     it('marks the current node consumed when a non-none event resolves', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
         // Walk to a node before resolving — the starting node may be a
         // 'none' kind in some fixtures. bw-5 is a loot cache: a fight would
@@ -536,7 +542,7 @@ describe('resolveCurrentMapEvent: engine consumedNodes population (Phase 27)', (
     });
 
     it('does NOT mark consumed when event.kind is “none”', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
         // The starting node may or may not have an event pool. The
         // assertion is robust either way: if the produced-true branch
@@ -551,7 +557,7 @@ describe('resolveCurrentMapEvent: engine consumedNodes population (Phase 27)', (
     });
 
     it('leaves a fight\'s node unconsumed until the fight settles (R9a)', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
         actions.moveTo('bw-2');
 
@@ -572,7 +578,7 @@ describe('resolveCurrentMapEvent: engine consumedNodes population (Phase 27)', (
 
 describe('selectExplorationViewModel: drawer copy', () => {
     it('exposes a lowercase-ritual empty-state and swipe hint on the VM', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const vm = selectExplorationViewModel(store.getState());
 
         expect(vm.drawerCopy.emptyMessage).toBe('every path beside trodden ground stays open — choose a glowing node to travel.');
@@ -583,7 +589,7 @@ describe('selectExplorationViewModel: drawer copy', () => {
     });
 
     it('drops the prior sentence-case empty literal that mismatched the screen voice', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const vm = selectExplorationViewModel(store.getState());
 
         // The empty message starts with neither a capital nor an article.
@@ -604,7 +610,7 @@ describe('selectExplorationViewModel: drawer copy', () => {
 
 describe('selectExplorationViewModel: LEAGUES bucket', () => {
     it('populates a non-empty leagues value (I | II | III) on every option', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const vm = selectExplorationViewModel(store.getState());
 
         expect(vm.options.length).toBeGreaterThan(0);
@@ -614,7 +620,7 @@ describe('selectExplorationViewModel: LEAGUES bucket', () => {
     });
 
     it('buckets options monotonically by distance from the current node', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const vm = selectExplorationViewModel(store.getState());
 
         if (vm.options.length < 2) return;
@@ -644,7 +650,7 @@ describe('selectExplorationViewModel: LEAGUES bucket', () => {
     });
 
     it('respects the documented thresholds (≤80=I, ≤160=II, >160=III)', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const vm = selectExplorationViewModel(store.getState());
 
         const current = vm.nodes.find((n) => n.id === vm.currentNodeId);
@@ -684,7 +690,7 @@ describe('encounter seam (Tick D)', () => {
         actions: ReturnType<typeof createAppActions>;
         encounterNodeId: string | null;
     } {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
         const vm = selectExplorationViewModel(store.getState());
         // Find the first available encounter / boss node in the starting
@@ -774,7 +780,7 @@ describe('encounter seam (Tick D)', () => {
  */
 describe('FE-008: legend and counter agree on SEALED', () => {
     it('uses one word for the locked state across the legend strip', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const vm = selectExplorationViewModel(store.getState());
         expect(vm.legend.left).toContain('SEALED');
         expect(vm.legend.left).not.toContain('SHUT');
@@ -801,7 +807,7 @@ describe('BUG-01: the legend counts the nodes the map actually draws', () => {
     };
 
     it('agrees with the pips on a fresh map', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const vm = selectExplorationViewModel(store.getState());
         const counter = readCounter(vm.legend.right);
 
@@ -813,7 +819,7 @@ describe('BUG-01: the legend counts the nodes the map actually draws', () => {
         // THE REGRESSION: this is the step that splits the two sources. The
         // start node stops being reachable, was never completed, and was never
         // in `lockedNodes` — so it is a sealed pip the lock list misses.
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
         actions.moveTo('bw-2');
 
@@ -827,7 +833,7 @@ describe('BUG-01: the legend counts the nodes the map actually draws', () => {
     it('agrees again after a second move', () => {
         // Cheap insurance that the agreement is structural, not a coincidence
         // that happens to hold at one position.
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
         actions.moveTo('bw-2');
         actions.moveTo('bw-9'); // the customs house, one of bw-2's forward fan
@@ -853,7 +859,7 @@ describe('selectExplorationViewModel: arrivalPending', () => {
         // and that record rides the save — this flag is how the screen reads
         // it back.
         const adapter = createMemoryAdapter();
-        const store = createAppStore({ adapter, overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter, overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
         actions.moveTo('bw-2');
         fightOut(store);
@@ -871,7 +877,7 @@ describe('selectExplorationViewModel: arrivalPending', () => {
         // answered arrival is never re-offered, here or after a reload. For
         // a fight the answer is the fight's end, not the resolve.
         const adapter = createMemoryAdapter();
-        const store = createAppStore({ adapter, overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter, overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
         actions.moveTo('bw-2');
         fightOut(store);
@@ -899,7 +905,7 @@ describe('selectExplorationViewModel: arrivalPending', () => {
         // mount, and `/exploration?fixture=sage-bw-door-gate` engaged the
         // boss fight instead of drawing the map. A placement writes no debt.
         // Stage: the Breakwater's door fight at the watchtower (bw-17).
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         expect(jumpToNode(store, 'bw-17')).toBe(true);
 
         const vm = selectExplorationViewModel(store.getState());
@@ -922,7 +928,7 @@ describe('selectExplorationViewModel: arrivalPending', () => {
         // a door), and resolving it clears the debt on the map being LEFT,
         // before the crossing files that map away — otherwise returning
         // through the door would cross again with no input.
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
         const world = store.getState().world;
         // bw-18 (the river bridge) is the Charcoal Wood door. Walk onto it

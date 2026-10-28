@@ -35,6 +35,29 @@ describe('gauntlet map traversal invariants', () => {
     for (const def of GAUNTLET_MAPS) {
         describe(def.name, () => {
             const audit = auditMapTraversal(def);
+            // A map that holds a questline (`holdRoadsUntilSettled`) puts its
+            // fights and hazards in POCKETS: nodes joined only to held nodes
+            // (their step's marker), dead ends by design. A pocket, and a node
+            // whose only road on is a lateral rib, are the terminals allowed
+            // outside the last column. The two column-shape
+            // rules a pocket and its marker cannot meet (a lane chain, and a
+            // choice in every column) skip such a map: its questline's
+            // routing test (`breakwater-questline.engine.test.ts`) walks the
+            // real frontier with the questline played instead. The strand,
+            // reachability, edge and coordinate rules still hold.
+            const held = new Set(def.holdRoadsUntilSettled ?? []);
+            const holdsAQuestline = held.size > 0;
+            const neighbours = (id: string): string[] => [
+                ...(def.nodes.find(n => n.id === id)?.connectedNodes ?? []),
+                ...def.nodes.filter(n => n.connectedNodes.includes(id)).map(n => n.id),
+            ];
+            const isPocket = (id: string): boolean => {
+                const around = neighbours(id);
+                return around.length > 0 && around.every(n => held.has(n)) && !held.has(id);
+            };
+            const column = (id: string) => def.nodes.find(n => n.id === id)!.location[0];
+            const ribsOn = (id: string): boolean =>
+                (def.nodes.find(n => n.id === id)?.connectedNodes ?? []).some(n => column(n) === column(id));
 
             it('never strands a run on a non-terminal node', () => {
                 // A strand is a soft-lock. The message names the exact route so
@@ -53,11 +76,12 @@ describe('gauntlet map traversal invariants', () => {
                 expect(audit.unreachableNodes).toEqual([]);
             });
 
-            it('authors its terminal nodes in one final column', () => {
+            it('authors its terminal nodes in one final column (a questline\'s pockets excepted)', () => {
                 // The end of the map is where the map says it ends: every
                 // terminal node shares the highest x-coordinate on the grid.
                 const maxX = Math.max(...def.nodes.map(n => n.location[0]));
                 for (const id of audit.terminalNodes) {
+                    if (holdsAQuestline && (isPocket(id) || ribsOn(id))) continue;
                     const node = def.nodes.find(n => n.id === id)!;
                     expect(node.location[0], `${id} is terminal but not in the last column`).toBe(maxX);
                 }
@@ -114,7 +138,7 @@ describe('gauntlet map traversal invariants', () => {
                 }
             });
 
-            it('gives every multi-node column a walkable lane chain (D1)', () => {
+            it.skipIf(holdsAQuestline)('gives every multi-node column a walkable lane chain (D1)', () => {
                 // The ribs are what turn a column of parallel rungs into a
                 // place the player can move along. Every non-terminal column
                 // with more than one node must be connected sideways end to
@@ -159,7 +183,7 @@ describe('gauntlet map traversal invariants', () => {
                 }
             });
 
-            it('offers a real choice at every branch (no single-file corridors)', () => {
+            it.skipIf(holdsAQuestline)('offers a real choice at every branch (no single-file corridors)', () => {
                 // A column of one is a deliberate chokepoint (the start, a
                 // boss, a door) — a map made only of them is not a map. The
                 // tolerance is 3: an Act 1 map opens on its arrival and ends

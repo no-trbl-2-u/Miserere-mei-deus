@@ -37,10 +37,10 @@ const PINNED_ORPHANS: ReadonlyArray<{ lens: string; id: string }> = [
     { lens: 'item-ungranted', id: 'relic-ruby-signet' },
     { lens: 'item-ungranted', id: 'relic-bleeding-signet' },
     // The Elementalist's relics, the same way: the Signet drops from elites, the
-    // Brooch and the Belt wait on the Act 1 quests (LR1f).
+    // Brooch waits on a later chapter's questline; the Belt is the Breakwater
+    // questline's last step (QL1d), so it is granted.
     { lens: 'item-ungranted', id: 'relic-elementalist-signet' },
     { lens: 'item-ungranted', id: 'relic-elementalist-brooch' },
-    { lens: 'item-ungranted', id: 'relic-elementalist-belt' },
     // The Defender's relics, the same way: the Signet drops from elites; the Brooch
     // and the Belt wait on a quest that hands them out.
     { lens: 'item-ungranted', id: 'relic-thornback-signet' },

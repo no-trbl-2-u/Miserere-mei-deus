@@ -260,6 +260,8 @@ export {
     FIXTURE_NPC, FIXTURE_SHOP, FIXTURE_QUEST,
     FIXTURE_DIALOGUE_EVENT, FIXTURE_VILLAGE_EVENT, FIXTURE_CUTSCENE_EVENT, FIXTURE_QUEST_EVENT, FIXTURE_QUESTLINE,
     FIXTURE_WEAPON, FIXTURE_ARMOR, FIXTURE_TRINKETS, FIXTURE_ELITE_RELICS, FIXTURE_QUEST_RELIC,
+    // Test-only: a map's quest nodes settled so a walker can cross it.
+    settleQuestNodes, settleQuestNodesIn, questNodeIdsOn,
     // The relic re-slot: the v38 -> v39 hop's helper, and the one the mobile
     // item-reward queue reads a pending piece through.
     reslotRelicPiece, reslotRelicSave,
@@ -453,6 +455,8 @@ export {
     registerQuestline, getQuestline, listQuestlines, questlineStep,
     questStepState, stepQuest, questStepView, questNodeStage, resolveQuestNodeEvent,
     openReadyQuestRoutes, settleQuestLog, acceptQuestStep, turnInQuestStep,
+    // The authored questlines (the Breakwater's).
+    BREAKWATER_QUESTLINE, BREAKWATER_QUESTLINE_ID, AUTHORED_QUESTLINES,
 } from './World';
 // Rest shelter classification. Mobile gates the hazard-scar max-VITAE mend on this.
 export type { RestShelter } from './World';

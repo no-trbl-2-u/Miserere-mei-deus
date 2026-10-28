@@ -44,6 +44,10 @@ export {
 // Importing `./MapEvents/content` for its side effect registers every
 // authored map's pools (coastal + northern continents) on module load.
 import './MapEvents/content';
+// Importing `./quest.library` for its side effect registers every authored
+// questline (the Breakwater's) on module load, beside the pools above.
+import './quest.library';
+export { BREAKWATER_QUESTLINE, BREAKWATER_QUESTLINE_ID, AUTHORED_QUESTLINES } from './quest.library';
 
 export {
     resolveMapEvent,

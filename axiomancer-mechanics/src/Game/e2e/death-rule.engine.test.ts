@@ -26,6 +26,7 @@ import type { WorldState } from '../../World/types';
 import { Player } from '../../Character/characters.mock';
 import { mockSequentialRng } from '../../test-utils/rng';
 import '../../World/MapEvents/content';
+import { settleQuestNodes } from '../fixtures/quest-nodes';
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -39,6 +40,12 @@ function memoryDisk(): PersistenceAdapter & { raw: () => GameState | null } {
     };
 }
 
+/** A new Breakwater with its quest nodes settled, so a walk reaches the pockets. */
+function bwWorld(): WorldState {
+    const w = createStartingWorld('breakwater');
+    return { ...w, currentMap: settleQuestNodes(w.currentMap) };
+}
+
 function walk(from: WorldState, ...route: string[]): WorldState {
     let world = from;
     for (const nodeId of route) {
@@ -50,17 +57,18 @@ function walk(from: WorldState, ...route: string[]): WorldState {
 
 const FIGHTS = [
     {
+        // A pocket fight: it opens nothing on (its pocket leads nowhere).
         name: 'a normal fight (bw-14)',
-        approach: () => walk(createStartingWorld('breakwater'), 'bw-2', 'bw-7', 'bw-11'),
-        from: 'bw-11',
+        approach: () => walk(bwWorld(), 'bw-4', 'bw-9'),
+        from: 'bw-9',
         node: 'bw-14',
-        onward: 'bw-17',
+        onward: null,
         boss: false,
     },
     {
         name: 'a boss fight (the door fight at bw-17)',
         approach: () => {
-            const placed = placeOnNode(createStartingWorld('breakwater'), 'bw-16');
+            const placed = placeOnNode(bwWorld(), 'bw-16');
             return { ...placed, currentMap: unlockAdjacent(placed.currentMap, 'bw-16') };
         },
         from: 'bw-16',
@@ -98,13 +106,13 @@ describe('A1 - the save contract', () => {
         const reloaded = createGameStore(disk).getState();
         expect(reloaded.dying).toBe(true);
         expect(reloaded.player.health).toBe(1);
-        expect(reloaded.world.currentMap.currentNode).toBe('bw-11');
+        expect(reloaded.world.currentMap.currentNode).toBe('bw-9');
 
         // And the arrival that wrote arrivedFrom rides a save too.
         const arrived = createGameStore(memoryDisk(), { player: Player, world: FIGHTS[0]!.approach() });
         arrived.getState().moveToNode('bw-14');
         arrived.getState().save();
-        expect(arrived.getState().world.currentMap.arrivedFrom).toBe('bw-11');
+        expect(arrived.getState().world.currentMap.arrivedFrom).toBe('bw-9');
     });
 
     it('a save from before the death rule loads not dying, with no arrivedFrom', () => {
@@ -214,7 +222,7 @@ describe.each(FIGHTS)('A2, A5 - $name', ({ approach, from, node, onward, boss })
         expect(map.currentNode).toBe(node);
         expect(map.consumedNodes).toContain(node);
         expect(map.pendingArrival ?? null).toBeNull();
-        expect(map.availableNodes).toContain(onward);
+        if (onward) expect(map.availableNodes).toContain(onward);
         // Winning is not resting: still dying.
         expect(store.getState().dying).toBe(true);
     });
@@ -320,7 +328,7 @@ describe('A6 - the engine hazard dies the same way', () => {
 
     function onHazard(dying: boolean): GameState {
         const base = createNewGameState();
-        const world = walk(createStartingWorld('breakwater'), 'bw-2');
+        const world = walk(bwWorld(), 'bw-2');
         return { ...base, world, dying: dying ? true : undefined };
     }
 
@@ -359,7 +367,7 @@ describe('A6 - the engine hazard dies the same way', () => {
 
 describe('A1 - which verbs write arrivedFrom', () => {
     it('an arrival records the node walked from; a placement and a crossing clear it', () => {
-        const start = createStartingWorld('breakwater');
+        const start = bwWorld();
         const arrived = moveToNode(start, 'bw-2');
         expect(arrived.currentMap.arrivedFrom).toBe('bw-1');
 
@@ -377,7 +385,7 @@ describe('A1 - which verbs write arrivedFrom', () => {
 
 describe('DY1b - the reducer stamps a run over, and arrival keeps what it walked', () => {
     it('PLAYER_DIED on a dying player stamps the current save version; a revive keeps the state version', () => {
-        const base = { ...createNewGameState(), world: moveToNode(createStartingWorld('breakwater'), 'bw-2') };
+        const base = { ...createNewGameState(), world: moveToNode(bwWorld(), 'bw-2') };
         const stale = 1 as GameState['version'];
 
         const over = gameReducer(
@@ -396,7 +404,7 @@ describe('DY1b - the reducer stamps a run over, and arrival keeps what it walked
     });
 
     it('arriving at the node already under the player keeps the arrivedFrom it had, or none', () => {
-        const map = moveToNode(createStartingWorld('breakwater'), 'bw-2').currentMap;
+        const map = moveToNode(bwWorld(), 'bw-2').currentMap;
         expect(arriveAtNode(map, 'bw-2').arrivedFrom).toBe('bw-1');
 
         const bare = { ...map };

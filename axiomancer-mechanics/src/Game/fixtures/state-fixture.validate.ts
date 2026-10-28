@@ -73,7 +73,7 @@ function playerProblems(player: unknown): string[] {
 function worldProblems(world: unknown): string[] {
     if (world === undefined) return [];
     if (!isRecord(world)) return ['world: expected an object'];
-    const { continent, map, node, completedMaps } = world;
+    const { continent, map, node, completedMaps, questNodesSettled } = world;
     if (typeof continent !== 'string' || typeof map !== 'string') {
         return ['world: `continent` and `map` are required strings'];
     }
@@ -100,7 +100,10 @@ function worldProblems(world: unknown): string[] {
                 try { getMapDefinition(continent as ContinentName, m as MapName); return []; }
                 catch { return [`world.completedMaps: unknown map '${continent}/${m}'`]; }
             });
-    return [...nodeProblems, ...completedProblems];
+    const settledProblems = questNodesSettled === undefined || typeof questNodesSettled === 'boolean'
+        ? []
+        : ['world.questNodesSettled: expected a boolean'];
+    return [...nodeProblems, ...completedProblems, ...settledProblems];
 }
 
 /** Every violation in `raw`, as `path: message` strings. Empty = valid. */

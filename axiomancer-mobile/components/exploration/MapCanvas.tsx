@@ -196,6 +196,11 @@ interface EdgePalette { parchment: string; ash: string; bone: string; }
  * solid, sealed is thin and coarsely dashed.
  */
 export function edgeStroke(e: ExplorationEdge, AXM: EdgePalette): EdgeStroke {
+    // A blocked road (a questline's lock) draws closed: thin, dotted, ash,
+    // whatever its ends are.
+    if (e.blocked) {
+        return { color: AXM.ash, width: 1.5, opacity: 0.6, dash: '1 6', casing: false };
+    }
     const color = e.traveled ? AXM.parchment : (e.locked ? AXM.ash : AXM.bone);
     const baseWidth = e.traveled ? 3.5 : (e.locked ? 2 : 2.5);
     const baseOpacity = e.traveled ? 0.95 : 0.7;
