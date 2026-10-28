@@ -89,6 +89,7 @@ import {
     continueHazardAfterResolveAction,
 } from '@/state/hazard/store-actions';
 import { confirmItemRewardAction } from '@/state/item-reward/store-actions';
+import { closeQuestAction } from '@/state/quest/store-actions';
 import {
     chooseRestChoiceOfferAction,
     claimRestChoiceOutcomeAction,
@@ -267,6 +268,13 @@ function skipActive(store: AppStore, actions: SkipEventActions, options: SkipEve
     if (state.rest?.session) return skipRest(store, nodeId);
     if (state.cache?.session) return skipCache(store, nodeId);
     if (state.blacksmith?.session) return skipBlacksmith(store, nodeId);
+    if (state.quest?.open) {
+        // The quest screen is left as the LEAVE button does: nothing is
+        // accepted or turned in, and the node stays unspent.
+        const open = state.quest.open;
+        closeQuestAction(store);
+        return { kind: 'quest', nodeId, outcome: 'dismissed', detail: { questline: open.questline, node: open.node } };
+    }
 
     const pending = state.event?.pending ?? null;
     if (pending) {

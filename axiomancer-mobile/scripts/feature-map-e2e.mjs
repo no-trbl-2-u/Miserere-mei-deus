@@ -391,6 +391,9 @@ const SEAMS = {
     // The STORY section's NPC chips list no one (Act 1 stages no NPC), so
     // the dialogue route is provoked by the state fixture that stages one.
     'route:dialogue': { fixture: 'apprentice-staged-dialogue', landing: 'dialogue-nameplate' },
+    // Act 1 carries no questline until QL1d, so the quest screen is provoked by the
+    // state fixture that stages the first quest node of the fixture questline.
+    'route:quest': { fixture: 'apprentice-staged-quest', landing: 'quest-column' },
     // No run hands out a relic yet (phase SG1 cut the first-node ring), so the
     // reward screen is provoked by the dev REWARDS row's RELIC REWARD.
     'route:item-reward': { section: 'rewards', leaf: 'debug-relic-reward-button', landing: 'item-reward-card' },

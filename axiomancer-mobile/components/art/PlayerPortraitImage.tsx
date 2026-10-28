@@ -9,7 +9,11 @@
 
 import React from 'react';
 import type { DimensionValue } from 'react-native';
+import { View } from 'react-native';
 import { Image } from '@/lib/platform/image';
+
+import { AxmIcon } from '@/components/icons';
+import { usePalette } from '@/theme/runtime';
 
 import { getPlayerPortrait, portraitIdFromFlags } from '@/assets/images/portraits';
 import { useGameState } from '@/state/GameStoreProvider';
@@ -24,16 +28,39 @@ interface PlayerPortraitImageProps {
     /** Where the image sits within its box. Defaults to 'top center' (the head
      *  anchors up, letterboxing below); pass 'center' to sit it in the middle. */
     contentPosition?: 'top center' | 'center';
+    /** Opt-in: show a skull in place of the portrait while the run is dying
+     *  (`GameState.dying`, read from the store). Only the combat board's two
+     *  portrait sites pass it; the sheet header and equipment dock keep the face. */
+    skullWhenDying?: boolean;
 }
+
+/** The skull's glyph: the registry's skull (the boss mark), no new art. */
+export const DYING_SKULL_ICON = 'action-boss' as const;
 
 export function PlayerPortraitImage({
     width = 80,
     height = 96,
     fit = 'contain',
     contentPosition = 'top center',
+    skullWhenDying = false,
 }: PlayerPortraitImageProps) {
+    const dying = useGameState((s) => s.dying === true);
+    const palette = usePalette();
     const portraitId = useGameState((s) => portraitIdFromFlags(s.flags));
     const portrait = getPlayerPortrait(portraitId);
+    if (skullWhenDying && dying) {
+        const box = [width, height].filter((n): n is number => typeof n === 'number');
+        return (
+            <View
+                testID="player-portrait-skull"
+                style={{ width, height, alignItems: 'center', justifyContent: 'center' }}
+                accessibilityElementsHidden
+                importantForAccessibility="no-hide-descendants"
+            >
+                <AxmIcon name={DYING_SKULL_ICON} size={Math.round(Math.min(...box, 52) * 0.8)} color={palette.bone} />
+            </View>
+        );
+    }
     return (
         <Image
             source={portrait.source}

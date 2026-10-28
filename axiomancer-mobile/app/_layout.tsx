@@ -30,6 +30,7 @@ import { PrevSessionCrashPrompt } from '@/components/PrevSessionCrashPrompt';
 import { HardwareBackHandler } from '@/components/HardwareBackHandler';
 import { BlacksmithGate } from '@/components/BlacksmithGate';
 import { CacheGate } from '@/components/CacheGate';
+import { QuestGate } from '@/components/QuestGate';
 import { EventGate } from '@/components/EventGate';
 import { HazardGate } from '@/components/HazardGate';
 import { CombatGate } from '@/components/CombatGate';
@@ -54,6 +55,7 @@ import ItemRewardScreen from './item-reward/index';
 import RestScreen from './rest/index';
 import DeathReturnScreen from './death-return/index';
 import CacheScreen from './cache/index';
+import QuestScreen from './quest/index';
 import BlacksmithScreen from './blacksmith/index';
 import VillageScreen from './village/index';
 import DialogueScreen from './dialogue/index';
@@ -279,6 +281,7 @@ function RootLayout() {
           <CombatGate />
           <RestGate />
           <CacheGate />
+          <QuestGate />
           <ItemRewardGate />
           <BlacksmithGate />
           <LabyrinthGate />
@@ -362,6 +365,11 @@ function RootLayout() {
             <Stack.Screen
               name="cache/index"
               component={CacheScreen}
+              options={{ headerShown: false, presentation: 'fullScreenModal', gestureEnabled: false }}
+            />
+            <Stack.Screen
+              name="quest/index"
+              component={QuestScreen}
               options={{ headerShown: false, presentation: 'fullScreenModal', gestureEnabled: false }}
             />
             <Stack.Screen

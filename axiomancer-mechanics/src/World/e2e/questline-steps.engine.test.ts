@@ -441,10 +441,14 @@ describe('A8: turn-in at the next node, and the boss victory pays the last step'
         at = stageAt(s, 'q4');
         expect(at.event.stage).toBe('turn-in');
         const potions = (g: GameState) => g.player.inventory.filter(i => i.id === POTION.id).length;
-        const t3 = turnInQuestStep(at.state, LINE, 3, seededRng(13));
-        expect(potions(t3.state)).toBe(potions(at.state) + 1);
-        s = accept(t3.state, 4);
-        expect(turnInQuestStep(s, LINE, 4).state).toBe(s); // step 4 is never turned in
+        // This turn-in goes through the dispatched action (no card pick, so
+        // no rng is drawn).
+        const t3 = gameReducer(at.state, { type: 'TURN_IN_QUEST_STEP', payload: { questline: LINE, step: 3 } });
+        expect(potions(t3)).toBe(potions(at.state) + 1);
+        expect(t3.player.experience).toBe(at.state.player.experience + 40);
+        expect(t3.quests.completed).toContain('ql1b-step-3');
+        s = accept(t3, 4);
+        expect(gameReducer(s, { type: 'TURN_IN_QUEST_STEP', payload: { questline: LINE, step: 4 } })).toBe(s); // step 4 is never turned in
 
         // Step 4: the boss victory completes and pays it, the Belt included.
         expect(legalMovesFrom(map(s))).toContain('boss');

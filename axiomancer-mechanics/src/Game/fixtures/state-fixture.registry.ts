@@ -19,7 +19,7 @@
  */
 
 import type { StateFixture } from './state-fixture.types';
-import { FIXTURE_CUTSCENE_EVENT, FIXTURE_DIALOGUE_EVENT, FIXTURE_VILLAGE_EVENT } from './fixture-content';
+import { FIXTURE_CUTSCENE_EVENT, FIXTURE_DIALOGUE_EVENT, FIXTURE_QUEST_EVENT, FIXTURE_VILLAGE_EVENT } from './fixture-content';
 
 export const STATE_FIXTURES: readonly StateFixture[] = Object.freeze([
     {
@@ -81,6 +81,15 @@ export const STATE_FIXTURES: readonly StateFixture[] = Object.freeze([
         world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-2' },
         arrive: true,
         stagedEvent: FIXTURE_CUTSCENE_EVENT,
+    },
+    {
+        id: 'apprentice-staged-quest',
+        description: 'Apprentice on the Breakwater\'s bw-2 with the fixture questline\'s first quest node staged on it (the live Act 1 has no questline until QL1d); `arrive` pushes /quest.',
+        seed: 'fixture-apprentice-staged-quest',
+        preset: 'apprentice',
+        world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-2' },
+        arrive: true,
+        stagedEvent: FIXTURE_QUEST_EVENT,
     },
     {
         id: 'apprentice-bw-rest',

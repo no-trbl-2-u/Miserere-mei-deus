@@ -27,6 +27,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import Svg, { Circle, Defs, Ellipse, LinearGradient, Path, RadialGradient, Rect, Stop } from 'react-native-svg';
 
+import { useGameState } from '@/state/GameStoreProvider';
 import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
 import { getEncounterEnemyArt } from '@/assets/images/enemies';
 import { getEnemyFrameSet } from '@/assets/images/enemies/frames';
@@ -294,6 +295,7 @@ export const PlayerMedallion = React.memo(function PlayerMedallion({
 }) {
     const AXM = usePalette();
     const styles = useStyles();
+    const dying = useGameState((st) => st.dying === true);
     const [floats, setFloats] = useState<Float[]>([]);
     const idRef = useRef(0);
     const lastSeq = useRef(0);
@@ -398,14 +400,14 @@ export const PlayerMedallion = React.memo(function PlayerMedallion({
                     testID="combat-player-medallion"
                     accessibilityRole="button"
                     accessibilityLabel={sacrificeCallout
-                        ? PROGRAM_COPY.floorA11y(sacrificeCallout.vitae, player.maxHp, sacrificeCallout.cost)
-                        : `${player.name}, VITAE ${player.hp} of ${player.maxHp}. Inspect your pilgrim — stats, status effects and cards.`}
+                        ? `${PROGRAM_COPY.floorA11y(sacrificeCallout.vitae, player.maxHp, sacrificeCallout.cost)}${dying ? ' You are dying.' : ''}`
+                        : `${player.name}${dying ? ', dying' : ''}, VITAE ${player.hp} of ${player.maxHp}. Inspect your pilgrim — stats, status effects and cards.`}
                     // Slop only toward the screen edge and the bottom, never up
                     // into the hand above the dock.
                     hitSlop={{ left: 6, bottom: 6 }}
                 >
                     <View style={styles.medallionClip}>
-                        <PlayerPortraitImage width={44} height={52} fit="cover" />
+                        <PlayerPortraitImage width={44} height={52} fit="cover" skullWhenDying />
                         <Animated.View style={[styles.medallionFlash, flashAnim]} pointerEvents="none" />
                     </View>
                     <Svg width={PLAYER_AVATAR_SIZE} height={PLAYER_AVATAR_SIZE} viewBox="0 0 92 92" style={StyleSheet.absoluteFill} pointerEvents="none">

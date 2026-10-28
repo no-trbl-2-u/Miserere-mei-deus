@@ -280,6 +280,10 @@ keyword (`EnemyKeyword = never`).
   (`/death-return`) and then the map on the node walked from; a death while
   dying resets the run. A defeat inside the Labyrinth still resets the run.
   A lethal hazard crossing in the app still resets the run until phase DY1c.
+  While dying, the combat board shows a skull in place of the player's
+  portrait (the footer-dock medallion and the pilgrim modal head); the
+  character tab keeps the portrait. This is dying's visible effect so far; the
+  rule is provisional and may gain others after playtests.
 - **Rest** offers one choice (`World/RestChoice/`): heal
   `restHealFraction` = 25% of maximum VITAE, upgrade one card the player
   picks (free, no heal; the shared upgrade screen shows it before and after,
