@@ -7,6 +7,9 @@
  * right. The main menu (MENU_COLUMN_MAX_WIDTH) and the combat preview
  * (REVEAL_COLUMN_MAX_WIDTH) had the same fault and the same cure.
  *
+ * The loot cache had the same fault (CRITIQUE pass 108): both offers ran as
+ * 1250px bars with the card face crowded at the left edge.
+ *
  * Contract asserted here: each screen's content sits in a column capped at
  * a reading width and centred, at full width below the cap so a phone
  * still fills it; the settlement's pinned exit shares the cap, so TAKE THE
@@ -21,8 +24,9 @@ import { render, within } from '@testing-library/react-native';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
-import { consumableLibrary, createRestChoiceSession } from '@mechanics';
+import { consumableLibrary, createLootCacheChoiceSession, createRestChoiceSession } from '@mechanics';
 
+import CacheScreen, { CACHE_COLUMN_MAX_WIDTH } from '@/app/cache/index';
 import RestScreen, { REST_COLUMN_MAX_WIDTH } from '@/app/rest/index';
 import VillageScreen, { VILLAGE_COLUMN_MAX_WIDTH } from '@/app/village/index';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
@@ -52,6 +56,21 @@ function restStore(): AppStore {
                 health: 90,
                 currency: 40,
                 deckCardIds: [],
+            }),
+        },
+    });
+    return store;
+}
+
+/** A store seated on a loot cache's two offers. */
+function cacheStore(): AppStore {
+    const store = createAppStore({ adapter: createMemoryAdapter() });
+    store.setState({
+        cache: {
+            session: createLootCacheChoiceSession(108, {
+                cardCandidate: 'grey-ward',
+                itemCandidates: [],
+                currencyCandidate: 8,
             }),
         },
     });
@@ -133,5 +152,17 @@ describe('rest and settlement screens hold one centred column (critique pass 71)
         const exit = r.getByTestId('village-exit-column');
         expectReadingColumn(exit, VILLAGE_COLUMN_MAX_WIDTH);
         expect(exit).toContainElement(r.getByTestId('village-leave'));
+    });
+
+    it('cache: the title and both offers sit in the capped column (critique pass 108)', () => {
+        const r = render(
+            <GameStoreProvider store={cacheStore()}>
+                <CacheScreen />
+            </GameStoreProvider>,
+        );
+        const column = r.getByTestId('cache-column');
+        expectReadingColumn(column, CACHE_COLUMN_MAX_WIDTH);
+        expect(column).toContainElement(r.getByTestId('cache-choice-offer-card'));
+        expect(column).toContainElement(r.getByTestId('cache-choice-offer-item'));
     });
 });

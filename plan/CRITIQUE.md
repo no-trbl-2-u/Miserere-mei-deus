@@ -966,15 +966,6 @@
 
 ## Pending
 
-### [MED] /cache / desktop — the choice column runs the full 1280 width, so both offers are 1250px bars with the card and its text crowded at the left edge
-- pass: 108 (commit 850ce863)
-- viewport: desktop (1280x800); mobile unaffected
-- category: visual
-- observation: on the loot cache at 1280 the TAKE A CARD and TAKE THE GOODS buttons stretch from x=14 to x=1266. The card face and "TAKE A CARD / ONE CARD, STRAIGHT INTO THE DECK." sit in the first ~370px, leaving ~880px of empty gold-bordered box, and the eyebrow, title and intro hug the left edge too. The sibling one-choice screens centre a capped column: `/rest` and `/quest` both cap at 520 (this pass's `desktop/14-quest.png` shows the column centred over the art), so the cache is the one node screen that reads as an unstyled stretch.
-- evidence: `.critique-artifacts/desktop/12-cache.png` against `desktop/14-quest.png` and `desktop/09-rest.png`; `axiomancer-mobile/app/cache/index.tsx:160` `scroll` (no column, no `maxWidth`); `app/rest/index.tsx:228,235` `REST_COLUMN_MAX_WIDTH = 520` and `app/quest/index.tsx:185,190`.
-- suggested fix: wrap the cache's content in a `column` style `{ width: '100%', maxWidth: CACHE_COLUMN_MAX_WIDTH, alignSelf: 'center' }` with `CACHE_COLUMN_MAX_WIDTH = 520`, as rest and quest do; presentation only, pinned by the cache screen test reading the exported constant.
-- source: critique:drive (unattended)
-
 ### [LOW] /cache — TAKE THE GOODS says only "whatever's inside", while TAKE A CARD prints the exact card, so the one irreversible choice weighs a known card against a blind box
 - pass: 108 (commit 850ce863)
 - viewport: both (375x812, 1280x800)
@@ -1314,6 +1305,16 @@
 - source: loop
 
 ## Done
+
+### [x] [MED] /cache / desktop — the choice column runs the full 1280 width, so both offers are 1250px bars with the card and its text crowded at the left edge — RESOLVED 2026-10-28 (branch loop/iterate-cache-column, db76f4dc7: the cache content sits in a column capped at `CACHE_COLUMN_MAX_WIDTH = 520` and centred, as rest and quest do; pinned in `rest-village-column.critique-71.test.tsx`)
+- pass: 108 (commit 850ce863)
+- viewport: desktop (1280x800); mobile unaffected
+- category: visual
+- observation: on the loot cache at 1280 the TAKE A CARD and TAKE THE GOODS buttons stretch from x=14 to x=1266. The card face and "TAKE A CARD / ONE CARD, STRAIGHT INTO THE DECK." sit in the first ~370px, leaving ~880px of empty gold-bordered box, and the eyebrow, title and intro hug the left edge too. The sibling one-choice screens centre a capped column: `/rest` and `/quest` both cap at 520 (this pass's `desktop/14-quest.png` shows the column centred over the art), so the cache is the one node screen that reads as an unstyled stretch.
+- evidence: `.critique-artifacts/desktop/12-cache.png` against `desktop/14-quest.png` and `desktop/09-rest.png`; `axiomancer-mobile/app/cache/index.tsx:160` `scroll` (no column, no `maxWidth`); `app/rest/index.tsx:228,235` `REST_COLUMN_MAX_WIDTH = 520` and `app/quest/index.tsx:185,190`.
+- suggested fix: wrap the cache's content in a `column` style `{ width: '100%', maxWidth: CACHE_COLUMN_MAX_WIDTH, alignSelf: 'center' }` with `CACHE_COLUMN_MAX_WIDTH = 520`, as rest and quest do; presentation only, pinned by the cache screen test reading the exported constant.
+- source: critique:drive (unattended)
+- issue: #1034
 
 ### [x] [MED] hazard / village / forge / deck — the barred gothic zero still prints in about a dozen numeric styles, so the hazard ladder reads "RI 28" for a threshold of 20 — RESOLVED 2026-10-28 (branch loop/iterate-gothic-figures, 9be8fceb: the 18 figure styles the guard names (the ladder, stall price, forge budget, DECK and hazard-deck stats and tallies, character-select and SELF stats and level, the hazard flash stat, the pilgrim conviction and stats, the satchel purse, the puzzle clock, the level-up number, the labyrinth room number) and the SACRIFICE floor tag print in FONTS.sans; names and titles stay gothic; `theme/__tests__/no-gothic-figures.test.ts` fails on any figure-named style in app/ or components/ that sets FONTS.gothic)
 - pass: 106 (commit 4edd5433)
