@@ -15,9 +15,9 @@
 | 2026-11-02 (in 5 days) | Plot Chapter 1's enemies and their art brief from the two sessions (1 h) | needs you: B2 ready for you | W1 |
 | 2026-11-03 (in 6 days) | Review the Breakwater node map before the event-node pitch (1 h) | needs you: your task | W2 |
 | 2026-11-03 (in 6 days) | Live hazard routing (each of the seven Act 1 hazard nodes draws a random puzzle from the thirty) and the cuts (plot, 1 h) | needs a plot: no build-plan rows yet | W2 |
-| 2026-11-04 (in 7 days) | Pitch the event-node UI/UX for the Breakwater's eight kinds, all of Act 1's (1 h) | needs you: your task | W2 |
-| 2026-11-06 (in 9 days) | Event-node UI/UX for the Breakwater's eight kinds (plot, 1 h) | needs a plot: no build-plan rows yet | W2 |
+| 2026-11-04 (in 7 days) | Pitch the event-node UI/UX for the Breakwater's nine kinds, all of Act 1's, the quest node included (1 h) | needs you: your task | W2 |
+| 2026-11-06 (in 9 days) | Event-node UI/UX for the Breakwater's nine kinds (plot, 1 h) | needs a plot: no build-plan rows yet | W2 |
 | 2026-11-08 (in 11 days) | Chapter 1's enemy art: pick from the loop's candidates (2 h) | needs you: your task | W2 |
 | 2026-11-09 (in 12 days) | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | needs you: your task | W2 |
-| 2026-11-10 (in 13 days) | Answer Chapter 1's `[content]` rows (node copy, map fixes) and write the Breakwater's quest line (1.5 h) | needs you: your task | W2 |
+| 2026-11-10 (in 13 days) | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | needs you: your task | W2 |
 | 2026-11-11 (in 14 days) | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | needs you: your task | W2 |
