@@ -966,15 +966,6 @@
 
 ## Pending
 
-### [MED] /cache / desktop — the choice column runs the full 1280 width, so both offers are 1250px bars with the card and its text crowded at the left edge
-- pass: 108 (commit 850ce863)
-- viewport: desktop (1280x800); mobile unaffected
-- category: visual
-- observation: on the loot cache at 1280 the TAKE A CARD and TAKE THE GOODS buttons stretch from x=14 to x=1266. The card face and "TAKE A CARD / ONE CARD, STRAIGHT INTO THE DECK." sit in the first ~370px, leaving ~880px of empty gold-bordered box, and the eyebrow, title and intro hug the left edge too. The sibling one-choice screens centre a capped column: `/rest` and `/quest` both cap at 520 (this pass's `desktop/14-quest.png` shows the column centred over the art), so the cache is the one node screen that reads as an unstyled stretch.
-- evidence: `.critique-artifacts/desktop/12-cache.png` against `desktop/14-quest.png` and `desktop/09-rest.png`; `axiomancer-mobile/app/cache/index.tsx:160` `scroll` (no column, no `maxWidth`); `app/rest/index.tsx:228,235` `REST_COLUMN_MAX_WIDTH = 520` and `app/quest/index.tsx:185,190`.
-- suggested fix: wrap the cache's content in a `column` style `{ width: '100%', maxWidth: CACHE_COLUMN_MAX_WIDTH, alignSelf: 'center' }` with `CACHE_COLUMN_MAX_WIDTH = 520`, as rest and quest do; presentation only, pinned by the cache screen test reading the exported constant.
-- source: critique:drive (unattended)
-
 ### [LOW] /cache — TAKE THE GOODS says only "whatever's inside", while TAKE A CARD prints the exact card, so the one irreversible choice weighs a known card against a blind box
 - pass: 108 (commit 850ce863)
 - viewport: both (375x812, 1280x800)
@@ -1323,6 +1314,16 @@
 - source: loop
 
 ## Done
+
+### [x] [MED] /cache / desktop — the choice column runs the full 1280 width, so both offers are 1250px bars with the card and its text crowded at the left edge — RESOLVED 2026-10-28 (branch loop/iterate-cache-column, db76f4dc7: the cache content sits in a column capped at `CACHE_COLUMN_MAX_WIDTH = 520` and centred, as rest and quest do; pinned in `rest-village-column.critique-71.test.tsx`)
+- pass: 108 (commit 850ce863)
+- viewport: desktop (1280x800); mobile unaffected
+- category: visual
+- observation: on the loot cache at 1280 the TAKE A CARD and TAKE THE GOODS buttons stretch from x=14 to x=1266. The card face and "TAKE A CARD / ONE CARD, STRAIGHT INTO THE DECK." sit in the first ~370px, leaving ~880px of empty gold-bordered box, and the eyebrow, title and intro hug the left edge too. The sibling one-choice screens centre a capped column: `/rest` and `/quest` both cap at 520 (this pass's `desktop/14-quest.png` shows the column centred over the art), so the cache is the one node screen that reads as an unstyled stretch.
+- evidence: `.critique-artifacts/desktop/12-cache.png` against `desktop/14-quest.png` and `desktop/09-rest.png`; `axiomancer-mobile/app/cache/index.tsx:160` `scroll` (no column, no `maxWidth`); `app/rest/index.tsx:228,235` `REST_COLUMN_MAX_WIDTH = 520` and `app/quest/index.tsx:185,190`.
+- suggested fix: wrap the cache's content in a `column` style `{ width: '100%', maxWidth: CACHE_COLUMN_MAX_WIDTH, alignSelf: 'center' }` with `CACHE_COLUMN_MAX_WIDTH = 520`, as rest and quest do; presentation only, pinned by the cache screen test reading the exported constant.
+- source: critique:drive (unattended)
+- issue: #1034
 
 ### [x] [HIGH] ci / critique-drive — `/cache`, the satchel, `/quest` and `/death-return` are not in the critique set, so four passes of shipped surfaces went unseen — RESOLVED 2026-10-28 (branch loop/iterate-critique-drive-new-routes, cf5957ead: `cache` and `quest` boot their arrival fixtures and wait for the gate's push, `satchel` opens `/inventory` on `sage-bw-door-gate`, `death-return` opens the `?preview=1` dev view through a new `devTools` flag; the mobile drive captured all 15 screens with no errors; pinned in critique-drive.test.mjs. No preset wears a relic and no fixture boots a dying board, so the relic icons and the DY1d skull wait on fixtures: AUDIT row filed)
 - pass: 103 (commit 79ecad63); raised LOW to MED at pass 105 (commit 02372412); raised MED to HIGH at pass 107 (commit bf5bae72)
