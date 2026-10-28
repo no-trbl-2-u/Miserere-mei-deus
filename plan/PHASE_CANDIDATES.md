@@ -61,6 +61,7 @@
 - proposed: 2026-10-24, `/ship-a-phase` BE2e retro (lessons at the 40-open cap, so filed here instead)
 - source signals: PRs #866 (EQ1b), #868 (EL1c) and #870 (BE2c) each bumped `hook-refusal-half-done` in `plan/lessons.md`. GitHub merged them server-side, where `scripts/lessons-merge.mjs` is never registered, so its line merge kept three copies of the row and root `npm test` (`check-lessons`) went red on `main` at 730af1c41. BE2e's PR folded them into one row.
 - rationale: the slug-merge driver only runs where a session registered it; the `pr-review.yml` merge job and the merge button never do, so every burst of loop PRs that bump one lesson lands a red `main`.
+- **Scope note (2026-10-28, plot MD1):** MD1 covers the other half of server-side merging, a PR that CONFLICTS after another merges (a `plan/deadlines.md` driver, and `pr-resolve` re-deriving Status). This row stays: it is about a merge that is clean to GitHub but wrong in the tree. Brief `plan/phases/phase_MD1_deadlines_merge_driver.md`.
 - proposed scope: 1 small phase. Either the merge job updates the PR head from `main` with the driver registered (a local merge plus push) before it merges, or it runs `check-lessons` on GitHub's test-merge ref and holds the PR when it fails.
 - estimated phases: 1
 - conflicts: none. CI only; no game code, content, rule, card or keyword (D88).

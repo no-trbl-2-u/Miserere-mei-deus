@@ -439,6 +439,17 @@ event-pool and layout files).
 - [x] Phase EQ2b — Every screen says Weapon, Armor, Relic (plotted by T, 2026-10-25): the dock reads WEAPON, ARMOR, RELIC I, RELIC II, RELIC III and the SELF screen the same order from one `LOADOUT_ROWS`; item rows, the detail modal, the item card icon and the victory panel say Relic; a test bars "Trinket" and "Accessory" from player-visible strings. Brief `plan/phases/phase_EQ2_equipment_slots.md` § EQ2b. Requires EQ2a.
 - [x] (#982) Phase ER1 — Elites come back after a night's rest (plotted by T, 2026-10-26; calls answered 2026-10-26): claiming a rest un-spends every elite node already fought anywhere in the act, departed maps included (`respawnElites`, pool-read); the same foe at the same level; each won elite fight rolls its own relic drop list first (`eliteRelicDrops`, shared relics allowed, a carried relic skipped, 8% engine default, the chance never shown to the player), and a drop is the whole reward (no XP, cards or upgrade) and retires that elite (`retiredEliteNodes`); otherwise XP and cards on every win and the upgrade only until taken once from that elite (`eliteUpgradeTakenNodes`); two optional save fields, no migration; the rest screen names each returning foe; the rest node itself stays used up. Brief `plan/phases/phase_ER1_elite_respawn.md`. Requires LR1c.
 - [ ] Phase SB1 — Set bonuses: T's design session (plotted by T, 2026-10-26) (attended): T and the agent decide what a set is (relics of one lane, a matching weapon or armor, named sets), the bonus table (whether and at what tier a set lifts the lane card slots of D100/D104 to 3 of 3, and any other bonus) and how a set shows on screen; weapons and armor still grant no lane or signature (EQ2 calls 1-2); recorded as a design record and a D-number, D100 and D105 pointed at it, and the build rows it implies filed as `/plot` candidates; nothing built; not part of the Act 1 MVP. Brief `plan/phases/phase_SB1_set_bonuses.md`. Requires nothing.
+- [ ] Phase MD1a — A merge driver for `plan/deadlines.md` (plotted by T, 2026-10-28): `scripts/deadlines-merge.mjs`,
+      registered like the lessons and build-plan drivers (`.gitattributes`, the SessionStart hook, `MERGE_DRIVERS`
+      in `scripts/pr-resolve.mjs`), so two plot PRs that each add an Item, an Unscheduled line and a Change log line
+      stop conflicting when one merges: same-spot insertions both kept, a row both sides edited merged cell by
+      cell, a doubled Unscheduled id refused, Items kept in date order. Reuses the clash core of
+      `build-plan-merge.mjs`. Brief `plan/phases/phase_MD1_deadlines_merge_driver.md` § MD1a. Requires nothing.
+- [ ] Phase MD1b — `pr-resolve` settles a plot-on-plot merge on its own (plotted by T, 2026-10-28): after a merge
+      it commits, `pr-resolve` re-derives the Item Status cells (`deadlines.mjs --write`, `LIVE_DEADLINES.md`
+      restored); `mergeMain` takes the repository directory; a fixture test runs two plot branches that both add
+      asap rows and deadline Items through it with no Haiku entry and `check-deadlines` green. Brief
+      `plan/phases/phase_MD1_deadlines_merge_driver.md` § MD1b. Requires MD1a.
 - [x] (#961) Phase NC1 — No caps on the live cards (plotted by T, 2026-10-26): every capped line of the Elementalist (P-06b, P-09a) and Blood Price (What Is Owed, Full Tally, Blood for Blood, Name Your Price, Reclaim, Repaid in Kind) prints and applies no "max" (the two SACRIFICE X caps stay, T 2026-10-26), a line whose cap was its only upgrade growth grows a flat `+n`, Repaid in Kind's PAID becomes twice the damage taken, and a library test fails any "max" left (D109). Brief `plan/phases/phase_NC1_no_caps.md`. Requires nothing.
 - [x] (#964) Phase CL1 — Ballots pitch no colour; colours are split after T picks (plotted by T, 2026-10-26): the ballot kit drops `JOB_COLORS`, the tint and the colour checks, the Defender ballot loses its `job` fields, and `/lane-creator` proposes an even colour split at the revisions step for T to edit (D110). Brief `plan/phases/phase_CL1_colour_is_payment.md`. Requires nothing.
 - [x] (#914) Phase EM1 — The Elementalist in measured truth, with a self-burn metric (plotted by T, 2026-10-25): `elementalist` joins the measured lanes beside grey and Blood Price (its 20-card test deck as the lane's ceiling, T 2026-10-24); two seeded sampled families, `elementalist~20of30` (the spread) and `mixed~20of60` (the median, from both trial sets' 60 cards), each 16 draws reported as median and range; a `selfBurnMean` column (VITAE lost to your own INFERNO) on every cell; `latest.md` regenerated in the PR. A measurement (D57), not a tune (D88). Brief `plan/phases/phase_EM1_elementalist_measured.md`. Requires nothing.
@@ -1095,6 +1106,14 @@ See the status rows above; generate briefs on demand.
 > confirmation this was T's request, T's stated reason (or
 > "reason not stated" — never invent one), and the resulting
 > commit/issue/phase-brief when available.
+
+- **2026-10-28** — actor: **T, session** (`/plot anytime`, run unattended on T's word relayed from an attended
+  session, branch `loop/plot-MD1-deadlines-merge-driver`). Action: **added Phases MD1a and MD1b** after the last
+  open row, Phase SB1 (a merge driver for `plan/deadlines.md`; `pr-resolve` re-derives Status after a merge and a
+  fixture proves two plot branches settle with no Haiku run). Confirmed T's request: yes (T, 2026-10-28:
+  "whenever we have two plot/plan PRs open, once I merge one, the other always ends up with a conflict").
+  Reason: the build plan already merges through a driver, but `plan/deadlines.md`, which every plot edits in the
+  same three places, does not. Brief `plan/phases/phase_MD1_deadlines_merge_driver.md`.
 
 - **2026-10-27** — actor: **T, session** (`/plot asap`, run unattended on T's word relayed from an attended
   session, branch `loop/plot-QL1-breakwater-questline`). Action: **added Phases QL1a, QL1b, QL1c, QL1d, QL1e
