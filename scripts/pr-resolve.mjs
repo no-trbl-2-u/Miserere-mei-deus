@@ -18,8 +18,9 @@
 //       Post-run: fail if any listed file still has a marker; else stage,
 //       commit the merge and push <b>.
 //   node scripts/pr-resolve.mjs update --branch <b>
-//       The merge job's tree check (phase MD1c): `mergeMain` plus the push,
-//       for a PR whose merged tree is red. Exit 3 (nothing pushed) when the
+//       The update the merge job's tree check makes (phase MD1c): `mergeMain`
+//       plus the push, run in a throwaway worktree with this checkout's scripts
+//       as the drivers (never the branch's), for a PR whose merged tree is red. Exit 3 (nothing pushed) when the
 //       branch was already current or the merge conflicted.
 //
 // After a merge it commits (or, for `finish`, is about to commit), it re-derives
@@ -353,8 +354,9 @@ export function mergeMain(branch, cwd = ROOT, scriptsRoot = null) {
 
 /**
  * Bring `branch` up to date with origin/main (the merge drivers registered,
- * union files settled, Status re-derived) and push it. The merge job's tree
- * check runs this on a PR whose merged tree is red (phase MD1c). Never a
+ * union files settled, Status re-derived) and push it (phase MD1c). Pass a
+ * `scriptsRoot` and a `cwd` that is not it, or the branch's own scripts run as
+ * the drivers; `updateBranchIsolated` does that. Never a
  * force, never `main`; a conflict the drivers and the union cannot settle is
  * aborted and the branch is left as it was.
  * @param {string} branch  @param {string} [cwd] repository directory
@@ -377,6 +379,31 @@ export function updateBranch(branch, cwd = ROOT, beforePush, scriptsRoot = null)
   beforePush?.(head)
   git(['push', 'origin', `HEAD:${branch}`], { cwd })
   return { state: 'updated', head }
+}
+
+/**
+ * `updateBranch` in a throwaway detached worktree of `root`, with `root`'s
+ * scripts as the merge drivers and the Status re-derive. `root` is a checkout
+ * of main that is never switched, so the PR branch's own copies of those
+ * scripts never run. The real call sites are the merge job's in-process
+ * `treeCheck` (scripts/pr-merge.mjs) and the `update` mode below.
+ * @param {string} branch  @param {(head: string) => void} [beforePush]
+ * @param {string} [root] the checkout of main whose scripts run
+ * @returns {{ state: 'updated' | 'current' | 'conflict', head?: string, rest?: string[] }}
+ */
+export function updateBranchIsolated(branch, beforePush, root = ROOT) {
+  const wt = fs.mkdtempSync(path.join(os.tmpdir(), 'pr-update-wt-'))
+  try {
+    git(['worktree', 'add', '-q', '--detach', wt, 'origin/main'], { cwd: root })
+    return updateBranch(branch, wt, beforePush, root)
+  } finally {
+    fs.rmSync(wt, { recursive: true, force: true })
+    try {
+      git(['worktree', 'prune'], { cwd: root })
+    } catch {
+      // a throwaway runner
+    }
+  }
 }
 
 function commitAndPush(branch) {
@@ -446,7 +473,7 @@ function main() {
     return
   }
   if (mode === 'update') {
-    const r = updateBranch(branch)
+    const r = updateBranchIsolated(branch)
     console.log(r.state === 'conflict' ? `conflict: ${r.rest.join(', ')}` : `${r.state} ${r.head}`)
     if (r.state !== 'updated') process.exit(3)
     return

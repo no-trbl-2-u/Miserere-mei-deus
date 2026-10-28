@@ -50,7 +50,7 @@ import { fileURLToPath } from 'node:url'
 
 import { REVIEW_VERDICT } from './eval/ledger-lib.mjs'
 import { AUTO_MARKER, HOLD_LABELS, MERGEABLE_STATES, PIPELINE_PATHS, PLAN_LABELS, PLAN_TITLE, TRUSTED_AUTHORS } from './pr-policy.mjs'
-import { updateBranch } from './pr-resolve.mjs'
+import { updateBranchIsolated } from './pr-resolve.mjs'
 import { markedHeads } from './pr-review.mjs'
 
 // The policy constants live in `pr-policy.mjs` so `pr-review.mjs` can read
@@ -316,22 +316,12 @@ async function treeCheck(repo, pr, head) {
     let failed = !BRANCH.test(view.headRefName)
     if (!failed) {
       try {
-        // The merge runs in a separate worktree of the PR branch; ROOT (main) supplies every script, by absolute
-        // path, so no PR-branch code runs with the job's token in env.
-        const wt = mkdtempSync(join(tmpdir(), 'pr-merge-wt-'))
-        try {
-          execFileSync('git', ['worktree', 'add', '--detach', wt, 'origin/main'], { cwd: ROOT, stdio: 'pipe' })
-          const r = updateBranch(view.headRefName, wt, (to) => {
-            gh(['pr', 'comment', pr, '--repo', repo, '--body', treeUpdateComment({ from: head, to, red: red.map((x) => x.name) })])
-          }, ROOT)
-          failed = r.state !== 'updated'
-        } finally {
-          try {
-            execFileSync('git', ['worktree', 'remove', '--force', wt], { cwd: ROOT, stdio: 'pipe' })
-          } catch {
-            // the runner is thrown away
-          }
-        }
+        // A separate worktree of the PR branch; ROOT (main) supplies every script, by absolute path, so no
+        // PR-branch code runs with the job's token in env.
+        const r = updateBranchIsolated(view.headRefName, (to) => {
+          gh(['pr', 'comment', pr, '--repo', repo, '--body', treeUpdateComment({ from: head, to, red: red.map((x) => x.name) })])
+        }, ROOT)
+        failed = r.state !== 'updated'
       } catch (err) {
         console.error(`pr-merge: the tree-check update failed: ${err.message}`)
         failed = true

@@ -8,7 +8,7 @@
 //   node --test scripts/pr-resolve.test.mjs
 
 import assert from 'node:assert/strict'
-import { execFileSync } from 'node:child_process'
+import { execFileSync, spawnSync } from 'node:child_process'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
@@ -335,6 +335,29 @@ test('update runs main\'s drivers and scripts by absolute path: the PR worktree\
       assert.ok(!set.includes(wt), 'never the worktree\'s')
     }
     assert.equal(count(git(work, 'show', `origin/pr-branch:${LESSONS}`), '**zz-md1c-dup**'), 1, 'main\'s lessons driver merged by slug')
+  } finally {
+    fs.rmSync(sentinel, { force: true })
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('the update CLI mode uses the invoking checkout\'s drivers, never the poisoned branch\'s', () => {
+  const sentinel = path.join(os.tmpdir(), `md1c-cli-sentinel-${process.pid}-${Date.now()}`)
+  const poison = `import fs from 'node:fs'\nfs.writeFileSync(${JSON.stringify(sentinel)}, 'ran')\nprocess.exit(1)\n`
+  const { dir, work } = lessonsClash('a rule', 'a rule', (d) => {
+    write(d, 'scripts/lessons-merge.mjs', poison)
+    write(d, 'scripts/deadlines.mjs', poison)
+  })
+  try {
+    // `work` is main's checkout (on main, never switched); the CLI is its own copy of the script.
+    fs.copyFileSync(path.join(ROOT, 'scripts', 'pr-resolve.mjs'), path.join(work, 'scripts', 'pr-resolve.mjs'))
+    const r = spawnSync(process.execPath, [path.join(work, 'scripts', 'pr-resolve.mjs'), 'update', '--branch', 'pr-branch'], { cwd: work, encoding: 'utf8' })
+    assert.equal(r.status, 0, r.stderr)
+    assert.match(r.stdout, /^updated [0-9a-f]{40}/)
+    assert.equal(fs.existsSync(sentinel), false, 'no PR-branch script ran')
+    assert.equal(git(work, 'branch', '--show-current').trim(), 'main', 'the invoking checkout stays on main')
+    assert.equal(count(git(work, 'show', `origin/pr-branch:${LESSONS}`), '**zz-md1c-dup**'), 1, 'main\'s lessons driver merged by slug')
+    assert.ok(git(work, 'config', 'merge.lessons.driver').includes(path.join(work, 'scripts')), 'driver path is the invoking checkout\'s')
   } finally {
     fs.rmSync(sentinel, { force: true })
     fs.rmSync(dir, { recursive: true, force: true })
