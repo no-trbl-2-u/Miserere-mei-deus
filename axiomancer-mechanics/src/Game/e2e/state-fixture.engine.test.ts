@@ -221,6 +221,19 @@ describe('createFixtureGameStore (src/test-utils/fixture-store.ts)', () => {
     // QL1c — the live Act 1 carries no questline until QL1d, so the quest
     // screen's witness is a fixture that stages the quest node and brings its
     // questline along. A quest node is not spent by being resolved.
+    it('only a fixture that stages the fixture questline registers it', () => {
+        _unregisterQuestline('fixture-questline');
+        createFixtureGameStore('wanderer-staged-cutscene');
+        expect(getQuestline('fixture-questline')).toBeUndefined();
+        createFixtureGameStore({
+            id: 'other-quest', seed: 3,
+            world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-2' },
+            stagedEvent: { kind: 'quest', questline: 'some-other-line', node: 1 },
+        });
+        expect(getQuestline('fixture-questline')).toBeUndefined();
+        expect(getQuestline('some-other-line')).toBeUndefined();
+    });
+
     it('"apprentice-staged-quest" stages the fixture questline\'s first node and registers the line', () => {
         const f = getStateFixtureById('apprentice-staged-quest')!;
         expect(f.stagedEvent?.kind).toBe('quest');

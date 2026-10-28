@@ -1,3 +1,4 @@
+// guard-test: pins behaviour QL1b already ships in questline.ts (mutation gaps), so it passes on the parent by design
 /**
  * The questline registry and step views (phase QL1c: mutation gaps left by
  * QL1b in `World/questline.ts`).

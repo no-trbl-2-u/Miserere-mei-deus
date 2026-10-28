@@ -1,3 +1,4 @@
+// guard-test: pins behaviour QL1b already ships in resolve-map-event.ts (mutation gaps), so it passes on the parent by design
 /**
  * What resolving an unspent node does to its roads (phase QL1c: the mutation
  * gaps left by QL1b in `resolve-map-event.ts`).
