@@ -324,26 +324,18 @@ async function walk(page) {
     await settleOnMap(page, 'bw-4')
     log('play: bw-4 gathering')
 
-    await travelTo(page, 'bw-6')
-    await waitFor(page, 'combat-reveal', 'bw-6 encounter reveal')
-    await tap(page, 'combat-enter') || fail('bw-6: the reveal has no ENTER COMBAT')
-    await waitFor(page, 'combat-arena-backdrop', 'bw-6 combat board')
-    for (let k = 0; k < 120; k++) {
-        if (await page.getByTestId('combat-summary').count()) break
-        if (await tap(page, 'combat-mercy-spare')) continue
-        await tap(page, 'combat-end-phase')
-        await sleep(150)
-    }
-    await waitFor(page, 'combat-summary', 'bw-6 combat summary', 10000)
-    const verdict = (await page.getByTestId('combat-summary').innerText()).split('\n')[0]
-    if (/defeat/i.test(verdict)) {
-        // A lost fight is the death rule: the return moment, then the map on bw-4.
-        await tap(page, 'combat-summary-close')
-        await waitFor(page, 'death-return', 'the return moment after the bw-6 defeat')
-        await tap(page, 'death-return-continue') || fail('the return moment has no CONTINUE')
-    }
-    await settleOnMap(page, 'bw-6')
-    log('play: bw-6 fight, played to its end')
+    // The Breakwater's fights and hazards sit in pockets behind its quest
+    // markers (QL1d). Accepting step 1 at bw-19 opens the hazard pocket; the
+    // fight pocket waits behind bw-20, which needs step 1 crossed (no dev skip
+    // in this leg), so the seam leg provokes the fight routes.
+    await travelTo(page, 'bw-19')
+    await waitFor(page, 'quest-column', 'bw-19 quest screen')
+    await waitFor(page, 'quest-accept-button', 'bw-19 offer')
+    await tap(page, 'quest-accept-button')
+    await waitFor(page, 'quest-accepted-line', 'bw-19 accepted')
+    await tap(page, 'quest-leave-button') || fail('bw-19: the quest screen has no LEAVE')
+    await settleOnMap(page, 'bw-19')
+    log('play: bw-19 quest step accepted, back on the map')
 
     await travelTo(page, 'bw-3')
     await waitFor(page, 'hazard-route-select', 'bw-3 hazard')
