@@ -52,6 +52,7 @@ import CombatEncounterScreen from './combat-encounter/index';
 import HazardDeckScreen from './hazard-deck/index';
 import ItemRewardScreen from './item-reward/index';
 import RestScreen from './rest/index';
+import DeathReturnScreen from './death-return/index';
 import CacheScreen from './cache/index';
 import BlacksmithScreen from './blacksmith/index';
 import VillageScreen from './village/index';
@@ -347,6 +348,11 @@ function RootLayout() {
               name="item-reward/index"
               component={ItemRewardScreen}
               options={{ headerShown: false, presentation: 'fullScreenModal' }}
+            />
+            <Stack.Screen
+              name="death-return/index"
+              component={DeathReturnScreen}
+              options={{ headerShown: false, presentation: 'fullScreenModal', gestureEnabled: false }}
             />
             <Stack.Screen
               name="rest/index"

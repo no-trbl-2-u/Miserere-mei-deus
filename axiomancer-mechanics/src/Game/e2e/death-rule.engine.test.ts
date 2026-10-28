@@ -13,13 +13,13 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 
 import { createGameStore } from '../store';
-import { createNewGameState, gameReducer } from '../game.reducer';
+import { createNewGameState, GAME_STATE_VERSION, gameReducer } from '../game.reducer';
 import { resolveDeath, clearDying } from '../death';
 import type { GameState } from '../types';
 import type { PersistenceAdapter } from '../persistence/types';
 import { createStartingWorld } from '../../World';
 import {
-    frontierNodes, legalMovesFrom, moveToNode, placeOnNode, unlockAdjacent,
+    arriveAtNode, frontierNodes, legalMovesFrom, moveToNode, placeOnNode, unlockAdjacent,
 } from '../../World/world.reducer';
 import { resolveMapEvent } from '../../World/MapEvents/resolve-map-event';
 import type { WorldState } from '../../World/types';
@@ -372,5 +372,36 @@ describe('A1 - which verbs write arrivedFrom', () => {
         });
         expect(crossed.world.currentMap.name).toBe('charcoal-wood');
         expect(crossed.world.currentMap.arrivedFrom ?? null).toBeNull();
+    });
+});
+
+describe('DY1b - the reducer stamps a run over, and arrival keeps what it walked', () => {
+    it('PLAYER_DIED on a dying player stamps the current save version; a revive keeps the state version', () => {
+        const base = { ...createNewGameState(), world: moveToNode(createStartingWorld('breakwater'), 'bw-2') };
+        const stale = 1 as GameState['version'];
+
+        const over = gameReducer(
+            { ...base, version: stale, dying: true },
+            { type: 'PLAYER_DIED', payload: { cause: 'fight' } },
+        );
+        expect(over.version).toBe(GAME_STATE_VERSION);
+        expect(over.dying).toBeUndefined();
+
+        const revived = gameReducer(
+            { ...base, version: stale },
+            { type: 'PLAYER_DIED', payload: { cause: 'fight' } },
+        );
+        expect(revived.dying).toBe(true);
+        expect(revived.version).toBe(stale);
+    });
+
+    it('arriving at the node already under the player keeps the arrivedFrom it had, or none', () => {
+        const map = moveToNode(createStartingWorld('breakwater'), 'bw-2').currentMap;
+        expect(arriveAtNode(map, 'bw-2').arrivedFrom).toBe('bw-1');
+
+        const bare = { ...map };
+        delete (bare as { arrivedFrom?: unknown }).arrivedFrom;
+        expect(arriveAtNode(bare, 'bw-2').arrivedFrom).toBeNull();
+        expect(arriveAtNode(bare, 'bw-7').arrivedFrom).toBe('bw-2');
     });
 });

@@ -69,11 +69,21 @@
 			"color": "4"
 		},
 		{
+			"id": "route:death-return",
+			"type": "file",
+			"file": "Features/Death Return.md",
+			"x": 640,
+			"y": 170,
+			"width": 260,
+			"height": 90,
+			"color": "1"
+		},
+		{
 			"id": "route:dialogue",
 			"type": "file",
 			"file": "Features/Dialogue.md",
-			"x": 640,
-			"y": 170,
+			"x": 40,
+			"y": 300,
 			"width": 260,
 			"height": 90,
 			"color": "4"
@@ -82,7 +92,7 @@
 			"id": "route:event",
 			"type": "file",
 			"file": "Features/Event.md",
-			"x": 40,
+			"x": 340,
 			"y": 300,
 			"width": 260,
 			"height": 90,
@@ -92,7 +102,7 @@
 			"id": "route:index",
 			"type": "file",
 			"file": "Features/Index.md",
-			"x": 340,
+			"x": 640,
 			"y": 300,
 			"width": 260,
 			"height": 90,
@@ -102,8 +112,8 @@
 			"id": "route:item-reward",
 			"type": "file",
 			"file": "Features/Reward.md",
-			"x": 640,
-			"y": 300,
+			"x": 40,
+			"y": 430,
 			"width": 260,
 			"height": 90,
 			"color": "4"
@@ -112,7 +122,7 @@
 			"id": "route:rest",
 			"type": "file",
 			"file": "Features/Rest.md",
-			"x": 40,
+			"x": 340,
 			"y": 430,
 			"width": 260,
 			"height": 90,
@@ -122,7 +132,7 @@
 			"id": "route:saves",
 			"type": "file",
 			"file": "Features/Saves.md",
-			"x": 340,
+			"x": 640,
 			"y": 430,
 			"width": 260,
 			"height": 90,
@@ -132,8 +142,8 @@
 			"id": "route:settings",
 			"type": "file",
 			"file": "Features/Settings.md",
-			"x": 640,
-			"y": 430,
+			"x": 40,
+			"y": 560,
 			"width": 260,
 			"height": 90,
 			"color": "1"
@@ -142,7 +152,7 @@
 			"id": "route:village",
 			"type": "file",
 			"file": "Features/Village.md",
-			"x": 40,
+			"x": 340,
 			"y": 560,
 			"width": 260,
 			"height": 90,
@@ -233,6 +243,18 @@
 		{
 			"id": "flow:route:combat-encounter->elsewhere:route:(tabs)/exploration",
 			"fromNode": "route:combat-encounter",
+			"toNode": "elsewhere:route:(tabs)/exploration",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:combat-encounter->route:death-return",
+			"fromNode": "route:combat-encounter",
+			"toNode": "route:death-return",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:death-return->elsewhere:route:(tabs)/exploration",
+			"fromNode": "route:death-return",
 			"toNode": "elsewhere:route:(tabs)/exploration",
 			"color": "5"
 		},
