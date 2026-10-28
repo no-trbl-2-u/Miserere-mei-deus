@@ -966,15 +966,6 @@
 
 ## Pending
 
-### [LOW] /cache — TAKE THE GOODS says only "whatever's inside", while TAKE A CARD prints the exact card, so the one irreversible choice weighs a known card against a blind box
-- pass: 108 (commit 850ce863)
-- viewport: both (375x812, 1280x800)
-- category: comprehension
-- observation: the intro warns "Pick one — there is no walking back out." The card offer shows its rolled card face (A Plain Word, RW1b); the goods offer shows "WHATEVER'S INSIDE, PLUS WHAT IT'S WORTH." and nothing else, though the session already holds the rolled items and the shilling sum (`itemCandidates`, `currencyCandidate`) before the player picks. A first-time player cannot tell whether the goods are a potion and 10 shillings or a relic and 60, so the choice is a guess. RW1b's brief left TAKE THE GOODS unchanged; it did not rule the goods must stay hidden.
-- evidence: `.critique-artifacts/mobile/12-cache.png`, `desktop/12-cache.png`; `axiomancer-mobile/state/presenters/cache.copy.ts:19`; `axiomancer-mechanics/src/World/LootCacheChoice/lootcachechoice.types.ts:40-43` (candidates rolled before the choice); `plan/phases/phase_RW1_reward_rule.md:78`.
-- suggested fix: print the rolled goods under the goods offer as chips, reusing the outcome's `cacheOutcomeItemChip` and `cacheOutcomeCurrencyChip` (e.g. "+ HEALING POTION · +10 SHILLINGS"), and add them to its accessibility label; presentation only. If the blind box is meant, the loop leaves the reveal alone and instead makes the copy say so ("sight unseen"), which is T's copy call.
-- source: critique:drive (unattended)
-
 ### [LOW] satchel / desktop — a lone item tile is a 390px-wide black well with a 28px glyph in the middle, so the Healing Potion reads as an empty box
 - pass: 108 (commit 850ce863)
 - viewport: desktop (1280x800); on a phone the tile is ~100px and reads fine
@@ -1305,6 +1296,16 @@
 - source: loop
 
 ## Done
+
+### [x] [LOW] /cache — TAKE THE GOODS says only "whatever's inside", while TAKE A CARD prints the exact card, so the one irreversible choice weighs a known card against a blind box — RESOLVED 2026-10-28 (branch loop/iterate-cache-goods-reveal, 1273ff68: the goods offer prints its rolled items and shillings as the outcome ledger's chips and names them in its accessibility label; loop-call, the reveal over "sight unseen" copy; pinned in `cache.engine.test.ts` and `cache-card-preview.screen.test.tsx`)
+- pass: 108 (commit 850ce863)
+- viewport: both (375x812, 1280x800)
+- category: comprehension
+- observation: the intro warns "Pick one — there is no walking back out." The card offer shows its rolled card face (A Plain Word, RW1b); the goods offer shows "WHATEVER'S INSIDE, PLUS WHAT IT'S WORTH." and nothing else, though the session already holds the rolled items and the shilling sum (`itemCandidates`, `currencyCandidate`) before the player picks. A first-time player cannot tell whether the goods are a potion and 10 shillings or a relic and 60, so the choice is a guess. RW1b's brief left TAKE THE GOODS unchanged; it did not rule the goods must stay hidden.
+- evidence: `.critique-artifacts/mobile/12-cache.png`, `desktop/12-cache.png`; `axiomancer-mobile/state/presenters/cache.copy.ts:19`; `axiomancer-mechanics/src/World/LootCacheChoice/lootcachechoice.types.ts:40-43` (candidates rolled before the choice); `plan/phases/phase_RW1_reward_rule.md:78`.
+- suggested fix: print the rolled goods under the goods offer as chips, reusing the outcome's `cacheOutcomeItemChip` and `cacheOutcomeCurrencyChip` (e.g. "+ HEALING POTION · +10 SHILLINGS"), and add them to its accessibility label; presentation only. If the blind box is meant, the loop leaves the reveal alone and instead makes the copy say so ("sight unseen"), which is T's copy call.
+- source: critique:drive (unattended)
+- issue: #1041
 
 ### [x] [MED] /cache / desktop — the choice column runs the full 1280 width, so both offers are 1250px bars with the card and its text crowded at the left edge — RESOLVED 2026-10-28 (branch loop/iterate-cache-column, db76f4dc7: the cache content sits in a column capped at `CACHE_COLUMN_MAX_WIDTH = 520` and centred, as rest and quest do; pinned in `rest-village-column.critique-71.test.tsx`)
 - pass: 108 (commit 850ce863)
