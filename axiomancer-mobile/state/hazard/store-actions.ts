@@ -37,6 +37,7 @@ import {
 import { appendAcquiredCard, HAZARD_CARD_FLAG_PREFIX, hazardDeckBag } from '@mechanics';
 import type { HazardRouteKey, HazardSessionState } from '@mechanics';
 import { resolveMinigameSeed, resolveMinigameString } from '../minigame-seeds';
+import { armDeathReturn } from '../death-return';
 import type { AppStore } from '../store';
 
 export interface MobileHazardSlice {
@@ -258,11 +259,37 @@ export interface ClaimHazardRewardsResult {
     /**
      * True when the crossing was fatal: the net VITAE swing
      * would have dropped the player to `health <= 0` (engine `isDefeated`
-     * threshold), so the run was reset via `resetRun({ keepCharacter })`
-     * and the crossing's spoils were forfeit. On a fatal claim every
-     * delta reads 0 — death yields no reward.
+     * threshold), so the death rule ran (`playerDied('hazard')`) and the
+     * crossing's spoils were forfeit. On a fatal claim every delta reads 0
+     * — death yields no reward.
      */
     died: boolean;
+    /**
+     * What the death rule answered on a fatal crossing: `'revived'` (a first
+     * death: back on the node walked from at 1 VITAE, dying, the hazard node
+     * open to cross again) or `'run-over'` (a death while dying: the run was
+     * reset). `null` when the crossing was survived.
+     */
+    outcome: 'revived' | 'run-over' | null;
+}
+
+/** The death verb a fatal crossing runs; the app's `actions.playerDied` is the real one. */
+export type HazardDeathVerb = (cause: 'hazard') => 'revived' | 'run-over';
+
+/**
+ * The death verb every claim path shares: runs the app's `playerDied` and
+ * arms the return moment on a revive. It arms here, before the claim clears
+ * the session, so the hazard screen (which watches the session) routes to
+ * `/death-return` instead of popping.
+ */
+export function armingHazardDeath(
+    playerDied: (cause: 'hazard') => 'revived' | 'run-over',
+): HazardDeathVerb {
+    return (cause) => {
+        const outcome = playerDied(cause);
+        if (outcome === 'revived') armDeathReturn();
+        return outcome;
+    };
 }
 
 const NOOP_CLAIM: ClaimHazardRewardsResult = Object.freeze({
@@ -273,6 +300,7 @@ const NOOP_CLAIM: ClaimHazardRewardsResult = Object.freeze({
     cardAdded: null,
     crackAdded: false,
     died: false,
+    outcome: null,
 });
 
 /**
@@ -286,10 +314,16 @@ const NOOP_CLAIM: ClaimHazardRewardsResult = Object.freeze({
  *  penalty     — route penaltyVitae × lost rounds.
  *  card pick   — appended to the persistent deck flags.
  *
- * VITAE never drops below 1 here: hazards maim, they do not kill
- * (documented divergence — the engine has no out-of-combat death).
+ * A survivable crossing floors VITAE at 1. A crossing whose net swing
+ * reaches `health <= 0` is a death and runs the death rule through `die`
+ * (the app passes `actions.playerDied`, which also posts the play log's
+ * `run-end` on a run over).
  */
-export function claimHazardRewardsAction(store: AppStore, cardId: string | null): ClaimHazardRewardsResult {
+export function claimHazardRewardsAction(
+    store: AppStore,
+    cardId: string | null,
+    die: HazardDeathVerb,
+): ClaimHazardRewardsResult {
     const s = store.getState().hazard?.session;
     if (!s || !s.outcome) return NOOP_CLAIM;
     const done = engineClaimRewards(s, cardId);
@@ -328,23 +362,20 @@ export function claimHazardRewardsAction(store: AppStore, cardId: string | null)
 
     // Out-of-combat death. The nominal post-crossing VITAE
     // (before the floor-1 clamp below) decides lethality by the engine's
-    // own `isDefeated` threshold (`health <= 0`) — the SAME predicate the
-    // combat death path uses. A crossing the player cannot afford routes
-    // through the engine death/respawn primitive (`resetRun`, mirroring
-    // combat's BEGIN AGAIN) instead of silently maiming to 1. Spoils are
+    // own `isDefeated` threshold (`health <= 0`) -- the SAME predicate the
+    // combat death path uses. A fatal crossing runs the death rule: a first
+    // death revives the player on the node walked from (1 VITAE, dying, the
+    // hazard node unspent), a death while dying resets the run. Spoils are
     // forfeit on the killing crossing: we never reach the spoils-apply
     // `setState` below.
     const nominalHealth = player.health + vitaeDelta;
     if (engineIsDefeated({ ...player, health: nominalHealth })) {
-        const deathStore = store.getState() as unknown as {
-            resetRun?: (o: { keepCharacter: boolean }) => unknown;
-        };
-        // Stamp the tombstone onto the PRE-reset flags so it survives the
-        // run reset (resetRun keeps the character but may rebuild run
-        // flags); re-read post-reset flags and append.
-        deathStore.resetRun?.({ keepCharacter: true });
-        const afterReset = store.getState() as unknown as GameState;
-        const tombstoned = [...(afterReset.flags ?? []), `${HAZARD_DEATH_FLAG_PREFIX}${Date.now()}`];
+        const outcomeKind = die('hazard');
+        // Stamp the tombstone onto the post-death flags (a run over rebuilds
+        // run flags, so it is appended after the death rule ran). `dying` is
+        // never written here: the death rule owns it.
+        const afterDeath = store.getState() as unknown as GameState;
+        const tombstoned = [...(afterDeath.flags ?? []), `${HAZARD_DEATH_FLAG_PREFIX}${Date.now()}`];
         store.setState({ flags: tombstoned, hazard: { session: null } } as never);
         try {
             store.getState().save();
@@ -359,6 +390,7 @@ export function claimHazardRewardsAction(store: AppStore, cardId: string | null)
             cardAdded: null,
             crackAdded: false,
             died: true,
+            outcome: outcomeKind,
         };
     }
 
@@ -398,6 +430,7 @@ export function claimHazardRewardsAction(store: AppStore, cardId: string | null)
         cardAdded: done.pickedRewardCardId,
         crackAdded,
         died: false,
+        outcome: null,
     };
 }
 

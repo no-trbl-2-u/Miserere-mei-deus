@@ -21,6 +21,7 @@ dev route in Dev routes, from `axiomancer-mobile/app/dev/index.tsx`.
 
 - [[Features/The map|The map]]
 - [[Features/Character Select|Character Select]]
+- [[Features/Death Return|Death Return]]
 - [[Features/Devaftermath|Devaftermath]]
 - [[Features/Devart|Devart]]
 - [[Features/Devart Rooms|Devart Rooms]]

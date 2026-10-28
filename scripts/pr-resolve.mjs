@@ -17,6 +17,11 @@
 //   node scripts/pr-resolve.mjs finish --branch <b>
 //       Post-run: fail if any listed file still has a marker; else stage,
 //       commit the merge and push <b>.
+//   node scripts/pr-resolve.mjs update --branch <b>
+//       The update the merge job's tree check makes (phase MD1c): `mergeMain`
+//       plus the push, run in a throwaway worktree with this checkout's scripts
+//       as the drivers (never the branch's), for a PR whose merged tree is red. Exit 3 (nothing pushed) when the
+//       branch was already current or the merge conflicted.
 //
 // After a merge it commits (or, for `finish`, is about to commit), it re-derives
 // the Status cell of every deadline Item (`rederiveStatus`: `deadlines.mjs
@@ -241,11 +246,26 @@ export const MERGE_DRIVERS = [
   { key: 'deadlines', name: 'plan/deadlines.md, insertions unioned and rows by cell', driver: 'node scripts/deadlines-merge.mjs %O %A %B %P' },
 ]
 
-/** Register MERGE_DRIVERS in the repo at `cwd` (idempotent). @param {string} [cwd] */
-export function registerMergeDrivers(cwd = ROOT) {
+/**
+ * The driver command with its script path made absolute under `scriptsRoot`
+ * (a checkout of main), so a merge in another worktree runs main's driver and
+ * never the branch's copy.
+ * @param {string} driver a MERGE_DRIVERS command  @param {string} scriptsRoot
+ * @returns {string}
+ */
+export function driverCommand(driver, scriptsRoot) {
+  return driver.replace(/^node (scripts\/\S+)/, (_, rel) => `node "${path.join(scriptsRoot, rel)}"`)
+}
+
+/**
+ * Register MERGE_DRIVERS in the repo at `cwd` (idempotent). With `scriptsRoot`
+ * the commands point at that checkout's scripts by absolute path.
+ * @param {string} [cwd]  @param {string | null} [scriptsRoot]
+ */
+export function registerMergeDrivers(cwd = ROOT, scriptsRoot = null) {
   for (const d of MERGE_DRIVERS) {
     execFileSync('git', ['config', `merge.${d.key}.name`, d.name], { cwd })
-    execFileSync('git', ['config', `merge.${d.key}.driver`, d.driver], { cwd })
+    execFileSync('git', ['config', `merge.${d.key}.driver`, scriptsRoot ? driverCommand(d.driver, scriptsRoot) : d.driver], { cwd })
   }
 }
 
@@ -256,11 +276,29 @@ export function registerMergeDrivers(cwd = ROOT) {
  * `deadlines.mjs --write` also rewrites LIVE_DEADLINES.md, which the daily
  * workflow owns; that file goes back to the merged tree's copy. A changed
  * plan/deadlines.md is staged.
- * @param {string} [cwd] repository directory
+ * @param {string} [cwd] repository directory  @param {string | null} [scriptsRoot] a checkout of main to run the script from instead of `cwd`'s own
  * @returns {boolean} true when plan/deadlines.md changed
  */
-export function rederiveStatus(cwd = ROOT) {
-  if (!fs.existsSync(path.join(cwd, 'scripts', 'deadlines.mjs')) || !fs.existsSync(path.join(cwd, 'plan', 'deadlines.md'))) return false
+export function rederiveStatus(cwd = ROOT, scriptsRoot = null) {
+  if (!fs.existsSync(path.join(cwd, 'plan', 'deadlines.md'))) return false
+  if (scriptsRoot) {
+    // main's deadlines.mjs on a scratch copy of the worktree's plan/: it finds its files from its own
+    // location, and the branch's copy of the script must never run.
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'pr-rederive-'))
+    try {
+      fs.cpSync(path.join(scriptsRoot, 'scripts'), path.join(tmp, 'scripts'), { recursive: true })
+      fs.cpSync(path.join(cwd, 'plan'), path.join(tmp, 'plan'), { recursive: true })
+      execFileSync(process.execPath, ['scripts/deadlines.mjs', '--write'], { cwd: tmp, stdio: 'pipe' })
+      const next = fs.readFileSync(path.join(tmp, 'plan', 'deadlines.md'), 'utf8')
+      if (next === fs.readFileSync(path.join(cwd, 'plan', 'deadlines.md'), 'utf8')) return false
+      fs.writeFileSync(path.join(cwd, 'plan', 'deadlines.md'), next)
+      git(['add', '--', 'plan/deadlines.md'], { cwd })
+      return true
+    } finally {
+      fs.rmSync(tmp, { recursive: true, force: true })
+    }
+  }
+  if (!fs.existsSync(path.join(cwd, 'scripts', 'deadlines.mjs'))) return false
   execFileSync(process.execPath, ['scripts/deadlines.mjs', '--write'], { cwd, stdio: 'pipe' })
   const tracked = git(['ls-files', '--', 'LIVE_DEADLINES.md'], { cwd }).trim() !== ''
   if (tracked) git(['checkout', '--', 'LIVE_DEADLINES.md'], { cwd })
@@ -275,10 +313,11 @@ export function rederiveStatus(cwd = ROOT) {
  * files; re-derive the deadline Status cells. A clean merge is already
  * committed here, so a Status change amends that merge commit.
  * @param {string} branch  @param {string} [cwd] repository directory (default the repo root)
+ * @param {string | null} [scriptsRoot] a checkout of main whose scripts run the drivers and the Status re-derive, by absolute path; `cwd` then only sees plain git
  * @returns {{ merged: boolean, rest: string[] }}
  */
-export function mergeMain(branch, cwd = ROOT) {
-  registerMergeDrivers(cwd)
+export function mergeMain(branch, cwd = ROOT, scriptsRoot = null) {
+  registerMergeDrivers(cwd, scriptsRoot)
   git(['fetch', 'origin', 'main', branch], { cwd })
   git(['switch', '-C', branch, `origin/${branch}`], { cwd })
   let clean = true
@@ -288,7 +327,7 @@ export function mergeMain(branch, cwd = ROOT) {
     clean = false // conflicts: fall through
   }
   if (clean) {
-    if (rederiveStatus(cwd)) {
+    if (rederiveStatus(cwd, scriptsRoot)) {
       const parents = git(['rev-list', '--parents', '-n', '1', 'HEAD'], { cwd }).trim().split(' ').length - 1
       if (parents > 1) git(['commit', '--amend', '--no-edit'], { cwd })
       else git(['commit', '-m', 'plan: re-derive deadline Status after merging main'], { cwd })
@@ -309,8 +348,62 @@ export function mergeMain(branch, cwd = ROOT) {
     fs.writeFileSync(path.join(cwd, file), merged)
     git(['add', '--', file], { cwd })
   }
-  if (rest.length === 0) rederiveStatus(cwd) // the merge commit is still to come
+  if (rest.length === 0) rederiveStatus(cwd, scriptsRoot) // the merge commit is still to come
   return { merged: false, rest }
+}
+
+/**
+ * Bring `branch` up to date with origin/main (the merge drivers registered,
+ * union files settled, Status re-derived) and push it (phase MD1c). Pass a
+ * `scriptsRoot` and a `cwd` that is not it, or the branch's own scripts run as
+ * the drivers; `updateBranchIsolated` does that. Never a
+ * force, never `main`; a conflict the drivers and the union cannot settle is
+ * aborted and the branch is left as it was.
+ * @param {string} branch  @param {string} [cwd] repository directory
+ * @param {(head: string) => void} [beforePush] called with the new head just before the push, so a marker can name it first
+ * @param {string | null} [scriptsRoot] a checkout of main to run drivers and scripts from (see mergeMain)
+ * @returns {{ state: 'updated' | 'current' | 'conflict', head?: string, rest?: string[] }}
+ */
+export function updateBranch(branch, cwd = ROOT, beforePush, scriptsRoot = null) {
+  if (!branch || branch === 'main') throw new Error('updateBranch: a PR branch is required, never main')
+  const { merged, rest } = mergeMain(branch, cwd, scriptsRoot)
+  if (!merged) {
+    if (rest.length > 0) {
+      git(['merge', '--abort'], { cwd })
+      return { state: 'conflict', rest }
+    }
+    git(['commit', '--no-edit'], { cwd })
+  }
+  const head = git(['rev-parse', 'HEAD'], { cwd }).trim()
+  if (head === git(['rev-parse', `origin/${branch}`], { cwd }).trim()) return { state: 'current', head }
+  beforePush?.(head)
+  git(['push', 'origin', `HEAD:${branch}`], { cwd })
+  return { state: 'updated', head }
+}
+
+/**
+ * `updateBranch` in a throwaway detached worktree of `root`, with `root`'s
+ * scripts as the merge drivers and the Status re-derive. `root` is a checkout
+ * of main that is never switched, so the PR branch's own copies of those
+ * scripts never run. The real call sites are the merge job's in-process
+ * `treeCheck` (scripts/pr-merge.mjs) and the `update` mode below.
+ * @param {string} branch  @param {(head: string) => void} [beforePush]
+ * @param {string} [root] the checkout of main whose scripts run
+ * @returns {{ state: 'updated' | 'current' | 'conflict', head?: string, rest?: string[] }}
+ */
+export function updateBranchIsolated(branch, beforePush, root = ROOT) {
+  const wt = fs.mkdtempSync(path.join(os.tmpdir(), 'pr-update-wt-'))
+  try {
+    git(['worktree', 'add', '-q', '--detach', wt, 'origin/main'], { cwd: root })
+    return updateBranch(branch, wt, beforePush, root)
+  } finally {
+    fs.rmSync(wt, { recursive: true, force: true })
+    try {
+      git(['worktree', 'prune'], { cwd: root })
+    } catch {
+      // a throwaway runner
+    }
+  }
 }
 
 function commitAndPush(branch) {
@@ -379,7 +472,13 @@ function main() {
     else git(['push', 'origin', `HEAD:${branch}`])
     return
   }
-  console.error('usage: pr-resolve.mjs scan | prepare --branch <b> | finish --branch <b>')
+  if (mode === 'update') {
+    const r = updateBranchIsolated(branch)
+    console.log(r.state === 'conflict' ? `conflict: ${r.rest.join(', ')}` : `${r.state} ${r.head}`)
+    if (r.state !== 'updated') process.exit(3)
+    return
+  }
+  console.error('usage: pr-resolve.mjs scan | prepare --branch <b> | finish --branch <b> | update --branch <b>')
   process.exit(2)
 }
 
