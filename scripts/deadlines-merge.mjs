@@ -26,7 +26,8 @@
 //     passes no lint on its own line, so the driver is the only thing to catch it.
 //
 // Status cells are not re-derived here (the build plan may not be merged yet);
-// pr-resolve runs `node scripts/deadlines.mjs --write` after the merge.
+// they are left for `node scripts/deadlines.mjs --write` to re-derive after the
+// merge. Having pr-resolve run it is not built yet (phase MD1b).
 //
 // Exit codes: 0 merged cleanly; 1 conflicts left in <ours> for a human.
 
