@@ -975,15 +975,6 @@
 - suggested fix: cap the item tile's width (a `maxWidth` near the phone width, ~140) so the grid packs more tiles per row on a wide window instead of stretching each one; presentation only, pinned in the ItemCard test.
 - source: critique:drive (unattended)
 
-### [LOW] combat preview — WITHDRAW's "forfeit the path" line prints at 8.5px in `AXM.ash`, about 1.95:1 against the page
-- pass: 101 (commit 83975010)
-- viewport: mobile (375x812) and desktop (1280x800)
-- category: a11y
-- observation: on the Float-Eye preview the WITHDRAW button's sub-line "FORFEIT THE PATH" is the only text that says what withdrawing costs, and it is the faintest text on the screen: barely legible in both captures. `withdrawSub` sets `fontSize: 8.5` and `color: AXM.ash` (`#46403a` in Ashen Gold), which measures 1.95:1 against the `#0b0a09` page (WCAG asks 4.5:1 for small text). The WITHDRAW label above it uses `AXM.bone`.
-- evidence: `.critique-artifacts/mobile/03-combat.png` and `desktop/03-combat.png` (below ENTER COMBAT); `axiomancer-mobile/components/combat/encounter/CombatEncounterPanel.tsx:811` and `:1375` `withdrawSub`.
-- suggested fix: draw the sub-line in `AXM.bone` at a size of at least 10, keeping it dimmer than WITHDRAW by opacity or weight, not by the ash token; presentation only, pinned in the panel's existing test.
-- source: critique:drive (unattended)
-
 ### [MED] combat / mobile — at 375 wide the hand fan cuts four of five card names to "A PLAIN" plus one letter, so Blow, Word and Ward look the same
 - pass: 100 (commit ee9c5b83)
 - viewport: mobile (375x812)
@@ -1296,6 +1287,16 @@
 - source: loop
 
 ## Done
+
+### [x] [LOW] combat preview — WITHDRAW's "forfeit the path" line prints at 8.5px in `AXM.ash`, about 1.95:1 against the page — RESOLVED 2026-10-28 (branch loop/iterate-withdraw-sub-contrast, d420c2e30: `withdrawSub` draws in `AXM.bone` at 10px under the 12px WITHDRAW label; pinned in CombatEncounterPanel.withdraw-sub.test.ts)
+- pass: 101 (commit 83975010)
+- viewport: mobile (375x812) and desktop (1280x800)
+- category: a11y
+- observation: on the Float-Eye preview the WITHDRAW button's sub-line "FORFEIT THE PATH" is the only text that says what withdrawing costs, and it is the faintest text on the screen: barely legible in both captures. `withdrawSub` sets `fontSize: 8.5` and `color: AXM.ash` (`#46403a` in Ashen Gold), which measures 1.95:1 against the `#0b0a09` page (WCAG asks 4.5:1 for small text). The WITHDRAW label above it uses `AXM.bone`.
+- evidence: `.critique-artifacts/mobile/03-combat.png` and `desktop/03-combat.png` (below ENTER COMBAT); `axiomancer-mobile/components/combat/encounter/CombatEncounterPanel.tsx:811` and `:1375` `withdrawSub`.
+- suggested fix: draw the sub-line in `AXM.bone` at a size of at least 10, keeping it dimmer than WITHDRAW by opacity or weight, not by the ash token; presentation only, pinned in the panel's existing test.
+- source: critique:drive (unattended)
+- issue: #1038
 
 ### [x] [LOW] /cache — TAKE THE GOODS says only "whatever's inside", while TAKE A CARD prints the exact card, so the one irreversible choice weighs a known card against a blind box — RESOLVED 2026-10-28 (branch loop/iterate-cache-goods-reveal, 1273ff68: the goods offer prints its rolled items and shillings as the outcome ledger's chips and names them in its accessibility label; loop-call, the reveal over "sight unseen" copy; pinned in `cache.engine.test.ts` and `cache-card-preview.screen.test.tsx`)
 - pass: 108 (commit 850ce863)

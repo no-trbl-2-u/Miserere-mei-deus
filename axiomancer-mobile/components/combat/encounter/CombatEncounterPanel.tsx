@@ -1445,7 +1445,9 @@ const useStyles = makeStyles((AXM) => ({
     // symmetric other half of a fight-or-flight binary.
     withdrawBtn: { borderWidth: 1, borderColor: AXM.ash, paddingHorizontal: 20, paddingVertical: 8, marginTop: 12, alignItems: 'center' },
     withdrawBtnText: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 2 },
-    withdrawSub: { fontFamily: FONTS.sans, fontSize: 8.5, letterSpacing: 0.8, color: AXM.ash, marginTop: 3 },
+    // The only line that says what withdrawing costs: readable bone (AA on
+    // every theme's bg), kept under WITHDRAW by size alone. Never `ash`.
+    withdrawSub: { fontFamily: FONTS.sans, fontSize: 10, letterSpacing: 0.8, color: AXM.bone, marginTop: 3 },
 
     ghost: { position: 'absolute', top: 0, left: 0, zIndex: 999 },
     // ✕ badge riding the die ghost while it hovers an illegal target.
