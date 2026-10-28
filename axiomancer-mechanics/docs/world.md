@@ -271,13 +271,16 @@ it today (it's a noted follow-up — track in `plan/AUDIT.md`).
 | `emptyQuestLog()` | `{ available: [], active: [], completed: [] }` seed. |
 | `discoverQuest(log, quest)` | Adds to `available` if not present. |
 | `startQuest(log, quest)` | Moves quest from `available` into `active`. Idempotent. |
-| `progressQuest(log, name, objectiveId, amount?)` | Advances one objective; auto-completes the quest when every objective is filled. |
+| `progressQuest(log, name, objectiveId, amount?)` | Advances one objective; auto-completes the quest when every objective is filled, unless the quest is `holdForTurnIn` (it then stays active, "ready", unpaid until turned in). |
 | `completeQuest(log, name)` | Explicit completion. |
 | `isQuestComplete(quest)` | True when every objective is at `requiredCount`. |
 | `reachableObjectives(log, nodeId)` | Active `reach`-objectives that fire on this node. |
-| `killObjectives(log, enemyName)` | Active `kill`-objectives matching this enemy's name. |
+| `killObjectives(log, enemy, mapName)` | Active `kill`-objectives on `mapName` that count this foe: by display `target`, or with no target by `foeClass` (`'any'`, `'elite'` via `isEliteEnemy`, `'boss'` by difficulty). |
+| `advanceHazardObjectives(log, mapName)` | Counts one resolved hazard node toward active `hazard`-objectives on `mapName`. |
+| `payQuestReward(player, quest, rng?)` | Pays `reward` then `rewards` in order; a `card-pick` reward rolls offers onto `PaidQuestReward.cardOffers` without adding a card. |
 
-Objective types: `'kill' | 'collect' | 'reach' | 'talk' | 'flag'`.
+Objective types: `'kill' | 'collect' | 'reach' | 'talk' | 'flag' | 'hazard'`.
+Kill and hazard objectives count only on the quest's own `mapName`.
 
 The store's `endCombat` auto-advances `kill` objectives — defeating an
 enemy whose `name` matches an active objective's `target` ticks the counter

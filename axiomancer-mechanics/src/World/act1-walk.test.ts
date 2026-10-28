@@ -56,6 +56,11 @@ describe('planAct1Walk', () => {
         });
     }
 
+    it('lists the quest kind among the thirteen the audit table covers', () => {
+        expect(ACT1_WALK_EVENT_KINDS).toHaveLength(13);
+        expect(ACT1_WALK_EVENT_KINDS).toContain('quest');
+    });
+
     it('carries a subset of the thirteen kinds, and the walk meets every one it carries', () => {
         for (const kind of plan.carried) expect(ACT1_WALK_EVENT_KINDS).toContain(kind);
         const met = new Set(plan.regions.flatMap(r => r.steps.map(s => s.kind)));

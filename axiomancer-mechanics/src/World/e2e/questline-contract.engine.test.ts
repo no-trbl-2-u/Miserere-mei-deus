@@ -220,6 +220,19 @@ describe('A3: kills by foe class and hazards, on the quest map only', () => {
         expect(again.state.quests.active[0]!.objectives[0]!.currentCount).toBe(1);
     });
 
+    it('a card-pick paid through resolveMapEvent draws from the passed rng, not the global one', () => {
+        const q = quest([{ type: 'hazard' }], { rewards: [{ kind: 'card-pick', count: 3 }] });
+        const draws = (): number => {
+            const rng = seededRng(77);
+            let calls = 0;
+            resolveMapEvent(stateWith(q, 'bw-3'), () => { calls += 1; return rng(); });
+            return calls;
+        };
+        // The pool roll takes one draw; the card pick takes more from the same rng.
+        expect(draws()).toBeGreaterThan(1);
+        expect(draws()).toBe(draws());
+    });
+
     it('a hazard on another map counts nothing', () => {
         const q = quest([{ type: 'hazard', requiredCount: 2 }], { mapName: 'charcoal-wood' });
         const log = startQuest(emptyQuestLog(), q);

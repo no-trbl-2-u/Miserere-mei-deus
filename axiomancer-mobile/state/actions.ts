@@ -1514,6 +1514,18 @@ function resolveCurrentMapEventInner(store: AppStore, sourceNodeType?: string, s
             return true;
         }
 
+        // A quest node has no card: it routes to its own screen (QL1c
+        // replaces this branch with that route). Until then the player stays
+        // on the map with no pending event, and the node stays unspent (the
+        // engine does not consume it and the exclusion above keeps it so).
+        if (result.event.kind === 'quest') {
+            store.setState({
+                ...resolvedState,
+                event: EMPTY_EVENT_SLICE,
+            });
+            return true;
+        }
+
         // Spread the advanced state onto the store. `event` is mobile-only
         // and survives because `result.state` does not include it.
         // If the resolved event is an interaction, seed the dialogue cursor at

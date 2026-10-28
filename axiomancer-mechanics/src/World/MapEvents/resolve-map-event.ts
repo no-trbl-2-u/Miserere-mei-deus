@@ -59,9 +59,9 @@ function advanceReachObjectives(quests: QuestLog, nodeId: NodeId): QuestLog {
  * completed (`payCompletedQuests`, the one reward door). Same reference back
  * when the log did not change.
  */
-function withQuestLog(state: GameState, quests: QuestLog): GameState {
+function withQuestLog(state: GameState, quests: QuestLog, rng: () => number): GameState {
     if (quests === state.quests) return state;
-    const pay = payCompletedQuests(state.player, state.quests, quests);
+    const pay = payCompletedQuests(state.player, state.quests, quests, rng);
     return { ...state, player: pay.player, quests };
 }
 
@@ -301,7 +301,7 @@ export function resolveMapEvent(
     // pool roll. Pure no-op for non-reach quests or fully-completed reaches.
     // A reach that completes a quest pays its reward here.
     const questsAfterReach = advanceReachObjectives(answered.quests, nodeId);
-    const stateAfterReach: GameState = withQuestLog(answered, questsAfterReach);
+    const stateAfterReach: GameState = withQuestLog(answered, questsAfterReach, rng);
 
     // The two early branches below (no pool, no entry) rebuild the map from
     // `answeredMap`, never from the pre-answer `map` — rebuilding from `map`
@@ -341,7 +341,7 @@ export function resolveMapEvent(
     // against the unanswered state, and return before step 5. Only the
     // reveal runs, so the map can draw what lies past the fight.
     if (entry.payload.kind === 'encounter') {
-        const reachedOwed: GameState = withQuestLog(state, questsAfterReach);
+        const reachedOwed: GameState = withQuestLog(state, questsAfterReach, rng);
         const fight = applyPayload(reachedOwed, entry.payload, rng);
         const revealed = revealAdjacent(fight.state.world.currentMap, nodeId);
         return {
@@ -362,11 +362,13 @@ export function resolveMapEvent(
         ? withQuestLog(
             result.state,
             advanceCollectObjectives(result.state.quests, result.event.items.map(i => i.id)),
+            rng,
         )
         : result.event.kind === 'hazard'
             ? withQuestLog(
                 result.state,
                 advanceHazardObjectives(result.state.quests, result.state.world.currentMap.name).log,
+                rng,
             )
             : result.state;
 
