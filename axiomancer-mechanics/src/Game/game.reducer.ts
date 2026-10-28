@@ -324,10 +324,13 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
                     experience: nextPlayer.experience + grantedXp,
                     inventory: nextInventory,
                 };
-                // Advance any active `kill` objectives whose target matches,
-                // and pay the quests they complete (the one reward door).
+                // Advance any active `kill` objectives whose target matches
+                // on the current map, and pay the quests they complete (the
+                // one reward door). Map-scoped because a kill objective's
+                // target is the enemy's display name, shared by every Act 1
+                // region's door fight.
                 for (const enemy of encounter.enemies) {
-                    const kill = settleKill(nextPlayer, nextQuests, enemy.name);
+                    const kill = settleKill(nextPlayer, nextQuests, enemy.name, state.world.currentMap.name);
                     nextPlayer = kill.player;
                     nextQuests = kill.quests;
                 }
