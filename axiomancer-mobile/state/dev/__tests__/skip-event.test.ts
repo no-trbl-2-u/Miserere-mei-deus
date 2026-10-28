@@ -11,6 +11,7 @@
  *   - loot-cache → the ITEM offer claimed, session cleared.
  *   - blacksmith → left unchanged, session cleared, wallet untouched.
  *   - cutscene / village (paced) → dismissed, slice cleared.
+ *   - quest screen open → dismissed as LEAVE does.
  *   - nothing active, nothing owed → `nothing-to-skip`, no seq bump.
  *   - owed arrival (fixture with a rest node) → fired then resolved.
  *   - every skip writes an `action/dev-skip-event` log line.
@@ -198,6 +199,20 @@ describe('skipCurrentEvent — paced events and idle', () => {
         const result = skipCurrentEvent(store, actions, DEV);
         expect(result).toMatchObject({ kind: 'village', outcome: 'dismissed', detail: { villageName: 'Saltmarsh Wend' } });
         expect(store.getState().event.pending).toBeNull();
+    });
+
+    it('dismisses an open quest screen as LEAVE does: nothing accepted, the node unspent', () => {
+        const { store, actions } = freshHandle();
+        const before = (store.getState() as unknown as GameState).quests;
+        store.setState({
+            quest: { open: { questline: 'fixture-line', node: 1 }, paid: null, cardOffers: [] },
+        });
+
+        const result = skipCurrentEvent(store, actions, DEV);
+
+        expect(result).toMatchObject({ kind: 'quest', outcome: 'dismissed', detail: { questline: 'fixture-line', node: 1 } });
+        expect(store.getState().quest.open).toBeNull();
+        expect((store.getState() as unknown as GameState).quests).toBe(before);
     });
 
     it('reports nothing-to-skip when idle with no arrival owed, without bumping the seq', () => {

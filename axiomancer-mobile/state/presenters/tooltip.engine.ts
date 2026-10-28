@@ -161,6 +161,11 @@ const MAP_NODE_CONTENT: Record<string, TooltipContent> = {
     },
     quest: {
         title: 'QUEST',
+        body: 'someone here has work for you. take it, turn it in at the next marker, and take the pay. leave and come back; nothing is spent until you accept.',
+        footnote: 'opens the quest screen',
+    },
+    story: {
+        title: 'STORY',
         body: 'a thread of story to be picked up — a dialogue, a marker, sometimes both. consequences carry forward.',
         footnote: 'opens dialogue',
     },

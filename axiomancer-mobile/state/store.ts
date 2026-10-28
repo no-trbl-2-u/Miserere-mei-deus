@@ -94,6 +94,34 @@ export interface MobileRestSlice {
 }
 
 /**
+ * What a turned-in questline step paid, for the quest screen's ledger. Built
+ * from the engine's `PaidQuestReward` (the one reward door), never recomputed
+ * by the presenter.
+ */
+export interface MobileQuestPaid {
+    /** The step that was turned in (1-based). */
+    step: number;
+    questName: string;
+    experience: number;
+    currency: number;
+    /** Display names of the items the step put in the satchel. */
+    itemNames: readonly string[];
+}
+
+/**
+ * Mobile-only quest-screen slice. `open` names the quest node the screen is
+ * showing (the screen re-resolves its stage from the live quest log, so ACCEPT
+ * and TURN IN need no copy of engine state here); `paid` is the ledger of the
+ * last turn-in; `cardOffers` are the card ids a `card-pick` reward rolled,
+ * shown on the spoils tiles until taken or skipped. `null` outside a quest node.
+ */
+export interface MobileQuestSlice {
+    open: { questline: string; node: number; description?: string } | null;
+    paid: MobileQuestPaid | null;
+    cardOffers: readonly string[];
+}
+
+/**
  * Mobile-only Loot-cache-choice encounter slice ("The Reliquary"). Holds
  * the active two-offer session (engine: World/LootCacheChoice) — `null`
  * outside one. The engine deals in real `Item`s directly (no opaque-ref
@@ -218,6 +246,7 @@ export type AppStoreState = GameStore & {
     itemReward: MobileItemRewardSlice;
     hazard: MobileHazardSlice;
     rest: MobileRestSlice;
+    quest: MobileQuestSlice;
     cache: MobileCacheSlice;
     blacksmith: MobileBlacksmithSlice;
     labyrinthUi: MobileLabyrinthSlice;
@@ -268,6 +297,12 @@ export const EMPTY_HAZARD_SLICE: MobileHazardSlice = Object.freeze({ session: nu
 
 export const EMPTY_REST_SLICE: MobileRestSlice = Object.freeze({
     session: null,
+});
+
+export const EMPTY_QUEST_SLICE: MobileQuestSlice = Object.freeze({
+    open: null,
+    paid: null,
+    cardOffers: Object.freeze([]),
 });
 
 export const EMPTY_CACHE_SLICE: MobileCacheSlice = Object.freeze({
@@ -369,6 +404,7 @@ export function createAppStore(options: CreateAppStoreOptions = {}): AppStore {
         itemReward: EMPTY_ITEM_REWARD_SLICE,
         hazard: EMPTY_HAZARD_SLICE,
         rest: EMPTY_REST_SLICE,
+        quest: EMPTY_QUEST_SLICE,
         cache: EMPTY_CACHE_SLICE,
         blacksmith: EMPTY_BLACKSMITH_SLICE,
         labyrinthUi: resumed ? { session: resumed } : EMPTY_LABYRINTH_SLICE,

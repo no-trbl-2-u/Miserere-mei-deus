@@ -11,7 +11,7 @@ export {
 export type {
     WorldState, Quest,
     Encounter,
-    MapState, QuestObjective, QuestLog,
+    MapState, QuestObjective, QuestLog, Reward,
 } from './types';
 export type { MapName, ContinentName } from './map.library';
 export type { QuestName } from './quest.library';
