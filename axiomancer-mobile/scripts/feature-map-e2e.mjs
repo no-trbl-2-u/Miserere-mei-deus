@@ -242,6 +242,7 @@ async function settleOnMap(page, what) {
         await sleep(400)
         if (await tap(page, 'combat-summary-close')) continue
         if (await page.getByTestId('cutscene-advance').count()) { await playOutCutscene(page); continue }
+        if (await tap(page, 'death-return-continue')) continue
         if (await tap(page, 'item-reward-confirm')) continue
         if (await tap(page, 'rest-claim')) continue
     }
@@ -390,13 +391,18 @@ const SEAMS = {
     // The select screen opens from play only once the roster holds a character
     // (CH1f), so until then the `/dev` row that opens it (all locked) is the seam.
     // That row sits outside every section, so it has no section to open.
+    // A revive arms this screen in memory and a lost fight is not a seam, so the
+    // forced-dev-tools leg opens its preview (`?preview=1`) directly.
+    'route:death-return': { url: '/death-return?preview=1', landing: 'death-return' },
     'route:character-select': { leaf: 'dev-open-character-select', landing: 'character-select-carousel' },
 }
 
 async function seamLeg(page, baseUrl, id) {
     const seam = SEAMS[id]
     const path = routePathForId(id)
-    if (seam.fixture) {
+    if (seam.url) {
+        await page.goto(`${baseUrl}${seam.url}`, { waitUntil: 'networkidle' })
+    } else if (seam.fixture) {
         // docs/state-fixtures.md: `?fixture=<id>` boots the fixture and its
         // `arrive` pushes the staged route.
         await page.goto(`${baseUrl}/exploration?fixture=${seam.fixture}`, { waitUntil: 'networkidle' })

@@ -514,7 +514,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/smoke-screens.mjs"
+        "source": "axiomancer-mobile/scripts/feature-map-e2e.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
       },
       "tested": {
         "value": true,
