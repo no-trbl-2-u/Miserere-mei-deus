@@ -431,12 +431,14 @@ export {
     revealAdjacent, markNodeConsumed,
     // Traversal queries.
     legalMovesFrom,
+    isHoldingRoads,
     // The forward skeleton the progression audits walk.
     forwardEdges,
 } from './World';
 export {
     resolveMapEvent,
     settleArrival,
+    answerUnsettledArrival,
     getNodeEventPool,
     getNodePrimaryEventKind,
 } from './World';
@@ -444,6 +446,13 @@ export type {
     MapEventKind, QuestPayload,
     MapEventPayload, ResolvedEvent, ResolveMapEventResult,
     Questline, QuestlineStep, QuestlineId, QuestlineSettle, QuestNodeStage, QuestStepView, RouteRef,
+    QuestStepState,
+} from './World';
+// The questline step rules (accept, turn in, the node's stage, the settle seam).
+export {
+    registerQuestline, getQuestline, listQuestlines, questlineStep,
+    questStepState, stepQuest, questStepView, questNodeStage, resolveQuestNodeEvent,
+    openReadyQuestRoutes, settleQuestLog, acceptQuestStep, turnInQuestStep,
 } from './World';
 // Rest shelter classification. Mobile gates the hazard-scar max-VITAE mend on this.
 export type { RestShelter } from './World';

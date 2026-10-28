@@ -39,8 +39,10 @@ import { createStartingWorld, emptyQuestLog } from '../World';
 import type { MapName } from '../World/map.library';
 import { moveToNode as moveWorld } from '../World/world.reducer';
 import { resolveMapEvent, settleArrival } from '../World';
+import { answerUnsettledArrival } from '../World/MapEvents/resolve-map-event';
 import { applyDialogueChoice as applyDialogueRuntime } from '../World/dialogue.runtime';
-import { settleKill } from '../World/quest.engine';
+import { advanceKillObjectives } from '../World/quest.engine';
+import { acceptQuestStep, settleQuestLog, turnInQuestStep } from '../World/questline';
 import { calculateMaxHealth } from '../Utils';
 import { STAT_POINTS_PER_LEVEL } from './game-mechanics.constants';
 import { experienceForLevel } from '../Character/experience';
@@ -330,10 +332,11 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
                 // one reward door). Map-scoped because a kill objective's
                 // target is the enemy's display name, shared by every Act 1
                 // region's door fight.
+                // The kills go through the settle seam (`settleQuestLog`),
+                // which also opens the roads of a questline step they made
+                // ready, in this same END_COMBAT.
                 for (const enemy of encounter.enemies) {
-                    const kill = settleKill(nextPlayer, nextQuests, enemy, state.world.currentMap.name);
-                    nextPlayer = kill.player;
-                    nextQuests = kill.quests;
+                    nextQuests = advanceKillObjectives(nextQuests, enemy, state.world.currentMap.name).log;
                 }
             }
 
@@ -365,17 +368,30 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
                 }
             }
 
-            // The fight is over, so the node it was fought on is settled,
-            // whatever the outcome: `resolveMapEvent` left the
-            // arrival owed so a save taken mid-fight re-offers it.
-            return settleArrival({
+            const over: GameState = settleQuestLog({
                 ...state,
                 player: nextPlayer,
-                quests: nextQuests,
                 flags: nextFlags,
                 codex: nextCodex,
                 currentEncounter: undefined,
-            });
+            }, nextQuests).state;
+
+            // A won fight (victory or friendship) settles the node it was
+            // fought on: `resolveMapEvent` left the arrival owed so a save
+            // taken mid-fight re-offers it. A flee or a defeat only answers
+            // the arrival: the node stays unspent, opens nothing it holds,
+            // and can be tried again.
+            return (outcome === 'victory' || outcome === 'friendship')
+                ? settleArrival(over)
+                : answerUnsettledArrival(over);
+        }
+
+        case 'ACCEPT_QUEST_STEP': {
+            return acceptQuestStep(state, action.payload.questline, action.payload.step);
+        }
+
+        case 'TURN_IN_QUEST_STEP': {
+            return turnInQuestStep(state, action.payload.questline, action.payload.step).state;
         }
 
         case 'MOVE_TO_NODE': {

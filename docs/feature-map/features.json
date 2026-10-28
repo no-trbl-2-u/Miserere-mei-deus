@@ -2077,6 +2077,12 @@
     {
       "kind": "coupling",
       "from": "area:World",
+      "to": "area:Game",
+      "file": "axiomancer-mechanics/src/World/questline.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:World",
       "to": "area:Items",
       "file": "axiomancer-mechanics/src/World/Hazard/puzzle/hazard-puzzle.outcome.ts"
     },

@@ -26,6 +26,7 @@ import { generateEncounter, scaleEnemyToLevel } from '../encounter';
 import { getMapDefinition, createMapState } from '../map.registry';
 import { completeMap, changeContinent, unlockMap, changeMap } from '../world.reducer';
 import type { WorldState } from '../types';
+import { resolveQuestNodeEvent } from '../questline';
 import { ENEMY_REGISTRY, type EnemySlug } from '../../Enemy/enemy.library';
 import { validateDieGear, type DieGearColor } from '../../Character/dieGear.reducer';
 import { REST_PASSIVE_HEAL_FRACTION, restShelterOf } from './rest-shelter';
@@ -347,25 +348,15 @@ export function resolveLabyrinthDoor(
 // ─── quest ────────────────────────────────────────────────────────────────────
 
 /**
- * Resolves a quest node. The state is untouched: the node's stage is read,
- * never written. This is the contract (QL1a): node 1 is the chapter start and
- * reads `offer`; nodes 2-4 read `locked` until the step rules (QL1b) look at
- * the log. The dispatcher does not consume a quest node.
+ * Resolves a quest node. The state is untouched: the node's stage is read off
+ * the quest log (`questNodeStage`), never written. The dispatcher does not
+ * consume a quest node; accepting its step does (`acceptQuestStep`).
  */
 export function resolveQuest(
     state: GameState,
     payload: QuestPayload,
 ): ResolveMapEventResult {
-    return {
-        state,
-        event: {
-            kind: 'quest',
-            questline: payload.questline,
-            node: payload.node,
-            stage: payload.node === 1 ? 'offer' : 'locked',
-            description: payload.description,
-        },
-    };
+    return { state, event: resolveQuestNodeEvent(state.quests, payload) };
 }
 
 // ─── dispatch table ───────────────────────────────────────────────────────────

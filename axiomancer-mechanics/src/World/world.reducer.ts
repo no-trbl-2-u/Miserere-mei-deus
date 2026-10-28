@@ -116,22 +116,40 @@ function unblockedAdjacency(map: MapState): Map<NodeId, Set<NodeId>> {
 }
 
 /**
+ * True when `nodeId` is on the map's `holdRoadsUntilSettled` list and not yet
+ * spent: such a node adds its roads to the frontier only once it is spent, so
+ * standing on it opens nothing (a quest node before its step is accepted, the
+ * watchtower before the boss falls). Always false on a map with no list.
+ */
+export function isHoldingRoads(map: MapState, nodeId: NodeId): boolean {
+    const def = getMapDefinition(map.continent, map.name);
+    if (!def.holdRoadsUntilSettled?.includes(nodeId)) return false;
+    return !isNodeSpent(map, nodeId);
+}
+
+/**
  * The frontier: every UNVISITED node joined by an unblocked edge to ANY
  * visited node. Returned in map-definition order so callers render a stable
  * list. Gauntlet-shaped; labyrinth maps have their own rule and should ask
  * `legalMovesFrom` instead.
+ *
+ * A node the map holds (`holdRoadsUntilSettled`) is visited while the player
+ * stands on it, so it is never its own destination, but its roads open only
+ * once it is spent (`isHoldingRoads`).
  */
 export function frontierNodes(map: MapState): NodeId[] {
     const def = getMapDefinition(map.continent, map.name);
     if (!def.nodes.some(n => n.id === map.currentNode)) return [];
     const visited = visitedSet(map);
+    const origins = new Set<NodeId>(visited);
+    if (isHoldingRoads(map, map.currentNode)) origins.delete(map.currentNode);
     const adj = unblockedAdjacency(map);
     return def.nodes
         .map(n => n.id)
         .filter(id => !visited.has(id))
         .filter(id => {
             for (const neighbour of adj.get(id) ?? []) {
-                if (visited.has(neighbour)) return true;
+                if (origins.has(neighbour)) return true;
             }
             return false;
         });
@@ -219,11 +237,22 @@ export function syncFrontierLists(map: MapState): MapState {
  */
 export function moveToNode(state: WorldState, nodeId: NodeId): WorldState {
     const map = state.currentMap;
+    const def = getMapDefinition(map.continent, map.name);
     if (map.currentNode === nodeId) {
-        // Idempotent on no-op (already here).
+        // The retry: the node the player stands on, still unspent, with its
+        // arrival already answered (a fled or lost fight, a quest node whose
+        // step was not accepted) is owed again, so it can be tried even when
+        // it is the last move left. Otherwise idempotent (already here): a
+        // spent node, an arrival still owed, the labyrinth's rooms, and the
+        // map's starting node (the player is placed there, never arrives:
+        // its content is the host's start-node affair).
+        const answered = (map.pendingArrival ?? null) === null;
+        const retryable = def.traversal !== 'labyrinth' && nodeId !== def.startingNode.id;
+        if (retryable && answered && !isNodeSpent(map, nodeId)) {
+            return { ...state, currentMap: { ...map, pendingArrival: nodeId } };
+        }
         return state;
     }
-    const def = getMapDefinition(map.continent, map.name);
     const currentNode = def.nodes.find(n => n.id === map.currentNode);
     if (!currentNode) {
         throw new IllegalMoveError(`moveToNode: current node '${map.currentNode}' is unknown on map '${map.name}'.`);

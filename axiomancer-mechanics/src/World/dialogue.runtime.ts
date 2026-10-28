@@ -9,8 +9,9 @@
 import { GameState } from '../Game/types';
 import { DialogueChoice, DialogueTree, DialogueNode } from '../NPCs/types';
 import {
-    discoverQuest, startQuest, progressQuest, completeQuest, findActiveQuest, payCompletedQuests,
+    discoverQuest, startQuest, progressQuest, completeQuest, findActiveQuest,
 } from './quest.engine';
+import { settleQuestLog } from './questline';
 import { getMapDefinition } from './map.registry';
 import { QuestName } from './quest.library';
 
@@ -101,18 +102,15 @@ export function applyDialogueChoice(
             player = { ...player, currency: player.currency + e.grantCurrency };
             effects.grantedCurrency = e.grantCurrency;
         }
-        // A `progressQuest` or `completeQuest` that finished a quest pays its
-        // reward through the one reward door.
-        player = payCompletedQuests(player, gameState.quests, quests).player;
     }
 
     const nextNode = choice.nextNodeId ? (tree.nodes[choice.nextNodeId] ?? null) : null;
 
+    // A `progressQuest` or `completeQuest` that finished a quest pays its
+    // reward, and one that made a questline step ready opens its roads,
+    // through the one settle seam.
     return {
-        gameState: {
-            ...gameState,
-            player, quests, flags,
-        },
+        gameState: settleQuestLog({ ...gameState, player, flags }, quests).state,
         nextNode,
         effects,
     };

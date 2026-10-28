@@ -131,6 +131,25 @@ D1 (2026-09-21) replaced Spec 08's linear, no-back-travel rule.
 - **Arrival.** `moveToNode` is the arrival verb. It records
   `pendingArrival`, which `resolveMapEvent` clears. `placeOnNode` and
   `teleportToNode` stand the player on a node without owing an arrival.
+- **Fights settle on a win.** An encounter leaves its arrival owed until
+  `END_COMBAT`. A victory or a friendship settles the node (`settleArrival`:
+  consumed, its roads open). A flee or a defeat only answers the arrival
+  (`answerUnsettledArrival`): the node stays unspent, counts nothing, and is
+  a fresh fight on the next arrival.
+- **Held roads.** `MapDefinition.holdRoadsUntilSettled` lists nodes that add
+  their roads to the frontier only once spent (`isHoldingRoads`): standing
+  on one opens nothing. It is a list, never map-wide (the rule would empty
+  the frontier between every move and its resolve). The Breakwater's quest
+  nodes and its watchtower use it (QL1d).
+- **The retry.** `moveToNode` onto the node the player stands on re-owes its
+  arrival when the node is unspent and its arrival was answered (a fled or
+  lost fight, an unaccepted quest node), so a held node with no other move
+  left can be tried again. A spent node, an owed arrival, the map's starting
+  node and labyrinth rooms stay an idempotent no-op.
+- **Quest-node locks.** A questline's next quest node sits behind blocked
+  roads (`initialBlockedRoutes`, one reason each); a step's `opensOnReady`
+  unblocks them in the call that fills its last objective, through the one
+  settle seam (`settleQuestLog`, see "Quest Engine").
 - **Legacy lists.** `completeCurrentNode` keeps `availableNodes` and
   `lockedNodes` in sync with the frontier. The CLI's move filter and
   mobile's tap gate still read them, but `legalMovesFrom(map)` is the
@@ -206,7 +225,7 @@ later in 2026-08, 'labyrinth' in M4, 2026-09-27):
 | `cutscene`     | `{ kind: 'cutscene', lines }` — narration only.                           |
 | `hazard`       | `{ kind: 'hazard', effects, damage }` — applies effects + damage.         |
 | `loot-cache`   | `{ kind: 'loot-cache', items, currency }` — fixed grant.                  |
-| `quest`        | `{ kind: 'quest', questline, node, stage, behind?, ahead? }` — a questline step's giver (`QuestPayload`, node 1-4); never consumed until its step is accepted. Contract in `src/World/questline.ts`; the step rules, locks and held roads arrive with QL1b. |
+| `quest`        | `{ kind: 'quest', questline, node, stage, behind?, ahead? }` — a questline step's giver (`QuestPayload`, node 1-4); never consumed until its step is accepted (`acceptQuestStep`). Contract and step rules in `src/World/questline.ts` (see "Questlines"). |
 | `narration`    | `{ kind: 'narration', dialogue }` — inline monologue; the `DialogueTree` is authored directly on the node (no map NPC lookup). Barrel: `NarrationPayload`. |
 | `none`         | Consumed node (one-shot) or no pool registered.                            |
 
@@ -285,6 +304,23 @@ Kill and hazard objectives count only on the quest's own `mapName`.
 The store's `endCombat` auto-advances `kill` objectives — defeating an
 enemy whose `name` matches an active objective's `target` ticks the counter
 and grants the reward when the quest fills.
+
+### Questlines (`src/World/questline.ts`)
+
+A questline is data (`Questline { id, mapName, steps }`), registered with
+`registerQuestline` and looked up by the `quest` node's payload.
+
+| Function | Purpose |
+|----------|---------|
+| `questNodeStage(log, questline, node)` | Node 1 reads `offer`; node k reads step k-1: `locked` (not accepted), `waiting` (accepted, unmet), `turn-in` (met), `offer` (turned in). |
+| `acceptQuestStep(state, questline, step)` | At the step's own node, with the step before turned in: starts the step's quest with every count at 0 (nothing before acceptance counts) and spends the node, which opens its held roads. |
+| `turnInQuestStep(state, questline, step, rng?)` | At the NEXT quest node, a ready `settle: 'turn-in'` step: completes it and pays it once; the node then offers the next step. Returns `{ state, paid }` (`paid` carries items and card offers). |
+| `settleQuestLog(state, quests, rng?)` | THE settle seam: pays what completed (`payCompletedQuests`) and opens the `opensOnReady` roads of a step that became ready. `END_COMBAT`, the hazard, reach and collect branches of `resolveMapEvent`, the dialogue effects and the turn-in all go through it. |
+
+The last step (`settle: 'on-victory'`) is never turned in: its quest is not
+held, so the boss kill completes and pays it through the same seam.
+`GameAction`s `ACCEPT_QUEST_STEP` and `TURN_IN_QUEST_STEP` dispatch the two
+verbs.
 
 ## Dialogue (Spec 08 Q9 — branching tree)
 

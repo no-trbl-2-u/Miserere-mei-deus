@@ -1396,8 +1396,9 @@ function resolveCurrentMapEventInner(store: AppStore, sourceNodeType?: string, s
 
         // When a non-'none' event resolves, mark the current node consumed
         // in the engine's parallel data model (`consumedNodes`) for one-time
-        // events only. Encounter, travel and labyrinth events are never
-        // consumed here; every other kind is (one-time only). Kept alongside
+        // events only. Encounter, travel, labyrinth and quest events are never
+        // consumed here (a quest node is spent when its step is accepted,
+        // `acceptQuestStep`); every other kind is (one-time only). Kept alongside
         // `completedNodes` (populated by `moveToAction`'s
         // `worldCompleteNode` call).
         let resolvedState: GameState = result.state;

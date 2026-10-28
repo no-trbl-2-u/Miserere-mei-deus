@@ -23,7 +23,9 @@
  *
  * An `encounter` is the exception to 0 and 5. Its arrival stays
  * owed and its node unconsumed, with the way on still shut, until the fight
- * settles: `settleArrival` below, which `END_COMBAT` runs for every outcome.
+ * settles: `settleArrival` below, which `END_COMBAT` runs on a victory or a
+ * friendship. A flee or a defeat only answers the arrival
+ * (`answerUnsettledArrival`): the node stays unspent, to be tried again.
  * The fight itself is never saved (`currentEncounter` is transient), so a
  * save taken mid-fight must still say what the player owes, or a reload
  * lands past the fight.
@@ -32,11 +34,14 @@
  */
 
 import type { GameState } from '../../Game/types';
-import { revealAdjacent, markNodeConsumed, unlockAdjacent } from '../world.reducer';
+import {
+    revealAdjacent, markNodeConsumed, unlockAdjacent, isHoldingRoads, syncFrontierLists,
+} from '../world.reducer';
 import { getRng } from '../../Utils/rng';
 import { applyPayload } from './handlers';
 import { resolveDeath } from '../../Game/death';
-import { reachableObjectives, collectObjectives, progressQuest, payCompletedQuests, advanceHazardObjectives } from '../quest.engine';
+import { reachableObjectives, collectObjectives, progressQuest, advanceHazardObjectives } from '../quest.engine';
+import { settleQuestLog } from '../questline';
 import type { QuestLog, NodeId } from '../types';
 import type {
     MapEventPayload, MapEventPool, MapEventPoolEntry, MapEventKind, ResolveMapEventResult, ResolvedEvent,
@@ -58,14 +63,13 @@ function advanceReachObjectives(quests: QuestLog, nodeId: NodeId): QuestLog {
 }
 
 /**
- * Moves `state` onto the quest log `quests` and pays every quest the move
- * completed (`payCompletedQuests`, the one reward door). Same reference back
- * when the log did not change.
+ * Moves `state` onto the quest log `quests` through the settle seam
+ * (`settleQuestLog`): pays every quest the move completed and opens the roads
+ * of a questline step it made ready. Same reference back when the log did not
+ * change.
  */
 function withQuestLog(state: GameState, quests: QuestLog, rng: () => number): GameState {
-    if (quests === state.quests) return state;
-    const pay = payCompletedQuests(state.player, state.quests, quests, rng);
-    return { ...state, player: pay.player, quests };
+    return settleQuestLog(state, quests, rng).state;
 }
 
 /**
@@ -254,8 +258,8 @@ function answerArrival(state: GameState, nodeId: NodeId): GameState {
 /**
  * Settles the arrival at the node under the player: clears the debt, reveals
  * and unlocks the adjacents, and marks the node consumed. This is the second
- * half of resolving an `encounter`, run once the fight is over, whatever its
- * outcome. Identity-stable when nothing is owed at the current
+ * half of resolving an `encounter`, run once the fight is won (a victory or a
+ * friendship). Identity-stable when nothing is owed at the current
  * node, so calling it after a fight that never came from the map (a dev
  * pick, a test) changes nothing.
  */
@@ -266,6 +270,23 @@ export function settleArrival(state: GameState): GameState {
     const opened = unlockAdjacent(revealAdjacent(map, nodeId), nodeId);
     const settled = markNodeConsumed({ ...opened, pendingArrival: null }, nodeId);
     return { ...state, world: { ...state.world, currentMap: settled } };
+}
+
+/**
+ * Answers the arrival at the node under the player WITHOUT settling it: the
+ * end of a fight that was fled or lost. The debt is cleared (so a host does
+ * not re-fire the fight), but the node is neither consumed nor completed, so
+ * it stays unspent: a later arrival there is a fresh try, and the player may
+ * retry it in place (`moveToNode` onto the node they stand on). Nothing is
+ * unlocked from it beyond what the frontier already allows: a node the map
+ * holds (`holdRoadsUntilSettled`) opens no road, an unlisted one lets the
+ * player walk on past it as before. Identity-stable when nothing is owed.
+ */
+export function answerUnsettledArrival(state: GameState): GameState {
+    const map = state.world.currentMap;
+    if ((map.pendingArrival ?? null) !== map.currentNode) return state;
+    const answered = syncFrontierLists({ ...map, pendingArrival: null });
+    return { ...state, world: { ...state.world, currentMap: answered } };
 }
 
 /**
@@ -397,17 +418,18 @@ export function resolveMapEvent(
     // adjacents out of `lockedNodes` into `availableNodes` so the CLI
     // `mapTab` filter actually offers them as valid moves. The reveal path
     // only updates `discoveredNodes`.
-    const next = unlockAdjacent(
-        revealAdjacent(stateAfterCollect.world.currentMap, nodeId),
-        nodeId,
-    );
     // The Labyrinth door opens the way on like any node but is
     // never consumed: it stays a door, and the next arrival enters again. A
-    // quest node is the same until its step is accepted (QL1b); QL1a never
-    // accepts, so it never consumes.
-    const consumed = (result.event.kind === 'labyrinth' || result.event.kind === 'quest')
-        ? next
-        : markNodeConsumed(next, nodeId);
+    // quest node is never consumed here either: accepting its step spends it
+    // (`acceptQuestStep`), so until then the player may step off and return.
+    const unspent = result.event.kind === 'labyrinth' || result.event.kind === 'quest';
+    const revealed = revealAdjacent(stateAfterCollect.world.currentMap, nodeId);
+    // A node the map holds (`holdRoadsUntilSettled`) that stays unspent opens
+    // no road: only the frontier sync runs, and the frontier leaves it shut.
+    const next = unspent && isHoldingRoads(revealed, nodeId)
+        ? syncFrontierLists(revealed)
+        : unlockAdjacent(revealed, nodeId);
+    const consumed = unspent ? next : markNodeConsumed(next, nodeId);
     const nextState: GameState = {
         ...stateAfterCollect,
         world: { ...stateAfterCollect.world, currentMap: consumed },
