@@ -178,7 +178,9 @@ the Expo app (`axiomancer-mobile`) presents it.
   `npm run lane-pacing`) applies the same knob so its turn counts compare
   with play.
 - **Ending:** the player wins when the foe's VITAE reaches 0, or by sparing
-  a befriended foe. The player loses at 0 VITAE or after `MAX_PHASES` = 60.
+  a befriended foe. The player loses a fight at 0 VITAE or after `MAX_PHASES`
+  = 60. A first loss does not end the run; the next one does (see Death under
+  The world).
 
 ## VITAE and stats
 
@@ -265,6 +267,15 @@ keyword (`EnemyKeyword = never`).
   loot-cache, gathering, cutscene, travel. Act 1 has no NPCs, shops or
   quests; that plumbing is kept and tested with fixtures.
 - **Currency:** shillings.
+- **Death** (`Game/death.ts`, `resolveDeath`): the first time VITAE reaches 0
+  in a fight or on a node hazard, the player is put back on the node they
+  walked from (`MapState.arrivedFrom`) with 1 VITAE and `GameState.dying`
+  set. The node they died on is open again, so it can be walked into and
+  retried. A death while dying ends the run as a reset does: a fresh run and
+  world, full VITAE, the character kept. `clearDying` takes
+  dying off, for the rest claim's heal choice to call. A player with no previous node comes back on the
+  map's starting node. The store verb is `playerDied`; the app's defeat
+  still resets the run until it is wired to it.
 - **Rest** offers one choice (`World/RestChoice/`): heal
   `restHealFraction` = 25% of maximum VITAE, upgrade one card the player
   picks (free, no heal; the shared upgrade screen shows it before and after,

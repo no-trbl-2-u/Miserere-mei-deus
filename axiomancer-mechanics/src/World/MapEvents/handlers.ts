@@ -307,7 +307,8 @@ export function resolveTravel(
     // `currentMap` is the single writable copy.
     if (restored) delete preserved[payload.destinationMap];
     world = {
-        ...changeMap(world, restored ?? createMapState(destinationDef)),
+        // A crossing is a placement on the far side: no previous node.
+        ...changeMap(world, { ...(restored ?? createMapState(destinationDef)), arrivedFrom: null }),
         mapStates: preserved,
     };
 

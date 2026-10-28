@@ -56,6 +56,7 @@ import type { PersistenceAdapter } from '../Game/persistence/types';
 import type { TypedLevelUpEvent } from '../Game/events.types';
 import { getMapDefinition } from '../World/map.registry';
 import { resolveMapEvent, settleArrival, MAP_REGISTRY, getNodePrimaryEventKind } from '../World';
+import { resolveDeath } from '../Game/death';
 import type { ResolvedEvent, ContinentName, MapName } from '../World';
 import { getCardById } from '../Cards/cards.library';
 import { getAvailableCards } from '../Cards/card.engine';
@@ -204,9 +205,16 @@ async function resolveCurrentNodeEvent(
             maxTurns: flags.combatMaxTurns ?? 20,
         });
         combatOutcome = combatResult.outcome;
-        // The fight ran outside the store, so settle its node here, as
-        // `END_COMBAT` does in the store.
-        store.setState({ world: settleArrival(store.getState()).world });
+        // The fight ran outside the store. A lost fight is a death: the
+        // death rule decides what comes back (a revive, or a run over).
+        // Anything else settles its node here, as `END_COMBAT` does in the store.
+        if (combatOutcome === 'defeat') {
+            const died = resolveDeath(store.getState(), 'fight');
+            store.setState(died.state);
+            log(died.outcome === 'revived' ? 'Defeated: revived at 1 VITAE, dying.' : 'Defeated while dying: the run is over.');
+        } else {
+            store.setState({ world: settleArrival(store.getState()).world });
+        }
     }
 
     if (result.event.kind === 'village' && result.event.shop && result.event.shop.wares.length > 0) {

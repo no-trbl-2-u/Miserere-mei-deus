@@ -15,6 +15,8 @@
  *      map default (`setDefaultMapEventPool`). Missing pool → `{ kind: 'none' }`.
  *   4. Hand the rolled payload off to the matching handler from
  *      `handlers.ts`.
+ *   4b. A hazard whose flat `damage` takes VITAE to 0 is a death: the state
+ *      returned is `resolveDeath(…, 'hazard')`'s, and steps 5-6 do not run.
  *   5. Add the node to `consumedNodes` and reveal its adjacents.
  *   6. Return the handler's `{ state, event }` with the discovery /
  *      consumption updates folded in.
@@ -37,6 +39,7 @@ import {
 } from '../world.reducer';
 import { getRng } from '../../Utils/rng';
 import { applyPayload } from './handlers';
+import { resolveDeath } from '../../Game/death';
 import { reachableObjectives, collectObjectives, progressQuest, advanceHazardObjectives } from '../quest.engine';
 import { settleQuestLog } from '../questline';
 import type { QuestLog, NodeId } from '../types';
@@ -372,6 +375,13 @@ export function resolveMapEvent(
     }
 
     const result = applyPayload(stateAfterReach, entry.payload, rng);
+
+    // 4b. A hazard that takes VITAE to 0 is a death, not a player standing
+    // at 0. The death rule decides what comes back (a revive on the node
+    // walked from, or a run over).
+    if (result.event.kind === 'hazard' && result.state.player.health <= 0) {
+        return { state: resolveDeath(result.state, 'hazard').state, event: result.event };
+    }
 
     // 4a. Advance any active `collect`-type quest objectives the granted
     // items satisfy. Mirrors the reach-objective auto-advance above, but

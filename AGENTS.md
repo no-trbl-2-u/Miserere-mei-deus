@@ -329,6 +329,13 @@ them; update here first.
    kept) and both Queue change log entries, and neighbouring row ticks
    settle. Two rewrites of one row keep their markers, and a merge that
    would give a phase a second row is refused.
+   `plan/deadlines.md` merges through `scripts/deadlines-merge.mjs`
+   (`merge.deadlines.driver`, same registration, and `MERGE_DRIVERS` in
+   `scripts/pr-resolve.mjs` for the runner): same-spot Items, Unscheduled
+   lines and Change log lines are all kept (new Items stay in date order), a
+   row both sides edited merges cell by cell, a cell changed two ways keeps
+   its markers, and a merge that would double an Unscheduled id or an Items
+   row is refused.
 2. **No `Co-Authored-By:` trailers, no emojis** — in commits, code, or
    content.
 3. **The verify gate is non-negotiable.** No `--no-verify`, no
