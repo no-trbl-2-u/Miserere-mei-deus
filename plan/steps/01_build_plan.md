@@ -450,6 +450,12 @@ event-pool and layout files).
       restored); `mergeMain` takes the repository directory; a fixture test runs two plot branches that both add
       asap rows and deadline Items through it with no Haiku entry and `check-deadlines` green. Brief
       `plan/phases/phase_MD1_deadlines_merge_driver.md` § MD1b. Requires MD1a.
+- [ ] Phase MD1c — The merge job checks the merged tree before it merges (plotted by T, 2026-10-28): GitHub's
+      server-side merge never runs our drivers, so a PR with no conflict can leave `plan/` red (three bumps of one
+      lesson became three rows, #866/#868/#870). The `pr-review.yml` merge job copies the test-merge ref's `plan/`
+      over main's checkout and runs main's `check-lessons`, `check-plan-queues` and `check-deadlines`; red once
+      means `pr-resolve.mjs update` (main merged in with the drivers, no force), red again holds. Pipeline paths,
+      so the PR is held for T. Brief `plan/phases/phase_MD1_deadlines_merge_driver.md` § MD1c. Requires MD1b.
 - [x] (#961) Phase NC1 — No caps on the live cards (plotted by T, 2026-10-26): every capped line of the Elementalist (P-06b, P-09a) and Blood Price (What Is Owed, Full Tally, Blood for Blood, Name Your Price, Reclaim, Repaid in Kind) prints and applies no "max" (the two SACRIFICE X caps stay, T 2026-10-26), a line whose cap was its only upgrade growth grows a flat `+n`, Repaid in Kind's PAID becomes twice the damage taken, and a library test fails any "max" left (D109). Brief `plan/phases/phase_NC1_no_caps.md`. Requires nothing.
 - [x] (#964) Phase CL1 — Ballots pitch no colour; colours are split after T picks (plotted by T, 2026-10-26): the ballot kit drops `JOB_COLORS`, the tint and the colour checks, the Defender ballot loses its `job` fields, and `/lane-creator` proposes an even colour split at the revisions step for T to edit (D110). Brief `plan/phases/phase_CL1_colour_is_payment.md`. Requires nothing.
 - [x] (#914) Phase EM1 — The Elementalist in measured truth, with a self-burn metric (plotted by T, 2026-10-25): `elementalist` joins the measured lanes beside grey and Blood Price (its 20-card test deck as the lane's ceiling, T 2026-10-24); two seeded sampled families, `elementalist~20of30` (the spread) and `mixed~20of60` (the median, from both trial sets' 60 cards), each 16 draws reported as median and range; a `selfBurnMean` column (VITAE lost to your own INFERNO) on every cell; `latest.md` regenerated in the PR. A measurement (D57), not a tune (D88). Brief `plan/phases/phase_EM1_elementalist_measured.md`. Requires nothing.
@@ -1108,9 +1114,10 @@ See the status rows above; generate briefs on demand.
 > commit/issue/phase-brief when available.
 
 - **2026-10-28** — actor: **T, session** (`/plot anytime`, run unattended on T's word relayed from an attended
-  session, branch `loop/plot-MD1-deadlines-merge-driver`). Action: **added Phases MD1a and MD1b** after the last
+  session, branch `loop/plot-MD1-deadlines-merge-driver`). Action: **added Phases MD1a, MD1b and MD1c** after the last
   open row, Phase SB1 (a merge driver for `plan/deadlines.md`; `pr-resolve` re-derives Status after a merge and a
-  fixture proves two plot branches settle with no Haiku run). Confirmed T's request: yes (T, 2026-10-28:
+  fixture proves two plot branches settle with no Haiku run; the merge job checks the merged tree. T folded the
+  third in on the PR, 2026-10-28). Confirmed T's request: yes (T, 2026-10-28:
   "whenever we have two plot/plan PRs open, once I merge one, the other always ends up with a conflict").
   Reason: the build plan already merges through a driver, but `plan/deadlines.md`, which every plot edits in the
   same three places, does not. Brief `plan/phases/phase_MD1_deadlines_merge_driver.md`.

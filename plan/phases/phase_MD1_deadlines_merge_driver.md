@@ -46,7 +46,8 @@ Checked on `main` at the plot's base (29cc3a398), so the plot does not plan what
 
 ## Outcome
 
-Two `plot` PRs that both add asap build-plan rows, Items, Unscheduled lines and Change log lines merge through
+A PR that GitHub would merge with no conflict but that leaves `plan/` red (a doubled lesson row) is updated with the
+drivers or held before it merges. Two `plot` PRs that both add asap build-plan rows, Items, Unscheduled lines and Change log lines merge through
 `pr-resolve` with no conflict markers, no Haiku run, and a `plan/deadlines.md` that `check-deadlines` accepts.
 
 Size: see the per-phase sizes under Phases.
@@ -90,6 +91,24 @@ result.
   for the Haiku list, that every added row of both branches is present exactly once in both files, and that
   `check-deadlines` accepts the result.
 
+- **A9** The merge job runs a merged-tree check before it requests a merge: it fetches `refs/pull/<n>/merge`,
+  copies that tree's `plan/` over main's checkout and runs main's `check-lessons`, `check-plan-queues` and
+  `check-deadlines` on it. The decision is a pure function in `scripts/pr-merge.mjs` (tree green: go on; tree red,
+  not yet updated: update; red after an update or an update that conflicted: hold, naming the lint), tested over
+  those four inputs.
+- **A10** On a red tree the job updates the PR branch from `origin/main` with the drivers registered, through a new
+  `scripts/pr-resolve.mjs update --branch <b>` (the existing `mergeMain` plus a push, never a force, `main` never
+  touched), and requests no merge on that run. It updates a head at most once: a marker on the PR (the
+  `pr-merge` comment convention) records it, so a tree the drivers cannot fix holds instead of looping.
+- **A11** The fixture that reproduces the origin of the row: a scratch repo where two branches each bump the same
+  `plan/lessons.md` slug. The server-side style line merge (no drivers) is red under `check-lessons`; the same
+  merge through `update` (drivers registered) is green and keeps one row, and the verdict function returns update
+  then go. A second fixture where the drivers cannot fix it (both sides rewrote one row) returns hold.
+- **A12** The kill switch and holds stay as they are: `PR_AUTO_MERGE=off`, the `no-auto-merge` label, plot PRs
+  and pipeline PRs are decided before the tree check and never reach it; the check adds no hold to a PR those
+  already hold. `.github/workflows/README.md` and AGENTS.md "Pull requests" describe the new step, and the
+  PHASE_CANDIDATES row is Rejected as "briefed" (this plot does that edit).
+
 Measure: `node --test scripts/deadlines-merge.test.mjs scripts/build-plan-merge.test.mjs scripts/loop-pr.test.mjs`
 green, and root `npm test` green.
 
@@ -104,15 +123,18 @@ green, and root `npm test` green.
 - `scripts/pr-resolve.mjs`: the `MERGE_DRIVERS` entry, `mergeMain(branch, cwd)`, and the Status re-derive step
   after a committed merge.
 - No workflow edit is needed: `pr-resolve.yml` already calls `scan`; the new step lives in the script.
-- Not in MD1: `plan/PHASE_CANDIDATES.md`'s check of the merged tree before the merge job merges (see Decisions),
-  `LIVE_DEADLINES.md` (daily workflow), the AUDIT and CRITIQUE queues.
+- MD1c: `.github/workflows/pr-review.yml` (a tree-check step in the `merge` job, with a full checkout beside the
+  sparse one), `scripts/pr-merge.mjs` (the verdict function and the marker), `scripts/pr-resolve.mjs` (the
+  `update` mode), their tests, and the README/AGENTS lines.
+- Not in MD1: `LIVE_DEADLINES.md` (daily workflow), the AUDIT and CRITIQUE queues.
 
 ## Consumers to update
 
 - `AGENTS.md` standing rule 1 (it lists the two drivers and what each refuses): add the third.
 - `.github/workflows/README.md` where it describes `pr-resolve`'s union files.
-- `plan/PHASE_CANDIDATES.md` line "Server-side merges skip the lessons merge driver": re-scope note (this plot
-  does that edit).
+- `plan/PHASE_CANDIDATES.md`: the "Server-side merges skip the lessons merge driver" row is Rejected as
+  "briefed" (this plot does that edit).
+- `skills/fix-ci.md` / `skills/review.md` only if the merge job's hold reasons are quoted there (grep first).
 - `skills/plot.md` Step 4 needs no change: its reconcile steps still edit the same places; the driver only makes
   them merge.
 
@@ -131,15 +153,34 @@ None. No runtime code, no persisted game state.
 - **Status is re-derived after the merge, not inside the driver.** The driver runs mid-merge; at that moment
   `plan/steps/01_build_plan.md` (sorted after `plan/deadlines.md`) may not be merged yet, so it cannot know what
   `--write` would say. `pr-resolve` runs `--write` once the whole merge is in the tree. A session merge by hand
-  gets `check-deadlines` red, which names the fix. [T to confirm #1]
+  gets `check-deadlines` red, which names the fix. Confirmed by T (2026-10-28): yes, `pr-resolve` re-derives Status after the merge.
 - **The Haiku run stays for what is genuinely ambiguous.** Both sides changing one cell to different values, or
   one side deleting an Item the other edited, is a human or Haiku call; the driver leaves markers. That is the
   right boundary: MD1 removes the Haiku run for the plot-on-plot case, not for every case.
-- **Line-60 candidate (merge job checks the merged tree) stays a candidate, narrowed.** That row is about a clean
-  server-side merge that is semantically wrong (three `lessons.md` bumps kept as three rows: no conflict, a red
-  `main`). MD1 is about a merge that conflicts. They touch different jobs (the `pr-review.yml` merge job against
-  `pr-resolve`), different failures and different fixes, so the row is not briefed here; MD1 adds one line to it
-  saying so and pointing at this brief. [T to confirm #2]
+- **The merge job checks the merged tree (MD1c).** Confirmed by T (2026-10-28): fold the PHASE_CANDIDATES row
+  "Server-side merges skip the lessons merge driver" in as a third phase (the candidate moves to Rejected as
+  "briefed"). It is the other half of the same fact: GitHub's server-side merge never runs the drivers, so a PR
+  can merge with no conflict and still leave `main` red (three `lessons.md` bumps kept as three rows, #866,
+  #868, #870). The check runs in the `pr-review.yml` merge job, not in `pr-resolve`, and reuses MD1b's
+  `mergeMain(branch, cwd)` to fix what it finds.
+- **What the check runs, and whose code.** The three plan lints that read only `plan/` (`check-lessons`,
+  `check-plan-queues`, `check-deadlines`), main's copy of each, against the `plan/` tree of GitHub's test-merge
+  ref `refs/pull/<n>/merge` copied over main's checkout. A PR must not choose the lint that judges it (the
+  existing rule: the merge job runs main's scripts), and the lints locate their files from their own path, so the
+  merged `plan/` is copied in rather than the PR's lints run.
+- **Red tree: update the branch once, then hold.** On a red merged tree the job merges `origin/main` into the PR
+  branch with the drivers registered (`pr-resolve.mjs`, a new `update --branch <b>` mode that is `mergeMain` plus
+  the push) and requests no merge on this run. The push re-fires `pr-review`, and the existing digest rule reuses
+  the verdict because a merge of main leaves the diff alone. If the tree is still red after the update, or the
+  update conflicts, the job holds with the lint's name as the reason and T or `pr-resolve` takes it from there.
+  One update per PR per head, so a red tree the drivers cannot fix cannot loop.
+- **A point-in-time check, said honestly.** `gh pr merge --auto` merges later, when required checks pass, and
+  `main` can move in between; the check narrows the window to the review-to-merge gap and does not close it.
+  `pr-resolve` and the daily/root `npm test` stay the backstop.
+- **This is a pipeline change, so T merges it.** MD1c edits `.github/workflows/pr-review.yml`,
+  `scripts/pr-merge.mjs` and `scripts/pr-resolve.mjs`, all in `PIPELINE_PATHS` (`scripts/pr-policy.mjs`), so its
+  PR is held for T by the merge job (D95). MD1b also edits `scripts/pr-resolve.mjs`, so its PR is held for T the
+  same way; MD1a touches no pipeline path and merges on a green review.
 - **Line-55 row (shard the AUDIT and CRITIQUE queues) is untouched.** `pr-resolve` already unions those files and
   plots do not edit them; a conflict there is not the one T reported.
 - **No new `plan/deadlines.md` union path.** Adding it to `isUnionPath` would be the quick fix and it would double
@@ -177,6 +218,20 @@ Measure: the A8 `node --test` case (two plot branches through `mergeMain`, no Ha
   commit); a case with a genuinely conflicting cell (the branch is listed for Haiku, as before).
 - Verify gate: root `npm test`.
 
+### MD1c — The merge job checks the merged tree before it merges · M · closes A9, A10, A11, A12 · requires MD1b
+Measure: the A11 fixtures pass (a same-slug lessons bump is red as GitHub would merge it, green after `update`,
+one row; an unfixable clash holds), the A9 verdict-function cases pass, and `node --test scripts/pr-merge.test.mjs
+scripts/loop-pr.test.mjs` stays green. The first live proof is a merge job log line naming the tree check.
+- Scope: `.github/workflows/pr-review.yml` (merge job), `scripts/pr-merge.mjs`, `scripts/pr-resolve.mjs`
+  (`update --branch`), tests, README, AGENTS.md, the Rejected move in `plan/PHASE_CANDIDATES.md`.
+- Consumers: `scripts/loop-pr.test.mjs` (workflow shape assertions: the merge job still checks out main's scripts;
+  the new step is in the merge job only), `scripts/pr-merge.test.mjs` (`PIPELINE_PATHS` unchanged).
+- Save/schema: none.
+- Tests: the verdict function; the two fixtures over a scratch origin; a workflow-shape test that the tree-check
+  step precedes the decide step and that no step runs the PR's own lints.
+- Verify gate: root `npm test`. Pipeline PR: the merge job holds it for T (D95); T merges.
+- Attended: no (T merges the PR, as for every pipeline change).
+
 ## Tests matrix
 
 See each phase. Both phases are plan/scripts only; no mechanics or mobile suite is in scope.
@@ -200,12 +255,10 @@ registers drivers on the runner and now re-derives Status after the merge.
 
 ## DoD
 
-A1-A8 ticked.
+A1-A12 ticked.
 
 ## Follow-ups (not in these phases)
 
-- **The merge job's check of the merged tree** (PHASE_CANDIDATES, line-60 row): still a candidate, narrowed to the
-  silent-clean-merge case.
 - **The few minutes of CONFLICTING** after T merges one plot cannot go below the time `pr-resolve` takes without
   changing GitHub's own merge; if T finds the wait itself the problem, the candidate is to dispatch `pr-resolve`
   from the merge event rather than the push, and it needs T's say (workflow edit).
