@@ -13,6 +13,7 @@
  */
 
 import {
+    getQuestline,
     newlyCompletedQuests,
     qualifiesForItemRewardScreen,
     questRewardItem,
@@ -44,11 +45,17 @@ export function offerCompletedQuestItemsAction(store: AppStore, before: QuestLog
     let inventory = state.player.inventory;
     const offers: Array<{ item: Item; source: string }> = [];
     for (const quest of newlyCompletedQuests(before, state.quests)) {
-        const item = questRewardItem(quest.reward);
-        if (!item || !qualifiesForItemRewardScreen(item)) continue;
-        if (!inventory.some(row => row.id === item.id)) continue;
-        inventory = withoutLastRow(inventory, item.id);
-        offers.push({ item, source: questRewardSource(quest.name) });
+        // Every reward the quest paid, in the engine's order: `reward`, then
+        // `rewards` (a questline step's XP, extra and relic).
+        for (const reward of [quest.reward, ...(quest.rewards ?? [])]) {
+            const item = questRewardItem(reward);
+            if (!item || !qualifiesForItemRewardScreen(item)) continue;
+            if (!inventory.some(row => row.id === item.id)) continue;
+            inventory = withoutLastRow(inventory, item.id);
+            // A questline step names its questline; any other quest names itself.
+            const line = quest.questline ? getQuestline(quest.questline) : undefined;
+            offers.push({ item, source: questRewardSource(line?.name ?? quest.name) });
+        }
     }
     if (offers.length === 0) return [];
     store.setState({ player: { ...state.player, inventory } } as never);

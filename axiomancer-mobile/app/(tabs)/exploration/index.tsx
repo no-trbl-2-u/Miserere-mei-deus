@@ -107,7 +107,9 @@ export default function ExplorationScreen() {
      */
     const onNodePress = (node: ExplorationNode) => {
         if (node.kind === 'locked') {
-            setNodeTip('This path is sealed.');
+            // A road blocked by a questline's lock says why; any other
+            // locked node is simply out of reach.
+            setNodeTip(node.blockedReason ?? 'This path is sealed.');
             return;
         }
         if (node.kind === 'completed') {
@@ -115,6 +117,12 @@ export default function ExplorationScreen() {
             return;
         }
         if (node.kind === 'current') {
+            // A fled or lost fight, or a quest node left unaccepted, is
+            // unspent: tapping the node under the player tries it again.
+            if (vm.retryable && node.id === vm.currentNodeId) {
+                if (actions.moveTo(node.id).moved) actions.resolveCurrentMapEvent(node.type);
+                return;
+            }
             setNodeTip('you stand here');
             return;
         }

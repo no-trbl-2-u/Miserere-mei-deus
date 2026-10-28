@@ -53,6 +53,9 @@ Semantics worth knowing:
 - `world.node` defaults to the map's starting node. `completedMaps` are
   stamped on the continent first (and unlocked), then `map` is unlocked
   and entered fresh.
+- `world.questNodesSettled: true` settles the map's quest nodes after the
+  placement (the markers spent, their locks open; the quest log untouched),
+  so a fixture past the Breakwater's questline pockets reads every road open.
 - An empty fixture (`{ "id": "x" }`) is byte-equal to a new game.
 
 ## Using one

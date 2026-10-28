@@ -1,5 +1,5 @@
 import { Image } from '../Utils/types';
-import { QuestName } from '../World/quest.library';
+import type { QuestName } from '../World/quest.library';
 
 /**
  * NPCs module type definitions.

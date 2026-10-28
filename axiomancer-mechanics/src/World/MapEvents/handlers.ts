@@ -26,13 +26,14 @@ import { generateEncounter, scaleEnemyToLevel } from '../encounter';
 import { getMapDefinition, createMapState } from '../map.registry';
 import { completeMap, changeContinent, unlockMap, changeMap } from '../world.reducer';
 import type { WorldState } from '../types';
+import { resolveQuestNodeEvent } from '../questline';
 import { ENEMY_REGISTRY, type EnemySlug } from '../../Enemy/enemy.library';
 import { validateDieGear, type DieGearColor } from '../../Character/dieGear.reducer';
 import { REST_PASSIVE_HEAL_FRACTION, restShelterOf } from './rest-shelter';
 import type {
     EncounterPayload, InteractionPayload, GatheringPayload, RestPayload,
     VillagePayload, CutscenePayload, HazardPayload, LootCachePayload,
-    NarrationPayload, BlacksmithPayload, TravelPayload, LabyrinthDoorPayload,
+    NarrationPayload, BlacksmithPayload, TravelPayload, LabyrinthDoorPayload, QuestPayload,
     ResolveMapEventResult,
 } from './types';
 
@@ -306,7 +307,8 @@ export function resolveTravel(
     // `currentMap` is the single writable copy.
     if (restored) delete preserved[payload.destinationMap];
     world = {
-        ...changeMap(world, restored ?? createMapState(destinationDef)),
+        // A crossing is a placement on the far side: no previous node.
+        ...changeMap(world, { ...(restored ?? createMapState(destinationDef)), arrivedFrom: null }),
         mapStates: preserved,
     };
 
@@ -343,6 +345,20 @@ export function resolveLabyrinthDoor(
     };
 }
 
+// ─── quest ────────────────────────────────────────────────────────────────────
+
+/**
+ * Resolves a quest node. The state is untouched: the node's stage is read off
+ * the quest log (`questNodeStage`), never written. The dispatcher does not
+ * consume a quest node; accepting its step does (`acceptQuestStep`).
+ */
+export function resolveQuest(
+    state: GameState,
+    payload: QuestPayload,
+): ResolveMapEventResult {
+    return { state, event: resolveQuestNodeEvent(state.quests, payload) };
+}
+
 // ─── dispatch table ───────────────────────────────────────────────────────────
 
 import type { MapEventPayload } from './types';
@@ -365,5 +381,6 @@ export function applyPayload(
         case 'blacksmith':  return resolveBlacksmith(state, payload);
         case 'travel':      return resolveTravel(state, payload);
         case 'labyrinth':   return resolveLabyrinthDoor(state, payload);
+        case 'quest':       return resolveQuest(state, payload);
     }
 }

@@ -242,6 +242,7 @@ async function settleOnMap(page, what) {
         await sleep(400)
         if (await tap(page, 'combat-summary-close')) continue
         if (await page.getByTestId('cutscene-advance').count()) { await playOutCutscene(page); continue }
+        if (await tap(page, 'death-return-continue')) continue
         if (await tap(page, 'item-reward-confirm')) continue
         if (await tap(page, 'rest-claim')) continue
     }
@@ -323,19 +324,18 @@ async function walk(page) {
     await settleOnMap(page, 'bw-4')
     log('play: bw-4 gathering')
 
-    await travelTo(page, 'bw-6')
-    await waitFor(page, 'combat-reveal', 'bw-6 encounter reveal')
-    await tap(page, 'combat-enter') || fail('bw-6: the reveal has no ENTER COMBAT')
-    await waitFor(page, 'combat-arena-backdrop', 'bw-6 combat board')
-    for (let k = 0; k < 120; k++) {
-        if (await page.getByTestId('combat-summary').count()) break
-        if (await tap(page, 'combat-mercy-spare')) continue
-        await tap(page, 'combat-end-phase')
-        await sleep(150)
-    }
-    await waitFor(page, 'combat-summary', 'bw-6 combat summary', 10000)
-    await settleOnMap(page, 'bw-6')
-    log('play: bw-6 fight, played to its end')
+    // The Breakwater's fights and hazards sit in pockets behind its quest
+    // markers (QL1d). Accepting step 1 at bw-19 opens the hazard pocket; the
+    // fight pocket waits behind bw-20, which needs step 1 crossed (no dev skip
+    // in this leg), so the seam leg provokes the fight routes.
+    await travelTo(page, 'bw-19')
+    await waitFor(page, 'quest-column', 'bw-19 quest screen')
+    await waitFor(page, 'quest-accept-button', 'bw-19 offer')
+    await tap(page, 'quest-accept-button')
+    await waitFor(page, 'quest-accepted-line', 'bw-19 accepted')
+    await tap(page, 'quest-leave-button') || fail('bw-19: the quest screen has no LEAVE')
+    await settleOnMap(page, 'bw-19')
+    log('play: bw-19 quest step accepted, back on the map')
 
     await travelTo(page, 'bw-3')
     await waitFor(page, 'hazard-route-select', 'bw-3 hazard')
@@ -383,6 +383,9 @@ const SEAMS = {
     // The STORY section's NPC chips list no one (Act 1 stages no NPC), so
     // the dialogue route is provoked by the state fixture that stages one.
     'route:dialogue': { fixture: 'apprentice-staged-dialogue', landing: 'dialogue-nameplate' },
+    // The quest screen is provoked by the state fixture that stages the first
+    // quest node of the fixture questline (hermetic: no walk to bw-19).
+    'route:quest': { fixture: 'apprentice-staged-quest', landing: 'quest-column' },
     // No run hands out a relic yet (phase SG1 cut the first-node ring), so the
     // reward screen is provoked by the dev REWARDS row's RELIC REWARD.
     'route:item-reward': { section: 'rewards', leaf: 'debug-relic-reward-button', landing: 'item-reward-card' },
@@ -390,13 +393,18 @@ const SEAMS = {
     // The select screen opens from play only once the roster holds a character
     // (CH1f), so until then the `/dev` row that opens it (all locked) is the seam.
     // That row sits outside every section, so it has no section to open.
+    // A revive arms this screen in memory and a lost fight is not a seam, so the
+    // forced-dev-tools leg opens its preview (`?preview=1`) directly.
+    'route:death-return': { url: '/death-return?preview=1', landing: 'death-return' },
     'route:character-select': { leaf: 'dev-open-character-select', landing: 'character-select-carousel' },
 }
 
 async function seamLeg(page, baseUrl, id) {
     const seam = SEAMS[id]
     const path = routePathForId(id)
-    if (seam.fixture) {
+    if (seam.url) {
+        await page.goto(`${baseUrl}${seam.url}`, { waitUntil: 'networkidle' })
+    } else if (seam.fixture) {
         // docs/state-fixtures.md: `?fixture=<id>` boots the fixture and its
         // `arrive` pushes the staged route.
         await page.goto(`${baseUrl}/exploration?fixture=${seam.fixture}`, { waitUntil: 'networkidle' })

@@ -76,6 +76,9 @@ const DURABLE_ACTIONS: ReadonlySet<GameAction['type']> = new Set<GameAction['typ
     'APPLY_DIALOGUE',
     'SAVE_GAME',
     'RESET_RUN', // Persist new runId + reset world immediately.
+    'PLAYER_DIED', // A revive (or a run over) must survive a reload.
+    'ACCEPT_QUEST_STEP', // Spends the quest node: a reload must not re-offer it.
+    'TURN_IN_QUEST_STEP', // Pays the step once: a reload must not lose the payout.
     'UNLOCK_CODEX_ENTRY', // Persist codex unlock immediately.
 ]);
 
@@ -189,6 +192,14 @@ export interface GameActions {
      * standard DURABLE_ACTIONS pipeline. Returns the post-reset GameState.
      */
     resetRun: (opts: { keepCharacter: boolean }) => GameState;
+    /**
+     * The player's VITAE reached 0 (`cause`: a fight or a hazard). A first
+     * death revives them (`'revived'`: 1 VITAE, dying, back on the node they
+     * walked from, the death node open to retry); a death while dying ends
+     * the run as `resetRun({ keepCharacter: true })` does (`'run-over'`).
+     * Dispatches `PLAYER_DIED`; persists through DURABLE_ACTIONS.
+     */
+    playerDied: (cause: 'fight' | 'hazard') => 'revived' | 'run-over';
     // ── Codex ────────────────────────────────────────────────────────────────
     /**
      * Append a codex entry id to `state.codex.unlockedEntries`
@@ -295,12 +306,13 @@ function logGameEventSanitized(event: GameEvent): void {
 function durableSlice(next: GameState): GameState {
     const {
         version, runId, player, world, quests, flags,
-        rngState, codex, labyrinth,
+        rngState, codex, labyrinth, dying,
     } = next;
     return {
         version, runId, player, world, quests, flags,
         rngState, codex,
         ...(labyrinth ? { labyrinth } : {}),
+        ...(dying ? { dying } : {}),
     };
 }
 
@@ -517,6 +529,12 @@ export function createGameStore(
             // ── Run loop ─────────────────────────────────────────────────────
             resetRun(opts: { keepCharacter: boolean }) {
                 return dispatch({ type: 'RESET_RUN', payload: opts });
+            },
+
+            playerDied(cause) {
+                const wasDying = get().dying === true;
+                dispatch({ type: 'PLAYER_DIED', payload: { cause } });
+                return wasDying ? 'run-over' : 'revived';
             },
 
             // ── Codex ────────────────────────────────────────────────────────

@@ -173,6 +173,13 @@ secrets, variables, labels' meaning): a session never changes them, even
 at T's word in the moment; it writes the exact command as a
 `plan/NEEDS_T.md` row and T runs it (the 2026-10-20 ruleset, created
 in session without a bypass list, blocked every push to `main`).
+Before it requests a merge the job checks the tree GitHub would merge
+(`refs/pull/<n>/merge`) with main's `check-lessons`, `check-plan-queues` and
+`check-deadlines`; GitHub's server-side merge never runs the merge drivers, so
+a red tree gets one update of the PR branch from `main` (`updateBranchIsolated` in `pr-resolve.mjs`, called in-process; main's
+drivers and scripts by absolute path; no PR-branch code runs), then
+a hold naming the lint. The check is point-in-time (`--auto` merges later) and
+sits after the kill switch and the plot and pipeline holds.
 `pr-autofix` (Haiku, two runs per PR) keeps
 a red `loop:pr` PR green and `pr-resolve` keeps it mergeable (D87); at
 most 5 are open at once (D85).
@@ -329,6 +336,13 @@ them; update here first.
    kept) and both Queue change log entries, and neighbouring row ticks
    settle. Two rewrites of one row keep their markers, and a merge that
    would give a phase a second row is refused.
+   `plan/deadlines.md` merges through `scripts/deadlines-merge.mjs`
+   (`merge.deadlines.driver`, same registration, and `MERGE_DRIVERS` in
+   `scripts/pr-resolve.mjs` for the runner): same-spot Items, Unscheduled
+   lines and Change log lines are all kept (new Items stay in date order), a
+   row both sides edited merges cell by cell, a cell changed two ways keeps
+   its markers, and a merge that would double an Unscheduled id or an Items
+   row is refused.
 2. **No `Co-Authored-By:` trailers, no emojis** — in commits, code, or
    content.
 3. **The verify gate is non-negotiable.** No `--no-verify`, no

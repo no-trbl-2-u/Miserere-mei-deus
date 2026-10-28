@@ -7,7 +7,8 @@
  * SHIFT_PHILOSOPHICAL_ALIGNMENT, START_COMBAT, PROCESS_NODE) must NOT
  * trigger `adapter.save`. The curated durable set must — as of now
  * LEVEL_UP, END_COMBAT, MOVE_TO_NODE, APPLY_DIALOGUE, SAVE_GAME,
- * RESET_RUN and UNLOCK_CODEX_ENTRY. COMBAT_ROUND is not in the set.
+ * RESET_RUN, PLAYER_DIED, ACCEPT_QUEST_STEP, TURN_IN_QUEST_STEP and
+ * UNLOCK_CODEX_ENTRY. COMBAT_ROUND is not in the set.
  * `src/Game/store.ts` is the authority, not this comment.
  *
  * Note the scope: this pins the ENGINE's policy. A consumer may wrap the
@@ -132,5 +133,15 @@ describe('Phase 51 — autosave throttling restricts adapter.save to DURABLE_ACT
         // Call the explicit save verb — writes through.
         store.getState().save();
         expect(adapter.saves).toBe(1);
+    });
+
+    it('ACCEPT_QUEST_STEP and TURN_IN_QUEST_STEP trigger adapter.save (they spend a node, pay a step)', () => {
+        const adapter = countingAdapter();
+        const store = createGameStore(adapter, { player: Player, world: createStartingWorld('breakwater') });
+
+        store.getState().dispatch({ type: 'ACCEPT_QUEST_STEP', payload: { questline: 'none', step: 1 } });
+        expect(adapter.saves).toBe(1);
+        store.getState().dispatch({ type: 'TURN_IN_QUEST_STEP', payload: { questline: 'none', step: 1 } });
+        expect(adapter.saves).toBe(2);
     });
 });

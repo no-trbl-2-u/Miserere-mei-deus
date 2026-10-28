@@ -25,9 +25,12 @@ import { buildCharacterFromPreset, getPresetById } from '../../Character/presets
 import type { Character } from '../../Character/types';
 import { getRng, setSeed } from '../../Utils/rng';
 import { getMapDefinition, createMapState } from '../../World/map.registry';
+import { registerQuestline } from '../../World/questline';
+import { FIXTURE_QUESTLINE } from './fixture-content';
 import {
     changeContinent, changeMap, completeMap, placeOnNode, unlockMap,
 } from '../../World/world.reducer';
+import { settleQuestNodes } from './quest-nodes';
 import type { WorldState } from '../../World/types';
 import { createNewGameState } from '../game.reducer';
 import type { GameState } from '../types';
@@ -87,7 +90,10 @@ const applyWorld = (target: StateFixtureWorld | undefined) => (state: GameState)
     );
     const onMap = changeMap(unlockMap(withCompleted, target.map), createMapState(def));
     const placed = target.node === undefined ? onMap : placeOnNode(onMap, target.node);
-    return { ...state, world: placed };
+    const settled = target.questNodesSettled
+        ? { ...placed, currentMap: settleQuestNodes(placed.currentMap) }
+        : placed;
+    return { ...state, world: settled };
 };
 
 const applyFlags = (flags: readonly string[] | undefined) => (state: GameState): GameState =>
@@ -108,6 +114,11 @@ const pipe = (...fns: ReadonlyArray<(s: GameState) => GameState>) => (s: GameSta
  */
 export function buildStateFromFixture(fixture: StateFixture): GameState {
     if (fixture.seed !== undefined) setSeed(fixture.seed);
+    // The fixture questline is not part of the live world: a fixture that stages
+    // its quest node brings the questline with it.
+    if (fixture.stagedEvent?.kind === 'quest' && fixture.stagedEvent.questline === FIXTURE_QUESTLINE.id) {
+        registerQuestline(FIXTURE_QUESTLINE);
+    }
     return pipe(
         applyPreset(fixture),
         applyPlayer(fixture.player),

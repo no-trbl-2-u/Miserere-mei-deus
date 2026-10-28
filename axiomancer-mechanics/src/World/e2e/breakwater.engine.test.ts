@@ -84,19 +84,27 @@ describe('starting on any map (dev tools)', () => {
 });
 
 describe('the Breakwater map', () => {
-    it('carries one node per landmark on the coast plate (D25: 18)', () => {
-        expect(breakwater.nodes).toHaveLength(18);
-        expect(breakwater.nodes.map(n => n.id)).toEqual(
-            Array.from({ length: 18 }, (_, i) => `bw-${i + 1}`),
+    it('carries one node per landmark on the coast plate (D25: 18) and the four quest markers', () => {
+        expect(breakwater.nodes).toHaveLength(22);
+        expect(breakwater.nodes.map(n => n.id).sort()).toEqual(
+            Array.from({ length: 22 }, (_, i) => `bw-${i + 1}`).sort(),
         );
     });
 
-    it('ends every run at the river bridge, through the watchtower', () => {
+    it('ends every run at the river bridge, through the watchtower; the other dead ends are the pockets and the wreck', () => {
         const audit = auditMapTraversal(breakwater);
         expect(audit.strands).toEqual([]);
-        expect(audit.terminalNodes).toEqual(['bw-18']);
+        expect(audit.unreachableNodes).toEqual([]);
+        // The pockets (joined only to their marker) and the wreck (whose
+        // only onward road is the rib to the harbour town) end the forward
+        // skeleton too; the bridge is the one end in the last column.
+        expect([...audit.terminalNodes].sort()).toEqual(
+            ['bw-2', 'bw-3', 'bw-6', 'bw-8', 'bw-10', 'bw-11', 'bw-12', 'bw-14', 'bw-18'].sort(),
+        );
         const watchtower = breakwater.nodes.find(n => n.id === 'bw-17')!;
         expect(watchtower.connectedNodes).toEqual(['bw-18']);
+        const lastColumn = Math.max(...breakwater.nodes.map(n => n.location[0]));
+        expect(breakwater.nodes.filter(n => n.location[0] === lastColumn).map(n => n.id)).toEqual(['bw-18']);
     });
 });
 
@@ -107,20 +115,28 @@ describe('the Breakwater\'s events (D29)', () => {
 
     it('resolves an authored event on every node', () => {
         expect(Object.values(kinds)).not.toContain('empty');
-        expect(Object.keys(kinds)).toHaveLength(18);
+        expect(Object.keys(kinds)).toHaveLength(22);
     });
 
-    it('spreads 6 encounters, 2 rests, 3 loot caches, 2 gatherings, 2 hazards, 1 Anvil, an arrival and 1 door', () => {
+    it('spreads 6 encounters, 2 rests, 3 loot caches, 2 gatherings, 2 hazards, 1 Anvil, an arrival, 1 door and 4 quest nodes', () => {
         const tally: Record<string, number> = {};
         for (const k of Object.values(kinds)) tally[k] = (tally[k] ?? 0) + 1;
         expect(tally).toEqual({
-            encounter: 6, rest: 2, 'loot-cache': 3, gathering: 2, hazard: 2, blacksmith: 1, cutscene: 1, travel: 1,
+            encounter: 6, rest: 2, 'loot-cache': 3, gathering: 2, hazard: 2, blacksmith: 1, cutscene: 1, travel: 1, quest: 4,
         });
     });
 
-    it('keeps its Anvil at the fishing hamlet, a step from the door fight (D61, R3b)', () => {
+    it('puts the four quest markers on bw-19..bw-22, node 1 to node 4 of the Breakwater questline', () => {
+        for (const [i, id] of ['bw-19', 'bw-20', 'bw-21', 'bw-22'].entries()) {
+            const payload = getNodeEventPool('coastal-continent', 'breakwater', id)!.entries[0]!.payload;
+            expect(payload).toMatchObject({ kind: 'quest', questline: 'breakwater-questline', node: i + 1 });
+        }
+    });
+
+    it('keeps its Anvil at the fishing hamlet, a step from the last marker before the door fight (D61, R3b)', () => {
         expect(kinds['bw-16']).toBe('blacksmith');
-        expect(breakwater.nodes.find(n => n.id === 'bw-16')!.connectedNodes).toContain('bw-17');
+        expect(breakwater.nodes.find(n => n.id === 'bw-16')!.connectedNodes).toContain('bw-22');
+        expect(breakwater.nodes.find(n => n.id === 'bw-22')!.connectedNodes).toEqual(['bw-17']);
     });
 
     it('opens on an arrival scene at the windmill, not a rest screen (D31)', () => {

@@ -84,6 +84,19 @@ describe('a quest relic reaches the item-reward screen', () => {
         expectQuestRelicQueued(store, q);
     });
 
+    it('a relic in `Quest.rewards` (after XP) is queued too, not left in the satchel', () => {
+        const base = quest({ id: 'kill-foe', type: 'kill', target: FOE.name }, { kind: 'experience', amount: 40 });
+        const q: Quest = { ...base, rewards: [{ kind: 'currency', amount: 15 }, RELIC_REWARD] };
+        const store = storeWith(q);
+        const before = gs(store).player;
+        const actions = createAppActions(store);
+        actions.startCombat(FOE);
+        actions.endCombat('victory');
+        expect(gs(store).quests.completed).toContain(q.name);
+        expect(gs(store).player.currency).toBe(before.currency + 15);
+        expectQuestRelicQueued(store, q);
+    });
+
     it('from a reach on arrival: the event resolve queues the relic', () => {
         const store = createAppStore({ adapter: createMemoryAdapter() });
         const here = gs(store).world.currentMap.currentNode;

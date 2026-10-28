@@ -33,10 +33,12 @@ import {
     getCardById,
     healCharacter,
     isConsumable,
+    arriveAtNode,
     isEquipment,
     markNodeConsumed,
     resolveMapEvent,
-    settleArrival,
+    moveToNode,
+    answerUnsettledArrival,
     revealAdjacent,
     STARTING_CARD_IDS,
     unlockNode as worldUnlockNode,
@@ -67,6 +69,7 @@ import {
     applyHazardDeckPresetAction,
     applyHazardCardAction,
     beginHazardAction,
+    armingHazardDeath,
     claimHazardRewardsAction,
     continueHazardAfterResolveAction,
     discardHazardCardAction,
@@ -148,7 +151,14 @@ import {
 import { getAporiaAct } from '@mechanics';
 import type { LabyrinthActId, LabyrinthBossOutcome } from '@mechanics';
 import { wrapActionsWithLogging } from './logging';
-import { offerCompletedQuestItemsAction } from './item-reward/relic-sources';
+import {
+    acceptQuestStepAction,
+    claimQuestCardAction,
+    closeQuestAction,
+    offerCompletedQuestExtrasAction,
+    openQuestScreenAction,
+    turnInQuestStepAction,
+} from './quest/store-actions';
 import { endCombatOutcome, fightRecorder } from '@/lib/fightRecorder';
 import { deckEventPoster, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
 import { getMapLayout } from './exploration-maps';
@@ -359,6 +369,14 @@ export interface AppActions {
      * clears any in-flight Labyrinth visit and its return point.
      */
     resetRun: (opts: { keepCharacter: boolean }) => void;
+    /**
+     * Engine `playerDied` (the death rule). A first death revives the player
+     * on the node they walked from at 1 VITAE, dying (`'revived'`); a death
+     * while dying ends the run exactly as `resetRun({ keepCharacter: true })`
+     * does (`'run-over'`), including the play log's `run-end` and the
+     * Labyrinth cleanup. The combat route calls it for a lost fight on the map.
+     */
+    playerDied: (cause: 'fight' | 'hazard') => 'revived' | 'run-over';
     save: () => void;
     /**
      * Run `resolveMapEvent(state)` on the current node, cache the
@@ -389,8 +407,8 @@ export interface AppActions {
     pickEventChoice: (choiceId: string) => void;
     /**
      * Withdraw from an encounter already entered (the combat reveal's
-     * WITHDRAW). Toasts the retreat (free; it only narrates) and settles
-     * the node, without requiring a pending event slice, which
+     * WITHDRAW). Toasts the retreat (free; it only narrates) and answers
+     * the arrival, leaving the node unspent, without requiring a pending event slice, which
      * `beginHazardEncounter` has already cleared by then. Only offered where retreat is allowed;
      * boss encounters never surface it.
      */
@@ -468,6 +486,21 @@ export interface AppActions {
     pickRestChoiceUpgrade: (cardId: string) => void;
     /** Confirm the settled ledger; applies heal/upgrade/spend/removal and persists. */
     claimRestOutcome: () => ClaimRestChoiceResult;
+
+    // -----------------------------------------------------------------
+    // The quest screen (see state/quest/). ACCEPT starts the step the open
+    // quest node offers; TURN IN pays the finished step behind it; LEAVE
+    // closes the screen; the card pick settles a `card-pick` reward.
+    // -----------------------------------------------------------------
+
+    /** Accept the step the open quest node offers. True when it was accepted. */
+    acceptQuestStep: () => boolean;
+    /** Turn in the finished step behind the open quest node. True when paid. */
+    turnInQuestStep: () => boolean;
+    /** LEAVE the quest screen. Nothing changes; the node stays as it was. */
+    closeQuest: () => void;
+    /** Take one of the quest's offered cards, or `null` to take nothing. */
+    claimQuestCard: (cardId: string | null) => void;
 
     // -----------------------------------------------------------------
     // Loot-cache-choice encounter ("The Reliquary" — see state/cache/).
@@ -647,6 +680,29 @@ function recordRunEnd(store: AppStore): void {
     });
 }
 
+/**
+ * What a run over leaves behind in the mobile slices, after the engine has
+ * reset the run.
+ */
+function clearRunScopedSessions(store: AppStore): void {
+    // A run reset regenerates the overworld (seating the player at
+    // the starting node), so any in-flight Labyrinth visit is over.
+    // Clear the mobile session slice — otherwise the still-mounted
+    // Labyrinth presenter looks the fresh overworld node up in the
+    // act and throws LabyrinthContentError (the "battle loss → THE
+    // BINDING TORE" crash). This is the single choke point for
+    // every reset (combat defeat + hazard out-of-combat death).
+    if (store.getState().labyrinthUi?.session) {
+        store.setState({ labyrinthUi: EMPTY_LABYRINTH_SLICE });
+    }
+    // The visit's durable return point goes with it:
+    // the fresh overworld is where the run now stands.
+    const lab = store.getState().labyrinth;
+    if (lab?.returnWorld) {
+        store.setState({ labyrinth: withoutReturnWorld(lab) });
+    }
+}
+
 // ---------------------------------------------------------------------------
 // Action creators
 // ---------------------------------------------------------------------------
@@ -702,7 +758,7 @@ export function createAppActions(store: AppStore): AppActions {
             const questsBefore = (store.getState() as unknown as GameState).quests;
             const report = store.getState().endCombat(outcome ?? 'flee');
             // A kill that completed a quest: its relic goes to the reward screen.
-            if (questsBefore) offerCompletedQuestItemsAction(store, questsBefore);
+            if (questsBefore) offerCompletedQuestExtrasAction(store, questsBefore);
             // The play log: posts a fight the panel never finished (a WITHDRAW);
             // one it finished has already posted, so this is a no-op then.
             void fightRecorder.end(endCombatOutcome(outcome ?? 'flee'));
@@ -745,22 +801,27 @@ export function createAppActions(store: AppStore): AppActions {
             };
             recordRunEnd(store);
             engineStore.resetRun?.(opts);
-            // A run reset regenerates the overworld (seating the player at
-            // the starting node), so any in-flight Labyrinth visit is over.
-            // Clear the mobile session slice — otherwise the still-mounted
-            // Labyrinth presenter looks the fresh overworld node up in the
-            // act and throws LabyrinthContentError (the "battle loss → THE
-            // BINDING TORE" crash). This is the single choke point for
-            // every reset (combat defeat + hazard out-of-combat death).
-            if (store.getState().labyrinthUi?.session) {
-                store.setState({ labyrinthUi: EMPTY_LABYRINTH_SLICE });
+            clearRunScopedSessions(store);
+        },
+        playerDied: (cause) => {
+            const engineStore = store.getState() as unknown as {
+                playerDied?: (c: 'fight' | 'hazard') => 'revived' | 'run-over';
+            };
+            // A death while dying is a run over: post the run's end before
+            // the engine drops it, as `resetRun` does.
+            const runOver = store.getState().dying === true;
+            if (runOver) recordRunEnd(store);
+            const outcome = engineStore.playerDied?.(cause) ?? 'run-over';
+            if (outcome === 'run-over') clearRunScopedSessions(store);
+            // Mobile owns save timing: the engine's durable-action autosave is
+            // deflected here, so the revive (or the fresh run) is checkpointed
+            // by hand, before the return moment, and a reload keeps `dying`.
+            try {
+                store.getState().save();
+            } catch {
+                // Persistence failures must not strand the player on the fight.
             }
-            // The visit's durable return point goes with it:
-            // the fresh overworld is where the run now stands.
-            const lab = store.getState().labyrinth;
-            if (lab?.returnWorld) {
-                store.setState({ labyrinth: withoutReturnWorld(lab) });
-            }
+            return outcome;
         },
         levelUp: () => {
             // Engine `levelUp` action. Same
@@ -790,7 +851,8 @@ export function createAppActions(store: AppStore): AppActions {
         resolveHazardRound: () => resolveHazardRoundAction(store),
         continueHazardAfterResolve: () => continueHazardAfterResolveAction(store),
         acknowledgeHazardOutcome: () => acknowledgeHazardOutcomeAction(store),
-        claimHazardRewards: (cardId) => claimHazardRewardsAction(store, cardId),
+        claimHazardRewards: (cardId) =>
+            claimHazardRewardsAction(store, cardId, armingHazardDeath(actions.playerDied)),
         abandonHazard: () => abandonHazardAction(store),
         claimHazardPuzzle: (layout, route, p, seed) => claimHazardPuzzleAction(store, layout, route, p, seed),
         randomizeHazardDeck: () => randomizeHazardDeckAction(store),
@@ -829,6 +891,10 @@ export function createAppActions(store: AppStore): AppActions {
         pickRestChoiceCut: (cardId) => pickRestChoiceCutAction(store, cardId),
         pickRestChoiceUpgrade: (cardId) => pickRestChoiceUpgradeAction(store, cardId),
         claimRestOutcome: () => claimRestChoiceOutcomeAction(store),
+        acceptQuestStep: () => acceptQuestStepAction(store),
+        turnInQuestStep: () => turnInQuestStepAction(store),
+        closeQuest: () => closeQuestAction(store),
+        claimQuestCard: (cardId) => claimQuestCardAction(store, cardId),
         beginLootCacheChoice: (options) => beginLootCacheChoiceAction(store, options),
         chooseLootCacheChoiceOffer: (offer) => chooseLootCacheChoiceOfferAction(store, offer),
         claimLootCacheChoiceOutcome: () => claimLootCacheChoiceOutcomeAction(store),
@@ -1013,7 +1079,9 @@ export function readCurrentNodeId(world: WorldState): string {
  * player standing on a node with no record of what they still owe it.
  */
 function writeArrivalNodeId(map: MapState, nodeId: string): MapState {
-    return { ...map, currentNode: nodeId, pendingArrival: nodeId };
+    // The engine's own arrival write: cursor, owed arrival and `arrivedFrom`
+    // (where a first death returns the player) as one sentence.
+    return arriveAtNode(map, nodeId);
 }
 
 function moveToAction(store: AppStore, nodeId: string): MoveToResult {
@@ -1024,6 +1092,20 @@ function moveToAction(store: AppStore, nodeId: string): MoveToResult {
 
     const currentNodeId = readCurrentNodeId(world);
     const map = world.currentMap;
+
+    // The retry: the node the player stands on, still unspent, with its
+    // arrival answered (a fled or lost fight, a quest node left unaccepted),
+    // is owed again by the engine's own move. The caller resolves the arrival
+    // afterwards, as for any move.
+    if (nodeId === currentNodeId) {
+        const retried = moveToNode(world, nodeId);
+        if (retried !== world) {
+            store.setState({ world: retried });
+            try { store.getState().save(); } catch { /* persistence must not block the road */ }
+            return { moved: true, currentNodeId, locked: false };
+        }
+    }
+
     const available = map.availableNodes;
     const completed = map.completedNodes;
 
@@ -1038,14 +1120,17 @@ function moveToAction(store: AppStore, nodeId: string): MoveToResult {
     // Node kind comes from the engine's authored event pools. Encounter /
     // boss nodes (both resolve to the `encounter` kind) are not completed or
     // consumed BY THE MOVE, and the move does not open their way on either:
-    // a fight's node is settled when the fight ends, by the
-    // engine's `END_COMBAT` (`settleArrival`) or by a flee below. Until then
+    // a fight's node is settled only when the fight is won, by the
+    // engine's `END_COMBAT` (`settleArrival`); a flee leaves it unspent with
+    // its arrival answered (`answerArrivalAction` below). Until then
     // a save, mid-fight included, stands the player on the node with the
     // fight owed and nowhere else to go, and the map re-offers it on reload.
     // Every other kind completes here, and resolving its arrival consumes it
     // (`resolve-map-event.ts`).
     const nodeKind = getNodePrimaryEventKind(map.continent, map.name, nodeId);
-    const isEncounterNode = nodeKind === 'encounter';
+    // A quest node is the same: only accepting its step spends it
+    // (`acceptQuestStep`), and its roads open then, not on arrival.
+    const isEncounterNode = nodeKind === 'encounter' || nodeKind === 'quest';
 
     // Only complete/consume nodes that aren't encounters
     let nextWorld: WorldState = world;
@@ -1070,8 +1155,14 @@ function moveToAction(store: AppStore, nodeId: string): MoveToResult {
     const engineNode = getMapDefinition(map.continent, map.name).nodes.find(
         (n) => n.id === nodeId,
     );
+    // A blocked road (a questline's lock on the next quest node) opens
+    // nothing: the engine opens it, and lists the node, once the step fills.
+    const blocked = (targetId: string) => map.blockedRoutes.some(
+        (r) => (r.from === nodeId && r.to === targetId) || (r.from === targetId && r.to === nodeId),
+    );
     for (const targetId of isEncounterNode ? [] : engineNode?.connectedNodes ?? []) {
         if (completed.includes(targetId)) continue;
+        if (blocked(targetId)) continue;
         if (nextWorld.currentMap.availableNodes.includes(targetId)) continue;
         nextWorld = worldUnlockNode(nextWorld, targetId);
     }
@@ -1353,7 +1444,7 @@ function withQuestRewards(before: GameState, after: GameState): GameState['playe
 function resolveCurrentMapEventAction(store: AppStore, sourceNodeType?: string, staged?: MapEventPayload): boolean {
     const questsBefore = (store.getState() as unknown as GameState).quests;
     const resolved = resolveCurrentMapEventInner(store, sourceNodeType, staged);
-    if (questsBefore) offerCompletedQuestItemsAction(store, questsBefore);
+    if (questsBefore) offerCompletedQuestExtrasAction(store, questsBefore);
     return resolved;
 }
 
@@ -1365,8 +1456,9 @@ function resolveCurrentMapEventInner(store: AppStore, sourceNodeType?: string, s
 
         // When a non-'none' event resolves, mark the current node consumed
         // in the engine's parallel data model (`consumedNodes`) for one-time
-        // events only. Encounter, travel and labyrinth events are never
-        // consumed here; every other kind is (one-time only). Kept alongside
+        // events only. Encounter, travel, labyrinth and quest events are never
+        // consumed here (a quest node is spent when its step is accepted,
+        // `acceptQuestStep`); every other kind is (one-time only). Kept alongside
         // `completedNodes` (populated by `moveToAction`'s
         // `worldCompleteNode` call).
         let resolvedState: GameState = result.state;
@@ -1375,7 +1467,7 @@ function resolveCurrentMapEventInner(store: AppStore, sourceNodeType?: string, s
         // start node — mirroring the engine dispatcher's own travel
         // short-circuit. Doors stay repeatable.
         const shouldConsumeNode = result.event.kind !== 'none' &&
-            !['encounter', 'travel', 'labyrinth'].includes(result.event.kind);
+            !['encounter', 'travel', 'labyrinth', 'quest'].includes(result.event.kind);
         if (shouldConsumeNode) {
             const currentNodeId = resolvedState.world?.currentMap?.currentNode;
             if (currentNodeId) {
@@ -1514,6 +1606,23 @@ function resolveCurrentMapEventInner(store: AppStore, sourceNodeType?: string, s
             return true;
         }
 
+        // A quest node has no card: it opens the quest screen (`<QuestGate>`
+        // routes to /quest when the slice fills). The node stays unspent (the
+        // engine does not consume it and the exclusion above keeps it so)
+        // until its step is accepted, and the map shows no step state.
+        if (result.event.kind === 'quest') {
+            store.setState({
+                ...resolvedState,
+                event: EMPTY_EVENT_SLICE,
+            });
+            openQuestScreenAction(store, {
+                questline: result.event.questline,
+                node: result.event.node,
+                description: result.event.description,
+            });
+            return true;
+        }
+
         // Spread the advanced state onto the store. `event` is mobile-only
         // and survives because `result.state` does not include it.
         // If the resolved event is an interaction, seed the dialogue cursor at
@@ -1584,7 +1693,7 @@ function announceFlee(store: AppStore): void {
  * combat reveal's WITHDRAW. By then `beginHazardEncounter` has already cleared the event slice,
  * so unlike `pickEventChoice('flee')` this narrates the retreat without needing a
  * pending event; the slice is cleared defensively for any path that still has
- * one, and the node is settled. The modal teardown is the caller's (the overlay's) concern.
+ * one, and the arrival is answered with the node left unspent. The modal teardown is the caller's (the overlay's) concern.
  */
 function fleeEncounterAction(store: AppStore): void {
     try {
@@ -1593,17 +1702,19 @@ function fleeEncounterAction(store: AppStore): void {
         console.error('Failed to process flee action:', error);
     }
     clearEventSlice(store);
-    settleArrivalAction(store);
+    answerArrivalAction(store);
 }
 
 /**
- * Settle the fight's node when the player walks away from it. A fight that
- * runs to an end settles through the engine's `END_COMBAT`; a flee does not,
- * so both flee paths settle here. The node is spent and its way on opens.
+ * Answer the fight's arrival when the player walks away from it. A fight that
+ * runs to a win settles through the engine's `END_COMBAT`; a flee settles
+ * nothing: the engine's `answerUnsettledArrival` clears the debt (so the
+ * exploration screen does not re-fire the fight) and leaves the node unspent,
+ * with nothing opened or revealed from it, so the player can try it again.
  */
-function settleArrivalAction(store: AppStore): void {
-    const settled = settleArrival(store.getState() as unknown as GameState);
-    store.setState({ world: settled.world });
+function answerArrivalAction(store: AppStore): void {
+    const answered = answerUnsettledArrival(store.getState() as unknown as GameState);
+    store.setState({ world: answered.world });
 }
 
 function pickEventChoiceAction(store: AppStore, choiceId: string): void {
@@ -1638,7 +1749,7 @@ function pickEventChoiceAction(store: AppStore, choiceId: string): void {
                     console.error('Failed to process flee action:', error);
                     clearEventSlice(store);
                 }
-                settleArrivalAction(store);
+                answerArrivalAction(store);
                 return;
             }
             // Unknown choice id on combat-prelude — defensive no-op.
@@ -1670,7 +1781,7 @@ function pickEventChoiceAction(store: AppStore, choiceId: string): void {
                 const questsBefore = (store.getState() as unknown as GameState).quests;
                 store.getState().applyDialogue(tree, choice);
                 // A choice that completed a quest: its relic goes to the reward screen.
-                if (questsBefore) offerCompletedQuestItemsAction(store, questsBefore);
+                if (questsBefore) offerCompletedQuestExtrasAction(store, questsBefore);
                 const nextState = store.getState() as unknown as GameState;
                 const result = applyDialogueChoice(nextState, tree, choice);
 

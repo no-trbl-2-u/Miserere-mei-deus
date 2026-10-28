@@ -258,15 +258,20 @@ export {
     validateStateFixture,
     getStateFixtureById, listStateFixtureIds,
     FIXTURE_NPC, FIXTURE_SHOP, FIXTURE_QUEST,
-    FIXTURE_DIALOGUE_EVENT, FIXTURE_VILLAGE_EVENT, FIXTURE_CUTSCENE_EVENT,
+    FIXTURE_DIALOGUE_EVENT, FIXTURE_VILLAGE_EVENT, FIXTURE_CUTSCENE_EVENT, FIXTURE_QUEST_EVENT, FIXTURE_QUESTLINE,
     FIXTURE_WEAPON, FIXTURE_ARMOR, FIXTURE_TRINKETS, FIXTURE_ELITE_RELICS, FIXTURE_QUEST_RELIC,
+    // Test-only: a map's quest nodes settled so a walker can cross it.
+    settleQuestNodes, settleQuestNodesIn, questNodeIdsOn,
     // The relic re-slot: the v38 -> v39 hop's helper, and the one the mobile
     // item-reward queue reads a pending piece through.
     reslotRelicPiece, reslotRelicSave,
+    // The death rule: a first death revives, a death while dying ends the run.
+    resolveDeath, clearDying,
 } from './Game';
 export type {
     StateFixture,
     GameState, GameStore, PersistenceAdapter, StoreApi,
+    DeathCause, DeathResult,
     GameEvent, GameEventEmitter, GameEventHandler,
     CodexEntry,
 } from './Game';
@@ -277,17 +282,18 @@ export {
     // The new-game start and "start on any map" (dev tools).
     createStartingWorld, STARTING_MAP, STARTABLE_MAPS,
     moveToNode,
-    teleportToNode, placeOnNode, unblockMapRoute,
+    teleportToNode, placeOnNode, unblockMapRoute, arriveAtNode, unspendNode,
     applyDialogueChoice,
     emptyQuestLog, findActiveQuest,
     startQuest, progressQuest, completeQuest,
     payQuestReward, payCompletedQuests, newlyCompletedQuests, questRewardItem, settleKill,
+    advanceHazardObjectives,
     // Elites come back after a night's rest (phase ER1).
     respawnElites, settledEliteNodes, retireEliteNode,
     markEliteUpgradeTaken, isEliteUpgradeTaken,
     eliteEncounterAt, isEliteNode, eliteRelicDropsAt,
 } from './World';
-export type { PaidQuestReward, EliteNodeRef, SettledEliteNode, RespawnElitesResult } from './World';
+export type { PaidQuestReward, KilledFoe, EliteNodeRef, SettledEliteNode, RespawnElitesResult } from './World';
 
 // Hazard Minigame. The engine transitions, content, tuning, deck-flag codec
 // and types mobile consumes; the rest of the Hazard module's surface is
@@ -427,18 +433,30 @@ export {
     revealAdjacent, markNodeConsumed,
     // Traversal queries.
     legalMovesFrom,
+    isHoldingRoads,
     // The forward skeleton the progression audits walk.
     forwardEdges,
 } from './World';
 export {
     resolveMapEvent,
     settleArrival,
+    answerUnsettledArrival,
     getNodeEventPool,
     getNodePrimaryEventKind,
 } from './World';
 export type {
-    MapEventKind,
+    MapEventKind, QuestPayload,
     MapEventPayload, ResolvedEvent, ResolveMapEventResult,
+    Questline, QuestlineStep, QuestlineId, QuestlineSettle, QuestNodeStage, QuestStepView, RouteRef,
+    QuestStepState,
+} from './World';
+// The questline step rules (accept, turn in, the node's stage, the settle seam).
+export {
+    registerQuestline, getQuestline, listQuestlines, questlineStep,
+    questStepState, stepQuest, questStepView, questNodeStage, resolveQuestNodeEvent,
+    openReadyQuestRoutes, settleQuestLog, acceptQuestStep, turnInQuestStep,
+    // The authored questlines (the Breakwater's).
+    BREAKWATER_QUESTLINE, BREAKWATER_QUESTLINE_ID, AUTHORED_QUESTLINES,
 } from './World';
 // Rest shelter classification. Mobile gates the hazard-scar max-VITAE mend on this.
 export type { RestShelter } from './World';
@@ -465,7 +483,7 @@ export type {
     WorldState, Quest,
     Encounter,
     MapName, ContinentName, QuestName,
-    MapState, QuestObjective, QuestLog,
+    MapState, QuestObjective, QuestLog, Reward,
     SeedInput,
 } from './World';
 // Roster health (RH1): dangling references and orphans across the roster.

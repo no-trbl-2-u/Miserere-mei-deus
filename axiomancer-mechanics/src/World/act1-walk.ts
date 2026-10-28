@@ -10,7 +10,8 @@
  * Everything is read from the graph:
  *   - the regions, in order: the new-game map, then each exit's `travel`
  *     destination, until an exit that travels nowhere;
- *   - a region's exit: its one terminal node (no outgoing edge);
+ *   - a region's exit: its one terminal node (no outgoing edge) in the last
+ *     column (a questline's pockets are dead ends too, never the exit);
  *   - its door: the one node with an edge into the exit (the Death Beholder);
  *   - the kinds it carries: the first entry kind of every node's pool.
  *
@@ -20,11 +21,18 @@
  * kind not yet met (door and exit excluded), resolving every node on the way,
  * then the door, then the exit. Ties break in map-definition order.
  *
+ * A region that carries a questline (the Breakwater's) plays it first, in
+ * step order: the walk goes to each step's quest node (accepting the step
+ * there, after turning in the one before), then to as many nodes of its
+ * pocket as the step counts (the nearest first). The last step's boss is the
+ * door. The questline's own locks and held roads open in that order, so the
+ * walk never needs a road the game would refuse.
+ *
  * Read-only: nothing here edits a map, a pool or a save.
  *
  * Functions:
  *   planAct1Walk()            the four regions with their derived paths
- *   ACT1_WALK_EVENT_KINDS     all twelve map-event kinds, for the audit table
+ *   ACT1_WALK_EVENT_KINDS     all thirteen map-event kinds, for the audit table
  */
 
 import { MAP_REGISTRY } from './map.registry';
@@ -34,11 +42,13 @@ import type { MapEventKind } from './MapEvents/types';
 import { getNodeEventPool } from './MapEvents/resolve-map-event';
 import './MapEvents/content';
 import { STARTING_MAP } from './index';
+import { listQuestlines } from './questline';
+import { objectiveClass, stepSupply, supplyClassesOf } from './questline-supply';
 
 /** Every map-event kind, in `MapEventKind` declaration order. */
 export const ACT1_WALK_EVENT_KINDS: readonly MapEventKind[] = [
     'encounter', 'interaction', 'gathering', 'rest', 'village', 'cutscene',
-    'hazard', 'loot-cache', 'narration', 'blacksmith', 'travel', 'labyrinth',
+    'hazard', 'loot-cache', 'narration', 'blacksmith', 'travel', 'labyrinth', 'quest',
 ];
 
 /** Why a step is on the path. */
@@ -141,7 +151,8 @@ function planRegion(continent: ContinentName, map: MapName): Act1WalkRegion {
     if (!def) throw new Error(`act1-walk: ${continent}/${map} is not registered`);
     const start = def.startingNode.id;
 
-    const terminals = def.nodes.filter(n => n.connectedNodes.length === 0);
+    const lastColumn = Math.max(...def.nodes.map(n => n.location[0]));
+    const terminals = def.nodes.filter(n => n.connectedNodes.length === 0 && n.location[0] === lastColumn);
     if (terminals.length !== 1) {
         throw new Error(`act1-walk: ${map} has ${terminals.length} terminal nodes, expected one exit`);
     }
@@ -166,6 +177,37 @@ function planRegion(continent: ContinentName, map: MapName): Act1WalkRegion {
     const visited = new Set<string>([start]);
     const barred = new Set<string>([door, exit]);
     const adj = undirected(def);
+    const walkTo = (route: readonly string[]) => {
+        for (const id of route) {
+            visited.add(id);
+            met.add(kindOf.get(id)!);
+            steps.push({ nodeId: id, kind: kindOf.get(id)!, role: 'path' });
+        }
+    };
+
+    for (const questline of listQuestlines().filter(q => q.mapName === map)) {
+        const markers = questline.steps.map(s => s.nodeId);
+        for (const step of questline.steps) {
+            const later = markers.filter((_, i) => questline.steps[i]!.step > step.step);
+            const fenced = new Set<string>([door, exit, ...later]);
+            if (!visited.has(step.nodeId)) {
+                const route = routeToNearest(def, adj, visited, fenced, id => id === step.nodeId);
+                if (!route) throw new Error(`act1-walk: ${map} quest node ${step.nodeId} is not reachable`);
+                walkTo(route);
+            }
+            const supply = new Set(stepSupply(def, questline, step));
+            for (const objective of step.quest.objectives) {
+                const cls = objectiveClass(objective);
+                if (!cls || cls === 'boss') continue;
+                for (let n = 0; n < objective.requiredCount; n++) {
+                    const route = routeToNearest(def, adj, visited, fenced,
+                        id => supply.has(id) && supplyClassesOf(continent, map, id).includes(cls));
+                    if (!route) throw new Error(`act1-walk: ${map} step ${step.step} has no ${cls} node left to count`);
+                    walkTo(route);
+                }
+            }
+        }
+    }
 
     for (;;) {
         const missing = carried.filter(k => !met.has(k));
@@ -174,11 +216,7 @@ function planRegion(continent: ContinentName, map: MapName): Act1WalkRegion {
         if (!route) {
             throw new Error(`act1-walk: ${map} carries ${missing.join(', ')} but no carrier is reachable before the door`);
         }
-        for (const id of route) {
-            visited.add(id);
-            met.add(kindOf.get(id)!);
-            steps.push({ nodeId: id, kind: kindOf.get(id)!, role: 'path' });
-        }
+        walkTo(route);
     }
 
     const toDoor = routeToNearest(def, adj, visited, new Set([exit]), id => id === door);

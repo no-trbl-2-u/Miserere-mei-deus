@@ -65,6 +65,7 @@ import {
     type GameState,
     type HazardMark,
     type HazardSessionState,
+    type QuestLog,
 } from '@mechanics';
 import { runOneEncounter } from '@mechanics/Combat/combat.encounter.sim';
 
@@ -84,10 +85,13 @@ import {
 import {
     abandonHazardAction,
     acknowledgeHazardOutcomeAction,
+    armingHazardDeath,
     claimHazardRewardsAction,
     continueHazardAfterResolveAction,
 } from '@/state/hazard/store-actions';
 import { confirmItemRewardAction } from '@/state/item-reward/store-actions';
+import { selectHasActiveQuest } from '@/state/presenters/quest.engine';
+import { closeQuestAction, offerCompletedQuestExtrasAction } from '@/state/quest/store-actions';
 import {
     chooseRestChoiceOfferAction,
     claimRestChoiceOutcomeAction,
@@ -118,6 +122,7 @@ export type SkipEventKind =
     | 'gathering'
     | 'travel'
     | 'labyrinth'
+    | 'quest'
     | 'item-reward'
     | 'none';
 
@@ -133,7 +138,7 @@ export interface SkipEventResult {
 }
 
 /** The two app actions the skip needs beyond raw store access. */
-export type SkipEventActions = Pick<AppActions, 'resolveCurrentMapEvent' | 'beginHazardEncounter'>;
+export type SkipEventActions = Pick<AppActions, 'resolveCurrentMapEvent' | 'beginHazardEncounter' | 'playerDied'>;
 
 export interface SkipEventOptions {
     /** Override the gate (tests). Defaults to `isDevToolsEnabled()`. */
@@ -188,10 +193,27 @@ export function skipCurrentEvent(
     if (result.kind !== 'none') {
         store.setState({ _devSkipSeq: (store.getState()._devSkipSeq ?? 0) + 1 });
     }
+    flushDeferredQuestExtras();
     getLogger().info('action', SKIP_EVENT_LOG_KIND, {
         kind: result.kind, nodeId: result.nodeId, outcome: result.outcome, ...(result.detail ?? {}),
     });
     return result;
+}
+
+// A skipped fight's quest extras (a relic for `/item-reward`, a card pick)
+// wait for the next macrotask: the combat screen leaves on the skip's seq
+// bump, and an item reward queued in the same render would be pushed and
+// then popped by that leave, stranding the player on the combat route.
+let pendingQuestExtras: (() => void) | null = null;
+
+function deferQuestExtras(store: AppStore, before: QuestLog): void {
+    pendingQuestExtras = () => offerCompletedQuestExtrasAction(store, before);
+}
+
+function flushDeferredQuestExtras(): void {
+    const run = pendingQuestExtras;
+    pendingQuestExtras = null;
+    if (run) setTimeout(run, 0);
 }
 
 /**
@@ -260,10 +282,23 @@ function skipActive(store: AppStore, actions: SkipEventActions, options: SkipEve
     if (state.currentEncounter) {
         return skipCombat(store, state.currentEncounter.enemies[0] ?? null, nodeId, options, 'live');
     }
-    if (state.hazard?.session) return skipHazard(store, nodeId);
+    if (state.hazard?.session) return skipHazard(store, actions, nodeId);
     if (state.rest?.session) return skipRest(store, nodeId);
     if (state.cache?.session) return skipCache(store, nodeId);
     if (state.blacksmith?.session) return skipBlacksmith(store, nodeId);
+    if (selectHasActiveQuest(state)) {
+        // The quest screen is left as the LEAVE button does: nothing is
+        // accepted or turned in, and the node stays unspent. A card pick
+        // waiting with no node open (a boss-victory pick) counts as active
+        // and is taken as nothing.
+        const open = state.quest.open;
+        const offers = state.quest.cardOffers.length;
+        closeQuestAction(store);
+        return {
+            kind: 'quest', nodeId, outcome: 'dismissed',
+            detail: { questline: open?.questline ?? null, node: open?.node ?? null, cardOffers: offers },
+        };
+    }
 
     const pending = state.event?.pending ?? null;
     if (pending) {
@@ -377,8 +412,13 @@ function skipCombat(
     const seed = options.seed ?? (Date.now() % 1_000_003);
     const witness = runCombatWitness(before, enemy, seed);
 
-    // The engine's real END_COMBAT: XP, loot, quest objectives, codex.
+    // The engine's real END_COMBAT: XP, loot, quest objectives, codex. A
+    // kill that completed a quest routes its relic to `/item-reward` and its
+    // card pick to the spoils tiles, as the combat host does, once the
+    // combat screen has heard the skip and left (`deferQuestExtras`).
+    const questsBefore = gameState(store).quests;
     const report = store.getState().endCombat('victory');
+    if (questsBefore) deferQuestExtras(store, questsBefore);
 
     // A plausible win still bleeds: the witness's HP toll, capped and never fatal.
     let hpToll = 0;
@@ -413,7 +453,7 @@ function skipCombat(
 }
 
 /** Median crossing: `complete` tier with ceil(rounds/2) cleared, via the engine's own outcome path. */
-function skipHazard(store: AppStore, nodeId: string | null): SkipEventResult {
+function skipHazard(store: AppStore, actions: SkipEventActions, nodeId: string | null): SkipEventResult {
     const slice = store.getState().hazard;
     const session = slice.session as HazardSessionState;
     const total = Math.max(1, session.totalRounds);
@@ -457,7 +497,11 @@ function skipHazard(store: AppStore, nodeId: string | null): SkipEventResult {
         return { kind: 'hazard', nodeId, outcome: 'abandoned', detail: { hazardId: session.hazardId } };
     }
     const cardId = outcome.canSkip ? null : (outcome.offerCards[0]?.id ?? null);
-    const claim = claimHazardRewardsAction(store, cardId);
+    const claim = claimHazardRewardsAction(
+        store,
+        cardId,
+        armingHazardDeath(actions.playerDied),
+    );
     if (!claim.applied) {
         abandonHazardAction(store);
         return { kind: 'hazard', nodeId, outcome: 'abandoned', detail: { hazardId: session.hazardId } };
@@ -476,6 +520,7 @@ function skipHazard(store: AppStore, nodeId: string | null): SkipEventResult {
             shillings: claim.shillings,
             cardAdded: claim.cardAdded,
             died: claim.died,
+            deathOutcome: claim.outcome,
         },
     };
 }

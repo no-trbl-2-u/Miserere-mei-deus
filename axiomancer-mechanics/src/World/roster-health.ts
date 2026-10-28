@@ -49,6 +49,8 @@ import type { MapEventPool } from './MapEvents/types';
 import { listRegisteredMapEventPools } from './MapEvents/resolve-map-event';
 import { registerMapEventContent } from './MapEvents/content';
 import { auditNarrativeReachability } from './narrative-reachability';
+import type { Questline } from './questline';
+import { AUTHORED_QUESTLINES } from './quest.library';
 
 // ─── Report shape ─────────────────────────────────────────────────────────────
 
@@ -114,6 +116,8 @@ export interface RosterSources {
     startingItemIds: readonly string[];
     /** Item ids a loot cache tier can roll (`rollCacheReward`'s pool). */
     cacheItemIds: readonly string[];
+    /** Every authored questline: its steps' rewards grant items. */
+    questlines?: readonly Questline[];
 }
 
 /** The live tree's sources. Replays MapEvent registration if the registry is empty. */
@@ -137,6 +141,7 @@ export function collectRosterSources(): RosterSources {
         startingItemIds: [],
         // `rollCacheReward` draws uniformly from the whole consumable library.
         cacheItemIds: consumableLibrary.map(c => c.id),
+        questlines: AUTHORED_QUESTLINES,
     };
 }
 
@@ -205,6 +210,14 @@ function itemRefs(src: RosterSources): ItemRef[] {
         for (const quest of def.quests ?? []) {
             const item = rewardItem(quest.reward);
             if (item) push(item, `${def.name}.quest:${quest.name}`);
+        }
+    }
+    for (const line of src.questlines ?? []) {
+        for (const step of line.steps) {
+            for (const reward of step.rewards) {
+                const item = rewardItem(reward);
+                if (item) push(item, `${line.id}.step:${step.step}`);
+            }
         }
     }
     return refs;

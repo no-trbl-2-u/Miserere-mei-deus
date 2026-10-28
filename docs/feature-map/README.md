@@ -19,10 +19,12 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 | Character Select | route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Character Select") |
 | Encounter | route | yes | yes | yes | no |
 | Cutscene | route | yes | yes | yes | no |
+| Death Return | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Death Return") |
 | Dialogue | route | yes | yes | yes | no |
 | Event | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Event") |
 | Index | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Index") |
 | Reward | route | yes | no | yes | no |
+| Quest | route | yes | yes | yes | no |
 | Rest | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Rest", "RestChoice", "rest node", "rest site") |
 | Saves | route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Saves") |
 | Settings | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Settings") |
@@ -64,9 +66,9 @@ Routes with no outgoing player-flow edge to another feature, not counting the sh
 - Dialogue (`route:dialogue`)
 - Event (`route:event`)
 - Reward (`route:item-reward`)
+- Quest (`route:quest`)
 - Rest (`route:rest`)
 - Village (`route:village`)
-- The hazard minigame (`route:hazard`)
 - The hazard deck (`route:hazard-deck`)
 - The Labyrinth (`route:labyrinth`)
 - Devaftermath (`route:devaftermath`)
@@ -87,8 +89,10 @@ Features with no name from `game-model.md` vocabulary; each keeps its path-deriv
 - Inventory (`route:(tabs)/inventory`)
 - Memoir (`route:(tabs)/memoir`)
 - Character Select (`route:character-select`)
+- Death Return (`route:death-return`)
 - Event (`route:event`)
 - Index (`route:index`)
+- Quest (`route:quest`)
 - Saves (`route:saves`)
 - Settings (`route:settings`)
 - Village (`route:village`)

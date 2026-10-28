@@ -10,6 +10,12 @@ plan/NEEDS_T.md merge=lessons
 # same way. Unregistered, git falls back to its line merge.
 plan/steps/01_build_plan.md merge=buildplan
 
+# Merge plan/deadlines.md with same-spot insertions unioned and a row both
+# sides edited merged cell by cell (Phase MD1a): scripts/deadlines-merge.mjs,
+# registered as merge.deadlines.driver the same way. Unregistered, git falls
+# back to its line merge.
+plan/deadlines.md merge=deadlines
+
 # The art-department masters are compared byte for byte against a fresh
 # regeneration (art-department/tests/test_rig_spritesheet.py), so git must
 # never rewrite their line endings on checkout.

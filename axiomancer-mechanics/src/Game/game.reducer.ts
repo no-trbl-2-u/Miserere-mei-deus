@@ -39,14 +39,17 @@ import { createStartingWorld, emptyQuestLog } from '../World';
 import type { MapName } from '../World/map.library';
 import { moveToNode as moveWorld } from '../World/world.reducer';
 import { resolveMapEvent, settleArrival } from '../World';
+import { answerUnsettledArrival } from '../World/MapEvents/resolve-map-event';
 import { applyDialogueChoice as applyDialogueRuntime } from '../World/dialogue.runtime';
-import { settleKill } from '../World/quest.engine';
+import { advanceKillObjectives } from '../World/quest.engine';
+import { acceptQuestStep, settleQuestLog, turnInQuestStep } from '../World/questline';
 import { calculateMaxHealth } from '../Utils';
 import { STAT_POINTS_PER_LEVEL } from './game-mechanics.constants';
 import { experienceForLevel } from '../Character/experience';
 import { addItemStacking, rollEncounterLoot, totalEncounterXp } from './combat-grants';
 import { getRng } from '../Utils/rng';
 import { generateRunId } from './run-loop';
+import { resolveDeath, freshRunKeepingCharacter } from './death';
 
 /**
  * Increment when GameState's shape changes. Save loaders branch on this so
@@ -329,10 +332,11 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
                 // one reward door). Map-scoped because a kill objective's
                 // target is the enemy's display name, shared by every Act 1
                 // region's door fight.
+                // The kills go through the settle seam (`settleQuestLog`),
+                // which also opens the roads of a questline step they made
+                // ready, in this same END_COMBAT.
                 for (const enemy of encounter.enemies) {
-                    const kill = settleKill(nextPlayer, nextQuests, enemy.name, state.world.currentMap.name);
-                    nextPlayer = kill.player;
-                    nextQuests = kill.quests;
+                    nextQuests = advanceKillObjectives(nextQuests, enemy, state.world.currentMap.name).log;
                 }
             }
 
@@ -364,17 +368,30 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
                 }
             }
 
-            // The fight is over, so the node it was fought on is settled,
-            // whatever the outcome: `resolveMapEvent` left the
-            // arrival owed so a save taken mid-fight re-offers it.
-            return settleArrival({
+            const over: GameState = settleQuestLog({
                 ...state,
                 player: nextPlayer,
-                quests: nextQuests,
                 flags: nextFlags,
                 codex: nextCodex,
                 currentEncounter: undefined,
-            });
+            }, nextQuests).state;
+
+            // A won fight (victory or friendship) settles the node it was
+            // fought on: `resolveMapEvent` left the arrival owed so a save
+            // taken mid-fight re-offers it. A flee or a defeat only answers
+            // the arrival: the node stays unspent, opens nothing it holds,
+            // and can be tried again.
+            return (outcome === 'victory' || outcome === 'friendship')
+                ? settleArrival(over)
+                : answerUnsettledArrival(over);
+        }
+
+        case 'ACCEPT_QUEST_STEP': {
+            return acceptQuestStep(state, action.payload.questline, action.payload.step);
+        }
+
+        case 'TURN_IN_QUEST_STEP': {
+            return turnInQuestStep(state, action.payload.questline, action.payload.step).state;
         }
 
         case 'MOVE_TO_NODE': {
@@ -461,7 +478,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
                 // reset the seed mid-session, that breaks deterministic
                 // replay) and assign a fresh runId.
                 const fresh = createNewGameState();
-                return { ...fresh, runId: freshRunId, rngState: state.rngState };
+                return { ...fresh, runId: freshRunId, rngState: state.rngState, dying: undefined };
             }
 
             // keepCharacter: true — preserve persistent character ledger
@@ -470,19 +487,16 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
             // state. HP refills to maxHealth; effects clears defensively
             // (already empty between combats).
             return {
+                ...freshRunKeepingCharacter(state, freshRunId),
                 version: GAME_STATE_VERSION,
-                runId: freshRunId,
-                player: {
-                    ...state.player,
-                    health: state.player.maxHealth,
-                    effects: [],
-                },
-                world: createStartingWorld(),
-                quests: emptyQuestLog(),
-                flags: [],
-                rngState: state.rngState,
-                codex: state.codex,
             };
+        }
+
+        case 'PLAYER_DIED': {
+            const death = resolveDeath(state, action.payload.cause);
+            return death.outcome === 'run-over'
+                ? { ...death.state, version: GAME_STATE_VERSION }
+                : death.state;
         }
 
         case 'UNLOCK_CODEX_ENTRY': {

@@ -131,6 +131,38 @@ D1 (2026-09-21) replaced Spec 08's linear, no-back-travel rule.
 - **Arrival.** `moveToNode` is the arrival verb. It records
   `pendingArrival`, which `resolveMapEvent` clears. `placeOnNode` and
   `teleportToNode` stand the player on a node without owing an arrival.
+- **Fights settle on a win.** An encounter leaves its arrival owed until
+  `END_COMBAT`. A victory or a friendship settles the node (`settleArrival`:
+  consumed, its roads open). A flee or a defeat only answers the arrival
+  (`answerUnsettledArrival`): the node stays unspent, counts nothing, and is
+  a fresh fight on the next arrival.
+- **Held roads.** `MapDefinition.holdRoadsUntilSettled` lists nodes that add
+  their roads to the frontier only once spent (`isHoldingRoads`): standing
+  on one opens nothing. It is a list, never map-wide (the rule would empty
+  the frontier between every move and its resolve). The Breakwater lists
+  its four quest nodes (bw-19..bw-22) and its watchtower (bw-17).
+- **Pockets.** On a map that holds a questline every fight and hazard sits
+  in a pocket: nodes joined only to their step's quest node, dead ends by
+  design. The generic gauntlet audit lets a pocket end outside the last
+  column; the questline's own routing test
+  (`World/e2e/breakwater-questline.engine.test.ts`) walks the real frontier
+  with the questline played. `questline-supply.ts` reads a step's supply
+  strictly downstream of its marker (the authoring test,
+  `World/quest.library.test.ts`).
+- **The retry.** `moveToNode` onto the node the player stands on re-owes its
+  arrival when the node is unspent and its arrival was answered (a fled or
+  lost fight, an unaccepted quest node), so a held node with no other move
+  left can be tried again. A spent node, an owed arrival, the map's starting
+  node and labyrinth rooms stay an idempotent no-op.
+- **Quest-node locks.** A questline's next quest node sits behind blocked
+  roads (`initialBlockedRoutes`, one reason each); a step's `opensOnReady`
+  unblocks them in the call that fills its last objective, through the one
+  settle seam (`settleQuestLog`, see "Quest Engine"). The Breakwater seeds
+  four: bw-9 to bw-20, bw-7 to bw-21, and bw-15 and bw-16 to bw-22.
+  Test-only, `settleQuestNodes(map)` (`Game/fixtures/quest-nodes.ts`) spends
+  a map's quest nodes and opens their locks so a walker that is not about
+  the questline can cross the map; a state fixture opts in with
+  `world.questNodesSettled`.
 - **Legacy lists.** `completeCurrentNode` keeps `availableNodes` and
   `lockedNodes` in sync with the frontier. The CLI's move filter and
   mobile's tap gate still read them, but `legalMovesFrom(map)` is the
@@ -191,9 +223,9 @@ layout-engine parity test holds both halves to the same node ids.
 The current dispatcher is `resolveMapEvent(state, rng?)` from
 `src/World/MapEvents/resolve-map-event.ts`, shipped in Spec 23 and
 populated with content in Phase 24. It returns `{ state, event }`
-where `event` is a discriminated union over the twelve `MapEventKind`
-values ('quest' joined the original eight in Phase 137 and was retired
-in Phase 61; 'narration' joined in 2026-06, 'blacksmith' and 'travel'
+where `event` is a discriminated union over the thirteen `MapEventKind`
+values ('quest' joined the original eight in Phase 137, was retired
+in Phase 61 and came back in QL1a as the questline's giver node; 'narration' joined in 2026-06, 'blacksmith' and 'travel'
 later in 2026-08, 'labyrinth' in M4, 2026-09-27):
 
 | Event kind     | Result shape                                                              |
@@ -206,6 +238,7 @@ later in 2026-08, 'labyrinth' in M4, 2026-09-27):
 | `cutscene`     | `{ kind: 'cutscene', lines }` — narration only.                           |
 | `hazard`       | `{ kind: 'hazard', effects, damage }` — applies effects + damage.         |
 | `loot-cache`   | `{ kind: 'loot-cache', items, currency }` — fixed grant.                  |
+| `quest`        | `{ kind: 'quest', questline, node, stage, behind?, ahead? }` — a questline step's giver (`QuestPayload`, node 1-4); never consumed until its step is accepted (`acceptQuestStep`). Contract and step rules in `src/World/questline.ts` (see "Questlines"). |
 | `narration`    | `{ kind: 'narration', dialogue }` — inline monologue; the `DialogueTree` is authored directly on the node (no map NPC lookup). Barrel: `NarrationPayload`. |
 | `none`         | Consumed node (one-shot) or no pool registered.                            |
 
@@ -270,17 +303,40 @@ it today (it's a noted follow-up — track in `plan/AUDIT.md`).
 | `emptyQuestLog()` | `{ available: [], active: [], completed: [] }` seed. |
 | `discoverQuest(log, quest)` | Adds to `available` if not present. |
 | `startQuest(log, quest)` | Moves quest from `available` into `active`. Idempotent. |
-| `progressQuest(log, name, objectiveId, amount?)` | Advances one objective; auto-completes the quest when every objective is filled. |
+| `progressQuest(log, name, objectiveId, amount?)` | Advances one objective; auto-completes the quest when every objective is filled, unless the quest is `holdForTurnIn` (it then stays active, "ready", unpaid until turned in). |
 | `completeQuest(log, name)` | Explicit completion. |
 | `isQuestComplete(quest)` | True when every objective is at `requiredCount`. |
 | `reachableObjectives(log, nodeId)` | Active `reach`-objectives that fire on this node. |
-| `killObjectives(log, enemyName)` | Active `kill`-objectives matching this enemy's name. |
+| `killObjectives(log, enemy, mapName)` | Active `kill`-objectives on `mapName` that count this foe: by display `target`, or with no target by `foeClass` (`'any'`, `'elite'` via `isEliteEnemy`, `'boss'` by difficulty). |
+| `advanceHazardObjectives(log, mapName)` | Counts one resolved hazard node toward active `hazard`-objectives on `mapName`. |
+| `payQuestReward(player, quest, rng?)` | Pays `reward` then `rewards` in order; a `card-pick` reward rolls offers onto `PaidQuestReward.cardOffers` without adding a card. |
 
-Objective types: `'kill' | 'collect' | 'reach' | 'talk' | 'flag'`.
+Objective types: `'kill' | 'collect' | 'reach' | 'talk' | 'flag' | 'hazard'`.
+Kill and hazard objectives count only on the quest's own `mapName`.
 
 The store's `endCombat` auto-advances `kill` objectives — defeating an
 enemy whose `name` matches an active objective's `target` ticks the counter
 and grants the reward when the quest fills.
+
+### Questlines (`src/World/questline.ts`)
+
+A questline is data (`Questline { id, mapName, steps }`), registered with
+`registerQuestline` and looked up by the `quest` node's payload. The authored
+lines live in `src/World/quest.library.ts`, which registers them on load (the
+World barrel imports it beside the map-event pools); an unregistered line
+reads node 1 as `offer` and every later node as `locked`.
+
+| Function | Purpose |
+|----------|---------|
+| `questNodeStage(log, questline, node)` | Node 1 reads `offer`; node k reads step k-1: `locked` (not accepted), `waiting` (accepted, unmet), `turn-in` (met), `offer` (turned in). |
+| `acceptQuestStep(state, questline, step)` | At the step's own node, with the step before turned in: starts the step's quest with every count at 0 (nothing before acceptance counts) and spends the node, which opens its held roads. |
+| `turnInQuestStep(state, questline, step, rng?)` | At the NEXT quest node, a ready `settle: 'turn-in'` step: completes it and pays it once; the node then offers the next step. Returns `{ state, paid }` (`paid` carries items and card offers). |
+| `settleQuestLog(state, quests, rng?)` | THE settle seam: pays what completed (`payCompletedQuests`) and opens the `opensOnReady` roads of a step that became ready. `END_COMBAT`, the hazard, reach and collect branches of `resolveMapEvent`, the dialogue effects and the turn-in all go through it. |
+
+The last step (`settle: 'on-victory'`) is never turned in: its quest is not
+held, so the boss kill completes and pays it through the same seam.
+`GameAction`s `ACCEPT_QUEST_STEP` and `TURN_IN_QUEST_STEP` dispatch the two
+verbs.
 
 ## Dialogue (Spec 08 Q9 — branching tree)
 

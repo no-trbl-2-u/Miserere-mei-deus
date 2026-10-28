@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-10-27 at commit 02372412
-> Pass count: 105
+> Last pass: 2026-10-28 at commit bf5bae72
+> Pass count: 107
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
@@ -911,16 +911,59 @@
 > line." and the "Fixture Shop" names are the fixtures' own content, not
 > findings.
 
+> **[critique pass 106, 2026-10-28, commit 4edd5433] Unattended `/march`
+> tick.** `critique:drive` (`CRITIQUE_VIEWPORT=both`), full 11-screen
+> set: 22 captures, 0 nav trouble, 0 console/page errors. 24 first-parent
+> commits after pass 105: the pass-104 zero fix (#1005), DF1c-DF1e (the
+> Defender's spikes board, cards and relics), QL1's map-scoped kills,
+> three `plot` merges and the truth runs. The fix reached its three named
+> readouts (CONVICTION reads "◆ 0", the rest PURSE reads "0"), but an
+> enlarged crop of the hazard route ladder shows "RI 28" for a threshold
+> of 20: the same barred zero, in a style the fix did not touch. A grep
+> finds about a dozen more numeric styles still in `FONTS.gothic`. Filed
+> as one MED row for the sweep and a guard, not one per screen. Reconfirmed and not
+> re-filed: the covered fan names on a phone, the WITHDRAW sub-line
+> contrast, the `/cache` and satchel gap, the village Minor Healing
+> Potion row and the map legend's SEALED key. No screen in the set shows
+> a Defender card or relic, so DF1d/DF1e also shipped unseen. That is the
+> same coverage gap as the `/cache` row, so it gets no new row.
+
+> **[critique pass 107, 2026-10-28, commit bf5bae72] Unattended `/march`
+> tick.** `critique:drive` (`CRITIQUE_VIEWPORT=both`), full 11-screen
+> set: 22 captures, 0 nav trouble, 0 console/page errors. 19 first-parent
+> commits after pass 106: QL1a-QL1c (the quest kind, step rules and the
+> new `/quest` screen), DY1a-DY1d (the death rule, the revive and its new
+> `/death-return` screen, the dying skull on the combat panes), MD1a/MD1b
+> (merge tooling) and the truth runs. No regression on any of the 11
+> screens. Both new routes are off the set: `/quest` has a registry
+> fixture (`apprentice-staged-quest`, `arrive` pushes it) and
+> `/death-return` has a `?preview=1` dev view, yet neither is a SCREENS
+> entry, and no fixture boots the board dying, so the DY1d skull went
+> unseen too. That is the `/cache` row's cause a fourth pass running, so
+> the row names both routes and is raised MED to HIGH; no fresh row.
+> Reconfirmed and not re-filed: the barred zero sweep, the covered fan
+> names on a phone, the WITHDRAW sub-line contrast.
+
 ## Pending
 
-### [MED] ci / critique-drive — `/cache` and the satchel are not in the critique set, so RW1b's card-face offer and IT1b's relic icons shipped unseen
-- pass: 103 (commit 79ecad63); raised LOW to MED at pass 105 (commit 02372412)
+### [MED] hazard / village / forge / deck — the barred gothic zero still prints in about a dozen numeric styles, so the hazard ladder reads "RI 28" for a threshold of 20
+- pass: 106 (commit 4edd5433)
+- viewport: both (375x812, 1280x800)
+- category: comprehension
+- observation: #1005 moved the CONVICTION chip, the rest PURSE and the hazard card FORCE/ESCAPE values to `FONTS.sans`, and those three now read correctly. The same Pirata One zero still prints wherever another style puts a number in `FONTS.gothic`. In this pass's captures the Ledge Crawl ladder's first cell reads "RI 28" for a threshold of 20 when enlarged, beside "RII 23" and "RIII 25". The other styles are off the critique set but print live figures: a 10, 20 or 30-shilling stall price reads 18, 28 or 38, and a forge budget of 200 reads 288.
+- evidence: enlarged crop of `.critique-artifacts/desktop/10-hazard.png` (the Ledge Crawl PASS row, y~460-484); `components/hazard/RouteSelect.tsx:315` `ladderValue`; other numeric styles still in `FONTS.gothic`: `app/village/index.tsx:336` `warePrice`, `app/blacksmith/index.tsx:416` `budgetValue`, `app/(tabs)/deck/index.tsx:177,192` `statValue`/`tallyValue`, `app/hazard-deck/index.tsx:221,228`, `app/character-select/index.tsx:272` `statValue`, `app/(tabs)/character/index.tsx:329,343` `levelText`/`baseStatValue`, `components/hazard/HazardOverlays.tsx:310` `flashStatValue`, `components/combat/encounter/CombatEncounterPanel.tsx:1389,1392` `pilgrimConviction`/`pilgrimStatVal`.
+- suggested fix: move each style that prints a number to `FONTS.sans`, leaving names and titles in the gothic face as #1005 did. Then guard it so a fourth spot-fix is not needed: a lint test over `app/` and `components/` that fails when a style named for a figure (`*Value`, `*Price`, `*Stat*`, `level*`, `*Budget*`, `*Count`, ...) uses `FONTS.gothic`, or a shared `TYPE.figure` token used by every one of them.
+- source: critique:drive (unattended)
+
+### [HIGH] ci / critique-drive — `/cache`, the satchel, `/quest` and `/death-return` are not in the critique set, so four passes of shipped surfaces went unseen
+- pass: 103 (commit 79ecad63); raised LOW to MED at pass 105 (commit 02372412); raised MED to HIGH at pass 107 (commit bf5bae72)
 - viewport: n/a (both)
 - category: navigation
 - observation: RW1b (#947) changed the loot cache's card offer to print a `CombatCardFace` beside the label, the only player-facing diff since pass 102, but the drive's 11 screens never reach `/cache`. The registry already holds `apprentice-bw-cache` (`arrive` starts the cache session and pushes `/cache`), and the drive's own header names `/cache` among the gated routes, yet no `SCREENS` entry uses it.
 - evidence: `axiomancer-mobile/scripts/critique-drive.mjs` SCREENS (fixtures at lines 193-242, none for the cache); `axiomancer-mechanics/src/Game/fixtures/state-fixture.registry.ts:95` `apprentice-bw-cache`; `axiomancer-mobile/app/cache/index.tsx` (RW1b).
 - pass 105: IT1b (#989) gave the relics T's icons with colour accents (`components/icons/item-glyphs.ts`, `components/inventory/ItemCard.tsx`); they draw only on the satchel tab (`app/(tabs)/inventory`), which no SCREENS entry opens, so a second shipped surface went unseen in two passes.
-- suggested fix: add a `cache` screen entry booting `apprentice-bw-cache` with `waitForPath: '/cache'` (its seed is already shared through `openScreenContext`), and pin it in `critique-drive.test.mjs`; if that fixture's offers hold no card, note it so the face is judged on the next pass that rolls one. Add a `satchel` entry the same way: boot a fixture whose inventory holds at least one relic (or add one to the registry, which is an AUDIT row, not drive code) and open the inventory tab.
+- pass 107: QL1c (#1023) shipped `/quest` (`app/quest/index.tsx`, pushed by `components/QuestGate.tsx`) and DY1b (#1018) shipped `/death-return` (`app/death-return/index.tsx`); DY1d (#1022) added the dying skull to the combat panes. The registry already holds `apprentice-staged-quest` (`state-fixture.registry.ts:86`, `arrive` pushes `/quest`) and the death screen has a `?preview=1` dev view, but no SCREENS entry opens either, and no fixture boots a dying board.
+- suggested fix: add a `cache` screen entry booting `apprentice-bw-cache` with `waitForPath: '/cache'` (its seed is already shared through `openScreenContext`), and pin it in `critique-drive.test.mjs`; if that fixture's offers hold no card, note it so the face is judged on the next pass that rolls one. Add a `satchel` entry the same way: boot a fixture whose inventory holds at least one relic (or add one to the registry, which is an AUDIT row, not drive code) and open the inventory tab. Add `quest` (fixture `apprentice-staged-quest`, `waitForPath: '/quest'`) and `death-return` (path `/death-return?preview=1`) entries the same way; a dying-board fixture for the skull is an AUDIT row, not drive code.
 - source: critique:drive (unattended)
 
 ### [LOW] combat preview — WITHDRAW's "forfeit the path" line prints at 8.5px in `AXM.ash`, about 1.95:1 against the page

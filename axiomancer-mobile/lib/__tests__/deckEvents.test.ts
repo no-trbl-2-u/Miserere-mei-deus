@@ -217,6 +217,22 @@ describe('the four call sites', () => {
         expect(post.where.screen).toBe('run-end');
     });
 
+    it('a first death in a fight posts no run-end; the death while dying posts one', async () => {
+        const store = storeWithDeck();
+        const actions = createAppActions(store);
+        actions.moveTo('bw-2');
+        expect(actions.playerDied('fight')).toBe('revived');
+        await flush();
+        expect(calls).toEqual([]);
+
+        actions.moveTo('bw-2');
+        expect(actions.playerDied('fight')).toBe('run-over');
+        await flush();
+        const post = onlyPost();
+        expect(post).toMatchObject({ kind: 'run-end', cardId: null, offered: null });
+        expect(post.deck).toEqual(COMBAT_REWARD_POOL.slice(0, 12));
+    });
+
     it('with the switch off, no call site makes a request', async () => {
         await devSettingsStore.set({ playLogging: false });
         try {

@@ -15,7 +15,7 @@
 			"x": 1060,
 			"y": 0,
 			"width": 340,
-			"height": 300,
+			"height": 430,
 			"label": "Elsewhere"
 		},
 		{
@@ -97,6 +97,16 @@
 			"width": 260,
 			"height": 90,
 			"color": "1"
+		},
+		{
+			"id": "elsewhere:route:death-return",
+			"type": "file",
+			"file": "Features/Death Return.md",
+			"x": 1100,
+			"y": 300,
+			"width": 260,
+			"height": 90,
+			"color": "1"
 		}
 	],
 	"edges": [
@@ -110,6 +120,12 @@
 			"id": "flow:route:dev->elsewhere:route:character-select",
 			"fromNode": "route:dev",
 			"toNode": "elsewhere:route:character-select",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:dev->elsewhere:route:death-return",
+			"fromNode": "route:dev",
+			"toNode": "elsewhere:route:death-return",
 			"color": "5"
 		},
 		{

@@ -19,7 +19,7 @@
  */
 
 import type { MapName } from '../World/map.library';
-import { STARTING_MAP } from '../World';
+import { STARTING_MAP } from '../World/starting-world';
 
 /**
  * Canonical starting region for `resetRun`. The reset sends the

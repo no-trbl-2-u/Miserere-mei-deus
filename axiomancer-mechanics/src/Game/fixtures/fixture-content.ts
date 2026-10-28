@@ -16,6 +16,7 @@ import type { ShopInventory } from '../../Items/shop.types';
 import type { Equipment } from '../../Items/types';
 import type { MapEventPayload } from '../../World/MapEvents/types';
 import type { Quest } from '../../World/types';
+import type { Questline } from '../../World/questline';
 
 /** A quest with one `reach` objective on an Act 1 node. */
 export const FIXTURE_QUEST: Quest = {
@@ -76,6 +77,57 @@ export const FIXTURE_VILLAGE_EVENT: MapEventPayload = {
 export const FIXTURE_CUTSCENE_EVENT: MapEventPayload = {
     kind: 'cutscene',
     lines: ['A placeholder line.', 'A second placeholder line.'],
+};
+
+/**
+ * A two-step questline on the Breakwater's bw-2 and bw-3 (placeholder copy):
+ * step 1 cross a hazard, step 2 win a fight. The live Breakwater carries
+ * its own questline (`quest.library.ts`) on bw-19..bw-22; this one is the
+ * quest screen's hermetic witness, staged by `FIXTURE_QUEST_EVENT` and
+ * registered by `buildStateFromFixture`.
+ */
+export const FIXTURE_QUESTLINE: Questline = {
+    id: 'fixture-questline',
+    name: 'The Fixture Line',
+    mapName: 'breakwater',
+    steps: [
+        {
+            step: 1,
+            nodeId: 'bw-2',
+            quest: {
+                name: 'Fixture step one',
+                description: 'A placeholder first step.',
+                mapName: 'breakwater',
+                objectives: [{ id: 'goal', type: 'hazard', description: 'Cross a hazard.', requiredCount: 1, currentCount: 0 }],
+                reward: 'quest',
+                status: 'available',
+            },
+            rewards: [{ kind: 'experience', amount: 40 }, { kind: 'currency', amount: 10 }],
+            settle: 'turn-in',
+        },
+        {
+            step: 2,
+            nodeId: 'bw-3',
+            quest: {
+                name: 'Fixture step two',
+                description: 'A placeholder second step.',
+                mapName: 'breakwater',
+                objectives: [{ id: 'goal', type: 'kill', foeClass: 'any', description: 'Win a fight.', requiredCount: 1, currentCount: 0 }],
+                reward: 'quest',
+                status: 'available',
+            },
+            rewards: [{ kind: 'experience', amount: 40 }, { kind: 'currency', amount: 15 }],
+            settle: 'on-victory',
+        },
+    ],
+};
+
+/** The quest node that offers the fixture questline's first step. */
+export const FIXTURE_QUEST_EVENT: MapEventPayload = {
+    kind: 'quest',
+    questline: FIXTURE_QUESTLINE.id,
+    node: 1,
+    description: 'A placeholder line from a placeholder giver.',
 };
 
 /** A weapon-slot fixture relic. */

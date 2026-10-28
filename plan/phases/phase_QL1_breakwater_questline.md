@@ -18,7 +18,10 @@
   PR's six calls, recorded below as Confirmed by T.
 - T's answers of 2026-10-28 to the four open items (roaming ahead, the elite's
   place, the bridge, a lost boss fight), recorded below as Confirmed by T, and
-  T's death rule of the same day (see "Decisions"): a separate plot, not this one.
+  T's death rule of the same day (see "Decisions"): plot DY1, merged, not this one.
+- T's answers of 2026-10-28 to the notes the plot left (one spare in each
+  pocket, old saves, the Nov 8 date, the death rule's plot), recorded below as
+  Confirmed by T.
 - **D111** (this plot, T 2026-10-27, amended 2026-10-28): one questline in
   Chapter 1, a ninth Breakwater node kind `quest`; supersedes LR1f.
 - **D106** (each region is a chapter; the Breakwater is Chapter 1, the Nov 16
@@ -200,7 +203,8 @@ incomplete watchtower opens no road).
   before the player reached the watchtower reads the new map: it can reach
   `bw-22` (stage `locked`, a line only) and so strand there unless it plays the
   questline, and a pocket's node it already spent cannot be counted. T is the
-  only player; recorded, not migrated: such a save is abandoned for a new run.
+  only player; recorded, not migrated: such a save is abandoned for a new run (Confirmed by T, 2026-10-28:
+  start a new run, no migration).
   A load test over a pre-QL1 fixture save pins what it does read (no crash;
   `bw-22` shows `locked`).
 - **A5** Resolving a quest node never consumes it until the step it offers is
@@ -270,7 +274,9 @@ incomplete watchtower opens no road).
   stands on it, and are after a victory or a friendship; retry re-owes once;
   an unlisted fled node behaves as (d); a map with no list has the frontier it
   has today (the existing `world.reducer` cases pass unchanged). The player's
-  return after a first death is the death rule (see "Decisions"), not this ID.
+  return after a first death is plot DY1's (see "Decisions"), not this ID. DY1a also
+  makes every lost fight leave its node unspent; the two do not double-scope
+  (QL1b keeps A9a as written, and whichever lands second keeps the other's tests).
 - **A10** The `/quest` screen: a `<QuestGate>` routes a resolved `quest` event
   there (the interceptor pattern of rest, cache and the Anvil in
   `state/actions.ts`). It shows the giver's line, "Step n of 4", the
@@ -313,32 +319,42 @@ incomplete watchtower opens no road).
   supply node reachable while marker k is unsettled never counts, so a node
   that can be reached around the marker is not supply. Negative cases: a
   staged questline asking for two hazards of a pocket that holds one fails;
-  a staged map with a second road around a marker fails.
+  a staged map with a second road around a marker fails. The test also holds
+  each pocket to one spare beyond the goal (T, 2026-10-28): the goal plus one
+  hazards (step 1) and plus one encounter nodes (step 2); step 3's pocket holds
+  its elite and one further encounter, and the boss pocket has no spare; a
+  staged pocket holding exactly the goal fails the spare check.
 - **A15** The Breakwater's questline is authored (T, 2026-10-28: "We can move
-  around all the nodes whenever we need to"): four quest nodes `bw-19`..`bw-22`
-  and a re-pointed graph that puts each step's supply in a pocket behind its
-  own marker. Edges, undirected:
+  around all the nodes whenever we need to", and, the same day, one spare in
+  each pocket): four quest nodes `bw-19`..`bw-22` and a re-pointed graph that
+  puts each step's supply, plus one spare, in a pocket behind its own marker.
+  Edges, undirected:
   - the markers: `bw-19` off the windmill `bw-1`; `bw-20` off the customs house
     `bw-9`; `bw-21` off the south pier `bw-7`; `bw-22` between the c4 landmarks
-    and the watchtower (`bw-14`, `bw-15`, `bw-16` join `bw-22` in place of
-    `bw-17`, and `bw-22` joins `bw-17`);
-  - the pockets, each joined to its marker and to nothing else: Gallows Hill
-    `bw-3` (the hazard) behind `bw-19`; Crane Quay `bw-2` and the Walled Manor
-    `bw-10` (two normal fights) behind `bw-20`; the North Pier `bw-8` (the elite,
-    still the Green Jelly) behind `bw-21`; the watchtower `bw-17` behind
-    `bw-22` (and the bridge `bw-18` behind it);
+    and the watchtower (`bw-15` and `bw-16` join `bw-22` in place of `bw-17`,
+    and `bw-22` joins `bw-17`);
+  - the pockets, each node joined to its marker and to nothing else: behind
+    `bw-19` Gallows Hill `bw-3` and the Sea Cave `bw-12` (two hazards: the goal's
+    one and the spare); behind `bw-20` Crane Quay `bw-2`, the Walled Manor
+    `bw-10` and the Lighthouse `bw-14` (three normal fights: the goal's two and
+    the spare); behind `bw-21` the North Pier `bw-8` (the elite, still the Green
+    Jelly) and the Sea Fort `bw-6` (a normal fight: the spare, since the map
+    holds no second elite); behind `bw-22` the watchtower `bw-17`, and the bridge
+    `bw-18` behind it (one boss, no spare);
   - the fan, re-pointed around the pockets: `bw-1` joins `bw-4`, `bw-5`;
-    `bw-4` joins `bw-5`, `bw-7`, `bw-9`; `bw-5` joins `bw-6`, `bw-7`; `bw-6`
-    joins `bw-7`, `bw-11`; `bw-7` joins `bw-11`, `bw-12`; `bw-9` joins `bw-12`,
-    `bw-13`; everything from c3 on is as today.
+    `bw-4` joins `bw-5`, `bw-7`, `bw-9`; `bw-5` joins `bw-7`; `bw-7` joins
+    `bw-11`; `bw-9` joins `bw-13`; `bw-11` joins `bw-13` (the Sea Cave's two
+    lateral roads become this one rib); `bw-13` joins `bw-15`, `bw-16`; `bw-15`
+    joins `bw-16`. The open fan then holds the gathering, cache, rest and
+    blacksmith nodes only: every fight and hazard sits in a pocket.
   No node changes kind, foe or level (the measured report is unaffected: the
   same fights exist); the abstract `location` of a moved node is re-set only
-  where `layout-engine-parity` needs it. The map seeds five blocked roads,
+  where `layout-engine-parity` needs it. The map seeds four blocked roads,
   each with a one-line `reason` (the quest-node locks of A6: `bw-9`-`bw-20`,
-  `bw-7`-`bw-21`, and `bw-14`-`bw-22`, `bw-15`-`bw-22`, `bw-16`-`bw-22`),
-  opened by steps 1, 2 and 3 (`opensOnReady`). No road into the watchtower or
-  to the bridge is sealed: `holdRoadsUntilSettled` lists `bw-19`..`bw-22` and
-  `bw-17` (A9). The four are registered as `quest` pools in
+  `bw-7`-`bw-21`, and `bw-15`-`bw-22`, `bw-16`-`bw-22`), opened by steps 1, 2
+  and 3 (`opensOnReady`; step 3 opens both roads into `bw-22`). No road into the
+  watchtower or to the bridge is sealed: `holdRoadsUntilSettled` lists
+  `bw-19`..`bw-22` and `bw-17` (A9). The four are registered as `quest` pools in
   `MapEvents/content.ts` with placeholder lines marked `[content]` and the
   placeholder steps and rewards below.
 - **A16** The routing test, the Breakwater's proof that the questline can be
@@ -346,7 +362,7 @@ incomplete watchtower opens no road).
   by engine calls: (a) with the four markers settled in order every node is
   reachable, none is orphaned; (b) with no step accepted, a roam that enters and
   resolves every legal move until none is left never enters `bw-2`, `bw-3`,
-  `bw-8`, `bw-10`, `bw-17` or `bw-18`, and never enters `bw-20`, `bw-21` or
+  `bw-6`, `bw-8`, `bw-10`, `bw-12`, `bw-14`, `bw-17` or `bw-18`, and never enters `bw-20`, `bw-21` or
   `bw-22` (locked), so no step's supply is touched; (c) with step k accepted
   only pocket k opens (the pockets of A15), and nodes k+1.. stay locked until
   step k is ready; (d) the bridge: a defeat or a flee at `bw-17` leaves it
@@ -363,7 +379,8 @@ incomplete watchtower opens no road).
   holds its roads draws as any node; `layout-engine-parity`, `act1-layouts`
   and `branching-legibility` pass. If a re-pointed edge fails
   `branching-legibility`, the smallest fix is to move that node's abstract
-  `location` (and the plate mark), never to add a road.
+  `location` (and the plate mark), never to add a road. The re-pointing changes the rib count; the test's pinned
+  totals (11 on the Breakwater, 45 in all) are re-pinned to the new graph in QL1d.
 - **A18** An engine e2e from a fresh game walks the questline on the live
   Breakwater: accept step 1, cross a hazard, turn it in at node 2 and accept
   step 2, win two fights, turn in at node 3, beat the elite, turn in at node
@@ -371,7 +388,7 @@ incomplete watchtower opens no road).
   bridge open; carried unworn, `elementalist` is not in `unlockedLaneIds`
   (D107); worn, it is, and the next combat reward holds an Elementalist card.
 - **A19** Every test, fixture and script that walks to `bw-17` or `bw-18`, or
-  to a node whose road moved (`bw-2`, `bw-3`, `bw-8`, `bw-10`), still passes (a
+  to a node whose road moved (`bw-2`, `bw-3`, `bw-6`, `bw-8`, `bw-10`, `bw-12`, `bw-14`), still passes (a
   grep finds about thirty files: `state-fixture.registry.ts`, `act1-walk`,
   `door-gate`, `charcoal-wood`, `arrival-debt`, `breakwater.engine.test.ts`,
   `elite-respawn.engine.test.ts`, `game.cli.route-audit`, the mobile
@@ -396,16 +413,16 @@ incomplete watchtower opens no road).
   included; A13, A14, A16 and A18 still pass (A14 fails loudly if T's counts
   outrun the map); no `[content]` marker is left in the questline's source.
 - **A23** The boss can be fought again (Confirmed by T, 2026-10-28; relies on
-  T's death rule, a separate plot, id TBD: "If a player dies in a fight, they
+  T's death rule, plot DY1: "If a player dies in a fight, they
   come back with 1 HP and a 'dying' status. If they die again, it's game over.
   Resting removes the status." and, after the first death, the player is back
   at the spot before the fight, the node incomplete and retryable). Done
-  when, with that plot's phase merged, an e2e on the live Breakwater loses the
+  when, with DY1b merged (the death in the app), an e2e on the live Breakwater loses the
   watchtower fight once: the player is back before `bw-17`, `bw-17` is unspent,
   step 4 is still active, `bw-18` is not on the frontier; the player fights
   again in the same run and wins, and the Belt is queued with the bridge
   open. A second death is game over (the death rule's, asserted here, not
-  built here). QL1 does not build the death rule.
+  built here). QL1 does not build the death rule (DY1 does).
 - **A24** A fled fight in the app leaves its node incomplete (Confirmed by T,
   2026-10-28). Mobile's WITHDRAW flow (`fleeEncounterAction`) answers the
   arrival through the engine and no longer settles the node; returning to the
@@ -421,7 +438,7 @@ on the live Breakwater, the A16 routing test (no step's supply can be spent
 early; the bridge needs the boss) and the A14 strict supply test pass, a fled
 fight leaves its node incomplete in the engine and the app (A9, A24), and `npm
 run e2e:act1-walk` passes on the four-node map. A23 (the boss fought again)
-waits on the death rule and closes in QL1g.
+waits on plot DY1 (DY1b) and closes in QL1g.
 
 ## Scope
 
@@ -439,7 +456,7 @@ waits on the death rule and closes in QL1g.
   a flee or a defeat answers the arrival and does not settle the node),
   `World/world.reducer.ts` and `World/types.ts` (`holdRoadsUntilSettled` in
   `visitedSet`; the retry), `World/Continents/Coastal-Village/breakwater.ts`
-  (four nodes, the re-pointed edges and pockets, five blocked roads, the hold
+  (four nodes, the re-pointed edges and pockets, four blocked roads, the hold
   list),
   `World/MapEvents/content.ts` (four pools), `World/act1-walk.ts` (thirteen
   kinds), `Game/fixtures/state-fixture.registry.ts` and the tests of A19, a
@@ -475,8 +492,8 @@ menu, the feature map, `e2e:act1-walk`, `e2e:map-walk`, AW1b's
 `node-blurb-event.test.ts` (bw-1's label moves from QUEST to STORY; the four
 new nodes get blurbs), `layout-engine-parity.test.ts`, and every walker of
 A19, the fled-fight flow (the WITHDRAW path, the exploration screen's
-arrival re-fire, ER1's elite tests) and the death rule's plot (a separate PR,
-id TBD), which owns what a first death does to the player.
+arrival re-fire, ER1's elite tests) and plot DY1 (merged, `phase_DY1_dying.md`),
+which owns what a first death does to the player.
 
 ## Save / schema contracts
 
@@ -538,18 +555,29 @@ id TBD), which owns what a first death does to the player.
   foes and hazards are unreachable until it is accepted, and the next marker
   is shut until they are done, so there is no stranding path left on the map.
   What the tests still read is the map, not the player: a player who dies on
-  the way is the death rule's (below), and a hazard whose live puzzle routing
+  the way is plot DY1's (below), and a hazard whose live puzzle routing
   (W2) does not resolve the node is that plot's check.
-- **Every node may move for this (Confirmed by T, 2026-10-28).** T: "We can
-  move around all the nodes whenever we need to." The plot re-points the
-  Breakwater (A15): the pockets hold the hazard Gallows Hill (bw-3) behind
-  bw-19; two normal fights, Crane Quay (bw-2) and the Walled Manor (bw-10),
-  behind bw-20; and the elite North Pier (bw-8) behind bw-21; the watchtower
-  is behind bw-22. The test is strict downstream (A14), not "not forced
-  before". Each pocket holds exactly as many nodes as the placeholder goal
-  needs, so there is no slack: a goal T raises on Nov 10 fails A14 loudly and
-  needs a node moved into the pocket (the failure message names it). The spots are the plot's picks by plate neighbours; T reviews
-  them at the Nov 3 map review.
+- **Every node may move for this, and each pocket holds a spare (Confirmed by T,
+  2026-10-28).** T: "We can move around all the nodes whenever we need to." The
+  plot re-points the Breakwater (A15): the pockets hold the hazards Gallows Hill
+  (bw-3) and the Sea Cave (bw-12) behind bw-19; three normal fights, Crane Quay
+  (bw-2), the Walled Manor (bw-10) and the Lighthouse (bw-14), behind bw-20; the
+  elite North Pier (bw-8) and the normal Sea Fort (bw-6) behind bw-21; the
+  watchtower behind bw-22. The test is strict downstream (A14), not "not forced
+  before".
+  Confirmed by T (2026-10-28): add one spare to each step's pocket (one extra
+  hazard behind marker 1, one extra fight behind marker 2, one extra
+  elite-or-fight behind marker 3), re-pointing existing nodes with no new foe or
+  kind, so a modest count change on Nov 10 needs no map edit. A14 therefore
+  requires the goal plus one for hazards and fights. The map holds one elite, so
+  marker 3's spare is a normal fight: it covers a raised count only if T retypes
+  step 3 as "win fights"; two elites would need a second elite (a foe change) and
+  fails A14 loudly with a message that names it. The cost of the re-pointing: the
+  open fan holds no fight and no hazard (every one sits in a pocket), and the
+  Lighthouse leaves the road to bw-22, which is now `bw-15` and `bw-16`.
+  Kept (default; T did not ask to change it, 2026-10-28): the spots are the plot's
+  picks by plate neighbours, and QL1d's fallback moves abstract locations; T
+  reviews them at the Nov 3 map review.
 - **A step is turned in at the next quest node (Confirmed by T, 2026-10-27,
   call 2).** T: steps are turned in at the NEXT quest node, not at their own
   marker. Meeting the requirement makes the step ready; the payout is on the
@@ -583,18 +611,22 @@ id TBD), which owns what a first death does to the player.
   lock, warning or forfeit. A fled node when revisited is unspent and offers
   a fresh prelude (A9d).
 - **A lost or fled boss fight can be fought again (Confirmed by T,
-  2026-10-28); a first death is the death rule's, not this plot's.** T: re-fight
+  2026-10-28); a first death is plot DY1's, not this plot's.** T: re-fight
   allowed; a lost or fled boss fight leaves bw-17 incomplete and step 4 open.
   Checked: defeat today ends the run (`resetRun({ keepCharacter: true })`),
-  so no re-fight is possible in the app yet. T's death rule of the same day:
+  so no re-fight is possible in the app until DY1b. T's death rule of the same day:
   "If a player dies in a fight, they come back with 1 HP and a 'dying' status.
   If they die again, it's game over. Resting removes the status." After the
   first death the player returns to the spot before they triggered the fight
-  (or hazard), and that node stays incomplete so it can be retried. It is not
-  built on `main` and is plotted separately (its own plot PR, phase id TBD).
-  QL1 does not scope it. QL1's engine leaves a lost fight's node incomplete
-  (A9a, QL1b), and the boss-retry acceptance (A23, QL1g) is closed once the
-  death rule's phase has merged; QL1a-QL1f do not wait on it.
+  (or hazard), and that node stays incomplete so it can be retried. It is
+  plotted and merged separately as DY1 (`plan/phases/phase_DY1_dying.md`: DY1a
+  the engine and save, DY1b a lost fight in the app, DY1c a lethal hazard).
+  QL1 does not scope it, and the two do not double-scope the unspent node:
+  DY1a makes every lost fight leave its node unspent, and QL1b keeps the
+  flee-and-defeat-unspent rule in `END_COMBAT` as written (A9a); whichever lands
+  second keeps the other's tests. The boss-retry acceptance (A23, QL1g) closes
+  once DY1b has merged; QL1a-QL1f do not wait on it. QL1g's row requires DY1b
+  and carries no `[blocked]` marker, as DY1's rows are on `main`.
 - **The map shows no step progress (Confirmed by T, 2026-10-27, call 4).**
   The quest screen only: no step number, count or READY on the marker or its
   panel (A12).
@@ -635,8 +667,10 @@ id TBD), which owns what a first death does to the player.
   app (QL1c), the Breakwater's content, nodes, pockets, routing and the
   repaired walkers (QL1d, an L tick: the first thing the player sees on a real
   run), T's sitting (QL1e, attended, nothing built), T's lines in (QL1f) and
-  the boss fought again (QL1g, which waits on the death rule's plot).
+  the boss fought again (QL1g, which requires DY1b).
 - **Slotted asap (T):** above the first open row, DF1d.
+- **The Nov 8 date holds (Confirmed by T, 2026-10-28):** QL1a-QL1d keep the
+  `plan/deadlines.md` Item dated 2026-11-08.
 
 ## T's quest line (QL1e, written by T on Tue Nov 10)
 
@@ -690,16 +724,16 @@ Verify: <commands and results>
 ## DoD
 
 A1-A24 ticked across QL1a-QL1g (A21 by QL1e, attended; A23 by QL1g, after
-the death rule's plot); the Measure met.
+DY1b); the Measure met.
 
 ## Follow-ups (out of scope)
 
 - Chapters 2-4's quest lines (the Ruby Signet, the Bleeding Signet, the
   Brooch, the Carapace Belt): T writes them (W3, Nov 25), then a `/plot` on
   this questline's shape.
-- The death rule (T, 2026-10-28; a separate plot, id TBD): what a first and a
+- The death rule (T, 2026-10-28; plot DY1, merged): what a first and a
   second death do. QL1g joins it to the boss fight; everything else about
-  defeat (the aftermath, the dying status, resting) is that plot's.
+  defeat (the aftermath, the dying status, resting) is DY1's.
 - Pre-QL1 saves on the Breakwater can strand at `bw-22` (A4); a re-seed or a
   migration on load if an old save ever matters.
 - The live hazard routing (W2, needs plot): when a hazard node opens the
@@ -772,7 +806,7 @@ unspent in the app (A24).
   blurb test (bw-1 now STORY), the dev skip-event menu, the exploration
   screen's arrival re-fire, ER1's elite tests, and the tests that expected a
   fled node spent. Defeat is untouched here (the run still resets until the
-  death rule's plot lands); the aftermath has no flee.
+  plot DY1 (DY1b) lands); the aftermath has no flee.
 - Save / schema: none.
 - Tests: the quest presenter, screen and payout tests; exploration presenter
   cases; `flee-incomplete.engine.test.tsx`.
@@ -784,7 +818,7 @@ Measure: the A18 engine e2e walks all four steps to the Belt on the live
 Breakwater, A13, A14 and A16 pass, `npm run e2e:act1-walk` passes on the
 four-node map, and the A20 screenshots are on the PR.
 - Scope: `breakwater.ts` (bw-19..bw-22, the re-pointed edges and pockets of
-  A15, five blocked roads, `holdRoadsUntilSettled`), four `quest` pools in
+  A15, four blocked roads, `holdRoadsUntilSettled`), four `quest` pools in
   `MapEvents/content.ts`, the questline in `World/quest.library.ts` with
   placeholder lines and rewards marked `[content]`, `act1-landmarks.json` and
   `breakwater.layout.ts`, the shared quest-node test helper and the walkers of
@@ -794,7 +828,7 @@ four-node map, and the A20 screenshots are on the PR.
 - Consumers: `layout-engine-parity`, `act1-layouts`, `branching-legibility`,
   `node-blurb-event` (four blurbs), the traversal audit and the CLI route
   audit, the state fixtures (the Sage fixture on bw-15; any fixture on bw-2,
-  bw-3, bw-8 or bw-10), ER1's elite tests (bw-8 now sits behind bw-21), the
+  bw-3, bw-6, bw-8, bw-10, bw-12 or bw-14), ER1's elite tests (bw-8 now sits behind bw-21), the
   measured report (unchanged: the same fights exist, and none changes foe).
 - Save / schema: none (A4 already covers the new nodes and old saves).
 - Tests: `breakwater-questline.engine.test.ts`, `quest.library.test.ts`, the
@@ -821,16 +855,18 @@ finds nothing for the questline; A13, A14, A16 and A18 pass with T's numbers.
 - Verify gate: `npm run verify -w axiomancer-mechanics`; `npm run verify -w
   axiomancer-mobile`; `npm run e2e:act1-walk`; the root `npm test`.
 
-### QL1g — The boss fought again (waits on the death rule's plot) · S · closes A23 · requires QL1d and the death rule's phase (a separate plot PR, id TBD)
+### QL1g — The boss fought again (joins plot DY1) · S · closes A23 · requires QL1d and DY1b
 Measure: the A23 e2e passes on the live Breakwater: one lost watchtower fight,
 the player back before `bw-17`, `bw-17` unspent, step 4 active, then a win and
 the Belt.
-- T's death rule is plotted on its own (2026-10-28) and is not built here.
-  This phase adds the one e2e that joins the two, and fixes whatever it finds
-  at the seam (`END_COMBAT`'s defeat, the retry of A9c, the return to the spot
-  before the fight). The row's `Requires` gains the death rule's phase id when
-  that plot merges; until then the row waits and QL1a-QL1f do not.
-- Consumers: the death rule's return-to-spot step, the boss prelude's
+- T's death rule is plot DY1 (`plan/phases/phase_DY1_dying.md`, merged; DY1a the
+  engine and save, DY1b a lost fight in the app, DY1c a lethal hazard) and is not
+  built here. This phase adds the one e2e that joins the two, and fixes whatever
+  it finds at the seam (`END_COMBAT`'s defeat, the retry of A9c, DY1's return to
+  the spot before the fight). DY1's rows are on `main`, so the row carries no
+  `[blocked]` marker; it is pickable once QL1d and DY1b have merged, and
+  QL1a-QL1f do not wait on it.
+- Consumers: DY1's return-to-spot step (`resolveDeath`, `playerDied`), the boss prelude's
   WITHDRAW (`fleeAllowed: !isBoss` stays: a boss cannot be fled from the app).
 - Save / schema: none.
 - Tests: `breakwater-boss-retry.engine.test.ts`.

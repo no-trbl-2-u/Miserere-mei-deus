@@ -10,6 +10,8 @@ export {
 export type { GameStore, StoreApi } from './store';
 
 export { createNewGameState, GAME_STATE_VERSION } from './game.reducer';
+export { resolveDeath, clearDying } from './death';
+export type { DeathCause, DeathResult } from './death';
 export type { NewGameOptions } from './game.reducer';
 export type { GameState, CodexEntry } from './types';
 
@@ -48,6 +50,8 @@ export {
     getStateFixtureById, listStateFixtureIds,
     // R7e / R7e2 — the neutral witnesses for dialogue, shops, quests and gear.
     FIXTURE_NPC, FIXTURE_SHOP, FIXTURE_QUEST,
-    FIXTURE_DIALOGUE_EVENT, FIXTURE_VILLAGE_EVENT, FIXTURE_CUTSCENE_EVENT,
+    FIXTURE_DIALOGUE_EVENT, FIXTURE_VILLAGE_EVENT, FIXTURE_CUTSCENE_EVENT, FIXTURE_QUEST_EVENT, FIXTURE_QUESTLINE,
     FIXTURE_WEAPON, FIXTURE_ARMOR, FIXTURE_TRINKETS, FIXTURE_ELITE_RELICS, FIXTURE_QUEST_RELIC,
+    // Test-only: a map's quest nodes settled so a walker can cross it.
+    settleQuestNodes, settleQuestNodesIn, questNodeIdsOn,
 } from './fixtures';

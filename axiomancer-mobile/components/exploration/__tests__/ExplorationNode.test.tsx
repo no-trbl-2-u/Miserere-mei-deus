@@ -75,6 +75,18 @@ describe('ExplorationNode', () => {
     });
 });
 
+describe('a node behind a blocked road reads its reason (QL1d)', () => {
+    it('a locked node with a blocked road says sealed and the road\'s reason; without one, sealed alone', () => {
+        const locked = { ...mockNode, id: 'lock-1', label: 'The Marker', kind: 'locked' as const };
+        const { getByTestId, rerender } = render(
+            <ExplorationNode node={{ ...locked, blockedReason: 'Not yet.' }} onNodePress={mockOnNodePress} isSelected={false} />,
+        );
+        expect(getByTestId('node-lock-1').props.accessibilityLabel).toBe('The Marker, sealed: Not yet.');
+        rerender(<ExplorationNode node={{ ...locked, blockedReason: null }} onNodePress={mockOnNodePress} isSelected={false} />);
+        expect(getByTestId('node-lock-1').props.accessibilityLabel).toBe('The Marker, sealed');
+    });
+});
+
 describe('the sealed mark shows where a road ends (critique pass 84)', () => {
     const sealedNode = { ...mockNode, id: 'sealed-1', kind: 'locked' as const };
 

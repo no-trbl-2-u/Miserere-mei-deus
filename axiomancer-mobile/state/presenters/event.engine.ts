@@ -633,6 +633,8 @@ function composeNarrative(resolved: ResolvedEvent): Omit<EventViewModel, 'prelud
         // The Labyrinth door enters the Aporia from its
         // interceptor; like travel it never composes a card.
         case 'labyrinth':
+        // A quest node routes to its own screen (QL1c) and composes no card.
+        case 'quest':
         case 'none':
             return EMPTY_VM;
     }

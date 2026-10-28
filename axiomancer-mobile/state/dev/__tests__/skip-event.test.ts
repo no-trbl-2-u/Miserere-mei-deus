@@ -11,19 +11,25 @@
  *   - loot-cache → the ITEM offer claimed, session cleared.
  *   - blacksmith → left unchanged, session cleared, wallet untouched.
  *   - cutscene / village (paced) → dismissed, slice cleared.
+ *   - quest screen open → dismissed as LEAVE does.
  *   - nothing active, nothing owed → `nothing-to-skip`, no seq bump.
  *   - owed arrival (fixture with a rest node) → fired then resolved.
  *   - every skip writes an `action/dev-skip-event` log line.
  *   - `installDevSkipHook` installs / removes `__AXM_SKIP_EVENT__`.
  */
 
-import { configureLogging, getLogger, resetLoggingForTests, type GameState } from '@mechanics';
+import {
+    BREAKWATER_QUESTLINE, ENEMY_REGISTRY, HAZARD_CRACK_CARD, completeQuest, configureLogging, getLogger, placeOnNode, resetLoggingForTests, startQuest, stepQuest,
+    type GameState,
+} from '@mechanics';
 
 import { createAppActions } from '@/state/actions';
+import { clearDeathReturn, isDeathReturnArmed } from '@/state/death-return';
 import { stageEncounter, listEnemies } from '@/state/dev/enemy-picker';
 import { installDevSkipHook, SKIP_EVENT_LOG_KIND, skipCurrentEvent } from '@/state/dev/skip-event';
 import { createAppStore, EMPTY_EVENT_SLICE } from '@/state/store';
 import { createFixtureStore } from '@/test-utils/fixtureStore';
+import { settledBreakwater } from '@/test-utils/settledBreakwater';
 
 const DEV = { devToolsEnabled: true, seed: 7 } as const;
 
@@ -104,6 +110,34 @@ describe('skipCurrentEvent — combat', () => {
     });
 });
 
+describe('skipCurrentEvent — a skipped fight that completes a quest', () => {
+    it('routes the questline\'s relic to /item-reward, as the combat host does', () => {
+        const { store, actions } = freshHandle();
+        let quests = (store.getState() as unknown as GameState).quests;
+        for (const step of BREAKWATER_QUESTLINE.steps.slice(0, 3)) {
+            quests = completeQuest(startQuest(quests, stepQuest(BREAKWATER_QUESTLINE, step)), step.quest.name);
+        }
+        quests = startQuest(quests, stepQuest(BREAKWATER_QUESTLINE, BREAKWATER_QUESTLINE.steps[3]!));
+        store.setState({ quests, world: placeOnNode(settledBreakwater(), 'bw-17') } as never);
+        // The watchtower's foe, stamped as the encounter handler stamps a boss.
+        stageEncounter(store, { ...ENEMY_REGISTRY['death-beholder']!, difficulty: 'boss' as const }, 'dev:test', true);
+
+        jest.useFakeTimers();
+        try {
+            const result = skipCurrentEvent(store, actions, DEV);
+
+            expect(result).toMatchObject({ kind: 'encounter', outcome: 'victory' });
+            expect((store.getState() as unknown as GameState).quests.completed).toContain(BREAKWATER_QUESTLINE.steps[3]!.quest.name);
+            // The relic waits for the combat screen to have left on the skip.
+            expect(store.getState().itemReward.queue).toEqual([]);
+            jest.runOnlyPendingTimers();
+            expect(store.getState().itemReward.queue.map((e) => e.item.id)).toEqual(['relic-elementalist-belt']);
+        } finally {
+            jest.useRealTimers();
+        }
+    });
+});
+
 describe('skipCurrentEvent — minigames', () => {
     it('hazard: claims a median complete crossing and clears the session', () => {
         const { store, actions } = freshHandle();
@@ -116,6 +150,34 @@ describe('skipCurrentEvent — minigames', () => {
         expect(result.outcome).toMatch(/^(complete|perfect):\d+\/\d+$/);
         expect(result.detail).toMatchObject({ hazardId, died: false });
         expect(store.getState().hazard.session).toBeNull();
+    });
+
+    it('hazard: a lethal skipped crossing revives, arms the return moment and reports the outcome', () => {
+        const { store, actions } = freshHandle();
+        actions.moveTo('bw-2');
+        store.setState({ player: { ...player(store), health: 15, maxHealth: 15 } } as never);
+        clearDeathReturn();
+        // A lost cracked-cliff crossing (-20 VITAE), left on its rewards ledger.
+        actions.beginHazard({ seed: 9, hazardId: 'cracked-cliff' });
+        actions.selectHazardRoute('risk');
+        actions.finishHazardRolling();
+        for (let r = 0; r < 3; r++) {
+            const sess = store.getState().hazard.session!;
+            const hand = [{ uid: `t${sess.round}-0`, cardId: HAZARD_CRACK_CARD.id, dieId: null }];
+            store.setState({ hazard: { session: { ...sess, hand, play: [] } } });
+            actions.stageHazardCard(`t${sess.round}-0`);
+            actions.resolveHazardRound();
+            actions.continueHazardAfterResolve();
+        }
+        actions.acknowledgeHazardOutcome();
+
+        const result = skipCurrentEvent(store, actions, DEV);
+
+        expect(result.detail).toMatchObject({ died: true, deathOutcome: 'revived' });
+        expect(isDeathReturnArmed()).toBe(true);
+        expect((store.getState() as unknown as GameState).dying).toBe(true);
+        expect(store.getState().world.currentMap.currentNode).toBe('bw-1');
+        clearDeathReturn();
     });
 
     it('rest: takes the free REST offer and heals', () => {
@@ -198,6 +260,32 @@ describe('skipCurrentEvent — paced events and idle', () => {
         const result = skipCurrentEvent(store, actions, DEV);
         expect(result).toMatchObject({ kind: 'village', outcome: 'dismissed', detail: { villageName: 'Saltmarsh Wend' } });
         expect(store.getState().event.pending).toBeNull();
+    });
+
+    it('dismisses an open quest screen as LEAVE does: nothing accepted, the node unspent', () => {
+        const { store, actions } = freshHandle();
+        const before = (store.getState() as unknown as GameState).quests;
+        store.setState({
+            quest: { open: { questline: 'fixture-line', node: 1 }, paid: null, cardOffers: [] },
+        });
+
+        const result = skipCurrentEvent(store, actions, DEV);
+
+        expect(result).toMatchObject({ kind: 'quest', outcome: 'dismissed', detail: { questline: 'fixture-line', node: 1 } });
+        expect(store.getState().quest.open).toBeNull();
+        expect((store.getState() as unknown as GameState).quests).toBe(before);
+    });
+
+    it('dismisses a quest card pick waiting with no node open, taking nothing', () => {
+        const { store, actions } = freshHandle();
+        const before = player(store).combatRewardCards ?? [];
+        store.setState({ quest: { open: null, paid: null, cardOffers: ['grey-ward', 'grey-strike'] } });
+
+        const result = skipCurrentEvent(store, actions, DEV);
+
+        expect(result).toMatchObject({ kind: 'quest', outcome: 'dismissed', detail: { questline: null, node: null, cardOffers: 2 } });
+        expect(store.getState().quest.cardOffers).toEqual([]);
+        expect(player(store).combatRewardCards ?? []).toEqual(before);
     });
 
     it('reports nothing-to-skip when idle with no arrival owed, without bumping the seq', () => {

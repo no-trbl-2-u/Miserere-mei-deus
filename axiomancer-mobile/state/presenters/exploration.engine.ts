@@ -28,6 +28,7 @@ export type NodeType =
     | 'treasure'
     | 'boss'
     | 'quest'
+    | 'story'
     | 'hazard'
     | 'blacksmith'
     | 'village'
@@ -44,6 +45,13 @@ export interface ExplorationNode {
     type: NodeType;
     /** True when tapping the node should trigger combat. */
     triggersCombat: boolean;
+    /**
+     * For a locked node shut behind a BLOCKED ROAD from where the player has
+     * been (a questline's lock on its next quest node), the road's one-line
+     * reason; the tap on it says this instead of the bare "sealed". Absent
+     * or null otherwise.
+     */
+    blockedReason?: string | null;
 }
 
 export interface ExplorationEdge {
@@ -65,6 +73,13 @@ export interface ExplorationEdge {
      * here".
      */
     lateral: boolean;
+    /**
+     * True when the road itself is blocked (`MapState.blockedRoutes`): a
+     * questline's lock on its next quest node, opened when the step fills.
+     * The canvas draws it closed (dotted), apart from a road that is merely
+     * not reached yet.
+     */
+    blocked?: boolean;
 }
 
 export interface ExplorationAction {
@@ -161,6 +176,13 @@ export interface ExplorationViewModel {
      * the debt is legible off the bytes on disk.
      */
     arrivalPending: boolean;
+    /**
+     * True when the node under the player is unspent and its arrival is
+     * answered: a fled or lost fight, or a quest node whose step was not
+     * accepted. Tapping it tries it again (the engine's `moveToNode` onto the
+     * node the player stands on re-owes its arrival).
+     */
+    retryable: boolean;
     nodes: readonly ExplorationNode[];
     edges: readonly ExplorationEdge[];
     actions: readonly ExplorationAction[];
@@ -203,6 +225,8 @@ export const ACTION_ICON_BY_TYPE: Record<NodeType, string> = {
     treasure: 'chest',
     boss: 'boss',
     quest: 'scroll',
+    // The story kinds (cutscene, narration, interaction) wear the quill.
+    story: 'quill',
     hazard: 'hazard',
     blacksmith: 'anvil',
     village: 'village',
@@ -218,6 +242,7 @@ const ACTION_TAG_BY_TYPE: Record<NodeType, string> = {
     treasure: 'CARD · MIND',
     boss: 'TRAVEL · BOSS',
     quest: 'LORE',
+    story: 'LORE',
     hazard: 'PERIL · BRAVE IT',
     blacksmith: 'FORGE · DIE GEAR',
     village: 'HAVEN · TRADE',
@@ -233,6 +258,7 @@ export const NODE_KIND_LABEL: Record<NodeType, string> = {
     encounter: 'BATTLE',
     boss: 'BOSS · BATTLE',
     quest: 'QUEST',
+    story: 'STORY',
     rest: 'REST',
     gather: 'GATHER',
     treasure: 'TREASURE',
@@ -256,16 +282,20 @@ const KIND_TO_NODE_TYPE: Record<MapEventKind, NodeType> = {
     rest: 'rest',
     'loot-cache': 'treasure',
     hazard: 'hazard',
-    interaction: 'quest',
+    interaction: 'story',
     // Village and blacksmith wear their own woodcuts (huts and anvil).
     village: 'village',
-    cutscene: 'quest',
-    narration: 'quest',
+    cutscene: 'story',
+    narration: 'story',
     blacksmith: 'blacksmith',
     // Inter-map travel doors.
     travel: 'door',
     // The Labyrinth door (the Lantern Deep's vault door), a door like travel.
     labyrinth: 'door',
+    // The questline's giver wears the scroll and QUEST; the story kinds above
+    // wear the quill and STORY. The map shows no step state (the quest screen
+    // alone carries progress).
+    quest: 'quest',
 };
 
 /** Node display type, sourced from the engine's authored event pools. */
@@ -345,6 +375,7 @@ function buildEdges(
     forward: ReadonlyMap<string, readonly string[]>,
     spent: ReadonlySet<string>,
     locked: readonly string[],
+    blockedReason: (a: string, b: string) => string | null,
 ): ExplorationEdge[] {
     const edges: ExplorationEdge[] = [];
     const seen = new Set<string>();
@@ -367,6 +398,7 @@ function buildEdges(
                 traveled,
                 locked: isLocked,
                 lateral: !isForward(node.id, target),
+                blocked: blockedReason(node.id, target) !== null,
             });
         }
     }
@@ -503,6 +535,7 @@ const FALLBACK_VM: ExplorationViewModel = {
     currentNodeId: '',
     startNodePending: false,
     arrivalPending: false,
+    retryable: false,
     nodes: [],
     edges: [],
     actions: [],
@@ -579,6 +612,7 @@ function computeExplorationViewModel(state: GameStore): ExplorationViewModel {
             currentNodeId: readCurrentNodeId(world),
             startNodePending: false,
             arrivalPending: false,
+            retryable: false,
         });
     }
 
@@ -616,9 +650,25 @@ function computeExplorationViewModel(state: GameStore): ExplorationViewModel {
         });
     }
 
+    // A blocked road's reason, either direction (the engine's
+    // `isRouteBlocked` reading of `MapState.blockedRoutes`).
+    const blockedRoutes = world.currentMap.blockedRoutes ?? [];
+    const blockedReason = (a: string, b: string): string | null =>
+        blockedRoutes.find((r) => (r.from === a && r.to === b) || (r.from === b && r.to === a))?.reason ?? null;
+    // Where the player has been: the spent nodes and the one underfoot.
+    const been = (id: string): boolean => spent.has(id) || id === currentNodeId;
+    const neighboursOf = (id: string): string[] => [
+        ...(def.nodes.find((n) => n.id === id)?.connectedNodes ?? []),
+        ...def.nodes.filter((n) => n.connectedNodes.includes(id)).map((n) => n.id),
+    ];
+
     const nodes: ExplorationNode[] = def.nodes.map((eng) => {
         const meta = metaById.get(eng.id)!;
         const nodeKind = classifyNode(eng.id, currentNodeId, spent, reachable);
+        // A locked node met across a blocked road from where the player has
+        // been says why (the first such road, in map order).
+        const reason = nodeKind !== 'locked' ? null
+            : neighboursOf(eng.id).filter(been).map((n) => blockedReason(n, eng.id)).find((r) => r !== null) ?? null;
         return {
             id: eng.id,
             x: meta.x,
@@ -627,6 +677,7 @@ function computeExplorationViewModel(state: GameStore): ExplorationViewModel {
             label: meta.label,
             type: meta.type,
             triggersCombat: nodeKind === 'available' && ENCOUNTER_NODE_TYPES.has(meta.type),
+            blockedReason: reason,
         };
     });
 
@@ -670,7 +721,7 @@ function computeExplorationViewModel(state: GameStore): ExplorationViewModel {
 
     const options = buildOptions(metaById, orderById, reachable, currentNodeId, layout.sheet, readCurrency(state));
     const actions = buildActions(options);
-    const edges = buildEdges(def.nodes, forward, spent, locked);
+    const edges = buildEdges(def.nodes, forward, spent, locked, blockedReason);
 
     return freezeViewModel({
         continent: layout.continent,
@@ -681,6 +732,7 @@ function computeExplorationViewModel(state: GameStore): ExplorationViewModel {
         currentNodeId,
         startNodePending,
         arrivalPending,
+        retryable: !arrivalPending && !spent.has(currentNodeId) && currentNodeId !== def.startingNode.id,
         nodes,
         edges,
         actions,

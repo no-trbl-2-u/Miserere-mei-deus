@@ -13,6 +13,7 @@
 
 import { Enemy } from '../Enemy/types';
 import { Encounter } from '../World/types';
+import type { QuestlineId } from '../World/questline';
 import { Character } from '../Character/types';
 import { Equipment, EquipmentSlot, Item } from '../Items/types';
 import { DialogueTree, DialogueChoice } from '../NPCs/types';
@@ -42,6 +43,14 @@ export type GameAction =
           };
       }
     | { type: 'MOVE_TO_NODE';   payload: { nodeId: string } }
+    /** Accepts a questline step at its own quest node (`acceptQuestStep`). */
+    | { type: 'ACCEPT_QUEST_STEP'; payload: { questline: QuestlineId; step: number } }
+    /**
+     * Turns in a ready questline step at the next quest node
+     * (`turnInQuestStep`). Card offers a `card-pick` rolls are on that
+     * function's `paid`; a host that shows them calls it directly.
+     */
+    | { type: 'TURN_IN_QUEST_STEP'; payload: { questline: QuestlineId; step: number } }
     | { type: 'PROCESS_NODE';   payload?: undefined }
     | { type: 'APPLY_DIALOGUE'; payload: { tree: DialogueTree; choice: DialogueChoice } }
     | { type: 'USE_ITEM';       payload: { itemId: string } }
@@ -60,4 +69,6 @@ export type GameAction =
     | { type: 'SAVE_GAME';      payload?: undefined }
     | { type: 'LOAD_GAME';      payload?: undefined }
     | { type: 'RESET_RUN';      payload: { keepCharacter: boolean } }
+    /** The player's VITAE reached 0 (a fight or an engine hazard): `resolveDeath`. */
+    | { type: 'PLAYER_DIED';    payload: { cause: 'fight' | 'hazard' } }
     | { type: 'UNLOCK_CODEX_ENTRY'; payload: { entryId: string } };

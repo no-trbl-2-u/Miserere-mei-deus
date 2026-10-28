@@ -178,7 +178,9 @@ the Expo app (`axiomancer-mobile`) presents it.
   `npm run lane-pacing`) applies the same knob so its turn counts compare
   with play.
 - **Ending:** the player wins when the foe's VITAE reaches 0, or by sparing
-  a befriended foe. The player loses at 0 VITAE or after `MAX_PHASES` = 60.
+  a befriended foe. The player loses a fight at 0 VITAE or after `MAX_PHASES`
+  = 60. A first loss does not end the run; the next one does (see Death under
+  The world).
 
 ## VITAE and stats
 
@@ -242,8 +244,9 @@ keyword (`EnemyKeyword = never`).
   read from the library by id, so a saved copy takes the current ones; Heart,
   Body and Mind lines join the fighter's stats for each fight, `maxHp` folds
   onto `maxHealth`. The elite drop (`rollEliteRelicDrop`) can hand over the
-  Circlet; the quests are not authored yet, so the dev menu's relic chips,
-  which wear the relic while a position is free, hand over the rest; a relic
+  Circlet; the Breakwater questline's last step pays the Belt (through
+  `/item-reward`); the dev menu's relic chips, which wear the relic while a
+  position is free, hand over the rest; a relic
   carried unworn shows NOT WORN in the satchel, its signature off until the
   player taps WEAR. A character wears one weapon, one armor and up to three
   relics (`SLOT_CAPACITY.relic`); any relic fits any relic slot, and the
@@ -262,9 +265,36 @@ keyword (`EnemyKeyword = never`).
   (`ld-18`) and the Labyrinth vault door (`ld-15`) are sealed cutscenes.
   The Labyrinth and the other continents' maps are parked and unreachable.
 - **Nodes** in play: encounter, hazard, rest, blacksmith (the Anvil),
-  loot-cache, gathering, cutscene, travel. Act 1 has no NPCs, shops or
-  quests; that plumbing is kept and tested with fixtures.
+  loot-cache, gathering, cutscene, travel, and quest (the Breakwater only).
+  Act 1 has no NPCs or shops; that plumbing is kept and tested with fixtures.
+- **The Breakwater questline** (`World/quest.library.ts`, phase QL1d): four
+  quest nodes, bw-19..bw-22. Node 1 (off the windmill) offers step 1; nodes
+  2-4 turn in the step before and offer the next. Placeholder steps and
+  rewards until T's sitting (`[content]`): cross 1 hazard (40 XP, 10
+  shillings), win 2 fights (40 XP, a minor healing potion), beat the elite
+  (40 XP, a card pick of three), beat the watchtower boss (40 XP, 15
+  shillings, the Elementalist's Belt). Every fight and hazard sits in a
+  pocket behind its step's quest node, with one spare; the roads into nodes
+  2-4 are locked until the step before is met; the quest nodes and the
+  watchtower open their roads only once spent, so the bridge needs the boss.
 - **Currency:** shillings.
+- **Death** (`Game/death.ts`, `resolveDeath`): the first time VITAE reaches 0
+  in a fight or on a node hazard, the player is put back on the node they
+  walked from (`MapState.arrivedFrom`) with 1 VITAE and `GameState.dying`
+  set. The node they died on is open again, so it can be walked into and
+  retried. A death while dying ends the run as a reset does: a fresh run and
+  world, full VITAE, the character kept. `clearDying` takes
+  dying off: the rest's heal choice calls it, and the upgrade and cut
+  choices do not. A player with no previous node comes back on the
+  map's starting node. The store verb is `playerDied`. In the app a lost
+  fight on the map calls it: a first death shows a full-screen return moment
+  (`/death-return`) and then the map on the node walked from; a death while
+  dying resets the run. A defeat inside the Labyrinth still resets the run.
+  A lethal hazard crossing in the app still resets the run until phase DY1c.
+  While dying, the combat board shows a skull in place of the player's
+  portrait (the footer-dock medallion and the pilgrim modal head); the
+  character tab keeps the portrait. This is dying's visible effect so far; the
+  rule is provisional and may gain others after playtests.
 - **Rest** offers one choice (`World/RestChoice/`): heal
   `restHealFraction` = 25% of maximum VITAE, upgrade one card the player
   picks (free, no heal; the shared upgrade screen shows it before and after,
