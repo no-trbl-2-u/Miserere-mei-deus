@@ -868,7 +868,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/state/e2e/quest.screen.test.tsx"
+        "source": "axiomancer-mobile/components/__tests__/QuestGate.test.tsx, axiomancer-mobile/state/e2e/quest.screen.test.tsx"
       },
       "needsPitch": {
         "value": false,
@@ -6107,6 +6107,12 @@
       "from": "route:death-return",
       "to": "route:labyrinth",
       "file": "axiomancer-mobile/components/LabyrinthGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:death-return",
+      "to": "route:quest",
+      "file": "axiomancer-mobile/components/QuestGate.tsx"
     },
     {
       "kind": "flow",

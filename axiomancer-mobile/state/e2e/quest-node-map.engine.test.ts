@@ -13,6 +13,7 @@ import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 import { createStartingWorld, type GameState } from '@mechanics';
 import { registerMapEventPool, setNodeEventPoolOverride } from '@mechanics/World/MapEvents/resolve-map-event';
 
+import { createAppActions } from '@/state/actions';
 import { createAppStore, type AppStore } from '@/state/store';
 import { ACTION_ICON_BY_TYPE, NODE_KIND_LABEL, selectExplorationViewModel } from '@/state/presenters/exploration.engine';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
@@ -86,5 +87,18 @@ describe('the map shows no step state (A12)', () => {
         expect(text).not.toMatch(/\bstep\b/i);
         expect(text).not.toMatch(/\bready\b/i);
         expect(text).not.toMatch(/\d+\s*(of|\/)\s*\d+/i);
+    });
+});
+
+describe('walking onto a quest node does not spend it', () => {
+    it('moveTo leaves the quest node uncompleted and unconsumed; only accepting its step spends it', () => {
+        const store = breakwater();
+        const actions = createAppActions(store);
+        expect(actions.moveTo('bw-2').moved).toBe(true);
+        actions.resolveCurrentMapEvent('quest');
+        const map = store.getState().world.currentMap;
+        expect(map.completedNodes).not.toContain('bw-2');
+        expect(map.consumedNodes).not.toContain('bw-2');
+        expect(store.getState().quest.open).toMatchObject({ node: 2 });
     });
 });

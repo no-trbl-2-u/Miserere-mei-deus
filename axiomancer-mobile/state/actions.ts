@@ -1125,7 +1125,9 @@ function moveToAction(store: AppStore, nodeId: string): MoveToResult {
     // Every other kind completes here, and resolving its arrival consumes it
     // (`resolve-map-event.ts`).
     const nodeKind = getNodePrimaryEventKind(map.continent, map.name, nodeId);
-    const isEncounterNode = nodeKind === 'encounter';
+    // A quest node is the same: only accepting its step spends it
+    // (`acceptQuestStep`), and its roads open then, not on arrival.
+    const isEncounterNode = nodeKind === 'encounter' || nodeKind === 'quest';
 
     // Only complete/consume nodes that aren't encounters
     let nextWorld: WorldState = world;
