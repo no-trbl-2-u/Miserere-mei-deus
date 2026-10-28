@@ -80,6 +80,13 @@
 - estimated phases: 1
 - conflicts: none. Loop tooling only; no game code, content, rule, card or keyword (D88). Label `review:plan-only` for the docs half.
 
+### [ ] [score 3.0] Root `npm test` names a missing install instead of three false reds (lesson `worktree-no-node-modules`, seen 2×)
+- proposed: 2026-10-27, `/plot` QL1 retro (lessons at the 40-open cap, so the automation is filed here)
+- source signals: `plan/lessons.md` `worktree-no-node-modules`, seen 2×, last 2026-10-27. In an isolated worktree with no `node_modules`, `scripts/axio-mcp-server.test.mjs` fails three cases (`catalog:export regen failed`, "0 cards, 0 enemies") on a plan-only diff (ship AD1b, plot QL1), and the reader must work out it is the environment.
+- proposed scope: one `/iterate` tick. `axio-mcp-server.test.mjs` skips its catalog cases with a named reason ("no node_modules: run npm install") when the workspace install is absent, and the root `npm test` prints that line once; then mark the lesson `guarded by`.
+- estimated phases: 1
+- conflicts: none. Test tooling only; no game code, content, rule, card or keyword (D88).
+
 ### [ ] [score 3.5] Stop `<rev>:<path>` git reads from breaking on Windows (lesson `msys-rev-path`, seen 2x)
 - proposed: 2026-10-21, `/plot` AD1 retro (lesson `msys-rev-path`, seen 2×)
 - source signals: `plan/lessons.md` `msys-rev-path`, seen 2×, last 2026-10-21. Git Bash path conversion rewrites `git show origin/main:<path>` to `origin\main;<path>` and git reports "ambiguous argument". It bit twice inside one plot session reading `main`'s build plan and workflows, costing a retry each time; the same family as `sed-flattens-crlf` and `isolated-worktree-shell` — this box's shell, not the repo's logic.

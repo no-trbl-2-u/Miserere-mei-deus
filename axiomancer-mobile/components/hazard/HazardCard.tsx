@@ -114,7 +114,7 @@ function StatPair({
             style={{ flexDirection: 'row', alignItems: 'center', gap: 2, opacity: val === 0 ? 0.3 : 1 }}
         >
             <ProgGlyph kind={kind} size={size} color={TYPE_INK[kind]} />
-            <Text style={{ fontFamily: FONTS.gothic, fontSize: size + 4, lineHeight: size + 5, color: val < 0 ? COST_INK : TYPE_INK[kind] }}>
+            <Text style={{ fontFamily: FONTS.sans, fontSize: size + 4, lineHeight: size + 5, color: val < 0 ? COST_INK : TYPE_INK[kind] }}>
                 {hazardSignedNumber(val)}
             </Text>
         </View>
