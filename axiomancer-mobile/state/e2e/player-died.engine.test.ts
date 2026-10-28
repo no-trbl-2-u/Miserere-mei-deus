@@ -4,7 +4,7 @@
  * Mobile's own move records `arrivedFrom` (it delegates to the engine's
  * `arriveAtNode`), and `playerDied` revives a first death on that node and
  * ends the run on the next, with the same cleanup `resetRun` gives.
- * Nothing in the app calls `playerDied` yet: the defeat still resets.
+ * The combat route calls it for a lost fight on the map (phase DY1b).
  */
 
 import { describe, expect, it } from '@jest/globals';
@@ -17,6 +17,24 @@ function makeStoreAndActions() {
     const store = createAppStore({ adapter: createMemoryAdapter() });
     return { store, actions: createAppActions(store) };
 }
+
+describe('playerDied saves', () => {
+    it('a revive is written to the slot with dying, the player back on the node walked from', () => {
+        const adapter = createMemoryAdapter();
+        const store = createAppStore({ adapter });
+        const actions = createAppActions(store);
+        actions.moveTo('bw-2');
+        const before = adapter.saveCount;
+
+        actions.playerDied('fight');
+
+        expect(adapter.saveCount).toBeGreaterThan(before);
+        const saved = adapter.load();
+        expect(saved?.dying).toBe(true);
+        expect(saved?.player.health).toBe(1);
+        expect(saved?.world.currentMap.currentNode).toBe('bw-1');
+    });
+});
 
 describe('playerDied', () => {
     it('the app move records the node walked from', () => {

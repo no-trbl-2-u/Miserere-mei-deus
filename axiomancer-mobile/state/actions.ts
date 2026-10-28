@@ -373,7 +373,7 @@ export interface AppActions {
      * on the node they walked from at 1 VITAE, dying (`'revived'`); a death
      * while dying ends the run exactly as `resetRun({ keepCharacter: true })`
      * does (`'run-over'`), including the play log's `run-end` and the
-     * Labyrinth cleanup. Nothing calls it yet: the app's defeat still resets.
+     * Labyrinth cleanup. The combat route calls it for a lost fight on the map.
      */
     playerDied: (cause: 'fight' | 'hazard') => 'revived' | 'run-over';
     save: () => void;
@@ -812,6 +812,14 @@ export function createAppActions(store: AppStore): AppActions {
             if (runOver) recordRunEnd(store);
             const outcome = engineStore.playerDied?.(cause) ?? 'run-over';
             if (outcome === 'run-over') clearRunScopedSessions(store);
+            // Mobile owns save timing: the engine's durable-action autosave is
+            // deflected here, so the revive (or the fresh run) is checkpointed
+            // by hand, before the return moment, and a reload keeps `dying`.
+            try {
+                store.getState().save();
+            } catch {
+                // Persistence failures must not strand the player on the fight.
+            }
             return outcome;
         },
         levelUp: () => {

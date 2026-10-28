@@ -318,7 +318,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/app/__tests__/character-select.screen.test.tsx, axiomancer-mobile/components/__tests__/DebugEnemyPicker.test.tsx, axiomancer-mobile/components/__tests__/DebugTriggerEncounter.test.tsx, ..."
+        "source": "axiomancer-mobile/app/__tests__/character-select.screen.test.tsx, axiomancer-mobile/app/__tests__/death-return.screen.test.tsx, axiomancer-mobile/components/__tests__/DebugEnemyPicker.test.tsx, ..."
       },
       "needsPitch": {
         "value": false,
@@ -499,6 +499,31 @@
         "value": false,
         "missing": null,
         "source": "plan/2026-09-25-refactor-strategy.decisions.md D31"
+      }
+    },
+    {
+      "id": "route:death-return",
+      "name": "Death Return",
+      "kind": "route",
+      "group": "world",
+      "source": "axiomancer-mobile/app/death-return/index.tsx",
+      "named": false,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:combat-encounter -> route:death-return"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/feature-map-e2e.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/app/__tests__/death-return.screen.test.tsx, axiomancer-mobile/state/e2e/combat-route.screen.test.tsx"
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Death Return\")",
+        "source": null
       }
     },
     {
@@ -3667,6 +3692,12 @@
     },
     {
       "kind": "coupling",
+      "from": "route:death-return",
+      "to": "area:Log",
+      "file": "axiomancer-mobile/lib/platform/router.ts"
+    },
+    {
+      "kind": "coupling",
       "from": "route:dev",
       "to": "area:Cards",
       "file": "axiomancer-mobile/state/actions.ts"
@@ -5900,6 +5931,12 @@
     {
       "kind": "flow",
       "from": "route:combat-encounter",
+      "to": "route:death-return",
+      "file": "axiomancer-mobile/app/combat-encounter/index.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:combat-encounter",
       "to": "route:dialogue",
       "file": "axiomancer-mobile/components/EventGate.tsx"
     },
@@ -6008,6 +6045,78 @@
     {
       "kind": "flow",
       "from": "route:cutscene",
+      "to": "route:village",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:death-return",
+      "to": "route:(tabs)/exploration",
+      "file": "axiomancer-mobile/app/death-return/index.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:death-return",
+      "to": "route:blacksmith",
+      "file": "axiomancer-mobile/components/BlacksmithGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:death-return",
+      "to": "route:cache",
+      "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:death-return",
+      "to": "route:combat-encounter",
+      "file": "axiomancer-mobile/components/CombatGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:death-return",
+      "to": "route:cutscene",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:death-return",
+      "to": "route:dialogue",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:death-return",
+      "to": "route:event",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:death-return",
+      "to": "route:hazard",
+      "file": "axiomancer-mobile/components/HazardGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:death-return",
+      "to": "route:item-reward",
+      "file": "axiomancer-mobile/components/item-reward/ItemRewardGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:death-return",
+      "to": "route:labyrinth",
+      "file": "axiomancer-mobile/components/LabyrinthGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:death-return",
+      "to": "route:rest",
+      "file": "axiomancer-mobile/components/RestGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:death-return",
       "to": "route:village",
       "file": "axiomancer-mobile/components/EventGate.tsx"
     },
