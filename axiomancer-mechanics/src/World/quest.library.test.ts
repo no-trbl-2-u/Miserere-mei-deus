@@ -14,7 +14,7 @@ import { describe, it, expect } from 'vitest';
 
 import { AUTHORED_QUESTLINES, BREAKWATER_QUESTLINE } from './quest.library';
 import { listQuestlines, type Questline, type QuestlineStep } from './questline';
-import { questlineSupplyProblems, stepSupply, type SupplyClass } from './questline-supply';
+import { objectiveClass, questlineSupplyProblems, stepSupply, supplyClassesOf, type SupplyClass } from './questline-supply';
 import { getMapDefinition } from './map.registry';
 import { getNodeEventPool } from './MapEvents/resolve-map-event';
 import { MAP_REGISTRY } from './map.registry';
@@ -104,6 +104,43 @@ describe('A14: the Breakwater\'s pockets', () => {
             ['bw-6', 'bw-8'],
             ['bw-17'],
         ]);
+    });
+});
+
+describe('A14: what a node and an objective count', () => {
+    const cls = (id: string) => supplyClassesOf('coastal-continent', 'breakwater', id);
+
+    it('reads each node\'s class off its pool: a hazard, a normal fight, the elite, the boss, and nothing else', () => {
+        expect(cls('bw-3')).toEqual(['hazard']);
+        expect(cls('bw-2')).toEqual(['any']);
+        expect(cls('bw-8')).toEqual(['any', 'elite']);
+        expect(cls('bw-17')).toEqual(['boss']);
+        expect(cls('bw-4')).toEqual([]);
+        expect(cls('bw-19')).toEqual([]);
+        expect(cls('no-such-node')).toEqual([]);
+        expect(supplyClassesOf('coastal-continent', 'no-such-map', 'bw-3')).toEqual([]);
+    });
+
+    it('reads an objective\'s class: a hazard, a kill by foe class, and nothing for a named target or another type', () => {
+        expect(objectiveClass({ type: 'hazard' })).toBe('hazard');
+        expect(objectiveClass({ type: 'kill', foeClass: 'any' })).toBe('any');
+        expect(objectiveClass({ type: 'kill', foeClass: 'elite' })).toBe('elite');
+        expect(objectiveClass({ type: 'kill', foeClass: 'boss' })).toBe('boss');
+        expect(objectiveClass({ type: 'kill', target: 'Float-Eye', foeClass: 'any' })).toBeUndefined();
+        expect(objectiveClass({ type: 'kill' })).toBeUndefined();
+        expect(objectiveClass({ type: 'reach', target: 'bw-3' })).toBeUndefined();
+        expect(objectiveClass({ type: 'collect', target: 'driftwood' })).toBeUndefined();
+    });
+
+    it('skips an objective that counts no node: a questline asking for a named kill reports no supply problem for it', () => {
+        const line = BREAKWATER_QUESTLINE;
+        const named = {
+            ...line,
+            steps: line.steps.map(s => s.step !== 2 ? s : {
+                ...s, quest: { ...s.quest, objectives: [{ ...s.quest.objectives[0]!, target: 'Float-Eye', requiredCount: 9 }] },
+            }),
+        };
+        expect(questlineSupplyProblems(defOf(line), named)).toEqual([]);
     });
 });
 
