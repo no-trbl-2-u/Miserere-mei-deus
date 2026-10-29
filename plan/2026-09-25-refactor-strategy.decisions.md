@@ -1043,6 +1043,13 @@ satisfied for exactly these.)
 - Portraits, relics, stat spreads and playstyle lines are T's content (D88). The first character is due 2026-10-26 (T); three for December. Character content waits on at least one new lane, because a character needs three distinct lanes; T plans two new lanes before a character goes live.
 - Built by Phase CH1 (`plan/phases/phase_CH1_character_select.md`).
 
+**D113 — The player walks the roads; completed nodes can be revisited.** (T, 2026-10-28, attended `/plot`. Amends the gauntlet frontier rule documented on `MapDefinition.traversal`.)
+
+- On a gauntlet map the player moves only to nodes joined by an open road to the node they stand on, new or completed alike; roads read both ways. Frontier jumping ends.
+- A completed node re-entered does nothing (fights, hazards, rest, loot caches, cutscenes); a village, a travel node and a quest node act on every entry; an elite a rest revived (ER1) fights again.
+- Held roads and quest locks still gate routing; the boss is forced by routing, not by an exhausted frontier.
+- Built by Phase WR1 (`plan/phases/phase_WR1_walk_the_roads.md`).
+
 **D112 — The overworld has eight node kinds.** (T, 2026-10-28, in an attended session; recorded by the NK1 plot. Amends D111's "ninth kind": the count is now eight.)
 
 - The kinds are encounter, hazard, rest, loot cache, cutscene, quest (D111), village and travel, plus the empty waypoint (a node with no event) and the labyrinth door, kept but placed on no overworld map until the labyrinth returns (T: "I think the Labyrinth will eventually be act 2").
