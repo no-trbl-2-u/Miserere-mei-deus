@@ -30,7 +30,7 @@ import {
     isQuestComplete, findActiveQuest, startQuest, completeQuest, payCompletedQuests,
     syncCarryObjectives, type PaidQuestReward,
 } from './quest.engine';
-import { markNodeConsumed, revealAdjacent, syncFrontierLists, unblockMapRoute } from './world.reducer';
+import { markNodeConsumed, revealAdjacent, syncMoveLists, unblockMapRoute } from './world.reducer';
 import { getRng } from '../Utils/rng';
 
 /** A questline's id (the Breakwater's is `BREAKWATER_QUESTLINE_ID`). */
@@ -209,6 +209,7 @@ export function resolveQuestNodeEvent(log: QuestLog, payload: QuestPayload): Ext
         stage: questNodeStage(log, payload.questline, payload.node),
         description: payload.description,
     };
+    if (event.stage === 'locked' && payload.lockedLine !== undefined) event.lockedLine = payload.lockedLine;
     const questline = getQuestline(payload.questline);
     if (!questline) return event;
     const behind = questlineStep(questline, payload.node - 1);
@@ -242,7 +243,7 @@ export function openReadyQuestRoutes(state: GameState): GameState {
         }
     }
     if (next === map) return state;
-    return { ...state, world: { ...state.world, currentMap: syncFrontierLists(next) } };
+    return { ...state, world: { ...state.world, currentMap: syncMoveLists(next) } };
 }
 
 /**
@@ -372,6 +373,6 @@ export function turnInQuestStep(
     const settled = settleQuestLog(held, completeQuest(held.quests, target.quest.name), rng);
     if (questlineStep(questline, step + 1)) return settled;
     const map = settled.state.world.currentMap;
-    const spent = syncFrontierLists(markNodeConsumed(revealAdjacent(map, at), at));
+    const spent = syncMoveLists(markNodeConsumed(revealAdjacent(map, at), at));
     return { state: { ...settled.state, world: { ...settled.state.world, currentMap: spent } }, paid: settled.paid };
 }

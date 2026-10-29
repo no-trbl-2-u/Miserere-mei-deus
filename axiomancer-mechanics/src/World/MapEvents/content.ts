@@ -37,7 +37,7 @@ function innRestPool(nodeId: string, description: string): MapEventPool {
     };
 }
 
-function hazardPool(nodeId: string, description: string): MapEventPool {
+export function hazardPool(nodeId: string, description: string): MapEventPool {
     return {
         id: `${nodeId}.hazard`,
         entries: [{ kind: 'hazard', weight: 1, payload: { kind: 'hazard', damage: 2, description } }],
@@ -45,12 +45,12 @@ function hazardPool(nodeId: string, description: string): MapEventPool {
 }
 
 // Low-risk coastal scavenging — a few shillings the tide or a dead sailor left.
-const COAST_LOOT_CACHES: ReadonlyArray<{ currency: number; description: string }> = [
+export const COAST_LOOT_CACHES: ReadonlyArray<{ currency: number; description: string }> = [
     { currency: 8,  description: 'A purse of shillings snagged in the netting, its owner long gone.' },
     { currency: 12, description: 'A waterlogged strongbox wedged under the pilings.' },
     { currency: 6,  description: 'Loose shillings spill from a cracked jar in the rocks.' },
 ];
-function lootCachePool(nodeId: string, cache: { currency: number; description: string }): MapEventPool {
+export function lootCachePool(nodeId: string, cache: { currency: number; description: string }): MapEventPool {
     return {
         id: `${nodeId}.loot-cache`,
         entries: [{ kind: 'loot-cache', weight: 1, payload: { kind: 'loot-cache', currency: cache.currency, description: cache.description } }],
@@ -62,13 +62,18 @@ function lootCachePool(nodeId: string, cache: { currency: number; description: s
 // and wallet (`state/blacksmith/store-actions.ts`). The village name is a
 // placeholder until T writes the places.
 function anvilVillagePool(nodeId: string, description: string): MapEventPool {
+    return villagePool(nodeId, ANVIL_VILLAGE_NAMES[nodeId] ?? 'The Smithy', description);
+}
+
+/** A village named `villageName` with all three counters (the paid rest, the card shop, the Anvil). */
+export function villagePool(nodeId: string, villageName: string, description: string): MapEventPool {
     return {
         id: `${nodeId}.village`,
         entries: [{
             kind: 'village', weight: 1,
             payload: {
                 kind: 'village',
-                villageName: ANVIL_VILLAGE_NAMES[nodeId] ?? 'The Smithy',
+                villageName,
                 rest: true,
                 cardShop: true,
                 anvil: { variants: BLACKSMITH_WITNESS_VARIANTS },
@@ -78,7 +83,7 @@ function anvilVillagePool(nodeId: string, description: string): MapEventPool {
     };
 }
 
-function campRestPool(nodeId: string, description: string): MapEventPool {
+export function campRestPool(nodeId: string, description: string): MapEventPool {
     return {
         id: `${nodeId}.rest`,
         entries: [{
@@ -177,16 +182,16 @@ const bwWindmillArrival: MapEventPool = {
 };
 
 /** The Breakwater's elite, pinned low like every Act 1 fight. */
-const BW_ELITE_LEVEL = 3;
+export const BW_ELITE_LEVEL = 3;
 
 /** The Breakwater's Float-Eyes are pinned too, so its XP is fixed. */
-const BW_FIGHT_LEVEL = 2;
+export const BW_FIGHT_LEVEL = 2;
 
 /**
  * Each region's door sits one level under the player a full clear
  * brings to it (Breakwater 1, Charcoal Wood 2, Beacon Crags 3, Lantern Deep 4).
  */
-const BW_DOOR_LEVEL = 1;
+export const BW_DOOR_LEVEL = 1;
 
 const BW_ENCOUNTER_FOES: Record<string, ActOneFoe> = {
     // c1 — the crane quay
@@ -313,7 +318,7 @@ const BREAKWATER_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> =
  * list; every Act 1 elite leaves it absent until T authors the lists, so each
  * draws from the whole elite-only pool.
  */
-interface ActOneFoe { slug: EnemySlug; level: number; description?: string; isBoss?: boolean; eliteRelicDrops?: string[] }
+export interface ActOneFoe { slug: EnemySlug; level: number; description?: string; isBoss?: boolean; eliteRelicDrops?: string[] }
 
 const CW_FIGHT_LEVEL_EARLY = 2;
 const CW_FIGHT_LEVEL_LATE = 3;
@@ -335,7 +340,7 @@ const cwArrival: MapEventPool = {
     }],
 };
 
-function cwEncounterPool(nodeId: string, foe: ActOneFoe): MapEventPool {
+export function cwEncounterPool(nodeId: string, foe: ActOneFoe): MapEventPool {
     return {
         id: `${nodeId}.encounter`,
         entries: [{

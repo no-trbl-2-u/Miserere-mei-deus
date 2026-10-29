@@ -350,8 +350,8 @@ export function rollEliteReward(player: Character, rng: () => number, count = 3)
  * `dropList` (relic ids, looked up in `relics`), or, when the fight authors
  * none, the library's `relicSource: 'elite'` relics. Several elites may list
  * the same relic; one the player carries is skipped, so a shared relic won
- * from one elite never drops again from another. Quest relics come only from
- * their quests.
+ * from one elite never drops again from another. A `'quest'` relic drops only
+ * where a fight lists it; any relic may also be a quest's reward.
  */
 export function eliteRelicPool(
     player: Pick<Character, 'inventory'> & Wearer,
@@ -370,7 +370,7 @@ export function eliteRelicPool(
 /**
  * A won elite fight's relic roll, made before any other reward (a drop is
  * the whole reward): one relic from {@link eliteRelicPool} (the fight's
- * `dropList`, else the elite-only pool) with probability
+ * `dropList`, else the elite-drop pool) with probability
  * `ELITE_RELIC_DROP_CHANCE`, else `null`. Pure and seeded: the first draw is
  * the chance, the second picks uniformly from the pool. An empty pool drops
  * nothing and draws nothing. The relic comes back deep-cloned.
