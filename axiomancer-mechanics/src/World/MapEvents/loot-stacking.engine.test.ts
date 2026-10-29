@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { createNewGameState } from '../../Game';
-import { resolveGathering, resolveLootCache } from './handlers';
+import { resolveLootCache } from './handlers';
 import type { Consumable } from '../../Items/types';
 
 // RC walk, leg 2: a loot cache granting a potion the player already held
@@ -18,13 +18,6 @@ describe('map-event grants stack consumables onto the held row', () => {
 
     it('loot-cache', () => {
         const { state } = resolveLootCache(holding(), { kind: 'loot-cache', items: [{ ...potion }], currency: 0 } as never);
-        const rows = potionRows(state.player.inventory);
-        expect(rows).toHaveLength(1);
-        expect((rows[0] as Consumable).quantity).toBe(2);
-    });
-
-    it('gathering', () => {
-        const { state } = resolveGathering(holding(), { kind: 'gathering', items: [{ ...potion }] } as never);
         const rows = potionRows(state.player.inventory);
         expect(rows).toHaveLength(1);
         expect((rows[0] as Consumable).quantity).toBe(2);

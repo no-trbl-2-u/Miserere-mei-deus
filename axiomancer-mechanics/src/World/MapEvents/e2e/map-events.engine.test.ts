@@ -65,47 +65,6 @@ describe('resolveMapEvent — per-kind', () => {
         }
     });
 
-    it('resolves an interaction event by NPC name', () => {
-        mockSequentialRng(0.5);
-        const state = withPool(freshState(), {
-            id: 'pool.interaction',
-            entries: [{
-                kind: 'interaction',
-                weight: 1,
-                payload: { kind: 'interaction', npcName: 'Old Marrow' },
-            }],
-        });
-        const result = resolveMapEvent(state);
-        expect(result.event.kind).toBe('interaction');
-        if (result.event.kind === 'interaction') {
-            expect(result.event.npcName).toBeTruthy();
-        }
-    });
-
-    it('resolves a gathering event by adding cloned items to inventory', () => {
-        mockSequentialRng(0.5);
-        const before = freshState();
-        const beforeCount = before.player.inventory.length;
-        const state = withPool(before, {
-            id: 'pool.gathering',
-            entries: [{
-                kind: 'gathering',
-                weight: 1,
-                payload: {
-                    kind: 'gathering',
-                    items: [{
-                        id: 'driftwood', name: 'Driftwood',
-                        description: 'Salt-bleached.', category: 'material',
-                        quantity: 1,
-                    }],
-                },
-            }],
-        });
-        const result = resolveMapEvent(state);
-        expect(result.event.kind).toBe('gathering');
-        expect(result.state.player.inventory).toHaveLength(beforeCount + 1);
-    });
-
     it('resolves a rest event by healing the player', () => {
         mockSequentialRng(0.5);
         const before = freshState();
@@ -414,8 +373,8 @@ describe('resolveMapEvent — reach-objective auto-advance', () => {
 
 // ── `collect`-objective auto-advance via resolveMapEvent ───────────────────
 //
-// Mirrors the reach-objective block above: items granted by
-// `resolveGathering` advance a matching `collect` quest objective.
+// Nothing advances a `collect` objective since the gathering kind was cut:
+// a loot cache granting the very item leaves the objective where it was.
 
 describe('resolveMapEvent — collect-objective auto-advance', () => {
     function seedCollectQuest(state: GameState, targetItemId: string, requiredCount = 1): GameState {
@@ -440,62 +399,22 @@ describe('resolveMapEvent — collect-objective auto-advance', () => {
         };
     }
 
-    function withGatheringPool(state: GameState, itemIds: string[]): GameState {
-        return withPool(state, {
-            id: 'pool.collect-test',
-            entries: [{
-                kind: 'gathering',
-                weight: 1,
-                payload: {
-                    kind: 'gathering',
-                    items: itemIds.map(id => ({
-                        id, name: id, description: '', category: 'material' as const, quantity: 1,
-                    })),
-                },
-            }],
-        });
-    }
-
-    it('completes a collect quest when the resolved gathering event grants the target item', () => {
-        mockSequentialRng(0.5);
-        const state = seedCollectQuest(withGatheringPool(freshState(), ['driftwood']), 'driftwood');
-
-        const result = resolveMapEvent(state);
-        expect(result.event.kind).toBe('gathering');
-        expect(result.state.quests.active.some(q => q.name === COLLECT_DRIFTWOOD)).toBe(false);
-        expect(result.state.quests.completed).toContain('collect-driftwood');
-    });
-
-    it('is a silent no-op when the resolved gathering event grants a different item', () => {
-        mockSequentialRng(0.5);
-        const state = seedCollectQuest(withGatheringPool(freshState(), ['oak-branch']), 'driftwood');
-
-        const result = resolveMapEvent(state);
-        expect(result.event.kind).toBe('gathering');
-        expect(result.state.quests.active.some(q => q.name === COLLECT_DRIFTWOOD)).toBe(true);
-        expect(result.state.quests.completed).not.toContain('collect-driftwood');
-    });
-
-    it('advances currentCount by every matching item granted in one resolution', () => {
-        mockSequentialRng(0.5);
-        const state = seedCollectQuest(withGatheringPool(freshState(), ['driftwood', 'driftwood']), 'driftwood', 3);
-
-        const result = resolveMapEvent(state);
-        const quest = result.state.quests.active.find(q => q.name === COLLECT_DRIFTWOOD);
-        expect(quest?.objectives[0]?.currentCount).toBe(2);
-        expect(result.state.quests.completed).not.toContain('collect-driftwood');
-    });
-
-    it('is a no-op for non-gathering events even when a collect objective is active', () => {
+    it('is a no-op for a loot cache granting the target item', () => {
         mockSequentialRng(0.5);
         const base = withPool(freshState(), {
             id: 'pool.collect-noop-test',
-            entries: [{ kind: 'rest', weight: 1, payload: { kind: 'rest', shelter: 'camp' } }],
+            entries: [{
+                kind: 'loot-cache', weight: 1,
+                payload: {
+                    kind: 'loot-cache',
+                    items: [{ id: 'driftwood', name: 'driftwood', description: '', category: 'material', quantity: 1 }],
+                },
+            }],
         });
         const state = seedCollectQuest(base, 'driftwood');
 
         const result = resolveMapEvent(state);
-        expect(result.event.kind).toBe('rest');
+        expect(result.event.kind).toBe('loot-cache');
         expect(result.state.quests.active.some(q => q.name === COLLECT_DRIFTWOOD)).toBe(true);
         expect(result.state.quests.completed).not.toContain('collect-driftwood');
     });

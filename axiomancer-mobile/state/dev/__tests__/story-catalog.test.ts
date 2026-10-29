@@ -4,8 +4,8 @@
  * Pins:
  *   - `listNpcs` finds staged NPCs with trees across maps, unique keys.
  *   - `listQuests` finds the authored quest line in campaign order.
- *   - `openNpcDialogue` seeds an interaction + cursor at the tree root
- *     that `selectHasActiveEvent` recognises.
+ *   - `openNpcDialogue` seats a cursor at the tree root under a placeholder
+ *     event that `selectHasActiveEvent` recognises, routing to /dialogue.
  *   - start → advance → complete moves a real quest through the log.
  */
 
@@ -21,7 +21,7 @@ import {
     type QuestChoice,
 } from '@/state/dev/story-catalog';
 import { FIXTURE_NPC, FIXTURE_QUEST } from '@mechanics';
-import { selectHasActiveEvent } from '@/state/presenters/event.engine';
+import { selectHasActiveEvent, selectPacedEventRoute } from '@/state/presenters/event.engine';
 import { createAppStore } from '@/state/store';
 
 const FIXTURE_NPC_CHOICE: NpcChoice = {
@@ -37,14 +37,15 @@ describe('story-catalog dev helpers', () => {
         expect(listQuests()).toEqual([]);
     });
 
-    it('openNpcDialogue seeds an interaction with a cursor at the root', () => {
+    it('openNpcDialogue seats a cursor at the root under a placeholder event, and routes to /dialogue', () => {
         const store = createAppStore();
         const npc = FIXTURE_NPC_CHOICE;
         openNpcDialogue(store, npc);
         const slice = store.getState().event;
         expect(selectHasActiveEvent(store.getState())).toBe(true);
-        expect((slice.pending!.event as { kind: string; npcName: string }).npcName).toBe(npc.name);
+        expect(slice.pending!.event).toEqual({ kind: 'cutscene', lines: [] });
         expect(slice.dialogueCursor?.nodeId).toBe(npc.tree.rootId);
+        expect(selectPacedEventRoute(store.getState())).toBe('/dialogue');
     });
 
     it('start → advance → complete walks a real quest through the log', () => {

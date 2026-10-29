@@ -21,10 +21,9 @@ import {
 import { mockSequentialRng, restoreOriginalRng } from '../../../test-utils/rng';
 import { createStartingWorld } from '../../index';
 import { createNewGameState } from '../../../Game/game.reducer';
-import { resolveNarration, resolveBlacksmith } from '../handlers';
+import { resolveBlacksmith } from '../handlers';
 import type { GameState } from '../../../Game/types';
-import type { MapEventPool, NarrationPayload, BlacksmithPayload } from '../types';
-import type { DialogueTree } from '../../../NPCs/types';
+import type { MapEventPool, BlacksmithPayload } from '../types';
 
 function freshState(): GameState {
     return { ...createNewGameState(), world: createStartingWorld() };
@@ -58,65 +57,6 @@ describe('resolveMapEvent — description passthrough', () => {
         expect(result.event.kind).toBe('encounter');
         if (result.event.kind === 'encounter') {
             expect(result.event.description).toBe('A larva stirs in the cairn-mud.');
-        }
-    });
-
-    it('carries the authored description onto an interaction event', () => {
-        mockSequentialRng(0.5);
-        const state = withPool(freshState(), {
-            id: 'pool.description.interaction',
-            entries: [{
-                kind: 'interaction',
-                weight: 1,
-                payload: { kind: 'interaction', npcName: 'Old Marrow', description: 'Old Marrow leans on a driftwood cane.' },
-            }],
-        });
-        const result = resolveMapEvent(state);
-        expect(result.event.kind).toBe('interaction');
-        if (result.event.kind === 'interaction') {
-            expect(result.event.description).toBe('Old Marrow leans on a driftwood cane.');
-        }
-    });
-
-    it('leaves description undefined when the interaction payload omits one', () => {
-        mockSequentialRng(0.5);
-        const state = withPool(freshState(), {
-            id: 'pool.description.interaction-unauthored',
-            entries: [{
-                kind: 'interaction',
-                weight: 1,
-                payload: { kind: 'interaction', npcName: 'Old Marrow' },
-            }],
-        });
-        const result = resolveMapEvent(state);
-        expect(result.event.kind).toBe('interaction');
-        if (result.event.kind === 'interaction') {
-            expect(result.event.description).toBeUndefined();
-        }
-    });
-
-    it('carries the authored description onto a gathering event', () => {
-        mockSequentialRng(0.5);
-        const state = withPool(freshState(), {
-            id: 'pool.description.gathering',
-            entries: [{
-                kind: 'gathering',
-                weight: 1,
-                payload: {
-                    kind: 'gathering',
-                    description: 'Driftwood, tangled in kelp.',
-                    items: [{
-                        id: 'driftwood', name: 'Driftwood',
-                        description: 'Salt-bleached.', category: 'material',
-                        quantity: 1,
-                    }],
-                },
-            }],
-        });
-        const result = resolveMapEvent(state);
-        expect(result.event.kind).toBe('gathering');
-        if (result.event.kind === 'gathering') {
-            expect(result.event.description).toBe('Driftwood, tangled in kelp.');
         }
     });
 
@@ -201,25 +141,6 @@ describe('resolveMapEvent — description passthrough', () => {
 });
 
 describe('MapEvents description passthrough — direct handler coverage', () => {
-    const TREE: DialogueTree = {
-        id: 'test-narration',
-        rootId: 'a',
-        nodes: { a: { id: 'a', text: 'A quiet monologue.' } },
-    };
-
-    it('carries the authored description onto a narration event', () => {
-        const payload: NarrationPayload = {
-            kind: 'narration',
-            dialogue: TREE,
-            description: 'A voice, from nowhere in particular.',
-        };
-        const result = resolveNarration(createNewGameState(), payload);
-        expect(result.event.kind).toBe('narration');
-        if (result.event.kind === 'narration') {
-            expect(result.event.description).toBe('A voice, from nowhere in particular.');
-        }
-    });
-
     it('carries the authored description onto a blacksmith event', () => {
         const payload: BlacksmithPayload = {
             kind: 'blacksmith',

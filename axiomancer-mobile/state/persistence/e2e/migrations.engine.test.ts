@@ -180,8 +180,9 @@ describe('migrations.engine', () => {
             // v35: the deleted relic hop;
             // v36: the XP curve hop; v37: the level-20 curve hop;
             // v38: the Brine Hag to Green Jelly rename hop;
-            // v39: the relic slot hop.
-            expect(GAME_STATE_VERSION).toBe(39);
+            // v39: the relic slot hop;
+            // v40: the cut node kinds (an arrival owed on a former gathering node).
+            expect(GAME_STATE_VERSION).toBe(40);
             expect(result.version).toBe(GAME_STATE_VERSION);
         });
     });

@@ -233,30 +233,30 @@ the village; the event-assets art table (travel gains a per-node art slug).
    how "none" works today; NK1 only gives it its own map look. T's "migrate to
    none" is met by re-authoring, since payloads are not saved.
 2. **Gathering nodes become empty waypoints** until the Breakwater redraw and
-   Chapters 2-4's plots re-author them [T to confirm #1]. Gathering material
+   Chapters 2-4's plots re-author them [Accepted at merge (default)]. Gathering material
    item definitions stay, so items already in a save still load and sell for
    1; nothing grants them any more.
 3. **The labyrinth's narration lines become `cutscene` lines and its gathering
-   grants become `loot-cache` items** [T to confirm #2]. The Sophist's
+   grants become `loot-cache` items** [Accepted at merge (default)]. The Sophist's
    nameplate on those lines is lost; the words are kept verbatim. This keeps
    "everything about it" working while the kinds go.
 4. **"Hidden" means no door on any overworld map**, which is already true; A5
    turns it into a test. The `/dev` entry stays.
-5. **Card removal moves from the rest node to the village** [T to confirm #3]:
+5. **Card removal moves from the rest node to the village** [Accepted at merge (default)]:
    T listed removal under the village's shop; one place to remove cards keeps
    the price ladder meaningful.
-6. **The village shop sells cards only** [T to confirm #4]: today's consumable
+6. **The village shop sells cards only** [Accepted at merge (default)]: today's consumable
    and relic wares and the SELL tab go, since T named the shop as card buying
    and removal.
 7. **Paid rest: 25% of max VITAE for 6 shillings, once per visit**
-   [T to confirm #5]. The heal matches a rest node; the price sits between the
+   [Accepted at merge (default)]. The heal matches a rest node; the price sits between the
    Anvil's hone (3) and swap (8). Numbers are tuning, not law.
 8. **Card shop: three cards from the player's own reward pool at 6 shillings
-   each, fixed per village per run** [T to confirm #6]. The reward pool keeps
+   each, fixed per village per run** [Accepted at merge (default)]. The reward pool keeps
    lanes honest (D104, D107); fixing the offer stops a revisit from re-rolling
    it, which matters once backtracking lands.
 9. **Arriving through a passage counts as visiting the far end**
-   [T to confirm #7]: its roads join the frontier, which is what makes a
+   [Accepted at merge (default)]: its roads join the frontier, which is what makes a
    secret path open a new part of the map. The far end is the paired travel
    node, so the player can take it straight back (A13).
 10. **Nothing fires on arrival through a passage** (A13): the player stands on

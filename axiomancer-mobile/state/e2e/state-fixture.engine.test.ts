@@ -107,7 +107,7 @@ describe('store boot through the fixture adapter', () => {
     });
 
     it('`arrive` fixtures resolve the current node so <EventGate> has a paced route', () => {
-        const fixture = getStateFixtureById('apprentice-staged-dialogue')!;
+        const fixture = getStateFixtureById('wanderer-staged-cutscene')!;
         expect(fixture.arrive).toBe(true);
         const boot = resolveBootFixture({ request: { source: 'url', ref: fixture.id }, devToolsEnabled: true })!;
         const store = createAppStore({ adapter: createFixtureBootAdapter(boot.state) });
@@ -116,7 +116,7 @@ describe('store boot through the fixture adapter', () => {
 
         // What <FixtureBoot> does once navigation is ready.
         expect(actions.resolveCurrentMapEvent(undefined, boot.fixture.stagedEvent)).toBe(true);
-        expect(selectPacedEventRoute(store.getState())).toBe('/dialogue');
+        expect(selectPacedEventRoute(store.getState())).toBe('/cutscene');
     });
 
     it('`wanderer-staged-village` arrives on the village screen', () => {

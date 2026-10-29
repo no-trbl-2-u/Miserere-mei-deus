@@ -18,6 +18,7 @@
 import type { BaseStats } from '../../Character/types';
 import type { ContinentName, MapName } from '../../World/map.library';
 import type { MapEventPayload } from '../../World/MapEvents/types';
+import type { DialogueTree } from '../../NPCs/types';
 
 /** Player overrides layered over the preset (or the new-game player). */
 export interface StateFixturePlayer {
@@ -79,8 +80,14 @@ export interface StateFixture {
     /**
      * An event staged on the fixture's node: `arrive` resolves this payload
      * in place of the node's own pool (`resolveMapEvent`'s `staged`). How a
-     * fixture reaches dialogue, a shop or a cutscene now that Act 1 stages
-     * none (R7e); the payload is never registered in the live world.
+     * fixture reaches a shop or a cutscene now that Act 1 stages none
+     * (R7e); the payload is never registered in the live world.
      */
     stagedEvent?: MapEventPayload;
+    /**
+     * A dialogue tree `arrive` seats instead of resolving the node: no
+     * map-event kind opens a dialogue any more, so this is how a fixture
+     * reaches `/dialogue`. Mobile only; the CLI ignores it.
+     */
+    stagedDialogue?: DialogueTree;
 }

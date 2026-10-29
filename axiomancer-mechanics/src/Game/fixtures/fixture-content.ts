@@ -62,11 +62,6 @@ export const FIXTURE_SHOP: ShopInventory = {
 };
 
 /** Staged events for the arrival state fixtures (`StateFixture.stagedEvent`). */
-export const FIXTURE_DIALOGUE_EVENT: MapEventPayload = {
-    kind: 'narration',
-    dialogue: FIXTURE_NPC.dialogueTree!,
-};
-
 export const FIXTURE_VILLAGE_EVENT: MapEventPayload = {
     kind: 'village',
     villageName: 'Fixture Shop',

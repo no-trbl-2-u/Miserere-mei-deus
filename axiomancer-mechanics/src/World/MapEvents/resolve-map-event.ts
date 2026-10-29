@@ -40,7 +40,7 @@ import {
 import { getRng } from '../../Utils/rng';
 import { applyPayload } from './handlers';
 import { resolveDeath } from '../../Game/death';
-import { reachableObjectives, collectObjectives, progressQuest, advanceHazardObjectives } from '../quest.engine';
+import { reachableObjectives, progressQuest, advanceHazardObjectives } from '../quest.engine';
 import { settleQuestLog } from '../questline';
 import type { QuestLog, NodeId } from '../types';
 import type {
@@ -70,21 +70,6 @@ function advanceReachObjectives(quests: QuestLog, nodeId: NodeId): QuestLog {
  */
 function withQuestLog(state: GameState, quests: QuestLog, rng: () => number): GameState {
     return settleQuestLog(state, quests, rng).state;
-}
-
-/**
- * Advances any active `collect`-type quest objectives whose target matches
- * one of `itemIds`. Mirrors `advanceReachObjectives` for the gathering path —
- * called after a `gathering` payload resolves, with the granted items' ids.
- */
-function advanceCollectObjectives(quests: QuestLog, itemIds: string[]): QuestLog {
-    let log = quests;
-    for (const itemId of itemIds) {
-        for (const c of collectObjectives(log, itemId)) {
-            log = progressQuest(log, c.questName, c.objectiveId).log;
-        }
-    }
-    return log;
 }
 
 /**
@@ -383,25 +368,15 @@ export function resolveMapEvent(
         return { state: resolveDeath(result.state, 'hazard').state, event: result.event };
     }
 
-    // 4a. Advance any active `collect`-type quest objectives the granted
-    // items satisfy. Mirrors the reach-objective auto-advance above, but
-    // fires on the resolved event's items rather than the arrived-at node.
-    // A collect that completes a quest pays its reward here.
-    // 4a-hazard. A resolved hazard node counts toward an active `hazard`
-    // objective on this map, whatever the hazard did to the player.
-    const stateAfterCollect: GameState = result.event.kind === 'gathering'
+    // 4a. A resolved hazard node counts toward an active `hazard` objective
+    // on this map, whatever the hazard did to the player.
+    const stateAfterCollect: GameState = result.event.kind === 'hazard'
         ? withQuestLog(
             result.state,
-            advanceCollectObjectives(result.state.quests, result.event.items.map(i => i.id)),
+            advanceHazardObjectives(result.state.quests, result.state.world.currentMap.name).log,
             rng,
         )
-        : result.event.kind === 'hazard'
-            ? withQuestLog(
-                result.state,
-                advanceHazardObjectives(result.state.quests, result.state.world.currentMap.name).log,
-                rng,
-            )
-            : result.state;
+        : result.state;
 
     // 4a-travel. A resolved travel event has already crossed —
     // `result.state.world.currentMap` IS the destination map. Return here:

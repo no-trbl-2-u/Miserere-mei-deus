@@ -1,11 +1,9 @@
 /**
  * Narrative reachability — registry-wide invariant.
  *
- * `resolveInteraction` falls back silently when an authored `npcName`
- * doesn't resolve in the host map's roster, so a mismatch or a lost NPC
- * never fails anything at runtime — it just quietly ships a dialogue no
- * player can ever reach. `auditNarrativeReachability` is the
- * structural guard; this file is the hermetic invariant test over the
+ * No node kind talks to a map NPC, so a rostered NPC with a dialogue tree
+ * quietly ships a conversation no player can ever reach.
+ * `auditNarrativeReachability` is the structural guard; this file is the hermetic invariant test over the
  * whole registry, mirroring `e2e/map-traversal.engine.test.ts`.
  *
  * The four Act 1 maps are the playable world, they carry no NPC roster, and
@@ -36,11 +34,8 @@ describe('narrative reachability — pinned to Act 1 (R3c)', () => {
         describe(name, () => {
             const def = ALL_MAPS.find(d => d.name === name)!;
 
-            it('audits clean: no unresolved interaction, lost NPC or scenery-as-people', () => {
-                const audit = auditNarrativeReachability(def);
-                expect(audit.unresolvedInteractions).toEqual([]);
-                expect(audit.unreachableNpcs).toEqual([]);
-                expect(audit.sceneryAsPeople).toEqual([]);
+            it('audits clean: no lost NPC', () => {
+                expect(auditNarrativeReachability(def).unreachableNpcs).toEqual([]);
             });
 
             it('carries no NPC roster and no quests', () => {
@@ -66,11 +61,6 @@ describe('narrative reachability — registry-wide invariant', () => {
     for (const def of ALL_MAPS) {
         describe(def.name, () => {
             const audit = auditNarrativeReachability(def);
-
-            it('names only rostered NPCs from interaction nodes', () => {
-                // No exceptions are declared.
-                expect(audit.unresolvedInteractions, JSON.stringify(audit.unresolvedInteractions)).toEqual([]);
-            });
 
             it('homes or declares every tree-carrying NPC', () => {
                 expect(audit.unreachableNpcs, audit.unreachableNpcs.join(', ')).toEqual([]);

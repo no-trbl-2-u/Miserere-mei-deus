@@ -31,9 +31,9 @@ import { ENEMY_REGISTRY, type EnemySlug } from '../../Enemy/enemy.library';
 import { validateDieGear, type DieGearColor } from '../../Character/dieGear.reducer';
 import { REST_PASSIVE_HEAL_FRACTION, restShelterOf } from './rest-shelter';
 import type {
-    EncounterPayload, InteractionPayload, GatheringPayload, RestPayload,
+    EncounterPayload, RestPayload,
     VillagePayload, CutscenePayload, HazardPayload, LootCachePayload,
-    NarrationPayload, BlacksmithPayload, TravelPayload, LabyrinthDoorPayload, QuestPayload,
+    BlacksmithPayload, TravelPayload, LabyrinthDoorPayload, QuestPayload,
     ResolveMapEventResult,
 } from './types';
 
@@ -70,43 +70,6 @@ export function resolveEncounter(
         difficulty: isBoss ? 'boss' : undefined,
     });
     return { state, event: { kind: 'encounter', encounter, isBoss, description: payload.description } };
-}
-
-// ─── interaction ──────────────────────────────────────────────────────────────
-
-export function resolveInteraction(
-    state: GameState,
-    payload: InteractionPayload,
-): ResolveMapEventResult {
-    const map = state.world.currentMap;
-    const def = getMapDefinition(map.continent, map.name);
-    const npc = def.npcs?.find(n => n.name === payload.npcName);
-    return {
-        state,
-        event: {
-            kind: 'interaction',
-            npcName: npc?.name ?? payload.npcName,
-            dialogue: npc?.dialogueTree,
-            description: payload.description,
-        },
-    };
-}
-
-// ─── gathering ────────────────────────────────────────────────────────────────
-
-export function resolveGathering(
-    state: GameState,
-    payload: GatheringPayload,
-): ResolveMapEventResult {
-    const items = payload.items.map(deepClone) as Item[];
-    const player: Character = {
-        ...state.player,
-        inventory: items.reduce(addItemStacking, state.player.inventory),
-    };
-    return {
-        state: withPlayer(state, player),
-        event: { kind: 'gathering', items, description: payload.description },
-    };
 }
 
 // ─── rest ─────────────────────────────────────────────────────────────────────
@@ -217,25 +180,6 @@ export function resolveLootCache(
     return {
         state: withPlayer(state, player),
         event: { kind: 'loot-cache', items, currency, description: payload.description },
-    };
-}
-
-// ─── narration ────────────────────────────────────────────────────────────────
-
-/**
- * Narration events hand the host a `DialogueTree` to play through, reusing
- * the existing dialogue runtime (modeled on the `interaction` handler, but
- * with the tree authored inline on the node rather than fetched from a map
- * NPC). The shell touches no state — the dialogue runtime owns any side
- * effects (e.g. a flag set by an authored monologue node).
- */
-export function resolveNarration(
-    state: GameState,
-    payload: NarrationPayload,
-): ResolveMapEventResult {
-    return {
-        state,
-        event: { kind: 'narration', dialogue: payload.dialogue, description: payload.description },
     };
 }
 
@@ -370,14 +314,11 @@ export function applyPayload(
 ): ResolveMapEventResult {
     switch (payload.kind) {
         case 'encounter':   return resolveEncounter(state, payload);
-        case 'interaction': return resolveInteraction(state, payload);
-        case 'gathering':   return resolveGathering(state, payload);
         case 'rest':        return resolveRest(state, payload);
         case 'village':     return resolveVillage(state, payload);
         case 'cutscene':    return resolveCutscene(state, payload);
         case 'hazard':      return resolveHazard(state, payload, rng);
         case 'loot-cache':  return resolveLootCache(state, payload);
-        case 'narration':   return resolveNarration(state, payload);
         case 'blacksmith':  return resolveBlacksmith(state, payload);
         case 'travel':      return resolveTravel(state, payload);
         case 'labyrinth':   return resolveLabyrinthDoor(state, payload);

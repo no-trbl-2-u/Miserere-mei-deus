@@ -46,7 +46,6 @@ import {
     type GameStore,
     type Consumable,
     type DialogueChoice,
-    type DialogueTree,
     type Enemy,
     type Equipment,
     type EquipmentSlot,
@@ -1401,8 +1400,7 @@ function withQuestRewards(before: GameState, after: GameState): GameState['playe
 
 /**
  * Resolves the current node's event, then routes any relic a completed
- * quest paid on the way (a `reach` on arrival, a `collect` from a
- * gathering) to the item-reward screen.
+ * quest paid on the way (a `reach` on arrival) to the item-reward screen.
  */
 function resolveCurrentMapEventAction(store: AppStore, sourceNodeType?: string, staged?: MapEventPayload): boolean {
     const questsBefore = (store.getState() as unknown as GameState).quests;
@@ -1459,15 +1457,6 @@ function resolveCurrentMapEventInner(store: AppStore, sourceNodeType?: string, s
             return true;
         }
 
-        // Gathering has NO interceptor: the engine's `resolveGathering`
-        // appends the payload items to the inventory in `resolvedState`, and
-        // gathering falls through to the paced-event tail below like
-        // `interaction` / `village` / `cutscene`, where `composeGathering`
-        // renders an acknowledgement card that names what was picked up and
-        // waits for the player. A toast alone would not do: `<ToastHost>` is
-        // declared BEFORE `<Stack>` in `app/_layout.tsx` with no `zIndex`,
-        // so the navigator's opaque `<ScreenBg>` paints over it.
-        //
         // Rest events launch the rest-choice node. The engine's resolveMapEvent already
         // applied the passive heal to `result.state`; restore the
         // pre-event player so the node's settled ledger is the only thing
@@ -1587,38 +1576,17 @@ function resolveCurrentMapEventInner(store: AppStore, sourceNodeType?: string, s
         }
 
         // Spread the advanced state onto the store. `event` is mobile-only
-        // and survives because `result.state` does not include it.
-        // If the resolved event is an interaction, seed the dialogue cursor at
-        // the tree's root so `selectEventViewModel` composes against the right
-        // node. The engine supplies the authored tree (its map definition owns
-        // the NPCs); when it carries none, the card shows its default copy.
-        let dialogueCursor: { tree: DialogueTree; nodeId: string } | null = null;
-        if ((result.event.kind === 'interaction' || result.event.kind === 'narration') && result.event.dialogue) {
-            const tree = result.event.dialogue;
-            dialogueCursor = { tree, nodeId: tree.rootId };
-        }
-
+        // and survives because `result.state` does not include it. No map
+        // event carries a dialogue tree, so the cursor starts empty (the dev
+        // menu's dialogue jump is the one thing that seeds it).
         const nextEvent = {
             ...(state.event ?? EMPTY_EVENT_SLICE),
             pending: result,
-            dialogueCursor,
+            dialogueCursor: null,
             history: [],
             sourceNodeType: sourceNodeType ?? null,
         };
         store.setState({ ...resolvedState, event: nextEvent });
-
-        // A gathering grant is already folded into `resolvedState` by the
-        // engine resolver, and unlike every other paced kind it is a
-        // PERMANENT change to the inventory rather than a choice the player is
-        // still weighing — the acknowledgement card cannot refuse it.
-        // Checkpoint it here, on the same argument the crossing save above
-        // makes: saves are explicit on mobile, `moveToAction`'s
-        // checkpoint is taken BEFORE the arrival resolves, and a close on the
-        // acknowledgement card would otherwise cost the player what they had
-        // just picked up.
-        if (result.event.kind === 'gathering') {
-            try { store.getState().save(); } catch { /* persistence must not block the road */ }
-        }
 
         return result.event.kind !== 'none';
     } catch (error) {
@@ -1775,8 +1743,8 @@ function pickEventChoiceAction(store: AppStore, choiceId: string): void {
             return;
         }
 
-        // narrative-choice auto-resolve path (rest / gathering / loot-cache /
-        // interaction-without-dialogue / village / cutscene / hazard). Engine
+        // narrative-choice auto-resolve path (rest / loot-cache / village /
+        // cutscene / hazard). Engine
         // already advanced state via resolveMapEvent; just clear the event slice.
         clearEventSlice(store);
     } catch (error) {

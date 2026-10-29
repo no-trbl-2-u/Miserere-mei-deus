@@ -91,7 +91,7 @@ function makeCutsceneResult(): ResolveMapEventResult {
     };
 }
 
-describe('EventGate: paced events route to /event', () => {
+describe('EventGate: paced events route to their screen', () => {
     it('does not push when there is no pending event (fresh store)', () => {
         const store = makeStore();
         render(withProvider(store, <EventGate />));
@@ -105,29 +105,36 @@ describe('EventGate: paced events route to /event', () => {
         expect(mockPush).not.toHaveBeenCalled();
     });
 
-    it('pushes /event when a paced (rest) event is pending at mount', () => {
+    it('pushes /cutscene when a paced (cutscene) event is pending at mount', () => {
         const store = makeStore();
-        setPending(store, makeRestResult(5));
+        setPending(store, makeCutsceneResult());
         render(withProvider(store, <EventGate />));
         expect(mockPush).toHaveBeenCalledTimes(1);
-        expect(mockPush).toHaveBeenCalledWith('/event');
+        expect(mockPush).toHaveBeenCalledWith('/cutscene');
     });
 
-    it('pushes /event when the state flips from no-event to paced', () => {
+    it('pushes /cutscene when the state flips from no-event to paced', () => {
         const store = makeStore();
         render(withProvider(store, <EventGate />));
         expect(mockPush).not.toHaveBeenCalled();
 
         act(() => {
-            setPending(store, makeRestResult(3));
+            setPending(store, makeCutsceneResult());
         });
         expect(mockPush).toHaveBeenCalledTimes(1);
-        expect(mockPush).toHaveBeenCalledWith('/event');
+        expect(mockPush).toHaveBeenCalledWith('/cutscene');
+    });
+
+    it('pushes nothing for a pending kind with no screen of its own (the generic /event card is retired)', () => {
+        const store = makeStore();
+        setPending(store, makeRestResult(5));
+        render(withProvider(store, <EventGate />));
+        expect(mockPush).not.toHaveBeenCalled();
     });
 
     it('does not re-push when the paced event stays pending across re-renders', () => {
         const store = makeStore();
-        setPending(store, makeRestResult(4));
+        setPending(store, makeCutsceneResult());
         const tree = render(withProvider(store, <EventGate />));
         expect(mockPush).toHaveBeenCalledTimes(1);
 
@@ -157,7 +164,7 @@ describe('EventGate: paced events route to /event', () => {
 describe('EventGate: one push per event (S4-world-C03)', () => {
     it('pushes once across repeated re-renders with a fresh router each time', () => {
         const store = makeStore();
-        setPending(store, makeRestResult(6));
+        setPending(store, makeCutsceneResult());
         const tree = render(withProvider(store, <EventGate />));
         expect(mockPush).toHaveBeenCalledTimes(1);
 

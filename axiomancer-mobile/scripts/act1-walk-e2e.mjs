@@ -324,10 +324,9 @@ const RESOLVERS = {
             .catch(() => fail(`${nodeId}: the cache outcome has no "Move on"`))
         return 'screen'
     },
-    async gathering(page, nodeId) {
-        await expectPath(page, '/event', nodeId)
-        await waitFor(page, 'event-choice-acknowledge', `${nodeId} gathering`)
-        await tap(page, 'event-choice-acknowledge')
+    // An empty waypoint opens no screen: the walk onto it is the whole visit,
+    // and the caller's settle-on-map check proves the player stayed there.
+    async none() {
         return 'screen'
     },
     async rest(page, nodeId) {

@@ -64,9 +64,9 @@ function v38Save(): { raw: Record<string, unknown>; today: Character } {
 }
 
 describe('migrate v38 → v39 — the relic slot', () => {
-    it('is the current version', () => {
-        expect(GAME_STATE_VERSION).toBe(39);
-        expect(migrate(v38Save().raw, 38).version).toBe(39);
+    it('lands at the current version', () => {
+        expect(GAME_STATE_VERSION).toBeGreaterThanOrEqual(39);
+        expect(migrate(v38Save().raw, 38).version).toBe(GAME_STATE_VERSION);
     });
 
     it('keeps the same pieces worn and carried, under relics', () => {

@@ -85,12 +85,8 @@ function describeEvent(event: ResolvedEvent): string {
         case 'encounter':   return `Something is here: ${event.encounter.enemies.map(e => e.name).join(', ')}${event.isBoss ? ' (a warden of the house)' : ''}.`;
         case 'hazard':      return `The building fights you. (-${event.damage} VITAE${event.effects.length > 0 ? `, ${event.effects.length} effect${event.effects.length === 1 ? '' : 's'}` : ''})`;
         case 'loot-cache':  return `A cache: ${event.items.length} item${event.items.length === 1 ? '' : 's'}, ${event.currency} shillings.`;
-        case 'gathering':   return `You gather ${event.items.map(i => i.name).join(', ')}.`;
         case 'rest':        return `You rest. (+${event.healed} VITAE)`;
-        case 'narration': {
-            const root = event.dialogue.nodes[event.dialogue.rootId];
-            return root ? `The Sophist: "${root.text}"` : 'The Sophist says nothing, pointedly.';
-        }
+        case 'cutscene':    return `The Sophist: "${event.lines.join(' ')}"`;
         case 'none':        return 'The room is solved. Nothing stirs.';
         default:            return 'Something happens that the deep house declines to explain.';
     }

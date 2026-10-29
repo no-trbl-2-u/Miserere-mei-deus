@@ -13,7 +13,8 @@
  *   - a region's exit: its one terminal node (no outgoing edge) in the last
  *     column (a questline's pockets are dead ends too, never the exit);
  *   - its door: the one node with an edge into the exit (the Death Beholder);
- *   - the kinds it carries: the first entry kind of every node's pool.
+ *   - the kinds it carries: the first entry kind of every node's pool, or
+ *     `'none'` for an empty waypoint (a node with no pool).
  *
  * The path walks the roads (`roads.ts`): every step is joined by a road to
  * the step before it, and a dead-end pocket is left the way it was entered.
@@ -34,7 +35,7 @@
  *
  * Functions:
  *   planAct1Walk()            the four regions with their derived paths
- *   ACT1_WALK_EVENT_KINDS     all thirteen map-event kinds, for the audit table
+ *   ACT1_WALK_EVENT_KINDS     the ten map-event kinds and the waypoint, for the audit table
  */
 
 import { MAP_REGISTRY } from './map.registry';
@@ -47,10 +48,13 @@ import { STARTING_MAP } from './index';
 import { listQuestlines } from './questline';
 import { objectiveClass, stepSupply, supplyClassesOf } from './questline-supply';
 
-/** Every map-event kind, in `MapEventKind` declaration order. */
-export const ACT1_WALK_EVENT_KINDS: readonly MapEventKind[] = [
-    'encounter', 'interaction', 'gathering', 'rest', 'village', 'cutscene',
-    'hazard', 'loot-cache', 'narration', 'blacksmith', 'travel', 'labyrinth', 'quest',
+/** What a walked node carries: a map-event kind, or `'none'` for an empty waypoint. */
+export type Act1WalkKind = MapEventKind | 'none';
+
+/** Every map-event kind, in `MapEventKind` declaration order, then the waypoint. */
+export const ACT1_WALK_EVENT_KINDS: readonly Act1WalkKind[] = [
+    'encounter', 'rest', 'village', 'cutscene', 'hazard', 'loot-cache',
+    'blacksmith', 'travel', 'labyrinth', 'quest', 'none',
 ];
 
 /** Why a step is on the path. */
@@ -58,7 +62,7 @@ export type Act1WalkRole = 'arrival' | 'path' | 'back' | 'door' | 'exit';
 
 export interface Act1WalkStep {
     readonly nodeId: string;
-    readonly kind: MapEventKind;
+    readonly kind: Act1WalkKind;
     readonly role: Act1WalkRole;
 }
 
@@ -69,9 +73,9 @@ export interface Act1WalkRegion {
     readonly door: string;
     readonly exit: string;
     /** Distinct kinds this region's nodes carry, in first-seen map order. */
-    readonly carried: readonly MapEventKind[];
+    readonly carried: readonly Act1WalkKind[];
     /** Every carrier of each kind, in map order. */
-    readonly carriers: Readonly<Partial<Record<MapEventKind, readonly string[]>>>;
+    readonly carriers: Readonly<Partial<Record<Act1WalkKind, readonly string[]>>>;
     /** The arrival node, the derived path, the door, the exit. */
     readonly steps: readonly Act1WalkStep[];
 }
@@ -79,7 +83,7 @@ export interface Act1WalkRegion {
 export interface Act1WalkPlan {
     readonly regions: readonly Act1WalkRegion[];
     /** Distinct kinds across all regions, in first-seen order. */
-    readonly carried: readonly MapEventKind[];
+    readonly carried: readonly Act1WalkKind[];
 }
 
 function continentOf(map: string): ContinentName {
@@ -89,9 +93,11 @@ function continentOf(map: string): ContinentName {
     throw new Error(`act1-walk: map '${map}' is not registered`);
 }
 
-function nodeKind(continent: string, map: string, nodeId: string): MapEventKind {
-    const kind = getNodeEventPool(continent, map, nodeId)?.entries[0]?.kind;
-    if (!kind) throw new Error(`act1-walk: ${map}/${nodeId} has no event pool`);
+function nodeKind(continent: string, map: string, nodeId: string): Act1WalkKind {
+    const pool = getNodeEventPool(continent, map, nodeId);
+    if (!pool) return 'none';
+    const kind = pool.entries[0]?.kind;
+    if (!kind) throw new Error(`act1-walk: ${map}/${nodeId} has an empty event pool`);
     return kind;
 }
 
@@ -168,8 +174,8 @@ function planRegion(continent: ContinentName, map: MapName): Act1WalkRegion {
     const door = feeders[0]!.id;
 
     const kindOf = new Map(def.nodes.map(n => [n.id, nodeKind(continent, map, n.id)]));
-    const carried: MapEventKind[] = [];
-    const carriers: Partial<Record<MapEventKind, string[]>> = {};
+    const carried: Act1WalkKind[] = [];
+    const carriers: Partial<Record<Act1WalkKind, string[]>> = {};
     for (const n of def.nodes) {
         const kind = kindOf.get(n.id)!;
         if (!carried.includes(kind)) carried.push(kind);
@@ -177,7 +183,7 @@ function planRegion(continent: ContinentName, map: MapName): Act1WalkRegion {
     }
 
     const steps: Act1WalkStep[] = [{ nodeId: start, kind: kindOf.get(start)!, role: 'arrival' }];
-    const met = new Set<MapEventKind>([kindOf.get(start)!, kindOf.get(door)!, kindOf.get(exit)!]);
+    const met = new Set<Act1WalkKind>([kindOf.get(start)!, kindOf.get(door)!, kindOf.get(exit)!]);
     const visited = new Set<string>([start]);
     const barred = new Set<string>([door, exit]);
     const adj = undirected(def);
@@ -258,7 +264,7 @@ export function planAct1Walk(): Act1WalkPlan {
             ? { continent: payload.destinationContinent, map: payload.destinationMap }
             : null;
     }
-    const carried: MapEventKind[] = [];
+    const carried: Act1WalkKind[] = [];
     for (const r of regions) for (const k of r.carried) if (!carried.includes(k)) carried.push(k);
     return { regions, carried };
 }

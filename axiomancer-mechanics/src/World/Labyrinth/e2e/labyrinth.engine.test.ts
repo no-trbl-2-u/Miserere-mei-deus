@@ -388,9 +388,9 @@ describe('one-shot events on labyrinth maps (solved space is solved)', () => {
         const base = createNewGameState();
         let state: GameState = { ...base, world: aporiaWorld() };
 
-        // Entrance override is a narration (authored, not rolled).
+        // Entrance override is a one-line cutscene (authored, not rolled).
         const first = resolveMapEvent(state, () => 0.0);
-        expect(first.event.kind).toBe('narration');
+        expect(first.event.kind).toBe('cutscene');
         state = first.state;
         expect(state.world.currentMap.consumedNodes).toContain('ap1-1');
 

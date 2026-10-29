@@ -1,8 +1,8 @@
 ---
 kind: "route"
 group: "world"
-reachable: "yes"
-driven: "yes"
+reachable: "no"
+driven: "no"
 tested: "yes"
 needsPitch: "yes"
 source: "axiomancer-mobile/app/event/index.tsx"
@@ -20,8 +20,6 @@ route in World routes, from `axiomancer-mobile/app/event/index.tsx`.
 
 ## Leads to
 
-Opens from any screen.
-
 No player-flow edge leads out of it.
 
 ## Uses
@@ -31,7 +29,6 @@ Code it uses, as plain text so Graph view draws player flow only.
 - Cards
 - Effects
 - Game
-- Items
 - Log
 - NPCs
 - The world

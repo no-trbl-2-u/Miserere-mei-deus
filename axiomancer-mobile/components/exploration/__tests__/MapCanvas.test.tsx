@@ -566,7 +566,7 @@ describe('computeFocusTransform', () => {
             { id: 'bw-1', label: 'Windmill', kind: 'current',   type: 'rest',      x: 1150, y: 1130, triggersCombat: false },
             { id: 'bw-2', label: 'Quay',     kind: 'available', type: 'encounter', x: 1080, y: 770,  triggersCombat: false },
             { id: 'bw-3', label: 'Gallows',  kind: 'available', type: 'hazard',    x: 1630, y: 1270, triggersCombat: false },
-            { id: 'bw-4', label: 'Pass',     kind: 'available', type: 'gather',    x: 1460, y: 1755, triggersCombat: false },
+            { id: 'bw-4', label: 'Pass',     kind: 'available', type: 'waypoint',  x: 1460, y: 1755, triggersCombat: false },
             { id: 'bw-5', label: 'Cove',     kind: 'available', type: 'treasure',  x: 790, y: 1400, triggersCombat: false },
         ];
         const fit = computeFocusTransform(nodes, viewport, sheet);

@@ -72,8 +72,8 @@ describe.skip('the Labyrinth door (M4, D24) — parked (D54)', () => {
         const state = store.getState();
         expect(state.labyrinthUi.session?.actId).toBe('act1');
         expect(where(store)).toMatchObject({ continent: 'labyrinth-continent', map: 'aporia-colonnade', node: 'ap1-1' });
-        // The entrance narrates (the act's authored override), not the door.
-        expect(state.event.pending?.event.kind).toBe('narration');
+        // The entrance plays its line (the act's authored override), not the door.
+        expect(state.event.pending?.event.kind).toBe('cutscene');
         expect(state.notifications?.toast?.text).toMatch(/round door turns/);
     });
 

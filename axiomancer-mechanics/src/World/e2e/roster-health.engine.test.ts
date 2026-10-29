@@ -11,11 +11,10 @@ import { describe, expect, it } from 'vitest';
 
 import {
     auditRosterHealth, collectRosterSources,
-    danglingDialogue, danglingEnemySlugs, danglingItems, danglingMapNpcs, danglingRelicSignatures,
+    danglingDialogue, danglingEnemySlugs, danglingItems, danglingRelicSignatures,
     orphanDialogueNodes, orphanEnemies, orphanItems, orphanNpcs, orphanQuests,
     type RosterSources,
 } from '../roster-health';
-import { registerMapEventPool, setNodeEventPoolOverride } from '../MapEvents/resolve-map-event';
 import type { MapEventPool } from '../MapEvents/types';
 import type { MapDefinition, Quest } from '../types';
 import type { DialogueTree } from '../../NPCs/types';
@@ -106,8 +105,15 @@ function sources(over: Partial<RosterSources> = {}): RosterSources {
     };
 }
 
-function narrationPool(id: string, dialogue: DialogueTree): MapEventPool {
-    return { id, entries: [{ kind: 'narration', weight: 1, payload: { kind: 'narration', dialogue } }] };
+/** A village whose one merchant carries `dialogue`: the pools' only dialogue carrier. */
+function merchantPool(id: string, dialogue: DialogueTree): MapEventPool {
+    return {
+        id,
+        entries: [{
+            kind: 'village', weight: 1,
+            payload: { kind: 'village', villageName: 'V', merchants: [{ name: 'Merchant', dialogueTree: dialogue }] },
+        }],
+    };
 }
 
 describe('roster health — a clean synthetic tree reports nothing', () => {
@@ -166,7 +172,7 @@ describe('roster health — each dangling lens fires', () => {
                 },
             },
         };
-        const found = danglingDialogue(sources({ pools: [narrationPool('x-4.narration', tree)] }));
+        const found = danglingDialogue(sources({ pools: [merchantPool('x-4.village', tree)] }));
         expect(found.map(f => [f.lens, f.id])).toEqual([
             ['dialogue-next', 'nowhere'],
             ['dialogue-quest', 'lost-quest'],
@@ -177,17 +183,6 @@ describe('roster health — each dangling lens fires', () => {
     it('dialogue-quest: a quest chains into an undefined quest', () => {
         const maps = [mapDef({ quests: [quest('first', 'second')] })];
         expect(danglingDialogue(sources({ maps })).map(f => [f.lens, f.id])).toEqual([['dialogue-quest', 'second']]);
-    });
-
-    it('map-npc: an interaction names nobody on the roster or the unstaged list', () => {
-        const continent = 'rh-test-continent';
-        registerMapEventPool({
-            id: 'rh-1.interaction',
-            entries: [{ kind: 'interaction', weight: 1, payload: { kind: 'interaction', npcName: 'Nobody' } }],
-        });
-        setNodeEventPoolOverride(continent, 'rh-map', 'rh-1', 'rh-1.interaction');
-        const maps = [mapDef({ name: 'rh-map' as never, continent: continent as never, nodes: [{ id: 'rh-1' }] as never })];
-        expect(danglingMapNpcs(sources({ maps })).map(f => [f.id, f.where])).toEqual([['Nobody', 'rh-map:rh-1']]);
     });
 });
 
@@ -220,7 +215,7 @@ describe('roster health — each orphan lens fires', () => {
         expect(orphanItems(sources({ enemyLibrary: [foe], startingItemIds: [] }))).toEqual([]);
     });
 
-    it('npc-unreached: a rostered NPC with a tree no interaction names', () => {
+    it('npc-unreached: a rostered NPC with a tree no node reaches', () => {
         const tree: DialogueTree = { rootId: 'r', nodes: { r: { id: 'r', text: '' } } };
         const maps = [mapDef({ name: 'rh-lonely' as never, npcs: [{ name: 'Hermit', dialogueTree: tree }] })];
         expect(orphanNpcs(sources({ maps })).map(f => [f.id, f.where])).toEqual([['Hermit', 'rh-lonely']]);
@@ -235,7 +230,7 @@ describe('roster health — each orphan lens fires', () => {
                 c: { id: 'c', text: '' },
             },
         };
-        expect(orphanDialogueNodes(sources({ pools: [narrationPool('x-6.narration', tree)] })).map(f => f.id)).toEqual(['c']);
+        expect(orphanDialogueNodes(sources({ pools: [merchantPool('x-6.village', tree)] })).map(f => f.id)).toEqual(['c']);
     });
 
     it('quest-unstarted: a quest nothing starts; a chained quest counts as started', () => {
@@ -244,7 +239,7 @@ describe('roster health — each orphan lens fires', () => {
             rootId: 'r',
             nodes: { r: { id: 'r', text: '', choices: [{ text: '', effect: { startQuest: 'head' } }] } },
         };
-        const found = orphanQuests(sources({ maps, pools: [narrationPool('x-7.narration', tree)] }));
+        const found = orphanQuests(sources({ maps, pools: [merchantPool('x-7.village', tree)] }));
         expect(found.map(f => f.id)).toEqual(['alone']);
     });
 });

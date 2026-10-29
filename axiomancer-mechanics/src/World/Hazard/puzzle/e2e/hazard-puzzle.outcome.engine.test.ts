@@ -1,6 +1,5 @@
 /**
- * Hazard puzzle outcome — the formula cases on both routes, the region
- * material, and an engine claim of a failed and a cleared puzzle through the
+ * Hazard puzzle outcome — the formula cases on both routes and an engine claim of a failed and a cleared puzzle through the
  * reducer, the item grant and the scar flag.
  */
 
@@ -12,15 +11,10 @@ import { createNewGameState, gameReducer } from '../../../../Game/game.reducer';
 import type { GameState } from '../../../../Game/types';
 import { HAZARD_TUNING } from '../../hazard.tuning';
 import { hazardPuzzleOutcome, type HazardPuzzleOutcome } from '../hazard-puzzle.outcome';
-import { hazardRegionMaterials } from '../hazard-puzzle.region';
 import { confirmHazardPuzzle, createHazardPuzzleSession, playHazardPuzzleMoves } from '../hazard-puzzle.session';
 import { HAZARD_PUZZLE_FAILURE, HAZARD_PUZZLE_REWARDS } from '../hazard-puzzle.tuning';
 import type { HazardPuzzleMove } from '../hazard-puzzle.types';
-import type { MapName } from '../../../map.library';
 import { DRAW_ONLY_LAYOUT } from './hazard-puzzle.layouts.mock';
-
-/** A region the map registry does not hold, so it has no gathering list. */
-const NOWHERE = 'nowhere' as MapName;
 
 function outcome(route: 'safe' | 'risk', p: number, playerLevel = 1): HazardPuzzleOutcome {
     return hazardPuzzleOutcome({ route, result: { p }, playerLevel, region: 'lantern-deep', seed: 7 });
@@ -83,12 +77,12 @@ describe('hazardPuzzleOutcome (A11)', () => {
         expect(outcome('safe', 1, 3).xp).toBe(45);
     });
 
-    it('always pays one modest consumable roll and one region material, short or not', () => {
+    it('always pays one modest consumable roll and no material, short or not', () => {
         const roll = rollCacheReward({ playerLevel: 1, seed: 7, tier: 'modest' });
         for (const p of [0, 0.5, 1]) {
             const o = outcome('safe', p);
-            expect(o.items.slice(0, -1)).toEqual(roll);
-            expect(o.items[o.items.length - 1]).toMatchObject({ id: 'iron-ore', category: 'material', quantity: 1 });
+            expect(o.items).toEqual(roll);
+            expect(o.items.some((i) => i.category === 'material')).toBe(false);
         }
     });
 
@@ -99,36 +93,6 @@ describe('hazardPuzzleOutcome (A11)', () => {
     it('clamps p into [0, 1]', () => {
         expect(outcome('safe', 1.4).p).toBe(1);
         expect(outcome('safe', -0.2)).toMatchObject({ p: 0, vitaeLoss: 6, scar: 5 });
-    });
-
-    it('a region with no gathering list gives no material', () => {
-        const o = hazardPuzzleOutcome({ route: 'safe', result: { p: 1 }, playerLevel: 1, region: NOWHERE, seed: 7 });
-        expect(o.items).toEqual(rollCacheReward({ playerLevel: 1, seed: 7, tier: 'modest' }));
-    });
-});
-
-describe('hazardRegionMaterials', () => {
-    it("reads each Act 1 region's gathering list from its map-event pools", () => {
-        expect(hazardRegionMaterials('breakwater').map((m) => m.id).sort()).toEqual(['driftwood', 'kelp-frond']);
-        expect(hazardRegionMaterials('charcoal-wood').map((m) => m.id).sort()).toEqual([
-            'dark-berries',
-            'moonbell-petals',
-            'oak-branch',
-        ]);
-        expect(hazardRegionMaterials('beacon-crags').map((m) => m.id)).toEqual(['iron-ore']);
-        expect(hazardRegionMaterials('lantern-deep').map((m) => m.id)).toEqual(['iron-ore']);
-        expect(hazardRegionMaterials(NOWHERE)).toEqual([]);
-    });
-
-    it('the seed picks among them', () => {
-        const ids = new Set(
-            [0, 1, 2, 3, 4, 5].map(
-                (seed) =>
-                    hazardPuzzleOutcome({ route: 'safe', result: { p: 1 }, playerLevel: 1, region: 'charcoal-wood', seed })
-                        .items.slice(-1)[0]!.id,
-            ),
-        );
-        expect(ids).toEqual(new Set(['dark-berries', 'moonbell-petals', 'oak-branch']));
     });
 });
 
@@ -148,7 +112,7 @@ describe('claimHazardPuzzleOutcome (A12)', () => {
         return state.player.inventory.filter((i) => i.id === id).reduce((n, i) => n + ('quantity' in i ? i.quantity : 1), 0);
     }
 
-    it('a cleared risk puzzle pays XP, the consumables, the material and the purse, and costs nothing', () => {
+    it('a cleared risk puzzle pays XP, the consumables and the purse, and costs nothing', () => {
         const session = confirmHazardPuzzle(playHazardPuzzleMoves(createHazardPuzzleSession(DRAW_ONLY_LAYOUT, 'risk'), SOLUTION));
         expect(session.result?.cleared).toBe(true);
         const before = fresh();
@@ -166,7 +130,7 @@ describe('claimHazardPuzzleOutcome (A12)', () => {
         for (const item of o.items) {
             expect(stock(state, item.id), item.id).toBe(o.items.filter((i) => i.id === item.id).length);
         }
-        expect(o.items.some((i) => i.category === 'material')).toBe(true);
+        expect(o.items.some((i) => i.category === 'material')).toBe(false);
         expect(state.player.health).toBe(before.player.health);
         expect(state.player.maxHealth).toBe(before.player.maxHealth);
         expect(state.flags).toEqual(before.flags);

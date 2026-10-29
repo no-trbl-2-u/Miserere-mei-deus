@@ -24,6 +24,7 @@ import { getQuestline, _unregisterQuestline } from '../../World/questline';
 import {
     STATE_FIXTURES, buildStateFromFixture, getStateFixtureById, listStateFixtureIds,
     parseStateFixture, problemsFor, validateStateFixture, StateFixtureError,
+    FIXTURE_NPC,
 } from '../fixtures';
 import type { StateFixture } from '../fixtures';
 import { createFixtureGameStore, resolveFixture } from '../../test-utils/fixture-store';
@@ -184,6 +185,17 @@ describe('validateStateFixture', () => {
         expect(() => validateStateFixture(bad)).toThrow(StateFixtureError);
     });
 
+    it('checks stagedDialogue is a tree: an object with a string rootId and a nodes object', () => {
+        const tree = { rootId: 'r', nodes: { r: { id: 'r', text: 'x' } } };
+        expect(problemsFor({ id: 'x', stagedDialogue: tree })).toEqual([]);
+        const bad = ['stagedDialogue: expected a dialogue tree'];
+        expect(problemsFor({ id: 'x', stagedDialogue: 'tree' })).toEqual(bad);
+        expect(problemsFor({ id: 'x', stagedDialogue: { nodes: {} } })).toEqual(bad);
+        expect(problemsFor({ id: 'x', stagedDialogue: { rootId: 7, nodes: {} } })).toEqual(bad);
+        expect(problemsFor({ id: 'x', stagedDialogue: { rootId: 'r' } })).toEqual(bad);
+        expect(problemsFor({ id: 'x', stagedDialogue: { rootId: 'r', nodes: 'n' } })).toEqual(bad);
+    });
+
     it('rejects unknown maps and non-objects', () => {
         expect(problemsFor({ id: 'x', world: { continent: 'coastal-continent', map: 'atlantis' } })).toEqual([
             expect.stringContaining("unknown map 'coastal-continent/atlantis'"),
@@ -223,10 +235,18 @@ describe('createFixtureGameStore (src/test-utils/fixture-store.ts)', () => {
         }
     });
 
+    // NK1a — no map event opens a dialogue; the dialogue fixture seats the
+    // fixture NPC's tree instead of staging an event.
+    it('"apprentice-staged-dialogue" seats the fixture NPC\'s tree and stages no event', () => {
+        const f = getStateFixtureById('apprentice-staged-dialogue')!;
+        expect(f.arrive).toBe(true);
+        expect(f.stagedEvent).toBeUndefined();
+        expect(f.stagedDialogue).toBe(FIXTURE_NPC.dialogueTree);
+    });
+
     // R7e — Act 1 stages no NPC, shop or off-start cutscene; these fixtures
     // stage the neutral witnesses and must resolve to them, not the node's pool.
     it.each([
-        ['apprentice-staged-dialogue', 'narration'],
         ['wanderer-staged-village', 'village'],
         ['wanderer-staged-cutscene', 'cutscene'],
     ])('"%s" resolves its staged %s event', (id, kind) => {

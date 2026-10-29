@@ -3,10 +3,10 @@
  *
  * Every room rolls its act's weighted pool on FIRST arrival only
  * (existing `consumedNodes` one-shot semantics = "solved space is
- * solved"). Authored overrides: entrances and set-piece rooms narrate,
- * waystones rest (one-shot, meagre; the Third Waystone generous —
- * the finale resource floor), the ledger room (`act.questRoom`) narrates
- * the Sophist's own line, boss rooms fire the act boss. Weights per act:
+ * solved"). Authored overrides: entrances and set-piece rooms play a
+ * one-line cutscene, waystones rest (one-shot, meagre; the Third Waystone
+ * generous — the finale resource floor), the ledger room (`act.questRoom`)
+ * plays the Sophist's own line as a cutscene, boss rooms fire the act boss. Weights per act:
  * DESIGN.md section 4 (plan/labyrinth).
  *
  * Self-registers on import, mirroring `MapEvents/content.ts`.
@@ -21,19 +21,14 @@ import { applyPayload } from '../MapEvents/handlers';
 import type { MapEventPool, ResolveMapEventResult } from '../MapEvents/types';
 import type { GameState } from '../../Game/types';
 import { getRng } from '../../Utils/rng';
-import type { DialogueTree } from '../../NPCs/types';
 import { ENEMY_REGISTRY } from '../../Enemy/enemy.library';
 import type { EnemySlug } from '../../Enemy/enemy.library';
 import type { LabyrinthActDef, LabyrinthRoomDef } from './types';
 import { APORIA_ACTS } from './maps';
 
-/** A one-node monologue tree in the Sophist's voice. */
-function monologue(id: string, text: string): DialogueTree {
-    return {
-        id,
-        rootId: 'root',
-        nodes: { root: { id: 'root', text } },
-    };
+/** One line in the Sophist's voice, played as a cutscene. */
+function sophistLine(text: string): MapEventPool['entries'][number] {
+    return { kind: 'cutscene', weight: 1, payload: { kind: 'cutscene', lines: [text] } };
 }
 
 /** Boss levels pin the act difficulty regardless of shared-enemy tier. */
@@ -45,14 +40,14 @@ const BOSS_LEVEL: Record<LabyrinthActDef['id'], number> = {
 
 /** Per-act random-pool tuning (DESIGN.md section 4). */
 const ACT_POOL_TUNING: Record<LabyrinthActDef['id'], {
-    weights: { encounter: number; hazard: number; lootCache: number; gathering: number; rest: number; narration: number };
+    weights: { encounter: number; hazard: number; lootCache: number; gleaning: number; rest: number; vignette: number };
     hazardDamage: number;
     cacheCurrency: number;
     gatherItem: { id: string; name: string; description: string };
     vignette: string;
 }> = {
     act1: {
-        weights: { encounter: 30, hazard: 18, lootCache: 14, gathering: 12, rest: 14, narration: 12 },
+        weights: { encounter: 30, hazard: 18, lootCache: 14, gleaning: 12, rest: 14, vignette: 12 },
         hazardDamage: 6,
         cacheCurrency: 20,
         gatherItem: {
@@ -62,7 +57,7 @@ const ACT_POOL_TUNING: Record<LabyrinthActDef['id'], {
         vignette: 'Someone before you chalked an arrow on the floor here. Someone after them scrubbed it out. I remember both, and which of them left.',
     },
     act2: {
-        weights: { encounter: 34, hazard: 24, lootCache: 12, gathering: 10, rest: 10, narration: 10 },
+        weights: { encounter: 34, hazard: 24, lootCache: 12, gleaning: 10, rest: 10, vignette: 10 },
         hazardDamage: 9,
         cacheCurrency: 30,
         gatherItem: {
@@ -72,7 +67,7 @@ const ACT_POOL_TUNING: Record<LabyrinthActDef['id'], {
         vignette: 'The Archive once catalogued its own catalogue. The entry is filed under itself. Nobody has found it since, which the librarians insist is correct behavior.',
     },
     act3: {
-        weights: { encounter: 40, hazard: 28, lootCache: 10, gathering: 6, rest: 8, narration: 8 },
+        weights: { encounter: 40, hazard: 28, lootCache: 10, gleaning: 6, rest: 8, vignette: 8 },
         hazardDamage: 12,
         cacheCurrency: 40,
         gatherItem: {
@@ -98,9 +93,10 @@ function buildDefaultPool(act: LabyrinthActDef): MapEventPool {
                 payload: { kind: 'loot-cache', currency: t.cacheCurrency, description: 'Something a previous walker will not be coming back for.' },
             },
             {
-                kind: 'gathering', weight: t.weights.gathering,
+                // The act's material, found loose: a cache holding one item.
+                kind: 'loot-cache', weight: t.weights.gleaning,
                 payload: {
-                    kind: 'gathering',
+                    kind: 'loot-cache',
                     items: [{ ...t.gatherItem, category: 'material', quantity: 1 }],
                     description: 'The maze grows little. Take what it grows.',
                 },
@@ -110,10 +106,7 @@ function buildDefaultPool(act: LabyrinthActDef): MapEventPool {
                 // The house is not an innkeeper. Camp.
                 payload: { kind: 'rest', shelter: 'camp', description: 'A corner the house forgot to make uncomfortable.' },
             },
-            {
-                kind: 'narration', weight: t.weights.narration,
-                payload: { kind: 'narration', dialogue: monologue(`${act.mapName}.vignette`, t.vignette) },
-            },
+            { ...sophistLine(t.vignette), weight: t.weights.vignette },
         ],
     };
 }
@@ -122,16 +115,13 @@ function overridePool(act: LabyrinthActDef, room: LabyrinthRoomDef): MapEventPoo
     const id = `${act.mapName}.${room.nodeId}.override`;
 
     if (room.nodeId === act.questRoom) {
-        // The ledger room narrates the Sophist's own scripted line (the
+        // The ledger room plays the Sophist's own scripted line (the
         // room keeps its identity — `act.questRoom` also gates
         // the act3 "settle debt" action in `labyrinth.cli.ts` /
         // `state/presenters/labyrinth.engine.ts`, an unrelated mechanic).
         return {
             id,
-            entries: [{
-                kind: 'narration', weight: 1,
-                payload: { kind: 'narration', dialogue: monologue(`${act.mapName}.${room.nodeId}`, room.narration) },
-            }],
+            entries: [sophistLine(room.narration)],
         };
     }
 
@@ -172,14 +162,11 @@ function overridePool(act: LabyrinthActDef, room: LabyrinthRoomDef): MapEventPoo
     }
 
     if (room.nodeId === act.entry || room.eject || act.gates.some(g => g.roomId === room.nodeId)) {
-        // Entrances, the Foundation, and the Oubliette narrate — their
+        // Entrances, the Foundation, and the Oubliette play a line — their
         // drama is authored, not rolled.
         return {
             id,
-            entries: [{
-                kind: 'narration', weight: 1,
-                payload: { kind: 'narration', dialogue: monologue(`${act.mapName}.${room.nodeId}`, room.narration) },
-            }],
+            entries: [sophistLine(room.narration)],
         };
     }
 

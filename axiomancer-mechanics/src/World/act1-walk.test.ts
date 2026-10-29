@@ -50,20 +50,26 @@ describe('planAct1Walk', () => {
                 for (const kind of region.carried) expect(before.has(kind)).toBe(true);
             });
 
-            it('labels each step with its pool kind', () => {
+            it("labels each step with its pool kind, or 'none' for a waypoint", () => {
                 for (const step of region.steps) {
-                    expect(getNodeEventPool(region.continent, region.map, step.nodeId)?.entries[0]?.kind).toBe(step.kind);
+                    const kind = getNodeEventPool(region.continent, region.map, step.nodeId)?.entries[0]?.kind ?? 'none';
+                    expect(kind).toBe(step.kind);
                 }
             });
         });
     }
 
-    it('lists the quest kind among the thirteen the audit table covers', () => {
-        expect(ACT1_WALK_EVENT_KINDS).toHaveLength(13);
+    it('lists the ten kinds and the waypoint the audit table covers, and no removed kind', () => {
+        expect(ACT1_WALK_EVENT_KINDS).toHaveLength(11);
         expect(ACT1_WALK_EVENT_KINDS).toContain('quest');
+        expect(ACT1_WALK_EVENT_KINDS).toContain('none');
     });
 
-    it('carries a subset of the thirteen kinds, and the walk meets every one it carries', () => {
+    it('meets the waypoint: the gathering nodes the cut emptied are on the plan as none', () => {
+        expect(plan.carried).toContain('none');
+    });
+
+    it('carries a subset of the eleven kinds, and the walk meets every one it carries', () => {
         for (const kind of plan.carried) expect(ACT1_WALK_EVENT_KINDS).toContain(kind);
         const met = new Set(plan.regions.flatMap(r => r.steps.map(s => s.kind)));
         expect([...met].sort()).toEqual([...plan.carried].sort());

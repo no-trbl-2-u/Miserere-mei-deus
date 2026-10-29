@@ -136,18 +136,6 @@ describe('every completion path pays the quest reward', () => {
         expect(relicCount(result.state)).toBe(1);
     });
 
-    it('resolveMapEvent: a collect objective completed by a gathering pays', () => {
-        mockSequentialRng(0.5);
-        const collect = quest({ id: 'collect-wood', type: 'collect', target: 'driftwood' });
-        const result = resolveMapEvent(stateWith(collect, 'bw-1'), undefined, {
-            kind: 'gathering',
-            items: [{ id: 'driftwood', name: 'Driftwood', description: 'Salt-bleached.', category: 'material', quantity: 1 }],
-        });
-        expect(result.event.kind).toBe('gathering');
-        expect(result.state.quests.completed).toContain(collect.name);
-        expect(relicCount(result.state)).toBe(1);
-    });
-
     const tree: DialogueTree = {
         rootId: 'root',
         nodes: { root: { id: 'root', speaker: 'Fixture NPC', text: 'Placeholder.', choices: [] } },

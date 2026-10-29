@@ -27,8 +27,8 @@
  * stages no village, so the shop lens reports nothing today; it reads
  * whatever wares a registered pool declares and invents no stock table.
  *
- * Composes `auditNarrativeReachability` for the map-NPC lenses rather than
- * replacing it. Like that audit it reads the live MapEvent pool registry; if
+ * Composes `auditNarrativeReachability` for the npc-unreached lens rather
+ * than replacing it. It reads the live MapEvent pool registry; if
  * nothing is registered (a hermetic test cleared it) the default sources
  * replay `registerMapEventContent()` first.
  *
@@ -63,8 +63,7 @@ export type RosterDanglingLens =
     | 'relic-signature'
     | 'dialogue-next'
     | 'dialogue-quest'
-    | 'dialogue-card'
-    | 'map-npc';
+    | 'dialogue-card';
 
 export type RosterOrphanLens =
     | 'enemy-unpooled'
@@ -197,7 +196,7 @@ function itemRefs(src: RosterSources): ItemRef[] {
     }
     for (const pool of src.pools) {
         for (const { payload } of pool.entries) {
-            if (payload.kind === 'loot-cache' || payload.kind === 'gathering') {
+            if (payload.kind === 'loot-cache') {
                 for (const item of payload.items ?? []) push(item, pool.id);
             } else if (payload.kind === 'village') {
                 for (const ware of payload.shop?.wares ?? []) {
@@ -233,7 +232,6 @@ function dialogueTrees(src: RosterSources): Array<{ tree: DialogueTree; where: s
     }
     for (const pool of src.pools) {
         for (const { payload } of pool.entries) {
-            if (payload.kind === 'narration') out.push({ tree: payload.dialogue, where: `${pool.id}.narration` });
             if (payload.kind === 'village') {
                 for (const npc of payload.merchants ?? []) {
                     if (npc.dialogueTree) out.push({ tree: npc.dialogueTree, where: `${pool.id}.merchant:${npc.name}` });
@@ -339,14 +337,6 @@ export function danglingDialogue(src: RosterSources): RosterFinding[] {
     return out;
 }
 
-/** An interaction naming an NPC neither rostered nor declared unstaged. */
-export function danglingMapNpcs(src: RosterSources): RosterFinding[] {
-    return src.maps.flatMap(def => auditNarrativeReachability(def).sceneryAsPeople.map(u => ({
-        lens: 'map-npc' as const, subject: 'npc' as const, id: u.npcName, where: `${def.name}:${u.nodeId}`,
-        detail: 'interaction names an NPC not on the roster and not in unstagedNpcs',
-    })));
-}
-
 // ─── Orphan lenses ────────────────────────────────────────────────────────────
 
 /** A production enemy in no `EnemiesByMap` pool and no registered encounter. */
@@ -386,11 +376,11 @@ export function orphanItems(src: RosterSources): RosterFinding[] {
     return out;
 }
 
-/** A rostered NPC with a dialogue tree no interaction names. */
+/** A rostered NPC with a dialogue tree no node reaches and no unstaged entry excuses. */
 export function orphanNpcs(src: RosterSources): RosterFinding[] {
     return src.maps.flatMap(def => auditNarrativeReachability(def).unreachableNpcs.map(name => ({
         lens: 'npc-unreached' as const, subject: 'npc' as const, id: name, where: def.name,
-        detail: 'carries a dialogueTree no interaction names',
+        detail: 'carries a dialogueTree no node reaches',
     })));
 }
 
@@ -449,7 +439,6 @@ export function auditRosterHealth(sources: RosterSources = collectRosterSources(
             ...danglingItems(sources),
             ...danglingRelicSignatures(sources),
             ...danglingDialogue(sources),
-            ...danglingMapNpcs(sources),
         ],
         orphans: [
             ...orphanEnemies(sources),

@@ -25,7 +25,6 @@ import type {
     DialogueNode,
     DialogueTree,
     Encounter,
-    Item,
     NPC,
     ResolveMapEventResult,
     ResolvedEvent,
@@ -43,10 +42,9 @@ import { freezeViewModel } from './freeze';
 import { toRomanLower } from './roman';
 
 export type EventKind = 'combat-prelude' | 'narrative-choice';
-// 'gather' is the gathering acknowledgement card (see `composeGathering`).
 // There is no 'rest' variant: rest events start the rest-choice node and
 // never reach this VM.
-export type EventVariant = 'encounter' | 'boss' | 'quest' | 'npc' | 'gather';
+export type EventVariant = 'encounter' | 'boss' | 'quest' | 'npc';
 export type ChoiceAccentKey = 'blood' | 'sulfur' | 'parchment' | 'bone' | 'rust';
 
 export type ConsequenceKind =
@@ -203,7 +201,7 @@ export interface EventViewModel {
      * Map node type that triggered this event (`'quest'`, `'rest'`,
      * `'treasure'`, etc.). Passed through from the mobile event slice
      * so the modal can apply quest-source visual treatment even when
-     * the engine resolves to a generic kind (loot-cache, interaction…).
+     * the engine resolves to a generic kind (loot-cache, cutscene…).
      * `null` when the event was not triggered from exploration or the
      * source node type was not recorded.
      */
@@ -256,25 +254,24 @@ export function selectHasActivePacedEvent(state: AppStoreState): boolean {
 }
 
 /** Route targets for paced events. */
-export type PacedEventRoute = '/event' | '/village' | '/dialogue' | '/cutscene';
+export type PacedEventRoute = '/village' | '/dialogue' | '/cutscene';
 
 /**
  * Which full-screen route the active paced event should mount.
- * Interaction and narration mount `/dialogue`, village mounts
- * `/village`, cutscene mounts `/cutscene`; everything else paced (in
- * practice `gathering`, see `composeGathering`) mounts the generic
- * `/event` shell. Returns `null` when no paced event is active (rest /
- * loot-cache / quest / hazard never reach the event slice — their
- * interceptors start minigame sessions instead).
+ * A dialogue cursor mounts `/dialogue` (only the dev menu's dialogue jump
+ * seeds one; no map event does); village mounts `/village` and cutscene
+ * mounts `/cutscene`. Returns `null` when no paced event is active, and for
+ * any other pending kind: none reaches the slice (rest / loot-cache / quest /
+ * hazard / the Anvil are intercepted into their own sessions, and the
+ * gathering kind that the generic `/event` card served is cut, NK1a).
  */
 export function selectPacedEventRoute(state: AppStoreState): PacedEventRoute | null {
     if (!selectHasActivePacedEvent(state)) return null;
+    if (state.event.dialogueCursor !== null) return '/dialogue';
     const kind = state.event.pending?.event.kind;
-    if (kind === 'interaction') return '/dialogue';
     if (kind === 'village') return '/village';
     if (kind === 'cutscene') return '/cutscene';
-    if (kind === 'narration') return '/dialogue';
-    return '/event';
+    return null;
 }
 
 /**
@@ -515,27 +512,6 @@ export function buildDialogueContext(state: AppStoreState): DialogueContext {
     };
 }
 
-/**
- * Nameplate for a dialogue card.
- *
- * Input: the active event slice's resolved event (may be absent).
- * Output: the uppercase name of whoever is speaking, or the canonical
- * 'A FIGURE' chrome when the event names nobody — a `narration` monologue
- * has no speaker by design, and that is the only case the fallback is
- * honest for.
- *
- * The engine's `DialogueNode` carries no `.speaker`, but the
- * `interaction` event that OPENED the tree carries `npcName` — the same
- * name `composeInteraction` puts on the no-tree card.
- */
-function dialogueSpeakerTitle(resolved: ResolvedEvent | undefined): string {
-    if (resolved?.kind === 'interaction') {
-        const name = resolved.npcName.trim();
-        if (name.length > 0) return name.toUpperCase();
-    }
-    return 'A FIGURE';
-}
-
 function composeNpcDialogue(
     tree: DialogueTree,
     nodeId: string,
@@ -569,10 +545,9 @@ function composeNpcDialogue(
         artSlug: 'interaction-generic',
         badge: 'A VOICE',
         badgeAccentKey: 'parchment',
-        // `DialogueNode` has no speaker; the name comes from the opening
-        // `interaction` event. 'A FIGURE' is only for a speakerless
-        // narration.
-        title: dialogueSpeakerTitle(state.event.pending?.event),
+        // `DialogueNode` has no speaker, and no map event opens a tree any
+        // more (the dev menu's jump does), so the card names nobody.
+        title: 'A FIGURE',
         subtitle: '',
         body: text,
         choices,
@@ -600,14 +575,10 @@ function composeNarrative(resolved: ResolvedEvent): Omit<EventViewModel, 'prelud
     const artSlug = selectEventArtSlug(resolved);
     const body = bodyFromPayload(resolved);
     switch (resolved.kind) {
-        case 'interaction':
-            return composeInteraction(resolved.npcName, body, artSlug);
         case 'village':
             return composeVillage(resolved.villageName, resolved.merchants, body, artSlug);
         case 'cutscene':
             return composeCutscene(body, artSlug);
-        case 'gathering':
-            return composeGathering(resolved.items, body, artSlug);
         // Dead-end kinds: rest / loot-cache /
         // hazard never reach the event slice —
         // `resolveCurrentMapEventAction` intercepts them and starts
@@ -621,7 +592,6 @@ function composeNarrative(resolved: ResolvedEvent): Omit<EventViewModel, 'prelud
         case 'loot-cache':
         case 'hazard':
         case 'encounter':
-        case 'narration':
         // 'blacksmith': its interceptor starts "The Anvil" die-gear
         // session. It never reaches composeNarrative; falls to the empty
         // VM defensively like the other minigame kinds.
@@ -638,36 +608,6 @@ function composeNarrative(resolved: ResolvedEvent): Omit<EventViewModel, 'prelud
         case 'none':
             return EMPTY_VM;
     }
-}
-
-function composeInteraction(npcName: string, body: string, artSlug: EventArtSlug): Omit<EventViewModel, 'preludeChrome' | 'chrome' | 'sourceNodeType'> {
-    return {
-        kind: 'narrative-choice',
-        variant: 'npc',
-        artSlug,
-        // Eyebrow 'INTERACTION' is literal chrome; the title is the NPC
-        // name from the engine.
-        badge: 'INTERACTION',
-        badgeAccentKey: 'parchment',
-        title: npcName.toUpperCase(),
-        subtitle: '',
-        body,
-        choices: [
-            {
-                id: 'acknowledge',
-                label: 'SO BE IT',
-                description: 'Continue',
-                consequences: [],
-                iconKey: 'scroll',
-                accentKey: 'parchment',
-                enabled: true,
-                subtitle: null,
-                decode: null,
-            },
-        ],
-        lore: null,
-        canSkip: body.length > 240,
-    };
 }
 
 function composeVillage(
@@ -735,74 +675,6 @@ function composeCutscene(body: string, artSlug: EventArtSlug): Omit<EventViewMod
         lore: null,
         // Cutscenes are often long; skip is always available.
         canSkip: true,
-    };
-}
-
-/**
- * `Name` or `Name x3` — the stack size only surfaces when there is a stack.
- * `quantity` lives on `Material` (and on stacked consumables); the other
- * `Item` members do not carry it, so the read is narrowed rather than cast.
- */
-function gatheredLabel(item: Item): string {
-    const quantity = 'quantity' in item && typeof item.quantity === 'number' ? item.quantity : 1;
-    return quantity > 1 ? `${item.name} x${quantity}` : item.name;
-}
-
-/**
- * The gathering acknowledgement card.
- *
- * The grant happens in the engine: `resolveGathering` appends the payload
- * items to `player.inventory` and `resolve-map-event` advances any
- * `collect` quest objectives. This card has no session, RNG or route of
- * its own — it is the same paced `narrative-choice` card that
- * `interaction` / `village` / `cutscene` use. Its only job is to name what
- * the player just picked up and wait for them. A toast would not do:
- * `<ToastHost>` is declared BEFORE `<Stack>` in `app/_layout.tsx` with no
- * `zIndex`, and every screen's `<ScreenBg>` is opaque, so the navigator
- * paints over it.
- *
- * The button is a continue, not a decision: the items are already in the
- * inventory by the time this VM exists, so the label acknowledges a thing
- * done rather than offering a choice the player does not have.
- */
-function composeGathering(
-    items: ReadonlyArray<Item>,
-    body: string,
-    artSlug: EventArtSlug,
-): Omit<EventViewModel, 'preludeChrome' | 'chrome' | 'sourceNodeType'> {
-    const labels = items.map(gatheredLabel);
-    const foundSomething = labels.length > 0;
-    return {
-        kind: 'narrative-choice',
-        variant: 'gather',
-        artSlug,
-        badge: 'A GATHERING',
-        badgeAccentKey: 'rust',
-        // The names ARE the payload of this card: they tell the player what
-        // they gathered.
-        title: foundSomething ? labels.join(' · ').toUpperCase() : 'NOTHING WORTH TAKING',
-        // Where it went, so the player knows which tab to look in.
-        subtitle: foundSomething ? 'into the satchel' : '',
-        body,
-        choices: [
-            {
-                id: 'acknowledge',
-                label: foundSomething
-                    ? (labels.length === 1 ? 'POCKET IT' : 'POCKET THEM')
-                    : 'MOVE ON',
-                description: 'Continue',
-                // One chip per item. The screen shows three and counts the
-                // rest, so a fat pool still reads.
-                consequences: labels.map((label) => ({ kind: 'item' as const, label })),
-                iconKey: 'herbs',
-                accentKey: 'rust',
-                enabled: true,
-                subtitle: null,
-                decode: null,
-            },
-        ],
-        lore: null,
-        canSkip: body.length > 240,
     };
 }
 

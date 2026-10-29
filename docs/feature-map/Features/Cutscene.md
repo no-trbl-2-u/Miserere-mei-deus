@@ -29,7 +29,6 @@ Code it uses, as plain text so Graph view draws player flow only.
 
 - Effects
 - Game
-- Items
 - Log
 - NPCs
 - The world

@@ -444,8 +444,6 @@ async function mapTab(store: GameStoreHandle, flags: CliFlags): Promise<void> {
 function describeResolvedEvent(event: ResolvedEvent): string {
     switch (event.kind) {
         case 'encounter':   return `Encounter! ${event.isBoss ? '(boss) ' : ''}${event.encounter.enemies.map(e => e.name).join(', ')}`;
-        case 'interaction': return `You meet ${event.npcName}.`;
-        case 'gathering':   return `You gather ${event.items.map(i => i.name).join(', ')}.`;
         case 'rest':        return `You rest. (+${event.healed} HP)`;
         case 'village': {
             const wareCount = event.shop?.wares.length ?? 0;
@@ -455,10 +453,6 @@ function describeResolvedEvent(event: ResolvedEvent): string {
         case 'cutscene':    return event.lines.join(' ');
         case 'hazard':      return `Hazard! (-${event.damage} HP${event.effects.length > 0 ? `, ${event.effects.length} effect${event.effects.length === 1 ? '' : 's'}` : ''})`;
         case 'loot-cache':  return `Loot cache: ${event.items.length} item${event.items.length === 1 ? '' : 's'}, ${event.currency} currency.`;
-        case 'narration': {
-            const root = event.dialogue.nodes[event.dialogue.rootId];
-            return root ? root.text : 'A moment of narration passes.';
-        }
         case 'blacksmith':  return `The anvil (budget ${event.budget}${event.variants.length > 0 ? `, ${event.variants.length} variant${event.variants.length === 1 ? '' : 's'} on offer` : ''}).`;
         case 'travel':      return `${event.description ?? 'You walk on.'} (→ ${event.destinationContinent} / ${event.destinationMap})`;
         case 'labyrinth':   return `${event.description ?? 'A door into the Aporia.'} (the Aporia, ${event.act}: run \`npm run labyrinth\` to walk it)`;

@@ -38,19 +38,6 @@ describe('selectEventArtSlug', () => {
         expect(selectEventArtSlug({ kind: 'loot-cache', items: [], currency: 0 })).toBe('interaction-generic');
     });
 
-    // Gathering DOES reach the modal, as the acknowledgement card. It borrows the generic figure on purpose: a
-    // bespoke slug means a new exhaustive `Record` member in
-    // `PlaceholderIllustration` plus a drawing, which is an art errand. The
-    // slug is pinned here so that errand shows up as a failing test, not as
-    // silent drift.
-    it('gathering borrows the generic fallback until it earns its own drawing', () => {
-        expect(selectEventArtSlug({ kind: 'gathering', items: [] })).toBe('interaction-generic');
-    });
-
-    it('maps interaction to "interaction-generic"', () => {
-        expect(selectEventArtSlug({ kind: 'interaction', npcName: 'X' })).toBe('interaction-generic');
-    });
-
     it('maps village to "village"', () => {
         expect(selectEventArtSlug({ kind: 'village', villageName: 'X', merchants: [] })).toBe('village');
     });
@@ -72,9 +59,7 @@ describe('selectEventArtSlug', () => {
             { kind: 'encounter', encounter: { enemies: [{ name: 'x' }], origin: 'breakwater:bw-2' } as never, isBoss: false },
             { kind: 'encounter', encounter: { enemies: [{ name: 'x' }], origin: 'breakwater:bw-2' } as never, isBoss: true },
             { kind: 'rest', healed: 1, shelter: 'camp' },
-            { kind: 'gathering', items: [] },
             { kind: 'loot-cache', items: [], currency: 0 },
-            { kind: 'interaction', npcName: 'X' },
             { kind: 'village', villageName: 'X', merchants: [] },
             { kind: 'cutscene', lines: [] },
             { kind: 'hazard', effects: [], damage: 0 },
@@ -89,7 +74,7 @@ describe('selectEventArtSlug', () => {
 describe('defaultBodyForEvent', () => {
     it('returns a non-empty string for kinds that need a default', () => {
         expect(defaultBodyForEvent({ kind: 'rest', healed: 1, shelter: 'camp' })).not.toBe('');
-        expect(defaultBodyForEvent({ kind: 'gathering', items: [] })).not.toBe('');
+        expect(defaultBodyForEvent({ kind: 'loot-cache', items: [], currency: 0 })).not.toBe('');
         expect(defaultBodyForEvent({ kind: 'village', villageName: 'X', merchants: [] })).not.toBe('');
     });
 

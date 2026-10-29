@@ -141,7 +141,7 @@ const QUEST_OBJECTIVE_CONTENT: Record<string, TooltipContent> = {
 
 // Map-node content. Keys match the NodeType variants emitted by the
 // exploration presenter (`encounter | treasure | boss | quest | rest |
-// gather | hazard | blacksmith | village | door | current`). Each entry: uppercased title + short
+// waypoint | hazard | blacksmith | village | door | current`). Each entry: uppercased title + short
 // description of what happens when the node is engaged.
 const MAP_NODE_CONTENT: Record<string, TooltipContent> = {
     encounter: {
@@ -166,18 +166,18 @@ const MAP_NODE_CONTENT: Record<string, TooltipContent> = {
     },
     story: {
         title: 'STORY',
-        body: 'a thread of story to be picked up — a dialogue, a marker, sometimes both. consequences carry forward.',
-        footnote: 'opens dialogue',
+        body: 'a thread of story to be picked up: a scene plays, then the road goes on.',
+        footnote: 'plays a scene',
     },
     rest: {
         title: 'REST',
         body: 'a place to mend. recover hp + clear short-duration effects without leaving the map.',
         footnote: 'no combat',
     },
-    gather: {
-        title: 'GATHER',
-        body: 'forage, scavenge, salvage. yields are small but reliable; one of the cheaper ways to refill consumables.',
-        footnote: 'no combat',
+    waypoint: {
+        title: 'WAYPOINT',
+        body: 'a stretch of road with nothing on it. walk through, and the roads beyond it open.',
+        footnote: 'no combat · nothing here',
     },
     hazard: {
         title: 'HAZARD',

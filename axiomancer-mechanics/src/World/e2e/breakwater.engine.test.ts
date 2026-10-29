@@ -112,17 +112,21 @@ describe('the Breakwater\'s events (D29)', () => {
         breakwater.nodes.map(n => [n.id, resolveMapEvent(standingOn(n.id)).event.kind]),
     );
 
-    it('resolves an authored event on every node', () => {
+    it('resolves an authored event on every node but its waypoints', () => {
         expect(Object.values(kinds)).not.toContain('empty');
         expect(Object.keys(kinds)).toHaveLength(22);
     });
 
-    it('spreads 6 encounters, 2 rests, 3 loot caches, 2 gatherings, 2 hazards, 1 Anvil, an arrival, 1 door and 4 quest nodes', () => {
+    it('spreads 6 encounters, 2 rests, 3 loot caches, 2 waypoints, 2 hazards, 1 Anvil, an arrival, 1 door and 4 quest nodes', () => {
         const tally: Record<string, number> = {};
         for (const k of Object.values(kinds)) tally[k] = (tally[k] ?? 0) + 1;
         expect(tally).toEqual({
-            encounter: 6, rest: 2, 'loot-cache': 3, gathering: 2, hazard: 2, blacksmith: 1, cutscene: 1, travel: 1, quest: 4,
+            encounter: 6, rest: 2, 'loot-cache': 3, none: 2, hazard: 2, blacksmith: 1, cutscene: 1, travel: 1, quest: 4,
         });
+    });
+
+    it('leaves its former gathering nodes an empty waypoint: no pool, resolves to nothing', () => {
+        for (const id of ['bw-4', 'bw-11']) expect(kinds[id], id).toBe('none');
     });
 
     it('puts the four quest markers on bw-19..bw-22, node 1 to node 4 of the Breakwater questline', () => {
