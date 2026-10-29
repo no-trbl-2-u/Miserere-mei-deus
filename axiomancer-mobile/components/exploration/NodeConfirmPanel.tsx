@@ -3,11 +3,18 @@ import { View, Text, Pressable } from 'react-native';
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { ActionIcon } from '@/components/ActionIcon';
-import { ACTION_ICON_BY_TYPE, NODE_KIND_LABEL, nodePurseLines, type ExplorationOption } from '@/state/presenters/exploration.engine';
+import { ACTION_ICON_BY_TYPE, NODE_KIND_LABEL, nodePurseLines, type ExplorationNode, type ExplorationOption } from '@/state/presenters/exploration.engine';
+import { SHUT_ROAD_HEAD, shutRoadQuestLine } from '@/state/presenters/quest.copy';
 
 interface NodeConfirmPanelProps {
     /** The node the player has selected, or null when nothing is selected. */
     selected: ExplorationOption | null;
+    /**
+     * A tapped node behind a blocked road (a quest's gate or lock): the panel
+     * names it and the road's reason, with the holding quest, and offers no
+     * travel. Wins over `selected` when both are set.
+     */
+    shut?: ExplorationNode | null;
     onConfirm: () => void;
     onCancel: () => void;
     /** Shown when no node is selected (the drawer's empty-state line). */
@@ -22,9 +29,40 @@ interface NodeConfirmPanelProps {
  * that can charge shillings it prints the purse, so the player reads it
  * before the walk rather than inside.
  */
-export function NodeConfirmPanel({ selected, onConfirm, onCancel, emptyMessage }: NodeConfirmPanelProps) {
+export function NodeConfirmPanel({ selected, shut = null, onConfirm, onCancel, emptyMessage }: NodeConfirmPanelProps) {
     const styles = useStyles();
     const AXM = usePalette();
+
+    if (shut !== null) {
+        return (
+            <View style={styles.panel} testID="node-confirm-panel">
+                <View style={styles.body}>
+                    <View style={styles.iconWrap}>
+                        <ActionIcon kind={ACTION_ICON_BY_TYPE[shut.type] ?? 'sword'} size={22} color={AXM.bone} />
+                    </View>
+                    <View style={styles.text}>
+                        <Text style={styles.kind}>{SHUT_ROAD_HEAD}</Text>
+                        <Text style={styles.name} numberOfLines={1}>{shut.label}</Text>
+                        <Text style={styles.blurb} testID="node-confirm-shut-reason">{shut.blockedReason}</Text>
+                        {shut.blockedBy != null && (
+                            <Text style={styles.purse} testID="node-confirm-shut-quest">{shutRoadQuestLine(shut.blockedBy)}</Text>
+                        )}
+                    </View>
+                </View>
+                <View style={styles.actions}>
+                    <Pressable
+                        onPress={onCancel}
+                        accessibilityRole="button"
+                        accessibilityLabel="Cancel selection"
+                        testID="node-confirm-cancel"
+                        style={styles.cancel}
+                    >
+                        <Text style={styles.cancelText}>BACK</Text>
+                    </Pressable>
+                </View>
+            </View>
+        );
+    }
 
     if (selected === null) {
         return (

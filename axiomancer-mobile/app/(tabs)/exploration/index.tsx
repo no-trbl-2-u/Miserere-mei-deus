@@ -10,6 +10,7 @@ import { NodeGrid } from '@/components/exploration/NodeGrid';
 import { NodeConfirmPanel } from '@/components/exploration/NodeConfirmPanel';
 import { EventBadge } from '@/components/exploration/EventBadge';
 import { NodeToast } from '@/components/exploration/NodeToast';
+import { QuestTracker } from '@/components/exploration/QuestTracker';
 import { MapOverlays } from '@/components/exploration/MapOverlays';
 import { useCombatMode } from '@/state/combat-mode';
 import { useGameActions, useGameState, useGameStore } from '@/state/GameStoreProvider';
@@ -97,6 +98,12 @@ export default function ExplorationScreen() {
         [vm.options, selectedNodeId],
     );
 
+    // A tapped node behind a blocked road: the panel names the road's reason.
+    const shutNode = useMemo(
+        () => vm.nodes.find((n) => n.id === selectedNodeId && n.kind === 'locked' && n.blockedReason) ?? null,
+        [vm.nodes, selectedNodeId],
+    );
+
     /**
      * Node tap handler for the exploration map.
      *
@@ -107,9 +114,11 @@ export default function ExplorationScreen() {
      */
     const onNodePress = (node: ExplorationNode) => {
         if (node.kind === 'locked') {
-            // A road blocked by a questline's lock says why; any other
+            // A road blocked by a questline's lock or gate says why on the
+            // confirm panel (the quest named, no way to travel); any other
             // locked node is simply out of reach.
-            setNodeTip(node.blockedReason ?? 'This path is sealed.');
+            if (node.blockedReason) setSelectedNodeId((prev) => (prev === node.id ? null : node.id));
+            else setNodeTip('This path is sealed.');
             return;
         }
         if (node.kind === 'completed') {
@@ -164,6 +173,8 @@ export default function ExplorationScreen() {
                 </View>
             </View>
 
+            <QuestTracker />
+
             {/* Node Graph */}
             {/* Legend/compass copy ride the `overlays` slot (viewport-fixed),
                 not `children` (the pannable canvas) — CRITIQUE pass 20. */}
@@ -182,6 +193,7 @@ export default function ExplorationScreen() {
             {/* Select a node on the map → name + brief explanation + confirm. */}
             <NodeConfirmPanel
                 selected={selectedOption}
+                shut={shutNode}
                 onConfirm={onConfirmMove}
                 onCancel={() => setSelectedNodeId(null)}
                 emptyMessage={vm.drawerCopy.emptyMessage}

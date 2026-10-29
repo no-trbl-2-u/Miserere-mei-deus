@@ -35,6 +35,7 @@ Code it uses, as plain text so Graph view draws player flow only.
 - The foes
 - Game
 - Items
+- Log
 - NPCs
 - The world
 
