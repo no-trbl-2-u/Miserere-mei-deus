@@ -30,6 +30,20 @@ measured (R12a's report carries its columns). Card names are content T approves 
 | 8 | **The trial set.** A `/plot` for the removable trial set (its own library file, one `TRIAL_SETS` line, its lane and test deck) and any engine work its keywords need. T merges the plot; the loop builds it. | Session plots, T merges, loop builds | A `plot` PR, then `loop:pr` PRs |
 | 9 | **Measured.** The trial set joins the measured-truth report's decks. | Loop | `docs/reports/measured/latest.md` columns |
 
+## Spells
+
+T, 2026-10-29: "I never see Spells (where the card is a Free: as-is, but Paid: <HUGE impact>. Exile.)". The Spell
+law (D103) already makes a Spell's PAID line EXILE and sit a step above a plain card; past ballots met only that floor,
+so their Spells read as Skills with bigger PAID numbers. From the Merciful on:
+
+- **Two Spell candidates per sub-lane** on the ballot (six of the ninety; T, 2026-10-29). The slot pitches (step 2)
+  mark which slots offer them.
+- **FREE is the card as-is**: a modest line that plays and discards.
+- **PAID is a huge impact**: a bigger kind of effect than FREE (the whole stack, twice over, for the rest of combat,
+  the clock run out now), or about three times FREE's numbers, or both (T picked "Both"). The sims (step 6) are where
+  a runaway Spell shows up.
+- **"EXILE." is printed at the end of the PAID line**, not only in the legend.
+
 ## No caps
 
 T, 2026-10-26: "remove the '(max +n)' from every card. If there should be a max, I'll call it out." A slot
