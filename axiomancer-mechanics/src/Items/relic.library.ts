@@ -9,15 +9,20 @@
  * The relics and where each comes from (`relicSource`):
  *
  *   Suppliant's Ring (The Open Hand)  no lane     no source (no longer handed out)
- *   Crimson Circlet (Crimson Return)  Blood Price elite only
+ *   Crimson Circlet (Crimson Return)  Blood Price elite drop
  *   Ruby Signet (Ruby Tithe)          Blood Price quest
  *   Bleeding Signet (Open Vein)       Blood Price quest
- *   Elementalist's Signet             Elementalist elite only
+ *   Elementalist's Signet             Elementalist elite drop
  *   Elementalist's Brooch             Elementalist quest
  *   Elementalist's Belt               Elementalist quest
- *   Thornback Signet                  Defender      elite only
+ *   Thornback Signet                  Defender      elite drop
  *   Mirror Brooch                     Defender      quest
  *   Carapace Belt                     Defender      quest
+ *
+ * `relicSource` says where the elite drop draws from when a fight lists no
+ * drops of its own (`eliteRelicPool`); it does not limit who may pay a relic.
+ * No relic is elite-only: a quest may pay any lane relic, the elite-drop ones
+ * included (T, 2026-10-28).
  *
  * A run starts with none. The dev menu's relic chips hand any over, worn
  * while a position is free.
@@ -53,7 +58,7 @@ const SUPPLIANTS_RING: Equipment = {
 
 /**
  * The Crimson Circlet (T's): +5 Body, +20 max VITAE, and Crimson Return (◆5):
- * the next SACRIFICE heals instead of costing. Elite only.
+ * the next SACRIFICE heals instead of costing. The elite drop's; a quest may pay it too.
  */
 const CRIMSON_CIRCLET: Equipment = {
     id: 'relic-crimson-circlet',
@@ -101,7 +106,7 @@ const BLEEDING_SIGNET: Equipment = {
 
 /**
  * The Elementalist's Signet (T's): +5 Heart, +20 max VITAE, and Eye of the
- * Storm (◆6): clear your INFERNO, then trigger the foe's STORM. Elite only.
+ * Storm (◆6): clear your INFERNO, then trigger the foe's STORM. The elite drop's; a quest may pay it too.
  */
 const ELEMENTALIST_SIGNET: Equipment = {
     id: 'relic-elementalist-signet',
@@ -149,7 +154,7 @@ const ELEMENTALIST_BELT: Equipment = {
 
 /**
  * The Thornback Signet (T's): +5 Heart, +20 max VITAE, and Thorn Mantle (◆5):
- * THORNS equal to your GUARD. Elite only.
+ * THORNS equal to your GUARD. The elite drop's; a quest may pay it too.
  */
 const THORNBACK_SIGNET: Equipment = {
     id: 'relic-thornback-signet',

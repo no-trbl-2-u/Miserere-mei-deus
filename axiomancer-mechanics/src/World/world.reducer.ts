@@ -104,12 +104,6 @@ export function syncMoveLists(map: MapState): MapState {
 }
 
 /**
- * The former name of {@link syncMoveLists}, kept while `questline.ts` still
- * imports it (the questline worker owns that file); remove once it has moved.
- */
-export const syncFrontierLists = syncMoveLists;
-
-/**
  * `syncMoveLists` over a whole world: the current map and every departed map
  * on file (`mapStates`). The load step: a save written under the frontier
  * rule carries the frontier in its lists, and this rewrites them by the road

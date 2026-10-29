@@ -2279,6 +2279,12 @@
       "kind": "coupling",
       "from": "area:World",
       "to": "area:Items",
+      "file": "axiomancer-mechanics/src/World/breakwater-chapter.questline.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:World",
+      "to": "area:Items",
       "file": "axiomancer-mechanics/src/World/quest.engine.ts"
     },
     {

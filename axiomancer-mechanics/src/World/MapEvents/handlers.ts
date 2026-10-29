@@ -27,7 +27,7 @@ import { getMapDefinition, createMapState } from '../map.registry';
 import { completeMap, changeContinent, unlockMap, changeMap, isNodeSpent } from '../world.reducer';
 import type { MapState, WorldState } from '../types';
 import type { ContinentName, MapName } from '../map.library';
-import { resolveQuestNodeEvent } from '../questline';
+import { resolveQuestNodeEvent, giveQuestStep } from '../questline';
 import { ENEMY_REGISTRY, type EnemySlug } from '../../Enemy/enemy.library';
 import { validateDieGear, type DieGearColor } from '../../Character/dieGear.reducer';
 import { REST_PASSIVE_HEAL_FRACTION, restShelterOf } from './rest-shelter';
@@ -130,12 +130,18 @@ export function resolveVillage(
 
 // ─── cutscene ─────────────────────────────────────────────────────────────────
 
+/**
+ * Plays a cutscene: its lines, and its effect when it authors one (a
+ * `giveQuestStep` starts that questline step through the settle seam; a step
+ * that cannot start leaves the state as it was).
+ */
 export function resolveCutscene(
     state: GameState,
     payload: CutscenePayload,
 ): ResolveMapEventResult {
+    const give = payload.effect?.giveQuestStep;
     return {
-        state,
+        state: give ? giveQuestStep(state, give.questline, give.step) : state,
         event: { kind: 'cutscene', lines: payload.lines },
     };
 }

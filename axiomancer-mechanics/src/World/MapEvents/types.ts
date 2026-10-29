@@ -107,6 +107,17 @@ export interface CutscenePayload {
     /** Ordered narration lines. */
     lines: readonly string[];
     description?: string;
+    /**
+     * What the scene does as it plays: `giveQuestStep` starts that step of a
+     * questline (`giveQuestStep` in `questline.ts`), as a chapter's arrival
+     * gives its first quest. Authored content, never saved.
+     */
+    effect?: CutsceneEffect;
+}
+
+/** A cutscene's effect on the state (see `CutscenePayload.effect`). */
+export interface CutsceneEffect {
+    giveQuestStep?: { questline: QuestlineId; step: number };
 }
 
 export interface HazardPayload {
@@ -188,17 +199,23 @@ export interface LabyrinthDoorPayload {
 }
 
 /**
- * Quest node: the giver of one questline step. `node` (1-4) is its place in
- * the questline: it turns in the step before it (node 2-4) and offers the step
- * of its own number. Never consumed until the step it offers is accepted
- * (QL1b); resolving one touches no state.
+ * Quest node: the giver of one questline step. `node` (1-based) is its place
+ * in the questline: it turns in the step before it (node 2 and on) and offers
+ * the step of its own number. Never consumed until the step it offers is
+ * accepted (QL1b); resolving one touches no state.
  */
 export interface QuestPayload {
     kind: 'quest';
     questline: QuestlineId;
-    /** 1-4: the node's place in the questline. */
+    /** 1-based: the node's place in the questline. */
     node: number;
     description?: string;
+    /**
+     * The node's own refusal line, shown when the player reaches it too early
+     * (stage `locked`: the step it turns in is not yet held). Authored
+     * content, never saved.
+     */
+    lockedLine?: string;
 }
 
 /** Discriminated union of all authoring payloads. */
@@ -279,6 +296,8 @@ export type ResolvedEvent =
         behind?: QuestStepView;
         ahead?: QuestStepView;
         description?: string;
+        /** The node's refusal line, present only while the stage is `locked` and one is authored. */
+        lockedLine?: string;
     }
     | { kind: 'none' };
 

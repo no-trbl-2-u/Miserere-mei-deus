@@ -73,8 +73,9 @@ export const SLOT_CAPACITY: Record<EquipmentSlot, number> = {
  *                            resolved by `relicLaneId` (`Items/relic-lanes.ts`),
  *                            which prefers the relic library's entry.
  * @property relicSource    - How a player earns this relic: `'quest'` (a
- *                            quest's reward) or `'elite'` (the elite-only drop,
- *                            `rollEliteRelicDrop`). Optional; read from the
+ *                            quest's reward) or `'elite'` (the elite drop's pool,
+ *                            `rollEliteRelicDrop`). A quest may pay
+ *                            either. Optional; read from the
  *                            relic library's entry by id, like `laneId`.
  */
 export interface Equipment extends BaseItem {
@@ -86,7 +87,7 @@ export interface Equipment extends BaseItem {
     relicSource?: RelicSource;
 }
 
-/** How a player earns a relic: a quest's reward, or the elite-only drop. */
+/** Where a relic is meant to come from: a quest's reward, or the elite drop's pool (a quest may pay either). */
 export type RelicSource = 'quest' | 'elite';
 
 /**

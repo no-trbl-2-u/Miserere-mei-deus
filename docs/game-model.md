@@ -233,18 +233,18 @@ keyword (`EnemyKeyword = never`).
   starts with none: no relic is handed over at the first node (phase
   SG1). The Suppliant's Ring's signature is The Open Hand; old saves keep
   the ring they were given. Blood Price's three (phase LR1d), all opening the
-  `blood-price` lane while worn: the Crimson Circlet (elite only; +5 Body,
+  `blood-price` lane while worn: the Crimson Circlet (the elite drop's; +5 Body,
   +20 max VITAE; Crimson Return), the Ruby Signet (a quest's; +5 Heart; Ruby
   Tithe) and the Bleeding Signet (a quest's; +5 Mind; Open Vein: HEAL 5,
   then trigger the foe's LEECH, which loses its potency now and heals you
   that, no turn ticking off). The Elementalist's three (phase LR1e), opening
-  the `elementalist` lane: the Signet (elite only; +5 Heart, +20 max VITAE; Eye
+  the `elementalist` lane: the Signet (the elite drop's; +5 Heart, +20 max VITAE; Eye
   of the Storm), the Brooch (a quest's; +5 Mind; Kindle the Gale) and the Belt
   (a quest's; +5 Body; Thaw into Thunder). A worn relic's stat lines and signature are
   read from the library by id, so a saved copy takes the current ones; Heart,
   Body and Mind lines join the fighter's stats for each fight, `maxHp` folds
   onto `maxHealth`. The elite drop (`rollEliteRelicDrop`) can hand over the
-  Circlet; the Breakwater questline's last step pays the Belt (through
+  Circlet, and no relic is elite-only: a quest may pay any of them; the Breakwater questline's last step pays the Belt (through
   `/item-reward`); the dev menu's relic chips, which wear the relic while a
   position is free, hand over the rest; a relic
   carried unworn shows NOT WORN in the satchel, its signature off until the

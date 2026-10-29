@@ -180,7 +180,7 @@ describe('DF1e · A10 · the Defender\'s three relics', () => {
 });
 
 describe('A16 · every lane relic resolves to a registered lane', () => {
-    it('the nine lane relics name a registered lane; each lane has one elite-only relic and two quest relics', () => {
+    it('the nine lane relics name a registered lane; each lane has one elite-drop relic and two quest relics', () => {
         const laneRelics = relicLibrary.filter(r => r.laneId);
         expect(laneRelics).toHaveLength(9);
         for (const r of laneRelics) expect(getCardLane(relicLaneId(r)!), r.id).toBeDefined();
