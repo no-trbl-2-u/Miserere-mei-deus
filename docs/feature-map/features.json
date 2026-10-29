@@ -339,7 +339,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/feature-map-e2e.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
+        "source": "axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/feature-map-e2e.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
       },
       "tested": {
         "value": true,
@@ -414,11 +414,11 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs"
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs"
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/__tests__/CacheGate.test.tsx, axiomancer-mobile/state/e2e/cache-card-preview.screen.test.tsx, axiomancer-mobile/state/e2e/region-plate.rc-walk-10.test.tsx"
+        "source": "axiomancer-mobile/components/__tests__/CacheGate.test.tsx, axiomancer-mobile/scripts/critique-drive.test.mjs, axiomancer-mobile/state/e2e/cache-card-preview.screen.test.tsx, ..."
       },
       "needsPitch": {
         "value": true,
@@ -514,11 +514,11 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/feature-map-e2e.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
+        "source": "axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/feature-map-e2e.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/app/__tests__/death-return.screen.test.tsx, axiomancer-mobile/components/__tests__/DebugSkipEvent.test.tsx, axiomancer-mobile/state/e2e/combat-route.screen.test.tsx, ..."
+        "source": "axiomancer-mobile/app/__tests__/death-return.screen.test.tsx, axiomancer-mobile/components/__tests__/DebugSkipEvent.test.tsx, axiomancer-mobile/scripts/critique-drive.test.mjs, ..."
       },
       "needsPitch": {
         "value": true,
@@ -864,11 +864,11 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs"
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs"
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/__tests__/QuestGate.test.tsx, axiomancer-mobile/state/e2e/quest.screen.test.tsx"
+        "source": "axiomancer-mobile/components/__tests__/QuestGate.test.tsx, axiomancer-mobile/scripts/critique-drive.test.mjs, axiomancer-mobile/state/e2e/quest.screen.test.tsx"
       },
       "needsPitch": {
         "value": false,

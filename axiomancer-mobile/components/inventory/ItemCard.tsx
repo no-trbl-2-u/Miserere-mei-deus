@@ -19,6 +19,13 @@ export const CATEGORY_ORDER: readonly InventoryCategory[] = [
     'quest',
 ] as const;
 
+/**
+ * A collapsed tile's widest. The tile is a share of the panel, so on a wide
+ * window it stretched to ~390px around a 28px glyph and read as an empty box;
+ * capped near its phone width, the grid packs more tiles per row instead.
+ */
+export const ITEM_CARD_MAX_WIDTH = 140;
+
 export function groupByCategory(items: readonly InventoryItemRow[]): Record<InventoryCategory, InventoryItemRow[]> {
     const out: Record<InventoryCategory, InventoryItemRow[]> = {
         equipment: [],
@@ -353,12 +360,13 @@ export function ItemCard({ item, expanded, onTap, onUseOrEquip, onDiscard }: Ite
 const useStyles = makeStyles((AXM) => ({
     itemCard: {
         width: '31.5%',
+        maxWidth: ITEM_CARD_MAX_WIDTH,
         backgroundColor: AXM.panelBg,
         padding: 6,
         minHeight: 92,
         position: 'relative',
     },
-    itemCardExpanded: { width: '100%' },
+    itemCardExpanded: { width: '100%', maxWidth: '100%' },
     itemIcon: {
         width: '100%',
         height: 50,
