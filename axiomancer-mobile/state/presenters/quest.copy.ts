@@ -10,9 +10,12 @@ export const QUEST_TITLE = 'The giver waits';
 /** The giver's line when the node's payload carries none. */
 export const QUEST_GIVER_FALLBACK = '[content] Someone here has work for the willing.';
 
-/** "STEP 2 OF 4". */
+/**
+ * "STEP 2 OF 4". The node past the last step (where it is turned in, or a
+ * side quest's turn-in node) reads the last step, never "STEP 5 OF 4".
+ */
 export function questStepEyebrow(step: number, total: number): string {
-    return `STEP ${step} OF ${total}`;
+    return `STEP ${Math.min(step, total)} OF ${total}`;
 }
 
 export const QUEST_LOCKED_LINE = '[content] Not yet. Finish the work you were given first.';
@@ -49,4 +52,31 @@ export function questCardPickLine(count: number): string {
 
 export function questCardLine(name: string): string {
     return `The card ${name}`;
+}
+
+/** "2/3": a tracker row's short count. */
+export function questProgressShort(current: number, required: number): string {
+    return `${Math.min(current, required)}/${required}`;
+}
+
+/** A `carry` objective's line. */
+export function questBringLine(itemName: string): string {
+    return `Bring: ${itemName}`;
+}
+
+/** The tracker row of a quest whose objectives are all filled. */
+export const TRACKER_READY_LINE = 'Ready to turn in';
+export const TRACKER_HEAD = 'QUESTS';
+
+/** "+2 more". */
+export function trackerMoreLine(n: number): string {
+    return `+${n} more`;
+}
+
+/** The node confirm panel's line over a shut road. */
+export const SHUT_ROAD_HEAD = 'THE ROAD IS SHUT';
+
+/** "Held by: <quest>". */
+export function shutRoadQuestLine(questName: string): string {
+    return `Held by: ${questName}`;
 }
