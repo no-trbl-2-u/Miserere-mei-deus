@@ -23,7 +23,7 @@
 | 2026-11-08 (in 10 days) | Chapter 1's enemy art: pick from the loop's candidates (2 h) | needs you: your task | W2 |
 | 2026-11-09 (in 11 days) | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | needs you: your task; the loop still owes CH1f | W2 |
 | 2026-11-10 (in 12 days) | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | needs you: your task | W2 |
-| 2026-11-10 (in 12 days) | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | waiting on the loop: the loop still owes BW1b, BW1a | W2 |
+| 2026-11-10 (in 12 days) | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | waiting on the loop: the loop still owes BW1b | W2 |
 | 2026-11-11 (in 13 days) | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | needs you: your task | W2 |
 | 2026-11-12 (in 14 days) | Event kind 4, quest: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (0.5 h) | needs a plot: no build-plan rows yet | W2 |
 | 2026-11-12 (in 14 days) | Play the Defender test deck on the preview build and check the reward pool (0.5 h) | needs you: DF1f ready for you | W2 |
