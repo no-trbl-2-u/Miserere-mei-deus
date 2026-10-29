@@ -931,6 +931,7 @@ Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_
 
 ## Rejected
 
+- Trace or replace the UNRESOLVED art, now that a public page shows the gap (parked until B8): superseded 2026-10-29 by D115 (T: "The images we use for everything are open source"); nothing is traced or replaced, the records take T's ruling and the DevLog publishes the art. Briefed via `/plot` as Phase **AL1**, `plan/phases/phase_AL1_art_licence_closed.md`.
 - Server-side merges skip the lessons merge driver: check the merged tree before the merge job merges: briefed
   via `/plot` 2026-10-28 as Phase **MD1c** (T folded it into the MD1 plot, PR #1009). Brief
   `plan/phases/phase_MD1_deadlines_merge_driver.md` § MD1c.
@@ -1042,22 +1043,6 @@ re-sorts this section at R11.
   until the Drowned Parish session (the candidate above) settles it —
   this candidate ships the mechanism only.
 - parked: until R11 (story), after RC. Moved here via /oversight 2026-09-28; `/expand` does not re-file it.
-
-### Trace or replace the UNRESOLVED art, now that a public page shows the gap
-- **signal:** the public DevLog's licence gate (`plan/AUDIT.md`, loop-call
-  2026-09-20): 90 shipped art files carry licence "UNRESOLVED" — 52 of 77 foe
-  portraits, all 19 card paintings, all 15 character portraits, all 4 treasure
-  images. They ship inside the game as a known debt; on a public page they
-  cannot be republished at all, so the catalog publishes their frames and says
-  the painting is withheld.
-- **shape:** per-directory, in the `acquire-art.mjs` pattern that already
-  produced provable plates: trace the 2026-07-06 drop's sources where possible,
-  otherwise reacquire or commission, and write a provenance record per file.
-  The card faces are the highest-value slice (19 files, and the catalog's card
-  grid is the page a curious reader lands on).
-- **size:** large; splits cleanly by directory, and each directory is
-  independently shippable.
-- parked: until B8 (card art revamp), after RC. Moved here via /oversight 2026-09-28; `/expand` does not re-file it.
 
 ### Scripted first fight (content — extracted from retired Fate Engine P3)
 - source: spec-31 P3 remainder, extracted at Phase D1 (2026-07-17)
