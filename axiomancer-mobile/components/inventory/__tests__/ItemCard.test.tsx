@@ -14,8 +14,15 @@
 import { describe, expect, it, jest } from '@jest/globals';
 import { fireEvent, render, within } from '@testing-library/react-native';
 import React from 'react';
+import { StyleSheet } from 'react-native';
 
-import { ItemCard, ItemGlyph, groupByCategory, CATEGORY_ORDER } from '@/components/inventory/ItemCard';
+import {
+    ITEM_CARD_MAX_WIDTH,
+    ItemCard,
+    ItemGlyph,
+    groupByCategory,
+    CATEGORY_ORDER,
+} from '@/components/inventory/ItemCard';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 import type { InventoryItemRow } from '@/state/presenters/inventory.engine';
 
@@ -202,6 +209,30 @@ describe('ItemCard: basic rendering', () => {
         expect(rendered.getByText('Ancient Key')).toBeTruthy();
         expect(rendered.queryByText(/×/)).toBeNull();
         expect(rendered.queryByText('WORN')).toBeNull();
+    });
+});
+
+describe('ItemCard: tile width', () => {
+    const handlers = { onTap: jest.fn(), onUseOrEquip: jest.fn(), onDiscard: jest.fn() };
+    const tileStyle = (expanded: boolean) => {
+        const { tree } = withAllProviders(
+            <ItemCard item={mockEquipmentWeapon} expanded={expanded} {...handlers} />
+        );
+        return StyleSheet.flatten(render(tree).getByTestId('item-card-sword-basic').props.style);
+    };
+
+    // CRITIQUE pass 108: at 1280 a lone tile stretched to ~390px around a
+    // 28px glyph and read as an empty box.
+    it('caps a collapsed tile near its phone width', () => {
+        const style = tileStyle(false);
+        expect(style.width).toBe('31.5%');
+        expect(style.maxWidth).toBe(ITEM_CARD_MAX_WIDTH);
+    });
+
+    it('lets an expanded tile take the full row', () => {
+        const style = tileStyle(true);
+        expect(style.width).toBe('100%');
+        expect(style.maxWidth).toBe('100%');
     });
 });
 
