@@ -50,7 +50,8 @@ Say the step back to T in one line before doing anything.
    `## Session 0 — rulings (T, <date>)`, with an `### Open` list for what T
    left unsettled. Never invent a ruling; a gap is an Open line.
 2. **Slot pitches (session drafts, T approves).** Ten slot roles per
-   sub-lane, plain text, one job each, under `## Sub-lane pitches`. Show T
+   sub-lane, plain text, one job each, under `## Sub-lane pitches`; two slots per
+   sub-lane are typed Spell (`docs/lane-creator.md` "Spells"). Show T
    the thirty and ask for approval or edits; record "approved (T, <date>)".
 3. **The ballot (session).** Three candidates per slot, ninety in all, on
    the ballot shell per `plan/card-ledger/README.md` "Adding the next
@@ -58,7 +59,10 @@ Say the step back to T in one line before doing anything.
    kit tag and the `BALLOTS` entry. Every
    line clears the scrap floor, every Global opens on a trigger from the
    closed set (`docs/card-spec.md` §15), and no line prints a cap ("max n",
-   "max +n", "capped"): T calls out a cap when one is wanted (T, 2026-10-26). Run `node --test
+   "max +n", "capped"): T calls out a cap when one is wanted (T, 2026-10-26). Each sub-lane
+   carries two Spell candidates, each FREE as-is and PAID a huge impact (a bigger kind of
+   effect, about three times the numbers, or both, never "for the rest of combat") ending "EXILE." on the line
+   (`docs/lane-creator.md` "Spells", T, 2026-10-29). Run `node --test
    scripts/ballot-kit.test.mjs`; it must pass. Land it as the plan PR (below)
    and send T the branch preview link for the ballot.
 4. **The vote (T, on the phone).** Nothing to run. Tell T the ballot id and
