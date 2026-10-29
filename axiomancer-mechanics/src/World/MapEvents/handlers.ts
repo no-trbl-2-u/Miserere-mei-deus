@@ -33,7 +33,7 @@ import { REST_PASSIVE_HEAL_FRACTION, restShelterOf } from './rest-shelter';
 import type {
     EncounterPayload, RestPayload,
     VillagePayload, CutscenePayload, HazardPayload, LootCachePayload,
-    BlacksmithPayload, TravelPayload, LabyrinthDoorPayload, QuestPayload,
+    TravelPayload, LabyrinthDoorPayload, QuestPayload,
     ResolveMapEventResult,
 } from './types';
 
@@ -104,6 +104,12 @@ export function resolveVillage(
     payload: VillagePayload,
 ): ResolveMapEventResult {
     const merchants = (payload.merchants ?? []).map(m => ({ ...m }));
+    for (const v of payload.anvil?.variants ?? []) {
+        const reason = validateDieGear(v.gear, v.gear.dieColor as DieGearColor);
+        if (reason) {
+            throw new Error(`MapEvents: illegal anvil variant '${v.id}': ${reason}`);
+        }
+    }
     return {
         state,
         event: {
@@ -111,6 +117,7 @@ export function resolveVillage(
             villageName: payload.villageName,
             merchants,
             shop: payload.shop,
+            anvil: payload.anvil,
             description: payload.description,
         },
     };
@@ -180,36 +187,6 @@ export function resolveLootCache(
     return {
         state: withPlayer(state, player),
         event: { kind: 'loot-cache', items, currency, description: payload.description },
-    };
-}
-
-// ─── blacksmith ───────────────────────────────────────────────────────────────
-
-/**
- * Blacksmith events hand the host the authored budget
- * + variant-gear offers; the host launches a `World/Blacksmith` session and
- * applies the upgraded rail to `Character.dieGear` at claim (the same sandboxed
- * launch contract the hazard minigame uses). The handler touches no
- * state — it only validates the offered variant gear against the die-gear caps.
- */
-export function resolveBlacksmith(
-    state: GameState,
-    payload: BlacksmithPayload,
-): ResolveMapEventResult {
-    for (const v of payload.variants ?? []) {
-        const reason = validateDieGear(v.gear, v.gear.dieColor as DieGearColor);
-        if (reason) {
-            throw new Error(`MapEvents: illegal blacksmith variant '${v.id}': ${reason}`);
-        }
-    }
-    return {
-        state,
-        event: {
-            kind: 'blacksmith',
-            budget: payload.budget ?? 0,
-            variants: payload.variants ?? [],
-            description: payload.description,
-        },
     };
 }
 
@@ -319,7 +296,6 @@ export function applyPayload(
         case 'cutscene':    return resolveCutscene(state, payload);
         case 'hazard':      return resolveHazard(state, payload, rng);
         case 'loot-cache':  return resolveLootCache(state, payload);
-        case 'blacksmith':  return resolveBlacksmith(state, payload);
         case 'travel':      return resolveTravel(state, payload);
         case 'labyrinth':   return resolveLabyrinthDoor(state, payload);
         case 'quest':       return resolveQuest(state, payload);

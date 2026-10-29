@@ -13,8 +13,8 @@
 //
 // Each node is resolved through its own screen by test id, the way a player
 // does: a cache by taking an offer, a gathering by acknowledging `/event`, a
-// cutscene by advancing it, a rest by REST on `/rest`, the Anvil by leaving
-// `/blacksmith` unchanged, a door by its crossing. Fights (the four door fights
+// cutscene by advancing it, a rest by REST on `/rest`, a village by opening its Anvil, leaving
+// `/blacksmith` unchanged and taking the road, a door by its crossing. Fights (the four door fights
 // included) and hazard boards are resolved with the dev seam
 // `globalThis.__AXM_SKIP_EVENT__`, and only after the walk has seen the
 // encounter reveal or the hazard route select mount. Playing a round is
@@ -337,7 +337,12 @@ const RESOLVERS = {
         await tap(page, 'rest-claim')
         return 'screen'
     },
-    async blacksmith(page, nodeId) {
+    // A village: the hub opens, the Anvil counter opens /blacksmith, leaving
+    // the anvil unchanged lands back on the hub, and TAKE THE ROAD ends the visit.
+    async village(page, nodeId) {
+        await expectPath(page, '/village', nodeId)
+        await waitFor(page, 'village-anvil', `${nodeId} village anvil counter`)
+        await tap(page, 'village-anvil')
         await expectPath(page, '/blacksmith', nodeId)
         await waitFor(page, 'blacksmith-begin', `${nodeId} anvil`)
         await tap(page, 'blacksmith-begin')
@@ -345,6 +350,9 @@ const RESOLVERS = {
         await tap(page, 'blacksmith-leave')
         await waitFor(page, 'blacksmith-claim', `${nodeId} anvil outcome`)
         await tap(page, 'blacksmith-claim')
+        await expectPath(page, '/village', nodeId)
+        await waitFor(page, 'village-leave', `${nodeId} village exit`)
+        await tap(page, 'village-leave')
         return 'screen'
     },
     async cutscene(page, nodeId) {

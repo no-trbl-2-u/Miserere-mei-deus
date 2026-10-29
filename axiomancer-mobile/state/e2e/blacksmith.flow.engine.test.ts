@@ -3,8 +3,8 @@
  * interception. Drives the anvil
  * through the store action layer: begin → intro → forging (hone / temper /
  * swap) → card → outcome → claim, and verifies:
- *   - a 'blacksmith' map event launches the session (interception), not a
- *     paced /event card;
+ *   - a village's Anvil counter launches the session (the village screen's
+ *     button), not a paced /event card;
  *   - HONE / TEMPER / SWAP drive the engine;
  *   - a cap OR afford refusal surfaces the reason LOUDLY and no-ops the
  *     rail + budget;
@@ -29,7 +29,8 @@ import {
 import { createAppActions, type AppActions } from '@/state/actions';
 import { createAppStore, type AppStore } from '@/state/store';
 import { selectHasActiveBlacksmith, selectBlacksmithVM } from '@/state/presenters/blacksmith.engine';
-import { selectHasActiveEvent, selectPacedEventRoute } from '@/state/presenters/event.engine';
+import { selectPacedEventRoute } from '@/state/presenters/event.engine';
+import { selectVillageVM } from '@/state/presenters/village.engine';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 
 afterEach(() => {
@@ -65,31 +66,38 @@ function seatAt(store: AppStore, nodeId: string): void {
 function firstBlacksmithNode(): string {
     const def = getMapDefinition('coastal-continent', 'breakwater');
     const node = def.nodes.find(
-        (n) => getNodePrimaryEventKind('coastal-continent', 'breakwater', n.id) === 'blacksmith',
+        (n) => getNodePrimaryEventKind('coastal-continent', 'breakwater', n.id) === 'village',
     );
-    if (!node) throw new Error('no blacksmith node on the Breakwater');
+    if (!node) throw new Error('no village node on the Breakwater');
     return node.id;
 }
 
-describe('blacksmith map interception', () => {
-    it('the authored Breakwater node (bw-16) opens "The Anvil", not a paced /event', () => {
+describe('the village Anvil counter', () => {
+    it('the authored Breakwater village (bw-16) opens "The Anvil" from its counter', () => {
         const { store, actions } = makeStoreAndActions();
         expect(firstBlacksmithNode()).toBe('bw-16');
         seatAt(store, firstBlacksmithNode());
 
-        expect(actions.resolveCurrentMapEvent('blacksmith')).toBe(true);
+        // The node resolves to a village hub; no anvil session opens by itself.
+        expect(actions.resolveCurrentMapEvent('village')).toBe(true);
+        expect(selectHasActiveBlacksmith(store.getState())).toBe(false);
+        const vm = selectVillageVM(store.getState());
+        expect(vm.active).toBe(true);
+        expect(vm.anvil).not.toBeNull();
 
+        // The counter's button hands the payload's variants to the session.
+        expect(actions.beginBlacksmith({ variants: vm.anvil?.variants })).toBe(true);
         expect(selectHasActiveBlacksmith(store.getState())).toBe(true);
-        expect(selectHasActiveEvent(store.getState())).toBe(false);
-        expect(selectPacedEventRoute(store.getState())).toBeNull();
+        // The hub stays up underneath; the anvil is a counter, not a second event.
+        expect(selectPacedEventRoute(store.getState())).toBe('/village');
         // The witness swap variant rides the payload through to the session.
         expect(session(store).variants.map((v) => v.id)).toContain(HEART_RICH_PAYLOAD_VARIANT.id);
     });
 
-    it('there is exactly ONE blacksmith node on the first map (no invented cadence)', () => {
+    it('there is exactly ONE village on the first map (no invented cadence)', () => {
         const def = getMapDefinition('coastal-continent', 'breakwater');
         const count = def.nodes.filter(
-            (n) => getNodePrimaryEventKind('coastal-continent', 'breakwater', n.id) === 'blacksmith',
+            (n) => getNodePrimaryEventKind('coastal-continent', 'breakwater', n.id) === 'village',
         ).length;
         expect(count).toBe(1);
     });

@@ -106,6 +106,36 @@ export default function VillageScreen() {
                         </>
                     )}
 
+                    {vm.anvil && (
+                        <>
+                            <View style={styles.shopHead}>
+                                <Text style={styles.sectionLabel}>THE ANVIL</Text>
+                                {!vm.hasShop && (
+                                    <Text style={styles.purse} testID="village-purse">
+                                        {vm.currency} SHILLINGS
+                                    </Text>
+                                )}
+                            </View>
+                            <TouchableOpacity
+                                accessibilityRole="button"
+                                accessibilityLabel={`Open the Anvil. The smith's cheapest work is ${vm.anvil.cheapestWork} shillings`}
+                                onPress={() => actions.beginBlacksmith({ variants: vm.anvil?.variants })}
+                                style={styles.wareRow}
+                                testID="village-anvil"
+                            >
+                                <View style={styles.flexOne}>
+                                    <Text style={styles.wareName}>THE ANVIL</Text>
+                                    <Text style={styles.wareEffect} testID="village-anvil-effect">
+                                        hone, temper, swap a die, upgrade a card
+                                    </Text>
+                                </View>
+                                <Text style={styles.warePrice} testID="village-anvil-price">
+                                    FROM {vm.anvil.cheapestWork} SHILLINGS
+                                </Text>
+                            </TouchableOpacity>
+                        </>
+                    )}
+
                     {vm.hasShop && (
                         <>
                             <View style={styles.shopHead}>

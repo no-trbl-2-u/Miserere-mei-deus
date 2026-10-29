@@ -56,7 +56,7 @@ describe('Phase 14 — route survivorship vs coverage-audit classification', () 
         expect(eventKinds['bw-1']).toBe('cutscene');
         expect(eventKinds['bw-17']).toBe('encounter');
         expect(eventKinds['bw-18']).toBe('travel');
-        expect(eventKinds['bw-16']).toBe('blacksmith');
+        expect(eventKinds['bw-16']).toBe('village');
         // bw-19..bw-22 are the questline's four quest nodes.
         for (const id of ['bw-19', 'bw-20', 'bw-21', 'bw-22']) expect(eventKinds[id]).toBe('quest');
 

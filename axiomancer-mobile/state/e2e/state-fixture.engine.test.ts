@@ -162,7 +162,7 @@ describe('createFixtureStore + arriveFromFixture (test-utils/fixtureStore.ts)', 
         ['wanderer-staged-cutscene', (s: ReturnType<AppStore['getState']>) => selectPacedEventRoute(s) === '/cutscene'],
         ['apprentice-bw-rest', (s: ReturnType<AppStore['getState']>) => s.rest.session !== null],
         ['apprentice-bw-cache', (s: ReturnType<AppStore['getState']>) => s.cache.session !== null],
-        ['wanderer-bw-blacksmith', (s: ReturnType<AppStore['getState']>) => s.blacksmith.session !== null],
+        ['wanderer-bw-blacksmith', (s: ReturnType<AppStore['getState']>) => s.event.pending?.event.kind === 'village'],
         ['l30-bw-hazard-arrive', (s: ReturnType<AppStore['getState']>) => s.hazard.session !== null],
     ])('"%s": arrive lands the state its gate routes on', (id, landed) => {
         const h = createFixtureStore(id);

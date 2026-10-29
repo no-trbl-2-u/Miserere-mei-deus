@@ -102,6 +102,7 @@ const PACED_EXTRAS: readonly { id: string; label: string; event: unknown }[] = [
                     { itemId: 'minor-healing-potion', price: 12 },
                 ],
             },
+            anvil: { variants: [] },
         },
     },
     {

@@ -31,7 +31,6 @@ export type NodeType =
     | 'quest'
     | 'story'
     | 'hazard'
-    | 'blacksmith'
     | 'village'
     | 'door';
 
@@ -127,21 +126,28 @@ export interface ExplorationOption {
     /** Distance indicator for the step-card right column. */
     leagues: LeagueBucket;
     /** The player's shillings, for the node kinds that can charge them (rest,
-     *  the anvil, the village); null elsewhere. */
+     *  the village); null elsewhere. */
     purse: number | null;
-    /** The anvil's cheapest work in shillings (`ANVIL_VERB_PRICING.hone`);
-     *  null on every other kind. */
+    /** The Anvil counter's cheapest work in shillings (`ANVIL_VERB_PRICING.hone`),
+     *  on a village that has one; null on every other node. */
     cheapestWork: number | null;
 }
 
 /** The node kinds whose confirm panel shows the purse: the ones that can charge. */
-const PURSE_NODE_TYPES: ReadonlySet<NodeType> = new Set<NodeType>(['rest', 'blacksmith', 'village']);
+const PURSE_NODE_TYPES: ReadonlySet<NodeType> = new Set<NodeType>(['rest', 'village']);
 
-/** An option's purse fields for a node of `type`, given the player's shillings. */
-export function purseFieldsFor(type: NodeType, currency: number): Pick<ExplorationOption, 'purse' | 'cheapestWork'> {
+/**
+ * An option's purse fields for a node of `type`, given the player's shillings.
+ * `hasAnvil` is set on a village whose pool carries the Anvil counter.
+ */
+export function purseFieldsFor(
+    type: NodeType,
+    currency: number,
+    hasAnvil = false,
+): Pick<ExplorationOption, 'purse' | 'cheapestWork'> {
     return {
         purse: PURSE_NODE_TYPES.has(type) ? currency : null,
-        cheapestWork: type === 'blacksmith' ? ANVIL_VERB_PRICING.hone : null,
+        cheapestWork: type === 'village' && hasAnvil ? ANVIL_VERB_PRICING.hone : null,
     };
 }
 
@@ -242,7 +248,6 @@ export const ACTION_ICON_BY_TYPE: Record<NodeType, string> = {
     // The story kind (cutscene) wears the quill.
     story: 'quill',
     hazard: 'hazard',
-    blacksmith: 'anvil',
     village: 'village',
     // No door glyph exists yet; the scroll stands in until the art does.
     door: 'scroll',
@@ -258,7 +263,6 @@ const ACTION_TAG_BY_TYPE: Record<NodeType, string> = {
     quest: 'LORE',
     story: 'LORE',
     hazard: 'PERIL · BRAVE IT',
-    blacksmith: 'FORGE · DIE GEAR',
     village: 'HAVEN · TRADE',
     door: 'LEAVE · NEXT MAP',
 };
@@ -277,7 +281,6 @@ export const NODE_KIND_LABEL: Record<NodeType, string> = {
     waypoint: 'WAYPOINT',
     treasure: 'TREASURE',
     hazard: 'HAZARD',
-    blacksmith: 'THE ANVIL',
     village: 'VILLAGE',
     door: 'PATH ONWARD',
     current: 'HERE',
@@ -296,10 +299,9 @@ const KIND_TO_NODE_TYPE: Record<MapEventKind, NodeType> = {
     rest: 'rest',
     'loot-cache': 'treasure',
     hazard: 'hazard',
-    // Village and blacksmith wear their own woodcuts (huts and anvil).
+    // The village wears its own woodcut (huts).
     village: 'village',
     cutscene: 'story',
-    blacksmith: 'blacksmith',
     // Inter-map travel doors.
     travel: 'door',
     // The Labyrinth door (the Lantern Deep's vault door), a door like travel.
@@ -323,6 +325,14 @@ function engineNodeType(continent: string, mapName: string, nodeId: string): Nod
         return isBoss ? 'boss' : 'encounter';
     }
     return KIND_TO_NODE_TYPE[kind];
+}
+
+/** Whether the node's pool authors a village with the Anvil counter. */
+function nodeHasAnvil(continent: string, mapName: string, nodeId: string): boolean {
+    const pool = getNodeEventPool(continent, mapName, nodeId);
+    return pool?.entries.some(
+        (e) => e.kind === 'village' && (e.payload as { anvil?: unknown }).anvil !== undefined,
+    ) ?? false;
 }
 
 /**
@@ -367,6 +377,8 @@ interface ResolvedNodeMeta {
     label: string;
     description: string;
     type: NodeType;
+    /** True on a village whose pool carries the Anvil counter. */
+    anvil: boolean;
 }
 
 // Edges come from the ENGINE graph (`getMapDefinition().nodes[].connectedNodes`).
@@ -458,7 +470,7 @@ function buildOptions(
                 type: n.type,
                 description: n.description,
                 leagues: leaguesFromDistance(distance),
-                ...purseFieldsFor(n.type, currency),
+                ...purseFieldsFor(n.type, currency, n.anvil),
             };
         });
 }
@@ -661,6 +673,7 @@ function computeExplorationViewModel(state: GameStore): ExplorationViewModel {
             label: lay?.label ?? eng.id,
             description: lay?.description ?? '',
             type: engineNodeType(continent, mapName, eng.id),
+            anvil: nodeHasAnvil(continent, mapName, eng.id),
         });
     }
 

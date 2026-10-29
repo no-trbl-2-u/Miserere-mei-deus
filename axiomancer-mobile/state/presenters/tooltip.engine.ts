@@ -141,7 +141,7 @@ const QUEST_OBJECTIVE_CONTENT: Record<string, TooltipContent> = {
 
 // Map-node content. Keys match the NodeType variants emitted by the
 // exploration presenter (`encounter | treasure | boss | quest | rest |
-// waypoint | hazard | blacksmith | village | door | current`). Each entry: uppercased title + short
+// waypoint | hazard | village | door | current`). Each entry: uppercased title + short
 // description of what happens when the node is engaged.
 const MAP_NODE_CONTENT: Record<string, TooltipContent> = {
     encounter: {
@@ -184,14 +184,9 @@ const MAP_NODE_CONTENT: Record<string, TooltipContent> = {
         body: 'the ground itself turns against you. a short minigame — read the route, brave it, and you pass; falter and it costs vitae.',
         footnote: 'no combat · costs vitae',
     },
-    blacksmith: {
-        title: 'THE ANVIL',
-        body: 'a smith for your dice. pay to hone a face, temper a payload, or swap gear; the forge takes shillings and gives no refunds.',
-        footnote: 'no combat · costs shillings',
-    },
     village: {
         title: 'VILLAGE',
-        body: 'a haven of roofs and wares. trade, sell, and hear what the settled know; nothing here bites — yet.',
+        body: 'a haven of roofs and a forge. a smith for your dice (hone a face, temper a payload, swap gear, upgrade a card) for shillings; nothing here bites — yet.',
         footnote: 'no combat',
     },
     door: {

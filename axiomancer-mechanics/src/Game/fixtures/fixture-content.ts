@@ -67,6 +67,7 @@ export const FIXTURE_VILLAGE_EVENT: MapEventPayload = {
     villageName: 'Fixture Shop',
     merchants: [{ name: 'Fixture Shopkeeper', isShopkeeper: true }],
     shop: FIXTURE_SHOP,
+    anvil: {},
 };
 
 export const FIXTURE_CUTSCENE_EVENT: MapEventPayload = {

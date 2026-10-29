@@ -51,8 +51,6 @@ export function selectEventArtSlug(event: ResolvedEvent): EventArtSlug {
         case 'rest':
         case 'loot-cache':
         case 'hazard':
-        // 'blacksmith': its interceptor starts "The Anvil" die-gear session.
-        case 'blacksmith':
         // 'travel' resolves engine-side (the world has already crossed).
         case 'travel':
         // The Labyrinth door enters the Aporia straight from its interceptor.
@@ -76,9 +74,6 @@ const DEFAULT_BODY_BY_KIND: Record<ResolvedEvent['kind'], string> = {
     cutscene: '',
     hazard: 'The air turns.',
     'loot-cache': 'Forgotten goods.',
-    // 'blacksmith' launches "The Anvil" die-gear session via its interceptor;
-    // never renders in the modal, but the exhaustive record needs the entry.
-    blacksmith: 'An anvil, and a waiting hammer.',
     // Travel doors resolve engine-side. Exhaustive record needs the entry.
     travel: 'The road goes on. So do you.',
     // The Labyrinth door never renders in the modal (its

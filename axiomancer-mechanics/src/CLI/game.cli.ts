@@ -448,12 +448,12 @@ function describeResolvedEvent(event: ResolvedEvent): string {
         case 'village': {
             const wareCount = event.shop?.wares.length ?? 0;
             const shopSuffix = wareCount > 0 ? ` — ${wareCount} ware${wareCount === 1 ? '' : 's'} for sale` : '';
-            return `Village: ${event.villageName} (${event.merchants.length} merchant${event.merchants.length === 1 ? '' : 's'})${shopSuffix}.`;
+            const anvilSuffix = event.anvil ? ' — the Anvil is here' : '';
+            return `Village: ${event.villageName} (${event.merchants.length} merchant${event.merchants.length === 1 ? '' : 's'})${shopSuffix}${anvilSuffix}.`;
         }
         case 'cutscene':    return event.lines.join(' ');
         case 'hazard':      return `Hazard! (-${event.damage} HP${event.effects.length > 0 ? `, ${event.effects.length} effect${event.effects.length === 1 ? '' : 's'}` : ''})`;
         case 'loot-cache':  return `Loot cache: ${event.items.length} item${event.items.length === 1 ? '' : 's'}, ${event.currency} currency.`;
-        case 'blacksmith':  return `The anvil (budget ${event.budget}${event.variants.length > 0 ? `, ${event.variants.length} variant${event.variants.length === 1 ? '' : 's'} on offer` : ''}).`;
         case 'travel':      return `${event.description ?? 'You walk on.'} (→ ${event.destinationContinent} / ${event.destinationMap})`;
         case 'labyrinth':   return `${event.description ?? 'A door into the Aporia.'} (the Aporia, ${event.act}: run \`npm run labyrinth\` to walk it)`;
         case 'quest':       return `${event.description ?? 'A quest giver waits.'} (questline ${event.questline}, node ${event.node}: ${event.stage})`;

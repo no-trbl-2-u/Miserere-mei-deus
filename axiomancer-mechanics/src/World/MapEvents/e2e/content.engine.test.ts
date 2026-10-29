@@ -64,7 +64,7 @@ describe('every MapEventKind is covered', () => {
         }
         const required = [
             'encounter', 'none', 'rest', 'cutscene', 'hazard',
-            'loot-cache', 'blacksmith', 'travel',
+            'loot-cache', 'village', 'travel',
         ];
         for (const k of required) {
             expect(kinds, `Act 1 should fire ${k} at least once`).toContain(k);

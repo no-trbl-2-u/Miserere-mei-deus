@@ -592,10 +592,6 @@ function composeNarrative(resolved: ResolvedEvent): Omit<EventViewModel, 'prelud
         case 'loot-cache':
         case 'hazard':
         case 'encounter':
-        // 'blacksmith': its interceptor starts "The Anvil" die-gear
-        // session. It never reaches composeNarrative; falls to the empty
-        // VM defensively like the other minigame kinds.
-        case 'blacksmith':
         // 'travel' is engine-resolved (the world has already crossed when
         // the event surfaces) and composes no card. Falls to the empty VM
         // defensively.

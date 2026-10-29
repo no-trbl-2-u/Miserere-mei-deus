@@ -14,12 +14,14 @@
  */
 
 import {
+    ANVIL_VERB_PRICING,
     consumableLibrary,
     defaultSellPrice,
     getRelicById,
     getSignatureSkill,
     isConsumable,
     isEquipment,
+    type BlacksmithVariantOffer,
     type Item,
     type ShopWare,
 } from '@mechanics';
@@ -67,6 +69,16 @@ export interface VillageVM {
     wares: readonly VillageWareVM[];
     sellables: readonly VillageSellableVM[];
     currency: number;
+    /** The Anvil counter, when this village has a smith; null otherwise. */
+    anvil: VillageAnvilVM | null;
+}
+
+/** The village's Anvil counter: what the button names and what opening it seeds. */
+export interface VillageAnvilVM {
+    /** Variant gear on offer at the anvil (swap targets), handed to the session. */
+    variants: readonly BlacksmithVariantOffer[];
+    /** The smith's cheapest work in shillings (`ANVIL_VERB_PRICING.hone`). */
+    cheapestWork: number;
 }
 
 const EMPTY_VM: VillageVM = Object.freeze({
@@ -78,6 +90,7 @@ const EMPTY_VM: VillageVM = Object.freeze({
     wares: Object.freeze([]),
     sellables: Object.freeze([]),
     currency: 0,
+    anvil: null,
 });
 
 /**
@@ -235,14 +248,18 @@ export function selectVillageVM(
     return {
         active: true,
         villageName: event.villageName,
-        body:
-            'Roofs and smoke and the particular noise of people who all know ' +
-            'each other. Shillings are welcome. Strangers are tolerated, provided ' +
-            'they become customers promptly.',
+        body: event.description && event.description.length > 0
+            ? event.description
+            : 'Roofs and smoke and the particular noise of people who all know ' +
+              'each other. Shillings are welcome. Strangers are tolerated, provided ' +
+              'they become customers promptly.',
         merchants,
         hasShop: event.shop !== undefined,
         wares,
         sellables,
         currency,
+        anvil: event.anvil
+            ? { variants: event.anvil.variants ?? [], cheapestWork: ANVIL_VERB_PRICING.hone }
+            : null,
     };
 }

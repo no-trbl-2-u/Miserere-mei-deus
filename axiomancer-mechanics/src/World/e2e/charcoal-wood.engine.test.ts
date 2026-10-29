@@ -74,12 +74,12 @@ describe('the Charcoal Wood\'s events (D29)', () => {
         const tally: Record<string, number> = {};
         for (const k of Object.values(kinds)) tally[k] = (tally[k] ?? 0) + 1;
         expect(tally).toEqual({
-            encounter: 7, rest: 3, 'loot-cache': 3, none: 3, hazard: 1, blacksmith: 1, cutscene: 1, travel: 1,
+            encounter: 7, rest: 3, 'loot-cache': 3, none: 3, hazard: 1, village: 1, cutscene: 1, travel: 1,
         });
     });
 
     it('keeps its Anvil at the well, cw-18 (D61, R3b)', () => {
-        expect(kinds['cw-18']).toBe('blacksmith');
+        expect(kinds['cw-18']).toBe('village');
     });
 
     it('opens on the arrival over the river bridge', () => {

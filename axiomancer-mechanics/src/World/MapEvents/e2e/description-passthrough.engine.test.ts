@@ -21,9 +21,9 @@ import {
 import { mockSequentialRng, restoreOriginalRng } from '../../../test-utils/rng';
 import { createStartingWorld } from '../../index';
 import { createNewGameState } from '../../../Game/game.reducer';
-import { resolveBlacksmith } from '../handlers';
+import { resolveVillage } from '../handlers';
 import type { GameState } from '../../../Game/types';
-import type { MapEventPool, BlacksmithPayload } from '../types';
+import type { MapEventPool, VillagePayload } from '../types';
 
 function freshState(): GameState {
     return { ...createNewGameState(), world: createStartingWorld() };
@@ -141,15 +141,16 @@ describe('resolveMapEvent — description passthrough', () => {
 });
 
 describe('MapEvents description passthrough — direct handler coverage', () => {
-    it('carries the authored description onto a blacksmith event', () => {
-        const payload: BlacksmithPayload = {
-            kind: 'blacksmith',
-            budget: 12,
+    it('carries the authored description onto an anvil village event', () => {
+        const payload: VillagePayload = {
+            kind: 'village',
+            villageName: 'Smithy',
+            anvil: {},
             description: 'An anvil, still warm.',
         };
-        const result = resolveBlacksmith(createNewGameState(), payload);
-        expect(result.event.kind).toBe('blacksmith');
-        if (result.event.kind === 'blacksmith') {
+        const result = resolveVillage(createNewGameState(), payload);
+        expect(result.event.kind).toBe('village');
+        if (result.event.kind === 'village') {
             expect(result.event.description).toBe('An anvil, still warm.');
         }
     });

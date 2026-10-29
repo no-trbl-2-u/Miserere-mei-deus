@@ -29,7 +29,7 @@ const CONTINENT_OF: Record<string, ContinentName> = {
 /** Every kind `MapEventKind` holds. The `Record` fails to compile if one is added or removed. */
 const KEPT: Record<MapEventKind, true> = {
     'encounter': true, 'rest': true, 'village': true, 'cutscene': true, 'hazard': true,
-    'loot-cache': true, 'blacksmith': true, 'travel': true, 'labyrinth': true, 'quest': true,
+    'loot-cache': true, 'travel': true, 'labyrinth': true, 'quest': true,
 };
 
 function standingOn(map: string, nodeId: string): GameState {
@@ -39,9 +39,9 @@ function standingOn(map: string, nodeId: string): GameState {
 }
 
 describe('the overworld node kinds (A1)', () => {
-    it('are the ten kept kinds: no gathering, interaction or narration', () => {
+    it('are the nine kept kinds: no gathering, interaction, narration or blacksmith', () => {
         const kinds = Object.keys(KEPT);
-        expect(kinds).toHaveLength(10);
+        expect(kinds).toHaveLength(9);
         for (const removed of ['gathering', 'interaction', 'narration']) expect(kinds).not.toContain(removed);
     });
 
