@@ -44,13 +44,19 @@ Undertale.
 
 ### Shipped — the Act 1 core
 
-- **Combat:** the grey deck (three cards), four dice rolled once per threat
-  phase, Conviction, one signature (The Open Hand), three foes (Float-Eye,
-  Green Jelly, the Death Beholder).
+- **Cards:** the grey office (three cards, the ten-card starting deck) and
+  three 30-card trial sets, each its own reward lane: Blood Price, the
+  Elementalist and the Defender. A won fight offers cards from the lanes the
+  character starts with and the lane of each worn relic.
+- **Combat:** four dice rolled once per threat phase, Conviction, and ten
+  signatures, one per relic (The Open Hand and three per lane); a character
+  wears up to three relics. Three foes (Float-Eye, Green Jelly, the Death
+  Beholder).
 - **World:** Act 1, four regions (Breakwater, Charcoal Wood, Beacon
-  Crags, the Lantern Deep), each closed by a Death Beholder's door. Rest, the
-  Anvil, hazards, caches and gathering nodes. Shillings are the one
-  currency; healing potions the one item kind.
+  Crags, the Lantern Deep), each closed by a Death Beholder's door. Rest,
+  villages with the Anvil, hazards, caches, cutscenes and the Breakwater
+  questline. Shillings are the one currency; healing potions the one item
+  kind.
 - **Progression:** levels and body/mind/heart stats; stats scale each
   card's family; dice grow only at the Anvil.
 - **The app** (`axiomancer-mobile`): an expo-router shell with a tabbed

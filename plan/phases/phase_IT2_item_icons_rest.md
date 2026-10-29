@@ -74,13 +74,14 @@ library item takes the fallback), `components/inventory/` contains no `<Svg`, an
 
 ## T's picks
 
-Filled in IT2a's sitting. One row per slot.
+Filled in IT2a's sitting. One row per slot. The three potions were picked on 2026-10-29 and applied at once, ahead
+of the rest, on T's word ("Might as well start tackling those potion icons now"); IT2b applies the remaining rows.
 
 | Slot | Item id or glyph | Icon (author/icon) | Accents (T's words) |
 |---|---|---|---|
-| Potion | `healing-potion` | | |
-| Potion | `minor-healing-potion` | | |
-| Potion | `greater-healing-potion` | | |
+| Potion | `healing-potion` | `delapouite/health-potion` (A) | red liquid (T, 2026-10-29) |
+| Potion | `minor-healing-potion` | `sbed/vial` (A) | red liquid (T, 2026-10-29) |
+| Potion | `greater-healing-potion` | `lorc/perfume-bottle` (D) | red liquid (T, 2026-10-29) |
 | Relic | `relic-disarming-plea` (Suppliant's Ring) | | |
 | Relic | `relic-thornback-signet` | | |
 | Relic | `relic-mirror-brooch` | | |

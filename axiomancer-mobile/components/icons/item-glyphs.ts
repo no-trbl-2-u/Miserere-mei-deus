@@ -14,7 +14,8 @@
  *   `ItemGlyph` then draws today's category glyph.
  *
  * Which icon an item wears is an art call made by the owner (IT1b, T's
- * picks of 2026-10-27); an id with no row draws its category glyph.
+ * picks of 2026-10-27; IT2, the potions, 2026-10-29); an id with no row
+ * draws its category glyph.
  * `ITEM_GLYPH_ACCENTS` adds T's colour accents to a row's icon.
  */
 
@@ -29,6 +30,9 @@ export const ITEM_GLYPH_BY_ID = {
     'relic-elementalist-signet': 'relic-bolt-eye',
     'relic-elementalist-brooch': 'relic-gem-pendant',
     'relic-elementalist-belt': 'relic-frostfire',
+    'healing-potion': 'potion-heart-flask',
+    'minor-healing-potion': 'potion-vial',
+    'greater-healing-potion': 'potion-perfume-bottle',
 } as const satisfies ItemGlyphTable;
 
 export type ItemGlyphAccentTable = Readonly<Record<string, readonly IconAccent[]>>;
@@ -36,7 +40,8 @@ export type ItemGlyphAccentTable = Readonly<Record<string, readonly IconAccent[]
 /**
  * Colour accents per item id, in the icon's own 512-unit space. Blood
  * Price wears the theme's blood; the Elementalist wears the weather hues
- * its signatures move between. Clip shapes were fitted to each icon's
+ * its signatures move between; the healing potions' liquid is blood red
+ * (T, 2026-10-29: "Red liquid on all three"). Clip shapes were fitted to each icon's
  * geometry by eye at 28pt and at 3x.
  */
 export const ITEM_GLYPH_ACCENTS = {
@@ -82,6 +87,14 @@ export const ITEM_GLYPH_ACCENTS = {
             ],
         },
     ],
+    // The heart inside the flask.
+    'healing-potion': [
+        { hue: 'blood', clip: [{ kind: 'polygon', points: [[118, 196], [420, 196], [420, 330], [264, 445], [118, 330]] }] },
+    ],
+    // The tube below the glass window, bubbles and all.
+    'minor-healing-potion': [{ hue: 'blood', clip: [{ kind: 'rect', x: 0, y: 248, w: 512, h: 264 }] }],
+    // The bottle's belly, below the collar.
+    'greater-healing-potion': [{ hue: 'blood', clip: [{ kind: 'ellipse', cx: 256, cy: 322, rx: 168, ry: 80 }] }],
 } as const satisfies ItemGlyphAccentTable;
 
 /**

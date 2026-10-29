@@ -116,6 +116,9 @@ const ICON_LABELS: Record<GameIconName, string> = {
     'relic-bolt-eye': 'Eye with a lightning bolt',
     'relic-gem-pendant': 'Gem pendant on a chain',
     'relic-frostfire': 'Fire and frost',
+    'potion-heart-flask': 'Flask with a heart',
+    'potion-vial': 'Slim vial',
+    'potion-perfume-bottle': 'Stoppered crystal bottle',
 };
 
 function buildSpecs(): Record<GameIconName, AxmIconSpec> {

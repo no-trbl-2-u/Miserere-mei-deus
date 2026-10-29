@@ -78,6 +78,9 @@ const MANIFEST = {
     'relic-bolt-eye': 'lorc/bolt-eye',
     'relic-gem-pendant': 'lorc/gem-pendant',
     'relic-frostfire': 'lorc/frostfire',
+    'potion-heart-flask': 'delapouite/health-potion',
+    'potion-vial': 'sbed/vial',
+    'potion-perfume-bottle': 'lorc/perfume-bottle',
 };
 
 const rows = Object.entries(MANIFEST).map(([name, source]) => {
