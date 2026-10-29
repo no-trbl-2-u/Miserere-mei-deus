@@ -4,14 +4,12 @@ import Animated, { useSharedValue, useAnimatedStyle, withRepeat, withSequence, w
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { NodeMark } from '@/components/NodeMark';
-import { ActionIcon } from '@/components/ActionIcon';
 import { useTooltip } from '@/hooks/useTooltip';
 import { MapCameraContext, MapSheetContext } from './mapSheetContext';
+import { KindToken } from './KindToken';
 import {
-    ACTION_ICON_BY_TYPE,
     NODE_KIND_LABEL,
     type ExplorationNode as ExplorationNodeType,
-    type NodeType,
 } from '@/state/presenters/exploration.engine';
 
 interface ExplorationNodeProps {
@@ -58,24 +56,10 @@ const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 export function ExplorationNode({ node: n, onNodePress, isSelected }: ExplorationNodeProps) {
     const styles = useStyles();
     const AXM = usePalette();
-    const EVENT_COLOR: Record<NodeType, string> = {
-        encounter: AXM.blood,
-        treasure: AXM.sulfur,
-        boss: AXM.blood,
-        quest: AXM.sulfur,
-        story: AXM.bone,
-        rest: AXM.rust,
-        waypoint: AXM.bone,
-        current: AXM.sulfur,
-        hazard: AXM.rust,
-        village: AXM.sulfur,
-        door: AXM.sulfur,
-    };
     const tooltip = useTooltip();
     const sheet = useContext(MapSheetContext);
     const camera = useContext(MapCameraContext);
     const ref = useRef<View | null>(null);
-    const color = EVENT_COLOR[n.type] ?? EVENT_COLOR.encounter;
 
     // Pulse glow for available (tappable) nodes so new players see they're interactive.
     const pulseOpacity = useSharedValue(1);
@@ -97,17 +81,17 @@ export function ExplorationNode({ node: n, onNodePress, isSelected }: Exploratio
     const counterScale = useAnimatedStyle(() => ({
         transform: [{ scale: camera ? nodeCounterScale(camera.value) : 1 }], // worklet-safe: nodeCounterScale is a worklet
     }));
-    const iconKey = ACTION_ICON_BY_TYPE[n.type] ?? 'sword';
     const left = (n.x / sheet.width) * 100;
     const top = (n.y / sheet.height) * 100;
-    // Adjacent (reachable) nodes show a kind glyph so the player can see what
-    // each one is before choosing it.
-    const showKindIcon = n.kind === 'available' || n.kind === 'current';
-    // THE ROAD BACK (phase WR1b): a walked node a road away keeps its trodden
+    // The kind token (the presenter's `showKind`: the node underfoot, the
+    // offered moves, the nodes a road from them, and every quest node) sits
+    // inside the state mark, so the player reads what a node is before
+    // choosing it and the state still shows round it.
+    // THE ROAD BACK: a walked node a road away keeps its trodden
     // mark inside a dark halo with a dashed ring, so it reads as walkable
     // without reading as new (no pulse, no lamp). The ring is parchment for a
     // quiet walk back and sulfur for one whose event acts again (a village, a door, a quest node
-    // with business), which also shows its kind glyph.
+    // with business).
     const roadBack = n.kind === 'completed' && n.walkable === true;
     const actsAgain = roadBack && n.actsAgain === true;
 
@@ -152,10 +136,8 @@ export function ExplorationNode({ node: n, onNodePress, isSelected }: Exploratio
                 ]}
             >
                 <NodeMark kind={n.kind} size={NODE_SIZE} />
-                {(showKindIcon || actsAgain) && (
-                    <View style={styles.kindIcon} pointerEvents="none">
-                        <ActionIcon kind={iconKey} size={18} color={color} />
-                    </View>
+                {n.showKind === true && (
+                    <KindToken type={n.type} state={n.kind} size={NODE_SIZE} testID={`node-${n.id}-kind`} />
                 )}
             </Animated.View>
             {isSelected && (
@@ -193,11 +175,6 @@ const useStyles = makeStyles((AXM) => ({
     roadBack: {
         borderWidth: 3,
         borderStyle: 'dashed',
-    },
-    kindIcon: {
-        ...({ position: 'absolute' } as const),
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     nodeLabel: {
         marginTop: 2,

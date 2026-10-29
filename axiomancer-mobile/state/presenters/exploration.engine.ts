@@ -10,7 +10,7 @@
  */
 
 import type { GameStore, MapEventKind } from '@mechanics';
-import { getMapDefinition, getNodePrimaryEventKind, getNodeEventPool, legalMovesFrom, forwardEdges, actsOnRevisit, ANVIL_VERB_PRICING } from '@mechanics';
+import { getMapDefinition, getNodePrimaryEventKind, getNodeEventPool, legalMovesFrom, forwardEdges, actsOnRevisit, ANVIL_VERB_PRICING, isEliteNode } from '@mechanics';
 
 import { readCurrentNodeId } from '../actions';
 import { getMapLayout } from '@/state/exploration-maps';
@@ -26,13 +26,15 @@ export type NodeType =
     | 'waypoint'
     | 'current'
     | 'encounter'
+    | 'elite'
     | 'treasure'
     | 'boss'
     | 'quest'
     | 'story'
     | 'hazard'
     | 'village'
-    | 'door';
+    | 'door'
+    | 'start';
 
 export interface ExplorationNode {
     /** Stable engine node ID. */
@@ -73,6 +75,14 @@ export interface ExplorationNode {
      * the registered questlines; null when no questline names the road.
      */
     blockedBy?: string | null;
+    /**
+     * True when the node wears its kind token (the coloured disc with its
+     * kind's glyph): it is the node underfoot, an offered move (a new legal
+     * move, or a walked one that acts again), one road from an offered move,
+     * or a quest node. Every other node shows only its state mark. Absent
+     * reads as false.
+     */
+    showKind?: boolean;
 }
 
 export interface ExplorationEdge {
@@ -247,6 +257,9 @@ export const ACTION_ICON_BY_TYPE: Record<NodeType, string> = {
     waypoint: 'flee',
     current: 'eye',
     encounter: 'sword',
+    // An elite foe wears the horned helm, the map's start the windmill.
+    elite: 'elite',
+    start: 'start',
     // Treasure reads as a chest, not a scroll (the scroll is the
     // quest/document mark), and a boss node wears the crowned skull rather
     // than the plain crown (the crown is the SELF mark).
@@ -257,8 +270,8 @@ export const ACTION_ICON_BY_TYPE: Record<NodeType, string> = {
     story: 'quill',
     hazard: 'hazard',
     village: 'village',
-    // No door glyph exists yet; the scroll stands in until the art does.
-    door: 'scroll',
+    // A door to another map, or across this one, is the exit door.
+    door: 'door',
 };
 
 const ACTION_TAG_BY_TYPE: Record<NodeType, string> = {
@@ -266,6 +279,8 @@ const ACTION_TAG_BY_TYPE: Record<NodeType, string> = {
     waypoint: 'WAYPOINT · PASS ON',
     current: 'YOU ARE HERE',
     encounter: 'TRAVEL · 1 TURN',
+    elite: 'TRAVEL · ELITE',
+    start: 'WHERE THE ROAD BEGAN',
     treasure: 'CARD · MIND',
     boss: 'TRAVEL · BOSS',
     quest: 'LORE',
@@ -283,6 +298,8 @@ const ACTION_TAG_BY_TYPE: Record<NodeType, string> = {
 export const NODE_KIND_LABEL: Record<NodeType, string> = {
     encounter: 'BATTLE',
     boss: 'BOSS · BATTLE',
+    elite: 'ELITE · BATTLE',
+    start: 'START',
     quest: 'QUEST',
     story: 'STORY',
     rest: 'REST',
@@ -294,7 +311,7 @@ export const NODE_KIND_LABEL: Record<NodeType, string> = {
     current: 'HERE',
 };
 
-const ENCOUNTER_NODE_TYPES = new Set<NodeType>(['encounter', 'boss']);
+const ENCOUNTER_NODE_TYPES = new Set<NodeType>(['encounter', 'elite', 'boss']);
 
 // Maps the engine's authored MapEvent kind to a display NodeType (icon).
 // The engine owns which kind fires at each node; mobile only chooses the
@@ -320,8 +337,14 @@ const KIND_TO_NODE_TYPE: Record<MapEventKind, NodeType> = {
     quest: 'quest',
 };
 
-/** Node display type, sourced from the engine's authored event pools. */
-function engineNodeType(continent: string, mapName: string, nodeId: string): NodeType {
+/**
+ * Node display type, sourced from the engine's authored event pools. The
+ * map's starting node is `start` whatever its pool; an encounter is `boss`
+ * when its pool is a boss fight and `elite` when the engine's `isEliteNode`
+ * says it stages an elite foe.
+ */
+export function engineNodeType(continent: string, mapName: string, nodeId: string, startNodeId: string): NodeType {
+    if (nodeId === startNodeId) return 'start';
     const kind = getNodePrimaryEventKind(continent, mapName, nodeId);
     // No pool: the empty waypoint, its own look, never drawn as a fight.
     if (!kind) return 'waypoint';
@@ -330,9 +353,35 @@ function engineNodeType(continent: string, mapName: string, nodeId: string): Nod
         const isBoss = pool?.entries.some(
             (e) => e.kind === 'encounter' && (e.payload as { isBoss?: boolean }).isBoss === true,
         );
-        return isBoss ? 'boss' : 'encounter';
+        if (isBoss) return 'boss';
+        return isEliteNode(continent, mapName, nodeId) ? 'elite' : 'encounter';
     }
     return KIND_TO_NODE_TYPE[kind];
+}
+
+/**
+ * Which nodes wear their kind token. A node does when it is the node
+ * underfoot, an offered move (`offered`: a new legal move, or a walked one
+ * whose event acts again), one road from an offered move, or a quest node.
+ */
+export function kindTokenNodes(
+    nodes: readonly { id: string; type: NodeType }[],
+    currentNodeId: string,
+    offered: ReadonlySet<string>,
+    neighboursOf: (id: string) => readonly string[],
+): Set<string> {
+    const shown = new Set<string>();
+    for (const n of nodes) {
+        if (
+            n.id === currentNodeId
+            || n.type === 'quest'
+            || offered.has(n.id)
+            || neighboursOf(n.id).some((m) => offered.has(m))
+        ) {
+            shown.add(n.id);
+        }
+    }
+    return shown;
 }
 
 /** Whether the node's pool authors a village with the Anvil counter. */
@@ -690,7 +739,7 @@ function computeExplorationViewModel(state: GameStore): ExplorationViewModel {
             y: lay?.y ?? layout.sheet.height / 2,
             label: lay?.label ?? eng.id,
             description: lay?.description ?? '',
-            type: engineNodeType(continent, mapName, eng.id),
+            type: engineNodeType(continent, mapName, eng.id, def.startingNode.id),
             anvil: nodeHasAnvil(continent, mapName, eng.id),
         });
     }
@@ -706,6 +755,13 @@ function computeExplorationViewModel(state: GameStore): ExplorationViewModel {
         ...(def.nodes.find((n) => n.id === id)?.connectedNodes ?? []),
         ...def.nodes.filter((n) => n.connectedNodes.includes(id)).map((n) => n.id),
     ];
+
+    const kindShown = kindTokenNodes(
+        def.nodes.map((n) => ({ id: n.id, type: metaById.get(n.id)!.type })),
+        currentNodeId,
+        new Set(reachable),
+        neighboursOf,
+    );
 
     const nodes: ExplorationNode[] = def.nodes.map((eng) => {
         const meta = metaById.get(eng.id)!;
@@ -728,6 +784,7 @@ function computeExplorationViewModel(state: GameStore): ExplorationViewModel {
             walkable: legal.includes(eng.id),
             actsAgain: actsAgain.has(eng.id),
             blockedBy: heldBy,
+            showKind: kindShown.has(eng.id),
         };
     });
 
