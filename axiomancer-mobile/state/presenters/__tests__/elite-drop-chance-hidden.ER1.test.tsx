@@ -119,9 +119,9 @@ describe('the elite drop chance is never shown (A12)', () => {
         const fought = createStartingWorld('breakwater');
         const missed: WorldState = {
             ...fought,
-            currentMap: { ...fought.currentMap, consumedNodes: [...fought.currentMap.consumedNodes, 'bw-8'] },
+            currentMap: { ...fought.currentMap, consumedNodes: [...fought.currentMap.consumedNodes, 'bw-w5'] },
         };
-        const dropped = retireEliteNode(missed, 'bw-8');
+        const dropped = retireEliteNode(missed, 'bw-w5');
         const afterMiss = restScreenText(missed);
         expect(afterMiss).toContain('is back at');
         expect(offending(afterMiss)).toBeUndefined();

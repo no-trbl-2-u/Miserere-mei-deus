@@ -8,7 +8,7 @@
  * Two halves make it reachable and this file pins both: a map's start node is
  * authored as an arrival CUTSCENE (a kind that is safe to fire the moment
  * the map opens, unlike a fight nobody has had a chance to prepare for) —
- * the Breakwater's bw-1 today — and `ExplorationScreen` resolves the start
+ * the Breakwater's bw-w1 today — and `ExplorationScreen` resolves the start
  * node once on entry.
  *
  * Hermetic = self-contained + deterministic + isolated. See `docs/testing.md`.
@@ -83,11 +83,11 @@ describe('start-node arrival: the map resolves the node it puts you on', () => {
         const store = makeStore();
         const vm = selectExplorationViewModel(store.getState());
 
-        expect(vm.currentNodeId).toBe('bw-1');
+        expect(vm.currentNodeId).toBe('bw-w1');
         expect(vm.startNodePending).toBe(true);
     });
 
-    it('resolves bw-1 into a live cutscene event when the map screen mounts', () => {
+    it('resolves bw-w1 into a live cutscene event when the map screen mounts', () => {
         const store = makeStore();
         mountExploration(store);
 
@@ -100,7 +100,7 @@ describe('start-node arrival: the map resolves the node it puts you on', () => {
         const store = makeStore();
         mountExploration(store);
 
-        expect(store.getState().world.currentMap.consumedNodes).toContain('bw-1');
+        expect(store.getState().world.currentMap.consumedNodes).toContain('bw-w1');
         expect(selectExplorationViewModel(store.getState()).startNodePending).toBe(false);
     });
 
@@ -119,7 +119,7 @@ describe('start-node arrival: the map resolves the node it puts you on', () => {
 
         // The cache session is untouched and no cutscene was armed.
         expect(store.getState().event?.pending ?? null).toBeNull();
-        expect(store.getState().world.currentMap.consumedNodes).not.toContain('bw-1');
+        expect(store.getState().world.currentMap.consumedNodes).not.toContain('bw-w1');
         expect(selectHasAnyActiveSession(store.getState())).toBe(true);
     });
 
@@ -143,7 +143,7 @@ describe('start-node arrival: the map resolves the node it puts you on', () => {
         act(() => { jest.advanceTimersByTime(1); });
 
         expect(store.getState().event?.pending ?? null).toBeNull();
-        expect(store.getState().world.currentMap.consumedNodes).not.toContain('bw-1');
+        expect(store.getState().world.currentMap.consumedNodes).not.toContain('bw-w1');
     });
 
     it('does not fire again on a re-mount of the same map', () => {
@@ -172,15 +172,15 @@ describe('start-node arrival: the map resolves the node it puts you on', () => {
 describe('an arrival the player never answered survives a reload', () => {
     it('engages the encounter when the map screen remounts on the saved node', () => {
         const adapter = createMemoryAdapter();
-        const store = createAppStore({ adapter, overrides: { world: settledBreakwater('bw-20') } });
+        const store = createAppStore({ adapter, overrides: { world: settledBreakwater() } });
         const actions = createAppActions(store);
-        actions.moveTo('bw-2'); // engine kind `encounter`
+        actions.moveTo('bw-w2'); // engine kind `encounter`
 
         // The player reloads before answering the prelude: rebuild the app
         // from the bytes the move checkpointed.
         const reloaded = createAppStore({ adapter });
-        expect(reloaded.getState().world.currentMap.currentNode).toBe('bw-2');
-        expect(reloaded.getState().world.currentMap.consumedNodes).not.toContain('bw-2');
+        expect(reloaded.getState().world.currentMap.currentNode).toBe('bw-w2');
+        expect(reloaded.getState().world.currentMap.consumedNodes).not.toContain('bw-w2');
 
         const tree = mountExploration(reloaded);
 
@@ -191,8 +191,8 @@ describe('an arrival the player never answered survives a reload', () => {
         // `beginHazardEncounter` clears the event slice on the way in, so
         // `pending` is null by the time this line runs — before AND after the
         // fix. The sibling start-node case can assert `pending` only because
-        // bw-1 is a CUTSCENE, which has no engage.
-        expect(reloaded.getState().world.currentMap.consumedNodes).not.toContain('bw-2');
+        // bw-w1 is a CUTSCENE, which has no engage.
+        expect(reloaded.getState().world.currentMap.consumedNodes).not.toContain('bw-w2');
         expect(reloaded.getState().currentEncounter).toBeDefined();
         // The map never hosts the fight: it stays on screen under the route.
         expect(tree.queryByTestId('map-canvas-wrapper')).not.toBeNull();
@@ -212,10 +212,10 @@ describe('an arrival the player never answered survives a reload', () => {
 describe('a save taken mid-fight survives a reload', () => {
     it('re-offers the fight, with the onward nodes still shut', () => {
         const adapter = createMemoryAdapter();
-        const store = createAppStore({ adapter, overrides: { world: settledBreakwater('bw-22') } });
+        const store = createAppStore({ adapter, overrides: { world: settledBreakwater('bw-w4') } });
         const actions = createAppActions(store);
-        // The watchtower: the door fight, whose way on is the bridge.
-        actions.moveTo('bw-17'); // engine kind `encounter`
+        // The keep causeway's elite, which holds the road on to the keep gate.
+        actions.moveTo('bw-w5'); // engine kind `encounter`
         mountExploration(store).unmount();
         // The gate engaged: the fight is under way.
         expect(store.getState().currentEncounter).toBeDefined();
@@ -225,10 +225,10 @@ describe('a save taken mid-fight survives a reload', () => {
         const reloaded = createAppStore({ adapter });
         const map = reloaded.getState().world.currentMap;
         expect(reloaded.getState().currentEncounter).toBeUndefined();
-        expect(map.currentNode).toBe('bw-17');
-        expect(map.pendingArrival).toBe('bw-17');
-        // The watchtower's way on (the bridge) is not open: the fight is still owed.
-        for (const onward of ['bw-18']) {
+        expect(map.currentNode).toBe('bw-w5');
+        expect(map.pendingArrival).toBe('bw-w5');
+        // The elite's way on (the keep gate) is not open: the fight is still owed.
+        for (const onward of ['bw-k1']) {
             expect(map.availableNodes).not.toContain(onward);
         }
 
@@ -238,9 +238,9 @@ describe('a save taken mid-fight survives a reload', () => {
     });
 
     it('a fight walked away from leaves its node unspent, and tapping it tries it again', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: settledBreakwater('bw-20') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: settledBreakwater() } });
         const actions = createAppActions(store);
-        actions.moveTo('bw-2');
+        actions.moveTo('bw-w2');
         mountExploration(store).unmount();
 
         actions.fleeEncounter();
@@ -250,11 +250,11 @@ describe('a save taken mid-fight survives a reload', () => {
         // A flee answers the arrival and spends nothing: the node is not
         // consumed or completed, so the exploration screen does not re-fire the
         // fight, and the map reads it as unspent.
-        expect(map.consumedNodes ?? []).not.toContain('bw-2');
-        expect(map.completedNodes).not.toContain('bw-2');
-        expect(map.currentNode).toBe('bw-2');
+        expect(map.consumedNodes ?? []).not.toContain('bw-w2');
+        expect(map.completedNodes).not.toContain('bw-w2');
+        expect(map.currentNode).toBe('bw-w2');
         // Standing on it, the player may try it again: the arrival is owed afresh.
-        expect(actions.moveTo('bw-2').moved).toBe(true);
-        expect(store.getState().world.currentMap.pendingArrival).toBe('bw-2');
+        expect(actions.moveTo('bw-w2').moved).toBe(true);
+        expect(store.getState().world.currentMap.pendingArrival).toBe('bw-w2');
     });
 });

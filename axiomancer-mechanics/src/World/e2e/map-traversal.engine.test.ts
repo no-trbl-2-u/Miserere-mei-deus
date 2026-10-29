@@ -13,9 +13,10 @@ import { describe, expect, it } from 'vitest';
 
 import { MAP_REGISTRY } from '../map.registry';
 import { auditMapTraversal } from '../world.reducer';
-import { auditRoadReachability } from '../road-reachability';
+import { auditRoadReachability, mapPassages } from '../road-reachability';
 import { listQuestlines } from '../questline';
 import '../quest.library';
+import '../MapEvents/content';
 import type { MapDefinition } from '../types';
 import type { MapTraversalAudit } from '../world.reducer';
 
@@ -23,6 +24,20 @@ import type { MapTraversalAudit } from '../world.reducer';
 const GAUNTLET_MAPS: MapDefinition[] = Object.values(MAP_REGISTRY)
     .flatMap(maps => Object.values(maps))
     .filter((def): def is MapDefinition => def !== undefined && def.traversal !== 'labyrinth');
+
+/**
+ * Maps drawn as a tree of places rather than a gauntlet of columns: the
+ * Breakwater, T's Chapter 1 map (`plan/revamp/breakwater-vision.md`). Its
+ * roads branch from the windmill to dead ends that are destinations (the sea
+ * keep, the lighthouse, the fishermen's camp, the far bank), each walked back
+ * from under the road rule, and the cove is reached only through a same-map
+ * passage. So the two forward-skeleton rules that assume one exit column (a
+ * gauntlet's terminal column, and a forward walk that cannot cross a passage)
+ * do not describe it; `auditRoadReachability`, which walks roads and passages
+ * with the gates opened in quest order, is its reach rule. Every other rule
+ * still holds for it, and no other map is exempt.
+ */
+const TREE_MAPS: ReadonlySet<string> = new Set(['breakwater']);
 
 /**
  * The terminal nodes a map authors outside its last column, less the ones a
@@ -109,6 +124,7 @@ describe('gauntlet map traversal invariants', () => {
             // real roads with the questline played instead. The
             // reachability, edge and coordinate rules still hold.
             const holdsAQuestline = (def.holdRoadsUntilSettled?.length ?? 0) > 0;
+            const isTree = TREE_MAPS.has(def.name);
 
             it('walks every node along open roads, its gates opened in questline order', () => {
                 // The road rule: the player moves only along open roads from
@@ -119,11 +135,21 @@ describe('gauntlet map traversal invariants', () => {
                 expect(roads.unreachableNodes).toEqual([]);
             });
 
-            it('can reach every authored node from the start', () => {
+            it.runIf(isTree)('reaches only its passage side through the passage, never by road', () => {
+                // The tree exemption is narrow: the nodes the forward skeleton
+                // misses are exactly the ones past a same-map passage.
+                const ends = new Set(mapPassages(def).map(p => p.to));
+                const noPassage = auditRoadReachability(def, listQuestlines(), []);
+                expect(noPassage.unreachableNodes.length).toBeGreaterThan(0);
+                expect(audit.unreachableNodes).toEqual(noPassage.unreachableNodes);
+                expect(audit.unreachableNodes.some(id => ends.has(id))).toBe(true);
+            });
+
+            it.skipIf(isTree)('can reach every authored node from the start', () => {
                 expect(audit.unreachableNodes).toEqual([]);
             });
 
-            it('authors its terminal nodes in one final column (a questline\'s pockets excepted)', () => {
+            it.skipIf(isTree)('authors its terminal nodes in one final column (a questline\'s pockets excepted)', () => {
                 // The end of the map is where the map says it ends: every
                 // terminal node shares the highest x-coordinate on the grid.
                 expect(strayTerminals(def, audit)).toEqual([]);

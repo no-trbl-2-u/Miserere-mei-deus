@@ -2,10 +2,10 @@
  * MapEvent pool content for the Act 1 maps (breakwater, charcoal-wood,
  * beacon-crags, lantern-deep).
  *
- * Each authored node (bw-N / cw-N / bc-N / ld-N) gets a single-entry pool override
+ * Each authored node (bw-<code> / cw-N / bc-N / ld-N) gets a single-entry pool override
  * so the dispatcher reproduces (and extends) the authored events
- * `processNode` fires. Each region's one village (`ACT1_ANVIL_NODES`) carries
- * the paid rest, the card shop and the Anvil. A
+ * `processNode` fires. Each later region's one village (`ACT1_ANVIL_NODES`)
+ * carries the paid rest, the card shop and the Anvil; the Breakwater has two. A
  * node listed in `ACT1_WAYPOINT_NODES` gets no pool at all: it is an empty
  * waypoint, which reveals its roads and resolves to nothing.
  *
@@ -18,24 +18,15 @@ import {
     registerMapEventPool,
     setNodeEventPoolOverride,
 } from './resolve-map-event';
-import type { MapEventPool } from './types';
+import type { MapEventPayload, MapEventPool } from './types';
 import type { EnemySlug } from '../../Enemy/enemy.library';
 import { BLACKSMITH_WITNESS_VARIANTS } from '../Blacksmith/blacksmith.content';
-import { BREAKWATER_QUESTLINE_ID } from '../quest.library';
+import { breakwaterChapter } from '../Continents/Coastal-Village/breakwater-chapter';
+import { BREAKWATER_CHAPTER_QUESTLINE_ID } from '../breakwater-chapter.questline';
 
 // ─── Shared builders (Act 1) ─────────────────────────────────────────────────
 //
 // The builders the Act 1 maps share.
-
-/**
- * Inn rests: tended, paid shelter inside a settlement.
- */
-function innRestPool(nodeId: string, description: string): MapEventPool {
-    return {
-        id: `${nodeId}.rest`,
-        entries: [{ kind: 'rest', weight: 1, payload: { kind: 'rest', shelter: 'inn', description } }],
-    };
-}
 
 export function hazardPool(nodeId: string, description: string): MapEventPool {
     return {
@@ -116,19 +107,18 @@ function currencyLootPool(nodeId: string, currency: number, description: string)
 
 // ─── The Anvil, once per region ──────────────────────────────────────────────
 //
-// One village with an Anvil counter sits on one node near each Act 1 region's exit, a step from its
-// door fight: the Breakwater's fishing hamlet, the Charcoal Wood's well, the
-// Beacon Crags' falls and the Lantern Deep's forge (column 4). Same engine,
+// One village with an Anvil counter sits on one node near each later Act 1
+// region's exit, a step from its door fight: the Charcoal Wood's well, the
+// Beacon Crags' falls and the Lantern Deep's forge (column 4); the
+// Breakwater's two villages carry it too. Same engine,
 // budget, witness variants and line everywhere.
 const ANVIL_LINE = 'A lean-to forge, coals still breathing. The smith looks up from the anvil and nods at your dice.';
 export const ACT1_ANVIL_NODES: Readonly<Record<string, string>> = {
-    'breakwater':    'bw-16',
     'charcoal-wood': 'cw-18',
     'beacon-crags':  'bc-12',
     'lantern-deep':  'ld-14',
 };
 const ANVIL_VILLAGE_NAMES: Readonly<Record<string, string>> = {
-    'bw-16': 'The Fishing Hamlet',
     'cw-18': 'The Well',
     'bc-12': 'The Falls',
     'ld-14': 'The Forge',
@@ -139,10 +129,8 @@ const ANVIL_NODE_IDS: ReadonlySet<string> = new Set(Object.values(ACT1_ANVIL_NOD
 //
 // The nodes that held a gathering event until the kind was cut. They carry no
 // pool: arriving reveals their roads and resolves to nothing, and the map
-// draws them as a waypoint. The Breakwater redraw and the later chapters'
-// plots re-author them.
+// draws them as a waypoint. The later chapters' plots re-author them.
 export const ACT1_WAYPOINT_NODES: Readonly<Record<string, readonly string[]>> = {
-    'breakwater':    ['bw-4', 'bw-11'],
     'charcoal-wood': ['cw-4', 'cw-8', 'cw-14'],
     'beacon-crags':  ['bc-7'],
     'lantern-deep':  ['ld-7'],
@@ -151,35 +139,15 @@ const WAYPOINT_NODE_IDS: ReadonlySet<string> = new Set(Object.values(ACT1_WAYPOI
 
 // ─── The Breakwater (Act 1, map 1) ───────────────────────────────────────────
 //
-// The Breakwater is built from the shared builders above (inn rests, hazard
-// and loot caches); it adds no enemy, NPC or event kind of
-// its own. The one-line descriptions sit on the plate's landmarks (see
-// `Continents/Coastal-Village/breakwater.ts` for the node map).
+// T's Chapter 1 map (`Continents/Coastal-Village/breakwater-chapter.ts`): 44
+// nodes, one pool each, by the node list's board kind
+// (`braindump/2026-10-28-breakwater-chapter-1-map.md`, "The node list").
 //
-// Kind spread over 22 nodes: 6 encounter, 2 rest, 3 loot-cache,
-// 2 empty waypoints, 2 hazard, 1 village (the Anvil, bw-16), 1 arrival
-// cutscene, 1 travel, and the questline's 4 quest nodes (bw-19..bw-22). The
-// watchtower (bw-17), the one node every run crosses before the door, holds
-// the region's door fight.
-
-/**
- * The windmill is where a new game starts. It opens on a short
- * arrival scene, like every other Act 1 map, not on a rest screen.
- */
-const bwWindmillArrival: MapEventPool = {
-    id: 'bw-1.cutscene',
-    entries: [{
-        kind: 'cutscene', weight: 1,
-        payload: {
-            kind: 'cutscene',
-            lines: [
-                'A windmill on the headland, its sails lashed down. The sea is loud below it.',
-                'A road runs east along the breakwater, toward a watchtower with its lamp lit.',
-            ],
-            description: 'You set out along the coast.',
-        },
-    }],
-};
+// Placeholders until T's sessions: fights are today's Act 1 foes at today's
+// pinned levels (the Float-Eye at each fight, the Green Jelly at each elite,
+// the Death Beholder as the chapter boss at the door fight's level); hazards
+// are the shared damage hazard; rests, loot caches, villages and cutscenes
+// come from the shared builders. Every new line is `[content]`.
 
 /** The Breakwater's elite, pinned low like every Act 1 fight. */
 export const BW_ELITE_LEVEL = 3;
@@ -193,106 +161,144 @@ export const BW_FIGHT_LEVEL = 2;
  */
 export const BW_DOOR_LEVEL = 1;
 
-const BW_ENCOUNTER_FOES: Record<string, ActOneFoe> = {
-    // c1 — the crane quay
-    'bw-2':  { slug: 'float-eye', level: BW_FIGHT_LEVEL },
-    // c2 — the sea fort, the north pier, the walled manor
-    'bw-6':  { slug: 'float-eye', level: BW_FIGHT_LEVEL, description: 'A lidless thing hangs over the fort wall. It has already seen you.' },
-    'bw-10': { slug: 'float-eye', level: BW_FIGHT_LEVEL },
-    // c4 — the lighthouse
-    'bw-14': { slug: 'float-eye', level: BW_FIGHT_LEVEL },
+/** A board kind: what each node of the node list is. */
+export type BreakwaterChapterKind =
+    | 'start' | 'village' | 'quest' | 'boss' | 'elite' | 'hazard'
+    | 'fight' | 'rest' | 'loot' | 'cutscene' | 'travel';
+
+/** Each node's board kind and place (the node list's Kind and Place columns). */
+export const BREAKWATER_CHAPTER_KINDS: Readonly<Record<string, { kind: BreakwaterChapterKind; place: string }>> = {
+    'bw-w1': { kind: 'start',    place: 'Windmill' },
+    'bw-w2': { kind: 'fight',    place: 'Gallows crossroads' },
+    'bw-w3': { kind: 'fight',    place: 'Field road' },
+    'bw-w4': { kind: 'rest',     place: 'West cliff road' },
+    'bw-w5': { kind: 'elite',    place: 'Keep causeway' },
+    'bw-k1': { kind: 'quest',    place: 'Keep gate' },
+    'bw-k2': { kind: 'boss',     place: 'Sea keep' },
+    'bw-h1': { kind: 'fight',    place: 'Quay end' },
+    'bw-h2': { kind: 'fight',    place: 'Crane quay' },
+    'bw-h3': { kind: 'fight',    place: 'Harbour light pier' },
+    'bw-h4': { kind: 'hazard',   place: 'The wreck' },
+    'bw-h5': { kind: 'rest',     place: 'Moored ship' },
+    'bw-h6': { kind: 'travel',   place: 'Sea cave mouth' },
+    'bw-h7': { kind: 'fight',    place: 'Long pier' },
+    'bw-h8': { kind: 'loot',     place: 'Pier end' },
+    'bw-c0': { kind: 'travel',   place: 'Cave face' },
+    'bw-c1': { kind: 'elite',    place: 'Sea cave' },
+    'bw-c2': { kind: 'quest',    place: 'Fishermen\'s camp' },
+    'bw-t1': { kind: 'fight',    place: 'Harbour steps' },
+    'bw-t2': { kind: 'fight',    place: 'Bridge approach' },
+    'bw-t3': { kind: 'fight',    place: 'Town gate' },
+    'bw-t4': { kind: 'village',  place: 'Harbour town' },
+    'bw-t5': { kind: 'hazard',   place: 'Back lanes' },
+    'bw-t6': { kind: 'fight',    place: 'Upper town' },
+    'bw-b1': { kind: 'quest',    place: 'River bridge' },
+    'bw-b2': { kind: 'travel',   place: 'Far bank' },
+    'bw-l1': { kind: 'fight',    place: 'Cliff crossroads' },
+    'bw-l2': { kind: 'cutscene', place: 'Clifftop chapel' },
+    'bw-l3': { kind: 'rest',     place: 'Cliff road' },
+    'bw-l4': { kind: 'elite',    place: 'Lighthouse path' },
+    'bw-l5': { kind: 'quest',    place: 'Lighthouse' },
+    'bw-d1': { kind: 'fight',    place: 'Fishing hamlet' },
+    'bw-d2': { kind: 'loot',     place: 'Boat sheds' },
+    'bw-d3': { kind: 'fight',    place: 'Hamlet rise' },
+    'bw-d4': { kind: 'hazard',   place: 'Tower switchbacks' },
+    'bw-d5': { kind: 'cutscene', place: 'Old watchtower' },
+    'bw-m1': { kind: 'fight',    place: 'South fork' },
+    'bw-m2': { kind: 'hazard',   place: 'River meadow' },
+    'bw-m3': { kind: 'loot',     place: 'Riverbank' },
+    'bw-m4': { kind: 'hazard',   place: 'Manor road' },
+    'bw-m5': { kind: 'village',  place: 'Walled manor' },
+    'bw-p1': { kind: 'hazard',   place: 'Foothills' },
+    'bw-p2': { kind: 'fight',    place: 'Mountain path' },
+    'bw-p3': { kind: 'cutscene', place: 'High pass' },
 };
 
-/** The Green Jelly, a rarer mid-region fight on the north pier. */
-const BW_ELITE: ActOneFoe = { slug: 'green-jelly', level: BW_ELITE_LEVEL };
-
-/** The watchtower, the chokepoint before the bridge, holds the door fight. */
-const BW_DOOR: ActOneFoe = { slug: 'death-beholder', level: BW_DOOR_LEVEL, isBoss: true };
-
-const BW_REST_NODES: Record<string, string> = {
-    'bw-9':  'The customs house lets rooms by the night. The clerk takes shillings, not names.',
-    'bw-13': 'An inn above the harbour. Warm, loud, and paid for in advance.',
+/** The four quest nodes: their place in the chain and their refusal line. */
+const QUEST_NODES: Readonly<Record<string, { node: number; description: string; lockedLine: string }>> = {
+    'bw-c2': {
+        node: 2,
+        description: '[content] The fishermen huddle round a driftwood fire.',
+        lockedLine: '[content] The fishermen do not know you. They keep to their fire.',
+    },
+    'bw-l5': {
+        node: 3,
+        description: '[content] The lighthouse door stands open.',
+        lockedLine: '[content] The lighthouse keeper sends you back down the path. No one told him to expect you.',
+    },
+    'bw-k1': {
+        node: 4,
+        description: '[content] The keep gate, barred from the inside.',
+        lockedLine: '[content] The keep gate does not open for strangers.',
+    },
+    'bw-b1': {
+        node: 5,
+        description: '[content] The river bridge. The far bank is close.',
+        lockedLine: '[content] The bridge-keeper will not lift the bar while the sea keep stands.',
+    },
 };
 
-const BW_HAZARD_NODES: Record<string, string> = {
-    'bw-3':  'The gallows hill is loose shale. It gives under you.',
-    'bw-12': 'The tide comes into the sea cave faster than you leave it.',
+/** The loot caches, as indexes into the shared coastal caches. */
+const LOOT_NODES: Readonly<Record<string, number>> = { 'bw-h8': 0, 'bw-d2': 1, 'bw-m3': 2 };
+
+/** The windmill's arrival: the scene, and the chain's first step given. */
+const windmillArrival: MapEventPayload = {
+    kind: 'cutscene',
+    lines: [
+        'A windmill on the headland, its sails lashed down. The sea is loud below it.',
+        '[content] A fishing boat capsized off the harbour. Its crew never came home. Find them.',
+    ],
+    description: 'You set out along the coast.',
+    effect: { giveQuestStep: { questline: BREAKWATER_CHAPTER_QUESTLINE_ID, step: 1 } },
 };
 
-/** Index into `COAST_LOOT_CACHES`. */
-const BW_LOOT_NODES: Record<string, number> = { 'bw-5': 1, 'bw-7': 2, 'bw-15': 0 };
-
-/**
- * The river bridge — the Breakwater's door, on to the Charcoal Wood (Act 1,
- * map 2; re-pointed from fishing-village when the forest shipped in M3b).
- */
-const bwRiverBridge: MapEventPool = {
-    id: 'bw-18.travel',
-    entries: [{
-        kind: 'travel', weight: 1,
-        payload: {
-            kind: 'travel',
-            destination: { map: 'charcoal-wood', continent: 'coastal-continent' },
-            prompt: 'The bridge has a toll-house and no keeper. Across it, the road runs into a wood full of smoke.',
-        },
-    }],
+/** The travel nodes: the sea cave passage both ways, and the far bank on to the Charcoal Wood. */
+const TRAVEL: Readonly<Record<string, MapEventPayload>> = {
+    'bw-h6': {
+        kind: 'travel', destination: { node: 'bw-c0' },
+        prompt: '[content] The sea cave runs under the cliff, down to a cove.',
+    },
+    'bw-c0': {
+        kind: 'travel', destination: { node: 'bw-h6' },
+        prompt: '[content] The cave runs back up toward the harbour.',
+    },
+    'bw-b2': {
+        kind: 'travel', destination: { map: 'charcoal-wood', continent: 'coastal-continent' },
+        prompt: 'The bridge has a toll-house and no keeper. Across it, the road runs into a wood full of smoke.',
+    },
 };
 
-/**
- * The questline's four markers, bw-19..bw-22 (`quest.library.ts`): node k of
- * the Breakwater questline. Placeholder lines until T's sitting.
- */
-const BW_QUEST_NODES: Record<string, { node: number; description: string }> = {
-    'bw-19': { node: 1, description: '[content] A marker by the windmill. Someone has left word here.' },
-    'bw-20': { node: 2, description: '[content] A marker by the customs house. The word goes on.' },
-    'bw-21': { node: 3, description: '[content] A marker by the south pier. The word goes on.' },
-    'bw-22': { node: 4, description: '[content] A marker on the chapel road. The watchtower is close.' },
-};
-
-function questPool(nodeId: string, node: number, description: string): MapEventPool {
-    return {
-        id: `${nodeId}.quest`,
-        entries: [{
-            kind: 'quest', weight: 1,
-            payload: { kind: 'quest', questline: BREAKWATER_QUESTLINE_ID, node, description },
-        }],
-    };
+function single(nodeId: string, payload: MapEventPayload): MapEventPool {
+    return { id: `${nodeId}.${payload.kind}`, entries: [{ kind: payload.kind, weight: 1, payload }] };
 }
 
-const BREAKWATER_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> =
-    (() => {
-        const out: Array<{ nodeId: string; pool: MapEventPool }> = [];
-        for (let i = 1; i <= 22; i++) {
-            const nodeId = `bw-${i}`;
-            if (nodeId === 'bw-1') {
-                out.push({ nodeId, pool: bwWindmillArrival });
-            } else if (nodeId === 'bw-8') {
-                out.push({ nodeId, pool: cwEncounterPool(nodeId, BW_ELITE) });
-            } else if (nodeId === 'bw-17') {
-                out.push({ nodeId, pool: cwEncounterPool(nodeId, BW_DOOR) });
-            } else if (nodeId === 'bw-18') {
-                out.push({ nodeId, pool: bwRiverBridge });
-            } else if (BW_QUEST_NODES[nodeId]) {
-                const q = BW_QUEST_NODES[nodeId]!;
-                out.push({ nodeId, pool: questPool(nodeId, q.node, q.description) });
-            } else if (ANVIL_NODE_IDS.has(nodeId)) {
-                out.push({ nodeId, pool: anvilVillagePool(nodeId, ANVIL_LINE) });
-            } else if (BW_REST_NODES[nodeId]) {
-                out.push({ nodeId, pool: innRestPool(nodeId, BW_REST_NODES[nodeId]!) });
-            } else if (WAYPOINT_NODE_IDS.has(nodeId)) {
-                continue;
-            } else if (BW_HAZARD_NODES[nodeId]) {
-                out.push({ nodeId, pool: hazardPool(nodeId, BW_HAZARD_NODES[nodeId]!) });
-            } else if (nodeId in BW_LOOT_NODES) {
-                out.push({ nodeId, pool: lootCachePool(nodeId, COAST_LOOT_CACHES[BW_LOOT_NODES[nodeId]!]!) });
-            } else {
-                const foe = BW_ENCOUNTER_FOES[nodeId];
-                if (!foe) throw new Error(`breakwater: ${nodeId} has no authored event kind or foe.`);
-                out.push({ nodeId, pool: cwEncounterPool(nodeId, foe) });
-            }
+/** The pool for one node of the new map, by its board kind. */
+function poolFor(nodeId: string): MapEventPool {
+    const { kind, place } = BREAKWATER_CHAPTER_KINDS[nodeId]!;
+    switch (kind) {
+        case 'start':    return single(nodeId, windmillArrival);
+        case 'fight':    return cwEncounterPool(nodeId, { slug: 'float-eye', level: BW_FIGHT_LEVEL });
+        case 'elite':    return cwEncounterPool(nodeId, { slug: 'green-jelly', level: BW_ELITE_LEVEL });
+        case 'boss':     return cwEncounterPool(nodeId, { slug: 'death-beholder', level: BW_DOOR_LEVEL, isBoss: true });
+        case 'hazard':   return hazardPool(nodeId, `[content] ${place}.`);
+        case 'rest':     return campRestPool(nodeId, `[content] ${place}.`);
+        case 'loot':     return lootCachePool(nodeId, COAST_LOOT_CACHES[LOOT_NODES[nodeId]!]!);
+        case 'village':  return villagePool(nodeId, place, ANVIL_LINE);
+        case 'cutscene': return single(nodeId, { kind: 'cutscene', lines: [`[content] ${place}.`] });
+        case 'travel':   return single(nodeId, TRAVEL[nodeId]!);
+        case 'quest': {
+            const q = QUEST_NODES[nodeId]!;
+            return single(nodeId, {
+                kind: 'quest', questline: BREAKWATER_CHAPTER_QUESTLINE_ID,
+                node: q.node, description: q.description, lockedLine: q.lockedLine,
+            });
         }
-        return out;
-    })();
+    }
+}
+
+/** The 44 pools, in map-definition order. */
+export const BREAKWATER_CHAPTER_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> =
+    breakwaterChapter.nodes.map(n => ({ nodeId: n.id, pool: poolFor(n.id) }));
 
 // ─── The Charcoal Wood (Act 1, map 2) ────────────────────────────────────────
 //
@@ -688,7 +694,7 @@ const LANTERN_DEEP_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> 
  * `_clearMapEventPoolRegistry()`.
  */
 export function registerMapEventContent(): void {
-    for (const { nodeId, pool } of BREAKWATER_POOLS) {
+    for (const { nodeId, pool } of BREAKWATER_CHAPTER_POOLS) {
         registerMapEventPool(pool);
         setNodeEventPoolOverride('coastal-continent', 'breakwater', nodeId, pool.id);
     }

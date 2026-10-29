@@ -33,7 +33,7 @@ import {
 import { markNodeConsumed, revealAdjacent, syncMoveLists, unblockMapRoute } from './world.reducer';
 import { getRng } from '../Utils/rng';
 
-/** A questline's id (the Breakwater's is `BREAKWATER_QUESTLINE_ID`). */
+/** A questline's id (the Breakwater's is `BREAKWATER_CHAPTER_QUESTLINE_ID`). */
 export type QuestlineId = string;
 
 /** A road between two nodes: the shape of a `BlockedRoute` without its reason. */

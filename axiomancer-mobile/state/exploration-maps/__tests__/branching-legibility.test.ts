@@ -39,10 +39,11 @@ function glyphDiameter(mapId: string): number {
 
 const MAPS = [
     // Act 1's four maps, on the 1000×1000 plate sheet.
-    { mapId: 'breakwater', continent: 'coastal-continent' },
-    { mapId: 'charcoal-wood', continent: 'coastal-continent' },
-    { mapId: 'beacon-crags', continent: 'northern-continent' },
-    { mapId: 'lantern-deep', continent: 'northern-continent' },
+    // `ribCount`: the lateral ribs each map authors.
+    { mapId: 'breakwater', continent: 'coastal-continent', ribCount: 0 },
+    { mapId: 'charcoal-wood', continent: 'coastal-continent', ribCount: 13 },
+    { mapId: 'beacon-crags', continent: 'northern-continent', ribCount: 10 },
+    { mapId: 'lantern-deep', continent: 'northern-continent', ribCount: 11 },
 ] as const;
 
 interface DrawnEdge { a: string; b: string; lateral: boolean; length: number; }
@@ -79,7 +80,7 @@ function drawnEdges(continent: string, mapId: string): DrawnEdge[] {
 }
 
 describe('exploration map: the sheet can carry the branching graph', () => {
-    for (const { mapId, continent } of MAPS) {
+    for (const { mapId, continent, ribCount } of MAPS) {
         describe(mapId, () => {
             it('gives every node its own position — two nodes never share one mark', () => {
                 const layout = getMapLayout(mapId)!;
@@ -114,20 +115,21 @@ describe('exploration map: the sheet can carry the branching graph', () => {
                 expect(tooShort).toEqual([]);
             });
 
-            it('draws every lateral rib D1 authored, once and visibly', () => {
+            it('draws every lateral rib authored, once and visibly', () => {
                 const edges = drawnEdges(continent, mapId);
                 const ribs = edges.filter((e) => e.lateral);
-                // Every shipped gauntlet map has at least one multi-lane
-                // column, so every one of them gained ribs. A map with none
+                // Each gauntlet map has multi-lane columns, so it carries
+                // ribs; the Breakwater is a tree whose every road runs one
+                // column deeper, so it carries none. A count off its pin
                 // means either the ribs were lost or the forward-skeleton
-                // read is wrong — both silent on screen.
-                expect(ribs.length).toBeGreaterThan(0);
+                // read is wrong, both silent on screen.
+                expect(ribs.length).toBe(ribCount);
                 for (const r of ribs) expect(r.length).toBeGreaterThan(glyphDiameter(mapId));
             });
         });
     }
 
-    it('accounts for all 37 ribs: 3 on the Breakwater, 13 on the Charcoal Wood, 10 on the Beacon Crags, 11 on the Lantern Deep', () => {
+    it('accounts for all 34 ribs: none on the Breakwater, 13 on the Charcoal Wood, 10 on the Beacon Crags, 11 on the Lantern Deep', () => {
         // A total, not a per-map count: this is the one number that catches a
         // whole map's ribs disappearing in a refactor of the forward-skeleton
         // read, which no per-map "> 0" assertion would notice.
@@ -135,13 +137,13 @@ describe('exploration map: the sheet can carry the branching graph', () => {
             (n, m) => n + drawnEdges(m.continent, m.mapId).filter((e) => e.lateral).length,
             0,
         );
-        // The Breakwater's open fan carries 1 + 1 + 1 (the pass and the cove,
-        // the wreck and the harbour town, the chapel and the hamlet): its
-        // pockets hang off their quest markers and carry none (QL1d).
+        // The Breakwater's roads form a tree rooted at the windmill, every
+        // road one column deeper (the sea-cave passage is travel, not a
+        // road), so it carries none.
         // The Charcoal Wood's four carry 4 + 3 + 3 + 3.
         // The Beacon Crags' four bands carry 2 + 2 + 2 + 4.
         // The Lantern Deep's four bands carry 3 + 3 + 2 + 3.
         // Each map's door fight stands alone in its column and carries none.
-        expect(total).toBe(3 + 13 + 10 + 11);
+        expect(total).toBe(0 + 13 + 10 + 11);
     });
 });

@@ -227,12 +227,12 @@ describe('the four call sites', () => {
     it('a first death in a fight posts no run-end; the death while dying posts one', async () => {
         const store = storeWithDeck();
         const actions = createAppActions(store);
-        actions.moveTo('bw-2');
+        actions.moveTo('bw-w2');
         expect(actions.playerDied('fight')).toBe('revived');
         await flush();
         expect(calls).toEqual([]);
 
-        actions.moveTo('bw-2');
+        actions.moveTo('bw-w2');
         expect(actions.playerDied('fight')).toBe('run-over');
         await flush();
         const post = onlyPost();

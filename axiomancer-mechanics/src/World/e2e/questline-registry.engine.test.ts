@@ -51,8 +51,8 @@ afterEach(() => {
 
 describe('the registry', () => {
     it('registers, reads back, lists in registration order, and unregisters', () => {
-        const a = line(A, [step(1, 'bw-1', [XP])]);
-        const b = line(B, [step(1, 'bw-2', [XP])]);
+        const a = line(A, [step(1, 'bw-w1', [XP])]);
+        const b = line(B, [step(1, 'bw-w2', [XP])]);
         const before = listQuestlines().length;
         registerQuestline(a);
         registerQuestline(b);
@@ -69,8 +69,8 @@ describe('the registry', () => {
     });
 
     it('registering the same id again replaces it (last write wins), without duplicating', () => {
-        const first = line(A, [step(1, 'bw-1', [XP])]);
-        const second = line(A, [step(1, 'bw-2', [COIN])]);
+        const first = line(A, [step(1, 'bw-w1', [XP])]);
+        const second = line(A, [step(1, 'bw-w2', [COIN])]);
         const before = listQuestlines().length;
         registerQuestline(first);
         registerQuestline(second);
@@ -79,8 +79,8 @@ describe('the registry', () => {
     });
 
     it('questlineStep finds a step by its number and nothing for a number the line lacks', () => {
-        const l = line(A, [step(1, 'bw-1', [XP]), step(2, 'bw-2', [XP])]);
-        expect(questlineStep(l, 2)?.nodeId).toBe('bw-2');
+        const l = line(A, [step(1, 'bw-w1', [XP]), step(2, 'bw-w2', [XP])]);
+        expect(questlineStep(l, 2)?.nodeId).toBe('bw-w2');
         expect(questlineStep(l, 3)).toBeUndefined();
         expect(questlineStep(l, 0)).toBeUndefined();
     });
@@ -88,7 +88,7 @@ describe('the registry', () => {
 
 describe('stepQuest', () => {
     it('stamps the line, step and map, zeroes the counts, splits the rewards and holds a turn-in step', () => {
-        const l = line(A, [step(1, 'bw-1', [XP, COIN])]);
+        const l = line(A, [step(1, 'bw-w1', [XP, COIN])]);
         const s = l.steps[0]!;
         const dirty: QuestlineStep = { ...s, quest: { ...s.quest, objectives: [objective({ currentCount: 2 })] } };
         const fresh = stepQuest(l, dirty);
@@ -100,12 +100,12 @@ describe('stepQuest', () => {
     });
 
     it('an on-victory step is not held for turn-in', () => {
-        const l = line(A, [step(1, 'bw-1', [XP], { settle: 'on-victory' })]);
+        const l = line(A, [step(1, 'bw-w1', [XP], { settle: 'on-victory' })]);
         expect(stepQuest(l, l.steps[0]!).holdForTurnIn).toBe(false);
     });
 
     it("a step with no rewards keeps the quest's own reward", () => {
-        const s = step(1, 'bw-1', []);
+        const s = step(1, 'bw-w1', []);
         const own: QuestlineStep = { ...s, quest: quest('ql1c-reg-own', COIN) };
         const fresh = stepQuest(line(A, [own]), own);
         expect(fresh.reward).toBe(COIN);
@@ -114,7 +114,7 @@ describe('stepQuest', () => {
 });
 
 describe('questStepView', () => {
-    const l = line(A, [step(1, 'bw-1', [XP, COIN])]);
+    const l = line(A, [step(1, 'bw-w1', [XP, COIN])]);
     const s = l.steps[0]!;
 
     it('an unaccepted step shows the quest it would start as, counts at 0', () => {
@@ -150,17 +150,17 @@ describe('questNodeStage with an unknown questline', () => {
     });
 
     it('a node past the end of a known line reads locked', () => {
-        registerQuestline(line(A, [step(1, 'bw-1', [XP])]));
+        registerQuestline(line(A, [step(1, 'bw-w1', [XP])]));
         expect(questNodeStage(emptyQuestLog(), A, 2)).toBe('locked');
     });
 });
 
 describe('acceptQuestStep and the log offer', () => {
     it("moves the step's offer out of `available` into `active`", () => {
-        const l = line(A, [step(1, 'bw-1', [XP])]);
+        const l = line(A, [step(1, 'bw-w1', [XP])]);
         registerQuestline(l);
         const base = createNewGameState({ startMap: 'breakwater' });
-        const onNode: GameState = { ...base, world: placeOnNode(base.world, 'bw-1') };
+        const onNode: GameState = { ...base, world: placeOnNode(base.world, 'bw-w1') };
         const offered: GameState = {
             ...onNode,
             quests: { ...onNode.quests, available: [stepQuest(l, l.steps[0]!), quest('ql1c-reg-other')] },

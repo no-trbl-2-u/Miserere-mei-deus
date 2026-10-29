@@ -1655,12 +1655,6 @@
       "kind": "coupling",
       "from": "area:Game",
       "to": "area:Character",
-      "file": "axiomancer-mechanics/src/Game/game.migrate.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "area:Game",
-      "to": "area:Character",
       "file": "axiomancer-mechanics/src/Game/game.reducer.ts"
     },
     {
@@ -1715,12 +1709,6 @@
       "kind": "coupling",
       "from": "area:Game",
       "to": "area:Enemy",
-      "file": "axiomancer-mechanics/src/Game/game.migrate.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "area:Game",
-      "to": "area:Enemy",
       "file": "axiomancer-mechanics/src/Game/game.reducer.ts"
     },
     {
@@ -1752,12 +1740,6 @@
       "from": "area:Game",
       "to": "area:Items",
       "file": "axiomancer-mechanics/src/Game/fixtures/quest-chain-long.fixture.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "area:Game",
-      "to": "area:Items",
-      "file": "axiomancer-mechanics/src/Game/game.migrate.ts"
     },
     {
       "kind": "coupling",
@@ -1890,12 +1872,6 @@
       "from": "area:Game",
       "to": "area:World",
       "file": "axiomancer-mechanics/src/Game/fixtures/travel-passage.fixture.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "area:Game",
-      "to": "area:World",
-      "file": "axiomancer-mechanics/src/Game/game.migrate.ts"
     },
     {
       "kind": "coupling",
@@ -2286,12 +2262,6 @@
       "from": "area:World",
       "to": "area:Items",
       "file": "axiomancer-mechanics/src/World/quest.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "area:World",
-      "to": "area:Items",
-      "file": "axiomancer-mechanics/src/World/quest.library.ts"
     },
     {
       "kind": "coupling",

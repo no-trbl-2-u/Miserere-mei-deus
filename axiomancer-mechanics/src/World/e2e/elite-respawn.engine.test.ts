@@ -22,7 +22,6 @@ import {
     isEliteNode, isEliteUpgradeTaken, markEliteUpgradeTaken, respawnElites,
     retireEliteNode, settledEliteNodes,
 } from '../elite-respawn';
-import { planAct1Walk } from '../act1-walk';
 import { createGameStore } from '../../Game/store';
 import type { GameState } from '../../Game/types';
 import type { PersistenceAdapter } from '../../Game/persistence/types';
@@ -40,13 +39,19 @@ import type { Equipment } from '../../Items/types';
 afterEach(() => vi.restoreAllMocks());
 
 const ELITES = [
-    { map: 'breakwater', node: 'bw-8' },
+    { map: 'breakwater', node: 'bw-w5' },
     { map: 'charcoal-wood', node: 'cw-12' },
     { map: 'beacon-crags', node: 'bc-8' },
     { map: 'lantern-deep', node: 'ld-8' },
 ] as const;
 
-const REGIONS = planAct1Walk().regions;
+/** Each Act 1 region's exit door (its travel node on to the next region). */
+const EXITS: Readonly<Record<string, string>> = {
+    'breakwater': 'bw-b2',
+    'charcoal-wood': 'cw-20',
+    'beacon-crags': 'bc-17',
+    'lantern-deep': 'ld-18',
+};
 
 const noDisk: PersistenceAdapter = { load: () => null, save: () => undefined };
 
@@ -86,7 +91,7 @@ function fightElite(state: GameState, nodeId: string): { state: GameState; slug:
 
 /** Leaves the current region through its exit door. */
 function leaveRegion(state: GameState, map: MapName): GameState {
-    const exit = REGIONS.find(r => r.map === map)!.exit;
+    const exit = EXITS[map]!;
     const placed = placeOnNode(state.world, exit);
     const { state: next, event } = resolveMapEvent({ ...state, world: placed }, () => 0.5);
     expect(event.kind).toBe('travel');
@@ -135,7 +140,7 @@ describe('respawnElites over a real Act 1 walk (A1, A2)', () => {
         const { world, respawned } = respawnElites(state.world);
         expect(respawned).toEqual([
             { map: 'lantern-deep', node: 'ld-8' },
-            { map: 'breakwater', node: 'bw-8' },
+            { map: 'breakwater', node: 'bw-w5' },
             { map: 'charcoal-wood', node: 'cw-12' },
             { map: 'beacon-crags', node: 'bc-8' },
         ]);
@@ -155,25 +160,25 @@ describe('respawnElites over a real Act 1 walk (A1, A2)', () => {
         expect(() => moveToNode(placeOnNode(world, neighbourOf(world.currentMap, 'ld-8')), 'ld-8')).not.toThrow();
 
         // A departed map restored through a door shows its elite unspent.
-        const atExit = placeOnNode(world, REGIONS.find(r => r.map === 'lantern-deep')!.exit);
+        const atExit = placeOnNode(world, EXITS['lantern-deep']!);
         const door = { state: takeTravel(gameOn(atExit), {
             kind: 'travel', destination: { map: 'breakwater', continent: 'coastal-continent' }, prompt: '[content]',
         }) };
         expect(door.state.world.currentMap.name).toBe('breakwater');
-        expect(spentOn(door.state.world, 'breakwater', 'bw-8')).toBe(false);
-        const again = fightElite(door.state, 'bw-8');
-        expect(again.slug).toBe(firstFights['bw-8']!.slug);
-        expect(again.level).toBe(firstFights['bw-8']!.level);
+        expect(spentOn(door.state.world, 'breakwater', 'bw-w5')).toBe(false);
+        const again = fightElite(door.state, 'bw-w5');
+        expect(again.slug).toBe(firstFights['bw-w5']!.slug);
+        expect(again.level).toBe(firstFights['bw-w5']!.level);
     });
 
     it('respawns exactly the elites that were fought', () => {
-        const { state } = walkAct1(new Set(['bw-8', 'bc-8']));
+        const { state } = walkAct1(new Set(['bw-w5', 'bc-8']));
         const { world, respawned } = respawnElites(state.world);
         expect(respawned).toEqual([
-            { map: 'breakwater', node: 'bw-8' },
+            { map: 'breakwater', node: 'bw-w5' },
             { map: 'beacon-crags', node: 'bc-8' },
         ]);
-        expect(spentOn(world, 'breakwater', 'bw-8')).toBe(false);
+        expect(spentOn(world, 'breakwater', 'bw-w5')).toBe(false);
         expect(spentOn(world, 'beacon-crags', 'bc-8')).toBe(false);
         expect(spentOn(world, 'charcoal-wood', 'cw-12')).toBe(false);
         expect(spentOn(world, 'lantern-deep', 'ld-8')).toBe(false);
@@ -231,7 +236,8 @@ describe('only elites return (A3)', () => {
             if (map !== 'lantern-deep') state = leaveRegion(state, map);
         }
         const { world, respawned } = respawnElites(state.world);
-        expect(respawned).toHaveLength(4);
+        // The Breakwater's three held elites, and one on each later map.
+        expect(respawned).toHaveLength(6);
         let swept = 0;
         for (const { map } of ELITES) {
             const m = world.currentMap.name === map ? world.currentMap : world.mapStates![map]!;
@@ -250,28 +256,28 @@ describe('only elites return (A3)', () => {
 describe('a retired elite never returns (A9)', () => {
     it('respawnElites skips a retired node on any map of the act', () => {
         const { state } = walkAct1(new Set(ELITES.map(e => e.node)));
-        // Retire ld-8 (current map) and bw-8 (departed, retired while it was current).
+        // Retire ld-8 (current map) and bw-w5 (departed, retired while it was current).
         let world = retireEliteNode(state.world, 'ld-8');
         world = {
             ...world,
             mapStates: {
                 ...world.mapStates,
-                breakwater: { ...world.mapStates!.breakwater!, retiredEliteNodes: ['bw-8'] },
+                breakwater: { ...world.mapStates!.breakwater!, retiredEliteNodes: ['bw-w5'] },
             },
         };
         expect(settledEliteNodes(world).map(s => s.node)).toEqual(['cw-12', 'bc-8']);
         const out = respawnElites(world);
         expect(out.respawned.map(r => r.node)).toEqual(['cw-12', 'bc-8']);
         expect(spentOn(out.world, 'lantern-deep', 'ld-8')).toBe(true);
-        expect(spentOn(out.world, 'breakwater', 'bw-8')).toBe(true);
+        expect(spentOn(out.world, 'breakwater', 'bw-w5')).toBe(true);
     });
 
     it('retireEliteNode touches nothing else and is idempotent', () => {
         const world = createStartingWorld('breakwater');
-        const retired = retireEliteNode(world, 'bw-8');
-        expect(retired.currentMap).toEqual({ ...world.currentMap, retiredEliteNodes: ['bw-8'] });
+        const retired = retireEliteNode(world, 'bw-w5');
+        expect(retired.currentMap).toEqual({ ...world.currentMap, retiredEliteNodes: ['bw-w5'] });
         expect(retired.mapStates).toBe(world.mapStates);
-        expect(retireEliteNode(retired, 'bw-8')).toBe(retired);
+        expect(retireEliteNode(retired, 'bw-w5')).toBe(retired);
     });
 });
 

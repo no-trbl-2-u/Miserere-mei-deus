@@ -39,7 +39,7 @@ afterEach(() => {
 
 /** Leaves a lost cracked-cliff crossing (-20 VITAE) on its rewards ledger. */
 function stageLostCrossing(store: AppStore, actions: AppActions, health: number): void {
-    actions.moveTo('bw-2');
+    actions.moveTo('bw-w2');
     const p = (store.getState() as unknown as GameState).player;
     store.setState({ player: { ...p, health, maxHealth: Math.max(health, 15) } } as never);
     actions.beginHazard({ seed: 9, hazardId: 'cracked-cliff' });

@@ -40,16 +40,20 @@ const AUDIT_ROW = {
 
 /** Node id → the `plan/AUDIT.md` `[content]` row (heading text) that files it for T. */
 const PINNED_MISMATCHES: Readonly<Record<string, string>> = {
-    'bw-5':  AUDIT_ROW.breakwater,
-    'bw-15': AUDIT_ROW.breakwater,
-    'bw-16': AUDIT_ROW.breakwater,
+    // The Chapter 1 Breakwater (BW1a): its caches draw the shared coast
+    // rotation and its villages open the shared Anvil line.
+    'bw-m3': AUDIT_ROW.breakwater,
+    'bw-h8': AUDIT_ROW.breakwater,
+    'bw-d2': AUDIT_ROW.breakwater,
+    'bw-t4': AUDIT_ROW.breakwater,
+    'bw-m5': AUDIT_ROW.breakwater,
     'cw-18': AUDIT_ROW.charcoalWood,
     'bc-12': AUDIT_ROW.beaconCrags,
 };
 
 /** The hazard nodes, unpairable while their board is drawn at random. */
 const UNPAIRABLE_HAZARD_NODES: readonly string[] = [
-    'bc-3', 'bc-9', 'bw-12', 'bw-3', 'cw-3', 'ld-4', 'ld-9',
+    'bc-3', 'bc-9', 'bw-d4', 'bw-h4', 'bw-m2', 'bw-m4', 'bw-p1', 'bw-t5', 'cw-3', 'ld-4', 'ld-9',
 ];
 
 const STOP_WORDS: ReadonlySet<string> = new Set([

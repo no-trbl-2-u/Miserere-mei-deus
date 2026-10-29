@@ -51,7 +51,7 @@ describe('A12 — the travel payload names a map or a node of the same map', () 
         expect(PASSAGE_POOLS.mouth).toEqual(expect.objectContaining({
             kind: 'travel', destination: { node: 'face' }, prompt: expect.any(String),
         }));
-        const door = getNodeEventPool('coastal-continent', 'breakwater', 'bw-18')?.entries[0]?.payload;
+        const door = getNodeEventPool('coastal-continent', 'breakwater', 'bw-b2')?.entries[0]?.payload;
         expect(door).toEqual(expect.objectContaining({
             kind: 'travel',
             destination: { map: 'charcoal-wood', continent: 'coastal-continent' },
@@ -167,14 +167,14 @@ describe('A14 — a travel node shut until a node is spent (opensAfter)', () => 
 });
 
 describe('the inter-map doors offer, then cross on the yes', () => {
-    it('bw-18 offers the Charcoal Wood and crosses only when taken', () => {
+    it('bw-b2 offers the Charcoal Wood and crosses only when taken', () => {
         const seated: GameState = {
             ...createNewGameState(),
             world: { ...createStartingWorld('breakwater') },
         };
         const onDoor: GameState = {
             ...seated,
-            world: { ...seated.world, currentMap: { ...seated.world.currentMap, currentNode: 'bw-18' } },
+            world: { ...seated.world, currentMap: { ...seated.world.currentMap, currentNode: 'bw-b2' } },
         };
         const offered = tapHere(onDoor);
         expect(offered.event).toEqual(expect.objectContaining({
@@ -183,7 +183,7 @@ describe('the inter-map doors offer, then cross on the yes', () => {
         expect(offered.state.world.currentMap.name).toBe('breakwater');
         const crossed = takeTravel(offered.state);
         expect(crossed.world.currentMap.name).toBe('charcoal-wood');
-        expect(crossed.world.mapStates?.['breakwater']?.currentNode).toBe('bw-18');
+        expect(crossed.world.mapStates?.['breakwater']?.currentNode).toBe('bw-b2');
     });
 
     it('crossing back to a departed map restores it live and drops its filed copy', () => {
@@ -193,14 +193,14 @@ describe('the inter-map doors offer, then cross on the yes', () => {
         };
         const seated: GameState = {
             ...onDoor,
-            world: { ...onDoor.world, currentMap: { ...onDoor.world.currentMap, currentNode: 'bw-18' } },
+            world: { ...onDoor.world, currentMap: { ...onDoor.world.currentMap, currentNode: 'bw-b2' } },
         };
         const inWood = takeTravel(tapHere(seated).state);
         const back = takeTravel(inWood, {
             kind: 'travel', destination: { map: 'breakwater', continent: 'coastal-continent' }, prompt: '[content]',
         });
         expect(back.world.currentMap.name).toBe('breakwater');
-        expect(back.world.currentMap.currentNode).toBe('bw-18');
+        expect(back.world.currentMap.currentNode).toBe('bw-b2');
         expect(Object.keys(back.world.mapStates ?? {})).toEqual(['charcoal-wood']);
     });
 });

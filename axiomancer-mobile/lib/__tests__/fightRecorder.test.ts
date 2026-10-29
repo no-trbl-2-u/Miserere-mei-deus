@@ -63,7 +63,7 @@ function passTurn(s: CombatEncounterState): CombatEncounterState {
     return t.state.phase === 'phase-play' && t.state.dice.length === 0 ? startTurn(t.state).state : t.state;
 }
 
-/** Plays the real bw-2 fight through to its end, feeding every state to `observe`. */
+/** Plays the real bw-w2 fight through to its end, feeding every state to `observe`. */
 function playToTheEnd(observe: (s: CombatEncounterState) => void, combat: CombatEncounterState): CombatEncounterState[] {
     const states: CombatEncounterState[] = [combat];
     let s = rollEncounterDice(combat).state;

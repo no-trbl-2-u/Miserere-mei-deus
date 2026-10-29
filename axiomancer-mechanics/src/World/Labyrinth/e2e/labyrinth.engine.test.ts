@@ -379,7 +379,7 @@ describe('labyrinth traversal mode (world reducer)', () => {
             ...world,
             currentMap: createMapState(gauntlet),
         };
-        expect(() => teleportToNode(gauntletWorld, 'bw-3')).toThrow(IllegalMoveError);
+        expect(() => teleportToNode(gauntletWorld, 'bw-m2')).toThrow(IllegalMoveError);
     });
 });
 

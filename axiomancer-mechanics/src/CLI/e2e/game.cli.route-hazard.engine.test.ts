@@ -29,11 +29,9 @@ describe('Game CLI route walkthrough → Hazard-Pattern combat', () => {
     it('walks the Breakwater to its first encounter and runs Hazard combat', async () => {
         const logPath = tmpPath('bw-encounter');
 
-        // bw-2 is a Float-Eye encounter in the second step's pocket: the
-        // walk plays step one (bw-19, the bw-3 hazard), turns it in at bw-20
-        // and accepts step two to reach it.
+        // bw-w2 is a Float-Eye encounter, a road from the windmill start.
         await runGameCli([
-            '--start-map', 'breakwater', '--resolve-start', '--route', 'bw-19,bw-3,bw-4,bw-9,bw-20,bw-2',
+            '--start-map', 'breakwater', '--resolve-start', '--route', 'bw-w2',
             '--auto-combat',
             '--combat-policy', 'status',
             '--combat-seed', '42',
@@ -53,7 +51,7 @@ describe('Game CLI route walkthrough → Hazard-Pattern combat', () => {
             .filter(r => r.action === 'resolveMapEvent')
             .map(r => r.event as { kind?: string; encounter?: { enemies?: Array<{ name?: string }> } })
             .find(event => event.kind === 'encounter');
-        // bw-2's encounter pool is the Float-Eye (R2 roster reset).
+        // bw-w2's encounter pool is the Float-Eye.
         expect(encounterEvent?.encounter?.enemies?.[0]?.name).toBe('Float-Eye');
 
         const end = logs.find(r => r.action === 'hazardCombat:end');

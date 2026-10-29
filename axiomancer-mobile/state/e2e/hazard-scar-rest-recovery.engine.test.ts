@@ -2,8 +2,8 @@
  * Hermetic E2E Tests — Hazard max-VITAE scar recovery at rest.
  *
  * Pins the contract through the store action layer. Scarred reads "until
- * you next rest", and Act 1's only inns are in the Breakwater, so the mend
- * is not keyed on the authored `RestPayload.shelter` marker (RC2 walk,
+ * you next rest", and Act 1 authors no inn any more (the Breakwater's rests
+ * are camps since phase BW1b), so the mend is not keyed on the authored `RestPayload.shelter` marker (RC2 walk,
  * 2026-10-11: a Lantern Deep scar outlived two camps):
  *  - a `maxhp` hazard scar bakes the loss into maxHealth AND records a
  *    durable `hazard-scar:` flag;
@@ -111,7 +111,7 @@ describe('hazard scar recovery at rest', () => {
         const scarredMax = (store.getState() as unknown as GameState).player.maxHealth;
         expect(scarredMax).toBe(baseline - scar);
 
-        // Inn rest: the authored paid shelter (the Breakwater's rest nodes).
+        // Inn rest: the paid shelter the engine still supports (no Act 1 node authors one).
         expect(actions.beginRest({ seed: 7, shelter: 'inn' })).toBe(true);
         playRestToDawn(store, actions);
         const result = actions.claimRestOutcome();
@@ -132,7 +132,7 @@ describe('hazard scar recovery at rest', () => {
         const scarredMax = (store.getState() as unknown as GameState).player.maxHealth;
         expect(scarredMax).toBe(baseline - scar);
 
-        // Camp: every authored wilderness rest node, and every rest past the Breakwater.
+        // Camp: every authored rest node in Act 1, the Breakwater's included.
         expect(actions.beginRest({ seed: 7, shelter: 'camp' })).toBe(true);
         playRestToDawn(store, actions);
         const result = actions.claimRestOutcome();
@@ -170,9 +170,9 @@ describe('hazard scar recovery at rest', () => {
         expect((store.getState() as unknown as GameState).player.maxHealth).toBe(baseline);
     });
 
-    it('the Breakwater inn node routes an inn rest through the live interceptor', () => {
+    it('the Breakwater camp node routes a CAMP rest through the live interceptor', () => {
         // End-to-end witness that the AUTHORED marker (not a heal number)
-        // is what reaches the claim: bw-9 is an `innRestPool` node.
+        // is what reaches the claim: bw-w4, the Breakwater's first rest, is a camp.
         const { store, actions } = makeStoreAndActions();
         const scar = scarThePlayer(store, actions);
 
@@ -184,20 +184,20 @@ describe('hazard scar recovery at rest', () => {
                     ...before.world.currentMap,
                     continent: 'coastal-continent',
                     name: 'breakwater',
-                    currentNode: 'bw-9',
+                    currentNode: 'bw-w4',
                 },
             },
         } as never);
 
         expect(actions.resolveCurrentMapEvent()).toBe(true);
-        expect(restChoiceSession(store).shelter).toBe('inn');
+        expect(restChoiceSession(store).shelter).toBe('camp');
 
         playRestToDawn(store, actions);
         expect(actions.claimRestOutcome().scarMended).toBe(scar);
     });
 
     it('a Charcoal Wood camp routes a CAMP rest through the live interceptor, and it mends', () => {
-        // cw-9 (the hunting lodge's porch) is wilderness, past the last inn.
+        // cw-9 (the hunting lodge's porch) is wilderness.
         const { store, actions } = makeStoreAndActions();
         const baseline = (store.getState() as unknown as GameState).player.maxHealth;
         const scar = scarThePlayer(store, actions);

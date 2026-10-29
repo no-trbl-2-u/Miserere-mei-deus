@@ -136,8 +136,11 @@ import { resolveDeath, freshRunKeepingCharacter } from './death';
  * - v40: the gathering, interaction and narration map-event kinds are cut;
  *   an arrival owed on one of the seven former gathering nodes (now empty
  *   waypoints) is cleared.
+ * - v41: the live Breakwater is T's 44-node Chapter 1 map. Every older save
+ *   names nodes it no longer has, so none migrates: an older save loads only
+ *   to be deleted (`migrate`).
  */
-export const GAME_STATE_VERSION = 40;
+export const GAME_STATE_VERSION = 41;
 
 /** Options for {@link createNewGameState}. */
 export interface NewGameOptions {

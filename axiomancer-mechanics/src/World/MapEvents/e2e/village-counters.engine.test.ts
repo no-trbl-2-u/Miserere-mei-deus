@@ -6,9 +6,10 @@
  * sandboxed) that touches no state and rejects illegal (cap-violating) variant
  * gear at resolution time.
  *
- * Also pins where the Anvil lives in play: one village per Act 1 region, near
- * its exit — `ACT1_ANVIL_NODES` (bw-16, cw-18, bc-12, ld-14) — and that
- * `blacksmith` is no longer a map-event kind.
+ * Also pins where the Anvil lives in play: one village per later Act 1
+ * region, near its exit — `ACT1_ANVIL_NODES` (cw-18, bc-12, ld-14) — plus the
+ * rebuilt Breakwater's two villages (bw-t4, bw-m5), and that `blacksmith` is
+ * no longer a map-event kind.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -77,6 +78,18 @@ describe("MapEvents 'village' kind, the Anvil counter", () => {
 
 const ACT1_MAPS = ['breakwater', 'charcoal-wood', 'beacon-crags', 'lantern-deep'] as const;
 
+/** The Act 1 maps with exactly one village, the Anvil node (`ACT1_ANVIL_NODES`). */
+const LATER_MAPS = ['charcoal-wood', 'beacon-crags', 'lantern-deep'] as const;
+
+/** The rebuilt Breakwater's two villages, each with all three counters. */
+const BREAKWATER_VILLAGES = ['bw-t4', 'bw-m5'] as const;
+
+/** Every Act 1 village that carries the Anvil: [map, node]. */
+const ANVIL_VILLAGES: [string, string][] = [
+    ...BREAKWATER_VILLAGES.map(n => ['breakwater', n] as [string, string]),
+    ...LATER_MAPS.map(m => [m, ACT1_ANVIL_NODES[m]!] as [string, string]),
+];
+
 /** The registered definition of an Act 1 map, whichever continent holds it. */
 function act1Map(name: string): MapDefinition {
     const def = Object.values(MAP_REGISTRY)
@@ -95,17 +108,16 @@ function standingOn(def: MapDefinition, nodeId: string): GameState {
     };
 }
 
-describe('the regional Anvils — one per Act 1 map (D61, R3b)', () => {
-    it('names exactly one Anvil node for each Act 1 map', () => {
+describe('the regional Anvils — one per later Act 1 map, two on the Breakwater (D61, R3b)', () => {
+    it('names exactly one Anvil node for each later Act 1 map', () => {
         expect(ACT1_ANVIL_NODES).toEqual({
-            'breakwater':    'bw-16',
             'charcoal-wood': 'cw-18',
             'beacon-crags':  'bc-12',
             'lantern-deep':  'ld-14',
         });
     });
 
-    it.each(ACT1_MAPS.map(m => [m, ACT1_ANVIL_NODES[m]!]))(
+    it.each(ANVIL_VILLAGES)(
         '%s: %s resolves to a village whose Anvil offers the witness variants',
         (mapName, nodeId) => {
             const def = act1Map(mapName);
@@ -117,12 +129,20 @@ describe('the regional Anvils — one per Act 1 map (D61, R3b)', () => {
         },
     );
 
-    it.each(ACT1_MAPS.map(m => [m]))('%s carries exactly one village, and it is the Anvil node', mapName => {
+    it.each(LATER_MAPS.map(m => [m]))('%s carries exactly one village, and it is the Anvil node', mapName => {
         const def = act1Map(mapName);
         const villages = def.nodes
             .filter(n => getNodePrimaryEventKind(def.continent, def.name, n.id) === 'village')
             .map(n => n.id);
         expect(villages).toEqual([ACT1_ANVIL_NODES[mapName]]);
+    });
+
+    it('the Breakwater carries exactly two villages, the harbour town and the walled manor', () => {
+        const def = act1Map('breakwater');
+        const villages = def.nodes
+            .filter(n => getNodePrimaryEventKind(def.continent, def.name, n.id) === 'village')
+            .map(n => n.id);
+        expect(villages).toEqual([...BREAKWATER_VILLAGES]);
     });
 
     it('no map event pool authors a blacksmith kind', () => {
@@ -147,12 +167,12 @@ describe("MapEvents 'village' kind, the rest and card-shop counters (NK1c)", () 
 
     it('a card shop resolves the seeded offer for the node the player stands on, the same each time this run', () => {
         const def = act1Map('breakwater');
-        const state = standingOn(def, 'bw-16');
+        const state = standingOn(def, 'bw-t4');
         const result = resolveMapEvent(state, () => 0.5);
         if (result.event.kind !== 'village') throw new Error('not a village');
-        expect(result.event.cardShop).toEqual(villageCardShopFor(state, 'bw-16'));
+        expect(result.event.cardShop).toEqual(villageCardShopFor(state, 'bw-t4'));
         expect(result.event.cardShop?.price).toBe(VILLAGE_TUNING.cardPrice);
-        const again = resolveMapEvent({ ...standingOn(def, 'bw-16'), runId: state.runId }, () => 0.1);
+        const again = resolveMapEvent({ ...standingOn(def, 'bw-t4'), runId: state.runId }, () => 0.1);
         if (again.event.kind !== 'village') throw new Error('not a village');
         expect(again.event.cardShop).toEqual(result.event.cardShop);
     });
@@ -162,7 +182,7 @@ describe("MapEvents 'village' kind, the rest and card-shop counters (NK1c)", () 
         expect(Object.keys(result.event)).not.toContain('shop');
     });
 
-    it.each(ACT1_MAPS.map(m => [m, ACT1_ANVIL_NODES[m]!]))(
+    it.each(ANVIL_VILLAGES)(
         '%s: the %s village carries all three counters',
         (mapName, nodeId) => {
             const result = resolveMapEvent(standingOn(act1Map(mapName), nodeId), () => 0.5);

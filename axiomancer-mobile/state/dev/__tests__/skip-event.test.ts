@@ -19,7 +19,7 @@
  */
 
 import {
-    BREAKWATER_QUESTLINE, ENEMY_REGISTRY, HAZARD_CRACK_CARD, completeQuest, configureLogging, getLogger, placeOnNode, resetLoggingForTests, startQuest, stepQuest,
+    ENEMY_REGISTRY, HAZARD_CRACK_CARD, configureLogging, getLogger, placeOnNode, resetLoggingForTests,
     type GameState,
 } from '@mechanics';
 
@@ -29,6 +29,9 @@ import { stageEncounter, listEnemies } from '@/state/dev/enemy-picker';
 import { installDevSkipHook, SKIP_EVENT_LOG_KIND, skipCurrentEvent } from '@/state/dev/skip-event';
 import { createAppStore, EMPTY_EVENT_SLICE } from '@/state/store';
 import { createFixtureStore } from '@/test-utils/fixtureStore';
+import {
+    FIXTURE_NODES, fixtureQuestline, registerFixtureQuestline, startFixtureStep, unregisterFixtureQuestline,
+} from '@/test-utils/questlineFixture';
 import { settledBreakwater } from '@/test-utils/settledBreakwater';
 
 const DEV = { devToolsEnabled: true, seed: 7 } as const;
@@ -108,18 +111,35 @@ describe('skipCurrentEvent — combat', () => {
         expect(store.getState().currentEncounter ?? null).toBeNull();
         expect(player(store).health).toBeGreaterThanOrEqual(1);
     });
+
+    it('takes no HP toll while the routing walk sets __AXM_SKIP_TOLL_FREE__', () => {
+        const g = globalThis as { __AXM_SKIP_TOLL_FREE__?: boolean };
+        g.__AXM_SKIP_TOLL_FREE__ = true;
+        try {
+            const { store, actions } = freshHandle();
+            stageEncounter(store, gentlestFoe());
+            const before = player(store).health;
+            const result = skipCurrentEvent(store, actions, DEV);
+            expect(result.outcome).toBe('victory');
+            expect(player(store).health).toBeGreaterThanOrEqual(before);
+        } finally {
+            delete g.__AXM_SKIP_TOLL_FREE__;
+        }
+    });
 });
 
 describe('skipCurrentEvent — a skipped fight that completes a quest', () => {
+    // The live chain settles no step on a victory (its boss step is turned in
+    // at the bridge), so the staged fixture questline carries the case: its
+    // step 4 settles on the boss victory and pays the Belt.
+    beforeAll(() => { registerFixtureQuestline(); });
+    afterAll(() => { unregisterFixtureQuestline(); });
+
     it('routes the questline\'s relic to /item-reward, as the combat host does', () => {
         const { store, actions } = freshHandle();
-        let quests = (store.getState() as unknown as GameState).quests;
-        for (const step of BREAKWATER_QUESTLINE.steps.slice(0, 3)) {
-            quests = completeQuest(startQuest(quests, stepQuest(BREAKWATER_QUESTLINE, step)), step.quest.name);
-        }
-        quests = startQuest(quests, stepQuest(BREAKWATER_QUESTLINE, BREAKWATER_QUESTLINE.steps[3]!));
-        store.setState({ quests, world: placeOnNode(settledBreakwater(), 'bw-17') } as never);
-        // The watchtower's foe, stamped as the encounter handler stamps a boss.
+        const quests = startFixtureStep(store.getState() as unknown as GameState, 4);
+        store.setState({ quests, world: placeOnNode(settledBreakwater(), FIXTURE_NODES[3]) } as never);
+        // A boss foe, stamped as the encounter handler stamps a boss.
         stageEncounter(store, { ...ENEMY_REGISTRY['death-beholder']!, difficulty: 'boss' as const }, 'dev:test', true);
 
         jest.useFakeTimers();
@@ -127,7 +147,7 @@ describe('skipCurrentEvent — a skipped fight that completes a quest', () => {
             const result = skipCurrentEvent(store, actions, DEV);
 
             expect(result).toMatchObject({ kind: 'encounter', outcome: 'victory' });
-            expect((store.getState() as unknown as GameState).quests.completed).toContain(BREAKWATER_QUESTLINE.steps[3]!.quest.name);
+            expect((store.getState() as unknown as GameState).quests.completed).toContain(fixtureQuestline().steps[3]!.quest.name);
             // The relic waits for the combat screen to have left on the skip.
             expect(store.getState().itemReward.queue).toEqual([]);
             jest.runOnlyPendingTimers();
@@ -154,7 +174,7 @@ describe('skipCurrentEvent — minigames', () => {
 
     it('hazard: a lethal skipped crossing revives, arms the return moment and reports the outcome', () => {
         const { store, actions } = freshHandle();
-        actions.moveTo('bw-2');
+        actions.moveTo('bw-w2');
         store.setState({ player: { ...player(store), health: 15, maxHealth: 15 } } as never);
         clearDeathReturn();
         // A lost cracked-cliff crossing (-20 VITAE), left on its rewards ledger.
@@ -176,7 +196,7 @@ describe('skipCurrentEvent — minigames', () => {
         expect(result.detail).toMatchObject({ died: true, deathOutcome: 'revived' });
         expect(isDeathReturnArmed()).toBe(true);
         expect((store.getState() as unknown as GameState).dying).toBe(true);
-        expect(store.getState().world.currentMap.currentNode).toBe('bw-1');
+        expect(store.getState().world.currentMap.currentNode).toBe('bw-w1');
         clearDeathReturn();
     });
 
@@ -299,7 +319,7 @@ describe('skipCurrentEvent — paced events and idle', () => {
     });
 
     it('fires an owed arrival on a fixture rest node, then resolves it', () => {
-        // `apprentice-bw-rest` places a hurt Apprentice on bw-9 (rest) with
+        // `apprentice-bw-rest` places a hurt Apprentice on bw-w4 (rest) with
         // `arrive: true`, which the app fires from <FixtureBoot>; here nothing
         // has fired it yet, so the node under the player is the start-style
         // owed arrival only if the map records one — pin via pendingArrival.

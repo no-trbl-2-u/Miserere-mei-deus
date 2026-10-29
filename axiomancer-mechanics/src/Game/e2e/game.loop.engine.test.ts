@@ -9,7 +9,7 @@
  *   3. the Hazard-Pattern driver decides the fight outside the store
  *   4. endCombat('victory') — loot + XP applied
  *   5. LEVEL_UP — confirms the placeholder level-up reducer
- *   6. MOVE_TO_NODE to bw-4
+ *   6. MOVE_TO_NODE to bw-w2
  *   7. SAVE_GAME (via the memory adapter)
  *   8. LOAD_GAME — round-trip through `migrate()`
  *
@@ -87,12 +87,12 @@ describe('Game loop — full transcript through gameReducer', () => {
         expect(store.getState().player.availableStatPoints)
             .toBe(pointsBefore + expectedGrant);
 
-        // 5. MOVE_TO_NODE to bw-4 (a gathering node adjacent to the bw-1 start).
+        // 5. MOVE_TO_NODE to bw-w2 (the first fight, adjacent to the bw-w1 start).
         store.getState().dispatch({
             type: 'MOVE_TO_NODE',
-            payload: { nodeId: 'bw-4' },
+            payload: { nodeId: 'bw-w2' },
         });
-        expect(store.getState().world.currentMap.currentNode).toBe('bw-4');
+        expect(store.getState().world.currentMap.currentNode).toBe('bw-w2');
 
         // 6. Snapshot for round-trip.
         const preSave: GameState = JSON.parse(JSON.stringify({
@@ -137,8 +137,8 @@ describe('gameReducer — pure path (no store)', () => {
 
     it('MOVE_TO_NODE returns a new WorldState while keeping unrelated state intact', () => {
         const s = createNewGameState({ startMap: 'breakwater' });
-        const next = gameReducer(s, { type: 'MOVE_TO_NODE', payload: { nodeId: 'bw-4' } });
-        expect(next.world.currentMap.currentNode).toBe('bw-4');
+        const next = gameReducer(s, { type: 'MOVE_TO_NODE', payload: { nodeId: 'bw-w2' } });
+        expect(next.world.currentMap.currentNode).toBe('bw-w2');
         expect(next.player).toBe(s.player);
         expect(next.quests).toBe(s.quests);
     });

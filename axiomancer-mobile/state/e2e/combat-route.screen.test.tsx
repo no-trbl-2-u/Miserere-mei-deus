@@ -122,11 +122,11 @@ describe('the live combat route', () => {
         expect(s.runId).toBe(runId);
         expect(s.dying).toBe(true);
         expect(s.player.health).toBe(1);
-        expect(s.world.currentMap.currentNode).not.toBe('bw-2');
+        expect(s.world.currentMap.currentNode).not.toBe('bw-w2');
         // The fight node is live again (a placement has no node walked from, so
         // the revive is on the map start, a walk away from it).
-        expect(s.world.currentMap.consumedNodes).not.toContain('bw-2');
-        expect(s.world.currentMap.completedNodes).not.toContain('bw-2');
+        expect(s.world.currentMap.consumedNodes).not.toContain('bw-w2');
+        expect(s.world.currentMap.completedNodes).not.toContain('bw-w2');
         expect(isDeathReturnArmed()).toBe(true);
         expect(mockReplace).toHaveBeenCalledWith('/death-return');
         expect(mockBack).not.toHaveBeenCalled();

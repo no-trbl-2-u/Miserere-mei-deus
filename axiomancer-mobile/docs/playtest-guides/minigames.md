@@ -7,7 +7,7 @@ Each kind starts its own session slice in `state/actions.ts` (`resolveCurrentMap
 ## 2. Enter it directly
 
 - `/dev` sections start closed; `dev-section-<key>-toggle` opens one (the launchers below sit under MINIGAMES & REWARDS, `dev-section-rewards-toggle`, and the quick triggers under ENCOUNTERS, `dev-section-encounters-toggle`).
-- Rest: `/exploration?fixture=apprentice-bw-rest` (`arrive` → `/rest`); `broke-l1-bw-rest` (0 shillings, 1 vitae, on bw-9, no `arrive` — the empty-wallet case). `/dev`: `debug-rest-button` (camp), `debug-rest-inn-button`, `debug-trigger-encounter-rest`. Seed: `__AXM_MINIGAME_SEEDS__.rest.seed` / `__AXM_REST_SEED__` (default 515151).
+- Rest: `/exploration?fixture=apprentice-bw-rest` (`arrive` → `/rest`); `broke-l1-bw-rest` (0 shillings, 1 vitae, on the bw-w4 camp, no `arrive` — the empty-wallet case). `/dev`: `debug-rest-button` (camp), `debug-rest-inn-button`, `debug-trigger-encounter-rest`. Seed: `__AXM_MINIGAME_SEEDS__.rest.seed` / `__AXM_REST_SEED__` (default 515151).
 - Loot cache: `/exploration?fixture=apprentice-bw-cache` (`arrive` → `/cache`). `/dev`: `debug-cache-button` (modest), `debug-cache-rich-button`, `debug-trigger-encounter-treasure`. Seed: `__AXM_MINIGAME_SEEDS__.cache.seed` / `__AXM_CACHE_SEED__` (default 626262).
 - Blacksmith: `/exploration?fixture=wanderer-bw-blacksmith` (`arrive` → `/blacksmith`, 180 shillings — the real-wallet case). `/dev`: `debug-anvil-budget-button` (the same witness variant on a fixed ×500 budget; `debug-blacksmith-button` was cut on 2026-10-16 as its strict subset). Seed: `__AXM_MINIGAME_SEEDS__.blacksmith.seed` / `__AXM_BLACKSMITH_SEED__`.
 - Gathering: `/dev` → `debug-trigger-encounter-gather` (lands on `/event`). No registry fixture stands on a gather node.

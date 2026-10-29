@@ -146,7 +146,7 @@ export interface RespawnElitesResult {
  * blocked routes, maps of another act). A world with no settled elite comes
  * back as the same reference with `respawned: []`.
  *
- * @example respawnElites(world).respawned // [{ map: 'breakwater', node: 'bw-8' }, ...]
+ * @example respawnElites(world).respawned // [{ map: 'breakwater', node: 'bw-w5' }, ...]
  */
 export function respawnElites(world: WorldState): RespawnElitesResult {
     const settled = settledEliteNodes(world);

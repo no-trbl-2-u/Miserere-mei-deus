@@ -57,7 +57,7 @@ function quest(objectives: Partial<QuestObjective>[], extra: Partial<Quest> = {}
 }
 
 /** A Breakwater state standing on `nodeId` with `q` active. */
-function stateWith(q: Quest, nodeId = 'bw-1'): GameState {
+function stateWith(q: Quest, nodeId = 'bw-w1'): GameState {
     const base = createNewGameState({ startMap: 'breakwater' });
     const def = getMapDefinition('coastal-continent', 'breakwater');
     return {
@@ -211,7 +211,7 @@ describe('A3: kills by foe class and hazards, on the quest map only', () => {
 
     it('a hazard resolved counts once, whatever its outcome, on the quest map', () => {
         const q = quest([{ type: 'hazard', requiredCount: 2 }], { holdForTurnIn: true });
-        const state = stateWith(q, 'bw-3');
+        const state = stateWith(q, 'bw-m2');
         const { state: after, event } = resolveMapEvent(state, () => 0.5);
         expect(event.kind).toBe('hazard');
         expect(after.quests.active[0]!.objectives[0]!.currentCount).toBe(1);
@@ -225,7 +225,7 @@ describe('A3: kills by foe class and hazards, on the quest map only', () => {
         const draws = (): number => {
             const rng = seededRng(77);
             let calls = 0;
-            resolveMapEvent(stateWith(q, 'bw-3'), () => { calls += 1; return rng(); });
+            resolveMapEvent(stateWith(q, 'bw-m2'), () => { calls += 1; return rng(); });
             return calls;
         };
         // The pool roll takes one draw; the card pick takes more from the same rng.
@@ -241,7 +241,7 @@ describe('A3: kills by foe class and hazards, on the quest map only', () => {
 
     it('a hazard that fills the objective pays an unheld quest through the door', () => {
         const q = quest([{ type: 'hazard' }]);
-        const state = stateWith(q, 'bw-3');
+        const state = stateWith(q, 'bw-m2');
         const { state: after } = resolveMapEvent(state, () => 0.5);
         expect(after.quests.completed).toContain(q.name);
         expect(after.player.experience).toBe(state.player.experience + 40);

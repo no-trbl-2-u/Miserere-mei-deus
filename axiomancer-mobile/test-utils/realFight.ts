@@ -8,8 +8,8 @@
  * initialised from the store's player, flags and that foe, the same call
  * `<CombatEncounterPanel>` makes on mount.
  *
- * The default fixture is the Breakwater's bw-2 (a float-eye at the map's
- * fight level); `REAL_BOSS_FIGHT_FIXTURE` is its door boss. Pass another fixture ref to fight a different node's foe;
+ * The default fixture is the Breakwater's bw-w2 (a float-eye at the map's
+ * fight level); `REAL_BOSS_FIGHT_FIXTURE` is its chapter boss (bw-k2). Pass another fixture ref to fight a different node's foe;
  * pass `deck` and `seed` where a test needs a known hand, as the panel's own
  * `deck` and `seed` props do, and `player` where it needs exact save fields
  * (a known-card set, a health pool) on the fixture's player.
@@ -35,23 +35,23 @@ import {
     type FixtureStoreHandle,
 } from '@/test-utils/fixtureStore';
 
-/** An Apprentice standing on the Breakwater's first fight (bw-2), arriving. */
+/** An Apprentice standing on the Breakwater's first fight (bw-w2), arriving. */
 export const REAL_FIGHT_FIXTURE: StateFixture = Object.freeze<StateFixture>({
-    id: 'real-fight-apprentice-bw-2',
-    description: 'Apprentice on the Breakwater\'s bw-2 encounter; `arrive` opens its combat prelude. Mobile combat tests.',
-    seed: 'fixture-real-fight-apprentice-bw-2',
+    id: 'real-fight-apprentice-bw-w2',
+    description: 'Apprentice on the Breakwater\'s bw-w2 encounter; `arrive` opens its combat prelude. Mobile combat tests.',
+    seed: 'fixture-real-fight-apprentice-bw-w2',
     preset: 'apprentice',
-    world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-2' },
+    world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-w2' },
     arrive: true,
 });
 
-/** An Apprentice at the Breakwater's door fight (bw-17, the Death Beholder): a boss, no WITHDRAW. */
+/** An Apprentice at the Breakwater's chapter boss (bw-k2, the Death Beholder): a boss, no WITHDRAW. */
 export const REAL_BOSS_FIGHT_FIXTURE: StateFixture = Object.freeze<StateFixture>({
     ...REAL_FIGHT_FIXTURE,
-    id: 'real-fight-apprentice-bw-17',
-    description: 'Apprentice on the Breakwater\'s bw-17 door fight (a boss); `arrive` opens its combat prelude. Mobile combat tests.',
-    seed: 'fixture-real-fight-apprentice-bw-17',
-    world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-17' },
+    id: 'real-fight-apprentice-bw-k2',
+    description: 'Apprentice on the Breakwater\'s bw-k2 chapter boss (a boss); `arrive` opens its combat prelude. Mobile combat tests.',
+    seed: 'fixture-real-fight-apprentice-bw-k2',
+    world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-k2' },
 });
 
 /** The default fixture with `player` overrides (level, stats, known cards, …). */

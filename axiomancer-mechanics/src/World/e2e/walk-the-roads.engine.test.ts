@@ -3,9 +3,10 @@
  *
  * On a gauntlet map the legal moves are the open roads out of the node the
  * player stands on, read both ways, onto new and walked nodes alike; held
- * roads and quest locks still gate; the move lists follow the rule after
- * every move, resolve, rest respawn and load. Staged on the Breakwater that is
- * live when WR1a ships (the four markers, their pockets, the watchtower).
+ * roads and quest gates still gate; the move lists follow the rule after
+ * every move, resolve, rest respawn and load. Staged on the live Breakwater
+ * (phase BW1b): the wreck and the three elites hold their far roads, and the
+ * chain's keep gate and river bridge stay shut until their steps complete.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -16,8 +17,12 @@ import {
 } from '../world.reducer';
 import { createMapState, getMapDefinition } from '../map.registry';
 import { resolveMapEvent } from '../MapEvents/resolve-map-event';
+import { takeTravel } from '../MapEvents/travel';
 import { respawnElites } from '../elite-respawn';
-import { BREAKWATER_QUESTLINE_ID } from '../quest.library';
+import { BREAKWATER_CHAPTER_QUESTLINE_ID } from '../breakwater-chapter.questline';
+import {
+    BREAKWATER_CHAPTER_HELD, BRIDGE_GATE_REASON, KEEP_GATE_REASON,
+} from '../Continents/Coastal-Village/breakwater-chapter';
 import { createStartingWorld } from '../index';
 import { createNewGameState, gameReducer } from '../../Game/game.reducer';
 import type { GameState } from '../../Game/types';
@@ -56,27 +61,44 @@ function endFight(state: GameState, target: Encounter, outcome: 'victory' | 'fle
     return gameReducer(fighting, { type: 'END_COMBAT', payload: { outcome, grantedLoot: [], grantedXp: 0 } });
 }
 
+/** Opens the fight at `nodeId` (walking there, or retrying it in place) and ends it with `outcome`. */
 function fightAt(state: GameState, nodeId: string, outcome: 'victory' | 'flee' | 'defeat' = 'victory'): GameState {
-    const { state: owed, event } = arrive(state, nodeId);
+    const world = map(state).currentNode === nodeId ? moveToNode(state.world, nodeId) : walkRoadTo(state.world, nodeId);
+    const { state: owed, event } = resolveMapEvent({ ...state, world }, seededRng(7));
     if (event.kind !== 'encounter') throw new Error(`expected a fight at ${nodeId}, got ${event.kind}`);
     return endFight(owed, event.encounter, outcome);
 }
 
 const accept = (s: GameState, n: number) =>
-    gameReducer(s, { type: 'ACCEPT_QUEST_STEP', payload: { questline: BREAKWATER_QUESTLINE_ID, step: n } });
+    gameReducer(s, { type: 'ACCEPT_QUEST_STEP', payload: { questline: BREAKWATER_CHAPTER_QUESTLINE_ID, step: n } });
 const turnIn = (s: GameState, n: number) =>
-    gameReducer(s, { type: 'TURN_IN_QUEST_STEP', payload: { questline: BREAKWATER_QUESTLINE_ID, step: n } });
+    gameReducer(s, { type: 'TURN_IN_QUEST_STEP', payload: { questline: BREAKWATER_CHAPTER_QUESTLINE_ID, step: n } });
 
-function quest(state: GameState, nodeId: string): GameState {
+/** Arrives at the quest node `nodeId` and returns the state and the stage it reads as. */
+function quest(state: GameState, nodeId: string): { state: GameState; stage: string } {
     const { state: after, event } = arrive(state, nodeId);
     if (event.kind !== 'quest') throw new Error(`expected a quest node at ${nodeId}, got ${event.kind}`);
-    return after;
+    return { state: after, stage: event.stage };
+}
+
+/** Takes the passage offered at the travel node `nodeId`. */
+function travelFrom(state: GameState, nodeId: string): GameState {
+    const offered = arrive(state, nodeId);
+    expect(offered.event.kind).toBe('travel');
+    return takeTravel(offered.state);
+}
+
+/** The road `from` -> `to` is shut: not a legal move, and a move there throws `reason`. */
+function expectShut(s: GameState, to: string, reason: string | RegExp) {
+    expect(legalMovesFrom(map(s))).not.toContain(to);
+    expect(() => moveToNode(s.world, to)).toThrow(IllegalMoveError);
+    expect(() => moveToNode(s.world, to)).toThrow(reason);
 }
 
 describe('A1: legal moves are the open roads out of the node underfoot', () => {
     it('a new map offers the start node\'s roads, and its lists say so', () => {
         const m = createStartingWorld('breakwater').currentMap;
-        expect(legalMovesFrom(m)).toEqual(['bw-19', 'bw-4', 'bw-5']);
+        expect(legalMovesFrom(m)).toEqual(['bw-w2']);
         expectListsFollowTheRule(m);
         expectListsFollowTheRule(createMapState(DEF));
     });
@@ -91,32 +113,34 @@ describe('A1: legal moves are the open roads out of the node underfoot', () => {
         }
     });
 
-    it('from a dead-end pocket the only road is the one back', () => {
+    it('from a dead end the only road is the one back', () => {
         let s = freshGame();
-        s = accept(quest(s, 'bw-19'), 1);
-        s = arrive(s, 'bw-12').state;
-        expect(legalMovesFrom(map(s))).toEqual(['bw-19']);
-        // Back out through the marker to the windmill, then on to a new branch.
-        expect(roadRouteTo(map(s), 'bw-4')).toEqual(['bw-19', 'bw-1', 'bw-4']);
-        const out = arrive(s, 'bw-4');
-        expect(out.event.kind).toBe('none');
-        expect(map(out.state).currentNode).toBe('bw-4');
+        s = fightAt(s, 'bw-w2');
+        s = fightAt(s, 'bw-m1');
+        s = arrive(s, 'bw-m2').state;
+        s = arrive(s, 'bw-m3').state;
+        expect(legalMovesFrom(map(s))).toEqual(['bw-m2']);
+        // Back out to the first fork, then on to a new branch.
+        expect(roadRouteTo(map(s), 'bw-w4')).toEqual(['bw-m2', 'bw-m1', 'bw-w2', 'bw-w4']);
+        const out = arrive(s, 'bw-w4');
+        expect(out.event.kind).toBe('rest');
+        expect(map(out.state).currentNode).toBe('bw-w4');
     });
 
     it('a walk back passes only across walked nodes', () => {
         const s = freshGame();
-        // bw-7 is two roads away and bw-4 / bw-5 are unwalked: no walk reaches it yet.
-        expect(roadRouteTo(map(s), 'bw-7')).toBeNull();
-        expect(() => walkRoadTo(s.world, 'bw-7')).toThrow(IllegalMoveError);
-        expect(roadReachable(map(s))).toEqual(['bw-19', 'bw-4', 'bw-5']);
+        // bw-w3 is two roads away and bw-w2 is unwalked: no walk reaches it yet.
+        expect(roadRouteTo(map(s), 'bw-w3')).toBeNull();
+        expect(() => walkRoadTo(s.world, 'bw-w3')).toThrow(IllegalMoveError);
+        expect(roadReachable(map(s))).toEqual(['bw-w2']);
     });
 });
 
 describe('A2: the move lists follow the rule after every move, resolve, respawn and load', () => {
     it('after moves and resolves along a walk out and back', () => {
-        let s = freshGame();
+        let s = fightAt(freshGame(), 'bw-w2');
         expectListsFollowTheRule(map(s));
-        for (const id of ['bw-4', 'bw-9', 'bw-4', 'bw-1', 'bw-5']) {
+        for (const id of ['bw-w4', 'bw-w2', 'bw-w1', 'bw-w2', 'bw-w4']) {
             const moved: GameState = { ...s, world: moveToNode(s.world, id) };
             expectListsFollowTheRule(syncMoveLists(map(moved)));
             s = resolveMapEvent(moved, seededRng(5)).state;
@@ -126,97 +150,117 @@ describe('A2: the move lists follow the rule after every move, resolve, respawn 
 
     it('after a fight settles and after a rest brings an elite back', () => {
         let s = freshGame();
-        s = accept(quest(s, 'bw-19'), 1);
-        s = arrive(s, 'bw-3').state;
-        s = arrive(s, 'bw-4').state;
-        s = arrive(s, 'bw-9').state;
-        s = accept(turnIn(quest(s, 'bw-20'), 1), 2);
-        s = fightAt(s, 'bw-2');
+        s = fightAt(s, 'bw-w2');
+        s = arrive(s, 'bw-w4').state;
+        s = fightAt(s, 'bw-w5');
         expectListsFollowTheRule(map(s));
         const back = respawnElites(s.world);
+        expect(back.respawned).toEqual([{ map: 'breakwater', node: 'bw-w5' }]);
         expectListsFollowTheRule(back.world.currentMap);
     });
 
     it('A5: a save written under the frontier rule loads with its lists rewritten from where the player stands', () => {
         const live = createStartingWorld('breakwater');
-        // A frontier-era save: standing on bw-9 with the whole explored edge
+        // A frontier-era save: standing on bw-w4 with the whole explored edge
         // in availableNodes and a short lockedNodes.
         const frontierEra: WorldState = {
             ...live,
             currentMap: {
                 ...live.currentMap,
-                currentNode: 'bw-9',
-                completedNodes: ['bw-4', 'bw-5'],
-                consumedNodes: ['bw-1', 'bw-4', 'bw-5'],
-                availableNodes: ['bw-19', 'bw-4', 'bw-5', 'bw-7', 'bw-9', 'bw-13'],
-                lockedNodes: ['bw-17', 'bw-18'],
+                currentNode: 'bw-w4',
+                completedNodes: ['bw-w2'],
+                consumedNodes: ['bw-w1', 'bw-w2'],
+                availableNodes: ['bw-w2', 'bw-w3', 'bw-w4', 'bw-m1', 'bw-w5'],
+                lockedNodes: ['bw-k2', 'bw-b2'],
             },
             mapStates: {
-                'breakwater': { ...live.currentMap, availableNodes: ['bw-7'], lockedNodes: [] },
+                'breakwater': { ...live.currentMap, availableNodes: ['bw-w3'], lockedNodes: [] },
             },
         };
         const loaded = syncWorldMoveLists(frontierEra);
-        expect(loaded.currentMap.availableNodes).toEqual(['bw-4', 'bw-13']);
+        expect(loaded.currentMap.availableNodes).toEqual(['bw-w2', 'bw-w5']);
         expectListsFollowTheRule(loaded.currentMap);
         expectListsFollowTheRule(loaded.mapStates!['breakwater']!);
         // And it plays on: the next road is a legal move.
-        expect(moveToNode(loaded, 'bw-13').currentMap.currentNode).toBe('bw-13');
+        expect(moveToNode(loaded, 'bw-w5').currentMap.currentNode).toBe('bw-w5');
         // A save that already agrees loads untouched.
         expect(syncWorldMoveLists(loaded)).toBe(loaded);
     });
 });
 
-describe('A3: held roads and blocked routes still gate on the Breakwater', () => {
-    it('no road out of a quest marker opens before its step is accepted', () => {
-        // Each marker, stood on unspent with its lock open: only the roads it
-        // was reached by are legal, never one into its pocket.
-        const pockets: Record<string, string[]> = {
-            'bw-19': ['bw-3', 'bw-12'],
-            'bw-20': ['bw-2', 'bw-10', 'bw-14'],
-            'bw-21': ['bw-8', 'bw-6'],
-            'bw-22': ['bw-17'],
+describe('A3: held roads and quest gates still gate on the Breakwater', () => {
+    it('each held node keeps its far road shut until it is crossed or beaten, and the road it was reached by open', () => {
+        // Held node -> [the road it was reached by, its far road].
+        const roads: Record<string, [string, string]> = {
+            'bw-h4': ['bw-h3', 'bw-h5'],
+            'bw-c1': ['bw-c0', 'bw-c2'],
+            'bw-l4': ['bw-l3', 'bw-l5'],
+            'bw-w5': ['bw-w4', 'bw-k1'],
         };
+        expect(Object.keys(roads).sort()).toEqual([...BREAKWATER_CHAPTER_HELD].sort());
         const w = createStartingWorld('breakwater');
-        for (const [marker, pocket] of Object.entries(pockets)) {
-            const m: MapState = { ...w.currentMap, currentNode: marker, blockedRoutes: [] };
-            for (const id of pocket) expect(legalMovesFrom(m), `${marker} -> ${id}`).not.toContain(id);
-            expect(legalMovesFrom(m).length).toBeGreaterThan(0);
-            const accepted: MapState = { ...m, consumedNodes: [marker] };
-            for (const id of pocket) expect(legalMovesFrom(accepted), `${marker} -> ${id} once spent`).toContain(id);
+        for (const [held, [near, far]] of Object.entries(roads)) {
+            const m: MapState = { ...w.currentMap, currentNode: held, blockedRoutes: [] };
+            expect(legalMovesFrom(m), `${held} -> ${near}`).toContain(near);
+            expect(legalMovesFrom(m), `${held} -> ${far}`).not.toContain(far);
+            const settled: MapState = { ...m, completedNodes: [held] };
+            expect(legalMovesFrom(settled), `${held} -> ${far} once settled`).toContain(far);
         }
     });
 
-    it('the bridge (bw-18) is not a legal move until the watchtower fight (bw-17) is won', () => {
-        let s = freshGame();
-        s = accept(quest(s, 'bw-19'), 1);
-        s = arrive(s, 'bw-3').state;
-        s = arrive(s, 'bw-4').state;
-        s = arrive(s, 'bw-9').state;
-        s = accept(turnIn(quest(s, 'bw-20'), 1), 2);
-        s = fightAt(s, 'bw-2');
-        s = fightAt(s, 'bw-10');
-        s = arrive(s, 'bw-7').state;
-        s = accept(turnIn(quest(s, 'bw-21'), 2), 3);
-        s = fightAt(s, 'bw-8');
-        s = arrive(s, 'bw-13').state;
-        s = arrive(s, 'bw-15').state;
-        s = accept(turnIn(quest(s, 'bw-22'), 3), 4);
-        expect(roadReachable(map(s))).not.toContain('bw-18');
-
-        const fled = fightAt(s, 'bw-17', 'flee');
-        expect(map(fled).currentNode).toBe('bw-17');
-        expect(legalMovesFrom(map(fled))).toEqual(['bw-22']);
-        expect(() => moveToNode(fled.world, 'bw-18')).toThrow(/held/);
-
-        const won = fightAt(s, 'bw-17', 'victory');
-        expect(legalMovesFrom(map(won))).toContain('bw-18');
+    it('a fled elite keeps its far road shut; a won one opens it', () => {
+        let s = fightAt(freshGame(), 'bw-w2');
+        s = arrive(s, 'bw-w4').state;
+        const fled = fightAt(s, 'bw-w5', 'flee');
+        expect(map(fled).currentNode).toBe('bw-w5');
+        expect(legalMovesFrom(map(fled))).toEqual(['bw-w4']);
+        expect(() => moveToNode(fled.world, 'bw-k1')).toThrow(/held/);
+        const won = fightAt(fled, 'bw-w5', 'victory');
+        expect(legalMovesFrom(map(won))).toContain('bw-k1');
     });
 
-    it('a quest lock keeps its marker off the moves until the step before is met', () => {
+    it('the keep gate (bw-k1 -> bw-k2) and the river bridge (bw-b1 -> bw-b2) stay shut until their steps complete', () => {
         let s = freshGame();
-        s = arrive(s, 'bw-4').state;
-        s = arrive(s, 'bw-9').state;
-        expect(legalMovesFrom(map(s))).not.toContain('bw-20');
-        expect(() => moveToNode(s.world, 'bw-20')).toThrow(/blocked/);
+
+        // The bridge reached first: the quest node refuses, the bridge stays shut.
+        for (const id of ['bw-w2', 'bw-w3', 'bw-h1', 'bw-t1', 'bw-t2']) s = fightAt(s, id);
+        const early = quest(s, 'bw-b1');
+        expect(early.stage).toBe('locked');
+        expectShut(early.state, 'bw-b2', BRIDGE_GATE_REASON);
+        s = early.state;
+
+        // Step 1 to the cove and back, step 2 to the lighthouse.
+        for (const id of ['bw-h2', 'bw-h3']) s = fightAt(s, id);
+        s = arrive(s, 'bw-h4').state;
+        s = arrive(s, 'bw-h5').state;
+        s = travelFrom(s, 'bw-h6');
+        s = fightAt(s, 'bw-c1');
+        s = accept(turnIn(quest(s, 'bw-c2').state, 1), 2);
+        s = travelFrom(s, 'bw-c0');
+        s = fightAt(s, 'bw-t3');
+        s = arrive(s, 'bw-t5').state;
+        for (const id of ['bw-t6', 'bw-l1']) s = fightAt(s, id);
+        s = arrive(s, 'bw-l3').state;
+        s = fightAt(s, 'bw-l4');
+        s = accept(quest(s, 'bw-l5').state, 3);
+
+        // To the keep gate: shut with step 3 active and the key carried, until it is turned in.
+        s = arrive(s, 'bw-w4').state;
+        s = fightAt(s, 'bw-w5');
+        const gate = quest(s, 'bw-k1');
+        expect(gate.stage).toBe('turn-in');
+        expectShut(gate.state, 'bw-k2', KEEP_GATE_REASON);
+        s = turnIn(gate.state, 3);
+        expect(legalMovesFrom(map(s))).toContain('bw-k2');
+
+        // The boss beaten: the bridge stays shut until step 4 is turned in at bw-b1.
+        s = accept(s, 4);
+        s = fightAt(s, 'bw-k2');
+        expect(roadReachable(map(s))).not.toContain('bw-b2');
+        const bridge = quest(s, 'bw-b1');
+        expect(bridge.stage).toBe('turn-in');
+        expectShut(bridge.state, 'bw-b2', BRIDGE_GATE_REASON);
+        s = turnIn(bridge.state, 4);
+        expect(legalMovesFrom(map(s))).toContain('bw-b2');
     });
 });

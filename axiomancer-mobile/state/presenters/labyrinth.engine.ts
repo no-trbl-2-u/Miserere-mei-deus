@@ -302,7 +302,7 @@ function buildLabyrinthViewModel(state: AppStoreState): LabyrinthViewModel {
     // A live session whose current world node is NOT a room in the act
     // means the world was swapped out from under the visit — a run reset
     // on death (`resetRun` regenerates the overworld and seats the player
-    // at `bw-1`), a save/load race, or a teleport. The session is stale;
+    // at `bw-w1`), a save/load race, or a teleport. The session is stale;
     // fall back to act-select rather than throwing `LabyrinthContentError`
     // and tripping the global error boundary. (Root cause of the
     // "battle loss → THE BINDING TORE" crash.)
@@ -427,7 +427,7 @@ function buildLabyrinthFinaleViewModel(state: AppStoreState): LabyrinthFinaleVM 
     const act = getAporiaAct(session.actId);
     const nodeId = state.world.currentMap.currentNode;
     // `bossRoom` is always an authored room, so a stale post-reset node
-    // (e.g. `bw-1`) fails this guard and returns null before any
+    // (e.g. `bw-w1`) fails this guard and returns null before any
     // `getRoom` lookup — no LabyrinthContentError from the finale path.
     if (nodeId !== act.bossRoom) return null;
     const progress = labyrinthProgressOf(gameStateOf(state));

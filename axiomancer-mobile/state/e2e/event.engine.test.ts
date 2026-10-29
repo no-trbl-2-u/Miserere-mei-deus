@@ -72,7 +72,7 @@ function makeEncounterResult(opts: { isBoss?: boolean } = {}): ResolveMapEventRe
         state: undefined as never,
         event: {
             kind: 'encounter',
-            encounter: { enemies: [enemy], origin: 'breakwater:bw-2' } as never,
+            encounter: { enemies: [enemy], origin: 'breakwater:bw-w2' } as never,
             isBoss: opts.isBoss ?? false,
         },
     };

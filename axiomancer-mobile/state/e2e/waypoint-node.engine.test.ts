@@ -1,7 +1,8 @@
 /**
  * The empty waypoint on the map (phase NK1a, A3).
  *
- * A node with no event pool (the seven former gathering nodes) is not a fight:
+ * A node with no event pool (five former gathering nodes; the Chapter 1
+ * Breakwater has none) is not a fight:
  * it draws as a waypoint, with its own glyph, tag and tooltip, and walking onto
  * it never commits combat. Walks every Act 1 map's real pools.
  */
@@ -37,7 +38,7 @@ describe('the empty waypoint on the map', () => {
     it('every node with no pool draws as a waypoint, and only those do', () => {
         const nodes = ACT_1_MAPS.flatMap((m) => nodesOf(m));
         const waypoints = nodes.filter((n) => n.type === 'waypoint').map((n) => n.id).sort();
-        expect(waypoints).toEqual(['bc-7', 'bw-11', 'bw-4', 'cw-14', 'cw-4', 'cw-8', 'ld-7']);
+        expect(waypoints).toEqual(['bc-7', 'cw-14', 'cw-4', 'cw-8', 'ld-7']);
         expect(nodes.filter((n) => (n.type === 'waypoint') === n.pooled).map((n) => n.id)).toEqual([]);
     });
 

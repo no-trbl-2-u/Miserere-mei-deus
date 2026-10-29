@@ -1,26 +1,28 @@
 /**
- * The authored questlines (phase QL1d: A13, A14 of the QL1 brief).
+ * The authored questlines (phase QL1d: A14 of the QL1 brief; the Breakwater
+ * chain since phase BW1b).
  *
- *   A13 every authored questline is four steps on four distinct quest nodes
- *       of its map, steps 1-3 turned in and step 4 paid on the boss victory;
- *       each step pays exactly one XP and one extra, the last also one relic,
- *       and every relic a questline pays is a quest relic.
- *   A14 the supply, strict downstream: the nodes that open when step k's
- *       marker is settled hold its goal plus one spare (the boss step none),
- *       and a node reachable around a marker is never supply.
+ *   The only authored questline is the Breakwater's Chapter 1 chain
+ *   (`breakwater-chapter.questline.ts`); its shape, rewards and gates are
+ *   pinned in `breakwater-chapter.test.ts`. Every authored line is registered
+ *   on load, its quest nodes are reached in step order and no gate can be
+ *   walked around. The chain counts no pocket (its goals are places, a key
+ *   and the boss), so the A14 supply check (a step's pocket holds its goal
+ *   plus a spare) is pinned below on what a node and an objective count, and
+ *   on a staged map.
  */
 
 import { describe, it, expect } from 'vitest';
 
-import { AUTHORED_QUESTLINES, BREAKWATER_QUESTLINE } from './quest.library';
+import { AUTHORED_QUESTLINES } from './quest.library';
+import { BREAKWATER_CHAPTER_QUESTLINE } from './breakwater-chapter.questline';
 import { listQuestlines, type Questline, type QuestlineStep } from './questline';
-import { objectiveClass, questlineSupplyProblems, stepSupply, supplyClassesOf, type SupplyClass } from './questline-supply';
+import { objectiveClass, questlineSupplyProblems, supplyClassesOf, type SupplyClass } from './questline-supply';
+import { auditRoadReachability } from './road-reachability';
 import { questGateProblems } from './quest-gates';
 import { getMapDefinition } from './map.registry';
-import { getNodeEventPool } from './MapEvents/resolve-map-event';
 import { MAP_REGISTRY } from './map.registry';
-import type { MapDefinition, Reward } from './types';
-import type { Equipment, Item } from '../Items/types';
+import type { MapDefinition } from './types';
 import './index';
 
 function continentOf(map: string): string {
@@ -33,65 +35,18 @@ function continentOf(map: string): string {
 const defOf = (line: Questline): MapDefinition =>
     getMapDefinition(continentOf(line.mapName) as never, line.mapName);
 
-function itemOf(reward: Reward): Item | undefined {
-    if (typeof reward !== 'object') return undefined;
-    if ('category' in reward) return reward;
-    return reward.kind === 'item' ? reward.item : undefined;
-}
-
-const isRelic = (r: Reward) => itemOf(r)?.category === 'equipment';
-const isExtra = (r: Reward) => typeof r === 'object' && (
-    ('kind' in r && (r.kind === 'currency' || r.kind === 'card-pick'))
-    || itemOf(r)?.category === 'consumable');
-const isXp = (r: Reward) => typeof r === 'object' && 'kind' in r && r.kind === 'experience';
-
 describe('the authored questlines are registered', () => {
-    it('registers every authored line at module load, the Breakwater\'s first', () => {
-        expect(AUTHORED_QUESTLINES[0]).toBe(BREAKWATER_QUESTLINE);
+    it('registers every authored line at module load: the Breakwater chain, and only it', () => {
+        expect(AUTHORED_QUESTLINES).toEqual([BREAKWATER_CHAPTER_QUESTLINE]);
         for (const line of AUTHORED_QUESTLINES) expect(listQuestlines()).toContain(line);
     });
 });
 
-describe.each(AUTHORED_QUESTLINES.map(l => [l.id, l] as const))('A13: %s', (_id, line) => {
-    const def = defOf(line);
-
-    it('is four steps, numbered 1-4, on four distinct quest nodes of its map, node k offering step k', () => {
-        expect(line.steps.map(s => s.step)).toEqual([1, 2, 3, 4]);
-        expect(new Set(line.steps.map(s => s.nodeId)).size).toBe(4);
-        for (const step of line.steps) {
-            expect(def.nodes.some(n => n.id === step.nodeId)).toBe(true);
-            const payload = getNodeEventPool(def.continent, def.name, step.nodeId)?.entries[0]?.payload;
-            expect(payload).toMatchObject({ kind: 'quest', questline: line.id, node: step.step });
-            expect(step.quest.mapName).toBe(line.mapName);
-        }
-    });
-
-    it('turns in steps 1-3 and pays step 4 on the boss victory', () => {
-        expect(line.steps.slice(0, 3).map(s => s.settle)).toEqual(['turn-in', 'turn-in', 'turn-in']);
-        const last = line.steps[3]!;
-        expect(last.settle).toBe('on-victory');
-        expect(last.quest.objectives.some(o => o.type === 'kill' && o.foeClass === 'boss')).toBe(true);
-    });
-
-    it('pays exactly one XP and one extra per step, the last step also exactly one relic', () => {
-        for (const step of line.steps) {
-            expect(step.rewards.filter(isXp), `step ${step.step} XP`).toHaveLength(1);
-            expect(step.rewards.filter(isExtra), `step ${step.step} extra`).toHaveLength(1);
-            expect(step.rewards.filter(isRelic), `step ${step.step} relic`).toHaveLength(step.step === 4 ? 1 : 0);
-            expect(step.rewards).toHaveLength(step.step === 4 ? 3 : 2);
-        }
-    });
-
-    it('pays only quest relics (none is elite-only)', () => {
-        const relics = line.steps.flatMap(s => s.rewards.filter(isRelic).map(r => itemOf(r) as Equipment));
-        expect(relics.length).toBeGreaterThan(0);
-        for (const relic of relics) expect(relic.relicSource).toBe('quest');
-    });
-});
-
-describe.each(AUTHORED_QUESTLINES.map(l => [l.id, l] as const))('A14: %s supply, strict downstream', (_id, line) => {
-    it('holds every step\'s goal plus the spare in the pocket behind its own marker', () => {
-        expect(questlineSupplyProblems(defOf(line), line)).toEqual([]);
+describe.each(AUTHORED_QUESTLINES.map(l => [l.id, l] as const))('%s: every step and node in reach', (_id, line) => {
+    it('reaches every quest node in step order, and every node of its map, walking the roads', () => {
+        const audit = auditRoadReachability(defOf(line), [line]);
+        expect(audit.unreachableSteps).toEqual([]);
+        expect(audit.unreachableNodes).toEqual([]);
     });
 });
 
@@ -101,31 +56,18 @@ describe.each(listQuestlines().map(l => [l.id, l] as const))('MQ1 A3: %s gates h
     });
 });
 
-describe('A14: the Breakwater\'s pockets', () => {
-    const def = defOf(BREAKWATER_QUESTLINE);
-    it('opens exactly the authored pocket behind each marker', () => {
-        const pockets = BREAKWATER_QUESTLINE.steps.map(s => stepSupply(def, BREAKWATER_QUESTLINE, s).sort());
-        expect(pockets).toEqual([
-            ['bw-12', 'bw-3'],
-            ['bw-10', 'bw-14', 'bw-2'],
-            ['bw-6', 'bw-8'],
-            ['bw-17'],
-        ]);
-    });
-});
-
 describe('A14: what a node and an objective count', () => {
     const cls = (id: string) => supplyClassesOf('coastal-continent', 'breakwater', id);
 
-    it('reads each node\'s class off its pool: a hazard, a normal fight, the elite, the boss, and nothing else', () => {
-        expect(cls('bw-3')).toEqual(['hazard']);
-        expect(cls('bw-2')).toEqual(['any']);
-        expect(cls('bw-8')).toEqual(['any', 'elite']);
-        expect(cls('bw-17')).toEqual(['boss']);
-        expect(cls('bw-4')).toEqual([]);
-        expect(cls('bw-19')).toEqual([]);
+    it('reads each node\'s class off its pool: a hazard, a normal fight, an elite, the boss, and nothing else', () => {
+        expect(cls('bw-m2')).toEqual(['hazard']);
+        expect(cls('bw-w2')).toEqual(['any']);
+        expect(cls('bw-w5')).toEqual(['any', 'elite']);
+        expect(cls('bw-k2')).toEqual(['boss']);
+        expect(cls('bw-w4')).toEqual([]);
+        expect(cls('bw-c2')).toEqual([]);
         expect(cls('no-such-node')).toEqual([]);
-        expect(supplyClassesOf('coastal-continent', 'no-such-map', 'bw-3')).toEqual([]);
+        expect(supplyClassesOf('coastal-continent', 'no-such-map', 'bw-m2')).toEqual([]);
     });
 
     it('reads an objective\'s class: a hazard, a kill by foe class, and nothing for a named target or another type', () => {
@@ -135,19 +77,19 @@ describe('A14: what a node and an objective count', () => {
         expect(objectiveClass({ type: 'kill', foeClass: 'boss' })).toBe('boss');
         expect(objectiveClass({ type: 'kill', target: 'Float-Eye', foeClass: 'any' })).toBeUndefined();
         expect(objectiveClass({ type: 'kill' })).toBeUndefined();
-        expect(objectiveClass({ type: 'reach', target: 'bw-3' })).toBeUndefined();
+        expect(objectiveClass({ type: 'reach', target: 'bw-m2' })).toBeUndefined();
         expect(objectiveClass({ type: 'collect', target: 'driftwood' })).toBeUndefined();
     });
 
     it('skips an objective that counts no node: a questline asking for a named kill reports no supply problem for it', () => {
-        const line = BREAKWATER_QUESTLINE;
+        const line = stagedLine(1);
         const named = {
             ...line,
             steps: line.steps.map(s => s.step !== 2 ? s : {
                 ...s, quest: { ...s.quest, objectives: [{ ...s.quest.objectives[0]!, target: 'Float-Eye', requiredCount: 9 }] },
             }),
         };
-        expect(questlineSupplyProblems(defOf(line), named)).toEqual([]);
+        expect(questlineSupplyProblems(stagedDef({ withSpare: true }), named, classOf)).toEqual([]);
     });
 });
 

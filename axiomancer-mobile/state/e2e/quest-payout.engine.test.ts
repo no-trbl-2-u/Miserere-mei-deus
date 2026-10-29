@@ -19,6 +19,7 @@ import type { AppStore } from '@/state/store';
 import {
     FIXTURE_LINE,
     FIXTURE_LINE_NAME,
+    FIXTURE_NODES,
     acceptFixtureStep,
     fillFixtureStep,
     registerFixtureQuestline,
@@ -38,7 +39,7 @@ function atNode(node: number) {
     const handle = createFixtureStore({
         id: `ql1c-node-${node}`,
         seed: `ql1c-node-${node}`,
-        world: { continent: 'coastal-continent', map: 'breakwater', node: `bw-${node}` },
+        world: { continent: 'coastal-continent', map: 'breakwater', node: FIXTURE_NODES[node - 1]! },
     });
     const { store, actions } = handle;
     // The grey deck, an empty satchel and no level-up in reach.
@@ -58,7 +59,7 @@ describe('opening a quest node', () => {
         open();
         expect(store.getState().quest.open).toMatchObject({ questline: FIXTURE_LINE, node: 1 });
         expect(store.getState().event.pending).toBeNull();
-        expect(gs(store).world.currentMap.consumedNodes).not.toContain('bw-1');
+        expect(gs(store).world.currentMap.consumedNodes).not.toContain(FIXTURE_NODES[0]);
     });
 
     it('LEAVE closes the screen and changes nothing else', () => {
@@ -68,7 +69,7 @@ describe('opening a quest node', () => {
         actions.closeQuest();
         expect(store.getState().quest.open).toBeNull();
         expect(gs(store).quests).toBe(before.quests);
-        expect(gs(store).world.currentMap.consumedNodes).not.toContain('bw-1');
+        expect(gs(store).world.currentMap.consumedNodes).not.toContain(FIXTURE_NODES[0]);
     });
 });
 
@@ -79,7 +80,7 @@ describe('ACCEPT', () => {
         expect(actions.acceptQuestStep()).toBe(true);
         const active = gs(store).quests.active.find(q => q.name === 'Cross the Gallows');
         expect(active?.objectives[0]?.currentCount).toBe(0);
-        expect(gs(store).world.currentMap.consumedNodes).toContain('bw-1');
+        expect(gs(store).world.currentMap.consumedNodes).toContain(FIXTURE_NODES[0]);
     });
 
     it('a second ACCEPT does nothing', () => {
@@ -116,7 +117,7 @@ describe('TURN IN', () => {
         expect(actions.turnInQuestStep()).toBe(false);
         expect(gs(store).player.experience).toBe(before.experience + 40);
         // The node is not spent by a turn-in; it offers step 2.
-        expect(gs(store).world.currentMap.consumedNodes).not.toContain('bw-2');
+        expect(gs(store).world.currentMap.consumedNodes).not.toContain(FIXTURE_NODES[1]);
     });
 
     it('refuses a step that is not ready', () => {
@@ -216,7 +217,7 @@ describe('a card-pick paid off the turn-in path (a boss victory)', () => {
         const before = gs(store).quests;
         // Complete step 2 outside a turn-in, as a dialogue effect would.
         store.setState({ quests: completeQuest(before, 'Thin the Quay') } as never);
-        const placed = placeOnNode(gs(store).world, 'bw-4');
+        const placed = placeOnNode(gs(store).world, FIXTURE_NODES[3]);
         store.setState({ world: placed } as never);
         // offerCompletedQuestExtrasAction is the one call every completion path makes.
         offerCompletedQuestExtrasAction(store, before);

@@ -20,7 +20,7 @@
 
 import { describe, it, expect, afterEach, vi } from 'vitest';
 
-import { completeCurrentNode, moveToNode, placeOnNode, teleportToNode, unlockAdjacent } from '../world.reducer';
+import { moveToNode, placeOnNode, teleportToNode, unlockAdjacent } from '../world.reducer';
 import { createMapState, getMapDefinition } from '../map.registry';
 import { createStartingWorld } from '../index';
 import { resolveMapEvent, settleArrival } from '../MapEvents/resolve-map-event';
@@ -30,13 +30,13 @@ import { mockSequentialRng } from '../../test-utils/rng';
 import type { GameState } from '../../Game/types';
 import { settleQuestNodes } from '../../Game/fixtures/quest-nodes';
 import type { WorldState } from '../types';
-// Import for side effect — registers the Breakwater pools (bw-14 encounter,
-// bw-18 door) that the dispatcher rolls from.
+// Import for side effect — registers the Breakwater pools (bw-w3 encounter,
+// bw-b2 door) that the dispatcher rolls from.
 import '../MapEvents/content';
 
 afterEach(() => vi.restoreAllMocks());
 
-/** A new Breakwater with its quest nodes settled, so the walks reach the pockets. */
+/** A new Breakwater with its quest nodes settled, so the walks cross the quest gates. */
 const freshWorld = (): WorldState => {
     const w = createStartingWorld('breakwater');
     return { ...w, currentMap: settleQuestNodes(w.currentMap) };
@@ -67,33 +67,33 @@ describe('the arrival verb records what the player is owed', () => {
     });
 
     it('moveToNode owes the node it walked onto', () => {
-        const walked = moveToNode(freshWorld(), 'bw-5');
+        const walked = moveToNode(freshWorld(), 'bw-w2');
 
-        expect(walked.currentMap.currentNode).toBe('bw-5');
-        expect(walked.currentMap.pendingArrival).toBe('bw-5');
+        expect(walked.currentMap.currentNode).toBe('bw-w2');
+        expect(walked.currentMap.pendingArrival).toBe('bw-w2');
     });
 
     it('each further move owes only the node under the player', () => {
-        const walked = moveToNode(walk(freshWorld(), 'bw-5'), 'bw-7');
+        const walked = moveToNode(walk(freshWorld(), 'bw-w2'), 'bw-w3');
 
-        expect(walked.currentMap.pendingArrival).toBe('bw-7');
+        expect(walked.currentMap.pendingArrival).toBe('bw-w3');
     });
 });
 
 describe('the placement verbs owe nothing — being placed is not arriving', () => {
     it('placeOnNode clears a debt the walk had recorded', () => {
-        const walked = moveToNode(freshWorld(), 'bw-5');
-        expect(walked.currentMap.pendingArrival).toBe('bw-5');
+        const walked = moveToNode(freshWorld(), 'bw-w2');
+        expect(walked.currentMap.pendingArrival).toBe('bw-w2');
 
-        const placed = placeOnNode(walked, 'bw-9');
+        const placed = placeOnNode(walked, 'bw-w4');
 
-        expect(placed.currentMap.currentNode).toBe('bw-9');
+        expect(placed.currentMap.currentNode).toBe('bw-w4');
         expect(placed.currentMap.pendingArrival ?? null).toBeNull();
         // The condition the old inference fired on is still true: placement
         // deliberately un-consumes the node so its content stays live for the
         // tester who jumped there. That is precisely why it cannot stand in
         // for the debt.
-        expect(placed.currentMap.consumedNodes).not.toContain('bw-9');
+        expect(placed.currentMap.consumedNodes).not.toContain('bw-w4');
     });
 
     it('teleportToNode clears it too — the Oubliette ejects, it does not walk', () => {
@@ -121,23 +121,23 @@ describe('the placement verbs owe nothing — being placed is not arriving', () 
 
 describe('resolving the arrival is what answers it', () => {
     it('clears the debt for the node it resolved', () => {
-        // bw-11 is the kelp wreck, an empty waypoint since the gathering kind was cut.
-        const before = gameOn(walk(freshWorld(), 'bw-4', 'bw-7', 'bw-11'));
-        expect(before.world.currentMap.pendingArrival).toBe('bw-11');
+        // bw-w4 is a camp: its rest is offered, and the arrival is answered.
+        const before = gameOn(walk(freshWorld(), 'bw-w2', 'bw-w4'));
+        expect(before.world.currentMap.pendingArrival).toBe('bw-w4');
 
         const { state, event } = resolveMapEvent(before);
 
-        expect(event.kind).toBe('none');
+        expect(event.kind).toBe('rest');
         expect(state.world.currentMap.pendingArrival ?? null).toBeNull();
     });
 
     it('a fight is the exception: the debt stands until the fight settles (R9a)', () => {
-        const before = gameOn(walk(freshWorld(), 'bw-4', 'bw-9', 'bw-20', 'bw-14'));
+        const before = gameOn(walk(freshWorld(), 'bw-w2', 'bw-w3'));
 
         const { state, event } = resolveMapEvent(before);
 
         expect(event.kind).toBe('encounter');
-        expect(state.world.currentMap.pendingArrival).toBe('bw-14');
+        expect(state.world.currentMap.pendingArrival).toBe('bw-w3');
         expect(settleArrival(state).world.currentMap.pendingArrival ?? null).toBeNull();
     });
 
@@ -147,10 +147,11 @@ describe('resolving the arrival is what answers it', () => {
         // door answers it and only OFFERS the trip (phase NK1d); the yes
         // (`takeTravel`) crosses, and the Breakwater it files away owes
         // nothing, so returning through it never crosses again with no input.
-        // The watchtower beaten (completed): it holds the bridge until then.
-        const before = gameOn(completeCurrentNode(placeOnNode(freshWorld(), 'bw-17')));
-        const walked = { ...before, world: moveToNode(before.world, 'bw-18') };
-        expect(walked.world.currentMap.pendingArrival).toBe('bw-18');
+        // The bridge gate is open (the quest nodes settled): it is shut until
+        // the chain's last step is turned in at bw-b1.
+        const before = gameOn(placeOnNode(freshWorld(), 'bw-b1'));
+        const walked = { ...before, world: moveToNode(before.world, 'bw-b2') };
+        expect(walked.world.currentMap.pendingArrival).toBe('bw-b2');
 
         const { state: offered, event } = resolveMapEvent(walked);
         expect(event.kind).toBe('travel');
@@ -161,10 +162,10 @@ describe('resolving the arrival is what answers it', () => {
     });
 
     it('clears a stale debt on a node that was already consumed', () => {
-        const walked = walk(freshWorld(), 'bw-4', 'bw-9', 'bw-20', 'bw-14');
+        const walked = walk(freshWorld(), 'bw-w2', 'bw-w3');
         const consumed: WorldState = {
             ...walked,
-            currentMap: { ...walked.currentMap, consumedNodes: ['bw-14'] },
+            currentMap: { ...walked.currentMap, consumedNodes: ['bw-w3'] },
         };
 
         const { state, event } = resolveMapEvent(gameOn(consumed));

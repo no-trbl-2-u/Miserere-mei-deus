@@ -24,14 +24,14 @@ afterEach(() => {
 
 describe('node event-kind read API', () => {
     it('reports the authored kind for a known node without rolling', () => {
-        // bw-2 is authored as an encounter.
-        expect(getNodePrimaryEventKind('coastal-continent', 'breakwater', 'bw-2')).toBe(
+        // bw-w2 is authored as an encounter.
+        expect(getNodePrimaryEventKind('coastal-continent', 'breakwater', 'bw-w2')).toBe(
             'encounter',
         );
-        expect(getNodeEventKinds('coastal-continent', 'breakwater', 'bw-2')).toContain(
+        expect(getNodeEventKinds('coastal-continent', 'breakwater', 'bw-w2')).toContain(
             'encounter',
         );
-        const pool = getNodeEventPool('coastal-continent', 'breakwater', 'bw-2');
+        const pool = getNodeEventPool('coastal-continent', 'breakwater', 'bw-w2');
         expect(pool?.entries.length).toBeGreaterThan(0);
     });
 

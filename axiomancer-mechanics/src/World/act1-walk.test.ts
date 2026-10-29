@@ -2,13 +2,15 @@ import { describe, it, expect } from 'vitest';
 import { planAct1Walk, ACT1_WALK_EVENT_KINDS } from './act1-walk';
 import { MAP_REGISTRY } from './map.registry';
 import { getNodeEventPool } from './MapEvents/resolve-map-event';
+import { mapPassages } from './road-reachability';
+import { BREAKWATER_CHAPTER_QUESTLINE } from './breakwater-chapter.questline';
 
 const plan = planAct1Walk();
 
 describe('planAct1Walk', () => {
-    it('reads the four Act 1 regions, doors and exits off the graph', () => {
+    it('reads the four Act 1 regions, doors and exits off the graph and the pools', () => {
         expect(plan.regions.map(r => [r.map, r.door, r.exit])).toEqual([
-            ['breakwater', 'bw-17', 'bw-18'],
+            ['breakwater', 'bw-b1', 'bw-b2'],
             ['charcoal-wood', 'cw-17', 'cw-20'],
             ['beacon-crags', 'bc-15', 'bc-17'],
             ['lantern-deep', 'ld-16', 'ld-18'],
@@ -25,20 +27,29 @@ describe('planAct1Walk', () => {
                     edges.add(`${m}|${n.id}`);
                 }
             }
+            const passages = new Set(mapPassages(def).map(p => `${p.from}|${p.to}`));
+            // The Breakwater's door is the river bridge's quest node (step 4 is
+            // turned in there); every other region's door is its boss fight.
+            const doorKind = region.map === 'breakwater' ? 'quest' : 'encounter';
 
             it('starts on the arrival node and ends door, then exit', () => {
                 const steps = region.steps;
                 expect(steps[0]).toMatchObject({ nodeId: region.start, role: 'arrival' });
-                expect(steps[steps.length - 2]).toMatchObject({ nodeId: region.door, role: 'door', kind: 'encounter' });
+                expect(steps[steps.length - 2]).toMatchObject({ nodeId: region.door, role: 'door', kind: doorKind });
                 expect(steps[steps.length - 1]).toMatchObject({ nodeId: region.exit, role: 'exit' });
             });
 
-            it('walks the roads: each step is joined to the one before, and only a back step repeats a node', () => {
+            it('walks the roads and passages: each step is joined to the one before, and only a back or passage step repeats a node', () => {
                 const walked = new Set<string>([region.start]);
                 let here = region.start;
                 for (const step of region.steps.slice(1)) {
-                    expect(edges.has(`${here}|${step.nodeId}`), `${here} -> ${step.nodeId}`).toBe(true);
-                    expect(walked.has(step.nodeId)).toBe(step.role === 'back');
+                    const link = `${here}|${step.nodeId}`;
+                    if (step.role === 'passage') {
+                        expect(passages.has(link), `${here} => ${step.nodeId} is a passage`).toBe(true);
+                    } else {
+                        expect(edges.has(link), `${here} -> ${step.nodeId}`).toBe(true);
+                        expect(walked.has(step.nodeId)).toBe(step.role === 'back');
+                    }
                     walked.add(step.nodeId);
                     here = step.nodeId;
                 }
@@ -58,6 +69,22 @@ describe('planAct1Walk', () => {
             });
         });
     }
+
+    it('plays the Breakwater chain in order: the camp, the lighthouse, the keep gate, the boss, the bridge', () => {
+        const ids = plan.regions[0]!.steps.map(s => s.nodeId);
+        const firstAt = (id: string) => ids.indexOf(id);
+        const order = [...BREAKWATER_CHAPTER_QUESTLINE.steps.slice(1).map(s => s.nodeId), 'bw-k2', 'bw-b1', 'bw-b2'];
+        expect(order).toEqual(['bw-c2', 'bw-l5', 'bw-k1', 'bw-k2', 'bw-b1', 'bw-b2']);
+        const at = order.map(firstAt);
+        expect(at.every(i => i > 0)).toBe(true);
+        expect([...at].sort((a, b) => a - b)).toEqual(at);
+    });
+
+    it('crosses the sea cave by its passage both ways, and never by road', () => {
+        const steps = plan.regions[0]!.steps;
+        const passages = steps.filter(s => s.role === 'passage').map(s => s.nodeId);
+        expect(passages).toEqual(['bw-c0', 'bw-h6']);
+    });
 
     it('lists the nine kinds and the waypoint the audit table covers, and no removed kind', () => {
         expect(ACT1_WALK_EVENT_KINDS).toHaveLength(10);

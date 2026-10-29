@@ -78,7 +78,7 @@ describe('hazard screen -- a lethal crossing', () => {
     it('a first death arms the return moment and replaces the screen with it', () => {
         const { store, actions } = mountHazard();
         act(() => {
-            actions.moveTo('bw-2');
+            actions.moveTo('bw-w2');
             setHealth(store, 15, 15);
         });
         toFailedRewards(store, actions);
@@ -96,10 +96,10 @@ describe('hazard screen -- a lethal crossing', () => {
     it('a death while dying ends the run and does not show the return moment', () => {
         const { store, actions } = mountHazard();
         act(() => {
-            actions.moveTo('bw-2');
+            actions.moveTo('bw-w2');
             setHealth(store, 15, 15);
             actions.playerDied('hazard');
-            actions.moveTo('bw-2');
+            actions.moveTo('bw-w2');
         });
         toFailedRewards(store, actions);
 
