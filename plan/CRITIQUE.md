@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-10-28 at commit 850ce863
-> Pass count: 108
+> Last pass: 2026-10-29 at commit 1250f1d9
+> Pass count: 109
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
@@ -964,7 +964,52 @@
 > WITHDRAW sub-line contrast, the mobile hub's black band (the no-clamp
 > trade).
 
+> **[critique pass 109, 2026-10-29, commit 1250f1d9] Unattended `/march`
+> tick.** `critique:drive` (`CRITIQUE_VIEWPORT=both`), the 15-screen set:
+> 30 captures, 0 nav trouble, 0 console/page errors. 16 first-parent
+> commits after pass 108: the cache column and goods reveal, the satchel
+> tile width, the gothic figures, the WITHDRAW contrast, the opening-hand
+> recorder and #1046 (the map plate always covers the pane). Pass 108's
+> three rows read as fixed in the captures. Three rows filed: on desktop
+> the level-15 hub opens with the pilgrim's own node above the frame
+> (MED), TAKE THE GOODS prints two identical potions as two chips where
+> the satchel says x6 (LOW), and the cache's card offer is rolled from
+> `Math.random`, not the cache seed, so the two viewports offered
+> different cards (LOW). Checked and not filed: `/death-return`'s
+> "[content]" copy and `/quest`'s fixture lines (on purpose, as pass
+> 108); the Minor Healing Potion's "15 BELOW HALF" (open LOW row);
+> THE CUT dimmed with only the deck floor named while the purse is also
+> 0 (the floor is the binding reason). Reconfirmed and not re-filed: the
+> covered fan names on a phone (waits on T).
+
 ## Pending
+
+### [MED] exploration / desktop — the level-15 hub opens with the pilgrim's own node above the frame, so the first view shows open roads leading from somewhere off-screen
+- pass: 109 (commit 1250f1d9)
+- viewport: desktop (1280x800)
+- category: navigation
+- observation: on the `sage-bw-door-gate` hub at 1280 the camera's first frame shows eight open (gold-ringed) nodes and several roads running up off the pane's top edge, but no dotted "you are here" node anywhere; the pilgrim's node sits above the frame. The same fixture at 375 shows it at about (200, 248), and the level-1 hub at 1280 shows it only 40px under the pane's top edge. A first-time player sees choices with no origin until they press the recentre button, which runs the same fit and lands in the same place.
+- evidence: `.critique-artifacts/desktop/11-late-game-hub.png` (no dotted current node; roads exit the top near x 680) against `mobile/11-late-game-hub.png`; `desktop/05-exploration-hub.png` (windmill node at y about 210, the pane's top at 170). `axiomancer-mobile/components/exploration/MapCanvas.tsx` `computeFocusTransform`: the scale is floored at `minScaleFor` (the plate covers the pane, #1046, T 2026-10-28), and on the wide, short desktop pane that floor is likely above the scale that fits the focus box's height, so the box overflows the pane and the vertical centre can drop the current node out. The `settleAxis` comment promises it never takes a focus node off-screen; that holds only when the box fits.
+- suggested fix: keep the cover floor (T's ruling), but when the floored scale cannot fit the whole focus box, centre the overflowing axis on the current node instead of the box's middle (still clamped by `settleAxis`), so the pilgrim's node is always in the first frame; pin it in `MapCanvas.test.tsx` with a 1260x500 viewport and a focus box taller than the pane.
+- source: critique:drive (unattended)
+
+### [LOW] /cache — TAKE THE GOODS prints two identical potions as two "+ GREATER HEALING POTION" chips, where the satchel stacks the same item as "x6"
+- pass: 109 (commit 1250f1d9)
+- viewport: mobile (375x812) and desktop (1280x800)
+- category: comprehension
+- observation: the goods offer lists "+ GREATER HEALING POTION", "+ GREATER HEALING POTION", "+12 SHILLINGS" as three chips. At 375 they stack on three lines, so the repeat reads as a rendering echo rather than two potions. The satchel prints a stack as one tile with a "x6" badge, so the game already has a count idiom the cache does not use.
+- evidence: `.critique-artifacts/mobile/12-cache.png` and `desktop/12-cache.png` (goods row); `axiomancer-mobile/app/cache/index.tsx:74` maps `offer.goods` one chip per item name, and the outcome ledger at :150 does the same with `itemNames`.
+- suggested fix: fold repeats in the presenter into one chip with a count ("+ GREATER HEALING POTION x2"), in both the offer and the outcome ledger; presentation only, pinned in the cache presenter test.
+- source: critique:drive (unattended)
+
+### [LOW] /cache / determinism — the card offer is rolled from `Math.random`, not the cache seed, so the same fixture offered A Plain Ward at 375 and A Plain Word at 1280
+- pass: 109 (commit 1250f1d9)
+- viewport: mobile (375x812) and desktop (1280x800)
+- category: infra
+- observation: both viewports booted `apprentice-bw-cache` with the same seed and drew the same goods, but TAKE A CARD offered a different card in each. `beginLootCacheChoiceAction` resolves a cache seed and rolls the goods from it, then rolls the card with `rollCombatCardRewards(player, Math.random, 1)`. A cache is not reproducible from its seed, a mobile/desktop or pass-to-pass comparison of `/cache` is not like for like (the pass-100 hazard row, again), and a test cannot pin the card the screen shows.
+- evidence: `axiomancer-mobile/state/cache/store-actions.ts:72` (`Math.random`) beside :67 (`resolveMinigameSeed('cache', ...)`) and :71 (`rollCacheReward({ seed })`); `.critique-artifacts/mobile/12-cache.png` (A PLAIN WARD, GUARD 5) against `desktop/12-cache.png` (A PLAIN WORD, VULNERABLE +25%).
+- suggested fix: draw the card from a PRNG built from the cache seed (the mulberry32 `cache-reward.ts` already uses, offset so it does not share the goods' stream), and pin "same seed, same card" in the cache store-actions test.
+- source: critique:drive (unattended)
 
 ### [MED] combat / mobile — at 375 wide the hand fan cuts four of five card names to "A PLAIN" plus one letter, so Blow, Word and Ward look the same
 - pass: 100 (commit ee9c5b83)

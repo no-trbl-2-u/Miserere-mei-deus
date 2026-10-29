@@ -1050,6 +1050,15 @@ satisfied for exactly these.)
 - Held roads and quest locks still gate routing; the boss is forced by routing, not by an exhausted frontier.
 - Built by Phase WR1 (`plan/phases/phase_WR1_walk_the_roads.md`).
 
+**D112 — The overworld has eight node kinds.** (T, 2026-10-28, in an attended session; recorded by the NK1 plot. Amends D111's "ninth kind": the count is now eight.)
+
+- The kinds are encounter, hazard, rest, loot cache, cutscene, quest (D111), village and travel, plus the empty waypoint (a node with no event) and the labyrinth door, kept but placed on no overworld map until the labyrinth returns (T: "I think the Labyrinth will eventually be act 2").
+- Gathering, interaction and narration are removed (T: "I doubt we'll need that many").
+- The village is one node with three counters: a paid rest, a shop that sells cards and removes a card for a fee, and the Anvil (T: "'shop' and 'anvil' don't exist. Together, they make up the 'village' event node"). There is no standalone Anvil node.
+- Travel is a choice, "move to X?", with flavor text and art, leading to another map or to a node on the same map; a same-map pair is a secret path the player can take both ways, and nothing on the map shows where it leads (T: "Leave it up to the player to learn and remember").
+- Each kind's full treatment (art, transitions, copy, animation) is pitched and plotted one kind at a time: encounter, hazard, rest and quest before the Nov 16 MVP, travel, village, loot cache and cutscene by v0.3 (T, 2026-10-28; `plan/deadlines.md`).
+- Built by Phase NK1 (`plan/phases/phase_NK1_node_kind_cleanup.md`).
+
 **D111 — Chapter 1 has one questline, on a ninth node kind.** (T, 2026-10-27, in an attended session; recorded by the QL1 plot, run unattended on T's word; amended 2026-10-28 with T's answers to the plot's open items. Supersedes LR1f's scope: four quests, one per Act 1 region, given by existing map events.)
 
 - Chapter 1 (the Breakwater, D106) carries one questline of four steps. The other quest relics (the Ruby Signet, the Bleeding Signet, the Elementalist's Brooch, and the Defender's Carapace Belt) stay quest rewards for Chapters 2-4's quest lines.
