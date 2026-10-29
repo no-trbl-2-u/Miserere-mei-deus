@@ -1036,28 +1036,40 @@ function clearGatheringArrival(raw: unknown): unknown {
     return { ...map, pendingArrival: null };
 }
 
-/**
- * v39 → v40: the `gathering`, `interaction` and `narration` map-event kinds
- * are cut. The seven gathering nodes carry no pool now (empty waypoints), so
- * an arrival a v39 save still owes on one is cleared: there is no event left
- * to answer. Event payloads are never saved (pools are re-read from content),
- * so nothing else in a save names a removed kind; the materials those nodes
- * granted stay in the item library and still load and sell. Pure over a raw
- * v39 save payload.
- */
-function migrateV39ToV40(raw: Record<string, unknown>): Record<string, unknown> {
-    const world = raw.world as { currentMap?: unknown; mapStates?: Record<string, unknown> } | undefined;
-    if (!world || typeof world !== 'object') return { ...raw, version: 40 };
+/** A raw world (live or a Labyrinth visit's parked `returnWorld`) with every owed gathering arrival cleared. */
+function clearGatheringArrivalsInWorld(world: { currentMap?: unknown; mapStates?: Record<string, unknown> }): Record<string, unknown> {
     const mapStates = world.mapStates && typeof world.mapStates === 'object'
         ? Object.fromEntries(Object.entries(world.mapStates).map(([k, v]) => [k, clearGatheringArrival(v)]))
         : world.mapStates;
     return {
+        ...world,
+        currentMap: clearGatheringArrival(world.currentMap),
+        ...(mapStates !== undefined ? { mapStates } : {}),
+    };
+}
+
+/**
+ * v39 → v40: the `gathering`, `interaction` and `narration` map-event kinds
+ * are cut. The seven gathering nodes carry no pool now (empty waypoints), so
+ * an arrival a v39 save still owes on one is cleared: there is no event left
+ * to answer. This runs on the live world and, when a save sits inside a
+ * Labyrinth visit, on the parked `returnWorld` snapshot too: a save standing
+ * in the Aporia with an owed arrival on a former gathering node would
+ * otherwise keep it stale past v40. Event payloads are never saved (pools
+ * are re-read from content), so nothing else in a save names a removed kind;
+ * the materials those nodes granted stay in the item library and still load
+ * and sell. Pure over a raw v39 save payload.
+ */
+function migrateV39ToV40(raw: Record<string, unknown>): Record<string, unknown> {
+    const world = raw.world as { currentMap?: unknown; mapStates?: Record<string, unknown> } | undefined;
+    const labyrinth = raw.labyrinth as { returnWorld?: { currentMap?: unknown; mapStates?: Record<string, unknown> } } | undefined;
+    const returnWorld = labyrinth?.returnWorld;
+    return {
         ...raw,
-        world: {
-            ...world,
-            currentMap: clearGatheringArrival(world.currentMap),
-            ...(mapStates !== undefined ? { mapStates } : {}),
-        },
+        ...(world && typeof world === 'object' ? { world: clearGatheringArrivalsInWorld(world) } : {}),
+        ...(labyrinth && typeof labyrinth === 'object' && returnWorld && typeof returnWorld === 'object'
+            ? { labyrinth: { ...labyrinth, returnWorld: clearGatheringArrivalsInWorld(returnWorld) } }
+            : {}),
         version: 40,
     };
 }
