@@ -10,6 +10,7 @@
 import { getCardById, getQuestline, questNodeStage, questStepState, questlineStep, resolveQuestNodeEvent } from '@mechanics';
 import type { Quest, QuestNodeStage, Reward } from '@mechanics';
 import type { AppStoreState, MobileQuestPaid } from '@/state/store';
+import { objectiveText, rewardItemName } from './quest-tracker.engine';
 import {
     QUEST_GIVER_FALLBACK,
     questCardLine,
@@ -111,7 +112,7 @@ function stepVM(
         name: quest.name,
         objectives: quest.objectives.map(o => ({
             id: o.id,
-            description: o.description,
+            description: objectiveText(o),
             progress: questProgressLine(o.currentCount, o.requiredCount),
             done: o.currentCount >= o.requiredCount,
         })),
@@ -144,6 +145,23 @@ export function selectQuestVM(state: Pick<AppStoreState, 'quest' | 'quests'>): Q
         ? stepVM(event.ahead, event.ahead.step, stepStatus(event.ahead.step))
         : null;
     const total = questline?.steps.length ?? open.node;
+    // A step paid on ARRIVAL has no turn-in to leave a ledger: the node that
+    // offers the next step shows what the arrival paid, from the step's own
+    // rewards (the settle seam paid exactly these).
+    const arrivalStep = questline ? questlineStep(questline, open.node - 1) : undefined;
+    const arrivalPaid: MobileQuestPaid | null =
+        stage === 'offer' && arrivalStep?.settle === 'on-arrival' && questStepState(state.quests, arrivalStep) === 'completed'
+            ? {
+                step: arrivalStep.step,
+                questName: arrivalStep.quest.name,
+                experience: arrivalStep.rewards.reduce((n, r) => n + (typeof r !== 'string' && 'kind' in r && r.kind === 'experience' ? r.amount : 0), 0),
+                currency: arrivalStep.rewards.reduce((n, r) => n + (typeof r !== 'string' && 'kind' in r && r.kind === 'currency' ? r.amount : 0), 0),
+                itemNames: arrivalStep.rewards.flatMap(r => {
+                    const name = rewardItemName(r);
+                    return name === null ? [] : [name];
+                }),
+            }
+            : null;
     return {
         active: true,
         stage,
@@ -153,7 +171,7 @@ export function selectQuestVM(state: Pick<AppStoreState, 'quest' | 'quests'>): Q
         ahead,
         canAccept: stage === 'offer' && ahead?.status === 'unaccepted',
         canTurnIn: stage === 'turn-in',
-        paid: state.quest?.paid ?? null,
+        paid: state.quest?.paid ?? arrivalPaid,
         cardOffers,
     };
 }

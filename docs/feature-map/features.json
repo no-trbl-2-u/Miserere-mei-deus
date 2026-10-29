@@ -868,7 +868,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/__tests__/QuestGate.test.tsx, axiomancer-mobile/scripts/critique-drive.test.mjs, axiomancer-mobile/state/e2e/quest.screen.test.tsx"
+        "source": "axiomancer-mobile/components/__tests__/QuestGate.test.tsx, axiomancer-mobile/scripts/critique-drive.test.mjs, axiomancer-mobile/state/e2e/quest-chain.screen.test.tsx, ..."
       },
       "needsPitch": {
         "value": false,
@@ -2542,6 +2542,12 @@
       "kind": "coupling",
       "from": "route:(tabs)/exploration",
       "to": "area:Game",
+      "file": "axiomancer-mobile/state/presenters/quest-tracker.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/exploration",
+      "to": "area:Game",
       "file": "axiomancer-mobile/state/store.ts"
     },
     {
@@ -2561,6 +2567,12 @@
       "from": "route:(tabs)/exploration",
       "to": "area:Items",
       "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/exploration",
+      "to": "area:Log",
+      "file": "axiomancer-mobile/lib/platform/router.ts"
     },
     {
       "kind": "coupling",
@@ -2615,6 +2627,12 @@
       "from": "route:(tabs)/exploration",
       "to": "area:World",
       "file": "axiomancer-mobile/state/presenters/hazard.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/exploration",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/quest-tracker.engine.ts"
     },
     {
       "kind": "coupling",
@@ -3508,6 +3526,12 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Game",
+      "file": "axiomancer-mobile/state/presenters/quest-tracker.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Game",
       "file": "axiomancer-mobile/state/quest/store-actions.ts"
     },
     {
@@ -3641,6 +3665,12 @@
       "from": "route:combat-encounter",
       "to": "area:World",
       "file": "axiomancer-mobile/state/presenters/hazard.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/quest-tracker.engine.ts"
     },
     {
       "kind": "coupling",
@@ -3868,6 +3898,12 @@
       "kind": "coupling",
       "from": "route:dev",
       "to": "area:Game",
+      "file": "axiomancer-mobile/state/presenters/quest-tracker.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:dev",
+      "to": "area:Game",
       "file": "axiomancer-mobile/state/store.ts"
     },
     {
@@ -4031,6 +4067,12 @@
       "from": "route:dev",
       "to": "area:World",
       "file": "axiomancer-mobile/state/presenters/hazard-puzzle.copy.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:dev",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/quest-tracker.engine.ts"
     },
     {
       "kind": "coupling",
@@ -5375,6 +5417,12 @@
       "from": "route:(tabs)/exploration",
       "to": "route:(tabs)/memoir",
       "file": "axiomancer-mobile/app/(tabs)/_layout.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/exploration",
+      "to": "route:(tabs)/memoir",
+      "file": "axiomancer-mobile/components/exploration/QuestTracker.tsx"
     },
     {
       "kind": "flow",

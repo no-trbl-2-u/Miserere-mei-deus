@@ -17,6 +17,7 @@ import { getMapLayout } from '@/state/exploration-maps';
 import type { MapSheet } from '@/state/exploration-maps';
 import { FALLBACK_SHEET, LEGACY_SHEET_SIZE } from '@/state/exploration-maps/sheet';
 import { freezeViewModel } from './freeze';
+import { questHoldingRoad } from './quest-tracker.engine';
 import { anvilShortLine, nodePurseLine } from './node-confirm.copy';
 
 export type NodeKind = 'completed' | 'current' | 'available' | 'locked';
@@ -52,6 +53,12 @@ export interface ExplorationNode {
      * or null otherwise.
      */
     blockedReason?: string | null;
+    /**
+     * The name of the quest whose step holds that blocked road (a gate shut
+     * until the quest is completed, or a lock opened when it fills), read off
+     * the registered questlines; null when no questline names the road.
+     */
+    blockedBy?: string | null;
 }
 
 export interface ExplorationEdge {
@@ -666,8 +673,10 @@ function computeExplorationViewModel(state: GameStore): ExplorationViewModel {
         const nodeKind = classifyNode(eng.id, currentNodeId, spent, reachable);
         // A locked node met across a blocked road from where the player has
         // been says why (the first such road, in map order).
-        const reason = nodeKind !== 'locked' ? null
-            : neighboursOf(eng.id).filter(been).map((n) => blockedReason(n, eng.id)).find((r) => r !== null) ?? null;
+        const holdingRoad = nodeKind !== 'locked' ? undefined
+            : neighboursOf(eng.id).filter(been).find((n) => blockedReason(n, eng.id) !== null);
+        const reason = holdingRoad === undefined ? null : blockedReason(holdingRoad, eng.id);
+        const heldBy = holdingRoad === undefined ? null : questHoldingRoad(mapName, holdingRoad, eng.id);
         return {
             id: eng.id,
             x: meta.x,
@@ -677,6 +686,7 @@ function computeExplorationViewModel(state: GameStore): ExplorationViewModel {
             type: meta.type,
             triggersCombat: nodeKind === 'available' && ENCOUNTER_NODE_TYPES.has(meta.type),
             blockedReason: reason,
+            blockedBy: heldBy,
         };
     });
 
