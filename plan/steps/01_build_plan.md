@@ -247,12 +247,10 @@ event-pool and layout files).
       are typed `AxmIconName`, making a bad entry a compile error rather than the silent `null`
       `ActionIcon` returns. No art (D88). Brief
       `plan/phases/phase_IT1_item_glyph_resolver.md` § IT1a. Requires nothing.
-- [blocked: owner-led — art is owner-only (D88)] Phase IT1b — T's icon picks, and the inline glyphs
-      die: T picks from the 2026-10-19 candidate sheet (23 candidates over 7 slots, rendered at the 28px
-      `ItemGlyph` draws); then the rest is mechanical — add the chosen icons to
-      `extract-game-icons.mjs`'s manifest, regenerate `game-icon-paths.ts`, fill IT1a's table, and
-      delete the one-off inline `<Svg>` blocks in `ItemCard.tsx` and `ItemGrid.tsx` the picks make dead
-      (`icon-registry.ts` forbids them). Brief
+- [x] (#989) Phase IT1b — T's icon picks for the six lane relics, with colour accents (narrowed by T,
+      2026-10-29): T's 2026-10-27 picks fill IT1a's table for the six lane relics, through `AxmIcon`'s new
+      `accents`. Shipped by a hand PR that did not tick this row. The rest of the original scope (the potions,
+      the other relics, the category glyphs, the inline `<Svg>` drain) moved to Phase IT2. Brief
       `plan/phases/phase_IT1_item_glyph_resolver.md` § IT1b. Requires IT1a.
 - [x] (#697) Phase HP4a — Decision pressure in the report (plotted by T, 2026-10-19): `puzzle:report` prints, per route and
       unlock set, the optional-card count, the required share and how many distinct first plays can still win or
@@ -320,6 +318,8 @@ event-pool and layout files).
 - [x] Phase NK1c — Paid rest and the card shop (plotted by T, 2026-10-28): a village rests for shillings, sells three cards from the reward pool and removes a card at the removal price; the rest node's `cut` and the ware shop go. Brief `plan/phases/phase_NK1_node_kind_cleanup.md` § NK1c. Requires NK1b.
 - [x] Phase NK1d — Travel: "Move to X?" (plotted by T, 2026-10-28): a travel node is one screen of art, flavor text and yes/no, and can lead to a node on the same map (paired secret paths, sealable until a node is spent) as well as to another map. Brief `plan/phases/phase_NK1_node_kind_cleanup.md` § NK1d. Requires NK1a.
 - [x] Phase BW1a — The new Breakwater, built and walked (plotted by T, 2026-10-28): T's 44-node Chapter 1 map (ids are the board codes, `bw-w1`..`bw-p3`) and its four-step chain on MQ1's rules, each quest paying a relic, built beside the live map and registered in tests only; the wreck hazard and three elites hold their far roads, the keep and the bridge are quest gates, the sea cave mouth and the cave face are a travel pair, a quest node reached too early refuses, no relic is elite-only any more; an e2e walks it start to bridge. Brief `plan/phases/phase_BW1_breakwater_rebuild.md` § BW1a. Requires MQ1b, NK1d.
+- [ ] Phase IT2a — T picks the rest of the item icons (plotted by T, 2026-10-29) (attended): T picks a game-icons mark, with any colour accents, for the three potions, the four relics with no icon (Suppliant's Ring and the Defender's three), the consumable, relic, material and quest category glyphs, the unknown-item mark and the empty bag; the session records them in the brief's "T's picks" table. Brief `plan/phases/phase_IT2_item_icons_rest.md` § IT2a. Requires nothing.
+- [ ] Phase IT2b — The picks applied, the inline glyphs gone (plotted by T, 2026-10-29): T's picks go in the icon manifest, `game-icon-paths.ts` is regenerated, `ITEM_GLYPH_BY_ID` and its accents gain the seven items, the category, unknown and empty-bag glyphs draw registry icons, every inline `<Svg>` under `components/inventory/` is deleted, and the enumeration test requires every library item to have its own entry. Brief `plan/phases/phase_IT2_item_icons_rest.md` § IT2b. Requires IT2a.
 - [ ] Phase BW1b — The new Breakwater goes live (plotted by T, 2026-10-28): the new map replaces the Breakwater, QL1's questline and bw-1..bw-22 go, 44 coast marks and the layout put every node on T's spot, every old save is deleted, every test and fixture naming old ids moves. Brief `plan/phases/phase_BW1_breakwater_rebuild.md` § BW1b. Requires BW1a, NK1b.
 - [x] Phase BW1c — Every node wears its kind (plotted by T, 2026-10-28): available nodes, the nodes next to them and quest nodes show their kind as a coloured icon token (an opaque disc, no blur); elite, travel and start get their own icons (T's pick from the board). Brief `plan/phases/phase_BW1_breakwater_rebuild.md` § BW1c. Requires NK1a.
 - [ ] Phase BW1d — T writes Chapter 1's lines (plotted by T, 2026-10-28) (attended): T's Nov 10 sitting fills the brief's "T's Chapter 1 lines" table: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, step XP and the relic each quest pays (D88); nothing built. Brief `plan/phases/phase_BW1_breakwater_rebuild.md` § BW1d. Requires BW1b.
@@ -1130,6 +1130,8 @@ See the status rows above; generate briefs on demand.
 > confirmation this was T's request, T's stated reason (or
 > "reason not stated" — never invent one), and the resulting
 > commit/issue/phase-brief when available.
+
+- **2026-10-29** — actor: **T, in session** (`/plot asap`, attended, branch `loop/plot-IT2-item-icons-rest`). Action: **ticked Phase IT1b `[x] (#989)` and narrowed it** to the six lane-relic icons #989 shipped (a hand PR that never ticked the row), and **added Phases IT2a (attended) and IT2b** directly above Phase BW1b, the first open row, for the rest of IT1b's scope. Confirmed T's request: yes (T, 2026-10-29: "Split it, then plot the potion icons"). Reason (T): the item-icon deadline stayed overdue though the relic picks had shipped; the potions, the other relics and the category glyphs were never picked. Brief `plan/phases/phase_IT2_item_icons_rest.md`.
 
 - **2026-10-29** — actor: **T, in session** (`/plot anytime`, attended, branch `loop/plot-AL1-art-licence-closed`). Action: **added Phase AL1** after Phase SB1, the last open row. Confirmed T's request: yes (T, 2026-10-29: "can we please write down somewhere that we've resolved the licensing issue? The images we use for everything are open source"; then, asked about the public site: publish all of it). Reason (T): "We've had this conversation a few times now ... all the art in digest says we need to figure out the license." Records D115. Brief `plan/phases/phase_AL1_art_licence_closed.md`.
 
