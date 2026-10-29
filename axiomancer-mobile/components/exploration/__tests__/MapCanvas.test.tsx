@@ -489,6 +489,19 @@ describe('computeFocusTransform', () => {
         expect(fit.ty + sheet.height * fit.scale).toBeGreaterThanOrEqual(viewport.h);
     });
 
+    it('with no focus nodes, holds the cover floor when 1x would leave black', () => {
+        const nodes: ExplorationNode[] = [
+            { id: 'a', label: 'A', kind: 'locked', type: 'encounter', x: 100, y: 100, triggersCombat: false },
+        ];
+        const viewport = { w: 1200, h: 1500 };
+        const fit = computeFocusTransform(nodes, viewport);
+        const s = minScaleFor(viewport);
+        expect(s).toBeGreaterThan(1);
+        expect(fit.scale).toBe(s);
+        expect(fit.tx).toBeCloseTo((viewport.w - 360 * SPREAD * s) / 2, 5);
+        expect(fit.ty).toBeCloseTo((viewport.h - 400 * SPREAD * s) / 2, 5);
+    });
+
     it('falls back to canvas centre at 1x when no focus nodes exist', () => {
         const nodes: ExplorationNode[] = [
             { id: 'a', label: 'A', kind: 'locked', type: 'encounter', x: 100, y: 100, triggersCombat: false },
@@ -700,7 +713,9 @@ describe('MapCanvas re-frames on a focus change', () => {
         // guard would be vacuous — a spurious re-fit lands on the same numbers.
         // RNGH's jest-utils deliver the FIRST ACTIVE event as `onStart`; only a
         // repeated ACTIVE reaches `onUpdate`, which is where the pan moves tx/ty.
-        const drag = { translationX: 120, translationY: -80 };
+        // The fitted plate exactly fills the pane's height, so only a sideways
+        // drag has room to move it.
+        const drag = { translationX: 120, translationY: 0 };
         fireGestureHandler(getByGestureTestId('map-pan'), [
             { state: State.BEGAN },
             { state: State.ACTIVE },
@@ -728,6 +743,95 @@ describe('MapCanvas re-frames on a focus change', () => {
         rerender(<MapCanvas nodes={moved} edges={mockEdges}><MockChildren /></MapCanvas>);
         rerender(<MapCanvas nodes={[...moved]} edges={mockEdges}><MockChildren /></MapCanvas>);
         expect(cameraOf(getByTestId)).toEqual(computeFocusTransform(moved, VIEWPORT));
+    });
+
+    /** Mount, lay out and flush the fit; returns the fitted camera. */
+    const mountFitted = () => {
+        const utils = render(<MapCanvas nodes={mockNodes} edges={mockEdges}><MockChildren /></MapCanvas>);
+        fireEvent(utils.getByTestId('map-canvas-wrapper'), 'layout', {
+            nativeEvent: { layout: { width: VIEWPORT.w, height: VIEWPORT.h } },
+        });
+        const flush = () => utils.rerender(<MapCanvas nodes={[...mockNodes]} edges={mockEdges}><MockChildren /></MapCanvas>);
+        flush();
+        return { ...utils, flush, fit: cameraOf(utils.getByTestId) };
+    };
+    const CANVAS = { w: 360 * 2.6, h: 400 * 2.6 };
+
+    it('zooms about the pinch focal point, and a moving focal point drags the map', () => {
+        const { getByTestId, flush, fit } = mountFitted();
+        const f = { x: 200, y: 300 };
+        // The plate point under the fingers before the pinch.
+        const u = (f.x - fit.tx) / fit.scale;
+        const v = (f.y - fit.ty) / fit.scale;
+        fireGestureHandler(getByGestureTestId('map-pinch'), [
+            { state: State.BEGAN, focalX: f.x, focalY: f.y, scale: 1 },
+            { state: State.ACTIVE, focalX: f.x, focalY: f.y, scale: 1 },
+            { state: State.ACTIVE, focalX: f.x, focalY: f.y, scale: 1.5 },
+            { state: State.END, focalX: f.x, focalY: f.y, scale: 1.5 },
+        ]);
+        flush();
+        const zoomed = cameraOf(getByTestId);
+        expect(zoomed.scale).toBeCloseTo(fit.scale * 1.5, 5);
+        expect(zoomed.tx + u * zoomed.scale).toBeCloseTo(f.x, 5);
+        expect(zoomed.ty + v * zoomed.scale).toBeCloseTo(f.y, 5);
+
+        // Same zoom, fingers slide up-left together: the map follows them.
+        fireGestureHandler(getByGestureTestId('map-pinch'), [
+            { state: State.BEGAN, focalX: f.x, focalY: f.y, scale: 1 },
+            { state: State.ACTIVE, focalX: f.x, focalY: f.y, scale: 1 },
+            { state: State.ACTIVE, focalX: f.x - 30, focalY: f.y - 10, scale: 1 },
+            { state: State.END, focalX: f.x - 30, focalY: f.y - 10, scale: 1 },
+        ]);
+        flush();
+        const slid = cameraOf(getByTestId);
+        expect(slid.scale).toBeCloseTo(zoomed.scale, 5);
+        expect(slid.tx).toBeCloseTo(zoomed.tx - 30, 5);
+        expect(slid.ty).toBeCloseTo(zoomed.ty - 10, 5);
+    });
+
+    it('clamps a pinch between the cover floor and 3x, never showing black', () => {
+        const { getByTestId, flush } = mountFitted();
+        const pinchTo = (scale: number) => {
+            fireGestureHandler(getByGestureTestId('map-pinch'), [
+                { state: State.BEGAN, focalX: 100, focalY: 100, scale: 1 },
+                { state: State.ACTIVE, focalX: 100, focalY: 100, scale: 1 },
+                { state: State.ACTIVE, focalX: 100, focalY: 100, scale },
+                { state: State.END, focalX: 100, focalY: 100, scale },
+            ]);
+            flush();
+            return cameraOf(getByTestId);
+        };
+        expect(pinchTo(50).scale).toBe(3);
+        const out = pinchTo(0.001);
+        expect(out.scale).toBe(minScaleFor(VIEWPORT));
+        expect(out.tx).toBeLessThanOrEqual(0);
+        expect(out.ty).toBeLessThanOrEqual(0);
+        expect(out.tx + CANVAS.w * out.scale).toBeGreaterThanOrEqual(VIEWPORT.w - 1e-6);
+        expect(out.ty + CANVAS.h * out.scale).toBeGreaterThanOrEqual(VIEWPORT.h - 1e-6);
+    });
+
+    it('pans by each step delta and stops at the plate edges', () => {
+        const { getByTestId, flush, fit } = mountFitted();
+        fireGestureHandler(getByGestureTestId('map-pan'), [
+            { state: State.BEGAN },
+            { state: State.ACTIVE },
+            { state: State.ACTIVE, translationX: 40, translationY: 0 },
+            { state: State.ACTIVE, translationX: 70, translationY: 0 },
+            { state: State.END, translationX: 70, translationY: 0 },
+        ]);
+        flush();
+        expect(cameraOf(getByTestId)).toEqual({ scale: fit.scale, tx: fit.tx + 70, ty: fit.ty });
+
+        fireGestureHandler(getByGestureTestId('map-pan'), [
+            { state: State.BEGAN },
+            { state: State.ACTIVE },
+            { state: State.ACTIVE, translationX: 5000, translationY: -5000 },
+            { state: State.END, translationX: 5000, translationY: -5000 },
+        ]);
+        flush();
+        const far = cameraOf(getByTestId);
+        expect(far.tx).toBe(0);
+        expect(far.ty).toBeCloseTo(VIEWPORT.h - CANVAS.h * fit.scale, 5);
     });
 });
 

@@ -462,15 +462,25 @@ export function MapCanvas({ nodes, edges, sheet, overlays, children }: MapCanvas
     // pane. With the canvas's top-left transform origin a screen point is
     // `t + s·c`; holding the pinch's focal point fixed across s→s' while it
     // moves f→f' gives t' = f' − (s'/s)(f − t).
-    const canvasW = canvas.w;
-    const canvasH = canvas.h;
-    const vw = viewport?.w ?? 0;
-    const vh = viewport?.h ?? 0;
-    const minScale = viewport ? minScaleFor(viewport, size) : 1;
+    //
+    // The pane and plate sizes ride in a shared value, not the callbacks'
+    // closures: a handler built before the first layout must not clamp
+    // against a zero-sized pane.
+    const bounds = useSharedValue({ vw: 0, vh: 0, cw: canvas.w, ch: canvas.h, min: 1 });
+    React.useEffect(() => {
+        bounds.value = {
+            vw: viewport?.w ?? 0,
+            vh: viewport?.h ?? 0,
+            cw: canvas.w,
+            ch: canvas.h,
+            min: viewport ? minScaleFor(viewport, size) : 1,
+        };
+    }, [bounds, viewport, canvas.w, canvas.h, size]);
     const pinching = useSharedValue(false);
     const lastFocalX = useSharedValue(0);
     const lastFocalY = useSharedValue(0);
     const pinch = Gesture.Pinch()
+        .withTestId('map-pinch')
         .onStart((e) => {
             pinching.value = true;
             savedScale.value = scale.value;
@@ -479,11 +489,12 @@ export function MapCanvas({ nodes, edges, sheet, overlays, children }: MapCanvas
         })
         .onUpdate((e) => {
             const s = scale.value;
-            const next = Math.min(MAX_SCALE, Math.max(minScale, savedScale.value * e.scale));
+            const b = bounds.value;
+            const next = Math.min(MAX_SCALE, Math.max(b.min, savedScale.value * e.scale));
             const k = next / s;
             scale.value = next;
-            tx.value = settleAxis(e.focalX - k * (lastFocalX.value - tx.value), vw, canvasW * next);
-            ty.value = settleAxis(e.focalY - k * (lastFocalY.value - ty.value), vh, canvasH * next);
+            tx.value = settleAxis(e.focalX - k * (lastFocalX.value - tx.value), b.vw, b.cw * next);
+            ty.value = settleAxis(e.focalY - k * (lastFocalY.value - ty.value), b.vh, b.ch * next);
             lastFocalX.value = e.focalX;
             lastFocalY.value = e.focalY;
         })
@@ -510,8 +521,9 @@ export function MapCanvas({ nodes, edges, sheet, overlays, children }: MapCanvas
             lastPanY.value = e.translationY;
             // While two fingers pinch, the pinch's focal point carries the drag.
             if (pinching.value) return;
-            tx.value = settleAxis(tx.value + dx, vw, canvasW * scale.value);
-            ty.value = settleAxis(ty.value + dy, vh, canvasH * scale.value);
+            const b = bounds.value;
+            tx.value = settleAxis(tx.value + dx, b.vw, b.cw * scale.value);
+            ty.value = settleAxis(ty.value + dy, b.vh, b.ch * scale.value);
         });
 
     const composed = Gesture.Simultaneous(pinch, pan);
@@ -531,16 +543,17 @@ export function MapCanvas({ nodes, edges, sheet, overlays, children }: MapCanvas
             const px = e.clientX - rect.left;
             const py = e.clientY - rect.top;
             const s = scale.value;
-            const next = Math.min(MAX_SCALE, Math.max(minScale, s * Math.exp(-e.deltaY * 0.0015)));
+            const b = bounds.value;
+            const next = Math.min(MAX_SCALE, Math.max(b.min, s * Math.exp(-e.deltaY * 0.0015)));
             const k = next / s;
             scale.value = next;
             savedScale.value = next;
-            tx.value = settleAxis(px - k * (px - tx.value), vw, canvasW * next);
-            ty.value = settleAxis(py - k * (py - ty.value), vh, canvasH * next);
+            tx.value = settleAxis(px - k * (px - tx.value), b.vw, b.cw * next);
+            ty.value = settleAxis(py - k * (py - ty.value), b.vh, b.ch * next);
         };
         el.addEventListener('wheel', onWheel, { passive: false });
         return () => el.removeEventListener('wheel', onWheel);
-    }, [minScale, vw, vh, canvasW, canvasH, scale, savedScale, tx, ty]);
+    }, [bounds, scale, savedScale, tx, ty]);
 
     const mapTransform = useAnimatedStyle(() => ({
         transform: [
