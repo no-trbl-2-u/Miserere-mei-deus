@@ -147,7 +147,11 @@ effect, about three times the numbers, or both (T: "Both"); two Spells per sub-l
 ballot rewritten now as well as the flow (T: "Both"). "EXILE." now prints on the PAID line.
 
 The ballot's twelve Spells became six Spells, two per sub-lane, with FREE lines unchanged and PAID lines rewritten:
-P-03b (MERCY 15 and the clock runs out now), P-05a (the clock runs out now and MERCY pays three times), E-03b (heals
-+3 for the rest of combat), E-06a (every HEAL this combat is RADIANCE), M-02c (spare a foe with any MERCY;
+P-03b (MERCY 15 and the clock runs out now), P-05a (the clock runs out now and MERCY pays three times), E-03b (heals this turn
+HEAL three times as much), E-06a (HEALs this turn are RADIANCE and deal double), M-02c (spare a foe with any MERCY;
 placeholder) and M-05c (+12 max VITAE, then HEAL to full). The other six (P-05b, E-05c, E-07a, E-08c, M-09a, M-09b)
 are now Skills with their lines unchanged. Candidate ids are unchanged, so saved ticks stand.
+
+T, same sitting, on the first rewrite of E-03b ("heals +3 for the rest of combat"): "No, "rest of combat" is just a
+global. No to that one." E-03b and E-06a were rewritten to land this turn, and the flow now says a Spell's PAID is
+never "for the rest of combat".

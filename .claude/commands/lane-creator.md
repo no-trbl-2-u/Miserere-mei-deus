@@ -61,7 +61,7 @@ Say the step back to T in one line before doing anything.
    closed set (`docs/card-spec.md` §15), and no line prints a cap ("max n",
    "max +n", "capped"): T calls out a cap when one is wanted (T, 2026-10-26). Each sub-lane
    carries two Spell candidates, each FREE as-is and PAID a huge impact (a bigger kind of
-   effect, about three times the numbers, or both) ending "EXILE." on the line
+   effect, about three times the numbers, or both, never "for the rest of combat") ending "EXILE." on the line
    (`docs/lane-creator.md` "Spells", T, 2026-10-29). Run `node --test
    scripts/ballot-kit.test.mjs`; it must pass. Land it as the plan PR (below)
    and send T the branch preview link for the ballot.

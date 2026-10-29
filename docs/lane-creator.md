@@ -43,6 +43,8 @@ so their Spells read as Skills with bigger PAID numbers. From the Merciful on:
   the clock run out now), or about three times FREE's numbers, or both (T picked "Both"). The sims (step 6) are where
   a runaway Spell shows up.
 - **"EXILE." is printed at the end of the PAID line**, not only in the legend.
+- **Never "for the rest of combat."** A lasting effect is a Global's job (T, 2026-10-29: ""rest of combat" is just a
+  global"); a Spell's PAID lands now or this turn.
 
 ## No caps
 
