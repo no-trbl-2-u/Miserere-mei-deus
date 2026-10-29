@@ -21,7 +21,7 @@
 | 2026-11-07 (in 9 days) | Pick the title plate and the four arena backgrounds (coast, forest, mountains, underworld) from your art dossier (0.5 h) | needs you: TP1b ready for you | W2 |
 | 2026-11-07 (in 9 days) | Plot the arena-background swap from your picks (0.5 h) | needs a plot: no build-plan rows yet | W2 |
 | 2026-11-08 (in 10 days) | Chapter 1's enemy art: pick from the loop's candidates (2 h) | needs you: your task | W2 |
-| 2026-11-09 (in 11 days) | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | needs you: your task; the loop still owes CH1f, BW1c, NK1a | W2 |
+| 2026-11-09 (in 11 days) | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | needs you: your task; the loop still owes CH1f, BW1c | W2 |
 | 2026-11-10 (in 12 days) | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | needs you: your task | W2 |
 | 2026-11-10 (in 12 days) | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | waiting on the loop: the loop still owes BW1b, BW1a | W2 |
 | 2026-11-11 (in 13 days) | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | needs you: your task | W2 |
