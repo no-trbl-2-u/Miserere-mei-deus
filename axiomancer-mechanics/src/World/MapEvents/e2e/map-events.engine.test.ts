@@ -235,23 +235,23 @@ describe('resolveMapEvent — Phase 31 traversal fix', () => {
         const startId = state.world.currentMap.currentNode;
         const startNode = state.world.currentMap;
 
-        // Before resolution: bw-1's adjacent (bw-4) is already available,
-        // but bw-7 is locked.
-        expect(startNode.availableNodes).toContain('bw-4');
-        expect(startNode.lockedNodes).toContain('bw-7');
+        // Before resolution: bw-w1's adjacent (bw-w2) is already available,
+        // but bw-w3 is locked.
+        expect(startNode.availableNodes).toContain('bw-w2');
+        expect(startNode.lockedNodes).toContain('bw-w3');
 
-        const afterBw1 = resolveMapEvent(state).state.world.currentMap;
-        expect(afterBw1.consumedNodes).toContain(startId);
-        // bw-4 was already available — still there; no regression.
-        expect(afterBw1.availableNodes).toContain('bw-4');
-        // bw-1's adjacents are bw-19, bw-4 and bw-5, all already available; bw-7 is
-        // two steps out (no new unlock from bw-1 itself).
-        expect(afterBw1.lockedNodes).toContain('bw-7');
+        const afterW1 = resolveMapEvent(state).state.world.currentMap;
+        expect(afterW1.consumedNodes).toContain(startId);
+        // bw-w2 was already available — still there; no regression.
+        expect(afterW1.availableNodes).toContain('bw-w2');
+        // bw-w1's only adjacent is bw-w2, already available; bw-w3 is
+        // two steps out (no new unlock from bw-w1 itself).
+        expect(afterW1.lockedNodes).toContain('bw-w3');
     });
 
     it('unlocks the next-step adjacent when the player resolves the just-walked node', () => {
         mockSequentialRng(0.5);
-        // Reach bw-4 by moving (legal — bw-4 is in initial availableNodes).
+        // Reach bw-w2 by moving (legal — bw-w2 is in initial availableNodes).
         let state = withPool(freshState(), {
             id: 'pool.cutscene',
             entries: [{
@@ -259,17 +259,17 @@ describe('resolveMapEvent — Phase 31 traversal fix', () => {
                 payload: { kind: 'cutscene', lines: ['…'] },
             }],
         });
-        state = { ...state, world: { ...state.world, currentMap: { ...state.world.currentMap, currentNode: 'bw-4' } } };
+        state = { ...state, world: { ...state.world, currentMap: { ...state.world.currentMap, currentNode: 'bw-w2' } } };
 
-        // Before resolving bw-4: bw-7 is locked.
-        expect(state.world.currentMap.lockedNodes).toContain('bw-7');
-        expect(state.world.currentMap.availableNodes).not.toContain('bw-7');
+        // Before resolving bw-w2: bw-w3 is locked.
+        expect(state.world.currentMap.lockedNodes).toContain('bw-w3');
+        expect(state.world.currentMap.availableNodes).not.toContain('bw-w3');
 
-        const afterBw4 = resolveMapEvent(state).state.world.currentMap;
+        const afterW2 = resolveMapEvent(state).state.world.currentMap;
 
-        // After resolving bw-4: bw-7 has moved from locked → available.
-        expect(afterBw4.availableNodes).toContain('bw-7');
-        expect(afterBw4.lockedNodes).not.toContain('bw-7');
+        // After resolving bw-w2: bw-w3 has moved from locked → available.
+        expect(afterW2.availableNodes).toContain('bw-w3');
+        expect(afterW2.lockedNodes).not.toContain('bw-w3');
     });
 
     it('idempotent — re-resolving a consumed node does not re-promote unlocked adjacents', () => {
@@ -292,15 +292,15 @@ describe('resolveMapEvent — Phase 31 traversal fix', () => {
         mockSequentialRng(0.5);
         const state = freshState();
         _clearMapEventPoolRegistry();
-        // Move to bw-4 first (legal — bw-4 is already available; no pool needed
+        // Move to bw-w2 first (legal — bw-w2 is already available; no pool needed
         // to move).
-        const atBw4 = { ...state, world: { ...state.world, currentMap: { ...state.world.currentMap, currentNode: 'bw-4' } } };
-        expect(atBw4.world.currentMap.lockedNodes).toContain('bw-7');
-        const result = resolveMapEvent(atBw4);
+        const atW2 = { ...state, world: { ...state.world, currentMap: { ...state.world.currentMap, currentNode: 'bw-w2' } } };
+        expect(atW2.world.currentMap.lockedNodes).toContain('bw-w3');
+        const result = resolveMapEvent(atW2);
         expect(result.event.kind).toBe('none');
         // Discovery + traversal both advance even without a pool.
-        expect(result.state.world.currentMap.availableNodes).toContain('bw-7');
-        expect(result.state.world.currentMap.lockedNodes).not.toContain('bw-7');
+        expect(result.state.world.currentMap.availableNodes).toContain('bw-w3');
+        expect(result.state.world.currentMap.lockedNodes).not.toContain('bw-w3');
     });
 });
 
@@ -310,7 +310,7 @@ describe('resolveMapEvent — reach-objective auto-advance', () => {
     function seedReachQuest(state: GameState, targetNodeId: string): GameState {
         const reachQuest: Quest = {
             name: REACH_BW2,
-            description: 'Arrive at bw-2.',
+            description: 'Arrive at bw-w2.',
             mapName: state.world.currentMap.name,
             objectives: [{
                 id: 'arrive',
@@ -331,8 +331,8 @@ describe('resolveMapEvent — reach-objective auto-advance', () => {
 
     it('completes a reach quest when the player resolves the target node (no pool)', () => {
         const base = freshState();
-        const atBw2 = { ...base, world: { ...base.world, currentMap: { ...base.world.currentMap, currentNode: 'bw-2' } } };
-        const state = seedReachQuest(atBw2, 'bw-2');
+        const atBw2 = { ...base, world: { ...base.world, currentMap: { ...base.world.currentMap, currentNode: 'bw-w2' } } };
+        const state = seedReachQuest(atBw2, 'bw-w2');
 
         const result = resolveMapEvent(state);
         expect(result.event.kind).toBe('none');
@@ -351,8 +351,8 @@ describe('resolveMapEvent — reach-objective auto-advance', () => {
                 payload: { kind: 'rest', shelter: 'camp' },
             }],
         });
-        const atBw2 = { ...base, world: { ...base.world, currentMap: { ...base.world.currentMap, currentNode: 'bw-2' } } };
-        const state = seedReachQuest(atBw2, 'bw-2');
+        const atBw2 = { ...base, world: { ...base.world, currentMap: { ...base.world.currentMap, currentNode: 'bw-w2' } } };
+        const state = seedReachQuest(atBw2, 'bw-w2');
 
         const result = resolveMapEvent(state);
         expect(result.event.kind).toBe('rest');
@@ -361,11 +361,11 @@ describe('resolveMapEvent — reach-objective auto-advance', () => {
 
     it('is a silent no-op when no active reach objective targets this node', () => {
         const base = freshState();
-        const atBw2 = { ...base, world: { ...base.world, currentMap: { ...base.world.currentMap, currentNode: 'bw-2' } } };
-        const state = seedReachQuest(atBw2, 'bw-5'); // targets a different node
+        const atBw2 = { ...base, world: { ...base.world, currentMap: { ...base.world.currentMap, currentNode: 'bw-w2' } } };
+        const state = seedReachQuest(atBw2, 'bw-m3'); // targets a different node
 
         const result = resolveMapEvent(state);
-        // Quest stays active — bw-5 wasn't reached.
+        // Quest stays active — bw-m3 wasn't reached.
         expect(result.state.quests.active.some(q => q.name === REACH_BW2)).toBe(true);
         expect(result.state.quests.completed).not.toContain('reach-bw2');
     });

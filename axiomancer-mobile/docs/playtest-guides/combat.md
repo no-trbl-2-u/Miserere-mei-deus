@@ -6,7 +6,7 @@ An encounter node resolves to a `combat-prelude` event. `<CombatGate>` (`compone
 
 ## 2. Enter it directly
 
-- Fixture: `/exploration?fixture=sage-bw-door-gate` — Sage L15 on bw-15, door fight **bw-17** one step away. No `arrive`, so you land on the map; tap `node-bw-17` → `node-confirm-go`. `fresh-start` gives the first fight (tap the first glowing node).
+- Fixture: `/exploration?fixture=sage-bw-door-gate` — Sage L15 on the keep gate bw-k1 (quest nodes settled), chapter boss **bw-k2** one step away. No `arrive`, so you land on the map; tap `node-bw-k2` → `node-confirm-go`. `fresh-start` gives the first fight (tap the first glowing node).
 - `/dev` → open ENCOUNTERS (`dev-section-encounters-toggle`; every `/dev` section starts closed, `dev-section-<key>-toggle` opens it) → `debug-trigger-encounter-encounter` (gentlest foe) or `debug-trigger-encounter-boss`; `debug-enemy-map-<map>` then `debug-enemy-<enemyId>` for a specific foe. Both push `/(tabs)/exploration` and fire the prelude; `<CombatGate>` engages it and pushes `/combat-encounter`.
 - `/combat-encounter` is the live fight and holds only a staged fight: opened cold it leaves for the map (`combat-encounter-empty` for that frame). Scripts enter a fight through `scripts/live-fight-entry.mjs`.
 - Aftermath panels alone: `/devaftermath?panel=defeat|parley` (`devaftermath-panel`).

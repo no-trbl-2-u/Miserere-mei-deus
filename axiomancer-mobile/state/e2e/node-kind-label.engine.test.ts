@@ -32,12 +32,15 @@ describe('map node kind labels', () => {
 
     it('the region doors the RC walk named are doors', () => {
         const doorIds = ACT_1_MAPS.flatMap((m) => nodesOf(m).filter((n) => n.type === 'door').map((n) => n.id));
-        expect(doorIds).toEqual(expect.arrayContaining(['bw-18', 'cw-20', 'bc-17']));
+        expect(doorIds).toEqual(expect.arrayContaining(['bw-b2', 'cw-20', 'bc-17']));
     });
 
     it('the Anvil villages are villages: no node type is named for the smith', () => {
+        // One Anvil village a map, but the Breakwater has two (the harbour
+        // town bw-t4 and the walled manor bw-m5).
         const villages = ACT_1_MAPS.flatMap((m) => nodesOf(m)).filter((n) => n.type === 'village');
-        expect(villages.length).toBe(ACT_1_MAPS.length);
+        expect(villages.length).toBe(ACT_1_MAPS.length + 1);
+        expect(nodesOf('breakwater').filter((n) => n.type === 'village').map((n) => n.id).sort()).toEqual(['bw-m5', 'bw-t4']);
         expect(Object.keys(NODE_KIND_LABEL)).not.toContain('blacksmith');
         const tip = selectTooltipContentFor('map-node', 'village', NO_STATE);
         expect(tip?.title).toBe(NODE_KIND_LABEL.village);

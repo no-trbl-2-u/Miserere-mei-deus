@@ -238,9 +238,9 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - ease: -
 - source: Phase AW1b, `axiomancer-mobile/state/exploration-maps/__tests__/node-blurb-event.test.ts` (`PINNED_MISMATCHES`); the swarm's R13 in `docs/reports/playtest-elementalist-act1-2026-10-24.md`.
 - detail: three Breakwater nodes share no content word between the map blurb (`axiomancer-mobile/state/exploration-maps/breakwater.layout.ts`) and the event copy the node opens (`axiomancer-mechanics/src/World/MapEvents/content.ts`). The two caches draw from the shared `COAST_LOOT_CACHES` rotation, not copy written for the place; the Anvil uses the one `ANVIL_LINE` every region shares.
-  - [ ] bw-5 The Smugglers' Cove (loot-cache). Blurb: "Boats beached under the cliff. Their owners are elsewhere." Event: "A waterlogged strongbox wedged under the pilings."
-  - [ ] bw-15 The Clifftop Chapel (loot-cache). Blurb: "An empty chapel over the sea. The poor box is not." Event: "A purse of shillings snagged in the netting, its owner long gone."
-  - [ ] bw-16 The Fishing Hamlet (blacksmith). Blurb: "Fish dry on the racks. Nobody is watching them." Event: "A lean-to forge, coals still breathing. The smith looks up from the anvil and nods at your dice."
+  - [ ] BW1b (2026-10-29) replaced the map: the 22-node ids above are gone. The test now pins the new
+    Breakwater's mismatches: bw-m3, bw-h8 and bw-d2 (loot caches on the shared `COAST_LOOT_CACHES`), and the two
+    villages bw-t4 and bw-m5 (the shared `ANVIL_LINE`). T's flavour follow-up for Chapter 1 settles them.
 - next: T's call per node (map copy, D88): rewrite the blurb, give the node event copy of its own, or rule the pair fine. The test's pin for a node goes in the same change, or the stale-pin case fails.
 
 ### [content] map copy: Charcoal Wood node blurb that does not match its event (AW1b, 2026-10-26)

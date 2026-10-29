@@ -23,7 +23,7 @@ function actWorld(): WorldState {
         ...here,
         currentMap: consumed(here.currentMap, 'bc-8'),
         mapStates: {
-            breakwater: consumed(createStartingWorld('breakwater').currentMap, 'bw-8'),
+            breakwater: consumed(createStartingWorld('breakwater').currentMap, 'bw-w5'),
             'charcoal-wood': consumed(createStartingWorld('charcoal-wood').currentMap, 'cw-12'),
         },
     };
@@ -33,7 +33,7 @@ describe('eliteReturnLines (A5)', () => {
     it('names the foe and the place as the map screen names it, current region first', () => {
         expect(eliteReturnLines(actWorld())).toEqual([
             'The Green Jelly is back at The Ruined Chapel.',
-            'The Green Jelly is back at The North Pier.',
+            'The Green Jelly is back at The Keep Causeway.',
             'The Green Jelly is back at The Root Graveyard.',
         ]);
     });
@@ -43,7 +43,7 @@ describe('eliteReturnLines (A5)', () => {
         expect(eliteReturnLines(null)).toEqual([]);
         const retired = retireEliteNode(actWorld(), 'bc-8');
         expect(eliteReturnLines(retired)).toEqual([
-            'The Green Jelly is back at The North Pier.',
+            'The Green Jelly is back at The Keep Causeway.',
             'The Green Jelly is back at The Root Graveyard.',
         ]);
     });

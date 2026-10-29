@@ -12,7 +12,7 @@
 
 import { describe, it, expect, afterEach, vi } from 'vitest';
 
-import { moveToNode, placeOnNode, unlockAdjacent } from '../world.reducer';
+import { markNodeConsumed, moveToNode, placeOnNode, unlockAdjacent } from '../world.reducer';
 import { createStartingWorld } from '../index';
 import { resolveMapEvent, settleArrival } from '../MapEvents/resolve-map-event';
 import { createGameStore } from '../../Game/store';
@@ -36,7 +36,7 @@ function memoryDisk(): PersistenceAdapter {
     };
 }
 
-/** A new Breakwater with its quest nodes settled, so a walk reaches the pockets. */
+/** A new Breakwater with its quest nodes settled, so a walk crosses the keep gate. */
 function bwWorld(): WorldState {
     const w = createStartingWorld('breakwater');
     return { ...w, currentMap: settleQuestNodes(w.currentMap) };
@@ -75,22 +75,31 @@ function saveMidFight(approach: WorldState, fightNode: string) {
 
 const cases = [
     {
-        // A pocket fight: its pocket leads nowhere, so it has no way on.
-        name: 'a normal fight (Float-Eye at bw-14)',
-        approach: () => walk(bwWorld(), 'bw-4', 'bw-9', 'bw-20'),
-        node: 'bw-14',
+        // A plain fight: it holds no road, so it has no way on to shut.
+        name: 'a normal fight (Float-Eye at bw-w3)',
+        approach: () => walk(bwWorld(), 'bw-w2'),
+        node: 'bw-w3',
         onward: null,
         boss: false,
     },
     {
-        name: 'the door fight (the Death Beholder at bw-17)',
+        // A held elite: it keeps the road on to the keep gate shut until beaten.
+        name: 'the held elite (the Green Jelly at bw-w5)',
+        approach: () => walk(bwWorld(), 'bw-w2', 'bw-w4'),
+        node: 'bw-w5',
+        onward: 'bw-k1',
+        boss: false,
+    },
+    {
+        // The chapter boss: a dead end past the keep gate.
+        name: 'the chapter boss (the Death Beholder at bw-k2)',
         approach: () => {
-            const placed = placeOnNode(bwWorld(), 'bw-16');
-            // The settled quest node bw-22 sits between bw-16 and the door.
-            return walk({ ...placed, currentMap: unlockAdjacent(placed.currentMap, 'bw-16') }, 'bw-22');
+            const placed = placeOnNode(bwWorld(), 'bw-w5');
+            // The elite beaten, the settled quest node bw-k1 sits before the keep.
+            return walk({ ...placed, currentMap: markNodeConsumed(placed.currentMap, 'bw-w5') }, 'bw-k1');
         },
-        node: 'bw-17',
-        onward: 'bw-18',
+        node: 'bw-k2',
+        onward: null,
         boss: true,
     },
 ];
@@ -139,9 +148,9 @@ describe.each(cases)('a save taken during $name', ({ approach, node, onward, bos
     );
 
     // A fight that was fled or lost answers the arrival but leaves its node
-    // unspent (phase QL1b). The watchtower holds its road
-    // (`holdRoadsUntilSettled`), so an unspent watchtower keeps the bridge
-    // off the frontier even while the player stands on it.
+    // unspent (phase QL1b). A held elite holds its road
+    // (`holdRoadsUntilSettled`), so an unspent elite keeps its far road
+    // shut even while the player stands on it.
     it.each(['flee', 'defeat'] as const)(
         'the fight ending in %s answers the arrival and leaves the node unspent',
         (outcome) => {
@@ -162,20 +171,20 @@ describe.each(cases)('a save taken during $name', ({ approach, node, onward, bos
 describe('settleArrival', () => {
     it('is the identity when nothing is owed at the node underfoot', () => {
         const state: GameState = createGameStore(memoryDisk(), {
-            world: placeOnNode(bwWorld(), 'bw-14'),
+            world: placeOnNode(bwWorld(), 'bw-w3'),
         }).getState();
 
         expect(settleArrival(state)).toBe(state);
     });
 
     it('settles only the node the debt names', () => {
-        const world = walk(bwWorld(), 'bw-4', 'bw-9', 'bw-20', 'bw-2');
+        const world = walk(bwWorld(), 'bw-w2');
         const state: GameState = createGameStore(memoryDisk(), { world }).getState();
 
         const settled = settleArrival(state).world.currentMap;
 
         const markers = questNodeIdsOn('breakwater');
-        expect(settled.consumedNodes.filter(id => !markers.includes(id))).toEqual(['bw-2']);
+        expect(settled.consumedNodes.filter(id => !markers.includes(id))).toEqual(['bw-w2']);
         expect(settled.pendingArrival ?? null).toBeNull();
     });
 });

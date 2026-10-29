@@ -1,10 +1,8 @@
 /**
- * The Breakwater rebuilt to T's Chapter 1 vision (phase BW1a): 44 nodes on
- * the coast plate, 42 roads and one same-map travel pair.
- *
- * BUILT BESIDE THE LIVE MAP. This definition is registered only by the tests
- * that call `registerBreakwaterChapter()` (`MapEvents/breakwater-chapter.content.ts`);
- * the shipped registry still holds `breakwater.ts`. Phase BW1b swaps it live.
+ * The Breakwater, Act 1's first map and the new-game start, rebuilt to T's
+ * Chapter 1 vision: 44 nodes on the coast plate, 42 roads and one same-map
+ * travel pair. Its 44 event pools are `MapEvents/content.ts`'s Breakwater
+ * section; its quest chain is `breakwater-chapter.questline.ts`.
  *
  * Node ids are T's board codes in lower case (`bw-w1` .. `bw-p3`, plus the
  * cave face `bw-c0`). The node list, kinds and plate positions are the table

@@ -2,8 +2,7 @@
  * Chapter 1 walked (phase BW1a, the Measure of the BW1 brief: A2, A3, A4,
  * A5, A12, and Decision 13's elite revival).
  *
- * Walks the rebuilt Breakwater, registered in this file only
- * (`registerBreakwaterChapter`), from the windmill to the far bank through
+ * Walks the live Breakwater from the windmill to the far bank through
  * the engine's public verbs, road by road (`walkRoadTo`, never a jump): the
  * windmill's arrival gives the first quest; the wreck holds the harbour; the
  * sea cave is a passage to the cove and back; each elite holds the road past
@@ -15,7 +14,7 @@
  * and open after.
  */
 
-import { beforeAll, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import {
     IllegalMoveError, legalMovesFrom, moveToNode, roadReachable, walkRoadTo,
@@ -30,7 +29,6 @@ import { relicLibrary } from '../../Items/relic.library';
 import { createNewGameState, gameReducer } from '../../Game/game.reducer';
 import type { GameState } from '../../Game/types';
 import type { ResolvedEvent } from '../MapEvents/types';
-import { registerBreakwaterChapter } from '../MapEvents/breakwater-chapter.content';
 import { BRIDGE_GATE_REASON, KEEP_GATE_REASON } from '../Continents/Coastal-Village/breakwater-chapter';
 import {
     BREAKWATER_CHAPTER_QUESTLINE_ID as LINE, BREAKWATER_CHAPTER_RELICS, BREAKWATER_CHAPTER_STEPS as STEPS,
@@ -44,8 +42,6 @@ function seededRng(seed: number): () => number {
         return state / 2147483647;
     };
 }
-
-beforeAll(registerBreakwaterChapter);
 
 const legal = (s: GameState) => legalMovesFrom(s.world.currentMap);
 const reachable = (s: GameState) => roadReachable(s.world.currentMap);

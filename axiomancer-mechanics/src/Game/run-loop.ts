@@ -24,7 +24,7 @@ import { STARTING_MAP } from '../World/starting-world';
 /**
  * Canonical starting region for `resetRun`. The reset sends the
  * player back to `getMapDefinition('coastal-continent',
- * STARTING_REGION).startingNode.id`, the Breakwater's `bw-1`. One source:
+ * STARTING_REGION).startingNode.id`, the Breakwater's `bw-w1`. One source:
  * `STARTING_MAP` in the World barrel, which `createStartingWorld()` uses.
  */
 export const STARTING_REGION: MapName = STARTING_MAP;

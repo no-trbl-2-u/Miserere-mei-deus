@@ -36,7 +36,7 @@ function mount(store: AppStore) {
 function onTheBridge() {
     const handle = createFixtureStore({
         id: 'nk1d-bridge', seed: 'nk1d-bridge',
-        world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-18' },
+        world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-b2' },
     });
     handle.actions.resolveCurrentMapEvent('travel');
     mount(handle.store);
@@ -74,7 +74,7 @@ describe('/travel - "Move to X?"', () => {
         const { store } = onTheBridge();
         fireEvent.press(screen.getByTestId('travel-no'));
         expect(store.getState().world.currentMap.name).toBe('breakwater');
-        expect(store.getState().world.currentMap.currentNode).toBe('bw-18');
+        expect(store.getState().world.currentMap.currentNode).toBe('bw-b2');
         expect(store.getState().travel.open).toBeNull();
     });
 

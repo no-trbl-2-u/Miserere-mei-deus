@@ -8,7 +8,7 @@
  * refused mark, and a tap opens the info popup, whose lines
  * (`signatureInfoLines`) put the reason first.
  *
- * The fight is the real one: the default fixture is bw-2's Float-Eye, a foe
+ * The fight is the real one: the default fixture is bw-w2's Float-Eye, a foe
  * with no friendship reward, so The Open Hand is refused there however much
  * Conviction the player holds. Each rune prints its own cost: Ruby Tithe ◆3,
  * The Open Hand ◆4 (LR1d A11).

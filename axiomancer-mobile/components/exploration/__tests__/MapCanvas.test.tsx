@@ -572,15 +572,16 @@ describe('computeFocusTransform', () => {
     it('fits the Breakwater start fan on a phone (2026-09-26 playthrough)', () => {
         // A 2400px-square plate at 394x557: the windmill and its four exits
         // span ~840x985 canvas px. A flat 0.6 floor would leave every exit
-        // off-screen; the fit must reach the ~0.37 it needs.
+        // off-screen; the fit must reach the ~0.37 it needs. (The old
+        // Breakwater's start fan, kept as geometry: the ids are neutral.)
         const sheet = { width: 2400, height: 2400, scale: 1 };
         const viewport = { w: 394, h: 557 };
         const nodes: ExplorationNode[] = [
-            { id: 'bw-1', label: 'Windmill', kind: 'current',   type: 'rest',      x: 1150, y: 1130, triggersCombat: false },
-            { id: 'bw-2', label: 'Quay',     kind: 'available', type: 'encounter', x: 1080, y: 770,  triggersCombat: false },
-            { id: 'bw-3', label: 'Gallows',  kind: 'available', type: 'hazard',    x: 1630, y: 1270, triggersCombat: false },
-            { id: 'bw-4', label: 'Pass',     kind: 'available', type: 'waypoint',  x: 1460, y: 1755, triggersCombat: false },
-            { id: 'bw-5', label: 'Cove',     kind: 'available', type: 'treasure',  x: 790, y: 1400, triggersCombat: false },
+            { id: 'fan-start', label: 'Windmill', kind: 'current',   type: 'rest',      x: 1150, y: 1130, triggersCombat: false },
+            { id: 'fan-quay', label: 'Quay',   kind: 'available', type: 'encounter', x: 1080, y: 770,  triggersCombat: false },
+            { id: 'fan-gallows', label: 'Gallows', kind: 'available', type: 'hazard',    x: 1630, y: 1270, triggersCombat: false },
+            { id: 'fan-pass', label: 'Pass',   kind: 'available', type: 'waypoint',  x: 1460, y: 1755, triggersCombat: false },
+            { id: 'fan-cove', label: 'Cove',   kind: 'available', type: 'treasure',  x: 790, y: 1400, triggersCombat: false },
         ];
         const fit = computeFocusTransform(nodes, viewport, sheet);
         expect(fit.scale).toBeLessThan(0.6);

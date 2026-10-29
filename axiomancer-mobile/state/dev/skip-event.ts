@@ -430,8 +430,12 @@ function skipCombat(
     if (questsBefore) deferQuestExtras(store, questsBefore);
 
     // A plausible win still bleeds: the witness's HP toll, capped and never fatal.
+    // A browser walk that pins routing only (act1-walk-e2e) sets
+    // `__AXM_SKIP_TOLL_FREE__` so a long chain of skipped fights does not bleed
+    // it to death on the next hazard's arrival damage.
+    const tollFree = (globalThis as { __AXM_SKIP_TOLL_FREE__?: boolean }).__AXM_SKIP_TOLL_FREE__ === true;
     let hpToll = 0;
-    if (witness && witness.playerHpTaken > 0) {
+    if (!tollFree && witness && witness.playerHpTaken > 0) {
         const player = gameState(store).player;
         const cap = Math.floor(player.maxHealth * SKIP_COMBAT_MAX_TOLL_FRACTION);
         hpToll = Math.max(0, Math.min(witness.playerHpTaken, cap, player.health - 1));

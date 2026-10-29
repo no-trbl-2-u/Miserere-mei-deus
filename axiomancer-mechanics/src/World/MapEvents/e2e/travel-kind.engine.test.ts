@@ -3,7 +3,7 @@
  * at the highest public entry point.
  *
  * The doors under test are authored in `content.ts`:
- *   bw-18 (the Breakwater's river bridge) → coastal / charcoal-wood
+ *   bw-b2 (the Breakwater's far bank, past the river bridge) → coastal / charcoal-wood
  *   cw-20 (the Charcoal Wood's stair cave) → northern / beacon-crags
  *
  * The design call, decided: the world is a PLACE the player moves around
@@ -43,10 +43,10 @@ function seatAt(state: GameState, nodeId: string): GameState {
     };
 }
 
-/** A fresh game standing on the Breakwater's river bridge (bw-18). */
+/** A fresh game standing on the Breakwater's far bank, past the river bridge (bw-b2). */
 function atRiverBridge(): GameState {
     mockSequentialRng(0.5);
-    return seatAt({ ...createNewGameState(), world: createStartingWorld('breakwater') }, 'bw-18');
+    return seatAt({ ...createNewGameState(), world: createStartingWorld('breakwater') }, 'bw-b2');
 }
 
 /** A fresh game started on the Charcoal Wood, seated on its stair cave (cw-20). */
@@ -55,7 +55,7 @@ function atStairCave(): GameState {
     return seatAt({ ...createNewGameState(), world: createStartingWorld('charcoal-wood') }, 'cw-20');
 }
 
-describe("the bw-18 door — Breakwater → Charcoal Wood (same continent)", () => {
+describe("the bw-b2 door — Breakwater → Charcoal Wood (same continent)", () => {
     it('offers the Charcoal Wood, and crosses the world there on the yes', () => {
         const offer = resolveMapEvent(atRiverBridge());
         expect(offer.state.world.currentMap.name).toBe('breakwater');
@@ -95,7 +95,7 @@ describe("the bw-18 door — Breakwater → Charcoal Wood (same continent)", () 
         expect(preserved).toBeDefined();
         expect(preserved).toEqual(departed);
         // The door itself was never consumed — repeatable by design.
-        expect(preserved!.consumedNodes).not.toContain('bw-18');
+        expect(preserved!.consumedNodes).not.toContain('bw-b2');
     });
 
     it('is repeatable — standing on the preserved door, it offers and crosses again', () => {

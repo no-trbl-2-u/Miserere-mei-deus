@@ -206,7 +206,7 @@ async function runRoundTrip(page, baseUrl) {
 
     // With the encounter out of the way the screen is idle again, which lets
     // the exploration screen's ARRIVAL event for the map's start node resolve
-    // (2026-08-08) — the new game starts on the Breakwater, whose bw-1
+    // (2026-08-08) — the new game starts on the Breakwater, whose bw-w1
     // arrives as a full-screen ROUTE with no tab bar of its own. It is not
     // the tab LOCK, so play it out before reading the bar,
     // or this harness measures the wrong thing.
@@ -268,18 +268,18 @@ async function runRoundTrip(page, baseUrl) {
 async function runReloadMidFight(browser, baseUrl) {
     const context = await browser.newContext({ viewport: VIEWPORT, hasTouch: false })
     try {
-        // Standing on the Breakwater's bw-6 encounter with its arrival owed.
+        // Standing on the Breakwater's bw-w3 encounter with its arrival owed.
         await injectStateFixture(context, {
             id: 'roundtrip-reload', seed: 'rt1', preset: 'sage', arrive: true,
-            world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-6', completedMaps: [] },
+            world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-w3', completedMaps: [] },
         })
         const page = await context.newPage()
         page.on('pageerror', (err) => console.error('exploration-combat-roundtrip-e2e: pageerror', err.message))
         await page.goto(`${baseUrl}/exploration`, { waitUntil: 'networkidle' })
         await page.waitForURL(onCombatRoute, { timeout: 15000 })
-            .catch(() => fail(`arriving at bw-6 did not reach /combat-encounter (at ${page.url()})`))
+            .catch(() => fail(`arriving at bw-w3 did not reach /combat-encounter (at ${page.url()})`))
         await page.getByTestId('combat-reveal').waitFor({ state: 'visible', timeout: 10000 })
-            .catch(() => fail('bw-6 fight routed but the reveal never rendered'))
+            .catch(() => fail('bw-w3 fight routed but the reveal never rendered'))
         log('arrival fight on /combat-encounter; reloading mid-fight ...')
 
         await page.reload({ waitUntil: 'networkidle' })

@@ -23,10 +23,10 @@ export const FIXTURE_QUEST: Quest = {
     description: 'A placeholder quest.',
     mapName: 'breakwater',
     objectives: [{
-        id: 'reach-bw-2',
+        id: 'reach-bw-w2',
         type: 'reach',
-        description: 'Reach bw-2.',
-        target: 'bw-2',
+        description: 'Reach bw-w2.',
+        target: 'bw-w2',
         requiredCount: 1,
         currentCount: 0,
     }],
@@ -71,9 +71,9 @@ export const FIXTURE_CUTSCENE_EVENT: MapEventPayload = {
 };
 
 /**
- * A two-step questline on the Breakwater's bw-2 and bw-3 (placeholder copy):
+ * A two-step questline on the Breakwater's bw-w2 and bw-w3 (placeholder copy):
  * step 1 cross a hazard, step 2 win a fight. The live Breakwater carries
- * its own questline (`quest.library.ts`) on bw-19..bw-22; this one is the
+ * its own chain (`breakwater-chapter.questline.ts`); this one is the
  * quest screen's hermetic witness, staged by `FIXTURE_QUEST_EVENT` and
  * registered by `buildStateFromFixture`.
  */
@@ -84,7 +84,7 @@ export const FIXTURE_QUESTLINE: Questline = {
     steps: [
         {
             step: 1,
-            nodeId: 'bw-2',
+            nodeId: 'bw-w2',
             quest: {
                 name: 'Fixture step one',
                 description: 'A placeholder first step.',
@@ -98,7 +98,7 @@ export const FIXTURE_QUESTLINE: Questline = {
         },
         {
             step: 2,
-            nodeId: 'bw-3',
+            nodeId: 'bw-w3',
             quest: {
                 name: 'Fixture step two',
                 description: 'A placeholder second step.',

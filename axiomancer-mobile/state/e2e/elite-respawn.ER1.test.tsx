@@ -126,7 +126,7 @@ function winElite(store: AppStore, node: string, drop: boolean): { xp: number; o
 /** Rest at the map's first rest node: arrive, begin, choose REST. Returns the store. */
 function arriveAtRest(store: AppStore): void {
     const world = gs(store).world;
-    const restNode = world.currentMap.name === 'breakwater' ? 'bw-9' : 'cw-9';
+    const restNode = world.currentMap.name === 'breakwater' ? 'bw-w4' : 'cw-9';
     const placed = placeOnNode(world, restNode);
     store.setState({
         world: { ...placed, currentMap: { ...placed.currentMap, consumedNodes: [...placed.currentMap.consumedNodes, restNode] } },
@@ -144,35 +144,35 @@ describe('claiming a rest brings the elite back (A4)', () => {
     it('the claim respawns in its one save; arriving alone does not', () => {
         const adapter = createMemoryAdapter();
         const store = makeStore('breakwater', adapter);
-        winElite(store, 'bw-8', false);
+        winElite(store, 'bw-w5', false);
         claimCombatRewardAction(store, null);
 
         arriveAtRest(store);
         // Arrived, not claimed: the elite is still spent.
-        expect(spent(gs(store).world, 'bw-8')).toBe(true);
+        expect(spent(gs(store).world, 'bw-w5')).toBe(true);
 
         const saves = adapter.saveCount;
         const claim = claimRestChoiceOutcomeAction(store);
         expect(claim.applied).toBe(true);
-        expect(claim.respawnedElites).toEqual([{ map: 'breakwater', node: 'bw-8' }]);
+        expect(claim.respawnedElites).toEqual([{ map: 'breakwater', node: 'bw-w5' }]);
         expect(adapter.saveCount).toBe(saves + 1);
-        expect(spent(gs(store).world, 'bw-8')).toBe(false);
-        expect(spent(adapter.load()!.world, 'bw-8')).toBe(false);
+        expect(spent(gs(store).world, 'bw-w5')).toBe(false);
+        expect(spent(adapter.load()!.world, 'bw-w5')).toBe(false);
         // The rest node itself stays used up.
-        expect(spent(gs(store).world, 'bw-9')).toBe(true);
+        expect(spent(gs(store).world, 'bw-w4')).toBe(true);
     });
 });
 
 describe('XP and cards on every win (A6)', () => {
     it('fight, win, rest, claim, fight again, win: XP and the card offer both times', () => {
         const store = makeStore();
-        const first = winElite(store, 'bw-8', false);
+        const first = winElite(store, 'bw-w5', false);
         expect(first.xp).toBe(ELITE_XP);
         expect(first.offers).toHaveLength(3);
         claimCombatRewardAction(store, first.offers[0]!);
 
         restAndClaim(store);
-        const second = winElite(store, 'bw-8', false);
+        const second = winElite(store, 'bw-w5', false);
         expect(second.xp).toBe(ELITE_XP);
         expect(second.offers).toHaveLength(3);
         expect(gs(store).player.experience).toBe(2 * ELITE_XP);
@@ -183,13 +183,13 @@ describe('a relic drop is the whole reward, and retires the elite (A9, A11)', ()
     it('a forced drop: the relic queued, no XP, no reward screen; the elite never returns, through a save', () => {
         const adapter = createMemoryAdapter();
         const store = makeStore('breakwater', adapter);
-        const won = winElite(store, 'bw-8', true);
+        const won = winElite(store, 'bw-w5', true);
         expect(won.xp).toBe(0);
         expect(won.offers).toEqual([]);
         expect(store.getState().combatReward.claimed).toBe(true);
         expect(store.getState().combatReward.upgrade).toBeNull();
         expect(store.getState().itemReward.queue.map(e => e.item.id)).toEqual([FIXTURE_ELITE_RELICS[0]!.id]);
-        expect(gs(store).world.currentMap.retiredEliteNodes).toEqual(['bw-8']);
+        expect(gs(store).world.currentMap.retiredEliteNodes).toEqual(['bw-w5']);
 
         arriveAtRest(store);
         const r = render(
@@ -200,18 +200,18 @@ describe('a relic drop is the whole reward, and retires the elite (A9, A11)', ()
         expect(r.queryByTestId('rest-elite-respawn')).toBeNull();
         const claim = claimRestChoiceOutcomeAction(store);
         expect(claim.respawnedElites).toEqual([]);
-        expect(spent(gs(store).world, 'bw-8')).toBe(true);
+        expect(spent(gs(store).world, 'bw-w5')).toBe(true);
 
         // Save round-trip: the retirement rides the save.
         const saved = JSON.parse(JSON.stringify(adapter.load())) as GameState;
-        expect(saved.world.currentMap.retiredEliteNodes).toEqual(['bw-8']);
+        expect(saved.world.currentMap.retiredEliteNodes).toEqual(['bw-w5']);
         const reloaded = createAppStore({ adapter: createMemoryAdapter(saved) });
         expect(restAndClaim(reloaded).respawnedElites).toEqual([]);
     });
 
     it('a forced miss: XP and the elite reward as usual, nothing retired', () => {
         const store = makeStore();
-        const won = winElite(store, 'bw-8', false);
+        const won = winElite(store, 'bw-w5', false);
         expect(won.xp).toBe(ELITE_XP);
         expect(won.offers).toHaveLength(3);
         expect(store.getState().itemReward.queue).toHaveLength(0);
@@ -221,7 +221,7 @@ describe('a relic drop is the whole reward, and retires the elite (A9, A11)', ()
     it('a flee or a spare retires nothing either', () => {
         for (const outcome of ['flee', 'mercy'] as const) {
             const store = makeStore();
-            walkOnto(store, 'bw-8');
+            walkOnto(store, 'bw-w5');
             const actions = createAppActions(store);
             actions.resolveCurrentMapEvent();
             const enemy = actions.beginHazardEncounter()!;
@@ -234,29 +234,29 @@ describe('a relic drop is the whole reward, and retires the elite (A9, A11)', ()
             if (outcome === 'flee') {
                 // A fled fight leaves its node unspent (phase QL1b): the
                 // elite is still there, so the rest has nothing to bring back.
-                expect(gs(store).world.currentMap.consumedNodes).not.toContain('bw-8');
+                expect(gs(store).world.currentMap.consumedNodes).not.toContain('bw-w5');
                 expect(restAndClaim(store).respawnedElites).toEqual([]);
             } else {
                 // A spare is a won fight (friendship): the node is spent, and
                 // the rest brings the elite back.
-                expect(restAndClaim(store).respawnedElites).toEqual([{ map: 'breakwater', node: 'bw-8' }]);
+                expect(restAndClaim(store).respawnedElites).toEqual([{ map: 'breakwater', node: 'bw-w5' }]);
             }
         }
     });
 });
 
 describe('the upgrade, once per elite (A10)', () => {
-    it('taken over bw-8, a repeat win there offers cards only', () => {
+    it('taken over bw-w5, a repeat win there offers cards only', () => {
         const store = makeStore();
-        const first = winElite(store, 'bw-8', false);
+        const first = winElite(store, 'bw-w5', false);
         const upgrade = store.getState().combatReward.upgrade;
         expect(upgrade).not.toBeNull();
         claimCombatUpgradeAction(store, upgrade!.fromCardId);
-        expect(gs(store).world.currentMap.eliteUpgradeTakenNodes).toEqual(['bw-8']);
+        expect(gs(store).world.currentMap.eliteUpgradeTakenNodes).toEqual(['bw-w5']);
         expect(first.offers).toHaveLength(3);
 
         restAndClaim(store);
-        const second = winElite(store, 'bw-8', false);
+        const second = winElite(store, 'bw-w5', false);
         expect(second.offers).toHaveLength(3);
         expect(store.getState().combatReward.upgrade).toBeNull();
     });
@@ -269,13 +269,13 @@ describe('the upgrade, once per elite (A10)', () => {
 
     it('taking the cards leaves the upgrade on offer next time', () => {
         const store = makeStore();
-        const first = winElite(store, 'bw-8', false);
+        const first = winElite(store, 'bw-w5', false);
         expect(store.getState().combatReward.upgrade).not.toBeNull();
         claimCombatRewardAction(store, first.offers[0]!);
         expect(gs(store).world.currentMap.eliteUpgradeTakenNodes ?? []).toEqual([]);
 
         restAndClaim(store);
-        winElite(store, 'bw-8', false);
+        winElite(store, 'bw-w5', false);
         expect(store.getState().combatReward.upgrade).not.toBeNull();
     });
 });
@@ -284,7 +284,7 @@ describe('an old save respawns at its next claim (A8)', () => {
     it('a save from before ER1 loads with no migration, and the claim brings the elite back with its upgrade', () => {
         const adapter = createMemoryAdapter();
         const store = makeStore('breakwater', adapter);
-        winElite(store, 'bw-8', false);
+        winElite(store, 'bw-w5', false);
         claimCombatRewardAction(store, null);
         store.getState().save();
 
@@ -292,11 +292,11 @@ describe('an old save respawns at its next claim (A8)', () => {
         const old = JSON.parse(JSON.stringify(adapter.load())) as GameState;
         delete (old.world.currentMap as { retiredEliteNodes?: unknown }).retiredEliteNodes;
         delete (old.world.currentMap as { eliteUpgradeTakenNodes?: unknown }).eliteUpgradeTakenNodes;
-        expect(spent(old.world, 'bw-8')).toBe(true);
+        expect(spent(old.world, 'bw-w5')).toBe(true);
 
         const reloaded = createAppStore({ adapter: createMemoryAdapter(old) });
-        expect(restAndClaim(reloaded).respawnedElites).toEqual([{ map: 'breakwater', node: 'bw-8' }]);
-        winElite(reloaded, 'bw-8', false);
+        expect(restAndClaim(reloaded).respawnedElites).toEqual([{ map: 'breakwater', node: 'bw-w5' }]);
+        winElite(reloaded, 'bw-w5', false);
         expect(reloaded.getState().combatReward.upgrade).not.toBeNull();
     });
 });
@@ -304,7 +304,7 @@ describe('an old save respawns at its next claim (A8)', () => {
 describe('the rest screen names each returning foe (A5)', () => {
     it('one line per elite, current region first', () => {
         const store = makeStore();
-        winElite(store, 'bw-8', false);
+        winElite(store, 'bw-w5', false);
         claimCombatRewardAction(store, null);
         // A departed Charcoal Wood whose elite was fought.
         const cw = createStartingWorld('charcoal-wood').currentMap;
@@ -323,11 +323,11 @@ describe('the rest screen names each returning foe (A5)', () => {
         );
         const lines = r.getAllByTestId('rest-elite-respawn').map(n => String(n.props.children));
         expect(lines).toEqual([
-            'The Green Jelly is back at The North Pier.',
+            'The Green Jelly is back at The Keep Causeway.',
             'The Green Jelly is back at The Root Graveyard.',
         ]);
         fireEvent.press(r.getByTestId('rest-claim'));
-        expect(spent(gs(store).world, 'bw-8')).toBe(false);
+        expect(spent(gs(store).world, 'bw-w5')).toBe(false);
     });
 
     it('no line when nothing will return', () => {

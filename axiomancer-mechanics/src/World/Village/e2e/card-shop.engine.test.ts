@@ -51,16 +51,16 @@ describe('the card shop offer (A9)', () => {
     });
 
     it('is the same three for the same run and node, whatever else happened', () => {
-        const seed = villageCardShopSeed('run-1', 'bw-16');
+        const seed = villageCardShopSeed('run-1', 'bw-t4');
         expect(rollVillageCardShop(POOL, seed)).toEqual(rollVillageCardShop(POOL, seed));
-        expect(villageCardShopSeed('run-1', 'bw-16')).toBe(seed);
+        expect(villageCardShopSeed('run-1', 'bw-t4')).toBe(seed);
     });
 
     it('rolls differently for another node or another run', () => {
-        const here = villageCardShopSeed('run-1', 'bw-16');
+        const here = villageCardShopSeed('run-1', 'bw-t4');
         expect(villageCardShopSeed('run-1', 'cw-18')).not.toBe(here);
-        expect(villageCardShopSeed('run-2', 'bw-16')).not.toBe(here);
-        const offers = new Set(['bw-16', 'cw-18', 'bc-12', 'ld-14'].map(n =>
+        expect(villageCardShopSeed('run-2', 'bw-t4')).not.toBe(here);
+        const offers = new Set(['bw-t4', 'cw-18', 'bc-12', 'ld-14'].map(n =>
             rollVillageCardShop(POOL, villageCardShopSeed('run-1', n)).join(',')));
         expect(offers.size).toBeGreaterThan(1);
     });
@@ -72,12 +72,12 @@ describe('the card shop offer (A9)', () => {
 
     it("draws from the player's own reward pool at the tuned price", () => {
         const state = game(0);
-        const shop = villageCardShopFor(state, 'bw-16');
+        const shop = villageCardShopFor(state, 'bw-t4');
         const pool = rewardPoolFor(state.player);
         expect(shop.price).toBe(6);
         expect(shop.cardIds.length).toBe(Math.min(3, new Set(pool).size));
         for (const id of shop.cardIds) expect(pool).toContain(id);
-        expect(villageCardShopFor(state, 'bw-16')).toEqual(shop);
+        expect(villageCardShopFor(state, 'bw-t4')).toEqual(shop);
     });
 });
 

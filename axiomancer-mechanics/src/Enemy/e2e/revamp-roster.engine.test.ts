@@ -86,7 +86,7 @@ describe('the R2 enemy cards', () => {
 
 describe('the R2 Act 1 pools and pins (D61)', () => {
     const ACT1 = [
-        { continent: 'coastal-continent', map: 'breakwater', elite: 'bw-8', door: 'bw-17' },
+        { continent: 'coastal-continent', map: 'breakwater', elite: 'bw-w5', door: 'bw-k2' },
         { continent: 'coastal-continent', map: 'charcoal-wood', elite: 'cw-12', door: 'cw-17' },
         { continent: 'northern-continent', map: 'beacon-crags', elite: 'bc-8', door: 'bc-15' },
         { continent: 'northern-continent', map: 'lantern-deep', elite: 'ld-8', door: 'ld-16' },

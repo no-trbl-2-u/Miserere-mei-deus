@@ -224,11 +224,11 @@ async function main() {
     const browser = await chromium.launch(launchOptions)
     try {
         const context = await browser.newContext({ viewport: VIEWPORT, hasTouch: false })
-        // A Sage standing on the Breakwater's bw-15, the labyrinth's door
+        // A Sage standing on the Breakwater's bw-m3, the labyrinth's door
         // (fixture-gallery's labyrinth entries use the same stand).
         await injectStateFixture(context, {
             id: 'labyrinth-roundtrip', seed: 'g9', preset: 'sage',
-            world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-15', completedMaps: [] },
+            world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-m3', completedMaps: [] },
         })
         const page = await context.newPage()
         page.on('pageerror', (err) => console.error('labyrinth-combat-roundtrip-e2e: pageerror', err.message))

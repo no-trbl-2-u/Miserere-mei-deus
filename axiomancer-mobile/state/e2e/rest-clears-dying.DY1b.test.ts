@@ -51,7 +51,7 @@ function dyingStore(): { store: AppStore; actions: AppActions } {
         },
         flags: [],
     } as never);
-    actions.moveTo('bw-2');
+    actions.moveTo('bw-w2');
     expect(actions.playerDied('fight')).toBe('revived');
     expect(store.getState().dying).toBe(true);
     return { store, actions };
@@ -117,7 +117,7 @@ describe('rest and dying', () => {
 
     it('walking on leaves dying set', () => {
         const { store, actions } = dyingStore();
-        actions.moveTo('bw-2');
+        actions.moveTo('bw-w2');
         expect(dyingOf(store)).toBe(true);
     });
 });

@@ -11,7 +11,7 @@ import { createMapState } from './map.registry';
 import { roadMoveLists } from './roads';
 import { legalMovesFrom } from './world.reducer';
 import { createStartingWorld } from './index';
-import { settleQuestNodes } from '../Game/fixtures/quest-nodes';
+import { questNodeIdsOn, settleQuestNodes } from '../Game/fixtures/quest-nodes';
 import type { MapDefinition } from './types';
 
 /** Start `s` reaches `a` (blocked) on its own list and `b` only by `b`'s road back to it. */
@@ -54,8 +54,10 @@ describe('settleQuestNodes re-syncs the move lists', () => {
     it('after settling, available is the legal moves and no spent marker is locked', () => {
         const settled = settleQuestNodes(createStartingWorld('breakwater').currentMap);
         expect(settled.availableNodes).toEqual(legalMovesFrom(settled));
-        for (const marker of ['bw-19', 'bw-20', 'bw-21', 'bw-22']) {
-            expect(settled.lockedNodes).not.toContain(marker);
+        const questNodes = questNodeIdsOn('breakwater');
+        expect(questNodes.length).toBeGreaterThan(0);
+        for (const node of questNodes) {
+            expect(settled.lockedNodes).not.toContain(node);
         }
     });
 });

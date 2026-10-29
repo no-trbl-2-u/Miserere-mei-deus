@@ -1,5 +1,6 @@
 /**
- * Hermetic engine test — the v38 → v39 hop: the third slot kind is `relic`.
+ * Hermetic engine test — the relic re-slot (`reslotRelicSave`, once the
+ * v38 → v39 hop's helper; no save migrates since v41): the third slot kind is `relic`.
  *
  * A v38 save stored relics with the old slot name and a flavour kind, and the
  * loadout's relic row under its old name. The hop re-slots every equipment
@@ -9,8 +10,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { migrate } from '../game.migrate';
-import { createNewGameState, GAME_STATE_VERSION, gameReducer } from '../game.reducer';
+import { createNewGameState, gameReducer } from '../game.reducer';
 import type { GameState } from '../types';
 import { reslotRelicPiece, reslotRelicSave } from '../legacy-slots';
 import { createCharacter } from '../../Character';
@@ -63,15 +63,10 @@ function v38Save(): { raw: Record<string, unknown>; today: Character } {
     return { raw, today };
 }
 
-describe('migrate v38 → v39 — the relic slot', () => {
-    it('lands at the current version', () => {
-        expect(GAME_STATE_VERSION).toBeGreaterThanOrEqual(39);
-        expect(migrate(v38Save().raw, 38).version).toBe(GAME_STATE_VERSION);
-    });
-
+describe('reslotRelicSave — a v38-shaped save on the relic slot', () => {
     it('keeps the same pieces worn and carried, under relics', () => {
         const { raw, today } = v38Save();
-        const migrated = migrate(raw, 38);
+        const migrated = reslotRelicSave(raw) as unknown as GameState;
         expect(migrated.player.equipment.relics.map(r => r.id)).toEqual([SIGNET_ID]);
         expect(migrated.player.equipment.relics.every(r => r.slot === 'relic')).toBe(true);
         expect(migrated.player.inventory.map(i => i.id)).toEqual(today.inventory.map(i => i.id));
@@ -81,7 +76,7 @@ describe('migrate v38 → v39 — the relic slot', () => {
 
     it('keeps maxHealth and the signatures for the next fight', () => {
         const { raw, today } = v38Save();
-        const migrated = migrate(raw, 38) as GameState;
+        const migrated = reslotRelicSave(raw) as unknown as GameState;
         expect(migrated.player.maxHealth).toBe(today.maxHealth);
         const staged = gameReducer(migrated, { type: 'START_COMBAT', payload: { target: deepClone(FloatEye) } });
         const fight = initializeCombatEncounter(staged.player, deepClone(FloatEye), undefined, 7);
@@ -91,14 +86,14 @@ describe('migrate v38 → v39 — the relic slot', () => {
     });
 
     it('re-slots an inline quest reward too', () => {
-        const migrated = migrate(v38Save().raw, 38);
+        const migrated = reslotRelicSave(v38Save().raw) as unknown as GameState;
         const reward = migrated.quests.active[0]!.reward as { kind: 'item'; item: Equipment };
         expect(reward.item.slot).toBe('relic');
         expect('accessoryKind' in reward.item).toBe(false);
     });
 
     it('leaves no old slot word anywhere in the save', () => {
-        const json = JSON.stringify(migrate(v38Save().raw, 38));
+        const json = JSON.stringify(reslotRelicSave(v38Save().raw));
         expect(json).not.toMatch(/accessoryKind|"accessories"|"accessory"/);
     });
 

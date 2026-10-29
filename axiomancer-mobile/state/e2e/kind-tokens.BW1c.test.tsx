@@ -107,7 +107,7 @@ describe('A8: which nodes wear their kind token', () => {
         expect(quests.some((q) => q.kind === 'locked')).toBe(true);
     });
 
-    it.each(['bw-5', 'bw-10', 'bw-17'])('standing on %s, the tokens follow the player', (nodeId) => {
+    it.each(['bw-m3', 'bw-h1', 'bw-k2'])('standing on %s, the tokens follow the player', (nodeId) => {
         const vm = selectExplorationViewModel(standingOn(nodeId).getState());
         expect(vm.currentNodeId).toBe(nodeId);
         expect(shownTokens(vm)).toEqual(expectedTokens(vm));
@@ -188,7 +188,7 @@ describe('A9: the new marks', () => {
                 const vm = selectExplorationViewModel(storeOn({ ...fresh, world: placeOnNode(fresh.world, n.id) }).getState());
                 return vm.nodes.filter((v) => elites.includes(v.id) && v.kind === 'available');
             });
-        // A quest pocket may hold a map's elite behind its giver, so not every map offers one this way.
+        // A quest gate or a held node may keep a map's elite behind it, so not every map offers one this way.
         if (map === 'charcoal-wood') expect(offeredFrom.length).toBeGreaterThan(0);
         for (const node of offeredFrom) {
             expect(node.type).toBe('elite');

@@ -37,7 +37,7 @@ function walk(dir: string, out: string[] = []): string[] {
 }
 
 const callers = SCAN.flatMap((d) => walk(path.join(ROOT, d)))
-    .map((file) => ({ rel: path.relative(ROOT, file), text: readFileSync(file, 'utf8') }))
+    .map((file) => ({ rel: path.relative(ROOT, file).split(path.sep).join('/'), text: readFileSync(file, 'utf8') }))
     .filter((f) => f.text.includes('getState().endCombat('));
 
 describe('every engine endCombat caller routes the quest extras', () => {

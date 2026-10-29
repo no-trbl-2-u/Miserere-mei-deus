@@ -18,7 +18,7 @@ import { Enemy } from '../Enemy/types';
 import { FloatEye, ENEMY_REGISTRY } from '../Enemy/enemy.library';
 import { MapNode } from './types';
 
-const coastNode:   MapNode = { id: 'bw-2', location: [0, 0], connectedNodes: [] };
+const coastNode:   MapNode = { id: 'bw-w2', location: [0, 0], connectedNodes: [] };
 const forestNode:  MapNode = { id: 'cw-3', location: [0, 0], connectedNodes: [] };
 const unknownNode: MapNode = { id: 'zz-1', location: [0, 0], connectedNodes: [] };
 
@@ -92,7 +92,7 @@ describe('generateEncounter', () => {
         expect(enc.enemies).toHaveLength(1);
         // The Act 1 pool is Float-Eye only.
         expect(enc.enemies[0].id).toBe(FloatEye.id);
-        expect(enc.origin).toBe('breakwater:bw-2');
+        expect(enc.origin).toBe('breakwater:bw-w2');
     });
 
     it('throws for nodes whose map cannot be resolved', () => {

@@ -97,8 +97,8 @@ describe('the spoils pick takes two presses (TQ1 A1, A5)', () => {
  * found by standing the player on each node in turn.
  */
 function optionOf(map: string, type: NodeType, currency: number): ExplorationOption {
-    // A questline's quest nodes are settled (test-only) so its pockets'
-    // fights are offered from the open fan.
+    // A questline's quest nodes are settled (test-only) so the roads its
+    // gates hold are offered too.
     const fresh = createStartingWorld(map as never);
     const world0 = { ...fresh, currentMap: settleQuestNodes(fresh.currentMap) };
     const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: world0 } });
@@ -108,7 +108,7 @@ function optionOf(map: string, type: NodeType, currency: number): ExplorationOpt
     const def = getMapDefinition(world.currentMap.continent, world.currentMap.name);
     for (const node of def.nodes) {
         // Stand there with the map settled (a placement would un-spend a
-        // marker, and an unspent marker holds its pocket's roads).
+        // quest node, and an unspent quest node holds its gate).
         store.setState({ world: { ...world, currentMap: syncMoveLists({ ...world.currentMap, currentNode: node.id }) } } as never);
         const found = selectExplorationViewModel(store.getState()).options.find((o) => o.type === type);
         if (found) return found;
@@ -178,7 +178,7 @@ describe('the node panel shows the purse where a node can charge (TQ1 A2, A3, A5
 
     it('a change in the purse alone refreshes the options', () => {
         const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
-        jumpToNode(store, 'bw-13');
+        jumpToNode(store, 'bw-t3'); // a road from the harbour town's Anvil
         const before = selectExplorationViewModel(store.getState()).options.find((o) => o.type === 'village')!;
         const { player } = store.getState();
         store.setState({ player: { ...player, currency: (before.purse ?? 0) + 7 } } as never);

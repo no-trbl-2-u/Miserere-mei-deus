@@ -1,13 +1,13 @@
 /**
  * Hermetic test helper - a staged four-step questline on the Breakwater's
- * first nodes (phase QL1c). The Breakwater's own questline lives on
- * bw-19..bw-22 (`quest.library.ts`); the quest screen and its payout are
+ * first nodes (phase QL1c). The Breakwater's own chain lives on bw-w1,
+ * bw-c2, bw-l5, bw-k1 and bw-b1 (`breakwater-chapter.questline.ts`); the quest screen and its payout are
  * proven hermetically on this one, the way fixtures stage an NPC.
  *
- *   step 1  cross 1 hazard           pays XP + shillings        (node 1, bw-1)
- *   step 2  win 2 fights             pays XP + a card pick      (node 2, bw-2)
- *   step 3  beat 1 elite             pays XP + a potion         (node 3, bw-3)
- *   step 4  beat the boss            pays XP + shillings + Belt (node 4, bw-4)
+ *   step 1  cross 1 hazard           pays XP + shillings        (node 1, bw-w2)
+ *   step 2  win 2 fights             pays XP + a card pick      (node 2, bw-w3)
+ *   step 3  beat 1 elite             pays XP + a potion         (node 3, bw-w4)
+ *   step 4  beat the boss            pays XP + shillings + Belt (node 4, bw-w5)
  *
  * Steps 1-3 settle by turn-in; step 4 settles on the boss victory.
  */
@@ -20,7 +20,7 @@ import type { AppStore } from '@/state/store';
 
 export const FIXTURE_LINE = 'ql1c-line';
 export const FIXTURE_LINE_NAME = 'The Fixture Line';
-export const FIXTURE_NODES = ['bw-1', 'bw-2', 'bw-3', 'bw-4'] as const;
+export const FIXTURE_NODES = ['bw-w2', 'bw-w3', 'bw-w4', 'bw-w5'] as const;
 
 export const XP: Reward = { kind: 'experience', amount: 40 };
 export const SHILLINGS_10: Reward = { kind: 'currency', amount: 10 };

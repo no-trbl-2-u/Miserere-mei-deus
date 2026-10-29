@@ -4,10 +4,10 @@
  * Repro of the "battle loss → THE BINDING TORE" crash: a combat defeat
  * (or hazard death) inside the labyrinth routes through
  * `resetRun({ keepCharacter: true })`, which regenerates the OVERWORLD
- * and re-seats the player at the starting node (`bw-1`). The mobile
+ * and re-seats the player at the starting node (`bw-w1`). The mobile
  * `labyrinthUi` session, however, is transient and was left active —
- * so the still-mounted labyrinth presenter looked `bw-1` up in the act
- * and threw `LabyrinthContentError: Room 'bw-1' is not authored in
+ * so the still-mounted labyrinth presenter looked `bw-w1` up in the act
+ * and threw `LabyrinthContentError: Room 'bw-w1' is not authored in
  * act1`, tripping the global error boundary.
  *
  * Two guarantees pinned here:
@@ -57,7 +57,7 @@ describe('labyrinth — defeat / run reset', () => {
         store.setState({
             world: {
                 ...world,
-                currentMap: { ...world.currentMap, currentNode: 'bw-1' },
+                currentMap: { ...world.currentMap, currentNode: 'bw-w1' },
             },
         } as never);
 

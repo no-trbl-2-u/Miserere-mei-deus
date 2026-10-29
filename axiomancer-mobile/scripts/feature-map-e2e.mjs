@@ -7,8 +7,8 @@
 //
 //   1. PLAY: a new game the way a player starts one (title, save slot, the
 //      windmill arrival; a run starts with no relic), every tab, the hazard deck and
-//      settings from the SELF sheet, then the start map node to node: a loot
-//      cache, a gathering, a fight to its end, a hazard.
+//      settings from the SELF sheet, then the start map's first road: onto the
+//      windmill's one neighbour, a fight, to its reveal.
 //   2. SEAMS: every reachable route play did not reach is provoked from the
 //      dev tools (the same `/dev` buttons the encounter-routing journey
 //      presses), one fresh context each. A route with no seam stays
@@ -332,37 +332,13 @@ async function shell(page) {
 }
 
 async function walk(page) {
-    await travelTo(page, 'bw-5')
-    await waitFor(page, 'cache-choice-offers', 'bw-5 loot cache')
-    await page.getByTestId('cache-choice-offer-card').click({ force: true })
-    await page.getByRole('button', { name: /move on/i }).first().click({ timeout: 10000 })
-        .catch(() => fail('bw-5: the cache outcome has no "Move on"'))
-    await settleOnMap(page, 'bw-5')
-    log('play: bw-5 cache')
-
-    // bw-4 is an empty waypoint since the gathering kind was cut: nothing opens.
-    await travelTo(page, 'bw-4')
-    await settleOnMap(page, 'bw-4')
-    log('play: bw-4 waypoint')
-
-    // The Breakwater's fights and hazards sit in pockets behind its quest
-    // markers (QL1d). Accepting step 1 at bw-19 opens the hazard pocket; the
-    // fight pocket waits behind bw-20, which needs step 1 crossed (no dev skip
-    // in this leg), so the seam leg provokes the fight routes.
-    // The windmill is the road from the pass to marker 1.
-    await walkBack(page, 'bw-1')
-    await travelTo(page, 'bw-19')
-    await waitFor(page, 'quest-column', 'bw-19 quest screen')
-    await waitFor(page, 'quest-accept-button', 'bw-19 offer')
-    await tap(page, 'quest-accept-button')
-    await waitFor(page, 'quest-accepted-line', 'bw-19 accepted')
-    await tap(page, 'quest-leave-button') || fail('bw-19: the quest screen has no LEAVE')
-    await settleOnMap(page, 'bw-19')
-    log('play: bw-19 quest step accepted, back on the map')
-
-    await travelTo(page, 'bw-3')
-    await waitFor(page, 'hazard-route-select', 'bw-3 hazard')
-    log('play: bw-3 hazard')
+    // The Breakwater's windmill has one road, to the gallows crossroads
+    // (bw-w2), a fight. This leg installs no dev skip, so it walks onto the
+    // fight and stops at its reveal; the seam leg provokes the cache, hazard,
+    // rest and quest routes the map holds past it.
+    await travelTo(page, 'bw-w2')
+    await waitFor(page, 'combat-reveal', 'bw-w2 encounter reveal')
+    log('play: bw-w2 fight reveal')
 }
 
 async function playLeg(page, baseUrl) {
@@ -407,10 +383,10 @@ const SEAMS = {
     // the dialogue route is provoked by the state fixture that stages one.
     'route:dialogue': { fixture: 'apprentice-staged-dialogue', landing: 'dialogue-nameplate' },
     // The quest screen is provoked by the state fixture that stages the first
-    // quest node of the fixture questline (hermetic: no walk to bw-19).
+    // quest node of the fixture questline (hermetic: no walk to the chain's quest nodes).
     'route:quest': { fixture: 'apprentice-staged-quest', landing: 'quest-column' },
     // The travel screen is provoked by the state fixture that arrives on the
-    // river bridge (bw-18), whose offer opens "Move to The Charcoal Wood?".
+    // far bank (bw-b2), whose offer opens "Move to The Charcoal Wood?".
     'route:travel': { fixture: 'wanderer-bw-door-arrive', landing: 'travel-question' },
     // No run hands out a relic yet (phase SG1 cut the first-node ring), so the
     // reward screen is provoked by the dev REWARDS row's RELIC REWARD.

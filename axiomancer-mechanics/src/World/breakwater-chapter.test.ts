@@ -8,12 +8,10 @@
  * not against itself. A change T makes on the board edits both.
  */
 
-import { beforeAll, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { breakwaterChapter, BREAKWATER_CHAPTER_GATES } from './Continents/Coastal-Village/breakwater-chapter';
-import {
-    registerBreakwaterChapter, BREAKWATER_CHAPTER_KINDS, BREAKWATER_CHAPTER_POOLS,
-} from './MapEvents/breakwater-chapter.content';
+import { BREAKWATER_CHAPTER_KINDS, BREAKWATER_CHAPTER_POOLS } from './MapEvents/content';
 import {
     BREAKWATER_CHAPTER_QUESTLINE, BREAKWATER_CHAPTER_QUESTLINE_ID, BREAKWATER_KEEP_KEY,
 } from './breakwater-chapter.questline';
@@ -22,6 +20,7 @@ import { getNodeEventPool } from './MapEvents/resolve-map-event';
 import { isEliteNode } from './elite-respawn';
 import { questGateProblems } from './quest-gates';
 import { getQuestline } from './questline';
+import { AUTHORED_QUESTLINES } from './quest.library';
 import { getRelicById } from '../Items/relic.library';
 import type { MapEventPayload } from './MapEvents/types';
 
@@ -84,8 +83,6 @@ P3|cutscene|P2
 });
 
 const roadKey = (a: string, b: string) => [a, b].sort().join('~');
-
-beforeAll(registerBreakwaterChapter);
 
 function payloadOf(nodeId: string): MapEventPayload {
     return getNodeEventPool('coastal-continent', 'breakwater', nodeId)!.entries[0]!.payload;
@@ -160,7 +157,7 @@ describe('A1: the graph is T\'s node list', () => {
         }
     });
 
-    it('takes the registry\'s Breakwater only once registered (built beside the live map)', () => {
+    it('is the registered Breakwater', () => {
         expect(getMapDefinition('coastal-continent', 'breakwater')).toBe(breakwaterChapter);
     });
 });
@@ -204,7 +201,7 @@ describe('A4: the sea cave is a same-map travel pair', () => {
         expect(roads.has(roadKey('bw-h6', 'bw-c0'))).toBe(false);
     });
 
-    it('sends the far bank on to the Charcoal Wood, as bw-18 did', () => {
+    it('sends the far bank on to the Charcoal Wood, through the bridge door', () => {
         const p = payloadOf('bw-b2');
         expect(p.kind === 'travel' && p.destination).toEqual({ map: 'charcoal-wood', continent: 'coastal-continent' });
     });
@@ -212,6 +209,7 @@ describe('A4: the sea cave is a same-map travel pair', () => {
 
 describe('A2: the chain', () => {
     it('is registered, gives step 1 from the windmill\'s arrival and puts steps 2-4 on the quest nodes', () => {
+        expect(AUTHORED_QUESTLINES).toEqual([BREAKWATER_CHAPTER_QUESTLINE]);
         expect(getQuestline(BREAKWATER_CHAPTER_QUESTLINE_ID)).toBe(BREAKWATER_CHAPTER_QUESTLINE);
         const w1 = payloadOf('bw-w1');
         expect(w1.kind === 'cutscene' && w1.effect).toEqual({

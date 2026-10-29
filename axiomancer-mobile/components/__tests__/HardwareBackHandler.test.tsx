@@ -206,7 +206,7 @@ function combatPrelude(): ResolveMapEventResult {
         state: undefined as never,
         event: {
             kind: 'encounter',
-            encounter: { enemies: [enemy], origin: 'breakwater:bw-2' } as never,
+            encounter: { enemies: [enemy], origin: 'breakwater:bw-w2' } as never,
             isBoss: false,
         },
     };

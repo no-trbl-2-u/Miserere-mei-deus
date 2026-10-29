@@ -271,7 +271,7 @@ describe('smoke-render: surfaces with an ACTIVE event (no infinite render loop)'
     });
 
     it('renders the Exploration tab with an active combat-prelude without throwing', () => {
-        // A real arrival at bw-2: the prelude holds the node's own foe.
+        // A real arrival at bw-w2: the prelude holds the node's own foe.
         const { store } = arriveAtRealFight();
         expect(() => render(withProviders(store, <ExplorationScreen />))).not.toThrow();
     });

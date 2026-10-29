@@ -73,9 +73,9 @@ function firstBlacksmithNode(): string {
 }
 
 describe('the village Anvil counter', () => {
-    it('the authored Breakwater village (bw-16) opens "The Anvil" from its counter', () => {
+    it('the authored Breakwater village (bw-t4, the harbour town) opens "The Anvil" from its counter', () => {
         const { store, actions } = makeStoreAndActions();
-        expect(firstBlacksmithNode()).toBe('bw-16');
+        expect(firstBlacksmithNode()).toBe('bw-t4');
         seatAt(store, firstBlacksmithNode());
 
         // The node resolves to a village hub; no anvil session opens by itself.
@@ -94,12 +94,12 @@ describe('the village Anvil counter', () => {
         expect(session(store).variants.map((v) => v.id)).toContain(HEART_RICH_PAYLOAD_VARIANT.id);
     });
 
-    it('there is exactly ONE village on the first map (no invented cadence)', () => {
+    it('the first map has exactly its two authored villages, bw-t4 and bw-m5 (no invented cadence)', () => {
         const def = getMapDefinition('coastal-continent', 'breakwater');
-        const count = def.nodes.filter(
+        const villages = def.nodes.filter(
             (n) => getNodePrimaryEventKind('coastal-continent', 'breakwater', n.id) === 'village',
-        ).length;
-        expect(count).toBe(1);
+        ).map((n) => n.id);
+        expect(villages).toEqual(['bw-t4', 'bw-m5']);
     });
 });
 

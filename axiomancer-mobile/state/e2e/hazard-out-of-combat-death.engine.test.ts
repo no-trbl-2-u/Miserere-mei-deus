@@ -38,8 +38,8 @@ afterEach(() => {
 });
 
 function makeStoreAndActions(): { store: AppStore; actions: AppActions } {
-    // The quest nodes settled (test-only): bw-2 sits in a questline pocket.
-    const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: settledBreakwater('bw-20') } });
+    // The quest nodes settled (test-only), standing on the first fight (bw-w2).
+    const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: settledBreakwater('bw-w2') } });
     return { store, actions: createAppActions(store) };
 }
 
@@ -79,9 +79,9 @@ function driveFailingCrossing(store: AppStore, actions: AppActions): void {
 }
 
 describe('hazard out-of-combat death', () => {
-    /** Walks onto bw-2 (the crossing's node), wounds the player, plays the failing crossing. */
+    /** Walks onto bw-w3 (the crossing's node), wounds the player, plays the failing crossing. */
     function dieOnce(store: AppStore, actions: AppActions, health = 15) {
-        actions.moveTo('bw-2');
+        actions.moveTo('bw-w3');
         setHealth(store, health, Math.max(health, 15));
         driveFailingCrossing(store, actions);
         return actions.claimHazardRewards(null);
@@ -112,14 +112,14 @@ describe('hazard out-of-combat death', () => {
         expect(after.player.level).toBe(levelBefore);
         expect(after.player.currency).toBe(shillingsBefore);
         const map = after.world.currentMap;
-        expect(map.currentNode).toBe('bw-20');
-        expect(map.completedNodes).not.toContain('bw-2');
-        expect(map.availableNodes).toContain('bw-2');
+        expect(map.currentNode).toBe('bw-w2');
+        expect(map.completedNodes).not.toContain('bw-w3');
+        expect(map.availableNodes).toContain('bw-w3');
     });
 
     it('a revive is written to the slot', () => {
         const adapter = createMemoryAdapter();
-        const store = createAppStore({ adapter, overrides: { world: settledBreakwater('bw-20') } });
+        const store = createAppStore({ adapter, overrides: { world: settledBreakwater('bw-w2') } });
         const actions = createAppActions(store);
         const before = adapter.saveCount;
 
@@ -133,8 +133,8 @@ describe('hazard out-of-combat death', () => {
         const { store, actions } = makeStoreAndActions();
         dieOnce(store, actions);
 
-        actions.moveTo('bw-2');
-        expect(gameState(store).world.currentMap.currentNode).toBe('bw-2');
+        actions.moveTo('bw-w3');
+        expect(gameState(store).world.currentMap.currentNode).toBe('bw-w3');
         expect(gameState(store).dying).toBe(true);
     });
 
@@ -145,7 +145,7 @@ describe('hazard out-of-combat death', () => {
         expect(gameState(store).dying).toBe(true);
 
         // Dying at 1 VITAE: the same failing crossing is fatal again.
-        actions.moveTo('bw-2');
+        actions.moveTo('bw-w3');
         driveFailingCrossing(store, actions);
         const result = actions.claimHazardRewards(null);
 
@@ -155,7 +155,7 @@ describe('hazard out-of-combat death', () => {
         expect(after.runId).not.toBe(runId);
         expect(after.dying).toBeUndefined();
         expect(after.player.health).toBe(after.player.maxHealth);
-        expect(after.world.currentMap.currentNode).toBe('bw-1');
+        expect(after.world.currentMap.currentNode).toBe('bw-w1');
         expect(hazardDeathCount(after.flags ?? [])).toBe(1);
         expect(store.getState().hazard.session).toBeNull();
     });

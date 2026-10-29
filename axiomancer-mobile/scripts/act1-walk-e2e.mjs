@@ -11,6 +11,12 @@
 // door and exit off the map graph and picks the shortest frontier path that
 // meets every event kind the region carries before its door fight.
 //
+// A same-map passage (the Breakwater's sea cave, NK1d) is a travel node whose
+// YES lands on its far end: the plan marks that far end `passage`. A back
+// step onto a node that acts again (a village, a travel node, a quest node
+// with business) opens the confirm panel, so it goes through the confirm and
+// leaves the node's screen (or takes the passage when the next step is it).
+//
 // Each node is resolved through its own screen by test id, the way a player
 // does: a cache by taking an offer, a gathering by acknowledging `/event`, a
 // cutscene by advancing it, a rest by REST on `/rest`, a village by opening its Anvil, leaving
@@ -137,6 +143,8 @@ function loadPlan() {
             cwd: MECHANICS_ROOT,
             encoding: 'utf8',
             stdio: ['ignore', 'pipe', 'inherit'],
+            // `npx` is a .cmd shim on Windows, which execFile cannot start without a shell.
+            shell: process.platform === 'win32',
         })
         return JSON.parse(out)
     } catch (err) {
@@ -240,19 +248,68 @@ async function expectHere(page, nodeId) {
 
 /**
  * Walk back onto a walked node a road away (phase WR1a: the player walks the
- * roads, and a dead end is left the way it was entered). The node reads
- * "a road back"; one tap moves the player with no confirm panel and no event.
+ * roads, and a dead end is left the way it was entered). A plain walked node
+ * reads "a road back"; one tap moves the player with no confirm panel and no
+ * event. A node that acts again on entry (WR1b: a village, a travel node, a
+ * quest node with business) opens the confirm panel instead: GO, then its
+ * screen is left (`leave`), or a travel node's passage is taken when
+ * `takePassage` is set (the player then stands on the far end).
  */
-async function walkBack(page, nodeId) {
+async function walkBack(page, nodeId, { takePassage = false } = {}) {
     const label = await nodeLabel(page, nodeId)
-    if (!label || !/a road back/.test(label)) fail(`node-${nodeId} is not a road back (label: "${label}")`)
+    if (!label) fail(`node-${nodeId} is not on the map`)
     await page.evaluate((id) => document.querySelector(`[data-testid="node-${id}"]`).click(), nodeId)
+    let confirmed = false
     for (let i = 0; i < 20; i++) {
         if (/here/.test((await nodeLabel(page, nodeId)) ?? '')) break
+        if (await page.getByTestId('node-confirm-go').count()) {
+            await page.evaluate(() => document.querySelector('[data-testid="node-confirm-go"]').click())
+            confirmed = true
+            break
+        }
         await sleep(150)
     }
+    if (confirmed) {
+        if (await waitForAny(page, ['travel-yes', 'travel-no'], 4000)) {
+            await tap(page, takePassage ? 'travel-yes' : 'travel-no')
+            await settleOnMap(page, `${nodeId} travel`)
+            log(`walked back onto ${nodeId}${takePassage ? ' and took its passage' : ', the trip declined'}`)
+            return
+        }
+        for (const leave of ['village-leave', 'quest-leave-button']) {
+            if (await tap(page, leave)) break
+        }
+        await settleOnMap(page, `${nodeId} back`)
+    }
+    if (takePassage) fail(`${nodeId}: walking back did not offer its passage`)
     await expectHere(page, nodeId)
-    log(`walked back to ${nodeId}`)
+    log(`walked back to ${nodeId}${confirmed ? ' (it acted again; left)' : ''}`)
+}
+
+/** Confirm every queued item reward (`/item-reward`) until the screen it covered is back. */
+async function takeItemRewards(page, what, until = 'quest-paid') {
+    const visible = (id) => page.getByTestId(id).first().isVisible().catch(() => false)
+    for (let i = 0; i < 60; i++) {
+        if (await visible('item-reward-confirm')) {
+            await tap(page, 'item-reward-confirm')
+            log(`${what}: took an item reward`)
+            await sleep(400)
+            continue
+        }
+        if (/\/quest/.test(new URL(page.url()).pathname) && await visible(until)) return
+        await sleep(250)
+    }
+    fail(`${what}: the item rewards never ended`)
+}
+
+/** Wait until one of `testIds` is on screen; returns the first seen, or null. */
+async function waitForAny(page, testIds, timeout) {
+    const until = Date.now() + timeout
+    while (Date.now() < until) {
+        for (const id of testIds) if (await page.getByTestId(id).count()) return id
+        await sleep(150)
+    }
+    return null
 }
 
 /** The player's VITAE off the status card, as `[health, max]`; null when it is not on screen. */
@@ -371,19 +428,39 @@ const RESOLVERS = {
     // before when it is ready (a card pick it pays is skipped on the spoils
     // tiles), then ACCEPT the step the node offers, then LEAVE. The plan
     // visits the nodes in step order, so every one has a step to accept.
+    // A step paid on arrival shows its ledger with the next offer; the last
+    // quest node (the river bridge) turns in and offers nothing more.
     async quest(page, nodeId) {
+        // A step paid on arrival (the lighthouse) hands its items over first.
+        await takeItemRewards(page, nodeId, 'quest-column')
         await expectPath(page, '/quest', nodeId)
         await waitFor(page, 'quest-column', `${nodeId} quest screen`)
+        let turnedIn = false
         if (await tap(page, 'quest-turn-in-button')) {
+            turnedIn = true
+            // Every chain step pays a relic: it is taken on /item-reward first.
+            await takeItemRewards(page, nodeId)
             await waitFor(page, 'quest-paid', `${nodeId} turn-in payout`)
             if (await page.getByTestId('combat-rewards').count()) {
                 await tap(page, 'combat-reward-skip') || fail(`${nodeId}: the quest card pick has no SKIP`)
             }
         }
-        await waitFor(page, 'quest-accept-button', `${nodeId} offer`)
-        await tap(page, 'quest-accept-button')
-        await waitFor(page, 'quest-accepted-line', `${nodeId} accepted`)
+        if (await waitForAny(page, ['quest-accept-button'], 4000)) {
+            await tap(page, 'quest-accept-button')
+            await waitFor(page, 'quest-accepted-line', `${nodeId} accepted`)
+        } else if (!turnedIn) {
+            fail(`${nodeId}: the quest node offered nothing and took nothing`)
+        }
         await tap(page, 'quest-leave-button') || fail(`${nodeId}: the quest screen has no LEAVE`)
+        return 'screen'
+    },
+    // A travel node on the path: YES takes its passage when the plan's next
+    // step is the far end, else NO leaves the player on it.
+    async travel(page, nodeId, { next } = {}) {
+        await waitFor(page, 'travel-no', `${nodeId} travel screen`)
+        await expectPath(page, '/travel', nodeId)
+        const go = next?.role === 'passage'
+        await tap(page, go ? 'travel-yes' : 'travel-no') || fail(`${nodeId}: the travel screen has no ${go ? 'YES' : 'NO'}`)
         return 'screen'
     },
     async hazard(page, nodeId) {
@@ -402,7 +479,13 @@ const RESOLVERS = {
 async function newGame(page, baseUrl, plan) {
     // A static web export can't surface `extra.devToolsEnabled` at runtime; this
     // is the documented opt-in (lib/buildProfile.ts) that installs the skip seam.
-    await page.addInitScript(() => { globalThis.__AXM_FORCE_DEV_TOOLS__ = true })
+    // The walk pins routing, not attrition: skipped fights take no HP toll, or
+    // the Breakwater's run of fights before the wreck bleeds the walk to death
+    // on the hazard's arrival damage (the new map pays no potions).
+    await page.addInitScript(() => {
+        globalThis.__AXM_FORCE_DEV_TOOLS__ = true
+        globalThis.__AXM_SKIP_TOLL_FREE__ = true
+    })
     await page.goto(`${baseUrl}/`, { waitUntil: 'networkidle' })
     await page.getByLabel('Embark on your journey').click({ timeout: 15000 })
     await tap(page, 'main-menu-new-game') || fail('the main menu has no NEW GAME')
@@ -455,10 +538,20 @@ async function walk(page, baseUrl, plan, tally) {
         const region = plan.regions[i]
         const next = plan.regions[i + 1] ?? null
         log(`=== ${region.map}: ${region.steps.map((s) => s.nodeId).join(' > ')} ===`)
-        for (const step of region.steps) {
+        for (let j = 0; j < region.steps.length; j++) {
+            const step = region.steps[j]
+            const nextStep = region.steps[j + 1]
             if (step.role === 'arrival') continue
             if (step.role === 'back') {
-                await walkBack(page, step.nodeId)
+                await walkBack(page, step.nodeId, { takePassage: nextStep?.role === 'passage' })
+                continue
+            }
+            if (step.role === 'passage') {
+                // The travel node before it took the passage: the player stands here.
+                await settleOnMap(page, `${step.nodeId} passage`)
+                await expectHere(page, step.nodeId)
+                count(step.kind, 'screen', step.nodeId)
+                log(`${step.nodeId}: arrived through the passage`)
                 continue
             }
             if (step.role === 'exit') {
@@ -471,9 +564,9 @@ async function walk(page, baseUrl, plan, tally) {
             if (!resolve) fail(`${step.nodeId}: the walk has no way to resolve a ${step.kind} node`)
             if (step.kind === 'encounter' || step.kind === 'hazard') await mendIfLow(page, step.nodeId)
             await travelTo(page, step.nodeId)
-            const how = await resolve(page, step.nodeId)
+            const how = await resolve(page, step.nodeId, { next: nextStep })
             await settleOnMap(page, step.nodeId)
-            await expectHere(page, step.nodeId)
+            if (nextStep?.role !== 'passage') await expectHere(page, step.nodeId)
             count(step.kind, how, step.nodeId)
             log(`${step.nodeId} ${step.kind}: resolved by ${how}, back on the map`)
         }

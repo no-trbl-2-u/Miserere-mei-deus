@@ -129,7 +129,7 @@ export interface UniqueEvent {
     completed: boolean;
 }
 
-/** Node IDs are formatted as `<map-acronym>-<number>`, e.g. `"bw-1"`. */
+/** Node IDs are formatted as `<map-acronym>-<code>`, e.g. `"bw-w1"`. */
 export type NodeId = string;
 
 /** A traversable location on a map. */

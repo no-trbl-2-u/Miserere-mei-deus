@@ -1,10 +1,12 @@
 /**
  * The empty waypoint — hermetic coverage (phase NK1a, A1 and A2).
  *
- * The `gathering`, `interaction` and `narration` kinds are cut. The seven Act
- * 1 nodes that held a gathering event carry no pool now: arriving on one
+ * The `gathering`, `interaction` and `narration` kinds are cut. The Act 1
+ * nodes that held a gathering event carry no pool now: arriving on one
  * resolves to nothing, consumes it and opens its roads, like any node with no
- * pool. No registered pool names a removed kind.
+ * pool. No registered pool names a removed kind. The Breakwater's two went
+ * with its rebuild (BW1b): the new Breakwater has no empty waypoint, so five
+ * remain, all off it.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -55,10 +57,9 @@ describe('the overworld node kinds (A1)', () => {
     });
 });
 
-describe('the seven former gathering nodes are empty waypoints (A2)', () => {
-    it('are the seven nodes the gathering kind held', () => {
+describe('the former gathering nodes are empty waypoints (A2)', () => {
+    it('are the five nodes the gathering kind held, none on the rebuilt Breakwater', () => {
         expect(ACT1_WAYPOINT_NODES).toEqual({
-            'breakwater':    ['bw-4', 'bw-11'],
             'charcoal-wood': ['cw-4', 'cw-8', 'cw-14'],
             'beacon-crags':  ['bc-7'],
             'lantern-deep':  ['ld-7'],

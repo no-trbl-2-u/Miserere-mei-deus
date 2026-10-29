@@ -19,12 +19,13 @@ function frontierEraSave(): GameState {
             ...fresh.world,
             currentMap: {
                 ...fresh.world.currentMap,
-                currentNode: 'bw-9',
-                completedNodes: ['bw-4', 'bw-5'],
-                consumedNodes: ['bw-1', 'bw-4', 'bw-5'],
+                // On the camp, the first fight behind it won.
+                currentNode: 'bw-w4',
+                completedNodes: ['bw-w2', 'bw-w4'],
+                consumedNodes: ['bw-w1', 'bw-w2', 'bw-w4'],
                 // The whole explored edge, as the frontier kept it.
-                availableNodes: ['bw-19', 'bw-4', 'bw-5', 'bw-7', 'bw-9', 'bw-13'],
-                lockedNodes: ['bw-17', 'bw-18'],
+                availableNodes: ['bw-w3', 'bw-m1', 'bw-w2', 'bw-w4', 'bw-w5'],
+                lockedNodes: ['bw-k2', 'bw-b2'],
             },
         },
     };
@@ -35,9 +36,11 @@ describe('loading a frontier-era save', () => {
         const loaded = unwrap({ schemaVersion: CURRENT_SCHEMA_VERSION, state: frontierEraSave() } as never);
         const map = loaded.world.currentMap;
         expect(map.availableNodes).toEqual(legalMovesFrom(map));
-        expect(map.availableNodes).toEqual(['bw-4', 'bw-13']);
-        expect(map.lockedNodes).toContain('bw-19');
-        expect(moveToNode(loaded.world, 'bw-13').currentMap.currentNode).toBe('bw-13');
+        // A road back to the fight and a road on to the causeway elite;
+        // the fight's other roads are not a road from the camp.
+        expect([...map.availableNodes].sort()).toEqual(['bw-w2', 'bw-w5']);
+        expect(map.lockedNodes).toContain('bw-w3');
+        expect(moveToNode(loaded.world, 'bw-w5').currentMap.currentNode).toBe('bw-w5');
     });
 
     it('leaves a save that already agrees untouched', () => {

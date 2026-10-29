@@ -10,7 +10,7 @@
 import { MapDefinition, MapState, NodeId, UniqueEvent } from './types';
 import { ContinentName, MapName } from './map.library';
 import { roadMoveLists } from './roads';
-import { breakwater } from './Continents/Coastal-Village/breakwater';
+import { breakwaterChapter } from './Continents/Coastal-Village/breakwater-chapter';
 import { charcoalWood } from './Continents/Coastal-Village/charcoal-wood';
 import { beaconCrags } from './Continents/Northern-Continent/beacon-crags';
 import { lanternDeep } from './Continents/Northern-Continent/lantern-deep';
@@ -30,8 +30,8 @@ export class MapNotFoundError extends Error {
  */
 export const MAP_REGISTRY: Record<ContinentName, Partial<Record<MapName, MapDefinition>>> = {
     'coastal-continent': {
-        // Act 1's coast, the new-game start.
-        'breakwater': breakwater,
+        // Act 1's coast, the new-game start: T's Chapter 1 map.
+        'breakwater': breakwaterChapter,
         // Act 1's forest, past the Breakwater's bridge.
         'charcoal-wood': charcoalWood,
     },

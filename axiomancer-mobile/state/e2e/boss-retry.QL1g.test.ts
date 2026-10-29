@@ -1,16 +1,19 @@
-// guard-test: the seam already agreed on the parent; this pins the app path (moveTo, endCombat, playerDied, the Belt on /item-reward) for the lost-then-won watchtower
+// guard-test: the seam already agreed on the parent; this pins the app path (moveTo, endCombat, playerDied) for the lost-then-won chapter boss
 /**
- * The watchtower fought again through the app's actions (phase QL1g, A23).
+ * The chapter boss fought again through the app's actions (phase QL1g's A23,
+ * on the Chapter 1 chain of phase BW1a).
  *
- * A lost boss fight revives the player on the node walked from, dying, with
- * bw-17 open, unspent and step 4 active. The retry wins, the Belt is queued on
- * /item-reward and the bridge opens. A second loss while dying ends the run.
+ * A lost boss fight revives the player on the node walked from (the keep
+ * gate, bw-k1), dying, with the sea keep (bw-k2) open, unspent and step 4
+ * active. The retry wins and fills step 4, which is turned in at the river
+ * bridge (bw-b1), so nothing is queued and the bridge stays shut until then.
+ * A second loss while dying ends the run.
  */
 
 import { describe, expect, it } from '@jest/globals';
 
 import {
-    BREAKWATER_QUESTLINE, ENEMY_REGISTRY, completeQuest, initializeCombatEncounter, legalMovesFrom,
+    BREAKWATER_CHAPTER_QUESTLINE, ENEMY_REGISTRY, completeQuest, initializeCombatEncounter, legalMovesFrom,
     startQuest, stepQuest, type CombatOutcome, type GameState,
 } from '@mechanics';
 
@@ -23,26 +26,26 @@ import { settledBreakwater } from '@/test-utils/settledBreakwater';
 const gs = (store: ReturnType<typeof createAppStore>) => store.getState() as unknown as GameState;
 
 function setup() {
-    const placed = settledBreakwater('bw-22');
+    const placed = settledBreakwater('bw-k1');
     const world = placed;
     const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world } });
     const actions = createAppActions(store);
     let quests = gs(store).quests;
-    for (const step of BREAKWATER_QUESTLINE.steps.slice(0, 3)) {
-        quests = completeQuest(startQuest(quests, stepQuest(BREAKWATER_QUESTLINE, step)), step.quest.name);
+    for (const step of BREAKWATER_CHAPTER_QUESTLINE.steps.slice(0, 3)) {
+        quests = completeQuest(startQuest(quests, stepQuest(BREAKWATER_CHAPTER_QUESTLINE, step)), step.quest.name);
     }
-    quests = startQuest(quests, stepQuest(BREAKWATER_QUESTLINE, BREAKWATER_QUESTLINE.steps[3]!));
+    quests = startQuest(quests, stepQuest(BREAKWATER_CHAPTER_QUESTLINE, BREAKWATER_CHAPTER_QUESTLINE.steps[3]!));
     store.setState({ quests } as never);
     const boss = { ...ENEMY_REGISTRY['death-beholder']!, difficulty: 'boss' as const };
     const engage = () => {
-        actions.moveTo('bw-17');
+        actions.moveTo('bw-k2');
         actions.startCombat(boss);
     };
     return { store, actions, boss, engage };
 }
 
-describe('the lost watchtower, retried (QL1g)', () => {
-    it('a loss revives before bw-17 with it open and step 4 active; the retry wins and queues the Belt', () => {
+describe('the lost chapter boss, retried (QL1g)', () => {
+    it('a loss revives before bw-k2 with it open and step 4 active; the retry wins and fills step 4', () => {
         const { store, actions, boss, engage } = setup();
         engage();
         const before = gs(store).quests;
@@ -53,19 +56,20 @@ describe('the lost watchtower, retried (QL1g)', () => {
         const map = gs(store).world.currentMap;
         expect(gs(store).dying).toBe(true);
         expect(gs(store).player.health).toBe(1);
-        expect(map.currentNode).toBe('bw-22');
-        expect(map.consumedNodes).not.toContain('bw-17');
-        expect(map.completedNodes).not.toContain('bw-17');
-        expect(legalMovesFrom(map)).toContain('bw-17');
-        expect(legalMovesFrom(map)).not.toContain('bw-18');
+        expect(map.currentNode).toBe('bw-k1');
+        expect(map.consumedNodes).not.toContain('bw-k2');
+        expect(map.completedNodes).not.toContain('bw-k2');
+        expect(legalMovesFrom(map)).toContain('bw-k2');
         expect(gs(store).quests.active).toEqual(before.active);
         expect(store.getState().itemReward.queue).toEqual([]);
 
         engage();
         const won = initializeCombatEncounter(gs(store).player, boss, ['grey-strike'], 7);
         applyHazardOutcome(store, 'victory' as CombatOutcome, won, boss);
-        expect(store.getState().itemReward.queue.map((e) => e.item.id)).toEqual(['relic-elementalist-belt']);
-        expect(legalMovesFrom(gs(store).world.currentMap)).toContain('bw-18');
+        const last = BREAKWATER_CHAPTER_QUESTLINE.steps[3]!.quest.name;
+        expect(gs(store).quests.active.find((q) => q.name === last)?.objectives[0]?.currentCount).toBe(1);
+        // Step 4 is turned in at the bridge: the win queues nothing.
+        expect(store.getState().itemReward.queue).toEqual([]);
     });
 
     it('a second loss while dying ends the run', () => {
@@ -77,6 +81,6 @@ describe('the lost watchtower, retried (QL1g)', () => {
             expect(actions.playerDied('fight')).toBe(expected);
         }
         expect(gs(store).dying).toBeUndefined();
-        expect(gs(store).world.currentMap.currentNode).toBe('bw-1');
+        expect(gs(store).world.currentMap.currentNode).toBe('bw-w1');
     });
 });

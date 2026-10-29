@@ -39,7 +39,7 @@ function quest(objective: Partial<QuestObjective>, reward: Reward = RELIC_REWARD
 }
 
 /** A Breakwater state standing on `nodeId`, with `q` active. */
-function stateWith(q: Quest, nodeId = 'bw-1'): GameState {
+function stateWith(q: Quest, nodeId = 'bw-w1'): GameState {
     const base = createNewGameState({ startMap: 'breakwater' });
     const def = getMapDefinition('coastal-continent', 'breakwater');
     return {
@@ -130,8 +130,8 @@ describe('every completion path pays the quest reward', () => {
 
     it('resolveMapEvent: a reach objective completed on arrival pays', () => {
         mockSequentialRng(0.5);
-        const reach = quest({ id: 'reach-bw-2', type: 'reach', target: 'bw-2' });
-        const result = resolveMapEvent(stateWith(reach, 'bw-2'));
+        const reach = quest({ id: 'reach-bw-w2', type: 'reach', target: 'bw-w2' });
+        const result = resolveMapEvent(stateWith(reach, 'bw-w2'));
         expect(result.state.quests.completed).toContain(reach.name);
         expect(relicCount(result.state)).toBe(1);
     });

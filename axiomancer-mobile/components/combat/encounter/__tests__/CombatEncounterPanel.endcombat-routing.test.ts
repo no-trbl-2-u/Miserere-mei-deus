@@ -2,7 +2,7 @@
  * `applyHazardOutcome` routes rewards through the engine's real `endCombat`
  * reducer rather than hand-rolling XP/loot/quest-advancement itself. These
  * tests stage `state.currentEncounter` through a real fight (the
- * Breakwater's bw-2, entered by `beginHazardEncounter`), or via
+ * Breakwater's bw-w2, entered by `beginHazardEncounter`), or via
  * `startCombat` for an authored foe the mercy path needs, then assert `endCombat`'s full grant lands
  * live: quest kill-objective advancement + completion reward, and — on a
  * merciful win — the authored `friendshipReward` payload (flags, codex
@@ -25,7 +25,7 @@ afterEach(() => {
     jest.restoreAllMocks();
 });
 
-/** The real bw-2 fight, its final state dealt from the Gleaner's Due. */
+/** The real bw-w2 fight, its final state dealt from the Gleaner's Due. */
 function realFight() {
     return startRealFight(REAL_FIGHT_FIXTURE, {
         player: { level: 3, baseStats: { heart: 8, body: 8, mind: 8 } },

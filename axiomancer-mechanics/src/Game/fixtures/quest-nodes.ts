@@ -2,15 +2,15 @@
  * Test-only: settles a map's quest nodes so a walker can cross a map that
  * carries a questline without playing it.
  *
- * Every registered questline on the map has its markers spent (consumed, so
- * their held roads open) and every road its steps open on ready
+ * Every registered questline on the map has its quest nodes spent (consumed,
+ * so their held roads open) and every road its steps open on ready
  * (`opensOnReady`, the quest-node locks) or on completion (`gatesPast`, the
  * quest gates) unblocked. The quest log is not
  * touched: no step is accepted, counted or paid. A walk that is ABOUT the
- * questline plays it instead (`breakwater-questline.engine.test.ts`).
+ * questline plays it instead (`breakwater-chapter.engine.test.ts`).
  *
  * Never called by the game: the fixtures, the tests and the e2e walkers use
- * it to keep a walk to the watchtower, a pocket or the bridge short.
+ * it to keep a walk to the sea keep or the bridge short.
  */
 
 import type { GameState } from '../types';

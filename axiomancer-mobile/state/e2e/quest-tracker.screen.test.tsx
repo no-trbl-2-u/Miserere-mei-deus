@@ -63,10 +63,17 @@ afterEach(() => {
     jest.clearAllMocks();
 });
 
+/**
+ * A new Breakwater with the windmill's arrival already played, so mounting
+ * the map does not fire it (its cutscene gives the chain's first quest, which
+ * would add a row of its own).
+ */
 function newStore(): AppStore {
+    const w = createStartingWorld('breakwater');
+    const map = { ...w.currentMap, pendingArrival: null, consumedNodes: [...w.currentMap.consumedNodes, 'bw-w1'] };
     return createAppStore({
         adapter: createMemoryAdapter(),
-        overrides: { world: createStartingWorld('breakwater') },
+        overrides: { world: { ...w, currentMap: map } },
     });
 }
 
@@ -150,26 +157,27 @@ describe('A9: the quest tracker', () => {
 
 describe('A10: a shut road says why on the node panel', () => {
     const reasonOf = () => getMapDefinition('coastal-continent', 'breakwater')
-        .initialBlockedRoutes!.find((r) => r.to === 'bw-20')!.reason;
+        .initialBlockedRoutes!.find((r) => r.to === 'bw-k2')!.reason;
 
-    function atTheCustomsHouse(): AppStore {
+    /** On the keep gate (bw-k1), the keep gate to the sea keep (bw-k2) still shut. */
+    function atTheKeepGate(): AppStore {
         const w = createStartingWorld('breakwater');
         const map = {
             ...w.currentMap,
-            currentNode: 'bw-9',
+            currentNode: 'bw-k1',
             pendingArrival: null,
-            completedNodes: ['bw-4', 'bw-9'],
-            consumedNodes: ['bw-1', 'bw-4', 'bw-9'],
+            completedNodes: ['bw-w2', 'bw-w4', 'bw-w5'],
+            consumedNodes: ['bw-w1', 'bw-w2', 'bw-w4', 'bw-w5'],
         };
         return createAppStore({ adapter: createMemoryAdapter(), overrides: { world: { ...w, currentMap: map } } });
     }
 
     it('names the node, the road\'s reason and the quest that holds it, with no TRAVEL button', () => {
-        const store = atTheCustomsHouse();
-        const node = selectExplorationViewModel(store.getState()).nodes.find((n) => n.id === 'bw-20')!;
+        const store = atTheKeepGate();
+        const node = selectExplorationViewModel(store.getState()).nodes.find((n) => n.id === 'bw-k2')!;
         expect(node.blockedBy).toBeTruthy();
         const tree = mount(store);
-        act(() => { fireEvent.press(tree.getByTestId('node-bw-20')); });
+        act(() => { fireEvent.press(tree.getByTestId('node-bw-k2')); });
         expect(tree.getByTestId('node-confirm-panel')).toBeTruthy();
         expect(tree.getByTestId('node-confirm-shut-reason').props.children).toBe(reasonOf());
         expect(tree.getByTestId('node-confirm-shut-quest').props.children).toBe(`Held by: ${node.blockedBy}`);
@@ -179,9 +187,9 @@ describe('A10: a shut road says why on the node panel', () => {
     });
 
     it('a locked node with no blocked road still just toasts', () => {
-        const store = atTheCustomsHouse();
+        const store = atTheKeepGate();
         const tree = mount(store);
-        act(() => { fireEvent.press(tree.getByTestId('node-bw-3')); });
+        act(() => { fireEvent.press(tree.getByTestId('node-bw-h1')); });
         expect(tree.queryByTestId('node-confirm-shut-reason')).toBeNull();
         expect(tree.getByTestId('exploration-node-toast')).toBeTruthy();
     });

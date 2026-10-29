@@ -449,7 +449,7 @@ export {
     syncMoveLists, syncWorldMoveLists,
     // The walk back along open roads to a node.
     roadRouteTo, walkRoadTo, roadReachable,
-    auditRoadReachability,
+    auditRoadReachability, mapPassages,
     // The forward skeleton the progression audits walk.
     forwardEdges,
 } from './World';
@@ -479,8 +479,10 @@ export {
     registerQuestline, getQuestline, listQuestlines, questlineStep,
     questStepState, stepQuest, questStepView, questNodeStage, resolveQuestNodeEvent,
     openReadyQuestRoutes, settleQuestLog, acceptQuestStep, giveQuestStep, turnInQuestStep, turnInNodeOf,
-    // The authored questlines (the Breakwater's).
-    BREAKWATER_QUESTLINE, BREAKWATER_QUESTLINE_ID, AUTHORED_QUESTLINES,
+    // The authored questlines (the Breakwater's Chapter 1 chain).
+    AUTHORED_QUESTLINES,
+    BREAKWATER_CHAPTER_QUESTLINE, BREAKWATER_CHAPTER_QUESTLINE_ID, BREAKWATER_CHAPTER_STEPS,
+    BREAKWATER_CHAPTER_RELICS, BREAKWATER_KEEP_KEY, BREAKWATER_CHAPTER_GATES, BREAKWATER_CHAPTER_HELD,
 } from './World';
 // Rest shelter classification. Mobile gates the hazard-scar max-VITAE mend on this.
 export type { RestShelter } from './World';
