@@ -472,7 +472,8 @@ describe('computeFocusTransform', () => {
         }
     });
 
-    it('centres a plate smaller than the pane, splitting the margin', () => {
+    // T, 2026-10-28: the screen is always the map — no zoom shows black.
+    it('never zooms a plate out smaller than the pane, even for a plate-wide focus', () => {
         const sheet = { width: 2400, height: 2400, scale: 1 };
         const viewport = { w: 394, h: 557 };
         const nodes: ExplorationNode[] = [
@@ -480,9 +481,12 @@ describe('computeFocusTransform', () => {
             { id: 'b', label: 'B', kind: 'available', type: 'encounter', x: 2400, y: 2400, triggersCombat: false },
         ];
         const fit = computeFocusTransform(nodes, viewport, sheet);
-        const plateH = sheet.height * fit.scale;
-        expect(plateH).toBeLessThan(viewport.h);
-        expect(fit.ty).toBeCloseTo((viewport.h - plateH) / 2, 5);
+        expect(sheet.width * fit.scale).toBeGreaterThanOrEqual(viewport.w);
+        expect(sheet.height * fit.scale).toBeGreaterThanOrEqual(viewport.h);
+        expect(fit.tx).toBeLessThanOrEqual(0);
+        expect(fit.ty).toBeLessThanOrEqual(0);
+        expect(fit.tx + sheet.width * fit.scale).toBeGreaterThanOrEqual(viewport.w);
+        expect(fit.ty + sheet.height * fit.scale).toBeGreaterThanOrEqual(viewport.h);
     });
 
     it('falls back to canvas centre at 1x when no focus nodes exist', () => {
@@ -528,14 +532,14 @@ describe('computeFocusTransform', () => {
         expect(fit.scale).toBe(1);
     });
 
-    it('clamps to the whole-plate floor rather than shrinking without bound', () => {
+    it('clamps to the cover floor rather than shrinking without bound', () => {
         const nodes: ExplorationNode[] = [
             { id: 'left',  label: 'Left',  kind: 'available', type: 'encounter', x: 0,   y: 0,   triggersCombat: false },
             { id: 'right', label: 'Right', kind: 'available', type: 'encounter', x: 1000, y: 1000, triggersCombat: false },
         ];
         const fit = computeFocusTransform(nodes, { w: 400, h: 800 });
-        // The default sheet is 936px wide: the floor is the scale that shows it whole.
-        expect(fit.scale).toBeCloseTo(400 / 936, 5);
+        // The default sheet is 936x1040: the floor is the scale where it just covers 400x800.
+        expect(fit.scale).toBeCloseTo(800 / 1040, 5);
         expect(fit.scale).toBe(minScaleFor({ w: 400, h: 800 }));
     });
 
@@ -564,11 +568,10 @@ describe('computeFocusTransform', () => {
         }
     });
 
-    it('never floors below showing the whole plate', () => {
+    it('floors at the scale where the plate just covers the pane', () => {
         const sheet = { width: 2400, height: 2400, scale: 1 };
-        expect(minScaleFor({ w: 394, h: 557 }, sheet)).toBeCloseTo(394 / 2400, 5);
-        // A plate smaller than 0.6 needs keeps the familiar floor.
-        expect(minScaleFor({ w: 1200, h: 900 })).toBe(0.6);
+        expect(minScaleFor({ w: 394, h: 557 }, sheet)).toBeCloseTo(557 / 2400, 5);
+        expect(minScaleFor({ w: 1200, h: 900 })).toBeCloseTo(1200 / 936, 5);
     });
 });
 

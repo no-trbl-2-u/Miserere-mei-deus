@@ -39,26 +39,23 @@ interface MapCanvasProps {
 
 /** The canvas size in device px for a sheet at 1x zoom. */
 export function canvasSizeOf(size: SheetSize): { w: number; h: number } {
+    'worklet';
     return { w: size.width * size.scale, h: size.height * size.scale };
 }
 
-const MIN_SCALE = 0.6;
 const MAX_SCALE = 3;
 
 /**
- * The zoom-out floor for this sheet in this viewport: `MIN_SCALE`, or lower
- * if that is what it takes to see the whole plate at once — never lower.
+ * The zoom-out floor for this sheet in this viewport: the scale at which the
+ * plate just COVERS the pane, so the map always fills the screen and never
+ * shows black around it (T, 2026-10-28: "the screen would always be the map").
  *
- * A large plate (the Breakwater is 2400px square) at 0.6 shows a phone about a
- * quarter of the sheet, so a fit clamped there would leave every open node
- * from the Breakwater's start windmill off-screen.
- *
- * Exported for unit coverage; the fit and the pinch share it so a pinch that
- * starts below 0.6 does not snap up.
+ * Exported for unit coverage; the fit, the pinch and the wheel share it.
  */
 export function minScaleFor(viewport: { w: number; h: number }, size: SheetSize = LEGACY_SHEET_SIZE): number {
+    'worklet';
     const canvas = canvasSizeOf(size);
-    return Math.min(MIN_SCALE, viewport.w / canvas.w, viewport.h / canvas.h);
+    return Math.max(viewport.w / canvas.w, viewport.h / canvas.h);
 }
 
 // The camera fits the whole focus bounding box in frame, zooming out (never
@@ -116,9 +113,11 @@ interface FocusTransform { scale: number; tx: number; ty: number; }
  * edge; one that does not is centred, so its margin splits evenly.
  *
  * Never takes a focus node off-screen: every node lies on the plate, and the
- * slide only moves plate that was already past the frame's edge.
+ * slide only moves plate that was already past the frame's edge. The pinch,
+ * pan and wheel clamp through it too, so no gesture can drag black in.
  */
 function settleAxis(t: number, viewportLen: number, canvasLen: number): number {
+    'worklet';
     if (canvasLen <= viewportLen) return (viewportLen - canvasLen) / 2;
     return Math.min(0, Math.max(viewportLen - canvasLen, t));
 }
@@ -132,7 +131,8 @@ export function computeFocusTransform(
     const canvas = canvasSizeOf(size);
     const focus = nodes.filter((n) => n.kind === 'available' || n.kind === 'current');
     if (focus.length === 0) {
-        return { scale: 1, tx: (viewport.w - canvas.w) / 2, ty: (viewport.h - canvas.h) / 2 };
+        const s = Math.max(1, minScaleFor(viewport, size));
+        return { scale: s, tx: (viewport.w - canvas.w * s) / 2, ty: (viewport.h - canvas.h * s) / 2 };
     }
 
     const xs = focus.map((n) => n.x * size.scale);
@@ -365,8 +365,6 @@ export function MapCanvas({ nodes, edges, sheet, overlays, children }: MapCanvas
     const savedScale = useSharedValue(1);
     const tx = useSharedValue(0);
     const ty = useSharedValue(0);
-    const savedTx = useSharedValue(0);
-    const savedTy = useSharedValue(0);
 
     // Open the map framed on the nodes the player can actually act on
     // right now — the current position plus its available next steps —
@@ -399,18 +397,14 @@ export function MapCanvas({ nodes, edges, sheet, overlays, children }: MapCanvas
      *
      * Both the automatic fit and the manual RECENTRE go through here, so the
      * two can never drift into different ideas of what "framed on the player"
-     * means — and, just as importantly, both write the `saved*` values as
-     * well. Leaving those stale is what would make the next pan snap the
-     * chart back to wherever it was before the recentre.
+     * means — and, just as importantly, both write `savedScale` as well.
      */
     const commitCamera = React.useCallback((fit: FocusTransform) => {
         scale.value = fit.scale;
         savedScale.value = fit.scale;
         tx.value = fit.tx;
         ty.value = fit.ty;
-        savedTx.value = fit.tx;
-        savedTy.value = fit.ty;
-    }, [scale, savedScale, tx, ty, savedTx, savedTy]);
+    }, [scale, savedScale, tx, ty]);
 
     /**
      * RECENTRE — the drag affordance's missing return leg.
@@ -462,28 +456,62 @@ export function MapCanvas({ nodes, edges, sheet, overlays, children }: MapCanvas
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [viewport, focusKey, size.width, size.height, size.scale, commitCamera]);
 
-    const minScale = viewport ? minScaleFor(viewport, size) : MIN_SCALE;
+    // Every gesture works in DELTAS from its last event and clamps through
+    // `settleAxis`, so pinch and pan compose without either replaying its
+    // whole translation over the other's, and the plate always covers the
+    // pane. With the canvas's top-left transform origin a screen point is
+    // `t + s·c`; holding the pinch's focal point fixed across s→s' while it
+    // moves f→f' gives t' = f' − (s'/s)(f − t).
+    const canvasW = canvas.w;
+    const canvasH = canvas.h;
+    const vw = viewport?.w ?? 0;
+    const vh = viewport?.h ?? 0;
+    const minScale = viewport ? minScaleFor(viewport, size) : 1;
+    const pinching = useSharedValue(false);
+    const lastFocalX = useSharedValue(0);
+    const lastFocalY = useSharedValue(0);
     const pinch = Gesture.Pinch()
-        .onUpdate((e) => {
-            const next = savedScale.value * e.scale;
-            scale.value = Math.min(MAX_SCALE, Math.max(minScale, next));
+        .onStart((e) => {
+            pinching.value = true;
+            savedScale.value = scale.value;
+            lastFocalX.value = e.focalX;
+            lastFocalY.value = e.focalY;
         })
-        .onEnd(() => {
+        .onUpdate((e) => {
+            const s = scale.value;
+            const next = Math.min(MAX_SCALE, Math.max(minScale, savedScale.value * e.scale));
+            const k = next / s;
+            scale.value = next;
+            tx.value = settleAxis(e.focalX - k * (lastFocalX.value - tx.value), vw, canvasW * next);
+            ty.value = settleAxis(e.focalY - k * (lastFocalY.value - ty.value), vh, canvasH * next);
+            lastFocalX.value = e.focalX;
+            lastFocalY.value = e.focalY;
+        })
+        .onFinalize(() => {
+            pinching.value = false;
             savedScale.value = scale.value;
         });
 
     // `withTestId` is RNGH's own test affordance, inert in production — it
     // lets the suite drive a real pan and then prove the focus re-fit does
     // not undo it (issue #294).
+    const lastPanX = useSharedValue(0);
+    const lastPanY = useSharedValue(0);
     const pan = Gesture.Pan()
         .withTestId('map-pan')
-        .onUpdate((e) => {
-            tx.value = savedTx.value + e.translationX;
-            ty.value = savedTy.value + e.translationY;
+        .onBegin(() => {
+            lastPanX.value = 0;
+            lastPanY.value = 0;
         })
-        .onEnd(() => {
-            savedTx.value = tx.value;
-            savedTy.value = ty.value;
+        .onUpdate((e) => {
+            const dx = e.translationX - lastPanX.value;
+            const dy = e.translationY - lastPanY.value;
+            lastPanX.value = e.translationX;
+            lastPanY.value = e.translationY;
+            // While two fingers pinch, the pinch's focal point carries the drag.
+            if (pinching.value) return;
+            tx.value = settleAxis(tx.value + dx, vw, canvasW * scale.value);
+            ty.value = settleAxis(ty.value + dy, vh, canvasH * scale.value);
         });
 
     const composed = Gesture.Simultaneous(pinch, pan);
@@ -505,18 +533,14 @@ export function MapCanvas({ nodes, edges, sheet, overlays, children }: MapCanvas
             const s = scale.value;
             const next = Math.min(MAX_SCALE, Math.max(minScale, s * Math.exp(-e.deltaY * 0.0015)));
             const k = next / s;
-            const nx = px - k * (px - tx.value);
-            const ny = py - k * (py - ty.value);
             scale.value = next;
             savedScale.value = next;
-            tx.value = nx;
-            ty.value = ny;
-            savedTx.value = nx;
-            savedTy.value = ny;
+            tx.value = settleAxis(px - k * (px - tx.value), vw, canvasW * next);
+            ty.value = settleAxis(py - k * (py - ty.value), vh, canvasH * next);
         };
         el.addEventListener('wheel', onWheel, { passive: false });
         return () => el.removeEventListener('wheel', onWheel);
-    }, [minScale, scale, savedScale, tx, ty, savedTx, savedTy]);
+    }, [minScale, vw, vh, canvasW, canvasH, scale, savedScale, tx, ty]);
 
     const mapTransform = useAnimatedStyle(() => ({
         transform: [
