@@ -249,6 +249,8 @@ fails the root `npm test` on an open row (`[ ]`, `[-]` or `[blocked: …]`) that
 names, and on a line here with no reason. **A row listed here is work the loop may still pick on its ordinary turn:
 undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
 
+- HD1a — plotted 2026-10-29; cleanup loop work, needs no time from T; date not set.
+- HD1b — plotted 2026-10-29; cleanup loop work, needs no time from T; date not set.
 - AD1a — plotted 2026-10-21 (#716) without a deadline line; date not set.
 - AD1b — plotted 2026-10-21 (#716) without a deadline line; date not set.
 - EQ1a — a live defect T hit on device; loop work, needs no time from T; date not set.
@@ -335,6 +337,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-29** — **HD1 plotted** (T, attended `/plot anytime`: "File them all as one plot"): added HD1a and HD1b under `## Unscheduled` (cleanup loop work after the Breakwater heads-down run; no T act waits on it). No Item edited or ticked: the cleanup changes no Item's premise.
 - **2026-10-29** — **the item-icon pick split; IT2 plotted** (T, attended `/plot asap`: asked why the list was stuck, T said the icon picks were done; the repo showed #989 shipped the six lane relics' icons on Oct 27 without ticking IT1b, and nothing else was picked; T: "Split it, then plot the potion icons"). **Edited** the Oct 27 Item: its name narrows to the picks still owed (three potions, four relics, the category glyphs, the unknown mark, the empty bag) and its Rows move from IT1b (now `[x] (#989)`) to IT2a; the date stays T's. **Added** IT2b to the `Waits on` of the Nov 16 MVP demo, which names icons. **Edited** the Oct 27 MVP-schedule piece and the W2 notes to match. Nothing ticked by hand.
 - **2026-10-29** — **the art licence question is closed; AL1 plotted** (T, attended `/plot`: "The images we use for everything are open source. We've had this conversation a few times now"; then: publish all of it, D115). **Added** an Unscheduled line for AL1: loop work that needs no time from T and unblocks no T act. No Item is added, edited or ticked: no open Item rests on the licence question.
 - **2026-10-29** — **T answered BW1's six calls** (T, in session: a cave-face node C0 is the sea cave's other end, "H6 should travel to C0"; "delete all the original saves"; icons only on "the currently available ones, the connecting ones to the available ones, and the Quest ones"; "we'll drop all the original quests. Furthermore, every completed quest will offer a new relic", and the elite-only relic rule amended). **Edited** the Nov 25 Chapters 2-4 quest-line Item: its premise was QL1's shape and the four quest relics left over; now Chapter 1's chain, every quest paying a relic. No date moved, nothing ticked.
