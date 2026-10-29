@@ -966,15 +966,6 @@
 
 ## Pending
 
-### [LOW] satchel / desktop — a lone item tile is a 390px-wide black well with a 28px glyph in the middle, so the Healing Potion reads as an empty box
-- pass: 108 (commit 850ce863)
-- viewport: desktop (1280x800); on a phone the tile is ~100px and reads fine
-- category: visual
-- observation: under PHIALS & SOPS the only item, Healing Potion x6, draws as a tile 31.5% of the panel wide (~390px) with a 50px-high black glyph well; the vial glyph is a thin sliver at its centre, so at a glance the tile looks like a blank placeholder with a name under it. The tile width is a percentage, so it grows with the window while the glyph stays 28px.
-- evidence: `.critique-artifacts/desktop/13-satchel.png` (y~585-675) against `mobile/13-satchel.png`; `axiomancer-mobile/components/inventory/ItemCard.tsx:50` (`size={28}`), `:355` (`width: '31.5%'`), `:363-364` (well `height: 50`).
-- suggested fix: cap the item tile's width (a `maxWidth` near the phone width, ~140) so the grid packs more tiles per row on a wide window instead of stretching each one; presentation only, pinned in the ItemCard test.
-- source: critique:drive (unattended)
-
 ### [MED] combat / mobile — at 375 wide the hand fan cuts four of five card names to "A PLAIN" plus one letter, so Blow, Word and Ward look the same
 - pass: 100 (commit ee9c5b83)
 - viewport: mobile (375x812)
@@ -1277,6 +1268,16 @@
 - source: loop
 
 ## Done
+
+### [x] [LOW] satchel / desktop — a lone item tile is a 390px-wide black well with a 28px glyph in the middle, so the Healing Potion reads as an empty box — RESOLVED 2026-10-29 (branch loop/iterate-satchel-tile-width, 760c8bb05: a collapsed tile caps at `ITEM_CARD_MAX_WIDTH` 140, so a wide window packs more tiles per row and phones are unchanged; an expanded tile still takes the full row; pinned in `ItemCard.test.tsx`)
+- pass: 108 (commit 850ce863)
+- viewport: desktop (1280x800); on a phone the tile is ~100px and reads fine
+- category: visual
+- observation: under PHIALS & SOPS the only item, Healing Potion x6, draws as a tile 31.5% of the panel wide (~390px) with a 50px-high black glyph well; the vial glyph is a thin sliver at its centre, so at a glance the tile looks like a blank placeholder with a name under it. The tile width is a percentage, so it grows with the window while the glyph stays 28px.
+- evidence: `.critique-artifacts/desktop/13-satchel.png` (y~585-675) against `mobile/13-satchel.png`; `axiomancer-mobile/components/inventory/ItemCard.tsx:50` (`size={28}`), `:355` (`width: '31.5%'`), `:363-364` (well `height: 50`).
+- suggested fix: cap the item tile's width (a `maxWidth` near the phone width, ~140) so the grid packs more tiles per row on a wide window instead of stretching each one; presentation only, pinned in the ItemCard test.
+- source: critique:drive (unattended)
+- issue: #1047
 
 ### [x] [LOW] play log / fight recorder — the opening hand never reaches the fight's event stream — RESOLVED 2026-10-28 (branch loop/iterate-opening-hand-drawn, 13312468d: the recorder stamps the first observed state's hand as one `hand-drawn` ahead of the engine's events, so card-usage counts it as drawn at turn end 0; no engine or contract change; pinned in `fightRecorder.test.ts`)
 - pass: ship-a-phase BE2f (PR #877)
