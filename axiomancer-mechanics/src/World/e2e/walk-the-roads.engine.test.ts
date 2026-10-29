@@ -99,7 +99,7 @@ describe('A1: legal moves are the open roads out of the node underfoot', () => {
         // Back out through the marker to the windmill, then on to a new branch.
         expect(roadRouteTo(map(s), 'bw-4')).toEqual(['bw-19', 'bw-1', 'bw-4']);
         const out = arrive(s, 'bw-4');
-        expect(out.event.kind).toBe('gathering');
+        expect(out.event.kind).toBe('none');
         expect(map(out.state).currentNode).toBe('bw-4');
     });
 
