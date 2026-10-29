@@ -7,7 +7,8 @@
 > completed." In the same session T shared the Chapter 1 vision it serves (a red
 > quest node: "A player is not able to move past one of these nodes unless that
 > quest is completed"), recorded in `plan/revamp/breakwater-map.md` → "T's vision
-> for Chapter 1". This plot builds the quest rules that vision needs and proves
+> for Chapter 1" and in full, with T's later rulings, in
+> `plan/revamp/breakwater-vision.md`. This plot builds the quest rules that vision needs and proves
 > them on a fixture map; it does not rebuild the Breakwater (the map is still
 > being designed, see Follow-ups).
 
@@ -22,7 +23,8 @@
 - **D111** (one questline in Chapter 1, four steps on a `quest` node kind; the
   next quest node locked until the current step is met). This plot keeps D111's
   questline machinery and generalises it; it does not change the Breakwater's
-  content, so D111 stands until the Breakwater rebuild plot amends it.
+  content, so D111 stands until the Breakwater rebuild plot amends it (BW1,
+  D114: every quest pays a relic, any lane relic, none elite-only).
 - **D88** (content from a T-approved brief; quest lines and giver copy are T's),
   **D93** (lands by `plot` PR), **D71** (quests give designated relics).
 - Brief `plan/phases/phase_QL1_breakwater_questline.md` (QL1a-QL1d, QL1g
@@ -210,11 +212,10 @@ holds only the Breakwater's questline.
 
 ## Follow-ups (out of scope)
 
-- **The Breakwater rebuilt to T's vision.** Once T's node map is locked (the
-  map design session and the `/pitch` thread of 2026-10-28), a plot rebuilds
-  the graph, the quest chain, the gates and the side quests, amends D111 (its
-  four steps and its next-node lock) and re-scopes QL1e/QL1f (T's quest-line
-  writing, Nov 10) to the new chain.
+- **The Breakwater rebuilt to T's vision.** Plotted as BW1
+  (`plan/phases/phase_BW1_breakwater_rebuild.md`, D114): the 44-node graph, the
+  quest chain on these rules, the gates, a relic per quest; QL1e/QL1f are skipped
+  for BW1d/BW1e. Side quests on the Breakwater stay a follow-up.
 - **Backtracking.** T's new map rules let players backtrack; today's gauntlet
   traversal never re-enters a spent node. A quest turned in at a node already
   passed needs it. Not built here; the fixture avoids it.

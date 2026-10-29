@@ -9,6 +9,9 @@
 
 ## T's vision for Chapter 1 (T, 2026-10-28)
 
+> **The full record, with T's later rulings (44 nodes, the cove's travel pair, a relic per quest), is
+> `plan/revamp/breakwater-vision.md`; the rebuild is phase BW1 (D114).**
+>
 > **Important: T's vision for the chapter. The Breakwater rebuild follows it.** Recorded from T's message of
 > 2026-10-28 (sent to `/pitch` to start mapping every node, and shared in the MQ1 plot session) with T's marked-up
 > coast art. Not yet built; the map below is what ships today. Every node's kind is still being locked with T.
