@@ -1043,6 +1043,14 @@ satisfied for exactly these.)
 - Portraits, relics, stat spreads and playstyle lines are T's content (D88). The first character is due 2026-10-26 (T); three for December. Character content waits on at least one new lane, because a character needs three distinct lanes; T plans two new lanes before a character goes live.
 - Built by Phase CH1 (`plan/phases/phase_CH1_character_select.md`).
 
+**D115 — The art licence question is closed: every image the game and the DevLog use is open source; the public DevLog publishes all of it.** (T, 2026-10-29, attended; recorded by the AL1 plot. Amends the 2026-09-20 publication-gate carve-out ("a third-party asset whose licence forbids redistribution ... is not covered by T's ruling") as applied to the game's own art, and closes the owner's 2026-08-22 answer about `Potential Assets/MCP-Axiomancer/images/`. T: "can we please write down somewhere that we've resolved the licensing issue? The images we use for everything are open source. We've had this conversation a few times now. I say this because all the art in digest says we need to figure out the license." Asked whether the public site should show the art it withholds, T chose: publish all of it.)
+
+- Every image the game and the DevLog use is open source (T). A provenance record that read UNRESOLVED records the licence as `open source (T, 2026-10-29, D115)`; a record that already carries a traced grant (the torio free material, the owner-generated Act 1 map plates) keeps it, and that grant now publishes.
+- The public DevLog publishes all of the game's art: every card painting, foe portrait, portrait and treasure image. The "painting withheld" plate stays only for a file whose record names no licence the gate recognises.
+- The question is not asked again. No agent, digest, audit row or candidate re-files the art licence for an image the game already uses, or for the `Potential Assets/MCP-Axiomancer/images/` paintings it came from.
+- The gate stays: a third-party file added after D115 still records its own licence (a traced grant, or this ruling written into its record by a session T runs). The torio Wizardry carve-out (`docs/licences/torio-javardry.md`) is a separate per-monster rule and stays.
+- Built by Phase AL1 (`plan/phases/phase_AL1_art_licence_closed.md`).
+
 **D114 — Chapter 1 is T's 44-node Breakwater, told by gates; every quest pays a relic.** (T, 2026-10-28, attended, a `/pitch` then `/plot`; recorded by the BW1 plot. Supersedes D111's four-step questline and its pocket routing; D112 and D113 are taken by the open NK1 and WR1 plots. T: "I REALLY need you to take this down as an important note in terms of the VISION I have for chapter 1".)
 
 - The Breakwater is the 44 nodes, 42 roads and one travel pair (the sea cave mouth and the cave face) T drew on the coast plate (the board and `braindump/2026-10-28-breakwater-chapter-1-map.md`); node ids are the board's codes (`bw-w1` .. `bw-p3`).
