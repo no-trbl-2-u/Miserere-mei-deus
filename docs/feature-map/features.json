@@ -323,7 +323,7 @@
       "needsPitch": {
         "value": false,
         "missing": null,
-        "source": "plan/2026-09-02-big-numbers-overhaul.decisions.md D16"
+        "source": "braindump/2026-10-28-breakwater-chapter-1-map.md"
       }
     },
     {
@@ -421,9 +421,9 @@
         "source": "axiomancer-mobile/components/__tests__/CacheGate.test.tsx, axiomancer-mobile/scripts/critique-drive.test.mjs, axiomancer-mobile/state/e2e/cache-card-preview.screen.test.tsx, ..."
       },
       "needsPitch": {
-        "value": true,
-        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Loot cache\", \"loot-cache\", \"loot cache\")",
-        "source": null
+        "value": false,
+        "missing": null,
+        "source": "braindump/2026-10-28-breakwater-chapter-1-map.md"
       }
     },
     {
@@ -498,7 +498,7 @@
       "needsPitch": {
         "value": false,
         "missing": null,
-        "source": "plan/2026-09-25-refactor-strategy.decisions.md D31"
+        "source": "braindump/2026-10-28-breakwater-chapter-1-map.md"
       }
     },
     {
@@ -971,9 +971,9 @@
         "source": "axiomancer-mobile/components/__tests__/DebugTriggerEncounter.test.tsx, axiomancer-mobile/lib/platform/__tests__/router.pending-navigation.test.ts, axiomancer-mobile/state/e2e/option-description-size.S5-talk-C17.test.tsx, ..."
       },
       "needsPitch": {
-        "value": true,
-        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Village\")",
-        "source": null
+        "value": false,
+        "missing": null,
+        "source": "braindump/2026-10-28-breakwater-chapter-1-map.md"
       }
     }
   ],
