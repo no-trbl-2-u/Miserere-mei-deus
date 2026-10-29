@@ -7,6 +7,43 @@
 > Each region is a chapter (D106, T 2026-10-26): Act 1 is the four regions, and the Breakwater is Chapter 1, the
 > Nov 16 MVP's scope.
 
+## T's vision for Chapter 1 (T, 2026-10-28)
+
+> **Important: T's vision for the chapter. The Breakwater rebuild follows it.** Recorded from T's message of
+> 2026-10-28 (sent to `/pitch` to start mapping every node, and shared in the MQ1 plot session) with T's marked-up
+> coast art. Not yet built; the map below is what ships today. Every node's kind is still being locked with T.
+
+**The new map rules.** Players can backtrack. Players can have several quests at a time. A red quest node cannot
+be moved past until its quest is completed (the quest rules: phase MQ1).
+
+**The art's colour key.** Red: a quest node. Blue: a hazard a quest needs. Green: an elite. Black: the start.
+White: a village. Pink: the chapter boss. Yellow: not yet decided.
+
+**The main chain, in T's order.**
+
+1. **Start (black, the windmill).** The player is given a quest: find the lost fishermen whose boat capsized.
+2. **The hazard (blue, by the wreck).** Completing it opens the path to the sea cave.
+3. **The sea cave** is a travel node down to the cave below.
+4. **The elite (green, in the cave)** stands in front of the cave's quest node.
+5. **The cave's quest node (red).** Kill the elite, reach it: the first quest completes and a new one is given
+   (its flavour not decided yet). It leads to the lighthouse.
+6. **The elite on the lighthouse road (green)** blocks the lighthouse.
+7. **The lighthouse quest node (red, top of the map).** Getting there completes the quest and gives the player a
+   key.
+8. **The castle quest node (red, before the pink node).** The key is needed to complete it. Once it is completed
+   the boss is open.
+9. **The chapter boss (pink, the castle).**
+10. **The quest node past the bridge road (red, far right, "Quest").** The bridge was impassable while the boss
+    lived; with the boss dead the player completes this quest.
+11. **The travel node** is the very next node: the way out of the chapter.
+
+**Every other node (yellow)** is a fight (about 80% non-elite), a hazard, or, where it is a dead end, maybe a
+cutscene. T's placement is the vision: where the elites stand, and the "important" nodes where cutscenes go.
+Cutscenes are flavour for now and will later be folded into other nodes as part of them.
+
+**How T and Claude talk about it.** T asked for (1) a clear way to name each node, (2) a way to edit the visual so
+T can see proposals and count each kind, then (3) every node locked. That work runs in the `/pitch` thread.
+
 ## The shape
 
 > **Since QL1d (2026-10-28)** the Breakwater carries 22 nodes: the eighteen below plus the questline's four quest
