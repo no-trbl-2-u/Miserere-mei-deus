@@ -421,9 +421,9 @@
         "source": "axiomancer-mobile/components/__tests__/CacheGate.test.tsx, axiomancer-mobile/scripts/critique-drive.test.mjs, axiomancer-mobile/state/e2e/cache-card-preview.screen.test.tsx, ..."
       },
       "needsPitch": {
-        "value": true,
-        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Loot cache\", \"loot-cache\", \"loot cache\")",
-        "source": null
+        "value": false,
+        "missing": null,
+        "source": "plan/2026-09-25-refactor-strategy.decisions.md D112"
       }
     },
     {
