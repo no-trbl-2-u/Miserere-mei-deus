@@ -52,9 +52,9 @@ describe('node event-kind read API', () => {
             id: POOL_ID,
             entries: [
                 {
-                    kind: 'gathering',
+                    kind: 'loot-cache',
                     weight: 1,
-                    payload: { kind: 'gathering', items: [] },
+                    payload: { kind: 'loot-cache', items: [] },
                 },
                 {
                     kind: 'encounter',
@@ -71,7 +71,7 @@ describe('node event-kind read API', () => {
 
         expect(getNodePrimaryEventKind('test-continent', 'test-map', 'tn-1')).toBe('encounter');
         expect(getNodeEventKinds('test-continent', 'test-map', 'tn-1')).toEqual([
-            'gathering',
+            'loot-cache',
             'encounter',
         ]);
     });

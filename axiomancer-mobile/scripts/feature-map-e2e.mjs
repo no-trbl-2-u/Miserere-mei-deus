@@ -318,11 +318,10 @@ async function walk(page) {
     await settleOnMap(page, 'bw-5')
     log('play: bw-5 cache')
 
+    // bw-4 is an empty waypoint since the gathering kind was cut: nothing opens.
     await travelTo(page, 'bw-4')
-    await waitFor(page, 'event-choice-acknowledge', 'bw-4 gathering')
-    await tap(page, 'event-choice-acknowledge')
     await settleOnMap(page, 'bw-4')
-    log('play: bw-4 gathering')
+    log('play: bw-4 waypoint')
 
     // The Breakwater's fights and hazards sit in pockets behind its quest
     // markers (QL1d). Accepting step 1 at bw-19 opens the hazard pocket; the

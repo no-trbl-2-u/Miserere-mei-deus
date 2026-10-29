@@ -6,7 +6,7 @@
  *
  * Event plumbing mirrors the exploration screen: arrival (and baited-
  * clue) encounters are engaged by `<CombatGate>` and fought on the
- * `/combat-encounter` route; hazard / rest / loot / gathering / quest / narration
+ * `/combat-encounter` route; hazard / rest / loot / cutscene
  * events route to their existing full-screen minigames via the
  * globally-mounted gates. Boss rooms defer their arrival until the
  * finale panel's FIGHT (the naming rite precedes the fight — CLI

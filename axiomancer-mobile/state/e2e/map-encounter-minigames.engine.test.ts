@@ -5,17 +5,14 @@
  * rest node opens the matching minigame, NOT the "/event" card.
  * `resolveCurrentMapEventAction` intercepts those two kinds (plus
  * hazard) and starts a minigame session instead of dropping a
- * `ResolvedEvent` on the event slice. A gather node is different: it grants
- * its items inline through the same intercept point, with no session and no
- * minigame, and the grant surfaces on the paced `/event` card. See
- * `gathering-acknowledgement.engine.test.ts`.
+ * `ResolvedEvent` on the event slice. An empty waypoint (a node with no
+ * pool, where a gathering node used to be) opens nothing at all.
  *
  * This pins that contract end-to-end through the store action layer
  * (the same path `app/(tabs)/exploration` drives on a node tap):
  *   - treasure node → loot-cache session, no paced /event route
  *   - rest node → rest session
- *   - gather node → items land in inventory inline, no session, and the
- *     paced /event acknowledgement card
+ *   - waypoint node → no event, no session, nothing granted
  */
 
 import { describe, expect, it } from '@jest/globals';
@@ -83,22 +80,18 @@ describe('map encounter → minigame routing (charcoal-wood)', () => {
         expect(selectPacedEventRoute(store.getState())).toBeNull();
     });
 
-    // The grant happens in the engine resolver with no session and no
-    // minigame, and the node pays out onto the paced `/event` card so the
-    // player is told what they picked up. Full coverage of the card lives in
-    // `gathering-acknowledgement.engine.test.ts`.
-    it('gather node grants its items and opens the paced /event acknowledgement, with no session', () => {
+    // The empty waypoint resolves to nothing: no card, no session, no grant.
+    it('waypoint node opens nothing and grants nothing', () => {
         const { store, actions } = makeStoreAndActions();
-        seatAt(store, 'charcoal-wood', firstNodeOfKind('charcoal-wood', 'gathering'));
-        const before = store.getState().player.inventory.length;
+        seatAt(store, 'charcoal-wood', 'cw-4');
+        expect(getNodePrimaryEventKind('coastal-continent', 'charcoal-wood', 'cw-4')).toBeUndefined();
+        const before = store.getState().player.inventory;
 
-        expect(actions.resolveCurrentMapEvent('gather')).toBe(true);
+        expect(actions.resolveCurrentMapEvent('waypoint')).toBe(false);
 
-        expect(store.getState().player.inventory.length).toBeGreaterThan(before);
-        expect(selectHasActiveEvent(store.getState())).toBe(true);
-        expect(selectPacedEventRoute(store.getState())).toBe('/event');
-        // The Gleaning's session slices stay empty — this is a card, not a
-        // minigame coming back.
+        expect(store.getState().player.inventory).toEqual(before);
+        expect(selectHasActiveEvent(store.getState())).toBe(false);
+        expect(selectPacedEventRoute(store.getState())).toBeNull();
         expect(selectHasActiveCache(store.getState())).toBe(false);
         expect(selectHasActiveRest(store.getState())).toBe(false);
     });

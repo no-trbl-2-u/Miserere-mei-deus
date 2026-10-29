@@ -1,76 +1,37 @@
 /**
  * Narrative reachability audit.
  *
- * `resolveInteraction` (`MapEvents/handlers.ts`) looks an NPC up by display
- * name against the host map's roster and falls back silently when the name
- * is absent — a missing tree reads as a deliberately minimal encounter, not
- * a missing conversation, so an unreachable tree fails nothing on its own.
+ * No overworld node kind talks to a map's NPC roster: the `interaction` kind
+ * that looked an NPC up by name was cut with the node-kind cleanup. So a
+ * rostered NPC carrying a `dialogueTree` is a conversation no player can
+ * reach, unless the map declares it deliberately unplaced in `unstagedNpcs`.
  *
  * `auditNarrativeReachability` is the structural guard, mirroring
- * `auditMapTraversal`'s shape: a pure function over a static `MapDefinition`
- * plus the registered MapEvent pools, with a hermetic invariant test on top
- * (`e2e/narrative-reachability.engine.test.ts`). It does not run at import
- * time — `MapEvents/content.ts` deliberately does not import map
- * definitions, so coupling the two at module load would couple two
- * currently-independent modules and make correctness depend on import
- * order.
+ * `auditMapTraversal`'s shape: a pure function over a static `MapDefinition`,
+ * with a hermetic invariant test on top
+ * (`e2e/narrative-reachability.engine.test.ts`).
  */
 
-import type { MapDefinition, NodeId } from './types';
-import { getNodeEventPool } from './MapEvents/resolve-map-event';
+import type { MapDefinition } from './types';
 
 export interface NarrativeReachabilityAudit {
     mapName: string;
-    /** Interaction-node `npcName`s absent from this map's `npcs` roster. */
-    unresolvedInteractions: ReadonlyArray<{ nodeId: NodeId; npcName: string }>;
     /**
-     * Rostered NPCs carrying a `dialogueTree` that no node's interaction
-     * payload names, and that aren't declared in `unstagedNpcs`.
+     * Rostered NPCs carrying a `dialogueTree` that aren't declared in
+     * `unstagedNpcs`. No node can reach them.
      */
     unreachableNpcs: readonly string[];
-    /**
-     * The subset of `unresolvedInteractions` whose `npcName` doesn't match
-     * an `unstagedNpcs` entry either — i.e. not even accounted for as a
-     * deliberately-deferred placement. The roster will never carry this
-     * exact name; it's scenery or a typo, not a lost NPC awaiting a node.
-     */
-    sceneryAsPeople: ReadonlyArray<{ nodeId: NodeId; npcName: string }>;
 }
 
 /**
- * Walks every node on `def`, reads its registered MapEvent pool (if any),
- * and cross-checks every `interaction` payload's `npcName` against the
- * map's roster (`def.npcs`) and its declared-unstaged list
- * (`def.unstagedNpcs`). Reads the live pool registry populated by
- * `MapEvents/content.ts`'s import-time registration — call this only after
- * that module has loaded (true for every consumer that goes through the
- * `World` barrel).
+ * Lists every NPC on `def`'s roster (`def.npcs`) whose dialogue tree no node
+ * reaches and that its declared-unstaged list (`def.unstagedNpcs`) does not
+ * account for.
  */
 export function auditNarrativeReachability(def: MapDefinition): NarrativeReachabilityAudit {
-    const rosterNames = new Set((def.npcs ?? []).map(npc => npc.name));
     const unstagedNames = new Set((def.unstagedNpcs ?? []).map(u => u.name));
-
-    const unresolvedInteractions: Array<{ nodeId: NodeId; npcName: string }> = [];
-    const namedByNodes = new Set<string>();
-
-    for (const node of def.nodes) {
-        const pool = getNodeEventPool(def.continent, def.name, node.id);
-        if (!pool) continue;
-        for (const entry of pool.entries) {
-            if (entry.payload.kind !== 'interaction') continue;
-            const { npcName } = entry.payload;
-            namedByNodes.add(npcName);
-            if (!rosterNames.has(npcName)) {
-                unresolvedInteractions.push({ nodeId: node.id, npcName });
-            }
-        }
-    }
-
-    const sceneryAsPeople = unresolvedInteractions.filter(u => !unstagedNames.has(u.npcName));
-
     const unreachableNpcs = (def.npcs ?? [])
-        .filter(npc => npc.dialogueTree && !namedByNodes.has(npc.name) && !unstagedNames.has(npc.name))
+        .filter(npc => npc.dialogueTree && !unstagedNames.has(npc.name))
         .map(npc => npc.name);
-
-    return { mapName: def.name, unresolvedInteractions, unreachableNpcs, sceneryAsPeople };
+    return { mapName: def.name, unreachableNpcs };
 }

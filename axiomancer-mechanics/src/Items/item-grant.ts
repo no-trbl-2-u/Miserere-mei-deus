@@ -34,7 +34,7 @@
  *     row for the common case.
  *   - **Pure.** `Character → Character`, no throws, no global state. The
  *     granted item is deep-cloned on the way in, matching `buyItem` /
- *     `resolveGathering` / `resolveLootCache`, so two grants of the same
+ *     `resolveLootCache`, so two grants of the same
  *     library row never alias each other.
  *
  * ## D5 — which grants deserve ceremony
@@ -127,7 +127,7 @@ export function qualifiesForItemRewardScreen(item: Item): boolean {
 }
 
 /**
- * Split a batch of granted items (a gathering payload, a loot-cache haul, an
+ * Split a batch of granted items (a loot-cache haul, a hazard reward, an
  * encounter's drops) into the ones that route to the reward screen and the ones
  * that keep the inline grant. Order is preserved within each list so a caller
  * can present them in authored order.

@@ -24,7 +24,6 @@ import { applyDialogueChoice } from './dialogue.runtime';
 import { getMapDefinition } from './map.registry';
 import { createNewGameState, gameReducer } from '../Game/game.reducer';
 import type { GameState } from '../Game/types';
-import { getConsumableById } from '../Items/consumable.library';
 import type { DialogueTree } from '../NPCs/types';
 import type { MapDefinition, QuestObjective } from './types';
 import {
@@ -42,8 +41,6 @@ function seededRng(seed: number): () => number {
 
 beforeAll(registerQuestChainFixture);
 afterEach(() => registerQuestline(MAIN_QUESTLINE));
-
-const POTION = getConsumableById('minor-healing-potion')!;
 
 function freshGame(): GameState {
     const base = createNewGameState({ startMap: 'breakwater' });
@@ -160,14 +157,6 @@ describe('A2: a quest gate is shut until its quest is completed', () => {
     it('the reach path opens the gate', () => {
         registerQuestline(mainWithStep1({ type: 'reach', target: 'side1' }));
         const s = arrive(acceptQuestStep(freshGame(), MAIN_LINE, 1), 'side1').state;
-        expect(shut(s, pastQA)).toBeUndefined();
-    });
-
-    it('the collect path opens the gate', () => {
-        registerQuestline(mainWithStep1({ type: 'collect', target: POTION.id }));
-        const s0 = acceptQuestStep(freshGame(), MAIN_LINE, 1);
-        const moved: GameState = { ...s0, world: moveToNode(s0.world, 'side1') };
-        const s = resolveMapEvent(moved, seededRng(3), { kind: 'gathering', items: [POTION] }).state;
         expect(shut(s, pastQA)).toBeUndefined();
     });
 

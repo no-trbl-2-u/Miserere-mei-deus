@@ -17,7 +17,7 @@ import { createMapState } from '../../map.registry';
 import type { GameState } from '../../../Game/types';
 import type { MapState } from '../../types';
 import type { ContinentName } from '../../map.library';
-import { FIXTURE_DIALOGUE_EVENT, FIXTURE_NPC, FIXTURE_VILLAGE_EVENT } from '../../../Game/fixtures/fixture-content';
+import { FIXTURE_VILLAGE_EVENT } from '../../../Game/fixtures/fixture-content';
 // Import for side effect — registers the pools when the test loads.
 import '../content';
 
@@ -63,7 +63,7 @@ describe('every MapEventKind is covered', () => {
             }
         }
         const required = [
-            'encounter', 'gathering', 'rest', 'cutscene', 'hazard',
+            'encounter', 'none', 'rest', 'cutscene', 'hazard',
             'loot-cache', 'blacksmith', 'travel',
         ];
         for (const k of required) {
@@ -71,12 +71,10 @@ describe('every MapEventKind is covered', () => {
         }
     });
 
-    // Act 1 stages no NPC, shop or narration. Those kinds keep
-    // their handlers, witnessed by the neutral fixtures staged on an Act 1 node.
+    // Act 1 stages no shop. The village kind keeps its handler, witnessed by
+    // the neutral fixture staged on an Act 1 node.
     it.each([
-        ['narration', FIXTURE_DIALOGUE_EVENT],
         ['village', FIXTURE_VILLAGE_EVENT],
-        ['interaction', { kind: 'interaction', npcName: FIXTURE_NPC.name } as const],
     ] as const)('the %s kind resolves from a staged fixture', (kind, payload) => {
         mockSequentialRng(0.5);
         const result = resolveMapEvent(freshWorldAt('breakwater'), undefined, payload);
@@ -88,10 +86,10 @@ describe('Phase 52f — guaranteed per-act shilling income (the calibration inpu
     // The ONLY live, deterministic shilling source on the authored maps today
     // is the flat `loot-cache` MapEvent kind (`resolveLootCache` grants
     // `payload.currency` with no RNG). The deep `World/Hazard` and
-    // `World/Gathering` minigame packages have their own shilling economies,
+    // `World/Gathering` minigame packages had their own shilling economies,
     // but neither is wired to a Breakwater or northern-forest node (the
-    // map-level 'hazard'/'gathering' kinds here resolve to flat damage /
-    // items only — see `resolveHazard`/`resolveGathering`). Combat victory
+    // map-level 'hazard' kind here resolves to flat damage only — see
+    // `resolveHazard`). Combat victory
     // grants XP + loot items but no currency
     // (`aftermath.engine.ts`'s `currency: null`). This test walks every
     // authored node on a full map completion and pins the guaranteed

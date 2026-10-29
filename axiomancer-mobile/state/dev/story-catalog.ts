@@ -73,20 +73,28 @@ export function listQuests(): readonly QuestChoice[] {
 }
 
 /**
- * Seed the event slice with an `interaction` for `npc` and a cursor at
- * the tree root. `<EventGate>` pushes `/dialogue`; choices apply through
- * the live `pickEventChoice` path (quest starts, flags, taught cards).
+ * Seed the event slice with a cursor at `tree`'s root. No map-event kind
+ * carries a dialogue tree, so the pending event is an empty cutscene that
+ * only keeps the slice active; the cursor is what `<EventGate>` routes on,
+ * pushing `/dialogue`. Choices apply through the live `pickEventChoice` path
+ * (quest starts, flags, taught cards). The dev jump and a fixture's
+ * `stagedDialogue` (`<FixtureBoot>`) both seat through here.
  */
-export function openNpcDialogue(store: AppStore, npc: NpcChoice): void {
+export function seatDialogue(store: AppStore, tree: DialogueTree): void {
     const state = store.getState();
     store.setState({
         event: {
-            pending: { state, event: { kind: 'interaction', npcName: npc.name, dialogue: npc.tree } } as never,
-            dialogueCursor: { tree: npc.tree, nodeId: npc.tree.rootId },
+            pending: { state, event: { kind: 'cutscene', lines: [] } } as never,
+            dialogueCursor: { tree, nodeId: tree.rootId },
             history: [],
             sourceNodeType: null,
         },
     });
+}
+
+/** Seat `npc`'s tree (`seatDialogue`). */
+export function openNpcDialogue(store: AppStore, npc: NpcChoice): void {
+    seatDialogue(store, npc.tree);
 }
 
 const questLogOf = (store: AppStore): QuestLog => (store.getState() as unknown as GameState).quests;

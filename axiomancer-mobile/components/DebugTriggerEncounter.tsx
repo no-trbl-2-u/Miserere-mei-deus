@@ -16,15 +16,12 @@
  *               uses, so the matching gate (`<HazardGate>` →
  *               `/hazard`, `<RestGate>` → `/rest`, `<CacheGate>` →
  *               `/cache`) routes to the full-screen minigame.
- *   - GATHER   → grants a sample item straight into inventory, no
- *               gate and no route (the live `gathering` node does the
- *               same).
  *
- * Mechanism: rest / gather / treasure never reach the `/event` slice —
+ * Mechanism: rest / treasure never reach the `/event` slice —
  * the live `resolveCurrentMapEventAction` intercepts those kinds and
- * starts a minigame session (or, for gather, grants inline).
+ * starts a minigame session.
  * This panel mirrors that interception by calling the `begin*`
- * actions (or the inline grant) directly rather than seeding a
+ * actions directly rather than seeding a
  * `ResolvedEvent` onto the event slice, which would dead-end at the
  * `/event` "NO EVENT" card because `composeNarrative` returns the empty
  * VM for these kinds. Combat / boss construct a
@@ -46,7 +43,6 @@ import { useRouter } from '@/lib/platform/router';
 import {
     EnemiesByMap,
     EnemyLibrary,
-    consumableLibrary,
     type Enemy,
 } from '@mechanics';
 
@@ -68,7 +64,6 @@ const ENCOUNTERS: readonly { kind: NodeType; label: string }[] = [
     { kind: 'boss', label: 'BOSS' },
     { kind: 'hazard', label: 'HAZARD' },
     { kind: 'rest', label: 'REST' },
-    { kind: 'gather', label: 'GATHER' },
     { kind: 'treasure', label: 'TREASURE' },
 ];
 
@@ -194,15 +189,6 @@ export function DebugTriggerEncounter() {
                 // does not say is wilderness).
                 actions.beginRest({ shelter: 'camp' });
                 return;
-            case 'gather': {
-                // Items grant inline — no gate, no route. Mirrors the live
-                // interceptor's gathering branch: seed a sample item
-                // straight into inventory, same as TREASURE below seeds
-                // its cache items directly.
-                const sample = consumableLibrary[0];
-                if (sample) actions.addItemById(sample.id);
-                return;
-            }
             case 'treasure':
                 // "The Reliquary" — <CacheGate> routes to /cache. The
                 // choice screen rolls its own card/item candidates; seed

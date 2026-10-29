@@ -30,7 +30,6 @@ Code it uses, as plain text so Graph view draws player flow only.
 - Cards
 - Effects
 - Game
-- Items
 - Log
 - NPCs
 - The world

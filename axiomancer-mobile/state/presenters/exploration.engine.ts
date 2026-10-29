@@ -23,7 +23,7 @@ import { anvilShortLine, nodePurseLine } from './node-confirm.copy';
 export type NodeKind = 'completed' | 'current' | 'available' | 'locked';
 export type NodeType =
     | 'rest'
-    | 'gather'
+    | 'waypoint'
     | 'current'
     | 'encounter'
     | 'treasure'
@@ -220,10 +220,10 @@ export interface ExplorationViewModel {
 // giving adjacent nodes an at-a-glance "what is this" glyph. Boss uses a
 // distinct `crown` (not the encounter `sword`) so the climax is signposted.
 export const ACTION_ICON_BY_TYPE: Record<NodeType, string> = {
-    // Every node kind wears its own woodcut: campfire for rest, herb
-    // bundle for gathering, falling rocks for hazard.
+    // Every node kind wears its own woodcut: campfire for rest, the winged
+    // foot for an empty waypoint (walk on through), falling rocks for hazard.
     rest: 'rest',
-    gather: 'herbs',
+    waypoint: 'flee',
     current: 'eye',
     encounter: 'sword',
     // Treasure reads as a chest, not a scroll (the scroll is the
@@ -232,7 +232,7 @@ export const ACTION_ICON_BY_TYPE: Record<NodeType, string> = {
     treasure: 'chest',
     boss: 'boss',
     quest: 'scroll',
-    // The story kinds (cutscene, narration, interaction) wear the quill.
+    // The story kind (cutscene) wears the quill.
     story: 'quill',
     hazard: 'hazard',
     blacksmith: 'anvil',
@@ -243,7 +243,7 @@ export const ACTION_ICON_BY_TYPE: Record<NodeType, string> = {
 
 const ACTION_TAG_BY_TYPE: Record<NodeType, string> = {
     rest: 'HEAL · COSTLY',
-    gather: 'NODE · GATHER',
+    waypoint: 'WAYPOINT · PASS ON',
     current: 'YOU ARE HERE',
     encounter: 'TRAVEL · 1 TURN',
     treasure: 'CARD · MIND',
@@ -267,7 +267,7 @@ export const NODE_KIND_LABEL: Record<NodeType, string> = {
     quest: 'QUEST',
     story: 'STORY',
     rest: 'REST',
-    gather: 'GATHER',
+    waypoint: 'WAYPOINT',
     treasure: 'TREASURE',
     hazard: 'HAZARD',
     blacksmith: 'THE ANVIL',
@@ -281,26 +281,24 @@ const ENCOUNTER_NODE_TYPES = new Set<NodeType>(['encounter', 'boss']);
 // Maps the engine's authored MapEvent kind to a display NodeType (icon).
 // The engine owns which kind fires at each node; mobile only chooses the
 // glyph. `encounter` is promoted to `boss` when the node's pool is a boss
-// fight (see `engineNodeType`). Kinds with no bespoke glyph (interaction,
-// cutscene, narration, travel, labyrinth) borrow the narrative icon.
+// fight (see `engineNodeType`). Kinds with no bespoke glyph (cutscene,
+// travel, labyrinth) borrow the narrative icon. A node with no pool is the
+// empty waypoint, which is no kind at all (see `engineNodeType`).
 const KIND_TO_NODE_TYPE: Record<MapEventKind, NodeType> = {
     encounter: 'encounter',
-    gathering: 'gather',
     rest: 'rest',
     'loot-cache': 'treasure',
     hazard: 'hazard',
-    interaction: 'story',
     // Village and blacksmith wear their own woodcuts (huts and anvil).
     village: 'village',
     cutscene: 'story',
-    narration: 'story',
     blacksmith: 'blacksmith',
     // Inter-map travel doors.
     travel: 'door',
     // The Labyrinth door (the Lantern Deep's vault door), a door like travel.
     labyrinth: 'door',
-    // The questline's giver wears the scroll and QUEST; the story kinds above
-    // wear the quill and STORY. The map shows no step state (the quest screen
+    // The questline's giver wears the scroll and QUEST; the story kind above
+    // wears the quill and STORY. The map shows no step state (the quest screen
     // alone carries progress).
     quest: 'quest',
 };
@@ -308,7 +306,8 @@ const KIND_TO_NODE_TYPE: Record<MapEventKind, NodeType> = {
 /** Node display type, sourced from the engine's authored event pools. */
 function engineNodeType(continent: string, mapName: string, nodeId: string): NodeType {
     const kind = getNodePrimaryEventKind(continent, mapName, nodeId);
-    if (!kind) return 'encounter';
+    // No pool: the empty waypoint, its own look, never drawn as a fight.
+    if (!kind) return 'waypoint';
     if (kind === 'encounter') {
         const pool = getNodeEventPool(continent, mapName, nodeId);
         const isBoss = pool?.entries.some(

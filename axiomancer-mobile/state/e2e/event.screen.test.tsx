@@ -107,27 +107,6 @@ function lootCache(items: ReadonlyArray<{ id: string; name: string }>, currency 
     };
 }
 
-function interaction(npcName: string): ResolveMapEventResult {
-    return {
-        state: undefined as never,
-        event: { kind: 'interaction', npcName },
-    };
-}
-
-function gathering(
-    items: ReadonlyArray<{ id: string; name: string; quantity?: number }>,
-    description?: string,
-): ResolveMapEventResult {
-    return {
-        state: undefined as never,
-        event: {
-            kind: 'gathering',
-            items: items.map((i) => ({ quantity: 1, ...i, category: 'material' } as never)),
-            ...(description === undefined ? {} : { description }),
-        },
-    };
-}
-
 function setDialogueCursor(store: AppStore, choiceText: string) {
     const tree = {
         rootId: 'root',
@@ -142,7 +121,7 @@ function setDialogueCursor(store: AppStore, choiceText: string) {
     store.setState({
         event: {
             ...EMPTY_EVENT_SLICE,
-            pending: interaction('A Voice'),
+            pending: cutscene([]),
             dialogueCursor: { tree, nodeId: 'root' },
         },
     });
@@ -166,7 +145,7 @@ function setDialogueCursorWithNoChoices(store: AppStore) {
     store.setState({
         event: {
             ...EMPTY_EVENT_SLICE,
-            pending: interaction('A Voice'),
+            pending: cutscene([]),
             dialogueCursor: { tree, nodeId: 'root' },
         },
     });
@@ -276,75 +255,6 @@ describe('EventScreen render', () => {
         }
     });
 
-    // A gathering's items land inline, so the card is the only thing that
-    // tells the player. These three pin that the acknowledgement RENDERS: the name of what was
-    // gathered, where it went, and a button that waits for the player
-    // instead of a toast that outruns them.
-    it('renders a gathering event naming the item, where it went, and a receipt chip', () => {
-        const store = makeStore();
-        setPending(
-            store,
-            gathering([{ id: 'driftwood', name: 'Driftwood' }], 'You crouch to gather what the tide left behind.'),
-        );
-
-        const { getByTestId, getByText } = render(
-            withProvider(store, <EventScreen />),
-        );
-
-        expect(getByText('DRIFTWOOD')).toBeTruthy();
-        // The subtitle row prefixes an em-dash, so match on the copy itself.
-        expect(getByText(/into the satchel/)).toBeTruthy();
-        expect(getByTestId('event-choice-acknowledge')).toBeTruthy();
-        expect(getByText('POCKET IT')).toBeTruthy();
-        expect(getByTestId('event-consequence-chips')).toBeTruthy();
-    });
-
-    it('renders every gathered name on the card, not just the first', () => {
-        const store = makeStore();
-        setPending(
-            store,
-            gathering([
-                { id: 'berry', name: 'Dark Berries', quantity: 2 },
-                { id: 'petal', name: 'Moonbell Petals' },
-            ]),
-        );
-
-        const { getByText } = render(
-            withProvider(store, <EventScreen />),
-        );
-
-        expect(getByText('DARK BERRIES X2 · MOONBELL PETALS')).toBeTruthy();
-        expect(getByText('POCKET THEM')).toBeTruthy();
-    });
-
-    it('dispatches the acknowledgement and clears the card', () => {
-        const store = makeStore();
-        setPending(store, gathering([{ id: 'driftwood', name: 'Driftwood' }]));
-
-        const { getByTestId, queryByTestId } = render(
-            withProvider(store, <EventScreen />),
-        );
-
-        act(() => {
-            fireEvent.press(getByTestId('event-choice-acknowledge'));
-        });
-
-        expect(store.getState().event.pending).toBeNull();
-        expect(queryByTestId('event-choice-acknowledge')).toBeNull();
-    });
-
-    it('renders an interaction event with a single SO BE IT choice and the npc name', () => {
-        const store = makeStore();
-        setPending(store, interaction('A Stranger'));
-
-        const { getByText } = render(
-            withProvider(store, <EventScreen />),
-        );
-
-        expect(getByText('A STRANGER')).toBeTruthy();
-        expect(getByText('SO BE IT')).toBeTruthy();
-    });
-
     it('renders a cutscene event with the joined lines as body text', () => {
         const store = makeStore();
         setPending(store, cutscene(['First line.', 'Second line.']));
@@ -418,7 +328,7 @@ describe('DialogueScreen dialogue confirmation flash (ported Phase 29 Tick C)', 
     it('renders a ✓ next to the reply row that matches a dialogue:applied event', () => {
         jest.useFakeTimers();
         const store = makeStore();
-        setPending(store, interaction('A Stranger'));
+        setPending(store, cutscene(['A line.']));
 
         const { queryByTestId, getByTestId } = render(
             withProvider(store, <DialogueScreen />),

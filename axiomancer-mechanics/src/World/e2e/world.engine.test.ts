@@ -19,7 +19,7 @@ import { GameState } from '../../Game/types';
 import { mockSequentialRng } from '../../test-utils/rng';
 import { settleQuestNodesIn } from '../../Game/fixtures/quest-nodes';
 import {
-    FIXTURE_DIALOGUE_EVENT, FIXTURE_NPC, FIXTURE_QUEST, FIXTURE_VILLAGE_EVENT,
+    FIXTURE_NPC, FIXTURE_QUEST, FIXTURE_VILLAGE_EVENT,
 } from '../../Game/fixtures/fixture-content';
 
 afterEach(() => vi.restoreAllMocks());
@@ -117,15 +117,6 @@ describe('per-objective quest engine', () => {
 // ── resolveMapEvent dispatcher ────────────────────────────────────────────
 
 describe('resolveMapEvent dispatch', () => {
-    it('returns kind=narration with the dialogue tree for a staged NPC', () => {
-        mockSequentialRng(0.5);
-        const result = resolveMapEvent(bwStateAt('bw-2'), undefined, FIXTURE_DIALOGUE_EVENT);
-        expect(result.event.kind).toBe('narration');
-        if (result.event.kind === 'narration') {
-            expect(result.event.dialogue).toBe(FIXTURE_NPC.dialogueTree);
-        }
-    });
-
     it('returns kind=village for a staged shop', () => {
         mockSequentialRng(0.5);
         const result = resolveMapEvent(bwStateAt('bw-2'), undefined, FIXTURE_VILLAGE_EVENT);

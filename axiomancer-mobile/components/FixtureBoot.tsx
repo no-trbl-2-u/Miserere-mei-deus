@@ -21,6 +21,7 @@ import { useEffect, useRef } from 'react';
 
 import { navigationRef } from '@/lib/platform/router';
 import { getBootFixture } from '@/state/fixtures';
+import { seatDialogue } from '@/state/dev/story-catalog';
 import { useGameActions, useGameStore } from '@/state/GameStoreProvider';
 import { selectHasActiveEvent } from '@/state/presenters/event.engine';
 
@@ -51,7 +52,10 @@ export function FixtureBoot() {
             if (fired.current) return;
             if (navigationRef.isReady() || attempts >= READY_POLL_MAX) {
                 fired.current = true;
-                if (!somethingAlreadyArrived(store.getState())) actions.resolveCurrentMapEvent(undefined, boot.fixture.stagedEvent);
+                if (somethingAlreadyArrived(store.getState())) return;
+                // No map event opens a dialogue: a staged tree is seated, not resolved.
+                if (boot.fixture.stagedDialogue) seatDialogue(store, boot.fixture.stagedDialogue);
+                else actions.resolveCurrentMapEvent(undefined, boot.fixture.stagedEvent);
                 return;
             }
             attempts += 1;

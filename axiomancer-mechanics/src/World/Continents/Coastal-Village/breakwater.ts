@@ -12,7 +12,7 @@
  *
  * The map holds the questline by routing alone. Every fight and hazard sits
  * in a POCKET joined only to its step's marker, and the open fan between them
- * holds the gathering, cache, rest and Anvil nodes only:
+ * holds the waypoint, cache, rest and Anvil nodes only:
  *
  *   bw-19 (off the windmill)       Gallows Hill, the Sea Cave        (hazards)
  *   bw-20 (off the customs house)  Crane Quay, the Walled Manor,

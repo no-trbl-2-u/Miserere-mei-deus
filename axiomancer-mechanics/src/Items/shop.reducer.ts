@@ -10,7 +10,7 @@
  * `buyItem` deep-clones the purchased item — two consumers who each
  * buy the same ware should not share an item identity in their
  * inventories (a stack increment in one would otherwise alias the
- * other). Matches `resolveGathering` / `resolveLootCache` in
+ * other). Matches `resolveLootCache` in
  * `World/MapEvents/handlers.ts`.
  */
 

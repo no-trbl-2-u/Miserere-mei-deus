@@ -133,8 +133,11 @@ import { resolveDeath, freshRunKeepingCharacter } from './death';
  * - v39: the third slot kind is `relic` (one weapon, one armor, three
  *   relics); the old slot name, its flavour kind and the loadout row named
  *   after it are re-slotted onto the relic model.
+ * - v40: the gathering, interaction and narration map-event kinds are cut;
+ *   an arrival owed on one of the seven former gathering nodes (now empty
+ *   waypoints) is cleared.
  */
-export const GAME_STATE_VERSION = 39;
+export const GAME_STATE_VERSION = 40;
 
 /** Options for {@link createNewGameState}. */
 export interface NewGameOptions {

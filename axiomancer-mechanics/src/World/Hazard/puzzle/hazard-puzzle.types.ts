@@ -47,7 +47,7 @@ export interface HazardPuzzleLayout {
      * reuses; no new story text is written for a puzzle.
      */
     hazardId: string;
-    /** The Act 1 region the puzzle sits in; its gathering list gives the outcome's material. */
+    /** The Act 1 region the puzzle sits in. */
     region: MapName;
     /** Hand card ids, in order. */
     hand: string[];

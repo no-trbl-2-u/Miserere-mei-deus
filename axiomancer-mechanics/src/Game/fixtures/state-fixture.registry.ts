@@ -19,7 +19,7 @@
  */
 
 import type { StateFixture } from './state-fixture.types';
-import { FIXTURE_CUTSCENE_EVENT, FIXTURE_DIALOGUE_EVENT, FIXTURE_QUEST_EVENT, FIXTURE_VILLAGE_EVENT } from './fixture-content';
+import { FIXTURE_CUTSCENE_EVENT, FIXTURE_NPC, FIXTURE_QUEST_EVENT, FIXTURE_VILLAGE_EVENT } from './fixture-content';
 
 export const STATE_FIXTURES: readonly StateFixture[] = Object.freeze([
     {
@@ -29,12 +29,12 @@ export const STATE_FIXTURES: readonly StateFixture[] = Object.freeze([
     },
     {
         id: 'apprentice-staged-dialogue',
-        description: 'Apprentice on the Breakwater\'s bw-2 with the fixture NPC staged on it (Act 1 stages no NPC, R7e); `arrive` pushes /dialogue.',
+        description: 'Apprentice on the Breakwater\'s bw-2 with the fixture NPC\'s tree seated (no map event opens a dialogue, NK1a); `arrive` pushes /dialogue.',
         seed: 'fixture-apprentice-staged-dialogue',
         preset: 'apprentice',
         world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-2' },
         arrive: true,
-        stagedEvent: FIXTURE_DIALOGUE_EVENT,
+        stagedDialogue: FIXTURE_NPC.dialogueTree!,
     },
     {
         id: 'sage-bw-door-gate',

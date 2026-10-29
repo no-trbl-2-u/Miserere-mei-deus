@@ -11,12 +11,10 @@
  *   - HAZARD / REST / TREASURE launch their REAL minigame session
  *     (and crucially leave NO paced /event route, so they can never
  *     dead-end at the "NO EVENT" card)
- *   - GATHER grants a sample item straight into inventory — no
- *     session, no route
  *   - VILLAGE / CUTSCENE seed their paced events for the dedicated
  *     /village + /cutscene routes
  *
- * Seeding a narrative event for rest/gather/treasure would route through
+ * Seeding a narrative event for rest/treasure would route through
  * `<EventGate>` to /event, where `composeNarrative` returns the empty VM
  * ("NO EVENT IN PROGRESS"). The contract a player cares about is "the
  * minigame opens", so these tests assert the session selectors + absence
@@ -66,7 +64,7 @@ describe('DebugTriggerEncounter: DEV gate', () => {
     it('renders a button for every encounter kind when __DEV__ is true', () => {
         const store = makeStore();
         const tree = render(withProvider(store, <DebugTriggerEncounter />));
-        for (const kind of ['encounter', 'boss', 'hazard', 'rest', 'gather', 'treasure']) {
+        for (const kind of ['encounter', 'boss', 'hazard', 'rest', 'treasure']) {
             expect(tree.queryByTestId(`debug-trigger-encounter-${kind}`)).not.toBeNull();
         }
     });
@@ -162,17 +160,6 @@ describe('DebugTriggerEncounter: minigame triggers', () => {
         expect(store.getState().cache.session).not.toBeNull();
     });
 
-    it('GATHER grants a sample item straight into inventory, no session and no /event route', () => {
-        const store = makeStore();
-        const before = store.getState().player.inventory.length;
-        const tree = render(withProvider(store, <DebugTriggerEncounter />));
-        fireEvent.press(tree.getByTestId('debug-trigger-encounter-gather'));
-
-        expect(mockPush).toHaveBeenCalledWith('/(tabs)/exploration');
-        expect(store.getState().player.inventory.length).toBe(before + 1);
-        expect(selectHasActiveEvent(store.getState())).toBe(false);
-        expect(selectPacedEventRoute(store.getState())).toBeNull();
-    });
 });
 
 describe('DebugTriggerEncounter: paced dedicated-route triggers', () => {

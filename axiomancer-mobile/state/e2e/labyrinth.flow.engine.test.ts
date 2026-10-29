@@ -64,15 +64,15 @@ function quietHouse(store: AppStore): void {
 }
 
 describe('labyrinth store flow — enter / walk / exit', () => {
-    it('enter swaps to the act map, resolves the entrance narration, and exit restores the overworld', () => {
+    it('enter swaps to the act map, resolves the entrance line, and exit restores the overworld', () => {
         const { store, actions } = makeStoreAndActions();
         const overworldMap = store.getState().world.currentMap.name;
 
         actions.enterLabyrinth('act1');
         expect(store.getState().world.currentMap.name).toBe('aporia-colonnade');
         expect(currentNode(store)).toBe('ap1-1');
-        // Entrances narrate (authored override) → paced event pending.
-        expect(store.getState().event.pending?.event.kind).toBe('narration');
+        // Entrances play a one-line cutscene (authored override) → paced event pending.
+        expect(store.getState().event.pending?.event.kind).toBe('cutscene');
         // The entry room is solved on arrival.
         expect(store.getState().world.currentMap.consumedNodes).toContain('ap1-1');
 
