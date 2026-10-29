@@ -131,16 +131,28 @@ async function runRoundTrip(page, baseUrl) {
 
     log('entering Act I ...')
     await press(page, 'labyrinth-act-act1', 'act select')
-    // The entrance plays the Sophist's line as a one-line cutscene (the
-    // narration kind is cut, NK1a); SKIP returns to the room. Either way the
-    // entry room is where the walk starts.
-    const skip = page.locator('[data-testid="cutscene-skip"]:visible').first()
+    // The entrance narration, when it shows, is left with LEAVE (dialogue) or
+    // played out (the Omen is a `/cutscene` route, `cutscene-advance`); either
+    // way the entry room is where the walk starts.
+    const leave = page.locator('[data-testid="dialogue-leave"]:visible').first()
+    const cutscene = page.locator('[data-testid="cutscene-advance"]:visible').first()
     const room = page.locator('[data-testid="labyrinth-room"]:visible').first()
     await Promise.race([
-        skip.waitFor({ state: 'visible', timeout: 15000 }),
+        leave.waitFor({ state: 'visible', timeout: 15000 }),
+        cutscene.waitFor({ state: 'visible', timeout: 15000 }),
         room.waitFor({ state: 'visible', timeout: 15000 }),
     ]).catch(() => {})
-    if (await skip.count()) await skip.click({ force: true })
+    if (await leave.count()) await leave.click({ force: true })
+    if (await cutscene.count()) {
+        // SKIP only reveals the remaining lines; the scene ends on a tap of the
+        // body once every line is up (`cutscene-advance` → `dismissEvent`).
+        await page.locator('[data-testid="cutscene-skip"]:visible').first().click({ force: true, timeout: 5000 }).catch(() => {})
+        for (let k = 0; k < 12; k++) {
+            if (!(await page.locator('[data-testid="cutscene-advance"]:visible').count())) break
+            await page.locator('[data-testid="cutscene-advance"]:visible').first().click({ force: true, timeout: 3000 }).catch(() => {})
+            await page.waitForTimeout(250)
+        }
+    }
     await room.waitFor({ state: 'visible', timeout: 15000 })
         .catch(() => fail('the entry room never showed'))
 
