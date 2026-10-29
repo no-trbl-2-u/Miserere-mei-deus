@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Merciful — ballot</title>
+<!--
+  The Merciful's ballot (lane-creator step 3, /lane-creator, 2026-10-29),
+  copied from the ballot shell (plan/card-ledger/README.md "Adding the next
+  ballot"). Session 0 and the approved slot roles: rehearsal-merciful.md.
+  It runs on the shared ballot kit (ballot-kit.js, next to this file).
+
+  Candidates carry no colour (phase CL1): T votes on the text, and the
+  session splits the kept family's colours evenly within each sub-lane at
+  the revisions step (docs/lane-creator.md "Colours after the picks").
+
+  How it works:
+    1. Every candidate card is rendered from the CARDS array below.
+    2. Tick the checkbox on each card you KEEP (any number per slot;
+       ticking two in one slot reads as "merge these").
+    3. Optional: type a per-slot note (a TWEAK number, a merge rule, or a
+       colour overrule such as "make it blue").
+    4. Press "Submit" to send the verdict (the first time, it asks for the
+       API URL and the token), or "Generate" and copy the plain-text sheet.
+  Unticked cards are CUT by default.
+-->
+<style>
+  /* ---- Colour tokens (light default, dark via media query or toggle) ---- */
+  :root {
+    --bg: #efe9dc;          /* page: aged paper */
+    --ink: #1b1714;         /* body text */
+    --muted: #6b6259;       /* secondary text */
+    --card: #fbf7ee;        /* card face */
+    --edge: #2a2420;        /* card border */
+    --accent: #8e1b1b;      /* banner accent */
+    --free: #3d5a40;        /* FREE line accent */
+    --paid: #7a5a12;        /* PAID line accent */
+    --art: #d9cfbd;         /* art box fill */
+    --sel: #1b1714;         /* selected card ring */
+    --btn: #1b1714;
+    --btn-ink: #fbf7ee;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141110; --ink: #ece4d6; --muted: #a39887; --card: #1f1a17;
+      --edge: #ece4d6; --accent: #e0504a; --free: #8fbf8f; --paid: #e0b54a;
+      --art: #2c2521; --sel: #ece4d6; --btn: #ece4d6; --btn-ink: #141110;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141110; --ink: #ece4d6; --muted: #a39887; --card: #1f1a17;
+    --edge: #ece4d6; --accent: #e0504a; --free: #8fbf8f; --paid: #e0b54a;
+    --art: #2c2521; --sel: #ece4d6; --btn: #ece4d6; --btn-ink: #141110;
+  }
+
+  /* ---- Layout ---- */
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 16px; background: var(--bg); color: var(--ink);
+    font: 15px/1.45 Georgia, "Times New Roman", serif;
+  }
+  header, main, footer { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; letter-spacing: .02em; }
+  .sub { color: var(--muted); margin: 0 0 12px; }
+  .legend { font-size: .9rem; color: var(--muted); margin-bottom: 16px; }
+  .legend b { color: var(--ink); }
+  .theme { float: right; }
+
+  /* One slot = heading + role + row of candidate cards + note field */
+  .slot { margin: 22px 0 8px; padding-top: 10px; border-top: 2px solid var(--edge); }
+  .slot h2 { font-size: 1.1rem; margin: 0; }
+  .slot .role { color: var(--muted); margin: 2px 0 10px; }
+  .row { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+  .note { width: 100%; margin-top: 8px; padding: 6px 8px; font: inherit;
+          background: var(--card); color: var(--ink); border: 1px solid var(--muted); border-radius: 4px; }
+
+  /* ---- Card face ---- */
+  label.card {
+    display: flex; flex-direction: column; cursor: pointer;
+    background: var(--card); border: 2px solid var(--edge); border-radius: 10px;
+    padding: 10px; min-height: 300px; position: relative;
+    transition: box-shadow .12s, transform .12s;
+  }
+  label.card:hover { transform: translateY(-2px); }
+  label.card.on { box-shadow: 0 0 0 4px var(--sel); }
+  .hue { font-weight: bold; }
+  .top { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
+  .name { font-weight: bold; }
+  .type { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); text-align: right; }
+  .art {
+    margin: 8px 0; height: 96px; border: 1px solid var(--edge); border-radius: 6px;
+    background: repeating-linear-gradient(45deg, var(--art) 0 6px, transparent 6px 12px);
+    display: grid; place-items: center; font-size: 2.6rem;
+  }
+  .line { margin: 4px 0; font-size: .92rem; }
+  .tag { display: inline-block; min-width: 42px; font-size: .7rem; font-weight: bold;
+         letter-spacing: .08em; padding: 1px 5px; border-radius: 3px; margin-right: 4px;
+         color: var(--card); vertical-align: 1px; }
+  .tag.free { background: var(--free); }
+  .tag.paid { background: var(--paid); }
+  .kw { font-variant: small-caps; font-weight: bold; }
+  .dur { display: flex; gap: 4px; margin: 2px 0 4px; }
+  .dur .tag { min-width: 0; }
+  .trig .ticon { display: inline-block; width: 1.3em; }
+  .why { margin-top: auto; padding-top: 8px; font-size: .8rem; color: var(--muted); font-style: italic; }
+  .pick { position: absolute; top: 8px; right: 8px; width: 20px; height: 20px; accent-color: var(--sel); }
+  .top { padding-right: 26px; }
+
+  .banner { margin: 0 0 10px; padding: 8px 10px; border: 2px dashed var(--accent); border-radius: 6px; color: var(--accent); }
+  /* ---- Tabs ---- */
+  .tabs { max-width: 1100px; margin: 0 auto; display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+          position: sticky; top: 0; background: var(--bg); padding: 8px 0; z-index: 2; }
+  .tabs button { margin: 0; background: transparent; color: var(--ink); border: 2px solid var(--edge); }
+  .tabs button[aria-selected="true"] { background: var(--btn); color: var(--btn-ink); }
+  .tabs .n { font-size: .8rem; opacity: .8; margin-left: 4px; }
+  .family { font-size: .85rem; color: var(--muted); margin-left: auto; }
+  .panel[hidden] { display: none; }
+  .blurb { color: var(--muted); margin: 10px 0 0; }
+  .tally { color: var(--muted); font-size: .9rem; margin: 4px 0 0; }
+  /* ---- Footer / output ---- */
+  footer { margin-top: 28px; padding-top: 12px; border-top: 2px solid var(--edge); }
+  textarea { width: 100%; font: 13px/1.4 ui-monospace, Menlo, Consolas, monospace;
+             background: var(--card); color: var(--ink); border: 1px solid var(--muted);
+             border-radius: 4px; padding: 8px; }
+  #general { min-height: 60px; }
+  #out { min-height: 220px; margin-top: 10px; }
+  button { font: inherit; padding: 8px 18px; border-radius: 6px; border: 0;
+           background: var(--btn); color: var(--btn-ink); cursor: pointer; margin: 8px 8px 0 0; }
+  .count { color: var(--muted); margin-left: 6px; }
+</style>
+<script src="ballot-kit.js"></script>
+</head>
+<body>
+<header>
+  <button class="theme" id="themeBtn" type="button" aria-label="Toggle colour theme">◐</button>
+  <p class="banner" role="note"><b>CANDIDATES</b> — nothing here ships until the trial set is plotted and built. Numbers are placeholders for the sims.</p>
+  <h1>The Merciful — ballot</h1>
+  <p class="sub">Family: "My mending is a weapon." Three sub-lanes, one per tab: Payoff, Engine, Misc. Each has 10 slots × 3 candidates (90 cards in all); the target is about 1 survivor per slot, 30 in all.</p>
+  <p class="legend">
+    <b>Tick</b> each card you keep. Ticking two in one slot means "merge". <b>Unticked = CUT</b>.
+    Use a slot's note box for a TWEAK (one number), a merge rule, or a colour change ("make it blue").<br>
+    <b>DEAL</b>: damage. <b>GUARD</b>: block. <b>HEAL</b>: restore VITAE. <b>VULNERABLE</b>: the foe takes more damage from DEALs. <b>DRAW</b>: draw cards.<br>
+    <b>HEAL N with RADIANCE</b>: HEAL N, then DEAL what that heal actually restored (0 at full VITAE).<br>
+    <b>MERCY N</b>: HEAL the foe N, and add N to its MERCY. A 3-turn clock starts with the first MERCY; when it runs out, at the start of the foe's turn, the foe takes twice its MERCY. A new MERCY adds to the total and does not reset the clock.<br>
+    <b>Placeholders (Open, for the sims):</b> the MERCY payout is plain VITAE loss; the total resets once it pays; a heal on the foe stops at its max VITAE and anything past the max bursts 1:1 as a DEAL; a clock ticked to 0 pays at the start of the foe's next turn. <b>SACRIFICE</b> and <b>LEECH</b> are Blood Price's. A Spell's PAID line EXILEs it.
+    Numbers are base values before stat scaling. For reference, A Plain Blow is FREE DEAL 2 / PAID DEAL 5.<br>
+    <b>Globals:</b> FREE ⏳3 = in play 3 turns, PAID ∞ = rest of combat; all open on ⟳ start of your turn. A PAID line shows only what changes.
+    <b>Scrap floor:</b> no line gives only "gain 1 Conviction".
+  </p>
+</header>
+
+<nav class="tabs" id="tabs" role="tablist" aria-label="Sub-lanes"></nav>
+<main id="slots"></main>
+
+<footer>
+  <label for="general"><b>General notes</b> (optional)</label>
+  <textarea id="general" placeholder="Anything about the lane as a whole…"></textarea>
+  <button id="gen" type="button">Generate</button>
+  <button id="copy" type="button">Copy</button>
+  <span class="count" id="count"></span>
+  <textarea id="out" readonly placeholder="Press Submit, or Generate and copy this text back to Claude."></textarea>
+</footer>
+
+<script>
+/* =====================================================================
+   DATA — the ballot. One entry per candidate card.
+   slot: slot code; role: the slot's one-line job (shown once per slot);
+   el: optional family tag shown in the card header (an element, a sub-theme);
+   id: slot + candidate letter; type: Attack | Skill | Spell | Global;
+   free / paid: the two rules lines (plain text);
+   why: the drafter's one-line rationale.
+   ===================================================================== */
+const BALLOT_ID = 'merciful-2026-10-29';
+
+const TABS = [
+  { key: 'P', name: 'Payoff', blurb: 'What the Merciful is paid for: heals that land on a wounded you, and MERCY coming due.' },
+  { key: 'E', name: 'Engine', blurb: 'What makes room to heal, grows the heals and keeps MERCY going.' },
+  { key: 'M', name: 'Misc', blurb: 'Utility around it: walls for the wait, cleansing, sparing, recalling.' },
+];
+
+const SLOTS = [
+  // Payoff
+  { slot: 'P-01', el: 'RADIANCE', role: 'Attack — the core: HEAL, then DEAL what you healed', glyph: '☀' },
+  { slot: 'P-02', el: 'RADIANCE', role: 'Skill — a big HEAL with RADIANCE (huge when low, nothing when full)', glyph: '✚' },
+  { slot: 'P-03', el: 'MERCY', role: 'Skill — the big wager: a large MERCY', glyph: '🕊' },
+  { slot: 'P-04', el: 'MERCY', role: 'Attack — DEAL more while the foe carries MERCY', glyph: '⚔' },
+  { slot: 'P-05', el: 'MERCY', role: 'Spell — call it in: MERCY\'s clock ticks down (pays sooner)', glyph: '⌛' },
+  { slot: 'P-06', el: 'MERCY', role: 'Attack — DEAL equal to the foe\'s MERCY total, without spending it (Open: payoffs that read MERCY)', glyph: '⚖' },
+  { slot: 'P-07', el: 'RADIANCE', role: 'Attack — retribution: DEAL equal to all you healed this turn', glyph: '✹' },
+  { slot: 'P-08', el: 'RADIANCE + MERCY', role: 'Skill — MERCY equal to what you healed this turn (your mending feeds its debt)', glyph: '♾' },
+  { slot: 'P-09', el: 'heal', role: 'Attack — wounded strike: DEAL more the more VITAE you are missing', glyph: '🩹' },
+  { slot: 'P-10', el: 'RADIANCE', role: 'Global — HEAL with RADIANCE each turn', glyph: '⟳' },
+  // Engine
+  { slot: 'E-01', el: 'heal', role: 'Skill — a plain HEAL (RADIANCE fuel)', glyph: '✚' },
+  { slot: 'E-02', el: 'MERCY', role: 'Skill — a cheap small MERCY to start the clock', glyph: '🕊' },
+  { slot: 'E-03', el: 'heal', role: 'Skill — your heals this turn heal more', glyph: '⇡' },
+  { slot: 'E-04', el: 'SACRIFICE', role: 'Attack — DEAL; SACRIFICE to make room (shared Blood Price keyword)', glyph: '🩸' },
+  { slot: 'E-05', el: 'MERCY', role: 'Skill — MERCY on a weak foe heals it less (Open: the foe\'s max VITAE)', glyph: '🕯' },
+  { slot: 'E-06', el: 'RADIANCE', role: 'Spell — your next plain HEAL is RADIANCE', glyph: '✦' },
+  { slot: 'E-07', el: 'LEECH', role: 'Skill — LEECH: drains the foe, heals you (shared; RADIANCE fuel)', glyph: '🦇' },
+  { slot: 'E-08', el: 'RADIANCE + MERCY', role: 'Skill — twin mending: HEAL you and MERCY the foe the same amount', glyph: '☯' },
+  { slot: 'E-09', el: 'MERCY', role: 'Global — MERCY 1 each turn (adds to the total, never resets the clock)', glyph: '⟳' },
+  { slot: 'E-10', el: '', role: 'Skill — DRAW 2', glyph: '🂡' },
+  // Misc
+  { slot: 'M-01', el: 'GUARD', role: 'Skill — GUARD, to live through MERCY\'s clock', glyph: '🛡' },
+  { slot: 'M-02', el: 'MERCY', role: 'Skill — offer peace: spare a foe that carries MERCY (Open: befriending)', glyph: '🤝' },
+  { slot: 'M-03', el: 'DEAL', role: 'Skill — VULNERABLE (boosts the RADIANCE DEALs)', glyph: '◎' },
+  { slot: 'M-04', el: 'heal', role: 'Skill — cleanse: clear a debuff from yourself, then HEAL', glyph: '💧' },
+  { slot: 'M-05', el: 'heal', role: 'Skill — raise your max VITAE this combat (more room to heal into)', glyph: '❤' },
+  { slot: 'M-06', el: 'heal', role: 'Global — HEAL 1 each turn', glyph: '⟳' },
+  { slot: 'M-07', el: '', role: 'Attack — a cheap poke: a small DEAL, DRAW 1', glyph: '·' },
+  { slot: 'M-08', el: 'MERCY', role: 'Skill — stall: the foe\'s next attack is weaker while MERCY ticks', glyph: '🫧' },
+  { slot: 'M-09', el: 'heal', role: 'Spell — recall: return the last healing card you played to your hand', glyph: '⤺' },
+  { slot: 'M-10', el: 'overheal', role: 'Skill — overflow: HEAL the foe past its max so the burst lands (Open: the overheal burst)', glyph: '🌊' },
+];
+
+const CARDS = [
+  // P-01
+  { id: 'P-01a', type: 'Attack', free: 'HEAL 3 with RADIANCE.', paid: 'HEAL 7 with RADIANCE.', why: 'The pure heal-hit.' },
+  { id: 'P-01b', type: 'Attack', free: 'DEAL 2. HEAL 2 with RADIANCE.', paid: 'DEAL 4. HEAL 5 with RADIANCE.', why: 'Still hits at full VITAE.' },
+  { id: 'P-01c', type: 'Attack', free: 'The foe is VULNERABLE 1, then HEAL 3 with RADIANCE.', paid: 'The foe is VULNERABLE 2, then HEAL 6 with RADIANCE.', why: 'Opens the foe before the light lands.' },
+  // P-02
+  { id: 'P-02a', type: 'Skill', free: 'HEAL 5 with RADIANCE.', paid: 'HEAL 12 with RADIANCE.', why: 'Huge when low, nothing when full.' },
+  { id: 'P-02b', type: 'Skill', free: 'HEAL 4 with RADIANCE. GUARD 2.', paid: 'HEAL 9 with RADIANCE. GUARD 5.', why: 'The big heal with a wall behind it.' },
+  { id: 'P-02c', type: 'Skill', free: 'HEAL 4 with RADIANCE, or HEAL 8 with RADIANCE if you are below half VITAE.', paid: 'HEAL 9 with RADIANCE, or HEAL 16 with RADIANCE if you are below half VITAE.', why: 'Pays the desperate.' },
+  // P-03
+  { id: 'P-03a', type: 'Skill', free: 'MERCY 4.', paid: 'MERCY 10.', why: 'T\'s own example, as a card.' },
+  { id: 'P-03b', type: 'Spell', free: 'MERCY 5.', paid: 'MERCY 14.', why: 'The bigger wager, once (the PAID Spell EXILEs).' },
+  { id: 'P-03c', type: 'Skill', free: 'MERCY 3. GUARD 3.', paid: 'MERCY 8. GUARD 6.', why: 'The wager with a wall for the wait.' },
+  // P-04
+  { id: 'P-04a', type: 'Attack', free: 'DEAL 3, or DEAL 6 if the foe has MERCY.', paid: 'DEAL 6, or DEAL 12 if the foe has MERCY.', why: 'One yes/no check.' },
+  { id: 'P-04b', type: 'Attack', free: 'DEAL 1, twice; three times if the foe has MERCY.', paid: 'DEAL 3, twice; three times if the foe has MERCY.', why: 'More strikes, so VULNERABLE counts more.' },
+  { id: 'P-04c', type: 'Skill', free: 'GUARD 3, or GUARD 6 if the foe has MERCY.', paid: 'GUARD 7, or GUARD 14 if the foe has MERCY.', why: 'The same check, as a wall.' },
+  // P-05
+  { id: 'P-05a', type: 'Spell', free: 'MERCY\'s clock ticks down 1.', paid: 'MERCY\'s clock ticks down 2.', why: 'The plain call-in.' },
+  { id: 'P-05b', type: 'Spell', free: 'MERCY 2, then MERCY\'s clock ticks down 1.', paid: 'MERCY 5, then MERCY\'s clock ticks down 2.', why: 'Adds to the debt as it calls it in.' },
+  { id: 'P-05c', type: 'Attack', free: 'DEAL 2. MERCY\'s clock ticks down 1.', paid: 'DEAL 5. MERCY\'s clock ticks down 1.', why: 'A hit that hurries the debt.' },
+  // P-06
+  { id: 'P-06a', type: 'Attack', free: 'DEAL equal to the foe\'s MERCY.', paid: 'DEAL twice the foe\'s MERCY.', why: 'Reads the debt and leaves it in place.' },
+  { id: 'P-06b', type: 'Attack', free: 'DEAL 2, plus half the foe\'s MERCY.', paid: 'DEAL 4, plus the foe\'s MERCY.', why: 'A floor, so it hits with no MERCY up.' },
+  { id: 'P-06c', type: 'Skill', free: 'GUARD equal to the foe\'s MERCY.', paid: 'GUARD twice the foe\'s MERCY.', why: 'The debt as a wall.' },
+  // P-07
+  { id: 'P-07a', type: 'Attack', free: 'DEAL equal to all you healed this turn.', paid: 'DEAL twice all you healed this turn.', why: 'The plain retribution.' },
+  { id: 'P-07b', type: 'Attack', free: 'HEAL 2. DEAL equal to all you healed this turn.', paid: 'HEAL 4. DEAL twice all you healed this turn.', why: 'Brings its own heal.' },
+  { id: 'P-07c', type: 'Skill', free: 'GUARD and DEAL, each equal to half of all you healed this turn.', paid: 'GUARD and DEAL, each equal to all you healed this turn.', why: 'Split between a wall and a hit.' },
+  // P-08
+  { id: 'P-08a', type: 'Skill', free: 'MERCY equal to all you healed this turn.', paid: 'MERCY twice all you healed this turn.', why: 'Your mending, owed by the foe.' },
+  { id: 'P-08b', type: 'Skill', free: 'HEAL 3. MERCY equal to all you healed this turn.', paid: 'HEAL 6. MERCY equal to all you healed this turn.', why: 'Brings its own heal.' },
+  { id: 'P-08c', type: 'Attack', free: 'DEAL 2. MERCY equal to half of all you healed this turn.', paid: 'DEAL 4. MERCY equal to all you healed this turn.', why: 'A hit now, a debt later.' },
+  // P-09
+  { id: 'P-09a', type: 'Attack', free: 'DEAL 2, +1 per 5 VITAE you are missing.', paid: 'DEAL 4, +1 per 3 VITAE you are missing.', why: 'Grows with every wound.' },
+  { id: 'P-09b', type: 'Attack', free: 'DEAL 3, or DEAL 7 if you are below half VITAE.', paid: 'DEAL 6, or DEAL 14 if you are below half VITAE.', why: 'One yes/no check.' },
+  { id: 'P-09c', type: 'Skill', free: 'GUARD 2, +1 per 5 VITAE you are missing.', paid: 'GUARD 4, +1 per 3 VITAE you are missing.', why: 'The wound as a wall.' },
+  // P-10
+  { id: 'P-10a', type: 'Global', trig: 'turn', body: 'HEAL 2 with RADIANCE.', paidDelta: null, why: 'The light every turn.' },
+  { id: 'P-10b', type: 'Global', trig: 'turn', body: 'HEAL 1 with RADIANCE. GUARD 1.', paidDelta: null, why: 'Smaller light, with a wall.' },
+  { id: 'P-10c', type: 'Global', trig: 'turn', body: 'If the foe has MERCY, HEAL 3 with RADIANCE.', paidDelta: null, why: 'Bridges the two keywords.' },
+  // E-01
+  { id: 'E-01a', type: 'Skill', free: 'HEAL 3.', paid: 'HEAL 7.', why: 'The plain heal.' },
+  { id: 'E-01b', type: 'Skill', free: 'HEAL 2. DRAW 1.', paid: 'HEAL 5. DRAW 1.', why: 'Heals and digs for a RADIANCE card.' },
+  { id: 'E-01c', type: 'Skill', free: 'HEAL 2. GUARD 2.', paid: 'HEAL 5. GUARD 4.', why: 'Heals and walls.' },
+  // E-02
+  { id: 'E-02a', type: 'Skill', free: 'MERCY 2.', paid: 'MERCY 5.', why: 'The plain clock starter.' },
+  { id: 'E-02b', type: 'Attack', free: 'DEAL 1. MERCY 2.', paid: 'DEAL 3. MERCY 4.', why: 'Starts the clock with a hit.' },
+  { id: 'E-02c', type: 'Skill', free: 'MERCY 2. DRAW 1.', paid: 'MERCY 4. DRAW 1.', why: 'Starts the clock and digs.' },
+  // E-03
+  { id: 'E-03a', type: 'Skill', free: 'HEAL 1. Your other heals this turn HEAL +2.', paid: 'HEAL 2. Your other heals this turn HEAL +4.', why: 'Grows every heal after it.' },
+  { id: 'E-03b', type: 'Spell', free: 'Your heals this turn HEAL +3.', paid: 'Your heals this turn HEAL +6.', why: 'A bigger boost, once.' },
+  { id: 'E-03c', type: 'Skill', free: 'Your heals and MERCY this turn are +1. DRAW 1.', paid: 'Your heals and MERCY this turn are +3. DRAW 1.', why: 'Grows both keywords.' },
+  // E-04
+  { id: 'E-04a', type: 'Attack', free: 'SACRIFICE 2. DEAL 4.', paid: 'SACRIFICE 3. DEAL 9.', why: 'Hits and makes room.' },
+  { id: 'E-04b', type: 'Skill', free: 'SACRIFICE 3. DRAW 2.', paid: 'SACRIFICE 4. DRAW 3.', why: 'Makes room and digs for heals.' },
+  { id: 'E-04c', type: 'Skill', free: 'SACRIFICE 3, then HEAL 3 with RADIANCE.', paid: 'SACRIFICE 5, then HEAL 6 with RADIANCE.', why: 'Makes its own room, then fills it with light.' },
+  // E-05
+  { id: 'E-05a', type: 'Skill', free: 'MERCY 3; if the foe is below half VITAE, its heal is halved.', paid: 'MERCY 7; if the foe is below half VITAE, its heal is halved.', why: 'Late MERCY gives less ground. Placeholder: the debt stays whole.' },
+  { id: 'E-05b', type: 'Skill', free: 'MERCY 3; its heal cannot lift the foe above half VITAE.', paid: 'MERCY 7; its heal cannot lift the foe above half VITAE.', why: 'A ceiling on the ground given.' },
+  { id: 'E-05c', type: 'Spell', free: 'MERCY 4; no heal if the foe is below half VITAE.', paid: 'MERCY 9; no heal if the foe is below half VITAE.', why: 'A free debt on a weak foe, once.' },
+  // E-06
+  { id: 'E-06a', type: 'Spell', free: 'Your next HEAL this turn has RADIANCE.', paid: 'Your HEALs this turn have RADIANCE.', why: 'Turns plain heals into hits.' },
+  { id: 'E-06b', type: 'Skill', free: 'HEAL 2. Your next HEAL this turn has RADIANCE.', paid: 'HEAL 4. Your HEALs this turn have RADIANCE.', why: 'Brings its own heal.' },
+  { id: 'E-06c', type: 'Skill', free: 'DRAW 1. Your next HEAL this turn has RADIANCE.', paid: 'DRAW 2. Your HEALs this turn have RADIANCE.', why: 'Digs for the heal it lights.' },
+  // E-07
+  { id: 'E-07a', type: 'Spell', free: 'LEECH 1.', paid: 'LEECH 3.', why: 'The plain drain.' },
+  { id: 'E-07b', type: 'Attack', free: 'DEAL 2. LEECH 1.', paid: 'DEAL 4. LEECH 2.', why: 'A hit with a drain.' },
+  { id: 'E-07c', type: 'Skill', free: 'LEECH 1. GUARD 2.', paid: 'LEECH 2. GUARD 4.', why: 'A drain with a wall.' },
+  // E-08
+  { id: 'E-08a', type: 'Skill', free: 'HEAL 2 and MERCY 2.', paid: 'HEAL 5 and MERCY 5.', why: 'The plain twin mending.' },
+  { id: 'E-08b', type: 'Skill', free: 'HEAL 3 with RADIANCE and MERCY 2.', paid: 'HEAL 6 with RADIANCE and MERCY 4.', why: 'Both keywords at once.' },
+  { id: 'E-08c', type: 'Spell', free: 'HEAL 3 and MERCY 3, then DRAW 1.', paid: 'HEAL 6 and MERCY 6, then DRAW 1.', why: 'Bigger, once, and digs.' },
+  // E-09
+  { id: 'E-09a', type: 'Global', trig: 'turn', body: 'MERCY 1.', paidDelta: null, why: 'The debt grows every turn.' },
+  { id: 'E-09b', type: 'Global', trig: 'turn', body: 'MERCY 1 and HEAL 1.', paidDelta: null, why: 'Twin mending every turn.' },
+  { id: 'E-09c', type: 'Global', trig: 'turn', body: 'If the foe has MERCY, MERCY 2.', paidDelta: null, why: 'Feeds a clock you started; never starts one.' },
+  // E-10
+  { id: 'E-10a', type: 'Skill', free: 'DRAW 2.', paid: 'DRAW 3.', why: 'The plain refill.' },
+  { id: 'E-10b', type: 'Skill', free: 'DRAW 1. HEAL 2.', paid: 'DRAW 2. HEAL 4.', why: 'Refills and heals.' },
+  { id: 'E-10c', type: 'Skill', free: 'DRAW 2, or DRAW 3 if the foe has MERCY.', paid: 'DRAW 3, or DRAW 4 if the foe has MERCY.', why: 'Pays for the clock being up.' },
+  // M-01
+  { id: 'M-01a', type: 'Skill', free: 'GUARD 3.', paid: 'GUARD 7.', why: 'The plain wall.' },
+  { id: 'M-01b', type: 'Skill', free: 'GUARD 3, or GUARD 5 if the foe has MERCY.', paid: 'GUARD 7, or GUARD 11 if the foe has MERCY.', why: 'A bigger wall while the clock runs.' },
+  { id: 'M-01c', type: 'Skill', free: 'GUARD 2. HEAL 1.', paid: 'GUARD 5. HEAL 3.', why: 'A wall with a mend.' },
+  // M-02
+  { id: 'M-02a', type: 'Skill', free: 'MERCY 2. If the foe can be befriended, you may spare it.', paid: 'MERCY 4. If the foe can be befriended, you may spare it.', why: 'Placeholder: uses the foe\'s own befriend gate.' },
+  { id: 'M-02b', type: 'Skill', free: 'MERCY 2. While the foe has MERCY, it counts as under its befriend gate.', paid: 'MERCY 5. While the foe has MERCY, it counts as under its befriend gate.', why: 'Placeholder: MERCY opens the gate.' },
+  { id: 'M-02c', type: 'Spell', free: 'If the foe\'s MERCY is at least its VITAE, you may spare it.', paid: 'If the foe\'s MERCY is at least half its VITAE, you may spare it.', why: 'Placeholder: spare a foe the debt would kill.' },
+  // M-03
+  { id: 'M-03a', type: 'Skill', free: 'The foe is VULNERABLE 1.', paid: 'The foe is VULNERABLE 2.', why: 'The plain opener.' },
+  { id: 'M-03b', type: 'Attack', free: 'DEAL 2. The foe is VULNERABLE 1.', paid: 'DEAL 4. The foe is VULNERABLE 2.', why: 'Opens with a hit.' },
+  { id: 'M-03c', type: 'Skill', free: 'The foe is VULNERABLE 1. HEAL 2.', paid: 'The foe is VULNERABLE 2. HEAL 4.', why: 'Opens and mends.' },
+  // M-04
+  { id: 'M-04a', type: 'Skill', free: 'Clear one debuff from yourself, then HEAL 2.', paid: 'Clear every debuff from yourself, then HEAL 4.', why: 'The plain cleanse.' },
+  { id: 'M-04b', type: 'Skill', free: 'Clear one debuff from yourself, then HEAL 2 with RADIANCE.', paid: 'Clear every debuff from yourself, then HEAL 5 with RADIANCE.', why: 'A cleanse that hits.' },
+  { id: 'M-04c', type: 'Skill', free: 'Clear one debuff from yourself. GUARD 3.', paid: 'Clear every debuff from yourself. GUARD 6.', why: 'A cleanse with a wall.' },
+  // M-05
+  { id: 'M-05a', type: 'Skill', free: '+3 max VITAE this combat.', paid: '+8 max VITAE this combat.', why: 'More room to heal into.' },
+  { id: 'M-05b', type: 'Skill', free: '+2 max VITAE this combat. HEAL 2.', paid: '+5 max VITAE this combat. HEAL 5.', why: 'Room, and fills some of it.' },
+  { id: 'M-05c', type: 'Spell', free: '+4 max VITAE this combat. DRAW 1.', paid: '+10 max VITAE this combat. DRAW 1.', why: 'More room, once.' },
+  // M-06
+  { id: 'M-06a', type: 'Global', trig: 'turn', body: 'HEAL 1.', paidDelta: null, why: 'The plain mend.' },
+  { id: 'M-06b', type: 'Global', trig: 'turn', body: 'HEAL 1. GUARD 1.', paidDelta: null, why: 'A mend and a wall.' },
+  { id: 'M-06c', type: 'Global', trig: 'turn', body: 'HEAL 1, or HEAL 3 if you are below half VITAE.', paidDelta: null, why: 'Mends more when it matters.' },
+  // M-07
+  { id: 'M-07a', type: 'Attack', free: 'DEAL 1. DRAW 1.', paid: 'DEAL 3. DRAW 1.', why: 'The plain poke.' },
+  { id: 'M-07b', type: 'Attack', free: 'DEAL 1. HEAL 1. DRAW 1.', paid: 'DEAL 2. HEAL 2. DRAW 1.', why: 'A poke with a mend.' },
+  { id: 'M-07c', type: 'Attack', free: 'DEAL 1. MERCY 1. DRAW 1.', paid: 'DEAL 2. MERCY 2. DRAW 1.', why: 'A poke that starts the clock.' },
+  // M-08
+  { id: 'M-08a', type: 'Skill', free: 'If the foe has MERCY, its next attack deals 2 less.', paid: 'If the foe has MERCY, its next attack deals 5 less.', why: 'The debt softens it.' },
+  { id: 'M-08b', type: 'Skill', free: 'The foe\'s next attack deals 2 less, or 4 less if it has MERCY.', paid: 'The foe\'s next attack deals 4 less, or 8 less if it has MERCY.', why: 'Works without MERCY, better with it.' },
+  { id: 'M-08c', type: 'Skill', free: 'MERCY 1. The foe\'s next attack deals 2 less.', paid: 'MERCY 3. The foe\'s next attack deals 4 less.', why: 'Starts the clock and softens the wait.' },
+  // M-09
+  { id: 'M-09a', type: 'Spell', free: 'Return the last healing card you played this combat to your hand.', paid: 'Return the last two healing cards you played this combat to your hand.', why: 'The plain recall.' },
+  { id: 'M-09b', type: 'Spell', free: 'HEAL 1. Return the last healing card you played this combat to your hand.', paid: 'HEAL 3. Return the last healing card you played this combat to your hand.', why: 'Recalls and mends.' },
+  { id: 'M-09c', type: 'Skill', free: 'Return the last MERCY card you played this combat to your hand.', paid: 'Return the last two MERCY cards you played this combat to your hand.', why: 'Recalls the debt instead.' },
+  // M-10
+  { id: 'M-10a', type: 'Skill', free: 'HEAL the foe 3.', paid: 'HEAL the foe 8.', why: 'Placeholder: only the burst past its max hurts.' },
+  { id: 'M-10b', type: 'Skill', free: 'MERCY 2; anything past the foe\'s max bursts twice.', paid: 'MERCY 5; anything past the foe\'s max bursts twice.', why: 'A MERCY built for a foe at full.' },
+  { id: 'M-10c', type: 'Attack', free: 'If the foe is at max VITAE, DEAL 4; otherwise MERCY 2.', paid: 'If the foe is at max VITAE, DEAL 9; otherwise MERCY 5.', why: 'Hits a fresh foe, owes a hurt one.' },
+];
+
+/* Globals use the turn trigger only (the trigger set is closed). */
+const TRIGGERS = {
+  turn:  { icon: '⟳', text: 'Start of your turn:' },
+};
+
+/* =====================================================================
+   RENDER — pure helpers that turn data into DOM nodes.
+   ===================================================================== */
+
+/** Escape text for safe insertion as HTML. */
+const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+/** Wrap the known keywords in styled spans. */
+const markKeywords = (s) =>
+  esc(s).replace(/\b(DEAL|GUARD|HEAL|VULNERABLE|EXILE|DRAW|RADIANCE|MERCY|SACRIFICE|LEECH)\b/g, '<span class="kw">$1</span>');
+
+/** Body of a Global card: duration badges, trigger line, optional PAID delta. */
+const globalBody = (card) => {
+  const t = TRIGGERS[card.trig];
+  return `
+    <div class="dur"><span class="tag free">FREE ⏳3</span><span class="tag paid">PAID ∞</span></div>
+    <div class="line trig"><span class="ticon" aria-hidden="true">${t.icon}</span><b>${markKeywords(t.text)}</b> ${markKeywords(card.body)}</div>
+    ${card.paidDelta ? `<div class="line"><span class="tag paid">PAID</span>${markKeywords(card.paidDelta)}</div>` : ''}`;
+};
+
+/** FREE and PAID lines for every non-Global card. */
+const plainBody = (card) => `
+    <div class="line"><span class="tag free">FREE</span>${markKeywords(card.free)}</div>
+    <div class="line"><span class="tag paid">PAID</span>${markKeywords(card.paid)}</div>`;
+
+/** Build one card face as an HTML string. */
+const cardHtml = (card, glyph, el) => `
+  <label class="card" data-id="${card.id}">
+    <input class="pick" type="checkbox" value="${card.id}" aria-label="Keep ${card.id}">
+    <div class="top"><span class="name">${card.id}</span><span class="type">${card.type}${el ? ` · ${el}` : ''}</span></div>
+    <div class="art" aria-hidden="true">${glyph}</div>
+    ${card.type === 'Global' ? globalBody(card) : plainBody(card)}
+    <div class="why">${esc(card.why)}</div>
+  </label>`;
+
+/** Build one slot section: heading, role, its candidate cards, a note box. */
+const slotHtml = (s) => `
+  <section class="slot" data-slot="${s.slot}">
+    <h2>${s.slot}</h2>
+    <p class="role">${esc(s.role)}</p>
+    <div class="row">${CARDS.filter((c) => c.id.startsWith(s.slot)).map((c) => cardHtml(c, s.glyph, s.el)).join('')}</div>
+    <input class="note" type="text" data-note="${s.slot}" placeholder="Note for ${s.slot}: TWEAK / merge rule / colour (optional)">
+  </section>`;
+
+/** One tab panel: blurb and its slots. Hidden unless it is the active tab. */
+const panelHtml = (t, i) => `
+  <div class="panel" id="panel-${t.key}" role="tabpanel" ${i ? 'hidden' : ''}>
+    <p class="blurb"><b>${t.name}</b>: ${esc(t.blurb)}</p>
+    ${SLOTS.filter((s) => s.slot.startsWith(t.key + '-')).map(slotHtml).join('')}
+  </div>`;
+
+/** Tab button with a live "kept / total" counter. */
+const tabHtml = (t, i) =>
+  `<button type="button" role="tab" data-tab="${t.key}" aria-selected="${i === 0}">${t.name}<span class="n" data-n="${t.key}"></span></button>`;
+
+document.getElementById('slots').innerHTML = TABS.map(panelHtml).join('');
+document.getElementById('tabs').innerHTML = TABS.map(tabHtml).join('');
+
+/** Show one tab's panel, hide the others. */
+const showTab = (key) => {
+  document.querySelectorAll('[data-tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === key)));
+  TABS.forEach((t) => { document.getElementById(`panel-${t.key}`).hidden = t.key !== key; });
+};
+document.getElementById('tabs').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-tab]');
+  if (b) showTab(b.dataset.tab);
+});
+
+/* =====================================================================
+   STATE — read straight from the DOM (the kit saves and restores it).
+   ===================================================================== */
+
+/** Ids of every ticked card. */
+const kept = () => [...document.querySelectorAll('.pick:checked')].map((i) => i.value);
+
+/** Update the selected-card ring and the running counts. */
+const refresh = () => {
+  const k = kept();
+  document.querySelectorAll('label.card').forEach((l) =>
+    l.classList.toggle('on', l.querySelector('.pick').checked));
+  document.getElementById('count').textContent = `${k.length} kept of ${CARDS.length}`;
+  TABS.forEach((t) => {
+    const cards = CARDS.filter((c) => c.id.startsWith(t.key + '-'));
+    const here = k.filter((id) => id.startsWith(t.key + '-'));
+    document.querySelector(`[data-n="${t.key}"]`).textContent = `${here.length}/${cards.length}`;
+  });
+};
+document.getElementById('slots').addEventListener('change', refresh);
+refresh();
+
+/* =====================================================================
+   OUTPUT — build the plain-text verdict sheet from the current picks.
+   ===================================================================== */
+
+/** One line per slot: KEEP / MERGE / CUT, the cut candidates, the note. */
+const slotLine = (s, keptIds) => {
+  const ids = CARDS.filter((c) => c.id.startsWith(s.slot)).map((c) => c.id);
+  const keep = ids.filter((id) => keptIds.includes(id));
+  const cut = ids.filter((id) => !keptIds.includes(id));
+  const note = document.querySelector(`[data-note="${s.slot}"]`).value.trim();
+  const verdict = keep.length === 0 ? 'CUT slot'
+    : keep.length === 1 ? `KEEP ${keep[0]}`
+    : `MERGE ${keep.join(' + ')}`;
+  return `${s.slot}: ${verdict}` +
+    (keep.length ? ` | cut: ${cut.join(', ') || '-'}` : '') +
+    (note ? ` | note: ${note}` : '');
+};
+
+/** The whole sheet: header, the kept count, one line per slot, general notes. */
+const sheet = () => {
+  const k = kept();
+  const general = document.getElementById('general').value.trim();
+  return [
+    'BALLOT — The Merciful (merciful-2026-10-29)',
+    `kept ${k.length} of ${CARDS.length}`,
+    ...TABS.flatMap((t) => [
+      `-- ${t.name} --`,
+      ...SLOTS.filter((s) => s.slot.startsWith(t.key + '-')).map((s) => slotLine(s, k)),
+    ]),
+    general ? `general: ${general}` : null,
+  ].filter(Boolean).join('\n');
+};
+
+/* Generate, Copy, autosave, Clear and Submit come from the ballot kit. */
+BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
+
+/* Theme toggle: flips data-theme on <html>; no storage. */
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme
+    ? root.dataset.theme === 'dark'
+    : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+});
+</script>
+</body>
+</html>
