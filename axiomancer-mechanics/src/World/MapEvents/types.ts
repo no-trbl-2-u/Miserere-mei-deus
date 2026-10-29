@@ -135,21 +135,38 @@ export interface VillageAnvil {
     variants?: readonly BlacksmithVariantOffer[];
 }
 /**
- * Travel node — an inter-map DOOR. Resolving it walks the
- * player out of the current map: the departed map's runtime `MapState` is
+ * Where a travel node leads: another map (entered at its start, or where the
+ * player left it), or a node on the same map (a passage, whose far end is
+ * normally the paired travel node that leads back).
+ */
+export type TravelDestination =
+    | { map: MapName; continent: ContinentName }
+    | { node: NodeId };
+
+/**
+ * Travel node — a "move to X?" choice. Resolving it OFFERS the trip and moves
+ * no one (`resolveTravel`); taking it is the player's yes (`takeTravel`).
+ *
+ * A map destination crosses: the departed map's runtime `MapState` is
  * preserved under `WorldState.mapStates` and the map is marked in
- * `completedMaps` (the world is a place, not a checklist — completing a
- * map means "walked through", never "reset"); the destination map is
+ * `completedMaps` (the world is a place, not a checklist); the destination is
  * unlocked if locked, the continent switches when it differs, and the
- * destination becomes `currentMap` (restored if previously departed,
- * fresh otherwise). One-way per door, repeatable: the dispatcher never
- * consumes a travel node, so re-resolving it travels again.
+ * destination becomes `currentMap` (restored if previously departed, fresh
+ * otherwise). A node destination is a passage on the same map: the player
+ * stands on the far node, which counts as visited, and nothing there fires.
+ *
+ * Never consumed: a travel node offers its trip on every entry. `opensAfter`
+ * shuts it until that node of the same map is spent.
  */
 export interface TravelPayload {
     kind: 'travel';
-    destinationContinent: ContinentName;
-    destinationMap: MapName;
-    description?: string;
+    destination: TravelDestination;
+    /** The flavor text the trip is offered over. */
+    prompt: string;
+    /** The art slug the trip is offered over; the kind's default when absent. */
+    art?: string;
+    /** A node of the same map that must be spent before the way opens. */
+    opensAfter?: NodeId;
 }
 
 /**
@@ -223,9 +240,18 @@ export type ResolvedEvent =
     | { kind: 'cutscene';    lines: readonly string[] }
     | { kind: 'hazard';      effects: ActiveEffect[]; damage: number; description?: string }
     | { kind: 'loot-cache';  items: Item[]; currency: number; description?: string }
-    // The world state on the result has already crossed; the resolved event
-    // names where the door led so hosts can narrate the departure.
-    | { kind: 'travel';      destinationContinent: ContinentName; destinationMap: MapName; description?: string }
+    // The OFFER: the state has not moved. `open` is false while the
+    // payload's `opensAfter` node is unspent (the way is shut). Taking the
+    // trip is `takeTravel`'s.
+    | {
+        kind: 'travel';
+        nodeId: NodeId;
+        destination: TravelDestination;
+        prompt: string;
+        art?: string;
+        open: boolean;
+        opensAfter?: NodeId;
+    }
     // The state is unchanged; the host enters `act` through its own snapshot.
     | { kind: 'labyrinth';   act: LabyrinthActId; description?: string }
     // A quest node. `behind` is the step this node turns in (node 2-4) and

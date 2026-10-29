@@ -567,6 +567,10 @@ function bodyFromPayload(event: ResolvedEvent): string {
     if (event.kind === 'none') {
         return defaultBodyForEvent(event);
     }
+    // A travel node's flavor text is its `prompt` (phase NK1d).
+    if (event.kind === 'travel') {
+        return event.prompt.trim() || defaultBodyForEvent(event);
+    }
     const description = event.description?.trim();
     return description ? description : defaultBodyForEvent(event);
 }
@@ -592,9 +596,8 @@ function composeNarrative(resolved: ResolvedEvent): Omit<EventViewModel, 'prelud
         case 'loot-cache':
         case 'hazard':
         case 'encounter':
-        // 'travel' is engine-resolved (the world has already crossed when
-        // the event surfaces) and composes no card. Falls to the empty VM
-        // defensively.
+        // 'travel' opens the travel screen (`/travel`, phase NK1d) and
+        // composes no card. Falls to the empty VM defensively.
         case 'travel':
         // The Labyrinth door enters the Aporia from its
         // interceptor; like travel it never composes a card.

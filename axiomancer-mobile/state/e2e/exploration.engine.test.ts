@@ -918,14 +918,13 @@ describe('selectExplorationViewModel: arrivalPending', () => {
         expect(vm.startNodePending).toBe(false);
     });
 
-    it('owes a travel door the player walked onto, and the crossing answers it', () => {
+    it('owes a travel door the player walked onto, and its offer answers it', () => {
         // A door is deliberately never consumed ("a door is repeatable" —
         // `resolve-map-event.ts`), so consumption cannot say whether it has
         // been answered. The record can: walking onto the door owes it (a
-        // reload here should still cross, not strand the player standing on
-        // a door), and resolving it clears the debt on the map being LEFT,
-        // before the crossing files that map away — otherwise returning
-        // through the door would cross again with no input.
+        // reload here should still offer the trip), and resolving it clears
+        // the debt, so the map the YES files away owes nothing and returning
+        // through the door never crosses again with no input.
         const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
         const world = store.getState().world;
@@ -949,7 +948,12 @@ describe('selectExplorationViewModel: arrivalPending', () => {
 
         actions.resolveCurrentMapEvent();
 
-        // The crossing happened, and the departed map no longer owes the door.
+        // The door OFFERS its trip (phase NK1d): resolving it answered the
+        // arrival, so a reload re-offers nothing; YES crosses, and the
+        // departed map owes nothing.
+        expect(store.getState().world.currentMap.pendingArrival ?? null).toBeNull();
+        expect(store.getState().travel.open?.nodeId).toBe('bw-18');
+        expect(actions.takeTravel()).toBe(true);
         const after = store.getState().world;
         expect(after.currentMap.name).not.toBe('breakwater');
         expect(after.mapStates?.['breakwater']?.pendingArrival ?? null).toBeNull();

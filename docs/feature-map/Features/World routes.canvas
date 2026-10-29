@@ -6,7 +6,7 @@
 			"x": 0,
 			"y": 0,
 			"width": 940,
-			"height": 690,
+			"height": 820,
 			"label": "World routes"
 		},
 		{
@@ -159,11 +159,21 @@
 			"color": "1"
 		},
 		{
+			"id": "route:travel",
+			"type": "file",
+			"file": "Features/Travel.md",
+			"x": 640,
+			"y": 560,
+			"width": 260,
+			"height": 90,
+			"color": "4"
+		},
+		{
 			"id": "route:village",
 			"type": "file",
 			"file": "Features/Village.md",
-			"x": 640,
-			"y": 560,
+			"x": 40,
+			"y": 690,
 			"width": 260,
 			"height": 90,
 			"color": "4"

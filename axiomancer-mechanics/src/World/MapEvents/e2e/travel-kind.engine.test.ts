@@ -10,11 +10,12 @@
  * in. Departing a map preserves its runtime `MapState` under
  * `WorldState.mapStates` and marks it in `completedMaps` — never a reset.
  * Doors are one-way but repeatable: the dispatcher does not consume a
- * travel node, so re-resolving it travels again.
+ * travel node, so re-resolving it offers the trip again. Resolving a door
+ * OFFERS the trip (phase NK1d); `takeTravel` is the yes that crosses.
  */
 
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import { resolveMapEvent, createStartingWorld, getMapDefinition } from '../../index';
+import { resolveMapEvent, takeTravel, createStartingWorld, getMapDefinition } from '../../index';
 import { createNewGameState, GAME_STATE_VERSION } from '../../../Game/game.reducer';
 import { migrate } from '../../../Game/game.migrate';
 import { mockSequentialRng } from '../../../test-utils/rng';
@@ -24,6 +25,12 @@ import type { MapState } from '../../types';
 import '../content';
 
 afterEach(() => vi.restoreAllMocks());
+
+/** Resolves the door underfoot (the offer) and takes it (the yes). */
+function cross(state: GameState): ReturnType<typeof resolveMapEvent> {
+    const offered = resolveMapEvent(state);
+    return { state: takeTravel(offered.state), event: offered.event };
+}
 
 /** Seat the player on `nodeId` of the CURRENT map, unconsumed. */
 function seatAt(state: GameState, nodeId: string): GameState {
@@ -49,14 +56,16 @@ function atStairCave(): GameState {
 }
 
 describe("the bw-18 door — Breakwater → Charcoal Wood (same continent)", () => {
-    it('crosses the world to the Charcoal Wood and reports where it led', () => {
-        const result = resolveMapEvent(atRiverBridge());
+    it('offers the Charcoal Wood, and crosses the world there on the yes', () => {
+        const offer = resolveMapEvent(atRiverBridge());
+        expect(offer.state.world.currentMap.name).toBe('breakwater');
+        const result = cross(atRiverBridge());
 
         expect(result.event.kind).toBe('travel');
         if (result.event.kind === 'travel') {
-            expect(result.event.destinationContinent).toBe('coastal-continent');
-            expect(result.event.destinationMap).toBe('charcoal-wood');
-            expect(result.event.description).toBeTruthy();
+            expect(result.event.destination).toEqual({ map: 'charcoal-wood', continent: 'coastal-continent' });
+            expect(result.event.prompt).toBeTruthy();
+            expect(result.event.open).toBe(true);
         }
 
         const world = result.state.world;
@@ -66,7 +75,7 @@ describe("the bw-18 door — Breakwater → Charcoal Wood (same continent)", () 
     });
 
     it('marks the departed Breakwater completed and unlocks the wood — catalogue in sync', () => {
-        const { state } = resolveMapEvent(atRiverBridge());
+        const { state } = cross(atRiverBridge());
 
         expect(state.world.currentContinent.completedMaps).toContain('breakwater');
         expect(state.world.currentContinent.availableMaps).toContain('charcoal-wood');
@@ -78,9 +87,9 @@ describe("the bw-18 door — Breakwater → Charcoal Wood (same continent)", () 
     });
 
     it('preserves the departed MapState — the Breakwater is a place, not a checklist', () => {
-        const before = atRiverBridge();
-        const departed = before.world.currentMap;
-        const { state } = resolveMapEvent(before);
+        const offered = resolveMapEvent(atRiverBridge()).state;
+        const departed = offered.world.currentMap;
+        const state = takeTravel(offered);
 
         const preserved = state.world.mapStates?.['breakwater'];
         expect(preserved).toBeDefined();
@@ -89,8 +98,8 @@ describe("the bw-18 door — Breakwater → Charcoal Wood (same continent)", () 
         expect(preserved!.consumedNodes).not.toContain('bw-18');
     });
 
-    it('is repeatable — standing on the preserved door and resolving travels again', () => {
-        const first = resolveMapEvent(atRiverBridge());
+    it('is repeatable — standing on the preserved door, it offers and crosses again', () => {
+        const first = cross(atRiverBridge());
         const preserved = first.state.world.mapStates!['breakwater'] as MapState;
 
         // Put the player back on the preserved Breakwater (as a future
@@ -103,7 +112,7 @@ describe("the bw-18 door — Breakwater → Charcoal Wood (same continent)", () 
                 mapStates: { ...first.state.world.mapStates, 'breakwater': undefined },
             },
         };
-        const second = resolveMapEvent(back);
+        const second = cross(back);
         expect(second.event.kind).toBe('travel');
         expect(second.state.world.currentMap.name).toBe('charcoal-wood');
     });
@@ -111,7 +120,7 @@ describe("the bw-18 door — Breakwater → Charcoal Wood (same continent)", () 
 
 describe('the cw-20 door — wood → crags (cross-continent)', () => {
     it('switches continent, unlocks the crags, and lands on their start node', () => {
-        const { state, event } = resolveMapEvent(atStairCave());
+        const { state, event } = cross(atStairCave());
 
         expect(event.kind).toBe('travel');
         expect(state.world.currentContinent.name).toBe('northern-continent');
@@ -122,7 +131,7 @@ describe('the cw-20 door — wood → crags (cross-continent)', () => {
     });
 
     it('keeps both continents honest in the catalogue after the crossing', () => {
-        const { state } = resolveMapEvent(atStairCave());
+        const { state } = cross(atStairCave());
 
         const coastal = state.world.world.find(c => c.name === 'coastal-continent')!;
         expect(coastal.completedMaps).toContain('charcoal-wood');
@@ -134,7 +143,7 @@ describe('the cw-20 door — wood → crags (cross-continent)', () => {
     });
 
     it('the whole arc survives a save → migrate roundtrip at the current version', () => {
-        const { state } = resolveMapEvent(atStairCave());
+        const { state } = cross(atStairCave());
 
         const raw = JSON.parse(JSON.stringify(state));
         const loaded = migrate(raw, raw.version, GAME_STATE_VERSION);

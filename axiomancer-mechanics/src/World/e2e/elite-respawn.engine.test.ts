@@ -17,6 +17,7 @@ import { createStartingWorld } from '../index';
 import { getMapDefinition } from '../map.registry';
 import { markNodeConsumed, moveToNode, placeOnNode } from '../world.reducer';
 import { getNodeEventPool, resolveMapEvent, settleArrival } from '../MapEvents/resolve-map-event';
+import { takeTravel } from '../MapEvents/travel';
 import {
     isEliteNode, isEliteUpgradeTaken, markEliteUpgradeTaken, respawnElites,
     retireEliteNode, settledEliteNodes,
@@ -89,7 +90,7 @@ function leaveRegion(state: GameState, map: MapName): GameState {
     const placed = placeOnNode(state.world, exit);
     const { state: next, event } = resolveMapEvent({ ...state, world: placed }, () => 0.5);
     expect(event.kind).toBe('travel');
-    return next;
+    return takeTravel(next);
 }
 
 /** A rest node of the current map. */
@@ -155,9 +156,9 @@ describe('respawnElites over a real Act 1 walk (A1, A2)', () => {
 
         // A departed map restored through a door shows its elite unspent.
         const atExit = placeOnNode(world, REGIONS.find(r => r.map === 'lantern-deep')!.exit);
-        const door = resolveMapEvent(gameOn(atExit), () => 0.5, {
-            kind: 'travel', destinationContinent: 'coastal-continent', destinationMap: 'breakwater',
-        });
+        const door = { state: takeTravel(gameOn(atExit), {
+            kind: 'travel', destination: { map: 'breakwater', continent: 'coastal-continent' }, prompt: '[content]',
+        }) };
         expect(door.state.world.currentMap.name).toBe('breakwater');
         expect(spentOn(door.state.world, 'breakwater', 'bw-8')).toBe(false);
         const again = fightElite(door.state, 'bw-8');

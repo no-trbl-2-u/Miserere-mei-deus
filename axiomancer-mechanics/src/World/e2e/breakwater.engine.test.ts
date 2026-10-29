@@ -17,6 +17,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
+import { takeTravel } from '../MapEvents/travel';
 
 import {
     createStartingWorld, STARTING_MAP, STARTABLE_MAPS,
@@ -158,8 +159,9 @@ describe('the Breakwater\'s events (D29)', () => {
     });
 
     it('crosses the river bridge into the Charcoal Wood (Act 1, map 2)', () => {
-        const r = resolveMapEvent(standingOn('bw-18'));
-        expect(r.event.kind).toBe('travel');
+        const offer = resolveMapEvent(standingOn('bw-18'));
+        expect(offer.event.kind).toBe('travel');
+        const r = { state: takeTravel(offer.state) };
         expect(r.state.world.currentMap.name).toBe('charcoal-wood');
         expect(r.state.world.currentMap.currentNode).toBe('cw-1');
     });

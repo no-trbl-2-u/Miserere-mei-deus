@@ -14,7 +14,7 @@ export const ALL = 'all'
 const HAZARD = ['hazard-board', 'devpuzzle-list', 'devpuzzle-board', 'devpuzzle-outcome']
 // The fixture shots boot on /exploration and wait for the screen its
 // event gate pushes, so the exploration tab is under each of them.
-const VIA_EXPLORATION = ['exploration', 'dialogue', 'village', 'cutscene', 'hazard-board']
+const VIA_EXPLORATION = ['exploration', 'dialogue', 'village', 'cutscene', 'travel', 'hazard-board']
 
 /**
  * Paths that cannot change a pixel: tests, prose, plans, tooling outside the
@@ -54,6 +54,7 @@ export const RULES = [
     { test: /^axiomancer-mobile\/app\/dialogue\//, routes: ['dialogue'] },
     { test: /^axiomancer-mobile\/app\/village\//, routes: ['village'] },
     { test: /^axiomancer-mobile\/app\/cutscene\//, routes: ['cutscene'] },
+    { test: /^axiomancer-mobile\/app\/travel\//, routes: ['travel'] },
     { test: /^axiomancer-mobile\/app\/death-return\//, routes: ['death-return'] },
     { test: /^axiomancer-mobile\/app\/(hazard|devpuzzle)\//, routes: HAZARD },
     // The combat board draws two hazard glyphs.

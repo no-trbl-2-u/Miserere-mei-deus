@@ -225,9 +225,8 @@ const bwRiverBridge: MapEventPool = {
         kind: 'travel', weight: 1,
         payload: {
             kind: 'travel',
-            destinationContinent: 'coastal-continent',
-            destinationMap: 'charcoal-wood',
-            description: 'The bridge has a toll-house and no keeper. Across it, the road runs into a wood full of smoke.',
+            destination: { map: 'charcoal-wood', continent: 'coastal-continent' },
+            prompt: 'The bridge has a toll-house and no keeper. Across it, the road runs into a wood full of smoke.',
         },
     }],
 };
@@ -393,9 +392,8 @@ const cwStairCave: MapEventPool = {
         kind: 'travel', weight: 1,
         payload: {
             kind: 'travel',
-            destinationContinent: 'northern-continent',
-            destinationMap: 'beacon-crags',
-            description: 'A stair cut down into the cliff. It runs under the hills and comes up, a long way on, on a mountain road.',
+            destination: { map: 'beacon-crags', continent: 'northern-continent' },
+            prompt: 'A stair cut down into the cliff. It runs under the hills and comes up, a long way on, on a mountain road.',
         },
     }],
 };
@@ -503,9 +501,8 @@ const bcGlacierShrine: MapEventPool = {
         kind: 'travel', weight: 1,
         payload: {
             kind: 'travel',
-            destinationContinent: 'northern-continent',
-            destinationMap: 'lantern-deep',
-            description: 'A stair goes down under the shrine, into the ice, and on below it. Someone has hung a lantern on every turn.',
+            destination: { map: 'lantern-deep', continent: 'northern-continent' },
+            prompt: 'A stair goes down under the shrine, into the ice, and on below it. Someone has hung a lantern on every turn.',
         },
     }],
 };

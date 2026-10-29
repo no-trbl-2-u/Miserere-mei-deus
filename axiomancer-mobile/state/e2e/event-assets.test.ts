@@ -50,6 +50,13 @@ describe('selectEventArtSlug', () => {
         expect(selectEventArtSlug({ kind: 'hazard', effects: [], damage: 0 })).toBe('interaction-generic');
     });
 
+    it('maps travel to its own art slug when it names a drawn one, else the generic figure (phase NK1d)', () => {
+        const base = { kind: 'travel' as const, nodeId: 'n', destination: { node: 'm' }, prompt: 'p', open: true };
+        expect(selectEventArtSlug({ ...base, art: 'cutscene' })).toBe('cutscene');
+        expect(selectEventArtSlug({ ...base, art: 'not-drawn-yet' })).toBe('interaction-generic');
+        expect(selectEventArtSlug(base)).toBe('interaction-generic');
+    });
+
     it('maps none to "interaction-generic" (defensive fallback)', () => {
         expect(selectEventArtSlug({ kind: 'none' })).toBe('interaction-generic');
     });

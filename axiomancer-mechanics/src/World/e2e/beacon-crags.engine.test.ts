@@ -18,6 +18,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { getMapDefinition, createMapState, resolveMapEvent, getNodeEventPool } from '../index';
+import { takeTravel } from '../MapEvents/travel';
 import { auditMapTraversal } from '../world.reducer';
 import { createNewGameState } from '../../Game/game.reducer';
 import { EnemiesByMap, EnemyLibrary } from '../../Enemy/enemy.library';
@@ -112,8 +113,9 @@ describe('the Beacon Crags\' events (D29)', () => {
     });
 
     it('goes down under the glacier shrine into the Lantern Deep (Act 1, map 4)', () => {
-        const r = resolveMapEvent(standingOn('bc-17'));
-        expect(r.event.kind).toBe('travel');
+        const offer = resolveMapEvent(standingOn('bc-17'));
+        expect(offer.event.kind).toBe('travel');
+        const r = { state: takeTravel(offer.state) };
         expect(r.state.world.currentContinent.name).toBe('northern-continent');
         expect(r.state.world.currentMap.name).toBe('lantern-deep');
         expect(r.state.world.currentMap.currentNode).toBe('ld-1');

@@ -56,7 +56,7 @@ import type { PersistenceAdapter } from '../Game/persistence/types';
 import type { TypedLevelUpEvent } from '../Game/events.types';
 import { getMapDefinition } from '../World/map.registry';
 import {
-    resolveMapEvent, settleArrival, MAP_REGISTRY, getNodePrimaryEventKind,
+    resolveMapEvent, settleArrival, MAP_REGISTRY, getNodePrimaryEventKind, takeTravel,
     legalMovesFrom, roadRouteTo, roadReachable, syncWorldMoveLists, acceptQuestStep, turnInQuestStep,
 } from '../World';
 import { resolveDeath } from '../Game/death';
@@ -225,6 +225,12 @@ async function resolveCurrentNodeEvent(
     }
 
     if (result.event.kind === 'quest') playQuestNode(store, result.event);
+
+    // A travel node asks "move to X?"; a walk through the CLI always says
+    // yes to an open way (phase NK1d). A shut way moves no one.
+    if (result.event.kind === 'travel' && result.event.open) {
+        store.setState({ world: takeTravel(store.getState() as GameState).world });
+    }
 
     return { event: result.event, combatOutcome };
 }
@@ -454,7 +460,14 @@ function describeResolvedEvent(event: ResolvedEvent): string {
         case 'cutscene':    return event.lines.join(' ');
         case 'hazard':      return `Hazard! (-${event.damage} HP${event.effects.length > 0 ? `, ${event.effects.length} effect${event.effects.length === 1 ? '' : 's'}` : ''})`;
         case 'loot-cache':  return `Loot cache: ${event.items.length} item${event.items.length === 1 ? '' : 's'}, ${event.currency} currency.`;
-        case 'travel':      return `${event.description ?? 'You walk on.'} (→ ${event.destinationContinent} / ${event.destinationMap})`;
+        case 'travel': {
+            const where = 'map' in event.destination
+                ? `${event.destination.continent} / ${event.destination.map}`
+                : `node ${event.destination.node}`;
+            return event.open
+                ? `${event.prompt} (move to ${where}? yes)`
+                : `${event.prompt} (the way to ${where} is shut until ${event.opensAfter} is settled)`;
+        }
         case 'labyrinth':   return `${event.description ?? 'A door into the Aporia.'} (the Aporia, ${event.act}: run \`npm run labyrinth\` to walk it)`;
         case 'quest':       return `${event.description ?? 'A quest giver waits.'} (questline ${event.questline}, node ${event.node}: ${event.stage})`;
         case 'none':        return 'Nothing of note happens.';

@@ -22,6 +22,7 @@ import {
     arriveAtNode, legalMovesFrom, moveToNode, placeOnNode, unlockAdjacent,
 } from '../../World/world.reducer';
 import { resolveMapEvent } from '../../World/MapEvents/resolve-map-event';
+import { takeTravel } from '../../World/MapEvents/travel';
 import type { WorldState } from '../../World/types';
 import { Player } from '../../Character/characters.mock';
 import { mockSequentialRng } from '../../test-utils/rng';
@@ -374,10 +375,11 @@ describe('A1 - which verbs write arrivedFrom', () => {
         const placed = placeOnNode(arrived, 'bw-8');
         expect(placed.currentMap.arrivedFrom).toBeNull();
 
-        const state = { ...createNewGameState(), world: arrived };
-        const { state: crossed } = resolveMapEvent(state, () => 0.5, {
-            kind: 'travel', destinationContinent: 'coastal-continent', destinationMap: 'charcoal-wood',
-        });
+        // Standing on the river bridge (bw-18) with bw-1 as the node walked
+        // from; taking the door crosses (phase NK1d: the yes is `takeTravel`).
+        const onDoor = { ...arrived, currentMap: { ...arrived.currentMap, currentNode: 'bw-18' } };
+        expect(onDoor.currentMap.arrivedFrom).toBe('bw-1');
+        const crossed = takeTravel({ ...createNewGameState(), world: onDoor });
         expect(crossed.world.currentMap.name).toBe('charcoal-wood');
         expect(crossed.world.currentMap.arrivedFrom ?? null).toBeNull();
     });

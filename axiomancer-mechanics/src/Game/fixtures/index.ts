@@ -25,3 +25,6 @@ export {
     LONG_MAIN_QUESTLINE, LONG_SIDE_QUESTLINE, LONG_MAIN_LINE, LONG_SIDE_LINE, LONG_START_DIALOGUE, CASTLE_KEY,
     LONG_STEP_1, LONG_STEP_2, LONG_STEP_3, LONG_STEP_4, LONG_SIDE_STEP, longGateReason,
 } from './quest-chain-long.fixture';
+export {
+    registerTravelPassageFixture, PASSAGE_MAP, PASSAGE_CONTINENT, PASSAGE_POOLS,
+} from './travel-passage.fixture';

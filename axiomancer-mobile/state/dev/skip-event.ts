@@ -36,8 +36,9 @@
  *               event goes inactive). Mid-tree dialogue effects not yet
  *               chosen are forfeited, exactly as a dismiss would.
  *   item-reward every queued item confirmed into the satchel.
- *   travel      only reachable via the owed-arrival path (doors apply
- *               immediately); reported as the crossing it made.
+ *   travel      the open "Move to X?" answered YES: a crossing reports
+ *               the map it reached, a passage the node; a shut way is
+ *               answered NO (the player stays).
  *
  * State stays consistent because every branch goes through the same store
  * actions the screens use (`claim*Action`, `endCombat`, `resolveCurrentMapEvent`),
@@ -92,6 +93,7 @@ import {
 import { confirmItemRewardAction } from '@/state/item-reward/store-actions';
 import { selectHasActiveQuest } from '@/state/presenters/quest.engine';
 import { closeQuestAction, offerCompletedQuestExtrasAction } from '@/state/quest/store-actions';
+import { closeTravelAction, takeTravelAction } from '@/state/travel/store-actions';
 import {
     chooseRestChoiceOfferAction,
     claimRestChoiceOutcomeAction,
@@ -295,6 +297,18 @@ function skipActive(store: AppStore, actions: SkipEventActions, options: SkipEve
             kind: 'quest', nodeId, outcome: 'dismissed',
             detail: { questline: open?.questline ?? null, node: open?.node ?? null, cardOffers: offers },
         };
+    }
+
+    const travel = state.travel?.open ?? null;
+    if (travel) {
+        const mapBefore = currentMapName(store);
+        if (travel.open && takeTravelAction(store, () => {})) {
+            const mapAfter = currentMapName(store);
+            const outcome = mapAfter !== mapBefore ? `crossed:${mapAfter}` : `passage:${currentNodeId(store)}`;
+            return { kind: 'travel', nodeId, outcome, detail: { from: mapBefore } };
+        }
+        closeTravelAction(store);
+        return { kind: 'travel', nodeId, outcome: 'shut', detail: { opensAfter: travel.opensAfter ?? null } };
     }
 
     const pending = state.event?.pending ?? null;

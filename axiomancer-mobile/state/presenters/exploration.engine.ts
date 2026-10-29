@@ -272,7 +272,9 @@ const ACTION_TAG_BY_TYPE: Record<NodeType, string> = {
     story: 'LORE',
     hazard: 'PERIL · BRAVE IT',
     village: 'HAVEN · TRADE',
-    door: 'LEAVE · NEXT MAP',
+    // A travel node may lead to another map or along a passage on this one;
+    // the tag never says which (the travel screen names the destination).
+    door: 'TRAVEL · MOVE ON',
 };
 
 /**

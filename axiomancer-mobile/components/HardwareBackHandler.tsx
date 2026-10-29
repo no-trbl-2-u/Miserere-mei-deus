@@ -20,6 +20,7 @@ import { useGameState } from '@/state/GameStoreProvider';
 import { selectHasActivePacedEvent } from '@/state/presenters/event.engine';
 import { selectHasActiveQuest } from '@/state/presenters/quest.engine';
 import { selectHasActiveRest } from '@/state/presenters/rest.engine';
+import { selectHasActiveTravel } from '@/state/presenters/travel.engine';
 
 export function HardwareBackHandler() {
   const { inCombat } = useCombatMode();
@@ -28,7 +29,9 @@ export function HardwareBackHandler() {
   // The quest screen has its own LEAVE; a hardware back that popped it would
   // leave the quest slice open with no screen showing it.
   const hasActiveQuest = useGameState(selectHasActiveQuest);
-  const locked = inCombat || hasActiveRest || hasPacedEvent || hasActiveQuest;
+  // The travel screen has its own NO, for the same reason.
+  const hasActiveTravel = useGameState(selectHasActiveTravel);
+  const locked = inCombat || hasActiveRest || hasPacedEvent || hasActiveQuest || hasActiveTravel;
 
   useEffect(() => {
     if (Platform.OS !== 'android') return;

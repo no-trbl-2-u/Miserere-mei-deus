@@ -141,6 +141,9 @@ export default function ExplorationScreen() {
             return;
         }
         if (node.kind === 'current') {
+            // A travel node underfoot offers its trip again on every tap
+            // ("Move to X?"), spent or not (phase NK1d).
+            if (node.id === vm.currentNodeId && actions.offerTravelHere()) return;
             // A fled or lost fight, or a quest node left unaccepted, is
             // unspent: tapping the node under the player tries it again.
             if (vm.retryable && node.id === vm.currentNodeId) {

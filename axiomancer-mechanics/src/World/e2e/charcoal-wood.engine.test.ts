@@ -16,6 +16,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
+import { takeTravel } from '../MapEvents/travel';
 
 import { getMapDefinition, createMapState, resolveMapEvent, getNodeEventPool } from '../index';
 import { auditMapTraversal } from '../world.reducer';
@@ -102,8 +103,9 @@ describe('the Charcoal Wood\'s events (D29)', () => {
     });
 
     it('goes down the stair cave into the Beacon Crags, on the northern continent (Act 1, map 3)', () => {
-        const r = resolveMapEvent(standingOn(charcoalWood, 'cw-20'));
-        expect(r.event.kind).toBe('travel');
+        const offer = resolveMapEvent(standingOn(charcoalWood, 'cw-20'));
+        expect(offer.event.kind).toBe('travel');
+        const r = { state: takeTravel(offer.state) };
         expect(r.state.world.currentContinent.name).toBe('northern-continent');
         expect(r.state.world.currentMap.name).toBe('beacon-crags');
         expect(r.state.world.currentMap.currentNode).toBe('bc-1');
@@ -112,8 +114,9 @@ describe('the Charcoal Wood\'s events (D29)', () => {
 
 describe('the Act 1 chain so far', () => {
     it('crosses the Breakwater\'s river bridge into the Charcoal Wood, at the bridge end', () => {
-        const r = resolveMapEvent(standingOn(breakwater, 'bw-18'));
-        expect(r.event.kind).toBe('travel');
+        const offer = resolveMapEvent(standingOn(breakwater, 'bw-18'));
+        expect(offer.event.kind).toBe('travel');
+        const r = { state: takeTravel(offer.state) };
         expect(r.state.world.currentMap.name).toBe('charcoal-wood');
         expect(r.state.world.currentMap.currentNode).toBe('cw-1');
     });

@@ -47,8 +47,9 @@ taken — by driving the same store actions the screens use:
 | loot-cache | the ITEM offer, claimed |
 | blacksmith | leave unchanged, claimed |
 | interaction / narration / village / cutscene / gathering | dismissed (the screen pops itself) |
+| travel ("Move to X?") | YES: a crossing reports the map it reached (`crossed:<map>`), a passage the node (`passage:<node>`); a shut way is answered NO (`shut`) |
 | queued item reward | every item confirmed |
-| nothing active, arrival owed on the node under the player | the node's event fires, then resolves as above; a travel door reports the crossing |
+| nothing active, arrival owed on the node under the player | the node's event fires, then resolves as above |
 
 Two ways in, both dev-tools-gated (production: logged no-op, nothing
 loaded — the module and the sim it imports are only reached by lazy
