@@ -54,8 +54,11 @@ export interface Encounter {
  * - `talk`    — talk to the NPC named `target` (counts as 1).
  * - `flag`    — generic world-flag advanced explicitly by the dialogue or CLI.
  * - `hazard`  — resolve N hazard nodes on the quest's map, whatever the outcome.
+ * - `carry`   — hold N of the item `target` in the inventory: met while it is
+ *               carried, unmet when it leaves, and used up when the quest is
+ *               turned in (a carried item meant to persist is a relic).
  */
-export type QuestObjectiveType = 'kill' | 'collect' | 'reach' | 'talk' | 'flag' | 'hazard';
+export type QuestObjectiveType = 'kill' | 'collect' | 'reach' | 'talk' | 'flag' | 'hazard' | 'carry';
 
 /**
  * Which foes a `kill` objective with no `target` counts: every won fight

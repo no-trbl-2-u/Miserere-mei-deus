@@ -5,7 +5,9 @@
  * node (`MapEvents` kind `quest`) and is a `Quest` the log tracks. Steps 1-3
  * are held when their objectives fill and turned in at the NEXT quest node
  * (`settle: 'turn-in'`); the last step is beating the chapter boss and pays on
- * that victory (`settle: 'on-victory'`).
+ * that victory (`settle: 'on-victory'`); a `reach` step can be paid on
+ * arrival at its node (`settle: 'on-arrival'`), and a step can be given from
+ * anywhere (`giveQuestStep`).
  *
  * The contract (the types an authored questline and a resolved quest node
  * share) and the step rules: a registry of authored questlines, the stage a
@@ -26,7 +28,7 @@ import type { GameState } from '../Game/types';
 import type { QuestPayload, ResolvedEvent } from './MapEvents/types';
 import {
     isQuestComplete, findActiveQuest, startQuest, completeQuest, payCompletedQuests,
-    type PaidQuestReward,
+    syncCarryObjectives, type PaidQuestReward,
 } from './quest.engine';
 import { markNodeConsumed, revealAdjacent, syncFrontierLists, unblockMapRoute } from './world.reducer';
 import { getRng } from '../Utils/rng';
@@ -43,9 +45,10 @@ export interface RouteRef {
 /**
  * How a step is paid: turned in at a quest node (the next step's, or its own
  * `turnInAt`), or the moment its objectives fill (`'on-victory'`, the boss
- * step's shape).
+ * step's shape; `'on-arrival'`, a `reach` step paid as the player enters its
+ * target node, which then offers the next step as a turn-in node does).
  */
-export type QuestlineSettle = 'turn-in' | 'on-victory';
+export type QuestlineSettle = 'turn-in' | 'on-victory' | 'on-arrival';
 
 /** One step of a questline. */
 export interface QuestlineStep {
@@ -257,9 +260,22 @@ export function settleQuestLog(
     rng: () => number = () => getRng().random(),
 ): { state: GameState; paid: PaidQuestReward[] } {
     if (quests === state.quests) return { state, paid: [] };
-    const pay = payCompletedQuests(state.player, state.quests, quests, rng);
-    const moved: GameState = { ...state, player: pay.player, quests };
-    return { state: openReadyQuestRoutes(moved), paid: pay.paid };
+    // Carry objectives read the inventory, and a payout can put the item in it
+    // (an arrival step paying the key): read, pay, and read again until steady.
+    let player = state.player;
+    let before = state.quests;
+    let log = quests;
+    const paid: PaidQuestReward[] = [];
+    for (let pass = 0; pass < 5; pass++) {
+        log = syncCarryObjectives(player, log);
+        if (log === before) break;
+        const pay = payCompletedQuests(player, before, log, rng);
+        player = pay.player;
+        paid.push(...pay.paid);
+        before = log;
+    }
+    const moved: GameState = { ...state, player, quests: log };
+    return { state: openReadyQuestRoutes(moved), paid };
 }
 
 // ─── Accept and turn in ───────────────────────────────────────────────────────
@@ -282,19 +298,42 @@ export function acceptQuestStep(state: GameState, questlineId: QuestlineId, step
     const target = questline ? questlineStep(questline, step) : undefined;
     if (!questline || !target) return state;
     if (!standsOn(state, questline, target.nodeId)) return state;
-    if (questStepState(state.quests, target) !== 'unaccepted') return state;
-    const behind = questlineStep(questline, step - 1);
-    if (behind && questStepState(state.quests, behind) !== 'completed') return state;
+    const started = startStep(state, questline, target);
+    if (started === state) return state;
+    const map = started.world.currentMap;
+    const spent = markNodeConsumed(revealAdjacent(map, target.nodeId), target.nodeId);
+    return { ...started, world: { ...started.world, currentMap: spent } };
+}
 
+/**
+ * Starts `target` in the log when it can start: not yet accepted, the step
+ * before it completed. Counts begin at 0 (nothing before the start counts);
+ * a carry objective reads the inventory at once. Goes through the settle seam.
+ * Any other call returns the same state.
+ */
+function startStep(state: GameState, questline: Questline, target: QuestlineStep): GameState {
+    if (questStepState(state.quests, target) !== 'unaccepted') return state;
+    const behind = questlineStep(questline, target.step - 1);
+    if (behind && questStepState(state.quests, behind) !== 'completed') return state;
     const fresh = stepQuest(questline, target);
     const withoutOffer: QuestLog = {
         ...state.quests,
         available: state.quests.available.filter(q => q.name !== fresh.name),
     };
-    const quests = startQuest(withoutOffer, fresh);
-    const map = state.world.currentMap;
-    const spent = markNodeConsumed(revealAdjacent(map, target.nodeId), target.nodeId);
-    return { ...state, quests, world: { ...state.world, currentMap: spent } };
+    return settleQuestLog(state, startQuest(withoutOffer, fresh)).state;
+}
+
+/**
+ * Gives `step` of `questlineId` from anywhere (a dialogue or cutscene
+ * effect): starts the step as `acceptQuestStep` would, counting from 0 and
+ * needing the step before it completed, but needs no quest node and spends
+ * none. Any other call returns the same state.
+ */
+export function giveQuestStep(state: GameState, questlineId: QuestlineId, step: number): GameState {
+    const questline = getQuestline(questlineId);
+    const target = questline ? questlineStep(questline, step) : undefined;
+    if (!questline || !target) return state;
+    return startStep(state, questline, target);
 }
 
 /**
@@ -327,8 +366,10 @@ export function turnInQuestStep(
     const at = questline && target ? turnInNodeOf(questline, target) : undefined;
     if (!questline || !target || !at || target.settle !== 'turn-in') return { state, paid: [] };
     if (!standsOn(state, questline, at)) return { state, paid: [] };
-    if (questStepState(state.quests, target) !== 'ready') return { state, paid: [] };
-    const settled = settleQuestLog(state, completeQuest(state.quests, target.quest.name), rng);
+    // A carry objective is read off the inventory now: a key that left is unmet.
+    const held: GameState = { ...state, quests: syncCarryObjectives(state.player, state.quests) };
+    if (questStepState(held.quests, target) !== 'ready') return { state, paid: [] };
+    const settled = settleQuestLog(held, completeQuest(held.quests, target.quest.name), rng);
     if (questlineStep(questline, step + 1)) return settled;
     const map = settled.state.world.currentMap;
     const spent = syncFrontierLists(markNodeConsumed(revealAdjacent(map, at), at));
