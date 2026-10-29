@@ -12,7 +12,7 @@
 
 import { describe, it, expect, beforeAll } from 'vitest';
 
-import { moveToNode, legalMovesFrom, IllegalMoveError } from '../../World/world.reducer';
+import { moveToNode, walkRoadTo, legalMovesFrom, IllegalMoveError } from '../../World/world.reducer';
 import { createMapState } from '../../World/map.registry';
 import { resolveMapEvent } from '../../World/MapEvents/resolve-map-event';
 import { acceptQuestStep } from '../../World/questline';
@@ -40,7 +40,7 @@ beforeAll(registerLongChainFixture);
 const legal = (s: GameState) => legalMovesFrom(s.world.currentMap);
 
 function arrive(state: GameState, nodeId: string) {
-    return resolveMapEvent({ ...state, world: moveToNode(state.world, nodeId) }, seededRng(7));
+    return resolveMapEvent({ ...state, world: walkRoadTo(state.world, nodeId) }, seededRng(7));
 }
 
 function fightAt(state: GameState, nodeId: string): GameState {

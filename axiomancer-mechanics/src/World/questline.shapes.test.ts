@@ -6,7 +6,7 @@
 
 import { describe, it, expect, beforeAll } from 'vitest';
 
-import { moveToNode, legalMovesFrom, isRouteBlocked } from './world.reducer';
+import { walkRoadTo, legalMovesFrom, isRouteBlocked } from './world.reducer';
 import { createMapState } from './map.registry';
 import { resolveMapEvent } from './MapEvents/resolve-map-event';
 import {
@@ -38,7 +38,7 @@ function freshGame(): GameState {
 }
 
 function arrive(state: GameState, nodeId: string) {
-    return resolveMapEvent({ ...state, world: moveToNode(state.world, nodeId) }, seededRng(7));
+    return resolveMapEvent({ ...state, world: walkRoadTo(state.world, nodeId) }, seededRng(7));
 }
 
 function fightAt(state: GameState, nodeId: string): GameState {
