@@ -72,7 +72,14 @@ const SCREENS = [
   { name: 'rest', path: '/exploration', fixture: 'apprentice-bw-rest', waitFor: '/rest' },
   { name: 'rest-broke', path: '/exploration', fixture: 'broke-l1-bw-rest', waitFor: '/rest' },
   { name: 'cache', path: '/exploration', fixture: 'apprentice-bw-cache', waitFor: '/cache' },
-  { name: 'blacksmith', path: '/exploration', fixture: 'wanderer-bw-blacksmith', waitFor: '/blacksmith' },
+  { name: 'village-anvil', path: '/exploration', fixture: 'wanderer-bw-blacksmith', waitFor: '/village' },
+  {
+    name: 'blacksmith', path: '/exploration', fixture: 'wanderer-bw-blacksmith', waitFor: '/village',
+    prepare: async (p) => {
+      await p.getByTestId('village-anvil').click({ timeout: 8000, force: true }).catch(() => {})
+      await p.waitForURL((u) => u.pathname.includes('/blacksmith'), { timeout: 8000 }).catch(() => {})
+    },
+  },
   { name: 'hazard', path: '/exploration', fixture: 'l30-bw-hazard-arrive', waitFor: '/hazard' },
   { name: 'hazard-deck', path: '/hazard-deck', fixture: 'l30-bw-hazard' },
   { name: 'event', path: '/event', fixture: 'sage-bw-door-gate' },

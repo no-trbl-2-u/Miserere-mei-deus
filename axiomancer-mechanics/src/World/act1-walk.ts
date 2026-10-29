@@ -52,7 +52,7 @@ export type Act1WalkKind = MapEventKind | 'none';
 /** Every map-event kind, in `MapEventKind` declaration order, then the waypoint. */
 export const ACT1_WALK_EVENT_KINDS: readonly Act1WalkKind[] = [
     'encounter', 'rest', 'village', 'cutscene', 'hazard', 'loot-cache',
-    'blacksmith', 'travel', 'labyrinth', 'quest', 'none',
+    'travel', 'labyrinth', 'quest', 'none',
 ];
 
 /** Why a step is on the path. */

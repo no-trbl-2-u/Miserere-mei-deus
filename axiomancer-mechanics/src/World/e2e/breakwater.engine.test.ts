@@ -122,7 +122,7 @@ describe('the Breakwater\'s events (D29)', () => {
         const tally: Record<string, number> = {};
         for (const k of Object.values(kinds)) tally[k] = (tally[k] ?? 0) + 1;
         expect(tally).toEqual({
-            encounter: 6, rest: 2, 'loot-cache': 3, none: 2, hazard: 2, blacksmith: 1, cutscene: 1, travel: 1, quest: 4,
+            encounter: 6, rest: 2, 'loot-cache': 3, none: 2, hazard: 2, village: 1, cutscene: 1, travel: 1, quest: 4,
         });
     });
 
@@ -138,7 +138,7 @@ describe('the Breakwater\'s events (D29)', () => {
     });
 
     it('keeps its Anvil at the fishing hamlet, a step from the last marker before the door fight (D61, R3b)', () => {
-        expect(kinds['bw-16']).toBe('blacksmith');
+        expect(kinds['bw-16']).toBe('village');
         expect(breakwater.nodes.find(n => n.id === 'bw-16')!.connectedNodes).toContain('bw-22');
         expect(breakwater.nodes.find(n => n.id === 'bw-22')!.connectedNodes).toEqual(['bw-17']);
     });

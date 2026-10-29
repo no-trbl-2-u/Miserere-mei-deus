@@ -79,12 +79,12 @@ describe('the Beacon Crags\' events (D29)', () => {
         const tally: Record<string, number> = {};
         for (const k of Object.values(kinds)) tally[k] = (tally[k] ?? 0) + 1;
         expect(tally).toEqual({
-            encounter: 6, rest: 3, 'loot-cache': 2, none: 1, hazard: 2, blacksmith: 1, cutscene: 1, travel: 1,
+            encounter: 6, rest: 3, 'loot-cache': 2, none: 1, hazard: 2, village: 1, cutscene: 1, travel: 1,
         });
     });
 
     it('keeps its Anvil at the falls, bc-12 (D61, R3b)', () => {
-        expect(kinds['bc-12']).toBe('blacksmith');
+        expect(kinds['bc-12']).toBe('village');
     });
 
     it('opens on the arrival up the stair, at the top pass', () => {

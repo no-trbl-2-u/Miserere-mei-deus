@@ -83,12 +83,12 @@ describe('the Lantern Deep\'s events (D29)', () => {
         const tally: Record<string, number> = {};
         for (const k of Object.values(kinds)) tally[k] = (tally[k] ?? 0) + 1;
         expect(tally).toEqual({
-            encounter: 7, rest: 3, 'loot-cache': 1, none: 1, hazard: 2, blacksmith: 1, cutscene: 3,
+            encounter: 7, rest: 3, 'loot-cache': 1, none: 1, hazard: 2, village: 1, cutscene: 3,
         });
     });
 
     it('keeps its Anvil at the forge landmark, ld-14 (D61, R3b)', () => {
-        expect(kinds['ld-14']).toBe('blacksmith');
+        expect(kinds['ld-14']).toBe('village');
     });
 
     it('opens on the arrival down the stair, at the surface stair (D31)', () => {

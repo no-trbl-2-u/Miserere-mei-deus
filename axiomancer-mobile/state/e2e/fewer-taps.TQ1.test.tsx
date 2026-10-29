@@ -125,7 +125,7 @@ const HONE = ANVIL_VERB_PRICING.hone;
 describe('the node panel shows the purse where a node can charge (TQ1 A2, A3, A5)', () => {
     it.each<[NodeType, string]>([
         ['rest', 'breakwater'],
-        ['blacksmith', 'breakwater'],
+        ['village', 'breakwater'],
     ])('a %s node prints the purse', (type, map) => {
         const option = optionOf(map, type, 12);
         expect(option.purse).toBe(12);
@@ -134,9 +134,7 @@ describe('the node panel shows the purse where a node can charge (TQ1 A2, A3, A5
         expect(screen.getByText(/PURSE 12 SHILLINGS/)).toBeTruthy();
     });
 
-    it('a village node prints the purse', () => {
-        // No Act 1 map authors a village event today, so the village option is
-        // built from the presenter's own per-kind rule over a real option.
+    it('a village without a smith prints the purse and no short line', () => {
         const option = { ...optionOf('breakwater', 'encounter', 12), type: 'village' as const, ...purseFieldsFor('village', 12) };
         expect(option.purse).toBe(12);
         expect(option.cheapestWork).toBeNull();
@@ -156,16 +154,16 @@ describe('the node panel shows the purse where a node can charge (TQ1 A2, A3, A5
         expect(screen.queryByTestId('node-confirm-purse')).toBeNull();
     });
 
-    it('the anvil below its cheapest work says so, priced from the engine', () => {
-        const option = optionOf('breakwater', 'blacksmith', HONE - 1);
+    it('a village with an Anvil below its cheapest work says so, priced from the engine', () => {
+        const option = optionOf('breakwater', 'village', HONE - 1);
         expect(option.cheapestWork).toBe(HONE);
         renderPanel(option);
         const short = screen.getByTestId('node-confirm-purse-short');
         expect(short.props.children).toBe(` · the smith's cheapest work costs ${HONE} SHILLINGS`);
     });
 
-    it('the anvil at its cheapest work prints no short line', () => {
-        renderPanel(optionOf('breakwater', 'blacksmith', HONE));
+    it('a village with an Anvil at its cheapest work prints no short line', () => {
+        renderPanel(optionOf('breakwater', 'village', HONE));
         expect(screen.getByTestId('node-confirm-purse')).toBeTruthy();
         expect(screen.queryByTestId('node-confirm-purse-short')).toBeNull();
     });
@@ -179,10 +177,10 @@ describe('the node panel shows the purse where a node can charge (TQ1 A2, A3, A5
     it('a change in the purse alone refreshes the options', () => {
         const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
         jumpToNode(store, 'bw-13');
-        const before = selectExplorationViewModel(store.getState()).options.find((o) => o.type === 'blacksmith')!;
+        const before = selectExplorationViewModel(store.getState()).options.find((o) => o.type === 'village')!;
         const { player } = store.getState();
         store.setState({ player: { ...player, currency: (before.purse ?? 0) + 7 } } as never);
-        const after = selectExplorationViewModel(store.getState()).options.find((o) => o.type === 'blacksmith')!;
+        const after = selectExplorationViewModel(store.getState()).options.find((o) => o.type === 'village')!;
         expect(after.purse).toBe((before.purse ?? 0) + 7);
     });
 });

@@ -110,7 +110,7 @@ export const STATE_FIXTURES: readonly StateFixture[] = Object.freeze([
     },
     {
         id: 'wanderer-bw-blacksmith',
-        description: 'Wanderer (L8) with shillings on the Breakwater\'s anvil node (bw-16); `arrive` starts the forge session → /blacksmith.',
+        description: 'Wanderer (L8) with shillings on the Breakwater\'s village with the Anvil (bw-16); `arrive` opens the village hub → /village, whose Anvil counter opens /blacksmith.',
         seed: 'fixture-wanderer-bw-blacksmith',
         preset: 'wanderer',
         world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-16' },

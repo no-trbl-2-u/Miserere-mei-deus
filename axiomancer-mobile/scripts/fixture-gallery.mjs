@@ -59,11 +59,14 @@ export const GALLERY = [
       steps: [{ click: 'labyrinth-act-act1' }, { waitForPath: '/dialogue' }, { click: 'dialogue-leave' }, { waitFor: 'labyrinth-room' }, { click: 'labyrinth-map-toggle' }, { settle: 600 }] },
 
     // ── Minigames + services ─────────────────────────────────────────────
-    { name: 'blacksmith-intro', why: 'The forge, on arrival.',
-      fixture: 'wanderer-bw-blacksmith', path: '/exploration', waitForPath: '/blacksmith' },
+    { name: 'village-anvil', why: 'The village with its Anvil counter, on arrival.',
+      fixture: 'wanderer-bw-blacksmith', path: '/exploration', waitForPath: '/village' },
+    { name: 'blacksmith-intro', why: 'The forge, opened from the village counter.',
+      fixture: 'wanderer-bw-blacksmith', path: '/exploration', waitForPath: '/village',
+      steps: [{ jsClick: 'village-anvil' }, { waitForPath: '/blacksmith' }, { settle: 600 }] },
     { name: 'blacksmith-forging', why: 'The forge, mid-session (budget + card).',
-      fixture: 'wanderer-bw-blacksmith', path: '/exploration', waitForPath: '/blacksmith',
-      steps: [{ jsClick: 'blacksmith-begin' }, { settle: 1500 }] },
+      fixture: 'wanderer-bw-blacksmith', path: '/exploration', waitForPath: '/village',
+      steps: [{ jsClick: 'village-anvil' }, { waitForPath: '/blacksmith' }, { jsClick: 'blacksmith-begin' }, { settle: 1500 }] },
     { name: 'rest-cut-sheet', why: 'Card removal — THE CUT at a night watch, with shillings to pay for it.',
       // THE CUT is disabled at the 12-card floor — a Sage's kit is deep enough to thin.
       // The combat deck is the `combat-loadout-card:<id>` flag set (the engine

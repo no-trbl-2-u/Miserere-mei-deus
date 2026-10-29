@@ -95,7 +95,7 @@ describe('A1: the quest map-event kind', () => {
     });
 
     it('is one of the kinds the Act 1 audit lists', () => {
-        expect(ACT1_WALK_EVENT_KINDS).toHaveLength(11);
+        expect(ACT1_WALK_EVENT_KINDS).toHaveLength(10);
         expect(ACT1_WALK_EVENT_KINDS).toContain('quest');
     });
 });

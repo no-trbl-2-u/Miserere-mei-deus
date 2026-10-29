@@ -35,12 +35,12 @@ describe('map node kind labels', () => {
         expect(doorIds).toEqual(expect.arrayContaining(['bw-18', 'cw-20', 'bc-17']));
     });
 
-    it('the Anvil node uses the name its tooltip uses', () => {
-        const anvils = ACT_1_MAPS.flatMap((m) => nodesOf(m)).filter((n) => n.type === 'blacksmith');
-        expect(anvils.length).toBeGreaterThan(0);
-        const tip = selectTooltipContentFor('map-node', 'blacksmith', NO_STATE);
-        expect(NODE_KIND_LABEL.blacksmith).toBe('THE ANVIL');
-        expect(tip?.title).toBe(NODE_KIND_LABEL.blacksmith);
+    it('the Anvil villages are villages: no node type is named for the smith', () => {
+        const villages = ACT_1_MAPS.flatMap((m) => nodesOf(m)).filter((n) => n.type === 'village');
+        expect(villages.length).toBe(ACT_1_MAPS.length);
+        expect(Object.keys(NODE_KIND_LABEL)).not.toContain('blacksmith');
+        const tip = selectTooltipContentFor('map-node', 'village', NO_STATE);
+        expect(tip?.title).toBe(NODE_KIND_LABEL.village);
     });
 
     it('a door has its own tooltip', () => {

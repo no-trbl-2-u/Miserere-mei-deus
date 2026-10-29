@@ -1538,26 +1538,6 @@ function resolveCurrentMapEventInner(store: AppStore, sourceNodeType?: string, s
             return true;
         }
 
-        // Blacksmith events launch "The Anvil" (die-gear upgrades) instead
-        // of dropping a paced /event card. The engine
-        // handler touches no state (it only validates the offered variant
-        // gear), so there is nothing to restore — but we still clear the
-        // event slice and seed the session from the player's live rail +
-        // wallet. `<BlacksmithGate>` routes to /blacksmith when the slice
-        // fills. The authored payload `budget` is a PLACEHOLDER hint; the
-        // slice maps the spendable unit to the player's real currency, so
-        // it is intentionally not forwarded here.
-        if (result.event.kind === 'blacksmith') {
-            store.setState({
-                ...resolvedState,
-                event: EMPTY_EVENT_SLICE,
-            });
-            beginBlacksmithAction(store, {
-                variants: result.event.variants,
-            });
-            return true;
-        }
-
         // The Labyrinth door: the engine names the act
         // and leaves the world alone; the swap is `enterLabyrinthAction`'s.
         // Settle the resolved overworld first (the door's way on is open and

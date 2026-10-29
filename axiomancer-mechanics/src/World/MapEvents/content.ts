@@ -57,15 +57,21 @@ function lootCachePool(nodeId: string, cache: { currency: number; description: s
     };
 }
 
-// The anvil's pool. Budget is a placeholder; the mobile
-// interceptor re-derives the real spend cap from the player's wallet
-// (`state/blacksmith/store-actions.ts`) the moment this event fires.
-function blacksmithPool(nodeId: string, description: string): MapEventPool {
+// A village that carries the Anvil counter. The mobile village screen opens
+// the Anvil from this payload and seeds the session from the player's live rail
+// and wallet (`state/blacksmith/store-actions.ts`). The village name is a
+// placeholder until T writes the places.
+function anvilVillagePool(nodeId: string, description: string): MapEventPool {
     return {
-        id: `${nodeId}.blacksmith`,
+        id: `${nodeId}.village`,
         entries: [{
-            kind: 'blacksmith', weight: 1,
-            payload: { kind: 'blacksmith', budget: 12, variants: BLACKSMITH_WITNESS_VARIANTS, description },
+            kind: 'village', weight: 1,
+            payload: {
+                kind: 'village',
+                villageName: ANVIL_VILLAGE_NAMES[nodeId] ?? 'The Smithy',
+                anvil: { variants: BLACKSMITH_WITNESS_VARIANTS },
+                description,
+            },
         }],
     };
 }
@@ -103,7 +109,7 @@ function currencyLootPool(nodeId: string, currency: number, description: string)
 
 // ─── The Anvil, once per region ──────────────────────────────────────────────
 //
-// One anvil sits on one node near each Act 1 region's exit, a step from its
+// One village with an Anvil counter sits on one node near each Act 1 region's exit, a step from its
 // door fight: the Breakwater's fishing hamlet, the Charcoal Wood's well, the
 // Beacon Crags' falls and the Lantern Deep's forge (column 4). Same engine,
 // budget, witness variants and line everywhere.
@@ -113,6 +119,12 @@ export const ACT1_ANVIL_NODES: Readonly<Record<string, string>> = {
     'charcoal-wood': 'cw-18',
     'beacon-crags':  'bc-12',
     'lantern-deep':  'ld-14',
+};
+const ANVIL_VILLAGE_NAMES: Readonly<Record<string, string>> = {
+    'bw-16': 'The Fishing Hamlet',
+    'cw-18': 'The Well',
+    'bc-12': 'The Falls',
+    'ld-14': 'The Forge',
 };
 const ANVIL_NODE_IDS: ReadonlySet<string> = new Set(Object.values(ACT1_ANVIL_NODES));
 
@@ -138,7 +150,7 @@ const WAYPOINT_NODE_IDS: ReadonlySet<string> = new Set(Object.values(ACT1_WAYPOI
 // `Continents/Coastal-Village/breakwater.ts` for the node map).
 //
 // Kind spread over 22 nodes: 6 encounter, 2 rest, 3 loot-cache,
-// 2 empty waypoints, 2 hazard, 1 blacksmith (the Anvil, bw-16), 1 arrival
+// 2 empty waypoints, 2 hazard, 1 village (the Anvil, bw-16), 1 arrival
 // cutscene, 1 travel, and the questline's 4 quest nodes (bw-19..bw-22). The
 // watchtower (bw-17), the one node every run crosses before the door, holds
 // the region's door fight.
@@ -258,7 +270,7 @@ const BREAKWATER_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> =
                 const q = BW_QUEST_NODES[nodeId]!;
                 out.push({ nodeId, pool: questPool(nodeId, q.node, q.description) });
             } else if (ANVIL_NODE_IDS.has(nodeId)) {
-                out.push({ nodeId, pool: blacksmithPool(nodeId, ANVIL_LINE) });
+                out.push({ nodeId, pool: anvilVillagePool(nodeId, ANVIL_LINE) });
             } else if (BW_REST_NODES[nodeId]) {
                 out.push({ nodeId, pool: innRestPool(nodeId, BW_REST_NODES[nodeId]!) });
             } else if (WAYPOINT_NODE_IDS.has(nodeId)) {
@@ -285,7 +297,7 @@ const BREAKWATER_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> =
 // `Continents/Coastal-Village/charcoal-wood.ts`).
 //
 // Kind spread over 20 nodes: 7 encounter, 3 rest, 3 loot-cache,
-// 3 empty waypoints, 1 hazard, 1 blacksmith (the Anvil, cw-18), 1 arrival
+// 3 empty waypoints, 1 hazard, 1 village (the Anvil, cw-18), 1 arrival
 // cutscene, 1 travel. The northern forest's roster is level 9 and up, so
 // every fight here is pinned to a low absolute level,
 // ramping ring by ring from 2 to 3.
@@ -398,7 +410,7 @@ const CHARCOAL_WOOD_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }>
             } else if (nodeId === 'cw-20') {
                 out.push({ nodeId, pool: cwStairCave });
             } else if (ANVIL_NODE_IDS.has(nodeId)) {
-                out.push({ nodeId, pool: blacksmithPool(nodeId, ANVIL_LINE) });
+                out.push({ nodeId, pool: anvilVillagePool(nodeId, ANVIL_LINE) });
             } else if (CW_CAMP_NODES[nodeId]) {
                 out.push({ nodeId, pool: campRestPool(nodeId, CW_CAMP_NODES[nodeId]!) });
             } else if (WAYPOINT_NODE_IDS.has(nodeId)) {
@@ -424,7 +436,7 @@ const CHARCOAL_WOOD_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }>
 // `Continents/Northern-Continent/beacon-crags.ts`).
 //
 // Kind spread over 17 nodes: 6 encounter, 3 rest, 2 loot-cache, 1 empty waypoint,
-// 2 hazard, 1 blacksmith (the Anvil, bc-12), 1 arrival cutscene, 1 travel.
+// 2 hazard, 1 village (the Anvil, bc-12), 1 arrival cutscene, 1 travel.
 // The caverns' roster is level 13 and up, so every fight is pinned low, one
 // step above the Charcoal Wood: 3 on the upper mountain, 4 below
 // the gorge.
@@ -508,7 +520,7 @@ const BEACON_CRAGS_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> 
             } else if (nodeId === 'bc-17') {
                 out.push({ nodeId, pool: bcGlacierShrine });
             } else if (ANVIL_NODE_IDS.has(nodeId)) {
-                out.push({ nodeId, pool: blacksmithPool(nodeId, ANVIL_LINE) });
+                out.push({ nodeId, pool: anvilVillagePool(nodeId, ANVIL_LINE) });
             } else if (BC_CAMP_NODES[nodeId]) {
                 out.push({ nodeId, pool: campRestPool(nodeId, BC_CAMP_NODES[nodeId]!) });
             } else if (WAYPOINT_NODE_IDS.has(nodeId)) {
@@ -537,7 +549,7 @@ const BEACON_CRAGS_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> 
 // `Continents/Northern-Continent/lantern-deep.ts`).
 //
 // Kind spread over 18 nodes: 7 encounter, 3 rest, 1 loot-cache, 1 empty waypoint,
-// 2 hazard, 1 blacksmith (the Anvil, ld-14), 1 arrival cutscene, 2 sealed
+// 2 hazard, 1 village (the Anvil, ld-14), 1 arrival cutscene, 2 sealed
 // doors (the vault door and the deep stair). No boss; one elite on the last
 // fight column. Every fight pinned low, level with the Beacon Crags: 3 above
 // the aqueducts, 4 below them.
@@ -638,7 +650,7 @@ const LANTERN_DEEP_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> 
             } else if (nodeId === 'ld-18') {
                 out.push({ nodeId, pool: ldDeepStair });
             } else if (ANVIL_NODE_IDS.has(nodeId)) {
-                out.push({ nodeId, pool: blacksmithPool(nodeId, ANVIL_LINE) });
+                out.push({ nodeId, pool: anvilVillagePool(nodeId, ANVIL_LINE) });
             } else if (LD_CAMP_NODES[nodeId]) {
                 out.push({ nodeId, pool: campRestPool(nodeId, LD_CAMP_NODES[nodeId]!) });
             } else if (WAYPOINT_NODE_IDS.has(nodeId)) {

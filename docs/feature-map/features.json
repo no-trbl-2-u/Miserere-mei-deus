@@ -964,11 +964,11 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/__tests__/DebugTriggerEncounter.test.tsx, axiomancer-mobile/lib/platform/__tests__/router.pending-navigation.test.ts, axiomancer-mobile/state/e2e/option-description-size.S5-talk-C17.test.tsx, ..."
+        "source": "axiomancer-mobile/components/__tests__/DebugTriggerEncounter.test.tsx, axiomancer-mobile/lib/platform/__tests__/router.pending-navigation.test.ts, axiomancer-mobile/state/e2e/blacksmith.flow.engine.test.ts, ..."
       },
       "needsPitch": {
         "value": false,
@@ -5195,6 +5195,12 @@
       "from": "route:village",
       "to": "area:Log",
       "file": "axiomancer-mobile/lib/platform/router.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/village.engine.ts"
     },
     {
       "kind": "flow",

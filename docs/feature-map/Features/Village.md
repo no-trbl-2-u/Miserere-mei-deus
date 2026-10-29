@@ -31,6 +31,7 @@ Code it uses, as plain text so Graph view draws player flow only.
 - Game
 - Items
 - Log
+- The world
 
 ## Pitch
 

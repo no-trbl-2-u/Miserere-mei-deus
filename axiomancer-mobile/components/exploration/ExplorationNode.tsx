@@ -68,7 +68,6 @@ export function ExplorationNode({ node: n, onNodePress, isSelected }: Exploratio
         waypoint: AXM.bone,
         current: AXM.sulfur,
         hazard: AXM.rust,
-        blacksmith: AXM.rust,
         village: AXM.sulfur,
         door: AXM.sulfur,
     };

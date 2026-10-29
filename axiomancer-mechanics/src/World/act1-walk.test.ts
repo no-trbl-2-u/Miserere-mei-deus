@@ -57,8 +57,9 @@ describe('planAct1Walk', () => {
         });
     }
 
-    it('lists the ten kinds and the waypoint the audit table covers, and no removed kind', () => {
-        expect(ACT1_WALK_EVENT_KINDS).toHaveLength(11);
+    it('lists the nine kinds and the waypoint the audit table covers, and no removed kind', () => {
+        expect(ACT1_WALK_EVENT_KINDS).toHaveLength(10);
+        expect(ACT1_WALK_EVENT_KINDS).not.toContain('blacksmith');
         expect(ACT1_WALK_EVENT_KINDS).toContain('quest');
         expect(ACT1_WALK_EVENT_KINDS).toContain('none');
     });

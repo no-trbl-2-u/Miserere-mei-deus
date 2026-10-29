@@ -29,7 +29,6 @@ export type MapEventKind =
     | 'cutscene'
     | 'hazard'
     | 'loot-cache'
-    | 'blacksmith'
     | 'travel'
     | 'labyrinth'
     | 'quest';
@@ -93,6 +92,8 @@ export interface VillagePayload {
      * a shop, or a shop without named merchants.
      */
     shop?: ShopInventory;
+    /** The Anvil counter, when this village has a smith. */
+    anvil?: VillageAnvil;
     description?: string;
 }
 
@@ -120,24 +121,19 @@ export interface LootCachePayload {
 }
 
 /**
- * Blacksmith node ("The Anvil"). Hands the host an
- * authored budget + variant-gear offers; the host launches a
- * `World/Blacksmith` session from them (the sandboxed launch contract the
- * hazard minigame uses). The handler touches no state — it only
- * validates the offered gear against the die-gear caps.
+ * The Anvil counter of a village ("The Anvil"). Hands the host the
+ * variant-gear offers; the host launches a `World/Blacksmith` session from them
+ * when the player opens the counter (the sandboxed launch contract the hazard
+ * minigame uses). Resolving the village touches no state; it only validates the
+ * offered gear against the die-gear caps.
  *
- * The anvil is its own placed `blacksmith` node: one per Act 1 region, near
- * its exit. See `MapEvents/content.ts`'s `ACT1_ANVIL_NODES`.
+ * One village per Act 1 region carries it, near the region's exit. See
+ * `MapEvents/content.ts`'s `ACT1_ANVIL_NODES`.
  */
-export interface BlacksmithPayload {
-    kind: 'blacksmith';
-    /** Spendable budget for this visit (PLACEHOLDER unit; host maps ◆/souls). */
-    budget?: number;
+export interface VillageAnvil {
     /** Variant gear pieces offered for swap this visit. */
     variants?: readonly BlacksmithVariantOffer[];
-    description?: string;
 }
-
 /**
  * Travel node — an inter-map DOOR. Resolving it walks the
  * player out of the current map: the departed map's runtime `MapState` is
@@ -191,7 +187,6 @@ export type MapEventPayload =
     | CutscenePayload
     | HazardPayload
     | LootCachePayload
-    | BlacksmithPayload
     | TravelPayload
     | LabyrinthDoorPayload
     | QuestPayload;
@@ -224,11 +219,10 @@ export type ResolvedEvent =
     // rest-choice engine) decide the heal from an honest marker rather than
     // a number. `healed` is a computed OUTCOME, not an authoring knob.
     | { kind: 'rest';        healed: number; shelter: RestShelter; description?: string }
-    | { kind: 'village';     villageName: string; merchants: NPC[]; shop?: ShopInventory; description?: string }
+    | { kind: 'village';     villageName: string; merchants: NPC[]; shop?: ShopInventory; anvil?: VillageAnvil; description?: string }
     | { kind: 'cutscene';    lines: readonly string[] }
     | { kind: 'hazard';      effects: ActiveEffect[]; damage: number; description?: string }
     | { kind: 'loot-cache';  items: Item[]; currency: number; description?: string }
-    | { kind: 'blacksmith';  budget: number; variants: readonly BlacksmithVariantOffer[]; description?: string }
     // The world state on the result has already crossed; the resolved event
     // names where the door led so hosts can narrate the departure.
     | { kind: 'travel';      destinationContinent: ContinentName; destinationMap: MapName; description?: string }
