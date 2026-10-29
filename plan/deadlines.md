@@ -256,7 +256,6 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - DF1e — the Defender's relics; loop work, waits on LR1d; blocks no window's goal; date not set.
 - EQ1b — loop work, needs no time from T; date not set.
 - CL1 — plotted 2026-10-26 (ballots pitch no colour, D110); loop work, needs no time from T; date not set.
-- WR1a — plotted 2026-10-28 (walk the roads, D113); loop work, needs no time from T; date not set.
 - WR1b — plotted 2026-10-28 (revisit completed nodes, D113); loop work, needs no time from T; date not set.
 - NC1 — plotted 2026-10-26 (no caps, D109); loop work, needs no time from T; date not set.
 - FM1a — loop work, needs no time from T beyond confirming the pitch rule; date not set.
