@@ -7,7 +7,7 @@
 
 | Due | Item | What it needs | Window |
 |---|---|---|---|
-| 2026-10-27 (2 days overdue) | Pick the item icons, the six lane relics included; the loop applies them (1 h) | needs you: IT1b ready for you | W1 |
+| 2026-10-27 (2 days overdue) | Pick the rest of the item icons: the three potions, four relics, the category glyphs, the unknown mark and the empty bag (the six lane relics are done, #989) (1 h) | needs you: IT2a ready for you | W1 |
 | 2026-10-28 (1 day overdue) | Enemy session 1: Chapter 1's normal roster, the Breakwater's 15 fight nodes (1 h) | needs you: your task | W1 |
 | 2026-10-29 (today) | Author the first character: portrait, starting relic and its lane, two starting lanes, three lane cards, the playstyle line (1 h) | needs you: CH1e ready for you | W1 |
 | 2026-10-30 (tomorrow) | W1 demo part 1: T plays the ten hard candidates (1 h) | needs you: your task | W1 |
