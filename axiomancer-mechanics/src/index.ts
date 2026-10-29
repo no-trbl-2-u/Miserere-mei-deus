@@ -287,6 +287,7 @@ export {
     emptyQuestLog, findActiveQuest,
     startQuest, progressQuest, completeQuest,
     payQuestReward, payCompletedQuests, newlyCompletedQuests, questRewardItem, settleKill,
+    carriedCount, syncCarryObjectives, consumeCarriedItems,
     advanceHazardObjectives,
     // Elites come back after a night's rest (phase ER1).
     respawnElites, settledEliteNodes, retireEliteNode,
@@ -449,11 +450,14 @@ export type {
     Questline, QuestlineStep, QuestlineId, QuestlineSettle, QuestNodeStage, QuestStepView, RouteRef,
     QuestStepState,
 } from './World';
+// Quest gates: the authoring check that a gate holds its road.
+export type { QuestGate } from './World';
+export { questGatesOn, questGateProblems } from './World';
 // The questline step rules (accept, turn in, the node's stage, the settle seam).
 export {
     registerQuestline, getQuestline, listQuestlines, questlineStep,
     questStepState, stepQuest, questStepView, questNodeStage, resolveQuestNodeEvent,
-    openReadyQuestRoutes, settleQuestLog, acceptQuestStep, turnInQuestStep,
+    openReadyQuestRoutes, settleQuestLog, acceptQuestStep, giveQuestStep, turnInQuestStep, turnInNodeOf,
     // The authored questlines (the Breakwater's).
     BREAKWATER_QUESTLINE, BREAKWATER_QUESTLINE_ID, AUTHORED_QUESTLINES,
 } from './World';

@@ -1726,6 +1726,12 @@
       "kind": "coupling",
       "from": "area:Game",
       "to": "area:Items",
+      "file": "axiomancer-mechanics/src/Game/fixtures/quest-chain-long.fixture.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Items",
       "file": "axiomancer-mechanics/src/Game/game.migrate.ts"
     },
     {
@@ -1774,6 +1780,12 @@
       "kind": "coupling",
       "from": "area:Game",
       "to": "area:NPCs",
+      "file": "axiomancer-mechanics/src/Game/fixtures/quest-chain-long.fixture.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:NPCs",
       "file": "axiomancer-mechanics/src/Game/fixtures/state-fixture.types.ts"
     },
     {
@@ -1811,6 +1823,18 @@
       "from": "area:Game",
       "to": "area:World",
       "file": "axiomancer-mechanics/src/Game/fixtures/fixture-content.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:World",
+      "file": "axiomancer-mechanics/src/Game/fixtures/quest-chain-long.fixture.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:World",
+      "file": "axiomancer-mechanics/src/Game/fixtures/quest-chain.fixture.ts"
     },
     {
       "kind": "coupling",

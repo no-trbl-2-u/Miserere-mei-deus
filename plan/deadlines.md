@@ -249,9 +249,7 @@ fails the root `npm test` on an open row (`[ ]`, `[-]` or `[blocked: …]`) that
 names, and on a line here with no reason. **A row listed here is work the loop may still pick on its ordinary turn:
 undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
 
-- MQ1a — plotted 2026-10-28 (several quests, quest gates); date not set: it waits on no T act until T's Breakwater map is locked and the rebuild is plotted.
-- MQ1b — plotted 2026-10-28 (quest given anywhere, arrival, the key); date not set, as MQ1a.
-- MQ1c — plotted 2026-10-28 (the quest tracker, the shut road's reason); date not set, as MQ1a.
+- MQ1c — plotted 2026-10-28 (the quest tracker, the shut road's reason); date not set, as MQ1b.
 - AD1a — plotted 2026-10-21 (#716) without a deadline line; date not set.
 - AD1b — plotted 2026-10-21 (#716) without a deadline line; date not set.
 - EQ1a — a live defect T hit on device; loop work, needs no time from T; date not set.

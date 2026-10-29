@@ -20,6 +20,7 @@ export {
     emptyQuestLog, isQuestComplete, findActiveQuest,
     startQuest, progressQuest, completeQuest,
     payQuestReward, payCompletedQuests, newlyCompletedQuests, questRewardItem, settleKill,
+    carriedCount, syncCarryObjectives, consumeCarriedItems,
     advanceHazardObjectives,
 } from './quest.engine';
 export type { PaidQuestReward, KilledFoe } from './quest.engine';
@@ -64,11 +65,14 @@ export type {
     Questline, QuestlineStep, QuestlineId, QuestlineSettle, QuestNodeStage, QuestStepView, RouteRef,
     QuestStepState,
 } from './questline';
+// Quest gates: the authoring check that a gate holds its road.
+export type { QuestGate } from './quest-gates';
+export { questGatesOn, questGateProblems } from './quest-gates';
 // The questline step rules.
 export {
     registerQuestline, getQuestline, listQuestlines, questlineStep,
     questStepState, stepQuest, questStepView, questNodeStage, resolveQuestNodeEvent,
-    openReadyQuestRoutes, settleQuestLog, acceptQuestStep, turnInQuestStep,
+    openReadyQuestRoutes, settleQuestLog, acceptQuestStep, giveQuestStep, turnInQuestStep, turnInNodeOf,
 } from './questline';
 // Rest shelter classification. Mobile words an inn night as a bed.
 export type { RestShelter } from './MapEvents/types';

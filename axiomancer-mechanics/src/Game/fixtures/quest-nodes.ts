@@ -4,7 +4,8 @@
  *
  * Every registered questline on the map has its markers spent (consumed, so
  * their held roads open) and every road its steps open on ready
- * (`opensOnReady`, the quest-node locks) unblocked. The quest log is not
+ * (`opensOnReady`, the quest-node locks) or on completion (`gatesPast`, the
+ * quest gates) unblocked. The quest log is not
  * touched: no step is accepted, counted or paid. A walk that is ABOUT the
  * questline plays it instead (`breakwater-questline.engine.test.ts`).
  *
@@ -24,13 +25,14 @@ export function questNodeIdsOn(mapName: string): string[] {
         .flatMap(line => line.steps.map(step => step.nodeId));
 }
 
-/** `map` with its quest nodes spent and its quest-node locks open. */
+/** `map` with its quest nodes spent and its quest-node locks and gates open. */
 export function settleQuestNodes(map: MapState): MapState {
     let next = map;
     for (const line of listQuestlines()) {
         if (line.mapName !== map.name) continue;
         for (const step of line.steps) {
             for (const road of step.opensOnReady ?? []) next = unblockMapRoute(next, road.from, road.to);
+            for (const road of step.gatesPast ?? []) next = unblockMapRoute(next, road.from, road.to);
         }
         for (const step of line.steps) next = markNodeConsumed(next, step.nodeId);
     }
