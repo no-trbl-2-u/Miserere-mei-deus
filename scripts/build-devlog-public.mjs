@@ -662,14 +662,17 @@ async function renderCatalog(media, out, warnings) {
 
     // Each publishable painting is derived into the output once, so the <img>
     // cardArtHtml writes points at a file that exists.
+    const attributions = new Map()
     let cardsShown = 0
     for (const file of new Set(cards.map((c) => (c.image ? basename(c.image) : '')).filter(Boolean))) {
-        if (!verdictFor('cards', file).publish) continue
+        const verdict = verdictFor('cards', file)
+        if (!verdict.publish) continue
         const source = join(ART, 'cards', file)
         if (!existsSync(source)) continue
         const img = await media.derive(source, cardArtRel(file).replace(/\.webp$/, ''), BOX.card, out)
         imageBytes += img.bytes
         cardsShown += 1
+        if (verdict.tier === 'attribution' || verdict.attribution) attributions.set(file, verdict)
     }
 
     const cardPlates = cards.map((card) => {
@@ -692,7 +695,6 @@ async function renderCatalog(media, out, warnings) {
     })
 
     const foeCards = []
-    const attributions = new Map()
     let portraitsShown = 0
     for (const foe of enemies) {
         const file = foe.image ? basename(foe.image) : ''
