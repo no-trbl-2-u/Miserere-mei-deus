@@ -65,6 +65,14 @@ export function minScaleFor(viewport: { w: number; h: number }, size: SheetSize 
 const FIT_PADDING = 40;
 
 /**
+ * True for a node the camera frames beside the one underfoot: one of the
+ * player's legal moves, new (`available`) or a walked road back (`walkable`).
+ */
+function isFocusMove(n: ExplorationNode): boolean {
+    return n.kind === 'available' || (n.kind === 'completed' && n.walkable === true);
+}
+
+/**
  * The identity of the camera's SUBJECT — where the player stands, plus the
  * steps open from there — as a stable string.
  *
@@ -85,7 +93,8 @@ const FIT_PADDING = 40;
  * could snap back mid-gesture. The camera moves only at moments the player
  * themselves changed the map's subject.
  *
- * `completed` and `locked` nodes are deliberately NOT part of the key: they are
+ * `locked` nodes and walked nodes that are not a road away are deliberately NOT
+ * part of the key (a walked node a road away is a legal move, so it is): they are
  * not the camera's subject, and folding them in would re-fit the view for
  * changes the player did not make to their own position or options.
  *
@@ -97,7 +106,7 @@ const FIT_PADDING = 40;
 export function focusKeyOf(nodes: readonly ExplorationNode[]): string {
     const current = nodes.find((n) => n.kind === 'current')?.id ?? '';
     // Sorted so a reordering of the same options is NOT a change.
-    const open = nodes.filter((n) => n.kind === 'available').map((n) => n.id).sort();
+    const open = nodes.filter(isFocusMove).map((n) => n.id).sort();
     return `${current}|${open.join(',')}`;
 }
 
@@ -129,7 +138,7 @@ export function computeFocusTransform(
     size: SheetSize = LEGACY_SHEET_SIZE,
 ): FocusTransform {
     const canvas = canvasSizeOf(size);
-    const focus = nodes.filter((n) => n.kind === 'available' || n.kind === 'current');
+    const focus = nodes.filter((n) => n.kind === 'current' || isFocusMove(n));
     if (focus.length === 0) {
         const s = Math.max(1, minScaleFor(viewport, size));
         return { scale: s, tx: (viewport.w - canvas.w * s) / 2, ty: (viewport.h - canvas.h * s) / 2 };

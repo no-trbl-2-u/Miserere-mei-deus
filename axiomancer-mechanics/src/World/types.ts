@@ -173,7 +173,9 @@ export interface MapDefinition {
      * on, read both ways, new or completed alike (`roads.ts`,
      * `legalMovesFrom`). There is no jumping across the map: a dead-end
      * pocket is left the way it was entered. A resolved node is SPENT: it
-     * can be walked across, but its one-shot event does not fire again.
+     * can be walked across, but its one-shot event does not fire again and
+     * the walk back owes nothing (`arriveAtNode`). A village, a door and a
+     * quest node with business act on every entry (`actsOnRevisit`).
      * Blocked routes and the onward roads of an unspent held node
      * (`holdRoadsUntilSettled`) are not open, so the region boss is forced
      * by routing, not by running out of places to go. `availableNodes` /
