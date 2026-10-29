@@ -124,7 +124,12 @@ export default function ExplorationScreen() {
         if (node.kind === 'completed') {
             // A walked node joined by a road to where the player stands is a
             // walk back: it moves at once, and its spent event fires nothing.
-            if (node.walkable) {
+            // A door (travel/labyrinth) is the one exception — the engine
+            // deliberately never adds it to `consumedNodes` (a door is
+            // repeatable), so resolving it again would roll its pool and
+            // cross the map again with no confirm. Treat a door like any
+            // other walked node instead of walking back onto it.
+            if (node.walkable && node.type !== 'door') {
                 setSelectedNodeId(null);
                 if (actions.moveTo(node.id).moved) actions.resolveCurrentMapEvent(node.type);
                 return;
