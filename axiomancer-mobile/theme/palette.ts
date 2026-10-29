@@ -60,6 +60,10 @@ export interface ThemeSpec {
     buff: string;
     pixelShadow: string;
     pixelHighlight: string;
+    /** A cool lapis: the map's travel token (`kindTravel`). */
+    lapis: string;
+    /** A murex purple: the map's story token (`kindStory`). */
+    murex: string;
 }
 
 /** The full resolved palette — the shape of `AXM`. */
@@ -78,6 +82,24 @@ export interface Palette extends ThemeSpec {
     rustSubtle: string;
     shadow: string;
     nodeBg: string;
+    /**
+     * The map's node-kind tokens: the opaque disc a node wears under its kind
+     * glyph (`components/exploration/KindToken.tsx`). Opaque hexes, mixed
+     * from the theme's own hues so every theme carries a distinct one per
+     * kind; `kindInk` picks the glyph's colour on each.
+     */
+    kindQuest: string;
+    kindBoss: string;
+    kindElite: string;
+    kindFight: string;
+    kindHazard: string;
+    kindRest: string;
+    kindLoot: string;
+    kindVillage: string;
+    kindStory: string;
+    kindTravel: string;
+    kindStart: string;
+    kindWaypoint: string;
 }
 
 export interface ThemeDef {
@@ -101,6 +123,42 @@ function rgba(hex: string, alpha: number): string {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
+/** `a` moved `t` of the way to `b`, as an opaque hex. */
+export function mixHex(a: string, b: string, t: number): string {
+    const ca = hexToRgb(a);
+    const cb = hexToRgb(b);
+    return `#${ca
+        .map((v, i) => Math.round(v + (cb[i] - v) * t).toString(16).padStart(2, '0'))
+        .join('')}`;
+}
+
+/** WCAG relative luminance of a hex. */
+function luminance(hex: string): number {
+    const channel = (v: number) => {
+        const c = v / 255;
+        return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+    };
+    const [r, g, b] = hexToRgb(hex).map(channel);
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+/** WCAG contrast ratio between two hexes. */
+export function contrastOf(a: string, b: string): number {
+    const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+    return (hi + 0.05) / (lo + 0.05);
+}
+
+/**
+ * The glyph colour on a kind token: the theme's darkest ground or its
+ * parchment, whichever stands further off the disc, so a light disc
+ * carries a dark glyph and a dark disc a light one.
+ */
+export function kindInk(palette: Pick<Palette, 'deepBg' | 'parchment'>, disc: string): string {
+    return contrastOf(palette.deepBg, disc) >= contrastOf(palette.parchment, disc)
+        ? palette.deepBg
+        : palette.parchment;
+}
+
 /** Derive the full translucent palette from a theme's base hues. */
 export function makePalette(s: ThemeSpec): Palette {
     return {
@@ -119,6 +177,20 @@ export function makePalette(s: ThemeSpec): Palette {
         rustSubtle: rgba(s.rust, 0.1),
         shadow: 'rgba(0, 0, 0, 0.6)',
         nodeBg: rgba(s.bg, 0.9),
+        // Quest wears the theme's lamp, the brightest accent; the boss its
+        // blood, the elite a darker blood; the common fight stays bone.
+        kindQuest: s.sulfur,
+        kindBoss: s.blood,
+        kindElite: mixHex(s.blood, s.deepBg, 0.45),
+        kindFight: s.bone,
+        kindHazard: s.rust,
+        kindRest: s.heal,
+        kindLoot: mixHex(s.sulfur, s.deepBg, 0.45),
+        kindVillage: s.parchment,
+        kindStory: s.murex,
+        kindTravel: s.lapis,
+        kindStart: mixHex(s.heal, s.deepBg, 0.45),
+        kindWaypoint: mixHex(s.bone, s.deepBg, 0.6),
     };
 }
 
@@ -158,6 +230,8 @@ export const THEME_SPECS: Record<ThemeId, ThemeDef> = {
             buff: '#33270d',
             pixelShadow: '#6e2a1c',
             pixelHighlight: '#f6ecd8',
+            lapis: '#6f8fb8',
+            murex: '#9a6aa8',
         },
     },
     'coastal-verdant': {
@@ -182,6 +256,8 @@ export const THEME_SPECS: Record<ThemeId, ThemeDef> = {
             buff: '#10302a',
             pixelShadow: '#1a4a48',
             pixelHighlight: '#e6f2ea',
+            lapis: '#6a8fc4',
+            murex: '#a2789e',
         },
     },
     'ember-depths': {
@@ -206,6 +282,8 @@ export const THEME_SPECS: Record<ThemeId, ThemeDef> = {
             buff: '#33240c',
             pixelShadow: '#7a2a18',
             pixelHighlight: '#f6e8d4',
+            lapis: '#7d8fae',
+            murex: '#a0607e',
         },
     },
     'frost-marrow': {
@@ -230,6 +308,8 @@ export const THEME_SPECS: Record<ThemeId, ThemeDef> = {
             buff: '#122a36',
             pixelShadow: '#244a62',
             pixelHighlight: '#e6f0f4',
+            lapis: '#7c86d6',
+            murex: '#b07ab8',
         },
     },
     'plague-bloom': {
@@ -254,6 +334,8 @@ export const THEME_SPECS: Record<ThemeId, ThemeDef> = {
             buff: '#232e10',
             pixelShadow: '#4e2a5e',
             pixelHighlight: '#eef4dc',
+            lapis: '#6a90b8',
+            murex: '#8a6ac8',
         },
     },
 };

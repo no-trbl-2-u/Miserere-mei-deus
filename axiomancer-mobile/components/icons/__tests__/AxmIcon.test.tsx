@@ -15,7 +15,7 @@ import { render } from '@testing-library/react-native';
 import React from 'react';
 
 import { AxmIcon } from '@/components/icons';
-import { AXM_ICON_NAMES, AXM_ICON_SPECS, isAxmIconName } from '@/components/icons';
+import { AXM_ICON_NAMES, AXM_ICON_SPECS, isAxmIconName, type AxmIconName } from '@/components/icons';
 
 describe('AxmIcon: every registered icon renders', () => {
     it.each(AXM_ICON_NAMES)('name="%s" produces non-null output', (name) => {
@@ -57,5 +57,15 @@ describe('icon registry: spec well-formedness', () => {
             expect(isAxmIconName(`effect-${kind}`)).toBe(true);
         }
         expect(isAxmIconName('not-a-mark')).toBe(false);
+    });
+
+    const MAP_MARKS: [AxmIconName, string][] = [
+        ['action-elite', 'lorc/horned-helm'],
+        ['action-door', 'delapouite/exit-door'],
+        ['action-start', 'delapouite/windmill'],
+    ];
+    it.each(MAP_MARKS)('the map mark %s draws the chosen silhouette, %s', (name, source) => {
+        expect(isAxmIconName(name)).toBe(true);
+        expect(AXM_ICON_SPECS[name].source).toBe(source);
     });
 });

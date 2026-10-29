@@ -250,6 +250,19 @@ describe('MapCanvas', () => {
         expect(discs.map((d) => [d.props.cx, d.props.cy])).toEqual(mockNodes.map((n) => [n.x, n.y]));
     });
 
+    it('draws no halo under a node wearing its kind token (BW1c A8)', () => {
+        const plate = { width: 1000, height: 1000, scale: 2.4, backdrop: 1, plateOpacity: 0.85, chartTexture: false, nodeHalo: true };
+        const [tokened, ...rest] = mockNodes;
+        const nodes = [{ ...tokened, showKind: true }, ...rest];
+        const haloed = render(
+            <MapCanvas nodes={nodes} edges={mockEdges} sheet={plate}>
+                <MockChildren />
+            </MapCanvas>
+        );
+        const discs = React.Children.toArray(haloed.getByTestId('map-node-halos').props.children) as React.ReactElement<{ cx: number; cy: number }>[];
+        expect(discs.map((d) => [d.props.cx, d.props.cy])).toEqual(rest.map((n) => [n.x, n.y]));
+    });
+
     it('handles nodes with mixed availability states', () => {
         const mixedNodes: ExplorationNode[] = [
             {

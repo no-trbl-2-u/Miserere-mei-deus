@@ -141,13 +141,23 @@ const QUEST_OBJECTIVE_CONTENT: Record<string, TooltipContent> = {
 
 // Map-node content. Keys match the NodeType variants emitted by the
 // exploration presenter (`encounter | treasure | boss | quest | rest |
-// waypoint | hazard | village | door | current`). Each entry: uppercased title + short
+// waypoint | hazard | village | door | elite | start | current`). Each entry: uppercased title + short
 // description of what happens when the node is engaged.
 const MAP_NODE_CONTENT: Record<string, TooltipContent> = {
     encounter: {
         title: 'ENCOUNTER',
         body: 'a hostile presence stands between you and the next step. step in and the seal closes; fight, parley, or fall.',
         footnote: 'commits combat',
+    },
+    elite: {
+        title: 'ELITE',
+        body: 'a hardened foe, harder than the road\'s common fights. beat it for the better spoils; it may drop a relic.',
+        footnote: 'commits combat',
+    },
+    start: {
+        title: 'START',
+        body: 'where you came onto this map. walk back to it whenever a road leads there.',
+        footnote: 'where the road began',
     },
     boss: {
         title: 'BOSS',

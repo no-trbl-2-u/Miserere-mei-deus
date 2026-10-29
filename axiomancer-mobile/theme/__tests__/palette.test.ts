@@ -28,7 +28,26 @@ import {
     THEME_SPECS,
     type Palette,
     type ThemeSpec,
+    contrastOf,
+    kindInk,
+    mixHex,
 } from '../palette';
+
+/** The node-kind token keys, one per map node kind. */
+const KIND_KEYS: (keyof Palette)[] = [
+    'kindQuest',
+    'kindBoss',
+    'kindElite',
+    'kindFight',
+    'kindHazard',
+    'kindRest',
+    'kindLoot',
+    'kindVillage',
+    'kindStory',
+    'kindTravel',
+    'kindStart',
+    'kindWaypoint',
+];
 
 const SPEC_KEYS: (keyof ThemeSpec)[] = [
     'bg',
@@ -48,6 +67,8 @@ const SPEC_KEYS: (keyof ThemeSpec)[] = [
     'buff',
     'pixelShadow',
     'pixelHighlight',
+    'lapis',
+    'murex',
 ];
 
 const DERIVED_KEYS: (keyof Palette)[] = [
@@ -65,6 +86,7 @@ const DERIVED_KEYS: (keyof Palette)[] = [
     'rustSubtle',
     'shadow',
     'nodeBg',
+    ...KIND_KEYS,
 ];
 
 /** A spec with a 6-digit hue per channel-easy-to-assert value. */
@@ -86,6 +108,8 @@ const FIXTURE_SPEC: ThemeSpec = {
     buff: '#0088aa',
     pixelShadow: '#010101',
     pixelHighlight: '#fefefe',
+    lapis: '#3355cc',
+    murex: '#993399',
 };
 
 const ORIGINAL_THEME_GLOBAL = (globalThis as { __AXM_THEME__?: unknown }).__AXM_THEME__;
@@ -315,5 +339,70 @@ describe('theme contrast', () => {
         expect(contrastRatio('#ffffff', '#000000')).toBeCloseTo(21, 1);
         expect(contrastRatio('#000000', '#ffffff')).toBeCloseTo(21, 1);
         expect(contrastRatio('#7a7a7a', '#7a7a7a')).toBeCloseTo(1, 5);
+    });
+});
+
+describe('node-kind tokens', () => {
+    const rgb = (hex: string): number[] => {
+        const n = parseInt(hex.replace('#', ''), 16);
+        return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    };
+    const distance = (a: string, b: string): number => {
+        const [ca, cb] = [rgb(a), rgb(b)];
+        return Math.hypot(ca[0] - cb[0], ca[1] - cb[1], ca[2] - cb[2]);
+    };
+    /** The closest two kind tokens of a palette, by RGB distance. */
+    const closestPair = (p: Palette): number => {
+        let min = Infinity;
+        for (let i = 0; i < KIND_KEYS.length; i++) {
+            for (let j = i + 1; j < KIND_KEYS.length; j++) {
+                min = Math.min(min, distance(p[KIND_KEYS[i]], p[KIND_KEYS[j]]));
+            }
+        }
+        return min;
+    };
+
+    it('mixHex moves one hue toward another as an opaque hex', () => {
+        expect(mixHex('#000000', '#ffffff', 0)).toBe('#000000');
+        expect(mixHex('#000000', '#ffffff', 1)).toBe('#ffffff');
+        expect(mixHex('#000000', '#ffffff', 0.5)).toBe('#808080');
+        expect(mixHex('#ff0000', '#0000ff', 0.25)).toBe('#bf0040');
+    });
+
+    it.each(THEME_ORDER)('%s: every kind token is an opaque hex', (id) => {
+        const p = paletteFor(id);
+        for (const key of KIND_KEYS) expect(p[key]).toMatch(/^#[0-9a-f]{6}$/);
+    });
+
+    it.each(THEME_ORDER)('%s: every kind wears its own colour', (id) => {
+        const p = paletteFor(id);
+        expect(new Set(KIND_KEYS.map((k) => p[k])).size).toBe(KIND_KEYS.length);
+        expect(closestPair(p)).toBeGreaterThanOrEqual(18);
+    });
+
+    it('the default theme keeps its kinds well apart', () => {
+        expect(closestPair(paletteFor(DEFAULT_THEME_ID))).toBeGreaterThanOrEqual(35);
+    });
+
+    it.each(THEME_ORDER)('%s: each glyph stands off its disc at 3:1 or better', (id) => {
+        const p = paletteFor(id);
+        const weak = KIND_KEYS
+            .map((k) => ({ k, ratio: contrastOf(kindInk(p, p[k]), p[k]) }))
+            .filter((r) => r.ratio < 3)
+            .map((r) => `${r.k} = ${r.ratio.toFixed(2)}`);
+        expect(weak).toEqual([]);
+    });
+
+    it('the quest token is the theme lamp, the brightest accent', () => {
+        for (const id of THEME_ORDER) {
+            const p = paletteFor(id);
+            expect(p.kindQuest).toBe(THEME_SPECS[id].spec.sulfur);
+        }
+    });
+
+    it('kindInk picks the dark ground on a light disc and parchment on a dark one', () => {
+        const p = paletteFor(DEFAULT_THEME_ID);
+        expect(kindInk(p, p.parchment)).toBe(p.deepBg);
+        expect(kindInk(p, p.deepBg)).toBe(p.parchment);
     });
 });

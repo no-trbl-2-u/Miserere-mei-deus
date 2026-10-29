@@ -695,10 +695,12 @@ export function MapCanvas({ nodes, edges, sheet, overlays, children }: MapCanvas
                     })}
                     {/* Node halos over the roads and under the glyphs: a dark
                         pool that clears a dense plate's linework from around
-                        each mark, so the mark reads as a mark. */}
+                        each mark, so the mark reads as a mark. A node wearing
+                        its kind token gets none: the opaque token covers the
+                        roads itself. */}
                     {nodeHalo && (
                         <View style={StyleSheet.absoluteFillObject} pointerEvents="none" testID="map-node-halos">
-                            {nodes.map((n) => (
+                            {nodes.filter((n) => n.showKind !== true).map((n) => (
                                 <NodeHalo key={n.id} cx={n.x} cy={n.y} r={haloRadius} scale={size.scale} color={AXM.deepBg} counterScale={markerCounterScale} />
                             ))}
                         </View>
