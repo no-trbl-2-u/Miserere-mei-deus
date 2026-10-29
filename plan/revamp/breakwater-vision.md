@@ -59,8 +59,14 @@ a dead end, a cutscene.
 - **Reaching a quest node early** (before holding its quest) does nothing yet: the player is turned away, with story
   flavour written for the refusal.
 - The dashed road T5-T6 on the sketch is a plain road.
-- **Node kinds stand out:** each kind gets its own coloured, thematic icon instead of a plain circle, the set kept
-  close in style, each on a clearing so the map's busy lines do not run through it (T, later the same day).
+- **Node kinds stand out:** each kind gets its own coloured, thematic icon token instead of a plain circle, the set
+  kept close in style. The solid token covers the map's lines, so no blur behind it; the in-game colours are the
+  game's own, not the sketch's. Icons show on the available nodes, the nodes next to them, and every quest node.
+- **The cove:** a node C0 at the cave face is the sea cave's other end. H6 (the sea cave mouth) and C0 are a travel
+  pair, since the C1 elite cannot be a travel node. The cove is reached only through H6; W4 stays where it is.
+- **Every completed quest pays a relic** T names, and no relic is elite-only any more (T amends "one relic per trio
+  will only drop from an elite"). All of the original quests are dropped.
+- **Every old save is deleted** when the new map goes live.
 
 ## Where the details live
 

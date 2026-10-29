@@ -39,7 +39,7 @@ look that tells the player each node's kind at a glance, on every node, not only
 |---|---|
 | Nodes, shipped vs T's sketch | 22 vs 43 |
 | T's sketch by colour (blob detection on T's image) | 32 yellow, 4 red, 2 green, 1 blue, 1 pink, 2 white, 1 black |
-| Board v3 tally | start 1, village 2, quest 4, boss 1, elite 3, hazard 6, fight 15, rest 3, loot 3, cutscene 3, travel 2 |
+| Board v4 tally | start 1, village 2, quest 4, boss 1, elite 3, hazard 6, fight 15, rest 3, loot 3, cutscene 3, travel 3 (44) |
 | Combat share of the 30 yellows | 16 of 30 (15 fights + 1 elite); 83% of all 18 combat nodes non-elite |
 | Fight nodes enemy session 1 was sized for | 4 (`plan/deadlines.md`); the board has 15 + 3 elites + 1 boss |
 | Breakwater hazards the routing Item assumes | 2; the board has 6 |
@@ -69,6 +69,13 @@ look that tells the player each node's kind at a glance, on every node, not only
 - The T5-T6 road is a plain road.
 - Node kinds get distinct, coloured, thematic icons, not too different from each other, on a clearing that keeps
   the map's lines from running through them.
+
+- T's calls on the plot PR (2026-10-28): the three uncertain roads are roads, except that the sea cave never led to
+  W4: a new node C0 at the cave face is the sea cave's other end (H6 and C0 are a travel pair; C1 is an elite, so it
+  cannot be the travel node); W4 stays where it is, and the cove is reached only through H6. Every v3 kind stands.
+  All old saves are deleted. The icon set and tokens stand; tokens need no blur behind them, and the in-game colours
+  need not be the sketch's. Kind icons show only on available nodes, the nodes next to them, and quest nodes. QL1's
+  quests are all dropped; every completed quest pays a relic T names, and no relic is elite-only any more.
 
 ## Open PRs against the vision
 - **#1049 NK1 (node kinds cut to eight):** aligned. Its kinds cover every board kind (elite and boss stay encounter
@@ -102,63 +109,64 @@ kinds blur together at the 0.6 zoom floor (quest scroll vs cutscene quill is the
 An engine walk of the rebuilt Breakwater from W1 to B2 through the public verbs, checking each gate shut before and
 open after, plus the mobile map test that every node renders its kind's glyph in every state.
 
-## The node list (board v3)
+## The node list (board v4, every kind confirmed by T)
 | Code | Place | Kind | Whose call | Plate x, y | Roads to |
 |---|---|---|---|---|---|
 | W1 | Windmill | start | T | 0.497, 0.657 | W2 |
-| W2 | Gallows crossroads | fight | proposed | 0.586, 0.680 | W1, W3, W4, M1 |
-| W3 | Field road | fight | proposed | 0.633, 0.592 | W2, H1 |
-| W4 | West cliff road | rest | proposed | 0.305, 0.665 | W2, W5 |
-| W5 | Keep causeway | elite fight | proposed | 0.338, 0.607 | W4, K1 |
+| W2 | Gallows crossroads | fight | T (confirmed v3) | 0.586, 0.680 | W1, W3, W4, M1 |
+| W3 | Field road | fight | T (confirmed v3) | 0.633, 0.592 | W2, H1 |
+| W4 | West cliff road | rest | T (confirmed v3) | 0.305, 0.665 | W2, W5 |
+| W5 | Keep causeway | elite fight | T (confirmed v3) | 0.338, 0.607 | W4, K1 |
 | K1 | Keep gate (needs the key) | quest | T | 0.205, 0.559 | W5, K2 |
 | K2 | Sea keep | chapter boss | T | 0.160, 0.499 | K1 |
-| H1 | Quay end | fight | proposed | 0.639, 0.499 | W3, H2, T1 |
-| H2 | Crane quay | fight | proposed | 0.516, 0.500 | H1, H3 (unsure) |
-| H3 | Harbour light pier | fight | proposed | 0.291, 0.439 | H2 (unsure), H4 |
+| H1 | Quay end | fight | T (confirmed v3) | 0.639, 0.499 | W3, H2, T1 |
+| H2 | Crane quay | fight | T (confirmed v3) | 0.516, 0.500 | H1, H3 |
+| H3 | Harbour light pier | fight | T (confirmed v3) | 0.291, 0.439 | H2, H4 |
 | H4 | The wreck (quest hazard) | hazard | T | 0.121, 0.356 | H3, H5 |
-| H5 | Moored ship | rest | proposed | 0.400, 0.386 | H4, H6, H7 |
-| H6 | Sea cave mouth (to the cove) | travel | T | 0.459, 0.303 | H5, C1 (travel) |
-| H7 | Long pier | fight | proposed | 0.533, 0.383 | H5, H8 |
-| H8 | Pier end | loot cache | proposed | 0.605, 0.415 | H7 |
-| C1 | Sea cave | elite fight | T | 0.301, 0.797 | H6 (travel), C2 |
+| H5 | Moored ship | rest | T (confirmed v3) | 0.400, 0.386 | H4, H6, H7 |
+| H6 | Sea cave mouth (to the cove) | travel | T | 0.459, 0.303 | H5, C0 (travel) |
+| H7 | Long pier | fight | T (confirmed v3) | 0.533, 0.383 | H5, H8 |
+| H8 | Pier end | loot cache | T (confirmed v3) | 0.605, 0.415 | H7 |
+| C0 | Cave face (back to the sea cave) | travel | T | 0.332, 0.752 | H6 (travel), C1 |
+| C1 | Sea cave | elite fight | T | 0.301, 0.797 | C0, C2 |
 | C2 | Fishermen’s camp | quest | T | 0.369, 0.819 | C1 |
-| T1 | Harbour steps | fight | proposed | 0.705, 0.471 | H1, T2 |
-| T2 | Bridge approach | fight | proposed | 0.762, 0.443 | T1, B1, T3 |
-| T3 | Town gate | fight | proposed | 0.707, 0.414 | T2, T4, T5 (unsure) |
+| T1 | Harbour steps | fight | T (confirmed v3) | 0.705, 0.471 | H1, T2 |
+| T2 | Bridge approach | fight | T (confirmed v3) | 0.762, 0.443 | T1, B1, T3 |
+| T3 | Town gate | fight | T (confirmed v3) | 0.707, 0.414 | T2, T4, T5 |
 | T4 | Harbour town | village | T | 0.608, 0.328 | T3 |
-| T5 | Back lanes | hazard | proposed | 0.749, 0.340 | T3 (unsure), T6 |
-| T6 | Upper town | fight | proposed | 0.664, 0.295 | T5, L1 |
+| T5 | Back lanes | hazard | T (confirmed v3) | 0.749, 0.340 | T3, T6 |
+| T6 | Upper town | fight | T (confirmed v3) | 0.664, 0.295 | T5, L1 |
 | B1 | River bridge | quest | T | 0.819, 0.421 | T2, B2 |
 | B2 | Far bank (to Chapter 2) | travel | T | 0.963, 0.423 | B1 |
-| L1 | Cliff crossroads | fight | proposed | 0.579, 0.225 | T6, L2, L3, D1 |
-| L2 | Clifftop chapel | cutscene | proposed | 0.551, 0.179 | L1 |
-| L3 | Cliff road | rest | proposed | 0.450, 0.197 | L1, L4 |
+| L1 | Cliff crossroads | fight | T (confirmed v3) | 0.579, 0.225 | T6, L2, L3, D1 |
+| L2 | Clifftop chapel | cutscene | T (confirmed v3) | 0.551, 0.179 | L1 |
+| L3 | Cliff road | rest | T (confirmed v3) | 0.450, 0.197 | L1, L4 |
 | L4 | Lighthouse path | elite fight | T | 0.353, 0.147 | L3, L5 |
 | L5 | Lighthouse (gives the key) | quest | T | 0.262, 0.108 | L4 |
-| D1 | Fishing hamlet | fight | proposed | 0.767, 0.229 | L1, D2, D3 |
-| D2 | Boat sheds | loot cache | proposed | 0.682, 0.241 | D1 |
-| D3 | Hamlet rise | fight | proposed | 0.867, 0.191 | D1, D4 |
-| D4 | Tower switchbacks | hazard | proposed | 0.827, 0.129 | D3, D5 |
-| D5 | Old watchtower | cutscene | proposed | 0.841, 0.068 | D4 |
-| M1 | South fork | fight | proposed | 0.649, 0.790 | W2, M2, P1 |
-| M2 | River meadow | hazard | proposed | 0.854, 0.739 | M1, M3, M4 |
-| M3 | Riverbank | loot cache | proposed | 0.858, 0.803 | M2 |
-| M4 | Manor road | hazard | proposed | 0.777, 0.645 | M2, M5 |
+| D1 | Fishing hamlet | fight | T (confirmed v3) | 0.767, 0.229 | L1, D2, D3 |
+| D2 | Boat sheds | loot cache | T (confirmed v3) | 0.682, 0.241 | D1 |
+| D3 | Hamlet rise | fight | T (confirmed v3) | 0.867, 0.191 | D1, D4 |
+| D4 | Tower switchbacks | hazard | T (confirmed v3) | 0.827, 0.129 | D3, D5 |
+| D5 | Old watchtower | cutscene | T (confirmed v3) | 0.841, 0.068 | D4 |
+| M1 | South fork | fight | T (confirmed v3) | 0.649, 0.790 | W2, M2, P1 |
+| M2 | River meadow | hazard | T (confirmed v3) | 0.854, 0.739 | M1, M3, M4 |
+| M3 | Riverbank | loot cache | T (confirmed v3) | 0.858, 0.803 | M2 |
+| M4 | Manor road | hazard | T (confirmed v3) | 0.777, 0.645 | M2, M5 |
 | M5 | Walled manor | village | T | 0.740, 0.571 | M4 |
-| P1 | Foothills | hazard | proposed | 0.561, 0.894 | M1, P2 (unsure) |
-| P2 | Mountain path | fight | proposed | 0.450, 0.924 | P1 (unsure), P3 |
-| P3 | High pass | cutscene | proposed | 0.277, 0.994 | P2 |
+| P1 | Foothills | hazard | T (confirmed v3) | 0.561, 0.894 | M1, P2 |
+| P2 | Mountain path | fight | T (confirmed v3) | 0.450, 0.924 | P1, P3 |
+| P3 | High pass | cutscene | T (confirmed v3) | 0.277, 0.994 | P2 |
 
 Positions are fractions of the 2400px coast plate (`act1-coast.webp`), read from T's sketch. Board:
 https://claude.ai/artifact/1jCcmhZbyaWXyE2SZgFRmz (private to T).
 
 ## Handoff to /plot
-Task: Rebuild the Breakwater (Act 1, Chapter 1) as T's 43-node map, with T's quest chain on the new quest rules, so
+Task: Rebuild the Breakwater (Act 1, Chapter 1) as T's 44-node map, with T's quest chain on the new quest rules, so
 a player can walk the chapter from the windmill to the bridge through every gate T described; and give every map
 node a distinct, coloured, kind icon on a clearing, so a player can tell each node's kind at a glance.
 Source: this file; `plan/revamp/breakwater-vision.md`
 Acceptance:
-- A1 The Breakwater graph has exactly the 43 nodes and 42 roads of the node list above; engine node ids are the
+- A1 The Breakwater graph has exactly the 44 nodes, 42 roads and one travel pair of the node list above (A1 as plotted); engine node ids are the
   board codes (`bw-w1` .. `bw-p3`); each node has its listed kind; the plate has one mark per node at the listed
   position.
 - A2 The quest chain runs on MQ1's rules: W1 gives the fishermen quest; C2 completes it and gives the next; L5
