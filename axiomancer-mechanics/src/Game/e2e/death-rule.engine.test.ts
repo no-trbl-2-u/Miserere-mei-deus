@@ -19,7 +19,7 @@ import type { GameState } from '../types';
 import type { PersistenceAdapter } from '../persistence/types';
 import { createStartingWorld } from '../../World';
 import {
-    arriveAtNode, legalMovesFrom, moveToNode, placeOnNode, unlockAdjacent,
+    arriveAtNode, legalMovesFrom, markNodeConsumed, moveToNode, placeOnNode, unlockAdjacent,
 } from '../../World/world.reducer';
 import { resolveMapEvent } from '../../World/MapEvents/resolve-map-event';
 import { takeTravel } from '../../World/MapEvents/travel';
@@ -41,7 +41,7 @@ function memoryDisk(): PersistenceAdapter & { raw: () => GameState | null } {
     };
 }
 
-/** A new Breakwater with its quest nodes settled, so a walk reaches the pockets. */
+/** A new Breakwater with its quest nodes settled, so a walk crosses the keep gate. */
 function bwWorld(): WorldState {
     const w = createStartingWorld('breakwater');
     return { ...w, currentMap: settleQuestNodes(w.currentMap) };
@@ -58,24 +58,26 @@ function walk(from: WorldState, ...route: string[]): WorldState {
 
 const FIGHTS = [
     {
-        // A pocket fight: it opens nothing on (its pocket leads nowhere).
-        name: 'a normal fight (bw-14)',
-        approach: () => walk(bwWorld(), 'bw-4', 'bw-9', 'bw-20'),
-        from: 'bw-20',
-        node: 'bw-14',
-        onward: null,
+        // The first fight past the start: it walks on to the harbour.
+        name: 'a normal fight (bw-w3)',
+        approach: () => walk(bwWorld(), 'bw-w2'),
+        from: 'bw-w2',
+        node: 'bw-w3',
+        onward: 'bw-h1',
         boss: false,
     },
     {
-        name: 'a boss fight (the door fight at bw-17)',
+        // The chapter boss: a dead end past the keep gate (the bridge it
+        // pays for opens on the turn-in at bw-b1, not on the win).
+        name: 'a boss fight (the chapter boss at bw-k2)',
         approach: () => {
-            const placed = placeOnNode(bwWorld(), 'bw-16');
-            // The settled quest node bw-22 sits between bw-16 and the door.
-            return walk({ ...placed, currentMap: unlockAdjacent(placed.currentMap, 'bw-16') }, 'bw-22');
+            const placed = placeOnNode(bwWorld(), 'bw-w5');
+            // The elite beaten, the settled quest node bw-k1 sits before the keep.
+            return walk({ ...placed, currentMap: markNodeConsumed(placed.currentMap, 'bw-w5') }, 'bw-k1');
         },
-        from: 'bw-22',
-        node: 'bw-17',
-        onward: 'bw-18',
+        from: 'bw-k1',
+        node: 'bw-k2',
+        onward: null,
         boss: true,
     },
 ];
@@ -101,20 +103,20 @@ describe('A1 - the save contract', () => {
         mockSequentialRng(0.5);
         const disk = memoryDisk();
         const store = createGameStore(disk, { player: Player, world: FIGHTS[0]!.approach() });
-        enterFight(store, 'bw-14', false);
+        enterFight(store, 'bw-w3', false);
         expect(lose(store)).toBe('revived');
         store.getState().save();
 
         const reloaded = createGameStore(disk).getState();
         expect(reloaded.dying).toBe(true);
         expect(reloaded.player.health).toBe(1);
-        expect(reloaded.world.currentMap.currentNode).toBe('bw-20');
+        expect(reloaded.world.currentMap.currentNode).toBe('bw-w2');
 
         // And the arrival that wrote arrivedFrom rides a save too.
         const arrived = createGameStore(memoryDisk(), { player: Player, world: FIGHTS[0]!.approach() });
-        arrived.getState().moveToNode('bw-14');
+        arrived.getState().moveToNode('bw-w3');
         arrived.getState().save();
-        expect(arrived.getState().world.currentMap.arrivedFrom).toBe('bw-20');
+        expect(arrived.getState().world.currentMap.arrivedFrom).toBe('bw-w2');
     });
 
     it('a save from before the death rule loads not dying, with no arrivedFrom', () => {
@@ -234,9 +236,9 @@ describe('A3 - the final death', () => {
         const store = createGameStore(memoryDisk(), { player: Player, world: FIGHTS[0]!.approach(), flags: ['a-flag'] });
         const first = store.getState();
 
-        enterFight(store, 'bw-14', false);
+        enterFight(store, 'bw-w3', false);
         expect(lose(store)).toBe('revived');
-        enterFight(store, 'bw-14', false);
+        enterFight(store, 'bw-w3', false);
         expect(lose(store)).toBe('run-over');
 
         const after = store.getState();
@@ -244,7 +246,7 @@ describe('A3 - the final death', () => {
         expect(after.runId).not.toBe(first.runId);
         expect(after.player.health).toBe(after.player.maxHealth);
         expect(after.flags).toEqual([]);
-        expect(after.world.currentMap.currentNode).toBe('bw-1');
+        expect(after.world.currentMap.currentNode).toBe('bw-w1');
         expect(after.world.currentMap.consumedNodes).toEqual([]);
         expect(after.player.level).toBe(first.player.level);
 
@@ -263,7 +265,7 @@ describe('A3 - the final death', () => {
     it('a death, a clearDying, then a death revives again', () => {
         mockSequentialRng(0.5);
         const state = { ...createNewGameState(), world: FIGHTS[0]!.approach() };
-        const entered = { ...state, world: moveToNode(state.world, 'bw-14') };
+        const entered = { ...state, world: moveToNode(state.world, 'bw-w3') };
         const first = resolveDeath(entered, 'fight');
         expect(first.outcome).toBe('revived');
         expect(first.state.dying).toBe(true);
@@ -272,7 +274,7 @@ describe('A3 - the final death', () => {
         expect(healed.dying).toBeUndefined();
         expect(clearDying(healed)).toBe(healed);
 
-        const reEntered = { ...healed, world: moveToNode(healed.world, 'bw-14') };
+        const reEntered = { ...healed, world: moveToNode(healed.world, 'bw-w3') };
         const second = resolveDeath(reEntered, 'fight');
         expect(second.outcome).toBe('revived');
         expect(second.state.dying).toBe(true);
@@ -290,34 +292,34 @@ describe('A3 - the final death', () => {
 describe('A4 - no previous node', () => {
     it('arrivedFrom absent: back on the map start', () => {
         const state = createNewGameState();
-        const placed = placeOnNode(state.world, 'bw-14');
+        const placed = placeOnNode(state.world, 'bw-w3');
         expect(placed.currentMap.arrivedFrom ?? null).toBeNull();
         const out = resolveDeath({ ...state, world: placed }, 'fight');
         expect(out.outcome).toBe('revived');
-        expect(out.state.world.currentMap.currentNode).toBe('bw-1');
-        expect(out.state.world.currentMap.consumedNodes).not.toContain('bw-14');
+        expect(out.state.world.currentMap.currentNode).toBe('bw-w1');
+        expect(out.state.world.currentMap.consumedNodes).not.toContain('bw-w3');
         expect(legalMovesFrom(out.state.world.currentMap).length).toBeGreaterThan(0);
     });
 
     it('arrivedFrom equal to the death node or off the map: back on the map start', () => {
         const state = createNewGameState();
-        const placed = placeOnNode(state.world, 'bw-14');
-        for (const arrivedFrom of ['bw-14', 'not-a-node']) {
+        const placed = placeOnNode(state.world, 'bw-w3');
+        for (const arrivedFrom of ['bw-w3', 'not-a-node']) {
             const world = { ...placed, currentMap: { ...placed.currentMap, arrivedFrom } };
             const out = resolveDeath({ ...state, world }, 'fight');
-            expect(out.state.world.currentMap.currentNode).toBe('bw-1');
+            expect(out.state.world.currentMap.currentNode).toBe('bw-w1');
         }
     });
 
     it('the death node is the start node: the player stays, the arrival owed', () => {
         const state = createNewGameState();
         const map = state.world.currentMap;
-        expect(map.currentNode).toBe('bw-1');
+        expect(map.currentNode).toBe('bw-w1');
         const out = resolveDeath(state, 'fight');
         expect(out.outcome).toBe('revived');
         const after = out.state.world.currentMap;
-        expect(after.currentNode).toBe('bw-1');
-        expect(after.pendingArrival).toBe('bw-1');
+        expect(after.currentNode).toBe('bw-w1');
+        expect(after.pendingArrival).toBe('bw-w1');
         expect(out.state.dying).toBe(true);
         expect(out.state.player.health).toBe(1);
     });
@@ -329,7 +331,7 @@ describe('A6 - the engine hazard dies the same way', () => {
 
     function onHazard(dying: boolean): GameState {
         const base = createNewGameState();
-        const world = walk(bwWorld(), 'bw-5');
+        const world = walk(bwWorld(), 'bw-w2');
         return { ...base, world, dying: dying ? true : undefined };
     }
 
@@ -339,12 +341,12 @@ describe('A6 - the engine hazard dies the same way', () => {
         expect(event.kind).toBe('hazard');
         expect(out.player.health).toBe(1);
         expect(out.dying).toBe(true);
-        expect(out.world.currentMap.currentNode).toBe('bw-1');
-        expect(out.world.currentMap.consumedNodes).not.toContain('bw-5');
-        expect(out.world.currentMap.availableNodes).toContain('bw-5');
+        expect(out.world.currentMap.currentNode).toBe('bw-w1');
+        expect(out.world.currentMap.consumedNodes).not.toContain('bw-w2');
+        expect(out.world.currentMap.availableNodes).toContain('bw-w2');
         // The hazard fires again on the way back in.
-        const again = moveToNode(out.world, 'bw-5');
-        expect(again.currentMap.pendingArrival).toBe('bw-5');
+        const again = moveToNode(out.world, 'bw-w2');
+        expect(again.currentMap.pendingArrival).toBe('bw-w2');
     });
 
     it('lethal flat damage while dying ends the run', () => {
@@ -353,7 +355,7 @@ describe('A6 - the engine hazard dies the same way', () => {
         expect(out.dying).toBeUndefined();
         expect(out.runId).not.toBe(state.runId);
         expect(out.player.health).toBe(out.player.maxHealth);
-        expect(out.world.currentMap.currentNode).toBe('bw-1');
+        expect(out.world.currentMap.currentNode).toBe('bw-w1');
     });
 
     it('survivable damage is not a death', () => {
@@ -361,24 +363,24 @@ describe('A6 - the engine hazard dies the same way', () => {
         const { state: out } = resolveMapEvent(state, () => 0.5, mild);
         expect(out.dying).toBeUndefined();
         expect(out.player.health).toBe(state.player.health - 1);
-        expect(out.world.currentMap.currentNode).toBe('bw-5');
-        expect(out.world.currentMap.consumedNodes).toContain('bw-5');
+        expect(out.world.currentMap.currentNode).toBe('bw-w2');
+        expect(out.world.currentMap.consumedNodes).toContain('bw-w2');
     });
 });
 
 describe('A1 - which verbs write arrivedFrom', () => {
     it('an arrival records the node walked from; a placement and a crossing clear it', () => {
         const start = bwWorld();
-        const arrived = moveToNode(start, 'bw-5');
-        expect(arrived.currentMap.arrivedFrom).toBe('bw-1');
+        const arrived = moveToNode(start, 'bw-w2');
+        expect(arrived.currentMap.arrivedFrom).toBe('bw-w1');
 
-        const placed = placeOnNode(arrived, 'bw-8');
+        const placed = placeOnNode(arrived, 'bw-w5');
         expect(placed.currentMap.arrivedFrom).toBeNull();
 
-        // Standing on the river bridge (bw-18) with bw-1 as the node walked
+        // Standing on the river bridge (bw-b2) with bw-w1 as the node walked
         // from; taking the door crosses (phase NK1d: the yes is `takeTravel`).
-        const onDoor = { ...arrived, currentMap: { ...arrived.currentMap, currentNode: 'bw-18' } };
-        expect(onDoor.currentMap.arrivedFrom).toBe('bw-1');
+        const onDoor = { ...arrived, currentMap: { ...arrived.currentMap, currentNode: 'bw-b2' } };
+        expect(onDoor.currentMap.arrivedFrom).toBe('bw-w1');
         const crossed = takeTravel({ ...createNewGameState(), world: onDoor });
         expect(crossed.world.currentMap.name).toBe('charcoal-wood');
         expect(crossed.world.currentMap.arrivedFrom ?? null).toBeNull();
@@ -387,7 +389,7 @@ describe('A1 - which verbs write arrivedFrom', () => {
 
 describe('DY1b - the reducer stamps a run over, and arrival keeps what it walked', () => {
     it('PLAYER_DIED on a dying player stamps the current save version; a revive keeps the state version', () => {
-        const base = { ...createNewGameState(), world: moveToNode(bwWorld(), 'bw-5') };
+        const base = { ...createNewGameState(), world: moveToNode(bwWorld(), 'bw-w2') };
         const stale = 1 as GameState['version'];
 
         const over = gameReducer(
@@ -406,12 +408,12 @@ describe('DY1b - the reducer stamps a run over, and arrival keeps what it walked
     });
 
     it('arriving at the node already under the player keeps the arrivedFrom it had, or none', () => {
-        const map = moveToNode(bwWorld(), 'bw-5').currentMap;
-        expect(arriveAtNode(map, 'bw-5').arrivedFrom).toBe('bw-1');
+        const map = moveToNode(bwWorld(), 'bw-w2').currentMap;
+        expect(arriveAtNode(map, 'bw-w2').arrivedFrom).toBe('bw-w1');
 
         const bare = { ...map };
         delete (bare as { arrivedFrom?: unknown }).arrivedFrom;
-        expect(arriveAtNode(bare, 'bw-5').arrivedFrom).toBeNull();
-        expect(arriveAtNode(bare, 'bw-7').arrivedFrom).toBe('bw-5');
+        expect(arriveAtNode(bare, 'bw-w2').arrivedFrom).toBeNull();
+        expect(arriveAtNode(bare, 'bw-w3').arrivedFrom).toBe('bw-w2');
     });
 });

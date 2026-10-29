@@ -4,7 +4,7 @@
  * Replaces hand-built `store.setState({ world: …, player: … })` seating
  * with a declarative fixture (registry id or inline document), the same
  * documents the CLI's `--fixture` flag and the web `?fixture=` deep link
- * boot from. A test then reads as "a Wanderer on bw-2" instead of a
+ * boot from. A test then reads as "a Wanderer on bw-w2" instead of a
  * `createMapState` + spread dance, and cannot drift from what the app
  * itself would boot.
  *

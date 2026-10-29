@@ -37,7 +37,7 @@ function open(questline: string, node: number, completed: string[] = []) {
     const handle = createFixtureStore({
         id: `mq1c-${questline}-${node}`,
         seed: `mq1c-${questline}-${node}`,
-        world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-1' },
+        world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-w2' },
     });
     handle.store.setState({ quests: { ...gs(handle.store).quests, completed } } as never);
     handle.actions.resolveCurrentMapEvent(undefined, { kind: 'quest', questline, node });

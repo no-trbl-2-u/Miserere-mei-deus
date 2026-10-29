@@ -19,9 +19,9 @@ import { createAppActions } from '@/state/actions';
 import { createAppStore, type AppStore } from '@/state/store';
 
 /**
- * A new Breakwater with its quest nodes settled (test-only): the markers
- * spent and their locks open, so these walks reach the pockets' fights
- * without playing the questline.
+ * A new Breakwater with its quest nodes settled (test-only): the chain's
+ * quest nodes spent and both quest gates open, so these walks reach any
+ * road without playing the chain.
  */
 function bwWorld(): WorldState {
     const w = createStartingWorld('breakwater');
@@ -29,9 +29,8 @@ function bwWorld(): WorldState {
 }
 
 /**
- * `bwWorld()` with the player standing on `nodeId` (a settled marker, so its
- * pocket's fights are a road away). The player walks the roads: a pocket
- * fight is a legal move only from its marker.
+ * `bwWorld()` with the player standing on `nodeId`. The player walks the
+ * roads: a node is a legal move only from a node a road away.
  */
 function bwWorldOn(nodeId: string): WorldState {
     const w = bwWorld();
@@ -131,16 +130,16 @@ describe('selectExplorationViewModel: engine reads', () => {
         const vm = selectExplorationViewModel(store.getState());
 
         expect(vm.mapId).toBe('breakwater');
-        expect(vm.currentNodeId).toBe('bw-1');
+        expect(vm.currentNodeId).toBe('bw-w1');
 
         const byId = Object.fromEntries(vm.nodes.map((n) => [n.id, n]));
-        expect(byId['bw-1'].kind).toBe('current');
-        expect(byId['bw-4'].kind).toBe('available');
-        // The customs-house rest (column 2), a pocket's fight (behind its
-        // quest marker) and the river-bridge door are beyond the first ring.
-        expect(byId['bw-9'].kind).toBe('locked');
-        expect(byId['bw-2'].kind).toBe('locked');
-        expect(byId['bw-18'].kind).toBe('locked');
+        expect(byId['bw-w1'].kind).toBe('current');
+        expect(byId['bw-w2'].kind).toBe('available');
+        // The camp (two roads out), the harbour's first fight and the far
+        // bank's door are beyond the first road.
+        expect(byId['bw-w4'].kind).toBe('locked');
+        expect(byId['bw-h1'].kind).toBe('locked');
+        expect(byId['bw-b2'].kind).toBe('locked');
     });
 
     it('exposes options for each currently available node with a thematic description', () => {
@@ -148,41 +147,40 @@ describe('selectExplorationViewModel: engine reads', () => {
 
         const vm = selectExplorationViewModel(store.getState());
 
-        // The windmill (bw-1) opens on the whole first ring: the first quest
-        // marker, the foothill pass and smugglers' cove.
-        expect(vm.options.map((o) => o.nodeId).sort()).toEqual(['bw-19', 'bw-4', 'bw-5'].sort());
+        // The windmill (bw-w1) has one road out: the first fight.
+        expect(vm.options.map((o) => o.nodeId)).toEqual(['bw-w2']);
         for (const opt of vm.options) {
             expect(opt.description.length).toBeGreaterThan(0);
         }
     });
 
     it('marks available encounter nodes as triggersCombat; rest nodes do not', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorldOn('bw-20') } });
-
-        // With the quest nodes settled and the player on marker 2, the crane
-        // quay bw-2 (an `encounter` in its pocket) is available and a combat
-        // trigger.
-        const vm = selectExplorationViewModel(store.getState());
-        const bw2 = vm.nodes.find((n) => n.id === 'bw-2')!;
-        expect(bw2.kind).toBe('available');
-        expect(bw2.type).toBe('encounter');
-        expect(bw2.triggersCombat).toBe(true);
-
-        // On a new game the lighthouse bw-14 is an encounter too, but it sits
-        // behind its quest marker: locked, so not a combat trigger.
         const fresh = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
-        const bw14 = selectExplorationViewModel(fresh.getState()).nodes.find((n) => n.id === 'bw-14')!;
-        expect(bw14.type).toBe('encounter');
-        expect(bw14.kind).not.toBe('available');
-        expect(bw14.triggersCombat).toBe(false);
 
-        // The customs-house rest bw-9: available, and never a combat trigger.
-        createAppActions(fresh).moveTo('bw-4');
+        // The first fight bw-w2 is a road from the windmill: available and a
+        // combat trigger.
+        const vm = selectExplorationViewModel(fresh.getState());
+        const first = vm.nodes.find((n) => n.id === 'bw-w2')!;
+        expect(first.kind).toBe('available');
+        expect(first.type).toBe('encounter');
+        expect(first.triggersCombat).toBe(true);
+
+        // The harbour's first fight bw-h1 is an encounter too, but it is
+        // roads away: locked, so not a combat trigger.
+        const harbour = vm.nodes.find((n) => n.id === 'bw-h1')!;
+        expect(harbour.type).toBe('encounter');
+        expect(harbour.kind).not.toBe('available');
+        expect(harbour.triggersCombat).toBe(false);
+
+        // The camp bw-w4: available once the first fight is won, and never a
+        // combat trigger.
+        createAppActions(fresh).moveTo('bw-w2');
+        fightOut(fresh);
         const vm2 = selectExplorationViewModel(fresh.getState());
-        const bw9 = vm2.nodes.find((n) => n.id === 'bw-9')!;
-        expect(bw9.kind).toBe('available');
-        expect(bw9.type).toBe('rest');
-        expect(bw9.triggersCombat).toBe(false);
+        const camp = vm2.nodes.find((n) => n.id === 'bw-w4')!;
+        expect(camp.kind).toBe('available');
+        expect(camp.type).toBe('rest');
+        expect(camp.triggersCombat).toBe(false);
     });
 
     it('encounter step-card icon is "sword", NOT "flee" — exploration-audit [3.5] DRIFT fix', () => {
@@ -191,15 +189,14 @@ describe('selectExplorationViewModel: engine reads', () => {
         // surfacing as "this step lets you flee" rather than
         // "this step starts combat". Pin the new mapping so a
         // future refactor doesn't silently revert.
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorldOn('bw-20') } });
-        // The crane quay bw-2 (encounter) is a road away from marker 2 once
-        // the quest nodes are settled.
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
+        // The first fight bw-w2 (encounter) is a road from the windmill.
 
         const vm = selectExplorationViewModel(store.getState());
-        const encounterOption = vm.options.find((o) => o.nodeId === 'bw-2');
+        const encounterOption = vm.options.find((o) => o.nodeId === 'bw-w2');
         expect(encounterOption).toBeDefined();
         // actions[i] mirrors options[i] order; find the matching action.
-        const idx = vm.options.findIndex((o) => o.nodeId === 'bw-2');
+        const idx = vm.options.findIndex((o) => o.nodeId === 'bw-w2');
         const encounterAction = vm.actions[idx];
         expect(encounterAction.iconKey).toBe('sword');
         expect(encounterAction.iconKey).not.toBe('flee');
@@ -214,46 +211,47 @@ describe('moveTo action: happy path', () => {
     it('marks the target completed, advances currentNodeId, and unlocks connected nodes', () => {
         const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
         const actions = createAppActions(store);
+        // The first fight won, so its roads on are open.
+        actions.moveTo('bw-w2');
+        fightOut(store);
 
-        const result = actions.moveTo('bw-4');
+        const result = actions.moveTo('bw-w4');
 
-        expect(result).toEqual({ moved: true, currentNodeId: 'bw-4', locked: false });
+        expect(result).toEqual({ moved: true, currentNodeId: 'bw-w4', locked: false });
 
         const vm = selectExplorationViewModel(store.getState());
-        expect(vm.currentNodeId).toBe('bw-4');
+        expect(vm.currentNodeId).toBe('bw-w4');
         const byId = Object.fromEntries(vm.nodes.map((n) => [n.id, n]));
-        expect(byId['bw-4'].kind).toBe('current');
-        expect(store.getState().world.currentMap.completedNodes).toContain('bw-4');
-        // The foothill pass's forward fan (bw-7 / bw-9) opens; the third
-        // ring (bw-13) opens only once the player stands on the customs house.
-        expect(byId['bw-7'].kind).toBe('available');
-        expect(byId['bw-9'].kind).toBe('available');
-        expect(byId['bw-13'].kind).toBe('locked');
+        expect(byId['bw-w4'].kind).toBe('current');
+        expect(store.getState().world.currentMap.completedNodes).toContain('bw-w4');
+        // The camp's one road on (the causeway elite bw-w5) opens; the keep
+        // gate bw-k1 opens only once the player stands past the elite.
+        expect(byId['bw-w5'].kind).toBe('available');
+        expect(byId['bw-k1'].kind).toBe('locked');
 
-        actions.moveTo('bw-9');
+        actions.moveTo('bw-w5');
         const after = selectExplorationViewModel(store.getState());
         const byId2 = Object.fromEntries(after.nodes.map((n) => [n.id, n]));
-        expect(byId2['bw-13'].kind).toBe('available');
-        // The customs house's road to the second quest marker is the step-1
-        // lock: standing there opens it in no list, and the tap is refused.
-        expect(byId2['bw-20'].kind).toBe('locked');
-        expect(store.getState().world.currentMap.availableNodes).not.toContain('bw-20');
-        expect(actions.moveTo('bw-20').moved).toBe(false);
+        // The elite holds its far road until beaten: standing on it opens
+        // that road in no list, and the tap is refused.
+        expect(byId2['bw-k1'].kind).toBe('locked');
+        expect(store.getState().world.currentMap.availableNodes).not.toContain('bw-k1');
+        expect(actions.moveTo('bw-k1').moved).toBe(false);
     });
 
     it('refreshes the options drawer with the new available nodes after a move', () => {
         const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
         const actions = createAppActions(store);
 
-        actions.moveTo('bw-4'); // the foothill pass — gathering, completed on entry
-        actions.moveTo('bw-9'); // the customs house — a rest, completed on entry
+        actions.moveTo('bw-w2'); // the first fight
+        fightOut(store);
+        actions.moveTo('bw-w4'); // the camp — a rest, completed on entry
 
         const vm = selectExplorationViewModel(store.getState());
         const optionIds = vm.options.map((o) => o.nodeId).sort();
         // The road rule: the drawer offers the NEW nodes a road away from the
-        // customs house. The pass behind it is walked (a road back, not an
-        // option) and the road to marker 2 is still locked.
-        expect(optionIds).toEqual(['bw-13']);
+        // camp. The fight behind it is walked (a road back, not an option).
+        expect(optionIds).toEqual(['bw-w5']);
     });
 });
 
@@ -267,13 +265,13 @@ describe('moveTo action: locked / invalid targets', () => {
         const actions = createAppActions(store);
         const before = store.getState();
 
-        // The watchtower bw-17 is the last ring before the door — locked
-        // from the windmill.
-        const result = actions.moveTo('bw-17');
+        // The chapter boss bw-k2 is behind the keep gate — locked from the
+        // windmill.
+        const result = actions.moveTo('bw-k2');
 
         expect(result.moved).toBe(false);
         expect(result.locked).toBe(true);
-        expect(result.currentNodeId).toBe('bw-1');
+        expect(result.currentNodeId).toBe('bw-w1');
 
         // The world slice is unchanged on a refused move.
         expect(store.getState().world).toBe(before.world);
@@ -289,19 +287,18 @@ describe('moveTo action: locked / invalid targets', () => {
     });
 
     it('allows re-entering a reusable encounter node (gauntlet re-fight)', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorldOn('bw-21') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
 
-        // The sea fort bw-6 resolves to an engine `encounter` kind (in the
-        // third step's pocket, the quest nodes settled), so it is not
-        // completed on entry: walked off and back, it is owed again.
-        actions.moveTo('bw-6');
-        expect(actions.moveTo('bw-21').moved).toBe(true);
-        const result = actions.moveTo('bw-6');
+        // The first fight bw-w2 resolves to an engine `encounter` kind, so it
+        // is not completed on entry: walked off and back, it is owed again.
+        actions.moveTo('bw-w2');
+        expect(actions.moveTo('bw-w1').moved).toBe(true);
+        const result = actions.moveTo('bw-w2');
 
         expect(result.moved).toBe(true);
-        expect(store.getState().world.currentMap.completedNodes).not.toContain('bw-6');
-        expect(store.getState().world.currentMap.pendingArrival).toBe('bw-6');
+        expect(store.getState().world.currentMap.completedNodes).not.toContain('bw-w2');
+        expect(store.getState().world.currentMap.pendingArrival).toBe('bw-w2');
     });
 
     it('exposes locked nodes through the VM so the screen can desaturate them', () => {
@@ -366,28 +363,27 @@ describe('changeMap action: map transition', () => {
 
 describe('exploration lifecycle: multi-step navigation', () => {
     it('encounter nodes stay reusable and unlock their engine neighbours', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorldOn('bw-21') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
         const actions = createAppActions(store);
 
-        actions.moveTo('bw-6'); // the sea fort — encounter, reusable, not completed
+        actions.moveTo('bw-w2'); // the first fight — encounter, reusable, not completed
         fightOut(store);
-        actions.moveTo('bw-21'); // marker 3, walked back across
-        actions.moveTo('bw-7'); // the south pier — loot-cache, completed on entry
+        actions.moveTo('bw-w4'); // the camp — a rest, completed on entry
 
         const completed = store.getState().world.currentMap.completedNodes;
-        // bw-6 is an engine `encounter` kind, so it does not complete on
-        // entry (the fight settles it); the loot-cache bw-7 is a one-shot.
-        expect(completed).not.toContain('bw-6');
-        expect(completed).toContain('bw-7');
+        // bw-w2 is an engine `encounter` kind, so it does not complete on
+        // entry (the fight settles it); the camp bw-w4 is a one-shot.
+        expect(completed).not.toContain('bw-w2');
+        expect(completed).toContain('bw-w4');
 
         const vm = selectExplorationViewModel(store.getState());
         const byId = Object.fromEntries(vm.nodes.map((n) => [n.id, n]));
-        expect(byId['bw-7'].kind).toBe('current');
-        // The shipwreck (bw-11) is the south pier's neighbour in the ENGINE
-        // graph; the bridge sits behind the watchtower, which holds it until
-        // the boss falls.
-        expect(byId['bw-11'].kind).toBe('available');
-        expect(byId['bw-18'].kind).toBe('locked');
+        expect(byId['bw-w4'].kind).toBe('current');
+        // The causeway elite (bw-w5) is the camp's neighbour in the ENGINE
+        // graph; the keep gate sits past the elite, which holds it until
+        // beaten.
+        expect(byId['bw-w5'].kind).toBe('available');
+        expect(byId['bw-k1'].kind).toBe('locked');
     });
 
     /**
@@ -410,11 +406,11 @@ describe('exploration lifecycle: multi-step navigation', () => {
      */
     it('a move IS a save checkpoint — mobile policy, at the Spec 09 Q4 / Phase 51 granularity', () => {
         const adapter = createMemoryAdapter();
-        const store = createAppStore({ adapter, overrides: { world: bwWorldOn('bw-20') } });
+        const store = createAppStore({ adapter, overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
         const saveSpy = jest.spyOn(adapter, 'save');
 
-        actions.moveTo('bw-2');
+        actions.moveTo('bw-w2');
 
         // Movement is hard-won progress. The write comes from the explicit
         // checkpoint in `moveToAction` (`state/actions.ts`) — NOT from
@@ -447,10 +443,10 @@ describe('exploration lifecycle: multi-step navigation', () => {
         // `MOVE_TO_NODE` IS on the engine's DURABLE_ACTIONS allowlist, so a
         // bare engine store would write here. On mobile it must not.
         const engineArm = createMemoryAdapter();
-        const engineStore = createAppStore({ adapter: engineArm, overrides: { world: bwWorldOn('bw-20') } });
+        const engineStore = createAppStore({ adapter: engineArm, overrides: { world: bwWorld() } });
         const engineSpy = jest.spyOn(engineArm, 'save');
 
-        engineStore.getState().moveToNode('bw-2');
+        engineStore.getState().moveToNode('bw-w2');
 
         expect(engineSpy).not.toHaveBeenCalled();
 
@@ -458,10 +454,10 @@ describe('exploration lifecycle: multi-step navigation', () => {
         // explicit checkpoint `moveToAction` takes (`state/actions.ts`),
         // which is mobile policy, not the engine allowlist.
         const mobileArm = createMemoryAdapter();
-        const mobileStore = createAppStore({ adapter: mobileArm, overrides: { world: bwWorldOn('bw-20') } });
+        const mobileStore = createAppStore({ adapter: mobileArm, overrides: { world: bwWorld() } });
         const mobileSpy = jest.spyOn(mobileArm, 'save');
 
-        createAppActions(mobileStore).moveTo('bw-2');
+        createAppActions(mobileStore).moveTo('bw-w2');
 
         expect(mobileSpy).toHaveBeenCalledTimes(1);
     });
@@ -489,12 +485,12 @@ describe('moveTo action: engine discoveredNodes population (Phase 27)', () => {
         const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
 
-        actions.moveTo('bw-2');
+        actions.moveTo('bw-w2');
 
         const map = store.getState().world.currentMap;
         // discoveredNodes is the engine's new parallel field
         // populated via revealAdjacent. The engine reads neighbours
-        // from getMapDefinition; bw-2's connected nodes per the
+        // from getMapDefinition; bw-w2's connected nodes per the
         // registered map should land here.
         expect(map.discoveredNodes.length).toBeGreaterThan(0);
         // availableNodes is populated too, for the screen.
@@ -505,10 +501,12 @@ describe('moveTo action: engine discoveredNodes population (Phase 27)', () => {
         const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
 
-        actions.moveTo('bw-2');
+        actions.moveTo('bw-w2');
         const after1 = [...store.getState().world.currentMap.discoveredNodes];
-        // bw-3 is bw-2's lateral neighbour; both open the customs house bw-9.
-        actions.moveTo('bw-3');
+        // Walk back to the windmill and on to bw-w2 again: the same
+        // neighbours are revealed a second time.
+        actions.moveTo('bw-w1');
+        actions.moveTo('bw-w2');
         const after2 = store.getState().world.currentMap.discoveredNodes;
 
         // discoveredNodes only grows; no duplicates after a second
@@ -524,12 +522,13 @@ describe('moveTo action: engine discoveredNodes population (Phase 27)', () => {
 
 describe('resolveCurrentMapEvent: engine consumedNodes population (Phase 27)', () => {
     it('marks the current node consumed when a non-none event resolves', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorldOn('bw-m2') } });
         const actions = createAppActions(store);
         // Walk to a node before resolving — the starting node may be a
-        // 'none' kind in some fixtures. bw-5 is a loot cache: a fight would
-        // stay unconsumed until it settles (the twin below).
-        actions.moveTo('bw-5');
+        // 'none' kind in some fixtures. bw-m3 (a road from the meadow
+        // hazard bw-m2) is a loot cache: a fight would stay unconsumed until
+        // it settles (the twin below).
+        actions.moveTo('bw-m3');
         const before = store.getState().world.currentMap.consumedNodes.length;
 
         const produced = actions.resolveCurrentMapEvent();
@@ -561,18 +560,18 @@ describe('resolveCurrentMapEvent: engine consumedNodes population (Phase 27)', (
     });
 
     it('leaves a fight\'s node unconsumed until the fight settles (R9a)', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorldOn('bw-20') } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
-        actions.moveTo('bw-2');
+        actions.moveTo('bw-w2');
 
         expect(actions.resolveCurrentMapEvent()).toBe(true);
-        expect(store.getState().world.currentMap.consumedNodes).not.toContain('bw-2');
+        expect(store.getState().world.currentMap.consumedNodes).not.toContain('bw-w2');
 
         actions.beginHazardEncounter();
         store.getState().endCombat('victory');
 
-        expect(store.getState().world.currentMap.consumedNodes).toContain('bw-2');
-        expect(store.getState().world.currentMap.availableNodes).toContain('bw-20');
+        expect(store.getState().world.currentMap.consumedNodes).toContain('bw-w2');
+        expect(store.getState().world.currentMap.availableNodes).toContain('bw-w3');
     });
 });
 
@@ -825,7 +824,7 @@ describe('BUG-01: the legend counts the nodes the map actually draws', () => {
         // in `lockedNodes` — so it is a sealed pip the lock list misses.
         const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
-        actions.moveTo('bw-2');
+        actions.moveTo('bw-w2');
 
         const vm = selectExplorationViewModel(store.getState());
         const counter = readCounter(vm.legend.right);
@@ -839,8 +838,9 @@ describe('BUG-01: the legend counts the nodes the map actually draws', () => {
         // that happens to hold at one position.
         const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
-        actions.moveTo('bw-2');
-        actions.moveTo('bw-9'); // the customs house, one of bw-2's forward fan
+        actions.moveTo('bw-w2');
+        fightOut(store);
+        actions.moveTo('bw-w4'); // the camp, one of bw-w2's forward fan
 
         const vm = selectExplorationViewModel(store.getState());
         const counter = readCounter(vm.legend.right);
@@ -863,13 +863,13 @@ describe('selectExplorationViewModel: arrivalPending', () => {
         // and that record rides the save — this flag is how the screen reads
         // it back.
         const adapter = createMemoryAdapter();
-        const store = createAppStore({ adapter, overrides: { world: bwWorldOn('bw-21') } });
+        const store = createAppStore({ adapter, overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
-        actions.moveTo('bw-6'); // engine kind `encounter`
+        actions.moveTo('bw-w2'); // engine kind `encounter`
 
         const reloaded = createAppStore({ adapter });
 
-        expect(reloaded.getState().world.currentMap.currentNode).toBe('bw-6');
+        expect(reloaded.getState().world.currentMap.currentNode).toBe('bw-w2');
         expect(selectExplorationViewModel(reloaded.getState()).arrivalPending).toBe(true);
     });
 
@@ -878,16 +878,16 @@ describe('selectExplorationViewModel: arrivalPending', () => {
         // answered arrival is never re-offered, here or after a reload. For
         // a fight the answer is the fight's end, not the resolve.
         const adapter = createMemoryAdapter();
-        const store = createAppStore({ adapter, overrides: { world: bwWorldOn('bw-21') } });
+        const store = createAppStore({ adapter, overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
-        actions.moveTo('bw-6');
+        actions.moveTo('bw-w2');
         actions.resolveCurrentMapEvent();
         expect(selectExplorationViewModel(store.getState()).arrivalPending).toBe(true);
         actions.beginHazardEncounter();
         store.getState().endCombat('victory');
         actions.save();
 
-        expect(store.getState().world.currentMap.consumedNodes).toContain('bw-6');
+        expect(store.getState().world.currentMap.consumedNodes).toContain('bw-w2');
         expect(selectExplorationViewModel(store.getState()).arrivalPending).toBe(false);
         expect(selectExplorationViewModel(createAppStore({ adapter }).getState()).arrivalPending)
             .toBe(false);
@@ -902,17 +902,17 @@ describe('selectExplorationViewModel: arrivalPending', () => {
         // placement as an unanswered arrival. The map screen paid it on
         // mount, and `/exploration?fixture=sage-bw-door-gate` engaged the
         // boss fight instead of drawing the map. A placement writes no debt.
-        // Stage: the Breakwater's door fight at the watchtower (bw-17).
+        // Stage: the Breakwater's chapter boss at the sea keep (bw-k2).
         const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
-        expect(jumpToNode(store, 'bw-17')).toBe(true);
+        expect(jumpToNode(store, 'bw-k2')).toBe(true);
 
         const vm = selectExplorationViewModel(store.getState());
         const map = store.getState().world.currentMap;
 
-        expect(vm.currentNodeId).toBe('bw-17');
+        expect(vm.currentNodeId).toBe('bw-k2');
         // The conditions the old inference fired on are all still true ...
-        expect(map.consumedNodes).not.toContain('bw-17');
-        expect(getNodeEventPool(map.continent, map.name, 'bw-17')).not.toBeUndefined();
+        expect(map.consumedNodes).not.toContain('bw-k2');
+        expect(getNodeEventPool(map.continent, map.name, 'bw-k2')).not.toBeUndefined();
         // ... and nothing is owed, because nobody walked here.
         expect(vm.arrivalPending).toBe(false);
         expect(vm.startNodePending).toBe(false);
@@ -928,21 +928,20 @@ describe('selectExplorationViewModel: arrivalPending', () => {
         const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
         const world = store.getState().world;
-        // bw-18 (the river bridge) is the Charcoal Wood door. Walk onto it
-        // from its neighbour, the watchtower bw-17, rather than jumping, so
-        // this is a real arrival.
+        // bw-b2 (the far bank) is the Charcoal Wood door. Walk onto it from
+        // its neighbour, the river bridge bw-b1 (its gate open: the quest
+        // nodes are settled), rather than jumping, so this is a real arrival.
         store.setState({
             world: {
                 ...world,
                 currentMap: {
                     ...world.currentMap,
-                    currentNode: 'bw-17',
-                    // The watchtower beaten: it holds the bridge until then.
-                    consumedNodes: [...world.currentMap.consumedNodes, 'bw-17'],
+                    currentNode: 'bw-b1',
+                    consumedNodes: [...world.currentMap.consumedNodes, 'bw-b1'],
                 },
             },
         });
-        expect(actions.moveTo('bw-18').moved).toBe(true);
+        expect(actions.moveTo('bw-b2').moved).toBe(true);
 
         expect(selectExplorationViewModel(store.getState()).arrivalPending).toBe(true);
 
@@ -952,7 +951,7 @@ describe('selectExplorationViewModel: arrivalPending', () => {
         // arrival, so a reload re-offers nothing; YES crosses, and the
         // departed map owes nothing.
         expect(store.getState().world.currentMap.pendingArrival ?? null).toBeNull();
-        expect(store.getState().travel.open?.nodeId).toBe('bw-18');
+        expect(store.getState().travel.open?.nodeId).toBe('bw-b2');
         expect(actions.takeTravel()).toBe(true);
         const after = store.getState().world;
         expect(after.currentMap.name).not.toBe('breakwater');
@@ -968,43 +967,45 @@ describe('walking the roads: the map offers the open roads out of the node under
     it('marks only the road neighbours available; a node across the map draws locked', () => {
         const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
         const actions = createAppActions(store);
-        actions.moveTo('bw-4');
-        actions.moveTo('bw-9');
+        actions.moveTo('bw-w2');
+        fightOut(store);
+        actions.moveTo('bw-w4');
         const byId = Object.fromEntries(selectExplorationViewModel(store.getState()).nodes.map((n) => [n.id, n]));
-        // bw-5 and bw-7 touch walked nodes but not the customs house.
-        expect(byId['bw-13'].kind).toBe('available');
-        expect(byId['bw-5'].kind).toBe('locked');
-        expect(byId['bw-7'].kind).toBe('locked');
-        expect(byId['bw-5'].walkable).toBe(false);
+        // bw-w3 and bw-m1 touch the walked fight bw-w2 but not the camp.
+        expect(byId['bw-w5'].kind).toBe('available');
+        expect(byId['bw-w3'].kind).toBe('locked');
+        expect(byId['bw-m1'].kind).toBe('locked');
+        expect(byId['bw-w3'].walkable).toBe(false);
     });
 
     it('moveTo refuses a node off the roads, even one a frontier-era list still names', () => {
         const fresh = createStartingWorld('breakwater');
         const stale: WorldState = {
             ...fresh,
-            currentMap: { ...fresh.currentMap, availableNodes: [...fresh.currentMap.availableNodes, 'bw-7', 'bw-9'] },
+            currentMap: { ...fresh.currentMap, availableNodes: [...fresh.currentMap.availableNodes, 'bw-w3', 'bw-w4'] },
         };
         const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: stale } });
         const before = store.getState().world;
-        expect(createAppActions(store).moveTo('bw-7').moved).toBe(false);
+        expect(createAppActions(store).moveTo('bw-w3').moved).toBe(false);
         expect(store.getState().world).toBe(before);
     });
 
     it('a walked neighbour stays drawn walked, is marked walkable, and moves the player back with nothing offered', () => {
         const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
         const actions = createAppActions(store);
-        actions.moveTo('bw-4');
+        actions.moveTo('bw-w2');
         actions.resolveCurrentMapEvent();
-        actions.moveTo('bw-9');
+        fightOut(store);
+        actions.moveTo('bw-w4');
         const vm = selectExplorationViewModel(store.getState());
-        const bw4 = vm.nodes.find((n) => n.id === 'bw-4')!;
-        expect(bw4.kind).toBe('completed');
-        expect(bw4.walkable).toBe(true);
+        const fight = vm.nodes.find((n) => n.id === 'bw-w2')!;
+        expect(fight.kind).toBe('completed');
+        expect(fight.walkable).toBe(true);
         // A walk back is not a confirm-panel option.
-        expect(vm.options.map((o) => o.nodeId)).not.toContain('bw-4');
+        expect(vm.options.map((o) => o.nodeId)).not.toContain('bw-w2');
 
-        expect(actions.moveTo('bw-4').moved).toBe(true);
-        expect(store.getState().world.currentMap.currentNode).toBe('bw-4');
-        expect(store.getState().world.currentMap.availableNodes).toEqual(['bw-1', 'bw-5', 'bw-7', 'bw-9']);
+        expect(actions.moveTo('bw-w2').moved).toBe(true);
+        expect(store.getState().world.currentMap.currentNode).toBe('bw-w2');
+        expect([...store.getState().world.currentMap.availableNodes].sort()).toEqual(['bw-m1', 'bw-w1', 'bw-w3', 'bw-w4']);
     });
 });

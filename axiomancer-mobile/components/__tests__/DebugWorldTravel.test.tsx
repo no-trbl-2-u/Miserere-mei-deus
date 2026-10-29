@@ -80,12 +80,13 @@ describe('DebugWorldTravel: travel', () => {
     it('a node chip on a quest node jumps there and opens the quest screen, and nothing else', () => {
         const store = makeStore();
         const target = listNodes(store.getState()).find((n) => n.kind === 'quest')!;
-        expect(target.id).toBe('bw-19');
+        // The first quest node in map order: the keep gate, the chain's node 4.
+        expect(target.id).toBe('bw-k1');
         const tree = render(withProvider(store, <DebugWorldTravel />));
         fireEvent.press(tree.getByTestId(`debug-travel-node-${target.id}`));
         const state = store.getState();
-        expect(state.world.currentMap.currentNode).toBe('bw-19');
-        expect(state.quest.open).toMatchObject({ node: 1 });
+        expect(state.world.currentMap.currentNode).toBe('bw-k1');
+        expect(state.quest.open).toMatchObject({ node: 4 });
         expect(state.event.pending).toBeNull();
         expect(state.hazard.session).toBeNull();
         expect(state.rest.session).toBeNull();

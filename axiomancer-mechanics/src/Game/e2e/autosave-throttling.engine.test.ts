@@ -77,11 +77,11 @@ describe('Phase 51 — autosave throttling restricts adapter.save to DURABLE_ACT
         const adapter = countingAdapter();
         const store = createGameStore(adapter, { player: Player, world: createStartingWorld('breakwater') });
 
-        // MOVE_TO_NODE — durable. bw-4 (a gathering node) is adjacent to
-        // the Breakwater starting node (bw-1).
+        // MOVE_TO_NODE — durable. bw-w2 (the first fight) is adjacent to
+        // the Breakwater starting node (bw-w1).
         store.getState().dispatch({
             type: 'MOVE_TO_NODE',
-            payload: { nodeId: 'bw-4' },
+            payload: { nodeId: 'bw-w2' },
         });
         expect(adapter.saves).toBe(1);
 

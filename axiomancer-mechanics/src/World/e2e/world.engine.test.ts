@@ -44,33 +44,33 @@ const bwStateAt = (nodeId: string): GameState => {
 describe('moveToNode', () => {
     it('moves to a connected, unlocked, uncompleted node', () => {
         const world = createStartingWorld('breakwater');
-        const next = moveToNode(world, 'bw-4');
-        expect(next.currentMap.currentNode).toBe('bw-4');
+        const next = moveToNode(world, 'bw-w2');
+        expect(next.currentMap.currentNode).toBe('bw-w2');
     });
 
     it('rejects non-adjacent nodes', () => {
         const world = createStartingWorld('breakwater');
-        expect(() => moveToNode(world, 'bw-12')).toThrow(IllegalMoveError);
+        expect(() => moveToNode(world, 'bw-m2')).toThrow(IllegalMoveError);
     });
 
     it('rejects locked nodes', () => {
         const world = createStartingWorld('breakwater');
-        // bw-7 (the south pier) starts locked (only bw-19, bw-4 and bw-5 touch the windmill).
-        expect(world.currentMap.lockedNodes).toContain('bw-7');
-        expect(() => moveToNode(world, 'bw-7')).toThrow(IllegalMoveError);
+        // bw-w3 starts locked (only bw-w2 touches the windmill).
+        expect(world.currentMap.lockedNodes).toContain('bw-w3');
+        expect(() => moveToNode(world, 'bw-w3')).toThrow(IllegalMoveError);
     });
 
     it('walks back onto a completed node along its road, and nowhere off the roads', () => {
         let world = createStartingWorld('breakwater');
-        world = moveToNode(world, 'bw-4');
+        world = moveToNode(world, 'bw-w2');
         world = completeCurrentNode(world);
-        // After completing bw-4, the south pier (bw-7) becomes available.
-        expect(world.currentMap.availableNodes).toContain('bw-7');
-        world = moveToNode(world, 'bw-7');
-        // The completed bw-4 is a road back.
-        expect(moveToNode(world, 'bw-4').currentMap.currentNode).toBe('bw-4');
-        // The cove (bw-5) is joined to bw-7 by a road; marker 1 is not.
-        expect(() => moveToNode(world, 'bw-19')).toThrow(IllegalMoveError);
+        // After completing bw-w2, bw-w3 becomes available.
+        expect(world.currentMap.availableNodes).toContain('bw-w3');
+        world = moveToNode(world, 'bw-w3');
+        // The completed bw-w2 is a road back.
+        expect(moveToNode(world, 'bw-w2').currentMap.currentNode).toBe('bw-w2');
+        // The camp (bw-w4) is joined to bw-w2 by a road, not to bw-w3.
+        expect(() => moveToNode(world, 'bw-w4')).toThrow(IllegalMoveError);
     });
 
     it('returns the same state when target equals current node', () => {
@@ -110,7 +110,7 @@ describe('per-objective quest engine', () => {
 
     it('a reach objective ticks on arrival at its node', () => {
         mockSequentialRng(0.5);
-        const state = bwStateAt('bw-2');
+        const state = bwStateAt('bw-w2');
         const result = resolveMapEvent({ ...state, quests: startQuest(emptyQuestLog(), FIXTURE_QUEST) });
         expect(result.state.quests.completed).toContain(FIXTURE_QUEST.name);
     });
@@ -121,7 +121,7 @@ describe('per-objective quest engine', () => {
 describe('resolveMapEvent dispatch', () => {
     it('returns kind=village for a staged shop', () => {
         mockSequentialRng(0.5);
-        const result = resolveMapEvent(bwStateAt('bw-2'), undefined, FIXTURE_VILLAGE_EVENT);
+        const result = resolveMapEvent(bwStateAt('bw-w2'), undefined, FIXTURE_VILLAGE_EVENT);
         expect(result.event.kind).toBe('village');
         if (result.event.kind === 'village') {
             expect(result.event.merchants.length).toBeGreaterThan(0);
@@ -130,10 +130,11 @@ describe('resolveMapEvent dispatch', () => {
 
     it('returns kind=encounter on encounter nodes', () => {
         mockSequentialRng(0.5);
-        // bw-2 (the crane quay) is a Float-Eye fight in the second step's
-        // pocket; the quest nodes are settled to reach it.
-        let state = settleQuestNodesIn(startingState());
-        for (const target of ['bw-4', 'bw-9', 'bw-20', 'bw-2']) state = { ...state, world: moveToNode(state.world, target) };
+        // bw-w3 is a Float-Eye fight two roads from the windmill.
+        let state = startingState();
+        state = { ...state, world: moveToNode(state.world, 'bw-w2') };
+        state = { ...state, world: completeCurrentNode(state.world) };
+        state = { ...state, world: moveToNode(state.world, 'bw-w3') };
         const result = resolveMapEvent(state);
         expect(result.event.kind).toBe('encounter');
         if (result.event.kind === 'encounter') {
@@ -144,8 +145,8 @@ describe('resolveMapEvent dispatch', () => {
 
     it('grants currency on loot-cache nodes (treasure folded into loot-cache)', () => {
         mockSequentialRng(0.5);
-        // bw-5 is the Breakwater's first loot cache.
-        const state = bwStateAt('bw-5');
+        // bw-m3 is a Breakwater loot cache.
+        const state = bwStateAt('bw-m3');
         const before = state.player.currency;
         const result = resolveMapEvent(state);
         expect(result.event.kind).toBe('loot-cache');
@@ -156,12 +157,12 @@ describe('resolveMapEvent dispatch', () => {
 
     it('returns kind=encounter with isBoss=true on the boss node', () => {
         mockSequentialRng(0.5);
-        // The watchtower (bw-17) holds the Breakwater's door fight, behind
-        // the last quest node; the quest nodes are settled to reach it.
+        // The sea keep (bw-k2) holds the chapter boss, past the keep gate;
+        // the quest nodes are settled to open the gate.
         let state = settleQuestNodesIn(startingState());
-        for (const target of ['bw-4', 'bw-9', 'bw-13', 'bw-16', 'bw-22', 'bw-17'] as const) {
+        for (const target of ['bw-w2', 'bw-w4', 'bw-w5', 'bw-k1', 'bw-k2'] as const) {
             state = { ...state, world: moveToNode(state.world, target) };
-            if (target !== 'bw-17') state = { ...state, world: completeCurrentNode(state.world) };
+            if (target !== 'bw-k2') state = { ...state, world: completeCurrentNode(state.world) };
         }
         const result = resolveMapEvent(state);
         expect(result.event.kind).toBe('encounter');
@@ -179,7 +180,7 @@ describe('applyDialogueChoice', () => {
     // fixture quest already offered in the log.
     const tree = FIXTURE_NPC.dialogueTree!;
     const offered = (): GameState => ({
-        ...bwStateAt('bw-1'),
+        ...bwStateAt('bw-w1'),
         quests: { ...emptyQuestLog(), available: [FIXTURE_QUEST] },
     });
 

@@ -49,13 +49,13 @@ export const GALLERY = [
     // Entering an act fires the entrance narration (a paced event → /dialogue);
     // leaving it lands in the room.
     { name: 'labyrinth-entrance', why: 'Entering Act I of THE APORIA — the entrance narration.',
-      fixture: { id: 'g-lab-entrance', seed: 'g9', ...SAGE, world: coastal('breakwater', 'bw-15') }, path: '/labyrinth',
+      fixture: { id: 'g-lab-entrance', seed: 'g9', ...SAGE, world: coastal('breakwater', 'bw-m3') }, path: '/labyrinth',
       steps: [{ click: 'labyrinth-act-act1' }, { waitForPath: '/dialogue' }, { settle: 400 }] },
     { name: 'labyrinth-room', why: 'Inside Act I of THE APORIA — the room view.',
-      fixture: { id: 'g-lab-room', seed: 'g9', ...SAGE, world: coastal('breakwater', 'bw-15') }, path: '/labyrinth',
+      fixture: { id: 'g-lab-room', seed: 'g9', ...SAGE, world: coastal('breakwater', 'bw-m3') }, path: '/labyrinth',
       steps: [{ click: 'labyrinth-act-act1' }, { waitForPath: '/dialogue' }, { click: 'dialogue-leave' }, { waitFor: 'labyrinth-room' }, { settle: 600 }] },
     { name: 'labyrinth-map', why: 'The Act I map overlay.',
-      fixture: { id: 'g-lab-map', seed: 'g10', ...SAGE, world: coastal('breakwater', 'bw-15') }, path: '/labyrinth',
+      fixture: { id: 'g-lab-map', seed: 'g10', ...SAGE, world: coastal('breakwater', 'bw-m3') }, path: '/labyrinth',
       steps: [{ click: 'labyrinth-act-act1' }, { waitForPath: '/dialogue' }, { click: 'dialogue-leave' }, { waitFor: 'labyrinth-room' }, { click: 'labyrinth-map-toggle' }, { settle: 600 }] },
 
     // ── Minigames + services ─────────────────────────────────────────────
@@ -81,10 +81,10 @@ export const GALLERY = [
 
     // ── Combat at the boss gate ──────────────────────────────────────────
     { name: 'boss-reveal', why: 'The Breakwater door fight — the REVEAL over the map.',
-      fixture: { id: 'g-boss-reveal', seed: 'g12', ...SAGE, world: coastal('breakwater', 'bw-17'), arrive: true }, path: '/exploration',
+      fixture: { id: 'g-boss-reveal', seed: 'g12', ...SAGE, world: coastal('breakwater', 'bw-k2'), arrive: true }, path: '/exploration',
       steps: [{ waitFor: 'combat-reveal' }, { settle: 600 }] },
     { name: 'boss-board', why: 'The live board against the boss, L15 kit.',
-      fixture: { id: 'g-boss-board', seed: 'g12', ...SAGE, world: coastal('breakwater', 'bw-17'), arrive: true }, path: '/exploration',
+      fixture: { id: 'g-boss-board', seed: 'g12', ...SAGE, world: coastal('breakwater', 'bw-k2'), arrive: true }, path: '/exploration',
       steps: [{ waitFor: 'combat-reveal' }, { click: 'combat-enter' }, { waitFor: 'combat-board' }, { settle: 1200 }] },
 
     // ── Late-game tabs ───────────────────────────────────────────────────

@@ -29,21 +29,15 @@ const PINNED_ORPHANS: ReadonlyArray<{ lens: string; id: string }> = [
     // No run starts with the ring or is handed it any more; old saves and
     // the dev menu hold it until it gets a lane.
     { lens: 'item-ungranted', id: 'relic-disarming-plea' },
-    // Blood Price's relics: the Circlet drops from elites (`rollEliteRelicDrop`,
-    // a source this audit does not read); the two quest relics wait on the Act 1
-    // quests (LR1f). Until then only the dev menu hands them over.
-    { lens: 'item-ungranted', id: 'relic-crimson-circlet' },
-    { lens: 'item-ungranted', id: 'relic-ruby-signet' },
+    // The Breakwater chain pays four relics, one per step (the Ruby Signet, the
+    // Elementalist Brooch, the Mirror Brooch and the Crimson Circlet), so those
+    // are granted. The rest drop from elites (`rollEliteRelicDrop`, a source this
+    // audit does not read) or wait on a quest that hands them out; until then only
+    // the dev menu hands them over.
     { lens: 'item-ungranted', id: 'relic-bleeding-signet' },
-    // The Elementalist's relics, the same way: the Signet drops from elites, the
-    // Brooch waits on a later chapter's questline; the Belt is the Breakwater
-    // questline's last step (QL1d), so it is granted.
     { lens: 'item-ungranted', id: 'relic-elementalist-signet' },
-    { lens: 'item-ungranted', id: 'relic-elementalist-brooch' },
-    // The Defender's relics, the same way: the Signet drops from elites; the Brooch
-    // and the Belt wait on a quest that hands them out.
+    { lens: 'item-ungranted', id: 'relic-elementalist-belt' },
     { lens: 'item-ungranted', id: 'relic-thornback-signet' },
-    { lens: 'item-ungranted', id: 'relic-mirror-brooch' },
     { lens: 'item-ungranted', id: 'relic-carapace-belt' },
 ];
 

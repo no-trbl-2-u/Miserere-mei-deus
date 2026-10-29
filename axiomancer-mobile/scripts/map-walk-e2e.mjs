@@ -12,23 +12,21 @@
 // throwaway script. This is that walk, kept:
 //
 //   1. NEW GAME: the windmill's arrival scene (D31), then the map (no relic);
-//   2. bw-5, a loot cache: take a card, move on, back on the map;
-//   3. bw-4, an empty waypoint: nothing opens, still on the map (lateral rib);
-//      (the walk goes back to the windmill, a road from marker 1: the
-//      player walks the roads, phase WR1a)
-//   4. bw-19, the first quest node: ACCEPT step 1 on `/quest`, LEAVE; the
-//      hazard pocket behind it opens (QL1d: every fight and hazard sits in a
-//      pocket behind its quest node);
-//   5. bw-3, a hazard: lands on the route select, and the dev skip seam
-//      crosses it. Playing the board itself is `hazard-e2e.mjs`'s job (its
-//      drag helpers); this pins the routing. Arriving counts step 1;
-//   6. bw-9, a rest (walked back out of the pocket through bw-19, bw-1
-//      and bw-4, one tap each): REST, claim, back on the map;
-//   7. bw-20, the second quest node: TURN IN step 1, ACCEPT step 2;
-//   8. bw-2, a fight in its pocket: the reveal, the board on the plain black
-//      scene (D32), played to its end by ending phases. A defeat is the death
-//      rule: the full-screen return moment, then the map on bw-20 (the node
-//      walked from) at 1 VITAE, dying, with bw-2 still open.
+//   2. bw-w2, the first fight (the only road from the windmill): the reveal,
+//      then the dev skip seam wins it, so the walk can go on;
+//   3. bw-w4, a rest: REST, claim, back on the map;
+//   4. bw-m1, a fight (walked back through bw-w2, one tap): won by the seam;
+//   5. bw-m2, a hazard: lands on the route select, and the dev skip seam
+//      crosses it. Playing the board itself is `hazard-e2e.mjs`'s job;
+//   6. bw-m3, a loot cache: take a card, move on, back on the map;
+//   7. bw-w3, a fight (walked back through bw-m2, bw-m1 and bw-w2): the
+//      reveal, the board on the plain black scene (D32), played to its end by
+//      ending phases. A defeat is the death rule: the full-screen return
+//      moment, then the map on bw-w2 (the node walked from) at 1 VITAE,
+//      dying, with bw-w3 still open.
+//
+// The Breakwater (T's Chapter 1 map, BW1b) has no empty waypoint and no quest
+// node near the windmill; `act1-walk-e2e.mjs` plays its quest chain.
 //
 // Node clicks go through the DOM: nodes off a phone viewport would need the
 // camera panned first, and panning is not what this journey tests.
@@ -270,70 +268,46 @@ async function newGame(page, baseUrl) {
 
     // A run starts with no relic and is handed none: the scene opens the map.
     await settleOnMap(page, 'new game')
-    await expectHere(page, 'bw-1')
+    await expectHere(page, 'bw-w1')
     log('new game: on the Breakwater, at the windmill')
 }
 
 async function lootCache(page) {
-    await travelTo(page, 'bw-5')
-    await waitFor(page, 'cache-choice-offers', 'bw-5 loot cache')
+    await travelTo(page, 'bw-m3')
+    await waitFor(page, 'cache-choice-offers', 'bw-m3 loot cache')
     await page.getByTestId('cache-choice-offer-card').click({ force: true })
     // The offer resolves to an outcome with a single way out.
     await page.getByRole('button', { name: /move on/i }).first().click({ timeout: 10000 })
-        .catch(() => fail('bw-5: the cache outcome has no "Move on"'))
-    await settleOnMap(page, 'bw-5')
-    await expectHere(page, 'bw-5')
-    log('bw-5 cache: took a card, back on the map')
-}
-
-async function waypoint(page) {
-    await travelTo(page, 'bw-4')
-    await settleOnMap(page, 'bw-4')
-    await expectHere(page, 'bw-4')
-    log('bw-4 waypoint: nothing opened, still on the map')
-}
-
-/** A quest node: TURN IN the step before when it is ready, ACCEPT the one offered, LEAVE. */
-async function questNode(page, nodeId, { turnIn }) {
-    await travelTo(page, nodeId)
-    await waitFor(page, 'quest-column', `${nodeId} quest screen`)
-    if (turnIn) {
-        await tap(page, 'quest-turn-in-button') || fail(`${nodeId}: the ready step has no TURN IN`)
-        await waitFor(page, 'quest-paid', `${nodeId} turn-in payout`)
-    }
-    await waitFor(page, 'quest-accept-button', `${nodeId} offer`)
-    await tap(page, 'quest-accept-button')
-    await waitFor(page, 'quest-accepted-line', `${nodeId} accepted`)
-    await tap(page, 'quest-leave-button') || fail(`${nodeId}: the quest screen has no LEAVE`)
-    await settleOnMap(page, nodeId)
-    await expectHere(page, nodeId)
-    log(`${nodeId} quest node: ${turnIn ? 'turned in, ' : ''}accepted, back on the map`)
+        .catch(() => fail('bw-m3: the cache outcome has no "Move on"'))
+    await settleOnMap(page, 'bw-m3')
+    await expectHere(page, 'bw-m3')
+    log('bw-m3 cache: took a card, back on the map')
 }
 
 async function rest(page) {
-    await travelTo(page, 'bw-9')
-    await waitFor(page, 'rest-choice-offer-rest', 'bw-9 rest')
+    await travelTo(page, 'bw-w4')
+    await waitFor(page, 'rest-choice-offer-rest', 'bw-w4 rest')
     await page.getByTestId('rest-choice-offer-rest').first().click({ force: true })
-    await waitFor(page, 'rest-claim', 'bw-9 rest outcome')
+    await waitFor(page, 'rest-claim', 'bw-w4 rest outcome')
     await tap(page, 'rest-claim')
-    await settleOnMap(page, 'bw-9')
-    await expectHere(page, 'bw-9')
-    log('bw-9 rest: rested, back on the map')
+    await settleOnMap(page, 'bw-w4')
+    await expectHere(page, 'bw-w4')
+    log('bw-w4 rest: rested, back on the map')
 }
 
 async function fight(page) {
-    await travelTo(page, 'bw-2')
-    await waitFor(page, 'combat-reveal', 'bw-2 encounter reveal')
-    await tap(page, 'combat-enter') || fail('bw-2: the reveal has no ENTER COMBAT')
-    await waitFor(page, 'combat-arena-backdrop', 'bw-2 combat board')
+    await travelTo(page, 'bw-w3')
+    await waitFor(page, 'combat-reveal', 'bw-w3 encounter reveal')
+    await tap(page, 'combat-enter') || fail('bw-w3: the reveal has no ENTER COMBAT')
+    await waitFor(page, 'combat-arena-backdrop', 'bw-w3 combat board')
 
     // D32: combat draws a plain black scene, never a plate image.
     const backdrop = await page.getByTestId('combat-arena-backdrop').first().evaluate((el) => ({
         img: el.tagName === 'IMG' || !!el.querySelector('img'),
         bgImage: getComputedStyle(el).backgroundImage,
     }))
-    if (backdrop.img || backdrop.bgImage !== 'none') fail(`bw-2: the combat scene draws a plate (${JSON.stringify(backdrop)})`)
-    log('bw-2 fight: on the board, plain black scene')
+    if (backdrop.img || backdrop.bgImage !== 'none') fail(`bw-w3: the combat scene draws a plate (${JSON.stringify(backdrop)})`)
+    log('bw-w3 fight: on the board, plain black scene')
 
     // Play it to its end by ending phases (no cards staged), then close out.
     for (let k = 0; k < 120; k++) {
@@ -342,18 +316,18 @@ async function fight(page) {
         await tap(page, 'combat-end-phase')
         await sleep(150)
     }
-    await waitFor(page, 'combat-summary', 'bw-2 combat summary', 10000)
+    await waitFor(page, 'combat-summary', 'bw-w3 combat summary', 10000)
     const verdict = (await page.getByTestId('combat-summary').innerText()).split('\n')[0]
-    log(`bw-2 fight: over (${verdict})`)
+    log(`bw-w3 fight: over (${verdict})`)
     if (/defeat/i.test(verdict)) {
         // The first death: the return moment, then the node walked from.
         await tap(page, 'combat-summary-close')
-        await waitFor(page, 'death-return', 'the return moment after the bw-2 defeat')
+        await waitFor(page, 'death-return', 'the return moment after the bw-w3 defeat')
         await tap(page, 'death-return-continue') || fail('the return moment has no CONTINUE')
-        await settleOnMap(page, 'bw-2 return')
-        await expectHere(page, 'bw-20')
-        const label = await nodeLabel(page, 'bw-2')
-        if (!label || !/open/.test(label)) fail(`bw-2 is not open after the defeat (label: "${label}")`)
+        await settleOnMap(page, 'bw-w3 return')
+        await expectHere(page, 'bw-w2')
+        const label = await nodeLabel(page, 'bw-w3')
+        if (!label || !/open/.test(label)) fail(`bw-w3 is not open after the defeat (label: "${label}")`)
         const vitae = (await page.locator('[data-testid^="statbar-value"]').first().innerText()).trim()
         if (!/^1\//.test(vitae)) fail(`expected 1 VITAE on the return, the status card reads "${vitae}"`)
         let dying = false
@@ -362,29 +336,44 @@ async function fight(page) {
             if (!dying) await sleep(250)
         }
         if (!dying) fail('the save does not carry dying after the defeat')
-        log('bw-2 fight: lost; back on bw-20 at 1 VITAE, dying, bw-2 open')
+        log('bw-w3 fight: lost; back on bw-w2 at 1 VITAE, dying, bw-w3 open')
         return
     }
-    await settleOnMap(page, 'bw-2')
-    await expectHere(page, 'bw-2')
-    log('bw-2 fight: won; back on the map')
+    await settleOnMap(page, 'bw-w3')
+    await expectHere(page, 'bw-w3')
+    log('bw-w3 fight: won; back on the map')
+}
+
+/** A fight crossed by the dev skip seam once its reveal is up (the board is combat-round-e2e.mjs's). */
+async function skipFight(page, nodeId) {
+    await travelTo(page, nodeId)
+    await waitFor(page, 'combat-reveal', `${nodeId} encounter reveal`)
+    await page.waitForFunction(() => typeof globalThis.__AXM_SKIP_EVENT__ === 'function', null, { timeout: 15000 })
+        .catch(() => fail(`${nodeId}: the dev skip seam is not installed`))
+    const r = await page.evaluate(() => {
+        const out = globalThis.__AXM_SKIP_EVENT__()
+        return out ? { kind: out.kind, outcome: out.outcome } : null
+    })
+    if (!r || r.kind !== 'encounter' || r.outcome !== 'victory') fail(`${nodeId}: the skip did not win the fight (${JSON.stringify(r)})`)
+    await settleOnMap(page, nodeId)
+    await expectHere(page, nodeId)
+    log(`${nodeId} fight: won by the skip seam, back on the map`)
 }
 
 async function hazard(page) {
-    // The hazard pocket opened when step 1 was accepted at bw-19.
-    await travelTo(page, 'bw-3')
-    await waitFor(page, 'hazard-route-select', 'bw-3 hazard')
-    log('bw-3 hazard: landed on the route select (the board is hazard-e2e.mjs\'s)')
+    await travelTo(page, 'bw-m2')
+    await waitFor(page, 'hazard-route-select', 'bw-m2 hazard')
+    log('bw-m2 hazard: landed on the route select (the board is hazard-e2e.mjs\'s)')
     await page.waitForFunction(() => typeof globalThis.__AXM_SKIP_EVENT__ === 'function', null, { timeout: 15000 })
-        .catch(() => fail('bw-3: the dev skip seam is not installed'))
+        .catch(() => fail('bw-m2: the dev skip seam is not installed'))
     const r = await page.evaluate(() => {
         const out = globalThis.__AXM_SKIP_EVENT__()
         return out ? { kind: out.kind, nodeId: out.nodeId, outcome: out.outcome } : null
     })
-    if (!r || r.kind !== 'hazard' || r.outcome === 'abandoned') fail(`bw-3: the skip did not cross the hazard (${JSON.stringify(r)})`)
-    await settleOnMap(page, 'bw-3')
-    await expectHere(page, 'bw-3')
-    log(`bw-3 hazard: crossed by the skip seam (${r.outcome}), back on the map`)
+    if (!r || r.kind !== 'hazard' || r.outcome === 'abandoned') fail(`bw-m2: the skip did not cross the hazard (${JSON.stringify(r)})`)
+    await settleOnMap(page, 'bw-m2')
+    await expectHere(page, 'bw-m2')
+    log(`bw-m2 hazard: crossed by the skip seam (${r.outcome}), back on the map`)
 }
 
 // ---------------------------------------------------------------------------
@@ -409,20 +398,20 @@ async function main() {
             console.error('map-walk-e2e: pageerror', err.message)
         })
         await newGame(page, baseUrl)
-        await lootCache(page)
-        await waypoint(page)
-        // The player walks the roads: marker 1 is a road from the windmill.
-        await walkBack(page, 'bw-1')
-        await questNode(page, 'bw-19', { turnIn: false })
-        await hazard(page)
-        // Out of the hazard pocket the way it was entered, to the pass.
-        for (const id of ['bw-19', 'bw-1', 'bw-4']) await walkBack(page, id)
+        // The windmill's one road leads to the first fight.
+        await skipFight(page, 'bw-w2')
         await rest(page)
-        await questNode(page, 'bw-20', { turnIn: true })
+        // The player walks the roads: back to the crossroads, down the south fork.
+        await walkBack(page, 'bw-w2')
+        await skipFight(page, 'bw-m1')
+        await hazard(page)
+        await lootCache(page)
+        // Out of the dead end the way it was entered, to the field road.
+        for (const id of ['bw-m2', 'bw-m1', 'bw-w2']) await walkBack(page, id)
         await fight(page)
         if (pageErrors.length) fail(`${pageErrors.length} page error(s) during the walk`)
         await context.close()
-        log('ALL PASS — new game, cache, waypoint, quest, hazard, rest, quest and fight, node to node')
+        log('ALL PASS — new game, fight, rest, fight, hazard, cache and a played fight, node to node')
     } finally {
         await browser.close()
         server.close()

@@ -35,7 +35,7 @@ export const DIFFICULTY_LEVEL_BANDS: Record<EnemyDifficulty, { min: number; max:
     unique: 'authored',
 };
 
-/** Resolves a node id (e.g. `'bw-2'`) into the owning `MapName`. */
+/** Resolves a node id (e.g. `'bw-w2'`) into the owning `MapName`. */
 function nodeIdToMapName(nodeId: string): MapName | undefined {
     // Act 1's coast.
     if (nodeId.startsWith('bw-')) return 'breakwater';

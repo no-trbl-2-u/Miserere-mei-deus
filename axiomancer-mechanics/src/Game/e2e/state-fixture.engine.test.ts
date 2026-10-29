@@ -123,19 +123,19 @@ describe('buildStateFromFixture', () => {
         expect(currentMap.discoveredNodes).toContain('cw-8');
     });
 
-    it('world.questNodesSettled spends the map\'s quest nodes and opens their locks; without it the road to marker 4 stays shut', () => {
+    it('world.questNodesSettled spends the map\'s quest nodes and opens their gates; without it the keep gate stays shut', () => {
         const at = (questNodesSettled?: boolean) => buildStateFromFixture({
             id: 'settled',
             seed: 3,
-            world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-15', ...(questNodesSettled === undefined ? {} : { questNodesSettled }) },
+            world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-k1', ...(questNodesSettled === undefined ? {} : { questNodesSettled }) },
         }).world.currentMap;
         const settled = at(true);
-        expect(legalMovesFrom(settled)).toContain('bw-22');
-        expect(settled.consumedNodes).toEqual(expect.arrayContaining(['bw-19', 'bw-20', 'bw-21', 'bw-22']));
+        expect(legalMovesFrom(settled)).toContain('bw-k2');
+        expect(settled.consumedNodes).toEqual(expect.arrayContaining(['bw-w1', 'bw-c2', 'bw-l5', 'bw-k1']));
         expect(settled.blockedRoutes).toEqual([]);
         for (const plain of [at(), at(false)]) {
-            expect(legalMovesFrom(plain)).not.toContain('bw-22');
-            expect(plain.blockedRoutes).toHaveLength(4);
+            expect(legalMovesFrom(plain)).not.toContain('bw-k2');
+            expect(plain.blockedRoutes).toHaveLength(2);
         }
         expect(problemsFor({ id: 'bad', world: { continent: 'coastal-continent', map: 'breakwater', questNodesSettled: 'yes' } }))
             .toContain('world.questNodesSettled: expected a boolean');
@@ -155,7 +155,7 @@ describe('buildStateFromFixture', () => {
         expect(s.player.level).toBe(30);
         expect(s.player.health).toBe(12);
         expect(s.world.currentMap.name).toBe('breakwater');
-        expect(s.world.currentMap.currentNode).toBe('bw-3');
+        expect(s.world.currentMap.currentNode).toBe('bw-m2');
         expect(s.version).toBe(GAME_STATE_VERSION);
     });
 });
@@ -216,7 +216,7 @@ describe('createFixtureGameStore (src/test-utils/fixture-store.ts)', () => {
         const { store, state, fixture } = createFixtureGameStore('sage-bw-door-gate');
         expect(fixture.id).toBe('sage-bw-door-gate');
         expect(store.getState().runId).toBe(state.runId);
-        expect(store.getState().world.currentMap.currentNode).toBe('bw-22');
+        expect(store.getState().world.currentMap.currentNode).toBe('bw-k1');
     });
 
     it('accepts an inline fixture and rejects bad refs', () => {
@@ -267,7 +267,7 @@ describe('createFixtureGameStore (src/test-utils/fixture-store.ts)', () => {
         expect(getQuestline('fixture-questline')).toBeUndefined();
         createFixtureGameStore({
             id: 'other-quest', seed: 3,
-            world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-2' },
+            world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-w2' },
             stagedEvent: { kind: 'quest', questline: 'some-other-line', node: 1 },
         });
         expect(getQuestline('fixture-questline')).toBeUndefined();

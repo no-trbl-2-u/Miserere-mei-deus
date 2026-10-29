@@ -48,7 +48,7 @@ afterEach(() => {
 });
 
 function makeStore(): AppStore {
-    return createAppStore({ adapter: createMemoryAdapter(), overrides: { world: settledBreakwater('bw-20') } });
+    return createAppStore({ adapter: createMemoryAdapter(), overrides: { world: settledBreakwater() } });
 }
 
 function mountExploration(store: AppStore) {
@@ -66,11 +66,11 @@ function mountExploration(store: AppStore) {
 
 const map = (store: AppStore) => store.getState().world.currentMap;
 
-/** Walk onto bw-2 (a fight node) with its arrival resolved and the fight engaged. */
+/** Walk onto bw-w2 (a fight node) with its arrival resolved and the fight engaged. */
 function engage() {
     const store = makeStore();
     const actions = createAppActions(store);
-    actions.moveTo('bw-2');
+    actions.moveTo('bw-w2');
     mountExploration(store).unmount();
     expect(store.getState().currentEncounter).toBeDefined();
     return { store, actions };
@@ -78,9 +78,9 @@ function engage() {
 
 function expectUnspentAndAnswered(store: AppStore) {
     expect(map(store).pendingArrival ?? null).toBeNull();
-    expect(map(store).consumedNodes ?? []).not.toContain('bw-2');
-    expect(map(store).completedNodes).not.toContain('bw-2');
-    expect(map(store).currentNode).toBe('bw-2');
+    expect(map(store).consumedNodes ?? []).not.toContain('bw-w2');
+    expect(map(store).completedNodes).not.toContain('bw-w2');
+    expect(map(store).currentNode).toBe('bw-w2');
 }
 
 describe('WITHDRAW leaves the node incomplete', () => {
@@ -102,10 +102,10 @@ describe('WITHDRAW leaves the node incomplete', () => {
         actions.fleeEncounter();
         actions.endCombat('flee');
         const vm = selectExplorationViewModel(store.getState());
-        expect(vm.currentNodeId).toBe('bw-2');
+        expect(vm.currentNodeId).toBe('bw-w2');
         expect(vm.arrivalPending).toBe(false);
         expect(vm.retryable).toBe(true);
-        expect(vm.nodes.find(n => n.id === 'bw-2')?.kind).toBe('current');
+        expect(vm.nodes.find(n => n.id === 'bw-w2')?.kind).toBe('current');
     });
 
     it('tapping the node the player stands on tries it again: a fresh arrival, a fresh fight', () => {
@@ -113,8 +113,8 @@ describe('WITHDRAW leaves the node incomplete', () => {
         actions.fleeEncounter();
         actions.endCombat('flee');
 
-        expect(actions.moveTo('bw-2').moved).toBe(true);
-        expect(map(store).pendingArrival).toBe('bw-2');
+        expect(actions.moveTo('bw-w2').moved).toBe(true);
+        expect(map(store).pendingArrival).toBe('bw-w2');
         expect(selectExplorationViewModel(store.getState()).retryable).toBe(false);
         mountExploration(store);
         expect(store.getState().currentEncounter).toBeDefined();
@@ -124,7 +124,7 @@ describe('WITHDRAW leaves the node incomplete', () => {
         const { store, actions } = engage();
         actions.fleeEncounter();
         actions.endCombat('flee');
-        actions.moveTo('bw-2');
+        actions.moveTo('bw-w2');
         mountExploration(store).unmount();
         actions.fleeEncounter();
         actions.endCombat('flee');
@@ -136,7 +136,7 @@ describe("the prelude's FLEE leaves the node incomplete", () => {
     it('answers the arrival and spends nothing', () => {
         const store = makeStore();
         const actions = createAppActions(store);
-        actions.moveTo('bw-2');
+        actions.moveTo('bw-w2');
         actions.resolveCurrentMapEvent('encounter');
         expect(store.getState().event.pending?.event.kind).toBe('encounter');
 
@@ -151,7 +151,7 @@ describe('a won fight still settles the node (the control)', () => {
     it('victory spends it, and the map no longer offers a retry', () => {
         const { store, actions } = engage();
         actions.endCombat('victory');
-        expect(map(store).consumedNodes).toContain('bw-2');
+        expect(map(store).consumedNodes).toContain('bw-w2');
         expect(selectExplorationViewModel(store.getState()).retryable).toBe(false);
     });
 });

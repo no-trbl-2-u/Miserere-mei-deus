@@ -1,5 +1,12 @@
 # The Breakwater (Act 1, Chapter 1): node map (draft for T's review)
 
+> **Superseded (BW1b, 2026-10-29).** The live Breakwater is now T's 44-node Chapter 1 map:
+> `axiomancer-mechanics/src/World/Continents/Coastal-Village/breakwater-chapter.ts` (graph),
+> `MapEvents/content.ts` (its 44 pools), `World/breakwater-chapter.questline.ts` (the chain), and
+> `axiomancer-mobile/state/exploration-maps/breakwater.layout.ts` (its 44 coast marks). The node list is
+> `braindump/2026-10-28-breakwater-chapter-1-map.md` (board v4); T's vision is `plan/revamp/breakwater-vision.md`.
+> The 22-node map, its four quest markers and QL1's questline described below are gone; this page is history.
+
 > A rough map of every Breakwater node, read from the current tree on 2026-10-26: the graph in
 > `axiomancer-mechanics/src/World/Continents/Coastal-Village/breakwater.ts`, the events in
 > `axiomancer-mechanics/src/World/MapEvents/content.ts`, and the labels in

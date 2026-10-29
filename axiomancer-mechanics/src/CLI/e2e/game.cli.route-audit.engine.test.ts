@@ -35,7 +35,7 @@ afterEach(() => {
 });
 
 describe('Phase 14 — route survivorship vs coverage-audit classification', () => {
-    it('--route-audit reports all 22 Breakwater nodes without mutating a single life', async () => {
+    it('--route-audit reports all 44 Breakwater nodes without mutating a single life', async () => {
         const logPath = tmpPath('coverage');
 
         await runGameCli(['--route-audit', 'breakwater', '--state-log', logPath]);
@@ -44,21 +44,22 @@ describe('Phase 14 — route survivorship vs coverage-audit classification', () 
         expect(summary.classification).toBe('coverage-audit');
         expect(summary.survived).toBe(true);
         expect(summary.unvisitedNodeIds).toEqual([]);
-        expect((summary.visitedNodeIds as string[]).length).toBe(22);
-        expect((summary.resolvedNodeIds as string[]).length).toBe(22);
+        expect((summary.visitedNodeIds as string[]).length).toBe(44);
+        expect((summary.resolvedNodeIds as string[]).length).toBe(44);
         expect(summary.combatOutcomes).toEqual({});
 
-        // bw-17 is the Death Beholder's door fight; bw-1 is the arrival cutscene
-        // — the audit inspects wiring, it never fights anyone. bw-18 is the
-        // door to charcoal-wood — the read-only audit sees its kind without
-        // walking through it. bw-16 is the region's Anvil.
+        // bw-k2 is the Death Beholder's chapter-boss fight; bw-w1 is the
+        // arrival cutscene — the audit inspects wiring, it never fights
+        // anyone. bw-b2 is the door to charcoal-wood — the read-only audit
+        // sees its kind without walking through it. bw-t4 is a village with
+        // the region's Anvil.
         const eventKinds = summary.eventKinds as Record<string, string>;
-        expect(eventKinds['bw-1']).toBe('cutscene');
-        expect(eventKinds['bw-17']).toBe('encounter');
-        expect(eventKinds['bw-18']).toBe('travel');
-        expect(eventKinds['bw-16']).toBe('village');
-        // bw-19..bw-22 are the questline's four quest nodes.
-        for (const id of ['bw-19', 'bw-20', 'bw-21', 'bw-22']) expect(eventKinds[id]).toBe('quest');
+        expect(eventKinds['bw-w1']).toBe('cutscene');
+        expect(eventKinds['bw-k2']).toBe('encounter');
+        expect(eventKinds['bw-b2']).toBe('travel');
+        expect(eventKinds['bw-t4']).toBe('village');
+        // bw-c2, bw-l5, bw-k1 and bw-b1 are the chapter chain's quest nodes.
+        for (const id of ['bw-c2', 'bw-l5', 'bw-k1', 'bw-b1']) expect(eventKinds[id]).toBe('quest');
 
         const actions = readLog(logPath).map(r => r.action);
         expect(actions).not.toContain('hazardCombat:start');
@@ -67,32 +68,30 @@ describe('Phase 14 — route survivorship vs coverage-audit classification', () 
     it('a scripted route stops at a combat defeat and downgrades to "blocked" — never reports post-defeat traversal as survivorship', async () => {
         const logPath = tmpPath('defeat-stop');
 
-        // The bw-10 combat (the Walled Manor, in the second step's pocket)
-        // is forced against a ceiling enemy — a test-only registry entry:
-        // the Death Beholder scaled to L110 — so it is a DETERMINISTIC defeat
-        // regardless of card balance. The impossible enemy decouples this
-        // classifier test from balance for good. The walk plays step one
-        // (bw-19, the bw-3 hazard) and turns it in at bw-20 to reach the
-        // pocket.
+        // The bw-w3 combat (a road past the first fight) is forced against
+        // a ceiling enemy — a test-only registry entry: the Death Beholder
+        // scaled to L110 — so it is a DETERMINISTIC defeat regardless of
+        // card balance. The impossible enemy decouples this classifier test
+        // from balance for good.
         //
         // The intermediate encounter is decoupled from balance too:
-        // `--combat-max-turns 2` is chosen so the bw-2 fodder fight
+        // `--combat-max-turns 2` is chosen so the bw-w2 fodder fight
         // (Float-Eye) hits the turn cap UNRESOLVED (outcome null — not a
-        // defeat, so the route continues), while the L110 ceiling at bw-10
+        // defeat, so the route continues), while the L110 ceiling at bw-w3
         // still kills within the cap. Only a real `defeat` blocks the route;
-        // a capped, undecided combat must not. bw-14 is a route target but
-        // must never be reached once bw-10 ends in defeat.
+        // a capped, undecided combat must not. bw-h1 is a route target but
+        // must never be reached once bw-w3 ends in defeat.
         const registry = ENEMY_REGISTRY as Record<string, unknown>;
         registry['test-ceiling'] = scaleEnemyToLevel(DeathBeholder, 110);
         try {
             await runGameCli([
-                '--start-map', 'breakwater', '--resolve-start', '--route', 'bw-19,bw-3,bw-4,bw-9,bw-20,bw-2,bw-10,bw-14',
+                '--start-map', 'breakwater', '--resolve-start', '--route', 'bw-w2,bw-w3,bw-h1',
                 '--auto-combat',
                 '--combat-policy', 'naive',
                 '--combat-seed', '1',
                 '--combat-max-turns', '2',
                 '--combat-enemy', 'test-ceiling',
-                '--combat-enemy-node', 'bw-10',
+                '--combat-enemy-node', 'bw-w3',
                 '--state-log', logPath,
             ]);
         } finally {
@@ -102,14 +101,14 @@ describe('Phase 14 — route survivorship vs coverage-audit classification', () 
         const summary = routeEnd(logPath);
         expect(summary.classification).toBe('blocked');
         expect(summary.survived).toBe(false);
-        expect(summary.blockedAtNodeId).toBe('bw-10');
+        expect(summary.blockedAtNodeId).toBe('bw-w3');
         expect(summary.blockerReason).toBe('combat defeat');
-        expect((summary.combatOutcomes as Record<string, string>)['bw-10']).toBe('defeat');
-        // The capped bw-2 combat resolved to no outcome — it must be
+        expect((summary.combatOutcomes as Record<string, string>)['bw-w3']).toBe('defeat');
+        // The capped bw-w2 combat resolved to no outcome — it must be
         // recorded as neither a defeat nor a phantom victory.
-        expect(summary.combatOutcomes as Record<string, string>).not.toHaveProperty('bw-2');
-        expect(summary.visitedNodeIds).not.toContain('bw-14');
-        expect(summary.unvisitedNodeIds).toContain('bw-14');
+        expect(summary.combatOutcomes as Record<string, string>).not.toHaveProperty('bw-w2');
+        expect(summary.visitedNodeIds).not.toContain('bw-h1');
+        expect(summary.unvisitedNodeIds).toContain('bw-h1');
     });
 
     it('a lost CLI fight is a death: back on the node walked from, 1 VITAE, dying, the fight node unspent', async () => {
@@ -118,13 +117,13 @@ describe('Phase 14 — route survivorship vs coverage-audit classification', () 
         registry['test-ceiling'] = scaleEnemyToLevel(DeathBeholder, 110);
         try {
             await runGameCli([
-                '--start-map', 'breakwater', '--resolve-start', '--route', 'bw-19,bw-3,bw-4,bw-9,bw-20,bw-2,bw-10,bw-14',
+                '--start-map', 'breakwater', '--resolve-start', '--route', 'bw-w2,bw-w3,bw-h1',
                 '--auto-combat',
                 '--combat-policy', 'naive',
                 '--combat-seed', '1',
                 '--combat-max-turns', '2',
                 '--combat-enemy', 'test-ceiling',
-                '--combat-enemy-node', 'bw-10',
+                '--combat-enemy-node', 'bw-w3',
                 '--state-log', logPath,
             ]);
         } finally {
@@ -140,19 +139,19 @@ describe('Phase 14 — route survivorship vs coverage-audit classification', () 
         const map = after.world.currentMap;
         expect(after.dying).toBe(true);
         expect(after.player.health).toBe(1);
-        // bw-2 to bw-10 walks back across marker 2 (bw-20): that is the node walked from.
-        expect(map.currentNode).toBe('bw-20');
+        // bw-w3 is walked onto from bw-w2: that is the node walked from.
+        expect(map.currentNode).toBe('bw-w2');
         expect(map.pendingArrival ?? null).toBeNull();
-        expect(map.consumedNodes).not.toContain('bw-10');
-        expect(map.completedNodes).not.toContain('bw-10');
+        expect(map.consumedNodes).not.toContain('bw-w3');
+        expect(map.completedNodes).not.toContain('bw-w3');
         // The walker's evidence contract is unchanged: it still stops as blocked.
         expect((end.event as Record<string, unknown>).classification).toBe('blocked');
     });
 
-    it('--resolve-start resolves bw-1\'s own arrival cutscene before walking the route; without it, the start node is explicitly unresolved', async () => {
+    it('--resolve-start resolves bw-w1\'s own arrival cutscene before walking the route; without it, the start node is explicitly unresolved', async () => {
         const withFlag = tmpPath('resolve-start-on');
         await runGameCli([
-            '--start-map', 'breakwater', '--route', 'bw-4',
+            '--start-map', 'breakwater', '--route', 'bw-w2',
             '--resolve-start',
             '--auto-combat',
             '--combat-policy', 'status',
@@ -161,12 +160,12 @@ describe('Phase 14 — route survivorship vs coverage-audit classification', () 
             '--state-log', withFlag,
         ]);
         const onSummary = routeEnd(withFlag);
-        expect(onSummary.startNode).toMatchObject({ nodeId: 'bw-1', resolved: true });
-        expect(onSummary.resolvedNodeIds).toContain('bw-1');
+        expect(onSummary.startNode).toMatchObject({ nodeId: 'bw-w1', resolved: true });
+        expect(onSummary.resolvedNodeIds).toContain('bw-w1');
 
-        // bw-1 is the Breakwater's arrival cutscene — the start node holds a
+        // bw-w1 is the Breakwater's arrival cutscene — the start node holds a
         // kind that is safe to fire the moment the map opens (events fire on
-        // ARRIVAL, and the map places the player ON bw-1).
+        // ARRIVAL, and the map places the player ON bw-w1).
         const onLogs = readLog(withFlag);
         const bw1Event = onLogs
             .filter(r => r.action === 'resolveMapEvent')
@@ -177,7 +176,7 @@ describe('Phase 14 — route survivorship vs coverage-audit classification', () 
 
         const withoutFlag = tmpPath('resolve-start-off');
         await runGameCli([
-            '--start-map', 'breakwater', '--route', 'bw-4',
+            '--start-map', 'breakwater', '--route', 'bw-w2',
             '--auto-combat',
             '--combat-policy', 'status',
             '--combat-seed', '1',
@@ -185,18 +184,18 @@ describe('Phase 14 — route survivorship vs coverage-audit classification', () 
             '--state-log', withoutFlag,
         ]);
         const offSummary = routeEnd(withoutFlag);
-        expect(offSummary.startNode).toMatchObject({ nodeId: 'bw-1', resolved: false });
-        expect(offSummary.resolvedNodeIds).not.toContain('bw-1');
+        expect(offSummary.startNode).toMatchObject({ nodeId: 'bw-w1', resolved: false });
+        expect(offSummary.resolvedNodeIds).not.toContain('bw-w1');
     });
 
     it('reports the exact unvisited nodes for a partial legal route', async () => {
         const logPath = tmpPath('partial');
 
         // This test proves the visited/unvisited ACCOUNTING, not combat
-        // strength: the open fan (bw-4, bw-9) holds no fight, and
-        // `--combat-max-turns 4` would keep any balance-independent.
+        // strength: bw-w2 is a Float-Eye fodder fight and bw-w4 a camp, and
+        // `--combat-max-turns 4` keeps the fight balance-independent.
         await runGameCli([
-            '--start-map', 'breakwater', '--route', 'bw-4,bw-9',
+            '--start-map', 'breakwater', '--route', 'bw-w2,bw-w4',
             '--auto-combat',
             '--combat-policy', 'status',
             '--combat-seed', '42',
@@ -207,9 +206,9 @@ describe('Phase 14 — route survivorship vs coverage-audit classification', () 
         const summary = routeEnd(logPath);
         expect(summary.classification).toBe('survivorship');
         expect(summary.survived).toBe(true);
-        expect(summary.visitedNodeIds).toEqual(['bw-1', 'bw-4', 'bw-9']);
+        expect(summary.visitedNodeIds).toEqual(['bw-w1', 'bw-w2', 'bw-w4']);
         const unvisited = summary.unvisitedNodeIds as string[];
-        expect(unvisited).toContain('bw-18');
-        expect(unvisited.length).toBe(19); // 22 nodes − the 3 visited
+        expect(unvisited).toContain('bw-b2');
+        expect(unvisited.length).toBe(41); // 44 nodes − the 3 visited
     });
 });

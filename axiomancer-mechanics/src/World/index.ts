@@ -43,8 +43,8 @@ export {
     // The forward skeleton the progression audits walk.
     forwardEdges,
 } from './world.reducer';
-export { auditRoadReachability } from './road-reachability';
-export type { RoadReachabilityAudit } from './road-reachability';
+export { auditRoadReachability, mapPassages } from './road-reachability';
+export type { MapPassage, RoadReachabilityAudit } from './road-reachability';
 
 // MapEvents engine.
 // Importing `./MapEvents/content` for its side effect registers every
@@ -53,7 +53,12 @@ import './MapEvents/content';
 // Importing `./quest.library` for its side effect registers every authored
 // questline (the Breakwater's) on module load, beside the pools above.
 import './quest.library';
-export { BREAKWATER_QUESTLINE, BREAKWATER_QUESTLINE_ID, AUTHORED_QUESTLINES } from './quest.library';
+export { AUTHORED_QUESTLINES } from './quest.library';
+export {
+    BREAKWATER_CHAPTER_QUESTLINE, BREAKWATER_CHAPTER_QUESTLINE_ID, BREAKWATER_CHAPTER_STEPS,
+    BREAKWATER_CHAPTER_RELICS, BREAKWATER_KEEP_KEY,
+} from './breakwater-chapter.questline';
+export { BREAKWATER_CHAPTER_GATES, BREAKWATER_CHAPTER_HELD } from './Continents/Coastal-Village/breakwater-chapter';
 
 export {
     resolveMapEvent,

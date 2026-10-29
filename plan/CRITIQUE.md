@@ -984,6 +984,16 @@
 
 ## Pending
 
+### [MED] balance / Act 1 ledger — the rebuilt Breakwater's 19 fights make the Beacon Crags door free on a full clear (BW1b, 2026-10-29)
+- source: phase BW1b, `axiomancer-mechanics/src/Game/act1-progression.test.ts`.
+- detail: the new Breakwater stages 15 fights, 3 elites and the sea keep's boss (19, against 6 on the old map), so
+  the Act 1 ledger has 39 fights and a full clear meets the four doors at levels 6, 13, 16 and 19 (was 4, 9, 14,
+  18). At level 16 the placeholder Death Beholder at the Beacon Crags door (bc-15, level 3) is won about 92% of
+  the time, over the test's 90% "not free" ceiling. The test now names bc-15 in `FREE_UNTIL_RETUNED` and pins that
+  it is still free, so the exception fails loudly once the retune lands.
+- next: T's call with Chapter 1's real foes (enemy sessions 1-2, B2): fewer XP on the Breakwater's placeholder
+  fights, a later door level, or the curve. Then drop bc-15 from the set.
+
 ### [MED] exploration / desktop — the level-15 hub opens with the pilgrim's own node above the frame, so the first view shows open roads leading from somewhere off-screen
 - pass: 109 (commit 1250f1d9)
 - viewport: desktop (1280x800)

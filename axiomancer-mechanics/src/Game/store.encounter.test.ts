@@ -28,7 +28,7 @@ describe('store.startCombat — accepts Enemy or Encounter', () => {
     });
 
     it('Encounter: stages the first enemy of the list', () => {
-        const enc: Encounter = { enemies: [DeathBeholder], origin: 'test:bw-1' };
+        const enc: Encounter = { enemies: [DeathBeholder], origin: 'test:bw-w1' };
         const store = createGameStore(nullAdapter, { player: Player });
         store.getState().startCombat(enc);
         expect(store.getState().currentEncounter!.enemies[0]!.id).toBe(DeathBeholder.id);

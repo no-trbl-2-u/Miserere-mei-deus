@@ -7,9 +7,9 @@ Paced (narrative-choice) events sit in the event slice and `<EventGate>` (`compo
 ## 2. Enter it directly
 
 - `/dev` sections start closed; `dev-section-<key>-toggle` opens one (dialogue chips under STORY, `dev-section-story-toggle`; the quick triggers under ENCOUNTERS, `dev-section-encounters-toggle`).
-- Dialogue: `/exploration?fixture=apprentice-staged-dialogue` (`arrive` → `/dialogue`, the fixture NPC staged on the Breakwater's bw-2). `/dev`: `debug-dialogue-<map>-<npc-slug>` opens any staged tree.
+- Dialogue: `/exploration?fixture=apprentice-staged-dialogue` (`arrive` → `/dialogue`, the fixture NPC staged on the Breakwater's bw-w2). `/dev`: `debug-dialogue-<map>-<npc-slug>` opens any staged tree.
 - Village: `/exploration?fixture=wanderer-staged-village` (`arrive` → `/village`, 240 shillings). `/dev`: `debug-trigger-encounter-village` (synthetic two-merchant village); `debug-currency-large-grant` (under RUN & DIAGNOSTICS, `dev-section-run`) first if you want to buy.
-- Cutscene: `/exploration?fixture=wanderer-staged-cutscene` (`arrive` → `/cutscene`, a placeholder cutscene staged on bw-2). `/dev`: `debug-trigger-encounter-cutscene`. Map start nodes also fire their own omen on landing (`fresh-start`).
+- Cutscene: `/exploration?fixture=wanderer-staged-cutscene` (`arrive` → `/cutscene`, a placeholder cutscene staged on bw-w2). `/dev`: `debug-trigger-encounter-cutscene`. Map start nodes also fire their own omen on landing (`fresh-start`).
 - Narration: no dedicated fixture or dev trigger; reached by walking onto a narration node (see `DebugWorldTravel`'s `debug-travel-node-<id>` chips, which fire the node's authored event).
 - No seed globals apply; `__AXM_JUICE_INSTANT__` does not affect the cutscene fade (it is RN `Animated`, honours reduced motion).
 

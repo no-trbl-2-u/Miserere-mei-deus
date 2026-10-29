@@ -47,7 +47,7 @@ describe('resolveStateFixture', () => {
     });
 
     it('reads + validates a JSON document through the injected reader', () => {
-        const read = vi.fn(() => JSON.stringify({ id: 'file-fixture', seed: 9, preset: 'sage', world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-17' } }));
+        const read = vi.fn(() => JSON.stringify({ id: 'file-fixture', seed: 9, preset: 'sage', world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-k2' } }));
         const fixture = resolveStateFixture('./file-fixture.json', read);
         expect(read).toHaveBeenCalledWith('./file-fixture.json');
         expect(fixture.id).toBe('file-fixture');
@@ -61,7 +61,7 @@ describe('boot path', () => {
         const initial = bootStateFromFixture('sage-bw-door-gate');
         const store = createGameStore(nullAdapter, initial);
         expect(store.getState().player.level).toBe(15);
-        expect(store.getState().world.currentMap.currentNode).toBe('bw-22');
+        expect(store.getState().world.currentMap.currentNode).toBe('bw-k1');
     });
 
     it('describeFixtures lists every registry id', () => {

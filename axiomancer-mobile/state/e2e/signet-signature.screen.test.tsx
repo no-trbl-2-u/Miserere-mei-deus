@@ -5,7 +5,7 @@
  * The dev menu's only relic path is the ADD ITEM chip, which only pushed the
  * relic into the satchel, unworn, and a fight reads its signatures from the
  * worn loadout, so the board drew no rune. Now the chip wears the relic while
- * a position is free. This test presses the real chip on the real bw-2
+ * a position is free. This test presses the real chip on the real bw-w2
  * fight's store (stripped of relics), mounts the panel the way the route
  * does, and finds the rune; with Conviction at the cost a press casts it.
  * Since LR1d the Signet's signature is Open Vein, at its own cost of ◆4.
@@ -34,7 +34,7 @@ const CARDS = ['grey-strike', 'grey-ward', 'grey-word', 'grey-strike'];
 const noopDrag = (): DragController =>
     ({ begin: () => undefined, end: () => undefined, active: null, x: { value: 0 }, y: { value: 0 } } as unknown as DragController);
 
-/** The bw-2 arrival, every relic stripped, the Signet chip pressed for real. */
+/** The bw-w2 arrival, every relic stripped, the Signet chip pressed for real. */
 function pressSignetChip() {
     const arrival = arriveAtRealFight(REAL_FIGHT_FIXTURE, { player: { knownCards: CARDS } });
     const { store } = arrival;

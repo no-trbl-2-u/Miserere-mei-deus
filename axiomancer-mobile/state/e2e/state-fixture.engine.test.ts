@@ -82,7 +82,7 @@ describe('resolveBootFixture: gate + fallback', () => {
         const boot = resolveBootFixture({ request: { source: 'url', ref: 'l30-bw-hazard' }, devToolsEnabled: true });
         expect(boot?.fixture.id).toBe('l30-bw-hazard');
         expect(boot?.state.player.level).toBe(30);
-        expect(boot?.state.world.currentMap.currentNode).toBe('bw-3');
+        expect(boot?.state.world.currentMap.currentNode).toBe('bw-m2');
         expect(getBootFixture()).toBe(boot);
     });
 });
@@ -96,7 +96,7 @@ describe('store boot through the fixture adapter', () => {
         expect(s.version).toBe(GAME_STATE_VERSION);
         expect(s.player.level).toBe(15);
         expect(s.world.currentMap.name).toBe('breakwater');
-        expect(s.world.currentMap.currentNode).toBe('bw-22');
+        expect(s.world.currentMap.currentNode).toBe('bw-k1');
         // Mobile-only slices are still layered on.
         expect(s.event.pending).toBeNull();
 
@@ -132,7 +132,7 @@ describe('createFixtureStore + arriveFromFixture (test-utils/fixtureStore.ts)', 
     it('boots from a registry id with a zero-save memory adapter', () => {
         const h = createFixtureStore('sage-bw-door-gate');
         expect(h.fixture.id).toBe('sage-bw-door-gate');
-        expect(h.store.getState().world.currentMap.currentNode).toBe('bw-22');
+        expect(h.store.getState().world.currentMap.currentNode).toBe('bw-k1');
         expect(h.adapter.saveCount).toBe(0);
         expect(h.state.runId).toBe(h.store.getState().runId);
     });
@@ -140,12 +140,12 @@ describe('createFixtureStore + arriveFromFixture (test-utils/fixtureStore.ts)', 
     it('accepts an inline fixture and a caller-supplied adapter', () => {
         const adapter = createMemoryAdapter();
         const h = createFixtureStore(
-            { id: 'inline-seat', seed: 11, world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-18' } },
+            { id: 'inline-seat', seed: 11, world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-b2' } },
             { adapter },
         );
         expect(h.adapter).toBe(adapter);
         expect(adapter.saveCount).toBe(1);
-        expect(h.store.getState().world.currentMap.currentNode).toBe('bw-18');
+        expect(h.store.getState().world.currentMap.currentNode).toBe('bw-b2');
     });
 
     it('rejects unknown ids and invalid inline documents', () => {

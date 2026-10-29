@@ -9,12 +9,13 @@
  * a tap on it offers the trip again.
  *
  * Pinned here:
- *   - bw-18 (the river bridge) offers the Charcoal Wood; YES crosses with a
+ *   - bw-b2 (the far bank) offers the Charcoal Wood; YES crosses with a
  *     toast and a save; the arrival map's start node is not consumed
  *   - cw-20 (the stair cave) crosses the continent onto the Beacon Crags
  *   - NO keeps the player on the door; tapping it offers the trip again
  *   - the fixture map's passage pair (mouth and face) works both ways, on
  *     every entry, and a shut way (`opensAfter`) offers no move
+ *   - the Breakwater's sea cave (bw-h6 and bw-c0) is such a pair on a live map
  */
 
 import { beforeAll, describe, expect, it } from '@jest/globals';
@@ -62,8 +63,8 @@ function here(handle: { store: { getState: () => unknown } }): string {
 }
 
 describe('inter-map travel doors ask before they cross', () => {
-    it('bw-18 offers the Charcoal Wood and moves no one', () => {
-        const { store, actions } = seatAt('coastal-continent', 'breakwater', 'bw-18');
+    it('bw-b2 offers the Charcoal Wood and moves no one', () => {
+        const { store, actions } = seatAt('coastal-continent', 'breakwater', 'bw-b2');
 
         expect(actions.resolveCurrentMapEvent('travel')).toBe(true);
 
@@ -80,7 +81,7 @@ describe('inter-map travel doors ask before they cross', () => {
 
     it('YES crosses onto the Charcoal Wood with a toast and a checkpoint save', () => {
         const adapter = createMemoryAdapter();
-        const { store, actions } = seatAt('coastal-continent', 'breakwater', 'bw-18', adapter);
+        const { store, actions } = seatAt('coastal-continent', 'breakwater', 'bw-b2', adapter);
         actions.resolveCurrentMapEvent('travel');
         const savesBefore = adapter.saveCount;
 
@@ -108,7 +109,7 @@ describe('inter-map travel doors ask before they cross', () => {
     });
 
     it('NO keeps the player on the door, owing nothing; a tap on it offers the trip again', () => {
-        const { store, actions } = seatAt('coastal-continent', 'breakwater', 'bw-18');
+        const { store, actions } = seatAt('coastal-continent', 'breakwater', 'bw-b2');
         actions.resolveCurrentMapEvent('travel');
 
         actions.closeTravel();
@@ -116,7 +117,7 @@ describe('inter-map travel doors ask before they cross', () => {
         const after = store.getState();
         expect(selectHasActiveTravel(after)).toBe(false);
         expect(after.world.currentMap.name).toBe('breakwater');
-        expect(after.world.currentMap.currentNode).toBe('bw-18');
+        expect(after.world.currentMap.currentNode).toBe('bw-b2');
         expect(after.world.currentMap.pendingArrival ?? null).toBeNull();
 
         expect(actions.offerTravelHere()).toBe(true);
@@ -124,9 +125,28 @@ describe('inter-map travel doors ask before they cross', () => {
     });
 
     it('offerTravelHere off a travel node does nothing', () => {
-        const { store, actions } = seatAt('coastal-continent', 'breakwater', 'bw-1');
+        const { store, actions } = seatAt('coastal-continent', 'breakwater', 'bw-w1');
         expect(actions.offerTravelHere()).toBe(false);
         expect(selectHasActiveTravel(store.getState())).toBe(false);
+    });
+});
+
+describe('the Breakwater\'s sea cave, a same-map passage on a live map', () => {
+    it('the cave mouth bw-h6 asks, moves no one, and YES steps through to the cave face bw-c0 and back', () => {
+        const { store, actions } = seatAt('coastal-continent', 'breakwater', 'bw-h6');
+        expect(actions.resolveCurrentMapEvent('travel')).toBe(true);
+        expect(here({ store })).toBe('bw-h6');
+        expect(selectTravelVM(store.getState()).open).toBe(true);
+
+        expect(actions.takeTravel()).toBe(true);
+        expect(store.getState().world.currentMap.name).toBe('breakwater');
+        expect(here({ store })).toBe('bw-c0');
+        // No crossing toast for a passage: the map shows the move.
+        expect(store.getState().notifications?.toast?.text ?? null).toBeNull();
+
+        expect(actions.offerTravelHere()).toBe(true);
+        expect(actions.takeTravel()).toBe(true);
+        expect(here({ store })).toBe('bw-h6');
     });
 });
 

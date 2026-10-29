@@ -74,6 +74,33 @@ describe('auditRoadReachability', () => {
         expect(auditRoadReachability(DEF, [behind]).unreachableSteps).toEqual([{ questline: 'wr1a-line', step: 1, nodeId: 'b' }]);
     });
 
+    it('crosses a same-map passage both ways, as a road', () => {
+        //   s0 ── a        a and x are the two ends of a passage; x ── y
+        //   x ── y
+        const nodes: MapNode[] = [
+            { id: 's0', location: [0, 0], connectedNodes: ['a'] },
+            { id: 'a', location: [1, 0], connectedNodes: [] },
+            { id: 'x', location: [2, 0], connectedNodes: ['y'] },
+            { id: 'y', location: [3, 0], connectedNodes: [] },
+        ];
+        const def: MapDefinition = { ...DEF, nodes, startingNode: nodes[0]!, holdRoadsUntilSettled: [], initialBlockedRoutes: [] };
+        expect(auditRoadReachability(def, [], []).unreachableNodes).toEqual(['x', 'y']);
+        const passages = [{ from: 'a', to: 'x' }, { from: 'x', to: 'a' }];
+        expect(auditRoadReachability(def, [], passages).unreachableNodes).toEqual([]);
+    });
+
+    it('settles the held nodes in reach before it checks a step (an elite beaten on the way)', () => {
+        //   s0 ── e ── q     e (an elite) holds its road on to the quest node q
+        const nodes: MapNode[] = [
+            { id: 's0', location: [0, 0], connectedNodes: ['e'] },
+            { id: 'e', location: [1, 0], connectedNodes: ['q'] },
+            { id: 'q', location: [2, 0], connectedNodes: [] },
+        ];
+        const def: MapDefinition = { ...DEF, nodes, startingNode: nodes[0]!, holdRoadsUntilSettled: ['e'], initialBlockedRoutes: [] };
+        const toQ: Questline = { ...line(false), mapName: def.name, steps: [{ ...line(false).steps[0]!, nodeId: 'q' }] };
+        expect(auditRoadReachability(def, [toQ], [])).toEqual({ mapName: def.name, unreachableNodes: [], unreachableSteps: [] });
+    });
+
     it('returns an empty audit for a labyrinth', () => {
         expect(auditRoadReachability({ ...DEF, traversal: 'labyrinth' }, []).unreachableNodes).toEqual([]);
     });

@@ -17,7 +17,7 @@
  * drop also draws, because no relic is elite-only any more (A12). Every line
  * is `[content]`.
  *
- * Registered only by `registerBreakwaterChapter()` (tests only until BW1b).
+ * Registered on load by `quest.library.ts` (`AUTHORED_QUESTLINES`).
  */
 
 import type { Questline } from './questline';

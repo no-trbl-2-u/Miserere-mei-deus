@@ -4,7 +4,7 @@
  * The engine twin of mobile's `test-utils/fixtureStore.ts`. Replaces the
  * hand-built `createGameStore(nullAdapter, { player, world: … })` setup
  * with a declarative fixture (registry id or inline document), so a test
- * reads as "a Sage on bw-15" rather than twenty lines of state surgery.
+ * reads as "a Sage on bw-t4" rather than twenty lines of state surgery.
  *
  * Deterministic: every registry fixture carries a seed; an inline
  * fixture should too. Hermetic: `nullAdapter` by default (no disk).

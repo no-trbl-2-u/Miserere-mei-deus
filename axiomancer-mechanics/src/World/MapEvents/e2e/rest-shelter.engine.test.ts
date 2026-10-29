@@ -7,8 +7,10 @@
  *
  * This suite is the regression pin: EVERY authored rest pool in the game
  * is enumerated from the live registry and its shelter asserted by name.
- * If someone re-authors a spring as an inn (or forgets the marker on a
- * new node), this fails.
+ * The rebuilt Breakwater's rests are three camps, so no authored rest is an
+ * inn today; the inn stays a first-class shelter, covered by a registered
+ * inn pool. If someone authors an inn (or forgets the marker on a new
+ * node), this fails until the pin is updated.
  *
  * Hermetic: registry-only reads plus one seeded `resolveMapEvent`; no
  * disk, network, or TTY. RNG stubbed via `src/test-utils/rng.ts`.
@@ -118,15 +120,16 @@ describe('Phase 52b — RestPayload.shelter is authored, never inferred', () => 
 });
 
 describe('Phase 52b — the shelter classification of every authored rest pool', () => {
-    it('pins the Breakwater inns', () => {
+    it('pins the Breakwater rests as its three camps', () => {
         const census = censusOfAuthoredRestPools();
-        // bw-9 / bw-13 are `innRestPool(...)` — the Act 1 coast's inns.
-        for (const nodeId of ['bw-9', 'bw-13']) {
-            expect(
-                census[`coastal-continent:breakwater:${nodeId}`],
-                `${nodeId} must be an inn (innRestPool)`,
-            ).toEqual(['inn']);
-        }
+        const breakwater = Object.entries(census)
+            .filter(([key]) => key.startsWith('coastal-continent:breakwater:'))
+            .sort(([a], [b]) => a.localeCompare(b));
+        expect(breakwater).toEqual([
+            ['coastal-continent:breakwater:bw-h5', ['camp']],
+            ['coastal-continent:breakwater:bw-l3', ['camp']],
+            ['coastal-continent:breakwater:bw-w4', ['camp']],
+        ]);
     });
 
     it('pins both labyrinth rest entries as camps', () => {
@@ -141,18 +144,16 @@ describe('Phase 52b — the shelter classification of every authored rest pool',
         expect(new Set(labyrinthShelters)).toEqual(new Set<RestShelter>(['camp']));
     });
 
-    it('the ONLY inns in the game are the Breakwater\'s: a walled harbour town', () => {
-        // The customs house and harbour inn are inns; every other Act 1 rest
-        // is a camp.
+    it('no authored rest in the game is an inn: the rebuilt Breakwater rests in camps', () => {
+        // The old Breakwater's customs house and harbour inn went with its
+        // rebuild; every authored rest is a camp.
         const census = censusOfAuthoredRestPools();
+        expect(Object.keys(census).length).toBeGreaterThan(0);
         const innKeys = Object.entries(census)
             .filter(([, shelters]) => shelters.includes('inn'))
             .map(([key]) => key)
             .sort();
-        expect(innKeys).toEqual([
-            'coastal-continent:breakwater:bw-13',
-            'coastal-continent:breakwater:bw-9',
-        ]);
+        expect(innKeys).toEqual([]);
     });
 });
 
@@ -174,9 +175,25 @@ describe('Phase 52b — the resolved rest event carries the shelter', () => {
         } as GameState;
     }
 
-    it('an inn node resolves with shelter inn', () => {
+    it('a camp node resolves with shelter camp', () => {
         mockSequentialRng(0.5);
-        const result = resolveMapEvent(stateAtNode('bw-9'));
+        const result = resolveMapEvent(stateAtNode('bw-w4'));
+        expect(result.event.kind).toBe('rest');
+        if (result.event.kind === 'rest') {
+            expect(result.event.shelter).toBe('camp');
+        }
+    });
+
+    it('a pool marked inn resolves with shelter inn', () => {
+        mockSequentialRng(0.5);
+        const pool: MapEventPool = {
+            id: 'phase52b-inn-rest',
+            entries: [{ kind: 'rest', weight: 1, payload: { kind: 'rest', shelter: 'inn' } }],
+        };
+        registerMapEventPool(pool);
+        setNodeEventPoolOverride('coastal-continent', 'breakwater', 'bw-w4', pool.id);
+
+        const result = resolveMapEvent(stateAtNode('bw-w4'));
         expect(result.event.kind).toBe('rest');
         if (result.event.kind === 'rest') {
             expect(result.event.shelter).toBe('inn');
@@ -190,9 +207,9 @@ describe('Phase 52b — the resolved rest event carries the shelter', () => {
             entries: [{ kind: 'rest', weight: 1, payload: { kind: 'rest' } }],
         };
         registerMapEventPool(pool);
-        setNodeEventPoolOverride('coastal-continent', 'breakwater', 'bw-9', pool.id);
+        setNodeEventPoolOverride('coastal-continent', 'breakwater', 'bw-w4', pool.id);
 
-        const result = resolveMapEvent(stateAtNode('bw-9'));
+        const result = resolveMapEvent(stateAtNode('bw-w4'));
         expect(result.event.kind).toBe('rest');
         if (result.event.kind === 'rest') {
             expect(result.event.shelter).toBe('camp');

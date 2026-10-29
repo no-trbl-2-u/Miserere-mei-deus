@@ -104,10 +104,8 @@ describe('CLI process-level smoke (real ts-node startup)', () => {
             NPX,
             [
                 'ts-node', 'src/CLI/game.cli.ts',
-                // bw-2 is a Float-Eye encounter in the second step's pocket:
-                // the walk plays step one (bw-19, the bw-3 hazard), turns it
-                // in at bw-20 and accepts step two to reach it.
-                '--start-map', 'breakwater', '--resolve-start', '--route', 'bw-19,bw-3,bw-4,bw-9,bw-20,bw-2', '--auto-combat',
+                // bw-w2 is a Float-Eye encounter, a road from the windmill start.
+                '--start-map', 'breakwater', '--resolve-start', '--route', 'bw-w2', '--auto-combat',
                 '--combat-policy', 'status', '--combat-seed', '42',
                 '--combat-max-turns', '12',
                 '--json-events', '--state-log', logPath,

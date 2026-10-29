@@ -13,7 +13,7 @@ import { createFixtureStore } from '@/test-utils/fixtureStore';
 describe('resolving a quest node', () => {
     it('sets no pending event, opens the quest screen and leaves the node unspent', () => {
         const { store, actions } = createFixtureStore(
-            { id: 'quest-node', seed: 'quest-node', world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-1' } },
+            { id: 'quest-node', seed: 'quest-node', world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-w2' } },
         );
 
         const resolved = actions.resolveCurrentMapEvent(undefined, {
@@ -23,7 +23,7 @@ describe('resolving a quest node', () => {
         expect(resolved).toBe(true);
         expect(store.getState().event.pending).toBeNull();
         expect(store.getState().quest.open).toMatchObject({ questline: 'fixture-line', node: 1 });
-        expect(store.getState().world.currentMap.consumedNodes).not.toContain('bw-1');
-        expect(store.getState().world.currentMap.currentNode).toBe('bw-1');
+        expect(store.getState().world.currentMap.consumedNodes).not.toContain('bw-w2');
+        expect(store.getState().world.currentMap.currentNode).toBe('bw-w2');
     });
 });

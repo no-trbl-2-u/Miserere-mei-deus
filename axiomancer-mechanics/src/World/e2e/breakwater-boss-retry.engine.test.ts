@@ -1,25 +1,32 @@
 // guard-test: the seam already agreed on the parent (DY1a revive un-spends the death node, QL1b leaves it unspent); this pins the joined run so neither rule can drift
 /**
- * The watchtower fought again (phase QL1g, A23 of the QL1 brief).
+ * The chapter boss fought again (phase QL1g, A23 of the QL1 brief; moved to
+ * the rebuilt Breakwater in phase BW1b).
  *
- * The Breakwater questline's last step is the boss at bw-17. T's death rule
- * (plot DY1: a first death returns the player to the node walked from at 1
- * VITAE, dying; a death while dying ends the run) meets the questline's retry
- * rule (a lost or fled fight leaves its node unspent, A9) at this one fight.
- * This walks the live Breakwater and its registered questline from a fresh
- * game to step 4 accepted, loses the boss once through the reducer the app
- * dispatches to, and asserts the two rules agree: the player stands before
- * bw-17, bw-17 is open and unspent, step 4 is still active and the bridge is
- * shut. The same run then wins, gets the Belt and opens the bridge. A second
- * loss while dying ends the run.
+ * The Breakwater chain's last step is a `kill` of the chapter boss in the sea
+ * keep (bw-k2), taken at the keep gate (bw-k1) and turned in at the river
+ * bridge (bw-b1). T's death rule (plot DY1: a first death returns the player
+ * to the node walked from at 1 VITAE, dying; a death while dying ends the
+ * run) meets the retry rule (a lost or fled fight leaves its node unspent, A9)
+ * at this one fight. This walks the live Breakwater and its registered chain
+ * from a fresh game to step 4 accepted, loses the boss once through the
+ * reducer the app dispatches to, and asserts the two rules agree: the player
+ * stands on the keep gate, bw-k2 is open and unspent, step 4 is still active
+ * and uncounted and the bridge is shut. The same run then wins, turns the
+ * step in at the bridge, gets its relic and opens the bridge. A second loss
+ * while dying ends the run.
  */
 
 import { describe, it, expect } from 'vitest';
 
-import { legalMovesFrom, isNodeSpent, walkRoadTo } from '../world.reducer';
+import { legalMovesFrom, isNodeSpent, roadReachable, walkRoadTo } from '../world.reducer';
 import { resolveMapEvent } from '../MapEvents/resolve-map-event';
+import { takeTravel } from '../MapEvents/travel';
 import { questStepState } from '../questline';
-import { BREAKWATER_QUESTLINE, BREAKWATER_QUESTLINE_ID } from '../quest.library';
+import {
+    BREAKWATER_CHAPTER_QUESTLINE, BREAKWATER_CHAPTER_QUESTLINE_ID, BREAKWATER_CHAPTER_RELICS,
+    BREAKWATER_CHAPTER_STEPS,
+} from '../breakwater-chapter.questline';
 import '../index';
 import { createNewGameState, gameReducer } from '../../Game/game.reducer';
 import type { GameState } from '../../Game/types';
@@ -33,13 +40,19 @@ function seededRng(seed: number): () => number {
     };
 }
 
-const LINE = BREAKWATER_QUESTLINE_ID;
-const BOSS_NODE = 'bw-17';
-const BRIDGE = 'bw-18';
+const LINE = BREAKWATER_CHAPTER_QUESTLINE_ID;
+const BOSS_NODE = 'bw-k2';
+const KEEP_GATE = 'bw-k1';
+const BRIDGE_NODE = 'bw-b1';
+const BRIDGE = 'bw-b2';
+const RELIC = BREAKWATER_CHAPTER_RELICS[4];
 
 const map = (s: GameState) => s.world.currentMap;
 const legal = (s: GameState) => legalMovesFrom(map(s));
-const step4 = (s: GameState) => questStepState(s.quests, BREAKWATER_QUESTLINE.steps[3]!);
+const step4 = (s: GameState) => questStepState(s.quests, BREAKWATER_CHAPTER_QUESTLINE.steps[3]!);
+const bossKills = (s: GameState) =>
+    s.quests.active.find(q => q.name === BREAKWATER_CHAPTER_STEPS.boss)?.objectives[0]?.currentCount;
+const hasRelic = (s: GameState) => s.player.inventory.some(i => i.id === RELIC);
 
 function freshGame(): GameState {
     return resolveMapEvent(createNewGameState({ startMap: 'breakwater' }), seededRng(1)).state;
@@ -71,25 +84,38 @@ function fightAt(state: GameState, nodeId: string): GameState {
 const accept = (s: GameState, n: number) => gameReducer(s, { type: 'ACCEPT_QUEST_STEP', payload: { questline: LINE, step: n } });
 const turnIn = (s: GameState, n: number) => gameReducer(s, { type: 'TURN_IN_QUEST_STEP', payload: { questline: LINE, step: n } });
 
-/** Steps 1-3 played and turned in, step 4 accepted at bw-22: the road to the watchtower. */
-function atTheWatchtowerRoad(): GameState {
-    let s = freshGame();
-    s = accept(quest(s, 'bw-19'), 1);
-    s = arrive(s, 'bw-3').state;
-    s = arrive(s, 'bw-4').state;
-    s = arrive(s, 'bw-9').state;
-    s = accept(turnIn(quest(s, 'bw-20'), 1), 2);
-    s = fightAt(s, 'bw-2');
-    s = fightAt(s, 'bw-10');
-    s = arrive(s, 'bw-7').state;
-    s = accept(turnIn(quest(s, 'bw-21'), 2), 3);
-    s = fightAt(s, 'bw-8');
-    s = arrive(s, 'bw-13').state;
-    s = arrive(s, 'bw-15').state;
-    return accept(turnIn(quest(s, 'bw-22'), 3), 4);
+/** Takes the passage offered at the travel node `nodeId`. */
+function travelFrom(state: GameState, nodeId: string): GameState {
+    const { state: offered, event } = arrive(state, nodeId);
+    if (event.kind !== 'travel') throw new Error(`expected a passage at ${nodeId}, got ${event.kind}`);
+    return takeTravel(offered);
 }
 
-/** The boss engaged at bw-17: the arrival rolled, the fight staged. */
+/** Steps 1-3 played and turned in, step 4 accepted at the keep gate (bw-k1): the road to the sea keep. */
+function atTheKeepGate(): GameState {
+    let s = freshGame();
+    // Step 1 (given by the windmill): through the wreck and the sea cave to the camp.
+    for (const id of ['bw-w2', 'bw-w3', 'bw-h1', 'bw-h2', 'bw-h3']) s = fightAt(s, id);
+    s = arrive(s, 'bw-h4').state;
+    s = arrive(s, 'bw-h5').state;
+    s = travelFrom(s, 'bw-h6');
+    s = fightAt(s, 'bw-c1');
+    s = accept(turnIn(quest(s, 'bw-c2'), 1), 2);
+    // Step 2: back through the cave and up the town to the lighthouse (paid on arrival, with the key).
+    s = travelFrom(s, 'bw-c0');
+    for (const id of ['bw-t1', 'bw-t2', 'bw-t3']) s = fightAt(s, id);
+    s = arrive(s, 'bw-t5').state;
+    for (const id of ['bw-t6', 'bw-l1']) s = fightAt(s, id);
+    s = arrive(s, 'bw-l3').state;
+    s = fightAt(s, 'bw-l4');
+    s = accept(quest(s, 'bw-l5'), 3);
+    // Step 3: the key to the keep gate, past the causeway elite; then step 4 taken there.
+    s = arrive(s, 'bw-w4').state;
+    s = fightAt(s, 'bw-w5');
+    return accept(turnIn(quest(s, KEEP_GATE), 3), 4);
+}
+
+/** The boss engaged at bw-k2: the arrival rolled, the fight staged. */
 function engageBoss(state: GameState): { staged: GameState; encounter: Encounter } {
     const { state: owed, event } = arrive(state, BOSS_NODE);
     if (event.kind !== 'encounter') throw new Error(`expected the boss fight at ${BOSS_NODE}, got ${event.kind}`);
@@ -104,12 +130,13 @@ function loseTheBoss(state: GameState): GameState {
     return gameReducer({ ...lost, player: { ...lost.player, health: 0 } }, { type: 'PLAYER_DIED', payload: { cause: 'fight' } });
 }
 
-describe('A23: the watchtower fought again after the death rule', () => {
-    it('a first loss puts the player before bw-17 with it open, step 4 active and the bridge shut', () => {
-        const road = atTheWatchtowerRoad();
+describe('A23: the chapter boss fought again after the death rule', () => {
+    it('a first loss puts the player back on the keep gate with bw-k2 open, step 4 active and the bridge shut', () => {
+        const road = atTheKeepGate();
         expect(step4(road)).toBe('active');
+        expect(bossKills(road)).toBe(0);
         const walkedFrom = map(arrive(road, BOSS_NODE).state).arrivedFrom;
-        expect(walkedFrom).toBeTruthy();
+        expect(walkedFrom).toBe(KEEP_GATE);
 
         const revived = loseTheBoss(road);
 
@@ -120,19 +147,20 @@ describe('A23: the watchtower fought again after the death rule', () => {
         expect(map(revived).currentNode).not.toBe(BOSS_NODE);
         expect(map(revived).pendingArrival ?? null).toBeNull();
 
-        // bw-17 is unspent and open again; the bridge is not.
+        // bw-k2 is unspent and open again; the bridge is not.
         expect(isNodeSpent(map(revived), BOSS_NODE)).toBe(false);
         expect(legal(revived)).toContain(BOSS_NODE);
-        expect(legal(revived)).not.toContain(BRIDGE);
+        expect(roadReachable(map(revived))).not.toContain(BRIDGE);
 
-        // Step 4 was not paid, dropped or re-offered: still the one active step.
+        // Step 4 was not counted, paid, dropped or re-offered: still the one active step.
         expect(step4(revived)).toBe('active');
+        expect(bossKills(revived)).toBe(0);
         expect(revived.quests).toEqual(road.quests);
-        expect(revived.player.inventory.some(i => i.id === 'relic-elementalist-belt')).toBe(false);
+        expect(hasRelic(revived)).toBe(false);
     });
 
-    it('the same run fights the boss again, wins, gets the Belt and opens the bridge', () => {
-        const revived = loseTheBoss(atTheWatchtowerRoad());
+    it('the same run fights the boss again, wins, turns it in at the bridge, gets the relic and opens the bridge', () => {
+        const revived = loseTheBoss(atTheKeepGate());
 
         // The retry re-owes the arrival and offers the boss afresh.
         const { staged, encounter } = engageBoss(revived);
@@ -140,28 +168,33 @@ describe('A23: the watchtower fought again after the death rule', () => {
 
         expect(map(won).currentNode).toBe(BOSS_NODE);
         expect(isNodeSpent(map(won), BOSS_NODE)).toBe(true);
-        expect(step4(won)).toBe('completed');
-        expect(won.player.inventory.some(i => i.id === 'relic-elementalist-belt')).toBe(true);
-        expect(legal(won)).toContain(BRIDGE);
+        expect(bossKills(won)).toBe(1);
+        expect(step4(won)).toBe('ready');
+        expect(roadReachable(map(won))).not.toContain(BRIDGE);
+
+        const paid = turnIn(quest(won, BRIDGE_NODE), 4);
+        expect(step4(paid)).toBe('completed');
+        expect(hasRelic(paid)).toBe(true);
+        expect(legal(paid)).toContain(BRIDGE);
         // Winning is not resting: the run is still dying.
-        expect(won.dying).toBe(true);
+        expect(paid.dying).toBe(true);
     });
 
     it('a second loss while dying ends the run, quest and all', () => {
-        const road = atTheWatchtowerRoad();
+        const road = atTheKeepGate();
         const revived = loseTheBoss(road);
         const over = loseTheBoss(revived);
 
         expect(over.dying).toBeUndefined();
         expect(over.runId).not.toBe(road.runId);
         expect(over.player.health).toBe(over.player.maxHealth);
-        expect(map(over).currentNode).toBe('bw-1');
+        expect(map(over).currentNode).toBe('bw-w1');
         expect(over.quests.active).toEqual([]);
         expect(isNodeSpent(map(over), BOSS_NODE)).toBe(false);
     });
 
     it('a fled boss fight leaves the same open, unspent node and the player is not dying', () => {
-        const road = atTheWatchtowerRoad();
+        const road = atTheKeepGate();
         const { staged, encounter } = engageBoss(road);
         const fled = endFight(staged, encounter, 'flee');
 
@@ -169,12 +202,13 @@ describe('A23: the watchtower fought again after the death rule', () => {
         expect(map(fled).currentNode).toBe(BOSS_NODE);
         expect(isNodeSpent(map(fled), BOSS_NODE)).toBe(false);
         expect(step4(fled)).toBe('active');
-        expect(legal(fled)).not.toContain(BRIDGE);
+        expect(bossKills(fled)).toBe(0);
+        expect(roadReachable(map(fled))).not.toContain(BRIDGE);
 
-        // A loss on the retry is a first death: back before bw-17, dying.
+        // A loss on the retry is a first death: back on the keep gate, dying.
         const revived = loseTheBoss(fled);
         expect(revived.dying).toBe(true);
-        expect(map(revived).currentNode).not.toBe(BOSS_NODE);
+        expect(map(revived).currentNode).toBe(KEEP_GATE);
         expect(legal(revived)).toContain(BOSS_NODE);
     });
 });

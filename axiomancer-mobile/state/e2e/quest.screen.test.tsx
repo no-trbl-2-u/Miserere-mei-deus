@@ -20,6 +20,7 @@ import type { AppStore } from '@/state/store';
 import { createFixtureStore } from '@/test-utils/fixtureStore';
 import {
     FIXTURE_LINE,
+    FIXTURE_NODES,
     acceptFixtureStep,
     fillFixtureStep,
     registerFixtureQuestline,
@@ -43,7 +44,7 @@ function open(node: number, description?: string) {
     const handle = createFixtureStore({
         id: `ql1c-screen-${node}`,
         seed: `ql1c-screen-${node}`,
-        world: { continent: 'coastal-continent', map: 'breakwater', node: `bw-${node}` },
+        world: { continent: 'coastal-continent', map: 'breakwater', node: FIXTURE_NODES[node - 1] ?? FIXTURE_NODES[0] },
     });
     const view = () => render(
         <GameStoreProvider store={handle.store}>

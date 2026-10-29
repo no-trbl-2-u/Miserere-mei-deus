@@ -1,9 +1,12 @@
 /**
  * Act 1's fights.
  *
- * Every Act 1 region's door fight — the map's last fight
- * column — is the Death Beholder as a boss; each region keeps one mid-region
- * node pinned to its one elite, the Green Jelly. Every other fight is Float-Eye.
+ * Every later Act 1 region's door fight — the map's last fight
+ * column — is the Death Beholder as a boss; each keeps one mid-region
+ * node pinned to its one elite, the Green Jelly. The Breakwater's Death
+ * Beholder is its chapter boss in the sea keep (`bw-k2`), a dead end behind
+ * the keep gate, and it stages three Green Jellies, each holding the road
+ * past it. Every other fight is Float-Eye.
  *
  * Every Act 1 fight is pinned low, and the elite is too: an
  * unpinned elite would scale to its own roster level (7 and up).
@@ -12,6 +15,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { getMapDefinition, getNodeEventPool, isEliteNode, eliteRelicDropsAt } from '../index';
+import { BREAKWATER_CHAPTER_HELD } from '../Continents/Coastal-Village/breakwater-chapter';
 import { ENEMY_REGISTRY } from '../../Enemy/enemy.library';
 import type { Enemy } from '../../Enemy/types';
 
@@ -22,8 +26,14 @@ const ACT1_MAPS = [
     ['northern-continent', 'lantern-deep'],
 ] as const;
 
+/** Where a map stages its boss and elites when it does not follow the last-column rule. */
+const STAGED: Partial<Record<string, { boss: string; elites: readonly string[] }>> = {
+    breakwater: { boss: 'bw-k2', elites: ['bw-w5', 'bw-c1', 'bw-l4'] },
+};
+
 describe.each(ACT1_MAPS)('Act 1 fights on %s / %s (D30, D61)', (continent, mapName) => {
     const map = getMapDefinition(continent, mapName);
+    const staged = STAGED[mapName];
     const roster = new Map(Object.entries(ENEMY_REGISTRY as Record<string, Enemy>));
     const fights = map.nodes.flatMap(node => {
         const payload = getNodeEventPool(continent, mapName, node.id)?.entries[0]?.payload;
@@ -31,15 +41,26 @@ describe.each(ACT1_MAPS)('Act 1 fights on %s / %s (D30, D61)', (continent, mapNa
         return [{ node, payload, foe: roster.get(payload.enemySlug!) }];
     });
 
-    it('has exactly one boss — the Death Beholder, on the last fight column (D61)', () => {
+    it('has exactly one boss — the Death Beholder, on the last fight column or where the map stages it (D61)', () => {
         const bosses = fights.filter(f => f.payload.isBoss);
         expect(bosses.map(f => f.payload.enemySlug)).toEqual(['death-beholder']);
+        if (staged) {
+            expect(bosses[0]!.node.id).toBe(staged.boss);
+            expect(bosses[0]!.node.connectedNodes).toEqual([]);
+            return;
+        }
         const lastColumn = Math.max(...fights.map(f => f.node.location[0]));
         expect(bosses[0]!.node.location[0]).toBe(lastColumn);
     });
 
-    it('stages exactly one elite — the Green Jelly — before the door', () => {
+    it('stages the Green Jelly as its elite — once before the door, or on each held elite node', () => {
         const elites = fights.filter(f => f.foe?.difficulty === 'elite');
+        if (staged) {
+            expect(elites.map(f => f.node.id).sort()).toEqual([...staged.elites].sort());
+            for (const e of elites) expect(e.payload.enemySlug, e.node.id).toBe('green-jelly');
+            for (const id of staged.elites) expect(BREAKWATER_CHAPTER_HELD as readonly string[]).toContain(id);
+            return;
+        }
         expect(elites.map(f => f.payload.enemySlug)).toEqual(['green-jelly']);
         const lastColumn = Math.max(...fights.map(f => f.node.location[0]));
         expect(elites[0]!.node.location[0]).toBeLessThan(lastColumn);

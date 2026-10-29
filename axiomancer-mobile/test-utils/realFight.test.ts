@@ -23,7 +23,7 @@ describe('startRealFight', () => {
     it('stages the encounter node\'s foe on the store, scaled as the live gate scales it', () => {
         const fight = startRealFight();
         const state = fight.store.getState();
-        expect(state.world.currentMap.currentNode).toBe('bw-2');
+        expect(state.world.currentMap.currentNode).toBe('bw-w2');
         expect(selectIsInCombat(state)).toBe(true);
         expect(state.event?.pending ?? null).toBeNull();
         expect(state.currentEncounter?.enemies[0]).toEqual(fight.enemy);
@@ -49,9 +49,9 @@ describe('startRealFight', () => {
         expect(b.combat.hand.map((h) => h.cardId)).toEqual(a.combat.hand.map((h) => h.cardId));
     });
 
-    it('the boss fixture stages the door boss', () => {
+    it('the boss fixture stages the chapter boss', () => {
         const fight = startRealFight(REAL_BOSS_FIGHT_FIXTURE);
-        expect(fight.store.getState().world.currentMap.currentNode).toBe('bw-17');
+        expect(fight.store.getState().world.currentMap.currentNode).toBe('bw-k2');
         expect(fight.enemy.difficulty).toBe('boss');
         expect(fight.enemy.id).not.toBe(startRealFight().enemy.id);
     });

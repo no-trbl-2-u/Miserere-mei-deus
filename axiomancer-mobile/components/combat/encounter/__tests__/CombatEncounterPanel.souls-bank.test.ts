@@ -19,7 +19,7 @@ afterEach(() => {
     jest.restoreAllMocks();
 });
 
-/** The real bw-2 fight, dealt from the Gleaner's Due. */
+/** The real bw-w2 fight, dealt from the Gleaner's Due. */
 function realFight() {
     return startRealFight(REAL_FIGHT_FIXTURE, {
         player: { level: 3, baseStats: { heart: 8, body: 8, mind: 8 } },

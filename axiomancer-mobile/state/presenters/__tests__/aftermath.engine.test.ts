@@ -251,7 +251,7 @@ const DEFEAT_SNAPSHOT: Extract<AftermathData, { variant: 'defeat' }> = {
     runSummary: {
         roundsEndured: 4,
         encountersFaced: 12,
-        deepestNodeId: 'bw-14',
+        deepestNodeId: 'bw-l5',
         currentMapId: 'breakwater',
     },
 };
@@ -309,7 +309,7 @@ describe('selectAftermathViewModel: defeat branch', () => {
         expect(vm?.kind === 'defeat' && vm.runSummary).toEqual({
             rounds: 4,
             encountersFaced: 11, // 12 - 1: the fatal encounter is not survived
-            deepestNodeId: 'The Lighthouse', // resolved from bw-14 via map layout
+            deepestNodeId: 'The Lighthouse', // resolved from bw-l5 via map layout
         });
     });
 
@@ -354,7 +354,7 @@ describe('selectAftermathViewModel: Phase 93 fixes', () => {
     it('F10: resolves node ID to human-readable name via map layout', () => {
         const vm = selectAftermathViewModel({
             ...DEFEAT_SNAPSHOT,
-            runSummary: { ...DEFEAT_SNAPSHOT.runSummary, deepestNodeId: 'bw-1', currentMapId: 'breakwater' },
+            runSummary: { ...DEFEAT_SNAPSHOT.runSummary, deepestNodeId: 'bw-w1', currentMapId: 'breakwater' },
         });
         expect(vm?.kind === 'defeat' && vm.runSummary.deepestNodeId).toBe('The Windmill');
     });
@@ -370,9 +370,9 @@ describe('selectAftermathViewModel: Phase 93 fixes', () => {
     it('F10: falls back to node ID when current map is null', () => {
         const vm = selectAftermathViewModel({
             ...DEFEAT_SNAPSHOT,
-            runSummary: { ...DEFEAT_SNAPSHOT.runSummary, deepestNodeId: 'bw-1', currentMapId: null },
+            runSummary: { ...DEFEAT_SNAPSHOT.runSummary, deepestNodeId: 'bw-w1', currentMapId: null },
         });
-        expect(vm?.kind === 'defeat' && vm.runSummary.deepestNodeId).toBe('bw-1');
+        expect(vm?.kind === 'defeat' && vm.runSummary.deepestNodeId).toBe('bw-w1');
     });
 
     it('F10: falls back to node ID when node is not found in map layout', () => {

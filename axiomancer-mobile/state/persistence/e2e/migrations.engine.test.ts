@@ -161,29 +161,17 @@ describe('migrations.engine', () => {
             expect(result.version).toBe(GAME_STATE_VERSION);
         });
 
-        test('a v25 engine save rides the engine hop to the current version (T6 / D39)', () => {
+        test('every save older than v41 is rejected, the v40 save of the old Breakwater included (BW1b)', () => {
+            // v41 made the live Breakwater T's Chapter 1 map: an older save
+            // names nodes the map no longer has, so no hop carries it over.
+            expect(GAME_STATE_VERSION).toBe(41);
             const current = createNewGameState() as unknown as Record<string, unknown>;
-            const v25 = { ...current, version: 25 };
-
-            const result = unwrap({ schemaVersion: CURRENT_SCHEMA_VERSION, state: v25 });
-
-            // The hops chain from v25 to the current version:
-            // v26: the alignment grid / GRACE meter strip;
-            // v27: the deleted-foe re-point hop;
-            // v28: the Act 1 relocation hop;
-            // v29: the fishing-village / goodwill purge hop;
-            // v30: the deleted-consumable purge hop;
-            // v31: the hazard token / hex flag hop;
-            // v32: the deleted hazard deck card hop;
-            // v33: the region-consequences slice hop;
-            // v34: the parked world's content hop;
-            // v35: the deleted relic hop;
-            // v36: the XP curve hop; v37: the level-20 curve hop;
-            // v38: the Brine Hag to Green Jelly rename hop;
-            // v39: the relic slot hop;
-            // v40: the cut node kinds (an arrival owed on a former gathering node).
-            expect(GAME_STATE_VERSION).toBe(40);
-            expect(result.version).toBe(GAME_STATE_VERSION);
+            for (const version of [25, 39, 40]) {
+                const old = { ...current, version };
+                expect(() =>
+                    unwrap({ schemaVersion: CURRENT_SCHEMA_VERSION, state: old }),
+                ).toThrow(/not supported/);
+            }
         });
     });
 

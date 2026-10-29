@@ -70,7 +70,7 @@ function makeEncounterResult(): ResolveMapEventResult {
         event: {
             kind: 'encounter',
             // Canonical {enemies, origin} shape.
-            encounter: { enemies: [enemy], origin: 'breakwater:bw-2' } as never,
+            encounter: { enemies: [enemy], origin: 'breakwater:bw-w2' } as never,
             isBoss: false,
         },
     };
