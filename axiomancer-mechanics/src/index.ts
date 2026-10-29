@@ -287,6 +287,7 @@ export {
     emptyQuestLog, findActiveQuest,
     startQuest, progressQuest, completeQuest,
     payQuestReward, payCompletedQuests, newlyCompletedQuests, questRewardItem, settleKill,
+    carriedCount, syncCarryObjectives, consumeCarriedItems,
     advanceHazardObjectives,
     // Elites come back after a night's rest (phase ER1).
     respawnElites, settledEliteNodes, retireEliteNode,
@@ -457,7 +458,7 @@ export { questGatesOn, questGateProblems } from './World';
 export {
     registerQuestline, getQuestline, listQuestlines, questlineStep,
     questStepState, stepQuest, questStepView, questNodeStage, resolveQuestNodeEvent,
-    openReadyQuestRoutes, settleQuestLog, acceptQuestStep, turnInQuestStep, turnInNodeOf,
+    openReadyQuestRoutes, settleQuestLog, acceptQuestStep, giveQuestStep, turnInQuestStep, turnInNodeOf,
     // The authored questlines (the Breakwater's).
     BREAKWATER_QUESTLINE, BREAKWATER_QUESTLINE_ID, AUTHORED_QUESTLINES,
 } from './World';

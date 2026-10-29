@@ -11,7 +11,7 @@ import { DialogueChoice, DialogueTree, DialogueNode } from '../NPCs/types';
 import {
     discoverQuest, startQuest, progressQuest, completeQuest, findActiveQuest,
 } from './quest.engine';
-import { settleQuestLog } from './questline';
+import { settleQuestLog, giveQuestStep } from './questline';
 import { getMapDefinition } from './map.registry';
 import type { QuestName } from './quest.library';
 
@@ -22,6 +22,7 @@ export interface ApplyDialogueChoiceResult {
     /** Side-effect summary for the UI log. */
     effects: {
         startedQuest?: QuestName;
+        givenQuestStep?: { questline: string; step: number };
         completedQuest?: QuestName;
         progressedObjective?: { name: QuestName; objectiveId: string; amount: number };
         learnedCard?: string;
@@ -48,6 +49,7 @@ export function applyDialogueChoice(
     let quests = gameState.quests;
     let flags = gameState.flags;
     const effects: ApplyDialogueChoiceResult['effects'] = {};
+    let giveStep: { questline: string; step: number } | undefined;
 
     const e = choice.effect;
     if (e) {
@@ -69,6 +71,7 @@ export function applyDialogueChoice(
                 }
             }
         }
+        if (e.giveQuestStep) giveStep = e.giveQuestStep;
         if (e.progressQuest) {
             const amount = e.progressQuest.amount ?? 1;
             const res = progressQuest(quests, e.progressQuest.name, e.progressQuest.objectiveId, amount);
@@ -109,8 +112,14 @@ export function applyDialogueChoice(
     // A `progressQuest` or `completeQuest` that finished a quest pays its
     // reward, and one that made a questline step ready opens its roads,
     // through the one settle seam.
+    let settled = settleQuestLog({ ...gameState, player, flags }, quests).state;
+    if (giveStep) {
+        const given = giveQuestStep(settled, giveStep.questline, giveStep.step);
+        if (given !== settled) effects.givenQuestStep = giveStep;
+        settled = given;
+    }
     return {
-        gameState: settleQuestLog({ ...gameState, player, flags }, quests).state,
+        gameState: settled,
         nextNode,
         effects,
     };

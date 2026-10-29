@@ -21,6 +21,8 @@ import type { MapName } from './map.library';
 import type { Character } from '../Character/types';
 import type { Item } from '../Items/types';
 import { grantItem } from '../Items/item-grant';
+import { removeItem } from '../Items/item.reducer';
+import { isConsumable, isMaterial } from '../Items/types';
 import { rollCombatCardRewards, isEliteEnemy } from '../Combat/combat.rewards';
 import { getRng } from '../Utils/rng';
 import type { Enemy } from '../Enemy/types';
@@ -288,6 +290,64 @@ export function advanceHazardObjectives(
     return { log: next, completed };
 }
 
+// ─── Carry objectives ─────────────────────────────────────────────────────────
+
+/** How many of item `itemId` the inventory holds (a stack counts its quantity). */
+export function carriedCount(inventory: readonly Item[], itemId: string): number {
+    let held = 0;
+    for (const item of inventory) {
+        if (item.id !== itemId) continue;
+        held += isConsumable(item) || isMaterial(item) ? item.quantity : 1;
+    }
+    return held;
+}
+
+/** Removes one of `itemId` from the inventory (a stack loses one, a lone item goes). */
+function consumeOne(inventory: Item[], itemId: string): Item[] {
+    const row = inventory.find(i => i.id === itemId);
+    if (!row) return inventory;
+    if ((isConsumable(row) || isMaterial(row)) && row.quantity > 1) {
+        return inventory.map(i => i === row ? { ...row, quantity: row.quantity - 1 } : i);
+    }
+    return removeItem(inventory, itemId);
+}
+
+/**
+ * Reads every active quest's `carry` objectives off the inventory: an
+ * objective is met (`currentCount` = `requiredCount`) while the player holds
+ * enough of its `target`, and unmet again when the item leaves. A quest that
+ * is not held for a turn-in and so fills completes, as any filled quest does.
+ * The same log comes back when nothing moved.
+ */
+export function syncCarryObjectives(player: Character, log: QuestLog): QuestLog {
+    let next = log;
+    for (const quest of log.active) {
+        if (!quest.objectives.some(o => o.type === 'carry')) continue;
+        const objectives = quest.objectives.map(o => {
+            if (o.type !== 'carry' || o.target === undefined) return o;
+            const held = Math.min(o.requiredCount, carriedCount(player.inventory, o.target));
+            return held === o.currentCount ? o : { ...o, currentCount: held };
+        });
+        if (objectives.every((o, i) => o === quest.objectives[i])) continue;
+        const updated: Quest = { ...quest, objectives };
+        const active = next.active.map(q => q.name === quest.name ? updated : q);
+        next = isQuestComplete(updated) && !updated.holdForTurnIn
+            ? { ...next, active: active.filter(q => q.name !== quest.name), completed: [...next.completed, quest.name] }
+            : { ...next, active };
+    }
+    return next;
+}
+
+/** Uses up the items a completed quest's `carry` objectives asked for (`requiredCount` of each). */
+export function consumeCarriedItems(player: Character, quest: Pick<Quest, 'objectives'>): Character {
+    let inventory = player.inventory;
+    for (const o of quest.objectives) {
+        if (o.type !== 'carry' || o.target === undefined) continue;
+        for (let i = 0; i < o.requiredCount; i++) inventory = consumeOne(inventory, o.target);
+    }
+    return inventory === player.inventory ? player : { ...player, inventory };
+}
+
 // ─── Quest rewards ────────────────────────────────────────────────────────────
 
 /** What one completed quest paid: its name and the items it put in the inventory. */
@@ -385,6 +445,8 @@ export function payCompletedQuests(
     let next = player;
     const paid: PaidQuestReward[] = [];
     for (const quest of newlyCompletedQuests(before, after)) {
+        // A carried item is used up on completion, before the reward lands.
+        next = consumeCarriedItems(next, quest);
         const step = payQuestReward(next, quest, rng);
         next = step.player;
         paid.push(step.paid);

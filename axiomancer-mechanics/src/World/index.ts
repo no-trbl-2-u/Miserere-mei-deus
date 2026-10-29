@@ -20,6 +20,7 @@ export {
     emptyQuestLog, isQuestComplete, findActiveQuest,
     startQuest, progressQuest, completeQuest,
     payQuestReward, payCompletedQuests, newlyCompletedQuests, questRewardItem, settleKill,
+    carriedCount, syncCarryObjectives, consumeCarriedItems,
     advanceHazardObjectives,
 } from './quest.engine';
 export type { PaidQuestReward, KilledFoe } from './quest.engine';
@@ -71,7 +72,7 @@ export { questGatesOn, questGateProblems } from './quest-gates';
 export {
     registerQuestline, getQuestline, listQuestlines, questlineStep,
     questStepState, stepQuest, questStepView, questNodeStage, resolveQuestNodeEvent,
-    openReadyQuestRoutes, settleQuestLog, acceptQuestStep, turnInQuestStep, turnInNodeOf,
+    openReadyQuestRoutes, settleQuestLog, acceptQuestStep, giveQuestStep, turnInQuestStep, turnInNodeOf,
 } from './questline';
 // Rest shelter classification. Mobile words an inn night as a bed.
 export type { RestShelter } from './MapEvents/types';
