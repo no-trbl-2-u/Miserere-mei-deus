@@ -127,6 +127,11 @@ to the delete offer, and NEW GAME after it starts on `bw-w1`.
     it supersedes D111's four-step questline and pocket routing; node ids are the board codes; every quest pays a
     relic and no relic is elite-only.
 
+13. **Backtracking and revived elites.** The map is walked under WR1 (D113) where it has shipped: completed nodes
+    are revisitable, quest nodes act on every entry. An elite a claimed rest revives (ER1) holds its far road
+    again until beaten; the three rests (`bw-w4`, `bw-h5`, `bw-l3`) sit on the near side of the elites they serve,
+    so a revival never strands the player behind a shut road. The chapter e2e pins one revival.
+
 ## Calls for T (all answered)
 
 1. Confirmed by T (2026-10-28): the three uncertain roads are roads; the sea cave's other end is a new node `bw-c0` at the cave face, and
