@@ -1043,6 +1043,13 @@ satisfied for exactly these.)
 - Portraits, relics, stat spreads and playstyle lines are T's content (D88). The first character is due 2026-10-26 (T); three for December. Character content waits on at least one new lane, because a character needs three distinct lanes; T plans two new lanes before a character goes live.
 - Built by Phase CH1 (`plan/phases/phase_CH1_character_select.md`).
 
+**D113 — The player walks the roads; completed nodes can be revisited.** (T, 2026-10-28, attended `/plot`. Amends the gauntlet frontier rule documented on `MapDefinition.traversal`.)
+
+- On a gauntlet map the player moves only to nodes joined by an open road to the node they stand on, new or completed alike; roads read both ways. Frontier jumping ends.
+- A completed node re-entered does nothing (fights, hazards, rest, loot caches, cutscenes); a village, a travel node and a quest node act on every entry; an elite a rest revived (ER1) fights again.
+- Held roads and quest locks still gate routing; the boss is forced by routing, not by an exhausted frontier.
+- Built by Phase WR1 (`plan/phases/phase_WR1_walk_the_roads.md`).
+
 **D111 — Chapter 1 has one questline, on a ninth node kind.** (T, 2026-10-27, in an attended session; recorded by the QL1 plot, run unattended on T's word; amended 2026-10-28 with T's answers to the plot's open items. Supersedes LR1f's scope: four quests, one per Act 1 region, given by existing map events.)
 
 - Chapter 1 (the Breakwater, D106) carries one questline of four steps. The other quest relics (the Ruby Signet, the Bleeding Signet, the Elementalist's Brooch, and the Defender's Carapace Belt) stay quest rewards for Chapters 2-4's quest lines.
