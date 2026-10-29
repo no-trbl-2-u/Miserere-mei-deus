@@ -458,6 +458,8 @@ export {
     answerUnsettledArrival,
     getNodeEventPool,
     getNodePrimaryEventKind,
+    actsOnRevisit,
+    isQuietWalkBack,
 } from './World';
 export type {
     MapEventKind, QuestPayload,

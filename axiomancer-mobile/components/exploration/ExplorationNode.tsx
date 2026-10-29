@@ -103,6 +103,13 @@ export function ExplorationNode({ node: n, onNodePress, isSelected }: Exploratio
     // Adjacent (reachable) nodes show a kind glyph so the player can see what
     // each one is before choosing it.
     const showKindIcon = n.kind === 'available' || n.kind === 'current';
+    // THE ROAD BACK (phase WR1b): a walked node a road away keeps its trodden
+    // mark inside a dark halo with a dashed ring, so it reads as walkable
+    // without reading as new (no pulse, no lamp). The ring is parchment for a
+    // quiet walk back and sulfur for one whose event acts again (a village, a door, a quest node
+    // with business), which also shows its kind glyph.
+    const roadBack = n.kind === 'completed' && n.walkable === true;
+    const actsAgain = roadBack && n.actsAgain === true;
 
     return (
         <AnimatedTouchable
@@ -110,7 +117,10 @@ export function ExplorationNode({ node: n, onNodePress, isSelected }: Exploratio
             accessibilityRole="button"
             accessibilityLabel={`${n.label}, ${
                 n.kind === 'locked' ? (n.blockedReason ? `sealed: ${n.blockedReason}` : 'sealed')
-                    : n.kind === 'completed' ? (n.walkable ? 'walked, a road back' : 'walked')
+                    : n.kind === 'completed'
+                        ? (roadBack
+                            ? (actsAgain ? `walked, a road back, ${NODE_KIND_LABEL[n.type].toLowerCase()} again` : 'walked, a road back')
+                            : 'walked')
                         : n.kind === 'current' ? 'here'
                             : `open, ${NODE_KIND_LABEL[n.type].toLowerCase()}`
             }`}
@@ -132,9 +142,17 @@ export function ExplorationNode({ node: n, onNodePress, isSelected }: Exploratio
                 counterScale,
             ]}
         >
-            <Animated.View style={[styles.glyphWrap, isSelected && { borderColor: AXM.sulfur, borderWidth: 2 }, n.kind === 'available' && pulseStyle]}>
+            <Animated.View
+                testID={roadBack ? `node-${n.id}-road-back` : undefined}
+                style={[
+                    styles.glyphWrap,
+                    roadBack && [styles.roadBack, { borderColor: actsAgain ? AXM.sulfur : AXM.parchment, backgroundColor: AXM.nodeBg }],
+                    isSelected && { borderColor: AXM.sulfur, borderWidth: 2, borderStyle: 'solid' as const },
+                    n.kind === 'available' && pulseStyle,
+                ]}
+            >
                 <NodeMark kind={n.kind} size={NODE_SIZE} />
-                {showKindIcon && (
+                {(showKindIcon || actsAgain) && (
                     <View style={styles.kindIcon} pointerEvents="none">
                         <ActionIcon kind={iconKey} size={18} color={color} />
                     </View>
@@ -171,6 +189,10 @@ const useStyles = makeStyles((AXM) => ({
         justifyContent: 'center',
         borderRadius: NODE_SIZE / 2,
         borderColor: 'transparent',
+    },
+    roadBack: {
+        borderWidth: 3,
+        borderStyle: 'dashed',
     },
     kindIcon: {
         ...({ position: 'absolute' } as const),

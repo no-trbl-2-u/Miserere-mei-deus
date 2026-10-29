@@ -1119,14 +1119,17 @@ function moveToAction(store: AppStore, nodeId: string): MoveToResult {
     // (`acceptQuestStep`), and its held roads open then, not on arrival.
     const isEncounterNode = nodeKind === 'encounter' || nodeKind === 'quest';
 
-    let nextWorld: WorldState = isEncounterNode ? world : worldCompleteNode(world, nodeId);
-
-    // The arrival: cursor, owed arrival, `arrivedFrom`, and the move lists
-    // rewritten by the road rule from the new node (`arriveAtNode`).
-    nextWorld = {
-        ...nextWorld,
-        currentMap: writeArrivalNodeId(nextWorld.currentMap, nodeId),
+    // The arrival FIRST: cursor, owed arrival, `arrivedFrom`, and the move
+    // lists rewritten by the road rule from the new node (`arriveAtNode`).
+    // The engine reads whether the node was spent BEFORE this move: a first
+    // arrival owes its event, a walk back onto a spent node owes nothing
+    // (phase WR1b). Completing first would make every first arrival read as
+    // a walk back.
+    let nextWorld: WorldState = {
+        ...world,
+        currentMap: writeArrivalNodeId(world.currentMap, nodeId),
     };
+    if (!isEncounterNode) nextWorld = worldCompleteNode(nextWorld, nodeId);
 
     // Populate the engine's parallel data model (`discoveredNodes`) via
     // `revealAdjacent`. The engine reads neighbours from

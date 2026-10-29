@@ -60,6 +60,8 @@ export {
     answerUnsettledArrival,
     getNodeEventPool,
     getNodePrimaryEventKind,
+    actsOnRevisit,
+    isQuietWalkBack,
 } from './MapEvents/resolve-map-event';
 export type {
     MapEventKind, QuestPayload,

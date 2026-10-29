@@ -122,16 +122,19 @@ export default function ExplorationScreen() {
             return;
         }
         if (node.kind === 'completed') {
-            // A walked node joined by a road to where the player stands is a
-            // walk back: it moves at once, and its spent event fires nothing.
-            // A door (travel/labyrinth) is the one exception — the engine
-            // deliberately never adds it to `consumedNodes` (a door is
-            // repeatable), so resolving it again would roll its pool and
-            // cross the map again with no confirm. Treat a door like any
-            // other walked node instead of walking back onto it.
-            if (node.walkable && node.type !== 'door') {
+            // A walked node whose event acts on every entry (a village, a
+            // door, a quest node with business) is offered again: the tap
+            // opens the confirm panel like a new node's, and only the confirm
+            // resolves it. A door never crosses on the tap alone.
+            if (node.walkable && node.actsAgain) {
+                setSelectedNodeId((prev) => (prev === node.id ? null : node.id));
+                return;
+            }
+            // Any other walked node a road away is a QUIET WALK BACK: it moves
+            // at once, owes nothing and fires nothing, so nothing is resolved.
+            if (node.walkable) {
                 setSelectedNodeId(null);
-                if (actions.moveTo(node.id).moved) actions.resolveCurrentMapEvent(node.type);
+                actions.moveTo(node.id);
                 return;
             }
             setNodeTip('walked already');
@@ -155,7 +158,9 @@ export default function ExplorationScreen() {
     const onConfirmMove = () => {
         if (selectedNodeId === null) return;
         const node = vm.nodes.find((n) => n.id === selectedNodeId);
-        if (!node || node.kind !== 'available') {
+        const offered = node !== undefined
+            && (node.kind === 'available' || (node.kind === 'completed' && node.walkable === true && node.actsAgain === true));
+        if (!node || !offered) {
             setSelectedNodeId(null);
             return;
         }
