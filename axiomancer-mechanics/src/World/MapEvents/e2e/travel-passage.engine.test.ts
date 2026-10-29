@@ -71,6 +71,11 @@ describe('A12 — the travel payload names a map or a node of the same map', () 
         expect(state.world.currentMap.consumedNodes).not.toContain('mouth');
     });
 
+    it('an offer carries no art or opensAfter key the payload did not author', () => {
+        const offer = atMouth().event;
+        expect(Object.keys(offer).sort()).toEqual(['destination', 'kind', 'nodeId', 'open', 'prompt']);
+    });
+
     it('an authored art slug rides the offer', () => {
         const there = takeTravel(atMouth().state);
         expect(tapHere(there).event).toEqual(expect.objectContaining({ kind: 'travel', art: 'cutscene' }));
@@ -179,6 +184,24 @@ describe('the inter-map doors offer, then cross on the yes', () => {
         const crossed = takeTravel(offered.state);
         expect(crossed.world.currentMap.name).toBe('charcoal-wood');
         expect(crossed.world.mapStates?.['breakwater']?.currentNode).toBe('bw-18');
+    });
+
+    it('crossing back to a departed map restores it live and drops its filed copy', () => {
+        const onDoor: GameState = {
+            ...createNewGameState(),
+            world: { ...createStartingWorld('breakwater') },
+        };
+        const seated: GameState = {
+            ...onDoor,
+            world: { ...onDoor.world, currentMap: { ...onDoor.world.currentMap, currentNode: 'bw-18' } },
+        };
+        const inWood = takeTravel(tapHere(seated).state);
+        const back = takeTravel(inWood, {
+            kind: 'travel', destination: { map: 'breakwater', continent: 'coastal-continent' }, prompt: '[content]',
+        });
+        expect(back.world.currentMap.name).toBe('breakwater');
+        expect(back.world.currentMap.currentNode).toBe('bw-18');
+        expect(Object.keys(back.world.mapStates ?? {})).toEqual(['charcoal-wood']);
     });
 });
 
