@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-10-29 at commit c8b1e1a8
-> Pass count: 110
+> Last pass: 2026-10-29 at commit 3a8c0821
+> Pass count: 111
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
@@ -982,7 +982,40 @@
 > 0 (the floor is the binding reason). Reconfirmed and not re-filed: the
 > covered fan names on a phone (waits on T).
 
+> **[critique pass 111, 2026-10-29, commit 3a8c0821] Unattended `/march`
+> tick.** `critique:drive` (`CRITIQUE_VIEWPORT=both`), the 15-screen set:
+> 30 captures, 0 nav trouble, 0 console/page errors. 13 first-parent
+> commits after pass 110: IT2 (T's potion icons, #1088), the Merciful
+> plan PRs and the docs drift fix. The satchel's Healing Potion tile now
+> draws the red-liquid flask at both viewports; no regression elsewhere.
+> Two rows filed: the hub's footer line still tells a desktop player to
+> "tap a trodden one" (LOW), and the quest pay prints "+40 XP" over
+> "+10 shillings" in two cases (LOW). Checked and not filed: the cache's
+> goods chips stay text-only beside the new icon (IT2's brief does not
+> name the cache); `/death-return` and `/quest` placeholder copy (on
+> purpose, as pass 108). Reconfirmed and not re-filed: the covered fan
+> names on a phone, the Anvil label twice, the rest "full" twice, the
+> cache's repeated potion chips.
+
 ## Pending
+
+### [LOW] exploration / desktop — the hub's footer line still says "tap a trodden one to walk back" to a mouse player, in the same sentence that says "choose a glowing node"
+- pass: 111 (commit 3a8c0821)
+- viewport: desktop (1280x800), also mobile
+- category: voice
+- observation: WR1a's new walk-back clause reintroduced the touch verb the pointer-neutral sweep (pass 92 row, c6daa798) removed from this very drawer line. One sentence now uses "choose" for one node and "tap" for the other, and on desktop there is nothing to tap.
+- evidence: `.critique-artifacts/desktop/11-late-game-hub.png` (footer); `axiomancer-mobile/state/presenters/exploration.engine.ts:605`; pinned in `state/e2e/exploration.engine.test.ts:587`.
+- suggested fix: "choose a glowing node, or a trodden one to walk back." in the presenter and its test; copy only.
+- source: critique:drive (unattended)
+
+### [LOW] /quest — THE PAY prints "+40 XP" over "+10 shillings", so two lines of one ledger use two cases, where the cache, village and forge spell the unit "SHILLINGS"
+- pass: 111 (commit 3a8c0821)
+- viewport: mobile (375x812) and desktop (1280x800)
+- category: visual
+- observation: the quest's pay lines sit in one mono column; the XP line is upper case and the shillings line lower case. Every other price or reward on the road (cache chips "+6 SHILLINGS", stall and rest "6 SHILLINGS", the forge) reads upper case since the pass 84 shilling sweep.
+- evidence: `.critique-artifacts/mobile/14-quest.png`; `axiomancer-mobile/state/presenters/quest.copy.ts:46` returns `+${amount} shillings`.
+- suggested fix: return `+${amount} SHILLINGS` in `quest.copy.ts` and pin it in the quest presenter test; copy only.
+- source: critique:drive (unattended)
 
 ### [MED] balance / Act 1 ledger — the rebuilt Breakwater's 19 fights make the Beacon Crags door free on a full clear (BW1b, 2026-10-29)
 - source: phase BW1b, `axiomancer-mechanics/src/Game/act1-progression.test.ts`.
