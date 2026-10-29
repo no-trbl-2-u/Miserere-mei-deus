@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-10-29 at commit 1250f1d9
-> Pass count: 109
+> Last pass: 2026-10-29 at commit c8b1e1a8
+> Pass count: 110
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
@@ -994,6 +994,33 @@
 - next: T's call with Chapter 1's real foes (enemy sessions 1-2, B2): fewer XP on the Breakwater's placeholder
   fights, a later door level, or the curve. Then drop bc-15 from the set.
 
+### [LOW] /village — the Anvil says its name twice ("THE ANVIL" label over a "THE ANVIL" row), and it is the one counter whose copy is typed into the screen
+- pass: 110 (commit c8b1e1a8)
+- viewport: mobile (375x812) and desktop (1280x800)
+- category: voice
+- observation: every other counter pairs a section label with a different row name ("A BED FOR THE NIGHT" over REST, "THE CARD SHOP" over the cards). The Anvil prints "THE ANVIL" as its label and again as its row name, so the text reads "THE ANVIL / THE ANVIL / HONE, TEMPER, SWAP A DIE, UPGRADE A CARD". It is also the one counter whose label, line and price copy sit as literals in the component rather than in `village.copy.ts` (the package rule: no hardcoded player-facing copy in components). At both viewports it sits under the fold, and at 1280 only its bare label peeks above the exit bar.
+- evidence: `.critique-artifacts/mobile/07-village.txt` ("THE ANVIL" twice); `desktop/07-village.png` (label alone above TAKE THE ROAD); `axiomancer-mobile/app/village/index.tsx` the `vm.anvil` block (`THE ANVIL` at the section label and the row name, "hone, temper, swap a die, upgrade a card", `FROM ... SHILLINGS`) against `state/presenters/village.copy.ts` (`VILLAGE_CARD_SHOP_LABEL`, `VILLAGE_REST_LINE`).
+- suggested fix: move the Anvil's label, line and price string into `village.copy.ts` (a `VILLAGE_ANVIL_LABEL` in the "A BED FOR THE NIGHT" register, e.g. "THE SMITH", over the THE ANVIL row), so the label and the row say different things; presentation only, pinned in the village screen test.
+- source: critique:drive (unattended)
+
+### [LOW] /village — at full VITAE the rest counter says it is full twice, once in the row and again in the refusal line under it
+- pass: 110 (commit c8b1e1a8)
+- viewport: mobile (375x812) and desktop (1280x800)
+- category: comprehension
+- observation: with VITAE 230/230 the REST row reads "RESTORES NOTHING: VITAE IS FULL" and the refusal line under the row reads "your VITAE is already full". The two lines say the same thing in two registers (caps mono, then lower-case italic), and the refusal starts with a lower-case "your" that reads like a clipped sentence. The card and removal counters print a refusal only when the row itself does not already explain why it is dim.
+- evidence: `.critique-artifacts/mobile/07-village.txt` lines 9 and 12; `axiomancer-mobile/state/presenters/village.copy.ts:25` (`restores nothing: VITAE is full`) and `axiomancer-mechanics/src/World/Village/village.engine.ts:77` (`your VITAE is already full`).
+- suggested fix: when the refusal is the full-VITAE one, print only the row's effect (drop the refusal line, keep the dimmed price), or keep the refusal and let the effect read "restores nothing"; presentation only, pinned in the village presenter test.
+- source: critique:drive (unattended)
+
+### [LOW] /rest and /cache — "there is no walking back out" now reads against the hub's new "tap a trodden one to walk back"
+- pass: 110 (commit c8b1e1a8)
+- viewport: mobile (375x812) and desktop (1280x800)
+- category: comprehension
+- observation: since WR1 (D113) the hub's footer teaches "walk back" as a real verb ("choose a glowing node, or tap a trodden one to walk back"). The rest and cache screens still say "Pick one — there is no walking back out." It means "you must choose before you leave", but after WR1 a first-time player can read it as "you cannot walk back to this node", which is now false (they can; a revisited rest heals nothing, WR1 brief rule 5). The same verb now says yes on one screen and no on the next.
+- evidence: `.critique-artifacts/mobile/09-rest.png` and `mobile/05-exploration-hub.txt` (footer); `axiomancer-mobile/state/presenters/rest.copy.ts:12` and `cache.copy.ts:10`; `plan/phases/phase_WR1_walk_the_roads.md` rule 5.
+- suggested fix: reword both lines so they do not reuse the hub's verb, e.g. "The node is spent the moment you stop here. Pick one before you go; it will not offer again."; copy only, pinned where the presenter tests read the line.
+- source: critique:drive (unattended)
+
 ### [MED] exploration / desktop — the level-15 hub opens with the pilgrim's own node above the frame, so the first view shows open roads leading from somewhere off-screen
 - pass: 109 (commit 1250f1d9)
 - viewport: desktop (1280x800)
@@ -1001,6 +1028,7 @@
 - observation: on the `sage-bw-door-gate` hub at 1280 the camera's first frame shows eight open (gold-ringed) nodes and several roads running up off the pane's top edge, but no dotted "you are here" node anywhere; the pilgrim's node sits above the frame. The same fixture at 375 shows it at about (200, 248), and the level-1 hub at 1280 shows it only 40px under the pane's top edge. A first-time player sees choices with no origin until they press the recentre button, which runs the same fit and lands in the same place.
 - evidence: `.critique-artifacts/desktop/11-late-game-hub.png` (no dotted current node; roads exit the top near x 680) against `mobile/11-late-game-hub.png`; `desktop/05-exploration-hub.png` (windmill node at y about 210, the pane's top at 170). `axiomancer-mobile/components/exploration/MapCanvas.tsx` `computeFocusTransform`: the scale is floored at `minScaleFor` (the plate covers the pane, #1046, T 2026-10-28), and on the wide, short desktop pane that floor is likely above the scale that fits the focus box's height, so the box overflows the pane and the vertical centre can drop the current node out. The `settleAxis` comment promises it never takes a focus node off-screen; that holds only when the box fits.
 - suggested fix: keep the cover floor (T's ruling), but when the floored scale cannot fit the whole focus box, centre the overflowing axis on the current node instead of the box's middle (still clamped by `settleAxis`), so the pilgrim's node is always in the first frame; pin it in `MapCanvas.test.tsx` with a 1260x500 viewport and a focus box taller than the pane.
+- pass 110 note: not reproduced at 1280 on the rebuilt Breakwater (BW1b): the `sage-bw-door-gate` hub now frames the dotted current node at about (500, 495). The fixture moved, not the fit: `computeFocusTransform` still floors the scale at `minScaleFor` with no overflow rule, so the row stands.
 - source: critique:drive (unattended)
 
 ### [LOW] /cache — TAKE THE GOODS prints two identical potions as two "+ GREATER HEALING POTION" chips, where the satchel stacks the same item as "x6"
