@@ -23,6 +23,13 @@
   hits for 0, so the lane wants you hurt.
 - **The hit is a DEAL** (T picked "Yes, it's a DEAL"): VULNERABLE boosts it, a FROZEN foe takes it doubled, and
   Crimson Pact's +n can ride on it, as the Defender's THORNS does.
+- **Printed "RADIANCE N"** (T, 2026-10-29, during the vote: "I don't want 'HEAL n with Radiance'. I just want 'RADIANCE n'"). RADIANCE N means HEAL N, then DEAL what that heal restored.
+
+### Icons (T, 2026-10-29)
+
+- **RADIANCE: the sun**, as the upper-left FREE cost mark (T: "the radiance Icon for the upper left free cost will be the sun").
+- **MERCY: the dove** (T picked it from four pitched: dove, hourglass, open hand, candle).
+- Wired at the trial set (step 8); the ballot faces keep their slot glyphs.
 
 ### MERCY (T)
 
@@ -77,7 +84,7 @@ above; the ballot prints a flagged placeholder for it. Globals use the start-of-
 | Slot | Type | Piece | Role |
 |---|---|---|---|
 | P-01 | Attack | RADIANCE | The core: HEAL, then DEAL what you healed |
-| P-02 | Skill | RADIANCE | A big HEAL with RADIANCE (huge when low, nothing when full) |
+| P-02 | Skill | RADIANCE | A big RADIANCE (huge when low, nothing when full) |
 | P-03 | Skill | MERCY | The big wager: a large MERCY |
 | P-04 | Attack | MERCY | DEAL more while the foe carries MERCY |
 | P-05 | Spell | MERCY | Call it in: MERCY's clock ticks down 1 (pays sooner) |
@@ -85,7 +92,7 @@ above; the ballot prints a flagged placeholder for it. Globals use the start-of-
 | P-07 | Attack | RADIANCE | Retribution: DEAL equal to all you healed this turn |
 | P-08 | Skill | RADIANCE + MERCY | MERCY equal to what you healed this turn (your mending feeds its debt) |
 | P-09 | Attack | heal | Wounded strike: DEAL more the more VITAE you are missing |
-| P-10 | Global | RADIANCE | Start of your turn: HEAL with RADIANCE |
+| P-10 | Global | RADIANCE | Start of your turn: RADIANCE |
 
 ### Engine (makes room to heal and keeps MERCY going)
 
@@ -124,7 +131,7 @@ candidates, three per slot, no colour on any (D110; colours are split evenly wit
 step). Globals open on the start-of-turn trigger only. No line prints a cap.
 
 Numbers are placeholders for the sims (step 6), scaled from the grey cards (A Plain Blow: FREE DEAL 2, PAID DEAL 5).
-"HEAL N with RADIANCE" is T's RADIANCE: HEAL N, then DEAL what the heal actually restored. MERCY prints as T ruled it.
+"RADIANCE N" is T's RADIANCE: HEAL N, then DEAL what the heal actually restored (reworded from "HEAL N with RADIANCE" mid-vote, T, 2026-10-29). MERCY prints as T ruled it.
 The sheet's legend prints these placeholders for Open lines above, for the sims to test and T to settle:
 
 - MERCY's payout is plain VITAE loss, and the total resets once it pays.
