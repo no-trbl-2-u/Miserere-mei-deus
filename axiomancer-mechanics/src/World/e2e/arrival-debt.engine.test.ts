@@ -24,6 +24,7 @@ import { completeCurrentNode, moveToNode, placeOnNode, teleportToNode, unlockAdj
 import { createMapState, getMapDefinition } from '../map.registry';
 import { createStartingWorld } from '../index';
 import { resolveMapEvent, settleArrival } from '../MapEvents/resolve-map-event';
+import { takeTravel } from '../MapEvents/travel';
 import { createNewGameState } from '../../Game/game.reducer';
 import { mockSequentialRng } from '../../test-utils/rng';
 import type { GameState } from '../../Game/types';
@@ -142,19 +143,19 @@ describe('resolving the arrival is what answers it', () => {
 
     it('clears it on the map being LEFT when the arrival is a travel door', () => {
         // A door is never consumed ("a door is repeatable"), so consumption
-        // cannot say whether it was answered — the debt can. It has to be
-        // paid before the handler runs: the crossing swaps `currentMap` for
-        // the destination and files the departed map under `mapStates`, so a
-        // clear applied afterwards would leave the Breakwater owing its door
-        // forever and returning through it would cross again with no input.
+        // cannot say whether it was answered — the debt can. Resolving the
+        // door answers it and only OFFERS the trip (phase NK1d); the yes
+        // (`takeTravel`) crosses, and the Breakwater it files away owes
+        // nothing, so returning through it never crosses again with no input.
         // The watchtower beaten (completed): it holds the bridge until then.
         const before = gameOn(completeCurrentNode(placeOnNode(freshWorld(), 'bw-17')));
         const walked = { ...before, world: moveToNode(before.world, 'bw-18') };
         expect(walked.world.currentMap.pendingArrival).toBe('bw-18');
 
-        const { state, event } = resolveMapEvent(walked);
-
+        const { state: offered, event } = resolveMapEvent(walked);
         expect(event.kind).toBe('travel');
+        expect(offered.world.currentMap.pendingArrival ?? null).toBeNull();
+        const state = takeTravel(offered);
         expect(state.world.currentMap.name).toBe('charcoal-wood');
         expect(state.world.mapStates?.['breakwater']?.pendingArrival ?? null).toBeNull();
     });

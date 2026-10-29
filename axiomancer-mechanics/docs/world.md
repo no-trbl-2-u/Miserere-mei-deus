@@ -374,8 +374,14 @@ spec. Rewards (`{ kind: 'currency', amount }`) increment this directly.
 
 ## Campaign maps
 
-The maps join through `travel` nodes. Each door is the terminal node of its
-map, so the way on opens once the map is walked:
+The maps join through `travel` nodes. A travel node asks "Move to X?":
+resolving it offers the trip and moves no one, and `takeTravel` is the yes
+(phase NK1d, `MapEvents/travel.ts`). Its payload names a destination that is
+another map or a node of the same map (a passage, whose far end is the paired
+travel node leading back; arriving through it counts as visiting the far node
+and fires nothing), a `prompt`, an optional `art` slug and an optional
+`opensAfter` node that must be spent before the way opens. Each inter-map door
+is the terminal node of its map, so the way on opens once the map is walked:
 
 ```
 breakwater (bw-18) → charcoal-wood (cw-20) → beacon-crags (bc-17)

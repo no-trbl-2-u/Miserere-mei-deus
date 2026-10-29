@@ -24,8 +24,9 @@ import { lookupEffect } from '../../Effects/effects.library';
 import type { ActiveEffect } from '../../Effects/types';
 import { generateEncounter, scaleEnemyToLevel } from '../encounter';
 import { getMapDefinition, createMapState } from '../map.registry';
-import { completeMap, changeContinent, unlockMap, changeMap } from '../world.reducer';
-import type { WorldState } from '../types';
+import { completeMap, changeContinent, unlockMap, changeMap, isNodeSpent } from '../world.reducer';
+import type { MapState, WorldState } from '../types';
+import type { ContinentName, MapName } from '../map.library';
 import { resolveQuestNodeEvent } from '../questline';
 import { ENEMY_REGISTRY, type EnemySlug } from '../../Enemy/enemy.library';
 import { validateDieGear, type DieGearColor } from '../../Character/dieGear.reducer';
@@ -197,12 +198,41 @@ export function resolveLootCache(
 // ─── travel ───────────────────────────────────────────────────────────────────
 
 /**
- * Travel events walk the player through an inter-map door.
+ * A travel node OFFERS its trip: the state is returned untouched and the
+ * event names the node, where it leads, its prompt and art, and whether the
+ * way is open. It is shut while the payload's `opensAfter` node is unspent.
+ * Taking the trip is the player's yes, `takeTravel` (`travel.ts`).
+ */
+export function resolveTravel(
+    state: GameState,
+    payload: TravelPayload,
+): ResolveMapEventResult {
+    const map = state.world.currentMap;
+    return {
+        state,
+        event: {
+            kind: 'travel',
+            nodeId: map.currentNode,
+            destination: payload.destination,
+            prompt: payload.prompt,
+            ...(payload.art !== undefined ? { art: payload.art } : {}),
+            open: isTravelOpen(map, payload),
+            ...(payload.opensAfter !== undefined ? { opensAfter: payload.opensAfter } : {}),
+        },
+    };
+}
+
+/** True when `payload`'s way is open on `map`: no `opensAfter`, or that node is spent. */
+export function isTravelOpen(map: MapState, payload: TravelPayload): boolean {
+    return payload.opensAfter === undefined || isNodeSpent(map, payload.opensAfter);
+}
+
+/**
+ * Crosses the world to another map, the yes to a map destination.
  *
  * The departed map's runtime `MapState` is PRESERVED under
- * `WorldState.mapStates` — the design call, decided: the world is a place
- * you can move around in, and `completedMaps` means "walked through", never
- * "reset". Steps, in order:
+ * `WorldState.mapStates`: the world is a place you can move around in, and
+ * `completedMaps` means "walked through", never "reset". Steps, in order:
  *
  *   1. Mark the departed map in its continent's `completedMaps`.
  *   2. Switch continent when the destination continent differs.
@@ -210,41 +240,26 @@ export function resolveLootCache(
  *   4. Make the destination the current map — restoring its preserved
  *      state when the player has departed it before, fresh otherwise.
  *
- * The dispatcher never consumes a travel node, so a door is repeatable:
- * re-resolving it travels again. Throws (via `getMapDefinition`) when the
- * destination is not registered — an authored door to an unshipped map is
- * a programming error, not a runtime fallback.
+ * Throws (via `getMapDefinition`) when the destination is not registered:
+ * an authored door to an unshipped map is a programming error.
  */
-export function resolveTravel(
-    state: GameState,
-    payload: TravelPayload,
-): ResolveMapEventResult {
-    const destinationDef = getMapDefinition(payload.destinationContinent, payload.destinationMap);
-    const departed = state.world.currentMap;
+export function crossToMap(world: WorldState, continent: ContinentName, mapName: MapName): WorldState {
+    const destinationDef = getMapDefinition(continent, mapName);
+    const departed = world.currentMap;
 
-    let world: WorldState = completeMap(state.world, departed.name);
-    world = changeContinent(world, payload.destinationContinent);
-    world = unlockMap(world, payload.destinationMap);
+    let next: WorldState = completeMap(world, departed.name);
+    next = changeContinent(next, continent);
+    next = unlockMap(next, mapName);
 
-    const preserved = { ...(world.mapStates ?? {}), [departed.name]: departed };
-    const restored = preserved[payload.destinationMap];
+    const preserved = { ...(next.mapStates ?? {}), [departed.name]: departed };
+    const restored = preserved[mapName];
     // The restored copy becomes live again; drop its preserved duplicate so
     // `currentMap` is the single writable copy.
-    if (restored) delete preserved[payload.destinationMap];
-    world = {
-        // A crossing is a placement on the far side: no previous node.
-        ...changeMap(world, { ...(restored ?? createMapState(destinationDef)), arrivedFrom: null }),
-        mapStates: preserved,
-    };
-
+    if (restored) delete preserved[mapName];
     return {
-        state: { ...state, world },
-        event: {
-            kind: 'travel',
-            destinationContinent: payload.destinationContinent,
-            destinationMap: payload.destinationMap,
-            description: payload.description,
-        },
+        // A crossing is a placement on the far side: no previous node.
+        ...changeMap(next, { ...(restored ?? createMapState(destinationDef)), arrivedFrom: null }),
+        mapStates: preserved,
     };
 }
 

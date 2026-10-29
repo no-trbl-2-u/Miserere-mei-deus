@@ -255,6 +255,30 @@ export function arriveAtNode(map: MapState, nodeId: NodeId): MapState {
 }
 
 /**
+ * Arrives through a PASSAGE: the player steps from the travel node underfoot
+ * to `nodeId`, a node of the same map with no road between them (phase NK1d).
+ * The one arrival that skips the road rule, so it is legal on a gauntlet.
+ *
+ * The far node counts as visited (completed) and its neighbours are revealed,
+ * so its roads are the player's next moves; nothing there fires and nothing
+ * is owed (`pendingArrival` null). `arrivedFrom` is the near end. The order
+ * matters: the arrival is written first, then the node completed, so the
+ * spent check reads the far node as it was before the step.
+ * Throws `IllegalMoveError` when `nodeId` is not on the current map.
+ */
+export function arriveThroughPassage(state: WorldState, nodeId: NodeId): WorldState {
+    const map = state.currentMap;
+    const def = getMapDefinition(map.continent, map.name);
+    if (!def.nodes.some(n => n.id === nodeId)) {
+        throw new IllegalMoveError(`arriveThroughPassage: '${nodeId}' is unknown on map '${map.name}'.`);
+    }
+    if (map.currentNode === nodeId) return state;
+    const arrived: WorldState = { ...state, currentMap: { ...arriveAtNode(map, nodeId), pendingArrival: null } };
+    const visited = completeNode(arrived, nodeId);
+    return { ...visited, currentMap: syncMoveLists(revealAdjacent(visited.currentMap, nodeId)) };
+}
+
+/**
  * Completes the current node and unlocks every `connectedNode` that isn't
  * already completed. Idempotent on completed nodes. Used by the world
  * orchestrator after a node event resolves successfully.

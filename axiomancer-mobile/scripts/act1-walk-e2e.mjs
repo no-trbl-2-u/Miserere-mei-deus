@@ -418,10 +418,16 @@ async function newGame(page, baseUrl, plan) {
     log(`new game: on ${first.map}, at ${first.start}`)
 }
 
-/** Cross a region's exit: a travel door lands on the next region's arrival scene. */
+/**
+ * Cross a region's exit: a travel door asks "Move to X?" (phase NK1d); YES
+ * lands on the next region's arrival scene.
+ */
 async function crossExit(page, region, next) {
     await travelTo(page, region.exit)
     if (next) {
+        await waitFor(page, 'travel-yes', `${region.exit} travel screen`)
+        await expectPath(page, '/travel', `${region.exit} travel screen`)
+        await page.evaluate(() => document.querySelector('[data-testid="travel-yes"]').click())
         await waitFor(page, 'cutscene-advance', `${region.exit} crossing to ${next.map}`)
         await expectPath(page, '/cutscene', `${next.map} arrival`)
         await playOutCutscene(page)

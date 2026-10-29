@@ -17,7 +17,7 @@ import {
 
 import type { HazardSessionState } from '@mechanics';
 import type { BlacksmithSession, EliteRewardUpgrade, LootCacheChoiceSession, RestChoiceSession } from '@mechanics';
-import type { LabyrinthActId, VillageVisit, WorldState } from '@mechanics';
+import type { LabyrinthActId, ResolvedEvent, VillageVisit, WorldState } from '@mechanics';
 
 import { resumeLabyrinthSession } from './labyrinth/resume';
 
@@ -125,6 +125,18 @@ export interface MobileQuestSlice {
     open: { questline: string; node: number; description?: string } | null;
     paid: MobileQuestPaid | null;
     cardOffers: readonly string[];
+}
+
+/**
+ * Mobile-only travel-screen slice (phase NK1d). `open` is the trip a travel
+ * node offered when it was resolved: where it leads, its flavor text and art,
+ * and whether the way is open. The engine moved no one to offer it; YES is
+ * `takeTravel`, NO closes the slice and leaves the player on the node.
+ * Transient: a reload stands the player on the node with nothing owed, and a
+ * tap on it offers the trip again. `null` outside a travel node.
+ */
+export interface MobileTravelSlice {
+    open: Extract<ResolvedEvent, { kind: 'travel' }> | null;
 }
 
 /**
@@ -253,6 +265,7 @@ export type AppStoreState = GameStore & {
     hazard: MobileHazardSlice;
     rest: MobileRestSlice;
     quest: MobileQuestSlice;
+    travel: MobileTravelSlice;
     cache: MobileCacheSlice;
     blacksmith: MobileBlacksmithSlice;
     labyrinthUi: MobileLabyrinthSlice;
@@ -310,6 +323,8 @@ export const EMPTY_QUEST_SLICE: MobileQuestSlice = Object.freeze({
     paid: null,
     cardOffers: Object.freeze([]),
 });
+
+export const EMPTY_TRAVEL_SLICE: MobileTravelSlice = Object.freeze({ open: null });
 
 export const EMPTY_CACHE_SLICE: MobileCacheSlice = Object.freeze({
     session: null,
@@ -411,6 +426,7 @@ export function createAppStore(options: CreateAppStoreOptions = {}): AppStore {
         hazard: EMPTY_HAZARD_SLICE,
         rest: EMPTY_REST_SLICE,
         quest: EMPTY_QUEST_SLICE,
+        travel: EMPTY_TRAVEL_SLICE,
         cache: EMPTY_CACHE_SLICE,
         blacksmith: EMPTY_BLACKSMITH_SLICE,
         labyrinthUi: resumed ? { session: resumed } : EMPTY_LABYRINTH_SLICE,

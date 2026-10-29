@@ -260,8 +260,11 @@ export function planAct1Walk(): Act1WalkPlan {
         const region = planRegion(next.continent, next.map);
         regions.push(region);
         const payload = getNodeEventPool(region.continent, region.map, region.exit)?.entries[0]?.payload;
-        next = payload?.kind === 'travel'
-            ? { continent: payload.destinationContinent, map: payload.destinationMap }
+        // Only a door to another map continues the chain; a passage on the
+        // same map leads nowhere new.
+        const destination = payload?.kind === 'travel' ? payload.destination : undefined;
+        next = destination && 'map' in destination
+            ? { continent: destination.continent, map: destination.map }
             : null;
     }
     const carried: Act1WalkKind[] = [];

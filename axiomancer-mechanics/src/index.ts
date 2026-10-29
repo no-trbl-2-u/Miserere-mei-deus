@@ -283,6 +283,7 @@ export {
     createStartingWorld, STARTING_MAP, STARTABLE_MAPS,
     moveToNode,
     teleportToNode, placeOnNode, unblockMapRoute, arriveAtNode, unspendNode,
+    arriveThroughPassage,
     applyDialogueChoice,
     emptyQuestLog, findActiveQuest,
     startQuest, progressQuest, completeQuest,
@@ -460,9 +461,12 @@ export {
     getNodePrimaryEventKind,
     actsOnRevisit,
     isQuietWalkBack,
+    takeTravel,
+    travelPayloadAt,
+    isTravelOpen,
 } from './World';
 export type {
-    MapEventKind, QuestPayload,
+    MapEventKind, QuestPayload, TravelPayload, TravelDestination,
     MapEventPayload, ResolvedEvent, ResolveMapEventResult,
     Questline, QuestlineStep, QuestlineId, QuestlineSettle, QuestNodeStage, QuestStepView, RouteRef,
     QuestStepState,

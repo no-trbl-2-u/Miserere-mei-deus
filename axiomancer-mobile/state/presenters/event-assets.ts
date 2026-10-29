@@ -31,6 +31,11 @@ export const EVENT_ART_SLUGS = [
 
 export type EventArtSlug = (typeof EVENT_ART_SLUGS)[number];
 
+/** True when `slug` is one of the drawn art slugs. */
+export function isEventArtSlug(slug: string | undefined): slug is EventArtSlug {
+    return slug !== undefined && (EVENT_ART_SLUGS as readonly string[]).includes(slug);
+}
+
 /**
  * Pure mapper from a `ResolvedEvent` discriminant to the mobile slug
  * the screen renders an illustration for. `'none'` should never reach
@@ -45,14 +50,16 @@ export function selectEventArtSlug(event: ResolvedEvent): EventArtSlug {
             return 'village';
         case 'cutscene':
             return 'cutscene';
+        // A travel node's own art slug when it names a drawn one (phase
+        // NK1d); the generic figure until T picks art for it.
+        case 'travel':
+            return isEventArtSlug(event.art) ? event.art : 'interaction-generic';
         // Every kind below never reaches the modal (their interceptors start
         // minigame sessions or resolve elsewhere) and keeps the generic
         // fallback defensively.
         case 'rest':
         case 'loot-cache':
         case 'hazard':
-        // 'travel' resolves engine-side (the world has already crossed).
-        case 'travel':
         // The Labyrinth door enters the Aporia straight from its interceptor.
         case 'labyrinth':
         // A quest node routes to its own screen (QL1c); no modal art yet.
@@ -74,7 +81,8 @@ const DEFAULT_BODY_BY_KIND: Record<ResolvedEvent['kind'], string> = {
     cutscene: '',
     hazard: 'The air turns.',
     'loot-cache': 'Forgotten goods.',
-    // Travel doors resolve engine-side. Exhaustive record needs the entry.
+    // A travel node carries its own prompt (the travel screen shows it);
+    // the exhaustive record needs the entry.
     travel: 'The road goes on. So do you.',
     // The Labyrinth door never renders in the modal (its
     // interceptor enters the Aporia); the exhaustive record needs the entry.

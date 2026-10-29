@@ -28,6 +28,7 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 | Rest | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Rest", "RestChoice", "rest node", "rest site") |
 | Saves | route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Saves") |
 | Settings | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Settings") |
+| Travel | route | yes | yes | yes | no |
 | Village | route | yes | yes | yes | no |
 | The hazard minigame | route | yes | yes | yes | no |
 | The hazard deck | route | yes | yes | yes | no |
@@ -68,6 +69,7 @@ Routes with no outgoing player-flow edge to another feature, not counting the sh
 - Reward (`route:item-reward`)
 - Quest (`route:quest`)
 - Rest (`route:rest`)
+- Travel (`route:travel`)
 - Village (`route:village`)
 - The hazard deck (`route:hazard-deck`)
 - The Labyrinth (`route:labyrinth`)
@@ -95,6 +97,7 @@ Features with no name from `game-model.md` vocabulary; each keeps its path-deriv
 - Quest (`route:quest`)
 - Saves (`route:saves`)
 - Settings (`route:settings`)
+- Travel (`route:travel`)
 - Village (`route:village`)
 - Effects (`area:Effects`)
 - Game (`area:Game`)

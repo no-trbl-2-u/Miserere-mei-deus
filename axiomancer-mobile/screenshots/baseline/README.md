@@ -20,6 +20,7 @@ One PNG per route, named after the route's stable `name` in
 | `dialogue.png` | `/exploration` + fixture `apprentice-staged-dialogue` → `/dialogue` | `app/dialogue/index.tsx` |
 | `village.png` | `/exploration` + fixture `wanderer-staged-village` → `/village` | `app/village/index.tsx` |
 | `cutscene.png` | `/exploration` + fixture `wanderer-staged-cutscene` → `/cutscene` | `app/cutscene/index.tsx` |
+| `travel.png` | `/exploration` + fixture `wanderer-bw-door-arrive` → `/travel` | `app/travel/index.tsx` (the river bridge's "Move to The Charcoal Wood?") |
 | `death-return.png` | `/death-return?preview=1` + fixture `fresh-start` | `app/death-return/index.tsx` (the full-screen moment after a first death) |
 | `hazard-board.png` | `/exploration` + fixture `l30-bw-hazard-arrive` → `/hazard`, risk route picked, dice settled | `app/hazard/index.tsx` (the live board; the puzzle board's parity baseline) |
 | `devpuzzle-list.png` | `/devpuzzle` + fixture `fresh-start` | `app/devpuzzle/index.tsx` (the demos, then the candidates grouped easy, medium, hard) |

@@ -154,7 +154,9 @@ describe('Act 1 is the whole world (THE REVAMP R3a, D53)', () => {
                 for (const entry of pool?.entries ?? []) {
                     expect(entry.kind, `${node.id}`).not.toBe('labyrinth');
                     if (entry.payload.kind === 'travel') {
-                        expect(act1Names, `${node.id}`).toContain(entry.payload.destinationMap);
+                        const destination = entry.payload.destination;
+                        const leadsTo = 'map' in destination ? destination.map : map;
+                        expect(act1Names, `${node.id}`).toContain(leadsTo);
                     }
                 }
             }

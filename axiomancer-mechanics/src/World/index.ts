@@ -31,6 +31,7 @@ export {
     completeNode, unlockNode, changeContinent,
     revealAdjacent, markNodeConsumed,
     teleportToNode, placeOnNode, unblockMapRoute, arriveAtNode, unspendNode,
+    arriveThroughPassage,
     // Traversal queries: the road rule's legal moves.
     legalMovesFrom,
     // A node the map holds (`holdRoadsUntilSettled`) opens its roads once spent.
@@ -63,8 +64,11 @@ export {
     actsOnRevisit,
     isQuietWalkBack,
 } from './MapEvents/resolve-map-event';
+// Travel: the yes to a "move to X?" (phase NK1d).
+export { takeTravel, travelPayloadAt } from './MapEvents/travel';
+export { isTravelOpen } from './MapEvents/handlers';
 export type {
-    MapEventKind, QuestPayload,
+    MapEventKind, QuestPayload, TravelPayload, TravelDestination,
     MapEventPayload, ResolvedEvent, ResolveMapEventResult,
 } from './MapEvents/types';
 export type {

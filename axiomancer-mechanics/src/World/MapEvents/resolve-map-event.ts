@@ -378,11 +378,7 @@ export function resolveMapEvent(
 
     // 0. This call IS the answer to the node's arrival, whatever the roll
     //    turns up — so the debt the move recorded is paid here, before any
-    //    handler runs. Before the handler matters for `travel`: it swaps
-    //    `currentMap` for the destination and files the departed map under
-    //    `world.mapStates`, so a clear applied afterwards would scribble on
-    //    the wrong map and leave the door owed forever on the one the player
-    //    left.
+    //    handler runs.
     const answered = answerArrival(state, nodeId);
 
     // 1. Spent? Idempotent no-op: a consumed node, and on a gauntlet a
@@ -466,26 +462,16 @@ export function resolveMapEvent(
         )
         : result.state;
 
-    // 4a-travel. A resolved travel event has already crossed —
-    // `result.state.world.currentMap` IS the destination map. Return here:
-    // the reveal/unlock/consume step below operates on the current map and
-    // would scribble the departed node's id onto the destination's books.
-    // Deliberately NOT consumed — a door is repeatable (one-way per door):
-    // re-resolving the departed node, should the player ever stand on it
-    // again, travels again.
-    if (result.event.kind === 'travel') {
-        return { state: result.state, event: result.event };
-    }
-
     // 5. Reveal + unlock adjacents + mark consumed. Unlock is what moves the
     // adjacents out of `lockedNodes` into `availableNodes` so the CLI
     // `mapTab` filter actually offers them as valid moves. The reveal path
     // only updates `discoveredNodes`.
-    // The Labyrinth door opens the way on like any node but is
-    // never consumed: it stays a door, and the next arrival enters again. A
-    // quest node is never consumed here either: accepting its step spends it
-    // (`acceptQuestStep`), so until then the player may step off and return.
-    const unspent = result.event.kind === 'labyrinth' || result.event.kind === 'quest';
+    // A door (travel or the Labyrinth's) opens the way on like any node but
+    // is never consumed: it stays a door, and the next entry offers its trip
+    // again. A quest node is never consumed here either: accepting its step
+    // spends it (`acceptQuestStep`), so until then the player may step off
+    // and return.
+    const unspent = result.event.kind === 'labyrinth' || result.event.kind === 'quest' || result.event.kind === 'travel';
     const revealed = revealAdjacent(stateAfterCollect.world.currentMap, nodeId);
     // A node the map holds (`holdRoadsUntilSettled`) that stays unspent opens
     // no onward road: only the move-list sync runs, and the road rule keeps it shut.

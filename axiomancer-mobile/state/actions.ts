@@ -159,9 +159,10 @@ import {
     openQuestScreenAction,
     turnInQuestStepAction,
 } from './quest/store-actions';
+import { closeTravelAction, openTravelScreenAction, takeTravelAction } from './travel/store-actions';
+import { travelPayloadAt } from '@mechanics';
 import { endCombatOutcome, fightRecorder } from '@/lib/fightRecorder';
 import { deckEventPoster, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
-import { getMapLayout } from './exploration-maps';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -499,6 +500,21 @@ export interface AppActions {
     closeQuest: () => void;
     /** Take one of the quest's offered cards, or `null` to take nothing. */
     claimQuestCard: (cardId: string | null) => void;
+
+    // -----------------------------------------------------------------
+    // The travel screen (see state/travel/, phase NK1d). A travel node asks
+    // "Move to X?": YES takes the trip, NO stays on the node.
+    // -----------------------------------------------------------------
+
+    /** YES: take the trip the open travel screen offers. True when the player moved. */
+    takeTravel: () => boolean;
+    /** NO: close the travel screen; the player stays on the node. */
+    closeTravel: () => void;
+    /**
+     * The tap on the travel node the player stands on: offers its trip again
+     * (opens the travel screen). False, and nothing happens, off a travel node.
+     */
+    offerTravelHere: () => boolean;
 
     // -----------------------------------------------------------------
     // Loot-cache-choice encounter ("The Reliquary" — see state/cache/).
@@ -886,6 +902,12 @@ export function createAppActions(store: AppStore): AppActions {
         turnInQuestStep: () => turnInQuestStepAction(store),
         closeQuest: () => closeQuestAction(store),
         claimQuestCard: (cardId) => claimQuestCardAction(store, cardId),
+        takeTravel: () => takeTravelAction(store, (text) => pushToast(store, text)),
+        closeTravel: () => closeTravelAction(store),
+        offerTravelHere: () => {
+            if (!travelPayloadAt(store.getState() as unknown as GameState)) return false;
+            return resolveCurrentMapEventAction(store, 'door');
+        },
         beginLootCacheChoice: (options) => beginLootCacheChoiceAction(store, options),
         chooseLootCacheChoiceOffer: (offer) => chooseLootCacheChoiceOfferAction(store, offer),
         claimLootCacheChoiceOutcome: () => claimLootCacheChoiceOutcomeAction(store),
@@ -1419,10 +1441,8 @@ function resolveCurrentMapEventInner(store: AppStore, sourceNodeType?: string, s
         // `completedNodes` (populated by `moveToAction`'s
         // `worldCompleteNode` call).
         let resolvedState: GameState = result.state;
-        // 'travel' must never consume: post-travel, `currentMap` is the
-        // DESTINATION, so consuming here would mark the arrival map's
-        // start node — mirroring the engine dispatcher's own travel
-        // short-circuit. Doors stay repeatable.
+        // 'travel' must never consume: a door offers its trip on every
+        // entry, as the engine dispatcher keeps it.
         const shouldConsumeNode = result.event.kind !== 'none' &&
             !['encounter', 'travel', 'labyrinth', 'quest'].includes(result.event.kind);
         if (shouldConsumeNode) {
@@ -1513,24 +1533,16 @@ function resolveCurrentMapEventInner(store: AppStore, sourceNodeType?: string, s
             return true;
         }
 
-        // Travel events are already fully applied engine-side: the world
-        // on `result.state` has crossed maps (and continents when the door
-        // spans one). No screen detour and no pending card — clear the
-        // event slice so the exploration canvas re-renders the arrival
-        // map, and narrate the crossing as a toast.
+        // A travel node OFFERS its trip (phase NK1d): the engine moved no
+        // one. Open the travel screen ("Move to X?"; `<TravelGate>` routes
+        // to /travel when the slice fills); YES is `takeTravel`, NO leaves
+        // the player on the node with nothing owed.
         if (result.event.kind === 'travel') {
             store.setState({
                 ...resolvedState,
                 event: EMPTY_EVENT_SLICE,
             });
-            const region = getMapLayout(result.event.destinationMap)?.region
-                ?? result.event.destinationMap;
-            pushToast(store, `You cross into ${region}.`);
-            // Crossing a map is a checkpoint, same as a combat or rest
-            // outcome — saves are explicit on mobile, and a
-            // crossing lost to an app close would strand the run on the
-            // wrong map.
-            try { store.getState().save(); } catch { /* persistence must not block the road */ }
+            openTravelScreenAction(store, result.event);
             return true;
         }
 

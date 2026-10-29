@@ -10,6 +10,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
+import { takeTravel } from '../MapEvents/travel';
 
 import { completeCurrentNode, moveToNode, legalMovesFrom, walkRoadTo, syncMoveLists } from '../world.reducer';
 import {
@@ -171,7 +172,8 @@ describe('A7: a village, a door and a quest node act on every entry', () => {
 
     it('a travel door offers its trip again on every entry', () => {
         // The watchtower won, the bridge walked once by a host that completes
-        // on the move: walking back onto it travels again when resolved.
+        // on the move: walking back onto it offers the trip again when
+        // resolved, and taking it crosses (phase NK1d).
         const base = freshGame();
         const settled = settleQuestNodes(map(base));
         const atTower: MapState = syncMoveLists({
@@ -186,7 +188,8 @@ describe('A7: a village, a door and a quest node act on every entry', () => {
         expect(isQuietWalkBack(s, 'bw-18')).toBe(false);
         const { event, state: after } = step(s, 'bw-18');
         expect(event.kind).toBe('travel');
-        expect(map(after).name).toBe('charcoal-wood');
+        expect(map(after).name).toBe('breakwater');
+        expect(map(takeTravel(after)).name).toBe('charcoal-wood');
     });
 
     it('a village opens again on every entry', () => {

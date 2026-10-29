@@ -218,7 +218,7 @@ describe('A10: from the windmill into a dead-end pocket and back, then on to a n
         expect(store.getState().world.currentMap.consumedNodes).toContain('bw-4');
     });
 
-    it('a walked door is offered, not crossed, on the tap; the confirm crosses', () => {
+    it('a walked door is offered, not crossed, on the tap; the confirm walks onto it and asks "Move to X?"', () => {
         const store = storeOn(atTheTowerWithTheBridgeWalked());
         const tree = mountExploration(store);
         tap(tree, 'node-bw-18');
@@ -226,7 +226,11 @@ describe('A10: from the windmill into a dead-end pocket and back, then on to a n
         expect(store.getState().world.currentMap.currentNode).toBe('bw-17');
         expect(tree.getByTestId('node-confirm-go')).toBeTruthy();
         tap(tree, 'node-confirm-go');
-        expect(store.getState().world.currentMap.name).toBe('charcoal-wood');
+        // The confirm walks onto the door; the door only OFFERS its trip
+        // (phase NK1d). The travel screen's YES is what crosses.
+        expect(store.getState().world.currentMap.name).toBe('breakwater');
+        expect(store.getState().world.currentMap.currentNode).toBe('bw-18');
+        expect(store.getState().travel.open?.destination).toEqual({ map: 'charcoal-wood', continent: 'coastal-continent' });
     });
 
     it('a walked village (the Anvil one) opens its hub again on the confirm, not the Anvil', () => {

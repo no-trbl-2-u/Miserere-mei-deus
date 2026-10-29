@@ -409,6 +409,9 @@ const SEAMS = {
     // The quest screen is provoked by the state fixture that stages the first
     // quest node of the fixture questline (hermetic: no walk to bw-19).
     'route:quest': { fixture: 'apprentice-staged-quest', landing: 'quest-column' },
+    // The travel screen is provoked by the state fixture that arrives on the
+    // river bridge (bw-18), whose offer opens "Move to The Charcoal Wood?".
+    'route:travel': { fixture: 'wanderer-bw-door-arrive', landing: 'travel-question' },
     // No run hands out a relic yet (phase SG1 cut the first-node ring), so the
     // reward screen is provoked by the dev REWARDS row's RELIC REWARD.
     'route:item-reward': { section: 'rewards', leaf: 'debug-relic-reward-button', landing: 'item-reward-card' },

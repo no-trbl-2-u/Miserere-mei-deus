@@ -125,6 +125,14 @@ export const STATE_FIXTURES: readonly StateFixture[] = Object.freeze([
         world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-3' },
         arrive: true,
     },
+    {
+        id: 'wanderer-bw-door-arrive',
+        description: 'Wanderer (L8) on the Breakwater\'s river bridge (bw-18), the door to the Charcoal Wood; `arrive` offers the trip and pushes /travel ("Move to The Charcoal Wood?").',
+        seed: 'fixture-wanderer-bw-door-arrive',
+        preset: 'wanderer',
+        world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-18' },
+        arrive: true,
+    },
 ]);
 
 /** Lookup by id; `undefined` when unknown. */
