@@ -4,8 +4,8 @@
  *
  * Each authored node (bw-N / cw-N / bc-N / ld-N) gets a single-entry pool override
  * so the dispatcher reproduces (and extends) the authored events
- * `processNode` fires. Act 1 stages no shop, so the `village` kind has no
- * carrier here; its witness is the neutral fixture in `Game/fixtures/`. A
+ * `processNode` fires. Each region's one village (`ACT1_ANVIL_NODES`) carries
+ * the paid rest, the card shop and the Anvil. A
  * node listed in `ACT1_WAYPOINT_NODES` gets no pool at all: it is an empty
  * waypoint, which reveals its roads and resolves to nothing.
  *
@@ -57,8 +57,8 @@ function lootCachePool(nodeId: string, cache: { currency: number; description: s
     };
 }
 
-// A village that carries the Anvil counter. The mobile village screen opens
-// the Anvil from this payload and seeds the session from the player's live rail
+// A village with all three counters: the paid rest, the card shop and the
+// Anvil. The mobile village screen opens the Anvil from this payload and seeds the session from the player's live rail
 // and wallet (`state/blacksmith/store-actions.ts`). The village name is a
 // placeholder until T writes the places.
 function anvilVillagePool(nodeId: string, description: string): MapEventPool {
@@ -69,6 +69,8 @@ function anvilVillagePool(nodeId: string, description: string): MapEventPool {
             payload: {
                 kind: 'village',
                 villageName: ANVIL_VILLAGE_NAMES[nodeId] ?? 'The Smithy',
+                rest: true,
+                cardShop: true,
                 anvil: { variants: BLACKSMITH_WITNESS_VARIANTS },
                 description,
             },

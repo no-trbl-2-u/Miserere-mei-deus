@@ -1,9 +1,9 @@
 /**
  * /rest — the rest-choice screen.
  *
- * One irreversible choice of three: REST (free, flat 25% heal), UPGRADE A
- * CARD (free, one card upgraded on the shared upgrade screen, no heal) or
- * THE CUT (paid deck removal). `resolveMapEvent` consumes the node on entry,
+ * One irreversible choice of two: REST (free, flat 25% heal) or UPGRADE A
+ * CARD (free, one card upgraded on the shared upgrade screen, no heal).
+ * Card removal is the village's (`/village`). `resolveMapEvent` consumes the node on entry,
  * before any choice — there is no back-out: no header back, no
  * swipe-dismiss (`gestureEnabled: false` in the root layout), no Android
  * hardware-back (`<HardwareBackHandler>`). All rules live in
@@ -20,7 +20,6 @@ import { CardUpgradePicker } from '@/components/upgrade/CardUpgradePicker';
 import { useGameActions, useGameState } from '@/state/GameStoreProvider';
 import {
     selectRestVM,
-    type RestChoiceCutCardVM,
     type RestChoiceOfferVM,
 } from '@/state/presenters/rest.engine';
 import {
@@ -29,15 +28,9 @@ import {
     REST_CHOICE_INTRO,
     REST_CHOICE_PURSE_LABEL,
     REST_CHOICE_TITLE,
-    REST_CUT_CONFIRM_LABEL,
-    REST_CUT_NEXT_PRICE_PREFIX,
-    REST_CUT_SHEET_INTRO,
-    REST_CUT_SHEET_TITLE,
     REST_OUTCOME_CLAIM_LABEL,
     REST_OUTCOME_EYEBROW,
     restOutcomeHealChip,
-    restOutcomeRemovedChip,
-    restOutcomeSpendChip,
     restOutcomeUpgradedChip,
 } from '@/state/presenters/rest.copy';
 import { FONTS, TYPE } from '@/theme/axm';
@@ -75,21 +68,6 @@ function OfferCard({ offer, onPress }: { offer: RestChoiceOfferVM; onPress: () =
                 </Text>
             )}
         </View>
-    );
-}
-
-function CutRow({ card, onPress }: { card: RestChoiceCutCardVM; onPress: () => void }) {
-    const styles = useStyles();
-    return (
-        <TouchableOpacity
-            accessibilityRole="button"
-            accessibilityLabel={`Remove ${card.name} from the deck`}
-            onPress={onPress}
-            style={styles.cutRow}
-            testID={`rest-cut-card-${card.key}`}
-        >
-            <Text style={styles.cutCardName}>{card.name}</Text>
-        </TouchableOpacity>
     );
 }
 
@@ -155,26 +133,6 @@ export default function RestScreen() {
                         </View>
                     )}
 
-                    {vm.phase === 'cut-pick' && vm.cut !== null && (
-                        <View testID="rest-cut-sheet">
-                            <Text style={styles.eyebrow}>{REST_CUT_SHEET_TITLE}</Text>
-                            <Text style={styles.body}>{REST_CUT_SHEET_INTRO}</Text>
-                            <Text style={styles.priceHint} testID="rest-cut-price">
-                                THIS ONE: {vm.cut.price} SHILLINGS — {REST_CUT_NEXT_PRICE_PREFIX} {vm.cut.nextPrice}
-                            </Text>
-                            <View style={styles.cutList}>
-                                {vm.cut.cards.map((card) => (
-                                    <CutRow
-                                        key={card.key}
-                                        card={card}
-                                        onPress={() => actions.pickRestChoiceCut(card.cardId)}
-                                    />
-                                ))}
-                            </View>
-                            <Text style={styles.cutHint}>{REST_CUT_CONFIRM_LABEL}: tap a card above.</Text>
-                        </View>
-                    )}
-
                     {vm.phase === 'upgrade-pick' && vm.upgrade !== null && (
                         <CardUpgradePicker
                             rows={vm.upgrade}
@@ -189,12 +147,6 @@ export default function RestScreen() {
                             <View style={styles.chipRow}>
                                 {vm.outcome.healed > 0 && (
                                     <Text style={styles.chip}>{restOutcomeHealChip(vm.outcome.healed)}</Text>
-                                )}
-                                {vm.outcome.spent > 0 && (
-                                    <Text style={styles.chip}>{restOutcomeSpendChip(vm.outcome.spent)}</Text>
-                                )}
-                                {vm.outcome.removedCardName !== null && (
-                                    <Text style={styles.chip}>{restOutcomeRemovedChip(vm.outcome.removedCardName)}</Text>
                                 )}
                                 {vm.outcome.upgraded !== null && (
                                     <Text style={styles.chip} testID="rest-outcome-upgraded">
@@ -295,23 +247,6 @@ const useStyles = makeStyles((AXM) => ({
         color: AXM.bone,
         marginTop: 4,
     },
-    priceHint: {
-        fontFamily: FONTS.mono,
-        fontSize: 11,
-        letterSpacing: 0.5,
-        color: AXM.sulfur,
-        marginBottom: 8,
-    },
-    cutList: { marginBottom: 8 },
-    cutRow: {
-        borderWidth: 1,
-        borderColor: AXM.ash,
-        backgroundColor: AXM.bg,
-        padding: 8,
-        marginBottom: 4,
-    },
-    cutCardName: { fontFamily: FONTS.mono, fontSize: 13, color: AXM.parchment },
-    cutHint: { fontFamily: FONTS.serifItalic, fontSize: 12, color: AXM.bone },
     card: {
         borderWidth: 2,
         borderColor: AXM.ash,

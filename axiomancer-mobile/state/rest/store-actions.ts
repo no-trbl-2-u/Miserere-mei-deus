@@ -3,25 +3,22 @@
  *
  * The pure engine lives in `axiomancer-mechanics` (World/RestChoice); these
  * wrappers thread a rest node's one irreversible choice — `rest` (free,
- * flat 25% heal) / `upgrade` (free, one card upgraded) / `cut` (paid deck
- * removal) — through the mobile `rest` slice and, at claim, apply the
- * settled ledger to the real `GameState`: heal, the upgraded copy, shillings
- * spent, `cardRemovals` incremented, the scar mend, and the act's fought
- * elites brought back (`respawnElites`, phase ER1).
+ * flat 25% heal) / `upgrade` (free, one card upgraded) — through the mobile
+ * `rest` slice and, at claim, apply the settled ledger to the real
+ * `GameState`: heal, the upgraded copy, the scar mend, and the act's fought
+ * elites brought back (`respawnElites`, phase ER1). Card removal is a
+ * village counter (`state/village/`).
  */
 
 import type { GameState } from '@mechanics';
 
 import {
     buildCombatDeck,
-    cardRemovalsOf,
     chooseRestChoiceOffer as engineChooseOffer,
     claimRestChoiceOutcome as engineClaim,
     createRestChoiceSession,
     DEFAULT_REST_SHELTER,
-    pickRestChoiceCut as engineCut,
     pickRestChoiceUpgrade as engineUpgrade,
-    removeCardFromCombatDeck,
     replaceCard,
     respawnElites,
 } from '@mechanics';
@@ -33,7 +30,6 @@ import type {
     RestShelter,
 } from '@mechanics';
 import { bankedScarMagnitude, HAZARD_SCAR_FLAG_PREFIX } from '../hazard/store-actions';
-import { deckEventPoster, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
 
 import { resolveMinigameSeed } from '../minigame-seeds';
 import { EMPTY_REST_SLICE, type AppStore } from '../store';
@@ -82,24 +78,16 @@ export function beginRestAction(store: AppStore, options: BeginRestOptions = {})
         health: player.health,
         currency: player.currency,
         deckCardIds: buildCombatDeck(player, flags),
-        removals: cardRemovalsOf(player),
         description: options.description,
     }));
     return true;
 }
 
-/** offer -> outcome | cut-pick. */
+/** offer -> outcome | upgrade-pick. */
 export function chooseRestChoiceOfferAction(store: AppStore, offer: RestChoiceOfferId): void {
     const s = store.getState().rest?.session;
     if (!s) return;
     setSession(store, engineChooseOffer(s, offer));
-}
-
-/** cut-pick -> outcome. `cardId` must be one of `session.deckCardIds`. */
-export function pickRestChoiceCutAction(store: AppStore, cardId: string): void {
-    const s = store.getState().rest?.session;
-    if (!s) return;
-    setSession(store, engineCut(s, cardId));
 }
 
 /** upgrade-pick -> outcome. `cardId` must be one of `session.upgradableCardIds`. */
@@ -113,8 +101,6 @@ export interface ClaimRestChoiceResult {
     applied: boolean;
     chosen: RestChoiceOfferId | null;
     healed: number;
-    spent: number;
-    removedCardId: string | null;
     /** The upgraded id now in the deck (`<id>+`), or null when no upgrade was taken. */
     upgradedToCardId: string | null;
     /** Max-VITAE mended back from hazard scars (any rest, inn or camp). */
@@ -127,8 +113,6 @@ const NOOP_CLAIM: ClaimRestChoiceResult = Object.freeze({
     applied: false,
     chosen: null,
     healed: 0,
-    spent: 0,
-    removedCardId: null,
     upgradedToCardId: null,
     scarMended: 0,
     respawnedElites: Object.freeze([]) as readonly EliteNodeRef[],
@@ -137,10 +121,6 @@ const NOOP_CLAIM: ClaimRestChoiceResult = Object.freeze({
 /**
  * Confirms the outcome ledger and applies the rest node to the engine
  * `GameState`.
- *
- * A `cut` outcome only NAMES the removed card (see `RestChoiceOutcome`
- * header) — the real `removeCardFromCombatDeck` call, and the loadout
- * reconciliation it may do, happens here.
  *
  * Any rest, inn or camp, mends hazard-scarred max-VITAE regardless of
  * which offer was taken (the night is the trigger, not the choice; the
@@ -152,8 +132,8 @@ const NOOP_CLAIM: ClaimRestChoiceResult = Object.freeze({
  *
  * The night also brings back every elite already fought anywhere in the act
  * (`respawnElites`), in the same `setState` as the outcome, before the one
- * `save()`. The `rest` (heal) choice also clears `dying` there; upgrade and
- * cut leave it set. Arriving at the rest and leaving before the claim brings back
+ * `save()`. The `rest` (heal) choice also clears `dying` there; upgrade
+ * leaves it set. Arriving at the rest and leaving before the claim brings back
  * nothing: the claim is the trigger.
  */
 export function claimRestChoiceOutcomeAction(store: AppStore): ClaimRestChoiceResult {
@@ -166,16 +146,6 @@ export function claimRestChoiceOutcomeAction(store: AppStore): ClaimRestChoiceRe
     const state = store.getState() as unknown as GameState;
     let player: Character = state.player;
     let flags = state.flags ?? [];
-
-    let removedCardId: string | null = null;
-    if (outcome.chosen === 'cut' && outcome.removedCardId) {
-        const removal = removeCardFromCombatDeck(player, outcome.removedCardId, flags);
-        if (removal.ok) {
-            player = removal.player;
-            flags = removal.flags;
-            removedCardId = outcome.removedCardId;
-        }
-    }
 
     // An `upgrade` swaps exactly one owned copy for its upgraded id; the
     // other copies stay as they were.
@@ -202,8 +172,6 @@ export function claimRestChoiceOutcomeAction(store: AppStore): ClaimRestChoiceRe
         ...player,
         maxHealth: recoveredMax,
         health: player.health + healed,
-        currency: Math.max(0, player.currency - outcome.spent),
-        cardRemovals: outcome.removals,
     };
 
     const respawn = respawnElites(state.world);
@@ -224,30 +192,12 @@ export function claimRestChoiceOutcomeAction(store: AppStore): ClaimRestChoiceRe
         // Persistence failures must not strand the player on the ledger.
     }
 
-    if (removedCardId) postRemoveEvent(store, removedCardId);
     return {
         applied: true,
         chosen: outcome.chosen,
         healed,
-        spent: outcome.spent,
-        removedCardId: outcome.removedCardId,
         upgradedToCardId,
         scarMended,
         respawnedElites: respawn.respawned,
     };
-}
-
-/**
- * The play log (phase BE2e): the card cut at the rest site, with the deck
- * after the cut (its size is the deck's length).
- */
-function postRemoveEvent(store: AppStore, cardId: string): void {
-    const state = store.getState() as unknown as DeckEventState;
-    void deckEventPoster.post({
-        kind: 'remove',
-        cardId,
-        offered: null,
-        deck: runDeck(state),
-        where: deckEventWhere(state, 'rest'),
-    });
 }

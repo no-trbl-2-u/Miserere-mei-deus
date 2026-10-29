@@ -13,9 +13,6 @@
 import {
     applyDialogueChoice,
     payCompletedQuests,
-    buyItem as engineBuyItem,
-    sellItem as engineSellItem,
-    defaultSellPrice as engineDefaultSellPrice,
     buildCharacterFromPreset,
     changeMap as worldChangeMap,
     completeNode as worldCompleteNode,
@@ -59,7 +56,6 @@ import {
 
 
 import { COMBAT_CARDS } from '@/state/selectors/combat-cards';
-import { resolveWareItem } from '@/state/presenters/village.engine';
 import { findOwnedEquipment, isWornId } from '@/state/presenters/loadout';
 import { EMPTY_EVENT_SLICE, EMPTY_LABYRINTH_SLICE, type AppStore } from './store';
 import {
@@ -91,7 +87,6 @@ import {
     beginRestAction,
     chooseRestChoiceOfferAction,
     claimRestChoiceOutcomeAction,
-    pickRestChoiceCutAction,
     pickRestChoiceUpgradeAction,
     type BeginRestOptions,
     type ClaimRestChoiceResult,
@@ -119,6 +114,12 @@ import {
     type BeginBlacksmithOptions,
     type ClaimBlacksmithResult,
 } from './blacksmith/store-actions';
+import {
+    buyVillageCardAction,
+    removeVillageCardAction,
+    restAtVillageAction,
+    type VillageCounterResult,
+} from './village/store-actions';
 import type { DieGearColor, MapEventPayload } from '@mechanics';
 import {
     applyPlayerTierPresetAction,
@@ -478,13 +479,11 @@ export interface AppActions {
 
     /** Start a rest node. Returns false if one is underway. */
     beginRest: (options?: BeginRestOptions) => boolean;
-    /** Commit one of the three offers. Locks the others. */
+    /** Commit one of the two offers. Locks the other. */
     chooseRestChoiceOffer: (offer: RestChoiceOfferId) => void;
-    /** Pick a card to remove (`cut` sub-step). Must be one of the offered ids. */
-    pickRestChoiceCut: (cardId: string) => void;
     /** Pick a card to upgrade (`upgrade` sub-step). Must be one of the upgradable ids. */
     pickRestChoiceUpgrade: (cardId: string) => void;
-    /** Confirm the settled ledger; applies heal/upgrade/spend/removal and persists. */
+    /** Confirm the settled ledger; applies heal/upgrade and persists. */
     claimRestOutcome: () => ClaimRestChoiceResult;
 
     // -----------------------------------------------------------------
@@ -592,23 +591,17 @@ export interface AppActions {
     /** Clear the one-shot waystone/ejection toast signal. */
     clearLabyrinthArrivalNote: () => void;
 
-    /**
-     * Buy a ware from the pending village event's shop (the village
-     * screen). Engine `buyItem` owns the rules
-     * (affordability, cloning); returns success.
-     */
-    buyVillageWare: (itemId: string) => boolean;
+    // -----------------------------------------------------------------
+    // Village counters (see state/village/). The village event stays
+    // pending while they are used; engine `World/Village` owns the rules.
+    // -----------------------------------------------------------------
 
-    /**
-     * Sell an inventory item back to the pending village event's
-     * shop. `index` identifies the inventory slot (mirrors
-     * the CLI `shopLoop` sell path, which disambiguates the same
-     * way). Price is engine `defaultSellPrice` against the shop's
-     * ware list when the item matches a listed ware, else the CLI's
-     * fallback of `1`. Quest items are never sellable.
-     * Returns success.
-     */
-    sellVillageItem: (index: number) => boolean;
+    /** Rest at the village for shillings, once per visit. */
+    restAtVillage: () => VillageCounterResult;
+    /** Buy one of the village card shop's cards. */
+    buyVillageCard: (cardId: string) => VillageCounterResult;
+    /** Pay to remove one copy of a card from the deck. */
+    removeVillageCard: (cardId: string) => VillageCounterResult;
 }
 
 export interface UseItemResult {
@@ -903,7 +896,6 @@ export function createAppActions(store: AppStore): AppActions {
 
         beginRest: (options) => beginRestAction(store, options),
         chooseRestChoiceOffer: (offer) => chooseRestChoiceOfferAction(store, offer),
-        pickRestChoiceCut: (cardId) => pickRestChoiceCutAction(store, cardId),
         pickRestChoiceUpgrade: (cardId) => pickRestChoiceUpgradeAction(store, cardId),
         claimRestOutcome: () => claimRestChoiceOutcomeAction(store),
         acceptQuestStep: () => acceptQuestStepAction(store),
@@ -931,8 +923,9 @@ export function createAppActions(store: AppStore): AppActions {
         leaveBlacksmith: () => leaveBlacksmithAction(store),
         claimBlacksmithOutcome: () => claimBlacksmithOutcomeAction(store),
         abandonBlacksmith: () => abandonBlacksmithAction(store),
-        buyVillageWare: (itemId) => buyVillageWareAction(store, itemId),
-        sellVillageItem: (index) => sellVillageItemAction(store, index),
+        restAtVillage: () => restAtVillageAction(store),
+        buyVillageCard: (cardId) => buyVillageCardAction(store, cardId),
+        removeVillageCard: (cardId) => removeVillageCardAction(store, cardId),
     };
     return wrapActionsWithLogging(actions);
 }
@@ -1751,61 +1744,3 @@ function pickEventChoiceAction(store: AppStore, choiceId: string): void {
 function dismissEventAction(store: AppStore): void {
     clearEventSlice(store);
 }
-
-/**
- * Buys a ware off the pending village event's shop. The
- * engine reducer owns affordability and item cloning; a no-op result
- * (can't afford, unknown ware) returns false so the screen can leave
- * the row enabled-but-inert rather than crash.
- */
-function buyVillageWareAction(store: AppStore, itemId: string): boolean {
-    try {
-        const state = store.getState();
-        const pending = state.event?.pending;
-        if (!pending || pending.event.kind !== 'village') return false;
-        const ware = pending.event.shop?.wares.find(w => w.itemId === itemId);
-        if (!ware) return false;
-        const item = resolveWareItem(ware);
-        if (!item) return false;
-        const player = (state as unknown as GameState).player;
-        const next = engineBuyItem(player, item, ware.price);
-        if (next === player) return false;
-        store.setState({ player: next } as never);
-        return true;
-    } catch (error) {
-        console.error('Failed to buy village ware:', error);
-        return false;
-    }
-}
-
-/**
- * Sells an inventory item back to the pending village event's shop.
- * Quest items are never sellable — mirrors the `dropItem`
- * defend-in-depth guard (`canDiscard` on the inventory VM keeps the
- * screen from ever offering the action, but the action layer checks
- * again for direct dispatch). Price matches the CLI's `shopLoop` sell
- * path: `defaultSellPrice` against the shop's ware list when the item
- * matches a listed ware, else a flat fallback of `1`.
- */
-function sellVillageItemAction(store: AppStore, index: number): boolean {
-    try {
-        const state = store.getState();
-        const pending = state.event?.pending;
-        if (!pending || pending.event.kind !== 'village') return false;
-        const player = (state as unknown as GameState).player;
-        const item = player.inventory[index];
-        if (!item) return false;
-        if (item.category === 'quest-item') return false;
-        const wares = pending.event.shop?.wares ?? [];
-        const matching = wares.find(w => w.itemId === item.id);
-        const price = matching ? engineDefaultSellPrice(matching) : 1;
-        const next = engineSellItem(player, item.id, price);
-        if (next === player) return false;
-        store.setState({ player: next } as never);
-        return true;
-    } catch (error) {
-        console.error('Failed to sell village item:', error);
-        return false;
-    }
-}
-

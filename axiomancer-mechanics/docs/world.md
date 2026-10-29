@@ -234,7 +234,7 @@ later in 2026-08, 'labyrinth' in M4, 2026-09-27):
 | `interaction`  | `{ kind: 'interaction', npcName, dialogue? }` — branching tree.           |
 | `gathering`    | `{ kind: 'gathering', items }` — items added to inventory.                |
 | `rest`         | `{ kind: 'rest', healed, shelter }` — `shelter` is `'camp' \| 'inn'` (Phase 52b), authored on `RestPayload` and defaulting to `'camp'`. It rides along so hosts that replace the passive heal keep the inn/camp signal; every rest, inn or camp, mends hazard-scarred max-VITAE. The per-node `healFraction` knob is retired; the passive heal runs at `REST_PASSIVE_HEAL_FRACTION` (carried forward pending Phase 52c). |
-| `village`      | `{ kind: 'village', villageName, merchants, shop? }` — settlement scene.  |
+| `village`      | `{ kind: 'village', villageName, merchants, rest?, cardShop?, anvil? }` — settlement hub; `rest` carries its price, `cardShop` the seeded offer (`World/Village`), `anvil` the smith's variants. |
 | `cutscene`     | `{ kind: 'cutscene', lines }` — narration only.                           |
 | `hazard`       | `{ kind: 'hazard', effects, damage }` — applies effects + damage.         |
 | `loot-cache`   | `{ kind: 'loot-cache', items, currency }` — fixed grant.                  |

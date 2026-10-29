@@ -19,8 +19,7 @@ Each kind starts its own session slice in `state/actions.ts` (`resolveCurrentMap
 | `rest-inactive` | `/rest` with no session (pops back) |
 | `rest-purse` | Shillings |
 | `rest-choice-offers` / `rest-choice-intro` / `rest-choice-intro-one-way` | Offer list and intro copy |
-| `rest-choice-offer-<id>` / `rest-choice-offer-<id>-reason` | One offer; disabled ones state why (e.g. deck at floor of 12) |
-| `rest-cut-sheet` / `rest-cut-price` / `rest-cut-card-<key>` | THE CUT: pick a card to remove |
+| `rest-choice-offer-<id>` / `rest-choice-offer-<id>-reason` | One offer (REST or UPGRADE A CARD); disabled ones state why (e.g. no card can take an upgrade) |
 | `card-upgrade-row-<cardId>` / `card-upgrade-preview` / `card-upgrade-confirm` | The upgrade sheet (`components/upgrade/CardUpgradePicker.tsx`, opened by the rest site's upgrade offer and by the blacksmith): a row only previews the card before and after; UPGRADE IT commits it |
 | `rest-outcome` / `rest-claim` | Outcome card; CLAIM returns to the map |
 | `cache-inactive` | `/cache` with no session |
@@ -42,14 +41,14 @@ Each kind starts its own session slice in `state/actions.ts` (`resolveCurrentMap
 
 ## 4. A correct play, step by step
 
-- Rest: on `rest-choice-offers` tap an enabled `rest-choice-offer-<id>` (if you chose THE CUT, pick a `rest-cut-card-<key>`; if you chose the upgrade, press a `card-upgrade-row-<cardId>` to preview it, then `card-upgrade-confirm`); `rest-outcome` → `rest-claim`. A new game hands over no relic, so no `/item-reward` stacks on the start rest; a relic reward elsewhere still opens `/item-reward` over the map — `item-reward-equip` or `item-reward-confirm` to reach it.
+- Rest: on `rest-choice-offers` tap an enabled `rest-choice-offer-<id>` (card removal is the village's now; if you chose the upgrade, press a `card-upgrade-row-<cardId>` to preview it, then `card-upgrade-confirm`); `rest-outcome` → `rest-claim`. A new game hands over no relic, so no `/item-reward` stacks on the start rest; a relic reward elsewhere still opens `/item-reward` over the map — `item-reward-equip` or `item-reward-confirm` to reach it.
 - Cache: tap a `cache-choice-offer-<id>`; `cache-outcome` → `cache-claim`.
 - Blacksmith: `blacksmith-begin`; tap one enabled `blacksmith-offer-<id>` (watch `blacksmith-budget`); if `blacksmith-card` appears, `blacksmith-continue`; `blacksmith-leave`; `blacksmith-outcome` → `blacksmith-claim`.
 - Gathering: on `/event` read the card, tap an `event-choice-<id>` if any, else `event-skip`.
 
 ## 5. Looks stuck but isn't
 
-- A greyed offer is `disabled` + `aria-disabled` with its reason in `*-reason` (rest's THE CUT at the 12-card floor; blacksmith offers over budget or with nothing to hone). Pick another.
+- A greyed offer is `disabled` + `aria-disabled` with its reason in `*-reason` (rest's upgrade with no upgradable card; blacksmith offers over budget or with nothing to hone). Pick another.
 - `*-inactive` for a frame after CLAIM while the gate pops the route is normal.
 - The upgrade sheet with no confirm button: no row is picked yet; `card-upgrade-confirm` appears with the preview once you press a `card-upgrade-row-<cardId>`.
 - One-way note (`*-intro-one-way`): there is no back button by design; the only exits are an offer or (blacksmith) `blacksmith-abandon`.
@@ -67,7 +66,7 @@ Record: kind, fixture/trigger, offer ids visible, purse, last 20 `action` lines,
 ## 7. Read the log
 
 `__AXM_LOG__.tail(40, { domains: ['action', 'game', 'nav'] })` (debug for `action`):
-- rest: `action/beginRest`, `action/chooseRestChoiceOffer`, `action/pickRestChoiceCut`, `action/claimRestOutcome`.
+- rest: `action/beginRest`, `action/chooseRestChoiceOffer`, `action/pickRestChoiceUpgrade`, `action/claimRestOutcome`.
 - cache: `action/beginLootCacheChoice`, `action/chooseLootCacheChoiceOffer`, `action/claimLootCacheChoiceOutcome`.
 - blacksmith: `action/beginBlacksmith`, `action/startBlacksmithForging`, `action/honeBlacksmith`, `action/temperBlacksmith`, `action/swapBlacksmith`, `action/continueBlacksmithCard`, `action/leaveBlacksmith`, `action/claimBlacksmithOutcome`, `action/abandonBlacksmith`.
 - gathering: `action/resolveCurrentMapEvent`, `action/pickEventChoice`, `action/dismissEvent`, `game/inventory:changed`, `game/game:saved`.

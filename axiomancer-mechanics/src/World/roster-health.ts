@@ -23,9 +23,8 @@
  * audited. The dev dummy `Sandbag_01` and the dev menu's grants (GET ALL
  * RELICS) do not count as reachable: they exist for the dev menu, not play.
  *
- * Shops: stock rides on `VillagePayload.shop` (`Items/shop.types.ts`). Act 1
- * stages no village, so the shop lens reports nothing today; it reads
- * whatever wares a registered pool declares and invents no stock table.
+ * Villages sell no items (their card shop draws from the reward pool,
+ * `World/Village`), so no pool names a ware.
  *
  * Composes `auditNarrativeReachability` for the npc-unreached lens rather
  * than replacing it. It reads the live MapEvent pool registry; if
@@ -59,7 +58,6 @@ export type RosterSubject = 'enemy' | 'consumable' | 'relic' | 'item' | 'npc' | 
 export type RosterDanglingLens =
     | 'enemy-slug'
     | 'loot-item'
-    | 'shop-ware'
     | 'relic-signature'
     | 'dialogue-next'
     | 'dialogue-quest'
@@ -146,13 +144,13 @@ export function collectRosterSources(): RosterSources {
 
 // ─── Shared walks ─────────────────────────────────────────────────────────────
 
-/** A granted item reference: the item (or bare ware id) and where it is named. */
+/** A granted item reference: the item and where it is named. */
 interface ItemRef {
     id: string;
-    /** `consumable` / `relic` when the reference says so; `ware` for a bare shop id. */
-    kind: 'consumable' | 'relic' | 'ware' | 'other';
+    /** `consumable` / `relic` when the reference says so. */
+    kind: 'consumable' | 'relic' | 'other';
     where: string;
-    lens: 'loot-item' | 'shop-ware';
+    lens: 'loot-item';
 }
 
 function isRelicItem(item: Item): boolean {
@@ -198,10 +196,6 @@ function itemRefs(src: RosterSources): ItemRef[] {
         for (const { payload } of pool.entries) {
             if (payload.kind === 'loot-cache') {
                 for (const item of payload.items ?? []) push(item, pool.id);
-            } else if (payload.kind === 'village') {
-                for (const ware of payload.shop?.wares ?? []) {
-                    refs.push({ id: ware.itemId, kind: 'ware', where: `${pool.id}.shop`, lens: 'shop-ware' });
-                }
             }
         }
     }
@@ -265,7 +259,7 @@ export function danglingEnemySlugs(src: RosterSources): RosterFinding[] {
     return out;
 }
 
-/** A loot table, reward, cache or shop naming a consumable or relic id no library has. */
+/** A loot table, reward or cache naming a consumable or relic id no library has. */
 export function danglingItems(src: RosterSources): RosterFinding[] {
     const consumableIds = new Set(src.consumables.map(c => c.id));
     const relicIds = new Set(src.relics.map(r => r.id));
@@ -275,8 +269,6 @@ export function danglingItems(src: RosterSources): RosterFinding[] {
             out.push({ lens: ref.lens, subject: 'consumable', id: ref.id, where: ref.where, detail: 'consumable id not in consumableLibrary' });
         } else if (ref.kind === 'relic' && !relicIds.has(ref.id)) {
             out.push({ lens: ref.lens, subject: 'relic', id: ref.id, where: ref.where, detail: 'relic id not in relicLibrary' });
-        } else if (ref.kind === 'ware' && !consumableIds.has(ref.id) && !relicIds.has(ref.id)) {
-            out.push({ lens: ref.lens, subject: 'item', id: ref.id, where: ref.where, detail: 'shop ware names an item no library has' });
         }
     }
     for (const id of [...src.startingItemIds, ...src.cacheItemIds]) {

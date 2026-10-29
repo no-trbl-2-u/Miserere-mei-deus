@@ -64,10 +64,13 @@ import type { ResolvedEvent, ContinentName, MapName } from '../World';
 import { getCardById } from '../Cards/cards.library';
 import { getAvailableCards } from '../Cards/card.engine';
 import { isConsumable } from '../Items/types';
-import { buyItem, sellItem, defaultSellPrice } from '../Items/shop.reducer';
-import { getConsumableById } from '../Items/consumable.library';
+import {
+    FRESH_VILLAGE_VISIT, buyVillageCard, removeVillageCard, restAtVillage,
+    villageCardQuote, villageRemovalQuote, villageRestQuote, type VillageVisit,
+} from '../World/Village';
 import { runHazardCombatCliEncounter, type CombatAutoPolicyId } from './combat.cli';
 import type { CombatOutcome } from '../Combat/combat.encounter.types';
+import { buildCombatDeck } from '../Combat/combat.deck';
 
 type Tab = 'map' | 'journal' | 'cards' | 'codex' | 'inventory' | 'character' | 'dev' | 'reset' | 'save' | 'load' | 'quit';
 
@@ -220,8 +223,11 @@ async function resolveCurrentNodeEvent(
         }
     }
 
-    if (result.event.kind === 'village' && result.event.shop && result.event.shop.wares.length > 0) {
-        await shopLoop(store, result.event.shop);
+    // The counters wait on a person: a scripted or routed walk passes through.
+    const attended = flags.route === undefined && flags.routeAudit === undefined
+        && flags.scriptPath === undefined && !flags.stdin;
+    if (attended && result.event.kind === 'village' && (result.event.rest || result.event.cardShop)) {
+        await villageLoop(store, result.event);
     }
 
     if (result.event.kind === 'quest') playQuestNode(store, result.event);
@@ -452,10 +458,11 @@ function describeResolvedEvent(event: ResolvedEvent): string {
         case 'encounter':   return `Encounter! ${event.isBoss ? '(boss) ' : ''}${event.encounter.enemies.map(e => e.name).join(', ')}`;
         case 'rest':        return `You rest. (+${event.healed} HP)`;
         case 'village': {
-            const wareCount = event.shop?.wares.length ?? 0;
-            const shopSuffix = wareCount > 0 ? ` — ${wareCount} ware${wareCount === 1 ? '' : 's'} for sale` : '';
+            const restSuffix = event.rest ? ' — a bed for shillings' : '';
+            const cardCount = event.cardShop?.cardIds.length ?? 0;
+            const shopSuffix = event.cardShop ? ` — ${cardCount} card${cardCount === 1 ? '' : 's'} for sale` : '';
             const anvilSuffix = event.anvil ? ' — the Anvil is here' : '';
-            return `Village: ${event.villageName} (${event.merchants.length} merchant${event.merchants.length === 1 ? '' : 's'})${shopSuffix}${anvilSuffix}.`;
+            return `Village: ${event.villageName} (${event.merchants.length} merchant${event.merchants.length === 1 ? '' : 's'})${restSuffix}${shopSuffix}${anvilSuffix}.`;
         }
         case 'cutscene':    return event.lines.join(' ');
         case 'hazard':      return `Hazard! (-${event.damage} HP${event.effects.length > 0 ? `, ${event.effects.length} effect${event.effects.length === 1 ? '' : 's'}` : ''})`;
@@ -474,80 +481,71 @@ function describeResolvedEvent(event: ResolvedEvent): string {
     }
 }
 
-async function shopLoop(store: GameStoreHandle, shop: { wares: ReadonlyArray<{ itemId: string; price: number }> }): Promise<void> {
+/**
+ * The village's counters at the terminal: the paid rest, the card shop (buy
+ * one of its cards, or pay to remove one) and leave. The engine
+ * (`World/Village`) owns every price and refusal; this loop only words them.
+ */
+async function villageLoop(
+    store: GameStoreHandle,
+    event: Extract<ResolvedEvent, { kind: 'village' }>,
+): Promise<void> {
+    let visit: VillageVisit = FRESH_VILLAGE_VISIT;
     while (true) {
         const player = store.getState().player;
-        log(`\n— Shop — currency: ${player.currency}`);
-        const { action } = await prompt<{ action: 'buy' | 'sell' | 'leave' }>([{
-            type: 'rawlist', name: 'action', message: 'Shop:',
-            choices: [
-                { name: 'buy   — browse wares', value: 'buy' },
-                { name: 'sell  — list inventory', value: 'sell' },
-                { name: 'leave — close the shop', value: 'leave' },
-            ],
+        log(`\n— ${event.villageName} — currency: ${player.currency}, VITAE ${player.health}/${player.maxHealth}`);
+        const choices: { name: string; value: string }[] = [];
+        if (event.rest) {
+            const q = villageRestQuote(player, visit);
+            choices.push({ name: `rest   — +${q.heal} VITAE for ${q.price}${q.refusal ? ` (${q.refusal})` : ''}`, value: 'rest' });
+        }
+        if (event.cardShop) {
+            for (const cardId of event.cardShop.cardIds) {
+                const q = villageCardQuote(player, visit, event.cardShop, cardId);
+                const name = getCardById(cardId)?.name ?? cardId;
+                choices.push({ name: `buy    — ${name} for ${q.price}${q.refusal ? ` (${q.refusal})` : ''}`, value: `buy:${cardId}` });
+            }
+            const q = villageRemovalQuote(player);
+            choices.push({ name: `remove — a card for ${q.price}${q.refusal ? ` (${q.refusal})` : ''}`, value: 'remove' });
+        }
+        choices.push({ name: 'leave  — take the road', value: 'leave' });
+        const { action } = await prompt<{ action: string }>([{
+            type: 'rawlist', name: 'action', message: 'Village:', choices,
         }]);
         if (action === 'leave') return;
 
-        if (action === 'buy') {
-            const choices = shop.wares.map(w => {
-                const item = getConsumableById(w.itemId);
-                const price = w.price;
-                const label = item ? `${item.name} — ${price}` : `${w.itemId} — ${price} (unknown)`;
-                return { name: label, value: w.itemId };
-            });
-            choices.push({ name: 'back', value: '' });
-            const { wareId } = await prompt<{ wareId: string }>([{
-                type: 'rawlist', name: 'wareId', message: 'Buy what?', choices,
-            }]);
-            if (!wareId) continue;
-            const ware = shop.wares.find(w => w.itemId === wareId)!;
-            const item = getConsumableById(ware.itemId);
-            if (!item) { log(`Unknown item: ${ware.itemId}`); continue; }
-            const price = ware.price;
-            const before = store.getState();
-            const next = buyItem(before.player, item, price);
-            if (next === before.player) {
-                log(`You can't afford ${item.name} (need ${price}, have ${before.player.currency}).`);
-            } else {
-                store.setState({ player: next });
-                log(`Bought ${item.name} for ${price}.`);
-                logState('buyItem', before, store.getState(), { itemId: ware.itemId, price });
-            }
+        const before = store.getState();
+        if (action === 'rest') {
+            const r = restAtVillage(before, visit);
+            if (!r.ok) { log(`Refused: ${r.refusal}.`); continue; }
+            store.setState({ player: r.state.player, dying: r.state.dying });
+            visit = r.visit;
+            log(`Rested: +${r.healed} VITAE for ${r.spent}.`);
+            logState('villageRest', before, store.getState(), { healed: r.healed, spent: r.spent });
             continue;
         }
-
-        // sell
-        const inv = store.getState().player.inventory;
-        if (inv.length === 0) { log('Nothing to sell.'); continue; }
-        const choices = inv.map((i, idx) => {
-            // Engine-tier policy: defaultSellPrice
-            // halves and floors a ware's buy price. Always strictly less than the
-            // buy price for any positive integer, so buy → sell round-trips are
-            // net-negative for the player. For items not on the current shop's
-            // ware list, fall back to 1 (the pre-existing minimum) — that path
-            // is unaffected by the exploit since it doesn't loop with a buy.
-            const matching = shop.wares.find(w => w.itemId === i.id);
-            const sellPrice = matching ? defaultSellPrice(matching) : 1;
-            return { name: `${i.name} — sell for ${sellPrice}`, value: `${idx}:${sellPrice}` };
-        });
-        choices.push({ name: 'back', value: '' });
-        const { sellChoice } = await prompt<{ sellChoice: string }>([{
-            type: 'rawlist', name: 'sellChoice', message: 'Sell what?', choices,
-        }]);
-        if (!sellChoice) continue;
-        const [idxStr, priceStr] = sellChoice.split(':');
-        const idx = Number(idxStr);
-        const price = Number(priceStr);
-        const target = store.getState().player.inventory[idx];
-        if (!target) { log('Item slot vanished.'); continue; }
-        const before = store.getState();
-        const next = sellItem(before.player, target.id, price);
-        if (next === before.player) {
-            log(`Couldn't sell ${target.name}.`);
-        } else {
-            store.setState({ player: next });
-            log(`Sold ${target.name} for ${price}. Currency: ${next.currency}.`);
-            logState('sellItem', before, store.getState(), { itemId: target.id, price });
+        if (action.startsWith('buy:') && event.cardShop) {
+            const r = buyVillageCard(before, visit, event.cardShop, action.slice(4));
+            if (!r.ok) { log(`Refused: ${r.refusal}.`); continue; }
+            store.setState({ player: r.state.player });
+            visit = r.visit;
+            log(`Bought ${getCardById(r.cardId)?.name ?? r.cardId} for ${r.spent}.`);
+            logState('villageBuyCard', before, store.getState(), { cardId: r.cardId, spent: r.spent });
+            continue;
+        }
+        if (action === 'remove') {
+            const deck = buildCombatDeck(before.player, before.flags);
+            const { cardId } = await prompt<{ cardId: string }>([{
+                type: 'rawlist', name: 'cardId', message: 'Remove which card?',
+                choices: [...new Set(deck)].map(id => ({ name: getCardById(id)?.name ?? id, value: id }))
+                    .concat([{ name: 'back', value: '' }]),
+            }]);
+            if (!cardId) continue;
+            const r = removeVillageCard(before, visit, cardId);
+            if (!r.ok) { log(`Refused: ${r.refusal}`); continue; }
+            store.setState({ player: r.state.player, flags: r.state.flags });
+            log(`Removed ${getCardById(r.cardId)?.name ?? r.cardId} for ${r.spent}.`);
+            logState('villageRemoveCard', before, store.getState(), { cardId: r.cardId, spent: r.spent });
         }
     }
 }

@@ -1,9 +1,8 @@
 /**
- * Rest-choice engine ("rest" / "upgrade" / "cut") — hermetic unit suite.
+ * Rest-choice engine ("rest" / "upgrade") — hermetic unit suite.
  *
  * No RNG stub needed: every transition here is deterministic by
- * construction (the deck-removal primitive is deterministic itself — see
- * its own suite). Driven through the PUBLIC BARREL (`../../../index`), the
+ * construction. Driven through the PUBLIC BARREL (`../../../index`), the
  * same module path the mobile screen imports.
  */
 
@@ -13,12 +12,9 @@ import {
     createRestChoiceSession,
     chooseRestChoiceOffer,
     previewRestChoiceHeal,
-    pickRestChoiceCut,
     pickRestChoiceUpgrade,
     claimRestChoiceOutcome,
     RESTCHOICE_TUNING,
-    cardRemovalPrice,
-    removeCardFromCombatDeck,
     createCharacter,
     buildCombatDeck,
     replaceCard,
@@ -27,13 +23,12 @@ import {
     upgradeLimit,
 } from '../../../index';
 import type { RestChoiceSession, Character } from '../../../index';
-import { MIN_COMBAT_DECK_SIZE } from '../../../Cards/card.removal';
 
 const DECK = [
     'spoiled-poultice', 'chilblain-watch', 'petty-indictment', 'first-spadeful',
     'grandmothers-psalter', 'thumbprick-oath', 'thin-hymn', 'threadbare-cope',
     'unction-of-boils', 'the-sextons-bell',
-] as const; // exactly MIN_COMBAT_DECK_SIZE (10)
+] as const;
 
 function offerSession(overrides: Partial<Parameters<typeof createRestChoiceSession>[1]> = {}): RestChoiceSession {
     return createRestChoiceSession(1, {
@@ -41,34 +36,19 @@ function offerSession(overrides: Partial<Parameters<typeof createRestChoiceSessi
         maxHealth: 100,
         health: 50,
         currency: 100,
-        deckCardIds: [...DECK, 'the-vig'], // 11 — one above the floor by default
-        removals: 0,
+        deckCardIds: [...DECK, 'the-vig'],
         ...overrides,
     });
 }
 
 describe('rest-choice — offer phase + lifecycle', () => {
-    it('opens with three offers, `rest` always free and enabled', () => {
+    it('opens with two offers, `rest` always free and enabled; card removal is the village\'s', () => {
         const s = offerSession();
         expect(s.phase).toBe('offer');
-        expect(s.offers.map(o => o.id)).toEqual(['rest', 'upgrade', 'cut']);
+        expect(s.offers.map(o => o.id)).toEqual(['rest', 'upgrade']);
         const rest = s.offers.find(o => o.id === 'rest')!;
         expect(rest.cost).toBe(0);
         expect(rest.disabledReason).toBeUndefined();
-    });
-
-    it('disables `cut` at the deck floor even with a full purse', () => {
-        const s = offerSession({ deckCardIds: [...DECK], currency: 9999 }); // exactly MIN_COMBAT_DECK_SIZE
-        const cut = s.offers.find(o => o.id === 'cut')!;
-        expect(cut.disabledReason).toMatch(new RegExp(`floor of ${MIN_COMBAT_DECK_SIZE}`));
-        expect(chooseRestChoiceOffer(s, 'cut')).toBe(s);
-    });
-
-    it('disables `cut` when the escalating price outruns the purse', () => {
-        const s = offerSession({ removals: 5, currency: 1 }); // price = 5 + 5*5 = 30
-        const cut = s.offers.find(o => o.id === 'cut')!;
-        expect(cut.cost).toBe(cardRemovalPrice(5));
-        expect(cut.disabledReason).toMatch(/cover/i);
     });
 
     it('a broke player still has `rest` — never dead-ended', () => {
@@ -80,7 +60,7 @@ describe('rest-choice — offer phase + lifecycle', () => {
     it('committing one offer locks the other; re-committing is a no-op', () => {
         const committed = chooseRestChoiceOffer(offerSession(), 'rest');
         expect(committed.phase).toBe('outcome');
-        expect(chooseRestChoiceOffer(committed, 'cut')).toBe(committed);
+        expect(chooseRestChoiceOffer(committed, 'upgrade')).toBe(committed);
         expect(chooseRestChoiceOffer(committed, 'rest')).toBe(committed);
     });
 
@@ -111,62 +91,10 @@ describe('rest-choice — `rest` offer', () => {
         expect(o.healed).toBe(5);
     });
 
-    it('spends nothing and leaves removals untouched', () => {
-        const s = offerSession({ removals: 2 });
-        const o = chooseRestChoiceOffer(s, 'rest').outcome!;
-        expect(o.spent).toBe(0);
-        expect(o.removedCardId).toBeNull();
-        expect(o.removals).toBe(2);
-    });
-});
-
-describe('rest-choice — `cut` offer (names a card; the host removes it)', () => {
-    it('opens the picker, prices the escalating cost, and locks on a valid pick', () => {
-        const s = chooseRestChoiceOffer(offerSession({ removals: 1 }), 'cut');
-        expect(s.phase).toBe('cut-pick');
-        const picked = pickRestChoiceCut(s, 'thin-hymn');
-        expect(picked.phase).toBe('outcome');
-        const o = picked.outcome!;
-        expect(o.chosen).toBe('cut');
-        expect(o.removedCardId).toBe('thin-hymn');
-        expect(o.spent).toBe(cardRemovalPrice(1));
-        expect(o.removals).toBe(2); // incremented for the host to write back
-        expect(o.healed).toBe(0);
-    });
-
-    it('a card not on offer is an invalid call — silent no-op', () => {
-        const s = chooseRestChoiceOffer(offerSession(), 'cut');
-        expect(pickRestChoiceCut(s, 'no-such-card')).toBe(s);
-    });
-
-    it('picking while not in cut-pick is an invalid call — silent no-op', () => {
-        const s = offerSession();
-        expect(pickRestChoiceCut(s, 'thin-hymn')).toBe(s);
-    });
-
-    it('the named card actually shrinks buildCombatDeck\'s output once the host removes it', () => {
-        // A real fixture Character whose deck is exactly what this session was
-        // authored from — proving `removedCardId` is a valid, composable input
-        // to the deck-removal primitive, which is the host's job at claim.
-        const known = DECK.slice(0, 6);
-        const rewards = DECK.slice(6);
-        const player: Character = {
-            ...createCharacter({ name: 'Rest Fixture', level: 1, baseStats: { heart: 5, body: 5, mind: 5 } }),
-            knownCards: [...known],
-            combatRewardCards: [...rewards, 'the-vig'],
-        };
-        const deckCardIds = buildCombatDeck(player);
-        expect(deckCardIds).toHaveLength(DECK.length + 1);
-
-        const s = chooseRestChoiceOffer(offerSession({ deckCardIds }), 'cut');
-        const picked = pickRestChoiceCut(s, 'the-vig');
-        const outcome = picked.outcome!;
-
-        const removal = removeCardFromCombatDeck(player, outcome.removedCardId!);
-        expect(removal.ok).toBe(true);
-        if (!removal.ok) return;
-        expect(buildCombatDeck(removal.player)).toHaveLength(deckCardIds.length - 1);
-        expect(removal.player.cardRemovals).toBe(outcome.removals);
+    it('seals the heal alone: no card named', () => {
+        const o = chooseRestChoiceOffer(offerSession(), 'rest').outcome!;
+        expect(o.upgradedCardId).toBeNull();
+        expect(o.upgradedToCardId).toBeNull();
     });
 });
 
@@ -239,15 +167,12 @@ describe('rest-choice — `upgrade` offer (Phase UP1d: names a card; the host up
     });
 
     it('opens the picker and seals the card and the id it becomes, healing nothing', () => {
-        const s = chooseRestChoiceOffer(upgradeSession({ removals: 2, health: 40 }), 'upgrade');
+        const s = chooseRestChoiceOffer(upgradeSession({ health: 40 }), 'upgrade');
         expect(s.phase).toBe('upgrade-pick');
         const o = pickRestChoiceUpgrade(s, 'grey-strike').outcome!;
         expect(o).toEqual({
             chosen: 'upgrade',
             healed: 0,
-            spent: 0,
-            removedCardId: null,
-            removals: 2,
             upgradedCardId: 'grey-strike',
             upgradedToCardId: 'grey-strike+',
         });
@@ -266,10 +191,9 @@ describe('rest-choice — `upgrade` offer (Phase UP1d: names a card; the host up
         expect(pickRestChoiceUpgrade(offer, 'grey-strike')).toBe(offer);
     });
 
-    it('committing the upgrade locks rest and cut', () => {
+    it('committing the upgrade locks rest', () => {
         const picked = pickRestChoiceUpgrade(chooseRestChoiceOffer(upgradeSession(), 'upgrade'), 'grey-ward');
         expect(chooseRestChoiceOffer(picked, 'rest')).toBe(picked);
-        expect(pickRestChoiceCut(picked, 'grey-ward')).toBe(picked);
         expect(claimRestChoiceOutcome(picked).phase).toBe('done');
     });
 

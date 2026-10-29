@@ -146,14 +146,6 @@ describe('roster health — each dangling lens fires', () => {
         expect(danglingItems(sources({ pools })).map(f => [f.subject, f.id])).toEqual([['relic', 'relic-gone']]);
     });
 
-    it('shop-ware: a shop stocks an unknown item', () => {
-        const pools: MapEventPool[] = [{
-            id: 'x-3.village',
-            entries: [{ kind: 'village', weight: 1, payload: { kind: 'village', villageName: 'V', shop: { wares: [{ itemId: 'nothing', price: 1 }] } } }],
-        }];
-        expect(danglingItems(sources({ pools })).map(f => [f.lens, f.id])).toEqual([['shop-ware', 'nothing']]);
-    });
-
     it('relic-signature: a relic grants an unregistered signature', () => {
         expect(danglingRelicSignatures(sources({ signatureIds: new Set() })).map(f => [f.id, f.where]))
             .toEqual([['sig-disarming-plea', 'relic-test']]);

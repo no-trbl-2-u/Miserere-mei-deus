@@ -264,9 +264,10 @@ keyword (`EnemyKeyword = never`).
   Deep. Each region ends at a Death Beholder's door. The Lantern Deep's deep stair
   (`ld-18`) and the Labyrinth vault door (`ld-15`) are sealed cutscenes.
   The Labyrinth and the other continents' maps are parked and unreachable.
-- **Nodes** in play: encounter, hazard, rest, blacksmith (the Anvil),
-  loot-cache, gathering, cutscene, travel, and quest (the Breakwater only).
-  Act 1 has no NPCs or shops; that plumbing is kept and tested with fixtures.
+- **Nodes** in play: encounter, hazard, rest, village (one per region, with
+  the Anvil), loot-cache, cutscene, travel, quest (the Breakwater only) and
+  the empty waypoint. Act 1 has no NPCs; that plumbing is kept and tested
+  with fixtures.
 - **The Breakwater questline** (`World/quest.library.ts`, phase QL1d): four
   quest nodes, bw-19..bw-22. Node 1 (off the windmill) offers step 1; nodes
   2-4 turn in the step before and offer the next. Placeholder steps and
@@ -308,8 +309,8 @@ keyword (`EnemyKeyword = never`).
   set. The node they died on is open again, so it can be walked into and
   retried. A death while dying ends the run as a reset does: a fresh run and
   world, full VITAE, the character kept. `clearDying` takes
-  dying off: the rest's heal choice calls it, and the upgrade and cut
-  choices do not. A player with no previous node comes back on the
+  dying off: the rest's heal choice and the village's paid rest clear it,
+  and the upgrade choice does not. A player with no previous node comes back on the
   map's starting node. The store verb is `playerDied`. In the app a lost
   fight on the map calls it: a first death shows a full-screen return moment
   (`/death-return`) and then the map on the node walked from; a death while
@@ -322,9 +323,16 @@ keyword (`EnemyKeyword = never`).
 - **Rest** offers one choice (`World/RestChoice/`): heal
   `restHealFraction` = 25% of maximum VITAE, upgrade one card the player
   picks (free, no heal; the shared upgrade screen shows it before and after,
-  beside a locked "???" slot), or cut a card for 5, 10, 15 … shillings
-  (`CARD_REMOVAL_PRICING`).
-- **The Anvil** (one per region, near its exit; `ANVIL_VERB_PRICING`,
+  beside a locked "???" slot). Card removal is the village's.
+- **The village** (one per region, near its exit; `World/Village/`,
+  `VILLAGE_TUNING`) is a hub of three counters. A paid rest heals 25% of
+  maximum VITAE for 6 shillings, once per visit. The card shop offers three
+  cards from the player's reward pool at 6 shillings each, seeded by the run
+  and the node so a village offers the same three all run (each sells once a
+  visit), and removes a card for 5, 10, 15 … shillings
+  (`CARD_REMOVAL_PRICING`). It sells no items and buys nothing back. Every
+  refusal (a short purse, rested this visit, the deck floor) is shown.
+- **The Anvil** (the village's third counter; `ANVIL_VERB_PRICING`,
   `World/Blacksmith/blacksmith.engine.ts`): HONE turns a miss face to mana
   (3 shillings), TEMPER a mana face to special (5), SWAP changes a die's
   gear (8). This is the only way dice grow. It also upgrades one card a
@@ -403,8 +411,8 @@ without a ruling from T.
 
 - No stances, no hidden read, no rock-paper-scissors check.
 - No preset decks and no deck draft. Every run starts with the grey deck.
-- No card pricing or power budget. The only prices are the cut and the
-  Anvil. The trial cards keep their printed numbers, untuned.
+- No card pricing or power budget. The only prices are the village's
+  counters and the Anvil. The trial cards keep their printed numbers, untuned.
 - No themes or synergy. The only reward steering is the elite reward's one
   card from the deck's lanes (UP1f).
 - No enemy keywords, afflictions, summons or riders.
