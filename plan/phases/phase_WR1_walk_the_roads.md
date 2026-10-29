@@ -86,7 +86,10 @@ elite.
   states D113.
 - **A3** Held roads and blocked routes still gate: on the Breakwater no road
   out of a quest marker opens before its step is accepted, and the bridge
-  (bw-18) is not a legal move until the watchtower fight (bw-17) is won.
+  (bw-18) is not a legal move until the watchtower fight (bw-17) is won. The
+  test pins the rule on the map that is live when WR1 ships; BW1b (T's rebuilt
+  Chapter 1, D114) moves it to that map's gates (the wreck hazard, the three
+  road-holding elites, the keep and the bridge).
 - **A4** A reachability audit replaces the frontier and strand assumptions:
   for every gauntlet map, walking unblocked roads from the start with each lock
   opened in questline order reaches every node; `act1-walk.ts` walks roads;
@@ -194,8 +197,9 @@ A1-A10 ticked.
 
 ## Follow-ups (out of scope)
 
-- The Breakwater redraw (~45 nodes, curved roads; not yet plotted) is drawn for
-  road-walking.
+- The Breakwater rebuild (44 nodes, plotted as BW1, D114) is drawn for
+  road-walking: backtracking is one of T's map rules for it
+  (`plan/revamp/breakwater-vision.md`).
 - Whether long walks back want a fast-travel affordance: let play decide.
 - The event-kind sittings (deadlines) give the walk-back look its treatment.
 
