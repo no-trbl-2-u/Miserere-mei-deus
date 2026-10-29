@@ -6,10 +6,13 @@
  *      node. Resolving IS the answer, whatever the roll produces, so this
  *      happens before any handler runs.
  *   1. Look up the active node on the current map.
- *   2. If the node is already in `consumedNodes`, return
- *      `{ kind: 'none' }` immediately (one-shot enforcement). The one way
- *      back is a claimed rest, which un-consumes the act's settled elite
- *      nodes (`respawnElites`, `World/elite-respawn.ts`).
+ *   2. If the node is spent, return `{ kind: 'none' }` immediately
+ *      (one-shot enforcement): consumed, or on a gauntlet completed with no
+ *      arrival owed (a walk back, phase WR1b). The exceptions act on every
+ *      entry (`actsOnRevisit`): a village, a door, a quest node with
+ *      business. The one way back for the rest is a claimed rest, which
+ *      un-consumes the act's settled elite nodes (`respawnElites`,
+ *      `World/elite-respawn.ts`).
  *   3. Roll one entry from the node's event pool. Pool resolution
  *      prefers the node override (`setNodeEventPoolOverride`) over the
  *      map default (`setDefaultMapEventPool`). Missing pool → `{ kind: 'none' }`.
@@ -35,16 +38,18 @@
 
 import type { GameState } from '../../Game/types';
 import {
-    revealAdjacent, markNodeConsumed, unlockAdjacent, isHoldingRoads, syncMoveLists,
+    revealAdjacent, markNodeConsumed, unlockAdjacent, isHoldingRoads, syncMoveLists, isNodeSpent,
 } from '../world.reducer';
+import { getMapDefinition } from '../map.registry';
 import { getRng } from '../../Utils/rng';
 import { applyPayload } from './handlers';
 import { resolveDeath } from '../../Game/death';
 import { reachableObjectives, progressQuest, advanceHazardObjectives } from '../quest.engine';
-import { settleQuestLog } from '../questline';
+import { settleQuestLog, questNodeStage, getQuestline, questlineStep, questStepState } from '../questline';
 import type { QuestLog, NodeId } from '../types';
 import type {
     MapEventPayload, MapEventPool, MapEventPoolEntry, MapEventKind, ResolveMapEventResult, ResolvedEvent,
+    QuestPayload,
 } from './types';
 
 /**
@@ -211,6 +216,87 @@ export function getNodePrimaryEventKind(
     return best.kind;
 }
 
+// ─── Revisits (phase WR1b) ────────────────────────────────────────────────────
+
+/** True on a labyrinth map; false on a gauntlet or a map the registry does not hold. */
+function onLabyrinth(map: GameState['world']['currentMap']): boolean {
+    try {
+        return getMapDefinition(map.continent, map.name).traversal === 'labyrinth';
+    } catch {
+        return false;
+    }
+}
+
+/**
+ * The kinds whose event acts on every entry, spent or not: the village opens
+ * again, a door offers its trip again. A quest node is the fourth, but only
+ * while it has business (`questNodeHasBusiness`).
+ */
+const ACTS_ON_EVERY_ENTRY: ReadonlySet<MapEventKind> = new Set<MapEventKind>(['village', 'travel', 'labyrinth']);
+
+/**
+ * True when quest node `payload` has something to do right now: a step to
+ * turn in, or a step to offer that is not yet accepted. A marker whose step
+ * is accepted and not met has nothing (its turn-in is at the next marker).
+ */
+function questNodeHasBusiness(quests: QuestLog, payload: QuestPayload): boolean {
+    const stage = questNodeStage(quests, payload.questline, payload.node);
+    if (stage === 'turn-in') return true;
+    if (stage !== 'offer') return false;
+    const questline = getQuestline(payload.questline);
+    const ahead = questline ? questlineStep(questline, payload.node) : undefined;
+    return ahead !== undefined && questStepState(quests, ahead) === 'unaccepted';
+}
+
+/**
+ * True when walking onto `nodeId` of the current map fires its event even
+ * though the node is spent (phase WR1b): a village, a travel or labyrinth
+ * door, or a quest node with business (a turn-in or an offer). Every other
+ * kind is used once: a spent fight, hazard, rest, cache or cutscene fires
+ * nothing again. Reads the authored pool, never RNG.
+ */
+export function actsOnRevisit(state: Pick<GameState, 'world' | 'quests'>, nodeId: NodeId): boolean {
+    const map = state.world.currentMap;
+    const pool = lookupPool(map.continent, map.name, nodeId);
+    const kind = getNodePrimaryEventKind(map.continent, map.name, nodeId);
+    if (!pool || !kind) return false;
+    if (ACTS_ON_EVERY_ENTRY.has(kind)) return true;
+    if (kind !== 'quest') return false;
+    const entry = pool.entries.find(e => e.payload.kind === 'quest');
+    return entry !== undefined && entry.payload.kind === 'quest' && questNodeHasBusiness(state.quests, entry.payload);
+}
+
+/**
+ * True when stepping onto `nodeId` of the current gauntlet map is a QUIET
+ * WALK BACK (phase WR1b): the node is spent and does not act on a revisit,
+ * so the move fires nothing, owes nothing and opens no screen. False on a
+ * labyrinth, whose rooms keep their own rule.
+ */
+export function isQuietWalkBack(state: Pick<GameState, 'world' | 'quests'>, nodeId: NodeId): boolean {
+    const map = state.world.currentMap;
+    if (onLabyrinth(map)) return false;
+    return isNodeSpent(map, nodeId) && !actsOnRevisit(state, nodeId);
+}
+
+/**
+ * The spent check (step 1 of `resolveMapEvent`), read on the state BEFORE the
+ * arrival is answered. A consumed node resolves nothing, as ever. On a
+ * gauntlet a node that acts on every entry resolves again, and a node that is
+ * completed but not consumed is spent too unless its arrival is owed: a host
+ * that completes a node on the move (mobile does) and then resolves it is
+ * answering a first arrival, which owes; a walk back onto it owes nothing
+ * (`arriveAtNode`).
+ */
+function resolvesNothing(state: GameState, nodeId: NodeId): boolean {
+    const map = state.world.currentMap;
+    const consumed = map.consumedNodes.includes(nodeId);
+    if (onLabyrinth(map)) return consumed;
+    if ((consumed || map.completedNodes.includes(nodeId)) && actsOnRevisit(state, nodeId)) return false;
+    if (consumed) return true;
+    const owed = (map.pendingArrival ?? null) === nodeId;
+    return map.completedNodes.includes(nodeId) && !owed;
+}
+
 function rollPool(
     pool: MapEventPool,
     rng: () => number,
@@ -299,8 +385,10 @@ export function resolveMapEvent(
     //    left.
     const answered = answerArrival(state, nodeId);
 
-    // 1. Already consumed? Idempotent no-op.
-    if (answered.world.currentMap.consumedNodes.includes(nodeId)) {
+    // 1. Spent? Idempotent no-op: a consumed node, and on a gauntlet a
+    //    completed one the player walked back onto (it owed nothing), resolve
+    //    nothing; the kinds that act on every entry resolve again.
+    if (resolvesNothing(state, nodeId)) {
         const none: ResolvedEvent = { kind: 'none' };
         return { state: answered, event: none };
     }

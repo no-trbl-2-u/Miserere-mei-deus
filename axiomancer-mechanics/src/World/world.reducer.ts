@@ -237,12 +237,21 @@ export function moveToNode(state: WorldState, nodeId: NodeId): WorldState {
  * engine's `moveToNode` and mobile's own move both arrive through here.
  * Arriving at the node already under the player keeps the `arrivedFrom` it
  * had: nothing was walked.
+ *
+ * A WALK BACK OWES NOTHING (phase WR1b). On a gauntlet, arriving at a node
+ * that is already spent records no debt: its one-shot event is answered, so
+ * a reload re-offers nothing there. The kinds that act on every entry (a
+ * village, a door, a quest node with business) are resolved by the host's
+ * own confirm, never by a re-offered arrival (`actsOnRevisit`,
+ * `resolve-map-event.ts`). A labyrinth room keeps its debt as before.
  */
 export function arriveAtNode(map: MapState, nodeId: NodeId): MapState {
     const arrivedFrom = map.currentNode === nodeId ? (map.arrivedFrom ?? null) : map.currentNode;
+    const def = getMapDefinition(map.continent, map.name);
+    const owed = def.traversal === 'labyrinth' || !isNodeSpent(map, nodeId);
     // The move lists are read from where the player stands, so a move
     // rewrites them (a no-op on a labyrinth).
-    return syncMoveLists({ ...map, currentNode: nodeId, pendingArrival: nodeId, arrivedFrom });
+    return syncMoveLists({ ...map, currentNode: nodeId, pendingArrival: owed ? nodeId : null, arrivedFrom });
 }
 
 /**
@@ -572,8 +581,9 @@ function roadWalk(map: MapState): Map<NodeId, NodeId> | null {
 
 /**
  * Walks the player along `roadRouteTo(target)`, one `moveToNode` per road.
- * Only the arrival at `target` is left owed: the nodes walked across on the
- * way are spent (or the start), so nothing there is answered. Throws
+ * Only the arrival at `target` can be left owed: the nodes walked across on
+ * the way are spent (or the start), so arriving there owes nothing
+ * (`arriveAtNode`); a spent `target` is owed nothing either. Throws
  * `IllegalMoveError` when no such walk exists.
  */
 export function walkRoadTo(state: WorldState, target: NodeId): WorldState {

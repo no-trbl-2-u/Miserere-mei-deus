@@ -10,7 +10,7 @@
  */
 
 import type { GameStore, MapEventKind } from '@mechanics';
-import { getMapDefinition, getNodePrimaryEventKind, getNodeEventPool, legalMovesFrom, forwardEdges, ANVIL_VERB_PRICING } from '@mechanics';
+import { getMapDefinition, getNodePrimaryEventKind, getNodeEventPool, legalMovesFrom, forwardEdges, actsOnRevisit, ANVIL_VERB_PRICING } from '@mechanics';
 
 import { readCurrentNodeId } from '../actions';
 import { getMapLayout } from '@/state/exploration-maps';
@@ -52,6 +52,14 @@ export interface ExplorationNode {
      * false.
      */
     walkable?: boolean;
+    /**
+     * True for a `completed`, `walkable` node whose event acts on every entry
+     * (a village, a door, a quest node with business: the engine's
+     * `actsOnRevisit`): its tap opens the confirm panel like a new node's.
+     * False for a QUIET WALK BACK, which moves at once and fires nothing.
+     * Absent reads as false.
+     */
+    actsAgain?: boolean;
     /**
      * For a locked node shut behind a BLOCKED ROAD from where the player has
      * been (a questline's lock on its next quest node), the road's one-line
@@ -575,9 +583,11 @@ const FALLBACK_VM: ExplorationViewModel = {
 // The other presenters dodge this by returning frozen singletons; this one
 // builds a fresh frozen VM, so we cache it against the immutable `world`
 // reference (Zustand replaces it only when the world actually changes).
-// The purse on the node options is the one read outside `world`, so the
-// shilling count is part of the key.
+// The purse on the node options and the quest log (whether a walked quest
+// node has business again, `actsOnRevisit`) are the reads outside `world`, so
+// the shilling count and the log's reference are part of the key.
 let _expWorldRef: unknown;
+let _expQuestsRef: unknown;
 let _expCurrency: number | undefined;
 let _expVm: ExplorationViewModel | null = null;
 
@@ -587,9 +597,10 @@ function readCurrency(state: GameStore): number {
 
 export function selectExplorationViewModel(state: GameStore): ExplorationViewModel {
     const currency = readCurrency(state);
-    if (state.world === _expWorldRef && currency === _expCurrency && _expVm !== null) return _expVm;
+    if (state.world === _expWorldRef && state.quests === _expQuestsRef && currency === _expCurrency && _expVm !== null) return _expVm;
     const vm = computeExplorationViewModel(state);
     _expWorldRef = state.world;
+    _expQuestsRef = state.quests;
     _expCurrency = currency;
     _expVm = vm;
     return vm;
@@ -651,9 +662,16 @@ function computeExplorationViewModel(state: GameStore): ExplorationViewModel {
     // lookups per render, so the union is materialised once here against the
     // same two lists `isNodeSpent` reads and never against a third rule.
     const spent: ReadonlySet<string> = new Set<string>([...completed, ...consumedNodes]);
-    // The NEW nodes among the legal moves: what the confirm panel offers.
-    // A walked one is a walk back, tapped straight through (`walkable`).
-    const reachable: readonly string[] = legal.filter((id) => !spent.has(id));
+    // A walked legal move whose event acts on every entry (a village, a door,
+    // a quest node with business; the engine's `actsOnRevisit`) is offered
+    // again on the confirm panel. Any other walked one is a quiet walk back,
+    // tapped straight through (`walkable`).
+    const actsAgain: ReadonlySet<string> = new Set(
+        legal.filter((id) => spent.has(id) && actsOnRevisit(state, id)),
+    );
+    // What the confirm panel offers: the NEW nodes among the legal moves, and
+    // the walked ones that act again.
+    const reachable: readonly string[] = legal.filter((id) => !spent.has(id) || actsAgain.has(id));
     // The engine's forward skeleton — what separates a progression road from
     // a lateral rib on the canvas. Definition-only, so it is stable for
     // the life of the map.
@@ -708,6 +726,7 @@ function computeExplorationViewModel(state: GameStore): ExplorationViewModel {
             triggersCombat: nodeKind === 'available' && ENCOUNTER_NODE_TYPES.has(meta.type),
             blockedReason: reason,
             walkable: legal.includes(eng.id),
+            actsAgain: actsAgain.has(eng.id),
             blockedBy: heldBy,
         };
     });
