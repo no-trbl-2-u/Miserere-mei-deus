@@ -277,6 +277,16 @@ keyword (`EnemyKeyword = never`).
   pocket behind its step's quest node, with one spare; the roads into nodes
   2-4 are locked until the step before is met; the quest nodes and the
   watchtower open their roads only once spent, so the bridge needs the boss.
+- **Several quests at once** (`World/questline.ts`, phase MQ1a): any number
+  of questlines run side by side, each reading only its own steps off the
+  one quest log; a side quest is a one-step questline turned in at its own
+  `turnInAt` node, which is then spent. One kill or hazard counts for every
+  active objective that wants it. A step's **quest gates** (`gatesPast`) are
+  roads past the node where it settles, seeded shut with the quest named and
+  opened only when the step is completed (turned in, or paid on the fight),
+  through the one settle seam. `questGateProblems` (`World/quest-gates.ts`)
+  fails a map where roaming can walk around a gate. Built and proved on a
+  test fixture only; the Breakwater declares no gates yet.
 - **Currency:** shillings.
 - **Death** (`Game/death.ts`, `resolveDeath`): the first time VITAE reaches 0
   in a fight or on a node hazard, the player is put back on the node they

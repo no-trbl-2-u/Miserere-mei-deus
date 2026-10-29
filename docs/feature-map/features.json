@@ -1810,6 +1810,12 @@
       "kind": "coupling",
       "from": "area:Game",
       "to": "area:World",
+      "file": "axiomancer-mechanics/src/Game/fixtures/quest-chain.fixture.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:World",
       "file": "axiomancer-mechanics/src/Game/fixtures/quest-nodes.ts"
     },
     {

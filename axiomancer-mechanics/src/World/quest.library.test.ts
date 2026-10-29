@@ -15,6 +15,7 @@ import { describe, it, expect } from 'vitest';
 import { AUTHORED_QUESTLINES, BREAKWATER_QUESTLINE } from './quest.library';
 import { listQuestlines, type Questline, type QuestlineStep } from './questline';
 import { objectiveClass, questlineSupplyProblems, stepSupply, supplyClassesOf, type SupplyClass } from './questline-supply';
+import { questGateProblems } from './quest-gates';
 import { getMapDefinition } from './map.registry';
 import { getNodeEventPool } from './MapEvents/resolve-map-event';
 import { MAP_REGISTRY } from './map.registry';
@@ -91,6 +92,12 @@ describe.each(AUTHORED_QUESTLINES.map(l => [l.id, l] as const))('A13: %s', (_id,
 describe.each(AUTHORED_QUESTLINES.map(l => [l.id, l] as const))('A14: %s supply, strict downstream', (_id, line) => {
     it('holds every step\'s goal plus the spare in the pocket behind its own marker', () => {
         expect(questlineSupplyProblems(defOf(line), line)).toEqual([]);
+    });
+});
+
+describe.each(listQuestlines().map(l => [l.id, l] as const))('MQ1 A3: %s gates hold', (_id, line) => {
+    it('no node past a gate on its map is reachable around it (a map with no gates passes)', () => {
+        expect(questGateProblems(defOf(line), listQuestlines())).toEqual([]);
     });
 });
 
