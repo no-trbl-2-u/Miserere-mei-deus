@@ -72,7 +72,7 @@ left; otherwise after.
 - Rows: HP4f (the authoring patterns from the kept set) and HP4g (the band clocks from the kept set's times), as
   before. **Moved to W3:** HP2d-HP2f (calibration), which the MVP does not need; they are still amended once HP4e's
   rulings exist (`plan/phases/phase_HP4_graded_puzzle_set.md` Follow-ups).
-- To plot in W2: routing the live hazard nodes to the puzzle board, each of the seven Act 1 hazard nodes drawing a
+- To plot in W2: routing the live hazard nodes to the puzzle board, each of the eleven Act 1 hazard nodes (six on the Breakwater, D114) drawing a
   random puzzle from the thirty for now (T, 2026-10-24), and the cuts (RE-CAST cards, the saved hazard deck,
   `deadcard`; B3 Follow-ups). The hand-picked set, "the swap", moves to W3.
 - The MVP's loop work, which the reminder never names: Chapter 1's enemies and their art, from the B2 plot on Nov 2;
@@ -130,10 +130,10 @@ reads this table for the day's piece, the high-level task it serves, how AI can 
 | Mon Oct 26 | 0.5 | Merge the lane-relic plot (#922), then this plan's PR | Lock the MVP plan | Done (#922 merged) |
 | Tue Oct 27 | 1 | Pick the item icons (IT1b), the six lane relics included | Real item icons | Claude renders the 2026-10-19 candidate sheet at 28 px beside each item and finds candidates for the six new relics; you pick (art is yours, D88) |
 | Wed Oct 28 | 0.5 | Design the Breakwater map before enemy session 1: the total node count and how many of each kind, drop the two gathering nodes, and check on the coast art (`act1-coast.webp`) whether more keep nodes fit | Chapter 1's real enemies; event-node UX | Claude brings the current count from `plan/revamp/breakwater-map.md` (22 nodes since QL1d) and the coast art beside it; you decide the kinds and counts |
-| Wed Oct 28 | 1 | Enemy session 1: Chapter 1's normal roster (the Breakwater's four fight nodes; B2) | Chapter 1's real enemies | Claude drafts stat blocks and decks against measured truth and the S3 curve; you decide each foe |
+| Wed Oct 28 | 1 | Enemy session 1: Chapter 1's normal roster (the Breakwater's 15 fight nodes on T's new map, D114; B2) | Chapter 1's real enemies | Claude drafts stat blocks and decks against measured truth and the S3 curve; you decide each foe |
 | Thu Oct 29 | 1 | Author the first character (CH1e): portrait, starting relic and its lane, two starting lanes, three lane cards, the playstyle line | First character playable | Claude lays out the Defender's and the other lanes' cards and relics against the stats you set; you decide (D88) |
 | Fri Oct 30 | 1 | Play the ten hard candidates (HP4e, part 1) | Hazard puzzles locked | None while you play (no labels shown); afterwards Claude writes the rows from the move log |
-| Sat Oct 31 | 1 | Enemy session 2: Chapter 1's elite and the watchtower boss (B2) | Chapter 1's real enemies | Claude drafts decks and telegraphs and checks every keyword has a live counter (D45); you decide each foe |
+| Sat Oct 31 | 1 | Enemy session 2: Chapter 1's three elites and the sea keep's boss (B2) | Chapter 1's real enemies | Claude drafts decks and telegraphs and checks every keyword has a live counter (D45); you decide each foe |
 | Sun Nov 1 | 2 | Play the twenty cost-card candidates; rule keep or cut (HP4e, part 2) | Hazard puzzles locked | Claude records your rulings in your words |
 | Mon Nov 2 | 1 | `/plot` Chapter 1's enemies and their art brief (B2) | Chapter 1's real enemies | `/plot` writes the rows and briefs; you confirm the slot |
 | Tue Nov 3 | 1 | `/plot` live hazard routing and the cuts | Every hazard a puzzle | `/plot` |
@@ -144,10 +144,10 @@ reads this table for the day's piece, the high-level task it serves, how AI can 
 | Sat Nov 7 | 0.5 | `/plot` the arena-background swap from your picks | Title screen and combat backgrounds | `/plot` |
 | Sun Nov 8 | 2 | Chapter 1's enemy art: pick from the loop's candidates | Chapter 1's real enemies | Claude lays the candidates out beside each foe's stat block; you pick (art is yours, D88) |
 | Mon Nov 9 | 1 | Mid-MVP check: Chapter 1 on the preview build | The MVP run | Claude turns your notes into `/plot` or `/messy` rows |
-| Tue Nov 10 | 1.5 | Answer Chapter 1's `[content]` rows (node copy, map fixes) and write the Breakwater's quest line (QL1e) | Event-node UX; the lane relics | Claude drafts copy options per row and giver lines in the game's voice; you pick and rewrite |
+| Tue Nov 10 | 1.5 | Answer Chapter 1's `[content]` rows (node copy, map fixes) and write Chapter 1's quest chain lines (BW1d) | Event-node UX; the lane relics | Claude drafts copy options per row and giver lines in the game's voice; you pick and rewrite |
 | Wed Nov 11 | 1 | Review the held loop-doctrine candidates (R11 watch ends) | Loop health | Claude summarises each candidate's evidence since Oct 12 |
 | Thu Nov 12 | 0.5 | Play the Defender test deck on the preview build; check the reward pool (DF1f) | The Defender lane | Claude sets up the `/dev` deck steps; you play and rule |
-| Fri Nov 13 | 0.5 | Play your quest line on the preview build; rule on its lines | The Breakwater's questline | Claude turns your notes into fixes for QL1f |
+| Fri Nov 13 | 0.5 | Play your quest line on the preview build; rule on its lines | The Breakwater's questline | Claude turns your notes into fixes for BW1e |
 | Sat Nov 14 | 1 | File what is still broken (`/plot` or `/messy`); decide what Sunday's run must show | The MVP run | Claude lists what the mid-MVP check filed and what has shipped since; you cut or keep |
 | Sun Nov 15 | 1.5 | The MVP run: a full Breakwater run on the phone | The MVP | Afterwards Claude reads the play log and lists what broke; `/messy` the dump |
 
@@ -191,30 +191,30 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 |---|---|---|---|---|---|
 | [x] | 2026-10-26 | Merge the lane-relic plot (#922), then the MVP plan PR (0.5 h) | W1 | T | - |
 | [ ] | 2026-10-27 | Pick the item icons, the six lane relics included; the loop applies them (1 h) | W1 | IT1b | - |
-| [ ] | 2026-10-28 | Design the Breakwater map before enemy session 1: total node count and count per kind, drop the gathering nodes, check the coast art for room for more keep nodes (0.5 h) | W1 | T | - |
-| [ ] | 2026-10-28 | Enemy session 1: Chapter 1's normal roster, the Breakwater's four fight nodes (1 h) | W1 | T | - |
+| [x] | 2026-10-28 | Design the Breakwater map before enemy session 1: total node count and count per kind, drop the gathering nodes, check the coast art for room for more keep nodes (0.5 h) | W1 | T | - |
+| [ ] | 2026-10-28 | Enemy session 1: Chapter 1's normal roster, the Breakwater's 15 fight nodes (1 h) | W1 | T | - |
 | [ ] | 2026-10-29 | Author the first character: portrait, starting relic and its lane, two starting lanes, three lane cards, the playstyle line (1 h) | W1 | CH1e | - |
 | [ ] | 2026-10-30 | W1 demo part 1: T plays the ten hard candidates (1 h) | W1 | T | - |
-| [ ] | 2026-10-31 | Enemy session 2: Chapter 1's elite and the watchtower boss (1 h) | W1 | T | - |
+| [ ] | 2026-10-31 | Enemy session 2: Chapter 1's three elites and the sea keep's boss (1 h) | W1 | T | - |
 | [ ] | 2026-11-01 | W1 demo part 2: T plays the twenty cost-card candidates and rules keep or cut (2 h) | W1 | HP4e | - |
 | [ ] | 2026-11-02 | Plot Chapter 1's enemies and their art brief from the two sessions (1 h) | W1 | B2 | - |
-| [ ] | 2026-11-03 | Live hazard routing (each of the seven Act 1 hazard nodes draws a random puzzle from the thirty) and the cuts (plot, 1 h) | W2 | needs plot | - |
+| [ ] | 2026-11-03 | Live hazard routing (each of the eleven Act 1 hazard nodes, six of them the Breakwater's, draws a random puzzle from the thirty) and the cuts (plot, 1 h) | W2 | needs plot | - |
 | [ ] | 2026-11-04 | Pitch the event-node UI/UX for the Breakwater's nine kinds, all of Act 1's, the quest node included (1 h) | W2 | T | - |
 | [ ] | 2026-11-05 | Settle the event-node pitch's open questions: one direction per node kind, before the plot (0.5 h) | W2 | T | - |
 | [ ] | 2026-11-06 | Event-node UI/UX for the Breakwater's nine kinds (plot, 1 h) | W2 | needs plot | - |
 | [ ] | 2026-11-07 | Pick the title plate and the four arena backgrounds (coast, forest, mountains, underworld) from your art dossier (0.5 h) | W2 | TP1b | - |
 | [ ] | 2026-11-07 | Plot the arena-background swap from your picks (0.5 h) | W2 | needs plot | - |
 | [ ] | 2026-11-08 | Chapter 1's enemy art: pick from the loop's candidates (2 h) | W2 | T | - |
-| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1f |
+| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1f, BW1c |
 | [ ] | 2026-11-10 | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | W2 | T | - |
-| [ ] | 2026-11-10 | Write the Breakwater's quest line: the giver's lines per node, steps 1-3's requirement, every step's XP and extra (0.5 h) | W2 | QL1e | QL1d |
+| [ ] | 2026-11-10 | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | W2 | BW1d | BW1a, BW1b |
 | [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | W2 | T | - |
 | [ ] | 2026-11-12 | Play the Defender test deck on the preview build and check the reward pool (0.5 h) | W2 | DF1f | - |
-| [ ] | 2026-11-13 | Play your quest line on the preview build and rule on its lines (0.5 h) | W2 | T | QL1f |
+| [ ] | 2026-11-13 | Play your quest line on the preview build and rule on its lines (0.5 h) | W2 | T | BW1e |
 | [ ] | 2026-11-14 | File what is still broken (`/plot` or `/messy`) and decide what the MVP run must show (1 h) | W2 | T | - |
 | [ ] | 2026-11-16 | MVP demo: Act 1, Chapter 1 complete, a full Breakwater run on the phone with puzzle hazards, Chapter 1's enemies and art, lane relics, icons, new event UI (1.5 h, Sun Nov 15) | W2 | T | - |
 | [x] | 2026-11-18 | Upgrade grant call | W3 | T | - |
-| [ ] | 2026-11-19 | Plot the hazard swap: hand-pick the seven Act 1 hazard puzzles (Breakwater 2, Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2) after playing the thirty in `/dev` (1 h) | W3 | T | HP4f, HP4g |
+| [ ] | 2026-11-19 | Plot the hazard swap: hand-pick the eleven Act 1 hazard puzzles (Breakwater 6, Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2) after playing the thirty in `/dev` (1 h) | W3 | T | HP4f, HP4g |
 | [ ] | 2026-11-21 | Enemy session 3: Chapters 2-4's normal rosters and elites (2 h) | W3 | T | - |
 | [ ] | 2026-11-22 | Enemy session 4: Chapters 2-4's bosses and the Act Boss, at the end of Chapter 4 (2 h) | W3 | T | - |
 | [ ] | 2026-11-23 | Plot Chapters 2-4's enemies and their art brief (1 h) | W3 | needs plot | - |
@@ -324,6 +324,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-28** — **Chapter 1 rebuilt to T's vision; BW1 plotted** (T, attended: a `/pitch` locked every node on T's sketch, then "plan and plot how to go from where we are now to the result we just spoke of", and kind icons, D114). **Ticked** "Design the Breakwater map before enemy session 1" (T designed it this session: 43 nodes; the board and `braindump/2026-10-28-breakwater-chapter-1-map.md`). **Edited** enemy session 1 (four fight nodes to 15) and 2 (one elite and the watchtower boss to three elites and the sea keep's boss); the hazard routing plot and the Nov 19 swap (seven Act 1 hazard nodes to eleven, the Breakwater's two to six); the Nov 10 quest-line write (QL1e's four-step line to BW1d's chain, waiting on BW1a and BW1b) and the MVP-schedule pieces naming them; the Nov 13 play (waits on BW1e, not QL1f). **Added** BW1c under the Nov 9 mid-MVP check's `Waits on`. QL1e and QL1f are skipped in the build plan (call 6 on the PR). No date moved.
 - **2026-10-28** — **the Nov 3 node-map review is dropped** (T, in conversation: "Drop Nov 3 row"). Today's Breakwater map design covers it. **Removed** the Item and MVP-schedule piece "Review the Breakwater node map before the event-node pitch" (2026-11-03, 1 h, Rows `T`). The week of Nov 2 drops to 7.5 h, inside T's 5-8; the MVP total to about 22.5 h. No other date moved.
 - **2026-10-28** — **the Breakwater map is designed before enemy session 1** (T, in conversation: "we need to design the map before I start doing work locking in enemies, hazards and other nodes"; "I want to discuss how many nodes are there total and how many of each type of node exists"; "determine if it would be possible to add more keep nodes, also we can drop the gathering nodes entirely"). **Added** the Item and MVP-schedule piece "Design the Breakwater map before enemy session 1", due 2026-10-28 in W1, 0.5 h, Rows `T`, listed before enemy session 1. What "keep nodes" means (fight nodes, castle landmarks or quest nodes) is open for T. No other date moved; the Nov 3 "Review the Breakwater node map" Item stays as it is.
 - **2026-10-28** — **every Item is a T act; the Items table gains `Waits on`** (T, in conversation: "make sure each item is something I need to do, not just running an agent against a phase row"; "Realistically every item in deadline should be this way"; phase DL2b). **Dropped** the 27 Items that named only loop rows (20 shipped or mostly shipped, 7 open): "Cost-card engine and the worse-copy test", "The puzzle looks random", "The dev-only move log", "First character playable" (CH1a-CH1d, CH1f, DF1a-DF1d; CH1e is its own Item), "Card audit", "Difficulty features in the solver", "Decision pressure in the puzzle report", "The candidate library shape", "The deadline lint and its reconcile step", "Author the thirty candidates", "Solve times stored online", "The thirty on the live board", "Five hazard cost cards", "The twenty easy and medium candidates go", "Twenty cost-card puzzles on /devpuzzle", "Node blurbs matched to their events", "A first death comes back dying", "The six lane relics in play", "Loop gates, real-fight tests, report sweep" and "Card-upgrade path"; and, as open loop-only Items, "The authoring patterns from the kept set", "The band clocks", "The Breakwater's questline on the map", "T's quest line in the game", "The calibration set", "Upgrades proven on the Act 1 boss" and "Bands on the calibrated measure". The build plan and `plan/ARCHIVE.md` keep the record. **Folded** the open loop rows into the `Waits on` of the T act each unblocks: CH1f under the Nov 9 mid-MVP check; HP4f and HP4g under the Nov 19 hazard swap plot; QL1d under the Nov 10 quest-line write; QL1f under the Nov 13 quest-line play; HP2d under the Nov 28 calibration solves; UP1h under the Dec 14 W4 demo; HP2f under the Nov 30 W3 demo. **Removed** the Unscheduled line for DL2b when the phase shipped. **Edited** the Items prose, the MVP schedule prose and the reminder paragraph. No `T`, attended, owner-led or `needs plot` Item changed its date; Status cells are derived. The lint now fails a loop row in an Item's `Rows`.
