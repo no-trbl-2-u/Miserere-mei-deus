@@ -185,22 +185,30 @@ test('a title and a lede are derived from the entry, never invented', () => {
     assert.ok(headline.startsWith(cut.title.replace(/…$/, '')), 'a derived title must be the author\'s own words')
 })
 
-test('a plate whose painting is withheld says so, in the frame the art would fill', () => {
+test('a plate whose painting is refused says so, in the frame the art would fill', () => {
     // Driven directly rather than through the built page: `devlog/data/*.json`
     // is a regenerable snapshot other tests rewrite, and this rule must hold
     // whether or not a catalog export happens to be on disk.
-    const withheld = cardArtHtml({ id: 'freeze', name: 'Nothing Crossed the Ice', image: './assets/catalog/cards/freeze.webp' })
+    const unlicensed = [{ license: 'UNRESOLVED', covers: 'freeze.webp' }]
+    const withheld = cardArtHtml({ id: 'freeze', name: 'Nothing Crossed the Ice', image: './assets/catalog/cards/freeze.webp' }, '', unlicensed)
     assert.match(withheld, /painting withheld/)
-    assert.ok(!/<img/.test(withheld), 'a withheld painting must not be served at all')
+    assert.match(withheld, /no licence on record/)
+    assert.ok(!/<img/.test(withheld), 'a refused painting must not be served at all')
 
-    const publishable = cardArtHtml({ id: 'x', name: 'A Card', image: './assets/catalog/cards/forest-dark.webp' }, '../')
-    assert.ok(publishable.includes('<img') === false, 'card art is UNRESOLVED in this tree, so nothing in cards/ publishes')
+    const shipped = cardArtHtml({ id: 'freeze', name: 'Nothing Crossed the Ice', image: './assets/catalog/cards/freeze.webp' }, '../')
+    assert.ok(shipped.includes('<img'), 'a shipped card painting is served')
+    assert.ok(shipped.includes('../assets/cards/freeze.webp'))
 })
 
-test('the catalog and the About page carry the licence story', () => {
+test('the catalog serves the paintings and the About page says the art is open source', () => {
     const html = read('catalog/index.html')
-    assert.match(read('about/index.html'), /Attribution/)
-    assert.match(read('about/index.html'), /withheld/)
-    // Card paintings are UNRESOLVED in the tree, so none of them may be served.
-    assert.ok(!/assets\/cards\//.test(html), 'card art must not be published while its licence is unresolved')
+    const about = read('about/index.html')
+    assert.match(about, /Attribution/)
+    assert.match(about, /open-source art/)
+    assert.match(about, /held back/, 'the Needs you panel is still held back')
+    assert.ok(!/licen[cs]e[^.]*cannot prove|until their provenance is resolved/i.test(about), 'the About page no longer withholds art for want of a licence')
+    if (!/class="plate /.test(html)) return // no catalog export on disk: nothing to serve
+    assert.ok(/assets\/cards\//.test(html), 'card paintings are served')
+    assert.ok(readdirSync(join(OUT, 'assets', 'cards')).length > 0, 'the derived card files are in the build')
+    assert.ok(!/painting withheld/.test(html), 'no plate withholds a painting')
 })

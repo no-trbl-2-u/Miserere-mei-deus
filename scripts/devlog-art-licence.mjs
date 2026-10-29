@@ -11,27 +11,29 @@
 // licence forbids redistribution ... is not covered by T's ruling. Exclude it,
 // and file a [loop-call] row naming exactly what and why."
 //
-// WHAT THE TREE ACTUALLY SAYS (audited 2026-09-20 against the seven
+// THE ART LICENCE QUESTION IS CLOSED (T, 2026-10-29, D115): "The images we use
+// for everything are open source." Every image the game and the DevLog use is
+// open source and the public DevLog publishes all of it. Nobody re-opens that.
+//
+// WHAT THE TREE SAYS (audited at phase AL1, 2026-10-29, against the seven
 // per-directory provenance.json files):
 //
-//   maps/ combat/ splatter/   Public domain              -> publish
-//   enemies/ (1 of 3)         UNRESOLVED                 -> EXCLUDE
-//   enemies/ (2 of 3)         torio free material        -> EXCLUDE until T
-//                             (no attribution required)     rules the terms in
-//     (enemy counts re-audited at phase AN4a, 2026-10-22, which retired the
-//     one CC BY silhouette, and at AN3a, which retired the unresolved hag;
-//     the attribution tier stays for the next CC BY file)
-//   cards/ (19)               UNRESOLVED                 -> EXCLUDE
-//   portraits/ (15)           UNRESOLVED                 -> EXCLUDE
-//   treasure/ (4)             UNRESOLVED                 -> EXCLUDE
+//   maps/ combat/ splatter/   Public domain, plus the owner-generated
+//                             Act 1 map plates                  -> publish
+//   enemies/ portraits/       T's D115 ruling, and torio free
+//                             material (traced grant)           -> publish
+//   cards/ treasure/          T's D115 ruling, and torio free
+//                             material (Blood Price art)        -> publish
 //
-// "UNRESOLVED" is the provenance gate's own word for art that shipped before
-// anyone checked: owner-supplied external illustration, no source, no licence
-// traced since. Inside a private build that is a known debt. On a public page
-// it would be redistribution of work nobody can show a right to. So the card
-// plates on the public catalog publish their FRAME and their text and say, in
-// words, that the painting is withheld. A catalog that lies about what it may
-// show is worse than a catalog with fewer pictures.
+// The gate is amended, not deleted. It still refuses a file whose record names
+// no licence, says UNRESOLVED, names an attribution licence with no artist, or
+// names a licence it does not recognise, so a THIRD-PARTY FILE THAT ARRIVES
+// AFTER D115 still needs its own licence on record (a traced grant, or T's
+// ruling written into its record by a session T runs). The `open` tier matches
+// three exact forms and nothing broader: the D115 string, the torio free
+// material grant, and the owner-generated record. A refused file's catalog
+// plate publishes its FRAME and text and says the painting has no licence on
+// record.
 //
 // This module is pure and zero-dependency: it reads provenance JSON that the
 // caller supplies (or from disk) and answers one question per file.
@@ -68,10 +70,25 @@ export const PUBLIC_DOMAIN = [
 export const ATTRIBUTION_REQUIRED = [/^cc[\s-]?by([\s-]|$)/i]
 
 /**
+ * Licences that permit public redistribution with no attribution owed, matched
+ * as three exact forms and nothing broader (phase AL1, D115):
+ *   - T's ruling, written into a record by a session T runs;
+ *   - torio Javardry's free-material grant (docs/licences/torio-javardry.md);
+ *   - the owner-generated Act 1 map plates (T generated them; the generator's
+ *     terms assign the output to the user).
+ * A bare "open source" is NOT a match: the exact D115 string is.
+ */
+export const OPEN = [
+    /^open source \(T, 2026-10-29, D115\)$/,
+    /^torio Javardry free material\b.*no attribution required/i,
+    /^Owner-generated for this project\b/i,
+]
+
+/**
  * Decide one file's publication status.
  *
  * @param {{license?: string, artist?: string, source?: string}|null} record
- * @returns {{publish: boolean, tier: 'public-domain'|'attribution'|'excluded',
+ * @returns {{publish: boolean, tier: 'public-domain'|'open'|'attribution'|'excluded',
  *            licence: string, attribution: string, why: string}}
  */
 export function classify(record) {
@@ -83,6 +100,9 @@ export function classify(record) {
     }
     if (PUBLIC_DOMAIN.some((re) => re.test(licence))) {
         return { publish: true, tier: 'public-domain', licence, attribution: artist, why: '' }
+    }
+    if (OPEN.some((re) => re.test(licence))) {
+        return { publish: true, tier: 'open', licence, attribution: artist, why: '' }
     }
     if (ATTRIBUTION_REQUIRED.some((re) => re.test(licence))) {
         if (!artist) {
@@ -96,8 +116,8 @@ export function classify(record) {
     return {
         publish: false, tier: 'excluded', licence, attribution: artist,
         why: licence.toUpperCase() === 'UNRESOLVED'
-            ? 'licence UNRESOLVED — the tree cannot show a right to redistribute this file'
-            : `licence ${JSON.stringify(licence)} is neither public domain/CC0 nor an attribution licence`,
+            ? 'licence UNRESOLVED — no licence on record for this file'
+            : `licence ${JSON.stringify(licence)} is not a licence the gate recognises (public domain/CC0, open source per D115, a traced free-material grant, or an attribution licence with an artist)`,
     }
 }
 

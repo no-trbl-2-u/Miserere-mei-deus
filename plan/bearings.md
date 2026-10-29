@@ -408,10 +408,14 @@ ambiguity.)
   date in its `provenance.json` entry (also the Steam AI-disclosure
   record). Midjourney stays out of the automated pipeline. Art is
   content (D88, D99): built only from a brief T approved.
-- **`Potential Assets/MCP-Axiomancer/images/` — license per image not on
-  record.** The loop may not wire an image it cannot write a truthful
-  `provenance.json` entry for. An untraceable image is replaced or
-  regenerated, not wired.
+- **THE ART LICENCE QUESTION IS CLOSED (T, 2026-10-29, D115).** "The images
+  we use for everything are open source." Every image the game and the
+  DevLog use, including `Potential Assets/MCP-Axiomancer/images/`, is open
+  source and the public DevLog publishes all of it. Never re-open it, never
+  flag it in a digest, audit or candidate. The one rule that stays: a NEW
+  third-party file records its own licence (a traced grant, or the D115
+  string written by a session T runs); the DevLog gate refuses a file whose
+  record names none.
 - **THE REFACTOR STRATEGY (T, attended session 2026-09-25).** No restart
   and no procedural map generator; never re-propose either. Never
   re-propose cutting the Debug\* tools (D19). Record:

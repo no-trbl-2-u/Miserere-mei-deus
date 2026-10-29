@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 // scripts/devlog-art-licence.test.mjs — the publication gate for art.
 //
-// The public site republishes the game's pictures to strangers. These cases
-// pin the one rule T's "publish everything" ruling does not reach: a file
-// whose licence the tree cannot prove does not leave the repository.
+// The public site republishes the game's pictures to strangers. The art
+// licence question is closed (T, 2026-10-29, D115). These cases pin what is
+// left of the gate: a file with no recognised licence on record still does not
+// leave the repository.
 
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { classify, covers, recordFor, readProvenance, verdictFor } from './devlog-art-licence.mjs'
+import { readdirSync } from 'node:fs'
+import { join } from 'node:path'
+import { IMAGE_ROOT, classify, covers, recordFor, readProvenance, verdictFor } from './devlog-art-licence.mjs'
 
 test('public-domain and CC0 files publish, with no attribution obligation', () => {
     for (const licence of ['Public domain', 'public domain (author died 1883)', 'CC0', 'PD-old', 'No restrictions']) {
@@ -31,7 +34,30 @@ test('an attribution licence publishes only when the artist is on record', () =>
 test('UNRESOLVED is a refusal, not a shrug', () => {
     const verdict = classify({ license: 'UNRESOLVED' })
     assert.equal(verdict.publish, false)
-    assert.match(verdict.why, /cannot show a right to redistribute/)
+    assert.match(verdict.why, /no licence on record/)
+})
+
+test('the three open forms publish as the open tier: the D115 ruling, the torio grant, the owner-generated record', () => {
+    const forms = [
+        'open source (T, 2026-10-29, D115)',
+        'torio Javardry free material: free for any use including commercial, modification and redistribution; no attribution required',
+        "Owner-generated for this project (OpenAI's terms assign output rights to the user)",
+    ]
+    for (const licence of forms) {
+        const verdict = classify({ license: licence })
+        assert.equal(verdict.publish, true, `${licence} should publish`)
+        assert.equal(verdict.tier, 'open')
+    }
+})
+
+test('the gate still refuses what it does not recognise', () => {
+    for (const licence of ['', 'UNRESOLVED', 'All rights reserved', 'open source', 'open source (somebody, 2026-01-01)',
+        'torio Javardry free material, attribution required', 'Owner-generated elsewhere']) {
+        const verdict = classify({ license: licence })
+        assert.equal(verdict.publish, false, `${JSON.stringify(licence)} must not publish`)
+        assert.equal(verdict.tier, 'excluded')
+    }
+    assert.equal(classify({ license: 'CC BY 3.0' }).publish, false, 'an attribution licence with no artist still refuses')
 })
 
 test('a file with no record at all is withheld', () => {
@@ -50,19 +76,21 @@ test('a later record wins over the directory wildcard it supersedes', () => {
     assert.equal(covers(records[1], 'prop.webp'), false)
 })
 
-test('the shipped tree still says what the About page claims: card art is withheld, and so is the boss', () => {
+test('the shipped tree publishes the card art and the boss: the licence question is closed (D115)', () => {
     // These two directories are the ones the public catalog reads. If either
-    // verdict flips, the About page's wording and the catalog's plates must
-    // change with it — which is exactly why this is asserted rather than
-    // described in a comment.
-    assert.equal(verdictFor('cards', 'freeze.webp').publish, false, 'card art must not publish while its licence is UNRESOLVED')
+    // verdict flips, the catalog's plates change with it.
+    assert.equal(verdictFor('cards', 'freeze.webp').publish, true, 'card art publishes under D115')
     const records = readProvenance('enemies')
     assert.ok(records.length > 1, 'the enemies directory should carry per-file records')
-    // Phase AN4a retired the one CC BY silhouette. The boss is now torio's
-    // free material, whose terms name no licence this gate recognises, so it
-    // is withheld until T rules those terms into PUBLIC_DOMAIN.
     const boss = verdictFor('enemies', 'death-beholder.webp', records)
-    assert.equal(boss.publish, false)
-    assert.match(boss.why, /neither public domain\/CC0 nor an attribution licence/)
-    assert.ok(boss.attribution.length > 0, 'the artist stays on record either way')
+    assert.equal(boss.publish, true, "torio's free-material grant publishes")
+    assert.equal(boss.tier, 'open')
+    assert.ok(boss.attribution.length > 0, 'the artist stays on record')
+    assert.equal(verdictFor('maps', readdirSync(join(IMAGE_ROOT, 'maps')).find((f) => /\.webp$/.test(f))).publish, true)
+})
+
+test('no provenance record in the tree reads UNRESOLVED', () => {
+    for (const dir of ['cards', 'combat', 'enemies', 'maps', 'portraits', 'splatter', 'treasure']) {
+        for (const record of readProvenance(dir)) assert.notEqual(String(record.license).trim().toUpperCase().split(/\s/)[0], 'UNRESOLVED', dir)
+    }
 })
