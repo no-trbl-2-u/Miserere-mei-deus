@@ -184,6 +184,17 @@ describe('validateStateFixture', () => {
         expect(() => validateStateFixture(bad)).toThrow(StateFixtureError);
     });
 
+    it('checks stagedDialogue is a tree: an object with a string rootId and a nodes object', () => {
+        const tree = { rootId: 'r', nodes: { r: { id: 'r', text: 'x' } } };
+        expect(problemsFor({ id: 'x', stagedDialogue: tree })).toEqual([]);
+        const bad = ['stagedDialogue: expected a dialogue tree'];
+        expect(problemsFor({ id: 'x', stagedDialogue: 'tree' })).toEqual(bad);
+        expect(problemsFor({ id: 'x', stagedDialogue: { nodes: {} } })).toEqual(bad);
+        expect(problemsFor({ id: 'x', stagedDialogue: { rootId: 7, nodes: {} } })).toEqual(bad);
+        expect(problemsFor({ id: 'x', stagedDialogue: { rootId: 'r' } })).toEqual(bad);
+        expect(problemsFor({ id: 'x', stagedDialogue: { rootId: 'r', nodes: 'n' } })).toEqual(bad);
+    });
+
     it('rejects unknown maps and non-objects', () => {
         expect(problemsFor({ id: 'x', world: { continent: 'coastal-continent', map: 'atlantis' } })).toEqual([
             expect.stringContaining("unknown map 'coastal-continent/atlantis'"),

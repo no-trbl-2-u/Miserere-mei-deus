@@ -131,15 +131,16 @@ async function runRoundTrip(page, baseUrl) {
 
     log('entering Act I ...')
     await press(page, 'labyrinth-act-act1', 'act select')
-    // The entrance narration, when it shows, is left with LEAVE; either way
-    // the entry room is where the walk starts.
-    const leave = page.locator('[data-testid="dialogue-leave"]:visible').first()
+    // The entrance plays the Sophist's line as a one-line cutscene (the
+    // narration kind is cut, NK1a); SKIP returns to the room. Either way the
+    // entry room is where the walk starts.
+    const skip = page.locator('[data-testid="cutscene-skip"]:visible').first()
     const room = page.locator('[data-testid="labyrinth-room"]:visible').first()
     await Promise.race([
-        leave.waitFor({ state: 'visible', timeout: 15000 }),
+        skip.waitFor({ state: 'visible', timeout: 15000 }),
         room.waitFor({ state: 'visible', timeout: 15000 }),
     ]).catch(() => {})
-    if (await leave.count()) await leave.click({ force: true })
+    if (await skip.count()) await skip.click({ force: true })
     await room.waitFor({ state: 'visible', timeout: 15000 })
         .catch(() => fail('the entry room never showed'))
 
