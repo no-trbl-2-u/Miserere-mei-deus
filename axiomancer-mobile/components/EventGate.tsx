@@ -7,8 +7,8 @@ import { selectPacedEventRoute, type PacedEventRoute } from '@/state/presenters/
 /**
  * Pushes the user into the matching full-screen route whenever the
  * engine reports an active **paced** event (narrative-choice kind):
- * `/dialogue` for interactions, `/village` for settlements,
- * `/cutscene` for omens, `/event` for everything else.
+ * `/dialogue` for a seated dialogue, `/village` for settlements,
+ * `/cutscene` for omens (`selectPacedEventRoute`).
  * Combat-adjacent events (combat-prelude) belong to `<CombatGate>`,
  * which engages them onto `/combat-encounter`.
  * Rendered as a side-effect-only component so the gate runs anywhere

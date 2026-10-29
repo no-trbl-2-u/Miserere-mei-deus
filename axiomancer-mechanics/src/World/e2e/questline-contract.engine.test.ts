@@ -94,8 +94,8 @@ describe('A1: the quest map-event kind', () => {
         expect(event).toMatchObject({ kind: 'quest', node: 2, stage: 'locked', description: 'x' });
     });
 
-    it('is one of the thirteen kinds the Act 1 audit lists', () => {
-        expect(ACT1_WALK_EVENT_KINDS).toHaveLength(13);
+    it('is one of the kinds the Act 1 audit lists', () => {
+        expect(ACT1_WALK_EVENT_KINDS).toHaveLength(11);
         expect(ACT1_WALK_EVENT_KINDS).toContain('quest');
     });
 });

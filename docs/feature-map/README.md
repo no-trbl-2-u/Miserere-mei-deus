@@ -21,7 +21,7 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 | Cutscene | route | yes | yes | yes | no |
 | Death Return | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Death Return") |
 | Dialogue | route | yes | yes | yes | no |
-| Event | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Event") |
+| Event | route | no | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Event") |
 | Index | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Index") |
 | Reward | route | yes | no | yes | no |
 | Quest | route | yes | yes | yes | no |
@@ -54,7 +54,7 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 
 ### Built but unreachable
 
-- none
+- Event (`route:event`)
 
 ### Routes with no way out but back
 

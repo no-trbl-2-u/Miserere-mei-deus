@@ -4,8 +4,8 @@
  * Pins the second Act 1 map:
  * - the Breakwater's river bridge leads here, and this map's stair cave leads
  *   on into the Beacon Crags;
- * - the map borrows the shipped builders, the northern forest's roster and
- *   its materials, with one authored event on every node and one
+ * - the map borrows the shipped builders and the northern forest's roster,
+ *   with one authored event on every node but its waypoints and one
  *   Anvil near its exit;
  * - the forest roster is level 9 and up, so every fight here is pinned low.
  *
@@ -62,20 +62,20 @@ describe('the Charcoal Wood\'s events (D29)', () => {
         charcoalWood.nodes.map(n => [n.id, resolveMapEvent(standingOn(charcoalWood, n.id)).event.kind]),
     );
     /** Each node's authored payload (every Charcoal Wood pool has one entry). */
-    const payloads = charcoalWood.nodes.map(
-        n => getNodeEventPool('coastal-continent', 'charcoal-wood', n.id)!.entries[0]!.payload,
+    const payloads = charcoalWood.nodes.flatMap(
+        n => getNodeEventPool('coastal-continent', 'charcoal-wood', n.id)?.entries[0]?.payload ?? [],
     );
 
-    it('resolves an authored event on every node', () => {
+    it('resolves an authored event on every node but its waypoints', () => {
         expect(Object.values(kinds)).not.toContain('empty');
         expect(Object.keys(kinds)).toHaveLength(20);
     });
 
-    it('spreads 7 encounters, 3 rests, 3 loot caches, 3 gatherings, 1 hazard, 1 Anvil, an arrival and a door', () => {
+    it('spreads 7 encounters, 3 rests, 3 loot caches, 3 waypoints, 1 hazard, 1 Anvil, an arrival and a door', () => {
         const tally: Record<string, number> = {};
         for (const k of Object.values(kinds)) tally[k] = (tally[k] ?? 0) + 1;
         expect(tally).toEqual({
-            encounter: 7, rest: 3, 'loot-cache': 3, gathering: 3, hazard: 1, blacksmith: 1, cutscene: 1, travel: 1,
+            encounter: 7, rest: 3, 'loot-cache': 3, none: 3, hazard: 1, blacksmith: 1, cutscene: 1, travel: 1,
         });
     });
 
@@ -98,9 +98,8 @@ describe('the Charcoal Wood\'s events (D29)', () => {
         }
     });
 
-    it('gathers only the northern forest\'s own materials', () => {
-        const items = payloads.flatMap(p => (p.kind === 'gathering' ? p.items.map(i => i.id) : []));
-        expect(items.sort()).toEqual(['dark-berries', 'moonbell-petals', 'oak-branch']);
+    it('leaves its former gathering nodes an empty waypoint: no pool, resolves to nothing', () => {
+        for (const id of ['cw-4', 'cw-8', 'cw-14']) expect(kinds[id], id).toBe('none');
     });
 
     it('goes down the stair cave into the Beacon Crags, on the northern continent (Act 1, map 3)', () => {

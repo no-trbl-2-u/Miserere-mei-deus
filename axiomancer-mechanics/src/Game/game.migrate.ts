@@ -26,10 +26,11 @@
  * (every relic but the Suppliant's Ring dropped), v35 → v36 (XP
  * re-expressed on the rising level curve), v36 → v37 (XP re-expressed on
  * the level-20 curve), v37 → v38 (the Brine Hag's befriend flag and codex
- * entry renamed to the Green Jelly's) and v38 → v39 (the `accessory` slot
+ * entry renamed to the Green Jelly's), v38 → v39 (the `accessory` slot
  * renamed `relic`, the loadout's `accessories` row renamed `relics`, and the
- * `accessoryKind` flavour field dropped). The hops chain, so a v11 save lands
- * at v39 in one `migrate` call. Every other version mismatch rejects.
+ * `accessoryKind` flavour field dropped) and v39 → v40 (an arrival owed on a
+ * former gathering node cleared). The hops chain, so a v11 save lands at v40
+ * in one `migrate` call. Every other version mismatch rejects.
  *
  * The older hops are written against the current equipment shape, so a save
  * older than v39 has the v39 re-slot applied once before its first hop (the
@@ -1016,6 +1017,52 @@ function migrateV38ToV39(raw: Record<string, unknown>): Record<string, unknown> 
 }
 
 /**
+ * The nodes that held a gathering event at v39, by map. Frozen here: the hop
+ * reads the v39 content, never today's.
+ */
+const V39_GATHERING_NODES: Readonly<Record<string, readonly string[]>> = {
+    'breakwater':    ['bw-4', 'bw-11'],
+    'charcoal-wood': ['cw-4', 'cw-8', 'cw-14'],
+    'beacon-crags':  ['bc-7'],
+    'lantern-deep':  ['ld-7'],
+};
+
+/** A raw map state with its owed arrival cleared when it sits on a former gathering node. */
+function clearGatheringArrival(raw: unknown): unknown {
+    if (!raw || typeof raw !== 'object') return raw;
+    const map = raw as { name?: unknown; pendingArrival?: unknown };
+    const former = typeof map.name === 'string' ? V39_GATHERING_NODES[map.name] : undefined;
+    if (!former || typeof map.pendingArrival !== 'string' || !former.includes(map.pendingArrival)) return raw;
+    return { ...map, pendingArrival: null };
+}
+
+/**
+ * v39 → v40: the `gathering`, `interaction` and `narration` map-event kinds
+ * are cut. The seven gathering nodes carry no pool now (empty waypoints), so
+ * an arrival a v39 save still owes on one is cleared: there is no event left
+ * to answer. Event payloads are never saved (pools are re-read from content),
+ * so nothing else in a save names a removed kind; the materials those nodes
+ * granted stay in the item library and still load and sell. Pure over a raw
+ * v39 save payload.
+ */
+function migrateV39ToV40(raw: Record<string, unknown>): Record<string, unknown> {
+    const world = raw.world as { currentMap?: unknown; mapStates?: Record<string, unknown> } | undefined;
+    if (!world || typeof world !== 'object') return { ...raw, version: 40 };
+    const mapStates = world.mapStates && typeof world.mapStates === 'object'
+        ? Object.fromEntries(Object.entries(world.mapStates).map(([k, v]) => [k, clearGatheringArrival(v)]))
+        : world.mapStates;
+    return {
+        ...raw,
+        world: {
+            ...world,
+            currentMap: clearGatheringArrival(world.currentMap),
+            ...(mapStates !== undefined ? { mapStates } : {}),
+        },
+        version: 40,
+    };
+}
+
+/**
  * Narrow a raw save payload to the current `GameState`. Only the current
  * version is accepted; any other version throws (the caller resets to a new
  * game). The name/signature is kept so the persistence layer's call site is
@@ -1060,8 +1107,9 @@ export function migrate(
     // relic but the Suppliant's Ring; v35 → v36 re-expresses XP on the
     // rising level curve; v36 → v37 re-expresses it on the level-20 curve;
     // v37 → v38 renames the Brine Hag's flag and codex entry to the Green
-    // Jelly's; v38 → v39 renames the accessory slot and row to relic. Chained
-    // so a v11 save lands at v39 in one call. The older hops speak the relic
+    // Jelly's; v38 → v39 renames the accessory slot and row to relic; v39 →
+    // v40 clears an arrival owed on a former gathering node. Chained so a v11
+    // save lands at v40 in one call. The older hops speak the relic
     // shape, so a pre-v39 save is re-slotted once before its first hop.
     if (version >= 11 && version < 39) {
         working = reslotRelicSave(working);
@@ -1177,6 +1225,10 @@ export function migrate(
     if (version === 38 && toVersion >= 39) {
         working = migrateV38ToV39(working);
         version = 39;
+    }
+    if (version === 39 && toVersion >= 40) {
+        working = migrateV39ToV40(working);
+        version = 40;
     }
 
     if (version !== toVersion) {

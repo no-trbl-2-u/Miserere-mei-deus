@@ -110,7 +110,7 @@ describe('selectTooltipContentFor', () => {
     });
 
     describe('kind: map-node (Phase 74 walkthrough — exploration Tick 1)', () => {
-        const nodeTypes = ['encounter', 'boss', 'treasure', 'quest', 'rest', 'gather', 'current'] as const;
+        const nodeTypes = ['encounter', 'boss', 'treasure', 'quest', 'rest', 'waypoint', 'current'] as const;
         it.each(nodeTypes)('returns content for node type %s', (type) => {
             const content = selectTooltipContentFor('map-node', type, EMPTY_STATE);
             expect(content).not.toBeNull();

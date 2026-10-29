@@ -1,16 +1,14 @@
 /**
  * /event — the generic paced-event card.
  *
- * Most event kinds have a dedicated surface: interaction / narration →
+ * Every event kind has a dedicated surface: a seated dialogue →
  * /dialogue, village → /village, cutscene → /cutscene; rest /
  * loot-cache / hazard are intercepted in `resolveCurrentMapEventAction`
  * and launch minigame sessions; encounters are engaged by
- * `<CombatGate>` onto `/combat-encounter`. In production this screen is
- * the GATHERING acknowledgement: a gather node grants its items and
- * `selectPacedEventRoute` mounts this card so the player is told what
- * they picked up (`state/e2e/gathering-acknowledgement.engine.test.ts`).
- * It is also the `selectPacedEventRoute` fallback, so an unforeseen
- * paced kind degrades to a readable generic card instead of a dead end.
+ * `<CombatGate>` onto `/combat-encounter`. This screen was the
+ * GATHERING acknowledgement; the gathering kind is cut (NK1a), so
+ * `selectPacedEventRoute` no longer mounts it and nothing in play reaches
+ * it. Deleting it is a follow-up once confirmed unused.
  */
 
 import React, { useEffect, useMemo } from 'react';

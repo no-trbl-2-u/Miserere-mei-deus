@@ -31,13 +31,12 @@ afterEach(() => {
 });
 
 const ALLOWED_KINDS = ['combat-prelude', 'narrative-choice'] as const;
-const ALLOWED_VARIANTS = ['encounter', 'boss', 'quest', 'rest', 'gather', 'npc'] as const;
+const ALLOWED_VARIANTS = ['encounter', 'boss', 'quest', 'rest', 'npc'] as const;
 const ALLOWED_ACCENTS = ['blood', 'sulfur', 'parchment', 'bone', 'rust'] as const;
 const ALLOWED_SLUGS = [
     'encounter',
     'boss',
     'rest',
-    'gathering',
     'loot-cache',
     'interaction-generic',
     'village',
@@ -86,19 +85,6 @@ function makeRestResult(healed: number): ResolveMapEventResult {
     };
 }
 
-function makeGatheringResult(): ResolveMapEventResult {
-    return {
-        state: undefined as never,
-        event: {
-            kind: 'gathering',
-            items: [
-                { id: 'herb', name: 'Witherwort', category: 'material' } as never,
-                { id: 'flint', name: 'Flint shard', category: 'material' } as never,
-            ],
-        },
-    };
-}
-
 function makeLootCacheResult(): ResolveMapEventResult {
     return {
         state: undefined as never,
@@ -136,10 +122,11 @@ function makeHazardResult(damage: number): ResolveMapEventResult {
     };
 }
 
-function makeInteractionResult(opts: { description?: string } = {}): ResolveMapEventResult {
+/** A pending event under a dialogue cursor: no map event opens a tree, so it is an empty cutscene. */
+function makeDialogueCarrierResult(): ResolveMapEventResult {
     return {
         state: undefined as never,
-        event: { kind: 'interaction', npcName: 'A Stranger', description: opts.description },
+        event: { kind: 'cutscene', lines: [] },
     };
 }
 
@@ -547,8 +534,7 @@ describe('selectEventViewModel: narrative-choice composition', () => {
     // Rest / loot-cache events are intercepted in
     // resolveCurrentMapEventAction (they launch the rest-choice session /
     // "The Reliquary") and never reach the modal. The composer treats them
-    // as dead-end kinds. `gathering` is not one: it composes its
-    // acknowledgement card.
+    // as dead-end kinds.
     it('composes minigame-intercepted kinds (rest / loot-cache) to the empty VM', () => {
         const store = makeStore();
         for (const result of [makeRestResult(7), makeLootCacheResult()]) {
@@ -559,63 +545,6 @@ describe('selectEventViewModel: narrative-choice composition', () => {
             expect(vm.artSlug).toBe('interaction-generic');
             expect(vm.choices).toHaveLength(0);
         }
-    });
-
-    it('composes a gathering event into an acknowledgement card naming every item', () => {
-        const store = makeStore();
-        setPending(store, makeGatheringResult());
-        const vm = selectEventViewModel(store.getState());
-
-        expect(vm.kind).toBe('narrative-choice');
-        expect(vm.variant).toBe('gather');
-        expect(vm.badge).toBe('A GATHERING');
-        expect(vm.title).toBe('WITHERWORT · FLINT SHARD');
-        expect(vm.subtitle).toBe('into the satchel');
-        expect(vm.choices).toHaveLength(1);
-        expect(vm.choices[0]?.id).toBe('acknowledge');
-        // Plural payload, plural verb.
-        expect(vm.choices[0]?.label).toBe('POCKET THEM');
-        expect(vm.choices[0]?.consequences).toEqual([
-            { kind: 'item', label: 'Witherwort' },
-            { kind: 'item', label: 'Flint shard' },
-        ]);
-    });
-
-    it('gathering body falls back to the kind placeholder when the node authored none', () => {
-        const store = makeStore();
-        setPending(store, makeGatheringResult());
-        expect(selectEventViewModel(store.getState()).body).toBe('Useful things, here.');
-    });
-
-    it('gathering shows a stacked payload as "Name xN"', () => {
-        const store = makeStore();
-        setPending(store, {
-            state: undefined as never,
-            event: {
-                kind: 'gathering',
-                items: [
-                    { id: 'berry', name: 'Dark Berries', category: 'material', quantity: 2 } as never,
-                ],
-            },
-        });
-        const vm = selectEventViewModel(store.getState());
-        expect(vm.title).toBe('DARK BERRIES X2');
-        expect(vm.choices[0]?.label).toBe('POCKET IT');
-        expect(vm.choices[0]?.consequences).toEqual([{ kind: 'item', label: 'Dark Berries x2' }]);
-    });
-
-    it('a gathering payload that rolled nothing says so rather than showing a blank card', () => {
-        const store = makeStore();
-        setPending(store, {
-            state: undefined as never,
-            event: { kind: 'gathering', items: [] },
-        });
-        const vm = selectEventViewModel(store.getState());
-        expect(vm.title).toBe('NOTHING WORTH TAKING');
-        expect(vm.subtitle).toBe('');
-        expect(vm.choices).toHaveLength(1);
-        expect(vm.choices[0]?.label).toBe('MOVE ON');
-        expect(vm.choices[0]?.consequences).toEqual([]);
     });
 
     it('maps a village event to a single LEAVE choice (shop UI deferred)', () => {
@@ -664,32 +593,6 @@ describe('selectEventViewModel: narrative-choice composition', () => {
         expect(vm.kind).toBe('narrative-choice');
         expect(vm.badge).toBe('NO EVENT');
         expect(vm.choices).toHaveLength(0);
-    });
-
-    it('maps an interaction (no dialogue) to a single SO BE IT choice', () => {
-        const store = makeStore();
-        setPending(store, makeInteractionResult());
-        const vm = selectEventViewModel(store.getState());
-
-        expect(vm.kind).toBe('narrative-choice');
-        expect(vm.variant).toBe('npc');
-        expect(vm.artSlug).toBe('interaction-generic');
-        expect(vm.title).toContain('A STRANGER');
-        expect(vm.choices).toHaveLength(1);
-    });
-
-    it('interaction body falls back to the generic placeholder when unauthored', () => {
-        const store = makeStore();
-        setPending(store, makeInteractionResult());
-        const vm = selectEventViewModel(store.getState());
-        expect(vm.body).toBe('A figure waits.');
-    });
-
-    it('interaction body prefers the authored description over the placeholder (Phase 58)', () => {
-        const store = makeStore();
-        setPending(store, makeInteractionResult({ description: 'A Stranger leans on a driftwood cane.' }));
-        const vm = selectEventViewModel(store.getState());
-        expect(vm.body).toBe('A Stranger leans on a driftwood cane.');
     });
 
     it('canSkip is true on rest event with long body (forced by long description)', () => {
@@ -837,13 +740,13 @@ describe('selectEventViewModel: sourceNodeType', () => {
         expect(vm.sourceNodeType).toBe('rest');
     });
 
-    it('passes "gather" sourceNodeType through from the slice', () => {
+    it('passes "village" sourceNodeType through from the slice', () => {
         const store = makeStore();
         store.setState({
-            event: { ...EMPTY_EVENT_SLICE, pending: makeGatheringResult(), sourceNodeType: 'gather' },
+            event: { ...EMPTY_EVENT_SLICE, pending: makeVillageResult(), sourceNodeType: 'village' },
         });
         const vm = selectEventViewModel(store.getState());
-        expect(vm.sourceNodeType).toBe('gather');
+        expect(vm.sourceNodeType).toBe('village');
     });
 
     it('passes "treasure" sourceNodeType through for a loot-cache event', () => {
@@ -914,7 +817,7 @@ function setDialogueCursor(store: AppStore, nodeId: string) {
     store.setState({
         event: {
             ...EMPTY_EVENT_SLICE,
-            pending: makeInteractionResult(),
+            pending: makeDialogueCarrierResult(),
             dialogueCursor: { tree, nodeId },
         },
     });

@@ -30,7 +30,7 @@
  *   rest        the free REST offer, claimed (flat heal; mends scars).
  *   loot-cache  the ITEM offer, claimed (rolled items + the node's coin).
  *   blacksmith  leave the anvil unchanged, claimed (nothing spent).
- *   interaction / narration / village / cutscene / gathering
+ *   village / cutscene
  *               dismissed — the slice clears and the screen pops itself
  *               (each paced screen already does `router.back()` when its
  *               event goes inactive). Mid-tree dialogue effects not yet
@@ -115,11 +115,8 @@ export type SkipEventKind =
     | 'rest'
     | 'loot-cache'
     | 'blacksmith'
-    | 'interaction'
-    | 'narration'
     | 'village'
     | 'cutscene'
-    | 'gathering'
     | 'travel'
     | 'labyrinth'
     | 'quest'
@@ -327,10 +324,8 @@ function skipActive(store: AppStore, actions: SkipEventActions, options: SkipEve
 
 function pacedDetail(event: { kind: string } & Record<string, unknown>): Record<string, unknown> {
     switch (event.kind) {
-        case 'interaction': return { npcName: event.npcName };
         case 'village': return { villageName: event.villageName };
         case 'cutscene': return { lines: Array.isArray(event.lines) ? event.lines.length : 0 };
-        case 'gathering': return { items: Array.isArray(event.items) ? event.items.length : 0 };
         default: return {};
     }
 }

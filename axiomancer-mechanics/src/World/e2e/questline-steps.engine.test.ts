@@ -311,18 +311,6 @@ describe('A6: the next quest node is locked until the step is met', () => {
         }
     });
 
-    it('the collect path opens the road', () => {
-        registerQuestline(questline(LOCKED_MAP, objective({ type: 'collect', target: POTION.id })));
-        try {
-            const s0 = acceptedStep1();
-            const moved: GameState = { ...s0, world: moveToNode(s0.world, 'h1') };
-            const s = resolveMapEvent(moved, seededRng(3), { kind: 'gathering', items: [POTION] }).state;
-            expect(isRouteBlocked(map(s), 'r', 'q2')).toBeUndefined();
-        } finally {
-            registerQuestline(questline(LOCKED_MAP));
-        }
-    });
-
     it('the dialogue path opens the road', () => {
         registerQuestline(questline(LOCKED_MAP, objective({ type: 'flag', target: 'x' })));
         try {
@@ -562,13 +550,13 @@ describe('objective lookups skip a filled objective, and a hazard counts once', 
         expect(hazardObjectives(log, LOCKED_MAP)).toEqual([]);
     });
 
-    it('one hazard resolve counts once toward a two-hazard step; a gathering counts none', () => {
+    it('one hazard resolve counts once toward a two-hazard step; a loot cache counts none', () => {
         registerQuestline(questline(LOCKED_MAP, objective({ type: 'hazard', requiredCount: 2 })));
         try {
             const s0 = acceptedStep1();
             const count = (g: GameState) => g.quests.active.find(q => q.name === 'ql1b-step-1')!.objectives[0]!.currentCount;
             const moved: GameState = { ...s0, world: moveToNode(s0.world, 'h1') };
-            const gathered = resolveMapEvent(moved, seededRng(3), { kind: 'gathering', items: [POTION] }).state;
+            const gathered = resolveMapEvent(moved, seededRng(3), { kind: 'loot-cache', items: [POTION] }).state;
             expect(count(gathered)).toBe(0);
             const crossed = arrive(s0, 'h1').state;
             expect(count(crossed)).toBe(1);

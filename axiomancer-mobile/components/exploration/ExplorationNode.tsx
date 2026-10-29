@@ -65,7 +65,7 @@ export function ExplorationNode({ node: n, onNodePress, isSelected }: Exploratio
         quest: AXM.sulfur,
         story: AXM.bone,
         rest: AXM.rust,
-        gather: AXM.bone,
+        waypoint: AXM.bone,
         current: AXM.sulfur,
         hazard: AXM.rust,
         blacksmith: AXM.rust,

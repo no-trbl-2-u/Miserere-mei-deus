@@ -120,13 +120,13 @@ describe('the placement verbs owe nothing — being placed is not arriving', () 
 
 describe('resolving the arrival is what answers it', () => {
     it('clears the debt for the node it resolved', () => {
-        // bw-11 is the kelp wreck, a gathering node.
+        // bw-11 is the kelp wreck, an empty waypoint since the gathering kind was cut.
         const before = gameOn(walk(freshWorld(), 'bw-2', 'bw-7', 'bw-11'));
         expect(before.world.currentMap.pendingArrival).toBe('bw-11');
 
         const { state, event } = resolveMapEvent(before);
 
-        expect(event.kind).toBe('gathering');
+        expect(event.kind).toBe('none');
         expect(state.world.currentMap.pendingArrival ?? null).toBeNull();
     });
 

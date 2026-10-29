@@ -70,20 +70,20 @@ describe('the Lantern Deep\'s events (D29)', () => {
         lanternDeep.nodes.map(n => [n.id, resolveMapEvent(standingOn(n.id)).event.kind]),
     );
     /** Each node's authored payload (every Lantern Deep pool has one entry). */
-    const payloads = lanternDeep.nodes.map(
-        n => getNodeEventPool('northern-continent', 'lantern-deep', n.id)!.entries[0]!.payload,
+    const payloads = lanternDeep.nodes.flatMap(
+        n => getNodeEventPool('northern-continent', 'lantern-deep', n.id)?.entries[0]?.payload ?? [],
     );
 
-    it('resolves an authored event on every node', () => {
+    it('resolves an authored event on every node but its waypoint', () => {
         expect(Object.values(kinds)).not.toContain('empty');
         expect(Object.keys(kinds)).toHaveLength(18);
     });
 
-    it('spreads 7 encounters, 3 rests, a loot cache, 1 gathering, 2 hazards, 1 Anvil, an arrival and two sealed doors', () => {
+    it('spreads 7 encounters, 3 rests, a loot cache, 1 waypoint, 2 hazards, 1 Anvil, an arrival and two sealed doors', () => {
         const tally: Record<string, number> = {};
         for (const k of Object.values(kinds)) tally[k] = (tally[k] ?? 0) + 1;
         expect(tally).toEqual({
-            encounter: 7, rest: 3, 'loot-cache': 1, gathering: 1, hazard: 2, blacksmith: 1, cutscene: 3,
+            encounter: 7, rest: 3, 'loot-cache': 1, none: 1, hazard: 2, blacksmith: 1, cutscene: 3,
         });
     });
 
@@ -112,9 +112,8 @@ describe('the Lantern Deep\'s events (D29)', () => {
         expect(shelters).toEqual(['camp', 'camp', 'camp']);
     });
 
-    it('gathers only the caverns\' own iron', () => {
-        const items = payloads.flatMap(p => (p.kind === 'gathering' ? p.items.map(i => i.id) : []));
-        expect(items).toEqual(['iron-ore']);
+    it('leaves its former gathering node an empty waypoint: no pool, resolves to nothing', () => {
+        for (const id of ['ld-7']) expect(kinds[id], id).toBe('none');
     });
 
     it('seals the vault door: the Labyrinth never opens in play (THE REVAMP R3a, D54)', () => {

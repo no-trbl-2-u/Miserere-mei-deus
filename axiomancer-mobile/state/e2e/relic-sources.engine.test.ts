@@ -30,7 +30,7 @@ import { createAppActions } from '@/state/actions';
 import { claimCombatRewardAction, rollCombatRewardAction, settleEliteRelicAction } from '@/state/combat/store-actions';
 import { confirmItemRewardAction } from '@/state/item-reward/store-actions';
 import { eliteDropSource, questRewardSource } from '@/state/presenters/relic-source.copy';
-import { createAppStore, type AppStore } from '@/state/store';
+import { createAppStore, EMPTY_EVENT_SLICE, type AppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 
 afterEach(() => {
@@ -132,7 +132,15 @@ describe('a quest relic reaches the item-reward screen', () => {
             },
         };
         const actions = createAppActions(store);
-        actions.resolveCurrentMapEvent(undefined, { kind: 'narration', dialogue });
+        // No map event opens a tree; seat the cursor the way the dev menu's
+        // dialogue jump does.
+        store.setState({
+            event: {
+                ...EMPTY_EVENT_SLICE,
+                pending: { state: gs(store), event: { kind: 'cutscene', lines: [] } },
+                dialogueCursor: { tree: dialogue, nodeId: 'root' },
+            },
+        });
         expect(store.getState().event.dialogueCursor?.nodeId).toBe('root');
         actions.pickEventChoice('0');
         expect(gs(store).quests.completed).toContain(q.name);

@@ -4,9 +4,10 @@
  *
  * Each authored node (bw-N / cw-N / bc-N / ld-N) gets a single-entry pool override
  * so the dispatcher reproduces (and extends) the authored events
- * `processNode` fires. Act 1 stages no NPC, shop or narration, so
- * the `interaction`, `village` and `narration` kinds have no carrier here;
- * their witnesses are the neutral fixtures in `Game/fixtures/`.
+ * `processNode` fires. Act 1 stages no shop, so the `village` kind has no
+ * carrier here; its witness is the neutral fixture in `Game/fixtures/`. A
+ * node listed in `ACT1_WAYPOINT_NODES` gets no pool at all: it is an empty
+ * waypoint, which reveals its roads and resolves to nothing.
  *
  * This file side-effects on import: `src/World/index.ts` imports it
  * for that side effect, so consumers of the package get the pools
@@ -33,26 +34,6 @@ function innRestPool(nodeId: string, description: string): MapEventPool {
     return {
         id: `${nodeId}.rest`,
         entries: [{ kind: 'rest', weight: 1, payload: { kind: 'rest', shelter: 'inn', description } }],
-    };
-}
-
-const COAST_GATHER_MATERIALS: ReadonlyArray<{ id: string; name: string; description: string }> = [
-    { id: 'driftwood',  name: 'Driftwood',       description: 'Salt-bleached and brittle, but burns clean.' },
-    { id: 'tide-shell', name: 'Tide Shell',      description: 'Spiral and chalk-pale; the inside still smells of salt.' },
-    { id: 'salt-fish',  name: 'Salt-Fish Strip', description: 'Cured hard; chewy, salty, will keep for the road.' },
-    { id: 'kelp-frond', name: 'Kelp Frond',      description: 'Rubbery and green-black; useful steeped or dried.' },
-];
-function gatheringPool(nodeId: string, mat: { id: string; name: string; description: string }, description: string): MapEventPool {
-    return {
-        id: `${nodeId}.gathering`,
-        entries: [{
-            kind: 'gathering', weight: 1,
-            payload: {
-                kind: 'gathering',
-                items: [{ id: mat.id, name: mat.name, description: mat.description, category: 'material', quantity: 1 }],
-                description,
-            },
-        }],
     };
 }
 
@@ -85,24 +66,6 @@ function blacksmithPool(nodeId: string, description: string): MapEventPool {
         entries: [{
             kind: 'blacksmith', weight: 1,
             payload: { kind: 'blacksmith', budget: 12, variants: BLACKSMITH_WITNESS_VARIANTS, description },
-        }],
-    };
-}
-
-function ironVeinPool(nodeId: string, description: string): MapEventPool {
-    return {
-        id: `${nodeId}.gathering`,
-        entries: [{
-            kind: 'gathering', weight: 1,
-            payload: {
-                kind: 'gathering',
-                items: [{
-                    id: 'iron-ore', name: 'Iron Ore',
-                    description: 'Heavy, honest, worth carrying.',
-                    category: 'material', quantity: 1,
-                }],
-                description,
-            },
         }],
     };
 }
@@ -153,15 +116,29 @@ export const ACT1_ANVIL_NODES: Readonly<Record<string, string>> = {
 };
 const ANVIL_NODE_IDS: ReadonlySet<string> = new Set(Object.values(ACT1_ANVIL_NODES));
 
+// ─── Empty waypoints ─────────────────────────────────────────────────────────
+//
+// The nodes that held a gathering event until the kind was cut. They carry no
+// pool: arriving reveals their roads and resolves to nothing, and the map
+// draws them as a waypoint. The Breakwater redraw and the later chapters'
+// plots re-author them.
+export const ACT1_WAYPOINT_NODES: Readonly<Record<string, readonly string[]>> = {
+    'breakwater':    ['bw-4', 'bw-11'],
+    'charcoal-wood': ['cw-4', 'cw-8', 'cw-14'],
+    'beacon-crags':  ['bc-7'],
+    'lantern-deep':  ['ld-7'],
+};
+const WAYPOINT_NODE_IDS: ReadonlySet<string> = new Set(Object.values(ACT1_WAYPOINT_NODES).flat());
+
 // ─── The Breakwater (Act 1, map 1) ───────────────────────────────────────────
 //
-// The Breakwater is built from the shared builders above (inn rests, coast
-// materials, hazard and loot caches); it adds no enemy, NPC or event kind of
+// The Breakwater is built from the shared builders above (inn rests, hazard
+// and loot caches); it adds no enemy, NPC or event kind of
 // its own. The one-line descriptions sit on the plate's landmarks (see
 // `Continents/Coastal-Village/breakwater.ts` for the node map).
 //
 // Kind spread over 22 nodes: 6 encounter, 2 rest, 3 loot-cache,
-// 2 gathering, 2 hazard, 1 blacksmith (the Anvil, bw-16), 1 arrival
+// 2 empty waypoints, 2 hazard, 1 blacksmith (the Anvil, bw-16), 1 arrival
 // cutscene, 1 travel, and the questline's 4 quest nodes (bw-19..bw-22). The
 // watchtower (bw-17), the one node every run crosses before the door, holds
 // the region's door fight.
@@ -216,12 +193,6 @@ const BW_DOOR: ActOneFoe = { slug: 'death-beholder', level: BW_DOOR_LEVEL, isBos
 const BW_REST_NODES: Record<string, string> = {
     'bw-9':  'The customs house lets rooms by the night. The clerk takes shillings, not names.',
     'bw-13': 'An inn above the harbour. Warm, loud, and paid for in advance.',
-};
-
-/** Index into `COAST_GATHER_MATERIALS`, and the line said on arrival. */
-const BW_GATHER_NODES: Record<string, { mat: number; description: string }> = {
-    'bw-4':  { mat: 0, description: 'Storm wrack piles at the foot of the pass. Some of it burns.' },
-    'bw-11': { mat: 3, description: 'Kelp has taken the wreck. You cut what you can carry.' },
 };
 
 const BW_HAZARD_NODES: Record<string, string> = {
@@ -290,9 +261,8 @@ const BREAKWATER_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> =
                 out.push({ nodeId, pool: blacksmithPool(nodeId, ANVIL_LINE) });
             } else if (BW_REST_NODES[nodeId]) {
                 out.push({ nodeId, pool: innRestPool(nodeId, BW_REST_NODES[nodeId]!) });
-            } else if (BW_GATHER_NODES[nodeId]) {
-                const g = BW_GATHER_NODES[nodeId]!;
-                out.push({ nodeId, pool: gatheringPool(nodeId, COAST_GATHER_MATERIALS[g.mat]!, g.description) });
+            } else if (WAYPOINT_NODE_IDS.has(nodeId)) {
+                continue;
             } else if (BW_HAZARD_NODES[nodeId]) {
                 out.push({ nodeId, pool: hazardPool(nodeId, BW_HAZARD_NODES[nodeId]!) });
             } else if (nodeId in BW_LOOT_NODES) {
@@ -308,14 +278,14 @@ const BREAKWATER_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> =
 
 // ─── The Charcoal Wood (Act 1, map 2) ────────────────────────────────────────
 //
-// The Charcoal Wood uses the shared builders (gathering, hazard and loot, the
-// caverns' camp), the northern forest's roster and its three materials. It
+// The Charcoal Wood uses the shared builders (hazard and loot, the caverns'
+// camp) and the northern forest's roster. It
 // adds no enemy, NPC, item or event kind of its own; the one-line
 // descriptions and the two arrival lines sit on the plate's landmarks (see
 // `Continents/Coastal-Village/charcoal-wood.ts`).
 //
 // Kind spread over 20 nodes: 7 encounter, 3 rest, 3 loot-cache,
-// 3 gathering, 1 hazard, 1 blacksmith (the Anvil, cw-18), 1 arrival
+// 3 empty waypoints, 1 hazard, 1 blacksmith (the Anvil, cw-18), 1 arrival
 // cutscene, 1 travel. The northern forest's roster is level 9 and up, so
 // every fight here is pinned to a low absolute level,
 // ramping ring by ring from 2 to 3.
@@ -390,22 +360,6 @@ const CW_CAMP_NODES: Record<string, string> = {
     'cw-15': 'An open shelter over stacked logs. The fire is someone else\'s. You sit by it anyway.',
 };
 
-/** The wood's three materials. */
-const CW_GATHER_NODES: Record<string, { mat: { id: string; name: string; description: string }; description: string }> = {
-    'cw-4':  {
-        mat: { id: 'dark-berries', name: 'Dark Berries', description: 'Plump and sweet, with a hint of bitterness.' },
-        description: 'Bramble has taken the millrace. The berries on it are black, and free.',
-    },
-    'cw-8':  {
-        mat: { id: 'moonbell-petals', name: 'Moonbell Petals', description: 'Silvery petals that glow with their own light.' },
-        description: 'Moonbells grow in the great tree\'s shadow. Nobody has priced them yet.',
-    },
-    'cw-14': {
-        mat: { id: 'oak-branch', name: 'Oak Branch', description: 'Sturdy, fresh-fallen.' },
-        description: 'Oak waits by the mounds for the fire. The burners count the logs, not the branches.',
-    },
-};
-
 const CW_HAZARD_NODES: Record<string, string> = {
     'cw-3':  'The shrine floor is rotten over the crypt. It gives under you.',
 };
@@ -447,9 +401,8 @@ const CHARCOAL_WOOD_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }>
                 out.push({ nodeId, pool: blacksmithPool(nodeId, ANVIL_LINE) });
             } else if (CW_CAMP_NODES[nodeId]) {
                 out.push({ nodeId, pool: campRestPool(nodeId, CW_CAMP_NODES[nodeId]!) });
-            } else if (CW_GATHER_NODES[nodeId]) {
-                const g = CW_GATHER_NODES[nodeId]!;
-                out.push({ nodeId, pool: gatheringPool(nodeId, g.mat, g.description) });
+            } else if (WAYPOINT_NODE_IDS.has(nodeId)) {
+                continue;
             } else if (CW_HAZARD_NODES[nodeId]) {
                 out.push({ nodeId, pool: hazardPool(nodeId, CW_HAZARD_NODES[nodeId]!) });
             } else if (CW_LOOT_NODES[nodeId]) {
@@ -465,12 +418,12 @@ const CHARCOAL_WOOD_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }>
 
 // ─── The Beacon Crags (Act 1, map 3) ─────────────────────────────────────────
 //
-// The mountains use the caverns' roster, its iron, and its camp, hazard and
+// The mountains use the caverns' roster and its camp, hazard and
 // loot builders. They add no enemy, NPC, item or event kind of their own; the
 // one-line descriptions and the two arrival lines sit on the plate's landmarks (see
 // `Continents/Northern-Continent/beacon-crags.ts`).
 //
-// Kind spread over 17 nodes: 6 encounter, 3 rest, 2 loot-cache, 1 gathering,
+// Kind spread over 17 nodes: 6 encounter, 3 rest, 2 loot-cache, 1 empty waypoint,
 // 2 hazard, 1 blacksmith (the Anvil, bc-12), 1 arrival cutscene, 1 travel.
 // The caverns' roster is level 13 and up, so every fight is pinned low, one
 // step above the Charcoal Wood: 3 on the upper mountain, 4 below
@@ -517,11 +470,6 @@ const BC_CAMP_NODES: Record<string, string> = {
     'bc-14': 'The inn is shut and the cart outside it is not. You sleep in the cart.',
 };
 
-/** The caverns' one material (`ironVeinPool`). */
-const BC_GATHER_NODES: Record<string, string> = {
-    'bc-7':  'The delvers left ore in the spoil heap. Nobody weighs the tailings.',
-};
-
 const BC_HAZARD_NODES: Record<string, { damage: number; description: string }> = {
     'bc-3':  { damage: 2, description: 'The spray from the falls freezes on the path. The lake is a long way down.' },
     'bc-9':  { damage: 3, description: 'The rope bridge charges for the crossing. Halfway over, a plank charges again.' },
@@ -563,8 +511,8 @@ const BEACON_CRAGS_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> 
                 out.push({ nodeId, pool: blacksmithPool(nodeId, ANVIL_LINE) });
             } else if (BC_CAMP_NODES[nodeId]) {
                 out.push({ nodeId, pool: campRestPool(nodeId, BC_CAMP_NODES[nodeId]!) });
-            } else if (BC_GATHER_NODES[nodeId]) {
-                out.push({ nodeId, pool: ironVeinPool(nodeId, BC_GATHER_NODES[nodeId]!) });
+            } else if (WAYPOINT_NODE_IDS.has(nodeId)) {
+                continue;
             } else if (BC_HAZARD_NODES[nodeId]) {
                 const h = BC_HAZARD_NODES[nodeId]!;
                 out.push({ nodeId, pool: damageHazardPool(nodeId, h.damage, h.description) });
@@ -582,13 +530,13 @@ const BEACON_CRAGS_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> 
 
 // ─── The Lantern Deep (Act 1, map 4) ─────────────────────────────────────────
 //
-// The underworld uses the caverns like the Beacon Crags do: the roster, the
-// iron, and the camp, hazard and loot builders. It adds no enemy, NPC, item or
+// The underworld uses the caverns like the Beacon Crags do: the roster and the
+// camp, hazard and loot builders. It adds no enemy, NPC, item or
 // event kind of its own; the one-line descriptions and the two arrival lines
 // sit on the plate's landmarks (see
 // `Continents/Northern-Continent/lantern-deep.ts`).
 //
-// Kind spread over 18 nodes: 7 encounter, 3 rest, 1 loot-cache, 1 gathering,
+// Kind spread over 18 nodes: 7 encounter, 3 rest, 1 loot-cache, 1 empty waypoint,
 // 2 hazard, 1 blacksmith (the Anvil, ld-14), 1 arrival cutscene, 2 sealed
 // doors (the vault door and the deep stair). No boss; one elite on the last
 // fight column. Every fight pinned low, level with the Beacon Crags: 3 above
@@ -635,11 +583,6 @@ const LD_CAMP_NODES: Record<string, string> = {
     'ld-2':  'The ferryman lets you sleep under his lantern. He charges for the oil, not the floor.',
     'ld-10': 'The traders let you sleep behind the stalls. They sell lamp oil by the drop.',
     'ld-17': 'A landing on the stairway, dry and out of the draught. Someone left a lantern. It is out.',
-};
-
-/** The caverns' one material (`ironVeinPool`). */
-const LD_GATHER_NODES: Record<string, string> = {
-    'ld-7':  'Iron runs through the crystal. Up top the crystal is worth nothing. The iron is worth something.',
 };
 
 const LD_HAZARD_NODES: Record<string, { damage: number; description: string }> = {
@@ -698,8 +641,8 @@ const LANTERN_DEEP_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> 
                 out.push({ nodeId, pool: blacksmithPool(nodeId, ANVIL_LINE) });
             } else if (LD_CAMP_NODES[nodeId]) {
                 out.push({ nodeId, pool: campRestPool(nodeId, LD_CAMP_NODES[nodeId]!) });
-            } else if (LD_GATHER_NODES[nodeId]) {
-                out.push({ nodeId, pool: ironVeinPool(nodeId, LD_GATHER_NODES[nodeId]!) });
+            } else if (WAYPOINT_NODE_IDS.has(nodeId)) {
+                continue;
             } else if (LD_HAZARD_NODES[nodeId]) {
                 const h = LD_HAZARD_NODES[nodeId]!;
                 out.push({ nodeId, pool: damageHazardPool(nodeId, h.damage, h.description) });

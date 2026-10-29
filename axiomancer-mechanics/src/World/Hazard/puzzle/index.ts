@@ -40,7 +40,6 @@ export {
 
 export type { HazardPuzzleOutcome, HazardPuzzleOutcomeContext } from './hazard-puzzle.outcome';
 export { hazardPuzzleOutcome } from './hazard-puzzle.outcome';
-export { hazardRegionMaterials } from './hazard-puzzle.region';
 
 export type {
     HazardPuzzleFeatures, HazardPuzzleFirstPlays, HazardPuzzleSolution, HazardPuzzleSolveOptions,

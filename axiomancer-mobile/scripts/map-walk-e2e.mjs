@@ -13,7 +13,7 @@
 //
 //   1. NEW GAME: the windmill's arrival scene (D31), then the map (no relic);
 //   2. bw-5, a loot cache: take a card, move on, back on the map;
-//   3. bw-4, a gathering: acknowledge, back on the map (lateral rib);
+//   3. bw-4, an empty waypoint: nothing opens, still on the map (lateral rib);
 //   4. bw-19, the first quest node: ACCEPT step 1 on `/quest`, LEAVE; the
 //      hazard pocket behind it opens (QL1d: every fight and hazard sits in a
 //      pocket behind its quest node);
@@ -266,13 +266,11 @@ async function lootCache(page) {
     log('bw-5 cache: took a card, back on the map')
 }
 
-async function gathering(page) {
+async function waypoint(page) {
     await travelTo(page, 'bw-4')
-    await waitFor(page, 'event-choice-acknowledge', 'bw-4 gathering')
-    await tap(page, 'event-choice-acknowledge')
     await settleOnMap(page, 'bw-4')
     await expectHere(page, 'bw-4')
-    log('bw-4 gathering: acknowledged, back on the map')
+    log('bw-4 waypoint: nothing opened, still on the map')
 }
 
 /** A quest node: TURN IN the step before when it is ready, ACCEPT the one offered, LEAVE. */
@@ -392,7 +390,7 @@ async function main() {
         })
         await newGame(page, baseUrl)
         await lootCache(page)
-        await gathering(page)
+        await waypoint(page)
         await questNode(page, 'bw-19', { turnIn: false })
         await hazard(page)
         await rest(page)
@@ -400,7 +398,7 @@ async function main() {
         await fight(page)
         if (pageErrors.length) fail(`${pageErrors.length} page error(s) during the walk`)
         await context.close()
-        log('ALL PASS — new game, cache, gathering, quest, hazard, rest, quest and fight, node to node')
+        log('ALL PASS — new game, cache, waypoint, quest, hazard, rest, quest and fight, node to node')
     } finally {
         await browser.close()
         server.close()

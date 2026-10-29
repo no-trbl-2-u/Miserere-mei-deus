@@ -11,7 +11,7 @@
 //      forced) → the exploration map opens with bw-15 as the live node.
 //   B. Init-script global with an INLINE fixture carrying `arrive: true`
 //      → `<FixtureBoot>` fires the node event and `<EventGate>` lands on
-//      `/dialogue` cold.
+//      `/cutscene` cold.
 //   C. Fallback: an unknown id (`?fixture=no-such-fixture`) is ignored →
 //      the fresh-game map opens with bw-15 NOT live and no runtime error.
 //
@@ -163,17 +163,14 @@ async function caseInlineArrive(browser, baseUrl) {
             preset: 'apprentice',
             world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-2' },
             arrive: true,
-            stagedEvent: {
-                kind: 'narration',
-                dialogue: { rootId: 'start', nodes: { start: { id: 'start', text: 'A placeholder line.' } } },
-            },
+            stagedEvent: { kind: 'cutscene', lines: ['A placeholder line.'] },
         })
         const page = await context.newPage()
         trackErrors(page, errors)
         await page.goto(`${baseUrl}/`, { waitUntil: 'networkidle', timeout: 30000 })
-        await page.waitForURL((url) => url.pathname.endsWith('/dialogue'), { timeout: 20000 })
-            .catch(() => fail(`B (inline + arrive): expected /dialogue, got ${page.url()}`))
-        log('B (inline + arrive): landed on /dialogue cold ✔')
+        await page.waitForURL((url) => url.pathname.endsWith('/cutscene'), { timeout: 20000 })
+            .catch(() => fail(`B (inline + arrive): expected /cutscene, got ${page.url()}`))
+        log('B (inline + arrive): landed on /cutscene cold ✔')
     } finally {
         await context.close()
     }

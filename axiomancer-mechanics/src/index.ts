@@ -258,7 +258,7 @@ export {
     validateStateFixture,
     getStateFixtureById, listStateFixtureIds,
     FIXTURE_NPC, FIXTURE_SHOP, FIXTURE_QUEST,
-    FIXTURE_DIALOGUE_EVENT, FIXTURE_VILLAGE_EVENT, FIXTURE_CUTSCENE_EVENT, FIXTURE_QUEST_EVENT, FIXTURE_QUESTLINE,
+    FIXTURE_VILLAGE_EVENT, FIXTURE_CUTSCENE_EVENT, FIXTURE_QUEST_EVENT, FIXTURE_QUESTLINE,
     FIXTURE_WEAPON, FIXTURE_ARMOR, FIXTURE_TRINKETS, FIXTURE_ELITE_RELICS, FIXTURE_QUEST_RELIC,
     // Test-only: a map's quest nodes settled so a walker can cross it.
     settleQuestNodes, settleQuestNodesIn, questNodeIdsOn,
@@ -333,7 +333,6 @@ export type {
 // Hazard puzzle outcome: what a resolve pays and costs, and its claim.
 export {
     HAZARD_PUZZLE_FAILURE, HAZARD_PUZZLE_REWARDS, hazardPuzzleOutcome,
-    hazardRegionMaterials,
 } from './World/Hazard';
 export type { HazardPuzzleOutcome, HazardPuzzleOutcomeContext } from './World/Hazard';
 export { claimHazardPuzzleOutcome, HAZARD_SCAR_FLAG_PREFIX } from './Game';

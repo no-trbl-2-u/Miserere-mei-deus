@@ -218,7 +218,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mechanics/src/NPCs/e2e/dialogue.engine.test.ts, axiomancer-mechanics/src/World/MapEvents/e2e/description-passthrough.engine.test.ts, axiomancer-mechanics/src/World/MapEvents/e2e/narration-kind.engine.test.ts, ..."
+        "source": "axiomancer-mechanics/src/NPCs/e2e/dialogue.engine.test.ts, axiomancer-mechanics/src/World/e2e/quest-rewards.engine.test.ts, axiomancer-mechanics/src/World/e2e/questline-steps.engine.test.ts, ..."
       },
       "needsPitch": {
         "value": false,
@@ -489,7 +489,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/fixture-e2e.mjs, ..."
       },
       "tested": {
         "value": true,
@@ -689,11 +689,11 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/fixture-e2e.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
+        "source": "axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/state/e2e/event.screen.test.tsx, axiomancer-mobile/state/e2e/option-description-size.S5-talk-C17.test.tsx, axiomancer-mobile/state/e2e/scene-measure.S5-talk-C13.test.tsx, ..."
+        "source": "axiomancer-mobile/state/dev/__tests__/story-catalog.test.ts, axiomancer-mobile/state/e2e/event.screen.test.tsx, axiomancer-mobile/state/e2e/option-description-size.S5-talk-C17.test.tsx, ..."
       },
       "needsPitch": {
         "value": false,
@@ -709,16 +709,16 @@
       "source": "axiomancer-mobile/app/event/index.tsx",
       "named": false,
       "reachable": {
-        "value": true,
-        "source": "flow path from route:index: route:index -> route:event"
+        "value": false,
+        "source": "no flow path from route:index"
       },
       "driven": {
-        "value": true,
-        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs"
+        "value": false,
+        "source": null
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/__tests__/EventGate.test.tsx, axiomancer-mobile/components/event/__tests__/EventArt.test.tsx, axiomancer-mobile/components/event/__tests__/PlaceholderIllustration.test.tsx, ..."
+        "source": "axiomancer-mobile/components/event/__tests__/EventArt.test.tsx, axiomancer-mobile/components/event/__tests__/PlaceholderIllustration.test.tsx, axiomancer-mobile/state/e2e/app-components.engine.test.tsx, ..."
       },
       "needsPitch": {
         "value": true,
@@ -1774,6 +1774,12 @@
       "kind": "coupling",
       "from": "area:Game",
       "to": "area:NPCs",
+      "file": "axiomancer-mechanics/src/Game/fixtures/state-fixture.types.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:NPCs",
       "file": "axiomancer-mechanics/src/Game/store.ts"
     },
     {
@@ -2152,12 +2158,6 @@
       "kind": "coupling",
       "from": "area:World",
       "to": "area:Items",
-      "file": "axiomancer-mechanics/src/World/Hazard/puzzle/hazard-puzzle.region.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "area:World",
-      "to": "area:Items",
       "file": "axiomancer-mechanics/src/World/Hazard/puzzle/hazard-puzzle.tuning.ts"
     },
     {
@@ -2207,12 +2207,6 @@
       "from": "area:World",
       "to": "area:Items",
       "file": "axiomancer-mechanics/src/World/types.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "area:World",
-      "to": "area:NPCs",
-      "file": "axiomancer-mechanics/src/World/Labyrinth/labyrinth.pools.ts"
     },
     {
       "kind": "coupling",
@@ -2537,12 +2531,6 @@
       "from": "route:(tabs)/exploration",
       "to": "area:Items",
       "file": "axiomancer-mobile/state/combat-mode.tsx"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:(tabs)/exploration",
-      "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/event.engine.ts"
     },
     {
       "kind": "coupling",
@@ -3160,12 +3148,6 @@
       "kind": "coupling",
       "from": "route:character-select",
       "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/event.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:character-select",
-      "to": "area:Items",
       "file": "axiomancer-mobile/state/store.ts"
     },
     {
@@ -3544,12 +3526,6 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/event.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:combat-encounter",
-      "to": "area:Items",
       "file": "axiomancer-mobile/state/store.ts"
     },
     {
@@ -3677,12 +3653,6 @@
       "from": "route:cutscene",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/GameStoreProvider.tsx"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:cutscene",
-      "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/event.engine.ts"
     },
     {
       "kind": "coupling",
@@ -3887,12 +3857,6 @@
       "from": "route:dev",
       "to": "area:Items",
       "file": "axiomancer-mobile/components/DebugRewardTriggers.tsx"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:dev",
-      "to": "area:Items",
-      "file": "axiomancer-mobile/components/DebugTriggerEncounter.tsx"
     },
     {
       "kind": "coupling",
@@ -4245,12 +4209,6 @@
     {
       "kind": "coupling",
       "from": "route:dialogue",
-      "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/event.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:dialogue",
       "to": "area:Log",
       "file": "axiomancer-mobile/lib/platform/router.ts"
     },
@@ -4283,12 +4241,6 @@
       "from": "route:event",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/GameStoreProvider.tsx"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:event",
-      "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/event.engine.ts"
     },
     {
       "kind": "coupling",
@@ -4547,12 +4499,6 @@
       "from": "route:index",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/store.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:index",
-      "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/event.engine.ts"
     },
     {
       "kind": "coupling",
@@ -5068,12 +5014,6 @@
       "kind": "coupling",
       "from": "route:saves",
       "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/event.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:saves",
-      "to": "area:Items",
       "file": "axiomancer-mobile/state/store.ts"
     },
     {
@@ -5253,12 +5193,6 @@
     {
       "kind": "flow",
       "from": "route:(tabs)/character",
-      "to": "route:event",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:(tabs)/character",
       "to": "route:hazard",
       "file": "axiomancer-mobile/components/HazardGate.tsx"
     },
@@ -5361,12 +5295,6 @@
     {
       "kind": "flow",
       "from": "route:(tabs)/deck",
-      "to": "route:event",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:(tabs)/deck",
       "to": "route:hazard",
       "file": "axiomancer-mobile/components/HazardGate.tsx"
     },
@@ -5452,12 +5380,6 @@
       "kind": "flow",
       "from": "route:(tabs)/exploration",
       "to": "route:dialogue",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:(tabs)/exploration",
-      "to": "route:event",
       "file": "axiomancer-mobile/components/EventGate.tsx"
     },
     {
@@ -5553,12 +5475,6 @@
     {
       "kind": "flow",
       "from": "route:(tabs)/inventory",
-      "to": "route:event",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:(tabs)/inventory",
       "to": "route:hazard",
       "file": "axiomancer-mobile/components/HazardGate.tsx"
     },
@@ -5649,12 +5565,6 @@
     {
       "kind": "flow",
       "from": "route:(tabs)/memoir",
-      "to": "route:event",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:(tabs)/memoir",
       "to": "route:hazard",
       "file": "axiomancer-mobile/components/HazardGate.tsx"
     },
@@ -5715,12 +5625,6 @@
     {
       "kind": "flow",
       "from": "route:blacksmith",
-      "to": "route:event",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:blacksmith",
       "to": "route:hazard",
       "file": "axiomancer-mobile/components/HazardGate.tsx"
     },
@@ -5776,12 +5680,6 @@
       "kind": "flow",
       "from": "route:cache",
       "to": "route:dialogue",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:cache",
-      "to": "route:event",
       "file": "axiomancer-mobile/components/EventGate.tsx"
     },
     {
@@ -5878,12 +5776,6 @@
       "kind": "flow",
       "from": "route:character-select",
       "to": "route:dialogue",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:character-select",
-      "to": "route:event",
       "file": "axiomancer-mobile/components/EventGate.tsx"
     },
     {
@@ -5961,12 +5853,6 @@
     {
       "kind": "flow",
       "from": "route:combat-encounter",
-      "to": "route:event",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:combat-encounter",
       "to": "route:hazard",
       "file": "axiomancer-mobile/components/HazardGate.tsx"
     },
@@ -6022,12 +5908,6 @@
       "kind": "flow",
       "from": "route:cutscene",
       "to": "route:dialogue",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:cutscene",
-      "to": "route:event",
       "file": "axiomancer-mobile/components/EventGate.tsx"
     },
     {
@@ -6100,12 +5980,6 @@
       "kind": "flow",
       "from": "route:death-return",
       "to": "route:dialogue",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:death-return",
-      "to": "route:event",
       "file": "axiomancer-mobile/components/EventGate.tsx"
     },
     {
@@ -6243,12 +6117,6 @@
     {
       "kind": "flow",
       "from": "route:dev",
-      "to": "route:event",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:dev",
       "to": "route:hazard",
       "file": "axiomancer-mobile/components/HazardGate.tsx"
     },
@@ -6310,12 +6178,6 @@
       "kind": "flow",
       "from": "route:devaftermath",
       "to": "route:dialogue",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:devaftermath",
-      "to": "route:event",
       "file": "axiomancer-mobile/components/EventGate.tsx"
     },
     {
@@ -6387,12 +6249,6 @@
     {
       "kind": "flow",
       "from": "route:devart",
-      "to": "route:event",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:devart",
       "to": "route:hazard",
       "file": "axiomancer-mobile/components/HazardGate.tsx"
     },
@@ -6454,12 +6310,6 @@
       "kind": "flow",
       "from": "route:devart/rooms",
       "to": "route:dialogue",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:devart/rooms",
-      "to": "route:event",
       "file": "axiomancer-mobile/components/EventGate.tsx"
     },
     {
@@ -6531,12 +6381,6 @@
     {
       "kind": "flow",
       "from": "route:devframes",
-      "to": "route:event",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:devframes",
       "to": "route:hazard",
       "file": "axiomancer-mobile/components/HazardGate.tsx"
     },
@@ -6603,12 +6447,6 @@
     {
       "kind": "flow",
       "from": "route:devpuzzle",
-      "to": "route:event",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:devpuzzle",
       "to": "route:hazard",
       "file": "axiomancer-mobile/components/HazardGate.tsx"
     },
@@ -6664,12 +6502,6 @@
       "kind": "flow",
       "from": "route:dialogue",
       "to": "route:cutscene",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:dialogue",
-      "to": "route:event",
       "file": "axiomancer-mobile/components/EventGate.tsx"
     },
     {
@@ -6813,12 +6645,6 @@
     {
       "kind": "flow",
       "from": "route:hazard",
-      "to": "route:event",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:hazard",
       "to": "route:item-reward",
       "file": "axiomancer-mobile/components/item-reward/ItemRewardGate.tsx"
     },
@@ -6874,12 +6700,6 @@
       "kind": "flow",
       "from": "route:hazard-deck",
       "to": "route:dialogue",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:hazard-deck",
-      "to": "route:event",
       "file": "axiomancer-mobile/components/EventGate.tsx"
     },
     {
@@ -6981,12 +6801,6 @@
     {
       "kind": "flow",
       "from": "route:index",
-      "to": "route:event",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:index",
       "to": "route:hazard",
       "file": "axiomancer-mobile/components/HazardGate.tsx"
     },
@@ -7065,12 +6879,6 @@
     {
       "kind": "flow",
       "from": "route:item-reward",
-      "to": "route:event",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:item-reward",
       "to": "route:hazard",
       "file": "axiomancer-mobile/components/HazardGate.tsx"
     },
@@ -7126,12 +6934,6 @@
       "kind": "flow",
       "from": "route:labyrinth",
       "to": "route:dialogue",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:labyrinth",
-      "to": "route:event",
       "file": "axiomancer-mobile/components/EventGate.tsx"
     },
     {
@@ -7197,12 +6999,6 @@
     {
       "kind": "flow",
       "from": "route:quest",
-      "to": "route:event",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:quest",
       "to": "route:hazard",
       "file": "axiomancer-mobile/components/HazardGate.tsx"
     },
@@ -7258,12 +7054,6 @@
       "kind": "flow",
       "from": "route:rest",
       "to": "route:dialogue",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:rest",
-      "to": "route:event",
       "file": "axiomancer-mobile/components/EventGate.tsx"
     },
     {
@@ -7365,12 +7155,6 @@
     {
       "kind": "flow",
       "from": "route:saves",
-      "to": "route:event",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:saves",
       "to": "route:hazard",
       "file": "axiomancer-mobile/components/HazardGate.tsx"
     },
@@ -7432,12 +7216,6 @@
       "kind": "flow",
       "from": "route:settings",
       "to": "route:dialogue",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:settings",
-      "to": "route:event",
       "file": "axiomancer-mobile/components/EventGate.tsx"
     },
     {
@@ -7510,12 +7288,6 @@
       "kind": "flow",
       "from": "route:village",
       "to": "route:dialogue",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:village",
-      "to": "route:event",
       "file": "axiomancer-mobile/components/EventGate.tsx"
     },
     {

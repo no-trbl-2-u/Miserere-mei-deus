@@ -2,7 +2,7 @@
  * Mobile-local slug -> illustration mapping for the event modal.
  *
  * Mobile owns the slug-to-asset map. The engine
- * returns a `ResolvedEvent` with a discriminant (8 kinds + 'none');
+ * returns a `ResolvedEvent` with a discriminant (10 kinds + 'none');
  * the screen renders an SVG illustration component keyed on a stable
  * slug. If the engine later adds an `art: string` field on
  * `ResolvedEvent`, this mapper is the single switch-point to swap
@@ -17,9 +17,8 @@ import type { ResolvedEvent } from '@mechanics';
 
 // Only the kinds the modal renders with their own art keep a slug. Rest,
 // loot-cache and hazard never reach the event modal (their interceptors
-// start minigame sessions). `gathering` reaches it as an acknowledgement
-// card (`event.engine.ts::composeGathering`) and borrows
-// `'interaction-generic'`; a new `EventArtSlug` member needs an entry in the
+// start minigame sessions); `'interaction-generic'` is the fallback figure.
+// A new `EventArtSlug` member needs an entry in the
 // exhaustive `Record` in `components/event/PlaceholderIllustration.tsx`, its
 // test, and a drawing.
 export const EVENT_ART_SLUGS = [
@@ -42,21 +41,16 @@ export function selectEventArtSlug(event: ResolvedEvent): EventArtSlug {
     switch (event.kind) {
         case 'encounter':
             return event.isBoss ? 'boss' : 'encounter';
-        case 'interaction':
-            return 'interaction-generic';
         case 'village':
             return 'village';
         case 'cutscene':
             return 'cutscene';
-        // `gathering` reaches the modal and borrows the generic figure. Every
-        // other kind below never reaches the modal (their interceptors start
+        // Every kind below never reaches the modal (their interceptors start
         // minigame sessions or resolve elsewhere) and keeps the generic
         // fallback defensively.
-        case 'gathering':
         case 'rest':
         case 'loot-cache':
         case 'hazard':
-        case 'narration':
         // 'blacksmith': its interceptor starts "The Anvil" die-gear session.
         case 'blacksmith':
         // 'travel' resolves engine-side (the world has already crossed).
@@ -77,14 +71,11 @@ export function selectEventArtSlug(event: ResolvedEvent): EventArtSlug {
  */
 const DEFAULT_BODY_BY_KIND: Record<ResolvedEvent['kind'], string> = {
     encounter: 'Something stirs.',
-    interaction: 'A figure waits.',
-    gathering: 'Useful things, here.',
     rest: 'A quiet place.',
     village: 'Roofs and smoke.',
     cutscene: '',
     hazard: 'The air turns.',
     'loot-cache': 'Forgotten goods.',
-    narration: 'A voice speaks, unbidden.',
     // 'blacksmith' launches "The Anvil" die-gear session via its interceptor;
     // never renders in the modal, but the exhaustive record needs the entry.
     blacksmith: 'An anvil, and a waiting hammer.',

@@ -26,6 +26,7 @@ import {
 
 import { createAppActions, type AppActions } from '@/state/actions';
 import { resolveFixtureRequest } from '@/state/fixtures';
+import { seatDialogue } from '@/state/dev/story-catalog';
 import { createAppStore, type AppStore } from '@/state/store';
 import { createMemoryAdapter, type MemoryAdapter } from '@/test-utils/memoryAdapter';
 
@@ -66,5 +67,9 @@ export function createFixtureStore(ref: FixtureRef, options: FixtureStoreOptions
  * an event other than `none` resolved).
  */
 export function arriveFromFixture(handle: FixtureStoreHandle): boolean {
+    if (handle.fixture.stagedDialogue) {
+        seatDialogue(handle.store, handle.fixture.stagedDialogue);
+        return true;
+    }
     return handle.actions.resolveCurrentMapEvent(undefined, handle.fixture.stagedEvent);
 }

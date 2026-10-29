@@ -1,7 +1,7 @@
 /**
  * MapEvents — type surface.
  *
- * Thirteen event kinds plus a weighted-pool authoring model. See
+ * Ten event kinds plus a weighted-pool authoring model. See
  * `src/World/MapEvents/resolve-map-event.ts` for the dispatcher.
  */
 
@@ -9,7 +9,7 @@ import type { ActiveEffect } from '../../Effects/types';
 import type { GameState } from '../../Game/types';
 import type { Item } from '../../Items/types';
 import type { ShopInventory } from '../../Items/shop.types';
-import type { NPC, DialogueTree } from '../../NPCs/types';
+import type { NPC } from '../../NPCs/types';
 import type { EnemySlug } from '../../Enemy/enemy.library';
 import type { ContinentName, MapName } from '../map.library';
 import type { Encounter, NodeId } from '../types';
@@ -18,19 +18,17 @@ import type { LabyrinthActId } from '../Labyrinth/types';
 import type { QuestlineId, QuestNodeStage, QuestStepView } from '../questline';
 
 /**
- * The MapEvent kinds. 'narration' is a dialogue-backed monologue shell;
- * 'travel' is an inter-map door; 'labyrinth' is the Aporia's door.
+ * The MapEvent kinds. 'travel' is an inter-map door; 'labyrinth' is the
+ * Aporia's door, placed on no overworld map. A node with no event pool is the
+ * empty waypoint: it is not a kind, it resolves to `{ kind: 'none' }`.
  */
 export type MapEventKind =
     | 'encounter'
-    | 'interaction'
-    | 'gathering'
     | 'rest'
     | 'village'
     | 'cutscene'
     | 'hazard'
     | 'loot-cache'
-    | 'narration'
     | 'blacksmith'
     | 'travel'
     | 'labyrinth'
@@ -58,20 +56,6 @@ export interface EncounterPayload {
      * never saved; ignored on a non-elite fight.
      */
     eliteRelicDrops?: string[];
-    description?: string;
-}
-
-export interface InteractionPayload {
-    kind: 'interaction';
-    /** NPC name on the current map. */
-    npcName: string;
-    description?: string;
-}
-
-export interface GatheringPayload {
-    kind: 'gathering';
-    /** Items the player gathers. Cloned at resolution time. */
-    items: readonly Item[];
     description?: string;
 }
 
@@ -132,19 +116,6 @@ export interface LootCachePayload {
     kind: 'loot-cache';
     items?: readonly Item[];
     currency?: number;
-    description?: string;
-}
-
-export interface NarrationPayload {
-    kind: 'narration';
-    /**
-     * Dialogue tree the narration plays through (`src/NPCs/types.ts`). A
-     * narration is authored as a monologue — leaf `DialogueNode`s with no
-     * `choices` — so it reuses the existing dialogue runtime without
-     * branching. Unlike `interaction`, the tree is authored inline on the
-     * node rather than looked up from a map NPC.
-     */
-    dialogue: DialogueTree;
     description?: string;
 }
 
@@ -215,14 +186,11 @@ export interface QuestPayload {
 /** Discriminated union of all authoring payloads. */
 export type MapEventPayload =
     | EncounterPayload
-    | InteractionPayload
-    | GatheringPayload
     | RestPayload
     | VillagePayload
     | CutscenePayload
     | HazardPayload
     | LootCachePayload
-    | NarrationPayload
     | BlacksmithPayload
     | TravelPayload
     | LabyrinthDoorPayload
@@ -252,8 +220,6 @@ export interface MapEventPool {
 // `axiomancer-mobile/state/presenters/event.engine.ts::bodyFromPayload`.
 export type ResolvedEvent =
     | { kind: 'encounter';   encounter: Encounter; isBoss: boolean; description?: string }
-    | { kind: 'interaction'; npcName: string; dialogue?: DialogueTree; description?: string }
-    | { kind: 'gathering';   items: Item[]; description?: string }
     // The resolved rest event carries the SHELTER CLASS so hosts (and the
     // rest-choice engine) decide the heal from an honest marker rather than
     // a number. `healed` is a computed OUTCOME, not an authoring knob.
@@ -262,7 +228,6 @@ export type ResolvedEvent =
     | { kind: 'cutscene';    lines: readonly string[] }
     | { kind: 'hazard';      effects: ActiveEffect[]; damage: number; description?: string }
     | { kind: 'loot-cache';  items: Item[]; currency: number; description?: string }
-    | { kind: 'narration';   dialogue: DialogueTree; description?: string }
     | { kind: 'blacksmith';  budget: number; variants: readonly BlacksmithVariantOffer[]; description?: string }
     // The world state on the result has already crossed; the resolved event
     // names where the door led so hosts can narrate the departure.

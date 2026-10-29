@@ -74,7 +74,7 @@ function dialogueStore(): AppStore {
             ...EMPTY_EVENT_SLICE,
             pending: {
                 state: undefined as never,
-                event: { kind: 'interaction', npcName: 'A Voice' } as never,
+                event: { kind: 'cutscene', lines: [] } as never,
             },
             dialogueCursor: {
                 tree: {
