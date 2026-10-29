@@ -67,6 +67,42 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 
 ## Pending
 
+### [ ] [content] measured drift: cw-12/green-jelly grey lowestVitaeFractionP10 0.55 -> 0.78 (even, 2026-10-29)
+- issue: #1081
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for cw-12/green-jelly with the grey deck (even spread) from 0.55 at 62912e3 to 0.78 at 3993f2a (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-10-29: body-mind 0.73 -> 0.89 at 3993f2a
+
+### [ ] [content] measured drift: cw-17/death-beholder grey winRate 50% -> 85% (even, 2026-10-29)
+- issue: #1082
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved winRate for cw-17/death-beholder with the grey deck (even spread) from 50% at 62912e3 to 85% at 3993f2a (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-10-29: body-mind 83% -> 100% at 3993f2a
+
+### [ ] [content] measured drift: cw-17/death-beholder grey lowestVitaeFractionP10 0.00 -> 0.45 (body-mind, 2026-10-29)
+- issue: #1083
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for cw-17/death-beholder with the grey deck (body-mind spread) from 0.00 at 62912e3 to 0.45 at 3993f2a (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-10-29: body 0.37 -> 0.60 at 3993f2a
+
+### [ ] [content] measured drift: bc-15/death-beholder grey lowestVitaeFractionP10 0.23 -> 0.48 (body-mind, 2026-10-29)
+- issue: #1084
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for bc-15/death-beholder with the grey deck (body-mind spread) from 0.23 at 62912e3 to 0.48 at 3993f2a (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+
+
 ### [ ] [content] measured drift: bw-8/green-jelly grey winRate 100% -> 83% (even, 2026-10-28)
 - issue: #1029
 - category: content
