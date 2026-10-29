@@ -66,11 +66,11 @@ describe('node types and labels (A12)', () => {
         for (const id of ['bw-20', 'bw-21', 'bw-22']) expect(nodeOf(store, id).node.kind).toBe('locked');
     });
 
-    it('the windmill cutscene (bw-1) is STORY and the quill, no longer QUEST', () => {
+    it('the windmill (bw-1), the map\'s start, is START and the windmill, no longer QUEST (BW1c A9)', () => {
         const { node } = nodeOf(breakwater(), 'bw-1');
-        expect(node.type).toBe('story');
-        expect(NODE_KIND_LABEL[node.type]).toBe('STORY');
-        expect(ACTION_ICON_BY_TYPE[node.type]).toBe('quill');
+        expect(node.type).toBe('start');
+        expect(NODE_KIND_LABEL[node.type]).toBe('START');
+        expect(ACTION_ICON_BY_TYPE[node.type]).toBe('start');
     });
 });
 

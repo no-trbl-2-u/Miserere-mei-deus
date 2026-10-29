@@ -6,7 +6,10 @@ import { MapCameraContext } from '../mapSheetContext';
 import { minScaleFor } from '../MapCanvas';
 import { ALL_MAP_LAYOUTS } from '@/state/exploration-maps';
 import { Circle } from 'react-native-svg';
-import { SEALED_MARK_OPACITY } from '@/components/NodeMark';
+import { NODE_MARK_RADIUS, SEALED_MARK_OPACITY } from '@/components/NodeMark';
+import { KIND_TOKEN_COLOR, KIND_TOKEN_RADIUS, kindTokenRadius } from '../KindToken';
+import { DEFAULT_THEME_ID, paletteFor } from '@/theme/palette';
+import type { NodeType } from '@/state/presenters/exploration.engine';
 
 const mockNode = {
     id: 'node-1',
@@ -153,5 +156,69 @@ describe('node marks at any zoom (critique pass 75)', () => {
         );
         const style = StyleSheet.flatten(getByTestId('node-node-1').props.style);
         expect(style.transform).toEqual([{ scale: nodeCounterScale(0.148) }]);
+    });
+});
+
+describe('the kind token (BW1c A8)', () => {
+    const STATES = ['available', 'current', 'completed', 'locked'] as const;
+    const TYPES = Object.keys(KIND_TOKEN_COLOR) as NodeType[];
+
+    it.each(STATES)('a %s node draws its token only when the presenter says so', (kind) => {
+        const node = { ...mockNode, id: 'k', kind };
+        const { queryByTestId, rerender } = render(
+            <ExplorationNode node={{ ...node, showKind: true }} onNodePress={mockOnNodePress} isSelected={false} />,
+        );
+        expect(queryByTestId('node-k-kind')).not.toBeNull();
+        rerender(<ExplorationNode node={{ ...node, showKind: false }} onNodePress={mockOnNodePress} isSelected={false} />);
+        expect(queryByTestId('node-k-kind')).toBeNull();
+        rerender(<ExplorationNode node={node} onNodePress={mockOnNodePress} isSelected={false} />);
+        expect(queryByTestId('node-k-kind')).toBeNull();
+    });
+
+    it.each(TYPES)('a %s token is an opaque disc in its kind colour, no translucent wash', (type) => {
+        const { getByTestId } = render(
+            <ExplorationNode node={{ ...mockNode, id: 'k', type, showKind: true }} onNodePress={mockOnNodePress} isSelected={false} />,
+        );
+        const disc = getByTestId('node-k-kind').findAllByType(Circle)[0];
+        expect(disc.props.fill).toBe(paletteFor(DEFAULT_THEME_ID)[KIND_TOKEN_COLOR[type]]);
+        expect(disc.props.fill).toMatch(/^#[0-9a-f]{6}$/);
+        expect(disc.props.opacity ?? 1).toBe(1);
+    });
+
+    it('each kind but the stand-in wears its own colour', () => {
+        const real = TYPES.filter((t) => t !== 'current');
+        expect(new Set(real.map((t) => KIND_TOKEN_COLOR[t])).size).toBe(real.length);
+    });
+
+    it('the token sits inside each state\'s ring, so the four states still read without colour', () => {
+        // The inner edge of the part of each mark that tells its state.
+        const ringInner = { available: 13 - 1.25, current: 12 - 0.75, completed: 13, locked: 8.5 - 0.7 };
+        for (const state of STATES) {
+            for (const type of TYPES) {
+                const r = kindTokenRadius(state, type) + (type === 'quest' ? 0.6 : 0);
+                expect(r).toBeLessThan(ringInner[state]);
+            }
+        }
+    });
+
+    it('the token keeps the state marks\' size order', () => {
+        const bySize = (radii: Record<string, number>) => [...STATES].sort((a, b) => radii[b] - radii[a]);
+        expect(bySize(KIND_TOKEN_RADIUS)).toEqual(bySize(NODE_MARK_RADIUS));
+    });
+
+    it('a quest token is larger than any other kind\'s in the same state', () => {
+        for (const state of STATES) {
+            for (const type of TYPES.filter((t) => t !== 'quest')) {
+                expect(kindTokenRadius(state, 'quest')).toBeGreaterThan(kindTokenRadius(state, type));
+            }
+        }
+    });
+
+    it('a walked node a road back keeps its look and label with its token (WR1b)', () => {
+        const node = { ...mockNode, id: 'w', kind: 'completed' as const, type: 'village' as const, walkable: true, actsAgain: true, showKind: true };
+        const { getByTestId } = render(<ExplorationNode node={node} onNodePress={mockOnNodePress} isSelected={false} />);
+        expect(getByTestId('node-w-road-back')).toBeDefined();
+        expect(getByTestId('node-w-kind')).toBeDefined();
+        expect(getByTestId('node-w').props.accessibilityLabel).toBe('Test Node, walked, a road back, village again');
     });
 });
