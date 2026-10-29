@@ -121,7 +121,7 @@ open after, plus the mobile map test that every node renders its kind's glyph in
 | H7 | Long pier | fight | proposed | 0.533, 0.383 | H5, H8 |
 | H8 | Pier end | loot cache | proposed | 0.605, 0.415 | H7 |
 | C1 | Sea cave | elite fight | T | 0.301, 0.797 | H6 (travel), C2 |
-| C2 | Fishermen’s camp | quest | T | 0.369, 0.819 | C1 |
+| C2 | Fishermenâ€™s camp | quest | T | 0.369, 0.819 | C1 |
 | T1 | Harbour steps | fight | proposed | 0.705, 0.471 | H1, T2 |
 | T2 | Bridge approach | fight | proposed | 0.762, 0.443 | T1, B1, T3 |
 | T3 | Town gate | fight | proposed | 0.707, 0.414 | T2, T4, T5 (unsure) |
