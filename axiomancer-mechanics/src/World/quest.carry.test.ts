@@ -1,3 +1,4 @@
+// guard-test: pins MQ1b carry and dialogue-give behaviour already on main, killing the mutation survivors from #1056
 /**
  * Carry objectives (phase MQ1b, A7): reading the inventory, partial holds,
  * stacks, and the dialogue effect's edges.
