@@ -66,3 +66,68 @@
 - **Global triggers.** The closed set (`plan/revamp/cards.md`: start of turn, SACRIFICE, Curse played) has no "when you heal" trigger; whether the lane's
   Globals use ⟳ start of turn only, or T opens a new trigger, is not ruled.
 - **The family relic** (step 7), and whether a Merciful card can be a character's starting lane card (CH1, D108).
+
+## Sub-lane pitches (slot roles, approved by T, 2026-10-29)
+
+Approved as drafted (T, 2026-10-29: "Approve, build the ballot"). A slot marked *(Open)* leans on an Open line
+above; the ballot prints a flagged placeholder for it. Globals use the start-of-turn trigger only.
+
+### Payoff (paid for heals that land and MERCY that comes due)
+
+| Slot | Type | Piece | Role |
+|---|---|---|---|
+| P-01 | Attack | RADIANCE | The core: HEAL, then DEAL what you healed |
+| P-02 | Skill | RADIANCE | A big HEAL with RADIANCE (huge when low, nothing when full) |
+| P-03 | Skill | MERCY | The big wager: a large MERCY |
+| P-04 | Attack | MERCY | DEAL more while the foe carries MERCY |
+| P-05 | Spell | MERCY | Call it in: MERCY's clock ticks down 1 (pays sooner) |
+| P-06 | Attack | MERCY | DEAL equal to the foe's MERCY total, without spending it *(Open: payoffs that read MERCY)* |
+| P-07 | Attack | RADIANCE | Retribution: DEAL equal to all you healed this turn |
+| P-08 | Skill | RADIANCE + MERCY | MERCY equal to what you healed this turn (your mending feeds its debt) |
+| P-09 | Attack | heal | Wounded strike: DEAL more the more VITAE you are missing |
+| P-10 | Global | RADIANCE | Start of your turn: HEAL with RADIANCE |
+
+### Engine (makes room to heal and keeps MERCY going)
+
+| Slot | Type | Piece | Role |
+|---|---|---|---|
+| E-01 | Skill | heal | A plain HEAL (RADIANCE fuel) |
+| E-02 | Skill | MERCY | A cheap small MERCY to start the clock |
+| E-03 | Skill | heal | Your heals this turn heal more |
+| E-04 | Attack | SACRIFICE | DEAL; SACRIFICE to make room (shared Blood Price keyword) |
+| E-05 | Skill | MERCY | MERCY on a weak foe heals it less (bad timing costs less) *(Open: foe max VITAE)* |
+| E-06 | Spell | RADIANCE | Your next plain HEAL is RADIANCE |
+| E-07 | Skill | LEECH | LEECH: drains the foe, heals you (shared; RADIANCE fuel) |
+| E-08 | Skill | RADIANCE + MERCY | Twin mending: HEAL you and MERCY the foe the same amount |
+| E-09 | Global | MERCY | Start of your turn: MERCY 1 (adds to the total, never resets the clock) |
+| E-10 | Skill | none | DRAW 2 |
+
+### Misc (utility around it)
+
+| Slot | Type | Piece | Role |
+|---|---|---|---|
+| M-01 | Skill | GUARD | GUARD, to live through MERCY's clock |
+| M-02 | Skill | MERCY | Offer peace: spare a foe that carries MERCY *(Open: befriending)* |
+| M-03 | Skill | DEAL | VULNERABLE (boosts the RADIANCE DEALs) |
+| M-04 | Skill | heal | Cleanse: clear a debuff from yourself, then HEAL |
+| M-05 | Skill | heal | Raise your max VITAE this combat (more room to heal into) |
+| M-06 | Global | heal | Start of your turn: HEAL 1 |
+| M-07 | Attack | none | A cheap poke: a small DEAL, DRAW 1 |
+| M-08 | Skill | MERCY | Stall: the foe's next attack is weaker while MERCY ticks |
+| M-09 | Spell | heal | Recall: return the last healing card you played to your hand |
+| M-10 | Skill | overheal | Overflow: HEAL the foe past its max so the burst lands *(Open: overheal burst)* |
+
+## Ballot
+
+`rehearsal-merciful.ballot.html`, ballot id `merciful-2026-10-29`, opened 2026-10-29 (lane-creator step 3). Ninety
+candidates, three per slot, no colour on any (D110; colours are split evenly within each sub-lane at the revisions
+step). Globals open on the start-of-turn trigger only. No line prints a cap.
+
+Numbers are placeholders for the sims (step 6), scaled from the grey cards (A Plain Blow: FREE DEAL 2, PAID DEAL 5).
+"HEAL N with RADIANCE" is T's RADIANCE: HEAL N, then DEAL what the heal actually restored. MERCY prints as T ruled it.
+The sheet's legend prints these placeholders for Open lines above, for the sims to test and T to settle:
+
+- MERCY's payout is plain VITAE loss, and the total resets once it pays.
+- A heal on the foe stops at its max VITAE; anything past the max bursts 1:1 as a DEAL.
+- A clock ticked to 0 (P-05) pays at the start of the foe's next turn.
+- M-02's sparing uses the foe's own befriend gate in three forms (the Open "Befriending" line).
