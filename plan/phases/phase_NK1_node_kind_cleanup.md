@@ -9,8 +9,10 @@
 > travel into a "move to X?" choice with flavor text and art, which can lead
 > to another node on the same map (a secret path) as well as to another map;
 > keep the labyrinth built but out of reach. It lands before the Breakwater
-> redraw (T's ~45-node road web, a later plot), so that map is drawn on the
-> final kinds.
+> rebuild (T's 44-node Chapter 1, plotted as BW1, D114, `plan/revamp/breakwater-vision.md`),
+> so that map is drawn on the final kinds. BW1's sea cave mouth and cave face
+> (`bw-h6`, `bw-c0`) are NK1d's first same-map travel pair, and its two villages
+> carry the Anvil, so the rebuilt map has no blacksmith or gathering node.
 
 ## Sources
 
@@ -305,8 +307,8 @@ A1-A16 ticked.
 
 - **Backtracking** (which nodes work again on a revisit, how the player walks):
   the other session's plot.
-- **The Breakwater redraw** (T's road web, the secret paths as travel pairs):
-  a later plot, after NK1.
+- **The Breakwater rebuild** (T's 44-node map, the sea cave as a travel pair):
+  plotted as BW1 (`plan/phases/phase_BW1_breakwater_rebuild.md`), after NK1.
 - **Each kind's full treatment** (art, transitions, copy, animation): T's
   per-kind sittings in `plan/deadlines.md`, one kind at a time.
 - **Deleting `/dialogue`** if nothing else routes to it after NK1a: a later
