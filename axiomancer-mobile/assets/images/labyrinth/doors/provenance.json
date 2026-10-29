@@ -4,7 +4,7 @@
     "date": "2026-08-27",
     "tool": "scripts/ingest-art.mjs (sharp) — ungraded",
     "post_process": "longest edge <= 640px, WebP q44; 2026-09-22 build-size pass: re-encoded in place to the ingest recipe (longest edge <= 640px, WebP q44) by scripts/shrink-art.mjs",
-    "license": "UNRESOLVED",
+    "license": "open source (T, 2026-10-29, D115)",
     "covers": [
       "door02-d.webp",
       "door02-e.webp",
@@ -24,7 +24,7 @@
       "egypt-door-open.webp",
       "egypt-door-sealed.webp"
     ],
-    "license_note": "Owner-supplied via commit c561d1a8 (2026-07-07, 'Add doors and maze walls'). No source URL or license was recorded at the time and none has been traced since. These assets already ship; the record states what is known rather than inventing terms. Blocked on the owner, same question as Potential Assets/MCP-Axiomancer/images/.",
+    "license_note": "Owner-supplied via commit c561d1a8 (2026-07-07), no source traced. T, 2026-10-29, D115: \"The images we use for everything are open source.\"",
     "used_by": [
       "assets/images/labyrinth/index.ts (door hotspot art)"
     ],

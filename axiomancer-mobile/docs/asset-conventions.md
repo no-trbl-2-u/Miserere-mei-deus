@@ -46,15 +46,12 @@ regenerates `components/icons/game-icon-paths.ts` with per-entry
 attribution).
 
 **`Potential Assets/MCP-Axiomancer/images/` (116 card paintings) —
-open-source art found online** (owner's answer, 2026-08-22), per-image
-license NOT yet on record. "Open source" spans CC0 (no obligations),
-CC BY (attribution required), and share-alike terms, so the origin
-answer removes the scrape risk but does not settle the terms. Rule:
-do not wire one into the card registry until its source and license
-can be written truthfully into `provenance.json`. Tracing them
-(filename / reverse-image / bundled-manifest search against the usual
-open-art hosts) is fair game, and any image whose license is
-evidenced may ship.
+open-source art found online** (owner's answer, 2026-08-22). The art
+licence question is closed (T, 2026-10-29, D115): "The images we use
+for everything are open source." An image from this folder may be wired
+with `"license": "open source (T, 2026-10-29, D115)"` and a note
+saying where it came from. A file from any other third-party source
+still records its own licence.
 
 ## Generated art (Option A, ruled 2026-08-22)
 
@@ -291,17 +288,19 @@ stays with the owner. `prompts/enemies/green-jelly.sheet.json` is the
 worked spec, and with no `OPENAI_API_KEY` the run is a dry run that
 prints the compiled sheet request and writes nothing.
 
-## Licensing debt (open, blocked on the owner)
+## Licensing (closed, D115)
 
-Every raster directory except `maps/` (the Dore plate) now records
-`"license": "UNRESOLVED"` with a note. That is not a formality: the
-card, enemy, portrait, treasure, combat, door and wall art was all
-owner-supplied with no source or license captured, and the terms have
-never been established. The assets already ship, so the records state
-what is known instead of inventing terms. `assets:check` prints the
-count on every run; it does not fail, because only the owner can answer
-the question and a red build would neither answer it nor let anything
-else ship. Same question as `Potential Assets/MCP-Axiomancer/images/`.
+T ruled on 2026-10-29: "The images we use for everything are open
+source." The owner-supplied card, enemy, portrait, treasure, door and
+wall art records `"license": "open source (T, 2026-10-29, D115)"`; the
+torio files keep their traced free-material grant and the Act 1 map
+plates their owner-generated record. Nobody re-opens the question.
+A new third-party file still records its own licence: a traced grant, or
+T's ruling written into its record by a session T runs.
+`ingest-art.mjs` still defaults a file with no `--license` to
+`UNRESOLVED`, and `assets:check` still reports any record that says so.
+The DevLog art gate (`scripts/devlog-art-licence.mjs`) withholds such a
+file from the public site until its record names a licence.
 
 ## Item glyphs are chosen by id
 
@@ -343,7 +342,7 @@ npm run assets:acquire --workspace axiomancer-mobile -- --all --dry-run
 public domain or CC0** — non-zero exit, no file, no provenance record.
 The operator picks the file and the destination; the operator never
 asserts the licence, because a `--licence` flag would reproduce exactly
-the failure the licensing-debt AUDIT row describes.
+the failure the old licensing-debt AUDIT row described.
 
 Attribution licences (CC BY, CC BY-SA) are refused too. They are usable
 in principle, but the build has no attribution surface, and "we could

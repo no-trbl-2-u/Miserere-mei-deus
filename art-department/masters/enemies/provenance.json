@@ -12,8 +12,8 @@
     "source": "../../../axiomancer-mobile/assets/images/enemies/float-eye.webp",
     "method": "No image model was used and nothing was generated. The shipped painting is split into two layers — the body with the eye disc erased and refilled from the body's own black, and a feathered disc holding the eye — and each of the 24 frames is an affine pose of those layers plus a colour grade. Every pixel therefore descends from the existing asset.",
     "clips": "idle (8f @12fps, loop), hit (8f @16fps, one-shot), strike (8f @14fps, one-shot); one clip per row, 8 columns",
-    "license": "UNRESOLVED — inherits the source painting's status",
-    "license_note": "float-eye.webp is owner-supplied external illustration with no recorded source or licence (see ../provenance.json). A derivative cannot be cleaner than what it derives from, so this sheet carries the same open question and is blocked on the same owner answer.",
+    "license": "open source (T, 2026-10-29, D115)",
+    "license_note": "Derivative of float-eye.webp, an owner-supplied external illustration (no source traced). T, 2026-10-29, D115: \"The images we use for everything are open source.\"",
     "used_by": [
       "axiomancer-mobile/assets/images/enemies/anim/float-eye/ — phase AN1e cut this master into 24 per-cell WebP with tools/split-spritesheet.py and ingested them --no-grade; those cells ship and are bound to the float-eye key in the frame registry. The master itself still does not ship and must not: nothing outside this tree may resolve a path into it."
     ],

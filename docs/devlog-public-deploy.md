@@ -181,4 +181,4 @@ appears when that file holds a valid record.
 | the newest post is missing | the entry's file name must match `DIGEST_<YYYY-MM-DD>.md` |
 | the newest post is missing, and the build did not run | that night did not publish: no new line in `devlog/PUBLISH` (by design unless it carried a major release, a UI/QOL change or a play-blocking fix) — append a `manual:` line to force one |
 | an image is missing from a post | the capture is missing, or the work item has no usable `**What:**` line — the site refuses to publish an image it cannot label (DESIGN.md §7) |
-| a card's art is blank | expected: card paintings are licence-withheld (DESIGN.md §10) |
+| a card's art is blank | the gate refused the file (its provenance record names no licence it recognises, DESIGN.md §10), or `devlog/data` is missing (`npm run catalog:export`) |
