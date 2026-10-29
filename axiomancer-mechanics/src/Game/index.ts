@@ -49,7 +49,7 @@ export {
     validateStateFixture,
     getStateFixtureById, listStateFixtureIds,
     // R7e / R7e2 — the neutral witnesses for dialogue, shops, quests and gear.
-    FIXTURE_NPC, FIXTURE_SHOP, FIXTURE_QUEST,
+    FIXTURE_NPC, FIXTURE_QUEST,
     FIXTURE_VILLAGE_EVENT, FIXTURE_CUTSCENE_EVENT, FIXTURE_QUEST_EVENT, FIXTURE_QUESTLINE,
     FIXTURE_WEAPON, FIXTURE_ARMOR, FIXTURE_TRINKETS, FIXTURE_ELITE_RELICS, FIXTURE_QUEST_RELIC,
     // Test-only: a map's quest nodes settled so a walker can cross it.

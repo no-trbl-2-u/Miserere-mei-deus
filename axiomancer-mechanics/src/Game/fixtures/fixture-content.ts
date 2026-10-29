@@ -1,7 +1,7 @@
 /**
  * Neutral test fixtures for the plumbing with no authored content.
  *
- * Act 1 stages no NPC, shop or quest, so dialogue, shops and the quest engine
+ * Act 1 stages no NPC or quest, so dialogue and the quest engine
  * have no live carrier. These placeholders are their witnesses: suites and
  * state fixtures (`stagedEvent`) use them, the live world never registers
  * them, and their text is placeholder copy, not story.
@@ -12,7 +12,6 @@
  */
 
 import type { NPC } from '../../NPCs/types';
-import type { ShopInventory } from '../../Items/shop.types';
 import type { Equipment } from '../../Items/types';
 import type { MapEventPayload } from '../../World/MapEvents/types';
 import type { Quest } from '../../World/types';
@@ -56,17 +55,13 @@ export const FIXTURE_NPC: NPC = {
     },
 };
 
-/** A shop that sells the healing potion. */
-export const FIXTURE_SHOP: ShopInventory = {
-    wares: [{ itemId: 'minor-healing-potion', price: 12 }],
-};
-
 /** Staged events for the arrival state fixtures (`StateFixture.stagedEvent`). */
 export const FIXTURE_VILLAGE_EVENT: MapEventPayload = {
     kind: 'village',
     villageName: 'Fixture Shop',
     merchants: [{ name: 'Fixture Shopkeeper', isShopkeeper: true }],
-    shop: FIXTURE_SHOP,
+    rest: true,
+    cardShop: true,
     anvil: {},
 };
 

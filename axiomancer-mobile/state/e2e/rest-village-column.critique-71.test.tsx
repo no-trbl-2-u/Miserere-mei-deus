@@ -24,7 +24,7 @@ import { render, within } from '@testing-library/react-native';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
-import { consumableLibrary, createLootCacheChoiceSession, createRestChoiceSession } from '@mechanics';
+import { createLootCacheChoiceSession, createRestChoiceSession } from '@mechanics';
 
 import CacheScreen, { CACHE_COLUMN_MAX_WIDTH } from '@/app/cache/index';
 import RestScreen, { REST_COLUMN_MAX_WIDTH } from '@/app/rest/index';
@@ -77,7 +77,7 @@ function cacheStore(): AppStore {
     return store;
 }
 
-/** A store seated on a village whose stall sells two consumables. */
+/** A store seated on a village with its rest and card-shop counters. */
 function villageStore(): AppStore {
     const store = createAppStore({ adapter: createMemoryAdapter() });
     const state = store.getState();
@@ -91,7 +91,8 @@ function villageStore(): AppStore {
                     kind: 'village',
                     villageName: 'Saltmarsh',
                     merchants: [],
-                    shop: { wares: consumableLibrary.slice(0, 2).map((w) => ({ itemId: w.id, price: 12 })) },
+                    rest: { price: 6 },
+                    cardShop: { cardIds: ['grey-strike', 'grey-ward', 'grey-word'], price: 6 },
                 } as never,
             },
         },
@@ -125,7 +126,7 @@ describe('rest and settlement screens hold one centred column (critique pass 71)
         expectReadingColumn(column, REST_COLUMN_MAX_WIDTH);
         expect(column).toContainElement(r.getByTestId('rest-purse'));
         expect(column).toContainElement(r.getByTestId('rest-choice-offer-rest'));
-        expect(column).toContainElement(r.getByTestId('rest-choice-offer-cut'));
+        expect(column).toContainElement(r.getByTestId('rest-choice-offer-upgrade'));
     });
 
     it('rest: the purse figure prints in the open-zero face, so 0 never reads as 8 (critique pass 104)', () => {
@@ -138,7 +139,7 @@ describe('rest and settlement screens hold one centred column (critique pass 71)
         expect(StyleSheet.flatten(figure.props.style).fontFamily).toBe(FONTS.sans);
     });
 
-    it('village: the tabs and stalls sit in the capped column, and the exit shares the cap', () => {
+    it('village: the counters sit in the capped column, and the exit shares the cap', () => {
         const r = render(
             <GameStoreProvider store={villageStore()}>
                 <VillageScreen />
@@ -146,8 +147,8 @@ describe('rest and settlement screens hold one centred column (critique pass 71)
         );
         const column = r.getByTestId('village-column');
         expectReadingColumn(column, VILLAGE_COLUMN_MAX_WIDTH);
-        expect(column).toContainElement(r.getByTestId('village-tab-buy'));
-        expect(column).toContainElement(r.getByTestId(`village-ware-${consumableLibrary[0].id}`));
+        expect(column).toContainElement(r.getByTestId('village-rest'));
+        expect(column).toContainElement(r.getByTestId('village-card-shop'));
 
         const exit = r.getByTestId('village-exit-column');
         expectReadingColumn(exit, VILLAGE_COLUMN_MAX_WIDTH);

@@ -6,15 +6,14 @@
  * "5 SHILLINGS", but each stall row printed "12s". The bare "s" was the one
  * place the currency was abbreviated, met before any key to it.
  *
- * Contract asserted here: the buy and sell rows print the price with the same
- * unit word the purse header uses.
+ * Contract asserted here: every village counter (NK1c: the rest, the card
+ * shop's cards and card removal; the item stalls are gone) prints its price
+ * with the same unit word the purse header uses.
  */
 
 import { describe, expect, it, jest } from '@jest/globals';
-import { fireEvent, render } from '@testing-library/react-native';
+import { render } from '@testing-library/react-native';
 import React from 'react';
-
-import { consumableLibrary } from '@mechanics';
 
 import VillageScreen from '@/app/village/index';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
@@ -32,9 +31,7 @@ jest.mock('@/lib/platform/router', () => ({
     }),
 }));
 
-const WARE = consumableLibrary[0]!;
-
-/** A village with one stall selling `WARE` for 12, and one `WARE` in the satchel to sell. */
+/** A village with all its counters, and a hurt player with a full purse. */
 function villageStore(): AppStore {
     const store = createAppStore({ adapter: createMemoryAdapter() });
     const state = store.getState();
@@ -42,7 +39,7 @@ function villageStore(): AppStore {
         player: {
             ...state.player,
             currency: 240,
-            inventory: [{ ...WARE, quantity: 1 }],
+            health: 10,
         } as never,
         event: {
             ...EMPTY_EVENT_SLICE,
@@ -52,7 +49,8 @@ function villageStore(): AppStore {
                     kind: 'village',
                     villageName: 'Saltmarsh',
                     merchants: [],
-                    shop: { wares: [{ itemId: WARE.id, price: 12 }] },
+                    rest: { price: 6 },
+                    cardShop: { cardIds: ['grey-strike', 'grey-ward', 'grey-word'], price: 6 },
                 } as never,
             },
         },
@@ -65,18 +63,16 @@ function flatText(children: unknown): string {
 }
 
 describe('stall prices name the currency (critique pass 84)', () => {
-    it('the purse, a buy row and a sell row all say SHILLINGS', () => {
+    it('the purse and every counter say SHILLINGS', () => {
         const r = render(
             <GameStoreProvider store={villageStore()}>
                 <VillageScreen />
             </GameStoreProvider>,
         );
 
-        expect(flatText(r.getByTestId('village-purse').props.children)).toBe('240 SHILLINGS');
-        expect(flatText(r.getByTestId(`village-ware-${WARE.id}-price`).props.children)).toBe('12 SHILLINGS');
-
-        fireEvent.press(r.getByTestId('village-tab-sell'));
-        const sell = flatText(r.getByTestId('village-sell-0-price').props.children);
-        expect(sell).toMatch(/^\d+ SHILLINGS$/);
+        expect(flatText(r.getByTestId('village-purse').props.children)).toMatch(/^240 SHILLINGS/);
+        expect(flatText(r.getByTestId('village-rest-price').props.children)).toBe('6 SHILLINGS');
+        expect(flatText(r.getByTestId('village-card-grey-ward-price').props.children)).toBe('BUY · 6 SHILLINGS');
+        expect(flatText(r.getByTestId('village-remove-price').props.children)).toBe('5 SHILLINGS');
     });
 });

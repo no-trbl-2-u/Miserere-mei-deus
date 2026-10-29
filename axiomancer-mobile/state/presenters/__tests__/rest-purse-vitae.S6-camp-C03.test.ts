@@ -14,14 +14,14 @@
 import {
     chooseRestChoiceOffer,
     createRestChoiceSession,
-    pickRestChoiceCut,
+    pickRestChoiceUpgrade,
     RESTCHOICE_TUNING,
 } from '@mechanics';
 import type { RestChoiceSession } from '@mechanics';
 
 import { restDisplayHealth, selectRestVM } from '../rest.engine';
 
-const DECK = Array.from({ length: 13 }, (_, i) => `card-${i}`);
+const DECK = ['grey-strike', ...Array.from({ length: 12 }, (_, i) => `card-${i}`)];
 
 function session(health: number, maxHealth: number): RestChoiceSession {
     return createRestChoiceSession(1, {
@@ -58,8 +58,8 @@ describe('rest purse VITAE readout (S6-camp-C03)', () => {
     });
 
     it('leaves VITAE alone when the settled choice healed nothing', () => {
-        const picked = pickRestChoiceCut(
-            chooseRestChoiceOffer(session(20, 175), 'cut'),
+        const picked = pickRestChoiceUpgrade(
+            chooseRestChoiceOffer(session(20, 175), 'upgrade'),
             DECK[0],
         );
         const vm = selectRestVM({ rest: { session: picked } });
@@ -79,9 +79,6 @@ describe('restDisplayHealth', () => {
         const ledger = {
             chosen: 'rest' as const,
             healed: 43,
-            spent: 0,
-            removedCardId: null,
-            removals: 0,
             upgradedCardId: null,
             upgradedToCardId: null,
         };

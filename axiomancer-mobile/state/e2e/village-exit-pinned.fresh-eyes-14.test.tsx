@@ -23,8 +23,6 @@ import { render, within } from '@testing-library/react-native';
 import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 
-import { consumableLibrary } from '@mechanics';
-
 import VillageScreen from '@/app/village/index';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { createAppStore, EMPTY_EVENT_SLICE, type AppStore } from '@/state/store';
@@ -41,12 +39,11 @@ jest.mock('@/lib/platform/router', () => ({
     }),
 }));
 
-/** The four-stall market the fresh-eyes capture caught overflowing. */
-const WARES = consumableLibrary.slice(0, 4);
+/** The card shop's three cards (NK1c: the item stalls became counters). */
+const CARDS = ['grey-strike', 'grey-ward', 'grey-word'];
 
 /**
- * Seat a village whose stall sells `WARES`, with coin enough for all of
- * them.
+ * Seat a village with every counter, with coin enough for all of them.
  *
  * Input: none. Output: a fresh `AppStore` on a memory adapter, its event
  * slice holding the market. Resolves: 14-village — pins the stall count
@@ -65,7 +62,9 @@ function villageStore(): AppStore {
                     kind: 'village',
                     villageName: 'Saltmarsh',
                     merchants: [],
-                    shop: { wares: WARES.map((w) => ({ itemId: w.id, price: 4 })) },
+                    rest: { price: 6 },
+                    cardShop: { cardIds: CARDS, price: 6 },
+                    anvil: {},
                 } as never,
             },
         },
@@ -114,13 +113,13 @@ describe('village exit is pinned below the stalls (14-village)', () => {
         expect(flattenStyle(r.getByTestId('village-scroll').props.style).flex).toBe(1);
     });
 
-    it('keeps every stall — effect line and all — inside the scroller', () => {
+    it('keeps every counter — effect line and all — inside the scroller', () => {
         const r = mountVillage();
         const scroll = within(r.getByTestId('village-scroll'));
 
-        for (const ware of WARES) {
-            expect(scroll.getByTestId(`village-ware-${ware.id}`)).toBeTruthy();
-            expect(scroll.getByTestId(`village-ware-${ware.id}-effect`)).toBeTruthy();
-        }
+        expect(scroll.getByTestId('village-rest-effect')).toBeTruthy();
+        for (const id of CARDS) expect(scroll.getByTestId(`village-card-${id}-buy`)).toBeTruthy();
+        expect(scroll.getByTestId('village-remove')).toBeTruthy();
+        expect(scroll.getByTestId('village-anvil-effect')).toBeTruthy();
     });
 });

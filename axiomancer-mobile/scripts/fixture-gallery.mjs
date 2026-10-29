@@ -12,7 +12,7 @@
 // Usage:
 //   node scripts/fixture-gallery.mjs                  # export + capture all
 //   AXM_FORCE_EXPORT=1 node scripts/...       # re-export (else .smoke-dist is reused on a stamp hit)
-//   ONLY=labyrinth-room,rest-cut-sheet ...            # subset by name
+//   ONLY=labyrinth-room,village-anvil ...             # subset by name
 //   GALLERY_CHROME=/path/to/chrome ...                # custom browser binary
 //
 // Exit codes: 0 = every entry captured · 1 = one or more entries failed
@@ -67,15 +67,9 @@ export const GALLERY = [
     { name: 'blacksmith-forging', why: 'The forge, mid-session (budget + card).',
       fixture: 'wanderer-bw-blacksmith', path: '/exploration', waitForPath: '/village',
       steps: [{ jsClick: 'village-anvil' }, { waitForPath: '/blacksmith' }, { jsClick: 'blacksmith-begin' }, { settle: 1500 }] },
-    { name: 'rest-cut-sheet', why: 'Card removal — THE CUT at a night watch, with shillings to pay for it.',
-      // THE CUT is disabled at the 12-card floor — a Sage's kit is deep enough to thin.
-      // The combat deck is the `combat-loadout-card:<id>` flag set (the engine
-      // seeds 4 starters) plus reward cards; THE CUT is offered only above the
-      // 12-card floor, so a dozen extra loadout flags make a 16-card deck.
-      fixture: { id: 'g-rest-cut', seed: 'g11', ...SAGE, player: { currency: 40, health: 20 }, world: coastal('breakwater', 'bw-9'), arrive: true,
-        flags: ['unction-of-boils', 'salt-in-the-font', 'vinegar-and-gall', 'the-sextons-bell', 'the-blister-rosary', 'the-surgeons-absence', 'the-long-lent', 'alms-of-bad-bread', 'the-inventory-of-wounds', 'gangrene-gospel', 'the-lazars-kiss', 'communion-of-the-worm'].map((c) => `combat-loadout-card:${c}`) },
-      path: '/exploration', waitForPath: '/rest',
-      steps: [{ jsClick: 'rest-choice-offer-cut' }, { settle: 1200 }] },
+    { name: 'village-remove-sheet', why: 'Card removal at the village card shop, the deck laid out to pick from.',
+      fixture: 'wanderer-bw-blacksmith', path: '/exploration', waitForPath: '/village',
+      steps: [{ jsClick: 'village-remove' }, { settle: 800 }] },
     { name: 'loot-cache', why: 'The loot-cache choice.',
       fixture: 'apprentice-bw-cache', path: '/exploration', waitForPath: '/cache' },
     { name: 'hazard-routes', why: 'Choosing a route — the safe crawl or the leap — hand fanned above.',

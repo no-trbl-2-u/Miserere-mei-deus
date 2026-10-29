@@ -65,7 +65,6 @@ function makeActiveRestSession(): RestChoiceSession {
         currency: 5,
         deckCardIds: [],
         upgradableCardIds: [],
-        removals: 0,
         offers: [],
         description: null,
         outcome: null,

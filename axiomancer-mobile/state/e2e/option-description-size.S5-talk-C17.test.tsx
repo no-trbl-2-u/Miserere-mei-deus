@@ -16,8 +16,6 @@ import { render } from '@testing-library/react-native';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
-import { consumableLibrary } from '@mechanics';
-
 import DialogueScreen from '@/app/dialogue/index';
 import VillageScreen from '@/app/village/index';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
@@ -38,13 +36,11 @@ jest.mock('@/lib/platform/router', () => ({
 /** The size `/rest` prints its offer descriptions at — the shared floor. */
 const INN_DESC_SIZE = 12;
 
-const WARE = consumableLibrary[0]!;
-
 function mount(store: AppStore, child: React.ReactNode) {
     return render(<GameStoreProvider store={store}>{child}</GameStoreProvider>);
 }
 
-/** A village with a stall selling one described ware the player can afford. */
+/** A village whose rest counter prints its described line (NK1c: the stalls became counters). */
 function villageStore(): AppStore {
     const store = createAppStore({ adapter: createMemoryAdapter() });
     const state = store.getState();
@@ -58,7 +54,7 @@ function villageStore(): AppStore {
                     kind: 'village',
                     villageName: 'Saltmarsh',
                     merchants: [],
-                    shop: { wares: [{ itemId: WARE.id, price: 4 }] },
+                    rest: { price: 6 },
                 } as never,
             },
         },
@@ -95,10 +91,10 @@ function dialogueStore(): AppStore {
 }
 
 describe('option descriptions print at one size (S5-talk-C17)', () => {
-    it('prints a stall ware description no smaller than the inn does', () => {
+    it('prints a village counter description no smaller than the inn does', () => {
         const r = mount(villageStore(), <VillageScreen />);
         const style = StyleSheet.flatten(
-            r.getByTestId(`village-ware-${WARE.id}-desc`).props.style,
+            r.getByTestId('village-rest-desc').props.style,
         ) as { fontSize?: number };
 
         expect(style.fontSize).toBeGreaterThanOrEqual(INN_DESC_SIZE);

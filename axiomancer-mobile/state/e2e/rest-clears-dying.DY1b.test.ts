@@ -2,7 +2,7 @@
  * Hermetic E2E — only the heal choice at a rest clears dying (phase DY1b, A9).
  *
  * A first death leaves the player dying. The rest site's heal (REST) clears
- * it in the same write as the claim; the upgrade and the cut do not, and nor
+ * it in the same write as the claim; the upgrade does not, and nor
  * does a potion, a level-up, a move to the next node, or arriving at a rest
  * and leaving unclaimed.
  */
@@ -15,7 +15,6 @@ import {
     beginRestAction,
     chooseRestChoiceOfferAction,
     claimRestChoiceOutcomeAction,
-    pickRestChoiceCutAction,
     pickRestChoiceUpgradeAction,
 } from '@/state/rest/store-actions';
 import { createAppStore, type AppStore } from '@/state/store';
@@ -89,17 +88,6 @@ describe('rest and dying', () => {
         const claim = claimRestChoiceOutcomeAction(store);
 
         expect(claim.chosen).toBe('upgrade');
-        expect(dyingOf(store)).toBe(true);
-    });
-
-    it('the cut choice leaves dying set', () => {
-        const { store } = dyingStore();
-        beginRestAction(store, { seed: 7, shelter: 'camp' });
-        chooseRestChoiceOfferAction(store, 'cut');
-        pickRestChoiceCutAction(store, store.getState().rest.session!.deckCardIds[0]!);
-        const claim = claimRestChoiceOutcomeAction(store);
-
-        expect(claim.chosen).toBe('cut');
         expect(dyingOf(store)).toBe(true);
     });
 
