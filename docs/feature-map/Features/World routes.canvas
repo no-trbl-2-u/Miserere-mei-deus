@@ -36,7 +36,7 @@
 			"y": 40,
 			"width": 260,
 			"height": 90,
-			"color": "1"
+			"color": "4"
 		},
 		{
 			"id": "route:character-select",
