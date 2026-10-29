@@ -16,3 +16,7 @@ export {
     FIXTURE_WEAPON, FIXTURE_ARMOR, FIXTURE_TRINKETS, FIXTURE_ELITE_RELICS, FIXTURE_QUEST_RELIC,
 } from './fixture-content';
 export { settleQuestNodes, settleQuestNodesIn, questNodeIdsOn } from './quest-nodes';
+export {
+    registerQuestChainFixture, QUEST_CHAIN_DEF, QUEST_CHAIN_MAP, QUEST_CHAIN_GATES, QUEST_CHAIN_POOLS,
+    MAIN_QUESTLINE, SIDE_QUESTLINE, MAIN_LINE, SIDE_LINE, MAIN_STEP_1, MAIN_STEP_2, SIDE_STEP_1, gateReason,
+} from './quest-chain.fixture';

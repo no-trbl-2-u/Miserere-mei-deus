@@ -122,7 +122,7 @@ naming its quest.
 - **A9** What is active, on the map. The exploration screen shows a compact
   quest tracker: each active quest's name and its next unmet objective with
   progress (`2/3 foes`), at most three rows then `+n more`; tapping opens the
-  memoir's quest list. Empty log, no tracker. [T to confirm #4]
+  memoir's quest list. Empty log, no tracker. Accepted at merge (default, #4).
 - **A10** A shut road says why. Tapping a node behind a gate shows its route
   reason on the node confirm panel (QL1c's panel), the quest named; the `/quest`
   screen renders an arrival-settled step's payout and a `carry` objective's line
@@ -163,16 +163,16 @@ naming its quest.
 ## Decisions made upfront — DO NOT ASK
 
 - **Build the rules, prove them on a fixture; leave the Breakwater alone.**
-  [T to confirm #1] T's node map is still being designed; the rebuild is its own
+  Accepted at merge (default, #1). T's node map is still being designed; the rebuild is its own
   plot once every node is locked.
 - **A gate is shut from map start until its quest is completed.** Confirmed by
   T (2026-10-28), from the vision's red node.
 - **A side quest is a one-step questline.** One quest system, the one QL1 built.
-- **No abandoning a quest.** [T to confirm #3] A gate cannot be dodged by
+- **No abandoning a quest.** Accepted at merge (default, #3). A gate cannot be dodged by
   dropping its quest, and D111 already holds that the questline cannot be left
   unfinished.
 - **The tracker sits on the exploration screen, the full list stays in the
-  memoir.** [T to confirm #4]
+  memoir.** Accepted at merge (default, #4).
 - **A step's progress counts only from when it is given** (QL1's rule), however
   it is given.
 - **The key is used up at turn-in.** A carried item meant to persist would be a
