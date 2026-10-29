@@ -4,12 +4,11 @@ group: "world"
 reachable: "yes"
 driven: "yes"
 tested: "yes"
-needsPitch: "yes"
+needsPitch: "no"
 source: "axiomancer-mobile/app/village/index.tsx"
 generated: feature-map
 tags:
   - feature-map/world
-  - needs-pitch
 ---
 
 # Village
@@ -35,4 +34,4 @@ Code it uses, as plain text so Graph view draws player flow only.
 
 ## Pitch
 
-Needs a pitch. Missing: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Village")
+Has a pitch.

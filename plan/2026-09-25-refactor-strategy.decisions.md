@@ -1043,6 +1043,17 @@ satisfied for exactly these.)
 - Portraits, relics, stat spreads and playstyle lines are T's content (D88). The first character is due 2026-10-26 (T); three for December. Character content waits on at least one new lane, because a character needs three distinct lanes; T plans two new lanes before a character goes live.
 - Built by Phase CH1 (`plan/phases/phase_CH1_character_select.md`).
 
+**D114 — Chapter 1 is T's 44-node Breakwater, told by gates; every quest pays a relic.** (T, 2026-10-28, attended, a `/pitch` then `/plot`; recorded by the BW1 plot. Supersedes D111's four-step questline and its pocket routing; D112 and D113 are taken by the open NK1 and WR1 plots. T: "I REALLY need you to take this down as an important note in terms of the VISION I have for chapter 1".)
+
+- The Breakwater is the 44 nodes, 42 roads and one travel pair (the sea cave mouth and the cave face) T drew on the coast plate (the board and `braindump/2026-10-28-breakwater-chapter-1-map.md`); node ids are the board's codes (`bw-w1` .. `bw-p3`).
+- The chain: the windmill gives the fishermen quest; the wreck hazard opens the sea; the sea cave travels to the cove, where an elite guards the quest node that turns it in and gives the next; an elite guards the lighthouse, where arriving completes the quest and pays a key; the keep's quest node needs the key and opens the chapter boss; with the boss dead the bridge quest completes and the next node travels out.
+- Backtracking is allowed, several quests may run at once, and a quest node holds the road past it until its quest is done. A quest node reached too early refuses, with a line of story (T).
+- Elites guard quest nodes; rests sit near elites; loot caches lean on dead ends; cutscenes mark important or dead-end places; about half the other nodes are fights, about 80% of combat non-elite (T).
+- Every completed quest pays a relic T names. No relic is elite-only any more: T amends LR1's "one relic per trio will only drop from an elite" so quests can pay more relics; elites still drop relics (T, on the BW1 plot PR).
+- Available nodes, the nodes next to them and quest nodes show their kind as a coloured icon token, an opaque disc with no blur behind it, in the game's own colours (T). The icons are T's pick (D37, D88).
+- Every save made before the rebuild is deleted (T).
+- The vision, in T's terms: `plan/revamp/breakwater-vision.md`. Built by Phase BW1 (`plan/phases/phase_BW1_breakwater_rebuild.md`).
+
 **D113 — The player walks the roads; completed nodes can be revisited.** (T, 2026-10-28, attended `/plot`. Amends the gauntlet frontier rule documented on `MapDefinition.traversal`.)
 
 - On a gauntlet map the player moves only to nodes joined by an open road to the node they stand on, new or completed alike; roads read both ways. Frontier jumping ends.
