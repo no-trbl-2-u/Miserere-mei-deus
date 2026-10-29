@@ -416,18 +416,6 @@ const SEAMS = {
     // reward screen is provoked by the dev REWARDS row's RELIC REWARD.
     'route:item-reward': { section: 'rewards', leaf: 'debug-relic-reward-button', landing: 'item-reward-card' },
     'route:labyrinth': { section: 'world', leaf: 'debug-world-travel', press: (p) => tapFirstPrefixed(p, 'debug-aporia-'), landing: null },
-    // The Breakwater's one travel node is its exit (phase NK1d). Its NODES chip
-    // jumps there and fires the offer, and <TravelGate> pushes `/travel`.
-    'route:travel': {
-        section: 'world',
-        leaf: 'debug-world-travel',
-        press: async (p) => {
-            const chip = p.locator('[data-testid^="debug-travel-node-"]', { hasText: '· travel' }).first()
-            await chip.waitFor({ state: 'visible', timeout: 10000 }).catch(() => fail('no travel node chip on the WORLD panel'))
-            await chip.click()
-        },
-        landing: 'travel-question',
-    },
     // The select screen opens from play only once the roster holds a character
     // (CH1f), so until then the `/dev` row that opens it (all locked) is the seam.
     // That row sits outside every section, so it has no section to open.
