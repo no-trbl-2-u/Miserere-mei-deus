@@ -48,7 +48,7 @@ afterEach(() => {
 });
 
 function makeStore(): AppStore {
-    return createAppStore({ adapter: createMemoryAdapter(), overrides: { world: settledBreakwater() } });
+    return createAppStore({ adapter: createMemoryAdapter(), overrides: { world: settledBreakwater('bw-20') } });
 }
 
 function mountExploration(store: AppStore) {

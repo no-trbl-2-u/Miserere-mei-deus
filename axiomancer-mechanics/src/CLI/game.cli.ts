@@ -57,7 +57,7 @@ import type { TypedLevelUpEvent } from '../Game/events.types';
 import { getMapDefinition } from '../World/map.registry';
 import {
     resolveMapEvent, settleArrival, MAP_REGISTRY, getNodePrimaryEventKind,
-    legalMovesFrom, acceptQuestStep, turnInQuestStep,
+    legalMovesFrom, roadRouteTo, roadReachable, syncWorldMoveLists, acceptQuestStep, turnInQuestStep,
 } from '../World';
 import { resolveDeath } from '../Game/death';
 import type { ResolvedEvent, ContinentName, MapName } from '../World';
@@ -253,17 +253,22 @@ function playQuestNode(store: GameStoreHandle, event: Extract<ResolvedEvent, { k
 async function moveAndResolveMapNode(store: GameStoreHandle, target: string, flags: CliFlags): Promise<NodeResolutionResult> {
     const state = store.getState();
     const current = state.world.currentMap.currentNode;
-    // The engine's frontier is the authority on where a walk may go: a
-    // questline's pockets and its locks read only there.
-    const reachable = legalMovesFrom(state.world.currentMap);
-    if (!reachable.includes(target)) {
+    // The engine's road rule is the authority on where a walk may go: a
+    // questline's pockets and its locks read only there. A route names the
+    // nodes to resolve; the walk back across walked nodes between two of
+    // them is taken for it, one road at a time.
+    const roads = roadRouteTo(state.world.currentMap, target);
+    if (roads === null) {
+        const reachable = roadReachable(state.world.currentMap);
         throw new Error(`Route target '${target}' is not reachable from '${current}'. Reachable: ${reachable.join(', ') || '(none)'}`);
     }
 
-    const beforeMove = store.getState();
-    store.getState().moveToNode(target);
-    log(`Moved to ${target}.`);
-    logState('moveToNode', beforeMove, store.getState(), { target });
+    for (const step of roads) {
+        const beforeMove = store.getState();
+        store.getState().moveToNode(step);
+        log(step === target ? `Moved to ${target}.` : `Walked back across ${step}.`);
+        logState('moveToNode', beforeMove, store.getState(), { target: step });
+    }
 
     return resolveCurrentNodeEvent(store, flags, target);
 }
@@ -410,14 +415,15 @@ async function mapTab(store: GameStoreHandle, flags: CliFlags): Promise<void> {
     log(`\n— Map: ${def.name} —`);
     log(`You are at ${current}.`);
 
-    const available = state.world.currentMap.availableNodes;
-    const reachable = (node?.connectedNodes ?? []).filter(id => available.includes(id));
+    // The road rule's moves, new and spent nodes alike.
+    const reachable = node ? legalMovesFrom(state.world.currentMap) : [];
     if (reachable.length === 0) {
         log('No adjacent nodes are open right now.');
         return;
     }
 
-    const autoTarget = reachable[0];
+    const map = state.world.currentMap;
+    const autoTarget = reachable.find(id => !map.completedNodes.includes(id) && !map.consumedNodes.includes(id)) ?? reachable[0];
     const { target } = await prompt<{ target: string }>([
         {
             type: 'rawlist',
@@ -757,7 +763,11 @@ function loadTab(store: GameStoreHandle, snapshotAdapter: PersistenceAdapter | n
     const before = store.getState();
     // Restore EVERY persisted slice and bring an older save up to date through `migrate` first;
     // `currentEncounter` is transient and never saved.
-    const current = dropRetiredFlags(dropUnknownCardIds(saved.version < GAME_STATE_VERSION ? migrate(saved, saved.version) : saved));
+    const loaded = dropRetiredFlags(dropUnknownCardIds(saved.version < GAME_STATE_VERSION ? migrate(saved, saved.version) : saved));
+    // A save written under the frontier rule carries the frontier in its
+    // move lists: rewrite them by the road rule from where the player stands.
+    const syncedWorld = loaded.world ? syncWorldMoveLists(loaded.world) : loaded.world;
+    const current = syncedWorld === loaded.world ? loaded : { ...loaded, world: syncedWorld };
     const { currentEncounter: _transient, ...restored } = current;
     store.setState(restored);
     logState('load', before, store.getState());

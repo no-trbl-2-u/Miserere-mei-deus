@@ -3,6 +3,7 @@ import {
     migrate,
     dropUnknownCardIds,
     dropRetiredFlags,
+    syncWorldMoveLists,
     GAME_STATE_VERSION,
 } from '@mechanics';
 
@@ -159,9 +160,13 @@ export function unwrap(
     }
     // Every engine-shaped load, current version included: a save can name
     // cards the library no longer holds (`dropUnknownCardIds`) and flags no
-    // code reads (`dropRetiredFlags`).
+    // code reads (`dropRetiredFlags`), and a save written under the frontier
+    // rule carries the frontier in its move lists, which the road rule
+    // rewrites from where the player stands (`syncWorldMoveLists`).
     if (typeof engineVersion === 'number') {
-        state = dropRetiredFlags(dropUnknownCardIds(state as GameState));
+        const cleaned = dropRetiredFlags(dropUnknownCardIds(state as GameState));
+        const world = cleaned.world ? syncWorldMoveLists(cleaned.world) : cleaned.world;
+        state = world === cleaned.world ? cleaned : { ...cleaned, world };
     }
     return state as GameState;
 }

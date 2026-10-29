@@ -111,7 +111,7 @@ export function ExplorationNode({ node: n, onNodePress, isSelected }: Exploratio
             accessibilityRole="button"
             accessibilityLabel={`${n.label}, ${
                 n.kind === 'locked' ? (n.blockedReason ? `sealed: ${n.blockedReason}` : 'sealed')
-                    : n.kind === 'completed' ? 'walked'
+                    : n.kind === 'completed' ? (n.walkable ? 'walked, a road back' : 'walked')
                         : n.kind === 'current' ? 'here'
                             : `open, ${NODE_KIND_LABEL[n.type].toLowerCase()}`
             }`}
@@ -125,7 +125,7 @@ export function ExplorationNode({ node: n, onNodePress, isSelected }: Exploratio
             accessibilityState={{ selected: isSelected }}
             onPress={() => onNodePress(n)}
             onLongPress={() => tooltip.show({ kind: 'map-node', id: n.type, anchorRef: ref })}
-            activeOpacity={n.kind === 'available' ? 0.7 : 1}
+            activeOpacity={n.kind === 'available' || n.walkable ? 0.7 : 1}
             testID={`node-${n.id}`}
             style={[
                 styles.nodeWrap,

@@ -9,7 +9,7 @@
  *   Anvil near its exit;
  * - the forest roster is level 9 and up, so every fight here is pinned low.
  *
- * The generic gauntlet invariants (no strands, column law, ribs, distinct
+ * The generic gauntlet invariants (road reachability, column law, ribs, distinct
  * coordinates) run over this map in `map-traversal.engine.test.ts` like every
  * other registered map. The layout pins live in mobile, where the landmarks
  * and the sheet are.
@@ -48,7 +48,6 @@ describe('the Charcoal Wood map', () => {
 
     it('ends every run at the stair cave', () => {
         const audit = auditMapTraversal(charcoalWood);
-        expect(audit.strands).toEqual([]);
         expect(audit.terminalNodes).toEqual(['cw-20']);
     });
 

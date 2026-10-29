@@ -172,7 +172,7 @@ describe('start-node arrival: the map resolves the node it puts you on', () => {
 describe('an arrival the player never answered survives a reload', () => {
     it('engages the encounter when the map screen remounts on the saved node', () => {
         const adapter = createMemoryAdapter();
-        const store = createAppStore({ adapter, overrides: { world: settledBreakwater() } });
+        const store = createAppStore({ adapter, overrides: { world: settledBreakwater('bw-20') } });
         const actions = createAppActions(store);
         actions.moveTo('bw-2'); // engine kind `encounter`
 
@@ -212,7 +212,7 @@ describe('an arrival the player never answered survives a reload', () => {
 describe('a save taken mid-fight survives a reload', () => {
     it('re-offers the fight, with the onward nodes still shut', () => {
         const adapter = createMemoryAdapter();
-        const store = createAppStore({ adapter, overrides: { world: settledBreakwater() } });
+        const store = createAppStore({ adapter, overrides: { world: settledBreakwater('bw-22') } });
         const actions = createAppActions(store);
         // The watchtower: the door fight, whose way on is the bridge.
         actions.moveTo('bw-17'); // engine kind `encounter`
@@ -238,7 +238,7 @@ describe('a save taken mid-fight survives a reload', () => {
     });
 
     it('a fight walked away from leaves its node unspent, and tapping it tries it again', () => {
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: settledBreakwater() } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: settledBreakwater('bw-20') } });
         const actions = createAppActions(store);
         actions.moveTo('bw-2');
         mountExploration(store).unmount();

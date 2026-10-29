@@ -30,15 +30,19 @@ export {
     completeNode, unlockNode, changeContinent,
     revealAdjacent, markNodeConsumed,
     teleportToNode, placeOnNode, unblockMapRoute, arriveAtNode, unspendNode,
-    // Traversal queries + the strand audit.
+    // Traversal queries: the road rule's legal moves.
     legalMovesFrom,
     // A node the map holds (`holdRoadsUntilSettled`) opens its roads once spent.
     isHoldingRoads,
-    // Frontier roaming: the derived spent/frontier sets
-    // every surface classifies nodes from, plus the forward skeleton the
-    // progression audits walk.
+    // The move lists the road rule keeps, per map and over a loaded world.
+    syncMoveLists, syncWorldMoveLists,
+    // The walk back along open roads to a node.
+    roadRouteTo, walkRoadTo, roadReachable,
+    // The forward skeleton the progression audits walk.
     forwardEdges,
 } from './world.reducer';
+export { auditRoadReachability } from './road-reachability';
+export type { RoadReachabilityAudit } from './road-reachability';
 
 // MapEvents engine.
 // Importing `./MapEvents/content` for its side effect registers every

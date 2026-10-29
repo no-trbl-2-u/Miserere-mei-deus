@@ -77,7 +77,7 @@ const cases = [
     {
         // A pocket fight: its pocket leads nowhere, so it has no way on.
         name: 'a normal fight (Float-Eye at bw-14)',
-        approach: () => walk(bwWorld(), 'bw-4', 'bw-9'),
+        approach: () => walk(bwWorld(), 'bw-4', 'bw-9', 'bw-20'),
         node: 'bw-14',
         onward: null,
         boss: false,
@@ -86,7 +86,8 @@ const cases = [
         name: 'the door fight (the Death Beholder at bw-17)',
         approach: () => {
             const placed = placeOnNode(bwWorld(), 'bw-16');
-            return { ...placed, currentMap: unlockAdjacent(placed.currentMap, 'bw-16') };
+            // The settled quest node bw-22 sits between bw-16 and the door.
+            return walk({ ...placed, currentMap: unlockAdjacent(placed.currentMap, 'bw-16') }, 'bw-22');
         },
         node: 'bw-17',
         onward: 'bw-18',
@@ -168,7 +169,7 @@ describe('settleArrival', () => {
     });
 
     it('settles only the node the debt names', () => {
-        const world = walk(bwWorld(), 'bw-2');
+        const world = walk(bwWorld(), 'bw-4', 'bw-9', 'bw-20', 'bw-2');
         const state: GameState = createGameStore(memoryDisk(), { world }).getState();
 
         const settled = settleArrival(state).world.currentMap;

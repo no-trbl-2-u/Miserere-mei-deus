@@ -431,9 +431,13 @@ export {
     changeMap, completeMap, unlockMap,
     completeNode, unlockNode, changeContinent,
     revealAdjacent, markNodeConsumed,
-    // Traversal queries.
+    // Traversal queries: the road rule's legal moves.
     legalMovesFrom,
     isHoldingRoads,
+    syncMoveLists, syncWorldMoveLists,
+    // The walk back along open roads to a node.
+    roadRouteTo, walkRoadTo, roadReachable,
+    auditRoadReachability,
     // The forward skeleton the progression audits walk.
     forwardEdges,
 } from './World';

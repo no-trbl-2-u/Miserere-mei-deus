@@ -117,22 +117,23 @@ describe('buildStateFromFixture', () => {
         expect(currentContinent.lockedMaps).not.toContain('charcoal-wood');
         expect(currentContinent.completedMaps).toEqual(['breakwater']);
         expect(currentMap.currentNode).toBe('cw-8');
-        expect(currentMap.availableNodes).toContain('cw-8');
+        expect(currentMap.lockedNodes).not.toContain('cw-8');
+        expect(currentMap.availableNodes).toEqual(legalMovesFrom(currentMap));
         expect(currentMap.discoveredNodes).toContain('cw-8');
     });
 
-    it('world.questNodesSettled spends the map\'s quest nodes and opens their locks; without it the watchtower stays shut', () => {
+    it('world.questNodesSettled spends the map\'s quest nodes and opens their locks; without it the road to marker 4 stays shut', () => {
         const at = (questNodesSettled?: boolean) => buildStateFromFixture({
             id: 'settled',
             seed: 3,
             world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-15', ...(questNodesSettled === undefined ? {} : { questNodesSettled }) },
         }).world.currentMap;
         const settled = at(true);
-        expect(legalMovesFrom(settled)).toContain('bw-17');
+        expect(legalMovesFrom(settled)).toContain('bw-22');
         expect(settled.consumedNodes).toEqual(expect.arrayContaining(['bw-19', 'bw-20', 'bw-21', 'bw-22']));
         expect(settled.blockedRoutes).toEqual([]);
         for (const plain of [at(), at(false)]) {
-            expect(legalMovesFrom(plain)).not.toContain('bw-17');
+            expect(legalMovesFrom(plain)).not.toContain('bw-22');
             expect(plain.blockedRoutes).toHaveLength(4);
         }
         expect(problemsFor({ id: 'bad', world: { continent: 'coastal-continent', map: 'breakwater', questNodesSettled: 'yes' } }))
@@ -203,7 +204,7 @@ describe('createFixtureGameStore (src/test-utils/fixture-store.ts)', () => {
         const { store, state, fixture } = createFixtureGameStore('sage-bw-door-gate');
         expect(fixture.id).toBe('sage-bw-door-gate');
         expect(store.getState().runId).toBe(state.runId);
-        expect(store.getState().world.currentMap.currentNode).toBe('bw-15');
+        expect(store.getState().world.currentMap.currentNode).toBe('bw-22');
     });
 
     it('accepts an inline fixture and rejects bad refs', () => {

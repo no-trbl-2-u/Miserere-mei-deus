@@ -60,15 +60,17 @@ describe('moveToNode', () => {
         expect(() => moveToNode(world, 'bw-7')).toThrow(IllegalMoveError);
     });
 
-    it('locks completed nodes against back-travel (Q2)', () => {
+    it('walks back onto a completed node along its road, and nowhere off the roads', () => {
         let world = createStartingWorld('breakwater');
         world = moveToNode(world, 'bw-4');
         world = completeCurrentNode(world);
         // After completing bw-4, the south pier (bw-7) becomes available.
         expect(world.currentMap.availableNodes).toContain('bw-7');
         world = moveToNode(world, 'bw-7');
-        // Can't go back to the completed bw-4.
-        expect(() => moveToNode(world, 'bw-4')).toThrow(IllegalMoveError);
+        // The completed bw-4 is a road back.
+        expect(moveToNode(world, 'bw-4').currentMap.currentNode).toBe('bw-4');
+        // The cove (bw-5) is joined to bw-7 by a road; marker 1 is not.
+        expect(() => moveToNode(world, 'bw-19')).toThrow(IllegalMoveError);
     });
 
     it('returns the same state when target equals current node', () => {
@@ -140,7 +142,7 @@ describe('resolveMapEvent dispatch', () => {
         // bw-2 (the crane quay) is a Float-Eye fight in the second step's
         // pocket; the quest nodes are settled to reach it.
         let state = settleQuestNodesIn(startingState());
-        state = { ...state, world: moveToNode(state.world, 'bw-2') };
+        for (const target of ['bw-4', 'bw-9', 'bw-20', 'bw-2']) state = { ...state, world: moveToNode(state.world, target) };
         const result = resolveMapEvent(state);
         expect(result.event.kind).toBe('encounter');
         if (result.event.kind === 'encounter') {
@@ -166,7 +168,7 @@ describe('resolveMapEvent dispatch', () => {
         // The watchtower (bw-17) holds the Breakwater's door fight, behind
         // the last quest node; the quest nodes are settled to reach it.
         let state = settleQuestNodesIn(startingState());
-        for (const target of ['bw-4', 'bw-9', 'bw-13', 'bw-16', 'bw-17'] as const) {
+        for (const target of ['bw-4', 'bw-9', 'bw-13', 'bw-16', 'bw-22', 'bw-17'] as const) {
             state = { ...state, world: moveToNode(state.world, target) };
             if (target !== 'bw-17') state = { ...state, world: completeCurrentNode(state.world) };
         }

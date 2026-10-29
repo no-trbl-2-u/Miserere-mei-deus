@@ -9,7 +9,7 @@
  *   with one authored event on every node;
  * - the caverns' roster is level 13 and up, so every fight here is pinned low.
  *
- * The generic gauntlet invariants (no strands, column law, ribs, distinct
+ * The generic gauntlet invariants (road reachability, column law, ribs, distinct
  * coordinates) run over this map in `map-traversal.engine.test.ts` like every
  * other registered map. The layout pins live in mobile, where the landmarks
  * and the sheet are.
@@ -51,7 +51,6 @@ describe('the Beacon Crags map', () => {
 
     it('ends every run at the glacier shrine', () => {
         const audit = auditMapTraversal(beaconCrags);
-        expect(audit.strands).toEqual([]);
         expect(audit.unreachableNodes).toEqual([]);
         expect(audit.terminalNodes).toEqual(['bc-17']);
     });

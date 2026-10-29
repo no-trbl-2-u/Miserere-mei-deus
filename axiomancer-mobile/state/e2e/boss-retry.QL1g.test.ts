@@ -11,7 +11,7 @@ import { describe, expect, it } from '@jest/globals';
 
 import {
     BREAKWATER_QUESTLINE, ENEMY_REGISTRY, completeQuest, initializeCombatEncounter, legalMovesFrom,
-    placeOnNode, startQuest, stepQuest, type CombatOutcome, type GameState,
+    startQuest, stepQuest, type CombatOutcome, type GameState,
 } from '@mechanics';
 
 import { applyHazardOutcome } from '@/components/combat/encounter/CombatEncounterPanel';
@@ -23,7 +23,7 @@ import { settledBreakwater } from '@/test-utils/settledBreakwater';
 const gs = (store: ReturnType<typeof createAppStore>) => store.getState() as unknown as GameState;
 
 function setup() {
-    const placed = placeOnNode(settledBreakwater(), 'bw-16');
+    const placed = settledBreakwater('bw-22');
     const world = placed;
     const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world } });
     const actions = createAppActions(store);
@@ -53,7 +53,7 @@ describe('the lost watchtower, retried (QL1g)', () => {
         const map = gs(store).world.currentMap;
         expect(gs(store).dying).toBe(true);
         expect(gs(store).player.health).toBe(1);
-        expect(map.currentNode).toBe('bw-16');
+        expect(map.currentNode).toBe('bw-22');
         expect(map.consumedNodes).not.toContain('bw-17');
         expect(map.completedNodes).not.toContain('bw-17');
         expect(legalMovesFrom(map)).toContain('bw-17');

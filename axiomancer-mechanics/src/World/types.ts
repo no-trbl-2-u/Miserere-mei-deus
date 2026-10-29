@@ -165,16 +165,17 @@ export interface MapDefinition {
     /**
      * Traversal doctrine.
      *
-     * `'gauntlet'` (default when absent) is FRONTIER ROAMING: a node the
-     * player has resolved is SPENT and cannot be re-entered, and every
-     * UNVISITED node joined by an unblocked edge to ANY visited node is a
-     * legal destination — not merely the ones adjacent to where the player
-     * stands. The explored edge of the map is open all at once, so a lane
-     * skipped earlier stays walkable and the region boss becomes
-     * unavoidable only when the frontier runs out. It is still a gauntlet
-     * in the sense that matters: nothing resolved is ever re-farmed.
-     * `lockedNodes` is bookkeeping the reducer keeps in step; it is
-     * not consulted for legality.
+     * `'gauntlet'` (default when absent) is WALKING THE ROADS: the player
+     * moves only to the nodes joined by an open road to the node they stand
+     * on, read both ways, new or completed alike (`roads.ts`,
+     * `legalMovesFrom`). There is no jumping across the map: a dead-end
+     * pocket is left the way it was entered. A resolved node is SPENT: it
+     * can be walked across, but its one-shot event does not fire again.
+     * Blocked routes and the onward roads of an unspent held node
+     * (`holdRoadsUntilSettled`) are not open, so the region boss is forced
+     * by routing, not by running out of places to go. `availableNodes` /
+     * `lockedNodes` are bookkeeping the reducer keeps in step
+     * (`syncMoveLists`); they are not consulted for legality.
      *
      * `'labyrinth'` is the Aporia mode: free travel along
      * the CURRENT node's edges INCLUDING back into completed or consumed
@@ -188,11 +189,13 @@ export interface MapDefinition {
      */
     readonly initialBlockedRoutes?: readonly BlockedRoute[];
     /**
-     * Nodes that add their roads to the frontier only once they are spent:
-     * standing on one opens nothing (`isHoldingRoads`, `frontierNodes`). A
-     * quest node holds its pocket until its step is accepted; a boss holds
-     * the road past it until it falls. Static (not saved). Not map-wide: the
-     * rule would empty the frontier between every move and its resolve.
+     * Nodes that keep their onward roads (their own `connectedNodes`) shut,
+     * both ways, until they are spent (`isHoldingRoads`, `roads.ts`); the
+     * road a held node was reached by stays open, so the player may walk
+     * back off it. A quest node holds its pocket until its step is
+     * accepted; a boss holds the road past it until it falls. Static (not
+     * saved). Not map-wide: every node would hold its roads between a move
+     * and its resolve.
      */
     readonly holdRoadsUntilSettled?: readonly NodeId[];
     /**

@@ -163,7 +163,7 @@ not frontier) and are recomputed by a migration step at load (A5).
 6. **A fight the player fled or lost is not completed** (QL1, D111): walking
    back onto it fights again. Unchanged.
 7. **The walk-back tap moves at once** with no confirm panel
-   [T to confirm #1]: it fires nothing, so there is nothing to confirm; a new
+   Accepted at merge (default): it fires nothing, so there is nothing to confirm; a new
    node keeps today's confirm panel.
 8. **The labyrinth is untouched.**
 9. **NK1 order-independence**: if NK1d lands first, a same-map passage's

@@ -18,7 +18,7 @@
 
 import { describe, it, expect } from 'vitest';
 
-import { legalMovesFrom, moveToNode, isNodeSpent } from '../world.reducer';
+import { moveToNode, isNodeSpent, walkRoadTo, roadReachable } from '../world.reducer';
 import { createMapState, getMapDefinition } from '../map.registry';
 import { resolveMapEvent } from '../MapEvents/resolve-map-event';
 import {
@@ -56,7 +56,8 @@ const ALL_POCKET_NODES = Object.values(POCKETS).flat();
 const MARKERS = ['bw-19', 'bw-20', 'bw-21', 'bw-22'];
 
 const map = (s: GameState) => s.world.currentMap;
-const legal = (s: GameState) => legalMovesFrom(map(s));
+/** Where the player can walk to from where they stand, back across walked nodes. */
+const legal = (s: GameState) => roadReachable(map(s));
 const step = (s: GameState, n: number) => questStepState(s.quests, BREAKWATER_QUESTLINE.steps[n - 1]!);
 
 /** A fresh game on the Breakwater, the windmill's arrival resolved. */
@@ -67,7 +68,7 @@ function freshGame(): GameState {
 
 /** Walks onto `nodeId` and resolves its arrival. */
 function arrive(state: GameState, nodeId: string) {
-    const moved: GameState = { ...state, world: moveToNode(state.world, nodeId) };
+    const moved: GameState = { ...state, world: walkRoadTo(state.world, nodeId) };
     return resolveMapEvent(moved, seededRng(7));
 }
 
@@ -91,7 +92,7 @@ function fightAt(state: GameState, nodeId: string, outcome: 'victory' | 'flee' |
 const accept = (s: GameState, n: number) => gameReducer(s, { type: 'ACCEPT_QUEST_STEP', payload: { questline: LINE, step: n } });
 const turnIn = (s: GameState, n: number) => gameReducer(s, { type: 'TURN_IN_QUEST_STEP', payload: { questline: LINE, step: n } });
 
-/** The pockets open at `s`: every pocket node on the frontier, by pocket. */
+/** The pockets open at `s`: every pocket node in walking reach, by pocket. */
 function openPockets(s: GameState): number[] {
     const moves = new Set(legal(s));
     return Object.entries(POCKETS)

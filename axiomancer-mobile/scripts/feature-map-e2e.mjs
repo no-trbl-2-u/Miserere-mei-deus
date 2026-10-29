@@ -224,6 +224,28 @@ async function nodeLabel(page, nodeId) {
     return page.evaluate((id) => document.querySelector(`[data-testid="node-${id}"]`)?.getAttribute('aria-label') ?? null, nodeId)
 }
 
+async function expectHere(page, nodeId) {
+    const label = await nodeLabel(page, nodeId)
+    if (!label || !/here/.test(label)) fail(`expected to stand on ${nodeId}, its label reads "${label}"`)
+}
+
+/**
+ * Walk back onto a walked node a road away (phase WR1a: the player walks the
+ * roads, and a dead end is left the way it was entered). The node reads
+ * "a road back"; one tap moves the player with no confirm panel and no event.
+ */
+async function walkBack(page, nodeId) {
+    const label = await nodeLabel(page, nodeId)
+    if (!label || !/a road back/.test(label)) fail(`node-${nodeId} is not a road back (label: "${label}")`)
+    await page.evaluate((id) => document.querySelector(`[data-testid="node-${id}"]`).click(), nodeId)
+    for (let i = 0; i < 20; i++) {
+        if (/here/.test((await nodeLabel(page, nodeId)) ?? '')) break
+        await sleep(150)
+    }
+    await expectHere(page, nodeId)
+    log(`walked back to ${nodeId}`)
+}
+
 async function playOutCutscene(page) {
     await tap(page, 'cutscene-skip')
     for (let k = 0; k < 12; k++) {
@@ -328,6 +350,8 @@ async function walk(page) {
     // markers (QL1d). Accepting step 1 at bw-19 opens the hazard pocket; the
     // fight pocket waits behind bw-20, which needs step 1 crossed (no dev skip
     // in this leg), so the seam leg provokes the fight routes.
+    // The windmill is the road from the pass to marker 1.
+    await walkBack(page, 'bw-1')
     await travelTo(page, 'bw-19')
     await waitFor(page, 'quest-column', 'bw-19 quest screen')
     await waitFor(page, 'quest-accept-button', 'bw-19 offer')

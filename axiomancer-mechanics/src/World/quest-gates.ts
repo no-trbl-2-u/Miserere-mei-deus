@@ -2,10 +2,11 @@
  * Quest gates: the authoring check that a gate really holds its road.
  *
  * A step's `gatesPast` roads stay shut until the step is completed. On a
- * gauntlet map the player roams the whole frontier (`frontierNodes`), so a
- * gate holds only when every node past it is out of reach while it is shut.
- * `questGateProblems` reads the static definition (never a save) the way the
- * frontier does: roads both ways, every gate of every questline on the map
+ * gauntlet map the player walks the roads both ways, back across spent
+ * nodes too (`roads.ts`), so everything joined to the start by open roads is
+ * in reach and a gate holds only when every node past it is out of reach
+ * while it is shut. `questGateProblems` reads the static definition (never a
+ * save) the way the road rule does: roads both ways, every gate of every questline on the map
  * shut, every other authored block and every held node assumed open (each
  * one opens in play), and lists each node past a gate the start still
  * reaches, with the road it gets in by.

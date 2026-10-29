@@ -140,7 +140,8 @@ describe('Phase 14 — route survivorship vs coverage-audit classification', () 
         const map = after.world.currentMap;
         expect(after.dying).toBe(true);
         expect(after.player.health).toBe(1);
-        expect(map.currentNode).toBe('bw-2');
+        // bw-2 to bw-10 walks back across marker 2 (bw-20): that is the node walked from.
+        expect(map.currentNode).toBe('bw-20');
         expect(map.pendingArrival ?? null).toBeNull();
         expect(map.consumedNodes).not.toContain('bw-10');
         expect(map.completedNodes).not.toContain('bw-10');

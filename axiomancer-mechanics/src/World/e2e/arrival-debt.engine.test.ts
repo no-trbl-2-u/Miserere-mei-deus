@@ -66,14 +66,14 @@ describe('the arrival verb records what the player is owed', () => {
     });
 
     it('moveToNode owes the node it walked onto', () => {
-        const walked = moveToNode(freshWorld(), 'bw-2');
+        const walked = moveToNode(freshWorld(), 'bw-5');
 
-        expect(walked.currentMap.currentNode).toBe('bw-2');
-        expect(walked.currentMap.pendingArrival).toBe('bw-2');
+        expect(walked.currentMap.currentNode).toBe('bw-5');
+        expect(walked.currentMap.pendingArrival).toBe('bw-5');
     });
 
     it('each further move owes only the node under the player', () => {
-        const walked = moveToNode(walk(freshWorld(), 'bw-2'), 'bw-7');
+        const walked = moveToNode(walk(freshWorld(), 'bw-5'), 'bw-7');
 
         expect(walked.currentMap.pendingArrival).toBe('bw-7');
     });
@@ -81,8 +81,8 @@ describe('the arrival verb records what the player is owed', () => {
 
 describe('the placement verbs owe nothing — being placed is not arriving', () => {
     it('placeOnNode clears a debt the walk had recorded', () => {
-        const walked = moveToNode(freshWorld(), 'bw-2');
-        expect(walked.currentMap.pendingArrival).toBe('bw-2');
+        const walked = moveToNode(freshWorld(), 'bw-5');
+        expect(walked.currentMap.pendingArrival).toBe('bw-5');
 
         const placed = placeOnNode(walked, 'bw-9');
 
@@ -121,7 +121,7 @@ describe('the placement verbs owe nothing — being placed is not arriving', () 
 describe('resolving the arrival is what answers it', () => {
     it('clears the debt for the node it resolved', () => {
         // bw-11 is the kelp wreck, a gathering node.
-        const before = gameOn(walk(freshWorld(), 'bw-2', 'bw-7', 'bw-11'));
+        const before = gameOn(walk(freshWorld(), 'bw-5', 'bw-7', 'bw-11'));
         expect(before.world.currentMap.pendingArrival).toBe('bw-11');
 
         const { state, event } = resolveMapEvent(before);
@@ -131,7 +131,7 @@ describe('resolving the arrival is what answers it', () => {
     });
 
     it('a fight is the exception: the debt stands until the fight settles (R9a)', () => {
-        const before = gameOn(walk(freshWorld(), 'bw-2', 'bw-7', 'bw-11', 'bw-14'));
+        const before = gameOn(walk(freshWorld(), 'bw-4', 'bw-9', 'bw-20', 'bw-14'));
 
         const { state, event } = resolveMapEvent(before);
 
@@ -160,7 +160,7 @@ describe('resolving the arrival is what answers it', () => {
     });
 
     it('clears a stale debt on a node that was already consumed', () => {
-        const walked = walk(freshWorld(), 'bw-2', 'bw-7', 'bw-11', 'bw-14');
+        const walked = walk(freshWorld(), 'bw-4', 'bw-9', 'bw-20', 'bw-14');
         const consumed: WorldState = {
             ...walked,
             currentMap: { ...walked.currentMap, consumedNodes: ['bw-14'] },

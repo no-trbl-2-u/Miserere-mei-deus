@@ -113,6 +113,13 @@ export default function ExplorationScreen() {
             return;
         }
         if (node.kind === 'completed') {
+            // A walked node joined by a road to where the player stands is a
+            // walk back: it moves at once, and its spent event fires nothing.
+            if (node.walkable) {
+                setSelectedNodeId(null);
+                if (actions.moveTo(node.id).moved) actions.resolveCurrentMapEvent(node.type);
+                return;
+            }
             setNodeTip('walked already');
             return;
         }

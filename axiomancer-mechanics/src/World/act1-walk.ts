@@ -15,11 +15,13 @@
  *   - its door: the one node with an edge into the exit (the Death Beholder);
  *   - the kinds it carries: the first entry kind of every node's pool.
  *
- * The path follows the frontier rule (`world.reducer.ts`): a node is open when
- * it touches any resolved node. From the arrival node, the plan repeatedly
- * walks the shortest route through the visited set to the nearest node of a
- * kind not yet met (door and exit excluded), resolving every node on the way,
- * then the door, then the exit. Ties break in map-definition order.
+ * The path walks the roads (`roads.ts`): every step is joined by a road to
+ * the step before it, and a dead-end pocket is left the way it was entered.
+ * From the arrival node, the plan repeatedly walks the shortest route from
+ * where it stands to the nearest node of a kind not yet met (door and exit
+ * excluded): back across nodes it has already resolved (`back` steps, which
+ * fire nothing) and resolving every new node on the way, then the door, then
+ * the exit. Ties break in map-definition order.
  *
  * A region that carries a questline (the Breakwater's) plays it first, in
  * step order: the walk goes to each step's quest node (accepting the step
@@ -52,7 +54,7 @@ export const ACT1_WALK_EVENT_KINDS: readonly MapEventKind[] = [
 ];
 
 /** Why a step is on the path. */
-export type Act1WalkRole = 'arrival' | 'path' | 'door' | 'exit';
+export type Act1WalkRole = 'arrival' | 'path' | 'back' | 'door' | 'exit';
 
 export interface Act1WalkStep {
     readonly nodeId: string;
@@ -107,22 +109,24 @@ function undirected(def: MapDefinition): Map<string, Set<string>> {
 }
 
 /**
- * The shortest route from the visited set to the nearest node whose kind is
- * still wanted, as the list of new nodes to resolve in order. `null` when no
- * wanted node is reachable without crossing a barred node.
+ * The shortest road from `from` to the nearest unvisited node whose kind is
+ * still wanted, as the nodes to walk in order (`from` excluded): visited
+ * nodes on the way are walked back across, new ones are resolved. `null`
+ * when no wanted node is reachable without crossing a barred node.
  */
 function routeToNearest(
     def: MapDefinition,
     adj: Map<string, Set<string>>,
+    from: string,
     visited: ReadonlySet<string>,
     barred: ReadonlySet<string>,
     wanted: (id: string) => boolean,
 ): string[] | null {
     const order = new Map(def.nodes.map((n, i) => [n.id, i]));
     const byOrder = (a: string, b: string) => order.get(a)! - order.get(b)!;
-    const prev = new Map<string, string | null>();
-    let layer = [...visited].sort(byOrder);
-    for (const id of layer) prev.set(id, null);
+    const prev = new Map<string, string | null>([[from, null]]);
+    const isWanted = (id: string) => !visited.has(id) && wanted(id);
+    let layer = [from];
     while (layer.length > 0) {
         const next: string[] = [];
         for (const id of layer) {
@@ -133,10 +137,10 @@ function routeToNearest(
             }
         }
         next.sort(byOrder);
-        const hit = next.find(wanted);
+        const hit = next.find(isWanted);
         if (hit) {
             const route: string[] = [];
-            for (let at: string | null = hit; at !== null && !visited.has(at); at = prev.get(at) ?? null) {
+            for (let at: string | null = hit; at !== null && at !== from; at = prev.get(at) ?? null) {
                 route.unshift(at);
             }
             return route;
@@ -177,8 +181,14 @@ function planRegion(continent: ContinentName, map: MapName): Act1WalkRegion {
     const visited = new Set<string>([start]);
     const barred = new Set<string>([door, exit]);
     const adj = undirected(def);
+    let here = start;
     const walkTo = (route: readonly string[]) => {
         for (const id of route) {
+            here = id;
+            if (visited.has(id)) {
+                steps.push({ nodeId: id, kind: kindOf.get(id)!, role: 'back' });
+                continue;
+            }
             visited.add(id);
             met.add(kindOf.get(id)!);
             steps.push({ nodeId: id, kind: kindOf.get(id)!, role: 'path' });
@@ -191,7 +201,7 @@ function planRegion(continent: ContinentName, map: MapName): Act1WalkRegion {
             const later = markers.filter((_, i) => questline.steps[i]!.step > step.step);
             const fenced = new Set<string>([door, exit, ...later]);
             if (!visited.has(step.nodeId)) {
-                const route = routeToNearest(def, adj, visited, fenced, id => id === step.nodeId);
+                const route = routeToNearest(def, adj, here, visited, fenced, id => id === step.nodeId);
                 if (!route) throw new Error(`act1-walk: ${map} quest node ${step.nodeId} is not reachable`);
                 walkTo(route);
             }
@@ -200,7 +210,7 @@ function planRegion(continent: ContinentName, map: MapName): Act1WalkRegion {
                 const cls = objectiveClass(objective);
                 if (!cls || cls === 'boss') continue;
                 for (let n = 0; n < objective.requiredCount; n++) {
-                    const route = routeToNearest(def, adj, visited, fenced,
+                    const route = routeToNearest(def, adj, here, visited, fenced,
                         id => supply.has(id) && supplyClassesOf(continent, map, id).includes(cls));
                     if (!route) throw new Error(`act1-walk: ${map} step ${step.step} has no ${cls} node left to count`);
                     walkTo(route);
@@ -212,19 +222,18 @@ function planRegion(continent: ContinentName, map: MapName): Act1WalkRegion {
     for (;;) {
         const missing = carried.filter(k => !met.has(k));
         if (missing.length === 0) break;
-        const route = routeToNearest(def, adj, visited, barred, id => missing.includes(kindOf.get(id)!));
+        const route = routeToNearest(def, adj, here, visited, barred, id => missing.includes(kindOf.get(id)!));
         if (!route) {
             throw new Error(`act1-walk: ${map} carries ${missing.join(', ')} but no carrier is reachable before the door`);
         }
         walkTo(route);
     }
 
-    const toDoor = routeToNearest(def, adj, visited, new Set([exit]), id => id === door);
+    const toDoor = routeToNearest(def, adj, here, visited, new Set([exit]), id => id === door);
     if (!toDoor) throw new Error(`act1-walk: ${map} door ${door} is not reachable from the path`);
-    for (const id of toDoor) {
-        visited.add(id);
-        steps.push({ nodeId: id, kind: kindOf.get(id)!, role: id === door ? 'door' : 'path' });
-    }
+    walkTo(toDoor.slice(0, -1));
+    visited.add(door);
+    steps.push({ nodeId: door, kind: kindOf.get(door)!, role: 'door' });
     steps.push({ nodeId: exit, kind: kindOf.get(exit)!, role: 'exit' });
 
     return { continent, map, start, door, exit, carried, carriers, steps };

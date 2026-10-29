@@ -39,7 +39,7 @@ afterEach(() => {
 
 function makeStoreAndActions(): { store: AppStore; actions: AppActions } {
     // The quest nodes settled (test-only): bw-2 sits in a questline pocket.
-    const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: settledBreakwater() } });
+    const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: settledBreakwater('bw-20') } });
     return { store, actions: createAppActions(store) };
 }
 
@@ -112,14 +112,14 @@ describe('hazard out-of-combat death', () => {
         expect(after.player.level).toBe(levelBefore);
         expect(after.player.currency).toBe(shillingsBefore);
         const map = after.world.currentMap;
-        expect(map.currentNode).toBe('bw-1');
+        expect(map.currentNode).toBe('bw-20');
         expect(map.completedNodes).not.toContain('bw-2');
         expect(map.availableNodes).toContain('bw-2');
     });
 
     it('a revive is written to the slot', () => {
         const adapter = createMemoryAdapter();
-        const store = createAppStore({ adapter, overrides: { world: settledBreakwater() } });
+        const store = createAppStore({ adapter, overrides: { world: settledBreakwater('bw-20') } });
         const actions = createAppActions(store);
         const before = adapter.saveCount;
 
