@@ -8,12 +8,12 @@
 // same registry the CLI's `--fixture` flag boots from:
 //
 //   A. URL deep link  `/exploration?fixture=sage-bw-door-gate` (dev tools
-//      forced) → the exploration map opens with bw-15 as the live node.
+//      forced) → the exploration map opens with bw-22 as the live node.
 //   B. Init-script global with an INLINE fixture carrying `arrive: true`
 //      → `<FixtureBoot>` fires the node event and `<EventGate>` lands on
 //      `/cutscene` cold.
 //   C. Fallback: an unknown id (`?fixture=no-such-fixture`) is ignored →
-//      the fresh-game map opens with bw-15 NOT live and no runtime error.
+//      the fresh-game map opens with bw-22 NOT live and no runtime error.
 //
 // The production gate (`isDevToolsEnabled()` false → any request ignored)
 // is pinned by the Jest suite `state/e2e/state-fixture.engine.test.ts`; a
@@ -143,8 +143,8 @@ async function caseUrlDeepLink(browser, baseUrl) {
         const page = await context.newPage()
         trackErrors(page, errors)
         await page.goto(`${baseUrl}/exploration?fixture=sage-bw-door-gate`, { waitUntil: 'networkidle', timeout: 30000 })
-        await expectLiveNode(page, 'bw-15', 'A (url deep link)')
-        // Neighbours were unlocked by placeOnNode: the boss node is open.
+        await expectLiveNode(page, 'bw-22', 'A (url deep link)')
+        // The settled marker opens its road on: the boss node is a road away.
         const boss = await page.getByTestId('node-bw-17').getAttribute('aria-label')
         if (!boss || !boss.includes('open')) fail(`A: bw-17 should be open after placement (aria-label: ${boss})`)
     } finally {
@@ -191,9 +191,9 @@ async function caseUnknownIdFallback(browser, baseUrl) {
         await page.waitForTimeout(1500)
         const text = await page.evaluate(() => document.body?.innerText?.trim() ?? '')
         if (text.length === 0) fail('C (unknown id): the app rendered nothing')
-        const bw15 = page.getByTestId('node-bw-15')
-        const aria = (await bw15.count()) > 0 ? await bw15.first().getAttribute('aria-label') : null
-        if (aria && aria.includes('here')) fail(`C (unknown id): a fixture was applied (bw-15 aria-label: ${aria})`)
+        const bw22 = page.getByTestId('node-bw-22')
+        const aria = (await bw22.count()) > 0 ? await bw22.first().getAttribute('aria-label') : null
+        if (aria && aria.includes('here')) fail(`C (unknown id): a fixture was applied (bw-22 aria-label: ${aria})`)
         log('C (unknown id → fresh game): request ignored, app painted, no crash ✔')
     } finally {
         await context.close()

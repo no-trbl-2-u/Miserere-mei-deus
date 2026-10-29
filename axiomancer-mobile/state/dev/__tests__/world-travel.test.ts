@@ -54,7 +54,7 @@ describe('world-travel dev helpers', () => {
         expect(jumpToNode(store, target.id)).toBe(true);
         const map = store.getState().world.currentMap;
         expect(map.currentNode).toBe(target.id);
-        expect(map.availableNodes).toContain(target.id);
+        expect(map.availableNodes).not.toContain(target.id); // the node underfoot is no move
         expect(map.lockedNodes).not.toContain(target.id);
         expect(jumpToNode(store, 'no-such-node')).toBe(false);
     });

@@ -11,7 +11,7 @@
  * - the vault door (`ld-15`) is the Labyrinth's; the Labyrinth is parked,
  *   so the door is sealed and never opens in play.
  *
- * The generic gauntlet invariants (no strands, column law, ribs, distinct
+ * The generic gauntlet invariants (road reachability, column law, ribs, distinct
  * coordinates) run over this map in `map-traversal.engine.test.ts` like every
  * other registered map. The layout pins live in mobile, where the landmarks
  * and the sheet are.
@@ -55,7 +55,6 @@ describe('the Lantern Deep map', () => {
 
     it('ends every run at the deep stair', () => {
         const audit = auditMapTraversal(lanternDeep);
-        expect(audit.strands).toEqual([]);
         expect(audit.unreachableNodes).toEqual([]);
         expect(audit.terminalNodes).toEqual(['ld-18']);
     });

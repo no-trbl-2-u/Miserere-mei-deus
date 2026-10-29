@@ -15,14 +15,14 @@ import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 import { settledBreakwater } from '@/test-utils/settledBreakwater';
 
 function makeStoreAndActions() {
-    const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: settledBreakwater() } });
+    const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: settledBreakwater('bw-20') } });
     return { store, actions: createAppActions(store) };
 }
 
 describe('playerDied saves', () => {
     it('a revive is written to the slot with dying, the player back on the node walked from', () => {
         const adapter = createMemoryAdapter();
-        const store = createAppStore({ adapter, overrides: { world: settledBreakwater() } });
+        const store = createAppStore({ adapter, overrides: { world: settledBreakwater('bw-20') } });
         const actions = createAppActions(store);
         actions.moveTo('bw-2');
         const before = adapter.saveCount;
@@ -33,7 +33,7 @@ describe('playerDied saves', () => {
         const saved = adapter.load();
         expect(saved?.dying).toBe(true);
         expect(saved?.player.health).toBe(1);
-        expect(saved?.world.currentMap.currentNode).toBe('bw-1');
+        expect(saved?.world.currentMap.currentNode).toBe('bw-20');
     });
 });
 
@@ -43,7 +43,7 @@ describe('playerDied', () => {
         actions.moveTo('bw-2');
         const map = store.getState().world.currentMap;
         expect(map.currentNode).toBe('bw-2');
-        expect(map.arrivedFrom).toBe('bw-1');
+        expect(map.arrivedFrom).toBe('bw-20');
     });
 
     it('a first death revives on that node, dying, the fight node open', () => {
@@ -54,7 +54,7 @@ describe('playerDied', () => {
         const s = store.getState();
         expect(s.dying).toBe(true);
         expect(s.player.health).toBe(1);
-        expect(s.world.currentMap.currentNode).toBe('bw-1');
+        expect(s.world.currentMap.currentNode).toBe('bw-20');
         expect(s.world.currentMap.completedNodes).not.toContain('bw-2');
         expect(s.world.currentMap.availableNodes).toContain('bw-2');
     });

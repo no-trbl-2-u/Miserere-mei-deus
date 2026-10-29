@@ -16,7 +16,7 @@
 
 import { describe, it, expect } from 'vitest';
 
-import { legalMovesFrom, moveToNode, isNodeSpent, frontierNodes } from '../world.reducer';
+import { legalMovesFrom, isNodeSpent, walkRoadTo } from '../world.reducer';
 import { resolveMapEvent } from '../MapEvents/resolve-map-event';
 import { questStepState } from '../questline';
 import { BREAKWATER_QUESTLINE, BREAKWATER_QUESTLINE_ID } from '../quest.library';
@@ -45,9 +45,9 @@ function freshGame(): GameState {
     return resolveMapEvent(createNewGameState({ startMap: 'breakwater' }), seededRng(1)).state;
 }
 
-/** Walks onto `nodeId` and resolves its arrival. */
+/** Walks the roads to `nodeId` and resolves its arrival. */
 function arrive(state: GameState, nodeId: string) {
-    const moved: GameState = { ...state, world: moveToNode(state.world, nodeId) };
+    const moved: GameState = { ...state, world: walkRoadTo(state.world, nodeId) };
     return resolveMapEvent(moved, seededRng(7));
 }
 
@@ -123,9 +123,7 @@ describe('A23: the watchtower fought again after the death rule', () => {
         // bw-17 is unspent and open again; the bridge is not.
         expect(isNodeSpent(map(revived), BOSS_NODE)).toBe(false);
         expect(legal(revived)).toContain(BOSS_NODE);
-        expect(frontierNodes(map(revived))).toContain(BOSS_NODE);
         expect(legal(revived)).not.toContain(BRIDGE);
-        expect(frontierNodes(map(revived))).not.toContain(BRIDGE);
 
         // Step 4 was not paid, dropped or re-offered: still the one active step.
         expect(step4(revived)).toBe('active');

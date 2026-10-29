@@ -25,11 +25,12 @@ afterEach(() => {
 describe('a fresh run starts with no relic (SG1 A1)', () => {
     it('first node resolved, first fight entered: no relic, no hand-over, no signatures', () => {
         // The quest nodes settled (test-only), so the first fight is a step away.
-        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: settledBreakwater() } });
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: settledBreakwater('bw-20') } });
         const actions = createAppActions(store);
 
         // The first node: resolve whatever bw-1 offers, then walk to the first fight.
         actions.resolveCurrentMapEvent();
+        for (const id of ['bw-4', 'bw-9', 'bw-20']) actions.moveTo(id);
         actions.moveTo('bw-2');
         expect(actions.resolveCurrentMapEvent()).toBe(true);
         const enemy = actions.beginHazardEncounter();

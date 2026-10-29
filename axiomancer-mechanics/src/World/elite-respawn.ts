@@ -27,7 +27,7 @@ import type { ContinentName, MapName } from './map.library';
 import { getNodeEventPool } from './MapEvents/resolve-map-event';
 import type { EncounterPayload } from './MapEvents/types';
 import { getMapDefinition } from './map.registry';
-import { syncFrontierLists } from './world.reducer';
+import { syncMoveLists } from './world.reducer';
 import type { MapState, NodeId, WorldState } from './types';
 
 /**
@@ -122,7 +122,7 @@ export function settledEliteNodes(world: WorldState): SettledEliteNode[] {
     return actMapStates(world).flatMap(settledOn);
 }
 
-/** Un-spends `nodes` on one map and re-syncs its frontier lists. */
+/** Un-spends `nodes` on one map and re-syncs its move lists. */
 function unspend(map: MapState, nodes: ReadonlySet<NodeId>): MapState {
     const cleared: MapState = {
         ...map,
@@ -130,7 +130,7 @@ function unspend(map: MapState, nodes: ReadonlySet<NodeId>): MapState {
         consumedNodes: map.consumedNodes.filter(id => !nodes.has(id)),
     };
     // The same unlock-list sync every spend runs (`markNodeConsumed`).
-    return syncFrontierLists(cleared);
+    return syncMoveLists(cleared);
 }
 
 /** The result of {@link respawnElites}. */

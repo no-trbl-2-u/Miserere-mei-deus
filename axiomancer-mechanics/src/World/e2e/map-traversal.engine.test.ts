@@ -1,23 +1,21 @@
 /**
  * Map traversal invariants (2026-08-08 first-map audit).
  *
- * The gauntlet doctrine — completed nodes lock behind you, no back-travel —
- * makes map topology load-bearing for whether a run can finish at all. The
- * audit that produced this file found the then-first map (the Fishing
- * Village, purged in R3b) stranding players on eight different nodes, the
- * shortest strand four nodes deep. A stranded run is silent: the player is
- * alive, the map is unfinished, and the exploration screen has no glowing
- * node left to tap.
- *
- * These tests are the structural guard. `auditMapTraversal` walks EVERY legal
- * single-life route through a map definition; the invariant is that a route
- * only ever runs out of moves on an authored terminal node.
+ * The player walks the roads (phase WR1a): they move only along open roads
+ * from where they stand, back across walked nodes too, so a dead end is a
+ * walk back, never a strand. What the topology must still guarantee is that
+ * every node can be walked to once the map's gates open in play
+ * (`auditRoadReachability`), and that the forward skeleton keeps its shape
+ * (`auditMapTraversal`: terminals, reach, the column law).
  */
 
 import { describe, expect, it } from 'vitest';
 
 import { MAP_REGISTRY } from '../map.registry';
 import { auditMapTraversal } from '../world.reducer';
+import { auditRoadReachability } from '../road-reachability';
+import { listQuestlines } from '../questline';
+import '../quest.library';
 import type { MapDefinition } from '../types';
 import type { MapTraversalAudit } from '../world.reducer';
 
@@ -108,21 +106,17 @@ describe('gauntlet map traversal invariants', () => {
             // rules a pocket and its marker cannot meet (a lane chain, and a
             // choice in every column) skip such a map: its questline's
             // routing test (`breakwater-questline.engine.test.ts`) walks the
-            // real frontier with the questline played instead. The strand,
+            // real roads with the questline played instead. The
             // reachability, edge and coordinate rules still hold.
             const holdsAQuestline = (def.holdRoadsUntilSettled?.length ?? 0) > 0;
 
-            it('never strands a run on a non-terminal node', () => {
-                // A strand is a soft-lock. The message names the exact route so
-                // a failure is actionable without re-running the audit by hand.
-                const detail = audit.strands
-                    .slice(0, 5)
-                    .map(s => `  ${s.route.join(' -> ')}  (stuck at ${s.nodeId})`)
-                    .join('\n');
-                expect(
-                    audit.strands.length,
-                    `${def.name}: ${audit.strands.length} route(s) dead-end on a non-terminal node:\n${detail}`,
-                ).toBe(0);
+            it('walks every node along open roads, its gates opened in questline order', () => {
+                // The road rule: the player moves only along open roads from
+                // where they stand, back across walked nodes too. A node no
+                // such walk reaches is unplayable content.
+                const roads = auditRoadReachability(def, listQuestlines());
+                expect(roads.unreachableSteps).toEqual([]);
+                expect(roads.unreachableNodes).toEqual([]);
             });
 
             it('can reach every authored node from the start', () => {

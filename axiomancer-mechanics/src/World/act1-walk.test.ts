@@ -33,12 +33,14 @@ describe('planAct1Walk', () => {
                 expect(steps[steps.length - 1]).toMatchObject({ nodeId: region.exit, role: 'exit' });
             });
 
-            it('only steps on to frontier nodes (each touches a node already walked) and never repeats one', () => {
+            it('walks the roads: each step is joined to the one before, and only a back step repeats a node', () => {
                 const walked = new Set<string>([region.start]);
+                let here = region.start;
                 for (const step of region.steps.slice(1)) {
-                    expect(walked.has(step.nodeId)).toBe(false);
-                    expect([...walked].some(w => edges.has(`${w}|${step.nodeId}`))).toBe(true);
+                    expect(edges.has(`${here}|${step.nodeId}`), `${here} -> ${step.nodeId}`).toBe(true);
+                    expect(walked.has(step.nodeId)).toBe(step.role === 'back');
                     walked.add(step.nodeId);
+                    here = step.nodeId;
                 }
             });
 

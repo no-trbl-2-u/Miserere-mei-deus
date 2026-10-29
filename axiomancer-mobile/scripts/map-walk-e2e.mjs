@@ -14,13 +14,16 @@
 //   1. NEW GAME: the windmill's arrival scene (D31), then the map (no relic);
 //   2. bw-5, a loot cache: take a card, move on, back on the map;
 //   3. bw-4, an empty waypoint: nothing opens, still on the map (lateral rib);
+//      (the walk goes back to the windmill, a road from marker 1: the
+//      player walks the roads, phase WR1a)
 //   4. bw-19, the first quest node: ACCEPT step 1 on `/quest`, LEAVE; the
 //      hazard pocket behind it opens (QL1d: every fight and hazard sits in a
 //      pocket behind its quest node);
 //   5. bw-3, a hazard: lands on the route select, and the dev skip seam
 //      crosses it. Playing the board itself is `hazard-e2e.mjs`'s job (its
 //      drag helpers); this pins the routing. Arriving counts step 1;
-//   6. bw-9, a rest: REST, claim, back on the map;
+//   6. bw-9, a rest (walked back out of the pocket through bw-19, bw-1
+//      and bw-4, one tap each): REST, claim, back on the map;
 //   7. bw-20, the second quest node: TURN IN step 1, ACCEPT step 2;
 //   8. bw-2, a fight in its pocket: the reveal, the board on the plain black
 //      scene (D32), played to its end by ending phases. A defeat is the death
@@ -226,6 +229,23 @@ async function expectHere(page, nodeId) {
     if (!label || !/here/.test(label)) fail(`expected to stand on ${nodeId}, its label reads "${label}"`)
 }
 
+/**
+ * Walk back onto a walked node a road away (phase WR1a: the player walks the
+ * roads, and a dead end is left the way it was entered). The node reads
+ * "a road back"; one tap moves the player with no confirm panel and no event.
+ */
+async function walkBack(page, nodeId) {
+    const label = await nodeLabel(page, nodeId)
+    if (!label || !/a road back/.test(label)) fail(`node-${nodeId} is not a road back (label: "${label}")`)
+    await page.evaluate((id) => document.querySelector(`[data-testid="node-${id}"]`).click(), nodeId)
+    for (let i = 0; i < 20; i++) {
+        if (/here/.test((await nodeLabel(page, nodeId)) ?? '')) break
+        await sleep(150)
+    }
+    await expectHere(page, nodeId)
+    log(`walked back to ${nodeId}`)
+}
+
 // ---------------------------------------------------------------------------
 // The walk
 // ---------------------------------------------------------------------------
@@ -391,8 +411,12 @@ async function main() {
         await newGame(page, baseUrl)
         await lootCache(page)
         await waypoint(page)
+        // The player walks the roads: marker 1 is a road from the windmill.
+        await walkBack(page, 'bw-1')
         await questNode(page, 'bw-19', { turnIn: false })
         await hazard(page)
+        // Out of the hazard pocket the way it was entered, to the pass.
+        for (const id of ['bw-19', 'bw-1', 'bw-4']) await walkBack(page, id)
         await rest(page)
         await questNode(page, 'bw-20', { turnIn: true })
         await fight(page)

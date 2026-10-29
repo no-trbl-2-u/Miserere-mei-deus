@@ -16,7 +16,7 @@
 import type { GameState } from '../types';
 import type { MapState } from '../../World/types';
 import { listQuestlines } from '../../World/questline';
-import { markNodeConsumed, syncFrontierLists, unblockMapRoute } from '../../World/world.reducer';
+import { markNodeConsumed, syncMoveLists, unblockMapRoute } from '../../World/world.reducer';
 
 /** The quest-node ids of every registered questline on `mapName`, step order. */
 export function questNodeIdsOn(mapName: string): string[] {
@@ -36,7 +36,7 @@ export function settleQuestNodes(map: MapState): MapState {
         }
         for (const step of line.steps) next = markNodeConsumed(next, step.nodeId);
     }
-    return next === map ? map : syncFrontierLists(next);
+    return next === map ? map : syncMoveLists(next);
 }
 
 /** `state` with its current map's quest nodes settled (`settleQuestNodes`). */

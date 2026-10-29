@@ -61,7 +61,7 @@ describe('boot path', () => {
         const initial = bootStateFromFixture('sage-bw-door-gate');
         const store = createGameStore(nullAdapter, initial);
         expect(store.getState().player.level).toBe(15);
-        expect(store.getState().world.currentMap.currentNode).toBe('bw-15');
+        expect(store.getState().world.currentMap.currentNode).toBe('bw-22');
     });
 
     it('describeFixtures lists every registry id', () => {

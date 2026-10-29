@@ -238,6 +238,23 @@ async function expectHere(page, nodeId) {
     if (!label || !/here/.test(label)) fail(`expected to stand on ${nodeId}, its label reads "${label}"`)
 }
 
+/**
+ * Walk back onto a walked node a road away (phase WR1a: the player walks the
+ * roads, and a dead end is left the way it was entered). The node reads
+ * "a road back"; one tap moves the player with no confirm panel and no event.
+ */
+async function walkBack(page, nodeId) {
+    const label = await nodeLabel(page, nodeId)
+    if (!label || !/a road back/.test(label)) fail(`node-${nodeId} is not a road back (label: "${label}")`)
+    await page.evaluate((id) => document.querySelector(`[data-testid="node-${id}"]`).click(), nodeId)
+    for (let i = 0; i < 20; i++) {
+        if (/here/.test((await nodeLabel(page, nodeId)) ?? '')) break
+        await sleep(150)
+    }
+    await expectHere(page, nodeId)
+    log(`walked back to ${nodeId}`)
+}
+
 /** The player's VITAE off the status card, as `[health, max]`; null when it is not on screen. */
 async function vitae(page) {
     const text = await page.locator('[data-testid^="statbar-value"]').first().innerText().catch(() => null)
@@ -426,6 +443,10 @@ async function walk(page, baseUrl, plan, tally) {
         log(`=== ${region.map}: ${region.steps.map((s) => s.nodeId).join(' > ')} ===`)
         for (const step of region.steps) {
             if (step.role === 'arrival') continue
+            if (step.role === 'back') {
+                await walkBack(page, step.nodeId)
+                continue
+            }
             if (step.role === 'exit') {
                 await crossExit(page, region, next)
                 count(step.kind, 'screen', step.nodeId)

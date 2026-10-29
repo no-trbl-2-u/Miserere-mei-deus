@@ -20,7 +20,7 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 
 import {
-    moveToNode, legalMovesFrom, isRouteBlocked, placeOnNode, IllegalMoveError,
+    moveToNode, legalMovesFrom, isRouteBlocked, placeOnNode, IllegalMoveError, walkRoadTo, roadReachable, isNodeSpent,
 } from '../world.reducer';
 import { MAP_REGISTRY, createMapState } from '../map.registry';
 import {
@@ -176,7 +176,7 @@ function freshGame(def: MapDefinition = LOCKED_DEF): GameState {
 
 /** Walks onto `nodeId` (the arrival verb) and resolves its arrival. */
 function arrive(state: GameState, nodeId: string, rng = seededRng(7)) {
-    const moved: GameState = { ...state, world: moveToNode(state.world, nodeId) };
+    const moved: GameState = { ...state, world: walkRoadTo(state.world, nodeId) };
     return resolveMapEvent(moved, rng);
 }
 
@@ -230,16 +230,16 @@ describe('A5: a quest node is spent only once its step is accepted', () => {
         expect(map(s).pendingArrival ?? null).toBeNull();
 
         s = arrive(s, 'r').state;
-        expect(legalMovesFrom(map(s))).toContain('q1');
+        expect(roadReachable(map(s))).toContain('q1');
         expect(stageAt(s, 'q1').event.stage).toBe('offer');
     });
 
-    it('once step 1 is accepted, q1 is spent and moveToNode refuses it', () => {
+    it('once step 1 is accepted, q1 is spent: its pocket opens and it is the road back out', () => {
         let s = acceptedStep1();
         expect(map(s).consumedNodes).toContain('q1');
         s = arrive(s, 'h1').state;
-        expect(legalMovesFrom(map(s))).not.toContain('q1');
-        expect(() => moveToNode(s.world, 'q1')).toThrow(/spent/);
+        expect(isNodeSpent(map(s), 'q1')).toBe(true);
+        expect(legalMovesFrom(map(s))).toEqual(['q1']);
     });
 
     it('a step cannot be accepted away from its node, twice, or before the step behind is turned in', () => {
@@ -259,7 +259,7 @@ describe('A5: a quest node is spent only once its step is accepted', () => {
 describe('A6: the next quest node is locked until the step is met', () => {
     it('on a new game q2-q4 are behind blocked roads: never a legal move, and moving there throws the reason', () => {
         const s = arrive(freshGame(), 'r').state;
-        const moves = legalMovesFrom(map(s));
+        const moves = roadReachable(map(s));
         for (const q of ['q2', 'q3', 'q4']) expect(moves).not.toContain(q);
         expect(() => moveToNode(s.world, 'q2')).toThrow(IllegalMoveError);
         expect(() => moveToNode(s.world, 'q2')).toThrow(/Step 1 is not done/);
@@ -274,7 +274,7 @@ describe('A6: the next quest node is locked until the step is met', () => {
             s = endFight(s, ENEMY_REGISTRY['float-eye'], 'victory');
             expect(questStepState(s.quests, questline(LOCKED_MAP).steps[0]!)).toBe('ready');
             expect(isRouteBlocked(map(s), 'r', 'q2')).toBeUndefined();
-            expect(legalMovesFrom(map(s))).toContain('q2');
+            expect(roadReachable(map(s))).toContain('q2');
             // Ready is not paid: the step is held for its turn-in.
             expect(s.quests.completed).not.toContain('ql1b-step-1');
         } finally {
@@ -297,7 +297,7 @@ describe('A6: the next quest node is locked until the step is met', () => {
         expect(isRouteBlocked(map(before), 'r', 'q2')).toBeDefined();
         const s = readyStep1();
         expect(isRouteBlocked(map(s), 'r', 'q2')).toBeUndefined();
-        expect(legalMovesFrom(map(s))).toContain('q2');
+        expect(roadReachable(map(s))).toContain('q2');
         expect(s.player.experience).toBe(before.player.experience);
     });
 
@@ -439,7 +439,7 @@ describe('A8: turn-in at the next node, and the boss victory pays the last step'
         expect(gameReducer(s, { type: 'TURN_IN_QUEST_STEP', payload: { questline: LINE, step: 4 } })).toBe(s); // step 4 is never turned in
 
         // Step 4: the boss victory completes and pays it, the Belt included.
-        expect(legalMovesFrom(map(s))).toContain('boss');
+        expect(roadReachable(map(s))).toContain('boss');
         const xp4 = s.player.experience;
         const coin4 = s.player.currency;
         s = fightAt(s, 'boss', 'victory');
@@ -447,7 +447,7 @@ describe('A8: turn-in at the next node, and the boss victory pays the last step'
         expect(s.player.experience).toBe(xp4 + 40);
         expect(s.player.currency).toBe(coin4 + 15);
         expect(s.player.inventory.some(i => i.id === BELT.id)).toBe(true);
-        expect(legalMovesFrom(map(s))).toContain('bridge');
+        expect(roadReachable(map(s))).toContain('bridge');
     });
 });
 
@@ -473,7 +473,7 @@ describe('A9: incomplete nodes, held roads and the retry', () => {
             expect(map(s).pendingArrival ?? null).toBeNull();
             expect(map(s).consumedNodes).not.toContain('boss');
             expect(map(s).completedNodes).not.toContain('boss');
-            expect(legalMovesFrom(map(s))).not.toContain('bridge');
+            expect(roadReachable(map(s))).not.toContain('bridge');
             expect(map(s).availableNodes).not.toContain('bridge');
             expect(s.quests.active.map(q => q.name)).toContain('ql1b-step-4');
         },
@@ -482,21 +482,21 @@ describe('A9: incomplete nodes, held roads and the retry', () => {
     it.each(['victory', 'friendship'] as const)('a %s at the boss puts the bridge on the frontier', (outcome) => {
         const s = fightAt(atTheWatchtower(), 'boss', outcome);
         expect(map(s).consumedNodes).toContain('boss');
-        expect(legalMovesFrom(map(s))).toContain('bridge');
+        expect(roadReachable(map(s))).toContain('bridge');
     });
 
     it('standing on the held boss before the fight ends, the bridge is not a legal move', () => {
         const s = atTheWatchtower();
         const owed = arrive(s, 'boss').state;
         expect(map(owed).pendingArrival).toBe('boss');
-        expect(legalMovesFrom(map(owed))).not.toContain('bridge');
+        expect(roadReachable(map(owed))).not.toContain('bridge');
     });
 
     it('a held quest node opens nothing while the player stands on it unspent', () => {
         const s = stageAt(freshGame(), 'q1').state;
-        expect(legalMovesFrom(map(s))).not.toContain('h1');
+        expect(roadReachable(map(s))).not.toContain('h1');
         expect(map(s).availableNodes).not.toContain('h1');
-        expect(legalMovesFrom(map(accept(s, 1)))).toContain('h1');
+        expect(roadReachable(map(accept(s, 1)))).toContain('h1');
     });
 
     it('the retry: moving onto the unspent node underfoot re-owes it once, and offers the fight again', () => {
@@ -519,10 +519,10 @@ describe('A9: incomplete nodes, held roads and the retry', () => {
         expect(map(s).consumedNodes).not.toContain('f1');
         expect(s.quests.active.find(q => q.name === 'ql1b-step-2')!.objectives[0]!.currentCount).toBe(0);
         // f1 is not held: standing on it, the road past it is open.
-        expect(legalMovesFrom(map(s))).toContain('past');
+        expect(roadReachable(map(s))).toContain('past');
         s = arrive(s, 'f2').state;
         s = gameReducer(s, { type: 'END_COMBAT', payload: { outcome: 'flee' } });
-        expect(legalMovesFrom(map(s))).toContain('f1');
+        expect(roadReachable(map(s))).toContain('f1');
         const again = arrive(s, 'f1');
         expect(again.event.kind).toBe('encounter');
         expect(map(again.state).pendingArrival).toBe('f1');
@@ -530,7 +530,7 @@ describe('A9: incomplete nodes, held roads and the retry', () => {
 
     it('a map with no list keeps the frontier it has today: standing on a quest node opens its roads', () => {
         const s = stageAt(freshGame(OPEN_DEF), 'q1').state;
-        expect(legalMovesFrom(map(s))).toContain('h1');
+        expect(roadReachable(map(s))).toContain('h1');
     });
 });
 

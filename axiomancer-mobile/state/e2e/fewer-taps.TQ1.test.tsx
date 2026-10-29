@@ -19,7 +19,7 @@ import { describe, expect, it } from '@jest/globals';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import React from 'react';
 
-import { ANVIL_VERB_PRICING, createStartingWorld, getMapDefinition, settleQuestNodes } from '@mechanics';
+import { ANVIL_VERB_PRICING, createStartingWorld, getMapDefinition, settleQuestNodes, syncMoveLists } from '@mechanics';
 
 import { CombatRewardsOverlay } from '@/components/combat/encounter/CombatRewardsOverlay';
 import { NodeConfirmPanel } from '@/components/exploration/NodeConfirmPanel';
@@ -107,7 +107,9 @@ function optionOf(map: string, type: NodeType, currency: number): ExplorationOpt
     const world = store.getState().world!;
     const def = getMapDefinition(world.currentMap.continent, world.currentMap.name);
     for (const node of def.nodes) {
-        jumpToNode(store, node.id);
+        // Stand there with the map settled (a placement would un-spend a
+        // marker, and an unspent marker holds its pocket's roads).
+        store.setState({ world: { ...world, currentMap: syncMoveLists({ ...world.currentMap, currentNode: node.id }) } } as never);
         const found = selectExplorationViewModel(store.getState()).options.find((o) => o.type === type);
         if (found) return found;
     }

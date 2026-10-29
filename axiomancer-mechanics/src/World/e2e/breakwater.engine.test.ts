@@ -10,7 +10,7 @@
  * - every run ends at the river bridge, through the watchtower, where the
  *   region's elite waits; the start is an arrival scene.
  *
- * The generic gauntlet invariants (no strands, column law, ribs, distinct
+ * The generic gauntlet invariants (road reachability, column law, ribs, distinct
  * coordinates) run over this map in `map-traversal.engine.test.ts` like every
  * other registered map. The layout pins live in mobile, where the landmarks
  * and the sheet are.
@@ -93,7 +93,6 @@ describe('the Breakwater map', () => {
 
     it('ends every run at the river bridge, through the watchtower; the other dead ends are the pockets and the wreck', () => {
         const audit = auditMapTraversal(breakwater);
-        expect(audit.strands).toEqual([]);
         expect(audit.unreachableNodes).toEqual([]);
         // The pockets (joined only to their marker) and the wreck (whose
         // only onward road is the rib to the harbour town) end the forward

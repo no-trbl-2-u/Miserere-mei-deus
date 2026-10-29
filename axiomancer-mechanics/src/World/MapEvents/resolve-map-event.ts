@@ -35,7 +35,7 @@
 
 import type { GameState } from '../../Game/types';
 import {
-    revealAdjacent, markNodeConsumed, unlockAdjacent, isHoldingRoads, syncFrontierLists,
+    revealAdjacent, markNodeConsumed, unlockAdjacent, isHoldingRoads, syncMoveLists,
 } from '../world.reducer';
 import { getRng } from '../../Utils/rng';
 import { applyPayload } from './handlers';
@@ -263,14 +263,14 @@ export function settleArrival(state: GameState): GameState {
  * not re-fire the fight), but the node is neither consumed nor completed, so
  * it stays unspent: a later arrival there is a fresh try, and the player may
  * retry it in place (`moveToNode` onto the node they stand on). Nothing is
- * unlocked from it beyond what the frontier already allows: a node the map
+ * unlocked from it beyond what the road rule already allows: a node the map
  * holds (`holdRoadsUntilSettled`) opens no road, an unlisted one lets the
  * player walk on past it as before. Identity-stable when nothing is owed.
  */
 export function answerUnsettledArrival(state: GameState): GameState {
     const map = state.world.currentMap;
     if ((map.pendingArrival ?? null) !== map.currentNode) return state;
-    const answered = syncFrontierLists({ ...map, pendingArrival: null });
+    const answered = syncMoveLists({ ...map, pendingArrival: null });
     return { ...state, world: { ...state.world, currentMap: answered } };
 }
 
@@ -400,9 +400,9 @@ export function resolveMapEvent(
     const unspent = result.event.kind === 'labyrinth' || result.event.kind === 'quest';
     const revealed = revealAdjacent(stateAfterCollect.world.currentMap, nodeId);
     // A node the map holds (`holdRoadsUntilSettled`) that stays unspent opens
-    // no road: only the frontier sync runs, and the frontier leaves it shut.
+    // no onward road: only the move-list sync runs, and the road rule keeps it shut.
     const next = unspent && isHoldingRoads(revealed, nodeId)
-        ? syncFrontierLists(revealed)
+        ? syncMoveLists(revealed)
         : unlockAdjacent(revealed, nodeId);
     const consumed = unspent ? next : markNodeConsumed(next, nodeId);
     const nextState: GameState = {

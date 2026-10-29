@@ -38,10 +38,10 @@ export const STATE_FIXTURES: readonly StateFixture[] = Object.freeze([
     },
     {
         id: 'sage-bw-door-gate',
-        description: 'Sage (L15) on the Breakwater\'s bw-15 with the questline\'s quest nodes settled, so the door fight (bw-17, the Death Beholder) is open and the river bridge (bw-18) lies behind it. Combat + travel surfaces.',
+        description: 'Sage (L15) on the Breakwater\'s bw-22 (the last marker, on the chapel road) with the questline\'s quest nodes settled, so the door fight (bw-17, the Death Beholder) is a road away and the river bridge (bw-18) lies behind it. Combat + travel surfaces.',
         seed: 'fixture-sage-bw-door-gate',
         preset: 'sage',
-        world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-15', questNodesSettled: true },
+        world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-22', questNodesSettled: true },
     },
     {
         id: 'wanderer-staged-village',

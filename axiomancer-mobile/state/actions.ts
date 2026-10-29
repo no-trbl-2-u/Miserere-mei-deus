@@ -41,7 +41,7 @@ import {
     answerUnsettledArrival,
     revealAdjacent,
     STARTING_CARD_IDS,
-    unlockNode as worldUnlockNode,
+    legalMovesFrom,
     type Character,
     type GameStore,
     type Consumable,
@@ -1072,8 +1072,8 @@ export function readCurrentNodeId(world: WorldState): string {
 /**
  * Stand the player on `nodeId` as an ARRIVAL: the cursor moves and the node's
  * unanswered arrival is recorded (`pendingArrival`), exactly as the engine's
- * own arrival verb `moveToNode` does. Mobile keeps its own move (the screen's
- * reachability rules differ from the reducer's), so it must write the same
+ * own arrival verb `moveToNode` does. Mobile keeps its own move (it completes
+ * a non-fight node on the move; the legality is the engine's), so it must write the same
  * sentence the engine writes — otherwise the move's checkpoint would save a
  * player standing on a node with no record of what they still owe it.
  */
@@ -1105,67 +1105,31 @@ function moveToAction(store: AppStore, nodeId: string): MoveToResult {
         }
     }
 
-    const available = map.availableNodes;
-    const completed = map.completedNodes;
-
-    // Target must be currently reachable. Locked or already-completed
-    // taps no-op (the screen also gates this, but defend in depth).
-    const isAvailable = available.includes(nodeId);
-    const isLocked = map.lockedNodes.includes(nodeId);
-    if (!isAvailable) {
-        return { moved: false, currentNodeId, locked: isLocked };
+    // Target must be a legal move: the engine's road rule (`legalMovesFrom`,
+    // the open roads out of the node underfoot, new and walked nodes alike).
+    // Anything else no-ops (the screen also gates this, but defend in depth).
+    if (!legalMovesFrom(map).includes(nodeId)) {
+        return { moved: false, currentNodeId, locked: map.lockedNodes.includes(nodeId) };
     }
 
     // Node kind comes from the engine's authored event pools. Encounter /
     // boss nodes (both resolve to the `encounter` kind) are not completed or
-    // consumed BY THE MOVE, and the move does not open their way on either:
-    // a fight's node is settled only when the fight is won, by the
-    // engine's `END_COMBAT` (`settleArrival`); a flee leaves it unspent with
-    // its arrival answered (`answerArrivalAction` below). Until then
-    // a save, mid-fight included, stands the player on the node with the
-    // fight owed and nowhere else to go, and the map re-offers it on reload.
+    // consumed BY THE MOVE: a fight's node is settled only when the fight is
+    // won, by the engine's `END_COMBAT` (`settleArrival`); a flee leaves it
+    // unspent with its arrival answered (`answerArrivalAction` below). Until
+    // then a save, mid-fight included, stands the player on the node with the
+    // fight owed, and the map re-offers it on reload.
     // Every other kind completes here, and resolving its arrival consumes it
     // (`resolve-map-event.ts`).
     const nodeKind = getNodePrimaryEventKind(map.continent, map.name, nodeId);
     // A quest node is the same: only accepting its step spends it
-    // (`acceptQuestStep`), and its roads open then, not on arrival.
+    // (`acceptQuestStep`), and its held roads open then, not on arrival.
     const isEncounterNode = nodeKind === 'encounter' || nodeKind === 'quest';
 
-    // Only complete/consume nodes that aren't encounters
-    let nextWorld: WorldState = world;
-    if (!isEncounterNode) {
-        nextWorld = worldCompleteNode(world, nodeId);
-        // The engine reducer only *adds* to completedNodes; tidy up the
-        // available list so the same node can't be re-entered.
-        nextWorld = {
-            ...nextWorld,
-            currentMap: {
-                ...nextWorld.currentMap,
-                availableNodes: (nextWorld.currentMap.availableNodes as readonly string[]).filter(
-                    (n: string) => n !== nodeId,
-                ),
-            },
-        };
-    }
+    let nextWorld: WorldState = isEncounterNode ? world : worldCompleteNode(world, nodeId);
 
-    // Populate `availableNodes` (the screen's reachable set) from the ENGINE
-    // graph's outbound edges — `getMapDefinition` is the single source of truth
-    // for the unlock graph; the client carries no edge list of its own.
-    const engineNode = getMapDefinition(map.continent, map.name).nodes.find(
-        (n) => n.id === nodeId,
-    );
-    // A blocked road (a questline's lock on the next quest node) opens
-    // nothing: the engine opens it, and lists the node, once the step fills.
-    const blocked = (targetId: string) => map.blockedRoutes.some(
-        (r) => (r.from === nodeId && r.to === targetId) || (r.from === targetId && r.to === nodeId),
-    );
-    for (const targetId of isEncounterNode ? [] : engineNode?.connectedNodes ?? []) {
-        if (completed.includes(targetId)) continue;
-        if (blocked(targetId)) continue;
-        if (nextWorld.currentMap.availableNodes.includes(targetId)) continue;
-        nextWorld = worldUnlockNode(nextWorld, targetId);
-    }
-
+    // The arrival: cursor, owed arrival, `arrivedFrom`, and the move lists
+    // rewritten by the road rule from the new node (`arriveAtNode`).
     nextWorld = {
         ...nextWorld,
         currentMap: writeArrivalNodeId(nextWorld.currentMap, nodeId),
@@ -1174,8 +1138,7 @@ function moveToAction(store: AppStore, nodeId: string): MoveToResult {
     // Populate the engine's parallel data model (`discoveredNodes`) via
     // `revealAdjacent`. The engine reads neighbours from
     // `getMapDefinition(continent, name).nodes[].connectedNodes` — no
-    // mobile-side traversal needed. Kept alongside the `availableNodes`
-    // population above.
+    // mobile-side traversal needed.
     nextWorld = {
         ...nextWorld,
         currentMap: revealAdjacent(nextWorld.currentMap, nodeId),

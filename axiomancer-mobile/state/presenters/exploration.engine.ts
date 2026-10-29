@@ -47,6 +47,13 @@ export interface ExplorationNode {
     /** True when tapping the node should trigger combat. */
     triggersCombat: boolean;
     /**
+     * True when the node is one of the engine's legal moves from where the
+     * player stands (`legalMovesFrom`, the road rule): an `available` node, or
+     * a `completed` neighbour the player can walk back onto. Absent reads as
+     * false.
+     */
+    walkable?: boolean;
+    /**
      * For a locked node shut behind a BLOCKED ROAD from where the player has
      * been (a questline's lock on its next quest node), the road's one-line
      * reason; the tap on it says this instead of the bare "sealed". Absent
@@ -319,13 +326,11 @@ function engineNodeType(continent: string, mapName: string, nodeId: string): Nod
 }
 
 /**
- * `available` here means REACHABLE RIGHT NOW — the engine's
- * `legalMovesFrom`, not the map's cumulative `availableNodes` unlock set.
- *
- * `availableNodes` accumulates every node ever unlocked, including nodes
- * `moveToNode` would refuse as non-adjacent. A node you have seen but cannot
- * walk to from where you stand reads as 'locked' — which is exactly what the
- * gauntlet's no-back-travel rule makes it.
+ * `available` here means a NEW node REACHABLE RIGHT NOW — one of the engine's
+ * `legalMovesFrom` (the road rule: the open roads out of the node underfoot)
+ * that is not spent. A node you cannot walk to from where you stand reads as
+ * 'locked'. A spent legal move stays 'completed' (drawn walked) and is marked
+ * `walkable` on its view model instead.
  *
  * ── SPENT IS NOT SEALED ──
  *
@@ -335,10 +340,9 @@ function engineNodeType(continent: string, mapName: string, nodeId: string): Nod
  * other, so a node answered through the consume path lands in one list and
  * not the other.
  *
- * The frontier excludes every spent node from `legalMovesFrom`, so testing
- * `completedNodes` alone would drop a consumed-but-not-completed node through
- * to `locked` — drawn SEALED when the player has walked it and answered it.
- * Any spent node is TRODDEN.
+ * Testing `completedNodes` alone would drop a consumed-but-not-completed node
+ * through to `available` or `locked` — drawn new or SEALED when the player has
+ * walked it and answered it. Any spent node is TRODDEN.
  *
  * The spent set is passed in (rather than recomputed here) so the ONE place
  * that decides what "resolved" means stays `world.reducer.ts` — see the call
@@ -527,7 +531,7 @@ export const MAP_GESTURE_LINE: Readonly<Record<MapPointer, string>> = Object.fre
 });
 
 const DRAWER_COPY = {
-    emptyMessage: 'every path beside trodden ground stays open — choose a glowing node to travel.',
+    emptyMessage: 'walk the roads from where you stand — choose a glowing node, or tap a trodden one to walk back.',
     title: '✠ WHITHER, PILGRIM?',
     leaguesLabel: 'LEAGUES',
 } as const;
@@ -626,14 +630,18 @@ function computeExplorationViewModel(state: GameStore): ExplorationViewModel {
     const consumedNodes = (world.currentMap.consumedNodes ?? []) as readonly string[];
     const locked = world.currentMap.lockedNodes as readonly string[];
     const currentNodeId = readCurrentNodeId(world);
-    // The engine owns "where can I go from here" (see `classifyNode`).
-    const reachable: readonly string[] = legalMovesFrom(world.currentMap);
+    // The engine owns "where can I go from here" (see `classifyNode`): the
+    // road rule's legal moves, new and walked nodes alike.
+    const legal: readonly string[] = legalMovesFrom(world.currentMap);
     // The SPENT set — `isNodeSpent()`'s union, read off the two lists the
     // save actually carries. The engine's own predicate takes a `MapState`
     // one node at a time; over ~28 nodes per map that is 28 map-definition
     // lookups per render, so the union is materialised once here against the
     // same two lists `isNodeSpent` reads and never against a third rule.
     const spent: ReadonlySet<string> = new Set<string>([...completed, ...consumedNodes]);
+    // The NEW nodes among the legal moves: what the confirm panel offers.
+    // A walked one is a walk back, tapped straight through (`walkable`).
+    const reachable: readonly string[] = legal.filter((id) => !spent.has(id));
     // The engine's forward skeleton — what separates a progression road from
     // a lateral rib on the canvas. Definition-only, so it is stable for
     // the life of the map.
@@ -686,6 +694,7 @@ function computeExplorationViewModel(state: GameStore): ExplorationViewModel {
             type: meta.type,
             triggersCombat: nodeKind === 'available' && ENCOUNTER_NODE_TYPES.has(meta.type),
             blockedReason: reason,
+            walkable: legal.includes(eng.id),
             blockedBy: heldBy,
         };
     });

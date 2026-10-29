@@ -96,7 +96,7 @@ describe('store boot through the fixture adapter', () => {
         expect(s.version).toBe(GAME_STATE_VERSION);
         expect(s.player.level).toBe(15);
         expect(s.world.currentMap.name).toBe('breakwater');
-        expect(s.world.currentMap.currentNode).toBe('bw-15');
+        expect(s.world.currentMap.currentNode).toBe('bw-22');
         // Mobile-only slices are still layered on.
         expect(s.event.pending).toBeNull();
 
@@ -132,7 +132,7 @@ describe('createFixtureStore + arriveFromFixture (test-utils/fixtureStore.ts)', 
     it('boots from a registry id with a zero-save memory adapter', () => {
         const h = createFixtureStore('sage-bw-door-gate');
         expect(h.fixture.id).toBe('sage-bw-door-gate');
-        expect(h.store.getState().world.currentMap.currentNode).toBe('bw-15');
+        expect(h.store.getState().world.currentMap.currentNode).toBe('bw-22');
         expect(h.adapter.saveCount).toBe(0);
         expect(h.state.runId).toBe(h.store.getState().runId);
     });

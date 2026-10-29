@@ -18,7 +18,7 @@ import type { MapState, NodeId } from '../World/types';
 import { createStartingWorld } from '../World/starting-world';
 import { emptyQuestLog } from '../World/quest.engine';
 import { getMapDefinition } from '../World/map.registry';
-import { revealAdjacent, unspendNode } from '../World/world.reducer';
+import { revealAdjacent, syncMoveLists, unspendNode } from '../World/world.reducer';
 import { getRng } from '../Utils/rng';
 import { generateRunId } from './run-loop';
 
@@ -90,6 +90,8 @@ export function resolveDeath(state: GameState, _cause: DeathCause): DeathResult 
             back,
         );
     }
+    // The move lists are read from where the player now stands.
+    revived = syncMoveLists(revived);
 
     return {
         state: {

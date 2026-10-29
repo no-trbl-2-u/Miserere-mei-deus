@@ -9,6 +9,7 @@
 
 import { MapDefinition, MapState, NodeId, UniqueEvent } from './types';
 import { ContinentName, MapName } from './map.library';
+import { roadMoveLists } from './roads';
 import { breakwater } from './Continents/Coastal-Village/breakwater';
 import { charcoalWood } from './Continents/Coastal-Village/charcoal-wood';
 import { beaconCrags } from './Continents/Northern-Continent/beacon-crags';
@@ -63,18 +64,26 @@ export function getMapDefinition(continent: ContinentName, mapName: MapName): Ma
  * Builds the initial runtime `MapState` for a map definition.
  *
  * The starting node is *not* listed in `availableNodes` — the player is
- * standing on it, and completed nodes are locked from
- * back-travel, so it shouldn't be re-entered.
+ * standing on it. On a gauntlet map the two lists are the road rule's from
+ * the start (`roadMoveLists`): its open roads are available, every other
+ * node is locked.
  */
 export function createMapState(def: MapDefinition): MapState {
     const startId = def.startingNode.id;
+    const blockedRoutes = (def.initialBlockedRoutes ?? []).map(r => ({ ...r }));
     const adjacent = new Set<NodeId>(def.startingNode.connectedNodes);
-    const available: NodeId[] = [];
-    const locked: NodeId[] = [];
-    for (const n of def.nodes) {
-        if (n.id === startId) continue;
-        if (adjacent.has(n.id)) available.push(n.id);
-        else locked.push(n.id);
+    let available: NodeId[] = [];
+    let locked: NodeId[] = [];
+    if (def.traversal === 'labyrinth') {
+        for (const n of def.nodes) {
+            if (n.id === startId) continue;
+            if (adjacent.has(n.id)) available.push(n.id);
+            else locked.push(n.id);
+        }
+    } else {
+        const lists = roadMoveLists(def, { currentNode: startId, completedNodes: [], consumedNodes: [], blockedRoutes });
+        available = lists.availableNodes;
+        locked = lists.lockedNodes;
     }
     return {
         name: def.name,
@@ -93,9 +102,8 @@ export function createMapState(def: MapDefinition): MapState {
         pendingArrival: null,
         // Hazard persistence extensions, initialized as empty.
         hazardOutcomes: [],
-        // Secret doors / act gates arrive pre-blocked on labyrinth
-        // maps; empty everywhere else.
-        blockedRoutes: (def.initialBlockedRoutes ?? []).map(r => ({ ...r })),
+        // Secret doors, act gates and quest locks arrive pre-blocked.
+        blockedRoutes,
     };
 }
 
