@@ -47,6 +47,8 @@ export interface DialogueChoice {
     };
     effect?: {
         startQuest?: QuestName;
+        /** Starts a questline step from anywhere, as accepting it would (counts from 0, the step before it done). */
+        giveQuestStep?: { questline: string; step: number };
         progressQuest?: { name: QuestName; objectiveId: string; amount?: number };
         completeQuest?: QuestName;
         teachCard?: string;
