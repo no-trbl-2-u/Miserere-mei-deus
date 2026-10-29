@@ -294,7 +294,13 @@ keyword (`EnemyKeyword = never`).
   the item is in the inventory, unmet when it leaves, one of it used up when
   the step completes). Built and proved on test fixtures only
   (`Game/fixtures/quest-chain*.fixture.ts`, phases MQ1a and MQ1b); the Breakwater
-  declares no gates yet.
+  declares no gates yet. On screen (phase MQ1c): the exploration screen carries
+  a quest tracker (each active quest's name and next unmet objective with its
+  count, three rows then `+n more`, a tap opens the memoir; none for an empty
+  log), a tap on a node behind a shut road shows the road's reason and the
+  quest holding it on the node confirm panel (no travel), and `/quest` shows
+  an arrival-settled step's payout, a `carry` objective as `Bring: <item>`, and
+  the nodes of any questline.
 - **Currency:** shillings.
 - **Death** (`Game/death.ts`, `resolveDeath`): the first time VITAE reaches 0
   in a fight or on a node hazard, the player is put back on the node they

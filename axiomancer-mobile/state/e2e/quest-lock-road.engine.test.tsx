@@ -110,9 +110,11 @@ describe('A17: a blocked road draws closed, with its reason', () => {
         act(() => {
             fireEvent.press(tree.getByTestId('node-bw-20'));
         });
-        expect(tree.getByTestId('exploration-node-toast')).toBeTruthy();
-        expect(tree.getByText(LOCK_REASON)).toBeTruthy();
-        expect(tree.queryByTestId('node-confirm-panel')).toBeNull();
+        // MQ1c: the reason is on the node confirm panel, not a toast, and
+        // there is nothing to travel to.
+        expect(tree.getByTestId('node-confirm-shut-reason').props.children).toBe(LOCK_REASON);
+        expect(tree.queryByTestId('node-confirm-go')).toBeNull();
+        expect(tree.queryByTestId('exploration-node-toast')).toBeNull();
     });
 
     it('a quest marker that holds its roads draws as any node (the QUEST mark, no step state)', () => {
