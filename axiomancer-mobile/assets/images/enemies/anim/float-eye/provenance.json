@@ -8,8 +8,8 @@
     "graded": true,
     "graded_in_this_run": false,
     "graded_note": "A6b, grade once. The two fields say the two different things that get confused: the cells DO carry the ingest grade (graded: true, which is what the frame manifest records), and this run did not apply it (graded_in_this_run: false). It was applied once, upstream, to float-eye.webp in 2026-07. Re-running it here would darken the cells a second time and, worse, grayscale: true would flatten the corona that is the whole read of the attack frame.",
-    "license": "UNRESOLVED",
-    "license_note": "Derived from float-eye.webp, an owner-supplied external illustration with no recorded source or licence. A derivative cannot be cleaner than what it derives from, so this set carries the same open question and is blocked on the same owner answer.",
+    "license": "open source (T, 2026-10-29, D115)",
+    "license_note": "Derived from float-eye.webp, an owner-supplied external illustration (no source traced). T, 2026-10-29, D115: \"The images we use for everything are open source.\"",
     "source": "art-department/masters/enemies/float-eye.sheet.png (2048x768 lossless master, 8 columns x 3 rows of 256px cells; see its own provenance.json, which records the rig that drew it)",
     "method": "The master was cut into 24 lossless PNG cells by the splitter, row-major, then each cell was encoded to WebP q44 by the shared ingest recipe with the grade skipped. Every pixel descends from the shipped painting; the sheet master itself never enters this tree (D98).",
     "used_by": [

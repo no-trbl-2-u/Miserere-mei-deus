@@ -6,8 +6,8 @@
   "spec_section": "\u00a71 Stance Glyphs (GlyphHeart)",
   "target_dimensions": "64x64 viewBox, rendered 12-64 px",
   "source_file": "components/StanceGlyph.tsx",
-  "license": "UNRESOLVED",
-  "license_note": "Owner-supplied external illustration; no source or license was recorded at the time and none has been traced since. These assets already ship; this record states what is known rather than inventing terms. Blocked on the owner, same question as Potential Assets/MCP-Axiomancer/images/.",
+  "license": "open source (T, 2026-10-29, D115)",
+  "license_note": "Hand-written SVG (cursor-agent), no external source. T, 2026-10-29, D115: \"The images we use for everything are open source.\"",
   "covers": [
     "heart.svg"
   ]

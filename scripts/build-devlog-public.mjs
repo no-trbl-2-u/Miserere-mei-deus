@@ -67,7 +67,7 @@ const ENTRY_RE = /^DIGEST_(\d{4}-\d{2}-\d{2})\.md$/
 const PAGE_SIZE = 20
 
 /** Rendered box widths, in CSS pixels. Media is served at 2x these and no larger. */
-const BOX = { pair: 360, thumb: 160, portrait: 240 }
+const BOX = { pair: 360, thumb: 160, portrait: 240, card: 168 }
 
 /** The four families, one weight each, subset to Latin — the site's one fixed cost. */
 const FONT_BUDGET_BYTES = 120 * 1024
@@ -377,21 +377,25 @@ async function renderEvidence(item, entry, media, out, ctx) {
 // ---------------------------------------------------------------------------
 // pages
 // ---------------------------------------------------------------------------
+/** Where a card painting is served from: the derived file's path under the site root. */
+export const cardArtRel = (file) => `assets/cards/${file.replace(/\.\w+$/, '')}.webp`
+
 /**
- * The card plate's art box: the painting where its licence permits, and the
- * REASON where it does not.
+ * The card plate's art box: the painting where the gate publishes it, and the
+ * REASON where it does not (a file whose record names no licence).
  *
  * Exported because this is the one place the licence ruling becomes pixels,
  * and a test that can only reach it through a full build is a test that stops
- * running the day the catalog export is unavailable.
+ * running the day the catalog export is unavailable. `records` lets a test
+ * hand the gate a fixture record instead of the tree's.
  */
-export function cardArtHtml(card, root = '') {
+export function cardArtHtml(card, root = '', records = undefined) {
     const file = card.image ? basename(card.image) : ''
-    const verdict = file ? verdictFor('cards', file) : null
+    const verdict = file ? verdictFor('cards', file, records) : null
     if (verdict?.publish) {
-        return `<div><img loading="lazy" decoding="async" src="${root}assets/cards/${escapeHtml(file)}" alt="${escapeHtml(card.name)} — the card's plate."></div>`
+        return `<div><img loading="lazy" decoding="async" src="${root}${cardArtRel(file)}" alt="${escapeHtml(card.name)} — the card's plate."></div>`
     }
-    return '<div class="withheld"><span>painting withheld<br>licence unresolved</span></div>'
+    return '<div class="withheld"><span>painting withheld<br>no licence on record</span></div>'
 }
 
 /** One work-item card: the category, the what, the WHY, the pair, the commits. */
@@ -635,10 +639,10 @@ ${play}
 /**
  * The catalog — every card, foe and affliction, from the engine's own export.
  *
- * Art publishes only where its licence permits (scripts/devlog-art-licence.mjs).
- * Card paintings are UNRESOLVED in the tree today and are therefore withheld;
- * the plate publishes its frame, its name and its ledger, and says the
- * painting is withheld rather than pretending the card has no face.
+ * Art publishes where the gate passes it (scripts/devlog-art-licence.mjs):
+ * every card painting and foe portrait in the tree does (D115). A file whose
+ * record names no licence still publishes its frame, name and ledger and says
+ * the painting is withheld, rather than pretending the card has no face.
  */
 async function renderCatalog(media, out, warnings) {
     const root = rootFor(1)
@@ -656,14 +660,25 @@ async function renderCatalog(media, out, warnings) {
 
     const cardArt = (card) => cardArtHtml(card, root)
 
+    // Each publishable painting is derived into the output once, so the <img>
+    // cardArtHtml writes points at a file that exists.
+    let cardsShown = 0
+    for (const file of new Set(cards.map((c) => (c.image ? basename(c.image) : '')).filter(Boolean))) {
+        if (!verdictFor('cards', file).publish) continue
+        const source = join(ART, 'cards', file)
+        if (!existsSync(source)) continue
+        const img = await media.derive(source, cardArtRel(file).replace(/\.webp$/, ''), BOX.card, out)
+        imageBytes += img.bytes
+        cardsShown += 1
+    }
+
     const cardPlates = cards.map((card) => {
         const stance = stanceOf(card)
         const free = card.face?.freeVal
             ? `<span class="plate-free">${MARKS.lozenge}${escapeHtml(card.face.freeVal)}</span>`
             : ''
-        // The painting is withheld where the tree cannot show a right to
-        // republish it, and the plate SAYS SO in the frame the art would fill.
-        // A silent black box reads as a broken image; this reads as a policy.
+        // A refused painting says so in the frame the art would fill. A silent
+        // black box reads as a broken image; this reads as a policy.
         const art = cardArt(card)
         return `<article class="plate plate-${escapeHtml(stance || 'body')}" id="card-${escapeHtml(card.id)}">
       <h3 class="plate-name">${escapeHtml(card.name)}</h3>
@@ -678,16 +693,18 @@ async function renderCatalog(media, out, warnings) {
 
     const foeCards = []
     const attributions = new Map()
+    let portraitsShown = 0
     for (const foe of enemies) {
         const file = foe.image ? basename(foe.image) : ''
         const verdict = file ? verdictFor('enemies', file) : null
-        let portrait = '<div class="portrait" title="portrait withheld: licence unresolved"></div>'
+        let portrait = '<div class="portrait" title="portrait withheld: no licence on record"></div>'
         if (verdict?.publish) {
             const img = await media.derive(join(ART, 'enemies', file), `assets/foes/${file.replace(/\.\w+$/, '')}`, BOX.portrait, out)
             imageBytes += img.bytes
             portrait = `<div class="portrait"><img loading="lazy" decoding="async" src="${root}${img.rel}" alt="${escapeHtml(foe.name)} — the foe's portrait.">`
                 + '</div>'
-            if (verdict.tier === 'attribution') attributions.set(file, verdict)
+            portraitsShown += 1
+            if (verdict.tier === 'attribution' || verdict.attribution) attributions.set(file, verdict)
         }
         foeCards.push(`<article class="foe" id="foe-${escapeHtml(foe.id)}">
       ${portrait}
@@ -708,12 +725,12 @@ async function renderCatalog(media, out, warnings) {
     const body = `<div class="band band-full">
   ${eyebrow('The catalog')}
   <h1>Everything in the book</h1>
-  <p class="dim">Every card, every foe, every affliction — the same data the game runs on, nothing held back. The paintings are a different matter: a file whose licence the tree cannot prove is not published here, and its plate says so.</p>
+  <p class="dim">Every card, every foe, every affliction — the same data the game runs on, nothing held back, paintings included.</p>
   <h2 id="cards">Cards</h2>
-  <p class="mono">${cards.length} cards</p>
+  <p class="mono">${cards.length} cards ${MARKS.dot} ${cardsShown} paintings shown</p>
   <div class="cat-grid">${cardPlates.join('\n')}</div>
   <h2 id="foes">Foes</h2>
-  <p class="mono">${enemies.length} foes ${MARKS.dot} ${attributions.size} portraits published under an attribution licence</p>
+  <p class="mono">${enemies.length} foes ${MARKS.dot} ${portraitsShown} portraits shown</p>
   <div class="foe-grid">${foeCards.join('\n')}</div>
   <h2 id="afflictions">Afflictions</h2>
   <p class="mono">${effects.length} effects</p>
@@ -733,7 +750,7 @@ async function renderCatalog(media, out, warnings) {
 function renderAbout(attributions, out) {
     const root = rootFor(1)
     const marks = [...attributions.values()]
-        .map((v) => `<li>${escapeHtml(basename(v.file))} — ${escapeHtml(v.attribution)}, ${escapeHtml(v.licence)}${v.source ? ` (<a href="${escapeHtml(v.source)}">source</a>)` : ''}</li>`)
+        .map((v) => `<li>${escapeHtml(basename(v.file))} — ${escapeHtml(v.attribution)}, ${escapeHtml(v.licence)}${/^https?:\/\//.test(v.source || '') ? ` (<a href="${escapeHtml(v.source)}">source</a>)` : ''}</li>`)
         .sort()
 
     const body = `<div class="band band-narrow">
@@ -753,11 +770,10 @@ function renderAbout(attributions, out) {
 
   <h2>What is not here</h2>
   <p class="dim">${escapeHtml(WITHHOLD_NOTE)}</p>
-  <p class="dim">Art whose licence this repository cannot prove is also not here. Several of the game's paintings were supplied without a traceable source; they ship inside the game and are withheld from this page until their provenance is resolved. A plate with a withheld painting says so.</p>
 
   <h2>Attribution</h2>
-  <p class="dim">The world plates are 19th-century wood engravings in the public domain, graded for the screen. The type — Pirata One, IM Fell English, Bebas Neue and JetBrains Mono — is open licence. The marks below are published under an attribution licence and their artists are named as that licence requires.</p>
-  <ul class="mono">${marks.join('\n') || '<li>No attribution-licensed art is published on this site.</li>'}</ul>
+  <p class="dim">The world plates are 19th-century wood engravings in the public domain, graded for the screen. The type — Pirata One, IM Fell English, Bebas Neue and JetBrains Mono — is open licence. The paintings on the cards and the foes are open-source art, published here with the rest of the catalog. The files below carry an artist's name on record, and it is credited here whether or not the licence asks for it.</p>
+  <ul class="mono">${marks.join('\n') || '<li>No file in the catalog carries an artist credit.</li>'}</ul>
 
   <h2>How to follow it</h2>
   <p><a href="${root}feed.xml">The feed</a> ${MARKS.dot} <a href="${root}log/">The log</a> ${MARKS.dot} <a href="https://github.com/no-trbl-2-u/Miserere-mei-deus">The source</a></p>

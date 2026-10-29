@@ -22,8 +22,8 @@
 // reproduce is the app's typography, its art, or its chrome: an SVG in a
 // browser is not React Native, and pretending otherwise is exactly the second,
 // prettier truth the prompt warns about. The plate therefore carries no
-// painting (the card paintings are licence-withheld from this site anyway) and
-// the site captions it as a plate of the card's text, not a screenshot.
+// painting (the catalog page shows the paintings; this plate is the card's text
+// only) and the site captions it as a plate of the card's text, not a screenshot.
 //
 // Why SVG and not a rasterised PNG: determinism. The nightly runs unattended
 // with no browser and no model call; a headless rasteriser would add both. SVG

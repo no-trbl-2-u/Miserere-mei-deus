@@ -419,25 +419,25 @@ that happens the build ships the file the game ships.
 
 ## 10. Licences — what the catalog may and may not publish
 
-T's ruling makes the full catalog public. It does not, and cannot, waive a
-third party's licence. The build gates every image on the per-directory
-`provenance.json` records (`scripts/devlog-art-licence.mjs`):
+**The art licence question is closed (T, 2026-10-29, D115):** "The images we
+use for everything are open source." Every image the game and the DevLog use is
+open source, and the public catalog publishes all of it. Nobody re-opens that.
+The build still gates every image on the per-directory `provenance.json`
+records (`scripts/devlog-art-licence.mjs`), so a third-party file that arrives
+later must record its own licence:
 
 | directory | licence on record | published |
 |---|---|---|
-| `maps/`, `combat/`, `splatter/` | public domain | yes |
-| `enemies/` (25 of 77) | CC BY 3.0 (24) and public domain (1) | yes, with the artist rendered |
-| `enemies/` (52 of 77) | UNRESOLVED | **no** |
-| `cards/` (19) | UNRESOLVED | **no** |
-| `portraits/` (15), `treasure/` (4) | UNRESOLVED | **no** |
+| `maps/` | public domain; the Act 1 plates owner-generated | yes |
+| `combat/`, `splatter/` | public domain | yes |
+| `enemies/`, `cards/`, `portraits/`, `treasure/` | `open source (T, 2026-10-29, D115)`; torio free material (the Blood Price art, the Act 1 boss and elite) | yes |
 
-"UNRESOLVED" is the provenance gate's own word for art that shipped before
-anyone checked: owner-supplied external illustration, no source, no licence
-traced since. Inside the game that is a known debt; on a public page it would
-be redistribution of work nobody can show a right to. So a card plate in the
-public catalog publishes its frame, its name and its ledger, and says in the
-frame the painting would fill that the painting is withheld and why. A catalog
-that lies about what it may show is worse than a catalog with fewer pictures.
+The gate has three `open` forms and nothing broader: the exact D115 string, the
+torio free-material grant and the owner-generated record. A card plate whose
+record names no licence (an empty licence, `UNRESOLVED`, or one the gate does
+not recognise) publishes its frame, its name and its ledger, and says in the
+frame the painting would fill that the painting is withheld, no licence on
+record.
 
 An attribution licence publishes only where the provenance names the artist,
 and the attribution renders on the About page. `acquire-art.mjs` refuses
@@ -512,7 +512,6 @@ The build session's own list, honestly split.
 - **Equipment.** Cards, foes and afflictions have pipelines; the signet relics
   and consumables are not in the catalog export.
 - **A hand-cut hero sheet**, to replace the generated one.
-- **The UNRESOLVED art itself.** Fifty-two foe portraits, nineteen card
-  paintings, fifteen character portraits and four treasure images cannot be
-  published until their provenance is traced or they are replaced. That is a
-  content debt this site now makes visible on every plate.
+- **Art that is still withheld.** None today: the licence question is closed
+  (D115) and the catalog shows every painting. A new third-party file with no
+  licence on record is withheld and its plate says so.

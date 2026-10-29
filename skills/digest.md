@@ -217,9 +217,12 @@ its own cadence.
     ```
 
     Before is the blob at `<since-ref>`, after is the file now. The
-    licence gate runs first: a plate whose provenance cannot prove
-    public redistribution is never copied into the capture
-    directory, and the run says which it withheld and why.
+    licence gate runs first: it withholds a plate only when its
+    provenance record names no licence the gate recognises, and says
+    which and why. The art licence question is closed (T, 2026-10-29,
+    D115): all of the game's art is open source, so a withheld line
+    means a new file with no record, never "the licence is unresolved".
+    Never raise the licence with T.
 
     All three collectors write `devlog/assets/<date>/manifest.json`,
     which records the ref the "before" side came from. The public
