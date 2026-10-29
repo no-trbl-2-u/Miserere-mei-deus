@@ -28,12 +28,17 @@ Paced (narrative-choice) events sit in the event slice and `<EventGate>` (`compo
 | `village-inactive` | `/village` with no event |
 | `village-scroll` | Scroll view |
 | `village-merchant-<name>` | Merchant card |
-| `village-purse` | Shillings |
-| `village-tab-buy` / `village-tab-sell` | Shop tabs |
-| `village-ware-<itemId>` | Tap to buy (disabled when unaffordable) |
-| `village-ware-<itemId>-effect` / `village-ware-<itemId>-desc` / `village-ware-<itemId>-base-price` | Ware copy |
-| `village-buy-empty` / `village-sell-empty` | Empty notes |
-| `village-sell-<index>` | Tap to sell |
+| `village-purse` | Shillings and VITAE |
+| `village-note` | What the last counter did, or why it refused |
+| `village-rest` | Tap to rest for shillings (disabled when refused) |
+| `village-rest-price` / `village-rest-effect` / `village-rest-refusal` | Rest counter copy |
+| `village-card-<cardId>` | A card on the card shop's counter |
+| `village-card-<cardId>-buy` | Tap to buy (disabled when refused) |
+| `village-card-<cardId>-price` / `village-card-<cardId>-refusal` | Card price (SOLD once bought) and refusal |
+| `village-remove` | Tap to open card removal (disabled when refused) |
+| `village-remove-card-<cardId>` | Tap to remove that card |
+| `village-remove-cancel` | Tap to close removal |
+| `village-anvil` | Tap to open the Anvil |
 | `village-leave` | LEAVE |
 | `cutscene-inactive` | `/cutscene` with no event |
 | `cutscene-plate` | The fading plate |
@@ -45,7 +50,7 @@ Paced (narrative-choice) events sit in the event slice and `<EventGate>` (`compo
 ## 4. A correct play, step by step
 
 - Dialogue: read `dialogue-speech`; tap `dialogue-choice-<id>` twice (arm, confirm) until no choices remain; `dialogue-leave`. Map returns.
-- Village: `village-tab-buy` → tap an affordable `village-ware-<itemId>` (purse drops); `village-tab-sell` → `village-sell-<index>`; `village-leave`.
+- Village: tap `village-rest` (purse drops, VITAE rises); tap a `village-card-<cardId>-buy` (it reads SOLD); tap `village-remove` then a `village-remove-card-<cardId>`; `village-leave`.
 - Cutscene: tap `cutscene-advance` once per line (or `cutscene-skip`). Map returns.
 - `/event`: `event-choice-<id>` if present, else `event-skip`.
 
@@ -53,7 +58,7 @@ Paced (narrative-choice) events sit in the event slice and `<EventGate>` (`compo
 
 - A dialogue choice tapped once only highlights (`*-confirmed`): it needs a second tap within the confirm window (`confirmTimerRef` in `app/dialogue/index.tsx`).
 - Cutscene lines fade (`Animated.timing`); tapping during the fade is accepted but the next line still fades in. Reduced-motion collapses it to 0.
-- Village ware not buying: it is `disabled` when unaffordable (`village-purse`); `village-buy-empty` / `village-sell-empty` mean the list is genuinely empty, not broken.
+- A village counter not responding: it is `disabled` with its reason under it (`village-rest-refusal`, `village-card-<cardId>-refusal`, `village-remove-refusal`): a short purse, rested this visit, or sold this visit.
 - `*-inactive` flashes while the screen pops back after LEAVE/last line.
 - An omen stacking twice on a deep link was fixed (EventGate latch); a single push is expected.
 - Start-node omen on `fresh-start` fires on landing — not a stray event.
@@ -69,6 +74,6 @@ Record: route, fixture/trigger, nameplate/village name, the choice ids shown, la
 ## 7. Read the log
 
 `__AXM_LOG__.tail(40, { domains: ['action', 'game', 'nav'] })`:
-- `action/resolveCurrentMapEvent`, `action/pickEventChoice`, `action/dismissEvent`, `action/buyVillageWare`, `action/sellVillageItem` (debug level).
-- `game/dialogue:applied` after a confirmed choice; `game/inventory:changed` after buy/sell; `game/world:processed` when the node is consumed.
+- `action/resolveCurrentMapEvent`, `action/pickEventChoice`, `action/dismissEvent`, `action/restAtVillage`, `action/buyVillageCard`, `action/removeVillageCard` (debug level).
+- `game/dialogue:applied` after a confirmed choice;  `game/world:processed` when the node is consumed.
 - `nav/route-changed` `/dialogue` `/village` `/cutscene` `/event` and back to `/exploration`.

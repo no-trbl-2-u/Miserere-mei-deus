@@ -239,7 +239,7 @@ function claimIds(line, registryIds) {
   return idTokens(line, registryIds)
 }
 
-/** `village-ware-<itemId>` and `village-ware-${ware.itemId}` both normalise to `village-ware-<>`. */
+/** `village-card-<cardId>` and `village-card-${card.cardId}` both normalise to `village-card-<>`. */
 const normalId = (id) => id.replace(/<[^>]+>/g, '<>')
 
 /** The normalised testID a JSX attribute initializer carries, or null when it is not a literal or template. */
@@ -392,7 +392,7 @@ test('the old hazard.md hand row fails the tap check', () => {
 test('a timed overlay and a pressable row pass the claim checks', () => {
   const lines = [
     '| `hazard-dice-roll` | Dice-roll overlay (auto-finishes after `DICE_ROLL_OVERLAY_MS` → `finishHazardRolling`) |',
-    '| `village-ware-<itemId>` | Tap to buy (disabled when unaffordable) |',
+    '| `village-card-<cardId>-buy` | Tap to buy (disabled when refused) |',
   ].join('\n')
   assert.deepEqual(claimFailures(lines, declared, ts, parse, registry), [])
 })

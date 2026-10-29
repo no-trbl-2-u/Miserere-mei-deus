@@ -8,7 +8,7 @@
 import type { ActiveEffect } from '../../Effects/types';
 import type { GameState } from '../../Game/types';
 import type { Item } from '../../Items/types';
-import type { ShopInventory } from '../../Items/shop.types';
+import type { VillageCardShop, VillageRestCounter } from '../Village/village.types';
 import type { NPC } from '../../NPCs/types';
 import type { EnemySlug } from '../../Enemy/enemy.library';
 import type { ContinentName, MapName } from '../map.library';
@@ -87,11 +87,16 @@ export interface VillagePayload {
     /** Shopkeepers / merchants present in the scene. */
     merchants?: readonly NPC[];
     /**
-     * Transactional shop attached to this village. Authoring
-     * is optional — a village can carry merchants for dialogue without
-     * a shop, or a shop without named merchants.
+     * The paid rest counter, when this village lets a bed: a rest node's
+     * heal for shillings, once per visit (`World/Village`).
      */
-    shop?: ShopInventory;
+    rest?: true;
+    /**
+     * The card shop counter, when this village has one: three cards from the
+     * player's reward pool, the same three all run, and paid card removal
+     * (`World/Village`). The village sells cards only.
+     */
+    cardShop?: true;
     /** The Anvil counter, when this village has a smith. */
     anvil?: VillageAnvil;
     description?: string;
@@ -219,7 +224,17 @@ export type ResolvedEvent =
     // rest-choice engine) decide the heal from an honest marker rather than
     // a number. `healed` is a computed OUTCOME, not an authoring knob.
     | { kind: 'rest';        healed: number; shelter: RestShelter; description?: string }
-    | { kind: 'village';     villageName: string; merchants: NPC[]; shop?: ShopInventory; anvil?: VillageAnvil; description?: string }
+    // The village's counters: `rest` and `cardShop` carry what the host shows
+    // (the price, the seeded offer); `anvil` the smith's variants.
+    | {
+        kind: 'village';
+        villageName: string;
+        merchants: NPC[];
+        rest?: VillageRestCounter;
+        cardShop?: VillageCardShop;
+        anvil?: VillageAnvil;
+        description?: string;
+    }
     | { kind: 'cutscene';    lines: readonly string[] }
     | { kind: 'hazard';      effects: ActiveEffect[]; damage: number; description?: string }
     | { kind: 'loot-cache';  items: Item[]; currency: number; description?: string }

@@ -8,7 +8,7 @@
  * IS that reason; this module only shapes it for render.
  */
 
-import { cardRemovalPrice, ENEMY_REGISTRY, getCardById, previewRestChoiceHeal, settledEliteNodes } from '@mechanics';
+import { ENEMY_REGISTRY, getCardById, previewRestChoiceHeal, settledEliteNodes } from '@mechanics';
 import type {
     RestChoiceOfferId,
     RestChoiceSession,
@@ -32,28 +32,10 @@ export interface RestChoiceOfferVM {
     disabledReason: string | null;
 }
 
-/** One row in the removal picker sheet — one per DECK COPY, duplicates included. */
-export interface RestChoiceCutCardVM {
-    /** React key — index-qualified since duplicate ids repeat. */
-    key: string;
-    cardId: string;
-    name: string;
-}
-
-export interface RestChoiceCutVM {
-    /** What THIS removal costs — matches the `cut` offer's price. */
-    price: number;
-    /** What the NEXT removal (after this one) would cost — the escalation preview. */
-    nextPrice: number;
-    cards: readonly RestChoiceCutCardVM[];
-}
-
 export interface RestChoiceOutcomeVM {
     chosen: RestChoiceOfferId;
     label: string;
     healed: number;
-    spent: number;
-    removedCardName: string | null;
     /** The upgraded card, before and after, or null when no upgrade was taken. */
     upgraded: { fromName: string; toName: string } | null;
     /**
@@ -71,7 +53,6 @@ export interface RestChoiceVM {
     maxHealth: number;
     currency: number;
     offers: readonly RestChoiceOfferVM[];
-    cut: RestChoiceCutVM | null;
     /** The shared upgrade screen's rows, in the `upgrade-pick` phase only. */
     upgrade: readonly CardUpgradeRowVM[] | null;
     outcome: RestChoiceOutcomeVM | null;
@@ -90,7 +71,6 @@ const EMPTY_VM: RestChoiceVM = Object.freeze({
     maxHealth: 0,
     currency: 0,
     offers: Object.freeze([]),
-    cut: null,
     upgrade: null,
     outcome: null,
     description: null,
@@ -165,24 +145,12 @@ export function selectRestVM(
         disabledReason: o.disabledReason ?? null,
     }));
 
-    const cut: RestChoiceCutVM | null = s.phase !== 'cut-pick' ? null : {
-        price: cardRemovalPrice(s.removals),
-        nextPrice: cardRemovalPrice(s.removals + 1),
-        cards: s.deckCardIds.map((cardId, i) => ({
-            key: `${cardId}:${i}`,
-            cardId,
-            name: cardName(cardId),
-        })),
-    };
-
     const upgrade = s.phase !== 'upgrade-pick' ? null : cardUpgradeRowsVM(s.upgradableCardIds, s.deckCardIds);
 
     const outcome: RestChoiceOutcomeVM | null = s.outcome === null ? null : {
         chosen: s.outcome.chosen,
         label: REST_CHOICE_OFFER_LABEL[s.outcome.chosen],
         healed: s.outcome.healed,
-        spent: s.outcome.spent,
-        removedCardName: s.outcome.removedCardId === null ? null : cardName(s.outcome.removedCardId),
         upgraded: s.outcome.upgradedCardId === null || s.outcome.upgradedToCardId === null ? null : {
             fromName: cardName(s.outcome.upgradedCardId),
             toName: cardName(s.outcome.upgradedToCardId),
@@ -199,7 +167,6 @@ export function selectRestVM(
         maxHealth: s.maxHealth,
         currency: s.currency,
         offers,
-        cut,
         upgrade,
         outcome,
         description: s.description,

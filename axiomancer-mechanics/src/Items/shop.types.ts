@@ -1,13 +1,11 @@
 /**
  * Shop types.
  *
- * `ShopInventory` is an item catalogue keyed by `itemId` with a flat
- * price per ware. It rides on `VillagePayload.shop` so a `village`
- * MapEvent can declare its stock; the resolver forwards it onto the
- * resolved event without mutation. The buy / sell reducers in
- * `shop.reducer.ts` accept a price directly rather than re-resolving
- * against this catalogue — keeps the reducer dumb and lets a UI render
- * "shops buy at half" or any other policy externally.
+ * A `ShopWare` is an item id with a flat price. The buy / sell reducers in
+ * `shop.reducer.ts` accept a price directly rather than re-resolving it,
+ * which keeps the reducer dumb and lets a caller set its own policy. No
+ * village sells items any more (the village sells cards, `World/Village`),
+ * so the reducers have no live map carrier.
  */
 
 export interface ShopWare {
@@ -15,8 +13,4 @@ export interface ShopWare {
     readonly itemId: string;
     /** Flat price in `Character.currency` units. Must be ≥ 0. */
     readonly price: number;
-}
-
-export interface ShopInventory {
-    readonly wares: ReadonlyArray<ShopWare>;
 }

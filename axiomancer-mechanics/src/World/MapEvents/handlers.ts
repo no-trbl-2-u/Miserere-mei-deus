@@ -30,6 +30,7 @@ import { resolveQuestNodeEvent } from '../questline';
 import { ENEMY_REGISTRY, type EnemySlug } from '../../Enemy/enemy.library';
 import { validateDieGear, type DieGearColor } from '../../Character/dieGear.reducer';
 import { REST_PASSIVE_HEAL_FRACTION, restShelterOf } from './rest-shelter';
+import { villageCardShopFor, villageRestCounter } from '../Village/village.engine';
 import type {
     EncounterPayload, RestPayload,
     VillagePayload, CutscenePayload, HazardPayload, LootCachePayload,
@@ -116,7 +117,10 @@ export function resolveVillage(
             kind: 'village',
             villageName: payload.villageName,
             merchants,
-            shop: payload.shop,
+            ...(payload.rest ? { rest: villageRestCounter() } : {}),
+            ...(payload.cardShop
+                ? { cardShop: villageCardShopFor(state, state.world?.currentMap?.currentNode || payload.villageName) }
+                : {}),
             anvil: payload.anvil,
             description: payload.description,
         },

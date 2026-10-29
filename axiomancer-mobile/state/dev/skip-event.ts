@@ -95,7 +95,7 @@ import { closeQuestAction, offerCompletedQuestExtrasAction } from '@/state/quest
 import {
     chooseRestChoiceOfferAction,
     claimRestChoiceOutcomeAction,
-    pickRestChoiceCutAction,
+    pickRestChoiceUpgradeAction,
 } from '@/state/rest/store-actions';
 import {
     EMPTY_CACHE_SLICE,
@@ -520,13 +520,13 @@ function skipHazard(store: AppStore, actions: SkipEventActions, nodeId: string |
     };
 }
 
-/** The free REST offer, claimed. A cut already in progress removes the first offered card. */
+/** The free REST offer, claimed. An upgrade already in progress upgrades the first offered card. */
 function skipRest(store: AppStore, nodeId: string | null): SkipEventResult {
     const session = store.getState().rest.session;
     if (session?.phase === 'offer') chooseRestChoiceOfferAction(store, 'rest');
-    else if (session?.phase === 'cut-pick') {
-        const first = session.deckCardIds[0];
-        if (first) pickRestChoiceCutAction(store, first);
+    else if (session?.phase === 'upgrade-pick') {
+        const first = session.upgradableCardIds[0];
+        if (first) pickRestChoiceUpgradeAction(store, first);
     }
     const claim = claimRestChoiceOutcomeAction(store);
     if (!claim.applied) {
@@ -540,8 +540,7 @@ function skipRest(store: AppStore, nodeId: string | null): SkipEventResult {
         detail: {
             shelter: session?.shelter ?? null,
             healed: claim.healed,
-            spent: claim.spent,
-            removedCardId: claim.removedCardId,
+            upgradedToCardId: claim.upgradedToCardId,
             scarMended: claim.scarMended,
             respawnedElites: claim.respawnedElites.map(e => `${e.map}/${e.node}`),
         },

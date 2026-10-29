@@ -17,7 +17,7 @@ import {
 
 import type { HazardSessionState } from '@mechanics';
 import type { BlacksmithSession, EliteRewardUpgrade, LootCacheChoiceSession, RestChoiceSession } from '@mechanics';
-import type { LabyrinthActId, WorldState } from '@mechanics';
+import type { LabyrinthActId, VillageVisit, WorldState } from '@mechanics';
 
 import { resumeLabyrinthSession } from './labyrinth/resume';
 
@@ -40,6 +40,12 @@ export interface MobileEventSlice {
      * `null` when the event was not triggered from exploration.
      */
     sourceNodeType: string | null;
+    /**
+     * What the player has done at the pending village this visit (rested,
+     * cards bought). Absent on arrival: a fresh visit. Cleared with the
+     * slice, so leaving and coming back is a new visit.
+     */
+    villageVisit?: VillageVisit;
 }
 
 /**

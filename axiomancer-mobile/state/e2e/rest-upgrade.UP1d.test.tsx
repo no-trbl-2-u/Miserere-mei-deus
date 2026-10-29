@@ -64,7 +64,7 @@ function count(ids: readonly string[], id: string): number {
 }
 
 describe('rest site: upgrade a card (Phase UP1d)', () => {
-    it('offers the upgrade beside rest and cut', () => {
+    it('offers the upgrade beside rest, and no cut (removal is at the village, NK1c)', () => {
         const r = render(
             <GameStoreProvider store={restStore()}>
                 <RestScreen />
@@ -72,7 +72,7 @@ describe('rest site: upgrade a card (Phase UP1d)', () => {
         );
         expect(r.getByTestId('rest-choice-offer-rest')).toBeTruthy();
         expect(r.getByTestId('rest-choice-offer-upgrade')).toBeTruthy();
-        expect(r.getByTestId('rest-choice-offer-cut')).toBeTruthy();
+        expect(r.queryByTestId('rest-choice-offer-cut')).toBeNull();
     });
 
     it('previews the upgrade with a locked ??? slot, and the deck then holds <id>+', () => {

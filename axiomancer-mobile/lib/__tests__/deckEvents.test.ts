@@ -1,6 +1,7 @@
 /**
  * The deck-event poster (phase BE2e, A8): each of the four call sites, the
- * combat draft's claim, the cache's claim, a rest-site cut and the run reset,
+ * combat draft's claim, the cache's claim, a card removed at a village and the
+ * run reset,
  * posts one `DeckEventPost` the Worker's validator accepts, carrying the
  * build commit and session id and the deck after the change. A shut gate
  * makes no call; a failed post only warns.
@@ -32,9 +33,9 @@ import {
     beginRestAction,
     chooseRestChoiceOfferAction,
     claimRestChoiceOutcomeAction,
-    pickRestChoiceCutAction,
 } from '@/state/rest/store-actions';
-import { createAppStore, type AppStore } from '@/state/store';
+import { createAppStore, EMPTY_EVENT_SLICE, type AppStore } from '@/state/store';
+import { removeVillageCardAction } from '@/state/village/store-actions';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 
 jest.mock('@/lib/buildProfile', () => ({
@@ -184,21 +185,27 @@ describe('the four call sites', () => {
         expect(onlyPost()).toMatchObject({ kind: 'cache-reward', cardId: null, offered: [candidate] });
     });
 
-    it('a cut at the rest site posts the removed card and the smaller deck', async () => {
+    it('a card removed at a village posts the removed card and the smaller deck', async () => {
         const store = storeWithDeck();
-        beginRestAction(store, { seed: 3 });
+        store.setState({
+            event: {
+                ...EMPTY_EVENT_SLICE,
+                pending: {
+                    state: undefined as never,
+                    event: { kind: 'village', villageName: 'V', merchants: [], cardShop: { cardIds: [], price: 6 } },
+                },
+            },
+        });
         const cut = COMBAT_REWARD_POOL[0]!;
-        chooseRestChoiceOfferAction(store, 'cut');
-        pickRestChoiceCutAction(store, cut);
-        expect(claimRestChoiceOutcomeAction(store).removedCardId).toBe(cut);
+        expect(removeVillageCardAction(store, cut).ok).toBe(true);
         await flush();
         const post = onlyPost();
         expect(post).toMatchObject({ kind: 'remove', cardId: cut, offered: null });
         expect(post.deck).toHaveLength(11);
-        expect(post.where.screen).toBe('rest');
+        expect(post.where.screen).toBe('village');
     });
 
-    it('a rest taken without a cut posts nothing', async () => {
+    it('a rest node posts nothing: it removes no card', async () => {
         const store = storeWithDeck();
         beginRestAction(store, { seed: 3 });
         chooseRestChoiceOfferAction(store, 'rest');

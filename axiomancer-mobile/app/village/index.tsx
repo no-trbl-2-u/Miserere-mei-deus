@@ -1,69 +1,89 @@
 /**
  * /village — the dedicated settlement screen.
  *
- * A village event opens as a hub: the settlement's name, its
- * merchants (their stall-calls), and a transactional shop when the
- * authored payload carries one. Buying goes through the action
- * layer's `buyVillageWare` (engine `buyItem` owns the rules).
- *
- * A SELL tab sits alongside BUY: the shop head carries a tab
- * toggle, and SELL lists the player's inventory (quest items
- * excluded) priced via the presenter's `sellables` — dispatching
- * `sellVillageItem` (engine `sellItem` owns the rules).
- *
- * Every BUY row states what the coin buys before it states the
- * flavour, off the presenter's `effect` line.
+ * A village event opens as a hub of counters: the settlement's name, its
+ * merchants (their stall-calls), and whichever counters the event carries —
+ * a bed for the night (the paid rest), the card shop (three cards to buy, and
+ * paid card removal) and the Anvil (opens `/blacksmith`; leaving it lands back
+ * here, because the village stays the pending event). Every price and refusal
+ * is the engine's (`World/Village`); a refused counter shows its reason. The
+ * village sells no items and buys nothing back.
  *
  * The screen owns ONE scroller — the house shape (`/rest`, `/blacksmith`,
  * the inventory page) — and TAKE THE ROAD is pinned below it, so the exit
- * is whole at any stall count and at either width.
+ * is whole at any counter count and at either width.
  */
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from '@/lib/platform/router';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
+import { CombatCardFace } from '@/components/combat/encounter/CombatBoard';
 import { SCREEN_FRAME_INSET, ScreenBg } from '@/components/ScreenBg';
 import { AxmIcon } from '@/components/icons';
 import { useGameActions, useGameState } from '@/state/GameStoreProvider';
+import {
+    VILLAGE_CARD_BUY_LABEL,
+    VILLAGE_CARD_SHOP_LABEL,
+    VILLAGE_CARD_SHOP_LINE,
+    VILLAGE_CARD_SOLD_LABEL,
+    VILLAGE_REMOVE_CANCEL_LABEL,
+    VILLAGE_REMOVE_LABEL,
+    VILLAGE_REMOVE_LINE,
+    VILLAGE_REMOVE_PICK_HINT,
+    VILLAGE_REST_LABEL,
+    VILLAGE_REST_LINE,
+    villageCounterNote,
+    villageRemovePriceLine,
+} from '@/state/presenters/village.copy';
 import { selectVillageVM } from '@/state/presenters/village.engine';
+import type { VillageCounterResult } from '@/state/village/store-actions';
 import { FONTS, TYPE } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 /**
  * Size for an option's description line on this screen.
  *
- * Purpose: the stalls print a ware's description in the same uppercase
- * mono the inn (`/rest` `offerDesc`) uses, at the same size. Input: none
- * (a constant). Output: the point size both surfaces share.
+ * Purpose: the counters print their effect in the same uppercase mono the
+ * inn (`/rest` `offerDesc`) uses, at the same size. Input: none (a constant).
+ * Output: the point size both surfaces share.
  */
 const DESC_FONT_SIZE = 12;
+
+/** Card shop face size: three side by side fit a phone, the reward draft's size. */
+const SHOP_FACE_W = 100;
+const SHOP_FACE_H = 147;
 
 /**
  * The settlement screen.
  *
- * Purpose: render the village view-model — name, body, merchant voices,
- * and the BUY/SELL stalls — with the exit pinned beneath the scrolling
- * stall list instead of trailing it. Inputs: none (reads the store via
- * `useGameState`; dispatches through `useGameActions`). Output: the
- * screen's element tree. Resolves: 14-village — the stalls scroll, the
- * way out does not.
+ * Purpose: render the village view-model — name, body, merchant voices and
+ * the counters — with the exit pinned beneath the scrolling list. Inputs:
+ * none (reads the store via `useGameState`; dispatches through
+ * `useGameActions`). Output: the screen's element tree.
  */
 export default function VillageScreen() {
     const styles = useStyles();
     const event = useGameState((s) => s.event);
     const player = useGameState((s) => s.player);
+    const flags = useGameState((s) => s.flags);
     const vm = useMemo(
-        () => selectVillageVM({ event, player }),
-        [event, player],
+        () => selectVillageVM({ event, player, flags }),
+        [event, player, flags],
     );
     const actions = useGameActions();
     const router = useRouter();
-    const [shopTab, setShopTab] = useState<'buy' | 'sell'>('buy');
+    const [removing, setRemoving] = useState(false);
+    const [note, setNote] = useState<string | null>(null);
 
     useEffect(() => {
         if (!vm.active && router.canGoBack()) router.back();
     }, [vm.active, router]);
+
+    /** Words a counter's result: what it cost, or why it was refused. */
+    const report = (what: string, result: VillageCounterResult) => {
+        setNote(result.ok ? villageCounterNote(what, result.spent) : `Refused: ${result.refusal}.`);
+    };
 
     // Inactive shell — visible for a frame while the router unwinds; never a
     // blank screen.
@@ -91,6 +111,12 @@ export default function VillageScreen() {
                     </View>
                     <Text style={styles.title}>{vm.villageName.toUpperCase()}</Text>
                     <Text style={styles.body}>{vm.body}</Text>
+                    <Text style={styles.purse} testID="village-purse">
+                        {vm.currency} SHILLINGS · VITAE {vm.health}/{vm.maxHealth}
+                    </Text>
+                    {note !== null && (
+                        <Text style={styles.note} testID="village-note">{note}</Text>
+                    )}
 
                     {vm.merchants.length > 0 && (
                         <>
@@ -106,16 +132,142 @@ export default function VillageScreen() {
                         </>
                     )}
 
+                    {vm.rest && (
+                        <>
+                            <Text style={styles.sectionLabel}>{VILLAGE_REST_LABEL}</Text>
+                            <TouchableOpacity
+                                accessibilityRole="button"
+                                accessibilityLabel={
+                                    vm.rest.enabled
+                                        ? `Rest for ${vm.rest.price} shillings. ${vm.rest.effect}`
+                                        : `Rest unavailable: ${vm.rest.refusal}`
+                                }
+                                accessibilityState={{ disabled: !vm.rest.enabled }}
+                                disabled={!vm.rest.enabled}
+                                onPress={() => report('Rested', actions.restAtVillage())}
+                                style={[styles.wareRow, !vm.rest.enabled && styles.wareRowUnaffordable]}
+                                testID="village-rest"
+                            >
+                                <View style={styles.flexOne}>
+                                    <Text style={styles.wareName}>REST</Text>
+                                    <Text style={styles.wareEffect} testID="village-rest-effect">{vm.rest.effect}</Text>
+                                    <Text style={styles.wareDesc} testID="village-rest-desc">{VILLAGE_REST_LINE}</Text>
+                                </View>
+                                <Text
+                                    style={[styles.warePrice, !vm.rest.enabled && [styles.warePriceUnaffordable, styles.wareCtaDimmed]]}
+                                    testID="village-rest-price"
+                                >
+                                    {vm.rest.price} SHILLINGS
+                                </Text>
+                            </TouchableOpacity>
+                            {vm.rest.refusal !== null && (
+                                <Text style={styles.refusal} testID="village-rest-refusal">{vm.rest.refusal}</Text>
+                            )}
+                        </>
+                    )}
+
+                    {vm.cardShop && (
+                        <>
+                            <Text style={styles.sectionLabel}>{VILLAGE_CARD_SHOP_LABEL}</Text>
+                            <Text style={styles.wareDesc}>{VILLAGE_CARD_SHOP_LINE}</Text>
+                            <View style={styles.shopRow} testID="village-card-shop">
+                                {vm.cardShop.cards.map(card => (
+                                    <View key={card.cardId} style={styles.shopCard} testID={`village-card-${card.cardId}`}>
+                                        <CombatCardFace card={card.face} width={SHOP_FACE_W} height={SHOP_FACE_H} />
+                                        <TouchableOpacity
+                                            accessibilityRole="button"
+                                            accessibilityLabel={
+                                                card.enabled
+                                                    ? `Buy ${card.name} for ${card.price} shillings`
+                                                    : `${card.name} unavailable: ${card.refusal}`
+                                            }
+                                            accessibilityState={{ disabled: !card.enabled }}
+                                            disabled={!card.enabled}
+                                            onPress={() => report(`Bought ${card.name}`, actions.buyVillageCard(card.cardId))}
+                                            style={[styles.buyButton, !card.enabled && styles.wareRowUnaffordable]}
+                                            testID={`village-card-${card.cardId}-buy`}
+                                        >
+                                            <Text
+                                                style={[styles.buyText, !card.enabled && [styles.warePriceUnaffordable, styles.wareCtaDimmed]]}
+                                                testID={`village-card-${card.cardId}-price`}
+                                            >
+                                                {card.sold ? VILLAGE_CARD_SOLD_LABEL : `${VILLAGE_CARD_BUY_LABEL} · ${card.price} SHILLINGS`}
+                                            </Text>
+                                        </TouchableOpacity>
+                                        {card.refusal !== null && !card.sold && (
+                                            <Text style={styles.refusal} testID={`village-card-${card.cardId}-refusal`}>{card.refusal}</Text>
+                                        )}
+                                    </View>
+                                ))}
+                            </View>
+
+                            <TouchableOpacity
+                                accessibilityRole="button"
+                                accessibilityLabel={
+                                    vm.cardShop.removal.enabled
+                                        ? `Remove a card for ${vm.cardShop.removal.price} shillings`
+                                        : `Card removal unavailable: ${vm.cardShop.removal.refusal}`
+                                }
+                                accessibilityState={{ disabled: !vm.cardShop.removal.enabled, expanded: removing }}
+                                disabled={!vm.cardShop.removal.enabled}
+                                onPress={() => setRemoving(r => !r)}
+                                style={[styles.wareRow, !vm.cardShop.removal.enabled && styles.wareRowUnaffordable]}
+                                testID="village-remove"
+                            >
+                                <View style={styles.flexOne}>
+                                    <Text style={styles.wareName}>{VILLAGE_REMOVE_LABEL}</Text>
+                                    <Text style={styles.wareDesc}>{VILLAGE_REMOVE_LINE}</Text>
+                                </View>
+                                <Text
+                                    style={[styles.warePrice, !vm.cardShop.removal.enabled && [styles.warePriceUnaffordable, styles.wareCtaDimmed]]}
+                                    testID="village-remove-price"
+                                >
+                                    {vm.cardShop.removal.price} SHILLINGS
+                                </Text>
+                            </TouchableOpacity>
+                            {vm.cardShop.removal.refusal !== null && (
+                                <Text style={styles.refusal} testID="village-remove-refusal">{vm.cardShop.removal.refusal}</Text>
+                            )}
+                            {removing && vm.cardShop.removal.enabled && (
+                                <View testID="village-remove-sheet">
+                                    <Text style={styles.priceHint} testID="village-remove-next">
+                                        {villageRemovePriceLine(vm.cardShop.removal.price, vm.cardShop.removal.nextPrice)}
+                                    </Text>
+                                    <Text style={styles.emptyNote}>{VILLAGE_REMOVE_PICK_HINT}</Text>
+                                    {vm.cardShop.removal.cards.map(card => (
+                                        <TouchableOpacity
+                                            key={card.cardId}
+                                            accessibilityRole="button"
+                                            accessibilityLabel={`Remove ${card.name} from the deck`}
+                                            onPress={() => {
+                                                setRemoving(false);
+                                                report(`Removed ${card.name}`, actions.removeVillageCard(card.cardId));
+                                            }}
+                                            style={styles.removeRow}
+                                            testID={`village-remove-card-${card.cardId}`}
+                                        >
+                                            <Text style={styles.removeName}>
+                                                {card.name}{card.count > 1 ? ` ×${card.count}` : ''}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    ))}
+                                    <TouchableOpacity
+                                        accessibilityRole="button"
+                                        accessibilityLabel="Keep every card"
+                                        onPress={() => setRemoving(false)}
+                                        style={styles.removeRow}
+                                        testID="village-remove-cancel"
+                                    >
+                                        <Text style={styles.removeName}>{VILLAGE_REMOVE_CANCEL_LABEL}</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            )}
+                        </>
+                    )}
+
                     {vm.anvil && (
                         <>
-                            <View style={styles.shopHead}>
-                                <Text style={styles.sectionLabel}>THE ANVIL</Text>
-                                {!vm.hasShop && (
-                                    <Text style={styles.purse} testID="village-purse">
-                                        {vm.currency} SHILLINGS
-                                    </Text>
-                                )}
-                            </View>
+                            <Text style={styles.sectionLabel}>THE ANVIL</Text>
                             <TouchableOpacity
                                 accessibilityRole="button"
                                 accessibilityLabel={`Open the Anvil. The smith's cheapest work is ${vm.anvil.cheapestWork} shillings`}
@@ -135,105 +287,11 @@ export default function VillageScreen() {
                             </TouchableOpacity>
                         </>
                     )}
-
-                    {vm.hasShop && (
-                        <>
-                            <View style={styles.shopHead}>
-                                <Text style={styles.sectionLabel}>THE STALLS</Text>
-                                <Text style={styles.purse} testID="village-purse">
-                                    {vm.currency} SHILLINGS
-                                </Text>
-                            </View>
-                            <View style={styles.tabRow}>
-                                <TouchableOpacity
-                                    accessibilityRole="button"
-                                    accessibilityLabel="Buy from the stalls"
-                                    accessibilityState={{ selected: shopTab === 'buy' }}
-                                    onPress={() => setShopTab('buy')}
-                                    style={[styles.tabButton, shopTab === 'buy' && styles.tabButtonActive]}
-                                    testID="village-tab-buy"
-                                >
-                                    <Text style={[styles.tabButtonText, shopTab === 'buy' && styles.tabButtonTextActive]}>BUY</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    accessibilityRole="button"
-                                    accessibilityLabel="Sell to the stalls"
-                                    accessibilityState={{ selected: shopTab === 'sell' }}
-                                    onPress={() => setShopTab('sell')}
-                                    style={[styles.tabButton, shopTab === 'sell' && styles.tabButtonActive]}
-                                    testID="village-tab-sell"
-                                >
-                                    <Text style={[styles.tabButtonText, shopTab === 'sell' && styles.tabButtonTextActive]}>SELL</Text>
-                                </TouchableOpacity>
-                            </View>
-
-                            {shopTab === 'buy' && (
-                                vm.wares.length > 0 ? vm.wares.map(ware => (
-                                    <TouchableOpacity
-                                        key={ware.itemId}
-                                        accessibilityRole="button"
-                                        accessibilityLabel={
-                                            ware.effect.length > 0
-                                                ? `Buy ${ware.name} for ${ware.price} shillings. ${ware.effect}`
-                                                : `Buy ${ware.name} for ${ware.price} shillings`
-                                        }
-                                        accessibilityState={{ disabled: !ware.affordable }}
-                                        disabled={!ware.affordable}
-                                        onPress={() => actions.buyVillageWare(ware.itemId)}
-                                        style={[styles.wareRow, !ware.affordable && styles.wareRowUnaffordable]}
-                                        testID={`village-ware-${ware.itemId}`}
-                                    >
-                                        <View style={styles.flexOne}>
-                                            <Text style={styles.wareName}>{ware.name}</Text>
-                                            {/* The mechanical read comes before the
-                                                flavour line — a stall that prices a thing has to
-                                                say what the thing does. */}
-                                            {ware.effect.length > 0 && (
-                                                <Text style={styles.wareEffect} testID={`village-ware-${ware.itemId}-effect`}>{ware.effect}</Text>
-                                            )}
-                                            {ware.description.length > 0 && (
-                                                <Text style={styles.wareDesc} testID={`village-ware-${ware.itemId}-desc`}>{ware.description}</Text>
-                                            )}
-                                        </View>
-                                        <Text style={[styles.warePrice, !ware.affordable && [styles.warePriceUnaffordable, styles.wareCtaDimmed]]} testID={`village-ware-${ware.itemId}-price`}>{ware.price} SHILLINGS</Text>
-                                    </TouchableOpacity>
-                                )) : (
-                                    <Text style={styles.emptyNote} testID="village-buy-empty">Nothing for sale.</Text>
-                                )
-                            )}
-
-                            {shopTab === 'sell' && (
-                                vm.sellables.length > 0 ? vm.sellables.map(sellable => (
-                                    <TouchableOpacity
-                                        key={`${sellable.itemId}-${sellable.index}`}
-                                        accessibilityRole="button"
-                                        accessibilityLabel={`Sell ${sellable.name} for ${sellable.sellPrice} shillings`}
-                                        onPress={() => actions.sellVillageItem(sellable.index)}
-                                        style={styles.wareRow}
-                                        testID={`village-sell-${sellable.index}`}
-                                    >
-                                        <View style={styles.flexOne}>
-                                            <Text style={styles.wareName}>{sellable.name}</Text>
-                                            {sellable.description.length > 0 && (
-                                                <Text style={styles.wareDesc}>{sellable.description}</Text>
-                                            )}
-                                        </View>
-                                        <Text style={styles.warePrice} testID={`village-sell-${sellable.index}-price`}>{sellable.sellPrice} SHILLINGS</Text>
-                                    </TouchableOpacity>
-                                )) : (
-                                    <Text style={styles.emptyNote} testID="village-sell-empty">Nothing to sell.</Text>
-                                )
-                            )}
-                        </>
-                    )}
                 </View>
             </ScrollView>
 
-            {/* 14-village: the exit sits OUTSIDE the scroller. Four wares
-                that each state their effect are taller than 812pt, and
-                inside the list the button was bisected by the bottom of
-                the screen. Pinned here it is whole however long the
-                stalls run, at 375 and at 1280 alike. */}
+            {/* 14-village: the exit sits OUTSIDE the scroller, so it is whole
+                however long the counters run, at 375 and at 1280 alike. */}
             <View style={styles.exitBar} testID="village-exit-bar">
                 <View style={styles.column} testID="village-exit-column">
                     <TouchableOpacity
@@ -313,27 +371,40 @@ const useStyles = makeStyles((AXM) => ({
     },
     merchantName: { fontFamily: FONTS.gothic, fontSize: 16, color: AXM.sulfur, letterSpacing: 1.2 },
     merchantLine: { fontFamily: FONTS.serifItalic, fontSize: 12, color: AXM.parchment, marginTop: 4 },
-    shopHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' },
     purse: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.sulfur, letterSpacing: 1 },
-    tabRow: { flexDirection: 'row', gap: 8, marginTop: 8, marginBottom: 8 },
-    // The unselected tab does not use AXM.ash for its border: that is this
-    // app's DISABLED treatment (`offerDisabled` on both /rest and /blacksmith
-    // is `borderColor: AXM.ash`, and the combat rail greys an unaffordable
-    // rune to ash too), and SELL would read as "this merchant does not buy"
-    // rather than "tap to switch". parchmentMed is a
-    // mid-tone: clearly quieter than the selected tab's full parchment, and
-    // clearly not the dead ash.
-    tabButton: {
-        flex: 1,
+    // A refused counter names its reason under it, in the inn's reason voice
+    // (`/rest` `offerReason`): shown, never hidden.
+    refusal: {
+        fontFamily: FONTS.serifItalic,
+        fontSize: 11,
+        lineHeight: 15,
+        color: AXM.bone,
+        marginTop: -2,
+        marginBottom: 6,
+    },
+    note: { fontFamily: FONTS.serifItalic, fontSize: 12, color: AXM.sulfur, marginTop: 4 },
+    priceHint: { fontFamily: FONTS.mono, fontSize: 11, letterSpacing: 0.5, color: AXM.sulfur, marginBottom: 4 },
+    // Three faces side by side at the reward draft's size fit a 375pt phone.
+    shopRow: { flexDirection: 'row', justifyContent: 'space-between', gap: 6, marginTop: 18, marginBottom: 8 },
+    shopCard: { alignItems: 'center', width: 104 },
+    buyButton: {
+        alignSelf: 'stretch',
         borderWidth: 2,
-        borderColor: AXM.parchmentMed,
-        backgroundColor: AXM.panelBg,
-        paddingVertical: 6,
+        borderColor: AXM.bone,
+        backgroundColor: AXM.bg,
+        paddingVertical: 4,
+        marginTop: 6,
         alignItems: 'center',
     },
-    tabButtonActive: { borderColor: AXM.parchment, backgroundColor: AXM.bg },
-    tabButtonText: { fontFamily: FONTS.gothic, fontSize: 13, letterSpacing: 1.5, color: AXM.bone },
-    tabButtonTextActive: { color: AXM.parchment },
+    buyText: { fontFamily: FONTS.sans, fontSize: 11, letterSpacing: 0.5, color: AXM.sulfur, textAlign: 'center' },
+    removeRow: {
+        borderWidth: 1,
+        borderColor: AXM.ash,
+        backgroundColor: AXM.bg,
+        padding: 8,
+        marginBottom: 4,
+    },
+    removeName: { fontFamily: FONTS.mono, fontSize: 13, color: AXM.parchment },
     emptyNote: { fontFamily: FONTS.serifItalic, fontSize: 12, color: AXM.bone, marginBottom: 6 },
     wareRow: {
         flexDirection: 'row',
@@ -345,7 +416,7 @@ const useStyles = makeStyles((AXM) => ({
         padding: 10,
         marginBottom: 6,
     },
-    // Unaffordable rows dim only the price/CTA (below) — the border alone
+    // A refused row dims only the price/CTA (below) — the border alone
     // signals disabled so the name/description stay bone/parchment-bright
     // and legible, matching combat's disabled-item treatment.
     wareRowUnaffordable: { borderColor: AXM.ash },

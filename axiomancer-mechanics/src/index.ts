@@ -166,8 +166,8 @@ export {
 } from './Cards/cards.sandbox';
 
 // ─── Deck removal — taking a card OUT, and what that costs ──────────────────
-// The removal primitive plus the per-run escalating price. The rest-choice
-// engine and the picker screen consume these.
+// The removal primitive plus the per-run escalating price. The village's card
+// shop (`World/Village`) consumes these.
 export {
     removeCardFromCombatDeck,
     cardRemovalPrice, cardRemovalsOf,
@@ -257,7 +257,7 @@ export {
     buildStateFromFixture,
     validateStateFixture,
     getStateFixtureById, listStateFixtureIds,
-    FIXTURE_NPC, FIXTURE_SHOP, FIXTURE_QUEST,
+    FIXTURE_NPC, FIXTURE_QUEST,
     FIXTURE_VILLAGE_EVENT, FIXTURE_CUTSCENE_EVENT, FIXTURE_QUEST_EVENT, FIXTURE_QUESTLINE,
     FIXTURE_WEAPON, FIXTURE_ARMOR, FIXTURE_TRINKETS, FIXTURE_ELITE_RELICS, FIXTURE_QUEST_RELIC,
     // Test-only: a map's quest nodes settled so a walker can cross it.
@@ -409,12 +409,23 @@ export type {
     BlacksmithVariantOffer, BlacksmithSession, BlacksmithCardUpgrade,
 } from './World/Blacksmith';
 // Rest-choice encounter — the rest node's one irreversible choice of
-// `rest` / `upgrade` / `cut`, composing the Cards/card.removal primitive rather than
-// rebuilding it.
+// `rest` / `upgrade`.
 export {
     RESTCHOICE_TUNING, createRestChoiceSession, previewRestChoiceHeal,
-    chooseRestChoiceOffer, pickRestChoiceCut, pickRestChoiceUpgrade, claimRestChoiceOutcome,
+    chooseRestChoiceOffer, pickRestChoiceUpgrade, claimRestChoiceOutcome,
 } from './World/RestChoice';
+// Village counters — the paid rest and the card shop (buy a card, or pay to
+// remove one), beside the Anvil.
+export {
+    VILLAGE_TUNING, FRESH_VILLAGE_VISIT,
+    villageRestCounter, villageRestQuote, restAtVillage,
+    villageCardShopSeed, rollVillageCardShop, villageCardShopFor, villageCardQuote, buyVillageCard,
+    villageRemovalQuote, removeVillageCard,
+} from './World/Village';
+export type {
+    VillageCardShop, VillageRestCounter, VillageVisit, VillageQuote, VillageRestQuote,
+    VillageRemovalQuote, VillageHost,
+} from './World/Village';
 export type {
     RestChoiceOfferId, RestChoiceSession,
 } from './World/RestChoice';
