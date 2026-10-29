@@ -68,8 +68,8 @@ the Expo app (`axiomancer-mobile`) presents it.
   Curses. A line whose condition fails or whose SACRIFICE it cannot pay
   cannot be played, and the game says why (`programLineBlock`).
 - **Card mechanics** are DEAL and GUARD (`CardSpecialMechanic`) for the grey
-  cards. The player's keywords are DEAL, GUARD, VULNERABLE and the trial
-  set's six: **SACRIFICE** n (lose n VITAE, unscaled, a cost that never
+  cards. The player's keywords are DEAL, GUARD, VULNERABLE, Blood Price's
+  six: **SACRIFICE** n (lose n VITAE, unscaled, a cost that never
   takes you below 1; one that fires n times counts as n), **WAIVE** (your
   next SACRIFICE this turn costs nothing but still counts), **EXILE** (the
   card leaves combat instead of going to discard), **HEAL** n (mind-scaled,
@@ -91,6 +91,25 @@ the Expo app (`axiomancer-mobile`) presents it.
   (it still counts: TETHER deals that amount, the 🩸 Globals fire, the count
   moves); Ruby Tithe makes it also add LEECH equal to the VITAE paid,
   unscaled, with LEECH's 3 turns.
+  The Elementalist's are the weather and DRAW (`Combat/combat.elements.ts`),
+  all unscaled, lasting the whole combat and stacking by adding:
+  **INFERNO** n burns both sides (at the start of each foe turn the foe loses
+  its INFERNO; at the start of each of your turns you lose half of it, rounded
+  down; plain loss, and yours can kill you; a "foe only" line burns only the
+  foe), **BLIZZARD** n takes n off each foe attack, **FROZEN** comes when the
+  foe is about to attack and its every hit is at most the BLIZZARD (the next
+  DEAL it takes is doubled, then FROZEN ends), **STORM** n makes the foe lose
+  n at the start of its turn, then grows by 1, and **DRAW** n draws n now.
+  BLIZZARD and INFERNO drop by 1 at every round boundary after the round they
+  went up in. The Defender's are the spikes (`Combat/combat.spikes.ts`) and
+  RETRIEVE: **THORNS** n deals n back as a DEAL for each foe strike
+  (heart-scaled when applied, VULNERABLE applies, a FROZEN foe takes it
+  doubled, drops by 1 at every round boundary after its round), **REFLECT**
+  n% sends n% of each strike's damage before GUARD back as a DEAL without
+  reducing what you take (2 turns, a new REFLECT adds its % and refreshes to
+  2, no cap, unscaled), and **RETRIEVE** n returns n random cards from your
+  discard to your hand. Its PAID lines may also cost discarding random cards
+  from your own hand, a cost the engine refuses when it cannot pay.
 - **The starting deck is ten cards:** Blow ×5, Ward ×3, Word ×2
   (`STARTING_CARD_IDS`, `Combat/combat.rewards.ts`). The deck never drops
   below `MIN_COMBAT_DECK_SIZE` = 10.
@@ -151,11 +170,14 @@ the Expo app (`axiomancer-mobile`) presents it.
   signatures, each at its own cost (`SignatureSkill.cost`,
   `Combat/combat.signature.ts`), one per worn signet relic: The Open Hand
   ◆4, Crimson Return ◆5, Ruby Tithe ◆3, Open Vein ◆4, Eye of the Storm ◆6,
-  Kindle the Gale ◆4, Thaw into Thunder ◆3. A signature that would
+  Kindle the Gale ◆4, Thaw into Thunder ◆3, Thorn Mantle ◆5, Mirror Ward
+  ◆3, Hold the Line ◆4. A signature that would
   do nothing is refused with a reason the bar prints (Crimson Return and Ruby
   Tithe while one is already armed); Open Vein never is, its HEAL always lands. The Elementalist's three are refused
   when the weather would not change (no INFERNO on you and no STORM; no foe-only
-  INFERNO; no BLIZZARD).
+  INFERNO; no BLIZZARD). Thorn Mantle is refused with no GUARD to turn into
+  THORNS and Hold the Line while your GUARD is already held; Mirror Ward
+  never is.
 - **GUARD** resets to 0 after each threat phase.
 - **The program ledger** (`CombatEncounterState.program`) exists only when
   the deck holds a trial card: Globals in play with their turns left,
@@ -229,7 +251,7 @@ keyword (`EnemyKeyword = never`).
 
 ## Befriend and mercy
 
-- **Four relics** (`relicLibrary`, `Items/relic.library.ts`), and a run
+- **Ten relics** (`relicLibrary`, `Items/relic.library.ts`), and a run
   starts with none: no relic is handed over at the first node (phase
   SG1). The Suppliant's Ring's signature is The Open Hand; old saves keep
   the ring they were given. Blood Price's three (phase LR1d), all opening the
@@ -240,11 +262,17 @@ keyword (`EnemyKeyword = never`).
   that, no turn ticking off). The Elementalist's three (phase LR1e), opening
   the `elementalist` lane: the Signet (the elite drop's; +5 Heart, +20 max VITAE; Eye
   of the Storm), the Brooch (a quest's; +5 Mind; Kindle the Gale) and the Belt
-  (a quest's; +5 Body; Thaw into Thunder). A worn relic's stat lines and signature are
+  (a quest's; +5 Body; Thaw into Thunder). The Defender's three (phase DF1),
+  opening the `defender` lane: the Thornback Signet (the elite drop's; +5
+  Heart, +20 max VITAE; Thorn Mantle: THORNS equal to your GUARD), the Mirror
+  Brooch (a quest's; +5 Mind; Mirror Ward: REFLECT 50%) and the Carapace Belt
+  (a quest's; +5 Body; Hold the Line: your GUARD is not lost at the end of the
+  foe's next turn); no quest hands the Brooch or the Belt out yet. A worn relic's stat lines and signature are
   read from the library by id, so a saved copy takes the current ones; Heart,
   Body and Mind lines join the fighter's stats for each fight, `maxHp` folds
-  onto `maxHealth`. The elite drop (`rollEliteRelicDrop`) can hand over the
-  Circlet, and no relic is elite-only: a quest may pay any of them; the Breakwater questline's last step pays the Belt (through
+  onto `maxHealth`. The elite drop (`rollEliteRelicDrop`) draws from the
+  three elite-drop relics (the Circlet and the two Signets) the player does
+  not carry, unless the fight lists drops of its own; no relic is elite-only: a quest may pay any of them; the Breakwater questline's last step pays the Belt (through
   `/item-reward`); the dev menu's relic chips, which wear the relic while a
   position is free, hand over the rest; a relic
   carried unworn shows NOT WORN in the satchel, its signature off until the
