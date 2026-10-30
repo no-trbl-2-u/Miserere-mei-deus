@@ -32,7 +32,7 @@
 
 import { befriendHpGateOpen, isEnemyBefriendable } from '../Enemy/befriend';
 import {
-    programArmSacrifice, programSacrificeArmed, programSignatureHeal, programTriggerLeech,
+    programArmSacrifice, programFoeYielding, programSacrificeArmed, programSignatureHeal, programTriggerLeech,
     programSpikeSignature, programSpikeSignatureLive, programWeatherSignature, programWeatherSignatureLive,
 } from './combat.card-program';
 import type {
@@ -114,7 +114,8 @@ export function signatureCastBlock(state: CombatEncounterState, skill: Signature
         case 'mercy':
             if (state.mercyChoiceActive) return 'Mercy is already offered';
             if (!isEnemyBefriendable(state.enemy)) return `${state.enemy.name} will not be befriended`;
-            if (!befriendHpGateOpen(state.enemy)) return `${state.enemy.name} is not yet low enough to spare`;
+            // A YIELDING foe can be spared whatever its VITAE.
+            if (!programFoeYielding(state) && !befriendHpGateOpen(state.enemy)) return `${state.enemy.name} is not yet low enough to spare`;
             return null;
         case 'sacrifice-heals':
             return programSacrificeArmed(state, 'heals') ? 'Your next SACRIFICE already heals you' : null;

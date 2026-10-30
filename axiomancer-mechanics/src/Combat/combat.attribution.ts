@@ -80,13 +80,15 @@ const LINGERING_ROW_ID = '__lingering_afflictions__';
  * PLUS everything it healed back. Heals show as negative `damage-dealt` (card
  * mechanics) or as `enemy-healed` (STAGE / threat `enemyHeal`, playtest fix
  * 2026-09-04 — before that event existed those heals were invisible here and
- * tripped the WI-9 reconciliation warning).
+ * tripped the WI-9 reconciliation warning), or as the heal a `mercy-added`
+ * carries (MERCY heals the foe).
  */
 function enemyHpLost(state: CombatEncounterState): number {
     let enemyHealed = 0;
     for (const ev of state.log) {
         if (ev.kind === 'damage-dealt' && ev.target === 'enemy' && ev.amount < 0) enemyHealed += -ev.amount;
         else if (ev.kind === 'enemy-healed') enemyHealed += ev.amount;
+        else if (ev.kind === 'mercy-added') enemyHealed += ev.healed;
     }
     return Math.max(0, state.enemy.maxHealth - state.enemy.health) + enemyHealed;
 }

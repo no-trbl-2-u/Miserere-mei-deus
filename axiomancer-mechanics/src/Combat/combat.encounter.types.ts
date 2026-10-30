@@ -418,6 +418,17 @@ export type CombatEvent =
     | { kind: 'spikes-changed'; spike: SpikeReading; from: number; to: number }
     /** A foe strike met THORNS or REFLECT: the foe took `amount` back (a DEAL, after VULNERABLE and FROZEN). */
     | { kind: 'spike-struck'; spike: 'thorns' | 'reflect'; amount: number }
+    /** A RADIANCE resolved: it healed you `healed` VITAE, then DEALt that much; `amount` is the VITAE the hit
+     *  took off the foe (after VULNERABLE and FROZEN). Both 0 when the heal restored nothing (full VITAE). */
+    | { kind: 'radiance-struck'; cardId: string; healed: number; amount: number }
+    /** MERCY landed on the foe: `healed` the VITAE it restored, `amount` added to its MERCY total, now `total`,
+     *  bursting at the start of the foe's turn `turnsLeft` foe turns from now. */
+    | { kind: 'mercy-added'; cardId: string; healed: number; amount: number; total: number; turnsLeft: number }
+    /** The MERCY clock ticked down at the start of the foe's turn and did not run out. */
+    | { kind: 'mercy-ticked'; total: number; turnsLeft: number }
+    /** The foe's MERCY burst: a DEAL of twice the `total` (VULNERABLE and FROZEN apply) that took `amount` VITAE
+     *  off the foe; the total then cleared. `onClock` false for a burst a card called early. */
+    | { kind: 'mercy-burst'; total: number; amount: number; onClock: boolean }
     /** A PAID cost discarded these cards from your hand at random. */
     | { kind: 'cards-discarded'; cardIds: string[] }
     /** RETRIEVE returned these cards from your discard to your hand. */

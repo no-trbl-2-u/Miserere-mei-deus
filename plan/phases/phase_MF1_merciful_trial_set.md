@@ -120,8 +120,8 @@ down on the foe and burst for twice its total.
 
 ## Decisions made upfront — DO NOT ASK
 
-- **Names** [T to confirm #1]: the ledger's drafted names ship (`## Revisions`, "Names"). T edits any on this PR.
-- **The ring's source** [T to confirm #2]: the Suppliant's Ring gets `relicSource: 'elite'` and joins the elite drop
+- **Names** Accepted at merge (default): the ledger's drafted names ship (`## Revisions`, "Names"). T edits any on this PR.
+- **The ring's source** Accepted at merge (default): the Suppliant's Ring gets `relicSource: 'elite'` and joins the elite drop
   pool, so a Merciful run can find it; until then it stays reachable from `/dev`.
 - **Numbers**: T, 2026-10-30, "make your recommended changes": the sims' changes 1 to 5 and 8, as the ledger's "The
   numbers" table lists; every other number is as voted with T's notes and rulings. They live in the one trial-set
