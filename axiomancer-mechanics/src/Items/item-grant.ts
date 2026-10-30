@@ -33,7 +33,7 @@
  *     (explicit `equipment`, empty `inventory`) honest without duplicating a
  *     row for the common case.
  *   - **Pure.** `Character → Character`, no throws, no global state. The
- *     granted item is deep-cloned on the way in, matching `buyItem` /
+ *     granted item is deep-cloned on the way in, matching
  *     `resolveLootCache`, so two grants of the same
  *     library row never alias each other.
  *

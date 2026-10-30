@@ -66,6 +66,12 @@ describe('the former gathering nodes are empty waypoints (A2)', () => {
         });
     });
 
+    it('the Breakwater has no empty waypoint: every one of its nodes carries a pool', () => {
+        const def = getMapDefinition('coastal-continent', 'breakwater');
+        const bare = def.nodes.filter(n => getNodeEventPool('coastal-continent', 'breakwater', n.id) === undefined);
+        expect(bare.map(n => n.id)).toEqual([]);
+    });
+
     const cases = Object.entries(ACT1_WAYPOINT_NODES).flatMap(([map, ids]) => ids.map(id => [map, id] as const));
 
     it.each(cases)('%s %s carries no pool and resolves to nothing', (map, nodeId) => {

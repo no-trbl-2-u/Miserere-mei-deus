@@ -122,8 +122,12 @@ function undirected(def: MapDefinition, passages: ReadonlyArray<{ from: string; 
     return adj;
 }
 
-/** The region's exit: its one door to another map, else its one last-column dead end. */
-function exitOf(continent: ContinentName, map: MapName, def: MapDefinition): string {
+/**
+ * The region's exit: its one door to another map, else its one last-column
+ * dead end. Throws on a map with two doors or no single dead end; exported for
+ * the test that pins those refusals (`act1-walk.exit.test.ts`).
+ */
+export function exitOf(continent: ContinentName, map: MapName, def: MapDefinition): string {
     const doors = def.nodes.filter(n => {
         const p = getNodeEventPool(continent, map, n.id)?.entries[0]?.payload;
         return p?.kind === 'travel' && 'map' in p.destination;

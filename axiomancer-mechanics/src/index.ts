@@ -196,7 +196,6 @@ export {
     wornPerSlot, isEquippedFirstOfSlot, findEquippedInSlot,
     SLOT_CAPACITY,
     consumableLibrary, getConsumableById,
-    buyItem, sellItem, defaultSellPrice,
     relicLibrary, getRelicById, relicLaneId, wornLaneCounts,
     // The shared grant/equip/swap path. `equipItem` never returns the displaced
     // piece (weapon/armor replace in place; a full relic row is a guarded
@@ -210,7 +209,6 @@ export type {
     Item, Equipment, Consumable, Material, QuestItem,
     EquipmentSlot,
     CacheLootTier,
-    ShopWare,
     GrantOutcome,
 } from './Items';
 
