@@ -85,6 +85,7 @@ const ALLOWED = new Set([
     path.join('axiomancer-mechanics', 'src', 'Cards', 'e2e', 'defender.engine.test.ts'),
     path.join('axiomancer-mechanics', 'src', 'Cards', 'library', 'merciful.cards.ts'),
     path.join('axiomancer-mechanics', 'src', 'Cards', 'e2e', 'merciful.engine.test.ts'),
+    path.join('axiomancer-mechanics', 'src', 'Cards', 'e2e', 'merciful-lines.engine.test.ts'),
     path.join('axiomancer-mobile', 'assets', 'images', 'cards', 'index.ts'),
 ]);
 const SKIP_DIRS = new Set(['node_modules', '.expo', '.audit-dist', '.smoke-dist', 'dist', 'android', 'ios', 'screenshots']);
