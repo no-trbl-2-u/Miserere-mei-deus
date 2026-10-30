@@ -2053,14 +2053,17 @@ export function enemyWordChips(state: CombatEncounterState, side: 'enemy' | 'pla
     if (w.brine > 0) out.push(chip('Brine', w.brine, 0, '≋', 'statdown'));
     if ((w.tangle ?? 0) > 0) out.push(chip('Tangle', w.tangle!, 0, '#', 'control'));
     if (w.leechTurns > 0 && w.leechPotency > 0) out.push(chip('Leech', w.leechPotency, w.leechTurns, '∿', 'dot'));
-    if (w.undertow) out.push(chip('Undertow', 1, 0, '↓', 'control', `${undertowDieName(w.undertow)} die lifted from your next roll`));
+    if (w.undertow && w.undertowAlso) {
+        out.push(chip('Undertow', 2, 0, '↓', 'control',
+            `${undertowDieName(w.undertow)} and ${undertowDieName(w.undertowAlso)} dice lifted from your next roll`));
+    } else if (w.undertow) out.push(chip('Undertow', 1, 0, '↓', 'control', `${undertowDieName(w.undertow)} die lifted from your next roll`));
     return out;
 }
 
 /**
  * A foe's own counters (`state.enemyRiders`): not keywords, only fight state
- * the board reads out. The cards the Green Jelly HOLDS and the Tolls the
- * Curfew-Ringer has rung stand on the foe's side; the curfew it left you
+ * the board reads out. The cards the Green Jelly HOLDS, the Tolls the
+ * Curfew-Ringer has rung and the Cave Choir's VERSE stand on the foe's side; the curfew it left you
  * stands on yours. Live numbers, like GUARD; never on the telegraph.
  */
 export function foeCounterChips(state: CombatEncounterState, side: 'enemy' | 'player'): CombatEffectChipVM[] {
@@ -2077,6 +2080,11 @@ export function foeCounterChips(state: CombatEncounterState, side: 'enemy' | 'pl
         const held = r.held?.length ?? 0;
         if (held > 0) out.push(chip('held', 'Held', held, '◍', GLYPH_COLORS.control, ENEMY_COUNTER_GLOSS.held));
         if ((r.tolls ?? 0) > 0) out.push(chip('toll', 'Toll', r.tolls!, '♪', GLYPH_COLORS.dot, ENEMY_COUNTER_GLOSS.toll));
+        // The Cave Choir's VERSE (phase EN1j).
+        if ((r.verse ?? 0) > 0) {
+            out.push(chip('verse', 'Verse', r.verse!, '♫', GLYPH_COLORS.dot, ENEMY_COUNTER_GLOSS.verse,
+                'Crescendo and the Amen hit harder per verse'));
+        }
     } else if ((r.curfew ?? 0) > 0) {
         const left = Math.max(0, r.curfew! - (r.played ?? 0));
         out.push(chip('curfew', 'Curfew', left, '☾', GLYPH_COLORS.statdown, ENEMY_COUNTER_GLOSS.curfew, `${left} of ${r.curfew} plays left`));
@@ -2089,6 +2097,7 @@ const ENEMY_COUNTER_GLOSS = {
     held: 'Cards the foe has swallowed, out of your discard. They drop back into your discard when it spits them out.',
     toll: 'Tolls the foe has rung this fight. Each new Toll hits harder for every one already rung.',
     curfew: "A curfew: this turn only this many more cards can be played, FREE or PAID. It ends at the foe's next turn.",
+    verse: 'Verses the choir has sung. Each Hymn adds one. Crescendo hits for each. The Amen spends them all, hitting and mending for each.',
 } as const;
 
 /** The die an UNDERTOW lifts, by the name the dice wear on the board. */
@@ -2126,6 +2135,7 @@ export function effectChipA11y(e: CombatEffectChipVM): string {
         : e.effectId === 'program-yielding' ? 'while it holds'
         : e.effectId === 'program-mercy' ? `bursts in ${e.duration} turn${e.duration === 1 ? '' : 's'}`
         : e.effectId === 'enemy-counter-curfew' ? "until the foe's next turn"
+        : e.effectId === 'enemy-counter-verse' ? 'until the Amen spends it'
         : e.effectId.startsWith('enemy-counter-') ? 'a count that lasts the fight'
         : ENEMY_WORD_SPAN[e.effectId] ?? (e.effectId.startsWith('enemy-word-') && e.duration <= 0 ? "until the foe's next turn" : `${e.duration} turns left`);
     return `${e.glyph.label}, intensity ${e.intensity}${e.unit ?? ''}, ${span}${e.caption ? `. ${e.caption}` : ''}`;

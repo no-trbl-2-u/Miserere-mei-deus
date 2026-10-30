@@ -78,11 +78,32 @@ describe('the fields, quays, pier and town: each node\'s foe fires its DANGER at
     });
 });
 
-describe('the elite slots still hold the Green Jelly, staged as an elite', () => {
+describe('the sea cave draws the Cave Choir, which fires both its DANGERs at its lines (phase EN1j)', () => {
+    it('bw-c1', () => {
+        let s = fightAt('bw-c1');
+        const choir = ENEMY_REGISTRY['cave-choir'];
+        expect(s.enemy.id).toBe(choir.id);
+        expect(s.enemy.difficulty).toBe('elite');
+        expect(s.enemy.level).toBe(5);
+        for (const [phase, line, danger] of [[1, 0.6, 'Toll for the Drowned'], [2, 0.3, 'Amen']] as const) {
+            const crossed = resolveThreatPhase({ ...s, enemy: { ...s.enemy, health: Math.floor(s.enemy.maxHealth * line) } }, rng);
+            expect(crossed.events).toContainEqual({ kind: 'enemy-phase-entered', enemyId: choir.id, phase, danger });
+            s = crossed.state;
+            expect(telegraph(s)).toMatchObject({ phase, danger: true, kind: 'danger', name: danger });
+            const res = resolveThreatPhase(s, rng);
+            expect(fired(res.events)[0]).toMatch(new RegExp(`^${danger}: `));
+            expect(telegraph(res.state)).toMatchObject({ phase, step: 0, danger: false });
+            s = res.state;
+        }
+        expect(telegraph(s)).toMatchObject({ name: 'Antiphon', kind: 'unknown' });
+    });
+});
+
+describe('the other elite slots still hold the Green Jelly, staged as an elite', () => {
     // The Green Jelly is a normal on its own; the elite nodes stage it at the
     // elite tier until their own foes land, so the elite reward, respawn and
     // phase lines keep working there.
-    it.each(['bw-c1', 'bw-l4', 'bw-w5'])('%s', (nodeId) => {
+    it.each(['bw-l4', 'bw-w5'])('%s', (nodeId) => {
         const s = fightAt(nodeId);
         expect(s.enemy.id).toBe(ENEMY_REGISTRY['green-jelly'].id);
         expect(s.enemy.difficulty).toBe('elite');

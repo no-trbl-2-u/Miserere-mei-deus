@@ -20,7 +20,7 @@ import { getMapDefinition, getNodeEventPool, isEliteNode, eliteRelicDropsAt } fr
 import { BREAKWATER_CHAPTER_HELD } from '../Continents/Coastal-Village/breakwater-chapter';
 import { ENEMY_REGISTRY } from '../../Enemy/enemy.library';
 import { payloadDifficulty } from '../encounter-tier';
-import { BW_ENCOUNTER_FOES } from '../MapEvents/content';
+import { BW_ELITE_DRAWS, BW_ENCOUNTER_FOES } from '../MapEvents/content';
 import type { Enemy } from '../../Enemy/types';
 
 const ACT1_MAPS = [
@@ -57,11 +57,15 @@ describe.each(ACT1_MAPS)('Act 1 fights on %s / %s (D30, D61)', (continent, mapNa
         expect(bosses[0]!.node.location[0]).toBe(lastColumn);
     });
 
-    it('stages the Green Jelly as its elite — once before the door, or on each held elite node', () => {
+    it('stages its elites — the Green Jelly once before the door, or its own draw on each held elite node', () => {
         const elites = fights.filter(f => f.difficulty === 'elite');
         if (staged) {
             expect(elites.map(f => f.node.id).sort()).toEqual([...staged.elites].sort());
-            for (const e of elites) expect(e.payload.enemySlug, e.node.id).toBe('green-jelly');
+            // A node with a `BW_ELITE_DRAWS` row draws from it (EN1j); the rest hold the Green Jelly.
+            for (const e of elites) {
+                const draw = mapName === 'breakwater' ? BW_ELITE_DRAWS[e.node.id] : undefined;
+                expect(e.payload.enemySlug, e.node.id).toBe(draw?.[0]?.slug ?? 'green-jelly');
+            }
             for (const id of staged.elites) expect(BREAKWATER_CHAPTER_HELD as readonly string[]).toContain(id);
             return;
         }
