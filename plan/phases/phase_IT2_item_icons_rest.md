@@ -32,23 +32,24 @@ relic has its own mark, and the inventory's fallback glyphs come from the icon r
 hand-drawn one-offs.
 
 Measure: every id in the consumable and relic libraries resolves to its own `ITEM_GLYPH_BY_ID` entry (no
-library item takes the fallback), `components/inventory/` contains no `<Svg`, and
+library item takes the fallback), `components/inventory/` contains no `<Svg` but the material glyph's, and
 `npm run verify -w axiomancer-mobile` is green.
 
 ## Acceptance
 
 - **A1** T's picks are recorded in this brief's "T's picks" table: for each slot, one game-icons name
   (author/icon) and any colour accents in T's words. The slots: the three potions; the four relics with
-  no icon (Suppliant's Ring and the Defender's three) `[T to confirm #1]`; the consumable, relic,
-  material and quest category glyphs; the unknown-item mark and the empty-bag drawing
-  `[T to confirm #2]`.
+  no icon (Suppliant's Ring and the Defender's three); the consumable, relic and quest category glyphs;
+  the unknown-item mark and the empty-bag drawing. The material glyph is left out (Confirmed by T,
+  2026-10-30: gathering nodes are gone, so no material drops; a material that returns gets its own icon
+  then).
 - **A2** Each picked icon is in `extract-game-icons.mjs`'s manifest and `game-icon-paths.ts` is
   regenerated from it (D96: the library root is passed in, never defaulted).
 - **A3** `ITEM_GLYPH_BY_ID` gains a row for each of the seven items, and `ITEM_GLYPH_ACCENTS` one for
   each accent T asked for, through #989's accent mechanism (no new colour path, no hex literals).
-- **A4** The category glyphs, the unknown-item mark and the empty-bag drawing draw registry icons; the
-  inline `<Svg>` blocks they replace in `ItemCard.tsx` and `ItemGrid.tsx` are deleted, so
-  `components/inventory/` contains no `<Svg`.
+- **A4** The consumable, relic and quest glyphs, the unknown-item mark and the empty-bag drawing draw
+  registry icons; the inline `<Svg>` blocks they replace in `ItemCard.tsx` and `ItemGrid.tsx` are
+  deleted, so the only `<Svg` left under `components/inventory/` is the material glyph's.
 - **A5** IT1a's library-enumeration test is tightened from "falls back to today's glyph" to "every
   library id has its own table entry", so an item added later without an icon fails a test instead of
   silently wearing a category glyph. The three potions resolve to three distinct names.
@@ -65,9 +66,9 @@ library item takes the fallback), `components/inventory/` contains no `<Svg`, an
   the unknown mark, the bag) get fresh candidates.
 - **Accents use #989's mechanism.** Named hues only (`blood`, `storm`, `ember`, `frost`, or a new named
   hue added to the same map), never a hex literal.
-- **The Defender's three relics are in** `[T to confirm #1]`: they shipped after #989 and draw the
+- **The Defender's three relics are in** (Confirmed by T, 2026-10-30: T picked them): they shipped after #989 and draw the
   shared trinket, so leaving them out would keep the inventory half-iconed.
-- **The unknown-item mark and the empty bag are in** `[T to confirm #2]`: the registry's own rule
+- **The unknown-item mark and the empty bag are in** (Confirmed by T, 2026-10-30: T picked them): the registry's own rule
   forbids inline one-offs, and IT1b's Measure asked for an `<Svg>`-free `components/inventory/`.
 - **Slot: asap.** It is a T act already overdue in `plan/deadlines.md` (2026-10-27), and the MVP demo
   names real item icons.
@@ -82,16 +83,16 @@ of the rest, on T's word ("Might as well start tackling those potion icons now")
 | Potion | `healing-potion` | `delapouite/health-potion` (A) | red liquid (T, 2026-10-29) |
 | Potion | `minor-healing-potion` | `sbed/vial` (A) | red liquid (T, 2026-10-29) |
 | Potion | `greater-healing-potion` | `lorc/perfume-bottle` (D) | red liquid (T, 2026-10-29) |
-| Relic | `relic-disarming-plea` (Suppliant's Ring) | | |
-| Relic | `relic-thornback-signet` | | |
-| Relic | `relic-mirror-brooch` | | |
-| Relic | `relic-carapace-belt` | | |
-| Category | consumable | | |
-| Category | relic | | |
-| Category | material | | |
-| Category | quest | | |
-| Mark | unknown item | | |
-| Drawing | empty bag | | |
+| Relic | `relic-disarming-plea` (Suppliant's Ring) | `lorc/engagement-ring` (B, the hand holding a ring) | the ring gold (T, 2026-10-30) |
+| Relic | `relic-thornback-signet` | `lorc/thorn-helix` (B) | the vine amber (T, 2026-10-30) |
+| Relic | `relic-mirror-brooch` | `lorc/mirror-mirror` (A) | the glass GUARD blue, the frame parchment (T, 2026-10-30) |
+| Relic | `relic-carapace-belt` | `lorc/turtle-shell` (D) | the inner plates amber, the rim parchment (T, 2026-10-30) |
+| Category | consumable | `lorc/bubbling-flask` (A) | none |
+| Category | relic | `lorc/gem-chain` (A) | none |
+| Category | material | left out (T, 2026-10-30) | - |
+| Category | quest | `lorc/key` (A) | none |
+| Mark | unknown item | `sbed/help` (B) | none |
+| Drawing | empty bag | `lorc/knapsack` (A, already registered as `action-bag`) | none |
 
 ## Save / schema contracts
 
@@ -133,5 +134,5 @@ icons; the existing `ItemCard`, `ItemGlyph.by-id` and `item-glyph-accents` suite
 
 Verify gate: `npm run verify -w axiomancer-mobile`, then `npm run verify:visual` for the inventory routes.
 
-Measure: `grep -r "<Svg" axiomancer-mobile/components/inventory` returns nothing, and the A5 test passes
+Measure: `grep -r "<Svg" axiomancer-mobile/components/inventory` finds only the material glyph, and the A5 test passes
 with every library id on its own entry.
