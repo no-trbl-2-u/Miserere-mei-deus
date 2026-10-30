@@ -148,9 +148,9 @@ table exists for T's tuning session.
   Float-Eye and Green Jelly keep their art and frames.
 - **The five more elites (EN1j-EN1l).** All six drafted elites ship; none is cut. Each elite node
   draws one of its two per run, 50/50, from the pool roll the map already makes
-  (`MapEventPool.entries` with two `weight: 1` entries) [T to confirm #3]. Levels: `bw-c1` 5 (both
+  (`MapEventPool.entries` with two `weight: 1` entries) [Accepted at merge (default), #3]. Levels: `bw-c1` 5 (both
   foes), `bw-l4` 7, `bw-w5` 8, all under 10, numbers authored at level 3 and scaled like the
-  Tithe-Collector's [T to confirm #4]. Each elite's counter (VERSE, LIT/DARK, BAIT, TOLL, TIDE) is
+  Tithe-Collector's [Accepted at merge (default), #4]. Each elite's counter (VERSE, LIT/DARK, BAIT, TOLL, TIDE) is
   fight state on `CombatEncounterState.enemyRiders` shown on the enemy pane, not a keyword, like
   the LEDGER. "Turn" in the Appendix means one foe turn.
 - **UNKNOWN by state.** Antiphon and Wrecker's Bait are UNKNOWN moves (kind `unknown` from EN1c).

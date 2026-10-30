@@ -78,29 +78,28 @@ describe('the fields, quays, pier and town: each node\'s foe fires its DANGER at
     });
 });
 
-describe('the sea cave elite: the Tithe-Collector fires Audit at 60% and Foreclose at 30%', () => {
+describe('the sea cave draws the Cave Choir, which fires both its DANGERs at its lines (phase EN1j)', () => {
     it('bw-c1', () => {
-        const row = BW_ENCOUNTER_FOES['bw-c1']!;
-        expect(row).toMatchObject({ slug: 'tithe-collector', level: 5 });
-        const source = ENEMY_REGISTRY['tithe-collector'];
         let s = fightAt('bw-c1');
-        expect(s.enemy.id).toBe(source.id);
+        const choir = ENEMY_REGISTRY['cave-choir'];
+        expect(s.enemy.id).toBe(choir.id);
         expect(s.enemy.difficulty).toBe('elite');
-        expect(s.enemy.level).toBe(row.level);
-        for (const [phase, pct] of [[1, 0.6], [2, 0.3]] as const) {
-            const danger = source.phases![phase]!.danger!;
-            const crossed = resolveThreatPhase({ ...s, enemy: { ...s.enemy, health: Math.floor(s.enemy.maxHealth * pct) } }, rng);
-            expect(crossed.events).toContainEqual({ kind: 'enemy-phase-entered', enemyId: source.id, phase, danger: danger.name });
+        expect(s.enemy.level).toBe(5);
+        for (const [phase, line, danger] of [[1, 0.6, 'Toll for the Drowned'], [2, 0.3, 'Amen']] as const) {
+            const crossed = resolveThreatPhase({ ...s, enemy: { ...s.enemy, health: Math.floor(s.enemy.maxHealth * line) } }, rng);
+            expect(crossed.events).toContainEqual({ kind: 'enemy-phase-entered', enemyId: choir.id, phase, danger });
             s = crossed.state;
-            expect(telegraph(s)).toMatchObject({ phase, danger: true, kind: 'danger' });
+            expect(telegraph(s)).toMatchObject({ phase, danger: true, kind: 'danger', name: danger });
             const res = resolveThreatPhase(s, rng);
-            expect(fired(res.events)[0]).toMatch(new RegExp(`^${danger.name}: `));
+            expect(fired(res.events)[0]).toMatch(new RegExp(`^${danger}: `));
+            expect(telegraph(res.state)).toMatchObject({ phase, step: 0, danger: false });
             s = res.state;
         }
+        expect(telegraph(s)).toMatchObject({ name: 'Antiphon', kind: 'unknown' });
     });
 });
 
-describe('the elite slots hold their own foe or the Green Jelly, staged as an elite', () => {
+describe('the other elite slots still hold the Green Jelly, staged as an elite', () => {
     // The Green Jelly is a normal on its own; the elite nodes stage it at the
     // elite tier until their own foes land, so the elite reward, respawn and
     // phase lines keep working there.

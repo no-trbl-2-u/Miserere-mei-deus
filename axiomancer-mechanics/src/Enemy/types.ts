@@ -293,8 +293,8 @@ export interface EnemyMove {
     leech?: number;
     /** TANGLE n: your next n cards cannot use their FREE line (a count, not scaled by level). */
     tangle?: number;
-    /** UNDERTOW: the named die does not roll on your next turn. */
-    undertow?: 'heart' | 'body' | 'mind' | 'random';
+    /** UNDERTOW: the named die does not roll on your next turn; a pair names two; `random` is the gull-call's pick. */
+    undertow?: 'heart' | 'body' | 'mind' | 'random' | readonly ['heart' | 'body' | 'mind', 'heart' | 'body' | 'mind'];
     /** BARNACLE n: n Barnacle Curses join your hand (a count, not scaled by level). */
     barnacle?: number;
     /** The move's one conditional effect, resolved in `Combat/combat.enemy-riders.ts`.
@@ -346,6 +346,11 @@ export interface EnemyMove {
  *   ward-per-conviction      WARD `per` for each Conviction you hold.
  *   audit                    one hit of `damage` per LEDGER, then the LEDGER clears.
  *   foreclose                takes all your Conviction: one hit of `damage` and WARD `ward` per point taken.
+ *   verse-gain               adds `verse` to the foe's VERSE count.
+ *   verse-hit                one hit of `damage` per VERSE.
+ *   verse-amen               spends every VERSE: one hit of `damage` per VERSE, and it MENDs the same.
+ *   antiphon                 answers your last turn: you dealt it damage, WARD `ward`; else `hits`
+ *                            hits of `damage` and +`verse` VERSE.
  */
 export type EnemyMoveRider =
     | { kind: 'unplayed-card-bonus'; damage: number }
@@ -385,7 +390,12 @@ export type EnemyMoveRider =
     | { kind: 'garnish'; take: number; bonus: number; perLien?: number }
     | { kind: 'ward-per-conviction'; per: number }
     | { kind: 'audit'; damage: number }
-    | { kind: 'foreclose'; damage: number; ward: number };
+    | { kind: 'foreclose'; damage: number; ward: number }
+    // The Cave Choir (phase EN1j).
+    | { kind: 'verse-gain'; verse: number }
+    | { kind: 'verse-hit'; damage: number }
+    | { kind: 'verse-amen'; damage: number }
+    | { kind: 'antiphon'; ward: number; damage: number; hits: number; verse: number };
 
 /** A rider's kind, e.g. `half-guard`. */
 export type EnemyMoveRiderKind = EnemyMoveRider['kind'];

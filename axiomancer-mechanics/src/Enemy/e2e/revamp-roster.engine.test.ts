@@ -38,16 +38,19 @@ describe('the R2 roster', () => {
     it('ENEMY_REGISTRY is exactly sandbag, the three survivors and Chapter 1 normals', () => {
         expect(Object.keys(ENEMY_REGISTRY).sort())
             .toEqual([
-                'brine-widow', 'crane-hook', 'curfew-ringer', 'death-beholder', 'float-eye', 'gallows-crow',
+                'brine-widow', 'cave-choir', 'crane-hook', 'curfew-ringer', 'death-beholder', 'float-eye', 'gallows-crow',
                 'green-jelly', 'lamprey-knot', 'net-mender', 'sandbag', 'smokehouse-gutter', 'tithe-collector',
                 'wreck-picker',
             ]);
         expect(EnemyLibrary.map(e => e.id)).toEqual([
             'enemy-float-eye', ...CHAPTER1_IDS, 'enemy-green-jelly', 'enemy-curfew-ringer', ...CLIFF_IDS,
-            'enemy-death-beholder',
+            'enemy-cave-choir', 'enemy-death-beholder',
         ]);
         expect([...LIVE_ENEMY_IDS].sort())
-            .toEqual([...SURVIVOR_IDS, ...CHAPTER1_IDS, 'enemy-curfew-ringer', ...CLIFF_IDS, ENEMY_REGISTRY.sandbag.id].sort());
+            .toEqual([
+                ...SURVIVOR_IDS, ...CHAPTER1_IDS, 'enemy-curfew-ringer', ...CLIFF_IDS, 'enemy-cave-choir',
+                ENEMY_REGISTRY.sandbag.id,
+            ].sort());
     });
 
     it('no survivor carries a keyword, and no stage grants one', () => {

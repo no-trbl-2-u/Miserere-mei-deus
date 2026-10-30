@@ -96,6 +96,14 @@ export function scaleRider(rider: EnemyMoveRider, scale: (n: number) => number):
         case 'inferno-both':
         case 'ward-per-conviction':
             return rider;
+        // The Cave Choir (phase EN1j).
+        case 'verse-hit':
+        case 'verse-amen':
+            return { ...rider, damage: scale(rider.damage) };
+        case 'antiphon':
+            return { ...rider, ward: scale(rider.ward), damage: scale(rider.damage) };
+        case 'verse-gain':
+            return rider;
     }
 }
 
@@ -259,6 +267,11 @@ export function planRiderTurn(state: CombatEncounterState, action: CombatThreatA
                 break;
             case 'foreclose':
                 effects = withHits(effects, [rider.damage * state.conviction]);
+                break;
+            case 'verse-hit':
+            case 'verse-amen':
+            case 'antiphon':
+                effects = planVerseMove(state, effects, rider);
                 break;
             default:
                 break;
@@ -566,6 +579,14 @@ export function applyRiderAfterMove(
             state = { ...state, enemyRiders: { ...riders(), curfew: rider.cards } };
             events.push({ kind: 'enemy-rider', rider: rider.kind, amount: rider.cards });
             break;
+        case 'verse-gain':
+        case 'verse-amen':
+        case 'antiphon': {
+            const after = verseAfterMove(state, rider);
+            state = after.state;
+            events.push(...after.events);
+            break;
+        }
         default:
             break;
     }
@@ -723,3 +744,66 @@ const lengthenStep: PlayStep = (before, after) => {
     }
     return { state: after, events: [] };
 };
+
+// ─── The Cave Choir's VERSE (phase EN1j) ─────────────────────────────────────
+//
+// VERSE is fight state on the foe (`enemyRiders.verse`), not a keyword: each
+// Hymn adds to it, Crescendo hits for it, and the Amen spends all of it.
+
+/** The Cave Choir's VERSE: how many verses it has sung this fight. */
+export function verseOf(state: Pick<CombatEncounterState, 'enemyRiders'>): number {
+    return state.enemyRiders?.verse ?? 0;
+}
+
+/** How the Antiphon answers your last turn. */
+export type AntiphonAnswer = 'pews' | 'hymn';
+
+/**
+ * The Antiphon's read of your last turn: you attacked (you dealt the foe
+ * damage since its last turn ended) and it answers with The Pews; otherwise
+ * (you guarded, or did neither) it answers with a Hymn. Read on the board
+ * your turn left: what you dealt is only re-marked when the foe's turn ends,
+ * so the plan and the after-move read the same answer.
+ */
+export function antiphonAnswer(state: Pick<CombatEncounterState, 'directDamageDealt' | 'enemyRiders'>): AntiphonAnswer {
+    return dealtSinceFoeTurn(state) > 0 ? 'pews' : 'hymn';
+}
+
+type VerseRider = Extract<EnemyMoveRider, { kind: 'verse-hit' | 'verse-amen' | 'antiphon' }>;
+
+/** A VERSE move's effects from the board: Crescendo's hit, the Amen's hit and MEND, the Antiphon's answer. */
+function planVerseMove(state: CombatEncounterState, effects: CombatThreatEffect[], rider: VerseRider): CombatThreatEffect[] {
+    const verse = verseOf(state);
+    switch (rider.kind) {
+        case 'verse-hit':
+            return withHits(effects, [rider.damage * verse]);
+        case 'verse-amen': {
+            const total = rider.damage * verse;
+            return total > 0 ? [...withHits(effects, [total]), { enemyHeal: total }] : withHits(effects, []);
+        }
+        case 'antiphon':
+            return antiphonAnswer(state) === 'pews'
+                ? [...effects.filter(e => !isHit(e)), { ward: rider.ward }]
+                : withHits(effects, Array.from({ length: rider.hits }, () => rider.damage));
+    }
+}
+
+/** What a VERSE move leaves: a Hymn's verses added, the Amen's spent. */
+function verseAfterMove(
+    state: CombatEncounterState, rider: Extract<EnemyMoveRider, { kind: 'verse-gain' | 'verse-amen' | 'antiphon' }>,
+): { state: CombatEncounterState; events: CombatEvent[] } {
+    const verse = verseOf(state);
+    const withVerse = (n: number): CombatEncounterState => ({ ...state, enemyRiders: { ...state.enemyRiders, verse: n } });
+    switch (rider.kind) {
+        case 'verse-gain':
+            return { state: withVerse(verse + rider.verse), events: [{ kind: 'enemy-rider', rider: rider.kind, amount: rider.verse }] };
+        case 'verse-amen':
+            if (verse <= 0) return { state, events: [] };
+            return { state: withVerse(0), events: [{ kind: 'enemy-rider', rider: rider.kind, amount: verse }] };
+        case 'antiphon':
+            if (antiphonAnswer(state) === 'pews') {
+                return { state, events: [{ kind: 'enemy-rider', rider: rider.kind, amount: 0 }] };
+            }
+            return { state: withVerse(verse + rider.verse), events: [{ kind: 'enemy-rider', rider: rider.kind, amount: rider.verse }] };
+    }
+}

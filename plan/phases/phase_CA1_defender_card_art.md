@@ -49,11 +49,14 @@ Size: multi-phase (CA1a M, CA1b S).
 - **A1** `art-department/tools/split-card-sheet.py --sheet <master> --manifest <manifest.json> --out <dir>` finds the
   magenta gutters, cuts each tile named in the manifest to a lossless PNG named `<card id>.png`, skips a `null` tile,
   and refuses (non-zero exit, a message naming the file) a sheet whose grid is not the manifest's, a tile more than 4%
-  off square or under 400 px, or a tile that still holds gutter colour after a 3 px inset trim. It warns, naming the
-  card, when a tile's outer ring is not near black.
+  off square or under 400 px, or a tile whose edge band (the outer 4 px after a 3 px inset trim) still holds gutter
+  colour. Magenta inside a tile is the painting's own colour and is kept: the Elementalist's STORM lightning glows
+  pink-violet well inside the gutter test (T's sheets, 2026-10-30, refused by the first prototype). It warns, naming
+  the card, when a tile's outer ring is not near black.
 - **A2** `art-department/tests/test_split_card_sheet.py` (run by `run-tests.py`) builds synthetic sheets in the test
   and pins: a good 3 x 2 sheet gives six named cells; a `null` tile is skipped; a 3 x 1 sheet, a non-square tile and a
-  fringe left in a tile are each refused; the warning fires on a grey ring. No test reads the committed masters.
+  fringe left on a tile's edge are each refused; a magenta stroke in a tile's middle is kept; the warning fires on a
+  grey ring. No test reads the committed masters.
 - **A3** The 30 Defender paintings ship as `axiomancer-mobile/assets/images/cards/df-*.webp`, cut from the five
   committed masters by A1's tool and encoded by `ingest-art.mjs --no-grade` (in colour, longest edge 640, q44), with
   one `provenance.json` entry covering all 30 that names the masters, the prompts, the tool and T's approval.
@@ -124,6 +127,9 @@ Size: S. Requires nothing (runs beside CA1a; different workspace).
 Both phases merged; a Defender hand shows its own paintings under their action names on a local web build.
 
 ## Follow-ups
+
+- Amended 2026-10-30 before any build: A1 and A2 refuse gutter colour only on a tile's edge, after the
+  Elementalist's lightning tripped the prototype's whole-tile check.
 
 - Redo the four early Defender paintings with animal shapes (T paints; a new master; re-run A3's commands).
 - The Merciful's paintings and names (plotted next, reusing CA1a's tool).

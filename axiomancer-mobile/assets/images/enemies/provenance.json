@@ -65,11 +65,12 @@
     "covers": [
       "wreck-picker.webp",
       "smokehouse-gutter.webp",
-      "tithe-collector.webp"
+      "tithe-collector.webp",
+      "cave-choir.webp"
     ],
-    "source": "the 2026-07-06 temp art drop (see the float-eye record): wreck-picker.webp was hag.webp, smokehouse-gutter.webp was butcher.webp, tithe-collector.webp was bone-wizard-b.webp; the stand-ins T saw on the Breakwater Bestiary page",
+    "source": "the 2026-07-06 temp art drop (see the float-eye record): wreck-picker.webp was hag.webp, smokehouse-gutter.webp was butcher.webp, tithe-collector.webp was bone-wizard-b.webp, cave-choir.webp was zoma-a.webp; the stand-ins T saw on the Breakwater Bestiary page and its Elites tab",
     "used_by": [
-      "assets/images/enemies/index.ts (registry - the portraitAsset of the Wreck-Picker, the Smokehouse Gutter and the Tithe-Collector since phase EN1h)"
+      "assets/images/enemies/index.ts (registry - the portraitAsset of the Wreck-Picker, the Smokehouse Gutter and the Tithe-Collector since phase EN1h, and of the Cave Choir, the sea cave's second elite, since phase EN1j)"
     ],
     "license": "open source (T, 2026-10-29, D115)",
     "license_note": "stand-in until T's portrait swap. Owner-supplied external illustration (no source traced). T, 2026-10-29, D115: \"The images we use for everything are open source.\" No sprite sheets (D97)."

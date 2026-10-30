@@ -49,6 +49,7 @@ describe('per-foe aftermath narrative lines (art-driven roster)', () => {
         'enemy-gallows-crow', 'enemy-net-mender', 'enemy-crane-hook',
         'enemy-brine-widow', 'enemy-lamprey-knot', 'enemy-curfew-ringer',
         'enemy-wreck-picker', 'enemy-smokehouse-gutter', 'enemy-tithe-collector',
+        'enemy-cave-choir',
     ]);
 
     it('Chapter 1\'s description-only foes carry no aftermath prose yet', () => {
