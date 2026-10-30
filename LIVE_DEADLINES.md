@@ -12,8 +12,10 @@
 | 2026-10-29 (1 day overdue) | Author the first character: portrait, starting relic and its lane, two starting lanes, three lane cards, the playstyle line (1 h) | needs you: CH1e ready for you | W1 |
 | 2026-10-30 (today) | W1 demo part 1: T plays the ten hard candidates (1 h) | needs you: your task | W1 |
 | 2026-10-31 (tomorrow) | Enemy session 2: Chapter 1's three elites and the sea keep's boss (1 h) | needs you: your task | W1 |
+| 2026-10-31 (tomorrow) | Pitch Chapter 1's weapons and armor: how many of each, what each does, where each drops, and settle them (1 h) | needs you: your task | W1 |
 | 2026-11-01 (in 2 days) | W1 demo part 2: T plays the twenty cost-card candidates and rules keep or cut (2 h) | needs you: HP4e ready for you | W1 |
 | 2026-11-02 (in 3 days) | Plot Chapter 1's enemies and their art brief from the two sessions (1 h) | needs you: B2 ready for you | W1 |
+| 2026-11-02 (in 3 days) | Plot Chapter 1's weapons and armor from the pitch (0.5 h) | needs a plot: no build-plan rows yet | W1 |
 | 2026-11-03 (in 4 days) | Live hazard routing (each of the eleven Act 1 hazard nodes, six of them the Breakwater's, draws a random puzzle from the thirty) and the cuts (plot, 1 h) | needs a plot: no build-plan rows yet | W2 |
 | 2026-11-04 (in 5 days) | Event kind 1, encounter: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (1 h) | needs a plot: no build-plan rows yet | W2 |
 | 2026-11-05 (in 6 days) | Event kind 2, hazard: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (1 h) | needs a plot: no build-plan rows yet | W2 |
