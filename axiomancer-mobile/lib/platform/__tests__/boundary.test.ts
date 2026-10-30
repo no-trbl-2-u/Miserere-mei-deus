@@ -40,6 +40,7 @@ const GUARDED_PACKAGES = [
     'expo-router',
     'expo-image',
     'expo-haptics',
+    'expo-audio',
     'expo-font',
     'expo-splash-screen',
     'expo-navigation-bar',

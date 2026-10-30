@@ -35,6 +35,7 @@ import { TravelGate } from '@/components/TravelGate';
 import { EventGate } from '@/components/EventGate';
 import { HazardGate } from '@/components/HazardGate';
 import { CombatGate } from '@/components/CombatGate';
+import { BackgroundMusic } from '@/components/BackgroundMusic';
 import { LabyrinthGate } from '@/components/LabyrinthGate';
 import { ItemRewardGate } from '@/components/item-reward/ItemRewardGate';
 import { RestGate } from '@/components/RestGate';
@@ -281,6 +282,7 @@ function RootLayout() {
           <EventGate />
           <HazardGate />
           <CombatGate />
+          <BackgroundMusic />
           <RestGate />
           <CacheGate />
           <QuestGate />

@@ -87,7 +87,8 @@ change and a corrupt save leave it alone.
 | TEXT SIZE | 0.9 · 1 · 1.15 · 1.3 | `makeStyles` scales every `fontSize` / `lineHeight` (`scaleTextStyles`); chrome metrics hold |
 | REDUCED MOTION | system · on · off | `hooks/useReducedMotion.ts` — the OS switch, overridable |
 | HAPTICS | on · off | `lib/platform/haptics.ts` — `hapticsAllowed()` reads the store synchronously |
-| MUSIC / SOUND EFFECTS | 0–100 | persisted only — **no audio system plays yet**; the screen says so |
+| MUSIC | 0–100 | `components/BackgroundMusic.tsx` — T's theme loops under the whole game, paused while a fight or hazard is staged (`state/presenters/music.engine.ts`) |
+| SOUND EFFECTS | 0–100 | persisted only — **no sound effects play yet**; the screen says so |
 | STORY MODE | — | listed as COMING SOON, disabled; nothing persisted |
 | SAVE & RETURN TO TITLE *(in a run)* | — | `returnToTitleAction` (save + flush) then `/?menu=1` |
 | RESET SETTINGS | — | confirmation, then `settingsStore.reset()` |

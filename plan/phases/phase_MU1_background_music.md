@@ -62,11 +62,11 @@ is green.
 - **Pause is decided from game state, not routes.** The same selectors the gates use decide it, so a fight
   or hazard counts the moment it is staged, wherever the player is, and dev entry points behave like real
   ones.
-- **Fades.** Fade in over 2 seconds on resume, fade out over 0.5 seconds into a pause. [T to confirm #1]
+- **Fades.** Fade in over 2 seconds on resume, fade out over 0.5 seconds into a pause. Accepted at merge (default).
 - **The title screen plays it too**, since T said "all game": the track starts on boot (on web, on the
-  first touch). [T to confirm #2]
+  first touch). Accepted at merge (default).
 - **The app in the background is silent.** When Android sends the app to the background (home button,
-  screen off), the music pauses, and it resumes with the same fade on return. [T to confirm #3]
+  screen off), the music pauses, and it resumes with the same fade on return. Accepted at merge (default).
 - **The combat prelude keeps the music**; it pauses when the fight itself is staged
   (`selectIsInCombat`), the same moment `CombatGate` routes.
 - **Volume is linear**, `musicVolume / 100`, the setting's existing scale; no new setting.
