@@ -68,8 +68,9 @@ const MECHANIC_KEYWORD: Record<string, string> = {
  * (GUARD/VULNERABLE), the Blood Price trial cards (SACRIFICE, WAIVE, EXILE,
  * HEAL, TETHER, LEECH), the Elementalist's weather (INFERNO, BLIZZARD, FROZEN,
  * STORM, DRAW), the Defender's spikes (THORNS, REFLECT, RETRIEVE), the
- * healing potions (HEAL), the Merciful's RADIANCE, MERCY and YIELDING, a map hazard (BLEED) and the dice system (PIP,
- * BOON, HONE, TEMPER).
+ * healing potions (HEAL), the Merciful's RADIANCE, MERCY and YIELDING, a map
+ * hazard (BLEED), the dice system (PIP, BOON, HONE, TEMPER) and the enemy
+ * words (WARD, MEND, SCOUR, BRINE, with VULNERABLE and LEECH landing on you).
  *
  * TERSE GLOSSES: every gloss is ONE short
  * sentence in the Dawncaster register ("Cards with Lifedrain restore health
@@ -90,9 +91,12 @@ const KEYWORD_GLOSS: Record<string, string> = {
     // ── Affliction ──
     Bleed: 'Each hit the bearer takes deals 3 more VITAE per Bleed stack, then removes a stack.',
     Vulnerable:
-        'The foe takes that much more damage from every hit. Adding more stacks it and refreshes the turns.',
+        'The bearer takes that much more damage from every hit, and more stacks it and refreshes the turns. '
+        + 'On you, GUARD still blocks the larger hit.',
     Tether: 'For that many turns, each SACRIFICE makes the foe take damage equal to the VITAE it paid.',
-    Leech: 'Each LEECH adds 3 turns and its number to the potency. At the start of its turn the foe loses the potency in VITAE and you heal what it lost.',
+    Leech:
+        'Each LEECH adds 3 turns and its number to the potency. '
+        + 'At the start of its turn the bearer loses the potency in VITAE and the other side heals it, so race a LEECH on you.',
     // ── The weather (the Elementalist trial set) ──
     Inferno:
         'Both sides burn: the foe loses that much VITAE at the start of its turn, and you lose half, rounded down, at the start of yours. '
@@ -107,6 +111,17 @@ const KEYWORD_GLOSS: Record<string, string> = {
         'Each foe strike sends that % of its damage before GUARD back to the foe, and you still take the hit. '
         + 'It lasts 2 turns, and more REFLECT adds to it and refreshes it.',
     Retrieve: 'Return that many random cards from your discard to your hand.',
+    // ── The enemy words: what a foe's move can do, each with its counter ──
+    Ward:
+        "The foe's GUARD: it soaks your DEALs before its VITAE and is gone at the start of its next turn. "
+        + 'VULNERABLE, LEECH and INFERNO get past it.',
+    Mend: 'The foe heals that much VITAE, up to its maximum. Counter it with burst: damage dealt in one turn outruns the heal.',
+    Scour:
+        'The foe strips that many statuses off itself, the last one too: LEECH first, then INFERNO, STORM and its afflictions. '
+        + 'Lay more statuses than it can strip.',
+    Brine:
+        'Each GUARD you gain is cut by that much until the end of your next turn. '
+        + 'Gain your GUARD in one big play, not many small ones.',
     // ── The Merciful (the trial set) ──
     Radiance: 'HEAL that much, then DEAL the VITAE it restored to the foe. At full VITAE it deals nothing.',
     Mercy: 'Heals the foe that much and adds it to its MERCY. The third foe turn after the first MERCY, it bursts for twice the total, then clears.',

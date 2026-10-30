@@ -140,7 +140,7 @@ export function atlasKeywords() {
 /**
  * Atlas rows by section kind (Phase CS1; T, card-spec ballot §9): `card` for
  * the rows under "## Card keywords", `rule` under "## Rule keywords",
- * `system` under "## System terms". The mechanics twin is
+ * `system` under "## System terms", `enemy` under "## Enemy keywords". The mechanics twin is
  * `parseAtlasKeywords` in `src/Cards/card-rules.ts`, which the budget lint
  * reads.
  */
@@ -154,6 +154,7 @@ export function atlasKeywordKinds(text = read(PATHS.keywordAtlas)) {
       kind = t.startsWith('card keywords') ? 'card'
         : t.startsWith('rule keywords') ? 'rule'
         : t.startsWith('system terms') ? 'system'
+        : t.startsWith('enemy keywords') ? 'enemy'
         : null
       continue
     }

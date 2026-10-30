@@ -1343,6 +1343,12 @@
       "kind": "coupling",
       "from": "area:Combat",
       "to": "area:Effects",
+      "file": "axiomancer-mechanics/src/Combat/combat.enemy-words.resolve.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Effects",
       "file": "axiomancer-mechanics/src/Combat/combat.engine.ts"
     },
     {
@@ -1398,6 +1404,12 @@
       "from": "area:Combat",
       "to": "area:Enemy",
       "file": "axiomancer-mechanics/src/Combat/combat.enemy-decks.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Enemy",
+      "file": "axiomancer-mechanics/src/Combat/combat.enemy-words.resolve.ts"
     },
     {
       "kind": "coupling",

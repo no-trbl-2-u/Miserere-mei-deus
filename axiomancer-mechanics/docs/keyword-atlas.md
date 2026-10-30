@@ -43,8 +43,8 @@ Global's trigger is a condition. `COMPLEXITY_BUDGET` in
 
 | keyword | reminder text | carried by |
 |---|---|---|
-| **VULNERABLE +N% dM** | The foe takes that much more damage from every hit. Adding more stacks it and refreshes the turns. Heart scales N. | grey-word; Blood Price P-05b, P-09b, M-07a |
-| **LEECH N** | Each LEECH adds 3 turns and its number to the potency. At the start of its turn the foe loses the potency in VITAE and you heal what it lost. A debuff with two numbers: each application, the first included, adds 3 turns (`LEECH_TURNS_PER_APPLICATION`) and adds N, heart-scaled when applied, to the potency. Each foe turn the foe loses the potency (unscaled, not a DEAL), you heal what it lost, and a turn ticks off. The potency never decays; at 0 turns LEECH ends and the potency resets. | Blood Price P-06d, E-03d, E-05n, M-01d, M-03d, M-08d; the Ruby Tithe and Open Vein signatures (Ruby Signet, Bleeding Signet) |
+| **VULNERABLE +N% dM** | The bearer takes that much more damage from every hit, and more stacks it and refreshes the turns. On you, GUARD still blocks the larger hit. Heart scales N on a card; a foe's VULNERABLE on you does not scale. | grey-word; Blood Price P-05b, P-09b, M-07a; a foe move's `vulnerable` (Enemy keywords, below) |
+| **LEECH N** | Each LEECH adds 3 turns and its number to the potency. At the start of its turn the bearer loses the potency in VITAE and the other side heals it, so race a LEECH on you. On the foe, a debuff with two numbers: each application, the first included, adds 3 turns (`LEECH_TURNS_PER_APPLICATION`) and adds N, heart-scaled when applied, to the potency. Each foe turn the foe loses the potency (unscaled, not a DEAL), you heal what it lost, and a turn ticks off. The potency never decays; at 0 turns LEECH ends and the potency resets. | Blood Price P-06d, E-03d, E-05n, M-01d, M-03d, M-08d; the Ruby Tithe and Open Vein signatures (Ruby Signet, Bleeding Signet); a foe move's `leech`, on you (Enemy keywords, below) |
 | **TETHER N** | For that many turns, each SACRIFICE makes the foe take damage equal to the VITAE it paid (a DEAL: unscaled, VULNERABLE applies; a WAIVED SACRIFICE deals 0). | Blood Price P-08d, E-02d, E-05n, E-10d |
 | **BLEED** | Each hit the bearer takes deals 3 more VITAE per Bleed stack, then removes a stack. | no live carrier: no card, foe, hazard or item applies `debuff_bleed`; the effect stays in `src/Effects/debuffs.library.json` and mobile still glosses it |
 
@@ -143,10 +143,26 @@ effect (ballot §9). The budget does not count them.
 
 ---
 
-## Enemy keywords (none)
+## Enemy keywords
 
-No enemy carries a keyword (`EnemyKeyword = never`). The three foes fight
-with plain damage from their decks.
+The words a `phases` foe's move may carry (D116; Phase EN1d). Each is a field
+on `EnemyMove` (`src/Enemy/types.ts`), listed in `ENEMY_KEYWORDS`
+(`src/Enemy/enemy-keywords.ts`) and resolved in
+`src/Combat/combat.enemy-words.ts` and `combat.enemy-words.resolve.ts`. Every
+number but VULNERABLE's scales with the foe's level the way its damage does
+(`scaleMoveNumber`). The player's own VULNERABLE and LEECH can also land on
+the player from a foe's move (the `vulnerable` and `leech` fields); their
+rows are above, and their glosses read for either side. VULNERABLE on you is
+`debuff_vulnerable` for the foe's next `turns` attacks; LEECH on you mirrors
+the foe LEECH (3 turns per application, the potency stacks), ticks at the start of your
+turn past GUARD, and the foe heals what you lost.
+
+| keyword | reminder text | carried by |
+|---|---|---|
+| **WARD N** | The foe's GUARD: it soaks your DEALs before its VITAE and is gone at the start of its next turn. VULNERABLE, LEECH and INFERNO get past it. WARD meets only the part of a DEAL before VULNERABLE (FREE, PAID, a program DEAL, TETHER, a MERCY burst); a plain VITAE loss skips it. It lands after the move's hits, so the spikes those hits drew never meet it. `EnemyMove.ward`. | no live foe yet: the Breakwater foes (EN1f-h) |
+| **MEND N** | The foe heals that much VITAE, up to its maximum. Counter it with burst: damage dealt in one turn outruns the heal. The existing `enemyHeal`. `EnemyMove.enemyHeal`. | no live foe yet: the Breakwater foes (EN1f-h) |
+| **SCOUR N** | The foe strips that many statuses off itself, the last one too: LEECH first, then INFERNO, STORM and its afflictions. Lay more statuses than it can strip. Its afflictions go newest first; a both-sides INFERNO leaves you your half. MERCY is not a status it strips. `EnemyMove.enemyCleanse`. | no live foe yet: the Breakwater foes (EN1f-h) |
+| **BRINE N** | Each GUARD you gain is cut by that much until the end of your next turn. Gain your GUARD in one big play, not many small ones. Each gain is cut on its own (a PAID play's pips included, a HEAL's overflow into GUARD too); it fades at the start of the foe's next turn. `EnemyMove.brine`. | no live foe yet: the Breakwater foes (EN1f-h) |
 
 ---
 
@@ -180,6 +196,10 @@ ship.
    have `default:` arms, so a kind that skips them type-checks clean while
    doing nothing; a carrier card is what catches it.
 3. A carrier in `axiomancer-mechanics/src/Cards/library/`.
+   An enemy word is instead a field on `EnemyMove` (`src/Enemy/types.ts`), its
+   id in `ENEMY_KEYWORDS` (`src/Enemy/enemy-keywords.ts`) and `moveKeywords`,
+   its threat effect built in `moveThreatAction` (`src/Combat/combat.threat.ts`)
+   and resolved in `src/Combat/combat.enemy-words.resolve.ts`.
 4. The gloss in `axiomancer-mobile/state/combat/keywords.ts`, the headline
    in `axiomancer-mobile/state/presenters/combat-encounter.engine.ts`, and a
    glyph in `axiomancer-mobile/components/combat/statusGlyphs.ts` /

@@ -66,6 +66,7 @@ import { scaleFor, scaleEffectIntensity, programText } from './stat-scaling';
 
 export { programText };
 import { spendDice } from './combat.dice';
+import { brineCut, cutGuardGain, soakDealWithWard, wardSoak, wordsOf } from './combat.enemy-words';
 import { recordAttribution } from './combat.attribution';
 import type {
     CombatEncounterState, CombatEvent, CombatHandEntry, CombatManaDie,
@@ -336,8 +337,17 @@ class LineCtx implements ProgramCtx {
             dmg *= 2;
             this.w.l.el.frozen = false;
         }
+        const preVuln = dmg;
         const vuln = getDamageTakenMultiplier(enemy);
         if (vuln !== 1) dmg = Math.round(dmg * vuln);
+        // The foe's WARD soaks the part before VULNERABLE; only a real play spends it.
+        if (this.mode === 'apply') {
+            const warded = soakDealWithWard(this.w.s, preVuln, dmg, this.w.events);
+            this.w.s = warded.state;
+            dmg = warded.dealt;
+        } else {
+            dmg = wardSoak(wordsOf(this.w.s).ward, preVuln, dmg).dealt;
+        }
         const landed = Math.min(dmg, enemy.health);
         if (this.mode === 'cost') return landed;
         this.w.l.dealtThisTurn = (this.w.l.dealtThisTurn ?? 0) + landed;
@@ -457,7 +467,10 @@ class LineCtx implements ProgramCtx {
 
     // -- self ----------------------------------------------------------------
     guard(n: number, opts?: { exact?: boolean; plus?: number }): number {
-        const amt = (n > 0 ? (opts?.exact ? n : scaleFor(n, this.stats(), 'mind', 'one-shot')) : 0) + Math.max(0, opts?.plus ?? 0);
+        const printed = (n > 0 ? (opts?.exact ? n : scaleFor(n, this.stats(), 'mind', 'one-shot')) : 0) + Math.max(0, opts?.plus ?? 0);
+        if (printed <= 0) return 0;
+        // BRINE cuts the gain; the witness sees the cut too.
+        const amt = this.mode === 'apply' ? cutGuardGain(this.w.s, printed, this.w.events) : brineCut(this.w.s, printed);
         if (amt <= 0) return 0;
         if (this.mode === 'value') {
             const need = Math.max(0, this.incoming());
@@ -486,8 +499,11 @@ class LineCtx implements ProgramCtx {
     private healExact(amt: number, overflowToGuard: boolean): number {
         const p = this.w.s.player;
         const healed = Math.min(amt, Math.max(0, p.maxHealth - p.health));
-        const toGuard = overflowToGuard ? amt - healed : 0;
         if (this.mode !== 'cost') this.heals().healed += healed;
+        // An overflow into GUARD is a GUARD gain, so BRINE cuts it.
+        const overflow = overflowToGuard ? amt - healed : 0;
+        const toGuard = overflow <= 0 ? 0
+            : this.mode === 'apply' ? cutGuardGain(this.w.s, overflow, this.w.events) : brineCut(this.w.s, overflow);
         if (this.mode === 'value') {
             this.w.value += healed * 0.9 + toGuard * 0.5;
             return healed;
@@ -615,7 +631,12 @@ class LineCtx implements ProgramCtx {
                     dmg *= 2;
                     l.el.frozen = false;
                 }
+                const preVuln = dmg;
                 dmg = Math.round(dmg * getDamageTakenMultiplier(w.s.enemy));
+                // The foe's WARD soaks TETHER's hit too: it is a DEAL.
+                const warded = soakDealWithWard(w.s, preVuln, dmg, w.events);
+                w.s = warded.state;
+                dmg = warded.dealt;
                 new LineCtx(w, 'apply', { cardId: l.tetherCardId ?? this.f.cardId, waived: false }).hitFoe(dmg, true);
             }
         }
