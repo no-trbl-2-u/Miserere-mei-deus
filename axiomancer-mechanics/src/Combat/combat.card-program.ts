@@ -1115,8 +1115,8 @@ class LineCtx implements ProgramCtx {
     // -- the Merciful ----------------------------------------------------------
     radiance(n: number): number {
         if (n <= 0) return 0;
+        // A positive number scales to at least 1.
         const amt = scaleFor(n, this.stats(), 'heart', 'repeating');
-        if (amt <= 0) return 0;
         const healed = this.healExact(amt, false);
         // The witness sees its own heal land, so a later RADIANCE on the line reads the VITAE left to heal.
         if (this.mode === 'value' && healed > 0) this.w.s = { ...this.w.s, player: healCombatant(this.w.s.player, healed) };
@@ -1139,7 +1139,7 @@ class LineCtx implements ProgramCtx {
         if (n <= 0) return;
         const amt = opts?.exact ? n : scaleFor(n, this.stats(), 'heart', 'repeating');
         const enemy = this.w.s.enemy;
-        if (amt <= 0 || isDefeated(enemy) || this.mode === 'cost') return;
+        if (isDefeated(enemy) || this.mode === 'cost') return;
         const l = this.w.l;
         const before = l.mercy ?? initMercyState();
         const worthBefore = this.mode === 'value' ? this.mercyBurstValue(before) : 0;
