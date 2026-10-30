@@ -43,3 +43,20 @@ describe('threatPhaseHeader', () => {
         expect(threatPhaseHeader(p).text).toBe('PHASE 4 · ATTACKS');
     });
 });
+
+describe('threatPhaseHeader for a phases foe (EN1c)', () => {
+    const move = (kind: 'attack' | 'danger', name: string): CombatThreatPhase => phase(2, [13], {
+        intentType: kind, enemyMove: { phase: 1, step: 0, danger: kind === 'danger', name, kind },
+    });
+
+    it('prints the kind and the name, never the damage', () => {
+        expect(threatPhaseHeader(move('attack', 'Peck'))).toEqual({
+            text: 'PHASE 2 · ATTACK · Peck', a11y: 'Phase 2, ATTACK, Peck',
+        });
+    });
+
+    it('leaves a DANGER unnamed until the foe is beaten', () => {
+        expect(threatPhaseHeader(move('danger', 'Toll')).text).toBe('PHASE 2 · DANGER');
+        expect(threatPhaseHeader(move('danger', 'Toll'), true).text).toBe('PHASE 2 · DANGER · Toll');
+    });
+});

@@ -12,7 +12,7 @@ import { render, screen } from '@testing-library/react-native';
 import { describe, expect, it } from '@jest/globals';
 
 import { IntentIcon } from '@/components/combat/encounter/IntentIcon';
-import type { CombatIntentVM } from '@/state/presenters/combat-encounter.engine';
+import { INTENT_ICONS, type CombatIntentVM } from '@/state/presenters/combat-encounter.engine';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
 const baseIntent: CombatIntentVM = {
@@ -129,5 +129,40 @@ describe('IntentIcon: after BLIZZARD, and one number', () => {
         expect(a11y).toMatch(/^Enemy intent: ATTACKS\. It lunges at you\. Deals 11 damage\./);
         expect(a11y).not.toMatch(/\(12 damage\)/);
         expect(a11y.match(/\d+ damage/g)).toEqual(['11 damage']);
+    });
+});
+
+/** Phase EN1c: a `phases` foe's five kinds draw with a name and no number. */
+describe('IntentIcon: the five telegraph kinds', () => {
+    const kinds = ['attack', 'defend', 'status', 'danger', 'unknown'] as const;
+    const zeroWall = { projectedDamage: 0, netDamage: 0, willDeny: false, guard: 0, barrier: 0, blizzardCut: 0 };
+
+    for (const kind of kinds) {
+        it(`draws ${kind} with its icon, its name and no number`, () => {
+            const meta = INTENT_ICONS[kind];
+            const intent: CombatIntentVM = {
+                ...baseIntent, type: kind, icon: meta.icon, label: meta.label, color: meta.color,
+                damage: 0, description: 'Move', moveName: 'Move', wallMath: zeroWall,
+            };
+            const { tree } = withAllProviders(<IntentIcon intent={intent} />);
+            render(tree);
+            expect(screen.getByText(meta.icon)).toBeTruthy();
+            expect(screen.getByTestId('combat-intent-name').props.children).toBe('Move');
+            expect(screen.queryByText(/\d/)).toBeNull();
+            expect(screen.queryByTestId('combat-intent-wallmath')).toBeNull();
+            expect(screen.getByTestId('combat-intent').props.accessibilityLabel).toBe(`Enemy intent: ${meta.label}. Move.`);
+        });
+    }
+
+    it('draws an unnamed DANGER as the icon alone', () => {
+        const meta = INTENT_ICONS.danger;
+        const intent: CombatIntentVM = {
+            ...baseIntent, type: 'danger', icon: meta.icon, label: meta.label, color: meta.color,
+            damage: 0, description: '', moveName: null, wallMath: zeroWall,
+        };
+        const { tree } = withAllProviders(<IntentIcon intent={intent} />);
+        render(tree);
+        expect(screen.queryByTestId('combat-intent-name')).toBeNull();
+        expect(screen.getByTestId('combat-intent').props.accessibilityLabel).toBe('Enemy intent: DANGER.');
     });
 });

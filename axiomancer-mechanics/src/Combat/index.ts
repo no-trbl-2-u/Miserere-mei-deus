@@ -112,7 +112,7 @@ export {
     programFaceText, GLOBAL_TRIGGER_TEXT,
 } from './combat.cards';
 export {
-    getThreatSequence,
+    getThreatSequence, nextEnemyPhaseIndex,
 } from './combat.threat';
 
 export {
