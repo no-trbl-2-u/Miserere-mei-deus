@@ -8,6 +8,12 @@ describe('threat telegraph copy', () => {
         for (const enemy of EnemyLibrary) {
             for (const phase of getThreatSequence(enemy)) {
                 const faces = phase.branch ? [phase.branch.then, phase.branch.else] : [phase];
+                // A `phases` move prints T's own line ("Long Look: 6 damage, +2 for ..."),
+                // where a "+N" is a bonus on top of the hit, not a gain.
+                if (phase.enemyMove) {
+                    expect(phase.threatAction.description, enemy.id).toMatch(new RegExp(`^${phase.enemyMove.name}: `));
+                    continue;
+                }
                 for (const face of faces) {
                     const { description, effects } = face.threatAction;
                     const damage = effects.find(e => e.damage !== undefined)?.damage;

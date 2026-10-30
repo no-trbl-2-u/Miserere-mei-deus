@@ -15,9 +15,11 @@ describe('the Act 1 XP ledger (LV1)', () => {
         expect(ledger.every(f => f.level !== undefined)).toBe(true);
     });
 
-    it('a full clear meets the doors at levels 6, 13, 16 and 19 and ends at level 21', () => {
+    // Chapter 1's quay normals fight at level 3 (EN1f), so the Breakwater
+    // pays more XP than its old level-2 Float-Eyes did.
+    it('a full clear meets the doors at levels 7, 13, 17 and 20 and ends at level 21', () => {
         const walk = walkAct1(ledger);
-        expect(walk.doors.map(d => d.playerLevel)).toEqual([6, 13, 16, 19]);
+        expect(walk.doors.map(d => d.playerLevel)).toEqual([7, 13, 17, 20]);
         expect(walk.doors.map(d => d.doorLevel)).toEqual([1, 2, 3, 4]);
         expect(walk.finalLevel).toBe(21);
     });
@@ -37,11 +39,12 @@ describe('the Act 1 XP ledger (LV1)', () => {
     });
 
     // The rebuilt Breakwater stages 19 fights, so a full clear reaches the
-    // Beacon Crags door at level 16, where the placeholder Death Beholder is
-    // won about 92% of the time: winnable but free. Chapter 1's real foes
-    // (enemy sessions 1-2, B2) retune the ledger; until then this one door is
-    // held to "winnable" only. Filed for T in plan/CRITIQUE.md (BW1b).
-    const FREE_UNTIL_RETUNED: ReadonlySet<string> = new Set(['bc-15']);
+    // Beacon Crags door at level 17, where the placeholder Death Beholder is
+    // won about 92% of the time: winnable but free. Chapter 1's quay normals
+    // (EN1f) pay more XP, so the Lantern Deep door (level 20) is free too.
+    // T's tuning session after EN1i retunes the ledger; until then these
+    // doors are held to "winnable" only. Filed for T in plan/CRITIQUE.md (BW1b).
+    const FREE_UNTIL_RETUNED: ReadonlySet<string> = new Set(['bc-15', 'ld-16']);
 
     it('still finds each excused door free (drop it from the set once the retune lands)', () => {
         for (const door of walkAct1(ledger).doors.filter(d => FREE_UNTIL_RETUNED.has(d.nodeId))) {

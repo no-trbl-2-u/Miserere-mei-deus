@@ -78,11 +78,14 @@ import {
 } from './combat.card-program';
 import { weatherEvents } from './combat.elements';
 import { spikeEvents } from './combat.spikes';
-import { cutGuardGain, soakDealWithWard } from './combat.enemy-words';
+import { TANGLE_FREE_REFUSAL, cutGuardGain, soakDealWithWard } from './combat.enemy-words';
 import {
     applyEnemyWordEffects, enemyWordsAfterPlay, enemyWordsFoeTurnStart, enemyWordsPlayerTurnStart,
     enemyWordsUndertow,
 } from './combat.enemy-words.resolve';
+import {
+    applyRiderAfterMove, planRiderTurn, riderAfterPlay, riderGuardShare, riderStealPerHit,
+} from './combat.enemy-riders';
 import { BARNACLE_ID } from '../Cards/library/enemy-curses.cards';
 import type {
     CombatCard, CombatDieColor, CombatEncounterState, CombatEvent, CardPlay,
@@ -517,12 +520,15 @@ export function playCombatCard(
     if (held?.cardId === BARNACLE_ID) return refuse('a Barnacle cannot be played, spend a body die on a card to knock it off');
     // TANGLE: while it holds, a card cannot use its FREE line.
     if (held && !useBottom && (state.enemyWords?.tangle ?? 0) > 0) {
-        return refuse('tangled, the next cards cannot use their FREE line, pay with a die');
+        return refuse(TANGLE_FREE_REFUSAL);
     }
     const played = playCombatCardCore(state, cardRef, useBottom, dieId, rng, x);
-    const after = enemyWordsAfterPlay(state, played.state, played.events, useBottom, dieId);
-    if (after.events.length === 0) return played;
-    return { state: withLog(after.state, after.events), events: [...played.events, ...after.events] };
+    const words = enemyWordsAfterPlay(state, played.state, played.events, useBottom, dieId);
+    // A rider that lengthens the next status you put on the foe.
+    const lid = riderAfterPlay(state, words.state);
+    const extra = [...words.events, ...lid.events];
+    if (extra.length === 0) return played;
+    return { state: withLog(lid.state, extra), events: [...played.events, ...extra] };
 }
 
 function playCombatCardCore(
@@ -1223,10 +1229,16 @@ function soakFlatHit(
  */
 export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => number = defaultRng): CombatTransition {
     if (stateIn.phase === 'complete' || stateIn.finalOutcome) return { state: stateIn, events: [] };
+    // The move's rider reads the board as your turn left it (your hand, your
+    // TANGLE, what you dealt), before anything at the foe's turn start moves it.
+    const planAction = stateIn.threatPhases[Math.min(stateIn.currentPhaseIndex, stateIn.threatPhases.length - 1)].threatAction;
+    const plan = planRiderTurn(stateIn, planAction);
+    const rider = planAction.rider;
+    const moveEffects = plan.effects;
     // WARD and BRINE run out at the start of the foe's turn, before anything
     // else, so nothing at its turn start meets the old WARD.
     const faded = enemyWordsFoeTurnStart(stateIn);
-    let state = faded.state;
+    let state = plan.riders ? { ...faded.state, enemyRiders: plan.riders } : faded.state;
     // LEECH drains the foe at the start of its turn, before it acts.
     const leech = programFoeTurnStart(state);
     const leechEvents = [...faded.events, ...leech.events];
@@ -1307,12 +1319,12 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
     let blizzardCut = 0;
     let blizzardSoftened = 0;
     if (!hindered && !isDefeated(enemy) && state.program) {
-        const frozen = programFrozenCheck(state, threatHits(state));
+        const frozen = programFrozenCheck(state, threatHits(state, moveEffects));
         state = frozen.state;
         blizzardCut = frozen.blizzard;
         events.push(...frozen.events);
         // A REFLECT armed for the foe's attack is up before its first strike.
-        if (threatHits(state).length > 0) {
+        if (threatHits(state, moveEffects).length > 0) {
             const armed = programSpikeAttackStart(state.program!, state.round);
             if (armed !== state.program) {
                 events.push(...spikeEvents(state.program!.spikes, armed.spikes));
@@ -1322,13 +1334,16 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
     }
     // A card made the foe's next attack deal n less: taken off its strikes in order, spent when it attacks.
     let attackLess = state.program?.attackLess ?? 0;
+    const guardBefore = state.guard ?? 0;
+    let convictionStolen = 0;
     if (!hindered && !isDefeated(enemy)) {
+        events.push(...plan.events);
         // The enemy attacks: its telegraphed threat action fires on the player.
         const playerTakenMult = getDamageTakenMultiplier(state.player);
-        if (attackLess > 0 && state.program && phase.threatAction.effects.some(e => (e.damage ?? 0) > 0)) {
+        if (attackLess > 0 && state.program && moveEffects.some(e => (e.damage ?? 0) > 0)) {
             state = { ...state, program: { ...state.program, attackLess: 0 } };
         } else attackLess = 0;
-        for (const eff of phase.threatAction.effects) {
+        for (const eff of moveEffects) {
             // A foe the spikes defeated mid-attack strikes no more.
             if (eff.damage && eff.damage > 0 && !isDefeated(enemy)) {
                 attacksLanded += 1;
@@ -1362,7 +1377,8 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
                     riposteFired = true;
                 }
                 // GUARD soaks first (one-shot, clamped), then BARRIER (persistent).
-                const guardAbsorbed = Math.min(guard, dmg);
+                // A half-guard rider lets only half your GUARD count.
+                const guardAbsorbed = Math.min(Math.floor(guard * riderGuardShare(rider)), dmg);
                 guard -= guardAbsorbed;
                 dmg -= guardAbsorbed;
                 const barrierAbsorbed = Math.min(barrier, dmg);
@@ -1376,6 +1392,7 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
                     dmg = programClampDamage(state, player.health, dmg);
                     player = applyDamage(player, dmg);
                     enemyDamageDealt += dmg;
+                    convictionStolen += riderStealPerHit(rider);
                     // The 'damage-instance' clock, player bearer — a threat
                     // hit that LANDS advances every damage-instance-clocked
                     // DoT the player carries (enemy threat riders land
@@ -1472,7 +1489,7 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
         }
         // The move's enemy words land after its hits, so its own WARD never
         // meets the spikes or the riposte its strikes drew.
-        const words = applyEnemyWordEffects({ ...state, player, enemy }, phase.threatAction.effects);
+        const words = applyEnemyWordEffects({ ...state, player, enemy }, moveEffects);
         if (words.events.length > 0) {
             player = words.state.player;
             enemy = words.state.enemy;
@@ -1482,7 +1499,25 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
             };
             events.push(...words.events);
         }
-        events.push({ kind: 'threat-fired', phaseIndex: phase.index, description: phase.threatAction.description, effects: phase.threatAction.effects });
+        // What the move's rider takes and leaves behind (`combat.enemy-riders.ts`).
+        const took = Math.min(state.conviction, convictionStolen);
+        if (took > 0) {
+            state = { ...state, conviction: state.conviction - took };
+            events.push({ kind: 'enemy-rider', rider: 'steal-conviction-per-hit', amount: took });
+        }
+        const beforeRider = { ...state, player, enemy };
+        const after = applyRiderAfterMove(beforeRider, rider, {
+            fullyBlocked: attacksLanded > 0 && attacksFullyBlocked === attacksLanded,
+            guardBefore,
+        });
+        // Some riders only leave state behind (an armed bonus, a delayed hit).
+        if (after.state !== beforeRider) {
+            player = after.state.player;
+            enemy = after.state.enemy;
+            state = after.state;
+            events.push(...after.events);
+        }
+        events.push({ kind: 'threat-fired', phaseIndex: phase.index, description: phase.threatAction.description, effects: moveEffects });
         // Doom growth (card-local species): enemy-borne
         // `growth: 'per-enemy-action'` DoTs deepen by 1 each time the enemy
         // actually acts — a hindered (denied) turn never feeds the Doom.
@@ -1522,6 +1557,8 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
         enemyDamageThisTurn: (state.enemyDamageThisTurn ?? 0) + enemyDamageDealt,
         ...(state.program ? { program: programRecordDamage(state.program, Math.max(0, state.player.health - player.health)) } : {}),
         lastThreatFullyBlocked: !hindered && attacksLanded > 0 && attacksFullyBlocked === attacksLanded,
+        // A `phases` foe's riders measure "what you dealt it last turn" from here.
+        ...(hasEnemyPhases(enemy) ? { enemyRiders: { ...(state.enemyRiders ?? {}), dealtMark: directDamage } } : {}),
         phase: 'phase-resolve',
         threatMarks,
         phaseResults: [...state.phaseResults, result],
@@ -2066,7 +2103,7 @@ export function projectIncomingThreat(state: CombatEncounterState): {
 } {
     const idx = Math.min(state.currentPhaseIndex, state.threatPhases.length - 1);
     const phase = state.threatPhases[idx];
-    const rawDamage = phase.threatAction.effects.reduce((s, e) => s + (e.damage ?? 0), 0);
+    const rawDamage = planRiderTurn(state, phase.threatAction).effects.reduce((s, e) => s + (e.damage ?? 0), 0);
 
     const act = canAct(state.enemy.effects as ActiveEffect[]);
     const isBossTier = state.enemy.difficulty === 'boss' || state.enemy.difficulty === 'unique';
@@ -2133,9 +2170,11 @@ export const PROGRAM_KIT: ProgramKit = {
  * the outgoing and taken multipliers, the stage bonus) before BLIZZARD and
  * soak. Empty when the foe is denied its turn.
  */
-export function threatHits(state: CombatEncounterState): number[] {
+export function threatHits(state: CombatEncounterState, effects?: readonly CombatThreatEffect[]): number[] {
     const idx = Math.min(state.currentPhaseIndex, state.threatPhases.length - 1);
     const phase = state.threatPhases[idx];
+    // A move's rider shapes its hits from the live board (`planRiderTurn`).
+    const moveEffects = effects ?? planRiderTurn(state, phase.threatAction).effects;
     if (!canAct(state.enemy.effects as ActiveEffect[]).canAct) return [];
     const isBossTier = state.enemy.difficulty === 'boss' || state.enemy.difficulty === 'unique';
     const escalationRate = THREAT_ESCALATION_PER_ROUND * (isBossTier ? THREAT_ESCALATION_BOSS_MULT : 1);
@@ -2144,7 +2183,7 @@ export function threatHits(state: CombatEncounterState): number[] {
     const mult =escalation * getOutgoingDamageMult(state.enemy)
         * (1 + Math.min(STAGE_THREAT_BONUS_CAP, state.stageThreatBonus ?? 0))
         * getDamageTakenMultiplier(state.player);
-    return phase.threatAction.effects
+    return moveEffects
         .filter(e => (e.damage ?? 0) > 0)
         .map(e => Math.round((e.damage as number) * THREAT_DAMAGE_SCALE * mult));
 }
@@ -2161,6 +2200,20 @@ export function programLineBlock(state: CombatEncounterState, uid: string, paid:
     const entry = state.hand.find(h => h.uid === uid);
     if (!entry || !isProgramCard(entry.cardId)) return null;
     return programIllegalReason(state, uid, paid, PROGRAM_KIT, x);
+}
+
+/**
+ * Why any hand card's FREE line cannot be played right now (null = it can):
+ * TANGLE refuses every FREE line while it holds, as `playCombatCard` does;
+ * otherwise a program card's own refusal (`programLineBlock`).
+ *
+ * @example freeLineBlock(state, 'c3') // TANGLE_FREE_REFUSAL while TANGLE holds
+ */
+export function freeLineBlock(state: CombatEncounterState, uid: string): string | null {
+    const entry = state.hand.find(h => h.uid === uid);
+    if (!entry) return null;
+    if ((state.enemyWords?.tangle ?? 0) > 0 && entry.cardId !== BARNACLE_ID) return TANGLE_FREE_REFUSAL;
+    return programLineBlock(state, uid, false);
 }
 
 /**

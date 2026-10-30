@@ -15,7 +15,7 @@ import { describe, it, expect } from 'vitest';
 import { Player } from '../../Character/characters.mock';
 import type { Character } from '../../Character/types';
 import type { Enemy } from '../../Enemy/types';
-import { FloatEye } from '../../Enemy/enemy.library';
+import { FloatEye, GreenJelly } from '../../Enemy/enemy.library';
 import { ENEMY_DECKS, deckCardIds } from '../combat.enemy-decks';
 import { deepClone } from '../../Utils';
 import {
@@ -38,7 +38,8 @@ function makePlayer(): Character {
 
 /** A generated-sequence enemy — id deliberately absent from AUTHORED_THREAT_SEQUENCES. */
 function makeEnemy(hp: number, stance: 'heart' | 'body' | 'mind' = 'body'): Enemy {
-    const e = deepClone(FloatEye);
+    // The Float-Eye's body, without its HP phases (a phases foe skips the generator).
+    const e: Enemy = { ...deepClone(FloatEye), phases: undefined };
     e.id = 'enemy-rage-test-dummy';
     e.health = hp;
     e.maxHealth = hp;
@@ -69,12 +70,19 @@ describe('Phase 3 — generateDefaultThreatSequence appends a locked rage phase'
         expect(rage.intentType).toBe('combo');
     });
 
-    it('an authored enemy (FloatEye) is untouched — no phase is rage-gated', () => {
-        // Float-Eye's third card carries its deck's derived tier-2 gate
-        // (round-keyed deck tiers); nothing is appended or held to the rage round.
+    it('an authored enemy (the Green Jelly) is untouched — no phase is rage-gated', () => {
+        // Its deck's later cards carry their derived tier gates (round-keyed
+        // deck tiers; its tier 3 opens on round 6, the rage round by
+        // coincidence); nothing is appended.
+        const seq = getThreatSequence(GreenJelly);
+        expect(seq).toHaveLength(deckCardIds(ENEMY_DECKS['enemy-green-jelly']!).length);
+        expect(seq.some(p => p.threatAction.description.includes('loses patience'))).toBe(false);
+    });
+
+    it('a foe with HP phases (the Float-Eye) gets no generated or rage phase', () => {
         const seq = getThreatSequence(FloatEye);
-        expect(seq).toHaveLength(deckCardIds(ENEMY_DECKS['enemy-float-eye']!).length);
-        expect(seq.every(p => p.unlockAfterRound !== RAGE_UNLOCK_ROUND)).toBe(true);
+        expect(seq.every(p => p.enemyMove !== undefined)).toBe(true);
+        expect(seq.every(p => p.unlockAfterRound === undefined)).toBe(true);
     });
 });
 

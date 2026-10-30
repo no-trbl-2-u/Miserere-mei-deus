@@ -104,7 +104,8 @@ function makePlayer(cards: string[]): Character {
 }
 
 function makeEnemy(hp: number, stance: 'heart' | 'body' | 'mind' = 'heart'): Enemy {
-    const e = deepClone(FloatEye);
+    // The Float-Eye's body without its HP phases: a dummy on the generated sequence.
+    const e: Enemy = { ...deepClone(FloatEye), phases: undefined };
     e.id = 'enemy-test-dummy';
     e.health = hp;
     e.maxHealth = hp;

@@ -1,13 +1,19 @@
 /**
  * Enemy library — the roster.
  *
- * Three foes that deal plain damage, one per tier Act 1 uses, plus the
- * `sandbag-01` dev dummy:
- *   - Float-Eye (L1, normal) — every Act 1 map's wandering fight.
+ * Act 1's foes, plus the `sandbag-01` dev dummy:
+ *   - Float-Eye (L1, normal) — every Act 1 map's wandering fight; HP phases.
+ *   - The Gallows Crow, the Net-Mender and the Crane-Hook (normals) —
+ *     Chapter 1's fields and quays, bound per node in `MapEvents/content.ts`;
+ *     HP phases.
  *   - The Green Jelly (L7, elite) — a rarer mid-region fight; befriendable.
  *   - The Death Beholder (L8, boss) — every region's door fight.
  *
- * No enemy carries a keyword, affliction or rider.
+ * A `phases` foe plays T's moves: a fixed loop per phase, a DANGER on
+ * each phase change, the enemy words as move fields and one conditional
+ * `rider` per move (`Combat/combat.enemy-riders.ts`). Its numbers are
+ * authored at its tier's level (`PHASES_AUTHORED_LEVEL`) and scale with its
+ * level. The Green Jelly and the Death Beholder keep their decks for now.
  *
  * Difficulty is tier (`normal → elite → boss`, driving the threat-damage
  * multiplier, XP and the encounter generator's adaptive level band), authored
@@ -17,7 +23,7 @@
  */
 
 import { createEnemy, enemyStatBudget } from './index';
-import { LootTableEntry } from './types';
+import { EnemyMove, LootTableEntry } from './types';
 import { consumableLibrary, getConsumableById } from '../Items/consumable.library';
 import { Consumable } from '../Items/types';
 
@@ -47,6 +53,100 @@ const ADDED = '2026-07-06';
 /** Provenance stamp for the W-01 labyrinth-boss batch the Act 1 boss's numbers came from. */
 const APORIA_ADDED = '2026-07-07';
 
+/** Provenance stamp for Chapter 1's normals (T's Breakwater Bestiary picks). */
+const CHAPTER1_ADDED = '2026-10-30';
+
+// ─── Chapter 1 moves (T's Breakwater Bestiary, 2026-10-30) ───────────────────
+//
+// Kinds are the telegraph kinds; numbers are authored at level 2.
+
+const LONG_LOOK: EnemyMove = {
+    name: 'Long Look', kind: 'attack',
+    text: '6 damage, +2 for each card you leave unplayed in your hand.',
+    damage: 6, rider: { kind: 'unplayed-card-bonus', damage: 2 },
+};
+const AFTERIMAGE: EnemyMove = {
+    name: 'Afterimage', kind: 'attack',
+    text: '5 damage. If your GUARD blocks all of it, the eye copies your GUARD as its own WARD.',
+    damage: 5, rider: { kind: 'guard-to-ward' },
+};
+const SHUT_LID: EnemyMove = {
+    name: 'Shut Lid', kind: 'defend',
+    text: 'WARD 8. While shut it cannot see: the next status you put on it lasts 1 turn longer.',
+    ward: 8, rider: { kind: 'lengthen-next-status', turns: 1 },
+};
+const STARE: EnemyMove = {
+    name: 'Stare', kind: 'status',
+    text: 'You are VULNERABLE 25% for 1 turn.',
+    vulnerable: { pct: 25, turns: 1 },
+};
+
+const PECK_THE_DEBT: EnemyMove = {
+    name: 'Peck the Debt', kind: 'attack',
+    text: '3 damage, 2 hits. Each hit that gets through steals 1 Conviction.',
+    damage: 3, hits: 2, rider: { kind: 'steal-conviction-per-hit', amount: 1 },
+};
+const CARRION_DIVE: EnemyMove = {
+    name: 'Carrion Dive', kind: 'attack',
+    text: '8 damage. If you are under half VITAE: 12 damage, and the crow MENDs 4.',
+    damage: 8, rider: { kind: 'below-half-vitae', damage: 12, mend: 4 },
+};
+const TAKE_WING: EnemyMove = {
+    name: 'Take Wing', kind: 'defend',
+    text: 'WARD 6. If you do not hit it this turn, its next attack gains +3.',
+    ward: 6, rider: { kind: 'unhit-next-attack-bonus', damage: 3 },
+};
+const SHINY_THING: EnemyMove = {
+    name: 'Shiny Thing', kind: 'status',
+    text: 'Steals one banked die. With none banked: TANGLE 1.',
+    rider: { kind: 'steal-banked-die', tangle: 1 },
+};
+
+const CAST_NET: EnemyMove = {
+    name: 'Cast Net', kind: 'attack',
+    text: '5 damage and TANGLE 1.',
+    damage: 5, tangle: 1,
+};
+const HAUL_IN: EnemyMove = {
+    name: 'Haul In', kind: 'attack',
+    text: '6 damage. If you are TANGLED: 11 damage, and the tangle ends.',
+    damage: 6, rider: { kind: 'if-tangled', damage: 11 },
+};
+const MEND_THE_NET: EnemyMove = {
+    name: 'Mend the Net', kind: 'defend',
+    text: 'MEND 6 and it SCOURs one status off itself.',
+    enemyHeal: 6, enemyCleanse: 1,
+};
+const GILL_HOOK: EnemyMove = {
+    name: 'Gill-hook', kind: 'status',
+    text: 'A BARNACLE Curse goes into your hand.',
+    barnacle: 1,
+};
+
+const SWING: EnemyMove = {
+    name: 'Swing', kind: 'attack',
+    text: '8 damage. Your GUARD counts half against it.',
+    damage: 8, rider: { kind: 'half-guard' },
+};
+const LOCK_THE_BRAKE: EnemyMove = {
+    name: 'Lock the Brake', kind: 'defend',
+    text: 'WARD 10.',
+    ward: 10,
+};
+const HOIST: EnemyMove = {
+    name: 'Hoist', kind: 'status',
+    text: 'UNDERTOW: your body die is lifted out of your next roll.',
+    undertow: 'body',
+};
+/** Counterweight's second hit: 6, and 9 in its second phase. */
+function counterweight(later: number): EnemyMove {
+    return {
+        name: 'Counterweight', kind: 'attack',
+        text: `4 damage now, ${later} more next turn unless you deal 10+ to it this turn.`,
+        damage: 4, rider: { kind: 'delayed-hit', damage: later, unless: 10 },
+    };
+}
+
 // ─── The roster ───────────────────────────────────────────────────────────────
 
 /**
@@ -65,6 +165,22 @@ export const FloatEye = createEnemy({
     difficulty: 'normal',
     logic: 'balanced',
     loot: [none(70), drop('minor-healing-potion', 25), drop('healing-potion', 5)],
+    // Reworked (T, 2026-10-30): it punishes a full hand and a big final blow.
+    phases: [
+        { moves: [LONG_LOOK, AFTERIMAGE, SHUT_LID, STARE] },
+        {
+            danger: {
+                name: 'The Long Career', kind: 'danger',
+                text: 'Hits back for half the damage you dealt it last turn.',
+                rider: { kind: 'half-dealt-last-turn' },
+            },
+            // Shut Lid leaves the pool; Long Look rises to +3 per unplayed card.
+            moves: [
+                { ...LONG_LOOK, text: '6 damage, +3 for each card you leave unplayed in your hand.', rider: { kind: 'unplayed-card-bonus', damage: 3 } },
+                AFTERIMAGE, STARE,
+            ],
+        },
+    ],
     finalBlowLines: {
         brutal: 'The eye closes for the first time in its long career, and does not reopen.',
         quiet:  'It blinks once — a thing it had been saving — and settles into the dark.',
@@ -195,6 +311,93 @@ export const DeathBeholder = createEnemy({
     tags: ['early-game', 'boss', 'enemy'],
 });
 
+/** Fields & south road: lives on the crossroads gibbet. */
+export const GallowsCrow = createEnemy({
+    id: 'enemy-gallows-crow',
+    portraitAsset: 'gallows-crow',
+    name: 'Gallows Crow',
+    description: 'Lives on the crossroads gibbet, collecting what the hanged still owed.',
+    level: 2,
+    baseStats: enemyStatBudget(2),
+    mapName: 'breakwater',
+    difficulty: 'normal',
+    logic: 'balanced',
+    loot: [none(70), drop('minor-healing-potion', 25), drop('healing-potion', 5)],
+    phases: [
+        { moves: [PECK_THE_DEBT, CARRION_DIVE, TAKE_WING, SHINY_THING] },
+        {
+            danger: {
+                name: 'Murder of Crows', kind: 'danger',
+                text: 'One 2-damage hit per 2 cards in your discard (at least 3 hits).',
+                damage: 2, rider: { kind: 'hits-per-discard', per: 2, min: 3 },
+            },
+            // Peck the Debt becomes 3 hits.
+            moves: [
+                { ...PECK_THE_DEBT, text: '3 damage, 3 hits. Each hit that gets through steals 1 Conviction.', hits: 3 },
+                CARRION_DIVE, TAKE_WING, SHINY_THING,
+            ],
+        },
+    ],
+    addedIn: CHAPTER1_ADDED,
+    tags: ['early-game', 'enemy'],
+});
+
+/** The quays: a drowned fisherman still mending his net. */
+export const NetMender = createEnemy({
+    id: 'enemy-net-mender',
+    portraitAsset: 'net-mender',
+    name: 'Net-Mender',
+    description: 'A drowned fisherman still mending the net he went down in.',
+    level: 3,
+    baseStats: enemyStatBudget(3),
+    mapName: 'breakwater',
+    difficulty: 'normal',
+    logic: 'balanced',
+    loot: [none(70), drop('minor-healing-potion', 25), drop('healing-potion', 5)],
+    phases: [
+        { moves: [CAST_NET, HAUL_IN, MEND_THE_NET, GILL_HOOK] },
+        {
+            danger: {
+                name: 'The Whole Catch', kind: 'danger',
+                text: '3 damage per card in your hand, then TANGLE 2.',
+                tangle: 2, rider: { kind: 'hand-size-damage', damage: 3 },
+            },
+            // Cast Net and Haul In always come back to back.
+            moves: [CAST_NET, HAUL_IN],
+        },
+    ],
+    addedIn: CHAPTER1_ADDED,
+    tags: ['early-game', 'enemy'],
+});
+
+/** The quays: an iron dock crane that swings on its own. */
+export const CraneHook = createEnemy({
+    id: 'enemy-crane-hook',
+    portraitAsset: 'crane-hook',
+    name: 'Crane-Hook',
+    description: 'An iron dock crane that swings on its own and lifts whatever is owed.',
+    level: 3,
+    baseStats: enemyStatBudget(3),
+    mapName: 'breakwater',
+    difficulty: 'normal',
+    logic: 'balanced',
+    loot: [none(70), drop('minor-healing-potion', 25), drop('healing-potion', 5)],
+    phases: [
+        { moves: [SWING, counterweight(6), LOCK_THE_BRAKE, HOIST] },
+        {
+            danger: {
+                name: 'Drop the Load', kind: 'danger',
+                text: '15 damage. If you block all of it, the crane is VULNERABLE 50% for 2 turns.',
+                damage: 15, rider: { kind: 'self-vulnerable-on-block', pct: 50, turns: 2 },
+            },
+            // Counterweight's second hit grows to 9.
+            moves: [SWING, counterweight(9), LOCK_THE_BRAKE, HOIST],
+        },
+    ],
+    addedIn: CHAPTER1_ADDED,
+    tags: ['early-game', 'enemy'],
+});
+
 // ─── Test fixture (NOT part of the roster) ───────────────────────────────────
 
 /**
@@ -218,7 +421,7 @@ export const Sandbag_01 = createEnemy({
 // ─── Library indices ──────────────────────────────────────────────────────────
 
 /** Every production enemy, in tier order. */
-export const EnemyLibrary = [FloatEye, GreenJelly, DeathBeholder] as const;
+export const EnemyLibrary = [FloatEye, GallowsCrow, NetMender, CraneHook, GreenJelly, DeathBeholder] as const;
 
 /**
  * An Act 1 region's wandering pool: Float-Eye. The Green Jelly is a
@@ -250,6 +453,9 @@ export const ENEMY_REGISTRY = {
     // Test fixture.
     sandbag: Sandbag_01,
     'float-eye':      FloatEye,
+    'gallows-crow':   GallowsCrow,
+    'net-mender':     NetMender,
+    'crane-hook':     CraneHook,
     'green-jelly':      GreenJelly,
     'death-beholder': DeathBeholder,
 } as const;

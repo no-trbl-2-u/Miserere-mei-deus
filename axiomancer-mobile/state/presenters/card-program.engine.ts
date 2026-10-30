@@ -11,7 +11,7 @@
  */
 
 import {
-    programFaceText, programLineBlock, programLineShortfall, programLineDiscardShortfall, programXChoice, isCurseCard,
+    programFaceText, freeLineBlock, programLineBlock, programLineShortfall, programLineDiscardShortfall, programXChoice, isCurseCard,
     GLOBAL_FREE_TURNS,
     type Card, type CombatEncounterState, type ProgramShortfall, type DiscardShortfall,
 } from '@mechanics';
@@ -196,7 +196,8 @@ export interface ProgramPlayVM {
 /** The engine's read of whether each line of a hand card can be played now. */
 export function programPlayVM(state: CombatEncounterState, uid: string, cardId: string): ProgramPlayVM {
     return {
-        freeBlock: programLineBlock(state, uid, false),
+        // TANGLE refuses any card's FREE line; a program card adds its own refusals.
+        freeBlock: freeLineBlock(state, uid),
         paidBlock: programLineBlock(state, uid, true),
         freeShortfall: programLineShortfall(state, uid, false),
         paidShortfall: programLineShortfall(state, uid, true),

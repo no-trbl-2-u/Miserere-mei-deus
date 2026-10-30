@@ -290,7 +290,50 @@ export interface EnemyMove {
     undertow?: 'heart' | 'body' | 'mind';
     /** BARNACLE n: n Barnacle Curses join your hand (a count, not scaled by level). */
     barnacle?: number;
+    /** The move's one conditional effect, resolved in `Combat/combat.enemy-riders.ts`.
+     *  See {@link EnemyMoveRider}. */
+    rider?: EnemyMoveRider;
 }
+
+/**
+ * A move's conditional effect: the part no plain field covers. One kind per
+ * shape, each resolved in one place (`Combat/combat.enemy-riders.ts`). Fields
+ * named `damage`, `mend` and `ward` are authored at the tier's level and scale
+ * like the move's damage; counts, percentages and thresholds do not.
+ *
+ *   unplayed-card-bonus      +`damage` per card you leave unplayed in your hand.
+ *   hand-size-damage         one hit of `damage` per card in your hand.
+ *   half-dealt-last-turn     one hit of half what you dealt it last turn.
+ *   below-half-vitae         under half VITAE: the hit becomes `damage` and it MENDs `mend`.
+ *   if-tangled               TANGLE left at the end of your turn: the hit becomes `damage`.
+ *   hits-per-discard         one hit of the move's damage per `per` cards in your discard, at least `min`.
+ *   half-guard               your GUARD counts half against its hits.
+ *   steal-conviction-per-hit each hit that gets through takes `amount` Conviction.
+ *   guard-to-ward            if your GUARD blocks all of it, it gains your GUARD as WARD.
+ *   self-vulnerable-on-block if you block all of it, it takes VULNERABLE `pct`% for `turns`.
+ *   lengthen-next-status     until its next turn, the next status you put on it lasts `turns` longer.
+ *   unhit-next-attack-bonus  if you do not hit it on your next turn, its next attack gains `damage`.
+ *   steal-banked-die         takes your newest banked die; with none banked, TANGLE `tangle`.
+ *   delayed-hit              a `damage` hit on its next turn unless you deal it `unless`+ first.
+ */
+export type EnemyMoveRider =
+    | { kind: 'unplayed-card-bonus'; damage: number }
+    | { kind: 'hand-size-damage'; damage: number }
+    | { kind: 'half-dealt-last-turn' }
+    | { kind: 'below-half-vitae'; damage: number; mend: number }
+    | { kind: 'if-tangled'; damage: number }
+    | { kind: 'hits-per-discard'; per: number; min: number }
+    | { kind: 'half-guard' }
+    | { kind: 'steal-conviction-per-hit'; amount: number }
+    | { kind: 'guard-to-ward' }
+    | { kind: 'self-vulnerable-on-block'; pct: number; turns: number }
+    | { kind: 'lengthen-next-status'; turns: number }
+    | { kind: 'unhit-next-attack-bonus'; damage: number }
+    | { kind: 'steal-banked-die'; tangle: number }
+    | { kind: 'delayed-hit'; damage: number; unless: number };
+
+/** A rider's kind, e.g. `half-guard`. */
+export type EnemyMoveRiderKind = EnemyMoveRider['kind'];
 
 /**
  * One HP phase of a `phases` foe. `moves` is the loop played inside the

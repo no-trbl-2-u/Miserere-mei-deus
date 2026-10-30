@@ -1,10 +1,11 @@
 /**
  * Enemy art registry — one OR MORE assets per enemy.
  *
- * Three enemies: the Float-Eye, an alpha-matted painting (black background
- * keyed out so the figure floats over the arena backdrop), and the Green
- * Jelly and the Death Beholder, torio's Javardry free material, ingested in
- * colour. The registry key is the enemy's
+ * The Float-Eye, an alpha-matted painting (black background keyed out so the
+ * figure floats over the arena backdrop); the Green Jelly and the Death
+ * Beholder, torio's Javardry free material, ingested in colour; and Chapter
+ * 1's normals, stand-ins from the same drop as the Float-Eye until T's
+ * portrait swap. The registry key is the enemy's
  * `portraitAsset` (kebab-case) — slug->asset routing stays mobile-local. See
  * provenance.json.
  *
@@ -34,6 +35,11 @@ export const ENEMY_ART_BY_KEY: Readonly<Record<string, number>> = {
     // `grayscale: true` and these are colour enemies (AN1 A6b).
     'green-jelly':       require('./green-jelly.webp'),
     'death-beholder':    require('./death-beholder.webp'),
+    // Chapter 1's normals (phase EN1f): stand-ins restored from the
+    // 2026-07-06 drop until T's portrait swap; static, no frame set.
+    'gallows-crow':      require('./gallows-crow.webp'),
+    'net-mender':        require('./net-mender.webp'),
+    'crane-hook':        require('./crane-hook.webp'),
 };
 
 const ENEMY_ART_POOL: number[] = Object.values(ENEMY_ART_BY_KEY);

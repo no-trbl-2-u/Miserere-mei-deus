@@ -52,9 +52,10 @@ describe('installing a frame set took nothing away from the static registry', ()
     // encounter suite still drives the pane for keys with none. This pins the
     // count, so the next enemy added static, or framed, is a decision this
     // line has to be edited for.
-    it('every enemy on the roster is framed, and the list is exact', () => {
+    it('the framed and the static enemies are exact lists', () => {
         expect(keys.filter((k) => hasEnemyFrames(k)).sort()).toEqual(['death-beholder', 'float-eye', 'green-jelly']);
-        expect(keys.filter((k) => !hasEnemyFrames(k))).toEqual([]);
+        // Chapter 1's stand-in portraits carry no frame set until T picks them.
+        expect(keys.filter((k) => !hasEnemyFrames(k)).sort()).toEqual(['crane-hook', 'gallows-crow', 'net-mender']);
     });
 
     it('an unknown key still falls back to the hash pick, as it always did', () => {

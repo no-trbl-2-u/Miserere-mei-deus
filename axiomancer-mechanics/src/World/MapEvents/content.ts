@@ -148,17 +148,15 @@ const WAYPOINT_NODE_IDS: ReadonlySet<string> = new Set(Object.values(ACT1_WAYPOI
 // nodes, one pool each, by the node list's board kind
 // (`braindump/2026-10-28-breakwater-chapter-1-map.md`, "The node list").
 //
-// Placeholders until T's sessions: fights are today's Act 1 foes at today's
-// pinned levels (the Float-Eye at each fight, the Green Jelly at each elite,
-// the Death Beholder as the chapter boss at the door fight's level); hazards
-// are the shared damage hazard; rests, loot caches, villages and cutscenes
-// come from the shared builders. Every new line is `[content]`.
+// Each fight node binds one foe at one level (`BW_ENCOUNTER_FOES`, T's
+// Breakwater table). Placeholders until T's sessions: the elites are the
+// Green Jelly, the Death Beholder is the chapter boss at the door fight's
+// level, and a fight whose foe has not landed yet is the Float-Eye at level 2;
+// hazards are the shared damage hazard; rests, loot caches, villages and
+// cutscenes come from the shared builders. Every new line is `[content]`.
 
 /** The Breakwater's elite, pinned low like every Act 1 fight. */
 export const BW_ELITE_LEVEL = 3;
-
-/** The Breakwater's Float-Eyes are pinned too, so its XP is fixed. */
-export const BW_FIGHT_LEVEL = 2;
 
 /**
  * Each region's door sits one level under the player a full clear
@@ -285,12 +283,43 @@ function single(nodeId: string, payload: MapEventPayload): MapEventPool {
     return { id: `${nodeId}.${payload.kind}`, entries: [{ kind: payload.kind, weight: 1, payload }] };
 }
 
+/**
+ * The foe and level each Breakwater fight node binds (T's Breakwater table,
+ * every foe under level 10; a zone's two foes alternate across its nodes).
+ * Every `fight` node has a row; the Float-Eye at level 2 holds a node until
+ * its own foe lands.
+ */
+export const BW_ENCOUNTER_FOES: Readonly<Record<string, ActOneFoe>> = {
+    // Fields & south road, level 2.
+    'bw-w2': { slug: 'float-eye', level: 2 },
+    'bw-w3': { slug: 'gallows-crow', level: 2 },
+    'bw-m1': { slug: 'float-eye', level: 2 },
+    'bw-p2': { slug: 'gallows-crow', level: 2 },
+    // The quays, level 3.
+    'bw-h1': { slug: 'net-mender', level: 3 },
+    'bw-h2': { slug: 'crane-hook', level: 3 },
+    'bw-h3': { slug: 'net-mender', level: 3 },
+    // Long pier and harbour steps, the town, the cliffs: placeholders.
+    'bw-h7': { slug: 'float-eye', level: 2 },
+    'bw-t1': { slug: 'float-eye', level: 2 },
+    'bw-t2': { slug: 'float-eye', level: 2 },
+    'bw-t3': { slug: 'float-eye', level: 2 },
+    'bw-t6': { slug: 'float-eye', level: 2 },
+    'bw-l1': { slug: 'float-eye', level: 2 },
+    'bw-d1': { slug: 'float-eye', level: 2 },
+    'bw-d3': { slug: 'float-eye', level: 2 },
+};
+
 /** The pool for one node of the new map, by its board kind. */
 function poolFor(nodeId: string): MapEventPool {
     const { kind, place } = BREAKWATER_CHAPTER_KINDS[nodeId]!;
     switch (kind) {
         case 'start':    return single(nodeId, windmillArrival);
-        case 'fight':    return cwEncounterPool(nodeId, { slug: 'float-eye', level: BW_FIGHT_LEVEL });
+        case 'fight': {
+            const foe = BW_ENCOUNTER_FOES[nodeId];
+            if (!foe) throw new Error(`breakwater: fight ${nodeId} has no row in BW_ENCOUNTER_FOES`);
+            return cwEncounterPool(nodeId, foe);
+        }
         case 'elite':    return cwEncounterPool(nodeId, { slug: 'green-jelly', level: BW_ELITE_LEVEL });
         case 'boss':     return cwEncounterPool(nodeId, { slug: 'death-beholder', level: BW_DOOR_LEVEL, isBoss: true });
         case 'hazard':   return hazardPool(nodeId, `[content] ${place}.`);

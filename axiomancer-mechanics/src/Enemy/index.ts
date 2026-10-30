@@ -255,7 +255,7 @@ export type { EnemyKeyword } from './enemy-keywords';
 export { ENEMY_KEYWORDS, moveKeywords, enemyPhaseKeywords } from './enemy-keywords';
 
 export type {
-    Enemy, EnemyDifficulty, EnemyMove, EnemyMoveKind, EnemyPhase,
+    Enemy, EnemyDifficulty, EnemyMove, EnemyMoveKind, EnemyMoveRider, EnemyMoveRiderKind, EnemyPhase,
 } from './types';
 export {
     PHASE_LINES, PHASES_AUTHORED_LEVEL, enemyPhaseTier, hasEnemyPhases,

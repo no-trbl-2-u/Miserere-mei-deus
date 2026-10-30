@@ -6,7 +6,9 @@
  * node pinned to its one elite, the Green Jelly. The Breakwater's Death
  * Beholder is its chapter boss in the sea keep (`bw-k2`), a dead end behind
  * the keep gate, and it stages three Green Jellies, each holding the road
- * past it. Every other fight is Float-Eye.
+ * past it. Every other Breakwater fight binds the foe and level its
+ * `BW_ENCOUNTER_FOES` row names (T's Breakwater table); every other fight
+ * elsewhere is Float-Eye.
  *
  * Every Act 1 fight is pinned low, and the elite is too: an
  * unpinned elite would scale to its own roster level (7 and up).
@@ -17,6 +19,7 @@ import { describe, expect, it } from 'vitest';
 import { getMapDefinition, getNodeEventPool, isEliteNode, eliteRelicDropsAt } from '../index';
 import { BREAKWATER_CHAPTER_HELD } from '../Continents/Coastal-Village/breakwater-chapter';
 import { ENEMY_REGISTRY } from '../../Enemy/enemy.library';
+import { BW_ENCOUNTER_FOES } from '../MapEvents/content';
 import type { Enemy } from '../../Enemy/types';
 
 const ACT1_MAPS = [
@@ -66,10 +69,16 @@ describe.each(ACT1_MAPS)('Act 1 fights on %s / %s (D30, D61)', (continent, mapNa
         expect(elites[0]!.node.location[0]).toBeLessThan(lastColumn);
     });
 
-    it('every other fight is Float-Eye', () => {
+    it('every other fight is its table row on the Breakwater, and Float-Eye elsewhere', () => {
         const rest = fights.filter(f => !f.payload.isBoss && f.foe?.difficulty !== 'elite');
         expect(rest.length).toBeGreaterThan(0);
-        for (const f of rest) expect(f.payload.enemySlug, f.node.id).toBe('float-eye');
+        for (const f of rest) {
+            const row = mapName === 'breakwater' ? BW_ENCOUNTER_FOES[f.node.id] : undefined;
+            if (mapName === 'breakwater') expect(row, f.node.id).toBeDefined();
+            expect(f.payload.enemySlug, f.node.id).toBe(row?.slug ?? 'float-eye');
+            if (row) expect(f.payload.level, f.node.id).toBe(row.level);
+        }
+        if (mapName === 'breakwater') expect(rest.length).toBe(Object.keys(BW_ENCOUNTER_FOES).length);
     });
 
     it('the elite node is the one node the rest respawn reads as elite (phase ER1)', () => {

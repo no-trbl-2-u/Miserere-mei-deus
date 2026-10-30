@@ -154,14 +154,14 @@ describe('greedy object reproduces the pinned decision sequences', () => {
     // refactor, never the pin. Re-measure them after a legitimate change; do
     // not tune the game to them.
     //
-    // Seed 11 vs Float-Eye: a five-round victory, 22 plays, 5 VULNERABLE
-    // lands, all from A Plain Word.
+    // Seed 11 vs Float-Eye (its HP phases since EN1f): a five-round victory,
+    // 23 plays, 5 VULNERABLE lands, all from A Plain Word.
     it('seed 11 vs FloatEye: a status victory', () => {
         const r = runOneEncounter(loadout(MIX), FloatEye, 11, 'greedy');
         expect({ outcome: r.outcome, rounds: r.rounds, plays: r.plays, statusPlays: r.statusPlays })
-            .toEqual({ outcome: 'victory', rounds: 4, plays: 19, statusPlays: 3 });
+            .toEqual({ outcome: 'victory', rounds: 5, plays: 23, statusPlays: 5 });
         expect(r.cardUsage['grey-word']).toEqual({
-            cardId: 'grey-word', plays: 4, bottomPlays: 3, topPlays: 1, statusLands: 3, discards: 0,
+            cardId: 'grey-word', plays: 6, bottomPlays: 5, topPlays: 1, statusLands: 5, discards: 0,
         });
         // Telemetry stays internally consistent whatever the sequence is: the
         // per-card counters sum to the aggregates (the actual bug detector).

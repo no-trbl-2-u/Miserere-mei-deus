@@ -16,7 +16,7 @@
  */
 
 import type { Character } from '../Character/types';
-import type { Enemy, EnemyMoveKind } from '../Enemy/types';
+import type { Enemy, EnemyMoveKind, EnemyMoveRider, EnemyMoveRiderKind } from '../Enemy/types';
 import type { Effect, ActiveEffect } from '../Effects/types';
 import type { CardAspect, CardType } from '../Cards/types';
 import type { ProgramLedger } from './combat.card-program';
@@ -270,6 +270,27 @@ export interface CombatThreatAction {
     description: string;
     /** Applied to the player if the phase is Overwhelmed (not cleared). */
     effects: CombatThreatEffect[];
+    /** A `phases` move's conditional effect, its numbers scaled to the foe's
+     *  level (`combat.enemy-riders.ts`). */
+    rider?: EnemyMoveRider;
+}
+
+/**
+ * The riders' fight state, carried between turns (`combat.enemy-riders.ts`).
+ * Written only in a fight against a `phases` foe; absent reads as none.
+ */
+export interface EnemyRidersState {
+    /** `directDamageDealt` when the foe's last turn ended: what you dealt
+     *  it since is "what you dealt it last turn". */
+    dealtMark?: number;
+    /** Lengthen the next status you put on the foe by this many turns (until its next turn). */
+    lengthenStatus?: number;
+    /** Armed bonus: if you do not hit it on your turn, its next attack gains this. */
+    unhitBonus?: number;
+    /** Damage added to the foe's next attack's first hit. */
+    nextAttackBonus?: number;
+    /** A hit due on the foe's next turn unless you deal it `unless`+ first. */
+    delayedHit?: { damage: number; unless: number };
 }
 
 /**
@@ -529,6 +550,9 @@ export type CombatEvent =
     | { kind: 'enemy-word'; word: EnemyWordId;
         op: 'gained' | 'soaked' | 'cut' | 'ticked' | 'stripped' | 'faded' | 'spent' | 'shed';
         amount: number; stripped?: string[] }
+    /** A move's rider fired (`combat.enemy-riders.ts`): `amount` is what it
+     *  took, added or dealt (Conviction stolen, WARD copied, the delayed hit, ...). */
+    | { kind: 'enemy-rider'; rider: EnemyMoveRiderKind; amount: number }
     | { kind: 'hand-drawn'; cards: string[] }
     | { kind: 'mercy-opened'; message: string }
     // ── Upgradeable-dice events ────────────────────────────────────────────
@@ -711,6 +735,8 @@ export interface CombatEncounterState {
     program?: ProgramLedger;
     /** The enemy words' state (WARD, BRINE, LEECH on you). Absent = none. */
     enemyWords?: EnemyWordsState;
+    /** The move riders' state (`combat.enemy-riders.ts`). Absent = none. */
+    enemyRiders?: EnemyRidersState;
 }
 
 /**

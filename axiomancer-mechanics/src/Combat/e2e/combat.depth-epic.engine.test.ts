@@ -31,7 +31,8 @@ function makePlayer(cards: string[]): Character {
     return p;
 }
 function makeEnemy(hp: number, stance: 'heart' | 'body' | 'mind'): Enemy {
-    const e = deepClone(FloatEye);
+    // The Float-Eye's body without its HP phases: these cases drive the deck path's clock.
+    const e: Enemy = { ...deepClone(FloatEye), phases: undefined };
     e.id = 'enemy-depth-dummy';
     e.health = hp; e.maxHealth = hp; e.effects = [];
     e.baseStats = { heart: stance === 'heart' ? 6 : 2, body: stance === 'body' ? 6 : 2, mind: stance === 'mind' ? 6 : 2 };

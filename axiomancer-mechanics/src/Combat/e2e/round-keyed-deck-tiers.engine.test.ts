@@ -85,8 +85,8 @@ const TIERED_DECK_IDS = ENEMY_DECK_IDS.filter(id => isTieredDeck(ENEMY_DECKS[id]
 // ── (a) the flat form still compiles to today's behaviour ───────────────────
 
 describe('round-keyed deck tiers — a flat deck still compiles to what it always did', () => {
-    it('most of the roster is still authored flat, and flat decks keep their exact card order', () => {
-        expect(FLAT_DECK_IDS.length).toBeGreaterThan(TIERED_DECK_IDS.length);
+    it('flat decks keep their exact card order', () => {
+        expect(FLAT_DECK_IDS.length).toBeGreaterThan(0);
         for (const id of FLAT_DECK_IDS) {
             const authored = ENEMY_DECKS[id] as readonly string[];
             expect(deckCardIds(ENEMY_DECKS[id])).toEqual(authored);
@@ -115,18 +115,21 @@ describe('round-keyed deck tiers — a flat deck still compiles to what it alway
         }
     });
 
-    it('the 2-3 card majority gains NO delay it did not already author on a card', () => {
-        const short = FLAT_DECK_IDS.filter(id => deckCardIds(ENEMY_DECKS[id]).length <= 3);
-        // The roster has one flat deck, and it is short.
-        expect(short.length).toBeGreaterThan(0);
-        for (const id of short) {
-            const cardIds = deckCardIds(ENEMY_DECKS[id]);
-            compileEnemyDeck(id).forEach((step, i) => {
+    it('a 2-3 card deck gains NO delay it did not already author on a card', () => {
+        // No live deck is short since the Float-Eye moved to HP phases, so a
+        // fixture deck stands in for the duration of the test.
+        const FIXTURE = 'enemy-short-fixture';
+        (ENEMY_DECKS as Record<string, unknown>)[FIXTURE] = ['dp-wet-congregation', 'dp-lead-bell', 'dp-breaking-sea'];
+        try {
+            const cardIds = deckCardIds(ENEMY_DECKS[FIXTURE]);
+            compileEnemyDeck(FIXTURE).forEach((step, i) => {
                 const naturalRound = i + 1; // the round the pointer reaches index i unaided
                 const cardsOwnGate = ENEMY_CARD_LIBRARY[cardIds[i]].unlockAfterRound ?? 0;
-                expect(gateOf(step) ?? 0, `${id}[${i}] gained a delay`)
+                expect(gateOf(step) ?? 0, `${FIXTURE}[${i}] gained a delay`)
                     .toBeLessThanOrEqual(Math.max(naturalRound, cardsOwnGate));
             });
+        } finally {
+            delete (ENEMY_DECKS as Record<string, unknown>)[FIXTURE];
         }
     });
 
@@ -147,11 +150,12 @@ describe('round-keyed deck tiers — a flat deck still compiles to what it alway
         }
     });
 
-    it('a flat common opening (Float-Eye) compiles ungated, exactly as before', () => {
-        const steps = compileEnemyDeck('enemy-float-eye');
-        expect(steps.map(gateOf)).toEqual([undefined, undefined, TIER2_DEFAULT_ROUND]);
-        // Round 3 is where the pointer reaches index 2 anyway — a floor, not a hold.
-        expect(pointerByRound(enemyById('enemy-float-eye'), 5)).toEqual([0, 1, 2, 2, 2]);
+    it('a foe with HP phases has no deck: the Float-Eye and Chapter 1 normals left ENEMY_DECKS', () => {
+        for (const id of ['enemy-float-eye', 'enemy-gallows-crow', 'enemy-net-mender', 'enemy-crane-hook']) {
+            expect(ENEMY_DECK_IDS, id).not.toContain(id);
+            expect(enemyById(id).phases?.length, id).toBe(2);
+        }
+        expect(FLAT_DECK_IDS).toEqual(['enemy-green-jelly']);
     });
 });
 
@@ -211,7 +215,7 @@ describe('round-keyed deck tiers — an authored tiered deck opens its tiers by 
             actionText: 'fork',
         };
         (ENEMY_DECKS as Record<string, unknown>)[FIXTURE] = {
-            tier1: ['dp-first-bell', 'dp-undertow-grip'],
+            tier1: ['dp-wet-congregation', 'dp-lead-bell'],
             tier2: [BRANCH],
             tier3: ['what-shuts-stays-shut'],
         };
