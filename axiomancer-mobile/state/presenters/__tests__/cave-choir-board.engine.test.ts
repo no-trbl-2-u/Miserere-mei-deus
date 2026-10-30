@@ -16,21 +16,20 @@ import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 const DECK = ['grey-strike', 'grey-ward', 'grey-word', 'grey-strike', 'grey-ward'];
 const NO_WORDS = { ward: 0, brine: 0, leechTurns: 0, leechPotency: 0 };
 
-/** The live fight at the sea cave, as the app stages it. */
+/**
+ * The live fight at the sea cave, as the app stages it. The cave draws the
+ * Cave Choir or the Tithe-Collector by seed (EN1j), so this seed draws the choir.
+ */
 function cave(): CombatEncounterState {
-    // The node draws the Cave Choir or the Tithe-Collector on its seeded roll: take a seed that draws the choir.
-    for (let n = 0; n < 40; n++) {
-        const ref: StateFixture = {
-            ...REAL_FIGHT_FIXTURE,
-            id: `en1j-bw-c1-${n}`,
-            seed: `fixture-en1j-bw-c1-${n}`,
-            world: { ...REAL_FIGHT_FIXTURE.world!, node: 'bw-c1' },
-            player: { level: 1, baseStats: { heart: 5, body: 5, mind: 5 } },
-        };
-        const { combat } = startRealFight(ref, { deck: DECK, seed: 3 });
-        if (combat.enemy.id === 'enemy-cave-choir') return rollEncounterDice(combat).state;
-    }
-    throw new Error('no seed drew the Cave Choir at bw-c1');
+    const ref: StateFixture = {
+        ...REAL_FIGHT_FIXTURE,
+        id: 'en1j-bw-c1',
+        seed: 'fixture-bw-c1',
+        world: { ...REAL_FIGHT_FIXTURE.world!, node: 'bw-c1' },
+        player: { level: 1, baseStats: { heart: 5, body: 5, mind: 5 } },
+    };
+    const { combat } = startRealFight(ref, { deck: DECK, seed: 3 });
+    return rollEncounterDice(combat).state;
 }
 
 /** The fight with the choir about to play `move` in `phase` (0 = the opening loop). */

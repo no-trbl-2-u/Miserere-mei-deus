@@ -2064,8 +2064,8 @@ export function enemyWordChips(state: CombatEncounterState, side: 'enemy' | 'pla
  * A foe's own counters (`state.enemyRiders`): not keywords, only fight state
  * the board reads out. The cards the Green Jelly HOLDS, the Tolls the
  * Curfew-Ringer has rung, the Wreck-Picker's hoard, the Tithe-Collector's
- * LEDGER and the Cave Choir's VERSE stand on the foe's side; the curfew it left
- * you stands on yours. Live numbers, like GUARD; never on the telegraph.
+ * LEDGER and the Cave Choir's VERSE stand on the foe's side; the curfew it left you
+ * stands on yours. Live numbers, like GUARD; never on the telegraph.
  */
 export function foeCounterChips(state: CombatEncounterState, side: 'enemy' | 'player'): CombatEffectChipVM[] {
     const r = state.enemyRiders;

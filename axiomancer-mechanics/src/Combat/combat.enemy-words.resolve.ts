@@ -210,10 +210,10 @@ export function applyEnemyWordEffects(
             events.push({ kind: 'enemy-word', word: 'tangle', op: 'gained', amount: eff.tangle! });
         }
         if (eff.undertow) {
-            const words = wordsOf(state);
             // A named die, or "random": the gull-call picks one of the three.
             const dice = ['heart', 'body', 'mind'] as const;
-            const die = eff.undertow === 'random' ? dice[Math.min(2, Math.floor(rng() * 3))] : eff.undertow;
+            const die = eff.undertow === 'random' ? dice[Math.min(2, Math.floor(rng() * 3))]! : eff.undertow;
+            const words = wordsOf(state);
             // A move that names a second die holds both (one move, two UNDERTOW effects).
             const second = towed !== undefined && towed !== die;
             state = withWords(state, second ? { ...words, undertowAlso: die } : { ...words, undertow: die });

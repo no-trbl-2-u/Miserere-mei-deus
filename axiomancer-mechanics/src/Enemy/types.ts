@@ -293,7 +293,7 @@ export interface EnemyMove {
     leech?: number;
     /** TANGLE n: your next n cards cannot use their FREE line (a count, not scaled by level). */
     tangle?: number;
-    /** UNDERTOW: the named die does not roll on your next turn; a pair names two, "random" is one at the fight's roll. */
+    /** UNDERTOW: the named die does not roll on your next turn; a pair names two; `random` is the gull-call's pick. */
     undertow?: 'heart' | 'body' | 'mind' | 'random' | readonly ['heart' | 'body' | 'mind', 'heart' | 'body' | 'mind'];
     /** BARNACLE n: n Barnacle Curses join your hand (a count, not scaled by level). */
     barnacle?: number;

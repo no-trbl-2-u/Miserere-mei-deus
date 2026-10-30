@@ -155,7 +155,7 @@ describe('A11 and A12 — the three foes play exactly the Appendix', () => {
         expect(BW_ENCOUNTER_FOES['bw-d1']).toEqual({ slug: 'smokehouse-gutter', level: 6 });
         expect(BW_ENCOUNTER_FOES['bw-d3']).toEqual({ slug: 'wreck-picker', level: 6 });
         // The sea cave draws the Tithe-Collector or the Cave Choir (EN1j's pair), 50/50.
-        expect(BW_ELITE_DRAWS['bw-c1']).toContainEqual({ slug: 'tithe-collector', level: 5 });
+        expect(BW_ELITE_DRAWS['bw-c1']).toContainEqual(expect.objectContaining({ slug: 'tithe-collector', level: 5 }));
         const entries = getNodeEventPool('coastal-continent', 'breakwater', 'bw-c1')!.entries;
         const payload = entries.map(e => e.payload).find(p => (p as { enemySlug?: string }).enemySlug === 'tithe-collector');
         expect(payload).toMatchObject({ kind: 'encounter', enemySlug: 'tithe-collector', level: 5 });

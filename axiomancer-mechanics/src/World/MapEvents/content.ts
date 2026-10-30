@@ -287,8 +287,8 @@ function single(nodeId: string, payload: MapEventPayload): MapEventPool {
 /**
  * The foe and level each Breakwater fight node binds (T's Breakwater table,
  * every foe under level 10; a zone's two foes alternate across its nodes).
- * Every `fight` node has a row; the
- * Float-Eye at level 2 holds a node until its own foe lands.
+ * Every `fight` node has a row; the sea cave's elite draws are in
+ * `BW_ELITE_DRAWS`. The Float-Eye at level 2 holds a node until its own foe lands.
  */
 export const BW_ENCOUNTER_FOES: Readonly<Record<string, ActOneFoe>> = {
     // Fields & south road, level 2.
@@ -321,8 +321,8 @@ export const BW_ENCOUNTER_FOES: Readonly<Record<string, ActOneFoe>> = {
  * `bw-w5`). Levels are T's Breakwater table, every foe under level 10.
  */
 export const BW_ELITE_DRAWS: Readonly<Record<string, readonly ActOneFoe[]>> = {
-    // The sea cave, level 5: the Cave Choir or the Tithe-Collector (EN1h), 50/50 per run.
-    'bw-c1': [{ slug: 'cave-choir', level: 5 }, { slug: 'tithe-collector', level: 5 }],
+    // The sea cave, level 5: the Cave Choir (EN1j) and the Tithe-Collector (EN1h).
+    'bw-c1': [{ slug: 'cave-choir', level: 5 }, { slug: 'tithe-collector', level: 5, difficulty: 'elite' }],
 };
 
 /**

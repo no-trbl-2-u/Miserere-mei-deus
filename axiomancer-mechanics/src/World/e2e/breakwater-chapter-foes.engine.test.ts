@@ -92,7 +92,7 @@ describe('the sea cave draws the Tithe-Collector, which fires Audit at 60% and F
     it('bw-c1 names it as the second of its two draws, at level 5', () => {
         const slugs = getNodeEventPool('coastal-continent', 'breakwater', 'bw-c1')!.entries.map(e => (e.payload as { enemySlug?: string }).enemySlug);
         expect(slugs).toEqual(['cave-choir', 'tithe-collector']);
-        expect(BW_ELITE_DRAWS['bw-c1']![1]).toEqual({ slug: 'tithe-collector', level: 5 });
+        expect(BW_ELITE_DRAWS['bw-c1']![1]).toMatchObject({ slug: 'tithe-collector', level: 5 });
     });
 
     it('its DANGERs fire at its lines', () => {

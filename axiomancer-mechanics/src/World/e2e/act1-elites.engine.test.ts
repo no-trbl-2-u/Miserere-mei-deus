@@ -61,10 +61,10 @@ describe.each(ACT1_MAPS)('Act 1 fights on %s / %s (D30, D61)', (continent, mapNa
         const elites = fights.filter(f => f.difficulty === 'elite');
         if (staged) {
             expect(elites.map(f => f.node.id).sort()).toEqual([...staged.elites].sort());
-            // A node with a `BW_ELITE_DRAWS` row draws from it (EN1j); the rest hold the Green Jelly.
+            // A node with a `BW_ELITE_DRAWS` row draws one of its foes (EN1j, EN1h); the rest hold the Green Jelly.
             for (const e of elites) {
                 const draw = mapName === 'breakwater' ? BW_ELITE_DRAWS[e.node.id] : undefined;
-                expect(e.payload.enemySlug, e.node.id).toBe(draw?.[0]?.slug ?? 'green-jelly');
+                expect(draw?.map(d => d.slug) ?? ['green-jelly'], e.node.id).toContain(e.payload.enemySlug);
             }
             for (const id of staged.elites) expect(BREAKWATER_CHAPTER_HELD as readonly string[]).toContain(id);
             return;

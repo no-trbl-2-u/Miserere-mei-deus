@@ -302,13 +302,6 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
   status back. Placed on the town's nodes; an elite slot stages it at the elite
   tier until its own foe lands. The only foe that can be befriended, below 30%
   VITAE, which is also where its second phase begins.
-- **The Cave Choir:** level 5, an elite with three HP phases (EN1j), drawn
-  at the sea cave (`bw-c1`). Its VERSE count (fight state on its pane, not
-  a word) rises with each Hymn; Crescendo hits for it and its 30% DANGER,
-  the Amen, spends it all, hitting and mending for each. Its Antiphon
-  telegraphs UNKNOWN and answers your last turn. An elite node names one foe
-  or two in `BW_ELITE_DRAWS` (`World/MapEvents/content.ts`); with two, the
-  map's seeded pool roll draws one on arrival, 50/50.
 - **Wreck-Picker and Smokehouse Gutter:** level 6 normals with HP phases (EN1h), on the cliffs
   and the hamlet. The Wreck-Picker takes cards from your discard into its hoard
   (shown on its pane; its Hurl Flotsam and Hide in the Hoard grow with it, and its
@@ -317,6 +310,14 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
 - **The Tithe-Collector:** level 5, the sea cave's elite (EN1h), three phases (60%
   and 30% lines). Its LEDGER (on its pane) counts +1 for each card you scrap and each
   Conviction you spend; Audit reads it, Foreclose takes all your Conviction.
+- **The Cave Choir:** level 5, an elite with three HP phases (EN1j), drawn
+  at the sea cave (`bw-c1`). Its VERSE count (fight state on its pane, not
+  a word) rises with each Hymn; Crescendo hits for it and its 30% DANGER,
+  the Amen, spends it all, hitting and mending for each. Its Antiphon
+  telegraphs UNKNOWN and answers your last turn. An elite node names one foe
+  or two in `BW_ELITE_DRAWS` (`World/MapEvents/content.ts`); with two, the
+  map's seeded pool roll draws one on arrival, 50/50. The sea cave draws the
+  Cave Choir or the Tithe-Collector.
 - **The Death Beholder:** boss, 320 VITAE at level 8, two stages (at 60% and
   25% VITAE). It holds every region's door, pinned at level 1, 2, 3 and 4
   (`World/MapEvents/content.ts`); `scaleEnemyToLevel` scales its VITAE to

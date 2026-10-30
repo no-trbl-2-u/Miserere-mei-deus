@@ -44,8 +44,7 @@ describe('the R2 roster', () => {
             ]);
         expect(EnemyLibrary.map(e => e.id)).toEqual([
             'enemy-float-eye', ...CHAPTER1_IDS, 'enemy-green-jelly', 'enemy-curfew-ringer', ...CLIFF_IDS,
-            'enemy-cave-choir',
-            'enemy-death-beholder',
+            'enemy-cave-choir', 'enemy-death-beholder',
         ]);
         expect([...LIVE_ENEMY_IDS].sort())
             .toEqual([
