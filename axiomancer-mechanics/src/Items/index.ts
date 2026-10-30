@@ -25,8 +25,6 @@ export {
     wornPerSlot, isEquippedFirstOfSlot, findEquippedInSlot,
 } from './equipped';
 export { consumableLibrary, getConsumableById } from './consumable.library';
-export { buyItem, sellItem, defaultSellPrice } from './shop.reducer';
-export type { ShopWare } from './shop.types';
 // The signet relics + worn-loadout signature derivation.
 export {
     relicLibrary, getRelicById,

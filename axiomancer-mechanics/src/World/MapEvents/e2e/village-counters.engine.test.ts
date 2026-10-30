@@ -17,7 +17,7 @@ import { describe, expect, it } from 'vitest';
 import { createNewGameState } from '../../../Game/game.reducer';
 import { applyPayload, resolveVillage } from '../handlers';
 import { resolveMapEvent, getNodePrimaryEventKind } from '../resolve-map-event';
-import { ACT1_ANVIL_NODES } from '../content';
+import { ACT1_ANVIL_NODES, BREAKWATER_ANVIL_NODES, breakwaterVillagePool } from '../content';
 import { MAP_REGISTRY, createMapState } from '../../map.registry';
 import { BLACKSMITH_WITNESS_VARIANTS, HEART_RICH_PAYLOAD_VARIANT } from '../../Blacksmith/blacksmith.content';
 import type { VillagePayload } from '../types';
@@ -81,12 +81,9 @@ const ACT1_MAPS = ['breakwater', 'charcoal-wood', 'beacon-crags', 'lantern-deep'
 /** The Act 1 maps with exactly one village, the Anvil node (`ACT1_ANVIL_NODES`). */
 const LATER_MAPS = ['charcoal-wood', 'beacon-crags', 'lantern-deep'] as const;
 
-/** The rebuilt Breakwater's two villages, each with all three counters. */
-const BREAKWATER_VILLAGES = ['bw-t4', 'bw-m5'] as const;
-
 /** Every Act 1 village that carries the Anvil: [map, node]. */
 const ANVIL_VILLAGES: [string, string][] = [
-    ...BREAKWATER_VILLAGES.map(n => ['breakwater', n] as [string, string]),
+    ...BREAKWATER_ANVIL_NODES.map(n => ['breakwater', n] as [string, string]),
     ...LATER_MAPS.map(m => [m, ACT1_ANVIL_NODES[m]!] as [string, string]),
 ];
 
@@ -117,6 +114,16 @@ describe('the regional Anvils — one per later Act 1 map, two on the Breakwater
         });
     });
 
+    it('names the Breakwater\'s two Anvil villages, the harbour town and the walled manor', () => {
+        expect(BREAKWATER_ANVIL_NODES).toEqual(['bw-t4', 'bw-m5']);
+    });
+
+    it('refuses a Breakwater village the lookup does not name', () => {
+        expect(breakwaterVillagePool('bw-t4', 'Harbour town').entries[0]!.payload).toMatchObject({ kind: 'village', villageName: 'Harbour town' });
+        expect(() => breakwaterVillagePool('bw-w2', 'Gallows crossroads'))
+            .toThrow('content: Breakwater village bw-w2 is not in BREAKWATER_ANVIL_NODES');
+    });
+
     it.each(ANVIL_VILLAGES)(
         '%s: %s resolves to a village whose Anvil offers the witness variants',
         (mapName, nodeId) => {
@@ -142,7 +149,7 @@ describe('the regional Anvils — one per later Act 1 map, two on the Breakwater
         const villages = def.nodes
             .filter(n => getNodePrimaryEventKind(def.continent, def.name, n.id) === 'village')
             .map(n => n.id);
-        expect(villages).toEqual([...BREAKWATER_VILLAGES]);
+        expect(villages).toEqual([...BREAKWATER_ANVIL_NODES]);
     });
 
     it('no map event pool authors a blacksmith kind', () => {

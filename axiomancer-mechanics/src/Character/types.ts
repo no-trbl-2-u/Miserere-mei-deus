@@ -75,8 +75,9 @@ export interface Character {
     baseStats: BaseStats;
     inventory: Item[];
     /**
-     * Generic in-game currency counter. Spent / earned through the shop
-     * reducers (`Items/shop.reducer.ts`).
+     * Generic in-game currency counter. Spent at the village counters
+     * (`World/Village`); earned from loot caches, quest rewards and hazard
+     * puzzles.
      */
     currency: number;
     equipment: EquipmentLoadout;

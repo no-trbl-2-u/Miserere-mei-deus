@@ -109,9 +109,9 @@ function currencyLootPool(nodeId: string, currency: number, description: string)
 //
 // One village with an Anvil counter sits on one node near each later Act 1
 // region's exit, a step from its door fight: the Charcoal Wood's well, the
-// Beacon Crags' falls and the Lantern Deep's forge (column 4); the
-// Breakwater's two villages carry it too. Same engine,
-// budget, witness variants and line everywhere.
+// Beacon Crags' falls and the Lantern Deep's forge (column 4). The Breakwater
+// has two, its harbour town and its walled manor (`BREAKWATER_ANVIL_NODES`).
+// Same engine, budget, witness variants and line everywhere.
 const ANVIL_LINE = 'A lean-to forge, coals still breathing. The smith looks up from the anvil and nods at your dice.';
 export const ACT1_ANVIL_NODES: Readonly<Record<string, string>> = {
     'charcoal-wood': 'cw-18',
@@ -125,11 +125,16 @@ const ANVIL_VILLAGE_NAMES: Readonly<Record<string, string>> = {
 };
 const ANVIL_NODE_IDS: ReadonlySet<string> = new Set(Object.values(ACT1_ANVIL_NODES));
 
+/** The Breakwater's two Anvil villages; every village on its node list is one of them. */
+export const BREAKWATER_ANVIL_NODES: readonly string[] = ['bw-t4', 'bw-m5'];
+
 // ─── Empty waypoints ─────────────────────────────────────────────────────────
 //
 // The nodes that held a gathering event until the kind was cut. They carry no
 // pool: arriving reveals their roads and resolves to nothing, and the map
-// draws them as a waypoint. The later chapters' plots re-author them.
+// draws them as a waypoint. The later chapters' plots re-author them. The
+// Breakwater has none: every node on its list carries a pool
+// (`BREAKWATER_CHAPTER_POOLS`).
 export const ACT1_WAYPOINT_NODES: Readonly<Record<string, readonly string[]>> = {
     'charcoal-wood': ['cw-4', 'cw-8', 'cw-14'],
     'beacon-crags':  ['bc-7'],
@@ -268,6 +273,14 @@ const TRAVEL: Readonly<Record<string, MapEventPayload>> = {
     },
 };
 
+/** A Breakwater village: an Anvil village, refused for a node `BREAKWATER_ANVIL_NODES` does not name. */
+export function breakwaterVillagePool(nodeId: string, place: string): MapEventPool {
+    if (!BREAKWATER_ANVIL_NODES.includes(nodeId)) {
+        throw new Error(`content: Breakwater village ${nodeId} is not in BREAKWATER_ANVIL_NODES`);
+    }
+    return villagePool(nodeId, place, ANVIL_LINE);
+}
+
 function single(nodeId: string, payload: MapEventPayload): MapEventPool {
     return { id: `${nodeId}.${payload.kind}`, entries: [{ kind: payload.kind, weight: 1, payload }] };
 }
@@ -283,7 +296,7 @@ function poolFor(nodeId: string): MapEventPool {
         case 'hazard':   return hazardPool(nodeId, `[content] ${place}.`);
         case 'rest':     return campRestPool(nodeId, `[content] ${place}.`);
         case 'loot':     return lootCachePool(nodeId, COAST_LOOT_CACHES[LOOT_NODES[nodeId]!]!);
-        case 'village':  return villagePool(nodeId, place, ANVIL_LINE);
+        case 'village':  return breakwaterVillagePool(nodeId, place);
         case 'cutscene': return single(nodeId, { kind: 'cutscene', lines: [`[content] ${place}.`] });
         case 'travel':   return single(nodeId, TRAVEL[nodeId]!);
         case 'quest': {

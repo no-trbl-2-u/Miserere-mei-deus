@@ -48,6 +48,14 @@ describe('createMapState keeps the road rule on a gauntlet and adjacency on a la
         expect(m.availableNodes).toEqual(['a']);
         expect(m.lockedNodes).toEqual(['b', 'c']);
     });
+
+    it('a map that authors no blocked roads opens with none', () => {
+        // guard-test: the `initialBlockedRoutes ?? []` default (mutation survivor map.registry.ts:73 left by #1063)
+        const { initialBlockedRoutes: _, ...open } = graph('gauntlet');
+        const m = createMapState(open);
+        expect(m.blockedRoutes).toEqual([]);
+        expect(m.availableNodes).toEqual(['a', 'b']);
+    });
 });
 
 describe('settleQuestNodes re-syncs the move lists', () => {
@@ -59,5 +67,17 @@ describe('settleQuestNodes re-syncs the move lists', () => {
         for (const node of questNodes) {
             expect(settled.lockedNodes).not.toContain(node);
         }
+    });
+});
+
+describe('settleQuestNodes leaves a map with no questline alone', () => {
+    // guard-test: the map-name filter and the unchanged-map short cut (mutation survivors quest-nodes.ts:32 and :39 left by #1063)
+    it('returns the map itself: no other map\'s quest node is consumed, and stale lists are not re-synced', () => {
+        expect(questNodeIdsOn('charcoal-wood')).toEqual([]);
+        const map = createStartingWorld('charcoal-wood').currentMap;
+        const stale = { ...map, availableNodes: [], lockedNodes: [] };
+        const settled = settleQuestNodes(stale);
+        expect(settled).toBe(stale);
+        expect(settled.consumedNodes).toEqual([]);
     });
 });

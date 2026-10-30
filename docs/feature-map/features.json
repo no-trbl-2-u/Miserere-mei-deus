@@ -1936,12 +1936,6 @@
     {
       "kind": "coupling",
       "from": "area:Items",
-      "to": "area:Character",
-      "file": "axiomancer-mechanics/src/Items/shop.reducer.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "area:Items",
       "to": "area:Combat",
       "file": "axiomancer-mechanics/src/Items/equipment.engine.ts"
     },

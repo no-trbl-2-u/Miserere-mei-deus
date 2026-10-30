@@ -164,11 +164,9 @@ Each NPC puts a hard choice in a different life situation, with character confli
 ### Resolved since the original Pending list
 
 - ~~Shop reducers~~ — Phase 37 (`f9c18f0`) shipped `buyItem` + `sellItem`
-  + `defaultSellPrice` reducers in `src/Items/shop.reducer.ts`; CLI
-  affordance lives in `src/CLI/game.cli.ts` `shopLoop`. `NPC.isShopkeeper`
-  is consulted by the dialogue runtime to route into the shop. See
-  the archived `docs/items.md` (`archive-pre-revamp:plan/archive/2026-09-25-trim-t1/axiomancer-mechanics/docs/items.md`) for the engine
-  description.
+  + `defaultSellPrice` in `src/Items/shop.reducer.ts`; no village sold
+  items after NK1c, and phase HD1a deleted them. The village counters
+  (`src/World/Village`) sell cards, a bed and card removal.
 - ~~Moral gating~~ — the moral meter and alignment gates were removed
   2026-09-27 (T6, D39). Dialogue gates on quests and flags only.
 
