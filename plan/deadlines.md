@@ -203,7 +203,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-10-27 | Pick the rest of the item icons: four relics, the category glyphs, the unknown mark and the empty bag (the six lane relics and the three potions are done) (1 h) | W1 | IT2a | - |
 | [x] | 2026-10-28 | Design the Breakwater map before enemy session 1: total node count and count per kind, drop the gathering nodes, check the coast art for room for more keep nodes (0.5 h) | W1 | T | - |
 | [x] | 2026-10-28 | Enemy session 1: Chapter 1's normal roster, the Breakwater's 15 fight nodes (1 h) | W1 | T | - |
-| [ ] | 2026-10-29 | Author the first character: portrait, starting relic and its lane, two starting lanes, three lane cards, the playstyle line (1 h) | W1 | CH1e | - |
+| [ ] | 2026-10-29 | Author the first character: portrait, starting relic and its lane, two starting lanes, three lane cards, the playstyle line (1 h) | W1 | CH1e | MF1a, MF1b, MF1c, MF1d |
 | [ ] | 2026-10-30 | W1 demo part 1: T plays the ten hard candidates (1 h) | W1 | T | - |
 | [ ] | 2026-10-31 | Enemy session 2: pick the L4 and W5 elites from the drafts (the Lamplighter or the Wrecker, the Toll-Keeper or the Tide-Gate) and design the sea keep's boss; the C1 elite is set (1 h) | W1 | T | - |
 | [ ] | 2026-10-31 | Pitch Chapter 1's weapons and armor: how many of each, what each does, where each drops, and settle them (1 h) | W1 | T | - |
@@ -257,6 +257,7 @@ fails the root `npm test` on an open row (`[ ]`, `[-]` or `[blocked: …]`) that
 names, and on a line here with no reason. **A row listed here is work the loop may still pick on its ordinary turn:
 undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
 
+- MF1e — T plays the Merciful test deck on a preview build after MF1d; date not set (T picks it).
 - HD1b — plotted 2026-10-29; cleanup loop work, needs no time from T; date not set.
 - AT1a — plotted 2026-10-29; the DevLog atlas's data, loop work that needs no time from T; date not set.
 - AT1b — plotted 2026-10-29; the DevLog atlas page, loop work; date not set.
@@ -347,6 +348,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-30** — **the fourth lane plotted** (T in session, `/lane-creator` step 8 into `/plot` of the Merciful trial set: "get this land into the build so we can get started on our first character"). **Edited** the Item "Author the first character": its `Waits on` now names MF1a-MF1d, the rows that register the Merciful; its date (T's) is unchanged. **Added** an Unscheduled line for MF1e (T's check, date not set). **Ticked** nothing.
 - **2026-10-30** — **Chapter 1's enemies plotted (EN1); portrait swap and tuning added** (T, in the enemy-drafts thread: "For the normals, we'll use all of them ... Get the PR in and get it merged. Then add to the deadlines to swap out the portraits with the most thematic from the set and that we need to do actual tuning. Both for the enemies and for the cards"). **Ticked** enemy session 1. **Edited** enemy session 2 (Oct 31) to the L4 and W5 elite picks and the boss, the Nov 2 B2 plot to those alone (1 h to 0.5 h), and the Nov 8 art pick to T's portrait swap, which waits on EN1a-EN1h. **Added** two Items, dates Claude's draft for T to move: tune Chapter 1's enemies (Nov 13, 1 h, waits on EN1i) and tune the cards (Dec 7, 1.5 h, after the enemy tuning). Weeks now 9, 7.5 and 8.5 hours.
 - **2026-10-29** — **AT1 plotted** (T, attended `/plot`: the Miserere Atlas rebuilt in the private DevLog, data-driven): added AT1a, AT1b and AT1c under `## Unscheduled` (loop work; no T act waits on it). No Item edited or ticked: the atlas changes no Item's premise.
 - **2026-10-30** — **Chapter 1's weapons and armor join the MVP** (T, in the enemy-drafts thread: "add weapons and armor to the list of things needed to be pitched and plotted for the full MVP deadline"). **Added** two Items and their MVP-schedule pieces: the pitch on Sat Oct 31 (1 h, `T`) and its plot on Mon Nov 2 (0.5 h, `needs plot`). **Edited** the MVP milestone to name them and the three-week total from about 23 h to about 24.5 h (9, 8 and 7.5). No date moved; nothing ticked.
