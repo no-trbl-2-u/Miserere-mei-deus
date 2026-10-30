@@ -87,8 +87,28 @@ jobs:
           fi
           git commit -m "measured: truth run $(date -u +%F) — ${DRIFTS:-0} drift(s)"
           branch="${GITHUB_REF_NAME}"
+          # A run queued behind another truth run measured an older commit, so
+          # its report collides with the one that landed meanwhile: both append
+          # a line to history.jsonl and rewrite latest.md. Keep main's lines
+          # plus this run's new one, and this run's latest.md. Any other
+          # conflict (plan/AUDIT.md) still fails the rebase.
+          resolve_report() {
+            local f
+            for f in $(git diff --name-only --diff-filter=U); do
+              case "$f" in
+                docs/reports/measured/history.jsonl)
+                  { git show ":2:$f"; git show ":3:$f" | tail -n 1; } > "$f" ;;
+                docs/reports/measured/latest.md)
+                  git show ":3:$f" > "$f" ;;
+                *) return 1 ;;
+              esac
+              git add -- "$f"
+            done
+            GIT_EDITOR=true git rebase --continue
+          }
           for delay in 2 4 8 16; do
-            git pull --rebase origin "$branch" && git push origin "HEAD:$branch" && exit 0
+            { git pull --rebase origin "$branch" || resolve_report; } \
+              && git push origin "HEAD:$branch" && exit 0
             git rebase --abort 2>/dev/null || true
             sleep "$delay"
           done
