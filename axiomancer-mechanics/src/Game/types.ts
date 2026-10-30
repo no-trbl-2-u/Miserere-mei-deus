@@ -1,6 +1,7 @@
 import { WorldState, QuestLog, Encounter } from '../World/types';
 import { LabyrinthProgress } from '../World/Labyrinth/types';
 import { Character } from '../Character/types';
+import type { EnemySlug } from '../Enemy/enemy.library';
 
 /**
  * Top-level game state. The root object that aggregates the player,
@@ -62,6 +63,12 @@ export interface CodexEntry {
  */
 export interface CodexState {
     unlockedEntries: string[];
+    /**
+     * Slugs of the foes the player has beaten (a win or a befriend), written by
+     * the END_COMBAT reducer, de-duped. Optional: a save written before it reads
+     * as none beaten (`defeatedEnemies` in `defeat-ledger.ts`).
+     */
+    defeatedEnemies?: EnemySlug[];
 }
 
 export interface GameState {

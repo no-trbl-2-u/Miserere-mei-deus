@@ -7,7 +7,8 @@
 import { describe, it, expect } from 'vitest';
 
 import { migrate } from './game.migrate';
-import { GAME_STATE_VERSION } from './game.reducer';
+import { GAME_STATE_VERSION, createNewGameState } from './game.reducer';
+import { defeatedEnemies } from './defeat-ledger';
 
 describe('migrate refuses a save from another version', () => {
     it('names both versions and tells the player to start a new game', () => {
@@ -19,5 +20,21 @@ describe('migrate refuses a save from another version', () => {
 
     it('refuses a payload that is not an object before reading its version', () => {
         expect(() => migrate(null, GAME_STATE_VERSION)).toThrow('migrate: invalid save payload (got object).');
+    });
+});
+
+describe('the optional defeat ledger (EN1b)', () => {
+    it('a save written before it loads at the current version and reads as none beaten', () => {
+        const old = createNewGameState();
+        const { defeatedEnemies: _drop, ...codex } = old.codex;
+        const loaded = migrate({ ...old, codex }, GAME_STATE_VERSION);
+        expect(loaded.codex.defeatedEnemies).toBeUndefined();
+        expect(defeatedEnemies(loaded)).toEqual([]);
+    });
+
+    it('a save that carries the ledger keeps it through the load', () => {
+        const state = createNewGameState();
+        const saved = { ...state, codex: { ...state.codex, defeatedEnemies: ['float-eye' as const] } };
+        expect(defeatedEnemies(migrate(saved, GAME_STATE_VERSION))).toEqual(['float-eye']);
     });
 });

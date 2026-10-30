@@ -49,6 +49,7 @@ import { experienceForLevel } from '../Character/experience';
 import { addItemStacking, rollEncounterLoot, totalEncounterXp } from './combat-grants';
 import { getRng } from '../Utils/rng';
 import { generateRunId } from './run-loop';
+import { enemySlugOf } from './defeat-ledger';
 import { resolveDeath, freshRunKeepingCharacter } from './death';
 
 /**
@@ -370,6 +371,18 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
                     nextCodex = {
                         ...nextCodex,
                         unlockedEntries: [...nextCodex.unlockedEntries, entry.id],
+                    };
+                }
+            }
+
+            // The defeat ledger: a win or a befriend records the lead foe's slug
+            // (de-duped). A foe the registry does not hold has no slug to record.
+            if (outcome === 'victory' || outcome === 'friendship') {
+                const slug = enemySlugOf(foe);
+                if (slug && !(nextCodex.defeatedEnemies ?? []).includes(slug)) {
+                    nextCodex = {
+                        ...nextCodex,
+                        defeatedEnemies: [...(nextCodex.defeatedEnemies ?? []), slug],
                     };
                 }
             }
