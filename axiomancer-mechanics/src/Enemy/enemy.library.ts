@@ -15,6 +15,8 @@
  *     elites, drawn per run; HP phases.
  *   - The Cave Choir (L5, elite) — the sea cave's other elite, drawn per run;
  *     HP phases and its VERSE count.
+ *   - The Toll-Keeper and the Tide-Gate (L8, elites) — the keep causeway's
+ *     two elites, one drawn per run; HP phases, the TOLL and the TIDE.
  *   - The Death Beholder (L8, boss) — every region's door fight.
  *
  * A `phases` foe plays T's moves: a fixed loop per phase, a DANGER on
@@ -353,6 +355,61 @@ const ANTIPHON: EnemyMove = {
     name: 'Antiphon', kind: 'unknown',
     text: 'Answers your last turn. If you attacked, The Pews. If you guarded, a Hymn worth +2 VERSE.',
     rider: { kind: 'antiphon', ward: 10, damage: 3, hits: 2, verse: 2 },
+};
+
+// The Toll-Keeper and the Tide-Gate (phase EN1l), the keep causeway's two
+// elites: numbers authored at level 3 (`PHASES_AUTHORED_LEVEL.elite`).
+
+const LEVY: EnemyMove = {
+    name: 'Levy', kind: 'attack',
+    text: '5 damage + TOLL.',
+    damage: 5, rider: { kind: 'toll-levy', damage: 1 },
+};
+const STRONGBOX: EnemyMove = {
+    name: 'Strongbox', kind: 'defend',
+    text: 'WARD 10.',
+    ward: 10,
+};
+const WRIT: EnemyMove = {
+    name: 'Writ', kind: 'status',
+    text: 'A Writ (BARNACLE) Curse into your hand.',
+    barnacle: 1,
+};
+const DISTRAIN: EnemyMove = {
+    name: 'Distrain', kind: 'attack',
+    text: '4 damage and takes a random card from your hand until you pay the TOLL.',
+    damage: 4, rider: { kind: 'distrain' },
+};
+const DOUBLE_LEVY: EnemyMove = {
+    name: 'Levy', kind: 'attack',
+    text: '5 damage + double TOLL.',
+    damage: 5, rider: { kind: 'toll-levy', damage: 2 },
+};
+
+const WASH_OVER: EnemyMove = {
+    name: 'Wash Over', kind: 'attack',
+    text: '4 damage + TIDE.',
+    damage: 4, rider: { kind: 'tide-wash', damage: 1 },
+};
+const SLUICE: EnemyMove = {
+    name: 'Sluice', kind: 'defend',
+    text: 'WARD 3 per TIDE.',
+    rider: { kind: 'tide-ward', ward: 3 },
+};
+const GATE_UNDERTOW: EnemyMove = {
+    name: 'Undertow', kind: 'status',
+    text: 'UNDERTOW on 1 die.',
+    undertow: 'mind',
+};
+const WASH_OVER_HIGH: EnemyMove = {
+    name: 'Wash Over', kind: 'attack',
+    text: '4 damage + TIDE. Hits twice at TIDE 4+.',
+    damage: 4, rider: { kind: 'tide-wash', damage: 1, twiceAt: 4 },
+};
+const WASH_OVER_FLOOD: EnemyMove = {
+    name: 'Wash Over', kind: 'attack',
+    text: '4 damage + TIDE. Hits twice at TIDE 4+. TIDE now rises 2 a turn.',
+    damage: 4, rider: { kind: 'tide-wash', damage: 1, twiceAt: 4, rise: 2 },
 };
 
 // ─── The roster ───────────────────────────────────────────────────────────────
@@ -837,6 +894,76 @@ export const CaveChoir = createEnemy({
     tags: ['early-game', 'enemy', 'elite'],
 });
 
+/** The keep causeway's elite (phase EN1l): the TOLL rises each turn until you pay it. */
+export const TollKeeper = createEnemy({
+    id: 'enemy-toll-keeper',
+    portraitAsset: 'toll-keeper',
+    name: 'The Toll-Keeper',
+    description: 'Nobody crosses the causeway without paying. He has never once been paid in coin.',
+    level: 8,
+    baseStats: enemyStatBudget(8),
+    mapName: 'breakwater',
+    difficulty: 'elite',
+    logic: 'strategic',
+    loot: [none(80), drop('healing-potion', 20)],
+    phases: [
+        { moves: [LEVY, STRONGBOX, WRIT] },
+        {
+            danger: {
+                name: 'Compound Interest', kind: 'danger',
+                text: '4 damage per Curse in your hand, deck and discard.',
+                rider: { kind: 'curse-count-hit', damage: 4 },
+            },
+            moves: [LEVY, DISTRAIN],
+        },
+        {
+            danger: {
+                name: 'Seize the Causeway', kind: 'danger',
+                text: 'TOLL doubles, then 2 damage per TOLL.',
+                rider: { kind: 'toll-seize', damage: 2 },
+            },
+            moves: [DOUBLE_LEVY, DISTRAIN],
+        },
+    ],
+    addedIn: CHAPTER1_ADDED,
+    tags: ['early-game', 'enemy', 'elite'],
+});
+
+/** The keep causeway's second elite (phase EN1l): the TIDE rises each turn, and at low tide it is VULNERABLE. */
+export const TideGate = createEnemy({
+    id: 'enemy-tide-gate',
+    portraitAsset: 'tide-gate',
+    name: 'The Tide-Gate',
+    description: 'The causeway floods twice a day. The gate decides when.',
+    level: 8,
+    baseStats: enemyStatBudget(8),
+    mapName: 'breakwater',
+    difficulty: 'elite',
+    logic: 'strategic',
+    loot: [none(80), drop('healing-potion', 20)],
+    phases: [
+        { moves: [WASH_OVER, SLUICE, GATE_UNDERTOW] },
+        {
+            danger: {
+                name: 'Spring Tide', kind: 'danger',
+                text: 'TIDE jumps to 5, then 3 damage per TIDE.',
+                rider: { kind: 'tide-surge', damage: 3, to: 5 },
+            },
+            moves: [WASH_OVER_HIGH, SLUICE],
+        },
+        {
+            danger: {
+                name: 'The Gate Opens', kind: 'danger',
+                text: 'TIDE to 0 and 18 damage, then it is VULNERABLE 50% for 2 turns.',
+                damage: 18, rider: { kind: 'tide-ebb', to: 0, pct: 50, turns: 2 },
+            },
+            moves: [WASH_OVER_FLOOD],
+        },
+    ],
+    addedIn: CHAPTER1_ADDED,
+    tags: ['early-game', 'enemy', 'elite'],
+});
+
 // ─── Test fixture (NOT part of the roster) ───────────────────────────────────
 
 /**
@@ -862,7 +989,9 @@ export const Sandbag_01 = createEnemy({
 /** Every production enemy, in tier order. */
 export const EnemyLibrary = [
     FloatEye, GallowsCrow, NetMender, CraneHook, BrineWidow, LampreyKnot, GreenJelly, CurfewRinger,
-    WreckPicker, SmokehouseGutter, TitheCollector, CaveChoir, DeathBeholder,
+    WreckPicker, SmokehouseGutter, TitheCollector, CaveChoir,
+    TollKeeper, TideGate,
+    DeathBeholder,
 ] as const;
 
 /**
@@ -906,6 +1035,8 @@ export const ENEMY_REGISTRY = {
     'smokehouse-gutter':  SmokehouseGutter,
     'tithe-collector':    TitheCollector,
     'cave-choir':     CaveChoir,
+    'toll-keeper':    TollKeeper,
+    'tide-gate':      TideGate,
     'death-beholder': DeathBeholder,
 } as const;
 

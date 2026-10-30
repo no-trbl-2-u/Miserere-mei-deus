@@ -29,7 +29,7 @@ import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanima
 import Svg, { Circle, Defs, Line, Polygon, RadialGradient, Stop } from 'react-native-svg';
 import {
     initializeCombatEncounter, rollEncounterDice, playCombatCard, resolveThreatPhase,
-    startTurn, endTurn, discardCombatCard, playSignatureSkill,
+    startTurn, endTurn, discardCombatCard, playSignatureSkill, payTheToll,
     getFloatingDiceColors,
     selectEncounterMercyChoice, buildCombatSummary,
     getLogger, enemySlugOf, hasDefeatedEnemy,
@@ -598,6 +598,15 @@ export function CombatEncounterPanel({
         if (tapped && screenRef.current.persistOutcome) fightRecorder.signatureRefused(s.id, s.reason ?? 'refused');
     }, []);
     const onSignature = useCallback((id: string) => apply((s) => playSignatureSkill(s, id).state), [apply]);
+    // The Toll-Keeper's toll (phase EN1l): a refusal fizzles into the log in the engine's words.
+    const onPayToll = useCallback(() => {
+        apply((s) => {
+            const t = payTheToll(s);
+            fxRef.current = t.events;
+            return t.state;
+        });
+        setFxSeq((n) => n + 1);
+    }, [apply]);
     const onEndPhase = useCallback(() => {
         // The synchronous gate: a second tap in the same frame (touch
         // double-tap) finds the lock already held and is dropped, so exactly one
@@ -760,6 +769,7 @@ export function CombatEncounterPanel({
                     onMomentumInfo={onMomentumInfo}
                     fx={fx}
                     region={region}
+                    onPayToll={onPayToll}
                 />
             )}
 

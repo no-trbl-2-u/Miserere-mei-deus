@@ -165,10 +165,15 @@ describe('the Breakwater\'s events (D29)', () => {
         expect(payload).toMatchObject({ kind: 'encounter', enemySlug: 'death-beholder', isBoss: true, level: BW_DOOR_LEVEL });
     });
 
-    it('fights the Cave Choir in the sea cave (EN1j) and the Green Jelly on the other two held elite nodes (D61)', () => {
+    it('fights the Cave Choir in the sea cave (EN1j), the Toll-Keeper or the Tide-Gate on the keep causeway (EN1l) and the Green Jelly on the last held elite node (D61)', () => {
         const cave = getNodeEventPool('coastal-continent', 'breakwater', 'bw-c1')!.entries.map(e => e.payload);
         expect(cave).toContainEqual(expect.objectContaining({ kind: 'encounter', enemySlug: 'cave-choir', isBoss: false, level: 5 }));
-        for (const id of ['bw-w5', 'bw-l4']) {
+        const causeway = getNodeEventPool('coastal-continent', 'breakwater', 'bw-w5')!.entries.map(e => e.payload);
+        expect(causeway).toEqual([
+            expect.objectContaining({ kind: 'encounter', enemySlug: 'toll-keeper', isBoss: false, level: 8 }),
+            expect.objectContaining({ kind: 'encounter', enemySlug: 'tide-gate', isBoss: false, level: 8 }),
+        ]);
+        for (const id of ['bw-l4']) {
             const payload = getNodeEventPool('coastal-continent', 'breakwater', id)!.entries[0]!.payload;
             expect(payload, id).toMatchObject({ kind: 'encounter', enemySlug: 'green-jelly', isBoss: false, level: BW_ELITE_LEVEL });
         }

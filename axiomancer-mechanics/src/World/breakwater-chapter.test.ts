@@ -123,7 +123,7 @@ describe('A1: the graph is T\'s node list', () => {
         }
     });
 
-    it('gives every node its listed kind, through its one-entry pool', () => {
+    it('gives every node its listed kind, through its one-entry pool (an elite node, one per foe it draws)', () => {
         expect(BREAKWATER_CHAPTER_POOLS).toHaveLength(44);
         for (const n of NODE_LIST) {
             expect(getNodeEventPool('coastal-continent', 'breakwater', n.id)!.entries, n.id).toHaveLength(BW_ELITE_DRAWS[n.id]?.length ?? 1);

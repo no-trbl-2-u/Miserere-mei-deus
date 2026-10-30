@@ -65,6 +65,11 @@ export {
     // Card programs: why a line cannot be played, and an X line's range
     programLineBlock, freeLineBlock, playLimitBlock, programLineShortfall, programLineDiscardShortfall, programXChoice,
 } from './combat.engine';
+// The keep causeway (phase EN1l): paying the Toll-Keeper's toll, and the TOLL and TIDE reads.
+export { payTheToll, tollPayBlock, tollPayShortfall, tollPayCost, TOLL_SOURCE } from './combat.engine';
+export {
+    tollOwed, tideOf, carriesToll, carriesTide, TIDE_MAX, LOW_TIDE, LOW_TIDE_VULNERABLE_PCT,
+} from './combat.enemy-riders';
 // Card programs: the Global / Curse / SACRIFICE ledger and its reads.
 export {
     isProgramCard, isCurseCard, GLOBAL_FREE_TURNS, DISCARD_SHORTFALL_REASON,
