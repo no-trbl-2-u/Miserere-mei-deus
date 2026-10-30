@@ -7,6 +7,7 @@ import {
   auditRowPrefix, compare, familyCellText, fileDrifts, historyLine, renderAuditRow, renderDigestSection,
   renderLatest, rewardLaneRows, selfBurnRows,
 } from './measured-compare.mjs'
+import { lintFile } from './check-plan-queues.mjs'
 
 function cell(over = {}) {
   return {
@@ -90,6 +91,21 @@ test('fileDrifts: two spreads of one key in one run file one row', () => {
   const { text, added } = fileDrifts('## Pending\n', [drift, body], '2026-10-13')
   assert.equal(added.length, 1)
   assert.match(text, /- evidence 2026-10-13: body/)
+})
+
+test('fileDrifts: never leaves two blank lines in a row, and keeps CRLF', () => {
+  const other = { ...drift, deck: 'blood-price' }
+  const doubled = (t) => /\n[ \t]*\r?\n[ \t]*\r?\n/.test(t)
+  const base = '# Audit\n\n## Pending\n\n### [ ] [bug] old\n- category: bug\n'
+  const one = fileDrifts(base, [drift], '2026-10-13').text
+  assert.ok(!doubled(one), 'filing into a file that already has a blank under Pending')
+  const two = fileDrifts(one, [other], '2026-10-14').text
+  assert.ok(!doubled(two), 'one entry after another')
+  assert.ok(!doubled(fileDrifts('## Pending\n\n\n### [ ] [bug] old\n', [drift], '2026-10-13').text))
+  const crlf = fileDrifts(base.replace(/\n/g, '\r\n'), [drift], '2026-10-13').text
+  assert.ok(!/[^\r]\n/.test(crlf), 'every line break stays CRLF')
+  assert.ok(!doubled(crlf))
+  assert.deepEqual(lintFile(two, 'audit').findings, [])
 })
 
 test('fileDrifts: no Pending heading is an error only when there is a row to add', () => {

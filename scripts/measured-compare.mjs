@@ -136,7 +136,8 @@ export function renderAuditRow(drift, date) {
  * @throws When the text has no `## Pending` heading and there is a row to add.
  */
 export function fileDrifts(auditText, drifts, date) {
-  let lines = auditText.split('\n')
+  const eol = auditText.includes('\r\n') ? '\r\n' : '\n'
+  let lines = auditText.split(/\r?\n/)
   const added = []
   const evidenced = []
   const fresh = new Map()
@@ -169,9 +170,12 @@ export function fileDrifts(auditText, drifts, date) {
       added.push({ drift, title: auditRowTitle(drift, date) })
       return [renderAuditRow(drift, date).replace(/\n$/, ''), ...extra].join('\n')
     })
-    lines = [...lines.slice(0, pending + 1), '', ...blocks.join('\n\n').split('\n'), '', ...lines.slice(pending + 1)]
+    // One blank either side of the new rows: drop the blanks already under the heading.
+    let rest = lines.slice(pending + 1)
+    while (rest.length && rest[0].trim() === '') rest = rest.slice(1)
+    lines = [...lines.slice(0, pending + 1), '', ...blocks.join('\n\n').split('\n'), '', ...rest]
   }
-  return { text: lines.join('\n'), added, evidenced }
+  return { text: lines.join(eol), added, evidenced }
 }
 
 /** The optional cell fields a history line keeps when the report has them. */
