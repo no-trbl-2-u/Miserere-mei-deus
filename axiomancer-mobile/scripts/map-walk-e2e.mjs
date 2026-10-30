@@ -310,7 +310,10 @@ async function fight(page) {
     log('bw-w3 fight: on the board, plain black scene')
 
     // Play it to its end by ending phases (no cards staged), then close out.
-    for (let k = 0; k < 120; k++) {
+    // The budget covers a foe that never takes damage from ending phases
+    // (the Gallows Crow's WARD and Take Wing): it wins only by the player's
+    // death, about 190 phases in, so 120 gave up on a fight still under way.
+    for (let k = 0; k < 400; k++) {
         if (await page.getByTestId('combat-summary').count()) break
         if (await tap(page, 'combat-mercy-spare')) continue
         await tap(page, 'combat-end-phase')
