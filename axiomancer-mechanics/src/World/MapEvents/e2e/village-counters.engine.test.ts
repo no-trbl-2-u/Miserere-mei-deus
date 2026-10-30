@@ -17,7 +17,7 @@ import { describe, expect, it } from 'vitest';
 import { createNewGameState } from '../../../Game/game.reducer';
 import { applyPayload, resolveVillage } from '../handlers';
 import { resolveMapEvent, getNodePrimaryEventKind } from '../resolve-map-event';
-import { ACT1_ANVIL_NODES, BREAKWATER_ANVIL_NODES } from '../content';
+import { ACT1_ANVIL_NODES, BREAKWATER_ANVIL_NODES, breakwaterVillagePool } from '../content';
 import { MAP_REGISTRY, createMapState } from '../../map.registry';
 import { BLACKSMITH_WITNESS_VARIANTS, HEART_RICH_PAYLOAD_VARIANT } from '../../Blacksmith/blacksmith.content';
 import type { VillagePayload } from '../types';
@@ -116,6 +116,12 @@ describe('the regional Anvils — one per later Act 1 map, two on the Breakwater
 
     it('names the Breakwater\'s two Anvil villages, the harbour town and the walled manor', () => {
         expect(BREAKWATER_ANVIL_NODES).toEqual(['bw-t4', 'bw-m5']);
+    });
+
+    it('refuses a Breakwater village the lookup does not name', () => {
+        expect(breakwaterVillagePool('bw-t4', 'Harbour town').entries[0]!.payload).toMatchObject({ kind: 'village', villageName: 'Harbour town' });
+        expect(() => breakwaterVillagePool('bw-w2', 'Gallows crossroads'))
+            .toThrow('content: Breakwater village bw-w2 is not in BREAKWATER_ANVIL_NODES');
     });
 
     it.each(ANVIL_VILLAGES)(

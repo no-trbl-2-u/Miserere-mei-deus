@@ -273,6 +273,14 @@ const TRAVEL: Readonly<Record<string, MapEventPayload>> = {
     },
 };
 
+/** A Breakwater village: an Anvil village, refused for a node `BREAKWATER_ANVIL_NODES` does not name. */
+export function breakwaterVillagePool(nodeId: string, place: string): MapEventPool {
+    if (!BREAKWATER_ANVIL_NODES.includes(nodeId)) {
+        throw new Error(`content: Breakwater village ${nodeId} is not in BREAKWATER_ANVIL_NODES`);
+    }
+    return villagePool(nodeId, place, ANVIL_LINE);
+}
+
 function single(nodeId: string, payload: MapEventPayload): MapEventPool {
     return { id: `${nodeId}.${payload.kind}`, entries: [{ kind: payload.kind, weight: 1, payload }] };
 }
@@ -288,12 +296,7 @@ function poolFor(nodeId: string): MapEventPool {
         case 'hazard':   return hazardPool(nodeId, `[content] ${place}.`);
         case 'rest':     return campRestPool(nodeId, `[content] ${place}.`);
         case 'loot':     return lootCachePool(nodeId, COAST_LOOT_CACHES[LOOT_NODES[nodeId]!]!);
-        case 'village': {
-            if (!BREAKWATER_ANVIL_NODES.includes(nodeId)) {
-                throw new Error(`content: Breakwater village ${nodeId} is not in BREAKWATER_ANVIL_NODES`);
-            }
-            return villagePool(nodeId, place, ANVIL_LINE);
-        }
+        case 'village':  return breakwaterVillagePool(nodeId, place);
         case 'cutscene': return single(nodeId, { kind: 'cutscene', lines: [`[content] ${place}.`] });
         case 'travel':   return single(nodeId, TRAVEL[nodeId]!);
         case 'quest': {
