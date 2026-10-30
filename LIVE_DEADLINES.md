@@ -27,5 +27,5 @@
 | 2026-11-10 (in 11 days) | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | needs you: BW1d ready for you | W2 |
 | 2026-11-11 (in 12 days) | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | needs you: your task | W2 |
 | 2026-11-12 (in 13 days) | Event kind 4, quest: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it; settled early on Oct 30 (the giver scene) and plotted as ET1d (0.5 h) | needs a plot: no build-plan rows yet | W2 |
-| 2026-11-12 (in 13 days) | Play the Defender test deck on the preview build and check the reward pool (0.5 h) | needs you: DF1f ready for you | W2 |
+| 2026-11-12 (in 13 days) | Play the Defender test deck on the preview build and check the reward pool (0.5 h) | needs you: DF1f ready for you; the loop still owes CA1a, CA1b | W2 |
 | 2026-11-13 (in 14 days) | Play your quest line on the preview build and rule on its lines (0.5 h) | needs you: your task; the loop still owes BW1e | W2 |
