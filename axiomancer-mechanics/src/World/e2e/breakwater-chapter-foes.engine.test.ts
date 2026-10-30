@@ -1,6 +1,6 @@
 /**
- * Chapter 1's foes at their nodes (phase EN1f, the Measure of its block in
- * the EN1 brief): each fields-and-quays fight node, answered through the map's
+ * Chapter 1's foes at their nodes (phases EN1f and EN1g, the Measure of their
+ * blocks in the EN1 brief): each fields, quays, pier and town fight node, answered through the map's
  * own event resolver, meets the foe and level its `BW_ENCOUNTER_FOES` row
  * names; in the fight that foe plays its opening loop, and when its VITAE
  * reaches its 30% line its DANGER fires on its next turn, and not before.
@@ -11,7 +11,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { resolveMapEvent } from '../MapEvents/resolve-map-event';
-import { BW_ENCOUNTER_FOES } from '../MapEvents/content';
+import { BW_ELITE_LEVEL, BW_ENCOUNTER_FOES } from '../MapEvents/content';
 import { createNewGameState } from '../../Game/game.reducer';
 import type { GameState } from '../../Game/types';
 import { ENEMY_REGISTRY } from '../../Enemy/enemy.library';
@@ -39,9 +39,12 @@ const telegraph = (s: CombatEncounterState) => s.threatPhases[s.currentPhaseInde
 const fired = (events: readonly CombatEvent[]) =>
     events.filter((e): e is Extract<CombatEvent, { kind: 'threat-fired' }> => e.kind === 'threat-fired').map(e => e.description);
 
-const NODES = ['bw-w2', 'bw-w3', 'bw-m1', 'bw-p2', 'bw-h1', 'bw-h2', 'bw-h3'] as const;
+const NODES = [
+    'bw-w2', 'bw-w3', 'bw-m1', 'bw-p2', 'bw-h1', 'bw-h2', 'bw-h3',
+    'bw-h7', 'bw-t1', 'bw-t2', 'bw-t3', 'bw-t6',
+] as const;
 
-describe('the fields and the quays: each node\'s foe fires its DANGER at its 30% line', () => {
+describe('the fields, quays, pier and town: each node\'s foe fires its DANGER at its 30% line', () => {
     it.each(NODES)('%s', (nodeId) => {
         const row = BW_ENCOUNTER_FOES[nodeId]!;
         const source = ENEMY_REGISTRY[row.slug];
@@ -72,5 +75,20 @@ describe('the fields and the quays: each node\'s foe fires its DANGER at its 30%
         const res = resolveThreatPhase(s, rng);
         expect(fired(res.events)[0]).toMatch(new RegExp(`^${danger.name}: `));
         expect(telegraph(res.state)).toMatchObject({ phase: 1, step: 0, danger: false });
+    });
+});
+
+describe('the elite slots still hold the Green Jelly, staged as an elite', () => {
+    // The Green Jelly is a normal on its own; the elite nodes stage it at the
+    // elite tier until their own foes land, so the elite reward, respawn and
+    // phase lines keep working there.
+    it.each(['bw-c1', 'bw-l4', 'bw-w5'])('%s', (nodeId) => {
+        const s = fightAt(nodeId);
+        expect(s.enemy.id).toBe(ENEMY_REGISTRY['green-jelly'].id);
+        expect(s.enemy.difficulty).toBe('elite');
+        expect(s.enemy.level).toBe(BW_ELITE_LEVEL);
+        // It crosses its elite line at 60%, with its DANGER.
+        const res = resolveThreatPhase({ ...s, enemy: { ...s.enemy, health: Math.floor(s.enemy.maxHealth * 0.6) } }, rng);
+        expect(res.events.some(e => e.kind === 'enemy-phase-entered')).toBe(true);
     });
 });

@@ -66,7 +66,7 @@ import { scaleFor, scaleEffectIntensity, programText } from './stat-scaling';
 
 export { programText };
 import { spendDice } from './combat.dice';
-import { brineCut, cutGuardGain, soakDealWithWard, wardSoak, wordsOf } from './combat.enemy-words';
+import { brineCut, cutGuardGain, soakDealWithWard, veilHeal, wardSoak, wordsOf } from './combat.enemy-words';
 import { recordAttribution } from './combat.attribution';
 import { BARNACLE_ID } from '../Cards/library/enemy-curses.cards';
 import type {
@@ -502,7 +502,9 @@ class LineCtx implements ProgramCtx {
         return this.healExact(amt, opts?.overflowToGuard === true);
     }
 
-    private healExact(amt: number, overflowToGuard: boolean): number {
+    private healExact(amtIn: number, overflowToGuard: boolean): number {
+        // A foe's veil halves every HEAL until its next turn.
+        const amt = veilHeal(this.w.s, amtIn);
         const p = this.w.s.player;
         const healed = Math.min(amt, Math.max(0, p.maxHealth - p.health));
         if (this.mode !== 'cost') this.heals().healed += healed;
@@ -1777,7 +1779,7 @@ export function programTurnStart(state: CombatEncounterState, kit: ProgramKit): 
     l.drains = l.drains.filter(d => d.untilRound >= state.round);
     if (l.pendingHeal > 0) {
         const p = w.s.player;
-        const healed = Math.min(l.pendingHeal, Math.max(0, p.maxHealth - p.health));
+        const healed = Math.min(veilHeal(w.s, l.pendingHeal), Math.max(0, p.maxHealth - p.health));
         l.heals.healed += healed;
         w.s = { ...w.s, player: healCombatant(p, healed) };
         if (healed > 0) w.events.push({ kind: 'player-healed', cardId: 'pending-heal', amount: healed });
@@ -1842,7 +1844,7 @@ export function programArmSacrifice(state: CombatEncounterState, redirect: Sacri
 export function programSignatureHeal(
     state: CombatEncounterState, n: number, sourceId: string,
 ): ProgramPlayResult {
-    const amt = n > 0 ? scaleFor(n, state.player.baseStats, 'mind', 'one-shot') : 0;
+    const amt = n > 0 ? veilHeal(state, scaleFor(n, state.player.baseStats, 'mind', 'one-shot')) : 0;
     const p = state.player;
     const healed = Math.min(amt, Math.max(0, p.maxHealth - p.health));
     if (healed <= 0) return { state, events: [] };
@@ -1865,7 +1867,7 @@ function leechTick(state: CombatEncounterState, tick: boolean): ProgramPlayResul
     const before = state.enemy.health;
     const enemy = applyDamage(state.enemy, lost);
     const p = state.player;
-    const healed = Math.min(lost, Math.max(0, p.maxHealth - p.health));
+    const healed = Math.min(veilHeal(state, lost), Math.max(0, p.maxHealth - p.health));
     const events: CombatEvent[] = [{ kind: 'damage-dealt', cardId, target: 'enemy', amount: lost }];
     if (healed > 0) events.push({ kind: 'player-healed', cardId, amount: healed });
     return {

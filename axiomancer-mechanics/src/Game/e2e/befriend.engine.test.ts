@@ -76,14 +76,14 @@ describe('Phase 62 — quest-branch wire-in on outcome === friendship', () => {
 });
 
 describe('Phase 102 — Befriendable-enemy Tier-2 expansion', () => {
-    it('GreenJelly friendship threads elite-tier reward', () => {
+    it('GreenJelly friendship threads its normal-tier reward', () => {
         const store = createGameStore(nullAdapter);
         store.getState().startCombat(GreenJelly);
 
         const report = store.getState().endCombat('friendship');
         expect(report.outcome).toBe('friendship');
         expect(report.loot.some(item => item.id === 'healing-potion')).toBe(true);
-        expect(report.xpGained).toBe(Math.floor(7 * 50 * 0.5) + 35); // base half-XP (elite) + 35 bonus
+        expect(report.xpGained).toBe(Math.floor(5 * 20 * 0.5) + 35); // base half-XP (normal, level 5) + 35 bonus
         expect(report.friendshipReward?.narrative).toMatch(/jelly settles, slow as cooling wax/);
         expect(store.getState().flags).toContain('befriended-green-jelly');
     });

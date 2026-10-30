@@ -18,7 +18,7 @@
 import type { MapDefinition, NodeId, QuestObjective } from './types';
 import type { Questline, QuestlineStep } from './questline';
 import { getNodeEventPool } from './MapEvents/resolve-map-event';
-import { ENEMY_REGISTRY, type EnemySlug } from '../Enemy/enemy.library';
+import { payloadDifficulty } from './encounter-tier';
 
 /** What a node can count toward a step's objective. */
 export type SupplyClass = 'hazard' | 'any' | 'elite' | 'boss';
@@ -33,7 +33,7 @@ export function supplyClassesOf(continent: string, map: string, nodeId: NodeId):
     if (payload.kind === 'hazard') return ['hazard'];
     if (payload.kind !== 'encounter') return [];
     if (payload.isBoss) return ['boss'];
-    const difficulty = ENEMY_REGISTRY[payload.enemySlug as EnemySlug]?.difficulty;
+    const difficulty = payloadDifficulty(payload);
     return difficulty === 'elite' ? ['any', 'elite'] : ['any'];
 }
 

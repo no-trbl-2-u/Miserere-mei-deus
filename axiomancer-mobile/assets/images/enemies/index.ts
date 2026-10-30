@@ -35,11 +35,14 @@ export const ENEMY_ART_BY_KEY: Readonly<Record<string, number>> = {
     // `grayscale: true` and these are colour enemies (AN1 A6b).
     'green-jelly':       require('./green-jelly.webp'),
     'death-beholder':    require('./death-beholder.webp'),
-    // Chapter 1's normals (phase EN1f): stand-ins restored from the
+    // Chapter 1's normals (phases EN1f and EN1g): stand-ins restored from the
     // 2026-07-06 drop until T's portrait swap; static, no frame set.
     'gallows-crow':      require('./gallows-crow.webp'),
     'net-mender':        require('./net-mender.webp'),
     'crane-hook':        require('./crane-hook.webp'),
+    'brine-widow':       require('./brine-widow.webp'),
+    'lamprey-knot':      require('./lamprey-knot.webp'),
+    'curfew-ringer':     require('./curfew-ringer.webp'),
 };
 
 const ENEMY_ART_POOL: number[] = Object.values(ENEMY_ART_BY_KEY);

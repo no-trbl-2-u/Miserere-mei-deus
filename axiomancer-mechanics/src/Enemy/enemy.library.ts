@@ -6,14 +6,17 @@
  *   - The Gallows Crow, the Net-Mender and the Crane-Hook (normals) —
  *     Chapter 1's fields and quays, bound per node in `MapEvents/content.ts`;
  *     HP phases.
- *   - The Green Jelly (L7, elite) — a rarer mid-region fight; befriendable.
+ *   - The Brine-Widow, the Lamprey-Knot and the Curfew-Ringer (normals) —
+ *     the long pier and the town; HP phases.
+ *   - The Green Jelly (L5, normal, reworked) — the town's befriendable fight;
+ *     HP phases.
  *   - The Death Beholder (L8, boss) — every region's door fight.
  *
  * A `phases` foe plays T's moves: a fixed loop per phase, a DANGER on
  * each phase change, the enemy words as move fields and one conditional
  * `rider` per move (`Combat/combat.enemy-riders.ts`). Its numbers are
  * authored at its tier's level (`PHASES_AUTHORED_LEVEL`) and scale with its
- * level. The Green Jelly and the Death Beholder keep their decks for now.
+ * level. The Death Beholder keeps its deck for now.
  *
  * Difficulty is tier (`normal → elite → boss`, driving the threat-damage
  * multiplier, XP and the encounter generator's adaptive level band), authored
@@ -147,6 +150,91 @@ function counterweight(later: number): EnemyMove {
     };
 }
 
+const SALT_THE_WOUND: EnemyMove = {
+    name: 'Salt the Wound', kind: 'attack',
+    text: '5 damage, doubled if you carry any status.',
+    damage: 5, rider: { kind: 'double-if-status' },
+};
+/** Keening's BRINE: 3, and 5 in its second phase. */
+function keening(brine: number): EnemyMove {
+    return { name: 'Keening', kind: 'attack', text: `4 damage and BRINE ${brine}.`, damage: 4, brine };
+}
+const BLACK_VEIL: EnemyMove = {
+    name: 'Black Veil', kind: 'defend',
+    text: 'WARD 6. While veiled, your HEAL is halved.',
+    ward: 6, rider: { kind: 'veil' },
+};
+const MOURNING: EnemyMove = {
+    name: 'Mourning', kind: 'status',
+    text: 'You are VULNERABLE 25% for 2 turns.',
+    vulnerable: { pct: 25, turns: 2 },
+};
+
+const LATCH: EnemyMove = {
+    name: 'Latch', kind: 'attack',
+    text: '4 damage and LEECH 2 on you: it heals what you lose.',
+    damage: 4, leech: 2,
+};
+/** Writhe's hits: 3, and 4 in its second phase. */
+function writhe(hits: number): EnemyMove {
+    return { name: 'Writhe', kind: 'attack', text: `2 damage, ${hits} hits.`, damage: 2, hits };
+}
+const KNOT_UP: EnemyMove = {
+    name: 'Knot Up', kind: 'defend',
+    text: 'WARD 5 and MEND 4.',
+    ward: 5, enemyHeal: 4,
+};
+const MOUTHFUL: EnemyMove = {
+    name: 'Mouthful', kind: 'status',
+    text: 'LEECH 3 on you.',
+    leech: 3,
+};
+
+/** Engulf holds one card, and two in the second phase. */
+function engulf(cards: number): EnemyMove {
+    return {
+        name: 'Engulf', kind: 'attack',
+        text: `5 damage. The next ${cards === 1 ? 'card you play is' : `${cards} cards you play are`} HELD inside it until it dies or its DANGER fires.`,
+        damage: 5, rider: { kind: 'engulf-hold', cards },
+    };
+}
+const SHOW_YOU_YOUR_FACE: EnemyMove = {
+    name: 'Show You Your Face', kind: 'attack',
+    text: 'Deals what you dealt it last turn, up to 10.',
+    rider: { kind: 'mirror-dealt', cap: 10 },
+};
+const SETTLE: EnemyMove = {
+    name: 'Settle', kind: 'defend',
+    text: 'WARD 8.',
+    ward: 8,
+};
+const REFLECTION: EnemyMove = {
+    name: 'Reflection', kind: 'status',
+    text: 'Copies the last status you put on it back onto you.',
+    rider: { kind: 'copy-last-status' },
+};
+
+const TOLL: EnemyMove = {
+    name: 'Toll', kind: 'attack',
+    text: '4 damage, +2 for every Toll already rung this fight (the count shows).',
+    damage: 4, rider: { kind: 'toll-count', damage: 2 },
+};
+const CLAPPER: EnemyMove = {
+    name: 'Clapper', kind: 'attack',
+    text: '7 damage, +4 if you played 3+ cards this turn.',
+    damage: 7, rider: { kind: 'many-plays-bonus', damage: 4, cards: 3 },
+};
+const BAR_THE_DOOR: EnemyMove = {
+    name: 'Bar the Door', kind: 'defend',
+    text: 'WARD 8.',
+    ward: 8,
+};
+const HUSH: EnemyMove = {
+    name: 'Hush', kind: 'status',
+    text: 'TANGLE 2.',
+    tangle: 2,
+};
+
 // ─── The roster ───────────────────────────────────────────────────────────────
 
 /**
@@ -202,12 +290,26 @@ export const GreenJelly = createEnemy({
     description:
         'A green clot of jelly the size of a cart, clear enough to read through. Things it has ' +
         'eaten hang in it, half gone, still facing the way they faced. It is in no hurry. Neither were they.',
-    level: 7,
-    baseStats: enemyStatBudget(7, { heart: 4, body: 1, mind: 2 }),
+    level: 5,
+    baseStats: enemyStatBudget(5, { heart: 4, body: 1, mind: 2 }),
     mapName: 'breakwater',
-    difficulty: 'elite',
+    difficulty: 'normal',
     logic: 'strategic',
     loot: [none(80), drop('healing-potion', 20)],
+    // Reworked (T, 2026-10-30): a town normal that keeps what it eats. Its
+    // befriend window is the 30% line, where the second phase begins.
+    phases: [
+        { moves: [engulf(1), SHOW_YOU_YOUR_FACE, SETTLE, REFLECTION] },
+        {
+            danger: {
+                name: 'Spit It Out', kind: 'danger',
+                text: 'Every HELD card drops into your discard, 4 damage per card.',
+                rider: { kind: 'spit-held', damage: 4 },
+            },
+            // Engulf holds 2 cards; the Open Hand can now befriend it.
+            moves: [engulf(2), SHOW_YOU_YOUR_FACE, SETTLE, REFLECTION],
+        },
+    ],
     befriendabilityConfig: {
         hpGate: { belowPct: 0.3 },
     },
@@ -246,7 +348,7 @@ export const GreenJelly = createEnemy({
         quiet:  'You catch your reflection in her tide pool and it does not follow you home.',
     },
     addedIn: ADDED,
-    tags: ['early-game', 'elite', 'enemy'],
+    tags: ['early-game', 'enemy'],
 });
 
 /**
@@ -398,6 +500,90 @@ export const CraneHook = createEnemy({
     tags: ['early-game', 'enemy'],
 });
 
+/** The long pier: she waits at the pier end with a fist of salt. */
+export const BrineWidow = createEnemy({
+    id: 'enemy-brine-widow',
+    portraitAsset: 'brine-widow',
+    name: 'Brine-Widow',
+    description: 'She waits at the pier end with a fist of salt for whoever comes back.',
+    level: 4,
+    baseStats: enemyStatBudget(4),
+    mapName: 'breakwater',
+    difficulty: 'normal',
+    logic: 'balanced',
+    loot: [none(70), drop('minor-healing-potion', 25), drop('healing-potion', 5)],
+    phases: [
+        { moves: [SALT_THE_WOUND, keening(3), BLACK_VEIL, MOURNING] },
+        {
+            danger: {
+                name: 'Throw the Salt', kind: 'danger',
+                text: 'Strips your THORNS, REFLECT and INFERNO, then 3 damage for each one stripped.',
+                rider: { kind: 'strip-weather-hits', damage: 3 },
+            },
+            // Keening's BRINE rises to 5.
+            moves: [SALT_THE_WOUND, keening(5), BLACK_VEIL, MOURNING],
+        },
+    ],
+    addedIn: CHAPTER1_ADDED,
+    tags: ['early-game', 'enemy'],
+});
+
+/** The harbour steps: a ball of lampreys knotted round a pier pile. */
+export const LampreyKnot = createEnemy({
+    id: 'enemy-lamprey-knot',
+    portraitAsset: 'lamprey-knot',
+    name: 'Lamprey-Knot',
+    description: 'A ball of lampreys knotted round a pier pile, feeding on the tide line.',
+    level: 4,
+    baseStats: enemyStatBudget(4),
+    mapName: 'breakwater',
+    difficulty: 'normal',
+    logic: 'balanced',
+    loot: [none(70), drop('minor-healing-potion', 25), drop('healing-potion', 5)],
+    phases: [
+        { moves: [LATCH, writhe(3), KNOT_UP, MOUTHFUL] },
+        {
+            danger: {
+                name: 'Unravel', kind: 'danger',
+                text: '4 damage per turn of LEECH left on you, then it lets go.',
+                rider: { kind: 'leech-turns-damage', damage: 4 },
+            },
+            // Writhe rises to 4 hits.
+            moves: [LATCH, writhe(4), KNOT_UP, MOUTHFUL],
+        },
+    ],
+    addedIn: CHAPTER1_ADDED,
+    tags: ['early-game', 'enemy'],
+});
+
+/** The town: rings it to bed. */
+export const CurfewRinger = createEnemy({
+    id: 'enemy-curfew-ringer',
+    portraitAsset: 'curfew-ringer',
+    name: 'Curfew-Ringer',
+    description: 'Rings the town to bed. Anyone still out after the bell is fair game.',
+    level: 5,
+    baseStats: enemyStatBudget(5),
+    mapName: 'breakwater',
+    difficulty: 'normal',
+    logic: 'balanced',
+    loot: [none(70), drop('minor-healing-potion', 25), drop('healing-potion', 5)],
+    phases: [
+        { moves: [TOLL, CLAPPER, BAR_THE_DOOR, HUSH] },
+        {
+            danger: {
+                name: 'Curfew', kind: 'danger',
+                text: 'Next turn you can play at most 2 cards.',
+                rider: { kind: 'curfew', cards: 2 },
+            },
+            // Toll comes every other turn.
+            moves: [TOLL, CLAPPER, TOLL, BAR_THE_DOOR, TOLL, HUSH],
+        },
+    ],
+    addedIn: CHAPTER1_ADDED,
+    tags: ['early-game', 'enemy'],
+});
+
 // ─── Test fixture (NOT part of the roster) ───────────────────────────────────
 
 /**
@@ -421,7 +607,9 @@ export const Sandbag_01 = createEnemy({
 // ─── Library indices ──────────────────────────────────────────────────────────
 
 /** Every production enemy, in tier order. */
-export const EnemyLibrary = [FloatEye, GallowsCrow, NetMender, CraneHook, GreenJelly, DeathBeholder] as const;
+export const EnemyLibrary = [
+    FloatEye, GallowsCrow, NetMender, CraneHook, BrineWidow, LampreyKnot, GreenJelly, CurfewRinger, DeathBeholder,
+] as const;
 
 /**
  * An Act 1 region's wandering pool: Float-Eye. The Green Jelly is a
@@ -456,6 +644,9 @@ export const ENEMY_REGISTRY = {
     'gallows-crow':   GallowsCrow,
     'net-mender':     NetMender,
     'crane-hook':     CraneHook,
+    'brine-widow':    BrineWidow,
+    'lamprey-knot':   LampreyKnot,
+    'curfew-ringer':  CurfewRinger,
     'green-jelly':      GreenJelly,
     'death-beholder': DeathBeholder,
 } as const;

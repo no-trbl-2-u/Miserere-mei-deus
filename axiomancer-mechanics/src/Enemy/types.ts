@@ -315,6 +315,17 @@ export interface EnemyMove {
  *   unhit-next-attack-bonus  if you do not hit it on your next turn, its next attack gains `damage`.
  *   steal-banked-die         takes your newest banked die; with none banked, TANGLE `tangle`.
  *   delayed-hit              a `damage` hit on its next turn unless you deal it `unless`+ first.
+ *   double-if-status         the hit doubles if you carry any status (an affliction, LEECH or INFERNO).
+ *   veil                     until its next turn, your HEAL is halved.
+ *   strip-weather-hits       strips your THORNS, REFLECT and INFERNO, then one hit of `damage` per one stripped.
+ *   leech-turns-damage       one hit of `damage` per turn of LEECH left on you, then the LEECH lets go.
+ *   engulf-hold              the next `cards` you play are HELD inside it (out of your deck) until its DANGER or its death.
+ *   mirror-dealt             one hit of what you dealt it last turn, up to `cap`.
+ *   copy-last-status         the last status you put on it lands on you.
+ *   spit-held                every HELD card drops into your discard, one hit of `damage` per card.
+ *   toll-count               +`damage` on the hit for every Toll already rung this fight; ringing one adds to the count.
+ *   many-plays-bonus         +`damage` on the hit if you played `cards`+ cards this turn.
+ *   curfew                   on your next turn you can play at most `cards` cards.
  */
 export type EnemyMoveRider =
     | { kind: 'unplayed-card-bonus'; damage: number }
@@ -330,7 +341,18 @@ export type EnemyMoveRider =
     | { kind: 'lengthen-next-status'; turns: number }
     | { kind: 'unhit-next-attack-bonus'; damage: number }
     | { kind: 'steal-banked-die'; tangle: number }
-    | { kind: 'delayed-hit'; damage: number; unless: number };
+    | { kind: 'delayed-hit'; damage: number; unless: number }
+    | { kind: 'double-if-status' }
+    | { kind: 'veil' }
+    | { kind: 'strip-weather-hits'; damage: number }
+    | { kind: 'leech-turns-damage'; damage: number }
+    | { kind: 'engulf-hold'; cards: number }
+    | { kind: 'mirror-dealt'; cap: number }
+    | { kind: 'copy-last-status' }
+    | { kind: 'spit-held'; damage: number }
+    | { kind: 'toll-count'; damage: number }
+    | { kind: 'many-plays-bonus'; damage: number; cards: number }
+    | { kind: 'curfew'; cards: number };
 
 /** A rider's kind, e.g. `half-guard`. */
 export type EnemyMoveRiderKind = EnemyMoveRider['kind'];

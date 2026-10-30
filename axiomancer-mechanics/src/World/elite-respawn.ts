@@ -22,7 +22,8 @@
  * Every function is pure.
  */
 
-import { ENEMY_REGISTRY, type EnemySlug } from '../Enemy/enemy.library';
+import type { EnemySlug } from '../Enemy/enemy.library';
+import { payloadDifficulty } from './encounter-tier';
 import type { ContinentName, MapName } from './map.library';
 import { getNodeEventPool } from './MapEvents/resolve-map-event';
 import type { EncounterPayload } from './MapEvents/types';
@@ -70,8 +71,7 @@ export function eliteEncounterAt(
     for (const entry of pool?.entries ?? []) {
         const payload = entry.payload;
         if (payload.kind !== 'encounter' || !payload.enemySlug) continue;
-        const foe = ENEMY_REGISTRY[payload.enemySlug];
-        if (foe?.difficulty === 'elite') return payload as EncounterPayload & { enemySlug: EnemySlug };
+        if (payloadDifficulty(payload) === 'elite') return payload as EncounterPayload & { enemySlug: EnemySlug };
     }
     return undefined;
 }

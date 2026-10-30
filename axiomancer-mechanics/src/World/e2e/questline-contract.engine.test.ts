@@ -38,7 +38,8 @@ function seededRng(seed: number): () => number {
 }
 
 const FLOAT_EYE = ENEMY_REGISTRY['float-eye'];
-const GREEN_JELLY = ENEMY_REGISTRY['green-jelly'];
+/** The Green Jelly in an elite slot: it is a normal on its own, staged at the slot's tier. */
+const GREEN_JELLY = { ...ENEMY_REGISTRY['green-jelly'], difficulty: 'elite' as const };
 const BOSS = ENEMY_REGISTRY['death-beholder'];
 
 const XP: Reward = { kind: 'experience', amount: 40 };

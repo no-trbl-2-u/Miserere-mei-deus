@@ -291,7 +291,27 @@ export interface EnemyRidersState {
     nextAttackBonus?: number;
     /** A hit due on the foe's next turn unless you deal it `unless`+ first. */
     delayedHit?: { damage: number; unless: number };
+    /** Until the foe's next turn your HEAL is halved. */
+    veil?: boolean;
+    /** Cards the foe still holds the next plays of (an `engulf-hold` armed). */
+    holdArmed?: number;
+    /** Card ids HELD inside the foe, out of your deck until it spits them out. */
+    held?: string[];
+    /** The last status you put on the foe, for a `copy-last-status` rider. */
+    lastStatus?: ReflectedStatus;
+    /** Tolls rung so far this fight. */
+    tolls?: number;
+    /** Cards you have played since the foe's last turn ended. */
+    played?: number;
+    /** On this turn of yours at most this many cards can be played. */
+    curfew?: number;
 }
+
+/** A status a `copy-last-status` rider can throw back at you. */
+export type ReflectedStatus =
+    | { kind: 'effect'; effectId: string; intensity: number; turns: number }
+    | { kind: 'leech'; turns: number; potency: number }
+    | { kind: 'inferno'; amount: number };
 
 /**
  * The enemy's telegraphed intent type, derived from the threat action's

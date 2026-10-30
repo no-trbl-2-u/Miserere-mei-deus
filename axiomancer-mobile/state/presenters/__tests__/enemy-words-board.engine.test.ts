@@ -1,5 +1,5 @@
 /**
- * Chapter 1's foes on the board (phase EN1f): the first live `phases` foes.
+ * Chapter 1's foes on the board (phases EN1f and EN1g): the live `phases` foes.
  * Their enemy words stand as chips (the foe's WARD on its side; BRINE,
  * TANGLE, LEECH and UNDERTOW on yours), TANGLE refuses every card's FREE
  * line on the board as the engine does, and a WARD-only move telegraphs
@@ -36,10 +36,12 @@ function at(s: CombatEncounterState, move: string): CombatEncounterState {
 
 const NO_WORDS = { ward: 0, brine: 0, leechTurns: 0, leechPotency: 0 };
 
-describe('each fields-and-quays node stages its own foe and portrait', () => {
+describe('each fields, quays, pier and town node stages its own foe and portrait', () => {
     it.each([
         ['bw-w2', 'Float-Eye', 'float-eye'], ['bw-w3', 'Gallows Crow', 'gallows-crow'],
         ['bw-h1', 'Net-Mender', 'net-mender'], ['bw-h2', 'Crane-Hook', 'crane-hook'],
+        ['bw-h7', 'Brine-Widow', 'brine-widow'], ['bw-t1', 'Lamprey-Knot', 'lamprey-knot'],
+        ['bw-t2', 'Green Jelly', 'green-jelly'], ['bw-t3', 'Curfew-Ringer', 'curfew-ringer'],
     ])('%s: %s', (node, name, art) => {
         const vm = buildCombatViewModel(fightAt(node));
         expect(vm.enemy.name).toBe(name);
@@ -78,6 +80,56 @@ describe('the enemy words stand on the board as chips', () => {
         ]));
         expect(vm.player.effects.find((e) => e.effectId === 'enemy-word-leech')).toMatchObject({ intensity: 2, duration: 3 });
         expect(vm.enemy.effects.some((e) => e.effectId.startsWith('enemy-word-'))).toBe(false);
+    });
+});
+
+describe('the foes own counters stand on the board, never on the telegraph', () => {
+    it('the Green Jelly HELD cards show on its side with their count', () => {
+        const s = fightAt('bw-t2');
+        expect(buildCombatViewModel(s).enemy.effects.some((e) => e.effectId === 'enemy-counter-held')).toBe(false);
+        const held = buildCombatViewModel({ ...s, enemyRiders: { held: ['grey-strike', 'grey-ward'] } });
+        expect(held.enemy.effects).toContainEqual(expect.objectContaining({ effectId: 'enemy-counter-held', intensity: 2 }));
+        expect(held.enemy.effects.find((e) => e.effectId === 'enemy-counter-held')!.gloss).toMatch(/swallowed/);
+        expect(held.player.effects.some((e) => e.effectId.startsWith('enemy-counter-'))).toBe(false);
+    });
+
+    it('the Curfew-Ringer Toll count shows on its side', () => {
+        const s = fightAt('bw-t3');
+        const tolled = buildCombatViewModel({ ...s, enemyRiders: { tolls: 3 } });
+        expect(tolled.enemy.effects).toContainEqual(expect.objectContaining({ effectId: 'enemy-counter-toll', intensity: 3 }));
+    });
+
+    it('a Toll telegraphs ATTACK with no number, however high the count', () => {
+        const s = { ...at(fightAt('bw-t3'), 'Toll'), enemyRiders: { tolls: 4 } };
+        const intent = buildCombatViewModel(s).enemy.intent;
+        expect([intent.type, intent.moveName]).toEqual(['attack', 'Toll']);
+        expect(`${intent.label} ${intent.description} ${intent.moveName}`).not.toMatch(/\d/);
+        expect(intent.damage).toBe(0);
+    });
+
+    it('a Green Jelly move that reads your last turn telegraphs a kind, not a number', () => {
+        for (const move of ['Engulf', 'Show You Your Face', 'Reflection']) {
+            const s = { ...at(fightAt('bw-t2'), move), directDamageDealt: 7 };
+            const intent = buildCombatViewModel(s).enemy.intent;
+            expect(`${intent.label} ${intent.description} ${intent.moveName}`).not.toMatch(/\d/);
+            expect(intent.damage).toBe(0);
+        }
+    });
+});
+
+describe('the curfew refuses plays on the board, as the engine does', () => {
+    it('a card reads refused on both lines once the limit is played, and the chip counts what is left', () => {
+        const s = fightAt('bw-t3');
+        const open = buildCombatViewModel({ ...s, enemyRiders: { curfew: 2, played: 1 } });
+        expect(open.hand.every((c) => !c.play?.freeBlock && !c.play?.paidBlock)).toBe(true);
+        expect(open.player.effects).toContainEqual(expect.objectContaining({ effectId: 'enemy-counter-curfew', intensity: 1 }));
+        const shut = buildCombatViewModel({ ...s, enemyRiders: { curfew: 2, played: 2 } });
+        expect(shut.hand.length).toBeGreaterThan(0);
+        for (const card of shut.hand) {
+            expect(card.play?.freeBlock).toMatch(/curfew/);
+            expect(card.play?.paidBlock).toMatch(/curfew/);
+        }
+        expect(shut.player.effects).toContainEqual(expect.objectContaining({ effectId: 'enemy-counter-curfew', intensity: 0 }));
     });
 });
 

@@ -13,12 +13,6 @@
   },
   {
     "rule": "carrier-rule",
-    "id": "BRINE",
-    "reason": "enemy word with no live carrier yet: the engine resolves it (EN1d) and the Breakwater foes carry it from EN1f-h, which delete this row",
-    "filed": "2026-10-30"
-  },
-  {
-    "rule": "carrier-rule",
     "id": "HONE",
     "reason": "pinned at CS1, awaits T's card session",
     "filed": "2026-10-13"

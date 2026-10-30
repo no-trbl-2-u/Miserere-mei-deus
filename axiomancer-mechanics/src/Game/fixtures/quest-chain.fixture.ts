@@ -74,7 +74,7 @@ export const QUEST_CHAIN_DEF: MapDefinition = {
 /** Each node's one event; `start`, `pier` and `harbour` have none. */
 export const QUEST_CHAIN_POOLS: Readonly<Record<string, MapEventPayload>> = {
     cave:   { kind: 'hazard', damage: 1, description: '[content] The sea cave.' },
-    elite1: { kind: 'encounter', enemySlug: 'green-jelly', level: 1 },
+    elite1: { kind: 'encounter', enemySlug: 'green-jelly', level: 1, difficulty: 'elite' },
     qA:     { kind: 'quest', questline: MAIN_LINE, node: 2 },
     e2:     { kind: 'encounter', enemySlug: 'float-eye', level: 1 },
     boss:   { kind: 'encounter', enemySlug: 'death-beholder', isBoss: true, level: 1 },

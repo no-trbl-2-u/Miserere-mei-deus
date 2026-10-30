@@ -11,6 +11,7 @@ import type { Item } from '../../Items/types';
 import type { VillageCardShop, VillageRestCounter } from '../Village/village.types';
 import type { NPC } from '../../NPCs/types';
 import type { EnemySlug } from '../../Enemy/enemy.library';
+import type { EnemyDifficulty } from '../../Enemy/types';
 import type { ContinentName, MapName } from '../map.library';
 import type { Encounter, NodeId } from '../types';
 import type { BlacksmithVariantOffer } from '../Blacksmith/blacksmith.types';
@@ -55,6 +56,11 @@ export interface EncounterPayload {
      * never saved; ignored on a non-elite fight.
      */
     eliteRelicDrops?: string[];
+    /**
+     * The tier this slot stages the foe at, when it is not the foe's own: an
+     * elite slot holding a foe that is a normal elsewhere (`World/encounter-tier.ts`).
+     */
+    difficulty?: EnemyDifficulty;
     description?: string;
 }
 

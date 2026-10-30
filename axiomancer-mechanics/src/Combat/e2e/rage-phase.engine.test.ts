@@ -15,7 +15,7 @@ import { describe, it, expect } from 'vitest';
 import { Player } from '../../Character/characters.mock';
 import type { Character } from '../../Character/types';
 import type { Enemy } from '../../Enemy/types';
-import { FloatEye, GreenJelly } from '../../Enemy/enemy.library';
+import { DeathBeholder, FloatEye } from '../../Enemy/enemy.library';
 import { ENEMY_DECKS, deckCardIds } from '../combat.enemy-decks';
 import { deepClone } from '../../Utils';
 import {
@@ -70,12 +70,10 @@ describe('Phase 3 — generateDefaultThreatSequence appends a locked rage phase'
         expect(rage.intentType).toBe('combo');
     });
 
-    it('an authored enemy (the Green Jelly) is untouched — no phase is rage-gated', () => {
-        // Its deck's later cards carry their derived tier gates (round-keyed
-        // deck tiers; its tier 3 opens on round 6, the rage round by
-        // coincidence); nothing is appended.
-        const seq = getThreatSequence(GreenJelly);
-        expect(seq).toHaveLength(deckCardIds(ENEMY_DECKS['enemy-green-jelly']!).length);
+    it('an authored enemy (the Death Beholder) is untouched — no phase is rage-gated', () => {
+        // Its deck's later cards carry their authored tier gates; nothing is appended.
+        const seq = getThreatSequence(DeathBeholder);
+        expect(seq).toHaveLength(deckCardIds(ENEMY_DECKS['enemy-death-beholder']!).length);
         expect(seq.some(p => p.threatAction.description.includes('loses patience'))).toBe(false);
     });
 

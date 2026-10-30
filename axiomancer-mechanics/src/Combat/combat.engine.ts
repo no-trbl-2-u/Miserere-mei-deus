@@ -84,8 +84,10 @@ import {
     enemyWordsUndertow,
 } from './combat.enemy-words.resolve';
 import {
-    applyRiderAfterMove, planRiderTurn, riderAfterPlay, riderGuardShare, riderStealPerHit,
+    applyRiderAfterMove, planRiderTurn, playLimitBlock, riderAfterPlay, riderBeforeMove, riderGuardShare,
+    riderStealPerHit, riderTurnEnd,
 } from './combat.enemy-riders';
+export { playLimitBlock };
 import { BARNACLE_ID } from '../Cards/library/enemy-curses.cards';
 import type {
     CombatCard, CombatDieColor, CombatEncounterState, CombatEvent, CardPlay,
@@ -518,6 +520,9 @@ export function playCombatCard(
     };
     // BARNACLE: the Curse cannot be played; a body die on a card knocks it off.
     if (held?.cardId === BARNACLE_ID) return refuse('a Barnacle cannot be played, spend a body die on a card to knock it off');
+    // The curfew: past its limit no card can be played.
+    const curfew = held ? playLimitBlock(state) : null;
+    if (curfew) return refuse(curfew);
     // TANGLE: while it holds, a card cannot use its FREE line.
     if (held && !useBottom && (state.enemyWords?.tangle ?? 0) > 0) {
         return refuse(TANGLE_FREE_REFUSAL);
@@ -527,7 +532,10 @@ export function playCombatCard(
     // A rider that lengthens the next status you put on the foe.
     const lid = riderAfterPlay(state, words.state);
     const extra = [...words.events, ...lid.events];
-    if (extra.length === 0) return played;
+    if (extra.length === 0) {
+        // A rider may still have counted the play or taken the card.
+        return lid.state === played.state ? played : { state: lid.state, events: played.events };
+    }
     return { state: withLog(lid.state, extra), events: [...played.events, ...extra] };
 }
 
@@ -1322,6 +1330,14 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
     // BLIZZARD takes n off each hit; the FROZEN check reads the hits.
     let blizzardCut = 0;
     let blizzardSoftened = 0;
+    // A rider that strips the board takes it before the first strike lands.
+    if (!hindered && !isDefeated(enemy)) {
+        const bare = riderBeforeMove(state, rider);
+        if (bare.state !== state) {
+            state = bare.state;
+            events.push(...bare.events);
+        }
+    }
     if (!hindered && !isDefeated(enemy) && state.program) {
         const frozen = programFrozenCheck(state, threatHits(state, moveEffects));
         state = frozen.state;
@@ -1562,7 +1578,7 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
         ...(state.program ? { program: programRecordDamage(state.program, Math.max(0, state.player.health - player.health)) } : {}),
         lastThreatFullyBlocked: !hindered && attacksLanded > 0 && attacksFullyBlocked === attacksLanded,
         // A `phases` foe's riders measure "what you dealt it last turn" from here.
-        ...(hasEnemyPhases(enemy) ? { enemyRiders: { ...(state.enemyRiders ?? {}), dealtMark: directDamage } } : {}),
+        ...(hasEnemyPhases(enemy) ? { enemyRiders: riderTurnEnd(state.enemyRiders, directDamage) } : {}),
         phase: 'phase-resolve',
         threatMarks,
         phaseResults: [...state.phaseResults, result],
@@ -2216,7 +2232,11 @@ export function programLineBlock(state: CombatEncounterState, uid: string, paid:
 export function freeLineBlock(state: CombatEncounterState, uid: string): string | null {
     const entry = state.hand.find(h => h.uid === uid);
     if (!entry) return null;
-    if ((state.enemyWords?.tangle ?? 0) > 0 && entry.cardId !== BARNACLE_ID) return TANGLE_FREE_REFUSAL;
+    if (entry.cardId !== BARNACLE_ID) {
+        const limit = playLimitBlock(state);
+        if (limit) return limit;
+        if ((state.enemyWords?.tangle ?? 0) > 0) return TANGLE_FREE_REFUSAL;
+    }
     return programLineBlock(state, uid, false);
 }
 

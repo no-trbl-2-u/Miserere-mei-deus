@@ -11,6 +11,8 @@ import type { BaseStats } from '../Character/types';
 import { experienceForLevel } from '../Character/experience';
 import { ENEMY_REGISTRY, type EnemySlug } from '../Enemy/enemy.library';
 import { scaleEnemyToLevel } from '../World/encounter';
+import { sourceAtTier } from '../World/encounter-tier';
+import type { EnemyDifficulty } from '../Enemy/types';
 import { getNodeEventPool } from '../World/MapEvents/resolve-map-event';
 import { getMapDefinition } from '../World/map.registry';
 import type { ContinentName, MapName } from '../World/map.library';
@@ -32,6 +34,8 @@ export interface Act1Fight {
     enemySlug: EnemySlug;
     level: number | undefined;
     isBoss: boolean;
+    /** The tier the node stages the foe at, when it is not the foe's own. */
+    difficulty?: EnemyDifficulty;
 }
 
 /**
@@ -50,6 +54,7 @@ export function act1FightLedger(): Act1Fight[] {
                 fights.push({
                     map, nodeId: node.id, column: node.location[0],
                     enemySlug: payload.enemySlug, level: payload.level, isBoss: payload.isBoss ?? false,
+                    ...(payload.difficulty ? { difficulty: payload.difficulty } : {}),
                 });
             }
         }
@@ -63,7 +68,7 @@ export function act1FightLedger(): Act1Fight[] {
 export function act1FightXp(fight: Act1Fight, playerLevel: number): number {
     const source = ENEMY_REGISTRY[fight.enemySlug];
     const level = fight.level ?? Math.max(source.level, playerLevel);
-    return scaleEnemyToLevel(source, level).xpReward ?? 0;
+    return scaleEnemyToLevel(sourceAtTier(source, fight.difficulty), level).xpReward ?? 0;
 }
 
 /** The player's level and XP as they step up to a door fight. */

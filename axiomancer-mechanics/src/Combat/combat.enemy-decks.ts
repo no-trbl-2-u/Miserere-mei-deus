@@ -92,8 +92,7 @@ export function deckCardIds(spec: EnemyDeckSpec): readonly string[] {
 
 /** enemy id → its ordered deck of enemy-card ids (flat), or its authored tiers. */
 export const ENEMY_DECKS: Record<string, EnemyDeckSpec> = {
-    // The two deck foes (the Float-Eye and Chapter 1's normals play HP phases).
-    'enemy-green-jelly': ['dp-wet-congregation', 'dp-lead-bell', 'dp-drowning-drill', 'dp-breaking-sea', 'dp-vespers-under-water'],
+    // The one deck foe (every other foe plays HP phases).
     // BOSS — TIERED (7 cards): the door is kept open, the frame and the
     // margin note, then what shuts stays shut, the proof completed and the
     // question that eats.

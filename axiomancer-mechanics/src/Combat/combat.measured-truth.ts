@@ -26,6 +26,7 @@ import { getCardLane, laneRewardPool } from '../Cards/card.lanes';
 import { nextUpgradeId } from '../Cards/card-upgrades';
 import { ENEMY_REGISTRY, type EnemySlug } from '../Enemy/enemy.library';
 import { scaleEnemyToLevel } from '../World/encounter';
+import { sourceAtTier } from '../World/encounter-tier';
 import {
     act1FightLedger, stageStats, walkAct1, type Act1Fight, type StatSpread,
 } from '../Game/act1-progression';
@@ -272,7 +273,7 @@ export function measuredTruthCells(options: MeasuredTruthOptions = {}): Measured
         const key = n === 1 ? base : `${base}#${n}`;
         const playerLevel = fightLevels[i]!;
         const enemyLevel = fightEnemyLevel(fight, playerLevel);
-        const enemy = scaleEnemyToLevel(ENEMY_REGISTRY[fight.enemySlug], enemyLevel);
+        const enemy = scaleEnemyToLevel(sourceAtTier(ENEMY_REGISTRY[fight.enemySlug], fight.difficulty), enemyLevel);
         const play = (cards: readonly string[], spread: StatSpread) => {
             const player = createCharacter({
                 name: 'Measured', level: playerLevel,

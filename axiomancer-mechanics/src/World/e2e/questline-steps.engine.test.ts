@@ -113,7 +113,7 @@ const POOLS: Record<string, MapEventPayload> = {
     f1: { kind: 'encounter', enemySlug: 'float-eye', level: 1 },
     f2: { kind: 'encounter', enemySlug: 'float-eye', level: 1 },
     past: { kind: 'encounter', enemySlug: 'float-eye', level: 1 },
-    e1: { kind: 'encounter', enemySlug: 'green-jelly', level: 1 },
+    e1: { kind: 'encounter', enemySlug: 'green-jelly', level: 1, difficulty: 'elite' },
     boss: { kind: 'encounter', enemySlug: 'death-beholder', isBoss: true, level: 1 },
 };
 

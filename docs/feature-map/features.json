@@ -2189,6 +2189,12 @@
       "kind": "coupling",
       "from": "area:World",
       "to": "area:Enemy",
+      "file": "axiomancer-mechanics/src/World/encounter-tier.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:World",
+      "to": "area:Enemy",
       "file": "axiomancer-mechanics/src/World/encounter.ts"
     },
     {
@@ -2196,12 +2202,6 @@
       "from": "area:World",
       "to": "area:Enemy",
       "file": "axiomancer-mechanics/src/World/quest.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "area:World",
-      "to": "area:Enemy",
-      "file": "axiomancer-mechanics/src/World/questline-supply.ts"
     },
     {
       "kind": "coupling",

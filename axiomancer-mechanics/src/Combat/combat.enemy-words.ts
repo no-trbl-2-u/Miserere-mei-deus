@@ -54,6 +54,11 @@ export function soakDealWithWard(
     return { state: { ...state, enemyWords: { ...words, ward: r.ward } }, dealt: r.dealt };
 }
 
+/** The foe's veil halves one HEAL of yours (rounded down) until its next turn. */
+export function veilHeal(state: Pick<CombatEncounterState, 'enemyRiders'>, amount: number): number {
+    return state.enemyRiders?.veil && amount > 0 ? Math.floor(amount / 2) : amount;
+}
+
 /** BRINE meets one GUARD gain: the gain left after the cut. */
 export function brineCut(state: Pick<CombatEncounterState, 'enemyWords'>, gain: number): number {
     const brine = state.enemyWords?.brine ?? 0;

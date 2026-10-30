@@ -45,7 +45,10 @@ describe('per-foe aftermath narrative lines (art-driven roster)', () => {
 
     // Chapter 1's new normals ship with their one-line description only (the EN1
     // brief, "Prose"); the board falls back to its own lines until T writes theirs.
-    const DESCRIPTION_ONLY = new Set(['enemy-gallows-crow', 'enemy-net-mender', 'enemy-crane-hook']);
+    const DESCRIPTION_ONLY = new Set([
+        'enemy-gallows-crow', 'enemy-net-mender', 'enemy-crane-hook',
+        'enemy-brine-widow', 'enemy-lamprey-knot', 'enemy-curfew-ringer',
+    ]);
 
     it('Chapter 1\'s description-only foes carry no aftermath prose yet', () => {
         for (const id of DESCRIPTION_ONLY) {
