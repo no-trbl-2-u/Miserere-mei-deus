@@ -134,8 +134,13 @@ export type {
     ElementState, WeatherElement,
     // The Defender's spikes
     SpikeState, SpikeReading,
+    // The Merciful's MERCY
+    MercyState,
 } from './Combat';
-export { foeInferno, yourInferno, elementsOnFoe, weatherReading, spikeReading, REFLECT_TURNS } from './Combat';
+export {
+    foeInferno, yourInferno, elementsOnFoe, weatherReading, spikeReading, REFLECT_TURNS,
+    mercyReading, programFoeYielding, MERCY_CLOCK_TURNS, MERCY_BURST_MULT,
+} from './Combat';
 // The play-log API contract: the fight and deck change the preview app posts and the Worker stores.
 export {
     PLAY_LOG_FIGHTS_PATH, PLAY_LOG_DECK_EVENTS_PATH, COMBAT_EVENT_KINDS, PLAY_LOG_UI_EVENT_KINDS,

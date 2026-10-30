@@ -52,6 +52,9 @@ import {
     addReflect, addThorns, anySpikes, armReflectOnAttack, driftSpikes, fireReflectOnAttack, initSpikeState,
     spikeEvents, spikeReturns, REFLECT_TURNS, type SpikeState,
 } from './combat.spikes';
+import {
+    addMercy, initMercyState, mercyTickEvent, mercyYielding, tickMercyClock, MERCY_BURST_MULT, type MercyState,
+} from './combat.mercy';
 import { getRng } from '../Utils/rng';
 import { getCardById } from '../Cards/cards.library';
 import { lookupEffect, applyEffect } from '../Effects';
@@ -142,6 +145,8 @@ export interface ProgramLedger {
     spikes: SpikeState;
     /** VITAE your DEALs took off the foe this turn (reset at your turn start). */
     dealtThisTurn?: number;
+    /** The Merciful's MERCY on the foe and YIELDING (`combat.mercy.ts`). */
+    mercy: MercyState;
 }
 
 export function initProgramLedger(): ProgramLedger {
@@ -155,6 +160,7 @@ export function initProgramLedger(): ProgramLedger {
         tetherUntil: 0, tetherCardId: null, tetherSourceName: null, leechTurns: 0, leechPotency: 0, leechCardId: null,
         el: initElementState(),
         spikes: initSpikeState(),
+        mercy: initMercyState(),
     };
 }
 
@@ -166,6 +172,7 @@ function cloneLedger(l: ProgramLedger): ProgramLedger {
         drains: l.drains.map(d => ({ ...d })),
         el: { ...(l.el ?? initElementState()) },
         spikes: { ...(l.spikes ?? initSpikeState()) },
+        mercy: { ...(l.mercy ?? initMercyState()) },
     };
 }
 
@@ -259,6 +266,8 @@ const GUARD_HOLDS_VALUE = 0.8;
 const HELD_GUARD_VALUE = 0.6;
 /** A card back from EXILE into the draw pile: a later draw, worth about two DRAWs. */
 const UNEXILE_VALUE = 6;
+/** The witness's MERCY: a burst one more foe turn away is worth this much less (the fight may be over). */
+const MERCY_LATER_TURN_WEIGHT = 0.8;
 
 function expectedGlobalFires(trigger: GlobalTrigger, paid: boolean): number {
     const base = trigger === 'turn' ? GLOBAL_FREE_TURNS : trigger === 'sac' ? 2 : 1.5;
@@ -1102,6 +1111,60 @@ class LineCtx implements ProgramCtx {
         if (this.mode === 'value') { this.w.value += amt * 2 * turns * 0.8; return; }
         if (this.mode === 'apply') this.w.l.drains.push({ perHit: amt, untilRound: this.w.s.round + turns - 1 });
     }
+
+    // -- the Merciful ----------------------------------------------------------
+    radiance(n: number): number {
+        if (n <= 0) return 0;
+        const amt = scaleFor(n, this.stats(), 'heart', 'repeating');
+        if (amt <= 0) return 0;
+        const healed = this.healExact(amt, false);
+        // The witness sees its own heal land, so a later RADIANCE on the line reads the VITAE left to heal.
+        if (this.mode === 'value' && healed > 0) this.w.s = { ...this.w.s, player: healCombatant(this.w.s.player, healed) };
+        const landed = healed > 0 ? this.deal(healed, { exact: true }) : 0;
+        if (this.mode === 'apply') {
+            this.w.events.push({ kind: 'radiance-struck', cardId: this.f.cardId, healed, amount: landed });
+        }
+        return healed;
+    }
+
+    /** The witness's worth of a MERCY total: its burst, discounted by the foe turns until it comes. */
+    private mercyBurstValue(m: MercyState): number {
+        if (m.total <= 0) return 0;
+        const enemy = this.w.s.enemy;
+        const dmg = MERCY_BURST_MULT * m.total * getDamageTakenMultiplier(enemy);
+        return Math.min(dmg, enemy.health) * Math.pow(MERCY_LATER_TURN_WEIGHT, Math.max(0, m.clock - 1));
+    }
+
+    mercy(n: number, opts?: { exact?: boolean }): void {
+        if (n <= 0) return;
+        const amt = opts?.exact ? n : scaleFor(n, this.stats(), 'heart', 'repeating');
+        const enemy = this.w.s.enemy;
+        if (amt <= 0 || isDefeated(enemy) || this.mode === 'cost') return;
+        const l = this.w.l;
+        const before = l.mercy ?? initMercyState();
+        const worthBefore = this.mode === 'value' ? this.mercyBurstValue(before) : 0;
+        // The heal stops at the foe's max VITAE; the total gains n whatever it restored (T, 2026-10-30).
+        const healed = Math.min(amt, Math.max(0, enemy.maxHealth - enemy.health));
+        const after = addMercy(before, amt);
+        l.mercy = after;
+        this.w.s = { ...this.w.s, enemy: { ...enemy, health: enemy.health + healed } };
+        if (this.mode === 'value') {
+            this.w.value += this.mercyBurstValue(after) - worthBefore - healed;
+            return;
+        }
+        this.w.events.push({
+            kind: 'mercy-added', cardId: this.f.cardId, healed, amount: amt, total: after.total, turnsLeft: after.clock,
+        });
+    }
+
+    /** The foe's MERCY bursts: a DEAL of `mult` times `total` (the caller has
+     *  already cleared the total). Emits `mercy-burst`; returns the VITAE taken. */
+    burstMercyTotal(total: number, mult: number, onClock: boolean): number {
+        if (total <= 0 || isDefeated(this.w.s.enemy)) return 0;
+        const landed = this.deal(mult * total, { exact: true });
+        if (this.mode === 'apply') this.w.events.push({ kind: 'mercy-burst', total, amount: landed, onClock });
+        return landed;
+    }
 }
 
 /** Witness value of a SACRIFICE modifier: what it saves on the other program
@@ -1695,6 +1758,31 @@ export function programSpikeSignature(state: CombatEncounterState, op: SpikeSign
  */
 export function programFoeTurnStart(state: CombatEncounterState): ProgramPlayResult {
     return leechTick(state, true);
+}
+
+/**
+ * Start of the foe's turn, MERCY: the clock ticks down 1 (`mercy-ticked`).
+ * When it runs out the foe's MERCY bursts, a DEAL of twice the total
+ * (VULNERABLE applies, a FROZEN foe takes it doubled, a pending next-DEAL
+ * bonus rides on it), and the total clears (`mercy-burst`).
+ */
+export function programMercyFoeTurnStart(state: CombatEncounterState, kit: ProgramKit): ProgramPlayResult {
+    const m = state.program?.mercy;
+    if (!m || m.clock <= 0 || isDefeated(state.enemy)) return { state, events: [] };
+    const l = cloneLedger(state.program!);
+    const { next, burst } = tickMercyClock(m);
+    l.mercy = next;
+    const w: Work = { s: { ...state, program: l }, l, events: [], kit, cost: 0, value: 0 };
+    const tick = mercyTickEvent(m, next);
+    if (tick) w.events.push(tick);
+    if (burst > 0) new LineCtx(w, 'apply', { cardId: 'mercy', waived: false }).burstMercyTotal(burst, MERCY_BURST_MULT, true);
+    w.events.push(...weatherEvents(state.program!.el, w.l.el));
+    return { state: { ...w.s, program: w.l }, events: w.events };
+}
+
+/** True when the foe is YIELDING: The Open Hand reads its befriend gate as open whatever its VITAE. */
+export function programFoeYielding(state: CombatEncounterState): boolean {
+    return mercyYielding(state.program?.mercy);
 }
 
 /**

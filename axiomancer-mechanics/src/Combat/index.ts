@@ -78,6 +78,10 @@ export type { WeatherElement } from './combat.encounter.types';
 export { spikeReading, initSpikeState, REFLECT_TURNS } from './combat.spikes';
 export type { SpikeState } from './combat.spikes';
 export type { SpikeReading } from './combat.encounter.types';
+// The Merciful's MERCY on the foe (its total and clock) and YIELDING.
+export { mercyReading, initMercyState, MERCY_CLOCK_TURNS, MERCY_BURST_MULT } from './combat.mercy';
+export type { MercyState } from './combat.mercy';
+export { programFoeYielding } from './combat.card-program';
 // The live-encounter VITAE knob the app applies (and the pacing sim reads).
 export { LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER } from './live-encounter';
 // Stat scaling: the formula, the keyword families, and the

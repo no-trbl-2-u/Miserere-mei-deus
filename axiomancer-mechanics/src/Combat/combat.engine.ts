@@ -73,7 +73,7 @@ import {
     programIllegalReason, programShortfall, programXRange, type ProgramShortfall,
     programElementFoeTurnStart, programFrozenCheck, programElementDrift,
     programSpikeStrike, programSpikeDrift, programDiscardShortfall, type DiscardShortfall,
-    programSpikeAttackStart, programHoldsGuard, programOnScrap,
+    programSpikeAttackStart, programHoldsGuard, programOnScrap, programMercyFoeTurnStart,
 } from './combat.card-program';
 import { weatherEvents } from './combat.elements';
 import { spikeEvents } from './combat.spikes';
@@ -1179,6 +1179,13 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
         state = weather.state;
         if (isDefeated(state.enemy)) return endCombat(withLog(state, leechEvents), 'victory', leechEvents);
     } else state = weather.state;
+    // MERCY's clock ticks on the foe; when it runs out the MERCY bursts.
+    const mercy = programMercyFoeTurnStart(state, PROGRAM_KIT);
+    if (mercy.events.length > 0) {
+        leechEvents.push(...mercy.events);
+        state = mercy.state;
+        if (isDefeated(state.enemy)) return endCombat(withLog(state, leechEvents), 'victory', leechEvents);
+    }
 
     const idx = Math.min(state.currentPhaseIndex, state.threatPhases.length - 1);
     const phase = state.threatPhases[idx];

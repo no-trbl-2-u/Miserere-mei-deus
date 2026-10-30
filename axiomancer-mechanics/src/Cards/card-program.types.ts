@@ -186,6 +186,17 @@ export interface ProgramCtx {
     unexileRandom(): void;
     /** Lose n VITAE: a plain self-loss GUARD does not block; it can kill you. */
     loseVitae(n: number): void;
+
+    // ── The Merciful (`Combat/combat.mercy.ts`, T's rulings 2026-10-29 and 2026-10-30) ──
+    /** RADIANCE n: HEAL n (heart-scaled, repeating, as LEECH), then DEAL what
+     *  that heal restored (0 at full VITAE); the hit is a DEAL (VULNERABLE,
+     *  FROZEN and a pending next-DEAL bonus apply). Returns the VITAE restored. */
+    radiance(n: number): number;
+    /** MERCY n on the foe, heart-scaled (`exact`: an already-resolved number):
+     *  heal the foe n, stopping at its max VITAE, and add n to its MERCY total
+     *  whatever the heal restored. The first MERCY starts the 3-turn clock; a
+     *  later one never resets it. */
+    mercy(n: number, opts?: { exact?: boolean }): void;
 }
 
 /** One printed line (FREE or PAID) of a card that is not a Global. */
