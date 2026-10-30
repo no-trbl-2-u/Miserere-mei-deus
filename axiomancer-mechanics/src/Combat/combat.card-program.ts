@@ -53,7 +53,8 @@ import {
     spikeEvents, spikeReturns, REFLECT_TURNS, type SpikeState,
 } from './combat.spikes';
 import {
-    addMercy, initMercyState, mercyTickEvent, mercyYielding, tickMercyClock, MERCY_BURST_MULT, type MercyState,
+    addMercy, clearMercy, initHealMods, initMercyState, mercyTickEvent, mercyYielding, modifiedHeal, tickMercyClock,
+    yieldWhileMercy, MERCY_BURST_MULT, type HealMods, type MercyState,
 } from './combat.mercy';
 import { getRng } from '../Utils/rng';
 import { getCardById } from '../Cards/cards.library';
@@ -65,6 +66,7 @@ import { scaleFor, scaleEffectIntensity, programText } from './stat-scaling';
 
 export { programText };
 import { spendDice } from './combat.dice';
+import { brineCut, cutGuardGain, soakDealWithWard, wardSoak, wordsOf } from './combat.enemy-words';
 import { recordAttribution } from './combat.attribution';
 import type {
     CombatEncounterState, CombatEvent, CombatHandEntry, CombatManaDie,
@@ -147,6 +149,12 @@ export interface ProgramLedger {
     dealtThisTurn?: number;
     /** The Merciful's MERCY on the foe and YIELDING (`combat.mercy.ts`). */
     mercy: MercyState;
+    /** Your heals this turn, as the Merciful's cards change them (reset at your turn start). */
+    heals?: HealMods;
+    /** The foe's next attack deals this much less (0 = none); spent when it attacks. */
+    attackLess?: number;
+    /** The cards whose line added MERCY, oldest first, one entry per play (a Merciful card returns the last). */
+    mercyCards?: string[];
 }
 
 export function initProgramLedger(): ProgramLedger {
@@ -161,6 +169,7 @@ export function initProgramLedger(): ProgramLedger {
         el: initElementState(),
         spikes: initSpikeState(),
         mercy: initMercyState(),
+        heals: initHealMods(), attackLess: 0, mercyCards: [],
     };
 }
 
@@ -173,6 +182,8 @@ function cloneLedger(l: ProgramLedger): ProgramLedger {
         el: { ...(l.el ?? initElementState()) },
         spikes: { ...(l.spikes ?? initSpikeState()) },
         mercy: { ...(l.mercy ?? initMercyState()) },
+        heals: { ...(l.heals ?? initHealMods()) },
+        mercyCards: (l.mercyCards ?? []).slice(),
     };
 }
 
@@ -235,6 +246,8 @@ interface Frame {
     cardId: string;
     /** The Curse is being played with its SACRIFICE WAIVED. */
     waived: boolean;
+    /** MERCY applications the line has made (a card whose line added MERCY is a MERCY card). */
+    mercyApps?: number;
 }
 
 const BEFRIEND_CONVICTION_VALUE = 1.5;
@@ -268,6 +281,16 @@ const HELD_GUARD_VALUE = 0.6;
 const UNEXILE_VALUE = 6;
 /** The witness's MERCY: a burst one more foe turn away is worth this much less (the fight may be over). */
 const MERCY_LATER_TURN_WEIGHT = 0.8;
+/** The witness's worth of a foe made YIELDING, when it can be befriended. */
+const YIELDING_VALUE = 3;
+/** The witness's worth of one extra VITAE healed by a heal modifier (a heal is worth 0.9, and RADIANCE hits for it too). */
+const HEAL_MOD_VALUE = 1.5;
+/** What a plain heal restores in the witness's eyes, for a modifier that has no number of its own. */
+const HEAL_MOD_BASE = 4;
+/** The witness's worth of +1 max VITAE. */
+const MAX_VITAE_VALUE = 0.3;
+/** The witness's worth of one debuff cleared from you. */
+const DEBUFF_CLEARED_VALUE = 3;
 
 function expectedGlobalFires(trigger: GlobalTrigger, paid: boolean): number {
     const base = trigger === 'turn' ? GLOBAL_FREE_TURNS : trigger === 'sac' ? 2 : 1.5;
@@ -286,8 +309,16 @@ class LineCtx implements ProgramCtx {
             thorns: sp.thorns, reflect: sp.reflect,
             guard: q.guard + (this.w.guardPlus ?? 0),
             dealtThisTurn: this.w.l.dealtThisTurn ?? 0,
+            // The Merciful's reads come off the working ledger too.
+            foeMercy: this.w.l.mercy?.total ?? 0,
+            foeHasMercy: (this.w.l.mercy?.total ?? 0) > 0,
+            foeAtMax: this.w.s.enemy.health >= this.w.s.enemy.maxHealth,
+            healedThisTurn: this.w.l.heals?.healed ?? 0,
         };
     }
+
+    /** The turn's heal modifiers, made on first use (a ledger saved before they existed). */
+    private heals(): HealMods { return this.w.l.heals ?? (this.w.l.heals = initHealMods()); }
 
     private stats() { return this.w.s.player.baseStats; }
     private incoming(): number { return this.w.kit.incomingNet(this.w.s); }
@@ -306,8 +337,17 @@ class LineCtx implements ProgramCtx {
             dmg *= 2;
             this.w.l.el.frozen = false;
         }
+        const preVuln = dmg;
         const vuln = getDamageTakenMultiplier(enemy);
         if (vuln !== 1) dmg = Math.round(dmg * vuln);
+        // The foe's WARD soaks the part before VULNERABLE; only a real play spends it.
+        if (this.mode === 'apply') {
+            const warded = soakDealWithWard(this.w.s, preVuln, dmg, this.w.events);
+            this.w.s = warded.state;
+            dmg = warded.dealt;
+        } else {
+            dmg = wardSoak(wordsOf(this.w.s).ward, preVuln, dmg).dealt;
+        }
         const landed = Math.min(dmg, enemy.health);
         if (this.mode === 'cost') return landed;
         this.w.l.dealtThisTurn = (this.w.l.dealtThisTurn ?? 0) + landed;
@@ -427,7 +467,10 @@ class LineCtx implements ProgramCtx {
 
     // -- self ----------------------------------------------------------------
     guard(n: number, opts?: { exact?: boolean; plus?: number }): number {
-        const amt = (n > 0 ? (opts?.exact ? n : scaleFor(n, this.stats(), 'mind', 'one-shot')) : 0) + Math.max(0, opts?.plus ?? 0);
+        const printed = (n > 0 ? (opts?.exact ? n : scaleFor(n, this.stats(), 'mind', 'one-shot')) : 0) + Math.max(0, opts?.plus ?? 0);
+        if (printed <= 0) return 0;
+        // BRINE cuts the gain; the witness sees the cut too.
+        const amt = this.mode === 'apply' ? cutGuardGain(this.w.s, printed, this.w.events) : brineCut(this.w.s, printed);
         if (amt <= 0) return 0;
         if (this.mode === 'value') {
             const need = Math.max(0, this.incoming());
@@ -441,15 +484,26 @@ class LineCtx implements ProgramCtx {
     }
 
     heal(n: number, opts?: { exact?: boolean; overflowToGuard?: boolean; plus?: number }): number {
-        const amt = (n > 0 ? (opts?.exact ? n : scaleFor(n, this.stats(), 'mind', 'one-shot')) : 0) + Math.max(0, opts?.plus ?? 0);
-        if (amt <= 0) return 0;
+        const base = (n > 0 ? (opts?.exact ? n : scaleFor(n, this.stats(), 'mind', 'one-shot')) : 0) + Math.max(0, opts?.plus ?? 0);
+        if (base <= 0) return 0;
+        // This turn's heal modifiers (the Merciful): times, then plus; and a HEAL turned RADIANCE.
+        const h = this.heals();
+        const amt = modifiedHeal(h, base);
+        if (h.allRadianceDouble || h.nextRadiance > 0) {
+            if (!h.allRadianceDouble && this.mode !== 'cost') h.nextRadiance -= 1;
+            return this.radianceExact(amt, opts?.overflowToGuard === true);
+        }
         return this.healExact(amt, opts?.overflowToGuard === true);
     }
 
     private healExact(amt: number, overflowToGuard: boolean): number {
         const p = this.w.s.player;
         const healed = Math.min(amt, Math.max(0, p.maxHealth - p.health));
-        const toGuard = overflowToGuard ? amt - healed : 0;
+        if (this.mode !== 'cost') this.heals().healed += healed;
+        // An overflow into GUARD is a GUARD gain, so BRINE cuts it.
+        const overflow = overflowToGuard ? amt - healed : 0;
+        const toGuard = overflow <= 0 ? 0
+            : this.mode === 'apply' ? cutGuardGain(this.w.s, overflow, this.w.events) : brineCut(this.w.s, overflow);
         if (this.mode === 'value') {
             this.w.value += healed * 0.9 + toGuard * 0.5;
             return healed;
@@ -577,7 +631,12 @@ class LineCtx implements ProgramCtx {
                     dmg *= 2;
                     l.el.frozen = false;
                 }
+                const preVuln = dmg;
                 dmg = Math.round(dmg * getDamageTakenMultiplier(w.s.enemy));
+                // The foe's WARD soaks TETHER's hit too: it is a DEAL.
+                const warded = soakDealWithWard(w.s, preVuln, dmg, w.events);
+                w.s = warded.state;
+                dmg = warded.dealt;
                 new LineCtx(w, 'apply', { cardId: l.tetherCardId ?? this.f.cardId, waived: false }).hitFoe(dmg, true);
             }
         }
@@ -1115,12 +1174,21 @@ class LineCtx implements ProgramCtx {
     // -- the Merciful ----------------------------------------------------------
     radiance(n: number): number {
         if (n <= 0) return 0;
-        // A positive number scales to at least 1.
-        const amt = scaleFor(n, this.stats(), 'heart', 'repeating');
-        const healed = this.healExact(amt, false);
+        const base = scaleFor(n, this.stats(), 'heart', 'repeating');
+        if (base <= 0) return 0;
+        return this.radianceExact(modifiedHeal(this.heals(), base), false);
+    }
+
+    /** The heal of a RADIANCE (already scaled and modified), then the DEAL of what it
+     *  restored: doubled under "your HEALs this turn are RADIANCE and deal double".
+     *  `overflowToGuard` carries through from a HEAL that a Merciful modifier
+     *  redirected here, so Blood Price's overflow-to-GUARD still applies. */
+    private radianceExact(amt: number, overflowToGuard: boolean): number {
+        const healed = this.healExact(amt, overflowToGuard);
         // The witness sees its own heal land, so a later RADIANCE on the line reads the VITAE left to heal.
         if (this.mode === 'value' && healed > 0) this.w.s = { ...this.w.s, player: healCombatant(this.w.s.player, healed) };
-        const landed = healed > 0 ? this.deal(healed, { exact: true }) : 0;
+        const hit = this.heals().allRadianceDouble ? healed * 2 : healed;
+        const landed = healed > 0 ? this.deal(hit, { exact: true }) : 0;
         if (this.mode === 'apply') {
             this.w.events.push({ kind: 'radiance-struck', cardId: this.f.cardId, healed, amount: landed });
         }
@@ -1148,6 +1216,7 @@ class LineCtx implements ProgramCtx {
         const after = addMercy(before, amt);
         l.mercy = after;
         this.w.s = { ...this.w.s, enemy: { ...enemy, health: enemy.health + healed } };
+        this.f.mercyApps = (this.f.mercyApps ?? 0) + 1;
         if (this.mode === 'value') {
             this.w.value += this.mercyBurstValue(after) - worthBefore - healed;
             return;
@@ -1164,6 +1233,149 @@ class LineCtx implements ProgramCtx {
         const landed = this.deal(mult * total, { exact: true });
         if (this.mode === 'apply') this.w.events.push({ kind: 'mercy-burst', total, amount: landed, onClock });
         return landed;
+    }
+
+    /** The foe's MERCY bursts now (a card's burst, off the clock): a DEAL of `mult` times the total, then it clears. */
+    burstMercy(mult: number): void {
+        if (this.mode === 'cost' || isDefeated(this.w.s.enemy)) return;
+        const l = this.w.l;
+        const m = l.mercy ?? initMercyState();
+        if (m.total <= 0) return;
+        // The witness had counted the burst as coming; it comes now, so drop the pending worth first.
+        if (this.mode === 'value') this.w.value -= this.mercyBurstValue(m);
+        l.mercy = clearMercy(m);
+        this.burstMercyTotal(m.total, mult, false);
+    }
+
+    /** The clock ticks down n; a tick that takes it to 0 bursts the MERCY at once. */
+    tickMercy(n: number): void {
+        if (n <= 0 || this.mode === 'cost' || isDefeated(this.w.s.enemy)) return;
+        const l = this.w.l;
+        const m = l.mercy ?? initMercyState();
+        if (m.total <= 0 || m.clock <= 0) return;
+        const { next, burst } = tickMercyClock(m, n);
+        if (burst > 0) { this.burstMercy(MERCY_BURST_MULT); return; }
+        l.mercy = next;
+        if (this.mode === 'value') { this.w.value += this.mercyBurstValue(next) - this.mercyBurstValue(m); return; }
+        const tick = mercyTickEvent(m, next);
+        if (tick) this.w.events.push(tick);
+    }
+
+    yieldWhileMercy(): void {
+        if (this.mode === 'cost') return;
+        const l = this.w.l;
+        const m = l.mercy ?? initMercyState();
+        const next = yieldWhileMercy(m);
+        if (next === m) return;
+        l.mercy = next;
+        // Worth a little: the befriend gate opens for as long as the MERCY lasts.
+        if (this.mode === 'value') this.w.value += this.w.s.enemy.friendshipReward !== undefined ? YIELDING_VALUE : 0;
+    }
+
+    healsPlus(n: number): void {
+        if (n <= 0 || this.mode === 'cost') return;
+        if (this.mode === 'value') {
+            this.w.value += Math.min(n * this.healCardsInHand(), this.missingVitae()) * HEAL_MOD_VALUE;
+            return;
+        }
+        this.heals().plus += n;
+    }
+
+    healsTimes(k: number): void {
+        if (k <= 1 || this.mode === 'cost') return;
+        if (this.mode === 'value') {
+            this.w.value += Math.min((k - 1) * HEAL_MOD_BASE * this.healCardsInHand(), this.missingVitae()) * HEAL_MOD_VALUE;
+            return;
+        }
+        this.heals().times *= k;
+    }
+
+    nextHealRadiance(): void {
+        if (this.mode === 'cost') return;
+        if (this.mode === 'value') {
+            this.w.value += this.healCardsInHand() > 0 ? Math.min(HEAL_MOD_BASE, this.missingVitae()) : 0;
+            return;
+        }
+        this.heals().nextRadiance += 1;
+    }
+
+    allHealsRadianceDouble(): void {
+        if (this.mode === 'cost') return;
+        if (this.mode === 'value') {
+            this.w.value += Math.min(HEAL_MOD_BASE * this.healCardsInHand(), this.missingVitae()) * 2;
+            return;
+        }
+        this.heals().allRadianceDouble = true;
+    }
+
+    maxVitae(n: number): void {
+        if (n <= 0 || this.mode === 'cost') return;
+        const p = this.w.s.player;
+        this.w.s = { ...this.w.s, player: { ...p, maxHealth: p.maxHealth + n } };
+        if (this.mode === 'value') this.w.value += n * MAX_VITAE_VALUE;
+    }
+
+    healToFull(): number {
+        const missing = Math.max(0, this.w.s.player.maxHealth - this.w.s.player.health);
+        return missing > 0 ? this.heal(missing, { exact: true }) : 0;
+    }
+
+    clearDebuffs(count: number): number {
+        if (count <= 0 || this.mode === 'cost') return 0;
+        const p = this.w.s.player;
+        const gone = p.effects.filter(ae => lookupEffect(ae.effectId)?.type === 'debuff').slice(0, count);
+        if (gone.length === 0) return 0;
+        if (this.mode === 'value') { this.w.value += DEBUFF_CLEARED_VALUE * gone.length; return gone.length; }
+        const out = new Set(gone);
+        this.w.s = { ...this.w.s, player: { ...p, effects: p.effects.filter(ae => !out.has(ae)) } };
+        return gone.length;
+    }
+
+    weakenNextAttack(n: number): void {
+        if (n <= 0 || this.mode === 'cost') return;
+        if (this.mode === 'value') {
+            const inc = Math.max(0, this.incoming());
+            this.w.value += inc > 0 ? Math.min(n, inc) : 0.2 * n;
+            return;
+        }
+        this.w.l.attackLess = (this.w.l.attackLess ?? 0) + n;
+    }
+
+    returnMercyCards(n: number): void {
+        if (n <= 0 || this.mode === 'cost') return;
+        const played = this.w.l.mercyCards ?? [];
+        const discard = this.w.s.discard.slice();
+        const back: string[] = [];
+        for (let i = played.length - 1; i >= 0 && back.length < n; i--) {
+            const at = discard.indexOf(played[i]!);
+            if (at < 0) continue;
+            discard.splice(at, 1);
+            back.push(played[i]!);
+        }
+        if (back.length === 0) return;
+        if (this.mode === 'value') { this.w.value += DRAW_VALUE * back.length; return; }
+        const w = this.w;
+        const added = back.map(cardId => ({ uid: `ed${++w.l.el.drawUid}`, cardId }));
+        w.s = { ...w.s, discard, hand: [...w.s.hand, ...added] };
+        w.events.push({ kind: 'cards-retrieved', cardIds: back });
+    }
+
+    /** Your cards in hand whose lines heal, the turn modifiers themselves excluded (the witness's count for them). */
+    private healCardsInHand(): number {
+        let k = 0;
+        for (const h of this.w.s.hand) {
+            const p = cardProgram(h.cardId);
+            if (!p) continue;
+            const text = `${p.free?.text ?? ''} ${p.paid?.text ?? ''} ${p.global?.text ?? ''}`;
+            if (/heals this turn|HEALs this turn|next HEAL/.test(text)) continue;
+            if (/HEAL|RADIANCE/.test(text)) k++;
+        }
+        return k;
+    }
+
+    private missingVitae(): number {
+        const p = this.w.s.player;
+        return Math.max(0, p.maxHealth - p.health);
     }
 }
 
@@ -1211,6 +1423,11 @@ function buildQuery(s: CombatEncounterState, spent: number): ProgramQuery {
         reflect: l.spikes?.reflect ?? 0,
         guard: s.guard ?? 0,
         dealtThisTurn: l.dealtThisTurn ?? 0,
+        foeMercy: l.mercy?.total ?? 0,
+        foeHasMercy: (l.mercy?.total ?? 0) > 0,
+        foeAtMax: s.enemy.health >= s.enemy.maxHealth,
+        healedThisTurn: l.heals?.healed ?? 0,
+        belowHalf: vitae < maxVitae / 2,
     };
 }
 
@@ -1519,6 +1736,8 @@ export function playProgramCard(
     } else {
         const line = lineFor(program, useBottom) as ProgramLine;
         line.run(new LineCtx(w, 'apply', frame));
+        // A card whose line added MERCY is a MERCY card: M-09c returns it.
+        if ((frame.mercyApps ?? 0) > 0) w.l.mercyCards = [...(w.l.mercyCards ?? []), card.id];
         if (useBottom && line.exile) {
             w.l.exiled.push(card.id);
             w.events.push({ kind: 'card-exiled', cardId: card.id });
@@ -1547,10 +1766,13 @@ export function programTurnStart(state: CombatEncounterState, kit: ProgramKit): 
     l.nextTwice = false;
     l.nextDealBonus = 0;
     l.dealtThisTurn = 0;
+    // The turn's heal modifiers reset before anything heals (the Globals fire after).
+    l.heals = initHealMods();
     l.drains = l.drains.filter(d => d.untilRound >= state.round);
     if (l.pendingHeal > 0) {
         const p = w.s.player;
         const healed = Math.min(l.pendingHeal, Math.max(0, p.maxHealth - p.health));
+        l.heals.healed += healed;
         w.s = { ...w.s, player: healCombatant(p, healed) };
         if (healed > 0) w.events.push({ kind: 'player-healed', cardId: 'pending-heal', amount: healed });
         l.pendingHeal = 0;

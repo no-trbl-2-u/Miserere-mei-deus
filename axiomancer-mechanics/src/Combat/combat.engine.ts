@@ -62,7 +62,8 @@ import {
 import { recordAttribution } from './combat.attribution';
 import { scaleFor, scaleEffectIntensity, scaleCardForStats } from './stat-scaling';
 import { canAct, getActiveEffectModifiers, getActiveDotTotal, ticksOnRoundClock } from './effect-modifiers';
-import { getThreatSequence, commitThreatBranch } from './combat.threat';
+import { getThreatSequence, commitThreatBranch, nextEnemyPhaseIndex } from './combat.threat';
+import { escalationApplies, hasEnemyPhases } from '../Enemy/enemy-phases';
 import { getSignatureSkill, applySignatureSkill, signatureCastBlock, playerArchetype } from './combat.signature';
 import { getSignaturesForLoadout } from '../Items/relic.library';
 import { statsWithWorn } from '../Character/equipment.reducer';
@@ -77,6 +78,10 @@ import {
 } from './combat.card-program';
 import { weatherEvents } from './combat.elements';
 import { spikeEvents } from './combat.spikes';
+import { cutGuardGain, soakDealWithWard } from './combat.enemy-words';
+import {
+    applyEnemyWordEffects, enemyWordsFoeTurnStart, enemyWordsPlayerTurnStart,
+} from './combat.enemy-words.resolve';
 import type {
     CombatCard, CombatDieColor, CombatEncounterState, CombatEvent, CardPlay,
     CombatManaDie, CombatPhaseResult, CombatTransition, LandedEffect,
@@ -388,6 +393,13 @@ export function startTurn(
     events.push({ kind: 'turn-dice-rolled', turn, dice });
     events.push({ kind: 'dice-rolled', dice });
     let started = withLog(next, events);
+    // A foe's LEECH on you ticks at the start of your turn, and can kill you.
+    const leeched = enemyWordsPlayerTurnStart(started);
+    if (leeched.events.length > 0) {
+        started = withLog(leeched.state, leeched.events);
+        events.push(...leeched.events);
+        if (isDefeated(started.player)) return endCombat(started, 'defeat', events);
+    }
     // Start-of-turn Globals, a delayed HEAL and the turn's SACRIFICE
     // modifiers. No ledger, no change.
     if (started.program) {
@@ -757,17 +769,22 @@ function applyRiderToState(
     // or mind (on you). See `stat-scaling.ts`.
     const stats = player.baseStats;
 
-    if (r.guard) guard += scaleFor(r.guard, stats, 'mind', 'one-shot');
+    // BRINE cuts the GUARD gain.
+    if (r.guard) guard += cutGuardGain(state, scaleFor(r.guard, stats, 'mind', 'one-shot'), events);
     // Attribution ledger: the FREE line records
     // provenance with the same `recordAttribution` calls as the PAID path.
     let attribution = state.attribution;
+    let enemyWords = state.enemyWords;
     const cardName = lookupCard(cardId)?.name ?? cardId;
     if (r.damage) {
-        // The printed number is the number, scaled by body and VULNERABLE.
-        const dmg = scalePlayerHit({
-            base: scaleFor(r.damage, stats, 'body', 'one-shot'),
-            vulnMult: getDamageTakenMultiplier(enemy),
-        });
+        // The printed number is the number, scaled by body and VULNERABLE;
+        // the foe's WARD soaks the part before VULNERABLE.
+        const base = scaleFor(r.damage, stats, 'body', 'one-shot');
+        const warded = soakDealWithWard(state, base, scalePlayerHit({
+            base, vulnMult: getDamageTakenMultiplier(enemy),
+        }), events);
+        enemyWords = warded.state.enemyWords;
+        const dmg = warded.dealt;
         if (dmg > 0) {
             const hpBefore = enemy.health;
             const hit = applyEnemyDamage(enemy, dmg, state.round, events);
@@ -813,7 +830,10 @@ function applyRiderToState(
         souls += washSouls;
         events.push({ kind: 'soul-gained', amount: washSouls, total: souls, reason: 'expiry' });
     }
-    return { ...state, player, enemy, directDamageDealt: directDamage, guard, souls, attribution };
+    return {
+        ...state, player, enemy, directDamageDealt: directDamage, guard, souls, attribution,
+        ...(enemyWords ? { enemyWords } : {}),
+    };
 }
 
 /**
@@ -1005,15 +1025,17 @@ function playBottomAction(
         events.push({ kind: 'soul-gained', amount: n, total: souls, reason: 'expiry' });
     };
 
-    // DEAL — each hit folds the scalers through `scalePlayerHit`.
+    // DEAL — each hit folds the scalers through `scalePlayerHit`, then the
+    // foe's WARD soaks the part before VULNERABLE.
+    let wardState: CombatEncounterState = state;
     for (const mech of mechs) {
         if (mech.kind !== 'deal') continue;
         if (isDefeated(enemy)) break;
         const healthBefore = enemy.health;
-        const dmg = scalePlayerHit({
-            base: scaleFor(mech.amount, stats, 'body', 'one-shot'),
-            vulnMult,
-        });
+        const base = scaleFor(mech.amount, stats, 'body', 'one-shot');
+        const warded = soakDealWithWard(wardState, base, scalePlayerHit({ base, vulnMult }), events);
+        wardState = warded.state;
+        const dmg = warded.dealt;
         if (dmg <= 0) continue;
         const hit = applyEnemyDamage(enemy, dmg, state.round, events);
         enemy = hit.enemy;
@@ -1095,10 +1117,12 @@ function playBottomAction(
         events.push({ kind: 'pips-cashed', cardId: card.id, pips: poweringPips, bonus: 'guard', amount: pipGuard });
     }
     const guardBase = guardMech ? scaleFor(Math.max(1, Math.round(guardMech.amount)), stats, 'mind', 'one-shot') : 0;
-    const guardGain = guardBase + pipGuard;
+    // BRINE cuts the play's GUARD gain once, pips included.
+    const guardGain = cutGuardGain(state, guardBase + pipGuard, events);
 
     let next: CombatEncounterState = {
         ...state, player, enemy, dice, reserve, resonance, attribution,
+        ...(wardState.enemyWords ? { enemyWords: wardState.enemyWords } : {}),
         guard: (state.guard ?? 0) + guardGain,
         directDamageDealt: directDamage,
         floatingDice,
@@ -1164,10 +1188,13 @@ function soakFlatHit(
  */
 export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => number = defaultRng): CombatTransition {
     if (stateIn.phase === 'complete' || stateIn.finalOutcome) return { state: stateIn, events: [] };
-    let state = stateIn;
+    // WARD and BRINE run out at the start of the foe's turn, before anything
+    // else, so nothing at its turn start meets the old WARD.
+    const faded = enemyWordsFoeTurnStart(stateIn);
+    let state = faded.state;
     // LEECH drains the foe at the start of its turn, before it acts.
     const leech = programFoeTurnStart(state);
-    const leechEvents = leech.events;
+    const leechEvents = [...faded.events, ...leech.events];
     if (leechEvents.length > 0) {
         state = leech.state;
         if (isDefeated(state.enemy)) return endCombat(withLog(state, leechEvents), 'victory', leechEvents);
@@ -1203,7 +1230,8 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
     // dragging normal fight — makes finishing bosses quickly (DoT/control) the clear
     // efficient path.
     const escalationRate = THREAT_ESCALATION_PER_ROUND * (isBossTier ? THREAT_ESCALATION_BOSS_MULT : 1);
-    const escalation = Math.min(
+    // A normal or elite foe with HP phases has no clock: its phases carry the ramp.
+    const escalation = !escalationApplies(state.enemy) ? 1 : Math.min(
         THREAT_ESCALATION_MAX,
         1 + escalationRate * Math.max(0, state.round - THREAT_ESCALATION_GRACE),
     );
@@ -1257,9 +1285,14 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
             }
         }
     }
+    // A card made the foe's next attack deal n less: taken off its strikes in order, spent when it attacks.
+    let attackLess = state.program?.attackLess ?? 0;
     if (!hindered && !isDefeated(enemy)) {
         // The enemy attacks: its telegraphed threat action fires on the player.
         const playerTakenMult = getDamageTakenMultiplier(state.player);
+        if (attackLess > 0 && state.program && phase.threatAction.effects.some(e => (e.damage ?? 0) > 0)) {
+            state = { ...state, program: { ...state.program, attackLess: 0 } };
+        } else attackLess = 0;
         for (const eff of phase.threatAction.effects) {
             // A foe the spikes defeated mid-attack strikes no more.
             if (eff.damage && eff.damage > 0 && !isDefeated(enemy)) {
@@ -1276,6 +1309,11 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
                     * (1 + Math.min(STAGE_THREAT_BONUS_CAP, state.stageThreatBonus ?? 0))
                     * playerTakenMult,
                 );
+                if (attackLess > 0) {
+                    const less = Math.min(dmg, attackLess);
+                    dmg -= less;
+                    attackLess -= less;
+                }
                 if (blizzardCut > 0) {
                     const cut = Math.min(dmg, blizzardCut);
                     dmg -= cut;
@@ -1396,6 +1434,18 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
                 directDamage += counter + hit.clockDamage;
                 events.push({ kind: 'riposte-fired', amount: counter });
             }
+        }
+        // The move's enemy words land after its hits, so its own WARD never
+        // meets the spikes or the riposte its strikes drew.
+        const words = applyEnemyWordEffects({ ...state, player, enemy }, phase.threatAction.effects);
+        if (words.events.length > 0) {
+            player = words.state.player;
+            enemy = words.state.enemy;
+            state = {
+                ...state, enemyWords: words.state.enemyWords,
+                ...(words.state.program ? { program: words.state.program } : {}),
+            };
+            events.push(...words.events);
         }
         events.push({ kind: 'threat-fired', phaseIndex: phase.index, description: phase.threatAction.description, effects: phase.threatAction.effects });
         // Doom growth (card-local species): enemy-borne
@@ -1577,7 +1627,8 @@ export function processBetweenPhases(
     // legible instead of collapsing into one line of log.
     const stagesEntered = [...(state.stagesEntered ?? [])];
     let stageThreatBonus = state.stageThreatBonus ?? 0;
-    if (!isDefeated(enemy)) {
+    // A foe with HP phases changes shape at its phase lines (below), not stages.
+    if (!isDefeated(enemy) && !hasEnemyPhases(enemy)) {
         const pending = (enemy.stages ?? []).find((stage, i) => {
             if (stagesEntered.includes(i)) return false;
             const byVitae = stage.at.vitaePct !== undefined
@@ -1615,7 +1666,21 @@ export function processBetweenPhases(
     const candidateIndex = Math.min(state.currentPhaseIndex + 1, state.threatPhases.length - 1);
     const candidatePhase = state.threatPhases[candidateIndex];
     const rageGated = candidatePhase.unlockAfterRound !== undefined && resolvedRound < candidatePhase.unlockAfterRound;
-    const nextIndex = rageGated ? state.currentPhaseIndex : candidateIndex;
+    // HP PHASES: a `phases` foe walks its own loop, and on crossing a line
+    // enters the next phase (one per boundary) through its DANGER. A killing
+    // blow also crosses phase lines, so a defeated enemy is excluded the same
+    // way the STAGES block above excludes it.
+    const phasesIndex = isDefeated(enemy)
+        ? null
+        : nextEnemyPhaseIndex(state.threatPhases, state.currentPhaseIndex, enemy);
+    const nextIndex = phasesIndex ?? (rageGated ? state.currentPhaseIndex : candidateIndex);
+    if (phasesIndex !== null) {
+        const from = state.threatPhases[state.currentPhaseIndex]?.enemyMove;
+        const to = state.threatPhases[phasesIndex]?.enemyMove;
+        if (from && to && to.phase > from.phase) {
+            events.push({ kind: 'enemy-phase-entered', enemyId: enemy.id, phase: to.phase, danger: to.danger ? to.name : null });
+        }
+    }
 
     let threatPhases = state.threatPhases;
     // A branch phase commits its fork at phase START,
@@ -1973,7 +2038,8 @@ export function projectIncomingThreat(state: CombatEncounterState): {
     const willDeny = !act.canAct;
 
     const escalationRate = THREAT_ESCALATION_PER_ROUND * (isBossTier ? THREAT_ESCALATION_BOSS_MULT : 1);
-    const escalation = Math.min(THREAT_ESCALATION_MAX, 1 + escalationRate * Math.max(0, state.round - THREAT_ESCALATION_GRACE));
+    const escalation = !escalationApplies(state.enemy) ? 1
+        : Math.min(THREAT_ESCALATION_MAX, 1 + escalationRate * Math.max(0, state.round - THREAT_ESCALATION_GRACE));
     const enemyOutgoingMult = getOutgoingDamageMult(state.enemy);
     const playerTakenMult = getDamageTakenMultiplier(state.player);
 
@@ -2038,8 +2104,9 @@ export function threatHits(state: CombatEncounterState): number[] {
     if (!canAct(state.enemy.effects as ActiveEffect[]).canAct) return [];
     const isBossTier = state.enemy.difficulty === 'boss' || state.enemy.difficulty === 'unique';
     const escalationRate = THREAT_ESCALATION_PER_ROUND * (isBossTier ? THREAT_ESCALATION_BOSS_MULT : 1);
-    const escalation = Math.min(THREAT_ESCALATION_MAX, 1 + escalationRate * Math.max(0, state.round - THREAT_ESCALATION_GRACE));
-    const mult = escalation * getOutgoingDamageMult(state.enemy)
+    const escalation = !escalationApplies(state.enemy) ? 1
+        : Math.min(THREAT_ESCALATION_MAX, 1 + escalationRate * Math.max(0, state.round - THREAT_ESCALATION_GRACE));
+    const mult =escalation * getOutgoingDamageMult(state.enemy)
         * (1 + Math.min(STAGE_THREAT_BONUS_CAP, state.stageThreatBonus ?? 0))
         * getDamageTakenMultiplier(state.player);
     return phase.threatAction.effects

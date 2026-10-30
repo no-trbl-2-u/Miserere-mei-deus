@@ -10,7 +10,7 @@ import {
     Enemy, EnemyLogic, EnemyDifficulty, LootTableEntry,
     FriendshipReward, BefriendabilityConfig,
     FinalBlowLines, PactLines, CauseLines,
-    CodexEntry,
+    CodexEntry, EnemyPhase,
 } from './types';
 import type { EnemyKeyword, EnemyStage } from './enemy-keywords';
 
@@ -60,6 +60,8 @@ export interface CreateEnemyOptions {
     keywords?: EnemyKeyword[];
     /** Boss/unique stage thresholds. */
     stages?: EnemyStage[];
+    /** HP phases (see `Enemy.phases`). A foe with phases gets no default stages. */
+    phases?: EnemyPhase[];
 }
 
 /**
@@ -213,8 +215,9 @@ export function createEnemy(options: CreateEnemyOptions): Enemy {
         finalBlowLines, pactLines, causeLines,
         journalEntry, addedIn, tags,
         portraitAsset,
-        vitae, keywords, stages,
+        vitae, keywords, stages, phases,
     } = options;
+    const phased = (phases?.length ?? 0) > 0;
 
     const maxHealth = enemyVitae(level, difficulty, vitae);
     const resolvedXp =
@@ -241,13 +244,21 @@ export function createEnemy(options: CreateEnemyOptions): Enemy {
         portraitAsset,
         // No keywords are defined yet; an empty list keeps the slot.
         keywords: keywords ?? [],
-        stages: stages ?? defaultEnemyStages(difficulty, maxHealth),
+        // A foe with HP phases changes shape at its phase lines, not stages.
+        stages: stages ?? (phased ? [] : defaultEnemyStages(difficulty, maxHealth)),
+        ...(phased ? { phases } : {}),
     };
 }
 
 export { isEnemyBefriendable, befriendHpGateOpen } from './befriend';
 export type { EnemyKeyword } from './enemy-keywords';
+export { ENEMY_KEYWORDS, moveKeywords, enemyPhaseKeywords } from './enemy-keywords';
 
 export type {
-    Enemy, EnemyDifficulty,
+    Enemy, EnemyDifficulty, EnemyMove, EnemyMoveKind, EnemyPhase,
 } from './types';
+export {
+    PHASE_LINES, PHASES_AUTHORED_LEVEL, enemyPhaseTier, hasEnemyPhases,
+    enemyPhaseLinesCrossed, enemyPhaseTarget, escalationApplies,
+} from './enemy-phases';
+export type { EnemyPhaseTier } from './enemy-phases';

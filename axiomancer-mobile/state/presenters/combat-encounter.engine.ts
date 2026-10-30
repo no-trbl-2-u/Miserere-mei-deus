@@ -25,7 +25,7 @@ import {
     // Stat scaling: the hand prints final numbers in the family colour.
     scaleCardForStats,
     weatherReading, yourInferno,
-    spikeReading,
+    spikeReading, mercyReading,
     type StatFamily,
     type CombatEncounterState, type CombatCard, type CombatManaDie, type CombatEvent,
     type CombatThreatPhase, type CombatIntentType,
@@ -35,6 +35,7 @@ import {
     type WheelStance,
     type WeatherElement,
     type SpikeReading,
+    hasEnemyPhases, nextEnemyPhaseIndex,
 } from '@mechanics';
 // The card-text projection. The detail panel's printed clauses are DERIVED in
 // mechanics from the effect data; this presenter only formats them (keyword
@@ -176,6 +177,7 @@ const FREE_KW_GLYPH: Record<string, string> = {
     GUARD: '❖', HEAL: '✚', DRAW: '⚑',
     CLEANSE: '✦', PIP: '⬡',
     SACRIFICE: '†', LEECH: '∿', TETHER: '⊸', WAIVE: '○', DEAL: '⚔',
+    RADIANCE: '☼', MERCY: '☮',
 };
 /** The FREE glyph plus the KEYWORD that drives it — the key lets the face swap
  *  the text rune for the effect's SILHOUETTE (glyphShapes.ts) when one exists. */
@@ -206,7 +208,21 @@ export const INTENT_ICONS: Record<CombatIntentType, { icon: string; label: strin
     block: { icon: '🛡', label: 'DEFENDS', color: HUE.blockBlue },
     pass: { icon: '○', label: 'WAITS', color: HUE.stoneGrey },
     combo: { icon: '⚡', label: 'SURGES', color: HUE.goldAccent },
+    // The kinds a `phases` foe telegraphs: a kind and a name, never a number.
+    attack: { icon: '⚔', label: 'ATTACK', color: HUE.damageRed },
+    defend: { icon: '🛡', label: 'DEFEND', color: HUE.blockBlue },
+    status: { icon: '☠', label: 'STATUS', color: HUE.tickPurple },
+    danger: { icon: '⚠', label: 'DANGER', color: HUE.goldAccent },
+    unknown: { icon: '?', label: 'UNKNOWN', color: HUE.stoneGrey },
 };
+
+/** A `phases` foe's telegraph: the entry's move name, or null for a DANGER
+ *  the save has not seen beaten. Null for any other entry. */
+export function telegraphName(phase: CombatThreatPhase | undefined, beaten: boolean): string | null {
+    const move = phase?.enemyMove;
+    if (!move) return null;
+    return move.kind === 'danger' && !beaten ? null : move.name;
+}
 
 // ── View-model types ─────────────────────────────────────────────────────────
 
@@ -234,6 +250,10 @@ export interface CombatIntentBranchVM {
 }
 export interface CombatIntentVM {
     type: CombatIntentType; icon: string; label: string; color: string; description: string;
+    /** A `phases` foe's move name (null when it has none to show: a DANGER not
+     *  yet beaten, or any other foe). Its intent carries no number at all:
+     *  `damage` is 0, `debuffs` false and `wallMath` zero. */
+    moveName?: string | null;
     /** Total HP damage this phase's threat action deals if NOT cleared (0 if none).
      *  Raw face value — NOT run through live modifiers; see `wallMath` for that. */
     damage: number;
@@ -241,7 +261,7 @@ export interface CombatIntentVM {
     debuffs: boolean;
     /** Fork info for the CURRENT phase (null on linear phases). */
     branch: CombatIntentBranchVM | null;
-    next: { type: CombatIntentType; icon: string; label: string; branch: CombatIntentBranchVM | null } | null;
+    next: { type: CombatIntentType; icon: string; label: string; branch: CombatIntentBranchVM | null; moveName?: string | null } | null;
     /** The wall-math readout (`projectIncomingThreat`): what this
      *  telegraphed hit actually deals right now, netted against live guard/
      *  barrier and denial state — the number `damage` above can't show. */
@@ -269,6 +289,9 @@ export interface CombatEnemyPaneVM {
      *  case `isLethalInFlight` is true. Engine truth (`projectCombatOutcome`),
      *  this presenter only forwards it. */
     pendingDot: number; roundsToKill: number | null; isLethalInFlight: boolean;
+    /** A `phases` foe's DANGER moves, one per later phase, named only once the
+     *  save records the foe beaten (null otherwise). Empty for any other foe. */
+    dangers?: { phase: number; name: string | null }[];
 }
 export interface CombatPlayerPaneVM {
     name: string; hp: number; maxHp: number; hpPct: number; guard: number; effects: CombatEffectChipVM[];
@@ -677,6 +700,19 @@ export interface CombatLogLineVM {
 
 const LOG_STAGE_COLOR = HUE.goldAccent;
 
+/** The foe's MERCY and its clock, as one log sentence. */
+function mercyClockText(total: number, turnsLeft: number): string {
+    return `The foe's MERCY is ${total}; it bursts in ${turnsLeft} turn${turnsLeft === 1 ? '' : 's'}.`;
+}
+
+/**
+ * Display names for a damage source that is not a card: the engine tags a
+ * MERCY burst's hit with the pseudo card id `mercy`.
+ */
+const DAMAGE_SOURCE_NAMES: Readonly<Record<string, string>> = {
+    mercy: 'Mercy burst',
+};
+
 export function selectCombatLogLines(events: readonly CombatEvent[]): CombatLogLineVM[] {
     const out: CombatLogLineVM[] = [];
     for (const e of events) {
@@ -688,6 +724,39 @@ export function selectCombatLogLines(events: readonly CombatEvent[]): CombatLogL
                     kind: e.kind, side: 'enemy', color: LOG_STAGE_COLOR,
                     text: `‡ ${e.name.toUpperCase()} ‡ ${e.text}`,
                     float: `‡ ${e.name.toUpperCase()} ‡`,
+                });
+                break;
+            // The Merciful. RADIANCE heals you, then hits for what it restored;
+            // MERCY heals the foe and counts down; the burst is the hit. Every
+            // amount is VITAE actually removed or restored.
+            case 'radiance-struck':
+                out.push({
+                    kind: e.kind, side: 'player', color: GLYPH_COLORS.statup,
+                    text: e.healed > 0
+                        ? `RADIANCE heals you ${e.healed} and hits for ${e.amount}.`
+                        : 'RADIANCE finds nothing to heal.',
+                    float: null,
+                });
+                break;
+            case 'mercy-added':
+                out.push({
+                    kind: e.kind, side: 'enemy', color: GLYPH_COLORS.statup,
+                    text: `MERCY +${e.amount}${e.healed > 0 ? `, healing the foe ${e.healed}` : ''}. ${mercyClockText(e.total, e.turnsLeft)}`,
+                    float: `MERCY +${e.amount}`,
+                });
+                break;
+            case 'mercy-ticked':
+                out.push({
+                    kind: e.kind, side: 'enemy', color: GLYPH_COLORS.statup,
+                    text: mercyClockText(e.total, e.turnsLeft),
+                    float: null,
+                });
+                break;
+            case 'mercy-burst':
+                out.push({
+                    kind: e.kind, side: 'enemy', color: INTENT_ICONS.damage.color,
+                    text: `The foe's MERCY ${e.total} bursts for ${e.amount}.`,
+                    float: `MERCY BURST −${e.amount}`,
                 });
                 break;
             // The foe's bar climbing gets a line saying WHY. Zero-amount heals
@@ -834,7 +903,7 @@ export const COMBAT_LOG_BACK_TEXT = '‹ BACK';
 /** Long fights scroll early turns off rather than growing the sheet forever. */
 const LOG_HISTORY_CAP = 200;
 
-export function selectCombatLogHistory(state: CombatEncounterState): CombatLogHistoryEntryVM[] {
+export function selectCombatLogHistory(state: CombatEncounterState, beaten = false): CombatLogHistoryEntryVM[] {
     const events = state.log ?? [];
     const out: CombatLogHistoryEntryVM[] = [];
     let seq = 0;
@@ -864,7 +933,7 @@ export function selectCombatLogHistory(state: CombatEncounterState): CombatLogHi
                 break;
             }
             case 'damage-dealt': {
-                const named = getCardById(e.cardId)?.name;
+                const named = getCardById(e.cardId)?.name ?? DAMAGE_SOURCE_NAMES[e.cardId];
                 const suffix = named ? ` (${named})` : '';
                 if (e.target === 'enemy') push('enemy', INTENT_ICONS.damage.color, `You deal ${e.amount}${suffix}.`);
                 else push('player', INTENT_ICONS.damage.color, `It deals ${e.amount} to you${suffix}.`);
@@ -896,7 +965,12 @@ export function selectCombatLogHistory(state: CombatEncounterState): CombatLogHi
             }
             case 'threat-fired':
                 midPlay = false;
-                push('enemy', GLYPH_COLORS.control, stripThreatPayload(e.description));
+                {
+                // An unbeaten foe's DANGER fires nameless, as its telegraph did.
+                const fired = state.threatPhases[e.phaseIndex - 1];
+                const hidden = fired?.enemyMove?.kind === 'danger' && !beaten;
+                push('enemy', GLYPH_COLORS.control, hidden ? 'DANGER.' : stripThreatPayload(e.description));
+            }
                 break;
             case 'hand-drawn':
                 if (midPlay && e.cards.length > 0) {
@@ -975,8 +1049,16 @@ function cardNames(ids: readonly string[]): string {
  *  most phases share one intent, so the damage is what tells them apart and
  *  shows the fight escalating without opening each row. A branch phase omits
  *  it: its face is only the baseline fork, and the open row reads both. */
-export function threatPhaseHeader(phase: CombatThreatPhase): { text: string; a11y: string } {
+export function threatPhaseHeader(phase: CombatThreatPhase, beaten = false): { text: string; a11y: string } {
     const label = INTENT_ICONS[phase.intentType ?? 'pass'].label;
+    if (phase.enemyMove) {
+        // A `phases` foe: a kind and a name, no figure.
+        const name = telegraphName(phase, beaten);
+        return {
+            text: `PHASE ${phase.index} · ${label}${name ? ` · ${name}` : ''}`,
+            a11y: `Phase ${phase.index}, ${label}${name ? `, ${name}` : ''}`,
+        };
+    }
     const damage = phase.branch
         ? 0
         : phase.threatAction.effects.reduce((s, e) => s + (e.damage ?? 0), 0);
@@ -1009,13 +1091,36 @@ export function ledgerA11y(ledger: CombatViewModel['ledger']): string {
     return runs.length > 0 ? `Phases: ${runs.join(', ')}` : 'Phases: none';
 }
 
-function intentVM(state: CombatEncounterState): CombatIntentVM {
+/** The intent of a `phases` foe: the move's kind and name, every number left out. */
+function phasesIntentVM(state: CombatEncounterState, cur: CombatThreatPhase, beaten: boolean): CombatIntentVM {
+    const type = (cur.intentType ?? 'unknown') as CombatIntentType;
+    const meta = INTENT_ICONS[type];
+    const moveName = telegraphName(cur, beaten);
+    const nextIndex = nextEnemyPhaseIndex(state.threatPhases, state.currentPhaseIndex, state.enemy);
+    const nextPhase = nextIndex === null ? undefined : state.threatPhases[nextIndex];
+    const next = nextPhase
+        ? (() => {
+            const t = (nextPhase.intentType ?? 'unknown') as CombatIntentType;
+            const m = INTENT_ICONS[t];
+            return { type: t, icon: m.icon, label: m.label, branch: null, moveName: telegraphName(nextPhase, beaten) };
+        })()
+        : null;
+    return {
+        type, icon: meta.icon, label: meta.label, color: meta.color,
+        description: moveName ?? '', moveName, damage: 0, debuffs: false,
+        branch: null, next,
+        wallMath: { projectedDamage: 0, netDamage: 0, willDeny: false, guard: 0, barrier: 0, blizzardCut: 0 },
+    };
+}
+
+function intentVM(state: CombatEncounterState, beaten: boolean): CombatIntentVM {
     const cur = currentPhase(state);
+    if (cur?.enemyMove && hasEnemyPhases(state.enemy)) return phasesIntentVM(state, cur, beaten);
     const type = (cur?.intentType ?? 'pass') as CombatIntentType;
     const meta = INTENT_ICONS[type];
     const nextPhase = state.threatPhases[state.currentPhaseIndex + 1];
     const next = nextPhase && !cur?.isFinalPhase
-        ? (() => { const t = (nextPhase.intentType ?? 'pass') as CombatIntentType; const m = INTENT_ICONS[t]; return { type: t, icon: m.icon, label: m.label, branch: branchVM(nextPhase) }; })()
+        ? (() => { const t = (nextPhase.intentType ?? 'pass') as CombatIntentType; const m = INTENT_ICONS[t]; return { type: t, icon: m.icon, label: m.label, branch: branchVM(nextPhase), moveName: null }; })()
         : null;
     const effects = cur?.threatAction.effects ?? [];
     const damage = effects.reduce((s, e) => s + (e.damage ?? 0), 0);
@@ -1023,7 +1128,7 @@ function intentVM(state: CombatEncounterState): CombatIntentVM {
     const threat = projectIncomingThreat(state);
     return {
         type, icon: meta.icon, label: cur?.intentLabel ?? meta.label, color: meta.color,
-        description: cur?.threatAction.description ?? '', damage, debuffs,
+        description: cur?.threatAction.description ?? '', moveName: null, damage, debuffs,
         branch: branchVM(cur), next,
         wallMath: {
             projectedDamage: threat.projectedDamage, netDamage: threat.netDamage,
@@ -1033,7 +1138,7 @@ function intentVM(state: CombatEncounterState): CombatIntentVM {
     };
 }
 
-function enemyPane(state: CombatEncounterState): CombatEnemyPaneVM {
+function enemyPane(state: CombatEncounterState, beaten: boolean): CombatEnemyPaneVM {
     const e = state.enemy;
     const isBoss = e.difficulty === 'boss' || e.difficulty === 'unique'
         || (e.tags ?? []).includes('boss') || (e.tags ?? []).includes('unique');
@@ -1048,11 +1153,14 @@ function enemyPane(state: CombatEncounterState): CombatEnemyPaneVM {
         hp: Math.max(0, e.health), maxHp: e.maxHealth,
         hpPct: e.maxHealth > 0 ? Math.max(0, e.health) / e.maxHealth : 0,
         effects: [...chips(e.effects), ...programChips(state), ...weatherChips(state, 'enemy')],
-        intent: intentVM(state),
+        intent: intentVM(state, beaten),
         stagesEntered: (state.stagesEntered ?? []).length,
         pendingDot: lethality.pendingDot,
         roundsToKill: lethality.roundsToKill,
         isLethalInFlight: lethality.isLethalInFlight,
+        dangers: (e.phases ?? []).flatMap((p, i) => (i > 0 && p.danger
+            ? [{ phase: i + 1, name: beaten ? p.danger.name : null }]
+            : [])),
     };
 }
 
@@ -1741,6 +1849,7 @@ const KEYWORD_FAMILY: Record<string, StatFamily> = {
     DEAL: 'body',
     GUARD: 'mind', HEAL: 'mind',
     BLEED: 'heart', VULNERABLE: 'heart', LEECH: 'heart',
+    RADIANCE: 'heart', MERCY: 'heart',
 };
 
 /**
@@ -1843,6 +1952,23 @@ function programChips(state: CombatEncounterState): CombatEffectChipVM[] {
             gloss: keywordGloss('Tether'),
         });
     }
+    // MERCY on the foe: its total and the foe turns left until it bursts; YIELDING
+    // while the foe holds it.
+    const mercy = mercyReading(l.mercy);
+    if (mercy.mercy > 0) {
+        out.push({
+            effectId: 'program-mercy', intensity: mercy.mercy, duration: mercy['mercy-turns'],
+            glyph: { glyph: '☮', color: GLYPH_COLORS.dot, kind: 'dot', label: 'Mercy' },
+            gloss: keywordGloss('Mercy'),
+        });
+    }
+    if (mercy.yielding) {
+        out.push({
+            effectId: 'program-yielding', intensity: 1, duration: 0,
+            glyph: { glyph: '☉', color: HUE.goldAccent, kind: 'control', label: 'Yielding' },
+            gloss: keywordGloss('Yielding'),
+        });
+    }
     return out;
 }
 
@@ -1918,6 +2044,8 @@ export function weatherChips(state: CombatEncounterState, side: 'enemy' | 'playe
 export function effectChipA11y(e: CombatEffectChipVM): string {
     const span = e.effectId.startsWith('weather-') ? 'lasts the combat'
         : e.effectId === 'spike-thorns' ? 'drops by 1 each round'
+        : e.effectId === 'program-yielding' ? 'while it holds'
+        : e.effectId === 'program-mercy' ? `bursts in ${e.duration} turn${e.duration === 1 ? '' : 's'}`
         : `${e.duration} turns left`;
     return `${e.glyph.label}, intensity ${e.intensity}${e.unit ?? ''}, ${span}${e.caption ? `. ${e.caption}` : ''}`;
 }
@@ -2141,13 +2269,14 @@ function dieGearRailVM(state: CombatEncounterState): CombatDieGearRailVM {
 
 // ── Entry point ──────────────────────────────────────────────────────────────
 
-export function buildCombatViewModel(state: CombatEncounterState): CombatViewModel {
+/** `beaten`: the save records this foe as beaten, so its DANGER names show. */
+export function buildCombatViewModel(state: CombatEncounterState, beaten = false): CombatViewModel {
     const total = state.threatPhases.length;
     const idx = Math.min(state.currentPhaseIndex, total - 1);
     const dice = diceVM(state);
     return {
         phase: state.phase,
-        enemy: enemyPane(state),
+        enemy: enemyPane(state, beaten),
         player: playerPane(state),
         dice,
         reserveRoom: (state.reserve ?? []).length < RESERVE_MAX,

@@ -1187,6 +1187,12 @@
       "kind": "coupling",
       "from": "area:Combat",
       "to": "area:Cards",
+      "file": "axiomancer-mechanics/src/Combat/combat.encounter.sim.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Cards",
       "file": "axiomancer-mechanics/src/Combat/combat.encounter.types.ts"
     },
     {
@@ -1337,6 +1343,12 @@
       "kind": "coupling",
       "from": "area:Combat",
       "to": "area:Effects",
+      "file": "axiomancer-mechanics/src/Combat/combat.enemy-words.resolve.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Effects",
       "file": "axiomancer-mechanics/src/Combat/combat.engine.ts"
     },
     {
@@ -1392,6 +1404,12 @@
       "from": "area:Combat",
       "to": "area:Enemy",
       "file": "axiomancer-mechanics/src/Combat/combat.enemy-decks.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Enemy",
+      "file": "axiomancer-mechanics/src/Combat/combat.enemy-words.resolve.ts"
     },
     {
       "kind": "coupling",
@@ -2440,6 +2458,12 @@
     {
       "kind": "coupling",
       "from": "route:(tabs)/deck",
+      "to": "area:Enemy",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/deck",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/GameStoreProvider.tsx"
     },
@@ -3112,6 +3136,12 @@
     {
       "kind": "coupling",
       "from": "route:cache",
+      "to": "area:Enemy",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/GameStoreProvider.tsx"
     },
@@ -3522,6 +3552,12 @@
       "from": "route:combat-encounter",
       "to": "area:Enemy",
       "file": "axiomancer-mobile/state/combat/store-actions.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Enemy",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
     },
     {
       "kind": "coupling",
@@ -4972,6 +5008,12 @@
     {
       "kind": "coupling",
       "from": "route:quest",
+      "to": "area:Enemy",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:quest",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/GameStoreProvider.tsx"
     },
@@ -5339,6 +5381,12 @@
       "kind": "coupling",
       "from": "route:village",
       "to": "area:Effects",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village",
+      "to": "area:Enemy",
       "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
     },
     {

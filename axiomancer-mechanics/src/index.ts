@@ -40,8 +40,9 @@ export type {
 
 // ─── Enemy ────────────────────────────────────────────────────────────────────
 export {
-    createEnemy, isEnemyBefriendable,
+    createEnemy, isEnemyBefriendable, hasEnemyPhases,
 } from './Enemy';
+export { hasDefeatedEnemy, defeatedEnemies, enemySlugOf } from './Game/defeat-ledger';
 export type {
     Enemy, EnemyDifficulty,
     // CodexEntry's semantic home is the Game-loop persistence surface; the
@@ -75,7 +76,7 @@ export {
     handCards, buildCombatSummary,
     combatDieCanPower,
     toCombatCard, buildCombatDeck,
-    getThreatSequence,
+    getThreatSequence, nextEnemyPhaseIndex,
     mechanicText,
     // Turn lifecycle, Conviction, Signature Skills
     startTurn, endTurn, discardCombatCard,

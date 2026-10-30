@@ -16,7 +16,7 @@
  */
 
 import type { Character } from '../Character/types';
-import type { Enemy } from '../Enemy/types';
+import type { Enemy, EnemyMoveKind } from '../Enemy/types';
 import type { Effect, ActiveEffect } from '../Effects/types';
 import type { CardAspect, CardType } from '../Cards/types';
 import type { ProgramLedger } from './combat.card-program';
@@ -220,6 +220,36 @@ export interface CombatThreatEffect {
     /** The enemy sheds up to this many of its OWN afflictions when the
      *  action fires (a fraction, never the last one). Written only by the threat-branch resolver. */
     enemyCleanse?: number;
+    /** The enemy words a `phases` move carries (`combat.enemy-words.ts`).
+     *  SCOUR: statuses the foe strips off itself, the last one included. */
+    scour?: number;
+    /** WARD: the foe gains this much GUARD against your DEALs. */
+    ward?: number;
+    /** BRINE: each GUARD you gain is cut by this much until the end of your next turn. */
+    brine?: number;
+    /** VULNERABLE on you: `pct`% more damage from the foe's next `turns` attacks. */
+    vulnerable?: { pct: number; turns: number };
+    /** LEECH on you: adds 3 turns and this much potency. */
+    leech?: number;
+}
+
+/** The enemy words with live state on the board (`combat.enemy-words.ts`). */
+export type EnemyWordId = 'ward' | 'mend' | 'scour' | 'brine' | 'vulnerable' | 'leech';
+
+/**
+ * The enemy words' fight state. Optional on the encounter: absent reads as
+ * all zero. WARD and BRINE fade at the start of the foe's turn; LEECH ticks
+ * at the start of yours.
+ */
+export interface EnemyWordsState {
+    /** WARD on the foe: soaks your DEALs before its VITAE. */
+    ward: number;
+    /** BRINE on you: each GUARD you gain is cut by this much. */
+    brine: number;
+    /** LEECH on you: your turns left (0 = none). */
+    leechTurns: number;
+    /** LEECH on you: the VITAE you lose at the start of each of your turns. */
+    leechPotency: number;
 }
 
 export interface CombatThreatAction {
@@ -239,7 +269,13 @@ export type CombatIntentType =
     | 'buff'       // only enemy self-heal / self-buff
     | 'block'      // a defensive / damage-reduction effect on the enemy
     | 'pass'       // no effects (damage 0, no effectId)
-    | 'combo';     // multiple types at once
+    | 'combo'      // multiple types at once
+    // The telegraph kinds of a foe that declares `phases`: a kind, never a number.
+    | 'attack'
+    | 'defend'
+    | 'status'
+    | 'danger'
+    | 'unknown';
 
 /**
  * A threat branch's authored
@@ -282,6 +318,11 @@ export interface CombatThreatPhase {
     index: number;                            // 1-indexed for display
     threatAction: CombatThreatAction;         // the enemy's telegraphed attack each phase (HP model)
     isFinalPhase: boolean;                    // last telegraph in the sequence (then it loops)
+    /** Set only on a `phases` foe's entries (`resolveEnemyPhases`): which HP
+     *  phase this move belongs to (0-based), its place in that phase's loop
+     *  (`step`, 0-based; 0 on a DANGER), whether it is the phase's entry
+     *  DANGER, and the move's name and telegraph kind. */
+    enemyMove?: { phase: number; step: number; danger: boolean; name: string; kind: EnemyMoveKind };
 
     // ── Intent telegraph ────────────────────────────────────────────────────
     /** Auto-derived from `threatAction.effects` (deriveIntentType); override for
@@ -448,6 +489,9 @@ export type CombatEvent =
     | { kind: 'soul-gained'; amount: number; total: number; reason: 'expiry' | 'consumed' | 'granted' }
     /** A foe crossed one of its STAGE thresholds and became another fight. */
     | { kind: 'stage-entered'; enemyId: string; name: string; text: string }
+    /** A `phases` foe crossed a line and entered HP phase `phase` (0-based);
+     *  `danger` names the DANGER move it plays next (null when the phase has none). */
+    | { kind: 'enemy-phase-entered'; enemyId: string; phase: number; danger: string | null }
     /**
      * The foe's VITAE went UP. `amount` is the HP
      * ACTUALLY restored after the max-VITAE clamp — never the printed figure —
@@ -463,6 +507,12 @@ export type CombatEvent =
     | { kind: 'threat-branch'; phaseIndex: number; conditionText: string; taken: 'then' | 'else' }
     // The enemy's reactive cleanse shed some of its own afflictions.
     | { kind: 'threat-cleansed'; phaseIndex: number; effectIds: string[] }
+    /** An enemy word moved: `gained` (WARD, BRINE, VULNERABLE or LEECH landed, `amount` its number),
+     *  `soaked` (WARD took `amount` off a DEAL), `cut` (BRINE took `amount` off a GUARD gain),
+     *  `ticked` (LEECH took `amount` VITAE from you), `stripped` (SCOUR took `stripped` off the foe)
+     *  or `faded` (WARD or BRINE ran out with `amount` left). */
+    | { kind: 'enemy-word'; word: EnemyWordId; op: 'gained' | 'soaked' | 'cut' | 'ticked' | 'stripped' | 'faded';
+        amount: number; stripped?: string[] }
     | { kind: 'hand-drawn'; cards: string[] }
     | { kind: 'mercy-opened'; message: string }
     // ── Upgradeable-dice events ────────────────────────────────────────────
@@ -643,6 +693,8 @@ export interface CombatEncounterState {
     /** The SACRIFICE / Global / Curse ledger. Present only when the deck
      *  holds a program card (`combat.card-program.ts`). */
     program?: ProgramLedger;
+    /** The enemy words' state (WARD, BRINE, LEECH on you). Absent = none. */
+    enemyWords?: EnemyWordsState;
 }
 
 /**

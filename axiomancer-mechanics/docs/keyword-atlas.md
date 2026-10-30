@@ -43,8 +43,8 @@ Global's trigger is a condition. `COMPLEXITY_BUDGET` in
 
 | keyword | reminder text | carried by |
 |---|---|---|
-| **VULNERABLE +N% dM** | The foe takes that much more damage from every hit. Adding more stacks it and refreshes the turns. Heart scales N. | grey-word; Blood Price P-05b, P-09b, M-07a |
-| **LEECH N** | Each LEECH adds 3 turns and its number to the potency. At the start of its turn the foe loses the potency in VITAE and you heal what it lost. A debuff with two numbers: each application, the first included, adds 3 turns (`LEECH_TURNS_PER_APPLICATION`) and adds N, heart-scaled when applied, to the potency. Each foe turn the foe loses the potency (unscaled, not a DEAL), you heal what it lost, and a turn ticks off. The potency never decays; at 0 turns LEECH ends and the potency resets. | Blood Price P-06d, E-03d, E-05n, M-01d, M-03d, M-08d; the Ruby Tithe and Open Vein signatures (Ruby Signet, Bleeding Signet) |
+| **VULNERABLE +N% dM** | The bearer takes that much more damage from every hit, and more stacks it and refreshes the turns. On you, GUARD still blocks the larger hit. Heart scales N on a card; a foe's VULNERABLE on you does not scale. | grey-word; Blood Price P-05b, P-09b, M-07a; a foe move's `vulnerable` (Enemy keywords, below) |
+| **LEECH N** | Each LEECH adds 3 turns and its number to the potency. At the start of its turn the bearer loses the potency in VITAE and the other side heals it, so race a LEECH on you. On the foe, a debuff with two numbers: each application, the first included, adds 3 turns (`LEECH_TURNS_PER_APPLICATION`) and adds N, heart-scaled when applied, to the potency. Each foe turn the foe loses the potency (unscaled, not a DEAL), you heal what it lost, and a turn ticks off. The potency never decays; at 0 turns LEECH ends and the potency resets. | Blood Price P-06d, E-03d, E-05n, M-01d, M-03d, M-08d; the Ruby Tithe and Open Vein signatures (Ruby Signet, Bleeding Signet); a foe move's `leech`, on you (Enemy keywords, below) |
 | **TETHER N** | For that many turns, each SACRIFICE makes the foe take damage equal to the VITAE it paid (a DEAL: unscaled, VULNERABLE applies; a WAIVED SACRIFICE deals 0). | Blood Price P-08d, E-02d, E-05n, E-10d |
 | **BLEED** | Each hit the bearer takes deals 3 more VITAE per Bleed stack, then removes a stack. | no live carrier: no card, foe, hazard or item applies `debuff_bleed`; the effect stays in `src/Effects/debuffs.library.json` and mobile still glosses it |
 
@@ -102,6 +102,17 @@ double on that foe turn.
 | **THORNS N** | Each foe strike deals N back to the foe. THORNS drops by 1 at the end of each round after the one it was gained in. | the Defender trial set |
 | **REFLECT N%** | Each foe strike sends N% of its damage before GUARD back to the foe. You still take the hit. Lasts 2 turns; a new REFLECT adds its % and refreshes to 2 turns. No cap. | the Defender trial set |
 
+### The Merciful
+
+The Merciful's heal-as-weapon words (T, 2026-10-29 and 2026-10-30; `src/Combat/combat.mercy.ts`). Heart scales the
+numbers of RADIANCE and MERCY as it scales LEECH.
+
+| keyword | reminder text | carried by |
+|---|---|---|
+| **RADIANCE N** | HEAL N, then DEAL what that heal restored: nothing at full VITAE. The hit is a DEAL, so VULNERABLE raises it and a FROZEN foe takes it doubled. Heart scales N. | the Merciful trial set (MF1d) |
+| **MERCY N** | Heal the foe N, stopping at its max VITAE, and add N to its MERCY whatever the heal restored. The first MERCY starts a 3-turn clock; a new MERCY adds to the total and never resets the clock. When the clock runs out, at the start of the foe's turn, the MERCY bursts, then clears. Heart scales N. | the Merciful trial set (MF1d) |
+| **YIELDING** | While a foe is YIELDING you can befriend it whatever its VITAE. A card makes a foe YIELDING for as long as it has MERCY; the burst ends it. A foe that cannot be befriended stays so. | the Merciful trial set (MF1d) |
+
 ### Drawing
 
 | keyword | reminder text | carried by |
@@ -132,10 +143,26 @@ effect (ballot §9). The budget does not count them.
 
 ---
 
-## Enemy keywords (none)
+## Enemy keywords
 
-No enemy carries a keyword (`EnemyKeyword = never`). The three foes fight
-with plain damage from their decks.
+The words a `phases` foe's move may carry (D116; Phase EN1d). Each is a field
+on `EnemyMove` (`src/Enemy/types.ts`), listed in `ENEMY_KEYWORDS`
+(`src/Enemy/enemy-keywords.ts`) and resolved in
+`src/Combat/combat.enemy-words.ts` and `combat.enemy-words.resolve.ts`. Every
+number but VULNERABLE's scales with the foe's level the way its damage does
+(`scaleMoveNumber`). The player's own VULNERABLE and LEECH can also land on
+the player from a foe's move (the `vulnerable` and `leech` fields); their
+rows are above, and their glosses read for either side. VULNERABLE on you is
+`debuff_vulnerable` for the foe's next `turns` attacks; LEECH on you mirrors
+the foe LEECH (3 turns per application, the potency stacks), ticks at the start of your
+turn past GUARD, and the foe heals what you lost.
+
+| keyword | reminder text | carried by |
+|---|---|---|
+| **WARD N** | The foe's GUARD: it soaks your DEALs before its VITAE and is gone at the start of its next turn. VULNERABLE, LEECH and INFERNO get past it. WARD meets only the part of a DEAL before VULNERABLE (FREE, PAID, a program DEAL, TETHER, a MERCY burst); a plain VITAE loss skips it. It lands after the move's hits, so the spikes those hits drew never meet it. `EnemyMove.ward`. | no live foe yet: the Breakwater foes (EN1f-h) |
+| **MEND N** | The foe heals that much VITAE, up to its maximum. Counter it with burst: damage dealt in one turn outruns the heal. The existing `enemyHeal`. `EnemyMove.enemyHeal`. | no live foe yet: the Breakwater foes (EN1f-h) |
+| **SCOUR N** | The foe strips that many statuses off itself, the last one too: LEECH first, then INFERNO, STORM and its afflictions. Lay more statuses than it can strip. Its afflictions go newest first; a both-sides INFERNO leaves you your half. MERCY is not a status it strips. `EnemyMove.enemyCleanse`. | no live foe yet: the Breakwater foes (EN1f-h) |
+| **BRINE N** | Each GUARD you gain is cut by that much until the end of your next turn. Gain your GUARD in one big play, not many small ones. Each gain is cut on its own (a PAID play's pips included, a HEAL's overflow into GUARD too); it fades at the start of the foe's next turn. `EnemyMove.brine`. | no live foe yet: the Breakwater foes (EN1f-h) |
 
 ---
 
@@ -150,6 +177,7 @@ in `SYSTEM_GLOSSARY`.
 | RESERVE & PIPS | Up to 2 dice held between phases instead of played. Each gains +1 pip per phase it survives, spent for extra intensity or Guard. |
 | WILD / X | A WILD die (the gold die) counts as any color. A dead X die (a miss face) powers nothing. |
 | HOLDS | GUARD holds: you have taken no damage this turn. A card that works "while GUARD holds" stops the moment a hit gets through. |
+| BURST | MERCY's word for what it does when its clock runs out, or a card runs it out: the foe takes a DEAL of twice its MERCY, then the MERCY clears. Card text says "bursts", never "triggers". |
 | CURSE | A card type: a dead card that holds a hand slot until played. It cannot be scrapped. The grey Curse is defined, but no card adds it and it is in no lane, deck or reward pool (foes will add Curses later). |
 
 ---
@@ -168,6 +196,10 @@ ship.
    have `default:` arms, so a kind that skips them type-checks clean while
    doing nothing; a carrier card is what catches it.
 3. A carrier in `axiomancer-mechanics/src/Cards/library/`.
+   An enemy word is instead a field on `EnemyMove` (`src/Enemy/types.ts`), its
+   id in `ENEMY_KEYWORDS` (`src/Enemy/enemy-keywords.ts`) and `moveKeywords`,
+   its threat effect built in `moveThreatAction` (`src/Combat/combat.threat.ts`)
+   and resolved in `src/Combat/combat.enemy-words.resolve.ts`.
 4. The gloss in `axiomancer-mobile/state/combat/keywords.ts`, the headline
    in `axiomancer-mobile/state/presenters/combat-encounter.engine.ts`, and a
    glyph in `axiomancer-mobile/components/combat/statusGlyphs.ts` /
