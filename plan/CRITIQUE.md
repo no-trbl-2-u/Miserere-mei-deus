@@ -1099,15 +1099,6 @@
 - suggested fix: fold repeats in the presenter into one chip with a count ("+ GREATER HEALING POTION x2"), in both the offer and the outcome ledger; presentation only, pinned in the cache presenter test.
 - source: critique:drive (unattended)
 
-### [LOW] /cache / determinism — the card offer is rolled from `Math.random`, not the cache seed, so the same fixture offered A Plain Ward at 375 and A Plain Word at 1280
-- pass: 109 (commit 1250f1d9)
-- viewport: mobile (375x812) and desktop (1280x800)
-- category: infra
-- observation: both viewports booted `apprentice-bw-cache` with the same seed and drew the same goods, but TAKE A CARD offered a different card in each. `beginLootCacheChoiceAction` resolves a cache seed and rolls the goods from it, then rolls the card with `rollCombatCardRewards(player, Math.random, 1)`. A cache is not reproducible from its seed, a mobile/desktop or pass-to-pass comparison of `/cache` is not like for like (the pass-100 hazard row, again), and a test cannot pin the card the screen shows.
-- evidence: `axiomancer-mobile/state/cache/store-actions.ts:72` (`Math.random`) beside :67 (`resolveMinigameSeed('cache', ...)`) and :71 (`rollCacheReward({ seed })`); `.critique-artifacts/mobile/12-cache.png` (A PLAIN WARD, GUARD 5) against `desktop/12-cache.png` (A PLAIN WORD, VULNERABLE +25%).
-- suggested fix: draw the card from a PRNG built from the cache seed (the mulberry32 `cache-reward.ts` already uses, offset so it does not share the goods' stream), and pin "same seed, same card" in the cache store-actions test.
-- source: critique:drive (unattended)
-
 ### [MED] combat / mobile — at 375 wide the hand fan cuts four of five card names to "A PLAIN" plus one letter, so Blow, Word and Ward look the same
 - pass: 100 (commit ee9c5b83)
 - viewport: mobile (375x812)
@@ -1410,6 +1401,16 @@
 - source: loop
 
 ## Done
+
+### [x] [LOW] /cache / determinism — the card offer is rolled from `Math.random`, not the cache seed, so the same fixture offered A Plain Ward at 375 and A Plain Word at 1280 — RESOLVED 2026-10-30 (branch loop/iterate-cache-card-seed, 789abec5e: the card draws from `cacheCardRng(seed)`, a mulberry32 stream of the cache seed offset from the goods' stream, so one seed reproduces the whole cache; pinned in `cache.flow.engine.test.ts`)
+- pass: 109 (commit 1250f1d9)
+- viewport: mobile (375x812) and desktop (1280x800)
+- category: infra
+- observation: both viewports booted `apprentice-bw-cache` with the same seed and drew the same goods, but TAKE A CARD offered a different card in each. `beginLootCacheChoiceAction` resolves a cache seed and rolls the goods from it, then rolls the card with `rollCombatCardRewards(player, Math.random, 1)`. A cache is not reproducible from its seed, a mobile/desktop or pass-to-pass comparison of `/cache` is not like for like (the pass-100 hazard row, again), and a test cannot pin the card the screen shows.
+- evidence: `axiomancer-mobile/state/cache/store-actions.ts:72` (`Math.random`) beside :67 (`resolveMinigameSeed('cache', ...)`) and :71 (`rollCacheReward({ seed })`); `.critique-artifacts/mobile/12-cache.png` (A PLAIN WARD, GUARD 5) against `desktop/12-cache.png` (A PLAIN WORD, VULNERABLE +25%).
+- suggested fix: draw the card from a PRNG built from the cache seed (the mulberry32 `cache-reward.ts` already uses, offset so it does not share the goods' stream), and pin "same seed, same card" in the cache store-actions test.
+- source: critique:drive (unattended)
+- issue: #1092
 
 ### [x] [LOW] satchel / desktop — a lone item tile is a 390px-wide black well with a 28px glyph in the middle, so the Healing Potion reads as an empty box — RESOLVED 2026-10-29 (branch loop/iterate-satchel-tile-width, 760c8bb05: a collapsed tile caps at `ITEM_CARD_MAX_WIDTH` 140, so a wide window packs more tiles per row and phones are unchanged; an expanded tile still takes the full row; pinned in `ItemCard.test.tsx`)
 - pass: 108 (commit 850ce863)

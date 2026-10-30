@@ -1709,6 +1709,12 @@
       "kind": "coupling",
       "from": "area:Game",
       "to": "area:Enemy",
+      "file": "axiomancer-mechanics/src/Game/defeat-ledger.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Enemy",
       "file": "axiomancer-mechanics/src/Game/game.reducer.ts"
     },
     {
@@ -1716,6 +1722,12 @@
       "from": "area:Game",
       "to": "area:Enemy",
       "file": "axiomancer-mechanics/src/Game/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Enemy",
+      "file": "axiomancer-mechanics/src/Game/types.ts"
     },
     {
       "kind": "coupling",

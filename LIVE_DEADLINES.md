@@ -7,7 +7,6 @@
 
 | Due | Item | What it needs | Window |
 |---|---|---|---|
-| 2026-10-27 (3 days overdue) | Pick the rest of the item icons: four relics, the category glyphs, the unknown mark and the empty bag (the six lane relics and the three potions are done) (1 h) | needs you: IT2a ready for you | W1 |
 | 2026-10-29 (1 day overdue) | Author the first character: portrait, starting relic and its lane, two starting lanes, three lane cards, the playstyle line (1 h) | needs you: CH1e ready for you; the loop still owes MF1a, MF1b, MF1c, MF1d | W1 |
 | 2026-10-30 (today) | W1 demo part 1: T plays the ten hard candidates (1 h) | needs you: your task | W1 |
 | 2026-10-31 (tomorrow) | Enemy session 2: pick the L4 and W5 elites from the drafts (the Lamplighter or the Wrecker, the Toll-Keeper or the Tide-Gate) and design the sea keep's boss; the C1 elite is set (1 h) | needs you: your task | W1 |
@@ -21,7 +20,7 @@
 | 2026-11-06 (in 7 days) | Event kind 3, rest: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (0.5 h) | needs a plot: no build-plan rows yet | W2 |
 | 2026-11-07 (in 8 days) | Pick the title plate and the four arena backgrounds (coast, forest, mountains, underworld) from your art dossier (0.5 h) | needs you: TP1b ready for you | W2 |
 | 2026-11-07 (in 8 days) | Plot the arena-background swap from your picks (0.5 h) | needs a plot: no build-plan rows yet | W2 |
-| 2026-11-08 (in 9 days) | Swap Chapter 1's enemy portraits: replace each stand-in with the most thematic portrait from your set (2 h) | needs you: your task; the loop still owes EN1a, EN1b, EN1c, EN1d, EN1e, EN1f, EN1g, EN1h | W2 |
+| 2026-11-08 (in 9 days) | Swap Chapter 1's enemy portraits: replace each stand-in with the most thematic portrait from your set (2 h) | needs you: your task; the loop still owes EN1a, EN1c, EN1d, EN1e, EN1f, EN1g, EN1h | W2 |
 | 2026-11-09 (in 10 days) | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | needs you: your task; the loop still owes CH1f | W2 |
 | 2026-11-10 (in 11 days) | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | needs you: your task | W2 |
 | 2026-11-10 (in 11 days) | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | needs you: BW1d ready for you | W2 |
