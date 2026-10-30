@@ -15,6 +15,8 @@
  *
  * The cards here are synthetic test cards in the sandbox registry; the
  * Merciful trial set itself lands in MF1d.
+ *
+ * guard-test: the `edges` describe block pins the MERCY and RADIANCE mutation survivors PR #1110 left, behaviour already on main; this PR's own change (dropping two `amt <= 0` checks a positive `n` already made unreachable) is behaviour-identical, so every new case passes unchanged on the parent by design
  */
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
