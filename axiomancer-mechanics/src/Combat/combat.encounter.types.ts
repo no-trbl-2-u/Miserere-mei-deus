@@ -295,7 +295,7 @@ export interface EnemyRidersState {
     veil?: boolean;
     /** Cards the foe still holds the next plays of (an `engulf-hold` armed). */
     holdArmed?: number;
-    /** Card ids HELD inside the foe, out of your deck until it spits them out. */
+    /** Card ids HELD inside the foe, out of your discard until it spits them out. */
     held?: string[];
     /** The last status you put on the foe, for a `copy-last-status` rider. */
     lastStatus?: ReflectedStatus;

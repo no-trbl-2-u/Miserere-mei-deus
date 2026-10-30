@@ -319,7 +319,7 @@ export interface EnemyMove {
  *   veil                     until its next turn, your HEAL is halved.
  *   strip-weather-hits       strips your THORNS, REFLECT and INFERNO, then one hit of `damage` per one stripped.
  *   leech-turns-damage       one hit of `damage` per turn of LEECH left on you, then the LEECH lets go.
- *   engulf-hold              the next `cards` you play are HELD inside it (out of your deck) until its DANGER or its death.
+ *   engulf-hold              the next `cards` you play are HELD inside it (out of your discard) until its DANGER or its death.
  *   mirror-dealt             one hit of what you dealt it last turn, up to `cap`.
  *   copy-last-status         the last status you put on it lands on you.
  *   spit-held                every HELD card drops into your discard, one hit of `damage` per card.

@@ -2081,7 +2081,7 @@ export function foeCounterChips(state: CombatEncounterState, side: 'enemy' | 'pl
 
 /** What each foe counter says when tapped (state of the fight, not a keyword). */
 const ENEMY_COUNTER_GLOSS = {
-    held: 'Cards the foe has swallowed, out of your deck. They drop into your discard when it spits them out.',
+    held: 'Cards the foe has swallowed, out of your discard. They drop back into your discard when it spits them out.',
     toll: 'Tolls the foe has rung this fight. Each new Toll hits harder for every one already rung.',
     curfew: "A curfew: this turn only this many more cards can be played, FREE or PAID. It ends at the foe's next turn.",
 } as const;
