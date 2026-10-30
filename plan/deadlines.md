@@ -250,6 +250,9 @@ names, and on a line here with no reason. **A row listed here is work the loop m
 undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
 
 - HD1b — plotted 2026-10-29; cleanup loop work, needs no time from T; date not set.
+- AT1a — plotted 2026-10-29; the DevLog atlas's data, loop work that needs no time from T; date not set.
+- AT1b — plotted 2026-10-29; the DevLog atlas page, loop work; date not set.
+- AT1c — plotted 2026-10-29; the atlas's drift plate, loop work; date not set.
 - AD1a — plotted 2026-10-21 (#716) without a deadline line; date not set.
 - AD1b — plotted 2026-10-21 (#716) without a deadline line; date not set.
 - EQ1a — a live defect T hit on device; loop work, needs no time from T; date not set.
@@ -336,6 +339,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-29** — **AT1 plotted** (T, attended `/plot`: the Miserere Atlas rebuilt in the private DevLog, data-driven): added AT1a, AT1b and AT1c under `## Unscheduled` (loop work; no T act waits on it). No Item edited or ticked: the atlas changes no Item's premise.
 - **2026-10-29** — **HD1 plotted** (T, attended `/plot anytime`: "File them all as one plot"): added HD1a and HD1b under `## Unscheduled` (cleanup loop work after the Breakwater heads-down run; no T act waits on it). No Item edited or ticked: the cleanup changes no Item's premise.
 - **2026-10-29** — **the three potion icons picked and applied** (T, in session: Healing Potion `delapouite/health-potion`, Minor `sbed/vial`, Greater `lorc/perfume-bottle`, "Red liquid on all three"; "Might as well start tackling those potion icons now"). **Edited** the Oct 27 Item's name: the potions leave the list of picks still owed. Its Rows stay IT2a, which still has the four relics, the category glyphs, the unknown mark and the bag. Nothing ticked.
 - **2026-10-29** — **the item-icon pick split; IT2 plotted** (T, attended `/plot asap`: asked why the list was stuck, T said the icon picks were done; the repo showed #989 shipped the six lane relics' icons on Oct 27 without ticking IT1b, and nothing else was picked; T: "Split it, then plot the potion icons"). **Edited** the Oct 27 Item: its name narrows to the picks still owed (three potions, four relics, the category glyphs, the unknown mark, the empty bag) and its Rows move from IT1b (now `[x] (#989)`) to IT2a; the date stays T's. **Added** IT2b to the `Waits on` of the Nov 16 MVP demo, which names icons. **Edited** the Oct 27 MVP-schedule piece and the W2 notes to match. Nothing ticked by hand.
