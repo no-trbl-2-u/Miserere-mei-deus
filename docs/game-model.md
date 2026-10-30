@@ -204,8 +204,10 @@ the Expo app (`axiomancer-mobile`) presents it.
   name shows only once the foe is in the defeat ledger
   (`codex.defeatedEnemies`, written on a win or a befriend); before that the
   DANGER icon shows with no name, and it stays unnamed when it fires.
-- **Enemy words.** A move may carry any of nine words, each a field on
-  `EnemyMove` and each with a counter its gloss names
+- **Enemy words (D116).** A foe's move may carry the six enemy words (WARD,
+  MEND and SCOUR count as one, then BRINE, TANGLE, UNDERTOW, BARNACLE), and
+  may land the player's own VULNERABLE and LEECH on you. Each is a field on
+  `EnemyMove` with a counter its gloss names
   (`Enemy/enemy-keywords.ts`, resolved in `Combat/combat.enemy-words.ts` and
   `combat.enemy-words.resolve.ts`). They land after the move's hits.
   - **WARD n** is the foe's GUARD: it soaks your DEALs before its VITAE and
@@ -281,7 +283,8 @@ the Expo app (`axiomancer-mobile`) presents it.
 ## The foes
 
 Three enemies (`EnemyLibrary`, `Enemy/enemy.library.ts`). None carries a
-word yet (`EnemyKeyword` is the nine of D116, see A fight).
+word yet (`ENEMY_KEYWORDS` lists nine ids: D116's six enemy words with MEND
+and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
 
 - **Float-Eye:** level 1, normal, 38 VITAE. The only foe drawn at random,
   in every region.
@@ -488,7 +491,8 @@ without a ruling from T.
   counters and the Anvil. The trial cards keep their printed numbers, untuned.
 - No themes or synergy. The only reward steering is the elite reward's one
   card from the deck's lanes (UP1f).
-- No enemy keywords beyond D116's nine words (see A fight), and no summons.
+- No enemy keywords beyond D116's six enemy words and the player's VULNERABLE
+  and LEECH landing on you (see A fight), and no summons.
 - No alternate wins beyond befriend: no RELENT, no CONDEMN, no capitulation.
 - No alignment, GRACE or faction reputation.
 - No bonus for paying with the card's own colour: the die powers the card
