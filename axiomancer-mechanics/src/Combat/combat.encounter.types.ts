@@ -309,6 +309,9 @@ export interface EnemyRidersState {
     curfew?: number;
     /** The Cave Choir's VERSE: +1 per Hymn; its Amen spends them all. */
     verse?: number;
+    /** The Lamplighter's lamp: absent = Lit; `dark` until a move lights it;
+     *  `out` = Dark for the rest of the fight. */
+    lamp?: 'dark' | 'out';
 }
 
 /** A status a `copy-last-status` rider can throw back at you. */

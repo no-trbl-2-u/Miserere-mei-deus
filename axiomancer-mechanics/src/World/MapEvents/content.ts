@@ -323,6 +323,8 @@ export const BW_ENCOUNTER_FOES: Readonly<Record<string, ActOneFoe>> = {
 export const BW_ELITE_DRAWS: Readonly<Record<string, readonly ActOneFoe[]>> = {
     // The sea cave, level 5: the Cave Choir; the Tithe-Collector (EN1h) is its pair.
     'bw-c1': [{ slug: 'cave-choir', level: 5 }],
+    // The lighthouse path, level 7: the Lamplighter or the Wrecker (EN1k).
+    'bw-l4': [{ slug: 'lamplighter', level: 7 }, { slug: 'wrecker', level: 7 }],
 };
 
 /**

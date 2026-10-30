@@ -12,6 +12,8 @@
  *     HP phases.
  *   - The Cave Choir (L5, elite) — one of the sea cave's two elites, drawn
  *     per run; HP phases and its VERSE count.
+ *   - The Lamplighter and the Wrecker (L7, elites) — the lighthouse path's
+ *     two elites, drawn per run; HP phases, its lamp and its Bait.
  *   - The Death Beholder (L8, boss) — every region's door fight.
  *
  * A `phases` foe plays T's moves: a fixed loop per phase, a DANGER on
@@ -264,6 +266,77 @@ const ANTIPHON: EnemyMove = {
     name: 'Antiphon', kind: 'unknown',
     text: 'Answers your last turn. If you attacked, The Pews. If you guarded, a Hymn worth +2 VERSE.',
     rider: { kind: 'antiphon', ward: 10, damage: 3, hits: 2, verse: 2 },
+};
+
+// The lighthouse path's elites (phase EN1k): numbers authored at level 3
+// (`PHASES_AUTHORED_LEVEL.elite`). The Lamplighter's lamp starts Lit.
+
+const WICK_LASH: EnemyMove = {
+    name: 'Wick-Lash', kind: 'attack',
+    text: '6 damage. If Lit, INFERNO 2 on you.',
+    damage: 6, rider: { kind: 'wick-lash', inferno: 2, dark: 0 },
+};
+const SHUTTER: EnemyMove = {
+    name: 'Shutter', kind: 'defend',
+    text: 'Goes Dark, WARD 12.',
+    ward: 12, rider: { kind: 'lamp', to: 'dark' },
+};
+const GLARE: EnemyMove = {
+    name: 'Glare', kind: 'status',
+    text: 'VULNERABLE 25% for 1 turn. Lit only.',
+    vulnerable: { pct: 25, turns: 1 }, rider: { kind: 'lit-only' },
+};
+const WICK_LASH_2: EnemyMove = {
+    name: 'Wick-Lash', kind: 'attack',
+    text: '6 damage, +3 while Dark. If Lit, INFERNO 2 on you.',
+    damage: 6, rider: { kind: 'wick-lash', inferno: 2, dark: 3 },
+};
+const SHUTTER_2: EnemyMove = {
+    name: 'Shutter', kind: 'defend',
+    text: 'WARD 12. Goes Dark every other time, and Lit the time between.',
+    ward: 12, rider: { kind: 'lamp', to: 'flip' },
+};
+// The last loop plays "Anything" in the dark: its moves telegraph UNKNOWN and hit +3.
+const WICK_LASH_3: EnemyMove = {
+    name: 'Wick-Lash', kind: 'unknown',
+    text: '9 damage, +3 while Dark.',
+    damage: 9, rider: { kind: 'wick-lash', inferno: 0, dark: 3 },
+};
+const SHUTTER_3: EnemyMove = {
+    name: 'Shutter', kind: 'unknown',
+    text: 'WARD 12. The lamp stays out.',
+    ward: 12,
+};
+
+const WRECKERS_BAIT: EnemyMove = {
+    name: "Wrecker's Bait", kind: 'unknown',
+    text: 'Reads your turn end. With GUARD up it takes WARD 14. Without, 12 damage.',
+    rider: { kind: 'bait', ward: 14, damage: 12 },
+};
+const CUDGEL: EnemyMove = {
+    name: 'Cudgel', kind: 'attack',
+    text: '7 damage. If it gets through your GUARD, BARNACLE.',
+    damage: 7, rider: { kind: 'barnacle-if-through', barnacle: 1 },
+};
+const ROPE: EnemyMove = {
+    name: 'Rope', kind: 'status',
+    text: 'TANGLE 2.',
+    tangle: 2,
+};
+const SALVAGE_HOOK: EnemyMove = {
+    name: 'Salvage Hook', kind: 'attack',
+    text: '6 damage and steals a banked die.',
+    damage: 6, rider: { kind: 'steal-banked-die', tangle: 0 },
+};
+const CUDGEL_3: EnemyMove = {
+    name: 'Cudgel', kind: 'attack',
+    text: '10 damage. If it gets through your GUARD, BARNACLE.',
+    damage: 10, rider: { kind: 'barnacle-if-through', barnacle: 1 },
+};
+const SALVAGE_HOOK_3: EnemyMove = {
+    name: 'Salvage Hook', kind: 'attack',
+    text: '9 damage and steals a banked die.',
+    damage: 9, rider: { kind: 'steal-banked-die', tangle: 0 },
 };
 
 // ─── The roster ───────────────────────────────────────────────────────────────
@@ -651,6 +724,76 @@ export const CaveChoir = createEnemy({
     tags: ['early-game', 'enemy', 'elite'],
 });
 
+/** One of the lighthouse path's two elites (phase EN1k): LIT or DARK. */
+export const Lamplighter = createEnemy({
+    id: 'enemy-lamplighter',
+    portraitAsset: 'lamplighter',
+    name: 'The Lamplighter',
+    description: 'Kept the light until it went out. Now he lights lures.',
+    level: 7,
+    baseStats: enemyStatBudget(7),
+    mapName: 'breakwater',
+    difficulty: 'elite',
+    logic: 'strategic',
+    loot: [none(80), drop('healing-potion', 20)],
+    phases: [
+        { moves: [WICK_LASH, SHUTTER, GLARE] },
+        {
+            danger: {
+                name: 'Lure Light', kind: 'danger',
+                text: 'TANGLE 3, MEND 8, and it goes Lit.',
+                tangle: 3, enemyHeal: 8, rider: { kind: 'lamp', to: 'lit' },
+            },
+            moves: [WICK_LASH_2, SHUTTER_2, GLARE],
+        },
+        {
+            danger: {
+                name: 'The Lamp Goes Out', kind: 'danger',
+                text: 'Dark for the rest of the fight.',
+                rider: { kind: 'lamp', to: 'out' },
+            },
+            moves: [WICK_LASH_3, SHUTTER_3],
+        },
+    ],
+    addedIn: CHAPTER1_ADDED,
+    tags: ['early-game', 'enemy', 'elite'],
+});
+
+/** The lighthouse path's other elite (phase EN1k): its Bait reads your turn end. */
+export const Wrecker = createEnemy({
+    id: 'enemy-wrecker',
+    portraitAsset: 'wrecker',
+    name: 'The Wrecker',
+    description: 'Swings a false light on the rocks so ships come in wrong.',
+    level: 7,
+    baseStats: enemyStatBudget(7),
+    mapName: 'breakwater',
+    difficulty: 'elite',
+    logic: 'strategic',
+    loot: [none(80), drop('healing-potion', 20)],
+    phases: [
+        { moves: [WRECKERS_BAIT, CUDGEL, ROPE] },
+        {
+            danger: {
+                name: 'Onto the Rocks', kind: 'danger',
+                text: '4 damage per card in your hand.',
+                rider: { kind: 'hand-size-damage', damage: 4 },
+            },
+            moves: [WRECKERS_BAIT, SALVAGE_HOOK, WRECKERS_BAIT],
+        },
+        {
+            danger: {
+                name: 'Strip the Wreck', kind: 'danger',
+                text: 'Takes your banked dice and 4 Conviction, WARD 4 per thing taken.',
+                rider: { kind: 'strip-wreck', conviction: 4, ward: 4 },
+            },
+            moves: [CUDGEL_3, SALVAGE_HOOK_3, WRECKERS_BAIT],
+        },
+    ],
+    addedIn: CHAPTER1_ADDED,
+    tags: ['early-game', 'enemy', 'elite'],
+});
+
 // ─── Test fixture (NOT part of the roster) ───────────────────────────────────
 
 /**
@@ -677,6 +820,7 @@ export const Sandbag_01 = createEnemy({
 export const EnemyLibrary = [
     FloatEye, GallowsCrow, NetMender, CraneHook, BrineWidow, LampreyKnot, GreenJelly, CurfewRinger,
     CaveChoir,
+    Lamplighter, Wrecker,
     DeathBeholder,
 ] as const;
 
@@ -718,6 +862,8 @@ export const ENEMY_REGISTRY = {
     'curfew-ringer':  CurfewRinger,
     'green-jelly':      GreenJelly,
     'cave-choir':     CaveChoir,
+    'lamplighter':    Lamplighter,
+    'wrecker':        Wrecker,
     'death-beholder': DeathBeholder,
 } as const;
 

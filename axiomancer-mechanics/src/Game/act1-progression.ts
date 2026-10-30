@@ -56,6 +56,9 @@ export function act1FightLedger(): Act1Fight[] {
                     enemySlug: payload.enemySlug, level: payload.level, isBoss: payload.isBoss ?? false,
                     ...(payload.difficulty ? { difficulty: payload.difficulty } : {}),
                 });
+                // One fight per node: an elite node's pair is one fight drawn
+                // per run, its two foes at the same level and tier (phase EN1k).
+                break;
             }
         }
         fights.sort((a, b) => a.column - b.column || Number(a.isBoss) - Number(b.isBoss));

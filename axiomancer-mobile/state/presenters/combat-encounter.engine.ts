@@ -36,6 +36,7 @@ import {
     type WeatherElement,
     type SpikeReading,
     hasEnemyPhases, nextEnemyPhaseIndex, playLimitBlock,
+    lampOf, intentsInTheDark, baitSet,
 } from '@mechanics';
 // The card-text projection. The detail panel's printed clauses are DERIVED in
 // mechanics from the effect data; this presenter only formats them (keyword
@@ -232,6 +233,8 @@ export interface CombatEffectChipVM {
     effectId: string; glyph: StatusGlyph; intensity: number; duration: number;
     /** A unit the badge prints after the number (REFLECT's '%'); absent = a bare count. */
     unit?: string;
+    /** A state, not a count (the Lamplighter's Lit or Dark): the chip prints no badge number. */
+    noBadge?: boolean;
     /** General keyword definition for the on-board status tooltip (null if unmapped). */
     gloss: string | null;
     /** A visible line beside the chip (set only on your own weather, e.g. the
@@ -1093,16 +1096,18 @@ export function ledgerA11y(ledger: CombatViewModel['ledger']): string {
 
 /** The intent of a `phases` foe: the move's kind and name, every number left out. */
 function phasesIntentVM(state: CombatEncounterState, cur: CombatThreatPhase, beaten: boolean): CombatIntentVM {
-    const type = (cur.intentType ?? 'unknown') as CombatIntentType;
+    // The Lamplighter's Dark (phase EN1k): every intent it shows reads UNKNOWN, unnamed.
+    const dark = intentsInTheDark(state);
+    const type = dark ? 'unknown' : (cur.intentType ?? 'unknown') as CombatIntentType;
     const meta = INTENT_ICONS[type];
-    const moveName = telegraphName(cur, beaten);
+    const moveName = dark ? null : telegraphName(cur, beaten);
     const nextIndex = nextEnemyPhaseIndex(state.threatPhases, state.currentPhaseIndex, state.enemy);
     const nextPhase = nextIndex === null ? undefined : state.threatPhases[nextIndex];
     const next = nextPhase
         ? (() => {
-            const t = (nextPhase.intentType ?? 'unknown') as CombatIntentType;
+            const t = dark ? 'unknown' : (nextPhase.intentType ?? 'unknown') as CombatIntentType;
             const m = INTENT_ICONS[t];
-            return { type: t, icon: m.icon, label: m.label, branch: null, moveName: telegraphName(nextPhase, beaten) };
+            return { type: t, icon: m.icon, label: m.label, branch: null, moveName: dark ? null : telegraphName(nextPhase, beaten) };
         })()
         : null;
     return {
@@ -2034,7 +2039,7 @@ export function spikeChips(state: CombatEncounterState): CombatEffectChipVM[] {
  */
 export function enemyWordChips(state: CombatEncounterState, side: 'enemy' | 'player'): CombatEffectChipVM[] {
     const w = state.enemyWords;
-    const counters = foeCounterChips(state, side);
+    const counters = [...foeCounterChips(state, side), ...lighthouseChips(state, side)];
     if (!w) return counters;
     // Each word carries the glyph kind its colour belongs to: WARD a boon
     // (statup), BRINE a cut (statdown), LEECH a drain (dot), the rest control.
@@ -2098,7 +2103,40 @@ const ENEMY_COUNTER_GLOSS = {
     toll: 'Tolls the foe has rung this fight. Each new Toll hits harder for every one already rung.',
     curfew: "A curfew: this turn only this many more cards can be played, FREE or PAID. It ends at the foe's next turn.",
     verse: 'Verses the choir has sung. Each Hymn adds one. Crescendo hits for each. The Amen spends them all, hitting and mending for each.',
+    lamp: 'The Lamplighter\'s lamp. While Lit its intents show and its Wick-Lash sets you alight. A Shutter puts it Dark, and while Dark every intent reads UNKNOWN and Glare is skipped. Lure Light lights it again. Once The Lamp Goes Out it stays Dark.',
+    bait: "The Wrecker's Bait reads your turn end. End your turn with GUARD up and it takes WARD instead. End it without GUARD and it hits you.",
 } as const;
+
+/**
+ * The lighthouse path's states on the foe's side (phase EN1k): the
+ * Lamplighter's lamp, Lit or Dark, for the whole fight, and the Wrecker's
+ * Bait while its next move is one. States, not counts: no badge number.
+ */
+export function lighthouseChips(state: CombatEncounterState, side: 'enemy' | 'player'): CombatEffectChipVM[] {
+    if (side !== 'enemy') return [];
+    const out: CombatEffectChipVM[] = [];
+    const lamp = lampOf(state);
+    if (lamp) {
+        const gone = state.enemyRiders?.lamp === 'out';
+        out.push({
+            effectId: 'enemy-counter-lamp', intensity: 1, duration: 0, noBadge: true,
+            glyph: lamp === 'lit'
+                ? { glyph: '☼', color: GLYPH_COLORS.statup, kind: 'statup', label: 'Lit' }
+                : { glyph: '◐', color: GLYPH_COLORS.control, kind: 'control', label: 'Dark' },
+            gloss: ENEMY_COUNTER_GLOSS.lamp,
+            caption: lamp === 'lit' ? 'Its intents show' : gone ? 'The lamp is out for good' : 'Its intents read UNKNOWN',
+        });
+    }
+    if (baitSet(state)) {
+        out.push({
+            effectId: 'enemy-counter-bait', intensity: 1, duration: 0, noBadge: true,
+            glyph: { glyph: '⚓', color: GLYPH_COLORS.statdown, kind: 'statdown', label: 'Bait' },
+            gloss: ENEMY_COUNTER_GLOSS.bait,
+            caption: 'End your turn with GUARD up',
+        });
+    }
+    return out;
+}
 
 /** The die an UNDERTOW lifts, by the name the dice wear on the board. */
 function undertowDieName(die: 'heart' | 'body' | 'mind'): string {
@@ -2127,6 +2165,12 @@ const ENEMY_WORD_SPAN: Record<string, string> = {
     'enemy-word-undertow': 'until your next roll',
 };
 
+/** How the Lamplighter's lamp chip clears: a Shutter darkens it, a light move relights it, and once out it stays. */
+function lampSpan(e: CombatEffectChipVM): string {
+    if (e.glyph.label === 'Lit') return 'until a Shutter puts it Dark';
+    return e.caption === 'The lamp is out for good' ? 'for the rest of the fight' : 'until Lure Light or a Shutter lights it again';
+}
+
 /** A status chip's a11y line. Weather has no turn count: it lasts the combat
  *  (drifting down on its own), so it never reads "0 turns left". */
 export function effectChipA11y(e: CombatEffectChipVM): string {
@@ -2136,9 +2180,13 @@ export function effectChipA11y(e: CombatEffectChipVM): string {
         : e.effectId === 'program-mercy' ? `bursts in ${e.duration} turn${e.duration === 1 ? '' : 's'}`
         : e.effectId === 'enemy-counter-curfew' ? "until the foe's next turn"
         : e.effectId === 'enemy-counter-verse' ? 'until the Amen spends it'
+        : e.effectId === 'enemy-counter-lamp' ? lampSpan(e)
+        : e.effectId === 'enemy-counter-bait' ? 'until your turn ends and the Bait reads it'
         : e.effectId.startsWith('enemy-counter-') ? 'a count that lasts the fight'
         : ENEMY_WORD_SPAN[e.effectId] ?? (e.effectId.startsWith('enemy-word-') && e.duration <= 0 ? "until the foe's next turn" : `${e.duration} turns left`);
-    return `${e.glyph.label}, intensity ${e.intensity}${e.unit ?? ''}, ${span}${e.caption ? `. ${e.caption}` : ''}`;
+    // A state chip (no badge) has no intensity to speak.
+    const amount = e.noBadge ? '' : `, intensity ${e.intensity}${e.unit ?? ''}`;
+    return `${e.glyph.label}${amount}, ${span}${e.caption ? `. ${e.caption}` : ''}`;
 }
 
 /** The colour a plain hit floats in, on either side: white, so colour alone

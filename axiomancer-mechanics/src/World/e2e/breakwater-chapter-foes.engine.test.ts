@@ -103,7 +103,7 @@ describe('the other elite slots still hold the Green Jelly, staged as an elite',
     // The Green Jelly is a normal on its own; the elite nodes stage it at the
     // elite tier until their own foes land, so the elite reward, respawn and
     // phase lines keep working there.
-    it.each(['bw-l4', 'bw-w5'])('%s', (nodeId) => {
+    it.each(['bw-w5'])('%s', (nodeId) => {
         const s = fightAt(nodeId);
         expect(s.enemy.id).toBe(ENEMY_REGISTRY['green-jelly'].id);
         expect(s.enemy.difficulty).toBe('elite');

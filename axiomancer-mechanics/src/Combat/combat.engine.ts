@@ -1529,6 +1529,7 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
         const after = applyRiderAfterMove(beforeRider, rider, {
             fullyBlocked: attacksLanded > 0 && attacksFullyBlocked === attacksLanded,
             guardBefore,
+            hitsThrough: attacksLanded - attacksFullyBlocked,
         });
         // Some riders only leave state behind (an armed bonus, a delayed hit).
         if (after.state !== beforeRider) {

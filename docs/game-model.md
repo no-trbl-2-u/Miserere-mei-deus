@@ -309,6 +309,15 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
   telegraphs UNKNOWN and answers your last turn. An elite node names one foe
   or two in `BW_ELITE_DRAWS` (`World/MapEvents/content.ts`); with two, the
   map's seeded pool roll draws one on arrival, 50/50.
+- **The Lamplighter and the Wrecker:** level 7, elites with three HP phases
+  (EN1k), drawn one per run at the lighthouse path (`bw-l4`). The
+  Lamplighter's lamp (fight state on its pane, LIT or DARK, not a word) starts
+  Lit. While Dark every intent it shows reads UNKNOWN with no name and Glare is
+  skipped. Its Shutter puts it Dark (in phase 2 every other time, relit the
+  time between), its 60% DANGER Lure Light relights it, and its 30% DANGER The
+  Lamp Goes Out leaves it Dark for the fight. The Wrecker's Bait telegraphs
+  UNKNOWN and reads your GUARD as your turn ends: GUARD up and it takes WARD,
+  none and it hits. A BAIT chip stands on its pane while the Bait is next.
 - **The Death Beholder:** boss, 320 VITAE at level 8, two stages (at 60% and
   25% VITAE). It holds every region's door, pinned at level 1, 2, 3 and 4
   (`World/MapEvents/content.ts`); `scaleEnemyToLevel` scales its VITAE to

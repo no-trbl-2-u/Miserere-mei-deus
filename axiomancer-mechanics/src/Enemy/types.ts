@@ -331,6 +331,14 @@ export interface EnemyMove {
  *   verse-amen               spends every VERSE: one hit of `damage` per VERSE, and it MENDs the same.
  *   antiphon                 answers your last turn: you dealt it damage, WARD `ward`; else `hits`
  *                            hits of `damage` and +`verse` VERSE.
+ *   lamp                     the Lamplighter's lamp: goes `lit`, goes `dark`, `flip`s (Lit to Dark, Dark
+ *                            to Lit), or goes `out` (Dark for the rest of the fight).
+ *   wick-lash                if Lit, INFERNO `inferno` on you after the hit; if Dark, +`dark` on the hit.
+ *   lit-only                 while Dark the move does nothing (it is skipped).
+ *   bait                     reads your turn end: GUARD up, it takes WARD `ward`; none, one hit of `damage`.
+ *   barnacle-if-through      if a hit gets through your GUARD, `barnacle` Barnacles join your hand.
+ *   strip-wreck              takes your banked dice and up to `conviction` Conviction, WARD `ward` per
+ *                            die and per point taken.
  */
 export type EnemyMoveRider =
     | { kind: 'unplayed-card-bonus'; damage: number }
@@ -362,7 +370,14 @@ export type EnemyMoveRider =
     | { kind: 'verse-gain'; verse: number }
     | { kind: 'verse-hit'; damage: number }
     | { kind: 'verse-amen'; damage: number }
-    | { kind: 'antiphon'; ward: number; damage: number; hits: number; verse: number };
+    | { kind: 'antiphon'; ward: number; damage: number; hits: number; verse: number }
+    // The lighthouse path: the Lamplighter and the Wrecker (phase EN1k).
+    | { kind: 'lamp'; to: 'lit' | 'dark' | 'flip' | 'out' }
+    | { kind: 'wick-lash'; inferno: number; dark: number }
+    | { kind: 'lit-only' }
+    | { kind: 'bait'; ward: number; damage: number }
+    | { kind: 'barnacle-if-through'; barnacle: number }
+    | { kind: 'strip-wreck'; conviction: number; ward: number };
 
 /** A rider's kind, e.g. `half-guard`. */
 export type EnemyMoveRiderKind = EnemyMoveRider['kind'];
