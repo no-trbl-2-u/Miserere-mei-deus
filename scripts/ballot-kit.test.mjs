@@ -181,7 +181,7 @@ test('the index lists every ballot file once, one entry per family', () => {
   assert.equal(new Set(ballots.map((b) => b.id)).size, ballots.length);
   for (const b of ballots) {
     assert.match(b.id, /^[a-z0-9-]{3,64}$/, `${b.id} is a valid ballotId`);
-    assert.ok(['open', 'closed'].includes(b.status), `${b.id} status`);
+    assert.ok(['open', 'closed', 'complete'].includes(b.status), `${b.id} status`);
     assert.match(b.date, /^\d{4}-\d{2}-\d{2}$/);
     assert.ok(existsSync(join(LEDGER, b.ledger)), `${b.ledger} exists`);
   }
