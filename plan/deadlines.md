@@ -218,7 +218,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-07 | Pick the title plate and the four arena backgrounds (coast, forest, mountains, underworld) from your art dossier (0.5 h) | W2 | TP1b | - |
 | [ ] | 2026-11-07 | Plot the arena-background swap from your picks (0.5 h) | W2 | needs plot | - |
 | [ ] | 2026-11-08 | Swap Chapter 1's enemy portraits: replace each stand-in with the most thematic portrait from your set (2 h) | W2 | T | EN1a, EN1b, EN1c, EN1d, EN1e, EN1f, EN1g, EN1h |
-| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1f, BW1c, NK1a |
+| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1f, BW1c, NK1a, MU1 |
 | [ ] | 2026-11-10 | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | W2 | T | - |
 | [ ] | 2026-11-10 | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | W2 | BW1d | BW1a, BW1b |
 | [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | W2 | T | - |
@@ -348,6 +348,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-30** — **background music plotted** (T, in session: uploaded the theme, "the official background music that should play uninterrupted all game (except for combat and hazards)", then `/plot`). **Added** MU1 to the `Waits on` of the Nov 9 mid-MVP check, the first preview build T plays after it ships. No date moved; nothing ticked.
 - **2026-10-30** — **enemy tuning moved to this weekend** (T, in Claude Duet: "Neither, I'll be doing a true tuning pass over the weekend", then "Move enemy tuning"). **Moved** "Tune Chapter 1's enemies" (1 h) from Fri Nov 13 (W2) to Sun Nov 1 (W1), after HP4e part 2; Sunday picked over Saturday because both carry 2 h and Saturday's enemy session 2 picks the elites first. It still waits on EN1i. The card tuning (Dec 7) is unchanged. Weeks now 10, 7.5 and 7.5 hours; the first is over T's 5-8 h. Nothing ticked.
 - **2026-10-30** — **the fourth lane plotted** (T in session, `/lane-creator` step 8 into `/plot` of the Merciful trial set: "get this land into the build so we can get started on our first character"). **Edited** the Item "Author the first character": its `Waits on` now names MF1a-MF1d, the rows that register the Merciful; its date (T's) is unchanged. **Added** an Unscheduled line for MF1e (T's check, date not set). **Ticked** nothing.
 - **2026-10-30** — **Chapter 1's enemies plotted (EN1); portrait swap and tuning added** (T, in the enemy-drafts thread: "For the normals, we'll use all of them ... Get the PR in and get it merged. Then add to the deadlines to swap out the portraits with the most thematic from the set and that we need to do actual tuning. Both for the enemies and for the cards"). **Ticked** enemy session 1. **Edited** enemy session 2 (Oct 31) to the L4 and W5 elite picks and the boss, the Nov 2 B2 plot to those alone (1 h to 0.5 h), and the Nov 8 art pick to T's portrait swap, which waits on EN1a-EN1h. **Added** two Items, dates Claude's draft for T to move: tune Chapter 1's enemies (Nov 13, 1 h, waits on EN1i) and tune the cards (Dec 7, 1.5 h, after the enemy tuning). Weeks now 9, 7.5 and 8.5 hours.
