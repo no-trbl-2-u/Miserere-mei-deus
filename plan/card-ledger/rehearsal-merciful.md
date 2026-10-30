@@ -155,3 +155,105 @@ are now Skills with their lines unchanged. Candidate ids are unchanged, so saved
 T, same sitting, on the first rewrite of E-03b ("heals +3 for the rest of combat"): "No, "rest of combat" is just a
 global. No to that one." E-03b and E-06a were rewritten to land this turn, and the flow now says a Spell's PAID is
 never "for the rest of combat".
+
+## Verdicts (T, 2026-10-29, pasted in session)
+
+T submitted the ballot and pasted its Generate text in chat. D1 `ballot_verdicts` held no row for
+`merciful-2026-10-29` (the table was empty at the check), so T's paste is the verdict. 29 kept of 90: 28 slots
+kept, two slots cut (E-05, M-03), and P-06 keeps two cards.
+
+T's verdict text, verbatim:
+
+```text
+BALLOT — The Merciful (merciful-2026-10-29)
+kept 29 of 90
+-- Payoff --
+P-01: KEEP P-01a | cut: P-01b, P-01c
+P-02: KEEP P-02b | cut: P-02a, P-02c
+P-03: KEEP P-03b | cut: P-03a, P-03c | note: Paid: Trigger the Foe's MERCY. EXILE.
+P-04: KEEP P-04a | cut: P-04b, P-04c
+P-05: KEEP P-05a | cut: P-05b, P-05c | note: This is a great opportunity to introduce a global keyword: HURRY which ticks down all effects. We'll be able to trigger MERCY more often but it'll make other status effects weaker.
+P-06: MERGE P-06a + P-06c | cut: P-06b | note: I want both, don't mix them.
+P-07: KEEP P-07b | cut: P-07a, P-07c
+P-08: KEEP P-08b | cut: P-08a, P-08c
+P-09: KEEP P-09c | cut: P-09a, P-09b | note: Guard x where X is equal to your VITAE missing
+P-10: KEEP P-10c | cut: P-10a, P-10b | note: Same but RADIANCE 5
+-- Engine --
+E-01: KEEP E-01b | cut: E-01a, E-01c
+E-02: KEEP E-02c | cut: E-02a, E-02b
+E-03: KEEP E-03b | cut: E-03a, E-03c
+E-04: KEEP E-04b | cut: E-04a, E-04c
+E-05: CUT slot | note: None
+E-06: KEEP E-06a | cut: E-06b, E-06c
+E-07: KEEP E-07b | cut: E-07a, E-07c
+E-08: KEEP E-08b | cut: E-08a, E-08c | note: Mercy first then RADIANCE
+E-09: KEEP E-09b | cut: E-09a, E-09c | note: Whenever you heal past your max, draw a card
+E-10: KEEP E-10b | cut: E-10a, E-10c
+-- Misc --
+M-01: KEEP M-01b | cut: M-01a, M-01c
+M-02: KEEP M-02b | cut: M-02a, M-02c | note: A new global keyword opportunity: BEFRIENDABLE (I'm open to other words though)
+M-03: CUT slot
+M-04: KEEP M-04b | cut: M-04a, M-04c
+M-05: KEEP M-05c | cut: M-05a, M-05b
+M-06: KEEP M-06c | cut: M-06a, M-06b | note: 2 / 5
+M-07: KEEP M-07c | cut: M-07a, M-07b
+M-08: KEEP M-08a | cut: M-08b, M-08c | note: Otherwise, mercy 3/5
+M-09: KEEP M-09c | cut: M-09a, M-09b
+M-10: KEEP M-10c | cut: M-10a, M-10b
+```
+
+### As kept, with T's notes applied
+
+Paper; numbers are the ballot's until the revisions step. A note whose reading is not certain is applied as
+written and listed under "Open from the vote" below.
+
+| Slot | Kept | Type | FREE | PAID |
+|---|---|---|---|---|
+| P-01 | P-01a | Attack | RADIANCE 3. | RADIANCE 7. |
+| P-02 | P-02b | Skill | RADIANCE 4. GUARD 2. | RADIANCE 9. GUARD 5. |
+| P-03 | P-03b | Spell | MERCY 5. | Trigger the foe's MERCY. EXILE. (T's note) |
+| P-04 | P-04a | Attack | DEAL 3, or DEAL 6 if the foe has MERCY. | DEAL 6, or DEAL 12 if the foe has MERCY. |
+| P-05 | P-05a | Spell | MERCY's clock ticks down 1. | MERCY's clock runs out now, and the foe takes three times its MERCY instead of twice. EXILE. |
+| P-06 | P-06a | Attack | DEAL equal to the foe's MERCY. | DEAL twice the foe's MERCY. |
+| P-06 | P-06c | Skill | GUARD equal to the foe's MERCY. | GUARD twice the foe's MERCY. |
+| P-07 | P-07b | Attack | HEAL 2. DEAL equal to all you healed this turn. | HEAL 4. DEAL twice all you healed this turn. |
+| P-08 | P-08b | Skill | HEAL 3. MERCY equal to all you healed this turn. | HEAL 6. MERCY equal to all you healed this turn. |
+| P-09 | P-09c | Skill | GUARD X, where X is the VITAE you are missing. (T's note) | Open (below) |
+| P-10 | P-10c | Global | ⟳ Start of your turn: if the foe has MERCY, RADIANCE 5. (T's note) | |
+| E-01 | E-01b | Skill | HEAL 2. DRAW 1. | HEAL 5. DRAW 1. |
+| E-02 | E-02c | Skill | MERCY 2. DRAW 1. | MERCY 4. DRAW 1. |
+| E-03 | E-03b | Spell | Your heals this turn HEAL +3. | Your heals this turn HEAL three times as much. EXILE. |
+| E-04 | E-04b | Skill | SACRIFICE 3. DRAW 2. | SACRIFICE 4. DRAW 3. |
+| E-05 | cut | | | |
+| E-06 | E-06a | Spell | Your next HEAL this turn is RADIANCE instead. | Your HEALs this turn are RADIANCE instead, and each deals double. EXILE. |
+| E-07 | E-07b | Attack | DEAL 2. LEECH 1. | DEAL 4. LEECH 2. |
+| E-08 | E-08b | Skill | MERCY 2, then RADIANCE 3. (T's note) | MERCY 4, then RADIANCE 6. |
+| E-09 | E-09b | Global | ⟳ Start of your turn: MERCY 1 and HEAL 1. | |
+| E-10 | E-10b | Skill | DRAW 1. HEAL 2. | DRAW 2. HEAL 4. |
+| M-01 | M-01b | Skill | GUARD 3, or GUARD 5 if the foe has MERCY. | GUARD 7, or GUARD 11 if the foe has MERCY. |
+| M-02 | M-02b | Skill | MERCY 2. While the foe has MERCY, it counts as under its befriend gate. | MERCY 5. While the foe has MERCY, it counts as under its befriend gate. |
+| M-03 | cut | | | |
+| M-04 | M-04b | Skill | Clear one debuff from yourself, then RADIANCE 2. | Clear every debuff from yourself, then RADIANCE 5. |
+| M-05 | M-05c | Spell | +4 max VITAE this combat. DRAW 1. | +12 max VITAE this combat, then HEAL to full. EXILE. |
+| M-06 | M-06c | Global | ⟳ Start of your turn: HEAL 2, or HEAL 5 if you are below half VITAE. (T's note) | |
+| M-07 | M-07c | Attack | DEAL 1. MERCY 1. DRAW 1. | DEAL 2. MERCY 2. DRAW 1. |
+| M-08 | M-08a | Skill | If the foe has MERCY, its next attack deals 2 less; otherwise MERCY 3. (T's note) | If the foe has MERCY, its next attack deals 5 less; otherwise MERCY 5. |
+| M-09 | M-09c | Skill | Return the last MERCY card you played this combat to your hand. | Return the last two MERCY cards you played this combat to your hand. |
+| M-10 | M-10c | Attack | If the foe is at max VITAE, DEAL 4; otherwise MERCY 2. | If the foe is at max VITAE, DEAL 9; otherwise MERCY 5. |
+
+### Open from the vote (for the revisions, step 7)
+
+- **HURRY** (T, P-05): "a global keyword: HURRY which ticks down all effects. We'll be able to trigger MERCY more
+  often but it'll make other status effects weaker." Which effects it ticks (both sides? the foe's only?), by how
+  much, and which cards print it are not ruled. Being global, it is engine work for the trial-set plot.
+- **BEFRIENDABLE** (T, M-02): "A new global keyword opportunity: BEFRIENDABLE (I'm open to other words though)". Its
+  name, and whether it replaces M-02b's "counts as under its befriend gate" line, are not ruled.
+- **P-09c's PAID line.** T's note sets GUARD X, X = the VITAE you are missing; whether that is the FREE line, the
+  PAID line or both, and what the other line reads, is not ruled.
+- **E-09's note** (T: "Whenever you heal past your max, draw a card"). Whether it replaces E-09b's body, is added
+  to it, or is a new card; and "when you heal" is not in the closed Global trigger set (the Session 0 Open line
+  "Global triggers").
+- **M-05c** was kept as voted. Its PAID raises max VITAE for the combat, the question put to T after the "rest of
+  combat" ruling; not yet answered.
+- **P-03b's PAID** now triggers the foe's MERCY; whether that pays twice the MERCY now (the clock run out) and
+  resets it, as P-05a's PAID does, is the same placeholder.
