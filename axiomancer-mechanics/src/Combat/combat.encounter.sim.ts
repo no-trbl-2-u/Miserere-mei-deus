@@ -21,8 +21,10 @@ import {
     initializeCombatEncounter, rollEncounterDice, playCombatCard,
     resolveThreatPhase, startTurn, endTurn,
     playSignatureSkill, handCards, selectMercyChoice, getSignatureSkill,
-    signatureCastBlock,
+    signatureCastBlock, PROGRAM_KIT,
 } from './combat.engine';
+import { programIllegalReason, programLineValue } from './combat.card-program';
+import { MERCIFUL_WITNESS, endMercifulFight } from './combat.merciful';
 import { MOMENTUM_CHAIN_ORDER } from './combat.upgradeable-dice';
 import { getRng } from '../Utils/rng';
 import type {
@@ -202,6 +204,30 @@ const FOCUS_CARD_BOOST = 1e18;
  * matches a stable sort). Token-gated cards that fizzle are skipped
  * via `notUids`; `focusIds` (card-coverage harness) trump every band.
  */
+// ── The Merciful witness (sandbox/merciful-sims only) ─────────────────────────
+// The greedy ranking reads a program card's printed damage preview, 0 for
+// every program card, so it plays them in hand order. For the Merciful
+// sandbox cards (ids `mc-`) the witness instead reads the program system's
+// value estimate, as the Defender's and the Elementalist's sims did: a die
+// goes to the card whose PAID line gains most over its FREE line, and the FREE
+// drain plays the best FREE line first and holds one worth less than nothing.
+// Every other card is ranked exactly as before.
+
+function isMercifulWitnessCard(cardId: string): boolean {
+    return MERCIFUL_WITNESS.on && cardId.startsWith('mc-');
+}
+
+/** A line's witness value, or -Infinity when it cannot be played. */
+function mercifulLineValue(s: CombatEncounterState, uid: string, paid: boolean): number {
+    if (programIllegalReason(s, uid, paid, PROGRAM_KIT) !== null) return -Infinity;
+    return programLineValue(s, uid, paid, PROGRAM_KIT);
+}
+
+/** What spending a die on this card gains over playing it FREE. */
+function mercifulDieGain(s: CombatEncounterState, uid: string): number {
+    return mercifulLineValue(s, uid, true) - Math.max(0, mercifulLineValue(s, uid, false));
+}
+
 function selectCard(
     s: CombatEncounterState,
     policy: CombatSimPolicy,
@@ -218,12 +244,16 @@ function selectCard(
     let best: { uid: string; card: CombatCard } | null = null;
     let bestScore = -Infinity;
     for (const c of cards) {
-        let score = policy.rankCard(s, c.card, rng);
+        let score = isMercifulWitnessCard(c.card.id)
+            ? mercifulDieGain(s, c.uid)
+            : policy.rankCard(s, c.card, rng);
         if (focusIds && focusIds.has(c.card.id)) {
             score += FOCUS_CARD_BOOST;
         }
         if (score > bestScore) { bestScore = score; best = c; }
     }
+    // A Merciful card only takes the die when the PAID line gains something.
+    if (best && isMercifulWitnessCard(best.card.id) && !(bestScore > 0)) return null;
     return best;
 }
 
@@ -439,8 +469,21 @@ export function upgradeablePlayPhase(
     const heldUids = new Set<string>();
     while (working.phase === 'phase-play' && !working.finalOutcome && !working.mercyChoiceActive && drain < 30) {
         drain++;
-        const resT = handCards(working).find(c => c.card.verbClass !== 'retreat' && !heldUids.has(c.uid));
+        let resT = handCards(working).find(c => c.card.verbClass !== 'retreat' && !heldUids.has(c.uid));
         if (!resT) break;
+        if (isMercifulWitnessCard(resT.card.id)) {
+            // The best FREE line first; one worth less than nothing is held.
+            let bestV = -Infinity;
+            for (const c of handCards(working)) {
+                if (heldUids.has(c.uid) || !isMercifulWitnessCard(c.card.id)) continue;
+                const v = mercifulLineValue(working, c.uid, false);
+                if (v > bestV) { bestV = v; resT = c; }
+            }
+            if (!(bestV >= 0)) {
+                for (const c of handCards(working)) if (isMercifulWitnessCard(c.card.id)) heldUids.add(c.uid);
+                continue;
+            }
+        }
         const play = playCombatCard(working, { uid: resT.uid }, false);
         const row = lineRow(lines, resT.card.id);
         row.freeHpSwing += playHpSwing(working, play.state, play.events);
@@ -544,6 +587,7 @@ export function runOneEncounter(
     const focusIds = options?.focusCardIds ? new Set(options.focusCardIds) : undefined;
     const deck = options?.deck ? [...options.deck] : undefined;
     let state = initializeCombatEncounter(player, enemy, deck, seed);
+    const foeStartVitae = state.enemy.health;
     // The opening Conviction bank emits no `conviction-gained`
     // event, so the objective telemetry seeds income from it; without this the
     // spend SHARE can exceed 1 (spending ◆ the transcript never granted).
@@ -625,6 +669,11 @@ export function runOneEncounter(
         }
     }
 
+    // Sandbox (the Merciful): fold the fight's MERCY tallies into the sim telemetry.
+    endMercifulFight(
+        state.program?.mc?.mercy ?? 0, foeStartVitae, state.enemy.health,
+        state.log.reduce((s, ev) => s + (ev.kind === 'enemy-healed' ? ev.amount : 0), 0),
+    );
     const convictionSpent = Math.max(0, state.turn - state.conviction);
     // The end state too: a defeat (or a self-inflicted cost) that ends the
     // fight before the next enemy action still counts as the trough.

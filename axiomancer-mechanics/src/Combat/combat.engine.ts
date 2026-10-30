@@ -73,9 +73,10 @@ import {
     programIllegalReason, programShortfall, programXRange, type ProgramShortfall,
     programElementFoeTurnStart, programFrozenCheck, programElementDrift,
     programSpikeStrike, programSpikeDrift, programDiscardShortfall, type DiscardShortfall,
-    programSpikeAttackStart, programHoldsGuard, programOnScrap,
+    programSpikeAttackStart, programHoldsGuard, programOnScrap, programMercyFoeTurnStart,
 } from './combat.card-program';
 import { weatherEvents } from './combat.elements';
+import { MERCIFUL_TELEMETRY } from './combat.merciful';
 import { spikeEvents } from './combat.spikes';
 import type {
     CombatCard, CombatDieColor, CombatEncounterState, CombatEvent, CardPlay,
@@ -1179,6 +1180,13 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
         state = weather.state;
         if (isDefeated(state.enemy)) return endCombat(withLog(state, leechEvents), 'victory', leechEvents);
     } else state = weather.state;
+    // Sandbox (the Merciful): the MERCY clock ticks; when it runs out MERCY bursts.
+    const mercy = programMercyFoeTurnStart(state, PROGRAM_KIT);
+    if (mercy.state !== state) {
+        leechEvents.push(...mercy.events);
+        state = mercy.state;
+        if (isDefeated(state.enemy)) return endCombat(withLog(state, leechEvents), 'victory', leechEvents);
+    }
 
     const idx = Math.min(state.currentPhaseIndex, state.threatPhases.length - 1);
     const phase = state.threatPhases[idx];
@@ -1250,9 +1258,14 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
             }
         }
     }
+    // Sandbox (the Merciful, M-08a): the foe's next attack deals n less, taken off its strikes in order.
+    let attackLess = state.program?.mc?.nextAttackLess ?? 0;
     if (!hindered && !isDefeated(enemy)) {
         // The enemy attacks: its telegraphed threat action fires on the player.
         const playerTakenMult = getDamageTakenMultiplier(state.player);
+        if (attackLess > 0 && state.program?.mc && phase.threatAction.effects.some(e => (e.damage ?? 0) > 0)) {
+            state = { ...state, program: { ...state.program, mc: { ...state.program.mc, nextAttackLess: 0 } } };
+        } else attackLess = 0;
         for (const eff of phase.threatAction.effects) {
             // A foe the spikes defeated mid-attack strikes no more.
             if (eff.damage && eff.damage > 0 && !isDefeated(enemy)) {
@@ -1269,6 +1282,12 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
                     * (1 + Math.min(STAGE_THREAT_BONUS_CAP, state.stageThreatBonus ?? 0))
                     * playerTakenMult,
                 );
+                if (attackLess > 0) {
+                    const less = Math.min(dmg, attackLess);
+                    dmg -= less;
+                    attackLess -= less;
+                    MERCIFUL_TELEMETRY.attackLessened += less;
+                }
                 if (blizzardCut > 0) {
                     const cut = Math.min(dmg, blizzardCut);
                     dmg -= cut;

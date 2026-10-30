@@ -63,6 +63,13 @@ export interface ProgramQuery {
     guard: number;
     /** VITAE your DEALs took off the foe this turn. */
     dealtThisTurn: number;
+    // ── The Merciful (sandbox/merciful-sims only; `Combat/combat.merciful.ts`) ──
+    /** The foe's MERCY total (0 = none). */
+    foeMercy?: number;
+    /** The foe is at its max VITAE. */
+    foeAtMax?: boolean;
+    /** VITAE you healed this turn. */
+    healedThisTurn?: number;
 }
 
 /** Who an INFERNO line burns: both sides (the default), the foe only, you only. */
@@ -186,6 +193,37 @@ export interface ProgramCtx {
     unexileRandom(): void;
     /** Lose n VITAE: a plain self-loss GUARD does not block; it can kill you. */
     loseVitae(n: number): void;
+
+    // ── The Merciful (sandbox/merciful-sims only; `Combat/combat.merciful.ts`, T's rulings 2026-10-29) ──
+    /** RADIANCE n: HEAL n (heart-scaled, repeating), then DEAL what that heal
+     *  restored. Returns the VITAE restored. */
+    radiance?(n: number): number;
+    /** MERCY n on the foe (heart-scaled unless `exact`): heal it n, capped at its
+     *  max, the excess adding to its MERCY; then n adds to its MERCY total. The
+     *  first MERCY starts the 3-turn clock. */
+    mercy?(n: number, opts?: { exact?: boolean }): void;
+    /** The foe's MERCY bursts now: a DEAL of `mult` times its total, then the total clears. */
+    burstMercy?(mult: number): void;
+    /** The foe's MERCY clock ticks down n; at 0 it runs out (it bursts now). */
+    tickMercy?(n: number): void;
+    /** Your heals this turn HEAL +n (unscaled). */
+    healsPlus?(n: number): void;
+    /** Your heals this turn HEAL k times as much. */
+    healsTimes?(k: number): void;
+    /** Your next HEAL this turn is RADIANCE instead. */
+    nextHealRadiance?(): void;
+    /** Your HEALs this turn are RADIANCE instead, and each deals double. */
+    allHealsRadianceDouble?(): void;
+    /** +n max VITAE this combat. */
+    maxVitae?(n: number): void;
+    /** HEAL to full (a HEAL of the VITAE you are missing). */
+    healToFull?(): void;
+    /** Clear `count` debuffs from yourself (Infinity: every one). Returns how many. */
+    clearDebuffs?(count: number): number;
+    /** The foe's next attack deals n less. */
+    weakenNextAttack?(n: number): void;
+    /** Return the last n MERCY cards you played this combat (from your discard) to your hand. */
+    returnMercyCards?(n: number): void;
 }
 
 /** One printed line (FREE or PAID) of a card that is not a Global. */

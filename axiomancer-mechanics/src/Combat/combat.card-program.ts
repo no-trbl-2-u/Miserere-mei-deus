@@ -52,6 +52,10 @@ import {
     addReflect, addThorns, anySpikes, armReflectOnAttack, driftSpikes, fireReflectOnAttack, initSpikeState,
     spikeEvents, spikeReturns, REFLECT_TURNS, type SpikeState,
 } from './combat.spikes';
+import {
+    cloneMerciful, initMercifulState, mercifulTurnReset, noteBurst, noteMercyApplied, noteRunaway, noteTurnRunaway,
+    MERCIFUL_TELEMETRY, MERCY_BURST_MULT, MERCY_CLOCK_TURNS, type MercifulState,
+} from './combat.merciful';
 import { getRng } from '../Utils/rng';
 import { getCardById } from '../Cards/cards.library';
 import { lookupEffect, applyEffect } from '../Effects';
@@ -142,6 +146,8 @@ export interface ProgramLedger {
     spikes: SpikeState;
     /** VITAE your DEALs took off the foe this turn (reset at your turn start). */
     dealtThisTurn?: number;
+    /** Sandbox (the Merciful): MERCY, the heal modifiers (`combat.merciful.ts`). */
+    mc?: MercifulState;
 }
 
 export function initProgramLedger(): ProgramLedger {
@@ -166,6 +172,7 @@ function cloneLedger(l: ProgramLedger): ProgramLedger {
         drains: l.drains.map(d => ({ ...d })),
         el: { ...(l.el ?? initElementState()) },
         spikes: { ...(l.spikes ?? initSpikeState()) },
+        ...(l.mc ? { mc: cloneMerciful(l.mc) } : {}),
     };
 }
 
@@ -228,6 +235,8 @@ interface Frame {
     cardId: string;
     /** The Curse is being played with its SACRIFICE WAIVED. */
     waived: boolean;
+    /** Sandbox (the Merciful): the played line is the PAID one (sim telemetry only). */
+    paid?: boolean;
 }
 
 const BEFRIEND_CONVICTION_VALUE = 1.5;
@@ -259,6 +268,8 @@ const GUARD_HOLDS_VALUE = 0.8;
 const HELD_GUARD_VALUE = 0.6;
 /** A card back from EXILE into the draw pile: a later draw, worth about two DRAWs. */
 const UNEXILE_VALUE = 6;
+/** Sandbox (the Merciful): a MERCY burst one more foe turn away is worth this much less (the fight may be over). */
+const MERCY_TURN_WEIGHT = 0.8;
 
 function expectedGlobalFires(trigger: GlobalTrigger, paid: boolean): number {
     const base = trigger === 'turn' ? GLOBAL_FREE_TURNS : trigger === 'sac' ? 2 : 1.5;
@@ -277,7 +288,238 @@ class LineCtx implements ProgramCtx {
             thorns: sp.thorns, reflect: sp.reflect,
             guard: q.guard + (this.w.guardPlus ?? 0),
             dealtThisTurn: this.w.l.dealtThisTurn ?? 0,
+            foeMercy: this.w.l.mc?.mercy ?? 0,
+            foeAtMax: this.w.s.enemy.health >= this.w.s.enemy.maxHealth,
+            healedThisTurn: this.w.l.mc?.healedThisTurn ?? 0,
         };
+    }
+
+    // -- the Merciful (sandbox/merciful-sims) -----------------------------------
+    /** Which bucket the next DEAL's damage counts in (sim telemetry). */
+    private src: 'deal' | 'radiance' | 'burst' = 'deal';
+    /** The last DEAL's damage after FROZEN and VULNERABLE, before the foe's VITAE cap. */
+    private lastDmg = 0;
+
+    private mc(): MercifulState { return this.w.l.mc ?? (this.w.l.mc = initMercifulState()); }
+
+    private dealAs(src: 'radiance' | 'burst', n: number): number {
+        const was = this.src;
+        this.src = src;
+        try { return this.deal(n, { exact: true }); } finally { this.src = was; }
+    }
+
+    /** The witness's worth of the MERCY on the foe now: its burst, discounted by the turns until it comes. */
+    private pendingBurstValue(total: number, clock: number): number {
+        if (total <= 0) return 0;
+        const enemy = this.w.s.enemy;
+        const dmg = MERCY_BURST_MULT * total * getDamageTakenMultiplier(enemy);
+        return Math.min(dmg, enemy.health) * Math.pow(MERCY_TURN_WEIGHT, Math.max(0, clock - 1));
+    }
+
+    /** Your cards in hand that heal (their text prints HEAL or RADIANCE), the turn modifiers excluded. */
+    private healCardsInHand(plainOnly = false): number {
+        let k = 0;
+        for (const h of this.w.s.hand) {
+            const p = cardProgram(h.cardId);
+            if (!p) continue;
+            const t = `${p.free?.text ?? ''} ${p.paid?.text ?? ''} ${p.global?.text ?? ''}`;
+            if (/heals this turn|HEALs this turn|next HEAL/.test(t)) continue;
+            if (plainOnly ? /HEAL/.test(t) : /HEAL|RADIANCE/.test(t)) k++;
+        }
+        return k;
+    }
+
+    private missingVitae(): number {
+        const p = this.w.s.player;
+        return Math.max(0, p.maxHealth - p.health);
+    }
+
+    /** A heal after this turn's modifiers (E-03b): times, then plus. */
+    private modHeal(amt: number): number {
+        const m = this.mc();
+        return amt * m.healTimes + m.healPlus;
+    }
+
+    /** The heal part of a RADIANCE, then the DEAL of what it restored (doubled under E-06a PAID). */
+    private radianceExact(amt: number, converted: boolean): number {
+        const m = this.mc();
+        const healed = this.healExact(amt, false);
+        const mult = m.allHealsRadianceDouble ? 2 : 1;
+        if (this.mode === 'apply') {
+            const t = MERCIFUL_TELEMETRY;
+            t.radianceCount += 1;
+            t.radianceTried += amt;
+            t.radianceHealed += healed;
+            if (healed <= 0) t.radianceWhiffs += 1;
+            if (converted) t.convertedHeals += 1;
+        }
+        if (healed > 0) {
+            const landed = this.dealAs('radiance', healed * mult);
+            if (this.mode === 'apply') {
+                if (m.allHealsRadianceDouble) noteTurnRunaway('E-06a PAID: RADIANCE DEAL that turn', landed);
+                else if (converted) noteTurnRunaway('E-06a FREE: the converted HEAL\'s DEAL', landed);
+            }
+        }
+        return healed;
+    }
+
+    radiance(n: number): number {
+        if (n <= 0) return 0;
+        const base = scaleFor(n, this.stats(), 'heart', 'repeating');
+        const amt = this.modHeal(base);
+        if (amt <= 0) return 0;
+        const room = this.missingVitae();
+        const healed = this.radianceExact(amt, false);
+        if (this.mode === 'apply' && amt > base) this.noteHealMod(healed - Math.min(base, room));
+        return healed;
+    }
+
+    private noteHealMod(extra: number): void {
+        const m = this.mc();
+        if (m.healTimes > 1) noteTurnRunaway('E-03b PAID: extra VITAE healed that turn', Math.max(0, extra));
+        else if (m.healPlus > 0) noteTurnRunaway('E-03b FREE: extra VITAE healed that turn', Math.max(0, extra));
+    }
+
+    mercy(n: number, opts?: { exact?: boolean }): void {
+        if (n <= 0) return;
+        const amt = opts?.exact ? n : scaleFor(n, this.stats(), 'heart', 'repeating');
+        const enemy = this.w.s.enemy;
+        if (amt <= 0 || isDefeated(enemy)) return;
+        const m = this.mc();
+        const healed = Math.min(amt, Math.max(0, enemy.maxHealth - enemy.health));
+        const excess = amt - healed;
+        const before = this.pendingBurstValue(m.mercy, m.clock);
+        m.mercy += amt + excess;
+        if (m.clock <= 0) m.clock = MERCY_CLOCK_TURNS;
+        m.mercyApps += 1;
+        if (this.mode === 'cost') return;
+        this.w.s = { ...this.w.s, enemy: { ...enemy, health: enemy.health + healed } };
+        if (this.mode === 'value') {
+            this.w.value += this.pendingBurstValue(m.mercy, m.clock) - before - healed;
+            return;
+        }
+        const t = MERCIFUL_TELEMETRY;
+        t.foeHealedByMercy += healed;
+        t.overhealToMercy += excess;
+        noteMercyApplied(m.mercy, healed);
+        if (this.f.cardId === 'mc-p-08b') noteRunaway(`P-08 ${this.f.paid ? 'PAID' : 'FREE'}: MERCY added (all you healed this turn, and its overheal)`, amt + excess);
+    }
+
+    burstMercy(mult: number): void {
+        const m = this.mc();
+        const total = m.mercy;
+        if (total <= 0 || isDefeated(this.w.s.enemy)) return;
+        if (this.mode === 'value') this.w.value -= this.pendingBurstValue(total, m.clock);
+        m.mercy = 0;
+        m.clock = 0;
+        if (this.mode === 'cost') return;
+        this.dealAs('burst', mult * total);
+        if (this.mode === 'apply') {
+            noteBurst(this.lastDmg, total, false);
+            const who = (getCardById(this.f.cardId)?.name ?? this.f.cardId).replace('Merciful ', '');
+            const label = mult > MERCY_BURST_MULT ? `${who} PAID: three-times burst`
+                : !this.f.paid ? `${who} FREE: the tick ran the clock out`
+                : who === 'P-05' ? `${who} PAID: the clock runs out now (twice)` : `${who} PAID: MERCY then burst now`;
+            noteRunaway(label, this.lastDmg);
+        }
+    }
+
+    /** The clock ran out at the foe's turn start (the total is already cleared). */
+    burstOnClock(total: number): void {
+        this.dealAs('burst', MERCY_BURST_MULT * total);
+        noteBurst(this.lastDmg, total, true);
+    }
+
+    tickMercy(n: number): void {
+        const m = this.mc();
+        if (n <= 0 || m.mercy <= 0 || m.clock <= 0) return;
+        if (m.clock - n <= 0) { this.burstMercy(MERCY_BURST_MULT); return; }
+        if (this.mode === 'value') this.w.value += this.pendingBurstValue(m.mercy, m.clock - n) - this.pendingBurstValue(m.mercy, m.clock);
+        m.clock -= n;
+    }
+
+    healsPlus(n: number): void {
+        if (n <= 0) return;
+        if (this.mode === 'value') { this.w.value += Math.min(n * this.healCardsInHand(), this.missingVitae()) * 1.5; return; }
+        if (this.mode === 'apply') this.mc().healPlus += n;
+    }
+
+    healsTimes(k: number): void {
+        if (k <= 1) return;
+        if (this.mode === 'value') { this.w.value += Math.min((k - 1) * 4 * this.healCardsInHand(), this.missingVitae()) * 1.5; return; }
+        if (this.mode === 'apply') this.mc().healTimes *= k;
+    }
+
+    nextHealRadiance(): void {
+        if (this.mode === 'value') { this.w.value += this.healCardsInHand(true) > 0 ? Math.min(4, this.missingVitae()) : 0; return; }
+        if (this.mode === 'apply') this.mc().nextHealRadiance += 1;
+    }
+
+    allHealsRadianceDouble(): void {
+        if (this.mode === 'value') { this.w.value += Math.min(4 * this.healCardsInHand(), this.missingVitae()) * 2; return; }
+        if (this.mode === 'apply') this.mc().allHealsRadianceDouble = true;
+    }
+
+    maxVitae(n: number): void {
+        if (n <= 0) return;
+        if (this.mode === 'cost') return;
+        const p = this.w.s.player;
+        this.w.s = { ...this.w.s, player: { ...p, maxHealth: p.maxHealth + n } };
+        if (this.mode === 'value') { this.w.value += n * 0.3; return; }
+        MERCIFUL_TELEMETRY.maxVitaeAdded += n;
+    }
+
+    healToFull(): void {
+        const missing = this.missingVitae();
+        if (missing <= 0) return;
+        const healed = this.heal(missing, { exact: true });
+        if (this.mode === 'apply') noteRunaway(`${this.f.cardId}: HEAL to full`, healed);
+    }
+
+    clearDebuffs(count: number): number {
+        const p = this.w.s.player;
+        const debuffs = p.effects.filter(ae => lookupEffect(ae.effectId)?.type === 'debuff').slice(0, count);
+        if (debuffs.length === 0) return 0;
+        if (this.mode === 'value') { this.w.value += 3 * debuffs.length; return debuffs.length; }
+        if (this.mode !== 'apply') return debuffs.length;
+        const gone = new Set(debuffs);
+        this.w.s = { ...this.w.s, player: { ...p, effects: p.effects.filter(ae => !gone.has(ae)) } };
+        MERCIFUL_TELEMETRY.debuffsCleared += debuffs.length;
+        return debuffs.length;
+    }
+
+    weakenNextAttack(n: number): void {
+        if (n <= 0) return;
+        if (this.mode === 'value') {
+            const inc = Math.max(0, this.incoming());
+            this.w.value += inc > 0 ? Math.min(n, inc) : 0.2 * n;
+            return;
+        }
+        if (this.mode === 'apply') this.mc().nextAttackLess += n;
+    }
+
+    returnMercyCards(n: number): void {
+        if (n <= 0) return;
+        const m = this.mc();
+        const discard = this.w.s.discard.slice();
+        const back: string[] = [];
+        for (let i = m.mercyCardsPlayed.length - 1; i >= 0 && back.length < n; i--) {
+            const id = m.mercyCardsPlayed[i]!;
+            const at = discard.indexOf(id);
+            if (at < 0) continue;
+            discard.splice(at, 1);
+            back.push(id);
+        }
+        if (back.length === 0) return;
+        if (this.mode === 'value') { this.w.value += DRAW_VALUE * back.length; return; }
+        if (this.mode !== 'apply') return;
+        const w = this.w;
+        const added = back.map(cardId => ({ uid: `ed${++w.l.el.drawUid}`, cardId }));
+        w.s = { ...w.s, discard, hand: [...w.s.hand, ...added] };
+        w.events.push({ kind: 'cards-retrieved', cardIds: back });
+        // A returned card counts as a card come to hand, so the play-rate denominator sees it.
+        w.events.push({ kind: 'hand-drawn', cards: back });
+        MERCIFUL_TELEMETRY.returned += back.length;
     }
 
     private stats() { return this.w.s.player.baseStats; }
@@ -297,9 +539,11 @@ class LineCtx implements ProgramCtx {
             dmg *= 2;
             this.w.l.el.frozen = false;
         }
+        const preVuln = dmg;
         const vuln = getDamageTakenMultiplier(enemy);
         if (vuln !== 1) dmg = Math.round(dmg * vuln);
         const landed = Math.min(dmg, enemy.health);
+        this.lastDmg = dmg;
         if (this.mode === 'cost') return landed;
         this.w.l.dealtThisTurn = (this.w.l.dealtThisTurn ?? 0) + landed;
         if (this.mode === 'value') {
@@ -308,6 +552,13 @@ class LineCtx implements ProgramCtx {
         }
         this.w.l.nextDealBonus = 0;
         this.hitFoe(dmg, true);
+        // Sandbox (the Merciful): the foe VITAE each kind of DEAL took.
+        const t = MERCIFUL_TELEMETRY;
+        if (this.src === 'radiance') t.radianceDeal += landed;
+        else if (this.src === 'burst') t.burstDeal += landed;
+        else t.dealPlain += landed;
+        if (this.f.cardId === 'mc-p-07b') noteRunaway(`P-07 ${this.f.paid ? 'PAID' : 'FREE'}: DEAL of all you healed this turn`, landed);
+        t.vulnExtra += Math.max(0, landed - Math.min(preVuln, enemy.health));
         return landed;
     }
 
@@ -432,20 +683,35 @@ class LineCtx implements ProgramCtx {
     }
 
     heal(n: number, opts?: { exact?: boolean; overflowToGuard?: boolean; plus?: number }): number {
-        const amt = (n > 0 ? (opts?.exact ? n : scaleFor(n, this.stats(), 'mind', 'one-shot')) : 0) + Math.max(0, opts?.plus ?? 0);
-        if (amt <= 0) return 0;
-        return this.healExact(amt, opts?.overflowToGuard === true);
+        const base = (n > 0 ? (opts?.exact ? n : scaleFor(n, this.stats(), 'mind', 'one-shot')) : 0) + Math.max(0, opts?.plus ?? 0);
+        if (base <= 0) return 0;
+        // Sandbox (the Merciful): this turn's heal modifiers (E-03b), and E-06a's HEAL-as-RADIANCE.
+        const m = this.w.l.mc;
+        if (!m) return this.healExact(base, opts?.overflowToGuard === true);
+        const amt = this.modHeal(base);
+        const room = this.missingVitae();
+        let healed: number;
+        if (m.allHealsRadianceDouble || m.nextHealRadiance > 0) {
+            if (!m.allHealsRadianceDouble) m.nextHealRadiance -= 1;
+            healed = this.radianceExact(amt, true);
+        } else healed = this.healExact(amt, opts?.overflowToGuard === true);
+        if (this.mode === 'apply' && amt > base) this.noteHealMod(healed - Math.min(base, room));
+        return healed;
     }
 
     private healExact(amt: number, overflowToGuard: boolean): number {
         const p = this.w.s.player;
         const healed = Math.min(amt, Math.max(0, p.maxHealth - p.health));
         const toGuard = overflowToGuard ? amt - healed : 0;
+        if (this.w.l.mc && this.mode !== 'cost') this.w.l.mc.healedThisTurn += healed;
         if (this.mode === 'value') {
             this.w.value += healed * 0.9 + toGuard * 0.5;
+            // The witness sees its own heal land, so a later RADIANCE on the line reads the VITAE left to heal.
+            if (this.w.l.mc && healed > 0) this.w.s = { ...this.w.s, player: healCombatant(p, healed) };
             return healed;
         }
         if (this.mode === 'apply') {
+            if (this.w.l.mc) MERCIFUL_TELEMETRY.healed += healed;
             this.w.s = {
                 ...this.w.s,
                 player: healCombatant(p, healed),
@@ -548,6 +814,7 @@ class LineCtx implements ProgramCtx {
             l.lostThisCombat += paid;
             l.lostThisRound += paid;
             l.sacrificePaid += paid;
+            if (l.mc) MERCIFUL_TELEMETRY.sacrificed += paid;
         }
         l.sacrificeCount += times;
         w.events.push({ kind: 'vitae-sacrificed', cardId: this.f.cardId, amount: paid, counted: nominalIn * times });
@@ -1446,7 +1713,7 @@ export function playProgramCard(
 
     const ledger = cloneLedger(ledgerIn);
     const w: Work = { s: { ...withoutEntry(s, uid), program: ledger }, l: ledger, events, kit, cost: 0, value: 0, x };
-    const frame: Frame = { cardId: card.id, waived: false };
+    const frame: Frame = { cardId: card.id, waived: false, paid: useBottom };
 
     if (program.global) {
         const turnsLeft = useBottom ? null : GLOBAL_FREE_TURNS;
@@ -1455,7 +1722,10 @@ export function playProgramCard(
         w.events.push({ kind: 'global-entered', cardId: card.id, paid: useBottom, turnsLeft });
     } else {
         const line = lineFor(program, useBottom) as ProgramLine;
+        if (w.l.mc) w.l.mc.mercyApps = 0;
         line.run(new LineCtx(w, 'apply', frame));
+        // Sandbox (the Merciful): a card whose line gave MERCY is a MERCY card (M-09c returns it).
+        if (w.l.mc && w.l.mc.mercyApps > 0) w.l.mc.mercyCardsPlayed.push(card.id);
         if (useBottom && line.exile) {
             w.l.exiled.push(card.id);
             w.events.push({ kind: 'card-exiled', cardId: card.id });
@@ -1484,6 +1754,9 @@ export function programTurnStart(state: CombatEncounterState, kit: ProgramKit): 
     l.nextTwice = false;
     l.nextDealBonus = 0;
     l.dealtThisTurn = 0;
+    // Sandbox (the Merciful): a fight with a Merciful card carries its state; the turn's heal modifiers reset.
+    if (!l.mc && state.deck.some(id => id.startsWith('mc-'))) l.mc = initMercifulState();
+    if (l.mc) l.mc = mercifulTurnReset(l.mc);
     l.drains = l.drains.filter(d => d.untilRound >= state.round);
     if (l.pendingHeal > 0) {
         const p = w.s.player;
@@ -1576,6 +1849,7 @@ function leechTick(state: CombatEncounterState, tick: boolean): ProgramPlayResul
     const p = state.player;
     const healed = Math.min(lost, Math.max(0, p.maxHealth - p.health));
     const events: CombatEvent[] = [{ kind: 'damage-dealt', cardId, target: 'enemy', amount: lost }];
+    if (l.mc) MERCIFUL_TELEMETRY.leech += lost;
     if (healed > 0) events.push({ kind: 'player-healed', cardId, amount: healed });
     return {
         state: {
@@ -1695,6 +1969,30 @@ export function programSpikeSignature(state: CombatEncounterState, op: SpikeSign
  */
 export function programFoeTurnStart(state: CombatEncounterState): ProgramPlayResult {
     return leechTick(state, true);
+}
+
+/**
+ * Sandbox (the Merciful): start of the foe's turn, the MERCY clock. It ticks
+ * down 1; when it runs out the foe's MERCY bursts, a DEAL of twice the total
+ * (FROZEN, VULNERABLE apply; the foe has no GUARD), and the total clears.
+ */
+export function programMercyFoeTurnStart(state: CombatEncounterState, kit: ProgramKit): ProgramPlayResult {
+    const m = state.program?.mc;
+    if (!m || m.clock <= 0 || isDefeated(state.enemy)) return { state, events: [] };
+    const l = cloneLedger(state.program!);
+    const mc = l.mc!;
+    mc.clock -= 1;
+    const w: Work = { s: { ...state, program: l }, l, events: [], kit, cost: 0, value: 0 };
+    if (mc.clock <= 0) {
+        const total = mc.mercy;
+        mc.mercy = 0;
+        mc.clock = 0;
+        if (total > 0) {
+            const ctx = new LineCtx(w, 'apply', { cardId: 'mercy', waived: false });
+            ctx.burstOnClock(total);
+        }
+    }
+    return { state: { ...w.s, program: w.l }, events: w.events };
 }
 
 /**
