@@ -29,6 +29,7 @@ export function sourceAtTier(source: Enemy, difficulty: EnemyDifficulty | undefi
     if (!difficulty || difficulty === source.difficulty) return source;
     return {
         ...source,
+        authoredDifficulty: source.authoredDifficulty ?? source.difficulty,
         difficulty,
         maxHealth: enemyVitae(source.level, difficulty),
         xpReward: source.level * DEFAULT_XP_BY_DIFFICULTY[difficulty],

@@ -43,6 +43,10 @@ export const ENEMY_ART_BY_KEY: Readonly<Record<string, number>> = {
     'brine-widow':       require('./brine-widow.webp'),
     'lamprey-knot':      require('./lamprey-knot.webp'),
     'curfew-ringer':     require('./curfew-ringer.webp'),
+    // The cliffs, the hamlet and the sea cave (phase EN1h): the same kind of stand-in.
+    'wreck-picker':      require('./wreck-picker.webp'),
+    'smokehouse-gutter': require('./smokehouse-gutter.webp'),
+    'tithe-collector':   require('./tithe-collector.webp'),
     // Chapter 1's elites (phase EN1j on): stand-ins restored from the same
     // drop until T's portrait swap; static, no frame set.
     'cave-choir':        require('./cave-choir.webp'),

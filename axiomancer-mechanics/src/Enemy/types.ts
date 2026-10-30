@@ -240,6 +240,13 @@ export interface Enemy {
      * escalation clock. See {@link EnemyPhase}.
      */
     phases?: EnemyPhase[];
+    /**
+     * The tier this foe's `phases` numbers were authored at, set when a node
+     * stages it at another tier (`sourceAtTier`: the Green Jelly as an elite).
+     * The move-scaling baseline reads it, so the same hit lands the same at
+     * either tier. Absent = the foe's own `difficulty`.
+     */
+    authoredDifficulty?: EnemyDifficulty;
 }
 
 /** The telegraph kind of an enemy move: what the board says it will do. */
@@ -286,8 +293,8 @@ export interface EnemyMove {
     leech?: number;
     /** TANGLE n: your next n cards cannot use their FREE line (a count, not scaled by level). */
     tangle?: number;
-    /** UNDERTOW: the named die does not roll on your next turn; a pair names two. */
-    undertow?: 'heart' | 'body' | 'mind' | readonly ['heart' | 'body' | 'mind', 'heart' | 'body' | 'mind'];
+    /** UNDERTOW: the named die does not roll on your next turn; a pair names two; `random` is the gull-call's pick. */
+    undertow?: 'heart' | 'body' | 'mind' | 'random' | readonly ['heart' | 'body' | 'mind', 'heart' | 'body' | 'mind'];
     /** BARNACLE n: n Barnacle Curses join your hand (a count, not scaled by level). */
     barnacle?: number;
     /** The move's one conditional effect, resolved in `Combat/combat.enemy-riders.ts`.
@@ -326,6 +333,19 @@ export interface EnemyMove {
  *   toll-count               +`damage` on the hit for every Toll already rung this fight; ringing one adds to the count.
  *   many-plays-bonus         +`damage` on the hit if you played `cards`+ cards this turn.
  *   curfew                   on your next turn you can play at most `cards` cards.
+ *   hoard-pick               after its hit, takes `cards` cards from your discard into its hoard (`random` or the `top` one).
+ *   hoard-hurl               one hit of `damage` per card in its hoard.
+ *   hoard-ward               WARD `ward` per card in its hoard.
+ *   hoard-return             one hit of `damage` per card in its hoard, then the hoard goes back to your hand.
+ *   inferno-feed             adds the INFERNO on it to the hit and gains that much WARD.
+ *   barnacle-on-hit          a BARNACLE Curse if a hit got through your GUARD.
+ *   self-vulnerable          it takes VULNERABLE `pct`% for `turns` turns.
+ *   inferno-both             INFERNO `amount` on both sides.
+ *   assess                   +`perScrap` per card you scrapped this turn (and +`perLien` per Barnacle in your hand).
+ *   garnish                  takes `take` Conviction; with none to take the hit gains `bonus` (and +`perLien` per Barnacle in your hand).
+ *   ward-per-conviction      WARD `per` for each Conviction you hold.
+ *   audit                    one hit of `damage` per LEDGER, then the LEDGER clears.
+ *   foreclose                takes all your Conviction: one hit of `damage` and WARD `ward` per point taken.
  *   verse-gain               adds `verse` to the foe's VERSE count.
  *   verse-hit                one hit of `damage` per VERSE.
  *   verse-amen               spends every VERSE: one hit of `damage` per VERSE, and it MENDs the same.
@@ -358,6 +378,19 @@ export type EnemyMoveRider =
     | { kind: 'toll-count'; damage: number }
     | { kind: 'many-plays-bonus'; damage: number; cards: number }
     | { kind: 'curfew'; cards: number }
+    | { kind: 'hoard-pick'; cards: number; from: 'random' | 'top' }
+    | { kind: 'hoard-hurl'; damage: number }
+    | { kind: 'hoard-ward'; ward: number }
+    | { kind: 'hoard-return'; damage: number }
+    | { kind: 'inferno-feed' }
+    | { kind: 'barnacle-on-hit' }
+    | { kind: 'self-vulnerable'; pct: number; turns: number }
+    | { kind: 'inferno-both'; amount: number }
+    | { kind: 'assess'; perScrap: number; perLien?: number }
+    | { kind: 'garnish'; take: number; bonus: number; perLien?: number }
+    | { kind: 'ward-per-conviction'; per: number }
+    | { kind: 'audit'; damage: number }
+    | { kind: 'foreclose'; damage: number; ward: number }
     // The Cave Choir (phase EN1j).
     | { kind: 'verse-gain'; verse: number }
     | { kind: 'verse-hit'; damage: number }

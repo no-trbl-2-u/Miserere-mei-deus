@@ -2063,7 +2063,8 @@ export function enemyWordChips(state: CombatEncounterState, side: 'enemy' | 'pla
 /**
  * A foe's own counters (`state.enemyRiders`): not keywords, only fight state
  * the board reads out. The cards the Green Jelly HOLDS, the Tolls the
- * Curfew-Ringer has rung and the Cave Choir's VERSE stand on the foe's side; the curfew it left you
+ * Curfew-Ringer has rung, the Wreck-Picker's hoard, the Tithe-Collector's
+ * LEDGER and the Cave Choir's VERSE stand on the foe's side; the curfew it left you
  * stands on yours. Live numbers, like GUARD; never on the telegraph.
  */
 export function foeCounterChips(state: CombatEncounterState, side: 'enemy' | 'player'): CombatEffectChipVM[] {
@@ -2080,6 +2081,15 @@ export function foeCounterChips(state: CombatEncounterState, side: 'enemy' | 'pl
         const held = r.held?.length ?? 0;
         if (held > 0) out.push(chip('held', 'Held', held, '◍', GLYPH_COLORS.control, ENEMY_COUNTER_GLOSS.held));
         if ((r.tolls ?? 0) > 0) out.push(chip('toll', 'Toll', r.tolls!, '♪', GLYPH_COLORS.dot, ENEMY_COUNTER_GLOSS.toll));
+        const hoard = r.hoard?.length ?? 0;
+        if (hoard > 0) {
+            out.push(chip('hoard', 'Hoard', hoard, '◈', GLYPH_COLORS.control, ENEMY_COUNTER_GLOSS.hoard,
+                `${hoard} card${hoard === 1 ? '' : 's'} taken from your discard`));
+        }
+        if ((r.ledger ?? 0) > 0) {
+            out.push(chip('ledger', 'Ledger', r.ledger!, '▤', GLYPH_COLORS.dot, ENEMY_COUNTER_GLOSS.ledger,
+                'your scraps and spent Conviction'));
+        }
         // The Cave Choir's VERSE (phase EN1j).
         if ((r.verse ?? 0) > 0) {
             out.push(chip('verse', 'Verse', r.verse!, '♫', GLYPH_COLORS.dot, ENEMY_COUNTER_GLOSS.verse,
@@ -2096,6 +2106,8 @@ export function foeCounterChips(state: CombatEncounterState, side: 'enemy' | 'pl
 const ENEMY_COUNTER_GLOSS = {
     held: 'Cards the foe has swallowed, out of your discard. They drop back into your discard when it spits them out.',
     toll: 'Tolls the foe has rung this fight. Each new Toll hits harder for every one already rung.',
+    hoard: 'Cards the foe has taken from your discard. Its moves grow with the hoard, and they come back when it dies.',
+    ledger: 'The Tithe-Collector counts every card you scrap and every Conviction you spend. His Audit reads it, then it clears.',
     curfew: "A curfew: this turn only this many more cards can be played, FREE or PAID. It ends at the foe's next turn.",
     verse: 'Verses the choir has sung. Each Hymn adds one. Crescendo hits for each. The Amen spends them all, hitting and mending for each.',
 } as const;
@@ -2122,6 +2134,8 @@ export function weatherChips(state: CombatEncounterState, side: 'enemy' | 'playe
 
 /** How long each enemy word's chip lasts, where it is not "the foe's next turn". */
 const ENEMY_WORD_SPAN: Record<string, string> = {
+    'enemy-counter-hoard': 'until the foe dies',
+    'enemy-counter-ledger': 'until its Audit clears it',
     'enemy-word-brine': 'until the end of your next turn',
     'enemy-word-tangle': 'until that many cards are played',
     'enemy-word-undertow': 'until your next roll',
@@ -2136,7 +2150,7 @@ export function effectChipA11y(e: CombatEffectChipVM): string {
         : e.effectId === 'program-mercy' ? `bursts in ${e.duration} turn${e.duration === 1 ? '' : 's'}`
         : e.effectId === 'enemy-counter-curfew' ? "until the foe's next turn"
         : e.effectId === 'enemy-counter-verse' ? 'until the Amen spends it'
-        : e.effectId.startsWith('enemy-counter-') ? 'a count that lasts the fight'
+        : e.effectId.startsWith('enemy-counter-') ? (ENEMY_WORD_SPAN[e.effectId] ?? 'a count that lasts the fight')
         : ENEMY_WORD_SPAN[e.effectId] ?? (e.effectId.startsWith('enemy-word-') && e.duration <= 0 ? "until the foe's next turn" : `${e.duration} turns left`);
     return `${e.glyph.label}, intensity ${e.intensity}${e.unit ?? ''}, ${span}${e.caption ? `. ${e.caption}` : ''}`;
 }

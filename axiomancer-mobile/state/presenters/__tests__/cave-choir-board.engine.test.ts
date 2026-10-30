@@ -16,12 +16,15 @@ import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 const DECK = ['grey-strike', 'grey-ward', 'grey-word', 'grey-strike', 'grey-ward'];
 const NO_WORDS = { ward: 0, brine: 0, leechTurns: 0, leechPotency: 0 };
 
-/** The live fight at the sea cave, as the app stages it. */
+/**
+ * The live fight at the sea cave, as the app stages it. The cave draws the
+ * Cave Choir or the Tithe-Collector by seed (EN1j), so this seed draws the choir.
+ */
 function cave(): CombatEncounterState {
     const ref: StateFixture = {
         ...REAL_FIGHT_FIXTURE,
         id: 'en1j-bw-c1',
-        seed: 'fixture-en1j-bw-c1',
+        seed: 'fixture-bw-c1',
         world: { ...REAL_FIGHT_FIXTURE.world!, node: 'bw-c1' },
         player: { level: 1, baseStats: { heart: 5, body: 5, mind: 5 } },
     };

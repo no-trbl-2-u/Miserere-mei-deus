@@ -14,6 +14,10 @@
  *                       stolen die, an armed bonus, a delayed hit).
  *   riderAfterPlay      after each of your card plays: a lengthened status.
  *
+ * The Wreck-Picker's hoard and the Tithe-Collector's LEDGER ride the same
+ * state (`EnemyRidersState`): the hoard fills in `applyRiderAfterMove`, the
+ * LEDGER counts your scraps and spent Conviction in `riderAfterSpend`.
+ *
  * Two more points serve the riders that change the board before the move
  * (`riderBeforeMove`) and the rule they leave for your next turn
  * (`playLimitBlock`, the curfew).
@@ -29,6 +33,7 @@ import { lookupEffect, applyEffect } from '../Effects';
 import { BARNACLE_ID } from '../Cards/library/enemy-curses.cards';
 import { wordsOf } from './combat.enemy-words';
 import { foeInferno, initElementState, weatherEvents, yourInferno } from './combat.elements';
+import { initProgramLedger } from './combat.card-program';
 import { initSpikeState, spikeEvents } from './combat.spikes';
 import type {
     CombatEncounterState, CombatEvent, CombatThreatAction, CombatThreatEffect, EnemyRidersState,
@@ -52,7 +57,24 @@ export function scaleRider(rider: EnemyMoveRider, scale: (n: number) => number):
         case 'spit-held':
         case 'toll-count':
         case 'many-plays-bonus':
+        case 'hoard-hurl':
+        case 'hoard-return':
+        case 'audit':
             return { ...rider, damage: scale(rider.damage) };
+        case 'hoard-ward':
+            return { ...rider, ward: scale(rider.ward) };
+        case 'assess':
+            return {
+                ...rider, perScrap: scale(rider.perScrap),
+                ...(rider.perLien !== undefined ? { perLien: scale(rider.perLien) } : {}),
+            };
+        case 'garnish':
+            return {
+                ...rider, bonus: scale(rider.bonus),
+                ...(rider.perLien !== undefined ? { perLien: scale(rider.perLien) } : {}),
+            };
+        case 'foreclose':
+            return { ...rider, damage: scale(rider.damage), ward: scale(rider.ward) };
         case 'half-dealt-last-turn':
         case 'hits-per-discard':
         case 'half-guard':
@@ -67,6 +89,12 @@ export function scaleRider(rider: EnemyMoveRider, scale: (n: number) => number):
         case 'mirror-dealt':
         case 'copy-last-status':
         case 'curfew':
+        case 'hoard-pick':
+        case 'inferno-feed':
+        case 'barnacle-on-hit':
+        case 'self-vulnerable':
+        case 'inferno-both':
+        case 'ward-per-conviction':
             return rider;
         // The Cave Choir (phase EN1j).
         case 'verse-hit':
@@ -98,6 +126,11 @@ function weatherStrippable(state: CombatEncounterState): number {
     const sp = state.program?.spikes;
     return (sp && sp.thorns > 0 ? 1 : 0) + (sp && sp.reflect > 0 ? 1 : 0)
         + (yourInferno(state.program?.el ?? initElementState()) > 0 ? 1 : 0);
+}
+
+/** The Barnacle Curses in your hand (the Tithe-Collector's Liens). */
+function liensInHand(state: Pick<CombatEncounterState, 'hand'>): number {
+    return state.hand.filter(h => h.cardId === BARNACLE_ID).length;
 }
 
 /** The cards that left your hand in one play (a Barnacle falling off is not a play). */
@@ -159,6 +192,7 @@ export function planRiderTurn(state: CombatEncounterState, action: CombatThreatA
     const before = state.enemyRiders;
     const dealt = dealtSinceFoeTurn(state);
     const rider = action.rider;
+    let infernoRead: number | undefined;
     if (rider) {
         const firstHit = effects.find(isHit)?.damage ?? 0;
         switch (rider.kind) {
@@ -209,6 +243,31 @@ export function planRiderTurn(state: CombatEncounterState, action: CombatThreatA
                 effects = withHits(effects, Array.from({ length: hits }, () => firstHit));
                 break;
             }
+            case 'hoard-hurl':
+            case 'hoard-return':
+                effects = withHits(effects, [rider.damage * (before?.hoard?.length ?? 0)]);
+                break;
+            case 'inferno-feed': {
+                infernoRead = foeInferno(state.program?.el ?? initElementState());
+                effects = bumpFirstHit(effects, infernoRead).effects;
+                break;
+            }
+            case 'assess':
+                effects = bumpFirstHit(
+                    effects, rider.perScrap * (state.scrapsThisTurn ?? 0) + (rider.perLien ?? 0) * liensInHand(state),
+                ).effects;
+                break;
+            case 'garnish':
+                effects = bumpFirstHit(
+                    effects, (state.conviction <= 0 ? rider.bonus : 0) + (rider.perLien ?? 0) * liensInHand(state),
+                ).effects;
+                break;
+            case 'audit':
+                effects = withHits(effects, [rider.damage * (before?.ledger ?? 0)]);
+                break;
+            case 'foreclose':
+                effects = withHits(effects, [rider.damage * state.conviction]);
+                break;
             case 'verse-hit':
             case 'verse-amen':
             case 'antiphon':
@@ -219,6 +278,7 @@ export function planRiderTurn(state: CombatEncounterState, action: CombatThreatA
         }
     }
     let riders: EnemyRidersState | undefined = before ? { ...before } : undefined;
+    if (infernoRead !== undefined) riders = { ...(riders ?? {}), infernoRead };
     if (riders) {
         // The lid opens, the veil lifts and the curfew ends at the foe's turn.
         delete riders.lengthenStatus;
@@ -249,9 +309,13 @@ export function planRiderTurn(state: CombatEncounterState, action: CombatThreatA
 }
 
 /** The riders' state as the foe's turn ends: what you dealt it is marked, and your plays are counted afresh. */
-export function riderTurnEnd(riders: EnemyRidersState | undefined, directDamage: number): EnemyRidersState {
+export function riderTurnEnd(
+    riders: EnemyRidersState | undefined, directDamage: number, hindered = false,
+): EnemyRidersState {
+    // A hindered foe turn never spoke, so a standing curfew's play count stands.
     const { played: _gone, ...rest } = riders ?? {};
-    return { ...rest, dealtMark: directDamage };
+    const kept = hindered && riders?.played !== undefined ? { ...rest, played: riders.played } : rest;
+    return { ...kept, dealtMark: directDamage };
 }
 
 /** The share of your GUARD that counts against the move's hits. */
@@ -277,7 +341,11 @@ export function riderBeforeMove(
     const events: CombatEvent[] = [];
     const bare = initSpikeState();
     const el = l.el ?? initElementState();
-    const kept = { ...el, infSelf: 0, infShared: 0, upSelf: false, upShared: false };
+    // Your INFERNO goes; the foe keeps burning (its shared share folds onto it first).
+    const kept = {
+        ...el, infFoe: el.infFoe + el.infShared, infSelf: 0, infShared: 0,
+        upFoe: el.upFoe || el.upShared, upSelf: false, upShared: false,
+    };
     events.push(...spikeEvents(l.spikes, bare), ...weatherEvents(el, kept));
     const n = weatherStrippable(state);
     if (n > 0) events.push({ kind: 'enemy-rider', rider: rider.kind, amount: n });
@@ -290,6 +358,37 @@ export interface RiderMoveOutcome {
     fullyBlocked: boolean;
     /** Your GUARD when the move began. */
     guardBefore: number;
+    /** The fight's random source (the hoard's random pick). */
+    rng?: () => number;
+}
+
+/** The foe gains `n` WARD (the event is a word gain like any other). */
+function gainWard(state: CombatEncounterState, n: number, events: CombatEvent[]): CombatEncounterState {
+    if (n <= 0) return state;
+    const words = wordsOf(state);
+    events.push({ kind: 'enemy-word', word: 'ward', op: 'gained', amount: n });
+    return { ...state, enemyWords: { ...words, ward: words.ward + n } };
+}
+
+/** `n` Barnacle Curses join your hand. */
+function addBarnacles(state: CombatEncounterState, n: number, events: CombatEvent[]): CombatEncounterState {
+    const words = wordsOf(state);
+    let uid = words.barnacleUid ?? 0;
+    const added = Array.from({ length: n }, () => ({ uid: `bn${++uid}`, cardId: BARNACLE_ID }));
+    events.push({ kind: 'enemy-word', word: 'barnacle', op: 'gained', amount: n });
+    return { ...state, enemyWords: { ...words, barnacleUid: uid }, hand: [...state.hand, ...added] };
+}
+
+/** VULNERABLE `pct`% on the foe itself for `turns` of your turns. */
+function foeVulnerable(state: CombatEncounterState, pct: number, turns: number): CombatEncounterState {
+    const def = lookupEffect('debuff_vulnerable');
+    if (!def) return state;
+    // One turn ticks off at this round's end, so it lasts through your next `turns` turns.
+    const applied = applyEffect(state.enemy.effects, def, state.round, {
+        intensityDelta: pct, uncapped: true,
+        durationMode: 'additive', durationDelta: turns + 1, sourceId: state.enemy.id,
+    });
+    return { ...state, enemy: { ...state.enemy, effects: applied.activeEffects } };
 }
 
 /**
@@ -313,15 +412,106 @@ export function applyRiderAfterMove(
             }
             break;
         case 'self-vulnerable-on-block': {
-            const def = lookupEffect('debuff_vulnerable');
-            if (outcome.fullyBlocked && def) {
-                // One turn ticks off at this round's end, so it lasts through your next `turns` turns.
-                const applied = applyEffect(state.enemy.effects, def, state.round, {
-                    intensityDelta: rider.pct, uncapped: true,
-                    durationMode: 'additive', durationDelta: rider.turns + 1, sourceId: state.enemy.id,
-                });
-                state = { ...state, enemy: { ...state.enemy, effects: applied.activeEffects } };
+            if (outcome.fullyBlocked) {
+                state = foeVulnerable(state, rider.pct, rider.turns);
                 events.push({ kind: 'enemy-rider', rider: rider.kind, amount: rider.pct });
+            }
+            break;
+        }
+        case 'self-vulnerable':
+            state = foeVulnerable(state, rider.pct, rider.turns);
+            events.push({ kind: 'enemy-rider', rider: rider.kind, amount: rider.pct });
+            break;
+        case 'hoard-pick': {
+            const discard = state.discard.slice();
+            const got: string[] = [];
+            for (let i = 0; i < rider.cards && discard.length > 0; i++) {
+                const at = rider.from === 'top'
+                    ? discard.length - 1
+                    : Math.min(discard.length - 1, Math.floor((outcome.rng ?? (() => 0))() * discard.length));
+                got.push(...discard.splice(at, 1));
+            }
+            if (got.length > 0) {
+                state = { ...state, discard, enemyRiders: { ...riders(), hoard: [...(riders().hoard ?? []), ...got] } };
+                events.push({ kind: 'enemy-rider', rider: rider.kind, amount: got.length });
+            }
+            break;
+        }
+        case 'hoard-ward': {
+            const n = riders().hoard?.length ?? 0;
+            if (n > 0) {
+                state = gainWard(state, rider.ward * n, events);
+                events.push({ kind: 'enemy-rider', rider: rider.kind, amount: n });
+            }
+            break;
+        }
+        case 'hoard-return': {
+            const hoard = riders().hoard ?? [];
+            if (hoard.length > 0) {
+                let uid = riders().hoardUid ?? 0;
+                const back = hoard.map(cardId => ({ uid: `hd${++uid}`, cardId }));
+                const { hoard: _gone, ...rest } = riders();
+                state = { ...state, hand: [...state.hand, ...back], enemyRiders: { ...rest, hoardUid: uid } };
+                events.push({ kind: 'enemy-rider', rider: rider.kind, amount: hoard.length });
+            }
+            break;
+        }
+        case 'inferno-feed': {
+            const read = riders().infernoRead ?? 0;
+            const { infernoRead: _gone, ...rest } = riders();
+            state = { ...state, enemyRiders: rest };
+            if (read > 0) {
+                state = gainWard(state, read, events);
+                events.push({ kind: 'enemy-rider', rider: rider.kind, amount: read });
+            }
+            break;
+        }
+        case 'barnacle-on-hit':
+            if (!outcome.fullyBlocked) {
+                state = addBarnacles(state, 1, events);
+                events.push({ kind: 'enemy-rider', rider: rider.kind, amount: 1 });
+            }
+            break;
+        case 'inferno-both': {
+            // The shared INFERNO: the foe burns in full, you by half. A fight with no
+            // program ledger gets one, so the weather ticks as it does for a program deck.
+            const l = state.program ?? initProgramLedger();
+            const el = l.el ?? initElementState();
+            const next = { ...el, infShared: el.infShared + rider.amount };
+            events.push(...weatherEvents(el, next));
+            state = { ...state, program: { ...l, el: next } };
+            events.push({ kind: 'enemy-rider', rider: rider.kind, amount: rider.amount });
+            break;
+        }
+        case 'ward-per-conviction': {
+            const n = rider.per * state.conviction;
+            if (n > 0) {
+                state = gainWard(state, n, events);
+                events.push({ kind: 'enemy-rider', rider: rider.kind, amount: n });
+            }
+            break;
+        }
+        case 'garnish': {
+            const took = Math.min(state.conviction, rider.take);
+            if (took > 0) {
+                state = { ...state, conviction: state.conviction - took };
+                events.push({ kind: 'enemy-rider', rider: rider.kind, amount: took });
+            }
+            break;
+        }
+        case 'audit': {
+            const { ledger: _gone, ...rest } = riders();
+            if ((riders().ledger ?? 0) > 0) {
+                events.push({ kind: 'enemy-rider', rider: rider.kind, amount: riders().ledger! });
+                state = { ...state, enemyRiders: rest };
+            }
+            break;
+        }
+        case 'foreclose': {
+            const taken = state.conviction;
+            if (taken > 0) {
+                state = gainWard({ ...state, conviction: 0 }, rider.ward * taken, events);
+                events.push({ kind: 'enemy-rider', rider: rider.kind, amount: taken });
             }
             break;
         }
@@ -441,7 +631,7 @@ export function riderAfterPlay(
 ): { state: CombatEncounterState; events: CombatEvent[] } {
     let state = after;
     const events: CombatEvent[] = [];
-    for (const step of [lengthenStep, playedStep, holdStep, lastStatusStep]) {
+    for (const step of [lengthenStep, playedStep, holdStep, lastStatusStep, ledgerStep]) {
         const r = step(before, state);
         state = r.state;
         events.push(...r.events);
@@ -450,6 +640,32 @@ export function riderAfterPlay(
 }
 
 type PlayStep = (before: CombatEncounterState, after: CombatEncounterState) => { state: CombatEncounterState; events: CombatEvent[] };
+
+/**
+ * The LEDGER counts what you spend: +1 for each card you scrap and each
+ * Conviction you spend. `spent` names the Conviction a signature cost; left
+ * out it is the drop in your Conviction between the two states.
+ */
+function ledgerStep(before: CombatEncounterState, after: CombatEncounterState, spent?: number): { state: CombatEncounterState; events: CombatEvent[] } {
+    if (!enemyCarriesRider(after.enemy, ['audit'])) return { state: after, events: [] };
+    const scraps = Math.max(0, (after.scrapsThisTurn ?? 0) - (before.scrapsThisTurn ?? 0));
+    const n = scraps + (spent ?? Math.max(0, before.conviction - after.conviction));
+    if (n <= 0) return { state: after, events: [] };
+    return {
+        state: { ...after, enemyRiders: { ...after.enemyRiders, ledger: (after.enemyRiders?.ledger ?? 0) + n } },
+        events: [{ kind: 'enemy-rider', rider: 'audit', amount: n }],
+    };
+}
+
+/**
+ * After a scrap or a signature cast (not a card play): the LEDGER reads what
+ * you spent. `spent` is the Conviction the signature cost.
+ */
+export function riderAfterSpend(
+    before: CombatEncounterState, after: CombatEncounterState, spent?: number,
+): { state: CombatEncounterState; events: CombatEvent[] } {
+    return ledgerStep(before, after, spent);
+}
 
 /** Counts your plays for the riders that read them (a Clapper's bonus, the curfew). */
 const playedStep: PlayStep = (before, after) => {
@@ -489,8 +705,11 @@ const lastStatusStep: PlayStep = (before, after) => {
         }
     }
     const l0 = before.program?.leechTurns ?? 0;
+    const p0 = before.program?.leechPotency ?? 0;
     const l1 = after.program;
-    if (!last && l1 && l1.leechTurns > l0) last = { kind: 'leech', turns: l1.leechTurns - l0, potency: l1.leechPotency };
+    if (!last && l1 && l1.leechTurns > l0) {
+        last = { kind: 'leech', turns: l1.leechTurns - l0, potency: Math.max(1, l1.leechPotency - (l0 > 0 ? p0 : 0)) };
+    }
     const f0 = foeInferno(before.program?.el ?? initElementState());
     const f1 = foeInferno(after.program?.el ?? initElementState());
     if (!last && f1 > f0) last = { kind: 'inferno', amount: f1 - f0 };

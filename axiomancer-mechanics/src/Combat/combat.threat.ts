@@ -405,7 +405,7 @@ function moveThreatAction(move: EnemyMove, level: number, authoredLevel: number)
 export function resolveEnemyPhases(enemy: Enemy): CombatThreatPhase[] {
     const phases = enemy.phases ?? [];
     const level = Math.max(1, enemy.level);
-    const authoredLevel = PHASES_AUTHORED_LEVEL[enemyPhaseTier(enemy.difficulty)];
+    const authoredLevel = PHASES_AUTHORED_LEVEL[enemyPhaseTier(enemy.authoredDifficulty ?? enemy.difficulty)];
     const out: CombatThreatPhase[] = [];
     const push = (move: EnemyMove, phase: number, step: number, danger: boolean): void => {
         out.push(withIntent({
