@@ -287,8 +287,8 @@ function single(nodeId: string, payload: MapEventPayload): MapEventPool {
 /**
  * The foe and level each Breakwater fight node binds (T's Breakwater table,
  * every foe under level 10; a zone's two foes alternate across its nodes).
- * Every `fight` node has a row; the Float-Eye at level 2 holds a node until
- * its own foe lands.
+ * Every `fight` node has a row, and so has the sea cave's elite `bw-c1`; the
+ * Float-Eye at level 2 holds a node until its own foe lands.
  */
 export const BW_ENCOUNTER_FOES: Readonly<Record<string, ActOneFoe>> = {
     // Fields & south road, level 2.
@@ -307,10 +307,12 @@ export const BW_ENCOUNTER_FOES: Readonly<Record<string, ActOneFoe>> = {
     'bw-t2': { slug: 'green-jelly', level: 5 },
     'bw-t3': { slug: 'curfew-ringer', level: 5 },
     'bw-t6': { slug: 'green-jelly', level: 5 },
-    // The cliffs and the hamlet: placeholders.
-    'bw-l1': { slug: 'float-eye', level: 2 },
-    'bw-d1': { slug: 'float-eye', level: 2 },
-    'bw-d3': { slug: 'float-eye', level: 2 },
+    // The cliffs and the hamlet, level 6.
+    'bw-l1': { slug: 'wreck-picker', level: 6 },
+    'bw-d1': { slug: 'smokehouse-gutter', level: 6 },
+    'bw-d3': { slug: 'wreck-picker', level: 6 },
+    // The sea cave's elite, level 5.
+    'bw-c1': { slug: 'tithe-collector', level: 5, difficulty: 'elite' },
 };
 
 /** The pool for one node of the new map, by its board kind. */
@@ -323,7 +325,7 @@ function poolFor(nodeId: string): MapEventPool {
             if (!foe) throw new Error(`breakwater: fight ${nodeId} has no row in BW_ENCOUNTER_FOES`);
             return cwEncounterPool(nodeId, foe);
         }
-        case 'elite':    return cwEncounterPool(nodeId, { slug: 'green-jelly', level: BW_ELITE_LEVEL, difficulty: 'elite' });
+        case 'elite':    return cwEncounterPool(nodeId, BW_ENCOUNTER_FOES[nodeId] ?? { slug: 'green-jelly', level: BW_ELITE_LEVEL, difficulty: 'elite' });
         case 'boss':     return cwEncounterPool(nodeId, { slug: 'death-beholder', level: BW_DOOR_LEVEL, isBoss: true });
         case 'hazard':   return hazardPool(nodeId, `[content] ${place}.`);
         case 'rest':     return campRestPool(nodeId, `[content] ${place}.`);

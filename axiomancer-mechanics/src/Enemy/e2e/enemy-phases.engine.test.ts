@@ -201,6 +201,8 @@ describe('A2 — a fixed loop per phase', () => {
         const foe: Enemy = { ...deepClone(DeathBeholder), health: 1000, maxHealth: 1000, effects: [] };
         const seq = getThreatSequence(foe);
         expect(seq.some(p => p.enemyMove !== undefined)).toBe(false);
+        // The contrast: the same call on a phases foe walks the phase model.
+        expect(getThreatSequence(phasedFoe('normal')).every(p => p.enemyMove !== undefined)).toBe(true);
         expect(nextEnemyPhaseIndex(seq, 0, foe)).toBeNull();
         let s = open(foe);
         const gate = s.threatPhases[1]?.unlockAfterRound;

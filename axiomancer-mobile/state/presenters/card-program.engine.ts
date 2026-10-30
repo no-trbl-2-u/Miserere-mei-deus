@@ -199,14 +199,18 @@ export function programPlayVM(state: CombatEncounterState, uid: string, cardId: 
     // The shortfall belongs to the SACRIFICE floor alone: when TANGLE is the
     // refusal (`freeBlock` is not the card's own), no SACRIFICE is owed.
     const freeIsFloor = freeBlock === programLineBlock(state, uid, false);
+    // The same for the PAID line: when the curfew is the refusal, no SACRIFICE
+    // or discard is owed (the shortfall fields name the card's own refusal).
+    const paidOwn = programLineBlock(state, uid, true);
+    const paidIsOwn = playLimitBlock(state) === null;
     return {
         // TANGLE refuses any card's FREE line; a program card adds its own refusals.
         freeBlock,
         // A curfew refuses the PAID line too.
-        paidBlock: playLimitBlock(state) ?? programLineBlock(state, uid, true),
+        paidBlock: playLimitBlock(state) ?? paidOwn,
         freeShortfall: freeIsFloor ? programLineShortfall(state, uid, false) : null,
-        paidShortfall: programLineShortfall(state, uid, true),
-        paidDiscard: programLineDiscardShortfall(state, uid, true),
+        paidShortfall: paidIsOwn ? programLineShortfall(state, uid, true) : null,
+        paidDiscard: paidIsOwn ? programLineDiscardShortfall(state, uid, true) : null,
         unscrappable: isCurseCard(cardId),
         xRange: programXChoice(state, uid),
     };

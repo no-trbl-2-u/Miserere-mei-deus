@@ -132,7 +132,7 @@ the Expo app (`axiomancer-mobile`) presents it.
   lanes widen the pool and never add a slot. A cache offers one. The dev
   menu's REWARD POOL can narrow the draft to card lanes (`CARD_LANES`: the
   grey office, Blood Price, the Elementalist and the Defender). A won elite fight
-  (`difficulty: 'elite'`; an elite slot stages the Green Jelly at that tier) pays the elite reward instead
+  (`difficulty: 'elite'`; the sea cave binds the Tithe-Collector, the other elite slots stage the Green Jelly at that tier) pays the elite reward instead
   (`rollEliteReward`, Phase UP1f): the best 3 cards by rarity, one from a
   lane the deck draws on (`deckLaneIds`), or one upgrade of a random owned
   card at the highest rarity owned that can take one, read on the shared
@@ -302,6 +302,14 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
   status back. Placed on the town's nodes; an elite slot stages it at the elite
   tier until its own foe lands. The only foe that can be befriended, below 30%
   VITAE, which is also where its second phase begins.
+- **Wreck-Picker and Smokehouse Gutter:** level 6 normals with HP phases (EN1h), on the cliffs
+  and the hamlet. The Wreck-Picker takes cards from your discard into its hoard
+  (shown on its pane; its Hurl Flotsam and Hide in the Hoard grow with it, and its
+  DANGER hands the cards back to your hand). The Gutter reads the INFERNO on it,
+  mends and burns: its DANGER lights INFERNO on both sides.
+- **The Tithe-Collector:** level 5, the sea cave's elite (EN1h), three phases (60%
+  and 30% lines). Its LEDGER (on its pane) counts +1 for each card you scrap and each
+  Conviction you spend; Audit reads it, Foreclose takes all your Conviction.
 - **The Death Beholder:** boss, 320 VITAE at level 8, two stages (at 60% and
   25% VITAE). It holds every region's door, pinned at level 1, 2, 3 and 4
   (`World/MapEvents/content.ts`); `scaleEnemyToLevel` scales its VITAE to

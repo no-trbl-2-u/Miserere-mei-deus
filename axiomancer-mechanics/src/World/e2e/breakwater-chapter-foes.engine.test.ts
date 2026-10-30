@@ -1,5 +1,5 @@
 /**
- * Chapter 1's foes at their nodes (phases EN1f and EN1g, the Measure of their
+ * Chapter 1's foes at their nodes (phases EN1f, EN1g and EN1h, the Measure of their
  * blocks in the EN1 brief): each fields, quays, pier and town fight node, answered through the map's
  * own event resolver, meets the foe and level its `BW_ENCOUNTER_FOES` row
  * names; in the fight that foe plays its opening loop, and when its VITAE
@@ -41,7 +41,7 @@ const fired = (events: readonly CombatEvent[]) =>
 
 const NODES = [
     'bw-w2', 'bw-w3', 'bw-m1', 'bw-p2', 'bw-h1', 'bw-h2', 'bw-h3',
-    'bw-h7', 'bw-t1', 'bw-t2', 'bw-t3', 'bw-t6',
+    'bw-h7', 'bw-t1', 'bw-t2', 'bw-t3', 'bw-t6', 'bw-l1', 'bw-d1', 'bw-d3',
 ] as const;
 
 describe('the fields, quays, pier and town: each node\'s foe fires its DANGER at its 30% line', () => {
@@ -78,11 +78,33 @@ describe('the fields, quays, pier and town: each node\'s foe fires its DANGER at
     });
 });
 
-describe('the elite slots still hold the Green Jelly, staged as an elite', () => {
+describe('the sea cave elite: the Tithe-Collector fires Audit at 60% and Foreclose at 30%', () => {
+    it('bw-c1', () => {
+        const row = BW_ENCOUNTER_FOES['bw-c1']!;
+        expect(row).toMatchObject({ slug: 'tithe-collector', level: 5 });
+        const source = ENEMY_REGISTRY['tithe-collector'];
+        let s = fightAt('bw-c1');
+        expect(s.enemy.id).toBe(source.id);
+        expect(s.enemy.difficulty).toBe('elite');
+        expect(s.enemy.level).toBe(row.level);
+        for (const [phase, pct] of [[1, 0.6], [2, 0.3]] as const) {
+            const danger = source.phases![phase]!.danger!;
+            const crossed = resolveThreatPhase({ ...s, enemy: { ...s.enemy, health: Math.floor(s.enemy.maxHealth * pct) } }, rng);
+            expect(crossed.events).toContainEqual({ kind: 'enemy-phase-entered', enemyId: source.id, phase, danger: danger.name });
+            s = crossed.state;
+            expect(telegraph(s)).toMatchObject({ phase, danger: true, kind: 'danger' });
+            const res = resolveThreatPhase(s, rng);
+            expect(fired(res.events)[0]).toMatch(new RegExp(`^${danger.name}: `));
+            s = res.state;
+        }
+    });
+});
+
+describe('the elite slots hold their own foe or the Green Jelly, staged as an elite', () => {
     // The Green Jelly is a normal on its own; the elite nodes stage it at the
     // elite tier until their own foes land, so the elite reward, respawn and
     // phase lines keep working there.
-    it.each(['bw-c1', 'bw-l4', 'bw-w5'])('%s', (nodeId) => {
+    it.each(['bw-l4', 'bw-w5'])('%s', (nodeId) => {
         const s = fightAt(nodeId);
         expect(s.enemy.id).toBe(ENEMY_REGISTRY['green-jelly'].id);
         expect(s.enemy.difficulty).toBe('elite');

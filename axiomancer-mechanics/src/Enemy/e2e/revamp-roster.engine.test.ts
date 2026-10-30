@@ -29,6 +29,8 @@ const SURVIVOR_IDS = ['enemy-float-eye', 'enemy-green-jelly', 'enemy-death-behol
 const CHAPTER1_IDS = [
     'enemy-gallows-crow', 'enemy-net-mender', 'enemy-crane-hook', 'enemy-brine-widow', 'enemy-lamprey-knot',
 ];
+/** The cliffs, the hamlet and the sea cave's elite (EN1h), in library order. */
+const CLIFF_IDS = ['enemy-wreck-picker', 'enemy-smokehouse-gutter', 'enemy-tithe-collector'];
 /** The foes that still play an enemy deck (the rest play HP phases). */
 const DECK_IDS = ['enemy-death-beholder'];
 
@@ -37,13 +39,15 @@ describe('the R2 roster', () => {
         expect(Object.keys(ENEMY_REGISTRY).sort())
             .toEqual([
                 'brine-widow', 'crane-hook', 'curfew-ringer', 'death-beholder', 'float-eye', 'gallows-crow',
-                'green-jelly', 'lamprey-knot', 'net-mender', 'sandbag',
+                'green-jelly', 'lamprey-knot', 'net-mender', 'sandbag', 'smokehouse-gutter', 'tithe-collector',
+                'wreck-picker',
             ]);
         expect(EnemyLibrary.map(e => e.id)).toEqual([
-            'enemy-float-eye', ...CHAPTER1_IDS, 'enemy-green-jelly', 'enemy-curfew-ringer', 'enemy-death-beholder',
+            'enemy-float-eye', ...CHAPTER1_IDS, 'enemy-green-jelly', 'enemy-curfew-ringer', ...CLIFF_IDS,
+            'enemy-death-beholder',
         ]);
         expect([...LIVE_ENEMY_IDS].sort())
-            .toEqual([...SURVIVOR_IDS, ...CHAPTER1_IDS, 'enemy-curfew-ringer', ENEMY_REGISTRY.sandbag.id].sort());
+            .toEqual([...SURVIVOR_IDS, ...CHAPTER1_IDS, 'enemy-curfew-ringer', ...CLIFF_IDS, ENEMY_REGISTRY.sandbag.id].sort());
     });
 
     it('no survivor carries a keyword, and no stage grants one', () => {

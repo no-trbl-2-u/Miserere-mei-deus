@@ -57,5 +57,21 @@
     ],
     "license": "open source (T, 2026-10-29, D115)",
     "license_note": "stand-in until T's portrait swap. Owner-supplied external illustration (no source traced). T, 2026-10-29, D115: \"The images we use for everything are open source.\" No sprite sheets (D97)."
+  },
+  {
+    "generated_by": "user-supplied",
+    "date": "2026-10-30",
+    "tool": "restored unchanged from the repo's own history (hag.webp at 5117001a8^, the commit before phase AN3a retired it; the others at c20ebe14e^, the commit before the R2a enemy reset deleted them)",
+    "covers": [
+      "wreck-picker.webp",
+      "smokehouse-gutter.webp",
+      "tithe-collector.webp"
+    ],
+    "source": "the 2026-07-06 temp art drop (see the float-eye record): wreck-picker.webp was hag.webp, smokehouse-gutter.webp was butcher.webp, tithe-collector.webp was bone-wizard-b.webp; the stand-ins T saw on the Breakwater Bestiary page",
+    "used_by": [
+      "assets/images/enemies/index.ts (registry - the portraitAsset of the Wreck-Picker, the Smokehouse Gutter and the Tithe-Collector since phase EN1h)"
+    ],
+    "license": "open source (T, 2026-10-29, D115)",
+    "license_note": "stand-in until T's portrait swap. Owner-supplied external illustration (no source traced). T, 2026-10-29, D115: \"The images we use for everything are open source.\" No sprite sheets (D97)."
   }
 ]

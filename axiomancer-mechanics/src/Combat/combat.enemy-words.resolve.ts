@@ -162,7 +162,7 @@ function scour(state: CombatEncounterState, n: number, events: CombatEvent[]): C
  * LEECH and SCOUR. Run once per fired move (a hindered foe fires none).
  */
 export function applyEnemyWordEffects(
-    stateIn: CombatEncounterState, effects: readonly CombatThreatEffect[],
+    stateIn: CombatEncounterState, effects: readonly CombatThreatEffect[], rng: () => number = () => 0,
 ): WordsResult {
     let state = stateIn;
     const events: CombatEvent[] = [];
@@ -208,7 +208,10 @@ export function applyEnemyWordEffects(
             events.push({ kind: 'enemy-word', word: 'tangle', op: 'gained', amount: eff.tangle! });
         }
         if (eff.undertow) {
-            state = withWords(state, { ...wordsOf(state), undertow: eff.undertow });
+            // A named die, or "random": the gull-call picks one of the three.
+            const dice = ['heart', 'body', 'mind'] as const;
+            const die = eff.undertow === 'random' ? dice[Math.min(2, Math.floor(rng() * 3))] : eff.undertow;
+            state = withWords(state, { ...wordsOf(state), undertow: die });
             events.push({ kind: 'enemy-word', word: 'undertow', op: 'gained', amount: 1 });
         }
         if ((eff.barnacle ?? 0) > 0) {

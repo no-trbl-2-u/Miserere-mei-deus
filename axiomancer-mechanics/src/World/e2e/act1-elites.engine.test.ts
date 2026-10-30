@@ -57,11 +57,13 @@ describe.each(ACT1_MAPS)('Act 1 fights on %s / %s (D30, D61)', (continent, mapNa
         expect(bosses[0]!.node.location[0]).toBe(lastColumn);
     });
 
-    it('stages the Green Jelly as its elite — once before the door, or on each held elite node', () => {
+    it('stages an elite — once before the door, or on each held elite node (the Green Jelly until a node binds its own)', () => {
         const elites = fights.filter(f => f.difficulty === 'elite');
         if (staged) {
             expect(elites.map(f => f.node.id).sort()).toEqual([...staged.elites].sort());
-            for (const e of elites) expect(e.payload.enemySlug, e.node.id).toBe('green-jelly');
+            for (const e of elites) {
+                expect(e.payload.enemySlug, e.node.id).toBe(BW_ENCOUNTER_FOES[e.node.id]?.slug ?? 'green-jelly');
+            }
             for (const id of staged.elites) expect(BREAKWATER_CHAPTER_HELD as readonly string[]).toContain(id);
             return;
         }
@@ -79,7 +81,9 @@ describe.each(ACT1_MAPS)('Act 1 fights on %s / %s (D30, D61)', (continent, mapNa
             expect(f.payload.enemySlug, f.node.id).toBe(row?.slug ?? 'float-eye');
             if (row) expect(f.payload.level, f.node.id).toBe(row.level);
         }
-        if (mapName === 'breakwater') expect(rest.length).toBe(Object.keys(BW_ENCOUNTER_FOES).length);
+        if (mapName === 'breakwater') {
+            expect(rest.length).toBe(Object.values(BW_ENCOUNTER_FOES).filter(f => f.difficulty !== 'elite').length);
+        }
     });
 
     it('the elite node is the one node the rest respawn reads as elite (phase ER1)', () => {
@@ -91,8 +95,10 @@ describe.each(ACT1_MAPS)('Act 1 fights on %s / %s (D30, D61)', (continent, mapNa
     });
 
     it('pins the elite to an Act 1 level', () => {
-        const elite = fights.find(f => f.difficulty === 'elite')!;
-        expect(elite.payload.level).toBeGreaterThanOrEqual(2);
-        expect(elite.payload.level).toBeLessThanOrEqual(4);
+        for (const elite of fights.filter(f => f.difficulty === 'elite')) {
+            expect(elite.payload.level).toBeGreaterThanOrEqual(2);
+            // Chapter 1's elites bind below level 10 (the EN1 brief).
+            expect(elite.payload.level).toBeLessThan(mapName === 'breakwater' ? 10 : 5);
+        }
     });
 });

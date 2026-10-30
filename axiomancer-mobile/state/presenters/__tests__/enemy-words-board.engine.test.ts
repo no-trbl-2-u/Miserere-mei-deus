@@ -46,12 +46,46 @@ describe('each fields, quays, pier and town node stages its own foe and portrait
         ['bw-h1', 'Net-Mender', 'net-mender'], ['bw-h2', 'Crane-Hook', 'crane-hook'],
         ['bw-h7', 'Brine-Widow', 'brine-widow'], ['bw-t1', 'Lamprey-Knot', 'lamprey-knot'],
         ['bw-t2', 'Green Jelly', 'green-jelly'], ['bw-t3', 'Curfew-Ringer', 'curfew-ringer'],
+        ['bw-l1', 'Wreck-Picker', 'wreck-picker'], ['bw-d1', 'Smokehouse Gutter', 'smokehouse-gutter'],
     ])('%s: %s', (node, name, art) => {
         const vm = buildCombatViewModel(fightAt(node));
         expect(vm.enemy.name).toBe(name);
         expect(vm.enemy.artKey).toBe(art);
         // An unbeaten foe's DANGER is listed, unnamed.
         expect(vm.enemy.dangers).toEqual([{ phase: 2, name: null }]);
+    });
+});
+
+describe('the sea cave elite stages its own foe and portrait, with both DANGERs unnamed', () => {
+    it('bw-c1: The Tithe-Collector', () => {
+        const vm = buildCombatViewModel(fightAt('bw-c1'));
+        expect(vm.enemy.name).toBe('The Tithe-Collector');
+        expect(vm.enemy.artKey).toBe('tithe-collector');
+        expect(vm.enemy.dangers).toEqual([{ phase: 2, name: null }, { phase: 3, name: null }]);
+    });
+});
+
+describe('the hoard and the LEDGER stand on the foe\'s side as counters', () => {
+    it('the hoard shows its card count with a caption and its own a11y span', () => {
+        const s = fightAt('bw-l1');
+        expect(buildCombatViewModel(s).enemy.effects.some((e) => e.effectId === 'enemy-counter-hoard')).toBe(false);
+        const vm = buildCombatViewModel({ ...s, enemyRiders: { hoard: ['grey-strike', 'grey-ward', 'grey-word'] } });
+        const chip = vm.enemy.effects.find((e) => e.effectId === 'enemy-counter-hoard')!;
+        expect(chip.intensity).toBe(3);
+        expect(chip.caption).toBe('3 cards taken from your discard');
+        expect(chip.gloss).toMatch(/come back when it dies/);
+        expect(effectChipA11y(chip)).toContain('until the foe dies');
+        expect(vm.player.effects.some((e) => e.effectId.startsWith('enemy-counter-'))).toBe(false);
+    });
+
+    it('the LEDGER shows what it has counted, and clears with its Audit', () => {
+        const s = fightAt('bw-c1');
+        expect(buildCombatViewModel(s).enemy.effects.some((e) => e.effectId === 'enemy-counter-ledger')).toBe(false);
+        const vm = buildCombatViewModel({ ...s, enemyRiders: { ledger: 4 } });
+        const chip = vm.enemy.effects.find((e) => e.effectId === 'enemy-counter-ledger')!;
+        expect(chip.intensity).toBe(4);
+        expect(chip.caption).toBe('your scraps and spent Conviction');
+        expect(effectChipA11y(chip)).toContain('until its Audit clears it');
     });
 });
 
@@ -209,5 +243,14 @@ describe('the FREE shortfall belongs to the SACRIFICE floor alone', () => {
         const vm = programPlayVM({ ...base(), enemyWords: { ...NO_WORDS, tangle: 1 } }, 'h0', 'ew-sacrifice');
         expect(vm.freeBlock).toMatch(/tangled/);
         expect(vm.freeShortfall).toBeNull();
+    });
+
+    it('the PAID shortfall too: a shut curfew is the refusal, so no SACRIFICE is owed', () => {
+        const open = programPlayVM(base(), 'h0', 'ew-sacrifice');
+        expect(open.paidShortfall).not.toBeNull();
+        const shut = programPlayVM({ ...base(), enemyRiders: { curfew: 1, played: 1 } }, 'h0', 'ew-sacrifice');
+        expect(shut.paidBlock).toMatch(/curfew/);
+        expect(shut.paidShortfall).toBeNull();
+        expect(shut.paidDiscard).toBeNull();
     });
 });

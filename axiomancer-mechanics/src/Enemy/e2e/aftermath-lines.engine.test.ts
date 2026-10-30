@@ -48,6 +48,7 @@ describe('per-foe aftermath narrative lines (art-driven roster)', () => {
     const DESCRIPTION_ONLY = new Set([
         'enemy-gallows-crow', 'enemy-net-mender', 'enemy-crane-hook',
         'enemy-brine-widow', 'enemy-lamprey-knot', 'enemy-curfew-ringer',
+        'enemy-wreck-picker', 'enemy-smokehouse-gutter', 'enemy-tithe-collector',
     ]);
 
     it('Chapter 1\'s description-only foes carry no aftermath prose yet', () => {

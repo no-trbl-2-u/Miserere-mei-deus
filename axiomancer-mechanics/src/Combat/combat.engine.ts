@@ -85,7 +85,7 @@ import {
 } from './combat.enemy-words.resolve';
 import {
     applyRiderAfterMove, planRiderTurn, playLimitBlock, riderAfterPlay, riderBeforeMove, riderGuardShare,
-    riderStealPerHit, riderTurnEnd,
+    riderAfterSpend, riderStealPerHit, riderTurnEnd,
 } from './combat.enemy-riders';
 export { playLimitBlock };
 import { BARNACLE_ID } from '../Cards/library/enemy-curses.cards';
@@ -688,6 +688,10 @@ export function discardCombatCard(state: CombatEncounterState, uid: string): Com
         next = rider.state;
         events.push(...rider.events);
     }
+    // The LEDGER reads the scrap, paid or not.
+    const ledger = riderAfterSpend(state, next);
+    next = ledger.state;
+    events.push(...ledger.events);
     return { state: withLog(next, events), events };
 }
 
@@ -1509,7 +1513,7 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
         }
         // The move's enemy words land after its hits, so its own WARD never
         // meets the spikes or the riposte its strikes drew.
-        const words = applyEnemyWordEffects({ ...state, player, enemy }, moveEffects);
+        const words = applyEnemyWordEffects({ ...state, player, enemy }, moveEffects, rng);
         if (words.events.length > 0) {
             player = words.state.player;
             enemy = words.state.enemy;
@@ -1529,6 +1533,7 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
         const after = applyRiderAfterMove(beforeRider, rider, {
             fullyBlocked: attacksLanded > 0 && attacksFullyBlocked === attacksLanded,
             guardBefore,
+            rng,
         });
         // Some riders only leave state behind (an armed bonus, a delayed hit).
         if (after.state !== beforeRider) {
@@ -1578,7 +1583,7 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
         ...(state.program ? { program: programRecordDamage(state.program, Math.max(0, state.player.health - player.health)) } : {}),
         lastThreatFullyBlocked: !hindered && attacksLanded > 0 && attacksFullyBlocked === attacksLanded,
         // A `phases` foe's riders measure "what you dealt it last turn" from here.
-        ...(hasEnemyPhases(enemy) ? { enemyRiders: riderTurnEnd(state.enemyRiders, directDamage) } : {}),
+        ...(hasEnemyPhases(enemy) ? { enemyRiders: riderTurnEnd(state.enemyRiders, directDamage, hindered) } : {}),
         phase: 'phase-resolve',
         threatMarks,
         phaseResults: [...state.phaseResults, result],
@@ -2023,7 +2028,10 @@ export function playSignatureSkill(
         { kind: 'signature-cast', signatureId: skill.id, name: skill.name, cost: skill.cost },
         ...applied.events,
     ];
-    const next = withLog(applied.state, events);
+    // The LEDGER reads the Conviction the signature spent.
+    const ledger = riderAfterSpend(state, applied.state, skill.cost);
+    events.push(...ledger.events);
+    const next = withLog(ledger.state, events);
     return checkImmediateOutcome(next, events);
 }
 
