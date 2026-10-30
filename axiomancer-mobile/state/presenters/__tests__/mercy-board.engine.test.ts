@@ -124,7 +124,7 @@ describe('MERCY and RADIANCE in the log', () => {
         expect(line({ kind: 'mercy-ticked', total: 10, turnsLeft: 1 }))
             .toMatchObject({ text: "The foe's MERCY is 10; it bursts in 1 turn." });
         expect(line({ kind: 'mercy-burst', total: 10, amount: 20, onClock: true }))
-            .toMatchObject({ side: 'enemy', text: "The foe's MERCY 10 bursts for 20.", float: 'MERCY BURST −20' });
+            .toMatchObject({ side: 'enemy', text: "The foe's MERCY 10 bursts for 20.", float: 'MERCY bursts −20' });
     });
 
     it('never says MERCY triggers', () => {

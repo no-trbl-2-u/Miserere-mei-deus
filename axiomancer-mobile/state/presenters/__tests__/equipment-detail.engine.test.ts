@@ -40,8 +40,14 @@ describe('equipment detail view-model — lane', () => {
         expect(vm.lane).toBe('Lane: Blood Price (while worn)');
     });
 
-    it('the Suppliant\'s Ring opens no lane: null', () => {
+    it('the Suppliant\'s Ring reads exactly "Lane: Merciful (while worn)"', () => {
         const vm = selectEquipmentDetailViewModel(stateWith([RING], [RING]), RING.id)!;
+        expect(vm.lane).toBe('Lane: Merciful (while worn)');
+    });
+
+    it('a relic naming no lane at all is null', () => {
+        const plain: Equipment = { id: 'plain-relic', name: 'Plain', description: '', category: 'equipment', slot: 'relic' };
+        const vm = selectEquipmentDetailViewModel(stateWith([plain], [plain]), plain.id)!;
         expect(vm.lane).toBeNull();
     });
 

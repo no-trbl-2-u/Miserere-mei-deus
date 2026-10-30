@@ -69,9 +69,9 @@ describe('/item-reward screen — lane line (LR1a A3)', () => {
         expect(screen.getByTestId('item-reward-lane').props.children).toBe('Lane: Blood Price (while worn)');
     });
 
-    it('the Suppliant\'s Ring draws no lane line', () => {
+    it('the Suppliant\'s Ring hands over with "Lane: Merciful (while worn)"', () => {
         mount((store) => offerItemRewardAction(store, relic(BENCHED_ACCESSORY)));
-        expect(screen.queryByTestId('item-reward-lane')).toBeNull();
+        expect(screen.getByTestId('item-reward-lane').props.children).toBe('Lane: Merciful (while worn)');
     });
 });
 

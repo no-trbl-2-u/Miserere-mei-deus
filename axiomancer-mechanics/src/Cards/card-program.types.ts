@@ -19,6 +19,8 @@
  *   {vuln:n}   VULNERABLE percent, heart-scaled like the status
  *   {leech:n}  heart-scaled repeating (LEECH)
  *   {thorns:n} heart-scaled repeating (THORNS)
+ *   {radiance:n} heart-scaled repeating (RADIANCE, as LEECH)
+ *   {mercy:n}  heart-scaled repeating (MERCY, as LEECH)
  *
  * Every other number (SACRIFICE, Conviction, caps, "the foe loses n") is
  * unscaled and printed as written.

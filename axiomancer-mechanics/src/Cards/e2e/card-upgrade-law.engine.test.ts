@@ -128,6 +128,8 @@ const PAYOFF_VERBS = new Set([
     'inferno', 'blizzard', 'storm', 'stormGrowthMarker',
     // The spikes: THORNS and REFLECT numbers.
     'thorns', 'reflect', 'reflectOnAttack',
+    // The Merciful: RADIANCE and MERCY numbers, max VITAE, the heal modifiers and the attack cut.
+    'radiance', 'mercy', 'maxVitae', 'healsPlus', 'healsTimes', 'weakenNextAttack',
 ]);
 const COST_VERBS = new Set(['sacrifice', 'sacrificeX', 'tether']);
 
@@ -217,12 +219,18 @@ describe('A3 — every upgrade makes the numbers bigger, never a cost', () => {
     const upgradable = cardLibrary.filter(canUpgrade);
     const noPayoff = new Set(cardsWithNoPayoff(cardLibrary));
 
-    it('only the pinned cards have nothing to grow: two Blood Price, six Elementalist, five Defender', () => {
-        expect(noPayoff.size).toBe(13);
+    it('only the pinned cards have nothing to grow: two Blood Price, six Elementalist, five Defender, six Merciful', () => {
+        expect(noPayoff.size).toBe(19);
         // The Defender's five: formulas and holds (THORNS or HEAL read off the fight, a Global GUARD
         // equal to THORNS, DRAW 1, RETRIEVE and the exile return).
         const defender = cardLibrary.filter(c => noPayoff.has(c.id) && c.tags?.includes('defender'));
         expect(defender.map(c => c.name)).toEqual(['Spite Growth', 'Bramble Carapace', 'Mend the Shell', 'Steady Shell', 'Rummage']);
+        // The Merciful's six: the clock tick and the burst, two "equal to the foe's MERCY" cards, the
+        // SACRIFICE and DRAW card, the heal-mode Spell, and the card that returns MERCY cards.
+        const merciful = cardLibrary.filter(c => noPayoff.has(c.id) && c.tags?.includes('merciful'));
+        expect(merciful.map(c => c.name)).toEqual([
+            'Hastened Reckoning', 'Weight of Grace', 'Shelter of Grace', 'Open the Wound', 'Kindled Prayer', 'Remembered Kindness',
+        ]);
     });
 
     it('covers every library card but the Curses', () => {

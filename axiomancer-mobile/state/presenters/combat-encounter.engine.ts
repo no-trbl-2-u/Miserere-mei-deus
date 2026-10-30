@@ -756,7 +756,7 @@ export function selectCombatLogLines(events: readonly CombatEvent[]): CombatLogL
                 out.push({
                     kind: e.kind, side: 'enemy', color: INTENT_ICONS.damage.color,
                     text: `The foe's MERCY ${e.total} bursts for ${e.amount}.`,
-                    float: `MERCY BURST −${e.amount}`,
+                    float: `MERCY bursts −${e.amount}`,
                 });
                 break;
             // The foe's bar climbing gets a line saying WHY. Zero-amount heals
