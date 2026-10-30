@@ -12,12 +12,12 @@
 <style>
   :root {
     --bg: #efe9dc; --ink: #1b1714; --muted: #6b6259; --card: #fbf7ee;
-    --edge: #2a2420; --open: #3d5a40; --closed: #6b6259;
+    --edge: #2a2420; --open: #3d5a40; --closed: #6b6259; --complete: #4a4f7a;
   }
   @media (prefers-color-scheme: dark) {
     :root {
       --bg: #141110; --ink: #ece4d6; --muted: #a39887; --card: #1f1a17;
-      --edge: #ece4d6; --open: #8fbf8f; --closed: #a39887;
+      --edge: #ece4d6; --open: #8fbf8f; --closed: #a39887; --complete: #a3a9e0;
     }
   }
   * { box-sizing: border-box; }
@@ -38,6 +38,7 @@
             text-transform: uppercase; padding: 1px 6px; border-radius: 3px; color: var(--card); }
   .status.open { background: var(--open); }
   .status.closed { background: var(--closed); }
+  .status.complete { background: var(--complete); }
   .empty { color: var(--muted); }
 </style>
 </head>
@@ -49,13 +50,14 @@
 </main>
 <script>
 /* One entry per family. status: open (taking a verdict) | closed (verdicts
-   recorded; the entry links to the ledger that holds them). date: the day the
-   ballot opened. */
+   recorded; the entry links to the ledger that holds them) | complete (the
+   lane is in the build: its trial set is plotted; T, 2026-10-30). date: the day
+   the ballot opened. */
 const BALLOTS = [
   { id: 'merciful-2026-10-29', family: 'The Merciful', file: 'rehearsal-merciful.ballot.html', ledger: 'rehearsal-merciful.md', status: 'closed', date: '2026-10-29' },
-  { id: 'defender-2026-10-26', family: 'The Defender', file: 'rehearsal-defender.ballot.html', ledger: 'rehearsal-defender.md', status: 'open', date: '2026-10-26' },
-  { id: 'elementalist-2026-10-22', family: 'The Elementalist', file: 'rehearsal-elementalist.ballot.html', ledger: 'rehearsal-elementalist.md', status: 'open', date: '2026-10-22' },
-  { id: 'blood-price-2026-09-30', family: 'Blood Price', file: 'rehearsal-blood-price.ballot.html', ledger: 'rehearsal-blood-price.md', status: 'closed', date: '2026-09-30' },
+  { id: 'defender-2026-10-26', family: 'The Defender', file: 'rehearsal-defender.ballot.html', ledger: 'rehearsal-defender.md', status: 'complete', date: '2026-10-26' },
+  { id: 'elementalist-2026-10-22', family: 'The Elementalist', file: 'rehearsal-elementalist.ballot.html', ledger: 'rehearsal-elementalist.md', status: 'complete', date: '2026-10-22' },
+  { id: 'blood-price-2026-09-30', family: 'Blood Price', file: 'rehearsal-blood-price.ballot.html', ledger: 'rehearsal-blood-price.md', status: 'complete', date: '2026-09-30' },
 ];
 
 /** Escape text for safe insertion as HTML. */
@@ -68,7 +70,7 @@ const entry = (b) => `
   <li>
     <a class="go" href="${esc(b.file)}">${esc(b.family)}</a>
     <p class="meta"><span class="status ${esc(b.status)}">${esc(b.status)}</span> opened ${esc(b.date)}</p>
-    ${b.status === 'closed'
+    ${b.status !== 'open'
       ? `<p class="meta">verdicts recorded: <a href="${esc(ledgerUrl(b))}">the ledger</a></p>`
       : ''}
   </li>`;

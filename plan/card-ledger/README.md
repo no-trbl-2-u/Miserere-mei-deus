@@ -38,7 +38,7 @@ the load from the save need the Pages site.
    `BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });`.
 4. **The `BALLOTS` entry.** Add `{ id, family, file, ledger, status: 'open',
    date }` to `index.html`, with `id` equal to the page's `BALLOT_ID`. When
-   the family's verdicts are written into its ledger, set `status: 'closed'`.
+   the family's verdicts are written into its ledger, set `status: 'closed'`. When the lane's trial set is plotted into the build, set `status: 'complete'` (T, 2026-10-30).
 
 `node --test scripts/ballot-kit.test.mjs` (in the root `npm test`) fails when a
 ballot file has no `BALLOTS` entry, an open ballot does not load the kit

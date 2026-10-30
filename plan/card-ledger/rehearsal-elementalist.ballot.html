@@ -126,7 +126,6 @@
            background: var(--btn); color: var(--btn-ink); cursor: pointer; margin: 8px 8px 0 0; }
   .count { color: var(--muted); margin-left: 6px; }
 </style>
-<script src="ballot-kit.js"></script>
 </head>
 <body>
 <header>
@@ -469,8 +468,7 @@ const sheet = () => {
   ].filter(Boolean).join('\n');
 };
 
-/* Generate, Copy, autosave, Clear and Submit come from the ballot kit. */
-BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
+/* Complete: the lane is in the build, so the ballot kit (Generate, Copy, autosave, Submit) is no longer loaded. */
 
 /* Theme toggle: flips data-theme on <html>; no storage. */
 document.getElementById('themeBtn').addEventListener('click', () => {
