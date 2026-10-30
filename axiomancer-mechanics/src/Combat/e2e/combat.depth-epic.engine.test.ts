@@ -65,6 +65,18 @@ describe('combat depth epic — H3: the escalation clock', () => {
         expect(r20).toBeLessThanOrEqual(Math.ceil(r1 * THREAT_ESCALATION_MAX) + 1);
         expect(THREAT_ESCALATION_PER_ROUND).toBeGreaterThan(0);
     });
+
+    it('a normal foe with HP phases has no clock: the same hit at round 1 and round 20', () => {
+        const hitAtRound = (round: number): number => {
+            const foe: Enemy = { ...makeEnemy(300, 'body'), phases: FloatEye.phases };
+            let s = initializeCombatEncounter(makePlayer([DOT_BODY]), foe, [DOT_BODY], 1);
+            s = rollEncounterDice(s).state;
+            s = { ...s, round };
+            return s.player.health - resolveThreatPhase(s).state.player.health;
+        };
+        expect(hitAtRound(1)).toBeGreaterThan(0);
+        expect(hitAtRound(20)).toBe(hitAtRound(1));
+    });
 });
 
 function makeBossEnemy(hp: number, stance: 'heart' | 'body' | 'mind'): Enemy {

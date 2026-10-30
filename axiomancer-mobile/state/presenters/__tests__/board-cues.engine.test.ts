@@ -109,6 +109,20 @@ describe('the BLIZZARD cut reaches the intent (A3)', () => {
         expect(cut).toBe(projectIncomingThreat(s).blizzardCut);
         expect(cut).toBeGreaterThan(0);
     });
+
+    it('a phases foe (the default bw-w2 Float-Eye) shows a kind and no wall-math number, BLIZZARD or not', () => {
+        const zero = { projectedDamage: 0, netDamage: 0, willDeny: false, guard: 0, barrier: 0, blizzardCut: 0 };
+        const clear = encounter();
+        const iced = withWeather(clear, { blizzard: 5 });
+        for (const s of [clear, iced]) {
+            const intent = buildCombatViewModel(s).enemy.intent;
+            expect(intent.type).toBe('attack');
+            expect(intent.wallMath).toEqual(zero);
+            expect(intent.damage).toBe(0);
+        }
+        // The engine still cuts the real hit; only the telegraph carries no number.
+        expect(projectIncomingThreat(iced).blizzardCut).toBeGreaterThan(0);
+    });
 });
 
 describe('selectDeadTray (A6)', () => {

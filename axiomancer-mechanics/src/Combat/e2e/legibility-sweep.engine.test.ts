@@ -81,4 +81,16 @@ describe('projectIncomingThreat — wall-math readout (phase 28)', () => {
         expect(projection.rawDamage).toBe(baseline.rawDamage); // the raw face value is unmodified…
         expect(projection.projectedDamage).toBeLessThan(baseline.projectedDamage); // …but the live projection isn't
     });
+
+    it('a phases foe projects its opening hit and is denied by PETRIFY like any other', () => {
+        const foe = (effects: ActiveEffect[]): Enemy => ({ ...makeEnemy(300, 'mind', effects), phases: FloatEye.phases });
+        const open = projectIncomingThreat(initializeCombatEncounter(makePlayer([]), foe([]), undefined, 7));
+        expect(open.willDeny).toBe(false);
+        expect(open.rawDamage).toBeGreaterThan(0);
+        expect(open.netDamage).toBeLessThanOrEqual(open.projectedDamage);
+        const denied = projectIncomingThreat(initializeCombatEncounter(makePlayer([]), foe([PETRIFY]), undefined, 7));
+        expect(denied.willDeny).toBe(true);
+        expect(denied.projectedDamage).toBe(0);
+        expect(denied.netDamage).toBe(0);
+    });
 });
