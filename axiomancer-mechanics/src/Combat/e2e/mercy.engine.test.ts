@@ -66,6 +66,7 @@ const CARDS: Card[] = [
     card('mt-radiance-neg', c => { c.radiance(-3); }),
     card('mt-mercy-0', c => c.mercy(0, { exact: true })),
     card('mt-mercy-neg', c => c.mercy(-2, { exact: true })),
+    card('mt-kill-then-mercy', c => { c.deal(40, { exact: true }); c.mercy(10); }),
 ];
 
 beforeAll(() => registerSandboxCards(CARDS));
@@ -400,6 +401,13 @@ describe('edges', () => {
         expect(programLineValue(held, 't0', false, PROGRAM_KIT)).toBeCloseTo(40 - 20, 5);
 
         expect(programLineValue(fight(['mt-mercy-10'], { foeVitae: 0 }), 't0', false, PROGRAM_KIT)).toBe(0);
+    });
+
+    it('a MERCY after the line has emptied the foe heals nothing and adds nothing', () => {
+        const r = playT(fight(['mt-kill-then-mercy'], { foeVitae: 30 }), 't0');
+        expect(r.state.enemy.health).toBe(0);
+        expect(mercyOf(r.state)).toEqual(initMercyState());
+        expect(ofKind(r.events, 'mercy-added')).toEqual([]);
     });
 
     it('the module: a 0 MERCY changes nothing; no clock never bursts; no tick event from or to no clock', () => {
