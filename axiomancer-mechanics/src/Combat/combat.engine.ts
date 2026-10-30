@@ -1612,8 +1612,12 @@ export function processBetweenPhases(
     const candidatePhase = state.threatPhases[candidateIndex];
     const rageGated = candidatePhase.unlockAfterRound !== undefined && resolvedRound < candidatePhase.unlockAfterRound;
     // HP PHASES: a `phases` foe walks its own loop, and on crossing a line
-    // enters the next phase (one per boundary) through its DANGER.
-    const phasesIndex = nextEnemyPhaseIndex(state.threatPhases, state.currentPhaseIndex, enemy);
+    // enters the next phase (one per boundary) through its DANGER. A killing
+    // blow also crosses phase lines, so a defeated enemy is excluded the same
+    // way the STAGES block above excludes it.
+    const phasesIndex = isDefeated(enemy)
+        ? null
+        : nextEnemyPhaseIndex(state.threatPhases, state.currentPhaseIndex, enemy);
     const nextIndex = phasesIndex ?? (rageGated ? state.currentPhaseIndex : candidateIndex);
     if (phasesIndex !== null) {
         const from = state.threatPhases[state.currentPhaseIndex]?.enemyMove;
