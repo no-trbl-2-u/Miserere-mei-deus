@@ -19,6 +19,12 @@
  * bursts at the start of the third foe turn from then. "1 turn left" means the
  * very next foe turn.
  *
+ * A foe is YIELDING because a card made it so (M-02b: "while the foe has
+ * MERCY, it is YIELDING"): its verb sets the flag ({@link yieldWhileMercy}),
+ * and the flag clears with the total when the MERCY bursts. It is a flag the
+ * card sets, not a reading of the total: MERCY from any other card leaves the
+ * foe as it was.
+ *
  * MERCY lives on the combat's program ledger only; it is never saved between
  * fights.
  */
@@ -55,16 +61,53 @@ export function addMercy(m: MercyState, n: number): MercyState {
     return { ...m, total: m.total + n, clock: m.clock > 0 ? m.clock : MERCY_CLOCK_TURNS };
 }
 
+/** The total clears with its clock and the YIELDING it gave (a burst). */
+export function clearMercy(m: MercyState): MercyState {
+    return { ...m, total: 0, clock: 0, yielding: false };
+}
+
 /**
- * The start of the foe's turn: the clock ticks down 1. When it runs out the
- * total bursts (`burst` is the total that bursts; the DEAL is
- * {@link MERCY_BURST_MULT} times it) and clears. No clock, no change.
+ * The clock ticks down `by` (1 at the start of the foe's turn; a card can tick
+ * it more). When it runs out the total bursts (`burst` is the total that
+ * bursts; the DEAL is {@link MERCY_BURST_MULT} times it) and clears. No clock,
+ * no change.
  */
-export function tickMercyClock(m: MercyState): { next: MercyState; burst: number } {
-    if (m.clock <= 0) return { next: m, burst: 0 };
-    const clock = m.clock - 1;
+export function tickMercyClock(m: MercyState, by = 1): { next: MercyState; burst: number } {
+    if (m.clock <= 0 || by <= 0) return { next: m, burst: 0 };
+    const clock = m.clock - by;
     if (clock > 0) return { next: { ...m, clock }, burst: 0 };
-    return { next: { ...m, total: 0, clock: 0 }, burst: m.total };
+    return { next: clearMercy(m), burst: m.total };
+}
+
+/** The foe is YIELDING while it has MERCY (M-02b): no MERCY, no change. */
+export function yieldWhileMercy(m: MercyState): MercyState {
+    return m.total > 0 && !m.yielding ? { ...m, yielding: true } : m;
+}
+
+/**
+ * Your heals this turn, as the Merciful's cards change them. Reset at the
+ * start of your turn, before the turn-start Globals fire.
+ */
+export interface HealMods {
+    /** VITAE you healed this turn (HEAL and RADIANCE; the turn-start heals included). */
+    healed: number;
+    /** Added to each of your HEAL and RADIANCE heals this turn (unscaled). */
+    plus: number;
+    /** Each of your HEAL and RADIANCE heals this turn is multiplied by this. */
+    times: number;
+    /** How many of your next HEALs this turn are RADIANCE instead. */
+    nextRadiance: number;
+    /** Every HEAL this turn is RADIANCE, and every RADIANCE deals double. */
+    allRadianceDouble: boolean;
+}
+
+export function initHealMods(): HealMods {
+    return { healed: 0, plus: 0, times: 1, nextRadiance: 0, allRadianceDouble: false };
+}
+
+/** A heal of `base` after this turn's modifiers: times, then plus. */
+export function modifiedHeal(h: HealMods, base: number): number {
+    return base * h.times + h.plus;
 }
 
 /** True when the foe is YIELDING (its befriend gate reads open). */

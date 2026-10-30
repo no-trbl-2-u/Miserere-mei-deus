@@ -69,11 +69,7 @@ test('the glyph parsers found a real table, not an empty one', () => {
  * ("a term earns a row at ~3+ cards"; one-card mechanics stay card-local)
  * makes these legitimate absences rather than drift.
  */
-const REGISTRY_WITHOUT_ATLAS_ROW = new Set([
-  // The Merciful's words (MF1c glosses them): their atlas rows are phase MF1b's
-  // (A5). Drop these three when those rows land.
-  'RADIANCE', 'MERCY', 'YIELDING',
-])
+const REGISTRY_WITHOUT_ATLAS_ROW = new Set([])
 
 /**
  * Atlas rows that deliberately gloss NOWHERE, and why. Each is a word the atlas
@@ -85,6 +81,9 @@ const ATLAS_WITHOUT_REGISTRY_ROW = new Set([
   // (MTG's rule: keyword what COMPRESSES). The atlas documents it as the
   // library's primary verb; it has no gloss because it needs none.
   'DEAL',
+  // The Merciful's word (phase MF1b): its atlas row lands with the engine; mobile has no
+  // BURST gloss.
+  'BURST',
 ])
 
 test('every keyword the atlas registers has a gloss in a live registry', () => {

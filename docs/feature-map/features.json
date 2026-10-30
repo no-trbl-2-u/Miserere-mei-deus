@@ -1187,6 +1187,12 @@
       "kind": "coupling",
       "from": "area:Combat",
       "to": "area:Cards",
+      "file": "axiomancer-mechanics/src/Combat/combat.encounter.sim.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Cards",
       "file": "axiomancer-mechanics/src/Combat/combat.encounter.types.ts"
     },
     {
