@@ -252,6 +252,7 @@ export function createEnemy(options: CreateEnemyOptions): Enemy {
 
 export { isEnemyBefriendable, befriendHpGateOpen } from './befriend';
 export type { EnemyKeyword } from './enemy-keywords';
+export { ENEMY_KEYWORDS, moveKeywords, enemyPhaseKeywords } from './enemy-keywords';
 
 export type {
     Enemy, EnemyDifficulty, EnemyMove, EnemyMoveKind, EnemyPhase,

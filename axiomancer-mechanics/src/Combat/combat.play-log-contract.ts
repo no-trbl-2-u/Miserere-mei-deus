@@ -35,7 +35,7 @@ export const COMBAT_EVENT_KINDS = [
     'radiance-struck', 'mercy-added', 'mercy-ticked', 'mercy-burst', 'cards-discarded', 'cards-retrieved', 'card-unexiled',
     'barrier-absorbed', 'riposte-fired', 'die-banked', 'die-ripened', 'resonance-gained', 'pips-cashed',
     'floating-die-spent', 'soul-gained', 'stage-entered', 'enemy-phase-entered', 'enemy-healed', 'dots-boosted', 'phase-resolved',
-    'threat-fired', 'threat-branch', 'threat-cleansed', 'hand-drawn', 'mercy-opened', 'momentum-advanced',
+    'threat-fired', 'threat-branch', 'threat-cleansed', 'enemy-word', 'hand-drawn', 'mercy-opened', 'momentum-advanced',
     'momentum-broken', 'momentum-surged', 'special-fired', 'die-overflowed', 'die-cracked',
     'coveted-die-stolen', 'combat-ended',
 ] as const satisfies readonly CombatEvent['kind'][];

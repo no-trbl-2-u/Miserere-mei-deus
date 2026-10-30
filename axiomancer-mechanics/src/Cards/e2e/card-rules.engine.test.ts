@@ -35,6 +35,8 @@ import { RESERVE_MAX, RESERVE_PIP_CAP } from '../../Combat/combat.dice';
 import { SPECIAL_CONVICTION_DEFAULT, UPGRADEABLE_DIE_COLORS } from '../../Combat/combat.upgradeable-dice';
 import { CONVICTION_CAP } from '../../Combat/combat.engine';
 import { ANVIL_VERB_PRICING } from '../../World/Blacksmith/blacksmith.engine';
+import { EnemyLibrary } from '../../Enemy/enemy.library';
+import { enemyPhaseKeywords } from '../../Enemy/enemy-keywords';
 
 const ATLAS_PATH = path.resolve(__dirname, '../../../docs/keyword-atlas.md');
 const FIXTURE_PATH = path.resolve(__dirname, 'card-rules.exemptions.json');
@@ -66,6 +68,15 @@ const NON_CARD_CARRIERS: ReadonlyMap<string, string> = new Map([
     ['WILD', `the gold die (${UPGRADEABLE_DIE_COLORS.includes('wild') ? 'wild' : 'missing'})`],
 ]);
 
+/** Enemy words by how many live foes' moves carry them (`enemyPhaseKeywords`). */
+const ENEMY_CARRIERS: ReadonlyMap<string, number> = (() => {
+    const counts = new Map<string, number>();
+    for (const enemy of EnemyLibrary) {
+        for (const k of enemyPhaseKeywords(enemy)) counts.set(k.toUpperCase(), (counts.get(k.toUpperCase()) ?? 0) + 1);
+    }
+    return counts;
+})();
+
 /** System words the admission bar skips (ballot §8). */
 const BAR_EXEMPT: ReadonlySet<string> = new Set(['CONVICTION', 'RESERVE', 'WILD', 'PIP']);
 
@@ -74,7 +85,9 @@ function allViolations(cards: readonly Card[]): CardRuleViolation[] {
         ...checkComplexityBudget(cards, CARD_KEYWORDS),
         ...checkScrapFloor(cards),
         ...checkGlobalTemplate(cards),
-        ...checkCarrierRule({ cards, atlas: ATLAS, nonCardCarriers: NON_CARD_CARRIERS, barExempt: BAR_EXEMPT }),
+        ...checkCarrierRule({
+            cards, atlas: ATLAS, nonCardCarriers: NON_CARD_CARRIERS, enemyCarriers: ENEMY_CARRIERS, barExempt: BAR_EXEMPT,
+        }),
         ...checkSpellLaw(cards),
         ...checkDiscardCost(cards),
     ];
