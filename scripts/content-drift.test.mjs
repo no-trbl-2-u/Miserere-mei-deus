@@ -69,7 +69,11 @@ test('the glyph parsers found a real table, not an empty one', () => {
  * ("a term earns a row at ~3+ cards"; one-card mechanics stay card-local)
  * makes these legitimate absences rather than drift.
  */
-const REGISTRY_WITHOUT_ATLAS_ROW = new Set([])
+const REGISTRY_WITHOUT_ATLAS_ROW = new Set([
+  // The Merciful's words (MF1c glosses them): their atlas rows are phase MF1b's
+  // (A5). Drop these three when those rows land.
+  'RADIANCE', 'MERCY', 'YIELDING',
+])
 
 /**
  * Atlas rows that deliberately gloss NOWHERE, and why. Each is a word the atlas
