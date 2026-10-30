@@ -189,11 +189,12 @@ Measure: mechanics verify; every A4 verb and read has a passing test.
   and the glossary word.
 - Verify gate: mechanics verify, root `npm test`.
 
-### MF1c — Mercy on the board · M · closes A6, A7 · requires MF1b
+### MF1c — Mercy on the board · M · closes A6, A7 · requires MF1a
 Measure: `npm run verify -w axiomancer-mobile`; a fixture fight shows the foe's MERCY total and turns left, and the sun
 and dove pills render.
 - Scope: `state/combat/keywords.ts` glosses and popups, the foe badges, log lines, card-face tokens, the sun and dove
-  glyph shapes.
+  glyph shapes. Runs beside MF1b (T, 2026-10-30): it reads only MF1a's MERCY state and events, and touches only
+  `axiomancer-mobile`; MF1b touches only `axiomancer-mechanics`.
 - Verify gate: mobile verify.
 
 ### MF1d — The Merciful cards and lane · M · closes A8, A9, A10, A11 · requires MF1b, MF1c
