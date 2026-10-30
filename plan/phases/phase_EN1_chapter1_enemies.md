@@ -260,18 +260,20 @@ Measure: the Breakwater e2e fights `bw-l1`, `bw-d1`, `bw-d3` and `bw-c1`.
 - Scope: as EN1f; the hoard and the LEDGER on the pane; `bw-c1` bound to the Tithe-Collector;
   three stand-in portraits.
 
-### EN1j — The sea cave's second elite: the Cave Choir · L · closes A14, A15 · requires EN1h
+### EN1j — The sea cave's second elite: the Cave Choir · L · closes A14, A15 · requires EN1g (beside EN1h)
 Measure: the Breakwater e2e draws each of `bw-c1`'s two elites and fights the Cave Choir through both DANGERs.
 - Scope: `Enemy/enemy.library.ts`, the pair draw in `BW_ENCOUNTER_FOES`/`poolFor` (an elite node
   may name two foes), VERSE and Antiphon's last-turn read in `combat.enemy-riders.ts`, VERSE on
   the pane, the `cave-choir` stand-in.
+- Beside EN1h (T, 2026-10-30): the two run in parallel. Whichever merges second binds `bw-c1`'s
+  pair (the Tithe-Collector and the Cave Choir); the first binds only its own foe there.
 
 ### EN1k — The lighthouse path: the Lamplighter and the Wrecker · L · closes A16, A17 · requires EN1j
 Measure: the Breakwater e2e draws each of `bw-l4`'s two elites and fights each through both DANGERs.
 - Scope: as EN1j; LIT/DARK with the intent VM's UNKNOWN override and the pane state; BAIT's
   turn-end read; `bw-l4` bound to the pair at level 7; two stand-ins.
 
-### EN1l — The keep causeway: the Toll-Keeper and the Tide-Gate · L · closes A18, A19 · requires EN1k
+### EN1l — The keep causeway: the Toll-Keeper and the Tide-Gate · L · closes A18, A19 · requires EN1j (beside EN1k)
 Measure: the Breakwater e2e draws each of `bw-w5`'s two elites, pays the toll once and fights each through both DANGERs.
 - Scope: as EN1j; TOLL with the "Pay the toll" board action through the SACRIFICE path and
   Distrain's held card; TIDE with its low-tide VULNERABLE; `bw-w5` bound to the pair at level 8;
