@@ -12,6 +12,7 @@
 | 2026-10-31 (tomorrow) | Enemy session 2: pick the L4 and W5 elites from the drafts (the Lamplighter or the Wrecker, the Toll-Keeper or the Tide-Gate) and design the sea keep's boss; the C1 elite is set (1 h) | needs you: your task | W1 |
 | 2026-10-31 (tomorrow) | Pitch Chapter 1's weapons and armor: how many of each, what each does, where each drops, and settle them (1 h) | needs you: your task | W1 |
 | 2026-11-01 (in 2 days) | W1 demo part 2: T plays the twenty cost-card candidates and rules keep or cut (2 h) | needs you: HP4e ready for you | W1 |
+| 2026-11-01 (in 2 days) | Tune Chapter 1's enemies from EN1i's table: levels (all under 10), how often each normal repeats, VITAE (1 h) | needs you: your task; the loop still owes EN1i | W1 |
 | 2026-11-02 (in 3 days) | Plot Chapter 1's L4 and W5 elites and the sea keep's boss from enemy session 2; the normals and the C1 elite are plotted (EN1) (0.5 h) | needs you: B2 ready for you | W1 |
 | 2026-11-02 (in 3 days) | Plot Chapter 1's weapons and armor from the pitch (0.5 h) | needs a plot: no build-plan rows yet | W1 |
 | 2026-11-03 (in 4 days) | Live hazard routing (each of the eleven Act 1 hazard nodes, six of them the Breakwater's, draws a random puzzle from the thirty) and the cuts (plot, 1 h) | needs a plot: no build-plan rows yet | W2 |
@@ -20,12 +21,11 @@
 | 2026-11-06 (in 7 days) | Event kind 3, rest: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (0.5 h) | needs a plot: no build-plan rows yet | W2 |
 | 2026-11-07 (in 8 days) | Pick the title plate and the four arena backgrounds (coast, forest, mountains, underworld) from your art dossier (0.5 h) | needs you: TP1b ready for you | W2 |
 | 2026-11-07 (in 8 days) | Plot the arena-background swap from your picks (0.5 h) | needs a plot: no build-plan rows yet | W2 |
-| 2026-11-08 (in 9 days) | Swap Chapter 1's enemy portraits: replace each stand-in with the most thematic portrait from your set (2 h) | needs you: your task; the loop still owes EN1e, EN1f, EN1g, EN1h | W2 |
-| 2026-11-09 (in 10 days) | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | needs you: your task; the loop still owes CH1f | W2 |
+| 2026-11-08 (in 9 days) | Swap Chapter 1's enemy portraits: replace each stand-in with the most thematic portrait from your set (2 h) | needs you: your task; the loop still owes EN1f, EN1g, EN1h | W2 |
+| 2026-11-09 (in 10 days) | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | needs you: your task; the loop still owes CH1f, MU1 | W2 |
 | 2026-11-10 (in 11 days) | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | needs you: your task | W2 |
 | 2026-11-10 (in 11 days) | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | needs you: BW1d ready for you | W2 |
 | 2026-11-11 (in 12 days) | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | needs you: your task | W2 |
 | 2026-11-12 (in 13 days) | Event kind 4, quest: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (0.5 h) | needs a plot: no build-plan rows yet | W2 |
 | 2026-11-12 (in 13 days) | Play the Defender test deck on the preview build and check the reward pool (0.5 h) | needs you: DF1f ready for you | W2 |
 | 2026-11-13 (in 14 days) | Play your quest line on the preview build and rule on its lines (0.5 h) | needs you: your task; the loop still owes BW1e | W2 |
-| 2026-11-13 (in 14 days) | Tune Chapter 1's enemies from EN1i's table: levels (all under 10), how often each normal repeats, VITAE (1 h) | needs you: your task; the loop still owes EN1i | W2 |

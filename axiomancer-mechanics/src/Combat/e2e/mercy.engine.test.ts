@@ -15,6 +15,8 @@
  *
  * The cards here are synthetic test cards in the sandbox registry; the
  * Merciful trial set itself lands in MF1d.
+ *
+ * guard-test: the `edges` describe block pins the MERCY and RADIANCE mutation survivors PR #1110 left, behaviour already on main; this PR's own change (dropping two `amt <= 0` checks a positive `n` already made unreachable) is behaviour-identical, so every new case passes unchanged on the parent by design
  */
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -31,12 +33,12 @@ import {
     PROGRAM_KIT,
 } from '../combat.engine';
 import { getSignatureSkill, signatureCastBlock } from '../combat.signature';
-import { initProgramLedger, programFoeYielding, programLineValue } from '../combat.card-program';
+import { initProgramLedger, programFoeYielding, programLineValue, programMercyFoeTurnStart } from '../combat.card-program';
 import { getDamageTakenMultiplier } from '../effects';
 import { scaleFor } from '../stat-scaling';
 import { buildCombatSummary } from '../combat.attribution';
 import {
-    addMercy, initMercyState, mercyReading, tickMercyClock, MERCY_CLOCK_TURNS, type MercyState,
+    addMercy, initMercyState, mercyReading, mercyTickEvent, tickMercyClock, MERCY_CLOCK_TURNS, type MercyState,
 } from '../combat.mercy';
 import type { CombatEncounterState, CombatEvent } from '../combat.encounter.types';
 
@@ -62,6 +64,11 @@ const CARDS: Card[] = [
     card('mt-deal-40', c => { c.deal(40, { exact: true }); }),
     card('mt-vuln', c => c.vulnerable(50, 3)),
     card('mt-filler', c => { c.guard(1, { exact: true }); }),
+    card('mt-radiance-0', c => { c.radiance(0); }),
+    card('mt-radiance-neg', c => { c.radiance(-3); }),
+    card('mt-mercy-0', c => c.mercy(0, { exact: true })),
+    card('mt-mercy-neg', c => c.mercy(-2, { exact: true })),
+    card('mt-kill-then-mercy', c => { c.deal(40, { exact: true }); c.mercy(10); }),
 ];
 
 beforeAll(() => registerSandboxCards(CARDS));
@@ -331,5 +338,86 @@ describe('A3 YIELDING', () => {
     it('a YIELDING foe without a friendshipReward stays unbefriendable', () => {
         const s = encounter(FloatEye, 1, true);
         expect(signatureCastBlock(s, getSignatureSkill(OPEN_HAND)!)).toMatch(/will not be befriended/);
+    });
+});
+
+// ── Edges the mutation report on PR #1110 named ──────────────────────────────
+
+describe('edges', () => {
+    const bodied = (s: CombatEncounterState): CombatEncounterState =>
+        ({ ...s, player: { ...s.player, baseStats: { ...s.player.baseStats, body: 10 } } });
+
+    it.each(['mt-radiance-0', 'mt-radiance-neg'])('%s does nothing and emits nothing', id => {
+        const s = fight([id], { vitae: 50 });
+        const r = playT(s, 't0');
+        expect(r.state.player.health).toBe(50);
+        expect(r.state.enemy.health).toBe(s.enemy.health);
+        expect(ofKind(r.events, 'radiance-struck')).toEqual([]);
+    });
+
+    it.each(['mt-mercy-0', 'mt-mercy-neg'])('%s adds nothing, starts no clock and emits nothing', id => {
+        const r = playT(fight([id], { foeVitae: 200 }), 't0');
+        expect(mercyOf(r.state)).toEqual(initMercyState());
+        expect(r.state.enemy.health).toBe(200);
+        expect(ofKind(r.events, 'mercy-added')).toEqual([]);
+    });
+
+    it("RADIANCE's hit and the burst are exact: Body does not scale them", () => {
+        const s = bodied(fight(['mt-radiance-5'], { vitae: 90 }));
+        expect(scaleFor(5, s.player.baseStats, 'body', 'one-shot')).toBeGreaterThan(5);
+        expect(s.enemy.health - play(s, 't0').enemy.health).toBe(5);
+        const foe = resolveThreatPhase(withMercy(bodied(fight([], { foeVitae: 300 })), { total: 10, clock: 1 }));
+        expect(ofKind(foe.events, 'mercy-burst')[0]!.amount).toBe(20);
+    });
+
+    it('a FROZEN burst emits the FROZEN expiry', () => {
+        const base = fight([], { foeVitae: 300 });
+        const frozen = withMercy({ ...base, program: { ...base.program!, el: { ...base.program!.el, frozen: true } } }, { total: 10, clock: 1 });
+        expect(resolveThreatPhase(frozen).events).toContainEqual({ kind: 'weather-changed', element: 'frozen', from: 1, to: 0 });
+    });
+
+    it('the foe-turn hook emits nothing without a clock, and only the tick with one', () => {
+        const none = fight([], { foeVitae: 300 });
+        expect(programMercyFoeTurnStart(none, PROGRAM_KIT).events).toEqual([]);
+        const ticking = withMercy(none, { total: 6, clock: 3 });
+        expect(programMercyFoeTurnStart(ticking, PROGRAM_KIT).events).toEqual([{ kind: 'mercy-ticked', total: 6, turnsLeft: 2 }]);
+        expect(resolveThreatPhase(none).events.filter(e => e.kind.startsWith('mercy'))).toEqual([]);
+    });
+
+    it('a burst that empties the foe ends the fight at once: nothing of the foe turn follows', () => {
+        const foe = resolveThreatPhase(withMercy(fight([], { foeVitae: 30 }), { total: 20, clock: 1 }));
+        const after = foe.events.slice(foe.events.findIndex(e => e.kind === 'mercy-burst') + 1).map(e => e.kind);
+        expect(after).not.toContain('phase-resolved');
+        expect(after).not.toContain('hand-drawn');
+        expect(after).not.toContain('dot-tick');
+    });
+
+    it('the witness: VULNERABLE raises a MERCY burst, a second MERCY is worth only what it adds, a defeated foe nothing', () => {
+        const vuln = play(fight(['mt-vuln', 'mt-mercy-10'], { foeVitae: 500 }), 't0');
+        const mult = getDamageTakenMultiplier(vuln.enemy);
+        expect(mult).toBeGreaterThan(1);
+        expect(programLineValue(vuln, 't1', false, PROGRAM_KIT)).toBeCloseTo(Math.min(20 * mult, 500) * 0.8 * 0.8, 5);
+
+        const held = withMercy(fight(['mt-mercy-10'], { foeVitae: 500 }), { total: 10, clock: 1 });
+        // 20 bursting next foe turn (40) less the 10 already there (20); a full foe heals nothing.
+        expect(programLineValue(held, 't0', false, PROGRAM_KIT)).toBeCloseTo(40 - 20, 5);
+
+        expect(programLineValue(fight(['mt-mercy-10'], { foeVitae: 0 }), 't0', false, PROGRAM_KIT)).toBe(0);
+    });
+
+    it('a MERCY after the line has emptied the foe heals nothing and adds nothing', () => {
+        const r = playT(fight(['mt-kill-then-mercy'], { foeVitae: 30 }), 't0');
+        expect(r.state.enemy.health).toBe(0);
+        expect(mercyOf(r.state)).toEqual(initMercyState());
+        expect(ofKind(r.events, 'mercy-added')).toEqual([]);
+    });
+
+    it('the module: a 0 MERCY changes nothing; no clock never bursts; no tick event from or to no clock', () => {
+        expect(addMercy(initMercyState(), 0)).toEqual(initMercyState());
+        expect(tickMercyClock({ total: 5, clock: 0, yielding: false })).toEqual({ next: { total: 5, clock: 0, yielding: false }, burst: 0 });
+        expect(mercyTickEvent({ total: 5, clock: 0, yielding: false }, { total: 5, clock: 2, yielding: false })).toBeNull();
+        expect(mercyTickEvent({ total: 5, clock: 1, yielding: false }, { total: 0, clock: 0, yielding: false })).toBeNull();
+        expect(mercyTickEvent({ total: 5, clock: 3, yielding: false }, { total: 5, clock: 2, yielding: false }))
+            .toEqual({ kind: 'mercy-ticked', total: 5, turnsLeft: 2 });
     });
 });
