@@ -258,6 +258,8 @@ names, and on a line here with no reason. **A row listed here is work the loop m
 undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
 
 - MF1e — T plays the Merciful test deck on a preview build after MF1d; date not set (T picks it).
+- CA2a — the Merciful's paintings; T sees them at MF1e, whose date is not set
+- CA2b — the Merciful's action names; T sees them at MF1e, whose date is not set
 - HD1b — plotted 2026-10-29; cleanup loop work, needs no time from T; date not set.
 - AT1a — plotted 2026-10-29; the DevLog atlas's data, loop work that needs no time from T; date not set.
 - AT1b — plotted 2026-10-29; the DevLog atlas page, loop work; date not set.
@@ -348,6 +350,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-30** — **the Merciful's card art plotted (CA2)** (T, in session: "When you're done, plot the merciful cards as well."). **Added** CA2a and CA2b under Unscheduled beside MF1e, T's Merciful check, which has no date yet. Nothing ticked; no date moved.
 - **2026-10-30** — **all six drafted elites plotted (EN1j-EN1l)** (T, in session on PR #1122: "Ignore all the 'settled'. There's 3 elites in that pitch and 15 enemies. I want them all", then "let's plot (to add on to the EN rows) the rest of the enemies that were suggested"). **Added** EN1j, EN1k and EN1l to the `Waits on` of the portrait swap (Nov 8); EN1i, which the tuning Item waits on, now requires EN1l. **Edited** enemy session 2 (Oct 31) and the Nov 2 B2 plot, in the Items and the MVP schedule, to the sea keep's boss alone: there is no elite pick left, since each elite node now draws one of its two drafted elites per run. Nothing ticked; no date moved.
 - **2026-10-30** — **the four MVP event kinds settled and plotted early (ET1)** (T, in the Claude Duet event-node thread, from a page of three pitched directions per kind: "Encounter A, Hazard B, Rest C (same treatment for when the sun comes up, just say "X upgraded" instead of VITAE if they pick upgrade), and quest: Giver (for now)", then "Plot it"). **Ticked** the four `needs plot` sittings it answers: encounter (Nov 4), hazard (Nov 5), rest (Nov 6) and quest (Nov 12). **Added** ET1a-ET1d to the `Waits on` of the MVP demo, the act whose "new event UI" they build. **Edited** the MVP milestone, the W2 notes and T's time (about 15 h to 12 h), the four MVP-schedule pieces (now 0 h, done Oct 30) and the hours line (Nov 4-6 freed; weeks 10, 5 and 7, about 22 h). No date moved.
 - **2026-10-30** — **background music plotted** (T, in session: uploaded the theme, "the official background music that should play uninterrupted all game (except for combat and hazards)", then `/plot`). **Added** MU1 to the `Waits on` of the Nov 9 mid-MVP check, the first preview build T plays after it ships. No date moved; nothing ticked.
