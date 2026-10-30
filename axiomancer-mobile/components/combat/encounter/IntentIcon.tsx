@@ -73,6 +73,12 @@ export function IntentIcon({ intent, onPress }: { intent: CombatIntentVM; onPres
                     {intent.branch && <Text style={[styles.pillText, { color: intent.color }]} allowFontScaling={false}>⑂</Text>}
                 </View>
             )}
+            {/* A `phases` foe names its move under the badge; an unseen DANGER has no name. */}
+            {intent.moveName ? (
+                <Text style={[styles.moveName, { color: intent.color }]} testID="combat-intent-name" allowFontScaling={false} numberOfLines={1}>
+                    {intent.moveName}
+                </Text>
+            ) : null}
             {blizzardLine ? (
                 <Text style={[styles.wallMathBlizzard, { color: INTENT_BLIZZARD_COLOR }]} testID="combat-intent-blizzard" allowFontScaling={false}>
                     {blizzardLine}
@@ -103,5 +109,6 @@ const useStyles = makeStyles((AXM) => ({
     debuffMark: { fontFamily: FONTS.sans, fontSize: 10, color: HUE.tickPurple },
     wallMathDenied: { fontFamily: FONTS.sans, fontSize: 9, color: HUE.goldAccent, marginTop: 1, letterSpacing: 0.5 },
     wallMathBlizzard: { fontFamily: FONTS.mono, fontSize: 9, marginTop: 1 },
+    moveName: { fontFamily: FONTS.sans, fontSize: 9, marginTop: 2, letterSpacing: 0.4, maxWidth: 96 },
     wallMathNet: { fontFamily: FONTS.mono, fontSize: 9, color: HUE.stoneGrey, marginTop: 1 },
 }));

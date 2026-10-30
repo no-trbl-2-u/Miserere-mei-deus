@@ -239,7 +239,13 @@ export type CombatIntentType =
     | 'buff'       // only enemy self-heal / self-buff
     | 'block'      // a defensive / damage-reduction effect on the enemy
     | 'pass'       // no effects (damage 0, no effectId)
-    | 'combo';     // multiple types at once
+    | 'combo'      // multiple types at once
+    // The telegraph kinds of a foe that declares `phases`: a kind, never a number.
+    | 'attack'
+    | 'defend'
+    | 'status'
+    | 'danger'
+    | 'unknown';
 
 /**
  * A threat branch's authored

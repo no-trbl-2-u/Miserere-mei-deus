@@ -12,7 +12,7 @@
  * can move enemy stats without re-authoring the sequences.
  */
 
-import type { Enemy, EnemyMove } from '../Enemy/types';
+import type { Enemy, EnemyMove, EnemyMoveKind } from '../Enemy/types';
 import { PHASES_AUTHORED_LEVEL, enemyPhaseTarget, enemyPhaseTier, hasEnemyPhases } from '../Enemy/enemy-phases';
 import { lookupEffect } from '../Effects/effects.library';
 import type {
@@ -182,8 +182,14 @@ function effectIsDebuff(eff: CombatThreatEffect): boolean {
 /**
  * Derives the enemy's INTENT type from a threat action's effects.
  * Damage + a debuff, or damage + self-heal, etc. → `combo`. Pure.
+ * A `phases` foe's move passes its declared `kind`: that kind is the intent
+ * (attack, defend, status, danger or unknown), whatever its effects add up to.
  */
-export function deriveIntentType(effects: readonly CombatThreatEffect[]): CombatIntentType {
+export function deriveIntentType(
+    effects: readonly CombatThreatEffect[],
+    kind?: EnemyMoveKind,
+): CombatIntentType {
+    if (kind) return kind;
     const hasDamage = effects.some(e => (e.damage ?? 0) > 0);
     // `enemyCleanse` counts toward `hasDebuff`: shedding its OWN afflictions
     // erases the player's invested DoT work — counterplay against the player,
@@ -386,6 +392,7 @@ export function resolveEnemyPhases(enemy: Enemy): CombatThreatPhase[] {
             index: out.length + 1,
             threatAction: moveThreatAction(move, level, authoredLevel),
             isFinalPhase: false,
+            intentType: deriveIntentType([], danger ? 'danger' : move.kind),
             enemyMove: { phase, step, danger, name: move.name, kind: danger ? 'danger' : move.kind },
         }));
     };

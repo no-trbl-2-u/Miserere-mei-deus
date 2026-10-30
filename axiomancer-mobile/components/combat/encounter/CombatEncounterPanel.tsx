@@ -32,7 +32,7 @@ import {
     startTurn, endTurn, discardCombatCard, playSignatureSkill,
     getFloatingDiceColors,
     selectEncounterMercyChoice, buildCombatSummary,
-    getLogger,
+    getLogger, enemySlugOf, hasDefeatedEnemy,
     type CombatEncounterState, type CombatOutcome, type Character, type Enemy, type CombatEvent,
     type Equipment, type GameState, type PlayLogUiEventKind,
 } from '@mechanics';
@@ -48,7 +48,7 @@ import { Image } from '@/lib/platform/image';
 import { fightRecorder } from '@/lib/fightRecorder';
 import { getEncounterEnemyArt } from '@/assets/images/enemies';
 import {
-    INTENT_ICONS, buildCombatViewModel, rewardCardVMs, STANCE_COLORS, threatPhaseHeader,
+    INTENT_ICONS, buildCombatViewModel, rewardCardVMs, STANCE_COLORS, threatPhaseHeader, telegraphName,
     selectCombatLogHistory, signatureInfoLines, COMBAT_LOG_TOGGLE_TEXT, COMBAT_LOG_TOGGLE_A11Y, COMBAT_LOG_CLOSE_A11Y, COMBAT_LOG_BACK_TEXT,
     type CombatCardVM, type CombatEffectChipVM, type CombatSignatureVM,
 } from '@/state/presenters/combat-encounter.engine';
@@ -434,7 +434,10 @@ export function CombatEncounterPanel({
     );
 
     const live = state ?? initial;
-    const vm = useMemo(() => buildCombatViewModel(live), [live]);
+    // The foe's DANGER names show only once the save records it beaten.
+    const enemySlug = enemySlugOf(live.enemy);
+    const beaten = useGameState((s) => (enemySlug ? hasDefeatedEnemy(s, enemySlug) : false));
+    const vm = useMemo(() => buildCombatViewModel(live, beaten), [live, beaten]);
 
     // ── momentum chain — `vm.momentumV2` is read
     // straight off engine state; the panel owns only the how-it-works popup. ──
@@ -792,7 +795,7 @@ export function CombatEncounterPanel({
                             // chevron) is always present and is the whole touch
                             // target; the threat text only mounts when open.
                             const open = openThreatPhases.has(p.index);
-                            const header = threatPhaseHeader(p);
+                            const header = threatPhaseHeader(p, beaten);
                             return (
                                 <View key={i} style={styles.revealPhase}>
                                     <Pressable
@@ -824,7 +827,9 @@ export function CombatEncounterPanel({
                                                 </Text>
                                             </View>
                                         ) : (
-                                            <Text style={styles.revealPhaseText}>{p.threatAction.description}</Text>
+                                            <Text style={styles.revealPhaseText}>
+                                                {p.enemyMove ? (telegraphName(p, beaten) ?? 'Its name is not yet known.') : p.threatAction.description}
+                                            </Text>
                                         )) : null}
                                     </View>
                                 </View>
