@@ -16,9 +16,9 @@
 | 2026-11-02 (in 3 days) | Plot Chapter 1's L4 and W5 elites and the sea keep's boss from enemy session 2; the normals and the C1 elite are plotted (EN1) (0.5 h) | needs you: B2 ready for you | W1 |
 | 2026-11-02 (in 3 days) | Plot Chapter 1's weapons and armor from the pitch (0.5 h) | needs a plot: no build-plan rows yet | W1 |
 | 2026-11-03 (in 4 days) | Live hazard routing (each of the eleven Act 1 hazard nodes, six of them the Breakwater's, draws a random puzzle from the thirty) and the cuts (plot, 1 h) | needs a plot: no build-plan rows yet | W2 |
-| 2026-11-04 (in 5 days) | Event kind 1, encounter: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (1 h) | needs a plot: no build-plan rows yet | W2 |
-| 2026-11-05 (in 6 days) | Event kind 2, hazard: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (1 h) | needs a plot: no build-plan rows yet | W2 |
-| 2026-11-06 (in 7 days) | Event kind 3, rest: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (0.5 h) | needs a plot: no build-plan rows yet | W2 |
+| 2026-11-04 (in 5 days) | Event kind 1, encounter: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it; settled early on Oct 30 (the ink curtain) and plotted as ET1a (1 h) | needs a plot: no build-plan rows yet | W2 |
+| 2026-11-05 (in 6 days) | Event kind 2, hazard: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it; settled early on Oct 30 (the stakes card) and plotted as ET1b (1 h) | needs a plot: no build-plan rows yet | W2 |
+| 2026-11-06 (in 7 days) | Event kind 3, rest: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it; settled early on Oct 30 (night passes) and plotted as ET1c (0.5 h) | needs a plot: no build-plan rows yet | W2 |
 | 2026-11-07 (in 8 days) | Pick the title plate and the four arena backgrounds (coast, forest, mountains, underworld) from your art dossier (0.5 h) | needs you: TP1b ready for you | W2 |
 | 2026-11-07 (in 8 days) | Plot the arena-background swap from your picks (0.5 h) | needs a plot: no build-plan rows yet | W2 |
 | 2026-11-08 (in 9 days) | Swap Chapter 1's enemy portraits: replace each stand-in with the most thematic portrait from your set (2 h) | needs you: your task; the loop still owes EN1f, EN1g, EN1h | W2 |
@@ -26,6 +26,6 @@
 | 2026-11-10 (in 11 days) | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | needs you: your task | W2 |
 | 2026-11-10 (in 11 days) | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | needs you: BW1d ready for you | W2 |
 | 2026-11-11 (in 12 days) | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | needs you: your task | W2 |
-| 2026-11-12 (in 13 days) | Event kind 4, quest: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (0.5 h) | needs a plot: no build-plan rows yet | W2 |
+| 2026-11-12 (in 13 days) | Event kind 4, quest: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it; settled early on Oct 30 (the giver scene) and plotted as ET1d (0.5 h) | needs a plot: no build-plan rows yet | W2 |
 | 2026-11-12 (in 13 days) | Play the Defender test deck on the preview build and check the reward pool (0.5 h) | needs you: DF1f ready for you | W2 |
 | 2026-11-13 (in 14 days) | Play your quest line on the preview build and rule on its lines (0.5 h) | needs you: your task; the loop still owes BW1e | W2 |
