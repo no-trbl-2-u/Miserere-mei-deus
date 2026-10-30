@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-10-30 at commit 0f0727a8
-> Pass count: 112
+> Last pass: 2026-10-30 at commit 594a0d81
+> Pass count: 113
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
@@ -1015,6 +1015,24 @@
 > the hub's "tap a trodden one", the quest pay's two cases.
 
 ## Pending
+
+### [MED] combat / phases foe — the preview and board number each loop move as a "PHASE", so Float-Eye reads as an 8-step fight whose DANGER lands on turn 5, where the rule gives it 2 phases and a DANGER at 30%
+- pass: 113 (commit 594a0d81)
+- viewport: mobile (375x812) and desktop (1280x800)
+- category: comprehension
+- observation: since EN1a/EN1f, Float-Eye is a `phases` foe: it loops Long Look, Afterimage, Shut Lid and Stare until its VITAE crosses 30%, then plays its DANGER and loops its second phase (D116; brief `phase_EN1_chapter1_enemies.md`, "normals 2 phases"). The screens instead show the engine's flat move list as numbered phases. The THREAT SEQUENCE preview lists "PHASE 1 · ATTACK · LONG LOOK" through "PHASE 8 · STATUS · STARE", with "PHASE 5 · DANGER" in the middle as though it were the fifth turn. The board header reads "PHASE 1/8 · ROUND 1 · TURN 1", and the dock ledger under VITAE draws 8 pips. A first-time player plans around a DANGER on turn 5 and a fight that ends at phase 8. In fact the loop repeats, so the header goes back to "PHASE 1/8" after Stare, and the DANGER fires only when the foe reaches its HP line. The word "phase" now means two different things on one screen.
+- evidence: `.critique-artifacts/mobile/03-combat.png`, `desktop/03-combat.png` (8 rows, DANGER at row 5); `mobile/04-combat-board.png` (header "PHASE 1/8", 8 ledger pips); `axiomancer-mechanics/src/Combat/combat.threat.ts:404-424` (`resolveEnemyPhases` flattens the loops plus DANGERs, numbering `index: out.length + 1`) and `:434` (`nextEnemyPhaseIndex` loops and jumps); `axiomancer-mobile/state/presenters/combat-encounter.engine.ts:1058` (`PHASE ${phase.index}`) and `:2317-2320` (`PHASE ${idx + 1}/${total}`).
+- suggested fix: for a `phases` foe, label from `enemyMove`, not the list index. Group the preview under one header per real phase ("PHASE 1 · loops", then "PHASE 2 · below 30%" led by its DANGER row), and have the board header and ledger count `enemyMove.phase + 1` of the foe's phase count. Leave the boss and deck foes on today's labels. Presentation only, no number shown (A4); pin it in `threat-phase-header.test.ts` and `combat-encounter.screen.test.tsx`.
+- source: critique:drive (unattended)
+
+### [LOW] combat preview — a `phases` foe's threat rows open to repeat the move name already in the header, and an unbeaten DANGER row opens to nothing
+- pass: 113 (commit 594a0d81)
+- viewport: mobile (375x812) and desktop (1280x800)
+- category: comprehension
+- observation: on the Float-Eye preview, the first row is open by default. Under "PHASE 1 · ATTACK · LONG LOOK" its body says only "Long Look". Every row keeps its chevron and "tap to read this phase" hint, but once the EN1 telegraph drops the numbers (A4), a `phases` move has nothing more to read. The unbeaten DANGER row (A5) expands to an empty body. So the accordion promises detail it no longer has, and the open first row costs a line of the fold on a screen whose ENTER COMBAT button is already below it at both sizes.
+- evidence: `.critique-artifacts/mobile/03-combat.png` and `desktop/03-combat.png` (row 1 body "Long Look"); `axiomancer-mobile/components/combat/encounter/CombatEncounterPanel.tsx:799-833` (the `p.enemyMove` branch renders `moveName` or `null`).
+- suggested fix: for an `enemyMove` row, drop the chevron, the open state and the hint, and render it as a static header, keeping the branch and deck-foe rows as accordions. Pin it in `combat-encounter.screen.test.tsx`. Presentation only, no new copy.
+- source: critique:drive (unattended)
 
 ### [LOW] satchel — the purse prints "⚜ 75", a currency mark no other screen uses, and the PURSE and BURDEN · STONE labels are typed into the screen
 - pass: 112 (commit 0f0727a8)
