@@ -2135,7 +2135,9 @@ export function projectIncomingThreat(state: CombatEncounterState): {
     // The foe's hit goes through the SAME `soakFlatHit` the engine
     // applies. RIPOSTE stays outside the helper (a one-shot parry on the foe's
     // own swing), applied first as the engine does.
-    remaining = soakFlatHit(remaining, { guard, barrier }).dealt;
+    // A half-guard rider (Swing) lets only half your GUARD count, as the engine soaks it.
+    const countedGuard = Math.floor(guard * riderGuardShare(phase.threatAction.rider));
+    remaining = soakFlatHit(remaining, { guard: countedGuard, barrier }).dealt;
 
     return {
         rawDamage, projectedDamage, willDeny, guard, barrier, netDamage: remaining, blizzardCut,
