@@ -1238,7 +1238,7 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
     // WARD and BRINE run out at the start of the foe's turn, before anything
     // else, so nothing at its turn start meets the old WARD.
     const faded = enemyWordsFoeTurnStart(stateIn);
-    let state = plan.riders ? { ...faded.state, enemyRiders: plan.riders } : faded.state;
+    let state = faded.state;
     // LEECH drains the foe at the start of its turn, before it acts.
     const leech = programFoeTurnStart(state);
     const leechEvents = [...faded.events, ...leech.events];
@@ -1290,6 +1290,10 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
     // Enemy-borne outgoing-damage statuses (QUARTER) dampen its telegraphed hit.
     const enemyOutgoingMult = getOutgoingDamageMult(state.enemy);
     const hindered = !act.canAct;
+    // The rider's cashed state (a delayed hit spent, an armed bonus spent into
+    // this move's hits) only takes effect once the move actually fires below —
+    // a hindered turn never cashes it, so it carries to the foe's next real turn.
+    if (!hindered && plan.riders) state = { ...state, enemyRiders: plan.riders };
 
     let player = state.player;
     let enemy = state.enemy;
