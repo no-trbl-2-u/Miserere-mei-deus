@@ -31,7 +31,7 @@ import {
     PROGRAM_KIT,
 } from '../combat.engine';
 import { getSignatureSkill, signatureCastBlock } from '../combat.signature';
-import { programFoeYielding, programLineValue } from '../combat.card-program';
+import { programFoeYielding, programIllegalReason, programLineValue } from '../combat.card-program';
 import { playSimPhase, type CombatCardUsage } from '../combat.encounter.sim';
 import { getDamageTakenMultiplier } from '../effects';
 import { clearMercy, initMercyState, tickMercyClock, yieldWhileMercy, type MercyState } from '../combat.mercy';
@@ -597,5 +597,60 @@ describe('the sim witness ranks a card that opts in by what its lines are worth'
     it('a die is not spent on a witnessed card whose PAID line gains nothing', () => {
         const usage = usageOf(['mv-dud']);
         expect(usage['mv-dud']?.bottomPlays ?? 0).toBe(0);
+    });
+});
+
+describe('probes leave the fight untouched, and the no-op edges hold', () => {
+    const PROBED = ['mv-burst', 'mv-tick-5', 'mv-yield', 'mv-plus-3', 'mv-times-2', 'mv-next-radiance', 'mv-all-radiance',
+        'mv-max-4', 'mv-full', 'mv-weaken-3', 'mv-return-2', 'mv-heal-5', 'mv-radiance-2'];
+
+    it('valuing or legality-checking a line never changes the state it reads', () => {
+        const base = play(play(fight(['mv-mercy-10', 'mv-mercy-5', ...PROBED], { vitae: 50, foeVitae: 200 }), 't0'), 't1');
+        const before = JSON.stringify(base);
+        for (let i = 0; i < PROBED.length; i++) {
+            const uid = `t${i + 2}`;
+            programLineValue(base, uid, false, PROGRAM_KIT);
+            programLineValue(base, uid, true, PROGRAM_KIT);
+            programIllegalReason(base, uid, false, PROGRAM_KIT);
+            programIllegalReason(base, uid, true, PROGRAM_KIT);
+        }
+        expect(JSON.stringify(base)).toBe(before);
+        expect(base.program!.mercyCards).toEqual(['mv-mercy-10', 'mv-mercy-5']);
+    });
+
+    it('a zero heal heals nothing and says nothing', () => {
+        const zero = card('mv-zero', c => { c.heal(0, { exact: true }); c.radiance(0); c.mercy(0); c.maxVitae(0); c.healsPlus(0); c.healsTimes(1); });
+        registerSandboxCards([zero]);
+        const s = { ...fight([], { vitae: 50 }), hand: [{ uid: 'z', cardId: 'mv-zero' }] };
+        const r = playT(s, 'z');
+        expect(r.events.filter(e => ['player-healed', 'radiance-struck', 'mercy-added'].includes(e.kind))).toEqual([]);
+        expect(r.state.player.maxHealth).toBe(100);
+        expect(r.state.program!.heals).toMatchObject({ plus: 0, times: 1 });
+    });
+
+    it('a tick of nothing changes nothing; a tick needs a running clock', () => {
+        const zero = card('mv-tick-0', c => { c.tickMercy(0); c.tickMercy(-1); });
+        registerSandboxCards([zero]);
+        const s = play(fight(['mv-mercy-10'], { foeVitae: 200 }), 't0');
+        const noClock = { ...withMercy(s, { clock: 0 }), hand: [{ uid: 'z', cardId: 'mv-tick-5' }] };
+        const r = playT(noClock, 'z');
+        expect(r.events.filter(e => e.kind === 'mercy-ticked' || e.kind === 'mercy-burst')).toEqual([]);
+        const r0 = playT({ ...s, hand: [{ uid: 'y', cardId: 'mv-tick-0' }] }, 'y');
+        expect(mercyOf(r0.state)).toMatchObject({ total: 10, clock: 3 });
+    });
+
+    it('a heal modifier counts only what the heal restores at max VITAE', () => {
+        const s = play(fight(['mv-times-2', 'mv-heal-5'], { vitae: 96 }), 't0');
+        const r = playT(s, 't1');
+        expect(r.state.player.health).toBe(100);
+        expect(r.state.program!.heals!.healed).toBe(4);
+    });
+
+    it('returning n of 0 returns nothing', () => {
+        const zero = card('mv-return-0', c => c.returnMercyCards(0));
+        registerSandboxCards([zero]);
+        const s = play(fight(['mv-mercy-5'], { foeVitae: 200 }), 't0');
+        const r = playT({ ...s, hand: [{ uid: 'y', cardId: 'mv-return-0' }] }, 'y');
+        expect(ofKind(r.events, 'cards-retrieved')).toEqual([]);
     });
 });
