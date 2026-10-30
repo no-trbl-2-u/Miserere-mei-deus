@@ -21,6 +21,7 @@ import { ENEMY_CARD_LIBRARY, type EnemyCardFace } from '../../Combat/combat.enem
 import { ENEMY_DECKS, deckCardIds } from '../../Combat/combat.enemy-decks';
 import { getThreatSequence } from '../../Combat/combat.threat';
 import { getNodeEventPool } from '../../World';
+import { BW_ELITE_DRAWS } from '../../World/MapEvents/content';
 import * as engine from '../../Combat/combat.engine';
 import * as mechanics from '../../index';
 
@@ -38,15 +39,18 @@ describe('the R2 roster', () => {
             .toEqual([
                 'brine-widow', 'cave-choir', 'crane-hook', 'curfew-ringer', 'death-beholder', 'float-eye', 'gallows-crow',
                 'green-jelly', 'lamprey-knot', 'net-mender', 'sandbag',
+                'tide-gate', 'toll-keeper',
             ]);
         expect(EnemyLibrary.map(e => e.id)).toEqual([
             'enemy-float-eye', ...CHAPTER1_IDS, 'enemy-green-jelly', 'enemy-curfew-ringer',
             'enemy-cave-choir',
+            'enemy-toll-keeper', 'enemy-tide-gate',
             'enemy-death-beholder',
         ]);
         expect([...LIVE_ENEMY_IDS].sort())
             .toEqual([
                 ...SURVIVOR_IDS, ...CHAPTER1_IDS, 'enemy-curfew-ringer', 'enemy-cave-choir', ENEMY_REGISTRY.sandbag.id,
+                'enemy-toll-keeper', 'enemy-tide-gate',
             ].sort());
     });
 
@@ -122,8 +126,16 @@ describe('the R2 Act 1 pools and pins (D61)', () => {
         expect(ENEMY_REGISTRY[payload.enemySlug as keyof typeof ENEMY_REGISTRY].difficulty).toBe('boss');
     });
 
-    it.each(ACT1)('$map pins the Green Jelly mid-region ($elite), staged as an elite there', ({ continent, map, elite }) => {
+    it.each(ACT1)('$map pins the Green Jelly mid-region ($elite), staged as an elite there, or its own draw', ({ continent, map, elite }) => {
         const payload = encounterAt(continent, map, elite) as { enemySlug?: string; isBoss?: boolean; difficulty?: string };
+        // A Breakwater elite node with a `BW_ELITE_DRAWS` row draws its own elites (EN1j on).
+        const draw = map === 'breakwater' ? BW_ELITE_DRAWS[elite] : undefined;
+        if (draw) {
+            expect(payload.enemySlug).toBe(draw[0]!.slug);
+            expect(payload.isBoss ?? false).toBe(false);
+            expect(ENEMY_REGISTRY[draw[0]!.slug].difficulty).toBe('elite');
+            return;
+        }
         expect(payload.enemySlug).toBe('green-jelly');
         expect(payload.isBoss ?? false).toBe(false);
         expect(payload.difficulty).toBe('elite');

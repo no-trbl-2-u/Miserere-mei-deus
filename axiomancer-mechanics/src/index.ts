@@ -93,6 +93,9 @@ export {
     GLOBAL_FREE_TURNS, DISCARD_SHORTFALL_REASON,
     programFaceText, GLOBAL_TRIGGER_TEXT,
     LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER,
+    // The keep causeway (phase EN1l): the toll, TOLL and TIDE
+    payTheToll, tollPayBlock, tollPayShortfall, tollPayCost, TOLL_SOURCE,
+    tollOwed, tideOf, carriesToll, carriesTide, TIDE_MAX, LOW_TIDE, LOW_TIDE_VULNERABLE_PCT,
     // Card rewards and the starting deck
     COMBAT_REWARD_POOL, STARTING_CARD_IDS, rollCombatCardRewards, rewardPoolFor, addRewardCard,
     // The reward rule: worn relics' lanes feed the pool and the lane slots

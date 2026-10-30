@@ -66,7 +66,8 @@ export function restOutcomeHealChip(healed: number): string {
  * @example restEliteReturnLine('Green Jelly', 'The North Pier') // 'The Green Jelly is back at The North Pier.'
  */
 export function restEliteReturnLine(foeName: string, place: string): string {
-    return `The ${foeName} is back at ${place}.`;
+    // A name that already carries its article (The Toll-Keeper) keeps just the one.
+    return `The ${foeName.replace(/^The /, '')} is back at ${place}.`;
 }
 
 export function restOutcomeUpgradedChip(fromName: string, toName: string): string {

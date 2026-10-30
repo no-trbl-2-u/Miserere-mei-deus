@@ -48,7 +48,10 @@ export function act1FightLedger(): Act1Fight[] {
         const fights: Act1Fight[] = [];
         for (const node of getMapDefinition(continent, map).nodes) {
             const pool = getNodeEventPool(continent, map, node.id);
-            for (const entry of pool?.entries ?? []) {
+            // A node is one fight: an elite node that draws one of two foes
+            // (same level and tier) counts its first.
+            const entry = (pool?.entries ?? []).find(e => e.payload.kind === 'encounter' && e.payload.enemySlug);
+            if (entry) {
                 const payload = entry.payload;
                 if (payload.kind !== 'encounter' || !payload.enemySlug) continue;
                 fights.push({

@@ -15,20 +15,23 @@ import { BW_ELITE_LEVEL, BW_ENCOUNTER_FOES } from '../MapEvents/content';
 import { createNewGameState } from '../../Game/game.reducer';
 import type { GameState } from '../../Game/types';
 import { ENEMY_REGISTRY } from '../../Enemy/enemy.library';
-import { initializeCombatEncounter, rollEncounterDice, resolveThreatPhase } from '../../Combat/combat.engine';
+import {
+    initializeCombatEncounter, payTheToll, rollEncounterDice, resolveThreatPhase, startTurn, TOLL_SOURCE,
+} from '../../Combat/combat.engine';
+import { tollOwed } from '../../Combat/combat.enemy-riders';
 import type { CombatEncounterState, CombatEvent } from '../../Combat/combat.encounter.types';
 
 const rng = (): number => 0.5;
 
 /** The node's fight, answered where the map would answer it. */
-function fightAt(nodeId: string): CombatEncounterState {
+function fightAt(nodeId: string, poolRng: () => number = rng): CombatEncounterState {
     const fresh = createNewGameState({ startMap: 'breakwater' });
     const state: GameState = {
         ...fresh,
         player: { ...fresh.player, health: 5000, maxHealth: 5000 },
         world: { ...fresh.world, currentMap: { ...fresh.world.currentMap, currentNode: nodeId } },
     };
-    const { event } = resolveMapEvent(state, rng);
+    const { event } = resolveMapEvent(state, poolRng);
     expect(event.kind, nodeId).toBe('encounter');
     if (event.kind !== 'encounter') throw new Error(nodeId);
     const foe = event.encounter.enemies[0]!;
@@ -99,11 +102,51 @@ describe('the sea cave draws the Cave Choir, which fires both its DANGERs at its
     });
 });
 
+describe('the keep causeway draws the Toll-Keeper or the Tide-Gate, each firing both its DANGERs (phase EN1l)', () => {
+    /** The causeway's fight with the map's pool roll drawing `slug`. */
+    const drawn = (slug: 'toll-keeper' | 'tide-gate'): CombatEncounterState => {
+        for (const roll of [0.1, 0.3, 0.5, 0.7, 0.9]) {
+            const s = fightAt('bw-w5', () => roll);
+            if (s.enemy.id === ENEMY_REGISTRY[slug].id) return s;
+        }
+        throw new Error(`bw-w5 never drew ${slug}`);
+    };
+
+    it.each([
+        ['toll-keeper', 'Compound Interest', 'Seize the Causeway'],
+        ['tide-gate', 'Spring Tide', 'The Gate Opens'],
+    ] as const)('bw-w5 draws %s', (slug, sixty, thirty) => {
+        let s = drawn(slug);
+        const source = ENEMY_REGISTRY[slug];
+        expect(s.enemy).toMatchObject({ id: source.id, difficulty: 'elite', level: 8 });
+        if (slug === 'toll-keeper') {
+            // A foe turn raises the TOLL to 1; the player pays it once, a SACRIFICE 1.
+            s = startTurn(resolveThreatPhase(s, rng).state, rng).state;
+            expect(tollOwed(s)).toBe(1);
+            const paid = payTheToll(s);
+            expect(paid.events).toContainEqual({ kind: 'vitae-sacrificed', cardId: TOLL_SOURCE, amount: 1, counted: 1 });
+            expect(paid.state.player.health).toBe(s.player.health - 1);
+            expect(tollOwed(paid.state)).toBe(0);
+            s = paid.state;
+        }
+        for (const [phase, line, danger] of [[1, 0.6, sixty], [2, 0.3, thirty]] as const) {
+            const crossed = resolveThreatPhase({ ...s, enemy: { ...s.enemy, health: Math.floor(s.enemy.maxHealth * line) } }, rng);
+            expect(crossed.events).toContainEqual({ kind: 'enemy-phase-entered', enemyId: source.id, phase, danger });
+            s = crossed.state;
+            expect(telegraph(s)).toMatchObject({ phase, danger: true, kind: 'danger', name: danger });
+            const res = resolveThreatPhase(s, rng);
+            expect(fired(res.events)[0]).toMatch(new RegExp(`^${danger}: `));
+            expect(telegraph(res.state)).toMatchObject({ phase, step: 0, danger: false });
+            s = res.state;
+        }
+    });
+});
+
 describe('the other elite slots still hold the Green Jelly, staged as an elite', () => {
     // The Green Jelly is a normal on its own; the elite nodes stage it at the
     // elite tier until their own foes land, so the elite reward, respawn and
     // phase lines keep working there.
-    it.each(['bw-l4', 'bw-w5'])('%s', (nodeId) => {
+    it.each(['bw-l4'])('%s', (nodeId) => {
         const s = fightAt(nodeId);
         expect(s.enemy.id).toBe(ENEMY_REGISTRY['green-jelly'].id);
         expect(s.enemy.difficulty).toBe('elite');

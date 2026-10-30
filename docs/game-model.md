@@ -309,6 +309,15 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
   telegraphs UNKNOWN and answers your last turn. An elite node names one foe
   or two in `BW_ELITE_DRAWS` (`World/MapEvents/content.ts`); with two, the
   map's seeded pool roll draws one on arrival, 50/50.
+- **The Toll-Keeper and the Tide-Gate:** level 8, elites with three HP phases
+  (EN1l), drawn 50/50 at the keep causeway (`bw-w5`). The Toll-Keeper's TOLL
+  (fight state on its pane) rises 1 each foe turn and its Levy adds it to the
+  hit; on your turn "Pay the toll (n)" pays it as a SACRIFICE equal to the
+  TOLL through the card-program path (WAIVE, TETHER and the SACRIFICE Globals
+  apply; refused when your VITAE is not above it), resets it to 0 and returns
+  every card Distrain took. It is not a card play. The Tide-Gate's TIDE (0 to
+  5) rises 1 each foe turn, 2 in its third phase, and at TIDE 0-1 the gate is
+  VULNERABLE 25%; its two DANGERs set the TIDE to 5 and to 0.
 - **The Death Beholder:** boss, 320 VITAE at level 8, two stages (at 60% and
   25% VITAE). It holds every region's door, pinned at level 1, 2, 3 and 4
   (`World/MapEvents/content.ts`); `scaleEnemyToLevel` scales its VITAE to

@@ -94,9 +94,10 @@ describe.each(ACT1_MAPS)('Act 1 fights on %s / %s (D30, D61)', (continent, mapNa
         expect(eliteRelicDropsAt(continent, mapName, elites[0]!)).toBeUndefined();
     });
 
-    it('pins the elite to an Act 1 level', () => {
-        const elite = fights.find(f => f.difficulty === 'elite')!;
-        expect(elite.payload.level).toBeGreaterThanOrEqual(2);
-        expect(elite.payload.level).toBeLessThanOrEqual(4);
+    it('pins each elite to an Act 1 level (T\'s Breakwater table: under level 10)', () => {
+        for (const elite of fights.filter(f => f.difficulty === 'elite')) {
+            expect(elite.payload.level, elite.node.id).toBeGreaterThanOrEqual(2);
+            expect(elite.payload.level, elite.node.id).toBeLessThan(10);
+        }
     });
 });

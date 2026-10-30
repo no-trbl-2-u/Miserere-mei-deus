@@ -33,7 +33,7 @@ describe('eliteReturnLines (A5)', () => {
     it('names the foe and the place as the map screen names it, current region first', () => {
         expect(eliteReturnLines(actWorld())).toEqual([
             'The Green Jelly is back at The Ruined Chapel.',
-            'The Green Jelly is back at The Keep Causeway.',
+            'The Toll-Keeper is back at The Keep Causeway.',
             'The Green Jelly is back at The Root Graveyard.',
         ]);
     });
@@ -43,12 +43,14 @@ describe('eliteReturnLines (A5)', () => {
         expect(eliteReturnLines(null)).toEqual([]);
         const retired = retireEliteNode(actWorld(), 'bc-8');
         expect(eliteReturnLines(retired)).toEqual([
-            'The Green Jelly is back at The Keep Causeway.',
+            'The Toll-Keeper is back at The Keep Causeway.',
             'The Green Jelly is back at The Root Graveyard.',
         ]);
     });
 
     it('the copy line', () => {
         expect(restEliteReturnLine('Green Jelly', 'The North Pier')).toBe('The Green Jelly is back at The North Pier.');
+        // A name that already carries its article keeps one (phase EN1l).
+        expect(restEliteReturnLine('The Toll-Keeper', 'The Keep Causeway')).toBe('The Toll-Keeper is back at The Keep Causeway.');
     });
 });

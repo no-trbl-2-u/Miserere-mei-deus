@@ -1838,6 +1838,43 @@ export function programArmSacrifice(state: CombatEncounterState, redirect: Sacri
 }
 
 /**
+ * What a SACRIFICE n outside any card line would cost you right now, after
+ * the turn's modifiers (a WAIVE makes it 0, a doubling doubles it). Pure.
+ */
+export function programSacrificeCost(state: CombatEncounterState, n: number, kit: ProgramKit): number {
+    const l = cloneLedger(state.program ?? initProgramLedger());
+    const w: Work = { s: { ...state, program: l }, l, events: [], kit, cost: 0, value: 0 };
+    new LineCtx(w, 'cost', { cardId: '', waived: false }).sacrifice(n);
+    return w.cost;
+}
+
+/**
+ * The SACRIFICE floor for a SACRIFICE n outside any card line: what it costs
+ * and the VITAE you hold when paying would leave you below 1, else null.
+ */
+export function programSacrificeShortfall(state: CombatEncounterState, n: number, kit: ProgramKit): ProgramShortfall | null {
+    return floorShortfall(state.player.health, programSacrificeCost(state, n, kit));
+}
+
+/**
+ * A SACRIFICE n outside any card line (the Toll-Keeper's toll): the turn's
+ * modifiers, the payment, the ledger, the SACRIFICE Globals and TETHER, as a
+ * card line's SACRIFICE. `sourceId` names it in the log. Creates the ledger
+ * when the fight has none. The caller checks the floor first.
+ */
+export function programPaySacrifice(
+    state: CombatEncounterState, n: number, sourceId: string, kit: ProgramKit,
+): ProgramPlayResult {
+    const ledgerIn = state.program ?? initProgramLedger();
+    const l = cloneLedger(ledgerIn);
+    const w: Work = { s: { ...state, program: l }, l, events: [], kit, cost: 0, value: 0 };
+    new LineCtx(w, 'apply', { cardId: sourceId, waived: false }).sacrifice(n);
+    w.events.push(...weatherEvents(ledgerIn.el, w.l.el));
+    w.events.push(...spikeEvents(ledgerIn.spikes, w.l.spikes));
+    return { state: { ...w.s, program: w.l }, events: w.events };
+}
+
+/**
  * A signature's HEAL n, outside any card line: mind-scaled, capped at max
  * VITAE, as a card's HEAL.
  */

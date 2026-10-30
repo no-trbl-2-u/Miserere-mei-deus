@@ -16,11 +16,12 @@ describe('the Act 1 XP ledger (LV1)', () => {
     });
 
     // Chapter 1's normals fight at levels 3 to 5 (EN1f, EN1g) and the sea
-    // cave's elite at level 5 (EN1j), so the Breakwater pays more XP than its
-    // old level-2 Float-Eyes and level-3 elite did.
-    it('a full clear meets the doors at levels 8, 15, 18 and 20 and ends at level 22', () => {
+    // cave's elite at level 5 (EN1j) and the keep causeway's at level 8
+    // (EN1l), so the Breakwater pays more XP than its old level-2 Float-Eyes
+    // and level-3 elites did.
+    it('a full clear meets the doors at levels 9, 16, 18 and 21 and ends at level 22', () => {
         const walk = walkAct1(ledger);
-        expect(walk.doors.map(d => d.playerLevel)).toEqual([8, 15, 18, 20]);
+        expect(walk.doors.map(d => d.playerLevel)).toEqual([9, 16, 18, 21]);
         expect(walk.doors.map(d => d.doorLevel)).toEqual([1, 2, 3, 4]);
         expect(walk.finalLevel).toBe(22);
     });
@@ -43,10 +44,12 @@ describe('the Act 1 XP ledger (LV1)', () => {
     // Beacon Crags door at level 18 (17 before EN1j's level-5 elite), where the placeholder Death Beholder is
     // won about 92% of the time: winnable but free. Chapter 1's normals
     // (EN1f, EN1g) pay more XP, so the Charcoal Wood door (level 15) and the
-    // Lantern Deep door (level 20) are free too.
+    // Lantern Deep door (level 20) are free too. The keep causeway's level-8
+    // elite (EN1l) brings the Breakwater's own door at level 9, where the
+    // level-1 Death Beholder is won about 92% of the time: free as well.
     // T's tuning session after EN1i retunes the ledger; until then these
     // doors are held to "winnable" only. Filed for T in plan/CRITIQUE.md (BW1b).
-    const FREE_UNTIL_RETUNED: ReadonlySet<string> = new Set(['cw-17', 'bc-15', 'ld-16']);
+    const FREE_UNTIL_RETUNED: ReadonlySet<string> = new Set(['bw-k2', 'cw-17', 'bc-15', 'ld-16']);
 
     it('still finds each excused door free (drop it from the set once the retune lands)', () => {
         for (const door of walkAct1(ledger).doors.filter(d => FREE_UNTIL_RETUNED.has(d.nodeId))) {

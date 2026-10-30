@@ -3,7 +3,7 @@
  * A5, A6, A8, A9, A10 and A11).
  *
  * Every fight here is the real path the combat panel takes: walk onto the
- * Green Jelly's node, resolve the arrival, enter the fight
+ * keep causeway's elite node, resolve the arrival, enter the fight
  * (`beginHazardEncounter`), finish it through `applyHazardOutcome` (the elite
  * relic roll first, then the engine's `endCombat`) and open the reward
  * (`rollCombatRewardAction`). A rest is the rest screen's actions: begin,
@@ -58,8 +58,8 @@ afterEach(() => {
 });
 
 const GREY = ['grey-strike', 'grey-strike', 'grey-strike', 'grey-ward', 'grey-ward', 'grey-word', 'grey-word'];
-/** The Green Jelly at level 3 (`DEFAULT_XP_BY_DIFFICULTY.elite` 50 a level). */
-const ELITE_XP = 150;
+/** The keep causeway's elite at level 8 (`DEFAULT_XP_BY_DIFFICULTY.elite` 50 a level), either of its two (phase EN1l). */
+const ELITE_XP = 400;
 
 function gs(store: AppStore): GameState {
     return store.getState() as unknown as GameState;
@@ -323,7 +323,7 @@ describe('the rest screen names each returning foe (A5)', () => {
         );
         const lines = r.getAllByTestId('rest-elite-respawn').map(n => String(n.props.children));
         expect(lines).toEqual([
-            'The Green Jelly is back at The Keep Causeway.',
+            'The Toll-Keeper is back at The Keep Causeway.',
             'The Green Jelly is back at The Root Graveyard.',
         ]);
         fireEvent.press(r.getByTestId('rest-claim'));
