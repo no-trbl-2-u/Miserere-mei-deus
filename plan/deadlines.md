@@ -12,7 +12,8 @@ the Charcoal Wood, Chapter 3 the Beacon Crags, Chapter 4 the Lantern Deep. A lat
 
 **MVP, Nov 16 (T, 2026-10-26): Act 1, Chapter 1 complete** (T: "Act 1 Chapter 1 completed is the mid November
 deadline"): a full Breakwater run on the phone with Chapter 1's real enemies and their art, the six lane relics T
-authored (three per lane, LR1b), actual item icons, the Breakwater's one questline (QL1, T 2026-10-27, D111), and a
+authored (three per lane, LR1b), actual item icons, Chapter 1's weapons and armor (T, 2026-10-30: "add weapons and
+armor to the list of things needed to be pitched and plotted for the full MVP deadline"), the Breakwater's one questline (QL1, T 2026-10-27, D111), and a
 a full treatment (art, transitions, copy, animation, working end to end) for the four node kinds every Breakwater
 run hits: encounter, hazard, rest and quest. Act 1 has eight node kinds since NK1 (D112, T 2026-10-28: encounter,
 hazard, rest, loot cache, cutscene, quest, village, travel); each is pitched, settled and plotted in its own sitting,
@@ -138,8 +139,10 @@ reads this table for the day's piece, the high-level task it serves, how AI can 
 | Thu Oct 29 | 1 | Author the first character (CH1e): portrait, starting relic and its lane, two starting lanes, three lane cards, the playstyle line | First character playable | Claude lays out the Defender's and the other lanes' cards and relics against the stats you set; you decide (D88) |
 | Fri Oct 30 | 1 | Play the ten hard candidates (HP4e, part 1) | Hazard puzzles locked | None while you play (no labels shown); afterwards Claude writes the rows from the move log |
 | Sat Oct 31 | 1 | Enemy session 2: Chapter 1's three elites and the sea keep's boss (B2) | Chapter 1's real enemies | Claude drafts decks and telegraphs and checks every keyword has a live counter (D45); you decide each foe |
+| Sat Oct 31 | 1 | Pitch Chapter 1's weapons and armor: how many of each, what each does in a fight, where each drops, and settle them | Chapter 1's weapons and armor | Claude brings the empty weapon and armor slots (one of each is worn beside three relics) and two or three directions per slot to react to; you decide each piece |
 | Sun Nov 1 | 2 | Play the twenty cost-card candidates; rule keep or cut (HP4e, part 2) | Hazard puzzles locked | Claude records your rulings in your words |
 | Mon Nov 2 | 1 | `/plot` Chapter 1's enemies and their art brief (B2) | Chapter 1's real enemies | `/plot` writes the rows and briefs; you confirm the slot |
+| Mon Nov 2 | 0.5 | `/plot` Chapter 1's weapons and armor from Saturday's pitch | Chapter 1's weapons and armor | `/plot` writes the rows; you confirm the slot |
 | Tue Nov 3 | 1 | `/plot` live hazard routing and the cuts | Every hazard a puzzle | `/plot` |
 | Wed Nov 4 | 1 | Event kind 1, encounter: pitch its full treatment, settle it and `/plot` it | Event-node UX | Claude brings AW1's screenshot of a fight node and two or three directions (art, transitions, copy, animation) to react to |
 | Thu Nov 5 | 1 | Event kind 2, hazard: pitch, settle and `/plot` its full treatment | Event-node UX | The same, for the hazard node, beside the live puzzle board |
@@ -157,7 +160,7 @@ reads this table for the day's piece, the high-level task it serves, how AI can 
 | Sun Nov 15 | 1.5 | The MVP run: a full Breakwater run on the phone | The MVP | Afterwards Claude reads the play log and lists what broke; `/messy` the dump |
 
 Every day from Oct 26 to Nov 15 has a piece of T's own (T, 2026-10-28: "make sure each item is something I need to
-do"). Total: about 23 hours in three weeks (8, 7.5 and 7.5). Chapter 1's scope freed about 3.5 hours (shorter enemy sessions, eight kinds to pitch, one quest line; the quest kind, QL1, made it nine); 2 of
+do"). Total: about 24.5 hours in three weeks (9, 8 and 7.5), with Chapter 1's weapons and armor (T, 2026-10-30) adding 1.5. Chapter 1's scope freed about 3.5 hours (shorter enemy sessions, eight kinds to pitch, one quest line; the quest kind, QL1, made it nine); 2 of
 them go to Chapter 1's enemy art, which the MVP now includes.
 
 After the MVP, T's pieces are the Items below: W3 about 12 hours (Chapters 2-4's enemy sessions on Nov 21 and 22,
@@ -202,8 +205,10 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-10-29 | Author the first character: portrait, starting relic and its lane, two starting lanes, three lane cards, the playstyle line (1 h) | W1 | CH1e | - |
 | [ ] | 2026-10-30 | W1 demo part 1: T plays the ten hard candidates (1 h) | W1 | T | - |
 | [ ] | 2026-10-31 | Enemy session 2: Chapter 1's three elites and the sea keep's boss (1 h) | W1 | T | - |
+| [ ] | 2026-10-31 | Pitch Chapter 1's weapons and armor: how many of each, what each does, where each drops, and settle them (1 h) | W1 | T | - |
 | [ ] | 2026-11-01 | W1 demo part 2: T plays the twenty cost-card candidates and rules keep or cut (2 h) | W1 | HP4e | - |
 | [ ] | 2026-11-02 | Plot Chapter 1's enemies and their art brief from the two sessions (1 h) | W1 | B2 | - |
+| [ ] | 2026-11-02 | Plot Chapter 1's weapons and armor from the pitch (0.5 h) | W1 | needs plot | - |
 | [ ] | 2026-11-03 | Live hazard routing (each of the eleven Act 1 hazard nodes, six of them the Breakwater's, draws a random puzzle from the thirty) and the cuts (plot, 1 h) | W2 | needs plot | - |
 | [ ] | 2026-11-04 | Event kind 1, encounter: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (1 h) | W2 | needs plot | - |
 | [ ] | 2026-11-05 | Event kind 2, hazard: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (1 h) | W2 | needs plot | - |
@@ -340,6 +345,7 @@ attended session.
 ## Change log
 
 - **2026-10-29** — **AT1 plotted** (T, attended `/plot`: the Miserere Atlas rebuilt in the private DevLog, data-driven): added AT1a, AT1b and AT1c under `## Unscheduled` (loop work; no T act waits on it). No Item edited or ticked: the atlas changes no Item's premise.
+- **2026-10-30** — **Chapter 1's weapons and armor join the MVP** (T, in the enemy-drafts thread: "add weapons and armor to the list of things needed to be pitched and plotted for the full MVP deadline"). **Added** two Items and their MVP-schedule pieces: the pitch on Sat Oct 31 (1 h, `T`) and its plot on Mon Nov 2 (0.5 h, `needs plot`). **Edited** the MVP milestone to name them and the three-week total from about 23 h to about 24.5 h (9, 8 and 7.5). No date moved; nothing ticked.
 - **2026-10-29** — **HD1 plotted** (T, attended `/plot anytime`: "File them all as one plot"): added HD1a and HD1b under `## Unscheduled` (cleanup loop work after the Breakwater heads-down run; no T act waits on it). No Item edited or ticked: the cleanup changes no Item's premise.
 - **2026-10-29** — **the three potion icons picked and applied** (T, in session: Healing Potion `delapouite/health-potion`, Minor `sbed/vial`, Greater `lorc/perfume-bottle`, "Red liquid on all three"; "Might as well start tackling those potion icons now"). **Edited** the Oct 27 Item's name: the potions leave the list of picks still owed. Its Rows stay IT2a, which still has the four relics, the category glyphs, the unknown mark and the bag. Nothing ticked.
 - **2026-10-29** — **the item-icon pick split; IT2 plotted** (T, attended `/plot asap`: asked why the list was stuck, T said the icon picks were done; the repo showed #989 shipped the six lane relics' icons on Oct 27 without ticking IT1b, and nothing else was picked; T: "Split it, then plot the potion icons"). **Edited** the Oct 27 Item: its name narrows to the picks still owed (three potions, four relics, the category glyphs, the unknown mark, the empty bag) and its Rows move from IT1b (now `[x] (#989)`) to IT2a; the date stays T's. **Added** IT2b to the `Waits on` of the Nov 16 MVP demo, which names icons. **Edited** the Oct 27 MVP-schedule piece and the W2 notes to match. Nothing ticked by hand.

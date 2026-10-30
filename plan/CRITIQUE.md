@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-10-29 at commit 3a8c0821
-> Pass count: 111
+> Last pass: 2026-10-30 at commit 0f0727a8
+> Pass count: 112
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
@@ -997,7 +997,33 @@
 > names on a phone, the Anvil label twice, the rest "full" twice, the
 > cache's repeated potion chips.
 
+> **[critique pass 112, 2026-10-30, commit 0f0727a8] Unattended `/march`
+> tick.** `critique:drive` (`CRITIQUE_VIEWPORT=both`), the 15-screen set:
+> 30 captures, 0 nav trouble, 0 console/page errors. 12 first-parent
+> commits after pass 111: HD1a (the mechanics residue: the shop reducer
+> deleted, the Breakwater's Anvil villages named), the Merciful plan PRs,
+> the lane-creator spells plan and a measured truth run; nothing under
+> `axiomancer-mobile/` changed, and every capture matches pass 111. One
+> row filed: the satchel's purse prints "⚜ 75", a mark no other screen
+> uses, and its PURSE and BURDEN · STONE labels are typed into the screen
+> (LOW). Checked and not filed: `/death-return` and the fresh hub's
+> "[content]" quest lines and the "Player" name (placeholder content,
+> D88); "STONE" as the burden unit (voice, and the tooltip explains it).
+> Reconfirmed and not re-filed: the covered fan names on a phone, the
+> Anvil label twice (its desktop row still sits under the pinned TAKE THE
+> ROAD bar), the rest "full" twice, the cache's repeated potion chips,
+> the hub's "tap a trodden one", the quest pay's two cases.
+
 ## Pending
+
+### [LOW] satchel — the purse prints "⚜ 75", a currency mark no other screen uses, and the PURSE and BURDEN · STONE labels are typed into the screen
+- pass: 112 (commit 0f0727a8)
+- viewport: mobile (375x812) and desktop (1280x800)
+- category: voice
+- observation: every other place that shows money spells the unit: the settlement header reads "240 SHILLINGS", stall and forge prices read "6 SHILLINGS", the cache reads "+6 SHILLINGS". The satchel alone prints the purse as a fleur-de-lis and a bare figure, so a first-time player meets a second currency mark for the same shillings. The screen's "PURSE" label and the burden bar's "BURDEN · STONE" are string literals in the component, beside a presenter that already owns the section header (`SECTION_HEADER` in `inventory.engine.ts`), against the package rule that player-facing copy lives outside components.
+- evidence: `.critique-artifacts/mobile/13-satchel.png` and `desktop/13-satchel.png` (top right, "PURSE ⚜ 75"); `axiomancer-mobile/app/(tabs)/inventory/index.tsx:136-137` (`PURSE`, `⚜ {vm.shilling}`) and `:151` (`label="BURDEN · STONE"`); `state/presenters/inventory.engine.ts:246`.
+- suggested fix: move the purse label, its figure line ("75 SHILLINGS") and the burden label into the inventory presenter's copy, render them as given, and pin the purse line in the inventory screen test; copy only, no rule change.
+- source: critique:drive (unattended)
 
 ### [LOW] exploration / desktop — the hub's footer line still says "tap a trodden one to walk back" to a mouse player, in the same sentence that says "choose a glowing node"
 - pass: 111 (commit 3a8c0821)
