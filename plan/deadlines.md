@@ -255,6 +255,9 @@ names, and on a line here with no reason. **A row listed here is work the loop m
 undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
 
 - HD1b — plotted 2026-10-29; cleanup loop work, needs no time from T; date not set.
+- AT1a — plotted 2026-10-29; the DevLog atlas's data, loop work that needs no time from T; date not set.
+- AT1b — plotted 2026-10-29; the DevLog atlas page, loop work; date not set.
+- AT1c — plotted 2026-10-29; the atlas's drift plate, loop work; date not set.
 - AD1a — plotted 2026-10-21 (#716) without a deadline line; date not set.
 - AD1b — plotted 2026-10-21 (#716) without a deadline line; date not set.
 - EQ1a — a live defect T hit on device; loop work, needs no time from T; date not set.
@@ -341,6 +344,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-29** — **AT1 plotted** (T, attended `/plot`: the Miserere Atlas rebuilt in the private DevLog, data-driven): added AT1a, AT1b and AT1c under `## Unscheduled` (loop work; no T act waits on it). No Item edited or ticked: the atlas changes no Item's premise.
 - **2026-10-30** — **Chapter 1's weapons and armor join the MVP** (T, in the enemy-drafts thread: "add weapons and armor to the list of things needed to be pitched and plotted for the full MVP deadline"). **Added** two Items and their MVP-schedule pieces: the pitch on Sat Oct 31 (1 h, `T`) and its plot on Mon Nov 2 (0.5 h, `needs plot`). **Edited** the MVP milestone to name them and the three-week total from about 23 h to about 24.5 h (9, 8 and 7.5). No date moved; nothing ticked.
 - **2026-10-29** — **HD1 plotted** (T, attended `/plot anytime`: "File them all as one plot"): added HD1a and HD1b under `## Unscheduled` (cleanup loop work after the Breakwater heads-down run; no T act waits on it). No Item edited or ticked: the cleanup changes no Item's premise.
 - **2026-10-29** — **the three potion icons picked and applied** (T, in session: Healing Potion `delapouite/health-potion`, Minor `sbed/vial`, Greater `lorc/perfume-bottle`, "Red liquid on all three"; "Might as well start tackling those potion icons now"). **Edited** the Oct 27 Item's name: the potions leave the list of picks still owed. Its Rows stay IT2a, which still has the four relics, the category glyphs, the unknown mark and the bag. Nothing ticked.
