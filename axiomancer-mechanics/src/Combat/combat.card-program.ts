@@ -1213,7 +1213,7 @@ class LineCtx implements ProgramCtx {
         if (n <= 0) return;
         const amt = opts?.exact ? n : scaleFor(n, this.stats(), 'heart', 'repeating');
         const enemy = this.w.s.enemy;
-        if (amt <= 0 || isDefeated(enemy) || this.mode === 'cost') return;
+        if (isDefeated(enemy) || this.mode === 'cost') return;
         const l = this.w.l;
         const before = l.mercy ?? initMercyState();
         const worthBefore = this.mode === 'value' ? this.mercyBurstValue(before) : 0;
