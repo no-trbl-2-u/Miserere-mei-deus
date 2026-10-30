@@ -112,6 +112,14 @@ describe('no code outside the set names a trial card id', () => {
             .filter(f => /['"`](bp-[a-z0-9-]+|el-[pem]-\d{2}[a-z]\+*|df-[pem]-\d{2}[a-z]\+*|mc-[pem]-\d{2}[a-z]\+*)['"`]/.test(fs.readFileSync(f, 'utf8')))
             .map(f => path.relative(root, f));
         expect(offenders).toEqual([]);
+        // Every arm above must earn its keep: an allowed file must actually carry one of
+        // its ids, or that arm pins nothing new. On the parent commit the Merciful set and
+        // its test do not exist, so this fails there and passes once they ship.
+        const mcPattern = /['"`]mc-[pem]-\d{2}[a-z]\+*['"`]/;
+        const mcIdSeen = files
+            .filter(f => ALLOWED.has(path.relative(root, f)))
+            .some(f => mcPattern.test(fs.readFileSync(f, 'utf8')));
+        expect(mcIdSeen).toBe(true);
         // The walk reads every file in two packages; a loaded full verify pushed it past the 5s default.
     }, 30_000);
 });
