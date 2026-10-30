@@ -514,7 +514,8 @@ export type CombatEvent =
     | { kind: 'threat-branch'; phaseIndex: number; conditionText: string; taken: 'then' | 'else' }
     // The enemy's reactive cleanse shed some of its own afflictions.
     | { kind: 'threat-cleansed'; phaseIndex: number; effectIds: string[] }
-    /** An enemy word moved: `gained` (WARD, BRINE, VULNERABLE or LEECH landed, `amount` its number),
+    /** An enemy word moved: `gained` (WARD, BRINE, VULNERABLE, LEECH, TANGLE, UNDERTOW or BARNACLE
+     *  landed, `amount` its number),
      *  `soaked` (WARD took `amount` off a DEAL), `cut` (BRINE took `amount` off a GUARD gain),
      *  `ticked` (LEECH took `amount` VITAE from you), `stripped` (SCOUR took `stripped` off the foe)
      *  `faded` (WARD, BRINE or TANGLE ran out with `amount` left), `spent` (a landed PAID play counted a card off TANGLE,
