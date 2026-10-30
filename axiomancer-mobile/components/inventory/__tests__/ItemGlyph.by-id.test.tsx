@@ -123,3 +123,17 @@ describe('ItemGlyph: id-keyed resolution', () => {
         expect(bogus).toEqual(byCategory);
     });
 });
+
+describe("ItemGlyph: T's potion picks (IT2, 2026-10-29)", () => {
+    const PICKS: [string, AxmIconName, string][] = [
+        ['healing-potion', 'potion-heart-flask', 'Flask with a heart'],
+        ['minor-healing-potion', 'potion-vial', 'Slim vial'],
+        ['greater-healing-potion', 'potion-perfume-bottle', 'Stoppered crystal bottle'],
+    ];
+    it.each(PICKS)('%s draws %s, read aloud as "%s"', (id, icon, label) => {
+        expect(getItemGlyph(id)).toBe(icon);
+        expect(AXM_ICON_SPECS[icon].label).toBe(label);
+        const { tree } = withAllProviders(<ItemGlyph category="consumable" sub={null} itemId={id} />);
+        expect(render(tree).getByLabelText(label)).toBeTruthy();
+    });
+});
