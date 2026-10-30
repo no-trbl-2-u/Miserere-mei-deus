@@ -249,7 +249,6 @@ fails the root `npm test` on an open row (`[ ]`, `[-]` or `[blocked: …]`) that
 names, and on a line here with no reason. **A row listed here is work the loop may still pick on its ordinary turn:
 undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
 
-- HD1a — plotted 2026-10-29; cleanup loop work, needs no time from T; date not set.
 - HD1b — plotted 2026-10-29; cleanup loop work, needs no time from T; date not set.
 - AD1a — plotted 2026-10-21 (#716) without a deadline line; date not set.
 - AD1b — plotted 2026-10-21 (#716) without a deadline line; date not set.
