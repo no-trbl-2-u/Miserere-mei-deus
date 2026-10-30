@@ -57,6 +57,8 @@ const HEADLINES: readonly { re: RegExp; keyword: string | null; value: (m: RegEx
     { re: /\bHEAL (\d+)\b/, keyword: 'HEAL', value: (m) => m[1] },
     { re: /\bLEECH (\d+)\b/, keyword: 'LEECH', value: (m) => m[1] },
     { re: /\bLEECH\b/, keyword: 'LEECH', value: () => VARIES },
+    { re: /\bRADIANCE (\d+)\b/, keyword: 'RADIANCE', value: (m) => m[1] },
+    { re: /\bMERCY (\d+)\b/, keyword: 'MERCY', value: (m) => m[1] },
     { re: /\bTETHER (\d+)\b/, keyword: 'TETHER', value: (m) => m[1] },
     // The weather and DRAW, by their printed number.
     { re: /\bINFERNO (\d+)\b/, keyword: 'INFERNO', value: (m) => m[1] },
@@ -78,6 +80,10 @@ const HEADLINES: readonly { re: RegExp; keyword: string | null; value: (m: RegEx
     // BLIZZARD", "Remove your INFERNO") headlines its verb, or the element.
     { re: /\bGUARD\b/, keyword: 'GUARD', value: () => VARIES },
     { re: /\bHEAL\b/, keyword: 'HEAL', value: () => VARIES },
+    // A line that only reads the Merciful's numbers ("MERCY equal to all you
+    // healed", "The foe's MERCY bursts now").
+    { re: /\bRADIANCE\b/, keyword: 'RADIANCE', value: () => '' },
+    { re: /\bMERCY\b/, keyword: 'MERCY', value: () => '' },
     { re: /\bINFERNO\b/, keyword: 'INFERNO', value: () => '' },
     { re: /\bBLIZZARD\b/, keyword: 'BLIZZARD', value: () => '' },
     { re: /\bSTORM\b/, keyword: 'STORM', value: () => '' },
@@ -108,6 +114,8 @@ const FREE_CELL: readonly { re: RegExp; keyword: string; value: (m: RegExpMatchA
     { re: /\bHEAL (\d+)\b/, keyword: 'HEAL', value: (m) => m[1] },
     { re: /\bVULNERABLE \+(\d+)%/, keyword: 'VULNERABLE', value: (m) => `+${m[1]}%` },
     { re: /\bLEECH (\d+)\b/, keyword: 'LEECH', value: (m) => m[1] },
+    { re: /\bRADIANCE (\d+)\b/, keyword: 'RADIANCE', value: (m) => m[1] },
+    { re: /\bMERCY (\d+)\b/, keyword: 'MERCY', value: (m) => m[1] },
     { re: /\bTETHER (\d+)\b/, keyword: 'TETHER', value: (m) => m[1] },
     { re: /\bINFERNO (\d+)\b/, keyword: 'INFERNO', value: (m) => m[1] },
     { re: /\bBLIZZARD (\d+)\b/, keyword: 'BLIZZARD', value: (m) => m[1] },
@@ -133,6 +141,8 @@ const FREE_CELL: readonly { re: RegExp; keyword: string; value: (m: RegExpMatchA
     { re: /\bSTORM grows by (\d+)\b/, keyword: 'STORM', value: (m) => `+${m[1]}` },
     { re: /\bGUARD\b/, keyword: 'GUARD', value: () => 'X' },
     { re: /\bHEAL\b/, keyword: 'HEAL', value: () => 'X' },
+    { re: /\bRADIANCE\b/, keyword: 'RADIANCE', value: () => 'X' },
+    { re: /\bMERCY\b/, keyword: 'MERCY', value: () => 'X' },
     { re: /\bBLIZZARD\b/, keyword: 'BLIZZARD', value: () => 'X' },
     { re: /\bINFERNO\b/, keyword: 'INFERNO', value: () => 'X' },
     { re: /\bSTORM\b/, keyword: 'STORM', value: () => 'X' },
