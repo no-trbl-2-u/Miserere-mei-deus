@@ -62,7 +62,8 @@ import {
 import { recordAttribution } from './combat.attribution';
 import { scaleFor, scaleEffectIntensity, scaleCardForStats } from './stat-scaling';
 import { canAct, getActiveEffectModifiers, getActiveDotTotal, ticksOnRoundClock } from './effect-modifiers';
-import { getThreatSequence, commitThreatBranch } from './combat.threat';
+import { getThreatSequence, commitThreatBranch, nextEnemyPhaseIndex } from './combat.threat';
+import { escalationApplies, hasEnemyPhases } from '../Enemy/enemy-phases';
 import { getSignatureSkill, applySignatureSkill, signatureCastBlock, playerArchetype } from './combat.signature';
 import { getSignaturesForLoadout } from '../Items/relic.library';
 import { statsWithWorn } from '../Character/equipment.reducer';
@@ -1196,7 +1197,8 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
     // dragging normal fight — makes finishing bosses quickly (DoT/control) the clear
     // efficient path.
     const escalationRate = THREAT_ESCALATION_PER_ROUND * (isBossTier ? THREAT_ESCALATION_BOSS_MULT : 1);
-    const escalation = Math.min(
+    // A normal or elite foe with HP phases has no clock: its phases carry the ramp.
+    const escalation = !escalationApplies(state.enemy) ? 1 : Math.min(
         THREAT_ESCALATION_MAX,
         1 + escalationRate * Math.max(0, state.round - THREAT_ESCALATION_GRACE),
     );
@@ -1570,7 +1572,8 @@ export function processBetweenPhases(
     // legible instead of collapsing into one line of log.
     const stagesEntered = [...(state.stagesEntered ?? [])];
     let stageThreatBonus = state.stageThreatBonus ?? 0;
-    if (!isDefeated(enemy)) {
+    // A foe with HP phases changes shape at its phase lines (below), not stages.
+    if (!isDefeated(enemy) && !hasEnemyPhases(enemy)) {
         const pending = (enemy.stages ?? []).find((stage, i) => {
             if (stagesEntered.includes(i)) return false;
             const byVitae = stage.at.vitaePct !== undefined
@@ -1608,7 +1611,17 @@ export function processBetweenPhases(
     const candidateIndex = Math.min(state.currentPhaseIndex + 1, state.threatPhases.length - 1);
     const candidatePhase = state.threatPhases[candidateIndex];
     const rageGated = candidatePhase.unlockAfterRound !== undefined && resolvedRound < candidatePhase.unlockAfterRound;
-    const nextIndex = rageGated ? state.currentPhaseIndex : candidateIndex;
+    // HP PHASES: a `phases` foe walks its own loop, and on crossing a line
+    // enters the next phase (one per boundary) through its DANGER.
+    const phasesIndex = nextEnemyPhaseIndex(state.threatPhases, state.currentPhaseIndex, enemy);
+    const nextIndex = phasesIndex ?? (rageGated ? state.currentPhaseIndex : candidateIndex);
+    if (phasesIndex !== null) {
+        const from = state.threatPhases[state.currentPhaseIndex]?.enemyMove;
+        const to = state.threatPhases[phasesIndex]?.enemyMove;
+        if (from && to && to.phase > from.phase) {
+            events.push({ kind: 'enemy-phase-entered', enemyId: enemy.id, phase: to.phase, danger: to.danger ? to.name : null });
+        }
+    }
 
     let threatPhases = state.threatPhases;
     // A branch phase commits its fork at phase START,
@@ -1966,7 +1979,8 @@ export function projectIncomingThreat(state: CombatEncounterState): {
     const willDeny = !act.canAct;
 
     const escalationRate = THREAT_ESCALATION_PER_ROUND * (isBossTier ? THREAT_ESCALATION_BOSS_MULT : 1);
-    const escalation = Math.min(THREAT_ESCALATION_MAX, 1 + escalationRate * Math.max(0, state.round - THREAT_ESCALATION_GRACE));
+    const escalation = !escalationApplies(state.enemy) ? 1
+        : Math.min(THREAT_ESCALATION_MAX, 1 + escalationRate * Math.max(0, state.round - THREAT_ESCALATION_GRACE));
     const enemyOutgoingMult = getOutgoingDamageMult(state.enemy);
     const playerTakenMult = getDamageTakenMultiplier(state.player);
 
@@ -2031,8 +2045,9 @@ export function threatHits(state: CombatEncounterState): number[] {
     if (!canAct(state.enemy.effects as ActiveEffect[]).canAct) return [];
     const isBossTier = state.enemy.difficulty === 'boss' || state.enemy.difficulty === 'unique';
     const escalationRate = THREAT_ESCALATION_PER_ROUND * (isBossTier ? THREAT_ESCALATION_BOSS_MULT : 1);
-    const escalation = Math.min(THREAT_ESCALATION_MAX, 1 + escalationRate * Math.max(0, state.round - THREAT_ESCALATION_GRACE));
-    const mult = escalation * getOutgoingDamageMult(state.enemy)
+    const escalation = !escalationApplies(state.enemy) ? 1
+        : Math.min(THREAT_ESCALATION_MAX, 1 + escalationRate * Math.max(0, state.round - THREAT_ESCALATION_GRACE));
+    const mult =escalation * getOutgoingDamageMult(state.enemy)
         * (1 + Math.min(STAGE_THREAT_BONUS_CAP, state.stageThreatBonus ?? 0))
         * getDamageTakenMultiplier(state.player);
     return phase.threatAction.effects

@@ -12,7 +12,8 @@
  * can move enemy stats without re-authoring the sequences.
  */
 
-import type { Enemy } from '../Enemy/types';
+import type { Enemy, EnemyMove } from '../Enemy/types';
+import { PHASES_AUTHORED_LEVEL, enemyPhaseTarget, enemyPhaseTier, hasEnemyPhases } from '../Enemy/enemy-phases';
 import { lookupEffect } from '../Effects/effects.library';
 import type {
     CombatIntentType, CombatThreatAction, CombatThreatBranchOutcome, CombatThreatEffect,
@@ -336,6 +337,98 @@ function resolveAuthored(enemy: Enemy, authored: AuthoredThreatStep[]): CombatTh
     });
 }
 
+// ── HP phases (the `Enemy.phases` model) ─────────────────────────────────────
+
+/**
+ * Scales one of a move's numbers (damage, MEND) from the level it was
+ * authored at to the foe's level, on the same level curve as
+ * `threatDamageBudget`, so a level change moves every number together.
+ * A positive number never scales below 1.
+ */
+export function scaleMoveNumber(n: number, level: number, authoredLevel: number): number {
+    if (n <= 0) return 0;
+    const at = (lv: number): number => THREAT_BASE + THREAT_PER_LEVEL * Math.max(1, lv);
+    return Math.max(1, Math.round(n * at(level) / at(authoredLevel)));
+}
+
+/** Builds the engine's threat action for one `phases` move at the foe's level. */
+function moveThreatAction(move: EnemyMove, level: number, authoredLevel: number): CombatThreatAction {
+    const effects: CombatThreatEffect[] = [];
+    const damage = scaleMoveNumber(move.damage ?? 0, level, authoredLevel);
+    if (damage > 0) {
+        for (let h = 0; h < Math.max(1, move.hits ?? 1); h++) effects.push({ damage });
+    }
+    if (move.effectId) {
+        effects.push({
+            effectId: move.effectId, intensity: move.intensity ?? 1,
+            ...(move.duration !== undefined ? { duration: move.duration } : {}),
+        });
+    }
+    const heal = scaleMoveNumber(move.enemyHeal ?? 0, level, authoredLevel);
+    if (heal > 0) effects.push({ enemyHeal: heal });
+    if ((move.enemyCleanse ?? 0) > 0) effects.push({ enemyCleanse: move.enemyCleanse });
+    return { description: `${move.name}: ${move.text}`, effects };
+}
+
+/**
+ * Lays a `phases` foe's moves out as the engine's flat threat sequence:
+ * the opening phase's loop, then for each later phase its entry DANGER
+ * followed by its loop. Each entry carries `enemyMove` so `nextEnemyPhaseIndex` can walk it.
+ * No entry is round-gated, branched or staked.
+ */
+export function resolveEnemyPhases(enemy: Enemy): CombatThreatPhase[] {
+    const phases = enemy.phases ?? [];
+    const level = Math.max(1, enemy.level);
+    const authoredLevel = PHASES_AUTHORED_LEVEL[enemyPhaseTier(enemy.difficulty)];
+    const out: CombatThreatPhase[] = [];
+    const push = (move: EnemyMove, phase: number, step: number, danger: boolean): void => {
+        out.push(withIntent({
+            index: out.length + 1,
+            threatAction: moveThreatAction(move, level, authoredLevel),
+            isFinalPhase: false,
+            enemyMove: { phase, step, danger, name: move.name, kind: danger ? 'danger' : move.kind },
+        }));
+    };
+    phases.forEach((p, phase) => {
+        if (phase > 0 && p.danger) push(p.danger, phase, 0, true);
+        p.moves.forEach((move, step) => push(move, phase, step, false));
+    });
+    if (out.length > 0) out[out.length - 1] = { ...out[out.length - 1], isFinalPhase: true };
+    return out;
+}
+
+/**
+ * The index a `phases` foe plays next, read at the turn boundary from the
+ * live (post-tick) enemy. If its VITAE has crossed a line past its current
+ * phase it enters the NEXT phase only (one change per boundary) and plays
+ * that phase's DANGER; otherwise it plays the next move of its current loop,
+ * wrapping to the first (a DANGER is followed by the loop's first move).
+ * Returns null when the current entry is not a `phases` move.
+ */
+export function nextEnemyPhaseIndex(
+    threatPhases: readonly CombatThreatPhase[],
+    currentIndex: number,
+    enemy: Enemy,
+): number | null {
+    const cur = threatPhases[currentIndex]?.enemyMove;
+    if (!cur) return null;
+    const find = (phase: number, pred: (m: NonNullable<CombatThreatPhase['enemyMove']>) => boolean): number =>
+        threatPhases.findIndex(p => p.enemyMove?.phase === phase && pred(p.enemyMove));
+    if (enemyPhaseTarget(enemy) > cur.phase) {
+        const nextPhase = cur.phase + 1;
+        const danger = find(nextPhase, m => m.danger);
+        if (danger >= 0) return danger;
+        const first = find(nextPhase, m => !m.danger && m.step === 0);
+        if (first >= 0) return first;
+    }
+    if (!cur.danger) {
+        const following = find(cur.phase, m => !m.danger && m.step === cur.step + 1);
+        if (following >= 0) return following;
+    }
+    const first = find(cur.phase, m => !m.danger && m.step === 0);
+    return first >= 0 ? first : currentIndex;
+}
+
 /**
  * "Rage mode": the generated (unauthored) sequence's appended
  * escalation phase. Locked until `RAGE_UNLOCK_ROUND` — a discrete,
@@ -378,6 +471,8 @@ export function generateDefaultThreatSequence(enemy: Enemy): CombatThreatPhase[]
  * otherwise an authored sequence keyed by id; otherwise the generated default.
  */
 export function getThreatSequence(enemy: Enemy): CombatThreatPhase[] {
+    // A foe with HP phases bypasses every deck and authored sequence.
+    if (hasEnemyPhases(enemy)) return resolveEnemyPhases(enemy);
     const explicit = (enemy as Enemy & { threatSequence?: CombatThreatPhase[] }).threatSequence;
     let seq: CombatThreatPhase[];
     if (explicit && explicit.length > 0) {

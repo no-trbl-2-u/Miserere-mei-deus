@@ -229,4 +229,55 @@ export interface Enemy {
      * phase boundaries; each fires at most once. See {@link EnemyStage}.
      */
     stages?: EnemyStage[];
+    /**
+     * HP PHASES: the foe's moves, one entry per phase. Inside a phase the
+     * foe plays `moves` in order, repeating; it changes phase only when its
+     * VITAE crosses a line of its tier (`PHASE_LINES`, `Enemy/enemy-phases.ts`),
+     * at most one change per turn boundary, and plays the entered phase's
+     * `danger` move first. A foe with `phases` bypasses the enemy deck, its
+     * round gates and its `stages`; a normal or elite one also skips the
+     * escalation clock. See {@link EnemyPhase}.
+     */
+    phases?: EnemyPhase[];
+}
+
+/** The telegraph kind of an enemy move: what the board says it will do. */
+export type EnemyMoveKind = 'attack' | 'defend' | 'status' | 'danger' | 'unknown';
+
+/**
+ * One move a `phases` foe plays. Numbers are authored at
+ * `PHASES_AUTHORED_LEVEL` for the foe's tier and scale with its level
+ * (`scaleMoveNumber`, `Combat/combat.threat.ts`).
+ */
+export interface EnemyMove {
+    /** The move's name, e.g. `Long Look`. */
+    name: string;
+    /** The telegraph kind (a DANGER move is `danger`). */
+    kind: EnemyMoveKind;
+    /** One player-facing line of what the move does. */
+    text: string;
+    /** Damage per hit at the authored level. */
+    damage?: number;
+    /** Number of hits (default 1). */
+    hits?: number;
+    /** A status the move puts on the player (an effects-library id). */
+    effectId?: string;
+    /** Intensity of `effectId` (default 1). */
+    intensity?: number;
+    /** Duration override for `effectId`. */
+    duration?: number;
+    /** VITAE the foe heals itself (MEND), at the authored level. */
+    enemyHeal?: number;
+    /** Afflictions the foe sheds from itself (SCOUR). */
+    enemyCleanse?: number;
+}
+
+/**
+ * One HP phase of a `phases` foe. `moves` is the loop played inside the
+ * phase. `danger` is the DANGER move the foe plays on entering this phase;
+ * the first phase's `danger` is never played (a fight opens on the loop).
+ */
+export interface EnemyPhase {
+    moves: EnemyMove[];
+    danger?: EnemyMove;
 }
