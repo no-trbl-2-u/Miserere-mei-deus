@@ -387,7 +387,8 @@ function moveThreatAction(move: EnemyMove, level: number, authoredLevel: number)
     if (leech > 0) effects.push({ leech });
     // TANGLE and BARNACLE are counts and UNDERTOW a colour: none scales.
     if ((move.tangle ?? 0) > 0) effects.push({ tangle: move.tangle });
-    if (move.undertow) effects.push({ undertow: move.undertow });
+    if (typeof move.undertow === 'string') effects.push({ undertow: move.undertow });
+    else if (move.undertow) for (const die of move.undertow) effects.push({ undertow: die });
     if ((move.barnacle ?? 0) > 0) effects.push({ barnacle: move.barnacle });
     // The move's conditional effect rides along, its level-bound numbers scaled
     // (`combat.enemy-riders.ts` resolves it).

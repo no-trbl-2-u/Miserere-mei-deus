@@ -11,7 +11,9 @@
 import { describe, expect, it } from 'vitest';
 
 import { resolveMapEvent } from '../MapEvents/resolve-map-event';
-import { BW_ELITE_LEVEL, BW_ENCOUNTER_FOES } from '../MapEvents/content';
+import { BW_ELITE_DRAWS, BW_ELITE_LEVEL, BW_ENCOUNTER_FOES } from '../MapEvents/content';
+import { getNodeEventPool } from '../../World';
+import { scaleEnemyToLevel } from '../encounter';
 import { createNewGameState } from '../../Game/game.reducer';
 import type { GameState } from '../../Game/types';
 import { ENEMY_REGISTRY } from '../../Enemy/enemy.library';
@@ -78,15 +80,27 @@ describe('the fields, quays, pier and town: each node\'s foe fires its DANGER at
     });
 });
 
-describe('the sea cave elite: the Tithe-Collector fires Audit at 60% and Foreclose at 30%', () => {
-    it('bw-c1', () => {
-        const row = BW_ENCOUNTER_FOES['bw-c1']!;
-        expect(row).toMatchObject({ slug: 'tithe-collector', level: 5 });
+/** A fight against `slug` at level 5 as an elite node stages it (the draw's other half is read from the pool). */
+function fightAs(slug: 'tithe-collector'): CombatEncounterState {
+    const fresh = createNewGameState({ startMap: 'breakwater' });
+    const player = { ...fresh.player, health: 5000, maxHealth: 5000 };
+    const foe = { ...scaleEnemyToLevel(ENEMY_REGISTRY[slug], 5), effects: [] };
+    return rollEncounterDice(initializeCombatEncounter(player, foe, undefined, 7), rng).state;
+}
+
+describe('the sea cave draws the Tithe-Collector, which fires Audit at 60% and Foreclose at 30% (phase EN1h)', () => {
+    it('bw-c1 names it as the second of its two draws, at level 5', () => {
+        const slugs = getNodeEventPool('coastal-continent', 'breakwater', 'bw-c1')!.entries.map(e => (e.payload as { enemySlug?: string }).enemySlug);
+        expect(slugs).toEqual(['cave-choir', 'tithe-collector']);
+        expect(BW_ELITE_DRAWS['bw-c1']![1]).toEqual({ slug: 'tithe-collector', level: 5 });
+    });
+
+    it('its DANGERs fire at its lines', () => {
         const source = ENEMY_REGISTRY['tithe-collector'];
-        let s = fightAt('bw-c1');
+        let s = fightAs('tithe-collector');
         expect(s.enemy.id).toBe(source.id);
         expect(s.enemy.difficulty).toBe('elite');
-        expect(s.enemy.level).toBe(row.level);
+        expect(s.enemy.level).toBe(5);
         for (const [phase, pct] of [[1, 0.6], [2, 0.3]] as const) {
             const danger = source.phases![phase]!.danger!;
             const crossed = resolveThreatPhase({ ...s, enemy: { ...s.enemy, health: Math.floor(s.enemy.maxHealth * pct) } }, rng);
@@ -100,7 +114,28 @@ describe('the sea cave elite: the Tithe-Collector fires Audit at 60% and Foreclo
     });
 });
 
-describe('the elite slots hold their own foe or the Green Jelly, staged as an elite', () => {
+describe('the sea cave draws the Cave Choir, which fires both its DANGERs at its lines (phase EN1j)', () => {
+    it('bw-c1', () => {
+        let s = fightAt('bw-c1');
+        const choir = ENEMY_REGISTRY['cave-choir'];
+        expect(s.enemy.id).toBe(choir.id);
+        expect(s.enemy.difficulty).toBe('elite');
+        expect(s.enemy.level).toBe(5);
+        for (const [phase, line, danger] of [[1, 0.6, 'Toll for the Drowned'], [2, 0.3, 'Amen']] as const) {
+            const crossed = resolveThreatPhase({ ...s, enemy: { ...s.enemy, health: Math.floor(s.enemy.maxHealth * line) } }, rng);
+            expect(crossed.events).toContainEqual({ kind: 'enemy-phase-entered', enemyId: choir.id, phase, danger });
+            s = crossed.state;
+            expect(telegraph(s)).toMatchObject({ phase, danger: true, kind: 'danger', name: danger });
+            const res = resolveThreatPhase(s, rng);
+            expect(fired(res.events)[0]).toMatch(new RegExp(`^${danger}: `));
+            expect(telegraph(res.state)).toMatchObject({ phase, step: 0, danger: false });
+            s = res.state;
+        }
+        expect(telegraph(s)).toMatchObject({ name: 'Antiphon', kind: 'unknown' });
+    });
+});
+
+describe('the other elite slots still hold the Green Jelly, staged as an elite', () => {
     // The Green Jelly is a normal on its own; the elite nodes stage it at the
     // elite tier until their own foes land, so the elite reward, respawn and
     // phase lines keep working there.

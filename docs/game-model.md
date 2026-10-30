@@ -302,6 +302,13 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
   status back. Placed on the town's nodes; an elite slot stages it at the elite
   tier until its own foe lands. The only foe that can be befriended, below 30%
   VITAE, which is also where its second phase begins.
+- **The Cave Choir:** level 5, an elite with three HP phases (EN1j), drawn
+  at the sea cave (`bw-c1`). Its VERSE count (fight state on its pane, not
+  a word) rises with each Hymn; Crescendo hits for it and its 30% DANGER,
+  the Amen, spends it all, hitting and mending for each. Its Antiphon
+  telegraphs UNKNOWN and answers your last turn. An elite node names one foe
+  or two in `BW_ELITE_DRAWS` (`World/MapEvents/content.ts`); with two, the
+  map's seeded pool roll draws one on arrival, 50/50.
 - **Wreck-Picker and Smokehouse Gutter:** level 6 normals with HP phases (EN1h), on the cliffs
   and the hamlet. The Wreck-Picker takes cards from your discard into its hoard
   (shown on its pane; its Hurl Flotsam and Hide in the Hoard grow with it, and its

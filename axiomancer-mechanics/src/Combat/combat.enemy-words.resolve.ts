@@ -73,12 +73,13 @@ export function enemyWordsUndertow(
 ): { state: CombatEncounterState; dice: CombatManaDie[]; events: CombatEvent[] } {
     const color = state.enemyWords?.undertow;
     if (!color) return { state, dice, events: [] };
-    const base = `t${turn}-u-${color}`;
-    const kept = dice.filter(d => d.id !== base);
+    const also = state.enemyWords?.undertowAlso;
+    const lifted = new Set([`t${turn}-u-${color}`, ...(also ? [`t${turn}-u-${also}`] : [])]);
+    const kept = dice.filter(d => !lifted.has(d.id));
     const events: CombatEvent[] = kept.length < dice.length
-        ? [{ kind: 'enemy-word', word: 'undertow', op: 'spent', amount: 1 }]
+        ? [{ kind: 'enemy-word', word: 'undertow', op: 'spent', amount: dice.length - kept.length }]
         : [];
-    const { undertow: _spent, ...rest } = state.enemyWords!;
+    const { undertow: _spent, undertowAlso: _spentToo, ...rest } = state.enemyWords!;
     return { state: withWords(state, rest), dice: kept, events };
 }
 
@@ -166,6 +167,7 @@ export function applyEnemyWordEffects(
 ): WordsResult {
     let state = stateIn;
     const events: CombatEvent[] = [];
+    let towed: CombatThreatEffect['undertow'];
     for (const eff of effects) {
         if (isDefeated(state.enemy)) break;
         if ((eff.ward ?? 0) > 0) {
@@ -208,10 +210,14 @@ export function applyEnemyWordEffects(
             events.push({ kind: 'enemy-word', word: 'tangle', op: 'gained', amount: eff.tangle! });
         }
         if (eff.undertow) {
+            const words = wordsOf(state);
             // A named die, or "random": the gull-call picks one of the three.
             const dice = ['heart', 'body', 'mind'] as const;
             const die = eff.undertow === 'random' ? dice[Math.min(2, Math.floor(rng() * 3))] : eff.undertow;
-            state = withWords(state, { ...wordsOf(state), undertow: die });
+            // A move that names a second die holds both (one move, two UNDERTOW effects).
+            const second = towed !== undefined && towed !== die;
+            state = withWords(state, second ? { ...words, undertowAlso: die } : { ...words, undertow: die });
+            towed = die;
             events.push({ kind: 'enemy-word', word: 'undertow', op: 'gained', amount: 1 });
         }
         if ((eff.barnacle ?? 0) > 0) {

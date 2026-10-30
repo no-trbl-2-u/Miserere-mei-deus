@@ -22,7 +22,7 @@ import { deepClone } from '../../Utils';
 import { scaleEnemyToLevel } from '../../World/encounter';
 import { payloadDifficulty } from '../../World/encounter-tier';
 import { isEliteNode } from '../../World/elite-respawn';
-import { BW_ENCOUNTER_FOES } from '../../World/MapEvents/content';
+import { BW_ELITE_DRAWS, BW_ENCOUNTER_FOES } from '../../World/MapEvents/content';
 import { getNodeEventPool } from '../../World';
 import { registerSandboxCards } from '../../Cards/cards.sandbox';
 import { BARNACLE_ID } from '../../Cards/library/enemy-curses.cards';
@@ -154,8 +154,10 @@ describe('A11 and A12 — the three foes play exactly the Appendix', () => {
         expect(BW_ENCOUNTER_FOES['bw-l1']).toEqual({ slug: 'wreck-picker', level: 6 });
         expect(BW_ENCOUNTER_FOES['bw-d1']).toEqual({ slug: 'smokehouse-gutter', level: 6 });
         expect(BW_ENCOUNTER_FOES['bw-d3']).toEqual({ slug: 'wreck-picker', level: 6 });
-        expect(BW_ENCOUNTER_FOES['bw-c1']).toEqual({ slug: 'tithe-collector', level: 5, difficulty: 'elite' });
-        const payload = getNodeEventPool('coastal-continent', 'breakwater', 'bw-c1')!.entries[0]!.payload;
+        // The sea cave draws the Tithe-Collector or the Cave Choir (EN1j's pair), 50/50.
+        expect(BW_ELITE_DRAWS['bw-c1']).toContainEqual({ slug: 'tithe-collector', level: 5 });
+        const entries = getNodeEventPool('coastal-continent', 'breakwater', 'bw-c1')!.entries;
+        const payload = entries.map(e => e.payload).find(p => (p as { enemySlug?: string }).enemySlug === 'tithe-collector');
         expect(payload).toMatchObject({ kind: 'encounter', enemySlug: 'tithe-collector', level: 5 });
         expect(payloadDifficulty(payload as Parameters<typeof payloadDifficulty>[0])).toBe('elite');
         expect(isEliteNode('coastal-continent', 'breakwater', 'bw-c1')).toBe(true);

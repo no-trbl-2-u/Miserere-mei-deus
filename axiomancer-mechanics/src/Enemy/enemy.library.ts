@@ -12,6 +12,8 @@
  *     HP phases.
  *   - The Wreck-Picker and the Smokehouse Gutter (normals) — the cliffs and
  *     the hamlet; the Tithe-Collector (elite) — the sea cave; HP phases.
+ *   - The Cave Choir (L5, elite) — one of the sea cave's two elites, drawn
+ *     per run; HP phases and its VERSE count.
  *   - The Death Beholder (L8, boss) — every region's door fight.
  *
  * A `phases` foe plays T's moves: a fixed loop per phase, a DANGER on
@@ -235,6 +237,35 @@ const HUSH: EnemyMove = {
     name: 'Hush', kind: 'status',
     text: 'TANGLE 2.',
     tangle: 2,
+};
+
+// The Cave Choir (phase EN1j), the sea cave's second elite: numbers authored
+// at level 3 (`PHASES_AUTHORED_LEVEL.elite`).
+
+const HYMN: EnemyMove = {
+    name: 'Hymn', kind: 'attack',
+    text: '3 damage, 2 hits. +1 VERSE.',
+    damage: 3, hits: 2, rider: { kind: 'verse-gain', verse: 1 },
+};
+const THE_PEWS: EnemyMove = {
+    name: 'The Pews', kind: 'defend',
+    text: 'WARD 10.',
+    ward: 10,
+};
+const CRESCENDO: EnemyMove = {
+    name: 'Crescendo', kind: 'attack',
+    text: 'One hit of 2 damage per VERSE.',
+    rider: { kind: 'verse-hit', damage: 2 },
+};
+const SEA_WATER_PSALM: EnemyMove = {
+    name: 'Sea-Water Psalm', kind: 'status',
+    text: '2 BARNACLE Curses into your hand.',
+    barnacle: 2,
+};
+const ANTIPHON: EnemyMove = {
+    name: 'Antiphon', kind: 'unknown',
+    text: 'Answers your last turn. If you attacked, The Pews. If you guarded, a Hymn worth +2 VERSE.',
+    rider: { kind: 'antiphon', ward: 10, damage: 3, hits: 2, verse: 2 },
 };
 
 // The cliffs and hamlet: the Wreck-Picker's hoard and the Smokehouse Gutter's fire.
@@ -672,6 +703,42 @@ export const CurfewRinger = createEnemy({
     tags: ['early-game', 'enemy'],
 });
 
+/** The sea cave's second elite (phase EN1j): the drowned congregation. */
+export const CaveChoir = createEnemy({
+    id: 'enemy-cave-choir',
+    portraitAsset: 'cave-choir',
+    name: 'The Cave Choir',
+    description: 'The drowned congregation, still at service under the cliff.',
+    level: 5,
+    baseStats: enemyStatBudget(5),
+    mapName: 'breakwater',
+    difficulty: 'elite',
+    logic: 'strategic',
+    loot: [none(80), drop('healing-potion', 20)],
+    phases: [
+        { moves: [HYMN, THE_PEWS, HUSH] },
+        {
+            danger: {
+                name: 'Toll for the Drowned', kind: 'danger',
+                text: 'UNDERTOW on 2 dice, then 8 damage.',
+                // Heart and Mind: the Body die stays, to shake off the Psalm's Barnacles.
+                undertow: ['heart', 'mind'], damage: 8,
+            },
+            moves: [CRESCENDO, HYMN, SEA_WATER_PSALM],
+        },
+        {
+            danger: {
+                name: 'Amen', kind: 'danger',
+                text: 'Spends every VERSE: 3 damage per VERSE, and it MENDs the same.',
+                rider: { kind: 'verse-amen', damage: 3 },
+            },
+            moves: [ANTIPHON, CRESCENDO],
+        },
+    ],
+    addedIn: CHAPTER1_ADDED,
+    tags: ['early-game', 'enemy', 'elite'],
+});
+
 /** The cliffs: strips what the sea brings in, and what you carry. */
 export const WreckPicker = createEnemy({
     id: 'enemy-wreck-picker',
@@ -794,7 +861,8 @@ export const Sandbag_01 = createEnemy({
 /** Every production enemy, in tier order. */
 export const EnemyLibrary = [
     FloatEye, GallowsCrow, NetMender, CraneHook, BrineWidow, LampreyKnot, GreenJelly, CurfewRinger,
-    WreckPicker, SmokehouseGutter, TitheCollector, DeathBeholder,
+    WreckPicker, SmokehouseGutter, TitheCollector, CaveChoir,
+    DeathBeholder,
 ] as const;
 
 /**
@@ -834,6 +902,7 @@ export const ENEMY_REGISTRY = {
     'lamprey-knot':   LampreyKnot,
     'curfew-ringer':  CurfewRinger,
     'green-jelly':      GreenJelly,
+    'cave-choir':     CaveChoir,
     'wreck-picker':       WreckPicker,
     'smokehouse-gutter':  SmokehouseGutter,
     'tithe-collector':    TitheCollector,

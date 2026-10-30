@@ -19,16 +19,21 @@ import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 const DECK = ['grey-strike', 'grey-ward', 'grey-word', 'grey-strike', 'grey-ward'];
 
 /** The live fight at a Breakwater fight node, as the app stages it. */
-function fightAt(node: string): CombatEncounterState {
-    const ref: StateFixture = {
-        ...REAL_FIGHT_FIXTURE,
-        id: `en1f-${node}`,
-        seed: `fixture-en1f-${node}`,
-        world: { ...REAL_FIGHT_FIXTURE.world!, node },
-        player: { level: 1, baseStats: { heart: 5, body: 5, mind: 5 } },
-    };
-    const { combat } = startRealFight(ref, { deck: DECK, seed: 3 });
-    return rollEncounterDice(combat).state;
+function fightAt(node: string, foeId?: string): CombatEncounterState {
+    // An elite node that draws one of two foes takes a seed that draws `foeId`.
+    for (let n = 0; n < (foeId ? 40 : 1); n++) {
+        const tag = foeId ? `-${n}` : '';
+        const ref: StateFixture = {
+            ...REAL_FIGHT_FIXTURE,
+            id: `en1f-${node}${tag}`,
+            seed: `fixture-en1f-${node}${tag}`,
+            world: { ...REAL_FIGHT_FIXTURE.world!, node },
+            player: { level: 1, baseStats: { heart: 5, body: 5, mind: 5 } },
+        };
+        const { combat } = startRealFight(ref, { deck: DECK, seed: 3 });
+        if (!foeId || combat.enemy.id === foeId) return rollEncounterDice(combat).state;
+    }
+    throw new Error(`no seed drew ${foeId} at ${node}`);
 }
 
 /** The fight with the foe about to play `move` in its opening loop. */
@@ -58,7 +63,7 @@ describe('each fields, quays, pier and town node stages its own foe and portrait
 
 describe('the sea cave elite stages its own foe and portrait, with both DANGERs unnamed', () => {
     it('bw-c1: The Tithe-Collector', () => {
-        const vm = buildCombatViewModel(fightAt('bw-c1'));
+        const vm = buildCombatViewModel(fightAt('bw-c1', 'enemy-tithe-collector'));
         expect(vm.enemy.name).toBe('The Tithe-Collector');
         expect(vm.enemy.artKey).toBe('tithe-collector');
         expect(vm.enemy.dangers).toEqual([{ phase: 2, name: null }, { phase: 3, name: null }]);
