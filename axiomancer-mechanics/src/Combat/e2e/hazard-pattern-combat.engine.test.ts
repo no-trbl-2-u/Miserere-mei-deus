@@ -173,6 +173,15 @@ describe('Spec 26 §2 — intent derivation', () => {
         const seq = getThreatSequence(makeEnemy(60));
         for (const p of seq) expect(p.intentType).toBeDefined();
     });
+    it('stamps a telegraph kind on every move of a phases foe, a DANGER on each phase change', () => {
+        const seq = getThreatSequence(FloatEye);
+        expect(seq.length).toBeGreaterThan(0);
+        for (const p of seq) {
+            expect(['attack', 'defend', 'status', 'danger', 'unknown']).toContain(p.intentType);
+            expect(p.intentType).toBe(p.enemyMove!.kind);
+        }
+        expect(seq.filter(p => p.intentType === 'danger')).toHaveLength(FloatEye.phases!.length - 1);
+    });
 });
 
 // ── Card classification (§6) — pure ──────────────────────────────────────────
@@ -223,6 +232,12 @@ describe('Spec 33 §1 — initialization + the four-die tray', () => {
             // Each phase is a real enemy turn: a threat action with effects.
             expect(p.threatAction.effects.length).toBeGreaterThan(0);
             expect(p.threatAction.effects.some(e => (e.damage ?? 0) > 0)).toBe(true);
+        }
+    });
+
+    it('a phases foe plays a real move every entry: a hit, a WARD, a status or a rider-shaped hit', () => {
+        for (const p of getThreatSequence(FloatEye)) {
+            expect(p.threatAction.effects.length > 0 || p.threatAction.rider !== undefined).toBe(true);
         }
     });
 });

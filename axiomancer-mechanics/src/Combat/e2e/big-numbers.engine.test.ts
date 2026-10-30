@@ -145,6 +145,20 @@ describe('boss STAGES', () => {
         const again = resolveThreatPhase(s, rng).state;
         expect(again.stagesEntered).toEqual([0]);
     });
+
+    it('a foe with HP phases enters no stage, even one it declares, and a DEAL still lands as printed', () => {
+        // The real Float-Eye keeps its `phases`; its HP line, not a stage, changes the fight.
+        const foe: Enemy = { ...makeEnemy({ stages, difficulty: 'normal' }), phases: FloatEye.phases };
+        foe.health = 900; // under the stage's 99% line
+        let s = open(foe);
+        const before = s.enemy.health;
+        s = playFree(seat(s, 'qa-bn-deal'), 'qa-bn-deal');
+        expect(before - s.enemy.health).toBe(3);
+        const res = resolveThreatPhase(s, rng);
+        expect(res.state.stagesEntered ?? []).toEqual([]);
+        expect(res.state.stageThreatBonus ?? 0).toBe(0);
+        expect(res.events.filter(e => e.kind === 'enemy-healed' && e.source === 'STAGE')).toEqual([]);
+    });
 });
 
 describe('the VITAE curve', () => {

@@ -50,7 +50,7 @@ import { rarityFor, RARITY_LABEL, RARITY_PIPS, RARITY_COLOR } from '@/state/pres
 
 /** The barrel doesn't re-export the union, so derive it from Card. */
 type CardSpecialMechanic = NonNullable<Card['specialMechanics']>[number];
-import { effectGlyph, GLYPH_COLORS, type StatusGlyph } from '@/components/combat/statusGlyphs';
+import { effectGlyph, GLYPH_COLORS, type StatusGlyph, type StatusGlyphKind } from '@/components/combat/statusGlyphs';
 import { keywordForEffect, keywordForVerb, keywordForMechanic, keywordGloss, keywordsInText, systemTermsForCard } from '@/state/combat/keywords';
 import { AXM, HUE } from '@/theme/axm';
 import {
@@ -2036,19 +2036,24 @@ export function enemyWordChips(state: CombatEncounterState, side: 'enemy' | 'pla
     const w = state.enemyWords;
     const counters = foeCounterChips(state, side);
     if (!w) return counters;
-    const chip = (word: string, intensity: number, duration: number, glyph: string, color: string): CombatEffectChipVM => ({
+    // Each word carries the glyph kind its colour belongs to: WARD a boon
+    // (statup), BRINE a cut (statdown), LEECH a drain (dot), the rest control.
+    const chip = (
+        word: string, intensity: number, duration: number, glyph: string, kind: StatusGlyphKind, caption?: string,
+    ): CombatEffectChipVM => ({
         effectId: `enemy-word-${word.toLowerCase()}`, intensity, duration,
-        glyph: { glyph, color, kind: 'control', label: word },
+        glyph: { glyph, color: GLYPH_COLORS[kind], kind, label: word },
         gloss: keywordGloss(word),
+        ...(caption ? { caption } : {}),
     });
     if (side === 'enemy') {
-        return [...(w.ward > 0 ? [chip('Ward', w.ward, 0, '⛨', GLYPH_COLORS.statup)] : []), ...counters];
+        return [...(w.ward > 0 ? [chip('Ward', w.ward, 0, '⛨', 'statup')] : []), ...counters];
     }
     const out: CombatEffectChipVM[] = [...counters];
-    if (w.brine > 0) out.push(chip('Brine', w.brine, 0, '≋', GLYPH_COLORS.statdown));
-    if ((w.tangle ?? 0) > 0) out.push(chip('Tangle', w.tangle!, 0, '#', GLYPH_COLORS.control));
-    if (w.leechTurns > 0 && w.leechPotency > 0) out.push(chip('Leech', w.leechPotency, w.leechTurns, '∿', GLYPH_COLORS.dot));
-    if (w.undertow) out.push(chip('Undertow', 1, 0, '↓', GLYPH_COLORS.control));
+    if (w.brine > 0) out.push(chip('Brine', w.brine, 0, '≋', 'statdown'));
+    if ((w.tangle ?? 0) > 0) out.push(chip('Tangle', w.tangle!, 0, '#', 'control'));
+    if (w.leechTurns > 0 && w.leechPotency > 0) out.push(chip('Leech', w.leechPotency, w.leechTurns, '∿', 'dot'));
+    if (w.undertow) out.push(chip('Undertow', 1, 0, '↓', 'control', `${undertowDieName(w.undertow)} die lifted from your next roll`));
     return out;
 }
 
@@ -2086,6 +2091,11 @@ const ENEMY_COUNTER_GLOSS = {
     curfew: "A curfew: this turn only this many more cards can be played, FREE or PAID. It ends at the foe's next turn.",
 } as const;
 
+/** The die an UNDERTOW lifts, by the name the dice wear on the board. */
+function undertowDieName(die: 'heart' | 'body' | 'mind'): string {
+    return die.charAt(0).toUpperCase() + die.slice(1);
+}
+
 /** The weather's chips for one side of the board ([] when the sky is clear).
  *  Your INFERNO's chip carries its per-turn loss as a caption. */
 export function weatherChips(state: CombatEncounterState, side: 'enemy' | 'player'): CombatEffectChipVM[] {
@@ -2101,6 +2111,13 @@ export function weatherChips(state: CombatEncounterState, side: 'enemy' | 'playe
         }));
 }
 
+/** How long each enemy word's chip lasts, where it is not "the foe's next turn". */
+const ENEMY_WORD_SPAN: Record<string, string> = {
+    'enemy-word-brine': 'until the end of your next turn',
+    'enemy-word-tangle': 'until that many cards are played',
+    'enemy-word-undertow': 'until your next roll',
+};
+
 /** A status chip's a11y line. Weather has no turn count: it lasts the combat
  *  (drifting down on its own), so it never reads "0 turns left". */
 export function effectChipA11y(e: CombatEffectChipVM): string {
@@ -2108,10 +2125,9 @@ export function effectChipA11y(e: CombatEffectChipVM): string {
         : e.effectId === 'spike-thorns' ? 'drops by 1 each round'
         : e.effectId === 'program-yielding' ? 'while it holds'
         : e.effectId === 'program-mercy' ? `bursts in ${e.duration} turn${e.duration === 1 ? '' : 's'}`
-        : e.effectId.startsWith('enemy-word-') && e.duration <= 0 ? "until the foe's next turn"
         : e.effectId === 'enemy-counter-curfew' ? "until the foe's next turn"
         : e.effectId.startsWith('enemy-counter-') ? 'a count that lasts the fight'
-        : `${e.duration} turns left`;
+        : ENEMY_WORD_SPAN[e.effectId] ?? (e.effectId.startsWith('enemy-word-') && e.duration <= 0 ? "until the foe's next turn" : `${e.duration} turns left`);
     return `${e.glyph.label}, intensity ${e.intensity}${e.unit ?? ''}, ${span}${e.caption ? `. ${e.caption}` : ''}`;
 }
 

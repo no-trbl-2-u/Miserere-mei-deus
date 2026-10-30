@@ -195,12 +195,16 @@ export interface ProgramPlayVM {
 
 /** The engine's read of whether each line of a hand card can be played now. */
 export function programPlayVM(state: CombatEncounterState, uid: string, cardId: string): ProgramPlayVM {
+    const freeBlock = freeLineBlock(state, uid);
+    // The shortfall belongs to the SACRIFICE floor alone: when TANGLE is the
+    // refusal (`freeBlock` is not the card's own), no SACRIFICE is owed.
+    const freeIsFloor = freeBlock === programLineBlock(state, uid, false);
     return {
         // TANGLE refuses any card's FREE line; a program card adds its own refusals.
-        freeBlock: freeLineBlock(state, uid),
+        freeBlock,
         // A curfew refuses the PAID line too.
         paidBlock: playLimitBlock(state) ?? programLineBlock(state, uid, true),
-        freeShortfall: programLineShortfall(state, uid, false),
+        freeShortfall: freeIsFloor ? programLineShortfall(state, uid, false) : null,
         paidShortfall: programLineShortfall(state, uid, true),
         paidDiscard: programLineDiscardShortfall(state, uid, true),
         unscrappable: isCurseCard(cardId),

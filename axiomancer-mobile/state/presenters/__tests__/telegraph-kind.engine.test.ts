@@ -116,6 +116,12 @@ describe('DANGER is named only once beaten (A5)', () => {
         const { combat } = startRealFight({ ...REAL_BOSS_FIGHT_FIXTURE, player: { level: 1 } }, { deck: ['grey-strike'], seed: 1 });
         expect(buildCombatViewModel(combat).enemy.dangers).toEqual([]);
     });
+
+    it('lists the live Float-Eye\'s DANGER at bw-w2: unnamed until beaten, then named', () => {
+        const { combat } = startRealFight(realFightFixture({ level: 1 }), { deck: ['grey-strike'], seed: 1 });
+        expect(buildCombatViewModel(combat, false).enemy.dangers).toEqual([{ phase: 2, name: null }]);
+        expect(buildCombatViewModel(combat, true).enemy.dangers).toEqual([{ phase: 2, name: 'The Long Career' }]);
+    });
 });
 
 describe('the log names a DANGER only once beaten (A5)', () => {

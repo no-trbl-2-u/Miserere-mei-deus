@@ -24,7 +24,7 @@ import { BW_ENCOUNTER_FOES } from '../../World/MapEvents/content';
 import { registerSandboxCards } from '../../Cards/cards.sandbox';
 import { BARNACLE_ID } from '../../Cards/library/enemy-curses.cards';
 import {
-    initializeCombatEncounter, rollEncounterDice, resolveThreatPhase, threatHits,
+    initializeCombatEncounter, projectIncomingThreat, rollEncounterDice, resolveThreatPhase, threatHits,
 } from '../../Combat/combat.engine';
 import { scaleMoveNumber } from '../../Combat/combat.threat';
 import { riderAfterPlay } from '../../Combat/combat.enemy-riders';
@@ -308,6 +308,13 @@ describe('the Crane-Hook\'s riders (level 3)', () => {
 
     it('Swing: your GUARD counts half against it', () => {
         expect(foeTurn({ ...at(crane, 'Swing'), guard: 10 }).lost).toBe(s3(8) - 5);
+    });
+
+    it('Swing: the preview (the incoming net) soaks the same half of your GUARD the turn does', () => {
+        for (const guard of [0, 3, 10, 40]) {
+            const s = { ...at(crane, 'Swing'), guard };
+            expect(projectIncomingThreat(s).netDamage, `guard ${guard}`).toBe(foeTurn(s).lost);
+        }
     });
 
     it('Counterweight: 4 now, 6 more next turn unless you deal it 10+ first', () => {
