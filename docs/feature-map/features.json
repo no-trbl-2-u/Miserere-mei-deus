@@ -1205,6 +1205,12 @@
       "kind": "coupling",
       "from": "area:Combat",
       "to": "area:Cards",
+      "file": "axiomancer-mechanics/src/Combat/combat.enemy-riders.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Cards",
       "file": "axiomancer-mechanics/src/Combat/combat.enemy-words.resolve.ts"
     },
     {
@@ -1355,6 +1361,12 @@
       "kind": "coupling",
       "from": "area:Combat",
       "to": "area:Effects",
+      "file": "axiomancer-mechanics/src/Combat/combat.enemy-riders.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Effects",
       "file": "axiomancer-mechanics/src/Combat/combat.enemy-words.resolve.ts"
     },
     {
@@ -1416,6 +1428,12 @@
       "from": "area:Combat",
       "to": "area:Enemy",
       "file": "axiomancer-mechanics/src/Combat/combat.enemy-decks.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Enemy",
+      "file": "axiomancer-mechanics/src/Combat/combat.enemy-riders.ts"
     },
     {
       "kind": "coupling",

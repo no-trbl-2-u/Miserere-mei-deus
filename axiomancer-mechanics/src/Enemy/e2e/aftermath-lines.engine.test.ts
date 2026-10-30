@@ -43,8 +43,21 @@ describe('per-foe aftermath narrative lines (art-driven roster)', () => {
         }
     });
 
-    it('every EnemyLibrary entry carries finalBlowLines + causeLines (full-roster regression guard)', () => {
-        for (const enemy of EnemyLibrary) {
+    // Chapter 1's new normals ship with their one-line description only (the EN1
+    // brief, "Prose"); the board falls back to its own lines until T writes theirs.
+    const DESCRIPTION_ONLY = new Set(['enemy-gallows-crow', 'enemy-net-mender', 'enemy-crane-hook']);
+
+    it('Chapter 1\'s description-only foes carry no aftermath prose yet', () => {
+        for (const id of DESCRIPTION_ONLY) {
+            const enemy = EnemyLibrary.find(e => e.id === id);
+            expect(enemy, id).toBeDefined();
+            expect(enemy!.finalBlowLines, id).toBeUndefined();
+            expect(enemy!.causeLines, id).toBeUndefined();
+        }
+    });
+
+    it('every other EnemyLibrary entry carries finalBlowLines + causeLines (full-roster regression guard)', () => {
+        for (const enemy of EnemyLibrary.filter(e => !DESCRIPTION_ONLY.has(e.id))) {
             expect(enemy.finalBlowLines, `${enemy.id} finalBlowLines`).toBeDefined();
             expect(enemy.finalBlowLines!.brutal).toMatch(/\S/);
             expect(enemy.finalBlowLines!.quiet).toMatch(/\S/);

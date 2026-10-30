@@ -127,8 +127,8 @@ table exists for T's tuning session.
   (`threatDamageBudget`), so a level change in tuning moves them together. The live ×2 VITAE knob
   stays.
 - **Levels and repeats** follow "The Breakwater table" below, every foe under level 10
-  [T to confirm #1]. Each fight node binds one foe; a zone's two foes alternate across its nodes
-  [T to confirm #2]. Both are starting points for T's tuning session.
+  [Accepted at merge (default), #1]. Each fight node binds one foe; a zone's two foes alternate across its nodes
+  [Accepted at merge (default), #2]. Both are starting points for T's tuning session.
 - **Per-node binding.** `poolFor` (`World/MapEvents/content.ts:289`) stops mapping by kind for
   `fight` and `bw-c1`; a `BW_ENCOUNTER_FOES` table by node id replaces `BW_FIGHT_LEVEL` for fights,
   like `CW_ENCOUNTER_FOES`. `bw-l4` and `bw-w5` keep today's foe (the Green Jelly at

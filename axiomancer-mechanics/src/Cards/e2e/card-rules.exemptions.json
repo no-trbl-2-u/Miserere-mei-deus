@@ -1,12 +1,6 @@
 [
   {
     "rule": "carrier-rule",
-    "id": "BARNACLE",
-    "reason": "enemy word with no live carrier yet: the engine resolves it (EN1e) and the Breakwater foes carry it from EN1f-h, which delete this row",
-    "filed": "2026-10-30"
-  },
-  {
-    "rule": "carrier-rule",
     "id": "BLEED",
     "reason": "pinned at CS1, awaits T's card session",
     "filed": "2026-10-13"
@@ -31,27 +25,9 @@
   },
   {
     "rule": "carrier-rule",
-    "id": "MEND",
-    "reason": "enemy word with no live carrier yet: the engine resolves it (EN1d) and the Breakwater foes carry it from EN1f-h, which delete this row",
-    "filed": "2026-10-30"
-  },
-  {
-    "rule": "carrier-rule",
     "id": "RETRIEVE",
     "reason": "admission bar: the Defender trial set carries RETRIEVE on one card (M-07 FREE, T's thirty as voted); the keyword is for every lane, so a second carrier is T's call after play",
     "filed": "2026-10-27"
-  },
-  {
-    "rule": "carrier-rule",
-    "id": "SCOUR",
-    "reason": "enemy word with no live carrier yet: the engine resolves it (EN1d) and the Breakwater foes carry it from EN1f-h, which delete this row",
-    "filed": "2026-10-30"
-  },
-  {
-    "rule": "carrier-rule",
-    "id": "TANGLE",
-    "reason": "enemy word with no live carrier yet: the engine resolves it (EN1e) and the Breakwater foes carry it from EN1f-h, which delete this row",
-    "filed": "2026-10-30"
   },
   {
     "rule": "carrier-rule",
@@ -61,21 +37,9 @@
   },
   {
     "rule": "carrier-rule",
-    "id": "UNDERTOW",
-    "reason": "enemy word with no live carrier yet: the engine resolves it (EN1e) and the Breakwater foes carry it from EN1f-h, which delete this row",
-    "filed": "2026-10-30"
-  },
-  {
-    "rule": "carrier-rule",
     "id": "WAIVE",
     "reason": "pinned at CS1, awaits T's card session",
     "filed": "2026-10-13"
-  },
-  {
-    "rule": "carrier-rule",
-    "id": "WARD",
-    "reason": "enemy word with no live carrier yet: the engine resolves it (EN1d) and the Breakwater foes carry it from EN1f-h, which delete this row",
-    "filed": "2026-10-30"
   },
   {
     "rule": "carrier-rule",

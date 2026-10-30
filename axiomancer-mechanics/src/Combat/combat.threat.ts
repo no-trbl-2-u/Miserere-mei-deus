@@ -20,6 +20,7 @@ import type {
     CombatThreatPhase, ThreatBranchCondition,
 } from './combat.encounter.types';
 import { AUTHORED_THREAT_SEQUENCES } from './combat.threat-sequences';
+import { scaleRider } from './combat.enemy-riders';
 
 export type { ThreatBranchCondition } from './combat.encounter.types';
 
@@ -388,7 +389,10 @@ function moveThreatAction(move: EnemyMove, level: number, authoredLevel: number)
     if ((move.tangle ?? 0) > 0) effects.push({ tangle: move.tangle });
     if (move.undertow) effects.push({ undertow: move.undertow });
     if ((move.barnacle ?? 0) > 0) effects.push({ barnacle: move.barnacle });
-    return { description: `${move.name}: ${move.text}`, effects };
+    // The move's conditional effect rides along, its level-bound numbers scaled
+    // (`combat.enemy-riders.ts` resolves it).
+    const rider = move.rider ? scaleRider(move.rider, n => scaleMoveNumber(n, level, authoredLevel)) : undefined;
+    return { description: `${move.name}: ${move.text}`, effects, ...(rider ? { rider } : {}) };
 }
 
 /**

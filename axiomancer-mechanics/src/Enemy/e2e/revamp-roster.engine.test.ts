@@ -1,8 +1,9 @@
 /**
  * The enemy roster reset.
  *
- * Pins the post-reset roster: exactly three live foes (Float-Eye, the Green
- * Jelly, the Death Beholder) plus the `sandbag` fixture; no survivor carries a
+ * Pins the roster: the three R2 survivors (Float-Eye, the Green Jelly, the
+ * Death Beholder), Chapter 1's normals as they land (EN1f: the Gallows Crow,
+ * the Net-Mender, the Crane-Hook) and the `sandbag` fixture; no foe carries a
  * keyword or a stage `gain` list; no enemy card carries an affliction; every
  * Act 1 map draws Float-Eye; each Act 1 region pins the Green Jelly mid-region
  * and the Death Beholder as its door boss. The keyword, rider, curse and
@@ -27,14 +28,20 @@ import * as mechanics from '../../index';
 const XP_REWARD = 350;
 
 const SURVIVOR_IDS = ['enemy-float-eye', 'enemy-green-jelly', 'enemy-death-beholder'];
+/** Chapter 1's normals so far, in library order. */
+const CHAPTER1_IDS = ['enemy-gallows-crow', 'enemy-net-mender', 'enemy-crane-hook'];
+/** The foes that still play an enemy deck (the rest play HP phases). */
+const DECK_IDS = ['enemy-green-jelly', 'enemy-death-beholder'];
 
 describe('the R2 roster', () => {
-    it('ENEMY_REGISTRY is exactly sandbag + the three survivors', () => {
+    it('ENEMY_REGISTRY is exactly sandbag, the three survivors and Chapter 1 normals', () => {
         expect(Object.keys(ENEMY_REGISTRY).sort())
-            .toEqual(['death-beholder', 'float-eye', 'green-jelly', 'sandbag']);
-        expect(EnemyLibrary.map(e => e.id)).toEqual(SURVIVOR_IDS);
+            .toEqual(['crane-hook', 'death-beholder', 'float-eye', 'gallows-crow', 'green-jelly', 'net-mender', 'sandbag']);
+        expect(EnemyLibrary.map(e => e.id)).toEqual([
+            'enemy-float-eye', ...CHAPTER1_IDS, 'enemy-green-jelly', 'enemy-death-beholder',
+        ]);
         expect([...LIVE_ENEMY_IDS].sort())
-            .toEqual([...SURVIVOR_IDS, ENEMY_REGISTRY.sandbag.id].sort());
+            .toEqual([...SURVIVOR_IDS, ...CHAPTER1_IDS, ENEMY_REGISTRY.sandbag.id].sort());
     });
 
     it('no survivor carries a keyword, and no stage grants one', () => {
@@ -72,8 +79,8 @@ describe('the R2 enemy cards', () => {
         }
     });
 
-    it('ENEMY_DECKS holds exactly the three survivors, and every card id resolves', () => {
-        expect(Object.keys(ENEMY_DECKS).sort()).toEqual([...SURVIVOR_IDS].sort());
+    it('ENEMY_DECKS holds exactly the deck foes, and every card id resolves', () => {
+        expect(Object.keys(ENEMY_DECKS).sort()).toEqual([...DECK_IDS].sort());
         for (const [enemyId, spec] of Object.entries(ENEMY_DECKS)) {
             const ids = deckCardIds(spec);
             expect(ids.length, enemyId).toBeGreaterThan(0);
@@ -129,12 +136,15 @@ describe('R2b — the enemy keyword code is gone (D63)', () => {
         }
     });
 
-    it('no survivor telegraph prints a PLEA, premise or curse rider', () => {
+    it('no deck telegraph prints a PLEA, premise or curse rider', () => {
+        // A `phases` move may carry the BARNACLE Curse, one of the enemy
+        // words; the deleted words stay gone from every telegraph.
         for (const enemy of EnemyLibrary) {
             for (const phase of getThreatSequence(enemy)) {
                 const faces = phase.branch ? [phase.branch.then, phase.branch.else] : [phase];
                 for (const face of faces) {
-                    expect(face.threatAction.description, enemy.id).not.toMatch(/PLEA|premise|curse/i);
+                    const banned = phase.enemyMove ? /PLEA|premise/ : /PLEA|premise|curse/i;
+                    expect(face.threatAction.description, enemy.id).not.toMatch(banned);
                 }
             }
         }

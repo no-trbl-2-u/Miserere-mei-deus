@@ -75,20 +75,6 @@ export interface EnemyCard {
 }
 
 export const ENEMY_CARD_LIBRARY: Record<string, EnemyCard> = {
-    'dp-first-bell': {
-        name: 'The First Bell',
-        archetype: 'drowned-parish',
-        grade: 'common',
-        damageWeight: 0.8,
-        actionText: 'The bell counts one, and the one it counts is you',
-    },
-    'dp-undertow-grip': {
-        name: 'Undertow',
-        archetype: 'drowned-parish',
-        grade: 'common',
-        damageWeight: 0.95,
-        actionText: 'The undertow takes your ankles in both cold hands and scrapes two long stripes off the shins',
-    },
     'dp-wet-congregation': {
         name: 'The Wet Congregation',
         archetype: 'drowned-parish',

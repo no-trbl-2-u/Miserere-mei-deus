@@ -38,5 +38,21 @@
     "used_by": [
       "assets/images/enemies/index.ts (registry - death-beholder is the Act 1 boss's portraitAsset since phase AN4a; green-jelly is the Act 1 elite's portraitAsset since phase AN3a)"
     ]
+  },
+  {
+    "generated_by": "user-supplied",
+    "date": "2026-10-30",
+    "tool": "restored unchanged from the repo's own history (each file at c20ebe14e^, the commit before the R2a enemy reset deleted it)",
+    "covers": [
+      "gallows-crow.webp",
+      "net-mender.webp",
+      "crane-hook.webp"
+    ],
+    "source": "the 2026-07-06 temp art drop (see the float-eye record): gallows-crow.webp was wharf-shrike.webp, net-mender.webp was sugata.webp, crane-hook.webp was raw-head-rex.webp; the stand-ins T saw on the Breakwater Bestiary page",
+    "used_by": [
+      "assets/images/enemies/index.ts (registry - the portraitAsset of the Gallows Crow, the Net-Mender and the Crane-Hook since phase EN1f)"
+    ],
+    "license": "open source (T, 2026-10-29, D115)",
+    "license_note": "stand-in until T's portrait swap. Owner-supplied external illustration (no source traced). T, 2026-10-29, D115: \"The images we use for everything are open source.\" No sprite sheets (D97)."
   }
 ]

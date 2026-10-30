@@ -12,7 +12,7 @@ import {
 import {
     buildCombatViewModel, selectCombatLogHistory, telegraphName, threatPhaseHeader,
 } from '../combat-encounter.engine';
-import { realFightFixture, startRealFight } from '@/test-utils/realFight';
+import { REAL_BOSS_FIGHT_FIXTURE, realFightFixture, startRealFight } from '@/test-utils/realFight';
 
 const DANGER_NAME = 'Gallows Toll';
 
@@ -112,7 +112,8 @@ describe('DANGER is named only once beaten (A5)', () => {
     });
 
     it('lists no dangers for a foe without phases', () => {
-        const { combat } = startRealFight(realFightFixture({ level: 1 }), { deck: ['grey-strike'], seed: 1 });
+        // The chapter boss keeps its deck (the Float-Eye at bw-w2 plays HP phases).
+        const { combat } = startRealFight({ ...REAL_BOSS_FIGHT_FIXTURE, player: { level: 1 } }, { deck: ['grey-strike'], seed: 1 });
         expect(buildCombatViewModel(combat).enemy.dangers).toEqual([]);
     });
 });

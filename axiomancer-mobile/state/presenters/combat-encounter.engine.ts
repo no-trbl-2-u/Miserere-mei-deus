@@ -1152,7 +1152,7 @@ function enemyPane(state: CombatEncounterState, beaten: boolean): CombatEnemyPan
         isBoss,
         hp: Math.max(0, e.health), maxHp: e.maxHealth,
         hpPct: e.maxHealth > 0 ? Math.max(0, e.health) / e.maxHealth : 0,
-        effects: [...chips(e.effects), ...programChips(state), ...weatherChips(state, 'enemy')],
+        effects: [...chips(e.effects), ...programChips(state), ...weatherChips(state, 'enemy'), ...enemyWordChips(state, 'enemy')],
         intent: intentVM(state, beaten),
         stagesEntered: (state.stagesEntered ?? []).length,
         pendingDot: lethality.pendingDot,
@@ -1170,7 +1170,7 @@ function playerPane(state: CombatEncounterState): CombatPlayerPaneVM {
         name: p.name ?? 'You', hp: Math.max(0, p.health), maxHp: p.maxHealth,
         hpPct: p.maxHealth > 0 ? Math.max(0, p.health) / p.maxHealth : 0,
         guard: state.guard ?? 0,
-        effects: [...chips(p.effects), ...weatherChips(state, 'player'), ...spikeChips(state)],
+        effects: [...chips(p.effects), ...weatherChips(state, 'player'), ...spikeChips(state), ...enemyWordChips(state, 'player')],
     };
 }
 
@@ -1891,7 +1891,9 @@ function handVM(state: CombatEncounterState): CombatCardVM[] {
         .filter(({ card }: { card: CombatCard }) => card.id !== 'card-retreat' && card.verbClass !== 'retreat')
         .map(({ uid, card }: { uid: string; card: CombatCard }) => {
             const vm = scaledCardVM(uid, card, state.player.baseStats);
-            if (!getCardById(card.id)?.program) return vm;
+            // A plain card has no line the engine refuses, until TANGLE refuses its FREE line.
+            const tangled = (state.enemyWords?.tangle ?? 0) > 0;
+            if (!getCardById(card.id)?.program && !tangled) return vm;
             const play = programPlayVM(state, uid, card.id);
             const blocks = [
                 play.freeBlock ? `FREE can't be played now: ${play.freeBlock}.` : null,
@@ -2024,6 +2026,31 @@ export function spikeChips(state: CombatEncounterState): CombatEffectChipVM[] {
     return out;
 }
 
+/**
+ * The enemy words standing on the board (`state.enemyWords`), as chips: the
+ * foe's WARD on its side; BRINE, TANGLE, LEECH and UNDERTOW on yours. These
+ * are live state, like GUARD, so they carry their numbers; the telegraph
+ * (intent, next, wall math) never does. BARNACLE shows as the Curse in hand.
+ */
+export function enemyWordChips(state: CombatEncounterState, side: 'enemy' | 'player'): CombatEffectChipVM[] {
+    const w = state.enemyWords;
+    if (!w) return [];
+    const chip = (word: string, intensity: number, duration: number, glyph: string, color: string): CombatEffectChipVM => ({
+        effectId: `enemy-word-${word.toLowerCase()}`, intensity, duration,
+        glyph: { glyph, color, kind: 'control', label: word },
+        gloss: keywordGloss(word),
+    });
+    if (side === 'enemy') {
+        return w.ward > 0 ? [chip('Ward', w.ward, 0, '⛨', GLYPH_COLORS.statup)] : [];
+    }
+    const out: CombatEffectChipVM[] = [];
+    if (w.brine > 0) out.push(chip('Brine', w.brine, 0, '≋', GLYPH_COLORS.statdown));
+    if ((w.tangle ?? 0) > 0) out.push(chip('Tangle', w.tangle!, 0, '#', GLYPH_COLORS.control));
+    if (w.leechTurns > 0 && w.leechPotency > 0) out.push(chip('Leech', w.leechPotency, w.leechTurns, '∿', GLYPH_COLORS.dot));
+    if (w.undertow) out.push(chip('Undertow', 1, 0, '↓', GLYPH_COLORS.control));
+    return out;
+}
+
 /** The weather's chips for one side of the board ([] when the sky is clear).
  *  Your INFERNO's chip carries its per-turn loss as a caption. */
 export function weatherChips(state: CombatEncounterState, side: 'enemy' | 'player'): CombatEffectChipVM[] {
@@ -2046,6 +2073,7 @@ export function effectChipA11y(e: CombatEffectChipVM): string {
         : e.effectId === 'spike-thorns' ? 'drops by 1 each round'
         : e.effectId === 'program-yielding' ? 'while it holds'
         : e.effectId === 'program-mercy' ? `bursts in ${e.duration} turn${e.duration === 1 ? '' : 's'}`
+        : e.effectId.startsWith('enemy-word-') && e.duration <= 0 ? "until the foe's next turn"
         : `${e.duration} turns left`;
     return `${e.glyph.label}, intensity ${e.intensity}${e.unit ?? ''}, ${span}${e.caption ? `. ${e.caption}` : ''}`;
 }

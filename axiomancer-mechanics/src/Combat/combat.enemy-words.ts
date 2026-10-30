@@ -16,6 +16,9 @@
 
 import type { CombatEncounterState, CombatEvent, EnemyWordsState } from './combat.encounter.types';
 
+/** Why a FREE line is refused while TANGLE holds (the engine's refusal and the board's ribbon). */
+export const TANGLE_FREE_REFUSAL = 'tangled, the next cards cannot use their FREE line, pay with a die';
+
 /** A fresh, empty words state. */
 export function initEnemyWords(): EnemyWordsState {
     return { ward: 0, brine: 0, leechTurns: 0, leechPotency: 0 };

@@ -52,7 +52,8 @@ function makePlayer(): Character {
 }
 
 function makeEnemy(over: Partial<Enemy> = {}): Enemy {
-    const e = deepClone(FloatEye);
+    // The Float-Eye's body without its HP phases (a phases foe enters no stage).
+    const e: Enemy = { ...deepClone(FloatEye), phases: undefined };
     e.id = 'enemy-big-numbers-dummy';
     e.health = 1000; e.maxHealth = 1000; e.effects = [];
     e.keywords = undefined; e.stages = undefined;
