@@ -137,7 +137,7 @@
 
 - **signature-kind-has-five-homes** · a new signature kind touched the kind union, `SIGNATURE_SKILLS`, the two exhaustive switches, mobile's `SIG_ICON`, and `ALL_SIGNATURE_KINDS`, whose test pins the witness list (ship DF1e) → grep `blizzard-to-storm` for every home; leave `ALL_SIGNATURE_KINDS` alone unless re-measuring · seen 1× · last 2026-10-28 · guarded by axiomancer-mechanics/src/Combat/e2e/combat-sim-policies.engine.test.ts
 - **mobile-owns-save-timing** · DY1b's revive showed the return moment and bw-4, but the slot still held the pre-fight state: the app deflects the engine's autosave, so a durable engine verb saves nothing until the mobile action creator calls `save()`; only the browser walk caught it · → call `store.getState().save()` in such creators, test `saveCount`, and read the slot in the e2e · seen 1× · last 2026-10-28 · open
-- **numberless-telegraph-has-many-leaks** · a `phases` foe's numbers sit in four view-model places (intent, `next`, `wallMath`, reveal header) and the `threat-fired` log line still prints the DANGER name (ship EN1c) → drop numbers in the VM, name through `telegraphName(phase, beaten)`; the log is ungated · seen 1× · last 2026-10-30 · guarded by axiomancer-mobile/state/presenters/__tests__/telegraph-kind.engine.test.ts
+- **numberless-telegraph-has-many-leaks** · a `phases` foe's numbers sit in four view-model places (intent, `next`, `wallMath`, reveal header), and the `threat-fired` log line printed the DANGER name (ship EN1c) → drop numbers in the VM, name through `telegraphName(phase, beaten)`, and gate the log history too · seen 1× · last 2026-10-30 · guarded by axiomancer-mobile/state/presenters/__tests__/telegraph-kind.engine.test.ts
 
 ## Adding a domain
 

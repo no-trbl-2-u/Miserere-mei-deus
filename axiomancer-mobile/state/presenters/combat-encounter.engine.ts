@@ -856,7 +856,7 @@ export const COMBAT_LOG_BACK_TEXT = '‹ BACK';
 /** Long fights scroll early turns off rather than growing the sheet forever. */
 const LOG_HISTORY_CAP = 200;
 
-export function selectCombatLogHistory(state: CombatEncounterState): CombatLogHistoryEntryVM[] {
+export function selectCombatLogHistory(state: CombatEncounterState, beaten = false): CombatLogHistoryEntryVM[] {
     const events = state.log ?? [];
     const out: CombatLogHistoryEntryVM[] = [];
     let seq = 0;
@@ -918,7 +918,12 @@ export function selectCombatLogHistory(state: CombatEncounterState): CombatLogHi
             }
             case 'threat-fired':
                 midPlay = false;
-                push('enemy', GLYPH_COLORS.control, stripThreatPayload(e.description));
+                {
+                // An unbeaten foe's DANGER fires nameless, as its telegraph did.
+                const fired = state.threatPhases[e.phaseIndex - 1];
+                const hidden = fired?.enemyMove?.kind === 'danger' && !beaten;
+                push('enemy', GLYPH_COLORS.control, hidden ? 'DANGER.' : stripThreatPayload(e.description));
+            }
                 break;
             case 'hand-drawn':
                 if (midPlay && e.cards.length > 0) {

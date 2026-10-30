@@ -451,7 +451,7 @@ export function CombatEncounterPanel({
     // resets it. The history is cheap (capped at 200 lines) and only walked
     // off `live`, so recomputing every render is fine.
     const [pilgrimLog, setPilgrimLog] = useState(false);
-    const logHistory = useMemo(() => selectCombatLogHistory(live), [live]);
+    const logHistory = useMemo(() => selectCombatLogHistory(live, beaten), [live, beaten]);
     const logScrollRef = useRef<ScrollView | null>(null);
     const closePilgrim = useCallback(() => { setPilgrimOpen(false); setPilgrimLog(false); }, []);
 

@@ -10,7 +10,7 @@ import {
 } from '@mechanics';
 
 import {
-    buildCombatViewModel, telegraphName, threatPhaseHeader,
+    buildCombatViewModel, selectCombatLogHistory, telegraphName, threatPhaseHeader,
 } from '../combat-encounter.engine';
 import { realFightFixture, startRealFight } from '@/test-utils/realFight';
 
@@ -114,5 +114,31 @@ describe('DANGER is named only once beaten (A5)', () => {
     it('lists no dangers for a foe without phases', () => {
         const { combat } = startRealFight(realFightFixture({ level: 1 }), { deck: ['grey-strike'], seed: 1 });
         expect(buildCombatViewModel(combat).enemy.dangers).toEqual([]);
+    });
+});
+
+describe('the log names a DANGER only once beaten (A5)', () => {
+    const s = phasesFight();
+    const dangerIndex = s.threatPhases.findIndex((p) => p.enemyMove?.danger);
+    const fired = (i: number): CombatEncounterState => ({
+        ...s,
+        log: [{
+            kind: 'threat-fired', phaseIndex: s.threatPhases[i].index,
+            description: s.threatPhases[i].threatAction.description, effects: s.threatPhases[i].threatAction.effects,
+        }],
+    });
+    const texts = (st: CombatEncounterState, beaten: boolean): string[] =>
+        selectCombatLogHistory(st, beaten).map((l) => l.text);
+
+    it('reads nameless for an unbeaten foe', () => {
+        expect(texts(fired(dangerIndex), false)).toEqual(['DANGER.']);
+    });
+
+    it('shows the name once the foe is beaten', () => {
+        expect(texts(fired(dangerIndex), true)[0]).toContain(DANGER_NAME);
+    });
+
+    it('never hides an ordinary move', () => {
+        expect(texts(fired(0), false)[0]).toContain('Peck');
     });
 });
