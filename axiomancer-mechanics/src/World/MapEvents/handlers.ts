@@ -29,6 +29,7 @@ import type { MapState, WorldState } from '../types';
 import type { ContinentName, MapName } from '../map.library';
 import { resolveQuestNodeEvent, giveQuestStep } from '../questline';
 import { ENEMY_REGISTRY, type EnemySlug } from '../../Enemy/enemy.library';
+import { sourceAtTier } from '../encounter-tier';
 import { validateDieGear, type DieGearColor } from '../../Character/dieGear.reducer';
 import { REST_PASSIVE_HEAL_FRACTION, restShelterOf } from './rest-shelter';
 import { villageCardShopFor, villageRestCounter } from '../Village/village.engine';
@@ -62,7 +63,7 @@ export function resolveEncounter(
         // An authored `level` pins the difficulty absolutely; otherwise the
         // enemy scales up to the player (never below its own level).
         const targetLevel = payload.level ?? Math.max(source.level, state.player.level);
-        const scaled = scaleEnemyToLevel(source, targetLevel);
+        const scaled = scaleEnemyToLevel(sourceAtTier(source, payload.difficulty), targetLevel);
         const encounter = { enemies: [scaled], origin: `${def.name}:${node.id}` };
         return { state, event: { kind: 'encounter', encounter, isBoss, description: payload.description } };
     }

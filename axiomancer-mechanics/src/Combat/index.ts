@@ -63,7 +63,7 @@ export {
     // Floating dice save-back
     getFloatingDiceColors,
     // Card programs: why a line cannot be played, and an X line's range
-    programLineBlock, freeLineBlock, programLineShortfall, programLineDiscardShortfall, programXChoice,
+    programLineBlock, freeLineBlock, playLimitBlock, programLineShortfall, programLineDiscardShortfall, programXChoice,
 } from './combat.engine';
 // Card programs: the Global / Curse / SACRIFICE ledger and its reads.
 export {

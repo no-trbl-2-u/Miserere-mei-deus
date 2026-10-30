@@ -19,6 +19,7 @@ import { describe, expect, it } from 'vitest';
 import { getMapDefinition, getNodeEventPool, isEliteNode, eliteRelicDropsAt } from '../index';
 import { BREAKWATER_CHAPTER_HELD } from '../Continents/Coastal-Village/breakwater-chapter';
 import { ENEMY_REGISTRY } from '../../Enemy/enemy.library';
+import { payloadDifficulty } from '../encounter-tier';
 import { BW_ENCOUNTER_FOES } from '../MapEvents/content';
 import type { Enemy } from '../../Enemy/types';
 
@@ -41,7 +42,7 @@ describe.each(ACT1_MAPS)('Act 1 fights on %s / %s (D30, D61)', (continent, mapNa
     const fights = map.nodes.flatMap(node => {
         const payload = getNodeEventPool(continent, mapName, node.id)?.entries[0]?.payload;
         if (payload?.kind !== 'encounter') return [];
-        return [{ node, payload, foe: roster.get(payload.enemySlug!) }];
+        return [{ node, payload, foe: roster.get(payload.enemySlug!), difficulty: payloadDifficulty(payload) }];
     });
 
     it('has exactly one boss — the Death Beholder, on the last fight column or where the map stages it (D61)', () => {
@@ -57,7 +58,7 @@ describe.each(ACT1_MAPS)('Act 1 fights on %s / %s (D30, D61)', (continent, mapNa
     });
 
     it('stages the Green Jelly as its elite — once before the door, or on each held elite node', () => {
-        const elites = fights.filter(f => f.foe?.difficulty === 'elite');
+        const elites = fights.filter(f => f.difficulty === 'elite');
         if (staged) {
             expect(elites.map(f => f.node.id).sort()).toEqual([...staged.elites].sort());
             for (const e of elites) expect(e.payload.enemySlug, e.node.id).toBe('green-jelly');
@@ -70,7 +71,7 @@ describe.each(ACT1_MAPS)('Act 1 fights on %s / %s (D30, D61)', (continent, mapNa
     });
 
     it('every other fight is its table row on the Breakwater, and Float-Eye elsewhere', () => {
-        const rest = fights.filter(f => !f.payload.isBoss && f.foe?.difficulty !== 'elite');
+        const rest = fights.filter(f => !f.payload.isBoss && f.difficulty !== 'elite');
         expect(rest.length).toBeGreaterThan(0);
         for (const f of rest) {
             const row = mapName === 'breakwater' ? BW_ENCOUNTER_FOES[f.node.id] : undefined;
@@ -83,14 +84,14 @@ describe.each(ACT1_MAPS)('Act 1 fights on %s / %s (D30, D61)', (continent, mapNa
 
     it('the elite node is the one node the rest respawn reads as elite (phase ER1)', () => {
         const flagged = map.nodes.filter(n => isEliteNode(continent, mapName, n.id)).map(n => n.id);
-        const elites = fights.filter(f => f.foe?.difficulty === 'elite').map(f => f.node.id);
+        const elites = fights.filter(f => f.difficulty === 'elite').map(f => f.node.id);
         expect(flagged).toEqual(elites);
         // No drop list authored yet: the whole elite-only pool applies.
         expect(eliteRelicDropsAt(continent, mapName, elites[0]!)).toBeUndefined();
     });
 
     it('pins the elite to an Act 1 level', () => {
-        const elite = fights.find(f => f.foe?.difficulty === 'elite')!;
+        const elite = fights.find(f => f.difficulty === 'elite')!;
         expect(elite.payload.level).toBeGreaterThanOrEqual(2);
         expect(elite.payload.level).toBeLessThanOrEqual(4);
     });

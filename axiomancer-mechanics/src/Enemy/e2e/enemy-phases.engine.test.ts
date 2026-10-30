@@ -12,7 +12,7 @@ import { describe, it, expect } from 'vitest';
 import { Player } from '../../Character/characters.mock';
 import type { Character } from '../../Character/types';
 import type { Enemy, EnemyDifficulty, EnemyPhase } from '../types';
-import { FloatEye, GreenJelly } from '../enemy.library';
+import { DeathBeholder, FloatEye } from '../enemy.library';
 import { deepClone } from '../../Utils';
 import {
     createEnemy, PHASE_LINES, PHASES_AUTHORED_LEVEL, enemyPhaseTier, escalationApplies,
@@ -198,7 +198,7 @@ describe('A2 — a fixed loop per phase', () => {
     });
 
     it('a foe with no phases keeps the deck path unchanged', () => {
-        const foe: Enemy = { ...deepClone(GreenJelly), health: 1000, maxHealth: 1000, effects: [] };
+        const foe: Enemy = { ...deepClone(DeathBeholder), health: 1000, maxHealth: 1000, effects: [] };
         const seq = getThreatSequence(foe);
         expect(seq.some(p => p.enemyMove !== undefined)).toBe(false);
         expect(nextEnemyPhaseIndex(seq, 0, foe)).toBeNull();
@@ -247,7 +247,7 @@ describe('A3 — no escalation clock for a normal or elite phases foe', () => {
     });
 
     it('a foe without phases keeps the clock', () => {
-        const foe: Enemy = { ...deepClone(GreenJelly), health: 1000, maxHealth: 1000, effects: [] };
+        const foe: Enemy = { ...deepClone(DeathBeholder), health: 1000, maxHealth: 1000, effects: [] };
         expect(escalationApplies(foe)).toBe(true);
         const early = open(foe);
         const late = { ...early, round: LATE };

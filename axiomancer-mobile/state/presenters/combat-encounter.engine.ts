@@ -35,7 +35,7 @@ import {
     type WheelStance,
     type WeatherElement,
     type SpikeReading,
-    hasEnemyPhases, nextEnemyPhaseIndex,
+    hasEnemyPhases, nextEnemyPhaseIndex, playLimitBlock,
 } from '@mechanics';
 // The card-text projection. The detail panel's printed clauses are DERIVED in
 // mechanics from the effect data; this presenter only formats them (keyword
@@ -1892,7 +1892,7 @@ function handVM(state: CombatEncounterState): CombatCardVM[] {
         .map(({ uid, card }: { uid: string; card: CombatCard }) => {
             const vm = scaledCardVM(uid, card, state.player.baseStats);
             // A plain card has no line the engine refuses, until TANGLE refuses its FREE line.
-            const tangled = (state.enemyWords?.tangle ?? 0) > 0;
+            const tangled = (state.enemyWords?.tangle ?? 0) > 0 || playLimitBlock(state) !== null;
             if (!getCardById(card.id)?.program && !tangled) return vm;
             const play = programPlayVM(state, uid, card.id);
             const blocks = [
@@ -2034,7 +2034,8 @@ export function spikeChips(state: CombatEncounterState): CombatEffectChipVM[] {
  */
 export function enemyWordChips(state: CombatEncounterState, side: 'enemy' | 'player'): CombatEffectChipVM[] {
     const w = state.enemyWords;
-    if (!w) return [];
+    const counters = foeCounterChips(state, side);
+    if (!w) return counters;
     // Each word carries the glyph kind its colour belongs to: WARD a boon
     // (statup), BRINE a cut (statdown), LEECH a drain (dot), the rest control.
     const chip = (
@@ -2046,15 +2047,49 @@ export function enemyWordChips(state: CombatEncounterState, side: 'enemy' | 'pla
         ...(caption ? { caption } : {}),
     });
     if (side === 'enemy') {
-        return w.ward > 0 ? [chip('Ward', w.ward, 0, '⛨', 'statup')] : [];
+        return [...(w.ward > 0 ? [chip('Ward', w.ward, 0, '⛨', 'statup')] : []), ...counters];
     }
-    const out: CombatEffectChipVM[] = [];
+    const out: CombatEffectChipVM[] = [...counters];
     if (w.brine > 0) out.push(chip('Brine', w.brine, 0, '≋', 'statdown'));
     if ((w.tangle ?? 0) > 0) out.push(chip('Tangle', w.tangle!, 0, '#', 'control'));
     if (w.leechTurns > 0 && w.leechPotency > 0) out.push(chip('Leech', w.leechPotency, w.leechTurns, '∿', 'dot'));
     if (w.undertow) out.push(chip('Undertow', 1, 0, '↓', 'control', `${undertowDieName(w.undertow)} die lifted from your next roll`));
     return out;
 }
+
+/**
+ * A foe's own counters (`state.enemyRiders`): not keywords, only fight state
+ * the board reads out. The cards the Green Jelly HOLDS and the Tolls the
+ * Curfew-Ringer has rung stand on the foe's side; the curfew it left you
+ * stands on yours. Live numbers, like GUARD; never on the telegraph.
+ */
+export function foeCounterChips(state: CombatEncounterState, side: 'enemy' | 'player'): CombatEffectChipVM[] {
+    const r = state.enemyRiders;
+    if (!r) return [];
+    const chip = (id: string, label: string, intensity: number, glyph: string, color: string, gloss: string, caption?: string): CombatEffectChipVM => ({
+        effectId: `enemy-counter-${id}`, intensity, duration: 0,
+        glyph: { glyph, color, kind: 'control', label },
+        gloss,
+        ...(caption ? { caption } : {}),
+    });
+    const out: CombatEffectChipVM[] = [];
+    if (side === 'enemy') {
+        const held = r.held?.length ?? 0;
+        if (held > 0) out.push(chip('held', 'Held', held, '◍', GLYPH_COLORS.control, ENEMY_COUNTER_GLOSS.held));
+        if ((r.tolls ?? 0) > 0) out.push(chip('toll', 'Toll', r.tolls!, '♪', GLYPH_COLORS.dot, ENEMY_COUNTER_GLOSS.toll));
+    } else if ((r.curfew ?? 0) > 0) {
+        const left = Math.max(0, r.curfew! - (r.played ?? 0));
+        out.push(chip('curfew', 'Curfew', left, '☾', GLYPH_COLORS.statdown, ENEMY_COUNTER_GLOSS.curfew, `${left} of ${r.curfew} plays left`));
+    }
+    return out;
+}
+
+/** What each foe counter says when tapped (state of the fight, not a keyword). */
+const ENEMY_COUNTER_GLOSS = {
+    held: 'Cards the foe has swallowed, out of your discard. They drop back into your discard when it spits them out.',
+    toll: 'Tolls the foe has rung this fight. Each new Toll hits harder for every one already rung.',
+    curfew: "A curfew: this turn only this many more cards can be played, FREE or PAID. It ends at the foe's next turn.",
+} as const;
 
 /** The die an UNDERTOW lifts, by the name the dice wear on the board. */
 function undertowDieName(die: 'heart' | 'body' | 'mind'): string {
@@ -2090,8 +2125,9 @@ export function effectChipA11y(e: CombatEffectChipVM): string {
         : e.effectId === 'spike-thorns' ? 'drops by 1 each round'
         : e.effectId === 'program-yielding' ? 'while it holds'
         : e.effectId === 'program-mercy' ? `bursts in ${e.duration} turn${e.duration === 1 ? '' : 's'}`
-        : ENEMY_WORD_SPAN[e.effectId] ?? (e.effectId.startsWith('enemy-word-') && e.duration <= 0 ? "until the foe's next turn"
-        : `${e.duration} turns left`);
+        : e.effectId === 'enemy-counter-curfew' ? "until the foe's next turn"
+        : e.effectId.startsWith('enemy-counter-') ? 'a count that lasts the fight'
+        : ENEMY_WORD_SPAN[e.effectId] ?? (e.effectId.startsWith('enemy-word-') && e.duration <= 0 ? "until the foe's next turn" : `${e.duration} turns left`);
     return `${e.glyph.label}, intensity ${e.intensity}${e.unit ?? ''}, ${span}${e.caption ? `. ${e.caption}` : ''}`;
 }
 

@@ -11,7 +11,7 @@
  */
 
 import {
-    programFaceText, freeLineBlock, programLineBlock, programLineShortfall, programLineDiscardShortfall, programXChoice, isCurseCard,
+    programFaceText, freeLineBlock, playLimitBlock, programLineBlock, programLineShortfall, programLineDiscardShortfall, programXChoice, isCurseCard,
     GLOBAL_FREE_TURNS,
     type Card, type CombatEncounterState, type ProgramShortfall, type DiscardShortfall,
 } from '@mechanics';
@@ -202,7 +202,8 @@ export function programPlayVM(state: CombatEncounterState, uid: string, cardId: 
     return {
         // TANGLE refuses any card's FREE line; a program card adds its own refusals.
         freeBlock,
-        paidBlock: programLineBlock(state, uid, true),
+        // A curfew refuses the PAID line too.
+        paidBlock: playLimitBlock(state) ?? programLineBlock(state, uid, true),
         freeShortfall: freeIsFloor ? programLineShortfall(state, uid, false) : null,
         paidShortfall: programLineShortfall(state, uid, true),
         paidDiscard: programLineDiscardShortfall(state, uid, true),

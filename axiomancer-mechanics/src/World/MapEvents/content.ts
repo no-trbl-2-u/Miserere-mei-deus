@@ -20,6 +20,7 @@ import {
 } from './resolve-map-event';
 import type { MapEventPayload, MapEventPool } from './types';
 import type { EnemySlug } from '../../Enemy/enemy.library';
+import type { EnemyDifficulty } from '../../Enemy/types';
 import { BLACKSMITH_WITNESS_VARIANTS } from '../Blacksmith/blacksmith.content';
 import { breakwaterChapter } from '../Continents/Coastal-Village/breakwater-chapter';
 import { BREAKWATER_CHAPTER_QUESTLINE_ID } from '../breakwater-chapter.questline';
@@ -299,12 +300,14 @@ export const BW_ENCOUNTER_FOES: Readonly<Record<string, ActOneFoe>> = {
     'bw-h1': { slug: 'net-mender', level: 3 },
     'bw-h2': { slug: 'crane-hook', level: 3 },
     'bw-h3': { slug: 'net-mender', level: 3 },
-    // Long pier and harbour steps, the town, the cliffs: placeholders.
-    'bw-h7': { slug: 'float-eye', level: 2 },
-    'bw-t1': { slug: 'float-eye', level: 2 },
-    'bw-t2': { slug: 'float-eye', level: 2 },
-    'bw-t3': { slug: 'float-eye', level: 2 },
-    'bw-t6': { slug: 'float-eye', level: 2 },
+    // The long pier and harbour steps, level 4.
+    'bw-h7': { slug: 'brine-widow', level: 4 },
+    'bw-t1': { slug: 'lamprey-knot', level: 4 },
+    // The town, level 5.
+    'bw-t2': { slug: 'green-jelly', level: 5 },
+    'bw-t3': { slug: 'curfew-ringer', level: 5 },
+    'bw-t6': { slug: 'green-jelly', level: 5 },
+    // The cliffs and the hamlet: placeholders.
     'bw-l1': { slug: 'float-eye', level: 2 },
     'bw-d1': { slug: 'float-eye', level: 2 },
     'bw-d3': { slug: 'float-eye', level: 2 },
@@ -320,7 +323,7 @@ function poolFor(nodeId: string): MapEventPool {
             if (!foe) throw new Error(`breakwater: fight ${nodeId} has no row in BW_ENCOUNTER_FOES`);
             return cwEncounterPool(nodeId, foe);
         }
-        case 'elite':    return cwEncounterPool(nodeId, { slug: 'green-jelly', level: BW_ELITE_LEVEL });
+        case 'elite':    return cwEncounterPool(nodeId, { slug: 'green-jelly', level: BW_ELITE_LEVEL, difficulty: 'elite' });
         case 'boss':     return cwEncounterPool(nodeId, { slug: 'death-beholder', level: BW_DOOR_LEVEL, isBoss: true });
         case 'hazard':   return hazardPool(nodeId, `[content] ${place}.`);
         case 'rest':     return campRestPool(nodeId, `[content] ${place}.`);
@@ -366,7 +369,11 @@ export const BREAKWATER_CHAPTER_POOLS: ReadonlyArray<{ nodeId: string; pool: Map
  * list; every Act 1 elite leaves it absent until T authors the lists, so each
  * draws from the whole elite-only pool.
  */
-export interface ActOneFoe { slug: EnemySlug; level: number; description?: string; isBoss?: boolean; eliteRelicDrops?: string[] }
+export interface ActOneFoe {
+    slug: EnemySlug; level: number; description?: string; isBoss?: boolean; eliteRelicDrops?: string[];
+    /** The tier the slot stages the foe at, when it is not the foe's own (an elite slot). */
+    difficulty?: EnemyDifficulty;
+}
 
 const CW_FIGHT_LEVEL_EARLY = 2;
 const CW_FIGHT_LEVEL_LATE = 3;
@@ -396,6 +403,7 @@ export function cwEncounterPool(nodeId: string, foe: ActOneFoe): MapEventPool {
             payload: {
                 kind: 'encounter', enemySlug: foe.slug, isBoss: foe.isBoss ?? false, level: foe.level, description: foe.description,
                 ...(foe.eliteRelicDrops ? { eliteRelicDrops: [...foe.eliteRelicDrops] } : {}),
+                ...(foe.difficulty ? { difficulty: foe.difficulty } : {}),
             },
         }],
     };
@@ -408,7 +416,7 @@ const CW_ENCOUNTER_FOES: Record<string, ActOneFoe> = {
     'cw-7':  { slug: 'float-eye', level: CW_FIGHT_LEVEL_EARLY },
     'cw-10': { slug: 'float-eye', level: CW_FIGHT_LEVEL_EARLY },
     // c3 — the root graveyard: the Green Jelly mid-region
-    'cw-12': { slug: 'green-jelly', level: CW_FIGHT_LEVEL_LATE },
+    'cw-12': { slug: 'green-jelly', level: CW_FIGHT_LEVEL_LATE, difficulty: 'elite' },
     // c4 — the rock chapel, the wayside cross, the east cave
     'cw-16': { slug: 'float-eye', level: CW_FIGHT_LEVEL_LATE },
     // The door fight, alone in its column: the exit's only way in.
@@ -519,7 +527,7 @@ const BC_ENCOUNTER_FOES: Record<string, ActOneFoe> = {
     // c1 — the summit beacon
     'bc-2':  { slug: 'float-eye', level: BC_FIGHT_LEVEL_EARLY },
     // c3 — the ruined chapel (the Green Jelly mid-region), the toll gate
-    'bc-8':  { slug: 'green-jelly', level: BC_FIGHT_LEVEL_EARLY },
+    'bc-8':  { slug: 'green-jelly', level: BC_FIGHT_LEVEL_EARLY, difficulty: 'elite' },
     'bc-10': { slug: 'float-eye', level: BC_FIGHT_LEVEL_EARLY },
     // c4 — the arch bridge, the quarry
     'bc-11': { slug: 'float-eye', level: BC_FIGHT_LEVEL_LATE },
@@ -632,7 +640,7 @@ const LD_ENCOUNTER_FOES: Record<string, ActOneFoe> = {
     'ld-3':  { slug: 'float-eye', level: LD_FIGHT_LEVEL_EARLY },
     'ld-5':  { slug: 'float-eye', level: LD_FIGHT_LEVEL_EARLY },
     // c2 — the central aqueduct: the Green Jelly mid-region
-    'ld-8':  { slug: 'green-jelly', level: LD_FIGHT_LEVEL_EARLY },
+    'ld-8':  { slug: 'green-jelly', level: LD_FIGHT_LEVEL_EARLY, difficulty: 'elite' },
     // c3 — the mushroom forest, the ossuary
     'ld-11': { slug: 'float-eye', level: LD_FIGHT_LEVEL_LATE },
     'ld-12': { slug: 'float-eye', level: LD_FIGHT_LEVEL_LATE },

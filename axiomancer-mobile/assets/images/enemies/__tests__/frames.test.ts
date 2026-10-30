@@ -55,7 +55,9 @@ describe('installing a frame set took nothing away from the static registry', ()
     it('the framed and the static enemies are exact lists', () => {
         expect(keys.filter((k) => hasEnemyFrames(k)).sort()).toEqual(['death-beholder', 'float-eye', 'green-jelly']);
         // Chapter 1's stand-in portraits carry no frame set until T picks them.
-        expect(keys.filter((k) => !hasEnemyFrames(k)).sort()).toEqual(['crane-hook', 'gallows-crow', 'net-mender']);
+        expect(keys.filter((k) => !hasEnemyFrames(k)).sort()).toEqual([
+            'brine-widow', 'crane-hook', 'curfew-ringer', 'gallows-crow', 'lamprey-knot', 'net-mender',
+        ]);
     });
 
     it('an unknown key still falls back to the hash pick, as it always did', () => {

@@ -156,7 +156,8 @@ describe('combat reward draft — store actions', () => {
 // Phase UP1f — after an elite fight the draft is the elite reward: the best
 // cards available, or one random upgrade of an owned card.
 describe('the elite reward — store actions', () => {
-    const ELITE = ENEMY_REGISTRY['green-jelly'];
+    // The Green Jelly in an elite slot: a normal on its own, staged at the slot's tier.
+    const ELITE = { ...ENEMY_REGISTRY['green-jelly'], difficulty: 'elite' as const };
     const RARE = cardLibrary.find((card) => upgradeLimit(card) === 3)!.id;
 
     function storeWithDeck(knownCards: readonly string[], rewards: readonly string[] = []): { store: AppStore; adapter: ReturnType<typeof createMemoryAdapter> } {

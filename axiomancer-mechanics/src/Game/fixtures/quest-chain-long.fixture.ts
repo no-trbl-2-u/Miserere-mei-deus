@@ -99,7 +99,7 @@ export const LONG_CHAIN_DEF: MapDefinition = {
 /** Each node's one event; `start` and `travel` have none. */
 export const LONG_CHAIN_POOLS: Readonly<Record<string, MapEventPayload>> = {
     cave:   { kind: 'hazard', damage: 1, description: '[content] The sea cave.' },
-    elite1: { kind: 'encounter', enemySlug: 'green-jelly', level: 1 },
+    elite1: { kind: 'encounter', enemySlug: 'green-jelly', level: 1, difficulty: 'elite' },
     qA:     { kind: 'quest', questline: LONG_MAIN_LINE, node: 2 },
     light:  { kind: 'quest', questline: LONG_MAIN_LINE, node: 3 },
     castle: { kind: 'quest', questline: LONG_MAIN_LINE, node: 4 },

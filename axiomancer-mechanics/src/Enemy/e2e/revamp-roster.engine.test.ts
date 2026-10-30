@@ -24,24 +24,26 @@ import { getNodeEventPool } from '../../World';
 import * as engine from '../../Combat/combat.engine';
 import * as mechanics from '../../index';
 
-/** The Brine Hag's XP reward before AN3a (level 7 x the elite rate), carried over unchanged. */
-const XP_REWARD = 350;
-
 const SURVIVOR_IDS = ['enemy-float-eye', 'enemy-green-jelly', 'enemy-death-beholder'];
-/** Chapter 1's normals so far, in library order. */
-const CHAPTER1_IDS = ['enemy-gallows-crow', 'enemy-net-mender', 'enemy-crane-hook'];
+/** Chapter 1's normals other than the Green Jelly, in library order. */
+const CHAPTER1_IDS = [
+    'enemy-gallows-crow', 'enemy-net-mender', 'enemy-crane-hook', 'enemy-brine-widow', 'enemy-lamprey-knot',
+];
 /** The foes that still play an enemy deck (the rest play HP phases). */
-const DECK_IDS = ['enemy-green-jelly', 'enemy-death-beholder'];
+const DECK_IDS = ['enemy-death-beholder'];
 
 describe('the R2 roster', () => {
     it('ENEMY_REGISTRY is exactly sandbag, the three survivors and Chapter 1 normals', () => {
         expect(Object.keys(ENEMY_REGISTRY).sort())
-            .toEqual(['crane-hook', 'death-beholder', 'float-eye', 'gallows-crow', 'green-jelly', 'net-mender', 'sandbag']);
+            .toEqual([
+                'brine-widow', 'crane-hook', 'curfew-ringer', 'death-beholder', 'float-eye', 'gallows-crow',
+                'green-jelly', 'lamprey-knot', 'net-mender', 'sandbag',
+            ]);
         expect(EnemyLibrary.map(e => e.id)).toEqual([
-            'enemy-float-eye', ...CHAPTER1_IDS, 'enemy-green-jelly', 'enemy-death-beholder',
+            'enemy-float-eye', ...CHAPTER1_IDS, 'enemy-green-jelly', 'enemy-curfew-ringer', 'enemy-death-beholder',
         ]);
         expect([...LIVE_ENEMY_IDS].sort())
-            .toEqual([...SURVIVOR_IDS, ...CHAPTER1_IDS, ENEMY_REGISTRY.sandbag.id].sort());
+            .toEqual([...SURVIVOR_IDS, ...CHAPTER1_IDS, 'enemy-curfew-ringer', ENEMY_REGISTRY.sandbag.id].sort());
     });
 
     it('no survivor carries a keyword, and no stage grants one', () => {
@@ -116,10 +118,11 @@ describe('the R2 Act 1 pools and pins (D61)', () => {
         expect(ENEMY_REGISTRY[payload.enemySlug as keyof typeof ENEMY_REGISTRY].difficulty).toBe('boss');
     });
 
-    it.each(ACT1)('$map pins the Green Jelly mid-region ($elite)', ({ continent, map, elite }) => {
-        const payload = encounterAt(continent, map, elite);
+    it.each(ACT1)('$map pins the Green Jelly mid-region ($elite), staged as an elite there', ({ continent, map, elite }) => {
+        const payload = encounterAt(continent, map, elite) as { enemySlug?: string; isBoss?: boolean; difficulty?: string };
         expect(payload.enemySlug).toBe('green-jelly');
         expect(payload.isBoss ?? false).toBe(false);
+        expect(payload.difficulty).toBe('elite');
     });
 });
 
@@ -193,28 +196,26 @@ describe('the Death Beholder is the Doorwarden\'s fight, carried over whole (AN4
     });
 });
 
-describe('the Green Jelly is the Brine Hag\'s fight, carried over whole (AN3a)', () => {
-    it('keeps the elite tier, level, map, VITAE, XP and stat budget', () => {
+describe('the Green Jelly is the Brine Hag\'s fight, reworked into a town normal (EN1g)', () => {
+    it('is a normal at level 5 with HP phases, and keeps its art, map and stat shape', () => {
         expect(GreenJelly).toMatchObject({
             id: 'enemy-green-jelly',
             portraitAsset: 'green-jelly',
-            level: 7,
-            difficulty: 'elite',
+            level: 5,
+            difficulty: 'normal',
             logic: 'strategic',
             mapName: 'breakwater',
-            maxHealth: 120,
-            xpReward: XP_REWARD,
         });
-        expect(GreenJelly.baseStats).toEqual(enemyStatBudget(7, { heart: 4, body: 1, mind: 2 }));
+        expect(GreenJelly.baseStats).toEqual(enemyStatBudget(5, { heart: 4, body: 1, mind: 2 }));
+        expect(GreenJelly.phases).toHaveLength(2);
+        expect(GreenJelly.stages).toEqual([]);
     });
 
-    it('keeps its loot and its deck', () => {
+    it('keeps its loot and drops its old deck', () => {
         expect(GreenJelly.loot?.map(l => [l.item?.id ?? null, l.weight])).toEqual([
             [null, 80], ['healing-potion', 20],
         ]);
-        expect(ENEMY_DECKS['enemy-green-jelly']).toEqual([
-            'dp-wet-congregation', 'dp-lead-bell', 'dp-drowning-drill', 'dp-breaking-sea', 'dp-vespers-under-water',
-        ]);
+        expect(ENEMY_DECKS['enemy-green-jelly']).toBeUndefined();
     });
 
     it('keeps the befriend gate below 30% and its 35 XP friendship bonus', () => {

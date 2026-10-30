@@ -79,7 +79,12 @@ function pointerByRound(enemy: Enemy, maxRound: number): number[] {
     return seen;
 }
 
-const FLAT_DECK_IDS = ENEMY_DECK_IDS.filter(id => !isTieredDeck(ENEMY_DECKS[id]));
+// No live foe plays a flat deck since the Green Jelly moved to HP phases, so a
+// fixture deck (its former five cards) stands in for the flat form.
+const FLAT_FIXTURE = 'enemy-flat-fixture';
+(ENEMY_DECKS as Record<string, unknown>)[FLAT_FIXTURE] =
+    ['dp-wet-congregation', 'dp-lead-bell', 'dp-drowning-drill', 'dp-breaking-sea', 'dp-vespers-under-water'];
+const FLAT_DECK_IDS = [FLAT_FIXTURE];
 const TIERED_DECK_IDS = ENEMY_DECK_IDS.filter(id => isTieredDeck(ENEMY_DECKS[id]));
 
 // ── (a) the flat form still compiles to today's behaviour ───────────────────
@@ -151,11 +156,14 @@ describe('round-keyed deck tiers — a flat deck still compiles to what it alway
     });
 
     it('a foe with HP phases has no deck: the Float-Eye and Chapter 1 normals left ENEMY_DECKS', () => {
-        for (const id of ['enemy-float-eye', 'enemy-gallows-crow', 'enemy-net-mender', 'enemy-crane-hook']) {
+        for (const id of [
+            'enemy-float-eye', 'enemy-gallows-crow', 'enemy-net-mender', 'enemy-crane-hook',
+            'enemy-brine-widow', 'enemy-lamprey-knot', 'enemy-green-jelly', 'enemy-curfew-ringer',
+        ]) {
             expect(ENEMY_DECK_IDS, id).not.toContain(id);
             expect(enemyById(id).phases?.length, id).toBe(2);
         }
-        expect(FLAT_DECK_IDS).toEqual(['enemy-green-jelly']);
+        expect(ENEMY_DECK_IDS).toEqual(['enemy-death-beholder']);
     });
 });
 

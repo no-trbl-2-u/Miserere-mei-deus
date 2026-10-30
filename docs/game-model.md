@@ -132,7 +132,7 @@ the Expo app (`axiomancer-mobile`) presents it.
   lanes widen the pool and never add a slot. A cache offers one. The dev
   menu's REWARD POOL can narrow the draft to card lanes (`CARD_LANES`: the
   grey office, Blood Price, the Elementalist and the Defender). A won elite fight
-  (`difficulty: 'elite'`, the Green Jelly) pays the elite reward instead
+  (`difficulty: 'elite'`; an elite slot stages the Green Jelly at that tier) pays the elite reward instead
   (`rollEliteReward`, Phase UP1f): the best 3 cards by rarity, one from a
   lane the deck draws on (`deckLaneIds`), or one upgrade of a random owned
   card at the highest rarity owned that can take one, read on the shared
@@ -297,8 +297,11 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
 
 - **Float-Eye:** level 1, normal, 38 VITAE. The only foe drawn at random,
   in every region.
-- **Green Jelly:** level 7, elite, 120 VITAE. Placed on certain nodes. The
-  only foe that can be befriended.
+- **Green Jelly:** level 5, a normal with HP phases (EN1g): it holds the
+  next cards you play inside it, shows you your own face and throws your last
+  status back. Placed on the town's nodes; an elite slot stages it at the elite
+  tier until its own foe lands. The only foe that can be befriended, below 30%
+  VITAE, which is also where its second phase begins.
 - **The Death Beholder:** boss, 320 VITAE at level 8, two stages (at 60% and
   25% VITAE). It holds every region's door, pinned at level 1, 2, 3 and 4
   (`World/MapEvents/content.ts`); `scaleEnemyToLevel` scales its VITAE to

@@ -69,8 +69,9 @@ function rarityOf(id: string) {
 }
 
 describe('which fights pay the elite reward', () => {
-    it('the Green Jelly is elite; the Float-Eye and the Death Beholder are not', () => {
-        expect(isEliteEnemy(GreenJelly)).toBe(true);
+    it('an elite slot pays it; the Green Jelly on its own, the Float-Eye and the Death Beholder do not', () => {
+        expect(isEliteEnemy({ ...GreenJelly, difficulty: 'elite' })).toBe(true);
+        expect(isEliteEnemy(GreenJelly)).toBe(false);
         expect(isEliteEnemy(FloatEye)).toBe(false);
         expect(isEliteEnemy(DeathBeholder)).toBe(false);
     });

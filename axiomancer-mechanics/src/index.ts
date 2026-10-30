@@ -89,7 +89,7 @@ export {
     // Floating dice save-back
     getFloatingDiceColors,
     // Card programs (Global, Curse, SACRIFICE): the reads the board needs
-    programLineBlock, freeLineBlock, programLineShortfall, programLineDiscardShortfall, programXChoice, isProgramCard, isCurseCard,
+    programLineBlock, freeLineBlock, playLimitBlock, programLineShortfall, programLineDiscardShortfall, programXChoice, isProgramCard, isCurseCard,
     GLOBAL_FREE_TURNS, DISCARD_SHORTFALL_REASON,
     programFaceText, GLOBAL_TRIGGER_TEXT,
     LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER,
