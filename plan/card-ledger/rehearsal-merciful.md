@@ -314,3 +314,38 @@ T answered the vote's Open lines and the remaining Session 0 Open lines in four 
 - The overheal-draw card that E-09's note became.
 - Which cards print HURRY N and YIELDING.
 - Names (D99), colours (split evenly per sub-lane), the test deck, and the sims' number changes.
+
+## Sims (lane-creator step 6)
+
+Branch `sandbox/merciful-sims` (head `227755148`, cut from `origin/main` at `8f35a2c93`), report
+`plan/card-ledger/merciful-sims.md` on that branch; never merged. 300 seeded runs per cell, the 39 Act 1 ledger fights
+(the ledger has grown from 26), the three stat spreads. Grey, Blood Price and the Elementalist re-measured on the branch
+match the last measured line (3993f2a) in all 351 cells; the Defender's 117 cells match unmodified main. Two decks:
+`merciful-29` (the 29 kept cards, no grey base) and a 20-card test deck **the session picked** (every Global and
+Spell), not T's. HURRY, YIELDING's befriend, the relics and E-09's overheal-draw card are not modelled.
+
+- **Slowest lane after grey; the 29 cards land closest to T's targets.** Turns on Float-Eye / the Green Jelly / the
+  Death Beholder (targets about 3 / 5 / 7): test deck 2.17 / 2.76 / 4.31, the 29 2.76 / 3.55 / 5.98. Grey 2.86 / 3.77
+  / 6.29, Blood Price 2.04 / 2.46 / 3.59, the Elementalist 2.67 / 3.22 / 4.44, the Defender 2.57 / 3.03 / 4.04.
+- **100% wins in all 234 cells, but it is hit hardest of the lanes**: lowest-VITAE p10 0.95 / 0.91 / 0.79 (test deck,
+  worst cell 0.74; the 29 worst 0.66). It takes 9.2 / 20.1 / 74.6 VITAE a fight, about twice the Defender.
+- **MERCY bursts do about half the killing**: 52 / 51 / 45% of the foe's VITAE, plain DEAL 41 to 44%, RADIANCE only
+  8 to 11%. MERCY heals the foe 11.8 / 18.7 / 51.9 a fight on the way.
+- **Bursts come early and big.** Only 9.8% of fights end before MERCY bursts; two thirds of bursts are early (P-03b,
+  P-05a), not on the clock. On the Death Beholder the burst runs median 56, p90 111, max 406. 24 to 44% of fights end
+  with MERCY still on the foe.
+- **RADIANCE whiffs often**: 35 / 27 / 16% of RADIANCE heals restore 0 (test deck); 45% overall in the 29.
+- **Runaways** (peak, test deck / 29): P-05a's three-times burst 261 / 369 (its FREE tick that runs the clock out
+  328 / 388); P-03b MERCY 15 then burst 260 / 210; M-05c heal to full 109 / 195; P-08b MERCY 105 / 181; P-07b DEAL
+  98 / 110; E-06a's turn 84 / 74; E-03b PAID's extra heal 61 / 52.
+- **No card is dead on both lines.** Near-dead PAID lines (under 13% of draws): E-03b, E-06a, P-08b, E-01b, P-01a,
+  M-04b, P-09c. M-04b's debuff clear never fired (no Act 1 foe debuffs you).
+- **Trials, not applied:** P-03b PAID MERCY 15 to 8 and P-05a PAID three times to twice gives 2.48 / 3.03 / 4.46
+  turns; adding M-05c +12 to +6 and E-03b PAID three times to twice drops the door's biggest burst from 406 to 280.
+  The report also suggests P-08b at "half all you healed".
+
+Modelling calls the sims made where the rules are silent (for T at the revisions): the clock bursts at the start of
+the third foe turn after MERCY lands; MERCY on a foe at full VITAE adds 2N (N plus N of overheal); "bursts now" and a
+tick to 0 burst at once, on your turn; foes carry no GUARD in this engine, so GUARD never blocks a burst; Heart scales
+MERCY and RADIANCE as it scales LEECH (plain HEAL stays Mind-scaled); E-03b's boost covers HEAL and RADIANCE, not
+MERCY or LEECH; "all you healed this turn" counts the turn-start Globals. The full list is in the report.
