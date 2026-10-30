@@ -30,6 +30,7 @@ import type { TrialSet } from './card.lanes';
 import { BLOOD_PRICE_SET } from './library/blood-price.cards';
 import { ELEMENTALIST_SET } from './library/elementalist.cards';
 import { DEFENDER_SET } from './library/defender.cards';
+import { ENEMY_CURSE_CARDS } from './library/enemy-curses.cards';
 
 /**
  * The registered trial sets (plan/revamp/cards.md → "The trial set"). Each
@@ -52,7 +53,8 @@ export const cardLibrary: Card[] = [
     ...TRIAL_SETS.flatMap(set => set.cards),
 ];
 
-const registry = new Map<string, Card>(cardLibrary.map(card => [card.id, card]));
+// The foe-made Curses resolve by id but are not in the player library.
+const registry = new Map<string, Card>([...cardLibrary, ...ENEMY_CURSE_CARDS].map(card => [card.id, card]));
 
 // Sandbox integration: experimental cards / overrides (loaded via --sandbox)
 // take precedence over the curated library at lookup time.

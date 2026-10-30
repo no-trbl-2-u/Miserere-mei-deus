@@ -231,10 +231,17 @@ export interface CombatThreatEffect {
     vulnerable?: { pct: number; turns: number };
     /** LEECH on you: adds 3 turns and this much potency. */
     leech?: number;
+    /** TANGLE: your next this-many cards cannot use their FREE line. */
+    tangle?: number;
+    /** UNDERTOW: the named die does not roll on your next turn. */
+    undertow?: WheelStance;
+    /** BARNACLE: this many Barnacle Curses join your hand. */
+    barnacle?: number;
 }
 
 /** The enemy words with live state on the board (`combat.enemy-words.ts`). */
-export type EnemyWordId = 'ward' | 'mend' | 'scour' | 'brine' | 'vulnerable' | 'leech';
+export type EnemyWordId =
+    | 'ward' | 'mend' | 'scour' | 'brine' | 'vulnerable' | 'leech' | 'tangle' | 'undertow' | 'barnacle';
 
 /**
  * The enemy words' fight state. Optional on the encounter: absent reads as
@@ -250,6 +257,12 @@ export interface EnemyWordsState {
     leechTurns: number;
     /** LEECH on you: the VITAE you lose at the start of each of your turns. */
     leechPotency: number;
+    /** TANGLE on you: cards left that cannot use their FREE line (absent = 0). */
+    tangle?: number;
+    /** UNDERTOW on you: the die colour that will not roll next turn (absent = none). */
+    undertow?: WheelStance;
+    /** Counter for the uids of the Barnacles put in your hand. */
+    barnacleUid?: number;
 }
 
 export interface CombatThreatAction {
@@ -507,11 +520,14 @@ export type CombatEvent =
     | { kind: 'threat-branch'; phaseIndex: number; conditionText: string; taken: 'then' | 'else' }
     // The enemy's reactive cleanse shed some of its own afflictions.
     | { kind: 'threat-cleansed'; phaseIndex: number; effectIds: string[] }
-    /** An enemy word moved: `gained` (WARD, BRINE, VULNERABLE or LEECH landed, `amount` its number),
+    /** An enemy word moved: `gained` (WARD, BRINE, VULNERABLE, LEECH, TANGLE, UNDERTOW or BARNACLE
+     *  landed, `amount` its number),
      *  `soaked` (WARD took `amount` off a DEAL), `cut` (BRINE took `amount` off a GUARD gain),
      *  `ticked` (LEECH took `amount` VITAE from you), `stripped` (SCOUR took `stripped` off the foe)
-     *  or `faded` (WARD or BRINE ran out with `amount` left). */
-    | { kind: 'enemy-word'; word: EnemyWordId; op: 'gained' | 'soaked' | 'cut' | 'ticked' | 'stripped' | 'faded';
+     *  `faded` (WARD, BRINE or TANGLE ran out with `amount` left), `spent` (a landed PAID play counted a card off TANGLE,
+     *  or UNDERTOW kept a die off the tray) or `shed` (a BARNACLE fell off). */
+    | { kind: 'enemy-word'; word: EnemyWordId;
+        op: 'gained' | 'soaked' | 'cut' | 'ticked' | 'stripped' | 'faded' | 'spent' | 'shed';
         amount: number; stripped?: string[] }
     | { kind: 'hand-drawn'; cards: string[] }
     | { kind: 'mercy-opened'; message: string }

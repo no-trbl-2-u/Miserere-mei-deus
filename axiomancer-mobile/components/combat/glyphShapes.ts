@@ -50,6 +50,10 @@ const BATTLEMENT: GlyphShape = { d: 'M4 3 H7 V6 H10 V3 H14 V6 H17 V3 H20 V21 H4 
 const STITCH: GlyphShape = { d: 'M10 3 H14 V10 H21 V14 H14 V21 H10 V14 H3 V10 H10 Z' };
 const SPARKLE: GlyphShape = { d: 'M12 2 L14.5 9.5 L22 12 L14.5 14.5 L12 22 L9.5 14.5 L2 12 L9.5 9.5 Z' };
 const WAVE: GlyphShape = { d: 'M2 10 C5 6 8 6 12 10 C16 14 19 14 22 10 V16 C19 20 16 20 12 16 C8 12 5 12 2 16 Z' };
+// TANGLE a net, UNDERTOW a pulling arrow, BARNACLE a shell with its mouth open.
+const NET: GlyphShape = { d: 'M3 8 H21 V11 H3 Z M3 13 H21 V16 H3 Z M8 3 H11 V21 H8 Z M13 3 H16 V21 H13 Z' };
+const PULL: GlyphShape = { d: 'M10 2 H14 V13 H19 L12 22 L5 13 H10 Z' };
+const SHELL: GlyphShape = { d: 'M12 3 L21 21 H3 Z M12 9 L8 18 H16 Z', evenodd: true };
 const EYE: GlyphShape = { d: 'M12 5.5 C6 5.5 2 12 2 12 C2 12 6 18.5 12 18.5 C18 18.5 22 12 22 12 C22 12 18 5.5 12 5.5 Z M12 8.5 A3.5 3.5 0 1 0 12 15.5 A3.5 3.5 0 1 0 12 8.5 Z', evenodd: true };
 
 // RADIANCE — a sun: a disc and eight rays. MERCY — a dove: the body, the raised wing, the tail.
@@ -86,6 +90,9 @@ export const GLYPH_SHAPES: Record<string, GlyphShape> = {
     MEND: STITCH,
     SCOUR: SPARKLE,
     BRINE: WAVE,
+    TANGLE: NET,
+    UNDERTOW: PULL,
+    BARNACLE: SHELL,
 };
 
 /** The silhouette for a face keyword, or null → keep the text-rune fallback. */

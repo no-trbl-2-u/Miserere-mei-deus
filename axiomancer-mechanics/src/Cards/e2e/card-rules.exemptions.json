@@ -1,6 +1,12 @@
 [
   {
     "rule": "carrier-rule",
+    "id": "BARNACLE",
+    "reason": "enemy word with no live carrier yet: the engine resolves it (EN1e) and the Breakwater foes carry it from EN1f-h, which delete this row",
+    "filed": "2026-10-30"
+  },
+  {
+    "rule": "carrier-rule",
     "id": "BLEED",
     "reason": "pinned at CS1, awaits T's card session",
     "filed": "2026-10-13"
@@ -61,9 +67,21 @@
   },
   {
     "rule": "carrier-rule",
+    "id": "TANGLE",
+    "reason": "enemy word with no live carrier yet: the engine resolves it (EN1e) and the Breakwater foes carry it from EN1f-h, which delete this row",
+    "filed": "2026-10-30"
+  },
+  {
+    "rule": "carrier-rule",
     "id": "TEMPER",
     "reason": "pinned at CS1, awaits T's card session",
     "filed": "2026-10-13"
+  },
+  {
+    "rule": "carrier-rule",
+    "id": "UNDERTOW",
+    "reason": "enemy word with no live carrier yet: the engine resolves it (EN1e) and the Breakwater foes carry it from EN1f-h, which delete this row",
+    "filed": "2026-10-30"
   },
   {
     "rule": "carrier-rule",

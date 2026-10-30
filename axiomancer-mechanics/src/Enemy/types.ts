@@ -284,6 +284,12 @@ export interface EnemyMove {
     /** LEECH n on you, at the authored level: adds 3 turns and n to the
      *  potency; at the start of your turn you lose the potency and it heals that much. */
     leech?: number;
+    /** TANGLE n: your next n cards cannot use their FREE line (a count, not scaled by level). */
+    tangle?: number;
+    /** UNDERTOW: the named die does not roll on your next turn. */
+    undertow?: 'heart' | 'body' | 'mind';
+    /** BARNACLE n: n Barnacle Curses join your hand (a count, not scaled by level). */
+    barnacle?: number;
 }
 
 /**

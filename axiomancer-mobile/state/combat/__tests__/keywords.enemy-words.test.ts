@@ -19,11 +19,16 @@ const COUNTER: Record<(typeof ENEMY_KEYWORDS)[number], RegExp> = {
     brine: /one big play/,
     vulnerable: /GUARD still blocks the larger hit/,
     leech: /race a LEECH on you/,
+    tangle: /Pay for them with dice/,
+    undertow: /banked in the Reserve/,
+    barnacle: /Spend a body die on a card/,
 };
 
 describe('the enemy words', () => {
-    it('reads the engine list of six', () => {
-        expect([...ENEMY_KEYWORDS]).toEqual(['ward', 'mend', 'scour', 'brine', 'vulnerable', 'leech']);
+    it('reads the engine list of nine', () => {
+        expect([...ENEMY_KEYWORDS]).toEqual([
+            'ward', 'mend', 'scour', 'brine', 'vulnerable', 'leech', 'tangle', 'undertow', 'barnacle',
+        ]);
     });
 
     for (const id of ENEMY_KEYWORDS) {
@@ -39,5 +44,6 @@ describe('the enemy words', () => {
         expect(keywordsInText('Keening: 4 damage and BRINE 3.')).toEqual(['Brine']);
         expect(keywordsInText('Knot Up: WARD 5 and MEND 4.')).toEqual(['Ward', 'Mend']);
         expect(keywordsInText('Mend the Net: MEND 6 and it SCOURs one status off itself.')).toEqual(['Mend', 'Scour']);
+        expect(keywordsInText('Net Throw: TANGLE 2 and BARNACLE.')).toEqual(['Tangle', 'Barnacle']);
     });
 });

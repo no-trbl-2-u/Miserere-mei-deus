@@ -189,10 +189,57 @@ the Expo app (`axiomancer-mobile`) presents it.
   3 cards unlock at rounds `TIER2_DEFAULT_ROUND` = 3 and 6. The telegraph
   shows the intent (damage, debuff, buff, combo or pass) before the player
   acts.
+- **The phase turn (D116).** A foe that declares `phases` (`Enemy.phases`,
+  `Enemy/enemy-phases.ts`) does not use that deck. It plays the moves of its
+  current phase as a fixed loop, in order, repeating. It changes phase at HP
+  lines by tier: a normal at 30% (`PHASE_LINES`), an elite at 60% and 30%, a
+  boss at 75%, 50% and 25%. At most one change happens per turn boundary, and
+  each change plays that phase's DANGER move, once, and nowhere else. Its move
+  numbers are authored at `PHASES_AUTHORED_LEVEL` (normal 2, elite 3) and
+  scale with the foe's level the way damage does. A foe without `phases`
+  keeps the deck path above.
+- **The telegraph names a kind, not a number.** For a `phases` foe the
+  intent is ATTACK, DEFEND, STATUS, DANGER or UNKNOWN, with the move's name
+  and no damage, WARD or stack number anywhere on the board. A DANGER move's
+  name shows only once the foe is in the defeat ledger
+  (`codex.defeatedEnemies`, written on a win or a befriend); before that the
+  DANGER icon shows with no name, and it stays unnamed when it fires.
+- **Enemy words (D116).** A foe's move may carry the five enemy words (WARD,
+  MEND and SCOUR count as one, then BRINE, TANGLE, UNDERTOW, BARNACLE), and
+  may land the player's own VULNERABLE and LEECH on you. Each is a field on
+  `EnemyMove` with a counter its gloss names
+  (`Enemy/enemy-keywords.ts`, resolved in `Combat/combat.enemy-words.ts` and
+  `combat.enemy-words.resolve.ts`). They land after the move's hits.
+  - **WARD n** is the foe's GUARD: it soaks your DEALs before its VITAE and
+    is gone at the start of its next turn. Counter: VULNERABLE, LEECH and
+    INFERNO get past it.
+  - **MEND n** heals the foe. Counter: burst.
+  - **SCOUR n** strips n statuses off the foe, the last one too. Counter:
+    lay more statuses than it can strip.
+  - **BRINE n** cuts each GUARD you gain until the end of your next turn.
+    Counter: one big GUARD play.
+  - **VULNERABLE** and **LEECH** land on you: more damage from the foe's next
+    attacks, and a VITAE drain at your turn start that heals the foe. Counter:
+    GUARD still blocks the larger hit; race the LEECH.
+  - **TANGLE n**: your next n cards cannot use their FREE line. A FREE play is
+    refused, each landed PAID play counts one card off, and what is left fades
+    at the start of the foe's next turn. Counter: pay with dice. A count, not
+    scaled with level.
+  - **UNDERTOW** names one die (body, mind or heart): it does not roll on your
+    next turn. Counter: a banked Reserve die is not on the tray, so it is not
+    lost.
+  - **BARNACLE** puts a Barnacle Curse in your hand (`barnacle`, outside the
+    player library). It cannot be played or scrapped and holds a slot; it
+    falls off when you spend a body die on a card, one Barnacle per such
+    play. A count, not scaled with level.
+  A foe-only counter (the Tithe-Collector's LEDGER, a hoard) is fight state
+  on the pane, not a word. No live foe carries a word until the Breakwater
+  foes land.
 - **Escalation:** enemy damage rises `THREAT_ESCALATION_PER_ROUND` = 0.22 per
   round after `THREAT_ESCALATION_GRACE` = 1 round, up to
   `THREAT_ESCALATION_MAX` = ×2, and `THREAT_ESCALATION_BOSS_MULT` = 1.6×
-  faster against a boss.
+  faster against a boss. A normal or elite foe that declares `phases` is
+  exempt; the HP phases carry its ramp.
 - **Live foes have double VITAE.** The app doubles every live encounter's
   foe VITAE (`LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER` = 2,
   `Combat/live-encounter.ts`), a testing knob; the engine's own fights use
@@ -236,7 +283,8 @@ the Expo app (`axiomancer-mobile`) presents it.
 ## The foes
 
 Three enemies (`EnemyLibrary`, `Enemy/enemy.library.ts`). None carries a
-keyword (`EnemyKeyword = never`).
+word yet (`ENEMY_KEYWORDS` lists nine ids: D116's five enemy words with MEND
+and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
 
 - **Float-Eye:** level 1, normal, 38 VITAE. The only foe drawn at random,
   in every region.
@@ -443,7 +491,8 @@ without a ruling from T.
   counters and the Anvil. The trial cards keep their printed numbers, untuned.
 - No themes or synergy. The only reward steering is the elite reward's one
   card from the deck's lanes (UP1f).
-- No enemy keywords, afflictions, summons or riders.
+- No enemy keywords beyond D116's five enemy words and the player's VULNERABLE
+  and LEECH landing on you (see A fight), and no summons.
 - No alternate wins beyond befriend: no RELENT, no CONDEMN, no capitulation.
 - No alignment, GRACE or faction reputation.
 - No bonus for paying with the card's own colour: the die powers the card

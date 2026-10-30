@@ -68,6 +68,7 @@ export { programText };
 import { spendDice } from './combat.dice';
 import { brineCut, cutGuardGain, soakDealWithWard, wardSoak, wordsOf } from './combat.enemy-words';
 import { recordAttribution } from './combat.attribution';
+import { BARNACLE_ID } from '../Cards/library/enemy-curses.cards';
 import type {
     CombatEncounterState, CombatEvent, CombatHandEntry, CombatManaDie,
 } from './combat.encounter.types';
@@ -200,6 +201,11 @@ export function isProgramCard(cardId: string): boolean {
 /** A Curse: a dead card that holds a hand slot until played; it cannot be scrapped. */
 export function isCurseCard(cardId: string): boolean {
     return getCardById(cardId)?.cardType === 'curse';
+}
+
+/** A Curse a card can play or exile from the hand: every Curse but a foe's Barnacle, which only a body die removes. */
+function isClearableCurse(cardId: string): boolean {
+    return cardId !== BARNACLE_ID && isCurseCard(cardId);
 }
 
 /** True when a deck holds any program card (the fight then carries a ledger). */
@@ -671,7 +677,7 @@ class LineCtx implements ProgramCtx {
     }
 
     playCurseFromHandWaived(): number {
-        const entry = this.w.s.hand.find(h => isCurseCard(h.cardId));
+        const entry = this.w.s.hand.find(h => isClearableCurse(h.cardId));
         if (!entry) return 0;
         if (this.mode === 'apply') {
             this.w.s = { ...this.w.s, hand: this.w.s.hand.filter(h => h.uid !== entry.uid) };
@@ -718,7 +724,7 @@ class LineCtx implements ProgramCtx {
     }
 
     exileCurseFromHand(): number {
-        const entry = this.w.s.hand.find(h => isCurseCard(h.cardId));
+        const entry = this.w.s.hand.find(h => isClearableCurse(h.cardId));
         if (!entry) return 0;
         if (this.mode === 'value') { this.w.value += CURSE_CLEARED_VALUE; return 1; }
         if (this.mode !== 'apply') return 1;
@@ -1410,7 +1416,7 @@ function buildQuery(s: CombatEncounterState, spent: number): ProgramQuery {
         takenLastTurn: l.takenLastRound,
         lostThisCombat: l.lostThisCombat,
         lostThisRound: l.lostThisRound,
-        cursesInHand: s.hand.filter(h => isCurseCard(h.cardId)).length,
+        cursesInHand: s.hand.filter(h => isClearableCurse(h.cardId)).length,
         cursesInDiscard: s.discard.filter(isCurseCard).length,
         foeInferno: foeInferno(l.el ?? initElementState()),
         yourInferno: yourInferno(l.el ?? initElementState()),

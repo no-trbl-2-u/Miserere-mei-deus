@@ -80,8 +80,10 @@ import { weatherEvents } from './combat.elements';
 import { spikeEvents } from './combat.spikes';
 import { cutGuardGain, soakDealWithWard } from './combat.enemy-words';
 import {
-    applyEnemyWordEffects, enemyWordsFoeTurnStart, enemyWordsPlayerTurnStart,
+    applyEnemyWordEffects, enemyWordsAfterPlay, enemyWordsFoeTurnStart, enemyWordsPlayerTurnStart,
+    enemyWordsUndertow,
 } from './combat.enemy-words.resolve';
+import { BARNACLE_ID } from '../Cards/library/enemy-curses.cards';
 import type {
     CombatCard, CombatDieColor, CombatEncounterState, CombatEvent, CardPlay,
     CombatManaDie, CombatPhaseResult, CombatTransition, LandedEffect,
@@ -352,13 +354,16 @@ export function startTurn(
     const turn = state.turn + 1;
     const cracked = crackedColorsForTurn(state, turn);
     let dice = rollUpgradeableDice(turn, state, cracked, rng);
+    // UNDERTOW: the die a foe named does not make it to the tray.
+    const tow = enemyWordsUndertow(state, turn, dice);
+    dice = tow.dice;
     if ((state.permanentWildDice ?? 0) > 0) {
         dice = [...dice, ...rollGoldLeadPair(turn, state, rng)];
     }
     if ((state.floatingDice ?? []).length > 0) {
         dice = [...dice, ...(state.floatingDice ?? []).map(d => ({ ...d, state: 'available' as const }))];
     }
-    const events: CombatEvent[] = [];
+    const events: CombatEvent[] = [...tow.events];
     let conviction = state.conviction;
     let reserve = state.reserve ?? [];
     let floatingDice = state.floatingDice ?? [];
@@ -381,6 +386,7 @@ export function startTurn(
     }
     const next: CombatEncounterState = {
         ...state, dice, reserve, floatingDice, conviction, turn,
+        ...(tow.state.enemyWords ? { enemyWords: tow.state.enemyWords } : {}),
         crackedDice: expireCrackedDice(state.crackedDice, turn),
         spellsPlayedThisTurn: 0,
         // The enemy-DoT accumulator is per-round; a fresh turn zeroes it
@@ -500,6 +506,33 @@ export function playCombatCard(
     x?: number,
 ): CombatTransition {
     if (state.phase !== 'phase-play') return { state, events: [] };
+    const held = cardRef.uid
+        ? state.hand.find(h => h.uid === cardRef.uid)
+        : state.hand.find(h => h.cardId === cardRef.cardId);
+    const refuse = (message: string): CombatTransition => {
+        const events: CombatEvent[] = [{ kind: 'effect-fizzled', cardId: held?.cardId ?? '', effectId: '', message }];
+        return { state: withLog(state, events), events };
+    };
+    // BARNACLE: the Curse cannot be played; a body die on a card knocks it off.
+    if (held?.cardId === BARNACLE_ID) return refuse('a Barnacle cannot be played, spend a body die on a card to knock it off');
+    // TANGLE: while it holds, a card cannot use its FREE line.
+    if (held && !useBottom && (state.enemyWords?.tangle ?? 0) > 0) {
+        return refuse('tangled, the next cards cannot use their FREE line, pay with a die');
+    }
+    const played = playCombatCardCore(state, cardRef, useBottom, dieId, rng, x);
+    const after = enemyWordsAfterPlay(state, played.state, played.events, useBottom, dieId);
+    if (after.events.length === 0) return played;
+    return { state: withLog(after.state, after.events), events: [...played.events, ...after.events] };
+}
+
+function playCombatCardCore(
+    state: CombatEncounterState,
+    cardRef: { uid?: string; cardId?: string },
+    useBottom: boolean,
+    dieId?: string,
+    rng: () => number = defaultRng,
+    x?: number,
+): CombatTransition {
 
     const entry = cardRef.uid
         ? state.hand.find(h => h.uid === cardRef.uid)
@@ -616,7 +649,9 @@ export function discardCombatCard(state: CombatEncounterState, uid: string): Com
     if (isCurseCard(entry.cardId)) {
         const events: CombatEvent[] = [{
             kind: 'effect-fizzled', cardId: entry.cardId, effectId: '',
-            message: 'a Curse cannot be scrapped — play it to be rid of it',
+            message: entry.cardId === BARNACLE_ID
+                ? 'a Barnacle cannot be scrapped, spend a body die on a card to knock it off'
+                : 'a Curse cannot be scrapped — play it to be rid of it',
         }];
         return { state: withLog(state, events), events };
     }
@@ -1442,7 +1477,7 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
             player = words.state.player;
             enemy = words.state.enemy;
             state = {
-                ...state, enemyWords: words.state.enemyWords,
+                ...state, enemyWords: words.state.enemyWords, hand: words.state.hand,
                 ...(words.state.program ? { program: words.state.program } : {}),
             };
             events.push(...words.events);

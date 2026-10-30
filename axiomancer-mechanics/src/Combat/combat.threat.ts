@@ -384,6 +384,10 @@ function moveThreatAction(move: EnemyMove, level: number, authoredLevel: number)
     }
     const leech = scaleMoveNumber(move.leech ?? 0, level, authoredLevel);
     if (leech > 0) effects.push({ leech });
+    // TANGLE and BARNACLE are counts and UNDERTOW a colour: none scales.
+    if ((move.tangle ?? 0) > 0) effects.push({ tangle: move.tangle });
+    if (move.undertow) effects.push({ undertow: move.undertow });
+    if ((move.barnacle ?? 0) > 0) effects.push({ barnacle: move.barnacle });
     return { description: `${move.name}: ${move.text}`, effects };
 }
 
