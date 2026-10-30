@@ -397,6 +397,7 @@ export const SPELL_LAW_PROBE: ProgramQuery = Object.freeze({
 const SPELL_MAGNITUDE_VERBS: ReadonlySet<string> = new Set([
     'deal', 'guard', 'heal', 'vulnerable', 'foeLoses', 'healNextTurn', 'drain',
     'inferno', 'blizzard', 'storm', 'stormTick', 'sacrificeX', 'thorns',
+    'radiance', 'mercy', 'maxVitae', 'healsPlus', 'healsTimes',
 ]);
 /** The payoff verbs the law raises by an INTENSITY step (+1). */
 const SPELL_INTENSITY_VERBS: ReadonlySet<string> = new Set(['leech', 'conviction', 'draw']);

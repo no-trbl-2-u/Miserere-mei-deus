@@ -97,9 +97,9 @@ describe('A1 · the Bleeding Signet opens Blood Price while worn', () => {
         devRewardLaneIds: undefined,
     });
 
-    it('the library entry names the blood-price lane; the Ring names none', () => {
+    it("the library entry names the blood-price lane; the Ring opens the Merciful's", () => {
         expect(signet().laneId).toBe('blood-price');
-        expect(getRelicById(RING_ID)!.laneId).toBeUndefined();
+        expect(getRelicById(RING_ID)!.laneId).toBe('merciful');
     });
 
     it('a worn Signet puts blood-price in the unlocked lanes and earns one lane slot', () => {
@@ -180,14 +180,16 @@ describe('DF1e · A10 · the Defender\'s three relics', () => {
 });
 
 describe('A16 · every lane relic resolves to a registered lane', () => {
-    it('the nine lane relics name a registered lane; each lane has one elite-drop relic and two quest relics', () => {
+    it('the ten lane relics name a registered lane; each lane has one elite-drop relic, and the three lanes with a full set have two quest relics', () => {
         const laneRelics = relicLibrary.filter(r => r.laneId);
-        expect(laneRelics).toHaveLength(9);
+        expect(laneRelics).toHaveLength(10);
         for (const r of laneRelics) expect(getCardLane(relicLaneId(r)!), r.id).toBeDefined();
         for (const lane of ['blood-price', 'elementalist', 'defender']) {
             expect(laneRelics.filter(r => r.laneId === lane && r.relicSource === 'elite')).toHaveLength(1);
             expect(laneRelics.filter(r => r.laneId === lane && r.relicSource === 'quest')).toHaveLength(2);
         }
+        // The Merciful has its family relic (the Ring, an elite drop); T picks its other two later.
+        expect(laneRelics.filter(r => r.laneId === 'merciful').map(r => [r.id, r.relicSource])).toEqual([[RING_ID, 'elite']]);
     });
 });
 

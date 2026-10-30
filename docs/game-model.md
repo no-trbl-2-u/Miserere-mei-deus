@@ -15,8 +15,8 @@ the Expo app (`axiomancer-mobile`) presents it.
 
 ## Cards
 
-- **The library is three grey cards and three trial sets, Blood Price, the
-  Elementalist and the Defender.** The
+- **The library is three grey cards and four trial sets, Blood Price, the
+  Elementalist, the Defender and the Merciful.** The
   grey office (`GREY_OFFICE_CARDS`, `Cards/library/starters.cards.ts`): A
   Plain Blow (attack, DEAL), A Plain Ward (skill, GUARD), A Plain Word
   (spell, VULNERABLE), all colour `any`, rank 1 (Ash), tier 1. The trial
@@ -47,6 +47,15 @@ the Expo app (`axiomancer-mobile`) presents it.
   refuses when it cannot pay), and use RETRIEVE and "while GUARD holds". Its
   lane `defender` holds all 30 and deals T's 20-card test deck (every Global
   and every Spell); it comes out by its file and its `TRIAL_SETS` line.
+  The Merciful trial set (`MERCIFUL_SET`, `Cards/library/merciful.cards.ts`,
+  Phase MF1d) is 29 cards (10 body, 10 mind, 9 purple, all rank 1, one upgrade
+  each) under drafted names at the numbers T chose to ship (the sims' fixes):
+  RADIANCE heals you and hits the foe for what it restored; MERCY heals the foe,
+  adds to its MERCY total, and bursts for twice the total when its 3-turn clock
+  runs out (`Combat/combat.mercy.ts`); YIELDING lets you befriend a foe whatever
+  its VITAE. Its lane `merciful` holds all 29 and deals the sims' 20-card test
+  deck (every Global and every Spell); it comes out by its file and its
+  `TRIAL_SETS` line. The Suppliant's Ring is its family relic (an elite drop).
 - **Card types** (`CardType`) are lifecycle rules. Attack and Skill play
   FREE or PAID, then discard. A **Spell** plays FREE and discards, or PAID
   and EXILEs, and its PAID line is a step stronger to pay for it (the Spell

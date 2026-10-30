@@ -192,7 +192,7 @@ export function scaleCardForStats(card: Card, stats: BaseStats | undefined): Car
     return out;
 }
 
-const PROGRAM_TOKEN = /\{(deal|guard|heal|vuln|leech|thorns):(\d+)\}/g;
+const PROGRAM_TOKEN = /\{(deal|guard|heal|vuln|leech|thorns|radiance|mercy):(\d+)\}/g;
 
 /**
  * A program line's printed text at the player's stats: every number token
@@ -212,7 +212,9 @@ function programTokenValue(kind: string, n: number, stats: BaseStats | undefined
         case 'guard':
         case 'heal': return scaleFor(n, stats, 'mind', 'one-shot');
         case 'leech':
-        case 'thorns': return scaleFor(n, stats, 'heart', 'repeating');
+        case 'thorns':
+        case 'radiance':
+        case 'mercy': return scaleFor(n, stats, 'heart', 'repeating');
         case 'vuln': {
             const def = lookupEffect('debuff_vulnerable');
             return def ? scaleEffectIntensity(def, n, false, stats) : n;

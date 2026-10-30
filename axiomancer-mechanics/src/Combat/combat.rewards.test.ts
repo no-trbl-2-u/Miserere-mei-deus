@@ -29,8 +29,10 @@ function seededRng(seed: number): () => number {
     };
 }
 
+/** The mock player wears the Suppliant's Ring, which opens the Merciful lane; a grey player wears no relic. */
 function greyPlayer(): Character {
-    return { ...deepClone(Player), knownCards: [...STARTING_CARD_IDS], combatRewardCards: [] };
+    const player = deepClone(Player);
+    return { ...player, knownCards: [...STARTING_CARD_IDS], combatRewardCards: [], equipment: { ...player.equipment, relics: [] } };
 }
 
 describe('the reward pool', () => {

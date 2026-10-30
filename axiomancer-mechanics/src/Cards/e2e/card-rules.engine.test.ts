@@ -204,15 +204,18 @@ describe('the Spell law (T, 2026-10-24)', () => {
     const spells = cardLibrary.filter(c => c.cardType === 'spell');
     const held = new Set(EXEMPTIONS.filter(e => e.rule === 'spell-law').map(e => e.id));
 
-    it('reads every Spell: the grey Word and the three trial lanes; A Plain Word and one Defender Spell are held, for T', () => {
-        expect(spells.length).toBe(21);
-        expect(held.size).toBe(2);
+    it('reads every Spell: the grey Word and the four trial lanes; A Plain Word, one Defender Spell and three Merciful Spells are held, for T', () => {
+        expect(spells.length).toBe(26);
+        expect(held.size).toBe(5);
         expect(held.has('grey-word')).toBe(true);
-        expect([...held].filter(id => id !== 'grey-word').every(id => cardLibrary.find(c => c.id === id)?.tags?.includes('defender'))).toBe(true);
+        const lanesOf = (tag: string): number =>
+            [...held].filter(id => cardLibrary.find(c => c.id === id)?.tags?.includes(tag)).length;
+        expect([lanesOf('defender'), lanesOf('merciful')]).toEqual([1, 3]);
         expect(spells.some(c => c.tags?.includes('grey'))).toBe(true);
         expect(spells.some(c => c.tags?.includes('blood-price'))).toBe(true);
         expect(spells.some(c => c.tags?.includes('elementalist'))).toBe(true);
         expect(spells.some(c => c.tags?.includes('defender'))).toBe(true);
+        expect(spells.some(c => c.tags?.includes('merciful'))).toBe(true);
     });
 
     it('every upgraded Spell keeps EXILE on PAID and stays a step past its baseline', () => {

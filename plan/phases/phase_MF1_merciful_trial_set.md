@@ -72,8 +72,9 @@ Size: multi-phase (MF1a L, MF1b M, MF1c M, MF1d M, MF1e S attended).
   times n; your next HEAL is RADIANCE; your HEALs this turn are RADIANCE and deal double; +n max VITAE this combat;
   HEAL to full; return the last n MERCY cards you played this combat; the foe's next attack deals n less; clear one or
   every debuff on you; the foe is YIELDING while it has MERCY. The sim witness values them, as the sandbox's did.
-- **A5** `axiomancer-mechanics/docs/keyword-atlas.md` has rows for RADIANCE, MERCY and YIELDING, and the glossary
-  carries "burst" as MERCY's word.
+- **A5** `axiomancer-mechanics/docs/keyword-atlas.md` has rows for RADIANCE, MERCY and YIELDING. "Bursts" is plain
+  vocabulary, not a keyword (T, 2026-10-30): no BURST atlas row, glossary entry or exemption; the MERCY row says what
+  happens when its clock runs out.
 - **A6** Mobile: `KEYWORD_GLOSS` has RADIANCE, MERCY and YIELDING, each with a popup. The foe panel shows its MERCY
   total and turns left and updates both as they change; YIELDING shows while it holds; the log shows each RADIANCE
   hit and each burst.
