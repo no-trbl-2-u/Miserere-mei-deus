@@ -313,6 +313,30 @@ export const BW_ENCOUNTER_FOES: Readonly<Record<string, ActOneFoe>> = {
     'bw-d3': { slug: 'float-eye', level: 2 },
 };
 
+/**
+ * The elite nodes' draws (phase EN1j): each elite node names one foe or two,
+ * and with two the map's seeded pool roll (`rollPool`, run once on arrival
+ * from the run's RNG) picks one, 50/50. An elite node with no row keeps the
+ * Green Jelly staged as an elite until its pair lands (EN1k: `bw-l4`, EN1l:
+ * `bw-w5`). Levels are T's Breakwater table, every foe under level 10.
+ */
+export const BW_ELITE_DRAWS: Readonly<Record<string, readonly ActOneFoe[]>> = {
+    // The sea cave, level 5: the Cave Choir; the Tithe-Collector (EN1h) is its pair.
+    'bw-c1': [{ slug: 'cave-choir', level: 5 }],
+};
+
+/**
+ * An elite node's pool: one `encounter` entry per foe, each `weight: 1`, so
+ * the map's pool roll draws each with equal odds. One or two foes; any other
+ * count is an authoring error.
+ */
+export function eliteDrawPool(nodeId: string, foes: readonly ActOneFoe[]): MapEventPool {
+    if (foes.length < 1 || foes.length > 2) {
+        throw new Error(`breakwater: elite ${nodeId} names ${foes.length} foes; an elite node draws one or two`);
+    }
+    return { id: `${nodeId}.encounter`, entries: foes.map(foe => cwEncounterPool(nodeId, foe).entries[0]!) };
+}
+
 /** The pool for one node of the new map, by its board kind. */
 function poolFor(nodeId: string): MapEventPool {
     const { kind, place } = BREAKWATER_CHAPTER_KINDS[nodeId]!;
@@ -323,7 +347,11 @@ function poolFor(nodeId: string): MapEventPool {
             if (!foe) throw new Error(`breakwater: fight ${nodeId} has no row in BW_ENCOUNTER_FOES`);
             return cwEncounterPool(nodeId, foe);
         }
-        case 'elite':    return cwEncounterPool(nodeId, { slug: 'green-jelly', level: BW_ELITE_LEVEL, difficulty: 'elite' });
+        case 'elite': {
+            const draw = BW_ELITE_DRAWS[nodeId];
+            if (draw) return eliteDrawPool(nodeId, draw);
+            return cwEncounterPool(nodeId, { slug: 'green-jelly', level: BW_ELITE_LEVEL, difficulty: 'elite' });
+        }
         case 'boss':     return cwEncounterPool(nodeId, { slug: 'death-beholder', level: BW_DOOR_LEVEL, isBoss: true });
         case 'hazard':   return hazardPool(nodeId, `[content] ${place}.`);
         case 'rest':     return campRestPool(nodeId, `[content] ${place}.`);

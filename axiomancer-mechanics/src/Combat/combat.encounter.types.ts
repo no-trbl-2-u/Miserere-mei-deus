@@ -261,6 +261,8 @@ export interface EnemyWordsState {
     tangle?: number;
     /** UNDERTOW on you: the die colour that will not roll next turn (absent = none). */
     undertow?: WheelStance;
+    /** UNDERTOW's second die, when one move named two (absent = none). */
+    undertowAlso?: WheelStance;
     /** Counter for the uids of the Barnacles put in your hand. */
     barnacleUid?: number;
 }
@@ -305,6 +307,8 @@ export interface EnemyRidersState {
     played?: number;
     /** On this turn of yours at most this many cards can be played. */
     curfew?: number;
+    /** The Cave Choir's VERSE: +1 per Hymn; its Amen spends them all. */
+    verse?: number;
 }
 
 /** A status a `copy-last-status` rider can throw back at you. */

@@ -286,8 +286,8 @@ export interface EnemyMove {
     leech?: number;
     /** TANGLE n: your next n cards cannot use their FREE line (a count, not scaled by level). */
     tangle?: number;
-    /** UNDERTOW: the named die does not roll on your next turn. */
-    undertow?: 'heart' | 'body' | 'mind';
+    /** UNDERTOW: the named die does not roll on your next turn; a pair names two. */
+    undertow?: 'heart' | 'body' | 'mind' | readonly ['heart' | 'body' | 'mind', 'heart' | 'body' | 'mind'];
     /** BARNACLE n: n Barnacle Curses join your hand (a count, not scaled by level). */
     barnacle?: number;
     /** The move's one conditional effect, resolved in `Combat/combat.enemy-riders.ts`.
@@ -326,6 +326,11 @@ export interface EnemyMove {
  *   toll-count               +`damage` on the hit for every Toll already rung this fight; ringing one adds to the count.
  *   many-plays-bonus         +`damage` on the hit if you played `cards`+ cards this turn.
  *   curfew                   on your next turn you can play at most `cards` cards.
+ *   verse-gain               adds `verse` to the foe's VERSE count.
+ *   verse-hit                one hit of `damage` per VERSE.
+ *   verse-amen               spends every VERSE: one hit of `damage` per VERSE, and it MENDs the same.
+ *   antiphon                 answers your last turn: you dealt it damage, WARD `ward`; else `hits`
+ *                            hits of `damage` and +`verse` VERSE.
  */
 export type EnemyMoveRider =
     | { kind: 'unplayed-card-bonus'; damage: number }
@@ -352,7 +357,12 @@ export type EnemyMoveRider =
     | { kind: 'spit-held'; damage: number }
     | { kind: 'toll-count'; damage: number }
     | { kind: 'many-plays-bonus'; damage: number; cards: number }
-    | { kind: 'curfew'; cards: number };
+    | { kind: 'curfew'; cards: number }
+    // The Cave Choir (phase EN1j).
+    | { kind: 'verse-gain'; verse: number }
+    | { kind: 'verse-hit'; damage: number }
+    | { kind: 'verse-amen'; damage: number }
+    | { kind: 'antiphon'; ward: number; damage: number; hits: number; verse: number };
 
 /** A rider's kind, e.g. `half-guard`. */
 export type EnemyMoveRiderKind = EnemyMoveRider['kind'];
