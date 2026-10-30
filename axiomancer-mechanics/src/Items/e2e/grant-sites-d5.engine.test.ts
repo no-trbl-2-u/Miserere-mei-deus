@@ -14,6 +14,8 @@ import { rollCacheReward } from '../cache-reward';
 import { consumableLibrary } from '../consumable.library';
 import { relicLibrary } from '../relic.library';
 import { qualifiesForItemRewardScreen } from '../item-grant';
+import * as itemsIndex from '../index';
+import * as packageIndex from '../../index';
 import type { CacheLootTier } from '../cache-reward';
 
 describe('rollCacheReward — consumables only, so The Reliquary rarely earns the reward screen', () => {
@@ -47,6 +49,15 @@ describe('the relic library is exactly the set D5 routes to the screen', () => {
         expect(relicLibrary.length).toBeGreaterThan(0);
         for (const r of relicLibrary) {
             expect(qualifiesForItemRewardScreen(r)).toBe(true);
+        }
+    });
+});
+
+describe('the dead shop reducer is gone from the package surface (A2)', () => {
+    it('neither the Items barrel nor the package index still exports it', () => {
+        for (const name of ['buyItem', 'sellItem', 'defaultSellPrice']) {
+            expect(name in itemsIndex).toBe(false);
+            expect(name in packageIndex).toBe(false);
         }
     });
 });
