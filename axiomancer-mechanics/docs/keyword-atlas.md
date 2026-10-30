@@ -134,12 +134,12 @@ effect (ballot §9). The budget does not count them.
 
 ## Enemy keywords
 
-The words a `phases` foe's move may carry (D116; Phase EN1d). Each is a field
+The words a `phases` foe's move may carry (D116; Phases EN1d and EN1e). Each is a field
 on `EnemyMove` (`src/Enemy/types.ts`), listed in `ENEMY_KEYWORDS`
 (`src/Enemy/enemy-keywords.ts`) and resolved in
 `src/Combat/combat.enemy-words.ts` and `combat.enemy-words.resolve.ts`. Every
-number but VULNERABLE's scales with the foe's level the way its damage does
-(`scaleMoveNumber`). The player's own VULNERABLE and LEECH can also land on
+number but VULNERABLE's, TANGLE's and BARNACLE's scales with the foe's level the
+way its damage does (`scaleMoveNumber`); UNDERTOW names a die, not a number. The player's own VULNERABLE and LEECH can also land on
 the player from a foe's move (the `vulnerable` and `leech` fields); their
 rows are above, and their glosses read for either side. VULNERABLE on you is
 `debuff_vulnerable` for the foe's next `turns` attacks; LEECH on you mirrors
@@ -152,6 +152,9 @@ turn past GUARD, and the foe heals what you lost.
 | **MEND N** | The foe heals that much VITAE, up to its maximum. Counter it with burst: damage dealt in one turn outruns the heal. The existing `enemyHeal`. `EnemyMove.enemyHeal`. | no live foe yet: the Breakwater foes (EN1f-h) |
 | **SCOUR N** | The foe strips that many statuses off itself, the last one too: LEECH first, then INFERNO, STORM and its afflictions. Lay more statuses than it can strip. Its afflictions go newest first; a both-sides INFERNO leaves you your half. MERCY is not a status it strips. `EnemyMove.enemyCleanse`. | no live foe yet: the Breakwater foes (EN1f-h) |
 | **BRINE N** | Each GUARD you gain is cut by that much until the end of your next turn. Gain your GUARD in one big play, not many small ones. Each gain is cut on its own (a PAID play's pips included, a HEAL's overflow into GUARD too); it fades at the start of the foe's next turn. `EnemyMove.brine`. | no live foe yet: the Breakwater foes (EN1f-h) |
+| **TANGLE N** | Your next N cards cannot use their FREE line. Pay for them with dice. A FREE play is refused and costs nothing; each landed PAID play counts one card off, and what is left fades at the start of the foe's next turn. N is a count and does not scale with level. `EnemyMove.tangle`. | no live foe yet: the Breakwater foes (EN1f-h) |
+| **UNDERTOW** | One named die (body, mind or heart) does not roll on your next turn. A Reserve die you banked is not on the tray, so bank one to cover it. The tray's base die of that colour is dropped (an act-reward or floating die of the colour still rolls); it lasts one turn. `EnemyMove.undertow`. | no live foe yet: the Breakwater foes (EN1f-h) |
+| **BARNACLE** | A Barnacle Curse joins your hand. It cannot be played or scrapped, and it holds a slot until you spend a body die on a card, which knocks one off. It is the engine's `barnacle` card, outside the player library; no program line can play or exile it. The count does not scale with level. `EnemyMove.barnacle`. | no live foe yet: the Breakwater foes (EN1f-h) |
 
 ---
 

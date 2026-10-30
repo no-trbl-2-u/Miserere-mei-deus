@@ -11,6 +11,14 @@
  *                 STORM, then its newest affliction (VULNERABLE and the rest).
  *   BRINE n       each GUARD you gain is cut by n until the end of your next
  *                 turn (it fades at the start of the foe's next turn).
+ *   TANGLE n      your next n cards cannot use their FREE line: a FREE play is
+ *                 refused, each landed PAID play counts one off, and what is
+ *                 left fades at the start of the foe's next turn.
+ *   UNDERTOW      the named die does not roll at the start of your next turn
+ *                 (`enemyWordsUndertow`).
+ *   BARNACLE n    n Barnacle Curses join your hand (`BARNACLE_ID`): not
+ *                 playable, not scrappable; a body die spent on a card knocks
+ *                 one off (`enemyWordsAfterPlay`).
  *   VULNERABLE    `debuff_vulnerable` on you: n% more damage from the foe's
  *                 next `turns` attacks.
  *   LEECH n       the program ledger's foe LEECH, mirrored onto you: each
@@ -27,8 +35,9 @@ import { applyDamage, heal, isDefeated } from './health';
 import { foeInferno, initElementState, weatherEvents } from './combat.elements';
 import { LEECH_TURNS_PER_APPLICATION, programRecordDamage } from './combat.card-program';
 import { wordsOf } from './combat.enemy-words';
+import { BARNACLE_ID } from '../Cards/library/enemy-curses.cards';
 import type {
-    CombatEncounterState, CombatEvent, CombatThreatEffect, EnemyWordsState,
+    CombatEncounterState, CombatEvent, CombatManaDie, CombatThreatEffect, EnemyWordsState,
 } from './combat.encounter.types';
 
 /** The words result shape: the next state and the events it emitted. */
@@ -44,11 +53,62 @@ function withWords(state: CombatEncounterState, words: EnemyWordsState): CombatE
 /** Start of the foe's turn: WARD and BRINE run out. */
 export function enemyWordsFoeTurnStart(state: CombatEncounterState): WordsResult {
     const words = state.enemyWords;
-    if (!words || (words.ward <= 0 && words.brine <= 0)) return { state, events: [] };
+    const tangle = words?.tangle ?? 0;
+    if (!words || (words.ward <= 0 && words.brine <= 0 && tangle <= 0)) return { state, events: [] };
     const events: CombatEvent[] = [];
     if (words.ward > 0) events.push({ kind: 'enemy-word', word: 'ward', op: 'faded', amount: words.ward });
     if (words.brine > 0) events.push({ kind: 'enemy-word', word: 'brine', op: 'faded', amount: words.brine });
-    return { state: withWords(state, { ...words, ward: 0, brine: 0 }), events };
+    if (tangle > 0) events.push({ kind: 'enemy-word', word: 'tangle', op: 'faded', amount: tangle });
+    return { state: withWords(state, { ...words, ward: 0, brine: 0, tangle: 0 }), events };
+}
+
+/**
+ * UNDERTOW at the start of your turn: the named die does not roll. Takes the
+ * turn's freshly built dice and returns them without the named colour's base
+ * die (act-reward and floating dice of that colour still roll, and a banked
+ * Reserve die is not on the tray to lose). The word is spent either way.
+ */
+export function enemyWordsUndertow(
+    state: CombatEncounterState, turn: number, dice: CombatManaDie[],
+): { state: CombatEncounterState; dice: CombatManaDie[]; events: CombatEvent[] } {
+    const color = state.enemyWords?.undertow;
+    if (!color) return { state, dice, events: [] };
+    const base = `t${turn}-u-${color}`;
+    const kept = dice.filter(d => d.id !== base);
+    const events: CombatEvent[] = kept.length < dice.length
+        ? [{ kind: 'enemy-word', word: 'undertow', op: 'spent', amount: 1 }]
+        : [];
+    const { undertow: _spent, ...rest } = state.enemyWords!;
+    return { state: withWords(state, rest), dice: kept, events };
+}
+
+/**
+ * After a card play: a landed PAID play counts one card off TANGLE, and a
+ * body die spent on it knocks one BARNACLE off your hand. `before` is the
+ * state the play started from (its dice say which colour paid).
+ */
+export function enemyWordsAfterPlay(
+    before: CombatEncounterState, after: CombatEncounterState, events: readonly CombatEvent[],
+    useBottom: boolean, dieId: string | undefined,
+): WordsResult {
+    const landed = useBottom && events.some(e => e.kind === 'card-played' && e.useBottom);
+    if (!landed) return { state: after, events: [] };
+    let state = after;
+    const out: CombatEvent[] = [];
+    const tangle = state.enemyWords?.tangle ?? 0;
+    if (tangle > 0) {
+        state = withWords(state, { ...wordsOf(state), tangle: tangle - 1 });
+        out.push({ kind: 'enemy-word', word: 'tangle', op: 'spent', amount: 1 });
+    }
+    const die = [...before.dice, ...(before.reserve ?? [])].find(d => d.id === dieId);
+    if (die?.color === 'body') {
+        const idx = state.hand.findIndex(h => h.cardId === BARNACLE_ID);
+        if (idx >= 0) {
+            state = { ...state, hand: state.hand.filter((_, i) => i !== idx) };
+            out.push({ kind: 'enemy-word', word: 'barnacle', op: 'shed', amount: 1 });
+        }
+    }
+    return { state, events: out };
 }
 
 /**
@@ -142,6 +202,22 @@ export function applyEnemyWordEffects(
             events.push({ kind: 'enemy-word', word: 'leech', op: 'gained', amount: eff.leech! });
         }
         if ((eff.scour ?? 0) > 0) state = scour(state, eff.scour!, events);
+        if ((eff.tangle ?? 0) > 0) {
+            const words = wordsOf(state);
+            state = withWords(state, { ...words, tangle: (words.tangle ?? 0) + eff.tangle! });
+            events.push({ kind: 'enemy-word', word: 'tangle', op: 'gained', amount: eff.tangle! });
+        }
+        if (eff.undertow) {
+            state = withWords(state, { ...wordsOf(state), undertow: eff.undertow });
+            events.push({ kind: 'enemy-word', word: 'undertow', op: 'gained', amount: 1 });
+        }
+        if ((eff.barnacle ?? 0) > 0) {
+            const words = wordsOf(state);
+            let uid = words.barnacleUid ?? 0;
+            const added = Array.from({ length: eff.barnacle! }, () => ({ uid: `bn${++uid}`, cardId: BARNACLE_ID }));
+            state = { ...withWords(state, { ...words, barnacleUid: uid }), hand: [...state.hand, ...added] };
+            events.push({ kind: 'enemy-word', word: 'barnacle', op: 'gained', amount: eff.barnacle! });
+        }
     }
     return { state, events };
 }

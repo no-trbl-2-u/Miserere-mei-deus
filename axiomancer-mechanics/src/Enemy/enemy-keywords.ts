@@ -3,8 +3,9 @@
  *
  * The words a `phases` foe's moves may carry, each with a live counter its
  * gloss names: WARD (the foe's own GUARD), MEND (it heals), SCOUR (it strips
- * a status off itself), BRINE (your GUARD gains are cut), and the player's own
- * VULNERABLE and LEECH landing on the player. Each word is a field on
+ * a status off itself), BRINE (your GUARD gains are cut), the player's own
+ * VULNERABLE and LEECH landing on the player, and TANGLE (your FREE lines shut),
+ * UNDERTOW (a die does not roll) and BARNACLE (a Curse holds a hand slot). Each word is a field on
  * `EnemyMove` (`Enemy/types.ts`); `moveKeywords` reads them back, so a foe's
  * words are always the words its moves resolve. The engine resolves them in
  * `Combat/combat.enemy-words.ts`.
@@ -13,7 +14,7 @@
 import type { EnemyMove } from './types';
 
 /** Every enemy keyword, in gloss order. */
-export const ENEMY_KEYWORDS = ['ward', 'mend', 'scour', 'brine', 'vulnerable', 'leech'] as const;
+export const ENEMY_KEYWORDS = ['ward', 'mend', 'scour', 'brine', 'vulnerable', 'leech', 'tangle', 'undertow', 'barnacle'] as const;
 
 /** A keyword carried by an enemy move. */
 export type EnemyKeyword = (typeof ENEMY_KEYWORDS)[number];
@@ -27,6 +28,9 @@ export function moveKeywords(move: EnemyMove): EnemyKeyword[] {
         brine: (move.brine ?? 0) > 0,
         vulnerable: (move.vulnerable?.pct ?? 0) > 0 && (move.vulnerable?.turns ?? 0) > 0,
         leech: (move.leech ?? 0) > 0,
+        tangle: (move.tangle ?? 0) > 0,
+        undertow: move.undertow !== undefined,
+        barnacle: (move.barnacle ?? 0) > 0,
     };
     return ENEMY_KEYWORDS.filter(k => has[k]);
 }

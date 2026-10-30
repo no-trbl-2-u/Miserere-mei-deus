@@ -1,5 +1,5 @@
 /**
- * Hermetic E2E — enemy words, part 1 (phase EN1d, acceptance A7).
+ * Hermetic E2E — enemy words, parts 1 and 2 (phases EN1d and EN1e, acceptance A7 and A8).
  *
  * Each word a `phases` foe's move can carry, and the counter its gloss names:
  *   · WARD n: the foe's GUARD. It soaks your DEALs (FREE, PAID, a program
@@ -14,7 +14,13 @@
  *   · LEECH on you: the program ledger's foe LEECH mirrored (3 turns per
  *     application, potency stacks). It ticks at the start of your turn, past
  *     GUARD, and the foe heals what you lost.
- * Every word's numbers but VULNERABLE's scale with the foe's level.
+ *   · TANGLE n: your next n cards cannot use their FREE line (a FREE play is
+ *     refused, each landed PAID play counts one off, the rest fades at the
+ *     foe's next turn).
+ *   · UNDERTOW: the named die does not roll on your next turn.
+ *   · BARNACLE: a Curse joins your hand; it cannot be played or scrapped and
+ *     falls off when you spend a body die on a card.
+ * Every word's numbers but VULNERABLE's, TANGLE's and BARNACLE's scale with the foe's level.
  *
  * Synthetic sandbox cards and a fixture foe; no live foe carries a word yet.
  * Fixed RNG; no disk / network / TTY.
@@ -33,13 +39,15 @@ import type { Card } from '../../Cards/types';
 import type { ProgramCtx } from '../../Cards/card-program.types';
 import { deepClone } from '../../Utils';
 import {
-    initializeCombatEncounter, playCombatCard, resolveThreatPhase, rollEncounterDice, startTurn,
+    discardCombatCard, initializeCombatEncounter, playCombatCard, resolveThreatPhase, rollEncounterDice, startTurn,
 } from '../combat.engine';
 import { getThreatSequence, scaleMoveNumber } from '../combat.threat';
 import { initProgramLedger, LEECH_TURNS_PER_APPLICATION } from '../combat.card-program';
 import { initElementState } from '../combat.elements';
 import { scaleFor } from '../stat-scaling';
 import { brineCut, wardSoak } from '../combat.enemy-words';
+import { BARNACLE_ID } from '../../Cards/library/enemy-curses.cards';
+import { getCardById } from '../../Cards/cards.library';
 import type { CombatEncounterState, CombatEvent } from '../combat.encounter.types';
 
 const rng = (): number => 0.5;
@@ -122,9 +130,11 @@ it('the fixture player is at neutral stats, so a printed number is the number', 
     expect(scaleFor(5, STATS, 'mind', 'one-shot')).toBe(5);
 });
 
-describe('the six words are the enemy keywords', () => {
-    it('ENEMY_KEYWORDS names WARD, MEND, SCOUR, BRINE, VULNERABLE and LEECH', () => {
-        expect([...ENEMY_KEYWORDS]).toEqual(['ward', 'mend', 'scour', 'brine', 'vulnerable', 'leech']);
+describe('the nine words are the enemy keywords', () => {
+    it('ENEMY_KEYWORDS names the six, then TANGLE, UNDERTOW and BARNACLE', () => {
+        expect([...ENEMY_KEYWORDS]).toEqual([
+            'ward', 'mend', 'scour', 'brine', 'vulnerable', 'leech', 'tangle', 'undertow', 'barnacle',
+        ]);
     });
 
     it('a move reports the words its fields carry, and a foe the words of all its moves', () => {
@@ -370,5 +380,147 @@ describe('LEECH on you', () => {
         const s = foeTurn(open(foe([LATCH]))).state;
         const r = startTurn({ ...s, player: { ...s.player, health: 2 } }, rng);
         expect(r.state.finalOutcome).toBe('defeat');
+    });
+});
+
+describe('TANGLE', () => {
+    const SNARE: EnemyMove = { name: 'Snare', kind: 'status', text: 'TANGLE 2.', tangle: 2 };
+
+    it('the count is not scaled by level and lands after the move', () => {
+        const [entry] = getThreatSequence(foe([SNARE], { level: 6 }));
+        expect(entry.threatAction.effects).toContainEqual({ tangle: 2 });
+        const r = foeTurn(open(foe([SNARE])));
+        expect(r.state.enemyWords?.tangle).toBe(2);
+        expect(words(r.events)).toContainEqual({ kind: 'enemy-word', word: 'tangle', op: 'gained', amount: 2 });
+    });
+
+    it('refuses a FREE play and spends nothing', () => {
+        const s = yourTurn(foeTurn(open(foe([SNARE]))).state, ['ew-hit-5']).state;
+        const hp = s.enemy.health;
+        const r = play(s, 'h0');
+        expect(r.state.enemy.health).toBe(hp);
+        expect(r.state.hand.map(h => h.uid)).toEqual(['h0']);
+        expect(r.events[0]).toMatchObject({ kind: 'effect-fizzled' });
+        expect(r.state.enemyWords?.tangle).toBe(2);
+    });
+
+    it('a PAID play still works and counts one card off', () => {
+        const s = yourTurn(foeTurn(open(foe([SNARE]))).state, ['grey-strike']).state;
+        const r = play(s, 'h0', true);
+        expect(r.state.hand).toHaveLength(0);
+        expect(r.state.enemyWords?.tangle).toBe(1);
+        expect(words(r.events)).toContainEqual({ kind: 'enemy-word', word: 'tangle', op: 'spent', amount: 1 });
+    });
+
+    it('after n paid cards the FREE line is back', () => {
+        let s = yourTurn(foeTurn(open(foe([SNARE]))).state, ['grey-strike', 'grey-strike', 'ew-hit-5']).state;
+        s = play(s, 'h0', true).state;
+        s = play(s, 'h1', true).state;
+        expect(s.enemyWords?.tangle).toBe(0);
+        const hp = s.enemy.health;
+        expect(hp - play(s, 'h2').state.enemy.health).toBe(5);
+    });
+
+    it('fades at the start of the foe next turn if unspent', () => {
+        const s = yourTurn(foeTurn(open(foe([SNARE]))).state).state;
+        const r = foeTurn(s);
+        expect(r.state.enemyWords?.tangle).toBe(0);
+        expect(words(r.events)[0]).toEqual({ kind: 'enemy-word', word: 'tangle', op: 'faded', amount: 2 });
+    });
+});
+
+describe('UNDERTOW', () => {
+    const DRAG: EnemyMove = { name: 'Drag', kind: 'status', text: 'UNDERTOW.', undertow: 'mind' };
+
+    it('names one die and does not scale', () => {
+        const [entry] = getThreatSequence(foe([DRAG], { level: 6 }));
+        expect(entry.threatAction.effects).toContainEqual({ undertow: 'mind' });
+        const r = foeTurn(open(foe([DRAG])));
+        expect(r.state.enemyWords?.undertow).toBe('mind');
+    });
+
+    it('the named die is not on the tray next turn, the others are', () => {
+        const s = foeTurn(open(foe([DRAG]))).state;
+        const r = startTurn(s, rng);
+        const colors = r.state.dice.map(d => d.color);
+        expect(colors).not.toContain('mind');
+        expect(colors).toContain('body');
+        expect(colors).toContain('heart');
+        expect(words(r.events)).toContainEqual({ kind: 'enemy-word', word: 'undertow', op: 'spent', amount: 1 });
+        expect(r.state.enemyWords?.undertow).toBeUndefined();
+    });
+
+    it('lasts one turn only', () => {
+        const s = foeTurn(open(foe([DRAG]))).state;
+        const t1 = startTurn(s, rng).state;
+        const t2 = startTurn({ ...foeTurn(t1).state, turnTakenThisPhase: false }, rng);
+        expect(t2.state.dice.map(d => d.color)).toContain('mind');
+    });
+
+    it('a banked Reserve die still powers a card (the counter)', () => {
+        const s = foeTurn(open(foe([DRAG]))).state;
+        const banked = { id: 'bank', color: 'mind' as const, state: 'available' as const, temporary: false, face: 'mana' as const };
+        const r = startTurn({ ...s, reserve: [banked] }, rng);
+        expect(r.state.reserve?.map(d => d.id)).toContain('bank');
+        expect(r.state.dice.map(d => d.color)).not.toContain('mind');
+    });
+});
+
+describe('BARNACLE', () => {
+    const LATCH_ON: EnemyMove = { name: 'Latch On', kind: 'status', text: 'BARNACLE.', barnacle: 1 };
+    const BODY = { id: 'body1', color: 'body' as const, state: 'available' as const, temporary: false, face: 'mana' as const };
+    const MIND = { id: 'mind1', color: 'mind' as const, state: 'available' as const, temporary: false, face: 'mana' as const };
+
+    function withBarnacle(extra: string[] = ['grey-strike']): CombatEncounterState {
+        const s = foeTurn(open(foe([LATCH_ON]))).state;
+        const t = startTurn(s, rng).state;
+        return { ...t, hand: [...t.hand, ...extra.map((cardId, i) => ({ uid: `x${i}`, cardId }))], dice: [BODY, MIND] };
+    }
+
+    it('is a Curse card outside the player library', () => {
+        expect(getCardById(BARNACLE_ID)?.cardType).toBe('curse');
+        const r = foeTurn(open(foe([LATCH_ON])));
+        expect(r.state.hand.filter(h => h.cardId === BARNACLE_ID)).toHaveLength(1);
+        expect(words(r.events)).toContainEqual({ kind: 'enemy-word', word: 'barnacle', op: 'gained', amount: 1 });
+    });
+
+    it('cannot be played, FREE or PAID', () => {
+        const s = withBarnacle();
+        const uid = s.hand.find(h => h.cardId === BARNACLE_ID)!.uid;
+        for (const paid of [false, true]) {
+            const r = playCombatCard(s, { uid }, paid, paid ? BODY.id : undefined, rng);
+            expect(r.events[0]).toMatchObject({ kind: 'effect-fizzled' });
+            expect(r.state.hand.some(h => h.cardId === BARNACLE_ID)).toBe(true);
+        }
+    });
+
+    it('cannot be scrapped', () => {
+        const s = withBarnacle();
+        const uid = s.hand.find(h => h.cardId === BARNACLE_ID)!.uid;
+        const r = discardCombatCard(s, uid);
+        expect(r.events[0]).toMatchObject({ kind: 'effect-fizzled' });
+        expect(r.state.hand.some(h => h.cardId === BARNACLE_ID)).toBe(true);
+    });
+
+    it('stays through a FREE play and through a non-body PAID play', () => {
+        let s = withBarnacle(['ew-hit-5', 'grey-strike']);
+        s = playCombatCard(s, { uid: 'x0' }, false, undefined, rng).state;
+        expect(s.hand.some(h => h.cardId === BARNACLE_ID)).toBe(true);
+        const r = playCombatCard(s, { uid: 'x1' }, true, MIND.id, rng);
+        expect(r.state.hand.some(h => h.cardId === BARNACLE_ID)).toBe(true);
+    });
+
+    it('falls off when a body die is spent on a card (the counter)', () => {
+        const s = withBarnacle();
+        const r = playCombatCard(s, { uid: 'x0' }, true, BODY.id, rng);
+        expect(r.state.hand.some(h => h.cardId === BARNACLE_ID)).toBe(false);
+        expect(words(r.events)).toContainEqual({ kind: 'enemy-word', word: 'barnacle', op: 'shed', amount: 1 });
+    });
+
+    it('two Barnacles fall one at a time', () => {
+        const s = withBarnacle();
+        const two = { ...s, hand: [...s.hand, { uid: 'bn9', cardId: BARNACLE_ID }] };
+        const r = playCombatCard(two, { uid: 'x0' }, true, BODY.id, rng);
+        expect(r.state.hand.filter(h => h.cardId === BARNACLE_ID)).toHaveLength(1);
     });
 });
