@@ -596,7 +596,7 @@ class LineCtx implements ProgramCtx {
         if (this.mode === 'value') {
             if (heals) {
                 const p = this.w.s.player;
-                this.w.value += Math.min(cost, Math.max(0, p.maxHealth - p.health)) * 0.9;
+                this.w.value += Math.min(veilHeal(this.w.s, cost), Math.max(0, p.maxHealth - p.health)) * 0.9;
             } else {
                 this.w.value -= cost * SAC_COST_VALUE;
             }
@@ -758,7 +758,7 @@ class LineCtx implements ProgramCtx {
         const amt = scaleFor(n, this.stats(), 'mind', 'one-shot');
         if (this.mode === 'value') {
             const p = this.w.s.player;
-            this.w.value += 0.8 * Math.min(amt, p.maxHealth - p.health + this.incoming());
+            this.w.value += 0.8 * Math.min(veilHeal(this.w.s, amt), p.maxHealth - p.health + this.incoming());
             return;
         }
         if (this.mode === 'apply') this.w.l.pendingHeal += amt;

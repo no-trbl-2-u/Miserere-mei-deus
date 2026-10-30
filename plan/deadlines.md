@@ -92,7 +92,7 @@ left; otherwise after.
   the title plate and arena backgrounds, the Defender check, a quest-line play, the pre-run triage,
   Chapter 1's enemy art, a mid-MVP check on the preview build, the walk's `[content]` answers with the Breakwater's
   quest line, the R11 review, and the MVP run.
-- Nov 11: the R11 watch ends; the five held loop-doctrine candidates come up for review.
+- Nov 11: the R11 watch ends; the four held loop-doctrine candidates come up for review (the fifth, claims, was plotted as HW1b on Oct 30).
 
 ### W3 — Chapters 2-4 designed; hazards tuned (Nov 17 - Nov 30)
 
@@ -257,6 +257,9 @@ fails the root `npm test` on an open row (`[ ]`, `[-]` or `[blocked: …]`) that
 names, and on a line here with no reason. **A row listed here is work the loop may still pick on its ordinary turn:
 undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
 
+- HW1a — loop tooling for T's `/heads-down` runs; no T act waits on it
+- HW1b — loop tooling (row claims); no T act waits on it
+- HW1c — loop tooling for T's `/heads-down` runs; no T act waits on it
 - MF1e — T plays the Merciful test deck on a preview build after MF1d; date not set (T picks it).
 - CA2a — the Merciful's paintings; T sees them at MF1e, whose date is not set
 - CA2b — the Merciful's action names; T sees them at MF1e, whose date is not set
@@ -350,6 +353,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-30** — **`/heads-down` gates, claims and resume plotted (HW1)** (T, in session: "let's plot it", after the Nexus v2 comparison). **Added** HW1a-HW1c under Unscheduled: loop tooling no T act waits on. **Edited** the W2 note on the Nov 11 R11 review: four held candidates, not five, since claims is now HW1b. Nothing ticked; no date moved.
 - **2026-10-30** — **the Merciful's card art plotted (CA2)** (T, in session: "When you're done, plot the merciful cards as well."). **Added** CA2a and CA2b under Unscheduled beside MF1e, T's Merciful check, which has no date yet. Nothing ticked; no date moved.
 - **2026-10-30** — **the Defender's card art plotted (CA1)** (T, in session: "Alright, the defender work is in, let's plot the card art replacement"). **Added** CA1a and CA1b to the `Waits on` of the Nov 12 Defender check, so T plays the deck with its own paintings and action names. Nothing ticked; no date moved.
 - **2026-10-30** — **all six drafted elites plotted (EN1j-EN1l)** (T, in session on PR #1122: "Ignore all the 'settled'. There's 3 elites in that pitch and 15 enemies. I want them all", then "let's plot (to add on to the EN rows) the rest of the enemies that were suggested"). **Added** EN1j, EN1k and EN1l to the `Waits on` of the portrait swap (Nov 8); EN1i, which the tuning Item waits on, now requires EN1l. **Edited** enemy session 2 (Oct 31) and the Nov 2 B2 plot, in the Items and the MVP schedule, to the sea keep's boss alone: there is no elite pick left, since each elite node now draws one of its two drafted elites per run. Nothing ticked; no date moved.

@@ -15,15 +15,15 @@ describe('the Act 1 XP ledger (LV1)', () => {
         expect(ledger.every(f => f.level !== undefined)).toBe(true);
     });
 
-    // Chapter 1's normals fight at levels 3 to 5 (EN1f, EN1g) and the sea
-    // cave's elite at level 5 (EN1j) and the keep causeway's at level 8
+    // Chapter 1's normals fight at levels 3 to 6 (EN1f, EN1g, EN1h), the sea
+    // cave's elites at level 5 (EN1j) and the keep causeway's at level 8
     // (EN1l), so the Breakwater pays more XP than its old level-2 Float-Eyes
     // and level-3 elites did.
-    it('a full clear meets the doors at levels 9, 16, 18 and 21 and ends at level 22', () => {
+    it('a full clear meets the doors at levels 9, 17, 19 and 21 and ends at level 23', () => {
         const walk = walkAct1(ledger);
-        expect(walk.doors.map(d => d.playerLevel)).toEqual([9, 16, 18, 21]);
+        expect(walk.doors.map(d => d.playerLevel)).toEqual([9, 17, 19, 21]);
         expect(walk.doors.map(d => d.doorLevel)).toEqual([1, 2, 3, 4]);
-        expect(walk.finalLevel).toBe(22);
+        expect(walk.finalLevel).toBe(23);
     });
 
     it('records the level stepping up to every fight, doors included', () => {
@@ -37,13 +37,13 @@ describe('the Act 1 XP ledger (LV1)', () => {
     it('a door-only route meets the Breakwater door at level 1', () => {
         const walk = walkAct1(ledger.filter(f => f.isBoss));
         expect(walk.doors[0]!.playerLevel).toBe(1);
-        expect(walk.finalLevel).toBeLessThan(22);
+        expect(walk.finalLevel).toBeLessThan(23);
     });
 
     // The rebuilt Breakwater stages 19 fights, so a full clear reaches the
-    // Beacon Crags door at level 18 (17 before EN1j's level-5 elite), where the placeholder Death Beholder is
+    // Beacon Crags door at level 19 (18 before EN1l's level-8 elites), where the placeholder Death Beholder is
     // won about 92% of the time: winnable but free. Chapter 1's normals
-    // (EN1f, EN1g) pay more XP, so the Charcoal Wood door (level 15) and the
+    // (EN1f, EN1g, EN1h) pay more XP, so the Charcoal Wood door (level 17) and the
     // Lantern Deep door (level 20) are free too. The keep causeway's level-8
     // elite (EN1l) brings the Breakwater's own door at level 9, where the
     // level-1 Death Beholder is won about 92% of the time: free as well.

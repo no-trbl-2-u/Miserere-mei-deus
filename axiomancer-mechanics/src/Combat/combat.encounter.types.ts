@@ -234,7 +234,7 @@ export interface CombatThreatEffect {
     /** TANGLE: your next this-many cards cannot use their FREE line. */
     tangle?: number;
     /** UNDERTOW: the named die does not roll on your next turn. */
-    undertow?: WheelStance;
+    undertow?: WheelStance | 'random';
     /** BARNACLE: this many Barnacle Curses join your hand. */
     barnacle?: number;
 }
@@ -307,6 +307,14 @@ export interface EnemyRidersState {
     played?: number;
     /** On this turn of yours at most this many cards can be played. */
     curfew?: number;
+    /** Card ids the foe has taken from your discard, until it dies (the Wreck-Picker's hoard). */
+    hoard?: string[];
+    /** Counter for the uids of the hoarded cards that go back to your hand. */
+    hoardUid?: number;
+    /** The Tithe-Collector's LEDGER: +1 for each card you scrap and each Conviction you spend. */
+    ledger?: number;
+    /** The INFERNO an `inferno-feed` move read when it was planned (its WARD gain). */
+    infernoRead?: number;
     /** The Cave Choir's VERSE: +1 per Hymn; its Amen spends them all. */
     verse?: number;
     /** The Toll-Keeper's TOLL: +1 each foe turn; paying it resets it to 0. */

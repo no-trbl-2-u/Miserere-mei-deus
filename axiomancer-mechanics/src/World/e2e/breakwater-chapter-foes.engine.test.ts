@@ -1,5 +1,5 @@
 /**
- * Chapter 1's foes at their nodes (phases EN1f and EN1g, the Measure of their
+ * Chapter 1's foes at their nodes (phases EN1f, EN1g and EN1h, the Measure of their
  * blocks in the EN1 brief): each fields, quays, pier and town fight node, answered through the map's
  * own event resolver, meets the foe and level its `BW_ENCOUNTER_FOES` row
  * names; in the fight that foe plays its opening loop, and when its VITAE
@@ -11,7 +11,9 @@
 import { describe, expect, it } from 'vitest';
 
 import { resolveMapEvent } from '../MapEvents/resolve-map-event';
-import { BW_ELITE_LEVEL, BW_ENCOUNTER_FOES } from '../MapEvents/content';
+import { BW_ELITE_DRAWS, BW_ELITE_LEVEL, BW_ENCOUNTER_FOES } from '../MapEvents/content';
+import { getNodeEventPool } from '../../World';
+import { scaleEnemyToLevel } from '../encounter';
 import { createNewGameState } from '../../Game/game.reducer';
 import type { GameState } from '../../Game/types';
 import { ENEMY_REGISTRY } from '../../Enemy/enemy.library';
@@ -44,7 +46,7 @@ const fired = (events: readonly CombatEvent[]) =>
 
 const NODES = [
     'bw-w2', 'bw-w3', 'bw-m1', 'bw-p2', 'bw-h1', 'bw-h2', 'bw-h3',
-    'bw-h7', 'bw-t1', 'bw-t2', 'bw-t3', 'bw-t6',
+    'bw-h7', 'bw-t1', 'bw-t2', 'bw-t3', 'bw-t6', 'bw-l1', 'bw-d1', 'bw-d3',
 ] as const;
 
 describe('the fields, quays, pier and town: each node\'s foe fires its DANGER at its 30% line', () => {
@@ -78,6 +80,40 @@ describe('the fields, quays, pier and town: each node\'s foe fires its DANGER at
         const res = resolveThreatPhase(s, rng);
         expect(fired(res.events)[0]).toMatch(new RegExp(`^${danger.name}: `));
         expect(telegraph(res.state)).toMatchObject({ phase: 1, step: 0, danger: false });
+    });
+});
+
+/** A fight against `slug` at level 5 as an elite node stages it (the draw's other half is read from the pool). */
+function fightAs(slug: 'tithe-collector'): CombatEncounterState {
+    const fresh = createNewGameState({ startMap: 'breakwater' });
+    const player = { ...fresh.player, health: 5000, maxHealth: 5000 };
+    const foe = { ...scaleEnemyToLevel(ENEMY_REGISTRY[slug], 5), effects: [] };
+    return rollEncounterDice(initializeCombatEncounter(player, foe, undefined, 7), rng).state;
+}
+
+describe('the sea cave draws the Tithe-Collector, which fires Audit at 60% and Foreclose at 30% (phase EN1h)', () => {
+    it('bw-c1 names it as the second of its two draws, at level 5', () => {
+        const slugs = getNodeEventPool('coastal-continent', 'breakwater', 'bw-c1')!.entries.map(e => (e.payload as { enemySlug?: string }).enemySlug);
+        expect(slugs).toEqual(['cave-choir', 'tithe-collector']);
+        expect(BW_ELITE_DRAWS['bw-c1']![1]).toMatchObject({ slug: 'tithe-collector', level: 5 });
+    });
+
+    it('its DANGERs fire at its lines', () => {
+        const source = ENEMY_REGISTRY['tithe-collector'];
+        let s = fightAs('tithe-collector');
+        expect(s.enemy.id).toBe(source.id);
+        expect(s.enemy.difficulty).toBe('elite');
+        expect(s.enemy.level).toBe(5);
+        for (const [phase, pct] of [[1, 0.6], [2, 0.3]] as const) {
+            const danger = source.phases![phase]!.danger!;
+            const crossed = resolveThreatPhase({ ...s, enemy: { ...s.enemy, health: Math.floor(s.enemy.maxHealth * pct) } }, rng);
+            expect(crossed.events).toContainEqual({ kind: 'enemy-phase-entered', enemyId: source.id, phase, danger: danger.name });
+            s = crossed.state;
+            expect(telegraph(s)).toMatchObject({ phase, danger: true, kind: 'danger' });
+            const res = resolveThreatPhase(s, rng);
+            expect(fired(res.events)[0]).toMatch(new RegExp(`^${danger.name}: `));
+            s = res.state;
+        }
     });
 });
 
