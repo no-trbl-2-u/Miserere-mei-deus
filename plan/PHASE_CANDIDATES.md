@@ -11,7 +11,7 @@
 
 ## Pending
 
-> **Five `[owner]` loop-doctrine candidates (T, 2026-10-11), held until the
+> **Four `[owner]` loop-doctrine candidates (T, 2026-10-11; a fifth, claims, was plotted as HW1b on 2026-10-30), held until the
 > R11 watch ends (on or after 2026-11-11, `skills/oversight.md` §3 item 10).**
 > Filed from the hunt-loop comparison that produced the R11 rewrite (PR #498).
 > They are candidates, not phases: no brief exists yet, on purpose. R11's rule
@@ -19,13 +19,6 @@
 > only when T runs `/plot <title>` on it, one at a time, and the watch data
 > says it is needed. `/expand` and `/oversight` promote none of them before
 > the date; `/iterate` never picks them up.
-
-### [ ] [owner] [score 5.5] Claims for a second loop: a claims record so two loops or a batch never build the same row
-- proposed: 2026-10-11, T's session (hunt comparison); held until the R11 watch ends
-- trigger: a second cron, a contributor, or `/heads-down`-style batches appear. With one cron plus attended sessions, "an open `loop:pr` PR is the claim" (R11 item 3) is enough; don't build this speculatively.
-- source signals: hunt's `claims.json` on an orphan `claims` branch, compare-and-swap writes by git plumbing, owned per session, 24 h TTL, released by `/tidy`; Axiomancer's Phase 99/105 double-ship and lesson `shared-tree-sweep` (a live loop swept a local edit).
-- proposed scope: 1 phase. A `claims` branch and `scripts/claims.mjs` (claim, renew, release, audit); `/march` and `ship-a-phase` claim before any read; a claim with a PR lives until the PR closes; a `/tidy`-style sweep. Tests on the CAS path.
-- conflicts: none; creates no content.
 
 ### [ ] [owner] [score 4.5] A cheap local check and the whole suite in CI: run only what changed locally, shard the full run in GitHub
 - proposed: 2026-10-11, T's session (hunt comparison); held until the R11 watch ends
@@ -945,6 +938,7 @@ Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_
 
 ## Rejected
 
+- Claims for a second loop: a claims record so two loops or a batch never build the same row: briefed via `/plot` 2026-10-30 as Phase **HW1b** (T: "Build the claims branch"; its trigger, `/heads-down` batches, fired). Brief `plan/phases/phase_HW1_heads_down_gates_and_claims.md` § HW1b.
 - Trace or replace the UNRESOLVED art, now that a public page shows the gap (parked until B8): superseded 2026-10-29 by D115 (T: "The images we use for everything are open source"); nothing is traced or replaced, the records take T's ruling and the DevLog publishes the art. Briefed via `/plot` as Phase **AL1**, `plan/phases/phase_AL1_art_licence_closed.md`.
 - Server-side merges skip the lessons merge driver: check the merged tree before the merge job merges: briefed
   via `/plot` 2026-10-28 as Phase **MD1c** (T folded it into the MD1 plot, PR #1009). Brief
