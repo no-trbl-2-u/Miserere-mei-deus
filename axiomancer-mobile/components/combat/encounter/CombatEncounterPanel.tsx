@@ -796,6 +796,7 @@ export function CombatEncounterPanel({
                             // target; the threat text only mounts when open.
                             const open = openThreatPhases.has(p.index);
                             const header = threatPhaseHeader(p, beaten);
+                            const moveName = p.enemyMove ? telegraphName(p, beaten) : null;
                             return (
                                 <View key={i} style={styles.revealPhase}>
                                     <Pressable
@@ -826,10 +827,12 @@ export function CombatEncounterPanel({
                                                     {p.branch.taken === 'else' ? '▶ ' : ''}otherwise: {p.branch.else.threatAction.description}
                                                 </Text>
                                             </View>
+                                        ) : p.enemyMove ? (
+                                            // An unseen DANGER has no name to show, as IntentIcon's
+                                            // badge also shows nothing for it.
+                                            moveName ? <Text style={styles.revealPhaseText}>{moveName}</Text> : null
                                         ) : (
-                                            <Text style={styles.revealPhaseText}>
-                                                {p.enemyMove ? (telegraphName(p, beaten) ?? 'Its name is not yet known.') : p.threatAction.description}
-                                            </Text>
+                                            <Text style={styles.revealPhaseText}>{p.threatAction.description}</Text>
                                         )) : null}
                                     </View>
                                 </View>
