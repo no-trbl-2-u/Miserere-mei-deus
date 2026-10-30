@@ -16,7 +16,7 @@
  */
 
 import type { Character } from '../Character/types';
-import type { Enemy } from '../Enemy/types';
+import type { Enemy, EnemyMoveKind } from '../Enemy/types';
 import type { Effect, ActiveEffect } from '../Effects/types';
 import type { CardAspect, CardType } from '../Cards/types';
 import type { ProgramLedger } from './combat.card-program';
@@ -282,6 +282,11 @@ export interface CombatThreatPhase {
     index: number;                            // 1-indexed for display
     threatAction: CombatThreatAction;         // the enemy's telegraphed attack each phase (HP model)
     isFinalPhase: boolean;                    // last telegraph in the sequence (then it loops)
+    /** Set only on a `phases` foe's entries (`resolveEnemyPhases`): which HP
+     *  phase this move belongs to (0-based), its place in that phase's loop
+     *  (`step`, 0-based; 0 on a DANGER), whether it is the phase's entry
+     *  DANGER, and the move's name and telegraph kind. */
+    enemyMove?: { phase: number; step: number; danger: boolean; name: string; kind: EnemyMoveKind };
 
     // ── Intent telegraph ────────────────────────────────────────────────────
     /** Auto-derived from `threatAction.effects` (deriveIntentType); override for
@@ -448,6 +453,9 @@ export type CombatEvent =
     | { kind: 'soul-gained'; amount: number; total: number; reason: 'expiry' | 'consumed' | 'granted' }
     /** A foe crossed one of its STAGE thresholds and became another fight. */
     | { kind: 'stage-entered'; enemyId: string; name: string; text: string }
+    /** A `phases` foe crossed a line and entered HP phase `phase` (0-based);
+     *  `danger` names the DANGER move it plays next (null when the phase has none). */
+    | { kind: 'enemy-phase-entered'; enemyId: string; phase: number; danger: string | null }
     /**
      * The foe's VITAE went UP. `amount` is the HP
      * ACTUALLY restored after the max-VITAE clamp — never the printed figure —
