@@ -71,6 +71,7 @@ const CARDS: Card[] = [
     card('mv-heal-then-read', c => { c.heal(5, { exact: true }); seen.push({ ...c.q }); }),
     card('mv-heal-5', c => { c.heal(5, { exact: true }); }),
     card('mv-heal-2', c => { c.heal(2, { exact: true }); }),
+    card('mv-heal-overflow-10', c => { c.heal(10, { exact: true, overflowToGuard: true }); }),
     card('mv-radiance-2', c => { c.radiance(2); }),
     card('mv-plus-3', c => c.healsPlus(3)),
     card('mv-times-2', c => c.healsTimes(2)),
@@ -328,6 +329,14 @@ describe('your next HEAL is RADIANCE', () => {
     it('the witness values it only with a HEAL in hand', () => {
         expect(programLineValue(fight(['mv-next-radiance', 'mv-heal-5'], { vitae: 50 }), 't0', false, PROGRAM_KIT)).toBeGreaterThan(0);
         expect(programLineValue(fight(['mv-next-radiance'], { vitae: 50 }), 't0', false, PROGRAM_KIT)).toBe(0);
+    });
+
+    it('a HEAL that overflows to GUARD still overflows once redirected to RADIANCE', () => {
+        const s = play(fight(['mv-next-radiance', 'mv-heal-overflow-10'], { vitae: 95, foeVitae: 300 }), 't0');
+        const r = playT(s, 't1');
+        expect(r.state.player.health).toBe(100);
+        expect(r.state.guard).toBe(5);
+        expect(s.enemy.health - r.state.enemy.health).toBe(5);
     });
 });
 

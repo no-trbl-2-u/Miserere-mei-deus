@@ -491,7 +491,7 @@ class LineCtx implements ProgramCtx {
         const amt = modifiedHeal(h, base);
         if (h.allRadianceDouble || h.nextRadiance > 0) {
             if (!h.allRadianceDouble && this.mode !== 'cost') h.nextRadiance -= 1;
-            return this.radianceExact(amt);
+            return this.radianceExact(amt, opts?.overflowToGuard === true);
         }
         return this.healExact(amt, opts?.overflowToGuard === true);
     }
@@ -1176,13 +1176,15 @@ class LineCtx implements ProgramCtx {
         if (n <= 0) return 0;
         const base = scaleFor(n, this.stats(), 'heart', 'repeating');
         if (base <= 0) return 0;
-        return this.radianceExact(modifiedHeal(this.heals(), base));
+        return this.radianceExact(modifiedHeal(this.heals(), base), false);
     }
 
     /** The heal of a RADIANCE (already scaled and modified), then the DEAL of what it
-     *  restored: doubled under "your HEALs this turn are RADIANCE and deal double". */
-    private radianceExact(amt: number): number {
-        const healed = this.healExact(amt, false);
+     *  restored: doubled under "your HEALs this turn are RADIANCE and deal double".
+     *  `overflowToGuard` carries through from a HEAL that a Merciful modifier
+     *  redirected here, so Blood Price's overflow-to-GUARD still applies. */
+    private radianceExact(amt: number, overflowToGuard: boolean): number {
+        const healed = this.healExact(amt, overflowToGuard);
         // The witness sees its own heal land, so a later RADIANCE on the line reads the VITAE left to heal.
         if (this.mode === 'value' && healed > 0) this.w.s = { ...this.w.s, player: healCombatant(this.w.s.player, healed) };
         const hit = this.heals().allRadianceDouble ? healed * 2 : healed;
