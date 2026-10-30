@@ -138,6 +138,7 @@ test('the atlas sorts every row into a Card, Rule or system section', () => {
   assert.equal(kinds.get('GLOBAL'), 'rule')
   assert.equal(kinds.get('DEAL'), 'card')
   assert.equal(kinds.get('CONVICTION'), 'system')
+  assert.equal(kinds.get('WARD'), 'enemy')
 })
 
 test('the kind extractor throws on an atlas with no kind sections', () => {

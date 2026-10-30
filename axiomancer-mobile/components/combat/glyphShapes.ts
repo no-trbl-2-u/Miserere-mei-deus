@@ -44,6 +44,12 @@ const CARDS: GlyphShape = { d: 'M4 7 H14 V21 H4 Z M8 3 H19 A1 1 0 0 1 20 4 V17 H
 const BURST: GlyphShape = { d: 'M12 2 L14 8 L20 4 L16 10 L22 12 L16 14 L20 20 L14 16 L12 22 L10 16 L4 20 L8 14 L2 12 L8 10 L4 4 L10 8 Z' };
 const RICOCHET: GlyphShape = { d: 'M2 12 L9 5 V9 H15 V5 L22 12 L15 19 V15 H9 V19 Z' };
 const RETURN: GlyphShape = { d: 'M9 3 L3 8 L9 13 V10 H15 A4 4 0 0 1 15 18 H7 V21 H15 A7 7 0 0 0 15 7 H9 Z' };
+// The enemy words: WARD a battlement, MEND a stitch cross, SCOUR a scrubbed
+// sparkle, BRINE a breaking wave.
+const BATTLEMENT: GlyphShape = { d: 'M4 3 H7 V6 H10 V3 H14 V6 H17 V3 H20 V21 H4 Z' };
+const STITCH: GlyphShape = { d: 'M10 3 H14 V10 H21 V14 H14 V21 H10 V14 H3 V10 H10 Z' };
+const SPARKLE: GlyphShape = { d: 'M12 2 L14.5 9.5 L22 12 L14.5 14.5 L12 22 L9.5 14.5 L2 12 L9.5 9.5 Z' };
+const WAVE: GlyphShape = { d: 'M2 10 C5 6 8 6 12 10 C16 14 19 14 22 10 V16 C19 20 16 20 12 16 C8 12 5 12 2 16 Z' };
 const EYE: GlyphShape = { d: 'M12 5.5 C6 5.5 2 12 2 12 C2 12 6 18.5 12 18.5 C18 18.5 22 12 22 12 C22 12 18 5.5 12 5.5 Z M12 8.5 A3.5 3.5 0 1 0 12 15.5 A3.5 3.5 0 1 0 12 8.5 Z', evenodd: true };
 
 /** UPPERCASE face keyword → silhouette, for the keys a live face can produce. */
@@ -68,6 +74,11 @@ export const GLYPH_SHAPES: Record<string, GlyphShape> = {
     THORNS: BURST,
     REFLECT: RICOCHET,
     RETRIEVE: RETURN,
+    // ── the enemy words ──
+    WARD: BATTLEMENT,
+    MEND: STITCH,
+    SCOUR: SPARKLE,
+    BRINE: WAVE,
 };
 
 /** The silhouette for a face keyword, or null → keep the text-rune fallback. */

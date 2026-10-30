@@ -219,8 +219,9 @@ export interface Enemy {
      */
     portraitAsset?: string;
     /**
-     * The foe's combat keywords. No foe carries one; the optional slot
-     * stays so keywords can be re-added. See {@link EnemyKeyword}.
+     * The foe's combat keywords. A `phases` foe's words come from its moves
+     * (`enemyPhaseKeywords`); this optional slot is not read by the engine.
+     * See {@link EnemyKeyword}.
      */
     keywords?: EnemyKeyword[];
     /**
@@ -268,8 +269,21 @@ export interface EnemyMove {
     duration?: number;
     /** VITAE the foe heals itself (MEND), at the authored level. */
     enemyHeal?: number;
-    /** Afflictions the foe sheds from itself (SCOUR). */
+    /** Statuses the foe strips off itself (SCOUR): its LEECH, INFERNO, STORM
+     *  and afflictions, in that order, the last one included. */
     enemyCleanse?: number;
+    /** WARD n, at the authored level: the foe's GUARD against your DEALs,
+     *  gone at the start of its next turn. */
+    ward?: number;
+    /** BRINE n, at the authored level: each GUARD you gain is cut by n until
+     *  the end of your next turn. */
+    brine?: number;
+    /** VULNERABLE on you: you take `pct`% more from its next `turns` attacks.
+     *  Neither number scales with level. */
+    vulnerable?: { pct: number; turns: number };
+    /** LEECH n on you, at the authored level: adds 3 turns and n to the
+     *  potency; at the start of your turn you lose the potency and it heals that much. */
+    leech?: number;
 }
 
 /**
