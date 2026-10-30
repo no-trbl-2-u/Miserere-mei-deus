@@ -20,7 +20,7 @@ import { getMapDefinition, getNodeEventPool, isEliteNode, eliteRelicDropsAt } fr
 import { BREAKWATER_CHAPTER_HELD } from '../Continents/Coastal-Village/breakwater-chapter';
 import { ENEMY_REGISTRY } from '../../Enemy/enemy.library';
 import { payloadDifficulty } from '../encounter-tier';
-import { BW_ELITE_DRAWS } from '../MapEvents/content';
+import { BW_ELITE_DRAWS, BW_ENCOUNTER_FOES } from '../MapEvents/content';
 import type { Enemy } from '../../Enemy/types';
 
 const ACT1_MAPS = [
