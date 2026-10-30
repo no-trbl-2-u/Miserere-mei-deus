@@ -52,6 +52,10 @@ const SPARKLE: GlyphShape = { d: 'M12 2 L14.5 9.5 L22 12 L14.5 14.5 L12 22 L9.5 
 const WAVE: GlyphShape = { d: 'M2 10 C5 6 8 6 12 10 C16 14 19 14 22 10 V16 C19 20 16 20 12 16 C8 12 5 12 2 16 Z' };
 const EYE: GlyphShape = { d: 'M12 5.5 C6 5.5 2 12 2 12 C2 12 6 18.5 12 18.5 C18 18.5 22 12 22 12 C22 12 18 5.5 12 5.5 Z M12 8.5 A3.5 3.5 0 1 0 12 15.5 A3.5 3.5 0 1 0 12 8.5 Z', evenodd: true };
 
+// RADIANCE — a sun: a disc and eight rays. MERCY — a dove: the body, the raised wing, the tail.
+const SUN: GlyphShape = { d: 'M12 7 A5 5 0 1 0 12 17 A5 5 0 1 0 12 7 Z M11 1 H13 V5 H11 Z M11 19 H13 V23 H11 Z M1 11 H5 V13 H1 Z M19 11 H23 V13 H19 Z M4.2 5.6 L5.6 4.2 L8.4 7 L7 8.4 Z M15.6 17 L17 15.6 L19.8 18.4 L18.4 19.8 Z M15.6 7 L18.4 4.2 L19.8 5.6 L17 8.4 Z M4.2 18.4 L7 15.6 L8.4 17 L5.6 19.8 Z' };
+const DOVE: GlyphShape = { d: 'M21 5 C18 5 16 6.5 15 8 C14 6 12 4.5 9 4 C10 6 10.5 7.5 10 9 C7 9.5 4 11.5 2 15 C4.5 14.5 6.5 14.5 8.5 15 C7.5 17 7 19 7 21 C9.5 19.5 11.5 17.5 13 15.5 C16 14 18 11 18.5 8 C19.5 7.5 20.5 6.5 21 5 Z' };
+
 /** UPPERCASE face keyword → silhouette, for the keys a live face can produce. */
 export const GLYPH_SHAPES: Record<string, GlyphShape> = {
     // ── afflictions ──
@@ -70,6 +74,9 @@ export const GLYPH_SHAPES: Record<string, GlyphShape> = {
     BLIZZARD: SNOWFLAKE,
     STORM: BOLT,
     DRAW: CARDS,
+    // ── the merciful ──
+    RADIANCE: SUN,
+    MERCY: DOVE,
     // ── the spikes ──
     THORNS: BURST,
     REFLECT: RICOCHET,

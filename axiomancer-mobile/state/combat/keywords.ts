@@ -68,9 +68,9 @@ const MECHANIC_KEYWORD: Record<string, string> = {
  * (GUARD/VULNERABLE), the Blood Price trial cards (SACRIFICE, WAIVE, EXILE,
  * HEAL, TETHER, LEECH), the Elementalist's weather (INFERNO, BLIZZARD, FROZEN,
  * STORM, DRAW), the Defender's spikes (THORNS, REFLECT, RETRIEVE), the
- * healing potions (HEAL), a map hazard (BLEED), the dice system (PIP,
- * BOON, HONE, TEMPER) and the enemy words (WARD, MEND, SCOUR, BRINE, with
- * VULNERABLE and LEECH landing on you).
+ * healing potions (HEAL), the Merciful's RADIANCE, MERCY and YIELDING, a map
+ * hazard (BLEED), the dice system (PIP, BOON, HONE, TEMPER) and the enemy
+ * words (WARD, MEND, SCOUR, BRINE, with VULNERABLE and LEECH landing on you).
  *
  * TERSE GLOSSES: every gloss is ONE short
  * sentence in the Dawncaster register ("Cards with Lifedrain restore health
@@ -122,6 +122,10 @@ const KEYWORD_GLOSS: Record<string, string> = {
     Brine:
         'Each GUARD you gain is cut by that much until the end of your next turn. '
         + 'Gain your GUARD in one big play, not many small ones.',
+    // ── The Merciful (the trial set) ──
+    Radiance: 'HEAL that much, then DEAL the VITAE it restored to the foe. At full VITAE it deals nothing.',
+    Mercy: 'Heals the foe that much and adds it to its MERCY. The third foe turn after the first MERCY, it bursts for twice the total, then clears.',
+    Yielding: "You can befriend the foe whatever its VITAE.",
     // ── Dice ──
     Pip:
         'Each threat phase a Reserve die survives, it gains one pip, capped at 2. '
