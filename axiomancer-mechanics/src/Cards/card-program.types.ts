@@ -63,6 +63,18 @@ export interface ProgramQuery {
     guard: number;
     /** VITAE your DEALs took off the foe this turn. */
     dealtThisTurn: number;
+    // ── The Merciful (`Combat/combat.mercy.ts`) ──
+    /** The foe's MERCY total (0 = none), an earlier verb on the same line included. */
+    foeMercy: number;
+    /** The foe has MERCY (its total is above 0). */
+    foeHasMercy: boolean;
+    /** The foe is at its max VITAE. */
+    foeAtMax: boolean;
+    /** VITAE you healed this turn: HEAL and RADIANCE, the turn-start heals
+     *  included, an earlier verb on the same line included. */
+    healedThisTurn: number;
+    /** You are below half your max VITAE (`atHalf` is "at half or less"). */
+    belowHalf: boolean;
 }
 
 /** Who an INFERNO line burns: both sides (the default), the foe only, you only. */
@@ -197,6 +209,35 @@ export interface ProgramCtx {
      *  whatever the heal restored. The first MERCY starts the 3-turn clock; a
      *  later one never resets it. */
     mercy(n: number, opts?: { exact?: boolean }): void;
+    /** The foe's MERCY bursts now: a DEAL of `mult` times its total (VULNERABLE
+     *  and FROZEN apply), then the total clears. Nothing happens without MERCY. */
+    burstMercy(mult: number): void;
+    /** The foe's MERCY clock ticks down n. A tick that takes it to 0 bursts the
+     *  MERCY at once (twice the total). Nothing happens without MERCY. */
+    tickMercy(n: number): void;
+    /** While the foe has MERCY it is YIELDING: you can befriend it whatever its
+     *  VITAE. Clears when the MERCY does. Nothing happens without MERCY. */
+    yieldWhileMercy(): void;
+    /** Your HEALs and RADIANCEs this turn heal +n (unscaled). Stacks. */
+    healsPlus(n: number): void;
+    /** Your HEALs and RADIANCEs this turn heal k times as much. Stacks. */
+    healsTimes(k: number): void;
+    /** Your next HEAL this turn is RADIANCE instead. */
+    nextHealRadiance(): void;
+    /** Your HEALs this turn are RADIANCE instead, and each RADIANCE deals double. */
+    allHealsRadianceDouble(): void;
+    /** +n max VITAE for the rest of this combat (current VITAE is unchanged). */
+    maxVitae(n: number): void;
+    /** HEAL the VITAE you are missing. Returns the VITAE restored. */
+    healToFull(): number;
+    /** Clear `count` debuffs from yourself, oldest first (`Infinity`: every one). Returns how many. */
+    clearDebuffs(count: number): number;
+    /** The foe's next attack deals n less, taken off its strikes in order. Stacks. */
+    weakenNextAttack(n: number): void;
+    /** Return the last n MERCY cards you played this combat from your discard to
+     *  your hand (an exiled card is not in it). A MERCY card is one whose line
+     *  added MERCY. */
+    returnMercyCards(n: number): void;
 }
 
 /** One printed line (FREE or PAID) of a card that is not a Global. */
@@ -240,6 +281,12 @@ export interface CardProgram {
      *  takes it from your hand (not when it is played). A card property,
      *  printed once, whichever line would have been played. */
     onDiscard?: ProgramRider;
+    /** The combat sim's greedy witness ranks this card by what its lines are
+     *  worth (`programLineValue`) instead of its printed damage preview, which
+     *  reads 0 for a program card: a die goes to the card whose PAID line gains
+     *  most over its FREE line, and a FREE line worth less than nothing is held.
+     *  A lane whose cards heal, or gain value later, opts in per card. */
+    valueWitness?: boolean;
 }
 
 /** A card property that fires on an event rather than when the card is played. */

@@ -81,6 +81,10 @@ const ATLAS_WITHOUT_REGISTRY_ROW = new Set([
   // (MTG's rule: keyword what COMPRESSES). The atlas documents it as the
   // library's primary verb; it has no gloss because it needs none.
   'DEAL',
+  // The Merciful's words (phase MF1b): the atlas rows land with the engine; mobile's glosses
+  // land in MF1c. The test below fails once a word is glossed, so MF1c deletes these as it adds
+  // each gloss.
+  'RADIANCE', 'MERCY', 'YIELDING', 'BURST',
 ])
 
 test('every keyword the atlas registers has a gloss in a live registry', () => {

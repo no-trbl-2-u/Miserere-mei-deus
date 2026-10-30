@@ -21,8 +21,10 @@ import {
     initializeCombatEncounter, rollEncounterDice, playCombatCard,
     resolveThreatPhase, startTurn, endTurn,
     playSignatureSkill, handCards, selectMercyChoice, getSignatureSkill,
-    signatureCastBlock,
+    signatureCastBlock, PROGRAM_KIT,
 } from './combat.engine';
+import { programIllegalReason, programLineValue } from './combat.card-program';
+import { getCardById } from '../Cards/cards.library';
 import { MOMENTUM_CHAIN_ORDER } from './combat.upgradeable-dice';
 import { getRng } from '../Utils/rng';
 import type {
@@ -196,6 +198,30 @@ export interface CombatSimRunOptions {
 /** Dominates every policy score band so a focused card always ranks first. */
 const FOCUS_CARD_BOOST = 1e18;
 
+// ── The value witness ─────────────────────────────────────────────────────────
+// The greedy ranking reads a card's printed damage preview, which is 0 for every
+// program card, so it plays them in hand order. A program that opts in
+// (`CardProgram.valueWitness`: a lane whose cards heal or pay off later) is
+// ranked by what its lines are worth instead (`programLineValue`): a die goes to
+// the card whose PAID line gains most over its FREE line, the FREE drain plays the
+// best FREE line first, and a line worth less than nothing is held. Every other
+// card is ranked exactly as before.
+
+function isValueWitnessCard(cardId: string): boolean {
+    return getCardById(cardId)?.program?.valueWitness === true;
+}
+
+/** A line's witness value, or -Infinity when it cannot be played. */
+function witnessLineValue(s: CombatEncounterState, uid: string, paid: boolean): number {
+    if (programIllegalReason(s, uid, paid, PROGRAM_KIT) !== null) return -Infinity;
+    return programLineValue(s, uid, paid, PROGRAM_KIT);
+}
+
+/** What spending a die on this card gains over playing it FREE. */
+function witnessDieGain(s: CombatEncounterState, uid: string): number {
+    return witnessLineValue(s, uid, true) - Math.max(0, witnessLineValue(s, uid, false));
+}
+
 /**
  * The best card in hand to POWER now, per the active policy's `rankCard`
  * (highest score wins; ties resolve to the earliest card in hand order, which
@@ -218,12 +244,16 @@ function selectCard(
     let best: { uid: string; card: CombatCard } | null = null;
     let bestScore = -Infinity;
     for (const c of cards) {
-        let score = policy.rankCard(s, c.card, rng);
+        let score = isValueWitnessCard(c.card.id)
+            ? witnessDieGain(s, c.uid)
+            : policy.rankCard(s, c.card, rng);
         if (focusIds && focusIds.has(c.card.id)) {
             score += FOCUS_CARD_BOOST;
         }
         if (score > bestScore) { bestScore = score; best = c; }
     }
+    // A value-witnessed card only takes the die when its PAID line gains something.
+    if (best && isValueWitnessCard(best.card.id) && !(bestScore > 0)) return null;
     return best;
 }
 
@@ -439,8 +469,21 @@ export function upgradeablePlayPhase(
     const heldUids = new Set<string>();
     while (working.phase === 'phase-play' && !working.finalOutcome && !working.mercyChoiceActive && drain < 30) {
         drain++;
-        const resT = handCards(working).find(c => c.card.verbClass !== 'retreat' && !heldUids.has(c.uid));
+        let resT = handCards(working).find(c => c.card.verbClass !== 'retreat' && !heldUids.has(c.uid));
         if (!resT) break;
+        if (isValueWitnessCard(resT.card.id)) {
+            // The best FREE line first; one worth less than nothing is held.
+            let bestV = -Infinity;
+            for (const c of handCards(working)) {
+                if (heldUids.has(c.uid) || !isValueWitnessCard(c.card.id)) continue;
+                const v = witnessLineValue(working, c.uid, false);
+                if (v > bestV) { bestV = v; resT = c; }
+            }
+            if (!(bestV >= 0)) {
+                for (const c of handCards(working)) if (isValueWitnessCard(c.card.id)) heldUids.add(c.uid);
+                continue;
+            }
+        }
         const play = playCombatCard(working, { uid: resT.uid }, false);
         const row = lineRow(lines, resT.card.id);
         row.freeHpSwing += playHpSwing(working, play.state, play.events);

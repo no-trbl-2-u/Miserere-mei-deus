@@ -1257,9 +1257,14 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
             }
         }
     }
+    // A card made the foe's next attack deal n less: taken off its strikes in order, spent when it attacks.
+    let attackLess = state.program?.attackLess ?? 0;
     if (!hindered && !isDefeated(enemy)) {
         // The enemy attacks: its telegraphed threat action fires on the player.
         const playerTakenMult = getDamageTakenMultiplier(state.player);
+        if (attackLess > 0 && state.program && phase.threatAction.effects.some(e => (e.damage ?? 0) > 0)) {
+            state = { ...state, program: { ...state.program, attackLess: 0 } };
+        } else attackLess = 0;
         for (const eff of phase.threatAction.effects) {
             // A foe the spikes defeated mid-attack strikes no more.
             if (eff.damage && eff.damage > 0 && !isDefeated(enemy)) {
@@ -1276,6 +1281,11 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
                     * (1 + Math.min(STAGE_THREAT_BONUS_CAP, state.stageThreatBonus ?? 0))
                     * playerTakenMult,
                 );
+                if (attackLess > 0) {
+                    const less = Math.min(dmg, attackLess);
+                    dmg -= less;
+                    attackLess -= less;
+                }
                 if (blizzardCut > 0) {
                     const cut = Math.min(dmg, blizzardCut);
                     dmg -= cut;

@@ -102,6 +102,17 @@ double on that foe turn.
 | **THORNS N** | Each foe strike deals N back to the foe. THORNS drops by 1 at the end of each round after the one it was gained in. | the Defender trial set |
 | **REFLECT N%** | Each foe strike sends N% of its damage before GUARD back to the foe. You still take the hit. Lasts 2 turns; a new REFLECT adds its % and refreshes to 2 turns. No cap. | the Defender trial set |
 
+### The Merciful
+
+The Merciful's heal-as-weapon words (T, 2026-10-29 and 2026-10-30; `src/Combat/combat.mercy.ts`). Heart scales the
+numbers of RADIANCE and MERCY as it scales LEECH.
+
+| keyword | reminder text | carried by |
+|---|---|---|
+| **RADIANCE N** | HEAL N, then DEAL what that heal restored: nothing at full VITAE. The hit is a DEAL, so VULNERABLE raises it and a FROZEN foe takes it doubled. Heart scales N. | the Merciful trial set (MF1d) |
+| **MERCY N** | Heal the foe N, stopping at its max VITAE, and add N to its MERCY whatever the heal restored. The first MERCY starts a 3-turn clock; a new MERCY adds to the total and never resets the clock. When the clock runs out, at the start of the foe's turn, the MERCY bursts, then clears. Heart scales N. | the Merciful trial set (MF1d) |
+| **YIELDING** | While a foe is YIELDING you can befriend it whatever its VITAE. A card makes a foe YIELDING for as long as it has MERCY; the burst ends it. A foe that cannot be befriended stays so. | the Merciful trial set (MF1d) |
+
 ### Drawing
 
 | keyword | reminder text | carried by |
@@ -150,6 +161,7 @@ in `SYSTEM_GLOSSARY`.
 | RESERVE & PIPS | Up to 2 dice held between phases instead of played. Each gains +1 pip per phase it survives, spent for extra intensity or Guard. |
 | WILD / X | A WILD die (the gold die) counts as any color. A dead X die (a miss face) powers nothing. |
 | HOLDS | GUARD holds: you have taken no damage this turn. A card that works "while GUARD holds" stops the moment a hit gets through. |
+| BURST | MERCY's word for what it does when its clock runs out, or a card runs it out: the foe takes a DEAL of twice its MERCY, then the MERCY clears. Card text says "bursts", never "triggers". |
 | CURSE | A card type: a dead card that holds a hand slot until played. It cannot be scrapped. The grey Curse is defined, but no card adds it and it is in no lane, deck or reward pool (foes will add Curses later). |
 
 ---

@@ -13,9 +13,27 @@
   },
   {
     "rule": "carrier-rule",
+    "id": "BURST",
+    "reason": "no carrier yet: MERCY's word is printed by the Merciful trial set cards (MF1d); delete this row when they land",
+    "filed": "2026-10-30"
+  },
+  {
+    "rule": "carrier-rule",
     "id": "HONE",
     "reason": "pinned at CS1, awaits T's card session",
     "filed": "2026-10-13"
+  },
+  {
+    "rule": "carrier-rule",
+    "id": "MERCY",
+    "reason": "no carrier yet: the Merciful trial set cards that print MERCY land in MF1d; delete this row when they land",
+    "filed": "2026-10-30"
+  },
+  {
+    "rule": "carrier-rule",
+    "id": "RADIANCE",
+    "reason": "no carrier yet: the Merciful trial set cards that print RADIANCE land in MF1d; delete this row when they land",
+    "filed": "2026-10-30"
   },
   {
     "rule": "carrier-rule",
@@ -34,6 +52,12 @@
     "id": "WAIVE",
     "reason": "pinned at CS1, awaits T's card session",
     "filed": "2026-10-13"
+  },
+  {
+    "rule": "carrier-rule",
+    "id": "YIELDING",
+    "reason": "no carrier yet: the one Merciful trial set card that makes a foe YIELDING lands in MF1d (re-reason the row as an admission-bar pin then: one card, T's call after play)",
+    "filed": "2026-10-30"
   },
   {
     "rule": "complexity-budget",
