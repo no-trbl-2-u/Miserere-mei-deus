@@ -8,7 +8,7 @@
   The Merciful's ballot (lane-creator step 3, /lane-creator, 2026-10-29),
   copied from the ballot shell (plan/card-ledger/README.md "Adding the next
   ballot"). Session 0 and the approved slot roles: rehearsal-merciful.md.
-  It runs on the shared ballot kit (ballot-kit.js, next to this file).
+  Closed 2026-10-29: the verdicts are in rehearsal-merciful.md, so the page no longer loads the ballot kit.
 
   Candidates carry no colour (phase CL1): T votes on the text, and the
   session splits the kept family's colours evenly within each sub-lane at
@@ -128,7 +128,6 @@
            background: var(--btn); color: var(--btn-ink); cursor: pointer; margin: 8px 8px 0 0; }
   .count { color: var(--muted); margin-left: 6px; }
 </style>
-<script src="ballot-kit.js"></script>
 </head>
 <body>
 <header>
@@ -465,8 +464,7 @@ const sheet = () => {
   ].filter(Boolean).join('\n');
 };
 
-/* Generate, Copy, autosave, Clear and Submit come from the ballot kit. */
-BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
+/* Closed: the ballot kit (Generate, Copy, autosave, Submit) is no longer loaded. */
 
 /* Theme toggle: flips data-theme on <html>; no storage. */
 document.getElementById('themeBtn').addEventListener('click', () => {
