@@ -220,6 +220,36 @@ export interface CombatThreatEffect {
     /** The enemy sheds up to this many of its OWN afflictions when the
      *  action fires (a fraction, never the last one). Written only by the threat-branch resolver. */
     enemyCleanse?: number;
+    /** The enemy words a `phases` move carries (`combat.enemy-words.ts`).
+     *  SCOUR: statuses the foe strips off itself, the last one included. */
+    scour?: number;
+    /** WARD: the foe gains this much GUARD against your DEALs. */
+    ward?: number;
+    /** BRINE: each GUARD you gain is cut by this much until the end of your next turn. */
+    brine?: number;
+    /** VULNERABLE on you: `pct`% more damage from the foe's next `turns` attacks. */
+    vulnerable?: { pct: number; turns: number };
+    /** LEECH on you: adds 3 turns and this much potency. */
+    leech?: number;
+}
+
+/** The enemy words with live state on the board (`combat.enemy-words.ts`). */
+export type EnemyWordId = 'ward' | 'mend' | 'scour' | 'brine' | 'vulnerable' | 'leech';
+
+/**
+ * The enemy words' fight state. Optional on the encounter: absent reads as
+ * all zero. WARD and BRINE fade at the start of the foe's turn; LEECH ticks
+ * at the start of yours.
+ */
+export interface EnemyWordsState {
+    /** WARD on the foe: soaks your DEALs before its VITAE. */
+    ward: number;
+    /** BRINE on you: each GUARD you gain is cut by this much. */
+    brine: number;
+    /** LEECH on you: your turns left (0 = none). */
+    leechTurns: number;
+    /** LEECH on you: the VITAE you lose at the start of each of your turns. */
+    leechPotency: number;
 }
 
 export interface CombatThreatAction {
@@ -477,6 +507,12 @@ export type CombatEvent =
     | { kind: 'threat-branch'; phaseIndex: number; conditionText: string; taken: 'then' | 'else' }
     // The enemy's reactive cleanse shed some of its own afflictions.
     | { kind: 'threat-cleansed'; phaseIndex: number; effectIds: string[] }
+    /** An enemy word moved: `gained` (WARD, BRINE, VULNERABLE or LEECH landed, `amount` its number),
+     *  `soaked` (WARD took `amount` off a DEAL), `cut` (BRINE took `amount` off a GUARD gain),
+     *  `ticked` (LEECH took `amount` VITAE from you), `stripped` (SCOUR took `stripped` off the foe)
+     *  or `faded` (WARD or BRINE ran out with `amount` left). */
+    | { kind: 'enemy-word'; word: EnemyWordId; op: 'gained' | 'soaked' | 'cut' | 'ticked' | 'stripped' | 'faded';
+        amount: number; stripped?: string[] }
     | { kind: 'hand-drawn'; cards: string[] }
     | { kind: 'mercy-opened'; message: string }
     // ── Upgradeable-dice events ────────────────────────────────────────────
@@ -657,6 +693,8 @@ export interface CombatEncounterState {
     /** The SACRIFICE / Global / Curse ledger. Present only when the deck
      *  holds a program card (`combat.card-program.ts`). */
     program?: ProgramLedger;
+    /** The enemy words' state (WARD, BRINE, LEECH on you). Absent = none. */
+    enemyWords?: EnemyWordsState;
 }
 
 /**

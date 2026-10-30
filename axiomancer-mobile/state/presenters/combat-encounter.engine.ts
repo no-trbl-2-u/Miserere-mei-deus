@@ -25,7 +25,7 @@ import {
     // Stat scaling: the hand prints final numbers in the family colour.
     scaleCardForStats,
     weatherReading, yourInferno,
-    spikeReading,
+    spikeReading, mercyReading,
     type StatFamily,
     type CombatEncounterState, type CombatCard, type CombatManaDie, type CombatEvent,
     type CombatThreatPhase, type CombatIntentType,
@@ -177,6 +177,7 @@ const FREE_KW_GLYPH: Record<string, string> = {
     GUARD: '❖', HEAL: '✚', DRAW: '⚑',
     CLEANSE: '✦', PIP: '⬡',
     SACRIFICE: '†', LEECH: '∿', TETHER: '⊸', WAIVE: '○', DEAL: '⚔',
+    RADIANCE: '☼', MERCY: '☮',
 };
 /** The FREE glyph plus the KEYWORD that drives it — the key lets the face swap
  *  the text rune for the effect's SILHOUETTE (glyphShapes.ts) when one exists. */
@@ -699,6 +700,19 @@ export interface CombatLogLineVM {
 
 const LOG_STAGE_COLOR = HUE.goldAccent;
 
+/** The foe's MERCY and its clock, as one log sentence. */
+function mercyClockText(total: number, turnsLeft: number): string {
+    return `The foe's MERCY is ${total}; it bursts in ${turnsLeft} turn${turnsLeft === 1 ? '' : 's'}.`;
+}
+
+/**
+ * Display names for a damage source that is not a card: the engine tags a
+ * MERCY burst's hit with the pseudo card id `mercy`.
+ */
+const DAMAGE_SOURCE_NAMES: Readonly<Record<string, string>> = {
+    mercy: 'Mercy burst',
+};
+
 export function selectCombatLogLines(events: readonly CombatEvent[]): CombatLogLineVM[] {
     const out: CombatLogLineVM[] = [];
     for (const e of events) {
@@ -710,6 +724,39 @@ export function selectCombatLogLines(events: readonly CombatEvent[]): CombatLogL
                     kind: e.kind, side: 'enemy', color: LOG_STAGE_COLOR,
                     text: `‡ ${e.name.toUpperCase()} ‡ ${e.text}`,
                     float: `‡ ${e.name.toUpperCase()} ‡`,
+                });
+                break;
+            // The Merciful. RADIANCE heals you, then hits for what it restored;
+            // MERCY heals the foe and counts down; the burst is the hit. Every
+            // amount is VITAE actually removed or restored.
+            case 'radiance-struck':
+                out.push({
+                    kind: e.kind, side: 'player', color: GLYPH_COLORS.statup,
+                    text: e.healed > 0
+                        ? `RADIANCE heals you ${e.healed} and hits for ${e.amount}.`
+                        : 'RADIANCE finds nothing to heal.',
+                    float: null,
+                });
+                break;
+            case 'mercy-added':
+                out.push({
+                    kind: e.kind, side: 'enemy', color: GLYPH_COLORS.statup,
+                    text: `MERCY +${e.amount}${e.healed > 0 ? `, healing the foe ${e.healed}` : ''}. ${mercyClockText(e.total, e.turnsLeft)}`,
+                    float: `MERCY +${e.amount}`,
+                });
+                break;
+            case 'mercy-ticked':
+                out.push({
+                    kind: e.kind, side: 'enemy', color: GLYPH_COLORS.statup,
+                    text: mercyClockText(e.total, e.turnsLeft),
+                    float: null,
+                });
+                break;
+            case 'mercy-burst':
+                out.push({
+                    kind: e.kind, side: 'enemy', color: INTENT_ICONS.damage.color,
+                    text: `The foe's MERCY ${e.total} bursts for ${e.amount}.`,
+                    float: `MERCY BURST −${e.amount}`,
                 });
                 break;
             // The foe's bar climbing gets a line saying WHY. Zero-amount heals
@@ -886,7 +933,7 @@ export function selectCombatLogHistory(state: CombatEncounterState, beaten = fal
                 break;
             }
             case 'damage-dealt': {
-                const named = getCardById(e.cardId)?.name;
+                const named = getCardById(e.cardId)?.name ?? DAMAGE_SOURCE_NAMES[e.cardId];
                 const suffix = named ? ` (${named})` : '';
                 if (e.target === 'enemy') push('enemy', INTENT_ICONS.damage.color, `You deal ${e.amount}${suffix}.`);
                 else push('player', INTENT_ICONS.damage.color, `It deals ${e.amount} to you${suffix}.`);
@@ -1802,6 +1849,7 @@ const KEYWORD_FAMILY: Record<string, StatFamily> = {
     DEAL: 'body',
     GUARD: 'mind', HEAL: 'mind',
     BLEED: 'heart', VULNERABLE: 'heart', LEECH: 'heart',
+    RADIANCE: 'heart', MERCY: 'heart',
 };
 
 /**
@@ -1904,6 +1952,23 @@ function programChips(state: CombatEncounterState): CombatEffectChipVM[] {
             gloss: keywordGloss('Tether'),
         });
     }
+    // MERCY on the foe: its total and the foe turns left until it bursts; YIELDING
+    // while the foe holds it.
+    const mercy = mercyReading(l.mercy);
+    if (mercy.mercy > 0) {
+        out.push({
+            effectId: 'program-mercy', intensity: mercy.mercy, duration: mercy['mercy-turns'],
+            glyph: { glyph: '☮', color: GLYPH_COLORS.dot, kind: 'dot', label: 'Mercy' },
+            gloss: keywordGloss('Mercy'),
+        });
+    }
+    if (mercy.yielding) {
+        out.push({
+            effectId: 'program-yielding', intensity: 1, duration: 0,
+            glyph: { glyph: '☉', color: HUE.goldAccent, kind: 'control', label: 'Yielding' },
+            gloss: keywordGloss('Yielding'),
+        });
+    }
     return out;
 }
 
@@ -1979,6 +2044,8 @@ export function weatherChips(state: CombatEncounterState, side: 'enemy' | 'playe
 export function effectChipA11y(e: CombatEffectChipVM): string {
     const span = e.effectId.startsWith('weather-') ? 'lasts the combat'
         : e.effectId === 'spike-thorns' ? 'drops by 1 each round'
+        : e.effectId === 'program-yielding' ? 'while it holds'
+        : e.effectId === 'program-mercy' ? `bursts in ${e.duration} turn${e.duration === 1 ? '' : 's'}`
         : `${e.duration} turns left`;
     return `${e.glyph.label}, intensity ${e.intensity}${e.unit ?? ''}, ${span}${e.caption ? `. ${e.caption}` : ''}`;
 }

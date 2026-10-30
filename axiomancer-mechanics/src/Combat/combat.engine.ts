@@ -78,6 +78,10 @@ import {
 } from './combat.card-program';
 import { weatherEvents } from './combat.elements';
 import { spikeEvents } from './combat.spikes';
+import { cutGuardGain, soakDealWithWard } from './combat.enemy-words';
+import {
+    applyEnemyWordEffects, enemyWordsFoeTurnStart, enemyWordsPlayerTurnStart,
+} from './combat.enemy-words.resolve';
 import type {
     CombatCard, CombatDieColor, CombatEncounterState, CombatEvent, CardPlay,
     CombatManaDie, CombatPhaseResult, CombatTransition, LandedEffect,
@@ -389,6 +393,13 @@ export function startTurn(
     events.push({ kind: 'turn-dice-rolled', turn, dice });
     events.push({ kind: 'dice-rolled', dice });
     let started = withLog(next, events);
+    // A foe's LEECH on you ticks at the start of your turn, and can kill you.
+    const leeched = enemyWordsPlayerTurnStart(started);
+    if (leeched.events.length > 0) {
+        started = withLog(leeched.state, leeched.events);
+        events.push(...leeched.events);
+        if (isDefeated(started.player)) return endCombat(started, 'defeat', events);
+    }
     // Start-of-turn Globals, a delayed HEAL and the turn's SACRIFICE
     // modifiers. No ledger, no change.
     if (started.program) {
@@ -758,17 +769,22 @@ function applyRiderToState(
     // or mind (on you). See `stat-scaling.ts`.
     const stats = player.baseStats;
 
-    if (r.guard) guard += scaleFor(r.guard, stats, 'mind', 'one-shot');
+    // BRINE cuts the GUARD gain.
+    if (r.guard) guard += cutGuardGain(state, scaleFor(r.guard, stats, 'mind', 'one-shot'), events);
     // Attribution ledger: the FREE line records
     // provenance with the same `recordAttribution` calls as the PAID path.
     let attribution = state.attribution;
+    let enemyWords = state.enemyWords;
     const cardName = lookupCard(cardId)?.name ?? cardId;
     if (r.damage) {
-        // The printed number is the number, scaled by body and VULNERABLE.
-        const dmg = scalePlayerHit({
-            base: scaleFor(r.damage, stats, 'body', 'one-shot'),
-            vulnMult: getDamageTakenMultiplier(enemy),
-        });
+        // The printed number is the number, scaled by body and VULNERABLE;
+        // the foe's WARD soaks the part before VULNERABLE.
+        const base = scaleFor(r.damage, stats, 'body', 'one-shot');
+        const warded = soakDealWithWard(state, base, scalePlayerHit({
+            base, vulnMult: getDamageTakenMultiplier(enemy),
+        }), events);
+        enemyWords = warded.state.enemyWords;
+        const dmg = warded.dealt;
         if (dmg > 0) {
             const hpBefore = enemy.health;
             const hit = applyEnemyDamage(enemy, dmg, state.round, events);
@@ -814,7 +830,10 @@ function applyRiderToState(
         souls += washSouls;
         events.push({ kind: 'soul-gained', amount: washSouls, total: souls, reason: 'expiry' });
     }
-    return { ...state, player, enemy, directDamageDealt: directDamage, guard, souls, attribution };
+    return {
+        ...state, player, enemy, directDamageDealt: directDamage, guard, souls, attribution,
+        ...(enemyWords ? { enemyWords } : {}),
+    };
 }
 
 /**
@@ -1006,15 +1025,17 @@ function playBottomAction(
         events.push({ kind: 'soul-gained', amount: n, total: souls, reason: 'expiry' });
     };
 
-    // DEAL — each hit folds the scalers through `scalePlayerHit`.
+    // DEAL — each hit folds the scalers through `scalePlayerHit`, then the
+    // foe's WARD soaks the part before VULNERABLE.
+    let wardState: CombatEncounterState = state;
     for (const mech of mechs) {
         if (mech.kind !== 'deal') continue;
         if (isDefeated(enemy)) break;
         const healthBefore = enemy.health;
-        const dmg = scalePlayerHit({
-            base: scaleFor(mech.amount, stats, 'body', 'one-shot'),
-            vulnMult,
-        });
+        const base = scaleFor(mech.amount, stats, 'body', 'one-shot');
+        const warded = soakDealWithWard(wardState, base, scalePlayerHit({ base, vulnMult }), events);
+        wardState = warded.state;
+        const dmg = warded.dealt;
         if (dmg <= 0) continue;
         const hit = applyEnemyDamage(enemy, dmg, state.round, events);
         enemy = hit.enemy;
@@ -1096,10 +1117,12 @@ function playBottomAction(
         events.push({ kind: 'pips-cashed', cardId: card.id, pips: poweringPips, bonus: 'guard', amount: pipGuard });
     }
     const guardBase = guardMech ? scaleFor(Math.max(1, Math.round(guardMech.amount)), stats, 'mind', 'one-shot') : 0;
-    const guardGain = guardBase + pipGuard;
+    // BRINE cuts the play's GUARD gain once, pips included.
+    const guardGain = cutGuardGain(state, guardBase + pipGuard, events);
 
     let next: CombatEncounterState = {
         ...state, player, enemy, dice, reserve, resonance, attribution,
+        ...(wardState.enemyWords ? { enemyWords: wardState.enemyWords } : {}),
         guard: (state.guard ?? 0) + guardGain,
         directDamageDealt: directDamage,
         floatingDice,
@@ -1165,10 +1188,13 @@ function soakFlatHit(
  */
 export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => number = defaultRng): CombatTransition {
     if (stateIn.phase === 'complete' || stateIn.finalOutcome) return { state: stateIn, events: [] };
-    let state = stateIn;
+    // WARD and BRINE run out at the start of the foe's turn, before anything
+    // else, so nothing at its turn start meets the old WARD.
+    const faded = enemyWordsFoeTurnStart(stateIn);
+    let state = faded.state;
     // LEECH drains the foe at the start of its turn, before it acts.
     const leech = programFoeTurnStart(state);
-    const leechEvents = leech.events;
+    const leechEvents = [...faded.events, ...leech.events];
     if (leechEvents.length > 0) {
         state = leech.state;
         if (isDefeated(state.enemy)) return endCombat(withLog(state, leechEvents), 'victory', leechEvents);
@@ -1398,6 +1424,18 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
                 directDamage += counter + hit.clockDamage;
                 events.push({ kind: 'riposte-fired', amount: counter });
             }
+        }
+        // The move's enemy words land after its hits, so its own WARD never
+        // meets the spikes or the riposte its strikes drew.
+        const words = applyEnemyWordEffects({ ...state, player, enemy }, phase.threatAction.effects);
+        if (words.events.length > 0) {
+            player = words.state.player;
+            enemy = words.state.enemy;
+            state = {
+                ...state, enemyWords: words.state.enemyWords,
+                ...(words.state.program ? { program: words.state.program } : {}),
+            };
+            events.push(...words.events);
         }
         events.push({ kind: 'threat-fired', phaseIndex: phase.index, description: phase.threatAction.description, effects: phase.threatAction.effects });
         // Doom growth (card-local species): enemy-borne

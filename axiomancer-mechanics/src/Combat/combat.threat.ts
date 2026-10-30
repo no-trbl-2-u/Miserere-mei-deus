@@ -372,7 +372,18 @@ function moveThreatAction(move: EnemyMove, level: number, authoredLevel: number)
     }
     const heal = scaleMoveNumber(move.enemyHeal ?? 0, level, authoredLevel);
     if (heal > 0) effects.push({ enemyHeal: heal });
-    if ((move.enemyCleanse ?? 0) > 0) effects.push({ enemyCleanse: move.enemyCleanse });
+    // The enemy words (`combat.enemy-words.resolve.ts`): WARD, BRINE and LEECH
+    // scale like damage; VULNERABLE's % and turns and SCOUR's count do not.
+    if ((move.enemyCleanse ?? 0) > 0) effects.push({ scour: move.enemyCleanse });
+    const ward = scaleMoveNumber(move.ward ?? 0, level, authoredLevel);
+    if (ward > 0) effects.push({ ward });
+    const brine = scaleMoveNumber(move.brine ?? 0, level, authoredLevel);
+    if (brine > 0) effects.push({ brine });
+    if (move.vulnerable && move.vulnerable.pct > 0 && move.vulnerable.turns > 0) {
+        effects.push({ vulnerable: { pct: move.vulnerable.pct, turns: move.vulnerable.turns } });
+    }
+    const leech = scaleMoveNumber(move.leech ?? 0, level, authoredLevel);
+    if (leech > 0) effects.push({ leech });
     return { description: `${move.name}: ${move.text}`, effects };
 }
 
