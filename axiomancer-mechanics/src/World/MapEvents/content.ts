@@ -317,8 +317,8 @@ export const BW_ENCOUNTER_FOES: Readonly<Record<string, ActOneFoe>> = {
  * The elite nodes' draws (phase EN1j): each elite node names one foe or two,
  * and with two the map's seeded pool roll (`rollPool`, run once on arrival
  * from the run's RNG) picks one, 50/50. An elite node with no row keeps the
- * Green Jelly staged as an elite until its pair lands (EN1k: `bw-l4`, EN1l:
- * `bw-w5`). Levels are T's Breakwater table, every foe under level 10.
+ * Green Jelly staged as an elite until its pair lands (EN1l: `bw-w5`).
+ * Levels are T's Breakwater table, every foe under level 10.
  */
 export const BW_ELITE_DRAWS: Readonly<Record<string, readonly ActOneFoe[]>> = {
     // The sea cave, level 5: the Cave Choir (EN1j) and the Tithe-Collector (EN1h).

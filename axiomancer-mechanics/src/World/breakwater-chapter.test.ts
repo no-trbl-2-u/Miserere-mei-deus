@@ -129,6 +129,9 @@ describe('A1: the graph is T\'s node list', () => {
             expect(getNodeEventPool('coastal-continent', 'breakwater', n.id)!.entries, n.id).toHaveLength(BW_ELITE_DRAWS[n.id]?.length ?? 1);
             expect(boardKindOf(n.id), n.id).toBe(n.kind);
         }
+        // bw-l4's lighthouse pair (EN1k) is the only two-foe draw: pin its
+        // count independently, or a one-foe regression would pass above.
+        expect(getNodeEventPool('coastal-continent', 'breakwater', 'bw-l4')!.entries).toHaveLength(2);
     });
 
     it('tallies the kinds as the brief does', () => {

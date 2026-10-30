@@ -240,6 +240,11 @@ export interface CombatEffectChipVM {
     /** A visible line beside the chip (set only on your own weather, e.g. the
      *  per-turn loss of your INFERNO); absent everywhere else. */
     caption?: string;
+    /** The a11y span line, pre-computed by a chip builder that knows fight
+     *  state `effectChipA11y` cannot see (the lamp's current HP phase decides
+     *  whether a Shutter can relight it); falls back to the generic table
+     *  when absent. */
+    span?: string;
 }
 /** The fork telegraph of a BRANCH phase: the condition
  *  plus BOTH outcomes stay visible; `taken` is stamped once the phase starts. */
@@ -2130,6 +2135,14 @@ export function lighthouseChips(state: CombatEncounterState, side: 'enemy' | 'pl
     const lamp = lampOf(state);
     if (lamp) {
         const gone = state.enemyRiders?.lamp === 'out';
+        // Only a phase whose own loop carries a relighting Shutter (`to`
+        // 'lit' or 'flip') can light the lamp again by itself; an earlier
+        // phase's Shutter only darkens it, so it waits on Lure Light (the
+        // next phase's entry DANGER) instead.
+        const hpPhase = state.threatPhases[state.currentPhaseIndex]?.enemyMove?.phase ?? 0;
+        const shutterRelights = state.threatPhases.some((p) =>
+            p.enemyMove?.phase === hpPhase && !p.enemyMove.danger &&
+            p.threatAction.rider?.kind === 'lamp' && p.threatAction.rider.to !== 'dark');
         out.push({
             effectId: 'enemy-counter-lamp', intensity: 1, duration: 0, noBadge: true,
             glyph: lamp === 'lit'
@@ -2137,6 +2150,10 @@ export function lighthouseChips(state: CombatEncounterState, side: 'enemy' | 'pl
                 : { glyph: '◐', color: GLYPH_COLORS.control, kind: 'control', label: 'Dark' },
             gloss: ENEMY_COUNTER_GLOSS.lamp,
             caption: lamp === 'lit' ? 'Its intents show' : gone ? 'The lamp is out for good' : 'Its intents read UNKNOWN',
+            span: lamp === 'lit' ? 'until a Shutter puts it Dark'
+                : gone ? 'for the rest of the fight'
+                : shutterRelights ? 'until a Shutter lights it again'
+                : 'until Lure Light lights it again',
         });
     }
     if (baitSet(state)) {
@@ -2179,7 +2196,7 @@ const ENEMY_WORD_SPAN: Record<string, string> = {
     'enemy-word-undertow': 'until your next roll',
 };
 
-/** How the Lamplighter's lamp chip clears: a Shutter darkens it, a light move relights it, and once out it stays. */
+/** Fallback for a lamp chip built with no `span` (e.g. a test literal): a Shutter darkens it, a light move relights it, and once out it stays. */
 function lampSpan(e: CombatEffectChipVM): string {
     if (e.glyph.label === 'Lit') return 'until a Shutter puts it Dark';
     return e.caption === 'The lamp is out for good' ? 'for the rest of the fight' : 'until Lure Light or a Shutter lights it again';
@@ -2194,7 +2211,7 @@ export function effectChipA11y(e: CombatEffectChipVM): string {
         : e.effectId === 'program-mercy' ? `bursts in ${e.duration} turn${e.duration === 1 ? '' : 's'}`
         : e.effectId === 'enemy-counter-curfew' ? "until the foe's next turn"
         : e.effectId === 'enemy-counter-verse' ? 'until the Amen spends it'
-        : e.effectId === 'enemy-counter-lamp' ? lampSpan(e)
+        : e.effectId === 'enemy-counter-lamp' ? (e.span ?? lampSpan(e))
         : e.effectId === 'enemy-counter-bait' ? 'until your turn ends and the Bait reads it'
         : e.effectId.startsWith('enemy-counter-') ? (ENEMY_WORD_SPAN[e.effectId] ?? 'a count that lasts the fight')
         : ENEMY_WORD_SPAN[e.effectId] ?? (e.effectId.startsWith('enemy-word-') && e.duration <= 0 ? "until the foe's next turn" : `${e.duration} turns left`);

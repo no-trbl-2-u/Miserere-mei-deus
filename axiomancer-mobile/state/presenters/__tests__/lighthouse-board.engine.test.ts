@@ -77,7 +77,16 @@ describe('A16 — the Lamplighter\'s lamp on its pane', () => {
         expect(intent.damage).toBe(0);
         const dark = chip(s, 'enemy-counter-lamp')!;
         expect(dark).toMatchObject({ glyph: { label: 'Dark' }, caption: 'Its intents read UNKNOWN' });
-        expect(effectChipA11y(dark)).toContain('until Lure Light or a Shutter lights it again');
+        // Phase 0's own Shutter only darkens the lamp (`to: 'dark'`); only
+        // Lure Light (phase 1's entry DANGER) can relight it from here.
+        expect(effectChipA11y(dark)).toContain('until Lure Light lights it again');
+    });
+
+    it('once Lure Light has lit it, phase 1\'s own Shutter can relight it too', () => {
+        const s = { ...at(drawn('The Lamplighter'), 'Wick-Lash', 1), enemyRiders: { lamp: 'dark' as const } };
+        const dark = chip(s, 'enemy-counter-lamp')!;
+        expect(dark).toMatchObject({ glyph: { label: 'Dark' }, caption: 'Its intents read UNKNOWN' });
+        expect(effectChipA11y(dark)).toContain('until a Shutter lights it again');
     });
 
     it('a DANGER while Dark reads UNKNOWN too', () => {
