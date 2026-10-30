@@ -18,12 +18,16 @@ import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 
 const DECK = ['grey-strike', 'grey-ward', 'grey-word', 'grey-strike', 'grey-ward'];
 
-/** The live fight at a Breakwater fight node, as the app stages it. */
-function fightAt(node: string): CombatEncounterState {
+/**
+ * The live fight at a Breakwater fight node, as the app stages it. The sea
+ * cave's elite draws one of its two foes by seed (EN1j), so its test passes a
+ * seed that draws the Tithe-Collector.
+ */
+function fightAt(node: string, seed = `fixture-en1f-${node}`): CombatEncounterState {
     const ref: StateFixture = {
         ...REAL_FIGHT_FIXTURE,
         id: `en1f-${node}`,
-        seed: `fixture-en1f-${node}`,
+        seed,
         world: { ...REAL_FIGHT_FIXTURE.world!, node },
         player: { level: 1, baseStats: { heart: 5, body: 5, mind: 5 } },
     };
@@ -58,7 +62,7 @@ describe('each fields, quays, pier and town node stages its own foe and portrait
 
 describe('the sea cave elite stages its own foe and portrait, with both DANGERs unnamed', () => {
     it('bw-c1: The Tithe-Collector', () => {
-        const vm = buildCombatViewModel(fightAt('bw-c1'));
+        const vm = buildCombatViewModel(fightAt('bw-c1', 'fixture-en1h-bw-c1'));
         expect(vm.enemy.name).toBe('The Tithe-Collector');
         expect(vm.enemy.artKey).toBe('tithe-collector');
         expect(vm.enemy.dangers).toEqual([{ phase: 2, name: null }, { phase: 3, name: null }]);
