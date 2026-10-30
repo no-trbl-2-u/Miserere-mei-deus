@@ -196,7 +196,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | Status | Due | Item | Window | Rows | Waits on |
 |---|---|---|---|---|---|
 | [x] | 2026-10-26 | Merge the lane-relic plot (#922), then the MVP plan PR (0.5 h) | W1 | T | - |
-| [ ] | 2026-10-27 | Pick the rest of the item icons: four relics, the category glyphs, the unknown mark and the empty bag (the six lane relics and the three potions are done) (1 h) | W1 | IT2a | - |
+| [x] | 2026-10-27 | Pick the rest of the item icons: four relics, the category glyphs, the unknown mark and the empty bag (the six lane relics and the three potions are done) (1 h) | W1 | IT2a | - |
 | [x] | 2026-10-28 | Design the Breakwater map before enemy session 1: total node count and count per kind, drop the gathering nodes, check the coast art for room for more keep nodes (0.5 h) | W1 | T | - |
 | [ ] | 2026-10-28 | Enemy session 1: Chapter 1's normal roster, the Breakwater's 15 fight nodes (1 h) | W1 | T | - |
 | [ ] | 2026-10-29 | Author the first character: portrait, starting relic and its lane, two starting lanes, three lane cards, the playstyle line (1 h) | W1 | CH1e | - |
@@ -335,6 +335,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-30** — **the rest of the item icons picked; IT2a done** (T, in session: Suppliant's Ring `lorc/engagement-ring`, Thornback Signet `lorc/thorn-helix`, Mirror Brooch `lorc/mirror-mirror`, Carapace Belt `lorc/turtle-shell`, with tints; consumable, relic and quest glyphs; the unknown mark and the bag; the material glyph left out, as nothing drops materials now). **Ticked** the Oct 27 Item by deriving its Status (IT2a is `[x]`). IT2b stays under the `Waits on` of the Nov 16 MVP demo.
 - **2026-10-29** — **the three potion icons picked and applied** (T, in session: Healing Potion `delapouite/health-potion`, Minor `sbed/vial`, Greater `lorc/perfume-bottle`, "Red liquid on all three"; "Might as well start tackling those potion icons now"). **Edited** the Oct 27 Item's name: the potions leave the list of picks still owed. Its Rows stay IT2a, which still has the four relics, the category glyphs, the unknown mark and the bag. Nothing ticked.
 - **2026-10-29** — **the item-icon pick split; IT2 plotted** (T, attended `/plot asap`: asked why the list was stuck, T said the icon picks were done; the repo showed #989 shipped the six lane relics' icons on Oct 27 without ticking IT1b, and nothing else was picked; T: "Split it, then plot the potion icons"). **Edited** the Oct 27 Item: its name narrows to the picks still owed (three potions, four relics, the category glyphs, the unknown mark, the empty bag) and its Rows move from IT1b (now `[x] (#989)`) to IT2a; the date stays T's. **Added** IT2b to the `Waits on` of the Nov 16 MVP demo, which names icons. **Edited** the Oct 27 MVP-schedule piece and the W2 notes to match. Nothing ticked by hand.
 - **2026-10-29** — **the art licence question is closed; AL1 plotted** (T, attended `/plot`: "The images we use for everything are open source. We've had this conversation a few times now"; then: publish all of it, D115). **Added** an Unscheduled line for AL1: loop work that needs no time from T and unblocks no T act. No Item is added, edited or ticked: no open Item rests on the licence question.
