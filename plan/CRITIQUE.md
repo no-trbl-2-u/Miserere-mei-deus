@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-10-30 at commit 594a0d81
-> Pass count: 113
+> Last pass: 2026-10-30 at commit ef02913e
+> Pass count: 114
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
@@ -1015,6 +1015,24 @@
 > the hub's "tap a trodden one", the quest pay's two cases.
 
 ## Pending
+
+### [LOW] critique / coverage — MU1 shipped the background music and its Settings MUSIC slider, but no critique pass can see `/settings`: the screen set never opens it
+- pass: 114 (commit ef02913e)
+- viewport: mobile (375x812) and desktop (1280x800)
+- category: navigation
+- observation: the only player-facing change since pass 113 is MU1, whose single control is the MUSIC volume row on the Settings screen (`musicVolume`, default 70). The title menu offers SETTINGS ("theme · motion · text · sound", `02-onboarding.txt`), and `/settings` is pushed straight from it (`app/index.tsx:53`) with no game-state gate. Even so, none of the 15 `critique:drive` entries opens it. So the music and sound rows, the theme and text-size steps and the reset copy have never been looked at by an unattended pass. The SOUND EFFECTS note ("sound effects are still to come") now sits beside a MUSIC slider that does play sound, and no pass has checked how the two rows read together.
+- evidence: `axiomancer-mobile/scripts/critique-drive.mjs:154` (`SCREENS`, no `settings` entry); `.critique-artifacts/manifest.json` (15 screens per viewport, none `/settings`); `axiomancer-mobile/state/presenters/settings.engine.ts:42-44` (`music: 'MUSIC'`, `sfx`, `soundNote`).
+- suggested fix: add a cold-enterable `{ name: 'settings', path: '/settings' }` entry to `SCREENS` (door 1 in the file's own header comment) that captures after fonts settle, and list it in `skills/critique.md` §3. This is tooling only and changes no game code.
+- source: critique:drive (unattended)
+
+### [LOW] settings presenter — the header still says the music volume is "kept for the audio build (nothing plays yet)", one tick after MU1 made it play the theme
+- pass: 114 (commit ef02913e)
+- viewport: n/a (source)
+- category: voice
+- observation: `settings.engine.ts` opens with the list of what a new player can change, and why each row exists. Its MUSIC / SOUND line says both volumes are kept for a future audio build and that nothing plays yet. Since MU1, `components/BackgroundMusic.tsx` loops the theme at `musicVolume` and pauses it for fights and hazards. Only the sound-effects half is still to come, which the player-facing `soundNote` already says correctly. The next tick that reads this header to change a settings row will take the music slider for a dead control.
+- evidence: `axiomancer-mobile/state/presenters/settings.engine.ts:13`; `axiomancer-mobile/state/settings.ts:52` (`musicVolume` doc names `BackgroundMusic.tsx`); `axiomancer-mobile/components/BackgroundMusic.tsx`.
+- suggested fix: rewrite the line as "MUSIC / SOUND  the theme's volume (MU1); sound effects are still to come". This is a comment only.
+- source: critique:drive (unattended)
 
 ### [MED] combat / phases foe — the preview and board number each loop move as a "PHASE", so Float-Eye reads as an 8-step fight whose DANGER lands on turn 5, where the rule gives it 2 phases and a DANGER at 30%
 - pass: 113 (commit 594a0d81)
