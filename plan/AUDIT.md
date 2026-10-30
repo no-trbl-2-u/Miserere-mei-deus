@@ -112,7 +112,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - detail: the measured-truth run moved lowestVitaeFractionP10 for bw-l4/green-jelly with the grey deck (even spread) from 0.78 at e36c9b8 to 0.96 at 00e0876 (`docs/reports/measured/history.jsonl`, `latest.md`).
 - next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
 
-
 ### [ ] [content] measured drift: bw-w2/float-eye grey lowestVitaeFractionP10 0.74 -> 0.95 (even, 2026-10-30)
 - issue: #1127
 - category: content
