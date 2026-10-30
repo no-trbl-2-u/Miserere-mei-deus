@@ -48,7 +48,9 @@ export function act1FightLedger(): Act1Fight[] {
         const fights: Act1Fight[] = [];
         for (const node of getMapDefinition(continent, map).nodes) {
             const pool = getNodeEventPool(continent, map, node.id);
-            for (const entry of pool?.entries ?? []) {
+            // A node is one fight: an elite node that draws one of two foes counts its first (same level).
+            const entry = pool?.entries.find(e => e.payload.kind === 'encounter' && e.payload.enemySlug);
+            if (entry) {
                 const payload = entry.payload;
                 if (payload.kind !== 'encounter' || !payload.enemySlug) continue;
                 fights.push({
@@ -56,9 +58,6 @@ export function act1FightLedger(): Act1Fight[] {
                     enemySlug: payload.enemySlug, level: payload.level, isBoss: payload.isBoss ?? false,
                     ...(payload.difficulty ? { difficulty: payload.difficulty } : {}),
                 });
-                // One fight per node: an elite node's pair is one fight drawn
-                // per run, its two foes at the same level and tier (phase EN1k).
-                break;
             }
         }
         fights.sort((a, b) => a.column - b.column || Number(a.isBoss) - Number(b.isBoss));

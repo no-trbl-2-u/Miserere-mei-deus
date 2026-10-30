@@ -15,15 +15,15 @@ describe('the Act 1 XP ledger (LV1)', () => {
         expect(ledger.every(f => f.level !== undefined)).toBe(true);
     });
 
-    // Chapter 1's normals fight at levels 3 to 5 (EN1f, EN1g), the sea
+    // Chapter 1's normals fight at levels 3 to 6 (EN1f, EN1g, EN1h), the sea
     // cave's elite at level 5 (EN1j) and the lighthouse path's at level 7
     // (EN1k), so the Breakwater pays more XP than its old level-2 Float-Eyes
     // and level-3 elites did.
-    it('a full clear meets the doors at levels 8, 16, 18 and 21 and ends at level 22', () => {
+    it('a full clear meets the doors at levels 8, 16, 19 and 21 and ends at level 23', () => {
         const walk = walkAct1(ledger);
-        expect(walk.doors.map(d => d.playerLevel)).toEqual([8, 16, 18, 21]);
+        expect(walk.doors.map(d => d.playerLevel)).toEqual([8, 16, 19, 21]);
         expect(walk.doors.map(d => d.doorLevel)).toEqual([1, 2, 3, 4]);
-        expect(walk.finalLevel).toBe(22);
+        expect(walk.finalLevel).toBe(23);
     });
 
     it('counts an elite node\'s pair as one fight, at the pair\'s shared level (EN1k)', () => {
@@ -47,11 +47,11 @@ describe('the Act 1 XP ledger (LV1)', () => {
     });
 
     // The rebuilt Breakwater stages 19 fights, so a full clear reaches the
-    // Beacon Crags door at level 18 (17 before EN1j's level-5 elite), where the placeholder Death Beholder is
+    // Beacon Crags door at level 19 (17 before EN1j's and EN1k's elites), where the placeholder Death Beholder is
     // won about 92% of the time: winnable but free. Chapter 1's normals
-    // (EN1f, EN1g) and the lighthouse path's level-7 elites (EN1k) pay more
-    // XP, so the Charcoal Wood door (level 16) and the Lantern Deep door
-    // (level 21) are free too.
+    // (EN1f, EN1g, EN1h) and the lighthouse path's level-7 elites (EN1k) pay
+    // more XP, so the Charcoal Wood door (level 16) and the Lantern Deep door
+    // are free too.
     // T's tuning session after EN1i retunes the ledger; until then these
     // doors are held to "winnable" only. Filed for T in plan/CRITIQUE.md (BW1b).
     const FREE_UNTIL_RETUNED: ReadonlySet<string> = new Set(['cw-17', 'bc-15', 'ld-16']);

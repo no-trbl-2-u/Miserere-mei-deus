@@ -10,8 +10,11 @@
  *     the long pier and the town; HP phases.
  *   - The Green Jelly (L5, normal, reworked) — the town's befriendable fight;
  *     HP phases.
- *   - The Cave Choir (L5, elite) — one of the sea cave's two elites, drawn
- *     per run; HP phases and its VERSE count.
+ *   - The Wreck-Picker and the Smokehouse Gutter (normals) — the cliffs and
+ *     the hamlet; the Tithe-Collector (elite) — one of the sea cave's two
+ *     elites, drawn per run; HP phases.
+ *   - The Cave Choir (L5, elite) — the sea cave's other elite, drawn per run;
+ *     HP phases and its VERSE count.
  *   - The Lamplighter and the Wrecker (L7, elites) — the lighthouse path's
  *     two elites, drawn per run; HP phases, its lamp and its Bait.
  *   - The Death Beholder (L8, boss) — every region's door fight.
@@ -237,6 +240,92 @@ const HUSH: EnemyMove = {
     name: 'Hush', kind: 'status',
     text: 'TANGLE 2.',
     tangle: 2,
+};
+
+// The cliffs and hamlet: the Wreck-Picker's hoard and the Smokehouse Gutter's fire.
+/** Pick Over takes one card into the hoard, two in the second phase. */
+function pickOver(cards: number): EnemyMove {
+    return {
+        name: 'Pick Over', kind: 'attack',
+        text: `5 damage. Takes ${cards === 1 ? 'a random card' : `${cards} random cards`} from your discard into its hoard.`,
+        damage: 5, rider: { kind: 'hoard-pick', cards, from: 'random' },
+    };
+}
+const HURL_FLOTSAM: EnemyMove = {
+    name: 'Hurl Flotsam', kind: 'attack',
+    text: '3 damage per card in its hoard.',
+    rider: { kind: 'hoard-hurl', damage: 3 },
+};
+const HIDE_IN_THE_HOARD: EnemyMove = {
+    name: 'Hide in the Hoard', kind: 'defend',
+    text: 'WARD 3 per hoarded card.',
+    rider: { kind: 'hoard-ward', ward: 3 },
+};
+const GULL_CALL: EnemyMove = {
+    name: 'Gull-call', kind: 'status',
+    text: 'UNDERTOW on a random die.',
+    undertow: 'random',
+};
+
+const SMOKE_LASH: EnemyMove = {
+    name: 'Smoke Lash', kind: 'attack',
+    text: '6 damage. Adds the INFERNO on it to the hit and gains that much WARD.',
+    damage: 6, rider: { kind: 'inferno-feed' },
+};
+const GUT_HOOK: EnemyMove = {
+    name: 'Gut Hook', kind: 'attack',
+    text: '7 damage. If it gets through your GUARD: BARNACLE.',
+    damage: 7, rider: { kind: 'barnacle-on-hit' },
+};
+const HANG_TO_CURE: EnemyMove = {
+    name: 'Hang to Cure', kind: 'defend',
+    text: 'MEND 8, but it is VULNERABLE 25% next turn.',
+    enemyHeal: 8, rider: { kind: 'self-vulnerable', pct: 25, turns: 1 },
+};
+const CHOKING_SMOKE: EnemyMove = {
+    name: 'Choking Smoke', kind: 'status',
+    text: 'TANGLE 2.',
+    tangle: 2,
+};
+
+// The sea cave's Tithe-Collector: the LEDGER reads what you scrap and spend.
+/** Assess: 6, +3 per card scrapped this turn; from the second phase +4, and +2 per Lien. */
+function assess(later: boolean): EnemyMove {
+    return later
+        ? {
+            name: 'Assess', kind: 'attack',
+            text: '6 damage, +4 for each card you scrapped this turn and +2 for each Lien in your hand.',
+            damage: 6, rider: { kind: 'assess', perScrap: 4, perLien: 2 },
+        }
+        : {
+            name: 'Assess', kind: 'attack',
+            text: '6 damage, +3 for each card you scrapped this turn.',
+            damage: 6, rider: { kind: 'assess', perScrap: 3 },
+        };
+}
+/** Garnish: 6, takes 2 Conviction (+4 with none to take); from the second phase +2 per Lien. */
+function garnish(later: boolean): EnemyMove {
+    return {
+        name: 'Garnish', kind: 'attack',
+        text: `6 damage and takes 2 Conviction. With none to take: +4 damage.${later ? ' +2 for each Lien in your hand.' : ''}`,
+        damage: 6,
+        rider: later ? { kind: 'garnish', take: 2, bonus: 4, perLien: 2 } : { kind: 'garnish', take: 2, bonus: 4 },
+    };
+}
+const LEDGER_SHIELD: EnemyMove = {
+    name: 'Ledger Shield', kind: 'defend',
+    text: 'WARD equal to twice your Conviction.',
+    rider: { kind: 'ward-per-conviction', per: 2 },
+};
+const LIEN: EnemyMove = {
+    name: 'Lien', kind: 'status',
+    text: 'A Lien (a BARNACLE Curse) goes into your hand. His attacks gain +2 for each Lien in your hand.',
+    barnacle: 1,
+};
+const SEIZE_GOODS: EnemyMove = {
+    name: 'Seize Goods', kind: 'attack',
+    text: '5 damage. Takes the top card of your discard until he dies.',
+    damage: 5, rider: { kind: 'hoard-pick', cards: 1, from: 'top' },
 };
 
 // The Cave Choir (phase EN1j), the sea cave's second elite: numbers authored
@@ -688,6 +777,103 @@ export const CurfewRinger = createEnemy({
     tags: ['early-game', 'enemy'],
 });
 
+/** The cliffs: strips what the sea brings in, and what you carry. */
+export const WreckPicker = createEnemy({
+    id: 'enemy-wreck-picker',
+    portraitAsset: 'wreck-picker',
+    name: 'Wreck-Picker',
+    description: 'A cliff scavenger who strips what the sea brings in, and what you carry.',
+    level: 6,
+    baseStats: enemyStatBudget(6),
+    mapName: 'breakwater',
+    difficulty: 'normal',
+    logic: 'balanced',
+    loot: [none(70), drop('minor-healing-potion', 25), drop('healing-potion', 5)],
+    phases: [
+        { moves: [pickOver(1), HURL_FLOTSAM, HIDE_IN_THE_HOARD, GULL_CALL] },
+        {
+            danger: {
+                name: 'Everything Washes Up', kind: 'danger',
+                text: '4 damage per hoarded card, then the cards go back to your hand.',
+                rider: { kind: 'hoard-return', damage: 4 },
+            },
+            // Pick Over takes 2 cards.
+            moves: [pickOver(2), HURL_FLOTSAM, HIDE_IN_THE_HOARD, GULL_CALL],
+        },
+    ],
+    addedIn: CHAPTER1_ADDED,
+    tags: ['early-game', 'enemy'],
+});
+
+/** The hamlet: gutted and hung on the smoking racks, still working. */
+export const SmokehouseGutter = createEnemy({
+    id: 'enemy-smokehouse-gutter',
+    portraitAsset: 'smokehouse-gutter',
+    name: 'Smokehouse Gutter',
+    description: 'Something gutted and hung on the hamlet\'s smoking racks, still working.',
+    level: 6,
+    baseStats: enemyStatBudget(6),
+    mapName: 'breakwater',
+    difficulty: 'normal',
+    logic: 'balanced',
+    loot: [none(70), drop('minor-healing-potion', 25), drop('healing-potion', 5)],
+    phases: [
+        { moves: [SMOKE_LASH, GUT_HOOK, HANG_TO_CURE, CHOKING_SMOKE] },
+        {
+            danger: {
+                name: 'Light the Racks', kind: 'danger',
+                text: 'INFERNO 4 on both sides.',
+                rider: { kind: 'inferno-both', amount: 4 },
+            },
+            // Gut Hook always lands its BARNACLE.
+            moves: [
+                SMOKE_LASH,
+                { name: 'Gut Hook', kind: 'attack', text: '7 damage and a BARNACLE Curse, always.', damage: 7, barnacle: 1 },
+                HANG_TO_CURE, CHOKING_SMOKE,
+            ],
+        },
+    ],
+    addedIn: CHAPTER1_ADDED,
+    tags: ['early-game', 'enemy'],
+});
+
+/** The sea cave's elite: the town's tithe, followed down to the cave. */
+export const TitheCollector = createEnemy({
+    id: 'enemy-tithe-collector',
+    portraitAsset: 'tithe-collector',
+    name: 'The Tithe-Collector',
+    description: 'The town\'s tithe is due, and he has followed you down to the sea cave to collect it. Your name is already in the ledger.',
+    level: 5,
+    baseStats: enemyStatBudget(5),
+    mapName: 'breakwater',
+    difficulty: 'elite',
+    logic: 'balanced',
+    loot: [none(50), drop('healing-potion', 35), drop('greater-healing-potion', 15)],
+    phases: [
+        {
+            moves: [assess(false), garnish(false), LEDGER_SHIELD],
+        },
+        {
+            danger: {
+                name: 'Audit', kind: 'danger',
+                text: '3 damage per LEDGER, then the LEDGER clears.',
+                rider: { kind: 'audit', damage: 3 },
+            },
+            moves: [LIEN, assess(true), garnish(true)],
+        },
+        {
+            danger: {
+                name: 'Foreclose', kind: 'danger',
+                text: 'Takes all your Conviction, then 2 damage and WARD 2 for each point taken.',
+                rider: { kind: 'foreclose', damage: 2, ward: 2 },
+            },
+            moves: [SEIZE_GOODS, assess(true)],
+        },
+    ],
+    addedIn: CHAPTER1_ADDED,
+    tags: ['early-game', 'elite', 'enemy'],
+});
+
 /** The sea cave's second elite (phase EN1j): the drowned congregation. */
 export const CaveChoir = createEnemy({
     id: 'enemy-cave-choir',
@@ -819,7 +1005,7 @@ export const Sandbag_01 = createEnemy({
 /** Every production enemy, in tier order. */
 export const EnemyLibrary = [
     FloatEye, GallowsCrow, NetMender, CraneHook, BrineWidow, LampreyKnot, GreenJelly, CurfewRinger,
-    CaveChoir,
+    WreckPicker, SmokehouseGutter, TitheCollector, CaveChoir,
     Lamplighter, Wrecker,
     DeathBeholder,
 ] as const;
@@ -861,6 +1047,9 @@ export const ENEMY_REGISTRY = {
     'lamprey-knot':   LampreyKnot,
     'curfew-ringer':  CurfewRinger,
     'green-jelly':      GreenJelly,
+    'wreck-picker':       WreckPicker,
+    'smokehouse-gutter':  SmokehouseGutter,
+    'tithe-collector':    TitheCollector,
     'cave-choir':     CaveChoir,
     'lamplighter':    Lamplighter,
     'wrecker':        Wrecker,

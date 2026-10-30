@@ -126,9 +126,7 @@ describe('A1: the graph is T\'s node list', () => {
     it('gives every node its listed kind, through its one-entry pool (an elite pair, two)', () => {
         expect(BREAKWATER_CHAPTER_POOLS).toHaveLength(44);
         for (const n of NODE_LIST) {
-            // An elite node with a pair in `BW_ELITE_DRAWS` holds one entry per foe (EN1j, EN1k).
-            const entries = BW_ELITE_DRAWS[n.id]?.length ?? 1;
-            expect(getNodeEventPool('coastal-continent', 'breakwater', n.id)!.entries, n.id).toHaveLength(entries);
+            expect(getNodeEventPool('coastal-continent', 'breakwater', n.id)!.entries, n.id).toHaveLength(BW_ELITE_DRAWS[n.id]?.length ?? 1);
             expect(boardKindOf(n.id), n.id).toBe(n.kind);
         }
     });
