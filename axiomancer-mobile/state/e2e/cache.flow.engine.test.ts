@@ -55,6 +55,20 @@ describe('cache store flow (three-offer choice)', () => {
         expect(store.getState().cache?.session).toBeNull();
     });
 
+    it('card offer: the cache seed picks the card, whatever Math.random says', () => {
+        const offeredCard = (random: number): string | null => {
+            jest.spyOn(Math, 'random').mockReturnValue(random);
+            const { store, actions } = makeStoreAndActions();
+            actions.beginLootCacheChoice({ tier: 'modest', currency: 10, seed: 7 });
+            const card = store.getState().cache?.session?.cardCandidate ?? null;
+            jest.restoreAllMocks();
+            return card;
+        };
+        const low = offeredCard(0);
+        expect(low).not.toBeNull();
+        expect(offeredCard(0.999)).toBe(low);
+    });
+
     it('item offer: outcome carries the rolled items + currency; claim grants both', () => {
         const { store, actions } = makeStoreAndActions();
         const before = store.getState() as unknown as GameState;
