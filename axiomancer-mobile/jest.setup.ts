@@ -5,6 +5,17 @@ jest.mock('expo-font', () => ({
     isLoaded: () => true,
 }));
 
+// expo-audio is a native module; no suite should load it. The player is inert.
+jest.mock('expo-audio', () => ({
+    createAudioPlayer: () => ({
+        loop: false,
+        volume: 1,
+        play: () => undefined,
+        pause: () => undefined,
+        remove: () => undefined,
+    }),
+}));
+
 jest.mock('expo-splash-screen', () => ({
     preventAutoHideAsync: () => Promise.resolve(),
     hideAsync: () => Promise.resolve(),

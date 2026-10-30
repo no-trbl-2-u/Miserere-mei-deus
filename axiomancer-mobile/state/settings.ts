@@ -49,9 +49,9 @@ export interface PlayerSettings {
     readonly reducedMotion: ReducedMotionPreference;
     readonly haptics: boolean;
     readonly textScale: TextScale;
-    /** 0–100. Persisted for the audio build; no audio system plays yet. */
+    /** 0–100. The background music's volume (`components/BackgroundMusic.tsx`). */
     readonly musicVolume: number;
-    /** 0–100. Persisted for the audio build; no audio system plays yet. */
+    /** 0–100. Persisted for the sound-effects build; no sound effect plays yet. */
     readonly sfxVolume: number;
 }
 

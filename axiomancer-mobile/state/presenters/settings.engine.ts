@@ -41,7 +41,7 @@ export const SETTINGS_COPY = Object.freeze({
     hapticsHint: 'the pulse on drags and dice',
     music: 'MUSIC',
     sfx: 'SOUND EFFECTS',
-    soundNote: 'no sound plays yet — these are kept for the build that brings it',
+    soundNote: 'sound effects are still to come — the slider is kept for the build that brings them',
     storyMode: 'STORY MODE',
     storyModeHint: 'a gentler road through the same chronicle — coming soon',
     comingSoon: 'COMING SOON',
