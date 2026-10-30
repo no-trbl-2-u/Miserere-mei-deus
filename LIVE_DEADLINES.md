@@ -7,7 +7,7 @@
 
 | Due | Item | What it needs | Window |
 |---|---|---|---|
-| 2026-10-29 (1 day overdue) | Author the first character: portrait, starting relic and its lane, two starting lanes, three lane cards, the playstyle line (1 h) | needs you: CH1e ready for you; the loop still owes MF1d | W1 |
+| 2026-10-29 (1 day overdue) | Author the first character: portrait, starting relic and its lane, two starting lanes, three lane cards, the playstyle line (1 h) | needs you: CH1e ready for you | W1 |
 | 2026-10-30 (today) | W1 demo part 1: T plays the ten hard candidates (1 h) | needs you: your task | W1 |
 | 2026-10-31 (tomorrow) | Enemy session 2: pick the L4 and W5 elites from the drafts (the Lamplighter or the Wrecker, the Toll-Keeper or the Tide-Gate) and design the sea keep's boss; the C1 elite is set (1 h) | needs you: your task | W1 |
 | 2026-10-31 (tomorrow) | Pitch Chapter 1's weapons and armor: how many of each, what each does, where each drops, and settle them (1 h) | needs you: your task | W1 |
