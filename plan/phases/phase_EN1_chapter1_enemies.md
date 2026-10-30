@@ -16,15 +16,20 @@
   measurement is not a gate), D88 (enemies and art are T's content; T designed these), D97 (sprite
   sheets only for used enemies), D106 (each region is a chapter), D114 (the 44-node Breakwater),
   D115 (every image is open source).
+- T's request, 2026-10-30, in session on PR #1122, of the Bestiary's Elites tab: "Ignore all the
+  'settled'. There's 3 elites in that pitch and 15 enemies. I want them all", then "let's plot (to
+  add on to the EN rows) the rest of the enemies that were suggested". This adds EN1j-EN1l: the
+  five other drafted elites (the Cave Choir, the Lamplighter, the Wrecker, the Toll-Keeper, the
+  Tide-Gate), so each of the three elite nodes has two foes.
 - Part plan: `plan/revamp/enemies.md` → "B2 — Enemy revamp (owner)". This plot is B2's Chapter 1
-  slice for the normals and the C1 elite. B2 stays open for the L4 and W5 elites, the sea keep's
-  boss and Chapters 2-4.
+  slice for the normals and all six drafted elites. B2 stays open for the sea keep's boss and
+  Chapters 2-4.
 
 ## Outcome
 
-Every Breakwater fight node meets one of T's ten normals and the sea cave meets the
-Tithe-Collector, each telegraphing a kind instead of a number, changing phase at its HP lines
-with its DANGER move, and carrying only the six enemy words.
+Every Breakwater fight node meets one of T's ten normals and each of the three elite nodes meets
+one of its two drafted elites, each telegraphing a kind instead of a number, changing phase at its
+HP lines with its DANGER move, and carrying only the six enemy words plus its own counter.
 
 Measure: `npm run verify -w axiomancer-mechanics` and `npm run verify -w axiomancer-mobile` green;
 the Breakwater e2e fights every fight node's foe and sees its DANGER fire at its line; EN1i's
@@ -69,6 +74,23 @@ table exists for T's tuning session.
 - **A11 (cliffs)** Wreck-Picker and Smokehouse Gutter, the same way.
 - **A12 (the C1 elite)** The Tithe-Collector fights at `bw-c1` with 3 phases, its two DANGERs and
   its LEDGER counter shown on the board, as the Appendix says, with a stand-in portrait.
+- **A14 (paired elite nodes)** Each elite node's encounter pool holds its two drafted elites at
+  equal weight, drawn by the run's seeded pool roll: `bw-c1` the Tithe-Collector or the Cave Choir,
+  `bw-l4` the Lamplighter or the Wrecker, `bw-w5` the Toll-Keeper or the Tide-Gate. A test proves
+  each node can draw each of its two, and that one seed always draws the same one.
+- **A15 (the Cave Choir)** The Cave Choir plays the Appendix's three phases and two DANGERs, its
+  VERSE counter shows on its pane, and Antiphon telegraphs UNKNOWN and resolves by what the player
+  did last turn (attacked: The Pews; guarded: a Hymn worth +2 VERSE).
+- **A16 (the Lamplighter)** The Lamplighter plays the Appendix, with LIT or DARK shown on its pane.
+  While Dark every intent it shows reads UNKNOWN (no move name), and Glare is skipped. After The
+  Lamp Goes Out it stays Dark for the rest of the fight.
+- **A17 (the Wrecker)** The Wrecker plays the Appendix. Wrecker's Bait telegraphs UNKNOWN and
+  resolves on the player's turn end: GUARD up gives the Wrecker WARD 14, no GUARD takes 12 damage.
+- **A18 (the Toll-Keeper)** The Toll-Keeper plays the Appendix, with TOLL on its pane rising 1
+  each turn. The player can pay the toll on their own turn as a SACRIFICE equal to TOLL (it counts
+  for TETHER and the SACRIFICE globals), which resets TOLL to 0 and returns any Distrained card.
+- **A19 (the Tide-Gate)** The Tide-Gate plays the Appendix, with TIDE 0-5 on its pane, rising 1 a
+  turn (2 in phase 3), and is VULNERABLE 25% at TIDE 0-1.
 - **A13 (the table for tuning)** A committed report gives, for every Breakwater foe at its node's
   level, the turns to kill and the VITAE lost for the four lane decks kitted at L8 and L10 (the
   lane's test deck upgraded once and its 3 relics; grey has none), and the share of fights that
@@ -110,7 +132,8 @@ table exists for T's tuning session.
 - **Per-node binding.** `poolFor` (`World/MapEvents/content.ts:289`) stops mapping by kind for
   `fight` and `bw-c1`; a `BW_ENCOUNTER_FOES` table by node id replaces `BW_FIGHT_LEVEL` for fights,
   like `CW_ENCOUNTER_FOES`. `bw-l4` and `bw-w5` keep today's foe (the Green Jelly at
-  `BW_ELITE_LEVEL`) and `bw-k2` keeps the Death Beholder until enemy session 2's plot.
+  `BW_ELITE_LEVEL`) until EN1k and EN1l bind their pairs, and `bw-k2` keeps the Death Beholder
+  until enemy session 2's plot.
 - **Other chapters.** The Float-Eye and Green Jelly reworks apply wherever they appear. The Green
   Jelly becomes `difficulty: 'normal'` everywhere. Measured-truth drift from this is expected and
   is not filed as a balance row.
@@ -123,6 +146,23 @@ table exists for T's tuning session.
   wreck-picker ← `hag`, smokehouse-gutter ← `butcher`, tithe-collector ← `bone-wizard-b`. Each
   file is at `<commit>^` of its deletion: `hag` at `5117001a8^`, the rest at `c20ebe14e^`. The
   Float-Eye and Green Jelly keep their art and frames.
+- **The five more elites (EN1j-EN1l).** All six drafted elites ship; none is cut. Each elite node
+  draws one of its two per run, 50/50, from the pool roll the map already makes
+  (`MapEventPool.entries` with two `weight: 1` entries) [T to confirm #3]. Levels: `bw-c1` 5 (both
+  foes), `bw-l4` 7, `bw-w5` 8, all under 10, numbers authored at level 3 and scaled like the
+  Tithe-Collector's [T to confirm #4]. Each elite's counter (VERSE, LIT/DARK, BAIT, TOLL, TIDE) is
+  fight state on `CombatEncounterState.enemyRiders` shown on the enemy pane, not a keyword, like
+  the LEDGER. "Turn" in the Appendix means one foe turn.
+- **UNKNOWN by state.** Antiphon and Wrecker's Bait are UNKNOWN moves (kind `unknown` from EN1c).
+  The Lamplighter's Dark is a pane state: while it holds, the telegraph turns every move into an
+  UNKNOWN intent with no name. This is a new override in the intent VM, not a new kind.
+- **Paying the toll.** The player pays on their own turn with a "Pay the toll (n)" action on the
+  Toll-Keeper's pane, not a turn-end prompt, because the board has no turn-end prompt today
+  [T to confirm #5]. It is legal only when the player's VITAE is above TOLL (the board refuses it
+  loudly otherwise) and it runs through the card-program SACRIFICE path, so TETHER and WAIVE apply.
+- **Elite stand-ins**, from the Bestiary page, each at `c20ebe14e^`: cave-choir ← `zoma-a`,
+  lamplighter ← `wichtlein`, wrecker ← `sendou-figure-a`, toll-keeper ← `paladin-cursed-a`,
+  tide-gate ← `mabadi`. Same provenance record and note as the others.
 - **Prose.** Each foe's `description` is the Appendix's one-line flavour. No journal or befriend
   data for the new foes.
 - **Ids.** Slugs as in the Appendix (`gallows-crow`, ...); enemy ids `enemy-<slug>`.
@@ -136,7 +176,9 @@ table exists for T's tuning session.
 | Long pier & harbour steps | `bw-h7` Brine-Widow, `bw-t1` Lamprey-Knot | 4 |
 | Town | `bw-t2` Green Jelly, `bw-t3` Curfew-Ringer, `bw-t6` Green Jelly | 5 |
 | Cliffs & hamlet | `bw-l1` Wreck-Picker, `bw-d1` Smokehouse Gutter, `bw-d3` Wreck-Picker | 6 |
-| Sea cave (elite) | `bw-c1` The Tithe-Collector | 5 |
+| Sea cave (elite) | `bw-c1` The Tithe-Collector (EN1h); from EN1j, the Tithe-Collector or the Cave Choir | 5 |
+| Lighthouse path (elite) | `bw-l4` the Lamplighter or the Wrecker (EN1k) | 7 |
+| Keep causeway (elite) | `bw-w5` the Toll-Keeper or the Tide-Gate (EN1l) | 8 |
 
 ## Tests matrix
 
@@ -163,12 +205,11 @@ Closes A<n>[, A<m>]. D116.
 
 ## DoD
 
-A1-A13 ticked.
+A1-A19 ticked.
 
 ## Follow-ups (out of scope)
 
-- The L4 and W5 elites and the sea keep's boss (enemy session 2, Oct 31, then its plot). Drafted
-  options: the Lamplighter or the Wrecker at L4, the Toll-Keeper or the Tide-Gate at W5.
+- The sea keep's boss (enemy session 2, Oct 31, then its plot).
 - Tuning: final levels, repeat rate and VITAE (T's session after EN1i), and the cards.
 - T's portrait swap: each stand-in replaced by T's pick.
 - Chapters 2-4's foes and the bosses' move to the phase model.
@@ -219,8 +260,25 @@ Measure: the Breakwater e2e fights `bw-l1`, `bw-d1`, `bw-d3` and `bw-c1`.
 - Scope: as EN1f; the hoard and the LEDGER on the pane; `bw-c1` bound to the Tithe-Collector;
   three stand-in portraits.
 
-### EN1i — The tuning table · S · closes A13 · requires EN1h
-Measure: `docs/reports/chapter1-enemies.md` exists with the table.
+### EN1j — The sea cave's second elite: the Cave Choir · L · closes A14, A15 · requires EN1h
+Measure: the Breakwater e2e draws each of `bw-c1`'s two elites and fights the Cave Choir through both DANGERs.
+- Scope: `Enemy/enemy.library.ts`, the pair draw in `BW_ENCOUNTER_FOES`/`poolFor` (an elite node
+  may name two foes), VERSE and Antiphon's last-turn read in `combat.enemy-riders.ts`, VERSE on
+  the pane, the `cave-choir` stand-in.
+
+### EN1k — The lighthouse path: the Lamplighter and the Wrecker · L · closes A16, A17 · requires EN1j
+Measure: the Breakwater e2e draws each of `bw-l4`'s two elites and fights each through both DANGERs.
+- Scope: as EN1j; LIT/DARK with the intent VM's UNKNOWN override and the pane state; BAIT's
+  turn-end read; `bw-l4` bound to the pair at level 7; two stand-ins.
+
+### EN1l — The keep causeway: the Toll-Keeper and the Tide-Gate · L · closes A18, A19 · requires EN1k
+Measure: the Breakwater e2e draws each of `bw-w5`'s two elites, pays the toll once and fights each through both DANGERs.
+- Scope: as EN1j; TOLL with the "Pay the toll" board action through the SACRIFICE path and
+  Distrain's held card; TIDE with its low-tide VULNERABLE; `bw-w5` bound to the pair at level 8;
+  two stand-ins.
+
+### EN1i — The tuning table · S · closes A13 · requires EN1l
+Measure: `docs/reports/chapter1-enemies.md` exists with the table, every elite included.
 - Scope: a script over `simulatePacing` (`Combat/combat.pacing.sim.ts`) for each foe at its node
   level against the four kitted lane decks at L8 and L10; the report; no balance change.
 
@@ -443,3 +501,174 @@ Phase 3 (30-0%):
 | 2 | ATTACK | Assess | As before. |
 
 Counters: Signature players spend Conviction before each line, but spending feeds the LEDGER. Body cards shake off Liens. Grey barely scraps, so Audit stays small.
+
+### C1 elite, second draw: The Cave Choir (`cave-choir`)
+
+The drowned congregation, still at service under the cliff.
+
+Mechanic: VERSE: a counter on the choir. Each Hymn adds 1.
+
+Phase 1 (100-60%):
+
+| # | Kind | Move | Effect |
+|---|---|---|---|
+| 1 | ATTACK | Hymn | 3 damage, 2 hits. +1 VERSE. |
+| 2 | DEFEND | The Pews | WARD 10. |
+| 3 | STATUS | Hush | TANGLE 2. |
+
+DANGER at 60%: **Toll for the Drowned**. UNDERTOW on 2 dice, then 8 damage.
+
+Phase 2 (60-30%):
+
+| # | Kind | Move | Effect |
+|---|---|---|---|
+| 1 | ATTACK | Crescendo | One hit of 2 damage per VERSE. |
+| 2 | ATTACK | Hymn | As before. |
+| 3 | STATUS | Sea-Water Psalm | 2 BARNACLE Curses into your hand. |
+
+DANGER at 30%: **Amen**. Spends every VERSE: 3 damage per VERSE, and it MENDs the same.
+
+Phase 3 (30-0%):
+
+| # | Kind | Move | Effect |
+|---|---|---|---|
+| 1 | UNKNOWN | Antiphon | Answers your last turn: if you attacked, The Pews; if you guarded, a Hymn worth +2 VERSE. |
+| 2 | ATTACK | Crescendo | As before. |
+
+Counters: THORNS punish every Hymn. A clock fight: kill it before the VERSEs pile up.
+
+### L4 elite: The Lamplighter (`lamplighter`)
+
+Kept the light until it went out. Now he lights lures.
+
+Mechanic: LIT / DARK: while Lit its intents show. While Dark they read UNKNOWN.
+
+Phase 1 (100-60%):
+
+| # | Kind | Move | Effect |
+|---|---|---|---|
+| 1 | ATTACK | Wick-Lash | 6 damage. If Lit: INFERNO 2 on you. |
+| 2 | DEFEND | Shutter | Goes Dark, WARD 12. |
+| 3 | STATUS | Glare | VULNERABLE 25% for 1 turn (Lit only). |
+
+DANGER at 60%: **Lure Light**. TANGLE 3, MEND 8, and it goes Lit.
+
+Phase 2 (60-30%):
+
+| # | Kind | Move | Effect |
+|---|---|---|---|
+| 1 | ATTACK | Wick-Lash | +3 damage while Dark. |
+| 2 | DEFEND | Shutter | Every other turn. |
+| 3 | STATUS | Glare | As before. |
+
+DANGER at 30%: **The Lamp Goes Out**. Dark for the rest of the fight.
+
+Phase 3 (30-0%):
+
+| # | Kind | Move | Effect |
+|---|---|---|---|
+| 1 | UNKNOWN | Anything | Every intent reads UNKNOWN. Its hits gain +3. |
+
+Counters: The fight that uses the UNKNOWN icon. Learned players save GUARD for the dark.
+
+### L4 elite, second draw: The Wrecker (`wrecker`)
+
+Swings a false light on the rocks so ships come in wrong. Tied to the H4 wreck.
+
+Mechanic: BAIT: an UNKNOWN that reads your turn. End with GUARD: WARD 14. End without: 12 damage.
+
+Phase 1 (100-60%):
+
+| # | Kind | Move | Effect |
+|---|---|---|---|
+| 1 | UNKNOWN | Wrecker's Bait | As above. |
+| 2 | ATTACK | Cudgel | 7 damage. If it gets through your GUARD: BARNACLE. |
+| 3 | STATUS | Rope | TANGLE 2. |
+
+DANGER at 60%: **Onto the Rocks**. 4 damage per card in your hand.
+
+Phase 2 (60-30%):
+
+| # | Kind | Move | Effect |
+|---|---|---|---|
+| 1 | UNKNOWN | Wrecker's Bait | Twice in the pattern. |
+| 2 | ATTACK | Salvage Hook | 6 damage and steals a banked die. |
+
+DANGER at 30%: **Strip the Wreck**. Takes your banked dice and 4 Conviction, WARD 4 per thing taken.
+
+Phase 3 (30-0%):
+
+| # | Kind | Move | Effect |
+|---|---|---|---|
+| 1 | ATTACK | Cudgel | +3 damage. |
+| 2 | ATTACK | Salvage Hook | +3 damage. |
+| 3 | UNKNOWN | Wrecker's Bait | As before. |
+
+Counters: A bluffing duel. Hand-hoarders and dice-bankers pay.
+
+### W5 elite: The Toll-Keeper (`toll-keeper`)
+
+Nobody crosses the causeway without paying. He has never once been paid in coin.
+
+Mechanic: TOLL: rises 1 each turn. At turn end you may pay it as a SACRIFICE equal to TOLL to reset it to 0.
+
+Phase 1 (100-60%):
+
+| # | Kind | Move | Effect |
+|---|---|---|---|
+| 1 | ATTACK | Levy | 5 damage + TOLL. |
+| 2 | DEFEND | Strongbox | WARD 10. |
+| 3 | STATUS | Writ | A Writ (BARNACLE) Curse into your hand. |
+
+DANGER at 60%: **Compound Interest**. 4 damage per Curse in your hand, deck and discard.
+
+Phase 2 (60-30%):
+
+| # | Kind | Move | Effect |
+|---|---|---|---|
+| 1 | ATTACK | Levy | As before. |
+| 2 | ATTACK | Distrain | 4 damage and takes a random card from your hand until you pay the TOLL. |
+
+DANGER at 30%: **Seize the Causeway**. TOLL doubles, then 2 damage per TOLL.
+
+Phase 3 (30-0%):
+
+| # | Kind | Move | Effect |
+|---|---|---|---|
+| 1 | ATTACK | Levy | 5 damage + double TOLL. |
+| 2 | ATTACK | Distrain | As before. |
+
+Counters: Blood Price turns the toll into fuel: paying it is a SACRIFICE, so TETHER fires. Others must race.
+
+### W5 elite, second draw: The Tide-Gate (`tide-gate`)
+
+The causeway floods twice a day. The gate decides when.
+
+Mechanic: TIDE 0-5: rises 1 each turn. At TIDE 0-1 the gate is VULNERABLE 25%.
+
+Phase 1 (100-60%):
+
+| # | Kind | Move | Effect |
+|---|---|---|---|
+| 1 | ATTACK | Wash Over | 4 damage + TIDE. |
+| 2 | DEFEND | Sluice | WARD 3 per TIDE. |
+| 3 | STATUS | Undertow | UNDERTOW on 1 die. |
+
+DANGER at 60%: **Spring Tide**. TIDE jumps to 5, then 3 damage per TIDE.
+
+Phase 2 (60-30%):
+
+| # | Kind | Move | Effect |
+|---|---|---|---|
+| 1 | ATTACK | Wash Over | Hits twice at TIDE 4+. |
+| 2 | DEFEND | Sluice | As before. |
+
+DANGER at 30%: **The Gate Opens**. TIDE to 0 and 18 damage, then it is VULNERABLE 50% for 2 turns.
+
+Phase 3 (30-0%):
+
+| # | Kind | Move | Effect |
+|---|---|---|---|
+| 1 | ATTACK | Wash Over | As before. TIDE now rises 2 a turn. |
+
+Counters: A rhythm read: hit hard at low tide. THORNS like the double wash.
