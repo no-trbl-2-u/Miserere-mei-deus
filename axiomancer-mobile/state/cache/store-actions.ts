@@ -16,6 +16,7 @@ import type { Character, GameState, Item } from '@mechanics';
 
 import {
     addRewardCard,
+    cacheCardRng,
     chooseLootCacheChoiceOffer as engineChooseOffer,
     claimLootCacheChoiceOutcome as engineClaim,
     createLootCacheChoiceSession,
@@ -36,10 +37,9 @@ export const CACHE_KEEPSAKE_FLAG_PREFIX = 'cache-keepsake:';
 
 /**
  * Dev/test seed override (`globalThis.__AXM_CACHE_SEED__`), mirroring
- * the hazard/rest/blacksmith hooks. Seeds the `item` offer's
- * `rollCacheReward` roll; the `card` offer rolls via `Math.random` like
- * every other card-reward draft (`rollCombatRewardAction`) — card offers
- * were never part of the minigame seed-replay contract.
+ * the hazard/rest/blacksmith hooks. Seeds both offers: the `item` offer's
+ * `rollCacheReward` roll and the `card` offer's draw (`cacheCardRng`, a
+ * separate stream of the same seed), so one seed reproduces the whole cache.
  */
 declare global {
     // eslint-disable-next-line no-var
@@ -69,7 +69,7 @@ export function beginLootCacheChoiceAction(store: AppStore, options: BeginLootCa
     const player = (state as unknown as GameState).player;
     const tier = options.tier ?? 'modest';
     const itemCandidates = rollCacheReward({ playerLevel: player?.level ?? 1, seed, tier });
-    const cardCandidate = rollCombatCardRewards(player as Character, Math.random, 1)[0];
+    const cardCandidate = rollCombatCardRewards(player as Character, cacheCardRng(seed), 1)[0];
 
     setSession(store, createLootCacheChoiceSession(seed, {
         cardCandidate,

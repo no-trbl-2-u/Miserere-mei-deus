@@ -52,6 +52,17 @@ function mulberry32(seed: number): () => number {
     };
 }
 
+/** Offset for the card stream, so the card and the goods never share draws. */
+const CACHE_CARD_STREAM_OFFSET = 0x9e3779b9;
+
+/**
+ * The rng a cache's card offer is drawn from: the cache seed's own stream,
+ * kept apart from `rollCacheReward`'s, so one seed reproduces the whole cache.
+ */
+export function cacheCardRng(seed: number): () => number {
+    return mulberry32((seed ^ CACHE_CARD_STREAM_OFFSET) >>> 0);
+}
+
 /** Pick an integer in [min, max] inclusive from an rng. */
 function rollInt(rng: () => number, min: number, max: number): number {
     if (max <= min) return min;

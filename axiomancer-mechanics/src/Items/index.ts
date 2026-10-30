@@ -19,7 +19,7 @@ export {
 } from './equipment.engine';
 // Loot caches yield consumables via `rollCacheReward`; the signet relics are
 // the whole equipment surface.
-export { rollCacheReward } from './cache-reward';
+export { cacheCardRng, rollCacheReward } from './cache-reward';
 export type { CacheLootTier } from './cache-reward';
 export {
     wornPerSlot, isEquippedFirstOfSlot, findEquippedInSlot,

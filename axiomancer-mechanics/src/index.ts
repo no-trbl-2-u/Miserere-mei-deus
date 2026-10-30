@@ -191,8 +191,8 @@ export {
     // preview with, so the shop line and the drink preview cannot drift from
     // what the engine actually pays.
     resolveConsumableHeal,
-    // Loot caches yield consumables via rollCacheReward.
-    rollCacheReward,
+    // Loot caches yield consumables via rollCacheReward; the card offer draws from cacheCardRng.
+    rollCacheReward, cacheCardRng,
     wornPerSlot, isEquippedFirstOfSlot, findEquippedInSlot,
     SLOT_CAPACITY,
     consumableLibrary, getConsumableById,
