@@ -2,7 +2,7 @@
  * Hermetic E2E — a trial set comes out cleanly (plan/revamp/cards.md →
  * "The trial set").
  *
- * The Blood Price, Elementalist and Defender sets' modules are replaced by empty sets,
+ * The Blood Price, Elementalist, Defender and Merciful sets' modules are replaced by empty sets,
  * which is what every consumer sees once their files and their `TRIAL_SETS`
  * lines are deleted.
  * The game must still run: the library is the grey office, the lane
@@ -25,6 +25,9 @@ vi.mock('../library/elementalist.cards', () => ({
 }));
 vi.mock('../library/defender.cards', () => ({
     DEFENDER_SET: { id: 'defender', cards: [], lanes: [] },
+}));
+vi.mock('../library/merciful.cards', () => ({
+    MERCIFUL_SET: { id: 'merciful', cards: [], lanes: [] },
 }));
 
 import { cardLibrary, getCardById } from '../cards.library';
@@ -80,6 +83,9 @@ const ALLOWED = new Set([
     path.join('axiomancer-mechanics', 'src', 'Cards', 'e2e', 'elementalist.engine.test.ts'),
     path.join('axiomancer-mechanics', 'src', 'Cards', 'library', 'defender.cards.ts'),
     path.join('axiomancer-mechanics', 'src', 'Cards', 'e2e', 'defender.engine.test.ts'),
+    path.join('axiomancer-mechanics', 'src', 'Cards', 'library', 'merciful.cards.ts'),
+    path.join('axiomancer-mechanics', 'src', 'Cards', 'e2e', 'merciful.engine.test.ts'),
+    path.join('axiomancer-mechanics', 'src', 'Cards', 'e2e', 'merciful-lines.engine.test.ts'),
     path.join('axiomancer-mobile', 'assets', 'images', 'cards', 'index.ts'),
 ]);
 const SKIP_DIRS = new Set(['node_modules', '.expo', '.audit-dist', '.smoke-dist', 'dist', 'android', 'ios', 'screenshots']);
@@ -96,7 +102,7 @@ function codeFiles(dir: string, out: string[] = []): string[] {
 }
 
 describe('no code outside the set names a trial card id', () => {
-    it('only the set files and their own tests carry a bp-, el- or df- card id', () => {
+    it('only the set files and their own tests carry a bp-, el-, df- or mc- card id', () => {
         const root = path.resolve(__dirname, '../../../..');
         const files = [
             ...codeFiles(path.join(root, 'axiomancer-mechanics', 'src')),
@@ -104,9 +110,17 @@ describe('no code outside the set names a trial card id', () => {
         ];
         const offenders = files
             .filter(f => !ALLOWED.has(path.relative(root, f)))
-            .filter(f => /['"`](bp-[a-z0-9-]+|el-[pem]-\d{2}[a-z]\+*|df-[pem]-\d{2}[a-z]\+*)['"`]/.test(fs.readFileSync(f, 'utf8')))
+            .filter(f => /['"`](bp-[a-z0-9-]+|el-[pem]-\d{2}[a-z]\+*|df-[pem]-\d{2}[a-z]\+*|mc-[pem]-\d{2}[a-z]\+*)['"`]/.test(fs.readFileSync(f, 'utf8')))
             .map(f => path.relative(root, f));
         expect(offenders).toEqual([]);
+        // Every arm above must earn its keep: an allowed file must actually carry one of
+        // its ids, or that arm pins nothing new. On the parent commit the Merciful set and
+        // its test do not exist, so this fails there and passes once they ship.
+        const mcPattern = /['"`]mc-[pem]-\d{2}[a-z]\+*['"`]/;
+        const mcIdSeen = files
+            .filter(f => ALLOWED.has(path.relative(root, f)))
+            .some(f => mcPattern.test(fs.readFileSync(f, 'utf8')));
+        expect(mcIdSeen).toBe(true);
         // The walk reads every file in two packages; a loaded full verify pushed it past the 5s default.
     }, 30_000);
 });

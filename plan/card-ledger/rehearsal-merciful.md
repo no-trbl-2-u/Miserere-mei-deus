@@ -4,6 +4,12 @@
 > with T, started 2026-10-29, from T's prompt "A lane where healing can be
 > offensive". The fourth lane T planned after the Defender. Paper only until the
 > trial set is plotted and built (step 8); nothing here is live content.
+>
+> **Live (Phase MF1d, 2026-10-30):** the 29 cards are the removable trial set
+> `axiomancer-mechanics/src/Cards/library/merciful.cards.ts` (one `TRIAL_SETS` line), with lane `merciful`, the
+> test deck under "Revisions" and the Suppliant's Ring as its family relic. The numbers shipped are "The numbers"
+> table's; one drafted name changed in the build (P-04 "What Is Owed" is already a Blood Price card, so it ships
+> "What Grace Owes").
 
 ## Session 0 — rulings (T, 2026-10-29)
 

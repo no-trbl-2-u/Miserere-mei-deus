@@ -43,8 +43,13 @@ function seededRng(seed: number): () => number {
     };
 }
 
+/** The mock player wears the Suppliant's Ring, which opens the Merciful lane; these fixtures wear no relic unless `wearing` says so. */
 function playerWith(knownCards: readonly string[], combatRewardCards: readonly string[] = []): Character {
-    return { ...deepClone(Player), knownCards: [...knownCards], combatRewardCards: [...combatRewardCards] };
+    const player = deepClone(Player);
+    return {
+        ...player, knownCards: [...knownCards], combatRewardCards: [...combatRewardCards],
+        equipment: { ...player.equipment, relics: [] },
+    };
 }
 
 /** The player wearing one fixture relic relic per lane id (no library relic names a lane yet). */

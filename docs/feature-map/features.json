@@ -168,7 +168,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mechanics/src/CLI/e2e/dev-tools.engine.test.ts, axiomancer-mechanics/src/Character/e2e/character-roster.engine.test.ts, axiomancer-mechanics/src/Character/e2e/character.engine.test.ts, ..."
+        "source": "axiomancer-mechanics/src/CLI/e2e/dev-tools.engine.test.ts, axiomancer-mechanics/src/Cards/e2e/merciful.engine.test.ts, axiomancer-mechanics/src/Character/e2e/character-roster.engine.test.ts, ..."
       },
       "needsPitch": {
         "value": false,
@@ -1044,6 +1044,12 @@
       "from": "area:Cards",
       "to": "area:Combat",
       "file": "axiomancer-mechanics/src/Cards/card.removal.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Cards",
+      "to": "area:Combat",
+      "file": "axiomancer-mechanics/src/Cards/library/merciful.cards.ts"
     },
     {
       "kind": "coupling",

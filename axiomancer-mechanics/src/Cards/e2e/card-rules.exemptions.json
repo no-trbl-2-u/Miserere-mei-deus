@@ -13,12 +13,6 @@
   },
   {
     "rule": "carrier-rule",
-    "id": "BURST",
-    "reason": "no carrier yet: MERCY's word is printed by the Merciful trial set cards (MF1d); delete this row when they land",
-    "filed": "2026-10-30"
-  },
-  {
-    "rule": "carrier-rule",
     "id": "BRINE",
     "reason": "enemy word with no live carrier yet: the engine resolves it (EN1d) and the Breakwater foes carry it from EN1f-h, which delete this row",
     "filed": "2026-10-30"
@@ -28,6 +22,12 @@
     "id": "HONE",
     "reason": "pinned at CS1, awaits T's card session",
     "filed": "2026-10-13"
+  },
+  {
+    "rule": "carrier-rule",
+    "id": "MEND",
+    "reason": "enemy word with no live carrier yet: the engine resolves it (EN1d) and the Breakwater foes carry it from EN1f-h, which delete this row",
+    "filed": "2026-10-30"
   },
   {
     "rule": "carrier-rule",
@@ -61,8 +61,14 @@
   },
   {
     "rule": "carrier-rule",
+    "id": "WARD",
+    "reason": "enemy word with no live carrier yet: the engine resolves it (EN1d) and the Breakwater foes carry it from EN1f-h, which delete this row",
+    "filed": "2026-10-30"
+  },
+  {
+    "rule": "carrier-rule",
     "id": "YIELDING",
-    "reason": "no carrier yet: the one Merciful trial set card that makes a foe YIELDING lands in MF1d (re-reason the row as an admission-bar pin then: one card, T's call after play)",
+    "reason": "admission bar: the Merciful trial set carries YIELDING on one card (M-02b, as kept); the keyword is for every lane, so a second carrier is T's call after play",
     "filed": "2026-10-30"
   },
   {
@@ -360,6 +366,108 @@
     "filed": "2026-10-24"
   },
   {
+    "rule": "complexity-budget",
+    "id": "mc-e-01b",
+    "reason": "the Merciful trial set as kept and revised (MF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-30"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "mc-e-02c",
+    "reason": "the Merciful trial set as kept and revised (MF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-30"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "mc-e-04b",
+    "reason": "the Merciful trial set as kept and revised (MF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-30"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "mc-e-06a",
+    "reason": "the Merciful trial set as kept and revised (MF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-30"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "mc-e-08b",
+    "reason": "the Merciful trial set as kept and revised (MF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-30"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "mc-e-09b",
+    "reason": "the Merciful trial set as kept and revised (MF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-30"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "mc-e-10b",
+    "reason": "the Merciful trial set as kept and revised (MF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-30"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "mc-m-01b",
+    "reason": "the Merciful trial set as kept and revised (MF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-30"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "mc-m-02b",
+    "reason": "the Merciful trial set as kept and revised (MF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-30"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "mc-m-05c",
+    "reason": "the Merciful trial set as kept and revised (MF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-30"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "mc-m-06c",
+    "reason": "the Merciful trial set as kept and revised (MF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-30"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "mc-m-07c",
+    "reason": "the Merciful trial set as kept and revised (MF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-30"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "mc-m-08a",
+    "reason": "the Merciful trial set as kept and revised (MF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-30"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "mc-m-10c",
+    "reason": "the Merciful trial set as kept and revised (MF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-30"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "mc-p-04a",
+    "reason": "the Merciful trial set as kept and revised (MF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-30"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "mc-p-08b",
+    "reason": "the Merciful trial set as kept and revised (MF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-30"
+  },
+  {
+    "rule": "complexity-budget",
+    "id": "mc-p-10c",
+    "reason": "the Merciful trial set as kept and revised (MF1d), awaits T's play (lane-creator step 8)",
+    "filed": "2026-10-30"
+  },
+  {
     "rule": "global-template",
     "id": "el-e-06a",
     "reason": "the Elementalist trial set as kept (EL1c), awaits T's revisions (lane-creator step 7)",
@@ -376,5 +484,23 @@
     "id": "grey-word",
     "reason": "held for T at SP1: under the law (PAID EXILE, +35%) the grey deck wins the first Act 1 door 2% of greedy runs (20% before), below the LV1 floor of 10%; T rules on the PR",
     "filed": "2026-10-24"
+  },
+  {
+    "rule": "spell-law",
+    "id": "mc-e-03b",
+    "reason": "E-03 PAID is \"Your heals this turn HEAL twice as much. EXILE.\" (T, the sims' fix): a multiplier with no number for a Spell-law step to raise; held for T",
+    "filed": "2026-10-30"
+  },
+  {
+    "rule": "spell-law",
+    "id": "mc-e-06a",
+    "reason": "E-06 PAID is \"Your HEALs this turn are RADIANCE instead, and each deals double. EXILE.\" (T): a mode change with no number for a Spell-law step to raise; held for T",
+    "filed": "2026-10-30"
+  },
+  {
+    "rule": "spell-law",
+    "id": "mc-p-05a",
+    "reason": "P-05 as kept: FREE ticks the clock and PAID is \"The foe's MERCY bursts now. EXILE.\" (T): neither line has a number for a Spell-law step to raise; held for T",
+    "filed": "2026-10-30"
   }
 ]

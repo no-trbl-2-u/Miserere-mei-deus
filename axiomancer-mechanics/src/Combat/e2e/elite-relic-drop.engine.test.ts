@@ -41,7 +41,7 @@ const spread = (i: number): number => (i + 1) * 104729;
 
 function bare(): Character {
     const player = deepClone(Player);
-    return { ...player, inventory: [] };
+    return { ...player, inventory: [], equipment: { ...player.equipment, relics: [] } };
 }
 
 describe('the elite relic pool', () => {

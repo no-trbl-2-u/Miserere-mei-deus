@@ -8,7 +8,7 @@
  *
  * The relics and where each comes from (`relicSource`):
  *
- *   Suppliant's Ring (The Open Hand)  no lane     no source (no longer handed out)
+ *   Suppliant's Ring (The Open Hand)  Merciful    elite drop
  *   Crimson Circlet (Crimson Return)  Blood Price elite drop
  *   Ruby Signet (Ruby Tithe)          Blood Price quest
  *   Bleeding Signet (Open Vein)       Blood Price quest
@@ -54,6 +54,8 @@ const SUPPLIANTS_RING: Equipment = {
     slot: 'relic',
     statModifiers: [],
     grantsSignature: 'sig-disarming-plea',
+    laneId: 'merciful',
+    relicSource: 'elite',
 };
 
 /**
