@@ -349,3 +349,86 @@ the third foe turn after MERCY lands; MERCY on a foe at full VITAE adds 2N (N pl
 tick to 0 burst at once, on your turn; foes carry no GUARD in this engine, so GUARD never blocks a burst; Heart scales
 MERCY and RADIANCE as it scales LEECH (plain HEAL stays Mind-scaled); E-03b's boost covers HEAL and RADIANCE, not
 MERCY or LEECH; "all you healed this turn" counts the turn-start Globals. The full list is in the report.
+
+## Revisions (T, 2026-10-30)
+
+T, after the sims: "Enemies have an incoming revision coming in. For now, let's make your recommended changes and get
+this land into the build so we can get started on our first character. Mark this land complete amongst the others."
+Then, in four answers: names "Draft, approve in PR"; colours and test deck "Take both" (the sims'); MERCY on a foe at
+full VITAE adds "N"; the lane is marked complete on the ballot index ("Ballot index status").
+
+### Rules
+
+- **MERCY N adds N to the foe's MERCY, whatever the heal restored** (T picked "N": "The heal is wasted at full, so the
+  excess replaces it: MERCY 5 adds 5"). The heal stops at the foe's max VITAE; the excess is not added a second time.
+  This replaces the sims' 2N reading.
+- **The sims' other readings stand** where T's rulings are silent (the clock bursts at the start of the third foe turn
+  after the first MERCY; "bursts now" bursts at once on your turn, as does a tick to 0; Heart scales MERCY and
+  RADIANCE as it scales LEECH; E-03b covers HEAL and RADIANCE heals; "all you healed this turn" counts the turn-start
+  Globals). Listed in `merciful-sims.md`, "Modelling assumptions", on `sandbox/merciful-sims`.
+- **Globals**: FREE in play 3 turns, PAID for the rest of combat, all on start of your turn (the ballot's rule).
+
+### The numbers (the sims' changes 1 to 5 and 8)
+
+| Card | Was | Ships |
+|---|---|---|
+| P-03b | PAID: MERCY 15, then the foe's MERCY bursts now. EXILE. | PAID: MERCY 8, then the foe's MERCY bursts now. EXILE. |
+| P-05a | PAID: MERCY's clock runs out now, and the foe takes three times its MERCY instead of twice. EXILE. | PAID: The foe's MERCY bursts now. EXILE. |
+| P-08b | MERCY equal to all you healed this turn (both lines) | MERCY equal to half all you healed this turn (both lines) |
+| M-05c | PAID: +12 max VITAE this combat, then HEAL to full. EXILE. | PAID: +6 max VITAE this combat, then HEAL to full. EXILE. |
+| E-03b | PAID: Your heals this turn HEAL three times as much. EXILE. | PAID: Your heals this turn HEAL twice as much. EXILE. |
+| E-01b | PAID: HEAL 5. DRAW 1. | PAID: HEAL 5. DRAW 2. |
+
+Every other line is as kept ("As kept, with T's notes applied") with "Rulings after the vote" applied.
+
+### Names (drafted; T approves or edits them on the trial-set plot PR) and colours (the sims' split)
+
+| Slot | Card | Name (draft) | Colour |
+|---|---|---|---|
+| P-01 | P-01a | Searing Mend | red |
+| P-02 | P-02b | Dawn Bulwark | blue |
+| P-03 | P-03b | Grace Called Due | purple |
+| P-04 | P-04a | What Is Owed | red |
+| P-05 | P-05a | Hastened Reckoning | purple |
+| P-06 | P-06a | Weight of Grace | red |
+| P-06 | P-06c | Shelter of Grace | blue |
+| P-07 | P-07b | Mended Wrath | red |
+| P-08 | P-08b | Shared Mending | blue |
+| P-09 | P-09c | Scarred Resolve | blue |
+| P-10 | P-10c | Morning Absolution | purple |
+| E-01 | E-01b | Salve | blue |
+| E-02 | E-02c | Gentle Debt | purple |
+| E-03 | E-03b | Swelling Grace | blue |
+| E-04 | E-04b | Open the Wound | red |
+| E-06 | E-06a | Kindled Prayer | purple |
+| E-07 | E-07b | Draw the Fever | red |
+| E-08 | E-08b | Twin Mending | purple |
+| E-09 | E-09b | Vigil | blue |
+| E-10 | E-10b | Quiet Breath | red |
+| M-01 | M-01b | Sanctuary | blue |
+| M-02 | M-02b | Offer of Peace | purple |
+| M-04 | M-04b | Purifying Light | red |
+| M-05 | M-05c | Deep Well | purple |
+| M-06 | M-06c | Steady Pulse | blue |
+| M-07 | M-07c | Kind Cut | red |
+| M-08 | M-08a | Stay the Hand | purple |
+| M-09 | M-09c | Remembered Kindness | blue |
+| M-10 | M-10c | Overflowing Cup | red |
+
+10 red, 10 blue, 9 purple (the sims' even split per sub-lane, T: "Take both").
+
+### The test deck (the sims' 20, T: "Take both")
+
+Every Global and every Spell, each payoff with its setup, no copies: red P-01a, P-04a, P-06a, P-07b, E-04b, M-07c,
+M-10c; blue P-08b, E-01b, E-03b, E-09b, M-06c, M-09c; purple P-03b, P-05a, P-10c, E-02c, E-06a, E-08b, M-05c.
+
+### The relic
+
+The Suppliant's Ring becomes the Merciful's family relic now ("Rulings after the vote"); T picks two more from the
+session's pitches later. The two, HURRY N (no kept card prints it), E-09's overheal-draw card, and the pace and
+structure questions the sims raised wait for the enemy revision and T's play of the test deck.
+
+### Into the build
+
+The trial set is plotted as Phase MF1 (`plan/phases/phase_MF1_merciful_trial_set.md`); the ballot index marks the
+lane complete (T, 2026-10-30).
