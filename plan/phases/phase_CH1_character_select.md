@@ -49,6 +49,8 @@
   game over still restarted the run as the same character with everything kept, and a full reset rebuilt the same
   character. T: "New run, new character"; "Ending a run means, yes, you should make a new character". T also ruled
   that a Labyrinth defeat ends the run, and that the codex carries over (A9, A10; CH1h, CH1i).
+- **Amended on the plot PR (#1181) by T, 2026-10-31:** "can we ratify this that the player gets a Game over
+  screen?" A run end shows a Game Over screen before character select (A11, CH1j).
 
 ## Outcome
 
@@ -97,6 +99,11 @@ plus the lane of every worn relic, never grey, so late-run lane control differs 
   in that slot as the chosen character (codex carried), BACK returns to the slot list. A slot saved at a run end is
   never "Made before characters": it reads as a finished run, and continuing it opens character select. A screen or
   store test covers the map game over, the hazard game over and the Labyrinth defeat.
+- **A11** (T, 2026-10-31: "the player gets a Game over screen") Every run end (map game over, hazard game over,
+  Labyrinth defeat) first shows a full-screen Game Over: a title, one line of copy and one button that goes on to
+  character select for the same slot (A10). It is a moment, not a save state: a reload while it shows, or continuing
+  the run-over slot later, opens character select directly. A screen test covers the three run ends passing
+  through it.
 
 Measure: the A3 engine test passes, and the A5 report column shows the late-run lane mix includes a lane absent at
 run start.
@@ -294,6 +301,9 @@ Chosen starts at level 1 with its ten-card deck and the codex entries unlocked b
 
 ### CH1i — After a run end, character select · M · closes A10 · requires CH1h
 
+(CH1j then puts the Game Over screen in front of this route; CH1i routes straight to character select so each
+phase ships alone.)
+
 Measure: on the web build, a second death on the map opens character select for the same slot; CONFIRM starts a
 fresh Chosen there with the codex kept; a reload at character select reopens it, never "Made before characters".
 
@@ -318,6 +328,31 @@ fresh Chosen there with the codex kept; a reload at character select reopens it,
   delete-only. UI change: before/after shots in the PR body (heads-down §4) for the saves list and the run-end
   arrival at character select.
 - Verify gate: `npm run verify -w axiomancer-mechanics`, `npm run verify -w axiomancer-mobile`, root `npm test`.
+
+### CH1j — The Game Over screen · S · closes A11 · requires CH1i
+
+Measure: on the web build, a second death on the map shows GAME OVER; its button opens character select for the
+same slot; a reload on the Game Over screen opens character select, never the map.
+
+- Today (read 2026-10-31): `app/death-return/index.tsx` is the first death's full-screen moment (title, one body
+  line, CONTINUE; presenter `state/presenters/death-return.engine.ts`, copy `death-return.copy.ts`; armed in memory
+  by `state/death-return.ts`, so a reload skips it). CH1i's three run ends route to
+  `/character-select?slot=<n>`.
+- Scope (mobile): a new `/game-over?slot=<n>` screen built the same way as `/death-return`: `app/game-over/index.tsx`,
+  a presenter `state/presenters/game-over.engine.ts` and its copy table `game-over.copy.ts` (title `GAME OVER`, one
+  placeholder line, button `NEW CHARACTER`; T may rewrite the copy later, no new art), an in-memory arm set by the
+  run end (no save field). CH1i's map, hazard and Labyrinth run-end branches route to `/game-over?slot=<n>` instead;
+  its button replaces the route with `/character-select?slot=<n>`. Unarmed (a reload, a deep link) it replaces to
+  character select for the slot at once; `?preview=1` on a dev build shows it for the visual baseline. Registered
+  in `app/_layout.tsx` beside `death-return`. The saves list and CONTINUE keep CH1i's behaviour (straight to
+  character select). DEV "NEW RUN" also passes through it.
+- Consumers: `app/_layout.tsx`, `app/combat-encounter/index.tsx`, `state/hazard/store-actions.ts`, `app/labyrinth/`,
+  `components/DebugRunControls.tsx`, the CH1i run-end tests (their expected route gains the Game Over stop).
+- Save / schema: none.
+- Tests matrix: `app/__tests__/game-over.screen.test.tsx`: renders the title, line and button; the button lands on
+  character select for the slot; unarmed it redirects there. CH1i's three run-end tests now pass through Game Over.
+  UI change: a before/after shot of the Game Over screen in the PR body (heads-down §4), plus the visual baseline.
+- Verify gate: `npm run verify -w axiomancer-mobile`, root `npm test`.
 
 ## T's characters
 
@@ -451,16 +486,16 @@ load as runs with no character.
 Closes A1, A2 of plan/phases/phase_CH1_character_select.md.
 ```
 
-(CH1b closes A3; CH1c A4; CH1d A5; CH1e A7; CH1f A6; CH1g A8; CH1h A9; CH1i A10.)
+(CH1b closes A3; CH1c A4; CH1d A5; CH1e A7; CH1f A6; CH1g A8; CH1h A9; CH1i A10; CH1j A11.)
 
 ## DoD
 
-A1-A10 ticked across CH1a-CH1i; the Measure met.
+A1-A11 ticked across CH1a-CH1j; the Measure met.
 
 ## Follow-ups (out of scope)
 
-- **A game-over moment:** CH1i routes a run end straight to character select. A game-over screen or line between
-  them (copy, art) is T's content and was not asked.
+- **The Game Over copy and art:** CH1j ships placeholder copy and no art; T's words or an image for it are T's
+  content, a later `[content]` row if T wants one.
 
 - **The December roster:** two more characters, their authoring session and their wiring (a new `/plot` when T
   formalises the December milestone). With them, a fourth lane makes the Measure's "absent lane" clause reachable.
