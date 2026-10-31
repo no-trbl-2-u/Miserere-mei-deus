@@ -220,7 +220,7 @@ export interface PacingSummary {
     meanSacrifices: number;
     meanLeechPeak: number;
     maxLeechPeak: number;
-    /** Share of fights that entered each HP phase, index 0 first (a foe with no phases reads [1]). */
+    /** Share of fights that entered each HP phase, index 0 first (a foe with no phases reads [1]; a phases foe reads one entry per declared phase, a phase never reached 0). */
     phaseShares: number[];
 }
 
@@ -260,7 +260,7 @@ export function simulatePacing(o: PacingOptions): PacingSummary {
         meanSacrifices: mean(all.map(r => r.sacrifices)),
         meanLeechPeak: mean(all.map(r => r.leechPeak)),
         maxLeechPeak: Math.max(0, ...all.map(r => r.leechPeak)),
-        phaseShares: Array.from({ length: 1 + Math.max(0, ...all.map(r => r.phaseReached)) },
+        phaseShares: Array.from({ length: Math.max(enemy.phases?.length ?? 1, 1 + Math.max(0, ...all.map(r => r.phaseReached))) },
             (_, k) => all.filter(r => r.phaseReached >= k).length / runs),
     };
 }

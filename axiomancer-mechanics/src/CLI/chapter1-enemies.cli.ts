@@ -11,7 +11,7 @@
  * `BW_ELITE_DRAWS` (each elite pair node, one row per foe), built the way the
  * live node builds them: the registry foe re-tiered by `sourceAtTier`, then
  * `scaleEnemyToLevel` to the node's level. A kitted lane is its test deck with
- * every card upgraded once and its three relics worn (grey has none), the
+ * every upgradable card upgraded once and its three relics worn (grey has none), the
  * player an even stat spread. A measurement, not a gate.
  */
 
@@ -21,7 +21,7 @@ import path from 'node:path';
 import { createCharacter } from '../Character';
 import type { Character } from '../Character/types';
 import { getCardLane } from '../Cards/card.lanes';
-import { nextUpgradeId } from '../Cards/card-upgrades';
+import { nextUpgradeId, isUpgradedCardId } from '../Cards/card-upgrades';
 import { stageStats } from '../Game/act1-progression';
 import { ENEMY_REGISTRY, type EnemySlug } from '../Enemy/enemy.library';
 import type { Enemy } from '../Enemy/types';
@@ -150,6 +150,12 @@ function table(cells: TuningCell[], policy: PacingPolicy): string[] {
     return lines;
 }
 
+/** A cell's phase shares at the foe's declared phase count: a phase never reached reads an explicit 0. */
+export function paddedShares(c: TuningCell): number[] {
+    const declared = c.foe.enemy.phases?.length ?? 1;
+    return Array.from({ length: Math.max(declared, c.summary.phaseShares.length) }, (_, k) => c.summary.phaseShares[k] ?? 0);
+}
+
 function phaseTable(cells: TuningCell[], policy: PacingPolicy): string[] {
     const cols = TUNING_LANES.flatMap(lane => TUNING_LEVELS.map(level => ({ lane, level })));
     const lines = [
@@ -161,7 +167,7 @@ function phaseTable(cells: TuningCell[], policy: PacingPolicy): string[] {
         const row = cols.map(col => {
             const c = cells.find(x => x.policy === policy && x.lane === col.lane && x.level === col.level
                 && x.foe.slug === foe.slug && x.foe.level === foe.level && x.foe.elite === foe.elite);
-            return c ? c.summary.phaseShares.map(pct).join(' / ') : '-';
+            return c ? paddedShares(c).map(pct).join(' / ') : '-';
         });
         lines.push(`| ${foeLabel(foe)} | L${foe.level} | ${row.join(' | ')} |`);
     }
@@ -172,7 +178,8 @@ function phaseTable(cells: TuningCell[], policy: PacingPolicy): string[] {
 export function renderReport(cells: TuningCell[], o: { runs: number; seed: number; commit: string; date: string }): string {
     const lanes = TUNING_LANES.map(l => {
         const k = kittedLane(l);
-        return `- ${l}: ${k.cards.length} cards, upgraded once; relics ${k.relics.length ? k.relics.map(r => r.name).join(', ') : 'none'}`;
+        const upgraded = k.cards.filter(isUpgradedCardId).length;
+        return `- ${l}: ${k.cards.length} cards, ${upgraded === k.cards.length ? 'all' : upgraded} upgraded once${upgraded === k.cards.length ? '' : ' (the rest have no upgrade)'}; relics ${k.relics.length ? k.relics.map(r => r.name).join(', ') : 'none'}`;
     });
     const mult = LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER;
     const maxVitae = TUNING_LANES.map(l => `${l} ${TUNING_LEVELS.map(lv => `L${lv} ${cells.find(c => c.lane === l && c.level === lv)?.playerMaxVitae}`).join(', ')}`);
