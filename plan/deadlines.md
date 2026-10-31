@@ -78,7 +78,8 @@ left; otherwise after.
 - Rows: HP4f (the authoring patterns from the kept set) and HP4g (the band clocks from the kept set's times), as
   before. **Moved to W3:** HP2d-HP2f (calibration), which the MVP does not need; they are still amended once HP4e's
   rulings exist (`plan/phases/phase_HP4_graded_puzzle_set.md` Follow-ups).
-- To plot in W2: routing the live hazard nodes to the puzzle board, each of the eleven Act 1 hazard nodes (six on the Breakwater, D114) drawing a
+- To plot in W2: routing the live hazard nodes to the puzzle board. The Breakwater's six (D114) are plotted as HP6 (T, 2026-10-31): a
+  bot-measured curve, six from its middle third rising along the story route. The other five Act 1 hazard nodes each draw a
   random puzzle from the thirty for now (T, 2026-10-24), and the cuts (RE-CAST cards, the saved hazard deck,
   `deadcard`; B3 Follow-ups). The hand-picked set, "the swap", moves to W3.
 - The MVP's loop work, which the reminder never names: Chapter 1's enemies and their art, from the B2 plot on Nov 2;
@@ -144,7 +145,7 @@ reads this table for the day's piece, the high-level task it serves, how AI can 
 | Sun Nov 1 | 1 | Tune Chapter 1's enemies: levels (all under 10), how often each normal repeats, VITAE | Chapter 1's real enemies | Claude brings EN1i's turns-to-kill table and the lines each foe reaches, or the current defaults if EN1i has not shipped |
 | Mon Nov 2 | 0.5 | `/plot` Chapter 1's sea keep boss (B2); the normals and all six elites are plotted (EN1) | Chapter 1's real enemies | `/plot` adds them to EN1's brief as new rows; you confirm the slot |
 | Mon Nov 2 | 0.5 | `/plot` Chapter 1's weapons and armor from Saturday's pitch | Chapter 1's weapons and armor | `/plot` writes the rows; you confirm the slot |
-| Tue Nov 3 | 1 | `/plot` live hazard routing and the cuts | Every hazard a puzzle | `/plot` |
+| Tue Nov 3 | 1 | `/plot` live hazard routing for the other five and the cuts | Every hazard a puzzle | `/plot` |
 | Wed Nov 4 | 0 | Event kind 1, encounter: settled early (Oct 30, the ink curtain) and plotted (ET1a) | Event-node UX | Done Oct 30 |
 | Thu Nov 5 | 0 | Event kind 2, hazard: settled early (Oct 30, the stakes card) and plotted (ET1b) | Event-node UX | Done Oct 30 |
 | Fri Nov 6 | 0 | Event kind 3, rest: settled early (Oct 30, night passes) and plotted (ET1c) | Event-node UX | Done Oct 30 |
@@ -213,7 +214,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-01 | Tune Chapter 1's enemies from EN1i's table: levels (all under 10), how often each normal repeats, VITAE (1 h) | W1 | T | EN1i |
 | [ ] | 2026-11-02 | Plot the sea keep's boss from enemy session 2; the normals and all six elites are plotted (EN1) (0.5 h) | W1 | B2 | - |
 | [ ] | 2026-11-02 | Plot Chapter 1's weapons and armor from the pitch (0.5 h) | W1 | needs plot | - |
-| [ ] | 2026-11-03 | Live hazard routing (each of the eleven Act 1 hazard nodes, six of them the Breakwater's, draws a random puzzle from the thirty) and the cuts (plot, 1 h) | W2 | needs plot | - |
+| [ ] | 2026-11-03 | Live hazard routing for the other five Act 1 hazard nodes (Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2; each draws a random puzzle from the thirty; the Breakwater's six are HP6) and the cuts (plot, 1 h) | W2 | needs plot | - |
 | [x] | 2026-11-04 | Event kind 1, encounter: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it; settled early on Oct 30 (the ink curtain) and plotted as ET1a (1 h) | W2 | needs plot | - |
 | [x] | 2026-11-05 | Event kind 2, hazard: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it; settled early on Oct 30 (the stakes card) and plotted as ET1b (1 h) | W2 | needs plot | - |
 | [x] | 2026-11-06 | Event kind 3, rest: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it; settled early on Oct 30 (night passes) and plotted as ET1c (0.5 h) | W2 | needs plot | - |
@@ -230,10 +231,10 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-12 | Decide the stat scaling: whether +20% per stat point (one-shot) and +10% (repeating) runs too high, after playing the first character (0.5 h) | W2 | T | - |
 | [ ] | 2026-11-13 | Play your quest line on the preview build and rule on its lines (0.5 h) | W2 | T | BW1e |
 | [ ] | 2026-11-14 | File what is still broken (`/plot` or `/messy`) and decide what the MVP run must show (1 h) | W2 | T | - |
-| [ ] | 2026-11-16 | MVP demo: Act 1, Chapter 1 complete, a full Breakwater run on the phone with puzzle hazards, Chapter 1's enemies and art, lane relics, icons, new event UI (1.5 h, Sun Nov 15) | W2 | T | IT2b, ET1a, ET1b, ET1c, ET1d |
+| [ ] | 2026-11-16 | MVP demo: Act 1, Chapter 1 complete, a full Breakwater run on the phone with puzzle hazards, Chapter 1's enemies and art, lane relics, icons, new event UI (1.5 h, Sun Nov 15) | W2 | T | IT2b, ET1a, ET1b, ET1c, ET1d, HP6a, HP6b, HP6c |
 | [x] | 2026-11-18 | Upgrade grant call | W3 | T | - |
 | [ ] | 2026-11-17 | Event kind 5, village (paid rest, card shop, Anvil): pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (1 h) | W3 | needs plot | NK1b, NK1c |
-| [ ] | 2026-11-19 | Plot the hazard swap: hand-pick the eleven Act 1 hazard puzzles (Breakwater 6, Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2) after playing the thirty in `/dev` (1 h) | W3 | T | HP4f, HP4g |
+| [ ] | 2026-11-19 | Plot the hazard swap: hand-pick the five other Act 1 hazard puzzles (Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2), and swap any of HP6's Breakwater six you want, after playing the thirty in `/dev` (1 h) | W3 | T | HP4f, HP4g |
 | [ ] | 2026-11-20 | Event kind 6, travel ("move to X?", secret paths): pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (1 h) | W3 | needs plot | NK1d |
 | [ ] | 2026-11-21 | Enemy session 3: Chapters 2-4's normal rosters and elites (2 h) | W3 | T | - |
 | [ ] | 2026-11-22 | Enemy session 4: Chapters 2-4's bosses and the Act Boss, at the end of Chapter 4 (2 h) | W3 | T | - |
@@ -369,6 +370,7 @@ attended session.
 ## Change log
 
 - **2026-10-31** — **the equipment dock fixed, relics keep their place, drag and drop (EQ3)** (T, attended `/plot`: "Equipment slots are broken, we can only equip/unequip the bottom row"). **Added** EQ3a, EQ3b and EQ3c to the `Waits on` of the Mid-MVP check (Nov 9): the check plays the Chosen with two relics on the preview build, and today every relic equip replaces RELIC III. Nothing ticked; no date moved.
+- **2026-10-31** — **the Breakwater's six hazards picked from a bot-measured curve, plotted (HP6)** (T, attended `/plot`: "run a reasonable amount of simulations of each hazard hidden in the devtools so we can get a rough difficulty curve. Then, pick n ... puzzles to add to the first map"; rulings: story route first, all thirty, the middle third, one puzzle per hazard). **Added** HP6a, HP6b and HP6c to the `Waits on` of the MVP demo (Nov 16), whose run plays puzzle hazards. **Edited** the Nov 3 routing plot (the eleven Act 1 hazard nodes to the other five; the Breakwater's six are HP6), its MVP-schedule row, the W2 note, and the Nov 19 swap (hand-pick the other five, and swap any of HP6's six). Nothing ticked; no date moved.
 - **2026-10-31** — **Miserere onto nexus v2, kept current with it, plotted (NX1)** (T, attended `/plot`, from the deviation map `docs/nexus-deviations.md`: "I would like to update Miserere with the latest of what's in nexus AND determine a means for it to remain up to date"; "Drain to Nov 11"). **Added** the Item "Cut over to nexus v2" on Nov 11 (W2) naming the attended NX1d, waiting on NX1a and NX1c; NX1b and NX1e-NX1i under `## Unscheduled`; a W2 line for the cut-over. The Nov 11 R11 review's premise still holds (v2's decisions log may answer one of the held candidates; the brief's Follow-ups say so). Nothing ticked; no date moved.
 - **2026-10-31** — **every foe befriendable (BUG1j)** (T on plot PR #1236, call 1: "let's make all the enemies befriendable so we can do some testing"). **Added** BUG1j to the `Waits on` of the Mid-MVP check (Nov 9), beside BUG1a and BUG1b: the check plays the Chosen, whose Open Hand now befriends any foe. Nothing ticked; no date moved.
 - **2026-10-31** — **the Chosen's signature, and the play log's fights, plotted (SK1)** (T, bug report from the 8f876ec preview APK: "I still can't play the Signature Skills o.0?"; plot run unattended). **Added** BUG1a and BUG1b to the `Waits on` of the Mid-MVP check (Nov 9), the first T act that plays the Chosen on a preview build. **Edited** BE2g's Unscheduled line: its premise (a preview fight shows up in the play log) needs BUG1b, since the deployed Worker refuses every fight post today. Nothing ticked; no date moved.
