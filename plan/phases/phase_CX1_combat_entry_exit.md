@@ -98,7 +98,7 @@ drive of a walk to an encounter node captures the ink mid-spread on the map and 
   place; a context with a track would play that track (the table and the player seam allow it; no
   combat audio is added). The table is the one place a future combat track is wired.
 - **A3** Leaving a `combat` or `hazard` context back to `exploration` resumes the theme from where it
-  paused, fading in over MU1's 2 s; it is never reloaded or seeked [T to confirm #1]. A test drives a
+  paused, fading in over MU1's 2 s; it is never reloaded or seeked Accepted at merge (default). A test drives a
   fight end to end with the mocked player: paused at staging, still paused after the outcome is
   written, `play()` without a seek after `exitCombat`.
 - **A4** The director does not trust its own memory of whether the native player is playing: when it
@@ -137,9 +137,9 @@ drive of a walk to an encounter node captures the ink mid-spread on the map and 
 
 1. **Two phases, music first.** They touch different files and neither needs the other; music is the
    smaller and closes a live defect T heard. Either can ship first.
-2. **Resume, not restart** [T to confirm #1]: the theme picks up where it paused, as MU1 and T's
+2. **Resume, not restart** Accepted at merge (default): the theme picks up where it paused, as MU1 and T's
    2026-10-30 "Pick up, but fade in if possible" already say.
-3. **The music returns when the player leaves the fight screen** [T to confirm #2], not the instant
+3. **The music returns when the player leaves the fight screen** Accepted at merge (default), not the instant
    the foe falls: the summary is part of the fight, and it is the screen a combat track will cover.
 4. **Hazards stay silent**, as MU1 (T, 2026-10-30: "except for combat and hazards"); the context
    exists so a hazard track could drop in later the same way.
@@ -150,7 +150,7 @@ drive of a walk to an encounter node captures the ink mid-spread on the map and 
    keeps the director's inputs open to it: `musicOn: false` is a master mute (silent in every
    context, like volume 0), never a context. Whichever of CX1a and ST1a lands second rebases onto the
    other's `music.engine.ts`; neither requires the other, and CX1a does not add the setting.
-7. **The ink spreads from the token on the map** [T to confirm #3], as ET1a's A1 asked: the spread
+7. **The ink spreads from the token on the map** Accepted at merge (default), as ET1a's A1 asked: the spread
    belongs to the exploration screen (it owns the token and the camera), and the fight screen picks
    it up already covered. The map gains the primitive it lacks: the window point of a node's token
    under the current camera (`MapCanvas` holds the node layout and the camera's `scale`, `tx`, `ty`).
@@ -158,7 +158,7 @@ drive of a walk to an encounter node captures the ink mid-spread on the map and 
    because the move checkpoints first and the arrival is owed until resolved
    (`app/(tabs)/exploration/index.tsx:50-56`); `CombatGate` is not changed, so the labyrinth, the
    dev triggers and a resumed fight route exactly as today.
-9. **Labyrinth fights and dev entries keep the plain open** [T to confirm #4]: they have no map token
+9. **Labyrinth fights and dev entries keep the plain open** Accepted at merge (default): they have no map token
    (`nodeOf` returns nothing), so no curtain, as ET1a left them; the route's native transition stays
    for them.
 10. **Ink colour** stays `HUE.inkBg`; the fix is the shape (a spreading, then receding, edge over a

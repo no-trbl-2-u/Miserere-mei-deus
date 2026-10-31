@@ -12,11 +12,12 @@ import { act, render } from '@testing-library/react-native';
 import React from 'react';
 import { Platform } from 'react-native';
 
-interface MockPlayer { play: jest.Mock; pause: jest.Mock; setVolume: jest.Mock; release: jest.Mock }
+interface MockPlayer { play: jest.Mock; pause: jest.Mock; setVolume: jest.Mock; release: jest.Mock; isPlaying: jest.Mock }
 const mockPlayers: MockPlayer[] = [];
 jest.mock('@/lib/platform/audio', () => ({
+    configureGameAudio: jest.fn(),
     createLoopingPlayer: jest.fn(() => {
-        const player = { play: jest.fn(), pause: jest.fn(), setVolume: jest.fn(), release: jest.fn() };
+        const player = { play: jest.fn(), pause: jest.fn(), setVolume: jest.fn(), release: jest.fn(), isPlaying: jest.fn(() => true) };
         mockPlayers.push(player);
         return player;
     }),
