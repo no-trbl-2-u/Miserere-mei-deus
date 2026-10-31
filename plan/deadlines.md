@@ -272,7 +272,6 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - SM1i — T reads the human-versus-sim comparison after a preview build carrying SM1a-SM1h; date not set (T picks it).
 - ST1a — the Settings tab for the beta; date not set (the beta handout is not dated yet).
 - ST1b — the dev menu moves into Settings; date not set (the beta handout is not dated yet).
-- NX1b — `/pitch` copied into the repo; no T act waits on it
 - NX1e — v2's landing after the cut-over; the T act after it, NX1i, has no date yet
 - NX1f — the workflows on v2's steps after the cut-over; the T act after it, NX1i, has no date yet
 - NX1g — `/pilot`, T's orchestrator; no dated T act waits on it

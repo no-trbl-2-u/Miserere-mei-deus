@@ -568,6 +568,37 @@ test('no other skill dispatches /plot or /messy', () => {
   }
 })
 
+// --- /pitch is only ever fired by T (NX1b) ----------------------------------
+
+test('no workflow fires /pitch', () => {
+  for (const f of fs.readdirSync(path.join(ROOT, WF)).filter((f) => f.endsWith('.yml'))) {
+    assert.doesNotMatch(read(`${WF}/${f}`), /\/pitch\b|skills\/pitch\b/, f)
+  }
+})
+
+test('no loop skill or command fires /pitch', () => {
+  const fires = /\/pitch\b|skills\/pitch\b|Skill\(\s*['"]?pitch/i
+  for (const f of fs.readdirSync(path.join(ROOT, 'skills')).filter((f) => f.endsWith('.md'))) {
+    assert.doesNotMatch(read(`skills/${f}`), fires, f)
+  }
+  for (const f of fs.readdirSync(path.join(ROOT, '.claude/commands')).filter((f) => f.endsWith('.md'))) {
+    assert.doesNotMatch(read(`.claude/commands/${f}`), fires, f)
+  }
+})
+
+test('/pitch lives in the repo, picks the game-design lens and never fires from a loop', () => {
+  const skill = read('.claude/skills/pitch/SKILL.md')
+  assert.match(skill, /^---\nname: pitch\n/)
+  assert.match(skill, /Never fired by a loop, workflow or another skill/)
+  for (const f of ['config.md', 'references.md', 'replays.md', 'lenses/game-design.md']) {
+    assert.ok(fs.existsSync(path.join(ROOT, '.claude/skills/pitch', f)), f)
+  }
+  const cfg = read('.claude/pitch.md')
+  assert.match(cfg, /^lens: game-design$/m)
+  assert.match(cfg, /^pitch_dir: braindump\/$/m)
+  assert.match(read('AGENTS.md'), /`AskUserQuestion` only in `\/oversight`[\s\S]{0,200}`\/pitch`/)
+})
+
 test('the two intake skills and /heads-down say the loop never fires them', () => {
   for (const f of ['skills/plot.md', 'skills/messy.md', 'skills/heads-down.md']) {
     assert.match(read(f), /Never fired by the loop/, f)
