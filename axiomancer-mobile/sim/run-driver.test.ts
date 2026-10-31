@@ -103,6 +103,22 @@ describe('the headless run driver', () => {
         }
     });
 
+    it('counts each node\'s withdrawals, so a policy can walk away once and fight the next time', () => {
+        const seen: number[] = [];
+        const shy: RunPolicy = {
+            ...WANDERER_POLICY,
+            flee: (ctx) => {
+                seen.push(ctx.fledHere);
+                return ctx.fledHere === 0;
+            },
+        };
+        const result = playRun({ policy: shy, seed: 1 });
+        expect(['run-over', 'chapter-clear']).toContain(result.outcome);
+        expect(result.fights.fled).toBeGreaterThan(0);
+        expect(seen).toContain(1);
+        expect(Math.max(...seen)).toBe(1);
+    });
+
     it('throws when the policy names a road that is not legal', () => {
         const wrong: RunPolicy = { ...WANDERER_POLICY, chooseRoad: () => 'bw-k2' };
         expect(() => playRun({ policy: wrong, seed: 1 })).toThrow(/'bw-k2', which is not a legal road/);

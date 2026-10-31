@@ -100,6 +100,8 @@ interface Tally {
     visited: Set<string>;
     furthest: { nodeId: string; depth: number };
     hazard: { policy: HazardPolicyId | null };
+    /** Withdrawals from a fight this run, by node id. */
+    fled: Map<string, number>;
     /** The last state seen alive, for a run-over's summary. */
     alive: AppStoreState;
 }
@@ -190,7 +192,7 @@ function step(store: AppStore, actions: AppActions, policy: RunPolicy, tally: Ta
     if (s.labyrinthUi?.session) throw stuck('the run entered the Aporia, which the driver does not walk', s, n);
     const pending = s.event?.pending ?? null;
     if ((pending && pending.event.kind === 'encounter') || s.currentEncounter) {
-        const result = playFight(store, actions, policy);
+        const result = playFight(store, actions, policy, tally.fled);
         if (result === null) throw stuck('a fight was offered but would not stage', s, n);
         tally.fights[result]++;
         return;
@@ -264,6 +266,7 @@ export function playRun(options: PlayRunOptions): RunResult {
             visited: new Set(),
             furthest: { nodeId: store.getState().world.currentMap.currentNode, depth: -1 },
             hazard: { policy: null },
+            fled: new Map(),
             alive: store.getState(),
         };
         for (let n = 0; n < maxSteps; n++) {

@@ -266,7 +266,6 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - AN5b — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
 - AN5c — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
 - MF1e — T plays the Merciful test deck on a preview build after MF1d; date not set (T picks it).
-- SM1f — the sim's archetype bots (SM1); no dated T act waits on it, only SM1i, whose date T has not set
 - SM1g — the sim posts its own data (SM1); no dated T act waits on it, only SM1i, whose date T has not set
 - SM1h — the T-beside-the-bots reports (SM1); no dated T act waits on it, only SM1i, whose date T has not set
 - SM1i — T reads the human-versus-sim comparison after a preview build carrying SM1a-SM1h; date not set (T picks it).

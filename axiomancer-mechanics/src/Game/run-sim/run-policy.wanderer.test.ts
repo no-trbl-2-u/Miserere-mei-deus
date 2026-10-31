@@ -57,7 +57,7 @@ describe('the wanderer', () => {
     });
 
     it('fights greedy, never flees, raises heart, wears what it can', () => {
-        const fight = { enemyName: 'x', isBoss: false, isElite: false, fleeAllowed: true, health: 1, maxHealth: 9, deck: [] };
+        const fight = { enemyName: 'x', isBoss: false, isElite: false, fleeAllowed: true, fledHere: 0, health: 1, maxHealth: 9, deck: [] };
         expect(W.fightPolicy(fight)).toBe(COMBAT_SIM_POLICIES.greedy);
         expect(W.flee(fight)).toBe(false);
         expect(W.hazardPolicy({ hazardId: 'h', health: 1, maxHealth: 9 })).toBe('greedy');

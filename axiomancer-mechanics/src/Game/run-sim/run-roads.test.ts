@@ -6,7 +6,7 @@ import {
     syncMoveLists,
     type GameState,
 } from '../../index';
-import { distanceToUnfinished, isNodeUnfinished, runRoadOptions } from './run-roads';
+import { distanceToUnfinished, isNodeUnfinished, isReachTarget, runRoadOptions } from './run-roads';
 
 /** A new game as the-chosen, optionally standing on `nodeId` with `spent` nodes walked. */
 function stateAt(nodeId?: string, spent: readonly string[] = [], settled = false): GameState {
@@ -54,6 +54,22 @@ describe('isNodeUnfinished', () => {
         expect(isNodeUnfinished(state, 'bw-l5')).toBe(false);
         expect(isNodeUnfinished(state, 'bw-w1')).toBe(false);
         expect(isNodeUnfinished(state, 'bw-w3')).toBe(true);
+    });
+
+    it('reads a quest node an active quest asks the player to reach as unfinished, until the objective fills', () => {
+        const reach = (currentCount: number): GameState => {
+            const state = stateAt();
+            const quest = {
+                name: 'q', description: '', mapName: 'breakwater', reward: 'quest', status: 'active',
+                objectives: [{ id: 'camp', type: 'reach', target: 'bw-c2', description: '', requiredCount: 1, currentCount }],
+            };
+            return { ...state, quests: { available: [], active: [quest], completed: [] } } as unknown as GameState;
+        };
+        expect(isReachTarget(reach(0), 'bw-c2')).toBe(true);
+        expect(isNodeUnfinished(reach(0), 'bw-c2')).toBe(true);
+        expect(isReachTarget(reach(1), 'bw-c2')).toBe(false);
+        expect(isNodeUnfinished(reach(1), 'bw-c2')).toBe(false);
+        expect(isReachTarget(reach(0), 'bw-l5')).toBe(false);
     });
 
     it('returns null distance when nothing unfinished is reachable', () => {
