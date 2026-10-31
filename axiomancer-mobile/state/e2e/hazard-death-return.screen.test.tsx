@@ -115,7 +115,7 @@ describe('hazard screen -- a lethal crossing', () => {
         expect((store.getState() as unknown as GameState).dying).toBeUndefined();
         expect(isDeathReturnArmed()).toBe(false);
         expect((store.getState() as unknown as GameState).runOver).toBe(true);
-        expect(mockReplace).toHaveBeenCalledWith('/character-select?slot=3&runEnd=1');
+        expect(mockReplace).toHaveBeenCalledWith('/game-over?slot=3');
         expect(mockBack).not.toHaveBeenCalled();
     });
 

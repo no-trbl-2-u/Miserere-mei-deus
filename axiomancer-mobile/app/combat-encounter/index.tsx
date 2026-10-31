@@ -28,6 +28,7 @@ import { CombatEncounterPanel } from '@/components/combat/encounter/CombatEncoun
 import { isDevToolsEnabled } from '@/lib/buildProfile';
 import { useCombatMode } from '@/state/combat-mode';
 import { armDeathReturn } from '@/state/death-return';
+import { armGameOver } from '@/state/game-over';
 import { runEndRoute } from '@/state/run-end';
 import { useActiveSlot } from '@/state/SaveSlotsProvider';
 import { useGameActions, useGameState, useGameStore } from '@/state/GameStoreProvider';
@@ -114,6 +115,7 @@ export default function CombatEncounterScreen() {
                     /* persistence must not strand the player on the fight */
                 }
                 exitCombat();
+                armGameOver();
                 router.replace(runEndRoute(slot) as never);
                 return;
             }
