@@ -58,6 +58,13 @@
 - estimated phases: 1
 - conflicts: none. CI only; no game code, content, rule, card or keyword (D88).
 
+### [ ] [score 3.5] One retrying helper for a plan-only push to main (lesson `plan-only-push-race`, seen 2×)
+- proposed: 2026-10-31, fix-ci retro (run 41245913757; lesson `plan-only-push-race`, seen 2×)
+- source signals: `plan/lessons.md` `plan-only-push-race`, seen 2×, last 2026-10-31. Plot R12a and this fix-ci tick each hit `git push origin main` rejected by a commit that landed between the fetch and the push; both recovered by hand with `git fetch origin && git rebase origin/main && git push origin main`, once needing a second round when another commit landed during the rebase.
+- proposed scope: one `/iterate` tick. A small `scripts/push-main.mjs` (or a shared shell function `skills/*.md` call out to) that commits, then loops `fetch origin main && rebase origin/main && push origin main` up to N times (e.g. 5) before giving up loudly, for every verb that lands a plan-only commit straight to main (`fix-ci`, `plot`, `march`'s Retro, telemetry ticks).
+- estimated phases: 1
+- conflicts: none. Loop tooling only; no game code, content, rule, card or keyword (D88).
+
 ### [ ] [score 3.0] Briefs name journeys the way they run: lint a brief's `node scripts/<x>-e2e.mjs` against the root (lesson `brief-e2e-script-paths`, seen 2×)
 - proposed: 2026-10-26, ship BC1 retro (lesson `brief-e2e-script-paths`, seen 2×)
 - source signals: `plan/lessons.md` `brief-e2e-script-paths`, seen 2×, last 2026-10-26. The PF4 and BC1 briefs' verify gates and Acceptance lines named `node scripts/combat-round-e2e.mjs` and `node scripts/exploration-combat-roundtrip-e2e.mjs` from the root; both live in `axiomancer-mobile/scripts/`, so the root call dies with MODULE_NOT_FOUND and costs a rerun.

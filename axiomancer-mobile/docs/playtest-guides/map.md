@@ -39,7 +39,7 @@
 - Tapping a sealed/walked/current node "does nothing": it raises `exploration-node-toast` for 2000 ms, then clears (PLAYTEST_BUGS_2026-09-18 "ruled out").
 - TRAVEL HERE is not lost: the move applies in-session; only persistence of it was BUG-03.
 - Nodes off-screen after a move: the camera deliberately never fights a manual pan (issue #294); press `map-recenter`.
-- Pinch/pan clamp: scale is clamped between `minScaleFor` (0.6, or lower on a big plate — never below the whole plate in frame) and 3; a pan that seems to "stop" hit nothing — there is no pan bound, so `map-recenter` if lost.
+- Pinch/pan limits (MC1a): scale runs from `minScaleFor` (the whole plate in the pane, black around it) to 3; the pinch and wheel are never edge-clamped, so black past the plate's edge is correct, not a bug. A pan that "stops" has brought a plate edge to the middle of the pane (the pan's own limit); `map-recenter` if lost.
 - A fixture boot (`?fixture=`) or a `/dev` JUMP owes no arrival — the map draws quietly; that is correct (only the start node and an interrupted move fire on mount).
 - A `travel` node consumed nothing and left the old map "incomplete": travel never consumes; the region toast + save is the whole event.
 - `setPointerCapture` console errors: synthetic pointer artefacts.
