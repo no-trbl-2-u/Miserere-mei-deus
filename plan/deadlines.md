@@ -265,6 +265,8 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - AN5c — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
 - AN5e — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
 - MF1e — T plays the Merciful test deck on a preview build after MF1d; date not set (T picks it).
+- ST1a — the Settings tab for the beta; date not set (the beta handout is not dated yet).
+- ST1b — the dev menu moves into Settings; date not set (the beta handout is not dated yet).
 - CA3b — the Merciful's paintings; T sees them at MF1e, whose date is not set
 - CA3c — the Elementalist's paintings; no T act scheduled to view them yet (date not set)
 - CA3d — Blood Price's new paintings; no T act scheduled to view them yet (date not set)
@@ -356,6 +358,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-31** — **a Settings tab plotted** (T, in session, planning the beta: a gear tab with the music switch, a feedback form and the dev menu). **Added** ST1a and ST1b under `## Unscheduled`: the beta handout has no date yet. Nothing ticked; no date moved.
 - **2026-10-31** — **a Game Over screen before character select (CH1j)** (T on plot PR #1181: "can we ratify this that the player gets a Game over screen?"). **Added** CH1j to the `Waits on` of the Mid-MVP check, beside CH1h and CH1i. Nothing ticked; no date moved.
 - **2026-10-31** — **a run end sends the player back to character select (CH1h, CH1i)** (T in session, during `/heads-down CH1`: "Ending a run means, yes, you should make a new character"). **Added** CH1h and CH1i to the `Waits on` of the Mid-MVP check, beside CH1f, whose game over still kept the whole character. Nothing ticked.
 - **2026-10-30** — **AN5e added** (T, in session: "plot and implement them last", of the Smokehouse Gutter and the Tide-Gate, whose idles slide). **Added** AN5e under Unscheduled. Nothing ticked; no date moved.
