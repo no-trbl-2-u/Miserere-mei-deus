@@ -7,8 +7,9 @@
  * until the card art revamp (B8) decides art per card type. The other
  * paintings in this folder stay as that pool (`CARD_ART_POOL`,
  * `provenance.json`). The 30 Blood Price cards each have their own
- * painting (`bp-*.webp`, T's sheets), and the 30 Defender cards each have their own
- * painting (`df-*.webp`, T's sheets). Unmapped ids (sandbox and fixture cards) fall back
+ * painting (`bp-*.webp`, T's sheets), the 30 Defender cards each have their
+ * own painting (`df-*.webp`, T's sheets), and the 30 Elementalist cards have
+ * theirs (`el-*.webp`). Unmapped ids (sandbox and fixture cards) fall back
  * to the circe placeholder.
  */
 
@@ -106,6 +107,37 @@ const CARD_ART_BY_ID: Record<string, number> = {
     'df-m-08c': require('./df-m-08c.webp'),
     'df-m-09a': require('./df-m-09a.webp'),
     'df-m-10n': require('./df-m-10n.webp'),
+    // Elementalist lane: T's paintings (provenance.json), one per card.
+    'el-p-01b': require('./el-p-01b.webp'),
+    'el-p-02b': require('./el-p-02b.webp'),
+    'el-p-03a': require('./el-p-03a.webp'),
+    'el-p-04a': require('./el-p-04a.webp'),
+    'el-p-05b': require('./el-p-05b.webp'),
+    'el-p-06b': require('./el-p-06b.webp'),
+    'el-p-07a': require('./el-p-07a.webp'),
+    'el-p-08b': require('./el-p-08b.webp'),
+    'el-p-09a': require('./el-p-09a.webp'),
+    'el-p-10b': require('./el-p-10b.webp'),
+    'el-e-01b': require('./el-e-01b.webp'),
+    'el-e-02c': require('./el-e-02c.webp'),
+    'el-e-03b': require('./el-e-03b.webp'),
+    'el-e-04c': require('./el-e-04c.webp'),
+    'el-e-05b': require('./el-e-05b.webp'),
+    'el-e-06a': require('./el-e-06a.webp'),
+    'el-e-07b': require('./el-e-07b.webp'),
+    'el-e-08c': require('./el-e-08c.webp'),
+    'el-e-09b': require('./el-e-09b.webp'),
+    'el-e-10c': require('./el-e-10c.webp'),
+    'el-m-01a': require('./el-m-01a.webp'),
+    'el-m-02a': require('./el-m-02a.webp'),
+    'el-m-03a': require('./el-m-03a.webp'),
+    'el-m-04a': require('./el-m-04a.webp'),
+    'el-m-05c': require('./el-m-05c.webp'),
+    'el-m-06a': require('./el-m-06a.webp'),
+    'el-m-07b': require('./el-m-07b.webp'),
+    'el-m-08c': require('./el-m-08c.webp'),
+    'el-m-09c': require('./el-m-09c.webp'),
+    'el-m-10n': require('./el-m-10n.webp'),
 };
 
 export function getCardArt(cardId: string): number {

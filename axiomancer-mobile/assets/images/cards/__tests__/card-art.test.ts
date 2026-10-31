@@ -36,6 +36,14 @@ describe('card art registry', () => {
         expect(new Set(art).size).toBe(ids.length);
     });
 
+    it('gives every Elementalist card its own painting', () => {
+        const ids = getCardLane('elementalist')?.cardIds ?? [];
+        expect(ids.length).toBeGreaterThan(0);
+        const art = ids.map(getCardArt);
+        for (const a of art) expect(a).not.toBe(FALLBACK_CARD_ART);
+        expect(new Set(art).size).toBe(ids.length);
+    });
+
     it('falls back for an unmapped id', () => {
         expect(getCardArt('no-such-card')).toBe(FALLBACK_CARD_ART);
     });
