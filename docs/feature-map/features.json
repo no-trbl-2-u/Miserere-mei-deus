@@ -18,7 +18,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mechanics/src/CLI/e2e/cli.docs-examples.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/dev-tools.engine.test.ts, axiomancer-mechanics/src/Cards/card-rules.test.ts, ..."
+        "source": "axiomancer-mechanics/src/CLI/chapter1-enemies.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/cli.docs-examples.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/dev-tools.engine.test.ts, ..."
       },
       "needsPitch": {
         "value": false,
@@ -243,7 +243,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mechanics/src/CLI/e2e/cli.docs-examples.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/game.cli.route-audit.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/hazard.cli.engine.test.ts, ..."
+        "source": "axiomancer-mechanics/src/CLI/chapter1-enemies.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/cli.docs-examples.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/game.cli.route-audit.engine.test.ts, ..."
       },
       "needsPitch": {
         "value": false,

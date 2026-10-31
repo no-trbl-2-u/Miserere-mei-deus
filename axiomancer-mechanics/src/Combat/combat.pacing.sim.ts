@@ -59,6 +59,8 @@ export interface PacingRun {
     sacrifices: number;
     /** The highest LEECH potency the foe carried. */
     leechPeak: number;
+    /** The highest HP phase (0-based) a `phases` foe entered; 0 for a foe with none. */
+    phaseReached: number;
 }
 
 /** The human-like signature step: The Open Hand when it can open mercy (and
@@ -177,7 +179,11 @@ export function runPacingEncounter(
     const greedy = COMBAT_SIM_POLICIES.greedy;
     const witness = mercy ? greedy : { ...greedy, signatureKinds: greedy.signatureKinds.filter(k => k !== 'mercy') };
     let leechPeak = 0;
-    const sample = (): void => { leechPeak = Math.max(leechPeak, s.program?.leechPotency ?? 0); };
+    let phaseReached = 0;
+    const sample = (): void => {
+        leechPeak = Math.max(leechPeak, s.program?.leechPotency ?? 0);
+        phaseReached = Math.max(phaseReached, s.threatPhases[s.currentPhaseIndex]?.enemyMove?.phase ?? 0);
+    };
     for (let guard = 0; guard < 200 && s.phase !== 'complete' && !s.finalOutcome; guard++) {
         if (s.mercyChoiceActive) { s = selectMercyChoice(s, 'spare').state; continue; }
         if (s.phase !== 'phase-play') break;
@@ -196,6 +202,7 @@ export function runPacingEncounter(
         vitaeLeft: s.finalOutcome === 'defeat' ? 0 : s.player.health,
         sacrifices: s.program?.sacrificeCount ?? 0,
         leechPeak,
+        phaseReached,
     };
 }
 
@@ -213,6 +220,8 @@ export interface PacingSummary {
     meanSacrifices: number;
     meanLeechPeak: number;
     maxLeechPeak: number;
+    /** Share of fights that entered each HP phase, index 0 first (a foe with no phases reads [1]). */
+    phaseShares: number[];
 }
 
 export interface PacingOptions {
@@ -251,5 +260,7 @@ export function simulatePacing(o: PacingOptions): PacingSummary {
         meanSacrifices: mean(all.map(r => r.sacrifices)),
         meanLeechPeak: mean(all.map(r => r.leechPeak)),
         maxLeechPeak: Math.max(0, ...all.map(r => r.leechPeak)),
+        phaseShares: Array.from({ length: 1 + Math.max(0, ...all.map(r => r.phaseReached)) },
+            (_, k) => all.filter(r => r.phaseReached >= k).length / runs),
     };
 }
