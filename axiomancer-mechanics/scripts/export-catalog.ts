@@ -10,6 +10,7 @@
  *
  * It writes:
  *   devlog/data/{cards,enemies,effects}.json  — flat records for the renderer
+ *   devlog/data/atlas.json                    — the Atlas page's data (src/Atlas)
  *   devlog/assets/catalog/cards/*             — copied card paintings
  *   devlog/assets/catalog/enemies/*           — copied enemy portraits
  *
@@ -37,6 +38,7 @@ import { STARTING_CARD_IDS } from '../src/Combat/combat.rewards';
 import { mechanicText, riderText } from '../src/Combat/combat.cards';
 import { EnemyLibrary } from '../src/Enemy/enemy.library';
 import { effectsLibrary, lookupEffect } from '../src/Effects/effects.library';
+import { buildAtlasData } from '../src/Atlas/atlas.data';
 // Pure, dependency-free presentation mappings (effect → glyph + colour;
 // effect id → registry keyword — the same vocabulary the card faces speak).
 import { effectGlyph } from '../../axiomancer-mobile/components/combat/statusGlyphs';
@@ -403,6 +405,7 @@ function main() {
     writeFileSync(join(DATA, 'enemies.json'), JSON.stringify(enemies, null, 1) + '\n');
     writeFileSync(join(DATA, 'effects.json'), JSON.stringify(effects, null, 1) + '\n');
     writeFileSync(join(DATA, 'meta.json'), JSON.stringify(meta, null, 1) + '\n');
+    writeFileSync(join(DATA, 'atlas.json'), JSON.stringify(buildAtlasData(meta), null, 1) + '\n');
 
     console.log(
         `catalog:export — ${cards.length} cards, ${enemies.length} enemies, ` +
