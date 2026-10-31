@@ -219,7 +219,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-07 | Pick the title plate and the four arena backgrounds (coast, forest, mountains, underworld) from your art dossier (0.5 h) | W2 | TP1b | - |
 | [ ] | 2026-11-07 | Plot the arena-background swap from your picks (0.5 h) | W2 | needs plot | - |
 | [ ] | 2026-11-08 | Swap Chapter 1's enemy portraits: replace each stand-in with the most thematic portrait from your set (2 h) | W2 | T | EN1a, EN1b, EN1c, EN1d, EN1e, EN1f, EN1g, EN1h, EN1j, EN1k, EN1l |
-| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1g, CH1f, CH1h, CH1i, CH1j, BW1c, NK1a, MU1, EN2a, EN2b, SM1a, SM1b, SM1c, SM1d |
+| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1g, CH1f, CH1h, CH1i, CH1j, BW1c, NK1a, MU1, EN2a, EN2b, SM1a, SM1b, SM1c, SM1d, SK1a, SK1b |
 | [ ] | 2026-11-10 | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | W2 | T | - |
 | [ ] | 2026-11-10 | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | W2 | BW1d | BW1a, BW1b |
 | [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | W2 | T | - |
@@ -328,7 +328,7 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - BE2d — loop work; follows BE2c; date not set.
 - BE2e — loop work; follows BE2a and BE2b; date not set.
 - BE2f — loop work; follows BE2a; date not set.
-- BE2g — attended; T's check on a preview APK once BE2c-BE2f ship; date not set.
+- BE2g — attended; T's check on a preview APK once BE2c-BE2f and SK1b ship (until SK1b, the Worker refuses every fight post); date not set.
 - IO1b — attended; waits on T enrolling in the Apple Developer Program; date not set.
 - IO1d — attended; T and a friend install the first iPhone builds once IO1b and IO1c ship; date not set.
 - BV1a — loop work, slotted asap (T); waits on BE2a; blocks no window's goal; date not set.
@@ -362,6 +362,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-31** — **the Chosen's signature, and the play log's fights, plotted (SK1)** (T, bug report from the 8f876ec preview APK: "I still can't play the Signature Skills o.0?"; plot run unattended). **Added** SK1a and SK1b to the `Waits on` of the Mid-MVP check (Nov 9), the first T act that plays the Chosen on a preview build. **Edited** BE2g's Unscheduled line: its premise (a preview fight shows up in the play log) needs SK1b, since the deployed Worker refuses every fight post today. Nothing ticked; no date moved.
 - **2026-10-31** — **the sim playtester and its own data plotted (SM1)** (T, `/plot asap` run unattended on T's word: "Have the sim collect it's own data", "Build a specialized sim playtester", "Differentiate between my playtesting data and the simulator"). **Added** SM1a-SM1d to the `Waits on` of the Nov 9 mid-MVP check: the preview APK T plays then should post as `human` with a run id and the whole run logged, so local harness runs stop landing in T's numbers and the check's run is the first human sample the bots are compared against. **Added** SM1e-SM1h and the attended SM1i under Unscheduled: no dated T act follows them, and SM1i's date is T's to pick. The mid-MVP check's premise still holds (T plays Chapter 1 and files what broke); no other Item's premise changes. No date moved; nothing ticked.
 - **2026-10-31** — **a Settings tab plotted** (T, in session, planning the beta: a gear tab with the music switch, a feedback form and the dev menu). **Added** ST1a and ST1b under `## Unscheduled`: the beta handout has no date yet. Nothing ticked; no date moved.
 - **2026-10-31** — **a Game Over screen before character select (CH1j)** (T on plot PR #1181: "can we ratify this that the player gets a Game over screen?"). **Added** CH1j to the `Waits on` of the Mid-MVP check, beside CH1h and CH1i. Nothing ticked; no date moved.
