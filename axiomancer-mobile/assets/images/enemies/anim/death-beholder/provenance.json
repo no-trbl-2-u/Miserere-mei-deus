@@ -17,6 +17,9 @@
       "components/combat/encounter/CombatCombatantPane.tsx - the Act 1 boss in live combat"
     ],
     "measured": "A8, measured on these exact files: 24 cells, 197658 B (193.0 KB) in total, mean 8236 B, max 11068 B (death-beholder-20.webp, the attack swell), min 4892 B (death-beholder-19.webp, the coil) - against 56286 B for the static death-beholder.webp. 3.5x, +141.4 KB for one enemy. The cell edge is 176px, not the float-eye's 256: at 256 this painting's cells encode to 21490 B max, past FRAME_CELL_MAX_BYTES (12000), and 192 still overshoots (12840 B). The ceiling held; the edge moved.",
+    "portrait": "death-beholder.webp",
+    "portrait_sha256": "75480dab6d14b0589cf6abc871cf5197c96bf5b17e2db6840610a0bd97981426",
+    "portrait_note": "A7 (phase AN5a): the SHA-256 of the static portrait this set was drawn from. scripts/frame-set-portraits.test.mjs (root npm test) fails when the portrait's bytes no longer match: a swapped portrait retires this set (remove it or regenerate it from the new portrait).",
     "covers": [
       "death-beholder-00.webp",
       "death-beholder-01.webp",
