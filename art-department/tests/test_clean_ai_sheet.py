@@ -410,6 +410,10 @@ class TheFourElitesRegenerate(unittest.TestCase):
         committed = json.loads(
             (MASTERS / "toll-keeper.cleanup-report.json").read_text(encoding="utf-8"))
         self.assertEqual(committed["components"]["welded_necked"], 1)
+        # A second welded core on this sheet never finds two poses and is
+        # still cut at the gridline (provenance.json's AN5d record): this
+        # pins that count too, so a drift in either direction is caught.
+        self.assertEqual(committed["components"]["welded_split"], 1)
 
 
 if __name__ == "__main__":
