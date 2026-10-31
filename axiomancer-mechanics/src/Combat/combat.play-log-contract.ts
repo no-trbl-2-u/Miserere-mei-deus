@@ -60,8 +60,11 @@ export const PLAY_LOG_SOURCES = ['human', 'harness', 'sim'] as const;
 /** What a report or a list may filter on: one source, or every source. */
 export const PLAY_LOG_SOURCE_FILTERS = [...PLAY_LOG_SOURCES, 'all'] as const;
 
-/** What changed the deck. `upgrade` is reserved for when the upgrade actions reach the app. */
-export const DECK_EVENT_KINDS = ['reward', 'cache-reward', 'remove', 'run-end'] as const;
+/**
+ * What changed the deck. An `upgrade` (phase SM1c; reserved by BE2, so no migration) names the card
+ * before it in `cardId` and the single card it became in `offered`.
+ */
+export const DECK_EVENT_KINDS = ['reward', 'cache-reward', 'remove', 'upgrade', 'run-end'] as const;
 
 /**
  * Upper bounds that keep one malformed or hostile post from filling a table.
@@ -76,6 +79,11 @@ export const PLAY_LOG_LIMITS = {
     offered: 20,
     fightBytes: 1024 * 1024,
     deckEventBytes: 64 * 1024,
+    /** A `play_runs` open or close body (phase SM1c). */
+    playRunBytes: 64 * 1024,
+    /** One run-events batch: at most this many events and this many bytes (phase SM1c). */
+    runEvents: 200,
+    runEventBytes: 256 * 1024,
 } as const;
 
 export type CombatEventKind = (typeof COMBAT_EVENT_KINDS)[number];
@@ -162,9 +170,9 @@ export interface DeckEventWhere {
 /** The body of `POST /v1/deck-events`: one change to the run's deck. */
 export interface DeckEventPost extends PlayLogSource, PlayLogOrigin {
     kind: DeckEventKind;
-    /** The card picked or removed; null for a skipped reward or a run's end. */
+    /** The card picked, removed or upgraded (its id before the change); null for a skipped reward or a run's end. */
     cardId: string | null;
-    /** The cards a reward showed; null for a removal or a run's end. */
+    /** The cards a reward showed, or the one card an upgrade made; null for a removal or a run's end. */
     offered: string[] | null;
     /** The deck after the change. */
     deck: string[];
@@ -234,19 +242,19 @@ const DECK_EVENT_KEYS: readonly (keyof DeckEventPost)[] = [
 const COMBAT_KINDS: ReadonlySet<string> = new Set(COMBAT_EVENT_KINDS);
 const UI_KINDS: ReadonlySet<string> = new Set(PLAY_LOG_UI_EVENT_KINDS);
 
-function isRecord(value: unknown): value is Record<string, unknown> {
+export function isRecord(value: unknown): value is Record<string, unknown> {
     return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-function isWhole(value: unknown, min: number): value is number {
+export function isWhole(value: unknown, min: number): value is number {
     return typeof value === 'number' && Number.isInteger(value) && value >= min;
 }
 
-function isFiniteNumber(value: unknown): value is number {
+export function isFiniteNumber(value: unknown): value is number {
     return typeof value === 'number' && Number.isFinite(value);
 }
 
-function checkText(value: unknown, field: string, reasons: string[], allowEmpty: boolean): void {
+export function checkText(value: unknown, field: string, reasons: string[], allowEmpty: boolean): void {
     if (typeof value !== 'string') {
         reasons.push(`${field}: expected a string`);
     } else if (!allowEmpty && value.trim() === '') {
@@ -256,13 +264,13 @@ function checkText(value: unknown, field: string, reasons: string[], allowEmpty:
     }
 }
 
-function checkOneOf(value: unknown, allowed: readonly string[], field: string, reasons: string[]): void {
+export function checkOneOf(value: unknown, allowed: readonly string[], field: string, reasons: string[]): void {
     if (typeof value !== 'string' || !allowed.includes(value)) {
         reasons.push(`${field}: expected one of ${allowed.join(', ')}`);
     }
 }
 
-function checkCardIds(value: unknown, field: string, max: number, reasons: string[]): void {
+export function checkCardIds(value: unknown, field: string, max: number, reasons: string[]): void {
     if (!Array.isArray(value)) {
         reasons.push(`${field}: expected an array`);
     } else if (value.length > max) {
@@ -290,7 +298,7 @@ export function withoutAbsentOrigin<T extends PlayLogOrigin>(post: T): T {
     return out;
 }
 
-function checkSource(body: Record<string, unknown>, reasons: string[]): void {
+export function checkSource(body: Record<string, unknown>, reasons: string[]): void {
     // The solver may be blank, as on a puzzle attempt; the session and build must be present.
     checkText(body.solver, 'solver', reasons, true);
     checkText(body.sessionId, 'sessionId', reasons, false);
@@ -385,17 +393,19 @@ export function validateFightPost(body: unknown): FightValidation {
 }
 
 /** Which of `cardId` and `offered` each kind carries. */
-const DECK_EVENT_SHAPE: Record<DeckEventKind, { card: 'required' | 'optional' | 'none'; offered: boolean }> = {
-    'reward': { card: 'optional', offered: true },
-    'cache-reward': { card: 'optional', offered: true },
-    'remove': { card: 'required', offered: false },
-    'run-end': { card: 'none', offered: false },
+const DECK_EVENT_SHAPE: Record<DeckEventKind, { card: 'required' | 'optional' | 'none'; offered: 'none' | 'list' | 'one' }> = {
+    'reward': { card: 'optional', offered: 'list' },
+    'cache-reward': { card: 'optional', offered: 'list' },
+    'remove': { card: 'required', offered: 'none' },
+    'upgrade': { card: 'required', offered: 'one' },
+    'run-end': { card: 'none', offered: 'none' },
 };
 
 /**
  * Checks an untrusted `POST /v1/deck-events` body. A reward names what it
  * offered and the card picked from it (null for a skip); a removal names its
- * card and offers nothing; a run's end names neither.
+ * card and offers nothing; an upgrade names the card before in `cardId` and
+ * the card after as the one entry of `offered`; a run's end names neither.
  */
 export function validateDeckEventPost(body: unknown): DeckEventValidation {
     if (!isRecord(body)) return { ok: false, reasons: ['body: expected a JSON object'] };
@@ -420,8 +430,14 @@ export function validateDeckEventPost(body: unknown): DeckEventValidation {
         } else if (body.cardId !== null || shape.card === 'required') {
             checkText(body.cardId, 'cardId', reasons, false);
         }
-        if (!shape.offered) {
+        if (shape.offered === 'none') {
             if (body.offered !== null) reasons.push(`offered: expected null for ${body.kind}`);
+        } else if (shape.offered === 'one') {
+            // An upgrade offers nothing: `offered` holds the one card the upgrade made.
+            checkCardIds(body.offered, 'offered', 1, reasons);
+            if (Array.isArray(body.offered) && body.offered.length === 0) {
+                reasons.push('offered: expected the upgraded card');
+            }
         } else {
             checkCardIds(body.offered, 'offered', PLAY_LOG_LIMITS.offered, reasons);
             if (Array.isArray(body.offered) && body.offered.length === 0) {

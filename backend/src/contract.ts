@@ -37,3 +37,27 @@ export type {
     PlayLogSourceFilter,
     PlayLogSourceKind,
 } from '../../axiomancer-mechanics/src/Combat/combat.play-log-contract';
+export {
+    PLAY_RUNS_PATH,
+    PLAY_RUN_OUTCOMES,
+    RUN_EVENTS_PATH,
+    RUN_EVENT_KINDS,
+    validatePlayRunEndPost,
+    validatePlayRunPost,
+    validateRunEventsPost,
+} from '../../axiomancer-mechanics/src/Combat/combat.play-run-contract';
+export type {
+    PlayRunClosed,
+    PlayRunEndPost,
+    PlayRunList,
+    PlayRunOpened,
+    PlayRunOutcome,
+    PlayRunPost,
+    PlayRunRow,
+    RunEvent,
+    RunEventKind,
+    RunEventList,
+    RunEventRow,
+    RunEventsCreated,
+    RunEventsPost,
+} from '../../axiomancer-mechanics/src/Combat/combat.play-run-contract';
