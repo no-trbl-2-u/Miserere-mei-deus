@@ -127,16 +127,21 @@ describe('cache store flow (three-offer choice)', () => {
         const bloodPrice = getCardLane('blood-price')!.cardIds;
         const elementalist = getCardLane('elementalist')!.cardIds;
 
-        it('no lane relic: the card is grey, never a Blood Price card', () => {
+        it('no lane relic: the card is from a starting lane, never grey, never an Elementalist card', () => {
             for (const r of RANDOMS) {
                 const card = cacheCard([], [], r);
-                expect(grey).toContain(card);
-                expect(bloodPrice).not.toContain(card);
+                expect(grey).not.toContain(card);
+                expect(elementalist).not.toContain(card);
+                expect([...bloodPrice, ...getCardLane('defender')!.cardIds]).toContain(card);
             }
         });
 
-        it('a lane relic carried in the satchel but not worn: still grey', () => {
-            for (const r of RANDOMS) expect(grey).toContain(cacheCard([], [laneRelic('elementalist')], r));
+        it('a lane relic carried in the satchel but not worn: still the starting lanes only', () => {
+            for (const r of RANDOMS) {
+                const card = cacheCard([], [laneRelic('elementalist')], r);
+                expect(grey).not.toContain(card);
+                expect(elementalist).not.toContain(card);
+            }
         });
 
         it('the lane relic worn: the card is from its lane', () => {

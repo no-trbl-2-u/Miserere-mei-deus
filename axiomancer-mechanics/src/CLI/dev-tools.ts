@@ -1,6 +1,6 @@
 import { createCharacter } from '../Character';
 import { getEquippedItems } from '../Character/equipment.reducer';
-import type { BaseStats } from '../Character/types';
+import type { BaseStats, Character } from '../Character/types';
 import type { EquipmentSlot } from '../Items/types';
 import { relicLibrary, getRelicById } from '../Items/relic.library';
 import { grantWearingIfFree } from '../Items/item-grant';
@@ -10,6 +10,16 @@ import { ENEMY_REGISTRY, EnemySlug } from '../Enemy/enemy.library';
 import type { createGameStore } from '../Game/store';
 
 type Store = ReturnType<typeof createGameStore>;
+
+/** A rebuilt player keeps the run's character and lanes, so its reward pool survives the rebuild. */
+function keepRun(before: Character, rebuilt: Character): Character {
+    return {
+        ...rebuilt,
+        ...(before.characterId !== undefined ? { characterId: before.characterId } : {}),
+        ...(before.startingLaneIds !== undefined ? { startingLaneIds: [...before.startingLaneIds] } : {}),
+        ...(before.devRewardLaneIds !== undefined ? { devRewardLaneIds: [...before.devRewardLaneIds] } : {}),
+    };
+}
 
 interface DevResult { ok: boolean; detail: string }
 
@@ -30,7 +40,7 @@ export function devSetLevel(store: Store, targetLevel: number): DevResult {
         effects: [...p.effects],
     });
 
-    store.setState({ player: rebuilt });
+    store.setState({ player: keepRun(p, rebuilt) });
     return { ok: true, detail: `Level set to ${clamped}` };
 }
 
@@ -55,7 +65,7 @@ export function devSetStats(store: Store, stats: Partial<BaseStats>): DevResult 
         effects: [...p.effects],
     });
 
-    store.setState({ player: rebuilt });
+    store.setState({ player: keepRun(p, rebuilt) });
     return { ok: true, detail: `Stats set to H:${next.heart} B:${next.body} M:${next.mind}` };
 }
 

@@ -71,6 +71,22 @@ describe('character roster (CH1 A1)', () => {
         }
     });
 
+    it('the Chosen is T\'s character, word for word (CH1f)', () => {
+        const chosen = getCharacterDefinition('the-chosen')!;
+        expect(chosen).toEqual({
+            id: 'the-chosen',
+            name: 'The Chosen',
+            portraitKey: 'altair-man',
+            startingRelicId: 'relic-disarming-plea',
+            baseStats: { heart: 7, body: 3, mind: 5 },
+            startingLaneIds: ['defender', 'blood-price'],
+            startingCardIds: ['df-e-04a', 'bp-p-02a'],
+            playstyle: 'Fumbling Squire trying to hold the line',
+        });
+        expect(characterProblems(chosen)).toEqual([]);
+        expect(characterDeck(chosen)).toHaveLength(10);
+    });
+
     it('the real roster ids are unique and resolve', () => {
         const ids = CHARACTER_ROSTER.map(d => d.id);
         expect(new Set(ids).size).toBe(ids.length);

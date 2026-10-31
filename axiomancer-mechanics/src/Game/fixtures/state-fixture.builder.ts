@@ -21,7 +21,7 @@
  */
 
 import { createCharacter } from '../../Character';
-import { buildCharacterFromPreset, getPresetById } from '../../Character/presets';
+import { buildCharacterFromPreset, getPresetById, DEV_PRESET_LANE_IDS } from '../../Character/presets';
 import type { Character } from '../../Character/types';
 import { getRng, setSeed } from '../../Utils/rng';
 import { getMapDefinition, createMapState } from '../../World/map.registry';
@@ -99,6 +99,12 @@ const applyWorld = (target: StateFixtureWorld | undefined) => (state: GameState)
 const applyFlags = (flags: readonly string[] | undefined) => (state: GameState): GameState =>
     flags ? { ...state, flags: dedupe([...state.flags, ...flags]) } : state;
 
+/** A fixture player always has a reward pool: no lane of its own gets the dev preset lanes. */
+const withRewardLanes = (state: GameState): GameState =>
+    state.player.startingLaneIds && state.player.startingLaneIds.length > 0
+        ? state
+        : { ...state, player: { ...state.player, startingLaneIds: [...DEV_PRESET_LANE_IDS] } };
+
 /** Every builder above may roll; persist the RNG cursor last. */
 const stampRng = (state: GameState): GameState => ({ ...state, rngState: getRng().getState() });
 
@@ -124,6 +130,7 @@ export function buildStateFromFixture(fixture: StateFixture): GameState {
         applyPlayer(fixture.player),
         applyWorld(fixture.world),
         applyFlags(fixture.flags),
+        withRewardLanes,
         stampRng,
     )(createNewGameState());
 }

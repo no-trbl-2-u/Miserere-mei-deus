@@ -22,7 +22,7 @@ function mount(slots = createMemorySlotStore()) {
 
 describe('MainMenu', () => {
     it('prints the four verbs and routes each press', () => {
-        const slots = createMemorySlotStore({ initial: { 1: { state: createNewGameState(), savedAt: 1_700_000_000_000 - 5000 } } });
+        const slots = createMemorySlotStore({ initial: { 1: { state: createNewGameState({ characterId: 'the-chosen' }), savedAt: 1_700_000_000_000 - 5000 } } });
         const h = mount(slots);
         expect(screen.getByText(MAIN_MENU_COPY.continue)).toBeTruthy();
         expect(screen.getByText(MAIN_MENU_COPY.newGame)).toBeTruthy();
@@ -54,7 +54,7 @@ describe('MainMenu', () => {
         expect(screen.queryByTestId('main-menu-continue')).toBeNull();
         act(() => {
             slots.selectSlot(2);
-            slots.save(createNewGameState());
+            slots.save(createNewGameState({ characterId: 'the-chosen' }));
         });
         expect(screen.getByTestId('main-menu-continue')).toBeTruthy();
     });

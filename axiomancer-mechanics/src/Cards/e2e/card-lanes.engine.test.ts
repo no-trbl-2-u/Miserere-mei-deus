@@ -66,11 +66,10 @@ describe('laneRewardPool', () => {
 });
 
 describe('rewardPoolFor', () => {
-    it('is the grey office when the override is absent, empty or unknown and no lane relic is worn', () => {
-        const grey = [...GREY_LANE.cardIds];
-        expect(rewardPoolFor({}, FIXTURE_LANES)).toEqual(grey);
-        expect(rewardPoolFor({ devRewardLaneIds: [] }, FIXTURE_LANES)).toEqual(grey);
-        expect(rewardPoolFor({ devRewardLaneIds: ['nope'] }, FIXTURE_LANES)).toEqual(grey);
+    it('has no pool when the override is absent, empty or unknown and no lane is held', () => {
+        expect(() => rewardPoolFor({}, FIXTURE_LANES)).toThrow(/no reward pool/);
+        expect(() => rewardPoolFor({ devRewardLaneIds: [] }, FIXTURE_LANES)).toThrow(/no reward pool/);
+        expect(() => rewardPoolFor({ devRewardLaneIds: ['nope'] }, FIXTURE_LANES)).toThrow(/no reward pool/);
     });
 
     it('narrows to the checked lanes', () => {

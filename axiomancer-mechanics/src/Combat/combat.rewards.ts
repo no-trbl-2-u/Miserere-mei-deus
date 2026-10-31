@@ -21,7 +21,7 @@ import type { Character } from '../Character/types';
 import type { Enemy } from '../Enemy/types';
 import { rankToRarity, type CardRarity } from '../Cards/types';
 import { cardLibrary, getCardById } from '../Cards/cards.library';
-import { CARD_LANES, GREY_LANE, deckLaneIds, getCardLane, laneRewardPool, type CardLane } from '../Cards/card.lanes';
+import { CARD_LANES, GREY_LANE, deckLaneIds, laneRewardPool, type CardLane } from '../Cards/card.lanes';
 import type { Equipment } from '../Items/types';
 import { relicLibrary } from '../Items/relic.library';
 import { wornLaneCounts, wornPieces, type Wearer } from '../Items/relic-lanes';
@@ -58,8 +58,10 @@ export const STARTING_CARD_IDS: readonly string[] = GREY_LANE.testDeck;
  *     when it names a registered lane;
  *  2. the cards of every lane the character starts with or a worn relic opens
  *     ({@link unlockedLaneIds});
- *  3. when that is no lane (a run with no character and no worn lane relic),
- *     the grey office's cards, the only way a grey card is ever offered.
+ * Grey cards are never offered. A player with no starting lane, no worn lane
+ * relic and no dev override has no pool, and that is a bug in whatever built
+ * the player (every run opens as a roster character): this throws rather than
+ * offering anything.
  *
  * Curses and ids the library cannot resolve are never in it.
  *
@@ -67,7 +69,8 @@ export const STARTING_CARD_IDS: readonly string[] = GREY_LANE.testDeck;
  * @param lanes  - The lane registry; defaults to {@link CARD_LANES}.
  * @param relics - The relic library; defaults to {@link relicLibrary}.
  * @returns The candidate card ids, library order within each lane.
- * @example rewardPoolFor(freshPlayer) // ['grey-strike', 'grey-ward', 'grey-word']
+ * @throws When the player draws on no lane at all.
+ * @example rewardPoolFor(theChosen) // Defender and Blood Price cards, plus the Merciful lane while the ring is worn
  */
 export function rewardPoolFor(
     player: Pick<Character, 'devRewardLaneIds'> & LaneHolder,
@@ -77,8 +80,10 @@ export function rewardPoolFor(
     const override = devOverridePool(player, lanes);
     if (override.length > 0) return override;
     const worn = rewardable(laneRewardPool(unlockedLaneIds(player, lanes, relics), lanes));
-    if (worn.length > 0) return worn;
-    return rewardable(getCardLane(GREY_LANE.id, lanes)?.cardIds ?? GREY_LANE.cardIds);
+    if (worn.length === 0) {
+        throw new Error('rewardPoolFor: the player has no starting lane, no worn lane relic and no dev reward lane, so no reward pool.');
+    }
+    return worn;
 }
 
 /** The ids a reward may offer: resolvable by the library and not a Curse. */

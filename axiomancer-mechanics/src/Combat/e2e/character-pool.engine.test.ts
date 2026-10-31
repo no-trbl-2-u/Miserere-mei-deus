@@ -11,7 +11,7 @@
  *   · taking off the starting relic removes ITS lane, never a starting lane;
  *   · the guaranteed lane slots still count worn relics only, so starting lanes
  *     widen the pool and never add a guaranteed slot;
- *   · no offer is ever a grey card; a run with no character keeps RW1a's pool.
+ *   · no offer is ever a grey card; a player on no lane has no pool.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -182,13 +182,13 @@ describe('A3 · the D100 lane slots count worn relics only', () => {
     });
 });
 
-describe('A3 · a run with no character keeps RW1a\'s pool', () => {
+describe('A3 · a player with no starting lane has no pool (CH1f: no grey fallback)', () => {
     const { player } = createNewGameState();
     const bare: Character = { ...player, devRewardLaneIds: undefined };
 
-    it('has no starting lanes: nothing worn gives the grey office, never an unlocked lane', () => {
+    it('has no starting lanes: nothing worn throws, never offers grey', () => {
         expect(unlockedLaneIds(bare, LANES, RELICS)).toEqual([]);
-        expect(rewardPoolFor(bare, LANES, RELICS)).toEqual([...GREY_LANE.cardIds]);
+        expect(() => rewardPoolFor(bare, LANES, RELICS)).toThrow(/no reward pool/);
     });
 
     it('a worn lane relic alone decides the lanes', () => {

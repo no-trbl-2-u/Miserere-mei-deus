@@ -42,6 +42,19 @@ export function selectRoster(): readonly CharacterDefinition[] {
     return CHARACTER_ROSTER;
 }
 
+/**
+ * The portrait key of the roster character a run opened as, or `null` when
+ * the run has no character (or one the roster no longer carries). A character
+ * run shows its character's portrait; the gallery choice is for no one else.
+ */
+export function characterPortraitKey(
+    characterId: string | undefined,
+    roster: readonly CharacterDefinition[] = selectRoster(),
+): string | null {
+    if (characterId === undefined) return null;
+    return roster.find((def) => def.id === characterId)?.portraitKey ?? null;
+}
+
 export interface CharacterSquareVM {
     readonly kind: 'character' | 'locked';
     /** Stable key: the character id, or `locked-<n>`. */

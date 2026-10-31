@@ -5,7 +5,7 @@
  * the brine-hag):
  *   · a fight pays the elite reward exactly when its foe is `difficulty: 'elite'`;
  *   · the cards are the best three of the reward pool (the worn relics'
- *     lanes, the grey office when none is worn), highest rarity first, so the
+ *     lanes plus the player's starting lanes, never grey), highest rarity first, so the
  *     one rare (Blood for Blood) is always offered once its lane is worn;
  *   · at least one offer comes from a lane the player's deck draws on;
  *   · the other option upgrades one random owned card at the highest rarity
@@ -43,12 +43,13 @@ function seededRng(seed: number): () => number {
     };
 }
 
-/** The mock player wears the Suppliant's Ring, which opens the Merciful lane; these fixtures wear no relic unless `wearing` says so. */
+/** The mock player wears the Suppliant's Ring; these fixtures wear no relic unless `wearing` says so, and start on two lanes so the pool is never empty. */
 function playerWith(knownCards: readonly string[], combatRewardCards: readonly string[] = []): Character {
     const player = deepClone(Player);
     return {
         ...player, knownCards: [...knownCards], combatRewardCards: [...combatRewardCards],
         equipment: { ...player.equipment, relics: [] },
+        startingLaneIds: ['defender', 'blood-price'],
     };
 }
 
@@ -104,18 +105,11 @@ describe('the elite cards: the best three, one from the player\'s lanes', () => 
         }
     });
 
-    it('with no lane relic worn, every elite card is grey', () => {
+    it('never offers a grey card, with or without a lane relic worn', () => {
         for (const seed of SEEDS) {
-            for (const player of [greyPlayer(), bloodPricePlayer()]) {
-                for (const id of rollEliteCardRewards(player, seededRng(seed))) expect(GREY_LANE.cardIds).toContain(id);
+            for (const player of [greyPlayer(), bloodPricePlayer(), wearing(greyPlayer(), 'elementalist')]) {
+                for (const id of rollEliteCardRewards(player, seededRng(seed))) expect(GREY_LANE.cardIds).not.toContain(id);
             }
-        }
-    });
-
-    it('a grey deck is always offered at least one grey card', () => {
-        for (const seed of SEEDS) {
-            const cards = rollEliteCardRewards(greyPlayer(), seededRng(seed));
-            expect(cards.some(id => GREY_LANE.cardIds.includes(id)), `seed ${seed}: ${cards}`).toBe(true);
         }
     });
 

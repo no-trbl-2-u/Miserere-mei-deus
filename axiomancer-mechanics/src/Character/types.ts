@@ -105,8 +105,8 @@ export interface Character {
     /**
      * The roster character this run opened as (`Character/roster.ts`), set
      * by `createNewGameState({ characterId })`. Optional + sparse — absent
-     * means a run with no character, which plays as a run did before
-     * characters existed.
+     * means a save from before characters, which cannot be continued (its
+     * slot offers deletion only).
      */
     characterId?: string;
     /**

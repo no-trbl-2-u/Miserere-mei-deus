@@ -69,16 +69,26 @@ export interface SaveSlotSummary {
     readonly mapName: string | null;
     /** `GameState.runId`, `null` unless `saved`. */
     readonly runId: string | null;
+    /**
+     * `player.characterId`, `null` unless `saved`, and `null` for a save made
+     * before characters existed (CH1f): such a save is only offered for deletion.
+     */
+    readonly characterId: string | null;
+}
+
+/** Whether a slot holds a save made before characters: readable, but never continued. */
+export function isPreCharacterSave(summary: SaveSlotSummary): boolean {
+    return summary.status === 'saved' && summary.characterId === null;
 }
 
 /** The summary of a slot nothing was written to. */
 export function emptySlotSummary(id: SaveSlotId): SaveSlotSummary {
-    return { id, status: 'empty', savedAt: null, level: null, mapName: null, runId: null };
+    return { id, status: 'empty', savedAt: null, level: null, mapName: null, runId: null, characterId: null };
 }
 
 /** The summary of a slot whose bytes could not be read. */
 export function unreadableSlotSummary(id: SaveSlotId): SaveSlotSummary {
-    return { id, status: 'unreadable', savedAt: null, level: null, mapName: null, runId: null };
+    return { id, status: 'unreadable', savedAt: null, level: null, mapName: null, runId: null, characterId: null };
 }
 
 /**
@@ -106,18 +116,20 @@ export function summarizeSlot(
         level: state.player?.level ?? null,
         mapName: state.world?.currentMap?.name ?? null,
         runId: state.runId ?? null,
+        characterId: state.player?.characterId ?? null,
     };
 }
 
 /**
- * The slot CONTINUE resumes: the `saved` slot with the greatest `savedAt`.
+ * The slot CONTINUE resumes: the `saved` slot with the greatest `savedAt`,
+ * a save made before characters never (it is only deleted).
  * Ties resolve to the lowest id (stable, deterministic). `null` when no slot
  * is saved — the menu then hides CONTINUE.
  */
 export function mostRecentSlot(summaries: readonly SaveSlotSummary[]): SaveSlotId | null {
     let best: SaveSlotSummary | null = null;
     for (const s of summaries) {
-        if (s.status !== 'saved') continue;
+        if (s.status !== 'saved' || isPreCharacterSave(s)) continue;
         if (best === null || (s.savedAt ?? 0) > (best.savedAt ?? 0)) best = s;
     }
     return best?.id ?? null;

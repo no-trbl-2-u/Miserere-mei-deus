@@ -15,6 +15,7 @@ import { StanceGlyph } from '@/components/StanceGlyph';
 import { EffectGlyph } from '@/components/EffectGlyph';
 import { XpChain } from '@/components/XpChain';
 import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
+import { characterPortraitKey } from '@/state/presenters/character-select.engine';
 import { nextPlayerPortrait, portraitIdFromFlags, PORTRAIT_FLAG_PREFIX } from '@/assets/images/portraits';
 import { useGameActions, useGameState, useGameStore } from '@/state/GameStoreProvider';
 import { selectCharacterViewModel } from '@/state/presenters/character.engine';
@@ -63,13 +64,17 @@ export default function CharacterScreen() {
 
   // Tap the bust to cycle the portrait gallery. Stored as a `portrait:<id>`
   // flag (generic string flags ride the normal save).
+  // A run opened as a roster character keeps that character's portrait: the
+  // bust does not cycle.
+  const portraitLocked = characterPortraitKey(player.characterId) !== null;
   const onCyclePortrait = useCallback(() => {
+    if (portraitLocked) return;
     store.setState((s) => {
       const flags = s.flags ?? [];
       const next = nextPlayerPortrait(portraitIdFromFlags(flags));
       return { flags: [...flags.filter((f) => !f.startsWith(PORTRAIT_FLAG_PREFIX)), `${PORTRAIT_FLAG_PREFIX}${next.id}`] };
     });
-  }, [store]);
+  }, [portraitLocked, store]);
 
   const onLevelUp = useCallback(() => {
     actions.levelUp();
@@ -99,16 +104,22 @@ export default function CharacterScreen() {
         accessibilityLabel={`${vm.a11y.characterName}. ${vm.a11y.level}. ${vm.a11y.experience}.`}
       >
         <View style={styles.sheetHeaderTopRow}>
-          <Pressable
-            style={styles.portraitFrame}
-            onPress={onCyclePortrait}
-            accessibilityRole="button"
-            accessibilityLabel="Change portrait"
-            accessibilityHint="cycles through the portrait gallery"
-            testID="self-portrait-cycle"
-          >
-            <PlayerPortraitImage width={176} height={212} />
-          </Pressable>
+          {portraitLocked ? (
+            <View style={styles.portraitFrame} testID="self-portrait">
+              <PlayerPortraitImage width={176} height={212} />
+            </View>
+          ) : (
+            <Pressable
+              style={styles.portraitFrame}
+              onPress={onCyclePortrait}
+              accessibilityRole="button"
+              accessibilityLabel="Change portrait"
+              accessibilityHint="cycles through the portrait gallery"
+              testID="self-portrait-cycle"
+            >
+              <PlayerPortraitImage width={176} height={212} />
+            </Pressable>
+          )}
           <View style={styles.identityCol}>
             <SectionLabel size={9} color={AXM.bone}>{vm.subtitle}</SectionLabel>
             <Text style={styles.characterName} numberOfLines={1}>{vm.displayName}</Text>

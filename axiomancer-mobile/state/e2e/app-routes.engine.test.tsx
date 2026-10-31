@@ -77,7 +77,7 @@ beforeEach(() => {
 });
 
 function savedState(name: string, level: number): GameState {
-    const s = createNewGameState();
+    const s = createNewGameState({ characterId: 'the-chosen' });
     return { ...s, player: { ...s.player, name, level } };
 }
 

@@ -1,8 +1,8 @@
 /**
  * The reward-lane section of the measured report (phase CH1d): per character,
  * the lanes in the pool and each lane's share of the offers at run start and
- * after three worn relics, plus a no-character baseline row. Fixture roster,
- * lanes and relics throughout; the live roster is empty.
+ * after three worn relics. Fixture roster, lanes and relics, plus the live
+ * roster's pool.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -50,35 +50,30 @@ const FIXTURE: CharacterDefinition = {
 
 const FIXTURE_OPTIONS = { roster: [FIXTURE], lanes: LANES, relics: RELICS, rolls: 120, seed: 7 };
 
-describe('the live roster is empty (CH1d A5)', () => {
-    it('holds the no-character baseline row only', () => {
-        expect(CHARACTER_ROSTER).toHaveLength(0);
+describe('the live roster (CH1d A5, CH1f)', () => {
+    it('holds one row per live character, each with a non-empty start pool', () => {
+        expect(CHARACTER_ROSTER.length).toBeGreaterThan(0);
         const report = rewardLanesByCharacter({ rolls: 30 });
-        expect(report.rows).toHaveLength(1);
-        const [baseline] = report.rows;
-        expect(baseline!.character).toBeNull();
-        expect(baseline!.start.worn).toEqual([]);
-        expect(baseline!.start.lanes).toEqual([]);
-        expect(Object.keys(baseline!.start.shares)).toEqual(['grey']);
-        expect(baseline!.start.shares.grey).toBe(1);
+        expect(report.rows.map(r => r.character)).toEqual(CHARACTER_ROSTER.map(c => c.id));
+        for (const row of report.rows) {
+            expect(row.start.lanes.length).toBeGreaterThan(0);
+            expect(row.start.shares.grey).toBeUndefined();
+        }
     });
 
-    it('the baseline late state wears the live lane relics and opens their lanes', () => {
-        const baseline = rewardLanesByCharacter({ rolls: 30 }).rows[0]!;
-        expect(baseline.late.worn).toContain('relic-crimson-circlet');
-        expect(baseline.late.worn).toContain('relic-elementalist-signet');
-        expect(baseline.late.lanes).toContain('blood-price');
-        expect(baseline.late.lanes).toContain('elementalist');
-        expect(baseline.late.shares['blood-price']).toBeGreaterThan(0);
+    it('the Chosen starts on Defender, Blood Price and the ring Merciful lane', () => {
+        const row = rewardLanesByCharacter({ rolls: 30 }).rows.find(r => r.character === 'the-chosen')!;
+        expect(row.start.worn).toEqual(['relic-disarming-plea']);
+        expect(row.start.lanes).toEqual(expect.arrayContaining(['defender', 'blood-price', 'merciful']));
     });
 });
 
 describe('a fixture character row (CH1d A5)', () => {
     const report = rewardLanesByCharacter(FIXTURE_OPTIONS);
-    const [row, baseline] = report.rows;
+    const [row] = report.rows;
 
-    it('has one row per roster character, then the baseline', () => {
-        expect(report.rows.map(r => r.character)).toEqual(['fx-character', null]);
+    it('has one row per roster character', () => {
+        expect(report.rows.map(r => r.character)).toEqual(['fx-character']);
         expect(row!.name).toBe('Fixture Character');
         expect(report.rolls).toBe(120);
         expect(report.seed).toBe(7);
@@ -105,14 +100,6 @@ describe('a fixture character row (CH1d A5)', () => {
             expect(total).toBeLessThan(1.001);
             expect(state.shares.grey).toBeUndefined();
         }
-    });
-
-    it('the baseline has no pool at start and the greedy lanes late', () => {
-        expect(baseline!.character).toBeNull();
-        expect(baseline!.start.lanes).toEqual([]);
-        expect(baseline!.start.shares).toEqual({ grey: 1 });
-        expect(baseline!.late.worn).toEqual(['fx-start-relic', 'fx-relic-w', 'fx-relic-x']);
-        expect(baseline!.late.lanes).toEqual(['fx-x', 'fx-z', 'fx-w']);
     });
 
     it('is deterministic for a seed', () => {
@@ -143,7 +130,7 @@ describe('the section rides the measured report (CH1d A5)', () => {
         });
         expect(report.rewardLanes.seed).toBe(3);
         expect(report.rewardLanes.rolls).toBe(10);
-        expect(report.rewardLanes.rows[report.rewardLanes.rows.length - 1]!.character).toBeNull();
+        expect(report.rewardLanes.rows.map(r => r.character)).toEqual(CHARACTER_ROSTER.map(c => c.id));
         expect(CARD_LANES.length).toBeGreaterThan(0);
     });
 });

@@ -43,13 +43,13 @@ afterEach(async () => {
 });
 
 function buildState(playerName = 'Pilgrim'): GameState {
-    const base = createNewGameState();
+    const base = createNewGameState({ characterId: 'the-chosen' });
     const player = createCharacter({
         name: playerName,
         level: 1,
         baseStats: { heart: 4, body: 4, mind: 4 },
     });
-    return { ...base, player };
+    return { ...base, player: { ...player, characterId: 'the-chosen' } };
 }
 
 // ---------------------------------------------------------------------------

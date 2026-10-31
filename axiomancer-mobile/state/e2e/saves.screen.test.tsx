@@ -23,24 +23,23 @@ jest.mock('@/lib/platform/router', () => ({
     useLocalSearchParams: () => mockParams,
 }));
 
-let mockRoster: unknown[] = [];
-jest.mock('@/state/presenters/character-select.engine', () => ({
-    ...(jest.requireActual('@/state/presenters/character-select.engine') as object),
-    selectRoster: () => mockRoster,
-}));
-
 afterEach(() => {
     jest.clearAllMocks();
     mockParams = {};
-    mockRoster = [];
 });
 beforeEach(() => {
     mockFixedRng(0.5);
 });
 
 function savedState(name: string, level: number): GameState {
-    const s = createNewGameState();
+    const s = createNewGameState({ characterId: 'the-chosen' });
     return { ...s, player: { ...s.player, name, level } };
+}
+
+/** A save made before characters: the run's player carries no `characterId`. */
+function preCharacterState(level: number): GameState {
+    const s = createNewGameState();
+    return { ...s, player: { ...s.player, level } };
 }
 
 function mount(mode: 'new' | 'load', slots = createMemorySlotStore()) {
@@ -52,44 +51,10 @@ function mount(mode: 'new' | 'load', slots = createMemorySlotStore()) {
 }
 
 describe('/saves — NEW GAME', () => {
-    it('BEGIN on an empty slot starts THE VERY START in that slot and enters the map', () => {
-        const { store, slots } = mount('new');
+    it('BEGIN on an empty slot always opens the character select and writes nothing yet', () => {
+        const { slots } = mount('new');
         expect(screen.getByTestId('saves-new')).toBeTruthy();
 
-        act(() => { fireEvent.press(screen.getByTestId('save-slot-2-action')); });
-
-        expect(slots.getActiveSlot()).toBe(2);
-        expect(slots.readSlot(2)).not.toBeNull();
-        expect(store.getState().player.inventory).toEqual([]);
-        expect(mockReplace).toHaveBeenCalledWith('/exploration');
-    });
-
-    it('OVERWRITE on a saved slot asks first; KEEP IT changes nothing; confirming wipes and begins', () => {
-        const slots = createMemorySlotStore({ initial: { 1: { state: savedState('Keep', 4), savedAt: 10 } } });
-        const { store } = mount('new', slots);
-        // (The RNG is pinned, so run ids collide; the saved LEVEL is the tell.)
-        expect(slots.readSlot(1)?.player.level).toBe(4);
-
-        act(() => { fireEvent.press(screen.getByTestId('save-slot-1-action')); });
-        act(() => { fireEvent.press(screen.getByTestId('saves-confirm-cancel')); });
-        expect(slots.readSlot(1)?.player.level).toBe(4);
-        expect(mockReplace).not.toHaveBeenCalled();
-
-        act(() => { fireEvent.press(screen.getByTestId('save-slot-1-action')); });
-        act(() => { fireEvent.press(screen.getByTestId('saves-confirm-confirm')); });
-        expect(slots.readSlot(1)?.player.level).toBe(1);
-        expect(store.getState().player.level).toBe(1);
-        expect(mockReplace).toHaveBeenCalledWith('/exploration');
-    });
-});
-
-describe('/saves — NEW GAME with a character roster', () => {
-    beforeEach(() => {
-        mockRoster = [{ id: 'fixture-knight' }];
-    });
-
-    it('BEGIN on an empty slot opens the character select and writes nothing yet', () => {
-        const { slots } = mount('new');
         act(() => { fireEvent.press(screen.getByTestId('save-slot-2-action')); });
 
         expect(mockPush).toHaveBeenCalledWith('/character-select?slot=2');
@@ -97,14 +62,56 @@ describe('/saves — NEW GAME with a character roster', () => {
         expect(slots.readSlot(2)).toBeNull();
     });
 
-    it('confirming an OVERWRITE opens the select and leaves the saved slot as it was', () => {
+    it('OVERWRITE on a saved slot asks first; KEEP IT changes nothing; confirming opens the select and leaves the save as it was', () => {
         const slots = createMemorySlotStore({ initial: { 1: { state: savedState('Keep', 4), savedAt: 10 } } });
         mount('new', slots);
+        expect(slots.readSlot(1)?.player.level).toBe(4);
+
+        act(() => { fireEvent.press(screen.getByTestId('save-slot-1-action')); });
+        act(() => { fireEvent.press(screen.getByTestId('saves-confirm-cancel')); });
+        expect(slots.readSlot(1)?.player.level).toBe(4);
+        expect(mockPush).not.toHaveBeenCalled();
+
         act(() => { fireEvent.press(screen.getByTestId('save-slot-1-action')); });
         act(() => { fireEvent.press(screen.getByTestId('saves-confirm-confirm')); });
-
         expect(mockPush).toHaveBeenCalledWith('/character-select?slot=1');
         expect(slots.readSlot(1)?.player.level).toBe(4);
+    });
+});
+
+describe('/saves — a save made before characters', () => {
+    it.each(['new', 'load'] as const)('reads "Made before characters", offers delete and no verb (%s)', (mode) => {
+        const slots = createMemorySlotStore({ initial: { 2: { state: preCharacterState(6), savedAt: 10 } } });
+        mount(mode, slots);
+
+        expect(screen.getByText('Made before characters')).toBeTruthy();
+        expect(screen.queryByTestId('save-slot-2-action')).toBeNull();
+        expect(screen.getByTestId('save-slot-2-clear')).toBeTruthy();
+        expect(mockReplace).not.toHaveBeenCalled();
+    });
+
+    it('DELETE SAVE wipes it after the confirmation', async () => {
+        const slots = createMemorySlotStore({ initial: { 2: { state: preCharacterState(6), savedAt: 10 } } });
+        mount('load', slots);
+
+        act(() => { fireEvent.press(screen.getByTestId('save-slot-2-clear')); });
+        await act(async () => { fireEvent.press(screen.getByTestId('saves-confirm-confirm')); });
+
+        expect(slots.readSlot(2)).toBeNull();
+    });
+
+    it('a character save beside it still loads', () => {
+        const slots = createMemorySlotStore({
+            initial: {
+                1: { state: preCharacterState(6), savedAt: 20 },
+                3: { state: savedState('Third', 5), savedAt: 10 },
+            },
+        });
+        const { store } = mount('load', slots);
+        expect(screen.queryByTestId('save-slot-1-action')).toBeNull();
+        act(() => { fireEvent.press(screen.getByTestId('save-slot-3-action')); });
+        expect(store.getState().player.name).toBe('Third');
+        expect(mockReplace).toHaveBeenCalledWith('/exploration');
     });
 });
 

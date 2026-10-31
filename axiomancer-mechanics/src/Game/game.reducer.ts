@@ -28,6 +28,7 @@ import {
     wornMaxHpBonus,
 } from '../Character/equipment.reducer';
 import { createCharacter, allocateStatPoint } from '../Character';
+import { DEV_PRESET_LANE_IDS } from '../Character/presets';
 import {
     CHARACTER_ROSTER, FRESH_RUN_BASE_STATS, characterDeck, getCharacterDefinition,
     type CharacterDefinition,
@@ -147,7 +148,11 @@ export const GAME_STATE_VERSION = 41;
 export interface NewGameOptions {
     /** Start on another campaign map instead of `STARTING_MAP`. */
     startMap?: MapName;
-    /** The roster character the run opens as; absent is a run with no character. */
+    /**
+     * The roster character the run opens as. Absent builds the pre-run shell: an
+     * apprentice with no relic or cards and the dev preset lanes as an explicit
+     * lane list (tests, and the app store before a run). Every player-facing path passes one.
+     */
     characterId?: string;
     /** The roster `characterId` is looked up in; defaults to `CHARACTER_ROSTER` (tests pass fixtures). */
     roster?: readonly CharacterDefinition[];
@@ -167,7 +172,12 @@ export interface NewGameOptions {
  */
 function createNewRunPlayer(opts: NewGameOptions): Character {
     if (opts.characterId === undefined) {
-        return createCharacter({ name: 'Player', level: 1, baseStats: { ...FRESH_RUN_BASE_STATS } });
+        // The shell holds the dev preset lanes as an explicit lane list, so even
+        // it has a reward pool: no player is ever built with an empty one.
+        return {
+            ...createCharacter({ name: 'Player', level: 1, baseStats: { ...FRESH_RUN_BASE_STATS } }),
+            startingLaneIds: [...DEV_PRESET_LANE_IDS],
+        };
     }
     const def = getCharacterDefinition(opts.characterId, opts.roster ?? CHARACTER_ROSTER);
     if (!def) throw new Error(`createNewGameState: no character with id "${opts.characterId}".`);
@@ -496,7 +506,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
                 // Full new-game reset; carry rngState forward (don't
                 // reset the seed mid-session, that breaks deterministic
                 // replay) and assign a fresh runId.
-                const fresh = createNewGameState();
+                // The same character again; an id the live roster lacks (a test
+                // fixture) resets to the shell.
+                const again = state.player.characterId;
+                const fresh = createNewGameState({
+                    characterId: again !== undefined && getCharacterDefinition(again) ? again : undefined,
+                });
                 return { ...fresh, runId: freshRunId, rngState: state.rngState, dying: undefined };
             }
 

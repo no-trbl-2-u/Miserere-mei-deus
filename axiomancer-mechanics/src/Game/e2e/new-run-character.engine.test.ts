@@ -82,14 +82,13 @@ describe('createNewGameState with a character (CH1 A2)', () => {
     });
 });
 
-describe('a run with no character is today\'s run', () => {
+describe('the pre-run shell (no characterId): not a character run (CH1f)', () => {
     it('keeps the apprentice baseline, wears nothing, deals no card and records no character', () => {
         const { player } = createNewGameState();
         expect(player.baseStats).toEqual({ heart: 5, body: 5, mind: 5 });
         expect(getEquippedItems(player.equipment)).toEqual([]);
         expect(player.knownCards).toEqual([]);
         expect(player).not.toHaveProperty('characterId');
-        expect(player).not.toHaveProperty('startingLaneIds');
     });
 
     it('the grey office it is dealt later stays Blow 5, Ward 3, Word 2', () => {
@@ -103,7 +102,6 @@ describe('a run with no character is today\'s run', () => {
         const loaded = migrate(deepClone(saved), GAME_STATE_VERSION);
         expect(loaded).toEqual(saved);
         expect(loaded.player).not.toHaveProperty('characterId');
-        expect(loaded.player).not.toHaveProperty('startingLaneIds');
     });
 
     it('a current-version character save keeps both fields through migrate', () => {
