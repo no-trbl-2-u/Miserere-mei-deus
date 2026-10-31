@@ -37,7 +37,7 @@ export interface QuestTrackerVM {
 const EMPTY_TRACKER: QuestTrackerVM = Object.freeze({ rows: Object.freeze([]), more: 0 });
 
 /** The item a reward puts in the satchel, when it is one. */
-function rewardItem(reward: Reward): { id: string; name: string } | null {
+export function rewardItem(reward: Reward): { id: string; name: string } | null {
     if (typeof reward === 'string') return null;
     if ('kind' in reward) return reward.kind === 'item' ? reward.item : null;
     return reward;

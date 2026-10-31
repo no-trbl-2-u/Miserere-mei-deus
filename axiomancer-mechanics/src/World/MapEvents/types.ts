@@ -210,6 +210,13 @@ export interface LabyrinthDoorPayload {
  * the step of its own number. Never consumed until the step it offers is
  * accepted (QL1b); resolving one touches no state.
  */
+export interface QuestGiver {
+    /** Who gives the quest (authored `[content]`, never saved). */
+    name: string;
+    /** A portrait slug the app resolves to art (a stand-in until T picks). */
+    portrait: string;
+}
+
 export interface QuestPayload {
     kind: 'quest';
     questline: QuestlineId;
@@ -222,6 +229,8 @@ export interface QuestPayload {
      * content, never saved.
      */
     lockedLine?: string;
+    /** The person who speaks this node's lines. */
+    giver?: QuestGiver;
 }
 
 /** Discriminated union of all authoring payloads. */
@@ -304,6 +313,7 @@ export type ResolvedEvent =
         description?: string;
         /** The node's refusal line, present only while the stage is `locked` and one is authored. */
         lockedLine?: string;
+        giver?: QuestGiver;
     }
     | { kind: 'none' };
 

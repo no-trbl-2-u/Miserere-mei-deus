@@ -140,6 +140,9 @@ describe('hermeticity guard: isolation (no disk in tests)', () => {
         // for a preference the caller already holds — the same standing as the
         // boundary guard above, and unprovable by rendering.
         'components/combat/frames/__tests__/reducedMotionSource.test.ts',
+        // The quest giver scene (phase ET1d, A11) reads its own source to prove
+        // the relic rise takes the reduced-motion answer from its caller.
+        'state/e2e/quest-giver.screen.test.tsx',
         // The worn-state guard (phase EQ1a, A1) reads the committed mobile
         // sources to prove no screen or action reads the inventory-order
         // convention; an import is a source fact, unprovable by rendering.

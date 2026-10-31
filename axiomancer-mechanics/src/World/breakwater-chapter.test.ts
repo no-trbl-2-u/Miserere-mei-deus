@@ -136,6 +136,17 @@ describe('A1: the graph is T\'s node list', () => {
         }
     });
 
+    it('gives each of the four quest nodes a giver: a [content] name, a portrait slug and a refusal line', () => {
+        for (const id of ['bw-c2', 'bw-l5', 'bw-k1', 'bw-b1']) {
+            const payload = getNodeEventPool('coastal-continent', 'breakwater', id)!.entries[0]!.payload;
+            expect(payload.kind, id).toBe('quest');
+            if (payload.kind !== 'quest') continue;
+            expect(payload.giver?.name, id).toMatch(/^\[content\] /);
+            expect(payload.giver?.portrait, id).toBeTruthy();
+            expect(payload.lockedLine, id).toBeTruthy();
+        }
+    });
+
     it('tallies the kinds as the brief does', () => {
         const tally: Record<string, number> = {};
         for (const n of NODE_LIST) tally[n.kind] = (tally[n.kind] ?? 0) + 1;

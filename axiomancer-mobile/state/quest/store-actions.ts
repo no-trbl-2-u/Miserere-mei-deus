@@ -27,13 +27,21 @@ export interface OpenQuestInput {
     questline: string;
     node: number;
     description?: string;
+    lockedLine?: string;
+    giver?: { name: string; portrait: string };
 }
 
 /** Opens the quest screen on a quest node. The node itself stays unspent. */
 export function openQuestScreenAction(store: AppStore, input: OpenQuestInput): void {
     store.setState({
         quest: {
-            open: { questline: input.questline, node: input.node, description: input.description },
+            open: {
+                questline: input.questline,
+                node: input.node,
+                description: input.description,
+                ...(input.lockedLine !== undefined ? { lockedLine: input.lockedLine } : {}),
+                ...(input.giver !== undefined ? { giver: input.giver } : {}),
+            },
             paid: null,
             cardOffers: [],
         },
@@ -81,6 +89,7 @@ function ledgerOf(step: number, paid: readonly PaidQuestReward[]): MobileQuestPa
         experience: paid.reduce((sum, p) => sum + amountOf(p.rewards, 'experience'), 0),
         currency: paid.reduce((sum, p) => sum + amountOf(p.rewards, 'currency'), 0),
         itemNames: paid.flatMap(p => p.items.map(item => item.name)),
+        itemIds: paid.flatMap(p => p.items.map(item => item.id)),
     };
 }
 
