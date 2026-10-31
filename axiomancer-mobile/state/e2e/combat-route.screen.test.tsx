@@ -154,13 +154,13 @@ describe('the live combat route', () => {
         expect(s.player.characterId).toBeUndefined();
         expect(s.dying).toBeUndefined();
         expect(isDeathReturnArmed()).toBe(false);
-        // A run end opens character select for the slot, not the map.
-        expect(mockReplace).toHaveBeenCalledWith('/character-select?slot=2&runEnd=1');
+        // A run end opens the Game Over screen for the slot, not the map.
+        expect(mockReplace).toHaveBeenCalledWith('/game-over?slot=2');
         expect(mockBack).not.toHaveBeenCalled();
         expect(combat.inCombat).toBe(false);
     });
 
-    it('a defeat inside the Labyrinth is a run end: no character, character select for the slot', () => {
+    it('a defeat inside the Labyrinth is a run end: no character, Game Over for the slot', () => {
         const store = stagedStore();
         const runId = store.getState().runId;
         store.setState({ labyrinthUi: { session: { actId: 'act1' } } } as never);
@@ -174,7 +174,7 @@ describe('the live combat route', () => {
         expect(s.runOver).toBe(true);
         expect(s.player.characterId).toBeUndefined();
         expect(isDeathReturnArmed()).toBe(false);
-        expect(mockReplace).toHaveBeenCalledWith('/character-select?slot=2&runEnd=1');
+        expect(mockReplace).toHaveBeenCalledWith('/game-over?slot=2');
         expect(mockBack).not.toHaveBeenCalled();
     });
 

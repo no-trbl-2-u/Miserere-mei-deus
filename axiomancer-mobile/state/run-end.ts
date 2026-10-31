@@ -3,8 +3,8 @@
  *
  * A run end (the second death on the map or at a hazard, a Labyrinth defeat)
  * leaves the engine's run-over state in the store (`GameState.runOver`: no
- * character, the codex kept). Every path that meets it routes to character
- * select for the slot, whose CONFIRM starts the next run with that codex.
+ * character, the codex kept). Every path that meets it routes to the Game Over
+ * screen, then character select for the slot, whose CONFIRM starts the next run with that codex.
  *
  * Pure: the callers own the router and the save.
  */
@@ -20,9 +20,19 @@ export const RUN_END_PARAM = 'runEnd';
  * Character select for a finished run in `slot`. With no active slot (a
  * fixture boot) the slot list is the only honest place to begin again.
  */
-export function runEndRoute(slot: SaveSlotId | null): string {
+export function characterSelectRunEndRoute(slot: SaveSlotId | null): string {
     if (slot === null) return '/saves?mode=new';
     return `/character-select?slot=${slot}&${RUN_END_PARAM}=1`;
+}
+
+/**
+ * Where a run end first lands (phase CH1j): the Game Over screen for the
+ * slot, whose button opens `characterSelectRunEndRoute`. The caller arms it
+ * (`armGameOver`); unarmed, the screen goes on to character select at once.
+ */
+export function runEndRoute(slot: SaveSlotId | null): string {
+    if (slot === null) return '/saves?mode=new';
+    return `/game-over?slot=${slot}`;
 }
 
 /** Whether the state is a finished run waiting on a new character. */
@@ -39,5 +49,5 @@ export function entryRoute(
     slot: SaveSlotId | null,
     fallback: string,
 ): string {
-    return isRunOver(state) ? runEndRoute(slot) : fallback;
+    return isRunOver(state) ? characterSelectRunEndRoute(slot) : fallback;
 }

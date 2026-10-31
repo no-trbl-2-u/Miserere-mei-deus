@@ -55,6 +55,7 @@ import HazardDeckScreen from './hazard-deck/index';
 import ItemRewardScreen from './item-reward/index';
 import RestScreen from './rest/index';
 import DeathReturnScreen from './death-return/index';
+import GameOverScreen from './game-over/index';
 import CacheScreen from './cache/index';
 import QuestScreen from './quest/index';
 import TravelScreen from './travel/index';
@@ -354,6 +355,11 @@ function RootLayout() {
             <Stack.Screen
               name="death-return/index"
               component={DeathReturnScreen}
+              options={{ headerShown: false, presentation: 'fullScreenModal', gestureEnabled: false }}
+            />
+            <Stack.Screen
+              name="game-over/index"
+              component={GameOverScreen}
               options={{ headerShown: false, presentation: 'fullScreenModal', gestureEnabled: false }}
             />
             <Stack.Screen

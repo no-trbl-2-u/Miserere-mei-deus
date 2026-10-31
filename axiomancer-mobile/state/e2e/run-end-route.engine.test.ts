@@ -10,7 +10,7 @@ import { createNewGameState } from '@mechanics';
 import { createAppActions } from '@/state/actions';
 import { loadGameAction, startNewGameAction } from '@/state/menu/store-actions';
 import { createMemorySlotStore } from '@/state/persistence/memorySlotStore';
-import { entryRoute, isRunOver, runEndRoute } from '@/state/run-end';
+import { characterSelectRunEndRoute, entryRoute, isRunOver, runEndRoute } from '@/state/run-end';
 import { createAppStore } from '@/state/store';
 
 function startedRun() {
@@ -21,15 +21,17 @@ function startedRun() {
 }
 
 describe('run-end routes', () => {
-    it('names character select for the slot, or the slot list with no slot', () => {
-        expect(runEndRoute(2)).toBe('/character-select?slot=2&runEnd=1');
+    it('names the Game Over screen and character select for the slot, or the slot list with no slot', () => {
+        expect(characterSelectRunEndRoute(2)).toBe('/character-select?slot=2&runEnd=1');
+        expect(runEndRoute(2)).toBe('/game-over?slot=2');
         expect(runEndRoute(null)).toBe('/saves?mode=new');
+        expect(characterSelectRunEndRoute(null)).toBe('/saves?mode=new');
     });
 
     it('entryRoute sends a run-over state to character select and any other to the fallback', () => {
         const run = createNewGameState({ characterId: 'the-chosen' });
         expect(entryRoute(run, 1, '/exploration')).toBe('/exploration');
-        expect(entryRoute({ runOver: true }, 1, '/exploration')).toBe(runEndRoute(1));
+        expect(entryRoute({ runOver: true }, 1, '/exploration')).toBe(characterSelectRunEndRoute(1));
         expect(isRunOver(run)).toBe(false);
     });
 });

@@ -83,6 +83,8 @@ export const ROUTES = [
     // The full-screen moment after a first death; `preview=1` shows it on a
     // dev build (a real revive arms it in memory), hence the forced context.
     { name: 'death-return', path: '/death-return?preview=1', fixture: 'fresh-start' },
+    // The full-screen moment after a run end (CH1j); `preview=1` shows it on a dev build.
+    { name: 'game-over', path: '/game-over?slot=1&preview=1', fixture: 'fresh-start' },
     // Dev-menu HAZARD PUZZLES board on the live hazard board (a dev route,
     // so it needs the forced dev-tools context a fixture route gets): the
     // hard demo's board, and its outcome panel after an immediate confirm.

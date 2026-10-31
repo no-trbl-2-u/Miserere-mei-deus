@@ -20,6 +20,7 @@ import { useRouter } from '@/lib/platform/router';
 import { DevButton, DevButtons, DevRow } from '@/components/dev/DevControls';
 import { isDevToolsEnabled } from '@/lib/buildProfile';
 import { useGameActions, useGameStore } from '@/state/GameStoreProvider';
+import { armGameOver } from '@/state/game-over';
 import { runEndRoute } from '@/state/run-end';
 import { useActiveSlot } from '@/state/SaveSlotsProvider';
 
@@ -49,6 +50,7 @@ export function DebugRunControls() {
         setFeedback(keepCharacter ? 'run reset · character kept' : 'new run · choose a character');
         if (!keepCharacter) {
             store.getState().save();
+            armGameOver();
             router.replace(runEndRoute(slot) as never);
         }
     };

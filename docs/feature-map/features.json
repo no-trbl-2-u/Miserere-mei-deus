@@ -468,7 +468,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/app/__tests__/character-select.live-roster.screen.test.tsx, axiomancer-mobile/app/__tests__/character-select.screen.test.tsx, axiomancer-mobile/state/e2e/combat-route.screen.test.tsx, ..."
+        "source": "axiomancer-mobile/app/__tests__/character-select.live-roster.screen.test.tsx, axiomancer-mobile/app/__tests__/character-select.screen.test.tsx, axiomancer-mobile/app/__tests__/game-over.screen.test.tsx, ..."
       },
       "needsPitch": {
         "value": true,
@@ -727,6 +727,31 @@
       }
     },
     {
+      "id": "route:game-over",
+      "name": "Game Over",
+      "kind": "route",
+      "group": "world",
+      "source": "axiomancer-mobile/app/game-over/index.tsx",
+      "named": false,
+      "reachable": {
+        "value": false,
+        "source": "no flow path from route:index"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/smoke-screens.mjs"
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/app/__tests__/game-over.screen.test.tsx, axiomancer-mobile/state/e2e/combat-route.screen.test.tsx, axiomancer-mobile/state/e2e/hazard-death-return.screen.test.tsx, ..."
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Game Over\")",
+        "source": null
+      }
+    },
+    {
       "id": "route:hazard",
       "name": "The hazard minigame",
       "kind": "route",
@@ -918,7 +943,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/app/__tests__/character-select.live-roster.screen.test.tsx, axiomancer-mobile/state/e2e/app-routes.engine.test.tsx, axiomancer-mobile/state/e2e/run-end-route.engine.test.ts, ..."
+        "source": "axiomancer-mobile/app/__tests__/character-select.live-roster.screen.test.tsx, axiomancer-mobile/app/__tests__/game-over.screen.test.tsx, axiomancer-mobile/state/e2e/app-routes.engine.test.tsx, ..."
       },
       "needsPitch": {
         "value": true,
@@ -4605,6 +4630,24 @@
     },
     {
       "kind": "coupling",
+      "from": "route:game-over",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/persistence/saveSlots.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:game-over",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/run-end.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:game-over",
+      "to": "area:Log",
+      "file": "axiomancer-mobile/lib/platform/router.ts"
+    },
+    {
+      "kind": "coupling",
       "from": "route:hazard",
       "to": "area:Character",
       "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
@@ -7324,6 +7367,84 @@
     {
       "kind": "flow",
       "from": "route:dialogue",
+      "to": "route:village",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:game-over",
+      "to": "route:blacksmith",
+      "file": "axiomancer-mobile/components/BlacksmithGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:game-over",
+      "to": "route:cache",
+      "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:game-over",
+      "to": "route:combat-encounter",
+      "file": "axiomancer-mobile/components/CombatGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:game-over",
+      "to": "route:cutscene",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:game-over",
+      "to": "route:dialogue",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:game-over",
+      "to": "route:hazard",
+      "file": "axiomancer-mobile/components/HazardGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:game-over",
+      "to": "route:item-reward",
+      "file": "axiomancer-mobile/components/item-reward/ItemRewardGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:game-over",
+      "to": "route:labyrinth",
+      "file": "axiomancer-mobile/components/LabyrinthGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:game-over",
+      "to": "route:quest",
+      "file": "axiomancer-mobile/components/QuestGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:game-over",
+      "to": "route:rest",
+      "file": "axiomancer-mobile/components/RestGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:game-over",
+      "to": "route:saves",
+      "file": "axiomancer-mobile/app/game-over/index.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:game-over",
+      "to": "route:travel",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:game-over",
       "to": "route:village",
       "file": "axiomancer-mobile/components/EventGate.tsx"
     },

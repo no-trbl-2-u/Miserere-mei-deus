@@ -56,6 +56,7 @@ export const RULES = [
     { test: /^axiomancer-mobile\/app\/cutscene\//, routes: ['cutscene'] },
     { test: /^axiomancer-mobile\/app\/travel\//, routes: ['travel'] },
     { test: /^axiomancer-mobile\/app\/death-return\//, routes: ['death-return'] },
+    { test: /^axiomancer-mobile\/app\/game-over\//, routes: ['game-over'] },
     { test: /^axiomancer-mobile\/app\/(hazard|devpuzzle)\//, routes: HAZARD },
     // The combat board draws two hazard glyphs.
     { test: /^axiomancer-mobile\/components\/hazard\//, routes: [...HAZARD, 'combat-encounter'] },

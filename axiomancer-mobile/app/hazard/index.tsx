@@ -24,6 +24,7 @@ import { RouteSelect } from '@/components/hazard/RouteSelect';
 import { StakesCard } from '@/components/hazard/StakesCard';
 import { useHazardDrag } from '@/components/hazard/useHazardDrag';
 import { isDeathReturnArmed } from '@/state/death-return';
+import { armGameOver } from '@/state/game-over';
 import { runEndRoute } from '@/state/run-end';
 import { useActiveSlot } from '@/state/SaveSlotsProvider';
 import { useGameActions, useGameState, useGameStore } from '@/state/GameStoreProvider';
@@ -57,7 +58,10 @@ export default function HazardScreen() {
         // EVENT alike) hands off to the return moment, which owns the way
         // back to the map: do not pop it as well.
         if (isDeathReturnArmed()) router.replace('/death-return');
-        else if (store.getState().runOver === true) router.replace(runEndRoute(slot) as never);
+        else if (store.getState().runOver === true) {
+            armGameOver();
+            router.replace(runEndRoute(slot) as never);
+        }
         else if (router.canGoBack()) router.back();
     }, [vm.active, router, store, slot]);
 

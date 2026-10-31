@@ -21,6 +21,7 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 | Cutscene | route | yes | yes | yes | no |
 | Death Return | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Death Return") |
 | Dialogue | route | yes | yes | yes | no |
+| Game Over | route | no | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Game Over") |
 | Index | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Index") |
 | Reward | route | yes | no | yes | no |
 | Quest | route | yes | yes | yes | no |
@@ -55,7 +56,7 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 
 ### Built but unreachable
 
-- none
+- Game Over (`route:game-over`)
 
 ### Routes with no way out but back
 
@@ -91,6 +92,7 @@ Features with no name from `game-model.md` vocabulary; each keeps its path-deriv
 - Memoir (`route:(tabs)/memoir`)
 - Character Select (`route:character-select`)
 - Death Return (`route:death-return`)
+- Game Over (`route:game-over`)
 - Index (`route:index`)
 - Quest (`route:quest`)
 - Saves (`route:saves`)
